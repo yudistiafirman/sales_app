@@ -3,12 +3,12 @@ import respFS from "@/utils/respFS";
 const font = {
     family: {
         montserrat: {
-            300: 'montserrat_light',
-            400: 'montserrat_regular',
-            500: 'montserrat_medium',
-            600: 'montserrat_semibold',
-            700: 'montserrat_bold',
-            800: 'montserrat_extrabold',
+            300: 'Montserrat-Light',
+            400: 'Montserrat-Regular',
+            500: 'Montserrat-Medium',
+            600: 'Montserrat-SemiBold',
+            700: 'Montserrat-Bold',
+            800: 'Montserrat-ExtraBold'
         }
     },
     size: {

@@ -53,12 +53,12 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>montserrat_bold.ttf</string>
-		<string>montserrat_extrabold.ttf</string>
-		<string>montserrat_light.ttf</string>
-		<string>montserrat_medium.ttf</string>
-		<string>montserrat_regular.ttf</string>
-		<string>montserrat_semibold.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
+		<string>Montserrat-ExtraBold.ttf</string>
+		<string>Montserrat-Light.ttf</string>
+		<string>Montserrat-Medium.ttf</string>
+		<string>Montserrat-Regular.ttf</string>
+		<string>Montserrat-SemiBold.ttf</string>
 	</array>
 </dict>
 </plist>
