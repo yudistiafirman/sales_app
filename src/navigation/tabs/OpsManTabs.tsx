@@ -14,8 +14,8 @@ function HomeScreen2() {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen 2</Text>
-      <Text style={{fontFamily: 'montserrat_regular'}}>Home Screen 2</Text>
-      <Text style={{fontFamily: 'montserrat_extrabold'}}>Home Screen 2</Text>
+      <Text style={{fontFamily: 'Montserrat-Regular'}}>Home Screen 2</Text>
+      <Text style={{fontFamily: 'Montserrat-ExtraBold'}}>Home Screen 2</Text>
     </View>
   );
 }
@@ -24,8 +24,8 @@ function HomeScreen3() {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen 3</Text>
-      <Text style={{fontFamily: 'montserrat_regular'}}>Home Screen 3</Text>
-      <Text style={{fontFamily: 'montserrat_extrabold'}}>Home Screen 3</Text>
+      <Text style={{fontFamily:'Montserrat-Regular'}}>Home Screen 3</Text>
+      <Text style={{fontFamily: 'Montserrat-ExtraBold'}}>Home Screen 3</Text>
     </View>
   );
 }
