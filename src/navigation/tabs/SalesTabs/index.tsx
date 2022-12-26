@@ -13,8 +13,8 @@ import PriceList from '@/screens/Price/PriceList';
 import scaleSize from '@/utils/scale';
 import CustomSalesTabBar from './SalesTabBar';
 import Profile from '@/screens/Profile';
-import Transaksi from '@/screens/Transaksi';
-import Beranda from '@/screens/Beranda';
+import Transactions from '@/screens/Transactions';
+import Home from '@/screens/Home';
 
 function HomeScreen2() {
   return (
@@ -47,14 +47,14 @@ function SalesTabs() {
         name: 'Beranda',
         title: 'Beranda',
         type: 'home',
-        component: Beranda,
+        component: Home,
       })}
       {BTabScreen({
         Tab: Tab,
         name: 'Transaksi',
         title: 'Transakski',
         type: 'sub',
-        component: Transaksi,
+        component: Transactions,
       })}
       {BTabScreen({
         Tab: Tab,

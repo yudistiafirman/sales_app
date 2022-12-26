@@ -1,21 +1,14 @@
 import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 import TabBarStyle from './TabBarStyle';
-
-
-
 
 interface TabBar {
     state:any,
     descriptors:any,
     navigation:any
 }
-
-
 
 const CustomSalesTabBar=({ state, descriptors, navigation }:TabBar)=> {
 
