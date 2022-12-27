@@ -22,6 +22,11 @@ const colors = {
     selected: '#E52525',
     unselected: '#999A9B',
   },
+  textInput:{
+    inActive:'#C7C7C7',
+    placeHolder:'#C7C7C7',
+    input:'#202020'
+  },
   border:{
     grey : '#C1C1C1'
   }
