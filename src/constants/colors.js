@@ -9,6 +9,7 @@ const colors = {
   text: {
     dark: '#191919',
     light: '#FFFFFF',
+    inactive : '#010206'
   },
   status: {
     grey: '#D7D7D7',
@@ -20,6 +21,9 @@ const colors = {
   select: {
     selected: '#E52525',
     unselected: '#999A9B',
+  },
+  border:{
+    grey : '#C1C1C1'
   }
 };
 

@@ -9,6 +9,12 @@ import colors from '@/constants/colors';
 import BTabScreen from '@/navigation/elements/BTabScreen';
 import BStatusBar from '@/components/atoms/BStatusBar';
 import HomeScreen from '@/screens/HomeScreen';
+import PriceList from '@/screens/Price/PriceList';
+import scaleSize from '@/utils/scale';
+import CustomSalesTabBar from './SalesTabBar';
+import Profile from '@/screens/Profile';
+import Transactions from '@/screens/Transactions';
+import Home from '@/screens/Home';
 
 function HomeScreen2() {
   return (
@@ -35,37 +41,34 @@ const Tab = createBottomTabNavigator();
 function SalesTabs() {
   return (
     <Tab.Navigator
-      screenOptions={{
-        // headerShown: false,
-        tabBarStyle: {
-          borderColor: 'transparent',
-          borderTopWidth: 0,
-          elevation: 0,
-          shadowOpacity: 0,
-          height: 54,
-        },
-      }}>
+    tabBar={props => <CustomSalesTabBar {...props} />}>
       {BTabScreen({
         Tab: Tab,
-        name: 'HomeTab',
+        name: 'Beranda',
         title: 'Beranda',
         type: 'home',
-        color: 'primary',
-        component: HomeScreen,
+        component: Home,
       })}
       {BTabScreen({
         Tab: Tab,
-        name: 'HomeTab2',
-        title: 'HomeTab2',
+        name: 'Transaksi',
+        title: 'Transakski',
         type: 'sub',
-        component: HomeScreen2,
+        component: Transactions,
       })}
       {BTabScreen({
         Tab: Tab,
-        name: 'HomeTab3',
-        title: 'HomeTab3',
+        name: 'Profil',
+        title: 'Profil',
         type: 'sub',
-        component: HomeScreen3,
+        component: Profile,
+      })}
+        {BTabScreen({
+        Tab: Tab,
+        name: 'Harga',
+        title: 'Harga',
+        type: 'sub',
+        component: PriceList,
       })}
     </Tab.Navigator>
   );
