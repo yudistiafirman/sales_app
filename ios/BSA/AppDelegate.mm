@@ -5,7 +5,7 @@
 #import <React/RCTRootView.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import <React/RCTAppSetupUtils.h>
-
+#import "ReactNativeConfig.h"
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -30,7 +30,9 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [GMSServices provideAPIKey:@"AIzaSyD8o1pRgkhQY9dcx8Uiqut-ruGKH5WUsH0"];
+  NSString *googleMapApiKeys = [ReactNativeConfig envFor:@"GOOGLE_MAPS_API_KEY"];
+  
+  [GMSServices provideAPIKey:googleMapApiKeys];
 
   RCTAppSetupPrepareApp(application);
 
