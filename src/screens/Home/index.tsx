@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import colors from '@/constants/colors';
-import TargetCard from '../elements/TargetCard';
+import TargetCard from './elements/TargetCard';
 
 const Beranda = () => {
-  const [currentVisit, setCurrentVisit] = useState(0);
+  const [currentVisit, setCurrentVisit] = useState(5);
   const [isExpanded, setIsExpanded] = useState(true);
   function increaseVisit() {
     setCurrentVisit((current) => current + 1);
@@ -20,6 +20,8 @@ const Beranda = () => {
         maxVisitation={10}
         currentVisitaion={currentVisit}
       ></TargetCard>
+      <Button title="increase" onPress={increaseVisit}></Button>
+      <Button title="reset" onPress={resetVisit}></Button>
     </View>
   );
 };
