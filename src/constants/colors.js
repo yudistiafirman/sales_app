@@ -6,10 +6,11 @@ const colors = {
   border: '#E6EDF6',
   white: '#FFFFFF',
   black: '#191919',
+  lightGray: `#E6E6E6`,
   text: {
     dark: '#191919',
     light: '#FFFFFF',
-    inactive : '#010206'
+    inactive: '#010206',
   },
   status: {
     grey: '#D7D7D7',
@@ -22,14 +23,15 @@ const colors = {
     selected: '#E52525',
     unselected: '#999A9B',
   },
-  textInput:{
-    inActive:'#C7C7C7',
-    placeHolder:'#C7C7C7',
-    input:'#202020'
+  textInput: {
+    inActive: '#C7C7C7',
+    placeHolder: '#C7C7C7',
+    input: '#202020',
   },
-  border:{
-    grey : '#C1C1C1'
-  }
+  border: {
+    grey: '#C1C1C1',
+    altGrey: '#C7C7C7',
+  },
 };
 
 export default colors;
