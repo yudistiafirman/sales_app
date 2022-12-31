@@ -16,6 +16,7 @@ type TargetCardProps = {
   isExpanded: boolean;
   isLoading: boolean;
 };
+
 export default function TargetCard({
   maxVisitation,
   currentVisitaion,
