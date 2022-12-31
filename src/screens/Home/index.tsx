@@ -38,6 +38,7 @@ const buttonsData: buttonDataType[] = [
 const Beranda = () => {
   const [currentVisit, setCurrentVisit] = useState(5);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   function increaseVisit() {
     setCurrentVisit((current) => current + 1);
   }
@@ -51,6 +52,7 @@ const Beranda = () => {
         isExpanded={isExpanded}
         maxVisitation={10}
         currentVisitaion={currentVisit}
+        isLoading={isLoading}
       ></TargetCard>
       <BQuickAction
         containerStyle={{
@@ -59,14 +61,20 @@ const Beranda = () => {
         }}
         buttonProps={buttonsData}
       ></BQuickAction>
-      {/* <Button title="increase" onPress={increaseVisit}></Button>
+      <Button title="increase" onPress={increaseVisit}></Button>
       <Button title="reset" onPress={resetVisit}></Button>
       <Button
-        title="toggle"
+        title="toggle loading"
         onPress={() => {
-          setIsExpanded((current) => !current);
+          setIsLoading((cur) => !cur);
         }}
-      ></Button> */}
+      ></Button>
+      <Button
+        title="toggle expand"
+        onPress={() => {
+          setIsExpanded((cur) => !cur);
+        }}
+      ></Button>
     </View>
   );
 };
