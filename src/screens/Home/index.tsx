@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import scaleSize from '@/utils/scale';
+import CalendarStrip from 'react-native-calendar-strip';
 
 import BQuickAction from '@/components/molecules/BQuickAction';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
@@ -71,13 +72,50 @@ const Beranda = () => {
         }}
         buttonProps={buttonsData}
       ></BQuickAction>
+
       <BBottomSheet
         onChange={bottomSheetOnchange}
-        percentSnapPoints={['63%', '87%']}
+        percentSnapPoints={['63%', '87%', `100%`]}
         ref={bottomSheetRef}
         initialSnapIndex={0}
       >
         <View style={style.contentContainer}>
+          <View
+            style={{
+              height: 100,
+              width: '100%',
+              backgroundColor: `black`,
+            }}
+          >
+            <CalendarStrip
+              calendarAnimation={{ type: 'sequence', duration: 30 }}
+              daySelectionAnimation={{
+                type: 'border',
+                duration: 200,
+                borderWidth: 0,
+                borderHighlightColor: 'gray',
+              }}
+              style={{
+                height: 100,
+                width: '100%',
+                paddingTop: 20,
+                paddingBottom: 20,
+              }}
+              calendarHeaderStyle={{
+                color: 'black',
+                fontSize: 15,
+                marginBottom: 15,
+              }}
+              calendarColor={'#FFFFFF'}
+              dateNumberStyle={{ color: 'black' }}
+              dateNameStyle={{ color: 'black' }}
+              highlightDateNumberStyle={{ color: 'red' }}
+              highlightDateNameStyle={{ color: 'red' }}
+              disabledDateNameStyle={{ color: 'grey' }}
+              disabledDateNumberStyle={{ color: 'grey' }}
+              numDaysInWeek={5}
+            />
+          </View>
           <Button title="increase" onPress={increaseVisit} />
           <Button title="reset" onPress={resetVisit} />
           <Button
@@ -95,7 +133,7 @@ const Beranda = () => {
           <Button
             title="max open bottom sheet"
             onPress={() => {
-              bottomSheetRef.current?.snapToIndex(1);
+              bottomSheetRef.current?.snapToIndex(0);
             }}
           />
         </View>
