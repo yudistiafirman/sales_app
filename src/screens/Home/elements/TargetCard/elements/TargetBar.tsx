@@ -27,18 +27,21 @@ export default function TargetBar({
 
   if (currentVisitaion && currentVisitaion > maxVisitation) {
     max = currentVisitaion;
-    if (currentVisitaion <= 12) {
+    if (currentVisitaion <= 10) {
       max += 2;
     } else if (currentVisitaion <= 14) {
       max += 1;
     }
   }
-  if (max > 15) {
-    max = 15;
+  if (max >= 14) {
+    max = 14;
   }
-
+  let maxCurrentVisit = currentVisitaion;
+  if (maxCurrentVisit >= 14) {
+    maxCurrentVisit = 14;
+  }
   const emptyProgress = [...Array(max)];
-  const currentProgress = [...Array(currentVisitaion)];
+  const currentProgress = [...Array(maxCurrentVisit)];
   return (
     <ShimmerPlaceHolder style={style.shimmerStyle} visible={!isLoading}>
       <View style={style.targetBar}>
@@ -94,7 +97,7 @@ const style = StyleSheet.create({
   },
   shimmerStyle: {
     borderRadius: scaleSize.moderateScale(8),
-    width: '90%',
+    width: '100%',
     height: scaleSize.moderateScale(43),
   },
 });
