@@ -38,13 +38,15 @@ const buttonsData: buttonDataType[] = [
 ];
 
 const Beranda = () => {
-  const [currentVisit, setCurrentVisit] = useState(5);
+  const [currentVisit, setCurrentVisit] = useState(5); //temporary
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // temporary
   function increaseVisit() {
+    // temporary
     setCurrentVisit((current) => current + 1);
   }
   function resetVisit() {
+    // temporary
     setCurrentVisit(0);
   }
 
