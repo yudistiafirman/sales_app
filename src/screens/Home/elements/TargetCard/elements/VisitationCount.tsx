@@ -3,13 +3,15 @@ import React from 'react';
 import font from '@/constants/fonts';
 import colors from '@/constants/colors';
 
+type VisitationCountPropsType = {
+  maxVisitation: number;
+  currentVisitaion: number;
+};
+
 export default function VisitationCount({
   maxVisitation,
   currentVisitaion,
-}: {
-  maxVisitation: number;
-  currentVisitaion: number;
-}) {
+}: VisitationCountPropsType) {
   if (
     typeof maxVisitation !== `number` ||
     typeof currentVisitaion !== `number`

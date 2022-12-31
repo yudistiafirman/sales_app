@@ -4,15 +4,17 @@ import TargetMarker from './TargetMarker';
 import colors from '@/constants/colors';
 import scaleSize from '@/utils/scale';
 
+type EmptyItemType = {
+  isLast: boolean;
+  isTargetMarker: boolean;
+  isFirst: boolean;
+};
+
 export default function EmptyItem({
   isLast,
   isFirst,
   isTargetMarker,
-}: {
-  isLast: boolean;
-  isTargetMarker: boolean;
-  isFirst: boolean;
-}) {
+}: EmptyItemType) {
   return (
     <View
       style={[
