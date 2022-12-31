@@ -2,6 +2,38 @@ import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
+import scaleSize from '@/utils/scale';
+
+import BQuickAction from '@/components/molecules/BQuickAction';
+import { buttonDataType } from '@/interfaces/QuickActionButton.type';
+
+const buttonsData: buttonDataType[] = [
+  {
+    icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
+    title: `Buat SPH`,
+    action: () => {},
+  },
+  {
+    icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
+    title: `Buat PO`,
+    action: () => {},
+  },
+  {
+    icon: require('@/assets/icon/QuickActionIcon/ic_depos.png'),
+    title: `Buat Deposit`,
+    action: () => {},
+  },
+  {
+    icon: require('@/assets/icon/QuickActionIcon/ic_janji.png'),
+    title: `Buat Jadwal`,
+    action: () => {},
+  },
+  {
+    icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),
+    title: `Buat Janji Temu`,
+    action: () => {},
+  },
+];
 
 const Beranda = () => {
   const [currentVisit, setCurrentVisit] = useState(5);
@@ -20,8 +52,21 @@ const Beranda = () => {
         maxVisitation={10}
         currentVisitaion={currentVisit}
       ></TargetCard>
-      <Button title="increase" onPress={increaseVisit}></Button>
+      <BQuickAction
+        containerStyle={{
+          paddingLeft: scaleSize.moderateScale(27),
+          height: scaleSize.moderateScale(100),
+        }}
+        buttonProps={buttonsData}
+      ></BQuickAction>
+      {/* <Button title="increase" onPress={increaseVisit}></Button>
       <Button title="reset" onPress={resetVisit}></Button>
+      <Button
+        title="toggle"
+        onPress={() => {
+          setIsExpanded((current) => !current);
+        }}
+      ></Button> */}
     </View>
   );
 };
