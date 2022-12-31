@@ -9,15 +9,17 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
+type TopVisitationType = {
+  maxVisitation: number;
+  currentVisitaion: number;
+  isLoading: boolean;
+};
+
 export default function TopVisitation({
   maxVisitation,
   currentVisitaion,
   isLoading,
-}: {
-  maxVisitation: number;
-  currentVisitaion: number;
-  isLoading: boolean;
-}) {
+}: TopVisitationType) {
   return (
     <View style={style.targetCount}>
       <ShimmerPlaceHolder style={style.shimmerStyle} visible={!isLoading}>

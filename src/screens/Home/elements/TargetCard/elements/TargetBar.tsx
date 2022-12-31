@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useMemo } from 'react';
 import colors from '@/constants/colors';
 import EmptyItem from './EmptyItem';
 import scaleSize from '@/utils/scale';
@@ -23,25 +23,29 @@ export default function TargetBar({
   if (!isExpanded) {
     return null;
   }
-  let max = maxVisitation + 2;
 
-  if (currentVisitaion && currentVisitaion > maxVisitation) {
-    max = currentVisitaion;
-    if (currentVisitaion <= 10) {
-      max += 2;
-    } else if (currentVisitaion <= 14) {
-      max += 1;
+  const [emptyProgress, currentProgress] = useMemo(() => {
+    let max = maxVisitation + 2;
+    if (currentVisitaion > maxVisitation) {
+      if (currentVisitaion <= 10) {
+        max = currentVisitaion + 2;
+      } else if (currentVisitaion <= 14) {
+        max = currentVisitaion + 1;
+      }
     }
-  }
-  if (max >= 14) {
-    max = 14;
-  }
-  let maxCurrentVisit = currentVisitaion;
-  if (maxCurrentVisit >= 14) {
-    maxCurrentVisit = 14;
-  }
-  const emptyProgress = [...Array(max)];
-  const currentProgress = [...Array(maxCurrentVisit)];
+    if (max >= 14) {
+      max = 14;
+    }
+    let maxCurrentVisit = currentVisitaion;
+    if (maxCurrentVisit >= 14) {
+      maxCurrentVisit = 14;
+    }
+    const emptyProgress = [...Array(max)];
+    const currentProgress = [...Array(maxCurrentVisit)];
+
+    return [emptyProgress, currentProgress];
+  }, [currentVisitaion, maxVisitation]);
+
   return (
     <ShimmerPlaceHolder style={style.shimmerStyle} visible={!isLoading}>
       <View style={style.targetBar}>
