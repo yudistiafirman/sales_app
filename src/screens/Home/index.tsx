@@ -75,7 +75,7 @@ const Beranda = () => {
       ></BQuickAction>
       <BBottomSheet
         onChange={bottomSheetOnchange}
-        percentSnapPoints={['63%', '87%']}
+        percentSnapPoints={['63%', '87%', '100%']}
         ref={bottomSheetRef}
         initialSnapIndex={0}
       >
