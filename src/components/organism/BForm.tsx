@@ -5,6 +5,8 @@ import BSpacer from '../atoms/BSpacer';
 import BText from '../atoms/BText';
 import BTextInput from '../atoms/BTextInput';
 import BCardOption from '../molecules/BCardOption';
+import BComboDropdown from '../molecules/BComboDropdown';
+import BDropdown from '../atoms/BDropdown';
 
 interface IProps {
   inputs: Input[];
@@ -22,7 +24,17 @@ const styles: Styles = {
 };
 
 const renderInput = (input: Input): React.ReactNode => {
-  const { type, label, onChange, value, options } = input;
+  const {
+    type,
+    label,
+    onChange,
+    value,
+    options,
+    comboDropdown,
+    dropdown,
+    // isRequire,
+  } = input;
+
   if (type === 'textInput') {
     return (
       <React.Fragment>
@@ -32,10 +44,24 @@ const renderInput = (input: Input): React.ReactNode => {
     );
   }
 
+  if (type === 'area') {
+    return (
+      <React.Fragment>
+        <BText bold="500">{label}</BText>
+        <BTextInput
+          onChangeText={onChange}
+          value={value}
+          multiline={true}
+          numberOfLines={4}
+        />
+      </React.Fragment>
+    );
+  }
+
   if (type === 'cardOption') {
     return (
       <React.Fragment>
-        <BText>Jenis Pelanggan</BText>
+        <BText>{label}</BText>
         <BSpacer size="extraSmall" />
         <View style={styles.optionContainer}>
           {options?.map((val, index) => (
@@ -53,6 +79,37 @@ const renderInput = (input: Input): React.ReactNode => {
         </View>
       </React.Fragment>
     );
+  }
+
+  if (type === 'dropdown') {
+    if (dropdown) {
+      console.log('dropdown, masukl');
+      return (
+        <React.Fragment>
+          <BText>{label}</BText>
+          <BSpacer size="extraSmall" />
+          <BDropdown
+            open={false}
+            value={null}
+            items={dropdown.items}
+            onChange={dropdown.onChange}
+            placeholder={dropdown.placeholder}
+          />
+        </React.Fragment>
+      );
+    }
+  }
+
+  if (type === 'comboDropdown') {
+    if (comboDropdown) {
+      return (
+        <React.Fragment>
+          <BText>{label}</BText>
+          <BSpacer size="extraSmall" />
+          <BComboDropdown {...comboDropdown} />
+        </React.Fragment>
+      );
+    }
   }
 };
 

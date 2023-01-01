@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { BForm, BText } from '@/components';
 import { Input } from '@/interfaces';
+import { MONTH_LIST, STAGE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
 
 interface IProps {
   updateValue: (key: keyof IState, value: any) => void;
@@ -49,11 +50,52 @@ const ThirdStep = ({ updateValue }: IProps) => {
 
   const inputs: Input[] = [
     {
-      label: 'Estimasi Yang dibutuhkan barang',
+      label: 'Fase Proyek',
       isRequire: true,
-      type: 'estimationDate',
-      onChange: onChange('estimationDate'),
+      value: state.stageProject,
+      onChange: onChange('stageProject'),
+      type: 'dropdown',
+      dropdown: {
+        items: STAGE_PROJECT,
+        placeholder: 'Fase Proyek',
+        onChange: (value: any) => {
+          onChange('stageProject')(value);
+        },
+      },
+    },
+  ];
+
+  const inputsTwo: Input[] = [
+    {
+      label: 'Estimasi Waktu Dibutuhkannya Barang',
+      isRequire: true,
+      type: 'comboDropdown',
+      // onChange: onChange('estimationDate'),
       value: state.estimationDate,
+      comboDropdown: {
+        itemsOne: WEEK_LIST,
+        itemsTwo: MONTH_LIST,
+        onChangeOne: (value: any) => {
+          setState({
+            ...state,
+            estimationDate: {
+              ...state.estimationDate,
+              estimationWeek: value,
+            },
+          });
+        },
+        onChangeTwo: (value: any) => {
+          setState({
+            ...state,
+            estimationDate: {
+              ...state.estimationDate,
+              estimationMonth: value,
+            },
+          });
+        },
+        placeholderOne: 'Pilih Minggu',
+        placeholderTwo: 'Pilih Bulan',
+      },
     },
     {
       label: 'Tipe Pemabayaran',
@@ -99,6 +141,7 @@ const ThirdStep = ({ updateValue }: IProps) => {
     <View>
       <BText>step 3</BText>
       <BForm inputs={inputs} />
+      <BForm inputs={inputsTwo} />
     </View>
   );
 };

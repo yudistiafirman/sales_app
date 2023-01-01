@@ -18,7 +18,7 @@ const baseStyle = {
 
 const baseContainerStyle: TextStyle = {
   borderRadius: scaleSize.moderateScale(4),
-  height: scaleSize.moderateScale(40),
+  minHeight: scaleSize.moderateScale(40),
   backgroundColor: Colors.white,
 };
 

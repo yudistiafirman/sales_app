@@ -47,7 +47,11 @@ const CreateVisitation = () => {
 
   return (
     <BContainer>
-      <ScrollView>{stepRender[state.step]}</ScrollView>
+      <ScrollView>
+        {stepRender[state.step]}
+        {/* {stepRender[state.step]}
+        {stepRender[state.step]} */}
+      </ScrollView>
       <View
         style={{
           flexDirection: 'row',
