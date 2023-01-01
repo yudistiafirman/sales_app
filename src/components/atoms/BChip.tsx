@@ -1,7 +1,7 @@
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import layout from '@/constants/layout';
-import {TextStyle, View, ViewStyle} from 'react-native';
+import { TextStyle, View, ViewStyle } from 'react-native';
 import BText from './BText';
 
 const BChip = ({
@@ -12,7 +12,7 @@ const BChip = ({
   type?: 'default' | 'header';
 }) => {
   let _style: ViewStyle = {
-    backgroundColor: colors.border,
+    backgroundColor: colors.border.default,
     paddingHorizontal: layout.pad.md,
     paddingVertical: layout.pad.xs,
     borderRadius: layout.radius.sm,

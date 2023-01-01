@@ -1,17 +1,27 @@
 import React from 'react';
 import {
-  View,
+  TouchableOpacity,
   Image,
   StyleProp,
   ViewStyle,
   ImageSourcePropType,
+  ImageStyle,
 } from 'react-native';
 
 import BText from '../atoms/BText';
 import { Colors, Layout } from '@/constants';
 import { scaleSize } from '@/utils';
 
-const containerStyle: StyleProp<ViewStyle> = {
+interface IProps {
+  children?: React.ReactNode;
+  icon: ImageSourcePropType | undefined;
+  title: string;
+  fullWidth?: boolean;
+  isActive?: boolean;
+  onPress?: () => void;
+}
+
+const baseStyle: StyleProp<ViewStyle> = {
   backgroundColor: Colors.offWhite,
   borderRadius: Layout.radius.md,
   height: scaleSize.verticalScale(80),
@@ -21,32 +31,49 @@ const containerStyle: StyleProp<ViewStyle> = {
 };
 
 const makeStyle = (props: IProps): StyleProp<ViewStyle> => {
-  const { fullWidth = false } = props;
+  const { fullWidth = false, isActive = false } = props;
+  let style = baseStyle;
 
   if (fullWidth) {
-    return {
-      ...containerStyle,
+    style = {
+      ...style,
       flex: 1,
     };
   }
-  return containerStyle;
+
+  if (isActive) {
+    style = {
+      ...style,
+      borderColor: Colors.primary,
+      borderWidth: 1,
+    };
+  }
+
+  return style;
 };
 
-interface IProps {
-  children?: React.ReactNode;
-  icon: ImageSourcePropType | undefined;
-  title: string;
-  fullWidth: boolean;
-}
+const makeStyleImage = ({
+  isActive,
+}: Partial<IProps>): StyleProp<ImageStyle> => {
+  if (isActive) {
+    return {
+      tintColor: Colors.primary,
+    };
+  }
+
+  return {
+    tintColor: Colors.textInput.input,
+  };
+};
 
 const BCardOption = (props: IProps) => {
-  const { icon, title } = props;
+  const { icon, title, isActive, onPress } = props;
 
   return (
-    <View style={makeStyle(props)}>
-      <Image source={icon} />
-      <BText>{title}</BText>
-    </View>
+    <TouchableOpacity style={makeStyle(props)} onPress={onPress}>
+      <Image source={icon} style={makeStyleImage({ isActive })} />
+      <BText {...(isActive && { color: 'primary' })}>{title}</BText>
+    </TouchableOpacity>
   );
 };
 
