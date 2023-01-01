@@ -9,17 +9,19 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
+type TargetBarType = {
+  maxVisitation: number;
+  currentVisitaion: number;
+  isExpanded: boolean;
+  isLoading: boolean;
+};
+
 export default function TargetBar({
   maxVisitation,
   currentVisitaion,
   isExpanded,
   isLoading,
-}: {
-  maxVisitation: number;
-  currentVisitaion: number;
-  isExpanded: boolean;
-  isLoading: boolean;
-}) {
+}: TargetBarType) {
   if (!isExpanded) {
     return null;
   }
@@ -31,15 +33,20 @@ export default function TargetBar({
         max = currentVisitaion + 2;
       } else if (currentVisitaion <= 14) {
         max = currentVisitaion + 1;
+      } else {
+        max = currentVisitaion;
       }
     }
+
     if (max >= 14) {
       max = 14;
     }
+
     let maxCurrentVisit = currentVisitaion;
     if (maxCurrentVisit >= 14) {
       maxCurrentVisit = 14;
     }
+
     const emptyProgress = [...Array(max)];
     const currentProgress = [...Array(maxCurrentVisit)];
 
