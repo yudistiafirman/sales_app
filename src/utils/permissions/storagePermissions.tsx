@@ -1,5 +1,6 @@
 import {PermissionsAndroid} from 'react-native';
 
+
 export const checkWritePermissions = async () => {
   try {
     const granted = await PermissionsAndroid.request(
@@ -40,4 +41,6 @@ export const checkReadPermissions = async () => {
     console.warn(err);
     return;
   }
-};
+}
+
+
