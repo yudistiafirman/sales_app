@@ -1,8 +1,7 @@
 import { View, FlatList } from 'react-native';
 import React from 'react';
 import { QuickActionProps } from '@/interfaces/QuickActionButton.type';
-import scaleSize from '@/utils/scale';
-import BQuickActionButton from './elements/BQuickActionButton';
+import BQuickActionButton from '../molecules/BQuickAction';
 
 export default function BQuickAction({
   buttonProps,
