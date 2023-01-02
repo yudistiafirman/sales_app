@@ -58,7 +58,7 @@ const Beranda = () => {
       ></TargetCard>
       <BQuickAction
         containerStyle={{
-          paddingLeft: scaleSize.moderateScale(27),
+          paddingLeft: scaleSize.moderateScale(25),
           height: scaleSize.moderateScale(100),
         }}
         buttonProps={buttonsData}
