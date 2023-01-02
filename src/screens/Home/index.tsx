@@ -120,9 +120,8 @@ const Beranda = () => {
         initialSnapIndex={0}
         enableContentPanningGesture={true}
         style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
+          paddingLeft: 20,
+          paddingRight:20
         }}
       >
         <View style={{ width: '100%' }}>
@@ -132,7 +131,7 @@ const Beranda = () => {
           ></BsearchBar>
           {/* <Searchbar placeholder="Search" value=""></Searchbar> */}
         </View>
-        {/* <DateDaily isRender={true}></DateDaily> */}
+        <DateDaily isRender={true}></DateDaily>
 
         {/* <Button title="increase" onPress={increaseVisit} />
         <Button title="reset" onPress={resetVisit} />
@@ -154,11 +153,11 @@ const Beranda = () => {
             bottomSheetRef.current?.snapToIndex(0);
           }}
         /> */}
-        {/* <BottomSheetFlatList
+        <BottomSheetFlatList
           data={data}
           keyExtractor={(i) => i}
           renderItem={BVisitationCard}
-        /> */}
+        />
       </BBottomSheet>
     </View>
   );
