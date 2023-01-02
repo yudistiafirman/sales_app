@@ -7,34 +7,6 @@ import scaleSize from '@/utils/scale';
 import BQuickAction from '@/components/molecules/BQuickAction';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 
-const buttonsData: buttonDataType[] = [
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
-    title: `Buat SPH`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
-    title: `Buat PO`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_depos.png'),
-    title: `Buat Deposit`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_janji.png'),
-    title: `Buat Jadwal`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),
-    title: `Buat Janji Temu`,
-    action: () => {},
-  },
-];
-
 const Beranda = () => {
   const [currentVisit, setCurrentVisit] = useState(5); //temporary
   const [isExpanded, setIsExpanded] = useState(true);
@@ -47,6 +19,37 @@ const Beranda = () => {
     // temporary
     setCurrentVisit(0);
   }
+
+  const buttonsData: buttonDataType[] = useMemo(
+    () => [
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
+        title: `Buat SPH`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
+        title: `Buat PO`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_depos.png'),
+        title: `Buat Deposit`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_janji.png'),
+        title: `Buat Jadwal`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),
+        title: `Buat Janji Temu`,
+        action: () => {},
+      },
+    ],
+    []
+  );
 
   return (
     <View style={style.container}>
