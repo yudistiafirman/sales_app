@@ -81,6 +81,11 @@ const Beranda = () => {
         percentSnapPoints={['63%', '87%', '100%']}
         ref={bottomSheetRef}
         initialSnapIndex={0}
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       >
         <View style={style.contentContainer}>
           <Button title="increase" onPress={increaseVisit} />
