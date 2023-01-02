@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^4",
     "@react-navigation/bottom-tabs": "^6.5.1",
     "@react-navigation/material-top-tabs": "^6.5.1",
     "@react-navigation/native": "^6.1.1",
@@ -17,11 +18,15 @@
     "lodash.debounce": "^4.0.8",
     "react": "18.1.0",
     "react-native": "0.70.6",
+    "react-native-gesture-handler": "^2.8.0",
+    "react-native-linear-gradient": "^2.6.2",
     "react-native-pager-view": "^6.1.2",
     "react-native-paper": "^5.0.1",
+    "react-native-reanimated": "^2.13.0",
     "react-native-responsive-fontsize": "^0.5.1",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
+    "react-native-shimmer-placeholder": "^2.0.9",
     "react-native-tab-view": "^3.3.4",
     "react-native-vector-icons": "^9.2.0"
   },
