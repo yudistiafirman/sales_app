@@ -3,7 +3,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { ViewStyle } from 'react-native';
 
 type BBottomSheetType = {
-  children?: JSX.Element;
+  children?: JSX.Element | JSX.Element[];
   percentSnapPoints: string[];
   onChange?: (index: number) => void;
   onChangeAnimate?: (fromIndex: number, toIndex: number) => void;
@@ -60,7 +60,7 @@ export const BBottomSheet = forwardRef(
     }: BBottomSheetType,
     ref: Ref<BottomSheet>
   ) => {
-    const snapPoints = useMemo(() => percentSnapPoints, []);
+    const snapPoints = useMemo(() => percentSnapPoints, [percentSnapPoints]);
 
     const handleSheetChanges = useCallback(onChange, []);
     const handleSheetChangesOnAnimate = useCallback(onChangeAnimate, []);
