@@ -9,6 +9,7 @@ import BQuickAction from '@/components/molecules/BQuickAction';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import { BBottomSheet } from '@/components/atoms/BBottomSheet';
 import BottomSheet, { BottomSheetFooter } from '@gorhom/bottom-sheet';
+import BsearchBar from '@/components/molecules/BsearchBar';
 
 const buttonsData: buttonDataType[] = [
   {
@@ -93,8 +94,11 @@ const Beranda = () => {
         initialSnapIndex={0}
       >
         <View style={style.contentContainer}>
+          <View style={{ width: '100%', paddingLeft: 10, paddingRight: 10 }}>
+            <BsearchBar activeOutlineColor="gray"></BsearchBar>
+          </View>
           <DateDaily isRender={true}></DateDaily>
-          <Button title="increase" onPress={increaseVisit} />
+          {/* <Button title="increase" onPress={increaseVisit} />
           <Button title="reset" onPress={resetVisit} />
           <Button
             title="toggle loading"
@@ -113,7 +117,7 @@ const Beranda = () => {
             onPress={() => {
               bottomSheetRef.current?.snapToIndex(0);
             }}
-          />
+          /> */}
         </View>
       </BBottomSheet>
     </View>
