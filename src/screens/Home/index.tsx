@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
@@ -8,8 +8,13 @@ import DateDaily from './elements/DateDaily';
 import BQuickAction from '@/components/molecules/BQuickAction';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import { BBottomSheet } from '@/components/atoms/BBottomSheet';
-import BottomSheet, { BottomSheetFooter } from '@gorhom/bottom-sheet';
+import BottomSheet, {
+  BottomSheetFooter,
+  BottomSheetFlatList,
+} from '@gorhom/bottom-sheet';
 import BsearchBar from '@/components/molecules/BsearchBar';
+import BVisitationCard from '@/components/molecules/BVisitationCard';
+import { Searchbar } from 'react-native-paper';
 
 const buttonsData: buttonDataType[] = [
   {
@@ -60,6 +65,15 @@ const Beranda = () => {
       setIsExpanded(false);
     }
   };
+
+  const data = useMemo(
+    () =>
+      Array(50)
+        .fill(0)
+        .map((_, index) => `index-${index}`),
+    []
+  );
+
   const renderFooter = useCallback(
     (props: any) => (
       <BottomSheetFooter {...props} bottomInset={24}>
@@ -67,6 +81,15 @@ const Beranda = () => {
           <Text>Footer</Text>
         </View>
       </BottomSheetFooter>
+    ),
+    []
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: string }) => (
+      <View style={style.itemContainer}>
+        <Text>{item}</Text>
+      </View>
     ),
     []
   );
@@ -89,36 +112,50 @@ const Beranda = () => {
 
       <BBottomSheet
         onChange={bottomSheetOnchange}
-        percentSnapPoints={['63%', '87%', `100%`]}
+        percentSnapPoints={['63%', '87%']}
         ref={bottomSheetRef}
         initialSnapIndex={0}
+        enableContentPanningGesture={true}
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       >
-        <View style={style.contentContainer}>
-          <View style={{ width: '100%', paddingLeft: 10, paddingRight: 10 }}>
-            <BsearchBar activeOutlineColor="gray"></BsearchBar>
-          </View>
-          <DateDaily isRender={true}></DateDaily>
-          {/* <Button title="increase" onPress={increaseVisit} />
-          <Button title="reset" onPress={resetVisit} />
-          <Button
-            title="toggle loading"
-            onPress={() => {
-              setIsLoading((cur) => !cur);
-            }}
-          />
-          <Button
-            title="toggle expand"
-            onPress={() => {
-              setIsExpanded((cur) => !cur);
-            }}
-          />
-          <Button
-            title="test ref "
-            onPress={() => {
-              bottomSheetRef.current?.snapToIndex(0);
-            }}
-          /> */}
+        <View style={{ width: '100%' }}>
+          <BsearchBar
+            placeholder="Search"
+            activeOutlineColor="gray"
+          ></BsearchBar>
+          {/* <Searchbar placeholder="Search" value=""></Searchbar> */}
         </View>
+        {/* <DateDaily isRender={true}></DateDaily> */}
+
+        {/* <Button title="increase" onPress={increaseVisit} />
+        <Button title="reset" onPress={resetVisit} />
+        <Button
+          title="toggle loading"
+          onPress={() => {
+            setIsLoading((cur) => !cur);
+          }}
+        />
+        <Button
+          title="toggle expand"
+          onPress={() => {
+            setIsExpanded((cur) => !cur);
+          }}
+        />
+        <Button
+          title="test ref "
+          onPress={() => {
+            bottomSheetRef.current?.snapToIndex(0);
+          }}
+        /> */}
+        {/* <BottomSheetFlatList
+          data={data}
+          keyExtractor={(i) => i}
+          renderItem={BVisitationCard}
+        /> */}
       </BBottomSheet>
     </View>
   );
@@ -134,6 +171,13 @@ const style = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: 'blue',
+    width: '100%',
+  },
+  itemContainer: {
+    padding: 6,
+    margin: 6,
+    backgroundColor: '#eee',
   },
 });
 export default Beranda;
