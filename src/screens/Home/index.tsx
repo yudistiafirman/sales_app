@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
@@ -8,34 +8,6 @@ import BQuickAction from '@/components/molecules/BQuickAction';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import { BBottomSheet } from '@/components/atoms/BBottomSheet';
 import BottomSheet from '@gorhom/bottom-sheet';
-
-const buttonsData: buttonDataType[] = [
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
-    title: `Buat SPH`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
-    title: `Buat PO`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_depos.png'),
-    title: `Buat Deposit`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_janji.png'),
-    title: `Buat Jadwal`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),
-    title: `Buat Janji Temu`,
-    action: () => {},
-  },
-];
 
 const Beranda = () => {
   const [currentVisit, setCurrentVisit] = useState(5); //temporary
@@ -58,6 +30,37 @@ const Beranda = () => {
       setIsExpanded(false);
     }
   };
+  const buttonsData: buttonDataType[] = useMemo(
+    () => [
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
+        title: `Buat SPH`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
+        title: `Buat PO`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_depos.png'),
+        title: `Buat Deposit`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_janji.png'),
+        title: `Buat Jadwal`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),
+        title: `Buat Janji Temu`,
+        action: () => {},
+      },
+    ],
+    []
+  );
+
   return (
     <View style={style.container}>
       <TargetCard
@@ -68,7 +71,7 @@ const Beranda = () => {
       ></TargetCard>
       <BQuickAction
         containerStyle={{
-          paddingLeft: scaleSize.moderateScale(27),
+          paddingLeft: scaleSize.moderateScale(25),
           height: scaleSize.moderateScale(100),
         }}
         buttonProps={buttonsData}
