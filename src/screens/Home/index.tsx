@@ -16,34 +16,6 @@ import BsearchBar from '@/components/molecules/BsearchBar';
 import BVisitationCard from '@/components/molecules/BVisitationCard';
 import { Searchbar } from 'react-native-paper';
 
-const buttonsData: buttonDataType[] = [
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
-    title: `Buat SPH`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
-    title: `Buat PO`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_depos.png'),
-    title: `Buat Deposit`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_janji.png'),
-    title: `Buat Jadwal`,
-    action: () => {},
-  },
-  {
-    icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),
-    title: `Buat Janji Temu`,
-    action: () => {},
-  },
-];
-
 const Beranda = () => {
   const [currentVisit, setCurrentVisit] = useState(5); //temporary
   const [isExpanded, setIsExpanded] = useState(true);
@@ -94,6 +66,37 @@ const Beranda = () => {
     []
   );
 
+  const buttonsData: buttonDataType[] = useMemo(
+    () => [
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
+        title: `Buat SPH`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
+        title: `Buat PO`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_depos.png'),
+        title: `Buat Deposit`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_janji.png'),
+        title: `Buat Jadwal`,
+        action: () => {},
+      },
+      {
+        icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),
+        title: `Buat Janji Temu`,
+        action: () => {},
+      },
+    ],
+    []
+  );
+
   return (
     <View style={style.container}>
       <TargetCard
@@ -104,7 +107,7 @@ const Beranda = () => {
       ></TargetCard>
       <BQuickAction
         containerStyle={{
-          paddingLeft: scaleSize.moderateScale(27),
+          paddingLeft: scaleSize.moderateScale(25),
           height: scaleSize.moderateScale(100),
         }}
         buttonProps={buttonsData}
