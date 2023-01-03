@@ -26,7 +26,7 @@ type DateDailyType = {
   isRender?: boolean;
   markedDatesArray?: markedDates[];
   onDateSelected?: () => void;
-  calendarColor: string;
+  calendarColor?: string;
 };
 
 export default function DateDaily({
