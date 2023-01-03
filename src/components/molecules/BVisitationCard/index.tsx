@@ -4,6 +4,9 @@ import font from '@/constants/fonts';
 import colors from '@/constants/colors';
 import respFS from '@/utils/respFS';
 
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 export default function BVisitationCard() {
   return (
     <View style={style.container}>
@@ -32,19 +35,64 @@ export default function BVisitationCard() {
             >Selesai</Text>
           </View>
         </View>
-        <View>
-          <Text>lokasi</Text>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: 10
+        }}>
+          <SimpleLineIcons
+            name='location-pin'
+            size={13}
+            color='#0080FF'
+            style={{
+              marginRight:7
+            }}
+          />
+          <Text
+          style={{
+            color: '#0080FF',
+            fontFamily: font.family.montserrat[300],
+            fontSize: respFS(12)
+          }}
+          >Jakarta Selatan</Text>
         </View>
         <View style={{
-          flexDirection: 'row'
+          flexDirection: 'row',
         }}>
-          <Text>waktu</Text>
-          <Text>visit</Text>
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginRight:7
+          }}>
+            <MaterialIcon name="clock-time-four-outline" 
+            style={{
+              marginRight:7
+            }}
+            size={13}
+            />
+            <Text>12:00</Text>
+          </View>
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+            <FontAwesome name="list-alt"
+            style={{
+              marginRight:7
+            }}
+            size={13}
+            />
+            <Text>visit ke 7</Text>
+          </View>
         </View>
 
       </View>
       <View style={style.rightSide}>
-        <Text>kanan</Text>
+        <MaterialIcon
+        size={30}
+        name='chevron-right'
+        />
+
       </View>
     </View>
   );
@@ -55,26 +103,31 @@ const style = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     width: 350,
-    height: 100,
     backgroundColor: 'white',
     justifyContent: 'space-between',
     borderColor: '#EBEBEB',
     borderRadius: 8,
     borderWidth: 1,
-    marginBottom: 20,
+    marginBottom: 10,
     paddingVertical: 15,
     paddingHorizontal: 8,
   },
   leftSide: {
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+
   },
   rightSide: {
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'red',
+    width: 40,
+
   },
   top: {
     height: 20,
     width: 300,
     flexDirection:'row', 
     justifyContent: 'space-between',
+    marginBottom:10
   }
 });
