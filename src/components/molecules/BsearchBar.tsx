@@ -24,6 +24,7 @@ interface BsearchBar {
     outlineStyle?:ViewStyle | undefined
     placeHolderTextColor?:string | undefined,
     dense?:boolean | undefined
+    onFocus?: () => void
 }
 
 const BsearchBarDefaultTextStyle = {
@@ -67,10 +68,12 @@ const BsearchBar = ({
     editable,
     outlineStyle,
     placeHolderTextColor,
-    dense
+    dense,
+    onFocus,
 }:BsearchBar & typeof BsearchBarDefaultProps) => {
   return (
    <TextInput 
+    onFocus={onFocus}
     mode={mode} 
     left={left}
     right={right}

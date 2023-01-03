@@ -10,11 +10,13 @@ import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import { BBottomSheet } from '@/components/atoms/BBottomSheet';
 import BottomSheet, { BottomSheetFooter } from '@gorhom/bottom-sheet';
 import BsearchBar from '@/components/molecules/BsearchBar';
+import moment from 'moment';
 
 const Beranda = () => {
   const [currentVisit, setCurrentVisit] = useState(5); //temporary
   const [isExpanded, setIsExpanded] = useState(true);
   const [isLoading, setIsLoading] = useState(false); // temporary
+  const [isRenderDateDaily, setIsRenderDateDaily] = useState(true);
   function increaseVisit() {
     // temporary
     setCurrentVisit((current) => current + 1);
@@ -74,6 +76,19 @@ const Beranda = () => {
     []
   );
 
+  const todayMark = useMemo(() => {
+    return [
+      {
+        date: moment(),
+        lines: [
+          {
+            color: colors.primary,
+          },
+        ],
+      },
+    ];
+  }, [moment().format('dddd')]);
+
   return (
     <View style={style.container}>
       <TargetCard
@@ -103,9 +118,16 @@ const Beranda = () => {
       >
         <View style={style.contentContainer}>
           <View style={{ width: '100%', paddingLeft: 10, paddingRight: 10 }}>
-            <BsearchBar activeOutlineColor="gray"></BsearchBar>
+            <BsearchBar onFocus={() => {
+              console.log('====================================');
+              console.log('testing focus');
+              console.log('====================================');
+            }} activeOutlineColor="gray"></BsearchBar>
           </View>
-          <DateDaily isRender={true}></DateDaily>
+          <DateDaily
+            markedDatesArray={todayMark}
+            isRender={isRenderDateDaily}
+          ></DateDaily>
           {/* <Button title="increase" onPress={increaseVisit} />
           <Button title="reset" onPress={resetVisit} />
           <Button
