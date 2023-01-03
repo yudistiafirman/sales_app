@@ -15,11 +15,13 @@ import BottomSheet, {
 import BsearchBar from '@/components/molecules/BsearchBar';
 import BVisitationCard from '@/components/molecules/BVisitationCard';
 import { Searchbar } from 'react-native-paper';
+import moment from 'moment';
 
 const Beranda = () => {
   const [currentVisit, setCurrentVisit] = useState(5); //temporary
   const [isExpanded, setIsExpanded] = useState(true);
   const [isLoading, setIsLoading] = useState(false); // temporary
+  const [isRenderDateDaily, setIsRenderDateDaily] = useState(true);
   function increaseVisit() {
     // temporary
     setCurrentVisit((current) => current + 1);
@@ -97,6 +99,19 @@ const Beranda = () => {
     []
   );
 
+  const todayMark = useMemo(() => {
+    return [
+      {
+        date: moment(),
+        lines: [
+          {
+            color: colors.primary,
+          },
+        ],
+      },
+    ];
+  }, [moment().format('dddd')]);
+
   return (
     <View style={style.container}>
       <TargetCard
@@ -131,7 +146,8 @@ const Beranda = () => {
           ></BsearchBar>
           {/* <Searchbar placeholder="Search" value=""></Searchbar> */}
         </View>
-        <DateDaily isRender={true}></DateDaily>
+        <DateDaily markedDatesArray={todayMark}
+            isRender={isRenderDateDaily}></DateDaily>
 
         {/* <Button title="increase" onPress={increaseVisit} />
         <Button title="reset" onPress={resetVisit} />
