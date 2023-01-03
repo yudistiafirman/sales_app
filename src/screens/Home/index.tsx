@@ -5,7 +5,7 @@ import TargetCard from './elements/TargetCard';
 import scaleSize from '@/utils/scale';
 import DateDaily from './elements/DateDaily';
 
-import BQuickAction from '@/components/molecules/BQuickAction';
+import BQuickAction from '@/components/organism/BQuickActionMenu';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import { BBottomSheet } from '@/components/atoms/BBottomSheet';
 import BottomSheet, { BottomSheetFooter } from '@gorhom/bottom-sheet';

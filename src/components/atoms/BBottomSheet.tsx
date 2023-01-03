@@ -62,8 +62,10 @@ export const BBottomSheet = forwardRef(
   ) => {
     const snapPoints = useMemo(() => percentSnapPoints, [percentSnapPoints]);
 
-    const handleSheetChanges = useCallback(onChange, []);
-    const handleSheetChangesOnAnimate = useCallback(onChangeAnimate, []);
+    const handleSheetChanges = useCallback(onChange, [onChange]);
+    const handleSheetChangesOnAnimate = useCallback(onChangeAnimate, [
+      onChangeAnimate,
+    ]);
 
     return (
       <BottomSheet
