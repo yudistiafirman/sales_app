@@ -13,27 +13,62 @@ import BsearchBar from '@/components/molecules/BsearchBar';
 import BVisitationCard from '@/components/molecules/BVisitationCard';
 import moment from 'moment';
 import { TextInput } from 'react-native-paper';
+import BuatKunjungan from './elements/BuatKunjungan';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+
+const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 const Beranda = () => {
   const [currentVisit] = useState(5); //temporary setCurrentVisit
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isLoading] = useState(false); // temporary setIsLoading
-  const [isRenderDateDaily] = useState(true); //setIsRenderDateDaily
-
+  const [isLoading, setIsLoading] = useState(false); // temporary setIsLoading
+  const [isRenderDateDaily, setIsRenderDateDaily] = useState(true); //setIsRenderDateDaily
+  const [snapPoints, setSnapPoints] = useState(['63%', '87%']); //setSnapPoints
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const bottomSheetOnchange = (index: number) => {
+    if (index === 0 || index === 1) {
+      setSnapPoints(['63%', '87%']);
+    }
     if (index === 0) {
       setIsExpanded(true);
-    } else if (index === 1) {
+      setIsRenderDateDaily(true);
+    } else {
       setIsExpanded(false);
+      setIsRenderDateDaily(false);
     }
+  };
+
+  const searchOnFocus = () => {
+    setSnapPoints(['63%', '87%', '100%']); // when search query is not null and showing search results
+
+    setTimeout(() => {
+      console.log(snapPoints, 'setTimeout');
+      bottomSheetRef.current?.expand();
+    }, 100);
   };
 
   const data = useMemo(
     () =>
       Array(50)
         .fill(0)
-        .map((_, index) => `index-${index}`),
+        .map((_) => {
+          return {
+            name: 'PT. Guna Karya Mandiri',
+            // location: 'Jakarta',
+            pilNames: [
+              'Guna Karya Mandiri',
+              'Proyek Bu Larguna',
+              'Proyek Bu Larguna',
+              'Proyek Bu Larguna',
+            ],
+            // time: `12:${(() => index.toString().padStart(2, '0'))()}`,
+            // status: `Visit ke ${index}`,
+            // pilStatus: 'Selesai',
+          };
+        }),
     []
   );
 
@@ -81,6 +116,41 @@ const Beranda = () => {
     ];
   }, []);
 
+  const onChangeSearch = (text: string) => {
+    // const alphanumericRegex = /^[0-9a-zA-Z\s]+$/;
+    // if (!text) {
+    //   setSearchQuery('');
+    // }
+    // if (alphanumericRegex.test(text)) {
+    setSearchQuery(text);
+    // }
+  };
+
+  const renderList = () => {
+    if (isLoading) {
+      return (
+        <View style={style.flatListLoading}>
+          <ShimmerPlaceHolder style={style.flatListShimmer} />
+        </View>
+      );
+    }
+
+    return (
+      <BottomSheetFlatList
+        style={style.flatListContainer}
+        data={data}
+        keyExtractor={(item, index) => `${item.name}-${index}`}
+        renderItem={({ item }) => {
+          return <BVisitationCard item={item} searchQuery={searchQuery} />;
+        }}
+      />
+    );
+  };
+
+  const kunjunganAction = () => {
+    setIsLoading((curr) => !curr);
+  };
+
   return (
     <View style={style.container}>
       <TargetCard
@@ -99,24 +169,26 @@ const Beranda = () => {
 
       <BBottomSheet
         onChange={bottomSheetOnchange}
-        percentSnapPoints={['63%', '87%']}
+        percentSnapPoints={snapPoints}
         ref={bottomSheetRef}
         initialSnapIndex={0}
         enableContentPanningGesture={true}
         style={style.BsheetStyle}
+        footerComponent={(props) => {
+          return BuatKunjungan(props, kunjunganAction);
+        }}
       >
         <BsearchBar
+          onFocus={searchOnFocus}
           placeholder="Search"
           activeOutlineColor="gray"
           left={<TextInput.Icon icon="magnify" />}
+          value={searchQuery}
+          onChangeText={onChangeSearch}
         />
         <DateDaily markedDatesArray={todayMark} isRender={isRenderDateDaily} />
 
-        <BottomSheetFlatList
-          data={data}
-          keyExtractor={(i) => i}
-          renderItem={BVisitationCard}
-        />
+        {renderList()}
       </BBottomSheet>
     </View>
   );
@@ -143,6 +215,18 @@ const style = StyleSheet.create({
   BsheetStyle: {
     paddingLeft: 20,
     paddingRight: 20,
+  },
+  flatListContainer: {
+    marginTop: 10,
+  },
+  flatListLoading: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flatListShimmer: {
+    width: scaleSize.moderateScale(320),
+    height: scaleSize.moderateScale(60),
+    borderRadius: scaleSize.moderateScale(8),
   },
 });
 export default Beranda;

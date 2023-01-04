@@ -16,10 +16,10 @@ type BBottomSheetType = {
   animateOnMount?: boolean;
   detached?: boolean; // set to true to detach bottom sheet like a modal
   bottomInset?: number; // add bottom inset to elevate the sheet
-  handleComponent?: () => JSX.Element;
-  backdropComponent?: () => JSX.Element;
-  backgroundComponent?: () => JSX.Element;
-  footerComponent?: () => JSX.Element;
+  handleComponent?: (props: any) => JSX.Element;
+  backdropComponent?: (props: any) => JSX.Element;
+  backgroundComponent?: (props: any) => JSX.Element;
+  footerComponent?: (props: any) => JSX.Element;
   backgroundStyle?: ViewStyle;
   style?: ViewStyle;
   handleStyle?: ViewStyle;
