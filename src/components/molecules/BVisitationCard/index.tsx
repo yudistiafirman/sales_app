@@ -9,7 +9,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import scaleSize from '@/utils/scale';
 import Location from './elements/Location';
 import PillNames from './elements/PillNames';
-import HighlightText from './elements/HighlightText';
+import HighlightText from '../../atoms/BHighlightText';
 
 type VisitationCardType = {
   item: {

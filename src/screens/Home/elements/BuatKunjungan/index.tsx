@@ -9,11 +9,7 @@ import BButtonPrimary from '@/components/atoms/BButtonPrimary';
 export default function BuatKunjungan(props: any, kunjunganAction: () => void) {
   return (
     <BottomSheetFooter {...props} style={style.container} bottomInset={2}>
-      <BButtonPrimary
-        onPress={kunjunganAction}
-        title="Buat Kunjungan"
-        isOutline={true}
-      />
+      <BButtonPrimary onPress={kunjunganAction} title="Buat Kunjungan" />
     </BottomSheetFooter>
   );
 }

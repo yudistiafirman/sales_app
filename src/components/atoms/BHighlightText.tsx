@@ -38,9 +38,10 @@ export default function HighlightText({
       ]}
       numberOfLines={1}
     >
-      {parts.map((part) =>
+      {parts.map((part, index) =>
         part.toLowerCase() === searchQuery.toLowerCase() ? (
           <Text
+            key={part + index}
             style={[
               style.normalText,
               style.boldText,

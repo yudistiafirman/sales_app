@@ -4,7 +4,7 @@ import scaleSize from '@/utils/scale';
 import font from '@/constants/fonts';
 import respFS from '@/utils/respFS';
 import colors from '@/constants/colors';
-import HighlightText from './HighlightText';
+import HighlightText from '../../../atoms/BHighlightText';
 
 type PillNamesType = {
   pilNames?: string[];
