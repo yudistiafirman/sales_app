@@ -35,7 +35,6 @@ const renderInput = (input: Input): React.ReactNode => {
     dropdown,
     isRequire,
     isError,
-    errorMessage,
   } = input;
 
   if (type === 'textInput') {

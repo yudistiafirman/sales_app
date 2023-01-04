@@ -7,10 +7,11 @@ module.exports = {
     es6: true,
     node: true,
   },
-  // globals: {
-  //   Atomics: 'readonly',
-  //   SharedArrayBuffer: 'readonly',
-  // },
+  globals: {
+    //   Atomics: 'readonly',
+    //   SharedArrayBuffer: 'readonly',
+    JSX: 'readonly',
+  },
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -22,7 +23,7 @@ module.exports = {
   rules: {
     'no-multi-spaces': 'error',
     'linebreak-style': 0,
-		quotes: ['error', 'single'],
+    quotes: ['error', 'single'],
     'no-unused-vars': 'error',
   },
 };
