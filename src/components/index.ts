@@ -7,14 +7,22 @@ export { default as BSpacer } from './atoms/BSpacer';
 export { default as BTextInput } from './atoms/BTextInput';
 export { default as BDivider } from './atoms/BDivider';
 export { default as BDropdown } from './atoms/BDropdown';
+export { default as BBottomSheet } from './atoms/BBottomSheet';
+export { default as BButtonPrimary } from './atoms/BButtonPrimary';
+export { default as BHighlightText } from './atoms/BHighlightText';
 
 // moleculses
 export { default as BTab } from './molecules/BTab';
-export { default as BLocation } from './molecules/Blocation';
-export { default as BSearchBar } from './molecules/BsearchBar';
+export { default as BSearchBar } from './molecules/BSearchBar';
 export { default as BCardOption } from './molecules/BCardOption';
 export { default as BComboDropdown } from './molecules/BComboDropdown';
 export { default as BLabel } from './molecules/BLabel';
+export { default as BLocation } from './molecules/BLocation';
+export { default as BQuickAction } from './molecules/BQuickAction';
+export { default as BTabLabels } from './molecules/BTabLabels';
+export { default as BVisitationCard } from './molecules/BVisitationCard';
 
 // organism
 export { default as BForm } from './organism/BForm';
+export { default as BQuickActionMenu } from './organism/BQuickActionMenu';
+export { default as BTabSections } from './organism/TabSections';

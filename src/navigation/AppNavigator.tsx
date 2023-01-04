@@ -1,17 +1,19 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BStackScreen from './elements/BStackScreen';
 import SalesTabs from './tabs/SalesTabs';
 import TestStack from './stacks/TestStack';
-import OpsManTabs from './tabs/OpsManTabs';
+// import OpsManTabs from './tabs/OpsManTabs';
 
 const Stack = createNativeStackNavigator();
 
 const getTabs = (userType?: 'opsManager' | 'sales' | undefined) => {
   let tabs = SalesTabs;
-  if (userType === 'opsManager') tabs = OpsManTabs;
+  if (userType === 'opsManager') {
+  }
+
   return BStackScreen({
     Stack: Stack,
     name: 'MainTabs',
@@ -24,8 +26,8 @@ const getTabs = (userType?: 'opsManager' | 'sales' | undefined) => {
 };
 
 const getStacks = (userType?: 'opsManager' | 'sales' | undefined) => {
-  if (userType === 'opsManager') return TestStack({Stack: Stack});
-  return TestStack({Stack: Stack});
+  if (userType === 'opsManager') return TestStack({ Stack: Stack });
+  return TestStack({ Stack: Stack });
 };
 
 function AppNavigator() {
@@ -35,7 +37,8 @@ function AppNavigator() {
       screenOptions={{
         headerTitleAlign: 'center',
         headerShadowVisible: false,
-      }}>
+      }}
+    >
       {getTabs(userType)}
       {getStacks(userType)}
     </Stack.Navigator>

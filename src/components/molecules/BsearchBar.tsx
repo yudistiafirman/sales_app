@@ -5,7 +5,7 @@ import * as React from 'react';
 import { TextStyle, ViewStyle } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
-interface BsearchBar {
+interface BSearchBarProp {
   mode?: 'flat' | 'outlined' | undefined;
   left?: React.ReactNode;
   right?: React.ReactNode;
@@ -24,9 +24,10 @@ interface BsearchBar {
   outlineStyle?: ViewStyle | undefined;
   placeHolderTextColor?: string | undefined;
   dense?: boolean | undefined;
+  onFocus?: () => void;
 }
 
-const BsearchBarDefaultTextStyle = {
+const BSearchBarDefaultTextStyle = {
   fontFamily: font.family.montserrat['400'],
   fontSize: font.size.md,
   lineHeight: scaleSize.moderateScale(14),
@@ -39,11 +40,11 @@ const BSearchBarDefaultContainerStyle = {
   height: scaleSize.moderateScale(40),
 };
 
-const BsearchBarDefaultProps = {
+const BSearchBarDefaultProps = {
   mode: 'outlined',
   outlineColor: colors.textInput.inActive,
   activeOutlineColor: colors.primary,
-  textInputStyle: BsearchBarDefaultTextStyle,
+  textInputStyle: BSearchBarDefaultTextStyle,
   outlineStyle: BSearchBarDefaultContainerStyle,
   placeHolderTextColor: colors.textInput.placeHolder,
   dense: true,
@@ -68,9 +69,11 @@ const BsearchBar = ({
   outlineStyle,
   placeHolderTextColor,
   dense,
-}: BsearchBar & typeof BsearchBarDefaultProps) => {
+  onFocus,
+}: BSearchBarProp & typeof BSearchBarDefaultTextStyle) => {
   return (
     <TextInput
+      onFocus={onFocus}
       mode={mode}
       left={left}
       right={right}
@@ -93,6 +96,6 @@ const BsearchBar = ({
   );
 };
 
-BsearchBar.defaultProps = BsearchBarDefaultProps;
+BsearchBar.defaultProps = BSearchBarDefaultProps;
 
 export default BsearchBar;

@@ -1,12 +1,11 @@
-import { BSpacer, BText } from '@/components';
+import { BText } from '@/components';
 import { Colors } from '@/constants';
 import layout from '@/constants/layout';
 import { Styles } from '@/interfaces';
 import { resFontSize, scaleSize } from '@/utils';
 import React from 'react';
 import { View } from 'react-native';
-import { Button, Chip, IconButton } from 'react-native-paper';
-import { Icon } from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Button } from 'react-native-paper';
 
 interface IProps {
   name: string;

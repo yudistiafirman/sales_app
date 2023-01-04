@@ -56,7 +56,7 @@ const bLocationDefaultProps = {
   coordinate: bLocationDefaultRegion,
 };
 
-const Blocation = ({
+const BLocation = ({
   mapStyle,
   region,
   onRegionChange,
@@ -76,6 +76,6 @@ const Blocation = ({
   );
 };
 
-Blocation.defaultProps = bLocationDefaultProps;
+BLocation.defaultProps = bLocationDefaultProps;
 
-export default Blocation;
+export default BLocation;
