@@ -9,7 +9,7 @@ import BQuickAction from '@/components/organism/BQuickActionMenu';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import { BBottomSheet } from '@/components/atoms/BBottomSheet';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import BsearchBar from '@/components/molecules/BsearchBar';
+import BsearchBar from '@/components/molecules/BSearchBar';
 import BVisitationCard from '@/components/molecules/BVisitationCard';
 import moment from 'moment';
 import { TextInput } from 'react-native-paper';

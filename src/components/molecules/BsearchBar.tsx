@@ -44,7 +44,7 @@ const BSearchBarDefaultProps = {
   mode: 'outlined',
   outlineColor: colors.textInput.inActive,
   activeOutlineColor: colors.primary,
-  textInputStyle: BsearchBarDefaultTextStyle,
+  textInputStyle: BSearchBarDefaultTextStyle,
   outlineStyle: BSearchBarDefaultContainerStyle,
   placeHolderTextColor: colors.textInput.placeHolder,
   dense: true,
