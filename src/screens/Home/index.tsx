@@ -1,18 +1,22 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import scaleSize from '@/utils/scale';
+import DateDaily from './elements/DateDaily';
 
 import BQuickAction from '@/components/organism/BQuickActionMenu';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import { BBottomSheet } from '@/components/atoms/BBottomSheet';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetFooter } from '@gorhom/bottom-sheet';
+import BsearchBar from '@/components/molecules/BsearchBar';
+import moment from 'moment';
 
 const Beranda = () => {
   const [currentVisit, setCurrentVisit] = useState(5); //temporary
   const [isExpanded, setIsExpanded] = useState(true);
   const [isLoading, setIsLoading] = useState(false); // temporary
+  const [isRenderDateDaily, setIsRenderDateDaily] = useState(true);
   function increaseVisit() {
     // temporary
     setCurrentVisit((current) => current + 1);
@@ -30,6 +34,17 @@ const Beranda = () => {
       setIsExpanded(false);
     }
   };
+  const renderFooter = useCallback(
+    (props: any) => (
+      <BottomSheetFooter {...props} bottomInset={24}>
+        <View>
+          <Text>Footer</Text>
+        </View>
+      </BottomSheetFooter>
+    ),
+    []
+  );
+
   const buttonsData: buttonDataType[] = useMemo(
     () => [
       {
@@ -61,6 +76,19 @@ const Beranda = () => {
     []
   );
 
+  const todayMark = useMemo(() => {
+    return [
+      {
+        date: moment(),
+        lines: [
+          {
+            color: colors.primary,
+          },
+        ],
+      },
+    ];
+  }, [moment().format('dddd')]);
+
   return (
     <View style={style.container}>
       <TargetCard
@@ -76,9 +104,10 @@ const Beranda = () => {
         }}
         buttonProps={buttonsData}
       ></BQuickAction>
+
       <BBottomSheet
         onChange={bottomSheetOnchange}
-        percentSnapPoints={['63%', '87%', '100%']}
+        percentSnapPoints={['63%', '87%', `100%`]}
         ref={bottomSheetRef}
         initialSnapIndex={0}
         style={{
@@ -88,7 +117,18 @@ const Beranda = () => {
         }}
       >
         <View style={style.contentContainer}>
-          <Button title="increase" onPress={increaseVisit} />
+          <View style={{ width: '100%', paddingLeft: 10, paddingRight: 10 }}>
+            <BsearchBar onFocus={() => {
+              console.log('====================================');
+              console.log('testing focus');
+              console.log('====================================');
+            }} activeOutlineColor="gray"></BsearchBar>
+          </View>
+          <DateDaily
+            markedDatesArray={todayMark}
+            isRender={isRenderDateDaily}
+          ></DateDaily>
+          {/* <Button title="increase" onPress={increaseVisit} />
           <Button title="reset" onPress={resetVisit} />
           <Button
             title="toggle loading"
@@ -103,11 +143,11 @@ const Beranda = () => {
             }}
           />
           <Button
-            title="max open bottom sheet"
+            title="test ref "
             onPress={() => {
-              bottomSheetRef.current?.snapToIndex(1);
+              bottomSheetRef.current?.snapToIndex(0);
             }}
-          />
+          /> */}
         </View>
       </BBottomSheet>
     </View>

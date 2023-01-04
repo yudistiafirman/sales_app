@@ -47,6 +47,7 @@ function SalesTabs() {
         name: 'Beranda',
         title: 'Beranda',
         type: 'home',
+        color: 'primary',
         component: Home,
       })}
       {BTabScreen({
