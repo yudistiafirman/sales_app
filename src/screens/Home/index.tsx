@@ -1,11 +1,13 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import React, { useState, useRef, useMemo } from 'react';
+import { Text, View, StyleSheet, Button } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import scaleSize from '@/utils/scale';
 
 import BQuickAction from '@/components/organism/BQuickActionMenu';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
+import { BBottomSheet } from '@/components/atoms/BBottomSheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 const Beranda = () => {
   const [currentVisit, setCurrentVisit] = useState(5); //temporary
@@ -20,6 +22,14 @@ const Beranda = () => {
     setCurrentVisit(0);
   }
 
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const bottomSheetOnchange = (index: number) => {
+    if (index == 0) {
+      setIsExpanded(true);
+    } else if (index == 1) {
+      setIsExpanded(false);
+    }
+  };
   const buttonsData: buttonDataType[] = useMemo(
     () => [
       {
@@ -66,20 +76,40 @@ const Beranda = () => {
         }}
         buttonProps={buttonsData}
       ></BQuickAction>
-      <Button title="increase" onPress={increaseVisit}></Button>
-      <Button title="reset" onPress={resetVisit}></Button>
-      <Button
-        title="toggle loading"
-        onPress={() => {
-          setIsLoading((cur) => !cur);
+      <BBottomSheet
+        onChange={bottomSheetOnchange}
+        percentSnapPoints={['63%', '87%', '100%']}
+        ref={bottomSheetRef}
+        initialSnapIndex={0}
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
-      ></Button>
-      <Button
-        title="toggle expand"
-        onPress={() => {
-          setIsExpanded((cur) => !cur);
-        }}
-      ></Button>
+      >
+        <View style={style.contentContainer}>
+          <Button title="increase" onPress={increaseVisit} />
+          <Button title="reset" onPress={resetVisit} />
+          <Button
+            title="toggle loading"
+            onPress={() => {
+              setIsLoading((cur) => !cur);
+            }}
+          />
+          <Button
+            title="toggle expand"
+            onPress={() => {
+              setIsExpanded((cur) => !cur);
+            }}
+          />
+          <Button
+            title="max open bottom sheet"
+            onPress={() => {
+              bottomSheetRef.current?.snapToIndex(1);
+            }}
+          />
+        </View>
+      </BBottomSheet>
     </View>
   );
 };

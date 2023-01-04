@@ -1,7 +1,7 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import {StatusBar} from 'react-native';
+import { StatusBar } from 'react-native';
 import {
   DefaultTheme as NavigationTheme,
   NavigationContainer,
@@ -14,6 +14,7 @@ import {
 } from 'react-native-paper';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const navTheme = {
   ...NavigationTheme,
@@ -41,16 +42,18 @@ const paperTheme = {
 
 function App() {
   return (
-    <NavigationContainer theme={navTheme}>
-      <StatusBar
-        barStyle={'dark-content'}
-        backgroundColor={'transparent'}
-        translucent={true}
-      />
-      <PaperProvider theme={paperTheme}>
-        <AppNavigator />
-      </PaperProvider>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer theme={navTheme}>
+        <StatusBar
+          barStyle={'dark-content'}
+          backgroundColor={'transparent'}
+          translucent={true}
+        />
+        <PaperProvider theme={paperTheme}>
+          <AppNavigator />
+        </PaperProvider>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
 
