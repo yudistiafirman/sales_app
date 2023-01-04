@@ -23,6 +23,10 @@ interface IProps {
     | undefined;
   placeholderOne: string;
   placeholderTwo: string;
+  isErrorOne?: boolean;
+  isErrorTwo?: boolean;
+  errorMessageOne?: string;
+  errorMessageTwo?: string;
 }
 const BComboDropdown = (props: IProps) => {
   const {
@@ -32,6 +36,10 @@ const BComboDropdown = (props: IProps) => {
     onChangeTwo,
     placeholderOne,
     placeholderTwo,
+    errorMessageOne,
+    errorMessageTwo,
+    isErrorOne,
+    isErrorTwo,
   } = props;
 
   return (
@@ -43,6 +51,8 @@ const BComboDropdown = (props: IProps) => {
           items={itemsOne}
           onChange={onChangeOne}
           placeholder={placeholderOne}
+          isError={isErrorOne}
+          errorMessage={errorMessageOne}
         />
       </View>
       <BSpacer size="extraSmall" />
@@ -53,6 +63,8 @@ const BComboDropdown = (props: IProps) => {
           items={itemsTwo}
           onChange={onChangeTwo}
           placeholder={placeholderTwo}
+          isError={isErrorTwo}
+          errorMessage={errorMessageTwo}
         />
       </View>
     </View>

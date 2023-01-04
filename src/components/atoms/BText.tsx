@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, TextProps, TextStyle } from 'react-native';
 import { Colors, Font } from '@/constants';
+import { resFontSize } from '@/utils';
 
 interface IProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ interface IProps {
     | '800'
     | '900'
     | undefined;
+  size?: 'small' | 'normal' | 'large';
 }
 
 const BText = ({
@@ -27,6 +29,7 @@ const BText = ({
   type,
   color,
   bold,
+  size,
   ...props
 }: IProps & TextProps) => {
   const _defaultStyle: TextStyle = {
@@ -63,6 +66,13 @@ const BText = ({
     _style = {
       ..._style,
       fontWeight: bold,
+    };
+  }
+
+  if (size) {
+    _style = {
+      ..._style,
+      fontSize: resFontSize(10),
     };
   }
 

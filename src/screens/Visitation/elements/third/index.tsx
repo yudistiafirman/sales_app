@@ -1,8 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
-import { BForm, BText } from '@/components';
+import { View, ScrollView } from 'react-native';
+import { BForm, BSpacer, BText } from '@/components';
 import { Input } from '@/interfaces';
 import { MONTH_LIST, STAGE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
+import ProductChip from './ProductChip';
 
 interface IProps {
   updateValue: (key: keyof IState, value: any) => void;
@@ -52,6 +53,7 @@ const ThirdStep = ({ updateValue }: IProps) => {
     {
       label: 'Fase Proyek',
       isRequire: true,
+      isError: true,
       value: state.stageProject,
       onChange: onChange('stageProject'),
       type: 'dropdown',
@@ -95,11 +97,16 @@ const ThirdStep = ({ updateValue }: IProps) => {
         },
         placeholderOne: 'Pilih Minggu',
         placeholderTwo: 'Pilih Bulan',
+        errorMessageOne: 'Pilih minggu',
+        errorMessageTwo: 'Pilih bulan',
+        isErrorOne: true,
+        isErrorTwo: true,
       },
     },
     {
       label: 'Tipe Pemabayaran',
       isRequire: true,
+      isError: true,
       type: 'cardOption',
       onChange: onChange('paymentType'),
       value: state.paymentType,
@@ -125,6 +132,7 @@ const ThirdStep = ({ updateValue }: IProps) => {
     {
       label: 'Catatan Sales',
       isRequire: true,
+      isError: true,
       type: 'area',
       onChange: onChange('notes'),
       value: state.notes,
@@ -137,10 +145,43 @@ const ThirdStep = ({ updateValue }: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
+  const products = [
+    {
+      name: 'Product 1',
+    },
+    {
+      name: 'Product 2',
+    },
+    {
+      name: 'Product 3',
+    },
+    {
+      name: 'Product 4',
+    },
+    {
+      name: 'Product 5',
+    },
+    {
+      name: 'Product 6',
+    },
+    {
+      name: 'Product 7',
+    },
+  ];
+
   return (
     <View>
       <BText>step 3</BText>
       <BForm inputs={inputs} />
+      <ScrollView horizontal={true}>
+        {products.map((val, index) => (
+          <React.Fragment key={index}>
+            <ProductChip name="k150" category={{ name: 'NFA' }} />
+            <BSpacer size="extraSmall" />
+          </React.Fragment>
+        ))}
+      </ScrollView>
+      <BSpacer size="small" />
       <BForm inputs={inputsTwo} />
     </View>
   );

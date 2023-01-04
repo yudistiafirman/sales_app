@@ -55,6 +55,7 @@ const SecondStep = (props: IProps) => {
     {
       label: 'Jenis Pelanggan',
       isRequire: true,
+      isError: true,
       type: 'cardOption',
       onChange: onChange('customerType'),
       value: state.customerType,
@@ -80,6 +81,8 @@ const SecondStep = (props: IProps) => {
     {
       label: 'Nama Perusahaan',
       isRequire: true,
+      isError: true,
+
       type: 'textInput',
       onChange: onChange('companyName'),
       value: state.companyName,
@@ -87,6 +90,8 @@ const SecondStep = (props: IProps) => {
     {
       label: 'Nama Proyek',
       isRequire: true,
+      isError: true,
+
       type: 'textInput',
       onChange: onChange('projectName'),
       value: state.projectName,

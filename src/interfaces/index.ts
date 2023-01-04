@@ -1,4 +1,9 @@
-import { StyleProp, ViewStyle, ImageSourcePropType } from 'react-native';
+import {
+  StyleProp,
+  ViewStyle,
+  ImageSourcePropType,
+  TextStyle,
+} from 'react-native';
 
 interface Input {
   label: string;
@@ -6,6 +11,7 @@ interface Input {
   type: 'textInput' | 'cardOption' | 'comboDropdown' | 'area' | 'dropdown';
   onChange?: (e: any) => void;
   value: string | any;
+  isError?: boolean;
   options?: Array<{
     title: string;
     value: string | any;
@@ -42,11 +48,15 @@ interface Input {
       | undefined;
     placeholderOne: string;
     placeholderTwo: string;
+    isErrorOne?: boolean;
+    isErrorTwo?: boolean;
+    errorMessageOne?: string;
+    errorMessageTwo?: string;
   };
 }
 
 interface Styles {
-  [key: string]: StyleProp<ViewStyle>;
+  [key: string]: StyleProp<ViewStyle | TextStyle>;
 }
 
 // create visitation

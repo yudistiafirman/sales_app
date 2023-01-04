@@ -2,11 +2,12 @@ import React from 'react';
 import { View, StyleProp, ViewStyle } from 'react-native';
 import { Input } from '@/interfaces';
 import BSpacer from '../atoms/BSpacer';
-import BText from '../atoms/BText';
 import BTextInput from '../atoms/BTextInput';
 import BCardOption from '../molecules/BCardOption';
 import BComboDropdown from '../molecules/BComboDropdown';
 import BDropdown from '../atoms/BDropdown';
+import BLabel from '../molecules/BLabel';
+import BText from '../atoms/BText';
 
 interface IProps {
   inputs: Input[];
@@ -32,14 +33,21 @@ const renderInput = (input: Input): React.ReactNode => {
     options,
     comboDropdown,
     dropdown,
-    // isRequire,
+    isRequire,
+    isError,
+    errorMessage,
   } = input;
 
   if (type === 'textInput') {
     return (
       <React.Fragment>
-        <BText bold="500">{label}</BText>
+        <BLabel label={label} isRequired={isRequire} />
         <BTextInput onChangeText={onChange} value={value} />
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {`${label} harus diisi`}
+          </BText>
+        )}
       </React.Fragment>
     );
   }
@@ -47,13 +55,18 @@ const renderInput = (input: Input): React.ReactNode => {
   if (type === 'area') {
     return (
       <React.Fragment>
-        <BText bold="500">{label}</BText>
+        <BLabel label={label} isRequired={isRequire} />
         <BTextInput
           onChangeText={onChange}
           value={value}
           multiline={true}
           numberOfLines={4}
         />
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {`${label} harus diisi`}
+          </BText>
+        )}
       </React.Fragment>
     );
   }
@@ -61,7 +74,7 @@ const renderInput = (input: Input): React.ReactNode => {
   if (type === 'cardOption') {
     return (
       <React.Fragment>
-        <BText>{label}</BText>
+        <BLabel label={label} isRequired={isRequire} />
         <BSpacer size="extraSmall" />
         <View style={styles.optionContainer}>
           {options?.map((val, index) => (
@@ -77,6 +90,12 @@ const renderInput = (input: Input): React.ReactNode => {
             </React.Fragment>
           ))}
         </View>
+        <BSpacer size="extraSmall" />
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {`${label} harus diisi`}
+          </BText>
+        )}
       </React.Fragment>
     );
   }
@@ -86,7 +105,7 @@ const renderInput = (input: Input): React.ReactNode => {
       console.log('dropdown, masukl');
       return (
         <React.Fragment>
-          <BText>{label}</BText>
+          <BLabel label={label} isRequired={isRequire} />
           <BSpacer size="extraSmall" />
           <BDropdown
             open={false}
@@ -94,6 +113,8 @@ const renderInput = (input: Input): React.ReactNode => {
             items={dropdown.items}
             onChange={dropdown.onChange}
             placeholder={dropdown.placeholder}
+            isError
+            errorMessage={`${label} harus dipilih`}
           />
         </React.Fragment>
       );
@@ -104,7 +125,7 @@ const renderInput = (input: Input): React.ReactNode => {
     if (comboDropdown) {
       return (
         <React.Fragment>
-          <BText>{label}</BText>
+          <BLabel label={label} isRequired={isRequire} />
           <BSpacer size="extraSmall" />
           <BComboDropdown {...comboDropdown} />
         </React.Fragment>

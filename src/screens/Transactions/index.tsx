@@ -1,14 +1,12 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React from 'react';
+import { View, Text } from 'react-native';
 
 const Transaksi = () => {
   return (
-<View>
-    <Text>
-        Transaki
-    </Text>
-</View>
-  )
-}
+    <View>
+      <Text>Transaki</Text>
+    </View>
+  );
+};
 
-export default Transaksi
+export default Transaksi;
