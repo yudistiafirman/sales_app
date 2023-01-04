@@ -7,15 +7,16 @@ import DateDaily from './elements/DateDaily';
 
 import BQuickAction from '@/components/organism/BQuickActionMenu';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
-import { BBottomSheet } from '@/components/atoms/BBottomSheet';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import BsearchBar from '@/components/molecules/BSearchBar';
 import BVisitationCard from '@/components/molecules/BVisitationCard';
 import moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { BBottomSheet, BSearchBar } from '@/components';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '@/interfaces';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -27,6 +28,7 @@ const Beranda = () => {
   const [snapPoints, setSnapPoints] = useState(['63%', '87%']); //setSnapPoints
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const navigation = useNavigation<NavigationProps>();
 
   const bottomSheetOnchange = (index: number) => {
     if (index === 0 || index === 1) {
@@ -149,6 +151,7 @@ const Beranda = () => {
 
   const kunjunganAction = () => {
     setIsLoading((curr) => !curr);
+    navigation.navigate('Create Visitation');
   };
 
   return (
@@ -174,11 +177,11 @@ const Beranda = () => {
         initialSnapIndex={0}
         enableContentPanningGesture={true}
         style={style.BsheetStyle}
-        footerComponent={(props) => {
+        footerComponent={(props: any) => {
           return BuatKunjungan(props, kunjunganAction);
         }}
       >
-        <BsearchBar
+        <BSearchBar
           onFocus={searchOnFocus}
           placeholder="Search"
           activeOutlineColor="gray"

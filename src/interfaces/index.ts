@@ -65,4 +65,8 @@ interface CreateVisitationState {
   state: any[];
 }
 
-export type { Input, Styles, CreateVisitationState };
+interface NavigationProps {
+  navigate: (screen?: string) => void;
+}
+
+export type { Input, Styles, CreateVisitationState, NavigationProps };

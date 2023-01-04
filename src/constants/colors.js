@@ -34,6 +34,10 @@ const colors = {
     grey: '#C1C1C1',
     altGrey: '#C7C7C7',
   },
+  chip: {
+    green: '#C2FCC8',
+    disabled: '#F5F5F5',
+  },
 };
 
 export default colors;
