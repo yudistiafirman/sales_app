@@ -7,6 +7,7 @@ const colors = {
   border: '#E6EDF6',
   white: '#FFFFFF',
   black: '#191919',
+  lightGray: `#E6E6E6`,
   text: {
     dark: '#191919',
     darker: '#202020',
@@ -34,6 +35,7 @@ const colors = {
     grey: '#C1C1C1',
     disabled: '#F5F5F5',
     tab: '#C7C7C7',
+    altGrey: '#C7C7C7',
   },
   chip: {
     green: '#C2FCC8',
