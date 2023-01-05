@@ -1,4 +1,6 @@
 {
   "name": "BSA",
-  "displayName": "BSA"
+  "displayName": "BSA",
+  "production":false
+
 }
