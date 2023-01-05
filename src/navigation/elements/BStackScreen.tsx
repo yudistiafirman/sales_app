@@ -1,7 +1,7 @@
 import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
 import { TypedNavigator } from '@react-navigation/native';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import React from 'react';
 
 const BStackScreen = ({
@@ -11,7 +11,7 @@ const BStackScreen = ({
   title,
   color,
   component,
-  headerShown = true,
+  headerShown = true
 }: {
   Stack: TypedNavigator<any, any, any, any, any>;
   type?: 'default' | 'home' | 'sub';
@@ -55,7 +55,7 @@ const BStackScreen = ({
         headerShadowVisible: false,
         headerShown: headerShown,
         headerStyle: styles.headerStyle,
-        headerTitle: renderHeaderTitle(),
+        headerTitle: () => renderHeaderTitle(),
       }}
     />
   );
