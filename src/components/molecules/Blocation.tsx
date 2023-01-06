@@ -34,7 +34,7 @@ type Details = {
 
 interface Blocation {
   mapStyle?: ViewStyle | undefined;
-  region?: Region | undefined;
+  region?: LatLng & Region;
   onRegionChange?: ((region: Region, details: Details) => void) | undefined;
   coordinate: LatLng;
   CustomMarker?: React.ReactNode | undefined;

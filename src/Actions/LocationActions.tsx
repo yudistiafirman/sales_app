@@ -28,9 +28,14 @@ export const searchLocation = (
   onSuccess: Function,
   onError: Function
 ) => {
-  request(BrikApi.searchLocation(searchValue), getOptions('GET')).then(
-    (responseJson) => {
+  request(BrikApi.searchLocation(searchValue), getOptions(token,'GET'))
+    .then((response) => response.json())
+    .then((responseJson) => {
       onSuccess(responseJson);
-    }
-  );
+    })
+    .catch((error) => {
+      onError(catchError(error));
+    });
 };
+
+fetc

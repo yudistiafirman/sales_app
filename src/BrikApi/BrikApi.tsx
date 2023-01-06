@@ -46,4 +46,10 @@ export default class BrikApi {
     const url = `${API_URL}/common/map/places/${placeId}`;
     return url;
   };
+  // ----------------------------MOCKEDUP---------------------------//
+
+  static getLocationDetailMockedUp = (longitude: number, latitude: number) => {
+    const url = ` https://maps.googleapis.com/maps/api/geocode/json?latlng=${longitude},${latitude}&key=${Config.GOOGLE_MAPS_API_KEY}`;
+    return url;
+  };
 }
