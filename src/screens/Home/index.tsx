@@ -8,15 +8,17 @@ import useHeaderShow from '@/hooks/useHeaderShow';
 
 import BQuickAction from '@/components/organism/BQuickActionMenu';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
-import { BBottomSheet } from '@/components/atoms/BBottomSheet';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import BsearchBar from '@/components/molecules/BsearchBar';
 import BVisitationCard from '@/components/molecules/BVisitationCard';
 import moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { BBottomSheet, BSearchBar } from '@/components';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '@/interfaces';
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 import Modal from 'react-native-modal';
 
@@ -59,6 +61,7 @@ const Beranda = () => {
   const [snapPoints] = useState(['68%', '91%', '100%']); //setSnapPoints
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const navigation = useNavigation<NavigationProps>();
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isHeaderShown, setIsHeaderShown] = useState(true);
@@ -210,6 +213,7 @@ const Beranda = () => {
 
   const kunjunganAction = () => {
     setIsLoading((curr) => !curr);
+    navigation.navigate('Create Visitation');
   };
 
   return (
@@ -222,7 +226,7 @@ const Beranda = () => {
         coverScreen={false}
       >
         <View style={style.modalContent}>
-          <BsearchBar
+          <BSearchBar
             placeholder="Search"
             activeOutlineColor="gray"
             left={
@@ -272,13 +276,13 @@ const Beranda = () => {
         initialSnapIndex={0}
         enableContentPanningGesture={true}
         style={style.BsheetStyle}
-        footerComponent={(props) => {
+        footerComponent={(props: any) => {
           return BuatKunjungan(props, kunjunganAction);
         }}
       >
         <View style={style.posRelative}>
           <TouchableOpacity style={style.touchable} onPress={toggleModal} />
-          <BsearchBar
+          <BSearchBar
             placeholder="Search"
             activeOutlineColor="gray"
             left={<TextInput.Icon icon="magnify" />}

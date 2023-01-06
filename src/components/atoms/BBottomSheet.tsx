@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useMemo, forwardRef, Ref } from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { ViewStyle } from 'react-native';
@@ -30,7 +31,7 @@ type BBottomSheetType = {
   topInset?: number;
 };
 
-export const BBottomSheet = forwardRef(
+const BBottomSheet = forwardRef(
   (
     {
       children,
@@ -97,3 +98,5 @@ export const BBottomSheet = forwardRef(
     );
   }
 );
+
+export default BBottomSheet;

@@ -1,10 +1,11 @@
-/* eslint-disable react/react-in-jsx-scope */
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import layout from '@/constants/layout';
-import scaleSize from '@/utils/scale';
+import React from 'react';
+// import colors from '@/constants/colors';
+// import font from '@/constants/fonts';
+// import layout from '@/constants/layout';
 import { TextStyle, View, ViewStyle } from 'react-native';
 import BText from './BText';
+import { scaleSize } from '@/utils';
+import { Colors, Font, Layout } from '@/constants';
 
 interface BChipProps {
   children: any;
@@ -14,9 +15,9 @@ interface BChipProps {
 
 const BChip = ({ children, type, backgroundColor }: BChipProps) => {
   let BChipHeaderStyle: ViewStyle = {
-    paddingHorizontal: scaleSize.moderateScale(layout.pad.md),
-    paddingVertical: scaleSize.moderateScale(layout.pad.xs),
-    borderRadius: scaleSize.moderateScale(layout.radius.sm),
+    paddingHorizontal: scaleSize.moderateScale(Layout.pad.md),
+    paddingVertical: scaleSize.moderateScale(Layout.pad.xs),
+    borderRadius: scaleSize.moderateScale(Layout.radius.sm),
   };
 
   let BChipDefaultStyle: ViewStyle = {
@@ -30,10 +31,11 @@ const BChip = ({ children, type, backgroundColor }: BChipProps) => {
     type === 'header' ? BChipHeaderStyle : BChipDefaultStyle;
 
   let _textStyle: TextStyle = {
-    color: colors.text.dark,
-    fontFamily: font.family.montserrat[400],
-    fontSize: font.size.xs,
+    color: Colors.text.dark,
+    fontFamily: Font.family.montserrat[400],
+    fontSize: Font.size.xs,
   };
+
   return (
     <View style={[_style, { backgroundColor: backgroundColor }]}>
       <BText style={[_textStyle]}>{children}</BText>
