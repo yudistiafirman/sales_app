@@ -1,7 +1,4 @@
 import React from 'react';
-// import colors from '@/constants/colors';
-// import font from '@/constants/fonts';
-// import layout from '@/constants/layout';
 import { TextStyle, View, ViewStyle } from 'react-native';
 import BText from './BText';
 import { resScale } from '@/utils';
