@@ -3,10 +3,9 @@ const colors = {
   secondary: '#FBC12C',
   disabled: '#D9D9D9',
   offWhite: '#F6F8FC',
-  border: '#E6EDF6',
   white: '#FFFFFF',
   black: '#191919',
-  lightGray: `#E6E6E6`,
+  lightGray: '#E6E6E6',
   text: {
     dark: '#191919',
     light: '#FFFFFF',
@@ -29,8 +28,13 @@ const colors = {
     input: '#202020',
   },
   border: {
+    oldBorder: '#E6EDF6',
     grey: '#C1C1C1',
     altGrey: '#C7C7C7',
+  },
+  chip: {
+    green: '#C2FCC8',
+    disabled: '#F5F5F5',
   },
 };
 
