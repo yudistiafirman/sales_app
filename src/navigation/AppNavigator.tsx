@@ -29,7 +29,7 @@ const getStacks = (userType?: 'opsManager' | 'sales' | undefined) => {
 };
 
 function AppNavigator() {
-  const userType = 'opsManager';
+  const userType = 'sales';
   return (
     <Stack.Navigator
       screenOptions={{
