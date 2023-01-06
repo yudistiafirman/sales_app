@@ -1,5 +1,5 @@
 import { BText } from '@/components';
-import { Colors } from '@/constants';
+import { colors } from '@/constants';
 import layout from '@/constants/layout';
 import { Styles } from '@/interfaces';
 import { resFontSize, scaleSize } from '@/utils';
@@ -24,10 +24,10 @@ const styles: Styles = {
     borderRadius: layout.radius.sm,
     paddingHorizontal: scaleSize.moderateScale(10),
     paddingVertical: scaleSize.verticalScale(5),
-    borderLeftColor: Colors.primary,
-    borderBottomColor: Colors.border.grey,
-    borderTopColor: Colors.border.grey,
-    borderRightColor: Colors.border.grey,
+    borderLeftColor: colors.primary,
+    borderBottomColor: colors.border.grey,
+    borderTopColor: colors.border.grey,
+    borderRightColor: colors.border.grey,
     borderLeftWidth: 5,
   },
   category: {
@@ -35,7 +35,7 @@ const styles: Styles = {
     // // right: -200,
     // top: 50,
     marginLeft: 10,
-    backgroundColor: Colors.secondary,
+    backgroundColor: colors.secondary,
     paddingHorizontal: scaleSize.moderateScale(10),
     paddingVertical: scaleSize.verticalScale(3),
     borderRadius: layout.radius.lg,
@@ -63,7 +63,7 @@ const ProductChip = ({ name, category }: IProps) => {
       <Button
         icon="close"
         color="blue"
-        textColor={Colors.textInput.input}
+        textColor={colors.textInput.input}
         children={''}
         mode="text"
         style={styles.icon}

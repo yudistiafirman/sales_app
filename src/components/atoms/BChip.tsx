@@ -1,11 +1,8 @@
 import React from 'react';
-// import colors from '@/constants/colors';
-// import font from '@/constants/fonts';
-// import layout from '@/constants/layout';
 import { TextStyle, View, ViewStyle } from 'react-native';
 import BText from './BText';
 import { scaleSize } from '@/utils';
-import { Colors, Font, Layout } from '@/constants';
+import { colors, font, layout } from '@/constants';
 
 interface BChipProps {
   children: any;
@@ -15,9 +12,9 @@ interface BChipProps {
 
 const BChip = ({ children, type, backgroundColor }: BChipProps) => {
   let BChipHeaderStyle: ViewStyle = {
-    paddingHorizontal: scaleSize.moderateScale(Layout.pad.md),
-    paddingVertical: scaleSize.moderateScale(Layout.pad.xs),
-    borderRadius: scaleSize.moderateScale(Layout.radius.sm),
+    paddingHorizontal: scaleSize.moderateScale(layout.pad.md),
+    paddingVertical: scaleSize.moderateScale(layout.pad.xs),
+    borderRadius: scaleSize.moderateScale(layout.radius.sm),
   };
 
   let BChipDefaultStyle: ViewStyle = {
@@ -31,9 +28,9 @@ const BChip = ({ children, type, backgroundColor }: BChipProps) => {
     type === 'header' ? BChipHeaderStyle : BChipDefaultStyle;
 
   let _textStyle: TextStyle = {
-    color: Colors.text.dark,
-    fontFamily: Font.family.montserrat[400],
-    fontSize: Font.size.xs,
+    color: colors.text.dark,
+    fontFamily: font.family.montserrat[400],
+    fontSize: font.size.xs,
   };
 
   return (
