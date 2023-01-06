@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native';
 import React from 'react';
 import CalendarStrip from 'react-native-calendar-strip';
-import scaleSize from '@/utils/scale';
-import respFS from '@/utils/respFS';
+import resScale from '@/utils/resScale';
+import respFS from '@/utils/resFontSize';
 import moment from 'moment';
 import font from '@/constants/fonts';
 import colors from '@/constants/colors';
@@ -61,7 +61,7 @@ export default function DateDaily({
 
 const style = StyleSheet.create({
   calendarStyle: {
-    height: scaleSize.moderateScale(95),
+    height: resScale(95),
     width: '100%',
   },
   calendarHeaderStyle: {
@@ -82,13 +82,13 @@ const style = StyleSheet.create({
   highlightDateNumberStyle: {
     color: colors.white,
     backgroundColor: colors.primary,
-    borderRadius: scaleSize.moderateScale(100),
-    paddingLeft: scaleSize.moderateScale(15),
-    paddingRight: scaleSize.moderateScale(15),
+    borderRadius: resScale(100),
+    paddingLeft: resScale(15),
+    paddingRight: resScale(15),
     shadowColor: colors.black,
     shadowOffset: {
-      width: scaleSize.moderateScale(0),
-      height: scaleSize.moderateScale(2),
+      width: resScale(0),
+      height: resScale(2),
     },
     shadowOpacity: 0.5,
     shadowRadius: 3.84,

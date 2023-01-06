@@ -1,4 +1,4 @@
-import BsearchBar from '@/components/molecules/BSearchBar';
+import BSearchBar from '@/components/molecules/BSearchBar';
 import React from 'react';
 import {
   SafeAreaView,
@@ -9,7 +9,7 @@ import {
 import { TextInput } from 'react-native-paper';
 import SearchProductStyles from '../styles';
 import Icon from 'react-native-vector-icons/Feather';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import colors from '@/constants/colors';
 
 interface SearchProductNavbarProps {
@@ -27,7 +27,7 @@ const SearchProductNavbar = ({
 }: SearchProductNavbarProps) => {
   return (
     <View style={SearchProductStyles.searchBarContainer}>
-      <BsearchBar
+      <BSearchBar
         value={value}
         onChangeText={onChangeText}
         placeholder="Cari Produk"

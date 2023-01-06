@@ -1,29 +1,29 @@
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import { Dimensions, StyleSheet } from 'react-native';
 
 const LocationStyles = StyleSheet.create({
   bottomSheetContainer: {
-    minHeight: scaleSize.moderateScale(143),
+    minHeight: resScale(143),
     width: Dimensions.get('window').width,
     position: 'absolute',
     bottom: 0,
     backgroundColor: colors.white,
-    borderTopStartRadius: scaleSize.moderateScale(16),
-    borderTopEndRadius: scaleSize.moderateScale(16),
+    borderTopStartRadius: resScale(16),
+    borderTopEndRadius: resScale(16),
   },
   coordinateDetailsOuterContainer: {
     flex: 1,
-    marginHorizontal: scaleSize.moderateScale(16),
-    height: scaleSize.moderateScale(67),
-    marginTop: scaleSize.moderateScale(10),
-    marginBottom: scaleSize.moderateScale(16),
+    marginHorizontal: resScale(16),
+    height: resScale(67),
+    marginTop: resScale(10),
+    marginBottom: resScale(16),
     backgroundColor: colors.tertiary,
   },
   coordinateDetailsInnerContainer: {
-    marginHorizontal: scaleSize.moderateScale(11),
-    marginVertical: scaleSize.moderateScale(8),
+    marginHorizontal: resScale(11),
+    marginVertical: resScale(8),
     flexDirection: 'row',
   },
   mapIconContainer: {
@@ -34,15 +34,15 @@ const LocationStyles = StyleSheet.create({
   },
   addressTitle: {
     fontFamily: font.family.montserrat['500'],
-    fontSize: scaleSize.moderateScale(14),
+    fontSize: resScale(14),
     color: colors.text.darker,
-    marginBottom: scaleSize.moderateScale(4),
+    marginBottom: resScale(4),
   },
   addressDetails: {
     fontFamily: font.family.montserrat['300'],
-    fontSize: scaleSize.moderateScale(12),
+    fontSize: resScale(12),
     color: colors.text.darker,
-    marginBottom: scaleSize.moderateScale(4),
+    marginBottom: resScale(4),
     textAlign: 'left',
   },
 });

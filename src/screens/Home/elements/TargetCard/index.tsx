@@ -4,7 +4,7 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import TargetBar from './elements/TargetBar';
 import TopVisitation from './elements/TopVisitation';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 
 type TargetCardProps = {
   maxVisitation: number;
@@ -43,7 +43,7 @@ export default function TargetCard({
       <Animated.View
         style={[
           {
-            width: scaleSize.moderateScale(320),
+            width: resScale(320),
             alignSelf: 'flex-start',
             zIndex: 1,
           },

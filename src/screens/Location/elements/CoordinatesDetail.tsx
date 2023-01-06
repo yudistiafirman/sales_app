@@ -4,7 +4,7 @@ import LocationStyles from '../styles';
 import Icons from 'react-native-vector-icons/Feather';
 import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 
 interface CoordinatesDetailsProps {
   addressTitle: string;
@@ -24,11 +24,7 @@ const CoordinatesDetail = ({
     >
       <View style={LocationStyles.coordinateDetailsInnerContainer}>
         <View style={LocationStyles.mapIconContainer}>
-          <Icons
-            name="map-pin"
-            size={scaleSize.moderateScale(20)}
-            color={colors.primary}
-          />
+          <Icons name="map-pin" size={resScale(20)} color={colors.primary} />
         </View>
         <View style={{ flex: 0.9 }}>
           <BText style={LocationStyles.addressTitle}>{addressTitle}</BText>

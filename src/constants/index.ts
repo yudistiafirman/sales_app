@@ -1,3 +1,3 @@
-export { default as Font } from './fonts';
-export { default as Colors } from './colors';
-export { default as Layout } from './layout';
+export { default as fonts } from './fonts';
+export { default as colors } from './colors';
+export { default as layout } from './layout';

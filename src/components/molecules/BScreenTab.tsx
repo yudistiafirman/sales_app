@@ -1,6 +1,6 @@
 import { View, FlatList, StyleSheet } from 'react-native';
 import React from 'react';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -48,16 +48,16 @@ const style = StyleSheet.create({
     flex: 1,
   },
   flatListContainer: {
-    marginTop: scaleSize.moderateScale(10),
+    marginTop: resScale(10),
   },
   flatListLoading: {
-    marginTop: scaleSize.moderateScale(20),
+    marginTop: resScale(20),
     justifyContent: 'center',
     alignItems: 'center',
   },
   flatListShimmer: {
-    width: scaleSize.moderateScale(320),
-    height: scaleSize.moderateScale(60),
-    borderRadius: scaleSize.moderateScale(8),
+    width: resScale(320),
+    height: resScale(60),
+    borderRadius: resScale(8),
   },
 });

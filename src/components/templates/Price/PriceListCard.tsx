@@ -5,7 +5,7 @@ import font from '@/constants/fonts';
 import { StyleSheet, View } from 'react-native';
 import BChip from '../../atoms/BChip';
 import BText from '../../atoms/BText';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 
 interface PriceListCardProps {
   productName?: string;
@@ -35,16 +35,16 @@ const PriceListCard = ({
 
 const PriceListCardStyles = StyleSheet.create({
   container: {
-    height: scaleSize.moderateScale(56),
+    height: resScale(56),
     borderBottomWidth: 1,
     borderColor: colors.border.disabled,
-    marginTop: scaleSize.moderateScale(6),
+    marginTop: resScale(6),
   },
   nameAndPriceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: scaleSize.moderateScale(8),
-    marginTop: scaleSize.moderateScale(6),
+    marginBottom: resScale(8),
+    marginTop: resScale(6),
   },
   productName: {
     fontFamily: font.family.montserrat['500'],

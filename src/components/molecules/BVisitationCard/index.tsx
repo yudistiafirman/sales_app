@@ -6,7 +6,7 @@ import Time from './elements/Time';
 import VisitStatus from './elements/VisitStatus';
 
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import Location from './elements/Location';
 import PillNames from './elements/PillNames';
 import HighlightText from '../../atoms/BHighlightText';
@@ -60,15 +60,15 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    width: scaleSize.moderateScale(330),
+    width: resScale(330),
     backgroundColor: 'white',
     justifyContent: 'space-between',
     borderColor: '#EBEBEB',
-    borderRadius: scaleSize.moderateScale(8),
-    borderWidth: scaleSize.moderateScale(1),
-    marginBottom: scaleSize.moderateScale(10),
-    paddingVertical: scaleSize.moderateScale(15),
-    paddingHorizontal: scaleSize.moderateScale(8),
+    borderRadius: resScale(8),
+    borderWidth: resScale(1),
+    marginBottom: resScale(10),
+    paddingVertical: resScale(15),
+    paddingHorizontal: resScale(8),
   },
   leftSide: {
     justifyContent: 'space-between',
@@ -78,16 +78,16 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   top: {
-    height: scaleSize.moderateScale(20),
+    height: resScale(20),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: scaleSize.moderateScale(5),
-    width: scaleSize.moderateScale(285),
+    marginBottom: resScale(5),
+    width: resScale(285),
   },
   row: {
     flexDirection: 'row',
   },
   bottom: {
-    marginTop: scaleSize.moderateScale(10),
+    marginTop: resScale(10),
   },
 });

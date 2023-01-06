@@ -13,15 +13,15 @@ export { default as BHighlightText } from './atoms/BHighlightText';
 
 // moleculses
 export { default as BTab } from './molecules/BTab';
-export { default as BSearchBar } from './molecules/BsearchBar';
+export { default as BSearchBar } from './molecules/BSearchBar';
 export { default as BCardOption } from './molecules/BCardOption';
 export { default as BComboDropdown } from './molecules/BComboDropdown';
 export { default as BLabel } from './molecules/BLabel';
-export { default as BLocation } from './molecules/Blocation';
 export { default as BQuickAction } from './molecules/BQuickAction';
 export { default as BTabLabels } from './molecules/BTabLabels';
 export { default as BVisitationCard } from './molecules/BVisitationCard';
 export { default as BPic } from './molecules/BPic';
+export { default as BLocation } from './molecules/BLocation';
 
 // organism
 export { default as BForm } from './organism/BForm';

@@ -2,7 +2,7 @@ import React, { useState, useRef, useMemo } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import DateDaily from './elements/DateDaily';
 import useHeaderShow from '@/hooks/useHeaderShow';
 
@@ -263,8 +263,8 @@ const Beranda = () => {
       />
       <BQuickAction
         containerStyle={{
-          paddingLeft: scaleSize.moderateScale(25),
-          height: scaleSize.moderateScale(100),
+          paddingLeft: resScale(25),
+          height: resScale(100),
         }}
         buttonProps={buttonsData}
       />
@@ -326,27 +326,27 @@ const style = StyleSheet.create({
   },
   flatListContainer: {},
   flatListLoading: {
-    marginTop: scaleSize.moderateScale(20),
+    marginTop: resScale(20),
     justifyContent: 'center',
     alignItems: 'center',
   },
   flatListShimmer: {
-    width: scaleSize.moderateScale(320),
-    height: scaleSize.moderateScale(60),
-    borderRadius: scaleSize.moderateScale(8),
+    width: resScale(320),
+    height: resScale(60),
+    borderRadius: resScale(8),
   },
   modalContent: {
     flex: 1,
   },
   posRelative: {
     position: 'relative',
-    marginBottom: scaleSize.moderateScale(10),
+    marginBottom: resScale(10),
   },
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: scaleSize.moderateScale(4),
-    height: scaleSize.moderateScale(45),
+    borderRadius: resScale(4),
+    height: resScale(45),
     zIndex: 2,
   },
 });

@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 
 import BText from '../atoms/BText';
-import { Colors, Layout } from '@/constants';
-import { scaleSize } from '@/utils';
+import { colors, layout } from '@/constants';
+import { resScale } from '@/utils';
 
 interface IProps {
   children?: React.ReactNode;
@@ -22,9 +22,9 @@ interface IProps {
 }
 
 const baseStyle: StyleProp<ViewStyle> = {
-  backgroundColor: Colors.offWhite,
-  borderRadius: Layout.radius.md,
-  height: scaleSize.verticalScale(80),
+  backgroundColor: colors.offWhite,
+  borderRadius: layout.radius.md,
+  height: resScale(80),
   justifyContent: 'center',
   alignContent: 'center',
   alignItems: 'center',
@@ -44,7 +44,7 @@ const makeStyle = (props: IProps): StyleProp<ViewStyle> => {
   if (isActive) {
     style = {
       ...style,
-      borderColor: Colors.primary,
+      borderColor: colors.primary,
       borderWidth: 1,
     };
   }
@@ -57,12 +57,12 @@ const makeStyleImage = ({
 }: Partial<IProps>): StyleProp<ImageStyle> => {
   if (isActive) {
     return {
-      tintColor: Colors.primary,
+      tintColor: colors.primary,
     };
   }
 
   return {
-    tintColor: Colors.textInput.input,
+    tintColor: colors.textInput.input,
   };
 };
 

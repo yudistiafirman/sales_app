@@ -1,4 +1,4 @@
-import { scaleSize } from '@/utils';
+import { resScale } from '@/utils';
 import React from 'react';
 import { View, StyleProp, ViewStyle } from 'react-native';
 
@@ -7,42 +7,42 @@ interface IProps {
 }
 
 const styles: StyleProp<ViewStyle> = {
-  marginHorizontal: scaleSize.moderateScale(10),
+  marginHorizontal: resScale(10),
 };
 
 const makeStyle = ({ size }: IProps): ViewStyle => {
   if (size === 'extraSmall') {
     return {
       ...styles,
-      margin: scaleSize.moderateScale(5),
+      margin: resScale(5),
     };
   }
 
   if (size === 'small') {
     return {
       ...styles,
-      margin: scaleSize.moderateScale(10),
+      margin: resScale(10),
     };
   }
 
   if (size === 'medium') {
     return {
       ...styles,
-      margin: scaleSize.moderateScale(15),
+      margin: resScale(15),
     };
   }
 
   if (size === 'large') {
     return {
       ...styles,
-      margin: scaleSize.moderateScale(20),
+      margin: resScale(20),
     };
   }
 
   if (typeof size === 'number') {
     return {
       ...styles,
-      margin: scaleSize.moderateScale(size),
+      margin: resScale(size),
     };
   }
 

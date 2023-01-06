@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type TimeType = {
@@ -23,11 +23,11 @@ export default function Time({ time }: TimeType) {
 }
 const style = StyleSheet.create({
   container: {
-    marginRight: scaleSize.moderateScale(7),
+    marginRight: resScale(7),
     alignItems: 'center',
     flexDirection: 'row',
   },
   iconStyle: {
-    marginRight: scaleSize.moderateScale(7),
+    marginRight: resScale(7),
   },
 });

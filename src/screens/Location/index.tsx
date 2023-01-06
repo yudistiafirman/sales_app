@@ -1,6 +1,6 @@
 import BButtonPrimary from '@/components/atoms/BButtonPrimary';
 import BLocation from '@/components/molecules/BLocation';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Dimensions, SafeAreaView, View } from 'react-native';
@@ -29,7 +29,7 @@ const Location = () => {
       headerLeft: () => (
         <BHeaderIcon
           iconName="chevron-left"
-          size={scaleSize.moderateScale(30)}
+          size={resScale(30)}
           onBack={() => navigation.goBack()}
         />
       ),

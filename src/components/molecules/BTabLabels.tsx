@@ -1,8 +1,8 @@
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import React from 'react';
-import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
+import { TextStyle, View, ViewStyle } from 'react-native';
 import BChip from '../atoms/BChip';
 import BText from '../atoms/BText';
 
@@ -34,7 +34,7 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
       ? font.family.montserrat['600']
       : font.family.montserrat['400'],
     fontSize: font.size.md,
-    marginRight: scaleSize.moderateScale(4),
+    marginRight: resScale(4),
   };
 
   return (

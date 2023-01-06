@@ -1,7 +1,7 @@
 import { Text, StyleSheet } from 'react-native';
 import React from 'react';
 import font from '@/constants/fonts';
-import respFS from '@/utils/respFS';
+import respFS from '@/utils/resFontSize';
 import colors from '@/constants/colors';
 
 type higlightTextType = {

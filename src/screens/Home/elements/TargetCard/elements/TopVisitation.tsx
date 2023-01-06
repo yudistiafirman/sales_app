@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import VisitationCount from './VisitationCount';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import colors from '@/constants/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -37,7 +37,7 @@ export default function TopVisitation({
 
 const style = StyleSheet.create({
   targetCount: {
-    height: scaleSize.moderateScale(40),
+    height: resScale(40),
     justifyContent: `center`,
     alignItems: `center`,
   },
@@ -49,6 +49,6 @@ const style = StyleSheet.create({
   },
 
   shimmerStyle: {
-    borderRadius: scaleSize.moderateScale(8),
+    borderRadius: resScale(8),
   },
 });

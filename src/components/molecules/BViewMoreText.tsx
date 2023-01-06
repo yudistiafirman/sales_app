@@ -1,4 +1,4 @@
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import * as React from 'react';
 import {
   Text,

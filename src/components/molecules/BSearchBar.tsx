@@ -1,6 +1,6 @@
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import { scaleSize } from '@/utils';
+import { resScale } from '@/utils';
 import * as React from 'react';
 import { TextStyle, ViewStyle } from 'react-native';
 import { TextInput } from 'react-native-paper';
@@ -30,14 +30,14 @@ interface BSearchBarProp {
 const BSearchBarDefaultTextStyle = {
   fontFamily: font.family.montserrat['400'],
   fontSize: font.size.md,
-  lineHeight: scaleSize.moderateScale(14),
+  lineHeight: resScale(14),
   backgroundColor: colors.white,
   color: colors.textInput.input,
 };
 
 const BSearchBarDefaultContainerStyle = {
-  borderRadius: scaleSize.moderateScale(4),
-  height: scaleSize.moderateScale(40),
+  borderRadius: resScale(4),
+  height: resScale(40),
 };
 
 const BSearchBarDefaultProps = {
@@ -50,7 +50,7 @@ const BSearchBarDefaultProps = {
   dense: true,
 };
 
-const BsearchBar = ({
+const BSearchBar = ({
   mode,
   left,
   right,
@@ -96,6 +96,6 @@ const BsearchBar = ({
   );
 };
 
-BsearchBar.defaultProps = BSearchBarDefaultProps;
+BSearchBar.defaultProps = BSearchBarDefaultProps;
 
-export default BsearchBar;
+export default BSearchBar;

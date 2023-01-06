@@ -1,7 +1,7 @@
 import React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { Colors, Font, Layout } from '@/constants';
-import { scaleSize } from '@/utils';
+import { colors, fonts, layout } from '@/constants';
+import { resScale } from '@/utils';
 import { Styles } from '@/interfaces';
 import BText from './BText';
 
@@ -33,40 +33,40 @@ interface IProps {
 
 const styles: Styles = {
   base: {
-    fontFamily: Font.family.montserrat[400],
-    fontSize: Font.size.md,
-    lineHeight: scaleSize.moderateScale(14),
-    backgroundColor: Colors.white,
-    color: Colors.textInput.input,
-    borderRadius: scaleSize.moderateScale(4),
-    borderColor: Colors.textInput.inActive,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+    lineHeight: resScale(14),
+    backgroundColor: colors.white,
+    color: colors.textInput.input,
+    borderRadius: resScale(4),
+    borderColor: colors.textInput.inActive,
     zIndex: 1,
   },
   activeInput: {
-    borderColor: Colors.black,
+    borderColor: colors.black,
     borderWidth: 1,
-    borderBottomEndRadius: Layout.radius.sm,
-    borderBottomStartRadius: Layout.radius.sm,
+    borderBottomEndRadius: layout.radius.sm,
+    borderBottomStartRadius: layout.radius.sm,
   },
   active: {
     position: 'absolute',
-    top: scaleSize.verticalScale(50),
-    borderRadius: Layout.radius.sm,
-    borderColor: Colors.border.default,
+    top: resScale(50),
+    borderRadius: layout.radius.sm,
+    borderColor: colors.border.default,
     borderWidth: 1,
   },
   dropdown: {
-    backgroundColor: Colors.white,
+    backgroundColor: colors.white,
     zIndex: 10,
   },
   separator: {
-    backgroundColor: Colors.border.default,
-    paddingHorizontal: scaleSize.moderateScale(5),
+    backgroundColor: colors.border.default,
+    paddingHorizontal: resScale(5),
     width: '95%',
     alignSelf: 'center',
   },
   error: {
-    borderColor: Colors.primary,
+    borderColor: colors.primary,
   },
 };
 

@@ -2,7 +2,7 @@ import { View, StyleSheet } from 'react-native';
 import React from 'react';
 import TargetMarker from './TargetMarker';
 import colors from '@/constants/colors';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 
 type EmptyItemType = {
   isLast: boolean;
@@ -30,13 +30,13 @@ export default function EmptyItem({
 
 const style = StyleSheet.create({
   emptyProgress: {
-    height: scaleSize.moderateScale(8),
-    width: scaleSize.moderateScale(20),
-    borderLeftWidth: scaleSize.moderateScale(1),
+    height: resScale(8),
+    width: resScale(20),
+    borderLeftWidth: resScale(1),
     borderLeftColor: colors.border.altGrey,
   },
   progressEnd: {
-    borderTopEndRadius: scaleSize.moderateScale(5),
-    borderBottomEndRadius: scaleSize.moderateScale(5),
+    borderTopEndRadius: resScale(5),
+    borderBottomEndRadius: resScale(5),
   },
 });

@@ -1,6 +1,6 @@
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import React from 'react';
 import {
   GestureResponderEvent,
@@ -19,7 +19,7 @@ const BTouchableTextDefaultStyle: TextStyle = {
   fontFamily: font.family.montserrat['400'],
   color: colors.primary,
   fontSize: font.size.sm,
-  marginRight: scaleSize.moderateScale(14),
+  marginRight: resScale(14),
 };
 
 const BTouchableTextDefaultProps = {
