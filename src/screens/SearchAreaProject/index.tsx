@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
-import BsearchBar from '@/components/molecules/BSearchBar';
+import BSearchBar from '@/components/molecules/BSearchBar';
 import scaleSize from '@/utils/scale';
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect, useState } from 'react';
@@ -33,7 +33,7 @@ const SearchAreaProject = () => {
     if (hasPermission) {
       Geolocation.getCurrentPosition(
         (position) => {
-          if(position){
+          if (position) {
             const { latitude, longitude } = position.coords;
 
             navigation.push('Location', {
@@ -53,7 +53,7 @@ const SearchAreaProject = () => {
 
   return (
     <SafeAreaView style={SearchAreaStyles.container}>
-      <BsearchBar
+      <BSearchBar
         placeholder="Cari alamat Area Proyek"
         left={<TextInput.Icon icon="magnify" />}
         right={<TextInput.Icon icon="close" />}

@@ -50,7 +50,7 @@ const BSearchBarDefaultProps = {
   dense: true,
 };
 
-const BsearchBar = ({
+const BSearchBar = ({
   mode,
   left,
   right,
@@ -96,6 +96,6 @@ const BsearchBar = ({
   );
 };
 
-BsearchBar.defaultProps = BSearchBarDefaultProps;
+BSearchBar.defaultProps = BSearchBarDefaultProps;
 
-export default BsearchBar;
+export default BSearchBar;
