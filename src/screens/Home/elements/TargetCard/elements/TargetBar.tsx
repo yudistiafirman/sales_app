@@ -81,7 +81,7 @@ export default function TargetBar({
 
 const style = StyleSheet.create({
   targetBar: {
-    height: scaleSize.moderateScale(43),
+    height: scaleSize.moderateScale(35),
     display: 'flex',
     flexDirection: `row`,
     justifyContent: `center`,

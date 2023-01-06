@@ -3,14 +3,13 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import BTabScreen from '@/navigation/elements/BTabScreen';
-import PriceList from '@/screens/Price/PriceList';
+import PriceList from '@/screens/Price';
 import CustomSalesTabBar from './SalesTabBar';
 import Profile from '@/screens/Profile';
 import Transactions from '@/screens/Transactions';
 import Home from '@/screens/Home';
 
 const Tab = createBottomTabNavigator();
-
 function SalesTabs() {
   return (
     <Tab.Navigator

@@ -1,11 +1,13 @@
-import { scaleSize } from '@/utils';
 import * as React from 'react';
+import scaleSize from '@/utils/scale';
 import { Dimensions, Platform, ViewStyle } from 'react-native';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
   PROVIDER_DEFAULT,
+  Circle,
 } from 'react-native-maps';
+import colors from '@/constants/colors';
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
@@ -32,7 +34,7 @@ type Details = {
 
 interface Blocation {
   mapStyle?: ViewStyle | undefined;
-  region?: Region | undefined;
+  region?: LatLng & Region;
   onRegionChange?: ((region: Region, details: Details) => void) | undefined;
   coordinate: LatLng;
   CustomMarker?: React.ReactNode | undefined;
@@ -72,6 +74,12 @@ const BLocation = ({
       rotateEnabled={false}
     >
       <Marker coordinate={coordinate}>{CustomMarker}</Marker>
+      <Circle
+        center={coordinate}
+        fillColor={`${colors.primary}60`}
+        radius={700}
+        strokeWidth={0}
+      />
     </MapView>
   );
 };

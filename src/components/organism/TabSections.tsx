@@ -31,6 +31,7 @@ const BTabSections = ({
           tabStyle={tabStyle}
           style={{ backgroundColor: colors.white }}
           renderLabel={BTabLabels}
+          scrollEnabled={true}
         />
       )}
     />

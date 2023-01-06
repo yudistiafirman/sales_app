@@ -1,14 +1,10 @@
 import { View, StyleSheet, Animated, Easing } from 'react-native';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import TargetBar from './elements/TargetBar';
 import TopVisitation from './elements/TopVisitation';
 import scaleSize from '@/utils/scale';
-// import LinearGradient from 'react-native-linear-gradient';
-// import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-
-// const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type TargetCardProps = {
   maxVisitation: number;
@@ -39,7 +35,7 @@ export default function TargetCard({
 
   const containerHeight = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [130, 130],
+    outputRange: [90, 100],
   });
 
   return (
@@ -55,14 +51,6 @@ export default function TargetCard({
         ]}
       >
         <View style={style.targetContainer}>
-          {/* <ShimmerPlaceHolder
-            visible={!isLoading}
-            LinearGradient={LinearGradient}
-            style={{
-              width: '80%',
-              borderRadius: 8,
-            }}
-          > */}
           <TopVisitation
             maxVisitation={maxVisitation}
             currentVisitaion={currentVisitaion}
@@ -75,7 +63,6 @@ export default function TargetCard({
             isExpanded={isExpandedLocal}
             isLoading={isLoading}
           />
-          {/* </ShimmerPlaceHolder> */}
         </View>
       </Animated.View>
     </View>
@@ -84,17 +71,13 @@ export default function TargetCard({
 
 const style = StyleSheet.create({
   targetContainer: {
-    padding: scaleSize.moderateScale(10),
     backgroundColor: colors.white,
     borderRadius: 8,
-    minHeight: scaleSize.moderateScale(60),
-    marginTop: scaleSize.moderateScale(10),
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   count: {
     fontFamily: font.family.montserrat[700],
-    colors: `black`,
+    colors: colors.black,
   },
 });
