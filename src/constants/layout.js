@@ -5,7 +5,7 @@ const layout = {
   mainPad: resScale(16),
   spaceBetween: resScale(10),
   radius: {
-    sm: resScale(2),
+    xs: resScale(2),
     sm: resScale(4),
     md: resScale(8),
     lg: resScale(16),
