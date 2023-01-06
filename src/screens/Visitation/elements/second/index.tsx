@@ -1,6 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
-import { BDivider, BForm, BSearchBar, BSpacer, BText } from '@/components';
+import {
+  BDivider,
+  BForm,
+  BPic,
+  BSearchBar,
+  BSpacer,
+  BText,
+} from '@/components';
 import { Input, Styles } from '@/interfaces';
 
 interface SecondState {
@@ -110,7 +117,13 @@ const SecondStep = (props: IProps) => {
 
   return (
     <React.Fragment>
-      <BSearchBar />
+      <BSearchBar
+        fontSize={0}
+        color={''}
+        fontFamily={''}
+        backgroundColor={''}
+        lineHeight={0}
+      />
       <BSpacer size="small" />
       <View style={styles.dividerContainer}>
         <BDivider />
@@ -132,6 +145,8 @@ const SecondStep = (props: IProps) => {
         <BSpacer size="extraSmall" />
         <BDivider />
         <BSpacer size="small" />
+        {/* <BPic isOption={true} /> */}
+        <BSpacer size="large" />
       </View>
     </React.Fragment>
   );
