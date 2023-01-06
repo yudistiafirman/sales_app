@@ -1,44 +1,9 @@
-import React from 'react';
 import { TypedNavigator } from '@react-navigation/native';
-import { Text, View } from 'react-native';
 import BStackScreen from '@/navigation/elements/BStackScreen';
+import SearchProduct from '@/screens/SearchProduct';
+import Location from '@/screens/Location';
+import SearchAreaProject from '@/screens/SearchAreaProject';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
-
-function DetailsScreen() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Text>Details Screen</Text>
-    </View>
-  );
-}
-
-function DetailsScreen2() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Text>Details Screen 2</Text>
-    </View>
-  );
-}
-
-const VisitationStack = ({
-  Stack,
-}: {
-  Stack: TypedNavigator<any, any, any, any, any>;
-}) => {
-  return <CreateVisitation />;
-};
 
 function TestStack({
   Stack,
@@ -48,21 +13,27 @@ function TestStack({
   return [
     BStackScreen({
       Stack: Stack,
-      name: 'Details',
-      title: 'Details',
-      component: DetailsScreen,
-    }),
-    BStackScreen({
-      Stack: Stack,
-      name: 'Details2',
-      title: 'Details2',
-      component: DetailsScreen2,
-    }),
-    BStackScreen({
-      Stack: Stack,
       name: 'Create Visitation',
       title: 'Create Visitation',
       component: CreateVisitation,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'SearchProduct',
+      title: 'SearchProduct',
+      component: SearchProduct,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'Location',
+      title: 'Pilih Area Proyek',
+      component: Location,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'SearchArea',
+      title: 'Pilih Area Proyek',
+      component: SearchAreaProject,
     }),
   ];
 }

@@ -1,17 +1,19 @@
 const colors = {
   primary: '#E52525',
   secondary: '#FBC12C',
+  tertiary: '#F6F8FC',
   disabled: '#D9D9D9',
   offWhite: '#F6F8FC',
-  // border: '#E6EDF6',
   white: '#FFFFFF',
   black: '#191919',
   lightGray: '#E6E6E6',
   text: {
     dark: '#191919',
+    darker: '#202020',
     light: '#FFFFFF',
     inactive: '#010206',
     divider: '#9A9A9A',
+    blue: '#0080FF',
   },
   status: {
     grey: '#D7D7D7',
@@ -32,6 +34,8 @@ const colors = {
   border: {
     default: '#E6EDF6',
     grey: '#C1C1C1',
+    disabled: '#F5F5F5',
+    tab: '#C7C7C7',
     altGrey: '#C7C7C7',
   },
   chip: {

@@ -18,12 +18,12 @@ export default function BQuickActionButton({ item }: { item: buttonDataType }) {
 }
 const style = StyleSheet.create({
   buttonContainer: {
-    backgroundColor: `white`,
+    backgroundColor: colors.white,
     width: scaleSize.moderateScale(90),
     height: scaleSize.moderateScale(93),
     borderRadius: scaleSize.moderateScale(8),
-    justifyContent: `center`,
-    alignItems: `center`,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: scaleSize.moderateScale(10),
   },
   buttonTitle: {
