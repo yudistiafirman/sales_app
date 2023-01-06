@@ -1,4 +1,4 @@
-import BsearchBar from '@/components/molecules/BSearchBar';
+import BSearchBar from '@/components/molecules/BSearchBar';
 import React from 'react';
 import { GestureResponderEvent, TouchableOpacity } from 'react-native';
 import PriceStyle from '../PriceStyle';
@@ -11,7 +11,7 @@ const PriceSearchBar = ({
 }) => {
   return (
     <TouchableOpacity style={PriceStyle.searchBarWrapper} onPress={onPress}>
-      <BsearchBar
+      <BSearchBar
         left={<TextInput.Icon icon="magnify" />}
         placeholder="Cari Produk"
         disabled

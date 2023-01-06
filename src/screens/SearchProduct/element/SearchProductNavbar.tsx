@@ -1,4 +1,4 @@
-import BsearchBar from '@/components/molecules/BSearchBar';
+import BSearchBar from '@/components/molecules/BSearchBar';
 import React from 'react';
 import {
   SafeAreaView,
@@ -27,7 +27,7 @@ const SearchProductNavbar = ({
 }: SearchProductNavbarProps) => {
   return (
     <View style={SearchProductStyles.searchBarContainer}>
-      <BsearchBar
+      <BSearchBar
         value={value}
         onChangeText={onChangeText}
         placeholder="Cari Produk"
