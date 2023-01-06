@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Colors, Layout } from '@/constants';
+import { colors, layout } from '@/constants';
 import { Styles } from '@/interfaces';
 import { scaleSize } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
@@ -17,10 +17,10 @@ const styles: Styles = {
     alignItems: 'center',
     paddingHorizontal: scaleSize.moderateScale(20),
     paddingVertical: scaleSize.verticalScale(10),
-    backgroundColor: Colors.offWhite,
-    borderRadius: Layout.radius.md,
+    backgroundColor: colors.offWhite,
+    borderRadius: layout.radius.md,
     borderWidth: 2,
-    borderColor: Colors.border.default,
+    borderColor: colors.border.default,
   },
 };
 
