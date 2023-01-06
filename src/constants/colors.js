@@ -12,6 +12,7 @@ const colors = {
     darker: '#202020',
     light: '#FFFFFF',
     inactive: '#010206',
+    divider: '#9A9A9A',
     blue: '#0080FF',
   },
   status: {
@@ -31,7 +32,7 @@ const colors = {
     input: '#202020',
   },
   border: {
-    oldBorder: '#E6EDF6',
+    default: '#E6EDF6',
     grey: '#C1C1C1',
     disabled: '#F5F5F5',
     tab: '#C7C7C7',

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
-import BsearchBar from '@/components/molecules/BsearchBar';
+import BsearchBar from '@/components/molecules/BSearchBar';
 import scaleSize from '@/utils/scale';
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect, useState } from 'react';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import scaleSize from '@/utils/scale';
-import { Dimensions, Image, Platform, View, ViewStyle } from 'react-native';
+import { Dimensions, Platform, ViewStyle } from 'react-native';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,

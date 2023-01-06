@@ -1,4 +1,4 @@
-import BsearchBar from '@/components/molecules/BsearchBar';
+import BsearchBar from '@/components/molecules/BSearchBar';
 import React from 'react';
 import { GestureResponderEvent, TouchableOpacity } from 'react-native';
 import PriceStyle from '../PriceStyle';

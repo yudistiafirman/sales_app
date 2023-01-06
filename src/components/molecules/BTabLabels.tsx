@@ -29,7 +29,7 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
   };
 
   const BTabLabelsTextStyle: TextStyle = {
-    color: focused ? colors.primary : colors.text.darker,
+    color: focused ? colors.primary : colors.text.dark,
     fontFamily: focused
       ? font.family.montserrat['600']
       : font.family.montserrat['400'],
