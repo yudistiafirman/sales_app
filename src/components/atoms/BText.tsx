@@ -1,13 +1,14 @@
+import React from 'react';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import {Text, TextProps, TextStyle} from 'react-native';
+import { Text, TextProps, TextStyle } from 'react-native';
 
 const BText = ({
   children,
   style,
   type,
   ...props
-}: {children: any; type?: 'default' | 'header'} & TextProps) => {
+}: { children: any; type?: 'default' | 'header' } & TextProps) => {
   const _defaultStyle: TextStyle = {
     color: colors.text.dark,
     fontFamily: font.family.montserrat[400],
