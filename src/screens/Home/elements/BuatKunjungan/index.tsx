@@ -3,7 +3,7 @@ import React from 'react';
 import { BottomSheetFooter } from '@gorhom/bottom-sheet';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import respFS from '@/utils/respFS';
+import respFS from '@/utils/resFontSize';
 import BButtonPrimary from '@/components/atoms/BButtonPrimary';
 
 export default function BuatKunjungan(props: any, kunjunganAction: () => void) {

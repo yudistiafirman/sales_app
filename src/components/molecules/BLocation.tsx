@@ -1,5 +1,5 @@
 import * as React from 'react';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import { Dimensions, Platform, ViewStyle } from 'react-native';
 import MapView, {
   Marker,
@@ -42,7 +42,7 @@ interface Blocation {
 
 const bLocationDefaultStyle = {
   width: width,
-  height: height - scaleSize.moderateScale(64),
+  height: height - resScale(64),
 };
 
 const bLocationDefaultRegion = {

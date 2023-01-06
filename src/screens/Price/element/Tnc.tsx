@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import colors from '@/constants/colors';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import React from 'react';
 import AutoHeightWebView from 'react-native-autoheight-webview';
 import Modal from 'react-native-modal';
@@ -23,7 +23,7 @@ const Tnc = ({ isVisible, onCloseTnc }: TncProps) => {
 
   const contentContainer: ViewStyle = {
     flex: 1,
-    marginRight: scaleSize.moderateScale(16),
+    marginRight: resScale(16),
   };
 
   const htmlStyle = `
@@ -35,11 +35,7 @@ const Tnc = ({ isVisible, onCloseTnc }: TncProps) => {
   const leftIcon = () => {
     return (
       <TouchableOpacity onPress={onCloseTnc}>
-        <Icon
-          name="close"
-          size={scaleSize.moderateScale(19)}
-          color={colors.text.darker}
-        />
+        <Icon name="close" size={resScale(19)} color={colors.text.darker} />
       </TouchableOpacity>
     );
   };

@@ -9,7 +9,7 @@ import SearchProductStyles from './styles';
 import ProductList from '@/components/templates/Price/ProductList';
 import { useNavigation } from '@react-navigation/native';
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import debounce from 'lodash.debounce';
 
 const SearchProduct = () => {
@@ -27,9 +27,9 @@ const SearchProduct = () => {
       headerBackVisible: false,
       headerLeft: () => (
         <BHeaderIcon
-          size={scaleSize.moderateScale(30)}
+          size={resScale(30)}
           iconName="chevron-left"
-          marginRight={scaleSize.moderateScale(16)}
+          marginRight={resScale(16)}
           onBack={() => navigation.goBack()}
         />
       ),

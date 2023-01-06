@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
-import respFS from '@/utils/respFS';
+import respFS from '@/utils/resFontSize';
 import font from '@/constants/fonts';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 
 type locationType = {
   location?: string;
@@ -36,6 +36,6 @@ const style = StyleSheet.create({
     fontSize: respFS(12),
   },
   iconStyle: {
-    marginRight: scaleSize.moderateScale(7),
+    marginRight: resScale(7),
   },
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TextProps, TextStyle } from 'react-native';
-import { Colors, Font } from '@/constants';
+import { colors, fonts } from '@/constants';
 import { resFontSize } from '@/utils';
 
 interface IProps {
@@ -33,9 +33,9 @@ const BText = ({
   ...props
 }: IProps & TextProps) => {
   const _defaultStyle: TextStyle = {
-    color: Colors.text.dark,
-    fontFamily: Font.family.montserrat[400],
-    fontSize: Font.size.sm,
+    color: colors.text.dark,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
   };
   let _style: TextStyle = {
     ..._defaultStyle,
@@ -43,22 +43,22 @@ const BText = ({
   if (type === 'header') {
     _style = {
       ..._style,
-      fontFamily: Font.family.montserrat[600],
-      fontSize: Font.size.xl,
+      fontFamily: fonts.family.montserrat[600],
+      fontSize: fonts.size.xl,
     };
   }
 
   if (color === 'primary') {
     _style = {
       ..._style,
-      color: Colors.primary,
+      color: colors.primary,
     };
   }
 
   if (color === 'divider') {
     _style = {
       ..._style,
-      color: Colors.text.divider,
+      color: colors.text.divider,
     };
   }
 

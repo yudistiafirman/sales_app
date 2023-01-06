@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import BSearchBar from '@/components/molecules/BSearchBar';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
@@ -20,7 +20,7 @@ const SearchAreaProject = () => {
       headerBackVisible: false,
       headerLeft: () => (
         <BHeaderIcon
-          size={scaleSize.moderateScale(23)}
+          size={resScale(23)}
           onBack={() => navigation.goBack()}
           iconName="x"
         />

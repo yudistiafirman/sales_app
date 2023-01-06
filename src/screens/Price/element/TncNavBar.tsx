@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import { TextStyle, View, ViewStyle } from 'react-native';
 import BText from '../../../components/atoms/BText';
 import * as React from 'react';
@@ -18,9 +18,9 @@ const TncNavBar = ({
   headerTitle,
 }: TncBarProps) => {
   const NavbarContainerStyles: ViewStyle = {
-    height: scaleSize.moderateScale(66),
+    height: resScale(66),
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   };
 
   const leftComponentStyles: ViewStyle = {

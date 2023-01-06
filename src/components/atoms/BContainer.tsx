@@ -1,8 +1,8 @@
 import React from 'react';
-import { scaleSize } from '@/utils';
+import { resScale } from '@/utils';
 import { StyleProp, ViewStyle } from 'react-native';
 import { View } from 'react-native';
-import { Colors, Layout } from '@/constants';
+import { colors, layout } from '@/constants';
 
 interface IProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ interface IProps {
 
 const containerStyle: StyleProp<ViewStyle> = {
   flex: 1,
-  padding: scaleSize.moderateScale(20),
+  padding: resScale(20),
 };
 
 const makeStyle = ({ bgc, radius, border }: IProps): StyleProp<ViewStyle> => {
@@ -21,7 +21,7 @@ const makeStyle = ({ bgc, radius, border }: IProps): StyleProp<ViewStyle> => {
   if (bgc === 'grey') {
     styles = {
       ...styles,
-      backgroundColor: Colors.offWhite,
+      backgroundColor: colors.offWhite,
     };
   }
 
@@ -30,10 +30,10 @@ const makeStyle = ({ bgc, radius, border }: IProps): StyleProp<ViewStyle> => {
       ...styles,
       borderRadius:
         radius === 'sm'
-          ? Layout.radius.sm
+          ? layout.radius.sm
           : radius === 'md'
-          ? Layout.radius.md
-          : Layout.radius.lg,
+          ? layout.radius.md
+          : layout.radius.lg,
     };
   }
 
@@ -41,7 +41,7 @@ const makeStyle = ({ bgc, radius, border }: IProps): StyleProp<ViewStyle> => {
     styles = {
       ...styles,
       borderWidth: 1,
-      borderColor: Colors.border.default,
+      borderColor: colors.border.default,
     };
   }
 

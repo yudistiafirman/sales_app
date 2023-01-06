@@ -2,7 +2,7 @@
 import BText from '@/components/atoms/BText';
 import BViewMoreText from '@/components/molecules/BViewMoreText';
 import colors from '@/constants/colors';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import React from 'react';
 import { GestureResponderEvent, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -17,24 +17,21 @@ const CurrentLocation = ({ location, onPress }: CurrentLocationProps) => {
     <TouchableOpacity
       style={{
         flexDirection: 'row',
-        marginHorizontal: scaleSize.moderateScale(16),
-        marginBottom: scaleSize.moderateScale(9.5),
+        marginHorizontal: resScale(16),
+        marginBottom: resScale(9.5),
       }}
       onPress={onPress}
     >
       <Icon
         name="map-pin"
-        style={{ marginRight: scaleSize.moderateScale(8) }}
+        style={{ marginRight: resScale(8) }}
         color={colors.text.blue}
       />
-      <BViewMoreText
-        textStyle={{ width: scaleSize.moderateScale(316) }}
-        numberOfLines={1}
-      >
+      <BViewMoreText textStyle={{ width: resScale(316) }} numberOfLines={1}>
         <BText
           style={{
             fontFamily: font.family.montserrat['300'],
-            fontSize: scaleSize.moderateScale(10),
+            fontSize: resScale(10),
             color: colors.text.blue,
           }}
         >

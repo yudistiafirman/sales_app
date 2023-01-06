@@ -1,2 +1,2 @@
-export { default as scaleSize } from './scale';
-export { default as resFontSize } from './respFS';
+export { default as resScale } from './resScale';
+export { default as resFontSize } from './resFontSize';

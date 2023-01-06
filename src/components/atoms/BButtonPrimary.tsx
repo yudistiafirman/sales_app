@@ -8,8 +8,8 @@ import {
 import React from 'react';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import respFS from '@/utils/respFS';
-import scaleSize from '@/utils/scale';
+import respFS from '@/utils/resFontSize';
+import resScale from '@/utils/resScale';
 
 type BButtonPrimaryType = {
   title: string;
@@ -69,6 +69,6 @@ const style = StyleSheet.create({
   outlineButton: {
     backgroundColor: colors.white,
     borderColor: colors.primary,
-    borderWidth: scaleSize.moderateScale(1),
+    borderWidth: resScale(1),
   },
 });

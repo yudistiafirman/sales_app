@@ -1,6 +1,6 @@
 import BSpinner from '@/components/atoms/BSpinner';
 import PriceListCard from '@/components/templates/Price/PriceListCard';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import React from 'react';
 import { FlatList } from 'react-native';
 import EmptyProduct from './EmptyProduct';
@@ -40,7 +40,7 @@ const ProductList = <ArrayOfObject extends productsData>({
   return (
     <FlatList
       data={products}
-      contentContainerStyle={{ marginHorizontal: scaleSize.moderateScale(16) }}
+      contentContainerStyle={{ marginHorizontal: resScale(16) }}
       keyExtractor={(item, index) => index.toString()}
       onEndReached={onEndReached}
       refreshing={refreshing}

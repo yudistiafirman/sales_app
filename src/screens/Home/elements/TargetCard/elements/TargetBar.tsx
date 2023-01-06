@@ -2,7 +2,7 @@ import { View, StyleSheet } from 'react-native';
 import React, { useMemo } from 'react';
 import colors from '@/constants/colors';
 import EmptyItem from './EmptyItem';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -81,7 +81,7 @@ export default function TargetBar({
 
 const style = StyleSheet.create({
   targetBar: {
-    height: scaleSize.moderateScale(35),
+    height: resScale(35),
     display: 'flex',
     flexDirection: `row`,
     justifyContent: `center`,
@@ -92,23 +92,23 @@ const style = StyleSheet.create({
     display: `flex`,
     flexDirection: `row`,
     backgroundColor: colors.lightGray,
-    borderRadius: scaleSize.moderateScale(8),
+    borderRadius: resScale(8),
     position: `relative`,
   },
   progressCont: {
     position: `absolute`,
     flexDirection: `row`,
     zIndex: 5,
-    borderRadius: scaleSize.moderateScale(8),
+    borderRadius: resScale(8),
     backgroundColor: colors.primary,
   },
   progress: {
-    height: scaleSize.moderateScale(8),
-    width: scaleSize.moderateScale(20),
+    height: resScale(8),
+    width: resScale(20),
   },
   shimmerStyle: {
-    borderRadius: scaleSize.moderateScale(8),
+    borderRadius: resScale(8),
     width: '100%',
-    height: scaleSize.moderateScale(43),
+    height: resScale(43),
   },
 });

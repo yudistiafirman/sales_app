@@ -6,7 +6,7 @@ import colors from '@/constants/colors';
 import { View, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type BTabViewScreenType = {
@@ -85,11 +85,11 @@ const style = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     alignItems: 'center',
-    marginTop: scaleSize.moderateScale(10),
+    marginTop: resScale(10),
   },
   loading: {
-    width: scaleSize.moderateScale(320),
-    height: scaleSize.moderateScale(60),
-    borderRadius: scaleSize.moderateScale(8),
+    width: resScale(320),
+    height: resScale(60),
+    borderRadius: resScale(8),
   },
 });

@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import font from '@/constants/fonts';
-import respFS from '@/utils/respFS';
+import respFS from '@/utils/resFontSize';
 import colors from '@/constants/colors';
 import HighlightText from '../../../atoms/BHighlightText';
 
@@ -45,14 +45,14 @@ export default function PillNames({
 const style = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginTop: scaleSize.moderateScale(10),
+    marginTop: resScale(10),
   },
   bluePill: {
-    padding: scaleSize.moderateScale(2),
+    padding: resScale(2),
     backgroundColor: '#B0D8FF',
-    paddingVertical: scaleSize.moderateScale(1),
-    paddingHorizontal: scaleSize.moderateScale(10),
-    borderRadius: scaleSize.moderateScale(32),
+    paddingVertical: resScale(1),
+    paddingHorizontal: resScale(10),
+    borderRadius: resScale(32),
   },
   bluePillText: {
     fontFamily: font.family.montserrat[400],
@@ -60,6 +60,6 @@ const style = StyleSheet.create({
     color: colors.textInput.input,
   },
   margin: {
-    marginRight: scaleSize.moderateScale(10),
+    marginRight: resScale(10),
   },
 });

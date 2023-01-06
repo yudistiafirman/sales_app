@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Colors, Layout } from '@/constants';
+import { colors, layout } from '@/constants';
 import { Styles } from '@/interfaces';
-import { scaleSize } from '@/utils';
+import { resScale } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
 import BText from '../atoms/BText';
 import { RadioButton } from 'react-native-paper';
@@ -15,12 +15,12 @@ const styles: Styles = {
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: scaleSize.moderateScale(20),
-    paddingVertical: scaleSize.verticalScale(10),
-    backgroundColor: Colors.offWhite,
-    borderRadius: Layout.radius.md,
+    paddingHorizontal: resScale(20),
+    paddingVertical: resScale(10),
+    backgroundColor: colors.offWhite,
+    borderRadius: layout.radius.md,
     borderWidth: 2,
-    borderColor: Colors.border.default,
+    borderColor: colors.border.default,
   },
 };
 
@@ -31,7 +31,7 @@ const makeStyle = ({ isOption }: IProps) => {
     _style = {
       container: {
         ...(_style.container as Object),
-        paddingHorizontal: scaleSize.moderateScale(10),
+        paddingHorizontal: resScale(10),
       },
     };
   }

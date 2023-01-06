@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import React from 'react';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import font from '@/constants/fonts';
 import colors from '@/constants/colors';
-import respFS from '@/utils/respFS';
+import respFS from '@/utils/resFontSize';
 
 export default function BQuickActionButton({ item }: { item: buttonDataType }) {
   return (
@@ -19,17 +19,17 @@ export default function BQuickActionButton({ item }: { item: buttonDataType }) {
 const style = StyleSheet.create({
   buttonContainer: {
     backgroundColor: colors.white,
-    width: scaleSize.moderateScale(90),
-    height: scaleSize.moderateScale(93),
-    borderRadius: scaleSize.moderateScale(8),
+    width: resScale(90),
+    height: resScale(93),
+    borderRadius: resScale(8),
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: scaleSize.moderateScale(10),
+    marginRight: resScale(10),
   },
   buttonTitle: {
     fontFamily: font.family.montserrat[600],
     color: colors.black,
     fontSize: respFS(12),
-    marginTop: scaleSize.moderateScale(8),
+    marginTop: resScale(8),
   },
 });
