@@ -1,10 +1,10 @@
-import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
 import resScale from '@/utils/resScale';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import SearchAreaStyles from '../styles';
 import Icons from 'react-native-vector-icons/Feather';
+import { BText } from '@/components';
 
 interface LocationListCardProps {
   onPress: () => void;

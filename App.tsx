@@ -15,6 +15,8 @@ import {
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Provider as ReduxProvider } from 'react-redux';
+import { store } from '@/redux/store';
 
 const navTheme = {
   ...NavigationTheme,
@@ -50,7 +52,9 @@ function App() {
           translucent={true}
         />
         <PaperProvider theme={paperTheme}>
-          <AppNavigator />
+          <ReduxProvider store={store}>
+            <AppNavigator />
+          </ReduxProvider>
         </PaperProvider>
       </NavigationContainer>
     </GestureHandlerRootView>

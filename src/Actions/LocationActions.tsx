@@ -1,5 +1,5 @@
-import BrikApi from '@/BrikApi/BrikApi';
-import { catchError, getOptions, request } from '@/Networking/request';
+import BrikApi from '@/brikApi/BrikApi';
+import { catchError, getOptions, request } from '@/networking/request';
 
 export const getLocationCoordinates = (
   token: string,
