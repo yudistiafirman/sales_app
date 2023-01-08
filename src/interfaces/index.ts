@@ -8,7 +8,13 @@ import {
 interface Input {
   label: string;
   isRequire: boolean;
-  type: 'textInput' | 'cardOption' | 'comboDropdown' | 'area' | 'dropdown';
+  type:
+    | 'textInput'
+    | 'cardOption'
+    | 'comboDropdown'
+    | 'area'
+    | 'dropdown'
+    | 'PIC';
   onChange?: (e: any) => void;
   value: string | any;
   isError?: boolean;
@@ -52,7 +58,10 @@ interface Input {
     isErrorTwo?: boolean;
     errorMessageOne?: string;
     errorMessageTwo?: string;
+    valueOne?: any;
+    valueTwo?: any;
   };
+  onSelect?: (index: number) => void; //eg for pic radio
 }
 
 interface Styles {
@@ -60,13 +69,50 @@ interface Styles {
 }
 
 // create visitation
+
+interface CreateVisitationSecondStep {
+  companyName: string;
+  customerType: string;
+  projectName: string;
+  location: {};
+  pics: PIC[];
+}
+interface CreateVisitationThirdStep {
+  stageProject: string;
+  products: any[];
+  estimationDate: {
+    estimationWeek: number | null;
+    estimationMonth: number | null;
+  };
+  paymentType: string;
+  notes: string;
+}
 interface CreateVisitationState {
   step: number;
-  state: any[];
+  stepOne: {};
+  stepTwo: CreateVisitationSecondStep;
+  stepThree: CreateVisitationThirdStep;
+  sheetIndex: number;
+}
+
+interface PIC {
+  name?: string;
+  phone?: string;
+  email?: string;
+  position?: string;
+  isSelected?: boolean;
 }
 
 interface NavigationProps {
   navigate: (screen?: string) => void;
 }
 
-export type { Input, Styles, CreateVisitationState, NavigationProps };
+export type {
+  Input,
+  Styles,
+  CreateVisitationState,
+  CreateVisitationSecondStep,
+  CreateVisitationThirdStep,
+  NavigationProps,
+  PIC,
+};

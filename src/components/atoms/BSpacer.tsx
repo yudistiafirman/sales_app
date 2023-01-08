@@ -1,9 +1,10 @@
+import { layout } from '@/constants';
 import { scaleSize } from '@/utils';
 import React from 'react';
 import { View, StyleProp, ViewStyle } from 'react-native';
 
 interface IProps {
-  size: 'extraSmall' | 'small' | 'medium' | 'large' | number;
+  size: 'extraSmall' | 'small' | 'medium' | 'large' | 'extraLarge' | number;
 }
 
 const styles: StyleProp<ViewStyle> = {
@@ -14,28 +15,35 @@ const makeStyle = ({ size }: IProps): ViewStyle => {
   if (size === 'extraSmall') {
     return {
       ...styles,
-      margin: scaleSize.moderateScale(5),
+      margin: layout.pad.xs,
     };
   }
 
   if (size === 'small') {
     return {
       ...styles,
-      margin: scaleSize.moderateScale(10),
+      margin: layout.pad.sm,
     };
   }
 
   if (size === 'medium') {
     return {
       ...styles,
-      margin: scaleSize.moderateScale(15),
+      margin: layout.pad.md,
     };
   }
 
   if (size === 'large') {
     return {
       ...styles,
-      margin: scaleSize.moderateScale(20),
+      margin: layout.pad.lg,
+    };
+  }
+
+  if (size === 'extraLarge') {
+    return {
+      ...styles,
+      margin: layout.pad.xl,
     };
   }
 

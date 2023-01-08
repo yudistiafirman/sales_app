@@ -1,14 +1,16 @@
 import React from 'react';
 import { View } from 'react-native';
 import { colors, layout } from '@/constants';
-import { Styles } from '@/interfaces';
+import { PIC, Styles } from '@/interfaces';
 import { scaleSize } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
 import BText from '../atoms/BText';
 import { RadioButton } from 'react-native-paper';
 
-interface IProps {
+interface IProps extends PIC {
   isOption?: boolean;
+  onSelect: (index: number) => void;
+  index: number;
 }
 
 const styles: Styles = {
@@ -39,29 +41,46 @@ const makeStyle = ({ isOption }: IProps) => {
   return _style;
 };
 
-const BPic = ({ isOption }: IProps): React.ReactNode => {
+const BPic = ({
+  isOption,
+  email,
+  name,
+  phone,
+  position,
+  isSelected,
+  onSelect,
+  index,
+}: IProps): JSX.Element => {
   return (
-    <View style={makeStyle({ isOption }).container}>
+    <View style={makeStyle({ isOption, index, onSelect }).container}>
       {isOption && (
         <React.Fragment>
-          <RadioButton value="first" status={'checked'} onPress={() => {}} />
+          <RadioButton
+            value={phone!}
+            status={isSelected ? 'checked' : 'unchecked'}
+            onPress={() => {
+              if (onSelect) {
+                onSelect(index!);
+              }
+            }}
+          />
           <BSpacer size="extraSmall" />
         </React.Fragment>
       )}
       <View>
         <BText>Nama</BText>
-        <BText bold="bold">Johnny</BText>
+        <BText bold="bold">{name}</BText>
         <BSpacer size="extraSmall" />
         <BText>No. Telepon</BText>
-        <BText bold="bold">+62 811 2886 9884</BText>
+        <BText bold="bold">+62{phone}</BText>
       </View>
       <BSpacer size="extraSmall" />
       <View>
         <BText>Jabatan</BText>
-        <BText bold="bold">Mandor</BText>
+        <BText bold="bold">{position}</BText>
         <BSpacer size="extraSmall" />
         <BText>email</BText>
-        <BText bold="bold">johnny@gmail.com</BText>
+        <BText bold="bold">{email}</BText>
       </View>
     </View>
   );

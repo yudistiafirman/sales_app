@@ -8,6 +8,8 @@ import BComboDropdown from '../molecules/BComboDropdown';
 import BDropdown from '../atoms/BDropdown';
 import BLabel from '../molecules/BLabel';
 import BText from '../atoms/BText';
+import BDivider from '../atoms/BDivider';
+import BPicList from './BPicList';
 
 interface IProps {
   inputs: Input[];
@@ -35,6 +37,7 @@ const renderInput = (input: Input): React.ReactNode => {
     dropdown,
     isRequire,
     isError,
+    onSelect,
   } = input;
 
   if (type === 'textInput') {
@@ -112,7 +115,7 @@ const renderInput = (input: Input): React.ReactNode => {
             items={dropdown.items}
             onChange={dropdown.onChange}
             placeholder={dropdown.placeholder}
-            isError
+            isError={isError}
             errorMessage={`${label} harus dipilih`}
           />
         </React.Fragment>
@@ -131,6 +134,28 @@ const renderInput = (input: Input): React.ReactNode => {
       );
     }
   }
+
+  if (type === 'PIC') {
+    return (
+      <React.Fragment>
+        <BSpacer size="medium" />
+        <View style={styles.optionContainer}>
+          <BText type="header">PIC</BText>
+          <BText bold="500" color="primary" onPress={onChange}>
+            + Tambah PIC
+          </BText>
+        </View>
+        <BSpacer size="extraSmall" />
+        <BDivider />
+        <BSpacer size="medium" />
+        <BPicList
+          isOption={value.length > 1 ? true : false}
+          data={value}
+          onSelect={onSelect!}
+        />
+      </React.Fragment>
+    );
+  }
 };
 
 const BForm = ({ inputs }: IProps) => {
@@ -139,7 +164,7 @@ const BForm = ({ inputs }: IProps) => {
       {inputs.map((input, index) => (
         <React.Fragment key={index}>
           {renderInput(input)}
-          <BSpacer size="small" />
+          <BSpacer size="medium" />
         </React.Fragment>
       ))}
     </View>

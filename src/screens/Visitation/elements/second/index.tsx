@@ -1,68 +1,29 @@
 import React from 'react';
 import { View } from 'react-native';
-import {
-  BDivider,
-  BForm,
-  BPic,
-  BSearchBar,
-  BSpacer,
-  BText,
-} from '@/components';
-import { Input, Styles } from '@/interfaces';
-
-interface SecondState {
-  location: {};
-  customerType: string;
-  companyName: string;
-  projectName: string;
-}
-
-interface IState {
-  step: number;
-  stepOne: {};
-  stepTwo: {};
-}
-
+import { BDivider, BForm, BSearchBar, BSpacer, BText } from '@/components';
+import { CreateVisitationSecondStep, Input, Styles } from '@/interfaces';
+import { createVisitationContext } from '@/context/CreateVisitationContext';
 interface IProps {
-  updateValue: (key: keyof IState, value: any) => void;
+  openBottomSheet: () => void;
 }
-
-const styles: Styles = {
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  picContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-};
 
 const company = require('@/assets/icon/Visitation/company.png');
 const individu = require('@/assets/icon/Visitation/profile.png');
 
-const SecondStep = (props: IProps) => {
-  const { updateValue } = props;
+const SecondStep = ({ openBottomSheet }: IProps) => {
+  const { values, action } = React.useContext(createVisitationContext);
+  const { stepTwo: state } = values;
+  const { updateValueOnstep } = action;
 
-  const [state, setState] = React.useState<SecondState>({
-    companyName: '',
-    customerType: '',
-    location: {},
-    projectName: '',
-  });
-
-  const onChange = (key: keyof SecondState) => (e: any) => {
-    setState({
-      ...state,
-      [key]: e,
-    });
+  const onChange = (key: keyof CreateVisitationSecondStep) => (e: any) => {
+    updateValueOnstep('stepTwo', key, e);
   };
 
   const inputs: Input[] = [
     {
       label: 'Jenis Pelanggan',
       isRequire: true,
-      isError: true,
+      isError: false,
       type: 'cardOption',
       onChange: onChange('customerType'),
       value: state.customerType,
@@ -88,8 +49,7 @@ const SecondStep = (props: IProps) => {
     {
       label: 'Nama Perusahaan',
       isRequire: true,
-      isError: true,
-
+      isError: false,
       type: 'textInput',
       onChange: onChange('companyName'),
       value: state.companyName,
@@ -97,23 +57,31 @@ const SecondStep = (props: IProps) => {
     {
       label: 'Nama Proyek',
       isRequire: true,
-      isError: true,
-
+      isError: false,
       type: 'textInput',
       onChange: onChange('projectName'),
       value: state.projectName,
     },
+    {
+      label: 'PIC',
+      isRequire: true,
+      isError: false,
+      type: 'PIC',
+      value: state.pics,
+      onChange: () => {
+        openBottomSheet();
+      },
+      onSelect: (index: number) => {
+        const newPicList = values.stepTwo.pics.map((el, _index) => {
+          return {
+            ...el,
+            isSelected: _index === index,
+          };
+        });
+        updateValueOnstep('stepTwo', 'pics', newPicList);
+      },
+    },
   ];
-
-  const onAddPic = () => {
-    console.log(state, 'ini state<<<<<');
-  };
-
-  React.useEffect(() => {
-    updateValue('stepTwo', state);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
 
   return (
     <React.Fragment>
@@ -124,7 +92,7 @@ const SecondStep = (props: IProps) => {
         backgroundColor={''}
         lineHeight={0}
       />
-      <BSpacer size="small" />
+      <BSpacer size="medium" />
       <View style={styles.dividerContainer}>
         <BDivider />
         <BSpacer size="extraSmall" />
@@ -132,24 +100,25 @@ const SecondStep = (props: IProps) => {
         <BSpacer size="extraSmall" />
         <BDivider />
       </View>
-      <BSpacer size="small" />
+      <BSpacer size="medium" />
       <View>
         <BForm inputs={inputs} />
-        <BSpacer size="small" />
-        <View style={styles.picContainer}>
-          <BText type="header">PIC</BText>
-          <BText bold="500" color="primary" onPress={onAddPic}>
-            + Tambah PIC
-          </BText>
-        </View>
-        <BSpacer size="extraSmall" />
-        <BDivider />
-        <BSpacer size="small" />
-        {/* <BPic isOption={true} /> */}
         <BSpacer size="large" />
       </View>
     </React.Fragment>
   );
+};
+
+const styles: Styles = {
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sheetStyle: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: 'red',
+  },
 };
 
 export default SecondStep;

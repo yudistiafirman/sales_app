@@ -1,5 +1,4 @@
 import React from 'react';
-import { scaleSize } from '@/utils';
 import { StyleProp, ViewStyle } from 'react-native';
 import { View } from 'react-native';
 import { colors, layout } from '@/constants';
@@ -13,7 +12,7 @@ interface IProps {
 
 const containerStyle: StyleProp<ViewStyle> = {
   flex: 1,
-  padding: scaleSize.moderateScale(20),
+  padding: layout.pad.lg,
 };
 
 const makeStyle = ({ bgc, radius, border }: IProps): StyleProp<ViewStyle> => {

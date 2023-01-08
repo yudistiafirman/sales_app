@@ -27,3 +27,4 @@ export { default as BLocation } from './molecules/BLocation';
 export { default as BForm } from './organism/BForm';
 export { default as BQuickActionMenu } from './organism/BQuickActionMenu';
 export { default as BTabSections } from './organism/TabSections';
+export { default as BPicList } from './organism/BPicList';
