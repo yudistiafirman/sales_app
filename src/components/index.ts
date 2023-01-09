@@ -22,6 +22,7 @@ export { default as BTabLabels } from './molecules/BTabLabels';
 export { default as BVisitationCard } from './molecules/BVisitationCard';
 export { default as BPic } from './molecules/BPic';
 export { default as BLocation } from './molecules/BLocation';
+export { default as BFlatlistItems } from './molecules/BFlatlistItems';
 
 // organism
 export { default as BForm } from './organism/BForm';

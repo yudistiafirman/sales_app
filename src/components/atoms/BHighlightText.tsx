@@ -20,7 +20,9 @@ export default function HighlightText({
       <Text
         style={[
           style.normalText,
-          fontSize ? { fontSize: fontSize } : { fontSize: respFS(14) },
+          fontSize
+            ? { fontSize: respFS(fontSize) }
+            : { fontSize: font.size.md },
         ]}
         numberOfLines={1}
       >
@@ -34,7 +36,7 @@ export default function HighlightText({
     <Text
       style={[
         style.normalText,
-        fontSize ? { fontSize: respFS(fontSize) } : { fontSize: respFS(14) },
+        fontSize ? { fontSize: respFS(fontSize) } : { fontSize: font.size.md },
       ]}
       numberOfLines={1}
     >
@@ -47,7 +49,7 @@ export default function HighlightText({
               style.boldText,
               fontSize
                 ? { fontSize: respFS(fontSize) }
-                : { fontSize: respFS(14) },
+                : { fontSize: font.size.md },
             ]}
           >
             {part}

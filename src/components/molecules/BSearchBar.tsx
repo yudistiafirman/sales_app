@@ -70,7 +70,7 @@ const BSearchBar = ({
   placeHolderTextColor,
   dense,
   onFocus,
-}: BSearchBarProp & typeof BSearchBarDefaultTextStyle) => {
+}: BSearchBarProp & typeof BSearchBarDefaultProps) => {
   return (
     <TextInput
       onFocus={onFocus}
