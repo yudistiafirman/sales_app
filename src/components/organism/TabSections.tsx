@@ -10,6 +10,7 @@ interface BTabSectionProps {
   renderScene: (props: any & { route: any }) => React.ReactNode;
   tabStyle?: ViewStyle;
   indicatorStyle?: ViewStyle;
+  tabBarStyle?: ViewStyle;
 }
 
 const BTabSections = ({
@@ -18,6 +19,7 @@ const BTabSections = ({
   renderScene,
   tabStyle,
   indicatorStyle,
+  tabBarStyle,
 }: BTabSectionProps) => {
   return (
     <BTab
@@ -29,7 +31,7 @@ const BTabSections = ({
           {...props}
           indicatorStyle={indicatorStyle}
           tabStyle={tabStyle}
-          style={{ backgroundColor: colors.white }}
+          style={[tabBarStyle, { backgroundColor: colors.white }]}
           renderLabel={BTabLabels}
           scrollEnabled={true}
         />

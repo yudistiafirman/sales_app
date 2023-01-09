@@ -8,6 +8,7 @@ import MapView, {
   Circle,
 } from 'react-native-maps';
 import colors from '@/constants/colors';
+import { BLocationProps } from '@/interfaces';
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
@@ -17,28 +18,6 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const ANDROID = Platform.OS === 'android';
 const MAPSPROVIDER = ANDROID ? PROVIDER_GOOGLE : PROVIDER_DEFAULT;
-
-type LatLng = {
-  latitude: number;
-  longitude: number;
-};
-
-type Region = LatLng & {
-  latitudeDelta: number;
-  longitudeDelta: number;
-};
-
-type Details = {
-  isGesture?: boolean;
-};
-
-interface Blocation {
-  mapStyle?: ViewStyle | undefined;
-  region?: LatLng & Region;
-  onRegionChange?: ((region: Region, details: Details) => void) | undefined;
-  coordinate: LatLng;
-  CustomMarker?: React.ReactNode | undefined;
-}
 
 const bLocationDefaultStyle = {
   width: width,
@@ -64,7 +43,7 @@ const BLocation = ({
   onRegionChange,
   coordinate,
   CustomMarker,
-}: Blocation & typeof bLocationDefaultProps) => {
+}: BLocationProps & typeof bLocationDefaultProps) => {
   return (
     <MapView
       style={mapStyle}

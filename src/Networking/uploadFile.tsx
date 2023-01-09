@@ -1,4 +1,4 @@
-import BrikApi from '@/BrikApi/BrikApi';
+import BrikApi from '@/brikApi/BrikApi';
 import axios from 'axios';
 
 type DataProps = {

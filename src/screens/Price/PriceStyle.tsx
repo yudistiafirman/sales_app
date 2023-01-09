@@ -7,12 +7,12 @@ const PriceStyle = StyleSheet.create({
   tabIndicator: {
     height: 2,
     backgroundColor: colors.primary,
-    marginLeft: resScale(16),
   },
   tabStyle: {
     width: resScale(66),
-    marginLeft: resScale(14),
   },
+  tabBarStyle: { backgroundColor: colors.white, marginLeft: 16 },
+
   titleStyle: {
     fontFamily: font.family.montserrat['600'],
     fontSize: font.size.lg,
