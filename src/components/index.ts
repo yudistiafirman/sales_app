@@ -10,6 +10,7 @@ export { default as BDropdown } from './atoms/BDropdown';
 export { default as BBottomSheet } from './atoms/BBottomSheet';
 export { default as BButtonPrimary } from './atoms/BButtonPrimary';
 export { default as BHighlightText } from './atoms/BHighlightText';
+export { default as BAutoComplete } from './atoms/BAutoComplete';
 
 // moleculses
 export { default as BTab } from './molecules/BTab';

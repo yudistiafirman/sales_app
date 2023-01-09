@@ -75,6 +75,7 @@ const BSheetAddPic = React.forwardRef(
         enableContentPanningGesture={true}
         style={styles.sheetStyle as ViewStyle}
         containerHeight={scaleSize.moderateScale(150)}
+        enablePanDownToClose
       >
         <BContainer>
           <BottomSheetScrollView>

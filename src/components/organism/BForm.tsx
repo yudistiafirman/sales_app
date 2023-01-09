@@ -10,6 +10,7 @@ import BLabel from '../molecules/BLabel';
 import BText from '../atoms/BText';
 import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
+import BAutoComplete from '../atoms/BAutoComplete';
 
 interface IProps {
   inputs: Input[];
@@ -98,6 +99,16 @@ const renderInput = (input: Input): React.ReactNode => {
             {`${label} harus diisi`}
           </BText>
         )}
+      </React.Fragment>
+    );
+  }
+
+  if (type === 'autocomplete') {
+    return (
+      <React.Fragment>
+        <BLabel label={label} isRequired={isRequire} />
+        <BSpacer size="extraSmall" />
+        <BAutoComplete {...input} />
       </React.Fragment>
     );
   }

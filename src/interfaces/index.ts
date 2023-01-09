@@ -14,10 +14,14 @@ interface Input {
     | 'comboDropdown'
     | 'area'
     | 'dropdown'
-    | 'PIC';
+    | 'PIC'
+    | 'autocomplete';
   onChange?: (e: any) => void;
   value: string | any;
+  placeholder?: string;
+  loading?: boolean;
   isError?: boolean;
+  items?: any;
   options?: Array<{
     title: string;
     value: string | any;
@@ -61,7 +65,7 @@ interface Input {
     valueOne?: any;
     valueTwo?: any;
   };
-  onSelect?: (index: number) => void; //eg for pic radio
+  onSelect?: (index: number | any) => void; //eg for pic radio
 }
 
 interface Styles {
