@@ -5,6 +5,7 @@ import resScale from '@/utils/resScale';
 import font from '@/constants/fonts';
 import colors from '@/constants/colors';
 import respFS from '@/utils/resFontSize';
+import { fonts, layout } from '@/constants';
 
 export default function BQuickActionButton({ item }: { item: buttonDataType }) {
   return (
@@ -21,15 +22,14 @@ const style = StyleSheet.create({
     backgroundColor: colors.white,
     width: resScale(90),
     height: resScale(93),
-    borderRadius: resScale(8),
+    borderRadius: layout.radius.md,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: resScale(10),
   },
   buttonTitle: {
     fontFamily: font.family.montserrat[600],
     color: colors.black,
-    fontSize: respFS(12),
-    marginTop: resScale(8),
+    fontSize: fonts.size.xs,
+    marginTop: layout.pad.md,
   },
 });
