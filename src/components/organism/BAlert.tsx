@@ -1,6 +1,6 @@
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import React from 'react';
 import { Image, StyleSheet, TextStyle, View } from 'react-native';
 import Modal from 'react-native-modal';
@@ -17,9 +17,9 @@ interface BAlertProps {
 
 const BAlertDefaultContentStyle: TextStyle = {
   fontFamily: font.family.montserrat['600'],
-  fontSize: scaleSize.moderateScale(16),
+  fontSize: resScale(16),
   textAlign: 'center',
-  marginBottom: scaleSize.moderateScale(34),
+  marginBottom: resScale(34),
 };
 
 const BalertDefaultProps = {
@@ -75,17 +75,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   alertContainer: {
-    paddingVertical: scaleSize.moderateScale(20),
-    paddingHorizontal: scaleSize.moderateScale(16),
+    paddingVertical: resScale(20),
+    paddingHorizontal: resScale(16),
     alignItems: 'center',
-    minHeight: scaleSize.moderateScale(160),
-    borderRadius: scaleSize.moderateScale(8),
+    minHeight: resScale(160),
+    borderRadius: resScale(8),
     backgroundColor: colors.white,
   },
   image: {
-    width: scaleSize.moderateScale(66),
-    height: scaleSize.moderateScale(66),
-    marginBottom: scaleSize.moderateScale(31),
+    width: resScale(66),
+    height: resScale(66),
+    marginBottom: resScale(31),
   },
   content: {},
 });

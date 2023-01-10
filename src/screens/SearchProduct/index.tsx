@@ -1,16 +1,13 @@
-/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import BTabSections from '@/components/organism/TabSections';
 import * as React from 'react';
 import { SafeAreaView } from 'react-native';
 import { SceneMap } from 'react-native-tab-view';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
-import ProductList from '@/components/templates/Price/ProductList';
 import { useNavigation } from '@react-navigation/native';
-import BHeaderIcon from '@/components/atoms/BHeaderIcon';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import debounce from 'lodash.debounce';
+import { BHeaderIcon, BTabSections, ProductList } from '@/components';
 
 const SearchProduct = () => {
   const [index, setIndex] = React.useState(0);
@@ -22,24 +19,34 @@ const SearchProduct = () => {
   const [productData, setProductData] = React.useState<[]>([]);
   const navigation = useNavigation();
 
+  const renderHeaderLeft = () => (
+    <BHeaderIcon
+      size={resScale(30)}
+      iconName="chevron-left"
+      marginRight={resScale(16)}
+      onBack={() => navigation.goBack()}
+    />
+  );
+
+  const renderHeaderCenter = () => (
+    <SearchProductNavbar
+      value={searchValue}
+      onChangeText={onChangeText}
+      onClearValue={() => setSearchValue('')}
+    />
+  );
+
+  const renderProductList = () => {
+    return (
+      <ProductList emptyProductName={searchValue} products={productData} />
+    );
+  };
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: false,
-      headerLeft: () => (
-        <BHeaderIcon
-          size={scaleSize.moderateScale(30)}
-          iconName="chevron-left"
-          marginRight={scaleSize.moderateScale(16)}
-          onBack={() => navigation.goBack()}
-        />
-      ),
-      headerTitle: () => (
-        <SearchProductNavbar
-          value={searchValue}
-          onChangeText={onChangeText}
-          onClearValue={() => setSearchValue('')}
-        />
-      ),
+      headerLeft: () => renderHeaderLeft(),
+      headerTitle: () => renderHeaderCenter(),
     });
   }, [navigation, searchValue]);
 
@@ -47,15 +54,6 @@ const SearchProduct = () => {
     setSearchValue(text);
   };
 
-  // const debouncedResults = React.useMemo(() => {
-  //   return debounce(onChangeText);
-  // }, [searchValue]);
-
-  const renderProductList = () => {
-    return (
-      <ProductList emptyProductName={searchValue} products={productData} />
-    );
-  };
 
   const renderScene = SceneMap({
     first: renderProductList,
@@ -70,6 +68,7 @@ const SearchProduct = () => {
         navigationState={{ index, routes }}
         renderScene={renderScene}
         onIndexChange={setIndex}
+        tabBarStyle={SearchProductStyles.tabBarStyle}
       />
     </SafeAreaView>
   );

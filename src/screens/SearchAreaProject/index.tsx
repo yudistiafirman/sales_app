@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import BSearchBar from '@/components/molecules/BSearchBar';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
@@ -9,18 +9,21 @@ import { SafeAreaView } from 'react-native';
 import SearchAreaStyles from './styles';
 import CurrentLocation from './element/SearchAreaCurrentLocation';
 import LocationList from './element/LocationList';
-import { hasLocationPermission } from '@/utils/permissions/locationPermissions';
 import Geolocation from 'react-native-geolocation-service';
+import { hasLocationPermission } from '@/utils/permissions';
+import { useDispatch } from 'react-redux';
+import { updateRegion } from '@/redux/locationReducer';
 
 const SearchAreaProject = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch()
   const [locationData, setLocationData] = useState([]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: false,
       headerLeft: () => (
         <BHeaderIcon
-          size={scaleSize.moderateScale(23)}
+          size={resScale(23)}
           onBack={() => navigation.goBack()}
           iconName="x"
         />
@@ -35,11 +38,13 @@ const SearchAreaProject = () => {
         (position) => {
           if (position) {
             const { latitude, longitude } = position.coords;
+            const coordinatePayload = {
+              latitude,
+              longitude
+            }
+            dispatch(updateRegion(coordinatePayload))
 
-            navigation.push('Location', {
-              longitude: longitude,
-              latitude: latitude,
-            });
+            navigation.push('Location');
           }
         },
         (error) => {

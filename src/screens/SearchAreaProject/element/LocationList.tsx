@@ -1,5 +1,6 @@
-import BSpinner from '@/components/atoms/BSpinner';
-import scaleSize from '@/utils/scale';
+
+import { BSpinner } from '@/components';
+import resScale from '@/utils/resScale';
 import React from 'react';
 import { FlatList } from 'react-native';
 import LocationListCard from './LocationListCard';
@@ -37,7 +38,7 @@ const LocationList = <ArrayOfObject extends LocationData>({
   return (
     <FlatList
       data={locationData}
-      contentContainerStyle={{ marginHorizontal: scaleSize.moderateScale(16) }}
+      contentContainerStyle={{ marginHorizontal: resScale(16) }}
       keyExtractor={(item, index) => index.toString()}
       onEndReached={onEndReached}
       refreshing={refreshing}

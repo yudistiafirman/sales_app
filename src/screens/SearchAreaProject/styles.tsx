@@ -1,25 +1,25 @@
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import { StyleSheet } from 'react-native';
 
 const SearchAreaStyles = StyleSheet.create({
-  container: { flex: 1, marginHorizontal: scaleSize.moderateScale(16) },
+  container: { flex: 1, marginHorizontal: resScale(16) },
   currentLocationContainer: {
     flexDirection: 'row',
-    marginVertical: scaleSize.moderateScale(20),
+    marginVertical: resScale(20),
     alignItems: 'center',
   },
   currentLocationText: {
     fontFamily: font.family.montserrat['400'],
-    fontSize: scaleSize.moderateScale(14),
+    fontSize: font.size.md,
     color: colors.text.darker,
   },
   locationListCardContainer: {
-    height: scaleSize.moderateScale(56),
+    height: resScale(56),
     borderBottomWidth: 1,
     borderColor: colors.border.disabled,
-    marginBottom: scaleSize.moderateScale(8),
+    marginBottom: resScale(8),
   },
   innerListContainer: {
     flexDirection: 'row',
@@ -27,13 +27,13 @@ const SearchAreaStyles = StyleSheet.create({
   },
   addressTitle: {
     fontFamily: font.family.montserrat['500'],
-    fontSize: scaleSize.moderateScale(14),
+    fontSize: font.size.md,
     color: colors.text.darker,
-    marginBottom: scaleSize.moderateScale(4),
+    marginBottom: resScale(4),
   },
   addressDetail: {
     fontFamily: font.family.montserrat['300'],
-    fontSize: scaleSize.moderateScale(12),
+    fontSize: resScale(12),
     color: colors.text.darker,
   },
 });

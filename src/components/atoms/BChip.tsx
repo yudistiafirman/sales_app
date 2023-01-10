@@ -1,8 +1,8 @@
 import React from 'react';
 import { TextStyle, View, ViewStyle } from 'react-native';
 import BText from './BText';
-import { scaleSize } from '@/utils';
-import { colors, font, layout } from '@/constants';
+import { resScale } from '@/utils';
+import { colors, fonts, layout } from '@/constants';
 
 interface BChipProps {
   children: any;
@@ -12,16 +12,16 @@ interface BChipProps {
 
 const BChip = ({ children, type, backgroundColor }: BChipProps) => {
   let BChipHeaderStyle: ViewStyle = {
-    paddingHorizontal: scaleSize.moderateScale(layout.pad.md),
-    paddingVertical: scaleSize.moderateScale(layout.pad.xs),
-    borderRadius: scaleSize.moderateScale(layout.radius.sm),
+    paddingHorizontal: resScale(layout.pad.md),
+    paddingVertical: resScale(layout.pad.xs),
+    borderRadius: resScale(layout.radius.sm),
   };
 
   let BChipDefaultStyle: ViewStyle = {
-    paddingVertical: scaleSize.moderateScale(2),
-    paddingHorizontal: scaleSize.moderateScale(10),
-    borderRadius: scaleSize.moderateScale(32),
-    marginRight: scaleSize.moderateScale(8),
+    paddingVertical: resScale(2),
+    paddingHorizontal: resScale(10),
+    borderRadius: resScale(32),
+    marginRight: resScale(8),
   };
 
   let _style: ViewStyle =
@@ -29,8 +29,8 @@ const BChip = ({ children, type, backgroundColor }: BChipProps) => {
 
   let _textStyle: TextStyle = {
     color: colors.text.dark,
-    fontFamily: font.family.montserrat[400],
-    fontSize: font.size.xs,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.xs,
   };
 
   return (

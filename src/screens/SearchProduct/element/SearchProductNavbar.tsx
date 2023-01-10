@@ -1,29 +1,19 @@
-import BSearchBar from '@/components/molecules/BSearchBar';
+import { BSearchBar } from '@/components';
 import React from 'react';
-import {
-  SafeAreaView,
-  TouchableOpacity,
-  View,
-  GestureResponderEvent,
-} from 'react-native';
+import { View, GestureResponderEvent } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import SearchProductStyles from '../styles';
-import Icon from 'react-native-vector-icons/Feather';
-import scaleSize from '@/utils/scale';
-import colors from '@/constants/colors';
 
 interface SearchProductNavbarProps {
   onChangeText?: (((text: string) => void) & Function) | undefined;
   value?: string;
   onClearValue?: (event: GestureResponderEvent) => void;
-  onBack?: (event: GestureResponderEvent) => void;
 }
 
 const SearchProductNavbar = ({
   onChangeText,
   value,
   onClearValue,
-  onBack,
 }: SearchProductNavbarProps) => {
   return (
     <View style={SearchProductStyles.searchBarContainer}>

@@ -1,7 +1,7 @@
 import { Text, StyleSheet } from 'react-native';
 import React from 'react';
 import font from '@/constants/fonts';
-import respFS from '@/utils/respFS';
+import respFS from '@/utils/resFontSize';
 import colors from '@/constants/colors';
 
 type higlightTextType = {
@@ -20,7 +20,9 @@ export default function HighlightText({
       <Text
         style={[
           style.normalText,
-          fontSize ? { fontSize: fontSize } : { fontSize: respFS(14) },
+          fontSize
+            ? { fontSize: respFS(fontSize) }
+            : { fontSize: font.size.md },
         ]}
         numberOfLines={1}
       >
@@ -34,7 +36,7 @@ export default function HighlightText({
     <Text
       style={[
         style.normalText,
-        fontSize ? { fontSize: respFS(fontSize) } : { fontSize: respFS(14) },
+        fontSize ? { fontSize: respFS(fontSize) } : { fontSize: font.size.md },
       ]}
       numberOfLines={1}
     >
@@ -47,7 +49,7 @@ export default function HighlightText({
               style.boldText,
               fontSize
                 ? { fontSize: respFS(fontSize) }
-                : { fontSize: respFS(14) },
+                : { fontSize: font.size.md },
             ]}
           >
             {part}

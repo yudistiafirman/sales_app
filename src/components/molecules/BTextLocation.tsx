@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import React, { Children } from 'react';
 import { GestureResponderEvent, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -22,13 +22,13 @@ const BTextLocation = ({ onPress, location, disabled }: BTextLocationProps) => {
     >
       <Icon
         name="map-pin"
-        style={{ marginRight: scaleSize.moderateScale(8) }}
+        style={{ marginRight: resScale(8) }}
         color={colors.text.blue}
       />
       <BText
         style={{
           fontFamily: font.family.montserrat['300'],
-          fontSize: scaleSize.moderateScale(10),
+          fontSize: resScale(10),
           color: colors.text.blue,
         }}
       >

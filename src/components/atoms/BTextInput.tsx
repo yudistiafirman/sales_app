@@ -1,24 +1,24 @@
 import React from 'react';
-import { colors, font } from '@/constants';
+import { colors, fonts } from '@/constants';
 import { TextStyle } from 'react-native';
 import { TextInput, TextInputProps } from 'react-native-paper';
-import { scaleSize } from '@/utils';
+import { resScale } from '@/utils';
 
 interface IProps extends Partial<TextInputProps> {
   rounded?: boolean;
 }
 
 const baseStyle = {
-  fontFamily: font.family.montserrat['400'],
-  fontSize: font.size.md,
-  lineHeight: scaleSize.moderateScale(14),
+  fontFamily: fonts.family.montserrat['400'],
+  fontSize: fonts.size.md,
+  lineHeight: resScale(14),
   backgroundColor: colors.white,
   color: colors.textInput.input,
 };
 
 const baseContainerStyle: TextStyle = {
-  borderRadius: scaleSize.moderateScale(4),
-  minHeight: scaleSize.moderateScale(40),
+  borderRadius: resScale(4),
+  minHeight: resScale(40),
   backgroundColor: colors.white,
 };
 

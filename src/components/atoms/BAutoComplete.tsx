@@ -1,6 +1,6 @@
 import { colors, font, layout } from '@/constants';
 import { Styles } from '@/interfaces';
-import { scaleSize } from '@/utils';
+import { resScale } from '@/utils';
 import React from 'react';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import BText from './BText';
@@ -69,7 +69,7 @@ const styles: Styles = {
   inputContainer: {
     fontFamily: font.family.montserrat[400],
     fontSize: font.size.md,
-    lineHeight: scaleSize.moderateScale(14),
+    lineHeight: resScale(14),
     color: 'blue',
     backgroundColor: colors.white,
     borderRadius: layout.radius.sm,
@@ -94,7 +94,7 @@ const styles: Styles = {
   },
   separator: {
     backgroundColor: colors.border.default,
-    paddingHorizontal: scaleSize.moderateScale(5),
+    paddingHorizontal: resScale(5),
     width: '95%',
     alignSelf: 'center',
   },

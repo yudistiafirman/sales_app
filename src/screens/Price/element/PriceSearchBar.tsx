@@ -1,8 +1,8 @@
-import BSearchBar from '@/components/molecules/BSearchBar';
 import React from 'react';
 import { GestureResponderEvent, TouchableOpacity } from 'react-native';
 import PriceStyle from '../PriceStyle';
 import { TextInput } from 'react-native-paper';
+import { BSearchBar } from '@/components';
 
 const PriceSearchBar = ({
   onPress,

@@ -3,23 +3,21 @@ import { Calendar, DateData } from 'react-native-calendars';
 import { BContainer, BPic, BSpacer, BText } from '@/components';
 import { colors } from '@/constants';
 import { View } from 'react-native';
-import { scaleSize } from '@/utils';
+import { resScale } from '@/utils';
 import { MarkedDates } from 'react-native-calendars/src/types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
   if (direction === 'right') {
     return (
-      <View
-        style={{ position: 'relative', right: scaleSize.moderateScale(-20) }}
-      >
+      <View style={{ position: 'relative', right: resScale(-20) }}>
         <Icon name="chevron-right" size={25} color={colors.icon.primary} />
       </View>
     );
   }
 
   return (
-    <View style={{ position: 'relative', left: scaleSize.moderateScale(-20) }}>
+    <View style={{ position: 'relative', left: resScale(-20) }}>
       <Icon name="chevron-left" size={25} color={colors.icon.primary} />
     </View>
   );

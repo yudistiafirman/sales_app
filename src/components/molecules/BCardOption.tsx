@@ -10,7 +10,7 @@ import {
 
 import BText from '../atoms/BText';
 import { colors, layout } from '@/constants';
-import { scaleSize } from '@/utils';
+import { resScale } from '@/utils';
 
 interface IProps {
   children?: React.ReactNode;
@@ -24,7 +24,7 @@ interface IProps {
 const baseStyle: StyleProp<ViewStyle> = {
   backgroundColor: colors.offWhite,
   borderRadius: layout.radius.md,
-  height: scaleSize.verticalScale(80),
+  height: resScale(80),
   justifyContent: 'center',
   alignContent: 'center',
   alignItems: 'center',

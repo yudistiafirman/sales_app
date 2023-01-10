@@ -2,7 +2,7 @@
 import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
@@ -28,13 +28,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyimage: {
-    width: scaleSize.moderateScale(88),
-    height: scaleSize.moderateScale(88),
-    marginVertical: scaleSize.moderateScale(32),
+    width: resScale(88),
+    height: resScale(88),
+    marginVertical: resScale(32),
   },
   emptyText: {
     fontFamily: font.family.montserrat['600'],
-    fontSize: scaleSize.moderateScale(14),
+    fontSize: resScale(14),
     textAlign: 'center',
     color: colors.text.darker,
   },

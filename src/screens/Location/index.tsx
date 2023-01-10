@@ -1,64 +1,47 @@
-import BButtonPrimary from '@/components/atoms/BButtonPrimary';
-import BLocation from '@/components/molecules/BLocation';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { Dimensions, SafeAreaView, View } from 'react-native';
-import BHeaderIcon from '../../components/atoms/BHeaderIcon';
-import BMarkers from '../../components/atoms/BMarkers';
+import React, { useCallback, useLayoutEffect, useMemo } from 'react';
+import { SafeAreaView, View } from 'react-native';
 import LocationStyles from './styles';
 import CoordinatesDetail from './elements/CoordinatesDetail';
-const { width, height } = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+import { BButtonPrimary, BHeaderIcon, BLocation, BMarker } from '@/components';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { updateRegion } from '@/redux/locationReducer';
+import { Region } from '@/interfaces';
+import debounce from 'lodash.debounce';
 const Location = () => {
   const navigation = useNavigation();
-  const route = useRoute();
-  const { longitude, latitude } = route.params;
-  const [region, setRegion] = useState({
-    longitude: longitude,
-    latitude: latitude,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-  });
+  const { region } = useSelector((state: RootState) => state.location);
+  const dispatch = useDispatch();
+
+  const renderHeaderLeft = () => (
+    <BHeaderIcon
+      iconName="chevron-left"
+      size={resScale(30)}
+      onBack={() => navigation.goBack()}
+    />
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      // eslint-disable-next-line react/no-unstable-nested-components
-      headerLeft: () => (
-        <BHeaderIcon
-          iconName="chevron-left"
-          size={scaleSize.moderateScale(30)}
-          onBack={() => navigation.goBack()}
-        />
-      ),
+      headerLeft: () => renderHeaderLeft(),
       headerBackVisible: false,
     });
   }, [navigation]);
 
-  useEffect(() => {
-    if (route.params) {
-      setRegion({
-        longitude,
-        latitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      });
-    }
-  }, [route.params]);
 
-  const onRegionChange = (region) => {
-    setRegion(region);
+  const onChangeRegion = (coordinate: Region) => {
+    dispatch(updateRegion(coordinate));
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BLocation
         region={region}
-        onRegionChange={setRegion}
-        coordinate={{ latitude: region.latitude, longitude: region.longitude }}
-        CustomMarker={<BMarkers />}
+        onRegionChange={onChangeRegion}
+        coordinate={region}
+        CustomMarker={<BMarker />}
       />
       <View style={LocationStyles.bottomSheetContainer}>
         <CoordinatesDetail
@@ -67,14 +50,7 @@ const Location = () => {
           onPress={() => navigation.navigate('SearchArea')}
         />
         <BButtonPrimary
-          onPress={() =>
-            navigation.navigate('Harga', {
-              updatedParams: {
-                latitude: region.latitude,
-                longitude: region.longitude,
-              },
-            })
-          }
+          onPress={() => navigation.navigate('Harga')}
           title="Simpan"
         />
       </View>

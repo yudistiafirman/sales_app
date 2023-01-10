@@ -1,6 +1,6 @@
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import React from 'react';
 import { TextStyle, View, ViewStyle } from 'react-native';
 import BChip from '../atoms/BChip';
@@ -34,14 +34,14 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
       ? font.family.montserrat['600']
       : font.family.montserrat['400'],
     fontSize: font.size.md,
-    marginRight: scaleSize.moderateScale(4),
+    marginRight: resScale(4),
   };
 
   return (
     <View style={BTabLabelsContainer}>
       <BText style={BTabLabelsTextStyle}>{title}</BText>
       <BChip type="header" backgroundColor={chipBackgroundColor}>
-        {totalItems}
+        {totalItems && totalItems}
       </BChip>
     </View>
   );

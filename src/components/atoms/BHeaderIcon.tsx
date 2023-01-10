@@ -2,7 +2,7 @@ import Icon from 'react-native-vector-icons/Feather';
 
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import colors from '@/constants/colors';
 
 interface BHeaderIconProps {
@@ -16,7 +16,7 @@ const BHeaderIcon = ({
   onBack,
   size,
   iconName,
-  marginRight = scaleSize.moderateScale(26),
+  marginRight = resScale(26),
 }: BHeaderIconProps) => {
   return (
     <TouchableOpacity style={{ marginRight: marginRight }} onPress={onBack}>

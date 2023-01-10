@@ -1,10 +1,10 @@
-import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import SearchAreaStyles from '../styles';
 import Icons from 'react-native-vector-icons/Feather';
+import { BText } from '@/components';
 
 interface LocationListCardProps {
   onPress: () => void;
@@ -25,9 +25,9 @@ const LocationListCard = ({
       <View style={SearchAreaStyles.innerListContainer}>
         <Icons
           name="map-pin"
-          size={scaleSize.moderateScale(20)}
+          size={resScale(20)}
           color={colors.text.darker}
-          style={{ marginRight: scaleSize.moderateScale(11) }}
+          style={{ marginRight: resScale(11) }}
         />
 
         <View>

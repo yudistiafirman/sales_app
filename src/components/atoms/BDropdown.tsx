@@ -1,7 +1,7 @@
 import React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { colors, font, layout } from '@/constants';
-import { scaleSize } from '@/utils';
+import { colors, fonts, layout } from '@/constants';
+import { resScale } from '@/utils';
 import { Styles } from '@/interfaces';
 import BText from './BText';
 
@@ -33,12 +33,12 @@ interface IProps {
 
 const styles: Styles = {
   base: {
-    fontFamily: font.family.montserrat[400],
-    fontSize: font.size.md,
-    lineHeight: scaleSize.moderateScale(14),
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+    lineHeight: resScale(14),
     backgroundColor: colors.white,
     color: colors.textInput.input,
-    borderRadius: scaleSize.moderateScale(4),
+    borderRadius: resScale(4),
     borderColor: colors.textInput.inActive,
     zIndex: 1,
   },
@@ -50,7 +50,7 @@ const styles: Styles = {
   },
   active: {
     position: 'absolute',
-    top: scaleSize.verticalScale(50),
+    top: resScale(50),
     borderRadius: layout.radius.sm,
     borderColor: colors.border.default,
     borderWidth: 1,
@@ -61,7 +61,7 @@ const styles: Styles = {
   },
   separator: {
     backgroundColor: colors.border.default,
-    paddingHorizontal: scaleSize.moderateScale(5),
+    paddingHorizontal: resScale(5),
     width: '95%',
     alignSelf: 'center',
   },

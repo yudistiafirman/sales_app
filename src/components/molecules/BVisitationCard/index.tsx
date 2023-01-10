@@ -6,10 +6,11 @@ import Time from './elements/Time';
 import VisitStatus from './elements/VisitStatus';
 
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import Location from './elements/Location';
 import PillNames from './elements/PillNames';
 import HighlightText from '../../atoms/BHighlightText';
+import { layout } from '@/constants';
 
 type VisitationCardType = {
   item: {
@@ -60,15 +61,14 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    width: scaleSize.moderateScale(330),
+    width: resScale(330),
     backgroundColor: 'white',
     justifyContent: 'space-between',
     borderColor: '#EBEBEB',
-    borderRadius: scaleSize.moderateScale(8),
-    borderWidth: scaleSize.moderateScale(1),
-    marginBottom: scaleSize.moderateScale(10),
-    paddingVertical: scaleSize.moderateScale(15),
-    paddingHorizontal: scaleSize.moderateScale(8),
+    borderRadius: layout.radius.md,
+    borderWidth: resScale(1),
+    paddingVertical: layout.pad.lg,
+    paddingHorizontal: layout.pad.md,
   },
   leftSide: {
     justifyContent: 'space-between',
@@ -78,16 +78,16 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   top: {
-    height: scaleSize.moderateScale(20),
+    height: resScale(20),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: scaleSize.moderateScale(5),
-    width: scaleSize.moderateScale(285),
+    marginBottom: layout.pad.sm,
+    width: resScale(285),
   },
   row: {
     flexDirection: 'row',
   },
   bottom: {
-    marginTop: scaleSize.moderateScale(10),
+    marginTop: layout.pad.md,
   },
 });

@@ -1,76 +1,78 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import BTabScreen from '../molecules/BScreenTab';
+import React, { useState, useMemo } from 'react';
+import { BTabSections } from '@/components';
 import { SceneMap } from 'react-native-tab-view';
-import TabSections from '@/components/organism/TabSections';
 import colors from '@/constants/colors';
 import { View, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
+import { layout } from '@/constants';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type BTabViewScreenType = {
-  dataToRender: {
-    /* data name/ category can be anything, example is -> semua,perusahaan, proyek, PIC etc*/
-    [key: string]: {
-      [key: string]: any;
-      name: string;
-    }[];
-  };
-  renderItem: (item: any) => JSX.Element;
+  searchQuery?: string;
+  // renderItem: (item: any) => JSX.Element;
+  screenToRender: (key: string) => JSX.Element | null;
   isLoading?: boolean;
+  tabToRender: {
+    tabTitle: string;
+    totalItems: number;
+  }[];
 };
 
-type AccumulatorReduceType = { [key: string]: () => JSX.Element };
+type AccumulatorReduceType = { [key: string]: () => JSX.Element | null };
 
 export default function BTabViewScreen({
-  dataToRender,
-  renderItem,
   isLoading,
+  tabToRender = [],
+
+  screenToRender,
 }: BTabViewScreenType) {
   const [indexRoute, setIndexRoute] = useState(0);
 
-  useEffect(() => {
-    console.log('====================================');
-    console.log(indexRoute, 'indexRoute');
-    console.log('====================================');
-  }, [indexRoute]);
-
-  const [routes, sceneData] = useMemo(() => {
-    const routeKeys = Object.keys(dataToRender);
-    const routesArray = routeKeys.map((key) => {
+  const [routes] = useMemo(() => {
+    console.log('routes , usememo');
+    const routesArray = tabToRender.map((key) => {
       return {
-        key: key,
-        title: key, //uppercase the first letter .charAt(0).toUpperCase() + key.slice(1)
-        totalItems: dataToRender[key].length,
+        key: key.tabTitle,
+        title: key.tabTitle, //uppercase the first letter .charAt(0).toUpperCase() + key.slice(1)
+        totalItems: key.totalItems,
         chipPosition: 'right',
       };
     });
-    const sceneMapData: { [key: string]: () => JSX.Element } = routeKeys.reduce(
-      (acc: AccumulatorReduceType, curr: string) => {
-        acc[curr] = () =>
-          BTabScreen({
-            data: dataToRender[curr],
-            renderItem: renderItem,
-          });
+    return [routesArray];
+  }, [tabToRender]);
+
+  const sceneData = useMemo(() => {
+    console.log('sceneData , usememo');
+
+    const sceneMapData: { [key: string]: () => JSX.Element | null } =
+      tabToRender.reduce((acc: AccumulatorReduceType, curr) => {
+        acc[curr.tabTitle] = () => {
+          if (!screenToRender) {
+            return null;
+          }
+          return screenToRender(curr.tabTitle);
+        };
         return acc;
-      },
-      {}
-    );
-    return [routesArray, sceneMapData];
-  }, [dataToRender, renderItem]);
+      }, {});
+    return sceneMapData;
+  }, [screenToRender, tabToRender]);
 
   const renderScene = SceneMap(sceneData);
 
   if (isLoading) {
+    console.log(sceneData, 'sceneData', routes);
+
     return (
       <View style={style.loadingContainer}>
-        <ShimmerPlaceHolder style={style.loading} />
+        <ShimmerPlaceHolder style={style.tabLoading} />
+        <ShimmerPlaceHolder style={style.listLoading} />
       </View>
     );
   }
   return (
-    <TabSections
+    <BTabSections
       navigationState={{ index: indexRoute, routes }}
       renderScene={renderScene}
       onIndexChange={setIndexRoute}
@@ -85,11 +87,18 @@ const style = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     alignItems: 'center',
-    marginTop: scaleSize.moderateScale(10),
+    marginTop: layout.pad.md,
   },
-  loading: {
-    width: scaleSize.moderateScale(320),
-    height: scaleSize.moderateScale(60),
-    borderRadius: scaleSize.moderateScale(8),
+  tabLoading: {
+    marginTop: layout.pad.xs,
+    width: resScale(325),
+    height: resScale(30),
+    borderRadius: layout.radius.md,
+  },
+  listLoading: {
+    marginTop: layout.pad.lg,
+    width: resScale(325),
+    height: resScale(60),
+    borderRadius: layout.radius.md,
   },
 });

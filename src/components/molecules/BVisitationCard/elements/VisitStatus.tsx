@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
-import scaleSize from '@/utils/scale';
+import resScale from '@/utils/resScale';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 type visitStatusType = {
@@ -23,6 +23,6 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   iconStyle: {
-    marginRight: scaleSize.moderateScale(7),
+    marginRight: resScale(7),
   },
 });

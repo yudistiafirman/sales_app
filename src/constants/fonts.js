@@ -1,4 +1,4 @@
-import respFS from "@/utils/respFS";
+import respFS from "@/utils/resFontSize";
 
 const font = {
     family: {

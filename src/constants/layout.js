@@ -1,20 +1,22 @@
-import { scaleSize } from '@/utils';
+import { resScale } from "@/utils";
+
 
 const layout = {
-  mainPad: 16,
-  spaceBetween: 10,
+  mainPad: resScale(16),
+  spaceBetween: resScale(10),
   radius: {
-    sm: 4,
-    md: 8,
-    lg: 16,
-    xl: 32,
+    xs: resScale(2),
+    sm: resScale(4),
+    md: resScale(8),
+    lg: resScale(16),
+    xl: resScale(32),
   },
   pad: {
-    xs: scaleSize.moderateScale(2),
-    sm: scaleSize.moderateScale(4),
-    md: scaleSize.moderateScale(8),
-    lg: scaleSize.moderateScale(16),
-    xl: scaleSize.moderateScale(32),
+    xs: resScale(2),
+    sm: resScale(4),
+    md: resScale(8),
+    lg: resScale(16),
+    xl: resScale(32),
   },
 };
 

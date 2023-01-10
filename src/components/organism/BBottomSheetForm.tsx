@@ -2,7 +2,7 @@ import React from 'react';
 import { ViewStyle } from 'react-native';
 import { layout } from '@/constants';
 import { Input, Styles } from '@/interfaces';
-import { scaleSize } from '@/utils';
+import { resScale } from '@/utils';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import BBottomSheet from '../atoms/BBottomSheet';
 import BButtonPrimary from '../atoms/BButtonPrimary';
@@ -27,7 +27,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
       initialSnapIndex={initialIndex}
       enableContentPanningGesture={true}
       style={styles.sheetStyle as ViewStyle}
-      containerHeight={scaleSize.moderateScale(150)}
+      containerHeight={resScale(150)}
       enablePanDownToClose
     >
       <BContainer>
