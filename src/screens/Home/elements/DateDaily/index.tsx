@@ -66,7 +66,7 @@ const style = StyleSheet.create({
   },
   calendarHeaderStyle: {
     color: 'black',
-    fontSize: respFS(12),
+    fontSize: font.size.sm,
     fontFamily: font.family.montserrat[500],
   },
   dateNumberStyle: {

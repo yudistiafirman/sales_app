@@ -10,6 +10,7 @@ import resScale from '@/utils/resScale';
 import Location from './elements/Location';
 import PillNames from './elements/PillNames';
 import HighlightText from '../../atoms/BHighlightText';
+import { layout } from '@/constants';
 
 type VisitationCardType = {
   item: {
@@ -64,11 +65,10 @@ const style = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'space-between',
     borderColor: '#EBEBEB',
-    borderRadius: resScale(8),
+    borderRadius: layout.radius.md,
     borderWidth: resScale(1),
-    marginBottom: resScale(10),
-    paddingVertical: resScale(15),
-    paddingHorizontal: resScale(8),
+    paddingVertical: layout.pad.lg,
+    paddingHorizontal: layout.pad.md,
   },
   leftSide: {
     justifyContent: 'space-between',
@@ -81,13 +81,13 @@ const style = StyleSheet.create({
     height: resScale(20),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: resScale(5),
+    marginBottom: layout.pad.sm,
     width: resScale(285),
   },
   row: {
     flexDirection: 'row',
   },
   bottom: {
-    marginTop: resScale(10),
+    marginTop: layout.pad.md,
   },
 });

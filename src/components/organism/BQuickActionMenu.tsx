@@ -1,7 +1,8 @@
 import { View, FlatList } from 'react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { QuickActionProps } from '@/interfaces/QuickActionButton.type';
 import BQuickActionButton from '../molecules/BQuickAction';
+import { BSpacer } from '@/components';
 
 export default function BQuickAction({
   buttonProps,
@@ -10,6 +11,7 @@ export default function BQuickAction({
   showsVerticalScrollIndicator = false,
   containerStyle,
 }: QuickActionProps) {
+  const separator = useCallback(() => <BSpacer size={'extraSmall'} />, []);
   return (
     <View style={containerStyle}>
       <FlatList
@@ -19,6 +21,7 @@ export default function BQuickAction({
         data={buttonProps}
         renderItem={BQuickActionButton}
         keyExtractor={(_, index) => index.toString()}
+        ItemSeparatorComponent={separator}
       />
     </View>
   );
