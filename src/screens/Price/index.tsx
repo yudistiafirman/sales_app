@@ -1,36 +1,41 @@
-/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useLayoutEffect } from 'react';
 import { SafeAreaView } from 'react-native';
 import { SceneMap } from 'react-native-tab-view';
 import BTabSections from '@/components/organism/TabSections';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Tnc from '@/screens/Price/element/Tnc';
 import CurrentLocation from './element/CurrentLocation';
 import PriceStyle from './PriceStyle';
 import Geolocation from 'react-native-geolocation-service';
 import PriceSearchBar from './element/PriceSearchBar';
 import ProductList from '@/components/templates/Price/ProductList';
-import BAlert from '@/components/organism/BAlert';
-import BTouchableText from '@/components/atoms/BTouchableText';
-import { hasLocationPermission } from '@/utils/permissions/locationPermissions';
-import BSpinner from '@/components/atoms/BSpinner';
+import { BAlert, BSpinner, BTouchableText } from '@/components';
+import { hasLocationPermission } from '@/utils/permissions';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateRegion } from '@/redux/locationReducer';
+import { RootState } from '@/redux/store';
 const PriceList = () => {
   const navigation = useNavigation();
-  const route = useRoute();
+  const { region } = useSelector((state: RootState) => state.location);
+  const dispatch = useDispatch();
   const [isVisibleTnc, setIsVisibleTnc] = React.useState<boolean>(false);
   const [index, setIndex] = React.useState(0);
   const [showAlert, setShowAlert] = React.useState<boolean>(false);
-  const [location, setLocation] = React.useState<{}>({});
   const [loading, setLoading] = React.useState(true);
   const [routes] = React.useState([
-    { key: 'first', title: 'NFA', totalItems: 8, chipPosition: 'right' },
-    { key: 'second', title: 'FA', totalItems: 6, chipPosition: 'right' },
+    { key: 'first', title: 'NFA' },
+    { key: 'second', title: 'FA' },
   ]);
   const [productsData, setProductsData] = React.useState([]);
 
   const renderProductList = () => {
     return <ProductList products={productsData} />;
+  };
+  const renderHeaderRight = () => {
+    return (
+      <BTouchableText onPress={() => setIsVisibleTnc(true)} title="Ketentuan" />
+    );
   };
   const renderScene = SceneMap({
     first: renderProductList,
@@ -39,24 +44,13 @@ const PriceList = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <BTouchableText
-          onPress={() => setIsVisibleTnc(true)}
-          title="Ketentuan"
-        />
-      ),
+      headerRight: () => renderHeaderRight(),
     });
   }, [navigation]);
 
   useEffect(() => {
-    if (route.params?.updatedParams) {
-      const { latitude, longitude } = route.params.updatedParams;
-      const locationDetails = `latitude=${latitude} and longitude=${longitude}`;
-      setLocation({ latitude, longitude, locationDetails });
-    } else {
-      getCurrentLocation();
-    }
-  }, [route.params?.updatedParams]);
+    getCurrentLocation();
+  }, []);
 
   const getCurrentLocation = React.useCallback(async () => {
     const hasPermission = await hasLocationPermission();
@@ -64,15 +58,12 @@ const PriceList = () => {
       Geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          console.log('ini current position', position.coords);
-          const locationDetails = `latitude=${latitude} and longitude=${longitude}`;
-          const coordinate = {
+          const coordinatePayload = {
             latitude,
             longitude,
-            locationDetails,
           };
-          setLocation(coordinate);
-          setLoading(false)
+          dispatch(updateRegion(coordinatePayload));
+          setLoading(false);
         },
         (error) => {
           // See error code charts below.
@@ -81,20 +72,15 @@ const PriceList = () => {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );
     }
-  }, [location]);
+  }, [dispatch]);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {loading ? (
         <BSpinner />
       ) : (
         <CurrentLocation
-          onPress={() =>
-            navigation.navigate('Location', {
-              longitude: location.longitude,
-              latitude: location.latitude,
-            })
-          }
-          location={location.locationDetails}
+          onPress={() => navigation.navigate('Location')}
+          location={`latitude:${region.latitude} longitude:${region.longitude}`}
         />
       )}
 
@@ -105,6 +91,7 @@ const PriceList = () => {
         onIndexChange={setIndex}
         indicatorStyle={PriceStyle.tabIndicator}
         tabStyle={PriceStyle.tabStyle}
+        tabBarStyle={PriceStyle.tabBarStyle}
       />
       <Tnc isVisible={isVisibleTnc} onCloseTnc={() => setIsVisibleTnc(false)} />
       <BAlert

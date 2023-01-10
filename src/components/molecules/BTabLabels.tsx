@@ -41,7 +41,7 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
     <View style={BTabLabelsContainer}>
       <BText style={BTabLabelsTextStyle}>{title}</BText>
       <BChip type="header" backgroundColor={chipBackgroundColor}>
-        {totalItems}
+        {totalItems && totalItems}
       </BChip>
     </View>
   );

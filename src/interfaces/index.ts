@@ -5,6 +5,9 @@ import {
   TextStyle,
 } from 'react-native';
 
+import * as React from 'react';
+import { Details, Region } from 'react-native-maps';
+
 interface Input {
   label: string;
   isRequire: boolean;
@@ -69,4 +72,27 @@ interface NavigationProps {
   navigate: (screen?: string) => void;
 }
 
-export type { Input, Styles, CreateVisitationState, NavigationProps };
+interface Location {
+  latitude: number;
+  longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
+}
+
+interface BLocationProps {
+  mapStyle?: ViewStyle | undefined;
+  region?: Location;
+  onRegionChange?: ((region: Region, details: Details) => void) | undefined;
+  coordinate: Region;
+  CustomMarker?: React.ReactNode | undefined;
+}
+
+export type {
+  Input,
+  Styles,
+  CreateVisitationState,
+  NavigationProps,
+  Location,
+  BLocationProps
+
+};

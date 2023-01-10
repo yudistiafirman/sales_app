@@ -1,7 +1,6 @@
-import {PermissionsAndroid} from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 
-
-export const checkWritePermissions = async () => {
+const checkWritePermissions = async () => {
   try {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -9,7 +8,7 @@ export const checkWritePermissions = async () => {
         title: 'Permissions for write access',
         message: 'Give permission to your storage to write a file',
         buttonPositive: 'ok',
-      },
+      }
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       return true;
@@ -22,7 +21,7 @@ export const checkWritePermissions = async () => {
   }
 };
 
-export const checkReadPermissions = async () => {
+const checkReadPermissions = async () => {
   try {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
@@ -30,7 +29,7 @@ export const checkReadPermissions = async () => {
         title: 'Permissions for read access',
         message: 'Give permission to your storage to read a file',
         buttonPositive: 'ok',
-      },
+      }
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       return true;
@@ -41,6 +40,6 @@ export const checkReadPermissions = async () => {
     console.warn(err);
     return;
   }
-}
+};
 
-
+export default { checkReadPermissions, checkWritePermissions };

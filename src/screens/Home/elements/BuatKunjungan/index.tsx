@@ -5,6 +5,7 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import respFS from '@/utils/resFontSize';
 import BButtonPrimary from '@/components/atoms/BButtonPrimary';
+import { layout } from '@/constants';
 
 export default function BuatKunjungan(props: any, kunjunganAction: () => void) {
   return (
@@ -16,9 +17,9 @@ export default function BuatKunjungan(props: any, kunjunganAction: () => void) {
 const style = StyleSheet.create({
   container: {},
   footerContainer: {
-    padding: 12,
-    margin: 12,
-    borderRadius: 12,
+    padding: layout.pad.md,
+    margin: layout.pad.md,
+    borderRadius: layout.radius.md,
     backgroundColor: colors.primary,
   },
   footerText: {

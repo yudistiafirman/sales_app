@@ -12,7 +12,7 @@ const SearchAreaStyles = StyleSheet.create({
   },
   currentLocationText: {
     fontFamily: font.family.montserrat['400'],
-    fontSize: resScale(14),
+    fontSize: font.size.md,
     color: colors.text.darker,
   },
   locationListCardContainer: {
@@ -27,7 +27,7 @@ const SearchAreaStyles = StyleSheet.create({
   },
   addressTitle: {
     fontFamily: font.family.montserrat['500'],
-    fontSize: resScale(14),
+    fontSize: font.size.md,
     color: colors.text.darker,
     marginBottom: resScale(4),
   },

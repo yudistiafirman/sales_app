@@ -1,4 +1,5 @@
-import BSpinner from '@/components/atoms/BSpinner';
+
+import { BSpinner } from '@/components';
 import resScale from '@/utils/resScale';
 import React from 'react';
 import { FlatList } from 'react-native';

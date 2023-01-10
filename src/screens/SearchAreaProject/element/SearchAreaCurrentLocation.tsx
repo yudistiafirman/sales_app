@@ -1,4 +1,4 @@
-import BText from '@/components/atoms/BText';
+import { BText } from '@/components';
 import colors from '@/constants/colors';
 import resScale from '@/utils/resScale';
 import React from 'react';

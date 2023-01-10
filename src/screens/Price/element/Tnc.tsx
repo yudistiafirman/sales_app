@@ -26,6 +26,15 @@ const Tnc = ({ isVisible, onCloseTnc }: TncProps) => {
     marginRight: resScale(16),
   };
 
+  const loadingContainer: ViewStyle = {
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  };
+
   const htmlStyle = `
   body {
     width: 100%;
@@ -51,16 +60,7 @@ const Tnc = ({ isVisible, onCloseTnc }: TncProps) => {
             style={webViewStyle}
             startInLoadingState
             renderLoading={() => (
-              <View
-                style={{
-                  position: 'absolute',
-                  height: '100%',
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
+              <View style={loadingContainer}>
                 <ActivityIndicator size="small" color={colors.primary} />
               </View>
             )}
