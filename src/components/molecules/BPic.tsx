@@ -9,26 +9,34 @@ import { RadioButton } from 'react-native-paper';
 
 interface IProps extends PIC {
   isOption?: boolean;
-  onSelect: (index: number) => void;
-  index: number;
+  onSelect?: (index: number) => void;
+  index?: number;
+  border?: boolean;
 }
 
 const styles: Styles = {
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: scaleSize.moderateScale(20),
-    paddingVertical: scaleSize.verticalScale(10),
     backgroundColor: colors.offWhite,
     borderRadius: layout.radius.md,
-    borderWidth: 2,
-    borderColor: colors.border.default,
   },
 };
 
-const makeStyle = ({ isOption }: IProps) => {
+const makeStyle = ({ isOption, border }: IProps) => {
   let _style: Styles = styles;
 
+  if (border) {
+    _style = {
+      container: {
+        ...(_style.container as Object),
+        borderWidth: 2,
+        borderColor: colors.border.default,
+        paddingHorizontal: scaleSize.moderateScale(20),
+        paddingVertical: scaleSize.verticalScale(10),
+      },
+    };
+  }
   if (isOption) {
     _style = {
       container: {
@@ -50,9 +58,10 @@ const BPic = ({
   isSelected,
   onSelect,
   index,
+  border = true,
 }: IProps): JSX.Element => {
   return (
-    <View style={makeStyle({ isOption, index, onSelect }).container}>
+    <View style={makeStyle({ isOption, index, onSelect, border }).container}>
       {isOption && (
         <React.Fragment>
           <RadioButton

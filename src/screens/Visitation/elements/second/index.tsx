@@ -20,21 +20,26 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
     updateValueOnstep('stepTwo', key, e);
   };
 
-  const [options, setOptions] = React.useState<{
-    loading: boolean;
-    items: any[] | null;
-  }>({
-    loading: false,
-    items: null,
-  });
+  // const [options, setOptions] = React.useState<{
+  //   loading: boolean;
+  //   items: any[] | null;
+  // }>({
+  //   loading: false,
+  //   items: null,
+  // });
+
   const onFetching = (e: any) => {
     console.log('masuk sini ga sih??', e);
-    setOptions({
+    // setOptions({
+    //   loading: true,
+    //   items: null,
+    // });
+    updateValueOnstep('stepTwo', 'options', {
       loading: true,
       items: null,
     });
     setTimeout(() => {
-      setOptions({
+      updateValueOnstep('stepTwo', 'options', {
         loading: false,
         items: [
           {
@@ -55,17 +60,13 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           },
         ],
       });
-      // setOptions({
-      //   ...options,
-      //   loading: false,
-      // });
     }, 1000);
     return;
   };
 
   const inputs: Input[] = React.useMemo(() => {
     console.log('rerender input');
-    return [
+    const baseInput: Input[] = [
       {
         label: 'Jenis Pelanggan',
         isRequire: true,
@@ -92,48 +93,54 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           },
         ],
       },
-      {
-        label: 'Nama Perusahaan',
-        isRequire: true,
-        isError: false,
-        type: 'autocomplete',
-        onChange: onFetching,
-        value: state.companyName,
-        items: options?.items || null,
-        loading: options?.loading || false,
-        onSelect: (item: any) => {
-          updateValueOnstep('stepTwo', 'companyName', item?.title);
-        },
-      },
-      {
-        label: 'Nama Proyek',
-        isRequire: true,
-        isError: false,
-        type: 'textInput',
-        onChange: onChange('projectName'),
-        value: state.projectName,
-      },
-      {
-        label: 'PIC',
-        isRequire: true,
-        isError: false,
-        type: 'PIC',
-        value: state.pics,
-        onChange: () => {
-          openBottomSheet();
-        },
-        onSelect: (index: number) => {
-          const newPicList = values.stepTwo.pics.map((el, _index) => {
-            return {
-              ...el,
-              isSelected: _index === index,
-            };
-          });
-          updateValueOnstep('stepTwo', 'pics', newPicList);
-        },
-      },
     ];
-  }, [options]);
+    if (state.customerType.length > 0) {
+      const aditionalInput: Input[] = [
+        {
+          label: 'Nama Perusahaan',
+          isRequire: true,
+          isError: false,
+          type: 'autocomplete',
+          onChange: onFetching,
+          value: state.companyName,
+          items: state.options.items,
+          loading: state.options.loading,
+          onSelect: (item: any) => {
+            updateValueOnstep('stepTwo', 'companyName', item);
+          },
+        },
+        {
+          label: 'Nama Proyek',
+          isRequire: true,
+          isError: false,
+          type: 'textInput',
+          onChange: onChange('projectName'),
+          value: state.projectName,
+        },
+        {
+          label: 'PIC',
+          isRequire: true,
+          isError: false,
+          type: 'PIC',
+          value: state.pics,
+          onChange: () => {
+            openBottomSheet();
+          },
+          onSelect: (index: number) => {
+            const newPicList = values.stepTwo.pics.map((el, _index) => {
+              return {
+                ...el,
+                isSelected: _index === index,
+              };
+            });
+            updateValueOnstep('stepTwo', 'pics', newPicList);
+          },
+        },
+      ];
+      baseInput.push(...aditionalInput);
+    }
+    return baseInput;
+  }, [values]);
 
   return (
     <React.Fragment>

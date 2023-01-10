@@ -31,7 +31,7 @@ const BAutoComplete = ({
   //   setData(items);
   // }, [items]);
   // // // const data = React.useMemo(() => items, [items]);
-  // console.log(loading, data, 'ini apa? ke render lagi ga?');
+  console.log(loading, value, 'ini apa? ke render lagi ga?');
 
   return (
     <React.Fragment>

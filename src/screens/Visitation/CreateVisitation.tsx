@@ -11,6 +11,7 @@ import {
   createVisitationContext,
   CreateVisitationProvider,
 } from '@/context/CreateVisitationContext';
+import Fourth from './elements/fourth';
 
 const CreateVisitation = () => {
   const bottomSheetRef = React.useRef<BottomSheet>(null);
@@ -37,6 +38,7 @@ const CreateVisitation = () => {
     <BText>1</BText>,
     <SecondStep openBottomSheet={openBottomSheet} />,
     <ThirdStep />,
+    <Fourth />,
   ];
 
   return (

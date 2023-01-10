@@ -80,6 +80,10 @@ interface CreateVisitationSecondStep {
   projectName: string;
   location: {};
   pics: PIC[];
+  options: {
+    loading: false;
+    items: any[] | null;
+  };
 }
 interface CreateVisitationThirdStep {
   stageProject: string;

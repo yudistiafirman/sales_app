@@ -37,6 +37,10 @@ const initialData: CreateVisitationState = {
     location: {},
     pics: [],
     projectName: '',
+    options: {
+      items: null,
+      loading: false,
+    },
   },
   stepThree: {
     estimationDate: {

@@ -1,11 +1,6 @@
 import React from 'react';
-import { BBottomSheet, BButtonPrimary, BContainer, BForm } from '@/components';
-import { Input, PIC, Styles } from '@/interfaces';
-import { ViewStyle } from 'react-native';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { scaleSize } from '@/utils';
-import { layout } from '@/constants';
-
+import { BBottomSheetForm } from '@/components';
+import { Input, PIC } from '@/interfaces';
 interface IProps {
   initialIndex: number;
   addPic: any;
@@ -66,47 +61,25 @@ const BSheetAddPic = React.forwardRef(
       },
     ];
 
+    const onAdd = () => {
+      if (ref) {
+        ref.current?.close();
+      }
+      addPic(state);
+      setState(initialState);
+    };
+
     return (
-      <BBottomSheet
-        // onChange={bottomSheetOnchange}
-        percentSnapPoints={['75%']}
+      <BBottomSheetForm
         ref={ref}
-        initialSnapIndex={initialIndex}
-        enableContentPanningGesture={true}
-        style={styles.sheetStyle as ViewStyle}
-        containerHeight={scaleSize.moderateScale(150)}
-        enablePanDownToClose
-      >
-        <BContainer>
-          <BottomSheetScrollView>
-            <BForm inputs={inputs} />
-            <BButtonPrimary
-              onPress={() => {
-                if (ref) {
-                  ref.current?.close();
-                }
-                addPic(state);
-                setState(initialState);
-              }}
-              title="Tambah PIC"
-            />
-          </BottomSheetScrollView>
-        </BContainer>
-      </BBottomSheet>
+        initialIndex={initialIndex}
+        onAdd={onAdd}
+        inputs={inputs}
+        buttonTitle={'Tambah PIC'}
+        snapPoint={['75%']}
+      />
     );
   }
 );
-
-const styles: Styles = {
-  sheetStyle: {
-    padding: layout.pad.lg,
-    backgroundColor: 'red',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  button: { flexDirection: 'row-reverse' },
-};
 
 export default BSheetAddPic;
