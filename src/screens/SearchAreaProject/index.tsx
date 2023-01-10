@@ -9,11 +9,14 @@ import { SafeAreaView } from 'react-native';
 import SearchAreaStyles from './styles';
 import CurrentLocation from './element/SearchAreaCurrentLocation';
 import LocationList from './element/LocationList';
-import { hasLocationPermission } from '@/utils/permissions/locationPermissions';
 import Geolocation from 'react-native-geolocation-service';
+import { hasLocationPermission } from '@/utils/permissions';
+import { useDispatch } from 'react-redux';
+import { updateRegion } from '@/redux/locationReducer';
 
 const SearchAreaProject = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch()
   const [locationData, setLocationData] = useState([]);
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -35,11 +38,13 @@ const SearchAreaProject = () => {
         (position) => {
           if (position) {
             const { latitude, longitude } = position.coords;
+            const coordinatePayload = {
+              latitude,
+              longitude
+            }
+            dispatch(updateRegion(coordinatePayload))
 
-            navigation.push('Location', {
-              longitude: longitude,
-              latitude: latitude,
-            });
+            navigation.push('Location');
           }
         },
         (error) => {

@@ -2,7 +2,7 @@ import resScale from '@/utils/resScale';
 import React from 'react';
 import { Image } from 'react-native';
 
-const BMarkers = () => {
+const BMarker = () => {
   return (
     <Image
       style={{
@@ -14,4 +14,4 @@ const BMarkers = () => {
   );
 };
 
-export default BMarkers;
+export default BMarker;

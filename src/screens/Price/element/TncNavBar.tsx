@@ -3,8 +3,8 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
 import { TextStyle, View, ViewStyle } from 'react-native';
-import BText from '../../../components/atoms/BText';
 import * as React from 'react';
+import { BText } from '@/components';
 
 interface TncBarProps {
   rightComponent?: React.ReactNode | undefined;
