@@ -10,6 +10,7 @@ export { default as BDropdown } from './atoms/BDropdown';
 export { default as BBottomSheet } from './atoms/BBottomSheet';
 export { default as BButtonPrimary } from './atoms/BButtonPrimary';
 export { default as BHighlightText } from './atoms/BHighlightText';
+export { default as BAutoComplete } from './atoms/BAutoComplete';
 export { default as BSpinner } from './atoms/BSpinner';
 export { default as BTouchableText } from './atoms/BTouchableText';
 export { default as BHeaderIcon } from './atoms/BHeaderIcon';
@@ -34,7 +35,10 @@ export { default as BViewMoreText } from './molecules/BViewMoreText';
 export { default as BForm } from './organism/BForm';
 export { default as BQuickActionMenu } from './organism/BQuickActionMenu';
 export { default as BTabSections } from './organism/TabSections';
+export { default as BPicList } from './organism/BPicList';
+export { default as BBottomSheetForm } from './organism/BBottomSheetForm';
 export { default as BAlert } from './organism/BAlert';
+export { default as BTabViewScreen } from './organism/BTabViewScreen';
 
 //templates
 export { default as ProductList } from './templates/Price/ProductList';

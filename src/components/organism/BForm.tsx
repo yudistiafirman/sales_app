@@ -8,6 +8,9 @@ import BComboDropdown from '../molecules/BComboDropdown';
 import BDropdown from '../atoms/BDropdown';
 import BLabel from '../molecules/BLabel';
 import BText from '../atoms/BText';
+import BDivider from '../atoms/BDivider';
+import BPicList from './BPicList';
+import BAutoComplete from '../atoms/BAutoComplete';
 
 interface IProps {
   inputs: Input[];
@@ -35,6 +38,7 @@ const renderInput = (input: Input): React.ReactNode => {
     dropdown,
     isRequire,
     isError,
+    onSelect,
   } = input;
 
   if (type === 'textInput') {
@@ -99,6 +103,16 @@ const renderInput = (input: Input): React.ReactNode => {
     );
   }
 
+  if (type === 'autocomplete') {
+    return (
+      <React.Fragment>
+        <BLabel label={label} isRequired={isRequire} />
+        <BSpacer size="extraSmall" />
+        <BAutoComplete {...input} />
+      </React.Fragment>
+    );
+  }
+
   if (type === 'dropdown') {
     if (dropdown) {
       console.log('dropdown, masukl');
@@ -112,7 +126,7 @@ const renderInput = (input: Input): React.ReactNode => {
             items={dropdown.items}
             onChange={dropdown.onChange}
             placeholder={dropdown.placeholder}
-            isError
+            isError={isError}
             errorMessage={`${label} harus dipilih`}
           />
         </React.Fragment>
@@ -130,6 +144,28 @@ const renderInput = (input: Input): React.ReactNode => {
         </React.Fragment>
       );
     }
+  }
+
+  if (type === 'PIC') {
+    return (
+      <React.Fragment>
+        <BSpacer size="small" />
+        <View style={styles.optionContainer}>
+          <BText type="header">PIC</BText>
+          <BText bold="500" color="primary" onPress={onChange}>
+            + Tambah PIC
+          </BText>
+        </View>
+        <BSpacer size="extraSmall" />
+        <BDivider />
+        <BSpacer size="small" />
+        <BPicList
+          isOption={value.length > 1 ? true : false}
+          data={value}
+          onSelect={onSelect!}
+        />
+      </React.Fragment>
+    );
   }
 };
 

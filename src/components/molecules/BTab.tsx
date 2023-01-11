@@ -30,10 +30,12 @@ const BTab = ({
       renderScene={renderScene}
       renderTabBar={renderTabBar}
       onIndexChange={onIndexChange}
+      lazy
+      keyboardDismissMode="none"
     />
   );
 };
 
-BTab.defaultProps = defaultSceneContainerStyle
+BTab.defaultProps = defaultSceneContainerStyle;
 
 export default BTab;

@@ -8,10 +8,10 @@ const guidelineBaseHeight = 680;
 
 const scale = (size: number) => (width / guidelineBaseWidth) * size;
 
-const scaleSize = {
+const resScale = {
   verticalScale: (size: number) => (height / guidelineBaseHeight) * size,
   moderateScale: (size: number, factor = 0.5) =>
     size + (scale(size) - size) * factor,
 };
 
-export default scaleSize;
+export default resScale;

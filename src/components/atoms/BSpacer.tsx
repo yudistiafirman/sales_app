@@ -1,9 +1,9 @@
-import { resScale } from '@/utils';
 import React from 'react';
+import { resScale } from '@/utils';
 import { View, StyleProp, ViewStyle } from 'react-native';
 
 interface IProps {
-  size: 'extraSmall' | 'small' | 'medium' | 'large' | number;
+  size: 'extraSmall' | 'small' | 'medium' | 'large' | 'extraLarge' | number;
 }
 
 const styles: StyleProp<ViewStyle> = {
