@@ -37,6 +37,7 @@ const colors = {
     disabled: '#F5F5F5',
     tab: '#C7C7C7',
     altGrey: '#C7C7C7',
+    otpField: '#EBEBEB',
   },
   chip: {
     green: '#C2FCC8',
