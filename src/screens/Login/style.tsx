@@ -1,15 +1,19 @@
-import { colors } from '@/constants';
+import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
 import { StyleSheet } from 'react-native';
 const loginStyle = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: layout.pad.lg,
+  },
   textInfo: {
     fontFamily: font.family.montserrat['400'],
     fontSize: font.size.md,
     color: colors.text.dark,
-    marginBottom: resScale(32),
-    marginHorizontal: resScale(16),
+    marginBottom: layout.pad.xl,
     textAlign: 'center',
   },
   whatsapp: {
@@ -22,13 +26,11 @@ const loginStyle = StyleSheet.create({
     fontFamily: font.family.montserrat['500'],
     fontSize: font.size.sm,
     color: colors.text.dark,
-    marginHorizontal: resScale(16),
     alignSelf: 'flex-start',
   },
   phoneNumberInputContainer: {
     marginBottom: resScale(25),
     flexDirection: 'row',
-    marginHorizontal: resScale(16),
     alignItems: 'flex-end',
   },
   countryCodeContainer: {
@@ -37,8 +39,8 @@ const loginStyle = StyleSheet.create({
     height: resScale(38),
     width: resScale(45),
     borderColor: colors.textInput.inActive,
-    borderBottomLeftRadius: resScale(4),
-    borderTopLeftRadius: resScale(4),
+    borderBottomLeftRadius: layout.pad.sm,
+    borderTopLeftRadius: layout.pad.sm,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -54,8 +56,8 @@ const loginStyle = StyleSheet.create({
     color: colors.textInput.input,
   },
   maskInputContainer: {
-    borderTopRightRadius: resScale(4),
-    borderBottomEndRadius: resScale(4),
+    borderTopRightRadius: layout.pad.sm,
+    borderBottomEndRadius: layout.pad.sm,
     height: resScale(38),
     borderWidth: 1,
     borderLeftWidth: 0,
