@@ -1,4 +1,4 @@
-import { colors, font, layout } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import { Styles } from '@/interfaces';
 import { resScale } from '@/utils';
 import React from 'react';
@@ -67,8 +67,8 @@ const BAutoComplete = ({
 
 const styles: Styles = {
   inputContainer: {
-    fontFamily: font.family.montserrat[400],
-    fontSize: font.size.md,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
     lineHeight: resScale(14),
     color: 'blue',
     backgroundColor: colors.white,

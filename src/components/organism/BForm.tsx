@@ -149,7 +149,7 @@ const renderInput = (input: Input): React.ReactNode => {
   if (type === 'PIC') {
     return (
       <React.Fragment>
-        <BSpacer size="medium" />
+        <BSpacer size="small" />
         <View style={styles.optionContainer}>
           <BText type="header">PIC</BText>
           <BText bold="500" color="primary" onPress={onChange}>
@@ -158,7 +158,7 @@ const renderInput = (input: Input): React.ReactNode => {
         </View>
         <BSpacer size="extraSmall" />
         <BDivider />
-        <BSpacer size="medium" />
+        <BSpacer size="small" />
         <BPicList
           isOption={value.length > 1 ? true : false}
           data={value}
@@ -175,7 +175,7 @@ const BForm = ({ inputs }: IProps) => {
       {inputs.map((input, index) => (
         <React.Fragment key={index}>
           {renderInput(input)}
-          <BSpacer size="medium" />
+          <BSpacer size="small" />
         </React.Fragment>
       ))}
     </View>

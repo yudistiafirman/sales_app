@@ -104,6 +104,7 @@ interface CreateVisitationState {
   stepTwo: CreateVisitationSecondStep;
   stepThree: CreateVisitationThirdStep;
   sheetIndex: number;
+  shouldScrollView: boolean;
 }
 
 interface PIC {

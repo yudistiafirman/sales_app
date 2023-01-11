@@ -50,8 +50,8 @@ const BText = ({
   if (type === 'title') {
     _style = {
       ..._style,
-      fontFamily: font.family.montserrat[600],
-      fontSize: font.size.md,
+      fontFamily: fonts.family.montserrat[600],
+      fontSize: fonts.size.md,
     };
   }
 

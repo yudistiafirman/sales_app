@@ -1,9 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { View } from 'react-native';
-import { BDivider, BForm, BSearchBar, BSpacer, BText } from '@/components';
+import { BDivider, BForm, BSpacer, BText } from '@/components';
 import { CreateVisitationSecondStep, Input, Styles } from '@/interfaces';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
+import SearchFlow from './Searching';
+import { ScrollView } from 'react-native-gesture-handler';
 interface IProps {
   openBottomSheet: () => void;
 }
@@ -19,14 +21,6 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   const onChange = (key: keyof CreateVisitationSecondStep) => (e: any) => {
     updateValueOnstep('stepTwo', key, e);
   };
-
-  // const [options, setOptions] = React.useState<{
-  //   loading: boolean;
-  //   items: any[] | null;
-  // }>({
-  //   loading: false,
-  //   items: null,
-  // });
 
   const onFetching = (e: any) => {
     console.log('masuk sini ga sih??', e);
@@ -78,9 +72,9 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           {
             icon: company,
             title: 'Perusahaan',
-            value: 'customer',
+            value: 'company',
             onChange: () => {
-              onChange('customerType')('customer');
+              onChange('customerType')('company');
             },
           },
           {
@@ -142,29 +136,33 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
     return baseInput;
   }, [values]);
 
+  const [isSearch, setSearch] = React.useState<boolean>(false);
+
+  const onSearch = (searching: boolean) => {
+    setSearch(searching);
+  };
+
   return (
-    <React.Fragment>
-      <BSearchBar
-        fontSize={0}
-        color={''}
-        fontFamily={''}
-        backgroundColor={''}
-        lineHeight={0}
-      />
-      <BSpacer size="medium" />
-      <View style={styles.dividerContainer}>
-        <BDivider />
-        <BSpacer size="extraSmall" />
-        <BText color="divider">Atau Buat Baru Dibawah</BText>
-        <BSpacer size="extraSmall" />
-        <BDivider />
-      </View>
-      <BSpacer size="medium" />
-      <View>
-        <BForm inputs={inputs} />
-        <BSpacer size="large" />
-      </View>
-    </React.Fragment>
+    <ScrollView>
+      <SearchFlow isSearch={isSearch} onSearch={onSearch} />
+      {!isSearch && (
+        <React.Fragment>
+          <BSpacer size="small" />
+          <View style={styles.dividerContainer}>
+            <BDivider />
+            <BSpacer size="extraSmall" />
+            <BText color="divider">Atau Buat Baru Dibawah</BText>
+            <BSpacer size="extraSmall" />
+            <BDivider />
+          </View>
+          <BSpacer size="small" />
+          <View>
+            <BForm inputs={inputs} />
+            <BSpacer size="large" />
+          </View>
+        </React.Fragment>
+      )}
+    </ScrollView>
   );
 };
 

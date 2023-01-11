@@ -52,6 +52,7 @@ const initialData: CreateVisitationState = {
     products: [],
     stageProject: '',
   },
+  shouldScrollView: true,
 };
 
 const createVisitationContext = React.createContext<context>({
@@ -69,6 +70,7 @@ const reducerForm = (
   switch (action.type) {
     case 'sheetIndex':
     case 'step':
+    case 'shouldScrollView':
       return { ...state, [action.type]: action.value };
     case 'stepOne':
     case 'stepTwo':

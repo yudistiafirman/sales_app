@@ -37,6 +37,7 @@ export { default as BTabSections } from './organism/TabSections';
 export { default as BPicList } from './organism/BPicList';
 export { default as BBottomSheetForm } from './organism/BBottomSheetForm';
 export { default as BAlert } from './organism/BAlert';
+export { default as BTabViewScreen } from './organism/BTabViewScreen';
 
 //templates
 export { default as ProductList } from './templates/Price/ProductList';

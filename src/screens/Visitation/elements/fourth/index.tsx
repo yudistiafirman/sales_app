@@ -6,6 +6,7 @@ import { View } from 'react-native';
 import { resScale } from '@/utils';
 import { MarkedDates } from 'react-native-calendars/src/types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
   if (direction === 'right') {
@@ -51,7 +52,7 @@ const Fourth = () => {
   };
 
   return (
-    <React.Fragment>
+    <ScrollView>
       <BText>4</BText>
       <Calendar
         theme={{
@@ -74,7 +75,7 @@ const Fourth = () => {
             alignItems: 'center',
           }}
         >
-          <BText type="title">PT. Guna Karya Asu</BText>
+          <BText type="title">PT. Guna Karya</BText>
           <Icon name="chevron-down" size={25} color={colors.icon.darkGrey} />
         </View>
         <BText>Asu Asu</BText>
@@ -87,7 +88,7 @@ const Fourth = () => {
           border={false}
         />
       </BContainer>
-    </React.Fragment>
+    </ScrollView>
   );
 };
 

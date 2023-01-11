@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View } from 'react-native';
 import { BContainer, BText } from '@/components';
 import SecondStep from './elements/second';
 import { Button } from 'react-native-paper';
@@ -12,15 +12,17 @@ import {
   CreateVisitationProvider,
 } from '@/context/CreateVisitationContext';
 import Fourth from './elements/fourth';
+import { useKeyboardActive } from '@/hooks';
 
 const CreateVisitation = () => {
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const { values, action } = React.useContext(createVisitationContext);
+  const { shouldScrollView } = values;
   const { updateValue, updateValueOnstep } = action;
+  const { keyboardVisible } = useKeyboardActive();
 
   const next = (nextStep: number) => () => {
     const totalStep = stepRender.length;
-    console.log(values, 'ini values');
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
     }
@@ -43,29 +45,27 @@ const CreateVisitation = () => {
 
   return (
     <BContainer>
-      <ScrollView>
-        {stepRender[values.step]}
-        {/* {stepRender[state.step]}
-          {stepRender[state.step]} */}
-      </ScrollView>
-      <View style={styles.footer}>
-        <Button
-          mode="text"
-          onPress={next(values.step - 1)}
-          // disabled={state.step === 0}
-        >
-          Kembali
-        </Button>
-        <Button
-          mode="contained"
-          icon="chevron-right"
-          contentStyle={styles.button}
-          onPress={next(values.step + 1)}
-          // disabled={state.step === stepRender.length - 1}
-        >
-          Lanjut
-        </Button>
-      </View>
+      {/* {shouldScrollView ? (
+        <ScrollView>{stepRender[values.step]}</ScrollView>
+      ) : (
+        <View style={{ flex: 1 }}>{stepRender[values.step]}</View>
+      )} */}
+      {stepRender[values.step]}
+      {!keyboardVisible && shouldScrollView && (
+        <View style={styles.footer}>
+          <Button mode="text" onPress={next(values.step - 1)}>
+            Kembali
+          </Button>
+          <Button
+            mode="contained"
+            icon="chevron-right"
+            contentStyle={styles.button}
+            onPress={next(values.step + 1)}
+          >
+            Lanjut
+          </Button>
+        </View>
+      )}
       <BSheetAddPic
         ref={bottomSheetRef}
         initialIndex={values.sheetIndex}
@@ -76,11 +76,6 @@ const CreateVisitation = () => {
 };
 
 const styles: Styles = {
-  sheetStyle: {
-    // paddingLeft: 20,
-    // paddingRight: 20,
-    backgroundColor: 'red',
-  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
