@@ -22,14 +22,16 @@ type VisitationCardType = {
     pilStatus?: string;
   };
   searchQuery?: string;
+  onPress?: () => void;
 };
 
 export default function BVisitationCard({
   item,
   searchQuery,
+  onPress,
 }: VisitationCardType) {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <View style={style.container}>
         <View style={style.leftSide}>
           <View style={style.top}>

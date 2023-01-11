@@ -11,10 +11,20 @@ import { Details, Region } from 'react-native-maps';
 interface Input {
   label: string;
   isRequire: boolean;
-  type: 'textInput' | 'cardOption' | 'comboDropdown' | 'area' | 'dropdown';
+  type:
+    | 'textInput'
+    | 'cardOption'
+    | 'comboDropdown'
+    | 'area'
+    | 'dropdown'
+    | 'PIC'
+    | 'autocomplete';
   onChange?: (e: any) => void;
   value: string | any;
+  placeholder?: string;
+  loading?: boolean;
   isError?: boolean;
+  items?: any;
   options?: Array<{
     title: string;
     value: string | any;
@@ -55,7 +65,10 @@ interface Input {
     isErrorTwo?: boolean;
     errorMessageOne?: string;
     errorMessageTwo?: string;
+    valueOne?: any;
+    valueTwo?: any;
   };
+  onSelect?: (index: number | any) => void; //eg for pic radio
 }
 
 interface Styles {
@@ -63,9 +76,43 @@ interface Styles {
 }
 
 // create visitation
+
+interface CreateVisitationSecondStep {
+  companyName: string;
+  customerType: string;
+  projectName: string;
+  location: {};
+  pics: PIC[];
+  options: {
+    loading: false;
+    items: any[] | null;
+  };
+}
+interface CreateVisitationThirdStep {
+  stageProject: string;
+  products: any[];
+  estimationDate: {
+    estimationWeek: number | null;
+    estimationMonth: number | null;
+  };
+  paymentType: string;
+  notes: string;
+}
 interface CreateVisitationState {
   step: number;
-  state: any[];
+  stepOne: {};
+  stepTwo: CreateVisitationSecondStep;
+  stepThree: CreateVisitationThirdStep;
+  sheetIndex: number;
+  shouldScrollView: boolean;
+}
+
+interface PIC {
+  name?: string;
+  phone?: string;
+  email?: string;
+  position?: string;
+  isSelected?: boolean;
 }
 
 interface NavigationProps {
@@ -91,8 +138,10 @@ export type {
   Input,
   Styles,
   CreateVisitationState,
+  CreateVisitationSecondStep,
+  CreateVisitationThirdStep,
+  PIC,
   NavigationProps,
   Location,
-  BLocationProps
-
+  BLocationProps,
 };

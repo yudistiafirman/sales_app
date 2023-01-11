@@ -1,59 +1,28 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { BForm, BSpacer, BText } from '@/components';
-import { Input } from '@/interfaces';
+import { CreateVisitationThirdStep, Input } from '@/interfaces';
 import { MONTH_LIST, STAGE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
 import ProductChip from './ProductChip';
-
-interface IProps {
-  updateValue: (key: keyof IState, value: any) => void;
-}
-
-interface IState {
-  step: number;
-  stepOne: {};
-  stepTwo: {};
-  stepThree: {};
-}
-
-interface ThirdState {
-  stageProject: string;
-  products: any[];
-  estimationDate: {
-    estimationWeek: number | null;
-    estimationMonth: number | null;
-  };
-  paymentType: string;
-  notes: string;
-}
+import { createVisitationContext } from '@/context/CreateVisitationContext';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
-const ThirdStep = ({ updateValue }: IProps) => {
-  const [state, setState] = React.useState<ThirdState>({
-    estimationDate: {
-      estimationMonth: null,
-      estimationWeek: null,
-    },
-    notes: '',
-    paymentType: '',
-    products: [],
-    stageProject: '',
-  });
+const ThirdStep = () => {
+  const { values, action } = React.useContext(createVisitationContext);
+  const { stepThree: state } = values;
+  const { updateValueOnstep } = action;
 
-  const onChange = (key: keyof ThirdState) => (e: any) => {
-    setState({
-      ...state,
-      [key]: e,
-    });
+  const onChange = (key: keyof CreateVisitationThirdStep) => (e: any) => {
+    updateValueOnstep('stepThree', key, e);
   };
 
   const inputs: Input[] = [
     {
       label: 'Fase Proyek',
       isRequire: true,
-      isError: true,
+      isError: false,
       value: state.stageProject,
       onChange: onChange('stageProject'),
       type: 'dropdown',
@@ -77,36 +46,30 @@ const ThirdStep = ({ updateValue }: IProps) => {
       comboDropdown: {
         itemsOne: WEEK_LIST,
         itemsTwo: MONTH_LIST,
+        valueOne: values.stepThree.estimationDate.estimationWeek,
+        valueTwo: values.stepThree.estimationDate.estimationMonth,
         onChangeOne: (value: any) => {
-          setState({
-            ...state,
-            estimationDate: {
-              ...state.estimationDate,
-              estimationWeek: value,
-            },
-          });
+          const estimateionDate = { ...values.stepThree.estimationDate };
+          estimateionDate.estimationWeek = value;
+          updateValueOnstep('stepThree', 'estimationDate', estimateionDate);
         },
         onChangeTwo: (value: any) => {
-          setState({
-            ...state,
-            estimationDate: {
-              ...state.estimationDate,
-              estimationMonth: value,
-            },
-          });
+          const estimateionDate = { ...values.stepThree.estimationDate };
+          estimateionDate.estimationMonth = value;
+          updateValueOnstep('stepThree', 'estimationDate', estimateionDate);
         },
         placeholderOne: 'Pilih Minggu',
         placeholderTwo: 'Pilih Bulan',
         errorMessageOne: 'Pilih minggu',
         errorMessageTwo: 'Pilih bulan',
-        isErrorOne: true,
-        isErrorTwo: true,
+        isErrorOne: false,
+        isErrorTwo: false,
       },
     },
     {
       label: 'Tipe Pemabayaran',
       isRequire: true,
-      isError: true,
+      isError: false,
       type: 'cardOption',
       onChange: onChange('paymentType'),
       value: state.paymentType,
@@ -132,18 +95,12 @@ const ThirdStep = ({ updateValue }: IProps) => {
     {
       label: 'Catatan Sales',
       isRequire: true,
-      isError: true,
+      isError: false,
       type: 'area',
       onChange: onChange('notes'),
       value: state.notes,
     },
   ];
-
-  React.useEffect(() => {
-    updateValue('stepThree', state);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
 
   const products = [
     {
@@ -181,7 +138,7 @@ const ThirdStep = ({ updateValue }: IProps) => {
           </React.Fragment>
         ))}
       </ScrollView>
-      <BSpacer size="small" />
+      <BSpacer size="medium" />
       <BForm inputs={inputsTwo} />
     </View>
   );

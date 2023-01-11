@@ -42,6 +42,10 @@ const colors = {
     green: '#C2FCC8',
     disabled: '#F5F5F5',
   },
+  icon: {
+    primary: '#E52525',
+    darkGrey: '#202020',
+  },
 };
 
 export default colors;

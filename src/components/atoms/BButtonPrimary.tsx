@@ -51,8 +51,7 @@ export default function BButtonPrimary({
 const style = StyleSheet.create({
   container: {},
   buttonContainer: {
-    padding: 12,
-    margin: 12,
+    paddingVertical: 12,
     borderRadius: 12,
     backgroundColor: colors.primary,
   },
