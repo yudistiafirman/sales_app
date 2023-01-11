@@ -27,6 +27,8 @@ interface IProps {
   isErrorTwo?: boolean;
   errorMessageOne?: string;
   errorMessageTwo?: string;
+  valueOne?: any;
+  valueTwo?: any;
 }
 const BComboDropdown = (props: IProps) => {
   const {
@@ -40,6 +42,8 @@ const BComboDropdown = (props: IProps) => {
     errorMessageTwo,
     isErrorOne,
     isErrorTwo,
+    valueOne,
+    valueTwo,
   } = props;
 
   return (
@@ -47,7 +51,7 @@ const BComboDropdown = (props: IProps) => {
       <View style={{ flex: 6 }}>
         <BDropdown
           open={false}
-          value={null}
+          value={valueOne}
           items={itemsOne}
           onChange={onChangeOne}
           placeholder={placeholderOne}
@@ -59,7 +63,7 @@ const BComboDropdown = (props: IProps) => {
       <View style={{ flex: 4 }}>
         <BDropdown
           open={false}
-          value={null}
+          value={valueTwo}
           items={itemsTwo}
           onChange={onChangeTwo}
           placeholder={placeholderTwo}

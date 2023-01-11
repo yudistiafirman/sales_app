@@ -5,7 +5,7 @@ import { resFontSize } from '@/utils';
 
 interface IProps {
   children: React.ReactNode;
-  type?: 'default' | 'header';
+  type?: 'default' | 'header' | 'title';
   color?: 'primary' | 'divider';
   bold?:
     | 'bold'
@@ -45,6 +45,13 @@ const BText = ({
       ..._style,
       fontFamily: fonts.family.montserrat[600],
       fontSize: fonts.size.xl,
+    };
+  }
+  if (type === 'title') {
+    _style = {
+      ..._style,
+      fontFamily: fonts.family.montserrat[600],
+      fontSize: fonts.size.md,
     };
   }
 
