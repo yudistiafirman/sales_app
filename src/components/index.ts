@@ -14,6 +14,7 @@ export { default as BSpinner } from './atoms/BSpinner';
 export { default as BTouchableText } from './atoms/BTouchableText';
 export { default as BHeaderIcon } from './atoms/BHeaderIcon';
 export { default as BMarker } from './atoms/BMarker';
+export { default as BErrorText } from './atoms/BErrorText';
 
 // moleculses
 export { default as BTab } from './molecules/BTab';
