@@ -5,7 +5,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BText from './BText';
-const BErrorText = ({ text }: { text: string }) => {
+const BErrorText = ({ text }: { text: string | unknown }) => {
   return (
     <View style={styles.container}>
       <Icon
@@ -19,7 +19,7 @@ const BErrorText = ({ text }: { text: string }) => {
   );
 };
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row' },
+  container: { flexDirection: 'row', alignSelf: 'flex-start' },
   warningIcon: { marginRight: resScale(11), alignSelf: 'center' },
   warningText: {
     fontFamily: font.family.montserrat['500'],

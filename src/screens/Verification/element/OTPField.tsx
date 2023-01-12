@@ -10,8 +10,13 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 const CELL_COUNT = 6;
-const OTPField = () => {
-  const [value, setValue] = useState('');
+
+interface OTPFieldProps {
+  value?: string;
+  setValue: (text: string) => void;
+}
+
+const OTPField = ({ value = '', setValue }: OTPFieldProps) => {
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,

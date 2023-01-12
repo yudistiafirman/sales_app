@@ -1,15 +1,18 @@
-import { BText } from '@/components';
+import { BErrorText, BText } from '@/components';
 import loginStyle from '@/screens/Login/style';
 import React from 'react';
-import { View } from 'react-native';
+import {
+  NativeSyntheticEvent,
+  TextInputFocusEventData,
+  View,
+} from 'react-native';
 import MaskInput from 'react-native-mask-input';
-const PhoneInput = ({
-  value,
-  onChangeText,
-}: {
+
+interface PhoneInputProps {
   value: string;
   onChangeText: ((text: string) => void) & Function;
-}) => {
+}
+const PhoneInput = ({ value, onChangeText }: PhoneInputProps) => {
   const phonenumberMask = [
     /\d/,
     /\d/,
@@ -20,6 +23,7 @@ const PhoneInput = ({
     /\d/,
     /\d/,
     ' ',
+    /\d/,
     /\d/,
     /\d/,
     /\d/,
@@ -38,8 +42,8 @@ const PhoneInput = ({
           placeholderFillCharacter=""
           placeholder="Masukkan nomor whatsapp"
           keyboardType="number-pad"
-          onChangeText={(masked) => {
-            onChangeText(masked);
+          onChangeText={(masked, unmasked) => {
+            onChangeText(unmasked);
           }}
           mask={phonenumberMask}
         />

@@ -1,4 +1,4 @@
-import { colors } from '@/constants';
+import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
 import { StyleSheet } from 'react-native';
@@ -15,14 +15,12 @@ const VerificationStyles = StyleSheet.create({
     fontFamily: font.family.montserrat['300'],
     color: colors.text.dark,
     fontSize: font.size.md,
-    marginBottom: resScale(25),
     textAlign: 'center',
   },
   intructionsTextRed: {
     fontFamily: font.family.montserrat['500'],
     fontSize: font.size.md,
     color: colors.primary,
-    textAlign: 'left',
   },
   intrutructionsTextDarkBold: {
     fontFamily: font.family.montserrat['500'],
@@ -39,6 +37,11 @@ const VerificationStyles = StyleSheet.create({
     marginTop: resScale(25),
     justifyContent: 'center',
     marginBottom: resScale(23),
+  },
+  countDownText: {
+    fontFamily: font.family.montserrat['500'],
+    fontSize: font.size.md,
+    color: colors.text.divider,
   },
 });
 export default VerificationStyles;

@@ -17,16 +17,18 @@ type BButtonPrimaryType = {
   buttonStyle?: ViewStyle;
   titleStyle?: ViewStyle;
   isOutline?: boolean;
+  disable?: boolean
 };
 export default function BButtonPrimary({
   title,
   onPress = () => {},
   buttonStyle,
   titleStyle,
+  disable,
   isOutline = false,
 }: BButtonPrimaryType) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity disabled={disable} onPress={onPress}>
       <View
         style={[
           style.buttonContainer,

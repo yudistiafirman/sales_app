@@ -29,7 +29,7 @@ const loginStyle = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   phoneNumberInputContainer: {
-    marginBottom: resScale(25),
+    marginBottom: layout.pad.sm,
     flexDirection: 'row',
     alignItems: 'flex-end',
   },

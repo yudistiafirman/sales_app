@@ -37,5 +37,3 @@ export const searchLocation = (
       onError(catchError(error));
     });
 };
-
-fetc
