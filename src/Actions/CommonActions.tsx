@@ -1,24 +1,23 @@
 import BrikApi from '@/brikApi/BrikApi';
+import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import { catchError, getOptions, request } from '@/networking/request';
 
 export const getLocationCoordinates = (
   token: string,
   longitude: number,
   latitude: number,
-  distanceFrom: string,
-  onSuccess: Function,
-  onError: Function
+  distanceFrom: string
 ) => {
-  request(
-    BrikApi.getLocationCoordinates(longitude, latitude, distanceFrom),
+  return request(
+    BrikApiCommon.getLocationCoordinates(longitude, latitude, distanceFrom),
     getOptions(token, 'GET')
   )
     .then((response) => response.json())
-    .then((responseJson) => {
-      onSuccess(responseJson);
+    .then((json) => {
+      return json;
     })
     .catch((error) => {
-      onError(catchError(error));
+      catchError(error);
     });
 };
 
@@ -28,7 +27,7 @@ export const searchLocation = (
   onSuccess: Function,
   onError: Function
 ) => {
-  request(BrikApi.searchLocation(searchValue), getOptions(token,'GET'))
+  request(BrikApi.searchLocation(searchValue), getOptions(token, 'GET'))
     .then((response) => response.json())
     .then((responseJson) => {
       onSuccess(responseJson);
@@ -37,5 +36,3 @@ export const searchLocation = (
       onError(catchError(error));
     });
 };
-
-fetc

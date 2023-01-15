@@ -1,5 +1,12 @@
-import { Options } from './types';
+import axios from 'axios';
 import { production } from '../../app.json';
+
+interface RequestInfo {
+  method: 'GET' | 'POST' | 'DELETE' | 'PUT';
+  headers: {};
+  body?: string;
+  timeoutInterval?: number;
+}
 
 export const getOptions = (
   token = 'statictoken',
@@ -7,7 +14,7 @@ export const getOptions = (
   data?: any,
   timeout = 10000
 ) => {
-  const options = {} as Options;
+  const options = {} as RequestInfo;
   options.method = method;
   options.headers = {
     Accept: 'application/json',
