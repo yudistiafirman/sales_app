@@ -29,6 +29,7 @@ export { default as BPic } from './molecules/BPic';
 export { default as BLocation } from './molecules/BLocation';
 export { default as BFlatlistItems } from './molecules/BFlatlistItems';
 export { default as BViewMoreText } from './molecules/BViewMoreText';
+export { default as BTextLocation } from './molecules/BTextLocation';
 
 // organism
 export { default as BForm } from './organism/BForm';

@@ -29,7 +29,7 @@ interface context {
 
 const initialData: CreateVisitationState = {
   sheetIndex: -1,
-  step: 1,
+  step: 0,
   stepOne: {},
   stepTwo: {
     companyName: '',

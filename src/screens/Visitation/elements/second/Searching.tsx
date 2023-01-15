@@ -6,6 +6,7 @@ import {
   BSearchBar,
   BSpacer,
   BTabViewScreen,
+  BTextLocation,
   BVisitationCard,
 } from '@/components';
 import { TextInput } from 'react-native-paper';
@@ -179,8 +180,10 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
 
   return (
     <React.Fragment>
+      <BTextLocation location="ini lokasi nanti" />
+      <BSpacer size="extraSmall" />
       <BSearchBar
-        placeholder="Search"
+        placeholder="Cari pelanggan"
         activeOutlineColor="gray"
         left={
           <TextInput.Icon
@@ -203,7 +206,7 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
       />
       <BSpacer size="extraSmall" />
       {searchQuery && (
-        <View style={{ flex: 1, height: resScale(620) }}>
+        <View style={{ height: resScale(500) }}>
           <BTabViewScreen
             isLoading={false}
             screenToRender={sceneToRender}

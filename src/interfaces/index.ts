@@ -18,7 +18,8 @@ interface Input {
     | 'area'
     | 'dropdown'
     | 'PIC'
-    | 'autocomplete';
+    | 'autocomplete'
+    | 'map';
   onChange?: (e: any) => void;
   value: string | any;
   placeholder?: string;
@@ -124,6 +125,11 @@ interface Location {
   longitude: number;
   latitudeDelta: number;
   longitudeDelta: number;
+  formattedAddress?: string;
+  distance?: {
+    text?: string;
+    value?: number;
+  };
 }
 
 interface BLocationProps {
@@ -144,4 +150,5 @@ export type {
   NavigationProps,
   Location,
   BLocationProps,
+  Region,
 };

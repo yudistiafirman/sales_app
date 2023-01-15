@@ -44,8 +44,17 @@ const BLocation = ({
   coordinate,
   CustomMarker,
 }: BLocationProps & typeof bLocationDefaultProps) => {
+  const mapRef = React.useRef<MapView>(null);
+
+  React.useEffect(() => {
+    if (mapRef) {
+      mapRef.current?.animateToRegion(region);
+    }
+  }, [region, coordinate]);
+
   return (
     <MapView
+      ref={mapRef}
       style={mapStyle}
       initialRegion={region}
       provider={MAPSPROVIDER}

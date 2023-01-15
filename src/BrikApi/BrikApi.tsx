@@ -34,7 +34,7 @@ export default class BrikApi {
     latitude: number,
     distanceFrom = 'BP-LEGOK'
   ) => {
-    const url = `${API_URL}/common/map/coordinates?lon=${longitude}&lat=${latitude}8&distanceFrom=${distanceFrom}`;
+    const url = `https://common-dev.aggre.id/common/map/coordinates?lon=${longitude}&lat=${latitude}8&distanceFrom=${distanceFrom}`;
     return url;
   };
 

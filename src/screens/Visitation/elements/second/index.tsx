@@ -15,7 +15,7 @@ const individu = require('@/assets/icon/Visitation/profile.png');
 
 const SecondStep = ({ openBottomSheet }: IProps) => {
   const { values, action } = React.useContext(createVisitationContext);
-  const { stepTwo: state } = values;
+  const { stepTwo: state, shouldScrollView } = values;
   const { updateValueOnstep } = action;
 
   const onChange = (key: keyof CreateVisitationSecondStep) => (e: any) => {
@@ -141,6 +141,29 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   const onSearch = (searching: boolean) => {
     setSearch(searching);
   };
+
+  if (!shouldScrollView) {
+    <View style={{ flex: 1 }}>
+      <SearchFlow isSearch={isSearch} onSearch={onSearch} />
+      {!isSearch && (
+        <React.Fragment>
+          <BSpacer size="small" />
+          <View style={styles.dividerContainer}>
+            <BDivider />
+            <BSpacer size="extraSmall" />
+            <BText color="divider">Atau Buat Baru Dibawah</BText>
+            <BSpacer size="extraSmall" />
+            <BDivider />
+          </View>
+          <BSpacer size="small" />
+          <View>
+            <BForm inputs={inputs} />
+            <BSpacer size="large" />
+          </View>
+        </React.Fragment>
+      )}
+    </View>;
+  }
 
   return (
     <ScrollView>

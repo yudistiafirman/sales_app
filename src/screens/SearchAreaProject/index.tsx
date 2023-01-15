@@ -14,9 +14,9 @@ import { hasLocationPermission } from '@/utils/permissions';
 import { useDispatch } from 'react-redux';
 import { updateRegion } from '@/redux/locationReducer';
 
-const SearchAreaProject = () => {
+const SearchAreaProject = ({ route }: { route: any }) => {
   const navigation = useNavigation();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [locationData, setLocationData] = useState([]);
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,10 +40,14 @@ const SearchAreaProject = () => {
             const { latitude, longitude } = position.coords;
             const coordinatePayload = {
               latitude,
-              longitude
-            }
-            dispatch(updateRegion(coordinatePayload))
+              longitude,
+            };
+            dispatch(updateRegion(coordinatePayload));
 
+            if (route?.params?.from) {
+              navigation.goBack();
+              return;
+            }
             navigation.push('Location');
           }
         },

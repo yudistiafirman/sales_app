@@ -39,6 +39,7 @@ const renderInput = (input: Input): React.ReactNode => {
     isRequire,
     isError,
     onSelect,
+    placeholder,
   } = input;
 
   if (type === 'textInput') {
@@ -64,6 +65,7 @@ const renderInput = (input: Input): React.ReactNode => {
           value={value}
           multiline={true}
           numberOfLines={4}
+          placeholder={placeholder}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">

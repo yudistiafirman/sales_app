@@ -127,7 +127,7 @@ const ThirdStep = () => {
   ];
 
   return (
-    <View>
+    <ScrollView>
       <BText>step 3</BText>
       <BForm inputs={inputs} />
       <ScrollView horizontal={true}>
@@ -140,7 +140,7 @@ const ThirdStep = () => {
       </ScrollView>
       <BSpacer size="medium" />
       <BForm inputs={inputsTwo} />
-    </View>
+    </ScrollView>
   );
 };
 

@@ -30,7 +30,6 @@ const Location = () => {
     });
   }, [navigation]);
 
-
   const onChangeRegion = (coordinate: Region) => {
     dispatch(updateRegion(coordinate));
   };
