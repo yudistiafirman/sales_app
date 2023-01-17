@@ -1,7 +1,7 @@
 import { TabView } from 'react-native-tab-view';
 import * as React from 'react';
 import colors from '@/constants/colors';
-import { ViewStyle } from 'react-native';
+import { Text, View, ViewStyle } from 'react-native';
 
 interface Btab {
   onIndexChange: (index: number) => void;
@@ -9,6 +9,7 @@ interface Btab {
   renderScene: (props: any & { route: any }) => React.ReactNode;
   renderTabBar?: (props: any) => React.ReactNode;
   sceneContainerStyle?: ViewStyle | undefined;
+  swipeEnabled?: boolean;
 }
 
 const defaultSceneContainerStyle: ViewStyle = {
@@ -22,15 +23,17 @@ const BTab = ({
   renderScene,
   renderTabBar,
   sceneContainerStyle,
+  swipeEnabled,
 }: Btab & typeof defaultSceneContainerStyle) => {
   return (
     <TabView
+      swipeEnabled={swipeEnabled}
       sceneContainerStyle={sceneContainerStyle}
       navigationState={navigationState}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
-      onIndexChange={onIndexChange}
       lazy
+      onIndexChange={onIndexChange}
       keyboardDismissMode="none"
     />
   );
