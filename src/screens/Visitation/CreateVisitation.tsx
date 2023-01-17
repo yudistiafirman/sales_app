@@ -84,10 +84,10 @@ const styles: Styles = {
   button: { flexDirection: 'row-reverse' },
 };
 
-const CreateVisitationWithProvider = () => {
+const CreateVisitationWithProvider = (props: any) => {
   return (
     <CreateVisitationProvider>
-      <CreateVisitation />
+      <CreateVisitation {...props} />
     </CreateVisitationProvider>
   );
 };

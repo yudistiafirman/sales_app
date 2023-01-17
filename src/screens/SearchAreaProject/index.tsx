@@ -45,7 +45,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
             dispatch(updateRegion(coordinatePayload));
 
             if (route?.params?.from) {
-              navigation.goBack();
+              navigation.goBack(null, { shouldUpdate: true });
               return;
             }
             navigation.push('Location');

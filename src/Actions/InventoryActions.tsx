@@ -1,4 +1,5 @@
 import BrikApi from '@/brikApi/BrikApi';
+import BrikApiInventory from '@/brikApi/BrikApiInventory';
 import { catchError, getOptions, request } from '@/networking/request';
 
 export const getAllBrikProducts = (
@@ -25,23 +26,21 @@ export const getAllBrikProducts = (
 
 export const getProductsCategories = (
   token: string,
-  page: number,
-  size: number,
-  search: string,
-  pillar: string,
-  count: boolean,
-  onSuccess: Function,
-  onError: Function
+  page?: number,
+  size?: number,
+  search?: string,
+  pillar?: string,
+  count?: boolean
 ) => {
-  request(
-    BrikApi.getProductsCategories(page, size, search, pillar, count),
+  return request(
+    BrikApiInventory.getProductCategories(page, size, search, pillar, count),
     getOptions(token, 'GET')
   )
     .then((response) => response.json())
-    .then((responseJson) => {
-      onSuccess(responseJson);
+    .then((json) => {
+      return json;
     })
     .catch((error) => {
-      onError(catchError(error));
+      catchError(error);
     });
 };

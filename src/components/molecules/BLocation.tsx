@@ -9,6 +9,9 @@ import MapView, {
 } from 'react-native-maps';
 import colors from '@/constants/colors';
 import { BLocationProps } from '@/interfaces';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { useRoute } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
@@ -37,40 +40,49 @@ const bLocationDefaultProps = {
   coordinate: bLocationDefaultRegion,
 };
 
-const BLocation = ({
-  mapStyle,
-  region,
-  onRegionChange,
-  coordinate,
-  CustomMarker,
-}: BLocationProps & typeof bLocationDefaultProps) => {
-  const mapRef = React.useRef<MapView>(null);
+const BLocation = React.forwardRef(
+  (
+    {
+      mapStyle,
+      region,
+      onRegionChange,
+      coordinate,
+      CustomMarker,
+    }: BLocationProps & typeof bLocationDefaultProps,
+    ref: React.LegacyRef<MapView> | undefined
+  ) => {
+    // const mapRef = React.useRef<MapView>(null);
+    // // const { region: regionRedux } = useSelector(
+    // //   (state: RootState) => state.location
+    // // );
 
-  React.useEffect(() => {
-    if (mapRef) {
-      mapRef.current?.animateToRegion(region);
-    }
-  }, [region, coordinate]);
+    // React.useEffect(() => {
+    //   console.log(region, 'ini value?');
+    //   if (mapRef.current) {
+    //     mapRef.current?.animateToRegion(region);
+    //   }
+    // }, [region.latitude]);
 
-  return (
-    <MapView
-      ref={mapRef}
-      style={mapStyle}
-      initialRegion={region}
-      provider={MAPSPROVIDER}
-      onRegionChange={onRegionChange}
-      rotateEnabled={false}
-    >
-      <Marker coordinate={coordinate}>{CustomMarker}</Marker>
-      <Circle
-        center={coordinate}
-        fillColor={`${colors.primary}60`}
-        radius={700}
-        strokeWidth={0}
-      />
-    </MapView>
-  );
-};
+    return (
+      <MapView
+        ref={ref}
+        style={mapStyle}
+        initialRegion={region}
+        provider={MAPSPROVIDER}
+        onRegionChange={onRegionChange}
+        rotateEnabled={false}
+      >
+        <Marker coordinate={region}>{CustomMarker}</Marker>
+        <Circle
+          center={region}
+          fillColor={`${colors.primary}60`}
+          radius={700}
+          strokeWidth={0}
+        />
+      </MapView>
+    );
+  }
+);
 
 BLocation.defaultProps = bLocationDefaultProps;
 

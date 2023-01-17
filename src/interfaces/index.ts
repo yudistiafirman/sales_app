@@ -76,13 +76,24 @@ interface Styles {
   [key: string]: StyleProp<ViewStyle | TextStyle>;
 }
 
-// create visitation
+interface Address {
+  id?: string;
+  formattedAddress?: string;
+  lan?: number;
+  lon?: number;
+  line1?: string;
+  name?: string;
+}
 
+// create visitation
+interface CreateVisitationFirstStep {
+  createdLocation: Address;
+  locationAddress: Address;
+}
 interface CreateVisitationSecondStep {
   companyName: string;
   customerType: string;
   projectName: string;
-  location: {};
   pics: PIC[];
   options: {
     loading: false;
@@ -101,7 +112,7 @@ interface CreateVisitationThirdStep {
 }
 interface CreateVisitationState {
   step: number;
-  stepOne: {};
+  stepOne: CreateVisitationFirstStep;
   stepTwo: CreateVisitationSecondStep;
   stepThree: CreateVisitationThirdStep;
   sheetIndex: number;
@@ -144,6 +155,7 @@ export type {
   Input,
   Styles,
   CreateVisitationState,
+  CreateVisitationFirstStep,
   CreateVisitationSecondStep,
   CreateVisitationThirdStep,
   PIC,

@@ -3,6 +3,16 @@ import Config from 'react-native-config';
 const PRODUCTION = production;
 const API_URL = PRODUCTION ? Config.API_URL_PROD : Config.API_URL_DEV;
 
+class CommonApi {
+  // address
+  // user
+  // login
+}
+
+class InventoryApi {
+  // products
+}
+
 export default class BrikApi {
   static uploadFile = () => {
     const url = `${API_URL}/upload`;
@@ -14,8 +24,23 @@ export default class BrikApi {
     search: string,
     category: string
   ) => {
-    const url = `${API_URL}/inventory/m/products?page=${page}&size=${size}&search=${search}&category=${category}`;
-    return url;
+    const url = new URL(`${API_URL}/inventory/m/products`);
+    const params = url.searchParams;
+    if (search) {
+      params.append('search', search); //karya abadi ->karya abadi-> karya%20abadi
+    }
+    if (page) {
+      params.append('page', page.toString());
+    }
+    if (size) {
+      params.append('size', size.toString());
+    }
+    if (category) {
+      params.append('category', category);
+    }
+    return url.toString();
+    // const url = `${API_URL}/inventory/m/products?page=${page}&size=${size}&search=${search}&category=${category}`;
+    // return url;
   };
 
   static getProductsCategories = (
@@ -34,7 +59,7 @@ export default class BrikApi {
     latitude: number,
     distanceFrom = 'BP-LEGOK'
   ) => {
-    const url = `https://common-dev.aggre.id/common/map/coordinates?lon=${longitude}&lat=${latitude}8&distanceFrom=${distanceFrom}`;
+    const url = `https://common-dev.aggre.id/common/map/coordinates?lon=${longitude}&lat=${latitude}&distanceFrom=${distanceFrom}`;
     return url;
   };
 

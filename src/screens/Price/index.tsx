@@ -1,46 +1,55 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useLayoutEffect } from 'react';
-import { SafeAreaView } from 'react-native';
-import { SceneMap } from 'react-native-tab-view';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import { AppState, SafeAreaView } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
 import { useNavigation } from '@react-navigation/native';
 import Tnc from '@/screens/Price/element/Tnc';
 import CurrentLocation from './element/CurrentLocation';
 import PriceStyle from './PriceStyle';
-import Geolocation from 'react-native-geolocation-service';
 import PriceSearchBar from './element/PriceSearchBar';
 import ProductList from '@/components/templates/Price/ProductList';
-import { BAlert, BSpinner, BTouchableText } from '@/components';
-import { hasLocationPermission } from '@/utils/permissions';
+import { BAlert, BSpacer, BSpinner, BTouchableText } from '@/components';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateRegion } from '@/redux/locationReducer';
 import { RootState } from '@/redux/store';
+import { useMachine } from '@xstate/react';
+import { priceMachine } from '@/machine/priceMachine';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+import { layout } from '@/constants';
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
   const navigation = useNavigation();
   const { region } = useSelector((state: RootState) => state.location);
   const dispatch = useDispatch();
-  const [isVisibleTnc, setIsVisibleTnc] = React.useState<boolean>(false);
   const [index, setIndex] = React.useState(0);
-  const [showAlert, setShowAlert] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState(true);
-  const [routes] = React.useState([
-    { key: 'first', title: 'NFA' },
-    { key: 'second', title: 'FA' },
-  ]);
   const [productsData, setProductsData] = React.useState([]);
+  const appState = useRef(AppState.currentState);
+  const [state, send] = useMachine(priceMachine);
 
-  const renderProductList = () => {
-    return <ProductList products={productsData} />;
-  };
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        send('appComeForegroundState');
+      } else {
+        send('appComeBackgroundState');
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   const renderHeaderRight = () => {
     return (
-      <BTouchableText onPress={() => setIsVisibleTnc(true)} title="Ketentuan" />
+      <BTouchableText onPress={() => send('showAgreement')} title="Ketentuan" />
     );
   };
-  const renderScene = SceneMap({
-    first: renderProductList,
-    second: renderProductList,
-  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -48,56 +57,46 @@ const PriceList = () => {
     });
   }, [navigation]);
 
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
-
-  const getCurrentLocation = React.useCallback(async () => {
-    const hasPermission = await hasLocationPermission();
-    if (hasPermission) {
-      Geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          const coordinatePayload = {
-            latitude,
-            longitude,
-          };
-          dispatch(updateRegion(coordinatePayload));
-          setLoading(false);
-        },
-        (error) => {
-          // See error code charts below.
-          console.log(error.code, error.message);
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-      );
-    }
-  }, [dispatch]);
+  const { locationDetail, showingAlert, routes } = state.context;
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {loading ? (
-        <BSpinner />
-      ) : (
+      <BSpacer size="small" />
+      {state.matches('getLocation.finito') ? (
         <CurrentLocation
           onPress={() => navigation.navigate('Location')}
-          location={`latitude:${region.latitude} longitude:${region.longitude}`}
+          location={locationDetail.formattedAddress}
+        />
+      ) : (
+        <ShimmerPlaceholder
+          style={{
+            marginHorizontal: layout.pad.lg,
+            height: layout.pad.lg,
+            width: '92%',
+          }}
+          stopAutoRun
         />
       )}
-
+      <BSpacer size="extraSmall" />
       <PriceSearchBar onPress={() => navigation.navigate('SearchProduct')} />
+      <BSpacer size="extraSmall" />
       <BTabSections
         navigationState={{ index, routes }}
-        renderScene={renderScene}
+        renderScene={() => <ProductList products={productsData} />}
         onIndexChange={setIndex}
+        tabStyle={
+          state.matches('getProduct.categoriesLoaded') && PriceStyle.tabStyle
+        }
         indicatorStyle={PriceStyle.tabIndicator}
-        tabStyle={PriceStyle.tabStyle}
-        tabBarStyle={PriceStyle.tabBarStyle}
       />
-      <Tnc isVisible={isVisibleTnc} onCloseTnc={() => setIsVisibleTnc(false)} />
+
+      <Tnc
+        isVisible={state.matches('Tnc.agreementShowed')}
+        onCloseTnc={() => send('hideAgreement')}
+      />
       <BAlert
-        isVisible={showAlert}
+        isVisible={state.matches('getLocation.unreachable')}
         type="warning"
-        onClose={() => setShowAlert(false)}
+        onClose={() => send('hideWarning')}
       />
     </SafeAreaView>
   );

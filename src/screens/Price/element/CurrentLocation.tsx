@@ -32,8 +32,7 @@ const CurrentLocation = ({ location, onPress }: CurrentLocationProps) => {
 const CurrentLocationStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginHorizontal: resScale(16),
-    marginBottom: resScale(9.5),
+    marginHorizontal:resScale(16)
   },
   viewMoreText: {
     fontFamily: font.family.montserrat['300'],
