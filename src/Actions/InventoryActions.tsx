@@ -4,23 +4,18 @@ import { catchError, getOptions, request } from '@/networking/request';
 
 export const getAllBrikProducts = (
   token: string,
-  page: number,
-  size: number,
-  search: string,
-  categories: string,
-  onSuccess: Function,
-  onError: Function
+  page?: number,
+  size?: number,
+  search?: string,
+  categories?: string
 ) => {
-  request(
-    BrikApi.getAllProducts(page, size, search, categories),
+  return request(
+    BrikApiInventory.getProducts(page, size, search, categories),
     getOptions(token, 'GET')
   )
     .then((response) => response.json())
     .then((responseJson) => {
-      onSuccess(responseJson);
-    })
-    .catch((error) => {
-      onError(catchError(error));
+      return responseJson;
     });
 };
 
@@ -39,8 +34,5 @@ export const getProductsCategories = (
     .then((response) => response.json())
     .then((json) => {
       return json;
-    })
-    .catch((error) => {
-      catchError(error);
     });
 };

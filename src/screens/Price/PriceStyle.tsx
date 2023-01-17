@@ -7,11 +7,11 @@ import { StyleSheet } from 'react-native';
 const PriceStyle = StyleSheet.create({
   tabIndicator: {
     backgroundColor: colors.primary,
-    marginLeft: layout.pad.lg
+    marginLeft: layout.pad.lg,
   },
   tabStyle: {
     width: 'auto',
-    marginLeft: resScale(22)
+    marginLeft: resScale(22),
   },
   tabBarStyle: { backgroundColor: colors.white },
 
@@ -19,7 +19,6 @@ const PriceStyle = StyleSheet.create({
     fontFamily: font.family.montserrat['600'],
     fontSize: font.size.lg,
     color: colors.text.darker,
-  
   },
   searchBarWrapper: {
     marginHorizontal: layout.pad.lg,

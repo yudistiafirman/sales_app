@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import BText from '@/components/atoms/BText';
+import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
@@ -30,11 +31,11 @@ const styles = StyleSheet.create({
   emptyimage: {
     width: resScale(88),
     height: resScale(88),
-    marginVertical: resScale(32),
+    marginVertical: layout.pad.lg,
   },
   emptyText: {
     fontFamily: font.family.montserrat['600'],
-    fontSize: resScale(14),
+    fontSize: font.size.md,
     textAlign: 'center',
     color: colors.text.darker,
   },
