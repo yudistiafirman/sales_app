@@ -11,6 +11,7 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import respFS from '@/utils/resFontSize';
 import resScale from '@/utils/resScale';
+import { layout } from '@/constants';
 
 type BButtonPrimaryType = {
   title: string;
@@ -35,15 +36,16 @@ export default function BButtonPrimary({
   isLoading,
 }: BButtonPrimaryType) {
   return (
-    <TouchableOpacity onPress={onPress} disabled={disable}>
-      <View
+    <View pointerEvents={isLoading ? 'none' : 'auto'}>
+      <TouchableOpacity
         style={[
           style.buttonContainer,
           buttonStyle,
           isOutline ? style.outlineButton : null,
           disable ? style.disableStyle : null,
         ]}
-        pointerEvents={isLoading ? 'none' : 'auto'}
+        onPress={onPress}
+        disabled={disable}
       >
         <View>{leftIcon ? leftIcon() : null}</View>
         {isLoading ? (
@@ -61,16 +63,15 @@ export default function BButtonPrimary({
         )}
 
         <View>{rightIcon ? rightIcon() : null}</View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const style = StyleSheet.create({
   buttonContainer: {
-    paddingVertical: resScale(12),
-    paddingHorizontal: resScale(12),
-    borderRadius: 12,
+    padding: layout.pad.md,
+    borderRadius: layout.radius.md,
     backgroundColor: colors.primary,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -82,7 +83,7 @@ const style = StyleSheet.create({
     textAlign: 'center',
     color: colors.white,
     fontFamily: font.family.montserrat[600],
-    fontSize: respFS(16),
+    fontSize: font.size.lg,
     fontWeight: '600',
   },
   outlineTitle: {
