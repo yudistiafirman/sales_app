@@ -8,7 +8,7 @@ import CurrentLocation from './element/CurrentLocation';
 import PriceStyle from './PriceStyle';
 import PriceSearchBar from './element/PriceSearchBar';
 import ProductList from '@/components/templates/Price/ProductList';
-import { BAlert, BSpacer,BTouchableText } from '@/components';
+import { BAlert, BSpacer, BTouchableText } from '@/components';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateRegion } from '@/redux/locationReducer';
 import { RootState } from '@/redux/store';
@@ -33,7 +33,7 @@ const PriceList = () => {
           latitude: lat,
         };
         dispatch(updateRegion(coordinate));
-        navigation.navigate('Location');
+        // navigation.navigate('Location');
       },
     },
   });
@@ -79,6 +79,16 @@ const PriceList = () => {
     }
   };
 
+  const goToLocation = () => {
+    const { lon, lat } = locationDetail;
+    const coordinate = {
+      longitude: lon,
+      latitude: lat,
+    };
+    dispatch(updateRegion(coordinate));
+    navigation.navigate('Location');
+  };
+
   const {
     locationDetail,
     routes,
@@ -92,7 +102,7 @@ const PriceList = () => {
       <BSpacer size="small" />
       {state.matches('getLocation.finito') ? (
         <CurrentLocation
-          onPress={() => send('sendLonglatToRedux')}
+          onPress={goToLocation}
           location={locationDetail.formattedAddress}
         />
       ) : (

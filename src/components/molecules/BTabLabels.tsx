@@ -25,6 +25,7 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
   const BTabLabelsContainer: ViewStyle = {
     flexDirection: rightChipPosition ? 'row' : 'column',
     alignItems: 'center',
+    justifyContent:'center'
   };
 
   const BTabLabelsTextStyle: TextStyle = {
@@ -33,7 +34,7 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
       ? font.family.montserrat['600']
       : font.family.montserrat['400'],
     fontSize: font.size.md,
-    marginRight: resScale(4),
+    marginRight: route?.totalItems > 0 ? 4 : 0,
   };
   return (
     <View style={BTabLabelsContainer}>

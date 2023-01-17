@@ -7,7 +7,7 @@ import { StyleSheet } from 'react-native';
 const PriceStyle = StyleSheet.create({
   tabIndicator: {
     backgroundColor: colors.primary,
-    marginLeft: layout.pad.lg,
+    marginLeft: layout.pad.md,
   },
   tabStyle: {
     width: 'auto',

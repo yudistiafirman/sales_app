@@ -5,7 +5,7 @@ import {
 import { assign, createMachine } from 'xstate';
 
 export const searchProductMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACADugPYQCumALgHQCWAdvqRRfVAMQoY6sAKxZlWAG0ADAF1EofEVg0WROpJAAPRAE4AbCKoAWAMwB2AKwBGAExm1B63qMAaEAE9Eh7UdsaTmkSIAcesxMjAF9gh04sPEIScmp6RmZWDjRI3n5Y4RMJJBBpWXlFHNUEDQMTKlKzHQ09E18DHSr7J0RLMwrPMyMNX26DEVtQ8JScAnTKKgjuOnYIBTBaOgA3IgBrBamo8epN1gR6FcxUAtExU6U8uRoFJWK9EQ0Kgy0RczKTEwDm5wQ1MwMqAZLHo9JozL41CJ-kMQJsxjEJkcKGAoER0DQ4AAZIioCCQKgwRIzPgIiiwNhzOgLA5rDYjLakqhIlFojGwbG4-GEljE7awfbLIhI650U7nHKXAq3RA6IxqKgmB4Ge4gjRGAy+fwOH7VXxUERqaoNAbq0ylGFw6ICOIMJg89gKADC2FQMzAABVUAAjcVSGRXG5FVqNCqGkTVDSWV7K7WIcxGBV1dX1Z4iOXPC30+HWqh4r1EUh0TBJZSwCjHBaoABmyPQAApFT4AJTJLgMnN5gtF1i+3L+qVBhDmWNDsyhMIgOgkOBKS3bC79kXShAAWj0GhHK+MumeVX8Rh0agh4MzbezsUWCXtC-yS8HDUeel8ka+65fvhHoL0VD+hisAwMNQD18HRT0ic8Jl2GYbwDQpQGKdUR18ExHxEBprDMTxfDMdcwNGK0L2ZVF0SxHE8QgGCB3guNXiodwTH0e5sKfWo1BHHDvzTHQdD8Iw03cRi8PbQiK2ItkOXIgkwCJKASWteAJUXQNqKHQ86NqRi-Bw-wzE-Mw3HuHojEwqxnyEiDqE7Qti2gxTb2UlREEjPVjH0NQ1HXYxNDYloShDbjn36AJ3LQkJxyAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACADugPYQCumALgHQCWAdvqRRfVAMQoY6sAKxZlWAG0ADAF1EofEVg0WROpJAAPRAGYAjGqoAmAGwBWAOxGRRnRqMGROgDQgAnoh06AnFQ0AWPSIAcenSM9VwNXDQBfcPtOLDxCEnJqekZmVg40WN5+ROENCSQQaVl5RQLVBE1tfWNTc0trO0d1PW1PPx8DXzU1YwtI6IycAmzKWgYmFjp2BQBhbFQpsAAVVAAjUXypGTkaBSVyg0anBF8Qqm6A808eq1dffpAYofiBJPHUqbZMABsMgEl3hslEUdnsyohrlQ9HpfFYLCIET0RAZ7MdqlQQjprF0saZfF0Hk84iNqES0hAFGAxgA3IgAaypROGCVGZKmCHotMwqBKGyBBRBJX26i0VARGjcPQ0BlCQVRiCsnihOmurhcakMEs8hMGxJZ1G5FDAUCI6BocAAMkRUBBIFQYB8oHx9bA2BS6FTOfTGbrma8qIbjabzbArTa7Q7Jk6SbAOXQuTzdnQ+eJgdsheCEOZ5Qg9BoNBibAYNNCgsW8zquHr-YGTWbLdbbRB7WBHc7Xq6wOhiOgqPhvjyAGamgC2VCZL0SAZ5QfrocbEdbUfbOTjCd54n5W2KSeFuesGM8Vl8Ih8Jg0vhzvh0Il03QMwVcbT8T8rsT9U67PYAyhQZ2wt0KdNd0zYJtCMNQbBELVXDuPMczUWCxVcTU1GPAxPBVN9nhJcddTSL9TT7AcKGHdAxwnXC2SgNciENJMU02ICdzBUByk0XwqE8fx9HzQ5rAwlEmgQQ4C06QIYUMEw83uB46BIOAlEo-U0xY0o2MQABaPQcz4jFXARBFXCMfNpSsbDqynZIJlYVTQXUlQISOZwRFaaEsR0bpKmvCyP1ZfCpjsjMNNzIwcysbQNGRGwsRhSCdF8ydRlrYMG3DCAgpAkLDm0Gw1GvIx-GgmVnKzNUqCsCDrk6AIakS3CUrnMMmxbNsY0y1jHJEkyxU8gqiulQ4rxPO8ekfZ9Tm1KJHl9JLqEI9BfxnDqHPKGEjAqrRuluMzfCE45PFCZDUPQzCpsiIA */
   createMachine(
     {
       id: 'search product',
@@ -15,7 +15,11 @@ export const searchProductMachine =
       schema: {
         events: {} as
           | { type: 'searchingProducts'; value: string }
-          | { type: 'onChangeTab'; value: number },
+          | { type: 'onChangeTab'; value: number }
+          | { type: 'onGettingProductsData'; data: any[] }
+          | { type: 'getCategoriesData'; data: any[] }
+          | { type: 'clearInput' },
+
         services: {} as {
           getCategoriesData: {
             data: any[];
@@ -28,11 +32,11 @@ export const searchProductMachine =
 
       context: {
         searchValue: '' as string,
-        routes: [],
+        routes: [] as any,
         selectedCategories: '',
         page: 1,
         size: 10,
-        productsData: [],
+        productsData: [] as any[],
         loadProduct: false,
       },
 
@@ -41,7 +45,7 @@ export const searchProductMachine =
           on: {
             searchingProducts: [
               {
-                target: 'debouncing',
+                target: 'searching',
                 actions: 'assignSearchValue',
                 cond: 'searchValueLengthAccepted',
               },
@@ -53,20 +57,28 @@ export const searchProductMachine =
             ],
 
             onChangeTab: {
-              target: "inputting",
+              target: 'categoriesLoaded.gettingProducts',
               actions: 'assignIndex',
-              internal: true
-            }
+            },
+
+            clearInput: {
+              target: 'inputting',
+              internal: true,
+              actions: 'clearData',
+            },
           },
         },
 
         searching: {
           invoke: {
             src: 'getCategoriesData',
+
             onDone: {
-              target: 'categoriesLoaded',
+              target: 'categoriesLoaded.gettingProducts',
               actions: 'assignCategories',
             },
+
+            onError: 'errorState',
           },
         },
 
@@ -80,17 +92,15 @@ export const searchProductMachine =
                   target: '#search product.inputting',
                   actions: 'assignProducts',
                 },
-              }
+
+                onError: '#search product.errorState',
+              },
             },
           },
-
-          initial: 'gettingProducts',
         },
 
-        debouncing: {
-          after: {
-            '1000': 'searching',
-          },
+        errorState: {
+          always: 'inputting',
         },
       },
 
@@ -98,13 +108,13 @@ export const searchProductMachine =
     },
     {
       actions: {
-        assignSearchValue: assign((context, event) => {
+        assignSearchValue: assign((_context, event) => {
           return {
             searchValue: event.value,
             loadProduct: true,
           };
         }),
-        assignCategories: assign((context, event) => {
+        assignCategories: assign((_context, event) => {
           const newCategoriesData = event.data.map((item) => {
             return {
               key: item.id,
@@ -113,12 +123,16 @@ export const searchProductMachine =
               chipPosition: 'right',
             };
           });
+          const selectedCategory =
+            _context.selectedCategories.length > 0
+              ? _context.selectedCategories
+              : newCategoriesData[0].title;
           return {
             routes: newCategoriesData,
-            selectedCategories: newCategoriesData[0].title,
+            selectedCategories: selectedCategory,
           };
         }),
-        assignProducts: assign((context, event) => {
+        assignProducts: assign((_context, event) => {
           return {
             productsData: event.data,
             loadProduct: false,
@@ -130,7 +144,7 @@ export const searchProductMachine =
             loadProduct: true,
           };
         }),
-        clearData: assign((context, event) => {
+        clearData: assign((_context, _event) => {
           return {
             productsData: [],
             routes: [],
@@ -138,7 +152,7 @@ export const searchProductMachine =
         }),
       },
       guards: {
-        searchValueLengthAccepted: (context, event) => {
+        searchValueLengthAccepted: (_context, event) => {
           return event.value.length > 3;
         },
       },
