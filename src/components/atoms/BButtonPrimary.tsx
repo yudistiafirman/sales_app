@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
+  ActivityIndicator,
 } from 'react-native';
 import React from 'react';
 import colors from '@/constants/colors';
@@ -17,6 +18,10 @@ type BButtonPrimaryType = {
   buttonStyle?: ViewStyle;
   titleStyle?: ViewStyle;
   isOutline?: boolean;
+  rightIcon?: () => JSX.Element;
+  leftIcon?: () => JSX.Element;
+  disable?: boolean;
+  isLoading?: boolean;
 };
 export default function BButtonPrimary({
   title,
@@ -24,36 +29,54 @@ export default function BButtonPrimary({
   buttonStyle,
   titleStyle,
   isOutline = false,
+  rightIcon,
+  leftIcon,
+  disable,
+  isLoading,
 }: BButtonPrimaryType) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} disabled={disable}>
       <View
         style={[
           style.buttonContainer,
           buttonStyle,
           isOutline ? style.outlineButton : null,
+          disable ? style.disableStyle : null,
         ]}
+        pointerEvents={isLoading ? 'none' : 'auto'}
       >
-        <Text
-          style={[
-            style.buttonTitle,
-            titleStyle,
-            isOutline ? style.outlineTitle : null,
-          ]}
-        >
-          {title}
-        </Text>
+        <View>{leftIcon ? leftIcon() : null}</View>
+        {isLoading ? (
+          <ActivityIndicator size={resScale(24)} color={'white'} />
+        ) : (
+          <Text
+            style={[
+              style.buttonTitle,
+              titleStyle,
+              isOutline ? style.outlineTitle : null,
+            ]}
+          >
+            {title}
+          </Text>
+        )}
+
+        <View>{rightIcon ? rightIcon() : null}</View>
       </View>
     </TouchableOpacity>
   );
 }
 
 const style = StyleSheet.create({
-  container: {},
   buttonContainer: {
-    paddingVertical: 12,
+    paddingVertical: resScale(12),
+    paddingHorizontal: resScale(12),
     borderRadius: 12,
     backgroundColor: colors.primary,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  disableStyle: {
+    backgroundColor: colors.disabled,
   },
   buttonTitle: {
     textAlign: 'center',

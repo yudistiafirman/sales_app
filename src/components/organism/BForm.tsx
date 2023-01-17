@@ -11,6 +11,7 @@ import BText from '../atoms/BText';
 import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
+import { BSwitch, BFileInput } from '@/components';
 
 interface IProps {
   inputs: Input[];
@@ -164,6 +165,27 @@ const renderInput = (input: Input): React.ReactNode => {
           data={value}
           onSelect={onSelect!}
         />
+      </React.Fragment>
+    );
+  }
+
+  if (type === 'switch') {
+    return (
+      <React.Fragment>
+        <BSwitch label={label} value={value} onChange={onChange} />
+      </React.Fragment>
+    );
+  }
+
+  if (type === 'fileInput') {
+    return (
+      <React.Fragment>
+        <BFileInput label={label} value={value} onChange={onChange} />
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {`${label} harus diisi`}
+          </BText>
+        )}
       </React.Fragment>
     );
   }

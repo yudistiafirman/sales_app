@@ -18,7 +18,9 @@ interface Input {
     | 'area'
     | 'dropdown'
     | 'PIC'
-    | 'autocomplete';
+    | 'autocomplete'
+    | 'switch'
+    | 'fileInput';
   onChange?: (e: any) => void;
   value: string | any;
   placeholder?: string;
@@ -132,7 +134,32 @@ interface BLocationProps {
   onRegionChange?: ((region: Region, details: Details) => void) | undefined;
   coordinate: Region;
   CustomMarker?: React.ReactNode | undefined;
+  isUninteractable?: boolean;
 }
+
+interface SphStateInterface {
+  selectedCompany: any;
+  selectedPic: any;
+  isBillingAddressSame: boolean;
+  billingAddress: {
+    name: string;
+    phone: string | number;
+    addressAutoComplete: { [key: string]: any };
+    fullAddress: string;
+  };
+  paymentType: string;
+  paymentRequiredDocuments: any[];
+  paymentDocumentsFullfilled: boolean;
+  paymentBankGuarantee: boolean;
+  chosenProducts: any[];
+  productsChosen: boolean;
+}
+
+type SphContextInterface = [
+  SphStateInterface,
+  (key: string) => (data: any) => void,
+  (index: number) => void
+];
 
 export type {
   Input,
@@ -144,4 +171,6 @@ export type {
   NavigationProps,
   Location,
   BLocationProps,
+  SphStateInterface,
+  SphContextInterface,
 };

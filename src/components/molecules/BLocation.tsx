@@ -1,6 +1,6 @@
 import * as React from 'react';
 import resScale from '@/utils/resScale';
-import { Dimensions, Platform, ViewStyle } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -43,6 +43,7 @@ const BLocation = ({
   onRegionChange,
   coordinate,
   CustomMarker,
+  isUninteractable = false,
 }: BLocationProps & typeof bLocationDefaultProps) => {
   return (
     <MapView
@@ -51,6 +52,7 @@ const BLocation = ({
       provider={MAPSPROVIDER}
       onRegionChange={onRegionChange}
       rotateEnabled={false}
+      cacheEnabled={isUninteractable}
     >
       <Marker coordinate={coordinate}>{CustomMarker}</Marker>
       <Circle
