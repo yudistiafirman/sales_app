@@ -6,19 +6,31 @@ import { TouchableOpacity } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import SearchAreaStyles from '../styles';
 
-const SearchAreaCurrentLocation = ({ onPress }: { onPress: () => void }) => {
+const SearchAreaCurrentLocation = ({
+  onPress,
+  disabled,
+}: {
+  onPress: () => void;
+  disabled: boolean;
+}) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       onPress={onPress}
-      style={SearchAreaStyles.currentLocationContainer}
+      style={[SearchAreaStyles.currentLocationContainer]}
     >
       <Icons
         name="my-location"
         style={{ marginRight: resScale(12) }}
         size={resScale(16)}
-        color={colors.text.darker}
+        color={disabled ? `${colors.text.darker}40` : colors.text.darker}
       />
-      <BText style={SearchAreaStyles.currentLocationText}>
+      <BText
+        style={[
+          SearchAreaStyles.currentLocationText,
+          { color: disabled ? `${colors.text.darker}40` : colors.text.darker },
+        ]}
+      >
         Gunakan Lokasi Saat Ini
       </BText>
     </TouchableOpacity>

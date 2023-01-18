@@ -1,21 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import { SafeAreaView } from 'react-native';
-import { SceneMap } from 'react-native-tab-view';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
 import { useNavigation } from '@react-navigation/native';
 import resScale from '@/utils/resScale';
-import {
-  BHeaderIcon,
-  BSpacer,
-  BSpinner,
-  BTabSections,
-  ProductList,
-} from '@/components';
+import { BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
 import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
-import { searchAreaMachine } from '@/machine/searchAreaMachine';
 import { searchProductMachine } from '@/machine/searchProductMachine';
 
 const SearchProduct = () => {
@@ -37,7 +29,7 @@ const SearchProduct = () => {
     <SearchProductNavbar
       value={searchValue}
       onChangeText={onChangeText}
-      onClearValue={() => setSearchValue('')}
+      onClearValue={onClearValue}
     />
   );
 
@@ -54,6 +46,11 @@ const SearchProduct = () => {
     send('searchingProducts', { value: text });
   };
 
+  const onClearValue = () => {
+    setSearchValue('');
+    send('clearInput');
+  };
+
   const onTabPress = ({ route }) => {
     const tabIndex = index === 0 ? 1 : 0;
     if (route.key !== routes[index].key) {
@@ -61,7 +58,6 @@ const SearchProduct = () => {
     }
   };
   const { routes, productsData, loadProduct } = state.context;
-console.log(state.value)
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />

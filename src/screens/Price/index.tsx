@@ -1,17 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { AppState, SafeAreaView } from 'react-native';
+import {  AppState, SafeAreaView } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Tnc from '@/screens/Price/element/Tnc';
 import CurrentLocation from './element/CurrentLocation';
 import PriceStyle from './PriceStyle';
 import PriceSearchBar from './element/PriceSearchBar';
 import ProductList from '@/components/templates/Price/ProductList';
-import { BAlert, BSpacer,BTouchableText } from '@/components';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateRegion } from '@/redux/locationReducer';
-import { RootState } from '@/redux/store';
+import { BAlert, BSpacer, BTouchableText } from '@/components';
 import { useMachine } from '@xstate/react';
 import { priceMachine } from '@/machine/priceMachine';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -20,23 +17,10 @@ import { layout } from '@/constants';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
   const navigation = useNavigation();
-  const { region } = useSelector((state: RootState) => state.location);
-  const dispatch = useDispatch();
+  const route = useRoute();
   const [index, setIndex] = useState(0);
   const appState = useRef(AppState.currentState);
-  const [state, send] = useMachine(priceMachine, {
-    actions: {
-      sendingLonglat: (context) => {
-        const { lon, lat } = context.locationDetail;
-        const coordinate = {
-          longitude: lon,
-          latitude: lat,
-        };
-        dispatch(updateRegion(coordinate));
-        navigation.navigate('Location');
-      },
-    },
-  });
+  const [state, send] = useMachine(priceMachine);
 
   useEffect(() => {
     if (state.matches('getLocation.denied')) {
@@ -60,6 +44,16 @@ const PriceList = () => {
     }
   }, [state, send]);
 
+  useEffect(() => {
+    if (route?.params) {
+      const { params } = route;
+      const { latitude, longitude } = params.coordinate;
+      send('sendingParams', { value: { latitude, longitude } });
+    } else {
+      send('onAskPermission');
+    }
+  }, [route?.params]);
+
   const renderHeaderRight = () => {
     return (
       <BTouchableText onPress={() => send('showAgreement')} title="Ketentuan" />
@@ -79,6 +73,18 @@ const PriceList = () => {
     }
   };
 
+  const goToLocation = () => {
+    const { lon, lat } = locationDetail;
+    const coordinate = {
+      longitude: Number(lon),
+      latitude: Number(lat),
+    };
+
+    navigation.navigate('Location', {
+      coordinate: coordinate,
+    });
+  };
+
   const {
     locationDetail,
     routes,
@@ -86,13 +92,16 @@ const PriceList = () => {
     loadProduct,
     isLoadMore,
     refreshing,
+    loadLocation,
   } = state.context;
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />
-      {state.matches('getLocation.finito') ? (
+
+      {!loadLocation ? (
         <CurrentLocation
-          onPress={() => send('sendLonglatToRedux')}
+          onPress={goToLocation}
           location={locationDetail.formattedAddress}
         />
       ) : (
@@ -107,26 +116,28 @@ const PriceList = () => {
       <BSpacer size="extraSmall" />
       <PriceSearchBar onPress={() => navigation.navigate('SearchProduct')} />
       <BSpacer size="extraSmall" />
-      <BTabSections
-        swipeEnabled={false}
-        navigationState={{ index, routes }}
-        renderScene={() => (
-          <ProductList
-            onEndReached={() => send('onEndReached')}
-            products={productsData}
-            isLoadMore={isLoadMore}
-            loadProduct={loadProduct}
-            refreshing={refreshing}
-            onRefresh={() => send('refreshingList')}
-          />
-        )}
-        onTabPress={onTabPress}
-        onIndexChange={setIndex}
-        tabStyle={
-          state.matches('getProduct.categoriesLoaded') && PriceStyle.tabStyle
-        }
-        indicatorStyle={PriceStyle.tabIndicator}
-      />
+      {routes.length > 0 && (
+        <BTabSections
+          swipeEnabled={false}
+          navigationState={{ index, routes }}
+          renderScene={() => (
+            <ProductList
+              onEndReached={() => send('onEndReached')}
+              products={productsData}
+              isLoadMore={isLoadMore}
+              loadProduct={loadProduct}
+              refreshing={refreshing}
+              onRefresh={() => send('refreshingList')}
+            />
+          )}
+          onTabPress={onTabPress}
+          onIndexChange={setIndex}
+          tabStyle={PriceStyle.tabStyle}
+          tabBarStyle={PriceStyle.tabBarStyle}
+          indicatorStyle={PriceStyle.tabIndicator}
+        />
+      )}
+
       <Tnc
         isVisible={state.matches('Tnc.agreementShowed')}
         onCloseTnc={() => send('hideAgreement')}

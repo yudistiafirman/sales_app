@@ -19,32 +19,37 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const ANDROID = Platform.OS === 'android';
 const MAPSPROVIDER = ANDROID ? PROVIDER_GOOGLE : PROVIDER_DEFAULT;
 
-const bLocationDefaultStyle = {
+const BLocationDefaultStyle = {
   width: width,
   height: height - resScale(64),
 };
 
-const bLocationDefaultRegion = {
+const BLocationDefaultRegion = {
   latitude: LATITUDE,
   longitude: LONGITUDE,
   latitudeDelta: LATITUDE_DELTA,
   longitudeDelta: LONGITUDE_DELTA,
 };
 
-const bLocationDefaultProps = {
-  mapStyle: bLocationDefaultStyle,
-  region: bLocationDefaultRegion,
-  coordinate: bLocationDefaultRegion,
+const BLocationDefaultCoordinate = {
+  latitude: LATITUDE,
+  longitude: LONGITUDE,
+};
+
+const BLocationDefaultProps = {
+  mapStyle: BLocationDefaultStyle,
+  region: BLocationDefaultRegion,
+  coordinate: BLocationDefaultCoordinate,
 };
 
 const BLocation = ({
   mapStyle,
-  region,
   onRegionChange,
   coordinate,
+  region,
   CustomMarker,
   isUninteractable = false,
-}: BLocationProps & typeof bLocationDefaultProps) => {
+}: BLocationProps & typeof BLocationDefaultProps) => {
   return (
     <MapView
       style={mapStyle}
@@ -53,18 +58,19 @@ const BLocation = ({
       onRegionChange={onRegionChange}
       rotateEnabled={false}
       cacheEnabled={isUninteractable}
+      region={region}
     >
       <Marker coordinate={coordinate}>{CustomMarker}</Marker>
       <Circle
         center={coordinate}
         fillColor={`${colors.primary}60`}
         radius={700}
-        strokeWidth={0}
+        strokeWidth={0.1}
       />
     </MapView>
   );
 };
 
-BLocation.defaultProps = bLocationDefaultProps;
+BLocation.defaultProps = BLocationDefaultProps;
 
 export default BLocation;

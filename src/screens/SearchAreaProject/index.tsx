@@ -3,14 +3,12 @@ import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import BSearchBar from '@/components/molecules/BSearchBar';
 import resScale from '@/utils/resScale';
 import { useNavigation } from '@react-navigation/native';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { TextInput } from 'react-native-paper';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, AppState } from 'react-native';
 import SearchAreaStyles from './styles';
 import CurrentLocation from './element/SearchAreaCurrentLocation';
 import LocationList from './element/LocationList';
-import { useDispatch } from 'react-redux';
-import { updateRegion } from '@/redux/locationReducer';
 import { useMachine } from '@xstate/react';
 import { searchAreaMachine } from '@/machine/searchAreaMachine';
 import { assign } from 'xstate';
@@ -19,19 +17,10 @@ import { BSpacer } from '@/components';
 
 const SearchAreaProject = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
   const [text, setText] = useState('');
+  const appState = useRef(AppState.currentState);
   const [state, send] = useMachine(searchAreaMachine, {
     actions: {
-      sendingLonglat: (context, event) => {
-        const { longitude, latitude } = context.longlat;
-        const coordinate = {
-          longitude: longitude,
-          latitude: latitude,
-        };
-        dispatch(updateRegion(coordinate));
-        navigation.push('Location');
-      },
       clearInputValue: assign((context, event) => {
         setText('');
         return {
@@ -42,11 +31,12 @@ const SearchAreaProject = () => {
       navigateToLocation: (context, event) => {
         const { lon, lat } = event.data;
         const coordinate = {
-          longitude: lon,
-          latitude: lat,
+          longitude: Number(lon),
+          latitude: Number(lat),
         };
-        dispatch(updateRegion(coordinate));
-        navigation.push('Location');
+        navigation.navigate('Location', {
+          coordinate: coordinate,
+        });
       },
     },
   });
@@ -63,11 +53,47 @@ const SearchAreaProject = () => {
     });
   }, [navigation]);
 
-  const { result, loadPlaces } = state.context;
+  useEffect(() => {
+    if (state.matches('getLocation.denied')) {
+      const subscription = AppState.addEventListener(
+        'change',
+        (nextAppState) => {
+          if (
+            appState.current.match(/inactive|background/) &&
+            nextAppState === 'active'
+          ) {
+            send('appComeForeground');
+          } else {
+            send('appComeBackground');
+          }
+          appState.current = nextAppState;
+        }
+      );
+      return () => {
+        subscription.remove();
+      };
+    }
+  }, [state, send]);
 
+  const { result, loadPlaces, longlat } = state.context;
   const onChangeValue = (event: string) => {
     setText(event);
     send('searchingLocation', { payload: event });
+  };
+
+  const onPressCurrentLocation = () => {
+    const { latitude, longitude } = longlat;
+    const coordinate = {
+      longitude: longitude,
+      latitude: latitude,
+    };
+    navigation.navigate('Location', {
+      coordinate: coordinate,
+    });
+  };
+
+  const onPressListLocations = (placeId: string) => {
+    send('onGettingPlacesId', { payload: placeId });
   };
 
   return (
@@ -83,17 +109,15 @@ const SearchAreaProject = () => {
         }
       />
       <BSpacer size="small" />
-      <CurrentLocation onPress={() => send('askingPermission')} />
+      <CurrentLocation
+        disabled={longlat.latitude === undefined}
+        onPress={onPressCurrentLocation}
+      />
       <BSpacer size="small" />
       {loadPlaces ? (
         <LocationListShimmer />
       ) : (
-        <LocationList
-          onPress={(place_id) =>
-            send('onGettingPlacesId', { payload: place_id })
-          }
-          locationData={result}
-        />
+        <LocationList onPress={onPressListLocations} locationData={result} />
       )}
     </SafeAreaView>
   );

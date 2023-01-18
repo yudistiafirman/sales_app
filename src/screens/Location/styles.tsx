@@ -1,3 +1,4 @@
+import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
@@ -5,25 +6,25 @@ import { Dimensions, StyleSheet } from 'react-native';
 
 const LocationStyles = StyleSheet.create({
   bottomSheetContainer: {
-    minHeight: resScale(143),
+    minHeight: resScale(150),
     width: Dimensions.get('window').width,
     position: 'absolute',
     bottom: 0,
     backgroundColor: colors.white,
-    borderTopStartRadius: resScale(16),
-    borderTopEndRadius: resScale(16),
+    borderTopStartRadius: layout.pad.lg,
+    borderTopEndRadius: layout.pad.lg
   },
   coordinateDetailsOuterContainer: {
     flex: 1,
-    marginHorizontal: resScale(16),
+    marginHorizontal: layout.pad.lg,
     height: resScale(67),
     marginTop: resScale(10),
-    marginBottom: resScale(16),
+    marginBottom: layout.pad.md,
     backgroundColor: colors.tertiary,
   },
   coordinateDetailsInnerContainer: {
-    marginHorizontal: resScale(11),
-    marginVertical: resScale(8),
+    marginHorizontal: layout.pad.md,
+    marginVertical: layout.pad.md,
     flexDirection: 'row',
   },
   mapIconContainer: {
@@ -34,16 +35,20 @@ const LocationStyles = StyleSheet.create({
   },
   addressTitle: {
     fontFamily: font.family.montserrat['500'],
-    fontSize: resScale(14),
+    fontSize: font.size.md,
     color: colors.text.darker,
-    marginBottom: resScale(4),
+    marginBottom: layout.pad.sm,
   },
   addressDetails: {
     fontFamily: font.family.montserrat['300'],
-    fontSize: resScale(12),
+    fontSize: font.size.sm,
     color: colors.text.darker,
-    marginBottom: resScale(4),
+    marginBottom: layout.pad.sm,
     textAlign: 'left',
+  },
+  buttonStyles: {
+    borderRadius: layout.radius.md,
+    marginHorizontal: layout.pad.lg,
   },
 });
 
