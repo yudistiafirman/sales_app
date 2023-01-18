@@ -255,7 +255,7 @@ export const priceMachine =
           return event.data?.result;
         },
         isLocationReachable: (context, _event) => {
-          return context.locationDetail.distance.value < 4000;
+          return context.locationDetail.distance.value < 40000;
         },
         permissionGranted: (_context, event) => {
           return event.data === true;

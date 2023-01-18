@@ -12,13 +12,9 @@ import {
   BSpacer,
 } from '@/components';
 
-const { width, height } = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 import { useMachine } from '@xstate/react';
 import { locationMachine } from '@/machine/locationMachine';
-import { LatLng } from 'react-native-maps';
+import { LatLng, Region } from 'react-native-maps';
 const Location = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -47,9 +43,11 @@ const Location = () => {
     }
   }, [route?.params]);
 
-  const onChangeRegion = (coordinate: LatLng) => {
-    const { latitude, longitude } = coordinate;
-    send('onChangeRegion', { value: { latitude, longitude } });
+  const onRegionChangeComplete = (coordinate: Region) => {
+    const { latitude, longitude, latitudeDelta, longitudeDelta } = coordinate;
+    send('onChangeRegion', {
+      value: { latitude, longitude, latitudeDelta, longitudeDelta },
+    });
   };
   const onSaveLocation = () => {
     const { lon, lat } = locationDetail;
@@ -65,14 +63,9 @@ const Location = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BLocation
-        onRegionChange={onChangeRegion}
-        region={{
-          ...region,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
+        onRegionChangeComplete={onRegionChangeComplete}
+        region={region}
         CustomMarker={<BMarker />}
-        coordinate={region}
       />
       <View style={LocationStyles.bottomSheetContainer}>
         <CoordinatesDetail
