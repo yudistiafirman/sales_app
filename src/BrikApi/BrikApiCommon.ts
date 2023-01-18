@@ -9,7 +9,7 @@ export default class BrikApiCommon {
   static getLocationCoordinates = (
     longitude: number,
     latitude: number,
-    distanceFrom = 'BP-LEGOK'
+    distance = 'BP-LEGOK'
   ) => {
     const url = new URL(`${API_URL}/common/map/coordinates`);
     const params = url.searchParams;
@@ -20,8 +20,8 @@ export default class BrikApiCommon {
     if (latitude) {
       params.append('lat', `${latitude}`);
     }
-    if (distanceFrom) {
-      params.append('distanceFrom', distanceFrom);
+    if (distance) {
+      params.append('distance', distance);
     }
 
     return url.toString();
