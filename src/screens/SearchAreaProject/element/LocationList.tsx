@@ -1,5 +1,5 @@
-
 import { BSpinner } from '@/components';
+import EmptyProduct from '@/components/templates/Price/EmptyProduct';
 import resScale from '@/utils/resScale';
 import React from 'react';
 import { FlatList } from 'react-native';
@@ -21,33 +21,22 @@ interface LocationData {
 
 interface LocationDatarops<ArrayOfObject> {
   locationData: ArrayOfObject[];
-  onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
-  refreshing?: boolean;
-  isLoadMore?: boolean;
+  onPress: (place_id: string) => void;
 }
 
 const LocationList = <ArrayOfObject extends LocationData>({
   locationData,
-  onEndReached,
-  refreshing,
-  isLoadMore,
+  onPress,
 }: LocationDatarops<ArrayOfObject>) => {
   return (
     <FlatList
       data={locationData}
-      contentContainerStyle={{ marginHorizontal: resScale(16) }}
       keyExtractor={(item, index) => index.toString()}
-      onEndReached={onEndReached}
-      refreshing={refreshing}
-      ListFooterComponent={isLoadMore ? <BSpinner /> : null}
       renderItem={({ item }) => (
         <LocationListCard
-          addressDetail={item.structured_formatting.main_text}
-          addressTitle={item.structured_formatting.secodary_text}
-          onPress={() => console.log(item.place_id)}
+          addressDetail={item.structured_formatting.secondary_text}
+          addressTitle={item.structured_formatting.main_text}
+          onPress={() => onPress(item.place_id)}
         />
       )}
     />
