@@ -21,7 +21,7 @@
 "getProducts": "done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]";
         };
         missingImplementations: {
-          actions: "sendingLonglat";
+          actions: never;
           delays: never;
           guards: never;
           services: never;
@@ -31,12 +31,12 @@
 "assignCurrentLocationToContext": "done.invoke.price machine.getLocation.allowed:invocation[0]";
 "assignIndexToContext": "onChangeCategories";
 "assignLocationDetailToContext": "done.invoke.price machine.getLocation.currentLocationLoaded:invocation[0]";
+"assignParams": "sendingParams";
 "assignProductsDataToContext": "done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]";
 "enableLoadProducts": "done.invoke.price machine.getProduct.loadingProduct:invocation[0]" | "onChangeCategories" | "onEndReached" | "refreshingList";
 "handleError": "error.platform.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]" | "error.platform.price machine.getProduct.loadingProduct:invocation[0]";
 "incrementPage": "onEndReached";
 "refreshPriceList": "refreshingList";
-"sendingLonglat": "sendLonglatToRedux";
         };
         eventsCausingDelays: {
           
@@ -48,14 +48,14 @@
 "permissionGranted": "done.invoke.price machine.getLocation.askPermission:invocation[0]";
         };
         eventsCausingServices: {
-          "askingPermission": "appComeForegroundState" | "xstate.init";
-"fetchLocationDetail": "done.invoke.price machine.getLocation.allowed:invocation[0]" | "done.invoke.price machine.getLocation.currentLocationLoaded:invocation[0]";
+          "askingPermission": "appComeForegroundState" | "onAskPermission";
+"fetchLocationDetail": "done.invoke.price machine.getLocation.allowed:invocation[0]" | "done.invoke.price machine.getLocation.currentLocationLoaded:invocation[0]" | "sendingParams";
 "getCategoriesProduct": "xstate.init";
 "getCurrentLocation": "done.invoke.price machine.getLocation.askPermission:invocation[0]";
 "getProducts": "done.invoke.price machine.getProduct.loadingProduct:invocation[0]" | "onChangeCategories" | "onEndReached" | "refreshingList";
         };
-        matchesStates: "Tnc" | "Tnc.agreementHiding" | "Tnc.agreementShowed" | "errorGettingCategories" | "getLocation" | "getLocation.allowed" | "getLocation.askPermission" | "getLocation.currentLocationLoaded" | "getLocation.denied" | "getLocation.denied.background" | "getLocation.denied.foreground" | "getLocation.errorGettingLocation" | "getLocation.finito" | "getLocation.locationDetailLoaded" | "getLocation.unreachable" | "getProduct" | "getProduct.categoriesLoaded" | "getProduct.categoriesLoaded.getProductsBaseOnCategories" | "getProduct.categoriesLoaded.productLoaded" | "getProduct.loadingProduct" | { "Tnc"?: "agreementHiding" | "agreementShowed";
-"getLocation"?: "allowed" | "askPermission" | "currentLocationLoaded" | "denied" | "errorGettingLocation" | "finito" | "locationDetailLoaded" | "unreachable" | { "denied"?: "background" | "foreground"; };
+        matchesStates: "Tnc" | "Tnc.agreementHiding" | "Tnc.agreementShowed" | "errorGettingCategories" | "getLocation" | "getLocation.allowed" | "getLocation.askPermission" | "getLocation.currentLocationLoaded" | "getLocation.denied" | "getLocation.denied.background" | "getLocation.denied.foreground" | "getLocation.errorGettingLocation" | "getLocation.finito" | "getLocation.idle" | "getLocation.locationDetailLoaded" | "getLocation.unreachable" | "getProduct" | "getProduct.categoriesLoaded" | "getProduct.categoriesLoaded.getProductsBaseOnCategories" | "getProduct.categoriesLoaded.productLoaded" | "getProduct.loadingProduct" | { "Tnc"?: "agreementHiding" | "agreementShowed";
+"getLocation"?: "allowed" | "askPermission" | "currentLocationLoaded" | "denied" | "errorGettingLocation" | "finito" | "idle" | "locationDetailLoaded" | "unreachable" | { "denied"?: "background" | "foreground"; };
 "getProduct"?: "categoriesLoaded" | "loadingProduct" | { "categoriesLoaded"?: "getProductsBaseOnCategories" | "productLoaded"; }; };
         tags: never;
       }

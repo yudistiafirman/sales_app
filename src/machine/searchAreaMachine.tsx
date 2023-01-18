@@ -4,7 +4,7 @@ import GetLocation from 'react-native-get-location';
 import { assign, createMachine, send } from 'xstate';
 
 export const searchAreaMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACDaAdDAC4AyA9pqiQJYUB2htEANmAMSqwDWtDUAAph0AW1qxY9BgG0ADAF1EoAA4UpdRspAAPRAEYAHADZCATjkBWKwCZLhywGZjlmwBYANCACeiY+8IbM0cTG2M3OwB2RxsAX1ivFAwcfHQiUkpqTSZuHmExCSlGDghGMGYGADcKHnKkrDwCVGIwcioaaUJc-PFJaQR+aqzpeQVR7TUNaW09BH05R0DXSzdVyLMVs30vXwRLSNNDRxCVmytIt3jEtAbU9NbMjsYu3h7C6Q4RdAp0QhVWGgAMx+okI9RSTRabWGz26Il6RQYAyq7Wyo3GSBAk1o2RmfjcZkI+n0IUMcnmZkMZncOz8+hshEckUi+i2YTkVhiVxA4MaaWaGVRnVQrFYFAA7pASmUKtVamCbhD+VDHtkuqKJZBkUMnrJFBjVOocdNMbNjoSmXY3P5LMT7BtaXMWYQyW5InJjHIzBs3LbItzeXcBQ8hbCNZKIJ90N9fv8gSCFck+fdobr1WKI9rQ3qxooJkbcabEObGZErTa7VTLI6bAdCMYyY43IYbDZjjYHAHFcng6m1RAwAxaJBCMC0lBvgBXBiR1AqFQAYQoojAABUKAAhVCYHhQH7TiAGrEFk2gWbzDsuylbaJuVnex3+QxEuQsn2RQxurtJoMq7OEAchxHAAjbddynGcuHnJcVwAMR+MAJwoA8j2xQszwMExzCsWx7CcFxHEdSInHrORP09ZxjCZYx-QSHlu1-QUYSYL4fgAcVaOgBFVD5UJPLQiwQYwNlLNxXw-ZlLGsSJHUowhVk9D8YhZS46MDSEmLTTBJ2jQc+2kShUAHSMUBnfgoEoAQARIdceMYPipgEjCECORZDHc9zaxZM4TEdfR3UZfQxLdYTLDMcJaOuH9IV5OymH4FRJxILioA4TB2AwABJBhEpIBzjSc3QDAieSyKCqTjmidxPB8Ax6QZDtWysBwKTMSL6Oi5VYv-BKkpSjheXMuL8vQoqEFJQgvXc4lazMN19BcPybHpQIP3pA4gmJKxv1uGLuziipcv6wbuOzGR9CUTE0NPMayz8uQwkm1kXCsJwdqVIhuuYw6+vMjhGA45LzMEAFMDgTLDzzK7+IYPEEEvd0HDbNYVmMNHDD8hTAjORwSQe4SDkMd6e0TBoDoBzihuzaUGHKQYajqBi9qTcmGEBlK4qzZj0Shw1HNhwT9mffxvRmlqFpse7mUC2tWVWB6myJtSma6-b-wpoHTuYqMYz+ayx1BdTVZZ9W2cprXdS53UecuvmCoF5yZsJB76XpAlDH0MKZNquYyNMMLnEMD9XvR4nfy+tNWPQdnzIAERoVAOBGm7zympY-StCIkcdb1LECDYHtcJlPbiZXOs+tXvt5AA1EVJzAQzjI4HRYBIGhylQQESBEAAKeYOQASgGlWK5Nqvu1r1h68byBk8K2Y5EdOQw+Zsn-1IFKQe3MAIZpumUXlI3R7X76N+B0Gd4gK20X1Xnj35uGPKvVkFmpdYImMTG2vrYPGyZX1iIr2NifNMZ8BBbzBrvKOet4xiFJh9ZoEc1RgKEBfCG18Ri31tvfe2cM3bPkcNeVYVIIhBAxj7IKj1gj0g9tYDkTIlZ0QYBQAc8BMRH1QPmB+gkAC04VHQ8P8m4cwywySuGiHIX0Ssoq7WVJpUa1156IDsEsTObofRbEdC2QgFwWTrCCsyEk7ggEpgOiwdgXDcGCUpKolYawNHbB9hcZ81gCQLFfM4SRlgTG9gOnCAofRCqKIdmNO8cgdEdk-EFa08xWTe12PYSILoHC42tNaT0pcZEIL-N9EUGZICWNGrMaItjVjqM2I43YrZCT7GIjETxVJCGqSySTeRnRALDggIUlOiByJEmosYBaDYjC+kdCscJVEvSOCFgsT8Piclpg6SOMciEIJdOhtw5yJD+kHEGejEZ1YfZPkIPYa0WxvQXEIZkjqsjTH-iWRAQgoEdxIQPN0pRcwwimCZAcCwEks6HN2Mc05wl7yXOpPMtpzwo4xwtgomGcN5ZXjdEcFwDYg4ekdOk8wFhaGti9mkyFIZvraV0gwfSjAZ7rLtkUvwXpsInA5NSU4hEKEBVbE2RwOE2rTPahw+B2A4rvJCbMHhzYBFB3khtCwYRnCuFrPMpBnReqaygMKvBLhGRkhcMtaZMQ3Q1V2PVRYdjwhslZCSZpNzslKueBrDm2Z1WCSOISDY7hgiTOpJUgwHZ9CTTJNSBsUiCaKsrpHaM7FzZQHjm3J1js3CEJ-raKwL0ZWGoMGRPOZFmqEKsK7aR1qSa2qYDXOuDcKBGQKRsqxzlxGBAcP4BN7gPSuD8iERYxIqSvncGcdYoax6gKjRAy+caxqK0CMcAkxI7SKT8lRP1NEUkWG9METs8RYhAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACDaAdDAC4AyA9pqiQJYUB2hqsA1gApjoC2tss9BgGIIjMIVoMAbhVbiUGHPnRFSlanUbM2nHnwGMEkmRsEBtAAwBdS1cSgADhQGaG9kAA9EARgsAmABoQAE9EADYAVgB2Qm8-CIBmABYEgA5UpNSo7ySAX1yghSw8AlRiMHIqGkFtDi5efkEhLnQKdEIHABsaADM27kIipVLyytMtFjq9RsNjKtdbW3cnF0F3LwQwpJjUsLiATiiw1ISLBPig0M39v0Iw46iLCKTvBP2kvz98wrRi5VUKupqhNOp0KAB3SAiMQSaSyeS-YYqMpqeY1VCgiGQIxw8YMRbWZbOWiudaIc6pWJ+Cw0tL7Cw5PaXRDxBKEaIJKJRPyvV4fD7fEBDErI0ZA1zMTGQiDNdCtdpdXr9QaIkUAsbApgYsHSnEmTUEuxIEArElrY0bClUmlnVL0xneZkIBIRSlJJLvJ5hZIRX15ApC1X-FGAtFaCBgBi0SCEPoqKCtACuDBlqAcDgAwhRuGAACoUABCqEwrCgbWTECWxtNpItPn8MS2YT8qQs7tS3nSUSdj0pbyycQerwi+0FwuDYrDTAjUZjACNi6WkymhGnM9mwAAxNpgBMUCtVxzE2ugDadiJ3CLxCxhLm3uL+J0nNl2-b7BI+rmPL4B8cjVF4oQLRtAA4hUdAMFA4pNIeJrHuap6IEctzeBE3reE2SRbK6Toum6HppOkWF7BkCRjkGIzCtBWiSA4iYkBBUBCJgnS-AAkgwdEkLBNYIZ4iDvkksSJBh2ynEk-gRE6D77IQpxvm8URXn49w-j8ihqmUVFTrCXGMUIwqSFBU48fBjBkgg3jeFEsmka2Nw8vc3rSX4+yUk8rp2n4nJJNE5EaRO2mAbR9H6YZkHUfi3hGkeqzmXWCC7GyUS+WcyS+BEOT7NJVlsm2KUdjeYT7DkZG-hRopBZqumhUZQiMGBDFGew3SYHAbGVoS1ZmW4CVWTZhB2RYDkYfcCQuQyhA2ckpy+jybapP5fyUaqkWEA14FGZF0IMOIcxyCqAUrRpa0bU1EVTnqJnWKZcW9YhzoRBYhDUvEaGFVyzwuekdwpfsT0um9GRLUiRBVRKZ2MdtwEKt0JBxgMf6VatOmQ1tl1zHihpEndFkus9r2+scvifUkOUZC9KWZNZ5zJFkIOaYdxRrTDjWMQAIjQqBCLdZrxQ9XLJZJCRWdsaH3DlNxyb6iQ3le9IpQzgUo4BwoAGoYomYCUKgEYyh4sAkDQ4ioD0JBcAAFL4NIAJQGRVYMq9V6ua9rFC65AvMnvxlnumEcmpQ5H5vok0m+clKk5G2ZzZIt5VHcjJ06aQjEtcWYAdTte1wgdSOO0ngEp81rUZxAV1YzdXWxXz90+68zaDQk3oqYHkQ5RYlKZZ8EmpK66FRErx3M8nm2QWnbWZzDHRwwjTOg1pTsSkXY8lx15cGpXMVwbjfVN0J1ld9sElhE6CmDdZYnTdyN75AGDAUBG8DGnnqA4zXFkALR+GTIRIUJzw0iemEWkvdvCD1FABTUb9vYbG-tJBuDJmxRCyP9E4pVwHqjWpMXQDQDC114vzH2ElZLbGbMcW8RMbJOnuJSayxwno5CiE3YG8dloQNDIBbUWIIDQL4hsbkTpv4kJuM8Xw9xEhKQwSGDUEoZzRh4d1HeD0MhCXSE9fknJ3rUOpIQBymR3QlWOPsMIUjJyATkTGOMu5lwKOrjAxAXlBq9zbN-TRxwewd0Gkcay8QRH8lMZA2RkZ5GEAXCWPcFZeGELPCpC8cQnodhbtkPw3Zf4IF7F4vY3IRzxH8aw+eZjqqs1HsZPEUTa4bBll4rIGRojuhvKkq4LoYgpGbCo4B55-TqTYZgnSmBExykjDIwQOs9blIsiOSkkQ4i929E5KygjMq6JEZ8JS39v5YVMeDPiBCKksh-lcekL4njJBSG8KyzYtmLxqCFc6UBxkJX+jEeJt4LDTSyE3aSItnrRG8m5FI3jUhqUDAnfOw9AJowumUxR78EoCLSVHWScRg73BpN4BWVyC5FLlKBEpnMjYPIeiObwckgXPB5DcN4I5yZskjskbuaRIhx26QU7ZWgXadC1qMyAhK65oRiEwzKiDUKRG2GHd0dwRbvFaZyVBmLwXVWXlAcepdeVniZQHVyKQOytmsqkU+JUXodmAaitynwfz5CAA */
   createMachine(
     {
       tsTypes: {} as import('./searchAreaMachine.typegen').Typegen0,
@@ -20,13 +20,8 @@ export const searchAreaMachine =
       },
       states: {
         getLocation: {
+          initial: 'askPermission',
           states: {
-            idle: {
-              on: {
-                askingPermission: 'askPermission',
-              },
-            },
-
             askPermission: {
               invoke: {
                 src: 'askingPermission',
@@ -60,7 +55,7 @@ export const searchAreaMachine =
                 },
                 background: {
                   on: {
-                    appComeForeground: '#search area.getLocation.idle',
+                    appComeForeground: '#search area.getLocation.askPermission',
                   },
                 },
               },
@@ -69,22 +64,13 @@ export const searchAreaMachine =
             },
 
             errorGettingLocation: {
-              always: 'idle',
+              always: 'askPermission',
             },
 
             currentLocationLoaded: {
               entry: send('sendingLonglatToLocation'),
-
-              on: {
-                sendingLonglatToLocation: {
-                  target: 'idle',
-                  actions: 'sendingLonglat',
-                },
-              },
             },
           },
-
-          initial: 'idle',
         },
         searchLocation: {
           states: {

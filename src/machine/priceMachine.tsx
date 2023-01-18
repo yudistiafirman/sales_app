@@ -10,7 +10,7 @@ import { assign, send } from 'xstate/lib/actions';
 export { getLocationCoordinates } from '@/actions/CommonActions';
 
 export const priceMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXAGQHtMCb0GzKDYBrABTFR50sWGzIBiCOyrkAbg25U0WXIRLkqtRs1btOPfoOGj2COUxZiA2gAYAurbuIUDUbrLOQAD0QBmAEwArJS+AByBNgAsgaEAnP6hkQkA7AA0IACeiJFJlACMMclFkaF5Cb7JAL6V6crY+ESkFNRg9Bbu+nwCQiJiktKU5oqUdaqNGi1tOmKdhj0mZGZk8tPsjlZ5TkggyK7o7p4+CL4FIeFRMfGJKelZCP5RlABssaFFFb6fSf7VtRj1aiamla2ksegIABsIQwAO6QfrNIZKf5jdTNLTtGaQ6FwiBLFZgsjreyeXZuMSHRBlQKRZ6RMKhUJPEo2PKxPK3bKfSglN7JelsyLMn41HYohpo4FTQmcKGw+ECVAMVAjCEsABmyrwI3FgImGNWHGx8rx5kNxK2LnJ7EpCHinIQ-NClCKNhsvkisRKOV8gV+YpUEqBk1BHUwAFdUKgwGRpe5GAQIPCpIjlgpkYG9eiQZi9BGozG42IE0nTWnzfZHKS9gdtkdIjZYpRQv4wjZQr5Yh6HtEHeym6EbE8nnEInlPnlIv7RkH9TnDZR89HY6HiwxE8mBkidZnxtmi3nI8uD2QS5B8bmiZXNtXrR461SPSFAvyvd84hcHeE8pRAv4SpOsSBL47attOup7lKq6HgWK6XmeEDiIqyqqhqWo7gCkEhpei5HoW0GnuupYXhWDgktsZL7BSD4IA2A6toOHZdkkn6ZIgTLOm6bq+CO-j-pOU6ijOWZQTh0KGgAIq0BDoBCCGSMINAEGQ2AAEpgI0BAAEYQmAVYUTW1GgEcLYOuOgRPGcrx8UB-gvIy4G7pK2ELuJhJSUpsnyRAinKWpGkkNpukbJaOyGTaNGxC8LqlB6FRDk8-hfk+-LDrEUTxFFjaOZhzkGjK6rkPsDDiLAMYQIwZBQGqNAACoMOpEDhl4+lWlREXGexjx5O2Nj+MkXYdolaRsQgk6dpQ7bJN+YTxPyIp-E5wb5R04ZkNGmk6WA4ikEmADqBCoGQ5BQK1YV3ra-GTckw3REK46ROOZmtsEaVshZgRsmyOWost84ykmx2QJQmrRlASprYhBDIMgADCDB4GAABCRDcODDCQwAykpNB6eRbW1p1CClDYlB2YySQxHkyQMg6fGk0kfIWTYNNlF2P2zvuBGUID6DA1pqPo5D4jQ3DCNgAAYsqYBC2QEDYyweOhZRhPeH4QRnBE0RxAkjMjXcAT+DyYQFKyg4RGEgmLblwa1SpnDg2AYCI7GAAS6A+VVpXELCACCjvO4WZ0q0ZavHP4P5AV6EQk-EnZmUUTatuOPEtoO6ULQGNsTHbmAO9GgexpjPu4jtHtgP7BcuzQwfhfeRMBM6FTvf4sQDa+sQJwkLrpaBfFPMBQ4cyJky8EqTWYDQlDQomJ1jwwE80AiMhpsMwlYbQ8+L9PRFz+P4aTyRhIWre7X12H45Nm3PWfDTjYNq2dMVMEL7DkKvcPG8w8b60W8H1PM9PZQD-pPJCUYULIBqqDbU688q-33pPHes8qogJoEfdwJ8DIXUioOZ4n0KitgGn+F8dNEqkwsr6ZIQQb6RGSH6ISEE4E0FQYuRWUBlR81gAhUeCCaCwBRmVAA8mQWGbCOFwGXoMVeGZs77hYToGW4iuFEWBpvXh-CuBgGEaI3G7CMBwHQdYSs+Nzpn1tDxYIeQni+ieMkAoBRWaBDpq+EIHo8juNbjYCyeRv5MPkWI-RyiNwQB4Qvf+GihEiICZwsBSoVSQLQoIDCv05zMN4aw3RSjuFqLCZPCJWiomZMCYYtYxjlZ11tK8UmA9xxUIqLZEho0gj9TJi2E4eRGTjhHL4v6aTclTwUXozh3C0D9PkuwAAonLdSjRIC12wQ3Ae+RrEWTsZ9F8JwnFNOuM8Aozd+w0iiD01J-iinDJUSE0Zi9xkiOIMpGAOjFGBPmWYmiFjlk2LWQ4zZdNBrNiKG8bWORprHLkekwZWSLk6jGRc8Q0Z1TRlgE0KAdBFIvNVkcd5VjPn2I2QUB0IFfT5AbBUKhnpHqBHoaKMgC84CkkYUCU+GLEAAFpPSTS7FERI1lSgNi2XcNlkdYjCuFW6SlNIwIMKWqkgiTLQ5HBZT+RsIFvQ8snF4h00QeQ3V1tTN0bxOxPFBaJBcXAuhGF6B1UxzLaKWXSi8dZrI7HhCAgSnqLoBrundPSDsfLjUuRlMaXEcqrVHGSCzEIfUyHjg7A8JKo1HrJGeGld0n12QWSNVK2RJqZRLnwvBC5Ibz5HA2cbQIUUPED0Ns9amlB2SCi9IOBKoR-UrRmMhVAABxVorAqqyqwa8om1ik00kZO0kcg59bsXLS6TsfFSit3DUyVt-0OhuXcB5GSclC0DptR2Z0o6I5AWZtY3wZkvE-joV2F6nw3QvBXSeEGRUaAMCLbaUollojuMev1ECj9Rq1Msk8VkKzgLxHLbEB93M1obUCltN9NEkhJuFQUWhjb-wDQdGssmf5EgD14rY+h1sUlcxwrzSACGh0tIiHQgavoGy0P5Y+I2DTqYkr6gyKDZGYx8xCaDGWEM5aUbDoR38LMXxdkOYxumDw61DnJoPHqEquMLnIyEgWmA0aCYgMJo4PURx1oeN+0cAop33Fk-ahTIElNJH9bnXT7Ek7CqSPpqhZD413CsY9EIMavTFAbHYuz9sCAB2ru7IBDmxoVDJs5iOQ43NxoTk+RITIUjluZBZILecQtV0LMXE0kWLYhFbHxG640bJJaTR6JkbIvRsnCJm4jnMpSoMi3Yutdj3QfHvhxsybdqkZrKF4whZQH0sMAXvfpkX3FX067fECXpetNK8c6ccCRbIJFZL4Mb4LolwAQtNuyHWb7dcW-+u4dkng-nCO8Vs7IGyTh2-0jJTzznBNCYvfJ2i9vwF3fKxAtjnSvB4n1VmZRbF00SLSNj45Yfgca1nEjLXdtnP21Cq5-8Dt-dDVSfkx2ut3zO2epp00fz9VfIkX0UQbr+o7d2mgvaoCPKGXS7HxaqR8VpP1Oy9JLYEOJxdyln7+pCmmg2blVRqiVCAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXAGQHtMCb0GzKDYBrABTFR50sWGzIBiCOyrkAbg25U0WXIRLkqtRs1btOPfoOGj2COUxZiA2gAYAurbuIUDUbrLOQAD0QBmAEwArJS+AByBNr6+AOwAbDb+odEANCAAnogALJn+lACMgUmBgYmBAJz+sb4AvtWpytj4RKQU1GD0Fu76fAJCImKS0pTmipQNqs0abR06Yt2GfSZkZmTys+yOVnlOSCDIrujunj4IvgUh4ZEx8Ykp6Yj+NpmUsWVJ-pmxeR+BsSW19QwjTULU07W0lj0BAANtCGAB3SCDVojJRAibqVpaTpzGFwxEQFZrSFkTb2Tz7NxiY6Ib6BZ6xTK+MqBPJlGy-Xwc1IZBBM3yUTKhIp5J4xYV5aIAvbopqYsEzEmcWEIpECVAMVBjaEsABmmrwY1lIKm2PWHDxqsJ5nNZJ2Lip7BpCAqPMQ0SFlGi0RsNgKxVCVTi0vGctB0whXUwAFdUKgwGRFe5GAQIEipCjVgo0Sow6bwTi9DG4wmk2IU2nrVnbfZHBSDkddidMjYypRQv4YjF-GU8qFmeE3S62e2bLFYqEmYkvhyQ8bJliC+bKMX44nI+WGKn00NUUbcybF2Wi7G18eyBXIETC6Ta9t646PE3ab5nr5AtFAsyZx94qEh+EeSUCUmTRJOOTvnksT+HOB4LgqG4niW643peEDiOqmranqBr7sC8ERjeK6nqWiEXlulbXjWDjkrslKHNSz58q27adtE3a9v2byBABE6UL6voFAkHavjBdQynB8qEcucLmgAIu0BDoNCaGSMINAEGQ2AAEpgM0BAAEbQmAdZ0Q2jGgCcHZDnk76xBcbyit2EqhLB+FSWaSqySSCkacpqkQOpmk6XpJCGcZWz2ns5lOkxZSvF6oR5JKjy2f2bIAa+XqfBO3xcp+0RiYCknhp5XTRmQ8b6UZYDiKQaYAOoEKgZDkFApkOgxsWWQ8mRATYcRBIyTyZGUAT-vcCB5cE46cTkLavoGbkYqVS5KmmrWQJQ+rxlAGoVehBDIMgADCDB4GAABCRDcHtDAHQAyhpNAmbRnWNj1CBJTYlCVMKJSfkEo3+EO-iPIKtzMmUo1st8rniaGh4IURG3oFtBk3XdB3iEdp3nWAABimpgFjZAQE9LCvVF9Efd4fhBBcERRHEwl3LyAS5EySU9gUUQVNDy15keZHDBAxniOwACCBi9MY1hvdFj7OgAtAUoT8Y8YGFPSLJJKDYQhI84RToVbxMoLSPSUq6Bi7VsAJoFZBQLwzUEHgsAdYrXVPp9yvQRrA3CqEZTRG8NjCjZ7KG+H9IBKbk41Aj85SQAKlpnB7WAYAXYmAASNtteIsDEAikuZ9npaezTFl0wgQ0vPEfrsv4UFlPFNm-PZHrhCyLaVC2eQWwRaeYBn8YV4mD0lwSdU22AZfjznNBVzFPu15UAoDUElSSvSjJjR3UEhANr5nDEH7vkPHntLwGoQNGmA0JQcKpm1t8MPfj-IjIWajIjBG0Hfp-J+L9HbOzvg-GgVESR2gfN7Z0rpJqPGyPkVs7IPzCjjonYq7lVo0CAZA5+FE34QK-phLUyAdQ0B2oaf+198GkJAcQp2BDH7QPcLAsySs4qhB+n8WyoESjCl9L4UG0EfqchZr6L87Er54NYU-HQJNNRo1gGhaYCjYDXXtgAeTICdSmUAVFwG-sMX+OZcH5gYR-QhSijEYDgOowBjCtFcDAHogxL17GqPYfLGi1NV7OjONEfIFQIjQXHKHMcoM+ohMDJ+d8OQEnCjkVYhRK5DHGLURRLazibGP1cbo-RmSHGwAwnGLClCcKCDwitNJjCMleKyU4m+LjtHuOKU00pviNi1gVtXbqtcw4vFZK+QGwjIigwBr9DsfVw5-DAn8VJR50l2OaTkiARp8kdG3OhdgABRMmulmiQBXtwz6wTQlBDHJUWIUTYhTOSvkIUE425ck7MshUqySmqPUWgbZql2AnWIJpGAnjlGlLOfApily2TXIiXc9kDykHxBCX1b4A1vSti-J8jRDS1mlL+Yw1S8ZdTxmLm1Og6koW0xOLCsJNzIlItBj6AUdzuy-GSncnFScSpWJFrqcghwGDiBpTXE4nKXi3PYpOQoZ8bI9nsr4dlbJXhtyZFKaUZAP5wApMnUEcDaWIGVq+IC7KezThKOOSZk1lY5H4gJI27IcglCKhJSxwsbyGvFcansbL2IWsDFa+IojJqZGCKBaCoog6tmiJKXFZVcQyyMP0QZAy17NmeD6eITJw3fBDq2GygZgLhveHGn0xRxwJrWl0S0BJvWDJOD6EJ7zK2PG3tEsNkoG4TiStzKCl9eUeuRsuVcpFUIbIbRm41Bt-AeniPSOIrJvTIt5PSXIk5+yMm+hOKo1bzyUHIQAcXaKwJ2ZEp3OiDCW94fwm5VBBpNHuXpmR9nZL6MGmqcF1M9TJG8vklIqUnVw6Fn04hAUKlG6Godw1zqHJxX6QMAi+juR6bB7qf0jqVIK1qNAGCXqYhfSg8UQ4shbh+DBNk7IhBVSR9VMR90iwqlVMKNUCOfRDgq5VzzxwdldeMxjKMExowgOx2u0EQkRE-KW0UkRuSTVsrkMj2RbnjjZL8QTy5UZbR2iTfaZMxMnG5cBAa9JCiya5DxJB4MkUfHDWBcNrY3V0LwSLbTmyMaYFuvp0TIGjVTTHOrCofpiidiqN8NmDwbM3OyBgxzFRNPW1toZ314aXgBoqEG25NreRsX4t6QqTJobJQSIEXFI8Ut10yDZHI6t0rhxEaKOd6GXNTBHmPLOS985gMq4VDuYMaPlEiGBH48VyvpwIOXJeU8rSVa5hrcUC7AwDUZP154QakgCJ7N6fdCjKsfBslUNsb7+zh0nCzFr+r6nbKIa-FhjDeuPt5Cley44viJCguxAIu38U-MccB96PqECh31lyEIvZOxJWyPFL9GGhZfN+1035Gy8XbMKR08F3jdV+aB+F-idJRrsiiL8SLddWS5GbX3VkY5lWw9aysxHELke7K2cAtClWIsxNGu2aNX3AyKtxce09bVMdZI52DZ4c6gjhHCEIsoUzfgQ0GpKOyr5ai1CAA */
   createMachine(
     {
       tsTypes: {} as import('./priceMachine.typegen').Typegen0,
@@ -44,6 +44,7 @@ export const priceMachine =
         index: 0,
         loadProduct: false,
         isLoadMore: false,
+        loadLocation: false,
         refreshing: false,
         errorMessage: '' as string | unknown,
       },
@@ -114,13 +115,7 @@ export const priceMachine =
             },
 
             finito: {
-              on: {
-                sendLonglatToRedux: {
-                  target: 'finito',
-                  internal: true,
-                  actions: 'sendingLonglat',
-                },
-              },
+              always: "idle"
             },
 
             unreachable: {
@@ -147,9 +142,19 @@ export const priceMachine =
 
               initial: 'foreground',
             },
+
+            idle: {
+              on: {
+                onAskPermission: 'askPermission',
+                sendingParams: {
+                  target: 'currentLocationLoaded',
+                  actions: 'assignParams',
+                },
+              },
+            },
           },
 
-          initial: 'askPermission',
+          initial: 'idle',
         },
 
         Tnc: {
@@ -266,6 +271,7 @@ export const priceMachine =
         assignLocationDetailToContext: assign((_context, event) => {
           return {
             locationDetail: event.data.result,
+            loadLocation: false,
           };
         }),
         assignCategoriesToContext: assign((_context, event) => {
@@ -273,8 +279,8 @@ export const priceMachine =
             return {
               key: item.id,
               title: item.name,
-              totalItems:0,
-              chipPosition:'right'
+              totalItems: 0,
+              chipPosition: 'right',
             };
           });
           return {
@@ -320,6 +326,11 @@ export const priceMachine =
         enableLoadProducts: assign((_context, _event) => {
           return {
             loadProduct: true,
+          };
+        }),
+        assignParams: assign((context, event) => {
+          return {
+            longlat: event.value,
           };
         }),
         handleError: assign((_context, event) => {

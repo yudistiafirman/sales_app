@@ -24,6 +24,7 @@
 "assignProducts": "done.invoke.search product.categoriesLoaded.gettingProducts:invocation[0]";
 "assignSearchValue": "searchingProducts";
 "clearData": "clearInput" | "searchingProducts";
+"enableLoadProduct": "done.invoke.search product.searching:invocation[0]" | "onChangeTab";
         };
         eventsCausingDelays: {
           

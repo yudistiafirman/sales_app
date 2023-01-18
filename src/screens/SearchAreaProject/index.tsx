@@ -9,8 +9,6 @@ import { SafeAreaView } from 'react-native';
 import SearchAreaStyles from './styles';
 import CurrentLocation from './element/SearchAreaCurrentLocation';
 import LocationList from './element/LocationList';
-import { useDispatch } from 'react-redux';
-import { updateRegion } from '@/redux/locationReducer';
 import { useMachine } from '@xstate/react';
 import { searchAreaMachine } from '@/machine/searchAreaMachine';
 import { assign } from 'xstate';
@@ -19,19 +17,9 @@ import { BSpacer } from '@/components';
 
 const SearchAreaProject = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
   const [text, setText] = useState('');
   const [state, send] = useMachine(searchAreaMachine, {
     actions: {
-      sendingLonglat: (context, event) => {
-        const { longitude, latitude } = context.longlat;
-        const coordinate = {
-          longitude: longitude,
-          latitude: latitude,
-        };
-        dispatch(updateRegion(coordinate));
-        navigation.push('Location');
-      },
       clearInputValue: assign((context, event) => {
         setText('');
         return {
@@ -45,8 +33,9 @@ const SearchAreaProject = () => {
           longitude: lon,
           latitude: lat,
         };
-        dispatch(updateRegion(coordinate));
-        navigation.push('Location');
+        navigation.push('Location', {
+          coordinate: coordinate,
+        });
       },
     },
   });
@@ -63,11 +52,26 @@ const SearchAreaProject = () => {
     });
   }, [navigation]);
 
-  const { result, loadPlaces } = state.context;
+  const { result, loadPlaces, longlat } = state.context;
 
   const onChangeValue = (event: string) => {
     setText(event);
     send('searchingLocation', { payload: event });
+  };
+
+  const onPressCurrentLocation = () => {
+    const { latitude, longitude } = longlat;
+    const coordinate = {
+      longitude: longitude,
+      latitude: latitude,
+    };
+    navigation.push('Location', {
+      coordinate: coordinate,
+    });
+  };
+
+  const onPressListLocations = (placeId: string) => {
+    send('onGettingPlacesId', { payload: placeId });
   };
 
   return (
@@ -83,17 +87,12 @@ const SearchAreaProject = () => {
         }
       />
       <BSpacer size="small" />
-      <CurrentLocation onPress={() => send('askingPermission')} />
+      <CurrentLocation onPress={onPressCurrentLocation} />
       <BSpacer size="small" />
       {loadPlaces ? (
         <LocationListShimmer />
       ) : (
-        <LocationList
-          onPress={(place_id) =>
-            send('onGettingPlacesId', { payload: place_id })
-          }
-          locationData={result}
-        />
+        <LocationList onPress={onPressListLocations} locationData={result} />
       )}
     </SafeAreaView>
   );

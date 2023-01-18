@@ -7,16 +7,17 @@ import resScale from '@/utils/resScale';
 import { BText } from '@/components';
 
 interface CoordinatesDetailsProps {
-  addressTitle: string;
-  addressDetail: string;
+  address: string;
   onPress: () => void;
 }
 
-const CoordinatesDetail = ({
-  addressTitle,
-  addressDetail,
-  onPress,
-}: CoordinatesDetailsProps) => {
+const CoordinatesDetail = ({ address, onPress }: CoordinatesDetailsProps) => {
+  const isHasAddress = address.length > 0;
+  const addressTitle = isHasAddress ? address.split(',')[0] : '';
+  const addressDetail = isHasAddress
+    ? address.split(',').join('').substring(addressTitle.length)
+    : '';
+
   return (
     <TouchableOpacity
       onPress={onPress}

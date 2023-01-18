@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import * as React from 'react';
-import { Details, Region } from 'react-native-maps';
+import { Details } from 'react-native-maps';
 
 interface Input {
   label: string;
@@ -119,18 +119,21 @@ interface NavigationProps {
   navigate: (screen?: string) => void;
 }
 
-interface Location {
+interface LatLang {
   latitude: number;
   longitude: number;
+}
+
+interface Region {
   latitudeDelta: number;
   longitudeDelta: number;
 }
 
 interface BLocationProps {
   mapStyle?: ViewStyle | undefined;
-  region?: Location;
-  onRegionChange?: ((region: Region, details: Details) => void) | undefined;
-  coordinate: Region;
+  region?: Region & LatLang;
+  onRegionChange?: ((region: LatLang, details: Details) => void) | undefined;
+  coordinate: LatLang;
   CustomMarker?: React.ReactNode | undefined;
 }
 
@@ -142,6 +145,5 @@ export type {
   CreateVisitationThirdStep,
   PIC,
   NavigationProps,
-  Location,
   BLocationProps,
 };
