@@ -39,7 +39,7 @@ const BTabSections = ({
           onTabPress={onTabPress}
           indicatorStyle={indicatorStyle}
           tabStyle={tabStyle}
-          style={[tabBarStyle, { backgroundColor: colors.white }]}
+          style={[tabBarStyle, { backgroundColor: colors.white}]}
           renderLabel={({ route, focused }) => (
             <BTabLabels route={route} focused={focused} />
           )}

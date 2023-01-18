@@ -4,16 +4,16 @@ import {
   getProductsCategories,
 } from '@/actions/InventoryActions';
 import { hasLocationPermission } from '@/utils/permissions';
-import { Alert } from 'react-native';
 import GetLocation from 'react-native-get-location';
-import { createMachine, forwardTo } from 'xstate';
+import { createMachine } from 'xstate';
 import { assign, send } from 'xstate/lib/actions';
 export { getLocationCoordinates } from '@/actions/CommonActions';
 
 export const priceMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXAGQHtMCb0GzKDYBrABTFR50sWGzIBiCOyrkAbg25U0WXIRLkqtRs1btOPfoOGj2COUxZiA2gAYAurbuIUDUbrLOQAD0QBmAEwArJS+AByBNgAsgaEAnP6hkQkA7AA0IACeiJFJlACMMclFkaF5Cb7JAL6V6crY+ESkFNRg9Bbu+nwCQiJiktKU5oqUdaqNGi1tOmKdhj0mZGZk8tPsjlZ5TkggyK7o7p4+CL4FIeFRMfGJKelZCP5RlABssaFFFb6fSf7VtRj1aiamla2ksegIABsIQwAO6QfrNIZKf5jdTNLTtGaQ6FwiBLFZgsjreyeXZuMSHRBlQKRZ6RMKhUJPEo2PKxPK3bKfSglN7JelsyLMn41HYohpo4FTQmcKGw+ECVAMVAjCEsABmyrwI3FgImGNWHGx8rx5kNxK2LnJ7EpCHinIQ-NClCKNhsvkisRKOV8gV+YpUEqBk1BHUwAFdUKgwGRpe5GAQIPCpIjlgpkYG9eiQZi9BGozG42IE0nTWnzfZHKS9gdtkdIjZYpRQv4wjZQr5Yh6HtEHeym6EbE8nnEInlPnlIv7RkH9TnDZR89HY6HiwxE8mBkidZnxtmi3nI8uD2QS5B8bmiZXNtXrR461SPSFAvyvd84hcHeE8pRAv4SpOsSBL47attOup7lKq6HgWK6XmeEDiIqyqqhqWo7gCkEhpei5HoW0GnuupYXhWDgktsZL7BSD4IA2A6toOHZdkkn6ZIgTLOm6bq+CO-j-pOU6ijOWZQTh0KGgAIq0BDoBCCGSMINAEGQ2AAEpgI0BAAEYQmAVYUTW1GgEcLYOuOgRPGcrx8UB-gvIy4G7pK2ELuJhJSUpsnyRAinKWpGkkNpukbJaOyGTaNGxC8LqlB6FRDk8-hfk+-LDrEUTxFFjaOZhzkGjK6rkPsDDiLAMYQIwZBQGqNAACoMOpEDhl4+lWlREXGexjx5O2Nj+MkXYdolaRsQgk6dpQ7bJN+YTxPyIp-E5wb5R04ZkNGmk6WA4ikEmADqBCoGQ5BQK1YV3ra-GTckw3REK46ROOZmtsEaVshZgRsmyOWost84ykmx2QJQmrRlASprYhBDIMgADCDB4GAABCRDcODDCQwAykpNB6eRbW1p1CClDYlB2YySQxHkyQMg6fGk0kfIWTYNNlF2P2zvuBGUID6DA1pqPo5D4jQ3DCNgAAYsqYBC2QEDYyweOhZRhPeH4QRnBE0RxAkjMjXcAT+DyYQFKyg4RGEgmLblwa1SpnDg2AYCI7GAAS6A+VVpXELCACCjvO4WZ0q0Zav3BZzxPG6-ixPyPFPGyZkWZZTpPAELYvo9VsBjbEx25gDvRoHsaYz7uI7R7YD+0XLs0MH4X3kTdm+NdQQnOy-5vLESd5JZIE09NfGPaUoQcyJky8EqTWYDQlDQomJ2Tww080AiMhpsMwlYbQS8r3PRGL1P4YzyRhIWre7WN2H9qjT2tI9a8jNR0yQFj9vrS78fs-z57UCfzPSEowoWQDVUG2ot55Q-kfGe+8F5VX-jQU+7hz4GQupFQczxPoVFbANP8L46aJVJhZX0yQgg9Q9MkP0QkIKQJoAgxcisoDKj5rABCE9oE0FgCjMqAB5MgsNGHMLgGvQYG8My533PQnQMshGsKIsDHeHCuFcDAHwgRuMmEYDgEg6wlZ8bnUvraE4yR8jxGAt2IcARu630eiYpkNMWZkL4gtHOv05x0I4QwjRsi2GKOXl-ZRvD+GCK0bAQBSoVQgLQoIDCbjJGeOkZolhvioH+JnoE1RwTvGhJ0WsPRysG62leKTJ4WDSEVFsvg2+f4TEJFbHkPIjJxwjjfrQqRITknyIgDqNJbQNyIXYAAUTlupRokB65oKJsY0xbcLFpxjnTT6P5JzhCeNNQcDxJytL+h43pXiZGhLYWgXp8l2Cw2IMpGA6iDksImYYmi0y2SzJYvM6xdw7Isx5A0lmNgaRYNiNs9x7TsmdP6T0le8lozqmjLAJoUA6CKTuarI4jyzFfAeK8umyR3TPBpi+AIPUWalOqKKMgy84CkhoUCC+yLEAAFpPSTS7FERI1lSgNkCA6BlP5Yi8tjrxOyKQniAq5peGlocjh0p-I2EC3o2WTl+Q6aIPIbr9Q7J8E2rIRWiQXFwLoRhegdQMbS2ill0ovE+mOZIjTAhAQdCcUmRR0ogTih2Dl2qXIymNLicVRqjjYpMSBQVrIwgBD6kq6mkcXjuk+uyZOHqVozCXPheCXTfVXyOPi42tqE5lFKYbZ6kb2SCi9IOBKo9qFLXcdzZCqAADirRWBVQIum20acTE0kZCcXujIWZfltS6TsfFSgx2xUyBN-0OhuXcB5GSck02oPuUTDszpO3+HeszNOvgzK-J-JQrsL1PhuheBOk8IMio0AYK2mipRLLRAaY9fqQbt2jXHDdZ4rI06BGAmY3lp7uZrQ2oFLa16iZJBMbygokQBolH-ANB01rghBF1qU3iayqHWziTqgGMY+YQFA2HYav4WYvi7DSKIlCzIBEoJUr4cROztn-ThXmwNQYywhnLAjRx0PEcoQNX0DZoOctvg8GjQ5ybAVZL8pITGFwse6QLTAaMOP4cXSanqI4aObJWUBAU+tED0zE4lEckmeo0hcRA22KkuMGciGZRmzZu08Q00EV+laJFUHzoXJ2td3a-xs46JKr6-xGx4rauDL4Y4nvc1hygXmCAB1rqXE0AX6ScQYkOGk2Ko5vKpH+WkTJbUFC7FFHiFbMOcylAggL-4zJpybI02OqVqYvH-Ke+hP9D69IC6QsypDLLDhyw0xkaywjtYSR0uACEeu5fuEekI7JMvjk+ONvZiSfFdPYb0jJajJvwDUxKxAadpXUmjW6RpzJFllBdCzAIpCBrsiqDFyrW297rcOZt45EKF0E0O2NfqdMcgDg016TsL4poetrQ2mgTaoDXKSRSg7fqqRDzJv1+kltsEvved+u9-UhTTQbKyp71QgA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXAGQHtMCb0GzKDYBrABTFR50sWGzIBiCOyrkAbg25U0WXIRLkqtRs1btOPfoOGj2COUxZiA2gAYAurbuIUDUbrLOQAD0QBmAEwArJS+AByBNr6+AOwAbDb+odEANCAAnogALJn+lACMgUmBgYmBAJz+sb4AvtWpytj4RKQU1GD0Fu76fAJCImKS0pTmipQNqs0abR06Yt2GfSZkZmTys+yOVnlOSCDIrujunj4IvgUh4ZEx8Ykp6Yj+NpmUsWVJ-pmxeR+BsSW19QwjTULU07W0lj0BAANtCGAB3SCDVojJRAibqVpaTpzGFwxEQFZrSFkTb2Tz7NxiY6Ib6BZ6xTK+MqBPJlGy-Xwc1IZBBM3yUTKhIp5J4xYV5aIAvbopqYsEzEmcWEIpECVAMVBjaEsABmmrwY1lIKm2PWHDxqsJ5nNZJ2Lip7BpCAqPMQ0SFlGi0RsNgKxVCVTi0vGctB0whXUwAFdUKgwGRFe5GAQIEipCjVgo0Sow6bwTi9DG4wmk2IU2nrVnbfZHBSDkddidMjYypRQv4YjF-GU8qFmeE3S62e2bLFYqEmYkvhyQ8bJliC+bKMX44nI+WGKn00NUUbcybF2Wi7G18eyBXIETC6Ta9t646PE3ab5nr5AtFAsyZx94qEh+EeSUCUmTRJOOTvnksT+HOB4LgqG4niW643peEDiOqmranqBr7sC8ERjeK6nqWiEXlulbXjWDjkrslKHNSz58q27adtE3a9v2byBABE6UL6voFAkHavjBdQynB8qEcucLmgAIu0BDoNCaGSMINAEGQ2AAEpgM0BAAEbQmAdZ0Q2jGgCcHZDnk76xBcbyit2EqhLB+FSWaSqySSCkacpqkQOpmk6XpJCGcZWz2ns5lOkxZSvF6oR5JKjy2f2bIAa+XqfBO3xcp+0RiYCknhp5XS6uQhwMOIpkOgxsWWYgvxAdB47sZOhRnL4Nk9vZvixOxbKvGUZRMlK4mhoeCFEdGZDxvpRlgOIpBpgA6gQqBkOQUC1dFj7Oh8QE2HEQSMk8mRlAE-73AgeXBOOnE5C2r6Bm5GKlUuSppltkCUPq8ZQBqs3oQQyDIAAwgweBgAAQkQ3CAwwwMAMoaTQJm0XVjaNQgSU2JQlTCiUn5BBd-hDv4jyCrczKjb2vaJG9eZHmRlDfegv0GfDiPA+IoMQ1DYAAGKamAPNkBAqMsBjUX0dj3h+EEFwRFEcTCXcvIBLkTJJT2BRRBUo1M1N0lKugEDGeI7AAIIGL0xjWJje31U+OMALQFKE-GPGBhT0iySQU2EISPOEU6FW8TLGwRZVzObluwAmgVkFAvAbQQeCwLtcsWQrCBu9B3vHcKoRlNEbw2MKNnsiHlf0gEEeTjUE3zlJAAqWmcIDYBgNDiYABLm9t4iwMQCLW93veltnMWu3np0vPEfrsv4UEjbENm-PZHrhCyLaVC2eTR+3ncEJPfc0MjY8Est5tgBP8ZT4mM-7UxlQCsdQSVJK9KMpdm9QRCMdV8XUCrvmPh9GgvANQQGjJgGglA4Spm2tAhgsD4HIhkFmUYk0Y7tFQeghBSDk6pxgXAmgVESR2gfC7Z0robqPGyPkVs7IPzCgbs3Yq7lIEEPIYgiiKCyEYMwlqZAOoaD-UNLgjy+ChFEIESnXh8DKHuGoWZV+OMK4vFZK+EmwpfTdQYdBfGnI1a+i-OxCB+YoFyJXNLKAmoOawDQtMJRNBYBw0TgAeTIODexji4CYOGNgnM3DrFuLsejBxGA4AuNoG4jxXAwA+L8VEgJsAVGOxorLWezozjRHyBUCIrUBrsg3gwzIkp2wDS-PSfwn4wiuRbiVcJtidBi3SXE2RaDyGJO8b4-xMTYAYTjFhMROFBB4Xeq0np8DIkdKGV0mxsz3GeOSQMtJQzMkbFrE7HODU85aL+LZUCJR9GRApsTAmHZKmVz+GBP4VijwRPadEpxLi0ArNUuwAAohLXSzRIAv1oUxfJhSghjkqKUsclzkr5CFBOEaXJOxPIVC8wZ7yKK-U+YQ75vjiCaRgKkhZTjgXyxOGCtkEKSnlxhUY46gpko+29K2L8qLXFtIxbErFEAjRfJ5eIeMup4yj22nQdSZLc4UqqVS4pULaXlN5PUyILx2KFWalBBptRxJkDQXACkrdQQ0PJYgN2r4WrsR7NOEo44Lk3TdjkfiAkohCnNUkJ47LY4HP2XPE4bsewCgGgECogYbXxEMbyTIwRQLQQ+A3KN3wyies+l0LgPQjD9G9bkuKQFOyBi+J2AaSU3g2UKoKMcjI43CjiNBZN55lT4kgMaqV7oGXIuKMYr+dLI1VPHBOJKusoLgOaWElmRFVykVQjy5tBy-XB3qZ8DkMbWTekVU1R1k5+yMjxhOKodbWYiIAOLtFYCnMiM7fWICDMBIUhU-jLyqOTG6u8vTMj7OyX0lNxpcOmWOmSN5fJKRUtO9RIKcZxCAne1eo1y5RvqUOTiBNSYBF9AND0nCJKjumsuCqW0aAMAvc6D8Ap4plxZKvD8bCbJ2RCEGoaI1RoxH3TNOaoUCWLUI3FDWtJC3wvHB2Eo9SznMeXOzJtoGTUIGggUiIn4o140iNyG6tlcjkYuu+fq0RvgDRE19BMHNeX-TFkDCWnGcY1OAsdekhRRSKZ4gwqmZSPhRrAlG1sRVMO-uw3pn6vKuaYARiZiAZm86ij4hUP0xRC1nHgw5-GTnshsLcxUXTXR45gBC36n4qrg3WqhXapVMR+LekKkyUayUEiBHZR3TAmWHiZBsjkL2-ZWyhpbIyUC1XT7n1LIPEhdWECFU3pTWj5RIhgR+PFLrmAu6PwvlfK0A2dbe3FPEQo8Q4gNeUyBaphQtOiTLt+zzzM0VyIGx8GyVQ2zvu9AUH0z0qsjq8xylZ-DkGKLOxJltg2n28hSvZPt3wkpBoCHW9FmzMXbmC192d7oyhBy5CEXskp2FjlFJkMHnKIfcqhy9whfT1nErefqmHl6pNnH4nSC67Ioi-G4wgII3wvTHX3qyMcmnMevdeZ0nlfLcUgaxt9749PnNtjxkkKIgZersqPSe7aRP0kDe+B8Am6rwjhDOfDhhHbqYnUlHZV82rqhAA */
   createMachine(
     {
+      tsTypes: {} as import('./priceMachine.typegen').Typegen0,
       id: 'price machine',
       type: 'parallel',
       predictableActionArguments: true,
@@ -29,14 +29,12 @@ export const priceMachine =
             data: {};
           };
         },
-        actions: {} as {
-          assignCurrentLocationToContext: {
-            longlat: { longitude: number; latitude: number };
-          };
-        },
+        events: {} as
+          | { type: 'getCurrentLocation'; data: {} }
+          | { type: 'fetchLocationDetail'; data: { result: {} } },
       },
       context: {
-        longlat: {} as { longitude: number; latitude: number },
+        longlat: {} as any,
         locationDetail: {} as any,
         routes: [] as any[],
         size: 10,
@@ -46,6 +44,7 @@ export const priceMachine =
         index: 0,
         loadProduct: false,
         isLoadMore: false,
+        loadLocation: false,
         refreshing: false,
         errorMessage: '' as string | unknown,
       },
@@ -64,6 +63,8 @@ export const priceMachine =
                   'denied',
                 ],
               },
+
+              entry: 'enableLoadLocation',
             },
 
             allowed: {
@@ -116,13 +117,7 @@ export const priceMachine =
             },
 
             finito: {
-              on: {
-                sendLonglatToRedux: {
-                  target: 'finito',
-                  internal: true,
-                  actions: 'sendingLonglat',
-                },
-              },
+              always: 'idle',
             },
 
             unreachable: {
@@ -149,9 +144,19 @@ export const priceMachine =
 
               initial: 'foreground',
             },
+
+            idle: {
+              on: {
+                onAskPermission: 'askPermission',
+                sendingParams: {
+                  target: 'currentLocationLoaded',
+                  actions: 'assignParams',
+                },
+              },
+            },
           },
 
-          initial: 'askPermission',
+          initial: 'idle',
         },
 
         Tnc: {
@@ -246,13 +251,13 @@ export const priceMachine =
     },
     {
       guards: {
-        isHasResult: (context, event) => {
+        isHasResult: (_context, event) => {
           return event.data?.result;
         },
-        isLocationReachable: (context, event) => {
+        isLocationReachable: (context, _event) => {
           return context.locationDetail?.distance?.value > 40000;
         },
-        permissionGranted: (context, event) => {
+        permissionGranted: (_context, event) => {
           return event.data === true;
         },
         isNotLastPage: (context, event) => {
@@ -260,21 +265,25 @@ export const priceMachine =
         },
       },
       actions: {
-        assignCurrentLocationToContext: assign((context, event) => {
+        assignCurrentLocationToContext: assign((_context, event) => {
           return {
             longlat: event.data,
           };
         }),
-        assignLocationDetailToContext: assign((context, event) => {
+        assignLocationDetailToContext: assign((_context, event) => {
           return {
             locationDetail: event.data.result,
+            loadLocation: false,
           };
         }),
-        assignCategoriesToContext: assign((context, event) => {
+        assignCategoriesToContext: assign((_context, event) => {
           const newCategoriesData = event.data.map((item) => {
             return {
               key: item.id,
               title: item.name,
+              totalItems: 0,
+              chipPosition:'right'
+           
             };
           });
           return {
@@ -303,13 +312,13 @@ export const priceMachine =
             productsData: [],
           };
         }),
-        incrementPage: assign((context, event) => {
+        incrementPage: assign((context, _event) => {
           return {
             page: context.page + 1,
             isLoadMore: true,
           };
         }),
-        refreshPriceList: assign((context, event) => {
+        refreshPriceList: assign((_context, _event) => {
           return {
             page: 1,
             refreshing: true,
@@ -317,17 +326,28 @@ export const priceMachine =
             productsData: [],
           };
         }),
-        enableLoadProducts: assign((context, event) => {
+        enableLoadProducts: assign((_context, _event) => {
           return {
             loadProduct: true,
           };
         }),
-        handleError: assign((context, event) => {
+        assignParams: assign((context, event) => {
+          return {
+            longlat: event.value,
+            loadLocation: true,
+          };
+        }),
+        handleError: assign((_context, event) => {
           return {
             loadProduct: false,
             refreshing: false,
             isLoadMore: false,
             errorMessage: event.data.message,
+          };
+        }),
+        enableLoadLocation: assign((context, event) => {
+          return {
+            loadLocation: true,
           };
         }),
       },
@@ -348,7 +368,7 @@ export const priceMachine =
             console.log(error);
           }
         },
-        fetchLocationDetail: async (context, event) => {
+        fetchLocationDetail: async (context, _event) => {
           try {
             const { longitude, latitude } = context.longlat;
             const response = await getLocationCoordinates(
@@ -362,7 +382,7 @@ export const priceMachine =
             console.log(error);
           }
         },
-        getCategoriesProduct: async (context, event) => {
+        getCategoriesProduct: async (_context, _event) => {
           try {
             const response = await getProductsCategories(
               '',
@@ -378,7 +398,7 @@ export const priceMachine =
             // throw new Error(error.message);
           }
         },
-        getProducts: async (context, event) => {
+        getProducts: async (context, _event) => {
           const { page, size, selectedCategories } = context;
           try {
             const response = await getAllBrikProducts(

@@ -2,11 +2,13 @@
 import * as React from 'react';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import BChip from '../../atoms/BChip';
 import BText from '../../atoms/BText';
 import resScale from '@/utils/resScale';
 import { layout } from '@/constants';
+import formatCurrency from '@/utils/formatCurrency';
+
 
 interface PriceListCardProps {
   productName?: string;
@@ -19,12 +21,13 @@ const PriceListCard = ({
   productPrice,
   categories,
 }: PriceListCardProps) => {
+
   return (
     <View style={PriceListCardStyles.container}>
       <View style={PriceListCardStyles.nameAndPriceContainer}>
         <BText style={PriceListCardStyles.productName}>{productName}</BText>
         <BText style={PriceListCardStyles.productPrice}>
-          {`IDR ${productPrice?.toLocaleString('id-ID')}`}
+          {`IDR ${formatCurrency(productPrice)}`}
         </BText>
       </View>
       <View style={{ flexDirection: 'row' }}>

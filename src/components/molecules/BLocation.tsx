@@ -1,6 +1,6 @@
 import * as React from 'react';
 import resScale from '@/utils/resScale';
-import { Dimensions, Platform, ViewStyle } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -22,68 +22,56 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const ANDROID = Platform.OS === 'android';
 const MAPSPROVIDER = ANDROID ? PROVIDER_GOOGLE : PROVIDER_DEFAULT;
 
-const bLocationDefaultStyle = {
+const BLocationDefaultStyle = {
   width: width,
   height: height - resScale(64),
 };
 
-const bLocationDefaultRegion = {
+const BLocationDefaultRegion = {
   latitude: LATITUDE,
   longitude: LONGITUDE,
   latitudeDelta: LATITUDE_DELTA,
   longitudeDelta: LONGITUDE_DELTA,
 };
 
-const bLocationDefaultProps = {
-  mapStyle: bLocationDefaultStyle,
-  region: bLocationDefaultRegion,
-  coordinate: bLocationDefaultRegion,
+const BLocationDefaultCoordinate = {
+  latitude: LATITUDE,
+  longitude: LONGITUDE,
 };
 
-const BLocation = React.forwardRef(
-  (
-    {
-      mapStyle,
-      region,
-      onRegionChange,
-      coordinate,
-      CustomMarker,
-    }: BLocationProps & typeof bLocationDefaultProps,
-    ref: React.LegacyRef<MapView> | undefined
-  ) => {
-    // const mapRef = React.useRef<MapView>(null);
-    // // const { region: regionRedux } = useSelector(
-    // //   (state: RootState) => state.location
-    // // );
+const BLocationDefaultProps = {
+  mapStyle: BLocationDefaultStyle,
+  region: BLocationDefaultRegion,
+  coordinate: BLocationDefaultCoordinate,
+};
 
-    // React.useEffect(() => {
-    //   console.log(region, 'ini value?');
-    //   if (mapRef.current) {
-    //     mapRef.current?.animateToRegion(region);
-    //   }
-    // }, [region.latitude]);
+const BLocation = ({
+  mapStyle,
+  onRegionChange,
+  coordinate,
+  region,
+  CustomMarker,
+}: BLocationProps & typeof BLocationDefaultProps) => {
+  return (
+    <MapView
+      style={mapStyle}
+      initialRegion={region}
+      provider={MAPSPROVIDER}
+      onRegionChange={onRegionChange}
+      rotateEnabled={false}
+      region={region}
+    >
+      <Marker coordinate={coordinate}>{CustomMarker}</Marker>
+      <Circle
+        center={coordinate}
+        fillColor={`${colors.primary}60`}
+        radius={700}
+        strokeWidth={0.1}
+      />
+    </MapView>
+  );
+};
 
-    return (
-      <MapView
-        ref={ref}
-        style={mapStyle}
-        initialRegion={region}
-        provider={MAPSPROVIDER}
-        onRegionChange={onRegionChange}
-        rotateEnabled={false}
-      >
-        <Marker coordinate={region}>{CustomMarker}</Marker>
-        <Circle
-          center={region}
-          fillColor={`${colors.primary}60`}
-          radius={700}
-          strokeWidth={0}
-        />
-      </MapView>
-    );
-  }
-);
-
-BLocation.defaultProps = bLocationDefaultProps;
+BLocation.defaultProps = BLocationDefaultProps;
 
 export default BLocation;

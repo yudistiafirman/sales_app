@@ -8,7 +8,7 @@ import GetLocation from 'react-native-get-location';
 import { assign, createMachine, send } from 'xstate';
 
 export const searchAreaMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACDaAdDAC4AyA9pqiQJYUB2htEANmAMSqwDWtDUAAph0AW1qxY9BgG0ADAF1EoAA4UpdRspAAPRAEYAHADZCATjkBWKwCZLhywGZjlmwBYANCACeiY+8IbM0cTG2M3OwB2RxsAX1ivFAwcfHQiUkpqTSZuHmExCSlGDghGMGYGADcKHnKkrDwCVGIwcioaaUJc-PFJaQR+aqzpeQVR7TUNaW09BH05R0DXSzdVyLMVs30vXwRLSNNDRxCVmytIt3jEtAbU9NbMjsYu3h7C6Q4RdAp0QhVWGgAMx+okI9RSTRabWGz26Il6RQYAyq7Wyo3GSBAk1o2RmfjcZkI+n0IUMcnmZkMZncOz8+hshEckUi+i2YTkVhiVxA4MaaWaGVRnVQrFYFAA7pASmUKtVamCbhD+VDHtkuqKJZBkUMnrJFBjVOocdNMbNjoSmXY3P5LMT7BtaXMWYQyW5InJjHIzBs3LbItzeXcBQ8hbCNZKIJ90N9fv8gSCFck+fdobr1WKI9rQ3qxooJkbcabEObGZErTa7VTLI6bAdCMYyY43IYbDZjjYHAHFcng6m1RAwAxaJBCMC0lBvgBXBiR1AqFQAYQoojAABUKAAhVCYHhQH7TiAGrEFk2gWbzDsuylbaJuVnex3+QxEuQsn2RQxurtJoMq7OEAchxHAAjbddynGcuHnJcVwAMR+MAJwoA8j2xQszwMExzCsWx7CcFxHEdSInHrORP09ZxjCZYx-QSHlu1-QUYSYL4fgAcVaOgBFVD5QJ3dcAEk2DAABlEgaDAVCTy0IsEGZRY3DIwwyQWLZVmrHxEFrSwiSpMtKJJNtOzowNISYtNMEnaNBz7aRKFQAdIxQGd+CgSgBABEh1x4xgpKmGSMIQI5FmU0LaxZM4TEdfR3UZfRFLdYwNjMcJaOuH9IV5HymH4FRJxILioA4TB2AwASGDykg-ONALdAMCJCEUwx4ssJwmRiVZovpBkO1bKwHApMw0vojLlSy-9cvywqOF5Vzsuq9C6oQUlCC9ZTiVrMw3X0FxopselAg-ekDiCYkrG-W5Mu7bKKkq6bZu47MZH0JRMTQ08lrLaK5DCVbWRcKwnAupUiHG5jbqm1yOEYDiCtcwQAUwOAhIWj7Zkvd0HDbNYVmMPHDGi1ZTD6xwSR+pKDkMYGe0TBobphzi5uzaUGHKQYajqBirqTemGFhwrsqzZj0TzN7pIYPE9g-esgi2ekBp2mxvuZOLa1ZVYfqbKmTK5sbrv-Bm4ce5ioxjP5PLHUFTL1nmDb5xnjd1IXdRF17DX8iXZI2wkfvpekCWaywhu+rCg+cQwP0B-Hqd-MG01Y9B+dcgARGhUA4PieEEirIYEVHavPNalj9K0Iixx1vR0oJrDsNsWVcGPubp-9eQANRFScwHsxyOB0WBxJIcpUEBQf0AACgsOQAEoZt10H9fBtuO67igHMgfPPcCltCQiDkQhilS3EIzS5ibOQXTkO8fssFxm2Ixubeb8HSEKhHtzAISWbZlF5Wt+fbefg7IQiMP4QGdmifUot3Y1U3ktUKV5WSqU2hEYwhMhr1kjo2Jkvp7461Gv-J+aYX7wxAZ-BO5t4xiFpiDZocc1TEIEG-JGQlwEjEgW7Y8HtJb+2fI4a8qwqQRCCATE+8VfrBHlvoawe8PzxDogwCgA54CYj-qgfMXDZIAFoaKBDUgcVq7g2rH12JotwhAyxywsK1V8WxSYPxTNldRMDJZ2CWKXN0PotiOhbOY7aEcFgRxCGRexvYbosHYE4xasxKRuJWGsTx2wT4XGfNYAkCxXzOEvpYEJf5wZwgKH0Wq70C6ICvuYjsn54rWnmKySIjp7CRBdA4Um1prSejiHgy6ypzJqhFBmSAkS0aIGiLE1YHjNiJN2K2Qk+xiIxEyVSPhlxOk0NyWmQCw4ICDJKUFa0RJqLGB2g2Iwvp6mKXrI4L0rgOQXH0jknpnQNkjjHIhCCWyxYaK3ltfZBxDn4xORpXYT5CD2GtFsb0Fw+EdPSl0hx-4nkQEIJnJCB5tmwPPGEUwTIDgWA-BcDsgK-CXlBUle8kLqT3JDODBOSdHaLWKeixAN9GkkkMi2IOSUzA1mIvWGifUjA-WCNCkasLQn-kstZBgtlGDdwGR85xslPSEgsCcDk1JTjGIMLFVsTZLnWCGo4fYOS6EfQZZLTRrJdHxX0a4X0xwYgV1fC6IwvyzqrA2MaheaZJpGygGi7hLhGRkhcPtQ1HULh7TbCComBI-a2OWTC1ZJrniGwFtmf1skHApPWmRPqFgjh7Q5KtFwDghq5qkdrRNNNk0sWjOxIBqdxIZsCiSN0F8pHNk-F6Zs0VSaLEvgOqsdgHDZJWdWr1aol6sE7rK950ColMtrIEBw-gj7uA9K4XtRwiRGFxe4M46xPUAKIUAphoDm1LS1oEY4sbiRSM9HU0RVF9AYOaRYb0wRjLxCAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACDaAdDAC4AyA9pqiQJYUB2hqsA1gApjoC2tss9BgGIIjMIVoMAbhVbiUGHPnRFSlanUbM2nHnwGMEkmRsEBtAAwBdS1cSgADhQGaG9kAA9EARgsAmABoQAE9EADYAVgB2Qm8-CIBmABYEgA5UpNSo7ySAX1yghSw8AlRiMHIqGkFtDi5efkEhLnQKdEIHABsaADM27kIipVLyytMtFjq9RsNjKtdbW3cnF0F3LwQwpJjUsLiATiiw1ISLBPig0M39v0Iw46iLCKTvBP2kvz98wrRi5VUKupqhNOp0KAB3SAiMQSaSyeS-YYqMpqeY1VCgiGQIxw8YMRbWZbOWiudaIc6pWJ+Cw0tL7Cw5PaXRDxBKEaIJKJRPyvV4fD7fEBDErI0ZA1zMTGQiDNdCtdpdXr9QaIkUAsbApgYsHSnEmTUEuxIEArElrY0bClUmlnVL0xneZkIBIRSlJJLvJ5hZIRX15ApC1X-FGAtFaCBgBi0SCEPoqKCtACuDBlqAcDgAwhRuGAACoUABCqEwrCgbWTECWxtNpItPn8MS2YT8qQs7tS3nSUSdj0pbyycQerwi+0FwuDYrDTAjUZjACNi6WkymhGnM9mwAAxNpgBMUCtVxzE2ugDadiJ3CLxCxhLm3uL+J0nNl2-b7BI+rmPL4B8cjVF4oQLRtAA4hUdAMFA4pNIeJrHuap6IEctzeBE3reE2SRbK6Toum6HppOkWF7BkCRjkGIzCtBWiSA4iYkBBUBCJgnS-AAkgwdEkLBNYIZ4iDvkksSJBh2ynEk-gRE6D77IQpxvm8URXn49w-j8ihqmUVFTrCXGMUIwqSFBU48fBjBkgg3jeFEsmka2Nw8vc3rSX4+yUk8rp2n4nJJNE5EaRO2mAbR9H6YZkHUfi3hGkeqzmXWCC7GyUS+WcyS+BEOT7NJVlsm2KUdjeYT7DkZG-hRopBZqumhUZQiMGBDFGew3SYHAbGVoS1ZmW4CVWTZhB2RYDkYfcCQuQyhA2ckpy+jybapP5fyUaqkWEA14FGZF0IMOIcxyCqAUrRpa0bU1EVTnqJnWKZcW9YhzoRBYhDUvEaGFVyzwuekdwpfsT0um9GRLUiRBVRKZ2MdtwEKt0JBxgMf6VatOmQ1tl1zHihpEndFkus9r2+scvifUkOUZC9KWZNZ5zJFkIOaYdxRrTDjWMQAIjQqBCLdZrxQ9XLJZJCRWdsaH3DlNxyb6iQ3le9IpQzgUo4BwoAGoYomYCUKgEYyh4sAkDQ4ioD0JBcAAFL4NIAJQGRVYMq9V6ua9rFC65AvMnvxlnumEcmpQ5H5vok0m+clKk5G2ZzZIt5VHcjJ06aQjEtcWYAdTte1wgdSOO0ngEp81rUZxAV1YzdXWxXz90+68zaDQk3oqYHkQ5RYlKZZ8EmpK66FRErx3M8nm2QWnbWZzDHRwwjTOg1pTsSkXY8lx15cGpXMVwbjfVN0J1ld9sElhE6CmDdZYnTdyN6D6KAHVZgiZypGGquDres81X281xZvf+94blWw3jeE9V4uFXSEHfN6EWpwPxeXyAGBgFAIzwGNHnVAOMf4JQALR+DJiEJCQlng0g9B2EcroVK33VJFTB3sNh4Okg3BkzZbx+BsueOO6llp31DIBSYugGgGFrrxfmPsJKyW2Cw3YSk0I2SdPcSk1ljigLEscf0XD56Tj4VKSAtC+IbG5E6PBEibjPF8PcRISkqEhlfjUGc0YIB6NERsDIQl0hPX5Jyd68jqSQO7oRN8UQMjeGsVo6q9iYxxl3MuRx3Ud4PS8oNXubY8FeOOD2Dug0jjWXiKY-koT74SgiRAQgC4Sx7grE42uZ4VIXjiE9DsLdshsIyZSLIexuQjniPk+O3DqE6VZqPYyeIqkWRllkrIGRojuhvN2Ahj0YgpGbK4sIDJe7qMDAnfpgFH7PwYLYxg79dFxKwQLFKck4hvBuNsFS3kjEekIB6bp5jIheNCeDPiIjqksnwVcekL4ngfhbN3R4ER3mLxqCFc6UBRkJX+jEept4LDTSyE3aSItnrRG8m5FI2TUhqU2X0heBdqpowuiMk5dCkKBHmVHWSly3j3BpAA5F4KSUSkGdCzmRtYUPRHN4OS+Lng8huCA7KtLOxskjskfxuxXRsuHqrVUGtOhayObE6uVLLKyKmi6XwGFUKRG2GHd0dwRbvCWZyf6nDCWaI+VoZeUBx6l15XXSIfYPjvDSJ2BkQTT4lReh2VZTK3KfB-PkIAA */
   createMachine(
     {
       tsTypes: {} as import('./searchAreaMachine.typegen').Typegen0,
@@ -24,13 +24,8 @@ export const searchAreaMachine =
       },
       states: {
         getLocation: {
+          initial: 'askPermission',
           states: {
-            idle: {
-              on: {
-                askingPermission: 'askPermission',
-              },
-            },
-
             askPermission: {
               invoke: {
                 src: 'askingPermission',
@@ -64,7 +59,7 @@ export const searchAreaMachine =
                 },
                 background: {
                   on: {
-                    appComeForeground: '#search area.getLocation.idle',
+                    appComeForeground: '#search area.getLocation.askPermission',
                   },
                 },
               },
@@ -73,31 +68,21 @@ export const searchAreaMachine =
             },
 
             errorGettingLocation: {
-              on: {
-                backToIdleState: 'idle',
-              },
+              always: 'askPermission',
             },
 
             currentLocationLoaded: {
               entry: send('sendingLonglatToLocation'),
+              always: 'askPermission',
               invoke: {
                 src: 'getLocationByCoordinate',
                 onDone: {
-                  target: 'idle',
                   actions: 'navigateToLocation',
                 },
                 onError: 'errorGettingLocation',
               },
-              // on: {
-              //   sendingLonglatToLocation: {
-              //     target: 'idle',
-              //     actions: 'sendingLonglat',
-              //   },
-              // },
             },
           },
-
-          initial: 'idle',
         },
         searchLocation: {
           states: {
@@ -142,9 +127,7 @@ export const searchAreaMachine =
             },
 
             errorGettingData: {
-              on: {
-                backToInputting: 'inputting',
-              },
+              always: 'inputting',
             },
 
             searchValueLoaded: {

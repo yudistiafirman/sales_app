@@ -5,7 +5,7 @@ export const getLocationCoordinates = (
   token: string,
   longitude: number,
   latitude: number,
-  distanceFrom: string
+  distanceFrom?: string
 ) => {
   return request(
     BrikApiCommon.getLocationCoordinates(longitude, latitude, distanceFrom),
