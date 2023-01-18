@@ -32,7 +32,7 @@
         eventsCausingServices: {
           "onGettingLocationDetails": "sendingCoorParams" | "xstate.after(1000)#location.debounce";
         };
-        matchesStates: "debounce" | "gettingLocationDetails" | "locationDetailLoaded" | "receivingParams";
+        matchesStates: "debounce" | "gettingLocationDetails" | "receivingParams";
         tags: never;
       }
   

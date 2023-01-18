@@ -19,13 +19,14 @@ interface BTabLabelsProps {
 }
 
 const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
+  const isHasItems = route?.totalItems > 0;
   const rightChipPosition = route?.chipPosition === 'right';
-  const chipBackgroundColor = rightChipPosition ? colors.chip.disabled : '';
 
+  const chipBackgroundColor = rightChipPosition ? colors.chip.disabled : '';
   const BTabLabelsContainer: ViewStyle = {
     flexDirection: rightChipPosition ? 'row' : 'column',
     alignItems: 'center',
-    justifyContent:'center'
+    justifyContent: 'center',
   };
 
   const BTabLabelsTextStyle: TextStyle = {
@@ -34,16 +35,18 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
       ? font.family.montserrat['600']
       : font.family.montserrat['400'],
     fontSize: font.size.md,
-    marginRight: route?.totalItems > 0 ? 4 : 0,
+    marginRight: isHasItems ? 4 : 0,
   };
   return (
     <View style={BTabLabelsContainer}>
       <BText style={BTabLabelsTextStyle}>{route.title}</BText>
-      {route?.totalItems > 0 && (
-        <BChip type="header" backgroundColor={chipBackgroundColor}>
-          {route?.totalItems}
-        </BChip>
-      )}
+
+      <BChip
+        type="header"
+        backgroundColor={isHasItems ? chipBackgroundColor : null}
+      >
+        {isHasItems && route?.totalItems}
+      </BChip>
     </View>
   );
 };

@@ -54,7 +54,7 @@ const BLocation = ({
       style={mapStyle}
       initialRegion={region}
       provider={MAPSPROVIDER}
-      onRegionChangeComplete={onRegionChange}
+      onRegionChange={onRegionChange}
       rotateEnabled={false}
       region={region}
     >

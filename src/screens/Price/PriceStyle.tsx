@@ -7,13 +7,16 @@ import { StyleSheet } from 'react-native';
 const PriceStyle = StyleSheet.create({
   tabIndicator: {
     backgroundColor: colors.primary,
-    marginLeft: layout.pad.md,
+    marginLeft: resScale(15.5),
   },
   tabStyle: {
     width: 'auto',
-    marginLeft: resScale(22),
+    paddingHorizontal: layout.pad.lg,
   },
-  tabBarStyle: { backgroundColor: colors.white },
+  tabBarStyle: {
+    backgroundColor: colors.white,
+    paddingHorizontal: layout.pad.lg,
+  },
 
   titleStyle: {
     fontFamily: font.family.montserrat['600'],

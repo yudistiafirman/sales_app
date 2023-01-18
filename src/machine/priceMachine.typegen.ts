@@ -33,6 +33,7 @@
 "assignLocationDetailToContext": "done.invoke.price machine.getLocation.currentLocationLoaded:invocation[0]";
 "assignParams": "sendingParams";
 "assignProductsDataToContext": "done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]";
+"enableLoadLocation": "appComeForegroundState" | "onAskPermission";
 "enableLoadProducts": "done.invoke.price machine.getProduct.loadingProduct:invocation[0]" | "onChangeCategories" | "onEndReached" | "refreshingList";
 "handleError": "error.platform.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]" | "error.platform.price machine.getProduct.loadingProduct:invocation[0]";
 "incrementPage": "onEndReached";

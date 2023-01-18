@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Alert, AppState, SafeAreaView } from 'react-native';
+import {  AppState, SafeAreaView } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Tnc from '@/screens/Price/element/Tnc';
@@ -76,9 +76,10 @@ const PriceList = () => {
   const goToLocation = () => {
     const { lon, lat } = locationDetail;
     const coordinate = {
-      longitude: lon,
-      latitude: lat,
+      longitude: Number(lon),
+      latitude: Number(lat),
     };
+
     navigation.navigate('Location', {
       coordinate: coordinate,
     });
@@ -93,9 +94,11 @@ const PriceList = () => {
     refreshing,
     loadLocation,
   } = state.context;
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />
+
       {!loadLocation ? (
         <CurrentLocation
           onPress={goToLocation}
@@ -113,26 +116,28 @@ const PriceList = () => {
       <BSpacer size="extraSmall" />
       <PriceSearchBar onPress={() => navigation.navigate('SearchProduct')} />
       <BSpacer size="extraSmall" />
-      <BTabSections
-        swipeEnabled={false}
-        navigationState={{ index, routes }}
-        renderScene={() => (
-          <ProductList
-            onEndReached={() => send('onEndReached')}
-            products={productsData}
-            isLoadMore={isLoadMore}
-            loadProduct={loadProduct}
-            refreshing={refreshing}
-            onRefresh={() => send('refreshingList')}
-          />
-        )}
-        onTabPress={onTabPress}
-        onIndexChange={setIndex}
-        tabStyle={
-          state.matches('getProduct.categoriesLoaded') && PriceStyle.tabStyle
-        }
-        indicatorStyle={PriceStyle.tabIndicator}
-      />
+      {routes.length > 0 && (
+        <BTabSections
+          swipeEnabled={false}
+          navigationState={{ index, routes }}
+          renderScene={() => (
+            <ProductList
+              onEndReached={() => send('onEndReached')}
+              products={productsData}
+              isLoadMore={isLoadMore}
+              loadProduct={loadProduct}
+              refreshing={refreshing}
+              onRefresh={() => send('refreshingList')}
+            />
+          )}
+          onTabPress={onTabPress}
+          onIndexChange={setIndex}
+          tabStyle={PriceStyle.tabStyle}
+          tabBarStyle={PriceStyle.tabBarStyle}
+          indicatorStyle={PriceStyle.tabIndicator}
+        />
+      )}
+
       <Tnc
         isVisible={state.matches('Tnc.agreementShowed')}
         onCloseTnc={() => send('hideAgreement')}

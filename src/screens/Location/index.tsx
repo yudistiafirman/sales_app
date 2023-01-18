@@ -1,25 +1,23 @@
 import resScale from '@/utils/resScale';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { Dimensions, SafeAreaView, View } from 'react-native';
 import LocationStyles from './styles';
 import CoordinatesDetail from './elements/CoordinatesDetail';
-import { BButtonPrimary, BHeaderIcon, BLocation, BMarker } from '@/components';
+import {
+  BButtonPrimary,
+  BHeaderIcon,
+  BLocation,
+  BMarker,
+  BSpacer,
+} from '@/components';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-import debounce from 'lodash.debounce';
 import { useMachine } from '@xstate/react';
 import { locationMachine } from '@/machine/locationMachine';
-import LocationListShimmer from '../SearchAreaProject/element/LocationListShimmer';
 import { LatLng } from 'react-native-maps';
 const Location = () => {
   const navigation = useNavigation();
@@ -56,8 +54,8 @@ const Location = () => {
   const onSaveLocation = () => {
     const { lon, lat } = locationDetail;
     const coordinate = {
-      longitude: lon,
-      latitude: lat,
+      longitude: Number(lon),
+      latitude: Number(lat),
     };
     navigation.navigate('Harga', {
       coordinate: coordinate,
@@ -77,20 +75,22 @@ const Location = () => {
         coordinate={region}
       />
       <View style={LocationStyles.bottomSheetContainer}>
-        {loadingLocation ? (
-          <View style={{ marginTop: resScale(16), marginBottom: resScale(20) }}>
-            <LocationListShimmer />
-          </View>
-        ) : (
-          <CoordinatesDetail
-            address={
-              locationDetail?.formattedAddress?.length > 0 ? locationDetail?.formattedAddress : ''
-            }
-            onPress={() => navigation.navigate('SearchArea')}
-          />
-        )}
+        <CoordinatesDetail
+          loadingLocation={loadingLocation}
+          address={
+            locationDetail?.formattedAddress?.length > 0
+              ? locationDetail?.formattedAddress
+              : ''
+          }
+          onPress={() => navigation.navigate('SearchArea')}
+        />
 
-        <BButtonPrimary onPress={onSaveLocation} title="Simpan" />
+        <BButtonPrimary
+          buttonStyle={LocationStyles.buttonStyles}
+          onPress={onSaveLocation}
+          title="Simpan"
+        />
+        <BSpacer size="extraSmall" />
       </View>
     </SafeAreaView>
   );

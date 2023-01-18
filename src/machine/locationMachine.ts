@@ -5,9 +5,7 @@ const LATITUDE = -6.18897;
 const LONGITUDE = 106.738909;
 
 export const locationMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QBsD2BjAhgFwJaoDsA6AJzHTFwDdcCoAFTEzAW1gGJYwCJaoBhVKhKNmbANoAGALqJQAB1SxceQnJAAPRAA4AnEQBsARgDMAdgCsu3dvMAWC0e0AaEAE9ERg5KK6zAJgtJXRN-A39JAwMAX2jXNCxVYhhsPDoAGQwcfAIAETBsTFxkDghCMCJaKlQAawqE7MIiFLSoTMSc-MLi2AQqrKSpaSH1RWUk9S0EAFptIyJtCxMjfzmTE11wgxNXDwQTbR8HQP8QmxDA2PiBnKJ2xryCouRMzAhIdgBRKm4RpBAxiocpMdPMLGYzLpJCsDisnLtEHY-EQIpDrJYNkE7LE4iACKh3vB-g0Jv9AaTQFNpit9ItlqtTBstjt3J55tDJJyItsDpIsVcQCTbmQKNQ+KJWESFEogWp-lNvAiEDYiHZtOELHYostJKFtAKhU0Wnx7kkus8pQCZRTNIgDkQjFrtGYnFFdWZzEr-C6iJznQYzJzIZrLrjDcRTZ0nsVXu8IKNrcD5XaTCjjEH-GqDCEzAYlRZwSjJGi-EtdPycUA */
-
-  /** @xstate-layout N4IgpgJg5mDOIC5QBsD2BjAhgFwJaoDsA6AJzHTFwDdcCoAFTEzAW1gGJYwCJaoBhVKhKNmbANoAGALqJQAB1SxceQnJAAPRAA4AnEQBsARgDMAdgCsu3dvMAWC0e0AaEAE9ERg5KK6zAJgtJXRN-A39JAwMAX2jXNCxVYhhsPDoAGQwcfAIAETBsTFxkDghCMCJaKlQAawqE7MIiFLSoTMSc-MLi2AQqrKSpaSH1RWUk9S0EAFp-OyJ-Iz9dQN07I38V3QtXDwQ7daJJCzMjO20jLxM13Ri4kAakokfOgqLkTMwISHZCfgALTB0MAAJTAUByIyQIDGKhyk0Q-jM8xs1wMZhs2m0Bhsu0QFixRDsOLOdkCFn8cwssXiAxyRG+ACNUABXAgUdgaWCFbAVTAAM15JAAFEZJOKAJTsF5NJms9lgKEKJRwtTQqbXbRHbFGDEE3RnTZ4hAmby+KJWHHBcUXWL3Aiob7waEygijFUTdWIaYBBZLDGrdabEzGy5HMXi8WLSTEuzmGkPOlNMgUah8USsZ3K8bwr0IbzGmxE7GBYkGExi0LaBOu5oFVrtRp5N49d05tWgDVas4GbSnbHeczmY1IoxHSR99HivVk6n3WuurrvT7fCBt1VuvMmEwLYzTubYkJmAzGiwnBaSDHWSzXIJ2GtJ4hytkUdeezuIa7+IhmEzY496NoBJmMexpkj4twGJaujWhORh2tEQA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QBsD2BjAhgFwJaoDsA6AJzHTFwDdcCoAFTEzAW1gGJYwCJaoBhVKhKNmbANoAGALqJQAB1SxceQnJAAPRACYAzNqLbtAdgCs2gBznj2gJy3dAFgA0IAJ6JdANi9FHd3VNdCwsARl1JXVCAX2jXNCxVYhhsPDoAGQwcfAIAETBsTFxkDghCMCJaKlQAawqE7MIiFLSoTMSc-MLi2AQqrKSpaSH1RWUk9S0EY0cLIi9bbVNHRaNI+1cPBDC-Yy89bzDQ0NMw2PiBnNJySho6UVYOQn4AC0w6MAAlMCgckaQQGMVDlJjp9IYTOYrCY7A4XO4dHoiMZJDMwsZwvY7F5ziAGkkiBAwAAjVAAVwIFHYGlghWwFUwADN6SQABShSScgCU7HxVyJpIpFH+CiUwLUAKmaPmi2Wq2061smx0syIHIsxgioQskW0C2MsTiIAIqCJ8ABfIlovGIMliAAtF5lQhHUROe6PZ6DUbLcQyBRqHwHmxRmKJnaEP5ncdQsjHEFOaYk7YMcFcb7mgVWu1GnkCkUSqGbVbNIgOeF5o5gpJQvtTPZHMZnUZfMcvFZbDrq0Z05cmgLyZSwEXxQRQZGdrZQkttDHNbYvKZm0ivLWO12dbOcYagA */
   createMachine(
     {
       id: 'location',
@@ -49,6 +47,11 @@ export const locationMachine =
               target: 'gettingLocationDetails',
               actions: 'assignParamsToContext',
             },
+
+            onChangeRegion: {
+              target: 'debounce',
+              actions: 'assignOnChangeRegionValue',
+            },
           },
         },
 
@@ -56,17 +59,8 @@ export const locationMachine =
           invoke: {
             src: 'onGettingLocationDetails',
             onDone: {
-              target: 'locationDetailLoaded',
+              target: 'receivingParams',
               actions: 'assignLocationDetail',
-            },
-          },
-        },
-
-        locationDetailLoaded: {
-          on: {
-            onChangeRegion: {
-              target: 'debounce',
-              actions: 'assignOnChangeRegionValue',
             },
           },
         },
