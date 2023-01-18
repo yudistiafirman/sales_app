@@ -26,4 +26,17 @@ export default class BrikApiCommon {
 
     return url.toString();
   };
+  static searchPlaces = (searchValue: string) => {
+    const url = new URL(`${API_URL}/common/map/places`);
+    const params = url.searchParams;
+    if (searchValue) {
+      params.append('search', searchValue);
+    }
+    return url.toString();
+  };
+
+  static searchPlacesById = (id: string) => {
+    const url = new URL(`${API_URL}/common/map/places/${id}`);
+    return url.toString();
+  };
 }

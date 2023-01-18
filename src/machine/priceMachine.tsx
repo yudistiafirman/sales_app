@@ -1,15 +1,17 @@
 import { getLocationCoordinates } from '@/actions/CommonActions';
-import { getProductsCategories } from '@/actions/InventoryActions';
-import { request } from '@/networking/request';
+import {
+  getAllBrikProducts,
+  getProductsCategories,
+} from '@/actions/InventoryActions';
 import { hasLocationPermission } from '@/utils/permissions';
-import { Alert, Linking } from 'react-native';
+import { Alert } from 'react-native';
 import GetLocation from 'react-native-get-location';
-import { actions, createMachine } from 'xstate';
+import { createMachine, forwardTo } from 'xstate';
 import { assign, send } from 'xstate/lib/actions';
 export { getLocationCoordinates } from '@/actions/CommonActions';
 
 export const priceMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXAGQHtMCb0GzKDYBrABTFR50sWGzIBiCOyrkAbg25U0WXIRLkqtRs1btOPfoOGj2COUxZiA2gAYAurbuIUDUbrLOQAD0QAWAEy+lACsAJw2AGw2wf4AzAAcEQCMoaERADQgAJ6I-sFBEfHBwUkA7En+Ef6h-qX+AL71mcrY+ESkFNRg9Bbu+nwCQiJiktKU5oqULartGl09OmL9hkMmZGZk8ovsjlZJTkggyK7o7p4+CAFBYZHRcYkpaZk5CLG+NpRJvsVJYSmxyUijWaGFaag6mm62ksegIABs4QwAO6QUadCZKUEzdSdLS9JbwxEoiAbLYwsi7eyeY5uMTnRDxCqUWL+eIJUrBGzlWK-Z65YLxT6hMpfCI8lmhYFHLFtHGQhbkzgI5GogSoBioKZwlgAMw1eCmMvBczx2w4hJVJPMZspBxctPY9IQwtKlBsRRsNiSIq+sVCfIQ3qC3OKXP8ZTCYSl01lEPm0L6mAArqhUGAyAr3IwCBBUVJ0ZsFJiVLGTVD8Xpk6n05mxNnc1bCzb7I5qSczocLhFOZQigCObEbKFStEkgGBaFPlU8r5fnVfGLo0bZrjy2bKFW0xmE3WGDm82MMYaS8bV7XKymt+eyPXIKSKxSW-s2w6PJ3EN2Pn2IgOhyOSgGdQfL4vixDEEShMUwTikuJ4rvKO4XtW24PreEDiGqGparq+rHmC8Hxg+G6XjWiE3nuDb3s2DhUocNKnHS77OrErpJNEvilAOsQAkkGTZH44RuiUnF+rO3apLB+FyoR66ImaAAi3QEOgcJoZIwg0AQZDYAASmA7QEAARnCYCtnR7aMaAFwBK6AKhAks5gTY4b+OOg6UKU9kcc5jLxJKTTSnB0mmoqcnkopmkqWpEAaVpun6SQRkmXsdpHBZjpMbOHw2AucQBMEVSDhEfEvIU-iUJB8SeRyNgOSBknYnGIV9EmZBpgZxlgOIpC5gA6gQqBkOQUBmfaDEZVZH5lMyjIVGxeRfP6-EIIyES9v4Q7xIk7yVEk8QNaWZ5kZQuZDZAlB6mmUDqq16EEMgyAAMIMHgYAAEJENw10MLdADKmk0KZtFjR2k0IAAtBU2VFN6yRVMKRQBr4W0Ve8woxH6FTBKUB2nghRGneg52GZ9323eI91PS9YAAGIamAZNkBA-0sEDqX0aD3i5O6U6RDEs6lFVUSlEj8TlcUI6+PZg5siyuMEQAKtpnDXWAYCvRmAAS6AxWQUDiLAxDIgAgqr6s1qNaWvk6e3BJQHHvN21QbcjMQBkkdm9hEIF1NxnIshE8vSUrmAq2m5sZr9RvEt1OtgKb4cazQlsc5ZXMQ2UHyFQKPK+9BBXu6B5XVFynk1KE3ylIHAUxnj8y8OqEBJpgNCUIiObDQ3DBNy3aIyIWky1wRtBdz3rft7rUCj83NBUeStovuNb5g3tHysixI5RCkP6uctG0pL2DyRAjoRi7EQdNd008t23FGd43M8YamWHINqNCXQaQ-BVfD83xP9-dxnnPdwC9zLWyYuDcMdsPZxFZGxCCcQuTuy2kkEI9wvTIx-KUZGF8yw0Gvq3HQDMNRE1gGheuv8aCwA+rAMAAB5Mgj1WZQBIXAPu4wB7FikpffBlCNzMNYWQii50R6UOoVwehjCBEYDgMA6wLZgZWyXk6YclBagYLqL8YUYFggBn8JUYMxVQKhhyqfXBZ4CH8MBiwmRQj9wQAoYAlu4jaEMKYdYwRT91SalfjhQQeFGp4MsUQmxpDyGiKcVQmhkj3HENsXInYCj2bpWXuncGRVmSFG9hxe4VQxx7wMR5IxOjPRS32jXZc39eGRKsXEsJwiHFoEiWpdgj1iBaRgLE0JcAU4pKdJDcMh8RwOTZKUIqJVcgcVQe6Pau0coJDSOY+UwTpH1PsYaZpDTxDsAAKJMz0u0SAvTwFg0gQuIpRQ0jDmiNkiZCBAhgUoMkXip9vRsSrufKUZBu5wGpJUiEi9OYXHBgKYCI5sG8QXNxMWAZwZRDUQsn8hREi1E+SCIKPCyKArTsC8Ma13QlF4rxaots9GujiGM5ymiJRRGrui7heDjpcAGEYYYE0lFAsQF8IIvEEHui9FUKWvh3Zik+Kiq4bI8jgSWTJRUFpiTYvZV2ZIFVvan0SOJEC7sSgIo4okdG3scrlPpYEo6RFNykVQg0xVqSLiMnKg5Ko3tAheieMtBIWcuSpECFXDacMZXNSWJhVAABxborA9ZYrAcopibEvhqK2m8IcZR7hLReGUYMHtQyaI5GkBoFSMWMqImFdwEVlJwh2c-VANqbbRFYuxTi0FuJw3HNBNRHIvh-H0dEfyJrDr41kg+MtUVrXRs5c6QSAdhI5TqMkNNDJ3IVzSEYretsA1rkVDqcgpwGA1qYlBe2PJ4g7WHKfHK7t3RBGqKBKW1zm3BHXdeSgrV2qJU6nusGTkE1fDZNohcfNAKPNSNEbGlR7Ue0fcdQmkAP1pN4oKAlsNiUI10e63iTy2LI1SILIWaLAoMrNeuaDDjLoMxukzWDFwNohB9qfCCFQ6hbXiEjHKbpEhjOqvZSIgRIME3TETBxJNMBfXIxASjiBIGuk9O89keaShutKqx7lc0viemxr2-DpqqAh3ExDcMgps5shTWBMCdyKiMk+N8IcCQqi+TpZp-tlAQ5hzVknbWk9dOoMZO8EoLIBRRA4gXZaHtChPPDG8PaYpAhFBlc5ggZsk5R0tJ53sqnfN5ESDOoL6b-afC5AVVIBUqr1QLQR5ZlDdMgpZPbcFYkoUJF3umtVeX7L5ABMjR2j7LH-z1gQyr4ZJwexqDlH8jJIIsXdmMtaAoCqQsZCODTX8eErI8bYtClWOs1a5HVsUDW9G-HFoUFkVc2sFV8F1vhITBHhJ-pElxMTVm-LHTiiTkXMnbRyTZjaqGXj6PeG6EC2MCr5EFt2C7NSrtrYaZQYNYaaARqnmIjbAItsQu9rtmFe8xKfGqrUBc2NQLg7HrU7pdiGwbLHut57SqJNgeZPoliZQxndvyb92bbpBx-jiGUUZMrYfhuGl0wR-XJw2TSH5fRfkeTnuC+qp5NQCdchZGURojQgA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXAGQHtMCb0GzKDYBrABTFR50sWGzIBiCOyrkAbg25U0WXIRLkqtRs1btOPfoOGj2COUxZiA2gAYAurbuIUDUbrLOQAD0QBmAEwArJS+AByBNgAsgaEAnP6hkQkA7AA0IACeiJFJlACMMclFkaF5Cb7JAL6V6crY+ESkFNRg9Bbu+nwCQiJiktKU5oqUdaqNGi1tOmKdhj0mZGZk8tPsjlZ5TkggyK7o7p4+CL4FIeFRMfGJKelZCP5RlABssaFFFb6fSf7VtRj1aiamla2ksegIABsIQwAO6QfrNIZKf5jdTNLTtGaQ6FwiBLFZgsjreyeXZuMSHRBlQKRZ6RMKhUJPEo2PKxPK3bKfSglN7JelsyLMn41HYohpo4FTQmcKGw+ECVAMVAjCEsABmyrwI3FgImGNWHGx8rx5kNxK2LnJ7EpCHinIQ-NClCKNhsvkisRKOV8gV+YpUEqBk1BHUwAFdUKgwGRpe5GAQIPCpIjlgpkYG9eiQZi9BGozG42IE0nTWnzfZHKS9gdtkdIjZYpRQv4wjZQr5Yh6HtEHeym6EbE8nnEInlPnlIv7RkH9TnDZR89HY6HiwxE8mBkidZnxtmi3nI8uD2QS5B8bmiZXNtXrR461SPSFAvyvd84hcHeE8pRAv4SpOsSBL47attOup7lKq6HgWK6XmeEDiIqyqqhqWo7gCkEhpei5HoW0GnuupYXhWDgktsZL7BSD4IA2A6toOHZdkkn6ZIgTLOm6bq+CO-j-pOU6ijOWZQTh0KGgAIq0BDoBCCGSMINAEGQ2AAEpgI0BAAEYQmAVYUTW1GgEcLYOuOgRPGcrx8UB-gvIy4G7pK2ELuJhJSUpsnyRAinKWpGkkNpukbJaOyGTaNGxC8LqlB6FRDk8-hfk+-LDrEUTxFFjaOZhzkGjK6rkPsDDiLAMYQIwZBQGqNAACoMOpEDhl4+lWlREXGexjx5O2Nj+MkXYdolaRsQgk6dpQ7bJN+YTxPyIp-E5wb5R04ZkNGmk6WA4ikEmADqBCoGQ5BQK1YV3ra-GTckw3REK46ROOZmtsEaVshZgRsmyOWost84ykmx2QJQmrRlASprYhBDIMgADCDB4GAABCRDcODDCQwAykpNB6eRbW1p1CClDYlB2YySQxHkyQMg6fGk0kfIWTYNNlF2P2zvuBGUID6DA1pqPo5D4jQ3DCNgAAYsqYBC2QEDYyweOhZRhPeH4QRnBE0RxAkjMjXcAT+DyYQFKyg4RGEgmLblwa1SpnDg2AYCI7GAAS6A+VVpXELCACCjvO4WZ0q0Zav3BZzxPG6-ixPyPFPGyZkWZZTpPAELYvo9VsBjbEx25gDvRoHsaYz7uI7R7YD+0XLs0MH4X3kTdm+NdQQnOy-5vLESd5JZIE09NfGPaUoQcyJky8EqTWYDQlDQomJ2Tww080AiMhpsMwlYbQS8r3PRGL1P4YzyRhIWre7WN2H9qjT2tI9a8jNR0yQFj9vrS78fs-z57UCfzPSEowoWQDVUG2ot55Q-kfGe+8F5VX-jQU+7hz4GQupFQczxPoVFbANP8L46aJVJhZX0yQgg9Q9MkP0QkIKQJoAgxcisoDKj5rABCE9oE0FgCjMqAB5MgsNGHMLgGvQYG8My533PQnQMshGsKIsDHeHCuFcDAHwgRuMmEYDgEg6wlZ8bnUvraE4yR8jxGAt2IcARu630eiYpkNMWZkL4gtHOv05x0I4QwjRsi2GKOXl-ZRvD+GCK0bAQBSoVQgLQoIDCbjJGeOkZolhvioH+JnoE1RwTvGhJ0WsPRysG62leKTJ4WDSEVFsvg2+f4TEJFbHkPIjJxwjjfrQqRITknyIgDqNJbQNyIXYAAUTlupRokB65oKJsY0xbcLFpxjnTT6P5JzhCeNNQcDxJytL+h43pXiZGhLYWgXp8l2Cw2IMpGA6iDksImYYmi0y2SzJYvM6xdw7Isx5A0lmNgaRYNiNs9x7TsmdP6T0le8lozqmjLAJoUA6CKTuarI4jyzFfAeK8umyR3TPBpi+AIPUWalOqKKMgy84CkhoUCC+yLEAAFpPSTS7FERI1lSgNkCA6BlP5Yi8tjrxOyKQniAq5peGlocjh0p-I2EC3o2WTl+Q6aIPIbr9Q7J8E2rIRWiQXFwLoRhegdQMbS2ill0ovE+mOZIjTAhAQdCcUmRR0ogTih2Dl2qXIymNLicVRqjjYpMSBQVrIwgBD6kq6mkcXjuk+uyZOHqVozCXPheCXTfVXyOPi42tqE5lFKYbZ6kb2SCi9IOBKo9qFLXcdzZCqAADirRWBVQIum20acTE0kZCcXujIWZfltS6TsfFSgx2xUyBN-0OhuXcB5GSck02oPuUTDszpO3+HeszNOvgzK-J-JQrsL1PhuheBOk8IMio0AYK2mipRLLRAaY9fqQbt2jXHDdZ4rI06BGAmY3lp7uZrQ2oFLa16iZJBMbygokQBolH-ANB01rghBF1qU3iayqHWziTqgGMY+YQFA2HYav4WYvi7DSKIlCzIBEoJUr4cROztn-ThXmwNQYywhnLAjRx0PEcoQNX0DZoOctvg8GjQ5ybAVZL8pITGFwse6QLTAaMOP4cXSanqI4aObJWUBAU+tED0zE4lEckmeo0hcRA22KkuMGciGZRmzZu08Q00EV+laJFUHzoXJ2td3a-xs46JKr6-xGx4rauDL4Y4nvc1hygXmCAB1rqXE0AX6ScQYkOGk2Ko5vKpH+WkTJbUFC7FFHiFbMOcylAggL-4zJpybI02OqVqYvH-Ke+hP9D69IC6QsypDLLDhyw0xkaywjtYSR0uACEeu5fuEekI7JMvjk+ONvZiSfFdPYb0jJajJvwDUxKxAadpXUmjW6RpzJFllBdCzAIpCBrsiqDFyrW297rcOZt45EKF0E0O2NfqdMcgDg016TsL4poetrQ2mgTaoDXKSRSg7fqqRDzJv1+kltsEvved+u9-UhTTQbKyp71QgA */
   createMachine(
     {
       id: 'price machine',
@@ -27,11 +29,25 @@ export const priceMachine =
             data: {};
           };
         },
+        actions: {} as {
+          assignCurrentLocationToContext: {
+            longlat: { longitude: number; latitude: number };
+          };
+        },
       },
       context: {
-        longlat: {} as {},
-        locationDetail: {} as {},
+        longlat: {} as { longitude: number; latitude: number },
+        locationDetail: {} as any,
         routes: [] as any[],
+        size: 10,
+        page: 1,
+        selectedCategories: '',
+        productsData: [] as any[],
+        index: 0,
+        loadProduct: false,
+        isLoadMore: false,
+        refreshing: false,
+        errorMessage: '' as string | unknown,
       },
 
       states: {
@@ -66,7 +82,6 @@ export const priceMachine =
             currentLocationLoaded: {
               invoke: {
                 src: 'fetchLocationDetail',
-                onError: 'locationDetailError',
 
                 onDone: [
                   {
@@ -79,11 +94,12 @@ export const priceMachine =
                     internal: true,
                   },
                 ],
+
+                onError: 'errorGettingLocation',
               },
             },
 
             errorGettingLocation: {},
-            locationDetailError: {},
 
             locationDetailLoaded: {
               entry: send('distanceReachable'),
@@ -99,7 +115,15 @@ export const priceMachine =
               },
             },
 
-            finito: {},
+            finito: {
+              on: {
+                sendLonglatToRedux: {
+                  target: 'finito',
+                  internal: true,
+                  actions: 'sendingLonglat',
+                },
+              },
+            },
 
             unreachable: {
               on: {
@@ -158,7 +182,10 @@ export const priceMachine =
                     actions: 'assignCategoriesToContext',
                   },
                 ],
-                onError: '#price machine.errorGettingCategories',
+                onError: {
+                  target: '#price machine.errorGettingCategories',
+                  actions: 'handleError',
+                },
               },
             },
 
@@ -167,17 +194,42 @@ export const priceMachine =
                 getProductsBaseOnCategories: {
                   invoke: {
                     src: 'getProducts',
-                    onError: 'errorGettingProducts',
-                    onDone: 'productLoaded',
+                    onError: {
+                      target: '#price machine.errorGettingCategories',
+                      actions: 'handleError',
+                    },
+                    onDone: [
+                      {
+                        target: 'productLoaded',
+                        actions: 'assignProductsDataToContext',
+                        cond: 'isNotLastPage',
+                      },
+                    ],
                   },
-                },
 
-                errorGettingProducts: {},
+                  entry: 'enableLoadProducts',
+                },
 
                 productLoaded: {
                   on: {
-                    onChangeCategories: 'getProductsBaseOnCategories',
-                    onEndReached: 'getProductsBaseOnCategories',
+                    onEndReached: {
+                      target: 'getProductsBaseOnCategories',
+                      actions: 'incrementPage',
+                    },
+
+                    onChangeCategories: [
+                      {
+                        target: 'getProductsBaseOnCategories',
+                        actions: 'assignIndexToContext',
+                      },
+                    ],
+
+                    refreshingList: [
+                      {
+                        target: 'getProductsBaseOnCategories',
+                        actions: 'refreshPriceList',
+                      },
+                    ],
                   },
                 },
               },
@@ -195,13 +247,16 @@ export const priceMachine =
     {
       guards: {
         isHasResult: (context, event) => {
-          return event.data.result;
+          return event.data?.result;
         },
         isLocationReachable: (context, event) => {
-          return context.locationDetail.distance === 'hai';
+          return context.locationDetail?.distance?.value > 40000;
         },
         permissionGranted: (context, event) => {
           return event.data === true;
+        },
+        isNotLastPage: (context, event) => {
+          return context.page !== event.data.totalPage;
         },
       },
       actions: {
@@ -220,12 +275,59 @@ export const priceMachine =
             return {
               key: item.id,
               title: item.name,
-              chipPosition: 'right',
-              totalItems: item.ProductCount,
             };
           });
           return {
             routes: newCategoriesData,
+            selectedCategories: newCategoriesData[0].title,
+          };
+        }),
+        assignProductsDataToContext: assign((context, event) => {
+          const productsData = [
+            ...context.productsData,
+            ...event.data.products,
+          ];
+          return {
+            loadProduct: false,
+            isLoadMore: false,
+            refreshing: false,
+            productsData: productsData,
+          };
+        }),
+        assignIndexToContext: assign((context, event) => {
+          return {
+            index: event.payload,
+            selectedCategories: context.routes[event.payload].title,
+            page: 1,
+            loadProduct: true,
+            productsData: [],
+          };
+        }),
+        incrementPage: assign((context, event) => {
+          return {
+            page: context.page + 1,
+            isLoadMore: true,
+          };
+        }),
+        refreshPriceList: assign((context, event) => {
+          return {
+            page: 1,
+            refreshing: true,
+            loadProduct: true,
+            productsData: [],
+          };
+        }),
+        enableLoadProducts: assign((context, event) => {
+          return {
+            loadProduct: true,
+          };
+        }),
+        handleError: assign((context, event) => {
+          return {
+            loadProduct: false,
+            refreshing: false,
+            isLoadMore: false,
+            errorMessage: event.data.message,
           };
         }),
       },
@@ -267,12 +369,27 @@ export const priceMachine =
               undefined,
               undefined,
               undefined,
-              undefined,
-              true
+              'BRIK_MIX',
+              false
             );
             return response.result;
           } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
+            // throw new Error(error.message);
+          }
+        },
+        getProducts: async (context, event) => {
+          const { page, size, selectedCategories } = context;
+          try {
+            const response = await getAllBrikProducts(
+              '',
+              page,
+              size,
+              selectedCategories
+            );
+            return response;
+          } catch (error) {
+            throw new Error(error.message);
           }
         },
       },

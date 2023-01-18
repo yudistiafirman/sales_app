@@ -32,4 +32,30 @@ export default class BrikApiInventory {
 
     return url.toString();
   };
+
+  static getProducts = (
+    page?: number,
+    size?: number,
+    search?: string,
+    category?: string
+  ) => {
+    const url = new URL(`${API_URL}/inventory/m/products`);
+    const params = url.searchParams;
+
+    if (page) {
+      params.append('page', `${page}`);
+    }
+    if (size) {
+      params.append('size', `${size}`);
+    }
+    if (search) {
+      params.append('search', search);
+    }
+    if (category) {
+      params.append('category', category);
+    }
+ 
+
+    return url.toString();
+  };
 }

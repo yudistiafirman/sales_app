@@ -9,6 +9,7 @@ import { SafeAreaView, TouchableOpacity, View, ViewStyle } from 'react-native';
 import TncNavBar from '@/screens/Price/element/TncNavBar';
 import { ActivityIndicator } from 'react-native-paper';
 import tncHTML from './TncHtml';
+import { layout } from '@/constants';
 
 interface TncProps {
   isVisible?: boolean | undefined;
@@ -23,7 +24,7 @@ const Tnc = ({ isVisible, onCloseTnc }: TncProps) => {
 
   const contentContainer: ViewStyle = {
     flex: 1,
-    marginRight: resScale(16),
+    marginRight: layout.pad.lg,
   };
 
   const loadingContainer: ViewStyle = {

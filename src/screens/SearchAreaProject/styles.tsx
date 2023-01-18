@@ -7,7 +7,6 @@ const SearchAreaStyles = StyleSheet.create({
   container: { flex: 1, marginHorizontal: resScale(16) },
   currentLocationContainer: {
     flexDirection: 'row',
-    marginVertical: resScale(20),
     alignItems: 'center',
   },
   currentLocationText: {
@@ -29,11 +28,10 @@ const SearchAreaStyles = StyleSheet.create({
     fontFamily: font.family.montserrat['500'],
     fontSize: font.size.md,
     color: colors.text.darker,
-    marginBottom: resScale(4),
   },
   addressDetail: {
     fontFamily: font.family.montserrat['300'],
-    fontSize: resScale(12),
+    fontSize: font.size.sm,
     color: colors.text.darker,
   },
 });

@@ -17,6 +17,8 @@ const initialState: LocationState = {
     longitude: 0,
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LATITUDE_DELTA,
+    formattedAddress: '',
+    line1: '',
   },
 };
 

@@ -1,19 +1,22 @@
 import BSpinner from '@/components/atoms/BSpinner';
 import PriceListCard from '@/components/templates/Price/PriceListCard';
+import { layout } from '@/constants';
 import resScale from '@/utils/resScale';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
+import { Item } from 'react-native-paper/lib/typescript/components/List/List';
 import EmptyProduct from './EmptyProduct';
+import PriceListShimmer from './PriceListShimmer';
 
 interface productsData {
   name?: string;
-  price?: {
+  Price?: {
     id: string;
     price: number;
   };
-  category: {
+  Category: {
     name?: string;
-    parent?: {
+    Parent?: {
       name: string;
     };
   };
@@ -28,6 +31,8 @@ interface ProductListProps<ArrayOfObject> {
   refreshing?: boolean;
   emptyProductName?: string;
   isLoadMore?: boolean;
+  loadProduct?: boolean;
+  onRefresh?: () => void;
 }
 
 const ProductList = <ArrayOfObject extends productsData>({
@@ -36,23 +41,38 @@ const ProductList = <ArrayOfObject extends productsData>({
   refreshing,
   emptyProductName,
   isLoadMore,
+  onRefresh,
+  loadProduct,
 }: ProductListProps<ArrayOfObject>) => {
+  const renderItem = useCallback(({ item, index }) => {
+    return (
+      <PriceListCard
+        productName={item?.name}
+        productPrice={item?.Price?.price}
+        categories={item?.Category?.Parent?.name}
+      />
+    );
+  }, []);
   return (
     <FlatList
       data={products}
-      contentContainerStyle={{ marginHorizontal: resScale(16) }}
+      removeClippedSubviews={false}
+      initialNumToRender={10}
+      maxToRenderPerBatch={10}
+      onRefresh={onRefresh}
+      contentContainerStyle={{ marginHorizontal: layout.pad.lg }}
       keyExtractor={(item, index) => index.toString()}
       onEndReached={onEndReached}
       refreshing={refreshing}
-      ListFooterComponent={isLoadMore ? <BSpinner /> : null}
-      ListEmptyComponent={<EmptyProduct emptyProductName={emptyProductName} />}
-      renderItem={({ item }) => (
-        <PriceListCard
-          productName={item.name}
-          productPrice={item.price.price}
-          categories={item.category.parent.name}
-        />
-      )}
+      ListFooterComponent={isLoadMore ? <PriceListShimmer /> : null}
+      ListEmptyComponent={
+        loadProduct ? (
+          <PriceListShimmer />
+        ) : (
+          <EmptyProduct emptyProductName={emptyProductName} />
+        )
+      }
+      renderItem={renderItem}
     />
   );
 };

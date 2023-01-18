@@ -134,9 +134,12 @@ interface NavigationProps {
 interface Location {
   latitude: number;
   longitude: number;
-  latitudeDelta: number;
-  longitudeDelta: number;
+  latitudeDelta?: number;
+  longitudeDelta?: number;
   formattedAddress?: string;
+  name?: string;
+  PostalId?: any;
+  line1?: string;
   distance?: {
     text?: string;
     value?: number;

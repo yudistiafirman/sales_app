@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import MapView from 'react-native-maps';
+import debounce from 'lodash.debounce';
 
 import {
   BBottomSheet,
@@ -19,15 +21,15 @@ import {
 import Icons from 'react-native-vector-icons/Feather';
 
 import { resScale } from '@/utils';
-import { Styles, Region, Input } from '@/interfaces';
+import { Styles, Region, Input, Location } from '@/interfaces';
 import { updateRegion } from '@/redux/locationReducer';
-import debounce from 'lodash.debounce';
 import { colors, layout } from '@/constants';
 import { useKeyboardActive } from '@/hooks';
-import BrikApi from '../../../../brikApi/BrikApi';
-import MapView from 'react-native-maps';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
-// import BrikApi from '@/brikApi/BrikApi';
+import { useMachine } from '@xstate/react';
+import { deviceLocationMachine } from '@/machine/modules';
+import { getLocationCoordinates } from '@/actions/CommonActions';
+import { searchAreaMachine } from '@/machine/searchAreaMachine';
 
 const FirstStep = () => {
   const { values, action } = React.useContext(createVisitationContext);
@@ -56,7 +58,9 @@ const FirstStep = () => {
       onChange: (e: string) => {
         const newLocation = { ...values.stepOne.locationAddress };
         newLocation.line1 = e;
+
         updateValueOnstep('stepOne', 'locationAddress', newLocation);
+        dispatch(updateRegion({ ...region, line1: e }));
       },
       value: values?.stepOne?.locationAddress?.line1,
       placeholder: 'contoh: Jalan Kusumadinata no 5',
@@ -65,32 +69,91 @@ const FirstStep = () => {
 
   // map function
   const mapRef = React.useRef<MapView>(null);
-
   const onChangeRegion = async (coordinate: Region) => {
-    const result = await BrikApi.getLocationCoordinates(
+    const { result } = await getLocationCoordinates(
+      '',
       coordinate.longitude,
-      coordinate.latitude
+      coordinate.latitude,
+      ''
     );
-    console.log(result, 'ini result??');
-    dispatch(updateRegion(coordinate));
+    const _coordinate: Location = {
+      latitude: result?.lat,
+      longitude: result?.lon,
+      formattedAddress: result?.formattedAddress,
+      PostalId: result?.PostalId,
+    };
+
+    if (typeof result?.lon === 'string') {
+      _coordinate.longitude = Number(result.lon);
+    }
+
+    if (typeof result?.lat === 'string') {
+      _coordinate.latitude = Number(result.lat);
+    }
+    dispatch(updateRegion(_coordinate));
   };
 
   const debounceResult = React.useMemo(() => debounce(onChangeRegion, 500), []);
-
   React.useEffect(() => {
-    // use gpsLocation device to update createdLocation;
-
     return () => {
       debounceResult.cancel();
     };
   }, []);
 
   React.useEffect(() => {
-    console.log(navigation.isFocused(), 'ini navgitation value?');
-    if (mapRef.current && navigation.isFocused()) {
-      mapRef.current?.animateToRegion(region);
+    if (mapRef.current) {
+      mapRef?.current?.animateToRegion(region as Region);
     }
-  }, [navigation.isFocused()]);
+    const locationAddress = {
+      ...values.stepOne.locationAddress,
+      ...region,
+    };
+    updateValueOnstep('stepOne', 'locationAddress', locationAddress);
+  }, [region.formattedAddress]);
+
+  const [state, sendLoc] = useMachine(searchAreaMachine, {});
+
+  console.log(state.context, 'ini gimanaaa??');
+  // React.useEffect(() => {
+  // }, [state.context]);
+
+  const [, send] = useMachine(deviceLocationMachine, {
+    actions: {
+      dispatchState: (context, _event, _meta) => {
+        const coordinate: Location = {
+          longitude: context?.lon,
+          latitude: context?.lat,
+          formattedAddress: context?.formattedAddress,
+          PostalId: context?.PostalId,
+        };
+
+        updateValueOnstep('stepOne', 'createdLocation', context);
+        if (region.latitude === 0) {
+          dispatch(updateRegion(coordinate));
+        }
+      },
+    },
+  });
+
+  React.useEffect(() => {
+    const isExist =
+      !values.stepOne.createdLocation.lat ||
+      values.stepOne.createdLocation.lan === 0;
+    if (isExist) {
+      console.log('jalan');
+      send('askingPermission');
+    }
+    // console.log(state.context, 'ini apa?');
+  }, []);
+
+  const nameAddress = React.useMemo(() => {
+    const idx = region.formattedAddress?.split(',');
+    if (idx?.length > 1) {
+      return idx?.[0];
+    }
+
+    return 'Nama Alamat';
+  }, [region.formattedAddress]);
 
   return (
     <View style={styles.container}>
@@ -135,8 +198,8 @@ const FirstStep = () => {
               />
               <BSpacer size="large" />
               <View>
-                <BLabel label="Nama Alamat" />
-                <BText>Detail alamat</BText>
+                <BLabel label={nameAddress!} />
+                <BText>{region.formattedAddress || 'Detail Alamat'}</BText>
               </View>
             </View>
           </TouchableOpacity>
