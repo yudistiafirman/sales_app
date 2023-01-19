@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  CreateVisitationFirstStep,
   CreateVisitationSecondStep,
   CreateVisitationState,
   CreateVisitationThirdStep,
@@ -12,7 +13,10 @@ interface IProvider {
 interface ActionCreateVisitationState {
   type: keyof CreateVisitationState;
   value: any;
-  key?: keyof CreateVisitationSecondStep | keyof CreateVisitationThirdStep;
+  key?:
+    | keyof CreateVisitationFirstStep
+    | keyof CreateVisitationSecondStep
+    | keyof CreateVisitationThirdStep;
 }
 
 interface context {
@@ -21,7 +25,10 @@ interface context {
     updateValue: (key: keyof CreateVisitationState, value: any) => void;
     updateValueOnstep: (
       step: keyof CreateVisitationState,
-      key: keyof CreateVisitationSecondStep | keyof CreateVisitationThirdStep,
+      key:
+        | keyof CreateVisitationFirstStep
+        | keyof CreateVisitationSecondStep
+        | keyof CreateVisitationThirdStep,
       value: any
     ) => void;
   };
@@ -29,8 +36,11 @@ interface context {
 
 const initialData: CreateVisitationState = {
   sheetIndex: -1,
-  step: 1,
-  stepOne: {},
+  step: 0,
+  stepOne: {
+    createdLocation: {},
+    locationAddress: {},
+  },
   stepTwo: {
     companyName: '',
     customerType: '',
@@ -98,7 +108,10 @@ const CreateVisitationProvider = (props: IProvider) => {
 
   const updateValueOnstep = (
     step: keyof CreateVisitationState,
-    key: keyof CreateVisitationSecondStep | keyof CreateVisitationThirdStep,
+    key:
+      | keyof CreateVisitationFirstStep
+      | keyof CreateVisitationSecondStep
+      | keyof CreateVisitationThirdStep,
     value: any
   ) => {
     dispatchValue({

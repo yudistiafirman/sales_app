@@ -53,6 +53,7 @@ const BAlert = ({
               <BButtonPrimary
                 onPress={onClose}
                 isOutline
+                buttonStyle={{padding:resScale(20)}}
                 title="Saya Mengerti"
               />
             )}

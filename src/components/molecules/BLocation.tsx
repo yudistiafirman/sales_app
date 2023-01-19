@@ -1,14 +1,9 @@
 import * as React from 'react';
 import resScale from '@/utils/resScale';
-import { Dimensions, Platform, ViewStyle } from 'react-native';
-import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  PROVIDER_DEFAULT,
-  Circle,
-} from 'react-native-maps';
-import colors from '@/constants/colors';
+import { Dimensions, Platform, View, ViewStyle } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
 import { BLocationProps } from '@/interfaces';
+import BMarker from '../atoms/BMarker';
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
@@ -19,50 +14,56 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const ANDROID = Platform.OS === 'android';
 const MAPSPROVIDER = ANDROID ? PROVIDER_GOOGLE : PROVIDER_DEFAULT;
 
-const bLocationDefaultStyle = {
+const BLocationDefaultStyle = {
   width: width,
   height: height - resScale(64),
 };
 
-const bLocationDefaultRegion = {
+const BLocationDefaultRegion = {
   latitude: LATITUDE,
   longitude: LONGITUDE,
   latitudeDelta: LATITUDE_DELTA,
   longitudeDelta: LONGITUDE_DELTA,
 };
 
-const bLocationDefaultProps = {
-  mapStyle: bLocationDefaultStyle,
-  region: bLocationDefaultRegion,
-  coordinate: bLocationDefaultRegion,
+const BLocationDefaultProps = {
+  mapStyle: BLocationDefaultStyle,
+  region: BLocationDefaultRegion,
 };
 
-const BLocation = ({
-  mapStyle,
-  region,
-  onRegionChange,
-  coordinate,
-  CustomMarker,
-}: BLocationProps & typeof bLocationDefaultProps) => {
-  return (
-    <MapView
-      style={mapStyle}
-      initialRegion={region}
-      provider={MAPSPROVIDER}
-      onRegionChange={onRegionChange}
-      rotateEnabled={false}
-    >
-      <Marker coordinate={coordinate}>{CustomMarker}</Marker>
-      <Circle
-        center={coordinate}
-        fillColor={`${colors.primary}60`}
-        radius={700}
-        strokeWidth={0}
-      />
-    </MapView>
-  );
+const fixedCenterContainer: ViewStyle = {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
 };
 
-BLocation.defaultProps = bLocationDefaultProps;
+const BLocation = React.forwardRef(
+  (
+    {
+      mapStyle,
+      region,
+      onRegionChangeComplete,
+      CustomMarker,
+    }: BLocationProps & typeof BLocationDefaultProps,
+    ref: React.LegacyRef<MapView> | undefined
+  ) => {
+    return (
+      <View style={fixedCenterContainer}>
+        <MapView
+          ref={ref}
+          style={mapStyle}
+          initialRegion={region}
+          provider={MAPSPROVIDER}
+          rotateEnabled={false}
+          onRegionChangeComplete={onRegionChangeComplete}
+          region={region}
+        />
+        {CustomMarker || <BMarker />}
+      </View>
+    );
+  }
+);
+
+BLocation.defaultProps = BLocationDefaultProps;
 
 export default BLocation;

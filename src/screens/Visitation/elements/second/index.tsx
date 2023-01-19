@@ -15,7 +15,7 @@ const individu = require('@/assets/icon/Visitation/profile.png');
 
 const SecondStep = ({ openBottomSheet }: IProps) => {
   const { values, action } = React.useContext(createVisitationContext);
-  const { stepTwo: state } = values;
+  const { stepTwo: state, shouldScrollView } = values;
   const { updateValueOnstep } = action;
 
   const onChange = (key: keyof CreateVisitationSecondStep) => (e: any) => {
@@ -23,38 +23,12 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   };
 
   const onFetching = (e: any) => {
-    console.log('masuk sini ga sih??', e);
-    // setOptions({
-    //   loading: true,
-    //   items: null,
-    // });
+    updateValueOnstep('stepTwo', 'companyName', { id: 1, title: e });
+
+    // fetching then merge with the thing user type
     updateValueOnstep('stepTwo', 'options', {
-      loading: true,
-      items: null,
+      items: [{ id: 1, title: e }],
     });
-    setTimeout(() => {
-      updateValueOnstep('stepTwo', 'options', {
-        loading: false,
-        items: [
-          {
-            id: '1',
-            title: 'PT Satu',
-          },
-          {
-            id: '2',
-            title: 'PT Dua',
-          },
-          {
-            id: '3',
-            title: 'PT Tiga',
-          },
-          {
-            id: '4',
-            title: 'PT Empat',
-          },
-        ],
-      });
-    }, 1000);
     return;
   };
 
@@ -141,6 +115,29 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   const onSearch = (searching: boolean) => {
     setSearch(searching);
   };
+
+  if (!shouldScrollView) {
+    <View style={{ flex: 1 }}>
+      <SearchFlow isSearch={isSearch} onSearch={onSearch} />
+      {!isSearch && (
+        <React.Fragment>
+          <BSpacer size="small" />
+          <View style={styles.dividerContainer}>
+            <BDivider />
+            <BSpacer size="extraSmall" />
+            <BText color="divider">Atau Buat Baru Dibawah</BText>
+            <BSpacer size="extraSmall" />
+            <BDivider />
+          </View>
+          <BSpacer size="small" />
+          <View>
+            <BForm inputs={inputs} />
+            <BSpacer size="large" />
+          </View>
+        </React.Fragment>
+      )}
+    </View>;
+  }
 
   return (
     <ScrollView>

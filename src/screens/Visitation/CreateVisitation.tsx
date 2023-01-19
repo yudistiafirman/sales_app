@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { BContainer, BText } from '@/components';
+import { BContainer } from '@/components';
 import SecondStep from './elements/second';
 import { Button } from 'react-native-paper';
 import ThirdStep from './elements/third';
@@ -13,6 +13,7 @@ import {
 } from '@/context/CreateVisitationContext';
 import Fourth from './elements/fourth';
 import { useKeyboardActive } from '@/hooks';
+import FirstStep from './elements/first';
 
 const CreateVisitation = () => {
   const bottomSheetRef = React.useRef<BottomSheet>(null);
@@ -26,6 +27,7 @@ const CreateVisitation = () => {
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
     }
+    console.log(JSON.stringify(values, null, 2), 'ini values<<<<');
   };
 
   const addPic = (state: PIC) => {
@@ -37,7 +39,7 @@ const CreateVisitation = () => {
   };
 
   const stepRender = [
-    <BText>1</BText>,
+    <FirstStep />,
     <SecondStep openBottomSheet={openBottomSheet} />,
     <ThirdStep />,
     <Fourth />,
@@ -83,10 +85,10 @@ const styles: Styles = {
   button: { flexDirection: 'row-reverse' },
 };
 
-const CreateVisitationWithProvider = () => {
+const CreateVisitationWithProvider = (props: any) => {
   return (
     <CreateVisitationProvider>
-      <CreateVisitation />
+      <CreateVisitation {...props} />
     </CreateVisitationProvider>
   );
 };

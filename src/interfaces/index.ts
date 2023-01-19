@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import * as React from 'react';
-import { Details, Region } from 'react-native-maps';
+import { Details } from 'react-native-maps';
 
 interface Input {
   label: string;
@@ -18,8 +18,10 @@ interface Input {
     | 'area'
     | 'dropdown'
     | 'PIC'
-    | 'autocomplete';
+    | 'autocomplete'
+    | 'map';
   onChange?: (e: any) => void;
+  onFocus?: (e: any) => void;
   value: string | any;
   placeholder?: string;
   loading?: boolean;
@@ -75,13 +77,25 @@ interface Styles {
   [key: string]: StyleProp<ViewStyle | TextStyle>;
 }
 
-// create visitation
+interface Address {
+  lat: any;
+  id?: string;
+  formattedAddress?: string;
+  lan?: number;
+  lon?: number;
+  line1?: string;
+  name?: string;
+}
 
+// create visitation
+interface CreateVisitationFirstStep {
+  createdLocation: Address;
+  locationAddress: Address;
+}
 interface CreateVisitationSecondStep {
   companyName: string;
   customerType: string;
   projectName: string;
-  location: {};
   pics: PIC[];
   options: {
     loading: false;
@@ -100,7 +114,7 @@ interface CreateVisitationThirdStep {
 }
 interface CreateVisitationState {
   step: number;
-  stepOne: {};
+  stepOne: CreateVisitationFirstStep;
   stepTwo: CreateVisitationSecondStep;
   stepThree: CreateVisitationThirdStep;
   sheetIndex: number;
@@ -119,18 +133,44 @@ interface NavigationProps {
   navigate: (screen?: string) => void;
 }
 
-interface Location {
+interface LatLang {
   latitude: number;
   longitude: number;
+  latitudeDelta?: number;
+  longitudeDelta?: number;
+  formattedAddress?: string;
+  name?: string;
+  PostalId?: any;
+  line1?: string;
+  distance?: {
+    text?: string;
+    value?: number;
+  };
+}
+
+interface Region {
+  longitude(
+    arg0: string,
+    longitude: any,
+    latitude: any,
+    arg3: string
+  ): { result: any } | PromiseLike<{ result: any }>;
+  latitude(
+    arg0: string,
+    longitude: any,
+    latitude: any,
+    arg3: string
+  ): { result: any } | PromiseLike<{ result: any }>;
   latitudeDelta: number;
   longitudeDelta: number;
 }
 
 interface BLocationProps {
   mapStyle?: ViewStyle | undefined;
-  region?: Location;
-  onRegionChange?: ((region: Region, details: Details) => void) | undefined;
-  coordinate: Region;
+  region?: Region & LatLang;
+  onRegionChangeComplete?:
+    | ((region: Region & LatLang, details: Details) => void)
+    | undefined;
   CustomMarker?: React.ReactNode | undefined;
 }
 
@@ -138,10 +178,11 @@ export type {
   Input,
   Styles,
   CreateVisitationState,
+  CreateVisitationFirstStep,
   CreateVisitationSecondStep,
   CreateVisitationThirdStep,
   PIC,
   NavigationProps,
-  Location,
   BLocationProps,
+  Region,
 };

@@ -1,29 +1,26 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import { SafeAreaView } from 'react-native';
-import { SceneMap } from 'react-native-tab-view';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
 import { useNavigation } from '@react-navigation/native';
 import resScale from '@/utils/resScale';
-import debounce from 'lodash.debounce';
-import { BHeaderIcon, BTabSections, ProductList } from '@/components';
+import { BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
+import { layout } from '@/constants';
+import { useMachine } from '@xstate/react';
+import { searchProductMachine } from '@/machine/searchProductMachine';
 
-const SearchProduct = () => {
+const SearchProduct = ({ route }: { route: any }) => {
   const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    { key: 'first', title: 'NFA', totalItems: 2, chipPosition: 'right' },
-    { key: 'second', title: 'FA', totalItems: 0, chipPosition: 'right' },
-  ]);
   const [searchValue, setSearchValue] = React.useState<string>('');
-  const [productData, setProductData] = React.useState<[]>([]);
   const navigation = useNavigation();
+  const [state, send] = useMachine(searchProductMachine);
 
   const renderHeaderLeft = () => (
     <BHeaderIcon
       size={resScale(30)}
       iconName="chevron-left"
-      marginRight={resScale(16)}
+      marginRight={layout.pad.lg}
       onBack={() => navigation.goBack()}
     />
   );
@@ -32,15 +29,9 @@ const SearchProduct = () => {
     <SearchProductNavbar
       value={searchValue}
       onChangeText={onChangeText}
-      onClearValue={() => setSearchValue('')}
+      onClearValue={onClearValue}
     />
   );
-
-  const renderProductList = () => {
-    return (
-      <ProductList emptyProductName={searchValue} products={productData} />
-    );
-  };
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -52,24 +43,41 @@ const SearchProduct = () => {
 
   const onChangeText = (text: string) => {
     setSearchValue(text);
+    send('searchingProducts', { value: text });
   };
 
+  const onClearValue = () => {
+    setSearchValue('');
+    send('clearInput');
+  };
 
-  const renderScene = SceneMap({
-    first: renderProductList,
-    second: renderProductList,
-  });
-
+  const onTabPress = ({ route }) => {
+    const tabIndex = index === 0 ? 1 : 0;
+    if (route.key !== routes[index].key) {
+      send('onChangeTab', { value: tabIndex });
+    }
+  };
+  const { routes, productsData, loadProduct } = state.context;
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <BTabSections
-        tabStyle={SearchProductStyles.tabStyle}
-        indicatorStyle={SearchProductStyles.tabIndicator}
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        tabBarStyle={SearchProductStyles.tabBarStyle}
-      />
+      <BSpacer size="small" />
+      {routes.length > 0 && (
+        <BTabSections
+          tabStyle={SearchProductStyles.tabStyle}
+          indicatorStyle={SearchProductStyles.tabIndicator}
+          navigationState={{ index, routes }}
+          onTabPress={onTabPress}
+          renderScene={() => (
+            <ProductList
+              products={productsData}
+              loadProduct={loadProduct}
+              emptyProductName={searchValue}
+            />
+          )}
+          onIndexChange={setIndex}
+          tabBarStyle={SearchProductStyles.tabBarStyle}
+        />
+      )}
     </SafeAreaView>
   );
 };

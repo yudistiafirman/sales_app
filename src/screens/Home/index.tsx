@@ -206,7 +206,7 @@ const Beranda = () => {
 
   const kunjunganAction = () => {
     // setIsLoading((curr) => !curr);
-    navigation.navigate('Create Visitation');
+    navigation.navigate('CreateVisitation');
   };
   const sceneToRender = useCallback(
     (key: string) => {

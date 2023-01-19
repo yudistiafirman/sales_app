@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import { BForm, BSpacer, BText } from '@/components';
-import { CreateVisitationThirdStep, Input } from '@/interfaces';
+import { CreateVisitationThirdStep, Input, Styles } from '@/interfaces';
 import { MONTH_LIST, STAGE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
 import ProductChip from './ProductChip';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
+import { useNavigation } from '@react-navigation/native';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
@@ -13,6 +14,7 @@ const ThirdStep = () => {
   const { values, action } = React.useContext(createVisitationContext);
   const { stepThree: state } = values;
   const { updateValueOnstep } = action;
+  const navigation = useNavigation();
 
   const onChange = (key: keyof CreateVisitationThirdStep) => (e: any) => {
     updateValueOnstep('stepThree', key, e);
@@ -32,6 +34,19 @@ const ThirdStep = () => {
         onChange: (value: any) => {
           onChange('stageProject')(value);
         },
+      },
+    },
+    {
+      label: 'Produk',
+      isRequire: true,
+      type: 'textInput',
+      isError: false,
+      value: '',
+      onChange: () => {},
+      onFocus: () => {
+        navigation.navigate('SearchProduct', {
+          from: 'CreateVisitation',
+        });
       },
     },
   ];
@@ -127,9 +142,10 @@ const ThirdStep = () => {
   ];
 
   return (
-    <View>
+    <ScrollView>
       <BText>step 3</BText>
-      <BForm inputs={inputs} />
+      <BForm inputs={inputs} noSpaceEnd />
+      <BSpacer size="extraSmall" />
       <ScrollView horizontal={true}>
         {products.map((val, index) => (
           <React.Fragment key={index}>
@@ -138,9 +154,9 @@ const ThirdStep = () => {
           </React.Fragment>
         ))}
       </ScrollView>
-      <BSpacer size="medium" />
+      <BSpacer size="small" />
       <BForm inputs={inputsTwo} />
-    </View>
+    </ScrollView>
   );
 };
 

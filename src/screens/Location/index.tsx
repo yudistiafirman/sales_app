@@ -1,19 +1,24 @@
 import resScale from '@/utils/resScale';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useCallback, useLayoutEffect, useMemo } from 'react';
-import { SafeAreaView, View } from 'react-native';
+import React, { useEffect, useLayoutEffect } from 'react';
+import { Dimensions, SafeAreaView, View } from 'react-native';
 import LocationStyles from './styles';
 import CoordinatesDetail from './elements/CoordinatesDetail';
-import { BButtonPrimary, BHeaderIcon, BLocation, BMarker } from '@/components';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
-import { updateRegion } from '@/redux/locationReducer';
-import { Region } from '@/interfaces';
-import debounce from 'lodash.debounce';
+import {
+  BButtonPrimary,
+  BHeaderIcon,
+  BLocation,
+  BMarker,
+  BSpacer,
+} from '@/components';
+
+import { useMachine } from '@xstate/react';
+import { locationMachine } from '@/machine/locationMachine';
+import { LatLng, Region } from 'react-native-maps';
 const Location = () => {
   const navigation = useNavigation();
-  const { region } = useSelector((state: RootState) => state.location);
-  const dispatch = useDispatch();
+  const route = useRoute();
+  const [state, send] = useMachine(locationMachine);
 
   const renderHeaderLeft = () => (
     <BHeaderIcon
@@ -30,29 +35,55 @@ const Location = () => {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    if (route?.params) {
+      const { params } = route;
+      const { latitude, longitude } = params.coordinate;
+      send('sendingCoorParams', { value: { latitude, longitude } });
+    }
+  }, [route?.params]);
 
-  const onChangeRegion = (coordinate: Region) => {
-    dispatch(updateRegion(coordinate));
+  const onRegionChangeComplete = (coordinate: Region) => {
+    const { latitude, longitude, latitudeDelta, longitudeDelta } = coordinate;
+    send('onChangeRegion', {
+      value: { latitude, longitude, latitudeDelta, longitudeDelta },
+    });
   };
-
+  const onSaveLocation = () => {
+    const { lon, lat } = locationDetail;
+    const coordinate = {
+      longitude: Number(lon),
+      latitude: Number(lat),
+    };
+    navigation.navigate('Harga', {
+      coordinate: coordinate,
+    });
+  };
+  const { region, locationDetail, loadingLocation } = state.context;
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BLocation
+        onRegionChangeComplete={onRegionChangeComplete}
         region={region}
-        onRegionChange={onChangeRegion}
-        coordinate={region}
         CustomMarker={<BMarker />}
       />
       <View style={LocationStyles.bottomSheetContainer}>
         <CoordinatesDetail
-          addressTitle={`latitude=${region.latitude}`}
-          addressDetail={`longitude=${region.longitude}`}
+          loadingLocation={loadingLocation}
+          address={
+            locationDetail?.formattedAddress?.length > 0
+              ? locationDetail?.formattedAddress
+              : ''
+          }
           onPress={() => navigation.navigate('SearchArea')}
         />
+
         <BButtonPrimary
-          onPress={() => navigation.navigate('Harga')}
+          buttonStyle={LocationStyles.buttonStyles}
+          onPress={onSaveLocation}
           title="Simpan"
         />
+        <BSpacer size="extraSmall" />
       </View>
     </SafeAreaView>
   );
