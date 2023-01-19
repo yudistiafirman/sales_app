@@ -3,7 +3,7 @@ import React from 'react';
 import { View, ViewStyle } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import MapView from 'react-native-maps';
 import debounce from 'lodash.debounce';
@@ -21,21 +21,18 @@ import {
 import Icons from 'react-native-vector-icons/Feather';
 
 import { resScale } from '@/utils';
-import { Styles, Region, Input, Location } from '@/interfaces';
+import { Styles, Region, Input } from '@/interfaces';
 import { updateRegion } from '@/redux/locationReducer';
 import { colors, layout } from '@/constants';
-import { useKeyboardActive } from '@/hooks';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import { useMachine } from '@xstate/react';
 import { deviceLocationMachine } from '@/machine/modules';
 import { getLocationCoordinates } from '@/actions/CommonActions';
-import { searchAreaMachine } from '@/machine/searchAreaMachine';
 
 const FirstStep = () => {
   const { values, action } = React.useContext(createVisitationContext);
   const { updateValueOnstep } = action;
   const { region } = useSelector((state: RootState) => state.location);
-  const { keyboardVisible, keyboardHeight } = useKeyboardActive();
 
   const navigation = useNavigation();
   const dispatch = useDispatch<any>();
@@ -44,11 +41,11 @@ const FirstStep = () => {
     return {
       container: { flex: 1, marginHorizontal: -resScale(20) },
       map: {
-        height: keyboardVisible ? keyboardHeight : resScale(400),
+        height: resScale(400),
         width: '100%',
       },
     };
-  }, [keyboardVisible, keyboardHeight]);
+  }, []);
 
   const inputs: Input[] = [
     {
@@ -72,11 +69,11 @@ const FirstStep = () => {
   const onChangeRegion = async (coordinate: Region) => {
     const { result } = await getLocationCoordinates(
       '',
-      coordinate.longitude,
-      coordinate.latitude,
+      coordinate.longitude as unknown as number,
+      coordinate.latitude as unknown as number,
       ''
     );
-    const _coordinate: Location = {
+    const _coordinate = {
       latitude: result?.lat,
       longitude: result?.lon,
       formattedAddress: result?.formattedAddress,
@@ -102,7 +99,7 @@ const FirstStep = () => {
 
   React.useEffect(() => {
     if (mapRef.current) {
-      mapRef?.current?.animateToRegion(region as Region);
+      mapRef?.current?.animateToRegion(region);
     }
     const locationAddress = {
       ...values.stepOne.locationAddress,
@@ -114,7 +111,7 @@ const FirstStep = () => {
   const [, send] = useMachine(deviceLocationMachine, {
     actions: {
       dispatchState: (context, _event, _meta) => {
-        const coordinate: Location = {
+        const coordinate = {
           longitude: context?.lon,
           latitude: context?.lat,
           formattedAddress: context?.formattedAddress,
@@ -151,56 +148,57 @@ const FirstStep = () => {
 
   return (
     <View style={styles.container}>
-      <BLocation
-        ref={mapRef}
-        region={region}
-        onRegionChange={debounceResult}
-        coordinate={region}
-        CustomMarker={<BMarker />}
-        mapStyle={
-          styles.map as ViewStyle & {
-            width: number;
-            height: number;
-          }
-        }
-      />
-      <BBottomSheet
-        percentSnapPoints={[
-          keyboardVisible ? `${70 - keyboardHeight * 0.01}%` : '47%',
-        ]}
-      >
-        <BContainer>
-          <BLabel label={'Alamat Proyek'} isRequired />
-          <BSpacer size="extraSmall" />
-          <TouchableOpacity
-            style={{
-              padding: layout.pad.lg,
-              backgroundColor: colors.border.disabled,
-              borderRadius: layout.radius.sm,
-            }}
-            onPress={() =>
-              navigation.navigate('SearchArea', {
-                from: 'Create Visitation',
-              })
+      <View style={{ flex: 1 }}>
+        <BLocation
+          ref={mapRef}
+          region={region}
+          onRegionChangeComplete={debounceResult}
+          CustomMarker={<BMarker />}
+          mapStyle={
+            styles.map as ViewStyle & {
+              width: number;
+              height: number;
             }
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Icons
-                name="map-pin"
-                size={resScale(20)}
-                color={colors.primary}
-              />
-              <BSpacer size="large" />
-              <View>
-                <BLabel label={nameAddress!} />
-                <BText>{region.formattedAddress || 'Detail Alamat'}</BText>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <BSpacer size="extraSmall" />
-          <BForm inputs={inputs} />
-        </BContainer>
-      </BBottomSheet>
+          }
+        />
+      </View>
+      <View style={{ flex: 1 }}>
+        <BBottomSheet percentSnapPoints={['100%']}>
+          <ScrollView>
+            <BContainer>
+              <BLabel label={'Alamat Proyek'} isRequired />
+              <BSpacer size="extraSmall" />
+              <TouchableOpacity
+                style={{
+                  padding: layout.pad.lg,
+                  backgroundColor: colors.border.disabled,
+                  borderRadius: layout.radius.sm,
+                }}
+                onPress={() =>
+                  navigation.navigate('SearchArea', {
+                    from: 'CreateVisitation',
+                  })
+                }
+              >
+                <View style={{ flexDirection: 'row' }}>
+                  <Icons
+                    name="map-pin"
+                    size={resScale(20)}
+                    color={colors.primary}
+                  />
+                  <BSpacer size="large" />
+                  <View>
+                    <BLabel label={nameAddress!} />
+                    <BText>{region.formattedAddress || 'Detail Alamat'}</BText>
+                  </View>
+                </View>
+              </TouchableOpacity>
+              <BSpacer size="extraSmall" />
+              <BForm inputs={inputs} />
+            </BContainer>
+          </ScrollView>
+        </BBottomSheet>
+      </View>
     </View>
   );
 };

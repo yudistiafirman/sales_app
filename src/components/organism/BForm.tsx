@@ -14,6 +14,7 @@ import BAutoComplete from '../atoms/BAutoComplete';
 
 interface IProps {
   inputs: Input[];
+  noSpaceEnd?: boolean;
 }
 
 interface Styles {
@@ -46,7 +47,7 @@ const renderInput = (input: Input): React.ReactNode => {
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
-        <BTextInput onChangeText={onChange} value={value} />
+        <BTextInput {...input} />
         {isError && (
           <BText size="small" color="primary" bold="100">
             {`${label} harus diisi`}
@@ -171,13 +172,15 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 };
 
-const BForm = ({ inputs }: IProps) => {
+const BForm = ({ inputs, noSpaceEnd }: IProps) => {
   return (
     <View>
       {inputs.map((input, index) => (
         <React.Fragment key={index}>
           {renderInput(input)}
-          <BSpacer size="small" />
+          {(index < inputs.length - 1 || !noSpaceEnd) && (
+            <BSpacer size="small" />
+          )}
         </React.Fragment>
       ))}
     </View>

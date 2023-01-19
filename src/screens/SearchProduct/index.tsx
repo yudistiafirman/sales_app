@@ -10,7 +10,7 @@ import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import { searchProductMachine } from '@/machine/searchProductMachine';
 
-const SearchProduct = () => {
+const SearchProduct = ({ route }: { route: any }) => {
   const [index, setIndex] = React.useState(0);
   const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();

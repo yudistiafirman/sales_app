@@ -6,6 +6,7 @@ import { getLocationCoordinates } from '../priceMachine';
 // import { send } from 'xstate/lib/actions';
 
 interface IContext {
+  PostalId: any;
   lon: number;
   lat: number;
   formattedAddress: string;

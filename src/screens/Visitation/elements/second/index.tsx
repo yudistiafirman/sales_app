@@ -23,38 +23,12 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   };
 
   const onFetching = (e: any) => {
-    console.log('masuk sini ga sih??', e);
-    // setOptions({
-    //   loading: true,
-    //   items: null,
-    // });
+    updateValueOnstep('stepTwo', 'companyName', { id: 1, title: e });
+
+    // fetching then merge with the thing user type
     updateValueOnstep('stepTwo', 'options', {
-      loading: true,
-      items: null,
+      items: [{ id: 1, title: e }],
     });
-    setTimeout(() => {
-      updateValueOnstep('stepTwo', 'options', {
-        loading: false,
-        items: [
-          {
-            id: '1',
-            title: 'PT Satu',
-          },
-          {
-            id: '2',
-            title: 'PT Dua',
-          },
-          {
-            id: '3',
-            title: 'PT Tiga',
-          },
-          {
-            id: '4',
-            title: 'PT Empat',
-          },
-        ],
-      });
-    }, 1000);
     return;
   };
 

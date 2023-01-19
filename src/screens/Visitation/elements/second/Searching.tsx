@@ -19,7 +19,7 @@ interface IProps {
 }
 
 const SearchFlow = ({ onSearch, isSearch }: IProps) => {
-  const { action } = React.useContext(createVisitationContext);
+  const { action, values } = React.useContext(createVisitationContext);
   const { updateValueOnstep, updateValue } = action;
   const [searchQuery, setSearchQuery] = React.useState('');
 
@@ -180,7 +180,10 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
 
   return (
     <React.Fragment>
-      <BTextLocation location="ini lokasi nanti" />
+      <BTextLocation
+        location={values.stepOne.locationAddress.formattedAddress!}
+        numberOfLines={1}
+      />
       <BSpacer size="extraSmall" />
       <BSearchBar
         placeholder="Cari pelanggan"

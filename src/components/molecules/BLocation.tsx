@@ -1,17 +1,9 @@
 import * as React from 'react';
 import resScale from '@/utils/resScale';
-import { Dimensions, Platform } from 'react-native';
-import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  PROVIDER_DEFAULT,
-  Circle,
-} from 'react-native-maps';
-import colors from '@/constants/colors';
+import { Dimensions, Platform, View, ViewStyle } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
 import { BLocationProps } from '@/interfaces';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
-import { useRoute } from '@react-navigation/native';
+import BMarker from '../atoms/BMarker';
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
@@ -34,15 +26,15 @@ const BLocationDefaultRegion = {
   longitudeDelta: LONGITUDE_DELTA,
 };
 
-const BLocationDefaultCoordinate = {
-  latitude: LATITUDE,
-  longitude: LONGITUDE,
-};
-
 const BLocationDefaultProps = {
   mapStyle: BLocationDefaultStyle,
   region: BLocationDefaultRegion,
-  coordinate: BLocationDefaultCoordinate,
+};
+
+const fixedCenterContainer: ViewStyle = {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
 };
 
 const BLocation = React.forwardRef(
@@ -50,29 +42,24 @@ const BLocation = React.forwardRef(
     {
       mapStyle,
       region,
-      onRegionChange,
-      coordinate,
+      onRegionChangeComplete,
       CustomMarker,
     }: BLocationProps & typeof BLocationDefaultProps,
     ref: React.LegacyRef<MapView> | undefined
   ) => {
     return (
-      <MapView
-        ref={ref}
-        style={mapStyle}
-        initialRegion={region}
-        provider={MAPSPROVIDER}
-        onRegionChange={onRegionChange}
-        rotateEnabled={false}
-      >
-        <Marker coordinate={region}>{CustomMarker}</Marker>
-        <Circle
-          center={region}
-          fillColor={`${colors.primary}60`}
-          radius={700}
-          strokeWidth={0}
+      <View style={fixedCenterContainer}>
+        <MapView
+          ref={ref}
+          style={mapStyle}
+          initialRegion={region}
+          provider={MAPSPROVIDER}
+          rotateEnabled={false}
+          onRegionChangeComplete={onRegionChangeComplete}
+          region={region}
         />
-      </MapView>
+        {CustomMarker || <BMarker />}
+      </View>
     );
   }
 );

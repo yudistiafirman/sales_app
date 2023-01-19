@@ -21,6 +21,7 @@ interface Input {
     | 'autocomplete'
     | 'map';
   onChange?: (e: any) => void;
+  onFocus?: (e: any) => void;
   value: string | any;
   placeholder?: string;
   loading?: boolean;
@@ -77,6 +78,7 @@ interface Styles {
 }
 
 interface Address {
+  lat: any;
   id?: string;
   formattedAddress?: string;
   lan?: number;
@@ -147,6 +149,18 @@ interface LatLang {
 }
 
 interface Region {
+  longitude(
+    arg0: string,
+    longitude: any,
+    latitude: any,
+    arg3: string
+  ): { result: any } | PromiseLike<{ result: any }>;
+  latitude(
+    arg0: string,
+    longitude: any,
+    latitude: any,
+    arg3: string
+  ): { result: any } | PromiseLike<{ result: any }>;
   latitudeDelta: number;
   longitudeDelta: number;
 }
@@ -154,8 +168,9 @@ interface Region {
 interface BLocationProps {
   mapStyle?: ViewStyle | undefined;
   region?: Region & LatLang;
-  onRegionChange?: ((region: LatLang, details: Details) => void) | undefined;
-  coordinate: LatLang;
+  onRegionChangeComplete?:
+    | ((region: Region & LatLang, details: Details) => void)
+    | undefined;
   CustomMarker?: React.ReactNode | undefined;
 }
 

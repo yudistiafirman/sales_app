@@ -72,7 +72,6 @@ const PriceList = () => {
       send('onChangeCategories', { payload: tabIndex });
     }
   };
-
   const goToLocation = () => {
     const { lon, lat } = locationDetail;
     const coordinate = {

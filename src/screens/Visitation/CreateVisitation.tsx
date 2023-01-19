@@ -27,7 +27,7 @@ const CreateVisitation = () => {
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
     }
-    console.log(JSON.stringify(values.stepOne, null, 2), 'ini values<<<<');
+    console.log(JSON.stringify(values, null, 2), 'ini values<<<<');
   };
 
   const addPic = (state: PIC) => {
