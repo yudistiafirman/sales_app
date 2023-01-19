@@ -45,32 +45,37 @@ const BLocationDefaultProps = {
   coordinate: BLocationDefaultCoordinate,
 };
 
-const BLocation = ({
-  mapStyle,
-  onRegionChange,
-  coordinate,
-  region,
-  CustomMarker,
-}: BLocationProps & typeof BLocationDefaultProps) => {
-  return (
-    <MapView
-      style={mapStyle}
-      initialRegion={region}
-      provider={MAPSPROVIDER}
-      onRegionChange={onRegionChange}
-      rotateEnabled={false}
-      region={region}
-    >
-      <Marker coordinate={coordinate}>{CustomMarker}</Marker>
-      <Circle
-        center={coordinate}
-        fillColor={`${colors.primary}60`}
-        radius={700}
-        strokeWidth={0.1}
-      />
-    </MapView>
-  );
-};
+const BLocation = React.forwardRef(
+  (
+    {
+      mapStyle,
+      region,
+      onRegionChange,
+      coordinate,
+      CustomMarker,
+    }: BLocationProps & typeof BLocationDefaultProps,
+    ref: React.LegacyRef<MapView> | undefined
+  ) => {
+    return (
+      <MapView
+        ref={ref}
+        style={mapStyle}
+        initialRegion={region}
+        provider={MAPSPROVIDER}
+        onRegionChange={onRegionChange}
+        rotateEnabled={false}
+      >
+        <Marker coordinate={region}>{CustomMarker}</Marker>
+        <Circle
+          center={region}
+          fillColor={`${colors.primary}60`}
+          radius={700}
+          strokeWidth={0}
+        />
+      </MapView>
+    );
+  }
+);
 
 BLocation.defaultProps = BLocationDefaultProps;
 

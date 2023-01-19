@@ -111,12 +111,6 @@ const FirstStep = () => {
     updateValueOnstep('stepOne', 'locationAddress', locationAddress);
   }, [region.formattedAddress]);
 
-  const [state, sendLoc] = useMachine(searchAreaMachine, {});
-
-  console.log(state.context, 'ini gimanaaa??');
-  // React.useEffect(() => {
-  // }, [state.context]);
-
   const [, send] = useMachine(deviceLocationMachine, {
     actions: {
       dispatchState: (context, _event, _meta) => {
