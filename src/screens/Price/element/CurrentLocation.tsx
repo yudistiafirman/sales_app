@@ -5,10 +5,11 @@ import {
   GestureResponderEvent,
   StyleSheet,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import font from '@/constants/fonts';
-import { BText, BViewMoreText } from '@/components';
+import { layout } from '@/constants';
 interface CurrentLocationProps {
   location?: string | undefined;
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
@@ -19,12 +20,12 @@ const CurrentLocation = ({ location, onPress }: CurrentLocationProps) => {
     <TouchableOpacity style={CurrentLocationStyles.container} onPress={onPress}>
       <Icon
         name="map-pin"
-        style={{ marginRight: resScale(8) }}
+        style={{ marginRight: layout.pad.md }}
         color={colors.text.blue}
       />
-      <BViewMoreText textStyle={{ width: resScale(316) }} numberOfLines={1}>
-        <BText style={CurrentLocationStyles.viewMoreText}>{location}</BText>
-      </BViewMoreText>
+      <Text numberOfLines={1} style={CurrentLocationStyles.viewMoreText}>
+        {location}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -32,8 +33,7 @@ const CurrentLocation = ({ location, onPress }: CurrentLocationProps) => {
 const CurrentLocationStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginHorizontal: resScale(16),
-    marginBottom: resScale(9.5),
+    marginHorizontal: layout.pad.lg,
   },
   viewMoreText: {
     fontFamily: font.family.montserrat['300'],

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import resScale from '@/utils/resScale';
-import { Dimensions, Platform, ViewStyle } from 'react-native';
+import { Dimensions, Platform, View, ViewStyle } from 'react-native';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -19,50 +19,50 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const ANDROID = Platform.OS === 'android';
 const MAPSPROVIDER = ANDROID ? PROVIDER_GOOGLE : PROVIDER_DEFAULT;
 
-const bLocationDefaultStyle = {
+const BLocationDefaultStyle = {
   width: width,
   height: height - resScale(64),
 };
 
-const bLocationDefaultRegion = {
+const BLocationDefaultRegion = {
   latitude: LATITUDE,
   longitude: LONGITUDE,
   latitudeDelta: LATITUDE_DELTA,
   longitudeDelta: LONGITUDE_DELTA,
 };
 
-const bLocationDefaultProps = {
-  mapStyle: bLocationDefaultStyle,
-  region: bLocationDefaultRegion,
-  coordinate: bLocationDefaultRegion,
+const BLocationDefaultProps = {
+  mapStyle: BLocationDefaultStyle,
+  region: BLocationDefaultRegion,
+};
+
+const fixedCenterContainer: ViewStyle = {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
 };
 
 const BLocation = ({
   mapStyle,
+  onRegionChangeComplete,
   region,
-  onRegionChange,
-  coordinate,
   CustomMarker,
-}: BLocationProps & typeof bLocationDefaultProps) => {
+}: BLocationProps & typeof BLocationDefaultProps) => {
   return (
-    <MapView
-      style={mapStyle}
-      initialRegion={region}
-      provider={MAPSPROVIDER}
-      onRegionChange={onRegionChange}
-      rotateEnabled={false}
-    >
-      <Marker coordinate={coordinate}>{CustomMarker}</Marker>
-      <Circle
-        center={coordinate}
-        fillColor={`${colors.primary}60`}
-        radius={700}
-        strokeWidth={0}
+    <View style={fixedCenterContainer}>
+      <MapView
+        style={mapStyle}
+        initialRegion={region}
+        provider={MAPSPROVIDER}
+        rotateEnabled={false}
+        onRegionChangeComplete={onRegionChangeComplete}
+        region={region}
       />
-    </MapView>
+      {CustomMarker}
+    </View>
   );
 };
 
-BLocation.defaultProps = bLocationDefaultProps;
+BLocation.defaultProps = BLocationDefaultProps;
 
 export default BLocation;

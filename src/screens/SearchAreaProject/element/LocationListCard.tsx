@@ -4,7 +4,8 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import SearchAreaStyles from '../styles';
 import Icons from 'react-native-vector-icons/Feather';
-import { BText } from '@/components';
+import { BSpacer, BText } from '@/components';
+import { layout } from '@/constants';
 
 interface LocationListCardProps {
   onPress: () => void;
@@ -32,6 +33,7 @@ const LocationListCard = ({
 
         <View>
           <BText style={SearchAreaStyles.addressTitle}>{addressTitle}</BText>
+          <BSpacer size={layout.pad.xs} />
           <BText style={SearchAreaStyles.addressDetail}>{addressDetail}</BText>
         </View>
       </View>

@@ -1,24 +1,5 @@
 import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import appConfig from '../../../app.json';
-
-const openSetting = () => {
-  Linking.openSettings().catch(() => {
-    Alert.alert('Unable to open settings');
-  });
-};
-
-const ShowAlertLocation = () => {
-  Alert.alert(
-    `Turn on Location Services to allow "${appConfig.displayName}" to determine your location.`,
-    '',
-    [
-      { text: 'Go to Settings', onPress: openSetting },
-      { text: "Don't Use Location", onPress: () => {} },
-    ]
-  );
-};
-
 const hasPermissionIOS = async () => {
   const status = await Geolocation.requestAuthorization('whenInUse');
 
@@ -34,7 +15,21 @@ const hasPermissionIOS = async () => {
     ShowAlertLocation();
   }
 
-  return false;
+  ShowAlertLocation();
+};
+
+const openSetting = () => {
+  Linking.openSettings().catch(() => {
+    Alert.alert('Unable to open settings');
+  });
+};
+
+const ShowAlertLocation = () => {
+  Alert.alert(
+    'Turn on Location Services to allow "" to determine your location.',
+    '',
+    [{ text: 'Go to Settings', onPress: openSetting }]
+  );
 };
 
 const hasLocationPermission = async () => {
@@ -69,7 +64,7 @@ const hasLocationPermission = async () => {
     ShowAlertLocation();
   }
 
-  return false;
+  ShowAlertLocation();
 };
 
 export default hasLocationPermission;
