@@ -135,7 +135,7 @@ export const locationMachine =
             longitude,
             latitude
           );
-          return response.result;
+          return response.data.result;
         },
       },
     }

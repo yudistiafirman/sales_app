@@ -8,12 +8,28 @@ import Instruction from './element/Intstruction';
 import Label from './element/Label';
 import loginStyle from './style';
 import { colors } from '@/constants';
+import { signIn } from '@/actions/CommonActions';
+import { setPhoneNumber } from '@/redux/reducers/authReducer';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
+import BrikApiCommon from '@/brikApi/BrikApiCommon';
+import Spinner from 'react-native-loading-spinner-overlay';
+interface LoginState {
+  errorMessage: string | unknown;
+  loading: boolean;
+  phoneNumber: string;
+}
 const Login = () => {
   const navigation = useNavigation();
-  const [value, setValue] = useState('');
-  const [errorMessage, setErrorMessage] = useState<string | unknown>('');
+  const dispatch = useDispatch();
+  const [loginState, setLoginState] = useState<LoginState>({
+    errorMessage: '',
+    loading: false,
+    phoneNumber: '',
+  });
 
-  const disableBtn = value.length < 10;
+  const { errorMessage, loading, phoneNumber } = loginState;
+  const disableBtn = phoneNumber.length < 10;
 
   const renderLogo = () => (
     <Image
@@ -30,17 +46,35 @@ const Login = () => {
   }, [navigation]);
 
   const sendOtp = async () => {
-    let phoneNumberToSend = `+62${value}`;
-
+    const params = new URLSearchParams({ phone: phoneNumber });
+    setLoginState({ ...loginState, loading: true });
     try {
-      if (phoneNumberToSend !== '+6281321456789') {
-        throw new Error('Nomor yang anda masukkan tidak terdaftar');
+      const response = await axios.post(
+        BrikApiCommon.login(),
+        params.toString(),
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        }
+      );
+      if (response.data.success) {
+        dispatch(setPhoneNumber(phoneNumber));
+        setLoginState({
+          ...loginState,
+          loading: false,
+          errorMessage: '',
+          phoneNumber: '',
+        });
+        navigation.navigate('Verification');
+      } else {
+        throw new Error(response.data.message);
       }
-      navigation.navigate('Verification', { phoneNumber: phoneNumberToSend });
-      setValue('');
-      setErrorMessage('');
     } catch (error) {
-      setErrorMessage(error.message);
+      setLoginState({
+        ...loginState,
+        loading: false,
+        phoneNumber: '',
+        errorMessage: error.message,
+      });
     }
   };
 
@@ -48,7 +82,12 @@ const Login = () => {
     <SafeAreaView style={loginStyle.container}>
       <Instruction />
       <Label />
-      <PhoneInput value={value} onChangeText={setValue} />
+      <PhoneInput
+        value={phoneNumber}
+        onChangeText={(val) =>
+          setLoginState({ ...loginState, phoneNumber: val })
+        }
+      />
       {errorMessage && <BErrorText text={errorMessage} />}
       <BButtonPrimary
         disable={disableBtn}
@@ -59,6 +98,12 @@ const Login = () => {
         }}
         onPress={sendOtp}
         title="Kirim OTP"
+      />
+      <Spinner
+        visible={loading}
+        size="large"
+        overlayColor="rgba(0, 0, 0, 0.25)"
+        color={colors.primary}
       />
     </SafeAreaView>
   );

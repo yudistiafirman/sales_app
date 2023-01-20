@@ -48,6 +48,7 @@ const loginStyle = StyleSheet.create({
     fontFamily: font.family.montserrat['500'],
     fontSize: resScale(14),
     color: colors.text.dark,
+    marginBottom: layout.pad.sm,
   },
   maskInputStyle: {
     fontFamily: font.family.montserrat['400'],

@@ -171,7 +171,7 @@ export const searchProductMachine = createMachine(
             undefined,
             true
           );
-          return response.result;
+          return response.data.result;
         } catch (error) {
           console.log(error);
         }
@@ -186,7 +186,7 @@ export const searchProductMachine = createMachine(
             searchValue,
             selectedCategories
           );
-          return response.products;
+          return response.data.products;
         } catch (error) {
           console.log(error);
         }

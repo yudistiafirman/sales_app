@@ -12,11 +12,7 @@ export const getAllBrikProducts = (
   return request(
     BrikApiInventory.getProducts(page, size, search, categories),
     getOptions(token, 'GET')
-  )
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson;
-    });
+  );
 };
 
 export const getProductsCategories = (
@@ -30,9 +26,5 @@ export const getProductsCategories = (
   return request(
     BrikApiInventory.getProductCategories(page, size, search, pillar, count),
     getOptions(token, 'GET')
-  )
-    .then((response) => response.json())
-    .then((json) => {
-      return json;
-    });
+  );
 };

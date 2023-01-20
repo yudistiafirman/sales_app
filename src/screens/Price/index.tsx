@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import {  AppState, SafeAreaView } from 'react-native';
+import { AppState, SafeAreaView } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Tnc from '@/screens/Price/element/Tnc';
@@ -14,6 +14,11 @@ import { priceMachine } from '@/machine/priceMachine';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { layout } from '@/constants';
+import { signOut } from '@/actions/CommonActions';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { setUserData } from '@/redux/reducers/authReducer';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
   const navigation = useNavigation();
@@ -21,6 +26,7 @@ const PriceList = () => {
   const [index, setIndex] = useState(0);
   const appState = useRef(AppState.currentState);
   const [state, send] = useMachine(priceMachine);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (state.matches('getLocation.denied')) {
@@ -55,9 +61,7 @@ const PriceList = () => {
   }, [route?.params]);
 
   const renderHeaderRight = () => {
-    return (
-      <BTouchableText onPress={() => send('showAgreement')} title="Ketentuan" />
-    );
+    return <BTouchableText onPress={onLogout} title="Logout" />;
   };
 
   useLayoutEffect(() => {
@@ -82,6 +86,26 @@ const PriceList = () => {
     navigation.navigate('Location', {
       coordinate: coordinate,
     });
+  };
+
+  const onLogout = async () => {
+    try {
+      const response = await signOut();
+      if (response) {
+        EncryptedStorage.removeItem('userSession');
+        dispatch(
+          setUserData({
+            accessToken: '',
+            userId: '',
+            email: '',
+            userType: '',
+            phone: '',
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const {

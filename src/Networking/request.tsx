@@ -1,10 +1,10 @@
-import axios from 'axios';
 import { production } from '../../app.json';
+import axios, { AxiosBasicCredentials, AxiosHeaders } from 'axios';
 
 interface RequestInfo {
   method: 'GET' | 'POST' | 'DELETE' | 'PUT';
-  headers: {};
-  body?: string;
+  headers: Record<string, string>;
+  body?: any;
   timeoutInterval?: number;
 }
 
@@ -19,11 +19,12 @@ export const getOptions = (
   options.headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+
     token: token,
   };
 
   if (data) {
-    options.body = JSON.stringify(data);
+    options.body = data;
   }
 
   if (production) {
@@ -40,7 +41,7 @@ export const getOptions = (
   return options;
 };
 
-export const request = fetch;
+export const request = axios;
 
 export const catchError = (errorResponse: any) => {
   let validateError;

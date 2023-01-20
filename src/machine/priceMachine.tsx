@@ -376,8 +376,7 @@ export const priceMachine =
               latitude,
               'BP-LEGOK'
             );
-            console.log('ini response', response);
-            return response;
+            return response.data;
           } catch (error) {
             console.log(error);
           }
@@ -392,9 +391,9 @@ export const priceMachine =
               'BRIK_MIX',
               false
             );
-            return response.result;
+            return response.data.result;
           } catch (error) {
-            throw new Error(error.message);
+            console.log(error);
             // throw new Error(error.message);
           }
         },
@@ -407,9 +406,9 @@ export const priceMachine =
               size,
               selectedCategories
             );
-            return response;
+            return response.data;
           } catch (error) {
-            throw new Error(error.message);
+            console.log(error);
           }
         },
       },

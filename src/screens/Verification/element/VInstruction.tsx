@@ -4,7 +4,7 @@ import { resScale } from '@/utils';
 import React from 'react';
 import { View } from 'react-native';
 import VerificationStyles from '../styles';
-const VIntstruction = ({ phoneNumber }: { phoneNumber: number }) => {
+const VIntstruction = ({ phoneNumber,onPress }: { phoneNumber: string,onPress:()=>void }) => {
   return (
     <View style={{ alignItems: 'center', marginBottom: resScale(20) }}>
       <View style={{ flexDirection: 'row' }}>
@@ -20,6 +20,7 @@ const VIntstruction = ({ phoneNumber }: { phoneNumber: number }) => {
           {`${phoneNumber}  `}
         </BText>
         <BTouchableText
+          onPress={onPress}
           textStyle={VerificationStyles.intructionsTextRed}
           title="Ganti?"
         />

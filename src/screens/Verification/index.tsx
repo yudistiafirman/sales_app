@@ -11,21 +11,28 @@ import OTPFieldLabel from './element/OTPFieldLabel';
 import ResendOTP from './element/ResendOTP';
 import VIntstruction from './element/VInstruction';
 import VerificationStyles from './styles';
-
-import {
-  retrieveUserSession,
-  storeUserSession,
-} from '@/actions/StorageActions';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import BrikApiCommon from '@/brikApi/BrikApiCommon';
+import axios from 'axios';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { setSignin, setUserData } from '@/redux/reducers/authReducer';
 const Verification = () => {
-  const route = useRoute();
-  const { phoneNumber } = route.params;
+  const { phoneNumber } = useSelector(
+    (state: RootState) => state.auth.loginCredential
+  );
   const navigation = useNavigation();
-  const [value, setValue] = useState('');
-  const [countDownOtp, setCountDownOtp] = useState<number>(10);
-  const [errorOtp, setErrorOtp] = useState<string | unknown>('');
-  const disabled = value.length < 6;
-  let timer = useRef();
+  const [verificationState, setVerificationState] = useState({
+    otpValue: '',
+    errorOtp: '',
+    loading: false,
+  });
+  const dispatch = useDispatch();
+  const [countDownOtp, setCountDown] = useState(10);
+  const { otpValue, errorOtp, loading } = verificationState;
+  const disabled = otpValue.length < 6;
+  let timer = useRef<number | undefined>();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: false,
@@ -35,7 +42,7 @@ const Verification = () => {
   useEffect(() => {
     timer.current = setInterval(() => {
       if (countDownOtp !== 0) {
-        setCountDownOtp((prevState) => prevState - 1);
+        setCountDown((prevstate) => prevstate - 1);
       }
     }, 1000);
     return () => {
@@ -44,29 +51,80 @@ const Verification = () => {
   }, [countDownOtp]);
 
   const renderHeaderLeft = () => (
-    <BHeaderIcon
-      size={resScale(30)}
-      onBack={() => navigation.goBack()}
-      iconName="chevron-left"
-    />
+    <BHeaderIcon size={resScale(30)} onBack={onBack} iconName="chevron-left" />
   );
 
   const onLogin = async () => {
-    if (value.length === 6) {
-      if (value === '123456') {
+    const params = new URLSearchParams({ phone: phoneNumber, otp: otpValue });
+    setVerificationState({
+      ...verificationState,
+      loading: true,
+    });
+    try {
+      const response = await axios.post(
+        BrikApiCommon.login(),
+        params.toString(),
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        }
+      );
+      if (response.data.success) {
+        setVerificationState({
+          ...verificationState,
+          errorOtp: '',
+          otpValue: '',
+          loading: false,
+        });
         await EncryptedStorage.setItem(
-          'islogin',
-          JSON.stringify({ phone: phoneNumber })
+          'userSession',
+          JSON.stringify(response.data.data)
         );
-        setErrorOtp('');
+        dispatch(setUserData(response.data.data));
       } else {
-        setErrorOtp('Kode yang anda masukan salah');
+        throw new Error(response.data.message);
       }
+    } catch (error) {
+      setVerificationState({
+        ...verificationState,
+        errorOtp: error.message,
+        otpValue: '',
+        loading: false,
+      });
     }
   };
-  const onResendOtp = () => {
-    setErrorOtp('');
-    setCountDownOtp(10);
+  const onResendOtp = async () => {
+    setCountDown(10);
+    const params = new URLSearchParams({ phone: phoneNumber });
+    try {
+      const response = await axios.post(
+        BrikApiCommon.login(),
+        params.toString(),
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        }
+      );
+      if (response.data.success) {
+        setVerificationState({
+          ...verificationState,
+          errorOtp: '',
+          otpValue: '',
+        });
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (error) {
+      setVerificationState({
+        ...verificationState,
+        errorOtp: error.message,
+        otpValue: '',
+      });
+    }
+  };
+  const onBack = () => {
+    clearInterval(timer.current);
+    setCountDown(10);
+    setVerificationState({ ...verificationState, otpValue: '', errorOtp: '' });
+    navigation.goBack();
   };
   return (
     <View style={VerificationStyles.container}>
@@ -74,9 +132,14 @@ const Verification = () => {
         style={VerificationStyles.otpMessageImage}
         source={require('@/assets/illustration/ic_otp_message.png')}
       />
-      <VIntstruction phoneNumber={phoneNumber} />
+      <VIntstruction onPress={onBack} phoneNumber={phoneNumber} />
       <OTPFieldLabel />
-      <OTPField value={value} setValue={setValue} />
+      <OTPField
+        value={otpValue}
+        setValue={(code) =>
+          setVerificationState({ ...verificationState, otpValue: code })
+        }
+      />
       {errorOtp && <BErrorText text={errorOtp} />}
 
       <ResendOTP count={countDownOtp} onPress={onResendOtp} />
@@ -89,6 +152,12 @@ const Verification = () => {
         }}
         onPress={onLogin}
         title="Log In"
+      />
+      <Spinner
+        overlayColor="rgba(0, 0, 0, 0.25)"
+        visible={loading}
+        size="large"
+        color={colors.primary}
       />
     </View>
   );
