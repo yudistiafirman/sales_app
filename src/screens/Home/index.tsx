@@ -161,7 +161,9 @@ const Beranda = () => {
       {
         icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
         title: 'Buat SPH',
-        action: () => {},
+        action: () => {
+          navigation.navigate('SPH');
+        },
       },
       {
         icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
@@ -273,7 +275,7 @@ const Beranda = () => {
           <BTabViewScreen
             screenToRender={sceneToRender}
             isLoading={isLoading}
-            tabToRender={tabToRender}
+            tabToRender={searchQuery ? tabToRender : []}
           />
         </View>
       </Modal>

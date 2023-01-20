@@ -2,6 +2,7 @@ import BSpinner from '@/components/atoms/BSpinner';
 import PriceListCard from '@/components/templates/Price/PriceListCard';
 import { layout } from '@/constants';
 import resScale from '@/utils/resScale';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
 import { Item } from 'react-native-paper/lib/typescript/components/List/List';
@@ -33,6 +34,7 @@ interface ProductListProps<ArrayOfObject> {
   isLoadMore?: boolean;
   loadProduct?: boolean;
   onRefresh?: () => void;
+  onPress?: (data: any) => void;
 }
 
 const ProductList = <ArrayOfObject extends productsData>({
@@ -43,14 +45,21 @@ const ProductList = <ArrayOfObject extends productsData>({
   isLoadMore,
   onRefresh,
   loadProduct,
+  onPress = () => {},
 }: ProductListProps<ArrayOfObject>) => {
   const renderItem = useCallback(({ item, index }) => {
     return (
-      <PriceListCard
-        productName={item?.name}
-        productPrice={item?.Price?.price}
-        categories={item?.Category?.Parent?.name}
-      />
+      <TouchableOpacity
+        onPress={() => {
+          onPress(item);
+        }}
+      >
+        <PriceListCard
+          productName={item?.name}
+          productPrice={item?.Price?.price}
+          categories={item?.Category?.Parent?.name}
+        />
+      </TouchableOpacity>
     );
   }, []);
   return (
