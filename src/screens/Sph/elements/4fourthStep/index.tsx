@@ -121,12 +121,7 @@ export default function FourthStep() {
         }
       )}
       {!modeSearch && (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'space-between',
-          }}
-        >
+        <View style={style.searchModeContainer}>
           <View>
             <Text style={style.productText}>Produk</Text>
             <View>
@@ -216,5 +211,9 @@ const style = StyleSheet.create({
     fontFamily: fonts.family.montserrat[600],
     fontSize: fonts.size.sm,
     color: colors.text.darker,
+  },
+  searchModeContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
   },
 });

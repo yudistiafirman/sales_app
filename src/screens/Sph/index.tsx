@@ -1,4 +1,4 @@
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 // import StepIndicator from 'react-native-step-indicator';
 import StepperIndicator from './elements/StepIndicator';
@@ -115,7 +115,7 @@ export default function Sph() {
   }, []);
 
   useEffect(() => {
-    // stepHandler(sphData, stepsDone, setStepsDone, stepControll);
+    stepHandler(sphData, stepsDone, setStepsDone, stepControll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
 
@@ -131,7 +131,7 @@ export default function Sph() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={style.container}>
       <StepperIndicator
         stepsDone={stepsDone}
         stepOnPress={setCurrentPosition}
@@ -152,3 +152,9 @@ export default function Sph() {
     </View>
   );
 }
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

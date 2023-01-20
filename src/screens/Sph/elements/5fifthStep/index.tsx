@@ -19,21 +19,6 @@ import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import { SphContext } from '../context/SphContext';
 
-const productData = [
-  {
-    name: 'Beton K 350 NFA step5 dummy',
-    volume: '28 m3',
-    pricePerVol: '1.815.000/m3',
-    totalPrice: 'IDR 50.820.000',
-  },
-  {
-    name: 'Beton K 250 FA step5 dummy',
-    volume: '28 m3',
-    pricePerVol: '1.815.000/m3',
-    totalPrice: 'IDR 50.820.000',
-  },
-];
-
 export default function FifthStep() {
   const [sphState, stateUpdate] = useContext(SphContext);
 

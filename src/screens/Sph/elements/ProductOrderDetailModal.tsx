@@ -47,6 +47,7 @@ export default function ProductCartModal({
 }: ProductCartModalType) {
   useEffect(() => {
     setDetailOrder(prevData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [detailOrder, setDetailOrder] = useState({
@@ -132,7 +133,7 @@ export default function ProductCartModal({
         </View>
         <BContainer>
           <View style={style.inputContainer}>
-            <View style={{ width: '45%' }}>
+            <View style={style.volumeContainer}>
               <Text style={style.inputLabel}>Volume</Text>
               <BTextInput
                 onChange={(
@@ -153,7 +154,7 @@ export default function ProductCartModal({
               )}
             </View>
             <BSpacer size={'extraSmall'} />
-            <View style={{ width: '50%' }}>
+            <View style={style.sellPriceContainer}>
               <Text style={style.inputLabel}>Harga Jual</Text>
               <BTextInput
                 onChange={(
@@ -311,5 +312,11 @@ const style = StyleSheet.create({
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.sm,
     color: colors.text.darker,
+  },
+  volumeContainer: {
+    width: '45%',
+  },
+  sellPriceContainer: {
+    width: '50%',
   },
 });

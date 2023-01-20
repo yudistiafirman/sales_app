@@ -13,7 +13,6 @@ import {
   BLocation,
   BMarker,
 } from '@/components';
-import CoordinatesDetail from '@/screens/Location/elements/CoordinatesDetail';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
 import { Input } from '@/interfaces';
@@ -184,6 +183,7 @@ export default function SecondStep() {
         disableContinue={!checkObj(sphState)}
       />
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphState]);
 
   return (
