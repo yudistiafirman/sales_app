@@ -21,6 +21,7 @@ interface Input {
     | 'autocomplete'
     | 'switch'
     | 'fileInput';
+  hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   value: string | any;
   placeholder?: string;
@@ -151,11 +152,11 @@ interface SphStateInterface {
     fullAddress: string;
   };
   paymentType: string;
-  paymentRequiredDocuments: any[];
+  paymentRequiredDocuments: { [key: string]: any };
   paymentDocumentsFullfilled: boolean;
   paymentBankGuarantee: boolean;
   chosenProducts: any[];
-  productsChosen: boolean;
+  useHighway: boolean;
 }
 
 type SphContextInterface = [
@@ -163,6 +164,40 @@ type SphContextInterface = [
   (key: string) => (data: any) => void,
   (index: number) => void
 ];
+
+interface AdditionalPricesInterface {
+  id: string;
+  categoryId: string;
+  createdById?: string;
+  unit: string;
+  price: number;
+  type: string;
+  min: number;
+  max: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface productParentInterface {
+  id: string;
+  name: string;
+  AdditionalPrices: AdditionalPricesInterface[];
+}
+
+interface ProductDataInterface {
+  id: string;
+  name: string;
+  Price: {
+    id: string;
+    price: number;
+  };
+  Category: {
+    id: string;
+    name: string;
+    parent_id: string;
+    Parent: productParentInterface;
+  };
+}
 
 export type {
   Input,
@@ -175,4 +210,7 @@ export type {
   BLocationProps,
   SphStateInterface,
   SphContextInterface,
+  AdditionalPricesInterface,
+  productParentInterface,
+  ProductDataInterface,
 };

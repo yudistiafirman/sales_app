@@ -1,12 +1,14 @@
-import React from 'react';
-import { ViewStyle } from 'react-native';
-import { layout } from '@/constants';
+import React, { useCallback } from 'react';
+import { View, ViewStyle } from 'react-native';
+import { colors, layout } from '@/constants';
 import { Input, Styles } from '@/interfaces';
 import { resScale } from '@/utils';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { BottomSheetFooter, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import BBottomSheet from '../atoms/BBottomSheet';
 import BButtonPrimary from '../atoms/BButtonPrimary';
 import BForm from './BForm';
+import BContainer from '../atoms/BContainer';
+import BSpacer from '../atoms/BSpacer';
 
 interface IProps {
   initialIndex: number;
@@ -17,6 +19,7 @@ interface IProps {
   children?: JSX.Element;
   enableClose?: boolean;
   isButtonDisable?: boolean;
+  CustomFooterButton?: () => JSX.Element;
 }
 
 const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
@@ -29,6 +32,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
     children,
     enableClose = true,
     isButtonDisable,
+    CustomFooterButton,
   } = props;
 
   function renderChild() {
@@ -36,7 +40,6 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
       return (
         <BottomSheetScrollView style={{ marginBottom: resScale(20) }}>
           <BForm inputs={inputs} />
-          <BButtonPrimary onPress={onAdd} title={buttonTitle} />
         </BottomSheetScrollView>
       );
     }
@@ -48,15 +51,37 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
           style={{ marginBottom: resScale(20) }}
         >
           <BForm inputs={inputs} />
-          <BButtonPrimary
-            disable={isButtonDisable}
-            onPress={onAdd}
-            title={buttonTitle}
-          />
         </BottomSheetScrollView>
       </>
     );
   }
+
+  const FooterButton = useCallback(
+    (propsFooter: any) => {
+      return (
+        <BottomSheetFooter {...propsFooter}>
+          {CustomFooterButton ? (
+            <BContainer>
+              <View style={styles.footerContainer}>
+                <CustomFooterButton />
+              </View>
+            </BContainer>
+          ) : (
+            <BContainer>
+              <View style={styles.footerContainer}>
+                <BButtonPrimary
+                  disable={isButtonDisable}
+                  onPress={onAdd}
+                  title={buttonTitle}
+                />
+              </View>
+            </BContainer>
+          )}
+        </BottomSheetFooter>
+      );
+    },
+    [buttonTitle, onAdd, isButtonDisable, CustomFooterButton]
+  );
 
   return (
     <BBottomSheet
@@ -66,22 +91,29 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
       initialSnapIndex={initialIndex}
       enableContentPanningGesture={true}
       style={styles.sheetStyle as ViewStyle}
-      containerHeight={resScale(150)}
+      // containerHeight={resScale(150)}
       enablePanDownToClose={enableClose}
+      footerComponent={FooterButton}
     >
-      {renderChild()}
+      <BContainer>
+        {renderChild()}
+        <BSpacer size={'medium'} />
+      </BContainer>
     </BBottomSheet>
   );
 });
 
 const styles: Styles = {
   sheetStyle: {
-    padding: layout.pad.lg,
+    // padding: layout.pad.lg,
     // backgroundColor: 'red',
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  footerContainer: {
+    backgroundColor: colors.white,
   },
   button: { flexDirection: 'row-reverse' },
 };

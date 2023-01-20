@@ -9,7 +9,6 @@ import {
 import React from 'react';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import respFS from '@/utils/resFontSize';
 import resScale from '@/utils/resScale';
 import { layout } from '@/constants';
 
@@ -19,8 +18,8 @@ type BButtonPrimaryType = {
   buttonStyle?: ViewStyle;
   titleStyle?: ViewStyle;
   isOutline?: boolean;
-  rightIcon?: () => JSX.Element;
-  leftIcon?: () => JSX.Element;
+  rightIcon?: (() => JSX.Element) | null;
+  leftIcon?: (() => JSX.Element) | null;
   disable?: boolean;
   isLoading?: boolean;
 };
@@ -75,9 +74,12 @@ const style = StyleSheet.create({
     backgroundColor: colors.primary,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    borderColor: colors.primary,
+    borderWidth: resScale(1),
   },
   disableStyle: {
     backgroundColor: colors.disabled,
+    borderColor: colors.disabled,
   },
   buttonTitle: {
     textAlign: 'center',

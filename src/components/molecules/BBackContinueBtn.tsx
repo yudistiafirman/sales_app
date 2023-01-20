@@ -5,32 +5,38 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
 
 type BackContinueBtnType = {
-  onPressBack: () => void;
-  onPressContinue: () => void;
+  onPressBack?: () => void;
+  onPressContinue?: () => void;
   disableContinue?: boolean;
   loadingContinue?: boolean;
+  backText?: string;
+  continueText?: string;
+  isContinueIcon?: boolean;
 };
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
 }
 
-export default function BackContinueBtn({
+export default function BBackContinueBtn({
   onPressBack = () => {},
   onPressContinue = () => {},
   disableContinue,
   loadingContinue,
+  backText = 'Kembali',
+  continueText = 'Lanjut',
+  isContinueIcon = true,
 }: BackContinueBtnType) {
   return (
     <View style={style.buttonContainer}>
       <View style={style.backButtonContainer}>
-        <BButtonPrimary onPress={onPressBack} title="Kembali" isOutline />
+        <BButtonPrimary onPress={onPressBack} title={backText} isOutline />
       </View>
       <View style={style.continueButtonContainer}>
         <BButtonPrimary
-          rightIcon={ContinueIcon}
+          rightIcon={isContinueIcon ? ContinueIcon : null}
           onPress={onPressContinue}
-          title="Lanjut"
+          title={continueText}
           disable={disableContinue}
           isLoading={loadingContinue}
         />
@@ -45,7 +51,7 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
   },
   backButtonContainer: {
-    width: '35%',
+    width: '40%',
   },
   continueButtonContainer: {
     width: '55%',

@@ -40,6 +40,7 @@ const renderInput = (input: Input): React.ReactNode => {
     isRequire,
     isError,
     onSelect,
+    hidePicLabel,
   } = input;
 
   if (type === 'textInput') {
@@ -151,15 +152,19 @@ const renderInput = (input: Input): React.ReactNode => {
     return (
       <React.Fragment>
         <BSpacer size="small" />
-        <View style={styles.optionContainer}>
-          <BText type="header">PIC</BText>
-          <BText bold="500" color="primary" onPress={onChange}>
-            + Tambah PIC
-          </BText>
-        </View>
-        <BSpacer size="extraSmall" />
-        <BDivider />
-        <BSpacer size="small" />
+        {!hidePicLabel ? (
+          <>
+            <View style={styles.optionContainer}>
+              <BText type="header">PIC</BText>
+              <BText bold="500" color="primary" onPress={onChange}>
+                + Tambah PIC
+              </BText>
+            </View>
+            <BSpacer size="extraSmall" />
+            <BDivider />
+            <BSpacer size="small" />
+          </>
+        ) : null}
         <BPicList
           isOption={value.length > 1 ? true : false}
           data={value}

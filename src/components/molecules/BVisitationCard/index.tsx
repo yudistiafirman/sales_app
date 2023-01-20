@@ -40,7 +40,7 @@ function iconRender(
   if (customIcon) {
     return customIcon();
   }
-  return <MaterialIcon size={30} name="chevron-right" />;
+  return <MaterialIcon size={30} name="chevron-right" color={'#000000'} />;
 }
 
 export default function BVisitationCard({
