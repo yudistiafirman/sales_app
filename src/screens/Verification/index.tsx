@@ -5,7 +5,7 @@ import { colors } from '@/constants';
 import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import OTPField from './element/OTPField';
 import OTPFieldLabel from './element/OTPFieldLabel';
 import ResendOTP from './element/ResendOTP';
@@ -18,6 +18,7 @@ import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { setUserData } from '@/redux/reducers/authReducer';
+import { KeyboardAwareScrollView, KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view';
 const Verification = () => {
   const { phoneNumber } = useSelector(
     (state: RootState) => state.auth.loginCredential
@@ -127,33 +128,37 @@ const Verification = () => {
     navigation.goBack();
   };
   return (
-    <View style={VerificationStyles.container}>
-      <BSpacer size={resScale(40)} />
-      <Image
-        style={VerificationStyles.otpMessageImage}
-        source={require('@/assets/illustration/ic_otp_message.png')}
-      />
-      <BSpacer size="large" />
-      <VIntstruction onPress={onBack} phoneNumber={phoneNumber} />
-      <BSpacer size='large' />
-      <OTPFieldLabel />
-      <OTPField
-        value={otpValue}
-        setValue={(code) =>
-          setVerificationState({ ...verificationState, otpValue: code })
-        }
-      />
-      {errorOtp && <BErrorText text={errorOtp} />}
-      <BSpacer size={resScale(25)} />
-      <ResendOTP count={countDownOtp} onPress={onResendOtp} />
-      <BSpacer size={resScale(23)} />
-      <Spinner
-        overlayColor="rgba(0, 0, 0, 0.25)"
-        visible={loading}
-        size="large"
-        color={colors.primary}
-      />
-    </View>
+    <KeyboardAwareScrollView>
+      <SafeAreaView style={VerificationStyles.container}>
+        <BSpacer size={resScale(40)} />
+        <Image
+          style={VerificationStyles.otpMessageImage}
+          source={require('@/assets/illustration/ic_otp_message.png')}
+        />
+        <BSpacer size="large" />
+        <VIntstruction onPress={onBack} phoneNumber={phoneNumber} />
+        <BSpacer size='large' />
+
+        <OTPFieldLabel />
+        <OTPField
+          value={otpValue}
+          setValue={(code) =>
+            setVerificationState({ ...verificationState, otpValue: code })
+          }
+        />
+        {errorOtp && <BErrorText text={errorOtp} />}
+
+        <BSpacer size={resScale(25)} />
+        <ResendOTP count={countDownOtp} onPress={onResendOtp} />
+        <BSpacer size={resScale(23)} />
+        <Spinner
+          overlayColor="rgba(0, 0, 0, 0.25)"
+          visible={loading}
+          size="large"
+          color={colors.primary}
+        />
+      </SafeAreaView>
+    </KeyboardAwareScrollView>
   );
 };
 export default Verification;

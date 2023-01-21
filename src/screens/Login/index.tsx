@@ -88,11 +88,11 @@ const Login = () => {
           setLoginState({ ...loginState, phoneNumber: val })
         }
       />
-      <BSpacer size={layout.pad.sm} />
       <>
         {errorMessage && <BErrorText text={errorMessage} />}
 
       </>
+      <BSpacer size={resScale(40)} />
       <BButtonPrimary
         disable={disableBtn}
         buttonStyle={[loginStyle.buttonStyle, { backgroundColor: disableBtn ? `${colors.primary}40` : colors.primary, }]}

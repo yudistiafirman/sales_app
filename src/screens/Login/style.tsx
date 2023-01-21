@@ -67,7 +67,6 @@ const loginStyle = StyleSheet.create({
   },
   buttonStyle: {
     width: resScale(328),
-    marginTop: resScale(20)
   }
 });
 export default loginStyle;
