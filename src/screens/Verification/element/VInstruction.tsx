@@ -4,9 +4,9 @@ import { resScale } from '@/utils';
 import React from 'react';
 import { View } from 'react-native';
 import VerificationStyles from '../styles';
-const VIntstruction = ({ phoneNumber,onPress }: { phoneNumber: string,onPress:()=>void }) => {
+const VIntstruction = ({ phoneNumber, onPress }: { phoneNumber: string, onPress: () => void }) => {
   return (
-    <View style={{ alignItems: 'center', marginBottom: resScale(20) }}>
+    <View style={{ alignItems: 'center' }}>
       <View style={{ flexDirection: 'row' }}>
         <BText style={VerificationStyles.intructionsTextDark}>
           Masukkan OTP yang sudah dikirim ke

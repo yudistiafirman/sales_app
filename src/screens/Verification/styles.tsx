@@ -8,8 +8,6 @@ const VerificationStyles = StyleSheet.create({
     width: resScale(180),
     height: resScale(125.5),
     alignSelf: 'center',
-    marginBottom: resScale(28),
-    marginTop: resScale(40),
   },
   intructionsTextDark: {
     fontFamily: font.family.montserrat['300'],
@@ -34,9 +32,7 @@ const VerificationStyles = StyleSheet.create({
   },
   resendContainer: {
     flexDirection: 'row',
-    marginTop: resScale(25),
     justifyContent: 'center',
-    marginBottom: resScale(23),
   },
   countDownText: {
     fontFamily: font.family.montserrat['500'],

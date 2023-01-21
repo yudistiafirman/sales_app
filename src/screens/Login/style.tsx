@@ -13,7 +13,6 @@ const loginStyle = StyleSheet.create({
     fontFamily: font.family.montserrat['400'],
     fontSize: font.size.md,
     color: colors.text.dark,
-    marginBottom: layout.pad.xl,
     textAlign: 'center',
   },
   whatsapp: {
@@ -29,7 +28,6 @@ const loginStyle = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   phoneNumberInputContainer: {
-    marginBottom: layout.pad.sm,
     flexDirection: 'row',
     alignItems: 'flex-end',
   },
@@ -67,5 +65,9 @@ const loginStyle = StyleSheet.create({
     overflow: 'hidden',
     flex: 0.85,
   },
+  buttonStyle: {
+    width: resScale(328),
+    marginTop: resScale(20)
+  }
 });
 export default loginStyle;

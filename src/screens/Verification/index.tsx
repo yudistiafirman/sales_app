@@ -1,4 +1,4 @@
-import { BButtonPrimary } from '@/components';
+import { BSpacer } from '@/components';
 import BErrorText from '@/components/atoms/BErrorText';
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import { colors } from '@/constants';
@@ -17,7 +17,7 @@ import { RootState } from '@/redux/store';
 import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { setSignin, setUserData } from '@/redux/reducers/authReducer';
+import { setUserData } from '@/redux/reducers/authReducer';
 const Verification = () => {
   const { phoneNumber } = useSelector(
     (state: RootState) => state.auth.loginCredential
@@ -128,11 +128,14 @@ const Verification = () => {
   };
   return (
     <View style={VerificationStyles.container}>
+      <BSpacer size={resScale(40)} />
       <Image
         style={VerificationStyles.otpMessageImage}
         source={require('@/assets/illustration/ic_otp_message.png')}
       />
+      <BSpacer size="large" />
       <VIntstruction onPress={onBack} phoneNumber={phoneNumber} />
+      <BSpacer size='large' />
       <OTPFieldLabel />
       <OTPField
         value={otpValue}
@@ -141,18 +144,9 @@ const Verification = () => {
         }
       />
       {errorOtp && <BErrorText text={errorOtp} />}
-
+      <BSpacer size={resScale(25)} />
       <ResendOTP count={countDownOtp} onPress={onResendOtp} />
-
-      <BButtonPrimary
-        disable={disabled}
-        buttonStyle={{
-          width: resScale(338),
-          backgroundColor: disabled ? `${colors.primary}40` : colors.primary,
-        }}
-        onPress={onLogin}
-        title="Log In"
-      />
+      <BSpacer size={resScale(23)} />
       <Spinner
         overlayColor="rgba(0, 0, 0, 0.25)"
         visible={loading}

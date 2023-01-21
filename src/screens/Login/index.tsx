@@ -1,4 +1,4 @@
-import { BButtonPrimary, BErrorText } from '@/components';
+import { BButtonPrimary, BErrorText, BSpacer } from '@/components';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect, useState } from 'react';
@@ -7,8 +7,7 @@ import PhoneInput from './element/PhoneInput';
 import Instruction from './element/Intstruction';
 import Label from './element/Label';
 import loginStyle from './style';
-import { colors } from '@/constants';
-import { signIn } from '@/actions/CommonActions';
+import { colors, layout } from '@/constants';
 import { setPhoneNumber } from '@/redux/reducers/authReducer';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -81,6 +80,7 @@ const Login = () => {
   return (
     <SafeAreaView style={loginStyle.container}>
       <Instruction />
+      <BSpacer size={layout.pad.lg} />
       <Label />
       <PhoneInput
         value={phoneNumber}
@@ -88,14 +88,14 @@ const Login = () => {
           setLoginState({ ...loginState, phoneNumber: val })
         }
       />
-      {errorMessage && <BErrorText text={errorMessage} />}
+      <BSpacer size={layout.pad.sm} />
+      <>
+        {errorMessage && <BErrorText text={errorMessage} />}
+
+      </>
       <BButtonPrimary
         disable={disableBtn}
-        buttonStyle={{
-          width: resScale(328),
-          marginTop: resScale(20),
-          backgroundColor: disableBtn ? `${colors.primary}40` : colors.primary,
-        }}
+        buttonStyle={[loginStyle.buttonStyle, { backgroundColor: disableBtn ? `${colors.primary}40` : colors.primary, }]}
         onPress={sendOtp}
         title="Kirim OTP"
       />
