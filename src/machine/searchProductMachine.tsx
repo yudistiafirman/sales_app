@@ -164,7 +164,6 @@ export const searchProductMachine = createMachine(
       getCategoriesData: async (context) => {
         try {
           const response = await getProductsCategories(
-            '',
             undefined,
             undefined,
             context.searchValue,
@@ -180,7 +179,6 @@ export const searchProductMachine = createMachine(
         try {
           const { page, size, selectedCategories, searchValue } = context;
           const response = await getAllBrikProducts(
-            '',
             page,
             size,
             searchValue,

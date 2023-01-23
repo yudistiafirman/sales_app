@@ -1,9 +1,7 @@
-import BrikApi from '@/brikApi/BrikApi';
 import BrikApiInventory from '@/brikApi/BrikApiInventory';
-import { catchError, getOptions, request } from '@/networking/request';
+import { getOptions, request } from '@/networking/request';
 
 export const getAllBrikProducts = (
-  token: string,
   page?: number,
   size?: number,
   search?: string,
@@ -11,12 +9,11 @@ export const getAllBrikProducts = (
 ) => {
   return request(
     BrikApiInventory.getProducts(page, size, search, categories),
-    getOptions(token, 'GET')
+    getOptions('GET')
   );
 };
 
 export const getProductsCategories = (
-  token: string,
   page?: number,
   size?: number,
   search?: string,
@@ -25,6 +22,6 @@ export const getProductsCategories = (
 ) => {
   return request(
     BrikApiInventory.getProductCategories(page, size, search, pillar, count),
-    getOptions(token, 'GET')
+    getOptions('GET')
   );
 };

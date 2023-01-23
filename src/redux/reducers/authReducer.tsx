@@ -1,38 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { act } from 'react-test-renderer';
-
-interface UserData {
-  accessToken: string;
-  userId: string;
-  email: string;
-  phone: string;
-  userType: string;
-}
+import { JwtPayload } from 'jwt-decode';
 
 interface LoginCredential {
   phoneNumber: string;
 }
 
 interface AuthState {
-  userData: UserData;
+  userData: JwtPayload | null;
   loginCredential: LoginCredential;
-  isSignin: boolean;
   isLoading: boolean;
 }
 
 const initialState: AuthState = {
-  userData: {
-    accessToken: '',
-    userId: '',
-    email: '',
-    phone: '',
-    userType: '',
-  },
+  userData: null,
   loginCredential: {
     phoneNumber: '',
   },
-  isSignin: false,
   isLoading: false,
 };
 
@@ -49,17 +33,10 @@ export const authSlice = createSlice({
         },
       };
     },
-    setUserData: (state, action: PayloadAction<UserData>) => {
-      console.log(action.payload.accessToken)
+    setUserData: (state, action: PayloadAction<JwtPayload | null>) => {
       return {
         ...state,
         userData: action.payload,
-      };
-    },
-    setSignin: (state, action: PayloadAction<boolean>) => {
-      return {
-        ...state,
-        isSignin: action.payload,
       };
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
@@ -71,7 +48,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setPhoneNumber, setUserData, setSignin, setIsLoading } =
-  authSlice.actions;
+export const { setPhoneNumber, setUserData, setIsLoading } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -3,22 +3,23 @@ import BErrorText from '@/components/atoms/BErrorText';
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import { colors } from '@/constants';
 import { resScale } from '@/utils';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { View, Image, SafeAreaView, KeyboardAvoidingView } from 'react-native';
+import { Image, SafeAreaView } from 'react-native';
 import OTPField from './element/OTPField';
 import OTPFieldLabel from './element/OTPFieldLabel';
 import ResendOTP from './element/ResendOTP';
 import VIntstruction from './element/VInstruction';
 import VerificationStyles from './styles';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import BrikApiCommon from '@/brikApi/BrikApiCommon';
-import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { setUserData } from '@/redux/reducers/authReducer';
-import { KeyboardAwareScrollView, KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import bStorage from '@/actions/BStorage';
+import { signIn } from '@/actions/CommonActions';
+import jwtDecode, { JwtPayload } from 'jwt-decode';
+import storageKey from '@/constants/storageKey';
 const Verification = () => {
   const { phoneNumber } = useSelector(
     (state: RootState) => state.auth.loginCredential
@@ -28,11 +29,10 @@ const Verification = () => {
     otpValue: '',
     errorOtp: '',
     loading: false,
+    countDownOtp: 10,
   });
   const dispatch = useDispatch();
-  const [countDownOtp, setCountDown] = useState(10);
-  const { otpValue, errorOtp, loading } = verificationState;
-  const disabled = otpValue.length < 6;
+  const { otpValue, errorOtp, loading, countDownOtp } = verificationState;
   let timer = useRef<number | undefined>();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,7 +43,10 @@ const Verification = () => {
   useEffect(() => {
     timer.current = setInterval(() => {
       if (countDownOtp !== 0) {
-        setCountDown((prevstate) => prevstate - 1);
+        setVerificationState((prevState) => ({
+          ...prevState,
+          countDownOtp: countDownOtp - 1,
+        }));
       }
     }, 1000);
     return () => {
@@ -51,36 +54,35 @@ const Verification = () => {
     };
   }, [countDownOtp]);
 
+  useEffect(() => {
+    if (otpValue.length === 6) {
+      onLogin();
+    }
+  }, [otpValue]);
+
   const renderHeaderLeft = () => (
     <BHeaderIcon size={resScale(30)} onBack={onBack} iconName="chevron-left" />
   );
 
   const onLogin = async () => {
-    const params = new URLSearchParams({ phone: phoneNumber, otp: otpValue });
+    const params = { phone: phoneNumber, otp: otpValue };
     setVerificationState({
       ...verificationState,
       loading: true,
     });
     try {
-      const response = await axios.post(
-        BrikApiCommon.login(),
-        params.toString(),
-        {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        }
-      );
+      const response = await signIn(params);
       if (response.data.success) {
+        const { accessToken } = response.data.data;
+        const decoded = jwtDecode<JwtPayload>(accessToken);
+        await bStorage.setItem(storageKey.userToken, accessToken);
+        dispatch(setUserData(decoded));
         setVerificationState({
           ...verificationState,
           errorOtp: '',
           otpValue: '',
           loading: false,
         });
-        await EncryptedStorage.setItem(
-          'userSession',
-          JSON.stringify(response.data.data)
-        );
-        dispatch(setUserData(response.data.data));
       } else {
         throw new Error(response.data.message);
       }
@@ -94,21 +96,15 @@ const Verification = () => {
     }
   };
   const onResendOtp = async () => {
-    setCountDown(10);
-    const params = new URLSearchParams({ phone: phoneNumber });
+    const params = { phone: phoneNumber };
     try {
-      const response = await axios.post(
-        BrikApiCommon.login(),
-        params.toString(),
-        {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        }
-      );
+      const response = await signIn(params);
       if (response.data.success) {
         setVerificationState({
           ...verificationState,
           errorOtp: '',
           otpValue: '',
+          countDownOtp: 10,
         });
       } else {
         throw new Error(response.data.message);
@@ -118,13 +114,18 @@ const Verification = () => {
         ...verificationState,
         errorOtp: error.message,
         otpValue: '',
+        countDownOtp: 10,
       });
     }
   };
   const onBack = () => {
     clearInterval(timer.current);
-    setCountDown(10);
-    setVerificationState({ ...verificationState, otpValue: '', errorOtp: '' });
+    setVerificationState({
+      ...verificationState,
+      otpValue: '',
+      errorOtp: '',
+      countDownOtp: 10,
+    });
     navigation.goBack();
   };
   return (
@@ -137,7 +138,7 @@ const Verification = () => {
         />
         <BSpacer size="large" />
         <VIntstruction onPress={onBack} phoneNumber={phoneNumber} />
-        <BSpacer size='large' />
+        <BSpacer size="large" />
 
         <OTPFieldLabel />
         <OTPField

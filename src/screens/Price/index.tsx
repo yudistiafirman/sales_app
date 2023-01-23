@@ -19,6 +19,8 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { setUserData } from '@/redux/reducers/authReducer';
+import bStorage from '@/actions/BStorage';
+import storageKey from '@/constants/storageKey';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
   const navigation = useNavigation();
@@ -92,16 +94,8 @@ const PriceList = () => {
     try {
       const response = await signOut();
       if (response) {
-        EncryptedStorage.removeItem('userSession');
-        dispatch(
-          setUserData({
-            accessToken: '',
-            userId: '',
-            email: '',
-            userType: '',
-            phone: '',
-          })
-        );
+        bStorage.deleteItem(storageKey.userToken);
+        dispatch(setUserData(null));
       }
     } catch (error) {
       console.log(error);

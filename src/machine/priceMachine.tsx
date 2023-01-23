@@ -255,7 +255,7 @@ export const priceMachine =
           return event.data?.result;
         },
         isLocationReachable: (context, _event) => {
-          return context.locationDetail.distance.value < 40000;
+          return context.locationDetail?.distance?.value < 40000;
         },
         permissionGranted: (_context, event) => {
           return event.data === true;
@@ -371,7 +371,6 @@ export const priceMachine =
           try {
             const { longitude, latitude } = context.longlat;
             const response = await getLocationCoordinates(
-              '',
               longitude,
               latitude,
               'BP-LEGOK'
@@ -384,7 +383,6 @@ export const priceMachine =
         getCategoriesProduct: async (_context, _event) => {
           try {
             const response = await getProductsCategories(
-              '',
               undefined,
               undefined,
               undefined,
@@ -401,7 +399,6 @@ export const priceMachine =
           const { page, size, selectedCategories } = context;
           try {
             const response = await getAllBrikProducts(
-              '',
               page,
               size,
               selectedCategories

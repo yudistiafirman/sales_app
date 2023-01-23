@@ -51,7 +51,7 @@ export default class BrikApiCommon {
     const url = new URL(`${API_URL}/common/m/auth/logout`);
     return url.toString();
   };
-  static refresh = () => {
+  static getRefreshToken = () => {
     const url = new URL(`${API_URL}/common/m/auth/refresh`);
     return url.toString();
   };

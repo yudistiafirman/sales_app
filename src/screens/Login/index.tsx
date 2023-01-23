@@ -10,11 +10,10 @@ import loginStyle from './style';
 import { colors, layout } from '@/constants';
 import { setPhoneNumber } from '@/redux/reducers/authReducer';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
-import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { signIn } from '@/actions/CommonActions';
 interface LoginState {
-  errorMessage: string | unknown;
+  errorMessage: unknown | string;
   loading: boolean;
   phoneNumber: string;
 }
@@ -45,16 +44,9 @@ const Login = () => {
   }, [navigation]);
 
   const sendOtp = async () => {
-    const params = new URLSearchParams({ phone: phoneNumber });
     setLoginState({ ...loginState, loading: true });
     try {
-      const response = await axios.post(
-        BrikApiCommon.login(),
-        params.toString(),
-        {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        }
-      );
+      const response = await signIn({ phone: phoneNumber });
       if (response.data.success) {
         dispatch(setPhoneNumber(phoneNumber));
         setLoginState({
@@ -88,14 +80,18 @@ const Login = () => {
           setLoginState({ ...loginState, phoneNumber: val })
         }
       />
-      <>
-        {errorMessage && <BErrorText text={errorMessage} />}
-
-      </>
+      <>{errorMessage && <BErrorText text={errorMessage} />}</>
       <BSpacer size={resScale(40)} />
       <BButtonPrimary
         disable={disableBtn}
-        buttonStyle={[loginStyle.buttonStyle, { backgroundColor: disableBtn ? `${colors.primary}40` : colors.primary, }]}
+        buttonStyle={[
+          loginStyle.buttonStyle,
+          {
+            backgroundColor: disableBtn
+              ? `${colors.primary}40`
+              : colors.primary,
+          },
+        ]}
         onPress={sendOtp}
         title="Kirim OTP"
       />

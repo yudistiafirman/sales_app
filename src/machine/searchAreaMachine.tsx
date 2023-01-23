@@ -201,7 +201,7 @@ export const searchAreaMachine =
         },
         getLocationBySearch: async (context, event) => {
           try {
-            const response = await searchLocation('', context.searchValue);
+            const response = await searchLocation(context.searchValue);
 
             return response.data.result;
           } catch (error) {
@@ -210,7 +210,7 @@ export const searchAreaMachine =
         },
         gettingPlacesId: async (context, event) => {
           try {
-            const response = await searchLocationById('', context.placesId);
+            const response = await searchLocationById(context.placesId);
             return response.data.result;
           } catch (error) {
             console.log(error);

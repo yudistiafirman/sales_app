@@ -8,10 +8,7 @@ import TestStack from './stacks/TestStack';
 // import OpsManTabs from './tabs/OpsManTabs';
 import Splash from '@/screens/Splash';
 import AuthStack from './stacks/AuthStack';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/redux/store';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import { setIsLoading, setUserData } from '@/redux/reducers/authReducer';
+import { useBootStrapAsync } from '@/hooks';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,28 +36,9 @@ const getStacks = (userType?: 'opsManager' | 'sales' | undefined) => {
 const authStack = () => AuthStack({ Stack: Stack });
 
 function AppNavigator() {
-  const { isLoading, userData } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch<AppDispatch>();
-
-  React.useEffect(() => {
-    dispatch(setIsLoading(true));
-    EncryptedStorage.getItem('userSession')
-      .then((response) => {
-        if (response?.length > 0) {
-          const dataToSave = JSON.parse(response)
-          dispatch(setUserData(dataToSave));
-          dispatch(setIsLoading(false))
-         
-        }else{
-          dispatch(setIsLoading(false))
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsLoading(false)
-      });
-  }, []);
+  const [isLoading, userData] = useBootStrapAsync();
   const userType = 'sales';
+
   if (isLoading) {
     return <Splash />;
   }
@@ -71,7 +49,7 @@ function AppNavigator() {
         headerShadowVisible: false,
       }}
     >
-      {userData?.accessToken.length > 0 ? (
+      {userData ? (
         <>
           {getTabs(userType)}
           {getStacks(userType)}
