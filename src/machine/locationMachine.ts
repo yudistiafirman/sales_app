@@ -79,7 +79,7 @@ export const locationMachine =
           entry: 'enabledLoadingDetails',
 
           after: {
-            "500": 'gettingLocationDetails'
+            '500': 'gettingLocationDetails',
           },
         },
       },
@@ -130,11 +130,7 @@ export const locationMachine =
       services: {
         onGettingLocationDetails: async (context, event) => {
           const { latitude, longitude } = context.region;
-          const response = await getLocationCoordinates(
-            '',
-            longitude,
-            latitude
-          );
+          const response = await getLocationCoordinates(longitude, latitude);
           return response.data.result;
         },
       },
