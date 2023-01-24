@@ -1,5 +1,6 @@
 import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import { displayName } from '../../../app.json';
 const hasPermissionIOS = async () => {
   const status = await Geolocation.requestAuthorization('whenInUse');
 
@@ -26,7 +27,7 @@ const openSetting = () => {
 
 const ShowAlertLocation = () => {
   Alert.alert(
-    'Turn on Location Services to allow "" to determine your location.',
+    `Turn on Location Services to allow ${displayName} to determine your location.`,
     '',
     [{ text: 'Go to Settings', onPress: openSetting }]
   );

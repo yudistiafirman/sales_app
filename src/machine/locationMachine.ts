@@ -105,8 +105,8 @@ export const locationMachine =
                 ? event.data.formattedAddress
                 : '',
               postalId: event.data?.PostalId,
-              lon: event.data.lon,
-              lat: event.data.lat,
+              lon: event?.data?.lon,
+              lat: event?.data?.lat,
             },
             loadingLocation: false,
           };

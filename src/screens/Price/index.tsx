@@ -14,24 +14,18 @@ import { priceMachine } from '@/machine/priceMachine';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { layout } from '@/constants';
-import { signOut } from '@/actions/CommonActions';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/redux/store';
-import { setUserData } from '@/redux/reducers/authReducer';
-import bStorage from '@/actions/BStorage';
-import storageKey from '@/constants/storageKey';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
   const navigation = useNavigation();
-  const route = useRoute();
+  const route = useRoute<RootStackScreenProps>();
   const [index, setIndex] = useState(0);
+  const [visibleTnc, setVisibleTnc] = useState(false);
   const appState = useRef(AppState.currentState);
   const [state, send] = useMachine(priceMachine);
-  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (state.matches('getLocation.denied')) {
+    if (state.matches('denied')) {
       const subscription = AppState.addEventListener(
         'change',
         (nextAppState) => {
@@ -50,20 +44,24 @@ const PriceList = () => {
         subscription.remove();
       };
     }
-  }, [state, send]);
+  }, []);
 
   useEffect(() => {
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude } = params.coordinate;
+      send('backToIdle')
       send('sendingParams', { value: { latitude, longitude } });
+      setIndex(0);
     } else {
       send('onAskPermission');
     }
   }, [route?.params]);
 
   const renderHeaderRight = () => {
-    return <BTouchableText onPress={onLogout} title="Logout" />;
+    return (
+      <BTouchableText onPress={() => setVisibleTnc(true)} title="ketentuan" />
+    );
   };
 
   useLayoutEffect(() => {
@@ -88,18 +86,6 @@ const PriceList = () => {
     navigation.navigate('Location', {
       coordinate: coordinate,
     });
-  };
-
-  const onLogout = async () => {
-    try {
-      const response = await signOut();
-      if (response) {
-        bStorage.deleteItem(storageKey.userToken);
-        dispatch(setUserData(null));
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const {
@@ -131,7 +117,24 @@ const PriceList = () => {
         />
       )}
       <BSpacer size="extraSmall" />
-      <PriceSearchBar onPress={() => navigation.navigate('SearchProduct')} />
+      {!loadLocation ? (
+        <PriceSearchBar
+          onPress={() =>
+            navigation.navigate('SearchProduct', {
+              distance: locationDetail.distance.value,
+            })
+          }
+        />
+      ) : (
+        <ShimmerPlaceholder
+          style={{
+            marginHorizontal: layout.pad.lg,
+            height: layout.pad.xl,
+            width: '92%',
+          }}
+        />
+      )}
+
       <BSpacer size="extraSmall" />
       {routes.length > 0 && (
         <BTabSections
@@ -155,12 +158,9 @@ const PriceList = () => {
         />
       )}
 
-      <Tnc
-        isVisible={state.matches('Tnc.agreementShowed')}
-        onCloseTnc={() => send('hideAgreement')}
-      />
+      <Tnc isVisible={visibleTnc} onCloseTnc={() => setVisibleTnc(false)} />
       <BAlert
-        isVisible={state.matches('getLocation.unreachable')}
+        isVisible={state.matches('unreachable')}
         type="warning"
         onClose={() => send('hideWarning')}
       />

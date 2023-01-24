@@ -5,10 +5,11 @@ export const getAllBrikProducts = (
   page?: number,
   size?: number,
   search?: string,
-  categories?: string
+  category?: string,
+  distance?: number
 ) => {
   return request(
-    BrikApiInventory.getProducts(page, size, search, categories),
+    BrikApiInventory.getProducts(page, size, search, category, distance),
     getOptions('GET')
   );
 };

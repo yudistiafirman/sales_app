@@ -58,14 +58,13 @@ export const getOptions = (
 
 export const request = axios;
 
-const requestRefresh: TokenRefreshRequest = async (
-  refreshToken: string
-): Promise<string> => {
-  const response = await axios.post(BrikApiCommon.getRefreshToken(), {
-    token: refreshToken,
-  });
+// const requestRefresh: TokenRefreshRequest = async (
+//   refreshToken: string
+// ): Promise<string> => {
+//   const response = await axios.post(BrikApiCommon.getRefreshToken(), {
+//     refresh_token: refreshToken,
+//   });
+//   return response.data.data.accessToken;
+// };
 
-  return response.data.data.accessToken;
-};
-
-applyAuthTokenInterceptor(axios, { requestRefresh });
+// applyAuthTokenInterceptor(axios, { requestRefresh });

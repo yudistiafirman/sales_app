@@ -11,7 +11,7 @@ export default class BrikApiInventory {
     pillar?: string,
     count?: boolean
   ) => {
-    const url = new URL(`${API_URL}/inventory/m/categories`);
+    const url = new URL(`${API_URL}/inventory/m/category`);
     const params = url.searchParams;
 
     if (page) {
@@ -29,7 +29,6 @@ export default class BrikApiInventory {
     if (count) {
       params.append('count', `${count}`);
     }
-
     return url.toString();
   };
 
@@ -37,9 +36,10 @@ export default class BrikApiInventory {
     page?: number,
     size?: number,
     search?: string,
-    category?: string
+    category?: string,
+    distance?: number
   ) => {
-    const url = new URL(`${API_URL}/inventory/m/products`);
+    const url = new URL(`${API_URL}/inventory/m/product`);
     const params = url.searchParams;
 
     if (page) {
@@ -54,7 +54,9 @@ export default class BrikApiInventory {
     if (category) {
       params.append('category', category);
     }
- 
+    if (distance) {
+      params.append('distance', `${distance}`);
+    }
 
     return url.toString();
   };

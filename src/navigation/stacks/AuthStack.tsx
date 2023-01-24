@@ -12,14 +12,14 @@ const AuthStack = ({
       Stack: Stack,
       name: 'Login',
       title: 'Log in',
-      type:'home',
+      type: 'home',
       component: Login,
     }),
     BStackScreen({
       Stack: Stack,
       name: 'Verification',
       title: 'Kode Verifikasi',
-      type:'home',
+      type: 'home',
       component: Verification,
     }),
   ];

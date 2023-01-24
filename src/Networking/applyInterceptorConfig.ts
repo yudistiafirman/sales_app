@@ -2,6 +2,7 @@ import jwtDecode, { JwtPayload } from 'jwt-decode';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import bStorage from '@/actions/BStorage';
 import storageKey from '@/constants/storageKey';
+import { acc } from 'react-native-reanimated';
 const EXPIRE_FUDGE = 10;
 const STORAGE_KEY = storageKey.userToken;
 
@@ -83,7 +84,6 @@ const getTimestampFromToken = (token: Token): number | undefined => {
 
 const getExpiresIn = (token: Token): number => {
   const expiration = getTimestampFromToken(token);
-
   if (!expiration) return -1;
 
   return expiration - Date.now() / 1000;
@@ -104,7 +104,6 @@ const refreshToken = async (
     }
   } catch (error) {
     if (!axios.isAxiosError(error)) throw error;
-
     // Failed to refresh token
     const status = error.response?.status;
     if (status === 401 || status === 422) {
@@ -131,7 +130,6 @@ const authTokenInterceptor =
     // We need refresh token to do any authenticated requests
     const authToken = await getRefreshToken();
     if (!authToken) return requestConfig;
-
     const authenticateRequest = (token: string | undefined) => {
       if (token) {
         requestConfig.headers = requestConfig.headers ?? ({} as {});
