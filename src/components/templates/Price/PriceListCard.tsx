@@ -2,38 +2,56 @@
 import * as React from 'react';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import BChip from '../../atoms/BChip';
 import BText from '../../atoms/BText';
 import resScale from '@/utils/resScale';
+import { layout } from '@/constants';
+import formatCurrency from '@/utils/formatCurrency';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface PriceListCardProps {
   productName?: string;
-  productPrice?: number;
+  productPrice: number;
   categories?: string;
+  slump?: number;
 }
 
 const PriceListCard = ({
   productName,
   productPrice,
   categories,
+  slump,
 }: PriceListCardProps) => {
   return (
     <View style={PriceListCardStyles.container}>
       <View style={PriceListCardStyles.nameAndPriceContainer}>
         <BText style={PriceListCardStyles.productName}>{productName}</BText>
-        <BText style={PriceListCardStyles.productPrice}>{productPrice}</BText>
+        <BText style={PriceListCardStyles.productPrice}>
+          {`IDR ${formatCurrency(productPrice)}`}
+        </BText>
       </View>
       <View style={{ flexDirection: 'row' }}>
         <BChip type="default" backgroundColor={colors.chip.green}>
           {categories}
         </BChip>
+        {slump && (
+          <BChip type="default" backgroundColor={colors.chip.disabled}>
+            {`slump ${slump}`}
+            <Icon
+              color={colors.text.darker}
+              size={font.size.xs}
+              name="plus-minus"
+            />
+            {'2cm'}
+          </BChip>
+        )}
       </View>
     </View>
   );
 };
 
-const PriceListCardStyles = StyleSheet.create({
+export const PriceListCardStyles = StyleSheet.create({
   container: {
     height: resScale(56),
     borderBottomWidth: 1,
@@ -43,7 +61,7 @@ const PriceListCardStyles = StyleSheet.create({
   nameAndPriceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: resScale(8),
+    marginBottom: layout.pad.md,
     marginTop: resScale(6),
   },
   productName: {
@@ -53,7 +71,7 @@ const PriceListCardStyles = StyleSheet.create({
   },
   productPrice: {
     fontFamily: font.family.montserrat['400'],
-    color: '#202020',
+    color: colors.text.darker,
     fontSize: font.size.md,
   },
 });

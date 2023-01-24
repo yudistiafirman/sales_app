@@ -11,7 +11,7 @@ const BStackScreen = ({
   title,
   color,
   component,
-  headerShown = true
+  headerShown = true,
 }: {
   Stack: TypedNavigator<any, any, any, any, any>;
   type?: 'default' | 'home' | 'sub';
@@ -21,23 +21,19 @@ const BStackScreen = ({
   component: any;
   headerShown?: boolean;
 }) => {
-  const styles = useMemo(() => {
-    return {
-      headerTitleAlign: type === 'home' ? 'center' : 'left',
-      headerStyle: {
-        backgroundColor:
-          type === 'home' && color === 'primary'
-            ? colors.primary
-            : colors.white,
-      },
-      headerTitleStyle: {
-        color:
-          type === 'home' && color === 'primary'
-            ? colors.text.light
-            : colors.text.dark,
-      },
-    };
-  }, [type, color]);
+  const styles = {
+    headerTitleAlign: type === 'home' ? 'center' : 'left',
+    headerStyle: {
+      backgroundColor:
+        type === 'home' && color === 'primary' ? colors.primary : colors.white,
+    },
+    headerTitleStyle: {
+      color:
+        type === 'home' && color === 'primary'
+          ? colors.text.light
+          : colors.text.dark,
+    },
+  };
 
   const renderHeaderTitle = () => (
     <BText type="header" style={styles.headerTitleStyle}>
