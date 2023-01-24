@@ -11,13 +11,10 @@ interface TabBar {
   navigation: any;
 }
 
-const CustomSalesTabBar = ({ state, descriptors, navigation }: TabBar) => {
+const CustomOperationTabBar = ({ state, descriptors, navigation }: TabBar) => {
   const homeIcon = require('@/assets/icon/TabBarIcon/ic_home.png');
-  const transIcon = require('@/assets/icon/TabBarIcon/ic_dollar-square.png');
-  const profileIcon = require('@/assets/icon/TabBarIcon/ic_profile.png');
-  const priceIcon = require('@/assets/icon/TabBarIcon/ic_price.png');
-
-  const icons = [homeIcon, transIcon, profileIcon, priceIcon];
+  const dispatchIcon = require('@/assets/icon/TabBarIcon/ic_price.png');
+  const icons = [homeIcon, dispatchIcon];
 
   return (
     <View style={TabBarStyle.tabBarContainer}>
@@ -93,4 +90,4 @@ const CustomSalesTabBar = ({ state, descriptors, navigation }: TabBar) => {
   );
 };
 
-export default CustomSalesTabBar;
+export default CustomOperationTabBar;
