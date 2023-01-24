@@ -6,19 +6,19 @@ import {
 } from 'react-native';
 
 import * as React from 'react';
-import { Details, Region } from 'react-native-maps';
+import { Details } from 'react-native-maps';
 
 interface Input {
   label: string;
   isRequire: boolean;
   type:
-    | 'textInput'
-    | 'cardOption'
-    | 'comboDropdown'
-    | 'area'
-    | 'dropdown'
-    | 'PIC'
-    | 'autocomplete';
+  | 'textInput'
+  | 'cardOption'
+  | 'comboDropdown'
+  | 'area'
+  | 'dropdown'
+  | 'PIC'
+  | 'autocomplete';
   onChange?: (e: any) => void;
   value: string | any;
   placeholder?: string;
@@ -37,9 +37,9 @@ interface Input {
       value: string | number | any;
     }[];
     onChange:
-      | ((value: any) => void)
-      | ((value: any[] | null) => void)
-      | undefined;
+    | ((value: any) => void)
+    | ((value: any[] | null) => void)
+    | undefined;
     placeholder: string;
   };
   comboDropdown?: {
@@ -52,13 +52,13 @@ interface Input {
       value: string | number | any;
     }[];
     onChangeOne:
-      | ((value: any) => void)
-      | ((value: any[] | null) => void)
-      | undefined;
+    | ((value: any) => void)
+    | ((value: any[] | null) => void)
+    | undefined;
     onChangeTwo:
-      | ((value: any) => void)
-      | ((value: any[] | null) => void)
-      | undefined;
+    | ((value: any) => void)
+    | ((value: any[] | null) => void)
+    | undefined;
     placeholderOne: string;
     placeholderTwo: string;
     isErrorOne?: boolean;
@@ -119,21 +119,24 @@ interface NavigationProps {
   navigate: (screen?: string) => void;
 }
 
-interface Location {
+interface LatLang {
   latitude: number;
   longitude: number;
+}
+
+interface Region {
   latitudeDelta: number;
   longitudeDelta: number;
 }
 
 interface BLocationProps {
   mapStyle?: ViewStyle | undefined;
-  region?: Location;
-  onRegionChange?: ((region: Region, details: Details) => void) | undefined;
-  coordinate: Region;
+  region?: Region & LatLang;
+  onRegionChangeComplete?:
+  | ((region: Region & LatLang, details: Details) => void)
+  | undefined;
   CustomMarker?: React.ReactNode | undefined;
 }
-
 export type {
   Input,
   Styles,
@@ -142,6 +145,5 @@ export type {
   CreateVisitationThirdStep,
   PIC,
   NavigationProps,
-  Location,
   BLocationProps,
 };

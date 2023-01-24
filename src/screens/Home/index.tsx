@@ -15,7 +15,6 @@ import { TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
 import { BBottomSheet, BSearchBar, BFlatlistItems } from '@/components';
 import { useNavigation } from '@react-navigation/native';
-import { NavigationProps } from '@/interfaces';
 
 import Modal from 'react-native-modal';
 
@@ -32,7 +31,7 @@ const Beranda = () => {
   const [snapPoints] = useState(['68%', '91%', '100%']); //setSnapPoints
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const navigation = useNavigation<NavigationProps>();
+  const navigation = useNavigation();
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isHeaderShown, setIsHeaderShown] = useState(true);
@@ -206,7 +205,7 @@ const Beranda = () => {
 
   const kunjunganAction = () => {
     // setIsLoading((curr) => !curr);
-    navigation.navigate('Create Visitation');
+    navigation.navigate('CreateVisitation');
   };
   const sceneToRender = useCallback(
     (key: string) => {

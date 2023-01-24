@@ -9,8 +9,8 @@ import BText from '../atoms/BText';
 type Route = {
   key: string;
   title: string;
-  totalItems: number;
-  chipPosition: 'right' | 'bottom';
+  totalItems?: number;
+  chipPosition?: 'right' | 'bottom' | undefined;
 };
 
 interface BTabLabelsProps {
@@ -19,13 +19,14 @@ interface BTabLabelsProps {
 }
 
 const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
-  const { title, totalItems, chipPosition } = route;
-  const rightChipPosition = chipPosition === 'right';
-  const chipBackgroundColor = rightChipPosition ? colors.chip.disabled : '';
+  const isHasItems = route?.totalItems > 0;
+  const rightChipPosition = route?.chipPosition === 'right';
 
+  const chipBackgroundColor = rightChipPosition ? colors.chip.disabled : '';
   const BTabLabelsContainer: ViewStyle = {
     flexDirection: rightChipPosition ? 'row' : 'column',
     alignItems: 'center',
+    justifyContent: 'center',
   };
 
   const BTabLabelsTextStyle: TextStyle = {
@@ -34,14 +35,17 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
       ? font.family.montserrat['600']
       : font.family.montserrat['400'],
     fontSize: font.size.md,
-    marginRight: resScale(4),
+    marginRight: isHasItems ? 4 : 0,
   };
-
   return (
     <View style={BTabLabelsContainer}>
-      <BText style={BTabLabelsTextStyle}>{title}</BText>
-      <BChip type="header" backgroundColor={chipBackgroundColor}>
-        {totalItems && totalItems}
+      <BText style={BTabLabelsTextStyle}>{route.title}</BText>
+
+      <BChip
+        type="header"
+        backgroundColor={isHasItems ? chipBackgroundColor : null}
+      >
+        {isHasItems && route?.totalItems}
       </BChip>
     </View>
   );
