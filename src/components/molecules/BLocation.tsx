@@ -48,6 +48,7 @@ const BLocation = ({
   coordinate,
   region,
   CustomMarker,
+  isUninteractable = false,
 }: BLocationProps & typeof BLocationDefaultProps) => {
   return (
     <MapView
@@ -56,6 +57,7 @@ const BLocation = ({
       provider={MAPSPROVIDER}
       onRegionChange={onRegionChange}
       rotateEnabled={false}
+      cacheEnabled={isUninteractable}
       region={region}
     >
       <Marker coordinate={coordinate}>{CustomMarker}</Marker>

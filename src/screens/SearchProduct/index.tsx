@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
 import { useNavigation } from '@react-navigation/native';
@@ -10,7 +10,17 @@ import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import { searchProductMachine } from '@/machine/searchProductMachine';
 
-const SearchProduct = () => {
+type SearchProductType = {
+  isAsComponent?: boolean;
+  getProduct?: (data: any) => void;
+  onPressBack?: () => void;
+};
+
+const SearchProduct = ({
+  isAsComponent,
+  getProduct,
+  onPressBack = () => {},
+}: SearchProductType) => {
   const [index, setIndex] = React.useState(0);
   const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();
@@ -34,12 +44,14 @@ const SearchProduct = () => {
   );
 
   React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerLeft: () => renderHeaderLeft(),
-      headerTitle: () => renderHeaderCenter(),
-    });
-  }, [navigation, searchValue]);
+    if (!isAsComponent) {
+      navigation.setOptions({
+        headerBackVisible: false,
+        headerLeft: () => renderHeaderLeft(),
+        headerTitle: () => renderHeaderCenter(),
+      });
+    }
+  }, [navigation, searchValue, isAsComponent]);
 
   const onChangeText = (text: string) => {
     setSearchValue(text);
@@ -60,6 +72,35 @@ const SearchProduct = () => {
   const { routes, productsData, loadProduct } = state.context;
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      {isAsComponent && (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <View
+            style={{
+              marginTop: layout.pad.md,
+            }}
+          >
+            <BHeaderIcon
+              size={resScale(30)}
+              marginRight={0}
+              iconName="chevron-left"
+              onBack={() => {
+                onPressBack();
+              }}
+            />
+          </View>
+          <SearchProductNavbar
+            value={searchValue}
+            onChangeText={onChangeText}
+            onClearValue={onClearValue}
+          />
+        </View>
+      )}
       <BSpacer size="small" />
       {routes.length > 0 && (
         <BTabSections
@@ -72,6 +113,7 @@ const SearchProduct = () => {
               products={productsData}
               loadProduct={loadProduct}
               emptyProductName={searchValue}
+              onPress={getProduct}
             />
           )}
           onIndexChange={setIndex}

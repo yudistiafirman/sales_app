@@ -18,7 +18,10 @@ interface Input {
     | 'area'
     | 'dropdown'
     | 'PIC'
-    | 'autocomplete';
+    | 'autocomplete'
+    | 'switch'
+    | 'fileInput';
+  hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   value: string | any;
   placeholder?: string;
@@ -135,6 +138,65 @@ interface BLocationProps {
   onRegionChange?: ((region: LatLang, details: Details) => void) | undefined;
   coordinate: LatLang;
   CustomMarker?: React.ReactNode | undefined;
+  isUninteractable?: boolean;
+}
+
+interface SphStateInterface {
+  selectedCompany: any;
+  selectedPic: any;
+  isBillingAddressSame: boolean;
+  billingAddress: {
+    name: string;
+    phone: string | number;
+    addressAutoComplete: { [key: string]: any };
+    fullAddress: string;
+  };
+  paymentType: string;
+  paymentRequiredDocuments: { [key: string]: any };
+  paymentDocumentsFullfilled: boolean;
+  paymentBankGuarantee: boolean;
+  chosenProducts: any[];
+  useHighway: boolean;
+}
+
+type SphContextInterface = [
+  SphStateInterface,
+  (key: string) => (data: any) => void,
+  (index: number) => void
+];
+
+interface AdditionalPricesInterface {
+  id: string;
+  categoryId: string;
+  createdById?: string;
+  unit: string;
+  price: number;
+  type: string;
+  min: number;
+  max: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface productParentInterface {
+  id: string;
+  name: string;
+  AdditionalPrices: AdditionalPricesInterface[];
+}
+
+interface ProductDataInterface {
+  id: string;
+  name: string;
+  Price: {
+    id: string;
+    price: number;
+  };
+  Category: {
+    id: string;
+    name: string;
+    parent_id: string;
+    Parent: productParentInterface;
+  };
 }
 
 export type {
@@ -146,4 +208,9 @@ export type {
   PIC,
   NavigationProps,
   BLocationProps,
+  SphStateInterface,
+  SphContextInterface,
+  AdditionalPricesInterface,
+  productParentInterface,
+  ProductDataInterface,
 };
