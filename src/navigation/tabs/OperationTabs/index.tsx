@@ -20,16 +20,18 @@ function OperationTabs() {
       {BTabScreen({
         Tab: Tab,
         name: 'Dispatch',
-        title: 'Beranda',
+        title: 'Dispatch',
         type: 'home',
         color: 'white',
+        headerShown: false,
         component: Operation,
       })}
       {BTabScreen({
         Tab: Tab,
         name: 'Return',
-        title: 'Beranda',
+        title: 'Return',
         type: 'sub',
+        headerShown: false,
         component: Dispatch,
       })}
     </Tab.Navigator>

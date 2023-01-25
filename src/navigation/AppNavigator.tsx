@@ -37,7 +37,7 @@ const getTabs = (userType?: USER_TYPE) => {
         title: 'Beranda',
         type: 'home',
         color: 'white',
-        headerShown: false,
+        headerShown: true,
         component: operationTabs,
         operationType: 'Dispatch',
       });
