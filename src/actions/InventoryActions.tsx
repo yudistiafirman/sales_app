@@ -1,26 +1,20 @@
-import BrikApi from '@/brikApi/BrikApi';
 import BrikApiInventory from '@/brikApi/BrikApiInventory';
-import { catchError, getOptions, request } from '@/networking/request';
+import { getOptions, request } from '@/networking/request';
 
 export const getAllBrikProducts = (
-  token: string,
   page?: number,
   size?: number,
   search?: string,
-  categories?: string
+  category?: string,
+  distance?: number
 ) => {
   return request(
-    BrikApiInventory.getProducts(page, size, search, categories),
-    getOptions(token, 'GET')
-  )
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson;
-    });
+    BrikApiInventory.getProducts(page, size, search, category, distance),
+    getOptions('GET')
+  );
 };
 
 export const getProductsCategories = (
-  token: string,
   page?: number,
   size?: number,
   search?: string,
@@ -29,10 +23,6 @@ export const getProductsCategories = (
 ) => {
   return request(
     BrikApiInventory.getProductCategories(page, size, search, pillar, count),
-    getOptions(token, 'GET')
-  )
-    .then((response) => response.json())
-    .then((json) => {
-      return json;
-    });
+    getOptions('GET')
+  );
 };

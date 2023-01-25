@@ -15,7 +15,6 @@ import { TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
 import { BBottomSheet, BSearchBar, BFlatlistItems } from '@/components';
 import { useNavigation } from '@react-navigation/native';
-import { NavigationProps } from '@/interfaces';
 
 import Modal from 'react-native-modal';
 
@@ -32,7 +31,7 @@ const Beranda = () => {
   const [snapPoints] = useState(['68%', '91%', '100%']); //setSnapPoints
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const navigation = useNavigation<NavigationProps>();
+  const navigation = useNavigation();
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isHeaderShown, setIsHeaderShown] = useState(true);
@@ -161,7 +160,9 @@ const Beranda = () => {
       {
         icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
         title: 'Buat SPH',
-        action: () => {},
+        action: () => {
+          navigation.navigate('SPH');
+        },
       },
       {
         icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
@@ -273,7 +274,7 @@ const Beranda = () => {
           <BTabViewScreen
             screenToRender={sceneToRender}
             isLoading={isLoading}
-            tabToRender={tabToRender}
+            tabToRender={searchQuery ? tabToRender : []}
           />
         </View>
       </Modal>

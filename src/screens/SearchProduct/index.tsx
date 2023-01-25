@@ -1,20 +1,39 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import resScale from '@/utils/resScale';
 import { BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
 import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import { searchProductMachine } from '@/machine/searchProductMachine';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 
-const SearchProduct = ({ route }: { route: any }) => {
+type SearchProductType = {
+  isAsComponent?: boolean;
+  getProduct?: (data: any) => void;
+  onPressBack?: () => void;
+};
+
+const SearchProduct = ({
+  isAsComponent,
+  getProduct,
+  onPressBack = () => {},
+}: SearchProductType) => {
   const [index, setIndex] = React.useState(0);
   const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();
+  const route = useRoute<RootStackScreenProps>();
   const [state, send] = useMachine(searchProductMachine);
+
+  React.useEffect(() => {
+    if (route?.params) {
+      const { distance } = route.params;
+      send('sendingParams', { value: distance });
+    }
+  }, [route?.params]);
 
   const renderHeaderLeft = () => (
     <BHeaderIcon
@@ -34,12 +53,14 @@ const SearchProduct = ({ route }: { route: any }) => {
   );
 
   React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerLeft: () => renderHeaderLeft(),
-      headerTitle: () => renderHeaderCenter(),
-    });
-  }, [navigation, searchValue]);
+    if (!isAsComponent) {
+      navigation.setOptions({
+        headerBackVisible: false,
+        headerLeft: () => renderHeaderLeft(),
+        headerTitle: () => renderHeaderCenter(),
+      });
+    }
+  }, [navigation, searchValue, isAsComponent]);
 
   const onChangeText = (text: string) => {
     setSearchValue(text);
@@ -60,6 +81,35 @@ const SearchProduct = ({ route }: { route: any }) => {
   const { routes, productsData, loadProduct } = state.context;
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      {isAsComponent && (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <View
+            style={{
+              marginTop: layout.pad.md,
+            }}
+          >
+            <BHeaderIcon
+              size={resScale(30)}
+              marginRight={0}
+              iconName="chevron-left"
+              onBack={() => {
+                onPressBack();
+              }}
+            />
+          </View>
+          <SearchProductNavbar
+            value={searchValue}
+            onChangeText={onChangeText}
+            onClearValue={onClearValue}
+          />
+        </View>
+      )}
       <BSpacer size="small" />
       {routes.length > 0 && (
         <BTabSections
@@ -72,6 +122,7 @@ const SearchProduct = ({ route }: { route: any }) => {
               products={productsData}
               loadProduct={loadProduct}
               emptyProductName={searchValue}
+              onPress={getProduct}
             />
           )}
           onIndexChange={setIndex}

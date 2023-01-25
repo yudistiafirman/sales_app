@@ -79,7 +79,7 @@ export const locationMachine =
           entry: 'enabledLoadingDetails',
 
           after: {
-            "500": 'gettingLocationDetails'
+            '500': 'gettingLocationDetails',
           },
         },
       },
@@ -105,8 +105,8 @@ export const locationMachine =
                 ? event.data.formattedAddress
                 : '',
               postalId: event.data?.PostalId,
-              lon: event.data.lon,
-              lat: event.data.lat,
+              lon: event?.data?.lon,
+              lat: event?.data?.lat,
             },
             loadingLocation: false,
           };
@@ -130,12 +130,8 @@ export const locationMachine =
       services: {
         onGettingLocationDetails: async (context, event) => {
           const { latitude, longitude } = context.region;
-          const response = await getLocationCoordinates(
-            '',
-            longitude,
-            latitude
-          );
-          return response.result;
+          const response = await getLocationCoordinates(longitude, latitude);
+          return response.data.result;
         },
       },
     }

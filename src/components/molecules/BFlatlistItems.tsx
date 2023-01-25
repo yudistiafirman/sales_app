@@ -41,6 +41,7 @@ function FlatListFooter(isLoading?: boolean) {
   );
 }
 export default function BFlatlistItems({
+  data,
   renderItem,
   // isLoading,
   searchQuery,
@@ -50,7 +51,7 @@ export default function BFlatlistItems({
 }: BTabScreenType) {
   const [flatListDatas, setFlatListDatas] = useState<visitationType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (initialFetch) {
@@ -62,6 +63,9 @@ export default function BFlatlistItems({
           setFlatListDatas(initialData);
         }
       })();
+    } else if (data) {
+      // setIsLoading(false);
+      setFlatListDatas(data);
     }
     return () => {
       console.log('-----------flatlist cleanup?');
@@ -70,7 +74,7 @@ export default function BFlatlistItems({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const separator = useCallback(() => <BSpacer size={'small'} />, []);
+  const separator = useCallback(() => <BSpacer size={'extraSmall'} />, []);
 
   return (
     <View style={style.container}>
@@ -80,9 +84,9 @@ export default function BFlatlistItems({
 
           if (onEndReached && info.distanceFromEnd >= 1) {
             setIsLoading(true);
+            setCurrentPage((current) => current + 1);
             const newData = await onEndReached({ ...info, currentPage });
             setIsLoading(false);
-            setCurrentPage((current) => current + 1);
             //console.log(newData, 'newData'); //onEndReached
             // const fetchNewDataFunc = onEndReached(info);
 

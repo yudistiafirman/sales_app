@@ -1,7 +1,7 @@
 import resScale from '@/utils/resScale';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useLayoutEffect } from 'react';
-import { Dimensions, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import LocationStyles from './styles';
 import CoordinatesDetail from './elements/CoordinatesDetail';
 import {
@@ -14,10 +14,11 @@ import {
 
 import { useMachine } from '@xstate/react';
 import { locationMachine } from '@/machine/locationMachine';
-import { LatLng, Region } from 'react-native-maps';
+import { Region } from 'react-native-maps';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 const Location = () => {
   const navigation = useNavigation();
-  const route = useRoute();
+  const route = useRoute<RootStackScreenProps>();
   const [state, send] = useMachine(locationMachine);
 
   const renderHeaderLeft = () => (

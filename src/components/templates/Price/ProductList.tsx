@@ -1,18 +1,19 @@
-import BSpinner from '@/components/atoms/BSpinner';
 import PriceListCard from '@/components/templates/Price/PriceListCard';
 import { layout } from '@/constants';
-import resScale from '@/utils/resScale';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import React, { useCallback } from 'react';
-import { FlatList } from 'react-native';
-import { Item } from 'react-native-paper/lib/typescript/components/List/List';
+import { FlatList, ListRenderItem } from 'react-native';
 import EmptyProduct from './EmptyProduct';
 import PriceListShimmer from './PriceListShimmer';
 
 interface productsData {
-  name?: string;
-  Price?: {
-    id: string;
-    price: number;
+  display_name?: string;
+  calcPrice: number;
+  properties: {
+    fc: string;
+    fs: string;
+    sc: string;
+    slump: number;
   };
   Category: {
     name?: string;
@@ -33,6 +34,7 @@ interface ProductListProps<ArrayOfObject> {
   isLoadMore?: boolean;
   loadProduct?: boolean;
   onRefresh?: () => void;
+  onPress?: (data: any) => void;
 }
 
 const ProductList = <ArrayOfObject extends productsData>({
@@ -43,14 +45,24 @@ const ProductList = <ArrayOfObject extends productsData>({
   isLoadMore,
   onRefresh,
   loadProduct,
+  onPress = () => {},
 }: ProductListProps<ArrayOfObject>) => {
-  const renderItem = useCallback(({ item, index }) => {
+  const renderItem: ListRenderItem<productsData> = useCallback(({ item }) => {
+    const fc =
+      item?.properties?.fc?.length > 0 ? ` / FC${item.properties.fc}` : '';
     return (
-      <PriceListCard
-        productName={item?.name}
-        productPrice={item?.Price?.price}
-        categories={item?.Category?.Parent?.name}
-      />
+      <TouchableOpacity
+        onPress={() => {
+          onPress(item);
+        }}
+      >
+        <PriceListCard
+          productName={`${item?.display_name}${fc}`}
+          productPrice={item?.calcPrice}
+          categories={item?.Category?.Parent?.name}
+          slump={item?.properties?.slump}
+        />
+      </TouchableOpacity>
     );
   }, []);
   return (

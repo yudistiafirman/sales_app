@@ -10,29 +10,44 @@ import { assign, send } from 'xstate/lib/actions';
 export { getLocationCoordinates } from '@/actions/CommonActions';
 
 export const priceMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXAGQHtMCb0GzKDYBrABTFR50sWGzIBiCOyrkAbg25U0WXIRLkqtRs1btOPfoOGj2COUxZiA2gAYAurbuIUDUbrLOQAD0QBmAEwArJS+AByBNr6+AOwAbDb+odEANCAAnogALJn+lACMgUmBgYmBAJz+sb4AvtWpytj4RKQU1GD0Fu76fAJCImKS0pTmipQNqs0abR06Yt2GfSZkZmTys+yOVnlOSCDIrujunj4IvgUh4ZEx8Ykp6Yj+NpmUsWVJ-pmxeR+BsSW19QwjTULU07W0lj0BAANtCGAB3SCDVojJRAibqVpaTpzGFwxEQFZrSFkTb2Tz7NxiY6Ib6BZ6xTK+MqBPJlGy-Xwc1IZBBM3yUTKhIp5J4xYV5aIAvbopqYsEzEmcWEIpECVAMVBjaEsABmmrwY1lIKm2PWHDxqsJ5nNZJ2Lip7BpCAqPMQ0SFlGi0RsNgKxVCVTi0vGctB0whXUwAFdUKgwGRFe5GAQIEipCjVgo0Sow6bwTi9DG4wmk2IU2nrVnbfZHBSDkddidMjYypRQv4YjF-GU8qFmeE3S62e2bLFYqEmYkvhyQ8bJliC+bKMX44nI+WGKn00NUUbcybF2Wi7G18eyBXIETC6Ta9t646PE3ab5nr5AtFAsyZx94qEh+EeSUCUmTRJOOTvnksT+HOB4LgqG4niW643peEDiOqmranqBr7sC8ERjeK6nqWiEXlulbXjWDjkrslKHNSz58q27adtE3a9v2byBABE6UL6voFAkHavjBdQynB8qEcucLmgAIu0BDoNCaGSMINAEGQ2AAEpgM0BAAEbQmAdZ0Q2jGgCcAC0PqCmyJSMpUYR5EKQ55FEuRMq2QSRC23xSuJoaHghRGySSCkacpqkQOpmk6XpJCGcZWz2ns5lOkxEQCmU0E5P2LaPCUbk2HEwElfEopxHEoRlLB+FSWaSq6uQhwMOIpkOgxGWWYgvxAdB47sZOhRnL4bk9rEISxOxbKvGUZRMgFgKSeGjVdNGZDxvpRlgOIpBpgA6gQqBkOQUAdWlj7Oh8QHlUEjJPJkZQBP+9wIN874vK8fY5C2r6BnVGKrUuSppqdkCUPq8ZQBqG3oQQyDIAAwgweBgAAQkQ3AwwwcMAMoaTQJm0Z1jY9QgoSipQlTCiUn5BE9-hDv4jyCrczILb2vaJIDeZHmRlBg+gEMGVjONw+ICPI6jYAAGKamA4tkBABMsMTqX0WT3h+EEFxZdcwl3LyASec5PYFFEFQLbzwXSUq6AQMZ4jsAAggYvTGNYJOXV1T7k1ZBShPxjxgYU9IskkzNhCEjzhFO0Q9pONSBfODUg10DtO7ACYxWQUC8MdBB4LAF2axZ2sIFZ0HByVwo1dEbw2MKbnsjHTf0gECdvEyNsEQAKlpnAw2AYBo4mAASDtneIsDEAiLvD6Ppal+lfsV-dX2Cey-hQfNsRub8k0euELIFQ9eS91JA+YEP8ZL4meNzwSe0O2AC932PNAr1dTFOfxCcOUlPSRkz0D5QRCCVV8o1PzsUCJfYGNBeAaggNGTANBKBwlTGdJBDAUFoORDILMowgoEVoDgvB6DMG53zsg1BNAqIkjtA+X2zpXRvUeNkfIrZ2QfmFJ3ZOy16oIPIXQjBFFsG0PwZhLUyAdQ0ChoaEhadEGSMoeIvOIi0EMPcEwsyP9yaNxeKyV89NhS+jGuw6CNhgJBniL6L87F4H5hUbg0ROhFaamFrANC0xNE0FgJjbOAB5MgSM1ZQE8XAAhwwiE5iEc4vxK5wmRO8RRCGZDVEBK4GAEJYSiYRIwHAbRXsaIa1Xs6M40R8gVAiANaa7J97sMyJKds00vz0n8J+MIoQnFHkSe4gpXifEZNcWgrJwTQnJMKbADCcYsKyJwoIPCQMEmqKSfklJwz2h+PGTkyZGzpnFI2LWb2ZduoV0MX8dyoEShmMiMzOm1MOzNKbn8MCfxekKn6VMoZaSIBGlGR0bc6F2AAFFla6WaJAb+LCmKVOqT5OpDcxwPLyEBFygYarPQSAIiS8S+lrIGZsv5AKKGqXYEjYgmkYB5I8dMmFWsTjwrZIiyo9SUWWJKnZb4JVvSti-J83xhKflwB8WgQFql4y6njLPM6dB1IMvLkylpLLalsuRY03knTIgvHYgAr4UEum1HEmQXBcAKSp1BMwxliArKvn6uxHs04HLxAsbyKyOR+ICV+IkBIfpMi-EFWtcuZy17WR7AKaaAQKiBhdfct6AbBRxEeBbMcE56RBvTrid2Rh+jnNDawoCnZAxfE7NNSmbw3IJ0FGm363S4jQUzeeZU+JIDWqVe6LlXIgg+oSCUDlvJmlVPHBOSmlMd5VDgSnFaziBarlIqhP57bznWWjp0z4HJQJXO9Jq3qnrJz9kZJTMcgZcVKIQQLaRABxdorA85kWXWGxAQZgJCgTn8P0OUAgAXKF6ZkfZ2S+hZktPFKz+ahRvBFJSKkl16NheTOIQF307wWg3ANnShycWpgzAIvppoejPZa2dRFmqnRoAwR9zoPzZVeA3EoBQYGvV5O5X4U0Zo5XmgtGITaBYbS2olHalGmIB0qF6DsiHJTRG+MKJmb00VcnbH2FyPYWSRE-DxoiQs21wZtQgaCVSIifgDceyI3I5MBEoCyD4Pp2LzRUxp5cWn-lQ0VrDZWQnyZtLKkZwoopTM8XYazBpHwA1gQDd5BzoMEzC3+aLTA2M3MQA8xXUUfEKh+mKGWs4GHAvWOC9kXh4WKiRYzo7MAyXw2JqjU62NbL41apiP-b0HxmTNNFEEQV18KsPEyG5PK7YuRvD+C2RkU7BFgaoNfW+I9P6T2od1hACcD4symuUNTzzyixE64PAgi9P6PytAtpkQccXvI5IGcqvW5MgVaYUKTokyjeibX4hbHw3JVDbAB70DGniRDG6BvmXy1lUIkYChbS25Pvq+qWymUaAjPeFQc35wLwdlCjgp-9ko+FjlFJkBHgL1l0uR5WIVgLdm5JFfAHTHa9NnH4nSJ67Ioi-CNg8VkuQbMFVZGOXw018cUMJ4M0VJLxVktg6TGn-lmbZDbMepIURAwTUFde29Z1aVC6pxLldtIWbPE6UEcI4Rblo-YcUSaORk2SnfFUPHxqgA */
-  createMachine(
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXABVQHsIBXTGygG0YInKgbM2NAMQRGFSuQBujANZU0WXIRLkqtQa3ZcefMgKbaaCGY0wEa6CQG0ADAF17DxCkax0Via5AAPRAAsAIwArJQATEEAHADsASEAbFEAnEEBwQkANCAAnojhdnYBEUEAzMml5cnhyQmlQQC+DdlK2PhEpJKaRsK6vPxawiJgqEyolMiclgBmjKh4Exhtqp0aYPQ9Otz9BoPspmSyFl5kzs4+yO6e1mQ+-gih6ZRBySHhCUF2yXafUSHZeQQ4XeYTSdhCdii7ziIWSTRaSxUHXU1HWew4xzAUDm6DgABk9JBURshOxYAAhAiwMAAeTIAGFLFicXAxBIqGYFItlO01F00ZsMUzsRh8YSIMT0RSqbSGcKWbADkdLDczo4LlcTndELE7JQQqEQrEoXF6lEAYhonZSvqQgEPuEYgkYnFavCQK0kXy1iTjJRMSLcbACbwid1STRpdS6YyaMzRbBhqM5hMpjRZvNuctkfzfb0AwqQxAwwKI1HZbH40GleYVbZHOckB7NTdtQ87cUXm8Pl8fpD-rl8uCYpR7eV0jEQpPnaV3Z7eatJYL-fKE0WiWgI+uICIJABRMgQABKYA6kEbbg8Wqb911+sNxsdATNFoeKRHhRdL1CpQ+c8RC4ouGfoFmu4qLFu4q7gyxAEAYYCVoGcAXs2V6tjeOoxHqBohEaMQms+0Svi8FSjgkkKVOEuFRAkyRRP+PIrEBpYgauQbbhBxjbiIqBgNMvGwJ0UB4ugsA0Chlxod4GEIHeOF4QRL6DkCkLJJQqTjjEpRGkENQhAx2bekuEYrnGSHBuBm5cVBABGRByAAKowACSECcGAEkttJoC3uEUSUNpv6OrRoSFAOgJlFENqTp8djhPU7yOuEBleouVJyHQIx4KJHgSGykicooAFMZI6WZfMOU3DWxyqg26pNpJ1zeX4iClH5lB2PhaROkUNTOlkynJE6lAJOEATJAEWkulE1r0c0HrFTmVBlVllV5eIBWHPIRWMUtlArRVsC5WQ1V1qcDZBC4DVebcMmlAE-mdVE3XkQEfVOq+sLhJQsTjVEfwJAkb3gilgGlZw3AAO6QPlHJbVy84lctEOMNDECnScapXZeTW3T5iC1EEAXfLCMTxZ8bUBMRhRqb9E1BHEUTpH5oNI-tKNo0mYypjMcwLIje0EBzkAY7VTj1Tj174wghPE+CQ3k9aY2vrU32lK6U7xZE-Ws3txZkLiEoZliTAsIeIgEMgyD0oweBgJSmByFApuHgAyjQTKeVJeMtbJz7PEDw5pM+cQxK+5H+aNf2QmN1GNPNAtGfrhuUHZjvO4wZs7pb1u22AABicwm5nbse3GXu42292PV1k2ve9A2AjEnwjWNQ20YD2lRbrRkjGMADi6xWAYBI1XlQuQwQOSwBXUu+5UNfPXXvW1B9ylRUT6vjVpMe0YkPeLpgLCjGAZA0KPZ3cRtcOyAji1GUfJ9nxfJzbqL9bi9jqGVzJZPERTAU-JFGevdUo1p44Il2g-Y+vFn61lflBPuKZJi80zInQ+MDT7n3gTcN+Zgx7nU-hqb2bYXhYUoC6So6QIQug+KUf+7wApFHIt8WiXwpwHxRNwAhAARdYBB0CcCvqJD2ZBsAng6AQGy7lZ7oWllRUEXxfyJGbiwuIr4FGt23gkRI2tnyzgTvfRc3Czp8I9oI4RYk4LiNPCQKRMjLrEJ-vInRzwlE6OdEENRVNlIFFBG3JmbUJopChJwyQZteKSOkWAEQpBiwAHUCCoANgYWRzV7iRCJrpCEdhO6lH+pEYibVvpDV0k6BRyRqgGMgYZRc6A3IxIkAAQVgBlVaR0xZOLnvcT4LwRpvWejNHRKQ7SvjAcUfCkQIQGl0jUGIYSOQNJENSQ8AwkkEDwDPCW39umWjqGEeozpIS0INEDMZzoIhQjSIkWESQfhNHmmQZgcALhGPUF0uRvsAC0jdEA-I6oUQFsRXjpB-As4yxgPnpNam8Eov1EgpGDl44iwIRy4XiENGi5Q3j6UMVAxcwFejbH0IYCMUKfb3ACIUOFMIkipFBb8h49QwjggxfhO0IRingsJToUC7FxTkrbEDb6IJYRRSpR8SpxFVEdTtA6F0zd5l4tqcxPMvK2JilDBKHlkZKTRjlGZBUgqZJBBeMUB6z4ai6SSJ4jRvV1JUoes3P4KRKjcpYvmDVFktWcWENuY10s2ERB0WK+6uSSLEVSCOOiAzCj-Spe8cFSDUCDxoMPKAiEjXXRISa-C0bw1fh0c+SEdqaIjRJmFco5EEjgoOtlDpzVGq7IQH-ZSsI9RQm0QaWIXiAi1uFhAANvtm56gZtETlNNYrhQJrC3S40QqVKVnCZVqUUTJ0gEO+4gM9TaQqKaMNlRPqRGeAEii5R8J9pXWDKg66jZFwzlnTdiAsL+V3VvKh1p6HKRYSe6Ona47gtvaneyD7DxPoeL0n6MawExA0lhZI4cvi-rojHeIOkk3JhTUPfgL9PlNs+Rkl4-kjRGntBKmasQVZ1B+q6Cazd1a4VxTU1dkhH6wOwQQ-12bnG+zHWpWEv5O5-FNdpf+PwfrMLASkJWTGFr4q4TgiQZiBFCIFdx5tb1XzPVHJU3TpqKbUXBRE2xsFongedEU+Ko5m7xXGl4goD1wX1PckOmgjBkCtSKBQq52l0hQmUQOdy0waB7INPqQGqjITxFEyAGyjA022xhd9SZZQOz+ZDdkDAUBiAhYeF+cLniI7RYHJDepNBiCWgKNkYgYB0DZdyw9bIPSdFE0SIVqLnLp0IHGd5yIvmHrxRDQ8hoQA */
+  
+/** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXABVQHsIBXTGygG0YInKgbM2NAMQRGFSuQBujANZU0WXIRLkqtQa3ZcefMgKbaaCGY0wEa6CQG0ADAF17DxCkax0Via5AAPRAAsAIwArJQATEEAHADsASEAbFEAnEEBwQkANCAAnojhdnYBEUEAzMml5cnhyQmlQQC+DdlK2PhEpJKaRsK6vPxawiJgqEyolMiclgBmjKh4Exhtqp0aYPQ9Otz9BoPspmSyFl5kzs4+yO6e1mQ+-gih6ZRBySHhCUF2yXafUSHZeQQ4XeYTSdhCdii7ziIWSTRaSxUHXU1HWew4xzAUDm6DgABk9JBURshOxYAAhAiwMAAeTIAGFLFicXAxBIqGYFItlO01F00ZsMUzsRh8YSIMT0RSqbSGcKWbADkdLDczo4LlcTndELE7JQQqEQrEoXF6lEAYhonZSvqQgEPuEYgkYnFavCQK0kXy1iTjJRMSLcbACbwid1STRpdS6YyaMzRbBhqM5hMpjRZvNuctkfzfb0AwqQxAwwKI1HZbH40GleYVbZHOckB7NTdtQ87cUXm8Pl8fpD-rl8uCYpR7eV0jEQpPnaV3Z7eatJYL-fKE0WiWgI+uICIJABRMgQABKYA6kEbbg8Wqb911+sNxsdATNFoeKRHhRdL1CpQ+c8RC4ouGfoFmu4qLFu4q7gyxAEAYYCVoGcAXs2V6tjeOoxHqBohEaMQms+0Svi8FSjgkkKVOEuFRAkyRRP+PIrEBpYgauQbbhBxjbiIqBgNMvGwJ0UB4ugsA0Chlxod4GEIHeOF4QRL6DkCkLJJQqTjjEpRGkENQhAx2bekuEYrnGSHBuBm5cVBABGRByAAKowACSECcGAEkttJoC3uEUSUNpv6OrRoSFAOgJlFENqTp8djhPU7yOuEBleouVJyHQIx4KJHgSGykicooAFMZI6WZfMOU3DWxyqg26pNpJ1zeX4iClH5lB2PhaROkUNTOlkynJE6lAJOEATJAEWkulE1r0c0HrFTmVBlVllV5eIBWHPIRWMUtlArRVsC5WQ1V1qcDZBC4DVebcMmlAE-mdVE3XkQEfVOq+sLhJQsTjVEfwJAkb3gilgGlZw3AAO6QPlHJbVy84lctEOMNDECnScapXZeTW3T5iC1EEAXfLCMTxZ8bUBMRhRqb9E1BHEUTpH5oNI-tKNo0mYypjMcwLIje0EBzkAY7VTj1Tj174wghPE+CQ3k9aY2vrU32lK6U7xZE-Ws3txZkLiEoZliTAsIeIgEMgyD0oweBgJSmByFApuHgAyjQTKeVJeMtbJz7PEDw5pM+cQxK+5H+aNf2QmN1GNPNAtGfrhuUHZjvO4wZs7pb1u22AABicwm5nbse3GXu42292PV1k2ve9A2AjEnwjWNQ20YD2lRbrRkjGMADi6xWAYBI1XlQuQwQOSwBXUu+5UNfPXXvW1B9ylRUT6vjVpMe0YkPeLpgLCjGAZA0KPZ3cRtcOyAji1GUfJ9nxfJzbqL9bi9jqGVzJZPERTAU-JFGevdUo1p44Il2g-Y+vFn61lflBPuKZJi80zInQ+MDT7n3gTcN+Zgx7nU-hqb2bYXhYUoC6So6QIQug+KUf+7wApFHIt8WiXwpwHxRNwAhAARdYBB0CcCvqJD2ZBsAng6AQGy7lZ7oWllRUEXxfyJGbiwuIr4FGt23gkRI2tnyzgTvfRc3Czp8I9oI4RYk4LiNPCQKRMjLrEJ-vInRzwlE6OdEENRVNlIFFBG3JmbUJopChJwyQZteKSOkWAEQpBiwAHUCCoANgYWRzV7iRCJrpCEdhO6lH+pEYibVvpDV0k6BRyRqgGMgYZRc6A3IxIkAAQVgBlVaR0xZOLnvcT4LwRpvWejNHRKQ7SvjAcUfCkQIQGl0jUGIYSOQNJENSQ8AwkkEDwDPCW39umWjqGEeozpIS0INEDMZzoIhQjSIkWESQfhNHmmQZgcALhGPUF0uRvsAC0jdEA-I6oUQFsRXjpB-As4yxgPnpNam8Eov1EgpGDl44iwIRy4XiENGi5Q3j6UMVAxcwFejbH0IYCMUKfb3ACIUOFMIkipFBb8h49QwjggxfhO0IRingsJToUC7FxTkrbEDb6IJYRRSpR8SpxFVEdTtA6F0zd5l4tqcxPMvK2JilDBKHlkZKTRjlGZBUgqZJBBeMUB6z4ai6SSJ4jRvV1JUoes3P4KRKjcpYvmDVFktWcWENuY10s2ERB0WK+6uSSLEVSCOOiAzCj-Spe8cFSDUCDxoMPKAiEjXXRISa-C0bw1fh0c+SEdqaIjRJmFco5EEjgoOtlDpzVGq7IQH-ZSsI9RQm0QaWIXiAi1uFhAANvtm56gZtETlNNYrhQJrC3S40QqVKVnCZVqUUTJ0gEO+4gM9TaQqKaMNlRPqRGeAEii5R8J9pXWDKg66jZFwzlnTdiAsL+V3VvKh1p6HKRYSe6Ona47gtvaneyD7DxPoeL0n6MawExA0lhZI4cvi-rojHeIOkk3JhTUPfgL9PlNs+Rkl4-kjRGntBKmasQVZ1B+q6Cazd1a4VxTU1dkhH6wOwQQ-12bnG+zHWpWEv5O5-FNdpf+PwfrMLASkJWTGFr4q4TgiQZiBFCIFdx5tb1XzPVHJU3TpqKbUXBRE2xsFongedEU+Ko5m7xXGl4goD1wX1PckOmgjBkCtSKBQq52l0hQmUQOdy0waB7INPqQGqjITxFEyAGyjA022xhd9SZZQOz+ZDdkDAUBiAhYeF+cLniI7RYHJDepNBiCWgKNkYgYB0DZdyw9bIPSdFE0SIVqLnLp0IHGd5yIvmHrxRDQ8hoQA */
+createMachine(
     {
       tsTypes: {} as import('./priceMachine.typegen').Typegen0,
       id: 'price machine',
-      type: 'parallel',
       predictableActionArguments: true,
+
       schema: {
         services: {} as {
           askingPermission: {
             data: boolean;
           };
           getCurrentLocation: {
-            data: {};
+            data: { latitude: number; longitude: number };
           };
           fetchLocationDetail: {
-            data: {};
+            data: { result: {} };
+          };
+          getProducts: {
+            data: { products: [] };
+          };
+          getCategoriesProduct: {
+            data: any[];
           };
         },
         events: {} as
-          | { type: 'getCurrentLocation'; data: {} }
-          | { type: 'fetchLocationDetail'; data: { result: {} } },
+          | {
+              type: 'sendingParams';
+              value: { latitude: number; longitude: number };
+            }
+          | {
+              type: 'onChangeCategories';
+              payload: number;
+            },
       },
+
       context: {
         longlat: {} as any,
         locationDetail: {} as any,
@@ -50,132 +65,6 @@ export const priceMachine =
       },
 
       states: {
-        getLocation: {
-          states: {
-            askPermission: {
-              invoke: {
-                src: 'askingPermission',
-                onDone: [
-                  {
-                    target: 'allowed',
-                    cond: 'permissionGranted',
-                  },
-                  'denied',
-                ],
-              },
-
-              entry: 'enableLoadLocation',
-            },
-
-            allowed: {
-              invoke: {
-                src: 'getCurrentLocation',
-                onDone: [
-                  {
-                    target: 'currentLocationLoaded',
-                    actions: 'assignCurrentLocationToContext',
-                  },
-                ],
-                onError: 'errorGettingLocation',
-              },
-            },
-
-            currentLocationLoaded: {
-              invoke: {
-                src: 'fetchLocationDetail',
-
-                onDone: [
-                  {
-                    target: 'locationDetailLoaded',
-                    actions: 'assignLocationDetailToContext',
-                    cond: 'isHasResult',
-                  },
-                  {
-                    target: 'currentLocationLoaded',
-                    internal: true,
-                  },
-                ],
-
-                onError: 'errorGettingLocation',
-              },
-            },
-
-            errorGettingLocation: {},
-
-            locationDetailLoaded: {
-              entry: send('distanceReachable'),
-
-              on: {
-                distanceReachable: [
-                  {
-                    target: 'finito',
-                    cond: 'isLocationReachable',
-                  },
-                  'unreachable',
-                ],
-              },
-            },
-
-            finito: {
-              always: 'idle',
-            },
-
-            unreachable: {
-              on: {
-                hideWarning: 'finito',
-              },
-            },
-
-            denied: {
-              states: {
-                foreground: {
-                  on: {
-                    appComeBackgroundState: 'background',
-                  },
-                },
-
-                background: {
-                  on: {
-                    appComeForegroundState:
-                      '#price machine.getLocation.askPermission',
-                  },
-                },
-              },
-
-              initial: 'foreground',
-            },
-
-            idle: {
-              on: {
-                onAskPermission: 'askPermission',
-                sendingParams: {
-                  target: 'currentLocationLoaded',
-                  actions: 'assignParams',
-                },
-              },
-            },
-          },
-
-          initial: 'idle',
-        },
-
-        Tnc: {
-          states: {
-            agreementHiding: {
-              on: {
-                showAgreement: 'agreementShowed',
-              },
-            },
-            agreementShowed: {
-              on: {
-                hideAgreement: 'agreementHiding',
-              },
-            },
-          },
-
-          initial: 'agreementHiding',
-        },
-
         getProduct: {
           states: {
             loadingProduct: {
@@ -235,6 +124,8 @@ export const priceMachine =
                         actions: 'refreshPriceList',
                       },
                     ],
+
+                    backToIdle: '#price machine.idle',
                   },
                 },
               },
@@ -247,15 +138,106 @@ export const priceMachine =
         },
 
         errorGettingCategories: {},
+
+        askPermission: {
+          entry: 'enableLoadLocation',
+
+          invoke: {
+            src: 'askingPermission',
+            onDone: [
+              {
+                target: 'allowed',
+                cond: 'permissionGranted',
+              },
+              'denied',
+            ],
+          },
+        },
+
+        allowed: {
+          invoke: {
+            src: 'getCurrentLocation',
+            onError: 'errorGettingLocation',
+            onDone: {
+              target: 'currentLocationLoaded',
+              actions: 'assignCurrentLocationToContext',
+            },
+          },
+        },
+
+        denied: {
+          states: {
+            foreground: {
+              on: {
+                appComeBackgroundState: 'background',
+              },
+            },
+            background: {
+              on: {
+                appComeForegroundState: '#price machine.askPermission',
+              },
+            },
+          },
+
+          initial: 'foreground',
+        },
+
+        errorGettingLocation: {
+          on: {
+            always: 'askPermission',
+          },
+        },
+
+        currentLocationLoaded: {
+          invoke: {
+            src: 'fetchLocationDetail',
+
+            onDone: {
+              target: 'locationDetailLoaded',
+              actions: 'assignLocationDetailToContext',
+            },
+
+            onError: 'errorGettingLocation',
+          },
+        },
+
+        locationDetailLoaded: {
+          entry: send('distanceReachable'),
+
+          on: {
+            distanceReachable: [
+              {
+                target: 'getProduct.loadingProduct',
+                cond: 'isLocationReachable',
+              },
+              'unreachable',
+            ],
+          },
+        },
+
+        unreachable: {
+          on: {
+            hideWarning: 'getProduct.loadingProduct',
+          },
+        },
+
+        idle: {
+          on: {
+            onAskPermission: 'askPermission',
+            sendingParams: {
+              target: "currentLocationLoaded",
+              actions: "assignParams"
+            }
+          },
+        },
       },
+
+      initial: 'idle',
     },
     {
       guards: {
-        isHasResult: (_context, event) => {
-          return event.data?.result;
-        },
         isLocationReachable: (context, _event) => {
-          return context.locationDetail.distance.value < 40000;
+          return context.locationDetail?.distance?.value < 40000;
         },
         permissionGranted: (_context, event) => {
           return event.data === true;
@@ -330,10 +312,13 @@ export const priceMachine =
             loadProduct: true,
           };
         }),
-        assignParams: assign((context, event) => {
+        assignParams: assign((_context, event) => {
           return {
             longlat: event.value,
             loadLocation: true,
+            loadProduct: true,
+            productsData:[],
+            selectedCategories:[]
           };
         }),
         handleError: assign((_context, event) => {
@@ -344,7 +329,7 @@ export const priceMachine =
             errorMessage: event.data.message,
           };
         }),
-        enableLoadLocation: assign((context, event) => {
+        enableLoadLocation: assign((_context, _event) => {
           return {
             loadLocation: true,
           };
@@ -352,8 +337,12 @@ export const priceMachine =
       },
       services: {
         askingPermission: async () => {
-          const granted = await hasLocationPermission();
-          return granted;
+          try {
+            const granted = await hasLocationPermission();
+            return granted;
+          } catch (error) {
+            console.log(error);
+          }
         },
         getCurrentLocation: async () => {
           try {
@@ -371,13 +360,11 @@ export const priceMachine =
           try {
             const { longitude, latitude } = context.longlat;
             const response = await getLocationCoordinates(
-              '',
               longitude,
               latitude,
               'BP-LEGOK'
             );
-            console.log('ini response', response);
-            return response;
+            return response.data;
           } catch (error) {
             console.log(error);
           }
@@ -385,31 +372,32 @@ export const priceMachine =
         getCategoriesProduct: async (_context, _event) => {
           try {
             const response = await getProductsCategories(
-              '',
               undefined,
               undefined,
               undefined,
               'BRIK_MIX',
               false
             );
-            return response.result;
+            return response.data.result;
           } catch (error) {
-            throw new Error(error.message);
+            console.log(error);
             // throw new Error(error.message);
           }
         },
         getProducts: async (context, _event) => {
-          const { page, size, selectedCategories } = context;
+          const { page, size, selectedCategories, locationDetail } = context;
+          const distance = locationDetail?.distance?.value / 1000;
           try {
             const response = await getAllBrikProducts(
-              '',
               page,
               size,
-              selectedCategories
+              undefined,
+              selectedCategories,
+              distance
             );
-            return response;
+            return response.data;
           } catch (error) {
-            throw new Error(error.message);
+            console.log(error);
           }
         },
       },

@@ -15,6 +15,10 @@ export { default as BSpinner } from './atoms/BSpinner';
 export { default as BTouchableText } from './atoms/BTouchableText';
 export { default as BHeaderIcon } from './atoms/BHeaderIcon';
 export { default as BMarker } from './atoms/BMarker';
+export { default as BSwitch } from './atoms/BSwitch';
+export { default as BFileInput } from './atoms/BFileInput';
+export { default as BProductCard } from './atoms/BProductCard';
+export { default as BErrorText } from './atoms/BErrorText';
 
 // moleculses
 export { default as BTab } from './molecules/BTab';
@@ -30,6 +34,8 @@ export { default as BLocation } from './molecules/BLocation';
 export { default as BFlatlistItems } from './molecules/BFlatlistItems';
 export { default as BViewMoreText } from './molecules/BViewMoreText';
 export { default as BTextLocation } from './molecules/BTextLocation';
+export { default as BBackContinueBtn } from './molecules/BBackContinueBtn';
+export { default as BStepperIndicator } from './molecules/StepperIndicator';
 
 // organism
 export { default as BForm } from './organism/BForm';

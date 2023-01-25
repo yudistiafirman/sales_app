@@ -6,6 +6,7 @@ if (Platform.OS === 'android') {
 }
 
 const formatCurrency = (number: number) => {
+   
   if (Platform.OS === 'android') {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -17,7 +18,7 @@ const formatCurrency = (number: number) => {
       .split(',00')
       .join('');
   } else {
-    return number.toLocaleString('id-ID');
+    return number?.toLocaleString('id-ID');
   }
 };
 

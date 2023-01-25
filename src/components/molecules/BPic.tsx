@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { colors, layout } from '@/constants';
 import { PIC, Styles } from '@/interfaces';
 import { resScale } from '@/utils';
@@ -81,7 +81,11 @@ const BPic = ({
         <BText bold="bold">{name}</BText>
         <BSpacer size="extraSmall" />
         <BText>No. Telepon</BText>
-        <BText bold="bold">+62{phone}</BText>
+        <View style={{ width: resScale(120) }}>
+          <ScrollView horizontal={true}>
+            <BText bold="bold">+62{phone}</BText>
+          </ScrollView>
+        </View>
       </View>
       <BSpacer size="extraSmall" />
       <View>
@@ -89,7 +93,11 @@ const BPic = ({
         <BText bold="bold">{position}</BText>
         <BSpacer size="extraSmall" />
         <BText>email</BText>
-        <BText bold="bold">{email}</BText>
+        <View style={{ width: resScale(120) }}>
+          <ScrollView horizontal={true}>
+            <BText bold="bold">{email}</BText>
+          </ScrollView>
+        </View>
       </View>
     </View>
   );

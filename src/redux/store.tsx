@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import locationReducer from './locationReducer';
+import authReducer from './reducers/authReducer';
+import locationReducer from './reducers/locationReducer';
 
 export const store = configureStore({
   reducer: {
     location: locationReducer,
+    auth: authReducer,
   },
 });
 

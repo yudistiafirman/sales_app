@@ -39,4 +39,27 @@ export default class BrikApiCommon {
     const url = new URL(`${API_URL}/common/map/places/${id}`);
     return url.toString();
   };
+
+  // --------------------------------------------------AUTHENTICATION ---------------------------------------------//
+
+  static login = () => {
+    const url = new URL(`${API_URL}/common/m/auth/login`);
+    return url.toString();
+  };
+
+  static logout = () => {
+    const url = new URL(`${API_URL}/common/m/auth/logout`);
+    return url.toString();
+  };
+  static getRefreshToken = () => {
+    const url = new URL(`${API_URL}/common/m/auth/refresh`);
+    return url.toString();
+  };
+
+  static verifyAuth = () => {
+    const url = new URL(`${API_URL} /common/m/auth/verify-auth`);
+    return url.toString();
+  };
 }
+
+// --------------------------------------------------AUTHENTICATION ---------------------------------------------//
