@@ -98,9 +98,9 @@ const style = StyleSheet.create({
   status: {
     padding: resScale(2),
     backgroundColor: colors.status.grey,
-    paddingTop: resScale(4),
     paddingHorizontal: resScale(10),
     borderRadius: resScale(32),
+    alignItems: 'center',
   },
   statusText: {
     fontFamily: font.family.montserrat[300],
