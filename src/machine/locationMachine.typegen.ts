@@ -5,7 +5,7 @@
         '@@xstate/typegen': true;
         internalEvents: {
           "done.invoke.location.gettingLocationDetails:invocation[0]": { type: "done.invoke.location.gettingLocationDetails:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
-"xstate.after(1000)#location.debounce": { type: "xstate.after(1000)#location.debounce" };
+"xstate.after(500)#location.debounce": { type: "xstate.after(500)#location.debounce" };
 "xstate.init": { type: "xstate.init" };
         };
         invokeSrcNameMap: {
@@ -30,7 +30,7 @@
           
         };
         eventsCausingServices: {
-          "onGettingLocationDetails": "sendingCoorParams" | "xstate.after(1000)#location.debounce";
+          "onGettingLocationDetails": "sendingCoorParams" | "xstate.after(500)#location.debounce";
         };
         matchesStates: "debounce" | "gettingLocationDetails" | "receivingParams";
         tags: never;

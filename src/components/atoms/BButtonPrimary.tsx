@@ -28,10 +28,10 @@ export default function BButtonPrimary({
   onPress = () => {},
   buttonStyle,
   titleStyle,
+  disable,
   isOutline = false,
   rightIcon,
   leftIcon,
-  disable,
   isLoading,
 }: BButtonPrimaryType) {
   return (

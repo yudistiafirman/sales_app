@@ -4,7 +4,7 @@ import GetLocation from 'react-native-get-location';
 import { assign, createMachine, send } from 'xstate';
 
 export const searchAreaMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACDaAdDAC4AyA9pqiQJYUB2hqsA1gApjoC2tss9BgGIIjMIVoMAbhVbiUGHPnRFSlanUbM2nHnwGMEkmRsEBtAAwBdS1cSgADhQGaG9kAA9EARgsAmABoQAE9EADYAVgB2Qm8-CIBmABYEgA5UpNSo7ySAX1yghSw8AlRiMHIqGkFtDi5efkEhLnQKdEIHABsaADM27kIipVLyytMtFjq9RsNjKtdbW3cnF0F3LwQwpJjUsLiATiiw1ISLBPig0M39v0Iw46iLCKTvBP2kvz98wrRi5VUKupqhNOp0KAB3SAiMQSaSyeS-YYqMpqeY1VCgiGQIxw8YMRbWZbOWiudaIc6pWJ+Cw0tL7Cw5PaXRDxBKEaIJKJRPyvV4fD7fEBDErI0ZA1zMTGQiDNdCtdpdXr9QaIkUAsbApgYsHSnEmTUEuxIEArElrY0bClUmlnVL0xneZkIBIRSlJJLvJ5hZIRX15ApC1X-FGAtFaCBgBi0SCEPoqKCtACuDBlqAcDgAwhRuGAACoUABCqEwrCgbWTECWxtNpItPn8MS2YT8qQs7tS3nSUSdj0pbyycQerwi+0FwuDYrDTAjUZjACNi6WkymhGnM9mwAAxNpgBMUCtVxzE2ugDadiJ3CLxCxhLm3uL+J0nNl2-b7BI+rmPL4B8cjVF4oQLRtAA4hUdAMFA4pNIeJrHuap6IEctzeBE3reE2SRbK6Toum6HppOkWF7BkCRjkGIzCtBWiSA4iYkBBUBCJgnS-AAkgwdEkLBNYIZ4iDvkksSJBh2ynEk-gRE6D77IQpxvm8URXn49w-j8ihqmUVFTrCXGMUIwqSFBU48fBjBkgg3jeFEsmka2Nw8vc3rSX4+yUk8rp2n4nJJNE5EaRO2mAbR9H6YZkHUfi3hGkeqzmXWCC7GyUS+WcyS+BEOT7NJVlsm2KUdjeYT7DkZG-hRopBZqumhUZQiMGBDFGew3SYHAbGVoS1ZmW4CVWTZhB2RYDkYfcCQuQyhA2ckpy+jybapP5fyUaqkWEA14FGZF0IMOIcxyCqAUrRpa0bU1EVTnqJnWKZcW9YhzoRBYhDUvEaGFVyzwuekdwpfsT0um9GRLUiRBVRKZ2MdtwEKt0JBxgMf6VatOmQ1tl1zHihpEndFkus9r2+scvifUkOUZC9KWZNZ5zJFkIOaYdxRrTDjWMQAIjQqBCLdZrxQ9XLJZJCRWdsaH3DlNxyb6iQ3le9IpQzgUo4BwoAGoYomYCUKgEYyh4sAkDQ4ioD0JBcAAFL4NIAJQGRVYMq9V6ua9rFC65AvMnvxlnumEcmpQ5H5vok0m+clKk5G2ZzZIt5VHcjJ06aQjEtcWYAdTte1wgdSOO0ngEp81rUZxAV1YzdXWxXz90+68zaDQk3oqYHkQ5RYlKZZ8EmpK66FRErx3M8nm2QWnbWZzDHRwwjTOg1pTsSkXY8lx15cGpXMVwbjfVN0J1ld9sElhE6CmDdZYnTdyN6D6KAHVZgiZypGGquDres81X281xZvf+94blWw3jeE9V4uFXSEHfN6EWpwPxeXyAGBgFAIzwGNHnVAOMf4JQALR+DJiEJCQlng0g9B2EcroVK33VJFTB3sNh4Okg3BkzZbx+BsueOO6llp31DIBSYugGgGFrrxfmPsJKyW2Cw3YSk0I2SdPcSk1ljigLEscf0XD56Tj4VKSAtC+IbG5E6PBEibjPF8PcRISkqEhlfjUGc0YIB6NERsDIQl0hPX5Jyd68jqSQO7oRN8UQMjeGsVo6q9iYxxl3MuRx3Ud4PS8oNXubY8FeOOD2Dug0jjWXiKY-koT74SgiRAQgC4Sx7grE42uZ4VIXjiE9DsLdshsIyZSLIexuQjniPk+O3DqE6VZqPYyeIqkWRllkrIGRojuhvN2Ahj0YgpGbK4sIDJe7qMDAnfpgFH7PwYLYxg79dFxKwQLFKck4hvBuNsFS3kjEekIB6bp5jIheNCeDPiIjqksnwVcekL4ngfhbN3R4ER3mLxqCFc6UBRkJX+jEept4LDTSyE3aSItnrRG8m5FI2TUhqU2X0heBdqpowuiMk5dCkKBHmVHWSly3j3BpAA5F4KSUSkGdCzmRtYUPRHN4OS+Lng8huCA7KtLOxskjskfxuxXRsuHqrVUGtOhayObE6uVLLKyKmi6XwGFUKRG2GHd0dwRbvCWZyf6nDCWaI+VoZeUBx6l15XXSIfYPjvDSJ2BkQTT4lReh2VZTK3KfB-PkIAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACDaAdDAC4AyA9pqiQJYUB2hqsA1gApjoC2tss9BgGIIjMIVoMAbhVbiUGHPnRFSlanUbM2nHnwGMEkmRsEBtAAwBdS1cSgADhQGaG9kAA9EARgsAmABoQAE9EADYAVgB2Qm8-CIBmABYEgA5UpNSo7ySAX1yghSw8AlRiMHIqGkFtDi5efkEhLnQKdEIHABsaADM27kIipVLyytMtFjq9RsNjKtdbW3cnF0F3LwQwpJjUsLiATiiw1ISLBPig0M39v0Iw46iLCKTvBP2kvz98wrRi5VUKupqhNOp0KAB3SAiMQSaSyeS-YYqMpqeY1VCgiGQIxw8YMRbWZbOWiudaIc6pWJ+Cw0tL7Cw5PaXRDxBKEaIJKJRPyvV4fD7fEBDErI0ZA1zMTGQiDNdCtdpdXr9QaIkUAsbApgYsHSnEmTUEuxIEArElrY0bClUmlnVL0xneZkIBIRSlJJLvJ5hZIRX15ApC1X-FGAtFaCBgBi0SCEPoqKCtACuDBlqAcDgAwhRuGAACoUABCqEwrCgbWTECWxtNpItPn8MS2YT8qQs7tS3nSUSdj0pbyycQerwi+0FwuDYrDTAjUZjACNi6WkymhGnM9mwAAxNpgBMUCtVxzE2ugDadiJ3CLxCxhLm3uL+J0nNl2-b7BI+rmPL4B8cjVF4oQLRtAA4hUdAMFA4pNIeJrHuap6IEctzeBE3reE2SRbK6Toum6HppOkWF7BkCRjkG-6hoBmCJnKkYaq4lCoBGMqwTWCGeIgqRobE+zpDS3r7BEDIJLhrqEO+3oJK8Zx0j+PyKGqZTCtBWiSA4iYkBBUBCJgnS-AAkgwGkkGx8GMGSCDvBeBx8a+aTPKJIQ+NJSTsu6fhHNknkelE5GKROKlTrCJnaUIwqSFBU5masFl1gg3jePShCpNSUmZBEiWpU6ORnIQfj0p8eyHJ6fm-hRopBYB6maWFEWQap+LeEaR6xW48VZG53Lnl5bz3N2zkJTylItp2nYNv2-l-CMVWaiFtWRUIjBgVpkXsN0mBwAZlaEtW5ntYhCVJRYKVpR+GVZYEg0yTEDZeZl8TpBEU1IkQs0Sst4GRY10IMOIcxyCqAUzaqjWEJ9q0NVOerRdYMVmnFh0JHssRRO+HYWFEHyeVdVyvO+EkWDcWTSacHzeC9SlA8UYMQ9pP3AQq3QkHGAx-pVoPBXT33Q3MeKGkSbWWcj3io+jvhY583I5S2+zshY6SdmExPnP6CnTRzilg4zK3aQAIjQqBCPDJ6cQgUQZHcaMus8iUMhkMuHOydq7EcrxvBT5XA5rNPBcKABqGKJmATEsUIHiwCQNDiKgPQkFwAAUwkWAAlOFFVvZzgEB0HIcUMxkAmxxZ5ZLcWwYe7aO+JEMs3oQDIjik0RnE8qSU4FWdzaQ2nrcWYDbb9-1woD7OZ1rwXd2tG39xAMP83Du2tQjB1m68UQvrywnZO63gDXjPJsljkRch2+yJc87cg+PgGT5BvebQPjMdMzrPU69ymdxKt9QPfM9zwaC8WpwSFvFNeNlMrvHpG2J4SUcpEzljAjGURnjUhSPkAMDAKARngMaUeqBBbL0sgAWj8EkHsbkPTxDiGhbILoBRew1uqRqBDTYbFITlFGb4qGnDbNyV0z0GHv0nIBSYugGgGBXuxRGZskhE0INsZsxxby+lvPsJ09xKS72OMJHI69jhq0DN7JhwVtRYggCw4uSFcYsg9PIm4tsbyRE5AI9WQiAJzRnNGcxe0QGHQyG5J6bZSHOOOOo6kKU+L6ObIkUh8lDGMJDAxGoniYxxl3MubxS9WFcRuClbiQSUjINCYNXsKU3Z8PsfyS+op3EShSRAQgC4Sx7grBY6RZ4-CRCpMJDsnTthxD3khBWZS9gVPiFUwRVNak1B1l9KGeI2krw2L6C8WQ1lJGiO6G8gznTRHkcjFs7owj2wvpMic0ytA0TogwJJjBQ6QEWZZLkblpJ+DeDcbYnS3lOlIXLShDj7iJGQdUsevsFk+MIfFZIEkjipQ+N6DZnZrEJRpAg1CZ9fQKw9C8EFH9r5zRqpDKAjz4r7GOLEfwHphIcnGTlF4qztkun7L4JKuK37YFpgwXWPNwVZMsQgVKMLjixIRZlbK11MovOiOvF0xzbz0NcVTd6My5SgTmVAA2UcSWHWObcF0klsKum2DsuI6Q7E0JuG2ZIQk2XKq0DnTowd7mZOAZCw6qELaEGyElR6VcbwRBys8OWuxmwdlVp5G1Zyr5gq7uq3+21tWr3uHLaShxjgK0ZGSuBZL2Toqbo8U4rp0G5CAA */
   createMachine(
     {
       tsTypes: {} as import('./searchAreaMachine.typegen').Typegen0,
@@ -122,7 +122,7 @@ export const searchAreaMachine =
 
             searchValueLoaded: {
               after: {
-                '1000': 'onGettingLocation',
+                '500': 'onGettingLocation',
               },
             },
 
@@ -201,17 +201,17 @@ export const searchAreaMachine =
         },
         getLocationBySearch: async (context, event) => {
           try {
-            const response = await searchLocation('', context.searchValue);
+            const response = await searchLocation(context.searchValue);
 
-            return response.result;
+            return response.data.result;
           } catch (error) {
             console.log(error);
           }
         },
         gettingPlacesId: async (context, event) => {
           try {
-            const response = await searchLocationById('', context.placesId);
-            return response.result;
+            const response = await searchLocationById(context.placesId);
+            return response.data.result;
           } catch (error) {
             console.log(error);
           }

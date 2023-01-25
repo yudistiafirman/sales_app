@@ -3,12 +3,13 @@ import * as React from 'react';
 import { SafeAreaView, View } from 'react-native';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import resScale from '@/utils/resScale';
 import { BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
 import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import { searchProductMachine } from '@/machine/searchProductMachine';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 
 type SearchProductType = {
   isAsComponent?: boolean;
@@ -24,7 +25,15 @@ const SearchProduct = ({
   const [index, setIndex] = React.useState(0);
   const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();
+  const route = useRoute<RootStackScreenProps>();
   const [state, send] = useMachine(searchProductMachine);
+
+  React.useEffect(() => {
+    if (route?.params) {
+      const { distance } = route.params;
+      send('sendingParams', { value: distance });
+    }
+  }, [route?.params]);
 
   const renderHeaderLeft = () => (
     <BHeaderIcon
