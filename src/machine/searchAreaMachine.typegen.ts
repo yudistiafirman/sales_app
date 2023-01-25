@@ -9,7 +9,7 @@
 "done.invoke.search area.getLocation.askPermission:invocation[0]": { type: "done.invoke.search area.getLocation.askPermission:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
 "done.invoke.search area.searchLocation.gettingPlaceId:invocation[0]": { type: "done.invoke.search area.searchLocation.gettingPlaceId:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
 "done.invoke.search area.searchLocation.onGettingLocation:invocation[0]": { type: "done.invoke.search area.searchLocation.onGettingLocation:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
-"xstate.after(1000)#search area.searchLocation.searchValueLoaded": { type: "xstate.after(1000)#search area.searchLocation.searchValueLoaded" };
+"xstate.after(500)#search area.searchLocation.searchValueLoaded": { type: "xstate.after(500)#search area.searchLocation.searchValueLoaded" };
 "xstate.init": { type: "xstate.init" };
         };
         invokeSrcNameMap: {
@@ -43,7 +43,7 @@
         eventsCausingServices: {
           "askingPermission": "" | "appComeForeground" | "xstate.init";
 "getCurrentLocation": "done.invoke.search area.getLocation.askPermission:invocation[0]";
-"getLocationBySearch": "xstate.after(1000)#search area.searchLocation.searchValueLoaded";
+"getLocationBySearch": "xstate.after(500)#search area.searchLocation.searchValueLoaded";
 "gettingPlacesId": "onGettingPlacesId";
         };
         matchesStates: "getLocation" | "getLocation.allowed" | "getLocation.askPermission" | "getLocation.currentLocationLoaded" | "getLocation.denied" | "getLocation.denied.background" | "getLocation.denied.foreground" | "getLocation.errorGettingLocation" | "searchLocation" | "searchLocation.errorGettingData" | "searchLocation.gettingPlaceId" | "searchLocation.inputting" | "searchLocation.onGettingLocation" | "searchLocation.searchValueLoaded" | { "getLocation"?: "allowed" | "askPermission" | "currentLocationLoaded" | "denied" | "errorGettingLocation" | { "denied"?: "background" | "foreground"; };

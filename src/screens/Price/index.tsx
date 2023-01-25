@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import {  AppState, SafeAreaView } from 'react-native';
+import { AppState, SafeAreaView } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Tnc from '@/screens/Price/element/Tnc';
@@ -14,16 +14,18 @@ import { priceMachine } from '@/machine/priceMachine';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { layout } from '@/constants';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
   const navigation = useNavigation();
-  const route = useRoute();
+  const route = useRoute<RootStackScreenProps>();
   const [index, setIndex] = useState(0);
+  const [visibleTnc, setVisibleTnc] = useState(false);
   const appState = useRef(AppState.currentState);
   const [state, send] = useMachine(priceMachine);
 
   useEffect(() => {
-    if (state.matches('getLocation.denied')) {
+    if (state.matches('denied')) {
       const subscription = AppState.addEventListener(
         'change',
         (nextAppState) => {
@@ -42,13 +44,15 @@ const PriceList = () => {
         subscription.remove();
       };
     }
-  }, [state, send]);
+  }, []);
 
   useEffect(() => {
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude } = params.coordinate;
+      send('backToIdle')
       send('sendingParams', { value: { latitude, longitude } });
+      setIndex(0);
     } else {
       send('onAskPermission');
     }
@@ -56,7 +60,7 @@ const PriceList = () => {
 
   const renderHeaderRight = () => {
     return (
-      <BTouchableText onPress={() => send('showAgreement')} title="Ketentuan" />
+      <BTouchableText onPress={() => setVisibleTnc(true)} title="ketentuan" />
     );
   };
 
@@ -72,7 +76,6 @@ const PriceList = () => {
       send('onChangeCategories', { payload: tabIndex });
     }
   };
-
   const goToLocation = () => {
     const { lon, lat } = locationDetail;
     const coordinate = {
@@ -114,7 +117,24 @@ const PriceList = () => {
         />
       )}
       <BSpacer size="extraSmall" />
-      <PriceSearchBar onPress={() => navigation.navigate('SearchProduct')} />
+      {!loadLocation ? (
+        <PriceSearchBar
+          onPress={() =>
+            navigation.navigate('SearchProduct', {
+              distance: locationDetail.distance.value,
+            })
+          }
+        />
+      ) : (
+        <ShimmerPlaceholder
+          style={{
+            marginHorizontal: layout.pad.lg,
+            height: layout.pad.xl,
+            width: '92%',
+          }}
+        />
+      )}
+
       <BSpacer size="extraSmall" />
       {routes.length > 0 && (
         <BTabSections
@@ -138,12 +158,9 @@ const PriceList = () => {
         />
       )}
 
-      <Tnc
-        isVisible={state.matches('Tnc.agreementShowed')}
-        onCloseTnc={() => send('hideAgreement')}
-      />
+      <Tnc isVisible={visibleTnc} onCloseTnc={() => setVisibleTnc(false)} />
       <BAlert
-        isVisible={state.matches('getLocation.unreachable')}
+        isVisible={state.matches('unreachable')}
         type="warning"
         onClose={() => send('hideWarning')}
       />

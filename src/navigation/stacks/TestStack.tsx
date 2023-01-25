@@ -14,7 +14,7 @@ function TestStack({
   return [
     BStackScreen({
       Stack: Stack,
-      name: 'Create Visitation',
+      name: 'CreateVisitation',
       title: 'Create Visitation',
       component: CreateVisitation,
     }),

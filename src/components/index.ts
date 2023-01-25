@@ -18,6 +18,7 @@ export { default as BMarker } from './atoms/BMarker';
 export { default as BSwitch } from './atoms/BSwitch';
 export { default as BFileInput } from './atoms/BFileInput';
 export { default as BProductCard } from './atoms/BProductCard';
+export { default as BErrorText } from './atoms/BErrorText';
 
 // moleculses
 export { default as BTab } from './molecules/BTab';

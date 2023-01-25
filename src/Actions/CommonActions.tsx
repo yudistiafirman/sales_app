@@ -2,36 +2,33 @@ import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import { getOptions, request } from '@/networking/request';
 
 export const getLocationCoordinates = (
-  token: string,
   longitude: number,
   latitude: number,
-  distanceFrom?: string
+  distance?: string
 ) => {
   return request(
-    BrikApiCommon.getLocationCoordinates(longitude, latitude, distanceFrom),
-    getOptions(token, 'GET')
-  )
-    .then((response) => response.json())
-    .then((json) => {
-      return json;
-    });
+    BrikApiCommon.getLocationCoordinates(longitude, latitude, distance),
+    getOptions('GET')
+  );
 };
 
-export const searchLocation = (token: string, searchValue: string) => {
-  return request(
-    BrikApiCommon.searchPlaces(searchValue),
-    getOptions(token, 'GET')
-  )
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson;
-    });
+export const searchLocation = (searchValue: string) => {
+  return request(BrikApiCommon.searchPlaces(searchValue), getOptions('GET'));
 };
 
-export const searchLocationById = (token: string, id: string) => {
-  return request(BrikApiCommon.searchPlacesById(id), getOptions(token, 'GET'))
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson;
-    });
+export const searchLocationById = (id: string) => {
+  return request(BrikApiCommon.searchPlacesById(id), getOptions('GET'));
+};
+
+export const signIn = (body: Record<string, string>) => {
+  const params = new URLSearchParams();
+  const dataToSend = Object.keys(body);
+  dataToSend.forEach((val) => {
+    params.append(val, body[val]);
+  });
+  return request(BrikApiCommon.login(), getOptions('POST', params.toString()));
+};
+
+export const signOut = () => {
+  return request(BrikApiCommon.logout(), getOptions('POST'));
 };

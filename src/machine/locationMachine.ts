@@ -1,11 +1,14 @@
+import { Dimensions } from 'react-native';
 import { assign, createMachine } from 'xstate';
 import { getLocationCoordinates } from './priceMachine';
-
+const { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const LATITUDE = -6.18897;
 const LONGITUDE = 106.738909;
-
 export const locationMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QBsD2BjAhgFwJaoDsA6AJzHTFwDdcCoAFTEzAW1gGJYwCJaoBhVKhKNmbANoAGALqJQAB1SxceQnJAAPRACYAzNqLbtAdgCs2gBznj2gJy3dAFgA0IAJ6JdANi9FHd3VNdCwsARl1JXVCAX2jXNCxVYhhsPDoAGQwcfAIAETBsTFxkDghCMCJaKlQAawqE7MIiFLSoTMSc-MLi2AQqrKSpaSH1RWUk9S0EY0cLIi9bbVNHRaNI+1cPBDC-Yy89bzDQ0NMw2PiBnNJySho6UVYOQn4AC0w6MAAlMCgckaQQGMVDlJjp9IYTOYrCY7A4XO4dHoiMZJDMwsZwvY7F5ziAGkkiBAwAAjVAAVwIFHYGlghWwFUwADN6SQABShSScgCU7HxVyJpIpFH+CiUwLUAKmaPmi2Wq2061smx0syIHIsxgioQskW0C2MsTiIAIqCJ8ABfIlovGIMliAAtF5lQhHUROe6PZ6DUbLcQyBRqHwHmxRmKJnaEP5ncdQsjHEFOaYk7YMcFcb7mgVWu1GnkCkUSqGbVbNIgOeF5o5gpJQvtTPZHMZnUZfMcvFZbDrq0Z05cmgLyZSwEXxQRQZGdrZQkttDHNbYvKZm0ivLWO12dbOcYagA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QBsD2BjAhgFwJaoDsA6AJzHTFwDdcCoAFTEzAW1gGJYwCJaoBhVKhKNmbANoAGALqJQAB1SxceQnJAAPRACYAzNqLbtAdgCs2gBznj2gJy3dAFgA0IAJ6JdANi9FHd3VNdCwsARl1JXVCAX2jXNCxVYjIKaj5RVg5CfgALTDowACUwKHwCKVkkEEVlJPUtBD0DIzNLazsHF3cdPSJjSWNHMONw+zsvWPiMHDKiGGw8OgAZaaSAETBsTFxkDghCMCJaKlQAa0OEmcI5zcWoFcSyja2d2ARj1bKKivUalTL6ohBhYiF5bNpTI5wUZIvZXB4EGE-MYvHpvGFQqFTGFJiBLkkiBAwAAjVAAVwIFHYGlgW2wh0wADN6SQABSmSSSACU7HxsyJpIpFB+VT+dSqDWBoPBkOh2lhtnhOiGRFCkgsxgioQskW0YOMsTiIAIqCJ8CqfLUoqU-ytoAaAFosQYvDYhrYvN5bFCvKYlQgHb5OcHwtqvEMzBMjZbkuRKDQ6Bk2L8beL7YgnZJHKC3RYPV6fX7uo1w0RTOXTB7QvZJK7bLiYzcFnwHlcCM9trsU7UARLEGrwqDHMFJKFUZXvcZ-UZfJivFZbDqR0YG59rgLyZSwN3bQRAQghqEiLZQhDtJjQpqPUWEUZdKCxwulzrz1HYkA */
   createMachine(
     {
       id: 'location',
@@ -19,7 +22,12 @@ export const locationMachine =
             }
           | {
               type: 'onChangeRegion';
-              value: { longitude: number; latitude: number };
+              value: {
+                longitude: number;
+                latitude: number;
+                latitudeDelta: number;
+                longitudeDelta: number;
+              };
             },
         services: {} as {
           onGettingLocationDetails: {
@@ -36,6 +44,8 @@ export const locationMachine =
         region: {
           latitude: LATITUDE,
           longitude: LONGITUDE,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
         },
         locationDetail: {},
         loadingLocation: false,
@@ -66,11 +76,11 @@ export const locationMachine =
         },
 
         debounce: {
-          after: {
-            '1000': 'gettingLocationDetails',
-          },
-
           entry: 'enabledLoadingDetails',
+
+          after: {
+            '500': 'gettingLocationDetails',
+          },
         },
       },
 
@@ -83,6 +93,8 @@ export const locationMachine =
             region: {
               latitude: event.value.latitude,
               longitude: event.value.longitude,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
             },
           };
         }),
@@ -93,8 +105,8 @@ export const locationMachine =
                 ? event.data.formattedAddress
                 : '',
               postalId: event.data?.PostalId,
-              lon: event.data.lon,
-              lat: event.data.lat,
+              lon: event?.data?.lon,
+              lat: event?.data?.lat,
             },
             loadingLocation: false,
           };
@@ -104,6 +116,8 @@ export const locationMachine =
             region: {
               latitude: event.value.latitude,
               longitude: event.value.longitude,
+              latitudeDelta: event.value.latitudeDelta,
+              longitudeDelta: event.value.longitudeDelta,
             },
           };
         }),
@@ -116,12 +130,8 @@ export const locationMachine =
       services: {
         onGettingLocationDetails: async (context, event) => {
           const { latitude, longitude } = context.region;
-          const response = await getLocationCoordinates(
-            '',
-            longitude,
-            latitude
-          );
-          return response.result;
+          const response = await getLocationCoordinates(longitude, latitude);
+          return response.data.result;
         },
       },
     }

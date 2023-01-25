@@ -135,8 +135,9 @@ interface Region {
 interface BLocationProps {
   mapStyle?: ViewStyle | undefined;
   region?: Region & LatLang;
-  onRegionChange?: ((region: LatLang, details: Details) => void) | undefined;
-  coordinate: LatLang;
+  onRegionChangeComplete?:
+    | ((region: Region & LatLang, details: Details) => void)
+    | undefined;
   CustomMarker?: React.ReactNode | undefined;
   isUninteractable?: boolean;
 }
@@ -198,7 +199,6 @@ interface ProductDataInterface {
     Parent: productParentInterface;
   };
 }
-
 export type {
   Input,
   Styles,

@@ -21,6 +21,7 @@
         eventsCausingActions: {
           "assignCategories": "done.invoke.search product.searching:invocation[0]";
 "assignIndex": "onChangeTab";
+"assignParams": "sendingParams";
 "assignProducts": "done.invoke.search product.categoriesLoaded.gettingProducts:invocation[0]";
 "assignSearchValue": "searchingProducts";
 "clearData": "clearInput" | "searchingProducts";
@@ -36,7 +37,7 @@
           "getCategoriesData": "searchingProducts";
 "onGettingProductsData": "done.invoke.search product.searching:invocation[0]" | "onChangeTab";
         };
-        matchesStates: "categoriesLoaded" | "categoriesLoaded.gettingProducts" | "errorState" | "inputting" | "searching" | { "categoriesLoaded"?: "gettingProducts"; };
+        matchesStates: "categoriesLoaded" | "categoriesLoaded.gettingProducts" | "errorState" | "idle" | "inputting" | "searching" | { "categoriesLoaded"?: "gettingProducts"; };
         tags: never;
       }
   

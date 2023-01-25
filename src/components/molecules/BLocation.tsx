@@ -1,6 +1,6 @@
 import * as React from 'react';
 import resScale from '@/utils/resScale';
-import { Dimensions, Platform } from 'react-native';
+import { Dimensions, Platform, View, ViewStyle } from 'react-native';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -31,43 +31,36 @@ const BLocationDefaultRegion = {
   longitudeDelta: LONGITUDE_DELTA,
 };
 
-const BLocationDefaultCoordinate = {
-  latitude: LATITUDE,
-  longitude: LONGITUDE,
-};
-
 const BLocationDefaultProps = {
   mapStyle: BLocationDefaultStyle,
   region: BLocationDefaultRegion,
-  coordinate: BLocationDefaultCoordinate,
+};
+
+const fixedCenterContainer: ViewStyle = {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
 };
 
 const BLocation = ({
   mapStyle,
-  onRegionChange,
-  coordinate,
+  onRegionChangeComplete,
   region,
   CustomMarker,
   isUninteractable = false,
 }: BLocationProps & typeof BLocationDefaultProps) => {
   return (
-    <MapView
-      style={mapStyle}
-      initialRegion={region}
-      provider={MAPSPROVIDER}
-      onRegionChange={onRegionChange}
-      rotateEnabled={false}
-      cacheEnabled={isUninteractable}
-      region={region}
-    >
-      <Marker coordinate={coordinate}>{CustomMarker}</Marker>
-      <Circle
-        center={coordinate}
-        fillColor={`${colors.primary}60`}
-        radius={700}
-        strokeWidth={0.1}
+    <View style={fixedCenterContainer}>
+      <MapView
+        style={mapStyle}
+        initialRegion={region}
+        provider={MAPSPROVIDER}
+        rotateEnabled={false}
+        onRegionChangeComplete={onRegionChangeComplete}
+        region={region}
       />
-    </MapView>
+      {CustomMarker}
+    </View>
   );
 };
 

@@ -6,6 +6,9 @@ import BStackScreen from './elements/BStackScreen';
 import SalesTabs from './tabs/SalesTabs';
 import TestStack from './stacks/TestStack';
 // import OpsManTabs from './tabs/OpsManTabs';
+import Splash from '@/screens/Splash';
+import AuthStack from './stacks/AuthStack';
+import { useBootStrapAsync } from '@/hooks';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,8 +33,15 @@ const getStacks = (userType?: 'opsManager' | 'sales' | undefined) => {
   return TestStack({ Stack: Stack });
 };
 
+const authStack = () => AuthStack({ Stack: Stack });
+
 function AppNavigator() {
+  const [isLoading, userData] = useBootStrapAsync();
   const userType = 'sales';
+
+  if (isLoading) {
+    return <Splash />;
+  }
   return (
     <Stack.Navigator
       screenOptions={{
@@ -39,8 +49,14 @@ function AppNavigator() {
         headerShadowVisible: false,
       }}
     >
-      {getTabs(userType)}
-      {getStacks(userType)}
+      {userData ? (
+        <>
+          {getTabs(userType)}
+          {getStacks(userType)}
+        </>
+      ) : (
+        <>{authStack()}</>
+      )}
     </Stack.Navigator>
   );
 }
