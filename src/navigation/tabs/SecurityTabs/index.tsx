@@ -5,17 +5,17 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import BTabScreen from '@/navigation/elements/BTabScreen';
 import Operation from '@/screens/Operation';
 import Dispatch from '@/screens/Operation/Dispatch';
-import CustomOperationTabBar from './OperationTabBar';
+import CustomSecurityTabBar from './SecurityTabBar';
 
 const Tab = createBottomTabNavigator();
 
-function OperationTabs() {
+function SecurityTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarHideOnKeyboard: true,
       }}
-      tabBar={(props) => <CustomOperationTabBar {...props} />}
+      tabBar={(props) => <CustomSecurityTabBar {...props} />}
     >
       {BTabScreen({
         Tab: Tab,
@@ -38,4 +38,4 @@ function OperationTabs() {
   );
 }
 
-export default OperationTabs;
+export default SecurityTabs;

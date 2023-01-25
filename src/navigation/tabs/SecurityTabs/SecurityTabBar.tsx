@@ -11,7 +11,7 @@ interface TabBar {
   navigation: any;
 }
 
-const CustomOperationTabBar = ({ state, descriptors, navigation }: TabBar) => {
+const CustomSecurityTabBar = ({ state, descriptors, navigation }: TabBar) => {
   const homeIcon = require('@/assets/icon/TabBarIcon/ic_home.png');
   const dispatchIcon = require('@/assets/icon/TabBarIcon/ic_price.png');
   const icons = [homeIcon, dispatchIcon];
@@ -90,4 +90,4 @@ const CustomOperationTabBar = ({ state, descriptors, navigation }: TabBar) => {
   );
 };
 
-export default CustomOperationTabBar;
+export default CustomSecurityTabBar;

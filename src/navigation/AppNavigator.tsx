@@ -10,14 +10,14 @@ import Splash from '@/screens/Splash';
 import AuthStack from './stacks/AuthStack';
 import { useBootStrapAsync } from '@/hooks';
 import Operation from '@/screens/Operation';
-import OperationTabs from './tabs/OperationTabs';
 import { USER_TYPE } from '@/models/EnumModel';
+import SecurityTabs from './tabs/SecurityTabs';
 
 const Stack = createNativeStackNavigator();
 
 const getTabs = (userType?: USER_TYPE) => {
   let salesTabs = SalesTabs;
-  let operationTabs = OperationTabs;
+  let securityTabs = SecurityTabs;
   switch (userType) {
     case USER_TYPE.OPERATION:
       return BStackScreen({
@@ -38,7 +38,7 @@ const getTabs = (userType?: USER_TYPE) => {
         type: 'home',
         color: 'white',
         headerShown: true,
-        component: operationTabs,
+        component: securityTabs,
         operationType: 'Dispatch',
       });
     default:
