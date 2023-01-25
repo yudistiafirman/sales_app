@@ -4,12 +4,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
+  ActivityIndicator,
 } from 'react-native';
 import React from 'react';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import respFS from '@/utils/resFontSize';
 import resScale from '@/utils/resScale';
+import { layout } from '@/constants';
 
 type BButtonPrimaryType = {
   title: string;
@@ -17,7 +18,10 @@ type BButtonPrimaryType = {
   buttonStyle?: ViewStyle;
   titleStyle?: ViewStyle;
   isOutline?: boolean;
-  disable?: boolean
+  rightIcon?: (() => JSX.Element) | null;
+  leftIcon?: (() => JSX.Element) | null;
+  disable?: boolean;
+  isLoading?: boolean;
 };
 export default function BButtonPrimary({
   title,
@@ -26,42 +30,62 @@ export default function BButtonPrimary({
   titleStyle,
   disable,
   isOutline = false,
+  rightIcon,
+  leftIcon,
+  isLoading,
 }: BButtonPrimaryType) {
   return (
-    <TouchableOpacity disabled={disable} onPress={onPress}>
-      <View
+    <View pointerEvents={isLoading ? 'none' : 'auto'}>
+      <TouchableOpacity
         style={[
           style.buttonContainer,
           buttonStyle,
           isOutline ? style.outlineButton : null,
+          disable ? style.disableStyle : null,
         ]}
+        onPress={onPress}
+        disabled={disable}
       >
-        <Text
-          style={[
-            style.buttonTitle,
-            titleStyle,
-            isOutline ? style.outlineTitle : null,
-          ]}
-        >
-          {title}
-        </Text>
-      </View>
-    </TouchableOpacity>
+        <View>{leftIcon ? leftIcon() : null}</View>
+        {isLoading ? (
+          <ActivityIndicator size={resScale(24)} color={'white'} />
+        ) : (
+          <Text
+            style={[
+              style.buttonTitle,
+              titleStyle,
+              isOutline ? style.outlineTitle : null,
+            ]}
+          >
+            {title}
+          </Text>
+        )}
+
+        <View>{rightIcon ? rightIcon() : null}</View>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const style = StyleSheet.create({
-  container: {},
   buttonContainer: {
-    paddingVertical: 12,
-    borderRadius: 12,
+    padding: layout.pad.md,
+    borderRadius: layout.radius.md,
     backgroundColor: colors.primary,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderColor: colors.primary,
+    borderWidth: resScale(1),
+  },
+  disableStyle: {
+    backgroundColor: colors.disabled,
+    borderColor: colors.disabled,
   },
   buttonTitle: {
     textAlign: 'center',
     color: colors.white,
     fontFamily: font.family.montserrat[600],
-    fontSize: respFS(16),
+    fontSize: font.size.lg,
     fontWeight: '600',
   },
   outlineTitle: {

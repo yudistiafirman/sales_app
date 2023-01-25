@@ -47,6 +47,7 @@ const BLocation = ({
   onRegionChangeComplete,
   region,
   CustomMarker,
+  isUninteractable = false,
 }: BLocationProps & typeof BLocationDefaultProps) => {
   return (
     <View style={fixedCenterContainer}>
@@ -57,6 +58,7 @@ const BLocation = ({
         rotateEnabled={false}
         onRegionChangeComplete={onRegionChangeComplete}
         region={region}
+        cacheEnabled={isUninteractable}
       />
       {CustomMarker}
     </View>

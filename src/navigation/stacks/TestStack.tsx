@@ -4,6 +4,7 @@ import SearchProduct from '@/screens/SearchProduct';
 import Location from '@/screens/Location';
 import SearchAreaProject from '@/screens/SearchAreaProject';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
+import Sph from '@/screens/Sph';
 
 function TestStack({
   Stack,
@@ -16,6 +17,12 @@ function TestStack({
       name: 'CreateVisitation',
       title: 'Create Visitation',
       component: CreateVisitation,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'SPH',
+      title: 'SPH',
+      component: Sph,
     }),
     BStackScreen({
       Stack: Stack,

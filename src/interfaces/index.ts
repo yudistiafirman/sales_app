@@ -12,13 +12,16 @@ interface Input {
   label: string;
   isRequire: boolean;
   type:
-  | 'textInput'
-  | 'cardOption'
-  | 'comboDropdown'
-  | 'area'
-  | 'dropdown'
-  | 'PIC'
-  | 'autocomplete';
+    | 'textInput'
+    | 'cardOption'
+    | 'comboDropdown'
+    | 'area'
+    | 'dropdown'
+    | 'PIC'
+    | 'autocomplete'
+    | 'switch'
+    | 'fileInput';
+  hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   value: string | any;
   placeholder?: string;
@@ -37,9 +40,9 @@ interface Input {
       value: string | number | any;
     }[];
     onChange:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
     placeholder: string;
   };
   comboDropdown?: {
@@ -52,13 +55,13 @@ interface Input {
       value: string | number | any;
     }[];
     onChangeOne:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
     onChangeTwo:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
     placeholderOne: string;
     placeholderTwo: string;
     isErrorOne?: boolean;
@@ -133,9 +136,68 @@ interface BLocationProps {
   mapStyle?: ViewStyle | undefined;
   region?: Region & LatLang;
   onRegionChangeComplete?:
-  | ((region: Region & LatLang, details: Details) => void)
-  | undefined;
+    | ((region: Region & LatLang, details: Details) => void)
+    | undefined;
   CustomMarker?: React.ReactNode | undefined;
+  isUninteractable?: boolean;
+}
+
+interface SphStateInterface {
+  selectedCompany: any;
+  selectedPic: any;
+  isBillingAddressSame: boolean;
+  billingAddress: {
+    name: string;
+    phone: string | number;
+    addressAutoComplete: { [key: string]: any };
+    fullAddress: string;
+  };
+  paymentType: string;
+  paymentRequiredDocuments: { [key: string]: any };
+  paymentDocumentsFullfilled: boolean;
+  paymentBankGuarantee: boolean;
+  chosenProducts: any[];
+  useHighway: boolean;
+}
+
+type SphContextInterface = [
+  SphStateInterface,
+  (key: string) => (data: any) => void,
+  (index: number) => void
+];
+
+interface AdditionalPricesInterface {
+  id: string;
+  categoryId: string;
+  createdById?: string;
+  unit: string;
+  price: number;
+  type: string;
+  min: number;
+  max: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface productParentInterface {
+  id: string;
+  name: string;
+  AdditionalPrices: AdditionalPricesInterface[];
+}
+
+interface ProductDataInterface {
+  id: string;
+  name: string;
+  Price: {
+    id: string;
+    price: number;
+  };
+  Category: {
+    id: string;
+    name: string;
+    parent_id: string;
+    Parent: productParentInterface;
+  };
 }
 export type {
   Input,
@@ -146,4 +208,9 @@ export type {
   PIC,
   NavigationProps,
   BLocationProps,
+  SphStateInterface,
+  SphContextInterface,
+  AdditionalPricesInterface,
+  productParentInterface,
+  ProductDataInterface,
 };
