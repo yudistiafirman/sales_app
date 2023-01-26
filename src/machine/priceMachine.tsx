@@ -193,7 +193,7 @@ export const priceMachine =
 
         errorGettingLocation: {
           entry: (context, event) => {
-            Alert.alert('Something weng wrong', context.errorMessage);
+            Alert.alert('something went wrong', context.errorMessage);
           },
           after: {
             '500': 'askPermission',
@@ -334,6 +334,7 @@ export const priceMachine =
             loadProduct: true,
             productsData: [],
             selectedCategories: [],
+            page: 1,
           };
         }),
         handleError: assign((_context, event) => {
@@ -357,7 +358,7 @@ export const priceMachine =
             const granted = await hasLocationPermission();
             return granted;
           } catch (error) {
-            throw new Error(error)
+            throw new Error(error);
           }
         },
         getCurrentLocation: async () => {

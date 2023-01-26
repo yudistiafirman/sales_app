@@ -97,7 +97,7 @@ const PriceList = () => {
     refreshing,
     loadLocation,
   } = state.context;
-  console.log(state.value);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />
