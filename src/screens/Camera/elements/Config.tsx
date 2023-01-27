@@ -41,12 +41,6 @@ const Config = ({
     });
   };
 
-  (async () => {
-    let cameraPermission = await Camera.getCameraPermissionStatus();
-    if (cameraPermission !== 'authorized')
-      await Camera.requestCameraPermission();
-  })();
-
   const takePhoto = async () => {
     const takenPhoto = await camera.current.takePhoto({
       flash: 'off',

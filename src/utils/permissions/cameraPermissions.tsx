@@ -1,19 +1,31 @@
-import { PermissionsAndroid } from 'react-native';
+import { Alert, Linking, PermissionsAndroid } from 'react-native';
+import { displayName } from '../../../app.json';
 
-export const checkCameraPermissions = async () => {
+const openSetting = () => {
+  Linking.openSettings().catch(() => {
+    Alert.alert('Unable to open settings');
+  });
+};
+
+const showAlertCamera = () => {
+  Alert.alert(`Turn on Camera to allow ${displayName} to take a picture.`, '', [
+    { text: 'Go to Settings', onPress: openSetting },
+  ]);
+};
+
+export const hasCameraPermissions = async () => {
   try {
     const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: 'Permissions camera',
-        message: 'Give permission to your camera',
-        buttonPositive: 'ok',
-      }
+      PermissionsAndroid.PERMISSIONS.CAMERA
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       return true;
     } else {
-      return false;
+      if (granted === PermissionsAndroid.RESULTS.DENIED) {
+        showAlertCamera();
+      } else {
+        showAlertCamera();
+      }
     }
   } catch (err) {
     console.warn(err);
@@ -21,4 +33,4 @@ export const checkCameraPermissions = async () => {
   }
 };
 
-export default { checkCameraPermissions };
+export default hasCameraPermissions;
