@@ -59,7 +59,7 @@ const CameraPage = ({
   return (
     <View style={[_style, styles.parent]}>
       <View style={styles.container}>
-        {!!device && (
+        {device && (
           <>
             <Camera
               ref={camera}

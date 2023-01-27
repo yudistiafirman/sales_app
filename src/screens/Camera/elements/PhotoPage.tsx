@@ -5,16 +5,20 @@ import { StyleProp, ViewStyle, View, Image, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/navTypes';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+import { useDispatch } from 'react-redux';
+import { setImageURLS } from '@/redux/reducers/cameraReducer';
 
 const PhotoPage = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const route = useRoute<RootStackScreenProps>();
+  const dispatch = useDispatch();
   useHeaderTitleChanged({ title: 'Foto ' + route?.params?.photoTitle });
   const navigation = useNavigation();
   const _style = useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
 
   const savePhoto = () => {
-    //do save
+    dispatch(setImageURLS(photo));
+    navigation.goBack();
   };
 
   return (

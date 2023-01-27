@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './reducers/authReducer';
+import cameraReducer from './reducers/cameraReducer';
 import locationReducer from './reducers/locationReducer';
 
 export const store = configureStore({
   reducer: {
     location: locationReducer,
     auth: authReducer,
+    camera: cameraReducer,
   },
 });
 
