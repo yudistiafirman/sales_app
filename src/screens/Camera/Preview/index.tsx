@@ -18,7 +18,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
 
   const savePhoto = () => {
     dispatch(setImageURLS(photo));
-    navigation.goBack();
+    //NOTE: push your route navigation here.
   };
 
   return (
