@@ -8,21 +8,12 @@ import respFS from '@/utils/resFontSize';
 
 const BHeaderTitle = (
   title: string,
-  type: string,
-  color: string,
-  role: string
+  headerStyle: 'flex-start' | 'center',
+  role: string = ''
 ) => {
   const _styles: Styles = {
-    parent: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
     container: {
       flex: 1,
-      width: '100%',
-      alignItems: 'center',
-      backgroundColor: 'yellow',
     },
     chipView: {
       flex: 1,
@@ -46,14 +37,13 @@ const BHeaderTitle = (
       fontSize: respFS(10),
       color: colors.textInput.input,
     },
-    headerStyle: {
-      backgroundColor:
-        type === 'home' && color === 'primary' ? colors.primary : colors.white,
+    headerTitleStyle: {
+      alignSelf: headerStyle,
     },
   };
 
   return (
-    <View style={_styles.parent}>
+    <View style={_styles.container}>
       {role === 'Transport' || role === 'Dispatch' ? (
         <View style={_styles.container}>
           <BText type="header" style={_styles.headerTitleStyle}>

@@ -24,7 +24,6 @@ const getTabs = (userType?: USER_TYPE) => {
         name: 'MainTabs',
         title: 'Beranda',
         type: 'home',
-        color: 'white',
         headerShown: true,
         component: Operation,
         role: 'Transport',
@@ -35,7 +34,6 @@ const getTabs = (userType?: USER_TYPE) => {
         name: 'MainTabs',
         title: 'Beranda',
         type: 'home',
-        color: 'white',
         headerShown: true,
         component: securityTabs,
         role: 'Dispatch',
@@ -46,7 +44,6 @@ const getTabs = (userType?: USER_TYPE) => {
         name: 'MainTabs',
         title: `Beranda - ${userType}`,
         type: 'home',
-        color: 'primary',
         headerShown: false,
         component: salesTabs,
         role: '',
@@ -63,7 +60,7 @@ const authStack = () => AuthStack({ Stack: Stack });
 
 function AppNavigator() {
   const [isLoading, userData] = useBootStrapAsync();
-  const userType = USER_TYPE.OPSMANAGER;
+  const userType = USER_TYPE.SALES;
 
   if (isLoading) {
     return <Splash />;

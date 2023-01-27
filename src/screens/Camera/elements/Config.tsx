@@ -10,7 +10,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { layout } from '@/constants';
-import { USER_TYPE } from '@/models/EnumModel';
 
 const Config = ({
   title,
@@ -22,7 +21,7 @@ const Config = ({
   const getCameraDevice = (devices: CameraDevices): CameraDevice => {
     return devices.back;
   };
-  useHeaderTitleChanged({ title: 'Foto ' + title, role: USER_TYPE.OPSMANAGER });
+  useHeaderTitleChanged({ title: 'Foto ' + title });
   const device = getCameraDevice(useCameraDevices());
   const navigation = useNavigation();
   const camera = useRef<Camera>(null);

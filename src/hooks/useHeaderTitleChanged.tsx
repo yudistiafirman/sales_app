@@ -4,15 +4,14 @@ import BHeaderTitle from '@/components/molecules/BHeaderTitle';
 
 type useHeaderTitle = {
   title: string;
-  role: string;
 };
 
-export default function useHeaderTitleChanged({ title, role }: useHeaderTitle) {
+export default function useHeaderTitleChanged({ title }: useHeaderTitle) {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: () => BHeaderTitle(title, 'home', 'white', role),
+      headerTitle: () => BHeaderTitle(title, 'flex-start'),
     });
-  }, [navigation, title, role]);
+  }, [navigation, title]);
 }

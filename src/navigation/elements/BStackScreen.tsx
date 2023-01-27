@@ -7,7 +7,6 @@ const BStackScreen = ({
   name,
   type = 'default',
   title,
-  color,
   component,
   headerShown = true,
   role = undefined,
@@ -16,7 +15,6 @@ const BStackScreen = ({
   type?: 'default' | 'home' | 'sub';
   name: string;
   title?: string;
-  color?: 'primary' | 'white' | undefined;
   component: any;
   headerShown?: boolean;
   role?: string;
@@ -32,7 +30,7 @@ const BStackScreen = ({
         headerTitleAlign: headerTitleAlign,
         headerShadowVisible: false,
         headerShown: headerShown,
-        headerTitle: () => BHeaderTitle(title, type, color, role),
+        headerTitle: () => BHeaderTitle(title, 'center', role),
       }}
     />
   );
