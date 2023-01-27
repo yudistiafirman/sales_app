@@ -1,8 +1,7 @@
-import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
 import { TypedNavigator } from '@react-navigation/native';
-import { ReactNode, useMemo } from 'react';
 import React from 'react';
+import { renderHeaderTitle } from '@/utils/screenUtil';
 
 const BStackScreen = ({
   Stack,
@@ -17,7 +16,7 @@ const BStackScreen = ({
   type?: 'default' | 'home' | 'sub';
   name: string;
   title?: string;
-  color?: 'primary' | undefined;
+  color?: 'primary' | 'white' | undefined;
   component: any;
   headerShown?: boolean;
 }) => {
@@ -27,19 +26,7 @@ const BStackScreen = ({
       backgroundColor:
         type === 'home' && color === 'primary' ? colors.primary : colors.white,
     },
-    headerTitleStyle: {
-      color:
-        type === 'home' && color === 'primary'
-          ? colors.text.light
-          : colors.text.dark,
-    },
   };
-
-  const renderHeaderTitle = () => (
-    <BText type="header" style={styles.headerTitleStyle}>
-      {title}
-    </BText>
-  );
 
   return (
     <Stack.Screen
@@ -51,7 +38,7 @@ const BStackScreen = ({
         headerShadowVisible: false,
         headerShown: headerShown,
         headerStyle: styles.headerStyle,
-        headerTitle: () => renderHeaderTitle(),
+        headerTitle: () => renderHeaderTitle(title, type, color),
       }}
     />
   );

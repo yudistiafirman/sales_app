@@ -4,6 +4,7 @@ import SearchProduct from '@/screens/SearchProduct';
 import Location from '@/screens/Location';
 import SearchAreaProject from '@/screens/SearchAreaProject';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
+import PhotoPage from '@/screens/Camera/elements/PhotoPage';
 
 function TestStack({
   Stack,
@@ -34,6 +35,12 @@ function TestStack({
       name: 'SearchArea',
       title: 'Pilih Area Proyek',
       component: SearchAreaProject,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'PhotoPage',
+      title: 'Foto',
+      component: PhotoPage,
     }),
   ];
 }
