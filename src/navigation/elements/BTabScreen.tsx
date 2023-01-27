@@ -19,7 +19,7 @@ const BTabScreen = ({
   type?: 'default' | 'home' | 'sub';
   name: string;
   title?: string;
-  color?: 'primary' | undefined;
+  color?: 'primary' | 'white' | undefined;
   component: any;
   headerShown?: boolean;
 }) => {

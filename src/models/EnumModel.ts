@@ -1,0 +1,6 @@
+export enum USER_TYPE {
+  OPSMANAGER,
+  SALES,
+  OPERATION,
+  SECURITY,
+}

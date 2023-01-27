@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
+  TextStyle,
 } from 'react-native';
 import React from 'react';
 import colors from '@/constants/colors';
@@ -15,9 +16,9 @@ type BButtonPrimaryType = {
   title: string;
   onPress?: () => void;
   buttonStyle?: ViewStyle;
-  titleStyle?: ViewStyle;
+  titleStyle?: TextStyle;
   isOutline?: boolean;
-  disable?: boolean
+  disable?: boolean;
 };
 export default function BButtonPrimary({
   title,
