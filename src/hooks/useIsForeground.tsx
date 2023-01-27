@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 
-export const useIsForeground = (): boolean => {
+const useIsForeground = (): boolean => {
   const [isForeground, setIsForeground] = useState(true);
 
   useEffect(() => {
@@ -14,3 +14,5 @@ export const useIsForeground = (): boolean => {
 
   return isForeground;
 };
+
+export default useIsForeground;

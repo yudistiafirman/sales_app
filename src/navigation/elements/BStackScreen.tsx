@@ -1,7 +1,7 @@
 import colors from '@/constants/colors';
 import { TypedNavigator } from '@react-navigation/native';
 import React from 'react';
-import { renderHeaderTitle } from '@/utils/screenUtil';
+import BHeaderTitle from '@/components/molecules/BHeaderTitle';
 
 const BStackScreen = ({
   Stack,
@@ -38,7 +38,7 @@ const BStackScreen = ({
         headerShadowVisible: false,
         headerShown: headerShown,
         headerStyle: styles.headerStyle,
-        headerTitle: () => renderHeaderTitle(title, type, color),
+        headerTitle: () => BHeaderTitle(title, type, color),
       }}
     />
   );

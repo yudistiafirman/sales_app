@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { renderHeaderTitle } from '@/utils/screenUtil';
+import BHeaderTitle from '@/components/molecules/BHeaderTitle';
 
 type useHeaderTitle = {
   title: string;
@@ -11,7 +11,7 @@ export default function useHeaderTitleChanged({ title }: useHeaderTitle) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: () => renderHeaderTitle(title, 'home', 'white'),
+      headerTitle: () => BHeaderTitle(title, 'home', 'white'),
     });
   }, [navigation, title]);
 }
