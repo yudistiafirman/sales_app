@@ -4,7 +4,8 @@ import SearchProduct from '@/screens/SearchProduct';
 import Location from '@/screens/Location';
 import SearchAreaProject from '@/screens/SearchAreaProject';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
-import PhotoPage from '@/screens/Camera/elements/PhotoPage';
+import Preview from '@/screens/Camera/Preview';
+import Camera from '@/screens/Camera';
 
 function TestStack({
   Stack,
@@ -38,9 +39,15 @@ function TestStack({
     }),
     BStackScreen({
       Stack: Stack,
-      name: 'PhotoPage',
-      title: 'Foto',
-      component: PhotoPage,
+      name: 'Camera',
+      title: 'Camera',
+      component: Camera,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'Preview',
+      title: 'Preview',
+      component: Preview,
     }),
   ];
 }

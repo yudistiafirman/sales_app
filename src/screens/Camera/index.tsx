@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import CameraPage from './elements/CameraPage';
-import { useNavigation } from '@react-navigation/native';
+import Config from './elements/Config';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 
 const Camera = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const route = useRoute<RootStackScreenProps>();
 
   useEffect(() => {
     const backAction = () => {
@@ -25,7 +27,7 @@ const Camera = () => {
   return (
     <View style={styles.parent}>
       <SafeAreaView style={styles.container}>
-        <CameraPage title="DO" />
+        <Config title={route?.params?.photoTitle} />
       </SafeAreaView>
     </View>
   );

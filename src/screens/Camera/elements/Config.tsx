@@ -11,7 +11,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { layout } from '@/constants';
 
-const CameraPage = ({
+const Config = ({
   title,
   style,
 }: {
@@ -52,7 +52,7 @@ const CameraPage = ({
       flash: 'off',
     });
     animateElement();
-    navigation.navigate('PhotoPage', { photo: takenPhoto, photoTitle: title });
+    navigation.navigate('Preview', { photo: takenPhoto, photoTitle: title });
   };
   const isFocused = useIsFocused();
 
@@ -122,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CameraPage;
+export default Config;

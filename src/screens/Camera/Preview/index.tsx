@@ -8,7 +8,7 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
 
-const PhotoPage = ({ style }: { style?: StyleProp<ViewStyle> }) => {
+const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const route = useRoute<RootStackScreenProps>();
   const dispatch = useDispatch();
   useHeaderTitleChanged({ title: 'Foto ' + route?.params?.photoTitle });
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PhotoPage;
+export default Preview;

@@ -5,44 +5,26 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BStackScreen from './elements/BStackScreen';
 import SalesTabs from './tabs/SalesTabs';
 import TestStack from './stacks/TestStack';
-// import OpsManTabs from './tabs/OpsManTabs';
 import Splash from '@/screens/Splash';
 import AuthStack from './stacks/AuthStack';
 import { useBootStrapAsync } from '@/hooks';
-import Camera from '@/screens/Camera';
 
 const Stack = createNativeStackNavigator();
 
-const getTabs = (
-  userType?: 'opsManager' | 'sales' | 'cameraTest' | undefined
-) => {
+const getTabs = (userType?: 'opsManager' | 'sales' | undefined) => {
   let tabs = SalesTabs;
-  if (userType === 'cameraTest') {
-    return BStackScreen({
-      Stack: Stack,
-      name: 'Camera',
-      title: 'Camera',
-      type: 'home',
-      color: 'white',
-      headerShown: true,
-      component: Camera,
-    });
-  } else {
-    return BStackScreen({
-      Stack: Stack,
-      name: 'MainTabs',
-      title: `Beranda - ${userType}`,
-      type: 'home',
-      color: 'primary',
-      headerShown: false,
-      component: tabs,
-    });
-  }
+  return BStackScreen({
+    Stack: Stack,
+    name: 'MainTabs',
+    title: `Beranda - ${userType}`,
+    type: 'home',
+    color: 'primary',
+    headerShown: false,
+    component: tabs,
+  });
 };
 
-const getStacks = (
-  userType?: 'opsManager' | 'sales' | 'cameraTest' | undefined
-) => {
+const getStacks = (userType?: 'opsManager' | 'sales' | undefined) => {
   if (userType === 'opsManager') return TestStack({ Stack: Stack });
   return TestStack({ Stack: Stack });
 };
@@ -51,7 +33,7 @@ const authStack = () => AuthStack({ Stack: Stack });
 
 function AppNavigator() {
   const [isLoading, userData] = useBootStrapAsync();
-  const userType = 'cameraTest';
+  const userType = 'opsManager';
 
   if (isLoading) {
     return <Splash />;
