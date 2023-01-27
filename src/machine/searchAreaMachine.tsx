@@ -1,6 +1,6 @@
 import { searchLocation, searchLocationById } from '@/actions/CommonActions';
 import { hasLocationPermission } from '@/utils/permissions';
-import GetLocation from 'react-native-get-location';
+import Geolocation from 'react-native-geolocation-service'
 import { assign, createMachine, send } from 'xstate';
 
 export const searchAreaMachine =
@@ -188,15 +188,27 @@ export const searchAreaMachine =
           return granted;
         },
         getCurrentLocation: async () => {
+          const opt = {
+            // timeout:INFINITY,
+            // maximumAge:INFINITY,
+            // accuracy: { ios: "hundredMeters", android: "balanced" },
+            // enableHighAccuracy: false,
+            // distanceFilter:0,
+            showLocationDialog: true,
+            forceRequestLocation: true,
+          };
+          const getCurrentPosition = () =>
+            new Promise((resolve, error) =>
+              Geolocation.getCurrentPosition(resolve, error, opt)
+            );
+
           try {
-            const position = await GetLocation.getCurrentPosition({
-              enableHighAccuracy: true,
-              timeout: 15000,
-            });
-            const { latitude, longitude } = position;
-            return { latitude, longitude };
+            const response = await getCurrentPosition();
+            const { coords } = response;
+            const { longitude, latitude } = coords;
+            return { longitude, latitude };
           } catch (error) {
-            console.log(error);
+            throw new Error(error);
           }
         },
         getLocationBySearch: async (context, event) => {
