@@ -7,11 +7,15 @@ import { RootStackScreenProps } from '@/navigation/navTypes';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
+import { USER_TYPE } from '@/models/EnumModel';
 
 const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const route = useRoute<RootStackScreenProps>();
   const dispatch = useDispatch();
-  useHeaderTitleChanged({ title: 'Foto ' + route?.params?.photoTitle });
+  useHeaderTitleChanged({
+    title: 'Foto ' + route?.params?.photoTitle,
+    role: USER_TYPE.OPSMANAGER,
+  });
   const navigation = useNavigation();
   const _style = useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;

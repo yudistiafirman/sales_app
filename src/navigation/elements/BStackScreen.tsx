@@ -1,4 +1,3 @@
-import colors from '@/constants/colors';
 import { TypedNavigator } from '@react-navigation/native';
 import React from 'react';
 import BHeaderTitle from '@/components/molecules/BHeaderTitle';
@@ -11,6 +10,7 @@ const BStackScreen = ({
   color,
   component,
   headerShown = true,
+  role = undefined,
 }: {
   Stack: TypedNavigator<any, any, any, any, any>;
   type?: 'default' | 'home' | 'sub';
@@ -19,14 +19,9 @@ const BStackScreen = ({
   color?: 'primary' | 'white' | undefined;
   component: any;
   headerShown?: boolean;
+  role?: string;
 }) => {
-  const styles = {
-    headerTitleAlign: type === 'home' ? 'center' : 'left',
-    headerStyle: {
-      backgroundColor:
-        type === 'home' && color === 'primary' ? colors.primary : colors.white,
-    },
-  };
+  const headerTitleAlign = type === 'home' ? 'center' : 'left';
 
   return (
     <Stack.Screen
@@ -34,11 +29,10 @@ const BStackScreen = ({
       component={component}
       key={name}
       options={{
-        headerTitleAlign: styles.headerTitleAlign,
+        headerTitleAlign: headerTitleAlign,
         headerShadowVisible: false,
         headerShown: headerShown,
-        headerStyle: styles.headerStyle,
-        headerTitle: () => BHeaderTitle(title, type, color),
+        headerTitle: () => BHeaderTitle(title, type, color, role),
       }}
     />
   );
