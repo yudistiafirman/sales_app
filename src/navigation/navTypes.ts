@@ -11,8 +11,15 @@ export type RootStackParamList = {
   Harga: { coordinate: { longitude: number; latitude: number } };
   SearchProduct: { distance: number };
   CreateVisitation: undefined;
-  Camera: { photoTitle: string };
-  Preview: { photo: PhotoFile; photoTitle: string };
+  Camera: { photoTitle: string; entryPoint?: string };
+  Preview: {
+    photo?: PhotoFile;
+    photoTitle: string;
+    entryPoint?: string;
+  };
+  Schedule: { id: string };
+  Operation: { role?: string };
+  SubmitForm: { type?: string };
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;

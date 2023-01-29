@@ -11,6 +11,7 @@ import BText from '../atoms/BText';
 import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
+import { colors, layout } from '@/constants';
 
 interface IProps {
   inputs: Input[];
@@ -24,6 +25,19 @@ const styles: Styles = {
   optionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  quantityLayout: {
+    flexDirection: 'row',
+  },
+  quantityInput: {
+    flex: 1,
+  },
+  quantityText: {
+    position: 'absolute',
+    right: 0,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginRight: layout.pad.lg,
   },
 };
 
@@ -39,13 +53,47 @@ const renderInput = (input: Input): React.ReactNode => {
     isRequire,
     isError,
     onSelect,
+    keyboardType,
+    placeholder,
   } = input;
+
+  if (type === 'quantity') {
+    return (
+      <React.Fragment>
+        <BLabel label={label} isRequired={isRequire} />
+        <View style={styles.quantityLayout}>
+          <BTextInput
+            style={styles.quantityInput}
+            onChangeText={onChange}
+            value={value}
+            keyboardType={'numeric'}
+            placeholder={placeholder}
+            placeHolderTextColor={colors.textInput.placeHolder}
+          />
+          <View style={styles.quantityText}>
+            <BText>{'m3'}</BText>
+          </View>
+        </View>
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {`${label} harus diisi`}
+          </BText>
+        )}
+      </React.Fragment>
+    );
+  }
 
   if (type === 'textInput') {
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
-        <BTextInput onChangeText={onChange} value={value} />
+        <BTextInput
+          onChangeText={onChange}
+          value={value}
+          keyboardType={keyboardType ? keyboardType : 'default'}
+          placeholder={placeholder}
+          placeHolderTextColor={colors.textInput.placeHolder}
+        />
         {isError && (
           <BText size="small" color="primary" bold="100">
             {`${label} harus diisi`}
@@ -64,6 +112,8 @@ const renderInput = (input: Input): React.ReactNode => {
           value={value}
           multiline={true}
           numberOfLines={4}
+          placeholder={placeholder}
+          placeHolderTextColor={colors.textInput.placeHolder}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">

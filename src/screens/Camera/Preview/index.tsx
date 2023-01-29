@@ -9,18 +9,29 @@ import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
 
 const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
-  const route = useRoute<RootStackScreenProps>();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const route = useRoute<RootStackScreenProps>();
   useHeaderTitleChanged({
     title: 'Foto ' + route?.params?.photoTitle,
   });
-  const navigation = useNavigation();
   const _style = useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
 
   const savePhoto = () => {
     dispatch(setImageURLS(photo));
-    //NOTE: push your route navigation here.
+
+    if (
+      route?.params?.entryPoint === 'operation' ||
+      route?.params?.entryPoint === 'return' ||
+      route?.params?.entryPoint === 'delivery'
+    ) {
+      navigation.navigate('SubmitForm', {
+        type: route?.params?.entryPoint,
+      });
+    } else {
+      //NOTE: push your route navigation here.
+    }
   };
 
   return (

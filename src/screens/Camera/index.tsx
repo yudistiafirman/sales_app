@@ -31,7 +31,10 @@ const Camera = () => {
   return (
     <View style={styles.parent}>
       <SafeAreaView style={styles.container}>
-        <Config title={route?.params?.photoTitle} />
+        <Config
+          title={route?.params?.photoTitle}
+          entryPoint={route?.params?.entryPoint}
+        />
       </SafeAreaView>
     </View>
   );

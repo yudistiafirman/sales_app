@@ -3,6 +3,7 @@ import {
   ViewStyle,
   ImageSourcePropType,
   TextStyle,
+  KeyboardTypeOptions,
 } from 'react-native';
 
 import * as React from 'react';
@@ -12,6 +13,7 @@ interface Input {
   label: string;
   isRequire: boolean;
   type:
+    | 'quantity'
     | 'textInput'
     | 'cardOption'
     | 'comboDropdown'
@@ -20,11 +22,12 @@ interface Input {
     | 'PIC'
     | 'autocomplete';
   onChange?: (e: any) => void;
-  value: string | any;
+  value?: string | any;
   placeholder?: string;
   loading?: boolean;
   isError?: boolean;
   items?: any;
+  keyboardType?: KeyboardTypeOptions;
   options?: Array<{
     title: string;
     value: string | any;

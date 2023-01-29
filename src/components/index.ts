@@ -19,6 +19,7 @@ export { default as BErrorText } from './atoms/BErrorText';
 export { default as BSvg } from './atoms/BSvg';
 export { default as SVGName } from './atoms/BSvg/svgName';
 export { default as SVGFile } from './atoms/BSvg/svgFile';
+export { default as BLocationText } from './atoms/BLocationText';
 
 // moleculses
 export { default as BTab } from './molecules/BTab';

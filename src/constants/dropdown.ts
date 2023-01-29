@@ -83,4 +83,56 @@ const STAGE_PROJECT = [
   },
 ];
 
-export { MONTH_LIST, WEEK_LIST, STAGE_PROJECT };
+const VEHICLE_LIST = [
+  {
+    label: 'B 5236 TOB',
+    value: 'B5236TOB',
+  },
+  {
+    label: 'B 6589 TWS',
+    value: 'B6589TWS',
+  },
+  {
+    label: 'B 1237 AB',
+    value: 'B1237AB',
+  },
+];
+
+const DRIVER_LIST = [
+  {
+    label: 'Bejo',
+    value: 'BEJO',
+  },
+  {
+    label: 'Udin',
+    value: 'UDIN',
+  },
+  {
+    label: 'Samsul',
+    value: 'SAMSUL',
+  },
+];
+
+const TM_CONDITION = [
+  {
+    label: 'Bersih',
+    value: 'bersih',
+  },
+  {
+    label: 'Kotor',
+    value: 'kotor',
+  },
+  {
+    label: 'Barang Tertinggal',
+    value: 'tertinggal',
+  },
+];
+
+export {
+  MONTH_LIST,
+  WEEK_LIST,
+  STAGE_PROJECT,
+  VEHICLE_LIST,
+  DRIVER_LIST,
+  TM_CONDITION,
+};
