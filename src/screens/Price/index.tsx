@@ -50,7 +50,7 @@ const PriceList = () => {
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude } = params.coordinate;
-      send('backToIdle')
+      send('backToIdle');
       send('sendingParams', { value: { latitude, longitude } });
       setIndex(0);
     } else {
@@ -121,7 +121,7 @@ const PriceList = () => {
         <PriceSearchBar
           onPress={() =>
             navigation.navigate('SearchProduct', {
-              distance: locationDetail.distance.value,
+              distance: locationDetail?.distance?.value,
             })
           }
         />

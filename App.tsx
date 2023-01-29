@@ -1,7 +1,7 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, Text, View } from 'react-native';
 import {
   DefaultTheme as NavigationTheme,
   NavigationContainer,
@@ -17,6 +17,7 @@ import font from '@/constants/fonts';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '@/redux/store';
+import Popup from '@/components/templates/PopupGlobal/Popup';
 
 const navTheme = {
   ...NavigationTheme,
@@ -53,6 +54,7 @@ function App() {
         />
         <PaperProvider theme={paperTheme}>
           <ReduxProvider store={store}>
+            <Popup />
             <AppNavigator />
           </ReduxProvider>
         </PaperProvider>

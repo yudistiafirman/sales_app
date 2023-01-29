@@ -1,15 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View, DeviceEventEmitter } from 'react-native';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import resScale from '@/utils/resScale';
 import { BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
 import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import { searchProductMachine } from '@/machine/searchProductMachine';
-import { RootStackScreenProps } from '@/navigation/navTypes';
 
 type SearchProductType = {
   isAsComponent?: boolean;
@@ -22,10 +21,20 @@ const SearchProduct = ({
   getProduct,
   onPressBack = () => {},
 }: SearchProductType) => {
+  const route = useRoute<RouteProp<Record<string, object>, string>>();
+  let isGoback: boolean = false;
+  if (route.params) {
+    const { isGobackAfterPress } = route.params as {
+      isGobackAfterPress: boolean;
+    };
+    isGoback = isGobackAfterPress;
+  }
+  // const { isGobackAfterPress } = route.params as {
+  //   isGobackAfterPress: boolean;
+  // };
   const [index, setIndex] = React.useState(0);
   const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();
-  const route = useRoute<RootStackScreenProps>();
   const [state, send] = useMachine(searchProductMachine);
 
   React.useEffect(() => {
@@ -122,7 +131,16 @@ const SearchProduct = ({
               products={productsData}
               loadProduct={loadProduct}
               emptyProductName={searchValue}
-              onPress={getProduct}
+              onPress={(data) => {
+                if (getProduct) {
+                  getProduct(data);
+                } else {
+                  DeviceEventEmitter.emit('event.testEvent', { data });
+                  if (isGoback) {
+                    navigation.goBack();
+                  }
+                }
+              }}
             />
           )}
           onIndexChange={setIndex}

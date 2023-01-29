@@ -15,6 +15,7 @@ import { BSwitch, BFileInput } from '@/components';
 
 interface IProps {
   inputs: Input[];
+  noSpaceEnd?: boolean;
 }
 
 interface Styles {
@@ -40,14 +41,16 @@ const renderInput = (input: Input): React.ReactNode => {
     isRequire,
     isError,
     onSelect,
+    placeholder,
     hidePicLabel,
   } = input;
 
   if (type === 'textInput') {
+    const textInputProps = { onChange, value };
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
-        <BTextInput onChangeText={onChange} value={value} />
+        <BTextInput {...textInputProps} />
         {isError && (
           <BText size="small" color="primary" bold="100">
             {`${label} harus diisi`}
@@ -66,6 +69,7 @@ const renderInput = (input: Input): React.ReactNode => {
           value={value}
           multiline={true}
           numberOfLines={4}
+          placeholder={placeholder}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
@@ -117,7 +121,6 @@ const renderInput = (input: Input): React.ReactNode => {
 
   if (type === 'dropdown') {
     if (dropdown) {
-      console.log('dropdown, masukl');
       return (
         <React.Fragment>
           <BLabel label={label} isRequired={isRequire} />
@@ -196,13 +199,15 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 };
 
-const BForm = ({ inputs }: IProps) => {
+const BForm = ({ inputs, noSpaceEnd }: IProps) => {
   return (
     <View>
       {inputs.map((input, index) => (
         <React.Fragment key={index}>
           {renderInput(input)}
-          <BSpacer size="small" />
+          {(index < inputs.length - 1 || !noSpaceEnd) && (
+            <BSpacer size="small" />
+          )}
         </React.Fragment>
       ))}
     </View>
