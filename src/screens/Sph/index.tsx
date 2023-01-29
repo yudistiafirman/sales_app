@@ -89,7 +89,7 @@ function stepHandler(
 export default function Sph() {
   const stepRef = useRef<ScrollView>(null);
   const [currentPosition, setCurrentPosition] = useState<number>(0);
-  const [stepsDone, setStepsDone] = useState<number[]>([0]);
+  const [stepsDone, setStepsDone] = useState<number[]>([]);
   const [sphData, setSphData] = useState<SphStateInterface>({
     selectedCompany: null,
     selectedPic: null,

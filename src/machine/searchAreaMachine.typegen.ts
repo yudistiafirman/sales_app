@@ -1,7 +1,5 @@
 // This file was automatically generated. Edits will be overwritten
 
-// This file was automatically generated. Edits will be overwritten
-
 export interface Typegen0 {
   '@@xstate/typegen': true;
   internalEvents: {
@@ -13,6 +11,11 @@ export interface Typegen0 {
     };
     'done.invoke.search area.getLocation.askPermission:invocation[0]': {
       type: 'done.invoke.search area.getLocation.askPermission:invocation[0]';
+      data: unknown;
+      __tip: 'See the XState TS docs to learn how to strongly type this.';
+    };
+    'done.invoke.search area.getLocation.currentLocationLoaded:invocation[0]': {
+      type: 'done.invoke.search area.getLocation.currentLocationLoaded:invocation[0]';
       data: unknown;
       __tip: 'See the XState TS docs to learn how to strongly type this.';
     };
@@ -34,6 +37,7 @@ export interface Typegen0 {
   invokeSrcNameMap: {
     askingPermission: 'done.invoke.search area.getLocation.askPermission:invocation[0]';
     getCurrentLocation: 'done.invoke.search area.getLocation.allowed:invocation[0]';
+    getLocationByCoordinate: 'done.invoke.search area.getLocation.currentLocationLoaded:invocation[0]';
     getLocationBySearch: 'done.invoke.search area.searchLocation.onGettingLocation:invocation[0]';
     gettingPlacesId: 'done.invoke.search area.searchLocation.gettingPlaceId:invocation[0]';
   };
@@ -50,7 +54,9 @@ export interface Typegen0 {
     assignSearchValue: 'searchingLocation';
     clearInputValue: 'clearInput';
     clearResult: 'searchingLocation';
-    navigateToLocation: 'done.invoke.search area.searchLocation.gettingPlaceId:invocation[0]';
+    navigateToLocation:
+      | 'done.invoke.search area.getLocation.currentLocationLoaded:invocation[0]'
+      | 'done.invoke.search area.searchLocation.gettingPlaceId:invocation[0]';
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {
@@ -60,6 +66,7 @@ export interface Typegen0 {
   eventsCausingServices: {
     askingPermission: '' | 'appComeForeground' | 'xstate.init';
     getCurrentLocation: 'done.invoke.search area.getLocation.askPermission:invocation[0]';
+    getLocationByCoordinate: 'done.invoke.search area.getLocation.allowed:invocation[0]';
     getLocationBySearch: 'xstate.after(500)#search area.searchLocation.searchValueLoaded';
     gettingPlacesId: 'onGettingPlacesId';
   };

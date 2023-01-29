@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import { View, ViewStyle } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -29,23 +29,34 @@ import { useMachine } from '@xstate/react';
 import { deviceLocationMachine } from '@/machine/modules';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
 const FirstStep = () => {
   const { values, action } = React.useContext(createVisitationContext);
   const { updateValueOnstep } = action;
   const { region } = useSelector((state: RootState) => state.location);
+  const [isMapLoading, setIsMapLoading] = useState(false);
 
   const navigation = useNavigation();
   const dispatch = useDispatch<any>();
 
-  const styles: Styles = React.useMemo(() => {
-    return {
-      container: { flex: 1, marginHorizontal: -resScale(20) },
-      map: {
-        height: resScale(400),
-        width: '100%',
-      },
-    };
-  }, []);
+  // const styles: Styles = React.useMemo(() => {
+  //   return {
+  //     container: { flex: 1, marginHorizontal: -resScale(20) },
+  //     map: {
+  //       height: resScale(400),
+  //       width: '100%',
+  //     },
+  //     titleShimmer: {
+  //       width: resScale(108),
+  //       height: resScale(17),
+  //       marginBottom: resScale(4),
+  //     },
+  //     secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
+  //   };
+  // }, []);
 
   const inputs: Input[] = [
     {
@@ -67,12 +78,14 @@ const FirstStep = () => {
   // map function
   const mapRef = React.useRef<MapView>(null);
   const onChangeRegion = async (coordinate: Region) => {
-    const { result } = await getLocationCoordinates(
-      '',
+    setIsMapLoading(() => true);
+    const { data } = await getLocationCoordinates(
+      // '',
       coordinate.longitude as unknown as number,
       coordinate.latitude as unknown as number,
       ''
     );
+    const { result } = data;
     const _coordinate = {
       latitude: result?.lat,
       longitude: result?.lon,
@@ -88,6 +101,7 @@ const FirstStep = () => {
       _coordinate.latitude = Number(result.lat);
     }
     dispatch(updateRegion(_coordinate));
+    setIsMapLoading(() => false);
   };
 
   const debounceResult = React.useMemo(() => debounce(onChangeRegion, 500), []);
@@ -154,12 +168,7 @@ const FirstStep = () => {
           region={region}
           onRegionChangeComplete={debounceResult}
           CustomMarker={<BMarker />}
-          mapStyle={
-            styles.map as ViewStyle & {
-              width: number;
-              height: number;
-            }
-          }
+          mapStyle={styles.map}
         />
       </View>
       <View style={{ flex: 1 }}>
@@ -188,8 +197,21 @@ const FirstStep = () => {
                   />
                   <BSpacer size="large" />
                   <View>
-                    <BLabel label={nameAddress!} />
-                    <BText>{region.formattedAddress || 'Detail Alamat'}</BText>
+                    {isMapLoading ? (
+                      <View>
+                        <ShimmerPlaceholder style={styles.titleShimmer} />
+                        <ShimmerPlaceholder
+                          style={styles.secondaryTextShimmer}
+                        />
+                      </View>
+                    ) : (
+                      <>
+                        <BLabel label={nameAddress!} />
+                        <BText>
+                          {region.formattedAddress || 'Detail Alamat'}
+                        </BText>
+                      </>
+                    )}
                   </View>
                 </View>
               </TouchableOpacity>
@@ -202,5 +224,19 @@ const FirstStep = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: { flex: 1, marginHorizontal: -resScale(20) },
+  map: {
+    height: resScale(330),
+    width: '100%',
+  },
+  titleShimmer: {
+    width: resScale(108),
+    height: resScale(17),
+    marginBottom: resScale(4),
+  },
+  secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
+});
 
 export default FirstStep;

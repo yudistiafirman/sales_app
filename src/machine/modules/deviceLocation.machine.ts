@@ -1,4 +1,4 @@
-import { assign, createMachine, State } from 'xstate';
+import { assign, createMachine } from 'xstate';
 import { hasLocationPermission } from '@/utils/permissions';
 import GetLocation from 'react-native-get-location';
 import { getLocationCoordinates } from '../priceMachine';
@@ -19,7 +19,7 @@ interface IGuard {
 }
 
 const deviceLocationMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QTANwJYGMwBkD2mAhgC7p4B2AdOhADZgDEhsA1uuVAApgBOAtuliwy5ANoAGALqJQABzzDSFGSAAeiAIwA2LZQDMBvQCZxRrXq0B2cQFYALABoQAT0RGjeypZvjfNgJwadnriVpYAvuFOKBjY+ERKVMws3PyCwhQMEBRg1OSoeCy5MVi4BCQilMmpAkIiCOwFCSISkq0q8ooiKuoIAbqm4gAcGpb+RkF2dv5OrgjuNpRGPr5apnajvnqR0Wil8RUUVbS0eADukFk5eQVFlCVx5YnHpxcQDflPLVLtSCCd6ESPUQVjslDsWiGljs9hM4ksE1miBGlBWviMQ38IR0dgiOxA5DwKHgfweZWayj+AKBf16AFotEiEAz8WSDs8aPQOgpAd1aYg7EYmRNdNodEM9DYpeJ-DZjKy9o8KUlWDV0ny5DyaaBepLLKibCYrKNArYbMLfF4VhobOYEfDZQrYuTDkkTudINyupSdYh-OJPFpbUYYRptIKgkyNFD9IZceNIXZfENIpEgA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QTANwJYGMwBkD2mAhgC7p4B2AdOhADZgDEhsA1uuVAApgBOAtuliwy5ANoAGALqJQABzzDSFGSAAeiAIwA2LZQDMBvQCZxRrXq0B2cQFYALABoQAT0RGjeypZvjfNgJwadnriVpYAvuFOKBjY+ERKVMws3PyCwhQMEBRg1OSoeCy5MVi4BCQilMmpAkIiCOwFCSISkq0q8ooiKuoIAbqm4gAcGpb+RkF2dv5OrgjuNpRGPr5apnajvnqR0Wil8RUUVbS0eADukFk5eQVFlCVx5YnHpxcQDflPLVLtSCCd6ESPUQVjslDsWiGljs9hM4ksE1miBGlBWviMQ38IR0dgiURADzKzSOKAARngAK7kbAMVSwYgkXKEABmxF4AAoVgBKLJ7R7EqhkynUsC-OQKQHdP69IwIyhaOyhZZIhB6DTiJYrDQ2cwI4Y7Al8omHKgwYikDgHRIAETADPQtFgAHlyABhAAWhA4jGy5FyjUKxSNVsqZotUBDFFt9sdLo9XpgHyaJtaYv+EqB0sQekClChNhVao1y182t1JiGBsJkaSJ3Ol14PDwPEosloJGZzb492DXyOhDrbyTfbEPykHQzUtAvXV4g0qI0JhsQymHihRkLlnn4jVehsGgsE38UO2BvIeBQ8D+1ZHE66yizCAAtHYhiqn4t-F-vyENF-pmYVa9gK1B0GAd6Sg+06IHYG4uG42iUNoOhDHuNg+P4NjGEBsTGs81S8LUGTkBBmbQaqNiWKiNgmFYoyBLYBbwfMvheFqOp6HqYw2Dh+wji89YQKRU5qIg0K6EYWJ6DCIzoSMcFzNJEkjHu4i4uhsG4rx-Imj25JUtgwlQaJCDiCqipDEhOiQmhGFYTx+I3iBYbsBGI7RoQDrOm6nrekZJGPmZzHLv48rWah6F2aekRAA */
   createMachine(
     {
       id: 'deviceLocation',
@@ -54,14 +54,14 @@ const deviceLocationMachine =
         allowed: {
           invoke: {
             src: 'getCurrentLocation',
-            onDone: {
-              actions: ['assignCurrentLocationToContext', 'dispatchState'],
-            },
             // onError: 'errorGettingLocation',
             // onDone: {
             //   target: 'currentLocationLoaded',
             //   actions: 'assignCurrentLocationToContext',
             // },
+            onDone: {
+              actions: ['assignCurrentLocationToContext', 'dispatchState'],
+            },
           },
         },
       },
@@ -89,12 +89,15 @@ const deviceLocationMachine =
               timeout: 15000,
             });
             const { latitude, longitude } = position;
-            const { result } = await getLocationCoordinates(
-              '',
+
+            const { data } = await getLocationCoordinates(
+              // '',
               longitude,
               latitude,
               ''
             );
+            const { result } = data;
+
             return {
               lat: Number(result?.lat),
               lon: Number(result?.lon),

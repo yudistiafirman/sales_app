@@ -46,10 +46,11 @@ const renderInput = (input: Input): React.ReactNode => {
   } = input;
 
   if (type === 'textInput') {
+    const textInputProps = { onChange, value };
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
-        <BTextInput {...input} />
+        <BTextInput {...textInputProps} />
         {isError && (
           <BText size="small" color="primary" bold="100">
             {`${label} harus diisi`}
@@ -120,7 +121,6 @@ const renderInput = (input: Input): React.ReactNode => {
 
   if (type === 'dropdown') {
     if (dropdown) {
-      console.log('dropdown, masukl');
       return (
         <React.Fragment>
           <BLabel label={label} isRequired={isRequire} />

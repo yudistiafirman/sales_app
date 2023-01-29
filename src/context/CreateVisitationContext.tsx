@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   CreateVisitationFirstStep,
+  CreateVisitationFourthStep,
   CreateVisitationSecondStep,
   CreateVisitationState,
   CreateVisitationThirdStep,
@@ -16,7 +17,8 @@ interface ActionCreateVisitationState {
   key?:
     | keyof CreateVisitationFirstStep
     | keyof CreateVisitationSecondStep
-    | keyof CreateVisitationThirdStep;
+    | keyof CreateVisitationThirdStep
+    | keyof CreateVisitationFourthStep;
 }
 
 interface context {
@@ -28,7 +30,8 @@ interface context {
       key:
         | keyof CreateVisitationFirstStep
         | keyof CreateVisitationSecondStep
-        | keyof CreateVisitationThirdStep,
+        | keyof CreateVisitationThirdStep
+        | keyof CreateVisitationFourthStep,
       value: any
     ) => void;
   };
@@ -46,6 +49,7 @@ const initialData: CreateVisitationState = {
     customerType: '',
     location: {},
     pics: [],
+    selectedPic: null,
     projectName: '',
     options: {
       items: null,
@@ -61,6 +65,12 @@ const initialData: CreateVisitationState = {
     paymentType: '',
     products: [],
     stageProject: '',
+  },
+  stepFour: {
+    selectedDate: null,
+    images: [],
+    kategoriAlasan: null,
+    alasanPenolakan: '',
   },
   shouldScrollView: true,
 };
@@ -85,6 +95,7 @@ const reducerForm = (
     case 'stepOne':
     case 'stepTwo':
     case 'stepThree':
+    case 'stepFour':
       return {
         ...state,
         [action.type]: {
@@ -92,6 +103,8 @@ const reducerForm = (
           [action.key!]: action.value,
         },
       };
+
+    //   return { ...state, [action.type]: action.value };
     default:
       return state;
   }
@@ -111,7 +124,8 @@ const CreateVisitationProvider = (props: IProvider) => {
     key:
       | keyof CreateVisitationFirstStep
       | keyof CreateVisitationSecondStep
-      | keyof CreateVisitationThirdStep,
+      | keyof CreateVisitationThirdStep
+      | keyof CreateVisitationFourthStep,
     value: any
   ) => {
     dispatchValue({

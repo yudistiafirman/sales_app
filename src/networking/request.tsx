@@ -42,6 +42,8 @@ export const getOptions = (
   options.headers = {
     Accept: 'application/json',
     'Content-Type': getContentType(data),
+    // authorization:
+    //   'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImViYmRlMjYwLTkxNDktNDQzZC1iNGU3LWIwYThlYzZjZTI0OCIsImVtYWlsIjoic2l0YW1wYW5AZ21haWwuY29tIiwicGhvbmUiOiIxMjMxMjMxMjMiLCJ0eXBlIjoiQURNSU4iLCJpYXQiOjE2NzQ4NzMyNDgsImV4cCI6MTY3NDg3Njg0OH0.QKm6PUT7uSH-VoCQyA_8TkTz-ekr9loI371YYwfLv84',
   };
 
   if (data) {

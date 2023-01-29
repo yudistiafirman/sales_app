@@ -97,29 +97,40 @@ interface CreateVisitationFirstStep {
 }
 interface CreateVisitationSecondStep {
   companyName: string;
-  customerType: string;
+  customerType: 'INDIVIDU' | 'COMPANY';
   projectName: string;
+  location: { [key: string]: any };
   pics: PIC[];
+  selectedPic: PIC | null;
   options: {
     loading: false;
     items: any[] | null;
   };
 }
 interface CreateVisitationThirdStep {
-  stageProject: string;
+  stageProject: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
   products: any[];
   estimationDate: {
     estimationWeek: number | null;
     estimationMonth: number | null;
   };
-  paymentType: string;
+  paymentType: 'CBD' | 'CREDIT';
   notes: string;
 }
+
+interface CreateVisitationFourthStep {
+  selectedDate: any;
+  images: any[];
+  kategoriAlasan?: 'FINISHED' | 'MOU_COMPETITOR';
+  alasanPenolakan: string;
+}
+
 interface CreateVisitationState {
   step: number;
   stepOne: CreateVisitationFirstStep;
   stepTwo: CreateVisitationSecondStep;
   stepThree: CreateVisitationThirdStep;
+  stepFour: CreateVisitationFourthStep;
   sheetIndex: number;
   shouldScrollView: boolean;
 }
@@ -235,6 +246,103 @@ interface ProductDataInterface {
     Parent: productParentInterface;
   };
 }
+interface visitationListResponse {
+  id: string;
+  created_location: string;
+  visitation_id: string;
+  created_by_id: string;
+  project_id: string | null;
+  order: number;
+  customer_type: 'COMPANY' | 'INDIVIDU';
+  payment_type: 'CBD' | 'CREDIT';
+  estimation_week: string;
+  estimation_month: string;
+  visit_notes: string | null;
+  dateVisit: string;
+  reject_notes: string | null;
+  reject_category: 'FINISHED' | 'MOU_COMPETITOR' | null;
+  is_booking: boolean;
+  finishDate: string | null;
+  status: 'VISIT' | 'SPH' | 'PO' | 'SCHEDULING' | 'DO' | 'REJECTED';
+  created_at: string;
+  updated_at: string;
+  product_id: string;
+  company_id: string;
+  location_address_id: string | null;
+  shipping_address_id: string | null;
+  billing_address_id: string | null;
+  main_pic_id: string;
+  name: string;
+  stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+  checkout_url: string | null;
+  checkout_expiry_date: string | null;
+  external_customer_id: string | null;
+  file_id: string | null;
+  type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
+  supplier_id: string | null;
+  position: string;
+  phone: string;
+  email: string | null;
+  display_name: string;
+}
+
+interface customerDataInterface {
+  display_name: string;
+  type: string;
+  name: string;
+  email: string | null;
+  phone: string;
+  position: string;
+}
+
+interface locationPayloadType {
+  formattedAddress: string;
+  postalId: number;
+  lon: number;
+  lat: number;
+}
+
+interface visitationPayload {
+  order: number;
+  location: locationPayloadType;
+  customerType?: 'INDIVIDU' | 'COMPANY';
+  paymentType?: 'CBD' | 'CREDIT';
+  estimationWeek?: number;
+  estimationMonth?: number;
+  visitationNotes?: string;
+  dateVisit?: string;
+  rejectNotes?: string;
+  rejectCategory?: 'FINISHED' | 'MOU_COMPETITOR';
+  isBooking?: boolean; // ??
+  finishDate?: string; // ??
+  status?: 'VISIT' | 'SPH' | 'REJECTED' | '';
+  files: { id: string; type: 'GALLERY' | 'COVER' }[];
+  products: { id: string }[];
+}
+
+interface projectPayloadType {
+  name?: string;
+  companyDisplayName?: string;
+  location: locationPayloadType;
+  stage?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+}
+
+interface picPayloadType {
+  name?: string;
+  position?: string;
+  phone?: string;
+  email?: string;
+  type?: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
+  isSelected?: boolean;
+}
+
+interface payloadPostType {
+  visitation: visitationPayload;
+  project: projectPayloadType;
+  pic: picPayloadType[];
+  files: any[];
+}
+
 export type {
   Input,
   Styles,
@@ -251,4 +359,12 @@ export type {
   AdditionalPricesInterface,
   productParentInterface,
   ProductDataInterface,
+  CreateVisitationFourthStep,
+  visitationListResponse,
+  customerDataInterface,
+  locationPayloadType,
+  visitationPayload,
+  projectPayloadType,
+  picPayloadType,
+  payloadPostType,
 };

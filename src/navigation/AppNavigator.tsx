@@ -9,6 +9,11 @@ import TestStack from './stacks/TestStack';
 import Splash from '@/screens/Splash';
 import AuthStack from './stacks/AuthStack';
 import { useBootStrapAsync } from '@/hooks';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import Modal from 'react-native-modal';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +42,9 @@ const authStack = () => AuthStack({ Stack: Stack });
 
 function AppNavigator() {
   const [isLoading, userData] = useBootStrapAsync();
+  const isPopUpVisible = useSelector(
+    (state: RootState) => state.modal.isPopUpVisible
+  );
   const userType = 'sales';
 
   if (isLoading) {
@@ -49,6 +57,11 @@ function AppNavigator() {
         headerShadowVisible: false,
       }}
     >
+      {/* <Modal isVisible={isPopUpVisible}>
+        <View>
+          <Text>ini popup global</Text>
+        </View>
+      </Modal> */}
       {userData ? (
         <>
           {getTabs(userType)}

@@ -32,3 +32,13 @@ export const signIn = (body: Record<string, string>) => {
 export const signOut = () => {
   return request(BrikApiCommon.logout(), getOptions('POST'));
 };
+
+export const uploadFile = (files: any[]) => {
+  const formData = new FormData();
+  files.forEach((file) => {
+    formData.append('photos', file);
+  });
+  console.log(BrikApiCommon.filesUpload(), 'BrikApiCommon.filesUpload()');
+
+  return request(BrikApiCommon.filesUpload(), getOptions('POST', formData));
+};
