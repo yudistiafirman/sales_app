@@ -2,7 +2,7 @@ import { View, FlatList } from 'react-native';
 import React, { useCallback } from 'react';
 import { QuickActionProps } from '@/interfaces/QuickActionButton.type';
 import BQuickActionButton from '../molecules/BQuickAction';
-import { BSpacer } from '@/components';
+import BSpacer from '../atoms/BSpacer';
 
 export default function BQuickAction({
   buttonProps,
