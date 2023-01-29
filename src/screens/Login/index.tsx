@@ -31,7 +31,7 @@ const Login = () => {
   });
 
   const { errorMessage, loading, phoneNumber } = loginState;
-  const disableBtn = phoneNumber.length < 10;
+  const disableBtn = phoneNumber.length < 6;
 
   const renderLogo = () => (
     <Image

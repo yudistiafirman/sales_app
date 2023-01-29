@@ -44,7 +44,7 @@ const PriceList = () => {
         subscription.remove();
       };
     }
-  }, []);
+  }, [send, state]);
 
   useEffect(() => {
     if (route?.params) {
@@ -56,7 +56,7 @@ const PriceList = () => {
     } else {
       send('onAskPermission');
     }
-  }, [route?.params]);
+  }, [route, route?.params, send]);
 
   const renderHeaderRight = () => {
     return (
@@ -70,7 +70,7 @@ const PriceList = () => {
     });
   }, [navigation]);
 
-  const onTabPress = ({ route }) => {
+  const onTabPress = ({ route: any }) => {
     const tabIndex = index === 0 ? 1 : 0;
     if (route.key !== routes[index].key) {
       send('onChangeCategories', { payload: tabIndex });

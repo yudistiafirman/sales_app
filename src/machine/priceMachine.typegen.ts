@@ -1,5 +1,7 @@
 // This file was automatically generated. Edits will be overwritten
 
+// This file was automatically generated. Edits will be overwritten
+
 export interface Typegen0 {
   '@@xstate/typegen': true;
   internalEvents: {
@@ -28,6 +30,14 @@ export interface Typegen0 {
       data: unknown;
       __tip: 'See the XState TS docs to learn how to strongly type this.';
     };
+    'error.platform.price machine.allowed:invocation[0]': {
+      type: 'error.platform.price machine.allowed:invocation[0]';
+      data: unknown;
+    };
+    'error.platform.price machine.currentLocationLoaded:invocation[0]': {
+      type: 'error.platform.price machine.currentLocationLoaded:invocation[0]';
+      data: unknown;
+    };
     'error.platform.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]': {
       type: 'error.platform.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]';
       data: unknown;
@@ -35,6 +45,9 @@ export interface Typegen0 {
     'error.platform.price machine.getProduct.loadingProduct:invocation[0]': {
       type: 'error.platform.price machine.getProduct.loadingProduct:invocation[0]';
       data: unknown;
+    };
+    'xstate.after(500)#price machine.errorGettingLocation': {
+      type: 'xstate.after(500)#price machine.errorGettingLocation';
     };
     'xstate.init': { type: 'xstate.init' };
   };
@@ -58,13 +71,18 @@ export interface Typegen0 {
     assignLocationDetailToContext: 'done.invoke.price machine.currentLocationLoaded:invocation[0]';
     assignParams: 'sendingParams';
     assignProductsDataToContext: 'done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]';
-    enableLoadLocation: 'always' | 'appComeForegroundState' | 'onAskPermission';
+    enableLoadLocation:
+      | 'appComeForegroundState'
+      | 'onAskPermission'
+      | 'xstate.after(500)#price machine.errorGettingLocation';
     enableLoadProducts:
       | 'done.invoke.price machine.getProduct.loadingProduct:invocation[0]'
       | 'onChangeCategories'
       | 'onEndReached'
       | 'refreshingList';
     handleError:
+      | 'error.platform.price machine.allowed:invocation[0]'
+      | 'error.platform.price machine.currentLocationLoaded:invocation[0]'
       | 'error.platform.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]'
       | 'error.platform.price machine.getProduct.loadingProduct:invocation[0]';
     incrementPage: 'onEndReached';
@@ -77,7 +95,10 @@ export interface Typegen0 {
     permissionGranted: 'done.invoke.price machine.askPermission:invocation[0]';
   };
   eventsCausingServices: {
-    askingPermission: 'always' | 'appComeForegroundState' | 'onAskPermission';
+    askingPermission:
+      | 'appComeForegroundState'
+      | 'onAskPermission'
+      | 'xstate.after(500)#price machine.errorGettingLocation';
     fetchLocationDetail:
       | 'done.invoke.price machine.allowed:invocation[0]'
       | 'sendingParams';
