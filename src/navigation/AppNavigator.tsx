@@ -5,7 +5,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BStackScreen from './elements/BStackScreen';
 import SalesTabs from './tabs/SalesTabs';
 import TestStack from './stacks/TestStack';
-// import OpsManTabs from './tabs/OpsManTabs';
 import Splash from '@/screens/Splash';
 import AuthStack from './stacks/AuthStack';
 import { useBootStrapAsync } from '@/hooks';
@@ -25,10 +24,9 @@ const getTabs = (userType?: USER_TYPE) => {
         name: 'MainTabs',
         title: 'Beranda',
         type: 'home',
-        color: 'white',
         headerShown: true,
         component: Operation,
-        operationType: 'Transport',
+        role: 'Transport',
       });
     case USER_TYPE.SECURITY:
       return BStackScreen({
@@ -36,10 +34,9 @@ const getTabs = (userType?: USER_TYPE) => {
         name: 'MainTabs',
         title: 'Beranda',
         type: 'home',
-        color: 'white',
         headerShown: true,
         component: securityTabs,
-        operationType: 'Dispatch',
+        role: 'Dispatch',
       });
     default:
       return BStackScreen({
@@ -47,10 +44,9 @@ const getTabs = (userType?: USER_TYPE) => {
         name: 'MainTabs',
         title: `Beranda - ${userType}`,
         type: 'home',
-        color: 'primary',
         headerShown: false,
         component: salesTabs,
-        operationType: '',
+        role: '',
       });
   }
 };
@@ -64,7 +60,7 @@ const authStack = () => AuthStack({ Stack: Stack });
 
 function AppNavigator() {
   const [isLoading, userData] = useBootStrapAsync();
-  const userType = USER_TYPE.SECURITY;
+  const userType = USER_TYPE.SALES;
 
   if (isLoading) {
     return <Splash />;
