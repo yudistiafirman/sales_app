@@ -25,9 +25,13 @@ interface IGetAll {
   page: number;
   search: string;
 }
-export const getAllVisitations = ({ page = 0, date, search = '' }: IGetAll) => {
+export const getAllVisitations = async ({
+  page = 0,
+  date,
+  search = '',
+}: IGetAll) => {
   return request(
     BrikApiProductivity.getAllVisitations({ page, date, search }),
-    getOptions('GET')
+    await getOptions('GET', undefined, true)
   );
 };

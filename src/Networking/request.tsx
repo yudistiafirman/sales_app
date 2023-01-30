@@ -1,10 +1,13 @@
 import { production } from '../../app.json';
 import axios, { AxiosResponse } from 'axios';
-import {
-  applyAuthTokenInterceptor,
-  TokenRefreshRequest,
-} from './applyInterceptorConfig';
 import BrikApiCommon from '@/brikApi/BrikApiCommon';
+import { Api } from '@/models';
+import { UserModel } from '@/models/User';
+import { bStorage } from '@/actions';
+import { storageKey } from '@/constants';
+import { store } from '@/redux/store';
+import { setUserData } from '@/redux/reducers/authReducer';
+import jwtDecode, { JwtPayload } from 'jwt-decode';
 
 type FormDataValue =
   | string
@@ -21,17 +24,6 @@ interface RequestInfo {
   timeoutInterval?: number;
 }
 
-interface Response {
-  success: boolean;
-  message: string;
-  data?: any;
-  error?: {
-    code: string;
-    message: string;
-    status: number;
-  };
-}
-
 function getContentType<T>(dataToReceived: T) {
   let contentType = 'application/json';
   if (typeof dataToReceived === 'string') {
@@ -43,19 +35,25 @@ function getContentType<T>(dataToReceived: T) {
   return contentType;
 }
 
-export const getOptions = (
+export const getOptions = async (
   method: 'GET' | 'POST' | 'DELETE' | 'PUT',
   data?: Record<string, string> | FormDataValue,
+  withToken?: boolean,
   timeout = 10000
 ) => {
   const options = {} as RequestInfo;
+  const token = await bStorage.getItem(storageKey.userToken);
+  console.log(token, 'ini token');
   options.method = method;
   options.headers = {
     Accept: 'application/json',
     'Content-Type': getContentType(data),
-    authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImViYmRlMjYwLTkxNDktNDQzZC1iNGU3LWIwYThlYzZjZTI0OCIsImVtYWlsIjoic2l0YW1wYW5AZ21haWwuY29tIiwicGhvbmUiOiIxMjMxMjMxMjMiLCJ0eXBlIjoiQURNSU4iLCJpYXQiOjE2NzUwNTU0NzAsImV4cCI6MTY3NTA1OTA3MH0.D0kn5M_Xi-cRUgQvmx_KJyoDWq5P3eO7EKprYjFmNRw',
+    ...(withToken && {
+      Authorization: `Bearer ${token}`,
+    }),
   };
+
+  console.log(options.headers, 'ini apa?');
 
   if (data) {
     options.data = data;
@@ -74,37 +72,43 @@ const instance = axios.create({
 });
 
 instance.interceptors.response.use(
-  async (res: AxiosResponse<Response, any>) => {
-    // console.log(JSON.stringify(res, null, 2), 'res??><><><><><><><>');
-    const { data } = res;
-    console.log(data, 'data 1');
-    console.log(data.message === 'invalid access token', 'data 1');
-    if (!data.success && data?.error?.message === 'invalid access token') {
-      console.log('data 2');
-      const { data } = await instance.post(BrikApiCommon.getRefreshToken(), {});
-      console.log(data, 'data 2');
-      //       const response = await axios.post(BrikApiCommon.getRefreshToken(), {
-      //   refresh_token: refreshToken,
-      // });
-      // return response.data.data.accessToken;
+  async (res: AxiosResponse<Api.Response, any>) => {
+    const { data, config } = res;
+    if (!data.success) {
+      // automatic logout
+      // if (data.error?.message === 'invalid access token') {
+      //   bStorage.deleteItem(storageKey.phone);
+      //   store.dispatch(setUserData(null));
+      // }
+
+      if (data.error?.message === 'invalid access token') {
+        console.log('masuk refresh token', config.headers);
+        const responseRefreshToken = await instance.post<
+          any,
+          AxiosResponse<Api.Response, any>
+        >(BrikApiCommon.getRefreshToken(), {});
+
+        const { data: dataRefreshToken } = responseRefreshToken;
+        const resultRefreshToken =
+          dataRefreshToken.data as UserModel.DataSuccessLogin;
+
+        const newAccToken = resultRefreshToken.accessToken;
+        bStorage.setItem(storageKey.userToken, newAccToken);
+        const decoded = jwtDecode<JwtPayload>(newAccToken);
+
+        store.dispatch(setUserData(decoded));
+
+        config.headers.Authorization = `Bearer ${newAccToken}`;
+        const finalResponse = await instance(config);
+        return Promise.resolve(finalResponse);
+      }
     }
     return Promise.resolve(res);
   },
   (err: any) => {
     console.log(err, 'ini apa??><><><><><><><>');
-    let { response } = err;
+    return Promise.reject(err);
   }
 );
 
 export const request = instance;
-
-// const requestRefresh: TokenRefreshRequest = async (
-//   refreshToken: string
-// ): Promise<string> => {
-//   const response = await axios.post(BrikApiCommon.getRefreshToken(), {
-//     refresh_token: refreshToken,
-//   });
-//   return response.data.data.accessToken;
-// };
-
-// applyAuthTokenInterceptor(axios, { requestRefresh });
