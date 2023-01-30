@@ -21,7 +21,8 @@ interface Input {
     | 'autocomplete'
     | 'switch'
     | 'fileInput'
-    | 'map';
+    | 'map'
+    | 'autocomplete';
   hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   onFocus?: (e: any) => void;

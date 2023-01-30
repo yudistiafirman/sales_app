@@ -6,6 +6,8 @@ import SearchAreaProject from '@/screens/SearchAreaProject';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
 import Sph from '@/screens/Sph';
 import CalendarScreen from '@/screens/CalendarScreen';
+import Preview from '@/screens/Camera/Preview';
+import Camera from '@/screens/Camera';
 
 function TestStack({
   Stack,
@@ -48,6 +50,18 @@ function TestStack({
       name: 'calendar-screen',
       title: 'Pilih Tanggal',
       component: CalendarScreen,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'Camera',
+      title: 'Camera',
+      component: Camera,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'Preview',
+      title: 'Preview',
+      component: Preview,
     }),
   ];
 }

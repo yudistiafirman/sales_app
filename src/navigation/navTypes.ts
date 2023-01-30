@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { PhotoFile } from 'react-native-vision-camera';
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -10,6 +11,8 @@ export type RootStackParamList = {
   Harga: { coordinate: { longitude: number; latitude: number } };
   SearchProduct: { distance: number };
   CreateVisitation: undefined;
+  Camera: { photoTitle: string };
+  Preview: { photo: PhotoFile; photoTitle: string };
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;
