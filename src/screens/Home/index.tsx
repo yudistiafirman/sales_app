@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '@/constants/colors';
@@ -21,6 +22,7 @@ import Modal from 'react-native-modal';
 import BTabViewScreen from '@/components/organism/BTabViewScreen';
 import { layout } from '@/constants';
 import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
+import { getAllVisitations } from '@/actions/ProductivityActions';
 
 const Beranda = () => {
   const [currentVisit] = useState(5); //temporary setCurrentVisit
@@ -38,6 +40,7 @@ const Beranda = () => {
 
   useHeaderShow({ isHeaderShown: isHeaderShown });
   const toggleModal = () => {
+    setData([]);
     setIsHeaderShown(!isHeaderShown);
     setModalVisible(!isModalVisible);
   };
@@ -55,88 +58,76 @@ const Beranda = () => {
     }
   };
 
-  const data = useMemo(
-    () =>
-      Array(8)
-        .fill(0)
-        .map((_, index) => {
-          return {
-            name: 'PT. Guna Karya Mandiri',
-            location: 'Jakarta',
-            time: `12:${(() => index.toString().padStart(2, '0'))()}`,
-            status: `Visit ke ${index}`,
-            pilStatus: 'Selesai',
-          };
-        }),
-    []
+  // fetching data
+  const [data, setData] = React.useState<any[]>([]);
+  const [page, setPage] = React.useState<number>(0);
+  const [selectedDate, setSelectedDate] = React.useState<moment.Moment>(
+    moment()
   );
+
+  const fetchVisitations = async () => {
+    console.log(selectedDate, 'tanggal nih sekarang');
+    console.log(selectedDate.valueOf(), 'tanggal nih');
+    // console.log(new Date(1675098040000), 'tanggal nih');
+    try {
+      const { data: _data } = await getAllVisitations({
+        page,
+        date: selectedDate.valueOf(),
+        search: searchQuery,
+      });
+      console.log(_data, '<<<<');
+      const dispalyData = _data.data.map((el) => {
+        const status =
+          el.status === 'VISIT' ? `Visit ke ${el.order}` : el.status;
+        const pilStatus = el.finishDate ? 'Selesai' : 'Belum Selesai';
+        const time = el.finishDate
+          ? moment(el.finishDate).format('hh:mm')
+          : null;
+        console.log(moment(el.dateVisit).format('yyyy-MM-DD'));
+
+        return {
+          name: el.project?.name || '--',
+          location: 'dummy',
+          time,
+          status,
+          pilStatus,
+        };
+      });
+
+      if (page !== 0) {
+        setData([...data, ...dispalyData]);
+      } else {
+        setData(dispalyData);
+      }
+    } catch (error) {
+      console.log(error, 'ini err apa sih??');
+    }
+  };
+
+  React.useEffect(() => {
+    fetchVisitations();
+  }, [page, selectedDate]);
+
+  const onDateSelected = (date: moment.Moment) => {
+    setPage(0);
+    setSelectedDate(date);
+  };
 
   const tabData: { [key: string]: any } = useMemo(() => {
     return {
-      ['Semua']: Array(8)
-        .fill(0)
-        .map((_, index) => {
-          return {
-            name: 'PT. Guna Karya Mandiri' + index,
-            pilNames: [
-              'Guna Karya Mandiri',
-              'Proyek Bu Larguna',
-              'Proyek Bu Larguna',
-              'Proyek Bu Larguna',
-            ],
-          };
-        }),
-      ['Perusahaan']: Array(3)
-        .fill(0)
-        .map((_, index) => {
-          return {
-            name: 'PT. Guna Karya Mandiri' + index,
-            pilNames: [
-              'Guna Karya Mandiri',
-              'Proyek Bu Larguna',
-              'Proyek Bu Larguna',
-              'Proyek Bu Larguna',
-            ],
-          };
-        }),
-      ['Proyek']: Array(3)
-        .fill(0)
-        .map((_, index) => {
-          return {
-            name: 'PT. Guna Karya Mandiri' + index,
-            pilNames: [
-              'Guna Karya Mandiri',
-              'Proyek Bu Larguna',
-              'Proyek Bu Larguna',
-              'Proyek Bu Larguna',
-            ],
-          };
-        }),
-      ['PIC']: [],
+      ['Proyek']: data,
     };
-  }, []);
+  }, [data]);
 
   const tabToRender: { tabTitle: string; totalItems: number }[] =
     useMemo(() => {
       return [
         {
-          tabTitle: 'Semua',
-          totalItems: 8,
-        },
-        {
-          tabTitle: 'Perusahaan',
-          totalItems: 3,
-        },
-        {
           tabTitle: 'Proyek',
-          totalItems: 3,
-        },
-        {
-          tabTitle: 'PIC',
-          totalItems: 0,
+          totalItems: data.length,
         },
       ];
-    }, []);
+    }, [data]);
 
   const tabOnEndReached = useCallback(
     async (info: {
@@ -145,6 +136,7 @@ const Beranda = () => {
       currentPage: number;
       query?: string;
     }) => {
+      console.log('masuk sini ga?');
       const result = await new Promise<any>((resolve) => {
         setTimeout(() => {
           resolve(tabData[info.key]);
@@ -154,6 +146,11 @@ const Beranda = () => {
     },
     [tabData]
   );
+
+  const onEndReached = (info: any) => {
+    console.log(info, 'ini info');
+    setPage(page + 1);
+  };
 
   const buttonsData: buttonDataType[] = useMemo(
     () => [
@@ -237,7 +234,7 @@ const Beranda = () => {
         />
       );
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [searchQuery]
   );
 
@@ -313,12 +310,18 @@ const Beranda = () => {
           />
         </View>
 
-        <DateDaily markedDatesArray={todayMark} isRender={isRenderDateDaily} />
+        <DateDaily
+          markedDatesArray={todayMark}
+          isRender={isRenderDateDaily}
+          onDateSelected={onDateSelected}
+          selectedDate={selectedDate}
+        />
 
         <BottomSheetFlatlist
           isLoading={isLoading}
           data={data}
           searchQuery={searchQuery}
+          onEndReached={onEndReached}
         />
       </BBottomSheet>
     </View>

@@ -18,3 +18,16 @@ export const postVisitations = ({ payload }) => {
     getOptions('POST', payload)
   );
 };
+
+// home screen
+interface IGetAll {
+  date: number;
+  page: number;
+  search: string;
+}
+export const getAllVisitations = ({ page = 0, date, search = '' }: IGetAll) => {
+  return request(
+    BrikApiProductivity.getAllVisitations({ page, date, search }),
+    getOptions('GET')
+  );
+};

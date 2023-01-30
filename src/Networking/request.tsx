@@ -1,5 +1,5 @@
 import { production } from '../../app.json';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import {
   applyAuthTokenInterceptor,
   TokenRefreshRequest,
@@ -19,6 +19,17 @@ interface RequestInfo {
   headers: Record<string, string>;
   data?: Record<string, string> | FormDataValue;
   timeoutInterval?: number;
+}
+
+interface Response {
+  success: boolean;
+  message: string;
+  data?: any;
+  error?: {
+    code: string;
+    message: string;
+    status: number;
+  };
 }
 
 function getContentType<T>(dataToReceived: T) {
@@ -42,8 +53,8 @@ export const getOptions = (
   options.headers = {
     Accept: 'application/json',
     'Content-Type': getContentType(data),
-    // authorization:
-    //   'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImViYmRlMjYwLTkxNDktNDQzZC1iNGU3LWIwYThlYzZjZTI0OCIsImVtYWlsIjoic2l0YW1wYW5AZ21haWwuY29tIiwicGhvbmUiOiIxMjMxMjMxMjMiLCJ0eXBlIjoiQURNSU4iLCJpYXQiOjE2NzQ4NzMyNDgsImV4cCI6MTY3NDg3Njg0OH0.QKm6PUT7uSH-VoCQyA_8TkTz-ekr9loI371YYwfLv84',
+    authorization:
+      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImViYmRlMjYwLTkxNDktNDQzZC1iNGU3LWIwYThlYzZjZTI0OCIsImVtYWlsIjoic2l0YW1wYW5AZ21haWwuY29tIiwicGhvbmUiOiIxMjMxMjMxMjMiLCJ0eXBlIjoiQURNSU4iLCJpYXQiOjE2NzUwNTU0NzAsImV4cCI6MTY3NTA1OTA3MH0.D0kn5M_Xi-cRUgQvmx_KJyoDWq5P3eO7EKprYjFmNRw',
   };
 
   if (data) {
@@ -58,7 +69,34 @@ export const getOptions = (
   return options;
 };
 
-export const request = axios;
+const instance = axios.create({
+  withCredentials: true,
+});
+
+instance.interceptors.response.use(
+  async (res: AxiosResponse<Response, any>) => {
+    // console.log(JSON.stringify(res, null, 2), 'res??><><><><><><><>');
+    const { data } = res;
+    console.log(data, 'data 1');
+    console.log(data.message === 'invalid access token', 'data 1');
+    if (!data.success && data?.error?.message === 'invalid access token') {
+      console.log('data 2');
+      const { data } = await instance.post(BrikApiCommon.getRefreshToken(), {});
+      console.log(data, 'data 2');
+      //       const response = await axios.post(BrikApiCommon.getRefreshToken(), {
+      //   refresh_token: refreshToken,
+      // });
+      // return response.data.data.accessToken;
+    }
+    return Promise.resolve(res);
+  },
+  (err: any) => {
+    console.log(err, 'ini apa??><><><><><><><>');
+    let { response } = err;
+  }
+);
+
+export const request = instance;
 
 // const requestRefresh: TokenRefreshRequest = async (
 //   refreshToken: string

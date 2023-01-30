@@ -10,6 +10,12 @@ type getVisitationsType = {
   year?: number;
 };
 
+interface IGetAll {
+  date: number;
+  page: number;
+  search: string;
+}
+
 export default class BrikApiProductivity {
   static visitations = ({ month, year }: getVisitationsType) => {
     const url = new URL(`${API_URL}/productivity/m/flow/visitation`);
@@ -21,6 +27,24 @@ export default class BrikApiProductivity {
     if (year) {
       params.append('year', year.toString());
     }
+
+    return url.toString();
+  };
+
+  // homescreen
+  static getAllVisitations = ({ date, page = 0, search = '' }: IGetAll) => {
+    const url = new URL(`${API_URL}/productivity/m/flow/all-visitation`);
+    const params = url.searchParams;
+
+    if (date) {
+      params.append('date', date.toString());
+    }
+    if (page) {
+      params.append('page', page.toString());
+    }
+
+    params.append('search', search);
+    params.append('size', '7');
 
     return url.toString();
   };

@@ -25,8 +25,9 @@ type DateDailyType = {
   numDaysInWeek?: number;
   isRender?: boolean;
   markedDatesArray?: markedDates[];
-  onDateSelected?: () => void;
+  onDateSelected?: (date: moment.Moment) => void;
   calendarColor?: string;
+  selectedDate?: moment.Moment | Date | undefined;
 };
 
 export default function DateDaily({
@@ -35,13 +36,17 @@ export default function DateDaily({
   markedDatesArray,
   onDateSelected,
   calendarColor = '#FFFFFF',
+  selectedDate,
 }: DateDailyType) {
   if (!isRender) {
     return null;
   }
 
+  console.log(onDateSelected, 'ini date selected');
+
   return (
     <CalendarStrip
+      selectedDate={selectedDate}
       onDateSelected={onDateSelected}
       calendarAnimation={{ type: 'parallel', duration: 250 }}
       style={style.calendarStyle}
