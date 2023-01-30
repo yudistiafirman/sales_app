@@ -53,8 +53,6 @@ export const getOptions = async (
     }),
   };
 
-  console.log(options.headers, 'ini apa?');
-
   if (data) {
     options.data = data;
   }
@@ -76,13 +74,13 @@ instance.interceptors.response.use(
     const { data, config } = res;
     if (!data.success) {
       // automatic logout
-      // if (data.error?.message === 'invalid access token') {
-      //   bStorage.deleteItem(storageKey.phone);
-      //   store.dispatch(setUserData(null));
-      // }
+      if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
+        bStorage.deleteItem(storageKey.phone);
+        store.dispatch(setUserData(null));
+        return Promise.resolve(res);
+      }
 
-      if (data.error?.message === 'invalid access token') {
-        console.log('masuk refresh token', config.headers);
+      if (data.error?.code === 'TKN008') {
         const responseRefreshToken = await instance.post<
           any,
           AxiosResponse<Api.Response, any>
