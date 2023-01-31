@@ -182,7 +182,9 @@ const Beranda = () => {
       {
         icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),
         title: 'Buat Janji Temu',
-        action: () => {},
+        action: () => {
+          navigation.navigate('Appointment');
+        },
       },
     ],
     []

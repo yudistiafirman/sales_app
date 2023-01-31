@@ -10,6 +10,7 @@ export type RootStackParamList = {
   Harga: { coordinate: { longitude: number; latitude: number } };
   SearchProduct: { distance: number };
   CreateVisitation: undefined;
+  Appointment: undefined;
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;

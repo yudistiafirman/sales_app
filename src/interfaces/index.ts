@@ -3,6 +3,7 @@ import {
   ViewStyle,
   ImageSourcePropType,
   TextStyle,
+  KeyboardType,
 } from 'react-native';
 
 import * as React from 'react';
@@ -27,6 +28,8 @@ interface Input {
   placeholder?: string;
   loading?: boolean;
   isError?: boolean;
+  errorMessage?: string;
+  keyboardType?: KeyboardType;
   items?: any;
   options?: Array<{
     title: string;

@@ -12,6 +12,9 @@ import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
 import { BSwitch, BFileInput } from '@/components';
+import { resScale } from '@/utils';
+import { colors, layout } from '@/constants';
+import font from '@/constants/fonts';
 
 interface IProps {
   inputs: Input[];
@@ -25,6 +28,14 @@ const styles: Styles = {
   optionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  errorPicContainer: {
+    width: resScale(213),
+    height: resScale(40),
+    borderRadius: layout.pad.xs + layout.pad.sm,
+    backgroundColor: colors.status.errorPic,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 };
 
@@ -40,6 +51,9 @@ const renderInput = (input: Input): React.ReactNode => {
     isRequire,
     isError,
     onSelect,
+    placeholder,
+    errorMessage,
+    keyboardType,
     hidePicLabel,
   } = input;
 
@@ -47,10 +61,15 @@ const renderInput = (input: Input): React.ReactNode => {
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
-        <BTextInput onChangeText={onChange} value={value} />
+        <BTextInput
+          keyboardType={keyboardType}
+          onChangeText={onChange}
+          placeholder={placeholder}
+          value={value}
+        />
         {isError && (
           <BText size="small" color="primary" bold="100">
-            {`${label} harus diisi`}
+            {errorMessage}
           </BText>
         )}
       </React.Fragment>
@@ -111,6 +130,11 @@ const renderInput = (input: Input): React.ReactNode => {
         <BLabel label={label} isRequired={isRequire} />
         <BSpacer size="extraSmall" />
         <BAutoComplete {...input} />
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {errorMessage}
+          </BText>
+        )}
       </React.Fragment>
     );
   }
@@ -163,6 +187,17 @@ const renderInput = (input: Input): React.ReactNode => {
             <BSpacer size="extraSmall" />
             <BDivider />
             <BSpacer size="small" />
+            {isError && (
+              <View style={styles.errorPicContainer}>
+                <BText
+                  style={{ fontSize: font.size.lg }}
+                  color="primary"
+                  bold="400"
+                >
+                  {errorMessage}
+                </BText>
+              </View>
+            )}
           </>
         ) : null}
         <BPicList

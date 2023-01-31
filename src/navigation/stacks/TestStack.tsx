@@ -5,6 +5,7 @@ import Location from '@/screens/Location';
 import SearchAreaProject from '@/screens/SearchAreaProject';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
 import Sph from '@/screens/Sph';
+import Appointment from '@/screens/Appointment';
 
 function TestStack({
   Stack,
@@ -12,6 +13,12 @@ function TestStack({
   Stack: TypedNavigator<any, any, any, any, any>;
 }) {
   return [
+    BStackScreen({
+      Stack: Stack,
+      name: 'Appointment',
+      title: 'Buat Janji Temu',
+      component: Appointment,
+    }),
     BStackScreen({
       Stack: Stack,
       name: 'CreateVisitation',

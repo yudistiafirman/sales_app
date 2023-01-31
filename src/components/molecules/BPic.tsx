@@ -67,6 +67,7 @@ const BPic = ({
           <RadioButton
             value={phone!}
             status={isSelected ? 'checked' : 'unchecked'}
+            uncheckedColor={colors.border.altGrey}
             onPress={() => {
               if (onSelect) {
                 onSelect(index!);
