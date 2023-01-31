@@ -6,25 +6,26 @@ type getVisitationsType = {
   year?: number;
 };
 
-export const getVisitations = ({ month, year }: getVisitationsType) => {
+export const getVisitations = async ({ month, year }: getVisitationsType) => {
   return request(
     BrikApiProductivity.visitations({ month, year }),
-    getOptions('GET')
+    await getOptions('GET')
   );
 };
-export const postVisitations = ({ payload }) => {
+export const postVisitations = async ({ payload }) => {
   return request(
     BrikApiProductivity.visitations({}),
-    getOptions('POST', payload)
+    await getOptions('POST', payload)
   );
 };
 
 // home screen
 interface IGetAll {
-  date: number;
+  date?: number;
   page: number;
-  search: string;
+  search?: string;
 }
+
 export const getAllVisitations = async ({
   page = 0,
   date,
@@ -32,6 +33,13 @@ export const getAllVisitations = async ({
 }: IGetAll) => {
   return request(
     BrikApiProductivity.getAllVisitations({ page, date, search }),
+    await getOptions('GET', undefined, true)
+  );
+};
+
+export const getVisitationTarget = async () => {
+  return request(
+    BrikApiProductivity.getTarget(),
     await getOptions('GET', undefined, true)
   );
 };

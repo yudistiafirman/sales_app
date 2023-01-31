@@ -43,7 +43,6 @@ export const getOptions = async (
 ) => {
   const options = {} as RequestInfo;
   const token = await bStorage.getItem(storageKey.userToken);
-  console.log(token, 'ini token');
   options.method = method;
   options.headers = {
     Accept: 'application/json',
@@ -72,14 +71,17 @@ const instance = axios.create({
 instance.interceptors.response.use(
   async (res: AxiosResponse<Api.Response, any>) => {
     const { data, config } = res;
+    console.log(JSON.stringify(res, null, 2), 'ini apa suuuuuu??');
     if (!data.success) {
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
-        bStorage.deleteItem(storageKey.phone);
+        await bStorage.deleteItem(storageKey.userToken);
         store.dispatch(setUserData(null));
+        console.log('stop');
         return Promise.resolve(res);
       }
 
+      console.log('gajalan');
       if (data.error?.code === 'TKN008') {
         const responseRefreshToken = await instance.post<
           any,
@@ -104,7 +106,7 @@ instance.interceptors.response.use(
     return Promise.resolve(res);
   },
   (err: any) => {
-    console.log(err, 'ini apa??><><><><><><><>');
+    console.log(JSON.stringify(err, null, 2), 'ini apa??><><><><><><><>');
     return Promise.reject(err);
   }
 );

@@ -1,5 +1,6 @@
 import { production } from '../../app.json';
 import Config from 'react-native-config';
+import moment from 'moment';
 const PRODUCTION = production;
 const API_URL = PRODUCTION
   ? Config.API_URL_PRODUCTIVITY_PROD
@@ -11,9 +12,9 @@ type getVisitationsType = {
 };
 
 interface IGetAll {
-  date: number;
+  date?: number;
   page: number;
-  search: string;
+  search?: string;
 }
 
 export default class BrikApiProductivity {
@@ -39,12 +40,19 @@ export default class BrikApiProductivity {
     if (date) {
       params.append('date', date.toString());
     }
-    if (page) {
-      params.append('page', page.toString());
-    }
 
+    params.append('page', page.toString());
     params.append('search', search);
-    params.append('size', '7');
+    params.append('size', '10');
+
+    return url.toString();
+  };
+
+  static getTarget = () => {
+    const url = new URL(`${API_URL}/productivity/m/flow/completed-visitation`);
+
+    const params = url.searchParams;
+    params.append('date', moment().valueOf().toString());
 
     return url.toString();
   };

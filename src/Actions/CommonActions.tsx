@@ -1,44 +1,53 @@
 import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import { getOptions, request } from '@/networking/request';
 
-export const getLocationCoordinates = (
+export const getLocationCoordinates = async (
   longitude: number,
   latitude: number,
   distance?: string
 ) => {
   return request(
     BrikApiCommon.getLocationCoordinates(longitude, latitude, distance),
-    getOptions('GET')
+    await getOptions('GET')
   );
 };
 
-export const searchLocation = (searchValue: string) => {
-  return request(BrikApiCommon.searchPlaces(searchValue), getOptions('GET'));
+export const searchLocation = async (searchValue: string) => {
+  return request(
+    BrikApiCommon.searchPlaces(searchValue),
+    await getOptions('GET')
+  );
 };
 
-export const searchLocationById = (id: string) => {
-  return request(BrikApiCommon.searchPlacesById(id), getOptions('GET'));
+export const searchLocationById = async (id: string) => {
+  return request(BrikApiCommon.searchPlacesById(id), await getOptions('GET'));
 };
 
-export const signIn = (body: Record<string, string>) => {
+export const signIn = async (body: Record<string, string>) => {
   const params = new URLSearchParams();
   const dataToSend = Object.keys(body);
   dataToSend.forEach((val) => {
     params.append(val, body[val]);
   });
-  return request(BrikApiCommon.login(), getOptions('POST', params.toString()));
+  return request(
+    BrikApiCommon.login(),
+    await getOptions('POST', params.toString())
+  );
 };
 
-export const signOut = () => {
-  return request(BrikApiCommon.logout(), getOptions('POST'));
+export const signOut = async () => {
+  return request(BrikApiCommon.logout(), await getOptions('POST'));
 };
 
-export const uploadFile = (files: any[]) => {
+export const uploadFile = async (files: any[]) => {
   const formData = new FormData();
   files.forEach((file) => {
     formData.append('photos', file);
   });
   console.log(BrikApiCommon.filesUpload(), 'BrikApiCommon.filesUpload()');
 
-  return request(BrikApiCommon.filesUpload(), getOptions('POST', formData));
+  return request(
+    BrikApiCommon.filesUpload(),
+    await getOptions('POST', formData)
+  );
 };
