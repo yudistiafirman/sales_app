@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import BHeaderTitle from '@/components/molecules/BHeaderTitle';
+import { BHeaderTitle } from '@/components';
 
 type useHeaderTitle = {
   title: string;
