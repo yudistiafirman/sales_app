@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  CreateVisitationFirstStep,
+  CreateVisitationFourthStep,
   CreateVisitationSecondStep,
   CreateVisitationState,
   CreateVisitationThirdStep,
@@ -12,7 +14,11 @@ interface IProvider {
 interface ActionCreateVisitationState {
   type: keyof CreateVisitationState;
   value: any;
-  key?: keyof CreateVisitationSecondStep | keyof CreateVisitationThirdStep;
+  key?:
+    | keyof CreateVisitationFirstStep
+    | keyof CreateVisitationSecondStep
+    | keyof CreateVisitationThirdStep
+    | keyof CreateVisitationFourthStep;
 }
 
 interface context {
@@ -21,7 +27,11 @@ interface context {
     updateValue: (key: keyof CreateVisitationState, value: any) => void;
     updateValueOnstep: (
       step: keyof CreateVisitationState,
-      key: keyof CreateVisitationSecondStep | keyof CreateVisitationThirdStep,
+      key:
+        | keyof CreateVisitationFirstStep
+        | keyof CreateVisitationSecondStep
+        | keyof CreateVisitationThirdStep
+        | keyof CreateVisitationFourthStep,
       value: any
     ) => void;
   };
@@ -29,13 +39,17 @@ interface context {
 
 const initialData: CreateVisitationState = {
   sheetIndex: -1,
-  step: 1,
-  stepOne: {},
+  step: 0,
+  stepOne: {
+    createdLocation: {},
+    locationAddress: {},
+  },
   stepTwo: {
     companyName: '',
     customerType: '',
     location: {},
     pics: [],
+    selectedPic: null,
     projectName: '',
     options: {
       items: null,
@@ -51,6 +65,12 @@ const initialData: CreateVisitationState = {
     paymentType: '',
     products: [],
     stageProject: '',
+  },
+  stepFour: {
+    selectedDate: null,
+    images: [],
+    kategoriAlasan: null,
+    alasanPenolakan: '',
   },
   shouldScrollView: true,
 };
@@ -75,6 +95,7 @@ const reducerForm = (
     case 'stepOne':
     case 'stepTwo':
     case 'stepThree':
+    case 'stepFour':
       return {
         ...state,
         [action.type]: {
@@ -82,6 +103,8 @@ const reducerForm = (
           [action.key!]: action.value,
         },
       };
+
+    //   return { ...state, [action.type]: action.value };
     default:
       return state;
   }
@@ -98,7 +121,11 @@ const CreateVisitationProvider = (props: IProvider) => {
 
   const updateValueOnstep = (
     step: keyof CreateVisitationState,
-    key: keyof CreateVisitationSecondStep | keyof CreateVisitationThirdStep,
+    key:
+      | keyof CreateVisitationFirstStep
+      | keyof CreateVisitationSecondStep
+      | keyof CreateVisitationThirdStep
+      | keyof CreateVisitationFourthStep,
     value: any
   ) => {
     dispatchValue({

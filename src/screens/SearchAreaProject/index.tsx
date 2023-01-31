@@ -14,10 +14,13 @@ import { searchAreaMachine } from '@/machine/searchAreaMachine';
 import { assign } from 'xstate';
 import LocationListShimmer from './element/LocationListShimmer';
 import { BSpacer } from '@/components';
+import { useDispatch } from 'react-redux';
+import { updateRegion } from '@/redux/locationReducer';
 
-const SearchAreaProject = () => {
+const SearchAreaProject = ({ route }: { route: any }) => {
   const navigation = useNavigation();
   const [text, setText] = useState('');
+  const dispatch = useDispatch();
   const appState = useRef(AppState.currentState);
   const [state, send] = useMachine(searchAreaMachine, {
     actions: {
@@ -29,11 +32,27 @@ const SearchAreaProject = () => {
         };
       }),
       navigateToLocation: (context, event) => {
-        const { lon, lat } = event.data;
-        const coordinate = {
-          longitude: Number(lon),
-          latitude: Number(lat),
+        const { lon, lat, formattedAddress } = event.data;
+        let coordinate = {
+          longitude: lon,
+          latitude: lat,
+          formattedAddress,
         };
+
+        console.log(event.data, context, 'ini apa?? di search are');
+
+        if (typeof lon === 'string') {
+          coordinate.longitude = Number(lon);
+        }
+
+        if (typeof lat === 'string') {
+          coordinate.latitude = Number(lat);
+        }
+        if (route?.params?.from) {
+          dispatch(updateRegion(coordinate));
+          navigation.goBack();
+          return;
+        }
         navigation.navigate('Location', {
           coordinate: coordinate,
         });

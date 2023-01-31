@@ -6,6 +6,7 @@ import {
   BSearchBar,
   BSpacer,
   BTabViewScreen,
+  BTextLocation,
   BVisitationCard,
 } from '@/components';
 import { TextInput } from 'react-native-paper';
@@ -18,7 +19,7 @@ interface IProps {
 }
 
 const SearchFlow = ({ onSearch, isSearch }: IProps) => {
-  const { action } = React.useContext(createVisitationContext);
+  const { action, values } = React.useContext(createVisitationContext);
   const { updateValueOnstep, updateValue } = action;
   const [searchQuery, setSearchQuery] = React.useState('');
 
@@ -179,8 +180,13 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
 
   return (
     <React.Fragment>
+      <BTextLocation
+        location={values.stepOne.locationAddress.formattedAddress!}
+        numberOfLines={1}
+      />
+      <BSpacer size="extraSmall" />
       <BSearchBar
-        placeholder="Search"
+        placeholder="Cari pelanggan"
         activeOutlineColor="gray"
         left={
           <TextInput.Icon
@@ -203,7 +209,7 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
       />
       <BSpacer size="extraSmall" />
       {searchQuery && (
-        <View style={{ flex: 1, height: resScale(620) }}>
+        <View style={{ height: resScale(500) }}>
           <BTabViewScreen
             isLoading={false}
             screenToRender={sceneToRender}

@@ -61,31 +61,29 @@ export default function BTabViewScreen({
 
   const renderScene = SceneMap(sceneData);
 
-  if (isLoading) {
-    console.log(sceneData, 'sceneData', routes);
-
-    return (
-      <View style={style.loadingContainer}>
-        <ShimmerPlaceHolder style={style.tabLoading} />
-        <ShimmerPlaceHolder style={style.listLoading} />
-      </View>
-    );
-  }
   return (
-    <BTabSections
-      navigationState={{ index: indexRoute, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndexRoute}
-      indicatorStyle={{
-        backgroundColor: colors.primary,
-      }}
-    />
+    <View style={{ flex: 1 }}>
+      <BTabSections
+        navigationState={{ index: indexRoute, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndexRoute}
+        indicatorStyle={{
+          backgroundColor: colors.primary,
+        }}
+      />
+      {isLoading && (
+        <View style={style.loadingContainer}>
+          <ShimmerPlaceHolder style={style.tabLoading} />
+          <ShimmerPlaceHolder style={style.listLoading} />
+        </View>
+      )}
+    </View>
   );
 }
 
 const style = StyleSheet.create({
   loadingContainer: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     marginTop: layout.pad.md,
   },

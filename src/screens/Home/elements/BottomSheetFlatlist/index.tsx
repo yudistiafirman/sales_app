@@ -11,6 +11,7 @@ const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type FooterType = {
   isLoading?: boolean;
+  onEndReached?: any;
 };
 type BottomSheetFlatlistType = {
   data: {
@@ -35,6 +36,7 @@ export default function BottomSheetFlatlist({
   isLoading,
   data,
   searchQuery,
+  onEndReached,
 }: FooterType & BottomSheetFlatlistType) {
   const footerComp = useCallback(
     () => <FooterLoading isLoading={isLoading} />,
@@ -52,6 +54,7 @@ export default function BottomSheetFlatlist({
       }}
       ListFooterComponent={footerComp}
       ItemSeparatorComponent={separator}
+      onEndReached={onEndReached}
     />
   );
 }
