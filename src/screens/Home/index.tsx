@@ -205,8 +205,7 @@ const Beranda = () => {
 
   const kunjunganAction = () => {
     // setIsLoading((curr) => !curr);
-    // navigation.navigate('CreateVisitation');
-    navigation.navigate('Camera', { photoTitle: 'wkwk' });
+    navigation.navigate('CreateVisitation');
   };
   const sceneToRender = useCallback(
     (key: string) => {
