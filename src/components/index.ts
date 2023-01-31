@@ -37,13 +37,10 @@ export { default as BPic } from './molecules/BPic';
 export { default as BLocation } from './molecules/BLocation';
 export { default as BFlatlistItems } from './molecules/BFlatlistItems';
 export { default as BViewMoreText } from './molecules/BViewMoreText';
-<<<<<<< HEAD
 export { default as BTextLocation } from './molecules/BTextLocation';
 export { default as BBackContinueBtn } from './molecules/BBackContinueBtn';
 export { default as BStepperIndicator } from './molecules/StepperIndicator';
-=======
 export { default as BHeaderTitle } from './molecules/BHeaderTitle';
->>>>>>> cbcbe302d7d30627e1ab1ad3c463500b46a4b363
 
 // organism
 export { default as BForm } from './organism/BForm';
