@@ -60,28 +60,6 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
     updateValueOnstep('stepTwo', key, e);
   };
   const [isLoading, setisLoading] = useState(false);
-  useEffect(() => {
-    if (state.pics.length === 0) {
-      (async () => {
-        updateValueOnstep('stepTwo', 'pics', []);
-        setisLoading(true);
-        const data = await dummyReq();
-        console.log(data, 'data dummy');
-
-        updateValueOnstep('stepTwo', 'pics', data);
-        setisLoading(false);
-      })();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (state.pics.length === 1) {
-      updateValueOnstep('stepTwo', 'selectedPic', {
-        ...state.pics[0],
-        isSelected: true,
-      });
-    }
-  }, [state.pics]);
 
   const onFetching = (e: any) => {
     updateValueOnstep('stepTwo', 'companyName', { id: 1, title: e });
@@ -107,17 +85,17 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           {
             icon: company,
             title: 'Perusahaan',
-            value: 'company',
+            value: 'COMPANY',
             onChange: () => {
-              onChange('customerType')('company');
+              onChange('customerType')('COMPANY');
             },
           },
           {
             icon: individu,
             title: 'Individu',
-            value: 'individu',
+            value: 'INDIVIDU',
             onChange: () => {
-              onChange('customerType')('individu');
+              onChange('customerType')('INDIVIDU');
             },
           },
         ],
@@ -159,23 +137,13 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             openBottomSheet();
           },
           onSelect: (index: number) => {
-            let selectedIndex: number | null = null;
             const newPicList = values.stepTwo.pics.map((el, _index) => {
-              if (_index === index) {
-                selectedIndex = index;
-              }
               return {
                 ...el,
                 isSelected: _index === index,
               };
             });
             updateValueOnstep('stepTwo', 'pics', newPicList);
-            if (typeof selectedIndex === 'number') {
-              updateValueOnstep('stepTwo', 'selectedPic', {
-                ...newPicList[selectedIndex],
-                isSelected: true,
-              });
-            }
           },
         },
       ];

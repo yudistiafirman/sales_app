@@ -1,15 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+type popUpOptions = {
+  isRenderActions?: boolean;
+  popUpType: 'success' | 'error' | 'none';
+  popUpText?: string;
+  outsideClickClosePopUp?: boolean;
+};
+
 type initialStateType = {
   isPopUpVisible: boolean;
-  popUpOptions: {
-    isRenderActions: boolean;
-    popUpType: 'success' | 'error' | 'none';
-    popUpText: string;
-    outsideClickClosePopUp: boolean;
-    // continueMethod: () => void;
-    // backMethod: () => void;
-  };
+  popUpOptions: popUpOptions;
+};
+
+const initialPopupData: popUpOptions = {
+  isRenderActions: false,
+  popUpType: 'none',
+  popUpText: '',
+  outsideClickClosePopUp: true,
 };
 
 const initialState: initialStateType = {
@@ -19,8 +26,6 @@ const initialState: initialStateType = {
     popUpType: 'none',
     popUpText: '',
     outsideClickClosePopUp: true,
-    // continueMethod: () => {},
-    // backMethod: () => {},
   },
 };
 
@@ -34,9 +39,26 @@ export const modalSlice = createSlice({
         isPopUpVisible: !state.isPopUpVisible,
       };
     },
-    // resetState: () => {
-    //   return initialState;
-    // },
+    openPopUp: (state, { payload }: { payload: popUpOptions }) => {
+      state.isPopUpVisible = !state.isPopUpVisible;
+      if (payload.isRenderActions) {
+        state.popUpOptions.isRenderActions = payload.isRenderActions;
+      }
+      if (payload.popUpText) {
+        state.popUpOptions.popUpText = payload.popUpText;
+      }
+      if (payload.popUpType) {
+        state.popUpOptions.popUpType = payload.popUpType;
+      }
+      if (payload.outsideClickClosePopUp) {
+        state.popUpOptions.outsideClickClosePopUp =
+          payload.outsideClickClosePopUp;
+      }
+    },
+    closePopUp: (state) => {
+      state.isPopUpVisible = !state.isPopUpVisible;
+      state.popUpOptions = initialPopupData;
+    },
   },
 });
 

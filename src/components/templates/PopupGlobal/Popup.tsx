@@ -1,18 +1,86 @@
 import Modal from 'react-native-modal';
-import { View, Text } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  DeviceEventEmitter,
+} from 'react-native';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { setIsPopUpVisible } from '@/redux/reducers/modalReducer';
+import { colors, fonts, layout } from '@/constants';
+import { resScale } from '@/utils';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import BBackContinueBtn from '@/components/molecules/BBackContinueBtn';
 
 export default function Popup() {
+  const dispatch = useDispatch();
   const isPopUpVisible = useSelector(
     (state: RootState) => state.modal.isPopUpVisible
   );
+  const popUpOptions = useSelector(
+    (state: RootState) => state.modal.popUpOptions
+  );
+
   return (
-    <Modal isVisible={isPopUpVisible}>
-      <View>
-        <Text>ini popup global</Text>
+    <Modal
+      style={styles.modalStyle}
+      isVisible={isPopUpVisible}
+      backdropOpacity={0.3}
+      onBackdropPress={() => {
+        if (popUpOptions.outsideClickClosePopUp) {
+          dispatch(setIsPopUpVisible());
+        }
+      }}
+    >
+      <View style={styles.modalContent}>
+        <View>
+          {popUpOptions.popUpType === 'success' && (
+            <AntDesign size={resScale(48)} name="checkcircle" color={'green'} />
+          )}
+          {popUpOptions.popUpType === 'error' && (
+            <AntDesign size={resScale(48)} name="closecircle" color={'red'} />
+          )}
+        </View>
+        <Text style={styles.popUptext}>{popUpOptions.popUpText}</Text>
+        {popUpOptions.isRenderActions && (
+          <View style={styles.actionContainer}>
+            <BBackContinueBtn
+              onPressContinue={() => {
+                DeviceEventEmitter.emit('continue/Popup');
+              }}
+              onPressBack={() => {
+                DeviceEventEmitter.emit('back/Popup');
+              }}
+            />
+          </View>
+        )}
       </View>
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  modalStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: colors.white,
+    height: resScale(160),
+    width: resScale(300),
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: layout.pad.md,
+    borderRadius: layout.radius.md,
+  },
+  popUptext: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.md,
+    textAlign: 'center',
+  },
+  actionContainer: {},
+});

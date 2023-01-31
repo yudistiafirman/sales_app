@@ -28,6 +28,7 @@ type LastStepPopUpType = {
     areaValue: string | null;
   };
   onPressSubmit?: (type: lastStepPickedType) => void;
+  isLoading?: boolean;
 };
 type lastStepPickedType = 'VISIT' | 'SPH' | 'REJECTED' | '';
 
@@ -41,6 +42,7 @@ export default function LastStepPopUp({
   selectedDate,
   closedLostValueOnChange,
   onPressSubmit = () => {},
+  isLoading,
 }: LastStepPopUpType) {
   const navigation = useNavigation();
 
@@ -98,7 +100,10 @@ export default function LastStepPopUp({
           </Text>
         </View>
         <BSpacer size={'small'} />
-        <View style={styles.buttonLastStepContainer}>
+        <View
+          pointerEvents={isLoading ? 'none' : 'auto'}
+          style={styles.buttonLastStepContainer}
+        >
           <TouchableOpacity
             onPress={() => {
               setLastStepPicked('VISIT');
@@ -198,6 +203,7 @@ export default function LastStepPopUp({
             <BSpacer size={'extraSmall'} />
             <BButtonPrimary
               title="Submit"
+              isLoading={isLoading}
               disable={!selectedDate}
               onPress={() => {
                 onPressSubmit(lastStepPicked);
@@ -208,6 +214,7 @@ export default function LastStepPopUp({
         {lastStepPicked === 'SPH' && (
           <BButtonPrimary
             title="Buat SPH Sekarang"
+            isLoading={isLoading}
             onPress={() => {
               onPressSubmit(lastStepPicked);
             }}
@@ -218,6 +225,7 @@ export default function LastStepPopUp({
             <BForm inputs={inputs} />
             <BButtonPrimary
               title="Submit"
+              isLoading={isLoading}
               disable={
                 !(
                   !!closedLostValueOnChange.areaValue &&

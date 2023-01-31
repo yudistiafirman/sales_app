@@ -41,8 +41,18 @@ const initialData: CreateVisitationState = {
   sheetIndex: -1,
   step: 0,
   stepOne: {
-    createdLocation: {},
-    locationAddress: {},
+    createdLocation: {
+      lat: 12,
+      lon: 12,
+      postalId: undefined,
+      formattedAddress: 'createdLocation',
+    },
+    locationAddress: {
+      lat: 12,
+      lon: 12,
+      postalId: undefined,
+      formattedAddress: 'locationAddress',
+    },
   },
   stepTwo: {
     companyName: '',

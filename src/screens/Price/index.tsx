@@ -105,7 +105,7 @@ const PriceList = () => {
       {!loadLocation ? (
         <CurrentLocation
           onPress={goToLocation}
-          location={locationDetail.formattedAddress}
+          location={locationDetail?.formattedAddress}
         />
       ) : (
         <ShimmerPlaceholder

@@ -78,30 +78,39 @@ const FirstStep = () => {
   // map function
   const mapRef = React.useRef<MapView>(null);
   const onChangeRegion = async (coordinate: Region) => {
-    setIsMapLoading(() => true);
-    const { data } = await getLocationCoordinates(
-      // '',
-      coordinate.longitude as unknown as number,
-      coordinate.latitude as unknown as number,
-      ''
-    );
-    const { result } = data;
-    const _coordinate = {
-      latitude: result?.lat,
-      longitude: result?.lon,
-      formattedAddress: result?.formattedAddress,
-      PostalId: result?.PostalId,
-    };
+    try {
+      setIsMapLoading(() => true);
+      const { data } = await getLocationCoordinates(
+        // '',
+        coordinate.longitude as unknown as number,
+        coordinate.latitude as unknown as number,
+        ''
+      );
+      const { result } = data;
+      if (!result) {
+        throw data;
+      }
+      const _coordinate = {
+        latitude: result?.lat,
+        longitude: result?.lon,
+        formattedAddress: result?.formattedAddress,
+        PostalId: result?.PostalId,
+      };
 
-    if (typeof result?.lon === 'string') {
-      _coordinate.longitude = Number(result.lon);
-    }
+      if (typeof result?.lon === 'string') {
+        _coordinate.longitude = Number(result.lon);
+        _coordinate.lon = Number(result.lon);
+      }
 
-    if (typeof result?.lat === 'string') {
-      _coordinate.latitude = Number(result.lat);
+      if (typeof result?.lat === 'string') {
+        _coordinate.latitude = Number(result.lat);
+        _coordinate.lat = Number(result.lat);
+      }
+      dispatch(updateRegion(_coordinate));
+      setIsMapLoading(() => false);
+    } catch (error) {
+      console.log(JSON.stringify(error), 'onChangeRegionerror');
     }
-    dispatch(updateRegion(_coordinate));
-    setIsMapLoading(() => false);
   };
 
   const debounceResult = React.useMemo(() => debounce(onChangeRegion, 500), []);
@@ -131,8 +140,9 @@ const FirstStep = () => {
           formattedAddress: context?.formattedAddress,
           PostalId: context?.PostalId,
         };
+        console.log(context, 'contextmachince');
 
-        updateValueOnstep('stepOne', 'createdLocation', context);
+        // updateValueOnstep('stepOne', 'createdLocation', context);
         if (region.latitude === 0) {
           dispatch(updateRegion(coordinate));
         }

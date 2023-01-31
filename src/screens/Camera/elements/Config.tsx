@@ -11,13 +11,13 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { layout } from '@/constants';
 
-const Config = ({
-  title,
-  style,
-}: {
+type configType = {
   title: string;
   style?: StyleProp<ViewStyle>;
-}) => {
+  navigateTo?: string;
+};
+
+const Config = ({ title, style, navigateTo }: configType) => {
   const getCameraDevice = (devices: CameraDevices): CameraDevice => {
     return devices.back;
   };
@@ -42,11 +42,21 @@ const Config = ({
   };
 
   const takePhoto = async () => {
-    const takenPhoto = await camera.current.takePhoto({
-      flash: 'off',
-    });
-    animateElement();
-    navigation.navigate('Preview', { photo: takenPhoto, photoTitle: title });
+    try {
+      const takenPhoto = await camera.current.takePhoto({
+        flash: 'off',
+      });
+      animateElement();
+      console.log(takenPhoto, 'takenPhoto');
+
+      navigation.navigate('Preview', {
+        photo: takenPhoto,
+        photoTitle: title,
+        navigateTo,
+      });
+    } catch (error) {
+      console.log(error, 'takePhoto56');
+    }
   };
   const isFocused = useIsFocused();
 

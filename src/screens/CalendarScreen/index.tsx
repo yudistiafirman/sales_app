@@ -20,6 +20,10 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { productivityFlowGetVisitationsType } from '@/redux/async-thunks/productivityFlowThunks';
 import { RootState } from '@/redux/store';
 import { customerDataInterface, visitationListResponse } from '@/interfaces';
+import {
+  setVisitationMapped,
+  resetStates,
+} from '@/redux/reducers/productivityFlowReducer';
 
 const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
   if (direction === 'right') {
@@ -50,15 +54,14 @@ export default function CalendarScreen() {
   // console.log(visitationCalendarMapped, 'visitationCalendarMapped');
 
   useEffect(() => {
-    console.log(markedDate, 'markedDate');
-  }, [markedDate]);
-
-  useEffect(() => {
     const today = moment();
     fetchVisitation({
       month: today.get('month') + 1,
       year: today.get('year'),
     });
+    return () => {
+      dispatch(resetStates());
+    };
   }, []);
 
   const fetchVisitation = useCallback(
@@ -66,27 +69,32 @@ export default function CalendarScreen() {
       dispatch(getVisitationsList({ month, year }))
         .unwrap()
         .then((data: visitationListResponse[]) => {
+          console.log(JSON.stringify(data), 'visitationListResponse69');
           const visitMapped = data.reduce(
             (
               acc: { [key: string]: customerDataInterface[] },
               obj: visitationListResponse
             ) => {
               const formatedDate = moment(obj.dateVisit).format('yyyy-MM-DD');
+              console.log(formatedDate, obj.dateVisit, 'dateVisit77');
+
               if (!acc[formatedDate]) {
                 acc[formatedDate] = [];
               }
               acc[formatedDate].push({
-                display_name: obj.display_name,
-                name: obj.name,
-                email: obj.email,
-                phone: obj.phone,
-                position: obj.position,
-                type: obj.type,
+                display_name: obj.project?.company?.displayName,
+                name: obj.project?.name,
+                // location: obj.project.locationAddress.district,
+                email: obj.project?.pic?.email,
+                phone: obj.project?.pic?.phone,
+                position: obj.project?.pic?.position,
+                type: obj.project?.pic?.type,
               });
               return acc;
             },
             {}
           );
+          dispatch(setVisitationMapped(visitMapped));
           const newMarkedDate = { ...markedDate };
           Object.keys(visitMapped).forEach((date) => {
             newMarkedDate[date] = { marked: true };
@@ -94,7 +102,7 @@ export default function CalendarScreen() {
           setMarkedDate(newMarkedDate);
         });
     },
-    [markedDate, visitationCalendarMapped, dispatch]
+    [markedDate, dispatch]
   );
 
   // const onDayPress = (day: DateData) => {
@@ -127,6 +135,14 @@ export default function CalendarScreen() {
     (day: DateData) => {
       const custData = visitationCalendarMapped[day.dateString] || [];
       console.log(day, 'pressed', markedDate);
+      console.log('====================================');
+      console.log(
+        visitationCalendarMapped,
+        'visitationCalendarMapped138',
+        visitationCalendarMapped[day.dateString],
+        day.dateString
+      );
+      console.log('====================================');
 
       setCustomerDatas(custData);
 

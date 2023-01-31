@@ -168,11 +168,7 @@ const renderInput = (input: Input): React.ReactNode => {
             <BSpacer size="small" />
           </>
         ) : null}
-        <BPicList
-          isOption={value.length > 1 ? true : false}
-          data={value}
-          onSelect={onSelect!}
-        />
+        <BPicList isOption={true} data={value} onSelect={onSelect!} />
       </React.Fragment>
     );
   }

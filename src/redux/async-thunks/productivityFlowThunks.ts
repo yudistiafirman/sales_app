@@ -48,6 +48,9 @@ export const postVisitation = createAsyncThunk<
   async ({ payload }, { rejectWithValue }) => {
     try {
       const { data } = await postVisitations({ payload });
+      console.log('====================================');
+      console.log(data);
+      console.log('==================================== postVisitation');
       if (data.error) throw data as errorType;
       return data.data;
     } catch (error) {

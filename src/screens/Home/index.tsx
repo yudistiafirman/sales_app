@@ -35,6 +35,11 @@ const Beranda = () => {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isHeaderShown, setIsHeaderShown] = useState(true);
+  const [date, setDate] = useState(moment());
+  console.log(
+    moment(moment.utc(date).toDate()).local().valueOf(),
+    'date state'
+  );
 
   useHeaderShow({ isHeaderShown: isHeaderShown });
   const toggleModal = () => {
@@ -208,7 +213,10 @@ const Beranda = () => {
   const kunjunganAction = () => {
     // setIsLoading((curr) => !curr);
     // navigation.navigate('CreateVisitation');
-    navigation.navigate('Camera', { photoTitle: 'wkwk' });
+    navigation.navigate('Camera', {
+      photoTitle: 'Foto Kunjungan',
+      navigateTo: 'CreateVisitation',
+    });
   };
   const sceneToRender = useCallback(
     (key: string) => {

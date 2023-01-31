@@ -1,18 +1,17 @@
 //postUploadFiles
 import { createSlice } from '@reduxjs/toolkit';
 import { postUploadFiles } from '../async-thunks/commonThunks';
-import { postVisitation } from '../async-thunks/productivityFlowThunks';
 
 type initialStateType = {
   isUploadLoading: boolean;
   isPostVisitationLoading: boolean;
-  uploadedFilesResponse: any[];
+  // uploadedFilesResponse: any[];
 };
 
 const initialState: initialStateType = {
   isUploadLoading: false,
   isPostVisitationLoading: false,
-  uploadedFilesResponse: [],
+  // uploadedFilesResponse: [],
 };
 
 export const commonSlice = createSlice({
@@ -29,14 +28,9 @@ export const commonSlice = createSlice({
     });
     builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {
       state.isUploadLoading = false;
-      state.uploadedFilesResponse = payload;
     });
     builder.addCase(postUploadFiles.rejected, (state) => {
       state.isUploadLoading = false;
-    });
-
-    builder.addCase(postVisitation.fulfilled, (state) => {
-      state.uploadedFilesResponse = [];
     });
   },
 });
