@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { BTabSections } from '@/components';
 import { SceneMap } from 'react-native-tab-view';
 import colors from '@/constants/colors';
 import { View, StyleSheet } from 'react-native';
@@ -7,6 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import resScale from '@/utils/resScale';
 import { layout } from '@/constants';
+import BTabSections from './TabSections';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type BTabViewScreenType = {
