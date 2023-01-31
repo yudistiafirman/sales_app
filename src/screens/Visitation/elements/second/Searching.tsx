@@ -12,6 +12,8 @@ import {
 import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
+import { useDispatch } from 'react-redux';
+import { allVisitationGet } from '@/actions/CommonActions';
 
 interface IProps {
   onSearch: (search: boolean) => void;
@@ -19,6 +21,7 @@ interface IProps {
 }
 
 const SearchFlow = ({ onSearch, isSearch }: IProps) => {
+  const dispatch = useDispatch();
   const { action, values } = React.useContext(createVisitationContext);
   const { updateValueOnstep, updateValue } = action;
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -46,42 +49,6 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
 
   const tabData: { [key: string]: any } = React.useMemo(() => {
     return {
-      // ['Semua']: Array(8)
-      //   .fill(0)
-      //   .map((_, index) => {
-      //     return {
-      //       name: 'PT. Guna Karya Mandiri' + index,
-      //       pilNames: [
-      //         'Guna Karya Mandiri',
-      //         'Proyek Bu Larguna',
-      //         'Proyek Bu Larguna',
-      //         'Proyek Bu Larguna',
-      //       ],
-      //     };
-      //   }),
-      ['Perusahaan']: Array(8)
-        .fill(0)
-        .map((_, index) => {
-          return {
-            name: 'PT. Guna Karya Mandiri' + index,
-            pilNames: [
-              'Guna Karya Mandiri',
-              'Proyek Bu Larguna',
-              'Proyek Bu Larguna',
-              'Proyek Bu Larguna',
-            ],
-            customerType: 'company',
-            pic: [
-              {
-                name: 'Joko',
-                phone: '890832131',
-                email: 'eamil@meail.com',
-                position: 'mandor',
-              },
-            ],
-            projectName: 'Proyek coba coba',
-          };
-        }),
       ['Proyek']: Array(3)
         .fill(0)
         .map((_, index) => {
@@ -95,28 +62,15 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
             ],
           };
         }),
-      ['PIC']: [],
     };
   }, []);
 
   const tabToRender: { tabTitle: string; totalItems: number }[] =
     React.useMemo(() => {
       return [
-        // {
-        //   tabTitle: 'Semua',
-        //   totalItems: 8,
-        // },
-        {
-          tabTitle: 'Perusahaan',
-          totalItems: 3,
-        },
         {
           tabTitle: 'Proyek',
           totalItems: 3,
-        },
-        {
-          tabTitle: 'PIC',
-          totalItems: 0,
         },
       ];
     }, []);
@@ -155,22 +109,22 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
             />
           )}
           searchQuery={searchQuery}
-          initialFetch={() => {
-            const data = tabOnEndReached({
-              key,
-              currentPage: 1,
-              query: searchQuery,
-            });
-            console.log(data, 'ini data');
-            return data;
-          }}
-          onEndReached={(info) => {
-            return tabOnEndReached({
-              ...info,
-              key,
-              query: searchQuery,
-            });
-          }}
+          // initialFetch={() => {
+          // return dispatch(allVisitationGet(searchQuery)).unwrap();
+          // const data = tabOnEndReached({
+          //   key,
+          //   currentPage: 1,
+          //   query: searchQuery,
+          // });
+          // return data;
+          // }}
+          // onEndReached={(info) => {
+          //   return tabOnEndReached({
+          //     ...info,
+          //     key,
+          //     query: searchQuery,
+          //   });
+          // }}
         />
       );
     },
