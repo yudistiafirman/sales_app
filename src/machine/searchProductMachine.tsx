@@ -176,7 +176,7 @@ export const searchProductMachine =
       },
       guards: {
         searchValueLengthAccepted: (_context, event) => {
-          return event.value.length > 3;
+          return event.value.length > 2;
         },
       },
       services: {

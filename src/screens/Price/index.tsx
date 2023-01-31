@@ -60,7 +60,7 @@ const PriceList = () => {
 
   const renderHeaderRight = () => {
     return (
-      <BTouchableText onPress={() => setVisibleTnc(true)} title="ketentuan" />
+      <BTouchableText onPress={() => setVisibleTnc(true)} title="Ketentuan" />
     );
   };
 
@@ -105,7 +105,7 @@ const PriceList = () => {
       {!loadLocation ? (
         <CurrentLocation
           onPress={goToLocation}
-          location={locationDetail.formattedAddress}
+          location={locationDetail?.formattedAddress}
         />
       ) : (
         <ShimmerPlaceholder
@@ -121,7 +121,7 @@ const PriceList = () => {
         <PriceSearchBar
           onPress={() =>
             navigation.navigate('SearchProduct', {
-              distance: locationDetail.distance.value,
+              distance: locationDetail?.distance.value,
             })
           }
         />
