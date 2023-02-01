@@ -1,4 +1,9 @@
-import { BText, BHeaderIcon, BButtonPrimary } from '@/components';
+import {
+  BText,
+  BHeaderIcon,
+  BButtonPrimary,
+  BVisitationCard,
+} from '@/components';
 import BProjectRBtnList from '@/components/organism/BProjectRBtnList';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
@@ -6,7 +11,6 @@ import { DataCompany } from '@/context/AppointmentContext';
 import React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Modal from 'react-native-modal';
-import AppointmentCustomerCard from './CustomerCard';
 const { height } = Dimensions.get('window');
 
 interface BSheetCompanyProps {
@@ -44,9 +48,12 @@ const BottomSheetCompany = ({
             />
           </View>
           <View style={styles.companyDetailsCardWrapper}>
-            <AppointmentCustomerCard
-              name={dataCompany?.display_name}
-              location={dataCompany?.location}
+            <BVisitationCard
+              item={{
+                name: dataCompany?.name,
+                location: dataCompany?.location,
+              }}
+              isRenderIcon={false}
             />
           </View>
           <View style={styles.projectNameListContainer}>

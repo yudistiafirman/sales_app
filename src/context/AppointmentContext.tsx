@@ -1,6 +1,5 @@
 import { PIC } from '@/interfaces';
 import React, { createContext, useReducer, Dispatch } from 'react';
-import { Value } from 'react-native-reanimated';
 
 interface IProvider {
   children: React.ReactNode;
@@ -14,7 +13,7 @@ export type DataProject = {
 
 export type DataCompany = {
   id?: string;
-  display_name?: string;
+  name?: string;
   location?: string;
   project?: DataProject[];
   pics?: PIC[];
@@ -47,7 +46,7 @@ export interface StepOne {
 
 export interface AppointmentState {
   step: number;
-  sheetIndex: number;
+  stepDone: number[];
   searchQuery: string;
   stepOne: StepOne;
   isModalPicVisible: boolean;
@@ -58,7 +57,7 @@ export interface AppointmentState {
 
 const initialData: AppointmentState = {
   step: 0,
-  sheetIndex: -1,
+  stepDone: [0],
   searchQuery: '',
   stepOne: {
     routes: [
@@ -98,7 +97,7 @@ const initialData: AppointmentState = {
   customerData: [
     {
       id: '1',
-      display_name: 'PT Guna Sakti',
+      name: 'PT Guna Sakti',
       location: 'Cibeunying Kidul',
       project: [
         {
@@ -117,7 +116,7 @@ const initialData: AppointmentState = {
     },
     {
       id: '2',
-      display_name: 'PT Guna Rambo',
+      name: 'PT Guna Rambo',
       location: 'Cibeunying Wetan',
       project: [
         {
@@ -170,6 +169,8 @@ export enum AppointmentActionType {
   SET_CATEGORIES = 'SET_CATEGORIES',
   SELECT_COMPANY = 'SELECT_COMPANY',
   ON_PRESS_PROJECT = 'ON_PRESS_PROJECT',
+  INCREASE_STEP = 'INCREASE_STEP',
+  DECREASE_STEP = 'DECREASE_STEP',
 }
 
 type AppointmentPayload = {
@@ -213,6 +214,8 @@ type AppointmentPayload = {
     key: string;
     value: {};
   };
+  [AppointmentActionType.INCREASE_STEP]: {};
+  [AppointmentActionType.DECREASE_STEP]: {};
 };
 
 export type AppointmentAction =
@@ -344,6 +347,18 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
             projectName: action.value.projectName,
           },
         },
+      };
+    }
+    case AppointmentActionType.INCREASE_STEP: {
+      return {
+        ...state,
+        step: state.step + 1,
+      };
+    }
+    case AppointmentActionType.DECREASE_STEP: {
+      return {
+        ...state,
+        step: state.step - 1,
       };
     }
     default:

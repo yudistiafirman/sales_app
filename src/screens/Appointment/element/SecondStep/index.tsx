@@ -5,7 +5,6 @@ import { StyleSheet, View } from 'react-native';
 import { resScale } from '@/utils';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { TextInput } from 'react-native-paper';
-import AppointmentCalendar from './AppointmentCalendar';
 import { useNavigation } from '@react-navigation/native';
 
 const SecondStep = () => {
@@ -25,7 +24,6 @@ const SecondStep = () => {
           }
         />
       </TouchableOpacity>
-      <AppointmentCalendar />
     </View>
   );
 };

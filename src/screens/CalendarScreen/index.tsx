@@ -6,7 +6,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Calendar, DateData } from 'react-native-calendars';
+import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MarkedDates } from 'react-native-calendars/src/types';
 import { colors, fonts, layout } from '@/constants';
@@ -24,19 +24,20 @@ import {
   setVisitationMapped,
   resetStates,
 } from '@/redux/reducers/productivityFlowReducer';
+import defineLocalConfig from './calendarConfig';
 
 const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
   if (direction === 'right') {
     return (
       <View style={styles.arrowStyleRight}>
-        <Icon name="chevron-right" size={25} color={colors.icon.primary} />
+        <Icon name="chevron-right" size={25} color={colors.black} />
       </View>
     );
   }
 
   return (
     <View style={styles.arrowStyleLeft}>
-      <Icon name="chevron-left" size={25} color={colors.icon.primary} />
+      <Icon name="chevron-left" size={25} color={colors.black} />
     </View>
   );
 };
@@ -203,6 +204,8 @@ export default function CalendarScreen() {
     });
   };
 
+  defineLocalConfig();
+
   return (
     <BContainer>
       <View style={styles.container}>
@@ -214,6 +217,10 @@ export default function CalendarScreen() {
               selectedDayTextColor: colors.white,
               selectedDayBackgroundColor: colors.primary,
               dotColor: colors.primary,
+              dayTextColor: colors.text.darker,
+              textDayFontFamily: 'Montserrat-Regular',
+              textMonthFontFamily: 'Montserrat-SemiBold',
+              textDayHeaderFontFamily: 'Montserrat-Medium',
             }}
             onDayPress={onDayPress}
             markedDates={markedDate}

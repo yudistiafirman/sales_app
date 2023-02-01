@@ -11,24 +11,7 @@ import Location from './elements/Location';
 import PillNames from './elements/PillNames';
 import HighlightText from '../../atoms/BHighlightText';
 import { colors, layout } from '@/constants';
-
-type visitationDataType = {
-  id?: number;
-  name: string;
-  location?: string;
-  time?: string;
-  status?: string;
-  pilNames?: string[];
-  pilStatus?: string;
-};
-
-type VisitationCardType = {
-  item: visitationDataType;
-  searchQuery?: string;
-  onPress?: (data: visitationDataType) => void;
-  isRenderIcon?: boolean;
-  customIcon?: () => JSX.Element;
-};
+import { VisitationCardType } from '@/interfaces';
 
 function iconRender(
   isRenderIcon: boolean,

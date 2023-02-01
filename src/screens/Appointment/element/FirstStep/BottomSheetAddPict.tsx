@@ -117,13 +117,13 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
     const errors: Partial<InitialState> = {};
     if (state.name.length === 0) {
       errors.errorName = 'Nama harus diisi';
-    } else if (state.name.length < 6) {
-      errors.errorName = 'Nama tidak boleh kurang dari 6 karakter';
+    } else if (state.name.length < 4) {
+      errors.errorName = 'Nama tidak boleh kurang dari 4 karakter';
     }
     if (!state.position) {
       errors.errorPosition = 'Jabatan harus diisi';
-    } else if (state.position.length < 6) {
-      errors.errorPosition = 'Jabatan tidak boleh kurang dari 6 karakter';
+    } else if (state.position.length < 4) {
+      errors.errorPosition = 'Jabatan tidak boleh kurang dari 4 karakter';
     }
     if (!state.email) {
       errors.errorEmail = 'Email harus diisi';

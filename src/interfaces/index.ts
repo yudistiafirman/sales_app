@@ -389,6 +389,25 @@ interface payloadPostType {
   files: any[];
 }
 
+
+type visitationDataType = {
+  id?: number;
+  name: string;
+  location?: string;
+  time?: string;
+  status?: string;
+  pilNames?: string[];
+  pilStatus?: string;
+};
+
+type VisitationCardType = {
+  item: visitationDataType;
+  searchQuery?: string;
+  onPress?: (data: visitationDataType) => void;
+  isRenderIcon?: boolean;
+  customIcon?: () => JSX.Element;
+};
+
 export type {
   Input,
   Styles,
@@ -413,4 +432,6 @@ export type {
   projectPayloadType,
   picPayloadType,
   payloadPostType,
+  visitationDataType,
+  VisitationCardType
 };

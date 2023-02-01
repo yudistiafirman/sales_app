@@ -5,7 +5,7 @@ import {
   AppointmentProvider,
   StepOne,
 } from '@/context/AppointmentContext';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Steps from '../Sph/elements/Steps';
@@ -18,33 +18,38 @@ import { PIC } from '@/interfaces';
 import SecondStep from './element/SecondStep';
 const { width, height } = Dimensions.get('window');
 const Appointment = () => {
-  const [currentPosition, setCurrentPosition] = useState<number>(0);
-  const [stepsDone, setStepsDone] = useState<number[]>([0]);
   const [values, dispatchValue] = useAppointmentData();
-  const { searchQuery, stepOne, isModalPicVisible } = values;
+  const { searchQuery, stepOne, isModalPicVisible, step, stepDone } = values;
   const customerType =
     stepOne.customerType === 'company' ? 'company' : 'individu';
 
   const labels = ['Data Pelanggan', 'Tanggal Kunjungan'];
 
-  const renderBtnIcon = () => <Icon name="right" color={colors.white} />;
+  const renderBtnIcon = () => (
+    <Icon
+      name="right"
+      style={{ marginTop: layout.pad.sm }}
+      color={colors.white}
+    />
+  );
   const stepsToRender = [<FirstStep />, <SecondStep />];
   const btnShown = searchQuery.length === 0 && stepOne.customerType.length > 0;
+  const isFirstPage = step === 0;
 
   const onNext = useCallback(() => {
     const errors: Partial<StepOne> = {};
     if (customerType === 'company') {
       if (!stepOne.company.companyName) {
         errors.errorCompany = 'Nama perusahaan harus diisi';
-      } else if (stepOne.company.companyName.length < 6) {
+      } else if (stepOne.company.companyName.length < 4) {
         errors.errorCompany =
-          'Nama perusahaan tidak boleh kurang dari 6 karakter';
+          'Nama perusahaan tidak boleh kurang dari 4 karakter';
       }
     }
     if (stepOne[customerType].projectName?.length === 0) {
       errors.errorProject = 'Nama Proyek harus diisi';
-    } else if (stepOne[customerType].projectName?.length < 6) {
-      errors.errorProject = 'Nama Proyek tidak boleh kurang dari 6 karakter';
+    } else if (stepOne[customerType].projectName?.length < 4) {
+      errors.errorProject = 'Nama Proyek tidak boleh kurang dari 4 karakter';
     }
     if (stepOne[customerType].pics.length === 0) {
       errors.errorPics = 'Tambahkan minimal 1 PIC';
@@ -58,21 +63,33 @@ const Appointment = () => {
           value: errors[val as keyof StepOne],
         });
       });
+    } else {
+      dispatchValue({
+        type: AppointmentActionType.INCREASE_STEP,
+      });
     }
   }, [customerType, dispatchValue, stepOne]);
+
+  const onBackPress = () => {
+    if (!isFirstPage) {
+      dispatchValue({
+        type: AppointmentActionType.DECREASE_STEP,
+      });
+    }
+  };
   return (
     <View style={style.container}>
       <BStepperIndicator
-        stepsDone={stepsDone}
-        stepOnPress={setCurrentPosition}
-        currentStep={currentPosition}
+        stepsDone={stepDone}
+        currentStep={step}
         labels={labels}
       />
       <BSpacer size="medium" />
-      <Steps currentPosition={currentPosition} stepsToRender={stepsToRender} />
+      <Steps currentPosition={step} stepsToRender={stepsToRender} />
       {btnShown && (
         <View style={style.footer}>
           <BButtonPrimary
+            onPress={onBackPress}
             buttonStyle={{ width: resScale(132) }}
             isOutline
             title="Kembali"
@@ -80,6 +97,7 @@ const Appointment = () => {
           <BButtonPrimary
             title="Lanjut"
             onPress={onNext}
+            disable={step === 1}
             buttonStyle={{ width: resScale(202) }}
             rightIcon={() => renderBtnIcon()}
           />

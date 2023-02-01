@@ -1,7 +1,8 @@
-import { BTabSections } from '@/components';
+import { BTabSections, BVisitationCard } from '@/components';
 import { colors, layout } from '@/constants';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
+import { visitationDataType } from '@/interfaces';
 import { resScale } from '@/utils';
 import React, { useCallback, useState } from 'react';
 import {
@@ -58,15 +59,13 @@ const SearchingCustomer = () => {
     }
   };
 
-  const renderItem: ListRenderItem<CustomersData> = useCallback(
+  const renderItem: ListRenderItem<visitationDataType> = useCallback(
     ({ item }) => {
       return (
-        <AppointmentCustomerCard
+        <BVisitationCard
           item={item}
-          display_name={item.display_name}
-          searchQuery={searchQuery}
-          location={item.location}
           onPress={onPressCard}
+          searchQuery={searchQuery}
         />
       );
     },
