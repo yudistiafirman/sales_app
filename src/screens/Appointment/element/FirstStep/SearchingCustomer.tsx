@@ -22,23 +22,31 @@ const SearchingCustomer = () => {
   const { routes } = stepOne;
   const [index, setIndex] = useState(0);
 
-  const onPressCard = (item) => {
-    if (stepOne.selectedCategories === 'Perusahaan') {
-      dispatchValue({
-        type: AppointmentActionType.ON_PRESS_COMPANY,
-        value: item,
-      });
-    } else {
-      dispatchValue({
-        type: AppointmentActionType.ON_PRESS_PROJECT,
-        key: 'individu',
-        value: {
-          projectName: selectedCustomerData?.project[0].display_name,
-          pics: selectedCustomerData?.pics,
-        },
-      });
-    }
-  };
+  const onPressCard = useCallback(
+    (item) => {
+      if (stepOne.selectedCategories === 'Perusahaan') {
+        dispatchValue({
+          type: AppointmentActionType.ON_PRESS_COMPANY,
+          value: item,
+        });
+      } else {
+        dispatchValue({
+          type: AppointmentActionType.ON_PRESS_PROJECT,
+          key: 'individu',
+          value: {
+            projectName: selectedCustomerData?.project[0].display_name,
+            pics: selectedCustomerData?.pics,
+          },
+        });
+      }
+    },
+    [
+      dispatchValue,
+      selectedCustomerData?.pics,
+      selectedCustomerData?.project,
+      stepOne.selectedCategories,
+    ]
+  );
 
   const onTabPress = ({ route }) => {
     const tabIndex = index === 0 ? 1 : 0;
@@ -55,15 +63,14 @@ const SearchingCustomer = () => {
       return (
         <AppointmentCustomerCard
           item={item}
-          name={item.display_name}
+          display_name={item.display_name}
           searchQuery={searchQuery}
           location={item.location}
-          categories={stepOne.selectedCategories}
           onPress={onPressCard}
         />
       );
     },
-    [searchQuery]
+    [onPressCard, searchQuery]
   );
 
   return (

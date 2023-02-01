@@ -1,5 +1,6 @@
 import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import { getOptions, request } from '@/networking/request';
+import axios from 'axios';
 
 export const getLocationCoordinates = (
   longitude: number,
@@ -31,4 +32,17 @@ export const signIn = (body: Record<string, string>) => {
 
 export const signOut = () => {
   return request(BrikApiCommon.logout(), getOptions('POST'));
+};
+
+export const uploadFileImage = (files: any[], from: string) => {
+  const formData = new FormData();
+  files.forEach((file) => {
+    formData.append('photos', file);
+  });
+  formData.append('name', from);
+  return request(BrikApiCommon.filesUpload(), getOptions('POST', formData));
+};
+
+export const allVisitationGet = (search?: string) => {
+  return request(BrikApiCommon.allVisitation(search), getOptions('GET'));
 };

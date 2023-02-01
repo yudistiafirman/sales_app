@@ -1,45 +1,25 @@
-import BText from '@/components/atoms/BText';
-import colors from '@/constants/colors';
 import { TypedNavigator } from '@react-navigation/native';
-import { ReactNode, useMemo } from 'react';
 import React from 'react';
+import BHeaderTitle from '@/components/molecules/BHeaderTitle';
 
 const BStackScreen = ({
   Stack,
   name,
   type = 'default',
   title,
-  color,
   component,
   headerShown = true,
+  role = undefined,
 }: {
   Stack: TypedNavigator<any, any, any, any, any>;
   type?: 'default' | 'home' | 'sub';
   name: string;
   title?: string;
-  color?: 'primary' | undefined;
   component: any;
   headerShown?: boolean;
+  role?: string;
 }) => {
-  const styles = {
-    headerTitleAlign: type === 'home' ? 'center' : 'left',
-    headerStyle: {
-      backgroundColor:
-        type === 'home' && color === 'primary' ? colors.primary : colors.white,
-    },
-    headerTitleStyle: {
-      color:
-        type === 'home' && color === 'primary'
-          ? colors.text.light
-          : colors.text.dark,
-    },
-  };
-
-  const renderHeaderTitle = () => (
-    <BText type="header" style={styles.headerTitleStyle}>
-      {title}
-    </BText>
-  );
+  const headerTitleAlign = type === 'home' ? 'center' : 'left';
 
   return (
     <Stack.Screen
@@ -47,11 +27,10 @@ const BStackScreen = ({
       component={component}
       key={name}
       options={{
-        headerTitleAlign: styles.headerTitleAlign,
+        headerTitleAlign: headerTitleAlign,
         headerShadowVisible: false,
         headerShown: headerShown,
-        headerStyle: styles.headerStyle,
-        headerTitle: () => renderHeaderTitle(),
+        headerTitle: () => BHeaderTitle(title, 'center', role),
       }}
     />
   );

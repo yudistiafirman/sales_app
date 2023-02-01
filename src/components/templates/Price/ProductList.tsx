@@ -1,6 +1,5 @@
 import PriceListCard from '@/components/templates/Price/PriceListCard';
 import { layout } from '@/constants';
-import resScale from '@/utils/resScale';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import React, { useCallback } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';

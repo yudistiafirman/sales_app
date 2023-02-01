@@ -40,6 +40,20 @@ export default class BrikApiCommon {
     return url.toString();
   };
 
+  static filesUpload = () => {
+    const url = new URL(`${API_URL}/common/file/upload`);
+    return url.toString();
+  };
+
+  static allVisitation = (search?: string) => {
+    const url = new URL(`${API_URL}/common/m/flow/project`);
+    const params = url.searchParams;
+    if (search) {
+      params.append('search', search);
+    }
+    return url.toString();
+  };
+
   // --------------------------------------------------AUTHENTICATION ---------------------------------------------//
 
   static login = () => {

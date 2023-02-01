@@ -1,0 +1,80 @@
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { postUploadFiles } from '../async-thunks/commonThunks';
+
+interface photoType {
+  photo: {
+    uri: string;
+    type: string;
+    name: string;
+  };
+  type: 'COVER' | 'GALLERY';
+}
+
+type fileResponse = {
+  id: string;
+  type: 'COVER' | 'GALLERY';
+};
+
+export interface MainState {
+  photoURLs: photoType[];
+  uploadedFilesResponse: fileResponse[];
+}
+
+const initialState: MainState = {
+  photoURLs: [],
+  uploadedFilesResponse: [],
+};
+
+export const cameraSlice = createSlice({
+  name: 'camera',
+  initialState,
+  reducers: {
+    setImageURLS: (state, action: PayloadAction<photoType>) => {
+      return {
+        ...state,
+        photoURLs: [...state.photoURLs, action.payload],
+      };
+    },
+    resetImageURLS: (state) => {
+      return {
+        ...state,
+        photoURLs: [],
+      };
+    },
+    deleteImage: (state, action: PayloadAction<{ pos: number }>) => {
+      const currentImages = state.photoURLs;
+      console.log(currentImages, 'before', action.payload.pos);
+      currentImages.splice(action.payload.pos, 1);
+      console.log(currentImages, 'after');
+      state.photoURLs = [...currentImages];
+      // return {
+      //   ...state,
+      //   photoURLs: [...currentImages],
+      // };
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {
+      if (payload) {
+        state.uploadedFilesResponse = payload.map((photo) => {
+          const photoName = `${photo.name}.${photo.type}`;
+          const foundObject = state.photoURLs.find(
+            (obj) => obj.photo.name === photoName
+          );
+          if (foundObject) {
+            return {
+              id: photo.id,
+              type: foundObject.type,
+            };
+          }
+        });
+      }
+    });
+  },
+});
+
+export const { setImageURLS, resetImageURLS, deleteImage } =
+  cameraSlice.actions;
+
+export default cameraSlice.reducer;

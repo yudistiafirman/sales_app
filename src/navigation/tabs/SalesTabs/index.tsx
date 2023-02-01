@@ -29,7 +29,7 @@ function SalesTabs() {
       {BTabScreen({
         Tab: Tab,
         name: 'Transaksi',
-        title: 'Transakski',
+        title: 'Transaksi',
         type: 'sub',
         component: Transactions,
       })}

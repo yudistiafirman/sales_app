@@ -1,4 +1,4 @@
-import { BButtonPrimary, BSpacer, StepperIndicator } from '@/components';
+import { BButtonPrimary, BSpacer, BStepperIndicator } from '@/components';
 import { layout } from '@/constants';
 import {
   AppointmentActionType,
@@ -62,7 +62,7 @@ const Appointment = () => {
   }, [customerType, dispatchValue, stepOne]);
   return (
     <View style={style.container}>
-      <StepperIndicator
+      <BStepperIndicator
         stepsDone={stepsDone}
         stepOnPress={setCurrentPosition}
         currentStep={currentPosition}

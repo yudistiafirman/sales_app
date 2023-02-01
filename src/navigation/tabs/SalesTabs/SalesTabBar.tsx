@@ -2,8 +2,8 @@
 import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import { View,  TouchableOpacity, Image } from 'react-native';
-import TabBarStyle from './TabBarStyle';
+import { View, TouchableOpacity, Image } from 'react-native';
+import TabBarStyle from '../TabBarStyle';
 
 interface TabBar {
   state: any;

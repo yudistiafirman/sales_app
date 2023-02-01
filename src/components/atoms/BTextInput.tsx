@@ -8,12 +8,13 @@ interface IProps extends Partial<TextInputProps> {
   rounded?: boolean;
 }
 
-const baseStyle = {
+const baseStyle: TextStyle = {
   fontFamily: fonts.family.montserrat['400'],
   fontSize: fonts.size.md,
   lineHeight: resScale(14),
   backgroundColor: colors.white,
   color: colors.textInput.input,
+  // placeho
 };
 
 const baseContainerStyle: TextStyle = {
@@ -26,7 +27,7 @@ const defaultProps = {
   mode: 'outlined',
   outlineColor: colors.textInput.inActive,
   activeOutlineColor: colors.primary,
-  placeHolderTextColor: colors.textInput.placeHolder,
+  // placeHolderTextColor: colors.primary,
   textInputStyle: baseStyle,
   outlineStyle: baseContainerStyle,
   dense: true,

@@ -12,6 +12,14 @@ type FormDataValue =
       name?: string | undefined;
       type?: string | undefined;
       uri: string;
+    }
+  | {
+      photos?: {
+        name?: string | undefined;
+        type?: string | undefined;
+        uri: string;
+      };
+      name: string;
     };
 
 interface RequestInfo {
@@ -39,9 +47,12 @@ export const getOptions = (
 ) => {
   const options = {} as RequestInfo;
   options.method = method;
+  // const tokenDummy =
+  //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImViYmRlMjYwLTkxNDktNDQzZC1iNGU3LWIwYThlYzZjZTI0OCIsImVtYWlsIjoic2l0YW1wYW5AZ21haWwuY29tIiwicGhvbmUiOiIxMjMxMjMxMjMiLCJ0eXBlIjoiQURNSU4iLCJpYXQiOjE2NzUxNDg0MDEsImV4cCI6MTY3NTE1MjAwMX0.zG8Oe_B4fCAi4l6-SLkT84Rh1rFuvhpcBPRMh9JqkVE';
   options.headers = {
     Accept: 'application/json',
     'Content-Type': getContentType(data),
+    // authorization: `Bearer ${tokenDummy}`,
   };
 
   if (data) {

@@ -94,7 +94,7 @@ const AppointmentCalendar = () => {
   return (
     <Modal
       style={{ margin: 0, backgroundColor: colors.white }}
-      isVisible={true}
+      isVisible={false}
       deviceHeight={height}
     >
       <View style={{ marginHorizontal: layout.pad.lg, flex: 1 }}>

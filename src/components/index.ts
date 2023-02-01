@@ -29,12 +29,14 @@ export { default as BLabel } from './molecules/BLabel';
 export { default as BQuickAction } from './molecules/BQuickAction';
 export { default as BTabLabels } from './molecules/BTabLabels';
 export { default as BVisitationCard } from './molecules/BVisitationCard';
+export { default as BOperationCard } from './molecules/BOperationCard';
 export { default as BPic } from './molecules/BPic';
 export { default as BLocation } from './molecules/BLocation';
 export { default as BFlatlistItems } from './molecules/BFlatlistItems';
 export { default as BViewMoreText } from './molecules/BViewMoreText';
+export { default as BTextLocation } from './molecules/BTextLocation';
 export { default as BBackContinueBtn } from './molecules/BBackContinueBtn';
-export { default as StepperIndicator } from './molecules/StepperIndicator';
+export { default as BStepperIndicator } from './molecules/StepperIndicator';
 
 // organism
 export { default as BForm } from './organism/BForm';

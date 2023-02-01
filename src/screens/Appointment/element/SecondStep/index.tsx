@@ -6,11 +6,16 @@ import { resScale } from '@/utils';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { TextInput } from 'react-native-paper';
 import AppointmentCalendar from './AppointmentCalendar';
+import { useNavigation } from '@react-navigation/native';
 
 const SecondStep = () => {
+  const navigation = useNavigation();
   return (
     <View>
-      <TouchableOpacity style={styles.searchBarWrapper}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('CalendarScreen')}
+        style={styles.searchBarWrapper}
+      >
         <BSearchBar
           disabled
           placeHolderTextColor={colors.text.dark}

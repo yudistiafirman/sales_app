@@ -5,6 +5,9 @@ import Location from '@/screens/Location';
 import SearchAreaProject from '@/screens/SearchAreaProject';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
 import Sph from '@/screens/Sph';
+import CalendarScreen from '@/screens/CalendarScreen';
+import Preview from '@/screens/Camera/Preview';
+import Camera from '@/screens/Camera';
 import Appointment from '@/screens/Appointment';
 
 function TestStack({
@@ -18,6 +21,7 @@ function TestStack({
       name: 'Appointment',
       title: 'Buat Janji Temu',
       component: Appointment,
+      type: 'home',
     }),
     BStackScreen({
       Stack: Stack,
@@ -48,6 +52,24 @@ function TestStack({
       name: 'SearchArea',
       title: 'Pilih Area Proyek',
       component: SearchAreaProject,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'CalendarScreen',
+      title: 'Pilih Tanggal',
+      component: CalendarScreen,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'Camera',
+      title: 'Camera',
+      component: Camera,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'Preview',
+      title: 'Preview',
+      component: Preview,
     }),
   ];
 }

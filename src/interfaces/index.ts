@@ -21,9 +21,11 @@ interface Input {
     | 'PIC'
     | 'autocomplete'
     | 'switch'
-    | 'fileInput';
+    | 'fileInput'
+    | 'map';
   hidePicLabel?: boolean;
   onChange?: (e: any) => void;
+  onFocus?: (e: any) => void;
   value: string | any;
   placeholder?: string;
   loading?: boolean;
@@ -81,34 +83,60 @@ interface Styles {
   [key: string]: StyleProp<ViewStyle | TextStyle>;
 }
 
-// create visitation
+interface Address {
+  lat: any;
+  id?: string;
+  formattedAddress?: string;
+  lan?: number;
+  lon?: number;
+  line1?: string;
+  name?: string;
+  longitude?: number;
+  latitude?: number;
+  postalId?: number;
+}
 
+// create visitation
+interface CreateVisitationFirstStep {
+  createdLocation: Address;
+  locationAddress: Address;
+}
 interface CreateVisitationSecondStep {
   companyName: string;
-  customerType: string;
+  customerType: 'INDIVIDU' | 'COMPANY';
   projectName: string;
-  location: {};
+  location: { [key: string]: any };
   pics: PIC[];
+  selectedPic: PIC | null;
   options: {
     loading: false;
     items: any[] | null;
   };
 }
 interface CreateVisitationThirdStep {
-  stageProject: string;
+  stageProject: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
   products: any[];
   estimationDate: {
     estimationWeek: number | null;
     estimationMonth: number | null;
   };
-  paymentType: string;
+  paymentType: 'CBD' | 'CREDIT';
   notes: string;
 }
+
+interface CreateVisitationFourthStep {
+  selectedDate: any;
+  images: any[];
+  kategoriAlasan?: 'FINISHED' | 'MOU_COMPETITOR';
+  alasanPenolakan: string;
+}
+
 interface CreateVisitationState {
   step: number;
-  stepOne: {};
+  stepOne: CreateVisitationFirstStep;
   stepTwo: CreateVisitationSecondStep;
   stepThree: CreateVisitationThirdStep;
+  stepFour: CreateVisitationFourthStep;
   sheetIndex: number;
   shouldScrollView: boolean;
 }
@@ -128,9 +156,31 @@ interface NavigationProps {
 interface LatLang {
   latitude: number;
   longitude: number;
+  latitudeDelta?: number;
+  longitudeDelta?: number;
+  formattedAddress?: string;
+  name?: string;
+  PostalId?: any;
+  line1?: string;
+  distance?: {
+    text?: string;
+    value?: number;
+  };
 }
 
 interface Region {
+  longitude(
+    arg0: string,
+    longitude: any,
+    latitude: any,
+    arg3: string
+  ): { result: any } | PromiseLike<{ result: any }>;
+  latitude(
+    arg0: string,
+    longitude: any,
+    latitude: any,
+    arg3: string
+  ): { result: any } | PromiseLike<{ result: any }>;
   latitudeDelta: number;
   longitudeDelta: number;
 }
@@ -202,18 +252,165 @@ interface ProductDataInterface {
     Parent: productParentInterface;
   };
 }
+
+interface visitationListResponse {
+  id: string;
+  visitationId: string | null;
+  order: number;
+  dateVisit: string;
+  finishDate: string | null;
+  isBooking: boolean;
+  status: 'VISIT' | 'SPH' | 'PO' | 'SCHEDULING' | 'DO' | 'REJECTED';
+  address: {
+    id: string;
+  };
+  project: {
+    id: string;
+    name: string;
+    stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+    pic: {
+      id: string;
+      name: string;
+      position: string;
+      phone: string;
+      email: string | null;
+      type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
+    };
+    company: {
+      id: string;
+      name: string;
+      displayName: string;
+    };
+    locationAddress: {
+      id: string;
+      line1?: string;
+      rural?: string;
+      district?: string;
+      postalCode?: number;
+      city?: string;
+    };
+  };
+}
+// interface visitationListResponse {
+//   id: string;
+//   created_location: string;
+//   visitation_id: string;
+//   created_by_id: string;
+//   project_id: string | null;
+//   order: number;
+//   customer_type: 'COMPANY' | 'INDIVIDU';
+//   payment_type: 'CBD' | 'CREDIT';
+//   estimation_week: string;
+//   estimation_month: string;
+//   visit_notes: string | null;
+//   dateVisit: string;
+//   reject_notes: string | null;
+//   reject_category: 'FINISHED' | 'MOU_COMPETITOR' | null;
+//   is_booking: boolean;
+//   finishDate: string | null;
+//   status: 'VISIT' | 'SPH' | 'PO' | 'SCHEDULING' | 'DO' | 'REJECTED';
+//   created_at: string;
+//   updated_at: string;
+//   product_id: string;
+//   company_id: string;
+//   location_address_id: string | null;
+//   shipping_address_id: string | null;
+//   billing_address_id: string | null;
+//   main_pic_id: string;
+//   name: string;
+//   stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+//   checkout_url: string | null;
+//   checkout_expiry_date: string | null;
+//   external_customer_id: string | null;
+//   file_id: string | null;
+//   type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
+//   supplier_id: string | null;
+//   position: string;
+//   phone: string;
+//   email: string | null;
+//   display_name: string;
+// }
+
+interface customerDataInterface {
+  display_name: string;
+  type: string;
+  name: string;
+  email: string | null;
+  phone: string;
+  position: string;
+}
+
+interface locationPayloadType {
+  formattedAddress: string;
+  postalId: number;
+  lon: number;
+  lat: number;
+}
+
+interface visitationPayload {
+  order: number;
+  location: locationPayloadType;
+  customerType?: 'INDIVIDU' | 'COMPANY';
+  paymentType?: 'CBD' | 'CREDIT';
+  estimationWeek?: number;
+  estimationMonth?: number;
+  visitationNotes?: string;
+  dateVisit?: number;
+  finishDate?: number; // ??
+  bookingDate?: number;
+  rejectNotes?: string;
+  rejectCategory?: 'FINISHED' | 'MOU_COMPETITOR';
+  isBooking?: boolean; // ??
+  status?: 'VISIT' | 'SPH' | 'REJECTED' | '';
+  files: { id: string; type: 'GALLERY' | 'COVER' }[];
+  products: { id: string }[];
+}
+
+interface projectPayloadType {
+  name?: string;
+  companyDisplayName?: string;
+  location: locationPayloadType;
+  stage?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+}
+
+interface picPayloadType {
+  name?: string;
+  position?: string;
+  phone?: string;
+  email?: string;
+  type?: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
+  isSelected?: boolean;
+}
+
+interface payloadPostType {
+  visitation: visitationPayload;
+  project: projectPayloadType;
+  pic: picPayloadType[];
+  files: any[];
+}
+
 export type {
   Input,
   Styles,
   CreateVisitationState,
+  CreateVisitationFirstStep,
   CreateVisitationSecondStep,
   CreateVisitationThirdStep,
   PIC,
   NavigationProps,
   BLocationProps,
+  Region,
   SphStateInterface,
   SphContextInterface,
   AdditionalPricesInterface,
   productParentInterface,
   ProductDataInterface,
+  CreateVisitationFourthStep,
+  visitationListResponse,
+  customerDataInterface,
+  locationPayloadType,
+  visitationPayload,
+  projectPayloadType,
+  picPayloadType,
+  payloadPostType,
 };

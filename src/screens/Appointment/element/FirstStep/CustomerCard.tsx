@@ -7,28 +7,32 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 export type CustomersData = {
   id?: string;
-  name?: string;
+  display_name?: string;
   location?: string;
-  item?: any;
 };
 
 interface CustomersCard {
   searchQuery?: string;
   onPress?: (data: CustomersData) => void;
+  item: CustomersData;
 }
 
 const AppointmentCustomerCard = ({
-  name,
+  display_name,
   location,
   searchQuery,
   item,
   onPress,
-}: CustomersData & CustomersCard) => {
+}: CustomersCard & CustomersData) => {
   return (
     <View style={style.container}>
       <View style={style.leftSide}>
         <View style={style.top}>
-          <HighlightText fontSize={14} name={name!} searchQuery={searchQuery} />
+          <HighlightText
+            fontSize={14}
+            name={display_name!}
+            searchQuery={searchQuery}
+          />
         </View>
         <Location location={location} />
       </View>
