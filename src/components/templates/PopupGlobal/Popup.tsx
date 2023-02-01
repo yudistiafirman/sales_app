@@ -14,14 +14,12 @@ import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import BBackContinueBtn from '@/components/molecules/BBackContinueBtn';
+import { BHighlightText } from '@/components';
 
 export default function Popup() {
   const dispatch = useDispatch();
-  const isPopUpVisible = useSelector(
-    (state: RootState) => state.modal.isPopUpVisible
-  );
-  const popUpOptions = useSelector(
-    (state: RootState) => state.modal.popUpOptions
+  const { isPopUpVisible, popUpOptions } = useSelector(
+    (state: RootState) => state.modal
   );
 
   return (
@@ -44,7 +42,11 @@ export default function Popup() {
             <AntDesign size={resScale(48)} name="closecircle" color={'red'} />
           )}
         </View>
-        <Text style={styles.popUptext}>{popUpOptions.popUpText}</Text>
+        <BHighlightText
+          name={popUpOptions.popUpText}
+          searchQuery={popUpOptions.highlightedText}
+        />
+        {/* <Text style={styles.popUptext}>{popUpOptions.popUpText}</Text> */}
         {popUpOptions.isRenderActions && (
           <View style={styles.actionContainer}>
             <BBackContinueBtn
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     height: resScale(160),
     width: resScale(300),
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
     padding: layout.pad.md,
     borderRadius: layout.radius.md,

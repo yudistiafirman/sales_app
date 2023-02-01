@@ -40,7 +40,7 @@ function stepHandler(
   setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
 ) {
   const { stepOne, stepTwo, stepThree, stepFour } = state;
-  console.log(stepOne, 'stepOne');
+  console.log(stepTwo, 'stepTwo');
 
   if (
     stepOne.createdLocation.formattedAddress &&
@@ -57,9 +57,11 @@ function stepHandler(
       return pic;
     }
   });
+  const customerTypeCond =
+    stepTwo.customerType === 'COMPANY' ? !!stepTwo.companyName : true;
   if (
     stepTwo.customerType &&
-    stepTwo.companyName &&
+    customerTypeCond &&
     stepTwo.projectName &&
     selectedPic
   ) {
@@ -109,6 +111,7 @@ const CreateVisitation = () => {
       // DeviceEventEmitter.removeAllListeners('Camera.preview');
       dispatch(resetImageURLS());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     stepHandler(values, setStepsDone);
@@ -135,6 +138,12 @@ const CreateVisitation = () => {
     <ThirdStep />,
     <Fourth />,
   ];
+  console.log(
+    shouldScrollView,
+    'shouldScrollView140',
+    !keyboardVisible,
+    !keyboardVisible && shouldScrollView && values.step > 0
+  );
 
   return (
     <>

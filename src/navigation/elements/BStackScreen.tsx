@@ -1,6 +1,6 @@
+import { BHeaderTitle } from '@/components';
 import { TypedNavigator } from '@react-navigation/native';
 import React from 'react';
-import BHeaderTitle from '@/components/molecules/BHeaderTitle';
 
 const BStackScreen = ({
   Stack,

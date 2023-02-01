@@ -25,6 +25,7 @@ import {
   resetStates,
 } from '@/redux/reducers/productivityFlowReducer';
 import defineLocalConfig from './calendarConfig';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
   if (direction === 'right') {
@@ -63,6 +64,7 @@ export default function CalendarScreen() {
     return () => {
       dispatch(resetStates());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchVisitation = useCallback(
@@ -101,6 +103,17 @@ export default function CalendarScreen() {
             newMarkedDate[date] = { marked: true };
           });
           setMarkedDate(newMarkedDate);
+        })
+        .catch((error) => {
+          console.log(error, 'error106calendar');
+
+          dispatch(
+            openPopUp({
+              popUpType: 'error',
+              popUpText: 'Error fetching calendar data' + error,
+              highlightedText: 'calendar data',
+            })
+          );
         });
     },
     [markedDate, dispatch]

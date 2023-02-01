@@ -1,5 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { allVisitationGet, uploadFileImage } from '@/actions/CommonActions';
+import {
+  allVisitationGetAction,
+  uploadFileImage,
+} from '@/Actions/CommonActions';
 
 type errorType = {
   success: boolean;
@@ -12,15 +15,13 @@ type errorType = {
 
 export const postUploadFiles = createAsyncThunk<
   any,
-  { files: any[]; from: string },
-  {
-    rejectValue: string;
-  }
+  { files: any[]; from: string }
 >('common/postUploadFiles', async ({ files, from }, { rejectWithValue }) => {
   try {
     const response = await uploadFileImage(files, from);
 
     const { data } = response;
+
     if (data.error) throw data as errorType;
 
     return data.data;
@@ -30,18 +31,33 @@ export const postUploadFiles = createAsyncThunk<
   }
 });
 
-export const getAllProject = createAsyncThunk(
+export const getAllProject = createAsyncThunk<any, { search?: string }>(
   'common/getAllProject',
-  async (search?: string) => {
+  async ({ search }, { rejectWithValue }) => {
     try {
-      const response = await allVisitationGet(search);
+      const response = await allVisitationGetAction(search);
       const { data } = response;
       if (data.error) throw data as errorType;
 
-      return data.data;
+      return data;
     } catch (error) {
-      console.log(error?.response?.data, 'error at', 'common/postUploadFiles');
+      console.log(error, 'errorPlain/getAllProject');
+
+      console.log(error.message, 'message/getAllProject');
+
+      console.log(error?.response?.data, 'error at', 'common/getAllProject');
       return rejectWithValue(error.message);
     }
   }
 );
+
+// export const getProjectsByUserThunk = createAsyncThunk(
+//   'common/getProjectsByUserThunk',
+//   async (search?: string, { rejectWithValue }) => {
+//     // projectByUserGetAction
+//     try {
+//     } catch (error) {
+//       return rejectWithValue(error.message);
+//     }
+//   }
+// );

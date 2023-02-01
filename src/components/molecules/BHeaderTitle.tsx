@@ -1,11 +1,10 @@
-import React from 'react'
-import { BText } from '@/components';
 import { colors } from '@/constants';
 import { Styles } from '@/interfaces';
 import { View, Text } from 'react-native';
 import { resScale } from '@/utils';
 import { fonts } from '@/constants';
 import respFS from '@/utils/resFontSize';
+import BText from './../atoms/BText';
 
 const BHeaderTitle = (
   title: string,

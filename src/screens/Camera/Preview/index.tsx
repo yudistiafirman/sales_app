@@ -36,9 +36,11 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       : 'GALLERY';
     const photoName = photo.split('/').pop();
     const photoNameParts = photoName.split('.');
-    const photoType = photoNameParts[photoNameParts.length - 1];
+    let photoType = photoNameParts[photoNameParts.length - 1];
 
-    console.log(route?.params?.photo, 'objectfoto');
+    if (photoType === 'jpg') {
+      photoType = 'jpeg';
+    }
 
     const imageUrls = {
       photo: {

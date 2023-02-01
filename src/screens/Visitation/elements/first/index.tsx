@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -21,13 +21,13 @@ import {
 import Icons from 'react-native-vector-icons/Feather';
 
 import { resScale } from '@/utils';
-import { Styles, Region, Input } from '@/interfaces';
+import { Region, Input } from '@/interfaces';
 import { updateRegion } from '@/redux/locationReducer';
 import { colors, layout } from '@/constants';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import { useMachine } from '@xstate/react';
 import { deviceLocationMachine } from '@/machine/modules';
-import { getLocationCoordinates } from '@/actions/CommonActions';
+import { getLocationCoordinates } from '@/Actions/CommonActions';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -41,22 +41,6 @@ const FirstStep = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch<any>();
-
-  // const styles: Styles = React.useMemo(() => {
-  //   return {
-  //     container: { flex: 1, marginHorizontal: -resScale(20) },
-  //     map: {
-  //       height: resScale(400),
-  //       width: '100%',
-  //     },
-  //     titleShimmer: {
-  //       width: resScale(108),
-  //       height: resScale(17),
-  //       marginBottom: resScale(4),
-  //     },
-  //     secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
-  //   };
-  // }, []);
 
   const inputs: Input[] = [
     {

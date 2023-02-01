@@ -60,7 +60,7 @@ const PriceList = () => {
 
   const renderHeaderRight = () => {
     return (
-      <BTouchableText onPress={() => setVisibleTnc(true)} title="ketentuan" />
+      <BTouchableText onPress={() => setVisibleTnc(true)} title="Ketentuan" />
     );
   };
 

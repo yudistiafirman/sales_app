@@ -1,0 +1,76 @@
+import IcCustomerActive from '@/assets/svg/ic_customer_active.svg';
+import IcCustomerInactive from '@/assets/svg/ic_customer_inactive.svg';
+import IcDocActive from '@/assets/svg/ic_doc_active.svg';
+import IcDocInactive from '@/assets/svg/ic_doc_inactive.svg';
+import IcReceiptActive from '@/assets/svg/ic_receipt_active.svg';
+import IcReceiptInactive from '@/assets/svg/ic_receipt_inactive.svg';
+import IcShopActive from '@/assets/svg/ic_shop_active.svg';
+import IcShopInactive from '@/assets/svg/ic_shop_inactive.svg';
+import IcWalletActive from '@/assets/svg/ic_wallet_active.svg';
+import IcWalletInactive from '@/assets/svg/ic_wallet_inactive.svg';
+import IcCrmActive from '@/assets/svg/ic_crm_active.svg';
+import IcCrmInactive from '@/assets/svg/ic_crm_inactive.svg';
+import IcArrowLeft from '@/assets/svg/ic_arrow_left.svg';
+import IcInfoCircle from '@/assets/svg/ic_info_circle.svg';
+import IcArrowRight from '@/assets/svg/ic_arrow_right.svg';
+import IcClose from '@/assets/svg/ic_close.svg';
+import IcSearch from '@/assets/svg/ic_search.svg';
+import IcAdd from '@/assets/svg/ic_add.svg';
+import IcShare from '@/assets/svg/ic_share.svg';
+import IcSend from '@/assets/svg/ic_send.svg';
+import IcDownload from '@/assets/svg/ic_download.svg';
+import IcUpload from '@/assets/svg/ic_upload.svg';
+import IcOpen from '@/assets/svg/ic_open.svg';
+import IcHome from '@/assets/svg/ic_home.svg';
+import IcForwardDocument from '@/assets/svg/ic_forward_document.svg';
+import IcPrint from '@/assets/svg/ic_print.svg';
+import IcFlash from '@/assets/svg/ic_flash.svg';
+import IcFlashSlash from '@/assets/svg/ic_flash_slash.svg';
+import IcRotate from '@/assets/svg/ic_rotate.svg';
+import IcCamera from '@/assets/svg/ic_camera.svg';
+import IcGallery from '@/assets/svg/ic_gallery.svg';
+import IcFolder from '@/assets/svg/ic_folder.svg';
+import IcTick from '@/assets/svg/ic_tick.svg';
+
+// IMG
+import ImgOtpMessege from '@/assets/svg/img_otp_messege.svg';
+
+const SvgFiles = {
+  IcCustomerActive,
+  IcCustomerInactive,
+  IcDocActive,
+  IcDocInactive,
+  IcReceiptActive,
+  IcReceiptInactive,
+  IcShopActive,
+  IcShopInactive,
+  IcWalletActive,
+  IcWalletInactive,
+  IcCrmActive,
+  IcCrmInactive,
+  IcArrowLeft,
+  IcInfoCircle,
+  IcArrowRight,
+  IcClose,
+  IcSearch,
+  IcAdd,
+  IcShare,
+  IcSend,
+  IcDownload,
+  IcUpload,
+  IcOpen,
+  IcForwardDocument,
+  IcHome,
+  IcPrint,
+  IcFlash,
+  IcFlashSlash,
+  IcRotate,
+  IcCamera,
+  IcGallery,
+  IcFolder,
+  IcTick,
+
+  ImgOtpMessege,
+};
+
+export default SvgFiles;
