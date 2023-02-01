@@ -1,11 +1,16 @@
-import { BButtonPrimary, BSpacer, BStepperIndicator } from '@/components';
+import {
+  BButtonPrimary,
+  BHeaderIcon,
+  BSpacer,
+  BStepperIndicator,
+} from '@/components';
 import { layout } from '@/constants';
 import {
   AppointmentActionType,
   AppointmentProvider,
   StepOne,
 } from '@/context/AppointmentContext';
-import React, { useCallback } from 'react';
+import React, { useCallback, useLayoutEffect } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Steps from '../Sph/elements/Steps';
@@ -16,14 +21,40 @@ import BSheetAddPic from './element/FirstStep/BottomSheetAddPict';
 import { useAppointmentData } from '@/hooks';
 import { PIC } from '@/interfaces';
 import SecondStep from './element/SecondStep';
+import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 const Appointment = () => {
+  const navigation = useNavigation();
   const [values, dispatchValue] = useAppointmentData();
   const { searchQuery, stepOne, isModalPicVisible, step, stepDone } = values;
   const customerType =
     stepOne.customerType === 'company' ? 'company' : 'individu';
-
+  const btnShown = searchQuery.length === 0 && stepOne.customerType.length > 0;
+  const isFirstPage = step === 0;
   const labels = ['Data Pelanggan', 'Tanggal Kunjungan'];
+
+  const renderHeaderLeft = useCallback(
+    () => (
+      <BHeaderIcon
+        size={layout.pad.xl - layout.pad.md}
+        iconName="x"
+        marginRight={layout.pad.lg}
+        onBack={() => {
+          if (!isFirstPage) {
+            dispatchValue({ type: AppointmentActionType.DECREASE_STEP });
+          }
+        }}
+      />
+    ),
+    [dispatchValue, isFirstPage]
+  );
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackVisible: false,
+      headerLeft: () => renderHeaderLeft(),
+    });
+  }, [navigation, renderHeaderLeft, step]);
 
   const renderBtnIcon = () => (
     <Icon
@@ -33,10 +64,8 @@ const Appointment = () => {
     />
   );
   const stepsToRender = [<FirstStep />, <SecondStep />];
-  const btnShown = searchQuery.length === 0 && stepOne.customerType.length > 0;
-  const isFirstPage = step === 0;
 
-  const onNext = useCallback(() => {
+  const validateCompanyDetailsForm = useCallback(() => {
     const errors: Partial<StepOne> = {};
     if (customerType === 'company') {
       if (!stepOne.company.companyName) {
@@ -54,21 +83,29 @@ const Appointment = () => {
     if (stepOne[customerType].pics.length === 0) {
       errors.errorPics = 'Tambahkan minimal 1 PIC';
     }
+    return errors;
+  }, [customerType, stepOne]);
 
-    if (JSON.stringify(errors) !== '{}') {
-      Object.keys(errors).forEach((val) => {
-        dispatchValue({
-          type: AppointmentActionType.ASSIGN_ERROR,
-          key: val as keyof StepOne,
-          value: errors[val as keyof StepOne],
-        });
-      });
-    } else {
-      dispatchValue({
-        type: AppointmentActionType.INCREASE_STEP,
-      });
-    }
-  }, [customerType, dispatchValue, stepOne]);
+  const onNext = useCallback(() => {
+    // const errors = validateCompanyDetailsForm();
+
+    // if (JSON.stringify(errors) !== '{}') {
+    //   Object.keys(errors).forEach((val) => {
+    //     dispatchValue({
+    //       type: AppointmentActionType.ASSIGN_ERROR,
+    //       key: val as keyof StepOne,
+    //       value: errors[val as keyof StepOne],
+    //     });
+    //   });
+    // } else {
+    //   dispatchValue({
+    //     type: AppointmentActionType.INCREASE_STEP,
+    //   });
+    // }
+    dispatchValue({
+      type: AppointmentActionType.INCREASE_STEP,
+    });
+  }, [dispatchValue, validateCompanyDetailsForm]);
 
   const onBackPress = () => {
     if (!isFirstPage) {
