@@ -6,7 +6,7 @@ import { setUserData } from '@/redux/reducers/authReducer';
 import { AppDispatch } from '@/redux/store';
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect } from 'react';
-import { Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 const Profile = () => {
@@ -29,7 +29,7 @@ const Profile = () => {
         dispatch(setUserData(null));
       }
     } catch (error) {
-      console.log(error);
+      Alert.alert('Something went wrong', error.message);
     }
   };
   return (
