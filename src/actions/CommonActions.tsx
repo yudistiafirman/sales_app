@@ -1,48 +1,68 @@
-import BrikApiCommon from '@/brikApi/BrikApiCommon';
-import { getOptions, request } from '@/networking/request';
-import axios from 'axios';
+import BrikApiCommon from '@/BrikApi/BrikApiCommon';
+import { getOptions, request } from '@/Networking/request';
 
-export const getLocationCoordinates = (
+export const getLocationCoordinates = async (
   longitude: number,
   latitude: number,
   distance?: string
 ) => {
   return request(
     BrikApiCommon.getLocationCoordinates(longitude, latitude, distance),
-    getOptions('GET')
+    await getOptions('GET')
   );
 };
 
-export const searchLocation = (searchValue: string) => {
-  return request(BrikApiCommon.searchPlaces(searchValue), getOptions('GET'));
+export const searchLocation = async (searchValue: string) => {
+  return request(
+    BrikApiCommon.searchPlaces(searchValue),
+    await getOptions('GET')
+  );
 };
 
-export const searchLocationById = (id: string) => {
-  return request(BrikApiCommon.searchPlacesById(id), getOptions('GET'));
+export const searchLocationById = async (id: string) => {
+  return request(BrikApiCommon.searchPlacesById(id), await getOptions('GET'));
 };
 
-export const signIn = (body: Record<string, string>) => {
+export const signIn = async (body: Record<string, string>) => {
   const params = new URLSearchParams();
   const dataToSend = Object.keys(body);
   dataToSend.forEach((val) => {
     params.append(val, body[val]);
   });
-  return request(BrikApiCommon.login(), getOptions('POST', params.toString()));
+  return request(
+    BrikApiCommon.login(),
+    await getOptions('POST', params.toString())
+  );
 };
 
-export const signOut = () => {
-  return request(BrikApiCommon.logout(), getOptions('POST'));
+export const signOut = async () => {
+  return request(BrikApiCommon.logout(), await getOptions('POST'));
 };
 
-export const uploadFileImage = (files: any[], from: string) => {
+export const uploadFileImage = async (files: any[], from: string) => {
   const formData = new FormData();
   files.forEach((file) => {
     formData.append('photos', file);
   });
   formData.append('name', from);
-  return request(BrikApiCommon.filesUpload(), getOptions('POST', formData));
+  //192.168.18.23
+  //BrikApiCommon.filesUpload(),
+  return request(
+    BrikApiCommon.filesUpload(),
+    await getOptions('POST', formData, true)
+  );
 };
 
-export const allVisitationGet = (search?: string) => {
-  return request(BrikApiCommon.allVisitation(search), getOptions('GET'));
+export const allVisitationGetAction = async (search?: string) => {
+  return request(
+    BrikApiCommon.allVisitation(search),
+    await getOptions('GET', null, true)
+  );
+};
+
+export const projectByUserGetAction = async (search?: string) => {
+  return request(
+    BrikApiCommon.getProjectByUser(search),
+    await getOptions('GET', null, true)
+  );
 };

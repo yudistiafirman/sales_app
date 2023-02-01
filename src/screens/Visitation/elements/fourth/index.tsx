@@ -29,9 +29,8 @@ import { postVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import { RootState } from '@/redux/store';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { deleteImage } from '@/redux/reducers/cameraReducer';
-import { setIsPopUpVisible as setGlobalPopUp } from '@/redux/reducers/modalReducer';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
-import DocumentPicker from 'react-native-document-picker';
 
 type selectedDateType = {
   date: string;
@@ -56,7 +55,6 @@ function payloadMapper(
     files: [],
   } as payloadPostType;
   if (stepTwo.pics.length > 0) {
-    // payload.pic.push(stepTwo.selectedPic);
     payload.pic = stepTwo.pics;
   }
   payload.visitation.order = 1;
@@ -103,6 +101,8 @@ function payloadMapper(
   if (stepFour.selectedDate && type === 'VISIT') {
     payload.visitation.bookingDate = today.valueOf();
   }
+  console.log(stepFour, 'stepFour107');
+
   if (stepFour.selectedDate) {
     const selectedDate = moment(stepFour.selectedDate.date);
     payload.visitation.dateVisit = selectedDate.valueOf();
@@ -126,12 +126,21 @@ function payloadMapper(
     payload.project.name = stepTwo.projectName;
   }
   if (stepTwo.companyName) {
-    payload.project.companyDisplayName = stepTwo.companyName.title;
+    if (stepTwo.customerType === 'COMPANY') {
+      payload.project.companyDisplayName = stepTwo.companyName.title;
+    }
   }
   if (stepThree.stageProject) {
     payload.project.stage = stepThree.stageProject;
   }
   payload.visitation.isBooking = type === 'VISIT' ? true : false;
+
+  if (stepTwo.visitationId) {
+    payload.visitation.visitationId = stepTwo.visitationId;
+  }
+  if (stepTwo.existingOrderNum) {
+    payload.visitation.order = stepTwo.existingOrderNum;
+  }
 
   // console.log(JSON.stringify(payload), 'payloadds');
   return payload;
@@ -141,17 +150,16 @@ const Fourth = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const isUploadLoading = useSelector(
-    (state: RootState) => state.common.isUploadLoading
+  const { isUploadLoading, isPostVisitationLoading } = useSelector(
+    (state: RootState) => state.common
   );
-  const isPostVisitationLoading = useSelector(
-    (state: RootState) => state.common.isPostVisitationLoading
+  const { uploadedFilesResponse } = useSelector(
+    (state: RootState) => state.camera
   );
-  const photos = useSelector((state: RootState) => state.camera.photoURLs);
-  const uploadedFilesResponse = useSelector(
-    (state: RootState) => state.camera.uploadedFilesResponse
+
+  const { photoURLs: photoUrls } = useSelector(
+    (state: RootState) => state.camera
   );
-  const photoUrls = useSelector((state: RootState) => state.camera.photoURLs);
   const { values, action } = React.useContext(createVisitationContext);
   const { stepFour: state } = values;
   const { updateValueOnstep } = action;
@@ -160,41 +168,22 @@ const Fourth = () => {
     updateValueOnstep('stepFour', key, e);
   };
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isPopUpVisible, setIsPopUpVisible] = useState(false);
   const [isLastStepVisible, setIsLastStepVisible] = useState(false);
-
-  // const addImage = (image: any) => {
-  //   const imagesArray = [...state.images, image];
-
-  //   onChange('images')(imagesArray);
-  // };
-  const addImage = useCallback(
-    (image: any) => {
-      const imagesArray = [...state.images, image];
-      onChange('images')(imagesArray);
-    },
-    [state.images]
-  );
 
   const removeImage = useCallback(
     (pos: number) => () => {
       dispatch(deleteImage({ pos }));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  // const removeImage = (pos: number) => () => {
-  //   const currentImages = state.images;
-  //   currentImages.splice(pos, 1);
-  //   onChange('images')([...currentImages]);
-  // };
-
   useEffect(() => {
-    // photos;
-    onChange('images')(photos);
-    console.log(photos, 'ini photos');
-  }, [photos]);
+    // photoUrls;
+    onChange('images')(photoUrls);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [photoUrls]);
 
   useEffect(() => {
     DeviceEventEmitter.addListener('CreateVisitation.continueButton', () => {
@@ -221,73 +210,85 @@ const Fourth = () => {
   }, []);
 
   const onPressSubmit = useCallback(
-    (type: 'VISIT' | 'SPH' | 'REJECTED' | '') => {
-      let payload = payloadMapper(values, type);
-      // console.log(uploadedFilesResponse, 'uploadedFilesResponse');
-      console.log(payload, 'payload233');
-      if (uploadedFilesResponse.length === 0) {
-        const photoFiles = photos.map((photo) => {
-          return {
-            ...photo.photo,
-            uri: photo.photo.uri.replace('file:', 'file://'),
-          };
-        });
+    async (type: 'VISIT' | 'SPH' | 'REJECTED' | '') => {
+      try {
+        let payload = payloadMapper(values, type);
+        // console.log(uploadedFilesResponse, 'uploadedFilesResponse');
+        console.log(JSON.stringify(payload), 'payload216');
+        if (uploadedFilesResponse.length === 0) {
+          const photoFiles = photoUrls.map((photo) => {
+            return {
+              ...photo.photo,
+              uri: photo.photo.uri.replace('file:', 'file://'),
+            };
+          });
+          console.log(photoFiles, 'photoFiles235');
 
-        dispatch(postUploadFiles({ files: photoFiles, from: 'visitation' }))
-          .unwrap()
-          .then((data) => {
-            const files = data.map((photo) => {
-              const photoName = `${photo.name}.${photo.type}`;
-              const foundObject = photoUrls.find(
-                (obj) => obj.photo.name === photoName
-              );
-              if (foundObject) {
-                return {
-                  id: photo.id,
-                  type: foundObject.type,
-                };
-              }
-            });
-            payload.files = files;
-            dispatch(postVisitation({ payload }))
-              .unwrap()
-              .then(() => {
-                setIsLastStepVisible(false);
-                navigation.goBack();
-                dispatch(setGlobalPopUp());
-              });
-            console.log('ini setelah uploadfiles');
-            console.log('langsung post visitation payload');
+          const data = await dispatch(
+            postUploadFiles({ files: photoFiles, from: 'visitation' })
+          ).unwrap();
+          // .then((data) => {
+          const files = data.map((photo) => {
+            const photoName = `${photo.name}.${photo.type}`;
+            const photoNamee = `${photo.name}.jpg`;
+            const foundObject = photoUrls.find(
+              (obj) =>
+                obj.photo.name === photoName || obj.photo.name === photoNamee
+            );
+            if (foundObject) {
+              return {
+                id: photo.id,
+                type: foundObject.type,
+              };
+            }
           });
-      } else {
-        payload.files = uploadedFilesResponse;
-        dispatch(postVisitation({ payload }))
-          .unwrap()
-          .then(() => {
-            setIsLastStepVisible(false);
-            navigation.goBack();
-            dispatch(setGlobalPopUp());
-          });
-        console.log('ini apabila files telah di upload');
-        console.log('langsung post visitation payload');
+
+          payload.files = files;
+          const response = await dispatch(postVisitation({ payload })).unwrap();
+
+          console.log(response, 'response242');
+
+          setIsLastStepVisible(false);
+          navigation.goBack();
+          dispatch(
+            openPopUp({
+              popUpType: 'success',
+              popUpText: 'Success create visitation',
+            })
+          );
+        } else {
+          payload.files = uploadedFilesResponse;
+          const response = await dispatch(postVisitation({ payload })).unwrap();
+
+          console.log(response, 'response258');
+
+          setIsLastStepVisible(false);
+          navigation.goBack();
+          dispatch(
+            openPopUp({
+              popUpType: 'success',
+              popUpText: 'Successfully create visitation',
+              highlightedText: 'visitation',
+            })
+          );
+        }
+      } catch (error) {
+        console.log(error, 'error271fourth');
+        const message = error.message || 'Error creating visitation';
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText: message,
+            highlightedText: 'error',
+          })
+        );
       }
     },
-    []
+    [values]
   );
 
   return (
     <>
-      {/* <AddPictureModal
-        isVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-        initiatePopup={() => {
-          setIsModalVisible((curr) => !curr);
-          setTimeout(() => {
-            setIsPopUpVisible((curr) => !curr);
-          }, 200);
-        }}
-        addImage={addImage}
-      /> */}
       <PopUpQuestion
         isVisible={isPopUpVisible}
         setIsPopupVisible={setIsPopUpVisible}
@@ -321,11 +322,8 @@ const Fourth = () => {
         contentContainerStyle={styles.scrollViewContentStyle}
         showsVerticalScrollIndicator={false}
       >
-        {/* <BText>4</BText> */}
         <TouchableOpacity
           onPress={() => {
-            // selectFile();
-            // setIsModalVisible((curr) => !curr);
             navigation.dispatch(
               StackActions.push('Camera', {
                 photoTitle: 'Kunjungan',
@@ -337,13 +335,6 @@ const Fourth = () => {
             <Feather name="plus" size={resScale(25)} color="#000000" />
           </View>
         </TouchableOpacity>
-        {/* <BButtonPrimary
-          title="upload files"
-          onPress={() => {
-            dispatch(postUploadFiles({ files: values.stepFour.images }));
-          }}
-          disable={isUploadLoading}
-        /> */}
         {state.images.map((image, index) => {
           return (
             <View

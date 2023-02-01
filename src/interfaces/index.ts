@@ -21,7 +21,8 @@ interface Input {
     | 'autocomplete'
     | 'switch'
     | 'fileInput'
-    | 'map';
+    | 'map'
+    | 'autocomplete';
   hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   onFocus?: (e: any) => void;
@@ -99,16 +100,17 @@ interface CreateVisitationFirstStep {
   locationAddress: Address;
 }
 interface CreateVisitationSecondStep {
-  companyName: string;
+  companyName: { title: string; id: string };
   customerType: 'INDIVIDU' | 'COMPANY';
   projectName: string;
   location: { [key: string]: any };
   pics: PIC[];
-  selectedPic: PIC | null;
   options: {
-    loading: false;
-    items: any[] | null;
+    loading: boolean;
+    items: { title: string; id: string }[] | null;
   };
+  visitationId?: string;
+  existingOrderNum?: number;
 }
 interface CreateVisitationThirdStep {
   stageProject: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
@@ -345,6 +347,8 @@ interface locationPayloadType {
 }
 
 interface visitationPayload {
+  id?: string;
+  visitationId?: string;
   order: number;
   location: locationPayloadType;
   customerType?: 'INDIVIDU' | 'COMPANY';

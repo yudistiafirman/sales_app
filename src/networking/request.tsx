@@ -1,10 +1,14 @@
-import { production } from '../../app.json';
-import axios from 'axios';
-import {
-  applyAuthTokenInterceptor,
-  TokenRefreshRequest,
-} from './applyInterceptorConfig';
-import BrikApiCommon from '@/brikApi/BrikApiCommon';
+// import { production } from '../../app.json';
+const production = false;
+import axios, { AxiosResponse } from 'axios';
+import BrikApiCommon from '@/BrikApi/BrikApiCommon';
+import { Api } from '@/models';
+import { UserModel } from '@/models/User';
+import { bStorage } from '@/Actions';
+import { storageKey } from '@/constants';
+import { store } from '@/redux/store';
+import { setUserData } from '@/redux/reducers/authReducer';
+import jwtDecode, { JwtPayload } from 'jwt-decode';
 
 type FormDataValue =
   | string
@@ -12,14 +16,6 @@ type FormDataValue =
       name?: string | undefined;
       type?: string | undefined;
       uri: string;
-    }
-  | {
-      photos?: {
-        name?: string | undefined;
-        type?: string | undefined;
-        uri: string;
-      };
-      name: string;
     };
 
 interface RequestInfo {
@@ -40,42 +36,86 @@ function getContentType<T>(dataToReceived: T) {
   return contentType;
 }
 
-export const getOptions = (
+export const getOptions = async (
   method: 'GET' | 'POST' | 'DELETE' | 'PUT',
   data?: Record<string, string> | FormDataValue,
+  withToken?: boolean,
   timeout = 10000
 ) => {
-  const options = {} as RequestInfo;
-  options.method = method;
-  // const tokenDummy =
-  //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImViYmRlMjYwLTkxNDktNDQzZC1iNGU3LWIwYThlYzZjZTI0OCIsImVtYWlsIjoic2l0YW1wYW5AZ21haWwuY29tIiwicGhvbmUiOiIxMjMxMjMxMjMiLCJ0eXBlIjoiQURNSU4iLCJpYXQiOjE2NzUxNDg0MDEsImV4cCI6MTY3NTE1MjAwMX0.zG8Oe_B4fCAi4l6-SLkT84Rh1rFuvhpcBPRMh9JqkVE';
-  options.headers = {
-    Accept: 'application/json',
-    'Content-Type': getContentType(data),
-    // authorization: `Bearer ${tokenDummy}`,
-  };
+  try {
+    const options = {} as RequestInfo;
+    const token = await bStorage.getItem(storageKey.userToken);
+    options.method = method;
+    options.headers = {
+      Accept: 'application/json',
+      'Content-Type': getContentType(data),
+      ...(withToken && {
+        Authorization: `Bearer ${token}`,
+      }),
+    };
 
-  if (data) {
-    options.data = data;
-  }
+    if (data) {
+      options.data = data;
+    }
 
-  if (production) {
-    options.timeoutInterval = timeout;
-  } else {
-    options.timeoutInterval = timeout;
+    if (production) {
+      options.timeoutInterval = timeout;
+    } else {
+      options.timeoutInterval = timeout;
+    }
+    return options;
+  } catch (error) {
+    console.log('====================================');
+    console.log(error, 'error/getOptions');
+    console.log('====================================');
   }
-  return options;
 };
 
-export const request = axios;
+const instance = axios.create({
+  withCredentials: true,
+});
 
-// const requestRefresh: TokenRefreshRequest = async (
-//   refreshToken: string
-// ): Promise<string> => {
-//   const response = await axios.post(BrikApiCommon.getRefreshToken(), {
-//     refresh_token: refreshToken,
-//   });
-//   return response.data.data.accessToken;
-// };
+instance.interceptors.response.use(
+  async (res: AxiosResponse<Api.Response, any>) => {
+    const { data, config } = res;
+    // console.log(JSON.stringify(res, null, 2), 'ini apa suuuuuu??');
+    if (!data.success) {
+      // automatic logout
+      if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
+        await bStorage.deleteItem(storageKey.userToken);
+        store.dispatch(setUserData(null));
+        // console.log('stop');
+        return Promise.resolve(res);
+      }
 
-// applyAuthTokenInterceptor(axios, { requestRefresh });
+      // console.log('gajalan');
+      if (data.error?.code === 'TKN008') {
+        const responseRefreshToken = await instance.post<
+          any,
+          AxiosResponse<Api.Response, any>
+        >(BrikApiCommon.getRefreshToken(), {});
+
+        const { data: dataRefreshToken } = responseRefreshToken;
+        const resultRefreshToken =
+          dataRefreshToken.data as UserModel.DataSuccessLogin;
+
+        const newAccToken = resultRefreshToken?.accessToken;
+        bStorage.setItem(storageKey.userToken, newAccToken);
+        const decoded = jwtDecode<JwtPayload>(newAccToken);
+
+        store.dispatch(setUserData(decoded));
+
+        config.headers.Authorization = `Bearer ${newAccToken}`;
+        const finalResponse = await instance(config);
+        return Promise.resolve(finalResponse);
+      }
+    }
+    return Promise.resolve(res);
+  },
+  (err: any) => {
+    // console.log(JSON.stringify(err, null, 2), 'ini apa??><><><><><><><>');
+    return Promise.reject(err);
+  }
+);
+
+export const request = instance;

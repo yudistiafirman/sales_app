@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { getAllProject } from '../async-thunks/commonThunks';
 
 type popUpOptions = {
   isRenderActions?: boolean;
-  popUpType: 'success' | 'error' | 'none';
-  popUpText?: string;
+  popUpType?: 'success' | 'error' | 'none';
+  popUpText: string;
+  highlightedText?: string;
   outsideClickClosePopUp?: boolean;
 };
 
@@ -17,6 +19,7 @@ const initialPopupData: popUpOptions = {
   popUpType: 'none',
   popUpText: '',
   outsideClickClosePopUp: true,
+  highlightedText: '',
 };
 
 const initialState: initialStateType = {
@@ -34,10 +37,7 @@ export const modalSlice = createSlice({
   initialState,
   reducers: {
     setIsPopUpVisible: (state) => {
-      return {
-        ...state,
-        isPopUpVisible: !state.isPopUpVisible,
-      };
+      state.isPopUpVisible = !state.isPopUpVisible;
     },
     openPopUp: (state, { payload }: { payload: popUpOptions }) => {
       state.isPopUpVisible = !state.isPopUpVisible;
@@ -47,8 +47,13 @@ export const modalSlice = createSlice({
       if (payload.popUpText) {
         state.popUpOptions.popUpText = payload.popUpText;
       }
+      if (payload.highlightedText) {
+        state.popUpOptions.highlightedText = payload.highlightedText;
+      }
       if (payload.popUpType) {
         state.popUpOptions.popUpType = payload.popUpType;
+      } else {
+        state.popUpOptions.popUpType = 'success';
       }
       if (payload.outsideClickClosePopUp) {
         state.popUpOptions.outsideClickClosePopUp =
@@ -60,8 +65,15 @@ export const modalSlice = createSlice({
       state.popUpOptions = initialPopupData;
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(getAllProject.rejected, (state) => {
+      state.isPopUpVisible = !state.isPopUpVisible;
+      state.popUpOptions.popUpType = 'error';
+      state.popUpOptions.popUpText = 'getAllProject error';
+    });
+  },
 });
 
-export const { setIsPopUpVisible } = modalSlice.actions;
+export const { setIsPopUpVisible, openPopUp, closePopUp } = modalSlice.actions;
 
 export default modalSlice.reducer;

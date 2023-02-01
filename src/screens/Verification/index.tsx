@@ -16,8 +16,8 @@ import { RootState } from '@/redux/store';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { setUserData } from '@/redux/reducers/authReducer';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import bStorage from '@/actions/BStorage';
-import { signIn } from '@/actions/CommonActions';
+import bStorage from '@/Actions/BStorage';
+import { signIn } from '@/Actions/CommonActions';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import storageKey from '@/constants/storageKey';
 const Verification = () => {

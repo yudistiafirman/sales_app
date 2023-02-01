@@ -26,7 +26,7 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
   const BTabLabelsContainer: ViewStyle = {
     flexDirection: rightChipPosition ? 'row' : 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   };
 
   const BTabLabelsTextStyle: TextStyle = {
@@ -35,7 +35,12 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
       ? font.family.montserrat['600']
       : font.family.montserrat['400'],
     fontSize: font.size.md,
-    marginRight: isHasItems ? 4 : 0,
+    marginRight: isHasItems ? resScale(20) : 0,
+  };
+
+  const BChipStyle: ViewStyle = {
+    flex: 1,
+    width: resScale(20),
   };
   return (
     <View style={BTabLabelsContainer}>
@@ -44,6 +49,7 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
       <BChip
         type="header"
         backgroundColor={isHasItems ? chipBackgroundColor : null}
+        style={BChipStyle}
       >
         {isHasItems && route?.totalItems}
       </BChip>

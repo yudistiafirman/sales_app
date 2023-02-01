@@ -28,7 +28,7 @@ export const commonSlice = createSlice({
     builder.addCase(postUploadFiles.pending, (state) => {
       state.isUploadLoading = true;
     });
-    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {
+    builder.addCase(postUploadFiles.fulfilled, (state) => {
       state.isUploadLoading = false;
     });
     builder.addCase(postUploadFiles.rejected, (state) => {
@@ -38,7 +38,9 @@ export const commonSlice = createSlice({
       state.isProjectLoading = true;
     });
     builder.addCase(getAllProject.fulfilled, (state, { payload }) => {
-      state.projects = payload;
+      if (payload) {
+        state.projects = payload;
+      }
       state.isProjectLoading = false;
     });
     builder.addCase(getAllProject.rejected, (state) => {

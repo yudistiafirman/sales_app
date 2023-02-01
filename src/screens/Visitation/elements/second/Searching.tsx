@@ -12,8 +12,11 @@ import {
 import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
-import { useDispatch } from 'react-redux';
-import { allVisitationGet } from '@/actions/CommonActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { getAllProject } from '@/redux/async-thunks/commonThunks';
+import debounce from 'lodash.debounce';
+import { PIC } from '@/interfaces';
 
 interface IProps {
   onSearch: (search: boolean) => void;
@@ -25,11 +28,37 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
   const { action, values } = React.useContext(createVisitationContext);
   const { updateValueOnstep, updateValue } = action;
   const [searchQuery, setSearchQuery] = React.useState('');
+  const { projects, isProjectLoading } = useSelector(
+    (state: RootState) => state.common
+  );
+
+  // useEffect(() => {
+  //   return () => {
+  //     console.log('debounce cleanup');
+  //     onChangeWithDebounce.cancel();
+  //   };
+  // }, []);
+
+  const searchDispatch = (text: string) => {
+    dispatch(getAllProject({ search: text }));
+  };
+  const onChangeWithDebounce = React.useMemo(() => {
+    return debounce((text: string) => {
+      searchDispatch(text);
+    }, 500);
+  }, []);
 
   const onChangeSearch = (text: string) => {
-    updateValue('shouldScrollView', false);
+    // console.log(isSearch, 'isSearch53');
+
+    if (!isSearch && text) {
+      onSearch(true);
+    }
+    if (values.shouldScrollView) {
+      updateValue('shouldScrollView', false);
+    }
     setSearchQuery(text);
-    onSearch(true);
+    onChangeWithDebounce(text);
   };
 
   const onClear = () => {
@@ -39,98 +68,79 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
   };
 
   const onSelectProject = (item: any) => {
-    updateValueOnstep('stepTwo', 'companyName', item.name);
-    updateValueOnstep('stepTwo', 'customerType', item.customerType);
-    updateValueOnstep('stepTwo', 'pics', item.pic);
-    updateValueOnstep('stepTwo', 'projectName', item.projectName);
+    if (item.Company) {
+      const company = {
+        id: item.Company.id,
+        title: item.Company.name,
+      };
+
+      updateValueOnstep('stepTwo', 'companyName', company);
+
+      if (values.stepTwo.options.items) {
+        updateValueOnstep('stepTwo', 'options', {
+          items: [...values.stepTwo.options.items, company],
+        });
+      } else {
+        updateValueOnstep('stepTwo', 'options', {
+          items: [company],
+        });
+      }
+    }
+    const customerType = item.Company ? 'COMPANY' : 'INDIVIDU';
+    updateValueOnstep('stepTwo', 'customerType', customerType);
+
+    if (item.PIC) {
+      const picList = item.PIC.map((pic: PIC) => {
+        return {
+          ...pic,
+          isSelected: false,
+        };
+      });
+      updateValueOnstep('stepTwo', 'pics', picList);
+    }
+    updateValueOnstep('stepTwo', 'projectName', item.name);
+    if (item.Visitation) {
+      updateValueOnstep('stepTwo', 'visitationId', item.Visitation.id);
+      updateValueOnstep('stepTwo', 'existingOrderNum', item.Visitation.order);
+    }
     onClear();
     // updateValueOnstep('stepTwo', 'pics', item?.pic);
   };
-
-  const tabData: { [key: string]: any } = React.useMemo(() => {
-    return {
-      ['Proyek']: Array(3)
-        .fill(0)
-        .map((_, index) => {
-          return {
-            name: 'PT. Guna Karya Mandiri' + index,
-            pilNames: [
-              'Guna Karya Mandiri',
-              'Proyek Bu Larguna',
-              'Proyek Bu Larguna',
-              'Proyek Bu Larguna',
-            ],
-          };
-        }),
-    };
-  }, []);
 
   const tabToRender: { tabTitle: string; totalItems: number }[] =
     React.useMemo(() => {
       return [
         {
           tabTitle: 'Proyek',
-          totalItems: 3,
+          totalItems: projects.length,
         },
       ];
-    }, []);
+    }, [projects]);
 
-  const tabOnEndReached = React.useCallback(
-    async (info: {
-      distanceFromEnd?: number;
-      key: string;
-      currentPage: number;
-      query?: string;
-    }) => {
-      const result = await new Promise<any>((resolve) => {
-        setTimeout(() => {
-          resolve(tabData[info.key]);
-        }, 3000);
-      });
-      return result;
-    },
-    [tabData]
-  );
-
-  const sceneToRender = React.useCallback(
-    (key: string) => {
-      if (searchQuery.length <= 3) {
-        return null;
-      }
-      return (
-        <BFlatlistItems
-          renderItem={(item) => (
-            <BVisitationCard
-              item={item}
-              searchQuery={searchQuery}
-              onPress={() => {
-                onSelectProject(item);
-              }}
-            />
-          )}
-          searchQuery={searchQuery}
-          // initialFetch={() => {
-          // return dispatch(allVisitationGet(searchQuery)).unwrap();
-          // const data = tabOnEndReached({
-          //   key,
-          //   currentPage: 1,
-          //   query: searchQuery,
-          // });
-          // return data;
-          // }}
-          // onEndReached={(info) => {
-          //   return tabOnEndReached({
-          //     ...info,
-          //     key,
-          //     query: searchQuery,
-          //   });
-          // }}
-        />
-      );
-    },
-
-    [searchQuery]
-  );
+  const sceneToRender = React.useCallback(() => {
+    if (searchQuery.length <= 3) {
+      return null;
+    }
+    return (
+      <BFlatlistItems
+        renderItem={(item) => (
+          <BVisitationCard
+            item={{
+              name: item.name,
+              location: item.locationAddress.city,
+            }}
+            searchQuery={searchQuery}
+            onPress={() => {
+              onSelectProject(item);
+            }}
+          />
+        )}
+        searchQuery={searchQuery}
+        isLoading={isProjectLoading}
+        data={projects}
+      />
+    );
+  }, [searchQuery, projects]);
 
   return (
     <React.Fragment>

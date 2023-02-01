@@ -19,10 +19,10 @@ type BButtonPrimaryType = {
   buttonStyle?: ViewStyle;
   titleStyle?: TextStyle;
   isOutline?: boolean;
-  disable?: boolean;
-  isLoading?: boolean;
   rightIcon?: (() => JSX.Element) | null;
   leftIcon?: (() => JSX.Element) | null;
+  isLoading?: boolean;
+  disable?: boolean;
 };
 export default function BButtonPrimary({
   title,
