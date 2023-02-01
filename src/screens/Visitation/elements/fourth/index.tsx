@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { colors, layout } from '@/constants';
 import {
   DeviceEventEmitter,
@@ -11,7 +11,6 @@ import { resScale } from '@/utils';
 import { ScrollView } from 'react-native-gesture-handler';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import AddPictureModal from '../addPictureModal';
 import PopUpQuestion from '../PopUpQuestion';
 import LastStepPopUp from '../LastStepPopUp';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
@@ -28,6 +27,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
 import { postVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import { RootState } from '@/redux/store';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { deleteImage } from '@/redux/reducers/cameraReducer';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import moment from 'moment';
 
 type selectedDateType = {
   date: string;
@@ -40,6 +43,7 @@ function payloadMapper(
   type: 'VISIT' | 'SPH' | 'REJECTED' | ''
 ) {
   const { stepOne, stepTwo, stepThree, stepFour } = values;
+  const today = moment();
   const payload = {
     visitation: {
       location: {} as locationPayloadType,
@@ -50,8 +54,8 @@ function payloadMapper(
     pic: [] as picPayloadType[],
     files: [],
   } as payloadPostType;
-  if (stepTwo.selectedPic) {
-    payload.pic.push(stepTwo.selectedPic);
+  if (stepTwo.pics.length > 0) {
+    payload.pic = stepTwo.pics;
   }
   payload.visitation.order = 1;
   payload.visitation.status = type;
@@ -94,16 +98,21 @@ function payloadMapper(
   if (stepThree.notes) {
     payload.visitation.visitationNotes = stepThree.notes;
   }
-  if (stepFour.selectedDate) {
-    payload.visitation.dateVisit = stepFour.selectedDate;
+  if (stepFour.selectedDate && type === 'VISIT') {
+    payload.visitation.bookingDate = today.valueOf();
   }
+  console.log(stepFour, 'stepFour107');
+
   if (stepFour.selectedDate) {
-    payload.visitation.finishDate = stepFour.selectedDate;
+    const selectedDate = moment(stepFour.selectedDate.date);
+    payload.visitation.dateVisit = selectedDate.valueOf();
+    payload.visitation.finishDate = selectedDate.valueOf();
   }
-  if (stepFour.kategoriAlasan) {
+
+  if (stepFour.kategoriAlasan && type === 'REJECTED') {
     payload.visitation.rejectCategory = stepFour.kategoriAlasan;
   }
-  if (stepFour.alasanPenolakan) {
+  if (stepFour.alasanPenolakan && type === 'REJECTED') {
     payload.visitation.rejectNotes = stepFour.alasanPenolakan;
   }
   if (stepThree.products.length > 0) {
@@ -117,22 +126,39 @@ function payloadMapper(
     payload.project.name = stepTwo.projectName;
   }
   if (stepTwo.companyName) {
-    payload.project.companyDisplayName = stepTwo.companyName.title;
+    if (stepTwo.customerType === 'COMPANY') {
+      payload.project.companyDisplayName = stepTwo.companyName.title;
+    }
   }
   if (stepThree.stageProject) {
     payload.project.stage = stepThree.stageProject;
   }
+  payload.visitation.isBooking = type === 'VISIT' ? true : false;
 
-  console.log(JSON.stringify(payload), 'payloadds');
+  if (stepTwo.visitationId) {
+    payload.visitation.visitationId = stepTwo.visitationId;
+  }
+  if (stepTwo.existingOrderNum) {
+    payload.visitation.order = stepTwo.existingOrderNum;
+  }
+
+  // console.log(JSON.stringify(payload), 'payloadds');
+  return payload;
 }
 
 const Fourth = () => {
   const dispatch = useDispatch();
-  const isUploadLoading = useSelector(
-    (state: RootState) => state.common.isUploadLoading
+  const navigation = useNavigation();
+
+  const { isUploadLoading, isPostVisitationLoading } = useSelector(
+    (state: RootState) => state.common
   );
-  const uploadedFilesResponse = useSelector(
-    (state: RootState) => state.common.uploadedFilesResponse
+  const { uploadedFilesResponse } = useSelector(
+    (state: RootState) => state.camera
+  );
+
+  const { photoURLs: photoUrls } = useSelector(
+    (state: RootState) => state.camera
   );
   const { values, action } = React.useContext(createVisitationContext);
   const { stepFour: state } = values;
@@ -142,24 +168,30 @@ const Fourth = () => {
     updateValueOnstep('stepFour', key, e);
   };
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isPopUpVisible, setIsPopUpVisible] = useState(false);
   const [isLastStepVisible, setIsLastStepVisible] = useState(false);
 
-  const addImage = (image: any) => {
-    const imagesArray = [...state.images, image];
+  const removeImage = useCallback(
+    (pos: number) => () => {
+      dispatch(deleteImage({ pos }));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
-    onChange('images')(imagesArray);
-  };
-  const removeImage = (pos: number) => () => {
-    const currentImages = state.images;
-    currentImages.splice(pos, 1);
-    onChange('images')([...currentImages]);
-  };
+  useEffect(() => {
+    // photoUrls;
+    onChange('images')(photoUrls);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [photoUrls]);
 
   useEffect(() => {
     DeviceEventEmitter.addListener('CreateVisitation.continueButton', () => {
       setIsLastStepVisible((curr) => !curr);
+    });
+    DeviceEventEmitter.addListener('Camera.preview', () => {
+      // setIsLastStepVisible((curr) => !curr);
+      setIsPopUpVisible((curr) => !curr);
     });
     DeviceEventEmitter.addListener(
       'CalendarScreen.selectedDate',
@@ -172,31 +204,101 @@ const Fourth = () => {
     return () => {
       DeviceEventEmitter.removeAllListeners('CreateVisitation.continueButton');
       DeviceEventEmitter.removeAllListeners('CalendarScreen.selectedDate');
+      DeviceEventEmitter.removeAllListeners('Camera.preview');
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const onPressSubmit = useCallback(
+    async (type: 'VISIT' | 'SPH' | 'REJECTED' | '') => {
+      try {
+        let payload = payloadMapper(values, type);
+        // console.log(uploadedFilesResponse, 'uploadedFilesResponse');
+        console.log(JSON.stringify(payload), 'payload216');
+        if (uploadedFilesResponse.length === 0) {
+          const photoFiles = photoUrls.map((photo) => {
+            return {
+              ...photo.photo,
+              uri: photo.photo.uri.replace('file:', 'file://'),
+            };
+          });
+          console.log(photoFiles, 'photoFiles235');
+
+          const data = await dispatch(
+            postUploadFiles({ files: photoFiles, from: 'visitation' })
+          ).unwrap();
+          // .then((data) => {
+          const files = data.map((photo) => {
+            const photoName = `${photo.name}.${photo.type}`;
+            const photoNamee = `${photo.name}.jpg`;
+            const foundObject = photoUrls.find(
+              (obj) =>
+                obj.photo.name === photoName || obj.photo.name === photoNamee
+            );
+            if (foundObject) {
+              return {
+                id: photo.id,
+                type: foundObject.type,
+              };
+            }
+          });
+
+          payload.files = files;
+          const response = await dispatch(postVisitation({ payload })).unwrap();
+
+          console.log(response, 'response242');
+
+          setIsLastStepVisible(false);
+          navigation.goBack();
+          dispatch(
+            openPopUp({
+              popUpType: 'success',
+              popUpText: 'Success create visitation',
+            })
+          );
+        } else {
+          payload.files = uploadedFilesResponse;
+          const response = await dispatch(postVisitation({ payload })).unwrap();
+
+          console.log(response, 'response258');
+
+          setIsLastStepVisible(false);
+          navigation.goBack();
+          dispatch(
+            openPopUp({
+              popUpType: 'success',
+              popUpText: 'Successfully create visitation',
+              highlightedText: 'visitation',
+            })
+          );
+        }
+      } catch (error) {
+        console.log(error, 'error271fourth');
+        const message = error.message || 'Error creating visitation';
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText: message,
+            highlightedText: 'error',
+          })
+        );
+      }
+    },
+    [values]
+  );
+
   return (
     <>
-      <AddPictureModal
-        isVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-        initiatePopup={() => {
-          setIsModalVisible((curr) => !curr);
-          setTimeout(() => {
-            setIsPopUpVisible((curr) => !curr);
-          }, 200);
-        }}
-        addImage={addImage}
-      />
       <PopUpQuestion
         isVisible={isPopUpVisible}
         setIsPopupVisible={setIsPopUpVisible}
         initiateCameraModule={() => {
           setIsPopUpVisible((curr) => !curr);
-          setTimeout(() => {
-            setIsModalVisible((curr) => !curr);
-          }, 200);
+          navigation.dispatch(
+            StackActions.push('Camera', {
+              photoTitle: 'Kunjungan',
+            })
+          );
         }}
       />
       <LastStepPopUp
@@ -213,65 +315,45 @@ const Fourth = () => {
           areaOnChange: onChange('alasanPenolakan'),
           areaValue: state.alasanPenolakan,
         }}
-        onPressSubmit={(type) => {
-          console.log(type, 'type onpress', JSON.stringify(values));
-          payloadMapper(values, type);
-          console.log(uploadedFilesResponse, 'uploadedFilesResponse');
-          if (uploadedFilesResponse.length === 0) {
-            dispatch(postUploadFiles({ files: values.stepFour.images }))
-              .unwrap()
-              .then((data) => {
-                console.log(data, 'ini response upload files');
-                // dispatch(
-                //   postVisitation({ payload: payloadMapper(values, type) })
-                // );
-                console.log('ini setelah uploadfiles');
-                console.log('langsung post visitation payload');
-              });
-          } else {
-            console.log('ini apabila files telah di upload');
-            console.log('langsung post visitation payload');
-          }
-        }}
+        onPressSubmit={onPressSubmit}
+        isLoading={isPostVisitationLoading || isUploadLoading}
       />
       <ScrollView
         contentContainerStyle={styles.scrollViewContentStyle}
         showsVerticalScrollIndicator={false}
       >
-        {/* <BText>4</BText> */}
         <TouchableOpacity
           onPress={() => {
-            setIsModalVisible((curr) => !curr);
+            navigation.dispatch(
+              StackActions.push('Camera', {
+                photoTitle: 'Kunjungan',
+              })
+            );
           }}
         >
           <View style={[styles.addImage, styles.container]}>
             <Feather name="plus" size={resScale(25)} color="#000000" />
           </View>
         </TouchableOpacity>
-        {/* <BButtonPrimary
-          title="upload files"
-          onPress={() => {
-            dispatch(postUploadFiles({ files: values.stepFour.images }));
-          }}
-          disable={isUploadLoading}
-        /> */}
         {state.images.map((image, index) => {
           return (
             <View
               key={index.toString()}
               style={[styles.imageContainer, styles.container]}
             >
-              <Image source={image} style={styles.imageStyle} />
-              <TouchableOpacity
-                style={styles.closeIcon}
-                onPress={removeImage(index)}
-              >
-                <AntDesign
-                  name="closecircle"
-                  size={resScale(15)}
-                  color="#000000"
-                />
-              </TouchableOpacity>
+              <Image source={image.photo} style={styles.imageStyle} />
+              {image.type === 'GALLERY' && (
+                <TouchableOpacity
+                  style={styles.closeIcon}
+                  onPress={removeImage(index)}
+                >
+                  <AntDesign
+                    name="closecircle"
+                    size={resScale(15)}
+                    color="#000000"
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           );
         })}

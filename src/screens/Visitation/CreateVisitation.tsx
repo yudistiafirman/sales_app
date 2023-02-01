@@ -21,6 +21,8 @@ import FirstStep from './elements/first';
 import { BStepperIndicator } from '@/components';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
+import { useDispatch } from 'react-redux';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 
 const labels = [
   'Alamat Proyek',
@@ -50,11 +52,18 @@ function stepHandler(
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 0));
   }
+  const selectedPic = stepTwo.pics.find((pic) => {
+    if (pic.isSelected) {
+      return pic;
+    }
+  });
+  const customerTypeCond =
+    stepTwo.customerType === 'COMPANY' ? !!stepTwo.companyName : true;
   if (
     stepTwo.customerType &&
-    stepTwo.companyName &&
+    customerTypeCond &&
     stepTwo.projectName &&
-    stepTwo.selectedPic
+    selectedPic
   ) {
     setStepsDone((curr) => {
       return [...new Set(curr), 1];
@@ -86,6 +95,7 @@ function stepHandler(
   }
 }
 const CreateVisitation = () => {
+  const dispatch = useDispatch();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const { values, action } = React.useContext(createVisitationContext);
   const { shouldScrollView } = values;
@@ -93,6 +103,16 @@ const CreateVisitation = () => {
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3]);
 
+  useEffect(() => {
+    // DeviceEventEmitter.addListener('Camera.preview', (photo) => {
+    //   console.log('kedengeran di parent createVisitation', photo);
+    // });
+    return () => {
+      // DeviceEventEmitter.removeAllListeners('Camera.preview');
+      dispatch(resetImageURLS());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     stepHandler(values, setStepsDone);
   }, [values]);
@@ -118,6 +138,12 @@ const CreateVisitation = () => {
     <ThirdStep />,
     <Fourth />,
   ];
+  console.log(
+    shouldScrollView,
+    'shouldScrollView140',
+    !keyboardVisible,
+    !keyboardVisible && shouldScrollView && values.step > 0
+  );
 
   return (
     <>
@@ -129,11 +155,7 @@ const CreateVisitation = () => {
         currentStep={values.step}
         labels={labels}
       />
-      <BSheetAddPic
-        ref={bottomSheetRef}
-        initialIndex={values.sheetIndex}
-        addPic={addPic}
-      />
+
       <BContainer>
         {/* {shouldScrollView ? (
         <ScrollView>{stepRender[values.step]}</ScrollView>
@@ -165,6 +187,11 @@ const CreateVisitation = () => {
             />
           )}
         </View>
+        <BSheetAddPic
+          ref={bottomSheetRef}
+          initialIndex={values.sheetIndex}
+          addPic={addPic}
+        />
       </BContainer>
     </>
   );

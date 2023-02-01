@@ -1,5 +1,5 @@
-import BrikApiProductivity from '@/brikApi/BrikApiProductivity';
-import { getOptions, request } from '@/networking/request';
+import BrikApiProductivity from '@/BrikApi/BrikApiProductivity';
+import { getOptions, request } from '@/Networking/request';
 
 type getVisitationsType = {
   month?: number;
@@ -9,13 +9,13 @@ type getVisitationsType = {
 export const getVisitations = async ({ month, year }: getVisitationsType) => {
   return request(
     BrikApiProductivity.visitations({ month, year }),
-    await getOptions('GET')
+    await getOptions('GET', undefined, true)
   );
 };
 export const postVisitations = async ({ payload }) => {
   return request(
     BrikApiProductivity.visitations({}),
-    await getOptions('POST', payload)
+    await getOptions('POST', payload, true)
   );
 };
 

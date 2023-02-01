@@ -2,9 +2,9 @@ import {
   getLocationCoordinates,
   searchLocation,
   searchLocationById,
-} from '@/actions/CommonActions';
+} from '@/Actions/CommonActions';
 import { hasLocationPermission } from '@/utils/permissions';
-import Geolocation from 'react-native-geolocation-service'
+import Geolocation from 'react-native-geolocation-service';
 import { assign, createMachine, send } from 'xstate';
 
 export const searchAreaMachine =

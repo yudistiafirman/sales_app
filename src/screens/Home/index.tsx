@@ -25,7 +25,7 @@ import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
 import {
   getAllVisitations,
   getVisitationTarget,
-} from '@/actions/ProductivityActions';
+} from '@/Actions/ProductivityActions';
 import debounce from 'lodash.debounce';
 import { Api } from '@/models';
 
@@ -44,6 +44,11 @@ const Beranda = () => {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isHeaderShown, setIsHeaderShown] = useState(true);
+  const [date, setDate] = useState(moment());
+  console.log(
+    moment(moment.utc(date).toDate()).local().valueOf(),
+    'date state'
+  );
 
   // fetching data
   const [data, setData] = React.useState<Api.Response>({
@@ -247,7 +252,11 @@ const Beranda = () => {
 
   const kunjunganAction = () => {
     // setIsLoading((curr) => !curr);
-    navigation.navigate('CreateVisitation');
+    // navigation.navigate('CreateVisitation');
+    navigation.navigate('Camera', {
+      photoTitle: 'Foto Kunjungan',
+      navigateTo: 'CreateVisitation',
+    });
   };
   const sceneToRender = useCallback(() => {
     if (searchQuery.length <= 2) {

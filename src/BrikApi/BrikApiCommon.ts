@@ -1,4 +1,5 @@
-import { production } from '../../app.json';
+// import { production } from '../../app.json';
+const production = false;
 import Config from 'react-native-config';
 const PRODUCTION = production;
 const API_URL = PRODUCTION
@@ -42,6 +43,28 @@ export default class BrikApiCommon {
 
   static filesUpload = () => {
     const url = new URL(`${API_URL}/common/file/upload`);
+    return url.toString();
+  };
+
+  static allVisitation = (search?: string) => {
+    const url = new URL(`${API_URL}/common/m/flow/project`);
+    const params = url.searchParams;
+
+    if (search) {
+      params.append('search', search);
+    }
+
+    return url.toString();
+  };
+
+  static getProjectByUser = (search?: string) => {
+    const url = new URL(`${API_URL}/common/m/flow/companies-by-user`);
+    const params = url.searchParams;
+
+    if (search) {
+      params.append('search', search);
+    }
+
     return url.toString();
   };
 

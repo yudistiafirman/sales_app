@@ -42,7 +42,6 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
     flex: 1,
     width: resScale(20),
   };
-  console.log(route?.totalItems, 'aneeeh');
   return (
     <View style={BTabLabelsContainer}>
       <BText style={BTabLabelsTextStyle}>{route.title}</BText>

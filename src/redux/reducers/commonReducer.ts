@@ -1,18 +1,19 @@
 //postUploadFiles
 import { createSlice } from '@reduxjs/toolkit';
-import { postUploadFiles } from '../async-thunks/commonThunks';
-import { postVisitation } from '../async-thunks/productivityFlowThunks';
+import { postUploadFiles, getAllProject } from '../async-thunks/commonThunks';
 
 type initialStateType = {
   isUploadLoading: boolean;
   isPostVisitationLoading: boolean;
-  uploadedFilesResponse: any[];
+  isProjectLoading: boolean;
+  projects: any[];
 };
 
 const initialState: initialStateType = {
   isUploadLoading: false,
   isPostVisitationLoading: false,
-  uploadedFilesResponse: [],
+  isProjectLoading: false,
+  projects: [],
 };
 
 export const commonSlice = createSlice({
@@ -27,16 +28,23 @@ export const commonSlice = createSlice({
     builder.addCase(postUploadFiles.pending, (state) => {
       state.isUploadLoading = true;
     });
-    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {
+    builder.addCase(postUploadFiles.fulfilled, (state) => {
       state.isUploadLoading = false;
-      state.uploadedFilesResponse = payload;
     });
     builder.addCase(postUploadFiles.rejected, (state) => {
       state.isUploadLoading = false;
     });
-
-    builder.addCase(postVisitation.fulfilled, (state) => {
-      state.uploadedFilesResponse = [];
+    builder.addCase(getAllProject.pending, (state) => {
+      state.isProjectLoading = true;
+    });
+    builder.addCase(getAllProject.fulfilled, (state, { payload }) => {
+      if (payload) {
+        state.projects = payload;
+      }
+      state.isProjectLoading = false;
+    });
+    builder.addCase(getAllProject.rejected, (state) => {
+      state.isProjectLoading = true;
     });
   },
 });

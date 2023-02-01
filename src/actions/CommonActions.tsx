@@ -1,5 +1,5 @@
-import BrikApiCommon from '@/brikApi/BrikApiCommon';
-import { getOptions, request } from '@/networking/request';
+import BrikApiCommon from '@/BrikApi/BrikApiCommon';
+import { getOptions, request } from '@/Networking/request';
 
 export const getLocationCoordinates = async (
   longitude: number,
@@ -39,15 +39,30 @@ export const signOut = async () => {
   return request(BrikApiCommon.logout(), await getOptions('POST'));
 };
 
-export const uploadFile = async (files: any[]) => {
+export const uploadFileImage = async (files: any[], from: string) => {
   const formData = new FormData();
   files.forEach((file) => {
     formData.append('photos', file);
   });
-  console.log(BrikApiCommon.filesUpload(), 'BrikApiCommon.filesUpload()');
-
+  formData.append('name', from);
+  //192.168.18.23
+  //BrikApiCommon.filesUpload(),
   return request(
     BrikApiCommon.filesUpload(),
-    await getOptions('POST', formData)
+    await getOptions('POST', formData, true)
+  );
+};
+
+export const allVisitationGetAction = async (search?: string) => {
+  return request(
+    BrikApiCommon.allVisitation(search),
+    await getOptions('GET', null, true)
+  );
+};
+
+export const projectByUserGetAction = async (search?: string) => {
+  return request(
+    BrikApiCommon.getProjectByUser(search),
+    await getOptions('GET', null, true)
   );
 };

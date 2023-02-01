@@ -1,8 +1,19 @@
 import React, { useMemo } from 'react';
 import { BButtonPrimary } from '@/components';
 import { layout } from '@/constants';
-import { StyleProp, ViewStyle, View, Image, StyleSheet } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StyleProp,
+  ViewStyle,
+  View,
+  Image,
+  StyleSheet,
+  DeviceEventEmitter,
+} from 'react-native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/navTypes';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
@@ -17,10 +28,37 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const navigation = useNavigation();
   const _style = useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
+  const navigateTo = route?.params?.navigateTo;
 
   const savePhoto = () => {
-    dispatch(setImageURLS(photo));
+    const imagePayloadType: 'COVER' | 'GALLERY' = navigateTo
+      ? 'COVER'
+      : 'GALLERY';
+    const photoName = photo.split('/').pop();
+    const photoNameParts = photoName.split('.');
+    let photoType = photoNameParts[photoNameParts.length - 1];
+
+    if (photoType === 'jpg') {
+      photoType = 'jpeg';
+    }
+
+    const imageUrls = {
+      photo: {
+        uri: `file:${photo}`,
+        type: `image/${photoType}`,
+        name: photoName,
+      },
+      type: imagePayloadType,
+    };
+    dispatch(setImageURLS(imageUrls));
     //NOTE: push your route navigation here.
+    DeviceEventEmitter.emit('Camera.preview', photo);
+    if (navigateTo) {
+      navigation.goBack();
+      navigation.dispatch(StackActions.replace(navigateTo));
+    } else {
+      navigation.dispatch(StackActions.pop(2));
+    }
   };
 
   return (
