@@ -21,6 +21,7 @@ interface IProps {
     | '900'
     | undefined;
   size?: 'small' | 'normal' | 'large';
+  numberOfLines?: number;
 }
 
 const BText = ({
@@ -30,6 +31,7 @@ const BText = ({
   color,
   bold,
   size,
+  numberOfLines,
   ...props
 }: IProps & TextProps) => {
   const _defaultStyle: TextStyle = {
@@ -84,7 +86,7 @@ const BText = ({
   }
 
   return (
-    <Text style={[_style, style]} {...props}>
+    <Text numberOfLines={numberOfLines} style={[_style, style]} {...props}>
       {children}
     </Text>
   );

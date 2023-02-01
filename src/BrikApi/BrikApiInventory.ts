@@ -1,4 +1,5 @@
-import { production } from '../../app.json';
+// import { production } from '../../app.json';
+const production = false;
 import Config from 'react-native-config';
 const PRODUCTION = production;
 const API_URL = PRODUCTION ? Config.API_URL_INV_PROD : Config.API_URL_INV_DEV;

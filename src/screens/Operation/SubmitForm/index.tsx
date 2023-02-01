@@ -5,7 +5,11 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { Input } from '@/interfaces';
 import { RootStackScreenProps } from '@/navigation/navTypes';
 import { resScale } from '@/utils';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -19,6 +23,7 @@ const SubmitForm = () => {
     const baseInput: Input[] = [
       {
         label: 'Nama Penerima',
+        value: '',
         isRequire: true,
         isError: false,
         type: 'textInput',
@@ -26,6 +31,7 @@ const SubmitForm = () => {
       },
       {
         label: 'No. Telp Penerima',
+        value: '',
         isRequire: true,
         isError: false,
         type: 'textInput',
@@ -39,6 +45,7 @@ const SubmitForm = () => {
     const baseInput: Input[] = [
       {
         label: 'Ada Muatan Tersisa di Dalam TM?',
+        value: '',
         type: 'checkbox',
         isRequire: false,
         checkbox: {
@@ -48,6 +55,7 @@ const SubmitForm = () => {
       },
       {
         label: 'Kondisi TM',
+        value: '',
         isRequire: true,
         isError: false,
         type: 'dropdown',
@@ -119,7 +127,7 @@ const SubmitForm = () => {
         <View style={style.buttonTwo}>
           <BButtonPrimary
             title="Simpan"
-            onPress={() => navigation.navigate('Operation', {})}
+            onPress={() => navigation.dispatch(StackActions.popToTop())}
           />
         </View>
       </View>

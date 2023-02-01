@@ -11,11 +11,11 @@ export type RootStackParamList = {
   Harga: { coordinate: { longitude: number; latitude: number } };
   SearchProduct: { distance: number };
   CreateVisitation: undefined;
-  Camera: { photoTitle: string; entryPoint?: string };
+  Camera: { photoTitle: string; navigateTo?: string };
   Preview: {
     photo?: PhotoFile;
     photoTitle: string;
-    entryPoint?: string;
+    navigateTo?: string;
   };
   Schedule: { id: string };
   Operation: { role?: string };

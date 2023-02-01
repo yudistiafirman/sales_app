@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import Config from './elements/Config';
@@ -11,6 +11,9 @@ const Camera = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
+
+  const navigateTo = route?.params?.navigateTo;
+  const photoTitle = route?.params?.photoTitle;
 
   useEffect(() => {
     navigation.addListener('focus', () => {
@@ -26,15 +29,12 @@ const Camera = () => {
       backAction
     );
     return () => backHandler.remove();
-  });
+  }, []);
 
   return (
     <View style={styles.parent}>
       <SafeAreaView style={styles.container}>
-        <Config
-          title={route?.params?.photoTitle}
-          entryPoint={route?.params?.entryPoint}
-        />
+        <Config navigateTo={navigateTo} title={photoTitle} />
       </SafeAreaView>
     </View>
   );

@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
-import respFS from '@/utils/resFontSize';
 import font from '@/constants/fonts';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import resScale from '@/utils/resScale';
+import { fonts, layout } from '@/constants';
 
 type locationType = {
   location?: string;
@@ -29,13 +29,14 @@ const style = StyleSheet.create({
   location: {
     flexDirection: 'row',
     alignItems: 'center',
+    maxWidth: resScale(210),
   },
   locationText: {
     color: '#0080FF',
     fontFamily: font.family.montserrat[300],
-    fontSize: respFS(12),
+    fontSize: fonts.size.xs,
   },
   iconStyle: {
-    marginRight: resScale(7),
+    marginRight: layout.pad.md,
   },
 });

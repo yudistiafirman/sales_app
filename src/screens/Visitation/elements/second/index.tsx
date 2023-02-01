@@ -6,6 +6,10 @@ import { CreateVisitationSecondStep, Input, Styles } from '@/interfaces';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import SearchFlow from './Searching';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import { resScale } from '@/utils';
+import { layout } from '@/constants';
+
 interface IProps {
   openBottomSheet: () => void;
 }
@@ -23,43 +27,17 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   };
 
   const onFetching = (e: any) => {
-    console.log('masuk sini ga sih??', e);
-    // setOptions({
-    //   loading: true,
-    //   items: null,
-    // });
+    updateValueOnstep('stepTwo', 'companyName', { id: 1, title: e });
+
+    // fetching then merge with the thing user type
     updateValueOnstep('stepTwo', 'options', {
-      loading: true,
-      items: null,
+      items: [{ id: 1, title: e }],
     });
-    setTimeout(() => {
-      updateValueOnstep('stepTwo', 'options', {
-        loading: false,
-        items: [
-          {
-            id: '1',
-            title: 'PT Satu',
-          },
-          {
-            id: '2',
-            title: 'PT Dua',
-          },
-          {
-            id: '3',
-            title: 'PT Tiga',
-          },
-          {
-            id: '4',
-            title: 'PT Empat',
-          },
-        ],
-      });
-    }, 1000);
     return;
   };
 
   const inputs: Input[] = React.useMemo(() => {
-    console.log('rerender input');
+    // console.log('rerender input');
     const baseInput: Input[] = [
       {
         label: 'Jenis Pelanggan',
@@ -72,43 +50,47 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           {
             icon: company,
             title: 'Perusahaan',
-            value: 'company',
+            value: 'COMPANY',
             onChange: () => {
-              onChange('customerType')('company');
+              onChange('customerType')('COMPANY');
             },
           },
           {
             icon: individu,
             title: 'Individu',
-            value: 'individu',
+            value: 'INDIVIDU',
             onChange: () => {
-              onChange('customerType')('individu');
+              onChange('customerType')('INDIVIDU');
             },
           },
         ],
       },
     ];
     if (state.customerType.length > 0) {
-      const aditionalInput: Input[] = [
-        {
-          label: 'Nama Perusahaan',
-          isRequire: true,
-          isError: false,
-          type: 'autocomplete',
-          onChange: onFetching,
-          value: state.companyName,
-          items: state.options.items,
-          loading: state.options.loading,
-          onSelect: (item: any) => {
-            updateValueOnstep('stepTwo', 'companyName', item);
-          },
+      const companyNameInput: Input = {
+        label: 'Nama Perusahaan',
+        isRequire: true,
+        isError: false,
+        type: 'autocomplete',
+        onChange: onFetching,
+        value: state.companyName,
+        items: state.options.items,
+        loading: state.options.loading,
+        onSelect: (item: any) => {
+          updateValueOnstep('stepTwo', 'companyName', item);
         },
+      };
+
+      const aditionalInput: Input[] = [
         {
           label: 'Nama Proyek',
           isRequire: true,
           isError: false,
           type: 'textInput',
-          onChange: onChange('projectName'),
+          onChange: (e: any) => {
+            // console.log(e, 'event');
+            onChange('projectName')(e.nativeEvent.text);
+          },
           value: state.projectName,
         },
         {
@@ -131,6 +113,9 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           },
         },
       ];
+      if (state.customerType === 'COMPANY') {
+        aditionalInput.unshift(companyNameInput);
+      }
       baseInput.push(...aditionalInput);
     }
     return baseInput;
@@ -143,26 +128,30 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   };
 
   return (
-    <ScrollView>
+    <>
       <SearchFlow isSearch={isSearch} onSearch={onSearch} />
-      {!isSearch && (
-        <React.Fragment>
-          <BSpacer size="small" />
-          <View style={styles.dividerContainer}>
-            <BDivider />
-            <BSpacer size="extraSmall" />
-            <BText color="divider">Atau Buat Baru Dibawah</BText>
-            <BSpacer size="extraSmall" />
-            <BDivider />
-          </View>
-          <BSpacer size="small" />
-          <View>
-            <BForm inputs={inputs} />
-            <BSpacer size="large" />
-          </View>
-        </React.Fragment>
-      )}
-    </ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {!isSearch && (
+          // <ScrollView>
+          <React.Fragment>
+            <BSpacer size="small" />
+            <View style={styles.dividerContainer}>
+              <BDivider />
+              <BSpacer size="extraSmall" />
+              <BText color="divider">Atau Buat Baru Dibawah</BText>
+              <BSpacer size="extraSmall" />
+              <BDivider />
+            </View>
+            <BSpacer size="small" />
+            <View>
+              <BForm inputs={inputs} />
+              <BSpacer size="large" />
+            </View>
+          </React.Fragment>
+          // </ScrollView>
+        )}
+      </ScrollView>
+    </>
   );
 };
 
@@ -171,10 +160,10 @@ const styles: Styles = {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  sheetStyle: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    backgroundColor: 'red',
+  labelShimmer: {
+    width: resScale(335),
+    height: resScale(100),
+    borderRadius: layout.radius.md,
   },
 };
 

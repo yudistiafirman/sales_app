@@ -11,9 +11,15 @@ type BTextLocationProps = {
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
   location: string;
   disabled?: boolean | undefined;
+  numberOfLines?: number;
 };
 
-const BTextLocation = ({ onPress, location, disabled }: BTextLocationProps) => {
+const BTextLocation = ({
+  onPress,
+  location,
+  disabled,
+  numberOfLines,
+}: BTextLocationProps) => {
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -26,6 +32,7 @@ const BTextLocation = ({ onPress, location, disabled }: BTextLocationProps) => {
         color={colors.text.blue}
       />
       <BText
+        numberOfLines={numberOfLines}
         style={{
           fontFamily: font.family.montserrat['300'],
           fontSize: resScale(10),

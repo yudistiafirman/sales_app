@@ -16,6 +16,7 @@ const Schedule = () => {
     const baseInput: Input[] = [
       {
         label: 'Kuantitas',
+        value: '',
         isRequire: true,
         isError: false,
         type: 'quantity',
@@ -23,6 +24,7 @@ const Schedule = () => {
       },
       {
         label: 'No. Segel',
+        value: '',
         isRequire: true,
         isError: false,
         type: 'textInput',
@@ -30,6 +32,7 @@ const Schedule = () => {
       },
       {
         label: 'No. Kendaraan',
+        value: '',
         isRequire: true,
         isError: false,
         type: 'dropdown',
@@ -43,6 +46,7 @@ const Schedule = () => {
       },
       {
         label: 'Nama Supir',
+        value: '',
         isRequire: true,
         isError: false,
         type: 'dropdown',

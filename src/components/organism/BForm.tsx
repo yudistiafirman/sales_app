@@ -13,10 +13,12 @@ import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
 import { colors, layout } from '@/constants';
 import CheckBox from '@react-native-community/checkbox';
+import { BSwitch, BFileInput } from '@/components';
 
 interface IProps {
   inputs: Input[];
   spacer?: 'extraSmall' | 'small' | 'medium' | 'large' | 'extraLarge' | number;
+  noSpaceEnd?: boolean;
 }
 
 interface Styles {
@@ -63,8 +65,9 @@ const renderInput = (input: Input): React.ReactNode => {
     isError,
     onSelect,
     keyboardType,
-    placeholder,
     checkbox,
+    placeholder,
+    hidePicLabel,
   } = input;
 
   if (type === 'quantity') {
@@ -78,7 +81,6 @@ const renderInput = (input: Input): React.ReactNode => {
             value={value}
             keyboardType={'numeric'}
             placeholder={placeholder}
-            placeHolderTextColor={colors.textInput.placeHolder}
           />
           <View style={styles.quantityText}>
             <BText>{'m3'}</BText>
@@ -94,15 +96,14 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 
   if (type === 'textInput') {
+    const textInputProps = { onChange, value };
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
         <BTextInput
-          onChangeText={onChange}
-          value={value}
+          {...textInputProps}
           keyboardType={keyboardType ? keyboardType : 'default'}
           placeholder={placeholder}
-          placeHolderTextColor={colors.textInput.placeHolder}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
@@ -123,7 +124,6 @@ const renderInput = (input: Input): React.ReactNode => {
           multiline={true}
           numberOfLines={4}
           placeholder={placeholder}
-          placeHolderTextColor={colors.textInput.placeHolder}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
@@ -175,7 +175,6 @@ const renderInput = (input: Input): React.ReactNode => {
 
   if (type === 'dropdown') {
     if (dropdown) {
-      console.log('dropdown, masukl');
       return (
         <React.Fragment>
           <BLabel label={label} isRequired={isRequire} />
@@ -210,20 +209,41 @@ const renderInput = (input: Input): React.ReactNode => {
     return (
       <React.Fragment>
         <BSpacer size="small" />
-        <View style={styles.optionContainer}>
-          <BText type="header">PIC</BText>
-          <BText bold="500" color="primary" onPress={onChange}>
-            + Tambah PIC
+        {!hidePicLabel ? (
+          <>
+            <View style={styles.optionContainer}>
+              <BText type="header">PIC</BText>
+              <BText bold="500" color="primary" onPress={onChange}>
+                + Tambah PIC
+              </BText>
+            </View>
+            <BSpacer size="extraSmall" />
+            <BDivider />
+            <BSpacer size="small" />
+          </>
+        ) : null}
+        <BPicList isOption={true} data={value} onSelect={onSelect!} />
+      </React.Fragment>
+    );
+  }
+
+  if (type === 'switch') {
+    return (
+      <React.Fragment>
+        <BSwitch label={label} value={value} onChange={onChange} />
+      </React.Fragment>
+    );
+  }
+
+  if (type === 'fileInput') {
+    return (
+      <React.Fragment>
+        <BFileInput label={label} value={value} onChange={onChange} />
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {`${label} harus diisi`}
           </BText>
-        </View>
-        <BSpacer size="extraSmall" />
-        <BDivider />
-        <BSpacer size="small" />
-        <BPicList
-          isOption={value.length > 1 ? true : false}
-          data={value}
-          onSelect={onSelect!}
-        />
+        )}
       </React.Fragment>
     );
   }
@@ -250,13 +270,15 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 };
 
-const BForm = ({ inputs, spacer }: IProps) => {
+const BForm = ({ inputs, spacer, noSpaceEnd }: IProps) => {
   return (
     <View>
       {inputs.map((input, index) => (
         <React.Fragment key={index}>
           {renderInput(input)}
-          <BSpacer size={spacer ? spacer : 'small'} />
+          {(index < inputs.length - 1 || !noSpaceEnd) && (
+            <BSpacer size={spacer ? spacer : 'small'} />
+          )}
         </React.Fragment>
       ))}
     </View>

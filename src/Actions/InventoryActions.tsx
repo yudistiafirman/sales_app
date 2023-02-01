@@ -1,7 +1,7 @@
-import BrikApiInventory from '@/brikApi/BrikApiInventory';
-import { getOptions, request } from '@/networking/request';
+import BrikApiInventory from '@/BrikApi/BrikApiInventory';
+import { getOptions, request } from '@/Networking/request';
 
-export const getAllBrikProducts = (
+export const getAllBrikProducts = async (
   page?: number,
   size?: number,
   search?: string,
@@ -10,11 +10,11 @@ export const getAllBrikProducts = (
 ) => {
   return request(
     BrikApiInventory.getProducts(page, size, search, category, distance),
-    getOptions('GET')
+    await getOptions('GET')
   );
 };
 
-export const getProductsCategories = (
+export const getProductsCategories = async (
   page?: number,
   size?: number,
   search?: string,
@@ -23,6 +23,6 @@ export const getProductsCategories = (
 ) => {
   return request(
     BrikApiInventory.getProductCategories(page, size, search, pillar, count),
-    getOptions('GET')
+    await getOptions('GET')
   );
 };

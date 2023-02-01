@@ -18,15 +18,13 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { layout } from '@/constants';
 
-const Config = ({
-  title,
-  entryPoint,
-  style,
-}: {
+type configType = {
   title: string;
-  entryPoint?: string;
   style?: StyleProp<ViewStyle>;
-}) => {
+  navigateTo?: string;
+};
+
+const Config = ({ title, style, navigateTo }: configType) => {
   const getCameraDevice = (
     devices: CameraDevices
   ): CameraDevice | undefined => {
@@ -56,7 +54,7 @@ const Config = ({
     //NOTE: for emulator
     // navigation.navigate('Preview', {
     //   photoTitle: title,
-    //   entryPoint: entryPoint,
+    //   navigateTo,
     // });
 
     //NOTE: for real device
@@ -71,7 +69,7 @@ const Config = ({
         navigation.navigate('Preview', {
           photo: takenPhoto,
           photoTitle: title,
-          entryPoint: entryPoint,
+          navigateTo,
         });
       } catch (err) {
         Alert.alert('Camera Error');

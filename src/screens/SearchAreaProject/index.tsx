@@ -1,9 +1,14 @@
-/* eslint-disable react/no-unstable-nested-components */
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import BSearchBar from '@/components/molecules/BSearchBar';
 import resScale from '@/utils/resScale';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { TextInput } from 'react-native-paper';
 import { SafeAreaView, AppState } from 'react-native';
 import SearchAreaStyles from './styles';
@@ -14,10 +19,13 @@ import { searchAreaMachine } from '@/machine/searchAreaMachine';
 import { assign } from 'xstate';
 import LocationListShimmer from './element/LocationListShimmer';
 import { BSpacer } from '@/components';
+import { useDispatch } from 'react-redux';
+import { updateRegion } from '@/redux/locationReducer';
 
-const SearchAreaProject = () => {
+const SearchAreaProject = ({ route }: { route: any }) => {
   const navigation = useNavigation();
   const [text, setText] = useState('');
+  const dispatch = useDispatch();
   const appState = useRef(AppState.currentState);
   const [state, send] = useMachine(searchAreaMachine, {
     actions: {
@@ -29,29 +37,50 @@ const SearchAreaProject = () => {
         };
       }),
       navigateToLocation: (context, event) => {
-        const { lon, lat } = event.data;
-        const coordinate = {
-          longitude: Number(lon),
-          latitude: Number(lat),
+        const { lon, lat, formattedAddress } = event.data;
+        let coordinate = {
+          longitude: lon,
+          latitude: lat,
+          formattedAddress,
         };
+
+        console.log(event.data, context, 'ini apa?? di search are');
+
+        if (typeof lon === 'string') {
+          coordinate.longitude = Number(lon);
+        }
+
+        if (typeof lat === 'string') {
+          coordinate.latitude = Number(lat);
+        }
+        if (route?.params?.from) {
+          dispatch(updateRegion(coordinate));
+          navigation.goBack();
+          return;
+        }
         navigation.navigate('Location', {
           coordinate: coordinate,
         });
       },
     },
   });
+
+  const renderHeaderLeft = useCallback(() => {
+    return (
+      <BHeaderIcon
+        size={resScale(23)}
+        onBack={() => navigation.goBack()}
+        iconName="x"
+      />
+    );
+  }, [navigation]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: false,
-      headerLeft: () => (
-        <BHeaderIcon
-          size={resScale(23)}
-          onBack={() => navigation.goBack()}
-          iconName="x"
-        />
-      ),
+      headerTitle: 'Pilih Area Proyek',
+      headerLeft: () => renderHeaderLeft(),
     });
-  }, [navigation]);
+  }, [navigation, renderHeaderLeft]);
 
   useEffect(() => {
     if (state.matches('getLocation.denied')) {

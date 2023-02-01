@@ -1,6 +1,10 @@
-import { searchLocation, searchLocationById } from '@/actions/CommonActions';
+import {
+  getLocationCoordinates,
+  searchLocation,
+  searchLocationById,
+} from '@/Actions/CommonActions';
 import { hasLocationPermission } from '@/utils/permissions';
-import Geolocation from 'react-native-geolocation-service'
+import Geolocation from 'react-native-geolocation-service';
 import { assign, createMachine, send } from 'xstate';
 
 export const searchAreaMachine =
@@ -69,8 +73,14 @@ export const searchAreaMachine =
 
             currentLocationLoaded: {
               entry: send('sendingLonglatToLocation'),
-
-              always: "askPermission"
+              always: 'askPermission',
+              invoke: {
+                src: 'getLocationByCoordinate',
+                onDone: {
+                  actions: 'navigateToLocation',
+                },
+                onError: 'errorGettingLocation',
+              },
             },
           },
         },
@@ -224,6 +234,21 @@ export const searchAreaMachine =
           try {
             const response = await searchLocationById(context.placesId);
             return response.data.result;
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        getLocationByCoordinate: async (context, e) => {
+          try {
+            const { longitude, latitude } = context.longlat;
+            const response = await getLocationCoordinates(
+              // '',
+              longitude,
+              latitude,
+              ''
+            );
+
+            return response.result;
           } catch (error) {
             console.log(error);
           }

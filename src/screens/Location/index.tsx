@@ -1,6 +1,6 @@
 import resScale from '@/utils/resScale';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import LocationStyles from './styles';
 import CoordinatesDetail from './elements/CoordinatesDetail';
@@ -21,20 +21,24 @@ const Location = () => {
   const route = useRoute<RootStackScreenProps>();
   const [state, send] = useMachine(locationMachine);
 
-  const renderHeaderLeft = () => (
-    <BHeaderIcon
-      iconName="chevron-left"
-      size={resScale(30)}
-      onBack={() => navigation.goBack()}
-    />
+  const renderHeaderLeft = useCallback(
+    () => (
+      <BHeaderIcon
+        iconName="chevron-left"
+        size={resScale(30)}
+        onBack={() => navigation.goBack()}
+      />
+    ),
+    [navigation]
   );
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => renderHeaderLeft(),
       headerBackVisible: false,
+      headerTitle: 'Pilih Area Proyek',
     });
-  }, [navigation]);
+  }, [navigation, renderHeaderLeft]);
 
   useEffect(() => {
     if (route?.params) {

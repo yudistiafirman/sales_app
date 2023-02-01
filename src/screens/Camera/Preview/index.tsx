@@ -1,8 +1,19 @@
 import React, { useMemo } from 'react';
 import { BButtonPrimary } from '@/components';
 import { layout } from '@/constants';
-import { StyleProp, ViewStyle, View, Image, StyleSheet } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StyleProp,
+  ViewStyle,
+  View,
+  Image,
+  StyleSheet,
+  DeviceEventEmitter,
+} from 'react-native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/navTypes';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
@@ -17,20 +28,45 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   });
   const _style = useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
+  const navigateTo = route?.params?.navigateTo;
 
   const savePhoto = () => {
-    dispatch(setImageURLS(photo));
+    const imagePayloadType: 'COVER' | 'GALLERY' = navigateTo
+      ? 'COVER'
+      : 'GALLERY';
+    const photoName = photo.split('/').pop();
+    const photoNameParts = photoName.split('.');
+    let photoType = photoNameParts[photoNameParts.length - 1];
 
-    if (
-      route?.params?.entryPoint === 'operation' ||
-      route?.params?.entryPoint === 'return' ||
-      route?.params?.entryPoint === 'delivery'
-    ) {
-      navigation.navigate('SubmitForm', {
-        type: route?.params?.entryPoint,
-      });
+    if (photoType === 'jpg') {
+      photoType = 'jpeg';
+    }
+
+    const imageUrls = {
+      photo: {
+        uri: `file:${photo}`,
+        type: `image/${photoType}`,
+        name: photoName,
+      },
+      type: imagePayloadType,
+    };
+    dispatch(setImageURLS(imageUrls));
+    DeviceEventEmitter.emit('Camera.preview', photo);
+    if (navigateTo) {
+      if (
+        navigateTo === 'operation' ||
+        navigateTo === 'return' ||
+        navigateTo === 'delivery'
+      ) {
+        navigation.navigate('SubmitForm', {
+          type: navigateTo,
+        });
+      } else {
+        navigation.goBack();
+        navigation.dispatch(StackActions.replace(navigateTo));
+      }
     } else {
-      //NOTE: push your route navigation here.
+      navigation.dispatch(StackActions.pop(2));
     }
   };
 
