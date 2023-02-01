@@ -13,7 +13,8 @@ import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
 import { colors, layout } from '@/constants';
 import CheckBox from '@react-native-community/checkbox';
-import { BSwitch, BFileInput } from '@/components';
+import BFileInput from '../atoms/BFileInput';
+import BSwitch from '../atoms/BSwitch';
 
 interface IProps {
   inputs: Input[];
