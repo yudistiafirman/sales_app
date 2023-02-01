@@ -176,7 +176,7 @@ export const searchProductMachine =
       },
       guards: {
         searchValueLengthAccepted: (_context, event) => {
-          return event.value.length > 3;
+          return event.value.length > 2;
         },
       },
       services: {
@@ -198,10 +198,14 @@ export const searchProductMachine =
           try {
             const { page, size, selectedCategories, searchValue, distance } =
               context;
+            const filteredValue = searchValue
+              .split('')
+              .filter((char) => /^[A-Za-z0-9]*$/.test(char))
+              .join('');
             const response = await getAllBrikProducts(
               page,
               size,
-              searchValue,
+              filteredValue,
               selectedCategories,
               distance
             );
