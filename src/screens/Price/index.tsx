@@ -121,7 +121,7 @@ const PriceList = () => {
         <PriceSearchBar
           onPress={() =>
             navigation.navigate('SearchProduct', {
-              distance: locationDetail?.distance.value,
+              distance: locationDetail?.distance?.value,
             })
           }
         />
