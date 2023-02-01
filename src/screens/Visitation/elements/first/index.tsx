@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -21,13 +21,13 @@ import {
 import Icons from 'react-native-vector-icons/Feather';
 
 import { resScale } from '@/utils';
-import { Styles, Region, Input } from '@/interfaces';
+import { Region, Input } from '@/interfaces';
 import { updateRegion } from '@/redux/locationReducer';
 import { colors, layout } from '@/constants';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import { useMachine } from '@xstate/react';
 import { deviceLocationMachine } from '@/machine/modules';
-import { getLocationCoordinates } from '@/actions/CommonActions';
+import { getLocationCoordinates } from '@/Actions/CommonActions';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -41,22 +41,6 @@ const FirstStep = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch<any>();
-
-  // const styles: Styles = React.useMemo(() => {
-  //   return {
-  //     container: { flex: 1, marginHorizontal: -resScale(20) },
-  //     map: {
-  //       height: resScale(400),
-  //       width: '100%',
-  //     },
-  //     titleShimmer: {
-  //       width: resScale(108),
-  //       height: resScale(17),
-  //       marginBottom: resScale(4),
-  //     },
-  //     secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
-  //   };
-  // }, []);
 
   const inputs: Input[] = [
     {
@@ -78,30 +62,39 @@ const FirstStep = () => {
   // map function
   const mapRef = React.useRef<MapView>(null);
   const onChangeRegion = async (coordinate: Region) => {
-    setIsMapLoading(() => true);
-    const { data } = await getLocationCoordinates(
-      // '',
-      coordinate.longitude as unknown as number,
-      coordinate.latitude as unknown as number,
-      ''
-    );
-    const { result } = data;
-    const _coordinate = {
-      latitude: result?.lat,
-      longitude: result?.lon,
-      formattedAddress: result?.formattedAddress,
-      PostalId: result?.PostalId,
-    };
+    try {
+      setIsMapLoading(() => true);
+      const { data } = await getLocationCoordinates(
+        // '',
+        coordinate.longitude as unknown as number,
+        coordinate.latitude as unknown as number,
+        ''
+      );
+      const { result } = data;
+      if (!result) {
+        throw data;
+      }
+      const _coordinate = {
+        latitude: result?.lat,
+        longitude: result?.lon,
+        formattedAddress: result?.formattedAddress,
+        PostalId: result?.PostalId,
+      };
 
-    if (typeof result?.lon === 'string') {
-      _coordinate.longitude = Number(result.lon);
-    }
+      if (typeof result?.lon === 'string') {
+        _coordinate.longitude = Number(result.lon);
+        _coordinate.lon = Number(result.lon);
+      }
 
-    if (typeof result?.lat === 'string') {
-      _coordinate.latitude = Number(result.lat);
+      if (typeof result?.lat === 'string') {
+        _coordinate.latitude = Number(result.lat);
+        _coordinate.lat = Number(result.lat);
+      }
+      dispatch(updateRegion(_coordinate));
+      setIsMapLoading(() => false);
+    } catch (error) {
+      console.log(JSON.stringify(error), 'onChangeRegionerror');
     }
-    dispatch(updateRegion(_coordinate));
-    setIsMapLoading(() => false);
   };
 
   const debounceResult = React.useMemo(() => debounce(onChangeRegion, 500), []);
@@ -131,8 +124,9 @@ const FirstStep = () => {
           formattedAddress: context?.formattedAddress,
           PostalId: context?.PostalId,
         };
+        console.log(context, 'contextmachince');
 
-        updateValueOnstep('stepOne', 'createdLocation', context);
+        // updateValueOnstep('stepOne', 'createdLocation', context);
         if (region.latitude === 0) {
           dispatch(updateRegion(coordinate));
         }

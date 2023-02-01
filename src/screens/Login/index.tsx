@@ -11,7 +11,7 @@ import { colors, layout } from '@/constants';
 import { setPhoneNumber } from '@/redux/reducers/authReducer';
 import { useDispatch } from 'react-redux';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { signIn } from '@/actions/CommonActions';
+import { signIn } from '@/Actions/CommonActions';
 import { AuthStackScreenProps } from '@/navigation/navTypes';
 interface LoginState {
   errorMessage: unknown | string;

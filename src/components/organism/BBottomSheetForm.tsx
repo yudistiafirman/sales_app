@@ -10,6 +10,11 @@ import BForm from './BForm';
 import BContainer from '../atoms/BContainer';
 import BSpacer from '../atoms/BSpacer';
 
+type CustomFooterButtonType = {
+  disable?: boolean;
+  onPress?: () => void;
+  title: string;
+};
 interface IProps {
   initialIndex: number;
   onAdd: () => void;
@@ -19,7 +24,11 @@ interface IProps {
   children?: JSX.Element;
   enableClose?: boolean;
   isButtonDisable?: boolean;
-  CustomFooterButton?: () => JSX.Element;
+  CustomFooterButton?: ({
+    disable,
+    onPress,
+    title,
+  }: CustomFooterButtonType) => JSX.Element;
 }
 
 const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
@@ -63,7 +72,11 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
           {CustomFooterButton ? (
             <BContainer>
               <View style={styles.footerContainer}>
-                <CustomFooterButton />
+                <CustomFooterButton
+                  disable={isButtonDisable}
+                  onPress={onAdd}
+                  title={buttonTitle}
+                />
               </View>
             </BContainer>
           ) : (

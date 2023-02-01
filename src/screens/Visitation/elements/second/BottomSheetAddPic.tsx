@@ -32,7 +32,9 @@ const BSheetAddPic = React.forwardRef(
         isRequire: true,
         isError: true,
         type: 'textInput',
-        onChange: onChange('name'),
+        onChange: (event) => {
+          onChange('name')(event.nativeEvent.text);
+        },
         value: state.name,
       },
       {
@@ -40,7 +42,9 @@ const BSheetAddPic = React.forwardRef(
         isRequire: true,
         isError: true,
         type: 'textInput',
-        onChange: onChange('position'),
+        onChange: (event) => {
+          onChange('position')(event.nativeEvent.text);
+        },
         value: state.position,
       },
       {
@@ -48,7 +52,9 @@ const BSheetAddPic = React.forwardRef(
         isRequire: true,
         isError: true,
         type: 'textInput',
-        onChange: onChange('phone'),
+        onChange: (event) => {
+          onChange('phone')(event.nativeEvent.text);
+        },
         value: state.phone,
       },
       {
@@ -56,7 +62,9 @@ const BSheetAddPic = React.forwardRef(
         isRequire: true,
         isError: true,
         type: 'textInput',
-        onChange: onChange('email'),
+        onChange: (event) => {
+          onChange('email')(event.nativeEvent.text);
+        },
         value: state.email,
       },
     ];
@@ -65,8 +73,10 @@ const BSheetAddPic = React.forwardRef(
       if (ref) {
         ref.current?.close();
       }
-      addPic(state);
-      setState(initialState);
+      if (!!state.email && !!state.name && !!state.phone && !!state.position) {
+        addPic(state);
+        setState(initialState);
+      }
     };
 
     return (
@@ -77,6 +87,9 @@ const BSheetAddPic = React.forwardRef(
         inputs={inputs}
         buttonTitle={'Tambah PIC'}
         snapPoint={['75%']}
+        isButtonDisable={
+          !(!!state.email && !!state.name && !!state.phone && !!state.position)
+        }
       />
     );
   }

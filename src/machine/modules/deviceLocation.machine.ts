@@ -96,16 +96,20 @@ const deviceLocationMachine =
               latitude,
               ''
             );
+
             const { result } = data;
+            if (!result) {
+              throw data;
+            }
 
             return {
               lat: Number(result?.lat),
               lon: Number(result?.lon),
-              formattedAddress: result.formattedAddress,
+              formattedAddress: result?.formattedAddress,
               PostalId: result?.PostalId,
             };
           } catch (error) {
-            console.log(error);
+            console.log(error, 'deviceLocationMachince');
           }
         },
       },

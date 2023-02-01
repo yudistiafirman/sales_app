@@ -27,36 +27,42 @@ export const productivityFlowSlice = createSlice({
     resetStates: () => {
       return initialState;
     },
+    setVisitationMapped: (state, { payload }) => {
+      state.visitationCalendarMapped = payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getVisitationsList.pending, (state) => {
       state.isVisitationLoading = true;
     });
     builder.addCase(getVisitationsList.fulfilled, (state, { payload }) => {
-      if (payload) {
-        state.visitationCalendarMapped = payload.reduce(
-          (
-            acc: { [key: string]: customerDataInterface[] },
-            obj: visitationListResponse
-          ) => {
-            const formatedDate = moment(obj.date_visit).format('yyyy-MM-DD');
-            if (!acc[formatedDate]) {
-              acc[formatedDate] = [];
-            }
-            acc[formatedDate].push({
-              display_name: obj.display_name,
-              name: obj.name,
-              email: obj.email,
-              phone: obj.phone,
-              position: obj.position,
-              type: obj.type,
-            });
-            return acc;
-          },
-          {}
-        );
-        state.visitationList = payload;
-      }
+      // if (payload) {
+      //   state.visitationCalendarMapped = payload.reduce(
+      //     (
+      //       acc: { [key: string]: customerDataInterface[] },
+      //       obj: visitationListResponse
+      //     ) => {
+      //       const formatedDate = moment(obj.dateVisit).format('yyyy-MM-DD');
+      //       console.log(formatedDate, obj.dateVisit, 'dateVisit77');
+
+      //       if (!acc[formatedDate]) {
+      //         acc[formatedDate] = [];
+      //       }
+      //       acc[formatedDate].push({
+      //         display_name: obj.project?.company?.displayName,
+      //         name: obj.project?.name,
+      //         // location: obj.project.locationAddress.district,
+      //         email: obj.project?.pic?.email,
+      //         phone: obj.project?.pic?.phone,
+      //         position: obj.project?.pic?.position,
+      //         type: obj.project?.pic?.type,
+      //       });
+      //       return acc;
+      //     },
+      //     {}
+      //   );
+      //   state.visitationList = payload;
+      // }
       state.isVisitationLoading = false;
     });
     builder.addCase(getVisitationsList.rejected, (state, { payload }) => {
@@ -76,6 +82,7 @@ export const productivityFlowSlice = createSlice({
   },
 });
 
-export const { resetStates } = productivityFlowSlice.actions;
+export const { resetStates, setVisitationMapped } =
+  productivityFlowSlice.actions;
 
 export default productivityFlowSlice.reducer;

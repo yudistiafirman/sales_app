@@ -51,8 +51,6 @@ export default function BFlatlistItems({
   const [currentPage, setCurrentPage] = useState(1);
   const [_isLoading, _setIsLoading] = useState(isLoading || false);
 
-  console.log(data, 'ini apa cuk?');
-
   // useEffect(() => {
   //   if (initialFetch) {
   //     (async () => {

@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import { BDivider, BForm, BSpacer, BText } from '@/components';
 import { CreateVisitationSecondStep, Input, Styles } from '@/interfaces';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import SearchFlow from './Searching';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import LinearGradient from 'react-native-linear-gradient';
 import { resScale } from '@/utils';
 import { layout } from '@/constants';
-const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 interface IProps {
   openBottomSheet: () => void;
@@ -20,68 +17,14 @@ interface IProps {
 const company = require('@/assets/icon/Visitation/company.png');
 const individu = require('@/assets/icon/Visitation/profile.png');
 
-const dummyData = [
-  {
-    id: 'kwos0299',
-    name: 'Agus',
-    position: 'Finance',
-    phone: 81128869884,
-    email: 'agus@gmail.com',
-  },
-  {
-    id: '1233okjs',
-    name: 'Joko',
-    position: 'Finance',
-    phone: 81128869884,
-    email: 'Joko@gmail.com',
-  },
-  {
-    id: 'jsncijc828',
-    name: 'Johny',
-    position: 'Finance',
-    phone: 81128869884,
-    email: 'Johny@gmail.com',
-  },
-];
-function dummyReq() {
-  return new Promise<any>((resolve) => {
-    setTimeout(() => {
-      resolve(dummyData);
-    }, 5000);
-  });
-}
-
 const SecondStep = ({ openBottomSheet }: IProps) => {
   const { values, action } = React.useContext(createVisitationContext);
-  const { stepTwo: state, shouldScrollView } = values;
+  const { stepTwo: state } = values;
   const { updateValueOnstep } = action;
 
   const onChange = (key: keyof CreateVisitationSecondStep) => (e: any) => {
     updateValueOnstep('stepTwo', key, e);
   };
-  const [isLoading, setisLoading] = useState(false);
-  useEffect(() => {
-    if (state.pics.length === 0) {
-      (async () => {
-        updateValueOnstep('stepTwo', 'pics', []);
-        setisLoading(true);
-        const data = await dummyReq();
-        console.log(data, 'data dummy');
-
-        updateValueOnstep('stepTwo', 'pics', data);
-        setisLoading(false);
-      })();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (state.pics.length === 1) {
-      updateValueOnstep('stepTwo', 'selectedPic', {
-        ...state.pics[0],
-        isSelected: true,
-      });
-    }
-  }, [state.pics]);
 
   const onFetching = (e: any) => {
     updateValueOnstep('stepTwo', 'companyName', { id: 1, title: e });
@@ -107,37 +50,38 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           {
             icon: company,
             title: 'Perusahaan',
-            value: 'company',
+            value: 'COMPANY',
             onChange: () => {
-              onChange('customerType')('company');
+              onChange('customerType')('COMPANY');
             },
           },
           {
             icon: individu,
             title: 'Individu',
-            value: 'individu',
+            value: 'INDIVIDU',
             onChange: () => {
-              onChange('customerType')('individu');
+              onChange('customerType')('INDIVIDU');
             },
           },
         ],
       },
     ];
     if (state.customerType.length > 0) {
-      const aditionalInput: Input[] = [
-        {
-          label: 'Nama Perusahaan',
-          isRequire: true,
-          isError: false,
-          type: 'autocomplete',
-          onChange: onFetching,
-          value: state.companyName,
-          items: state.options.items,
-          loading: state.options.loading,
-          onSelect: (item: any) => {
-            updateValueOnstep('stepTwo', 'companyName', item);
-          },
+      const companyNameInput: Input = {
+        label: 'Nama Perusahaan',
+        isRequire: true,
+        isError: false,
+        type: 'autocomplete',
+        onChange: onFetching,
+        value: state.companyName,
+        items: state.options.items,
+        loading: state.options.loading,
+        onSelect: (item: any) => {
+          updateValueOnstep('stepTwo', 'companyName', item);
         },
+      };
+
+      const aditionalInput: Input[] = [
         {
           label: 'Nama Proyek',
           isRequire: true,
@@ -159,26 +103,19 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             openBottomSheet();
           },
           onSelect: (index: number) => {
-            let selectedIndex: number | null = null;
             const newPicList = values.stepTwo.pics.map((el, _index) => {
-              if (_index === index) {
-                selectedIndex = index;
-              }
               return {
                 ...el,
                 isSelected: _index === index,
               };
             });
             updateValueOnstep('stepTwo', 'pics', newPicList);
-            if (typeof selectedIndex === 'number') {
-              updateValueOnstep('stepTwo', 'selectedPic', {
-                ...newPicList[selectedIndex],
-                isSelected: true,
-              });
-            }
           },
         },
       ];
+      if (state.customerType === 'COMPANY') {
+        aditionalInput.unshift(companyNameInput);
+      }
       baseInput.push(...aditionalInput);
     }
     return baseInput;
@@ -190,53 +127,31 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
     setSearch(searching);
   };
 
-  if (!shouldScrollView) {
-    <View style={{ flex: 1 }}>
-      <SearchFlow isSearch={isSearch} onSearch={onSearch} />
-      {!isSearch && (
-        <React.Fragment>
-          <BSpacer size="small" />
-          <View style={styles.dividerContainer}>
-            <BDivider />
-            <BSpacer size="extraSmall" />
-            <BText color="divider">Atau Buat Baru Dibawah</BText>
-            <BSpacer size="extraSmall" />
-            <BDivider />
-          </View>
-          <BSpacer size="small" />
-          <View>
-            <BForm inputs={inputs} />
-            <BSpacer size="large" />
-          </View>
-        </React.Fragment>
-      )}
-    </View>;
-  }
-
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <>
       <SearchFlow isSearch={isSearch} onSearch={onSearch} />
-      {!isSearch && (
-        <React.Fragment>
-          <BSpacer size="small" />
-          <View style={styles.dividerContainer}>
-            <BDivider />
-            <BSpacer size="extraSmall" />
-            <BText color="divider">Atau Buat Baru Dibawah</BText>
-            <BSpacer size="extraSmall" />
-            <BDivider />
-          </View>
-          <BSpacer size="small" />
-          <View>
-            <BForm inputs={inputs} />
-            {state.customerType.length > 0 && isLoading && (
-              <ShimmerPlaceHolder style={styles.labelShimmer} />
-            )}
-            <BSpacer size="large" />
-          </View>
-        </React.Fragment>
-      )}
-    </ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {!isSearch && (
+          // <ScrollView>
+          <React.Fragment>
+            <BSpacer size="small" />
+            <View style={styles.dividerContainer}>
+              <BDivider />
+              <BSpacer size="extraSmall" />
+              <BText color="divider">Atau Buat Baru Dibawah</BText>
+              <BSpacer size="extraSmall" />
+              <BDivider />
+            </View>
+            <BSpacer size="small" />
+            <View>
+              <BForm inputs={inputs} />
+              <BSpacer size="large" />
+            </View>
+          </React.Fragment>
+          // </ScrollView>
+        )}
+      </ScrollView>
+    </>
   );
 };
 
@@ -244,11 +159,6 @@ const styles: Styles = {
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  sheetStyle: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    backgroundColor: 'red',
   },
   labelShimmer: {
     width: resScale(335),

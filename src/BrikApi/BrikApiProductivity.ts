@@ -18,15 +18,17 @@ interface IGetAll {
 }
 
 export default class BrikApiProductivity {
-  static visitations = ({ month, year }: getVisitationsType) => {
+  static visitations = (props?: getVisitationsType) => {
     const url = new URL(`${API_URL}/productivity/m/flow/visitation`);
-    const params = url.searchParams;
-
-    if (month) {
-      params.append('month', month.toString());
-    }
-    if (year) {
-      params.append('year', year.toString());
+    if (props) {
+      const params = url.searchParams;
+      const { month, year } = props;
+      if (month) {
+        params.append('month', month.toString());
+      }
+      if (year) {
+        params.append('year', year.toString());
+      }
     }
 
     return url.toString();

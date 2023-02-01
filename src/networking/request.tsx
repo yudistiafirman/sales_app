@@ -1,9 +1,10 @@
-import { production } from '../../app.json';
+// import { production } from '../../app.json';
+const production = false;
 import axios, { AxiosResponse } from 'axios';
-import BrikApiCommon from '@/brikApi/BrikApiCommon';
+import BrikApiCommon from '@/BrikApi/BrikApiCommon';
 import { Api } from '@/models';
 import { UserModel } from '@/models/User';
-import { bStorage } from '@/actions';
+import { bStorage } from '@/Actions';
 import { storageKey } from '@/constants';
 import { store } from '@/redux/store';
 import { setUserData } from '@/redux/reducers/authReducer';
@@ -41,27 +42,33 @@ export const getOptions = async (
   withToken?: boolean,
   timeout = 10000
 ) => {
-  const options = {} as RequestInfo;
-  const token = await bStorage.getItem(storageKey.userToken);
-  options.method = method;
-  options.headers = {
-    Accept: 'application/json',
-    'Content-Type': getContentType(data),
-    ...(withToken && {
-      Authorization: `Bearer ${token}`,
-    }),
-  };
+  try {
+    const options = {} as RequestInfo;
+    const token = await bStorage.getItem(storageKey.userToken);
+    options.method = method;
+    options.headers = {
+      Accept: 'application/json',
+      'Content-Type': getContentType(data),
+      ...(withToken && {
+        Authorization: `Bearer ${token}`,
+      }),
+    };
 
-  if (data) {
-    options.data = data;
-  }
+    if (data) {
+      options.data = data;
+    }
 
-  if (production) {
-    options.timeoutInterval = timeout;
-  } else {
-    options.timeoutInterval = timeout;
+    if (production) {
+      options.timeoutInterval = timeout;
+    } else {
+      options.timeoutInterval = timeout;
+    }
+    return options;
+  } catch (error) {
+    console.log('====================================');
+    console.log(error, 'error/getOptions');
+    console.log('====================================');
   }
-  return options;
 };
 
 const instance = axios.create({
@@ -71,17 +78,17 @@ const instance = axios.create({
 instance.interceptors.response.use(
   async (res: AxiosResponse<Api.Response, any>) => {
     const { data, config } = res;
-    console.log(JSON.stringify(res, null, 2), 'ini apa suuuuuu??');
+    // console.log(JSON.stringify(res, null, 2), 'ini apa suuuuuu??');
     if (!data.success) {
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
         await bStorage.deleteItem(storageKey.userToken);
         store.dispatch(setUserData(null));
-        console.log('stop');
+        // console.log('stop');
         return Promise.resolve(res);
       }
 
-      console.log('gajalan');
+      // console.log('gajalan');
       if (data.error?.code === 'TKN008') {
         const responseRefreshToken = await instance.post<
           any,
@@ -92,7 +99,7 @@ instance.interceptors.response.use(
         const resultRefreshToken =
           dataRefreshToken.data as UserModel.DataSuccessLogin;
 
-        const newAccToken = resultRefreshToken.accessToken;
+        const newAccToken = resultRefreshToken?.accessToken;
         bStorage.setItem(storageKey.userToken, newAccToken);
         const decoded = jwtDecode<JwtPayload>(newAccToken);
 
@@ -106,7 +113,7 @@ instance.interceptors.response.use(
     return Promise.resolve(res);
   },
   (err: any) => {
-    console.log(JSON.stringify(err, null, 2), 'ini apa??><><><><><><><>');
+    // console.log(JSON.stringify(err, null, 2), 'ini apa??><><><><><><><>');
     return Promise.reject(err);
   }
 );
