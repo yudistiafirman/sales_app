@@ -1,6 +1,10 @@
-import { searchLocation, searchLocationById } from '@/actions/CommonActions';
+import {
+  getLocationCoordinates,
+  searchLocation,
+  searchLocationById,
+} from '@/Actions/CommonActions';
 import { hasLocationPermission } from '@/utils/permissions';
-import GetLocation from 'react-native-get-location';
+import Geolocation from 'react-native-geolocation-service';
 import { assign, createMachine, send } from 'xstate';
 
 export const searchAreaMachine =
@@ -69,8 +73,14 @@ export const searchAreaMachine =
 
             currentLocationLoaded: {
               entry: send('sendingLonglatToLocation'),
-
-              always: "askPermission"
+              always: 'askPermission',
+              invoke: {
+                src: 'getLocationByCoordinate',
+                onDone: {
+                  actions: 'navigateToLocation',
+                },
+                onError: 'errorGettingLocation',
+              },
             },
           },
         },
@@ -188,15 +198,27 @@ export const searchAreaMachine =
           return granted;
         },
         getCurrentLocation: async () => {
+          const opt = {
+            // timeout:INFINITY,
+            // maximumAge:INFINITY,
+            // accuracy: { ios: "hundredMeters", android: "balanced" },
+            // enableHighAccuracy: false,
+            // distanceFilter:0,
+            showLocationDialog: true,
+            forceRequestLocation: true,
+          };
+          const getCurrentPosition = () =>
+            new Promise((resolve, error) =>
+              Geolocation.getCurrentPosition(resolve, error, opt)
+            );
+
           try {
-            const position = await GetLocation.getCurrentPosition({
-              enableHighAccuracy: true,
-              timeout: 15000,
-            });
-            const { latitude, longitude } = position;
-            return { latitude, longitude };
+            const response = await getCurrentPosition();
+            const { coords } = response;
+            const { longitude, latitude } = coords;
+            return { longitude, latitude };
           } catch (error) {
-            console.log(error);
+            throw new Error(error);
           }
         },
         getLocationBySearch: async (context, event) => {
@@ -212,6 +234,21 @@ export const searchAreaMachine =
           try {
             const response = await searchLocationById(context.placesId);
             return response.data.result;
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        getLocationByCoordinate: async (context, e) => {
+          try {
+            const { longitude, latitude } = context.longlat;
+            const response = await getLocationCoordinates(
+              // '',
+              longitude,
+              latitude,
+              ''
+            );
+
+            return response.result;
           } catch (error) {
             console.log(error);
           }

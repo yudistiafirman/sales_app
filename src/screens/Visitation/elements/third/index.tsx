@@ -1,15 +1,26 @@
-import React from 'react';
-import { View, ScrollView } from 'react-native';
-import { BForm, BSpacer, BText } from '@/components';
+import React, { useCallback, useEffect } from 'react';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  DeviceEventEmitter,
+} from 'react-native';
+import { BForm, BLabel, BSpacer, BText, BTextInput } from '@/components';
 import { CreateVisitationThirdStep, Input } from '@/interfaces';
 import { MONTH_LIST, STAGE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
 import ProductChip from './ProductChip';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
+import { TextInput } from 'react-native-paper';
+
+import { resScale } from '@/utils';
+import { useNavigation } from '@react-navigation/native';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
 const ThirdStep = () => {
+  const navigation = useNavigation();
   const { values, action } = React.useContext(createVisitationContext);
   const { stepThree: state } = values;
   const { updateValueOnstep } = action;
@@ -67,7 +78,7 @@ const ThirdStep = () => {
       },
     },
     {
-      label: 'Tipe Pemabayaran',
+      label: 'Tipe Pembayaran',
       isRequire: true,
       isError: false,
       type: 'cardOption',
@@ -77,24 +88,24 @@ const ThirdStep = () => {
         {
           title: 'Cash Before Delivery',
           icon: cbd,
-          value: 'cbd',
+          value: 'CBD',
           onChange: () => {
-            onChange('paymentType')('cbd');
+            onChange('paymentType')('CBD');
           },
         },
         {
           title: 'Credit',
           icon: credit,
-          value: 'credit',
+          value: 'CREDIT',
           onChange: () => {
-            onChange('paymentType')('credit');
+            onChange('paymentType')('CREDIT');
           },
         },
       ],
     },
     {
       label: 'Catatan Sales',
-      isRequire: true,
+      isRequire: false,
       isError: false,
       type: 'area',
       onChange: onChange('notes'),
@@ -102,46 +113,89 @@ const ThirdStep = () => {
     },
   ];
 
-  const products = [
-    {
-      name: 'Product 1',
+  const listenerCallback = useCallback(
+    ({ data }: { data: any }) => {
+      const newArray = [...state.products, data];
+      const uniqueArray = newArray.reduce((acc, obj) => {
+        if (!acc[obj.id]) {
+          acc[obj.id] = obj;
+        }
+        return acc;
+      }, {} as { [id: number]: any });
+      // console.log(Object.values(uniqueArray), 'uniqueArray');
+      updateValueOnstep('stepThree', 'products', Object.values(uniqueArray));
     },
-    {
-      name: 'Product 2',
-    },
-    {
-      name: 'Product 3',
-    },
-    {
-      name: 'Product 4',
-    },
-    {
-      name: 'Product 5',
-    },
-    {
-      name: 'Product 6',
-    },
-    {
-      name: 'Product 7',
-    },
-  ];
+    [state.products]
+  );
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener('event.testEvent', listenerCallback);
+    return () => {
+      DeviceEventEmitter.removeAllListeners('event.testEvent');
+    };
+  }, [listenerCallback]);
 
   return (
-    <View>
-      <BText>step 3</BText>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      {/* <BText>step 3</BText> */}
       <BForm inputs={inputs} />
-      <ScrollView horizontal={true}>
-        {products.map((val, index) => (
-          <React.Fragment key={index}>
-            <ProductChip name="k150" category={{ name: 'NFA' }} />
-            <BSpacer size="extraSmall" />
-          </React.Fragment>
-        ))}
-      </ScrollView>
-      <BSpacer size="medium" />
+      <View style={styles.labelContainer}>
+        <BLabel label="Produk" isRequired />
+        <BText color="primary">Lihat Semua</BText>
+      </View>
+      <View style={styles.posRelative}>
+        <TouchableOpacity
+          style={styles.touchable}
+          onPress={() => {
+            navigation.navigate('SearchProduct', {
+              isGobackAfterPress: true,
+            });
+            // navigation.navigate('SearchProduct');
+          }}
+        />
+        <BTextInput
+          placeholder="Cari Produk"
+          left={<TextInput.Icon icon={'magnify'} />}
+        />
+      </View>
+      <BSpacer size={'extraSmall'} />
+      {state.products.length ? (
+        <>
+          <ScrollView horizontal={true}>
+            {state.products.map((val, index) => (
+              <React.Fragment key={index}>
+                <ProductChip name={val.display_name} category={val.Category} />
+                <BSpacer size="extraSmall" />
+              </React.Fragment>
+            ))}
+          </ScrollView>
+          <BSpacer size="medium" />
+        </>
+      ) : (
+        <BSpacer size="extraSmall" />
+      )}
       <BForm inputs={inputsTwo} />
-    </View>
+    </ScrollView>
   );
 };
 
 export default ThirdStep;
+
+const styles = StyleSheet.create({
+  posRelative: {
+    position: 'relative',
+    // backgroundColor: 'blue',
+  },
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: resScale(4),
+    height: resScale(45),
+    zIndex: 2,
+    // backgroundColor: 'red',
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+});

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ViewStyle,
   ActivityIndicator,
+  TextStyle,
 } from 'react-native';
 import React from 'react';
 import colors from '@/constants/colors';
@@ -16,12 +17,12 @@ type BButtonPrimaryType = {
   title: string;
   onPress?: () => void;
   buttonStyle?: ViewStyle;
-  titleStyle?: ViewStyle;
+  titleStyle?: TextStyle;
   isOutline?: boolean;
   rightIcon?: (() => JSX.Element) | null;
   leftIcon?: (() => JSX.Element) | null;
-  disable?: boolean;
   isLoading?: boolean;
+  disable?: boolean;
 };
 export default function BButtonPrimary({
   title,

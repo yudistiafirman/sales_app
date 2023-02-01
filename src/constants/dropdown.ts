@@ -70,6 +70,10 @@ const MONTH_LIST = [
 
 const STAGE_PROJECT = [
   {
+    label: 'Persiapan Lahan',
+    value: 'LAND_PREP',
+  },
+  {
     label: 'Pasang Ceker Ayam',
     value: 'FOUNDATION',
   },

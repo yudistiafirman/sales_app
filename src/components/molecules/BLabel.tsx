@@ -14,7 +14,7 @@ const container: ViewStyle = {
 const BLabel = ({ label, isRequired }: IProps) => {
   return (
     <View style={container}>
-      <BText bold="500">{label}</BText>
+      <BText bold="700">{label}</BText>
       {isRequired && (
         <BText color="primary" bold="bold">
           {' '}

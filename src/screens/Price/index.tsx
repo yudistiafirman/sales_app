@@ -44,23 +44,23 @@ const PriceList = () => {
         subscription.remove();
       };
     }
-  }, []);
+  }, [send, state]);
 
   useEffect(() => {
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude } = params.coordinate;
-      send('backToIdle')
+      send('backToIdle');
       send('sendingParams', { value: { latitude, longitude } });
       setIndex(0);
     } else {
       send('onAskPermission');
     }
-  }, [route?.params]);
+  }, [route, route?.params, send]);
 
   const renderHeaderRight = () => {
     return (
-      <BTouchableText onPress={() => setVisibleTnc(true)} title="ketentuan" />
+      <BTouchableText onPress={() => setVisibleTnc(true)} title="Ketentuan" />
     );
   };
 
@@ -70,7 +70,7 @@ const PriceList = () => {
     });
   }, [navigation]);
 
-  const onTabPress = ({ route }) => {
+  const onTabPress = ({ route: any }) => {
     const tabIndex = index === 0 ? 1 : 0;
     if (route.key !== routes[index].key) {
       send('onChangeCategories', { payload: tabIndex });
@@ -105,7 +105,7 @@ const PriceList = () => {
       {!loadLocation ? (
         <CurrentLocation
           onPress={goToLocation}
-          location={locationDetail.formattedAddress}
+          location={locationDetail?.formattedAddress}
         />
       ) : (
         <ShimmerPlaceholder
@@ -121,7 +121,7 @@ const PriceList = () => {
         <PriceSearchBar
           onPress={() =>
             navigation.navigate('SearchProduct', {
-              distance: locationDetail.distance.value,
+              distance: locationDetail?.distance?.value,
             })
           }
         />

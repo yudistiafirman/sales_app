@@ -9,14 +9,14 @@ const hasPermissionIOS = async () => {
   }
 
   if (status === 'denied') {
-    ShowAlertLocation();
+    showAlertLocation();
   }
 
   if (status === 'disabled') {
-    ShowAlertLocation();
+    showAlertLocation();
   }
 
-  ShowAlertLocation();
+  showAlertLocation();
 };
 
 const openSetting = () => {
@@ -25,7 +25,7 @@ const openSetting = () => {
   });
 };
 
-const ShowAlertLocation = () => {
+const showAlertLocation = () => {
   Alert.alert(
     `Turn on Location Services to allow ${displayName} to determine your location.`,
     '',
@@ -60,12 +60,12 @@ const hasLocationPermission = async () => {
   }
 
   if (status === PermissionsAndroid.RESULTS.DENIED) {
-    ShowAlertLocation();
+    showAlertLocation();
   } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-    ShowAlertLocation();
+    showAlertLocation();
   }
 
-  ShowAlertLocation();
+  showAlertLocation();
 };
 
 export default hasLocationPermission;
