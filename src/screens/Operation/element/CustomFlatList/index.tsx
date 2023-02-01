@@ -53,7 +53,7 @@ export default function CustomFlatlist({
     } else {
       navigation.navigate('Camera', {
         photoTitle: 'DO',
-        entryPoint: 'operation',
+        entryPoint: 'return',
       });
     }
   };

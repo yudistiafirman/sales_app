@@ -7,6 +7,7 @@ const colors = {
   white: '#FFFFFF',
   black: '#191919',
   lightGray: '#E6E6E6',
+  offCheckbox: '#aaaaaa',
   text: {
     dark: '#191919',
     darker: '#202020',

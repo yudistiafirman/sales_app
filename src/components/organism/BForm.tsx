@@ -12,9 +12,11 @@ import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
 import { colors, layout } from '@/constants';
+import CheckBox from '@react-native-community/checkbox';
 
 interface IProps {
   inputs: Input[];
+  spacer?: 'extraSmall' | 'small' | 'medium' | 'large' | 'extraLarge' | number;
 }
 
 interface Styles {
@@ -39,6 +41,13 @@ const styles: Styles = {
     justifyContent: 'center',
     marginRight: layout.pad.lg,
   },
+  checkboxText: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  flexRow: {
+    flexDirection: 'row',
+  },
 };
 
 const renderInput = (input: Input): React.ReactNode => {
@@ -55,6 +64,7 @@ const renderInput = (input: Input): React.ReactNode => {
     onSelect,
     keyboardType,
     placeholder,
+    checkbox,
   } = input;
 
   if (type === 'quantity') {
@@ -217,15 +227,36 @@ const renderInput = (input: Input): React.ReactNode => {
       </React.Fragment>
     );
   }
+
+  if (type === 'checkbox') {
+    return (
+      <React.Fragment>
+        <View style={styles.flexRow}>
+          <View style={styles.checkboxText}>
+            <BLabel label={label} isRequired={isRequire} />
+          </View>
+          <CheckBox
+            disabled={checkbox?.disabled}
+            value={checkbox?.value}
+            onFillColor={colors.primary}
+            onTintColor={colors.offCheckbox}
+            onCheckColor={colors.primary}
+            tintColors={{ true: colors.primary, false: colors.offCheckbox }}
+            onValueChange={checkbox?.onValueChange}
+          />
+        </View>
+      </React.Fragment>
+    );
+  }
 };
 
-const BForm = ({ inputs }: IProps) => {
+const BForm = ({ inputs, spacer }: IProps) => {
   return (
     <View>
       {inputs.map((input, index) => (
         <React.Fragment key={index}>
           {renderInput(input)}
-          <BSpacer size="small" />
+          <BSpacer size={spacer ? spacer : 'small'} />
         </React.Fragment>
       ))}
     </View>

@@ -54,29 +54,29 @@ const Config = ({
 
   const takePhoto = async () => {
     //NOTE: for emulator
-    navigation.navigate('Preview', {
-      photoTitle: title,
-      entryPoint: entryPoint,
-    });
+    // navigation.navigate('Preview', {
+    //   photoTitle: title,
+    //   entryPoint: entryPoint,
+    // });
 
     //NOTE: for real device
-    // if (camera === undefined || camera.current === undefined) {
-    //   Alert.alert('No Camera Found');
-    // } else {
-    //   try {
-    //     const takenPhoto = await camera.current?.takePhoto({
-    //       flash: 'off',
-    //     });
-    //     animateElement();
-    //     navigation.navigate('Preview', {
-    //       photo: takenPhoto,
-    //       photoTitle: title,
-    //       entryPoint: entryPoint,
-    //     });
-    //   } catch (err) {
-    //     Alert.alert('Camera Error');
-    //   }
-    // }
+    if (camera === undefined || camera.current === undefined) {
+      Alert.alert('No Camera Found');
+    } else {
+      try {
+        const takenPhoto = await camera.current?.takePhoto({
+          flash: 'off',
+        });
+        animateElement();
+        navigation.navigate('Preview', {
+          photo: takenPhoto,
+          photoTitle: title,
+          entryPoint: entryPoint,
+        });
+      } catch (err) {
+        Alert.alert('Camera Error');
+      }
+    }
   };
   const isFocused = useIsFocused();
 

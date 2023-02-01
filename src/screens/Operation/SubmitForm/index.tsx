@@ -6,13 +6,14 @@ import { Input } from '@/interfaces';
 import { RootStackScreenProps } from '@/navigation/navTypes';
 import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const SubmitForm = () => {
   const route = useRoute<RootStackScreenProps>();
   useHeaderTitleChanged({ title: 'Dispatch' });
   const navigation = useNavigation();
+  const [toggleCheckBox, setToggleCheckBox] = useState(true);
 
   const deliveryInputs: Input[] = React.useMemo(() => {
     const baseInput: Input[] = [
@@ -37,6 +38,15 @@ const SubmitForm = () => {
   const returnInputs: Input[] = React.useMemo(() => {
     const baseInput: Input[] = [
       {
+        label: 'Ada Muatan Tersisa di Dalam TM?',
+        type: 'checkbox',
+        isRequire: false,
+        checkbox: {
+          value: toggleCheckBox,
+          onValueChange: setToggleCheckBox,
+        },
+      },
+      {
         label: 'Kondisi TM',
         isRequire: true,
         isError: false,
@@ -51,7 +61,7 @@ const SubmitForm = () => {
       },
     ];
     return baseInput;
-  }, []);
+  }, [toggleCheckBox]);
 
   return (
     <View style={style.parent}>
@@ -91,10 +101,11 @@ const SubmitForm = () => {
           </View>
         )}
         {route?.params?.type === 'return' && (
-          // put checkbox top of
-          <View style={style.container}>
-            <BForm inputs={returnInputs} />
-          </View>
+          <>
+            <View style={style.container}>
+              <BForm inputs={returnInputs} spacer="extraSmall" />
+            </View>
+          </>
         )}
       </View>
       <View style={style.conButton}>
@@ -141,7 +152,6 @@ const style = StyleSheet.create({
   },
   container: {
     flex: 1,
-    marginTop: layout.pad.lg,
   },
   conButton: {
     width: '100%',

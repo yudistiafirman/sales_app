@@ -20,7 +20,8 @@ interface Input {
     | 'area'
     | 'dropdown'
     | 'PIC'
-    | 'autocomplete';
+    | 'autocomplete'
+    | 'checkbox';
   onChange?: (e: any) => void;
   value?: string | any;
   placeholder?: string;
@@ -70,6 +71,11 @@ interface Input {
     errorMessageTwo?: string;
     valueOne?: any;
     valueTwo?: any;
+  };
+  checkbox?: {
+    disabled?: boolean;
+    value: any;
+    onValueChange: (value: any) => void;
   };
   onSelect?: (index: number | any) => void; //eg for pic radio
 }
