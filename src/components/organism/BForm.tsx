@@ -11,9 +11,11 @@ import BText from '../atoms/BText';
 import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
+import { BSwitch, BFileInput } from '@/components';
 
 interface IProps {
   inputs: Input[];
+  noSpaceEnd?: boolean;
 }
 
 interface Styles {
@@ -39,13 +41,16 @@ const renderInput = (input: Input): React.ReactNode => {
     isRequire,
     isError,
     onSelect,
+    placeholder,
+    hidePicLabel,
   } = input;
 
   if (type === 'textInput') {
+    const textInputProps = { onChange, value };
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
-        <BTextInput onChangeText={onChange} value={value} />
+        <BTextInput {...textInputProps} />
         {isError && (
           <BText size="small" color="primary" bold="100">
             {`${label} harus diisi`}
@@ -64,6 +69,7 @@ const renderInput = (input: Input): React.ReactNode => {
           value={value}
           multiline={true}
           numberOfLines={4}
+          placeholder={placeholder}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
@@ -115,7 +121,6 @@ const renderInput = (input: Input): React.ReactNode => {
 
   if (type === 'dropdown') {
     if (dropdown) {
-      console.log('dropdown, masukl');
       return (
         <React.Fragment>
           <BLabel label={label} isRequired={isRequire} />
@@ -150,15 +155,19 @@ const renderInput = (input: Input): React.ReactNode => {
     return (
       <React.Fragment>
         <BSpacer size="small" />
-        <View style={styles.optionContainer}>
-          <BText type="header">PIC</BText>
-          <BText bold="500" color="primary" onPress={onChange}>
-            + Tambah PIC
-          </BText>
-        </View>
-        <BSpacer size="extraSmall" />
-        <BDivider />
-        <BSpacer size="small" />
+        {!hidePicLabel ? (
+          <>
+            <View style={styles.optionContainer}>
+              <BText type="header">PIC</BText>
+              <BText bold="500" color="primary" onPress={onChange}>
+                + Tambah PIC
+              </BText>
+            </View>
+            <BSpacer size="extraSmall" />
+            <BDivider />
+            <BSpacer size="small" />
+          </>
+        ) : null}
         <BPicList
           isOption={value.length > 1 ? true : false}
           data={value}
@@ -167,15 +176,38 @@ const renderInput = (input: Input): React.ReactNode => {
       </React.Fragment>
     );
   }
+
+  if (type === 'switch') {
+    return (
+      <React.Fragment>
+        <BSwitch label={label} value={value} onChange={onChange} />
+      </React.Fragment>
+    );
+  }
+
+  if (type === 'fileInput') {
+    return (
+      <React.Fragment>
+        <BFileInput label={label} value={value} onChange={onChange} />
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {`${label} harus diisi`}
+          </BText>
+        )}
+      </React.Fragment>
+    );
+  }
 };
 
-const BForm = ({ inputs }: IProps) => {
+const BForm = ({ inputs, noSpaceEnd }: IProps) => {
   return (
     <View>
       {inputs.map((input, index) => (
         <React.Fragment key={index}>
           {renderInput(input)}
-          <BSpacer size="small" />
+          {(index < inputs.length - 1 || !noSpaceEnd) && (
+            <BSpacer size="small" />
+          )}
         </React.Fragment>
       ))}
     </View>

@@ -1,11 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import { BDivider, BForm, BSpacer, BText } from '@/components';
 import { CreateVisitationSecondStep, Input, Styles } from '@/interfaces';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import SearchFlow from './Searching';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+import { resScale } from '@/utils';
+import { layout } from '@/constants';
+const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
+
 interface IProps {
   openBottomSheet: () => void;
 }
@@ -13,53 +20,81 @@ interface IProps {
 const company = require('@/assets/icon/Visitation/company.png');
 const individu = require('@/assets/icon/Visitation/profile.png');
 
+const dummyData = [
+  {
+    id: 'kwos0299',
+    name: 'Agus',
+    position: 'Finance',
+    phone: 81128869884,
+    email: 'agus@gmail.com',
+  },
+  {
+    id: '1233okjs',
+    name: 'Joko',
+    position: 'Finance',
+    phone: 81128869884,
+    email: 'Joko@gmail.com',
+  },
+  {
+    id: 'jsncijc828',
+    name: 'Johny',
+    position: 'Finance',
+    phone: 81128869884,
+    email: 'Johny@gmail.com',
+  },
+];
+function dummyReq() {
+  return new Promise<any>((resolve) => {
+    setTimeout(() => {
+      resolve(dummyData);
+    }, 5000);
+  });
+}
+
 const SecondStep = ({ openBottomSheet }: IProps) => {
   const { values, action } = React.useContext(createVisitationContext);
-  const { stepTwo: state } = values;
+  const { stepTwo: state, shouldScrollView } = values;
   const { updateValueOnstep } = action;
 
   const onChange = (key: keyof CreateVisitationSecondStep) => (e: any) => {
     updateValueOnstep('stepTwo', key, e);
   };
+  const [isLoading, setisLoading] = useState(false);
+  useEffect(() => {
+    if (state.pics.length === 0) {
+      (async () => {
+        updateValueOnstep('stepTwo', 'pics', []);
+        setisLoading(true);
+        const data = await dummyReq();
+        console.log(data, 'data dummy');
+
+        updateValueOnstep('stepTwo', 'pics', data);
+        setisLoading(false);
+      })();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (state.pics.length === 1) {
+      updateValueOnstep('stepTwo', 'selectedPic', {
+        ...state.pics[0],
+        isSelected: true,
+      });
+    }
+  }, [state.pics]);
 
   const onFetching = (e: any) => {
-    console.log('masuk sini ga sih??', e);
-    // setOptions({
-    //   loading: true,
-    //   items: null,
-    // });
+    updateValueOnstep('stepTwo', 'companyName', { id: 1, title: e });
+
+    // fetching then merge with the thing user type
     updateValueOnstep('stepTwo', 'options', {
-      loading: true,
-      items: null,
+      items: [{ id: 1, title: e }],
     });
-    setTimeout(() => {
-      updateValueOnstep('stepTwo', 'options', {
-        loading: false,
-        items: [
-          {
-            id: '1',
-            title: 'PT Satu',
-          },
-          {
-            id: '2',
-            title: 'PT Dua',
-          },
-          {
-            id: '3',
-            title: 'PT Tiga',
-          },
-          {
-            id: '4',
-            title: 'PT Empat',
-          },
-        ],
-      });
-    }, 1000);
     return;
   };
 
   const inputs: Input[] = React.useMemo(() => {
-    console.log('rerender input');
+    // console.log('rerender input');
     const baseInput: Input[] = [
       {
         label: 'Jenis Pelanggan',
@@ -108,7 +143,10 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           isRequire: true,
           isError: false,
           type: 'textInput',
-          onChange: onChange('projectName'),
+          onChange: (e: any) => {
+            // console.log(e, 'event');
+            onChange('projectName')(e.nativeEvent.text);
+          },
           value: state.projectName,
         },
         {
@@ -121,13 +159,23 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             openBottomSheet();
           },
           onSelect: (index: number) => {
+            let selectedIndex: number | null = null;
             const newPicList = values.stepTwo.pics.map((el, _index) => {
+              if (_index === index) {
+                selectedIndex = index;
+              }
               return {
                 ...el,
                 isSelected: _index === index,
               };
             });
             updateValueOnstep('stepTwo', 'pics', newPicList);
+            if (typeof selectedIndex === 'number') {
+              updateValueOnstep('stepTwo', 'selectedPic', {
+                ...newPicList[selectedIndex],
+                isSelected: true,
+              });
+            }
           },
         },
       ];
@@ -142,8 +190,8 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
     setSearch(searching);
   };
 
-  return (
-    <ScrollView>
+  if (!shouldScrollView) {
+    <View style={{ flex: 1 }}>
       <SearchFlow isSearch={isSearch} onSearch={onSearch} />
       {!isSearch && (
         <React.Fragment>
@@ -162,6 +210,32 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           </View>
         </React.Fragment>
       )}
+    </View>;
+  }
+
+  return (
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <SearchFlow isSearch={isSearch} onSearch={onSearch} />
+      {!isSearch && (
+        <React.Fragment>
+          <BSpacer size="small" />
+          <View style={styles.dividerContainer}>
+            <BDivider />
+            <BSpacer size="extraSmall" />
+            <BText color="divider">Atau Buat Baru Dibawah</BText>
+            <BSpacer size="extraSmall" />
+            <BDivider />
+          </View>
+          <BSpacer size="small" />
+          <View>
+            <BForm inputs={inputs} />
+            {state.customerType.length > 0 && isLoading && (
+              <ShimmerPlaceHolder style={styles.labelShimmer} />
+            )}
+            <BSpacer size="large" />
+          </View>
+        </React.Fragment>
+      )}
     </ScrollView>
   );
 };
@@ -175,6 +249,11 @@ const styles: Styles = {
     paddingLeft: 20,
     paddingRight: 20,
     backgroundColor: 'red',
+  },
+  labelShimmer: {
+    width: resScale(335),
+    height: resScale(100),
+    borderRadius: layout.radius.md,
   },
 };
 

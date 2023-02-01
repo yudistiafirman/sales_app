@@ -1,95 +1,315 @@
-import React from 'react';
-import { Calendar, DateData } from 'react-native-calendars';
-import { BContainer, BPic, BSpacer, BText } from '@/components';
-import { colors } from '@/constants';
-import { View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { colors, layout } from '@/constants';
+import {
+  DeviceEventEmitter,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { resScale } from '@/utils';
-import { MarkedDates } from 'react-native-calendars/src/types';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native-gesture-handler';
+import Feather from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import AddPictureModal from '../addPictureModal';
+import PopUpQuestion from '../PopUpQuestion';
+import LastStepPopUp from '../LastStepPopUp';
+import { createVisitationContext } from '@/context/CreateVisitationContext';
+import {
+  CreateVisitationFourthStep,
+  locationPayloadType,
+  payloadPostType,
+  picPayloadType,
+  projectPayloadType,
+  visitationPayload,
+} from '@/interfaces';
+import { CreateVisitationState } from '@/interfaces';
+import { useDispatch, useSelector } from 'react-redux';
+import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
+import { postVisitation } from '@/redux/async-thunks/productivityFlowThunks';
+import { RootState } from '@/redux/store';
 
-const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
-  if (direction === 'right') {
-    return (
-      <View style={{ position: 'relative', right: resScale(-20) }}>
-        <Icon name="chevron-right" size={25} color={colors.icon.primary} />
-      </View>
-    );
-  }
-
-  return (
-    <View style={{ position: 'relative', left: resScale(-20) }}>
-      <Icon name="chevron-left" size={25} color={colors.icon.primary} />
-    </View>
-  );
+type selectedDateType = {
+  date: string;
+  prettyDate: string;
+  day: string;
 };
 
-const Fourth = () => {
-  const [markedDate, setMarkedDate] = React.useState<MarkedDates>({
-    '2023-01-01': { marked: true },
-  });
+function payloadMapper(
+  values: CreateVisitationState,
+  type: 'VISIT' | 'SPH' | 'REJECTED' | ''
+) {
+  const { stepOne, stepTwo, stepThree, stepFour } = values;
+  const payload = {
+    visitation: {
+      location: {} as locationPayloadType,
+    } as visitationPayload,
+    project: {
+      location: {} as locationPayloadType,
+    } as projectPayloadType,
+    pic: [] as picPayloadType[],
+    files: [],
+  } as payloadPostType;
+  if (stepTwo.selectedPic) {
+    payload.pic.push(stepTwo.selectedPic);
+  }
+  payload.visitation.order = 1;
+  payload.visitation.status = type;
+  // console.log(stepTwo, 'stepone');
 
-  const onDayPress = (day: DateData) => {
-    const newMarkedDate = { ...markedDate };
-    for (const date of Object.keys(newMarkedDate)) {
-      // if ()
-      console.log(date, 'ini apa??');
-      if (newMarkedDate[date].selected && newMarkedDate[date].marked) {
-        newMarkedDate[date].selected = false;
-      }
+  if (stepOne.locationAddress.formattedAddress) {
+    payload.project.location.formattedAddress =
+      stepOne.locationAddress.formattedAddress;
+  }
+  if (stepOne.locationAddress.longitude) {
+    payload.project.location.lon = stepOne.locationAddress.longitude;
+  }
+  if (stepOne.locationAddress.latitude) {
+    payload.project.location.lat = stepOne.locationAddress.latitude;
+  }
+  if (stepOne.createdLocation.formattedAddress) {
+    payload.visitation.location.formattedAddress =
+      stepOne.createdLocation.formattedAddress;
+  }
+  if (stepOne.createdLocation.lon) {
+    payload.visitation.location.lon = stepOne.createdLocation.lon;
+  }
+  if (stepOne.createdLocation.lat) {
+    payload.visitation.location.lat = stepOne.createdLocation.lat;
+  }
 
-      if (newMarkedDate[date].selected) {
-        console.log('masuk sini');
-        console.log(newMarkedDate[date]);
-        delete newMarkedDate[date];
-      }
-      newMarkedDate[day.dateString] = {
-        ...newMarkedDate[day.dateString],
-        selected: true,
+  if (stepTwo.customerType) {
+    payload.visitation.customerType = stepTwo.customerType;
+  }
+  if (stepThree.paymentType) {
+    payload.visitation.paymentType = stepThree.paymentType;
+  }
+  if (stepThree.estimationDate.estimationWeek) {
+    payload.visitation.estimationWeek = stepThree.estimationDate.estimationWeek;
+  }
+  if (stepThree.estimationDate.estimationMonth) {
+    payload.visitation.estimationMonth =
+      stepThree.estimationDate.estimationMonth;
+  }
+  if (stepThree.notes) {
+    payload.visitation.visitationNotes = stepThree.notes;
+  }
+  if (stepFour.selectedDate) {
+    payload.visitation.dateVisit = stepFour.selectedDate;
+  }
+  if (stepFour.selectedDate) {
+    payload.visitation.finishDate = stepFour.selectedDate;
+  }
+  if (stepFour.kategoriAlasan) {
+    payload.visitation.rejectCategory = stepFour.kategoriAlasan;
+  }
+  if (stepFour.alasanPenolakan) {
+    payload.visitation.rejectNotes = stepFour.alasanPenolakan;
+  }
+  if (stepThree.products.length > 0) {
+    payload.visitation.products = stepThree.products.map((product) => {
+      return {
+        id: product.id,
       };
-      setMarkedDate(newMarkedDate);
-    }
+    });
+  }
+  if (stepTwo.projectName) {
+    payload.project.name = stepTwo.projectName;
+  }
+  if (stepTwo.companyName) {
+    payload.project.companyDisplayName = stepTwo.companyName.title;
+  }
+  if (stepThree.stageProject) {
+    payload.project.stage = stepThree.stageProject;
+  }
+
+  console.log(JSON.stringify(payload), 'payloadds');
+}
+
+const Fourth = () => {
+  const dispatch = useDispatch();
+  const isUploadLoading = useSelector(
+    (state: RootState) => state.common.isUploadLoading
+  );
+  const uploadedFilesResponse = useSelector(
+    (state: RootState) => state.common.uploadedFilesResponse
+  );
+  const { values, action } = React.useContext(createVisitationContext);
+  const { stepFour: state } = values;
+  const { updateValueOnstep } = action;
+
+  const onChange = (key: keyof CreateVisitationFourthStep) => (e: any) => {
+    updateValueOnstep('stepFour', key, e);
   };
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isPopUpVisible, setIsPopUpVisible] = useState(false);
+  const [isLastStepVisible, setIsLastStepVisible] = useState(false);
+
+  const addImage = (image: any) => {
+    const imagesArray = [...state.images, image];
+
+    onChange('images')(imagesArray);
+  };
+  const removeImage = (pos: number) => () => {
+    const currentImages = state.images;
+    currentImages.splice(pos, 1);
+    onChange('images')([...currentImages]);
+  };
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener('CreateVisitation.continueButton', () => {
+      setIsLastStepVisible((curr) => !curr);
+    });
+    DeviceEventEmitter.addListener(
+      'CalendarScreen.selectedDate',
+      (date: selectedDateType) => {
+        onChange('selectedDate')(date);
+        setIsLastStepVisible((curr) => !curr);
+      }
+    );
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners('CreateVisitation.continueButton');
+      DeviceEventEmitter.removeAllListeners('CalendarScreen.selectedDate');
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <ScrollView>
-      <BText>4</BText>
-      <Calendar
-        theme={{
-          arrowColor: colors.black,
-          todayTextColor: colors.primary,
-          selectedDayTextColor: colors.white,
-          selectedDayBackgroundColor: colors.primary,
-          dotColor: colors.primary,
+    <>
+      <AddPictureModal
+        isVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        initiatePopup={() => {
+          setIsModalVisible((curr) => !curr);
+          setTimeout(() => {
+            setIsPopUpVisible((curr) => !curr);
+          }, 200);
         }}
-        onDayPress={onDayPress}
-        markedDates={markedDate}
-        renderArrow={(direction) => <RenderArrow direction={direction} />}
+        addImage={addImage}
       />
-      <BSpacer size="medium" />
-      <BContainer bgc="grey" radius="md" border>
-        <View
-          style={{
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center',
+      <PopUpQuestion
+        isVisible={isPopUpVisible}
+        setIsPopupVisible={setIsPopUpVisible}
+        initiateCameraModule={() => {
+          setIsPopUpVisible((curr) => !curr);
+          setTimeout(() => {
+            setIsModalVisible((curr) => !curr);
+          }, 200);
+        }}
+      />
+      <LastStepPopUp
+        isVisible={isLastStepVisible}
+        setIsPopUpVisible={setIsLastStepVisible}
+        selectedDate={
+          state.selectedDate
+            ? `${state.selectedDate?.day}, ${state.selectedDate?.prettyDate}`
+            : ''
+        }
+        closedLostValueOnChange={{
+          dropdownOnchange: onChange('kategoriAlasan'),
+          dropdownValue: state.kategoriAlasan,
+          areaOnChange: onChange('alasanPenolakan'),
+          areaValue: state.alasanPenolakan,
+        }}
+        onPressSubmit={(type) => {
+          console.log(type, 'type onpress', JSON.stringify(values));
+          payloadMapper(values, type);
+          console.log(uploadedFilesResponse, 'uploadedFilesResponse');
+          if (uploadedFilesResponse.length === 0) {
+            dispatch(postUploadFiles({ files: values.stepFour.images }))
+              .unwrap()
+              .then((data) => {
+                console.log(data, 'ini response upload files');
+                // dispatch(
+                //   postVisitation({ payload: payloadMapper(values, type) })
+                // );
+                console.log('ini setelah uploadfiles');
+                console.log('langsung post visitation payload');
+              });
+          } else {
+            console.log('ini apabila files telah di upload');
+            console.log('langsung post visitation payload');
+          }
+        }}
+      />
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContentStyle}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* <BText>4</BText> */}
+        <TouchableOpacity
+          onPress={() => {
+            setIsModalVisible((curr) => !curr);
           }}
         >
-          <BText type="title">PT. Guna Karya</BText>
-          <Icon name="chevron-down" size={25} color={colors.icon.darkGrey} />
-        </View>
-        <BText>Asu Asu</BText>
-        <BSpacer size="medium" />
-        <BPic
-          name="Joko"
-          email="EMAIL"
-          phone="896308263262"
-          position="position"
-          border={false}
-        />
-      </BContainer>
-    </ScrollView>
+          <View style={[styles.addImage, styles.container]}>
+            <Feather name="plus" size={resScale(25)} color="#000000" />
+          </View>
+        </TouchableOpacity>
+        {/* <BButtonPrimary
+          title="upload files"
+          onPress={() => {
+            dispatch(postUploadFiles({ files: values.stepFour.images }));
+          }}
+          disable={isUploadLoading}
+        /> */}
+        {state.images.map((image, index) => {
+          return (
+            <View
+              key={index.toString()}
+              style={[styles.imageContainer, styles.container]}
+            >
+              <Image source={image} style={styles.imageStyle} />
+              <TouchableOpacity
+                style={styles.closeIcon}
+                onPress={removeImage(index)}
+              >
+                <AntDesign
+                  name="closecircle"
+                  size={resScale(15)}
+                  color="#000000"
+                />
+              </TouchableOpacity>
+            </View>
+          );
+        })}
+      </ScrollView>
+    </>
   );
 };
 
 export default Fourth;
+
+const styles = StyleSheet.create({
+  container: {
+    width: resScale(102),
+    height: resScale(120),
+    margin: resScale(5),
+    borderRadius: layout.radius.md,
+  },
+  imageContainer: {
+    // backgroundColor: colors.tertiary,
+    position: 'relative',
+  },
+  addImage: {
+    backgroundColor: colors.tertiary,
+    margin: resScale(5),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scrollViewContentStyle: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    // backgroundColor: 'blue',
+  },
+  closeIcon: {
+    position: 'absolute',
+    right: resScale(-5),
+    top: resScale(-5),
+  },
+  imageStyle: {
+    flex: 1,
+  },
+});
