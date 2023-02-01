@@ -1,9 +1,14 @@
-/* eslint-disable react/no-unstable-nested-components */
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import BSearchBar from '@/components/molecules/BSearchBar';
 import resScale from '@/utils/resScale';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { TextInput } from 'react-native-paper';
 import { SafeAreaView, AppState } from 'react-native';
 import SearchAreaStyles from './styles';
@@ -59,18 +64,23 @@ const SearchAreaProject = ({ route }: { route: any }) => {
       },
     },
   });
+
+  const renderHeaderLeft = useCallback(() => {
+    return (
+      <BHeaderIcon
+        size={resScale(23)}
+        onBack={() => navigation.goBack()}
+        iconName="x"
+      />
+    );
+  }, [navigation]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: false,
-      headerLeft: () => (
-        <BHeaderIcon
-          size={resScale(23)}
-          onBack={() => navigation.goBack()}
-          iconName="x"
-        />
-      ),
+      headerTitle: 'Pilih Area Proyek',
+      headerLeft: () => renderHeaderLeft(),
     });
-  }, [navigation]);
+  }, [navigation, renderHeaderLeft]);
 
   useEffect(() => {
     if (state.matches('getLocation.denied')) {
