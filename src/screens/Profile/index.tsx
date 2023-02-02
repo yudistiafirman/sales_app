@@ -1,5 +1,5 @@
-import bStorage from '@/Actions/BStorage';
-import { signOut } from '@/Actions/CommonActions';
+import bStorage from '@/actions/BStorage';
+import { signOut } from '@/actions/CommonActions';
 import { BTouchableText } from '@/components';
 import storageKey from '@/constants/storageKey';
 import { setUserData } from '@/redux/reducers/authReducer';
