@@ -13,6 +13,7 @@ const Camera = () => {
   const route = useRoute<RootStackScreenProps>();
 
   const navigateTo = route?.params?.navigateTo;
+  const photoTitle = route?.params?.photoTitle;
 
   useEffect(() => {
     navigation.addListener('focus', () => {
@@ -33,7 +34,7 @@ const Camera = () => {
   return (
     <View style={styles.parent}>
       <SafeAreaView style={styles.container}>
-        <Config navigateTo={navigateTo} title={route?.params?.photoTitle} />
+        <Config navigateTo={navigateTo} title={photoTitle} />
       </SafeAreaView>
     </View>
   );

@@ -25,11 +25,16 @@ import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
 import {
   getAllVisitations,
   getVisitationTarget,
-} from '@/Actions/ProductivityActions';
+} from '@/actions/ProductivityActions';
 import debounce from 'lodash.debounce';
 import { Api } from '@/models';
+import { visitationDataType } from '@/interfaces';
+import { useDispatch } from 'react-redux';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 
 const Beranda = () => {
+  const dispatch = useDispatch();
   const [currentVisit, setCurrentVisit] = useState<{
     current: number;
     target: number;
@@ -119,6 +124,7 @@ const Beranda = () => {
       const dispalyData =
         _data.data?.map(
           (el: {
+            id: string;
             status: string;
             order: any;
             finishDate: moment.MomentInput;
@@ -133,6 +139,7 @@ const Beranda = () => {
               : null;
 
             return {
+              id: el.id,
               name: el.project?.name || '--',
               location: 'dummy',
               time,
@@ -163,10 +170,10 @@ const Beranda = () => {
     fetchVisitations();
   }, [page, selectedDate]);
 
-  const onDateSelected = (date: moment.Moment) => {
+  const onDateSelected = useCallback((dateTime: moment.Moment) => {
     setPage(0);
-    setSelectedDate(date);
-  };
+    setSelectedDate(dateTime);
+  }, []);
 
   const tabToRender: { tabTitle: string; totalItems: number }[] =
     useMemo(() => {
@@ -256,7 +263,7 @@ const Beranda = () => {
     // setIsLoading((curr) => !curr);
     // navigation.navigate('CreateVisitation');
     navigation.navigate('Camera', {
-      photoTitle: 'Foto Kunjungan',
+      photoTitle: 'Kunjungan',
       navigateTo: 'CreateVisitation',
     });
   };
@@ -267,7 +274,13 @@ const Beranda = () => {
     return (
       <BFlatlistItems
         renderItem={(item) => (
-          <BVisitationCard item={item} searchQuery={searchQuery} />
+          <BVisitationCard
+            item={item}
+            searchQuery={searchQuery}
+            onPress={() => {
+              console.log(item, 'sceneToRender');
+            }}
+          />
         )}
         searchQuery={searchQuery}
         data={data.data}
@@ -290,6 +303,39 @@ const Beranda = () => {
       />
     );
   }, [data]);
+
+  async function visitationOnPress(dataItem: visitationDataType) {
+    // console.log(dataItem, 'visitationOnPress');
+    try {
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: 'Loading visitation Data...',
+          outsideClickClosePopUp: false,
+        })
+      );
+      const response = await dispatch(
+        getOneVisitation({ visitationId: dataItem.id })
+      ).unwrap();
+      console.log(response, 'responsevisitationOnPress');
+
+      dispatch(closePopUp());
+      navigation.navigate('Camera', {
+        photoTitle: 'Foto Kunjungan',
+        navigateTo: 'CreateVisitation',
+        existingVisitation: response,
+      });
+    } catch (error) {
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          highlightedText: 'Error',
+          popUpText: 'Error fetching visitation Data',
+          outsideClickClosePopUp: true,
+        })
+      );
+    }
+  }
 
   return (
     <View style={style.container}>
@@ -381,6 +427,7 @@ const Beranda = () => {
           data={data.data}
           searchQuery={searchQuery}
           onEndReached={onEndReached}
+          onPressItem={visitationOnPress}
         />
       </BBottomSheet>
     </View>

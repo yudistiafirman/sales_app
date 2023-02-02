@@ -9,6 +9,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { resScale } from '@/utils';
 import { layout } from '@/constants';
+import { useRoute } from '@react-navigation/native';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 
 interface IProps {
   openBottomSheet: () => void;
@@ -18,6 +20,8 @@ const company = require('@/assets/icon/Visitation/company.png');
 const individu = require('@/assets/icon/Visitation/profile.png');
 
 const SecondStep = ({ openBottomSheet }: IProps) => {
+  const route = useRoute<RootStackScreenProps>();
+  const existingVisitation = route?.params?.existingVisitation;
   const { values, action } = React.useContext(createVisitationContext);
   const { stepTwo: state } = values;
   const { updateValueOnstep } = action;
@@ -64,6 +68,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             },
           },
         ],
+        isInputDisable: !!existingVisitation,
       },
     ];
     if (state.customerType.length > 0) {
@@ -79,6 +84,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         onSelect: (item: any) => {
           updateValueOnstep('stepTwo', 'companyName', item);
         },
+        isInputDisable: !!existingVisitation,
       };
 
       const aditionalInput: Input[] = [
@@ -92,6 +98,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             onChange('projectName')(e.nativeEvent.text);
           },
           value: state.projectName,
+          isInputDisable: !!existingVisitation,
         },
         {
           label: 'PIC',
@@ -129,7 +136,11 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
 
   return (
     <>
-      <SearchFlow isSearch={isSearch} onSearch={onSearch} />
+      <SearchFlow
+        searchingDisable={existingVisitation}
+        isSearch={isSearch}
+        onSearch={onSearch}
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
         {!isSearch && (
           // <ScrollView>

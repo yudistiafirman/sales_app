@@ -1,4 +1,4 @@
-import BrikApi from '@/brikApi/BrikApi';
+import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import axios from 'axios';
 
 type DataProps = {
@@ -44,7 +44,7 @@ export const uploadFile = async (
       'Content-Type': 'multipart/form-data',
       token: token,
     },
-    url: BrikApi.uploadFile(),
+    url: BrikApiCommon.filesUpload(),
     data: formdata,
     responseType: 'json',
     cancelToken: source.token,

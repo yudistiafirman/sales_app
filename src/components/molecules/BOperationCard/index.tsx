@@ -1,4 +1,11 @@
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import React from 'react';
 
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,42 +17,72 @@ import colors from '@/constants/colors';
 import respFS from '@/utils/resFontSize';
 import Quantity from './element/Quantity';
 import BButtonPrimary from '@/components/atoms/BButtonPrimary';
+import BLocationText from '@/components/atoms/BLocationText';
 
 type OperationCardType = {
   item: {
     id: string;
-    name: string;
-    qty: string;
-    status?: 'Dalam Produksi' | undefined;
+    name?: string;
+    qty?: string;
+    date?: string;
+    status?: string;
     addressID?: string;
     onLocationPress?: () => void;
   };
+  clickable: boolean;
   onPress?: () => void;
+  useChevron?: boolean;
+  color?: string;
+  customStyle?: StyleProp<ViewStyle>;
 };
 
-export default function BOperationCard({ item, onPress }: OperationCardType) {
+export default function BOperationCard({
+  item,
+  onPress,
+  useChevron,
+  color,
+  customStyle,
+  clickable,
+}: OperationCardType) {
   return (
-    <TouchableOpacity style={style.parent} onPress={onPress}>
+    <TouchableOpacity
+      style={[
+        style.parent,
+        color ? { backgroundColor: color } : { backgroundColor: colors.white },
+        customStyle && customStyle,
+      ]}
+      onPress={onPress}
+      disabled={!clickable}
+    >
       <View style={style.container}>
         <View style={style.leftSide}>
           <View style={style.top}>
             <HighlightText fontSize={12} name={item.id} />
-            <View style={style.status}>
-              <Text style={style.statusText}>{item.status}</Text>
-            </View>
+            {item.status && (
+              <View style={style.status}>
+                <Text style={style.statusText}>{item.status}</Text>
+              </View>
+            )}
           </View>
-          <View>
-            <Text style={style.statusText}>{item.name}</Text>
-          </View>
-          {item.qty && (
-            <View style={style.quantity}>
-              <Quantity name={item.qty} />
+          {item.name && (
+            <View
+              style={item.addressID || item.qty ? style.quantity : undefined}
+            >
+              <Text style={style.statusText}>{item.name}</Text>
             </View>
           )}
+          {item.addressID && (
+            <View style={item.qty ? style.quantity : undefined}>
+              <BLocationText location={item.addressID} />
+            </View>
+          )}
+          {item.qty && <Quantity name={item.qty} date={item.date} />}
         </View>
-        <View style={style.rightSide}>
-          <MaterialIcon size={20} name="chevron-right" />
-        </View>
+        {useChevron && (
+          <View style={style.rightSide}>
+            <MaterialIcon size={20} name="chevron-right" />
+          </View>
+        )}
       </View>
       {item.onLocationPress && (
         <View style={style.location}>
@@ -65,10 +102,7 @@ export default function BOperationCard({ item, onPress }: OperationCardType) {
 const style = StyleSheet.create({
   parent: {
     flex: 1,
-    width: resScale(330),
-    backgroundColor: 'white',
-    justifyContent: 'space-between',
-    borderColor: '#EBEBEB',
+    borderColor: colors.border.otpField,
     borderRadius: layout.radius.md,
     borderWidth: resScale(1),
     paddingVertical: layout.pad.lg,
@@ -79,6 +113,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
   },
   leftSide: {
+    flex: 1,
     justifyContent: 'space-between',
   },
   rightSide: {
@@ -86,14 +121,9 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   top: {
-    height: resScale(20),
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: layout.pad.sm,
-    width: resScale(285),
-  },
-  row: {
-    flexDirection: 'row',
   },
   status: {
     padding: resScale(2),
@@ -107,17 +137,11 @@ const style = StyleSheet.create({
     fontSize: respFS(10),
     color: colors.textInput.input,
   },
-  nameText: {
-    fontFamily: font.family.montserrat[400],
-    fontSize: respFS(12),
-    color: colors.textInput.input,
-  },
   quantity: {
-    marginTop: layout.pad.lg,
+    marginBottom: layout.pad.lg,
   },
   location: {
     marginTop: layout.pad.xl,
-    // paddingHorizontal: layout.pad.md,
   },
   locationButton: {
     borderRadius: 8,

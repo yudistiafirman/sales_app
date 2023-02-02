@@ -7,11 +7,11 @@ import VisitStatus from './elements/VisitStatus';
 
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import resScale from '@/utils/resScale';
-import Location from './elements/Location';
 import PillNames from './elements/PillNames';
 import HighlightText from '../../atoms/BHighlightText';
 import { colors, layout } from '@/constants';
 import { VisitationCardType } from '@/interfaces';
+import BLocationText from '@/components/atoms/BLocationText';
 
 function iconRender(
   isRenderIcon: boolean,
@@ -29,7 +29,7 @@ function iconRender(
 export default function BVisitationCard({
   item,
   searchQuery,
-  onPress,
+  onPress = () => {},
   isRenderIcon = true,
   customIcon,
 }: VisitationCardType) {
@@ -44,7 +44,7 @@ export default function BVisitationCard({
           />
           <PillStatus pilStatus={item.pilStatus} />
         </View>
-        <Location location={item.location} />
+        <BLocationText location={item.location} />
         <PillNames pilNames={item.pilNames} searchQuery={searchQuery} />
         <View
           style={[style.row, item.time || item.status ? style.bottom : null]}
@@ -56,9 +56,7 @@ export default function BVisitationCard({
       <TouchableOpacity
         style={style.rightSide}
         onPress={() => {
-          if (onPress) {
-            onPress(item);
-          }
+          onPress(item);
         }}
       >
         {iconRender(isRenderIcon, customIcon)}

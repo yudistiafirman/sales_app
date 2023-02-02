@@ -8,7 +8,16 @@ import {
 } from '@/components';
 import SecondStep from './elements/second';
 import ThirdStep from './elements/third';
-import { CreateVisitationState, PIC, Styles } from '@/interfaces';
+import {
+  CreateVisitationFirstStep,
+  CreateVisitationFourthStep,
+  CreateVisitationSecondStep,
+  CreateVisitationState,
+  CreateVisitationThirdStep,
+  PIC,
+  Styles,
+  visitationListResponse,
+} from '@/interfaces';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import BSheetAddPic from './elements/second/BottomSheetAddPic';
 import {
@@ -23,6 +32,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
 import { useDispatch } from 'react-redux';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { useRoute } from '@react-navigation/native';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 
 const labels = [
   'Alamat Proyek',
@@ -94,16 +105,45 @@ function stepHandler(
     setStepsDone((curr) => curr.filter((num) => num !== 3));
   }
 }
+function populateData(
+  existingData: visitationListResponse,
+  updateValue: (
+    step: keyof CreateVisitationState,
+    key:
+      | keyof CreateVisitationFirstStep
+      | keyof CreateVisitationSecondStep
+      | keyof CreateVisitationThirdStep
+      | keyof CreateVisitationFourthStep,
+    value: any
+  ) => undefined
+) {
+  console.log(existingData, 'difunction');
+  const { project } = existingData;
+  if (project.company) {
+    updateValue('stepTwo', 'customerType', 'COMPANY');
+  } else {
+    updateValue('stepTwo', 'customerType', 'INDIVIDU');
+  }
+  updateValue('stepTwo', 'projectName', project.name);
+  // updateValue('stepTwo', 'companyName');
+}
 const CreateVisitation = () => {
+  const route = useRoute<RootStackScreenProps>();
   const dispatch = useDispatch();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const { values, action } = React.useContext(createVisitationContext);
   const { shouldScrollView } = values;
   const { updateValue, updateValueOnstep } = action;
   const { keyboardVisible } = useKeyboardActive();
-  const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3]);
+  const [stepsDone, setStepsDone] = useState<number[]>([]);
+
+  const existingVisitation = route?.params?.existingVisitation;
 
   useEffect(() => {
+    console.log(existingVisitation, 'existingVisitation112');
+    if (existingVisitation) {
+      populateData(existingVisitation, updateValueOnstep);
+    }
     // DeviceEventEmitter.addListener('Camera.preview', (photo) => {
     //   console.log('kedengeran di parent createVisitation', photo);
     // });
@@ -138,12 +178,6 @@ const CreateVisitation = () => {
     <ThirdStep />,
     <Fourth />,
   ];
-  console.log(
-    shouldScrollView,
-    'shouldScrollView140',
-    !keyboardVisible,
-    !keyboardVisible && shouldScrollView && values.step > 0
-  );
 
   return (
     <>

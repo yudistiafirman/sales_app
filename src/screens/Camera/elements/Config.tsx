@@ -1,5 +1,12 @@
 import React, { useMemo, useRef } from 'react';
-import { StyleProp, ViewStyle, View, Animated, StyleSheet } from 'react-native';
+import {
+  StyleProp,
+  ViewStyle,
+  View,
+  Animated,
+  StyleSheet,
+  Alert,
+} from 'react-native';
 import {
   Camera,
   CameraDevices,
@@ -7,9 +14,14 @@ import {
   CameraDevice,
 } from 'react-native-vision-camera';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { layout } from '@/constants';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 
 type configType = {
   title: string;
@@ -18,9 +30,13 @@ type configType = {
 };
 
 const Config = ({ title, style, navigateTo }: configType) => {
-  const getCameraDevice = (devices: CameraDevices): CameraDevice => {
-    return devices.back;
+  const getCameraDevice = (
+    devices: CameraDevices
+  ): CameraDevice | undefined => {
+    return devices?.back;
   };
+  const route = useRoute<RootStackScreenProps>();
+
   useHeaderTitleChanged({ title: 'Foto ' + title });
   const device = getCameraDevice(useCameraDevices());
   const navigation = useNavigation();
@@ -42,20 +58,25 @@ const Config = ({ title, style, navigateTo }: configType) => {
   };
 
   const takePhoto = async () => {
-    try {
-      const takenPhoto = await camera.current.takePhoto({
-        flash: 'off',
-      });
-      animateElement();
-      console.log(takenPhoto, 'takenPhoto');
+    if (camera === undefined || camera.current === undefined) {
+      Alert.alert('No Camera Found');
+    } else {
+      try {
+        const takenPhoto = await camera.current.takePhoto({
+          flash: 'off',
+        });
+        animateElement();
+        const existingVisitation = route?.params?.existingVisitation;
 
-      navigation.navigate('Preview', {
-        photo: takenPhoto,
-        photoTitle: title,
-        navigateTo,
-      });
-    } catch (error) {
-      console.log(error, 'takePhoto56');
+        navigation.navigate('Preview', {
+          photo: takenPhoto,
+          photoTitle: title,
+          navigateTo,
+          existingVisitation,
+        });
+      } catch (error) {
+        console.log(error, 'takePhoto56');
+      }
     }
   };
   const isFocused = useIsFocused();
@@ -67,7 +88,7 @@ const Config = ({ title, style, navigateTo }: configType) => {
           <>
             <Camera
               ref={camera}
-              style={{ flex: 1 }}
+              style={styles.camera}
               device={device}
               isActive={isFocused}
               photo
@@ -77,7 +98,7 @@ const Config = ({ title, style, navigateTo }: configType) => {
               lowLightBoost
             />
             <View style={styles.cameraBtn}>
-              <TouchableOpacity onPress={takePhoto}>
+              <TouchableOpacity onPress={() => takePhoto()}>
                 <View style={styles.outerShutter}>
                   <View style={styles.innerShutter} />
                 </View>
@@ -92,6 +113,9 @@ const Config = ({ title, style, navigateTo }: configType) => {
 
 const styles = StyleSheet.create({
   parent: {
+    flex: 1,
+  },
+  camera: {
     flex: 1,
   },
   container: {
