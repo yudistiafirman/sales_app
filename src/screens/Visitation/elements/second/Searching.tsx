@@ -21,9 +21,10 @@ import { PIC } from '@/interfaces';
 interface IProps {
   onSearch: (search: boolean) => void;
   isSearch: boolean;
+  searchingDisable?: boolean;
 }
 
-const SearchFlow = ({ onSearch, isSearch }: IProps) => {
+const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
   const dispatch = useDispatch();
   const { action, values } = React.useContext(createVisitationContext);
   const { updateValueOnstep, updateValue } = action;
@@ -170,6 +171,7 @@ const SearchFlow = ({ onSearch, isSearch }: IProps) => {
         }
         value={searchQuery}
         onChangeText={onChangeSearch}
+        disabled={searchingDisable}
       />
       <BSpacer size="extraSmall" />
       {searchQuery && (

@@ -3,7 +3,7 @@ import { getAllProject } from '../async-thunks/commonThunks';
 
 type popUpOptions = {
   isRenderActions?: boolean;
-  popUpType?: 'success' | 'error' | 'none';
+  popUpType?: 'success' | 'error' | 'none' | 'loading';
   popUpText: string;
   highlightedText?: string;
   outsideClickClosePopUp?: boolean;
@@ -55,7 +55,7 @@ export const modalSlice = createSlice({
       } else {
         state.popUpOptions.popUpType = 'success';
       }
-      if (payload.outsideClickClosePopUp) {
+      if (typeof payload.outsideClickClosePopUp === 'boolean') {
         state.popUpOptions.outsideClickClosePopUp =
           payload.outsideClickClosePopUp;
       }

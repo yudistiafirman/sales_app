@@ -29,6 +29,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const _style = useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
   const navigateTo = route?.params?.navigateTo;
+  const existingVisitation = route?.params?.existingVisitation;
 
   const savePhoto = () => {
     const imagePayloadType: 'COVER' | 'GALLERY' = navigateTo
@@ -61,6 +62,10 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         navigation.navigate('SubmitForm', {
           type: navigateTo,
         });
+      } else if (navigateTo === 'CreateVisitation') {
+        navigation.dispatch(
+          StackActions.replace(navigateTo, { existingVisitation })
+        );
       } else {
         navigation.goBack();
         navigation.dispatch(StackActions.replace(navigateTo));
