@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useMemo, useCallback } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import resScale from '@/utils/resScale';
@@ -14,7 +14,12 @@ import BVisitationCard from '@/components/molecules/BVisitationCard';
 import moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
-import { BBottomSheet, BSearchBar, BFlatlistItems } from '@/components';
+import {
+  BBottomSheet,
+  BSearchBar,
+  BFlatlistItems,
+  BSpacer,
+} from '@/components';
 import { useNavigation } from '@react-navigation/native';
 
 import Modal from 'react-native-modal';
@@ -44,11 +49,7 @@ const Beranda = () => {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isHeaderShown, setIsHeaderShown] = useState(true);
-  const [date, setDate] = useState(moment());
-  console.log(
-    moment(moment.utc(date).toDate()).local().valueOf(),
-    'date state'
-  );
+  const [date] = useState(moment());
 
   // fetching data
   const [data, setData] = React.useState<Api.Response>({
@@ -271,20 +272,6 @@ const Beranda = () => {
         data={data.data}
         isLoading={isLoading}
         onEndReached={onEndReached}
-        // initialFetch={() => {
-        //   return tabOnEndReached({
-        //     key,
-        //     currentPage: 1,
-        //     query: searchQuery,
-        //   });
-        // }}
-        // onEndReached={(info) => {
-        //   return tabOnEndReached({
-        //     ...info,
-        //     key,
-        //     query: searchQuery,
-        //   });
-        // }}
       />
     );
   }, [data]);
@@ -329,16 +316,17 @@ const Beranda = () => {
           />
         </View>
       </Modal>
-      <TargetCard
-        isExpanded={isExpanded}
-        maxVisitation={currentVisit.target}
-        currentVisitaion={currentVisit.current}
-        isLoading={isLoading}
-      />
+      <View style={{ padding: layout.mainPad }}>
+        <TargetCard
+          isExpanded={isExpanded}
+          maxVisitation={currentVisit.target}
+          currentVisitaion={currentVisit.current}
+          isLoading={isLoading}
+        />
+      </View>
       <BQuickAction
         containerStyle={{
-          paddingLeft: resScale(25),
-          height: resScale(100),
+          paddingLeft: resScale(30),
         }}
         buttonProps={buttonsData}
       />
