@@ -1,4 +1,4 @@
-import BrikApiProductivity from '@/BrikApi/BrikApiProductivity';
+import BrikApiProductivity from '@/brikApi/BrikApiProductivity';
 import { getOptions, request } from '@/networking/request';
 
 type getVisitationsType = {
