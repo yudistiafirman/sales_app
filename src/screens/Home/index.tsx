@@ -261,7 +261,7 @@ const Beranda = () => {
     // setIsLoading((curr) => !curr);
     // navigation.navigate('CreateVisitation');
     navigation.navigate('Camera', {
-      photoTitle: 'Foto Kunjungan',
+      photoTitle: 'Kunjungan',
       navigateTo: 'CreateVisitation',
     });
   };

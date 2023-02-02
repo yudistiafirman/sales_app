@@ -20,12 +20,12 @@ import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
 
 const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
-  const route = useRoute<RootStackScreenProps>();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const route = useRoute<RootStackScreenProps>();
   useHeaderTitleChanged({
     title: 'Foto ' + route?.params?.photoTitle,
   });
-  const navigation = useNavigation();
   const _style = useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
   const navigateTo = route?.params?.navigateTo;
@@ -52,15 +52,24 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       type: imagePayloadType,
     };
     dispatch(setImageURLS(imageUrls));
-    //NOTE: push your route navigation here.
     DeviceEventEmitter.emit('Camera.preview', photo);
     if (navigateTo) {
-      navigation.goBack();
-      const params: { [key: string]: any } = {};
-      if (navigateTo === 'CreateVisitation') {
-        params.existingVisitation = existingVisitation;
+      if (
+        navigateTo === 'operation' ||
+        navigateTo === 'return' ||
+        navigateTo === 'delivery'
+      ) {
+        navigation.navigate('SubmitForm', {
+          type: navigateTo,
+        });
+      } else if (navigateTo === 'CreateVisitation') {
+        navigation.dispatch(
+          StackActions.replace(navigateTo, { existingVisitation })
+        );
+      } else {
+        navigation.goBack();
+        navigation.dispatch(StackActions.replace(navigateTo));
       }
-      navigation.dispatch(StackActions.replace(navigateTo, params));
     } else {
       navigation.dispatch(StackActions.pop(2));
     }

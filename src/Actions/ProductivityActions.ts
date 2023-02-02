@@ -1,5 +1,5 @@
 import BrikApiProductivity from '@/BrikApi/BrikApiProductivity';
-import { getOptions, request } from '@/Networking/request';
+import { getOptions, request } from '@/networking/request';
 
 type getVisitationsType = {
   month?: number;

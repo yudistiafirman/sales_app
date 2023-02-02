@@ -3,6 +3,7 @@ import {
   ViewStyle,
   ImageSourcePropType,
   TextStyle,
+  KeyboardTypeOptions,
 } from 'react-native';
 
 import * as React from 'react';
@@ -12,6 +13,7 @@ interface Input {
   label: string;
   isRequire: boolean;
   type:
+    | 'quantity'
     | 'textInput'
     | 'cardOption'
     | 'comboDropdown'
@@ -19,6 +21,7 @@ interface Input {
     | 'dropdown'
     | 'PIC'
     | 'autocomplete'
+    | 'checkbox'
     | 'switch'
     | 'fileInput'
     | 'map'
@@ -31,6 +34,7 @@ interface Input {
   loading?: boolean;
   isError?: boolean;
   items?: any;
+  keyboardType?: KeyboardTypeOptions;
   options?: Array<{
     title: string;
     value: string | any;
@@ -73,6 +77,11 @@ interface Input {
     errorMessageTwo?: string;
     valueOne?: any;
     valueTwo?: any;
+  };
+  checkbox?: {
+    disabled?: boolean;
+    value: any;
+    onValueChange: (value: any) => void;
   };
   onSelect?: (index: number | any) => void; //eg for pic radio
   isInputDisable?: boolean;

@@ -6,15 +6,21 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
 import { layout } from '@/constants';
 import { BSpacer, BOperationCard } from '@/components';
+import { useNavigation } from '@react-navigation/native';
+import { USER_TYPE } from '@/models/EnumModel';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type FooterType = {
+  role?: USER_TYPE;
   isLoading?: boolean;
 };
 type CustomFlatlistType = {
   data: {
-    [key: string]: any;
+    id: string;
     name: string;
+    qty?: string;
+    status?: string;
+    addressID?: string;
   }[];
 };
 
@@ -32,20 +38,40 @@ const FooterLoading = ({ isLoading }: FooterType) => {
 export default function CustomFlatlist({
   isLoading,
   data,
+  role,
 }: FooterType & CustomFlatlistType) {
+  const navigation = useNavigation();
   const footerComp = useCallback(
     () => <FooterLoading isLoading={isLoading} />,
     [isLoading]
   );
   const separator = useCallback(() => <BSpacer size={'small'} />, []);
 
+  const onClickItem = (id: string) => {
+    if (role === USER_TYPE.OPERATION) {
+      navigation.navigate('Schedule', { id: id });
+    } else {
+      navigation.navigate('Camera', {
+        photoTitle: 'DO',
+        navigateTo: 'return',
+      });
+    }
+  };
+
   return (
     <FlatList
-      style={style.flatListContainer}
+      style={style.flatList}
       data={data}
       keyExtractor={(item, index) => `${item.name}-${index}`}
       renderItem={({ item }) => {
-        return <BOperationCard item={item} />;
+        return (
+          <BOperationCard
+            onPress={() => onClickItem(item.id)}
+            item={item}
+            useChevron
+            clickable
+          />
+        );
       }}
       ListFooterComponent={footerComp}
       ItemSeparatorComponent={separator}
@@ -54,7 +80,11 @@ export default function CustomFlatlist({
 }
 
 const style = StyleSheet.create({
-  flatListContainer: {},
+  flatList: {
+    width: '100%',
+    paddingVertical: layout.pad.lg,
+    paddingHorizontal: layout.pad.lg,
+  },
   flatListLoading: {
     marginTop: layout.pad.md,
     justifyContent: 'center',

@@ -8,7 +8,7 @@ import { fonts, layout } from '@/constants';
 type locationType = {
   location?: string;
 };
-export default function Location({ location }: locationType) {
+export default function BLocationText({ location }: locationType) {
   if (!location) {
     return null;
   }

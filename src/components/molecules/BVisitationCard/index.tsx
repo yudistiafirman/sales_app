@@ -7,10 +7,10 @@ import VisitStatus from './elements/VisitStatus';
 
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import resScale from '@/utils/resScale';
-import Location from './elements/Location';
 import PillNames from './elements/PillNames';
 import HighlightText from '../../atoms/BHighlightText';
 import { colors, layout } from '@/constants';
+import BLocationText from '@/components/atoms/BLocationText';
 import { visitationDataType } from '@/interfaces';
 
 // type visitationDataType = {
@@ -63,7 +63,7 @@ export default function BVisitationCard({
           />
           <PillStatus pilStatus={item.pilStatus} />
         </View>
-        <Location location={item.location} />
+        <BLocationText location={item.location} />
         <PillNames pilNames={item.pilNames} searchQuery={searchQuery} />
         <View
           style={[style.row, item.time || item.status ? style.bottom : null]}

@@ -25,6 +25,9 @@ export type RootStackParamList = {
     navigateTo?: string;
     existingVisitation?: visitationListResponse;
   };
+  Schedule: { id: string };
+  Operation: { role?: string };
+  SubmitForm: { type?: string };
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;

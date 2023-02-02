@@ -7,7 +7,7 @@ import respFS from '@/utils/resFontSize';
 import BText from './../atoms/BText';
 
 const BHeaderTitle = (
-  title: string,
+  title: string | undefined,
   headerStyle: 'flex-start' | 'center',
   role: string = ''
 ) => {
@@ -42,26 +42,30 @@ const BHeaderTitle = (
     },
   };
 
-  return (
-    <View style={_styles.container}>
-      {role === 'Transport' || role === 'Dispatch' ? (
+  const getTabHeader = (value: string) => {
+    if (value === 'SECURITY' || value === 'OPERATION') {
+      return (
         <View style={_styles.container}>
           <BText type="header" style={_styles.headerTitleStyle}>
             {title}
           </BText>
           <View style={_styles.chipView}>
             <View style={_styles.chip}>
-              <Text style={_styles.chipText}>{role}</Text>
+              <Text style={_styles.chipText}>{value}</Text>
             </View>
           </View>
         </View>
-      ) : (
+      );
+    } else {
+      return (
         <BText type="header" style={_styles.headerTitleStyle}>
           {title}
         </BText>
-      )}
-    </View>
-  );
+      );
+    }
+  };
+
+  return <View style={_styles.container}>{getTabHeader(role)}</View>;
 };
 
 export default BHeaderTitle;
