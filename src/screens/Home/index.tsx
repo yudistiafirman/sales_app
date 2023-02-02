@@ -62,7 +62,6 @@ const Beranda = () => {
     moment()
   );
 
-  useHeaderShow({ isHeaderShown: isHeaderShown });
   const toggleModal = (key: string) => () => {
     setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
     setIsHeaderShown(!isHeaderShown);

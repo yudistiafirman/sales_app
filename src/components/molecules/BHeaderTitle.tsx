@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { colors } from '@/constants';
 import { Styles } from '@/interfaces';
 import { View, Text } from 'react-native';
@@ -9,6 +10,7 @@ import BText from './../atoms/BText';
 const BHeaderTitle = (
   title: string | undefined,
   headerStyle: 'flex-start' | 'center',
+  color: string = colors.text.dark,
   role: string = ''
 ) => {
   const _styles: Styles = {
@@ -39,6 +41,7 @@ const BHeaderTitle = (
     },
     headerTitleStyle: {
       alignSelf: headerStyle,
+      color: color && color,
     },
   };
 

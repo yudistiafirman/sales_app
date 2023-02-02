@@ -1,10 +1,7 @@
-import BChip from '@/components/atoms/BChip';
 import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
-import layout from '@/constants/layout';
-import {TypedNavigator} from '@react-navigation/native';
-import {useMemo} from 'react';
-import {View} from 'react-native';
+import { TypedNavigator } from '@react-navigation/native';
+import * as React from 'react';
 
 const BTabScreen = ({
   Tab,
@@ -23,7 +20,7 @@ const BTabScreen = ({
   component: any;
   headerShown?: boolean;
 }) => {
-  const styles = useMemo(() => {
+  const styles = React.useMemo(() => {
     return {
       headerTitleAlign: type === 'home' || type === 'sub' ? 'center' : 'left',
       headerStyle: {
