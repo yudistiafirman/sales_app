@@ -1,5 +1,5 @@
-import BrikApiInventory from '@/BrikApi/BrikApiInventory';
-import { getOptions, request } from '@/Networking/request';
+import BrikApiInventory from '@/brikApi/BrikApiInventory';
+import { getOptions, request } from '@/networking/request';
 
 export const getAllBrikProducts = async (
   page?: number,

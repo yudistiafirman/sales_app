@@ -1,4 +1,4 @@
-import bStorage from '@/Actions/BStorage';
+import bStorage from '@/actions/BStorage';
 import storageKey from '@/constants/storageKey';
 import { setIsLoading, setUserData } from '@/redux/reducers/authReducer';
 import { AppDispatch, RootState } from '@/redux/store';

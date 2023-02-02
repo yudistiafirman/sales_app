@@ -25,7 +25,7 @@ import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
 import {
   getAllVisitations,
   getVisitationTarget,
-} from '@/Actions/ProductivityActions';
+} from '@/actions/ProductivityActions';
 import debounce from 'lodash.debounce';
 import { Api } from '@/models';
 

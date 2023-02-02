@@ -1,4 +1,4 @@
-import { getVisitations, postVisitations } from '@/Actions/ProductivityActions';
+import { getVisitations, postVisitations } from '@/actions/ProductivityActions';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { visitationListResponse } from '@/interfaces';
 import { payloadPostType } from '@/interfaces';

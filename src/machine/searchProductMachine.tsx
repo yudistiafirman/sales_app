@@ -1,7 +1,7 @@
 import {
   getAllBrikProducts,
   getProductsCategories,
-} from '@/Actions/InventoryActions';
+} from '@/actions/InventoryActions';
 import { event } from 'react-native-reanimated';
 import { assign, createMachine } from 'xstate';
 

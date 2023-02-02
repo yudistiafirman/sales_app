@@ -27,7 +27,7 @@ import { colors, layout } from '@/constants';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import { useMachine } from '@xstate/react';
 import { deviceLocationMachine } from '@/machine/modules';
-import { getLocationCoordinates } from '@/Actions/CommonActions';
+import { getLocationCoordinates } from '@/actions/CommonActions';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
