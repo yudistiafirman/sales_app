@@ -29,6 +29,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const _style = useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
   const navigateTo = route?.params?.navigateTo;
+  const existingVisitation = route?.params?.existingVisitation;
 
   const savePhoto = () => {
     const imagePayloadType: 'COVER' | 'GALLERY' = navigateTo
@@ -55,7 +56,11 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
     DeviceEventEmitter.emit('Camera.preview', photo);
     if (navigateTo) {
       navigation.goBack();
-      navigation.dispatch(StackActions.replace(navigateTo));
+      const params: { [key: string]: any } = {};
+      if (navigateTo === 'CreateVisitation') {
+        params.existingVisitation = existingVisitation;
+      }
+      navigation.dispatch(StackActions.replace(navigateTo, params));
     } else {
       navigation.dispatch(StackActions.pop(2));
     }

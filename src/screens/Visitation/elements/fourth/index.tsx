@@ -253,6 +253,7 @@ const Fourth = () => {
             openPopUp({
               popUpType: 'success',
               popUpText: 'Success create visitation',
+              outsideClickClosePopUp: true,
             })
           );
         } else {
@@ -268,6 +269,7 @@ const Fourth = () => {
               popUpType: 'success',
               popUpText: 'Successfully create visitation',
               highlightedText: 'visitation',
+              outsideClickClosePopUp: true,
             })
           );
         }
@@ -279,6 +281,7 @@ const Fourth = () => {
             popUpType: 'error',
             popUpText: message,
             highlightedText: 'error',
+            outsideClickClosePopUp: true,
           })
         );
       }

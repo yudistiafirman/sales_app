@@ -1,3 +1,4 @@
+import { visitationListResponse } from '@/interfaces';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PhotoFile } from 'react-native-vision-camera';
 
@@ -10,9 +11,20 @@ export type RootStackParamList = {
   SearchArea: undefined;
   Harga: { coordinate: { longitude: number; latitude: number } };
   SearchProduct: { distance: number };
-  CreateVisitation: undefined;
-  Camera: { photoTitle: string; navigateTo?: string };
-  Preview: { photo: PhotoFile; photoTitle: string; navigateTo?: string };
+  CreateVisitation: {
+    existingVisitation?: visitationListResponse;
+  };
+  Camera: {
+    photoTitle: string;
+    navigateTo?: string;
+    existingVisitation?: visitationListResponse;
+  };
+  Preview: {
+    photo: PhotoFile;
+    photoTitle: string;
+    navigateTo?: string;
+    existingVisitation?: visitationListResponse;
+  };
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;

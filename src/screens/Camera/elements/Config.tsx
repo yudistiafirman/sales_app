@@ -7,9 +7,14 @@ import {
   CameraDevice,
 } from 'react-native-vision-camera';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { layout } from '@/constants';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 
 type configType = {
   title: string;
@@ -21,6 +26,8 @@ const Config = ({ title, style, navigateTo }: configType) => {
   const getCameraDevice = (devices: CameraDevices): CameraDevice => {
     return devices.back;
   };
+  const route = useRoute<RootStackScreenProps>();
+
   useHeaderTitleChanged({ title: 'Foto ' + title });
   const device = getCameraDevice(useCameraDevices());
   const navigation = useNavigation();
@@ -47,12 +54,13 @@ const Config = ({ title, style, navigateTo }: configType) => {
         flash: 'off',
       });
       animateElement();
-      console.log(takenPhoto, 'takenPhoto');
+      const existingVisitation = route?.params?.existingVisitation;
 
       navigation.navigate('Preview', {
         photo: takenPhoto,
         photoTitle: title,
         navigateTo,
+        existingVisitation,
       });
     } catch (error) {
       console.log(error, 'takePhoto56');

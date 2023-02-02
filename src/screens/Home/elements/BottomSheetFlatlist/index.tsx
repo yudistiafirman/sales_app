@@ -7,18 +7,26 @@ import { resScale } from '@/utils';
 import { layout } from '@/constants';
 import { BSpacer, BVisitationCard } from '@/components';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { visitationDataType } from '@/interfaces';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type FooterType = {
   isLoading?: boolean;
   onEndReached?: any;
 };
+// type visitationDataType = {
+//   id?: number;
+//   name: string;
+//   location?: string;
+//   time?: string;
+//   status?: string;
+//   pilNames?: string[];
+//   pilStatus?: string;
+// };
 type BottomSheetFlatlistType = {
-  data: {
-    [key: string]: any;
-    name: string;
-  }[];
+  data: visitationDataType[];
   searchQuery?: string;
+  onPressItem?: (data: visitationDataType) => void;
 };
 
 const FooterLoading = ({ isLoading }: FooterType) => {
@@ -37,6 +45,7 @@ export default function BottomSheetFlatlist({
   data,
   searchQuery,
   onEndReached,
+  onPressItem,
 }: FooterType & BottomSheetFlatlistType) {
   const footerComp = useCallback(
     () => <FooterLoading isLoading={isLoading} />,
@@ -50,7 +59,17 @@ export default function BottomSheetFlatlist({
       data={data}
       keyExtractor={(item, index) => `${item.name}-${index}`}
       renderItem={({ item }) => {
-        return <BVisitationCard item={item} searchQuery={searchQuery} />;
+        return (
+          <BVisitationCard
+            item={item}
+            searchQuery={searchQuery}
+            onPress={() => {
+              if (onPressItem) {
+                onPressItem(item);
+              }
+            }}
+          />
+        );
       }}
       ListFooterComponent={footerComp}
       ItemSeparatorComponent={separator}
