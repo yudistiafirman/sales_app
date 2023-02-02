@@ -1,27 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BButtonPrimary, BForm, BHeaderIcon, BText } from '@/components';
-import { Input, PIC } from '@/interfaces';
+import { Input, PIC, PicFormInitialState } from '@/interfaces';
 import Modal from 'react-native-modal';
-import { Dimensions, Keyboard, StyleSheet, View } from 'react-native';
-
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
+import validatePicForm from '@/utils/validatePicForm';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 const { height } = Dimensions.get('window');
 interface IProps {
   addPic: any;
   onClose: () => void;
   isVisible: boolean;
-}
-
-interface InitialState {
-  name: string;
-  errorName: string;
-  position: string;
-  errorPosition: string;
-  phone: string;
-  errorPhone: string;
-  email: string;
-  errorEmail: string;
 }
 
 const initialState = {
@@ -36,21 +26,7 @@ const initialState = {
 };
 
 const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
-  const [state, setState] = React.useState<InitialState>(initialState);
-  const [containerHeight, setContainerHeight] = useState<number>(height / 1.6);
-
-  useEffect(() => {
-    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
-      setContainerHeight(height / 1.82);
-    });
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-      setContainerHeight(height / 1.6);
-    });
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
-  }, []);
+  const [state, setState] = React.useState<PicFormInitialState>(initialState);
 
   const inputs: Input[] = [
     {
@@ -61,7 +37,11 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       placeholder: 'Masukkan Nama',
       type: 'textInput',
       onChange: (e) =>
-        setState((prevState) => ({ ...prevState, name: e, errorName: '' })),
+        setState((prevState: PicFormInitialState) => ({
+          ...prevState,
+          name: e.nativeEvent.text,
+          errorName: '',
+        })),
       value: state.name,
     },
     {
@@ -74,7 +54,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       onChange: (e) =>
         setState((prevState) => ({
           ...prevState,
-          position: e,
+          position: e.nativeEvent.text,
           errorPosition: '',
         })),
       value: state.position,
@@ -90,7 +70,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       onChange: (e) =>
         setState((prevState) => ({
           ...prevState,
-          phone: e,
+          phone: e.nativeEvent.text,
           errorPhone: '',
         })),
       value: state.phone,
@@ -106,40 +86,17 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       onChange: (e) =>
         setState((prevState) => ({
           ...prevState,
-          email: e,
+          email: e.nativeEvent.text,
           errorEmail: '',
         })),
       value: state.email,
     },
   ];
 
-  const validate = () => {
-    const errors: Partial<InitialState> = {};
-    if (state.name.length === 0) {
-      errors.errorName = 'Nama harus diisi';
-    } else if (state.name.length < 4) {
-      errors.errorName = 'Nama tidak boleh kurang dari 4 karakter';
-    }
-    if (!state.position) {
-      errors.errorPosition = 'Jabatan harus diisi';
-    } else if (state.position.length < 4) {
-      errors.errorPosition = 'Jabatan tidak boleh kurang dari 4 karakter';
-    }
-    if (!state.email) {
-      errors.errorEmail = 'Email harus diisi';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(state.email)) {
-      errors.errorEmail = 'Format email salah';
-    }
-    if (!state.phone) {
-      errors.errorPhone = 'Nomor telepon harus diisi';
-    } else if (!/^(^\+62)(\d{3,4}-?){2}\d{3,4}$/g.test(state.phone)) {
-      errors.errorPhone = 'Format nomor telepon salah';
-    }
-    return errors;
-  };
-
   const onAdd = () => {
-    const errors = validate();
+    const { name, position, email, phone } = state;
+    console.log('ini phone', phone);
+    const errors = validatePicForm({ name, position, email, phone });
     if (JSON.stringify(errors) !== '{}') {
       Object.keys(errors).forEach((val) => {
         setState((prevState) => ({
@@ -156,8 +113,13 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       };
       addPic(dataPIC);
       setState(initialState);
-      onClose();
+      onCloseModal();
     }
+  };
+
+  const onCloseModal = () => {
+    setState(initialState);
+    onClose();
   };
   return (
     <Modal
@@ -165,22 +127,28 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       isVisible={isVisible}
       style={styles.modalContainer}
     >
-      <View style={[styles.contentOuterContainer, { height: containerHeight }]}>
-        <View style={styles.contentInnerContainer}>
-          <View style={styles.headerContainer}>
-            <BText style={styles.headerTitle}>Tambah PIC</BText>
-            <BHeaderIcon
-              onBack={onClose}
-              size={layout.pad.lg}
-              marginRight={0}
-              iconName="x"
-            />
+      <View style={styles.contentWrapper}>
+        <KeyboardAwareScrollView>
+          <View
+            style={[styles.contentOuterContainer, { height: height / 1.43 }]}
+          >
+            <View style={styles.contentInnerContainer}>
+              <View style={styles.headerContainer}>
+                <BText style={styles.headerTitle}>Tambah PIC</BText>
+                <BHeaderIcon
+                  onBack={onCloseModal}
+                  size={layout.pad.lg}
+                  marginRight={0}
+                  iconName="x"
+                />
+              </View>
+              <View>
+                <BForm inputs={inputs} />
+                <BButtonPrimary onPress={onAdd} title="Tambah PIC" />
+              </View>
+            </View>
           </View>
-          <View>
-            <BForm inputs={inputs} />
-            <BButtonPrimary onPress={onAdd} title="Tambah PIC" />
-          </View>
-        </View>
+        </KeyboardAwareScrollView>
       </View>
     </Modal>
   );
@@ -188,6 +156,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
 
 const styles = StyleSheet.create({
   modalContainer: { margin: 0, justifyContent: 'flex-end' },
+  contentWrapper: { justifyContent: 'flex-end' },
   contentOuterContainer: {
     backgroundColor: colors.white,
     borderTopStartRadius: layout.radius.lg,

@@ -59,7 +59,7 @@ const renderInput = (input: Input): React.ReactNode => {
   } = input;
 
   if (type === 'textInput') {
-    const textInputProps = { onChange, value };
+    const textInputProps = { onChange, value, keyboardType };
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />

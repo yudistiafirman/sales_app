@@ -1,8 +1,10 @@
 import { BTabSections, BVisitationCard } from '@/components';
 import { colors, layout } from '@/constants';
-import { AppointmentActionType } from '@/context/AppointmentContext';
+import {
+  AppointmentActionType,
+  ProjectStructPayload,
+} from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
-import { visitationDataType } from '@/interfaces';
 import { resScale } from '@/utils';
 import React, { useCallback, useState } from 'react';
 import {
@@ -11,42 +13,32 @@ import {
   FlatList,
   ListRenderItem,
   StyleSheet,
+  Text,
   View,
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import BottomSheetCompany from './BottomSheetCompany';
-import AppointmentCustomerCard, { CustomersData } from './CustomerCard';
 const { width } = Dimensions.get('window');
 
 const SearchingCustomer = () => {
   const [values, dispatchValue] = useAppointmentData();
-  const { stepOne, searchQuery, selectedCustomerData } = values;
+  const { stepOne, searchQuery, selectedCustomerData, projectData } = values;
   const { routes } = stepOne;
   const [index, setIndex] = useState(0);
 
   const onPressCard = useCallback(
-    (item) => {
-      if (stepOne.selectedCategories === 'Perusahaan') {
-        dispatchValue({
-          type: AppointmentActionType.ON_PRESS_COMPANY,
-          value: item,
-        });
-      } else {
-        dispatchValue({
-          type: AppointmentActionType.ON_PRESS_PROJECT,
-          key: 'individu',
-          value: {
-            projectName: selectedCustomerData?.project[0].display_name,
-            pics: selectedCustomerData?.pics,
-          },
-        });
-      }
+    (item: ProjectStructPayload) => {
+      dispatchValue({
+        type: AppointmentActionType.ON_ADD_PROJECT,
+        key: 'individu',
+        value: {
+          companyName: item.Company,
+          pics: item.PIC,
+          project: { id: item.id, name: item.name },
+        },
+      });
     },
-    [
-      dispatchValue,
-      selectedCustomerData?.pics,
-      selectedCustomerData?.project,
-      stepOne.selectedCategories,
-    ]
+    [dispatchValue]
   );
 
   const onTabPress = ({ route }) => {
@@ -59,17 +51,22 @@ const SearchingCustomer = () => {
     }
   };
 
-  const renderItem: ListRenderItem<visitationDataType> = useCallback(
+  const renderItem: ListRenderItem<ProjectStructPayload> = useCallback(
     ({ item }) => {
       return (
-        <BVisitationCard
-          item={item}
-          onPress={onPressCard}
-          searchQuery={searchQuery}
-        />
+        // <TouchableOpacity onPress={() => onPressCard(item)}>
+        //   <Text>{item.name}</Text>
+        // </TouchableOpacity>
+        <View />
+
+        // <BVisitationCard
+        //   item={item}
+        //   onPress={onPressCard}
+        //   searchQuery={searchQuery}
+        // />
       );
     },
-    [onPressCard, searchQuery]
+    []
   );
 
   return (
@@ -79,7 +76,7 @@ const SearchingCustomer = () => {
         navigationState={{ index, routes }}
         renderScene={() => (
           <FlatList
-            data={values.customerData}
+            data={values.projectData}
             keyExtractor={(item, idx) => idx.toString()}
             renderItem={renderItem}
           />
@@ -90,7 +87,8 @@ const SearchingCustomer = () => {
         tabBarStyle={styles.tabBarStyle}
         indicatorStyle={styles.tabIndicator}
       />
-      <BottomSheetCompany
+      {/* WAITING FOR COMPANY PAYLOAD */}
+      {/* <BottomSheetCompany
         isVisible={values.isModalCompanyVisible}
         onCloseModal={() =>
           dispatchValue({ type: AppointmentActionType.TOGGLE_MODAL_COMPANY })
@@ -105,7 +103,7 @@ const SearchingCustomer = () => {
                 title: values.selectedCustomerData?.display_name,
               },
               pics: values.selectedCustomerData?.pics,
-              projectName: '',
+              project: { id: '', name: '' },
             },
           })
         }
@@ -139,7 +137,7 @@ const SearchingCustomer = () => {
                   title: values.selectedCustomerData?.display_name,
                 },
                 pics: values.selectedCustomerData?.pics,
-                projectName: projectName,
+                project: {id: values.selectedCustomerData?.project,name:values.selectedCustomerData?.name},
               },
             });
           } else {
@@ -161,7 +159,8 @@ const SearchingCustomer = () => {
             value: newSelectedProject,
           });
         }}
-      />
+      /> */}
+      {/* WAITING FOR COMPANY PALYLOAD */}
     </View>
   );
 };

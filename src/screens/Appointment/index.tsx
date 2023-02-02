@@ -1,6 +1,8 @@
 import {
   BButtonPrimary,
   BHeaderIcon,
+  BHeaderTitle,
+  BottomSheetAddPIC,
   BSpacer,
   BStepperIndicator,
 } from '@/components';
@@ -17,7 +19,6 @@ import Steps from '../Sph/elements/Steps';
 import FirstStep from './element/FirstStep';
 import { colors } from '@/constants';
 import { resScale } from '@/utils';
-import BSheetAddPic from './element/FirstStep/BottomSheetAddPict';
 import { useAppointmentData } from '@/hooks';
 import { PIC } from '@/interfaces';
 import SecondStep from './element/SecondStep';
@@ -42,16 +43,19 @@ const Appointment = () => {
         onBack={() => {
           if (!isFirstPage) {
             dispatchValue({ type: AppointmentActionType.DECREASE_STEP });
+          } else {
+            navigation.goBack();
           }
         }}
       />
     ),
-    [dispatchValue, isFirstPage]
+    [dispatchValue, isFirstPage, navigation]
   );
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: false,
+      headerTitle: () => BHeaderTitle('Buat Janji Temu', 'flex-start'),
       headerLeft: () => renderHeaderLeft(),
     });
   }, [navigation, renderHeaderLeft, step]);
@@ -67,17 +71,15 @@ const Appointment = () => {
 
   const validateCompanyDetailsForm = useCallback(() => {
     const errors: Partial<StepOne> = {};
-    if (customerType === 'company') {
-      if (!stepOne.company.companyName) {
-        errors.errorCompany = 'Nama perusahaan harus diisi';
-      } else if (stepOne.company.companyName.length < 4) {
-        errors.errorCompany =
-          'Nama perusahaan tidak boleh kurang dari 4 karakter';
-      }
+    if (!stepOne[customerType].companyName) {
+      errors.errorCompany = 'Nama perusahaan harus diisi';
+    } else if (stepOne[customerType].companyName.length < 4) {
+      errors.errorCompany =
+        'Nama perusahaan tidak boleh kurang dari 4 karakter';
     }
-    if (stepOne[customerType].projectName?.length === 0) {
+    if (stepOne[customerType].project.name?.length === 0) {
       errors.errorProject = 'Nama Proyek harus diisi';
-    } else if (stepOne[customerType].projectName?.length < 4) {
+    } else if (stepOne[customerType].project.name?.length < 4) {
       errors.errorProject = 'Nama Proyek tidak boleh kurang dari 4 karakter';
     }
     if (stepOne[customerType].pics.length === 0) {
@@ -140,7 +142,7 @@ const Appointment = () => {
           />
         </View>
       )}
-      <BSheetAddPic
+      <BottomSheetAddPIC
         isVisible={isModalPicVisible}
         addPic={(dataPic: PIC) =>
           dispatchValue({

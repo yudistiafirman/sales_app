@@ -393,7 +393,6 @@ interface payloadPostType {
   files: any[];
 }
 
-
 type visitationDataType = {
   id?: number;
   name: string;
@@ -411,6 +410,17 @@ type VisitationCardType = {
   isRenderIcon?: boolean;
   customIcon?: () => JSX.Element;
 };
+
+interface PicFormInitialState {
+  name: string;
+  errorName: string;
+  position: string;
+  errorPosition: string;
+  phone: string;
+  errorPhone: string;
+  email: string;
+  errorEmail: string;
+}
 
 export type {
   Input,
@@ -437,5 +447,6 @@ export type {
   picPayloadType,
   payloadPostType,
   visitationDataType,
-  VisitationCardType
+  VisitationCardType,
+  PicFormInitialState,
 };

@@ -14,6 +14,7 @@ const Inputs = () => {
   const onFetching = (e: any) => {
     console.log('hai');
   };
+
   const inputs: Input[] = React.useMemo(() => {
     const baseInput: Input[] = [
       {
@@ -57,13 +58,16 @@ const Inputs = () => {
           errorMessage: state.errorCompany,
           type: 'autocomplete',
           onChange: onFetching,
-          value: state.company.companyName,
+          value: isCompany
+            ? state.company.companyName
+            : state.individu.companyName,
           items: state.options.items,
           placeholder: 'Masukan Nama Perusahaan',
           loading: state.options.loading,
           onSelect: (item: any) => {
             dispatchValue({
               type: AppointmentActionType.SELECT_COMPANY,
+              key: state.customerType as keyof StepOne,
               value: item,
             });
           },
@@ -79,12 +83,12 @@ const Inputs = () => {
             dispatchValue({
               type: AppointmentActionType.SET_PROJECT_NAME,
               key: state.customerType as keyof StepOne,
-              value: e,
+              value: e.nativeEvent.text,
             });
           },
           value: isCompany
-            ? state.company.projectName
-            : state.individu.projectName,
+            ? state.company.project.name
+            : state.individu.project.name,
         },
         {
           label: 'PIC',
@@ -114,11 +118,8 @@ const Inputs = () => {
           },
         },
       ];
-      if (state.customerType === 'company') {
-        baseInput.push(...aditionalInput);
-      } else {
-        baseInput.push(...aditionalInput.splice(1));
-      }
+
+      baseInput.push(...aditionalInput);
     }
     return baseInput;
   }, [values]);

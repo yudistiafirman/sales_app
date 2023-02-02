@@ -50,6 +50,8 @@ export { default as BPicList } from './organism/BPicList';
 export { default as BBottomSheetForm } from './organism/BBottomSheetForm';
 export { default as BAlert } from './organism/BAlert';
 export { default as BTabViewScreen } from './organism/BTabViewScreen';
+export { default as BCalendar } from './organism/BCalendar';
 
 //templates
 export { default as ProductList } from './templates/Price/ProductList';
+export { default as BottomSheetAddPIC } from './templates/BottomSheetAddPIC';

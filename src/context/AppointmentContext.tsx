@@ -19,21 +19,21 @@ export type DataCompany = {
   pics?: PIC[];
 };
 
-type IndividuInput = {
-  projectName: string;
-  pics: PIC[];
-};
-
-type CompanyInput = {
+type CompanyCredentials = {
   companyName: string;
+  project: {
+    id: string;
+    name: string;
+  };
+  pics: PIC[];
 };
 
 export interface StepOne {
   routes: any[];
   selectedCategories: string;
   customerType: string;
-  individu: IndividuInput;
-  company: IndividuInput & CompanyInput;
+  individu: CompanyCredentials;
+  company: CompanyCredentials;
   location: {};
   errorProject: string;
   errorPics: string;
@@ -44,13 +44,34 @@ export interface StepOne {
   };
 }
 
+export type ProjectStructPayload = {
+  id: string;
+  name: string;
+  locationAddress: {
+    line1: string;
+    rural: string;
+    district: string;
+    postalCode: number;
+    city: string;
+  };
+  Company: {
+    id: string;
+    name: string;
+  };
+  mainPic: {
+    id: string | null;
+    name: string | null;
+  };
+  PIC: PIC[];
+};
+
 export interface AppointmentState {
   step: number;
   stepDone: number[];
   searchQuery: string;
   stepOne: StepOne;
   isModalPicVisible: boolean;
-  customerData: any[];
+  projectData: ProjectStructPayload[];
   selectedCustomerData: DataCompany | null;
   isModalCompanyVisible: boolean;
 }
@@ -62,12 +83,6 @@ const initialData: AppointmentState = {
   stepOne: {
     routes: [
       {
-        key: 'first',
-        title: 'Perusahaan',
-        totalItems: 2,
-        chipPosition: 'right',
-      },
-      {
         key: 'second',
         title: 'Proyek',
         totalItems: 3,
@@ -77,12 +92,19 @@ const initialData: AppointmentState = {
     selectedCategories: '',
     customerType: '',
     individu: {
-      projectName: '',
+      companyName: '',
+      project: {
+        id: '',
+        name: '',
+      },
       pics: [],
     },
     company: {
       companyName: '',
-      projectName: '',
+      project: {
+        id: '',
+        name: '',
+      },
       pics: [],
     },
     errorCompany: '',
@@ -94,48 +116,40 @@ const initialData: AppointmentState = {
       loading: false,
     },
   },
-  customerData: [
+  projectData: [
     {
-      id: '1',
-      name: 'PT Guna Sakti',
-      location: 'Cibeunying Kidul',
-      project: [
+      id: 'a03943ca-b564-5f56-8a12-adb53f181481',
+      name: 'project asik',
+      locationAddress: {
+        line1: 'bendi besar',
+        rural: 'AIK KETEKOK',
+        district: 'TANJUNG PANDAN',
+        postalCode: 33411,
+        city: 'BELITUNG',
+      },
+      Company: {
+        id: '512a5be8-8b84-50b7-b523-b22383ad2e99',
+        name: 'WIKI',
+      },
+      mainPic: {
+        id: null,
+        name: null,
+      },
+      PIC: [
         {
-          id: '1',
-          display_name: 'Kebun Binatang',
+          id: 'ccb66bb5-86d6-5319-a400-b7cdfbce5318',
+          name: 'udin bapri',
+          position: 'ceo',
+          phone: '81220656999',
+          email: null,
         },
       ],
-      pics: [
-        {
-          name: 'Jajang Sukandar',
-          jabatan: 'Supervisor',
-          phone: '+6289321456',
-          email: 'jajang@gmail.com',
-        },
-      ],
-    },
-    {
-      id: '2',
-      name: 'PT Guna Rambo',
-      location: 'Cibeunying Wetan',
-      project: [
-        {
-          id: '2',
-          display_name: 'Kuburan',
-        },
-        {
-          id: '3',
-          display_name: 'Tana Kusir',
-        },
-      ],
-      pics: [
-        {
-          name: 'Amin Mahfudin',
-          jabatan: 'Manager',
-          phone: '+62893214569',
-          email: 'Amin@gmail.com',
-        },
-      ],
+      Visitation: {
+        id: '1c389677-914a-5354-b62f-6a987d355c79',
+        order: 1,
+        finish_date: null,
+        visitation_id: null,
+      },
     },
   ],
   selectedCustomerData: null,
@@ -208,6 +222,7 @@ type AppointmentPayload = {
     value: number;
   };
   [AppointmentActionType.SELECT_COMPANY]: {
+    key: keyof StepOne;
     value: {};
   };
   [AppointmentActionType.ON_PRESS_PROJECT]: {
@@ -247,7 +262,7 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
           ...state.stepOne,
           [action.key as keyof StepOne]: {
             ...(state.stepOne[action.key as keyof StepOne] as StepOne),
-            projectName: action.value,
+            project: { name: action.value },
           },
         },
       };
@@ -308,7 +323,7 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
             ...(state.stepOne[action.key as keyof StepOne] as StepOne),
             pics: action.value.pics,
             companyName: action.value.companyName,
-            projectName: action.value.projectName,
+            project: action.value.project,
           },
         },
       };
@@ -327,8 +342,8 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
         ...state,
         stepOne: {
           ...state.stepOne,
-          company: {
-            ...state.stepOne.company,
+          [action.key as keyof StepOne]: {
+            ...(state.stepOne[action.key as keyof StepOne] as StepOne),
             companyName: action.value,
           },
         },
