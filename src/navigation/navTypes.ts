@@ -12,7 +12,14 @@ export type RootStackParamList = {
   SearchProduct: { distance: number };
   CreateVisitation: undefined;
   Camera: { photoTitle: string; navigateTo?: string };
-  Preview: { photo: PhotoFile; photoTitle: string; navigateTo?: string };
+  Preview: {
+    photo?: PhotoFile;
+    photoTitle: string;
+    navigateTo?: string;
+  };
+  Schedule: { id: string };
+  Operation: { role?: string };
+  SubmitForm: { type?: string };
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;

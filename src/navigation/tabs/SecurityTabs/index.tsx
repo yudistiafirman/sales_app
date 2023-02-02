@@ -6,6 +6,7 @@ import BTabScreen from '@/navigation/elements/BTabScreen';
 import Operation from '@/screens/Operation';
 import Dispatch from '@/screens/Operation/Dispatch';
 import CustomSecurityTabBar from './SecurityTabBar';
+import { USER_TYPE } from '@/models/EnumModel';
 
 const Tab = createBottomTabNavigator();
 

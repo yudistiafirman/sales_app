@@ -25,7 +25,7 @@ import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
 import {
   getAllVisitations,
   getVisitationTarget,
-} from '@/Actions/ProductivityActions';
+} from '@/actions/ProductivityActions';
 import debounce from 'lodash.debounce';
 import { Api } from '@/models';
 
@@ -254,7 +254,7 @@ const Beranda = () => {
     // setIsLoading((curr) => !curr);
     // navigation.navigate('CreateVisitation');
     navigation.navigate('Camera', {
-      photoTitle: 'Foto Kunjungan',
+      photoTitle: 'Kunjungan',
       navigateTo: 'CreateVisitation',
     });
   };

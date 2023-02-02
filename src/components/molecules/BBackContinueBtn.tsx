@@ -1,8 +1,8 @@
 import { View, StyleSheet } from 'react-native';
 import React from 'react';
-import { BButtonPrimary } from '@/components';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
+import BButtonPrimary from '../atoms/BButtonPrimary';
 
 type BackContinueBtnType = {
   onPressBack?: () => void;

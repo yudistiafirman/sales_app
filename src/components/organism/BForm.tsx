@@ -11,10 +11,14 @@ import BText from '../atoms/BText';
 import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
-import { BSwitch, BFileInput } from '@/components';
+import { colors, layout } from '@/constants';
+import CheckBox from '@react-native-community/checkbox';
+import BFileInput from '../atoms/BFileInput';
+import BSwitch from '../atoms/BSwitch';
 
 interface IProps {
   inputs: Input[];
+  spacer?: 'extraSmall' | 'small' | 'medium' | 'large' | 'extraLarge' | number;
   noSpaceEnd?: boolean;
 }
 
@@ -26,6 +30,26 @@ const styles: Styles = {
   optionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  quantityLayout: {
+    flexDirection: 'row',
+  },
+  quantityInput: {
+    flex: 1,
+  },
+  quantityText: {
+    position: 'absolute',
+    right: 0,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginRight: layout.pad.lg,
+  },
+  checkboxText: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  flexRow: {
+    flexDirection: 'row',
   },
 };
 
@@ -41,16 +65,47 @@ const renderInput = (input: Input): React.ReactNode => {
     isRequire,
     isError,
     onSelect,
+    keyboardType,
+    checkbox,
     placeholder,
     hidePicLabel,
   } = input;
+
+  if (type === 'quantity') {
+    return (
+      <React.Fragment>
+        <BLabel label={label} isRequired={isRequire} />
+        <View style={styles.quantityLayout}>
+          <BTextInput
+            style={styles.quantityInput}
+            onChangeText={onChange}
+            value={value}
+            keyboardType={'numeric'}
+            placeholder={placeholder}
+          />
+          <View style={styles.quantityText}>
+            <BText>{'m3'}</BText>
+          </View>
+        </View>
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {`${label} harus diisi`}
+          </BText>
+        )}
+      </React.Fragment>
+    );
+  }
 
   if (type === 'textInput') {
     const textInputProps = { onChange, value };
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
-        <BTextInput {...textInputProps} />
+        <BTextInput
+          {...textInputProps}
+          keyboardType={keyboardType ? keyboardType : 'default'}
+          placeholder={placeholder}
+        />
         {isError && (
           <BText size="small" color="primary" bold="100">
             {`${label} harus diisi`}
@@ -193,16 +248,37 @@ const renderInput = (input: Input): React.ReactNode => {
       </React.Fragment>
     );
   }
+
+  if (type === 'checkbox') {
+    return (
+      <React.Fragment>
+        <View style={styles.flexRow}>
+          <View style={styles.checkboxText}>
+            <BLabel label={label} isRequired={isRequire} />
+          </View>
+          <CheckBox
+            disabled={checkbox?.disabled}
+            value={checkbox?.value}
+            onFillColor={colors.primary}
+            onTintColor={colors.offCheckbox}
+            onCheckColor={colors.primary}
+            tintColors={{ true: colors.primary, false: colors.offCheckbox }}
+            onValueChange={checkbox?.onValueChange}
+          />
+        </View>
+      </React.Fragment>
+    );
+  }
 };
 
-const BForm = ({ inputs, noSpaceEnd }: IProps) => {
+const BForm = ({ inputs, spacer, noSpaceEnd }: IProps) => {
   return (
     <View>
       {inputs.map((input, index) => (
         <React.Fragment key={index}>
           {renderInput(input)}
           {(index < inputs.length - 1 || !noSpaceEnd) && (
-            <BSpacer size="small" />
+            <BSpacer size={spacer ? spacer : 'small'} />
           )}
         </React.Fragment>
       ))}

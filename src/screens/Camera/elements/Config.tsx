@@ -1,5 +1,12 @@
 import React, { useMemo, useRef } from 'react';
-import { StyleProp, ViewStyle, View, Animated, StyleSheet } from 'react-native';
+import {
+  StyleProp,
+  ViewStyle,
+  View,
+  Animated,
+  StyleSheet,
+  Alert,
+} from 'react-native';
 import {
   Camera,
   CameraDevices,
@@ -18,8 +25,10 @@ type configType = {
 };
 
 const Config = ({ title, style, navigateTo }: configType) => {
-  const getCameraDevice = (devices: CameraDevices): CameraDevice => {
-    return devices.back;
+  const getCameraDevice = (
+    devices: CameraDevices
+  ): CameraDevice | undefined => {
+    return devices?.back;
   };
   useHeaderTitleChanged({ title: 'Foto ' + title });
   const device = getCameraDevice(useCameraDevices());
@@ -42,20 +51,29 @@ const Config = ({ title, style, navigateTo }: configType) => {
   };
 
   const takePhoto = async () => {
-    try {
-      const takenPhoto = await camera.current.takePhoto({
-        flash: 'off',
-      });
-      animateElement();
-      console.log(takenPhoto, 'takenPhoto');
+    //NOTE: for emulator
+    // navigation.navigate('Preview', {
+    //   photoTitle: title,
+    //   navigateTo,
+    // });
 
-      navigation.navigate('Preview', {
-        photo: takenPhoto,
-        photoTitle: title,
-        navigateTo,
-      });
-    } catch (error) {
-      console.log(error, 'takePhoto56');
+    //NOTE: for real device
+    if (camera === undefined || camera.current === undefined) {
+      Alert.alert('No Camera Found');
+    } else {
+      try {
+        const takenPhoto = await camera.current?.takePhoto({
+          flash: 'off',
+        });
+        animateElement();
+        navigation.navigate('Preview', {
+          photo: takenPhoto,
+          photoTitle: title,
+          navigateTo,
+        });
+      } catch (err) {
+        Alert.alert('Camera Error');
+      }
     }
   };
   const isFocused = useIsFocused();
@@ -67,7 +85,7 @@ const Config = ({ title, style, navigateTo }: configType) => {
           <>
             <Camera
               ref={camera}
-              style={{ flex: 1 }}
+              style={styles.camera}
               device={device}
               isActive={isFocused}
               photo
@@ -77,7 +95,7 @@ const Config = ({ title, style, navigateTo }: configType) => {
               lowLightBoost
             />
             <View style={styles.cameraBtn}>
-              <TouchableOpacity onPress={takePhoto}>
+              <TouchableOpacity onPress={() => takePhoto()}>
                 <View style={styles.outerShutter}>
                   <View style={styles.innerShutter} />
                 </View>
@@ -92,6 +110,9 @@ const Config = ({ title, style, navigateTo }: configType) => {
 
 const styles = StyleSheet.create({
   parent: {
+    flex: 1,
+  },
+  camera: {
     flex: 1,
   },
   container: {

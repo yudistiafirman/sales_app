@@ -1,5 +1,5 @@
 import BrikApiCommon from '@/BrikApi/BrikApiCommon';
-import { getOptions, request } from '@/Networking/request';
+import { getOptions, request } from '@/networking/request';
 
 export const getLocationCoordinates = async (
   longitude: number,

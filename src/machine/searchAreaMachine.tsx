@@ -2,7 +2,7 @@ import {
   getLocationCoordinates,
   searchLocation,
   searchLocationById,
-} from '@/Actions/CommonActions';
+} from '@/actions/CommonActions';
 import { hasLocationPermission } from '@/utils/permissions';
 import Geolocation from 'react-native-geolocation-service';
 import { assign, createMachine, send } from 'xstate';

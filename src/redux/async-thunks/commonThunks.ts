@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   allVisitationGetAction,
   uploadFileImage,
-} from '@/Actions/CommonActions';
+} from '@/actions/CommonActions';
 
 type errorType = {
   success: boolean;
