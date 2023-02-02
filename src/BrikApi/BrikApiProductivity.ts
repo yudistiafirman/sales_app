@@ -17,6 +17,10 @@ interface IGetAll {
   search?: string;
 }
 
+type getOneVisitationType = {
+  visitationId: string;
+};
+
 export default class BrikApiProductivity {
   static visitations = (props?: getVisitationsType) => {
     const url = new URL(`${API_URL}/productivity/m/flow/visitation`);
@@ -55,6 +59,14 @@ export default class BrikApiProductivity {
 
     const params = url.searchParams;
     params.append('date', moment().valueOf().toString());
+
+    return url.toString();
+  };
+
+  static visitationGetOne = ({ visitationId }: getOneVisitationType) => {
+    const url = new URL(
+      `${API_URL}/productivity/m/flow/visitation/${visitationId}`
+    );
 
     return url.toString();
   };

@@ -84,6 +84,7 @@ interface Input {
     onValueChange: (value: any) => void;
   };
   onSelect?: (index: number | any) => void; //eg for pic radio
+  isInputDisable?: boolean;
 }
 
 interface Styles {
@@ -399,6 +400,16 @@ interface payloadPostType {
   files: any[];
 }
 
+interface visitationDataType {
+  id?: number;
+  name: string;
+  location?: string;
+  time?: string;
+  status?: string;
+  pilNames?: string[];
+  pilStatus?: string;
+}
+
 export type {
   Input,
   Styles,
@@ -423,4 +434,5 @@ export type {
   projectPayloadType,
   picPayloadType,
   payloadPostType,
+  visitationDataType,
 };
