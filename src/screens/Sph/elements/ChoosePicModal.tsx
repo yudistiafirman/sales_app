@@ -61,12 +61,14 @@ type ChoosePicModalType = {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   openAddPic: () => void;
+  selectPic?: () => void;
 };
 
 export default function ChoosePicModal({
   isModalVisible,
   setIsModalVisible,
   openAddPic = () => {},
+  selectPic = () => {},
 }: ChoosePicModalType) {
   const [isLoading, setIsLoading] = useState(false);
   const [flatListData, setFlatListData] = useState<any[]>([]);
@@ -198,7 +200,7 @@ export default function ChoosePicModal({
               </View>
 
               {/* </ScrollView> */}
-              <BButtonPrimary title="Pilih" />
+              <BButtonPrimary title="Pilih" onPress={selectPic} />
             </View>
           </View>
         </BContainer>
