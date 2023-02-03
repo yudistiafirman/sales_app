@@ -5,6 +5,7 @@ import font from '@/constants/fonts';
 import TargetBar from './elements/TargetBar';
 import TopVisitation from './elements/TopVisitation';
 import resScale from '@/utils/resScale';
+import { layout } from '@/constants';
 
 type TargetCardProps = {
   maxVisitation: number;
@@ -35,7 +36,7 @@ export default function TargetCard({
 
   const containerHeight = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [90, 100],
+    outputRange: [75, 90],
   });
 
   return (
@@ -72,7 +73,7 @@ export default function TargetCard({
 const style = StyleSheet.create({
   targetContainer: {
     backgroundColor: colors.white,
-    borderRadius: 8,
+    borderRadius: layout.radius.md,
     justifyContent: 'center',
     alignItems: 'center',
   },

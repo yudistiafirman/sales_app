@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
+  DeviceEventEmitter,
 } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import SearchProduct from '@/screens/SearchProduct';
@@ -21,6 +22,7 @@ import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 import { colors, fonts } from '@/constants';
 import { SphContext } from '../context/SphContext';
+import { useNavigation } from '@react-navigation/native';
 
 type ChosenProductType = {
   volume: string;
@@ -73,6 +75,7 @@ function renderSeparator() {
 }
 
 export default function FourthStep() {
+  const navigation = useNavigation();
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modeSearch, setModeSearch] = useState(false);
@@ -97,6 +100,12 @@ export default function FourthStep() {
     if (sphState) {
       setChosenProducts(sphState?.chosenProducts);
     }
+    DeviceEventEmitter.addListener('event.testEvent', ({ data }) => {
+      getProduct(data);
+    });
+    return () => {
+      DeviceEventEmitter.removeAllListeners('event.testEvent');
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -120,76 +129,68 @@ export default function FourthStep() {
           setModeSearch(false);
         }
       )}
-      {!modeSearch && (
-        <View style={style.searchModeContainer}>
+      <View style={style.searchModeContainer}>
+        <View>
+          <Text style={style.productText}>Produk</Text>
           <View>
-            <Text style={style.productText}>Produk</Text>
-            <View>
-              <BDivider />
-            </View>
-            <BSpacer size={'extraSmall'} />
-            <View style={style.posRelative}>
-              <TouchableOpacity
-                style={style.touchable}
-                onPress={() => {
-                  setModeSearch(true);
-                }}
-              />
-              <BSearchBar
-                placeholder="Cari Produk"
-                activeOutlineColor="gray"
-                left={<TextInput.Icon icon="magnify" />}
-              />
-            </View>
-            <BSpacer size={'small'} />
-            {/* <Text>Tidak ada produk yang terpilih</Text> */}
-            <FlatList
-              data={chosenProducts}
-              keyExtractor={(item) => item.product.id}
-              renderItem={({ item, index }) => {
-                return (
-                  <BProductCard
-                    name={item.product.name}
-                    volume={+item.volume}
-                    pricePerVol={+item.sellPrice}
-                    totalPrice={+item.volume * +item.sellPrice}
-                    onPressEdit={() => {
-                      setSelectedProduct(item.product);
-                      setIsModalVisible(true);
-                    }}
-                    onPressDelete={() => {
-                      deleteSelectedProduct(index);
-                    }}
-                  />
-                );
+            <BDivider />
+          </View>
+          <BSpacer size={'extraSmall'} />
+          <View style={style.posRelative}>
+            <TouchableOpacity
+              style={style.touchable}
+              onPress={() => {
+                navigation.navigate('SearchProduct', {
+                  isGobackAfterPress: false,
+                });
               }}
-              ItemSeparatorComponent={renderSeparator}
+            />
+            <BSearchBar
+              placeholder="Cari Produk"
+              activeOutlineColor="gray"
+              left={<TextInput.Icon icon="magnify" />}
             />
           </View>
-          <BBackContinueBtn
-            onPressBack={() => {
-              if (setCurrentPosition) {
-                setCurrentPosition(2);
-              }
+          <BSpacer size={'small'} />
+          {/* <Text>Tidak ada produk yang terpilih</Text> */}
+          <FlatList
+            data={chosenProducts}
+            keyExtractor={(item) => item.product.id}
+            renderItem={({ item, index }) => {
+              return (
+                <BProductCard
+                  name={item.product.name}
+                  volume={+item.volume}
+                  pricePerVol={+item.sellPrice}
+                  totalPrice={+item.volume * +item.sellPrice}
+                  onPressEdit={() => {
+                    setSelectedProduct(item.product);
+                    setIsModalVisible(true);
+                  }}
+                  onPressDelete={() => {
+                    deleteSelectedProduct(index);
+                  }}
+                />
+              );
             }}
-            onPressContinue={() => {
-              if (setCurrentPosition) {
-                setCurrentPosition(4);
-              }
-            }}
-            disableContinue={sphState?.chosenProducts.length === 0}
+            ItemSeparatorComponent={renderSeparator}
           />
         </View>
-      )}
-      {modeSearch && (
-        <SearchProduct
-          isAsComponent={true}
-          getProduct={getProduct}
+        <BBackContinueBtn
           onPressBack={() => {
-            setModeSearch(false);
+            if (setCurrentPosition) {
+              setCurrentPosition(2);
+            }
           }}
+          onPressContinue={() => {
+            if (setCurrentPosition) {
+              setCurrentPosition(4);
+            }
+          }}
+          disableContinue={sphState?.chosenProducts.length === 0}
         />
-      )}
+      </View>
+
       {/* <Text>ini step 4</Text> */}
     </BContainer>
   );
