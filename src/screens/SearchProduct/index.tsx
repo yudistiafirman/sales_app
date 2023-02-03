@@ -72,6 +72,8 @@ const SearchProduct = ({
   }, [navigation, searchValue, isAsComponent]);
 
   const onChangeText = (text: string) => {
+    console.log(text, 'onChangeText');
+
     setSearchValue(text);
     send('searchingProducts', { value: text });
   };

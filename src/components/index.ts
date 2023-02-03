@@ -1,6 +1,6 @@
 // atoms
 export { default as BText } from './atoms/BText';
-export { default as BContainer } from '@/components/atoms/BContainer';
+export { default as BContainer } from './atoms/BContainer';
 export { default as BChip } from './atoms/BChip';
 export { default as BStatusBar } from './atoms/BStatusBar';
 export { default as BSpacer } from './atoms/BSpacer';
