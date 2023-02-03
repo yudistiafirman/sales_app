@@ -102,17 +102,20 @@ interface Address {
   longitude?: number;
   latitude?: number;
   postalId?: number;
+  line2?: string;
 }
 
 // create visitation
 interface CreateVisitationFirstStep {
   createdLocation: Address;
   locationAddress: Address;
+  existingLocationId?: string;
 }
 interface CreateVisitationSecondStep {
   companyName: { title: string; id: string };
   customerType: 'INDIVIDU' | 'COMPANY';
   projectName: string;
+  projectId?: string;
   location: { [key: string]: any };
   pics: PIC[];
   options: {
@@ -148,9 +151,11 @@ interface CreateVisitationState {
   stepFour: CreateVisitationFourthStep;
   sheetIndex: number;
   shouldScrollView: boolean;
+  existingVisitationId: string | null;
 }
 
 interface PIC {
+  id?: string;
   name?: string;
   phone?: string;
   email?: string;
@@ -277,14 +282,16 @@ interface visitationListResponse {
     id: string;
     name: string;
     stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
-    pic: {
-      id: string;
-      name: string;
-      position: string;
-      phone: string;
-      email: string | null;
-      type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
-    };
+    // pic: {
+    //   id: string;
+    //   name: string;
+    //   position: string;
+    //   phone: string;
+    //   email: string | null;
+    //   type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
+    // };
+    PIC: PIC[];
+    mainPic: PIC & { type?: string };
     company: {
       id: string;
       name: string;
@@ -293,10 +300,13 @@ interface visitationListResponse {
     locationAddress: {
       id: string;
       line1?: string;
+      line2?: string;
       rural?: string;
       district?: string;
       postalCode?: number;
       city?: string;
+      lat?: string;
+      lon?: string;
     };
   };
 }
@@ -354,6 +364,7 @@ interface locationPayloadType {
   postalId: number;
   lon: number;
   lat: number;
+  line2?: string;
 }
 
 interface visitationPayload {
@@ -373,11 +384,18 @@ interface visitationPayload {
   rejectCategory?: 'FINISHED' | 'MOU_COMPETITOR';
   isBooking?: boolean; // ??
   status?: 'VISIT' | 'SPH' | 'REJECTED' | '';
-  files: { id: string; type: 'GALLERY' | 'COVER' }[];
+  files: filesType[];
   products: { id: string }[];
 }
 
+interface filesType {
+  id: string;
+  type: 'GALLERY' | 'COVER';
+}
+
 interface projectPayloadType {
+  id?: string;
+  locationAddressId?: string;
   name?: string;
   companyDisplayName?: string;
   location: locationPayloadType;
@@ -397,7 +415,7 @@ interface payloadPostType {
   visitation: visitationPayload;
   project: projectPayloadType;
   pic: picPayloadType[];
-  files: any[];
+  files: filesType[];
 }
 
 interface visitationDataType {

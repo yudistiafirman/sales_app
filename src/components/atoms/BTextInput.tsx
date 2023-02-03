@@ -6,7 +6,7 @@ import { resScale } from '@/utils';
 
 interface IProps extends Partial<TextInputProps> {
   rounded?: boolean;
-  editable?: boolean;
+  disabled?: boolean;
 }
 
 const baseStyle: TextStyle = {

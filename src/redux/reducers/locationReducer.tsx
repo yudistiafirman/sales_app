@@ -27,8 +27,11 @@ export const locationSlice = createSlice({
     updateRegion: (state, action: PayloadAction<Location>) => {
       return { ...state, region: { ...state.region, ...action.payload } };
     },
+    resetRegion: (state) => {
+      state.region = initialState.region;
+    },
   },
 });
 
-export const { updateRegion } = locationSlice.actions;
+export const { updateRegion, resetRegion } = locationSlice.actions;
 export default locationSlice.reducer;

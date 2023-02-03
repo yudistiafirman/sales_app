@@ -98,8 +98,7 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 
   if (type === 'textInput') {
-    const textInputProps = { onChange, value, isInputDisable: !isInputDisable };
-    console.log(textInputProps, 'textInputProps');
+    const textInputProps = { onChange, value };
 
     return (
       <React.Fragment>
@@ -108,6 +107,7 @@ const renderInput = (input: Input): React.ReactNode => {
           {...textInputProps}
           keyboardType={keyboardType ? keyboardType : 'default'}
           placeholder={placeholder}
+          disabled={isInputDisable}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
@@ -175,7 +175,16 @@ const renderInput = (input: Input): React.ReactNode => {
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
         <BSpacer size="extraSmall" />
-        <BAutoComplete {...input} />
+
+        {!isInputDisable ? (
+          <BAutoComplete {...input} />
+        ) : (
+          <BTextInput
+            value={value.title}
+            placeholder={placeholder}
+            disabled={isInputDisable}
+          />
+        )}
       </React.Fragment>
     );
   }
