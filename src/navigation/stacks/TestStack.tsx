@@ -8,6 +8,8 @@ import Sph from '@/screens/Sph';
 import CalendarScreen from '@/screens/CalendarScreen';
 import Preview from '@/screens/Camera/Preview';
 import Camera from '@/screens/Camera';
+import Schedule from '@/screens/Operation/Schedule';
+import SubmitForm from '@/screens/Operation/SubmitForm';
 
 function TestStack({
   Stack,
@@ -62,6 +64,18 @@ function TestStack({
       name: 'Preview',
       title: 'Preview',
       component: Preview,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'Schedule',
+      title: 'Ops - Schedule',
+      component: Schedule,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'SubmitForm',
+      title: 'Ops - Submit Form',
+      component: SubmitForm,
     }),
   ];
 }

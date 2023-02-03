@@ -2,7 +2,6 @@ import {
   getAllBrikProducts,
   getProductsCategories,
 } from '@/actions/InventoryActions';
-import { event } from 'react-native-reanimated';
 import { assign, createMachine } from 'xstate';
 
 export const searchProductMachine =

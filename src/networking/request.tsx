@@ -1,5 +1,3 @@
-// import { production } from '../../app.json';
-const production = false;
 import axios, { AxiosResponse } from 'axios';
 import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import { Api } from '@/models';
@@ -9,6 +7,7 @@ import { storageKey } from '@/constants';
 import { store } from '@/redux/store';
 import { setUserData } from '@/redux/reducers/authReducer';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
+const production = false;
 
 type FormDataValue =
   | string

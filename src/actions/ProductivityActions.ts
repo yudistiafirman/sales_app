@@ -19,6 +19,17 @@ export const postVisitations = async ({ payload }) => {
   );
 };
 
+export const oneGetVisitation = async ({
+  visitationId,
+}: {
+  visitationId: string;
+}) => {
+  return request(
+    BrikApiProductivity.visitationGetOne({ visitationId }),
+    await getOptions('GET', undefined, true)
+  );
+};
+
 // home screen
 interface IGetAll {
   date?: number;
