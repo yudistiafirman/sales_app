@@ -29,6 +29,7 @@ export type RootStackParamList = {
   Operation: { role?: string };
   SubmitForm: { type?: string };
   SPH: {};
+  TransactionDetail: { title: string; data: any };
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;

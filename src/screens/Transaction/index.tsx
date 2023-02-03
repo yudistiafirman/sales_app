@@ -66,6 +66,12 @@ const Transaction = () => {
               loadTransaction={loadTransaction}
               refreshing={refreshing}
               onRefresh={() => send('refreshingList')}
+              onPress={(data: any) =>
+                navigation.navigate('TransactionDetail', {
+                  title: data.title,
+                  data,
+                })
+              }
             />
           )}
           onTabPress={onTabPress}

@@ -14,5 +14,7 @@ export const getColorStatusTrx = (id: string) => {
       return { color: colors.status.red, textColor: colors.black };
     case 'Disetujui' || 'Diterima':
       return { color: colors.status.green, textColor: colors.black };
+    default:
+      return { color: colors.status.grey, textColor: colors.black };
   }
 };

@@ -12,9 +12,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Feather from 'react-native-vector-icons/Feather';
 import { resScale } from '@/utils';
 import LabelSuccess from './elements/LabelSuccess';
-import CompanyMap from './elements/CompanyMap';
-import { BPic, BProductCard, BSpacer } from '@/components';
-import Rincian from './elements/Rincian';
+import {
+  BPic,
+  BProductCard,
+  BSpacer,
+  BCompanyMapCard,
+  BProjectDetailCard,
+} from '@/components';
 import { SphContext } from '../context/SphContext';
 
 type StepDoneType = {
@@ -60,7 +64,7 @@ export default function StepDone({
         </View>
         <View style={styles.modalContent}>
           <LabelSuccess />
-          <CompanyMap location={sphState?.billingAddress.fullAddress} />
+          <BCompanyMapCard location={sphState?.billingAddress.fullAddress} />
           <View style={styles.contentDetail}>
             <Text style={styles.partText}>PIC</Text>
             <BSpacer size={'extraSmall'} />
@@ -68,7 +72,7 @@ export default function StepDone({
             <BSpacer size={'extraSmall'} />
             <Text style={styles.partText}>Rincian</Text>
             <BSpacer size={'extraSmall'} />
-            <Rincian />
+            <BProjectDetailCard />
             <BSpacer size={'extraSmall'} />
             <Text style={styles.partText}>Rincian</Text>
             <BSpacer size={'extraSmall'} />
