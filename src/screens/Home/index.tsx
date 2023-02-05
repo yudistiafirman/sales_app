@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useMemo, useCallback } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import resScale from '@/utils/resScale';
@@ -14,7 +14,12 @@ import BVisitationCard from '@/components/molecules/BVisitationCard';
 import moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
-import { BBottomSheet, BSearchBar, BFlatlistItems } from '@/components';
+import {
+  BBottomSheet,
+  BSearchBar,
+  BFlatlistItems,
+  BSpacer,
+} from '@/components';
 import { useNavigation } from '@react-navigation/native';
 
 import Modal from 'react-native-modal';
@@ -28,8 +33,13 @@ import {
 } from '@/actions/ProductivityActions';
 import debounce from 'lodash.debounce';
 import { Api } from '@/models';
+import { visitationDataType } from '@/interfaces';
+import { useDispatch } from 'react-redux';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 
 const Beranda = () => {
+  const dispatch = useDispatch();
   const [currentVisit, setCurrentVisit] = useState<{
     current: number;
     target: number;
@@ -44,11 +54,7 @@ const Beranda = () => {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isHeaderShown, setIsHeaderShown] = useState(true);
-  const [date, setDate] = useState(moment());
-  console.log(
-    moment(moment.utc(date).toDate()).local().valueOf(),
-    'date state'
-  );
+  const [date] = useState(moment());
 
   // fetching data
   const [data, setData] = React.useState<Api.Response>({
@@ -119,6 +125,7 @@ const Beranda = () => {
       const dispalyData =
         _data.data?.map(
           (el: {
+            id: string;
             status: string;
             order: any;
             finishDate: moment.MomentInput;
@@ -133,6 +140,7 @@ const Beranda = () => {
               : null;
 
             return {
+              id: el.id,
               name: el.project?.name || '--',
               location: 'dummy',
               time,
@@ -163,10 +171,10 @@ const Beranda = () => {
     fetchVisitations();
   }, [page, selectedDate]);
 
-  const onDateSelected = (date: moment.Moment) => {
+  const onDateSelected = useCallback((dateTime: moment.Moment) => {
     setPage(0);
-    setSelectedDate(date);
-  };
+    setSelectedDate(dateTime);
+  }, []);
 
   const tabToRender: { tabTitle: string; totalItems: number }[] =
     useMemo(() => {
@@ -265,29 +273,54 @@ const Beranda = () => {
     return (
       <BFlatlistItems
         renderItem={(item) => (
-          <BVisitationCard item={item} searchQuery={searchQuery} />
+          <BVisitationCard
+            item={item}
+            searchQuery={searchQuery}
+            onPress={() => {
+              console.log(item, 'sceneToRender');
+            }}
+          />
         )}
         searchQuery={searchQuery}
         data={data.data}
         isLoading={isLoading}
         onEndReached={onEndReached}
-        // initialFetch={() => {
-        //   return tabOnEndReached({
-        //     key,
-        //     currentPage: 1,
-        //     query: searchQuery,
-        //   });
-        // }}
-        // onEndReached={(info) => {
-        //   return tabOnEndReached({
-        //     ...info,
-        //     key,
-        //     query: searchQuery,
-        //   });
-        // }}
       />
     );
   }, [data]);
+
+  async function visitationOnPress(dataItem: visitationDataType) {
+    // console.log(dataItem, 'visitationOnPress');
+    try {
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: 'Loading visitation Data...',
+          outsideClickClosePopUp: false,
+        })
+      );
+      const response = await dispatch(
+        getOneVisitation({ visitationId: dataItem.id })
+      ).unwrap();
+      console.log(response, 'responsevisitationOnPress');
+
+      dispatch(closePopUp());
+      navigation.navigate('Camera', {
+        photoTitle: 'Foto Kunjungan',
+        navigateTo: 'CreateVisitation',
+        existingVisitation: response,
+      });
+    } catch (error) {
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          highlightedText: 'Error',
+          popUpText: 'Error fetching visitation Data',
+          outsideClickClosePopUp: true,
+        })
+      );
+    }
+  }
 
   return (
     <View style={style.container}>
@@ -329,16 +362,17 @@ const Beranda = () => {
           />
         </View>
       </Modal>
-      <TargetCard
-        isExpanded={isExpanded}
-        maxVisitation={currentVisit.target}
-        currentVisitaion={currentVisit.current}
-        isLoading={isLoading}
-      />
+      <View style={{ padding: layout.mainPad }}>
+        <TargetCard
+          isExpanded={isExpanded}
+          maxVisitation={currentVisit.target}
+          currentVisitaion={currentVisit.current}
+          isLoading={isLoading}
+        />
+      </View>
       <BQuickAction
         containerStyle={{
-          paddingLeft: resScale(25),
-          height: resScale(100),
+          paddingLeft: resScale(30),
         }}
         buttonProps={buttonsData}
       />
@@ -379,6 +413,7 @@ const Beranda = () => {
           data={data.data}
           searchQuery={searchQuery}
           onEndReached={onEndReached}
+          onPressItem={visitationOnPress}
         />
       </BBottomSheet>
     </View>

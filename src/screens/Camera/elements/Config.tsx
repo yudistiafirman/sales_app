@@ -14,9 +14,14 @@ import {
   CameraDevice,
 } from 'react-native-vision-camera';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { layout } from '@/constants';
+import { RootStackScreenProps } from '@/navigation/navTypes';
 
 type configType = {
   title: string;
@@ -30,6 +35,8 @@ const Config = ({ title, style, navigateTo }: configType) => {
   ): CameraDevice | undefined => {
     return devices?.back;
   };
+  const route = useRoute<RootStackScreenProps>();
+
   useHeaderTitleChanged({ title: 'Foto ' + title });
   const device = getCameraDevice(useCameraDevices());
   const navigation = useNavigation();
@@ -51,28 +58,24 @@ const Config = ({ title, style, navigateTo }: configType) => {
   };
 
   const takePhoto = async () => {
-    //NOTE: for emulator
-    // navigation.navigate('Preview', {
-    //   photoTitle: title,
-    //   navigateTo,
-    // });
-
-    //NOTE: for real device
     if (camera === undefined || camera.current === undefined) {
       Alert.alert('No Camera Found');
     } else {
       try {
-        const takenPhoto = await camera.current?.takePhoto({
+        const takenPhoto = await camera.current.takePhoto({
           flash: 'off',
         });
         animateElement();
+        const existingVisitation = route?.params?.existingVisitation;
+
         navigation.navigate('Preview', {
           photo: takenPhoto,
           photoTitle: title,
           navigateTo,
+          existingVisitation,
         });
-      } catch (err) {
-        Alert.alert('Camera Error');
+      } catch (error) {
+        console.log(error, 'takePhoto56');
       }
     }
   };

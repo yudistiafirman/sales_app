@@ -1,4 +1,4 @@
-import BrikApiProductivity from '@/BrikApi/BrikApiProductivity';
+import BrikApiProductivity from '@/brikApi/BrikApiProductivity';
 import { getOptions, request } from '@/networking/request';
 
 type getVisitationsType = {
@@ -16,6 +16,17 @@ export const postVisitations = async ({ payload }) => {
   return request(
     BrikApiProductivity.visitations({}),
     await getOptions('POST', payload, true)
+  );
+};
+
+export const oneGetVisitation = async ({
+  visitationId,
+}: {
+  visitationId: string;
+}) => {
+  return request(
+    BrikApiProductivity.visitationGetOne({ visitationId }),
+    await getOptions('GET', undefined, true)
   );
 };
 
