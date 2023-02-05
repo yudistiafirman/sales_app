@@ -25,6 +25,7 @@ const getRootScreen = (
         return [
           <Stack.Screen
             name={'Operation'}
+            key={'Operation'}
             component={Operation}
             options={{
               headerTitle: () =>
@@ -42,6 +43,7 @@ const getRootScreen = (
         return [
           <Stack.Screen
             name={'Root'}
+            key={'Root'}
             component={SecurityTabsV2}
             options={{
               headerTitle: () =>
@@ -54,6 +56,7 @@ const getRootScreen = (
         return [
           <Stack.Screen
             name={'Root'}
+            key={'Root'}
             component={SalesTabsV2}
             options={{
               headerStyle: { backgroundColor: colors.primary },
@@ -68,6 +71,7 @@ const getRootScreen = (
     return [
       <Stack.Screen
         name={'Login'}
+        key={'Login'}
         component={Login}
         options={{
           headerTitle: () => BHeaderTitle('Log in', 'flex-start'),
@@ -75,6 +79,7 @@ const getRootScreen = (
       />,
       <Stack.Screen
         name={'Verification'}
+        key={'Verification'}
         component={Verification}
         options={{
           headerTitle: () => BHeaderTitle('Kode Verifikasi', 'flex-start'),

@@ -15,6 +15,7 @@ export const getOperationStack = (Stack: any) => {
   return [
     <Stack.Screen
       name={'Camera'}
+      key={'Camera'}
       component={Camera}
       options={{
         headerTitle: () => BHeaderTitle('Camera', 'flex-start'),
@@ -22,6 +23,7 @@ export const getOperationStack = (Stack: any) => {
     />,
     <Stack.Screen
       name={'Preview'}
+      key={'Preview'}
       component={Preview}
       options={{
         headerTitle: () => BHeaderTitle('Preview', 'flex-start'),
@@ -29,6 +31,7 @@ export const getOperationStack = (Stack: any) => {
     />,
     <Stack.Screen
       name={'Schedule'}
+      key={'Schedule'}
       component={Schedule}
       options={{
         headerTitle: () => BHeaderTitle('Schedule', 'flex-start'),
@@ -36,6 +39,7 @@ export const getOperationStack = (Stack: any) => {
     />,
     <Stack.Screen
       name={'SubmitForm'}
+      key={'SubmitForm'}
       component={SubmitForm}
       options={{
         headerTitle: () => BHeaderTitle('SubmitForm', 'flex-start'),
@@ -48,6 +52,7 @@ export const getSalesStack = (Stack: any) => {
   return [
     <Stack.Screen
       name={'CreateVisitation'}
+      key={'CreateVisitation'}
       component={CreateVisitation}
       options={{
         headerTitle: () => BHeaderTitle('CreateVisitation', 'flex-start'),
@@ -55,6 +60,7 @@ export const getSalesStack = (Stack: any) => {
     />,
     <Stack.Screen
       name={'SPH'}
+      key={'SPH'}
       component={Sph}
       options={{
         headerTitle: () => BHeaderTitle('SPH', 'flex-start'),
@@ -62,6 +68,7 @@ export const getSalesStack = (Stack: any) => {
     />,
     <Stack.Screen
       name={'SearchProduct'}
+      key={'SearchProduct'}
       component={SearchProduct}
       options={{
         headerTitle: () => BHeaderTitle('SearchProduct', 'flex-start'),
@@ -69,6 +76,7 @@ export const getSalesStack = (Stack: any) => {
     />,
     <Stack.Screen
       name={'Location'}
+      key={'Location'}
       component={Location}
       options={{
         headerTitle: () => BHeaderTitle('Pilih Area Proyek', 'flex-start'),
@@ -76,6 +84,7 @@ export const getSalesStack = (Stack: any) => {
     />,
     <Stack.Screen
       name={'SearchArea'}
+      key={'SearchArea'}
       component={SearchAreaProject}
       options={{
         headerTitle: () => BHeaderTitle('Pilih Area Proyek', 'flex-start'),
@@ -83,6 +92,7 @@ export const getSalesStack = (Stack: any) => {
     />,
     <Stack.Screen
       name={'CalendarScreen'}
+      key={'CalendarScreen'}
       component={CalendarScreen}
       options={{
         headerTitle: () => BHeaderTitle('Pilih Tanggal', 'flex-start'),
@@ -90,6 +100,7 @@ export const getSalesStack = (Stack: any) => {
     />,
     <Stack.Screen
       name={'Camera'}
+      key={'Camera'}
       component={Camera}
       options={{
         headerTitle: () => BHeaderTitle('Camera', 'flex-start'),
@@ -97,6 +108,7 @@ export const getSalesStack = (Stack: any) => {
     />,
     <Stack.Screen
       name={'Preview'}
+      key={'Preview'}
       component={Preview}
       options={{
         headerTitle: () => BHeaderTitle('Preview', 'flex-start'),
