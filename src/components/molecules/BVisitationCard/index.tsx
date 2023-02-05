@@ -11,18 +11,20 @@ import PillNames from './elements/PillNames';
 import HighlightText from '../../atoms/BHighlightText';
 import { colors, layout } from '@/constants';
 import BLocationText from '@/components/atoms/BLocationText';
+import { visitationDataType } from '@/interfaces';
 
-type visitationDataType = {
-  id?: number;
-  name: string;
-  location?: string;
-  time?: string;
-  status?: string;
-  pilNames?: string[];
-  pilStatus?: string;
-};
+// type visitationDataType = {
+//   id?: number;
+//   name: string;
+//   location?: string;
+//   time?: string;
+//   status?: string;
+//   pilNames?: string[];
+//   pilStatus?: string;
+// };
 
 type VisitationCardType = {
+  id?: string;
   item: visitationDataType;
   searchQuery?: string;
   onPress?: (data: visitationDataType) => void;
@@ -46,7 +48,7 @@ function iconRender(
 export default function BVisitationCard({
   item,
   searchQuery,
-  onPress,
+  onPress = () => {},
   isRenderIcon = true,
   customIcon,
 }: VisitationCardType) {
@@ -73,9 +75,7 @@ export default function BVisitationCard({
       <TouchableOpacity
         style={style.rightSide}
         onPress={() => {
-          if (onPress) {
-            onPress(item);
-          }
+          onPress(item);
         }}
       >
         {iconRender(isRenderIcon, customIcon)}

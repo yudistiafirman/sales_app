@@ -69,6 +69,7 @@ const renderInput = (input: Input): React.ReactNode => {
     checkbox,
     placeholder,
     hidePicLabel,
+    isInputDisable,
   } = input;
 
   if (type === 'quantity') {
@@ -97,7 +98,9 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 
   if (type === 'textInput') {
-    const textInputProps = { onChange, value };
+    const textInputProps = { onChange, value, isInputDisable: !isInputDisable };
+    console.log(textInputProps, 'textInputProps');
+
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
@@ -140,7 +143,10 @@ const renderInput = (input: Input): React.ReactNode => {
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
         <BSpacer size="extraSmall" />
-        <View style={styles.optionContainer}>
+        <View
+          pointerEvents={isInputDisable ? 'none' : 'auto'}
+          style={styles.optionContainer}
+        >
           {options?.map((val, index) => (
             <React.Fragment key={index}>
               <BCardOption

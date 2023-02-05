@@ -32,7 +32,7 @@ export default function SecondStep() {
   const { region } = useSelector((state: RootState) => state.location);
   const [sheetIndex] = useState(0); //setSheetIndex
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const [sheetSnapPoints, setSheetSnapPoints] = useState(['35%', '75%']);
+  const [sheetSnapPoints, setSheetSnapPoints] = useState(['60%']);
   const dispatch = useDispatch();
 
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
@@ -67,7 +67,7 @@ export default function SecondStep() {
         },
       ];
     }
-    setSheetSnapPoints(['35%', '75%']);
+    setSheetSnapPoints(['60%']);
     setTimeout(() => {
       bottomSheetRef.current?.expand();
     }, 50);
@@ -188,13 +188,24 @@ export default function SecondStep() {
 
   return (
     <View style={style.container}>
-      <BLocation
-        region={region}
-        onRegionChange={onChangeRegion}
-        coordinate={region}
-        CustomMarker={<BMarker />}
-        isUninteractable={false}
-      />
+      <View
+        style={{
+          flex: 1,
+          // alignItems: 'center',
+          // justifyContent: 'flex-start',
+          // alignItems: 'flex-start',
+        }}
+      >
+        <BLocation
+          region={region}
+          onRegionChange={onChangeRegion}
+          coordinate={region}
+          CustomMarker={<BMarker />}
+          isUninteractable={false}
+          mapStyle={style.map}
+        />
+      </View>
+      <View style={{ flex: 0.5 }} />
       <BBottomSheetForm
         enableClose={false}
         inputs={inputsData}
@@ -229,13 +240,6 @@ export default function SecondStep() {
               <Text>{`longitude=${region.longitude}`}</Text>
             </View>
           </View>
-          {/* <CoordinatesDetail
-            addressTitle={`latitude=${region.latitude}`}
-            addressDetail={`longitude=${region.longitude}`}
-            onPress={() => {
-              console.log('di pencet');
-            }}
-          /> */}
         </View>
       </BBottomSheetForm>
     </View>
@@ -245,7 +249,10 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: layout.pad.md,
-    // marginBottom: 200,
+  },
+  map: {
+    height: resScale(450),
+    width: '100%',
   },
   mapIconContainer: {
     alignItems: 'center',

@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import BrikApiCommon from '@/BrikApi/BrikApiCommon';
+import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import { Api } from '@/models';
 import { UserModel } from '@/models/User';
 import { bStorage } from '@/actions';

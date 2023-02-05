@@ -99,15 +99,14 @@ function payloadMapper(
     payload.visitation.visitationNotes = stepThree.notes;
   }
   if (stepFour.selectedDate && type === 'VISIT') {
-    payload.visitation.bookingDate = today.valueOf();
-  }
-  console.log(stepFour, 'stepFour107');
-
-  if (stepFour.selectedDate) {
     const selectedDate = moment(stepFour.selectedDate.date);
-    payload.visitation.dateVisit = selectedDate.valueOf();
-    payload.visitation.finishDate = selectedDate.valueOf();
+    payload.visitation.bookingDate = selectedDate.valueOf();
   }
+
+  // if (stepFour.selectedDate) {
+  payload.visitation.dateVisit = today.valueOf();
+  payload.visitation.finishDate = today.valueOf();
+  // }
 
   if (stepFour.kategoriAlasan && type === 'REJECTED') {
     payload.visitation.rejectCategory = stepFour.kategoriAlasan;
@@ -254,6 +253,7 @@ const Fourth = () => {
             openPopUp({
               popUpType: 'success',
               popUpText: 'Success create visitation',
+              outsideClickClosePopUp: true,
             })
           );
         } else {
@@ -269,6 +269,7 @@ const Fourth = () => {
               popUpType: 'success',
               popUpText: 'Successfully create visitation',
               highlightedText: 'visitation',
+              outsideClickClosePopUp: true,
             })
           );
         }
@@ -280,6 +281,7 @@ const Fourth = () => {
             popUpType: 'error',
             popUpText: message,
             highlightedText: 'error',
+            outsideClickClosePopUp: true,
           })
         );
       }

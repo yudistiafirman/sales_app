@@ -5,6 +5,7 @@ import {
   Button,
   StyleSheet,
   DeviceEventEmitter,
+  ActivityIndicator,
 } from 'react-native';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,6 +27,7 @@ export default function Popup() {
     <Modal
       style={styles.modalStyle}
       isVisible={isPopUpVisible}
+      hideModalContentWhileAnimating={false}
       backdropOpacity={0.3}
       onBackdropPress={() => {
         if (popUpOptions.outsideClickClosePopUp) {
@@ -40,6 +42,9 @@ export default function Popup() {
           )}
           {popUpOptions.popUpType === 'error' && (
             <AntDesign size={resScale(48)} name="closecircle" color={'red'} />
+          )}
+          {popUpOptions.popUpType === 'loading' && (
+            <ActivityIndicator size={resScale(60)} color={colors.primary} />
           )}
         </View>
         <BHighlightText

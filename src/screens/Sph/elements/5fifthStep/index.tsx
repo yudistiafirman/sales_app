@@ -18,6 +18,7 @@ import ChoosePicModal from '../ChoosePicModal';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import { SphContext } from '../context/SphContext';
+import StepDone from '../StepDoneModal/StepDone';
 
 export default function FifthStep() {
   const [sphState, stateUpdate] = useContext(SphContext);
@@ -25,6 +26,7 @@ export default function FifthStep() {
   const bottomSheetRef = React.useRef<BottomSheet>(null);
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isStepDoneVisible, setIsStepDoneVisible] = useState(false);
 
   const inputsData: Input[] = [
     {
@@ -45,13 +47,18 @@ export default function FifthStep() {
   }
   return (
     <BContainer>
-      {/* <Text>FifthStep</Text> */}
+      <StepDone
+        isModalVisible={isStepDoneVisible}
+        setIsModalVisible={setIsStepDoneVisible}
+      />
       <ChoosePicModal
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         openAddPic={addPicHandler}
+        selectPic={() => {
+          setIsStepDoneVisible((curr) => !curr);
+        }}
       />
-
       <View style={{ minHeight: resScale(80) }}>
         <BVisitationCard
           item={{
