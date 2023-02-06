@@ -2,7 +2,7 @@ import bStorage from '@/actions/BStorage';
 import { signOut } from '@/actions/CommonActions';
 import { BTouchableText } from '@/components';
 import storageKey from '@/constants/storageKey';
-import { setUserData } from '@/redux/reducers/authReducer';
+import { setUserData, signout } from '@/redux/reducers/authReducer';
 import { AppDispatch } from '@/redux/store';
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect } from 'react';
@@ -26,7 +26,7 @@ const Profile = () => {
       const response = await signOut();
       if (response) {
         bStorage.deleteItem(storageKey.userToken);
-        dispatch(setUserData(null));
+        dispatch(signout);
       }
     } catch (error) {
       Alert.alert('Something went wrong', error.message);

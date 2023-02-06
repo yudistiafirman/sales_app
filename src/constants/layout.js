@@ -1,6 +1,5 @@
 import { resScale } from "@/utils";
 
-
 const layout = {
   mainPad: resScale(16),
   spaceBetween: resScale(10),
@@ -15,6 +14,7 @@ const layout = {
     xs: resScale(2),
     sm: resScale(4),
     md: resScale(8),
+    ml: resScale(12),
     lg: resScale(16),
     xl: resScale(32),
   },

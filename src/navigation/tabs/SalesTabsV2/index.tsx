@@ -1,10 +1,21 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import PriceList from '@/screens/Price';
-import CustomSalesTabBar from './../SalesTabs/SalesTabBar';
+import CustomTabBar from '../CustomTabBar';
 import Profile from '@/screens/Profile';
 import Transactions from '@/screens/Transactions';
 import Home from '@/screens/Home';
+import { colors, fonts } from '@/constants';
+import {
+  TAB_HOME,
+  TAB_HOME_TITLE,
+  TAB_PRICE_LIST,
+  TAB_PRICE_LIST_TITLE,
+  TAB_PROFILE,
+  TAB_PROFILE_TITLE,
+  TAB_TRANSACTION,
+  TAB_TRANSACTION_TITLE,
+} from '@/navigation/ScreenNames';
 
 const Tab = createBottomTabNavigator();
 
@@ -12,15 +23,42 @@ function SalesTabsV2() {
   return (
     <Tab.Navigator
       screenOptions={{
+        headerShown: true,
         tabBarHideOnKeyboard: true,
-        headerShown: false,
+        headerTitleAlign: 'center',
+        headerShadowVisible: false,
+        headerTitleStyle: {
+          color: colors.text.darker,
+          fontSize: fonts.size.lg,
+          fontWeight: fonts.family.montserrat[600],
+        },
       }}
-      tabBar={(props) => <CustomSalesTabBar {...props} />}
+      tabBar={(props) => <CustomTabBar {...props} />}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Transaction" component={Transactions} />
-      <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="PriceList" component={PriceList} />
+      <Tab.Screen
+        key={TAB_HOME}
+        name={TAB_HOME_TITLE}
+        options={{ headerTitle: TAB_HOME_TITLE }}
+        component={Home}
+      />
+      <Tab.Screen
+        key={TAB_TRANSACTION}
+        name={TAB_TRANSACTION_TITLE}
+        options={{ headerTitle: TAB_TRANSACTION_TITLE }}
+        component={Transactions}
+      />
+      <Tab.Screen
+        key={TAB_PROFILE}
+        name={TAB_PROFILE_TITLE}
+        options={{ headerTitle: TAB_PROFILE_TITLE }}
+        component={Profile}
+      />
+      <Tab.Screen
+        key={TAB_PRICE_LIST}
+        name={TAB_PRICE_LIST_TITLE}
+        options={{ headerTitle: TAB_PRICE_LIST_TITLE }}
+        component={PriceList}
+      />
     </Tab.Navigator>
   );
 }

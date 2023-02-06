@@ -1,12 +1,9 @@
-// In App.js in a new project
-
 import * as React from 'react';
-import { StatusBar, Text, View } from 'react-native';
+import { StatusBar } from 'react-native';
 import {
   DefaultTheme as NavigationTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import AppNavigator from '@/navigation/AppNavigator';
 import {
   configureFonts,
   MD3LightTheme as PaperTheme,
@@ -19,6 +16,10 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '@/redux/store';
 import Popup from '@/components/templates/PopupGlobal/Popup';
 import AppNavigatorV2 from '@/navigation/AppNavigatorV2';
+
+const parentFull = {
+  flex: 1,
+};
 
 const navTheme = {
   ...NavigationTheme,
@@ -46,7 +47,7 @@ const paperTheme = {
 
 function App() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={parentFull}>
       <NavigationContainer theme={navTheme}>
         <StatusBar
           barStyle={'dark-content'}

@@ -1,0 +1,100 @@
+import Preview from '@/screens/Camera/Preview';
+import Camera from '@/screens/Camera';
+import CalendarScreen from '@/screens/CalendarScreen';
+import * as React from 'react';
+import SearchAreaProject from '@/screens/SearchAreaProject';
+import Location from '@/screens/Location';
+import SearchProduct from '@/screens/SearchProduct';
+import Sph from '@/screens/Sph';
+import CreateVisitation from '@/screens/Visitation/CreateVisitation';
+import {
+  CALENDAR,
+  CALENDAR_TITLE,
+  CAMERA,
+  CAMERA_TITLE,
+  CREATE_VISITATION,
+  CREATE_VISITATION_TITLE,
+  IMAGE_PREVIEW,
+  IMAGE_PREVIEW_TITLE,
+  LOCATION,
+  LOCATION_TITLE,
+  SEARCH_AREA,
+  SEARCH_AREA_TITLE,
+  SEARCH_PRODUCT,
+  SEARCH_PRODUCT_TITLE,
+  SPH,
+  SPH_TITLE,
+} from '../ScreenNames';
+
+const SalesStack = (Stack: any) => {
+  return (
+    <>
+      <Stack.Screen
+        name={CREATE_VISITATION}
+        key={CREATE_VISITATION}
+        component={CreateVisitation}
+        options={{
+          headerTitle: CREATE_VISITATION_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={SPH}
+        key={SPH}
+        component={Sph}
+        options={{
+          headerTitle: SPH_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={SEARCH_PRODUCT}
+        key={SEARCH_PRODUCT}
+        component={SearchProduct}
+        options={{
+          headerTitle: SEARCH_PRODUCT_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={LOCATION}
+        key={LOCATION}
+        component={Location}
+        options={{
+          headerTitle: LOCATION_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={SEARCH_AREA}
+        key={SEARCH_AREA}
+        component={SearchAreaProject}
+        options={{
+          headerTitle: SEARCH_AREA_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={CALENDAR}
+        key={CALENDAR}
+        component={CalendarScreen}
+        options={{
+          headerTitle: CALENDAR_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={CAMERA}
+        key={CAMERA}
+        component={Camera}
+        options={{
+          headerTitle: CAMERA_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={IMAGE_PREVIEW}
+        key={IMAGE_PREVIEW}
+        component={Preview}
+        options={{
+          headerTitle: IMAGE_PREVIEW_TITLE,
+        }}
+      />
+    </>
+  );
+};
+
+export default SalesStack;
