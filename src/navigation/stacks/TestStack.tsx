@@ -11,6 +11,7 @@ import Camera from '@/screens/Camera';
 import Schedule from '@/screens/Operation/Schedule';
 import SubmitForm from '@/screens/Operation/SubmitForm';
 import PO from '@/screens/PurchaseOrder';
+import TransactionDetail from '@/screens/Transaction/Detail';
 
 function TestStack({
   Stack,
@@ -83,6 +84,12 @@ function TestStack({
       name: 'SubmitForm',
       title: 'Ops - Submit Form',
       component: SubmitForm,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'TransactionDetail',
+      title: 'Transaction Detail',
+      component: TransactionDetail,
     }),
   ];
 }

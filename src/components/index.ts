@@ -17,7 +17,6 @@ export { default as BHeaderIcon } from './atoms/BHeaderIcon';
 export { default as BMarker } from './atoms/BMarker';
 export { default as BSwitch } from './atoms/BSwitch';
 export { default as BFileInput } from './atoms/BFileInput';
-export { default as BProductCard } from './atoms/BProductCard';
 export { default as BErrorText } from './atoms/BErrorText';
 export { default as BSvg } from './atoms/BSvg';
 export { default as SVGName } from './atoms/BSvg/svgName';
@@ -29,7 +28,7 @@ export { default as BTab } from './molecules/BTab';
 export { default as BSearchBar } from './molecules/BSearchBar';
 export { default as BCardOption } from './molecules/BCardOption';
 export { default as BComboDropdown } from './molecules/BComboDropdown';
-export { default as BLabel } from './molecules/BLabel';
+export { default as BLabel } from './atoms/BLabel';
 export { default as BQuickAction } from './molecules/BQuickAction';
 export { default as BTabLabels } from './molecules/BTabLabels';
 export { default as BVisitationCard } from './molecules/BVisitationCard';
@@ -42,6 +41,10 @@ export { default as BTextLocation } from './molecules/BTextLocation';
 export { default as BBackContinueBtn } from './molecules/BBackContinueBtn';
 export { default as BStepperIndicator } from './molecules/StepperIndicator';
 export { default as BHeaderTitle } from './molecules/BHeaderTitle';
+export { default as BProjectDetailCard } from './molecules/BProjectDetailCard';
+export { default as BProductCard } from './molecules/BProductCard';
+export { default as BDepositCard } from './molecules/BDepositCard';
+export { default as BCompanyMapCard } from './molecules/BCompanyMapCard';
 
 // organism
 export { default as BForm } from './organism/BForm';
@@ -52,6 +55,7 @@ export { default as BBottomSheetForm } from './organism/BBottomSheetForm';
 export { default as BAlert } from './organism/BAlert';
 export { default as BTabViewScreen } from './organism/BTabViewScreen';
 export { default as BCommonCompanyList } from './organism/BCommonCompanyList';
+export { default as BNestedProductCard } from './organism/BNestedProductCard';
 
 //templates
 export { default as ProductList } from './templates/Price/ProductList';

@@ -33,6 +33,8 @@ export type RootStackParamList = {
   PO: {
     poImages?: Record<string, string>;
   };
+  SPH: {};
+  TransactionDetail: { title: string; data: any };
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;
