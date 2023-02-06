@@ -122,15 +122,15 @@ function populateData(
   const { company, PIC: picList, mainPic } = project;
   if (company) {
     updateValue('stepTwo', 'customerType', 'COMPANY');
-    const selectedCompany = {
-      id: company.id,
-      title: company.displayName,
-    };
-    updateValue('stepTwo', 'companyName', selectedCompany);
-    updateValue('stepTwo', 'options', {
-      loading: false,
-      items: [selectedCompany],
-    });
+    // const selectedCompany = {
+    //   id: company.id,
+    //   title: company.displayName,
+    // };
+    updateValue('stepTwo', 'companyName', company.displayName);
+    // updateValue('stepTwo', 'options', {
+    //   loading: false,
+    //   items: [selectedCompany],
+    // });
   } else {
     updateValue('stepTwo', 'customerType', 'INDIVIDU');
   }

@@ -20,7 +20,7 @@ type BBottomSheetType = {
   handleComponent?: (props: any) => JSX.Element;
   backdropComponent?: (props: any) => JSX.Element;
   backgroundComponent?: (props: any) => JSX.Element;
-  footerComponent?: (props: any) => JSX.Element;
+  footerComponent?: ((props: any) => JSX.Element) | null;
   backgroundStyle?: ViewStyle;
   style?: ViewStyle;
   handleStyle?: ViewStyle;

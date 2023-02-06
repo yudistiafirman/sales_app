@@ -180,7 +180,7 @@ const renderInput = (input: Input): React.ReactNode => {
           <BAutoComplete {...input} />
         ) : (
           <BTextInput
-            value={value.title}
+            value={value?.title}
             placeholder={placeholder}
             disabled={isInputDisable}
           />

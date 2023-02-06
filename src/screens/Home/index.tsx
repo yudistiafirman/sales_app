@@ -397,6 +397,9 @@ const Beranda = () => {
         enableContentPanningGesture={true}
         style={style.BsheetStyle}
         footerComponent={(props: any) => {
+          if (!isRenderDateDaily) {
+            return null;
+          }
           return BuatKunjungan(props, kunjunganAction);
         }}
       >

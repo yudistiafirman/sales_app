@@ -112,7 +112,7 @@ interface CreateVisitationFirstStep {
   existingLocationId?: string;
 }
 interface CreateVisitationSecondStep {
-  companyName: { title: string; id: string };
+  companyName: string;
   customerType: 'INDIVIDU' | 'COMPANY';
   projectName: string;
   projectId?: string;
@@ -282,14 +282,6 @@ interface visitationListResponse {
     id: string;
     name: string;
     stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
-    // pic: {
-    //   id: string;
-    //   name: string;
-    //   position: string;
-    //   phone: string;
-    //   email: string | null;
-    //   type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
-    // };
     PIC: PIC[];
     mainPic: PIC & { type?: string };
     company: {
@@ -310,45 +302,6 @@ interface visitationListResponse {
     };
   };
 }
-// interface visitationListResponse {
-//   id: string;
-//   created_location: string;
-//   visitation_id: string;
-//   created_by_id: string;
-//   project_id: string | null;
-//   order: number;
-//   customer_type: 'COMPANY' | 'INDIVIDU';
-//   payment_type: 'CBD' | 'CREDIT';
-//   estimation_week: string;
-//   estimation_month: string;
-//   visit_notes: string | null;
-//   dateVisit: string;
-//   reject_notes: string | null;
-//   reject_category: 'FINISHED' | 'MOU_COMPETITOR' | null;
-//   is_booking: boolean;
-//   finishDate: string | null;
-//   status: 'VISIT' | 'SPH' | 'PO' | 'SCHEDULING' | 'DO' | 'REJECTED';
-//   created_at: string;
-//   updated_at: string;
-//   product_id: string;
-//   company_id: string;
-//   location_address_id: string | null;
-//   shipping_address_id: string | null;
-//   billing_address_id: string | null;
-//   main_pic_id: string;
-//   name: string;
-//   stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
-//   checkout_url: string | null;
-//   checkout_expiry_date: string | null;
-//   external_customer_id: string | null;
-//   file_id: string | null;
-//   type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
-//   supplier_id: string | null;
-//   position: string;
-//   phone: string;
-//   email: string | null;
-//   display_name: string;
-// }
 
 interface customerDataInterface {
   display_name: string;
@@ -428,6 +381,22 @@ interface visitationDataType {
   pilStatus?: string;
 }
 
+interface projectResponseType {
+  id: string;
+  name: string;
+  display_name: string;
+  line1: string;
+  rural: string;
+  district: string;
+  postal_code: number;
+  city: string;
+  projects: {
+    id: string;
+    name: string;
+  }[];
+  project_count: string;
+}
+
 export type {
   Input,
   Styles,
@@ -453,4 +422,5 @@ export type {
   picPayloadType,
   payloadPostType,
   visitationDataType,
+  projectResponseType,
 };
