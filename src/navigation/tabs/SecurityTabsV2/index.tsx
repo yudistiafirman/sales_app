@@ -16,6 +16,7 @@ function SecurityTabsV2() {
   return (
     <Tab.Navigator
       screenOptions={{
+        headerTitleAlign: 'center',
         tabBarHideOnKeyboard: true,
         headerShown: false,
       }}

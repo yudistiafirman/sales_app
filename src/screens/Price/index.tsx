@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import * as React from 'react';
 import { AppState, SafeAreaView } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -15,16 +15,18 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { layout } from '@/constants';
 import { RootStackScreenProps } from '@/navigation/navTypes';
+import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
+import { LOCATION, SEARCH_PRODUCT } from '@/navigation/ScreenNames';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
-  const [index, setIndex] = useState(0);
-  const [visibleTnc, setVisibleTnc] = useState(false);
-  const appState = useRef(AppState.currentState);
+  const [index, setIndex] = React.useState(0);
+  const [visibleTnc, setVisibleTnc] = React.useState(false);
+  const appState = React.useRef(AppState.currentState);
   const [state, send] = useMachine(priceMachine);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (state.matches('denied')) {
       const subscription = AppState.addEventListener(
         'change',
@@ -46,7 +48,7 @@ const PriceList = () => {
     }
   }, [send, state]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude } = params.coordinate;
@@ -58,24 +60,19 @@ const PriceList = () => {
     }
   }, [route, route?.params, send]);
 
-  const renderHeaderRight = () => {
-    return (
+  useCustomHeaderRight({
+    customHeaderRight: (
       <BTouchableText onPress={() => setVisibleTnc(true)} title="Ketentuan" />
-    );
-  };
+    ),
+  });
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => renderHeaderRight(),
-    });
-  }, [navigation]);
-
-  const onTabPress = ({ route: any }) => {
+  const onTabPress = () => {
     const tabIndex = index === 0 ? 1 : 0;
     if (route.key !== routes[index].key) {
       send('onChangeCategories', { payload: tabIndex });
     }
   };
+
   const goToLocation = () => {
     const { lon, lat } = locationDetail;
     const coordinate = {
@@ -83,7 +80,7 @@ const PriceList = () => {
       latitude: Number(lat),
     };
 
-    navigation.navigate('Location', {
+    navigation.navigate(LOCATION, {
       coordinate: coordinate,
     });
   };
@@ -120,7 +117,7 @@ const PriceList = () => {
       {!loadLocation ? (
         <PriceSearchBar
           onPress={() =>
-            navigation.navigate('SearchProduct', {
+            navigation.navigate(SEARCH_PRODUCT, {
               distance: locationDetail?.distance?.value,
             })
           }

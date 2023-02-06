@@ -2,13 +2,7 @@ import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import BSearchBar from '@/components/molecules/BSearchBar';
 import resScale from '@/utils/resScale';
 import { useNavigation } from '@react-navigation/native';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import * as React from 'react';
 import { TextInput } from 'react-native-paper';
 import { SafeAreaView, AppState } from 'react-native';
 import SearchAreaStyles from './styles';
@@ -21,12 +15,14 @@ import LocationListShimmer from './element/LocationListShimmer';
 import { BSpacer } from '@/components';
 import { useDispatch } from 'react-redux';
 import { updateRegion } from '@/redux/locationReducer';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { LOCATION } from '@/navigation/ScreenNames';
 
 const SearchAreaProject = ({ route }: { route: any }) => {
   const navigation = useNavigation();
-  const [text, setText] = useState('');
+  const [text, setText] = React.useState('');
   const dispatch = useDispatch();
-  const appState = useRef(AppState.currentState);
+  const appState = React.useRef(AppState.currentState);
   const [state, send] = useMachine(searchAreaMachine, {
     actions: {
       clearInputValue: assign((context, event) => {
@@ -58,31 +54,24 @@ const SearchAreaProject = ({ route }: { route: any }) => {
           navigation.goBack();
           return;
         }
-        navigation.navigate('Location', {
+        navigation.navigate(LOCATION, {
           coordinate: coordinate,
         });
       },
     },
   });
 
-  const renderHeaderLeft = useCallback(() => {
-    return (
+  useCustomHeaderLeft({
+    customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
         onBack={() => navigation.goBack()}
         iconName="x"
       />
-    );
-  }, [navigation]);
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerTitle: 'Pilih Area Proyek',
-      headerLeft: () => renderHeaderLeft(),
-    });
-  }, [navigation, renderHeaderLeft]);
+    ),
+  });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (state.matches('getLocation.denied')) {
       const subscription = AppState.addEventListener(
         'change',
@@ -116,7 +105,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
       longitude: longitude,
       latitude: latitude,
     };
-    navigation.navigate('Location', {
+    navigation.navigate(LOCATION, {
       coordinate: coordinate,
     });
   };

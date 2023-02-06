@@ -29,6 +29,7 @@ import { useDispatch } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
+import { CAMERA, SPH } from '@/navigation/ScreenNames';
 
 const Beranda = () => {
   const dispatch = useDispatch();
@@ -193,7 +194,7 @@ const Beranda = () => {
         icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
         title: 'Buat SPH',
         action: () => {
-          navigation.navigate('SPH');
+          navigation.navigate(SPH);
         },
       },
       {
@@ -253,8 +254,7 @@ const Beranda = () => {
 
   const kunjunganAction = () => {
     // setIsLoading((curr) => !curr);
-    // navigation.navigate('CreateVisitation');
-    navigation.navigate('Camera', {
+    navigation.navigate(CAMERA, {
       photoTitle: 'Kunjungan',
       navigateTo: 'CreateVisitation',
     });
@@ -297,7 +297,7 @@ const Beranda = () => {
       console.log(response, 'responsevisitationOnPress');
 
       dispatch(closePopUp());
-      navigation.navigate('Camera', {
+      navigation.navigate(CAMERA, {
         photoTitle: 'Foto Kunjungan',
         navigateTo: 'CreateVisitation',
         existingVisitation: response,

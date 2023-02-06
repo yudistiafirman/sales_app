@@ -18,6 +18,7 @@ import { RootStackScreenProps } from '@/navigation/navTypes';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
+import { SUBMIT_FORM } from '@/navigation/ScreenNames';
 
 const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         navigateTo === 'return' ||
         navigateTo === 'delivery'
       ) {
-        navigation.navigate('SubmitForm', {
+        navigation.navigate(SUBMIT_FORM, {
           type: navigateTo,
         });
       } else if (navigateTo === 'CreateVisitation') {

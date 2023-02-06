@@ -7,11 +7,12 @@ const _styles: Styles = {
   chipView: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: layout.pad.xl,
   },
   chip: {
     paddingHorizontal: layout.pad.ml,
     paddingVertical: layout.pad.sm,
-    backgroundColor: colors.chip.green,
+    backgroundColor: colors.white,
     borderRadius: layout.radius.sm,
   },
   chipText: {

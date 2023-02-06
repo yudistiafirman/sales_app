@@ -16,6 +16,7 @@ import {
   TAB_TRANSACTION,
   TAB_TRANSACTION_TITLE,
 } from '@/navigation/ScreenNames';
+import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,7 +39,10 @@ function SalesTabsV2() {
       <Tab.Screen
         key={TAB_HOME}
         name={TAB_HOME_TITLE}
-        options={{ headerTitle: TAB_HOME_TITLE }}
+        options={{
+          headerTitle: TAB_HOME_TITLE,
+          headerRight: () => SalesHeaderRight(),
+        }}
         component={Home}
       />
       <Tab.Screen

@@ -42,6 +42,7 @@ const RootScreen = (
               key={OPERATION}
               component={Operation}
               options={{
+                headerTitleAlign: 'center',
                 headerTitle: OPERATION_TITLE,
                 headerRight: () => OperationHeaderRight(),
               }}
@@ -87,6 +88,7 @@ const RootScreen = (
           key={LOGIN}
           component={Login}
           options={{
+            headerTitleAlign: 'center',
             headerTitle: LOGIN_TITLE,
             animationTypeForReplace: isSignout ? 'pop' : 'push',
           }}
@@ -114,7 +116,7 @@ function AppNavigatorV2() {
     return (
       <Stack.Navigator
         screenOptions={{
-          headerTitleAlign: 'center',
+          headerTitleAlign: 'left',
           headerShadowVisible: false,
           headerShown: true,
           headerTitleStyle: {

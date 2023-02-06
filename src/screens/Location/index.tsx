@@ -1,46 +1,21 @@
-import resScale from '@/utils/resScale';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useCallback, useEffect, useLayoutEffect } from 'react';
+import * as React from 'react';
 import { SafeAreaView, View } from 'react-native';
 import LocationStyles from './styles';
 import CoordinatesDetail from './elements/CoordinatesDetail';
-import {
-  BButtonPrimary,
-  BHeaderIcon,
-  BLocation,
-  BMarker,
-  BSpacer,
-} from '@/components';
-
+import { BButtonPrimary, BLocation, BMarker, BSpacer } from '@/components';
 import { useMachine } from '@xstate/react';
 import { locationMachine } from '@/machine/locationMachine';
 import { Region } from 'react-native-maps';
 import { RootStackScreenProps } from '@/navigation/navTypes';
+import { SEARCH_AREA, TAB_PRICE_LIST } from '@/navigation/ScreenNames';
+
 const Location = () => {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
   const [state, send] = useMachine(locationMachine);
 
-  const renderHeaderLeft = useCallback(
-    () => (
-      <BHeaderIcon
-        iconName="chevron-left"
-        size={resScale(30)}
-        onBack={() => navigation.goBack()}
-      />
-    ),
-    [navigation]
-  );
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => renderHeaderLeft(),
-      headerBackVisible: false,
-      headerTitle: 'Pilih Area Proyek',
-    });
-  }, [navigation, renderHeaderLeft]);
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude } = params.coordinate;
@@ -60,7 +35,7 @@ const Location = () => {
       longitude: Number(lon),
       latitude: Number(lat),
     };
-    navigation.navigate('Harga', {
+    navigation.navigate(TAB_PRICE_LIST, {
       coordinate: coordinate,
     });
   };
@@ -80,7 +55,7 @@ const Location = () => {
               ? locationDetail?.formattedAddress
               : ''
           }
-          onPress={() => navigation.navigate('SearchArea')}
+          onPress={() => navigation.navigate(SEARCH_AREA)}
         />
 
         <BButtonPrimary
