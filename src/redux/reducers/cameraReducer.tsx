@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { postUploadFiles } from '../async-thunks/commonThunks';
 
-interface photoType {
+export interface photoType {
   photo: {
     uri: string;
     type: string;

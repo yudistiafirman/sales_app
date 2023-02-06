@@ -66,6 +66,10 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         navigation.dispatch(
           StackActions.replace(navigateTo, { existingVisitation })
         );
+      } else if (navigateTo === 'PO') {
+        navigation.dispatch(
+          StackActions.replace(navigateTo, { poImages: imageUrls.photo })
+        );
       } else {
         navigation.goBack();
         navigation.dispatch(StackActions.replace(navigateTo));

@@ -1,4 +1,5 @@
 import { visitationListResponse } from '@/interfaces';
+import { photoType } from '@/redux/reducers/cameraReducer';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PhotoFile } from 'react-native-vision-camera';
 
@@ -24,10 +25,14 @@ export type RootStackParamList = {
     photoTitle: string;
     navigateTo?: string;
     existingVisitation?: visitationListResponse;
+    poImages?: photoType;
   };
   Schedule: { id: string };
   Operation: { role?: string };
   SubmitForm: { type?: string };
+  PO: {
+    poImages?: Record<string, string>;
+  };
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;

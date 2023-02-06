@@ -10,6 +10,7 @@ import Preview from '@/screens/Camera/Preview';
 import Camera from '@/screens/Camera';
 import Schedule from '@/screens/Operation/Schedule';
 import SubmitForm from '@/screens/Operation/SubmitForm';
+import PO from '@/screens/PurchaseOrder';
 
 function TestStack({
   Stack,
@@ -28,6 +29,12 @@ function TestStack({
       name: 'SPH',
       title: 'SPH',
       component: Sph,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'PO',
+      title: 'PO',
+      component: PO,
     }),
     BStackScreen({
       Stack: Stack,

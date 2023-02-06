@@ -39,6 +39,7 @@ const colors = {
     tab: '#C7C7C7',
     altGrey: '#C7C7C7',
     otpField: '#EBEBEB',
+    commonCard: '#EBEBEB',
   },
   chip: {
     green: '#C2FCC8',
@@ -47,6 +48,7 @@ const colors = {
   icon: {
     primary: '#E52525',
     darkGrey: '#202020',
+    closeImg: '#636363',
   },
 };
 
