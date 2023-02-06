@@ -18,10 +18,10 @@ import BSpacer from '../atoms/BSpacer';
 
 interface BCommonCompanyCardProps {
   name: string;
-  searchQuery: string;
+  searchQuery?: string;
   sph?: SPH[];
   location: string;
-  onPress: (data: any) => void;
+  onPress?: (data: any) => void;
   needRightIcon?: boolean;
 }
 

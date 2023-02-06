@@ -8,6 +8,7 @@ import {
   BTabSections,
 } from '@/components';
 import BImageList from '@/components/organism/BImagesList';
+import ChoosePOModal from '@/components/templates/ChooseSphModal';
 import { colors, layout } from '@/constants';
 import {
   PurchaseOrderContext,
@@ -15,7 +16,7 @@ import {
 } from '@/context/PoContext';
 import { Input } from '@/interfaces';
 import { RootStackParamList } from '@/navigation/navTypes';
-import cameraReducer, { deleteImage } from '@/redux/reducers/cameraReducer';
+import { deleteImage } from '@/redux/reducers/cameraReducer';
 import { AppDispatch, RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 import {
@@ -196,6 +197,7 @@ const PO = () => {
           </View>
         )}
       </View>
+      <ChoosePOModal />
     </SafeAreaView>
   );
 };

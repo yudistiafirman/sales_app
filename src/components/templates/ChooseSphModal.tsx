@@ -1,36 +1,25 @@
-import {
-  BText,
-  BHeaderIcon,
-  BButtonPrimary,
-  BVisitationCard,
-} from '@/components';
-import BProjectRBtnList from '@/components/organism/BProjectRBtnList';
+import { BText, BHeaderIcon, BButtonPrimary } from '@/components';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Modal from 'react-native-modal';
+import BCommonCompanyCard from '../molecules/BCommonCompanyCard';
 const { height } = Dimensions.get('window');
 
-interface BSheetCompanyProps {
-
-const BottomSheetCompany = ({
+const ChoosePOModal = ({
   onChoose,
   isVisible,
   dataCompany,
   onCloseModal,
   onSelect,
-}: BSheetCompanyProps) => {
+}) => {
   return (
-    <Modal
-      deviceHeight={height}
-      isVisible={isVisible}
-      style={styles.modalContainer}
-    >
+    <Modal deviceHeight={height} isVisible={true} style={styles.modalContainer}>
       <View style={[styles.contentOuterContainer, { height: height / 1.6 }]}>
         <View style={styles.contentInnerContainer}>
           <View style={styles.headerContainer}>
-            <BText style={styles.headerTitle}>Pilih Proyek</BText>
+            <BText style={styles.headerTitle}>Pilih PO</BText>
             <BHeaderIcon
               onBack={onCloseModal}
               size={layout.pad.lg}
@@ -38,17 +27,10 @@ const BottomSheetCompany = ({
               iconName="x"
             />
           </View>
-          <View style={styles.companyDetailsCardWrapper}>
-            <BVisitationCard
-              item={{
-                name: dataCompany?.name,
-                location: dataCompany?.location,
-              }}
-              isRenderIcon={false}
-            />
-          </View>
-          <View style={styles.projectNameListContainer}>
-          </View>
+
+          <BCommonCompanyCard name="PT Guna Darma" location="Waduk Darma" />
+
+          <View style={styles.projectNameListContainer} />
           <BButtonPrimary
             buttonStyle={styles.chooseBtn}
             onPress={onChoose}
@@ -88,7 +70,7 @@ const styles = StyleSheet.create({
   notFoundProjectText: {
     fontFamily: font.family.montserrat['400'],
     fontSize: font.size.md,
-    color: colors.text.medium,
+    color: colors.text.dark,
   },
   addProjectButton: { borderRadius: layout.radius.sm },
   addProjectBtnText: { fontFamily: font.family.montserrat['400'] },
@@ -99,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BottomSheetCompany;
+export default ChoosePOModal;
