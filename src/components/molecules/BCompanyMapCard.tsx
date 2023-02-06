@@ -2,14 +2,19 @@ import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { BSpacer } from '@/components';
+import { BSpacer, BTouchableText } from '@/components';
 
-type CompanyMapType = {
+type BCompanyMapCardType = {
   location?: string;
   companyName?: string;
+  onPressLocation?: () => void;
 };
 
-export default function CompanyMap({ location, companyName }: CompanyMapType) {
+export default function BCompanyMapCard({
+  location,
+  companyName,
+  onPressLocation,
+}: BCompanyMapCardType) {
   return (
     <View style={styles.company}>
       <Text style={styles.companyText}>{companyName}</Text>
@@ -23,7 +28,7 @@ export default function CompanyMap({ location, companyName }: CompanyMapType) {
         />
         <View>
           <Text style={styles.mapLocation}>{location}</Text>
-          <Text style={styles.mapLink}>Lihat Peta</Text>
+          <BTouchableText title="Lihat Peta" onPress={onPressLocation} />
         </View>
       </View>
     </View>

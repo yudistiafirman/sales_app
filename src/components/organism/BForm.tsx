@@ -6,7 +6,7 @@ import BTextInput from '../atoms/BTextInput';
 import BCardOption from '../molecules/BCardOption';
 import BComboDropdown from '../molecules/BComboDropdown';
 import BDropdown from '../atoms/BDropdown';
-import BLabel from '../molecules/BLabel';
+import BLabel from '../atoms/BLabel';
 import BText from '../atoms/BText';
 import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';

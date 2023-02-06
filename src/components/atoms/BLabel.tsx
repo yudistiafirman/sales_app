@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ViewStyle } from 'react-native';
-import BText from '../atoms/BText';
+import BText from './BText';
 
 interface IProps {
   label: string;

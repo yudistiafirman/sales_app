@@ -14,7 +14,7 @@ type FooterType = {
   role?: USER_TYPE;
   isLoading?: boolean;
 };
-type CustomFlatlistType = {
+type OperationListType = {
   data: {
     id: string;
     name: string;
@@ -35,11 +35,11 @@ const FooterLoading = ({ isLoading }: FooterType) => {
   );
 };
 
-export default function CustomFlatlist({
+export default function OperationList({
   isLoading,
   data,
   role,
-}: FooterType & CustomFlatlistType) {
+}: FooterType & OperationListType) {
   const navigation = useNavigation();
   const footerComp = useCallback(
     () => <FooterLoading isLoading={isLoading} />,

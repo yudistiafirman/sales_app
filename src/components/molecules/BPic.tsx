@@ -83,7 +83,7 @@ const BPic = ({
         <BText>No. Telepon</BText>
         <View style={{ width: resScale(120) }}>
           <ScrollView horizontal={true}>
-            <BText bold="bold">+62{phone}</BText>
+            <BText bold="bold">+62 {phone}</BText>
           </ScrollView>
         </View>
       </View>

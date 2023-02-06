@@ -2,8 +2,9 @@ import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import { BSpacer } from '@/components';
+import { getColorStatusTrx } from '@/utils/generalFunc';
 
-type RincianType = {
+type BProjectDetailCardType = {
   status?: string;
   paymentMethod?: string;
   expiredDate?: string;
@@ -11,19 +12,22 @@ type RincianType = {
   productionTime?: string;
 };
 
-export default function Rincian({
+export default function BProjectDetailCard({
   status,
   paymentMethod,
   expiredDate,
   projectName,
   productionTime,
-}: RincianType) {
+}: BProjectDetailCardType) {
+  const { color, textColor } = getColorStatusTrx(status);
   return (
     <View>
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>Status</Text>
-        <View style={styles.chip}>
-          <Text style={[styles.summary, styles.fontw400]}>{status}</Text>
+        <View style={[styles.chip, { backgroundColor: color }]}>
+          <Text style={[styles.summary, styles.fontw400, { color: textColor }]}>
+            {status}
+          </Text>
         </View>
       </View>
       <BSpacer size={'extraSmall'} />
@@ -67,6 +71,5 @@ const styles = StyleSheet.create({
     paddingVertical: layout.pad.xs,
     paddingHorizontal: layout.pad.md,
     borderRadius: layout.radius.xl,
-    backgroundColor: colors.status.grey,
   },
 });
