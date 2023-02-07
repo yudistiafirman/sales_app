@@ -33,7 +33,7 @@ import { resScale } from '@/utils';
 import { useDispatch } from 'react-redux';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { useRoute } from '@react-navigation/native';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 
 const labels = [
   'Alamat Proyek',

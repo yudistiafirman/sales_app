@@ -1,6 +1,8 @@
 /*
     Screen Keys
 */
+export const TAB_ROOT = 'TAB_ROOT';
+
 export const TAB_OPERATION = 'TAB.OPERATION';
 export const TAB_DISPATCH = 'TAB.DISPATCH';
 export const TAB_HOME = 'TAB.HOME';
@@ -8,8 +10,6 @@ export const TAB_TRANSACTION = 'TAB.TRANSACTION';
 export const TAB_PROFILE = 'TAB.PROFILE';
 export const TAB_PRICE_LIST = 'TAB.PRICE_LIST';
 
-export const SALES_TAB = 'SALES_TAB';
-export const SECURITY_TAB = 'SECURITY_TAB';
 export const OPERATION = 'OPERATION';
 export const LOGIN = 'LOGIN';
 export const VERIFICATION = 'VERIFICATION';

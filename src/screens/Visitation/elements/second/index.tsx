@@ -10,7 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { resScale } from '@/utils';
 import { layout } from '@/constants';
 import { useRoute } from '@react-navigation/native';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 
 interface IProps {
   openBottomSheet: () => void;

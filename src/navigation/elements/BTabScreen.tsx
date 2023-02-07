@@ -3,6 +3,9 @@ import colors from '@/constants/colors';
 import { TypedNavigator } from '@react-navigation/native';
 import * as React from 'react';
 
+/**
+ * @deprecated The method should not be used
+ */
 const BTabScreen = ({
   Tab,
   name,

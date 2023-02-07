@@ -58,6 +58,9 @@ const getStacks = (userData: boolean | JwtPayload | null) => {
   }
 };
 
+/**
+ * @deprecated The method should not be used
+ */
 function AppNavigator() {
   const [isLoading, userData] = useBootStrapAsync();
   const userType = USER_TYPE.SECURITY;

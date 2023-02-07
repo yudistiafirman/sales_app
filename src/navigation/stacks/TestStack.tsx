@@ -11,6 +11,9 @@ import Camera from '@/screens/Camera';
 import Schedule from '@/screens/Operation/Schedule';
 import SubmitForm from '@/screens/Operation/SubmitForm';
 
+/**
+ * @deprecated The method should not be used
+ */
 function TestStack({
   Stack,
 }: {

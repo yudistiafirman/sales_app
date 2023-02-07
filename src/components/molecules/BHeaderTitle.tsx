@@ -7,6 +7,9 @@ import { fonts } from '@/constants';
 import respFS from '@/utils/resFontSize';
 import BText from './../atoms/BText';
 
+/**
+ * @deprecated The method should not be used
+ */
 const BHeaderTitle = (
   title: string | undefined,
   headerStyle: 'flex-start' | 'center',

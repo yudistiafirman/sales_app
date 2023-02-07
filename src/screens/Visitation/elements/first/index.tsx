@@ -31,7 +31,7 @@ import { getLocationCoordinates } from '@/actions/CommonActions';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { SEARCH_AREA } from '@/navigation/ScreenNames';
+import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const FirstStep = () => {
@@ -180,7 +180,7 @@ const FirstStep = () => {
                 }}
                 onPress={() =>
                   navigation.navigate(SEARCH_AREA, {
-                    from: 'CreateVisitation',
+                    from: CREATE_VISITATION,
                   })
                 }
               >

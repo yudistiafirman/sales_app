@@ -14,9 +14,10 @@ import { priceMachine } from '@/machine/priceMachine';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { layout } from '@/constants';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
 import { LOCATION, SEARCH_PRODUCT } from '@/navigation/ScreenNames';
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
   const navigation = useNavigation();

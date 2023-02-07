@@ -29,7 +29,7 @@ import { useDispatch } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
-import { CAMERA, SPH } from '@/navigation/ScreenNames';
+import { CAMERA, CREATE_VISITATION, SPH } from '@/navigation/ScreenNames';
 
 const Beranda = () => {
   const dispatch = useDispatch();
@@ -256,7 +256,7 @@ const Beranda = () => {
     // setIsLoading((curr) => !curr);
     navigation.navigate(CAMERA, {
       photoTitle: 'Kunjungan',
-      navigateTo: 'CreateVisitation',
+      navigateTo: CREATE_VISITATION,
     });
   };
   const sceneToRender = React.useCallback(() => {
@@ -298,8 +298,8 @@ const Beranda = () => {
 
       dispatch(closePopUp());
       navigation.navigate(CAMERA, {
-        photoTitle: 'Foto Kunjungan',
-        navigateTo: 'CreateVisitation',
+        photoTitle: 'Kunjungan',
+        navigateTo: CREATE_VISITATION,
         existingVisitation: response,
       });
     } catch (error) {

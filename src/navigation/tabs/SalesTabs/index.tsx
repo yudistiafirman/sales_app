@@ -10,6 +10,9 @@ import Transactions from '@/screens/Transactions';
 import Home from '@/screens/Home';
 
 const Tab = createBottomTabNavigator();
+/**
+ * @deprecated The method should not be used
+ */
 function SalesTabs() {
   return (
     <Tab.Navigator

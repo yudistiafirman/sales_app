@@ -15,8 +15,7 @@ import {
   LOGIN_TITLE,
   OPERATION,
   OPERATION_TITLE,
-  SALES_TAB,
-  SECURITY_TAB,
+  TAB_ROOT,
   SECURITY_TAB_TITLE,
   VERIFICATION,
   VERIFICATION_TITLE,
@@ -54,8 +53,8 @@ const RootScreen = (
         return (
           <>
             <Stack.Screen
-              name={SECURITY_TAB}
-              key={SECURITY_TAB}
+              name={TAB_ROOT}
+              key={TAB_ROOT}
               component={SecurityTabsV2}
               options={{
                 headerTitle: SECURITY_TAB_TITLE,
@@ -69,8 +68,8 @@ const RootScreen = (
         return (
           <>
             <Stack.Screen
-              name={SALES_TAB}
-              key={SALES_TAB}
+              name={TAB_ROOT}
+              key={TAB_ROOT}
               component={SalesTabsV2}
               options={{
                 headerShown: false,

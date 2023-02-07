@@ -7,8 +7,12 @@ import { BButtonPrimary, BLocation, BMarker, BSpacer } from '@/components';
 import { useMachine } from '@xstate/react';
 import { locationMachine } from '@/machine/locationMachine';
 import { Region } from 'react-native-maps';
-import { RootStackScreenProps } from '@/navigation/navTypes';
-import { SEARCH_AREA, TAB_PRICE_LIST } from '@/navigation/ScreenNames';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
+import {
+  SEARCH_AREA,
+  TAB_PRICE_LIST_TITLE,
+  TAB_ROOT,
+} from '@/navigation/ScreenNames';
 
 const Location = () => {
   const navigation = useNavigation();
@@ -35,8 +39,9 @@ const Location = () => {
       longitude: Number(lon),
       latitude: Number(lat),
     };
-    navigation.navigate(TAB_PRICE_LIST, {
-      coordinate: coordinate,
+    navigation.navigate(TAB_ROOT, {
+      screen: TAB_PRICE_LIST_TITLE,
+      params: { coordinate: coordinate },
     });
   };
   const { region, locationDetail, loadingLocation } = state.context;

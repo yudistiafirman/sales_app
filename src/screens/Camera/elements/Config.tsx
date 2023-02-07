@@ -21,7 +21,7 @@ import {
 } from '@react-navigation/native';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { layout } from '@/constants';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { IMAGE_PREVIEW } from '@/navigation/ScreenNames';
 
 type configType = {

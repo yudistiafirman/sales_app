@@ -31,6 +31,7 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import { deleteImage } from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
+import { CAMERA } from '@/navigation/ScreenNames';
 
 type selectedDateType = {
   date: string;
@@ -297,7 +298,7 @@ const Fourth = () => {
         initiateCameraModule={() => {
           setIsPopUpVisible((curr) => !curr);
           navigation.dispatch(
-            StackActions.push('Camera', {
+            StackActions.push(CAMERA, {
               photoTitle: 'Kunjungan',
             })
           );
@@ -327,7 +328,7 @@ const Fourth = () => {
         <TouchableOpacity
           onPress={() => {
             navigation.dispatch(
-              StackActions.push('Camera', {
+              StackActions.push(CAMERA, {
                 photoTitle: 'Kunjungan',
               })
             );

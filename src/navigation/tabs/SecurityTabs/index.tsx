@@ -9,6 +9,9 @@ import CustomTabBar from '../CustomTabBar';
 
 const Tab = createBottomTabNavigator();
 
+/**
+ * @deprecated The method should not be used
+ */
 function SecurityTabs() {
   return (
     <Tab.Navigator
