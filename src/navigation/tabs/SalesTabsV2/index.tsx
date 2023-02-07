@@ -3,9 +3,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import PriceList from '@/screens/Price';
 import CustomTabBar from '../CustomTabBar';
 import Profile from '@/screens/Profile';
-import Transactions from '@/screens/Transactions';
 import Home from '@/screens/Home';
 import { colors, fonts } from '@/constants';
+import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
+import Transaction from '@/screens/Transaction';
 import {
   TAB_HOME,
   TAB_HOME_TITLE,
@@ -16,7 +17,6 @@ import {
   TAB_TRANSACTION,
   TAB_TRANSACTION_TITLE,
 } from '@/navigation/ScreenNames';
-import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +49,7 @@ function SalesTabsV2() {
         key={TAB_TRANSACTION}
         name={TAB_TRANSACTION_TITLE}
         options={{ headerTitle: TAB_TRANSACTION_TITLE }}
-        component={Transactions}
+        component={Transaction}
       />
       <Tab.Screen
         key={TAB_PROFILE}

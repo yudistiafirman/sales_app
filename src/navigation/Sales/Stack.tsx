@@ -7,6 +7,7 @@ import Location from '@/screens/Location';
 import SearchProduct from '@/screens/SearchProduct';
 import Sph from '@/screens/Sph';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
+import TransactionDetail from '@/screens/Transaction/Detail';
 import {
   CALENDAR,
   CALENDAR_TITLE,
@@ -24,6 +25,8 @@ import {
   SEARCH_PRODUCT_TITLE,
   SPH,
   SPH_TITLE,
+  TRANSACTION_DETAIL,
+  TRANSACTION_DETAIL_TITLE,
 } from '../ScreenNames';
 
 const SalesStack = (Stack: any) => {
@@ -91,6 +94,14 @@ const SalesStack = (Stack: any) => {
         component={Preview}
         options={{
           headerTitle: IMAGE_PREVIEW_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={TRANSACTION_DETAIL}
+        key={TRANSACTION_DETAIL}
+        component={TransactionDetail}
+        options={{
+          headerTitle: TRANSACTION_DETAIL_TITLE,
         }}
       />
     </>

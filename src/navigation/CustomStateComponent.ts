@@ -32,6 +32,7 @@ export type RootStackParamList = {
   LOCATION: { coordinate: { longitude: number; latitude: number } };
   SEARCH_AREA: {};
   CALENDAR: {};
+  TRANSACTION_DETAIL: { title: string; data: any };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

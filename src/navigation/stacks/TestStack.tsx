@@ -84,7 +84,7 @@ function TestStack({
     BStackScreen({
       Stack: Stack,
       name: 'TransactionDetail',
-      title: 'Transaction Detail',
+      title: 'Transaksi',
       component: TransactionDetail,
     }),
   ];
