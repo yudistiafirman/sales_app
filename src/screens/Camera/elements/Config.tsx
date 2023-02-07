@@ -76,7 +76,7 @@ const Config = ({ title, style, navigateTo }: configType) => {
           existingVisitation,
         });
       } catch (error) {
-        console.log(error, 'takePhoto56');
+        Alert.alert('Camera Error');
       }
     }
   };

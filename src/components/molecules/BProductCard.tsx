@@ -4,27 +4,35 @@ import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { resScale } from '@/utils';
-import BSpacer from './BSpacer';
+import BSpacer from '../atoms/BSpacer';
 
-type ProductCardType = {
+type BProductCardType = {
   name?: string;
   volume?: number;
   pricePerVol?: number;
   totalPrice?: number;
   onPressDelete?: () => void;
   onPressEdit?: () => void;
+  backgroundColor?: 'white' | 'default';
 };
 
-export default function ProductCard({
+export default function BProductCard({
   name,
   volume,
   pricePerVol,
   totalPrice,
   onPressDelete,
   onPressEdit,
-}: ProductCardType) {
+  backgroundColor = 'default',
+}: BProductCardType) {
   return (
-    <View style={style.container}>
+    <View
+      style={[
+        backgroundColor === 'default'
+          ? style.containerDefault
+          : style.containerWhite,
+      ]}
+    >
       <View style={style.nameIcons}>
         <Text style={style.productName}>{name}</Text>
         <View style={style.iconsContainer}>
@@ -65,13 +73,19 @@ export default function ProductCard({
 }
 
 const style = StyleSheet.create({
-  container: {
+  containerDefault: {
     width: '100%',
-    backgroundColor: colors.tertiary,
     padding: layout.pad.md,
     borderRadius: layout.radius.md,
-    borderWidth: 1,
+    backgroundColor: colors.tertiary,
     borderColor: colors.border.default,
+    borderWidth: 1,
+  },
+  containerWhite: {
+    width: '100%',
+    padding: layout.pad.md,
+    borderRadius: layout.radius.md,
+    backgroundColor: colors.white,
   },
   productName: {
     fontFamily: fonts.family.montserrat[500],

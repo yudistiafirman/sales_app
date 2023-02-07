@@ -49,7 +49,7 @@ const tncHTML = `<!DOCTYPE html>
       </div>
       <div style="background-color:${colors.white};height:38px;display:flex;flex-direction:row;">
          <div style="flex:1.1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.text.darker};border-right:1px solid ${colors.border.tab}">7 m<sup>3</sup></div>
-         <div style="flex:1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.text.darker}"></div>
+         <div style="flex:1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.text.darker}">-</div>
      </div>
      <div style="background-color:${colors.chip.disabled};height:38px;display:flex;flex-direction:row;">
        <div style="flex:1.1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.text.darker};border-right:1px solid ${colors.border.tab}">5-6 m<sup>3</sup></div>
@@ -74,7 +74,7 @@ const tncHTML = `<!DOCTYPE html>
     </div>
     <div style="background-color:${colors.white};height:38px;display:flex;flex-direction:row;">
        <div style="flex:1.1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.text.darker};border-right:1px solid ${colors.border.tab}">0 - 20 KM</div>
-       <div style="flex:1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.text.darker}"></div>
+       <div style="flex:1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.text.darker}">-</div>
    </div>
    <div style="background-color:${colors.chip.disabled};height:38px;display:flex;flex-direction:row;">
      <div style="flex:1.1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.text.darker};border-right:1px solid ${colors.border.tab}">21 - 25 KM</div>

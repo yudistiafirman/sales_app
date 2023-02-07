@@ -1,9 +1,14 @@
 import BrikApiProductivity from '@/brikApi/BrikApiProductivity';
+import { payloadPostType } from '@/interfaces';
 import { getOptions, request } from '@/networking/request';
 
 type getVisitationsType = {
   month?: number;
   year?: number;
+};
+type visitationPayloadType = {
+  payload: payloadPostType;
+  visitationId: string;
 };
 
 export const getVisitations = async ({ month, year }: getVisitationsType) => {
@@ -12,7 +17,7 @@ export const getVisitations = async ({ month, year }: getVisitationsType) => {
     await getOptions('GET', undefined, true)
   );
 };
-export const postVisitations = async ({ payload }) => {
+export const postVisitations = async ({ payload }: visitationPayloadType) => {
   return request(
     BrikApiProductivity.visitations({}),
     await getOptions('POST', payload, true)
@@ -25,8 +30,22 @@ export const oneGetVisitation = async ({
   visitationId: string;
 }) => {
   return request(
-    BrikApiProductivity.visitationGetOne({ visitationId }),
+    BrikApiProductivity.visitationIdPath({ visitationId }),
     await getOptions('GET', undefined, true)
+  );
+};
+
+export const putVisitation = async ({
+  payload,
+  visitationId,
+}: visitationPayloadType) => {
+  console.log(visitationId, 'visitationId42');
+
+  return request(
+    BrikApiProductivity.visitationIdPath({
+      visitationId,
+    }),
+    await getOptions('PUT', payload, true)
   );
 };
 

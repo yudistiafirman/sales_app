@@ -64,6 +64,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           type: navigateTo,
         });
       } else if (navigateTo === CREATE_VISITATION) {
+        navigation.goBack();
         navigation.dispatch(
           StackActions.replace(navigateTo, { existingVisitation })
         );

@@ -14,9 +14,9 @@ import { assign } from 'xstate';
 import LocationListShimmer from './element/LocationListShimmer';
 import { BSpacer } from '@/components';
 import { useDispatch } from 'react-redux';
-import { updateRegion } from '@/redux/locationReducer';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { LOCATION } from '@/navigation/ScreenNames';
+import { updateRegion } from '@/redux/reducers/locationReducer';
 
 const SearchAreaProject = ({ route }: { route: any }) => {
   const navigation = useNavigation();

@@ -1,5 +1,5 @@
 import BTab from '@/components/molecules/BTab';
-import { Text, View, ViewStyle } from 'react-native';
+import { ViewStyle } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import * as React from 'react';
 import colors from '@/constants/colors';
@@ -15,6 +15,7 @@ interface BTabSectionProps {
   tabBarStyle?: ViewStyle;
   onTabPress?: ((scene: Scene<Route> & Event) => void) | undefined;
   swipeEnabled?: boolean;
+  minTabHeaderWidth?: number | undefined;
 }
 
 const BTabSections = ({
@@ -26,6 +27,7 @@ const BTabSections = ({
   tabBarStyle,
   onTabPress,
   swipeEnabled,
+  minTabHeaderWidth,
 }: BTabSectionProps) => {
   return (
     <BTab
@@ -39,9 +41,13 @@ const BTabSections = ({
           onTabPress={onTabPress}
           indicatorStyle={indicatorStyle}
           tabStyle={tabStyle}
-          style={[tabBarStyle, { backgroundColor: colors.white}]}
+          style={[tabBarStyle, { backgroundColor: colors.white }]}
           renderLabel={({ route, focused }) => (
-            <BTabLabels route={route} focused={focused} />
+            <BTabLabels
+              route={route}
+              focused={focused}
+              minWidth={minTabHeaderWidth}
+            />
           )}
           scrollEnabled={true}
         />

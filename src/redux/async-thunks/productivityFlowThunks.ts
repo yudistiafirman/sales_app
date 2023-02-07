@@ -2,6 +2,7 @@ import {
   getVisitations,
   postVisitations,
   oneGetVisitation,
+  putVisitation,
 } from '@/actions/ProductivityActions';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { visitationListResponse } from '@/interfaces';
@@ -90,6 +91,30 @@ export const getOneVisitation = createAsyncThunk<
         'productivityFlow/getOneVisitation'
       );
       return rejectWithValue(error?.response?.data || 'error66');
+    }
+  }
+);
+//putVisitation
+export const putVisitationFlow = createAsyncThunk<
+  any,
+  { payload: payloadPostType; visitationId: string },
+  {
+    rejectValue: string;
+  }
+>(
+  'productivityFlow/putVisitationFlow',
+  async ({ payload, visitationId }, { rejectWithValue }) => {
+    try {
+      const { data } = await putVisitation({ payload, visitationId });
+      if (data.error) throw data as errorType;
+      return data.data;
+    } catch (error) {
+      console.log(
+        error?.response?.data,
+        'error at106',
+        'productivityFlow/putVisitationFlow'
+      );
+      return rejectWithValue(error?.response?.data || 'error109');
     }
   }
 );
