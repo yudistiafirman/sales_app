@@ -7,7 +7,6 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import SearchProduct from '@/screens/SearchProduct';
 import {
   BBackContinueBtn,
   BContainer,
