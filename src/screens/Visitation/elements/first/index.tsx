@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -22,7 +22,7 @@ import Icons from 'react-native-vector-icons/Feather';
 
 import { resScale } from '@/utils';
 import { Region, Input } from '@/interfaces';
-import { updateRegion } from '@/redux/locationReducer';
+import { updateRegion } from '@/redux/reducers/locationReducer';
 import { colors, layout } from '@/constants';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import { useMachine } from '@xstate/react';
@@ -49,12 +49,12 @@ const FirstStep = () => {
       isRequire: false,
       onChange: (e: string) => {
         const newLocation = { ...values.stepOne.locationAddress };
-        newLocation.line1 = e;
+        newLocation.line2 = e;
 
         updateValueOnstep('stepOne', 'locationAddress', newLocation);
         dispatch(updateRegion({ ...region, line1: e }));
       },
-      value: values?.stepOne?.locationAddress?.line1,
+      value: values?.stepOne?.locationAddress?.line2,
       placeholder: 'contoh: Jalan Kusumadinata no 5',
     },
   ];
@@ -63,6 +63,7 @@ const FirstStep = () => {
   const mapRef = React.useRef<MapView>(null);
   const onChangeRegion = async (coordinate: Region) => {
     try {
+      console.log(coordinate, 'coordinateonchange66');
       setIsMapLoading(() => true);
       const { data } = await getLocationCoordinates(
         // '',
@@ -112,6 +113,10 @@ const FirstStep = () => {
       ...values.stepOne.locationAddress,
       ...region,
     };
+    // console.log(region, 'region116first', locationAddress);
+    console.log(values.stepOne.locationAddress, 'location117', region);
+    console.log(locationAddress, 'locationAddress118');
+
     updateValueOnstep('stepOne', 'locationAddress', locationAddress);
   }, [region.formattedAddress]);
 
@@ -124,9 +129,8 @@ const FirstStep = () => {
           formattedAddress: context?.formattedAddress,
           PostalId: context?.PostalId,
         };
-        console.log(context, 'contextmachince');
 
-        // updateValueOnstep('stepOne', 'createdLocation', context);
+        updateValueOnstep('stepOne', 'createdLocation', context);
         if (region.latitude === 0) {
           dispatch(updateRegion(coordinate));
         }
@@ -137,9 +141,10 @@ const FirstStep = () => {
   React.useEffect(() => {
     const isExist =
       !values.stepOne.createdLocation.lat ||
-      values.stepOne.createdLocation.lan === 0;
+      values.stepOne.createdLocation.lon === 0;
+
     if (isExist) {
-      console.log('jalan');
+      console.log('jalan143');
       send('askingPermission');
     }
     // console.log(state.context, 'ini apa?');

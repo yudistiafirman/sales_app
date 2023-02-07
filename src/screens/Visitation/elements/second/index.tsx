@@ -1,16 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { BDivider, BForm, BSpacer, BText } from '@/components';
-import { CreateVisitationSecondStep, Input, Styles } from '@/interfaces';
+import {
+  CreateVisitationSecondStep,
+  Input,
+  projectResponseType,
+  Styles,
+} from '@/interfaces';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import SearchFlow from './Searching';
 import { ScrollView } from 'react-native-gesture-handler';
+import debounce from 'lodash.debounce';
 
 import { resScale } from '@/utils';
 import { layout } from '@/constants';
 import { useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/navTypes';
+import { useDispatch } from 'react-redux';
+import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
 
 interface IProps {
   openBottomSheet: () => void;
@@ -20,6 +28,14 @@ const company = require('@/assets/icon/Visitation/company.png');
 const individu = require('@/assets/icon/Visitation/profile.png');
 
 const SecondStep = ({ openBottomSheet }: IProps) => {
+  const dispatch = useDispatch();
+  const [selectedCompany, setSelectedCompany] = useState<
+    | {
+        id: number;
+        title: string;
+      }
+    | {}
+  >({});
   const route = useRoute<RootStackScreenProps>();
   const existingVisitation = route?.params?.existingVisitation;
   const { values, action } = React.useContext(createVisitationContext);
@@ -30,13 +46,45 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
     updateValueOnstep('stepTwo', key, e);
   };
 
-  const onFetching = (e: any) => {
-    updateValueOnstep('stepTwo', 'companyName', { id: 1, title: e });
+  useEffect(() => {
+    if (values.stepTwo.companyName) {
+      setSelectedCompany({ id: 1, title: values.stepTwo.companyName });
+      updateValueOnstep('stepTwo', 'options', {
+        items: [{ id: 1, title: values.stepTwo.companyName }],
+      });
+    }
+  }, []);
+
+  const fetchDebounce = useMemo(() => {
+    return debounce((searchQuery: string) => {
+      console.log('jalan di second line60', searchQuery);
+
+      dispatch(getProjectsByUserThunk({ search: searchQuery }))
+        .unwrap()
+        .then((response: projectResponseType[]) => {
+          const items = response.map((project) => {
+            return {
+              id: project.id,
+              title: project.display_name,
+            };
+          });
+          updateValueOnstep('stepTwo', 'options', {
+            items: items,
+          });
+        });
+    }, 500);
+  }, []);
+
+  const onChangeText = (searchQuery: string): void => {
+    updateValueOnstep('stepTwo', 'companyName', searchQuery);
+    fetchDebounce(searchQuery);
+    //fetchDebounce(searchQuery)
+    // setSelectedCompany({ id: 1, title: searchQuery });
 
     // fetching then merge with the thing user type
-    updateValueOnstep('stepTwo', 'options', {
-      items: [{ id: 1, title: e }],
-    });
+    // updateValueOnstep('stepTwo', 'options', {
+    //   items: [{ id: 1, title: searchQuery }],
+    // });
     return;
   };
 
@@ -77,13 +125,17 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         isRequire: true,
         isError: false,
         type: 'autocomplete',
-        onChange: onFetching,
-        value: state.companyName,
+        onChange: onChangeText,
+        value: selectedCompany,
         items: state.options.items,
         loading: state.options.loading,
-        onSelect: (item: any) => {
-          updateValueOnstep('stepTwo', 'companyName', item);
+        onSelect: (item: { id: string; title: string }): void => {
+          if (item) {
+            updateValueOnstep('stepTwo', 'companyName', item.title);
+            setSelectedCompany(item);
+          }
         },
+        placeholder: 'Masukkan Nama Proyek',
         isInputDisable: !!existingVisitation,
       };
 
@@ -98,6 +150,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             onChange('projectName')(e.nativeEvent.text);
           },
           value: state.projectName,
+          placeholder: 'Masukkan Nama Proyek',
           isInputDisable: !!existingVisitation,
         },
         {
@@ -137,7 +190,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   return (
     <>
       <SearchFlow
-        searchingDisable={existingVisitation}
+        searchingDisable={!!existingVisitation}
         isSearch={isSearch}
         onSearch={onSearch}
       />

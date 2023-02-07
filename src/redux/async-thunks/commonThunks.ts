@@ -2,7 +2,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   allVisitationGetAction,
   uploadFileImage,
+  projectByUserGetAction,
 } from '@/actions/CommonActions';
+import { projectResponseType } from '@/interfaces';
 
 type errorType = {
   success: boolean;
@@ -51,13 +53,19 @@ export const getAllProject = createAsyncThunk<any, { search?: string }>(
   }
 );
 
-// export const getProjectsByUserThunk = createAsyncThunk(
-//   'common/getProjectsByUserThunk',
-//   async (search?: string, { rejectWithValue }) => {
-//     // projectByUserGetAction
-//     try {
-//     } catch (error) {
-//       return rejectWithValue(error.message);
-//     }
-//   }
-// );
+export const getProjectsByUserThunk = createAsyncThunk<
+  projectResponseType,
+  { search?: string }
+>('common/getProjectsByUserThunk', async ({ search }, { rejectWithValue }) => {
+  // projectByUserGetAction
+  try {
+    const response = await projectByUserGetAction(search);
+    const { data } = response;
+    if (data.error) throw data as errorType;
+
+    return data;
+  } catch (error) {
+    console.log(error.message, 'message/getProjectsByUserThunk');
+    return rejectWithValue(error.message);
+  }
+});

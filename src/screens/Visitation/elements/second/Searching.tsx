@@ -102,7 +102,11 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
     updateValueOnstep('stepTwo', 'projectName', item.name);
     if (item.Visitation) {
       updateValueOnstep('stepTwo', 'visitationId', item.Visitation.id);
-      updateValueOnstep('stepTwo', 'existingOrderNum', item.Visitation.order);
+      let order = +item.Visitation.order;
+      if (!item.Visitation.finish_date) {
+        order -= 1;
+      }
+      updateValueOnstep('stepTwo', 'existingOrderNum', order);
     }
     onClear();
     // updateValueOnstep('stepTwo', 'pics', item?.pic);
