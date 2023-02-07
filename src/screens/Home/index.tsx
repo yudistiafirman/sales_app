@@ -289,9 +289,11 @@ const Beranda = () => {
     );
   }, [data]);
 
-  async function visitationOnPress(dataItem: visitationDataType) {
-    // console.log(dataItem, 'visitationOnPress');
+  async function visitationOnPress(
+    dataItem: visitationDataType
+  ): Promise<void> {
     try {
+      const status = dataItem.pilStatus;
       dispatch(
         openPopUp({
           popUpType: 'loading',
@@ -302,14 +304,19 @@ const Beranda = () => {
       const response = await dispatch(
         getOneVisitation({ visitationId: dataItem.id })
       ).unwrap();
-      console.log(response, 'responsevisitationOnPress');
 
       dispatch(closePopUp());
-      navigation.navigate('Camera', {
-        photoTitle: 'Foto Kunjungan',
-        navigateTo: 'CreateVisitation',
-        existingVisitation: response,
-      });
+      if (status === 'Belum Selesai') {
+        navigation.navigate('Camera', {
+          photoTitle: 'Foto Kunjungan',
+          navigateTo: 'CreateVisitation',
+          existingVisitation: response,
+        });
+      } else {
+        navigation.navigate('CustomerDetail', {
+          existingVisitation: response,
+        });
+      }
     } catch (error) {
       dispatch(
         openPopUp({
