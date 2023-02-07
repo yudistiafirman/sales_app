@@ -30,6 +30,7 @@ export type RootStackParamList = {
   SubmitForm: { type?: string };
   SPH: {};
   TransactionDetail: { title: string; data: any };
+  CreateSchedule: {};
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;

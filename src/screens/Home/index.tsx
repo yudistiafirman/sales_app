@@ -216,7 +216,9 @@ const Beranda = () => {
       {
         icon: require('@/assets/icon/QuickActionIcon/ic_janji.png'),
         title: 'Buat Jadwal',
-        action: () => {},
+        action: () => {
+          navigation.navigate('CreateSchedule');
+        },
       },
       {
         icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),

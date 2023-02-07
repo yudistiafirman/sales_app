@@ -227,6 +227,17 @@ interface SphStateInterface {
   useHighway: boolean;
 }
 
+interface CreateScheduleStateInterface {
+  selectedCompany: any;
+  selectedSPH: any;
+}
+
+type CreateScheduleContextInterface = [
+  CreateScheduleStateInterface,
+  (key: string) => (data: any) => void,
+  (index: number) => void
+];
+
 type SphContextInterface = [
   SphStateInterface,
   (key: string) => (data: any) => void,
@@ -410,6 +421,8 @@ export type {
   Region,
   SphStateInterface,
   SphContextInterface,
+  CreateScheduleStateInterface,
+  CreateScheduleContextInterface,
   AdditionalPricesInterface,
   productParentInterface,
   ProductDataInterface,
