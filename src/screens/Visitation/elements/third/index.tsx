@@ -15,6 +15,7 @@ import { TextInput } from 'react-native-paper';
 
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
+import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
@@ -147,10 +148,9 @@ const ThirdStep = () => {
         <TouchableOpacity
           style={styles.touchable}
           onPress={() => {
-            navigation.navigate('SearchProduct', {
+            navigation.navigate(SEARCH_PRODUCT, {
               isGobackAfterPress: true,
             });
-            // navigation.navigate('SearchProduct');
           }}
         />
         <BTextInput

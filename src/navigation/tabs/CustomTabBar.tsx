@@ -3,7 +3,7 @@ import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import { View, TouchableOpacity, Image } from 'react-native';
-import TabBarStyle from '../TabBarStyle';
+import TabBarStyle from './TabBarStyle';
 
 interface TabBar {
   state: any;
@@ -11,10 +11,13 @@ interface TabBar {
   navigation: any;
 }
 
-const CustomSecurityTabBar = ({ state, descriptors, navigation }: TabBar) => {
+const CustomTabBar = ({ state, descriptors, navigation }: TabBar) => {
   const homeIcon = require('@/assets/icon/TabBarIcon/ic_home.png');
-  const dispatchIcon = require('@/assets/icon/TabBarIcon/ic_price.png');
-  const icons = [homeIcon, dispatchIcon];
+  const transIcon = require('@/assets/icon/TabBarIcon/ic_dollar-square.png');
+  const profileIcon = require('@/assets/icon/TabBarIcon/ic_profile.png');
+  const priceIcon = require('@/assets/icon/TabBarIcon/ic_price.png');
+
+  const icons = [homeIcon, transIcon, profileIcon, priceIcon];
 
   return (
     <View style={TabBarStyle.tabBarContainer}>
@@ -90,4 +93,4 @@ const CustomSecurityTabBar = ({ state, descriptors, navigation }: TabBar) => {
   );
 };
 
-export default CustomSecurityTabBar;
+export default CustomTabBar;

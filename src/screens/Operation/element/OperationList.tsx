@@ -8,6 +8,7 @@ import { layout } from '@/constants';
 import { BSpacer, BOperationCard } from '@/components';
 import { useNavigation } from '@react-navigation/native';
 import { USER_TYPE } from '@/models/EnumModel';
+import { CAMERA, SCHEDULE } from '@/navigation/ScreenNames';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type FooterType = {
@@ -49,9 +50,9 @@ export default function OperationList({
 
   const onClickItem = (id: string) => {
     if (role === USER_TYPE.OPERATION) {
-      navigation.navigate('Schedule', { id: id });
+      navigation.navigate(SCHEDULE, { id: id });
     } else {
-      navigation.navigate('Camera', {
+      navigation.navigate(CAMERA, {
         photoTitle: 'DO',
         navigateTo: 'return',
       });

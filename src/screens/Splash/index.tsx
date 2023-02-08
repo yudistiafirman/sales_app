@@ -1,6 +1,6 @@
 import { colors } from '@/constants';
 import { resScale } from '@/utils';
-import React from 'react';
+import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 const Splash = () => {
   return (
