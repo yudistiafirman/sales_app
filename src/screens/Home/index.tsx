@@ -12,7 +12,12 @@ import BVisitationCard from '@/components/molecules/BVisitationCard';
 import moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
-import { BBottomSheet, BSearchBar, BFlatlistItems } from '@/components';
+import {
+  BBottomSheet,
+  BSearchBar,
+  BFlatlistItems,
+  BSpacer,
+} from '@/components';
 import { useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import BTabViewScreen from '@/components/organism/BTabViewScreen';
