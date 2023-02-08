@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import { QuickActionProps } from '@/interfaces/QuickActionButton.type';
 import BQuickActionButton from '../molecules/BQuickAction';
 import BSpacer from '../atoms/BSpacer';
+import { resScale } from '@/utils';
 
 export default function BQuickAction({
   buttonProps,
@@ -15,6 +16,7 @@ export default function BQuickAction({
   return (
     <View style={containerStyle}>
       <FlatList
+        contentContainerStyle={{ paddingLeft: resScale(30) }}
         showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
         horizontal={isHorizontal}

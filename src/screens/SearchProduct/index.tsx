@@ -9,6 +9,7 @@ import { BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
 import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import { searchProductMachine } from '@/machine/searchProductMachine';
+import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 
 type SearchProductType = {
   isAsComponent?: boolean;
@@ -44,33 +45,6 @@ const SearchProduct = ({
     }
   }, [route?.params]);
 
-  const renderHeaderLeft = () => (
-    <BHeaderIcon
-      size={resScale(30)}
-      iconName="chevron-left"
-      marginRight={layout.pad.lg}
-      onBack={() => navigation.goBack()}
-    />
-  );
-
-  const renderHeaderCenter = () => (
-    <SearchProductNavbar
-      value={searchValue}
-      onChangeText={onChangeText}
-      onClearValue={onClearValue}
-    />
-  );
-
-  React.useLayoutEffect(() => {
-    if (!isAsComponent) {
-      navigation.setOptions({
-        headerBackVisible: false,
-        headerLeft: () => renderHeaderLeft(),
-        headerTitle: () => renderHeaderCenter(),
-      });
-    }
-  }, [navigation, searchValue, isAsComponent]);
-
   const onChangeText = (text: string) => {
     console.log(text, 'onChangeText');
 
@@ -82,6 +56,21 @@ const SearchProduct = ({
     setSearchValue('');
     send('clearInput');
   };
+
+  if (!isAsComponent) {
+    useCustomHeaderCenter(
+      {
+        customHeaderCenter: (
+          <SearchProductNavbar
+            value={searchValue}
+            onChangeText={onChangeText}
+            onClearValue={onClearValue}
+          />
+        ),
+      },
+      [searchValue]
+    );
+  }
 
   const onTabPress = ({ route }) => {
     const tabIndex = index === 0 ? 1 : 0;

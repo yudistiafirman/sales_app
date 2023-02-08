@@ -1,7 +1,7 @@
 import { BButtonPrimary, BErrorText, BSpacer } from '@/components';
 import { resScale } from '@/utils';
-import { useNavigation } from '@react-navigation/native';
-import React, { useLayoutEffect, useState } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import * as React from 'react';
 import { Image, SafeAreaView } from 'react-native';
 import PhoneInput from './element/PhoneInput';
 import Instruction from './element/Intstruction';
@@ -12,19 +12,19 @@ import { setPhoneNumber } from '@/redux/reducers/authReducer';
 import { useDispatch } from 'react-redux';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { signIn } from '@/actions/CommonActions';
-import { AuthStackScreenProps } from '@/navigation/navTypes';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { VERIFICATION } from '@/navigation/ScreenNames';
+
 interface LoginState {
   errorMessage: unknown | string;
   loading: boolean;
   phoneNumber: string;
 }
 
-type LoginScreenNavigationProps = AuthStackScreenProps['navigation'];
-
 const Login = () => {
-  const navigation = useNavigation<LoginScreenNavigationProps>();
+  const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [loginState, setLoginState] = useState<LoginState>({
+  const [loginState, setLoginState] = React.useState<LoginState>({
     errorMessage: '',
     loading: false,
     phoneNumber: '',
@@ -33,19 +33,14 @@ const Login = () => {
   const { errorMessage, loading, phoneNumber } = loginState;
   const disableBtn = phoneNumber.length < 6;
 
-  const renderLogo = () => (
-    <Image
-      style={{ width: resScale(70), height: resScale(33) }}
-      source={require('@/assets/logo/brik_logo.png')}
-    />
-  );
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerLeft: () => renderLogo(),
-    });
-  }, [navigation]);
+  useCustomHeaderLeft({
+    customHeaderLeft: (
+      <Image
+        style={{ width: resScale(70), height: resScale(33) }}
+        source={require('@/assets/logo/brik_logo.png')}
+      />
+    ),
+  });
 
   const sendOtp = async () => {
     setLoginState({ ...loginState, loading: true });
@@ -59,7 +54,7 @@ const Login = () => {
           errorMessage: '',
           phoneNumber: '',
         });
-        navigation.navigate('Verification');
+        navigation.navigate(VERIFICATION);
       } else {
         throw new Error(response.data.message);
       }

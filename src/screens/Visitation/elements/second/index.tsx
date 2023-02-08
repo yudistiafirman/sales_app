@@ -16,7 +16,7 @@ import debounce from 'lodash.debounce';
 import { resScale } from '@/utils';
 import { layout } from '@/constants';
 import { useRoute } from '@react-navigation/native';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { useDispatch } from 'react-redux';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
 
