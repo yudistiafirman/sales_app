@@ -6198,6 +6198,11 @@ react-native-codegen@^0.70.6:
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
 
+react-native-collapsible@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.6.0.tgz#ca261ffff16914f872059bb0972e3a78c4b37f9c"
+  integrity sha512-beZjdgbT9Y/Pg591Xy5XkKG20HffJiVad4n9bfcUF/f783A+tvOVXnqvbS58Lkaym93mi4jcDPMuW9Vc1t6rqg==
+
 react-native-config@^1.4.11:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-1.5.0.tgz#ff5a78fbbc2c2a0525788e5f3c86101110651ba4"
@@ -6345,6 +6350,13 @@ react-native-shimmer-placeholder@^2.0.9:
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/react-native-shimmer-placeholder/-/react-native-shimmer-placeholder-2.0.9.tgz#0096932289bd9ec5747cd4f1c9d15f91ba02157a"
   integrity sha512-s2pfAAO6uaybREYM2KcaxP3c2XlZvLfHfzmhMlGEoOhSKaoM92KpA1Hx0BeC75yilkliJuowqO/hFzvLB0h7hg==
+
+react-native-simple-accordion@^1.17.0:
+  version "1.17.0"
+  resolved "https://registry.yarnpkg.com/react-native-simple-accordion/-/react-native-simple-accordion-1.17.0.tgz#1b47dcf15e54c474a39c9ff8127a4b82bf45b96c"
+  integrity sha512-GhlBMkf7bPkxJaL6cb8tKu+PAq9zcv08anCrlVZWLFC9A+X/lrv6axZOrnwbyHWuEggSE96NHXZxiondHNEA7w==
+  dependencies:
+    react-native-collapsible "^1.6.0"
 
 react-native-size-matters@^0.4.0:
   version "0.4.0"

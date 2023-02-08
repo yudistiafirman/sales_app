@@ -35,7 +35,7 @@ const defaultProps = {
 };
 
 const BTextInput = ({ ...props }: IProps & typeof defaultProps) => (
-  <TextInput {...props} placeholderTextColor={colors.textInput.placeHolder} />
+  <TextInput placeholderTextColor={colors.textInput.placeHolder} {...props} />
 );
 
 BTextInput.defaultProps = defaultProps;

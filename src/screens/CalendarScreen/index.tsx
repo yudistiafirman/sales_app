@@ -6,12 +6,18 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Calendar, DateData } from 'react-native-calendars';
+import { DateData } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MarkedDates } from 'react-native-calendars/src/types';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
-import { BButtonPrimary, BContainer, BSpacer, BText } from '@/components';
+import {
+  BButtonPrimary,
+  BCalendar,
+  BContainer,
+  BSpacer,
+  BText,
+} from '@/components';
 import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
 import moment, { locale } from 'moment';
 import { useNavigation } from '@react-navigation/native';
@@ -25,22 +31,7 @@ import {
   resetStates,
 } from '@/redux/reducers/productivityFlowReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-
-const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
-  if (direction === 'right') {
-    return (
-      <View style={styles.arrowStyleRight}>
-        <Icon name="chevron-right" size={25} color={colors.icon.primary} />
-      </View>
-    );
-  }
-
-  return (
-    <View style={styles.arrowStyleLeft}>
-      <Icon name="chevron-left" size={25} color={colors.icon.primary} />
-    </View>
-  );
-};
+import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 
 export default function CalendarScreen() {
   const navigation = useNavigation();
@@ -53,7 +44,7 @@ export default function CalendarScreen() {
     []
   );
   // console.log(visitationCalendarMapped, 'visitationCalendarMapped');
-
+  useHeaderTitleChanged({ title: 'Pilih Tanggal' });
   useEffect(() => {
     const today = moment();
     fetchVisitation({
@@ -220,17 +211,9 @@ export default function CalendarScreen() {
     <BContainer>
       <View style={styles.container}>
         <View>
-          <Calendar
-            theme={{
-              arrowColor: colors.black,
-              todayTextColor: colors.primary,
-              selectedDayTextColor: colors.white,
-              selectedDayBackgroundColor: colors.primary,
-              dotColor: colors.primary,
-            }}
+          <BCalendar
             onDayPress={onDayPress}
             markedDates={markedDate}
-            renderArrow={(direction) => <RenderArrow direction={direction} />}
             onMonthChange={onMonthPress}
           />
           <BSpacer size="small" />
@@ -293,13 +276,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.montserrat[600],
     fontSize: fonts.size.xl,
     color: colors.text.darker,
-  },
-  arrowStyleRight: {
-    position: 'relative',
-    right: resScale(-20),
-  },
-  arrowStyleLeft: {
-    position: 'relative',
-    left: resScale(-20),
   },
 });

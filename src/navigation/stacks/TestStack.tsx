@@ -8,6 +8,7 @@ import Sph from '@/screens/Sph';
 import CalendarScreen from '@/screens/CalendarScreen';
 import Preview from '@/screens/Camera/Preview';
 import Camera from '@/screens/Camera';
+import Appointment from '@/screens/Appointment';
 import Schedule from '@/screens/Operation/Schedule';
 import SubmitForm from '@/screens/Operation/SubmitForm';
 
@@ -17,6 +18,13 @@ function TestStack({
   Stack: TypedNavigator<any, any, any, any, any>;
 }) {
   return [
+    BStackScreen({
+      Stack: Stack,
+      name: 'Appointment',
+      title: 'Buat Janji Temu',
+      component: Appointment,
+      type: 'home',
+    }),
     BStackScreen({
       Stack: Stack,
       name: 'CreateVisitation',
@@ -49,7 +57,7 @@ function TestStack({
     }),
     BStackScreen({
       Stack: Stack,
-      name: 'calendar-screen',
+      name: 'CalendarScreen',
       title: 'Pilih Tanggal',
       component: CalendarScreen,
     }),

@@ -3,6 +3,7 @@ import {
   ViewStyle,
   ImageSourcePropType,
   TextStyle,
+  KeyboardType,
   KeyboardTypeOptions,
 } from 'react-native';
 
@@ -33,8 +34,9 @@ interface Input {
   placeholder?: string;
   loading?: boolean;
   isError?: boolean;
+  errorMessage?: string;
+  keyboardType?: KeyboardType | KeyboardTypeOptions;
   items?: any;
-  keyboardType?: KeyboardTypeOptions;
   options?: Array<{
     title: string;
     value: string | any;
@@ -400,7 +402,7 @@ interface payloadPostType {
   files: any[];
 }
 
-interface visitationDataType {
+type visitationDataType = {
   id?: number;
   name: string;
   location?: string;
@@ -408,6 +410,25 @@ interface visitationDataType {
   status?: string;
   pilNames?: string[];
   pilStatus?: string;
+};
+
+type VisitationCardType = {
+  item: visitationDataType;
+  searchQuery?: string;
+  onPress?: (data: visitationDataType) => void;
+  isRenderIcon?: boolean;
+  customIcon?: () => JSX.Element;
+};
+
+interface PicFormInitialState {
+  name: string;
+  errorName: string;
+  position: string;
+  errorPosition: string;
+  phone: string;
+  errorPhone: string;
+  email: string;
+  errorEmail: string;
 }
 
 export type {
@@ -435,4 +456,6 @@ export type {
   picPayloadType,
   payloadPostType,
   visitationDataType,
+  VisitationCardType,
+  PicFormInitialState
 };

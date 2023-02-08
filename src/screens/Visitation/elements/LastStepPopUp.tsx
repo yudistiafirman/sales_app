@@ -190,7 +190,7 @@ export default function LastStepPopUp({
               <TouchableOpacity
                 style={styles.touchable}
                 onPress={() => {
-                  navigation.navigate('calendar-screen');
+                  navigation.navigate('CalendarScreen');
                   setIsPopUpVisible((curr) => !curr);
                 }}
               />

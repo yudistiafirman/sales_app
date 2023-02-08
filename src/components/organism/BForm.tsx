@@ -11,10 +11,11 @@ import BText from '../atoms/BText';
 import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
+import { BSwitch, BFileInput } from '@/components';
+import { resScale } from '@/utils';
 import { colors, layout } from '@/constants';
+import font from '@/constants/fonts';
 import CheckBox from '@react-native-community/checkbox';
-import BFileInput from '../atoms/BFileInput';
-import BSwitch from '../atoms/BSwitch';
 
 interface IProps {
   inputs: Input[];
@@ -30,6 +31,14 @@ const styles: Styles = {
   optionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  errorPicContainer: {
+    width: resScale(213),
+    height: resScale(40),
+    borderRadius: layout.pad.xs + layout.pad.sm,
+    backgroundColor: colors.status.errorPic,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   quantityLayout: {
     flexDirection: 'row',
@@ -68,6 +77,7 @@ const renderInput = (input: Input): React.ReactNode => {
     keyboardType,
     checkbox,
     placeholder,
+    errorMessage,
     hidePicLabel,
     isInputDisable,
   } = input;
@@ -98,7 +108,12 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 
   if (type === 'textInput') {
-    const textInputProps = { onChange, value, isInputDisable: !isInputDisable };
+    const textInputProps = {
+      onChange,
+      value,
+      keyboardType,
+      isInputDisable: !isInputDisable,
+    };
     console.log(textInputProps, 'textInputProps');
 
     return (
@@ -111,7 +126,7 @@ const renderInput = (input: Input): React.ReactNode => {
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
-            {`${label} harus diisi`}
+            {errorMessage}
           </BText>
         )}
       </React.Fragment>
@@ -176,6 +191,11 @@ const renderInput = (input: Input): React.ReactNode => {
         <BLabel label={label} isRequired={isRequire} />
         <BSpacer size="extraSmall" />
         <BAutoComplete {...input} />
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {errorMessage}
+          </BText>
+        )}
       </React.Fragment>
     );
   }
@@ -227,6 +247,17 @@ const renderInput = (input: Input): React.ReactNode => {
             <BSpacer size="extraSmall" />
             <BDivider />
             <BSpacer size="small" />
+            {isError && (
+              <View style={styles.errorPicContainer}>
+                <BText
+                  style={{ fontSize: font.size.lg }}
+                  color="primary"
+                  bold="400"
+                >
+                  {errorMessage}
+                </BText>
+              </View>
+            )}
           </>
         ) : null}
         <BPicList isOption={true} data={value} onSelect={onSelect!} />

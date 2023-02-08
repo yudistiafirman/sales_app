@@ -16,8 +16,6 @@ interface IProps {
   loading?: boolean;
 }
 const BAutoComplete = ({
-  isError,
-  errorMessage,
   value,
   items,
   onChange,
@@ -56,11 +54,6 @@ const BAutoComplete = ({
         useFilter={false}
         clearOnFocus={false}
       />
-      {isError && (
-        <BText size="small" color="primary" bold="100">
-          {errorMessage}
-        </BText>
-      )}
     </React.Fragment>
   );
 };
