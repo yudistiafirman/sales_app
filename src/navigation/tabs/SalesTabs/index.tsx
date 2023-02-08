@@ -6,8 +6,8 @@ import BTabScreen from '@/navigation/elements/BTabScreen';
 import PriceList from '@/screens/Price';
 import CustomSalesTabBar from './SalesTabBar';
 import Profile from '@/screens/Profile';
-import Transactions from '@/screens/Transactions';
 import Home from '@/screens/Home';
+import Transaction from '@/screens/Transaction';
 
 const Tab = createBottomTabNavigator();
 function SalesTabs() {
@@ -31,7 +31,7 @@ function SalesTabs() {
         name: 'Transaksi',
         title: 'Transaksi',
         type: 'sub',
-        component: Transactions,
+        component: Transaction,
       })}
       {BTabScreen({
         Tab: Tab,

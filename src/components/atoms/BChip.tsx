@@ -8,9 +8,10 @@ interface BChipProps {
   children: any;
   type?: 'default' | 'header';
   backgroundColor?: string | undefined;
+  textColor?: string | undefined;
 }
 
-const BChip = ({ children, type, backgroundColor }: BChipProps) => {
+const BChip = ({ children, type, backgroundColor, textColor }: BChipProps) => {
   let BChipHeaderStyle: ViewStyle = {
     paddingHorizontal: resScale(layout.pad.md),
     paddingVertical: resScale(layout.pad.xs),
@@ -28,7 +29,7 @@ const BChip = ({ children, type, backgroundColor }: BChipProps) => {
     type === 'header' ? BChipHeaderStyle : BChipDefaultStyle;
 
   let _textStyle: TextStyle = {
-    color: colors.text.dark,
+    color: textColor ? textColor : colors.text.dark,
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.xs,
   };

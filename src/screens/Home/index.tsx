@@ -54,7 +54,6 @@ const Beranda = () => {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isHeaderShown, setIsHeaderShown] = useState(true);
-  const [date] = useState(moment());
 
   // fetching data
   const [data, setData] = React.useState<Api.Response>({
@@ -173,6 +172,7 @@ const Beranda = () => {
 
   const onDateSelected = useCallback((dateTime: moment.Moment) => {
     setPage(0);
+    setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
     setSelectedDate(dateTime);
   }, []);
 
@@ -289,9 +289,11 @@ const Beranda = () => {
     );
   }, [data]);
 
-  async function visitationOnPress(dataItem: visitationDataType) {
-    // console.log(dataItem, 'visitationOnPress');
+  async function visitationOnPress(
+    dataItem: visitationDataType
+  ): Promise<void> {
     try {
+      const status = dataItem.pilStatus;
       dispatch(
         openPopUp({
           popUpType: 'loading',
@@ -302,14 +304,19 @@ const Beranda = () => {
       const response = await dispatch(
         getOneVisitation({ visitationId: dataItem.id })
       ).unwrap();
-      console.log(response, 'responsevisitationOnPress');
 
       dispatch(closePopUp());
-      navigation.navigate('Camera', {
-        photoTitle: 'Foto Kunjungan',
-        navigateTo: 'CreateVisitation',
-        existingVisitation: response,
-      });
+      if (status === 'Belum Selesai') {
+        navigation.navigate('Camera', {
+          photoTitle: 'Foto Kunjungan',
+          navigateTo: 'CreateVisitation',
+          existingVisitation: response,
+        });
+      } else {
+        navigation.navigate('CustomerDetail', {
+          existingVisitation: response,
+        });
+      }
     } catch (error) {
       dispatch(
         openPopUp({
@@ -362,20 +369,16 @@ const Beranda = () => {
           />
         </View>
       </Modal>
-      <View style={{ padding: layout.mainPad }}>
-        <TargetCard
-          isExpanded={isExpanded}
-          maxVisitation={currentVisit.target}
-          currentVisitaion={currentVisit.current}
-          isLoading={isLoading}
-        />
-      </View>
-      <BQuickAction
-        containerStyle={{
-          paddingLeft: resScale(30),
-        }}
-        buttonProps={buttonsData}
+      {/* <View style={{ padding: layout.mainPad }}> */}
+      <TargetCard
+        isExpanded={isExpanded}
+        maxVisitation={currentVisit.target}
+        currentVisitaion={currentVisit.current}
+        isLoading={isLoading}
       />
+      {/* </View> */}
+      <BSpacer size={'extraSmall'} />
+      <BQuickAction buttonProps={buttonsData} />
 
       <BBottomSheet
         onChange={bottomSheetOnchange}
@@ -385,6 +388,9 @@ const Beranda = () => {
         enableContentPanningGesture={true}
         style={style.BsheetStyle}
         footerComponent={(props: any) => {
+          if (!isRenderDateDaily) {
+            return null;
+          }
           return BuatKunjungan(props, kunjunganAction);
         }}
       >
@@ -400,14 +406,12 @@ const Beranda = () => {
             value={searchQuery}
           />
         </View>
-
         <DateDaily
           markedDatesArray={todayMark}
           isRender={isRenderDateDaily}
           onDateSelected={onDateSelected}
           selectedDate={selectedDate}
         />
-
         <BottomSheetFlatlist
           isLoading={isLoading}
           data={data.data}
@@ -430,17 +434,18 @@ const style = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'blue',
     width: '100%',
   },
   itemContainer: {
-    padding: 6,
-    margin: 6,
+    padding: layout.pad.sm,
+    margin: layout.pad.sm,
     backgroundColor: '#eee',
   },
   BsheetStyle: {
     paddingLeft: layout.pad.lg,
     paddingRight: layout.pad.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   flatListContainer: {},
   flatListLoading: {
@@ -457,12 +462,12 @@ const style = StyleSheet.create({
   },
   posRelative: {
     position: 'relative',
-    marginBottom: resScale(10),
+    marginBottom: layout.pad.md,
   },
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
   },

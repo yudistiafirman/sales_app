@@ -15,13 +15,17 @@ const colors = {
     inactive: '#010206',
     divider: '#9A9A9A',
     blue: '#0080FF',
+    secondary: '#636363',
+    secYellow: '#FF7B00',
   },
   status: {
     grey: '#D7D7D7',
     yellow: '#FFE885',
+    orange: '#FFD494',
     red: '#FF8F8F',
     black: '#191919',
     white: '#FFFFFF',
+    offYellow: '#FFFFE5',
   },
   select: {
     selected: '#E52525',

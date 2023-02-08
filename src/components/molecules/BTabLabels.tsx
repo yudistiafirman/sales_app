@@ -16,9 +16,10 @@ type Route = {
 interface BTabLabelsProps {
   route: Route;
   focused: boolean;
+  minWidth?: number | undefined;
 }
 
-const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
+const BTabLabels = ({ route, focused, minWidth }: BTabLabelsProps) => {
   const isHasItems = route?.totalItems > 0;
   const rightChipPosition = route?.chipPosition === 'right';
 
@@ -35,7 +36,9 @@ const BTabLabels = ({ route, focused }: BTabLabelsProps) => {
       ? font.family.montserrat['600']
       : font.family.montserrat['400'],
     fontSize: font.size.md,
-    marginRight: isHasItems ? resScale(20) : 0,
+    minWidth: minWidth && minWidth,
+    alignSelf: 'center',
+    textAlign: 'center',
   };
 
   const BChipStyle: ViewStyle = {

@@ -28,6 +28,8 @@ export type RootStackParamList = {
   Schedule: { id: string };
   Operation: { role?: string };
   SubmitForm: { type?: string };
+  SPH: {};
+  TransactionDetail: { title: string; data: any };
 };
 
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;

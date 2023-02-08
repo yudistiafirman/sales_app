@@ -2,8 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import colors from '@/constants/colors';
 import { layout } from '@/constants';
-import CustomFlatlist from './element/CustomFlatList';
 import { USER_TYPE } from '@/models/EnumModel';
+import OperationList from './element/OperationList';
 
 const Operation = () => {
   const [isLoading] = useState(false);
@@ -25,7 +25,7 @@ const Operation = () => {
 
   return (
     <View style={style.container}>
-      <CustomFlatlist
+      <OperationList
         role={USER_TYPE.SECURITY} // change from redux state
         isLoading={isLoading}
         data={data}
