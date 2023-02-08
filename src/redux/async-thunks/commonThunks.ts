@@ -3,6 +3,7 @@ import {
   allVisitationGetAction,
   uploadFileImage,
   projectByUserGetAction,
+  projectGetOneById,
 } from '@/actions/CommonActions';
 import { projectResponseType } from '@/interfaces';
 
@@ -69,3 +70,19 @@ export const getProjectsByUserThunk = createAsyncThunk<
     return rejectWithValue(error.message);
   }
 });
+//projectGetOneById
+export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
+  'common/getOneProjectById',
+  async ({ projectId }, { rejectWithValue }) => {
+    try {
+      const response = await projectGetOneById(projectId);
+      const { data } = response;
+      if (data.error) throw data as errorType;
+
+      return data;
+    } catch (error) {
+      console.log(error.message, 'message/getProjectsByUserThunk');
+      return rejectWithValue(error.message);
+    }
+  }
+);

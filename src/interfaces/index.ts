@@ -33,6 +33,8 @@ interface Input {
   placeholder?: string;
   loading?: boolean;
   isError?: boolean;
+  customerErrorMsg?: string;
+  LeftIcon?: () => JSX.Element;
   items?: any;
   keyboardType?: KeyboardTypeOptions;
   options?: Array<{
@@ -209,8 +211,36 @@ interface BLocationProps {
   isUninteractable?: boolean;
 }
 
+interface selectedCompanyInterface {
+  id: string;
+  name: string;
+  Company: {
+    id: string | null;
+    name: string | null;
+  };
+  PIC: PIC[];
+  Visitation: {
+    finish_date: string | null;
+    id: string;
+    order: number;
+    visitation_id: string | null;
+  };
+  locationAddress: {
+    city?: string;
+    district?: string;
+    line1?: string;
+    postalCode?: number;
+    rural?: string;
+  };
+  mainPic: {
+    id: string | null;
+    name: string | null;
+  };
+}
+
 interface SphStateInterface {
-  selectedCompany: any;
+  selectedCompany: selectedCompanyInterface | null;
+  picList: PIC[];
   selectedPic: any;
   isBillingAddressSame: boolean;
   billingAddress: {
@@ -229,8 +259,9 @@ interface SphStateInterface {
 
 type SphContextInterface = [
   SphStateInterface,
-  (key: string) => (data: any) => void,
-  (index: number) => void
+  (key: keyof SphStateInterface) => (data: any) => void,
+  (index: number) => void,
+  number
 ];
 
 interface AdditionalPricesInterface {
@@ -423,4 +454,5 @@ export type {
   payloadPostType,
   visitationDataType,
   projectResponseType,
+  selectedCompanyInterface,
 };

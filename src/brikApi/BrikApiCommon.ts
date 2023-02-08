@@ -67,6 +67,12 @@ export default class BrikApiCommon {
     return url.toString();
   };
 
+  static oneGetProject = (projectId?: string) => {
+    const url = new URL(`${API_URL}/common/m/flow/project/${projectId}`);
+
+    return url.toString();
+  };
+
   // --------------------------------------------------AUTHENTICATION ---------------------------------------------//
 
   static login = () => {

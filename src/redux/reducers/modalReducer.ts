@@ -40,7 +40,7 @@ export const modalSlice = createSlice({
       state.isPopUpVisible = !state.isPopUpVisible;
     },
     openPopUp: (state, { payload }: { payload: popUpOptions }) => {
-      state.isPopUpVisible = !state.isPopUpVisible;
+      state.isPopUpVisible = true;
       if (payload.isRenderActions) {
         state.popUpOptions.isRenderActions = payload.isRenderActions;
       }
@@ -61,7 +61,7 @@ export const modalSlice = createSlice({
       }
     },
     closePopUp: (state) => {
-      state.isPopUpVisible = !state.isPopUpVisible;
+      state.isPopUpVisible = false;
       state.popUpOptions = initialPopupData;
     },
   },

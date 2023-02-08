@@ -35,14 +35,26 @@ const Location = () => {
   };
   const onSaveLocation = () => {
     const { lon, lat } = locationDetail;
+    const from = route?.params?.from;
     const coordinate = {
       longitude: Number(lon),
       latitude: Number(lat),
     };
-    navigation.navigate(TAB_ROOT, {
-      screen: TAB_PRICE_LIST_TITLE,
-      params: { coordinate: coordinate },
-    });
+    if (from) {
+      navigation.goBack();
+      navigation.navigate(TAB_ROOT, {
+        screen: from,
+        coordinate: coordinate,
+      });
+    } else {
+      navigation.navigate(TAB_ROOT, {
+        screen: TAB_PRICE_LIST_TITLE,
+        params: { coordinate: coordinate },
+      });
+      // navigation.navigate('Harga', {
+      //   coordinate: coordinate,
+      // });
+    }
   };
   const { region, locationDetail, loadingLocation } = state.context;
   return (

@@ -33,13 +33,6 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
     (state: RootState) => state.common
   );
 
-  // useEffect(() => {
-  //   return () => {
-  //     console.log('debounce cleanup');
-  //     onChangeWithDebounce.cancel();
-  //   };
-  // }, []);
-
   const searchDispatch = (text: string) => {
     dispatch(getAllProject({ search: text }));
   };
@@ -132,7 +125,7 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
           <BVisitationCard
             item={{
               name: item.name,
-              location: item.locationAddress.city,
+              location: item.locationAddress.line1,
             }}
             searchQuery={searchQuery}
             onPress={() => {

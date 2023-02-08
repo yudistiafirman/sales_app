@@ -56,13 +56,19 @@ export const uploadFileImage = async (files: any[], from: string) => {
 export const allVisitationGetAction = async (search?: string) => {
   return request(
     BrikApiCommon.allVisitation(search),
-    await getOptions('GET', null, true)
+    await getOptions('GET', undefined, true)
   );
 };
 
 export const projectByUserGetAction = async (search?: string) => {
   return request(
     BrikApiCommon.getProjectByUser(search),
-    await getOptions('GET', null, true)
+    await getOptions('GET', undefined, true)
+  );
+};
+export const projectGetOneById = async (projectId?: string) => {
+  return request(
+    BrikApiCommon.oneGetProject(projectId),
+    await getOptions('GET', undefined, true)
   );
 };
