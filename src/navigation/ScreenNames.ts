@@ -24,6 +24,7 @@ export const LOCATION = 'LOCATION';
 export const SEARCH_AREA = 'SEARCH_AREA';
 export const CALENDAR = 'CALENDAR';
 export const TRANSACTION_DETAIL = 'TRANSACTION_DETAIL';
+export const CUSTOMER_DETAIL = 'CUSTOMER_DETAIL';
 
 /*
     Screen Title
@@ -51,3 +52,4 @@ export const LOCATION_TITLE = 'Pilih Area Proyek';
 export const SEARCH_AREA_TITLE = 'Pilih Area Proyek';
 export const CALENDAR_TITLE = 'Pilih Tanggal';
 export const TRANSACTION_DETAIL_TITLE = 'Detail Transaksi';
+export const CUSTOMER_DETAIL_TITLE = 'Detil Pelanggan';

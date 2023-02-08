@@ -33,6 +33,7 @@ export type RootStackParamList = {
   SEARCH_AREA: {};
   CALENDAR: {};
   TRANSACTION_DETAIL: { title: string; data: any };
+  CUSTOMER_DETAIL: { existingVisitation?: visitationListResponse };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

@@ -15,6 +15,8 @@ import {
   CAMERA_TITLE,
   CREATE_VISITATION,
   CREATE_VISITATION_TITLE,
+  CUSTOMER_DETAIL,
+  CUSTOMER_DETAIL_TITLE,
   IMAGE_PREVIEW,
   IMAGE_PREVIEW_TITLE,
   LOCATION,
@@ -28,6 +30,7 @@ import {
   TRANSACTION_DETAIL,
   TRANSACTION_DETAIL_TITLE,
 } from '../ScreenNames';
+import CustomerDetail from '@/screens/CustomerDetail';
 
 const SalesStack = (Stack: any) => {
   return (
@@ -102,6 +105,14 @@ const SalesStack = (Stack: any) => {
         component={TransactionDetail}
         options={{
           headerTitle: TRANSACTION_DETAIL_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={CUSTOMER_DETAIL}
+        key={CUSTOMER_DETAIL}
+        component={CustomerDetail}
+        options={{
+          headerTitle: CUSTOMER_DETAIL_TITLE,
         }}
       />
     </>

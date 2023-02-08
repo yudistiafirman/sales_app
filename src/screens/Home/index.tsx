@@ -29,7 +29,12 @@ import { useDispatch } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
-import { CAMERA, CREATE_VISITATION, SPH } from '@/navigation/ScreenNames';
+import {
+  CAMERA,
+  CREATE_VISITATION,
+  CUSTOMER_DETAIL,
+  SPH,
+} from '@/navigation/ScreenNames';
 
 const Beranda = () => {
   const dispatch = useDispatch();
@@ -307,7 +312,7 @@ const Beranda = () => {
           existingVisitation: response,
         });
       } else {
-        navigation.navigate('CustomerDetail', {
+        navigation.navigate(CUSTOMER_DETAIL, {
           existingVisitation: response,
         });
       }
