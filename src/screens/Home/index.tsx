@@ -167,6 +167,7 @@ const Beranda = () => {
 
   const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
     setPage(0);
+    setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
     setSelectedDate(dateTime);
   }, []);
 
@@ -282,8 +283,11 @@ const Beranda = () => {
     );
   }, [data]);
 
-  async function visitationOnPress(dataItem: visitationDataType) {
+  async function visitationOnPress(
+    dataItem: visitationDataType
+  ): Promise<void> {
     try {
+      const status = dataItem.pilStatus;
       dispatch(
         openPopUp({
           popUpType: 'loading',
@@ -294,14 +298,19 @@ const Beranda = () => {
       const response = await dispatch(
         getOneVisitation({ visitationId: dataItem.id })
       ).unwrap();
-      console.log(response, 'responsevisitationOnPress');
 
       dispatch(closePopUp());
-      navigation.navigate(CAMERA, {
-        photoTitle: 'Kunjungan',
-        navigateTo: CREATE_VISITATION,
-        existingVisitation: response,
-      });
+      if (status === 'Belum Selesai') {
+        navigation.navigate(CAMERA, {
+          photoTitle: 'Kunjungan',
+          navigateTo: CREATE_VISITATION,
+          existingVisitation: response,
+        });
+      } else {
+        navigation.navigate('CustomerDetail', {
+          existingVisitation: response,
+        });
+      }
     } catch (error) {
       dispatch(
         openPopUp({
@@ -354,20 +363,16 @@ const Beranda = () => {
           />
         </View>
       </Modal>
-      <View style={{ padding: layout.mainPad }}>
-        <TargetCard
-          isExpanded={isExpanded}
-          maxVisitation={currentVisit.target}
-          currentVisitaion={currentVisit.current}
-          isLoading={isLoading}
-        />
-      </View>
-      <BQuickAction
-        containerStyle={{
-          paddingLeft: resScale(30),
-        }}
-        buttonProps={buttonsData}
+      {/* <View style={{ padding: layout.mainPad }}> */}
+      <TargetCard
+        isExpanded={isExpanded}
+        maxVisitation={currentVisit.target}
+        currentVisitaion={currentVisit.current}
+        isLoading={isLoading}
       />
+      {/* </View> */}
+      <BSpacer size={'extraSmall'} />
+      <BQuickAction buttonProps={buttonsData} />
 
       <BBottomSheet
         onChange={bottomSheetOnchange}
@@ -395,14 +400,12 @@ const Beranda = () => {
             value={searchQuery}
           />
         </View>
-
         <DateDaily
           markedDatesArray={todayMark}
           isRender={isRenderDateDaily}
           onDateSelected={onDateSelected}
           selectedDate={selectedDate}
         />
-
         <BottomSheetFlatlist
           isLoading={isLoading}
           data={data.data}
@@ -425,17 +428,18 @@ const style = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'blue',
     width: '100%',
   },
   itemContainer: {
-    padding: 6,
-    margin: 6,
+    padding: layout.pad.sm,
+    margin: layout.pad.sm,
     backgroundColor: '#eee',
   },
   BsheetStyle: {
     paddingLeft: layout.pad.lg,
     paddingRight: layout.pad.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   flatListContainer: {},
   flatListLoading: {
@@ -452,12 +456,12 @@ const style = StyleSheet.create({
   },
   posRelative: {
     position: 'relative',
-    marginBottom: resScale(10),
+    marginBottom: layout.pad.md,
   },
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
   },

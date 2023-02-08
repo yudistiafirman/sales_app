@@ -11,6 +11,7 @@ import Camera from '@/screens/Camera';
 import Schedule from '@/screens/Operation/Schedule';
 import SubmitForm from '@/screens/Operation/SubmitForm';
 import TransactionDetail from '@/screens/Transaction/Detail';
+import CustomerDetail from '@/screens/CustomerDetail';
 
 /**
  * @deprecated The method should not be used
@@ -86,6 +87,12 @@ function TestStack({
       name: 'TransactionDetail',
       title: 'Transaksi',
       component: TransactionDetail,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'CustomerDetail',
+      title: 'Detil Pelanggan',
+      component: CustomerDetail,
     }),
   ];
 }
