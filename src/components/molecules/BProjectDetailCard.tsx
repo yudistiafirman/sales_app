@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
+import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
-import { BSpacer } from '@/components';
 import { getColorStatusTrx } from '@/utils/generalFunc';
+import BSpacer from '../atoms/BSpacer';
 
 type BProjectDetailCardType = {
   status?: string;
