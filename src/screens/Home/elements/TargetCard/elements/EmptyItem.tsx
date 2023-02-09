@@ -31,7 +31,7 @@ export default function EmptyItem({
 const style = StyleSheet.create({
   emptyProgress: {
     height: resScale(8),
-    width: resScale(20),
+    width: resScale(25),
     borderLeftWidth: resScale(1),
     borderLeftColor: colors.border.altGrey,
   },

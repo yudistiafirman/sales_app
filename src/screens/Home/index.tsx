@@ -100,6 +100,8 @@ const Beranda = () => {
   const fetchTarget = async () => {
     try {
       const { data: _data } = await getVisitationTarget();
+      console.log(_data.data, 'fetchTarget103');
+
       setCurrentVisit({
         current: _data.data.totalCompleted,
         target: _data.data.visitationTarget,
@@ -373,14 +375,14 @@ const Beranda = () => {
           />
         </View>
       </Modal>
-      {/* <View style={{ padding: layout.mainPad }}> */}
-      <TargetCard
-        isExpanded={isExpanded}
-        maxVisitation={currentVisit.target}
-        currentVisitaion={currentVisit.current}
-        isLoading={isLoading}
-      />
-      {/* </View> */}
+      <View style={{ paddingHorizontal: layout.mainPad }}>
+        <TargetCard
+          isExpanded={isExpanded}
+          maxVisitation={currentVisit.target}
+          currentVisitaion={currentVisit.current}
+          isLoading={isLoading}
+        />
+      </View>
       <BSpacer size={'extraSmall'} />
       <BQuickAction buttonProps={buttonsData} />
 
@@ -431,7 +433,7 @@ const Beranda = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: colors.primary,
   },
