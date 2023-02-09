@@ -31,6 +31,11 @@ import IcCamera from '@/assets/svg/ic_camera.svg';
 import IcGallery from '@/assets/svg/ic_gallery.svg';
 import IcFolder from '@/assets/svg/ic_folder.svg';
 import IcTick from '@/assets/svg/ic_tick.svg';
+import IcSph from '@/assets/svg/ic_sph.svg';
+import IcPo from '@/assets/svg/ic_po.svg';
+import IcDeposit from '@/assets/svg/ic_deposit.svg';
+import IcMakeSchedule from '@/assets/svg/ic_make_schedule.svg';
+import IcAppointment from '@/assets/svg/ic_appointment.svg';
 
 // IMG
 import ImgOtpMessege from '@/assets/svg/img_otp_messege.svg';
@@ -69,7 +74,11 @@ const SvgFiles = {
   IcGallery,
   IcFolder,
   IcTick,
-
+  IcSph,
+  IcPo,
+  IcDeposit,
+  IcMakeSchedule,
+  IcAppointment,
   ImgOtpMessege,
 };
 

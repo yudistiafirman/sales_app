@@ -40,7 +40,7 @@ import {
   CUSTOMER_DETAIL,
   SPH,
 } from '@/navigation/ScreenNames';
-
+import SvgNames from '@/components/atoms/BSvg/svgName';
 const { height } = Dimensions.get('window');
 
 const initialSnapPoints = (height.toFixed() - 115) / 10;
@@ -208,29 +208,29 @@ const Beranda = () => {
   const buttonsData: buttonDataType[] = React.useMemo(
     () => [
       {
-        icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
+        icon: SvgNames.IC_SPH,
         title: 'Buat SPH',
         action: () => {
           navigation.navigate(SPH);
         },
       },
       {
-        icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
+        icon: SvgNames.IC_PO,
         title: 'Buat PO',
         action: () => {},
       },
       {
-        icon: require('@/assets/icon/QuickActionIcon/ic_depos.png'),
+        icon: SvgNames.IC_DEPOSIT,
         title: 'Buat Deposit',
         action: () => {},
       },
       {
-        icon: require('@/assets/icon/QuickActionIcon/ic_janji.png'),
+        icon: SvgNames.IC_MAKE_SCHEDULE,
         title: 'Buat Jadwal',
         action: () => {},
       },
       {
-        icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),
+        icon: SvgNames.IC_APPOINTMENT,
         title: 'Buat Janji Temu',
         action: () => {},
       },
@@ -410,7 +410,7 @@ const Beranda = () => {
             onPress={toggleModal('open')}
           />
           <BSearchBar
-            placeholder="Search"
+            placeholder="Cari Pelanggan"
             activeOutlineColor="gray"
             left={<TextInput.Icon icon="magnify" />}
             value={searchQuery}

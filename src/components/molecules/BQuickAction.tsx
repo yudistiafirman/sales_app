@@ -6,12 +6,19 @@ import font from '@/constants/fonts';
 import colors from '@/constants/colors';
 
 import { fonts, layout } from '@/constants';
+import BSvg from '../atoms/BSvg';
 
 export default function BQuickActionButton({ item }: { item: buttonDataType }) {
   return (
     <TouchableOpacity onPress={item.action}>
       <View style={style.buttonContainer}>
-        <Image source={item.icon} />
+        <BSvg
+          svgName={item.icon}
+          width={resScale(48)}
+          height={resScale(48)}
+          type="fill"
+          color={colors.white}
+        />
         <Text style={style.buttonTitle}>{item.title}</Text>
       </View>
     </TouchableOpacity>
@@ -25,13 +32,13 @@ const style = StyleSheet.create({
     borderRadius: layout.radius.md,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: layout.pad.md,
+    marginRight: layout.pad.lg,
   },
   buttonTitle: {
     fontFamily: font.family.montserrat[400],
     color: colors.black,
     fontSize: fonts.size.sm,
     marginTop: layout.pad.md,
-    textAlign:'center'
+    textAlign: 'center',
   },
 });
