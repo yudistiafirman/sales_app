@@ -1,32 +1,25 @@
-import React, { useLayoutEffect, useState } from 'react';
+import * as React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { BSpacer, BTouchableText } from '@/components';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { useMachine } from '@xstate/react';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
 import TransactionList from './element/TransactionList';
 import { transactionMachine } from '@/machine/transactionMachine';
+import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
+import { SPH, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = React.useState(0);
   const [state, send] = useMachine(transactionMachine);
-
-  const renderHeaderRight = () => {
-    return (
-      <BTouchableText
-        onPress={() => navigation.navigate('SPH')}
-        title="Buat SPH"
-      />
-    );
-  };
 
   const onTabPress = () => {
     const tabIndex = index === 0 ? 1 : 0;
@@ -35,10 +28,13 @@ const Transaction = () => {
     }
   };
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => renderHeaderRight(),
-    });
+  useCustomHeaderRight({
+    customHeaderRight: (
+      <BTouchableText
+        onPress={() => navigation.navigate(SPH)}
+        title="Buat SPH"
+      />
+    ),
   });
 
   const {
@@ -67,7 +63,7 @@ const Transaction = () => {
               refreshing={refreshing}
               onRefresh={() => send('refreshingList')}
               onPress={(data: any) =>
-                navigation.navigate('TransactionDetail', {
+                navigation.navigate(TRANSACTION_DETAIL, {
                   title: data.title,
                   data,
                 })

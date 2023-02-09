@@ -3,13 +3,15 @@ import storageKey from '@/constants/storageKey';
 import { setIsLoading, setUserData } from '@/redux/reducers/authReducer';
 import { AppDispatch, RootState } from '@/redux/store';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
-import React from 'react';
+import * as React from 'react';
 import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 const useBootStrapAsync = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, userData } = useSelector((state: RootState) => state.auth);
+  const { isLoading, userData, isSignout } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   React.useEffect(() => {
     bootStrapAsync();
@@ -30,7 +32,7 @@ const useBootStrapAsync = () => {
     }
   };
 
-  return [isLoading, userData];
+  return { isLoading, userData, isSignout };
 };
 
 export default useBootStrapAsync;

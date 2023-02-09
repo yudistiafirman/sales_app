@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import {
@@ -11,7 +11,7 @@ import {
   BNestedProductCard,
   BDepositCard,
 } from '@/components';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { colors, fonts, layout } from '@/constants';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { ScrollView } from 'react-native-gesture-handler';

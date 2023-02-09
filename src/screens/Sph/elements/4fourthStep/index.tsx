@@ -22,6 +22,7 @@ import { resScale } from '@/utils';
 import { colors, fonts } from '@/constants';
 import { SphContext } from '../context/SphContext';
 import { useNavigation } from '@react-navigation/native';
+import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
 
 type ChosenProductType = {
   volume: string;
@@ -139,7 +140,7 @@ export default function FourthStep() {
             <TouchableOpacity
               style={style.touchable}
               onPress={() => {
-                navigation.navigate('SearchProduct', {
+                navigation.navigate(SEARCH_PRODUCT, {
                   isGobackAfterPress: false,
                 });
               }}

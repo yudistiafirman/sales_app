@@ -3,7 +3,7 @@ import { colors, layout } from '@/constants';
 import { TM_CONDITION } from '@/constants/dropdown';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { Input } from '@/interfaces';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { resScale } from '@/utils';
 import {
   StackActions,
