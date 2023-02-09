@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { BBottomSheetForm } from '@/components';
 import { Input, PIC } from '@/interfaces';
+import { StyleSheet, Text } from 'react-native';
+import { colors, fonts } from '@/constants';
 interface IProps {
   initialIndex: number;
   addPic: any;
@@ -12,6 +14,12 @@ const initialState = {
   phone: '',
   email: '',
 };
+function LeftIcon() {
+  return <Text style={style.leftIconStyle}>+62</Text>;
+}
+const emailRegex =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
 const BSheetAddPic = React.forwardRef(
   ({ initialIndex, addPic }: IProps, ref: any) => {
@@ -26,54 +34,65 @@ const BSheetAddPic = React.forwardRef(
       });
     };
 
-    const inputs: Input[] = [
-      {
-        label: 'Nama',
-        isRequire: true,
-        isError: true,
-        type: 'textInput',
-        onChange: (event) => {
-          onChange('name')(event.nativeEvent.text);
+    const inputs: Input[] = useMemo(() => {
+      return [
+        {
+          label: 'Nama',
+          isRequire: true,
+          isError: !state.name,
+          type: 'textInput',
+          onChange: (event) => {
+            onChange('name')(event.nativeEvent.text);
+          },
+          value: state.name,
         },
-        value: state.name,
-      },
-      {
-        label: 'Jabatan',
-        isRequire: true,
-        isError: true,
-        type: 'textInput',
-        onChange: (event) => {
-          onChange('position')(event.nativeEvent.text);
+        {
+          label: 'Jabatan',
+          isRequire: true,
+          isError: !state.position,
+          type: 'textInput',
+          onChange: (event) => {
+            onChange('position')(event.nativeEvent.text);
+          },
+          value: state.position,
         },
-        value: state.position,
-      },
-      {
-        label: 'No. Telepon',
-        isRequire: true,
-        isError: true,
-        type: 'textInput',
-        onChange: (event) => {
-          onChange('phone')(event.nativeEvent.text);
+        {
+          label: 'No. Telepon',
+          isRequire: true,
+          isError: !phoneNumberRegex.test(state.phone),
+          type: 'textInput',
+          onChange: (event) => {
+            onChange('phone')(event.nativeEvent.text);
+          },
+          value: state.phone,
+          keyboardType: 'numeric',
+          customerErrorMsg: 'No. Telepon Harus diisi sesuai format',
+          LeftIcon: LeftIcon,
         },
-        value: state.phone,
-      },
-      {
-        label: 'Email',
-        isRequire: true,
-        isError: true,
-        type: 'textInput',
-        onChange: (event) => {
-          onChange('email')(event.nativeEvent.text);
+        {
+          label: 'Email',
+          isRequire: true,
+          isError: !emailRegex.test(state.email),
+          type: 'textInput',
+          onChange: (event) => {
+            onChange('email')(event.nativeEvent.text);
+          },
+          value: state.email,
+          customerErrorMsg: 'Email harus diisi sesuai format',
         },
-        value: state.email,
-      },
-    ];
+      ];
+    }, [state.name, state.email, state.position, state.phone]);
 
     const onAdd = () => {
       if (ref) {
         ref.current?.close();
       }
-      if (!!state.email && !!state.name && !!state.phone && !!state.position) {
+      if (
+        emailRegex.test(state.email) &&
+        !!state.name &&
+        phoneNumberRegex.test(state.phone) &&
+        !!state.position
+      ) {
         addPic(state);
         setState(initialState);
       }
@@ -88,11 +107,24 @@ const BSheetAddPic = React.forwardRef(
         buttonTitle={'Tambah PIC'}
         snapPoint={['75%']}
         isButtonDisable={
-          !(!!state.email && !!state.name && !!state.phone && !!state.position)
+          !(
+            emailRegex.test(state.email) &&
+            !!state.name &&
+            phoneNumberRegex.test(state.phone) &&
+            !!state.position
+          )
         }
       />
     );
   }
 );
+
+const style = StyleSheet.create({
+  leftIconStyle: {
+    fontFamily: fonts.family.montserrat['400'],
+    fontSize: fonts.size.md,
+    color: colors.textInput.input,
+  },
+});
 
 export default BSheetAddPic;

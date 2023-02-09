@@ -33,6 +33,8 @@ interface Input {
   placeholder?: string;
   loading?: boolean;
   isError?: boolean;
+  customerErrorMsg?: string;
+  LeftIcon?: () => JSX.Element;
   items?: any;
   keyboardType?: KeyboardTypeOptions;
   options?: Array<{
@@ -209,8 +211,36 @@ interface BLocationProps {
   isUninteractable?: boolean;
 }
 
+interface selectedCompanyInterface {
+  id: string;
+  name: string;
+  Company: {
+    id: string | null;
+    name: string | null;
+  };
+  PIC: PIC[];
+  Visitation: {
+    finish_date: string | null;
+    id: string;
+    order: number;
+    visitation_id: string | null;
+  };
+  locationAddress: {
+    city?: string;
+    district?: string;
+    line1?: string;
+    postalCode?: number;
+    rural?: string;
+  };
+  mainPic: {
+    id: string | null;
+    name: string | null;
+  };
+}
+
 interface SphStateInterface {
-  selectedCompany: any;
+  selectedCompany: selectedCompanyInterface | null;
+  picList: PIC[];
   selectedPic: any;
   isBillingAddressSame: boolean;
   billingAddress: {
@@ -219,6 +249,7 @@ interface SphStateInterface {
     addressAutoComplete: { [key: string]: any };
     fullAddress: string;
   };
+  distanceFromLegok: number | null;
   paymentType: string;
   paymentRequiredDocuments: { [key: string]: any };
   paymentDocumentsFullfilled: boolean;
@@ -229,8 +260,9 @@ interface SphStateInterface {
 
 type SphContextInterface = [
   SphStateInterface,
-  (key: string) => (data: any) => void,
-  (index: number) => void
+  (key: keyof SphStateInterface) => (data: any) => void,
+  (index: number) => void,
+  number
 ];
 
 interface AdditionalPricesInterface {
@@ -259,12 +291,19 @@ interface ProductDataInterface {
     id: string;
     price: number;
   };
+  properties: {
+    fc: string;
+    fs: string;
+    sc: string;
+    slump: number;
+  };
   Category: {
     id: string;
     name: string;
     parent_id: string;
     Parent: productParentInterface;
   };
+  calcPrice: number;
 }
 
 interface visitationListResponse {
@@ -397,6 +436,61 @@ interface projectResponseType {
   project_count: string;
 }
 
+interface sphOrderPayloadType {
+  projectId: string;
+  picId: string;
+  isUseSameAddress: boolean;
+  billingRecipientName: string;
+  billingRecipientPhone: string;
+  paymentType: 'CBD' | 'CREDIT';
+  viaTol: boolean;
+  projectDocs: any[];
+  isProvideBankGuarantee: boolean;
+  shippingAddress: {
+    id: string;
+    lat: string;
+    lon: string;
+    line1: string;
+    rural: string | null;
+    district: string | null;
+    postalCode: string | number | null;
+    city: string | null;
+  };
+  requestedProducts: {
+    productId: string;
+    categoryId: string;
+    offeringPrice: number;
+    quantity: number;
+    totalPrice: number;
+  }[];
+  delivery: {
+    id: string;
+    categoryId: string;
+    createdById: string | null;
+    unit: string;
+    price: number;
+    type: string;
+    min: number;
+    max: number;
+    createdAt: string;
+    updatedAt: string;
+    category_id: string;
+  };
+  distance: {
+    id: string;
+    categoryId: string;
+    createdById: string | null;
+    unit: string;
+    price: number;
+    type: string;
+    min: number;
+    max: number;
+    createdAt: string;
+    updatedAt: string;
+    category_id: string;
+  };
+}
+
 export type {
   Input,
   Styles,
@@ -423,4 +517,6 @@ export type {
   payloadPostType,
   visitationDataType,
   projectResponseType,
+  selectedCompanyInterface,
+  sphOrderPayloadType,
 };

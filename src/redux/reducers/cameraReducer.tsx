@@ -37,10 +37,11 @@ export const cameraSlice = createSlice({
       };
     },
     resetImageURLS: (state) => {
-      return {
-        ...state,
-        photoURLs: [],
-      };
+      state.photoURLs = [];
+      // return {
+      //   ...state,
+      //   photoURLs: [],
+      // };
     },
     deleteImage: (state, action: PayloadAction<{ pos: number }>) => {
       const currentImages = state.photoURLs;

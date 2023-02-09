@@ -1947,6 +1947,11 @@ ajv@^6.10.0, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+algebra.js@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/algebra.js/-/algebra.js-0.2.6.tgz#23aacc86f8634e4c206d56c8077ef220a6221c74"
+  integrity sha512-ogfp7ukWOqIgBGERLLhArKhPORnmvn1t0pXvPvtfe15qlDV9BaDwCArHh5RyoEj2GHUqYeCWfBzQ7oZRqQxKDw==
+
 anser@^1.4.9:
   version "1.4.10"
   resolved "https://registry.yarnpkg.com/anser/-/anser-1.4.10.tgz#befa3eddf282684bd03b63dcda3927aef8c2e35b"

@@ -28,19 +28,32 @@ type ChosenProductType = {
   volume: string;
   sellPrice: string;
   product: ProductDataInterface;
+  totalPrice: number;
+  productId: string;
+  categoryId: string;
 }[];
 
-function RenderModal(
-  selectedProduct: ProductDataInterface | null,
-  isModalVisible: boolean,
-  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>,
+interface RenderModalType {
+  selectedProduct: ProductDataInterface | null;
+  isModalVisible: boolean;
+  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedProduct: React.Dispatch<
     React.SetStateAction<ProductDataInterface | null>
-  >,
-  setChosenProducts: React.Dispatch<React.SetStateAction<any[]>>,
-  chosenProducts: ChosenProductType,
-  backToChosenProducst: () => void
-) {
+  >;
+  setChosenProducts: React.Dispatch<React.SetStateAction<any[]>>;
+  chosenProducts: ChosenProductType;
+  distance: number | null;
+}
+
+function RenderModal({
+  selectedProduct,
+  isModalVisible,
+  setIsModalVisible,
+  setSelectedProduct,
+  setChosenProducts,
+  chosenProducts,
+  distance,
+}: RenderModalType) {
   if (!selectedProduct) {
     return null;
   }
@@ -62,10 +75,11 @@ function RenderModal(
       setIsVisible={setIsModalVisible}
       resetSelectedProduct={() => {
         setSelectedProduct(null);
-        backToChosenProducst();
+        // backToChosenProducst();
       }}
       choseProduct={setChosenProducts}
       prevData={prevData}
+      distance={distance}
     />
   );
 }
@@ -118,17 +132,15 @@ export default function FourthStep() {
 
   return (
     <BContainer>
-      {RenderModal(
-        selectedProduct,
-        isModalVisible,
-        setIsModalVisible,
-        setSelectedProduct,
-        setChosenProducts,
-        chosenProducts,
-        () => {
-          setModeSearch(false);
-        }
-      )}
+      <RenderModal
+        setChosenProducts={setChosenProducts}
+        setSelectedProduct={setSelectedProduct}
+        setIsModalVisible={setIsModalVisible}
+        isModalVisible={isModalVisible}
+        chosenProducts={chosenProducts}
+        selectedProduct={selectedProduct}
+        distance={sphState.distanceFromLegok}
+      />
       <View style={style.searchModeContainer}>
         <View>
           <Text style={style.productText}>Produk</Text>
@@ -141,7 +153,10 @@ export default function FourthStep() {
               style={style.touchable}
               onPress={() => {
                 navigation.navigate(SEARCH_PRODUCT, {
-                  isGobackAfterPress: false,
+                  isGobackAfterPress: true,
+                  distance: sphState.distanceFromLegok
+                    ? sphState.distanceFromLegok
+                    : 0,
                 });
               }}
             />
@@ -162,7 +177,7 @@ export default function FourthStep() {
                   name={item.product.name}
                   volume={+item.volume}
                   pricePerVol={+item.sellPrice}
-                  totalPrice={+item.volume * +item.sellPrice}
+                  totalPrice={+item.totalPrice}
                   onPressEdit={() => {
                     setSelectedProduct(item.product);
                     setIsModalVisible(true);

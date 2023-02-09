@@ -11,7 +11,7 @@ import {
 import { BVisitationCard } from '@/components';
 import { resScale } from '@/utils';
 import { colors, fonts } from '@/constants';
-import { Input } from '@/interfaces';
+import { Input, SphStateInterface } from '@/interfaces';
 import { BFlatlistItems } from '@/components';
 
 import ChoosePicModal from '../ChoosePicModal';
@@ -20,6 +20,10 @@ import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSh
 import { SphContext } from '../context/SphContext';
 import StepDone from '../StepDoneModal/StepDone';
 
+function payloadMapper(sphState: SphStateInterface) {
+  console.log(JSON.stringify(sphState), 'sphState24');
+}
+
 export default function FifthStep() {
   const [sphState, stateUpdate] = useContext(SphContext);
 
@@ -27,6 +31,7 @@ export default function FifthStep() {
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isStepDoneVisible, setIsStepDoneVisible] = useState(false);
+  console.log(sphState?.selectedCompany, 'selectedCompany30');
 
   const inputsData: Input[] = [
     {
@@ -45,6 +50,16 @@ export default function FifthStep() {
     setIsModalVisible(false);
     bottomSheetRef.current?.expand();
   }
+
+  async function buatSph() {
+    try {
+      console.log('buatsph52');
+      payloadMapper(sphState);
+    } catch (error) {
+      console.log(error, 'errorbuatSph54');
+    }
+  }
+
   return (
     <BContainer>
       <StepDone
@@ -55,15 +70,19 @@ export default function FifthStep() {
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         openAddPic={addPicHandler}
-        selectPic={() => {
-          setIsStepDoneVisible((curr) => !curr);
+        selectPic={(pic) => {
+          // setIsStepDoneVisible((curr) => !curr);
+          stateUpdate('selectedPic')(pic);
+          setIsModalVisible((curr) => !curr);
         }}
       />
       <View style={{ minHeight: resScale(80) }}>
         <BVisitationCard
           item={{
-            name: sphState?.selectedCompany?.name,
-            location: sphState?.selectedCompany?.location,
+            name: sphState?.selectedCompany?.name
+              ? sphState?.selectedCompany?.name
+              : '-',
+            location: sphState?.selectedCompany?.locationAddress.line1,
           }}
           isRenderIcon={false}
         />
@@ -97,27 +116,36 @@ export default function FifthStep() {
               name={item.product.name}
               pricePerVol={+item.sellPrice}
               volume={+item.volume}
-              totalPrice={+item.sellPrice * +item.volume}
+              totalPrice={+item.totalPrice}
             />
           );
         }}
         data={sphState?.chosenProducts}
+        emptyText={'Produk tidak ada yang terpilih'}
       />
       <BSpacer size={'extraSmall'} />
       <BForm inputs={inputsData} />
       <BBackContinueBtn
         isContinueIcon={false}
         continueText={'Buat Sph'}
-        onPressContinue={() => {
-          setIsModalVisible((curr) => !curr);
-        }}
+        onPressContinue={buatSph}
       />
       <BSheetAddPic
         ref={bottomSheetRef}
         initialIndex={-1}
         addPic={(pic: any) => {
-          // onChange('selectedPic', pic);
-          console.log(pic, 'bsheetaddpic');
+          if (sphState.selectedCompany) {
+            const newList = [
+              ...sphState.selectedCompany.PIC,
+              { ...pic, isSelected: false },
+            ];
+
+            stateUpdate('selectedCompany')({
+              ...sphState.selectedCompany,
+              PIC: newList,
+            });
+            // stateUpdate('picList')(newList);
+          }
         }}
       />
     </BContainer>

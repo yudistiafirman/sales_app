@@ -6,7 +6,7 @@ import {
   NativeSyntheticEvent,
   TextInputChangeEventData,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Modal from 'react-native-modal';
 import { ProductDataInterface } from '@/interfaces';
 import { resScale } from '@/utils';
@@ -23,6 +23,7 @@ import {
 } from '@/components';
 import formatCurrency from '@/utils/formatCurrency';
 import { TextInput } from 'react-native-paper';
+import calcTrips from '@/utils/calcTrips';
 
 type ProductCartModalType = {
   productData: ProductDataInterface;
@@ -31,6 +32,7 @@ type ProductCartModalType = {
   resetSelectedProduct: () => void;
   choseProduct: React.Dispatch<React.SetStateAction<any[]>>;
   prevData: { volume: string; sellPrice: string };
+  distance: number | null;
 };
 
 function TextIcon(label: string) {
@@ -44,9 +46,12 @@ export default function ProductCartModal({
   resetSelectedProduct,
   choseProduct,
   prevData,
+  distance,
 }: ProductCartModalType) {
   useEffect(() => {
     setDetailOrder(prevData);
+    console.log(JSON.stringify(productData), 'productData53');
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,6 +59,34 @@ export default function ProductCartModal({
     volume: '',
     sellPrice: '',
   });
+
+  const calcPrice = useMemo(
+    () => calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost,
+    [detailOrder.volume]
+  );
+  const totalPrice =
+    +detailOrder.volume * +detailOrder.sellPrice + (calcPrice ? calcPrice : 0);
+
+  const distanceCeil = distance ? Math.ceil(distance / 1000) : 0;
+
+  // const addPrice = useMemo(() => {
+  //   const { Category } = productData;
+  //   const { Parent } = Category;
+  //   const { AdditionalPrices } = Parent;
+
+  //   for (const price of AdditionalPrices) {
+  //     if (price.type === 'DISTANCE') {
+  //       if (distanceCeil >= price.min && distanceCeil <= price.max) {
+  //         console.log(price, 'additioncalprices87');
+
+  //         return price.price;
+  //       }
+  //     }
+  //   }
+  //   return 0;
+  // }, [productData, distanceCeil]);
+
+  console.log(calcPrice, 'calcPrice63');
 
   const onChange = (key: string) => (val: string) => {
     setDetailOrder((curr) => {
@@ -92,7 +125,9 @@ export default function ProductCartModal({
             <BChip backgroundColor={colors.chip.green}>
               {productData.Category.Parent.name}
             </BChip>
-            <BChip backgroundColor={colors.chip.disabled}>slump 12±12 cm</BChip>
+            <BChip backgroundColor={colors.chip.disabled}>
+              slump {productData.properties.slump}±12 cm
+            </BChip>
           </View>
           <BSpacer size={'extraSmall'} />
           <View style={style.priceContainer}>
@@ -112,7 +147,7 @@ export default function ProductCartModal({
               size={resScale(20)}
               color="#000000"
             />
-            <Text style={style.distanceText}>30 KM</Text>
+            <Text style={style.distanceText}>{distanceCeil} KM</Text>
           </View>
           <BSpacer size={'small'} />
           <View>
@@ -127,7 +162,7 @@ export default function ProductCartModal({
               </Text>
             </View>
             <Text style={style.hargaJualPrice}>
-              IDR {formatCurrency(productData.Price.price)}
+              IDR {formatCurrency(productData.calcPrice)}
             </Text>
           </View>
         </View>
@@ -169,9 +204,11 @@ export default function ProductCartModal({
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
               />
-              {!detailOrder.sellPrice && (
+              {!!(+detailOrder.sellPrice < productData.calcPrice) && (
                 <BText size="small" color="primary" bold="100">
-                  Harga jual harus diisi
+                  {!detailOrder.sellPrice
+                    ? 'Harga jual harus diisi'
+                    : 'Harga tidak bisa lebih rendah dari Harga Jual Terendah'}
                 </BText>
               )}
             </View>
@@ -179,27 +216,36 @@ export default function ProductCartModal({
           <BSpacer size={'small'} />
           <View style={style.priceContainer}>
             <Text style={style.hargaText}>Biaya Mobilisasi</Text>
-            <Text style={style.hargaText}>IDR 250.000</Text>
+            <Text style={style.hargaText}>IDR {calcPrice || '0'}</Text>
           </View>
           <BSpacer size={'small'} />
           <View style={style.priceContainer}>
             <Text style={style.productName}>Total Harga</Text>
             <Text style={style.boldPrice}>
-              IDR {formatCurrency(+detailOrder.volume * +detailOrder.sellPrice)}
+              IDR {formatCurrency(totalPrice)}
             </Text>
           </View>
         </BContainer>
         <View style={style.buttonContainer}>
           <BButtonPrimary
             title="Tambah Produk"
-            disable={!detailOrder.sellPrice || !detailOrder.volume}
+            disable={
+              +detailOrder.sellPrice < productData.calcPrice ||
+              !detailOrder.volume
+            }
             onPress={() => {
               choseProduct((curr) => {
                 const currentValue = curr;
                 const newData = {
-                  product: productData,
+                  product: {
+                    id: productData.id,
+                    name: productData.name,
+                  },
+                  productId: productData.id,
+                  categoryId: productData.Category.id,
                   sellPrice: detailOrder.sellPrice,
                   volume: detailOrder.volume,
+                  totalPrice: totalPrice,
                 };
                 const existingDataIndex = currentValue.findIndex(
                   (data) => data.product.id === productData.id
@@ -208,9 +254,15 @@ export default function ProductCartModal({
                   currentValue.splice(existingDataIndex, 1, newData);
                 } else {
                   currentValue.push({
-                    product: productData,
+                    product: {
+                      id: productData.id,
+                      name: productData.name,
+                    },
+                    productId: productData.id,
+                    categoryId: productData.Category.id,
                     sellPrice: detailOrder.sellPrice,
                     volume: detailOrder.volume,
+                    totalPrice: totalPrice,
                   });
                 }
                 return currentValue;

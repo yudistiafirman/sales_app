@@ -27,6 +27,7 @@ const SearchProduct = ({
   if (route.params) {
     const { isGobackAfterPress } = route.params as {
       isGobackAfterPress: boolean;
+      distance: number;
     };
     isGoback = isGobackAfterPress;
   }

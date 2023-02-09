@@ -15,6 +15,7 @@ import { colors, layout } from '@/constants';
 import CheckBox from '@react-native-community/checkbox';
 import BFileInput from '../atoms/BFileInput';
 import BSwitch from '../atoms/BSwitch';
+import { TextInput } from 'react-native-paper';
 
 interface IProps {
   inputs: Input[];
@@ -70,6 +71,8 @@ const renderInput = (input: Input): React.ReactNode => {
     placeholder,
     hidePicLabel,
     isInputDisable,
+    customerErrorMsg,
+    LeftIcon,
   } = input;
 
   if (type === 'quantity') {
@@ -99,6 +102,7 @@ const renderInput = (input: Input): React.ReactNode => {
 
   if (type === 'textInput') {
     const textInputProps = { onChange, value };
+    const defaultErrorMsg = `${label} harus diisi`;
 
     return (
       <React.Fragment>
@@ -108,10 +112,11 @@ const renderInput = (input: Input): React.ReactNode => {
           keyboardType={keyboardType ? keyboardType : 'default'}
           placeholder={placeholder}
           disabled={isInputDisable}
+          left={LeftIcon && <TextInput.Icon icon={LeftIcon} />}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
-            {`${label} harus diisi`}
+            {customerErrorMsg || defaultErrorMsg}
           </BText>
         )}
       </React.Fragment>
@@ -119,6 +124,7 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 
   if (type === 'area') {
+    const defaultErrorMsg = `${label} harus diisi`;
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
@@ -131,7 +137,7 @@ const renderInput = (input: Input): React.ReactNode => {
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
-            {`${label} harus diisi`}
+            {customerErrorMsg || defaultErrorMsg}
           </BText>
         )}
       </React.Fragment>
