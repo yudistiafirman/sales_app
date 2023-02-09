@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import React, { useCallback } from 'react';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -8,6 +8,7 @@ import { layout } from '@/constants';
 import { BSpacer, BVisitationCard } from '@/components';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { visitationDataType } from '@/interfaces';
+import EmptyProduct from '@/components/templates/Price/EmptyProduct';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type FooterType = {
@@ -51,7 +52,7 @@ export default function BottomSheetFlatlist({
     () => <FooterLoading isLoading={isLoading} />,
     [isLoading]
   );
-  const separator = useCallback(() => <BSpacer size={'small'} />, []);
+  const separator = useCallback(() => <BSpacer size={'extraSmall'} />, []);
 
   return (
     <BottomSheetFlatList
@@ -74,12 +75,24 @@ export default function BottomSheetFlatlist({
       ListFooterComponent={footerComp}
       ItemSeparatorComponent={separator}
       onEndReached={onEndReached}
+      ListEmptyComponent={() => {
+        if (isLoading) {
+          return null;
+        }
+        return (
+          <View style={{ width: resScale(330) }}>
+            <EmptyProduct emptyText="Tidak ada data kunjungan,silahkan ganti tanggal kunjungan" />
+          </View>
+        );
+      }}
     />
   );
 }
 
 const style = StyleSheet.create({
-  flatListContainer: {},
+  flatListContainer: {
+    // backgroundColor: 'gray',
+  },
   flatListLoading: {
     marginTop: layout.pad.md,
     justifyContent: 'center',

@@ -37,8 +37,14 @@ export type RootStackParamList = {
   TransactionDetail: { title: string; data: any };
 };
 
+/**
+ * @deprecated The type should not be used
+ */
 export type AuthStackScreenProps = NativeStackScreenProps<AuthStackParamList>;
 
+/**
+ * @deprecated The type should not be used
+ */
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, T>;
 

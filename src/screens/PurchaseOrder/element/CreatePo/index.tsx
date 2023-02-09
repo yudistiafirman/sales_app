@@ -55,7 +55,7 @@ const CreatePo = () => {
     } else {
       send('goToFirstStep', { value: 'yes' });
     }
-    navigation.navigate('Camera', {
+    navigation.navigate('CAMERA', {
       photoTitle: 'File PO',
       navigateTo: 'PO',
     });

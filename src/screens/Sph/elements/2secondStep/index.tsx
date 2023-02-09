@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Region } from 'react-native-maps';
 import Feather from 'react-native-vector-icons/Feather';
 
-import { updateRegion } from '@/redux/locationReducer';
+import { updateRegion } from '@/redux/reducers/locationReducer';
 import { RootState } from '@/redux/store';
 import {
   BBackContinueBtn,

@@ -5,9 +5,14 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, Text } from 'react-native';
 
-const EmptyProduct = ({ emptyProductName }: { emptyProductName?: string }) => {
+type EmptyProductType = {
+  emptyProductName?: string;
+  emptyText?: string;
+};
+
+const EmptyProduct = ({ emptyProductName, emptyText }: EmptyProductType) => {
   return (
     <View style={styles.container}>
       <Image
@@ -15,9 +20,14 @@ const EmptyProduct = ({ emptyProductName }: { emptyProductName?: string }) => {
         source={require('@/assets/icon/ic_not_found.png')}
       />
       <View style={{ flex: 1 }}>
-        <BText style={styles.emptyText}>
-          Pencarian mu "{emptyProductName}" tidak ada. Coba cari produk lainnya.
-        </BText>
+        {!emptyText ? (
+          <BText style={styles.emptyText}>
+            Pencarian mu "{emptyProductName}" tidak ada. Coba cari produk
+            lainnya.
+          </BText>
+        ) : (
+          <BText style={styles.emptyText}>{emptyText}</BText>
+        )}
       </View>
     </View>
   );

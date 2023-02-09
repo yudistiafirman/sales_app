@@ -42,17 +42,19 @@ const initialData: CreateVisitationState = {
   step: 0,
   stepOne: {
     createdLocation: {
-      lat: 12,
-      lon: 12,
+      lat: 0,
+      lon: 0,
       postalId: undefined,
-      formattedAddress: 'createdLocation',
+      formattedAddress: '',
     },
     locationAddress: {
-      lat: 12,
-      lon: 12,
+      lat: 0,
+      lon: 0,
       postalId: undefined,
-      formattedAddress: 'locationAddress',
+      formattedAddress: '',
+      line2: '',
     },
+    existingLocationId: '',
   },
   stepTwo: {
     companyName: '',
@@ -65,6 +67,7 @@ const initialData: CreateVisitationState = {
       items: null,
       loading: false,
     },
+    projectId: '',
   },
   stepThree: {
     estimationDate: {
@@ -83,6 +86,7 @@ const initialData: CreateVisitationState = {
     alasanPenolakan: '',
   },
   shouldScrollView: true,
+  existingVisitationId: null,
 };
 
 const createVisitationContext = React.createContext<context>({
@@ -101,6 +105,7 @@ const reducerForm = (
     case 'sheetIndex':
     case 'step':
     case 'shouldScrollView':
+    case 'existingVisitationId':
       return { ...state, [action.type]: action.value };
     case 'stepOne':
     case 'stepTwo':

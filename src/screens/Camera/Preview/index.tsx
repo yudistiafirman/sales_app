@@ -14,10 +14,11 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
+import { CREATE_VISITATION, SUBMIT_FORM } from '@/navigation/ScreenNames';
 
 const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const dispatch = useDispatch();
@@ -59,10 +60,11 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         navigateTo === 'return' ||
         navigateTo === 'delivery'
       ) {
-        navigation.navigate('SubmitForm', {
+        navigation.navigate(SUBMIT_FORM, {
           type: navigateTo,
         });
-      } else if (navigateTo === 'CreateVisitation') {
+      } else if (navigateTo === CREATE_VISITATION) {
+        navigation.goBack();
         navigation.dispatch(
           StackActions.replace(navigateTo, { existingVisitation })
         );
