@@ -50,7 +50,7 @@ const Beranda = () => {
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
   const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
-  const [snapPoints] = React.useState(['68%', '91%', '100%']); //setSnapPoints
+  const [snapPoints] = React.useState(['62%', '91%', '100%']); //setSnapPoints
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = React.useState('');
   const navigation = useNavigation();
@@ -381,14 +381,13 @@ const Beranda = () => {
         isLoading={isLoading}
       />
       {/* </View> */}
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size="small" />
       <BQuickAction buttonProps={buttonsData} />
 
       <BBottomSheet
         onChange={bottomSheetOnchange}
         percentSnapPoints={snapPoints}
         ref={bottomSheetRef}
-        initialSnapIndex={0}
         enableContentPanningGesture={true}
         style={style.BsheetStyle}
         footerComponent={(props: any) => {
@@ -449,7 +448,6 @@ const style = StyleSheet.create({
     paddingLeft: layout.pad.lg,
     paddingRight: layout.pad.lg,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   flatListContainer: {},
   flatListLoading: {
@@ -457,7 +455,6 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   flatListShimmer: {
-    width: resScale(330),
     height: resScale(60),
     borderRadius: layout.radius.md,
   },

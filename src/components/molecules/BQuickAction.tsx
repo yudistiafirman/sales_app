@@ -4,7 +4,6 @@ import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import resScale from '@/utils/resScale';
 import font from '@/constants/fonts';
 import colors from '@/constants/colors';
-import respFS from '@/utils/resFontSize';
 import { fonts, layout } from '@/constants';
 
 export default function BQuickActionButton({ item }: { item: buttonDataType }) {
@@ -25,6 +24,7 @@ const style = StyleSheet.create({
     borderRadius: layout.radius.md,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: layout.pad.md,
   },
   buttonTitle: {
     fontFamily: font.family.montserrat[600],

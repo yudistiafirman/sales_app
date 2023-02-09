@@ -4,7 +4,6 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import TargetBar from './elements/TargetBar';
 import TopVisitation from './elements/TopVisitation';
-import resScale from '@/utils/resScale';
 import { layout } from '@/constants';
 
 type TargetCardProps = {
@@ -32,7 +31,7 @@ export default function TargetCard({
       useNativeDriver: false,
       easing: Easing.linear,
     }).start(() => [setIsExpanded(isExpanded)]);
-  }, [isExpanded]);
+  }, [animation, isExpanded, isExpandedLocal]);
 
   const containerHeight = animation.interpolate({
     inputRange: [0, 1],
@@ -40,16 +39,9 @@ export default function TargetCard({
   });
 
   return (
-    <View style={{ position: `relative`, zIndex: 0 }}>
+    <View style={style.container}>
       <Animated.View
-        style={[
-          {
-            width: resScale(320),
-            alignSelf: 'flex-start',
-            zIndex: 1,
-          },
-          { height: containerHeight },
-        ]}
+        style={[style.animatedContainer, { height: containerHeight }]}
       >
         <View style={style.targetContainer}>
           <TopVisitation
@@ -71,6 +63,13 @@ export default function TargetCard({
 }
 
 const style = StyleSheet.create({
+  container: { position: 'relative', zIndex: 0, width: '100%' },
+  animatedContainer: {
+    width: '100%',
+    alignSelf: 'flex-start',
+    zIndex: 1,
+    paddingHorizontal: layout.pad.lg,
+  },
   targetContainer: {
     backgroundColor: colors.white,
     borderRadius: layout.radius.md,

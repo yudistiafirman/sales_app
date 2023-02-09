@@ -9,7 +9,7 @@ import { layout } from '@/constants';
 
 export default function BuatKunjungan(props: any, kunjunganAction: () => void) {
   return (
-    <BottomSheetFooter {...props} style={style.container} bottomInset={2}>
+    <BottomSheetFooter {...props} style={style.container} bottomInset={10}>
       <BButtonPrimary onPress={kunjunganAction} title="Buat Kunjungan" />
     </BottomSheetFooter>
   );
