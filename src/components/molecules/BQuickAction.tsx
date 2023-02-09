@@ -9,6 +9,7 @@ import { fonts, layout } from '@/constants';
 import BSvg from '../atoms/BSvg';
 
 export default function BQuickActionButton({ item }: { item: buttonDataType }) {
+  const title = item.title.split(' ');
   return (
     <TouchableOpacity onPress={item.action}>
       <View style={style.buttonContainer}>
@@ -19,7 +20,14 @@ export default function BQuickActionButton({ item }: { item: buttonDataType }) {
           type="fill"
           color={colors.white}
         />
-        <Text style={style.buttonTitle}>{item.title}</Text>
+        {title.length > 2 ? (
+          <Text style={style.buttonTitle}>{item.title}</Text>
+        ) : (
+          <>
+            <Text style={style.buttonTitle}>{title[0]}</Text>
+            <Text style={style.buttonTitle}>{title[1]}</Text>
+          </>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -38,7 +46,7 @@ const style = StyleSheet.create({
     fontFamily: font.family.montserrat[400],
     color: colors.black,
     fontSize: fonts.size.sm,
-    marginTop: layout.pad.md,
     textAlign: 'center',
+    lineHeight: layout.pad.lg,
   },
 });
