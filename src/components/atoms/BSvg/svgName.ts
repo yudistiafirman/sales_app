@@ -32,7 +32,11 @@ const SvgNames = {
   IC_CAMERA: 'IcCamera',
   IC_FOLDER: 'IcFolder',
   IC_TICK: 'IcTick',
-
+  IC_SPH: 'IcSph',
+  IC_PO: 'IcPo',
+  IC_DEPOSIT: 'IcDeposit',
+  IC_MAKE_SCHEDULE: 'IcMakeSchedule',
+  IC_APPOINTMENT: 'IcAppointment',
   IMG_OTP_MESSEGE: 'ImgOtpMessege',
 };
 

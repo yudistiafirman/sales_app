@@ -80,9 +80,7 @@ export default function BottomSheetFlatlist({
           return null;
         }
         return (
-          <View style={{ width: resScale(330) }}>
-            <EmptyProduct emptyText="Tidak ada data kunjungan,silahkan ganti tanggal kunjungan" />
-          </View>
+          <EmptyProduct emptyText="Tidak ada data kunjungan,silahkan ganti tanggal kunjungan" />
         );
       }}
     />
@@ -91,7 +89,6 @@ export default function BottomSheetFlatlist({
 
 const style = StyleSheet.create({
   flatListContainer: {
-    // backgroundColor: 'gray',
   },
   flatListLoading: {
     marginTop: layout.pad.md,
@@ -99,7 +96,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   flatListShimmer: {
-    width: resScale(330),
+    width: '100%',
     height: resScale(60),
     borderRadius: layout.radius.md,
   },
