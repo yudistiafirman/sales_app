@@ -24,6 +24,8 @@ import { useDispatch } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
+import { Region } from 'react-native-maps';
+import { getLocationCoordinates } from '@/actions/CommonActions';
 
 const labels = [
   'Cari Pelanggan',
@@ -70,7 +72,10 @@ function stepHandler(
     !Object.values(sphData.billingAddress).every((val) => !val) &&
     Object.entries(sphData.billingAddress.addressAutoComplete).length > 1;
 
-  if (sphData.isBillingAddressSame || billingAddressFilled) {
+  if (
+    (sphData.isBillingAddressSame || billingAddressFilled) &&
+    sphData.distanceFromLegok !== null
+  ) {
     setSteps((curr) => {
       return [...new Set(curr), 1];
     });
@@ -111,7 +116,7 @@ function SphContent() {
   const route = useRoute();
   const stepRef = useRef<ScrollView>(null);
   // const [currentPosition, setCurrentPosition] = useState<number>(0);
-  const [stepsDone, setStepsDone] = useState<number[]>([]);
+  const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3, 4]);
   const [sphData, updateState, setCurrentPosition, currentPosition] =
     useContext(SphContext);
   const stepControll = useCallback((step: number) => {
@@ -119,9 +124,47 @@ function SphContent() {
   }, []);
 
   useEffect(() => {
-    stepHandler(sphData, stepsDone, setStepsDone, stepControll);
+    // stepHandler(sphData, stepsDone, setStepsDone, stepControll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
+
+  const getLocationCoord = async (coordinate: Region) => {
+    try {
+      console.log(coordinate, 'coordinateonchange51');
+      const { data } = await getLocationCoordinates(
+        // '',
+        coordinate.longitude as unknown as number,
+        coordinate.latitude as unknown as number,
+        'BP-LEGOK'
+      );
+      const { result } = data;
+      if (!result) {
+        throw data;
+      }
+      console.log(result, 'getLocationCoordinate');
+
+      const _coordinate = {
+        latitude: result?.lat,
+        longitude: result?.lon,
+        formattedAddress: result?.formattedAddress,
+        PostalId: result?.PostalId,
+      };
+
+      if (typeof result?.lon === 'string') {
+        _coordinate.longitude = Number(result.lon);
+        _coordinate.lon = Number(result.lon);
+      }
+
+      if (typeof result?.lat === 'string') {
+        _coordinate.latitude = Number(result.lat);
+        _coordinate.lat = Number(result.lat);
+      }
+      updateState('distanceFromLegok')(result.distance.value);
+      dispatch(updateRegion(_coordinate));
+    } catch (error) {
+      console.log(JSON.stringify(error), 'onChangeRegionerror');
+    }
+  };
 
   async function getProjectById(projectId: string) {
     try {
@@ -149,17 +192,18 @@ function SphContent() {
         if (locationAddress.lon && locationAddress.lat) {
           const longitude = +locationAddress.lon;
           const latitude = +locationAddress.lat;
-          dispatch(
-            updateRegion({
-              formattedAddress: locationAddress.line1,
-              latitude: latitude,
-              longitude: longitude,
-              lat: latitude,
-              long: latitude,
-              PostalId: undefined,
-              line2: locationAddress?.line2,
-            })
-          );
+          getLocationCoord({ longitude: longitude, latitude: latitude });
+          // dispatch(
+          //   updateRegion({
+          //     formattedAddress: locationAddress.line1,
+          //     latitude: latitude,
+          //     longitude: longitude,
+          //     lat: latitude,
+          //     long: latitude,
+          //     PostalId: undefined,
+          //     line2: locationAddress?.line2,
+          //   })
+          // );
         }
       }
     } catch (error) {

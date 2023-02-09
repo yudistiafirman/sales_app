@@ -12,6 +12,7 @@ const initialState: SphStateInterface = {
     addressAutoComplete: {},
     fullAddress: '',
   },
+  distanceFromLegok: null,
   paymentType: '',
   paymentRequiredDocuments: {},
   paymentDocumentsFullfilled: false,

@@ -48,6 +48,8 @@ export default function SelectedPic({
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [sphState, stateUpdate] = useContext(SphContext);
 
+  console.log(sphState.picList, 'list51');
+
   const inputsData: Input[] = useMemo(() => {
     return [
       {
@@ -55,7 +57,9 @@ export default function SelectedPic({
         isRequire: true,
         isError: false,
         type: 'PIC',
-        value: sphState.picList,
+        value: sphState.selectedCompany?.PIC
+          ? sphState.selectedCompany.PIC
+          : [],
         onChange: () => {
           openBottomSheet();
         },
@@ -63,16 +67,23 @@ export default function SelectedPic({
           if (stateUpdate) {
             // stateUpdate('selectedPic')(flatListData[index]);
             // const selectPic = (sphState.picList[index].isSelected = true);
-            const listPic = sphState.picList;
+            const listPic = sphState.selectedCompany?.PIC
+              ? sphState.selectedCompany.PIC
+              : [];
             const selectPic = listPic.map((pic, picIndex) => {
               if (index === picIndex) {
+                stateUpdate('selectedPic')(pic);
                 pic.isSelected = true;
               } else {
                 pic.isSelected = false;
               }
               return pic;
             });
-            stateUpdate('picList')(selectPic);
+            // stateUpdate('picList')(selectPic);
+            stateUpdate('selectedCompany')({
+              ...sphState.selectedCompany,
+              PIC: selectPic,
+            });
           }
         },
       },
@@ -87,12 +98,23 @@ export default function SelectedPic({
       }
       if (sphState.selectedCompany.PIC) {
         const listPic = sphState.selectedCompany.PIC.map((pic) => {
-          if (sphState.selectedPic && pic.id === sphState.selectedPic.id) {
-            return { ...pic, isSelected: true };
+          if (sphState.selectedPic) {
+            if (sphState.selectedPic.id) {
+              if (pic.id === sphState.selectedPic.id) {
+                stateUpdate('selectedPic')(pic);
+                return { ...pic, isSelected: true };
+              }
+            } else {
+              return { ...pic };
+            }
           }
           return { ...pic, isSelected: false };
         });
-        stateUpdate('picList')(listPic);
+        stateUpdate('selectedCompany')({
+          ...sphState.selectedCompany,
+          PIC: listPic,
+        });
+        // stateUpdate('picList')(listPic);
       }
     }
   }, []);
@@ -146,7 +168,7 @@ export default function SelectedPic({
         </ScrollView>
       </View>
       <BButtonPrimary
-        disable={!checkSelected(sphState.picList)}
+        disable={!checkSelected(sphState.selectedCompany?.PIC)}
         title="Lanjut"
         onPress={() => {
           if (setCurrentPosition) {
@@ -163,7 +185,15 @@ export default function SelectedPic({
           // onChange('selectedPic', pic);
           console.log(pic, 'bsheetaddpic');
           pic.isSelected = false;
-          stateUpdate('picList')([...sphState.picList, pic]);
+          const currentList = sphState.selectedCompany?.PIC
+            ? sphState.selectedCompany.PIC
+            : [];
+          stateUpdate('selectedCompany')({
+            ...sphState.selectedCompany,
+            PIC: [...currentList, pic],
+          });
+          // stateUpdate('picList')([...sphState.picList, pic]);
+          // sphState.selectedCompany?.PIC ? sphState.selectedCompany.PIC : [];
         }}
       />
     </View>

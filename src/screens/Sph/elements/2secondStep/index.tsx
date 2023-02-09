@@ -21,22 +21,22 @@ import {
 } from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
-import { Input } from '@/interfaces';
+import { Input, SphStateInterface } from '@/interfaces';
 import { SphContext } from '../context/SphContext';
 import { useNavigation } from '@react-navigation/native';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import { useMachine } from '@xstate/react';
 import { deviceLocationMachine } from '@/machine/modules';
-import { styles } from '@/screens/Transaction/element/TransactionListCard';
 
-function checkObj(obj?: { [key: string]: any }) {
-  if (obj) {
-    return (
-      (Object.values(obj.billingAddress).every((val) => val) &&
-        Object.entries(obj.billingAddress.addressAutoComplete).length > 1) ||
-      obj.isBillingAddressSame
-    );
-  }
+function checkObj(obj: SphStateInterface) {
+  const billingAddressFilled =
+    Object.values(obj.billingAddress).every((val) => val) &&
+    Object.entries(obj.billingAddress.addressAutoComplete).length > 1;
+
+  const billingAddressSame = obj.isBillingAddressSame;
+  const distanceFilled = obj.distanceFromLegok !== null;
+
+  return (billingAddressFilled || billingAddressSame) && distanceFilled;
 }
 
 function LeftIcon() {
@@ -57,19 +57,18 @@ export default function SecondStep() {
 
   const onChangeRegion = async (coordinate: Region) => {
     try {
-      console.log(coordinate, 'coordinateonchange51');
       setIsMapLoading(() => true);
       const { data } = await getLocationCoordinates(
         // '',
         coordinate.longitude as unknown as number,
         coordinate.latitude as unknown as number,
-        ''
+        'BP-LEGOK'
       );
       const { result } = data;
       if (!result) {
         throw data;
       }
-      console.log(result, 'resultOnChange');
+      console.log(result, 'resultOnChange71secondstep');
 
       const _coordinate = {
         latitude: result?.lat,
@@ -87,6 +86,7 @@ export default function SecondStep() {
         _coordinate.latitude = Number(result.lat);
         _coordinate.lat = Number(result.lat);
       }
+      stateUpdate('distanceFromLegok')(result.distance.value);
       dispatch(updateRegion(_coordinate));
       setIsMapLoading(() => false);
     } catch (error) {
@@ -103,7 +103,8 @@ export default function SecondStep() {
           formattedAddress: context?.formattedAddress,
           PostalId: context?.PostalId,
         };
-
+        console.log(context, 'contextmachince');
+        stateUpdate('distanceFromLegok')(context?.distance?.value);
         // updateValueOnstep('stepOne', 'createdLocation', context);
         if (region.latitude === 0) {
           dispatch(updateRegion(coordinate));
@@ -270,7 +271,7 @@ export default function SecondStep() {
 
   return (
     <View style={style.container}>
-      <View style={styles.blocationcontainer}>
+      <View style={style.blocationcontainer}>
         <BLocation
           region={region}
           onRegionChangeComplete={onChangeRegion}

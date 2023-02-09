@@ -25,6 +25,7 @@ type BTabScreenType = {
     | undefined;
   refreshing?: boolean;
   initialFetch?: () => Promise<visitationType[] | undefined>;
+  emptyText?: string;
 };
 function FlatListFooter(isLoading?: boolean) {
   if (!isLoading) {
@@ -46,6 +47,7 @@ export default function BFlatlistItems({
   refreshing,
   initialFetch,
   isLoading,
+  emptyText,
 }: BTabScreenType) {
   const [flatListDatas, setFlatListDatas] = useState<any[]>(data!);
   const [currentPage, setCurrentPage] = useState(1);
@@ -112,7 +114,10 @@ export default function BFlatlistItems({
           // if (_isLoading) {
           //   return null;
           // }
-          return EmptyProduct({ emptyProductName: searchQuery });
+          return EmptyProduct({
+            emptyProductName: searchQuery,
+            emptyText: emptyText,
+          });
         }}
         ItemSeparatorComponent={separator}
       />

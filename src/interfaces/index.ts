@@ -249,6 +249,7 @@ interface SphStateInterface {
     addressAutoComplete: { [key: string]: any };
     fullAddress: string;
   };
+  distanceFromLegok: number | null;
   paymentType: string;
   paymentRequiredDocuments: { [key: string]: any };
   paymentDocumentsFullfilled: boolean;
@@ -290,12 +291,19 @@ interface ProductDataInterface {
     id: string;
     price: number;
   };
+  properties: {
+    fc: string;
+    fs: string;
+    sc: string;
+    slump: number;
+  };
   Category: {
     id: string;
     name: string;
     parent_id: string;
     Parent: productParentInterface;
   };
+  calcPrice: number;
 }
 
 interface visitationListResponse {
@@ -428,6 +436,61 @@ interface projectResponseType {
   project_count: string;
 }
 
+interface sphOrderPayloadType {
+  projectId: string;
+  picId: string;
+  isUseSameAddress: boolean;
+  billingRecipientName: string;
+  billingRecipientPhone: string;
+  paymentType: 'CBD' | 'CREDIT';
+  viaTol: boolean;
+  projectDocs: any[];
+  isProvideBankGuarantee: boolean;
+  shippingAddress: {
+    id: string;
+    lat: string;
+    lon: string;
+    line1: string;
+    rural: string | null;
+    district: string | null;
+    postalCode: string | number | null;
+    city: string | null;
+  };
+  requestedProducts: {
+    productId: string;
+    categoryId: string;
+    offeringPrice: number;
+    quantity: number;
+    totalPrice: number;
+  }[];
+  delivery: {
+    id: string;
+    categoryId: string;
+    createdById: string | null;
+    unit: string;
+    price: number;
+    type: string;
+    min: number;
+    max: number;
+    createdAt: string;
+    updatedAt: string;
+    category_id: string;
+  };
+  distance: {
+    id: string;
+    categoryId: string;
+    createdById: string | null;
+    unit: string;
+    price: number;
+    type: string;
+    min: number;
+    max: number;
+    createdAt: string;
+    updatedAt: string;
+    category_id: string;
+  };
+}
+
 export type {
   Input,
   Styles,
@@ -455,4 +518,5 @@ export type {
   visitationDataType,
   projectResponseType,
   selectedCompanyInterface,
+  sphOrderPayloadType,
 };
