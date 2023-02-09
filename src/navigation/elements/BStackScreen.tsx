@@ -2,6 +2,9 @@ import { BHeaderTitle } from '@/components';
 import { TypedNavigator } from '@react-navigation/native';
 import React from 'react';
 
+/**
+ * @deprecated The method should not be used
+ */
 const BStackScreen = ({
   Stack,
   name,

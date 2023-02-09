@@ -389,7 +389,7 @@ interface visitationDataType {
   time?: string;
   status?: string;
   pilNames?: string[];
-  pilStatus?: string;
+  pilStatus?: 'Selesai' | 'Belum Selesai';
 }
 
 interface projectResponseType {

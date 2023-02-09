@@ -10,6 +10,7 @@ interface AuthState {
   userData: JwtPayload | null;
   loginCredential: LoginCredential;
   isLoading: boolean;
+  isSignout: boolean;
 }
 
 const initialState: AuthState = {
@@ -18,6 +19,7 @@ const initialState: AuthState = {
     phoneNumber: '',
   },
   isLoading: false,
+  isSignout: false,
 };
 
 export const authSlice = createSlice({
@@ -37,6 +39,7 @@ export const authSlice = createSlice({
       return {
         ...state,
         userData: action.payload,
+        isSignout: false,
       };
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
@@ -45,9 +48,18 @@ export const authSlice = createSlice({
         isLoading: action.payload,
       };
     },
+    signout: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        userData: null,
+        isLoading: action.payload,
+        isSignout: true,
+      };
+    },
   },
 });
 
-export const { setPhoneNumber, setUserData, setIsLoading } = authSlice.actions;
+export const { setPhoneNumber, setUserData, setIsLoading, signout } =
+  authSlice.actions;
 
 export default authSlice.reducer;

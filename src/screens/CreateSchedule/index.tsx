@@ -97,13 +97,15 @@ const CreateSchedule = () => {
 
   return (
     <View style={styles.parent}>
-      <StepperIndicator
-        stepsDone={stepsDone}
-        stepOnPress={setCurrentPosition}
-        currentStep={currentPosition}
-        labels={labels}
-        ref={stepRef}
-      />
+      <View style={styles.stepper}>
+        <StepperIndicator
+          stepsDone={stepsDone}
+          stepOnPress={setCurrentPosition}
+          currentStep={currentPosition}
+          labels={labels}
+          ref={stepRef}
+        />
+      </View>
       <CreateScheduleContext.Provider
         value={
           [
@@ -125,6 +127,10 @@ const CreateSchedule = () => {
 const styles = StyleSheet.create({
   parent: {
     flex: 1,
+  },
+  stepper: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

@@ -1,6 +1,5 @@
 import { useLayoutEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { BHeaderTitle } from '@/components';
 
 type useHeaderTitle = {
   title: string;
@@ -11,7 +10,7 @@ export default function useHeaderTitleChanged({ title }: useHeaderTitle) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: () => BHeaderTitle(title, 'flex-start'),
+      headerTitle: title,
     });
   }, [navigation, title]);
 }

@@ -12,7 +12,11 @@ import Schedule from '@/screens/Operation/Schedule';
 import SubmitForm from '@/screens/Operation/SubmitForm';
 import TransactionDetail from '@/screens/Transaction/Detail';
 import CreateSchedule from '@/screens/CreateSchedule';
+import CustomerDetail from '@/screens/CustomerDetail';
 
+/**
+ * @deprecated The method should not be used
+ */
 function TestStack({
   Stack,
 }: {
@@ -82,7 +86,7 @@ function TestStack({
     BStackScreen({
       Stack: Stack,
       name: 'TransactionDetail',
-      title: 'Transaction Detail',
+      title: 'Transaksi',
       component: TransactionDetail,
     }),
     BStackScreen({
@@ -90,6 +94,12 @@ function TestStack({
       name: 'CreateSchedule',
       title: 'Buat Jadwal',
       component: CreateSchedule,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'CustomerDetail',
+      title: 'Detil Pelanggan',
+      component: CustomerDetail,
     }),
   ];
 }

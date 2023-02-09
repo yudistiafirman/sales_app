@@ -218,8 +218,8 @@ const style = StyleSheet.create({
   modalContent: {
     backgroundColor: 'white',
     height: resScale(350),
-    borderTopLeftRadius: layout.radius.sm,
-    borderTopRightRadius: layout.radius.sm,
+    borderTopLeftRadius: layout.radius.lg,
+    borderTopRightRadius: layout.radius.lg,
   },
   modalHeader: {
     justifyContent: 'space-between',

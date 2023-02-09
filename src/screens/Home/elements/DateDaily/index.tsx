@@ -2,10 +2,10 @@ import { StyleSheet } from 'react-native';
 import React from 'react';
 import CalendarStrip from 'react-native-calendar-strip';
 import resScale from '@/utils/resScale';
-import respFS from '@/utils/resFontSize';
 import moment from 'moment';
 import font from '@/constants/fonts';
 import colors from '@/constants/colors';
+import { fonts } from '@/constants';
 
 type markOption = {
   color: string;
@@ -31,7 +31,7 @@ type DateDailyType = {
 };
 
 export default function DateDaily({
-  numDaysInWeek = 5,
+  // numDaysInWeek = 5,
   isRender,
   markedDatesArray,
   onDateSelected,
@@ -41,8 +41,6 @@ export default function DateDaily({
   if (!isRender) {
     return null;
   }
-
-  console.log(onDateSelected, 'ini date selected');
 
   return (
     <CalendarStrip
@@ -58,8 +56,9 @@ export default function DateDaily({
       highlightDateNameStyle={style.highlightDateNameStyle}
       disabledDateNameStyle={style.disabledDateNameStyle}
       disabledDateNumberStyle={style.disabledDateNumberStyle}
-      numDaysInWeek={numDaysInWeek}
+      // numDaysInWeek={numDaysInWeek}
       markedDates={markedDatesArray}
+      scrollable={true}
     />
   );
 }
@@ -77,19 +76,18 @@ const style = StyleSheet.create({
   dateNumberStyle: {
     fontFamily: font.family.montserrat[500],
     color: colors.textInput.input,
-    fontSize: respFS(15),
+    fontSize: fonts.size.md,
   },
   dateNameStyle: {
     fontFamily: font.family.montserrat[300],
     color: colors.textInput.input,
-    fontSize: respFS(10),
+    fontSize: fonts.size.xs,
   },
   highlightDateNumberStyle: {
     color: colors.white,
     backgroundColor: colors.primary,
     borderRadius: resScale(100),
-    paddingLeft: resScale(15),
-    paddingRight: resScale(15),
+    paddingHorizontal: resScale(10),
     shadowColor: colors.black,
     shadowOffset: {
       width: resScale(0),
@@ -99,7 +97,12 @@ const style = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  highlightDateNameStyle: { color: colors.border.grey },
+  highlightDateNameStyle: {
+    fontSize: fonts.size.xs,
+    color: colors.border.grey,
+    // margin: 0,
+    // backgroundColor: 'blue',
+  },
   disabledDateNameStyle: { color: colors.border.grey },
   disabledDateNumberStyle: { color: colors.border.grey },
 });
