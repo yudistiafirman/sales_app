@@ -22,6 +22,7 @@ export default function FirstStep() {
 
   const tabData: { [key: string]: any } = React.useMemo(() => {
     const mapCallback = (_: any, index: number) => {
+      console.log('iniii dia', _, index);
       return {
         name: 'PT. Guna Karya Mandiri' + index,
         pilNames: [
@@ -95,15 +96,15 @@ export default function FirstStep() {
               item={item}
               searchQuery={searchQuery}
               onPress={(data) => {
-                console.log('visit di pencet', data);
                 // setSelectedPic(data);
                 if (stateUpdate) {
-                  stateUpdate('selectedCompany')(data);
+                  stateUpdate('selectedSPH')(data);
                 }
               }}
             />
           )}
           searchQuery={searchQuery}
+          data={tabData[key]}
           initialFetch={() => {
             return tabOnEndReached({
               key,
@@ -154,11 +155,11 @@ export default function FirstStep() {
           tabToRender={searchQuery.length > 3 ? tabToRender : []}
         />
       )}
-      {createScheduleState?.selectedCompany && (
+      {createScheduleState?.selectedSPH && (
         <SelectedPIC
           onPress={() => {
             if (stateUpdate) {
-              stateUpdate('selectedPic')(null);
+              stateUpdate('selectedSPH')(null);
               stateUpdate('selectedCompany')(null);
             }
           }}

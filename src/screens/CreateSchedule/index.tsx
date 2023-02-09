@@ -15,16 +15,15 @@ import FirstStep from './element/FirstStep';
 import SecondStep from './element/SecondStep';
 
 const labels = ['Cari PO', 'Detil Pengiriman'];
-
 const stepsToRender = [<FirstStep />, <SecondStep />];
 
 function stepHandler(
-  sphData: CreateScheduleStateInterface,
+  createScheduleData: CreateScheduleStateInterface,
   stepsDone: number[],
   setSteps: (e: number[] | ((curr: number[]) => number[])) => void,
   stepController: (step: number) => void
 ) {
-  if (sphData.selectedCompany) {
+  if (createScheduleData.selectedCompany && createScheduleData.selectedSPH) {
     if (!stepsDone.includes(0)) {
       setSteps((curr) => {
         return [...new Set(curr), 0];
@@ -34,7 +33,12 @@ function stepHandler(
     setSteps((curr) => curr.filter((num) => num !== 0));
   }
 
-  if (sphData.selectedSPH) {
+  if (
+    createScheduleData.deliveryDetail &&
+    createScheduleData.deliveryDetail.date &&
+    createScheduleData.deliveryDetail.time &&
+    createScheduleData.deliveryDetail.method
+  ) {
     setSteps((curr) => {
       return [...new Set(curr), 1];
     });
@@ -71,21 +75,25 @@ const CreateSchedule = () => {
   const stepRef = React.useRef<ScrollView>(null);
   const [currentPosition, setCurrentPosition] = React.useState<number>(0);
   const [stepsDone, setStepsDone] = React.useState<number[]>([]);
-  const [sphData, setSphData] = React.useState<CreateScheduleStateInterface>({
-    selectedCompany: null,
-    selectedSPH: null,
-  });
-  const stepControll = React.useCallback((step: number) => {
+  const [createScheduleData, setCreateScheduleData] =
+    React.useState<CreateScheduleStateInterface>({
+      selectedCompany: null,
+      selectedSPH: null,
+      deliveryDetail: null,
+      lastDeposit: null,
+      newDeposit: null,
+    });
+  const stepControl = React.useCallback((step: number) => {
     console.log(step, 'stepsss');
   }, []);
 
   React.useEffect(() => {
-    stepHandler(sphData, stepsDone, setStepsDone, stepControll);
+    stepHandler(createScheduleData, stepsDone, setStepsDone, stepControl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sphData]);
+  }, [createScheduleData]);
 
   const stateUpdate = (key: string) => (e: any) => {
-    setSphData((current) => {
+    setCreateScheduleData((current) => {
       console.log('stateUpdate', e);
 
       return {
@@ -109,7 +117,7 @@ const CreateSchedule = () => {
       <CreateScheduleContext.Provider
         value={
           [
-            sphData,
+            createScheduleData,
             stateUpdate,
             setCurrentPosition,
           ] as CreateScheduleContextInterface

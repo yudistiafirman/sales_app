@@ -230,6 +230,21 @@ interface SphStateInterface {
 interface CreateScheduleStateInterface {
   selectedCompany: any;
   selectedSPH: any;
+  lastDeposit: {
+    total: number;
+    sales: number;
+  };
+  newDeposit: {
+    total: number;
+    sales: number;
+  };
+  deliveryDetail: {
+    date: string;
+    time: string;
+    method: string;
+    isConsecutive: boolean;
+    isTechnicalRequest: boolean;
+  };
 }
 
 type CreateScheduleContextInterface = [
