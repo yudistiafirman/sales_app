@@ -15,9 +15,10 @@ const Profile = () => {
   const onLogout = async () => {
     try {
       const response = await signOut();
+      console.log(response.data)
       if (response) {
         bStorage.deleteItem(storageKey.userToken);
-        dispatch(signout);
+        dispatch(signout(false));
       }
     } catch (error) {
       Alert.alert('Something went wrong', error.message);
