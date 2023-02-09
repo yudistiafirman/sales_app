@@ -21,8 +21,12 @@
           "assignDeleteImageByIndex": "deleteImage";
 "assignImages": "addImages";
 "assignIndexChanged": "onChangeCategories";
+"assignPoType": "goToFirstStep";
 "assignSearchQuery": "searching";
 "assignValue": "inputSph";
+"closeModalSph": "addChoosenSph";
+"closingModal": "closeModal";
+"triggerModal": "openingModal";
         };
         eventsCausingDelays: {
           
@@ -35,7 +39,7 @@
           "GetSphList": "searching";
 "getSavedPo": "xstate.init";
         };
-        matchesStates: "Exit" | "checkSavedPo" | "enquirePOType" | "firstStep" | "firstStep.SearchSph" | "firstStep.SearchSph.inputting" | "firstStep.SearchSph.searchingSph" | "firstStep.addPO" | "firstStep.openModalChooseSph" | "openCamera" | { "firstStep"?: "SearchSph" | "addPO" | "openModalChooseSph" | { "SearchSph"?: "inputting" | "searchingSph"; }; };
+        matchesStates: "Exit" | "checkSavedPo" | "enquirePOType" | "firstStep" | "firstStep.SearchSph" | "firstStep.SearchSph.inputting" | "firstStep.SearchSph.openModalChooseSph" | "firstStep.SearchSph.searchingSph" | "firstStep.addPO" | "openCamera" | { "firstStep"?: "SearchSph" | "addPO" | { "SearchSph"?: "inputting" | "openModalChooseSph" | "searchingSph"; }; };
         tags: never;
       }
   

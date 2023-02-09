@@ -45,6 +45,7 @@ export { default as BProjectDetailCard } from './molecules/BProjectDetailCard';
 export { default as BProductCard } from './molecules/BProductCard';
 export { default as BDepositCard } from './molecules/BDepositCard';
 export { default as BCompanyMapCard } from './molecules/BCompanyMapCard';
+export { default as BExpandableSPHCard } from './molecules/BExpandableSPHCard';
 
 // organism
 export { default as BForm } from './organism/BForm';

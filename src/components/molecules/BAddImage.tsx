@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     width: resScale(102),
     height: resScale(120),
     borderRadius: layout.radius.md,
-    marginRight: layout.pad.lg,
+    margin: layout.pad.sm,
   },
   addImage: {
     backgroundColor: colors.tertiary,

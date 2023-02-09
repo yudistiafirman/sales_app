@@ -17,12 +17,13 @@ import BChip from '../atoms/BChip';
 import BSpacer from '../atoms/BSpacer';
 
 interface BCommonCompanyCardProps {
-  name: string;
+  name?: string;
   searchQuery?: string;
   sph?: SPH[];
-  location: string;
+  location?: string;
   onPress?: (data: any) => void;
   needRightIcon?: boolean;
+  customButton?: () => JSX.Element;
 }
 
 const BCommonCompanyCard = ({
@@ -32,7 +33,20 @@ const BCommonCompanyCard = ({
   sph,
   onPress,
   needRightIcon,
+  customButton,
 }: BCommonCompanyCardProps) => {
+  const renderButton = () => {
+    if (customButton) {
+      return <View style={style.rightSide}>{customButton()}</View>;
+    } else {
+      return (
+        <TouchableOpacity style={style.rightSide} onPress={onPress}>
+          <Icon name="right" />
+        </TouchableOpacity>
+      );
+    }
+  };
+
   const renderItem: ListRenderItem<SPH> = useCallback(({ item }) => {
     return (
       <BChip type="default" backgroundColor={colors.chip.green}>
@@ -62,11 +76,7 @@ const BCommonCompanyCard = ({
           />
         )}
       </View>
-      {needRightIcon && (
-        <TouchableOpacity style={style.rightSide} onPress={onPress}>
-          <Icon name="right" />
-        </TouchableOpacity>
-      )}
+      {needRightIcon && renderButton()}
     </View>
   );
 };
@@ -81,7 +91,6 @@ const style = StyleSheet.create({
     borderWidth: resScale(1),
     padding: layout.pad.md,
     minHeight: resScale(57),
-    marginTop: layout.pad.lg,
   },
   leftSide: {
     justifyContent: 'space-between',
@@ -89,6 +98,9 @@ const style = StyleSheet.create({
   rightSide: {
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute',
+    alignSelf: 'center',
+    right: resScale(10),
   },
   top: {
     // height: resScale(20),

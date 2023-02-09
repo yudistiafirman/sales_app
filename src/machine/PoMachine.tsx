@@ -1,9 +1,10 @@
 import { bStorage } from '@/actions';
+import { CompanyData } from '@/components/organism/BCommonCompanyList';
 import { storageKey } from '@/constants';
 import { assign, createMachine } from 'xstate';
 
 const POMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgAsAdkruAHAE5D7u4AzACsAGwhhiFBzgA0IACeiACM3s6U0b5Z3u6GycFBQa4AvsXxkjj4RKTkVDT0TKwQHJy4EBAAkgC2uDCwZvbIVjZ6vPZOCGHpQb6uIa6GYaEhzr5B7vFJk8mulIXOyYthAUHJISGl5RiVMjXyYLwAjqiC6GBsAPIAKgnIYJxQYhfYgAMVesG0DG0YGQAyQICG1lsY3hE2c6MoxzOYVy3hWgSimxSzhxXmSU1cbnJhmclwR12k1TkVAez1e72+v3+gOBYPQEKhMP0yXM8MRIzsqJcGKx4Vx+NyISJCDxIT2aV86JCOx2lLpFUZslqlAAZuDIdDkJQ2s0PpwCLgpMIoAxkNg4ZYkaNxoh3EtKIZA4GfIVDt4gsrgrslqtnKdks53PlvPqGVUjfIzfyLTDre1Pq12gBZUhgbq9OAehHDZE+hArZVnBaUA4UhOpHIxVNSdN3KhZgWWvO27hgAA2YGh5ZgVfFtal9e8yT22vmvgihzWyqmnhJp1COTWOzC3ZuTONA5zVptBeEaEhbtnNe9C4plF8fvOqTCOIjiUQ0SGJQS5Br42ozDitJlPSPa3MyprmoKVoMGAjo4K62CcAARrg9DAgAgvmxBPl6kqgBMPieGB8aGBqhR4sqaRqq4P4HIUtGuNkp6Gn2CHZkhlAoWh2AYUIvD3rovBQPaqFOlJJESii5EpIYawBu4sz5IUKzrN4yprEBOIRHkrihOiSzcb28GXgJQlSKJDpyS6brcHwAgaGIEhpnBF6IUOdnoW6lCOTgzoYeoIjEFoyJmAp87KQgyQxOkmo0gsQSGK4S5hHp-4IKlwEgSE4YLDi3gntBBpWb5-H+bJgXYMF9XYGFLl8AAwngUlgO1OhgIC6CCJWJiDM+ZGOCpS4Bs4tGnDStHeAEkacS2LFhJqazaoEFVXLB56Zn5uYBSJQV3qg2iSdJxB-LwzolhAuBjnFL4Jd4b0BniM2GBlqyRGE+nfV4M3rR+gSFKElk+QdtW5tdDz3Y9nXEFYYAYYWEBIyjvAYc940TOcvjvhE5w5SsYauIx5zqrGhwrOVcylNBvDEOQ8Bit5+3oKNpFKRNCAALT-Xl-PpAcgYzfkYRZRl7iQ5zChKI0qjc4pdaUo2pleH4WSzDiwRyxmVAAKIODYKvxXz6t5XiLba+48w5b4h4G7xrIvG8nw-H85svXz+TRjlYb24GMwNnlOx5JQyTJOuaxFMVcYlJVHOG3xg4wj7eMAdHRPnOEn3k8qria3NeRBOV3icRSLvWYd175h8me8-jYFeOtKwbm9zjFZGzjeGSUxTG4a0HDXNXp8hzUYU3dYfoTyaZbkrg7EuvjbmEy7uCxwRuOsZxdsne2pzZdXCaJZ0Xc6M8LociZRz4i+ZSvcTW0UhW0zM23FUnu1nsfdeCSnkFEKLUpLTzFGNZuxIpozQ2osUy65K6MRzuXWmq8chUjHvIOGvBepdAoLga+CU4zpBYqpaIUtUEzVylsck8wWzkjcFLVIvhaZYP7AAnBCMxyYwIOAz0qtXzhEoMXSuG9AgrBYi-WheRlwUnYt9aOMwk6lCAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgAsAdkruAHAE5D7u4AzACsAGwhhiFBzgA0IACeiACM3s6U0b5Z3u6GycFBQa4AvsXxkjj4RKTkVDT0TKwQHJy4EBAAkgC2uDCwZvbIVjZ6vPZOCGHpQb6uIa6GYaEhzr5B7vFJk8mulIXOyYthAUHJISGl5RiVMjXyYLwAjqiC6GBsAPIAKgnIYJxQYhfYgAMVesG0DG0YGQAyQICG1lsY3hE2c6MoxzOYVy3hWgSimxSzhxXmSU1cbnJhmclwR12k1TkVAez1e72+v3+gOBYPQEKhMP0yXM8MRIzsqJcGKx4Vx+NyISJCDxIT2aV86JCOx2lLpFUZslqlAAZuDIdDkJQ2s0PpwCLgpMIoAxkNg4ZYkaNxoh3EtKIZA4GfIVDt4gsrgrslqtnKdks53PlvPqGVUjfIzfyLTDre1Pq12gBZUhgbq9OAehHDZE+hArZVnBaUA4UhOpHIxVNSdN3KhZgWWvO27hgAA2YGh5ZgVfFtalkzCyQDSZWQQiyUOS+VIV8nlxzkyeXJJO7NyZxoHOatNoLwjQkLds5r3oXFMoe4i2u8YRxEcSiDRIYlDeIcga+NqMw4rSZT0j2tzMqa5qClaDBgI6OCutgnAAEa4PQwIAIL5sQz5epKoATD4ngQfGhgaoUeLKmkaquL+ByFPRrjZGehp9kh2YoZQaEYdgWFCLwD66LwUD2uhToyWREoopRKSGGsK6zPkhRrj4yprMBOIRHkrihOiSy8b2iFXkJIlSOJ96oNo0mycQfy8M6JYQLgY5KfOqkIBBvggTMzg5Lu7izGE3j6Ri5K+N4P7OFEe45JZCGXshQ52ZhbqUA6Ckum63B8AIGhiBIaYZZmWW5jlYl5QVODOlh6giMQWjImYfmvgFyQxOkmo0gsQSGK4oHRbFwGJYcIThgsOI-ulF41YJ2Xybl2D5Rt2AtcVfAAMJ4DJYAHToYCAuggiViYgwvhRjhqaBAbJeGhyvd4ASRtxLZsWEmprNqgRhMtGb9rVqE7eJbkPF5PlHcQVhgFhnCYGOSNw75t1ivdKmPYFAQBku0SbuSIS5GEkZFJiMS+IcbGuAmfqg-xNnraJ0PuZjCNIyjNo8wQvBYT1D0TOcwW+F+4R4gcXHMec6qxrNYVhHMpSwbwxDkPAYpVSt6B3eReMTAAtJTAEICb6Sy3kEFjWNKzeGxLOIfUyhNBwhvKXWlKNqZXh+FkUWBEELvGgAog4Nhe-5+O+xbeItoH7jzNFCWRWH9xPC8byfD8fwx71+P5NG0VhingYzA2Fs7HklCbpLaxFHNcYlLBBpWZla0woXouAZuH5S9FKxhq4yquP7o1B+EMb2yD7d62DAmDrmt4fL3xuARBXj-SsG6JYeMUW+4YVklMUxuH9ByZ+D3eQxzbob3WeLBYsZzxmTFPKqrnj9WFktLkKKrNuVx4L62XteYSUM8qOWcs6J+C53q-x8GNXIjNxpxATtTGaUQZjAzmiAuC54l5szqtAraTVdoySwggvqYVlzJQBosUyksnbMQHkEUCURQLpypDfCBtlyGUBhrwbm2BEYEBoTjI2dYkH1xQR4MaOw0iNlJvXVYUwaQzHXMEfhIizpdAoLgWh+M4zpDYupaIqtOEJnoo2CIuxWxuFVqkOmUR1bFCAA */
   createMachine(
     {
       id: 'purchase order',
@@ -20,13 +21,20 @@ const POMachine =
           | { type: 'searchingSph' }
           | { type: 'backToAddPo' }
           | { type: 'searching'; value: string }
-          | { type: 'onChangeCategories'; value: number },
+          | { type: 'onChangeCategories'; value: number }
+          | { type: 'openingModal'; value: CompanyData }
+          | { type: 'addChoosenSph'; value: CompanyData }
+          | { type: 'closeModal' },
       },
       context: {
         poImages: [{ photo: null }],
+        isProvidedByCustomers: true,
         sphNumber: '',
         searchQuery: '',
         sphCategories: '',
+        choosenSphDataFromList: {} as CompanyData,
+        choosenSphDataFromModal: {} as CompanyData,
+        isModalChooseSphVisible: false,
         routes: [
           {
             key: 'first',
@@ -44,32 +52,54 @@ const POMachine =
               {
                 no: 'SPH/BRIK/2022/11/0021',
                 totalPrice: 5000000,
-                products: [
+                productsData: [
                   {
-                    display_name: 'BETON K 250 FA',
-                    unit: 28,
-                    price_per_unit: 1700000,
+                    name: 'BETON K 250 FA',
+                    volume: 28,
+                    pricePerVol: 1700000,
+                    totalPrice: 58000000,
                   },
                   {
-                    display_name: 'BETON K 100 NFA',
-                    unit: 29,
-                    price_per_unit: 1600000,
+                    name: 'BETON K 100 NFA',
+                    volume: 29,
+                    pricePerVol: 1600000,
+                    totalPrice: 58000000,
                   },
                 ],
               },
               {
                 no: 'SPH/BRIK/2021/19/0022',
                 totalPrice: 5100000,
-                products: [
+                productsData: [
                   {
-                    display_name: 'BETON K 250 FA',
-                    unit: 28,
-                    price_per_unit: 1700000,
+                    name: 'BETON K 250 FA',
+                    volume: 28,
+                    pricePerVol: 1700000,
+                    totalPrice: 58000000,
                   },
                   {
-                    display_name: 'BETON K 100 NFA',
-                    unit: 29,
-                    price_per_unit: 1600000,
+                    name: 'BETON K 100 NFA',
+                    volume: 29,
+                    pricePerVol: 1600000,
+                    totalPrice: 58000000,
+                  },
+                  {
+                    name: 'BETON K BO FA',
+                    volume: 28,
+                    pricePerVol: 1700000,
+                    totalPrice: 58000000,
+                  },
+                ],
+              },
+              {
+                no: 'SPH/BRIK/2022/11/0021',
+                totalPrice: 5000000,
+                productsData: [
+                  {
+                    name: 'BETON K 250 FA',
+                    volume: 28,
+                    pricePerVol: 1700000,
+                    totalPrice: 58000000,
                   },
                 ],
               },
@@ -83,11 +113,31 @@ const POMachine =
               {
                 no: 'SPH/BRIK/2022/11/0021',
                 totalPrice: 5000000,
-                products: [
+                productsData: [
                   {
-                    display_name: 'BETON K 250 FA',
-                    unit: 28,
-                    price_per_unit: 1700000,
+                    name: 'BETON K 250 FA',
+                    volume: 28,
+                    pricePerVol: 1700000,
+                    totalPrice: 58000000,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'PDI Perjuangan',
+            location: 'Cab Bandung Barat',
+            paymentType: 'CREDIT',
+            sph: [
+              {
+                no: 'SPH/BRIK/2022/11/0021',
+                totalPrice: 5000000,
+                productsData: [
+                  {
+                    name: 'BETON K 250 FA',
+                    volume: 28,
+                    pricePerVol: 1700000,
+                    totalPrice: 58000000,
                   },
                 ],
               },
@@ -121,8 +171,12 @@ const POMachine =
               {
                 target: 'openCamera',
                 cond: 'isPOProvidedByCustomers',
+                actions: 'assignPoType',
               },
-              'firstStep.SearchSph',
+              {
+                target: 'firstStep.addPO',
+                actions: 'assignPoType',
+              },
             ],
           },
         },
@@ -157,7 +211,10 @@ const POMachine =
                       actions: 'assignSearchQuery',
                     },
 
-                    openingModal: "#purchase order.firstStep.openModalChooseSph"
+                    openingModal: {
+                      target: 'openModalChooseSph',
+                      actions: 'triggerModal',
+                    },
                   },
                 },
 
@@ -174,6 +231,20 @@ const POMachine =
                     },
                   },
                 },
+
+                openModalChooseSph: {
+                  on: {
+                    closeModal: {
+                      target: 'inputting',
+                      actions: 'closingModal',
+                    },
+
+                    addChoosenSph: {
+                      target: '#purchase order.firstStep.addPO',
+                      actions: 'closeModalSph',
+                    },
+                  },
+                },
               },
 
               initial: 'inputting',
@@ -182,12 +253,6 @@ const POMachine =
                 backToAddPo: 'addPO',
               },
             },
-
-            openModalChooseSph: {
-              on: {
-                addChoosenSph: "addPO"
-              }
-            }
           },
 
           initial: 'addPO',
@@ -217,7 +282,6 @@ const POMachine =
           return event.data === undefined;
         },
         isPOProvidedByCustomers: (context, event) => {
-          console.log('ini event', event.value);
           return event.value === 'yes';
         },
       },
@@ -248,6 +312,29 @@ const POMachine =
         assignIndexChanged: assign((context, event) => {
           return {
             sphCategories: context.routes[event.value].title,
+          };
+        }),
+        triggerModal: assign((context, event) => {
+          return {
+            isModalChooseSphVisible: true,
+            choosenSphDataFromList: event.value,
+          };
+        }),
+        closeModalSph: assign((context, event) => {
+          return {
+            isModalChooseSphVisible: false,
+            choosenSphDataFromModal: event.value,
+          };
+        }),
+        closingModal: assign((context, event) => {
+          return {
+            isModalChooseSphVisible: false,
+          };
+        }),
+        assignPoType: assign((context, event) => {
+          const isProvidedByCustomers = event.value === 'yes';
+          return {
+            isProvidedByCustomers: isProvidedByCustomers,
           };
         }),
       },

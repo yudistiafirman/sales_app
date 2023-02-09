@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 import React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
@@ -14,6 +20,7 @@ type BProductCardType = {
   onPressDelete?: () => void;
   onPressEdit?: () => void;
   backgroundColor?: 'white' | 'default';
+  containerStyle?: ViewStyle;
 };
 
 export default function BProductCard({
@@ -24,6 +31,7 @@ export default function BProductCard({
   onPressDelete,
   onPressEdit,
   backgroundColor = 'default',
+  containerStyle,
 }: BProductCardType) {
   return (
     <View
@@ -31,6 +39,7 @@ export default function BProductCard({
         backgroundColor === 'default'
           ? style.containerDefault
           : style.containerWhite,
+        { ...containerStyle },
       ]}
     >
       <View style={style.nameIcons}>

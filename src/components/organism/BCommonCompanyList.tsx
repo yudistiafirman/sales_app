@@ -1,24 +1,27 @@
 import React, { useCallback } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
+import BSpacer from '../atoms/BSpacer';
 import BCommonCompanyCard from '../molecules/BCommonCompanyCard';
 
 type ProductsData = {
-  display_name: string;
-  unit: number;
-  price_per_unit: number;
+  name: string;
+  volume: number;
+  pricePerVol: number;
+  totalPrice: number;
 };
 
 export type SPH = {
   no: string;
   totalPrice: number;
-  products: ProductsData[];
+  checked?: boolean;
+  productsData: ProductsData[];
 };
 
-type CompanyData = {
-  name: string;
-  location: string;
-  paymentType: 'CBD' | 'CREDIT';
-  sph: SPH[];
+export type CompanyData = {
+  name?: string;
+  location?: string;
+  paymentType?: 'CBD' | 'CREDIT';
+  sph?: SPH[];
 };
 
 interface BCompanyCardProps {
@@ -41,7 +44,7 @@ const BCommonCompanyList = ({
           name={item.name}
           location={item.location}
           searchQuery={searchQuery}
-          onPress={onPress}
+          onPress={() => onPress(item)}
           sph={item.sph}
           needRightIcon={needRightIcon}
         />
@@ -49,11 +52,17 @@ const BCommonCompanyList = ({
     },
     [needRightIcon, onPress, searchQuery]
   );
+
+  const renderItemSeparator = () => {
+    return <BSpacer size="extraSmall" />;
+  };
   return (
     <FlatList
       data={companyData}
       keyExtractor={(item, index) => index.toString()}
       renderItem={renderItem}
+      showsHorizontalScrollIndicator={false}
+      ItemSeparatorComponent={renderItemSeparator}
     />
   );
 };

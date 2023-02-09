@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   container: {
     width: resScale(102),
     height: resScale(120),
-    marginRight: layout.pad.lg,
+    margin: layout.pad.sm,
   },
   imageContainer: {
     // backgroundColor: colors.tertiary,
@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
   },
   closeIcon: {
     position: 'absolute',
-    right: resScale(-5),
-    top: resScale(-5),
+    right: resScale(-3),
+    top: resScale(-3),
     width: layout.pad.md + layout.pad.sm,
     height: layout.pad.md + layout.pad.sm,
     backgroundColor: colors.icon.closeImg,
