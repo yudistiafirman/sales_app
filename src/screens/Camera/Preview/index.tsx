@@ -19,6 +19,12 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
 import { CREATE_VISITATION, SUBMIT_FORM } from '@/navigation/ScreenNames';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { resScale } from '@/utils';
+
+function ContinueIcon() {
+  return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
+}
 
 const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const dispatch = useDispatch();
@@ -93,7 +99,11 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           />
         </View>
         <View style={styles.buttonTwo}>
-          <BButtonPrimary title="Lanjut" onPress={savePhoto} />
+          <BButtonPrimary
+            title="Lanjut"
+            onPress={savePhoto}
+            rightIcon={ContinueIcon}
+          />
         </View>
       </View>
     </View>

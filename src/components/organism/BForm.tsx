@@ -21,6 +21,19 @@ interface IProps {
   inputs: Input[];
   spacer?: 'extraSmall' | 'small' | 'medium' | 'large' | 'extraLarge' | number;
   noSpaceEnd?: boolean;
+  titleBold?:
+    | 'bold'
+    | '400'
+    | 'normal'
+    | '100'
+    | '200'
+    | '300'
+    | '500'
+    | '600'
+    | '700'
+    | '800'
+    | '900'
+    | undefined;
 }
 
 interface Styles {
@@ -54,7 +67,22 @@ const styles: Styles = {
   },
 };
 
-const renderInput = (input: Input): React.ReactNode => {
+const renderInput = (
+  input: Input,
+  titleBold?:
+    | 'bold'
+    | '400'
+    | 'normal'
+    | '100'
+    | '200'
+    | '300'
+    | '500'
+    | '600'
+    | '700'
+    | '800'
+    | '900'
+    | undefined
+): React.ReactNode => {
   const {
     type,
     label,
@@ -78,7 +106,7 @@ const renderInput = (input: Input): React.ReactNode => {
   if (type === 'quantity') {
     return (
       <React.Fragment>
-        <BLabel label={label} isRequired={isRequire} />
+        <BLabel bold={titleBold} label={label} isRequired={isRequire} />
         <View style={styles.quantityLayout}>
           <BTextInput
             style={styles.quantityInput}
@@ -106,7 +134,7 @@ const renderInput = (input: Input): React.ReactNode => {
 
     return (
       <React.Fragment>
-        <BLabel label={label} isRequired={isRequire} />
+        <BLabel bold={titleBold} label={label} isRequired={isRequire} />
         <BTextInput
           {...textInputProps}
           keyboardType={keyboardType ? keyboardType : 'default'}
@@ -127,7 +155,7 @@ const renderInput = (input: Input): React.ReactNode => {
     const defaultErrorMsg = `${label} harus diisi`;
     return (
       <React.Fragment>
-        <BLabel label={label} isRequired={isRequire} />
+        <BLabel bold={titleBold} label={label} isRequired={isRequire} />
         <BTextInput
           onChangeText={onChange}
           value={value}
@@ -147,7 +175,7 @@ const renderInput = (input: Input): React.ReactNode => {
   if (type === 'cardOption') {
     return (
       <React.Fragment>
-        <BLabel label={label} isRequired={isRequire} />
+        <BLabel bold={titleBold} label={label} isRequired={isRequire} />
         <BSpacer size="extraSmall" />
         <View
           pointerEvents={isInputDisable ? 'none' : 'auto'}
@@ -179,7 +207,7 @@ const renderInput = (input: Input): React.ReactNode => {
   if (type === 'autocomplete') {
     return (
       <React.Fragment>
-        <BLabel label={label} isRequired={isRequire} />
+        <BLabel bold={titleBold} label={label} isRequired={isRequire} />
         <BSpacer size="extraSmall" />
 
         {!isInputDisable ? (
@@ -199,7 +227,7 @@ const renderInput = (input: Input): React.ReactNode => {
     if (dropdown) {
       return (
         <React.Fragment>
-          <BLabel label={label} isRequired={isRequire} />
+          <BLabel bold={titleBold} label={label} isRequired={isRequire} />
           <BSpacer size="extraSmall" />
           <BDropdown
             open={false}
@@ -219,7 +247,7 @@ const renderInput = (input: Input): React.ReactNode => {
     if (comboDropdown) {
       return (
         <React.Fragment>
-          <BLabel label={label} isRequired={isRequire} />
+          <BLabel bold={titleBold} label={label} isRequired={isRequire} />
           <BSpacer size="extraSmall" />
           <BComboDropdown {...comboDropdown} />
         </React.Fragment>
@@ -275,7 +303,7 @@ const renderInput = (input: Input): React.ReactNode => {
       <React.Fragment>
         <View style={styles.flexRow}>
           <View style={styles.checkboxText}>
-            <BLabel label={label} isRequired={isRequire} />
+            <BLabel bold={titleBold} label={label} isRequired={isRequire} />
           </View>
           <CheckBox
             disabled={checkbox?.disabled}
@@ -292,12 +320,12 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 };
 
-const BForm = ({ inputs, spacer, noSpaceEnd }: IProps) => {
+const BForm = ({ inputs, spacer, noSpaceEnd, titleBold }: IProps) => {
   return (
     <View>
       {inputs.map((input, index) => (
         <React.Fragment key={index}>
-          {renderInput(input)}
+          {renderInput(input, titleBold)}
           {(index < inputs.length - 1 || !noSpaceEnd) && (
             <BSpacer size={spacer ? spacer : 'small'} />
           )}

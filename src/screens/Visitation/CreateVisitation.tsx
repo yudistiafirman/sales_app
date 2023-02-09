@@ -239,11 +239,6 @@ const CreateVisitation = () => {
       />
 
       <BContainer>
-        {/* {shouldScrollView ? (
-        <ScrollView>{stepRender[values.step]}</ScrollView>
-      ) : (
-        <View style={{ flex: 1 }}>{stepRender[values.step]}</View>
-      )} */}
         <View style={styles.container}>
           {stepRender[values.step]}
           <BSpacer size={'extraSmall'} />

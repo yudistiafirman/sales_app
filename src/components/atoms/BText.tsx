@@ -75,7 +75,24 @@ const BText = ({
     _style = {
       ..._style,
       fontWeight: bold,
+      fontFamily:
+        bold !== 'normal' && bold !== 'bold'
+          ? fonts.family.montserrat[parseInt(bold)]
+          : undefined,
     };
+
+    if (
+      bold !== 'normal' &&
+      bold !== 'bold' &&
+      bold !== '100' &&
+      bold !== '200' &&
+      bold !== '900'
+    ) {
+      _style = {
+        ..._style,
+        fontFamily: fonts.family.montserrat[parseInt(bold)],
+      };
+    }
   }
 
   if (size) {

@@ -172,16 +172,27 @@ const FirstStep = () => {
         />
       </View>
       <View style={{ flex: 1 }}>
-        <BBottomSheet percentSnapPoints={['100%']}>
+        <BBottomSheet
+          handleIndicatorStyle={{ display: 'none' }}
+          backgroundStyle={{ borderRadius: layout.radius.lg }}
+          percentSnapPoints={['100%']}
+        >
           <ScrollView>
-            <BContainer>
-              <BLabel label={'Alamat Proyek'} isRequired />
-              <BSpacer size="extraSmall" />
+            <BContainer
+              paddingHorizontal={layout.pad.lg}
+              paddingVertical={layout.pad.zero}
+            >
+              <BLabel bold="500" label={'Alamat Proyek'} isRequired />
+              <BSpacer size="verySmall" />
               <TouchableOpacity
                 style={{
-                  padding: layout.pad.lg,
+                  flexDirection: 'row',
+                  paddingVertical: layout.pad.md,
                   backgroundColor: colors.border.disabled,
                   borderRadius: layout.radius.sm,
+                  paddingHorizontal: layout.pad.ml,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
                 onPress={() =>
                   navigation.navigate(SEARCH_AREA, {
@@ -189,34 +200,32 @@ const FirstStep = () => {
                   })
                 }
               >
-                <View style={{ flexDirection: 'row' }}>
+                <View>
                   <Icons
                     name="map-pin"
                     size={resScale(20)}
                     color={colors.primary}
                   />
-                  <BSpacer size="large" />
-                  <View>
-                    {isMapLoading ? (
-                      <View>
-                        <ShimmerPlaceholder style={styles.titleShimmer} />
-                        <ShimmerPlaceholder
-                          style={styles.secondaryTextShimmer}
-                        />
-                      </View>
-                    ) : (
-                      <>
-                        <BLabel label={nameAddress!} />
-                        <BText>
-                          {region.formattedAddress || 'Detail Alamat'}
-                        </BText>
-                      </>
-                    )}
-                  </View>
+                </View>
+                <View style={{ paddingStart: layout.pad.ml, flex: 1 }}>
+                  {isMapLoading ? (
+                    <View>
+                      <ShimmerPlaceholder style={styles.titleShimmer} />
+                      <ShimmerPlaceholder style={styles.secondaryTextShimmer} />
+                    </View>
+                  ) : (
+                    <>
+                      <BLabel bold="500" label={nameAddress!} />
+                      <BSpacer size="verySmall" />
+                      <BText bold="300">
+                        {region.formattedAddress || 'Detail Alamat'}
+                      </BText>
+                    </>
+                  )}
                 </View>
               </TouchableOpacity>
-              <BSpacer size="extraSmall" />
-              <BForm inputs={inputs} />
+              <BSpacer size="medium" />
+              <BForm titleBold="500" inputs={inputs} />
             </BContainer>
           </ScrollView>
         </BBottomSheet>

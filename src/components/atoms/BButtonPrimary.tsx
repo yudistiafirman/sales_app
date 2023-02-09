@@ -77,6 +77,7 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
     borderColor: colors.primary,
     borderWidth: resScale(1),
+    alignItems: 'center',
   },
   disableStyle: {
     backgroundColor: colors.disabled,
