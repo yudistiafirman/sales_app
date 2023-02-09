@@ -18,18 +18,23 @@ interface IProps {
     | '800'
     | '900'
     | undefined;
+  sizeInNumber?: number;
 }
 
 const container: ViewStyle = {
   flexDirection: 'row',
 };
 
-const BLabel = ({ label, isRequired, bold }: IProps) => {
+const BLabel = ({ label, isRequired, bold, sizeInNumber }: IProps) => {
   return (
     <View style={container}>
-      <BText bold={bold ? bold : '700'}>{label}</BText>
+      <BText sizeInNumber={sizeInNumber} bold={bold ? bold : '700'}>{label}</BText>
       {isRequired && (
-        <BText color="primary" bold={bold ? bold : 'bold'}>
+        <BText
+          sizeInNumber={sizeInNumber}
+          color="primary"
+          bold={bold ? bold : 'bold'}
+        >
           {' '}
           *
         </BText>

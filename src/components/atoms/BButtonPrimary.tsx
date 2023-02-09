@@ -21,6 +21,7 @@ type BButtonPrimaryType = {
   isOutline?: boolean;
   rightIcon?: (() => JSX.Element) | null;
   leftIcon?: (() => JSX.Element) | null;
+  emptyIconEnable?: boolean;
   isLoading?: boolean;
   disable?: boolean;
 };
@@ -33,6 +34,7 @@ export default function BButtonPrimary({
   isOutline = false,
   rightIcon,
   leftIcon,
+  emptyIconEnable = false,
   isLoading,
 }: BButtonPrimaryType) {
   return (
@@ -41,13 +43,14 @@ export default function BButtonPrimary({
         style={[
           style.buttonContainer,
           buttonStyle,
-          isOutline ? style.outlineButton : null,
-          disable ? style.disableStyle : null,
+          isOutline && style.outlineButton,
+          disable && style.disableStyle,
         ]}
         onPress={onPress}
         disabled={disable}
       >
-        <View>{leftIcon ? leftIcon() : null}</View>
+        <View>{leftIcon && leftIcon()}</View>
+        <>{emptyIconEnable && <View style={{ height: resScale(24) }} />}</>
         {isLoading ? (
           <ActivityIndicator size={resScale(24)} color={'white'} />
         ) : (
@@ -62,7 +65,8 @@ export default function BButtonPrimary({
           </Text>
         )}
 
-        <View>{rightIcon ? rightIcon() : null}</View>
+        <View>{rightIcon && rightIcon()}</View>
+        <>{emptyIconEnable && <View style={{ height: resScale(24) }} />}</>
       </TouchableOpacity>
     </View>
   );

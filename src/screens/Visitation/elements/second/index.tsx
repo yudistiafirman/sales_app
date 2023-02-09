@@ -137,6 +137,8 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         },
         placeholder: 'Masukkan Nama Proyek',
         isInputDisable: !!existingVisitation,
+        // showChevronAutoCompleted: false,
+        showClearAutoCompleted: false,
       };
 
       const aditionalInput: Input[] = [
@@ -193,26 +195,26 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         searchingDisable={!!existingVisitation}
         isSearch={isSearch}
         onSearch={onSearch}
+        resultSpace={2}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
         {!isSearch && (
-          // <ScrollView>
-          <React.Fragment>
-            <BSpacer size="small" />
+          <>
+            <BSpacer size={6} />
             <View style={styles.dividerContainer}>
               <BDivider />
-              <BSpacer size="extraSmall" />
-              <BText color="divider">Atau Buat Baru Dibawah</BText>
-              <BSpacer size="extraSmall" />
+              <BSpacer size="verySmall" />
+              <BText bold="500" color="divider">
+                Atau Buat Baru Dibawah
+              </BText>
+              <BSpacer size="verySmall" />
               <BDivider />
             </View>
-            <BSpacer size="small" />
+            <BSpacer size={8} />
             <View>
-              <BForm inputs={inputs} />
-              <BSpacer size="large" />
+              <BForm titleBold="500" inputs={inputs} />
             </View>
-          </React.Fragment>
-          // </ScrollView>
+          </>
         )}
       </ScrollView>
     </>

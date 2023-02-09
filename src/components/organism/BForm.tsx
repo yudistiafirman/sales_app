@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleProp, ViewStyle } from 'react-native';
+import { View, StyleProp, ViewStyle, TextStyle } from 'react-native';
 import { Input } from '@/interfaces';
 import BSpacer from '../atoms/BSpacer';
 import BTextInput from '../atoms/BTextInput';
@@ -11,7 +11,7 @@ import BText from '../atoms/BText';
 import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
-import { colors, layout } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import CheckBox from '@react-native-community/checkbox';
 import BFileInput from '../atoms/BFileInput';
 import BSwitch from '../atoms/BSwitch';
@@ -44,6 +44,7 @@ const styles: Styles = {
   optionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   quantityLayout: {
     flexDirection: 'row',
@@ -65,6 +66,12 @@ const styles: Styles = {
   flexRow: {
     flexDirection: 'row',
   },
+};
+
+const textStyles: TextStyle = {
+  color: colors.textInput.input,
+  fontFamily: fonts.family.montserrat[400],
+  fontSize: fonts.size.md,
 };
 
 const renderInput = (
@@ -106,7 +113,12 @@ const renderInput = (
   if (type === 'quantity') {
     return (
       <React.Fragment>
-        <BLabel bold={titleBold} label={label} isRequired={isRequire} />
+        <BLabel
+          sizeInNumber={input.textSize}
+          bold={titleBold}
+          label={label}
+          isRequired={isRequire}
+        />
         <View style={styles.quantityLayout}>
           <BTextInput
             style={styles.quantityInput}
@@ -114,6 +126,7 @@ const renderInput = (
             value={value}
             keyboardType={'numeric'}
             placeholder={placeholder}
+            contentStyle={textStyles}
           />
           <View style={styles.quantityText}>
             <BText>{'m3'}</BText>
@@ -134,13 +147,19 @@ const renderInput = (
 
     return (
       <React.Fragment>
-        <BLabel bold={titleBold} label={label} isRequired={isRequire} />
+        <BLabel
+          sizeInNumber={input.textSize}
+          bold={titleBold}
+          label={label}
+          isRequired={isRequire}
+        />
         <BTextInput
           {...textInputProps}
           keyboardType={keyboardType ? keyboardType : 'default'}
           placeholder={placeholder}
           disabled={isInputDisable}
           left={LeftIcon && <TextInput.Icon icon={LeftIcon} />}
+          contentStyle={textStyles}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
@@ -155,13 +174,19 @@ const renderInput = (
     const defaultErrorMsg = `${label} harus diisi`;
     return (
       <React.Fragment>
-        <BLabel bold={titleBold} label={label} isRequired={isRequire} />
+        <BLabel
+          sizeInNumber={input.textSize}
+          bold={titleBold}
+          label={label}
+          isRequired={isRequire}
+        />
         <BTextInput
           onChangeText={onChange}
           value={value}
           multiline={true}
           numberOfLines={4}
           placeholder={placeholder}
+          contentStyle={textStyles}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
@@ -175,8 +200,13 @@ const renderInput = (
   if (type === 'cardOption') {
     return (
       <React.Fragment>
-        <BLabel bold={titleBold} label={label} isRequired={isRequire} />
-        <BSpacer size="extraSmall" />
+        <BLabel
+          sizeInNumber={input.textSize}
+          bold={titleBold}
+          label={label}
+          isRequired={isRequire}
+        />
+        <BSpacer size="verySmall" />
         <View
           pointerEvents={isInputDisable ? 'none' : 'auto'}
           style={styles.optionContainer}
@@ -190,11 +220,10 @@ const renderInput = (
                 isActive={value === val.value}
                 onPress={val.onChange}
               />
-              <BSpacer size="small" />
+              {index !== options.length - 1 && <BSpacer size={6} />}
             </React.Fragment>
           ))}
         </View>
-        <BSpacer size="extraSmall" />
         {isError && (
           <BText size="small" color="primary" bold="100">
             {`${label} harus diisi`}
@@ -207,16 +236,26 @@ const renderInput = (
   if (type === 'autocomplete') {
     return (
       <React.Fragment>
-        <BLabel bold={titleBold} label={label} isRequired={isRequire} />
-        <BSpacer size="extraSmall" />
+        <BLabel
+          sizeInNumber={input.textSize}
+          bold={titleBold}
+          label={label}
+          isRequired={isRequire}
+        />
+        <BSpacer size="verySmall" />
 
         {!isInputDisable ? (
-          <BAutoComplete {...input} />
+          <BAutoComplete
+            {...input}
+            showClear={input.showClearAutoCompleted}
+            showChevron={input.showChevronAutoCompleted}
+          />
         ) : (
           <BTextInput
             value={value?.title}
             placeholder={placeholder}
             disabled={isInputDisable}
+            contentStyle={textStyles}
           />
         )}
       </React.Fragment>
@@ -227,8 +266,13 @@ const renderInput = (
     if (dropdown) {
       return (
         <React.Fragment>
-          <BLabel bold={titleBold} label={label} isRequired={isRequire} />
-          <BSpacer size="extraSmall" />
+          <BLabel
+            sizeInNumber={input.textSize}
+            bold={titleBold}
+            label={label}
+            isRequired={isRequire}
+          />
+          <BSpacer size="verySmall" />
           <BDropdown
             open={false}
             value={null}
@@ -247,8 +291,13 @@ const renderInput = (
     if (comboDropdown) {
       return (
         <React.Fragment>
-          <BLabel bold={titleBold} label={label} isRequired={isRequire} />
-          <BSpacer size="extraSmall" />
+          <BLabel
+            sizeInNumber={input.textSize}
+            bold={titleBold}
+            label={label}
+            isRequired={isRequire}
+          />
+          <BSpacer size="verySmall" />
           <BComboDropdown {...comboDropdown} />
         </React.Fragment>
       );
@@ -258,18 +307,25 @@ const renderInput = (
   if (type === 'PIC') {
     return (
       <React.Fragment>
-        <BSpacer size="small" />
+        <BSpacer size="verySmall" />
         {!hidePicLabel ? (
           <>
             <View style={styles.optionContainer}>
-              <BText type="header">PIC</BText>
-              <BText bold="500" color="primary" onPress={onChange}>
+              <BText sizeInNumber={fonts.size.md} bold="600">
+                PIC
+              </BText>
+              <BText
+                bold="500"
+                sizeInNumber={fonts.size.sm}
+                color="primary"
+                onPress={onChange}
+              >
                 + Tambah PIC
               </BText>
             </View>
-            <BSpacer size="extraSmall" />
+            <BSpacer size="verySmall" />
             <BDivider />
-            <BSpacer size="small" />
+            <BSpacer size="extraSmall" />
           </>
         ) : null}
         <BPicList isOption={true} data={value} onSelect={onSelect!} />
@@ -327,7 +383,7 @@ const BForm = ({ inputs, spacer, noSpaceEnd, titleBold }: IProps) => {
         <React.Fragment key={index}>
           {renderInput(input, titleBold)}
           {(index < inputs.length - 1 || !noSpaceEnd) && (
-            <BSpacer size={spacer ? spacer : 'small'} />
+            <BSpacer size={spacer ? spacer : 'middleSmall'} />
           )}
         </React.Fragment>
       ))}

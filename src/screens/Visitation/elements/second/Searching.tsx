@@ -22,9 +22,22 @@ interface IProps {
   onSearch: (search: boolean) => void;
   isSearch: boolean;
   searchingDisable?: boolean;
+  resultSpace?:
+    | 'verySmall'
+    | 'extraSmall'
+    | 'small'
+    | 'medium'
+    | 'large'
+    | 'extraLarge'
+    | number;
 }
 
-const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
+const SearchFlow = ({
+  onSearch,
+  isSearch,
+  searchingDisable,
+  resultSpace,
+}: IProps) => {
   const dispatch = useDispatch();
   const { action, values } = React.useContext(createVisitationContext);
   const { updateValueOnstep, updateValue } = action;
@@ -170,7 +183,7 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
         onChangeText={onChangeSearch}
         disabled={searchingDisable}
       />
-      <BSpacer size="extraSmall" />
+      <BSpacer size={resultSpace ? resultSpace : 'extraSmall'} />
       {searchQuery && (
         <View style={{ height: resScale(500) }}>
           <BTabViewScreen

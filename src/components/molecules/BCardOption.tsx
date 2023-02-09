@@ -11,6 +11,7 @@ import {
 import BText from '../atoms/BText';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
+import BSpacer from '../atoms/BSpacer';
 
 interface IProps {
   children?: React.ReactNode;
@@ -72,6 +73,7 @@ const BCardOption = (props: IProps) => {
   return (
     <TouchableOpacity style={makeStyle(props)} onPress={onPress}>
       <Image source={icon} style={makeStyleImage({ isActive })} />
+      <BSpacer size={'verySmall'} />
       <BText {...(isActive && { color: 'primary' })}>{title}</BText>
     </TouchableOpacity>
   );

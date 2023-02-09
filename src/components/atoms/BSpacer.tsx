@@ -6,6 +6,7 @@ interface IProps {
   size:
     | 'verySmall'
     | 'extraSmall'
+    | 'middleSmall'
     | 'small'
     | 'medium'
     | 'large'
@@ -14,7 +15,7 @@ interface IProps {
 }
 
 const styles: StyleProp<ViewStyle> = {
-  marginHorizontal: resScale(10),
+  // marginHorizontal: resScale(0),
 };
 
 const makeStyle = ({ size }: IProps): ViewStyle => {
@@ -29,6 +30,13 @@ const makeStyle = ({ size }: IProps): ViewStyle => {
     return {
       ...styles,
       margin: resScale(5),
+    };
+  }
+
+  if (size === 'middleSmall') {
+    return {
+      ...styles,
+      margin: resScale(7),
     };
   }
 

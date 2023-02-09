@@ -37,6 +37,9 @@ interface Input {
   LeftIcon?: () => JSX.Element;
   items?: any;
   keyboardType?: KeyboardTypeOptions;
+  showChevronAutoCompleted?: boolean;
+  showClearAutoCompleted?: boolean;
+  textSize?: number;
   options?: Array<{
     title: string;
     value: string | any;

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -38,7 +38,7 @@ const FirstStep = () => {
   const { values, action } = React.useContext(createVisitationContext);
   const { updateValueOnstep } = action;
   const { region } = useSelector((state: RootState) => state.location);
-  const [isMapLoading, setIsMapLoading] = useState(false);
+  const [isMapLoading, setIsMapLoading] = React.useState(false);
 
   const navigation = useNavigation();
   const dispatch = useDispatch<any>();
@@ -174,7 +174,10 @@ const FirstStep = () => {
       <View style={{ flex: 1 }}>
         <BBottomSheet
           handleIndicatorStyle={{ display: 'none' }}
-          backgroundStyle={{ borderRadius: layout.radius.lg }}
+          backgroundStyle={{
+            borderTopEndRadius: layout.radius.lg,
+            borderTopStartRadius: layout.radius.lg,
+          }}
           percentSnapPoints={['100%']}
         >
           <ScrollView>

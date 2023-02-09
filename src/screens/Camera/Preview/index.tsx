@@ -95,6 +95,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           <BButtonPrimary
             title="Ulangi"
             isOutline
+            emptyIconEnable
             onPress={() => navigation.goBack()}
           />
         </View>
@@ -134,11 +135,11 @@ const styles = StyleSheet.create({
     padding: layout.pad.lg,
   },
   buttonOne: {
-    width: '40%',
+    flex: 1,
     paddingEnd: layout.pad.md,
   },
   buttonTwo: {
-    width: '60%',
+    flex: 1.5,
     paddingStart: layout.pad.md,
   },
 });
