@@ -4,6 +4,7 @@ import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import resScale from '@/utils/resScale';
 import font from '@/constants/fonts';
 import colors from '@/constants/colors';
+
 import { fonts, layout } from '@/constants';
 
 export default function BQuickActionButton({ item }: { item: buttonDataType }) {
@@ -19,17 +20,18 @@ export default function BQuickActionButton({ item }: { item: buttonDataType }) {
 const style = StyleSheet.create({
   buttonContainer: {
     backgroundColor: colors.white,
-    width: resScale(90),
-    height: resScale(93),
+    width: resScale(82),
+    height: resScale(98),
     borderRadius: layout.radius.md,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: layout.pad.md,
   },
   buttonTitle: {
-    fontFamily: font.family.montserrat[600],
+    fontFamily: font.family.montserrat[400],
     color: colors.black,
-    fontSize: fonts.size.xs,
+    fontSize: fonts.size.sm,
     marginTop: layout.pad.md,
+    textAlign:'center'
   },
 });

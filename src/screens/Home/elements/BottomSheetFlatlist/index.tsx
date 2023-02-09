@@ -89,7 +89,6 @@ export default function BottomSheetFlatlist({
 
 const style = StyleSheet.create({
   flatListContainer: {
-    // backgroundColor: 'gray',
   },
   flatListLoading: {
     marginTop: layout.pad.md,

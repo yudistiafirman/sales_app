@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import resScale from '@/utils/resScale';
@@ -41,6 +41,10 @@ import {
   SPH,
 } from '@/navigation/ScreenNames';
 
+const { height } = Dimensions.get('window');
+
+const initialSnapPoints = (height.toFixed() - 115) / 10;
+
 const Beranda = () => {
   const dispatch = useDispatch();
   const [currentVisit, setCurrentVisit] = React.useState<{
@@ -50,7 +54,7 @@ const Beranda = () => {
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
   const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
-  const [snapPoints] = React.useState(['62.5%', '91%', '100%']); //setSnapPoints
+  const [snapPoints] = React.useState([`${initialSnapPoints}%`, '91%', '100%']); //setSnapPoints
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = React.useState('');
   const navigation = useNavigation();
