@@ -40,11 +40,11 @@ export default function TargetCard({
   });
 
   return (
-    <View style={{ position: `relative`, zIndex: 0 }}>
+    <View style={{ width: '100%', position: `relative`, zIndex: 0 }}>
       <Animated.View
         style={[
           {
-            width: resScale(320),
+            width: '100%',
             alignSelf: 'flex-start',
             zIndex: 1,
           },
