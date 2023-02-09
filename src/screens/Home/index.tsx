@@ -50,7 +50,7 @@ const Beranda = () => {
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
   const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
-  const [snapPoints] = React.useState(['62%', '91%', '100%']); //setSnapPoints
+  const [snapPoints] = React.useState(['62.5%', '91%', '100%']); //setSnapPoints
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = React.useState('');
   const navigation = useNavigation();
@@ -100,6 +100,8 @@ const Beranda = () => {
   const fetchTarget = async () => {
     try {
       const { data: _data } = await getVisitationTarget();
+      console.log(_data.data, 'fetchTarget103');
+
       setCurrentVisit({
         current: _data.data.totalCompleted,
         target: _data.data.visitationTarget,
@@ -389,6 +391,7 @@ const Beranda = () => {
         percentSnapPoints={snapPoints}
         ref={bottomSheetRef}
         enableContentPanningGesture={true}
+        handleIndicatorStyle={style.handleIndicator}
         style={style.BsheetStyle}
         footerComponent={(props: any) => {
           if (!isRenderDateDaily) {
@@ -430,7 +433,7 @@ const Beranda = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: colors.primary,
   },
@@ -471,6 +474,11 @@ const style = StyleSheet.create({
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
+  },
+  handleIndicator: {
+    height: resScale(3),
+    width: resScale(40),
+    backgroundColor: colors.disabled,
   },
 });
 export default Beranda;
