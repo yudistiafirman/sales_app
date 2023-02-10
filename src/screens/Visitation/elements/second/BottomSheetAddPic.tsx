@@ -45,6 +45,7 @@ const BSheetAddPic = React.forwardRef(
             onChange('name')(event.nativeEvent.text);
           },
           value: state.name,
+          placeholder: 'Masukkan nama',
         },
         {
           label: 'Jabatan',
@@ -55,6 +56,7 @@ const BSheetAddPic = React.forwardRef(
             onChange('position')(event.nativeEvent.text);
           },
           value: state.position,
+          placeholder: 'Masukkan jabatan',
         },
         {
           label: 'No. Telepon',
@@ -67,7 +69,8 @@ const BSheetAddPic = React.forwardRef(
           value: state.phone,
           keyboardType: 'numeric',
           customerErrorMsg: 'No. Telepon Harus diisi sesuai format',
-          LeftIcon: LeftIcon,
+          LeftIcon: state.phone ? LeftIcon : undefined,
+          placeholder: 'Masukkan nomor telpon',
         },
         {
           label: 'Email',
@@ -79,6 +82,7 @@ const BSheetAddPic = React.forwardRef(
           },
           value: state.email,
           customerErrorMsg: 'Email harus diisi sesuai format',
+          placeholder: 'Masukkan email',
         },
       ];
     }, [state.name, state.email, state.position, state.phone]);

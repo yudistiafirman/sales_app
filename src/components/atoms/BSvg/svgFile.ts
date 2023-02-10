@@ -36,6 +36,10 @@ import IcPo from '@/assets/svg/ic_po.svg';
 import IcDeposit from '@/assets/svg/ic_deposit.svg';
 import IcMakeSchedule from '@/assets/svg/ic_make_schedule.svg';
 import IcAppointment from '@/assets/svg/ic_appointment.svg';
+import IcCBD from '@/assets/svg/ic_cbd.svg';
+import IcCredit from '@/assets/svg/ic_credit.svg';
+import IcCompany from '@/assets/svg/ic_company.svg';
+import IcProfile from '@/assets/svg/ic_profile.svg';
 
 // IMG
 import ImgOtpMessege from '@/assets/svg/img_otp_messege.svg';
@@ -79,6 +83,10 @@ const SvgFiles = {
   IcDeposit,
   IcMakeSchedule,
   IcAppointment,
+  IcCBD,
+  IcCredit,
+  IcCompany,
+  IcProfile,
   ImgOtpMessege,
 };
 

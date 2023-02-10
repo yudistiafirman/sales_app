@@ -37,6 +37,10 @@ const SvgNames = {
   IC_DEPOSIT: 'IcDeposit',
   IC_MAKE_SCHEDULE: 'IcMakeSchedule',
   IC_APPOINTMENT: 'IcAppointment',
+  IC_CBD: 'IcCBD',
+  IC_CREDIT: 'IcCredit',
+  IC_COMPANY: 'IcCompany',
+  IC_PROFILE: 'IcProfile',
   IMG_OTP_MESSEGE: 'ImgOtpMessege',
 };
 

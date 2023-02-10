@@ -6,7 +6,14 @@ import {
   TouchableOpacity,
   DeviceEventEmitter,
 } from 'react-native';
-import { BForm, BLabel, BSpacer, BText, BTextInput } from '@/components';
+import {
+  BForm,
+  BLabel,
+  BSpacer,
+  BText,
+  BTextInput,
+  SVGName,
+} from '@/components';
 import { CreateVisitationThirdStep, Input } from '@/interfaces';
 import { MONTH_LIST, STAGE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
 import ProductChip from './ProductChip';
@@ -17,9 +24,6 @@ import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
 import { fonts } from '@/constants';
-
-const cbd = require('@/assets/icon/Visitation/cbd.png');
-const credit = require('@/assets/icon/Visitation/credit.png');
 
 const ThirdStep = () => {
   const navigation = useNavigation();
@@ -89,7 +93,7 @@ const ThirdStep = () => {
       options: [
         {
           title: 'Cash Before Delivery',
-          icon: cbd,
+          icon: SVGName.IC_CBD,
           value: 'CBD',
           onChange: () => {
             onChange('paymentType')('CBD');
@@ -97,7 +101,7 @@ const ThirdStep = () => {
         },
         {
           title: 'Credit',
-          icon: credit,
+          icon: SVGName.IC_CREDIT,
           value: 'CREDIT',
           onChange: () => {
             onChange('paymentType')('CREDIT');
@@ -126,7 +130,7 @@ const ThirdStep = () => {
         }
         return acc;
       }, {} as { [id: number]: any });
-      // console.log(Object.values(uniqueArray), 'uniqueArray');
+      console.log(Object.values(uniqueArray), 'uniqueArray');
       updateValueOnstep('stepThree', 'products', Object.values(uniqueArray));
     },
     [state.products]
@@ -135,8 +139,7 @@ const ThirdStep = () => {
   const deleteProduct = (index: number) => {
     const products = state.products;
     const restProducts = products.filter((o, i) => index !== i);
-    const newArray = [...state.products, restProducts];
-    // updateValueOnstep('stepThree', 'products', newArray);
+    updateValueOnstep('stepThree', 'products', restProducts);
   };
 
   useEffect(() => {
@@ -146,6 +149,7 @@ const ThirdStep = () => {
     };
   }, [listenerCallback]);
 
+  console.log('xxxxxx', state.products);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       {/* <BText>step 3</BText> */}

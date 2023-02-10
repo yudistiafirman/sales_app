@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { BDivider, BForm, BSpacer, BText } from '@/components';
+import { BDivider, BForm, BSpacer, BText, SVGName } from '@/components';
 import {
   CreateVisitationSecondStep,
   Input,
@@ -23,9 +23,6 @@ import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
 interface IProps {
   openBottomSheet: () => void;
 }
-
-const company = require('@/assets/icon/Visitation/company.png');
-const individu = require('@/assets/icon/Visitation/profile.png');
 
 const SecondStep = ({ openBottomSheet }: IProps) => {
   const dispatch = useDispatch();
@@ -100,7 +97,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         value: state.customerType,
         options: [
           {
-            icon: company,
+            icon: SVGName.IC_COMPANY,
             title: 'Perusahaan',
             value: 'COMPANY',
             onChange: () => {
@@ -108,7 +105,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             },
           },
           {
-            icon: individu,
+            icon: SVGName.IC_PROFILE,
             title: 'Individu',
             value: 'INDIVIDU',
             onChange: () => {

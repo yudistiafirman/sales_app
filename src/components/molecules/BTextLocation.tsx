@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import { fonts } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
@@ -35,7 +36,7 @@ const BTextLocation = ({
         numberOfLines={numberOfLines}
         style={{
           fontFamily: font.family.montserrat['300'],
-          fontSize: resScale(10),
+          fontSize: fonts.size.xs,
           color: colors.text.blue,
         }}
       >

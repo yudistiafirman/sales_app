@@ -50,7 +50,12 @@ const SearchProduct = ({
     console.log(text, 'onChangeText');
 
     setSearchValue(text);
-    send('searchingProducts', { value: text });
+
+    if (text.length === 0) {
+      send('clearInput');
+    } else {
+      send('searchingProducts', { value: text });
+    }
   };
 
   const onClearValue = () => {
