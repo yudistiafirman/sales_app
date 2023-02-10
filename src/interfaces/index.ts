@@ -44,7 +44,7 @@ interface Input {
     title: string;
     value: string | any;
     onChange: () => void;
-    icon?: ImageSourcePropType | undefined;
+    icon?: string;
   }>;
   dropdown?: {
     items: {

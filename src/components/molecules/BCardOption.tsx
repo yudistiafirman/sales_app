@@ -12,10 +12,11 @@ import BText from '../atoms/BText';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
+import BSvg from '../atoms/BSvg';
 
 interface IProps {
   children?: React.ReactNode;
-  icon: ImageSourcePropType | undefined;
+  icon: string;
   title: string;
   fullWidth?: boolean;
   isActive?: boolean;
@@ -72,7 +73,12 @@ const BCardOption = (props: IProps) => {
 
   return (
     <TouchableOpacity style={makeStyle(props)} onPress={onPress}>
-      <Image source={icon} style={makeStyleImage({ isActive })} />
+      <BSvg
+        color={isActive ? colors.primary : colors.textInput.input}
+        svgName={icon}
+        type="stroke"
+      />
+      {/* <Image source={icon} style={makeStyleImage({ isActive })} /> */}
       <BSpacer size={'verySmall'} />
       <BText {...(isActive && { color: 'primary' })}>{title}</BText>
     </TouchableOpacity>
