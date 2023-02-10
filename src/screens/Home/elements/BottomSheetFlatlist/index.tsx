@@ -80,7 +80,7 @@ export default function BottomSheetFlatlist({
           return null;
         }
         return (
-          <EmptyProduct emptyText="Tidak ada data kunjungan, silahkan ganti tanggal kunjungan" />
+          <EmptyProduct emptyText="Tidak ada data kunjungan, silakan ganti tanggal kunjungan!" />
         );
       }}
     />

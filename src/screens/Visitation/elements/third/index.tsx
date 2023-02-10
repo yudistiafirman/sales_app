@@ -25,6 +25,9 @@ import { useNavigation } from '@react-navigation/native';
 import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
 import { fonts } from '@/constants';
 
+const cbd = require('@/assets/icon/Visitation/cbd.png')
+const credit = require('@/assets/icon/Visitation/credit.png')
+
 const ThirdStep = () => {
   const navigation = useNavigation();
   const { values, action } = React.useContext(createVisitationContext);
@@ -93,7 +96,7 @@ const ThirdStep = () => {
       options: [
         {
           title: 'Cash Before Delivery',
-          icon: SVGName.IC_CBD,
+          icon: cbd,
           value: 'CBD',
           onChange: () => {
             onChange('paymentType')('CBD');
@@ -101,7 +104,7 @@ const ThirdStep = () => {
         },
         {
           title: 'Credit',
-          icon: SVGName.IC_CREDIT,
+          icon: credit,
           value: 'CREDIT',
           onChange: () => {
             onChange('paymentType')('CREDIT');
