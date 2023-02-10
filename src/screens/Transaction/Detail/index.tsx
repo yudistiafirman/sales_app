@@ -15,6 +15,7 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { colors, fonts, layout } from '@/constants';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { ScrollView } from 'react-native-gesture-handler';
+import { getStatusTrx } from '@/utils/generalFunc';
 
 function ListProduct(item: any) {
   return (
@@ -41,24 +42,25 @@ const TransactionDetail = () => {
   };
 
   const data = route?.params?.data;
+  console.log('wkwkw', route?.params);
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView>
         <BCompanyMapCard
           onPressLocation={onPressLocation}
-          companyName={data?.company}
-          location={data?.address}
+          companyName={data?.companyName ? data?.companyName : '-'}
+          location={data?.address ? data?.address : '-'}
         />
         <View style={styles.contentDetail}>
-          {data?.pic && (
+          {data?.mainPic && (
             <>
               <Text style={styles.partText}>PIC</Text>
               <BSpacer size={'extraSmall'} />
               <BPic
-                name={data?.pic.name}
-                position={data?.pic.jabatan}
-                phone={data?.pic.phone}
-                email={data?.pic.email}
+                name={data?.mainPic.name}
+                position={data?.mainPic.position}
+                phone={data?.mainPic.phone}
+                email={data?.mainPic.email ? data?.mainPic.email : '-'}
               />
               <BSpacer size={'small'} />
             </>
@@ -66,21 +68,29 @@ const TransactionDetail = () => {
           <Text style={styles.partText}>Rincian</Text>
           <BSpacer size={'extraSmall'} />
           <BProjectDetailCard
-            status={data?.status}
-            paymentMethod={data?.paymentMethod}
+            status={getStatusTrx(data?.status)}
+            paymentMethod={
+              data?.paymentType && data?.paymentType === 'CBD'
+                ? 'Cash'
+                : 'Debit'
+            }
             expiredDate={data?.expiredDate}
-            projectName={data?.desc}
-            productionTime={data?.createdDate}
+            projectName={data?.project.name}
+            productionTime={data?.createdAt}
           />
           <BSpacer size={'small'} />
           {data?.lastOrder && data?.lastOrder.length > 0 ? (
             <BNestedProductCard data={data?.lastOrder} />
           ) : (
             <>
-              <Text style={styles.partText}>Produk</Text>
-              <BSpacer size={'extraSmall'} />
-              {data?.chosenProducts.map((item) => ListProduct(item))}
-              <BSpacer size={'small'} />
+              {data?.chosenProducts && (
+                <>
+                  <Text style={styles.partText}>Produk</Text>
+                  <BSpacer size={'extraSmall'} />
+                  {data?.chosenProducts.map((item) => ListProduct(item))}
+                  <BSpacer size={'small'} />
+                </>
+              )}
             </>
           )}
           {data?.deposit && (

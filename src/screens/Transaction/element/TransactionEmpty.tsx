@@ -8,8 +8,10 @@ import { View, Image, StyleSheet } from 'react-native';
 
 const TransactionEmpty = ({
   emptyTransactionName,
+  errorName,
 }: {
   emptyTransactionName?: string;
+  errorName?: string;
 }) => {
   return (
     <View style={styles.container}>
@@ -19,8 +21,9 @@ const TransactionEmpty = ({
       />
       <View style={styles.parent}>
         <BText style={styles.emptyText}>
-          Pencarian mu "{emptyTransactionName}" tidak ada. Coba cari transaksi
-          lainnya.
+          {errorName
+            ? errorName
+            : `Pencarian mu ${emptyTransactionName} tidak ada. Coba cari transaksi lainnya.`}
         </BText>
       </View>
     </View>
