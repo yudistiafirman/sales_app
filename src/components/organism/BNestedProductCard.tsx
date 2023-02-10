@@ -40,9 +40,10 @@ const ListProduct = (index: number, parentItem: any) => {
         {isExpand && (
           <>
             <BSpacer size={'small'} />
-            {parentItem?.chosenProducts.map((item, index) =>
-              ListChildProduct(parentItem?.chosenProducts.length, index, item)
-            )}
+            {parentItem?.products &&
+              parentItem?.products.map((item, index) =>
+                ListChildProduct(parentItem?.products.length, index, item)
+              )}
           </>
         )}
       </View>
@@ -53,12 +54,12 @@ const ListProduct = (index: number, parentItem: any) => {
 
 const ListChildProduct = (size: number, index: number, item: any) => {
   return (
-    <View key={item.id}>
+    <View key={item.product_id}>
       <BProductCard
-        name={item.product.name}
-        pricePerVol={item.sellPrice}
-        volume={item.volume}
-        totalPrice={item.sellPrice * item.volume}
+        name={item.display_name}
+        pricePerVol={+item.offering_price}
+        volume={+item.volume}
+        totalPrice={+item.total_price}
         backgroundColor={'white'}
       />
       {size - 1 !== index && (

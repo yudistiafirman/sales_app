@@ -112,6 +112,10 @@ const BDropdown = (props: IProps) => {
         onClose={() => {
           setOpen(false);
         }}
+        textStyle={{
+          fontFamily: fonts.family.montserrat[400],
+          color: colors.textInput.input,
+        }}
       />
       {isError && (
         <BText size="small" color="primary" bold="100">

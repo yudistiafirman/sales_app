@@ -15,16 +15,17 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { colors, fonts, layout } from '@/constants';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { ScrollView } from 'react-native-gesture-handler';
-import { getStatusTrx } from '@/utils/generalFunc';
+import { beautifyPhoneNumber, getStatusTrx } from '@/utils/generalFunc';
+import moment from 'moment';
 
 function ListProduct(item: any) {
   return (
-    <View key={item.id}>
+    <View key={item.product_id}>
       <BProductCard
-        name={item.product.name}
-        pricePerVol={+item.sellPrice}
+        name={item.display_name}
+        pricePerVol={+item.offering_price}
         volume={+item.volume}
-        totalPrice={+item.sellPrice * +item.volume}
+        totalPrice={+item.total_price}
       />
       <BSpacer size={'extraSmall'} />
     </View>
@@ -49,7 +50,7 @@ const TransactionDetail = () => {
         <BCompanyMapCard
           onPressLocation={onPressLocation}
           companyName={data?.companyName ? data?.companyName : '-'}
-          location={data?.address ? data?.address : '-'}
+          location={data?.address ? data?.address.line1 : '-'}
         />
         <View style={styles.contentDetail}>
           {data?.mainPic && (
@@ -59,7 +60,7 @@ const TransactionDetail = () => {
               <BPic
                 name={data?.mainPic.name}
                 position={data?.mainPic.position}
-                phone={data?.mainPic.phone}
+                phone={beautifyPhoneNumber(data?.mainPic.phone)}
                 email={data?.mainPic.email ? data?.mainPic.email : '-'}
               />
               <BSpacer size={'small'} />
@@ -74,20 +75,28 @@ const TransactionDetail = () => {
                 ? 'Cash'
                 : 'Debit'
             }
-            expiredDate={data?.expiredDate}
+            expiredDate={
+              data?.expiredDate
+                ? moment(data?.expiredDate).format('DD MMMM yyyy')
+                : '-'
+            }
             projectName={data?.project.name}
-            productionTime={data?.createdAt}
+            productionTime={
+              data?.createdAt
+                ? moment(data?.createdAt).format('DD MMM yyyy HH:mm')
+                : '-'
+            }
           />
           <BSpacer size={'small'} />
           {data?.lastOrder && data?.lastOrder.length > 0 ? (
             <BNestedProductCard data={data?.lastOrder} />
           ) : (
             <>
-              {data?.chosenProducts && (
+              {data?.products && (
                 <>
                   <Text style={styles.partText}>Produk</Text>
                   <BSpacer size={'extraSmall'} />
-                  {data?.chosenProducts.map((item) => ListProduct(item))}
+                  {data?.products.map((item) => ListProduct(item))}
                   <BSpacer size={'small'} />
                 </>
               )}

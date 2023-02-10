@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
   summaryContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   chip: {
     paddingVertical: layout.pad.xs,

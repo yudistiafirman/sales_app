@@ -23,17 +23,31 @@ export const getStatusTrx = (id: string) => {
   switch (id) {
     case 'DRAFT':
       return 'Diajukan';
-    case 'CEK BARANG':
-      return 'Cek Barang';
-    case 'PERSIAPAN':
+    case 'SUBMITTED':
+      return 'Diajukan';
+    case 'PARTIALLY_PROCESSED':
       return 'Persiapan';
-    case 'KADALUARSA':
-      return 'Kadaluarsa';
-    case 'DITOLAK':
-      return 'Ditolak';
-    case 'DISETUJUI':
+    case 'PARTIALLY_PAID':
       return 'Disetujui';
+    case 'PAID':
+      return 'Diterima';
+    case 'CANCELLED':
+      return 'Ditolak';
     default:
       return 'N/A';
   }
+};
+
+export const beautifyPhoneNumber = (text: string) => {
+  let firstChar: string[] = text.match(/.{1,3}/g) ?? [];
+  let result = '';
+  if (firstChar.length > 0) {
+    result += firstChar[0];
+    firstChar = firstChar.splice(1, 4);
+    firstChar = firstChar.join('').match(/.{1,4}/g) ?? [];
+    result += ' ' + firstChar.join(' ');
+  } else {
+    result += firstChar.join('');
+  }
+  return result;
 };

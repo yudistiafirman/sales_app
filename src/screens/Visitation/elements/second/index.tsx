@@ -134,7 +134,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             setSelectedCompany(item);
           }
         },
-        placeholder: 'Masukkan Nama Proyek',
+        placeholder: 'Masukkan Nama Perusahaan',
         isInputDisable: !!existingVisitation,
         // showChevronAutoCompleted: false,
         showClearAutoCompleted: false,
