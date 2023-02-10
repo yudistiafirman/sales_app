@@ -1,4 +1,8 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { SafeAreaView, View } from 'react-native';
 import LocationStyles from './styles';
@@ -40,11 +44,12 @@ const Location = () => {
       longitude: Number(lon),
       latitude: Number(lat),
     };
+
     if (from) {
       navigation.goBack();
       navigation.navigate(TAB_ROOT, {
         screen: from,
-        coordinate: coordinate,
+        params: { coordinate: coordinate },
       });
     } else {
       navigation.navigate(TAB_ROOT, {

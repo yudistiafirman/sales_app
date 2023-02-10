@@ -27,6 +27,8 @@ import { useNavigation } from '@react-navigation/native';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import { useMachine } from '@xstate/react';
 import { deviceLocationMachine } from '@/machine/modules';
+import { SEARCH_AREA, SPH } from '@/navigation/ScreenNames';
+import { fetchAddressSuggestion } from '@/redux/async-thunks/commonThunks';
 
 function checkObj(obj: SphStateInterface) {
   const billingAddressFilled =
@@ -50,6 +52,36 @@ export default function SecondStep() {
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [sheetSnapPoints, setSheetSnapPoints] = useState(['60%']);
   const dispatch = useDispatch();
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+
+  // async function getSuggestion(search: string) {
+  //   try {
+  //     const response = await dispatch(
+  //       fetchAddressSuggestion({ search, page: 1 })
+  //     ).unwrap();
+  //     setAddressSuggestions(response.data);
+  //   } catch (error) {
+  //     console.log(error, 'errorfetchAddressSuggestion');
+  //   }
+  // }
+
+  const getSuggestion = useCallback(async (search: string) => {
+    try {
+      const response = await dispatch(
+        fetchAddressSuggestion({ search, page: 1 })
+      ).unwrap();
+      const nameToTile = response.data.map((data) => {
+        return {
+          id: data.id,
+          title: data.name,
+        };
+      });
+      setAddressSuggestions(nameToTile);
+    } catch (error) {
+      setAddressSuggestions([]);
+      console.log(error, 'errorfetchAddressSuggestion');
+    }
+  }, []);
 
   const [isMapLoading, setIsMapLoading] = useState(false);
 
@@ -74,7 +106,7 @@ export default function SecondStep() {
         latitude: result?.lat,
         longitude: result?.lon,
         formattedAddress: result?.formattedAddress,
-        PostalId: result?.PostalId,
+        postalId: result?.PostalId,
       };
 
       if (typeof result?.lon === 'string') {
@@ -101,7 +133,7 @@ export default function SecondStep() {
           longitude: context?.lon,
           latitude: context?.lat,
           formattedAddress: context?.formattedAddress,
-          PostalId: context?.PostalId,
+          postalId: context?.PostalId,
         };
         console.log(context, 'contextmachince');
         stateUpdate('distanceFromLegok')(context?.distance?.value);
@@ -155,11 +187,11 @@ export default function SecondStep() {
         isRequire: true,
         isError: true,
         type: 'textInput',
-        onChange: (text: string) => {
+        onChange: (event: any) => {
           if (stateUpdate && sphState) {
             stateUpdate('billingAddress')({
               ...sphState?.billingAddress,
-              name: text,
+              name: event.nativeEvent.text,
             });
           }
         },
@@ -188,24 +220,10 @@ export default function SecondStep() {
         isRequire: true,
         isError: true,
         type: 'autocomplete',
-        items: [
-          {
-            id: '1',
-            title: 'PT Satu',
-          },
-          {
-            id: '2',
-            title: 'PT Dua',
-          },
-          {
-            id: '3',
-            title: 'PT Tiga',
-          },
-          {
-            id: '4',
-            title: 'PT Empat',
-          },
-        ],
+        onChange: (text: string) => {
+          getSuggestion(text);
+        },
+        items: addressSuggestions,
         value: sphState?.billingAddress?.addressAutoComplete
           ? sphState?.billingAddress?.addressAutoComplete
           : {},
@@ -235,7 +253,7 @@ export default function SecondStep() {
         value: sphState?.billingAddress?.fullAddress,
       },
     ];
-  }, [sphState, stateUpdate]);
+  }, [sphState, stateUpdate, addressSuggestions]);
 
   const customFooterButton = useCallback(() => {
     return (
@@ -259,6 +277,10 @@ export default function SecondStep() {
   useEffect(() => {
     send('askingPermission');
   }, []);
+
+  useEffect(() => {
+    stateUpdate('projectAddress')(region);
+  }, [region]);
 
   const nameAddress = React.useMemo(() => {
     const idx = region.formattedAddress?.split(',');
@@ -297,8 +319,8 @@ export default function SecondStep() {
       >
         <BLocationDetail
           onPress={() => {
-            navigation.navigate('SearchArea', {
-              from: 'SPH',
+            navigation.navigate(SEARCH_AREA, {
+              from: SPH,
             });
           }}
           nameAddress={nameAddress}

@@ -94,7 +94,7 @@ interface Styles {
 }
 
 interface Address {
-  lat: any;
+  lat?: any;
   id?: string;
   formattedAddress?: string;
   lan?: number;
@@ -105,6 +105,8 @@ interface Address {
   latitude?: number;
   postalId?: number;
   line2?: string;
+  latitudeDelta?: number;
+  longitudeDelta?: number;
 }
 
 // create visitation
@@ -231,6 +233,9 @@ interface selectedCompanyInterface {
     line1?: string;
     postalCode?: number;
     rural?: string;
+    lat: string;
+    lon: string;
+    id?: string;
   };
   mainPic: {
     id: string | null;
@@ -238,10 +243,37 @@ interface selectedCompanyInterface {
   };
 }
 
+interface chosenProductType {
+  product: ProductDataInterface;
+  productId: string;
+  categoryId: string;
+  sellPrice: string;
+  volume: string;
+  totalPrice: number;
+  additionalData: {
+    distance: {
+      id: string;
+      price: number;
+    };
+    delivery: {
+      id: string;
+      price: number;
+    };
+  };
+}
+
 interface SphStateInterface {
   selectedCompany: selectedCompanyInterface | null;
   picList: PIC[];
-  selectedPic: any;
+  projectAddress: Address | null;
+  selectedPic: {
+    id?: string;
+    name: string;
+    phone: string;
+    email?: string;
+    position?: string;
+    isSelected?: boolean;
+  } | null;
   isBillingAddressSame: boolean;
   billingAddress: {
     name: string;
@@ -250,11 +282,11 @@ interface SphStateInterface {
     fullAddress: string;
   };
   distanceFromLegok: number | null;
-  paymentType: string;
+  paymentType: 'CBD' | 'CREDIT' | '';
   paymentRequiredDocuments: { [key: string]: any };
   paymentDocumentsFullfilled: boolean;
   paymentBankGuarantee: boolean;
-  chosenProducts: any[];
+  chosenProducts: chosenProductType[];
   useHighway: boolean;
 }
 
@@ -436,6 +468,39 @@ interface projectResponseType {
   project_count: string;
 }
 
+interface shippingAddressType {
+  id: string;
+  lat: string;
+  lon: string;
+  line1: string;
+  line2: string;
+  rural: string | null;
+  district: string | null;
+  postalCode: string | number | null;
+  city: string | null;
+}
+
+interface requestedProductsType {
+  productId: string;
+  categoryId: string;
+  offeringPrice: number;
+  quantity: number;
+  productName: string;
+  productUnit: string;
+}
+interface deliveryAndDistance {
+  id: string;
+  categoryId?: string;
+  createdById?: string | null;
+  unit?: string;
+  price: number;
+  type?: string;
+  min?: number;
+  max?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  category_id?: string;
+}
 interface sphOrderPayloadType {
   projectId: string;
   picId: string;
@@ -446,49 +511,10 @@ interface sphOrderPayloadType {
   viaTol: boolean;
   projectDocs: any[];
   isProvideBankGuarantee: boolean;
-  shippingAddress: {
-    id: string;
-    lat: string;
-    lon: string;
-    line1: string;
-    rural: string | null;
-    district: string | null;
-    postalCode: string | number | null;
-    city: string | null;
-  };
-  requestedProducts: {
-    productId: string;
-    categoryId: string;
-    offeringPrice: number;
-    quantity: number;
-    totalPrice: number;
-  }[];
-  delivery: {
-    id: string;
-    categoryId: string;
-    createdById: string | null;
-    unit: string;
-    price: number;
-    type: string;
-    min: number;
-    max: number;
-    createdAt: string;
-    updatedAt: string;
-    category_id: string;
-  };
-  distance: {
-    id: string;
-    categoryId: string;
-    createdById: string | null;
-    unit: string;
-    price: number;
-    type: string;
-    min: number;
-    max: number;
-    createdAt: string;
-    updatedAt: string;
-    category_id: string;
-  };
+  shippingAddress: shippingAddressType;
+  requestedProducts: requestedProductsType[];
+  delivery: deliveryAndDistance;
+  distance: deliveryAndDistance;
 }
 
 export type {
@@ -519,4 +545,8 @@ export type {
   projectResponseType,
   selectedCompanyInterface,
   sphOrderPayloadType,
+  shippingAddressType,
+  requestedProductsType,
+  deliveryAndDistance,
+  Address,
 };

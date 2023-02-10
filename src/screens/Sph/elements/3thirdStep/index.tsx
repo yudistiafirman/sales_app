@@ -11,9 +11,23 @@ import { colors, fonts } from '@/constants';
 import font from '@/constants/fonts';
 import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn';
 import { SphContext } from '../context/SphContext';
+import { fetchSphDocuments } from '@/redux/async-thunks/commonThunks';
+import { useDispatch } from 'react-redux';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
+
+type documentType = {
+  id: string;
+  name: string;
+  payment_type: 'CBD' | 'CREDIT';
+  is_required: boolean;
+};
+
+type docResponse = {
+  cbd: documentType[];
+  credit: documentType[];
+};
 
 const fileCredit = [
   {
@@ -74,59 +88,168 @@ function checkDocFilled(data: { [key: string]: any }) {
 }
 
 export default function ThirdStep() {
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [fileKeys, setFileKeys] = useState<{ key: string; label: string }[]>(
-    []
-  );
+  const [fileKeys, setFileKeys] = useState<
+    { key: string; label: string; isRequired: boolean }[]
+  >([]);
   const [documents, setDocuments] = useState<{ [key: string]: any }>({});
-
+  const [sphDocuments, setSphDocuments] = useState<docResponse>({
+    cbd: [],
+    credit: [],
+  });
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
+
+  // useEffect(() => {
+  //   if (sphState?.paymentType) {
+  //     // console.log(sphState?.paymentType, 'paymenttype');
+  //     // (async () => {
+  //     //   try {
+  //     //     setFileKeys([]);
+  //     //     setIsLoading(true);
+  //     //     const dataFileKey = await fileToUploads(sphState.paymentType);
+  //     //     const documentObj: { [key: string]: any } = {};
+  //     //     dataFileKey.forEach((key) => {
+  //     //       documentObj[key.key] = null;
+  //     //     });
+  //     //     const parentReqDocKeys = Object.keys(
+  //     //       sphState.paymentRequiredDocuments
+  //     //     );
+  //     //     const localReqDocKeys = Object.keys(documentObj);
+  //     //     const sphDocString = JSON.stringify(parentReqDocKeys);
+  //     //     const stateDocString = JSON.stringify(localReqDocKeys);
+  //     //     if (sphDocString === stateDocString && parentReqDocKeys.length > 0) {
+  //     //       setDocuments(sphState.paymentRequiredDocuments);
+  //     //     } else {
+  //     //       setDocuments(documentObj);
+  //     //     }
+  //     //     setIsLoading(false);
+  //     //     setFileKeys(dataFileKey);
+  //     //   } catch (error) {
+  //     //     setIsLoading(false);
+  //     //     console.log(error, 'error');
+  //     //   }
+  //     // })();
+  //   }
+  // }, [sphState?.paymentType]);
 
   useEffect(() => {
     if (sphState?.paymentType) {
-      // console.log(sphState?.paymentType, 'paymenttype');
-      (async () => {
-        try {
-          setFileKeys([]);
-          setDocuments({});
-          setIsLoading(true);
-          const dataFileKey = await fileToUploads(sphState.paymentType);
+      const objKey: {
+        CREDIT: 'credit';
+        CBD: 'cbd';
+      } = {
+        CREDIT: 'credit',
+        CBD: 'cbd',
+      };
+      const key: 'cbd' | 'credit' = objKey[sphState?.paymentType];
+      console.log(sphDocuments[key].length, 'lengthdocument');
 
+      if (sphDocuments[key]) {
+        if (sphDocuments[key].length) {
+          const newFileKeys = sphDocuments[key].map((doc) => {
+            return {
+              key: doc.id,
+              label: doc.name,
+              isRequired: doc.is_required,
+            };
+          });
+          console.log(newFileKeys, 'newFileKeys155');
           const documentObj: { [key: string]: any } = {};
-          dataFileKey.forEach((key) => {
-            documentObj[key.key] = null;
+          sphDocuments[key].forEach((doc) => {
+            documentObj[doc.id] = null;
           });
           const parentReqDocKeys = Object.keys(
             sphState.paymentRequiredDocuments
           );
           const localReqDocKeys = Object.keys(documentObj);
-          const sphDocString = JSON.stringify(parentReqDocKeys);
-          const stateDocString = JSON.stringify(localReqDocKeys);
+          const parentDocString = JSON.stringify(parentReqDocKeys);
+          const localDocString = JSON.stringify(localReqDocKeys);
+          console.log(
+            parentDocString === localDocString && parentReqDocKeys.length > 0,
+            'condition170'
+          );
 
-          if (sphDocString === stateDocString && parentReqDocKeys.length > 0) {
+          if (
+            parentDocString === localDocString &&
+            parentReqDocKeys.length > 0
+          ) {
             setDocuments(sphState.paymentRequiredDocuments);
           } else {
             setDocuments(documentObj);
           }
-
-          setIsLoading(false);
-          setFileKeys(dataFileKey);
-        } catch (error) {
-          setIsLoading(false);
-          console.log(error, 'error');
+          setFileKeys(newFileKeys);
         }
-      })();
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sphState?.paymentType]);
+  }, [sphDocuments, sphState?.paymentType]);
+
+  async function getDocument() {
+    try {
+      setIsLoading(true);
+      const response: docResponse = await dispatch(
+        fetchSphDocuments()
+      ).unwrap();
+
+      if (sphState?.paymentType) {
+        const objKey: {
+          CREDIT: 'credit';
+          CBD: 'cbd';
+        } = {
+          CREDIT: 'credit',
+          CBD: 'cbd',
+        };
+        const key: 'cbd' | 'credit' = objKey[sphState?.paymentType];
+        if (response[key]) {
+          if (response[key].length) {
+            const newFileKeys = response[key].map((doc) => {
+              return {
+                key: doc.id,
+                label: doc.name,
+                isRequired: doc.is_required,
+              };
+            });
+            const documentObj: { [key: string]: any } = {};
+            response[key].forEach((doc) => {
+              documentObj[doc.id] = null;
+            });
+            const parentReqDocKeys = Object.keys(
+              sphState.paymentRequiredDocuments
+            );
+            const localReqDocKeys = Object.keys(documentObj);
+            const parentDocString = JSON.stringify(parentReqDocKeys);
+            const localDocString = JSON.stringify(localReqDocKeys);
+
+            if (
+              parentDocString === localDocString &&
+              parentReqDocKeys.length > 0
+            ) {
+              setDocuments(sphState.paymentRequiredDocuments);
+            } else {
+              setDocuments(documentObj);
+            }
+            setFileKeys(newFileKeys);
+          }
+        }
+      }
+      setSphDocuments(response);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log('error getDocument128', error);
+    }
+  }
 
   useEffect(() => {
-    if (stateUpdate) {
-      stateUpdate('paymentRequiredDocuments')(documents);
-      const isFilled = checkDocFilled(documents);
-      stateUpdate('paymentDocumentsFullfilled')(isFilled);
-    }
+    getDocument();
+  }, []);
 
+  useEffect(() => {
+    // if (stateUpdate) {
+    stateUpdate('paymentRequiredDocuments')(documents);
+    const isFilled = checkDocFilled(documents);
+    stateUpdate('paymentDocumentsFullfilled')(isFilled);
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documents]);
 
@@ -145,23 +268,23 @@ export default function ThirdStep() {
           {
             title: 'Cash Before Delivery',
             icon: cbd,
-            value: 'cbd',
+            value: 'CBD',
             onChange: () => {
-              if (stateUpdate) {
-                stateUpdate('paymentType')('cbd');
-                // getPaymentDocReq('cbd');
-              }
+              // if (stateUpdate) {
+              stateUpdate('paymentType')('CBD');
+              // getPaymentDocReq('cbd');
+              // }
             },
           },
           {
             title: 'Credit',
             icon: credit,
-            value: 'credit',
+            value: 'CREDIT',
             onChange: () => {
-              if (stateUpdate) {
-                stateUpdate('paymentType')('credit');
-                // getPaymentDocReq('credit');
-              }
+              // if (stateUpdate) {
+              stateUpdate('paymentType')('CREDIT');
+              // getPaymentDocReq('credit');
+              // }
             },
           },
         ],
@@ -171,23 +294,32 @@ export default function ThirdStep() {
       inputs.push({
         label: key.label,
         onChange: (data: any) => {
-          if (stateUpdate) {
-            setDocuments((curr) => {
-              return {
-                ...curr,
-                [key.key]: data,
-              };
-            });
-          }
+          setDocuments((curr) => {
+            console.log(curr, 'curr298');
+
+            return {
+              ...curr,
+              [key.key]: data,
+            };
+          });
+          // stateUpdate('paymentRequiredDocuments')({
+          //   ...sphState.paymentRequiredDocuments,
+          //   [key.key]: data,
+          // });
         }, //onChange(key.key),
         type: 'fileInput',
         value: sphState?.paymentRequiredDocuments?.[key.key],
-        isRequire: true,
+        isRequire: !!key.isRequired,
         isError: Boolean(!sphState?.paymentRequiredDocuments?.[key.key]),
       });
     });
     return inputs;
-  }, [fileKeys, sphState, stateUpdate]);
+  }, [fileKeys, sphState, stateUpdate, documents]);
+  console.log(
+    sphState?.paymentRequiredDocuments,
+    'documentsparent316',
+    fileKeys
+  );
 
   return (
     <BContainer>

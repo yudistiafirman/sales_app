@@ -5,6 +5,7 @@ const initialState: SphStateInterface = {
   selectedCompany: null,
   picList: [],
   selectedPic: null,
+  projectAddress: null,
   isBillingAddressSame: false,
   billingAddress: {
     name: '',

@@ -46,24 +46,29 @@ const stepsToRender = [
 // enum
 function checkSelected(picList: PIC[]) {
   let isSelectedExist = false;
-  picList.forEach((pic) => {
+
+  const list = picList ? picList : [];
+  list.forEach((pic) => {
     if (pic.isSelected) {
       isSelectedExist = true;
     }
   });
   return isSelectedExist;
 }
+
 function stepHandler(
   sphData: SphStateInterface,
   stepsDone: number[],
   setSteps: (e: number[] | ((curr: number[]) => number[])) => void,
   stepController: (step: number) => void
 ) {
-  if (checkSelected(sphData.picList) && sphData.selectedCompany) {
-    if (!stepsDone.includes(0)) {
-      setSteps((curr) => {
-        return [...new Set(curr), 0];
-      });
+  if (sphData.selectedCompany) {
+    if (checkSelected(sphData.selectedCompany.PIC)) {
+      if (!stepsDone.includes(0)) {
+        setSteps((curr) => {
+          return [...new Set(curr), 0];
+        });
+      }
     }
   } else {
     setSteps((curr) => curr.filter((num) => num !== 0));

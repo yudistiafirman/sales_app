@@ -72,3 +72,17 @@ export const projectGetOneById = async (projectId?: string) => {
     await getOptions('GET', undefined, true)
   );
 };
+
+export const getSphDocuments = async () => {
+  return request(
+    BrikApiCommon.sphDocuments(),
+    await getOptions('GET', undefined, true)
+  );
+};
+
+export const getAddressSuggestion = async (search?: string, page?: number) => {
+  return request(
+    BrikApiCommon.addressSuggestion(search, page),
+    await getOptions('GET', undefined, true)
+  );
+};

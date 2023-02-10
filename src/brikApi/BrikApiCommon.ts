@@ -73,6 +73,28 @@ export default class BrikApiCommon {
     return url.toString();
   };
 
+  static sphDocuments = () => {
+    const url = new URL(`${API_URL}/common/m/flow/sph`);
+
+    return url.toString();
+  };
+
+  static addressSuggestion = (search?: string, page?: number) => {
+    const url = new URL(`${API_URL}/common/m/flow/address/suggestion`);
+    const params = url.searchParams;
+    if (search) {
+      params.append('search', search);
+    }
+    if (page) {
+      params.append('page', `${page}`);
+    }
+    // if (search) {
+    params.append('size', '10');
+    // }
+
+    return url.toString();
+  };
+
   // --------------------------------------------------AUTHENTICATION ---------------------------------------------//
 
   static login = () => {
