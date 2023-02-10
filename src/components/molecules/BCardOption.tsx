@@ -32,6 +32,11 @@ const baseStyle: StyleProp<ViewStyle> = {
   alignItems: 'center',
 };
 
+const baseStyleImage: StyleProp<ViewStyle> = {
+  width: resScale(24),
+  height: resScale(24),
+};
+
 const makeStyle = (props: IProps): StyleProp<ViewStyle> => {
   const { fullWidth = false, isActive = false } = props;
   let style = baseStyle;
@@ -59,11 +64,13 @@ const makeStyleImage = ({
 }: Partial<IProps>): StyleProp<ImageStyle> => {
   if (isActive) {
     return {
+      ...baseStyleImage,
       tintColor: colors.primary,
     };
   }
 
   return {
+    ...baseStyleImage,
     tintColor: colors.textInput.input,
   };
 };
@@ -73,12 +80,12 @@ const BCardOption = (props: IProps) => {
 
   return (
     <TouchableOpacity style={makeStyle(props)} onPress={onPress}>
-      <BSvg
+      {/* <BSvg
         color={isActive ? colors.primary : colors.textInput.input}
         svgName={icon}
-        type="stroke"
-      />
-      {/* <Image source={icon} style={makeStyleImage({ isActive })} /> */}
+        type='fill'
+      /> */}
+      <Image source={icon} style={makeStyleImage({ isActive })} />
       <BSpacer size={'verySmall'} />
       <BText {...(isActive && { color: 'primary' })}>{title}</BText>
     </TouchableOpacity>

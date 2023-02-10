@@ -19,6 +19,8 @@ import { useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { useDispatch } from 'react-redux';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
+const company = require('@/assets/icon/Visitation/company.png')
+const profile = require('@/assets/icon/Visitation/profile.png')
 
 interface IProps {
   openBottomSheet: () => void;
@@ -97,7 +99,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         value: state.customerType,
         options: [
           {
-            icon: SVGName.IC_COMPANY,
+            icon: company,
             title: 'Perusahaan',
             value: 'COMPANY',
             onChange: () => {
@@ -105,7 +107,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             },
           },
           {
-            icon: SVGName.IC_PROFILE,
+            icon: profile,
             title: 'Individu',
             value: 'INDIVIDU',
             onChange: () => {
