@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   BDivider,
   BPic,
@@ -17,6 +17,7 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { ScrollView } from 'react-native-gesture-handler';
 import { beautifyPhoneNumber, getStatusTrx } from '@/utils/generalFunc';
 import moment from 'moment';
+import { LOCATION } from '@/navigation/ScreenNames';
 
 function ListProduct(item: any) {
   return (
@@ -24,7 +25,7 @@ function ListProduct(item: any) {
       <BProductCard
         name={item.display_name}
         pricePerVol={+item.offering_price}
-        volume={+item.volume}
+        volume={item.volume ? item.volume : 0}
         totalPrice={+item.total_price}
       />
       <BSpacer size={'extraSmall'} />
@@ -33,13 +34,20 @@ function ListProduct(item: any) {
 }
 
 const TransactionDetail = () => {
+  const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
   useHeaderTitleChanged({
     title: route?.params?.title,
   });
 
-  const onPressLocation = () => {
-    console.log('goto map location');
+  const onPressLocation = (lat: number, long: number) => {
+    navigation.navigate(LOCATION, {
+      coordinate: {
+        latitude: lat,
+        longitude: long,
+      },
+      isReadOnly: true,
+    });
   };
 
   const data = route?.params?.data;
@@ -47,11 +55,16 @@ const TransactionDetail = () => {
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView>
-        <BCompanyMapCard
-          onPressLocation={onPressLocation}
-          companyName={data?.companyName ? data?.companyName : '-'}
-          location={data?.address ? data?.address.line1 : '-'}
-        />
+        {data?.address && (
+          <BCompanyMapCard
+            onPressLocation={() =>
+              onPressLocation(data?.address.lat, data?.address.long)
+            }
+            disabled={data?.address.lat === null || data?.address.long === null}
+            companyName={data?.companyName ? data?.companyName : '-'}
+            location={data?.address ? data?.address.line1 : '-'}
+          />
+        )}
         <View style={styles.contentDetail}>
           {data?.mainPic && (
             <>
@@ -71,7 +84,9 @@ const TransactionDetail = () => {
           <BProjectDetailCard
             status={getStatusTrx(data?.status)}
             paymentMethod={
-              data?.paymentType && data?.paymentType === 'CBD'
+              !data?.paymentType
+                ? 'N/A'
+                : data?.paymentType === 'CBD'
                 ? 'Cash'
                 : 'Debit'
             }

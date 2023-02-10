@@ -60,7 +60,7 @@ export default function BProductCard({
       </View>
       <BSpacer size={'extraSmall'} />
       <View style={style.detail}>
-        <Text style={style.detailText}>{volume}m³</Text>
+        <Text style={style.detailText}>{volume > 0 ? volume + 'm³' : '-'}</Text>
         <Text style={style.detailText}>
           IDR {pricePerVol ? formatCurrency(pricePerVol) : '-'}/m³
         </Text>

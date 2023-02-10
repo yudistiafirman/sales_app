@@ -13,6 +13,7 @@ interface BTouchableTextProps {
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
   textStyle?: TextStyle | undefined;
   title?: string | undefined;
+  disabled?: boolean;
 }
 
 const BTouchableTextDefaultStyle: TextStyle = {
@@ -30,10 +31,13 @@ const BTouchableText = ({
   onPress,
   textStyle,
   title,
+  disabled = false,
 }: BTouchableTextProps & typeof BTouchableTextDefaultProps) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <BText style={textStyle}>{title}</BText>
+    <TouchableOpacity disabled={disabled} onPress={onPress}>
+      <BText style={[textStyle, disabled && { color: colors.text.inactive }]}>
+        {title}
+      </BText>
     </TouchableOpacity>
   );
 };

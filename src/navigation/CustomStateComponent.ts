@@ -29,7 +29,10 @@ export type RootStackParamList = {
   CREATE_VISITATION: { existingVisitation?: visitationListResponse };
   SPH: {};
   SEARCH_PRODUCT: { distance: number };
-  LOCATION: { coordinate: { longitude: number; latitude: number } };
+  LOCATION: {
+    coordinate: { longitude: number; latitude: number };
+    isReadOnly?: boolean;
+  };
   SEARCH_AREA: {};
   CALENDAR: {};
   TRANSACTION_DETAIL: { title: string; data: any };

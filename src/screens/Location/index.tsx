@@ -13,11 +13,18 @@ import {
   TAB_PRICE_LIST_TITLE,
   TAB_ROOT,
 } from '@/navigation/ScreenNames';
+import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+import { resScale } from '@/utils';
 
 const Location = () => {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
   const [state, send] = useMachine(locationMachine);
+  const isReadOnly = route?.params.isReadOnly;
+
+  useHeaderTitleChanged({
+    title: 'Lihat Area Proyek',
+  });
 
   React.useEffect(() => {
     if (route?.params) {
@@ -29,9 +36,11 @@ const Location = () => {
 
   const onRegionChangeComplete = (coordinate: Region) => {
     const { latitude, longitude, latitudeDelta, longitudeDelta } = coordinate;
-    send('onChangeRegion', {
-      value: { latitude, longitude, latitudeDelta, longitudeDelta },
-    });
+    if (!isReadOnly) {
+      send('onChangeRegion', {
+        value: { latitude, longitude, latitudeDelta, longitudeDelta },
+      });
+    }
   };
   const onSaveLocation = () => {
     const { lon, lat } = locationDetail;
@@ -62,9 +71,15 @@ const Location = () => {
       <BLocation
         onRegionChangeComplete={onRegionChangeComplete}
         region={region}
+        scrollEnabled={false}
         CustomMarker={<BMarker />}
       />
-      <View style={LocationStyles.bottomSheetContainer}>
+      <View
+        style={[
+          LocationStyles.bottomSheetContainer,
+          isReadOnly && { minHeight: resScale(80) },
+        ]}
+      >
         <CoordinatesDetail
           loadingLocation={loadingLocation}
           address={
@@ -73,14 +88,19 @@ const Location = () => {
               : ''
           }
           onPress={() => navigation.navigate(SEARCH_AREA)}
+          disable={isReadOnly === true}
         />
 
-        <BButtonPrimary
-          buttonStyle={LocationStyles.buttonStyles}
-          onPress={onSaveLocation}
-          title="Simpan"
-        />
-        <BSpacer size="extraSmall" />
+        {!isReadOnly && (
+          <>
+            <BButtonPrimary
+              buttonStyle={LocationStyles.buttonStyles}
+              onPress={onSaveLocation}
+              title="Simpan"
+            />
+            <BSpacer size="extraSmall" />
+          </>
+        )}
       </View>
     </SafeAreaView>
   );
