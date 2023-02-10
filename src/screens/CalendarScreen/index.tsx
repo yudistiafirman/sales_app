@@ -23,8 +23,10 @@ import { customerDataInterface, visitationListResponse } from '@/interfaces';
 import {
   setVisitationMapped,
   resetStates,
+  setMarkedData,
 } from '@/redux/reducers/productivityFlowReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
+import { todayString } from 'react-native-calendars/src/expandableCalendar/commons';
 
 const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
   if (direction === 'right') {
@@ -48,7 +50,9 @@ export default function CalendarScreen() {
   const visitationCalendarMapped = useSelector(
     (state: RootState) => state.productivity.visitationCalendarMapped
   );
-  const [markedDate, setMarkedDate] = useState<MarkedDates>({});
+  const markedDate = useSelector(
+    (state: RootState) => state.productivity.markedDate
+  );
   const [customerDatas, setCustomerDatas] = useState<customerDataInterface[]>(
     []
   );
@@ -59,6 +63,7 @@ export default function CalendarScreen() {
     fetchVisitation({
       month: today.get('month') + 1,
       year: today.get('year'),
+      fullDate: today.format('yyyy-MM-DD'),
     });
     return () => {
       dispatch(resetStates());
@@ -67,7 +72,15 @@ export default function CalendarScreen() {
   }, []);
 
   const fetchVisitation = useCallback(
-    ({ month, year }: { month: number; year: number }) => {
+    ({
+      month,
+      year,
+      fullDate,
+    }: {
+      month: number;
+      year: number;
+      fullDate: string;
+    }) => {
       dispatch(getVisitationsList({ month, year }))
         .unwrap()
         .then((data: visitationListResponse[]) => {
@@ -101,7 +114,11 @@ export default function CalendarScreen() {
           Object.keys(visitMapped).forEach((date) => {
             newMarkedDate[date] = { marked: true };
           });
-          setMarkedDate(newMarkedDate);
+
+          if (Object.keys(newMarkedDate).length === 0) {
+            newMarkedDate[fullDate] = { selected: true };
+          }
+          dispatch(setMarkedData(newMarkedDate));
         })
         .catch((error) => {
           console.log(error, 'error106calendar');
@@ -161,6 +178,8 @@ export default function CalendarScreen() {
 
       const newMarkedDate = { ...markedDate };
 
+      console.log('diaa 1', newMarkedDate);
+
       for (const date of Object.keys(newMarkedDate)) {
         if (newMarkedDate[date].selected && newMarkedDate[date].marked) {
           newMarkedDate[date].selected = false;
@@ -176,7 +195,8 @@ export default function CalendarScreen() {
         };
       }
 
-      setMarkedDate(newMarkedDate);
+      console.log('diaa 2', newMarkedDate);
+      dispatch(setMarkedData(newMarkedDate));
     },
     [markedDate, visitationCalendarMapped]
   );
@@ -213,6 +233,7 @@ export default function CalendarScreen() {
     fetchVisitation({
       month: dateData.month,
       year: dateData.year,
+      fullDate: dateData.dateString,
     });
   };
 
