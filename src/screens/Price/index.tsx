@@ -16,7 +16,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import { layout } from '@/constants';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
-import { LOCATION, SEARCH_PRODUCT } from '@/navigation/ScreenNames';
+import {
+  LOCATION,
+  SEARCH_PRODUCT,
+  TAB_PRICE_LIST_TITLE,
+} from '@/navigation/ScreenNames';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
@@ -83,6 +87,8 @@ const PriceList = () => {
 
     navigation.navigate(LOCATION, {
       coordinate: coordinate,
+      isReadOnly: false,
+      from: TAB_PRICE_LIST_TITLE,
     });
   };
 

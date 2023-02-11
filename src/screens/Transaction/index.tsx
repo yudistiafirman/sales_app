@@ -41,7 +41,6 @@ const Transaction = () => {
   const getOneOrder = async (id: string) => {
     try {
       const { data } = await getOrderByID(id);
-      console.log('iniiiH', JSON.stringify(data.data));
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data.data ? data.data.number : 'N/A',
         data: data.data,

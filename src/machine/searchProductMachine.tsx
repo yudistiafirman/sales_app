@@ -243,7 +243,6 @@ export const searchProductMachine =
               selectedCategories,
               distance
             );
-            console.log('iniii 2', response.data.products);
             return response.data.products;
           } catch (error) {
             console.log(error);

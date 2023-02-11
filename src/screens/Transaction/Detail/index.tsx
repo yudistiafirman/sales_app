@@ -17,7 +17,7 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { ScrollView } from 'react-native-gesture-handler';
 import { beautifyPhoneNumber, getStatusTrx } from '@/utils/generalFunc';
 import moment from 'moment';
-import { LOCATION } from '@/navigation/ScreenNames';
+import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
 
 function ListProduct(item: any) {
   return (
@@ -43,15 +43,15 @@ const TransactionDetail = () => {
   const onPressLocation = (lat: number, long: number) => {
     navigation.navigate(LOCATION, {
       coordinate: {
-        latitude: lat,
-        longitude: long,
+        latitude: lat, // -6.1993922
+        longitude: long, // 106.7626047
       },
       isReadOnly: true,
+      from: TRANSACTION_DETAIL,
     });
   };
 
   const data = route?.params?.data;
-  console.log('wkwkw', route?.params);
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView>

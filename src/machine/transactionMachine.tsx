@@ -489,7 +489,6 @@ export const transactionMachine =
             //   totalItems: 6,
             //   totalPage: 1,
             // };
-            console.log('inii, ', response.data);
             return response.data as any;
           } catch (error) {
             console.log(error);

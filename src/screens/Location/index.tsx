@@ -9,9 +9,15 @@ import { locationMachine } from '@/machine/locationMachine';
 import { Region } from 'react-native-maps';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
+  LOCATION_TITLE,
   SEARCH_AREA,
+  TAB_DISPATCH_TITLE,
+  TAB_HOME_TITLE,
+  TAB_OPERATION_TITLE,
   TAB_PRICE_LIST_TITLE,
+  TAB_PROFILE_TITLE,
   TAB_ROOT,
+  TAB_TRANSACTION_TITLE,
 } from '@/navigation/ScreenNames';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { resScale } from '@/utils';
@@ -23,7 +29,7 @@ const Location = () => {
   const isReadOnly = route?.params.isReadOnly;
 
   useHeaderTitleChanged({
-    title: 'Lihat Area Proyek',
+    title: isReadOnly === true ? 'Lihat Area Proyek' : LOCATION_TITLE,
   });
 
   React.useEffect(() => {
@@ -36,7 +42,7 @@ const Location = () => {
 
   const onRegionChangeComplete = (coordinate: Region) => {
     const { latitude, longitude, latitudeDelta, longitudeDelta } = coordinate;
-    if (!isReadOnly) {
+    if (isReadOnly === false) {
       send('onChangeRegion', {
         value: { latitude, longitude, latitudeDelta, longitudeDelta },
       });
@@ -49,20 +55,25 @@ const Location = () => {
       longitude: Number(lon),
       latitude: Number(lat),
     };
-    if (from) {
-      navigation.goBack();
+    if (
+      from === TAB_PRICE_LIST_TITLE ||
+      from === TAB_TRANSACTION_TITLE ||
+      from === TAB_PROFILE_TITLE ||
+      from === TAB_HOME_TITLE ||
+      from === TAB_OPERATION_TITLE ||
+      from === TAB_DISPATCH_TITLE
+    ) {
       navigation.navigate(TAB_ROOT, {
         screen: from,
-        coordinate: coordinate,
-      });
-    } else {
-      navigation.navigate(TAB_ROOT, {
-        screen: TAB_PRICE_LIST_TITLE,
         params: { coordinate: coordinate },
       });
-      // navigation.navigate('Harga', {
-      //   coordinate: coordinate,
-      // });
+    } else {
+      navigation?.setParams({
+        coordinate: coordinate,
+        isReadOnly: route?.params?.isReadOnly,
+        from: from,
+      });
+      navigation.goBack();
     }
   };
   const { region, locationDetail, loadingLocation } = state.context;
@@ -71,13 +82,13 @@ const Location = () => {
       <BLocation
         onRegionChangeComplete={onRegionChangeComplete}
         region={region}
-        scrollEnabled={false}
+        scrollEnabled={isReadOnly === true ? false : true}
         CustomMarker={<BMarker />}
       />
       <View
         style={[
           LocationStyles.bottomSheetContainer,
-          isReadOnly && { minHeight: resScale(80) },
+          isReadOnly === true && { minHeight: resScale(80) },
         ]}
       >
         <CoordinatesDetail
@@ -87,11 +98,13 @@ const Location = () => {
               ? locationDetail?.formattedAddress
               : ''
           }
-          onPress={() => navigation.navigate(SEARCH_AREA)}
+          onPress={() =>
+            navigation.navigate(SEARCH_AREA, { from: route?.params?.from })
+          }
           disable={isReadOnly === true}
         />
 
-        {!isReadOnly && (
+        {isReadOnly === false && (
           <>
             <BButtonPrimary
               buttonStyle={LocationStyles.buttonStyles}

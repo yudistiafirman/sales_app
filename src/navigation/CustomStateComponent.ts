@@ -31,9 +31,10 @@ export type RootStackParamList = {
   SEARCH_PRODUCT: { distance: number };
   LOCATION: {
     coordinate: { longitude: number; latitude: number };
-    isReadOnly?: boolean;
+    isReadOnly: boolean;
+    from: string;
   };
-  SEARCH_AREA: {};
+  SEARCH_AREA: { from: string };
   CALENDAR: {};
   TRANSACTION_DETAIL: { title: string; data: any };
   CUSTOMER_DETAIL: { existingVisitation?: visitationListResponse };
