@@ -240,7 +240,7 @@ const FirstStep = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, marginHorizontal: -resScale(20) },
   map: {
-    height: resScale(330),
+    flex: 1,
     width: '100%',
   },
   titleShimmer: {

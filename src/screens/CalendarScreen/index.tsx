@@ -10,7 +10,7 @@ import { Calendar, DateData } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
-import { BButtonPrimary, BContainer, BSpacer, BText } from '@/components';
+import { BButtonPrimary, BSpacer, BText } from '@/components';
 import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
 import moment, { locale } from 'moment';
 import { useNavigation } from '@react-navigation/native';
@@ -124,7 +124,7 @@ export default function CalendarScreen() {
           setCustomerDatas(custData);
           dispatch(setMarkedData(newMarkedDate));
         })
-        .catch((error) => {
+        .catch((error: any) => {
           console.log(error, 'error106calendar');
 
           dispatch(
@@ -245,68 +245,64 @@ export default function CalendarScreen() {
   };
 
   return (
-    <BContainer>
-      <View style={styles.container}>
-        <View>
-          <Calendar
-            theme={{
-              arrowColor: colors.black,
-              todayTextColor: colors.primary,
-              selectedDayTextColor: colors.white,
-              selectedDayBackgroundColor: colors.primary,
-              dotColor: colors.primary,
-            }}
-            onDayPress={onDayPress}
-            markedDates={markedDate}
-            renderArrow={(direction) => <RenderArrow direction={direction} />}
-            onMonthChange={onMonthPress}
-          />
-          <BSpacer size="small" />
-          <BText color="divider"> Pelanggan yang Dikunjungi </BText>
-          <BSpacer size="extraSmall" />
-
-          <FlatList
-            style={styles.flatlistStyle}
-            data={customerDatas}
-            ItemSeparatorComponent={() => <BSpacer size={'extraSmall'} />}
-            renderItem={({ item }) => <ExpandableCustomerCard item={item} />}
-            keyExtractor={(_, index) => index.toString()}
-          />
-        </View>
-        <View>
-          {selectedData && (
-            <>
-              <View>
-                <Text style={styles.tanggalKunjunganText}>
-                  Tanggal Kunjungan Berikutnya
-                </Text>
-                <Text style={styles.dateText}>
-                  {selectedData[0] && `${selectedData[0]} ,`} {selectedData[1]}
-                </Text>
-              </View>
-              <BSpacer size={'extraSmall'} />
-              <BButtonPrimary
-                title="Simpan"
-                onPress={() => {
-                  DeviceEventEmitter.emit(
-                    'CalendarScreen.selectedDate',
-                    selectedData[2]
-                  );
-                  navigation.goBack();
-                }}
-                disable={!selectedData[0]}
-              />
-            </>
-          )}
-        </View>
+    <View style={styles.container}>
+      <View>
+        <Calendar
+          theme={{
+            arrowColor: colors.black,
+            todayTextColor: colors.primary,
+            selectedDayTextColor: colors.white,
+            selectedDayBackgroundColor: colors.primary,
+            dotColor: colors.primary,
+          }}
+          onDayPress={onDayPress}
+          markedDates={markedDate}
+          renderArrow={(direction) => <RenderArrow direction={direction} />}
+          onMonthChange={onMonthPress}
+        />
+        <BSpacer size="small" />
+        <BText color="divider"> Pelanggan yang Dikunjungi </BText>
+        <BSpacer size="extraSmall" />
       </View>
-    </BContainer>
+      <FlatList
+        style={{ marginBottom: layout.pad.md }}
+        data={customerDatas}
+        ItemSeparatorComponent={() => <BSpacer size={'extraSmall'} />}
+        renderItem={({ item }) => <ExpandableCustomerCard item={item} />}
+        keyExtractor={(_, index) => index.toString()}
+      />
+      {selectedData && (
+        <>
+          <View>
+            <Text style={styles.tanggalKunjunganText}>
+              Tanggal Kunjungan Berikutnya
+            </Text>
+            <Text style={styles.dateText}>
+              {selectedData[0] && `${selectedData[0]} ,`} {selectedData[1]}
+            </Text>
+          </View>
+          <BSpacer size={'extraSmall'} />
+          <BButtonPrimary
+            title="Simpan"
+            onPress={() => {
+              DeviceEventEmitter.emit(
+                'CalendarScreen.selectedDate',
+                selectedData[2]
+              );
+              navigation.goBack();
+            }}
+            disable={!selectedData[0]}
+          />
+        </>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: layout.pad.lg,
     justifyContent: 'space-between',
   },
   customerCard: {
@@ -314,8 +310,6 @@ const styles = StyleSheet.create({
     padding: layout.pad.md,
     borderRadius: layout.radius.md,
   },
-  flatlistStyle: { height: resScale(230) },
-
   tanggalKunjunganText: {
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.md,

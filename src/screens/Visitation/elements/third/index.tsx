@@ -152,7 +152,6 @@ const ThirdStep = () => {
     };
   }, [listenerCallback]);
 
-  console.log('xxxxxx', state.products);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       {/* <BText>step 3</BText> */}
