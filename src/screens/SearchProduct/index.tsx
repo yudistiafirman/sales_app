@@ -47,7 +47,6 @@ const SearchProduct = ({
   }, [route?.params]);
 
   const onChangeText = (text: string) => {
-    console.log(text, 'onChangeText');
 
     setSearchValue(text);
 

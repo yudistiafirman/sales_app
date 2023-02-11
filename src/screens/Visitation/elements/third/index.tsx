@@ -22,11 +22,11 @@ import { TextInput } from 'react-native-paper';
 
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
-import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
+import { ALL_PRODUCT, CREATE_VISITATION, SEARCH_PRODUCT } from '@/navigation/ScreenNames';
 import { fonts } from '@/constants';
 
-const cbd = require('@/assets/icon/Visitation/cbd.png')
-const credit = require('@/assets/icon/Visitation/credit.png')
+const cbd = require('@/assets/icon/Visitation/cbd.png');
+const credit = require('@/assets/icon/Visitation/credit.png');
 
 const ThirdStep = () => {
   const navigation = useNavigation();
@@ -133,7 +133,6 @@ const ThirdStep = () => {
         }
         return acc;
       }, {} as { [id: number]: any });
-      console.log(Object.values(uniqueArray), 'uniqueArray');
       updateValueOnstep('stepThree', 'products', Object.values(uniqueArray));
     },
     [state.products]
@@ -152,23 +151,35 @@ const ThirdStep = () => {
     };
   }, [listenerCallback]);
 
-  console.log('xxxxxx', state.products);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       {/* <BText>step 3</BText> */}
       <BForm titleBold="500" inputs={inputs} />
-      <View style={styles.labelContainer}>
+      <TouchableOpacity
+        onPress={() => {
+          const coordinate = {
+            longitude: Number(values.stepOne.createdLocation.lon),
+            latitude: Number(values.stepOne.createdLocation.lat),
+          };
+          navigation.navigate(ALL_PRODUCT, {
+            coordinate: coordinate,
+            from: CREATE_VISITATION,
+          });
+        }}
+        style={styles.labelContainer}
+      >
         <BLabel bold="500" label="Produk" isRequired />
         <BText bold="500" color="primary">
           Lihat Semua
         </BText>
-      </View>
+      </TouchableOpacity>
       <View style={styles.posRelative}>
         <TouchableOpacity
           style={styles.touchable}
           onPress={() => {
             navigation.navigate(SEARCH_PRODUCT, {
               isGobackAfterPress: true,
+              distance: values.stepOne.createdLocation?.distance?.value,
             });
           }}
         />
