@@ -8,7 +8,6 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Calendar, DateData } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { MarkedDates } from 'react-native-calendars/src/types';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import { BButtonPrimary, BContainer, BSpacer, BText } from '@/components';
@@ -17,7 +16,6 @@ import moment, { locale } from 'moment';
 import { useNavigation } from '@react-navigation/native';
 import { getVisitationsList } from '@/redux/async-thunks/productivityFlowThunks';
 import { useDispatch, useSelector } from 'react-redux';
-// import { productivityFlowGetVisitationsType } from '@/redux/async-thunks/productivityFlowThunks';
 import { RootState } from '@/redux/store';
 import { customerDataInterface, visitationListResponse } from '@/interfaces';
 import {
@@ -26,7 +24,6 @@ import {
   setMarkedData,
 } from '@/redux/reducers/productivityFlowReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import { todayString } from 'react-native-calendars/src/expandableCalendar/commons';
 
 const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
   if (direction === 'right') {
@@ -112,12 +109,19 @@ export default function CalendarScreen() {
           dispatch(setVisitationMapped(visitMapped));
           const newMarkedDate = { ...markedDate };
           Object.keys(visitMapped).forEach((date) => {
-            newMarkedDate[date] = { marked: true };
+            newMarkedDate[date] = {
+              ...newMarkedDate[date],
+              marked: true,
+            };
           });
 
-          if (Object.keys(newMarkedDate).length === 0) {
-            newMarkedDate[fullDate] = { selected: true };
-          }
+          newMarkedDate[fullDate] = {
+            ...newMarkedDate[fullDate],
+            selected: true,
+          };
+
+          const custData = visitMapped[fullDate] || [];
+          setCustomerDatas(custData);
           dispatch(setMarkedData(newMarkedDate));
         })
         .catch((error) => {
@@ -175,30 +179,33 @@ export default function CalendarScreen() {
       console.log('====================================');
 
       setCustomerDatas(custData);
+      console.log('iniiiwkwkw 1, ', custData);
 
       const newMarkedDate = { ...markedDate };
 
       console.log('diaa 1', newMarkedDate);
 
       for (const date of Object.keys(newMarkedDate)) {
-        if (newMarkedDate[date].selected && newMarkedDate[date].marked) {
-          newMarkedDate[date].selected = false;
-        }
+        // if (newMarkedDate[date].selected && newMarkedDate[date].marked) {
+        //   newMarkedDate[date].selected = false;
+        // }
 
         if (newMarkedDate[date].selected) {
-          delete newMarkedDate[date];
+          newMarkedDate[date] = {
+            ...newMarkedDate[date],
+            selected: false,
+          };
         }
-
-        newMarkedDate[day.dateString] = {
-          ...newMarkedDate[day.dateString],
-          selected: true,
-        };
       }
+      newMarkedDate[day.dateString] = {
+        ...newMarkedDate[day.dateString],
+        selected: true,
+      };
 
       console.log('diaa 2', newMarkedDate);
       dispatch(setMarkedData(newMarkedDate));
     },
-    [markedDate, visitationCalendarMapped]
+    [markedDate, visitationCalendarMapped, dispatch]
   );
 
   const selectedData = useMemo(() => {
@@ -267,26 +274,30 @@ export default function CalendarScreen() {
           />
         </View>
         <View>
-          <View>
-            <Text style={styles.tanggalKunjunganText}>
-              Tanggal Kunjungan Berikutnya
-            </Text>
-            <Text style={styles.dateText}>
-              {selectedData[0] && `${selectedData[0]} ,`} {selectedData[1]}
-            </Text>
-          </View>
-          <BSpacer size={'extraSmall'} />
-          <BButtonPrimary
-            title="Simpan"
-            onPress={() => {
-              DeviceEventEmitter.emit(
-                'CalendarScreen.selectedDate',
-                selectedData[2]
-              );
-              navigation.goBack();
-            }}
-            disable={!selectedData[0]}
-          />
+          {selectedData && (
+            <>
+              <View>
+                <Text style={styles.tanggalKunjunganText}>
+                  Tanggal Kunjungan Berikutnya
+                </Text>
+                <Text style={styles.dateText}>
+                  {selectedData[0] && `${selectedData[0]} ,`} {selectedData[1]}
+                </Text>
+              </View>
+              <BSpacer size={'extraSmall'} />
+              <BButtonPrimary
+                title="Simpan"
+                onPress={() => {
+                  DeviceEventEmitter.emit(
+                    'CalendarScreen.selectedDate',
+                    selectedData[2]
+                  );
+                  navigation.goBack();
+                }}
+                disable={!selectedData[0]}
+              />
+            </>
+          )}
         </View>
       </View>
     </BContainer>

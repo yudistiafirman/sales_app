@@ -85,14 +85,14 @@ const BPic = ({
       <View>
         <BText style={titleStyles}>Nama</BText>
         <BText sizeInNumber={fonts.size.sm} bold="500">
-          {name}
+          {name ? name : '-'}
         </BText>
         <BSpacer size="extraSmall" />
         <BText style={titleStyles}>No. Telepon</BText>
         <View style={{ width: resScale(120) }}>
           <ScrollView horizontal={true}>
             <BText sizeInNumber={fonts.size.sm} bold="500">
-              +62 {phone}
+              {phone ? '+62' + phone : '-'}
             </BText>
           </ScrollView>
         </View>
@@ -101,14 +101,14 @@ const BPic = ({
       <View>
         <BText style={titleStyles}>Jabatan</BText>
         <BText sizeInNumber={fonts.size.sm} bold="500">
-          {position}
+          {position ? position : '-'}
         </BText>
         <BSpacer size="extraSmall" />
         <BText style={titleStyles}>email</BText>
         <View style={{ width: resScale(120) }}>
           <ScrollView horizontal={true}>
             <BText sizeInNumber={fonts.size.sm} bold="500">
-              {email}
+              {email ? email : '-'}
             </BText>
           </ScrollView>
         </View>

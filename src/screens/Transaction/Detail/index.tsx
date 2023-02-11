@@ -74,7 +74,7 @@ const TransactionDetail = () => {
                 name={data?.mainPic.name}
                 position={data?.mainPic.position}
                 phone={beautifyPhoneNumber(data?.mainPic.phone)}
-                email={data?.mainPic.email ? data?.mainPic.email : '-'}
+                email={data?.mainPic.email}
               />
               <BSpacer size={'small'} />
             </>
