@@ -99,56 +99,56 @@ export default function SecondStep() {
   const [isMapLoading, setIsMapLoading] = useState(false);
 
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
+  const onChangeRegion = useCallback(
+    async (coordinate: Region, isBiilingAddress?: boolean) => {
+      try {
+        setIsMapLoading(() => true);
+        const { data } = await getLocationCoordinates(
+          // '',
+          coordinate.longitude as unknown as number,
+          coordinate.latitude as unknown as number,
+          'BP-LEGOK'
+        );
+        const { result } = data;
+        if (!result) {
+          throw data;
+        }
+        console.log(result, 'resultOnChange71secondstep');
 
-  const onChangeRegion = async (
-    coordinate: Region,
-    isBiilingAddress?: boolean
-  ) => {
-    try {
-      setIsMapLoading(() => true);
-      const { data } = await getLocationCoordinates(
-        // '',
-        coordinate.longitude as unknown as number,
-        coordinate.latitude as unknown as number,
-        'BP-LEGOK'
-      );
-      const { result } = data;
-      if (!result) {
-        throw data;
-      }
-      console.log(result, 'resultOnChange71secondstep');
+        const _coordinate = {
+          latitude: result?.lat,
+          longitude: result?.lon,
+          formattedAddress: result?.formattedAddress,
+          postalId: result?.PostalId,
+        };
 
-      const _coordinate = {
-        latitude: result?.lat,
-        longitude: result?.lon,
-        formattedAddress: result?.formattedAddress,
-        postalId: result?.PostalId,
-      };
+        if (typeof result?.lon === 'string') {
+          _coordinate.longitude = Number(result.lon);
+          _coordinate.lon = Number(result.lon);
+        }
 
-      if (typeof result?.lon === 'string') {
-        _coordinate.longitude = Number(result.lon);
-        _coordinate.lon = Number(result.lon);
+        if (typeof result?.lat === 'string') {
+          _coordinate.latitude = Number(result.lat);
+          _coordinate.lat = Number(result.lat);
+        }
+        if (isBiilingAddress) {
+          stateUpdate('billingAddress')({
+            ...sphState?.billingAddress,
+            addressAutoComplete: _coordinate,
+          });
+        } else {
+          stateUpdate('distanceFromLegok')(result.distance.value);
+          dispatch(updateRegion(_coordinate));
+        }
+        setIsMapLoading(() => false);
+      } catch (error) {
+        setIsMapLoading(() => false);
+        console.log(JSON.stringify(error), 'onChangeRegionerror');
       }
+    },
+    [sphState?.billingAddress]
+  );
 
-      if (typeof result?.lat === 'string') {
-        _coordinate.latitude = Number(result.lat);
-        _coordinate.lat = Number(result.lat);
-      }
-      if (isBiilingAddress) {
-        stateUpdate('billingAddress')({
-          ...sphState?.billingAddress,
-          addressAutoComplete: _coordinate,
-        });
-      } else {
-        stateUpdate('distanceFromLegok')(result.distance.value);
-        dispatch(updateRegion(_coordinate));
-      }
-      setIsMapLoading(() => false);
-    } catch (error) {
-      setIsMapLoading(() => false);
-      console.log(JSON.stringify(error), 'onChangeRegionerror');
-    }
-  };
   const [, send] = useMachine(deviceLocationMachine, {
     actions: {
       dispatchState: (context, _event, _meta) => {
@@ -313,7 +313,7 @@ export default function SecondStep() {
       DeviceEventEmitter.removeAllListeners(eventKeyObj.shipp);
       DeviceEventEmitter.removeAllListeners(eventKeyObj.billing);
     };
-  }, []);
+  }, [onChangeRegion]);
 
   useEffect(() => {
     stateUpdate('projectAddress')(region);

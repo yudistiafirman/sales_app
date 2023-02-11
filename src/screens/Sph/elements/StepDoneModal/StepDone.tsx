@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   FlatList,
   Share,
+  Platform,
+  Linking,
 } from 'react-native';
 import React, { useContext } from 'react';
 import Modal from 'react-native-modal';
@@ -22,8 +24,12 @@ import {
 } from '@/components';
 import { SphContext } from '../context/SphContext';
 import { postSphResponseType } from '@/interfaces';
-import ReactNativeBlobUtil from 'react-native-blob-util';
 import { useNavigation } from '@react-navigation/native';
+
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import RNPrint from 'react-native-print';
+import { useDispatch } from 'react-redux';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 type StepDoneType = {
   isModalVisible: boolean;
@@ -42,11 +48,17 @@ const paymentMethod: {
   '': '-',
 };
 
+type downloadType = {
+  url?: string;
+  title?: string;
+  downloadPopup: () => void;
+};
+
 function Separator() {
   return <BSpacer size={'extraSmall'} />;
 }
 
-function downloadPdf(url?: string, title?: string) {
+function downloadPdf({ url, title, downloadPopup }: downloadType) {
   if (!url) return null;
   let dirs = ReactNativeBlobUtil.fs.dirs;
   const downloadTitle = title
@@ -70,12 +82,38 @@ function downloadPdf(url?: string, title?: string) {
     })
     .then((res) => {
       // the temp file path
+      downloadPopup();
       console.log('The file saved to ', res.path());
     })
     .catch((err) => {
       console.log(err, 'error download', url);
     });
 }
+async function printRemotePDF(url?: string) {
+  try {
+    if (!url) {
+      throw 'error url missing';
+    }
+    await RNPrint.print({
+      filePath: url,
+    });
+  } catch (error) {
+    console.log(error, 'error print');
+  }
+}
+
+const openAddressOnMap = (label, lat, lng) => {
+  const scheme = Platform.select({
+    ios: 'maps:0,0?q=',
+    android: 'geo:0,0?q=',
+  });
+  const latLng = `${lat},${lng}`;
+  const url = Platform.select({
+    ios: `${scheme}${label}@${latLng}`,
+    android: `${scheme}${latLng}(${label})`,
+  });
+  Linking.openURL(url);
+};
 
 export default function StepDone({
   isModalVisible,
@@ -83,20 +121,30 @@ export default function StepDone({
   sphResponse,
 }: StepDoneType) {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [sphState] = useContext(SphContext);
   const stateCompanyName = sphState.selectedCompany?.Company?.name
     ? sphState.selectedCompany?.Company.name
     : sphState.selectedPic?.name;
 
-  const locationState = sphState?.billingAddress.addressAutoComplete
-    ?.formattedAddress
-    ? sphState?.billingAddress.addressAutoComplete.formattedAddress
-    : sphState.selectedCompany?.locationAddress.line1;
+  // const locationState = sphState?.billingAddress.addressAutoComplete
+  //   ?.formattedAddress
+  //   ? sphState?.billingAddress.addressAutoComplete.formattedAddress
+  //   : sphState.selectedCompany?.locationAddress.line1;
+  const locationState = sphState.isBillingAddressSame
+    ? sphState.selectedCompany?.locationAddress.line1
+    : sphState?.billingAddress.addressAutoComplete.formattedAddress;
+  const locationObj = sphState.isBillingAddressSame
+    ? sphState.selectedCompany
+    : sphState?.billingAddress.addressAutoComplete;
 
   const shareFunc = async (url?: string) => {
     try {
       if (!url) throw 'no url';
-      await Share.share({ url: url, message: `Link PDF SPH, ${url}` });
+      await Share.share({
+        url: url,
+        message: `Link PDF SPH ${stateCompanyName}, ${url}`,
+      });
     } catch (error) {
       console.log(error, 'errorsharefunc');
     }
@@ -136,6 +184,15 @@ export default function StepDone({
           <BCompanyMapCard
             companyName={stateCompanyName}
             location={locationState}
+            onPressLocation={() => {
+              if (locationObj && locationObj.lat && locationObj.lon) {
+                openAddressOnMap(
+                  stateCompanyName,
+                  locationObj.lat,
+                  locationObj.lon
+                );
+              }
+            }}
           />
           <View style={styles.contentDetail}>
             <Text style={styles.partText}>PIC</Text>
@@ -174,7 +231,7 @@ export default function StepDone({
         <View style={styles.modalFooter}>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() => setIsModalVisible((curr) => !curr)}
+            onPress={() => printRemotePDF(sphResponse?.thermalLink)}
           >
             <MaterialCommunityIcons
               name="printer"
@@ -197,7 +254,19 @@ export default function StepDone({
           <TouchableOpacity
             style={styles.footerButton}
             onPress={() =>
-              downloadPdf(sphResponse?.letterLink, sphResponse?.number)
+              downloadPdf({
+                url: sphResponse?.letterLink,
+                title: sphResponse?.number,
+                downloadPopup: () => {
+                  dispatch(
+                    openPopUp({
+                      popUpText: 'Berhasil mendownload SPH',
+                      popUpType: 'success',
+                      outsideClickClosePopUp: true,
+                    })
+                  );
+                },
+              })
             }
           >
             <Feather

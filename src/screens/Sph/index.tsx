@@ -121,7 +121,7 @@ function SphContent() {
   const route = useRoute();
   const stepRef = useRef<ScrollView>(null);
   // const [currentPosition, setCurrentPosition] = useState<number>(0);
-  const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3, 4]);
+  const [stepsDone, setStepsDone] = useState<number[]>([]);
   const [sphData, updateState, setCurrentPosition, currentPosition] =
     useContext(SphContext);
   const stepControll = useCallback((step: number) => {
@@ -129,8 +129,11 @@ function SphContent() {
   }, []);
 
   useEffect(() => {
-    // stepHandler(sphData, stepsDone, setStepsDone, stepControll);
+    stepHandler(sphData, stepsDone, setStepsDone, stepControll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      updateState('chosenProducts')([]);
+    };
   }, [sphData]);
 
   const getLocationCoord = async (coordinate: Region) => {
