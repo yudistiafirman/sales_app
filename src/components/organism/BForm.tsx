@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleProp, ViewStyle } from 'react-native';
+import { View, StyleProp, ViewStyle, TouchableOpacity } from 'react-native';
 import { Input } from '@/interfaces';
 import BSpacer from '../atoms/BSpacer';
 import BTextInput from '../atoms/BTextInput';
@@ -16,6 +16,7 @@ import CheckBox from '@react-native-community/checkbox';
 import BFileInput from '../atoms/BFileInput';
 import BSwitch from '../atoms/BSwitch';
 import { TextInput } from 'react-native-paper';
+import { resScale } from '@/utils';
 
 interface IProps {
   inputs: Input[];
@@ -52,6 +53,16 @@ const styles: Styles = {
   flexRow: {
     flexDirection: 'row',
   },
+  relative: {
+    position: 'relative',
+  },
+  TextinputAbsolut: {
+    position: 'absolute',
+    // backgroundColor: 'blue',
+    width: '100%',
+    height: resScale(73),
+    zIndex: 2,
+  },
 };
 
 const renderInput = (input: Input): React.ReactNode => {
@@ -73,6 +84,9 @@ const renderInput = (input: Input): React.ReactNode => {
     isInputDisable,
     customerErrorMsg,
     LeftIcon,
+    labelStyle,
+    textInputAsButton,
+    textInputAsButtonOnPress,
   } = input;
 
   if (type === 'quantity') {
@@ -103,9 +117,16 @@ const renderInput = (input: Input): React.ReactNode => {
   if (type === 'textInput') {
     const textInputProps = { onChange, value };
     const defaultErrorMsg = `${label} harus diisi`;
-
+    //textInputAsButton
     return (
-      <React.Fragment>
+      <View style={styles.relative}>
+        {textInputAsButton && (
+          <TouchableOpacity
+            onPress={textInputAsButtonOnPress}
+            style={styles.TextinputAbsolut}
+          />
+        )}
+
         <BLabel label={label} isRequired={isRequire} />
         <BTextInput
           {...textInputProps}
@@ -119,7 +140,7 @@ const renderInput = (input: Input): React.ReactNode => {
             {customerErrorMsg || defaultErrorMsg}
           </BText>
         )}
-      </React.Fragment>
+      </View>
     );
   }
 
@@ -252,7 +273,12 @@ const renderInput = (input: Input): React.ReactNode => {
   if (type === 'switch') {
     return (
       <React.Fragment>
-        <BSwitch label={label} value={value} onChange={onChange} />
+        <BSwitch
+          labelStyle={labelStyle}
+          label={label}
+          value={value}
+          onChange={onChange}
+        />
       </React.Fragment>
     );
   }

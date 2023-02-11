@@ -4,7 +4,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { DeviceEventEmitter, SafeAreaView, View } from 'react-native';
 import LocationStyles from './styles';
 import CoordinatesDetail from './elements/CoordinatesDetail';
 import { BButtonPrimary, BLocation, BMarker, BSpacer } from '@/components';
@@ -40,17 +40,20 @@ const Location = () => {
   const onSaveLocation = () => {
     const { lon, lat } = locationDetail;
     const from = route?.params?.from;
+    const eventKey = route?.params?.eventKey;
     const coordinate = {
       longitude: Number(lon),
       latitude: Number(lat),
     };
 
-    if (from) {
-      navigation.goBack();
-      navigation.navigate(TAB_ROOT, {
-        screen: from,
-        params: { coordinate: coordinate },
-      });
+    if (eventKey) {
+      DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
+      navigation.dispatch(StackActions.pop(2));
+      // navigation.goBack();
+      // navigation.navigate(TAB_ROOT, {
+      //   screen: from,
+      //   params: { coordinate: coordinate },
+      // });
     } else {
       navigation.navigate(TAB_ROOT, {
         screen: TAB_PRICE_LIST_TITLE,

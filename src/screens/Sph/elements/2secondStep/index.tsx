@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { DeviceEventEmitter, StyleSheet, Text, View } from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -18,6 +18,7 @@ import {
   BLocation,
   BLocationDetail,
   BMarker,
+  BText,
 } from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
@@ -29,6 +30,7 @@ import { useMachine } from '@xstate/react';
 import { deviceLocationMachine } from '@/machine/modules';
 import { SEARCH_AREA, SPH } from '@/navigation/ScreenNames';
 import { fetchAddressSuggestion } from '@/redux/async-thunks/commonThunks';
+import { useKeyboardActive } from '@/hooks';
 
 function checkObj(obj: SphStateInterface) {
   const billingAddressFilled =
@@ -44,15 +46,23 @@ function checkObj(obj: SphStateInterface) {
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
 }
+//'shippingAddress.event'
+// 'billingAddress.event'
+const eventKeyObj = {
+  shipp: 'shippingAddress.event',
+  billing: 'billingAddress.event',
+};
 
 export default function SecondStep() {
   const navigation = useNavigation();
   const { region } = useSelector((state: RootState) => state.location);
   const [sheetIndex] = useState(0); //setSheetIndex
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const [sheetSnapPoints, setSheetSnapPoints] = useState(['60%']);
+  const [sheetSnapPoints, setSheetSnapPoints] = useState(['60%', '90%']);
   const dispatch = useDispatch();
   const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [isSuggestionLoading, setIsSuggestionLoading] = useState(false);
+  const { keyboardVisible } = useKeyboardActive();
 
   // async function getSuggestion(search: string) {
   //   try {
@@ -67,6 +77,7 @@ export default function SecondStep() {
 
   const getSuggestion = useCallback(async (search: string) => {
     try {
+      setIsSuggestionLoading(true);
       const response = await dispatch(
         fetchAddressSuggestion({ search, page: 1 })
       ).unwrap();
@@ -77,7 +88,9 @@ export default function SecondStep() {
         };
       });
       setAddressSuggestions(nameToTile);
+      setIsSuggestionLoading(false);
     } catch (error) {
+      setIsSuggestionLoading(false);
       setAddressSuggestions([]);
       console.log(error, 'errorfetchAddressSuggestion');
     }
@@ -87,7 +100,10 @@ export default function SecondStep() {
 
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
 
-  const onChangeRegion = async (coordinate: Region) => {
+  const onChangeRegion = async (
+    coordinate: Region,
+    isBiilingAddress?: boolean
+  ) => {
     try {
       setIsMapLoading(() => true);
       const { data } = await getLocationCoordinates(
@@ -118,8 +134,15 @@ export default function SecondStep() {
         _coordinate.latitude = Number(result.lat);
         _coordinate.lat = Number(result.lat);
       }
-      stateUpdate('distanceFromLegok')(result.distance.value);
-      dispatch(updateRegion(_coordinate));
+      if (isBiilingAddress) {
+        stateUpdate('billingAddress')({
+          ...sphState?.billingAddress,
+          addressAutoComplete: _coordinate,
+        });
+      } else {
+        stateUpdate('distanceFromLegok')(result.distance.value);
+        dispatch(updateRegion(_coordinate));
+      }
       setIsMapLoading(() => false);
     } catch (error) {
       setIsMapLoading(() => false);
@@ -148,7 +171,7 @@ export default function SecondStep() {
     const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
     if (sphState?.isBillingAddressSame) {
-      setSheetSnapPoints(['35%']);
+      setSheetSnapPoints(['40%']);
       setTimeout(() => {
         bottomSheetRef.current?.collapse();
       }, 50);
@@ -166,10 +189,8 @@ export default function SecondStep() {
         },
       ];
     }
-    setSheetSnapPoints(['60%']);
-    setTimeout(() => {
-      bottomSheetRef.current?.expand();
-    }, 50);
+    setSheetSnapPoints(['60%', '90%']);
+
     return [
       {
         label: 'Alamat penagihan sama dengan pengiriman',
@@ -185,7 +206,7 @@ export default function SecondStep() {
       {
         label: 'Nama',
         isRequire: true,
-        isError: true,
+        isError: !sphState?.billingAddress?.name,
         type: 'textInput',
         onChange: (event: any) => {
           if (stateUpdate && sphState) {
@@ -219,22 +240,27 @@ export default function SecondStep() {
         label: 'Cari Alamat',
         isRequire: true,
         isError: true,
-        type: 'autocomplete',
+        type: 'textInput',
         onChange: (text: string) => {
           getSuggestion(text);
         },
-        items: addressSuggestions,
+        items: sphState?.billingAddress?.addressAutoComplete
+          ? [
+              ...addressSuggestions,
+              sphState?.billingAddress?.addressAutoComplete,
+            ]
+          : addressSuggestions,
         value: sphState?.billingAddress?.addressAutoComplete
-          ? sphState?.billingAddress?.addressAutoComplete
-          : {},
-        loading: false,
-        onSelect: (item: any) => {
-          if (stateUpdate && sphState) {
-            stateUpdate('billingAddress')({
-              ...sphState?.billingAddress,
-              addressAutoComplete: item ? item : {},
-            });
-          }
+          ? sphState?.billingAddress?.addressAutoComplete?.formattedAddress
+          : '',
+        // loading: isSuggestionLoading,
+        placeholder: 'Cari Kelurahan, Kecamatan, Kota',
+        textInputAsButton: true,
+        textInputAsButtonOnPress: () => {
+          navigation.navigate(SEARCH_AREA, {
+            from: SPH,
+            eventKey: eventKeyObj.billing,
+          });
         },
       },
       {
@@ -253,7 +279,7 @@ export default function SecondStep() {
         value: sphState?.billingAddress?.fullAddress,
       },
     ];
-  }, [sphState, stateUpdate, addressSuggestions]);
+  }, [sphState, stateUpdate, addressSuggestions, isSuggestionLoading]);
 
   const customFooterButton = useCallback(() => {
     return (
@@ -276,11 +302,28 @@ export default function SecondStep() {
 
   useEffect(() => {
     send('askingPermission');
+    DeviceEventEmitter.addListener(eventKeyObj.shipp, (data) => {
+      onChangeRegion(data.coordinate);
+    });
+    DeviceEventEmitter.addListener(eventKeyObj.billing, (data) => {
+      console.log(data, 'listener billing');
+      onChangeRegion(data.coordinate, true);
+    });
+    return () => {
+      DeviceEventEmitter.removeAllListeners(eventKeyObj.shipp);
+      DeviceEventEmitter.removeAllListeners(eventKeyObj.billing);
+    };
   }, []);
 
   useEffect(() => {
     stateUpdate('projectAddress')(region);
   }, [region]);
+
+  useEffect(() => {
+    if (keyboardVisible) {
+      bottomSheetRef.current?.expand();
+    }
+  }, [keyboardVisible]);
 
   const nameAddress = React.useMemo(() => {
     const idx = region.formattedAddress?.split(',');
@@ -317,16 +360,21 @@ export default function SecondStep() {
         initialIndex={sheetIndex}
         CustomFooterButton={customFooterButton}
       >
-        <BLocationDetail
-          onPress={() => {
-            navigation.navigate(SEARCH_AREA, {
-              from: SPH,
-            });
-          }}
-          nameAddress={nameAddress}
-          formattedAddress={region.formattedAddress}
-          isLoading={isMapLoading}
-        />
+        <>
+          <Text style={style.titleText}>Alamat pengiriman</Text>
+          <View style={style.customPadding} />
+          <BLocationDetail
+            onPress={() => {
+              navigation.navigate(SEARCH_AREA, {
+                from: SPH,
+                eventKey: eventKeyObj.shipp,
+              });
+            }}
+            nameAddress={nameAddress}
+            formattedAddress={region.formattedAddress}
+            isLoading={isMapLoading}
+          />
+        </>
       </BBottomSheetForm>
     </View>
   );
@@ -335,6 +383,14 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: layout.pad.md,
+  },
+  titleText: {
+    fontFamily: fonts.family.montserrat['500'],
+    fontSize: fonts.size.sm,
+    color: colors.text.darker,
+  },
+  customPadding: {
+    padding: resScale(2),
   },
   map: {
     height: resScale(450),

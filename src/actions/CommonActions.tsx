@@ -45,9 +45,12 @@ export const uploadFileImage = async (files: any[], from: string) => {
     formData.append('photos', file);
   });
   formData.append('name', from);
-  //192.168.18.23
+  console.log(formData, 'formDatauploadFileImage48');
+
+  //http://192.168.18.23:3000/common/file/upload
   //BrikApiCommon.filesUpload(),
   return request(
+    // 'http://192.168.18.23:3000/common/file/upload',
     BrikApiCommon.filesUpload(),
     await getOptions('POST', formData, true)
   );

@@ -108,6 +108,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
     navigation.navigate(LOCATION, {
       coordinate: coordinate,
       from: route?.params?.from,
+      eventKey: route?.params?.eventKey,
     });
   };
 

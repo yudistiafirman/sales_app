@@ -20,23 +20,72 @@ import {
   BProjectDetailCard,
 } from '@/components';
 import { SphContext } from '../context/SphContext';
+import { postSphResponseType } from '@/interfaces';
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import { useNavigation } from '@react-navigation/native';
 
 type StepDoneType = {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   //   openAddPic: () => void;
   //   selectPic?: () => void;
+  sphResponse: postSphResponseType | null;
+};
+const paymentMethod: {
+  CBD: 'Cash';
+  CREDIT: 'Credit';
+  '': '-';
+} = {
+  CBD: 'Cash',
+  CREDIT: 'Credit',
+  '': '-',
 };
 
 function Separator() {
   return <BSpacer size={'extraSmall'} />;
 }
 
+function downloadPdf(url?: string, title?: string) {
+  if (!url) return null;
+  let dirs = ReactNativeBlobUtil.fs.dirs;
+  const downloadTitle = title
+    ? `${title} berhasil di download`
+    : 'PDF sph berhasil di download';
+  ReactNativeBlobUtil.config({
+    // add this option that makes response data to be stored as a file,
+    // this is much more performant.
+    fileCache: true,
+    path: dirs.DocumentDir,
+    addAndroidDownloads: {
+      useDownloadManager: true,
+      notification: true,
+      title: downloadTitle,
+      description: 'SPH PDF',
+      mediaScannable: true,
+    },
+  })
+    .fetch('GET', url, {
+      //some headers ..
+    })
+    .then((res) => {
+      // the temp file path
+      console.log('The file saved to ', res.path());
+    })
+    .catch((err) => {
+      console.log(err, 'error download', url);
+    });
+}
+
 export default function StepDone({
   isModalVisible,
   setIsModalVisible,
+  sphResponse,
 }: StepDoneType) {
+  const navigation = useNavigation();
   const [sphState] = useContext(SphContext);
+  const stateCompanyName = sphState.selectedCompany?.Company?.name
+    ? sphState.selectedCompany?.Company.name
+    : sphState.selectedPic?.name;
 
   return (
     <Modal
@@ -49,7 +98,12 @@ export default function StepDone({
     >
       <View style={styles.modalStyle}>
         <View style={styles.modalHeader}>
-          <TouchableOpacity onPress={() => setIsModalVisible((curr) => !curr)}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+              setIsModalVisible((curr) => !curr);
+            }}
+          >
             <MaterialCommunityIcons
               name="close"
               size={resScale(25)}
@@ -58,38 +112,48 @@ export default function StepDone({
           </TouchableOpacity>
           <View style={styles.modalTitle}>
             <Text style={styles.headerText} numberOfLines={1}>
-              SPH/BRIK/2022/11/00254
+              {sphResponse?.number}
             </Text>
           </View>
         </View>
         <View style={styles.modalContent}>
-          <LabelSuccess />
-          <BCompanyMapCard location={sphState?.billingAddress.fullAddress} />
+          <LabelSuccess sphId={sphResponse?.number} />
+          <BCompanyMapCard
+            companyName={stateCompanyName}
+            location={
+              sphState?.billingAddress.addressAutoComplete.formattedAddress
+            }
+          />
           <View style={styles.contentDetail}>
             <Text style={styles.partText}>PIC</Text>
             <BSpacer size={'extraSmall'} />
-            <BPic />
+            <BPic {...sphState.selectedPic} />
             <BSpacer size={'extraSmall'} />
             <Text style={styles.partText}>Rincian</Text>
             <BSpacer size={'extraSmall'} />
-            <BProjectDetailCard />
+            <BProjectDetailCard
+              productionTime={sphResponse?.createdTime}
+              expiredDate={sphResponse?.expiryTime}
+              status={'Diajukan'}
+              paymentMethod={paymentMethod[sphState.paymentType]}
+              projectName={sphState.selectedCompany?.name}
+            />
             <BSpacer size={'extraSmall'} />
-            <Text style={styles.partText}>Rincian</Text>
+            <Text style={styles.partText}>Produk</Text>
             <BSpacer size={'extraSmall'} />
             <FlatList
               renderItem={({ item }) => {
                 return (
                   <BProductCard
-                    key={item.id}
                     name={item.product.name}
                     pricePerVol={+item.sellPrice}
                     volume={+item.volume}
-                    totalPrice={+item.sellPrice * +item.volume}
+                    totalPrice={+item.totalPrice}
                   />
                 );
               }}
               data={sphState?.chosenProducts}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.productId}
               ItemSeparatorComponent={Separator}
             />
           </View>
@@ -104,7 +168,7 @@ export default function StepDone({
               size={resScale(25)}
               color={colors.primary}
             />
-            <Text>Print</Text>
+            <Text style={styles.footerButtonText}>Print</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.footerButton}
@@ -115,18 +179,20 @@ export default function StepDone({
               size={resScale(25)}
               color={colors.primary}
             />
-            <Text>Share</Text>
+            <Text style={styles.footerButtonText}>Share</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() => setIsModalVisible((curr) => !curr)}
+            onPress={() =>
+              downloadPdf(sphResponse?.letterLink, sphResponse?.number)
+            }
           >
             <Feather
               name="download"
               size={resScale(25)}
               color={colors.primary}
             />
-            <Text>Download</Text>
+            <Text style={styles.footerButtonText}>Download</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -211,5 +277,10 @@ const styles = StyleSheet.create({
     flex: 0.3,
     // backgroundColor: 'red',
     alignItems: 'center',
+  },
+  footerButtonText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
   },
 });

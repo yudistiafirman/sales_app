@@ -143,7 +143,6 @@ export default function ThirdStep() {
         CBD: 'cbd',
       };
       const key: 'cbd' | 'credit' = objKey[sphState?.paymentType];
-      console.log(sphDocuments[key].length, 'lengthdocument');
 
       if (sphDocuments[key]) {
         if (sphDocuments[key].length) {
@@ -165,10 +164,6 @@ export default function ThirdStep() {
           const localReqDocKeys = Object.keys(documentObj);
           const parentDocString = JSON.stringify(parentReqDocKeys);
           const localDocString = JSON.stringify(localReqDocKeys);
-          console.log(
-            parentDocString === localDocString && parentReqDocKeys.length > 0,
-            'condition170'
-          );
 
           if (
             parentDocString === localDocString &&
@@ -294,14 +289,19 @@ export default function ThirdStep() {
       inputs.push({
         label: key.label,
         onChange: (data: any) => {
-          setDocuments((curr) => {
-            console.log(curr, 'curr298');
+          if (data) {
+            setDocuments((curr) => {
+              console.log(curr, 'curr298');
 
-            return {
-              ...curr,
-              [key.key]: data,
-            };
-          });
+              return {
+                ...curr,
+                [key.key]: {
+                  ...data,
+                  name: key.key.trim() + data.name.trim(),
+                },
+              };
+            });
+          }
           // stateUpdate('paymentRequiredDocuments')({
           //   ...sphState.paymentRequiredDocuments,
           //   [key.key]: data,

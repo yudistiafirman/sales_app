@@ -224,7 +224,7 @@ const style = StyleSheet.create({
   },
   productText: {
     fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.sm,
+    fontSize: fonts.size.md,
     color: colors.text.darker,
   },
   searchModeContainer: {

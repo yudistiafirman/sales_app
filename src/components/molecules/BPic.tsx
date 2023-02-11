@@ -90,12 +90,12 @@ const BPic = ({
       <BSpacer size="extraSmall" />
       <View>
         <BText>Jabatan</BText>
-        <BText bold="bold">{position}</BText>
+        <BText bold="bold">{position ? position : '-'}</BText>
         <BSpacer size="extraSmall" />
         <BText>email</BText>
         <View style={{ width: resScale(120) }}>
           <ScrollView horizontal={true}>
-            <BText bold="bold">{email}</BText>
+            <BText bold="bold">{email ? email : '-'}</BText>
           </ScrollView>
         </View>
       </View>

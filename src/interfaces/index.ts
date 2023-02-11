@@ -87,6 +87,9 @@ interface Input {
   };
   onSelect?: (index: number | any) => void; //eg for pic radio
   isInputDisable?: boolean;
+  labelStyle?: ViewStyle;
+  textInputAsButton?: boolean;
+  textInputAsButtonOnPress?: () => void;
 }
 
 interface Styles {
@@ -107,6 +110,9 @@ interface Address {
   line2?: string;
   latitudeDelta?: number;
   longitudeDelta?: number;
+  city?: string;
+  district?: string;
+  rural?: string;
 }
 
 // create visitation
@@ -288,6 +294,7 @@ interface SphStateInterface {
   paymentBankGuarantee: boolean;
   chosenProducts: chosenProductType[];
   useHighway: boolean;
+  uploadedAndMappedRequiredDocs: requiredDocType[];
 }
 
 type SphContextInterface = [
@@ -503,7 +510,8 @@ interface deliveryAndDistance {
 }
 interface sphOrderPayloadType {
   projectId: string;
-  picId: string;
+  // picId: string;
+  picArr: PIC[];
   isUseSameAddress: boolean;
   billingRecipientName: string;
   billingRecipientPhone: string;
@@ -515,6 +523,33 @@ interface sphOrderPayloadType {
   requestedProducts: requestedProductsType[];
   delivery: deliveryAndDistance;
   distance: deliveryAndDistance;
+  billingAddress: {
+    postalId: string;
+    line1: string;
+    line2: string;
+  };
+}
+
+type requiredDocType = {
+  documentId: string;
+  fileId: string;
+};
+
+interface pdfDataType {
+  type: string;
+  name: string;
+  url: string;
+  pdfType: string;
+}
+
+interface postSphResponseType {
+  number: string;
+  createdTime: string;
+  expiryTime: string;
+  thermalLink: string;
+  letterLink: string;
+  letter: pdfDataType[];
+  pos: pdfDataType[];
 }
 
 export type {
@@ -549,4 +584,6 @@ export type {
   requestedProductsType,
   deliveryAndDistance,
   Address,
+  requiredDocType,
+  postSphResponseType,
 };

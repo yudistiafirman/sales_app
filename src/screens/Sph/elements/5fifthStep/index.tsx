@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   BBackContinueBtn,
   BContainer,
@@ -14,6 +14,7 @@ import { colors, fonts } from '@/constants';
 import {
   deliveryAndDistance,
   Input,
+  postSphResponseType,
   requestedProductsType,
   shippingAddressType,
   sphOrderPayloadType,
@@ -27,7 +28,10 @@ import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSh
 import { SphContext } from '../context/SphContext';
 import StepDone from '../StepDoneModal/StepDone';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { postOrderSph } from '@/redux/async-thunks/orderThunks';
+import { RootState } from '@/redux/store';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 
 function payloadMapper(sphState: SphStateInterface) {
   console.log(JSON.stringify(sphState), 'sphState24');
@@ -37,13 +41,13 @@ function payloadMapper(sphState: SphStateInterface) {
     requestedProducts: [] as requestedProductsType[],
     delivery: {} as deliveryAndDistance,
     distance: {} as deliveryAndDistance,
+    billingAddress: {},
   } as sphOrderPayloadType;
   const { selectedCompany, projectAddress } = sphState;
   const locationAddress = selectedCompany?.locationAddress;
-  //harcode m3
-  console.log(projectAddress, 'projectAddressdistep5');
 
   if (sphState.chosenProducts.length > 0) {
+    //harcode m3
     payload.requestedProducts = sphState.chosenProducts.map((product) => {
       return {
         productId: product.productId,
@@ -57,10 +61,8 @@ function payloadMapper(sphState: SphStateInterface) {
 
     payload.distance = sphState.chosenProducts[0].additionalData.distance;
     // find highest delivery
-    const deliveries = [];
+    const deliveries: deliveryAndDistance[] = [];
     sphState.chosenProducts.forEach((prod) => {
-      console.log(prod.additionalData, 'iniaddprices58');
-
       deliveries.push(prod.additionalData.delivery);
     });
     const highestPrice = deliveries.reduce(function (prev, curr) {
@@ -70,13 +72,11 @@ function payloadMapper(sphState: SphStateInterface) {
   }
 
   if (locationAddress) {
-    console.log(locationAddress, 'locationAddress69');
-
     if (locationAddress.id) {
       payload.shippingAddress.id = locationAddress.id;
     }
   }
-  if (projectAddress && sphState.isBillingAddressSame) {
+  if (projectAddress) {
     if (projectAddress.city) {
       payload.shippingAddress.city = projectAddress.city;
     }
@@ -96,7 +96,7 @@ function payloadMapper(sphState: SphStateInterface) {
       payload.shippingAddress.rural = projectAddress.rural;
     }
     if (projectAddress.postalId) {
-      payload.shippingAddress.postalCode = projectAddress.postalId;
+      payload.shippingAddress.postalId = projectAddress.postalId;
     }
   }
   if (sphState.paymentType) {
@@ -110,35 +110,68 @@ function payloadMapper(sphState: SphStateInterface) {
   }
   if (selectedCompany) {
     payload.projectId = selectedCompany.id;
+    payload.picArr = selectedCompany.PIC;
   }
   if (typeof sphState.paymentBankGuarantee === 'boolean') {
     payload.isProvideBankGuarantee = sphState.paymentBankGuarantee;
   }
-  if (sphState.billingAddress.name) {
-    if (sphState.isBillingAddressSame) {
+
+  if (sphState.isBillingAddressSame) {
+    if (sphState.selectedPic?.name) {
       payload.billingRecipientName = sphState.selectedPic.name;
-    } else {
+    }
+    if (sphState.selectedPic?.phone) {
+      payload.billingRecipientPhone = sphState.selectedPic.phone;
+    }
+  } else {
+    if (sphState.billingAddress.name) {
       payload.billingRecipientName = sphState.billingAddress.name;
     }
-  }
-  if (sphState.billingAddress.phone) {
-    if (sphState.isBillingAddressSame) {
-      payload.billingRecipientPhone = sphState.selectedPic.phone;
-    } else {
+    if (sphState.billingAddress.phone) {
       payload.billingRecipientPhone = sphState.billingAddress.phone.toString();
     }
   }
+
+  // }
   if (!sphState.isBillingAddressSame) {
     if (sphState.billingAddress.addressAutoComplete) {
-      payload.shippingAddress.line1 =
-        sphState.billingAddress.addressAutoComplete.title;
-      payload.shippingAddress.postalCode =
-        sphState.billingAddress.addressAutoComplete.id;
+      if (sphState.billingAddress.addressAutoComplete.formattedAddress) {
+        payload.billingAddress.line1 =
+          sphState.billingAddress.addressAutoComplete.formattedAddress;
+      }
+      if (sphState.billingAddress.addressAutoComplete.postalId) {
+        payload.billingAddress.postalId =
+          sphState.billingAddress.addressAutoComplete.postalId;
+      }
+      if (sphState.billingAddress.addressAutoComplete.lat) {
+        payload.billingAddress.lat =
+          sphState.billingAddress.addressAutoComplete.lat;
+      }
+      if (sphState.billingAddress.addressAutoComplete.lon) {
+        payload.billingAddress.lon =
+          sphState.billingAddress.addressAutoComplete.lon;
+      }
+      if (sphState.billingAddress.addressAutoComplete.rural) {
+        payload.billingAddress.rural =
+          sphState.billingAddress.addressAutoComplete.rural;
+      }
+      if (sphState.billingAddress.addressAutoComplete.district) {
+        payload.billingAddress.district =
+          sphState.billingAddress.addressAutoComplete.district;
+      }
+      if (sphState.billingAddress.addressAutoComplete.city) {
+        payload.billingAddress.city =
+          sphState.billingAddress.addressAutoComplete.city;
+      }
     }
     if (sphState.billingAddress.fullAddress) {
-      payload.shippingAddress.line2 = sphState.billingAddress.fullAddress;
+      payload.billingAddress.line2 = sphState.billingAddress.fullAddress;
     }
+    console.log(sphState.billingAddress.addressAutoComplete, 'testing9292');
+  } else {
+    payload.billingAddress = payload.shippingAddress;
   }
+
   // if (!sphState.isBillingAddressSame) {
   // }
   console.log(JSON.stringify(payload), 'payload1012');
@@ -148,12 +181,16 @@ function payloadMapper(sphState: SphStateInterface) {
 
 export default function FifthStep() {
   const dispatch = useDispatch();
+  const { isOrderLoading } = useSelector((state: RootState) => state.order);
   const [sphState, stateUpdate] = useContext(SphContext);
 
   const bottomSheetRef = React.useRef<BottomSheet>(null);
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isStepDoneVisible, setIsStepDoneVisible] = useState(false);
+  const [madeSphData, setMadeSphData] = useState<postSphResponseType | null>(
+    null
+  );
 
   const inputsData: Input[] = [
     {
@@ -166,6 +203,10 @@ export default function FifthStep() {
         }
       },
       value: sphState?.useHighway,
+      labelStyle: {
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.md,
+      },
     },
   ];
   function addPicHandler() {
@@ -176,38 +217,91 @@ export default function FifthStep() {
   async function buatSph() {
     try {
       const payload = payloadMapper(sphState);
-
       const photoFiles = Object.values(sphState.paymentRequiredDocuments);
-      console.log(photoFiles, '`photoFiles170`');
 
-      const photoResponse = await dispatch(
-        postUploadFiles({ files: photoFiles, from: 'sph' })
-      ).unwrap();
-      console.log(photoResponse, 'photoResponseuploaded');
+      if (sphState.uploadedAndMappedRequiredDocs.length === 0) {
+        const photoResponse = await dispatch(
+          postUploadFiles({ files: photoFiles, from: 'sph' })
+        ).unwrap();
 
-      // const files = photoResponse.map((photo) => {
-      //   const photoName = `${photo.name}.${photo.type}`;
-      //   const photoNamee = `${photo.name}.jpg`;
-      //   const foundObject = photoUrls.find(
-      //     (obj) => obj.photo.name === photoName || obj.photo.name === photoNamee
-      //   );
-      //   if (foundObject) {
-      //     return {
-      //       id: photo.id,
-      //       type: foundObject.type,
-      //     };
-      //   }
-      // });
+        const files = photoResponse.map((photo) => {
+          const photoName = `${photo.name}.${photo.type}`;
+          const photoNamee = `${photo.name}.jpg`;
+
+          Object.keys(sphState.paymentRequiredDocuments);
+          let foundPhoto;
+          for (const documentId in sphState.paymentRequiredDocuments) {
+            if (
+              Object.prototype.hasOwnProperty.call(
+                sphState.paymentRequiredDocuments,
+                documentId
+              )
+            ) {
+              const photoData = sphState.paymentRequiredDocuments[documentId];
+              if (
+                photoData.name === photoName ||
+                photoData.name === photoNamee
+              ) {
+                // return {
+                // documentId: documentId,
+                // fileId: photo.id,
+                // };
+                foundPhoto = documentId;
+              }
+            }
+          }
+          if (foundPhoto) {
+            return {
+              documentId: foundPhoto,
+              fileId: photo.id,
+            };
+          }
+        });
+        payload.projectDocs = files;
+      } else {
+        payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
+      }
+      console.log(JSON.stringify(payload), 'payloadfinal');
+
+      const sphResponse = await dispatch(postOrderSph({ payload })).unwrap();
+      const { sph } = sphResponse;
+      if (!sph) {
+        throw sphResponse;
+      }
+      setMadeSphData(sph);
+      setIsStepDoneVisible(true);
     } catch (error) {
       console.log(error, 'errorbuatSph54');
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: 'Error Menyimpan SPH',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   }
+
+  useEffect(() => {
+    if (isOrderLoading) {
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: 'Menyimpan SPH',
+          outsideClickClosePopUp: false,
+        })
+      );
+    } else {
+      dispatch(closePopUp());
+    }
+  }, [isOrderLoading]);
 
   return (
     <BContainer>
       <StepDone
         isModalVisible={isStepDoneVisible}
         setIsModalVisible={setIsStepDoneVisible}
+        sphResponse={madeSphData}
       />
       <ChoosePicModal
         isModalVisible={isModalVisible}

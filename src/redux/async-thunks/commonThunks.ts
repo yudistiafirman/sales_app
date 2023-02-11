@@ -31,6 +31,8 @@ export const postUploadFiles = createAsyncThunk<
 
     return data.data;
   } catch (error) {
+    console.log(error.message, 'errormsgcommon/postUploadFiles');
+
     console.log(error?.response?.data, 'error at', 'common/postUploadFiles');
     return rejectWithValue(error.message);
   }
