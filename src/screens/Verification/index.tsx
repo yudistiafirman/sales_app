@@ -1,10 +1,9 @@
 import { BSpacer } from '@/components';
 import BErrorText from '@/components/atoms/BErrorText';
-import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import { colors } from '@/constants';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import * as React from 'react';
 import { Image, SafeAreaView } from 'react-native';
 import OTPField from './element/OTPField';
 import OTPFieldLabel from './element/OTPFieldLabel';
@@ -20,12 +19,13 @@ import bStorage from '@/actions/BStorage';
 import { signIn } from '@/actions/CommonActions';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import storageKey from '@/constants/storageKey';
+
 const Verification = () => {
   const { phoneNumber } = useSelector(
     (state: RootState) => state.auth.loginCredential
   );
   const navigation = useNavigation();
-  const [verificationState, setVerificationState] = useState({
+  const [verificationState, setVerificationState] = React.useState({
     otpValue: '',
     errorOtp: '',
     loading: false,
@@ -33,14 +33,8 @@ const Verification = () => {
   });
   const dispatch = useDispatch();
   const { otpValue, errorOtp, loading, countDownOtp } = verificationState;
-  let timer = useRef<number | undefined>();
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerLeft: renderHeaderLeft,
-    });
-  }, [navigation]);
-  useEffect(() => {
+  let timer = React.useRef<number | undefined>();
+  React.useEffect(() => {
     timer.current = setInterval(() => {
       if (countDownOtp !== 0) {
         setVerificationState((prevState) => ({
@@ -54,15 +48,11 @@ const Verification = () => {
     };
   }, [countDownOtp]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (otpValue.length === 6) {
       onLogin();
     }
   }, [otpValue]);
-
-  const renderHeaderLeft = () => (
-    <BHeaderIcon size={resScale(30)} onBack={onBack} iconName="chevron-left" />
-  );
 
   const onLogin = async () => {
     const params = { phone: phoneNumber, otp: otpValue };

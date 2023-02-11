@@ -33,7 +33,8 @@ import { resScale } from '@/utils';
 import { useDispatch } from 'react-redux';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { useRoute } from '@react-navigation/native';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
+import { resetRegion, updateRegion } from '@/redux/reducers/locationReducer';
 
 const labels = [
   'Alamat Proyek',
@@ -51,7 +52,6 @@ function stepHandler(
   setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
 ) {
   const { stepOne, stepTwo, stepThree, stepFour } = state;
-  console.log(stepTwo, 'stepTwo');
 
   if (
     stepOne.createdLocation.formattedAddress &&
@@ -115,15 +115,44 @@ function populateData(
       | keyof CreateVisitationThirdStep
       | keyof CreateVisitationFourthStep,
     value: any
-  ) => undefined
+  ) => void
 ) {
-  console.log(existingData, 'difunction');
+  console.log(JSON.stringify(existingData), 'difunction');
   const { project } = existingData;
-  if (project.company) {
+  const { company, PIC: picList, mainPic } = project;
+  if (company) {
     updateValue('stepTwo', 'customerType', 'COMPANY');
+    // const selectedCompany = {
+    //   id: company.id,
+    //   title: company.displayName,
+    // };
+    updateValue('stepTwo', 'companyName', company.displayName);
+    // updateValue('stepTwo', 'options', {
+    //   loading: false,
+    //   items: [selectedCompany],
+    // });
   } else {
     updateValue('stepTwo', 'customerType', 'INDIVIDU');
   }
+  if (picList) {
+    const list = picList.map((pic) => {
+      if (mainPic) {
+        if (pic.id === mainPic.id) {
+          return {
+            ...pic,
+            isSelected: true,
+          };
+        }
+      }
+      return {
+        ...pic,
+        isSelected: false,
+      };
+    });
+    updateValue('stepTwo', 'pics', list);
+  }
+  updateValue('stepTwo', 'projectId', project.id);
+
   updateValue('stepTwo', 'projectName', project.name);
   // updateValue('stepTwo', 'companyName');
 }
@@ -137,19 +166,38 @@ const CreateVisitation = () => {
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = useState<number[]>([]);
 
-  const existingVisitation = route?.params?.existingVisitation;
+  const existingVisitation: visitationListResponse =
+    route?.params?.existingVisitation;
 
   useEffect(() => {
-    console.log(existingVisitation, 'existingVisitation112');
     if (existingVisitation) {
+      updateValue('existingVisitationId', existingVisitation.id);
       populateData(existingVisitation, updateValueOnstep);
+      const { project } = existingVisitation;
+      const { locationAddress } = project;
+      updateValueOnstep('stepOne', 'existingLocationId', locationAddress.id);
+      if (locationAddress) {
+        if (locationAddress.lon && locationAddress.lat) {
+          const longitude = +locationAddress.lon;
+          const latitude = +locationAddress.lat;
+          dispatch(
+            updateRegion({
+              formattedAddress: locationAddress.line1,
+              latitude: latitude,
+              longitude: longitude,
+              lat: latitude,
+              long: latitude,
+              PostalId: undefined,
+              line2: locationAddress?.line2,
+            })
+          );
+        }
+      }
     }
-    // DeviceEventEmitter.addListener('Camera.preview', (photo) => {
-    //   console.log('kedengeran di parent createVisitation', photo);
-    // });
+
     return () => {
-      // DeviceEventEmitter.removeAllListeners('Camera.preview');
       dispatch(resetImageURLS());
+      dispatch(resetRegion());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

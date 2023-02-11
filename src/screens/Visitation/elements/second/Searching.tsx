@@ -33,13 +33,6 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
     (state: RootState) => state.common
   );
 
-  // useEffect(() => {
-  //   return () => {
-  //     console.log('debounce cleanup');
-  //     onChangeWithDebounce.cancel();
-  //   };
-  // }, []);
-
   const searchDispatch = (text: string) => {
     dispatch(getAllProject({ search: text }));
   };
@@ -102,7 +95,11 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
     updateValueOnstep('stepTwo', 'projectName', item.name);
     if (item.Visitation) {
       updateValueOnstep('stepTwo', 'visitationId', item.Visitation.id);
-      updateValueOnstep('stepTwo', 'existingOrderNum', item.Visitation.order);
+      let order = +item.Visitation.order;
+      if (!item.Visitation.finish_date) {
+        order -= 1;
+      }
+      updateValueOnstep('stepTwo', 'existingOrderNum', order);
     }
     onClear();
     // updateValueOnstep('stepTwo', 'pics', item?.pic);
@@ -128,7 +125,7 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
           <BVisitationCard
             item={{
               name: item.name,
-              location: item.locationAddress.city,
+              location: item.locationAddress.line1,
             }}
             searchQuery={searchQuery}
             onPress={() => {

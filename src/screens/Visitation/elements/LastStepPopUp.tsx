@@ -16,6 +16,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { TextInput } from 'react-native-paper';
 import { Input } from '@/interfaces';
 import { useNavigation } from '@react-navigation/native';
+import { CALENDAR } from '@/navigation/ScreenNames';
 
 type LastStepPopUpType = {
   isVisible: boolean;
@@ -190,7 +191,7 @@ export default function LastStepPopUp({
               <TouchableOpacity
                 style={styles.touchable}
                 onPress={() => {
-                  navigation.navigate('CalendarScreen');
+                  navigation.navigate(CALENDAR);
                   setIsPopUpVisible((curr) => !curr);
                 }}
               />

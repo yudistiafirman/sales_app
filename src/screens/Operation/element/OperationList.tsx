@@ -8,13 +8,14 @@ import { layout } from '@/constants';
 import { BSpacer, BOperationCard } from '@/components';
 import { useNavigation } from '@react-navigation/native';
 import { USER_TYPE } from '@/models/EnumModel';
+import { CAMERA, SCHEDULE } from '@/navigation/ScreenNames';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type FooterType = {
   role?: USER_TYPE;
   isLoading?: boolean;
 };
-type CustomFlatlistType = {
+type OperationListType = {
   data: {
     id: string;
     name: string;
@@ -35,11 +36,11 @@ const FooterLoading = ({ isLoading }: FooterType) => {
   );
 };
 
-export default function CustomFlatlist({
+export default function OperationList({
   isLoading,
   data,
   role,
-}: FooterType & CustomFlatlistType) {
+}: FooterType & OperationListType) {
   const navigation = useNavigation();
   const footerComp = useCallback(
     () => <FooterLoading isLoading={isLoading} />,
@@ -49,9 +50,9 @@ export default function CustomFlatlist({
 
   const onClickItem = (id: string) => {
     if (role === USER_TYPE.OPERATION) {
-      navigation.navigate('Schedule', { id: id });
+      navigation.navigate(SCHEDULE, { id: id });
     } else {
-      navigation.navigate('Camera', {
+      navigation.navigate(CAMERA, {
         photoTitle: 'DO',
         navigateTo: 'return',
       });

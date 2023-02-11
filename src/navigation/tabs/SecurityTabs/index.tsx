@@ -5,18 +5,20 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import BTabScreen from '@/navigation/elements/BTabScreen';
 import Operation from '@/screens/Operation';
 import Dispatch from '@/screens/Operation/Dispatch';
-import CustomSecurityTabBar from './SecurityTabBar';
-import { USER_TYPE } from '@/models/EnumModel';
+import CustomTabBar from '../CustomTabBar';
 
 const Tab = createBottomTabNavigator();
 
+/**
+ * @deprecated The method should not be used
+ */
 function SecurityTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarHideOnKeyboard: true,
       }}
-      tabBar={(props) => <CustomSecurityTabBar {...props} />}
+      tabBar={(props) => <CustomTabBar {...props} />}
     >
       {BTabScreen({
         Tab: Tab,

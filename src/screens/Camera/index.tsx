@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import Config from './elements/Config';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { hasCameraPermissions } from '@/utils/permissions';
 
 const Camera = () => {

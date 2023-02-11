@@ -34,7 +34,8 @@ interface Input {
   placeholder?: string;
   loading?: boolean;
   isError?: boolean;
-  errorMessage?: string;
+  customerErrorMsg?: string;
+  LeftIcon?: () => JSX.Element;
   keyboardType?: KeyboardType | KeyboardTypeOptions;
   items?: any;
   options?: Array<{
@@ -104,17 +105,20 @@ interface Address {
   longitude?: number;
   latitude?: number;
   postalId?: number;
+  line2?: string;
 }
 
 // create visitation
 interface CreateVisitationFirstStep {
   createdLocation: Address;
   locationAddress: Address;
+  existingLocationId?: string;
 }
 interface CreateVisitationSecondStep {
-  companyName: { title: string; id: string };
+  companyName: string;
   customerType: 'INDIVIDU' | 'COMPANY';
   projectName: string;
+  projectId?: string;
   location: { [key: string]: any };
   pics: PIC[];
   options: {
@@ -150,9 +154,11 @@ interface CreateVisitationState {
   stepFour: CreateVisitationFourthStep;
   sheetIndex: number;
   shouldScrollView: boolean;
+  existingVisitationId: string | null;
 }
 
 interface PIC {
+  id?: string;
   name?: string;
   phone?: string;
   email?: string;
@@ -206,8 +212,36 @@ interface BLocationProps {
   isUninteractable?: boolean;
 }
 
+interface selectedCompanyInterface {
+  id: string;
+  name: string;
+  Company: {
+    id: string | null;
+    name: string | null;
+  };
+  PIC: PIC[];
+  Visitation: {
+    finish_date: string | null;
+    id: string;
+    order: number;
+    visitation_id: string | null;
+  };
+  locationAddress: {
+    city?: string;
+    district?: string;
+    line1?: string;
+    postalCode?: number;
+    rural?: string;
+  };
+  mainPic: {
+    id: string | null;
+    name: string | null;
+  };
+}
+
 interface SphStateInterface {
-  selectedCompany: any;
+  selectedCompany: selectedCompanyInterface | null;
+  picList: PIC[];
   selectedPic: any;
   isBillingAddressSame: boolean;
   billingAddress: {
@@ -216,6 +250,7 @@ interface SphStateInterface {
     addressAutoComplete: { [key: string]: any };
     fullAddress: string;
   };
+  distanceFromLegok: number | null;
   paymentType: string;
   paymentRequiredDocuments: { [key: string]: any };
   paymentDocumentsFullfilled: boolean;
@@ -226,8 +261,9 @@ interface SphStateInterface {
 
 type SphContextInterface = [
   SphStateInterface,
-  (key: string) => (data: any) => void,
-  (index: number) => void
+  (key: keyof SphStateInterface) => (data: any) => void,
+  (index: number) => void,
+  number
 ];
 
 interface AdditionalPricesInterface {
@@ -256,12 +292,19 @@ interface ProductDataInterface {
     id: string;
     price: number;
   };
+  properties: {
+    fc: string;
+    fs: string;
+    sc: string;
+    slump: number;
+  };
   Category: {
     id: string;
     name: string;
     parent_id: string;
     Parent: productParentInterface;
   };
+  calcPrice: number;
 }
 
 interface visitationListResponse {
@@ -279,14 +322,8 @@ interface visitationListResponse {
     id: string;
     name: string;
     stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
-    pic: {
-      id: string;
-      name: string;
-      position: string;
-      phone: string;
-      email: string | null;
-      type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
-    };
+    PIC: PIC[];
+    mainPic: PIC & { type?: string };
     company: {
       id: string;
       name: string;
@@ -295,52 +332,16 @@ interface visitationListResponse {
     locationAddress: {
       id: string;
       line1?: string;
+      line2?: string;
       rural?: string;
       district?: string;
       postalCode?: number;
       city?: string;
+      lat?: string;
+      lon?: string;
     };
   };
 }
-// interface visitationListResponse {
-//   id: string;
-//   created_location: string;
-//   visitation_id: string;
-//   created_by_id: string;
-//   project_id: string | null;
-//   order: number;
-//   customer_type: 'COMPANY' | 'INDIVIDU';
-//   payment_type: 'CBD' | 'CREDIT';
-//   estimation_week: string;
-//   estimation_month: string;
-//   visit_notes: string | null;
-//   dateVisit: string;
-//   reject_notes: string | null;
-//   reject_category: 'FINISHED' | 'MOU_COMPETITOR' | null;
-//   is_booking: boolean;
-//   finishDate: string | null;
-//   status: 'VISIT' | 'SPH' | 'PO' | 'SCHEDULING' | 'DO' | 'REJECTED';
-//   created_at: string;
-//   updated_at: string;
-//   product_id: string;
-//   company_id: string;
-//   location_address_id: string | null;
-//   shipping_address_id: string | null;
-//   billing_address_id: string | null;
-//   main_pic_id: string;
-//   name: string;
-//   stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
-//   checkout_url: string | null;
-//   checkout_expiry_date: string | null;
-//   external_customer_id: string | null;
-//   file_id: string | null;
-//   type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
-//   supplier_id: string | null;
-//   position: string;
-//   phone: string;
-//   email: string | null;
-//   display_name: string;
-// }
 
 interface customerDataInterface {
   display_name: string;
@@ -356,6 +357,7 @@ interface locationPayloadType {
   postalId: number;
   lon: number;
   lat: number;
+  line2?: string;
 }
 
 interface visitationPayload {
@@ -375,11 +377,18 @@ interface visitationPayload {
   rejectCategory?: 'FINISHED' | 'MOU_COMPETITOR';
   isBooking?: boolean; // ??
   status?: 'VISIT' | 'SPH' | 'REJECTED' | '';
-  files: { id: string; type: 'GALLERY' | 'COVER' }[];
+  files: filesType[];
   products: { id: string }[];
 }
 
+interface filesType {
+  id: string;
+  type: 'GALLERY' | 'COVER';
+}
+
 interface projectPayloadType {
+  id?: string;
+  locationAddressId?: string;
   name?: string;
   companyDisplayName?: string;
   location: locationPayloadType;
@@ -399,7 +408,7 @@ interface payloadPostType {
   visitation: visitationPayload;
   project: projectPayloadType;
   pic: picPayloadType[];
-  files: any[];
+  files: filesType[];
 }
 
 type visitationDataType = {
@@ -409,26 +418,78 @@ type visitationDataType = {
   time?: string;
   status?: string;
   pilNames?: string[];
-  pilStatus?: string;
-};
+  pilStatus?: 'Selesai' | 'Belum Selesai';
+}
 
-type VisitationCardType = {
-  item: visitationDataType;
-  searchQuery?: string;
-  onPress?: (data: visitationDataType) => void;
-  isRenderIcon?: boolean;
-  customIcon?: () => JSX.Element;
-};
-
-interface PicFormInitialState {
+interface projectResponseType {
+  id: string;
   name: string;
-  errorName: string;
-  position: string;
-  errorPosition: string;
-  phone: string;
-  errorPhone: string;
-  email: string;
-  errorEmail: string;
+  display_name: string;
+  line1: string;
+  rural: string;
+  district: string;
+  postal_code: number;
+  city: string;
+  projects: {
+    id: string;
+    name: string;
+  }[];
+  project_count: string;
+}
+
+interface sphOrderPayloadType {
+  projectId: string;
+  picId: string;
+  isUseSameAddress: boolean;
+  billingRecipientName: string;
+  billingRecipientPhone: string;
+  paymentType: 'CBD' | 'CREDIT';
+  viaTol: boolean;
+  projectDocs: any[];
+  isProvideBankGuarantee: boolean;
+  shippingAddress: {
+    id: string;
+    lat: string;
+    lon: string;
+    line1: string;
+    rural: string | null;
+    district: string | null;
+    postalCode: string | number | null;
+    city: string | null;
+  };
+  requestedProducts: {
+    productId: string;
+    categoryId: string;
+    offeringPrice: number;
+    quantity: number;
+    totalPrice: number;
+  }[];
+  delivery: {
+    id: string;
+    categoryId: string;
+    createdById: string | null;
+    unit: string;
+    price: number;
+    type: string;
+    min: number;
+    max: number;
+    createdAt: string;
+    updatedAt: string;
+    category_id: string;
+  };
+  distance: {
+    id: string;
+    categoryId: string;
+    createdById: string | null;
+    unit: string;
+    price: number;
+    type: string;
+    min: number;
+    max: number;
+    createdAt: string;
+    updatedAt: string;
+    category_id: string;
+  };
 }
 
 export type {
@@ -456,6 +517,7 @@ export type {
   picPayloadType,
   payloadPostType,
   visitationDataType,
-  VisitationCardType,
-  PicFormInitialState
+  projectResponseType,
+  selectedCompanyInterface,
+  sphOrderPayloadType,
 };

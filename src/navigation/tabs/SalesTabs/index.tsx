@@ -4,19 +4,22 @@ import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import BTabScreen from '@/navigation/elements/BTabScreen';
 import PriceList from '@/screens/Price';
-import CustomSalesTabBar from './SalesTabBar';
+import CustomTabBar from '../CustomTabBar';
 import Profile from '@/screens/Profile';
-import Transactions from '@/screens/Transactions';
 import Home from '@/screens/Home';
+import Transaction from '@/screens/Transaction';
 
 const Tab = createBottomTabNavigator();
+/**
+ * @deprecated The method should not be used
+ */
 function SalesTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarHideOnKeyboard: true,
       }}
-      tabBar={(props) => <CustomSalesTabBar {...props} />}
+      tabBar={(props) => <CustomTabBar {...props} />}
     >
       {BTabScreen({
         Tab: Tab,
@@ -31,7 +34,7 @@ function SalesTabs() {
         name: 'Transaksi',
         title: 'Transaksi',
         type: 'sub',
-        component: Transactions,
+        component: Transaction,
       })}
       {BTabScreen({
         Tab: Tab,

@@ -75,7 +75,6 @@ const style = StyleSheet.create({
     borderColor: '#EBEBEB',
     borderRadius: layout.radius.md,
     borderWidth: resScale(1),
-    marginBottom: layout.pad.md,
     padding: layout.pad.md,
   },
   leftSide: {

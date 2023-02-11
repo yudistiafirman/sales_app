@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   getVisitationsList,
   postVisitation,
+  putVisitationFlow,
 } from '../async-thunks/productivityFlowThunks';
-import moment from 'moment';
 import { visitationListResponse, customerDataInterface } from '@/interfaces';
 
 type initialStateType = {
@@ -67,7 +67,7 @@ export const productivityFlowSlice = createSlice({
     });
     builder.addCase(getVisitationsList.rejected, (state, { payload }) => {
       state.isVisitationLoading = false;
-      console.log(payload, 'error at', 'getVisitationsList.rejected');
+      console.log(payload, 'error at reducer', 'getVisitationsList.rejected');
       //   state.visitationList = [];
     });
     builder.addCase(postVisitation.pending, (state) => {
@@ -77,6 +77,15 @@ export const productivityFlowSlice = createSlice({
       state.isPostVisitationLoading = false;
     });
     builder.addCase(postVisitation.rejected, (state) => {
+      state.isPostVisitationLoading = false;
+    });
+    builder.addCase(putVisitationFlow.pending, (state) => {
+      state.isPostVisitationLoading = true;
+    });
+    builder.addCase(putVisitationFlow.fulfilled, (state) => {
+      state.isPostVisitationLoading = false;
+    });
+    builder.addCase(putVisitationFlow.rejected, (state) => {
       state.isPostVisitationLoading = false;
     });
   },

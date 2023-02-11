@@ -6,7 +6,7 @@ import BTextInput from '../atoms/BTextInput';
 import BCardOption from '../molecules/BCardOption';
 import BComboDropdown from '../molecules/BComboDropdown';
 import BDropdown from '../atoms/BDropdown';
-import BLabel from '../molecules/BLabel';
+import BLabel from '../atoms/BLabel';
 import BText from '../atoms/BText';
 import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
@@ -16,6 +16,7 @@ import { resScale } from '@/utils';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import CheckBox from '@react-native-community/checkbox';
+import { TextInput } from 'react-native-paper';
 
 interface IProps {
   inputs: Input[];
@@ -80,6 +81,8 @@ const renderInput = (input: Input): React.ReactNode => {
     errorMessage,
     hidePicLabel,
     isInputDisable,
+    customerErrorMsg,
+    LeftIcon,
   } = input;
 
   if (type === 'quantity') {
@@ -108,13 +111,8 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 
   if (type === 'textInput') {
-    const textInputProps = {
-      onChange,
-      value,
-      keyboardType,
-      isInputDisable: !isInputDisable,
-    };
-    console.log(textInputProps, 'textInputProps');
+    const textInputProps = { onChange, value };
+    const defaultErrorMsg = `${label} harus diisi`;
 
     return (
       <React.Fragment>
@@ -123,10 +121,12 @@ const renderInput = (input: Input): React.ReactNode => {
           {...textInputProps}
           keyboardType={keyboardType ? keyboardType : 'default'}
           placeholder={placeholder}
+          disabled={isInputDisable}
+          left={LeftIcon && <TextInput.Icon icon={LeftIcon} />}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
-            {errorMessage}
+            {customerErrorMsg || defaultErrorMsg}
           </BText>
         )}
       </React.Fragment>
@@ -134,6 +134,7 @@ const renderInput = (input: Input): React.ReactNode => {
   }
 
   if (type === 'area') {
+    const defaultErrorMsg = `${label} harus diisi`;
     return (
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
@@ -146,7 +147,7 @@ const renderInput = (input: Input): React.ReactNode => {
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
-            {`${label} harus diisi`}
+            {customerErrorMsg || defaultErrorMsg}
           </BText>
         )}
       </React.Fragment>
@@ -190,11 +191,15 @@ const renderInput = (input: Input): React.ReactNode => {
       <React.Fragment>
         <BLabel label={label} isRequired={isRequire} />
         <BSpacer size="extraSmall" />
-        <BAutoComplete {...input} />
-        {isError && (
-          <BText size="small" color="primary" bold="100">
-            {errorMessage}
-          </BText>
+
+        {!isInputDisable ? (
+          <BAutoComplete {...input} />
+        ) : (
+          <BTextInput
+            value={value?.title}
+            placeholder={placeholder}
+            disabled={isInputDisable}
+          />
         )}
       </React.Fragment>
     );

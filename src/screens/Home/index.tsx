@@ -1,12 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef, useMemo, useCallback } from 'react';
+import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import resScale from '@/utils/resScale';
 import DateDaily from './elements/DateDaily';
-import useHeaderShow from '@/hooks/useHeaderShow';
-
 import BQuickAction from '@/components/organism/BQuickActionMenu';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -14,11 +12,14 @@ import BVisitationCard from '@/components/molecules/BVisitationCard';
 import moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
-import { BBottomSheet, BSearchBar, BFlatlistItems } from '@/components';
+import {
+  BBottomSheet,
+  BSearchBar,
+  BFlatlistItems,
+  BSpacer,
+} from '@/components';
 import { useNavigation } from '@react-navigation/native';
-
 import Modal from 'react-native-modal';
-
 import BTabViewScreen from '@/components/organism/BTabViewScreen';
 import { layout } from '@/constants';
 import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
@@ -32,28 +33,35 @@ import { visitationDataType } from '@/interfaces';
 import { useDispatch } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
+import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
+import {
+  CAMERA,
+  CREATE_VISITATION,
+  CUSTOMER_DETAIL,
+  SPH,
+} from '@/navigation/ScreenNames';
 
 const Beranda = () => {
   const dispatch = useDispatch();
-  const [currentVisit, setCurrentVisit] = useState<{
+  const [currentVisit, setCurrentVisit] = React.useState<{
     current: number;
     target: number;
   }>({ current: 0, target: 10 }); //temporary setCurrentVisit
-  const [isExpanded, setIsExpanded] = useState(true);
-  const [isLoading, setIsLoading] = useState(false); // setIsLoading temporary  setIsLoading
-  const [isRenderDateDaily, setIsRenderDateDaily] = useState(true); //setIsRenderDateDaily
-  const [snapPoints] = useState(['68%', '91%', '100%']); //setSnapPoints
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isExpanded, setIsExpanded] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
+  const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
+  const [snapPoints] = React.useState(['68%', '91%', '100%']); //setSnapPoints
+  const bottomSheetRef = React.useRef<BottomSheet>(null);
+  const [searchQuery, setSearchQuery] = React.useState('');
   const navigation = useNavigation();
 
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [isHeaderShown, setIsHeaderShown] = useState(true);
-  const [date, setDate] = useState(moment());
-  console.log(
-    moment(moment.utc(date).toDate()).local().valueOf(),
-    'date state'
-  );
+  const [isModalVisible, setModalVisible] = React.useState(false);
+  const [isHeaderShown, setIsHeaderShown] = React.useState(true);
+
+  useHeaderStyleChanged({
+    titleColor: colors.text.light,
+    bgColor: colors.primary,
+  });
 
   // fetching data
   const [data, setData] = React.useState<Api.Response>({
@@ -67,7 +75,6 @@ const Beranda = () => {
     moment()
   );
 
-  useHeaderShow({ isHeaderShown: isHeaderShown });
   const toggleModal = (key: string) => () => {
     setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
     setIsHeaderShown(!isHeaderShown);
@@ -93,6 +100,8 @@ const Beranda = () => {
   const fetchTarget = async () => {
     try {
       const { data: _data } = await getVisitationTarget();
+      console.log(_data.data, 'fetchTarget103');
+
       setCurrentVisit({
         current: _data.data.totalCompleted,
         target: _data.data.visitationTarget,
@@ -107,8 +116,6 @@ const Beranda = () => {
   }, []);
 
   const fetchVisitations = async (search?: string) => {
-    // console.log('masuk berapa kali ini?');
-    // console.log(selectedDate.valueOf());
     setIsLoading(true);
     try {
       const options = {
@@ -170,13 +177,14 @@ const Beranda = () => {
     fetchVisitations();
   }, [page, selectedDate]);
 
-  const onDateSelected = useCallback((dateTime: moment.Moment) => {
+  const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
     setPage(0);
+    setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
     setSelectedDate(dateTime);
   }, []);
 
   const tabToRender: { tabTitle: string; totalItems: number }[] =
-    useMemo(() => {
+    React.useMemo(() => {
       return [
         {
           tabTitle: 'Proyek',
@@ -193,13 +201,13 @@ const Beranda = () => {
     }
   };
 
-  const buttonsData: buttonDataType[] = useMemo(
+  const buttonsData: buttonDataType[] = React.useMemo(
     () => [
       {
         icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
         title: 'Buat SPH',
         action: () => {
-          navigation.navigate('SPH');
+          navigation.navigate(SPH);
         },
       },
       {
@@ -228,7 +236,7 @@ const Beranda = () => {
     []
   );
 
-  const todayMark = useMemo(() => {
+  const todayMark = React.useMemo(() => {
     return [
       {
         date: moment(),
@@ -261,13 +269,12 @@ const Beranda = () => {
 
   const kunjunganAction = () => {
     // setIsLoading((curr) => !curr);
-    // navigation.navigate('CreateVisitation');
-    navigation.navigate('Camera', {
+    navigation.navigate(CAMERA, {
       photoTitle: 'Kunjungan',
-      navigateTo: 'CreateVisitation',
+      navigateTo: CREATE_VISITATION,
     });
   };
-  const sceneToRender = useCallback(() => {
+  const sceneToRender = React.useCallback(() => {
     if (searchQuery.length <= 2) {
       return null;
     }
@@ -286,27 +293,15 @@ const Beranda = () => {
         data={data.data}
         isLoading={isLoading}
         onEndReached={onEndReached}
-        // initialFetch={() => {
-        //   return tabOnEndReached({
-        //     key,
-        //     currentPage: 1,
-        //     query: searchQuery,
-        //   });
-        // }}
-        // onEndReached={(info) => {
-        //   return tabOnEndReached({
-        //     ...info,
-        //     key,
-        //     query: searchQuery,
-        //   });
-        // }}
       />
     );
   }, [data]);
 
-  async function visitationOnPress(dataItem: visitationDataType) {
-    // console.log(dataItem, 'visitationOnPress');
+  async function visitationOnPress(
+    dataItem: visitationDataType
+  ): Promise<void> {
     try {
+      const status = dataItem.pilStatus;
       dispatch(
         openPopUp({
           popUpType: 'loading',
@@ -317,14 +312,19 @@ const Beranda = () => {
       const response = await dispatch(
         getOneVisitation({ visitationId: dataItem.id })
       ).unwrap();
-      console.log(response, 'responsevisitationOnPress');
 
       dispatch(closePopUp());
-      navigation.navigate('Camera', {
-        photoTitle: 'Foto Kunjungan',
-        navigateTo: 'CreateVisitation',
-        existingVisitation: response,
-      });
+      if (status === 'Belum Selesai') {
+        navigation.navigate(CAMERA, {
+          photoTitle: 'Kunjungan',
+          navigateTo: CREATE_VISITATION,
+          existingVisitation: response,
+        });
+      } else {
+        navigation.navigate(CUSTOMER_DETAIL, {
+          existingVisitation: response,
+        });
+      }
     } catch (error) {
       dispatch(
         openPopUp({
@@ -377,19 +377,16 @@ const Beranda = () => {
           />
         </View>
       </Modal>
-      <TargetCard
-        isExpanded={isExpanded}
-        maxVisitation={currentVisit.target}
-        currentVisitaion={currentVisit.current}
-        isLoading={isLoading}
-      />
-      <BQuickAction
-        containerStyle={{
-          paddingLeft: resScale(25),
-          height: resScale(100),
-        }}
-        buttonProps={buttonsData}
-      />
+      <View style={{ paddingHorizontal: layout.mainPad }}>
+        <TargetCard
+          isExpanded={isExpanded}
+          maxVisitation={currentVisit.target}
+          currentVisitaion={currentVisit.current}
+          isLoading={isLoading}
+        />
+      </View>
+      <BSpacer size={'extraSmall'} />
+      <BQuickAction buttonProps={buttonsData} />
 
       <BBottomSheet
         onChange={bottomSheetOnchange}
@@ -399,6 +396,9 @@ const Beranda = () => {
         enableContentPanningGesture={true}
         style={style.BsheetStyle}
         footerComponent={(props: any) => {
+          if (!isRenderDateDaily) {
+            return null;
+          }
           return BuatKunjungan(props, kunjunganAction);
         }}
       >
@@ -414,14 +414,12 @@ const Beranda = () => {
             value={searchQuery}
           />
         </View>
-
         <DateDaily
           markedDatesArray={todayMark}
           isRender={isRenderDateDaily}
           onDateSelected={onDateSelected}
           selectedDate={selectedDate}
         />
-
         <BottomSheetFlatlist
           isLoading={isLoading}
           data={data.data}
@@ -437,24 +435,25 @@ const Beranda = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: colors.primary,
   },
   contentContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'blue',
     width: '100%',
   },
   itemContainer: {
-    padding: 6,
-    margin: 6,
+    padding: layout.pad.sm,
+    margin: layout.pad.sm,
     backgroundColor: '#eee',
   },
   BsheetStyle: {
     paddingLeft: layout.pad.lg,
     paddingRight: layout.pad.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   flatListContainer: {},
   flatListLoading: {
@@ -471,12 +470,12 @@ const style = StyleSheet.create({
   },
   posRelative: {
     position: 'relative',
-    marginBottom: resScale(10),
+    marginBottom: layout.pad.md,
   },
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
   },

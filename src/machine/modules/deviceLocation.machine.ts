@@ -11,6 +11,10 @@ interface IContext {
   lat: number;
   formattedAddress: string;
   isGranted: boolean;
+  distance: {
+    text: string;
+    value: number | null;
+  };
 }
 
 interface IGuard {
@@ -34,6 +38,10 @@ const deviceLocationMachine =
         lat: 0,
         lon: 0,
         isGranted: false,
+        distance: {
+          text: '',
+          value: null,
+        },
       },
       initial: 'idle',
       states: {
@@ -94,7 +102,7 @@ const deviceLocationMachine =
               // '',
               longitude,
               latitude,
-              ''
+              'BP-LEGOK'
             );
 
             const { result } = data;
@@ -107,6 +115,10 @@ const deviceLocationMachine =
               lon: Number(result?.lon),
               formattedAddress: result?.formattedAddress,
               PostalId: result?.PostalId,
+              distance: {
+                text: result.distance.text,
+                value: result.distance.value,
+              },
             };
           } catch (error) {
             console.log(error, 'deviceLocationMachince');

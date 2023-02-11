@@ -4,10 +4,10 @@ import { Api } from '@/models';
 import { UserModel } from '@/models/User';
 import { bStorage } from '@/actions';
 import { storageKey } from '@/constants';
-import { store } from '@/redux/store';
 import { setUserData } from '@/redux/reducers/authReducer';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 const production = false;
+let store: any;
 
 type FormDataValue =
   | string
@@ -73,6 +73,9 @@ export const getOptions = async (
 const instance = axios.create({
   withCredentials: true,
 });
+export const injectStore = (_store: any) => {
+  store = _store;
+};
 
 instance.interceptors.response.use(
   async (res: AxiosResponse<Api.Response, any>) => {

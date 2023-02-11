@@ -21,7 +21,8 @@ import {
 } from '@react-navigation/native';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { layout } from '@/constants';
-import { RootStackScreenProps } from '@/navigation/navTypes';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
+import { IMAGE_PREVIEW } from '@/navigation/ScreenNames';
 
 type configType = {
   title: string;
@@ -68,14 +69,14 @@ const Config = ({ title, style, navigateTo }: configType) => {
         animateElement();
         const existingVisitation = route?.params?.existingVisitation;
 
-        navigation.navigate('Preview', {
+        navigation.navigate(IMAGE_PREVIEW, {
           photo: takenPhoto,
           photoTitle: title,
           navigateTo,
           existingVisitation,
         });
       } catch (error) {
-        console.log(error, 'takePhoto56');
+        Alert.alert('Camera Error');
       }
     }
   };

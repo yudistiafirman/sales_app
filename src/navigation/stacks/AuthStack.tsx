@@ -2,6 +2,10 @@ import { TypedNavigator } from '@react-navigation/native';
 import Login from '@/screens/Login';
 import Verification from '@/screens/Verification';
 import BStackScreen from '../elements/BStackScreen';
+
+/**
+ * @deprecated The method should not be used
+ */
 const AuthStack = ({
   Stack,
 }: {

@@ -5,6 +5,7 @@ import font from '@/constants/fonts';
 import TargetBar from './elements/TargetBar';
 import TopVisitation from './elements/TopVisitation';
 import resScale from '@/utils/resScale';
+import { layout } from '@/constants';
 
 type TargetCardProps = {
   maxVisitation: number;
@@ -35,15 +36,15 @@ export default function TargetCard({
 
   const containerHeight = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [90, 100],
+    outputRange: [75, 90],
   });
 
   return (
-    <View style={{ position: `relative`, zIndex: 0 }}>
+    <View style={{ width: '100%', position: `relative`, zIndex: 0 }}>
       <Animated.View
         style={[
           {
-            width: resScale(320),
+            width: '100%',
             alignSelf: 'flex-start',
             zIndex: 1,
           },
@@ -72,7 +73,7 @@ export default function TargetCard({
 const style = StyleSheet.create({
   targetContainer: {
     backgroundColor: colors.white,
-    borderRadius: 8,
+    borderRadius: layout.radius.md,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -63,7 +63,7 @@ export default class BrikApiProductivity {
     return url.toString();
   };
 
-  static visitationGetOne = ({ visitationId }: getOneVisitationType) => {
+  static visitationIdPath = ({ visitationId }: getOneVisitationType) => {
     const url = new URL(
       `${API_URL}/productivity/m/flow/visitation/${visitationId}`
     );

@@ -13,7 +13,7 @@ import { colors, fonts, layout } from '@/constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { BButtonPrimary } from '@/components';
 import { SphContext } from './context/SphContext';
-import { Input } from '@/interfaces';
+import { Input, PIC } from '@/interfaces';
 
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
@@ -61,12 +61,14 @@ type ChoosePicModalType = {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   openAddPic: () => void;
+  selectPic?: (pic: PIC) => void;
 };
 
 export default function ChoosePicModal({
   isModalVisible,
   setIsModalVisible,
   openAddPic = () => {},
+  selectPic = () => {},
 }: ChoosePicModalType) {
   const [isLoading, setIsLoading] = useState(false);
   const [flatListData, setFlatListData] = useState<any[]>([]);
@@ -77,63 +79,81 @@ export default function ChoosePicModal({
   const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
     undefined
   );
+  function selectedPicData() {
+    for (const pic of sphState.picList) {
+      if (pic.isSelected) {
+        // stateUpdate('selectedPic')(pic);
+        return pic;
+      }
+    }
+  }
+  // useEffect(() => {
+  //   // if (sphState.picList) {
+  //   //   setFlatListData(sphState.picList);
+  //   // }
+  // }, []);
 
   //   function handleOnScroll(event) {
   //     setScrollOffSet(event.nativeEvent.contentOffset.y);
   //   }
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      setFlatListData([]);
-      const data = await dummyReq();
-      //sphState?.selectedPic?.id
-      const findPicById = data.find(
-        (item: dummyType) => item.id === sphState?.selectedPic?.id
-      );
-      if (findPicById) {
-        setSelectedPic(findPicById);
-      }
-      setFlatListData(data);
-      setIsLoading(false);
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     setIsLoading(true);
+  //     setFlatListData([]);
+  //     const data = await dummyReq();
+  //     //sphState?.selectedPic?.id
+  //     const findPicById = data.find(
+  //       (item: dummyType) => item.id === sphState?.selectedPic?.id
+  //     );
+  //     if (findPicById) {
+  //       setSelectedPic(findPicById);
+  //     }
+  //     setFlatListData(data);
+  //     setIsLoading(false);
+  //   })();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const inputsData: Input[] = useMemo(() => {
-    const values = flatListData.map((item) => {
-      if (selectedPic && item.id === selectedPic.id) {
-        return {
-          ...item,
-          isSelected: true,
-        };
-      }
-      return {
-        ...item,
-        isSelected: false,
-      };
-    });
     return [
       {
         label: 'PIC',
         isRequire: true,
         isError: false,
         type: 'PIC',
-        value: values,
+        value: sphState.selectedCompany?.PIC
+          ? sphState.selectedCompany.PIC
+          : [],
         hidePicLabel: true,
         // onChange: () => {
         //   //   openBottomSheet();
         //   openAddPic();
         // },
         onSelect: (index: number) => {
-          if (stateUpdate) {
-            setSelectedPic(flatListData[index]);
-            // stateUpdate('selectedPic')(flatListData[index]);
-          }
+          // setSelectedPic(flatListData[index]);
+          // stateUpdate('selectedPic')(flatListData[index]);
+          const listPic = sphState.selectedCompany?.PIC
+            ? sphState.selectedCompany.PIC
+            : [];
+          const selectPicData = listPic.map((pic, picIndex) => {
+            if (index === picIndex) {
+              pic.isSelected = true;
+            } else {
+              pic.isSelected = false;
+            }
+            return pic;
+          });
+
+          stateUpdate('selectedCompany')({
+            ...sphState.selectedCompany,
+            PIC: selectPicData,
+          });
+          // stateUpdate('picList')(selectPicData);
         },
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [flatListData, selectedPic]);
+  }, [sphState.picList, selectedPic]);
 
   return (
     <Modal
@@ -197,8 +217,13 @@ export default function ChoosePicModal({
                 </ScrollView>
               </View>
 
-              {/* </ScrollView> */}
-              <BButtonPrimary title="Pilih" />
+              {/* </ScrollView> selectedPicData()*/}
+              <BButtonPrimary
+                title="Pilih"
+                onPress={() => {
+                  selectPic(selectedPicData());
+                }}
+              />
             </View>
           </View>
         </BContainer>
@@ -216,8 +241,8 @@ const style = StyleSheet.create({
   modalContent: {
     backgroundColor: 'white',
     height: resScale(350),
-    borderTopLeftRadius: layout.radius.sm,
-    borderTopRightRadius: layout.radius.sm,
+    borderTopLeftRadius: layout.radius.lg,
+    borderTopRightRadius: layout.radius.lg,
   },
   modalHeader: {
     justifyContent: 'space-between',

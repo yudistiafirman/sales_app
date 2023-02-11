@@ -6,6 +6,7 @@ import resScale from '@/utils/resScale';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { layout } from '@/constants';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -22,10 +23,6 @@ export default function TargetBar({
   isExpanded,
   isLoading,
 }: TargetBarType) {
-  if (!isExpanded) {
-    return null;
-  }
-
   const [emptyProgress, currentProgress] = useMemo(() => {
     let max = maxVisitation + 2;
     if (currentVisitaion > maxVisitation) {
@@ -47,11 +44,14 @@ export default function TargetBar({
       maxCurrentVisit = 14;
     }
 
-    const emptyProgress = [...Array(max)];
-    const currentProgress = [...Array(maxCurrentVisit)];
+    const empty = [...Array(max)];
+    const current = [...Array(maxCurrentVisit)];
 
-    return [emptyProgress, currentProgress];
+    return [empty, current];
   }, [currentVisitaion, maxVisitation]);
+  if (!isExpanded) {
+    return null;
+  }
 
   return (
     <ShimmerPlaceHolder style={style.shimmerStyle} visible={!isLoading}>
@@ -59,7 +59,7 @@ export default function TargetBar({
         <View style={style.emptyProgressCont}>
           <View style={style.progressCont}>
             {currentProgress.map((_, i) => (
-              <View key={i + `current`} style={[style.progress]}></View>
+              <View key={i + 'current'} style={[style.progress]} />
             ))}
           </View>
 
@@ -67,9 +67,9 @@ export default function TargetBar({
             emptyProgress.map((_, i) => (
               <EmptyItem
                 key={i.toString()}
-                isLast={i == emptyProgress.length - 1}
-                isFirst={i == 0}
-                isTargetMarker={i == maxVisitation - 1}
+                isLast={i === emptyProgress.length - 1}
+                isFirst={i === 0}
+                isTargetMarker={i === maxVisitation - 1}
               />
             )),
           ]}
@@ -83,31 +83,31 @@ const style = StyleSheet.create({
   targetBar: {
     height: resScale(35),
     display: 'flex',
-    flexDirection: `row`,
-    justifyContent: `center`,
-    alignItems: `flex-end`,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
     width: '100%',
   },
   emptyProgressCont: {
-    display: `flex`,
-    flexDirection: `row`,
+    display: 'flex',
+    flexDirection: 'row',
     backgroundColor: colors.lightGray,
-    borderRadius: resScale(8),
-    position: `relative`,
+    borderRadius: layout.radius.md,
+    position: 'relative',
   },
   progressCont: {
-    position: `absolute`,
-    flexDirection: `row`,
+    position: 'absolute',
+    flexDirection: 'row',
     zIndex: 5,
-    borderRadius: resScale(8),
+    borderRadius: layout.radius.md,
     backgroundColor: colors.primary,
   },
   progress: {
     height: resScale(8),
-    width: resScale(20),
+    width: resScale(25),
   },
   shimmerStyle: {
-    borderRadius: resScale(8),
+    borderRadius: layout.radius.md,
     width: '100%',
     height: resScale(43),
   },

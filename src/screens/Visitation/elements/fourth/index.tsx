@@ -25,12 +25,17 @@ import {
 import { CreateVisitationState } from '@/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
-import { postVisitation } from '@/redux/async-thunks/productivityFlowThunks';
+import {
+  getOneVisitation,
+  postVisitation,
+  putVisitationFlow,
+} from '@/redux/async-thunks/productivityFlowThunks';
 import { RootState } from '@/redux/store';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { deleteImage } from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
+import { CAMERA, SPH_TITLE } from '@/navigation/ScreenNames';
 
 type selectedDateType = {
   date: string;
@@ -41,7 +46,7 @@ type selectedDateType = {
 function payloadMapper(
   values: CreateVisitationState,
   type: 'VISIT' | 'SPH' | 'REJECTED' | ''
-) {
+): payloadPostType {
   const { stepOne, stepTwo, stepThree, stepFour } = values;
   const today = moment();
   const payload = {
@@ -59,27 +64,41 @@ function payloadMapper(
   }
   payload.visitation.order = 1;
   payload.visitation.status = type;
-  // console.log(stepTwo, 'stepone');
 
-  if (stepOne.locationAddress.formattedAddress) {
+  const { locationAddress, createdLocation } = stepOne;
+  const { estimationDate } = stepThree;
+
+  if (locationAddress.line2) {
+    payload.project.location.line2 = locationAddress.line2;
+  }
+  if (locationAddress.postalId) {
+    payload.project.location.postalId = locationAddress.postalId;
+  }
+  if (createdLocation.postalId) {
+    payload.project.location.postalId = createdLocation.postalId;
+  }
+  if (stepOne.existingLocationId) {
+    payload.project.locationAddressId = stepOne.existingLocationId;
+  }
+  if (locationAddress.formattedAddress) {
     payload.project.location.formattedAddress =
-      stepOne.locationAddress.formattedAddress;
+      locationAddress.formattedAddress;
   }
-  if (stepOne.locationAddress.longitude) {
-    payload.project.location.lon = stepOne.locationAddress.longitude;
+  if (locationAddress.longitude) {
+    payload.project.location.lon = locationAddress.longitude;
   }
-  if (stepOne.locationAddress.latitude) {
-    payload.project.location.lat = stepOne.locationAddress.latitude;
+  if (locationAddress.latitude) {
+    payload.project.location.lat = locationAddress.latitude;
   }
-  if (stepOne.createdLocation.formattedAddress) {
+  if (createdLocation.formattedAddress) {
     payload.visitation.location.formattedAddress =
-      stepOne.createdLocation.formattedAddress;
+      createdLocation.formattedAddress;
   }
-  if (stepOne.createdLocation.lon) {
-    payload.visitation.location.lon = stepOne.createdLocation.lon;
+  if (createdLocation.lon) {
+    payload.visitation.location.lon = createdLocation.lon;
   }
-  if (stepOne.createdLocation.lat) {
-    payload.visitation.location.lat = stepOne.createdLocation.lat;
+  if (createdLocation.lat) {
+    payload.visitation.location.lat = createdLocation.lat;
   }
 
   if (stepTwo.customerType) {
@@ -88,12 +107,11 @@ function payloadMapper(
   if (stepThree.paymentType) {
     payload.visitation.paymentType = stepThree.paymentType;
   }
-  if (stepThree.estimationDate.estimationWeek) {
-    payload.visitation.estimationWeek = stepThree.estimationDate.estimationWeek;
+  if (estimationDate.estimationWeek) {
+    payload.visitation.estimationWeek = estimationDate.estimationWeek;
   }
-  if (stepThree.estimationDate.estimationMonth) {
-    payload.visitation.estimationMonth =
-      stepThree.estimationDate.estimationMonth;
+  if (estimationDate.estimationMonth) {
+    payload.visitation.estimationMonth = estimationDate.estimationMonth;
   }
   if (stepThree.notes) {
     payload.visitation.visitationNotes = stepThree.notes;
@@ -126,7 +144,7 @@ function payloadMapper(
   }
   if (stepTwo.companyName) {
     if (stepTwo.customerType === 'COMPANY') {
-      payload.project.companyDisplayName = stepTwo.companyName.title;
+      payload.project.companyDisplayName = stepTwo.companyName;
     }
   }
   if (stepThree.stageProject) {
@@ -137,8 +155,16 @@ function payloadMapper(
   if (stepTwo.visitationId) {
     payload.visitation.visitationId = stepTwo.visitationId;
   }
-  if (stepTwo.existingOrderNum) {
+  if (typeof stepTwo.existingOrderNum === 'number') {
     payload.visitation.order = stepTwo.existingOrderNum;
+  }
+
+  if (values.existingVisitationId) {
+    payload.visitation.id = values.existingVisitationId;
+  }
+  if (stepTwo.projectId) {
+    payload.project.id = stepTwo.projectId;
+    payload.visitation.order += 1;
   }
 
   // console.log(JSON.stringify(payload), 'payloadds');
@@ -211,9 +237,20 @@ const Fourth = () => {
   const onPressSubmit = useCallback(
     async (type: 'VISIT' | 'SPH' | 'REJECTED' | '') => {
       try {
-        let payload = payloadMapper(values, type);
+        let payload: payloadPostType = payloadMapper(values, type);
         // console.log(uploadedFilesResponse, 'uploadedFilesResponse');
-        console.log(JSON.stringify(payload), 'payload216');
+        console.log(
+          JSON.stringify(payload),
+          'payload216',
+          uploadedFilesResponse
+        );
+        const visitationMethod = {
+          POST: postVisitation,
+          PUT: putVisitationFlow,
+        };
+        const isDataUpdate = !!payload.visitation.id;
+        const methodStr = isDataUpdate ? 'PUT' : 'POST';
+
         if (uploadedFilesResponse.length === 0) {
           const photoFiles = photoUrls.map((photo) => {
             return {
@@ -221,12 +258,11 @@ const Fourth = () => {
               uri: photo.photo.uri.replace('file:', 'file://'),
             };
           });
-          console.log(photoFiles, 'photoFiles235');
 
           const data = await dispatch(
             postUploadFiles({ files: photoFiles, from: 'visitation' })
           ).unwrap();
-          // .then((data) => {
+
           const files = data.map((photo) => {
             const photoName = `${photo.name}.${photo.type}`;
             const photoNamee = `${photo.name}.jpg`;
@@ -241,38 +277,69 @@ const Fourth = () => {
               };
             }
           });
-
           payload.files = files;
-          const response = await dispatch(postVisitation({ payload })).unwrap();
+          const payloadData: {
+            payload: payloadPostType;
+            visitationId?: string;
+          } = {
+            payload,
+          };
+          if (payload.visitation.id) {
+            payloadData.visitationId = payload.visitation.id;
+          }
 
-          console.log(response, 'response242');
+          const response = await dispatch(
+            visitationMethod[methodStr](payloadData)
+          ).unwrap();
+
+          console.log(response, 'response242', type);
 
           setIsLastStepVisible(false);
-          navigation.goBack();
-          dispatch(
-            openPopUp({
-              popUpType: 'success',
-              popUpText: 'Success create visitation',
-              outsideClickClosePopUp: true,
-            })
-          );
+          if (type === 'SPH') {
+            navigation.dispatch(
+              StackActions.replace(SPH_TITLE, {
+                projectId: response.projectId,
+              })
+            );
+          } else {
+            navigation.goBack();
+          }
         } else {
           payload.files = uploadedFilesResponse;
-          const response = await dispatch(postVisitation({ payload })).unwrap();
+          const payloadData: {
+            payload: payloadPostType;
+            visitationId?: string;
+          } = {
+            payload,
+          };
+          if (payload.visitation.id) {
+            payloadData.visitationId = payload.visitation.id;
+          }
+          const response = await dispatch(
+            visitationMethod[methodStr](payloadData)
+          ).unwrap();
 
           console.log(response, 'response258');
 
           setIsLastStepVisible(false);
-          navigation.goBack();
-          dispatch(
-            openPopUp({
-              popUpType: 'success',
-              popUpText: 'Successfully create visitation',
-              highlightedText: 'visitation',
-              outsideClickClosePopUp: true,
-            })
-          );
+          if (type === 'SPH') {
+            navigation.dispatch(
+              StackActions.replace(SPH_TITLE, {
+                projectId: response.projectId,
+              })
+            );
+          } else {
+            navigation.goBack();
+          }
         }
+        dispatch(
+          openPopUp({
+            popUpType: 'success',
+            popUpText: 'Successfully create visitation',
+            highlightedText: 'visitation',
+            outsideClickClosePopUp: true,
+          })
+        );
       } catch (error) {
         console.log(error, 'error271fourth');
         const message = error.message || 'Error creating visitation';
@@ -297,7 +364,7 @@ const Fourth = () => {
         initiateCameraModule={() => {
           setIsPopUpVisible((curr) => !curr);
           navigation.dispatch(
-            StackActions.push('Camera', {
+            StackActions.push(CAMERA, {
               photoTitle: 'Kunjungan',
             })
           );
@@ -327,7 +394,7 @@ const Fourth = () => {
         <TouchableOpacity
           onPress={() => {
             navigation.dispatch(
-              StackActions.push('Camera', {
+              StackActions.push(CAMERA, {
                 photoTitle: 'Kunjungan',
               })
             );
