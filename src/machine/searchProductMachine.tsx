@@ -64,7 +64,7 @@ export const searchProductMachine =
             },
 
             clearInput: {
-              target: 'getAllProducts',
+              target: 'inputting',
               internal: true,
               actions: 'clearData',
             },
@@ -81,38 +81,6 @@ export const searchProductMachine =
             },
 
             onError: 'errorState',
-          },
-        },
-
-        getAllProducts: {
-          invoke: {
-            src: 'getCategoriesData',
-
-            onDone: {
-              target: 'allCategoriesLoaded.gettingProducts',
-              actions: 'assignCategories',
-            },
-
-            onError: 'errorState',
-          },
-        },
-
-        allCategoriesLoaded: {
-          states: {
-            gettingProducts: {
-              invoke: {
-                src: 'onGettingProductsData',
-
-                onDone: {
-                  target: '#search product.inputting',
-                  actions: 'assignProducts',
-                },
-
-                onError: '#search product.errorState',
-              },
-
-              entry: 'enableLoadProduct',
-            },
           },
         },
 
@@ -142,7 +110,8 @@ export const searchProductMachine =
         idle: {
           on: {
             sendingParams: {
-              target: 'getAllProducts',
+              target: 'inputting',
+              actions: 'assignParams',
             },
           },
         },
@@ -189,7 +158,6 @@ export const searchProductMachine =
         }),
         clearData: assign((_context, _event) => {
           return {
-            searchValue: '',
             productsData: [],
             routes: [],
           };
@@ -209,9 +177,6 @@ export const searchProductMachine =
         searchValueLengthAccepted: (_context, event) => {
           return event.value.length > 2;
         },
-        searchValueLengthZero: (_context, event) => {
-          return event.value.length === 0;
-        },
       },
       services: {
         getCategoriesData: async (context) => {
@@ -219,7 +184,7 @@ export const searchProductMachine =
             const response = await getProductsCategories(
               undefined,
               undefined,
-              context.searchValue ? context.searchValue : undefined,
+              context.searchValue,
               undefined,
               true
             );
@@ -239,7 +204,7 @@ export const searchProductMachine =
             const response = await getAllBrikProducts(
               page,
               size,
-              filteredValue ? filteredValue : undefined,
+              filteredValue,
               selectedCategories,
               distance
             );

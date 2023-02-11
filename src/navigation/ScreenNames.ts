@@ -25,6 +25,7 @@ export const SEARCH_AREA = 'SEARCH_AREA';
 export const CALENDAR = 'CALENDAR';
 export const TRANSACTION_DETAIL = 'TRANSACTION_DETAIL';
 export const CUSTOMER_DETAIL = 'CUSTOMER_DETAIL';
+export const ALL_PRODUCT = 'ALL_PRODUCT';
 
 /*
     Screen Title

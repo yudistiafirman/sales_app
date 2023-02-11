@@ -18,6 +18,10 @@ export type RootStackParamList = {
     navigateTo?: string;
     existingVisitation?: visitationListResponse;
   };
+  ALL_PRODUCT: {
+    coordinate: { longitude: number; latitude: number };
+    from: string;
+  };
   IMAGE_PREVIEW: {
     photo: PhotoFile;
     photoTitle: string;
