@@ -8,16 +8,14 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Calendar, DateData } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { MarkedDates } from 'react-native-calendars/src/types';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
-import { BButtonPrimary, BContainer, BSpacer, BText } from '@/components';
+import { BButtonPrimary, BSpacer, BText } from '@/components';
 import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
 import moment, { locale } from 'moment';
 import { useNavigation } from '@react-navigation/native';
 import { getVisitationsList } from '@/redux/async-thunks/productivityFlowThunks';
 import { useDispatch, useSelector } from 'react-redux';
-// import { productivityFlowGetVisitationsType } from '@/redux/async-thunks/productivityFlowThunks';
 import { RootState } from '@/redux/store';
 import { customerDataInterface, visitationListResponse } from '@/interfaces';
 import {
@@ -26,7 +24,6 @@ import {
   setMarkedData,
 } from '@/redux/reducers/productivityFlowReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import { todayString } from 'react-native-calendars/src/expandableCalendar/commons';
 
 const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
   if (direction === 'right') {
@@ -112,15 +109,22 @@ export default function CalendarScreen() {
           dispatch(setVisitationMapped(visitMapped));
           const newMarkedDate = { ...markedDate };
           Object.keys(visitMapped).forEach((date) => {
-            newMarkedDate[date] = { marked: true };
+            newMarkedDate[date] = {
+              ...newMarkedDate[date],
+              marked: true,
+            };
           });
 
-          if (Object.keys(newMarkedDate).length === 0) {
-            newMarkedDate[fullDate] = { selected: true };
-          }
+          newMarkedDate[fullDate] = {
+            ...newMarkedDate[fullDate],
+            selected: true,
+          };
+
+          const custData = visitMapped[fullDate] || [];
+          setCustomerDatas(custData);
           dispatch(setMarkedData(newMarkedDate));
         })
-        .catch((error) => {
+        .catch((error: any) => {
           console.log(error, 'error106calendar');
 
           dispatch(
@@ -175,30 +179,33 @@ export default function CalendarScreen() {
       console.log('====================================');
 
       setCustomerDatas(custData);
+      console.log('iniiiwkwkw 1, ', custData);
 
       const newMarkedDate = { ...markedDate };
 
       console.log('diaa 1', newMarkedDate);
 
       for (const date of Object.keys(newMarkedDate)) {
-        if (newMarkedDate[date].selected && newMarkedDate[date].marked) {
-          newMarkedDate[date].selected = false;
-        }
+        // if (newMarkedDate[date].selected && newMarkedDate[date].marked) {
+        //   newMarkedDate[date].selected = false;
+        // }
 
         if (newMarkedDate[date].selected) {
-          delete newMarkedDate[date];
+          newMarkedDate[date] = {
+            ...newMarkedDate[date],
+            selected: false,
+          };
         }
-
-        newMarkedDate[day.dateString] = {
-          ...newMarkedDate[day.dateString],
-          selected: true,
-        };
       }
+      newMarkedDate[day.dateString] = {
+        ...newMarkedDate[day.dateString],
+        selected: true,
+      };
 
       console.log('diaa 2', newMarkedDate);
       dispatch(setMarkedData(newMarkedDate));
     },
-    [markedDate, visitationCalendarMapped]
+    [markedDate, visitationCalendarMapped, dispatch]
   );
 
   const selectedData = useMemo(() => {
@@ -238,35 +245,34 @@ export default function CalendarScreen() {
   };
 
   return (
-    <BContainer>
-      <View style={styles.container}>
-        <View>
-          <Calendar
-            theme={{
-              arrowColor: colors.black,
-              todayTextColor: colors.primary,
-              selectedDayTextColor: colors.white,
-              selectedDayBackgroundColor: colors.primary,
-              dotColor: colors.primary,
-            }}
-            onDayPress={onDayPress}
-            markedDates={markedDate}
-            renderArrow={(direction) => <RenderArrow direction={direction} />}
-            onMonthChange={onMonthPress}
-          />
-          <BSpacer size="small" />
-          <BText color="divider"> Pelanggan yang Dikunjungi </BText>
-          <BSpacer size="extraSmall" />
-
-          <FlatList
-            style={styles.flatlistStyle}
-            data={customerDatas}
-            ItemSeparatorComponent={() => <BSpacer size={'extraSmall'} />}
-            renderItem={({ item }) => <ExpandableCustomerCard item={item} />}
-            keyExtractor={(_, index) => index.toString()}
-          />
-        </View>
-        <View>
+    <View style={styles.container}>
+      <View>
+        <Calendar
+          theme={{
+            arrowColor: colors.black,
+            todayTextColor: colors.primary,
+            selectedDayTextColor: colors.white,
+            selectedDayBackgroundColor: colors.primary,
+            dotColor: colors.primary,
+          }}
+          onDayPress={onDayPress}
+          markedDates={markedDate}
+          renderArrow={(direction) => <RenderArrow direction={direction} />}
+          onMonthChange={onMonthPress}
+        />
+        <BSpacer size="small" />
+        <BText color="divider"> Pelanggan yang Dikunjungi </BText>
+        <BSpacer size="extraSmall" />
+      </View>
+      <FlatList
+        style={{ marginBottom: layout.pad.md }}
+        data={customerDatas}
+        ItemSeparatorComponent={() => <BSpacer size={'extraSmall'} />}
+        renderItem={({ item }) => <ExpandableCustomerCard item={item} />}
+        keyExtractor={(_, index) => index.toString()}
+      />
+      {selectedData && (
+        <>
           <View>
             <Text style={styles.tanggalKunjunganText}>
               Tanggal Kunjungan Berikutnya
@@ -287,15 +293,16 @@ export default function CalendarScreen() {
             }}
             disable={!selectedData[0]}
           />
-        </View>
-      </View>
-    </BContainer>
+        </>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: layout.pad.lg,
     justifyContent: 'space-between',
   },
   customerCard: {
@@ -303,8 +310,6 @@ const styles = StyleSheet.create({
     padding: layout.pad.md,
     borderRadius: layout.radius.md,
   },
-  flatlistStyle: { height: resScale(230) },
-
   tanggalKunjunganText: {
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.md,

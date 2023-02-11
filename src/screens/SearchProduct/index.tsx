@@ -66,11 +66,23 @@ const SearchProduct = ({
     useCustomHeaderCenter(
       {
         customHeaderCenter: (
-          <SearchProductNavbar
-            value={searchValue}
-            onChangeText={onChangeText}
-            onClearValue={onClearValue}
-          />
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
+            <SearchProductNavbar
+              customStyle={{
+                width: '75%',
+                justifyContent: 'center',
+              }}
+              value={searchValue}
+              onChangeText={onChangeText}
+              onClearValue={onClearValue}
+            />
+          </View>
         ),
       },
       [searchValue]
