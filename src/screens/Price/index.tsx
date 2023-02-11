@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { AppState, SafeAreaView } from 'react-native';
+import { AppState, DeviceEventEmitter, SafeAreaView, View } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Tnc from '@/screens/Price/element/Tnc';
@@ -15,8 +15,12 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { layout } from '@/constants';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
-import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
-import { LOCATION, SEARCH_PRODUCT } from '@/navigation/ScreenNames';
+import {
+  CREATE_VISITATION,
+  LOCATION,
+  SEARCH_PRODUCT,
+  TAB_PRICE_LIST_TITLE,
+} from '@/navigation/ScreenNames';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
@@ -26,6 +30,7 @@ const PriceList = () => {
   const [visibleTnc, setVisibleTnc] = React.useState(false);
   const appState = React.useRef(AppState.currentState);
   const [state, send] = useMachine(priceMachine);
+  const [fromVisitation, setFromVisitation] = React.useState(false);
 
   React.useEffect(() => {
     if (state.matches('denied')) {
@@ -53,6 +58,10 @@ const PriceList = () => {
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude } = params.coordinate;
+      const { from } = params;
+      if (from === CREATE_VISITATION) {
+        setFromVisitation(true);
+      }
       send('backToIdle');
       send('sendingParams', { value: { latitude, longitude } });
       setIndex(0);
@@ -61,11 +70,21 @@ const PriceList = () => {
     }
   }, [route, route?.params, send]);
 
-  useCustomHeaderRight({
-    customHeaderRight: (
-      <BTouchableText onPress={() => setVisibleTnc(true)} title="Ketentuan" />
-    ),
-  });
+  const renderHeaderRight = React.useCallback(() => {
+    if (fromVisitation) {
+      return <View />;
+    } else {
+      return (
+        <BTouchableText onPress={() => setVisibleTnc(true)} title="Ketentuan" />
+      );
+    }
+  }, [fromVisitation]);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: renderHeaderRight,
+    });
+  }, [navigation, renderHeaderRight]);
 
   const onTabPress = () => {
     const tabIndex = index === 0 ? 1 : 0;
@@ -74,16 +93,37 @@ const PriceList = () => {
     }
   };
 
-  const goToLocation = () => {
-    const { lon, lat } = locationDetail;
-    const coordinate = {
-      longitude: Number(lon),
-      latitude: Number(lat),
-    };
+  const onPressProduct = (data) => {
+    if (fromVisitation) {
+      DeviceEventEmitter.emit('event.testEvent', { data });
+      navigation.goBack();
+    }
+  };
 
-    navigation.navigate(LOCATION, {
-      coordinate: coordinate,
-    });
+  const onPressSearchBar = () => {
+    if (!fromVisitation) {
+      navigation.navigate(SEARCH_PRODUCT, {
+        distance: locationDetail?.distance?.value,
+      });
+    } else {
+      navigation.goBack();
+    }
+  };
+
+  const goToLocation = () => {
+    if (!fromVisitation) {
+      const { lon, lat } = locationDetail;
+      const coordinate = {
+        longitude: Number(lon),
+        latitude: Number(lat),
+      };
+
+      navigation.navigate(LOCATION, {
+        coordinate: coordinate,
+        isReadOnly: false,
+        from: TAB_PRICE_LIST_TITLE,
+      });
+    }
   };
 
   const {
@@ -116,13 +156,7 @@ const PriceList = () => {
       )}
       <BSpacer size="extraSmall" />
       {!loadLocation ? (
-        <PriceSearchBar
-          onPress={() =>
-            navigation.navigate(SEARCH_PRODUCT, {
-              distance: locationDetail?.distance?.value,
-            })
-          }
-        />
+        <PriceSearchBar onPress={onPressSearchBar} />
       ) : (
         <ShimmerPlaceholder
           style={{
@@ -142,6 +176,7 @@ const PriceList = () => {
             <ProductList
               onEndReached={() => send('onEndReached')}
               products={productsData}
+              onPress={onPressProduct}
               isLoadMore={isLoadMore}
               loadProduct={loadProduct}
               refreshing={refreshing}

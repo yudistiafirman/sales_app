@@ -7,9 +7,10 @@ import TransactionListCard from './TransactionListCard';
 import TransactionListShimmer from './TransactionListShimmer';
 
 interface TransactionsData {
-  title: string;
-  name?: string;
-  desc: string;
+  id: string;
+  number: string;
+  expiredDate: string;
+  projectName: string;
   status: string;
 }
 
@@ -46,9 +47,10 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
           }}
         >
           <TransactionListCard
-            title={item.title}
-            name={item.name}
-            desc={item.desc}
+            id={item.id}
+            number={item.number}
+            expiredDate={item.expiredDate}
+            projectName={item.projectName}
             status={item.status}
           />
         </TouchableOpacity>
@@ -75,7 +77,10 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
         loadTransaction ? (
           <TransactionListShimmer />
         ) : (
-          <TransactionEmpty emptyTransactionName={emptyTransactionName} />
+          <TransactionEmpty
+            errorName="Data transaksi mu tidak tersedia, silakan buat SPH terlebih dahulu."
+            emptyTransactionName={emptyTransactionName}
+          />
         )
       }
       renderItem={renderItem}

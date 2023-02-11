@@ -29,6 +29,7 @@ const BLocationDefaultRegion = {
 const BLocationDefaultProps = {
   mapStyle: BLocationDefaultStyle,
   region: BLocationDefaultRegion,
+  scrollEnabled: false || true,
 };
 
 const fixedCenterContainer: ViewStyle = {
@@ -44,6 +45,7 @@ const BLocation = React.forwardRef(
       region,
       onRegionChangeComplete,
       CustomMarker,
+      scrollEnabled = true,
     }: BLocationProps & typeof BLocationDefaultProps,
     ref: React.LegacyRef<MapView> | undefined
   ) => {
@@ -57,6 +59,10 @@ const BLocation = React.forwardRef(
           rotateEnabled={false}
           onRegionChangeComplete={onRegionChangeComplete}
           region={region}
+          scrollEnabled={scrollEnabled}
+          pitchEnabled={scrollEnabled}
+          zoomTapEnabled={scrollEnabled}
+          scrollDuringRotateOrZoomEnabled={scrollEnabled}
         />
         {CustomMarker || <BMarker />}
       </View>

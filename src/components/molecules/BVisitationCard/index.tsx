@@ -23,7 +23,7 @@ function iconRender(
   if (customIcon) {
     return customIcon();
   }
-  return <MaterialIcon size={30} name="chevron-right" color={'#000000'} />;
+  return <MaterialIcon size={24} name="chevron-right" color={'#000000'} />;
 }
 
 export default function BVisitationCard({
@@ -88,8 +88,9 @@ const style = StyleSheet.create({
     // height: resScale(20),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // marginBottom: layout.pad.sm,
-    width: resScale(275),
+    marginBottom: layout.pad.sm,
+    width: resScale(285),
+    alignItems: 'center',
   },
   row: {
     flexDirection: 'row',

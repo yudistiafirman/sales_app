@@ -32,7 +32,7 @@ const style = StyleSheet.create({
     color: colors.black,
   },
   count: {
-    fontFamily: font.family.montserrat[700],
+    fontFamily: font.family.montserrat[500],
     colors: colors.black,
   },
 });

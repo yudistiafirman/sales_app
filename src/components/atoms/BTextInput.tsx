@@ -1,12 +1,13 @@
 import React from 'react';
 import { colors, fonts } from '@/constants';
-import { TextStyle } from 'react-native';
+import { TextStyle, ViewStyle } from 'react-native';
 import { TextInput, TextInputProps } from 'react-native-paper';
 import { resScale } from '@/utils';
 
 interface IProps extends Partial<TextInputProps> {
   rounded?: boolean;
   disabled?: boolean;
+  contentStyle?: ViewStyle;
 }
 
 const baseStyle: TextStyle = {
@@ -35,7 +36,11 @@ const defaultProps = {
 };
 
 const BTextInput = ({ ...props }: IProps & typeof defaultProps) => (
-  <TextInput placeholderTextColor={colors.textInput.placeHolder} {...props} />
+  <TextInput
+    {...props}
+    placeholderTextColor={colors.textInput.placeHolder}
+    contentStyle={props.contentStyle}
+  />
 );
 
 BTextInput.defaultProps = defaultProps;

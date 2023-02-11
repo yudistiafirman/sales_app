@@ -13,6 +13,7 @@ import TransactionList from './element/TransactionList';
 import { transactionMachine } from '@/machine/transactionMachine';
 import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
 import { SPH, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
+import { getOrderByID } from '@/actions/OrderActions';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
@@ -37,14 +38,20 @@ const Transaction = () => {
     ),
   });
 
-  const {
-    routes,
-    isLoadMore,
-    refreshing,
-    transactionsData,
-    loadTransaction,
-    loadTab,
-  } = state.context;
+  const getOneOrder = async (id: string) => {
+    try {
+      const { data } = await getOrderByID(id);
+      navigation.navigate(TRANSACTION_DETAIL, {
+        title: data.data ? data.data.number : 'N/A',
+        data: data.data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const { routes, isLoadMore, refreshing, data, loadTransaction, loadTab } =
+    state.context;
 
   return (
     <SafeAreaView style={styles.parent}>
@@ -57,17 +64,12 @@ const Transaction = () => {
           renderScene={() => (
             <TransactionList
               onEndReached={() => send('onEndReached')}
-              transactions={transactionsData}
+              transactions={data}
               isLoadMore={isLoadMore}
               loadTransaction={loadTransaction}
               refreshing={refreshing}
               onRefresh={() => send('refreshingList')}
-              onPress={(data: any) =>
-                navigation.navigate(TRANSACTION_DETAIL, {
-                  title: data.title,
-                  data,
-                })
-              }
+              onPress={(data: any) => getOneOrder(data.id)}
             />
           )}
           onTabPress={onTabPress}

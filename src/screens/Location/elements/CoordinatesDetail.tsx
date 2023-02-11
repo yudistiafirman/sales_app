@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View,Text } from 'react-native';
+import { TouchableOpacity, View, Text } from 'react-native';
 import LocationStyles from '../styles';
 import Icons from 'react-native-vector-icons/Feather';
 import colors from '@/constants/colors';
@@ -11,12 +11,14 @@ interface CoordinatesDetailsProps {
   address: string;
   onPress: () => void;
   loadingLocation: boolean;
+  disable?: boolean;
 }
 
 const CoordinatesDetail = ({
   address,
   onPress,
   loadingLocation,
+  disable = false,
 }: CoordinatesDetailsProps) => {
   const isHasAddress = address.length > 0;
   const addressTitle = isHasAddress ? address.split(',')[0] : '';
@@ -35,6 +37,7 @@ const CoordinatesDetail = ({
   return (
     <TouchableOpacity
       onPress={onPress}
+      disabled={disable}
       style={LocationStyles.coordinateDetailsOuterContainer}
     >
       <View style={[LocationStyles.coordinateDetailsInnerContainer]}>
@@ -42,8 +45,12 @@ const CoordinatesDetail = ({
           <Icons name="map-pin" size={resScale(20)} color={colors.primary} />
         </View>
         <View style={{ flex: 0.9 }}>
-          <Text numberOfLines={1} style={LocationStyles.addressTitle}>{addressTitle}</Text>
-          <Text numberOfLines={2} style={LocationStyles.addressDetails}>{addressDetail}</Text>
+          <Text numberOfLines={1} style={LocationStyles.addressTitle}>
+            {addressTitle}
+          </Text>
+          <Text numberOfLines={2} style={LocationStyles.addressDetails}>
+            {addressDetail}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

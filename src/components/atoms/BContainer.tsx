@@ -9,6 +9,8 @@ interface IProps {
   bgc?: 'grey';
   radius?: 'sm' | 'md' | 'lg';
   border?: boolean;
+  paddingHorizontal?: number;
+  paddingVertical?: number;
 }
 
 const containerStyle: StyleProp<ViewStyle> = {
@@ -16,12 +18,32 @@ const containerStyle: StyleProp<ViewStyle> = {
   padding: resScale(20),
 };
 
-const makeStyle = ({ bgc, radius, border }: IProps): StyleProp<ViewStyle> => {
+const makeStyle = ({
+  bgc,
+  radius,
+  border,
+  paddingHorizontal,
+  paddingVertical,
+}: IProps): StyleProp<ViewStyle> => {
   let styles = containerStyle;
   if (bgc === 'grey') {
     styles = {
       ...styles,
       backgroundColor: colors.offWhite,
+    };
+  }
+
+  if (paddingHorizontal || paddingHorizontal === 0) {
+    styles = {
+      ...styles,
+      paddingHorizontal: paddingHorizontal,
+    };
+  }
+
+  if (paddingVertical || paddingVertical === 0) {
+    styles = {
+      ...styles,
+      paddingVertical: paddingVertical,
     };
   }
 

@@ -38,11 +38,14 @@ interface Input {
   LeftIcon?: () => JSX.Element;
   keyboardType?: KeyboardType | KeyboardTypeOptions;
   items?: any;
+  showChevronAutoCompleted?: boolean;
+  showClearAutoCompleted?: boolean;
+  textSize?: number;
   options?: Array<{
     title: string;
     value: string | any;
     onChange: () => void;
-    icon?: ImageSourcePropType | undefined;
+    icon?: string;
   }>;
   dropdown?: {
     items: {
