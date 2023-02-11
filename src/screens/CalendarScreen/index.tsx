@@ -7,16 +7,8 @@ import {
 } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DateData } from 'react-native-calendars';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors, fonts, layout } from '@/constants';
-import { resScale } from '@/utils';
-import {
-  BButtonPrimary,
-  BCalendar,
-  BContainer,
-  BSpacer,
-  BText,
-} from '@/components';
+import { BButtonPrimary, BCalendar, BSpacer, BText } from '@/components';
 import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
 import moment, { locale } from 'moment';
 import { useNavigation } from '@react-navigation/native';
