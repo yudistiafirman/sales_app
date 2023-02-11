@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Share,
 } from 'react-native';
 import React, { useContext } from 'react';
 import Modal from 'react-native-modal';
@@ -87,6 +88,20 @@ export default function StepDone({
     ? sphState.selectedCompany?.Company.name
     : sphState.selectedPic?.name;
 
+  const locationState = sphState?.billingAddress.addressAutoComplete
+    ?.formattedAddress
+    ? sphState?.billingAddress.addressAutoComplete.formattedAddress
+    : sphState.selectedCompany?.locationAddress.line1;
+
+  const shareFunc = async (url?: string) => {
+    try {
+      if (!url) throw 'no url';
+      await Share.share({ url: url, message: `Link PDF SPH, ${url}` });
+    } catch (error) {
+      console.log(error, 'errorsharefunc');
+    }
+  };
+
   return (
     <Modal
       backdropOpacity={1}
@@ -120,9 +135,7 @@ export default function StepDone({
           <LabelSuccess sphId={sphResponse?.number} />
           <BCompanyMapCard
             companyName={stateCompanyName}
-            location={
-              sphState?.billingAddress.addressAutoComplete.formattedAddress
-            }
+            location={locationState}
           />
           <View style={styles.contentDetail}>
             <Text style={styles.partText}>PIC</Text>
@@ -172,7 +185,7 @@ export default function StepDone({
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() => setIsModalVisible((curr) => !curr)}
+            onPress={() => shareFunc(sphResponse?.letterLink)}
           >
             <MaterialCommunityIcons
               name="share-variant-outline"
