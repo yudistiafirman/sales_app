@@ -131,10 +131,13 @@ function SphContent() {
   useEffect(() => {
     stepHandler(sphData, stepsDone, setStepsDone, stepControll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sphData]);
+
+  useEffect(() => {
     return () => {
       updateState('chosenProducts')([]);
     };
-  }, [sphData]);
+  }, []);
 
   const getLocationCoord = async (coordinate: Region) => {
     try {
