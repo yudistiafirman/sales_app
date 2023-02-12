@@ -15,7 +15,7 @@ import LocationListShimmer from './element/LocationListShimmer';
 import { BSpacer } from '@/components';
 import { useDispatch } from 'react-redux';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import { LOCATION } from '@/navigation/ScreenNames';
+import { CREATE_VISITATION, LOCATION } from '@/navigation/ScreenNames';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 
 const SearchAreaProject = ({ route }: { route: any }) => {
@@ -49,14 +49,16 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         if (typeof lat === 'string') {
           coordinate.latitude = Number(lat);
         }
-        if (route?.params?.from) {
+        if (route?.params?.from === CREATE_VISITATION) {
           dispatch(updateRegion(coordinate));
           navigation.goBack();
-          return;
+        } else {
+          navigation.navigate(LOCATION, {
+            coordinate: coordinate,
+            isReadOnly: false,
+            from: route?.params?.from,
+          });
         }
-        navigation.navigate(LOCATION, {
-          coordinate: coordinate,
-        });
       },
     },
   });
@@ -105,11 +107,17 @@ const SearchAreaProject = ({ route }: { route: any }) => {
       longitude: longitude,
       latitude: latitude,
     };
-    navigation.navigate(LOCATION, {
-      coordinate: coordinate,
-      from: route?.params?.from,
-      eventKey: route?.params?.eventKey,
-    });
+    if (route?.params?.from === CREATE_VISITATION) {
+      dispatch(updateRegion(coordinate));
+      navigation.goBack();
+    } else {
+      navigation.navigate(LOCATION, {
+        coordinate: coordinate,
+        from: route?.params?.from,
+        isReadOnly: false,
+        eventKey: route?.params?.eventKey,
+      });
+    }
   };
 
   const onPressListLocations = (placeId: string) => {

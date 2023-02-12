@@ -21,6 +21,7 @@ interface IProps {
     | '900'
     | undefined;
   size?: 'small' | 'normal' | 'large';
+  sizeInNumber?: number;
   numberOfLines?: number;
 }
 
@@ -32,6 +33,7 @@ const BText = ({
   bold,
   size,
   numberOfLines,
+  sizeInNumber,
   ...props
 }: IProps & TextProps) => {
   const _defaultStyle: TextStyle = {
@@ -75,13 +77,37 @@ const BText = ({
     _style = {
       ..._style,
       fontWeight: bold,
+      fontFamily:
+        bold !== 'normal' && bold !== 'bold'
+          ? fonts.family.montserrat[parseInt(bold)]
+          : undefined,
     };
+
+    if (
+      bold !== 'normal' &&
+      bold !== 'bold' &&
+      bold !== '100' &&
+      bold !== '200' &&
+      bold !== '900'
+    ) {
+      _style = {
+        ..._style,
+        fontFamily: fonts.family.montserrat[parseInt(bold)],
+      };
+    }
   }
 
   if (size) {
     _style = {
       ..._style,
       fontSize: resFontSize(10),
+    };
+  }
+
+  if (sizeInNumber) {
+    _style = {
+      ..._style,
+      fontSize: sizeInNumber,
     };
   }
 

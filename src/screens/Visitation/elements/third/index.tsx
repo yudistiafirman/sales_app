@@ -6,7 +6,14 @@ import {
   TouchableOpacity,
   DeviceEventEmitter,
 } from 'react-native';
-import { BForm, BLabel, BSpacer, BText, BTextInput } from '@/components';
+import {
+  BForm,
+  BLabel,
+  BSpacer,
+  BText,
+  BTextInput,
+  SVGName,
+} from '@/components';
 import { CreateVisitationThirdStep, Input } from '@/interfaces';
 import { MONTH_LIST, STAGE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
 import ProductChip from './ProductChip';
@@ -15,7 +22,8 @@ import { TextInput } from 'react-native-paper';
 
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
-import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
+import { ALL_PRODUCT, CREATE_VISITATION, SEARCH_PRODUCT } from '@/navigation/ScreenNames';
+import { fonts } from '@/constants';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
@@ -109,8 +117,10 @@ const ThirdStep = () => {
       isRequire: false,
       isError: false,
       type: 'area',
+      placeholder: 'Tulis catatan di sini',
       onChange: onChange('notes'),
       value: state.notes,
+      textSize: fonts.size.sm,
     },
   ];
 
@@ -123,11 +133,16 @@ const ThirdStep = () => {
         }
         return acc;
       }, {} as { [id: number]: any });
-      // console.log(Object.values(uniqueArray), 'uniqueArray');
       updateValueOnstep('stepThree', 'products', Object.values(uniqueArray));
     },
     [state.products]
   );
+
+  const deleteProduct = (index: number) => {
+    const products = state.products;
+    const restProducts = products.filter((o, i) => index !== i);
+    updateValueOnstep('stepThree', 'products', restProducts);
+  };
 
   useEffect(() => {
     DeviceEventEmitter.addListener('event.testEvent', listenerCallback);
@@ -139,17 +154,32 @@ const ThirdStep = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       {/* <BText>step 3</BText> */}
-      <BForm inputs={inputs} />
-      <View style={styles.labelContainer}>
-        <BLabel label="Produk" isRequired />
-        <BText color="primary">Lihat Semua</BText>
-      </View>
+      <BForm titleBold="500" inputs={inputs} />
+      <TouchableOpacity
+        onPress={() => {
+          const coordinate = {
+            longitude: Number(values.stepOne.createdLocation.lon),
+            latitude: Number(values.stepOne.createdLocation.lat),
+          };
+          navigation.navigate(ALL_PRODUCT, {
+            coordinate: coordinate,
+            from: CREATE_VISITATION,
+          });
+        }}
+        style={styles.labelContainer}
+      >
+        <BLabel bold="500" label="Produk" isRequired />
+        <BText bold="500" color="primary">
+          Lihat Semua
+        </BText>
+      </TouchableOpacity>
       <View style={styles.posRelative}>
         <TouchableOpacity
           style={styles.touchable}
           onPress={() => {
             navigation.navigate(SEARCH_PRODUCT, {
               isGobackAfterPress: true,
+              distance: values.stepOne.createdLocation?.distance?.value,
             });
           }}
         />
@@ -164,7 +194,11 @@ const ThirdStep = () => {
           <ScrollView horizontal={true}>
             {state.products.map((val, index) => (
               <React.Fragment key={index}>
-                <ProductChip name={val.display_name} category={val.Category} />
+                <ProductChip
+                  name={val.display_name}
+                  category={val.Category}
+                  onDelete={() => deleteProduct(index)}
+                />
                 <BSpacer size="extraSmall" />
               </React.Fragment>
             ))}
@@ -174,7 +208,7 @@ const ThirdStep = () => {
       ) : (
         <BSpacer size="extraSmall" />
       )}
-      <BForm inputs={inputsTwo} />
+      <BForm titleBold="500" inputs={inputsTwo} />
     </ScrollView>
   );
 };
@@ -197,5 +231,6 @@ const styles = StyleSheet.create({
   labelContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
-import { colors, layout } from '@/constants';
+import { ScrollView, TextStyle, View } from 'react-native';
+import { colors, fonts, layout } from '@/constants';
 import { PIC, Styles } from '@/interfaces';
 import { resScale } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
@@ -21,6 +21,12 @@ const styles: Styles = {
     backgroundColor: colors.offWhite,
     borderRadius: layout.radius.md,
   },
+};
+
+const titleStyles: TextStyle = {
+  fontFamily: fonts.family.montserrat[400],
+  fontSize: fonts.size.xs,
+  color: colors.text.secondary,
 };
 
 const makeStyle = ({ isOption, border }: IProps) => {
@@ -77,25 +83,33 @@ const BPic = ({
         </React.Fragment>
       )}
       <View>
-        <BText>Nama</BText>
-        <BText bold="bold">{name}</BText>
+        <BText style={titleStyles}>Nama</BText>
+        <BText sizeInNumber={fonts.size.sm} bold="500">
+          {name ? name : '-'}
+        </BText>
         <BSpacer size="extraSmall" />
-        <BText>No. Telepon</BText>
+        <BText style={titleStyles}>No. Telepon</BText>
         <View style={{ width: resScale(120) }}>
           <ScrollView horizontal={true}>
-            <BText bold="bold">+62 {phone}</BText>
+            <BText sizeInNumber={fonts.size.sm} bold="500">
+              {phone ? '+62' + phone : '-'}
+            </BText>
           </ScrollView>
         </View>
       </View>
       <BSpacer size="extraSmall" />
       <View>
-        <BText>Jabatan</BText>
-        <BText bold="bold">{position ? position : '-'}</BText>
+        <BText style={titleStyles}>Jabatan</BText>
+        <BText sizeInNumber={fonts.size.sm} bold="500">
+          {position ? position : '-'}
+        </BText>
         <BSpacer size="extraSmall" />
-        <BText>email</BText>
+        <BText style={titleStyles}>email</BText>
         <View style={{ width: resScale(120) }}>
           <ScrollView horizontal={true}>
-            <BText bold="bold">{email ? email : '-'}</BText>
+            <BText sizeInNumber={fonts.size.sm} bold="500">
+              {email ? email : '-'}
+            </BText>
           </ScrollView>
         </View>
       </View>

@@ -15,14 +15,16 @@ const BPicList = ({ data, isOption = false, onSelect }: IProps) => {
     <View>
       {data.map((el, key) => (
         <React.Fragment key={key}>
-          <BPic
-            isOption={isOption}
-            isSelected={el.isSelected}
-            {...el}
-            onSelect={onSelect}
-            index={key}
-          />
-          <BSpacer size="small" />
+          <View>
+            <BPic
+              isOption={isOption}
+              isSelected={el.isSelected}
+              {...el}
+              onSelect={onSelect}
+              index={key}
+            />
+          </View>
+          <BSpacer size="extraSmall" />
         </React.Fragment>
       ))}
     </View>

@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { BContainer, BForm, BSpacer } from '@/components';
+import { BContainer, BForm, BSpacer, SVGName } from '@/components';
 import { Input } from '@/interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -14,9 +14,6 @@ import { SphContext } from '../context/SphContext';
 import { fetchSphDocuments } from '@/redux/async-thunks/commonThunks';
 import { useDispatch } from 'react-redux';
 
-const cbd = require('@/assets/icon/Visitation/cbd.png');
-const credit = require('@/assets/icon/Visitation/credit.png');
-
 type documentType = {
   id: string;
   name: string;
@@ -28,60 +25,6 @@ type docResponse = {
   cbd: documentType[];
   credit: documentType[];
 };
-
-const fileCredit = [
-  {
-    label: 'SK Kemenkumham',
-    key: 'SKKem',
-  },
-  {
-    label: 'KTP Direktur',
-    key: 'KTPDir',
-  },
-  {
-    label: 'Akta Pendirian',
-    key: 'AktaPend',
-  },
-  {
-    label: 'NIB Perusahaan',
-    key: 'NIBPer',
-  },
-  {
-    label: 'NPWP Direktur',
-    key: 'NPWPDir',
-  },
-  {
-    label: 'Surat Kuasa',
-    key: 'SuratKuasa',
-  },
-]; //dummy data
-
-const Cbd = [
-  {
-    label: 'Foto NPWP',
-    key: 'FotoNpwp',
-  },
-  {
-    label: 'Foto KTP',
-    key: 'FotoKtp',
-  },
-]; //dummy data
-
-async function fileToUploads(type: string) {
-  return new Promise<{ key: string; label: string }[]>((resolve, reject) => {
-    if (type === 'cbd') {
-      setTimeout(() => {
-        resolve(Cbd);
-      }, 5000);
-    } else if (type === 'credit') {
-      setTimeout(() => {
-        resolve(fileCredit);
-      }, 5000);
-    } else {
-      reject({ message: 'error' });
-    }
-  });
-} //dummy request
 
 function checkDocFilled(data: { [key: string]: any }) {
   return Object.values(data).every((val) => !!val);
@@ -262,8 +205,8 @@ export default function ThirdStep() {
         options: [
           {
             title: 'Cash Before Delivery',
-            icon: cbd,
-            value: 'CBD',
+            icon: SVGName.IC_CBD,
+            value: 'cbd',
             onChange: () => {
               // if (stateUpdate) {
               stateUpdate('paymentType')('CBD');
@@ -273,8 +216,8 @@ export default function ThirdStep() {
           },
           {
             title: 'Credit',
-            icon: credit,
-            value: 'CREDIT',
+            icon: SVGName.IC_CREDIT,
+            value: 'credit',
             onChange: () => {
               // if (stateUpdate) {
               stateUpdate('paymentType')('CREDIT');

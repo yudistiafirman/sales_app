@@ -186,7 +186,7 @@ export default function LastStepPopUp({
         {lastStepPicked && <BSpacer size={'extraSmall'} />}
         {lastStepPicked === 'VISIT' && (
           <View>
-            <BLabel label="Tanggal" isRequired />
+            <BLabel bold="500" label="Tanggal" isRequired />
             <View style={styles.relativPos}>
               <TouchableOpacity
                 style={styles.touchable}
@@ -223,7 +223,7 @@ export default function LastStepPopUp({
         )}
         {lastStepPicked === 'REJECTED' && (
           <>
-            <BForm inputs={inputs} />
+            <BForm titleBold="500" inputs={inputs} />
             <BButtonPrimary
               title="Submit"
               isLoading={isLoading}
