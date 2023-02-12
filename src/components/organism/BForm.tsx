@@ -355,7 +355,11 @@ const renderInput = (
             <BSpacer size="extraSmall" />
           </>
         ) : null}
-        <BPicList isOption={true} data={value} onSelect={onSelect!} />
+        <BPicList
+          isOption={value?.length > 1}
+          data={value}
+          onSelect={onSelect!}
+        />
       </React.Fragment>
     );
   }

@@ -62,6 +62,8 @@ const BAutoComplete = ({
         clearOnFocus={false}
         showChevron={showChevron}
         showClear={showClear}
+        EmptyResultComponent={() => <></>}
+        emptyResultText={''}
       />
       {isError && (
         <BText size="small" color="primary" bold="100">

@@ -196,6 +196,7 @@ function SphContent() {
       if (project.mainPic) {
         updateState('selectedPic')(project.mainPic);
       }
+      // if ()
       updateState('selectedCompany')(project);
       console.log(locationAddress, 'locationAddress146');
 
