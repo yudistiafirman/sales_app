@@ -14,3 +14,14 @@ export const getOrderByID = async (id: string) => {
     await getOptions('GET', undefined, true)
   );
 };
+import { sphOrderPayloadType } from '@/interfaces';
+
+export const postSph = async (payload: sphOrderPayloadType) => {
+  console.log(payload, 'payload sebelum request');
+
+  return request(
+    // 'http://192.168.18.23:3004/order/m/flow/quotation',
+    BrikApiOrder.orderSphPost(),
+    await getOptions('POST', payload, true)
+  );
+};

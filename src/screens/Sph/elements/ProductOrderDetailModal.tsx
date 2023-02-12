@@ -35,6 +35,11 @@ type ProductCartModalType = {
   distance: number | null;
 };
 
+type distanceDeliverType = {
+  id: string;
+  price: number;
+};
+
 function TextIcon(label: string) {
   return <Text style={style.textIcon}>{label}</Text>;
 }
@@ -85,6 +90,41 @@ export default function ProductCartModal({
   //   }
   //   return 0;
   // }, [productData, distanceCeil]);
+  function getAddPrice(): {
+    delivery: distanceDeliverType;
+    distance: distanceDeliverType;
+  } {
+    const { Category } = productData;
+    const { Parent } = Category;
+    const { AdditionalPrices } = Parent;
+
+    const additionalData = {
+      distance: {} as distanceDeliverType,
+      delivery: {} as distanceDeliverType,
+    };
+    for (const price of AdditionalPrices) {
+      if (price.type === 'DISTANCE') {
+        if (distanceCeil >= price.min && distanceCeil <= price.max) {
+          additionalData.distance.id = price.id;
+          additionalData.distance.price = price.price;
+        }
+      }
+      console.log(price.type, 'inipricetyp112');
+
+      if (price.type === 'TRANSPORT') {
+        console.log(
+          'masuktransport114',
+          +detailOrder.volume >= price.min && +detailOrder.volume <= price.max
+        );
+
+        if (+detailOrder.volume >= price.min) {
+          additionalData.delivery.id = price.id;
+          additionalData.delivery.price = price.price;
+        }
+      }
+    }
+    return additionalData;
+  }
 
   console.log(calcPrice, 'calcPrice63');
 
@@ -123,17 +163,17 @@ export default function ProductCartModal({
           <BSpacer size={'extraSmall'} />
           <View style={style.chipContainer}>
             <BChip backgroundColor={colors.chip.green}>
-              {productData.Category.Parent.name}
+              {productData.Category?.Parent?.name}
             </BChip>
             <BChip backgroundColor={colors.chip.disabled}>
-              slump {productData.properties.slump}±12 cm
+              slump {productData?.properties?.slump}±12 cm
             </BChip>
           </View>
           <BSpacer size={'extraSmall'} />
           <View style={style.priceContainer}>
             <Text style={style.hargaText}>Harga Dasar</Text>
             <Text style={style.hargaText}>
-              IDR {formatCurrency(productData.Price.price)}
+              IDR {formatCurrency(productData?.Price?.price)}
             </Text>
           </View>
           <BSpacer size={'extraSmall'} />
@@ -178,6 +218,7 @@ export default function ProductCartModal({
                 }}
                 value={detailOrder.volume}
                 keyboardType="numeric"
+                returnKeyType="next"
                 right={<TextInput.Icon icon={() => TextIcon('m³')} />}
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
@@ -237,15 +278,13 @@ export default function ProductCartModal({
               choseProduct((curr) => {
                 const currentValue = curr;
                 const newData = {
-                  product: {
-                    id: productData.id,
-                    name: productData.name,
-                  },
+                  product: productData,
                   productId: productData.id,
                   categoryId: productData.Category.id,
                   sellPrice: detailOrder.sellPrice,
                   volume: detailOrder.volume,
                   totalPrice: totalPrice,
+                  additionalData: getAddPrice(),
                 };
                 const existingDataIndex = currentValue.findIndex(
                   (data) => data.product.id === productData.id
@@ -253,17 +292,7 @@ export default function ProductCartModal({
                 if (existingDataIndex !== -1) {
                   currentValue.splice(existingDataIndex, 1, newData);
                 } else {
-                  currentValue.push({
-                    product: {
-                      id: productData.id,
-                      name: productData.name,
-                    },
-                    productId: productData.id,
-                    categoryId: productData.Category.id,
-                    sellPrice: detailOrder.sellPrice,
-                    volume: detailOrder.volume,
-                    totalPrice: totalPrice,
-                  });
+                  currentValue.push(newData);
                 }
                 return currentValue;
               });
