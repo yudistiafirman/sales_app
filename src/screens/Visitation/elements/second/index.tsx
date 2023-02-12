@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { BDivider, BForm, BSpacer, BText } from '@/components';
+import { BDivider, BForm, BSpacer, BText, SVGName } from '@/components';
 import {
   CreateVisitationSecondStep,
   Input,
@@ -19,13 +19,12 @@ import { useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { useDispatch } from 'react-redux';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
+const company = require('@/assets/icon/Visitation/company.png')
+const profile = require('@/assets/icon/Visitation/profile.png')
 
 interface IProps {
   openBottomSheet: () => void;
 }
-
-const company = require('@/assets/icon/Visitation/company.png');
-const individu = require('@/assets/icon/Visitation/profile.png');
 
 const SecondStep = ({ openBottomSheet }: IProps) => {
   const dispatch = useDispatch();
@@ -108,7 +107,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             },
           },
           {
-            icon: individu,
+            icon: profile,
             title: 'Individu',
             value: 'INDIVIDU',
             onChange: () => {
@@ -135,8 +134,10 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             setSelectedCompany(item);
           }
         },
-        placeholder: 'Masukkan Nama Proyek',
+        placeholder: 'Masukkan Nama Perusahaan',
         isInputDisable: !!existingVisitation,
+        // showChevronAutoCompleted: false,
+        showClearAutoCompleted: false,
       };
 
       const aditionalInput: Input[] = [
@@ -193,26 +194,26 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         searchingDisable={!!existingVisitation}
         isSearch={isSearch}
         onSearch={onSearch}
+        resultSpace={2}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
         {!isSearch && (
-          // <ScrollView>
-          <React.Fragment>
-            <BSpacer size="small" />
+          <>
+            <BSpacer size={6} />
             <View style={styles.dividerContainer}>
               <BDivider />
-              <BSpacer size="extraSmall" />
-              <BText color="divider">Atau Buat Baru Dibawah</BText>
-              <BSpacer size="extraSmall" />
+              <BSpacer size="verySmall" />
+              <BText bold="500" color="divider">
+                Atau Buat Baru Dibawah
+              </BText>
+              <BSpacer size="verySmall" />
               <BDivider />
             </View>
-            <BSpacer size="small" />
+            <BSpacer size={8} />
             <View>
-              <BForm inputs={inputs} />
-              <BSpacer size="large" />
+              <BForm titleBold="500" inputs={inputs} />
             </View>
-          </React.Fragment>
-          // </ScrollView>
+          </>
         )}
       </ScrollView>
     </>

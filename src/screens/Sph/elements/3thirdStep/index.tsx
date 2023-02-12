@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { BContainer, BForm, BSpacer } from '@/components';
+import { BContainer, BForm, BSpacer, SVGName } from '@/components';
 import { Input } from '@/interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -11,9 +11,6 @@ import { colors, fonts } from '@/constants';
 import font from '@/constants/fonts';
 import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn';
 import { SphContext } from '../context/SphContext';
-
-const cbd = require('@/assets/icon/Visitation/cbd.png');
-const credit = require('@/assets/icon/Visitation/credit.png');
 
 const fileCredit = [
   {
@@ -144,7 +141,7 @@ export default function ThirdStep() {
         options: [
           {
             title: 'Cash Before Delivery',
-            icon: cbd,
+            icon: SVGName.IC_CBD,
             value: 'cbd',
             onChange: () => {
               if (stateUpdate) {
@@ -155,7 +152,7 @@ export default function ThirdStep() {
           },
           {
             title: 'Credit',
-            icon: credit,
+            icon: SVGName.IC_CREDIT,
             value: 'credit',
             onChange: () => {
               if (stateUpdate) {

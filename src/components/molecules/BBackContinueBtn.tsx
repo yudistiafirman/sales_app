@@ -3,6 +3,7 @@ import React from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
 import BButtonPrimary from '../atoms/BButtonPrimary';
+import { layout } from '@/constants';
 
 type BackContinueBtnType = {
   onPressBack?: () => void;
@@ -30,7 +31,12 @@ export default function BBackContinueBtn({
   return (
     <View style={style.buttonContainer}>
       <View style={style.backButtonContainer}>
-        <BButtonPrimary onPress={onPressBack} title={backText} isOutline />
+        <BButtonPrimary
+          emptyIconEnable
+          onPress={onPressBack}
+          title={backText}
+          isOutline
+        />
       </View>
       <View style={style.continueButtonContainer}>
         <BButtonPrimary
@@ -47,13 +53,17 @@ export default function BBackContinueBtn({
 
 const style = StyleSheet.create({
   buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   backButtonContainer: {
-    width: '40%',
+    flex: 1,
+    paddingEnd: layout.pad.md,
   },
   continueButtonContainer: {
-    width: '55%',
+    flex: 1.5,
+    paddingStart: layout.pad.md,
   },
 });

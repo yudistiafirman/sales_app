@@ -32,9 +32,10 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
 import { useDispatch } from 'react-redux';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { resetRegion, updateRegion } from '@/redux/reducers/locationReducer';
+import { layout } from '@/constants';
 
 const labels = [
   'Alamat Proyek',
@@ -158,6 +159,7 @@ function populateData(
 }
 const CreateVisitation = () => {
   const route = useRoute<RootStackScreenProps>();
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const { values, action } = React.useContext(createVisitationContext);
@@ -239,11 +241,6 @@ const CreateVisitation = () => {
       />
 
       <BContainer>
-        {/* {shouldScrollView ? (
-        <ScrollView>{stepRender[values.step]}</ScrollView>
-      ) : (
-        <View style={{ flex: 1 }}>{stepRender[values.step]}</View>
-      )} */}
         <View style={styles.container}>
           {stepRender[values.step]}
           <BSpacer size={'extraSmall'} />
@@ -261,12 +258,24 @@ const CreateVisitation = () => {
             />
           )}
           {values.step === 0 && (
-            <BButtonPrimary
-              disable={!stepsDone.includes(values.step)}
-              title="Lanjut"
-              onPress={next(values.step + 1)}
-              rightIcon={ContinueIcon}
-            />
+            <View style={styles.conButton}>
+              <View style={styles.buttonOne}>
+                <BButtonPrimary
+                  title="Kembali"
+                  isOutline
+                  emptyIconEnable
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+              <View style={styles.buttonTwo}>
+                <BButtonPrimary
+                  disable={!stepsDone.includes(values.step)}
+                  title="Lanjut"
+                  onPress={next(values.step + 1)}
+                  rightIcon={ContinueIcon}
+                />
+              </View>
+            </View>
           )}
         </View>
         <BSheetAddPic
@@ -288,6 +297,20 @@ const styles: Styles = {
   container: {
     justifyContent: 'space-between',
     flex: 1,
+  },
+  conButton: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  buttonOne: {
+    flex: 1,
+    paddingEnd: layout.pad.md,
+  },
+  buttonTwo: {
+    flex: 1.5,
+    paddingStart: layout.pad.md,
   },
 };
 

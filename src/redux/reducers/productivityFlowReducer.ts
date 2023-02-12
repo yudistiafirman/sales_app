@@ -5,12 +5,14 @@ import {
   putVisitationFlow,
 } from '../async-thunks/productivityFlowThunks';
 import { visitationListResponse, customerDataInterface } from '@/interfaces';
+import { MarkedDates } from 'react-native-calendars/src/types';
 
 type initialStateType = {
   visitationList: visitationListResponse[];
   isVisitationLoading: boolean;
   visitationCalendarMapped: { [key: string]: customerDataInterface[] };
   isPostVisitationLoading: boolean;
+  markedDate: MarkedDates;
 };
 
 const initialState: initialStateType = {
@@ -18,6 +20,7 @@ const initialState: initialStateType = {
   isVisitationLoading: false,
   visitationCalendarMapped: {},
   isPostVisitationLoading: false,
+  markedDate: {},
 };
 
 export const productivityFlowSlice = createSlice({
@@ -29,6 +32,9 @@ export const productivityFlowSlice = createSlice({
     },
     setVisitationMapped: (state, { payload }) => {
       state.visitationCalendarMapped = payload;
+    },
+    setMarkedData: (state, { payload }) => {
+      state.markedDate = payload;
     },
   },
   extraReducers: (builder) => {
@@ -91,7 +97,7 @@ export const productivityFlowSlice = createSlice({
   },
 });
 
-export const { resetStates, setVisitationMapped } =
+export const { resetStates, setVisitationMapped, setMarkedData } =
   productivityFlowSlice.actions;
 
 export default productivityFlowSlice.reducer;

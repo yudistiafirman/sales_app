@@ -3,18 +3,40 @@ import { resScale } from '@/utils';
 import { View, StyleProp, ViewStyle } from 'react-native';
 
 interface IProps {
-  size: 'extraSmall' | 'small' | 'medium' | 'large' | 'extraLarge' | number;
+  size:
+    | 'verySmall'
+    | 'extraSmall'
+    | 'middleSmall'
+    | 'small'
+    | 'medium'
+    | 'large'
+    | 'extraLarge'
+    | number;
 }
 
 const styles: StyleProp<ViewStyle> = {
-  marginHorizontal: resScale(10),
+  // marginHorizontal: resScale(0),
 };
 
 const makeStyle = ({ size }: IProps): ViewStyle => {
+  if (size === 'verySmall') {
+    return {
+      ...styles,
+      margin: resScale(3),
+    };
+  }
+
   if (size === 'extraSmall') {
     return {
       ...styles,
       margin: resScale(5),
+    };
+  }
+
+  if (size === 'middleSmall') {
+    return {
+      ...styles,
+      margin: resScale(7),
     };
   }
 
