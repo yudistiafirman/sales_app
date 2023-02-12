@@ -16,4 +16,9 @@ export default class BrikApiOrder {
     const url = new URL(`${API_URL}/order/m/flow/quotation-letter/${id}`);
     return url.toString();
   };
+
+  static orderSphPost = () => {
+    const url = new URL(`${API_URL}/order/m/flow/quotation`);
+    return url.toString();
+  };
 }

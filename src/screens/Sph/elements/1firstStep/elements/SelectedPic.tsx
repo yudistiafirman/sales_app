@@ -26,9 +26,10 @@ function GantiIcon() {
   );
 }
 
-function checkSelected(picList: PIC[]) {
+function checkSelected(picList?: PIC[]) {
   let isSelectedExist = false;
-  picList.forEach((pic) => {
+  const list = picList ? picList : [];
+  list.forEach((pic) => {
     if (pic.isSelected) {
       isSelectedExist = true;
     }
@@ -153,7 +154,7 @@ export default function SelectedPic({
             }}
           />
         </View>
-        <ScrollView>
+        <ScrollView style={style.scrollViewStyle}>
           <BForm inputs={inputsData} />
           {/* {isLoading && (
             <View>
@@ -216,5 +217,8 @@ const style = StyleSheet.create({
     width: resScale(335),
     height: resScale(50),
     borderRadius: layout.radius.md,
+  },
+  scrollViewStyle: {
+    maxHeight: resScale(500),
   },
 });

@@ -1,6 +1,10 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import * as React from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { DeviceEventEmitter, SafeAreaView, View } from 'react-native';
 import LocationStyles from './styles';
 import CoordinatesDetail from './elements/CoordinatesDetail';
 import { BButtonPrimary, BLocation, BMarker, BSpacer } from '@/components';
@@ -11,6 +15,7 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
   LOCATION_TITLE,
   SEARCH_AREA,
+  SPH,
   TAB_DISPATCH_TITLE,
   TAB_HOME_TITLE,
   TAB_OPERATION_TITLE,
@@ -51,6 +56,7 @@ const Location = () => {
   const onSaveLocation = () => {
     const { lon, lat } = locationDetail;
     const from = route?.params?.from;
+    const eventKey = route?.params?.eventKey;
     const coordinate = {
       longitude: Number(lon),
       latitude: Number(lat),
@@ -61,8 +67,13 @@ const Location = () => {
       from === TAB_PROFILE_TITLE ||
       from === TAB_HOME_TITLE ||
       from === TAB_OPERATION_TITLE ||
-      from === TAB_DISPATCH_TITLE
+      from === TAB_DISPATCH_TITLE ||
+      from === SPH
     ) {
+      if (eventKey) {
+        DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
+        navigation.dispatch(StackActions.pop(2));
+      }
       navigation.navigate(TAB_ROOT, {
         screen: from,
         params: { coordinate: coordinate },

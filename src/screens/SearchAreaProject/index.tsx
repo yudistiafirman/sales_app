@@ -115,6 +115,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         coordinate: coordinate,
         from: route?.params?.from,
         isReadOnly: false,
+        eventKey: route?.params?.eventKey,
       });
     }
   };

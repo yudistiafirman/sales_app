@@ -92,7 +92,6 @@ export default function FourthStep() {
   const navigation = useNavigation();
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modeSearch, setModeSearch] = useState(false);
   const [selectedProduct, setSelectedProduct] =
     useState<ProductDataInterface | null>(null);
   const [chosenProducts, setChosenProducts] = useState<ChosenProductType>([]);
@@ -225,7 +224,7 @@ const style = StyleSheet.create({
   },
   productText: {
     fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.sm,
+    fontSize: fonts.size.md,
     color: colors.text.darker,
   },
   searchModeContainer: {

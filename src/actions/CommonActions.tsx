@@ -45,9 +45,12 @@ export const uploadFileImage = async (files: any[], from: string) => {
     formData.append('photos', file);
   });
   formData.append('name', from);
-  //192.168.18.23
+  console.log(formData, 'formDatauploadFileImage48');
+
+  //http://192.168.18.23:3000/common/file/upload
   //BrikApiCommon.filesUpload(),
   return request(
+    // 'http://192.168.18.23:3000/common/file/upload',
     BrikApiCommon.filesUpload(),
     await getOptions('POST', formData, true)
   );
@@ -69,6 +72,20 @@ export const projectByUserGetAction = async (search?: string) => {
 export const projectGetOneById = async (projectId?: string) => {
   return request(
     BrikApiCommon.oneGetProject(projectId),
+    await getOptions('GET', undefined, true)
+  );
+};
+
+export const getSphDocuments = async () => {
+  return request(
+    BrikApiCommon.sphDocuments(),
+    await getOptions('GET', undefined, true)
+  );
+};
+
+export const getAddressSuggestion = async (search?: string, page?: number) => {
+  return request(
+    BrikApiCommon.addressSuggestion(search, page),
     await getOptions('GET', undefined, true)
   );
 };

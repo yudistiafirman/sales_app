@@ -4,6 +4,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Share,
+  Platform,
+  Linking,
 } from 'react-native';
 import React, { useContext } from 'react';
 import Modal from 'react-native-modal';
@@ -20,23 +23,132 @@ import {
   BProjectDetailCard,
 } from '@/components';
 import { SphContext } from '../context/SphContext';
+import { postSphResponseType } from '@/interfaces';
+import { useNavigation } from '@react-navigation/native';
+
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import RNPrint from 'react-native-print';
+import { useDispatch } from 'react-redux';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 type StepDoneType = {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   //   openAddPic: () => void;
   //   selectPic?: () => void;
+  sphResponse: postSphResponseType | null;
+};
+const paymentMethod: {
+  CBD: 'Cash';
+  CREDIT: 'Credit';
+  '': '-';
+} = {
+  CBD: 'Cash',
+  CREDIT: 'Credit',
+  '': '-',
+};
+
+type downloadType = {
+  url?: string;
+  title?: string;
+  downloadPopup: () => void;
 };
 
 function Separator() {
   return <BSpacer size={'extraSmall'} />;
 }
 
+function downloadPdf({ url, title, downloadPopup }: downloadType) {
+  if (!url) return null;
+  let dirs = ReactNativeBlobUtil.fs.dirs;
+  const downloadTitle = title
+    ? `${title} berhasil di download`
+    : 'PDF sph berhasil di download';
+  ReactNativeBlobUtil.config({
+    // add this option that makes response data to be stored as a file,
+    // this is much more performant.
+    fileCache: true,
+    path: dirs.DocumentDir,
+    addAndroidDownloads: {
+      useDownloadManager: true,
+      notification: true,
+      title: downloadTitle,
+      description: 'SPH PDF',
+      mediaScannable: true,
+    },
+  })
+    .fetch('GET', url, {
+      //some headers ..
+    })
+    .then((res) => {
+      // the temp file path
+      downloadPopup();
+      console.log('The file saved to ', res.path());
+    })
+    .catch((err) => {
+      console.log(err, 'error download', url);
+    });
+}
+async function printRemotePDF(url?: string) {
+  try {
+    if (!url) {
+      throw 'error url missing';
+    }
+    await RNPrint.print({
+      filePath: url,
+    });
+  } catch (error) {
+    console.log(error, 'error print');
+  }
+}
+
+const openAddressOnMap = (label, lat, lng) => {
+  const scheme = Platform.select({
+    ios: 'maps:0,0?q=',
+    android: 'geo:0,0?q=',
+  });
+  const latLng = `${lat},${lng}`;
+  const url = Platform.select({
+    ios: `${scheme}${label}@${latLng}`,
+    android: `${scheme}${latLng}(${label})`,
+  });
+  Linking.openURL(url);
+};
+
 export default function StepDone({
   isModalVisible,
   setIsModalVisible,
+  sphResponse,
 }: StepDoneType) {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [sphState] = useContext(SphContext);
+  const stateCompanyName = sphState.selectedCompany?.Company?.name
+    ? sphState.selectedCompany?.Company.name
+    : sphState.selectedPic?.name;
+
+  // const locationState = sphState?.billingAddress.addressAutoComplete
+  //   ?.formattedAddress
+  //   ? sphState?.billingAddress.addressAutoComplete.formattedAddress
+  //   : sphState.selectedCompany?.locationAddress.line1;
+  const locationState = sphState.isBillingAddressSame
+    ? sphState.selectedCompany?.locationAddress.line1
+    : sphState?.billingAddress.addressAutoComplete.formattedAddress;
+  const locationObj = sphState.isBillingAddressSame
+    ? sphState.selectedCompany
+    : sphState?.billingAddress.addressAutoComplete;
+
+  const shareFunc = async (url?: string) => {
+    try {
+      if (!url) throw 'no url';
+      await Share.share({
+        url: url,
+        message: `Link PDF SPH ${stateCompanyName}, ${url}`,
+      });
+    } catch (error) {
+      console.log(error, 'errorsharefunc');
+    }
+  };
 
   return (
     <Modal
@@ -49,7 +161,12 @@ export default function StepDone({
     >
       <View style={styles.modalStyle}>
         <View style={styles.modalHeader}>
-          <TouchableOpacity onPress={() => setIsModalVisible((curr) => !curr)}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+              setIsModalVisible((curr) => !curr);
+            }}
+          >
             <MaterialCommunityIcons
               name="close"
               size={resScale(25)}
@@ -58,38 +175,55 @@ export default function StepDone({
           </TouchableOpacity>
           <View style={styles.modalTitle}>
             <Text style={styles.headerText} numberOfLines={1}>
-              SPH/BRIK/2022/11/00254
+              {sphResponse?.number}
             </Text>
           </View>
         </View>
         <View style={styles.modalContent}>
-          <LabelSuccess />
-          <BCompanyMapCard location={sphState?.billingAddress.fullAddress} />
+          <LabelSuccess sphId={sphResponse?.number} />
+          <BCompanyMapCard
+            companyName={stateCompanyName}
+            location={locationState}
+            onPressLocation={() => {
+              if (locationObj && locationObj.lat && locationObj.lon) {
+                openAddressOnMap(
+                  stateCompanyName,
+                  locationObj.lat,
+                  locationObj.lon
+                );
+              }
+            }}
+          />
           <View style={styles.contentDetail}>
             <Text style={styles.partText}>PIC</Text>
             <BSpacer size={'extraSmall'} />
-            <BPic />
+            <BPic {...sphState.selectedPic} />
             <BSpacer size={'extraSmall'} />
             <Text style={styles.partText}>Rincian</Text>
             <BSpacer size={'extraSmall'} />
-            <BProjectDetailCard />
+            <BProjectDetailCard
+              productionTime={sphResponse?.createdTime}
+              expiredDate={sphResponse?.expiryTime}
+              status={'Diajukan'}
+              paymentMethod={paymentMethod[sphState.paymentType]}
+              projectName={sphState.selectedCompany?.name}
+            />
             <BSpacer size={'extraSmall'} />
-            <Text style={styles.partText}>Rincian</Text>
+            <Text style={styles.partText}>Produk</Text>
             <BSpacer size={'extraSmall'} />
             <FlatList
               renderItem={({ item }) => {
                 return (
                   <BProductCard
-                    key={item.id}
                     name={item.product.name}
                     pricePerVol={+item.sellPrice}
                     volume={+item.volume}
-                    totalPrice={+item.sellPrice * +item.volume}
+                    totalPrice={+item.totalPrice}
                   />
                 );
               }}
               data={sphState?.chosenProducts}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.productId}
               ItemSeparatorComponent={Separator}
             />
           </View>
@@ -97,36 +231,50 @@ export default function StepDone({
         <View style={styles.modalFooter}>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() => setIsModalVisible((curr) => !curr)}
+            onPress={() => printRemotePDF(sphResponse?.thermalLink)}
           >
             <MaterialCommunityIcons
               name="printer"
               size={resScale(25)}
               color={colors.primary}
             />
-            <Text>Print</Text>
+            <Text style={styles.footerButtonText}>Print</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() => setIsModalVisible((curr) => !curr)}
+            onPress={() => shareFunc(sphResponse?.letterLink)}
           >
             <MaterialCommunityIcons
               name="share-variant-outline"
               size={resScale(25)}
               color={colors.primary}
             />
-            <Text>Share</Text>
+            <Text style={styles.footerButtonText}>Share</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() => setIsModalVisible((curr) => !curr)}
+            onPress={() =>
+              downloadPdf({
+                url: sphResponse?.letterLink,
+                title: sphResponse?.number,
+                downloadPopup: () => {
+                  dispatch(
+                    openPopUp({
+                      popUpText: 'Berhasil mendownload SPH',
+                      popUpType: 'success',
+                      outsideClickClosePopUp: true,
+                    })
+                  );
+                },
+              })
+            }
           >
             <Feather
               name="download"
               size={resScale(25)}
               color={colors.primary}
             />
-            <Text>Download</Text>
+            <Text style={styles.footerButtonText}>Download</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -211,5 +359,10 @@ const styles = StyleSheet.create({
     flex: 0.3,
     // backgroundColor: 'red',
     alignItems: 'center',
+  },
+  footerButtonText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
   },
 });
