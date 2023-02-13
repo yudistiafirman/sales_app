@@ -1,5 +1,5 @@
 import React from 'react';
-import { BButtonPrimary, BForm, BHeaderIcon, BText } from '@/components';
+
 import { Input, PIC, PicFormInitialState } from '@/interfaces';
 import Modal from 'react-native-modal';
 import { Dimensions, StyleSheet, View } from 'react-native';
@@ -7,7 +7,11 @@ import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import validatePicForm from '@/utils/validatePicForm';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-const { height } = Dimensions.get('window');
+import BText from '../atoms/BText';
+import BHeaderIcon from '../atoms/BHeaderIcon';
+import BForm from '../organism/BForm';
+import BButtonPrimary from '../atoms/BButtonPrimary';
+const { height, width } = Dimensions.get('window');
 interface IProps {
   addPic: any;
   onClose: () => void;
@@ -33,7 +37,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       label: 'Nama',
       isRequire: true,
       isError: state.errorName.length > 0,
-      errorMessage: state.errorName,
+      customerErrorMsg: state.errorName,
       placeholder: 'Masukkan Nama',
       type: 'textInput',
       onChange: (e) =>
@@ -48,7 +52,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       label: 'Jabatan',
       isRequire: true,
       isError: state.errorPosition.length > 0,
-      errorMessage: state.errorPosition,
+      customerErrorMsg: state.errorPosition,
       placeholder: 'Masukkan jabatan',
       type: 'textInput',
       onChange: (e) =>
@@ -63,7 +67,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       label: 'No. Telepon',
       isRequire: true,
       isError: state.errorPhone.length > 0,
-      errorMessage: state.errorPhone,
+      customerErrorMsg: state.errorPhone,
       placeholder: 'Masukkan nomor telepon',
       type: 'textInput',
       keyboardType: 'phone-pad',
@@ -79,7 +83,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       label: 'Email',
       isRequire: true,
       isError: state.errorEmail.length > 0,
-      errorMessage: state.errorEmail,
+      customerErrorMsg: state.errorEmail,
       keyboardType: 'email-address',
       placeholder: 'Masukkan email',
       type: 'textInput',
@@ -95,7 +99,6 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
 
   const onAdd = () => {
     const { name, position, email, phone } = state;
-    console.log('ini phone', phone);
     const errors = validatePicForm({ name, position, email, phone });
     if (JSON.stringify(errors) !== '{}') {
       Object.keys(errors).forEach((val) => {
@@ -113,7 +116,6 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       };
       addPic(dataPIC);
       setState(initialState);
-      onCloseModal();
     }
   };
 
@@ -130,7 +132,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       <View style={styles.contentWrapper}>
         <KeyboardAwareScrollView>
           <View
-            style={[styles.contentOuterContainer, { height: height / 1.43 }]}
+            style={[styles.contentOuterContainer, { height: height / 1.67 }]}
           >
             <View style={styles.contentInnerContainer}>
               <View style={styles.headerContainer}>
@@ -144,7 +146,9 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
               </View>
               <View>
                 <BForm inputs={inputs} />
-                <BButtonPrimary onPress={onAdd} title="Tambah PIC" />
+                <View style={styles.buttonWrapper}>
+                  <BButtonPrimary onPress={onAdd} title="Tambah PIC" />
+                </View>
               </View>
             </View>
           </View>
@@ -172,6 +176,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: font.family.montserrat['700'],
     fontSize: font.size.lg,
+  },
+  buttonWrapper: {
+    position: 'absolute',
+    width: '100%',
+    top: width - layout.pad.lg,
   },
 });
 

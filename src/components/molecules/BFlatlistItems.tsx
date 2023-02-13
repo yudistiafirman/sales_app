@@ -74,8 +74,6 @@ export default function BFlatlistItems({
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, []);
 
-  const separator = useCallback(() => <BSpacer size={'extraSmall'} />, []);
-
   return (
     <View style={style.container}>
       <FlatList
@@ -103,7 +101,6 @@ export default function BFlatlistItems({
         onEndReachedThreshold={0.1}
         // maintainVisibleContentPosition
         refreshing={refreshing}
-        style={style.flatListContainer}
         data={flatListDatas}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => {
@@ -119,7 +116,6 @@ export default function BFlatlistItems({
             emptyText: emptyText,
           });
         }}
-        ItemSeparatorComponent={separator}
       />
     </View>
   );
@@ -128,9 +124,6 @@ export default function BFlatlistItems({
 const style = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  flatListContainer: {
-    marginTop: layout.pad.md,
   },
   flatListLoading: {
     marginTop: layout.pad.lg,

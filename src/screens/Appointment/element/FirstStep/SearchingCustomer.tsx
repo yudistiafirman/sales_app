@@ -1,183 +1,102 @@
-import { BTabSections, BVisitationCard } from '@/components';
+import { BFlatlistItems, BTabViewScreen, BVisitationCard } from '@/components';
 import { colors, layout } from '@/constants';
-import {
-  AppointmentActionType,
-  ProjectStructPayload,
-} from '@/context/AppointmentContext';
+import { AppointmentActionType } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
-import { resScale } from '@/utils';
-import React, { useCallback, useState } from 'react';
-import {
-  Alert,
-  Dimensions,
-  FlatList,
-  ListRenderItem,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import BottomSheetCompany from './BottomSheetCompany';
+import React, { useCallback } from 'react';
+import { Dimensions, View } from 'react-native';
+import { useSelector } from 'react-redux';
 const { width } = Dimensions.get('window');
+import { selectedCompanyInterface } from '@/interfaces/index';
 
 const SearchingCustomer = () => {
   const [values, dispatchValue] = useAppointmentData();
-  const { stepOne, searchQuery, selectedCustomerData, projectData } = values;
-  const { routes } = stepOne;
-  const [index, setIndex] = useState(0);
+  const { searchQuery } = values;
+  const { projects, isProjectLoading } = useSelector(
+    (state: RootState) => state.common
+  );
 
   const onPressCard = useCallback(
-    (item: ProjectStructPayload) => {
+    (item: selectedCompanyInterface) => {
+      const customerType = item.Company.id ? 'company' : 'individu';
+      console.log('ini item',item)
+      if (values.stepOne.options.items) {
+        dispatchValue({
+          type: AppointmentActionType.ADD_COMPANIES,
+          value: [
+            ...values.stepOne.options.items,
+            { id: item.Company.id, title: item.Company.name },
+          ],
+        });
+      } else {
+        dispatchValue({
+          type: AppointmentActionType.ADD_COMPANIES,
+          value: [{ id: item.Company.id, title: item.Company.name }],
+        });
+      }
+
+      const companyDataToSave = {
+        Company: { id: item.Company.id, title: item.Company.name },
+        PIC: item.PIC,
+        Visitation: item.Visitation,
+        locationAddress: item.locationAddress,
+        mainPic: item.mainPic,
+        id: item.id,
+        name: item.name,
+      };
+
       dispatchValue({
         type: AppointmentActionType.ON_ADD_PROJECT,
-        key: 'individu',
-        value: {
-          companyName: item.Company,
-          pics: item.PIC,
-          project: { id: item.id, name: item.name },
+        key: customerType,
+        value: companyDataToSave,
+      });
+    },
+    [dispatchValue, values.stepOne.options.items]
+  );
+
+  const tabToRender: { tabTitle: string; totalItems: number }[] =
+    React.useMemo(() => {
+      return [
+        {
+          tabTitle: 'Proyek',
+          totalItems: projects.length,
         },
-      });
-    },
-    [dispatchValue]
-  );
+      ];
+    }, [projects]);
 
-  const onTabPress = ({ route }) => {
-    const tabIndex = index === 0 ? 1 : 0;
-    if (route.key !== routes[index].key) {
-      dispatchValue({
-        type: AppointmentActionType.SET_CATEGORIES,
-        value: tabIndex,
-      });
+  const sceneToRender = React.useCallback(() => {
+    if (searchQuery.length <= 3) {
+      return null;
     }
-  };
-
-  const renderItem: ListRenderItem<ProjectStructPayload> = useCallback(
-    ({ item }) => {
-      return (
-        // <TouchableOpacity onPress={() => onPressCard(item)}>
-        //   <Text>{item.name}</Text>
-        // </TouchableOpacity>
-        <View />
-
-        // <BVisitationCard
-        //   item={item}
-        //   onPress={onPressCard}
-        //   searchQuery={searchQuery}
-        // />
-      );
-    },
-    []
-  );
+    return (
+      <BFlatlistItems
+        renderItem={(item) => (
+          <BVisitationCard
+            item={{
+              name: item.name,
+              location: item.locationAddress.line1,
+            }}
+            searchQuery={searchQuery}
+            onPress={() => {
+              onPressCard(item);
+            }}
+          />
+        )}
+        searchQuery={searchQuery}
+        isLoading={isProjectLoading}
+        data={projects}
+      />
+    );
+  }, [searchQuery, isProjectLoading, projects, onPressCard]);
 
   return (
     <View style={{ height: width + layout.pad.md }}>
-      <BTabSections
-        swipeEnabled={false}
-        navigationState={{ index, routes }}
-        renderScene={() => (
-          <FlatList
-            data={values.projectData}
-            keyExtractor={(item, idx) => idx.toString()}
-            renderItem={renderItem}
-          />
-        )}
-        onIndexChange={setIndex}
-        onTabPress={onTabPress}
-        tabStyle={styles.tabStyle}
-        tabBarStyle={styles.tabBarStyle}
-        indicatorStyle={styles.tabIndicator}
+      <BTabViewScreen
+        isLoading={false}
+        screenToRender={sceneToRender}
+        tabToRender={searchQuery ? tabToRender : []}
       />
-      {/* WAITING FOR COMPANY PAYLOAD */}
-      {/* <BottomSheetCompany
-        isVisible={values.isModalCompanyVisible}
-        onCloseModal={() =>
-          dispatchValue({ type: AppointmentActionType.TOGGLE_MODAL_COMPANY })
-        }
-        onChooseProject={() =>
-          dispatchValue({
-            type: AppointmentActionType.ON_ADD_PROJECT,
-            key: 'company',
-            value: {
-              companyName: {
-                id: values.selectedCustomerData?.id,
-                title: values.selectedCustomerData?.display_name,
-              },
-              pics: values.selectedCustomerData?.pics,
-              project: { id: '', name: '' },
-            },
-          })
-        }
-        onChoose={() => {
-          let projectName;
-          let shouldDispatch = false;
-          if (selectedCustomerData?.project?.length > 1) {
-            const filteredProject = selectedCustomerData?.project?.filter(
-              (el) => {
-                return el.isSelected;
-              }
-            );
-            if (filteredProject?.length === 0) {
-              shouldDispatch = false;
-            } else {
-              shouldDispatch = true;
-              projectName = filteredProject[0].display_name;
-            }
-          } else {
-            shouldDispatch = true;
-            projectName = selectedCustomerData?.project[0].display_name;
-          }
-
-          if (shouldDispatch) {
-            dispatchValue({
-              type: AppointmentActionType.ON_ADD_PROJECT,
-              key: 'company',
-              value: {
-                companyName: {
-                  id: values.selectedCustomerData?.id,
-                  title: values.selectedCustomerData?.display_name,
-                },
-                pics: values.selectedCustomerData?.pics,
-                project: {id: values.selectedCustomerData?.project,name:values.selectedCustomerData?.name},
-              },
-            });
-          } else {
-            Alert.alert('Ooops', 'Pilih salah satu proyek atau tambah proyek');
-          }
-        }}
-        dataCompany={values.selectedCustomerData}
-        onSelect={(_idx: number) => {
-          const newSelectedProject = values.selectedCustomerData?.project?.map(
-            (el, _index) => {
-              return {
-                ...el,
-                isSelected: _idx === _index,
-              };
-            }
-          );
-          dispatchValue({
-            type: AppointmentActionType.SELECT_PROJECT,
-            value: newSelectedProject,
-          });
-        }}
-      /> */}
-      {/* WAITING FOR COMPANY PALYLOAD */}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  tabIndicator: {
-    backgroundColor: colors.primary,
-    marginLeft: resScale(15.5),
-  },
-  tabStyle: {
-    width: 'auto',
-    paddingHorizontal: layout.pad.lg,
-  },
-  tabBarStyle: {
-    backgroundColor: colors.white,
-    paddingHorizontal: layout.pad.lg,
-  },
-});
 
 export default SearchingCustomer;

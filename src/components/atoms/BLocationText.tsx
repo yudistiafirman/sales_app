@@ -20,7 +20,7 @@ export default function BLocationText({ location }: locationType) {
         color="#0080FF"
         style={style.iconStyle}
       />
-      <Text style={style.locationText}>{location}</Text>
+      <Text numberOfLines={1} style={style.locationText}>{location}</Text>
     </View>
   );
 }

@@ -70,4 +70,9 @@ export default class BrikApiProductivity {
 
     return url.toString();
   };
+
+  static bookingAppointment = () => {
+    const url = new URL(`${API_URL}/productivity/m/flow/visitation-book`);
+    return url.toString();
+  };
 }

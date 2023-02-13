@@ -1,15 +1,10 @@
-import { PIC } from '@/interfaces';
+import { PIC, selectedCompanyInterface } from '@/interfaces';
 import React, { createContext, useReducer, Dispatch } from 'react';
+import { DateData } from 'react-native-calendars';
 
 interface IProvider {
   children: React.ReactNode;
 }
-
-export type DataProject = {
-  id: string;
-  display_name: string;
-  isSelected?: string;
-};
 
 export type DataCompany = {
   id?: string;
@@ -19,21 +14,12 @@ export type DataCompany = {
   pics?: PIC[];
 };
 
-type CompanyCredentials = {
-  companyName: string;
-  project: {
-    id: string;
-    name: string;
-  };
-  pics: PIC[];
-};
-
 export interface StepOne {
   routes: any[];
   selectedCategories: string;
   customerType: string;
-  individu: CompanyCredentials;
-  company: CompanyCredentials;
+  individu: selectedCompanyInterface;
+  company: selectedCompanyInterface;
   location: {};
   errorProject: string;
   errorPics: string;
@@ -44,34 +30,13 @@ export interface StepOne {
   };
 }
 
-export type ProjectStructPayload = {
-  id: string;
-  name: string;
-  locationAddress: {
-    line1: string;
-    rural: string;
-    district: string;
-    postalCode: number;
-    city: string;
-  };
-  Company: {
-    id: string;
-    name: string;
-  };
-  mainPic: {
-    id: string | null;
-    name: string | null;
-  };
-  PIC: PIC[];
-};
-
 export interface AppointmentState {
   step: number;
   stepDone: number[];
   searchQuery: string;
   stepOne: StepOne;
   isModalPicVisible: boolean;
-  projectData: ProjectStructPayload[];
+  selectedDate: DateData | null;
   selectedCustomerData: DataCompany | null;
   isModalCompanyVisible: boolean;
 }
@@ -92,20 +57,56 @@ const initialData: AppointmentState = {
     selectedCategories: '',
     customerType: '',
     individu: {
-      companyName: '',
-      project: {
+      id: '',
+      name: '',
+      Company: {
         id: '',
-        name: '',
+        title: '',
       },
-      pics: [],
+      PIC: [],
+      Visitation: {
+        finish_date: null,
+        id: '',
+        order: 1,
+        visitation_id: null,
+      },
+      locationAddress: {
+        city: undefined,
+        district: undefined,
+        line1: undefined,
+        postalCode: undefined,
+        rural: undefined,
+      },
+      mainPic: {
+        id: null,
+        name: null,
+      },
     },
     company: {
-      companyName: '',
-      project: {
+      id: '',
+      name: '',
+      Company: {
         id: '',
-        name: '',
+        title: '',
       },
-      pics: [],
+      PIC: [],
+      Visitation: {
+        finish_date: null,
+        id: '',
+        order: 1,
+        visitation_id: null,
+      },
+      locationAddress: {
+        city: undefined,
+        district: undefined,
+        line1: undefined,
+        postalCode: undefined,
+        rural: undefined,
+      },
+      mainPic: {
+        id: null,
+        name: null,
+      },
     },
     errorCompany: '',
     errorProject: '',
@@ -116,42 +117,7 @@ const initialData: AppointmentState = {
       loading: false,
     },
   },
-  projectData: [
-    {
-      id: 'a03943ca-b564-5f56-8a12-adb53f181481',
-      name: 'project asik',
-      locationAddress: {
-        line1: 'bendi besar',
-        rural: 'AIK KETEKOK',
-        district: 'TANJUNG PANDAN',
-        postalCode: 33411,
-        city: 'BELITUNG',
-      },
-      Company: {
-        id: '512a5be8-8b84-50b7-b523-b22383ad2e99',
-        name: 'WIKI',
-      },
-      mainPic: {
-        id: null,
-        name: null,
-      },
-      PIC: [
-        {
-          id: 'ccb66bb5-86d6-5319-a400-b7cdfbce5318',
-          name: 'udin bapri',
-          position: 'ceo',
-          phone: '81220656999',
-          email: null,
-        },
-      ],
-      Visitation: {
-        id: '1c389677-914a-5354-b62f-6a987d355c79',
-        order: 1,
-        finish_date: null,
-        visitation_id: null,
-      },
-    },
-  ],
+  selectedDate: null,
   selectedCustomerData: null,
   isModalPicVisible: false,
   isModalCompanyVisible: false,
@@ -183,6 +149,9 @@ export enum AppointmentActionType {
   SET_CATEGORIES = 'SET_CATEGORIES',
   SELECT_COMPANY = 'SELECT_COMPANY',
   ON_PRESS_PROJECT = 'ON_PRESS_PROJECT',
+  ADD_COMPANIES = 'ADD_COMPANIES',
+  SET_COMPANIES_NAME = 'SET_COMPANIES_NAME',
+  SET_DATE = 'SET_DATE',
   INCREASE_STEP = 'INCREASE_STEP',
   DECREASE_STEP = 'DECREASE_STEP',
 }
@@ -229,6 +198,15 @@ type AppointmentPayload = {
     key: string;
     value: {};
   };
+  [AppointmentActionType.ADD_COMPANIES]: {
+    value: [];
+  };
+  [AppointmentActionType.SET_COMPANIES_NAME]: {
+    value: string;
+  };
+  [AppointmentActionType.SET_DATE]: {
+    value: DateData;
+  };
   [AppointmentActionType.INCREASE_STEP]: {};
   [AppointmentActionType.DECREASE_STEP]: {};
 };
@@ -244,6 +222,18 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
   switch (action.type) {
     case AppointmentActionType.SEARCH_QUERY:
       return { ...state, searchQuery: action.value };
+    case AppointmentActionType.SET_COMPANIES_NAME:
+      return {
+        ...state,
+        stepOne: {
+          ...state.stepOne,
+          errorCompany: '',
+          company: {
+            ...state.stepOne.company,
+            Company: { ...state.stepOne.company.Company, title: action.value },
+          },
+        },
+      };
     case AppointmentActionType.SET_CUSTOMER_TYPE:
       return {
         ...state,
@@ -253,6 +243,10 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
           errorCompany: '',
           errorProject: '',
           errorPics: '',
+          company: {
+            ...state.stepOne.company,
+            Company: { ...state.stepOne.company.Company },
+          },
         },
       };
     case AppointmentActionType.SET_PROJECT_NAME:
@@ -260,20 +254,23 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
         ...state,
         stepOne: {
           ...state.stepOne,
+          errorProject: '',
           [action.key as keyof StepOne]: {
             ...(state.stepOne[action.key as keyof StepOne] as StepOne),
-            project: { name: action.value },
+            name: action.value,
           },
         },
       };
     case AppointmentActionType.SET_PICS:
       return {
         ...state,
+        isModalPicVisible: false,
         stepOne: {
           ...state.stepOne,
+          errorPics: '',
           [action.key as keyof StepOne]: {
             ...(state.stepOne[action.key as keyof StepOne] as StepOne),
-            pics: action.value,
+            PIC: action.value,
           },
         },
       };
@@ -319,11 +316,12 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
         stepOne: {
           ...state.stepOne,
           customerType: action.key,
+          errorPics: '',
+          errorCompany: '',
+          errorProject: '',
           [action.key as keyof StepOne]: {
             ...(state.stepOne[action.key as keyof StepOne] as StepOne),
-            pics: action.value.pics,
-            companyName: action.value.companyName,
-            project: action.value.project,
+            ...action.value,
           },
         },
       };
@@ -344,7 +342,7 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
           ...state.stepOne,
           [action.key as keyof StepOne]: {
             ...(state.stepOne[action.key as keyof StepOne] as StepOne),
-            companyName: action.value,
+            Company: action.value,
           },
         },
       };
@@ -362,6 +360,21 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
             projectName: action.value.projectName,
           },
         },
+      };
+    }
+    case AppointmentActionType.ADD_COMPANIES: {
+      return {
+        ...state,
+        stepOne: {
+          ...state.stepOne,
+          options: { ...state.stepOne.options.items, items: action.value },
+        },
+      };
+    }
+    case AppointmentActionType.SET_DATE: {
+      return {
+        ...state,
+        selectedDate: action.value,
       };
     }
     case AppointmentActionType.INCREASE_STEP: {
@@ -384,10 +397,7 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
 const AppointmentProvider = (props: IProvider) => {
   const { children } = props;
 
-  const [values, dispatchValue] = useReducer(
-    reducerForm,
-    initialData as AppointmentState
-  );
+  const [values, dispatchValue] = useReducer(reducerForm, initialData);
   return (
     <AppoinmentContext.Provider value={[values, dispatchValue]}>
       {children}

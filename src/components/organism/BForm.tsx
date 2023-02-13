@@ -12,10 +12,11 @@ import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
 import { colors, fonts, layout } from '@/constants';
-import { BSwitch, BFileInput } from '@/components';
 import { resScale } from '@/utils';
 import CheckBox from '@react-native-community/checkbox';
 import { TextInput } from 'react-native-paper';
+import BSwitch from '../atoms/BSwitch';
+import BFileInput from '../atoms/BFileInput';
 
 interface IProps {
   inputs: Input[];
@@ -52,6 +53,7 @@ const styles: Styles = {
     backgroundColor: colors.status.errorPic,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: layout.pad.sm,
   },
   quantityLayout: {
     flexDirection: 'row',
@@ -111,10 +113,10 @@ const renderInput = (
     keyboardType,
     checkbox,
     placeholder,
-    errorMessage,
     hidePicLabel,
     isInputDisable,
     customerErrorMsg,
+    onClear,
     LeftIcon,
   } = input;
 
@@ -242,6 +244,7 @@ const renderInput = (
   }
 
   if (type === 'autocomplete') {
+    const defaultErrorMsg = `${label} harus diisi`;
     return (
       <React.Fragment>
         <BLabel
@@ -255,6 +258,7 @@ const renderInput = (
         {!isInputDisable ? (
           <BAutoComplete
             {...input}
+            onClear={onClear}
             showClear={input.showClearAutoCompleted}
             showChevron={input.showChevronAutoCompleted}
           />
@@ -265,6 +269,11 @@ const renderInput = (
             disabled={isInputDisable}
             contentStyle={textStyles}
           />
+        )}
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {customerErrorMsg || defaultErrorMsg}
+          </BText>
         )}
       </React.Fragment>
     );
@@ -337,11 +346,11 @@ const renderInput = (
             {isError && (
               <View style={styles.errorPicContainer}>
                 <BText
-                  style={{ fontSize: font.size.lg }}
+                  style={{ fontSize: fonts.size.md }}
                   color="primary"
                   bold="400"
                 >
-                  {errorMessage}
+                  {customerErrorMsg}
                 </BText>
               </View>
             )}

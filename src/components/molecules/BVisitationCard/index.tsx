@@ -69,13 +69,13 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    width: resScale(330),
     backgroundColor: colors.white,
     justifyContent: 'space-between',
     borderColor: '#EBEBEB',
     borderRadius: layout.radius.md,
     borderWidth: resScale(1),
     padding: layout.pad.md,
+    marginTop: layout.pad.lg,
   },
   leftSide: {
     justifyContent: 'space-between',
