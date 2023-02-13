@@ -84,7 +84,6 @@ const style = StyleSheet.create({
     borderRadius: layout.radius.md,
     borderWidth: resScale(1),
     padding: layout.pad.md,
-    marginTop: layout.pad.lg,
   },
   leftSide: {
     justifyContent: 'space-between',
