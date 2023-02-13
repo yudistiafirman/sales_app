@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     height: resScale(25),
     paddingHorizontal: layout.pad.md,
     zIndex: 2,
+    alignItems: 'center',
     backgroundColor: 'white',
   },
   scrollContainer: {

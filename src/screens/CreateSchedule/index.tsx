@@ -1,145 +1,226 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { BHeaderIcon } from '@/components';
-import { resScale } from '@/utils';
+import { View, DeviceEventEmitter } from 'react-native';
 import {
-  CreateScheduleContextInterface,
-  CreateScheduleStateInterface,
-} from '@/interfaces';
-import StepperIndicator from '@/components/molecules/StepperIndicator';
-import { ScrollView } from 'react-native-gesture-handler';
-import { CreateScheduleContext } from './element/context/CreateScheduleContext';
-import Steps from './element/Steps';
-import FirstStep from './element/FirstStep';
+  BBackContinueBtn,
+  BButtonPrimary,
+  BContainer,
+  BHeaderIcon,
+  BSpacer,
+} from '@/components';
+import { Styles } from '@/interfaces';
+import { useKeyboardActive } from '@/hooks';
+import { BStepperIndicator } from '@/components';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { resScale } from '@/utils';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
+import { layout } from '@/constants';
+import {
+  CreateScheduleFirstStep,
+  CreateScheduleListResponse,
+  CreateScheduleSecondStep,
+  CreateScheduleState,
+} from '@/interfaces/CreateSchedule';
+import {
+  CreateScheduleContext,
+  CreateScheduleProvider,
+} from '@/context/CreateScheduleContext';
 import SecondStep from './element/SecondStep';
+import FirstStep from './element/FirstStep';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 
 const labels = ['Cari PO', 'Detil Pengiriman'];
-const stepsToRender = [<FirstStep />, <SecondStep />];
+
+function ContinueIcon() {
+  return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
+}
 
 function stepHandler(
-  createScheduleData: CreateScheduleStateInterface,
-  stepsDone: number[],
-  setSteps: (e: number[] | ((curr: number[]) => number[])) => void,
-  stepController: (step: number) => void
+  state: CreateScheduleState,
+  setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
 ) {
-  if (createScheduleData.selectedCompany && createScheduleData.selectedSPH) {
-    if (!stepsDone.includes(0)) {
-      setSteps((curr) => {
-        return [...new Set(curr), 0];
-      });
-    }
-  } else {
-    setSteps((curr) => curr.filter((num) => num !== 0));
-  }
+  const { stepOne, stepTwo } = state;
 
-  if (
-    createScheduleData.deliveryDetail &&
-    createScheduleData.deliveryDetail.date &&
-    createScheduleData.deliveryDetail.time &&
-    createScheduleData.deliveryDetail.method
-  ) {
-    setSteps((curr) => {
+  if (stepOne.products) {
+    setStepsDone((curr) => {
+      return [...new Set(curr), 0];
+    });
+  } else {
+    setStepsDone((curr) => curr.filter((num) => num !== 0));
+  }
+  if (stepTwo.deliveryDate && stepTwo.deliveryTime && stepTwo.method) {
+    setStepsDone((curr) => {
       return [...new Set(curr), 1];
     });
   } else {
-    setSteps((curr) => curr.filter((num) => num !== 1));
+    setStepsDone((curr) => curr.filter((num) => num !== 1));
   }
+}
 
-  const max = Math.max(...stepsDone);
-  console.log(stepsDone, 'stepsDone');
+function populateData(
+  existingData: CreateScheduleListResponse,
+  updateValue: (
+    step: keyof CreateScheduleState,
+    key: keyof CreateScheduleFirstStep | keyof CreateScheduleSecondStep,
+    value: any
+  ) => void
+) {
+  console.log(JSON.stringify(existingData), 'difunction');
+  updateValue('stepOne', 'companyName', existingData.companyName);
+  updateValue('stepOne', 'locationName', existingData.locationName);
+  updateValue(
+    'stepOne',
+    'title',
+    existingData.sphs && existingData.sphs.length > 0
+      ? existingData.sphs[0]
+      : '-'
+  );
+  updateValue('stepOne', 'products', existingData.products);
+  updateValue('stepOne', 'addedDeposit', existingData.addedDeposit);
+  updateValue('stepOne', 'lastDeposit', existingData.lastDeposit);
 
-  stepController(max);
+  updateValue('stepTwo', 'deliveryDate', existingData.deliveryDate);
+  updateValue('stepTwo', 'deliveryTime', existingData.deliveryTime);
+  updateValue('stepTwo', 'method', existingData.method);
+  updateValue('stepTwo', 'isConsecutive', existingData.isConsecutive);
+  updateValue(
+    'stepTwo',
+    'hasTechnicalRequest',
+    existingData.hasTechnicalRequest
+  );
+  updateValue('stepTwo', 'products', existingData.products);
+  updateValue(
+    'stepTwo',
+    'totalDeposit',
+    existingData.lastDeposit +
+      existingData.addedDeposit
+        .map((item) => item.nominal)
+        .reduce((prev, next) => prev + next)
+  );
 }
 
 const CreateSchedule = () => {
+  const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
+  const { values, action } = React.useContext(CreateScheduleContext);
+  const { shouldScrollView } = values;
+  const { updateValue, updateValueOnstep } = action;
+  const { keyboardVisible } = useKeyboardActive();
+  const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
 
-  const renderHeaderLeft = React.useCallback(() => {
-    return (
+  useCustomHeaderLeft({
+    customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
         onBack={() => navigation.goBack()}
         iconName="x"
       />
-    );
-  }, [navigation]);
+    ),
+  });
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerLeft: () => renderHeaderLeft(),
-    });
-  }, [navigation, renderHeaderLeft]);
-
-  const stepRef = React.useRef<ScrollView>(null);
-  const [currentPosition, setCurrentPosition] = React.useState<number>(0);
-  const [stepsDone, setStepsDone] = React.useState<number[]>([]);
-  const [createScheduleData, setCreateScheduleData] =
-    React.useState<CreateScheduleStateInterface>({
-      selectedCompany: null,
-      selectedSPH: null,
-      deliveryDetail: null,
-      lastDeposit: null,
-      newDeposit: null,
-    });
-  const stepControl = React.useCallback((step: number) => {
-    console.log(step, 'stepsss');
-  }, []);
+  const existingSchedule: CreateScheduleListResponse =
+    route?.params?.existingSchedule;
 
   React.useEffect(() => {
-    stepHandler(createScheduleData, stepsDone, setStepsDone, stepControl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createScheduleData]);
+    if (existingSchedule) {
+      updateValue('existingScheduleID', existingSchedule.id);
+      populateData(existingSchedule, updateValueOnstep);
+    }
+    stepHandler(values, setStepsDone);
+  }, [existingSchedule, updateValue, updateValueOnstep, values]);
 
-  const stateUpdate = (key: string) => (e: any) => {
-    setCreateScheduleData((current) => {
-      console.log('stateUpdate', e);
-
-      return {
-        ...current,
-        [key]: e,
-      };
-    });
+  const next = (nextStep: number) => () => {
+    const totalStep = stepRender.length;
+    if (nextStep < totalStep && nextStep >= 0) {
+      updateValue('step', nextStep);
+    }
   };
 
+  const stepRender = [<FirstStep />, <SecondStep />];
+
   return (
-    <View style={styles.parent}>
-      <View style={styles.stepper}>
-        <StepperIndicator
-          stepsDone={stepsDone}
-          stepOnPress={setCurrentPosition}
-          currentStep={currentPosition}
-          labels={labels}
-          ref={stepRef}
-        />
-      </View>
-      <CreateScheduleContext.Provider
-        value={
-          [
-            createScheduleData,
-            stateUpdate,
-            setCurrentPosition,
-          ] as CreateScheduleContextInterface
-        }
-      >
-        <Steps
-          currentPosition={currentPosition}
-          stepsToRender={stepsToRender}
-        />
-      </CreateScheduleContext.Provider>
-    </View>
+    <>
+      <BStepperIndicator
+        stepsDone={stepsDone}
+        stepOnPress={(pos: number) => {
+          next(pos)();
+        }}
+        currentStep={values.step}
+        labels={labels}
+      />
+
+      <BContainer>
+        <View style={styles.container}>
+          {stepRender[values.step]}
+          <BSpacer size={'extraSmall'} />
+          {!keyboardVisible && shouldScrollView && values.step > 0 && (
+            <BBackContinueBtn
+              onPressContinue={() => {
+                next(values.step + 1)();
+                DeviceEventEmitter.emit('CreateSchedule.continueButton', true);
+              }}
+              onPressBack={next(values.step - 1)}
+              disableContinue={!stepsDone.includes(values.step)}
+            />
+          )}
+          {values.step === 0 && (
+            <View style={styles.conButton}>
+              <View style={styles.buttonOne}>
+                <BButtonPrimary
+                  title="Kembali"
+                  isOutline
+                  emptyIconEnable
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+              <View style={styles.buttonTwo}>
+                <BButtonPrimary
+                  disable={!stepsDone.includes(values.step)}
+                  title="Lanjut"
+                  onPress={next(values.step + 1)}
+                  rightIcon={ContinueIcon}
+                />
+              </View>
+            </View>
+          )}
+        </View>
+      </BContainer>
+    </>
   );
 };
 
-const styles = StyleSheet.create({
-  parent: {
+const styles: Styles = {
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  button: { flexDirection: 'row-reverse' },
+  container: {
+    justifyContent: 'space-between',
     flex: 1,
   },
-  stepper: {
+  conButton: {
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
-});
+  buttonOne: {
+    flex: 1,
+    paddingEnd: layout.pad.md,
+  },
+  buttonTwo: {
+    flex: 1.5,
+    paddingStart: layout.pad.md,
+  },
+};
 
-export default CreateSchedule;
+const CreateScheduleWithProvider = (props: any) => {
+  return (
+    <CreateScheduleProvider>
+      <CreateSchedule {...props} />
+    </CreateScheduleProvider>
+  );
+};
+
+export default CreateScheduleWithProvider;

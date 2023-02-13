@@ -29,6 +29,8 @@ import {
   LOCATION_TITLE,
   SEARCH_AREA,
   SEARCH_AREA_TITLE,
+  SEARCH_PO,
+  SEARCH_PO_TITLE,
   SEARCH_PRODUCT,
   SEARCH_PRODUCT_TITLE,
   SPH,
@@ -40,6 +42,7 @@ import CustomerDetail from '@/screens/CustomerDetail';
 import CreateSchedule from '@/screens/CreateSchedule';
 import PriceList from '@/screens/Price';
 import AppointmentWithProvider from '@/screens/Appointment';
+import SearchPO from '@/screens/SearchPO';
 
 const SalesStack = (Stack: any) => {
   return (
@@ -146,6 +149,14 @@ const SalesStack = (Stack: any) => {
         component={CreateSchedule}
         options={{
           headerTitle: CREATE_SCHEDULE_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={SEARCH_PO}
+        key={SEARCH_PO}
+        component={SearchPO}
+        options={{
+          headerTitle: SEARCH_PO_TITLE,
         }}
       />
     </>

@@ -3,8 +3,14 @@ import * as React from 'react';
 
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
+import { useNavigation } from '@react-navigation/native';
+import { CreateScheduleContext } from '@/context/CreateScheduleContext';
 
 export default function SecondStep() {
+  const navigation = useNavigation();
+  const { values } = React.useContext(CreateScheduleContext);
+  const { stepTwo: state } = values;
+
   return (
     <View style={style.container}>
       <Text>Step 2</Text>

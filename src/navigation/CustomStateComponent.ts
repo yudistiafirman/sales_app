@@ -33,7 +33,7 @@ export type RootStackParamList = {
   CREATE_VISITATION: { existingVisitation?: visitationListResponse };
   SPH: {};
   APPOINTMENT: {};
-  SEARCH_PRODUCT: { distance: number };
+  SEARCH_PRODUCT: { isGobackAfterPress?: boolean; distance: number };
   LOCATION: {
     coordinate: { longitude: number; latitude: number };
     isReadOnly: boolean;
@@ -44,6 +44,7 @@ export type RootStackParamList = {
   TRANSACTION_DETAIL: { title: string; data: any };
   CUSTOMER_DETAIL: { existingVisitation?: visitationListResponse };
   CREATE_SCHEDULE: {};
+  SEARCH_PO: { isGobackAfterPress?: boolean };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
