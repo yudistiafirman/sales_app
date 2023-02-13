@@ -111,6 +111,9 @@ export default function SelectedPic({
           }
           return { ...pic, isSelected: false };
         });
+        if (listPic.length === 1) {
+          listPic[0].isSelected = true;
+        }
         stateUpdate('selectedCompany')({
           ...sphState.selectedCompany,
           PIC: listPic,
