@@ -218,9 +218,13 @@ export default function FifthStep() {
     try {
       const payload = payloadMapper(sphState);
       const photoFiles = Object.values(sphState.paymentRequiredDocuments);
-
-      if (sphState.uploadedAndMappedRequiredDocs.length === 0) {
-        console.log('ini mau upload foto');
+      const isNoPhotoToUpload = photoFiles.every((val) => val === null);
+      payload.projectDocs = [];
+      if (
+        sphState.uploadedAndMappedRequiredDocs.length === 0 &&
+        !isNoPhotoToUpload
+      ) {
+        console.log('ini mau upload foto', photoFiles);
         const photoResponse = await dispatch(
           postUploadFiles({ files: photoFiles, from: 'sph' })
         ).unwrap();
@@ -263,7 +267,7 @@ export default function FifthStep() {
         });
         payload.projectDocs = files;
         stateUpdate('uploadedAndMappedRequiredDocs')(files);
-      } else {
+      } else if (!isNoPhotoToUpload) {
         payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
       }
       console.log(JSON.stringify(payload), 'payloadfinal');
