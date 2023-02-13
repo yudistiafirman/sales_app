@@ -73,3 +73,10 @@ export const getVisitationTarget = async () => {
     await getOptions('GET', undefined, true)
   );
 };
+
+export const postBookingAppointment = async ({ payload }) => {
+  return request(
+    BrikApiProductivity.bookingAppointment(),
+    await getOptions('POST', payload, true)
+  );
+};

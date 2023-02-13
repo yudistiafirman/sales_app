@@ -1,3 +1,4 @@
+import { getAllOrders } from '@/actions/OrderActions';
 import { createMachine } from 'xstate';
 import { assign } from 'xstate/lib/actions';
 
@@ -12,7 +13,7 @@ export const transactionMachine =
       schema: {
         services: {} as {
           getTransactions: {
-            data: { transactions: [] };
+            data: { data: [] };
           };
           getTypeTransactions: {
             data: any[];
@@ -30,9 +31,9 @@ export const transactionMachine =
       context: {
         routes: [] as any[],
         size: 10,
-        page: 1,
+        page: 0,
         selectedType: '',
-        transactionsData: [] as any[],
+        data: [] as any[],
         index: 0,
         loadTab: true,
         loadTransaction: false,
@@ -122,7 +123,7 @@ export const transactionMachine =
     {
       guards: {
         isNotLastPage: (context, event) => {
-          if (event.data.totalPage > 1) {
+          if (event.data && event.data.totalPage > 1) {
             return context.page !== event.data.totalPage;
           } else {
             return true;
@@ -149,16 +150,13 @@ export const transactionMachine =
           };
         }),
         assignTransactionsDataToContext: assign((context, event) => {
-          const transactionsData = [
-            ...context.transactionsData,
-            ...event.data.transactions,
-          ];
+          const transactionsData = [...context.data, ...event.data.data];
           return {
             loadTransaction: false,
             isLoadMore: false,
             refreshing: false,
             totalItems: event.data.totalItems,
-            transactionsData: transactionsData,
+            data: transactionsData,
           };
         }),
         assignIndexToContext: assign((context, event) => {
@@ -167,7 +165,7 @@ export const transactionMachine =
             selectedType: context.routes[event.payload].title,
             page: 1,
             loadTransaction: true,
-            transactionsData: [],
+            data: [],
           };
         }),
         incrementPage: assign((context, _event) => {
@@ -181,7 +179,7 @@ export const transactionMachine =
             page: 1,
             refreshing: true,
             loadTransaction: true,
-            transactionsData: [],
+            data: [],
           };
         }),
         enableLoadTransaction: assign((_context, _event) => {
@@ -207,22 +205,22 @@ export const transactionMachine =
                 index: 1,
                 name: 'SPH',
               },
-              {
-                index: 2,
-                name: 'DO',
-              },
-              {
-                index: 3,
-                name: 'Deposit',
-              },
-              {
-                index: 4,
-                name: 'Jadwal',
-              },
-              {
-                index: 5,
-                name: 'PO',
-              },
+              // {
+              //   index: 2,
+              //   name: 'DO',
+              // },
+              // {
+              //   index: 3,
+              //   name: 'Deposit',
+              // },
+              // {
+              //   index: 4,
+              //   name: 'Jadwal',
+              // },
+              // {
+              //   index: 5,
+              //   name: 'PO',
+              // },
             ];
             return response;
           } catch (error) {
@@ -232,265 +230,266 @@ export const transactionMachine =
         getTransactions: async (_context, _event) => {
           try {
             // need to call API
-            const response = {
-              transactions: [
-                {
-                  title: 'SPH/BRIK/2022/11/07856',
-                  name: '',
-                  desc: 'Proyek Jembatan',
-                  status: 'Diajukan',
-                  address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-                  chosenProducts: [
-                    {
-                      id: 'k350',
-                      product: {
-                        name: 'Beton K 350 NFA',
-                      },
-                      sellPrice: 1815000,
-                      volume: 28,
-                    },
-                    {
-                      id: 'k200',
-                      product: {
-                        name: 'Beton K 200 NFA',
-                      },
-                      sellPrice: 1815000,
-                      volume: 28,
-                    },
-                  ],
-                  company: 'PT. Guna Karya Mandiri',
-                  pic: {
-                    name: 'Agus',
-                    jabatan: 'Finance',
-                    phone: '8972633212',
-                    email: 'agus@agus.com',
-                  },
-                  paymentMethod: 'Cash',
-                  expiredDate: '20 December 2022',
-                  createdDate: '28 Dec 2022 14:58',
-                },
-                {
-                  title: 'SPH/BRIK/2022/11/07856',
-                  name: 'SPH/BRIK/2022/11/00254',
-                  desc: 'Proyek Jembatan',
-                  status: 'Cek Barang',
-                  address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-                  chosenProducts: [
-                    {
-                      id: 'k350',
-                      product: {
-                        name: 'Beton K 350 NFA',
-                      },
-                      sellPrice: 1815000,
-                      volume: 28,
-                    },
-                    {
-                      id: 'k200',
-                      product: {
-                        name: 'Beton K 200 NFA',
-                      },
-                      sellPrice: 1815000,
-                      volume: 28,
-                    },
-                  ],
-                  lastOrder: [
-                    {
-                      title: 'PO/BRIK/2022/11/00023',
-                      price: 50820000,
-                      chosenProducts: [
-                        {
-                          id: 'k350',
-                          product: {
-                            name: 'Beton K 350 NFA',
-                          },
-                          sellPrice: 1815000,
-                          volume: 28,
-                        },
-                        {
-                          id: 'k200',
-                          product: {
-                            name: 'Beton K 200 NFA',
-                          },
-                          sellPrice: 1815000,
-                          volume: 28,
-                        },
-                      ],
-                    },
-                    {
-                      title: 'PO/BRIK/2022/11/00023',
-                      price: 50820000,
-                      chosenProducts: [
-                        {
-                          id: 'k350',
-                          product: {
-                            name: 'Beton K 350 NFA',
-                          },
-                          sellPrice: 1815000,
-                          volume: 28,
-                        },
-                        {
-                          id: 'k200',
-                          product: {
-                            name: 'Beton K 200 NFA',
-                          },
-                          sellPrice: 1815000,
-                          volume: 28,
-                        },
-                      ],
-                    },
-                  ],
-                  company: 'PT. Guna Karya Mandiri',
-                  pic: {
-                    name: 'Agus',
-                    jabatan: 'Finance',
-                    phone: '8972633212',
-                    email: 'agus@agus.com',
-                  },
-                  paymentMethod: 'Cash',
-                  expiredDate: '20 December 2022',
-                  createdDate: '28 Dec 2022 14:58',
-                  deposit: {
-                    firstSection: 'Deposit Awal',
-                    firstSectionValue: 60000000,
-                    secondSection: 'Tambahan Deposit',
-                    secondSectionValue: 7000000,
-                    thirdSection: 'Deposit Akhir',
-                  },
-                },
-                {
-                  title: 'SPH/BRIK/2022/11/07856',
-                  name: 'SPH/BRIK/2022/11/00254',
-                  desc: 'Proyek Jembatan',
-                  status: 'Persiapan',
-                  address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-                  chosenProducts: [
-                    {
-                      id: 'k350',
-                      product: {
-                        name: 'Beton K 350 NFA',
-                      },
-                      sellPrice: 1815000,
-                      volume: 28,
-                    },
-                    {
-                      id: 'k200',
-                      product: {
-                        name: 'Beton K 200 NFA',
-                      },
-                      sellPrice: 1815000,
-                      volume: 28,
-                    },
-                  ],
-                  lastOrder: [
-                    {
-                      title: 'PO/BRIK/2022/11/00023',
-                      price: 50820000,
-                      chosenProducts: [
-                        {
-                          id: 'k350',
-                          product: {
-                            name: 'Beton K 350 NFA',
-                          },
-                          sellPrice: 1815000,
-                          volume: 28,
-                        },
-                        {
-                          id: 'k200',
-                          product: {
-                            name: 'Beton K 200 NFA',
-                          },
-                          sellPrice: 1815000,
-                          volume: 28,
-                        },
-                      ],
-                    },
-                  ],
-                  company: 'PT. Guna Karya Mandiri',
-                  pic: {
-                    name: 'Agus',
-                    jabatan: 'Finance',
-                    phone: '8972633212',
-                    email: 'agus@agus.com',
-                  },
-                  paymentMethod: 'Cash',
-                  expiredDate: '20 December 2022',
-                  createdDate: '28 Dec 2022 14:58',
-                  deposit: {
-                    firstSection: 'Deposit Awal',
-                    firstSectionValue: 60000000,
-                    secondSection: 'Tambahan Deposit',
-                    secondSectionValue: 7000000,
-                    thirdSection: 'Deposit Akhir',
-                  },
-                },
-                {
-                  title: 'SPH/BRIK/2022/11/07856',
-                  name: 'SPH/BRIK/2022/11/00254',
-                  desc: 'Proyek Jembatan',
-                  status: 'Diajukan',
-                  address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-                  chosenProducts: [],
-                  company: 'PT. Guna Karya Mandiri',
-                  pic: {
-                    name: 'Agus',
-                    jabatan: 'Finance',
-                    phone: '8972633212',
-                    email: 'agus@agus.com',
-                  },
-                  paymentMethod: 'Cash',
-                  expiredDate: '20 December 2022',
-                  createdDate: '28 Dec 2022 14:58',
-                  deposit: {
-                    firstSection: 'Deposit',
-                    firstSectionValue: 28000000,
-                    secondSection: 'Beton K 250 NFA',
-                    secondSectionValue: -25410000,
-                    thirdSection: 'Est. Sisa Deposit',
-                  },
-                },
-                {
-                  title: 'SPH/BRIK/2022/11/07856',
-                  name: 'SPH/BRIK/2022/11/00254',
-                  desc: 'Proyek Jembatan',
-                  status: 'Kadaluarsa',
-                  address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-                  chosenProducts: [],
-                  company: 'PT. Guna Karya Mandiri',
-                  paymentMethod: 'Cash',
-                  expiredDate: '20 December 2022',
-                  createdDate: '28 Dec 2022 14:58',
-                  deposit: {
-                    firstSection: 'Deposit',
-                    firstSectionValue: 28000000,
-                    secondSection: 'Beton K 250 NFA',
-                    secondSectionValue: -25410000,
-                    thirdSection: 'Est. Sisa Deposit',
-                  },
-                },
-                {
-                  title: 'SPH/BRIK/2022/11/07856',
-                  name: 'SPH/BRIK/2022/11/00254',
-                  desc: 'Proyek Jembatan',
-                  status: 'Ditolak',
-                  address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-                  chosenProducts: [],
-                  company: 'PT. Guna Karya Mandiri',
-                  pic: {
-                    name: 'Agus',
-                    jabatan: 'Finance',
-                    phone: '8972633212',
-                    email: 'agus@agus.com',
-                  },
-                  paymentMethod: 'Cash',
-                  expiredDate: '20 December 2022',
-                  createdDate: '28 Dec 2022 14:58',
-                },
-              ],
-              message: '',
-              totalItems: 6,
-              totalPage: 1,
-            };
-            return response as any;
+            const response = await getAllOrders();
+            // const response = {
+            //   transactions: [
+            //     {
+            //       title: 'SPH/BRIK/2022/11/07856',
+            //       name: '',
+            //       desc: 'Proyek Jembatan',
+            //       status: 'Diajukan',
+            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
+            //       chosenProducts: [
+            //         {
+            //           id: 'k350',
+            //           product: {
+            //             name: 'Beton K 350 NFA',
+            //           },
+            //           sellPrice: 1815000,
+            //           volume: 28,
+            //         },
+            //         {
+            //           id: 'k200',
+            //           product: {
+            //             name: 'Beton K 200 NFA',
+            //           },
+            //           sellPrice: 1815000,
+            //           volume: 28,
+            //         },
+            //       ],
+            //       company: 'PT. Guna Karya Mandiri',
+            //       pic: {
+            //         name: 'Agus',
+            //         jabatan: 'Finance',
+            //         phone: '8972633212',
+            //         email: 'agus@agus.com',
+            //       },
+            //       paymentMethod: 'Cash',
+            //       expiredDate: '20 December 2022',
+            //       createdDate: '28 Dec 2022 14:58',
+            //     },
+            //     {
+            //       title: 'SPH/BRIK/2022/11/07856',
+            //       name: 'SPH/BRIK/2022/11/00254',
+            //       desc: 'Proyek Jembatan',
+            //       status: 'Cek Barang',
+            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
+            //       chosenProducts: [
+            //         {
+            //           id: 'k350',
+            //           product: {
+            //             name: 'Beton K 350 NFA',
+            //           },
+            //           sellPrice: 1815000,
+            //           volume: 28,
+            //         },
+            //         {
+            //           id: 'k200',
+            //           product: {
+            //             name: 'Beton K 200 NFA',
+            //           },
+            //           sellPrice: 1815000,
+            //           volume: 28,
+            //         },
+            //       ],
+            //       lastOrder: [
+            //         {
+            //           title: 'PO/BRIK/2022/11/00023',
+            //           price: 50820000,
+            //           chosenProducts: [
+            //             {
+            //               id: 'k350',
+            //               product: {
+            //                 name: 'Beton K 350 NFA',
+            //               },
+            //               sellPrice: 1815000,
+            //               volume: 28,
+            //             },
+            //             {
+            //               id: 'k200',
+            //               product: {
+            //                 name: 'Beton K 200 NFA',
+            //               },
+            //               sellPrice: 1815000,
+            //               volume: 28,
+            //             },
+            //           ],
+            //         },
+            //         {
+            //           title: 'PO/BRIK/2022/11/00023',
+            //           price: 50820000,
+            //           chosenProducts: [
+            //             {
+            //               id: 'k350',
+            //               product: {
+            //                 name: 'Beton K 350 NFA',
+            //               },
+            //               sellPrice: 1815000,
+            //               volume: 28,
+            //             },
+            //             {
+            //               id: 'k200',
+            //               product: {
+            //                 name: 'Beton K 200 NFA',
+            //               },
+            //               sellPrice: 1815000,
+            //               volume: 28,
+            //             },
+            //           ],
+            //         },
+            //       ],
+            //       company: 'PT. Guna Karya Mandiri',
+            //       pic: {
+            //         name: 'Agus',
+            //         jabatan: 'Finance',
+            //         phone: '8972633212',
+            //         email: 'agus@agus.com',
+            //       },
+            //       paymentMethod: 'Cash',
+            //       expiredDate: '20 December 2022',
+            //       createdDate: '28 Dec 2022 14:58',
+            //       deposit: {
+            //         firstSection: 'Deposit Awal',
+            //         firstSectionValue: 60000000,
+            //         secondSection: 'Tambahan Deposit',
+            //         secondSectionValue: 7000000,
+            //         thirdSection: 'Deposit Akhir',
+            //       },
+            //     },
+            //     {
+            //       title: 'SPH/BRIK/2022/11/07856',
+            //       name: 'SPH/BRIK/2022/11/00254',
+            //       desc: 'Proyek Jembatan',
+            //       status: 'Persiapan',
+            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
+            //       chosenProducts: [
+            //         {
+            //           id: 'k350',
+            //           product: {
+            //             name: 'Beton K 350 NFA',
+            //           },
+            //           sellPrice: 1815000,
+            //           volume: 28,
+            //         },
+            //         {
+            //           id: 'k200',
+            //           product: {
+            //             name: 'Beton K 200 NFA',
+            //           },
+            //           sellPrice: 1815000,
+            //           volume: 28,
+            //         },
+            //       ],
+            //       lastOrder: [
+            //         {
+            //           title: 'PO/BRIK/2022/11/00023',
+            //           price: 50820000,
+            //           chosenProducts: [
+            //             {
+            //               id: 'k350',
+            //               product: {
+            //                 name: 'Beton K 350 NFA',
+            //               },
+            //               sellPrice: 1815000,
+            //               volume: 28,
+            //             },
+            //             {
+            //               id: 'k200',
+            //               product: {
+            //                 name: 'Beton K 200 NFA',
+            //               },
+            //               sellPrice: 1815000,
+            //               volume: 28,
+            //             },
+            //           ],
+            //         },
+            //       ],
+            //       company: 'PT. Guna Karya Mandiri',
+            //       pic: {
+            //         name: 'Agus',
+            //         jabatan: 'Finance',
+            //         phone: '8972633212',
+            //         email: 'agus@agus.com',
+            //       },
+            //       paymentMethod: 'Cash',
+            //       expiredDate: '20 December 2022',
+            //       createdDate: '28 Dec 2022 14:58',
+            //       deposit: {
+            //         firstSection: 'Deposit Awal',
+            //         firstSectionValue: 60000000,
+            //         secondSection: 'Tambahan Deposit',
+            //         secondSectionValue: 7000000,
+            //         thirdSection: 'Deposit Akhir',
+            //       },
+            //     },
+            //     {
+            //       title: 'SPH/BRIK/2022/11/07856',
+            //       name: 'SPH/BRIK/2022/11/00254',
+            //       desc: 'Proyek Jembatan',
+            //       status: 'Diajukan',
+            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
+            //       chosenProducts: [],
+            //       company: 'PT. Guna Karya Mandiri',
+            //       pic: {
+            //         name: 'Agus',
+            //         jabatan: 'Finance',
+            //         phone: '8972633212',
+            //         email: 'agus@agus.com',
+            //       },
+            //       paymentMethod: 'Cash',
+            //       expiredDate: '20 December 2022',
+            //       createdDate: '28 Dec 2022 14:58',
+            //       deposit: {
+            //         firstSection: 'Deposit',
+            //         firstSectionValue: 28000000,
+            //         secondSection: 'Beton K 250 NFA',
+            //         secondSectionValue: -25410000,
+            //         thirdSection: 'Est. Sisa Deposit',
+            //       },
+            //     },
+            //     {
+            //       title: 'SPH/BRIK/2022/11/07856',
+            //       name: 'SPH/BRIK/2022/11/00254',
+            //       desc: 'Proyek Jembatan',
+            //       status: 'Kadaluarsa',
+            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
+            //       chosenProducts: [],
+            //       company: 'PT. Guna Karya Mandiri',
+            //       paymentMethod: 'Cash',
+            //       expiredDate: '20 December 2022',
+            //       createdDate: '28 Dec 2022 14:58',
+            //       deposit: {
+            //         firstSection: 'Deposit',
+            //         firstSectionValue: 28000000,
+            //         secondSection: 'Beton K 250 NFA',
+            //         secondSectionValue: -25410000,
+            //         thirdSection: 'Est. Sisa Deposit',
+            //       },
+            //     },
+            //     {
+            //       title: 'SPH/BRIK/2022/11/07856',
+            //       name: 'SPH/BRIK/2022/11/00254',
+            //       desc: 'Proyek Jembatan',
+            //       status: 'Ditolak',
+            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
+            //       chosenProducts: [],
+            //       company: 'PT. Guna Karya Mandiri',
+            //       pic: {
+            //         name: 'Agus',
+            //         jabatan: 'Finance',
+            //         phone: '8972633212',
+            //         email: 'agus@agus.com',
+            //       },
+            //       paymentMethod: 'Cash',
+            //       expiredDate: '20 December 2022',
+            //       createdDate: '28 Dec 2022 14:58',
+            //     },
+            //   ],
+            //   message: '',
+            //   totalItems: 6,
+            //   totalPage: 1,
+            // };
+            return response.data as any;
           } catch (error) {
             console.log(error);
           }

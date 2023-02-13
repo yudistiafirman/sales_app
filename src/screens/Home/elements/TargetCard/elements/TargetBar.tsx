@@ -104,7 +104,7 @@ const style = StyleSheet.create({
   },
   progress: {
     height: resScale(8),
-    width: resScale(20),
+    width: resScale(25),
   },
   shimmerStyle: {
     borderRadius: layout.radius.md,

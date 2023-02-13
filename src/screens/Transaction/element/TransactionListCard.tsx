@@ -5,21 +5,25 @@ import { StyleSheet, View } from 'react-native';
 import resScale from '@/utils/resScale';
 import { BChip, BText } from '@/components';
 import { layout } from '@/constants';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { getColorStatusTrx } from '@/utils/generalFunc';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { getColorStatusTrx, getStatusTrx } from '@/utils/generalFunc';
 
 interface TransactionListCardProps {
-  title: string;
-  name?: string;
-  desc: string;
+  id: string;
+  number: string;
+  expiredDate: string;
+  projectName: string;
   status: string;
+  name?: string;
 }
 
 const TransactionListCard = ({
-  title,
-  name,
-  desc,
+  id,
+  number,
+  expiredDate,
+  projectName,
   status,
+  name,
 }: TransactionListCardProps) => {
   const { color, textColor } = getColorStatusTrx(status);
   return (
@@ -31,16 +35,16 @@ const TransactionListCard = ({
     >
       <View style={styles.leftSide}>
         <View style={styles.container}>
-          <BText style={styles.title}>{title}</BText>
+          <BText style={styles.title}>{number}</BText>
           <BChip type="default" backgroundColor={color} textColor={textColor}>
-            {status}
+            {getStatusTrx(status)}
           </BChip>
         </View>
         {name && <BText style={styles.name}>{name}</BText>}
-        <BText style={styles.desc}>{desc}</BText>
+        <BText style={styles.desc}>{projectName}</BText>
       </View>
       <View style={styles.rightSide}>
-        <MaterialIcon size={20} name="chevron-right" />
+        <Icon name="chevron-right" size={20} color={colors.textInput.input} />
       </View>
     </View>
   );
@@ -75,7 +79,7 @@ export const styles = StyleSheet.create({
   },
   desc: {
     flex: 1,
-    marginTop: layout.pad.sm,
+    marginTop: layout.pad.md,
     fontFamily: font.family.montserrat['400'],
     color: colors.text.darker,
     fontSize: font.size.sm,

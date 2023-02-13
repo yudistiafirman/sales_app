@@ -19,6 +19,12 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
 import { CREATE_VISITATION, SUBMIT_FORM } from '@/navigation/ScreenNames';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { resScale } from '@/utils';
+
+function ContinueIcon() {
+  return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
+}
 
 const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const dispatch = useDispatch();
@@ -93,11 +99,16 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           <BButtonPrimary
             title="Ulangi"
             isOutline
+            emptyIconEnable
             onPress={() => navigation.goBack()}
           />
         </View>
         <View style={styles.buttonTwo}>
-          <BButtonPrimary title="Lanjut" onPress={savePhoto} />
+          <BButtonPrimary
+            title="Lanjut"
+            onPress={savePhoto}
+            rightIcon={ContinueIcon}
+          />
         </View>
       </View>
     </View>
@@ -128,11 +139,11 @@ const styles = StyleSheet.create({
     padding: layout.pad.lg,
   },
   buttonOne: {
-    width: '40%',
+    flex: 1,
     paddingEnd: layout.pad.md,
   },
   buttonTwo: {
-    width: '60%',
+    flex: 1.5,
     paddingStart: layout.pad.md,
   },
 });

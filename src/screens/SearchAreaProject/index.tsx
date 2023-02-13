@@ -4,7 +4,7 @@ import resScale from '@/utils/resScale';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { TextInput } from 'react-native-paper';
-import { SafeAreaView, AppState } from 'react-native';
+import { SafeAreaView, AppState, DeviceEventEmitter } from 'react-native';
 import SearchAreaStyles from './styles';
 import CurrentLocation from './element/SearchAreaCurrentLocation';
 import LocationList from './element/LocationList';
@@ -15,7 +15,7 @@ import LocationListShimmer from './element/LocationListShimmer';
 import { BSpacer } from '@/components';
 import { useDispatch } from 'react-redux';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import { LOCATION } from '@/navigation/ScreenNames';
+import { CREATE_VISITATION, LOCATION, SPH } from '@/navigation/ScreenNames';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 
 const SearchAreaProject = ({ route }: { route: any }) => {
@@ -34,13 +34,13 @@ const SearchAreaProject = ({ route }: { route: any }) => {
       }),
       navigateToLocation: (context, event) => {
         const { lon, lat, formattedAddress } = event.data;
+        const from = route?.params?.from;
+        const eventKey = route?.params?.eventKey;
         let coordinate = {
           longitude: lon,
           latitude: lat,
           formattedAddress,
         };
-
-        console.log(event.data, context, 'ini apa?? di search are');
 
         if (typeof lon === 'string') {
           coordinate.longitude = Number(lon);
@@ -49,14 +49,20 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         if (typeof lat === 'string') {
           coordinate.latitude = Number(lat);
         }
-        if (route?.params?.from) {
-          dispatch(updateRegion(coordinate));
+        if (from === CREATE_VISITATION || from === SPH) {
+          if (eventKey) {
+            DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
+          } else {
+            dispatch(updateRegion(coordinate));
+          }
           navigation.goBack();
-          return;
+        } else {
+          navigation.navigate(LOCATION, {
+            coordinate: coordinate,
+            isReadOnly: false,
+            from: route?.params?.from,
+          });
         }
-        navigation.navigate(LOCATION, {
-          coordinate: coordinate,
-        });
       },
     },
   });
@@ -101,13 +107,23 @@ const SearchAreaProject = ({ route }: { route: any }) => {
 
   const onPressCurrentLocation = () => {
     const { latitude, longitude } = longlat;
+    const eventKey = route?.params?.eventKey;
+
     const coordinate = {
       longitude: longitude,
       latitude: latitude,
     };
-    navigation.navigate(LOCATION, {
-      coordinate: coordinate,
-    });
+    if (route?.params?.from === CREATE_VISITATION) {
+      dispatch(updateRegion(coordinate));
+      navigation.goBack();
+    } else {
+      navigation.navigate(LOCATION, {
+        coordinate: coordinate,
+        from: route?.params?.from,
+        isReadOnly: false,
+        eventKey: eventKey,
+      });
+    }
   };
 
   const onPressListLocations = (placeId: string) => {

@@ -34,9 +34,9 @@ const BSvg = ({
       <I
         width={_width}
         height={_height}
-        fill={_type == 'fill' ? _color : undefined}
-        stroke={_type == 'stroke' ? _color : undefined}
-        color={_type == 'color' ? _color : undefined}
+        fill={_type === 'fill' ? _color : undefined}
+        stroke={_type === 'stroke' ? _color : undefined}
+        color={_type === 'color' ? _color : undefined}
       />
     </View>
   );

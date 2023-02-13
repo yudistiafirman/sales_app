@@ -5,6 +5,7 @@ import cameraReducer from './reducers/cameraReducer';
 import locationReducer from './reducers/locationReducer';
 import modalReducer from './reducers/modalReducer';
 import productivityFlowReducer from './reducers/productivityFlowReducer';
+import orderReducer from './reducers/orderReducer';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     productivity: productivityFlowReducer,
     common: commonReducer,
     camera: cameraReducer,
+    order: orderReducer,
   },
   middleware: (getDefaultMiddleWare) =>
     getDefaultMiddleWare({ serializableCheck: false }),

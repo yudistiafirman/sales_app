@@ -12,6 +12,8 @@ export type RootStackParamList = {
   SearchArea: undefined;
   Harga: { coordinate: { longitude: number; latitude: number } };
   SearchProduct: { distance: number };
+  Appointment: undefined;
+  CalendarScreen: undefined;
   CreateVisitation: {
     existingVisitation?: visitationListResponse;
   };

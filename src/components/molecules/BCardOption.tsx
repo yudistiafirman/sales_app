@@ -6,15 +6,18 @@ import {
   ViewStyle,
   ImageSourcePropType,
   ImageStyle,
+  ImageProps,
 } from 'react-native';
 
 import BText from '../atoms/BText';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
+import BSpacer from '../atoms/BSpacer';
+import BSvg from '../atoms/BSvg';
 
 interface IProps {
   children?: React.ReactNode;
-  icon: ImageSourcePropType | undefined;
+  icon: string | ImageProps;
   title: string;
   fullWidth?: boolean;
   isActive?: boolean;
@@ -28,6 +31,11 @@ const baseStyle: StyleProp<ViewStyle> = {
   justifyContent: 'center',
   alignContent: 'center',
   alignItems: 'center',
+};
+
+const baseStyleImage: StyleProp<ViewStyle> = {
+  width: resScale(24),
+  height: resScale(24),
 };
 
 const makeStyle = (props: IProps): StyleProp<ViewStyle> => {
@@ -57,11 +65,13 @@ const makeStyleImage = ({
 }: Partial<IProps>): StyleProp<ImageStyle> => {
   if (isActive) {
     return {
+      ...baseStyleImage,
       tintColor: colors.primary,
     };
   }
 
   return {
+    ...baseStyleImage,
     tintColor: colors.textInput.input,
   };
 };
@@ -71,7 +81,16 @@ const BCardOption = (props: IProps) => {
 
   return (
     <TouchableOpacity style={makeStyle(props)} onPress={onPress}>
-      <Image source={icon} style={makeStyleImage({ isActive })} />
+      {typeof icon === 'string' ? (
+        <BSvg
+          color={isActive ? colors.primary : colors.textInput.input}
+          svgName={icon}
+          type="fill"
+        />
+      ) : (
+        <Image source={icon} style={makeStyleImage({ isActive })} />
+      )}
+      <BSpacer size={'verySmall'} />
       <BText {...(isActive && { color: 'primary' })}>{title}</BText>
     </TouchableOpacity>
   );

@@ -83,6 +83,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     height: resScale(25),
     paddingHorizontal: layout.pad.md,
+    zIndex: 2,
+    backgroundColor: 'white',
   },
   scrollContainer: {
     flexDirection: 'row',
@@ -92,6 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: layout.pad.md,
   },
   dot: {
     width: resScale(16),

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import resScale from '@/utils/resScale';
@@ -35,11 +35,16 @@ import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
 import {
+  APPOINTMENT,
   CAMERA,
   CREATE_VISITATION,
   CUSTOMER_DETAIL,
   SPH,
 } from '@/navigation/ScreenNames';
+import SvgNames from '@/components/atoms/BSvg/svgName';
+const { height } = Dimensions.get('window');
+
+const initialSnapPoints = (height.toFixed() - 115) / 10;
 
 const Beranda = () => {
   const dispatch = useDispatch();
@@ -50,7 +55,7 @@ const Beranda = () => {
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
   const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
-  const [snapPoints] = React.useState(['68%', '91%', '100%']); //setSnapPoints
+  const [snapPoints] = React.useState([`${initialSnapPoints}%`, '91%', '100%']); //setSnapPoints
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = React.useState('');
   const navigation = useNavigation();
@@ -100,6 +105,8 @@ const Beranda = () => {
   const fetchTarget = async () => {
     try {
       const { data: _data } = await getVisitationTarget();
+      console.log(_data.data, 'fetchTarget103');
+
       setCurrentVisit({
         current: _data.data.totalCompleted,
         target: _data.data.visitationTarget,
@@ -202,33 +209,35 @@ const Beranda = () => {
   const buttonsData: buttonDataType[] = React.useMemo(
     () => [
       {
-        icon: require('@/assets/icon/QuickActionIcon/ic_sph.png'),
+        icon: SvgNames.IC_SPH,
         title: 'Buat SPH',
         action: () => {
           navigation.navigate(SPH);
         },
       },
       {
-        icon: require('@/assets/icon/QuickActionIcon/ic_po.png'),
+        icon: SvgNames.IC_PO,
         title: 'Buat PO',
         action: () => {
           navigation.navigate('PO');
         },
       },
       {
-        icon: require('@/assets/icon/QuickActionIcon/ic_depos.png'),
+        icon: SvgNames.IC_DEPOSIT,
         title: 'Buat Deposit',
         action: () => {},
       },
       {
-        icon: require('@/assets/icon/QuickActionIcon/ic_janji.png'),
+        icon: SvgNames.IC_MAKE_SCHEDULE,
         title: 'Buat Jadwal',
         action: () => {},
       },
       {
-        icon: require('@/assets/icon/QuickActionIcon/ic_temu.png'),
+        icon: SvgNames.IC_APPOINTMENT,
         title: 'Buat Janji Temu',
-        action: () => {},
+        action: () => {
+          navigation.navigate(APPOINTMENT);
+        },
       },
     ],
     []
@@ -383,15 +392,15 @@ const Beranda = () => {
         isLoading={isLoading}
       />
       {/* </View> */}
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size="small" />
       <BQuickAction buttonProps={buttonsData} />
 
       <BBottomSheet
         onChange={bottomSheetOnchange}
         percentSnapPoints={snapPoints}
         ref={bottomSheetRef}
-        initialSnapIndex={0}
         enableContentPanningGesture={true}
+        handleIndicatorStyle={style.handleIndicator}
         style={style.BsheetStyle}
         footerComponent={(props: any) => {
           if (!isRenderDateDaily) {
@@ -406,7 +415,7 @@ const Beranda = () => {
             onPress={toggleModal('open')}
           />
           <BSearchBar
-            placeholder="Search"
+            placeholder="Cari Pelanggan"
             activeOutlineColor="gray"
             left={<TextInput.Icon icon="magnify" />}
             value={searchQuery}
@@ -433,7 +442,7 @@ const Beranda = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: colors.primary,
   },
@@ -451,7 +460,6 @@ const style = StyleSheet.create({
     paddingLeft: layout.pad.lg,
     paddingRight: layout.pad.lg,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   flatListContainer: {},
   flatListLoading: {
@@ -459,7 +467,6 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   flatListShimmer: {
-    width: resScale(330),
     height: resScale(60),
     borderRadius: layout.radius.md,
   },
@@ -476,6 +483,11 @@ const style = StyleSheet.create({
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
+  },
+  handleIndicator: {
+    height: resScale(3),
+    width: resScale(40),
+    backgroundColor: colors.disabled,
   },
 });
 export default Beranda;

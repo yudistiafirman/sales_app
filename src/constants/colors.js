@@ -15,6 +15,7 @@ const colors = {
     inactive: '#010206',
     divider: '#9A9A9A',
     blue: '#0080FF',
+    medium: '#636363',
     secondary: '#636363',
     secYellow: '#FF7B00',
   },
@@ -25,6 +26,7 @@ const colors = {
     red: '#FF8F8F',
     black: '#191919',
     white: '#FFFFFF',
+    errorPic: '#F6D7DC',
     offYellow: '#FFFFE5',
   },
   select: {

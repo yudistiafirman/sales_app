@@ -22,9 +22,26 @@ interface IProps {
   onSearch: (search: boolean) => void;
   isSearch: boolean;
   searchingDisable?: boolean;
+  resultSpace?:
+    | 'verySmall'
+    | 'extraSmall'
+    | 'small'
+    | 'medium'
+    | 'large'
+    | 'extraLarge'
+    | number;
+  setSelectedCompany: React.Dispatch<
+    React.SetStateAction<{ id: string; title: string }>
+  >;
 }
 
-const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
+const SearchFlow = ({
+  onSearch,
+  isSearch,
+  searchingDisable,
+  resultSpace,
+  setSelectedCompany,
+}: IProps) => {
   const dispatch = useDispatch();
   const { action, values } = React.useContext(createVisitationContext);
   const { updateValueOnstep, updateValue } = action;
@@ -32,13 +49,6 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
   const { projects, isProjectLoading } = useSelector(
     (state: RootState) => state.common
   );
-
-  // useEffect(() => {
-  //   return () => {
-  //     console.log('debounce cleanup');
-  //     onChangeWithDebounce.cancel();
-  //   };
-  // }, []);
 
   const searchDispatch = (text: string) => {
     dispatch(getAllProject({ search: text }));
@@ -69,25 +79,27 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
   };
 
   const onSelectProject = (item: any) => {
-    if (item.Company) {
+    if (item.Company?.id) {
       const company = {
         id: item.Company.id,
         title: item.Company.name,
       };
-
-      updateValueOnstep('stepTwo', 'companyName', company);
+      updateValueOnstep('stepTwo', 'companyName', company.title);
+      setSelectedCompany(company);
 
       if (values.stepTwo.options.items) {
         updateValueOnstep('stepTwo', 'options', {
+          ...values.stepTwo.options,
           items: [...values.stepTwo.options.items, company],
         });
       } else {
         updateValueOnstep('stepTwo', 'options', {
+          ...values.stepTwo.options,
           items: [company],
         });
       }
     }
-    const customerType = item.Company ? 'COMPANY' : 'INDIVIDU';
+    const customerType = item.Company?.id ? 'COMPANY' : 'INDIVIDU';
     updateValueOnstep('stepTwo', 'customerType', customerType);
 
     if (item.PIC) {
@@ -97,6 +109,9 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
           isSelected: false,
         };
       });
+      if (picList.length === 1) {
+        picList[0].isSelected = true;
+      }
       updateValueOnstep('stepTwo', 'pics', picList);
     }
     updateValueOnstep('stepTwo', 'projectName', item.name);
@@ -132,7 +147,7 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
           <BVisitationCard
             item={{
               name: item.name,
-              location: item.locationAddress.city,
+              location: item.locationAddress.line1,
             }}
             searchQuery={searchQuery}
             onPress={() => {
@@ -177,7 +192,7 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
         onChangeText={onChangeSearch}
         disabled={searchingDisable}
       />
-      <BSpacer size="extraSmall" />
+      <BSpacer size={resultSpace ? resultSpace : 'extraSmall'} />
       {searchQuery && (
         <View style={{ height: resScale(500) }}>
           <BTabViewScreen

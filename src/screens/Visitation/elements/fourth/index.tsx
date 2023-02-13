@@ -26,6 +26,7 @@ import { CreateVisitationState } from '@/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
 import {
+  getOneVisitation,
   postVisitation,
   putVisitationFlow,
 } from '@/redux/async-thunks/productivityFlowThunks';
@@ -34,9 +35,9 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import { deleteImage } from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
-import { CAMERA } from '@/navigation/ScreenNames';
+import { CAMERA, SPH_TITLE } from '@/navigation/ScreenNames';
 
-type selectedDateType = {
+export type selectedDateType = {
   date: string;
   prettyDate: string;
   day: string;
@@ -69,6 +70,12 @@ function payloadMapper(
 
   if (locationAddress.line2) {
     payload.project.location.line2 = locationAddress.line2;
+  }
+  if (locationAddress.postalId) {
+    payload.project.location.postalId = locationAddress.postalId;
+  }
+  if (createdLocation.postalId) {
+    payload.project.location.postalId = createdLocation.postalId;
   }
   if (stepOne.existingLocationId) {
     payload.project.locationAddressId = stepOne.existingLocationId;
@@ -232,7 +239,11 @@ const Fourth = () => {
       try {
         let payload: payloadPostType = payloadMapper(values, type);
         // console.log(uploadedFilesResponse, 'uploadedFilesResponse');
-        console.log(JSON.stringify(payload), 'payload216');
+        console.log(
+          JSON.stringify(payload),
+          'payload216',
+          uploadedFilesResponse
+        );
         const visitationMethod = {
           POST: postVisitation,
           PUT: putVisitationFlow,
@@ -240,81 +251,95 @@ const Fourth = () => {
         const isDataUpdate = !!payload.visitation.id;
         const methodStr = isDataUpdate ? 'PUT' : 'POST';
 
-        // if (uploadedFilesResponse.length === 0) {
-        //   const photoFiles = photoUrls.map((photo) => {
-        //     return {
-        //       ...photo.photo,
-        //       uri: photo.photo.uri.replace('file:', 'file://'),
-        //     };
-        //   });
+        if (uploadedFilesResponse.length === 0) {
+          const photoFiles = photoUrls.map((photo) => {
+            return {
+              ...photo.photo,
+              uri: photo.photo.uri.replace('file:', 'file://'),
+            };
+          });
 
-        //   const data = await dispatch(
-        //     postUploadFiles({ files: photoFiles, from: 'visitation' })
-        //   ).unwrap();
-        //   // .then((data) => {
-        //   const files = data.map((photo) => {
-        //     const photoName = `${photo.name}.${photo.type}`;
-        //     const photoNamee = `${photo.name}.jpg`;
-        //     const foundObject = photoUrls.find(
-        //       (obj) =>
-        //         obj.photo.name === photoName || obj.photo.name === photoNamee
-        //     );
-        //     if (foundObject) {
-        //       return {
-        //         id: photo.id,
-        //         type: foundObject.type,
-        //       };
-        //     }
-        //   });
-        //   payload.files = files;
+          const data = await dispatch(
+            postUploadFiles({ files: photoFiles, from: 'visitation' })
+          ).unwrap();
 
-        //   const response = await dispatch(
-        //     // postVisitation({ payload })
-        //     // isDataUpdate
-        //     //   ? visitationMethod.PUT({
-        //     //       payload,
-        //     //       visitationId: payload.visitation.id,
-        //     //     })
-        //     //   : visitationMethod.POST({ payload })
-        //     visitationMethod[methodStr]({
-        //       payload,
-        //       visitationId: payload.visitation.id,
-        //     })
-        //   ).unwrap();
+          const files = data.map((photo) => {
+            const photoName = `${photo.name}.${photo.type}`;
+            const photoNamee = `${photo.name}.jpg`;
+            const foundObject = photoUrls.find(
+              (obj) =>
+                obj.photo.name === photoName || obj.photo.name === photoNamee
+            );
+            if (foundObject) {
+              return {
+                id: photo.id,
+                type: foundObject.type,
+              };
+            }
+          });
+          payload.files = files;
+          const payloadData: {
+            payload: payloadPostType;
+            visitationId?: string;
+          } = {
+            payload,
+          };
+          if (payload.visitation.id) {
+            payloadData.visitationId = payload.visitation.id;
+          }
 
-        //   console.log(response, 'response242');
+          const response = await dispatch(
+            visitationMethod[methodStr](payloadData)
+          ).unwrap();
 
-        //   setIsLastStepVisible(false);
-        //   navigation.goBack();
-        //   dispatch(
-        //     openPopUp({
-        //       popUpType: 'success',
-        //       popUpText: 'Success create visitation',
-        //       outsideClickClosePopUp: true,
-        //     })
-        //   );
-        // } else {
-        //   payload.files = uploadedFilesResponse;
-        //   const response = await dispatch(
-        //     visitationMethod[methodStr]({
-        //       payload,
-        //       visitationId: payload.visitation.id,
-        //     })
-        //   ).unwrap();
+          console.log(response, 'response242', type);
 
-        //   console.log(response, 'response258');
+          setIsLastStepVisible(false);
+          if (type === 'SPH') {
+            navigation.dispatch(
+              StackActions.replace(SPH_TITLE, {
+                projectId: response.projectId,
+              })
+            );
+          } else {
+            navigation.goBack();
+          }
+        } else {
+          payload.files = uploadedFilesResponse;
+          const payloadData: {
+            payload: payloadPostType;
+            visitationId?: string;
+          } = {
+            payload,
+          };
+          if (payload.visitation.id) {
+            payloadData.visitationId = payload.visitation.id;
+          }
+          const response = await dispatch(
+            visitationMethod[methodStr](payloadData)
+          ).unwrap();
 
-        //   setIsLastStepVisible(false);
-        //   navigation.goBack();
-        //   dispatch(
-        //     openPopUp({
-        //       popUpType: 'success',
-        //       popUpText: 'Successfully create visitation',
-        //       highlightedText: 'visitation',
-        //       outsideClickClosePopUp: true,
-        //     })
-        //   );
-        // }
+          console.log(response, 'response258');
+
+          setIsLastStepVisible(false);
+          if (type === 'SPH') {
+            navigation.dispatch(
+              StackActions.replace(SPH_TITLE, {
+                projectId: response.projectId,
+              })
+            );
+          } else {
+            navigation.goBack();
+          }
+        }
+        dispatch(
+          openPopUp({
+            popUpType: 'success',
+            popUpText: 'Successfully create visitation',
+            highlightedText: 'visitation',
+            outsideClickClosePopUp: true,
+          })
+        );
       } catch (error) {
         console.log(error, 'error271fourth');
         const message = error.message || 'Error creating visitation';

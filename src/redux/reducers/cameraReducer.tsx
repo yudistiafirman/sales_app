@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { postUploadFiles } from '../async-thunks/commonThunks';
+import { requiredDocType } from '@/interfaces';
 
 export interface photoType {
   photo: {
@@ -19,11 +20,13 @@ type fileResponse = {
 export interface MainState {
   photoURLs: photoType[];
   uploadedFilesResponse: fileResponse[];
+  uploadedRequiredDocsResponse: requiredDocType[];
 }
 
 const initialState: MainState = {
   photoURLs: [],
   uploadedFilesResponse: [],
+  uploadedRequiredDocsResponse: [],
 };
 
 export const cameraSlice = createSlice({
@@ -37,22 +40,19 @@ export const cameraSlice = createSlice({
       };
     },
     resetImageURLS: (state) => {
-      return {
-        ...state,
-        photoURLs: [],
-      };
+      state.photoURLs = [];
     },
     deleteImage: (state, action: PayloadAction<{ pos: number }>) => {
       const currentImages = state.photoURLs;
-      console.log(currentImages, 'before', action.payload.pos);
       currentImages.splice(action.payload.pos, 1);
-      console.log(currentImages, 'after');
       state.photoURLs = [...currentImages];
-      // return {
-      //   ...state,
-      //   photoURLs: [...currentImages],
-      // };
     },
+    // setRequiredDocsResponse: (
+    //   state,
+    //   action: PayloadAction<{ uploadedResponse: requiredDocType[] }>
+    // ) => {
+    //   state.uploadedRequiredDocsResponse = action.payload.uploadedResponse;
+    // },
   },
   extraReducers: (builder) => {
     builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {

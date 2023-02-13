@@ -7,7 +7,7 @@ const _styles: Styles = {
   chipView: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: layout.pad.xl,
+    marginRight: layout.pad.lg,
   },
   chip: {
     paddingHorizontal: layout.pad.ml,

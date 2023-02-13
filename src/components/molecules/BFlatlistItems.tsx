@@ -25,6 +25,7 @@ type BTabScreenType = {
     | undefined;
   refreshing?: boolean;
   initialFetch?: () => Promise<visitationType[] | undefined>;
+  emptyText?: string;
 };
 function FlatListFooter(isLoading?: boolean) {
   if (!isLoading) {
@@ -46,6 +47,7 @@ export default function BFlatlistItems({
   refreshing,
   initialFetch,
   isLoading,
+  emptyText,
 }: BTabScreenType) {
   const [flatListDatas, setFlatListDatas] = useState<any[]>(data!);
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,9 +73,9 @@ export default function BFlatlistItems({
   //   };
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, []);
-
-  const separator = useCallback(() => <BSpacer size={'extraSmall'} />, []);
-
+  const renderItemSeparator = () => {
+    return <BSpacer size="middleSmall" />;
+  };
   return (
     <View style={style.container}>
       <FlatList
@@ -97,11 +99,12 @@ export default function BFlatlistItems({
         //     }
         //   }
         // }}
+        contentContainerStyle={style.flatlistContent}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.1}
         // maintainVisibleContentPosition
+        ItemSeparatorComponent={renderItemSeparator}
         refreshing={refreshing}
-        style={style.flatListContainer}
         data={flatListDatas}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => {
@@ -112,9 +115,11 @@ export default function BFlatlistItems({
           // if (_isLoading) {
           //   return null;
           // }
-          return EmptyProduct({ emptyProductName: searchQuery });
+          return EmptyProduct({
+            emptyProductName: searchQuery,
+            emptyText: emptyText,
+          });
         }}
-        ItemSeparatorComponent={separator}
       />
     </View>
   );
@@ -124,8 +129,8 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
   },
-  flatListContainer: {
-    marginTop: layout.pad.md,
+  flatlistContent: {
+    marginTop: layout.pad.lg,
   },
   flatListLoading: {
     marginTop: layout.pad.lg,

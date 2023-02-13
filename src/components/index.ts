@@ -46,6 +46,7 @@ export { default as BProductCard } from './molecules/BProductCard';
 export { default as BDepositCard } from './molecules/BDepositCard';
 export { default as BCompanyMapCard } from './molecules/BCompanyMapCard';
 export { default as BExpandableSPHCard } from './molecules/BExpandableSPHCard';
+export { default as BLocationDetail } from './molecules/BLocationDetail';
 
 // organism
 export { default as BForm } from './organism/BForm';
@@ -56,7 +57,9 @@ export { default as BBottomSheetForm } from './organism/BBottomSheetForm';
 export { default as BAlert } from './organism/BAlert';
 export { default as BTabViewScreen } from './organism/BTabViewScreen';
 export { default as BCommonCompanyList } from './organism/BCommonCompanyList';
+export { default as BCalendar } from './organism/BCalendar';
 export { default as BNestedProductCard } from './organism/BNestedProductCard';
 
 //templates
 export { default as ProductList } from './templates/Price/ProductList';
+export { default as BottomSheetAddPIC } from './templates/BottomSheetAddPIC';
