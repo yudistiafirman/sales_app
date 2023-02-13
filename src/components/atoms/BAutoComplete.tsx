@@ -17,10 +17,9 @@ interface IProps {
   loading?: boolean;
   showChevron?: boolean;
   showClear?: boolean;
+  onClear?: () => void;
 }
 const BAutoComplete = ({
-  isError,
-  errorMessage,
   value,
   items,
   onChange,
@@ -29,6 +28,7 @@ const BAutoComplete = ({
   placeholder,
   showChevron = true,
   showClear = true,
+  onClear,
 }: IProps) => {
   // const [data, setData] = React.useState(items);
 
@@ -60,16 +60,12 @@ const BAutoComplete = ({
         closeOnBlur={false}
         useFilter={false}
         clearOnFocus={false}
+        onClear={onClear}
         showChevron={showChevron}
         showClear={showClear}
         EmptyResultComponent={() => <></>}
         emptyResultText={''}
       />
-      {isError && (
-        <BText size="small" color="primary" bold="100">
-          {errorMessage}
-        </BText>
-      )}
     </React.Fragment>
   );
 };

@@ -18,11 +18,11 @@ import BDivider from '../atoms/BDivider';
 import BPicList from './BPicList';
 import BAutoComplete from '../atoms/BAutoComplete';
 import { colors, fonts, layout } from '@/constants';
-import CheckBox from '@react-native-community/checkbox';
-import BFileInput from '../atoms/BFileInput';
-import BSwitch from '../atoms/BSwitch';
-import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
+import CheckBox from '@react-native-community/checkbox';
+import { TextInput } from 'react-native-paper';
+import BSwitch from '../atoms/BSwitch';
+import BFileInput from '../atoms/BFileInput';
 
 interface IProps {
   inputs: Input[];
@@ -51,7 +51,15 @@ const styles: Styles = {
   optionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  errorPicContainer: {
+    width: resScale(213),
+    height: resScale(40),
+    borderRadius: layout.pad.xs + layout.pad.sm,
+    backgroundColor: colors.status.errorPic,
+    justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: layout.pad.sm,
   },
   quantityLayout: {
     flexDirection: 'row',
@@ -124,6 +132,7 @@ const renderInput = (
     hidePicLabel,
     isInputDisable,
     customerErrorMsg,
+    onClear,
     LeftIcon,
     labelStyle,
     textInputAsButton,
@@ -261,6 +270,7 @@ const renderInput = (
   }
 
   if (type === 'autocomplete') {
+    const defaultErrorMsg = `${label} harus diisi`;
     return (
       <React.Fragment>
         <BLabel
@@ -274,6 +284,7 @@ const renderInput = (
         {!isInputDisable ? (
           <BAutoComplete
             {...input}
+            onClear={onClear}
             showClear={input.showClearAutoCompleted}
             showChevron={input.showChevronAutoCompleted}
           />
@@ -284,6 +295,11 @@ const renderInput = (
             disabled={isInputDisable}
             contentStyle={textStyles}
           />
+        )}
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {customerErrorMsg || defaultErrorMsg}
+          </BText>
         )}
       </React.Fragment>
     );
@@ -353,6 +369,17 @@ const renderInput = (
             <BSpacer size="verySmall" />
             <BDivider />
             <BSpacer size="extraSmall" />
+            {isError && (
+              <View style={styles.errorPicContainer}>
+                <BText
+                  style={{ fontSize: fonts.size.md }}
+                  color="primary"
+                  bold="400"
+                >
+                  {customerErrorMsg}
+                </BText>
+              </View>
+            )}
           </>
         ) : null}
         <BPicList

@@ -3,6 +3,7 @@ import {
   ViewStyle,
   ImageSourcePropType,
   TextStyle,
+  KeyboardType,
   KeyboardTypeOptions,
 } from 'react-native';
 
@@ -35,8 +36,8 @@ interface Input {
   isError?: boolean;
   customerErrorMsg?: string;
   LeftIcon?: () => JSX.Element;
+  keyboardType?: KeyboardType | KeyboardTypeOptions;
   items?: any;
-  keyboardType?: KeyboardTypeOptions;
   showChevronAutoCompleted?: boolean;
   showClearAutoCompleted?: boolean;
   textSize?: number;
@@ -90,6 +91,7 @@ interface Input {
   };
   onSelect?: (index: number | any) => void; //eg for pic radio
   isInputDisable?: boolean;
+  onClear?: () => void;
   labelStyle?: ViewStyle;
   textInputAsButton?: boolean;
   textInputAsButtonOnPress?: () => void;
@@ -225,10 +227,15 @@ interface BLocationProps {
 interface selectedCompanyInterface {
   id: string;
   name: string;
-  Company: {
-    id: string | null;
-    name: string | null;
-  };
+  Company:
+    | {
+        id: string | null;
+        name: string | null;
+      }
+    | {
+        id: string | null;
+        title: string | null;
+      };
   PIC: PIC[];
   Visitation: {
     finish_date: string | null;
@@ -427,6 +434,17 @@ interface filesType {
   type: 'GALLERY' | 'COVER';
 }
 
+interface PicFormInitialState {
+  name: string;
+  errorName: string;
+  position: string;
+  errorPosition: string;
+  phone: string;
+  errorPhone: string;
+  email: string;
+  errorEmail: string;
+}
+
 interface projectPayloadType {
   id?: string;
   locationAddressId?: string;
@@ -452,7 +470,7 @@ interface payloadPostType {
   files: filesType[];
 }
 
-interface visitationDataType {
+type visitationDataType = {
   id?: number;
   name: string;
   location?: string;
@@ -460,7 +478,7 @@ interface visitationDataType {
   status?: string;
   pilNames?: string[];
   pilStatus?: 'Selesai' | 'Belum Selesai';
-}
+};
 
 interface projectResponseType {
   id: string;
@@ -583,6 +601,7 @@ export type {
   projectResponseType,
   selectedCompanyInterface,
   sphOrderPayloadType,
+  PicFormInitialState,
   shippingAddressType,
   requestedProductsType,
   deliveryAndDistance,

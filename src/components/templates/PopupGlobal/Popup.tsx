@@ -1,12 +1,5 @@
 import Modal from 'react-native-modal';
-import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  DeviceEventEmitter,
-  ActivityIndicator,
-} from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -14,8 +7,8 @@ import { setIsPopUpVisible } from '@/redux/reducers/modalReducer';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import BBackContinueBtn from '@/components/molecules/BBackContinueBtn';
-import { BHighlightText } from '@/components';
+import { BButtonPrimary, BHighlightText, BSpacer, BText } from '@/components';
+import font from '@/constants/fonts';
 
 export default function Popup() {
   const dispatch = useDispatch();
@@ -36,7 +29,9 @@ export default function Popup() {
       }}
     >
       <View style={styles.modalContent}>
-        <View>
+        <View
+          style={{ paddingTop: resScale(33), paddingBottom: layout.pad.ml }}
+        >
           {popUpOptions.popUpType === 'success' && (
             <AntDesign size={resScale(48)} name="checkcircle" color={'green'} />
           )}
@@ -47,20 +42,33 @@ export default function Popup() {
             <ActivityIndicator size={resScale(60)} color={colors.primary} />
           )}
         </View>
-        <BHighlightText
-          name={popUpOptions.popUpText}
-          searchQuery={popUpOptions.highlightedText}
-        />
+        {popUpOptions.popUpText && (
+          <View style={{ paddingBottom: layout.pad.lg }}>
+            <BHighlightText
+              searchQuery={popUpOptions.highlightedText}
+              name={popUpOptions.popUpText}
+            />
+          </View>
+        )}
+        {popUpOptions.popUpTitle && (
+          <View style={{ paddingBottom: layout.pad.lg }}>
+            <BText style={styles.popUpTitle}>{popUpOptions.popUpTitle}</BText>
+          </View>
+        )}
         {/* <Text style={styles.popUptext}>{popUpOptions.popUpText}</Text> */}
         {popUpOptions.isRenderActions && (
           <View style={styles.actionContainer}>
-            <BBackContinueBtn
-              onPressContinue={() => {
-                DeviceEventEmitter.emit('continue/Popup');
-              }}
-              onPressBack={() => {
-                DeviceEventEmitter.emit('back/Popup');
-              }}
+            <BButtonPrimary
+              onPress={popUpOptions.outlineBtnAction}
+              isOutline
+              buttonStyle={{ paddingHorizontal: layout.pad.xl + layout.pad.md }}
+              title={popUpOptions.outlineBtnTitle}
+            />
+            <BSpacer size="extraSmall" />
+            <BButtonPrimary
+              title={popUpOptions.primaryBtnTitle}
+              buttonStyle={{ paddingHorizontal: layout.pad.xl }}
+              onPress={popUpOptions.primaryBtnAction}
             />
           </View>
         )}
@@ -76,12 +84,19 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: colors.white,
-    height: resScale(160),
-    width: resScale(300),
     justifyContent: 'space-around',
     alignItems: 'center',
     padding: layout.pad.md,
     borderRadius: layout.radius.md,
+    minHeight: resScale(144),
+    minWidth: resScale(327),
+  },
+  popUpTitle: {
+    color: colors.text.darker,
+    fontFamily: font.family.montserrat['600'],
+    fontSize: font.size.md,
+    textAlign: 'center',
+    lineHeight: resScale(24),
   },
   popUptext: {
     color: colors.text.darker,
@@ -89,5 +104,8 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.md,
     textAlign: 'center',
   },
-  actionContainer: {},
+  actionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 });
