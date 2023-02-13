@@ -10,8 +10,8 @@ import resScale from '@/utils/resScale';
 import PillNames from './elements/PillNames';
 import HighlightText from '../../atoms/BHighlightText';
 import { colors, layout } from '@/constants';
-import { VisitationCardType } from '@/interfaces';
 import BLocationText from '@/components/atoms/BLocationText';
+import { visitationDataType } from '@/interfaces';
 
 function iconRender(
   isRenderIcon: boolean,
@@ -25,6 +25,15 @@ function iconRender(
   }
   return <MaterialIcon size={24} name="chevron-right" color={'#000000'} />;
 }
+
+type VisitationCardType = {
+  id?: string;
+  item: visitationDataType;
+  searchQuery?: string;
+  onPress?: (data: visitationDataType) => void;
+  isRenderIcon?: boolean;
+  customIcon?: () => JSX.Element;
+};
 
 export default function BVisitationCard({
   item,
