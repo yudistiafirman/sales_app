@@ -220,9 +220,11 @@ export default function FifthStep() {
       const photoFiles = Object.values(sphState.paymentRequiredDocuments);
 
       if (sphState.uploadedAndMappedRequiredDocs.length === 0) {
+        console.log('ini mau upload foto');
         const photoResponse = await dispatch(
           postUploadFiles({ files: photoFiles, from: 'sph' })
         ).unwrap();
+        console.log('upload kelar');
 
         const files = photoResponse.map((photo) => {
           const photoName = `${photo.name}.${photo.type}`;
@@ -238,15 +240,17 @@ export default function FifthStep() {
               )
             ) {
               const photoData = sphState.paymentRequiredDocuments[documentId];
-              if (
-                photoData.name === photoName ||
-                photoData.name === photoNamee
-              ) {
-                // return {
-                // documentId: documentId,
-                // fileId: photo.id,
-                // };
-                foundPhoto = documentId;
+              if (photoData) {
+                if (
+                  photoData.name === photoName ||
+                  photoData.name === photoNamee
+                ) {
+                  // return {
+                  // documentId: documentId,
+                  // fileId: photo.id,
+                  // };
+                  foundPhoto = documentId;
+                }
               }
             }
           }
@@ -258,6 +262,7 @@ export default function FifthStep() {
           }
         });
         payload.projectDocs = files;
+        stateUpdate('uploadedAndMappedRequiredDocs')(files);
       } else {
         payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
       }
@@ -272,6 +277,7 @@ export default function FifthStep() {
       setIsStepDoneVisible(true);
     } catch (error) {
       console.log(error, 'errorbuatSph54');
+      dispatch(closePopUp());
       dispatch(
         openPopUp({
           popUpType: 'error',
