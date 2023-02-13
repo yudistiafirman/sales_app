@@ -166,7 +166,7 @@ const CreateVisitation = () => {
   const { shouldScrollView } = values;
   const { updateValue, updateValueOnstep } = action;
   const { keyboardVisible } = useKeyboardActive();
-  const [stepsDone, setStepsDone] = useState<number[]>([]);
+  const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3]);
 
   const existingVisitation: visitationListResponse =
     route?.params?.existingVisitation;
@@ -215,6 +215,9 @@ const CreateVisitation = () => {
   };
 
   const addPic = (state: PIC) => {
+    if (values.stepTwo.pics.length < 2) {
+      state.isSelected = true;
+    }
     updateValueOnstep('stepTwo', 'pics', [...values.stepTwo.pics, state]);
   };
 

@@ -79,6 +79,8 @@ const FirstStep = () => {
       const _coordinate = {
         latitude: result?.lat,
         longitude: result?.lon,
+        lat: 0,
+        lon: 0,
         formattedAddress: result?.formattedAddress,
         PostalId: result?.PostalId,
       };
@@ -107,6 +109,7 @@ const FirstStep = () => {
   }, []);
 
   React.useEffect(() => {
+    console.log(values.stepOne.createdLocation.formattedAddress, 'onEffect');
     if (mapRef.current) {
       mapRef?.current?.animateToRegion(region);
     }
@@ -119,7 +122,10 @@ const FirstStep = () => {
     console.log(locationAddress, 'locationAddress118');
 
     updateValueOnstep('stepOne', 'locationAddress', locationAddress);
-  }, [region.formattedAddress]);
+  }, [
+    region.formattedAddress,
+    values.stepOne.createdLocation.formattedAddress,
+  ]);
 
   const [, send] = useMachine(deviceLocationMachine, {
     actions: {

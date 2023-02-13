@@ -5,6 +5,7 @@ const initialState: SphStateInterface = {
   selectedCompany: null,
   picList: [],
   selectedPic: null,
+  projectAddress: null,
   isBillingAddressSame: false,
   billingAddress: {
     name: '',
@@ -19,6 +20,7 @@ const initialState: SphStateInterface = {
   paymentBankGuarantee: false,
   chosenProducts: [],
   useHighway: false,
+  uploadedAndMappedRequiredDocs: [],
 };
 function initialFunction(key: keyof SphStateInterface) {
   return (data: any) => {

@@ -154,6 +154,7 @@ export enum AppointmentActionType {
   SET_DATE = 'SET_DATE',
   INCREASE_STEP = 'INCREASE_STEP',
   DECREASE_STEP = 'DECREASE_STEP',
+  RESET_STATE = 'RESET_STATE',
 }
 
 type AppointmentPayload = {
@@ -209,6 +210,7 @@ type AppointmentPayload = {
   };
   [AppointmentActionType.INCREASE_STEP]: {};
   [AppointmentActionType.DECREASE_STEP]: {};
+  [AppointmentActionType.RESET_STATE]: {};
 };
 
 export type AppointmentAction =
@@ -388,6 +390,9 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
         ...state,
         step: state.step - 1,
       };
+    }
+    case AppointmentActionType.RESET_STATE: {
+      return initialData;
     }
     default:
       return state;

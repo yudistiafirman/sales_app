@@ -31,9 +31,17 @@ import SecondStep from './element/SecondStep';
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import { postBookingAppointment } from '@/actions/ProductivityActions';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import {
+  closePopUp,
+  openPopUp,
+  setIsPopUpVisible,
+} from '@/redux/reducers/modalReducer';
 const { width } = Dimensions.get('window');
 const Appointment = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch<AppDispatch>();
   const [values, dispatchValue] = useAppointmentData();
   const {
     searchQuery,
@@ -59,14 +67,22 @@ const Appointment = () => {
         marginRight={layout.pad.lg}
         onBack={() => {
           if (inVisitationDateStep) {
-            dispatchValue({ type: AppointmentActionType.DECREASE_STEP });
+            if (selectedDate) {
+              dispatchValue({
+                type: AppointmentActionType.SET_DATE,
+                value: null,
+              });
+            }
+            dispatchValue({
+              type: AppointmentActionType.DECREASE_STEP,
+            });
           } else {
             navigation.goBack();
           }
         }}
       />
     ),
-    [dispatchValue, inVisitationDateStep, navigation]
+    [dispatchValue, inVisitationDateStep, navigation, selectedDate]
   );
 
   useLayoutEffect(() => {
@@ -100,7 +116,7 @@ const Appointment = () => {
     }
     if (stepOne[customerType].PIC.length === 0) {
       errors.errorPics = 'Tambahkan minimal 1 PIC';
-    } else if (stepOne[customerType].PIC.length > 0) {
+    } else if (stepOne[customerType].PIC.length > 1) {
       const selectedPic = stepOne[customerType].PIC.filter((v) => v.isSelected);
       if (selectedPic.length === 0) {
         errors.errorPics = 'Pilih salah satu PIC';
@@ -138,8 +154,11 @@ const Appointment = () => {
       pic: [] as picPayloadType[],
     };
 
-    if (stepOne[customerType].PIC.length > 0) {
+    if (stepOne[customerType].PIC.length === 1) {
       payload.pic = stepOne[customerType].PIC;
+    } else {
+      const selectedPic = stepOne[customerType].PIC.filter((v) => v.isSelected);
+      payload.pic = selectedPic;
     }
     const typeCustomer = customerType === 'individu' ? 'INDIVIDU' : 'COMPANY';
     payload.visitation.order = stepOne[customerType].Visitation.finish_date
@@ -196,11 +215,54 @@ const Appointment = () => {
     payload.visitation.isBooking = true;
     try {
       const response = await postBookingAppointment({ payload });
-      console.log('ini response', response.data);
+      if (response.data.success) {
+        dispatch(
+          openPopUp({
+            popUpType: 'success',
+            popUpTitle: 'Apakah Anda Ingin Membuat Janji Temu Lagi?',
+            popUpText: 'Janji Temu Berhasil Dibuat',
+            outlineBtnTitle: 'Tidak',
+            outsideClickClosePopUp: false,
+            outlineBtnAction: () => {
+              navigation.goBack();
+              dispatch(closePopUp());
+            },
+            primaryBtnAction: () => {
+              dispatchValue({ type: AppointmentActionType.RESET_STATE });
+              dispatch(closePopUp());
+            },
+            primaryBtnTitle: 'Buat Janji',
+            isRenderActions: true,
+          })
+        );
+      } else {
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText: 'Something went wrong',
+            highlightedText: 'error',
+            outsideClickClosePopUp: true,
+          })
+        );
+      }
     } catch (error) {
-      console.log('ini error', error);
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: error.message,
+          highlightedText: 'error',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
-  }, [customerType, stepOne, values.selectedDate]);
+  }, [
+    customerType,
+    dispatch,
+    dispatchValue,
+    navigation,
+    stepOne,
+    values.selectedDate,
+  ]);
 
   const onNext = useCallback(() => {
     if (inCustomerDataStep) {
@@ -210,13 +272,21 @@ const Appointment = () => {
     }
   }, [goToVisitationDateStep, inCustomerDataStep, submitAppoinmentData]);
 
-  const onBackPress = () => {
+  const onBackPress = useCallback(() => {
     if (inVisitationDateStep) {
+      if (selectedDate) {
+        dispatchValue({
+          type: AppointmentActionType.SET_DATE,
+          value: null,
+        });
+      }
       dispatchValue({
         type: AppointmentActionType.DECREASE_STEP,
       });
+    } else {
+      navigation.goBack();
     }
-  };
+  }, [dispatchValue, inVisitationDateStep, navigation, selectedDate]);
   return (
     <View style={style.container}>
       <BStepperIndicator

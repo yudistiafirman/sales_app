@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, StyleProp, ViewStyle, TextStyle } from 'react-native';
+import {
+  View,
+  StyleProp,
+  ViewStyle,
+  TouchableOpacity,
+  TextStyle,
+} from 'react-native';
 import { Input } from '@/interfaces';
 import BSpacer from '../atoms/BSpacer';
 import BTextInput from '../atoms/BTextInput';
@@ -75,6 +81,16 @@ const styles: Styles = {
   flexRow: {
     flexDirection: 'row',
   },
+  relative: {
+    position: 'relative',
+  },
+  TextinputAbsolut: {
+    position: 'absolute',
+    // backgroundColor: 'blue',
+    width: '100%',
+    height: resScale(73),
+    zIndex: 2,
+  },
 };
 
 const textStyles: TextStyle = {
@@ -118,6 +134,9 @@ const renderInput = (
     customerErrorMsg,
     onClear,
     LeftIcon,
+    labelStyle,
+    textInputAsButton,
+    textInputAsButtonOnPress,
   } = input;
 
   if (type === 'quantity') {
@@ -154,9 +173,16 @@ const renderInput = (
   if (type === 'textInput') {
     const textInputProps = { onChange, value };
     const defaultErrorMsg = `${label} harus diisi`;
-
+    //textInputAsButton
     return (
-      <React.Fragment>
+      <View style={styles.relative}>
+        {textInputAsButton && (
+          <TouchableOpacity
+            onPress={textInputAsButtonOnPress}
+            style={styles.TextinputAbsolut}
+          />
+        )}
+
         <BLabel
           sizeInNumber={input.textSize}
           bold={titleBold}
@@ -176,7 +202,7 @@ const renderInput = (
             {customerErrorMsg || defaultErrorMsg}
           </BText>
         )}
-      </React.Fragment>
+      </View>
     );
   }
 
@@ -356,7 +382,11 @@ const renderInput = (
             )}
           </>
         ) : null}
-        <BPicList isOption={true} data={value} onSelect={onSelect!} />
+        <BPicList
+          isOption={value?.length > 1}
+          data={value}
+          onSelect={onSelect!}
+        />
       </React.Fragment>
     );
   }
@@ -364,7 +394,12 @@ const renderInput = (
   if (type === 'switch') {
     return (
       <React.Fragment>
-        <BSwitch label={label} value={value} onChange={onChange} />
+        <BSwitch
+          labelStyle={labelStyle}
+          label={label}
+          value={value}
+          onChange={onChange}
+        />
       </React.Fragment>
     );
   }

@@ -56,8 +56,7 @@ export default function BFileInput({ onChange, label, value }: BFileInputType) {
         throw err;
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onChange]);
 
   return (
     <TouchableOpacity onPress={selectFile}>

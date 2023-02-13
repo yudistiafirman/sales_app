@@ -7,6 +7,7 @@ import { Dimensions, View } from 'react-native';
 import { useSelector } from 'react-redux';
 const { width } = Dimensions.get('window');
 import { selectedCompanyInterface } from '@/interfaces/index';
+import { resScale } from '@/utils';
 
 const SearchingCustomer = () => {
   const [values, dispatchValue] = useAppointmentData();
@@ -18,7 +19,6 @@ const SearchingCustomer = () => {
   const onPressCard = useCallback(
     (item: selectedCompanyInterface) => {
       const customerType = item.Company.id ? 'company' : 'individu';
-      console.log('ini item',item)
       if (values.stepOne.options.items) {
         dispatchValue({
           type: AppointmentActionType.ADD_COMPANIES,
@@ -89,7 +89,7 @@ const SearchingCustomer = () => {
   }, [searchQuery, isProjectLoading, projects, onPressCard]);
 
   return (
-    <View style={{ height: width + layout.pad.md }}>
+    <View style={{ height: width + resScale(160)}}>
       <BTabViewScreen
         isLoading={false}
         screenToRender={sceneToRender}

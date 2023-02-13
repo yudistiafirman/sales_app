@@ -46,24 +46,29 @@ const stepsToRender = [
 // enum
 function checkSelected(picList: PIC[]) {
   let isSelectedExist = false;
-  picList.forEach((pic) => {
+
+  const list = picList ? picList : [];
+  list.forEach((pic) => {
     if (pic.isSelected) {
       isSelectedExist = true;
     }
   });
   return isSelectedExist;
 }
+
 function stepHandler(
   sphData: SphStateInterface,
   stepsDone: number[],
   setSteps: (e: number[] | ((curr: number[]) => number[])) => void,
   stepController: (step: number) => void
 ) {
-  if (checkSelected(sphData.picList) && sphData.selectedCompany) {
-    if (!stepsDone.includes(0)) {
-      setSteps((curr) => {
-        return [...new Set(curr), 0];
-      });
+  if (sphData.selectedCompany) {
+    if (checkSelected(sphData.selectedCompany.PIC)) {
+      if (!stepsDone.includes(0)) {
+        setSteps((curr) => {
+          return [...new Set(curr), 0];
+        });
+      }
     }
   } else {
     setSteps((curr) => curr.filter((num) => num !== 0));
@@ -84,13 +89,9 @@ function stepHandler(
   }
 
   const paymentCondition =
-    sphData.paymentType === 'credit' ? sphData.paymentBankGuarantee : true;
+    sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
 
-  if (
-    sphData.paymentDocumentsFullfilled &&
-    sphData.paymentType &&
-    paymentCondition
-  ) {
+  if (sphData.paymentType && paymentCondition) {
     setSteps((curr) => {
       return [...new Set(curr), 2];
     });
@@ -116,7 +117,7 @@ function SphContent() {
   const route = useRoute();
   const stepRef = useRef<ScrollView>(null);
   // const [currentPosition, setCurrentPosition] = useState<number>(0);
-  const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3, 4]);
+  const [stepsDone, setStepsDone] = useState<number[]>([]);
   const [sphData, updateState, setCurrentPosition, currentPosition] =
     useContext(SphContext);
   const stepControll = useCallback((step: number) => {
@@ -124,7 +125,7 @@ function SphContent() {
   }, []);
 
   useEffect(() => {
-    // stepHandler(sphData, stepsDone, setStepsDone, stepControll);
+    stepHandler(sphData, stepsDone, setStepsDone, stepControll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
 
@@ -185,6 +186,7 @@ function SphContent() {
       if (project.mainPic) {
         updateState('selectedPic')(project.mainPic);
       }
+      // if ()
       updateState('selectedCompany')(project);
       console.log(locationAddress, 'locationAddress146');
 

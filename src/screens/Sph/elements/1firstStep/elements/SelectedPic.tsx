@@ -26,9 +26,10 @@ function GantiIcon() {
   );
 }
 
-function checkSelected(picList: PIC[]) {
+function checkSelected(picList?: PIC[]) {
   let isSelectedExist = false;
-  picList.forEach((pic) => {
+  const list = picList ? picList : [];
+  list.forEach((pic) => {
     if (pic.isSelected) {
       isSelectedExist = true;
     }
@@ -94,7 +95,10 @@ export default function SelectedPic({
   useEffect(() => {
     if (sphState.selectedCompany) {
       if (sphState.selectedCompany.mainPic?.id && !sphState.selectedPic) {
-        stateUpdate('selectedPic')(sphState.selectedCompany.mainPic);
+        const foundMainPic = sphState.selectedCompany.PIC.find(
+          (pic) => pic.id === sphState.selectedCompany.mainPic.id
+        );
+        stateUpdate('selectedPic')(foundMainPic);
       }
       if (sphState.selectedCompany.PIC) {
         const listPic = sphState.selectedCompany.PIC.map((pic) => {
@@ -110,6 +114,9 @@ export default function SelectedPic({
           }
           return { ...pic, isSelected: false };
         });
+        if (listPic.length === 1) {
+          listPic[0].isSelected = true;
+        }
         stateUpdate('selectedCompany')({
           ...sphState.selectedCompany,
           PIC: listPic,
@@ -153,7 +160,7 @@ export default function SelectedPic({
             }}
           />
         </View>
-        <ScrollView>
+        <ScrollView style={style.scrollViewStyle}>
           <BForm inputs={inputsData} />
           {/* {isLoading && (
             <View>
@@ -216,5 +223,8 @@ const style = StyleSheet.create({
     width: resScale(335),
     height: resScale(50),
     borderRadius: layout.radius.md,
+  },
+  scrollViewStyle: {
+    maxHeight: resScale(500),
   },
 });

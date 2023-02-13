@@ -4,6 +4,8 @@ import {
   uploadFileImage,
   projectByUserGetAction,
   projectGetOneById,
+  getSphDocuments,
+  getAddressSuggestion,
 } from '@/actions/CommonActions';
 import { projectResponseType } from '@/interfaces';
 
@@ -29,6 +31,8 @@ export const postUploadFiles = createAsyncThunk<
 
     return data.data;
   } catch (error) {
+    console.log(error.message, 'errormsgcommon/postUploadFiles');
+
     console.log(error?.response?.data, 'error at', 'common/postUploadFiles');
     return rejectWithValue(error.message);
   }
@@ -82,6 +86,38 @@ export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
       return data;
     } catch (error) {
       console.log(error.message, 'message/getProjectsByUserThunk');
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchSphDocuments = createAsyncThunk(
+  'common/fetchSphDocuments',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getSphDocuments();
+      const { data } = response;
+      if (data.error) throw data as errorType;
+      return data;
+    } catch (error) {
+      console.log(error.message, 'message/fetchSphDocuments');
+      return rejectWithValue(error.message);
+    }
+  }
+);
+export const fetchAddressSuggestion = createAsyncThunk<
+  any,
+  { search: string; page: number }
+>(
+  'common/fetchAddressSuggestion',
+  async ({ search, page }, { rejectWithValue }) => {
+    try {
+      const response = await getAddressSuggestion(search, page);
+      const { data } = response;
+      if (data.error) throw data as errorType;
+      return data;
+    } catch (error) {
+      console.log(error.message, 'message/fetchAddressSuggestion');
       return rejectWithValue(error.message);
     }
   }

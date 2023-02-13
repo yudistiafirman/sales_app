@@ -63,6 +63,8 @@ const BAutoComplete = ({
         onClear={onClear}
         showChevron={showChevron}
         showClear={showClear}
+        EmptyResultComponent={() => <></>}
+        emptyResultText={''}
       />
     </React.Fragment>
   );

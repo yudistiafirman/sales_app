@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import React from 'react';
 import { Switch } from 'react-native-paper';
 import { colors, fonts } from '@/constants';
@@ -8,12 +8,18 @@ type BSwitchType = {
   value: boolean;
   onChange?: (e: any) => void;
   label?: string;
+  labelStyle?: ViewStyle;
 };
 
-export default function BSwitch({ value, onChange, label }: BSwitchType) {
+export default function BSwitch({
+  value,
+  onChange,
+  label,
+  labelStyle,
+}: BSwitchType) {
   return (
     <View style={style.container}>
-      <Text style={style.labelStyle}>{label}</Text>
+      <Text style={[style.labelStyle, labelStyle]}>{label}</Text>
       <Switch
         value={value}
         onValueChange={(val) => {
@@ -33,8 +39,8 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   labelStyle: {
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: resFontSize(11),
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
     color: colors.text.darker,
   },
 });

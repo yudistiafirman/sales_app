@@ -151,15 +151,6 @@ export default function CalendarScreen() {
   const onDayPress = useCallback(
     (day: DateData) => {
       const custData = visitationCalendarMapped[day.dateString] || [];
-      console.log(day, 'pressed', markedDate);
-      console.log('====================================');
-      console.log(
-        visitationCalendarMapped,
-        'visitationCalendarMapped138',
-        visitationCalendarMapped[day.dateString],
-        day.dateString
-      );
-      console.log('====================================');
 
       setCustomerDatas(custData);
       console.log('iniiiwkwkw 1, ', custData);

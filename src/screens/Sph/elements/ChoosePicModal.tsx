@@ -71,19 +71,19 @@ export default function ChoosePicModal({
   selectPic = () => {},
 }: ChoosePicModalType) {
   const [isLoading, setIsLoading] = useState(false);
-  const [flatListData, setFlatListData] = useState<any[]>([]);
   const [sphState, stateUpdate] = useContext(SphContext);
-  const [selectedPic, setSelectedPic] = useState<dummyType | null | undefined>(
-    null
-  );
+
   const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
     undefined
   );
   function selectedPicData() {
-    for (const pic of sphState.picList) {
-      if (pic.isSelected) {
-        // stateUpdate('selectedPic')(pic);
-        return pic;
+    if (sphState.selectedCompany?.PIC.length) {
+      const listPic = sphState.selectedCompany?.PIC;
+      for (const pic of listPic) {
+        if (pic.isSelected) {
+          // stateUpdate('selectedPic')(pic);
+          return pic;
+        }
       }
     }
   }
@@ -152,8 +152,7 @@ export default function ChoosePicModal({
         },
       },
     ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sphState.picList, selectedPic]);
+  }, [sphState.selectedCompany]);
 
   return (
     <Modal
