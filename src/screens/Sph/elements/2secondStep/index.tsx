@@ -174,9 +174,6 @@ export default function SecondStep() {
             }
           },
           value: sphState?.isBillingAddressSame,
-          labelStyle: {
-            fontSize: fonts.size.xs,
-          },
         },
       ];
     }
@@ -336,14 +333,14 @@ export default function SecondStep() {
 
   return (
     <View style={style.container}>
-      <View style={style.blocationcontainer}>
-        <BLocation
-          region={region}
-          onRegionChangeComplete={onChangeRegion}
-          CustomMarker={<BMarker />}
-          mapStyle={style.map}
-        />
-      </View>
+      {/* <View style={style.blocationcontainer}> */}
+      <BLocation
+        region={region}
+        onRegionChangeComplete={onChangeRegion}
+        CustomMarker={<BMarker />}
+        mapStyle={style.map}
+      />
+      {/* </View> */}
       <View style={{ flex: 0.5 }} />
       <BBottomSheetForm
         enableClose={false}
@@ -421,6 +418,6 @@ const style = StyleSheet.create({
     color: colors.textInput.input,
   },
   blocationcontainer: {
-    flex: 1,
+    flex: 0.5,
   },
 });
