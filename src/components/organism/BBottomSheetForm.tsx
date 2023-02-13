@@ -9,6 +9,7 @@ import BButtonPrimary from '../atoms/BButtonPrimary';
 import BForm from './BForm';
 import BContainer from '../atoms/BContainer';
 import BSpacer from '../atoms/BSpacer';
+import { useKeyboardActive } from '@/hooks';
 
 type CustomFooterButtonType = {
   disable?: boolean;
@@ -32,6 +33,7 @@ interface IProps {
 }
 
 const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
+  const { keyboardVisible } = useKeyboardActive();
   const {
     initialIndex,
     inputs,
@@ -48,7 +50,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
     if (!children) {
       return (
         <BottomSheetScrollView style={{ marginBottom: resScale(20) }}>
-          <BForm inputs={inputs} />
+          <BForm spacer={'extraSmall'} titleBold="500" inputs={inputs} />
         </BottomSheetScrollView>
       );
     }
@@ -59,7 +61,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
           nestedScrollEnabled={true}
           style={{ marginBottom: resScale(20) }}
         >
-          <BForm inputs={inputs} />
+          <BForm spacer={'extraSmall'} titleBold="500" inputs={inputs} />
         </BottomSheetScrollView>
       </>
     );
@@ -67,6 +69,9 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
 
   const FooterButton = useCallback(
     (propsFooter: any) => {
+      if (keyboardVisible) {
+        return null;
+      }
       return (
         <BottomSheetFooter {...propsFooter}>
           {CustomFooterButton ? (
@@ -93,7 +98,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
         </BottomSheetFooter>
       );
     },
-    [buttonTitle, onAdd, isButtonDisable, CustomFooterButton]
+    [buttonTitle, onAdd, isButtonDisable, CustomFooterButton, keyboardVisible]
   );
 
   return (
@@ -110,7 +115,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
     >
       <BContainer>
         {renderChild()}
-        <BSpacer size={'medium'} />
+        {!keyboardVisible && <BSpacer size={'medium'} />}
       </BContainer>
     </BBottomSheet>
   );

@@ -14,16 +14,13 @@ export default class BrikApiCommon {
     const url = new URL(`${API_URL}/common/map/coordinates`);
     const params = url.searchParams;
 
-    if (longitude) {
-      params.append('lon', `${longitude}`);
-    }
-    if (latitude) {
-      params.append('lat', `${latitude}`);
-    }
+    params.append('lon', `${longitude}`);
+    params.append('lat', `${latitude}`);
     if (distance) {
       params.append('distance', distance);
     }
 
+    console.log(url.toString(), '====================');
     return url.toString();
   };
   static searchPlaces = (searchValue: string) => {
@@ -63,6 +60,34 @@ export default class BrikApiCommon {
     if (search) {
       params.append('search', search);
     }
+
+    return url.toString();
+  };
+
+  static oneGetProject = (projectId?: string) => {
+    const url = new URL(`${API_URL}/common/m/flow/project/${projectId}`);
+
+    return url.toString();
+  };
+
+  static sphDocuments = () => {
+    const url = new URL(`${API_URL}/common/m/flow/sph`);
+
+    return url.toString();
+  };
+
+  static addressSuggestion = (search?: string, page?: number) => {
+    const url = new URL(`${API_URL}/common/m/flow/address/suggestion`);
+    const params = url.searchParams;
+    if (search) {
+      params.append('search', search);
+    }
+    if (page) {
+      params.append('page', `${page}`);
+    }
+    // if (search) {
+    params.append('size', '10');
+    // }
 
     return url.toString();
   };

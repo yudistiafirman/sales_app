@@ -11,6 +11,7 @@ const layout = {
     xl: resScale(32),
   },
   pad: {
+    zero: resScale(0),
     xs: resScale(2),
     sm: resScale(4),
     md: resScale(8),

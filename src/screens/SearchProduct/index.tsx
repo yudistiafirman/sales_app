@@ -27,6 +27,7 @@ const SearchProduct = ({
   if (route.params) {
     const { isGobackAfterPress } = route.params as {
       isGobackAfterPress: boolean;
+      distance: number;
     };
     isGoback = isGobackAfterPress;
   }
@@ -46,10 +47,14 @@ const SearchProduct = ({
   }, [route?.params]);
 
   const onChangeText = (text: string) => {
-    console.log(text, 'onChangeText');
 
     setSearchValue(text);
-    send('searchingProducts', { value: text });
+
+    if (text.length === 0) {
+      send('clearInput');
+    } else {
+      send('searchingProducts', { value: text });
+    }
   };
 
   const onClearValue = () => {
@@ -61,11 +66,23 @@ const SearchProduct = ({
     useCustomHeaderCenter(
       {
         customHeaderCenter: (
-          <SearchProductNavbar
-            value={searchValue}
-            onChangeText={onChangeText}
-            onClearValue={onClearValue}
-          />
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
+            <SearchProductNavbar
+              customStyle={{
+                width: '75%',
+                justifyContent: 'center',
+              }}
+              value={searchValue}
+              onChangeText={onChangeText}
+              onClearValue={onClearValue}
+            />
+          </View>
         ),
       },
       [searchValue]

@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { BContainer, BForm, BSpacer } from '@/components';
+import { BContainer, BForm, BSpacer, SVGName } from '@/components';
 import { Input } from '@/interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -11,122 +11,183 @@ import { colors, fonts } from '@/constants';
 import font from '@/constants/fonts';
 import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn';
 import { SphContext } from '../context/SphContext';
+import { fetchSphDocuments } from '@/redux/async-thunks/commonThunks';
+import { useDispatch } from 'react-redux';
 
-const cbd = require('@/assets/icon/Visitation/cbd.png');
-const credit = require('@/assets/icon/Visitation/credit.png');
+type documentType = {
+  id: string;
+  name: string;
+  payment_type: 'CBD' | 'CREDIT';
+  is_required: boolean;
+};
 
-const fileCredit = [
-  {
-    label: 'SK Kemenkumham',
-    key: 'SKKem',
-  },
-  {
-    label: 'KTP Direktur',
-    key: 'KTPDir',
-  },
-  {
-    label: 'Akta Pendirian',
-    key: 'AktaPend',
-  },
-  {
-    label: 'NIB Perusahaan',
-    key: 'NIBPer',
-  },
-  {
-    label: 'NPWP Direktur',
-    key: 'NPWPDir',
-  },
-  {
-    label: 'Surat Kuasa',
-    key: 'SuratKuasa',
-  },
-]; //dummy data
-
-const Cbd = [
-  {
-    label: 'Foto NPWP',
-    key: 'FotoNpwp',
-  },
-  {
-    label: 'Foto KTP',
-    key: 'FotoKtp',
-  },
-]; //dummy data
-
-async function fileToUploads(type: string) {
-  return new Promise<{ key: string; label: string }[]>((resolve, reject) => {
-    if (type === 'cbd') {
-      setTimeout(() => {
-        resolve(Cbd);
-      }, 5000);
-    } else if (type === 'credit') {
-      setTimeout(() => {
-        resolve(fileCredit);
-      }, 5000);
-    } else {
-      reject({ message: 'error' });
-    }
-  });
-} //dummy request
+type docResponse = {
+  cbd: documentType[];
+  credit: documentType[];
+};
 
 function checkDocFilled(data: { [key: string]: any }) {
   return Object.values(data).every((val) => !!val);
 }
 
 export default function ThirdStep() {
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [fileKeys, setFileKeys] = useState<{ key: string; label: string }[]>(
-    []
-  );
+  const [fileKeys, setFileKeys] = useState<
+    { key: string; label: string; isRequired: boolean }[]
+  >([]);
   const [documents, setDocuments] = useState<{ [key: string]: any }>({});
-
+  const [sphDocuments, setSphDocuments] = useState<docResponse>({
+    cbd: [],
+    credit: [],
+  });
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
+
+  // useEffect(() => {
+  //   if (sphState?.paymentType) {
+  //     // console.log(sphState?.paymentType, 'paymenttype');
+  //     // (async () => {
+  //     //   try {
+  //     //     setFileKeys([]);
+  //     //     setIsLoading(true);
+  //     //     const dataFileKey = await fileToUploads(sphState.paymentType);
+  //     //     const documentObj: { [key: string]: any } = {};
+  //     //     dataFileKey.forEach((key) => {
+  //     //       documentObj[key.key] = null;
+  //     //     });
+  //     //     const parentReqDocKeys = Object.keys(
+  //     //       sphState.paymentRequiredDocuments
+  //     //     );
+  //     //     const localReqDocKeys = Object.keys(documentObj);
+  //     //     const sphDocString = JSON.stringify(parentReqDocKeys);
+  //     //     const stateDocString = JSON.stringify(localReqDocKeys);
+  //     //     if (sphDocString === stateDocString && parentReqDocKeys.length > 0) {
+  //     //       setDocuments(sphState.paymentRequiredDocuments);
+  //     //     } else {
+  //     //       setDocuments(documentObj);
+  //     //     }
+  //     //     setIsLoading(false);
+  //     //     setFileKeys(dataFileKey);
+  //     //   } catch (error) {
+  //     //     setIsLoading(false);
+  //     //     console.log(error, 'error');
+  //     //   }
+  //     // })();
+  //   }
+  // }, [sphState?.paymentType]);
 
   useEffect(() => {
     if (sphState?.paymentType) {
-      // console.log(sphState?.paymentType, 'paymenttype');
-      (async () => {
-        try {
-          setFileKeys([]);
-          setDocuments({});
-          setIsLoading(true);
-          const dataFileKey = await fileToUploads(sphState.paymentType);
+      const objKey: {
+        CREDIT: 'credit';
+        CBD: 'cbd';
+      } = {
+        CREDIT: 'credit',
+        CBD: 'cbd',
+      };
+      const key: 'cbd' | 'credit' = objKey[sphState?.paymentType];
 
+      if (sphDocuments[key]) {
+        if (sphDocuments[key].length) {
+          const newFileKeys = sphDocuments[key].map((doc) => {
+            return {
+              key: doc.id,
+              label: doc.name,
+              isRequired: doc.is_required,
+            };
+          });
+          console.log(newFileKeys, 'newFileKeys155');
           const documentObj: { [key: string]: any } = {};
-          dataFileKey.forEach((key) => {
-            documentObj[key.key] = null;
+          sphDocuments[key].forEach((doc) => {
+            documentObj[doc.id] = null;
           });
           const parentReqDocKeys = Object.keys(
             sphState.paymentRequiredDocuments
           );
           const localReqDocKeys = Object.keys(documentObj);
-          const sphDocString = JSON.stringify(parentReqDocKeys);
-          const stateDocString = JSON.stringify(localReqDocKeys);
+          const parentDocString = JSON.stringify(parentReqDocKeys);
+          const localDocString = JSON.stringify(localReqDocKeys);
 
-          if (sphDocString === stateDocString && parentReqDocKeys.length > 0) {
+          if (
+            parentDocString === localDocString &&
+            parentReqDocKeys.length > 0
+          ) {
             setDocuments(sphState.paymentRequiredDocuments);
           } else {
             setDocuments(documentObj);
           }
-
-          setIsLoading(false);
-          setFileKeys(dataFileKey);
-        } catch (error) {
-          setIsLoading(false);
-          console.log(error, 'error');
+          setFileKeys(newFileKeys);
         }
-      })();
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sphState?.paymentType]);
+  }, [sphDocuments, sphState?.paymentType]);
+
+  async function getDocument() {
+    try {
+      setIsLoading(true);
+      const response: docResponse = await dispatch(
+        fetchSphDocuments()
+      ).unwrap();
+
+      if (sphState?.paymentType) {
+        const objKey: {
+          CREDIT: 'credit';
+          CBD: 'cbd';
+        } = {
+          CREDIT: 'credit',
+          CBD: 'cbd',
+        };
+        const key: 'cbd' | 'credit' = objKey[sphState?.paymentType];
+        if (response[key]) {
+          if (response[key].length) {
+            const newFileKeys = response[key].map((doc) => {
+              return {
+                key: doc.id,
+                label: doc.name,
+                isRequired: doc.is_required,
+              };
+            });
+            const documentObj: { [key: string]: any } = {};
+            response[key].forEach((doc) => {
+              documentObj[doc.id] = null;
+            });
+            const parentReqDocKeys = Object.keys(
+              sphState.paymentRequiredDocuments
+            );
+            const localReqDocKeys = Object.keys(documentObj);
+            const parentDocString = JSON.stringify(parentReqDocKeys);
+            const localDocString = JSON.stringify(localReqDocKeys);
+
+            if (
+              parentDocString === localDocString &&
+              parentReqDocKeys.length > 0
+            ) {
+              setDocuments(sphState.paymentRequiredDocuments);
+            } else {
+              setDocuments(documentObj);
+            }
+            setFileKeys(newFileKeys);
+          }
+        }
+      }
+      setSphDocuments(response);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log('error getDocument128', error);
+    }
+  }
 
   useEffect(() => {
-    if (stateUpdate) {
-      stateUpdate('paymentRequiredDocuments')(documents);
-      const isFilled = checkDocFilled(documents);
-      stateUpdate('paymentDocumentsFullfilled')(isFilled);
-    }
+    getDocument();
+  }, []);
 
+  useEffect(() => {
+    // if (stateUpdate) {
+    stateUpdate('paymentRequiredDocuments')(documents);
+    const isFilled = checkDocFilled(documents);
+    stateUpdate('paymentDocumentsFullfilled')(isFilled);
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documents]);
 
@@ -144,24 +205,24 @@ export default function ThirdStep() {
         options: [
           {
             title: 'Cash Before Delivery',
-            icon: cbd,
-            value: 'cbd',
+            icon: SVGName.IC_CBD,
+            value: 'CBD',
             onChange: () => {
-              if (stateUpdate) {
-                stateUpdate('paymentType')('cbd');
-                // getPaymentDocReq('cbd');
-              }
+              // if (stateUpdate) {
+              stateUpdate('paymentType')('CBD');
+              // getPaymentDocReq('cbd');
+              // }
             },
           },
           {
             title: 'Credit',
-            icon: credit,
-            value: 'credit',
+            icon: SVGName.IC_CREDIT,
+            value: 'CREDIT',
             onChange: () => {
-              if (stateUpdate) {
-                stateUpdate('paymentType')('credit');
-                // getPaymentDocReq('credit');
-              }
+              // if (stateUpdate) {
+              stateUpdate('paymentType')('CREDIT');
+              // getPaymentDocReq('credit');
+              // }
             },
           },
         ],
@@ -171,23 +232,39 @@ export default function ThirdStep() {
       inputs.push({
         label: key.label,
         onChange: (data: any) => {
-          if (stateUpdate) {
+          if (data) {
             setDocuments((curr) => {
+              console.log(curr, 'curr298');
+
               return {
                 ...curr,
-                [key.key]: data,
+                [key.key]: {
+                  ...data,
+                  name: key.key.trim() + data.name.trim(),
+                },
               };
             });
           }
+          // stateUpdate('paymentRequiredDocuments')({
+          //   ...sphState.paymentRequiredDocuments,
+          //   [key.key]: data,
+          // });
         }, //onChange(key.key),
         type: 'fileInput',
         value: sphState?.paymentRequiredDocuments?.[key.key],
-        isRequire: true,
-        isError: Boolean(!sphState?.paymentRequiredDocuments?.[key.key]),
+        isRequire: key.isRequired,
+        isError: key.isRequired
+          ? !sphState?.paymentRequiredDocuments?.[key.key]
+          : false,
       });
     });
     return inputs;
-  }, [fileKeys, sphState, stateUpdate]);
+  }, [fileKeys, sphState, stateUpdate, documents]);
+  console.log(
+    sphState?.paymentRequiredDocuments,
+    'documentsparent316',
+    fileKeys
+  );
 
   return (
     <BContainer>
@@ -206,7 +283,7 @@ export default function ThirdStep() {
         </ScrollView>
 
         <View>
-          {sphState?.paymentType === 'credit' && (
+          {sphState?.paymentType === 'CREDIT' && (
             <View style={style.checkboxContainer}>
               <Checkbox
                 status={
@@ -237,8 +314,7 @@ export default function ThirdStep() {
             disableContinue={
               !(
                 sphState?.paymentType &&
-                sphState?.paymentDocumentsFullfilled &&
-                (sphState.paymentType === 'credit'
+                (sphState.paymentType === 'CREDIT'
                   ? sphState?.paymentBankGuarantee
                   : true)
               ) || isLoading

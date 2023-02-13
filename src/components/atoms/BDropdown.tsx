@@ -90,6 +90,10 @@ const BDropdown = (props: IProps) => {
         placeholder={props.placeholder}
         labelProps={{
           numberOfLines: 1,
+          style: {
+            fontFamily: fonts.family.montserrat[400],
+            color: colors.textInput.input,
+          },
         }}
         style={[
           styles.base,
@@ -107,6 +111,10 @@ const BDropdown = (props: IProps) => {
         itemSeparatorStyle={styles.separator}
         onClose={() => {
           setOpen(false);
+        }}
+        textStyle={{
+          fontFamily: fonts.family.montserrat[400],
+          color: colors.textInput.input,
         }}
       />
       {isError && (

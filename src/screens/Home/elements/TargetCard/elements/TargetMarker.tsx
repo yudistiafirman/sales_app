@@ -2,32 +2,34 @@ import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import resScale from '@/utils/resScale';
 import colors from '@/constants/colors';
+import { fonts } from '@/constants';
 
 export default function TargetMarker() {
   return (
     <View style={style.targetMarker}>
-      <View
-        style={{
-          position: `relative`,
-        }}
-      >
-        <Text
-          style={{
-            color: colors.white,
-            zIndex: 2,
-            textAlign: `center`,
-          }}
-        >
-          Target hari ini
-        </Text>
-        <View style={style.markerPointer}></View>
+      <View style={style.todayTargetContainer}>
+        <Text style={style.todayTargetText}>Target hari ini</Text>
+        <View style={style.markerPointer} />
       </View>
     </View>
   );
 }
 const style = StyleSheet.create({
+  todayTargetContainer: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  todayTargetText: {
+    color: colors.white,
+    zIndex: 2,
+    textAlign: 'center',
+    fontFamily: fonts.family.montserrat['500'],
+    fontSize: fonts.size.xs,
+    marginTop: resScale(2),
+  },
   targetMarker: {
-    position: `absolute`,
+    position: 'absolute',
     backgroundColor: colors.black,
     borderRadius: resScale(10),
     top: resScale(-25),
@@ -36,13 +38,14 @@ const style = StyleSheet.create({
     right: resScale(-48),
   },
   markerPointer: {
-    position: `absolute`,
+    position: 'absolute',
     zIndex: 1,
     backgroundColor: colors.black,
-    transform: [{ rotate: `45deg` }],
+    transform: [{ rotate: '45deg' }],
     width: resScale(15),
     height: resScale(15),
     bottom: 0,
-    left: `45%`,
+    top: 5,
+    left: '45%',
   },
 });

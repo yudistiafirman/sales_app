@@ -1,18 +1,31 @@
 import { View, ScrollView, StyleSheet } from 'react-native';
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useContext,
+} from 'react';
 // import StepIndicator from 'react-native-step-indicator';
 // import StepperIndicator from '../../components/molecules/StepIndicator';
 import { BStepperIndicator as StepperIndicator } from '@/components';
 
 import Steps from './elements/Steps';
-import { SphContext } from './elements/context/SphContext';
-import { SphStateInterface, SphContextInterface } from '@/interfaces';
+import { SphContext, SphProvider } from './elements/context/SphContext';
+import { SphStateInterface, PIC } from '@/interfaces';
 
 import FirstStep from './elements/1firstStep';
 import SecondStep from './elements/2secondStep';
 import ThirdStep from './elements/3thirdStep';
 import FourthStep from './elements/4fourthStep';
 import FifthStep from './elements/5fifthStep';
+import { useRoute } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { updateRegion } from '@/redux/reducers/locationReducer';
+import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
+import { Region } from 'react-native-maps';
+import { getLocationCoordinates } from '@/actions/CommonActions';
 
 const labels = [
   'Cari Pelanggan',
@@ -31,17 +44,31 @@ const stepsToRender = [
 ];
 
 // enum
+function checkSelected(picList: PIC[]) {
+  let isSelectedExist = false;
+
+  const list = picList ? picList : [];
+  list.forEach((pic) => {
+    if (pic.isSelected) {
+      isSelectedExist = true;
+    }
+  });
+  return isSelectedExist;
+}
+
 function stepHandler(
   sphData: SphStateInterface,
   stepsDone: number[],
   setSteps: (e: number[] | ((curr: number[]) => number[])) => void,
   stepController: (step: number) => void
 ) {
-  if (sphData.selectedPic && sphData.selectedCompany) {
-    if (!stepsDone.includes(0)) {
-      setSteps((curr) => {
-        return [...new Set(curr), 0];
-      });
+  if (sphData.selectedCompany) {
+    if (checkSelected(sphData.selectedCompany.PIC)) {
+      if (!stepsDone.includes(0)) {
+        setSteps((curr) => {
+          return [...new Set(curr), 0];
+        });
+      }
     }
   } else {
     setSteps((curr) => curr.filter((num) => num !== 0));
@@ -50,7 +77,10 @@ function stepHandler(
     !Object.values(sphData.billingAddress).every((val) => !val) &&
     Object.entries(sphData.billingAddress.addressAutoComplete).length > 1;
 
-  if (sphData.isBillingAddressSame || billingAddressFilled) {
+  if (
+    (sphData.isBillingAddressSame || billingAddressFilled) &&
+    sphData.distanceFromLegok !== null
+  ) {
     setSteps((curr) => {
       return [...new Set(curr), 1];
     });
@@ -59,13 +89,9 @@ function stepHandler(
   }
 
   const paymentCondition =
-    sphData.paymentType === 'credit' ? sphData.paymentBankGuarantee : true;
+    sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
 
-  if (
-    sphData.paymentDocumentsFullfilled &&
-    sphData.paymentType &&
-    paymentCondition
-  ) {
+  if (sphData.paymentType && paymentCondition) {
     setSteps((curr) => {
       return [...new Set(curr), 2];
     });
@@ -86,33 +112,16 @@ function stepHandler(
   stepController(max);
 }
 
-export default function Sph() {
+function SphContent() {
+  const dispatch = useDispatch();
+  const route = useRoute();
   const stepRef = useRef<ScrollView>(null);
-  const [currentPosition, setCurrentPosition] = useState<number>(0);
+  // const [currentPosition, setCurrentPosition] = useState<number>(0);
   const [stepsDone, setStepsDone] = useState<number[]>([]);
-  const [sphData, setSphData] = useState<SphStateInterface>({
-    selectedCompany: null,
-    selectedPic: null,
-    isBillingAddressSame: false,
-    billingAddress: {
-      name: '',
-      phone: '',
-      addressAutoComplete: {},
-      fullAddress: '',
-    },
-    paymentType: '',
-    paymentRequiredDocuments: {},
-    paymentDocumentsFullfilled: false,
-    paymentBankGuarantee: false,
-    chosenProducts: [],
-    useHighway: false,
-  });
+  const [sphData, updateState, setCurrentPosition, currentPosition] =
+    useContext(SphContext);
   const stepControll = useCallback((step: number) => {
     console.log(step, 'stepsss');
-
-    // if (step >= 2) {
-    //   stepRef.current?.scrollToEnd();
-    // }
   }, []);
 
   useEffect(() => {
@@ -120,16 +129,110 @@ export default function Sph() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
 
-  const stateUpdate = (key: string) => (e: any) => {
-    setSphData((current) => {
-      console.log('stateUpdate', e);
+  const getLocationCoord = async (coordinate: Region) => {
+    try {
+      console.log(coordinate, 'coordinateonchange51');
+      const { data } = await getLocationCoordinates(
+        // '',
+        coordinate.longitude as unknown as number,
+        coordinate.latitude as unknown as number,
+        'BP-LEGOK'
+      );
+      const { result } = data;
+      if (!result) {
+        throw data;
+      }
+      console.log(result, 'getLocationCoordinate');
 
-      return {
-        ...current,
-        [key]: e,
+      const _coordinate = {
+        latitude: result?.lat,
+        longitude: result?.lon,
+        formattedAddress: result?.formattedAddress,
+        PostalId: result?.PostalId,
       };
-    });
+
+      if (typeof result?.lon === 'string') {
+        _coordinate.longitude = Number(result.lon);
+        _coordinate.lon = Number(result.lon);
+      }
+
+      if (typeof result?.lat === 'string') {
+        _coordinate.latitude = Number(result.lat);
+        _coordinate.lat = Number(result.lat);
+      }
+      updateState('distanceFromLegok')(result.distance.value);
+      dispatch(updateRegion(_coordinate));
+    } catch (error) {
+      console.log(JSON.stringify(error), 'onChangeRegionerror');
+    }
   };
+
+  async function getProjectById(projectId: string) {
+    try {
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: 'loading fetching data',
+          outsideClickClosePopUp: false,
+        })
+      );
+      const response = await dispatch(
+        getOneProjectById({ projectId: projectId })
+      ).unwrap();
+      dispatch(closePopUp());
+      console.log(JSON.stringify(response), 'response138');
+      const project = response[0];
+      const { locationAddress } = project;
+      if (project.mainPic) {
+        updateState('selectedPic')(project.mainPic);
+      }
+      // if ()
+      updateState('selectedCompany')(project);
+      console.log(locationAddress, 'locationAddress146');
+
+      if (locationAddress) {
+        if (locationAddress.lon && locationAddress.lat) {
+          const longitude = +locationAddress.lon;
+          const latitude = +locationAddress.lat;
+          getLocationCoord({ longitude: longitude, latitude: latitude });
+          // dispatch(
+          //   updateRegion({
+          //     formattedAddress: locationAddress.line1,
+          //     latitude: latitude,
+          //     longitude: longitude,
+          //     lat: latitude,
+          //     long: latitude,
+          //     PostalId: undefined,
+          //     line2: locationAddress?.line2,
+          //   })
+          // );
+        }
+      }
+    } catch (error) {
+      console.log(error, 'errorgetVisitationById');
+      dispatch(closePopUp());
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: 'Error fetching visitation',
+          outsideClickClosePopUp: true,
+        })
+      );
+    }
+  }
+
+  useEffect(() => {
+    const projectId = route.params?.projectId;
+    console.log(projectId, 'visitationId122');
+    if (projectId) {
+      getProjectById(projectId);
+      // (async () => {
+      //   await dispatch(
+      //     getOneVisitation({ visitationId: visitationId })
+      //   ).unwrap();
+      // })();
+    }
+  }, []);
 
   return (
     <View style={style.container}>
@@ -140,17 +243,16 @@ export default function Sph() {
         labels={labels}
         ref={stepRef}
       />
-      <SphContext.Provider
-        value={
-          [sphData, stateUpdate, setCurrentPosition] as SphContextInterface
-        }
-      >
-        <Steps
-          currentPosition={currentPosition}
-          stepsToRender={stepsToRender}
-        />
-      </SphContext.Provider>
+      <Steps currentPosition={currentPosition} stepsToRender={stepsToRender} />
     </View>
+  );
+}
+
+export default function Sph() {
+  return (
+    <SphProvider>
+      <SphContent />
+    </SphProvider>
   );
 }
 

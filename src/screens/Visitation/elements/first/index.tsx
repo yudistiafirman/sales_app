@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -38,7 +38,7 @@ const FirstStep = () => {
   const { values, action } = React.useContext(createVisitationContext);
   const { updateValueOnstep } = action;
   const { region } = useSelector((state: RootState) => state.location);
-  const [isMapLoading, setIsMapLoading] = useState(false);
+  const [isMapLoading, setIsMapLoading] = React.useState(false);
 
   const navigation = useNavigation();
   const dispatch = useDispatch<any>();
@@ -79,6 +79,8 @@ const FirstStep = () => {
       const _coordinate = {
         latitude: result?.lat,
         longitude: result?.lon,
+        lat: 0,
+        lon: 0,
         formattedAddress: result?.formattedAddress,
         PostalId: result?.PostalId,
       };
@@ -107,6 +109,7 @@ const FirstStep = () => {
   }, []);
 
   React.useEffect(() => {
+    console.log(values.stepOne.createdLocation.formattedAddress, 'onEffect');
     if (mapRef.current) {
       mapRef?.current?.animateToRegion(region);
     }
@@ -119,7 +122,10 @@ const FirstStep = () => {
     console.log(locationAddress, 'locationAddress118');
 
     updateValueOnstep('stepOne', 'locationAddress', locationAddress);
-  }, [region.formattedAddress]);
+  }, [
+    region.formattedAddress,
+    values.stepOne.createdLocation.formattedAddress,
+  ]);
 
   const [, send] = useMachine(deviceLocationMachine, {
     actions: {
@@ -172,16 +178,30 @@ const FirstStep = () => {
         />
       </View>
       <View style={{ flex: 1 }}>
-        <BBottomSheet percentSnapPoints={['100%']}>
+        <BBottomSheet
+          handleIndicatorStyle={{ display: 'none' }}
+          backgroundStyle={{
+            borderTopEndRadius: layout.radius.lg,
+            borderTopStartRadius: layout.radius.lg,
+          }}
+          percentSnapPoints={['100%']}
+        >
           <ScrollView>
-            <BContainer>
-              <BLabel label={'Alamat Proyek'} isRequired />
-              <BSpacer size="extraSmall" />
+            <BContainer
+              paddingHorizontal={layout.pad.lg}
+              paddingVertical={layout.pad.zero}
+            >
+              <BLabel bold="500" label={'Alamat Proyek'} isRequired />
+              <BSpacer size="verySmall" />
               <TouchableOpacity
                 style={{
-                  padding: layout.pad.lg,
+                  flexDirection: 'row',
+                  paddingVertical: layout.pad.md,
                   backgroundColor: colors.border.disabled,
                   borderRadius: layout.radius.sm,
+                  paddingHorizontal: layout.pad.ml,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
                 onPress={() =>
                   navigation.navigate(SEARCH_AREA, {
@@ -189,34 +209,32 @@ const FirstStep = () => {
                   })
                 }
               >
-                <View style={{ flexDirection: 'row' }}>
+                <View>
                   <Icons
                     name="map-pin"
                     size={resScale(20)}
                     color={colors.primary}
                   />
-                  <BSpacer size="large" />
-                  <View>
-                    {isMapLoading ? (
-                      <View>
-                        <ShimmerPlaceholder style={styles.titleShimmer} />
-                        <ShimmerPlaceholder
-                          style={styles.secondaryTextShimmer}
-                        />
-                      </View>
-                    ) : (
-                      <>
-                        <BLabel label={nameAddress!} />
-                        <BText>
-                          {region.formattedAddress || 'Detail Alamat'}
-                        </BText>
-                      </>
-                    )}
-                  </View>
+                </View>
+                <View style={{ paddingStart: layout.pad.ml, flex: 1 }}>
+                  {isMapLoading ? (
+                    <View>
+                      <ShimmerPlaceholder style={styles.titleShimmer} />
+                      <ShimmerPlaceholder style={styles.secondaryTextShimmer} />
+                    </View>
+                  ) : (
+                    <>
+                      <BLabel bold="500" label={nameAddress!} />
+                      <BSpacer size="verySmall" />
+                      <BText bold="300">
+                        {region.formattedAddress || 'Detail Alamat'}
+                      </BText>
+                    </>
+                  )}
                 </View>
               </TouchableOpacity>
-              <BSpacer size="extraSmall" />
-              <BForm inputs={inputs} />
+              <BSpacer size="medium" />
+              <BForm titleBold="500" inputs={inputs} />
             </BContainer>
           </ScrollView>
         </BBottomSheet>
@@ -228,7 +246,7 @@ const FirstStep = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, marginHorizontal: -resScale(20) },
   map: {
-    height: resScale(330),
+    flex: 1,
     width: '100%',
   },
   titleShimmer: {

@@ -33,13 +33,18 @@ interface Input {
   placeholder?: string;
   loading?: boolean;
   isError?: boolean;
+  customerErrorMsg?: string;
+  LeftIcon?: () => JSX.Element;
   items?: any;
   keyboardType?: KeyboardTypeOptions;
+  showChevronAutoCompleted?: boolean;
+  showClearAutoCompleted?: boolean;
+  textSize?: number;
   options?: Array<{
     title: string;
     value: string | any;
     onChange: () => void;
-    icon?: ImageSourcePropType | undefined;
+    icon?: string;
   }>;
   dropdown?: {
     items: {
@@ -85,6 +90,9 @@ interface Input {
   };
   onSelect?: (index: number | any) => void; //eg for pic radio
   isInputDisable?: boolean;
+  labelStyle?: ViewStyle;
+  textInputAsButton?: boolean;
+  textInputAsButtonOnPress?: () => void;
 }
 
 interface Styles {
@@ -92,7 +100,7 @@ interface Styles {
 }
 
 interface Address {
-  lat: any;
+  lat?: any;
   id?: string;
   formattedAddress?: string;
   lan?: number;
@@ -103,6 +111,11 @@ interface Address {
   latitude?: number;
   postalId?: number;
   line2?: string;
+  latitudeDelta?: number;
+  longitudeDelta?: number;
+  city?: string;
+  district?: string;
+  rural?: string;
 }
 
 // create visitation
@@ -209,9 +222,67 @@ interface BLocationProps {
   isUninteractable?: boolean;
 }
 
+interface selectedCompanyInterface {
+  id: string;
+  name: string;
+  Company: {
+    id: string | null;
+    name: string | null;
+  };
+  PIC: PIC[];
+  Visitation: {
+    finish_date: string | null;
+    id: string;
+    order: number;
+    visitation_id: string | null;
+  };
+  locationAddress: {
+    city?: string;
+    district?: string;
+    line1?: string;
+    postalCode?: number;
+    rural?: string;
+    lat: string;
+    lon: string;
+    id?: string;
+  };
+  mainPic: {
+    id: string | null;
+    name: string | null;
+  };
+}
+
+interface chosenProductType {
+  product: ProductDataInterface;
+  productId: string;
+  categoryId: string;
+  sellPrice: string;
+  volume: string;
+  totalPrice: number;
+  additionalData: {
+    distance: {
+      id: string;
+      price: number;
+    };
+    delivery: {
+      id: string;
+      price: number;
+    };
+  };
+}
+
 interface SphStateInterface {
-  selectedCompany: any;
-  selectedPic: any;
+  selectedCompany: selectedCompanyInterface | null;
+  picList: PIC[];
+  projectAddress: Address | null;
+  selectedPic: {
+    id?: string;
+    name: string;
+    phone: string;
+    email?: string;
+    position?: string;
+    isSelected?: boolean;
+  } | null;
   isBillingAddressSame: boolean;
   billingAddress: {
     name: string;
@@ -219,12 +290,14 @@ interface SphStateInterface {
     addressAutoComplete: { [key: string]: any };
     fullAddress: string;
   };
-  paymentType: string;
+  distanceFromLegok: number | null;
+  paymentType: 'CBD' | 'CREDIT' | '';
   paymentRequiredDocuments: { [key: string]: any };
   paymentDocumentsFullfilled: boolean;
   paymentBankGuarantee: boolean;
-  chosenProducts: any[];
+  chosenProducts: chosenProductType[];
   useHighway: boolean;
+  uploadedAndMappedRequiredDocs: requiredDocType[];
 }
 
 interface CreateScheduleStateInterface {
@@ -255,8 +328,9 @@ type CreateScheduleContextInterface = [
 
 type SphContextInterface = [
   SphStateInterface,
-  (key: string) => (data: any) => void,
-  (index: number) => void
+  (key: keyof SphStateInterface) => (data: any) => void,
+  (index: number) => void,
+  number
 ];
 
 interface AdditionalPricesInterface {
@@ -285,12 +359,19 @@ interface ProductDataInterface {
     id: string;
     price: number;
   };
+  properties: {
+    fc: string;
+    fs: string;
+    sc: string;
+    slump: number;
+  };
   Category: {
     id: string;
     name: string;
     parent_id: string;
     Parent: productParentInterface;
   };
+  calcPrice: number;
 }
 
 interface visitationListResponse {
@@ -423,6 +504,83 @@ interface projectResponseType {
   project_count: string;
 }
 
+interface shippingAddressType {
+  id: string;
+  lat: string;
+  lon: string;
+  line1: string;
+  line2: string;
+  rural: string | null;
+  district: string | null;
+  postalCode: string | number | null;
+  city: string | null;
+}
+
+interface requestedProductsType {
+  productId: string;
+  categoryId: string;
+  offeringPrice: number;
+  quantity: number;
+  productName: string;
+  productUnit: string;
+}
+interface deliveryAndDistance {
+  id: string;
+  categoryId?: string;
+  createdById?: string | null;
+  unit?: string;
+  price: number;
+  type?: string;
+  min?: number;
+  max?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  category_id?: string;
+}
+interface sphOrderPayloadType {
+  projectId: string;
+  // picId: string;
+  picArr: PIC[];
+  isUseSameAddress: boolean;
+  billingRecipientName: string;
+  billingRecipientPhone: string;
+  paymentType: 'CBD' | 'CREDIT';
+  viaTol: boolean;
+  projectDocs: any[];
+  isProvideBankGuarantee: boolean;
+  shippingAddress: shippingAddressType;
+  requestedProducts: requestedProductsType[];
+  delivery: deliveryAndDistance;
+  distance: deliveryAndDistance;
+  billingAddress: {
+    postalId: string;
+    line1: string;
+    line2: string;
+  };
+}
+
+type requiredDocType = {
+  documentId: string;
+  fileId: string;
+};
+
+interface pdfDataType {
+  type: string;
+  name: string;
+  url: string;
+  pdfType: string;
+}
+
+interface postSphResponseType {
+  number: string;
+  createdTime: string;
+  expiryTime: string;
+  thermalLink: string;
+  letterLink: string;
+  letter: pdfDataType[];
+  pos: pdfDataType[];
+}
+
 export type {
   Input,
   Styles,
@@ -451,4 +609,12 @@ export type {
   payloadPostType,
   visitationDataType,
   projectResponseType,
+  selectedCompanyInterface,
+  sphOrderPayloadType,
+  shippingAddressType,
+  requestedProductsType,
+  deliveryAndDistance,
+  Address,
+  requiredDocType,
+  postSphResponseType,
 };

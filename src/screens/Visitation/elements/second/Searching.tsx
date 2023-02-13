@@ -22,9 +22,22 @@ interface IProps {
   onSearch: (search: boolean) => void;
   isSearch: boolean;
   searchingDisable?: boolean;
+  resultSpace?:
+    | 'verySmall'
+    | 'extraSmall'
+    | 'small'
+    | 'medium'
+    | 'large'
+    | 'extraLarge'
+    | number;
 }
 
-const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
+const SearchFlow = ({
+  onSearch,
+  isSearch,
+  searchingDisable,
+  resultSpace,
+}: IProps) => {
   const dispatch = useDispatch();
   const { action, values } = React.useContext(createVisitationContext);
   const { updateValueOnstep, updateValue } = action;
@@ -32,13 +45,6 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
   const { projects, isProjectLoading } = useSelector(
     (state: RootState) => state.common
   );
-
-  // useEffect(() => {
-  //   return () => {
-  //     console.log('debounce cleanup');
-  //     onChangeWithDebounce.cancel();
-  //   };
-  // }, []);
 
   const searchDispatch = (text: string) => {
     dispatch(getAllProject({ search: text }));
@@ -132,7 +138,7 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
           <BVisitationCard
             item={{
               name: item.name,
-              location: item.locationAddress.city,
+              location: item.locationAddress.line1,
             }}
             searchQuery={searchQuery}
             onPress={() => {
@@ -177,7 +183,7 @@ const SearchFlow = ({ onSearch, isSearch, searchingDisable }: IProps) => {
         onChangeText={onChangeSearch}
         disabled={searchingDisable}
       />
-      <BSpacer size="extraSmall" />
+      <BSpacer size={resultSpace ? resultSpace : 'extraSmall'} />
       {searchQuery && (
         <View style={{ height: resScale(500) }}>
           <BTabViewScreen

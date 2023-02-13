@@ -9,12 +9,14 @@ type BCompanyMapCardType = {
   location?: string;
   companyName?: string;
   onPressLocation?: () => void;
+  disabled?: boolean;
 };
 
 export default function BCompanyMapCard({
   location,
   companyName,
   onPressLocation,
+  disabled = false,
 }: BCompanyMapCardType) {
   return (
     <View style={styles.company}>
@@ -29,7 +31,11 @@ export default function BCompanyMapCard({
         />
         <View>
           <Text style={styles.mapLocation}>{location}</Text>
-          <BTouchableText title="Lihat Peta" onPress={onPressLocation} />
+          <BTouchableText
+            disabled={disabled}
+            title="Lihat Peta"
+            onPress={onPressLocation}
+          />
         </View>
       </View>
     </View>

@@ -12,6 +12,7 @@ interface IProps {
   category: {
     name: string;
   };
+  onDelete: () => void;
 }
 
 const styles: Styles = {
@@ -51,9 +52,16 @@ const styles: Styles = {
     position: 'relative',
     right: resScale(10),
   },
+  close: {
+    padding: 0,
+    // width: 10,
+    height: resScale(10),
+    width: resScale(10),
+    right: resScale(10),
+  },
 };
 
-const ProductChip = ({ name, category }: IProps) => {
+const ProductChip = ({ name, category, onDelete }: IProps) => {
   return (
     <View style={styles.container}>
       <BText bold="bold">{name}</BText>
@@ -62,11 +70,9 @@ const ProductChip = ({ name, category }: IProps) => {
       </View>
       <Button
         icon="close"
-        color="blue"
         textColor={colors.textInput.input}
-        children={''}
-        mode="text"
         style={styles.icon}
+        onPress={onDelete}
       />
     </View>
   );

@@ -26,6 +26,7 @@ export const CALENDAR = 'CALENDAR';
 export const TRANSACTION_DETAIL = 'TRANSACTION_DETAIL';
 export const CUSTOMER_DETAIL = 'CUSTOMER_DETAIL';
 export const CREATE_SCHEDULE = 'CREATE_SCHEDULE';
+export const ALL_PRODUCT = 'ALL_PRODUCT';
 
 /*
     Screen Title
@@ -46,12 +47,13 @@ export const CAMERA_TITLE = 'Camera';
 export const IMAGE_PREVIEW_TITLE = 'Image Preview';
 export const SCHEDULE_TITLE = 'Schedule';
 export const SUBMIT_FORM_TITLE = 'Submit Form';
-export const CREATE_VISITATION_TITLE = 'Create Visitation';
+export const CREATE_VISITATION_TITLE = 'Buat Kunjungan';
 export const SPH_TITLE = 'SPH';
-export const SEARCH_PRODUCT_TITLE = 'Search Product';
+export const SEARCH_PRODUCT_TITLE = 'Cari Produk';
 export const LOCATION_TITLE = 'Pilih Area Proyek';
 export const SEARCH_AREA_TITLE = 'Pilih Area Proyek';
 export const CALENDAR_TITLE = 'Pilih Tanggal';
 export const TRANSACTION_DETAIL_TITLE = 'Detail Transaksi';
 export const CUSTOMER_DETAIL_TITLE = 'Detil Pelanggan';
 export const CREATE_SCHEDULE_TITLE = 'Buat Jadwal';
+export const ALL_PRODUCT_TITLE = 'Semua Produk';

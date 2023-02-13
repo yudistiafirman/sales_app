@@ -18,6 +18,10 @@ export type RootStackParamList = {
     navigateTo?: string;
     existingVisitation?: visitationListResponse;
   };
+  ALL_PRODUCT: {
+    coordinate: { longitude: number; latitude: number };
+    from: string;
+  };
   IMAGE_PREVIEW: {
     photo: PhotoFile;
     photoTitle: string;
@@ -29,8 +33,12 @@ export type RootStackParamList = {
   CREATE_VISITATION: { existingVisitation?: visitationListResponse };
   SPH: {};
   SEARCH_PRODUCT: { distance: number };
-  LOCATION: { coordinate: { longitude: number; latitude: number } };
-  SEARCH_AREA: {};
+  LOCATION: {
+    coordinate: { longitude: number; latitude: number };
+    isReadOnly: boolean;
+    from: string;
+  };
+  SEARCH_AREA: { from: string };
   CALENDAR: {};
   TRANSACTION_DETAIL: { title: string; data: any };
   CUSTOMER_DETAIL: { existingVisitation?: visitationListResponse };

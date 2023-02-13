@@ -2,6 +2,7 @@ import { colors, fonts, layout } from '@/constants';
 import { Styles } from '@/interfaces';
 import { resScale } from '@/utils';
 import React from 'react';
+import { Text } from 'react-native';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import BText from './BText';
 
@@ -14,6 +15,8 @@ interface IProps {
   onChange?: (e: any) => void;
   onSelect?: (index: any) => void;
   loading?: boolean;
+  showChevron?: boolean;
+  showClear?: boolean;
 }
 const BAutoComplete = ({
   isError,
@@ -24,6 +27,8 @@ const BAutoComplete = ({
   onSelect,
   loading,
   placeholder,
+  showChevron = true,
+  showClear = true,
 }: IProps) => {
   // const [data, setData] = React.useState(items);
 
@@ -55,6 +60,10 @@ const BAutoComplete = ({
         closeOnBlur={false}
         useFilter={false}
         clearOnFocus={false}
+        showChevron={showChevron}
+        showClear={showClear}
+        EmptyResultComponent={() => <></>}
+        emptyResultText={''}
       />
       {isError && (
         <BText size="small" color="primary" bold="100">
@@ -82,7 +91,6 @@ const styles: Styles = {
     zIndex: 10,
   },
   dropdownContainer: {
-    paddingHorizontal: layout.pad.sm,
     zIndex: 10,
     borderRadius: layout.radius.sm,
     borderColor: colors.textInput.inActive,
@@ -91,6 +99,8 @@ const styles: Styles = {
   },
   text: {
     color: colors.textInput.input,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
   },
   separator: {
     backgroundColor: colors.border.default,

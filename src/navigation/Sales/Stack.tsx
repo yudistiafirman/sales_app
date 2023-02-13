@@ -9,6 +9,8 @@ import Sph from '@/screens/Sph';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
 import TransactionDetail from '@/screens/Transaction/Detail';
 import {
+  ALL_PRODUCT,
+  ALL_PRODUCT_TITLE,
   CALENDAR,
   CALENDAR_TITLE,
   CAMERA,
@@ -34,6 +36,7 @@ import {
 } from '../ScreenNames';
 import CustomerDetail from '@/screens/CustomerDetail';
 import CreateSchedule from '@/screens/CreateSchedule';
+import PriceList from '@/screens/Price';
 
 const SalesStack = (Stack: any) => {
   return (
@@ -116,6 +119,14 @@ const SalesStack = (Stack: any) => {
         component={CustomerDetail}
         options={{
           headerTitle: CUSTOMER_DETAIL_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={ALL_PRODUCT}
+        key={ALL_PRODUCT}
+        component={PriceList}
+        options={{
+          headerTitle: ALL_PRODUCT_TITLE,
         }}
       />
       <Stack.Screen

@@ -1,15 +1,16 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { BButtonPrimary, BForm, BSpacer, BVisitationCard } from '@/components';
+import React, { useContext, useEffect, useMemo } from 'react';
+import { BButtonPrimary, BForm, BVisitationCard } from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
-import { Input } from '@/interfaces';
+import { Input, PIC } from '@/interfaces';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import { SphContext } from '../../context/SphContext';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import LinearGradient from 'react-native-linear-gradient';
-const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
+
+// import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+// import LinearGradient from 'react-native-linear-gradient';
+// const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 import Entypo from 'react-native-vector-icons/Entypo';
 
@@ -17,42 +18,23 @@ function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
 }
 
-const dummyData = [
-  {
-    id: 'kwos0299',
-    name: 'Agus',
-    position: 'Finance',
-    phone: 81128869884,
-    email: 'agus@gmail.com',
-  },
-  {
-    id: '1233okjs',
-    name: 'Joko',
-    position: 'Finance',
-    phone: 81128869884,
-    email: 'Joko@gmail.com',
-  },
-  {
-    id: 'jsncijc828',
-    name: 'Johny',
-    position: 'Finance',
-    phone: 81128869884,
-    email: 'Johny@gmail.com',
-  },
-];
-function dummyReq() {
-  return new Promise<any>((resolve) => {
-    setTimeout(() => {
-      resolve(dummyData);
-    }, 5000);
-  });
-}
 function GantiIcon() {
   return (
     <View>
       <Text style={style.gantiText}>Ganti</Text>
     </View>
   );
+}
+
+function checkSelected(picList?: PIC[]) {
+  let isSelectedExist = false;
+  const list = picList ? picList : [];
+  list.forEach((pic) => {
+    if (pic.isSelected) {
+      isSelectedExist = true;
+    }
+  });
+  return isSelectedExist;
 }
 
 type SelectedPicType = {
@@ -65,54 +47,96 @@ export default function SelectedPic({
   setCurrentPosition,
 }: SelectedPicType) {
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const [flatListData, setFlatListData] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [sphState, stateUpdate] = useContext(SphContext);
 
+  console.log(sphState.picList, 'list51');
+
   const inputsData: Input[] = useMemo(() => {
-    const values = flatListData.map((item) => {
-      if (item.id === sphState?.selectedPic?.id) {
-        return {
-          ...item,
-          isSelected: true,
-        };
-      }
-      return {
-        ...item,
-        isSelected: false,
-      };
-    });
     return [
       {
         label: 'PIC',
         isRequire: true,
         isError: false,
         type: 'PIC',
-        value: values,
+        value: sphState.selectedCompany?.PIC
+          ? sphState.selectedCompany.PIC
+          : [],
         onChange: () => {
           openBottomSheet();
         },
         onSelect: (index: number) => {
           if (stateUpdate) {
-            stateUpdate('selectedPic')(flatListData[index]);
+            // stateUpdate('selectedPic')(flatListData[index]);
+            // const selectPic = (sphState.picList[index].isSelected = true);
+            const listPic = sphState.selectedCompany?.PIC
+              ? sphState.selectedCompany.PIC
+              : [];
+            const selectPic = listPic.map((pic, picIndex) => {
+              if (index === picIndex) {
+                stateUpdate('selectedPic')(pic);
+                pic.isSelected = true;
+              } else {
+                pic.isSelected = false;
+              }
+              return pic;
+            });
+            // stateUpdate('picList')(selectPic);
+            stateUpdate('selectedCompany')({
+              ...sphState.selectedCompany,
+              PIC: selectPic,
+            });
           }
         },
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [flatListData, sphState]);
+  }, [sphState]);
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      setFlatListData([]);
-      const data = await dummyReq();
-      console.log(data, 'data dummy');
-
-      setFlatListData(data);
-      setIsLoading(false);
-    })();
+    if (sphState.selectedCompany) {
+      if (sphState.selectedCompany.mainPic?.id && !sphState.selectedPic) {
+        const foundMainPic = sphState.selectedCompany.PIC.find(
+          (pic) => pic.id === sphState.selectedCompany.mainPic.id
+        );
+        stateUpdate('selectedPic')(foundMainPic);
+      }
+      if (sphState.selectedCompany.PIC) {
+        const listPic = sphState.selectedCompany.PIC.map((pic) => {
+          if (sphState.selectedPic) {
+            if (sphState.selectedPic.id) {
+              if (pic.id === sphState.selectedPic.id) {
+                stateUpdate('selectedPic')(pic);
+                return { ...pic, isSelected: true };
+              }
+            } else {
+              return { ...pic };
+            }
+          }
+          return { ...pic, isSelected: false };
+        });
+        if (listPic.length === 1) {
+          listPic[0].isSelected = true;
+        }
+        stateUpdate('selectedCompany')({
+          ...sphState.selectedCompany,
+          PIC: listPic,
+        });
+        // stateUpdate('picList')(listPic);
+      }
+    }
   }, []);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     setIsLoading(true);
+  //     setFlatListData([]);
+  //     const data = await dummyReq();
+  //     console.log(data, 'data dummy');
+
+  //     setFlatListData(data);
+  //     setIsLoading(false);
+  //   })();
+  // }, []);
 
   const openBottomSheet = () => {
     bottomSheetRef.current?.expand();
@@ -125,21 +149,20 @@ export default function SelectedPic({
           {/* <Text>{JSON.stringify(sphState?.selectedCompany)}</Text> */}
           <BVisitationCard
             item={{
-              name: sphState?.selectedCompany?.name,
-              location: sphState?.selectedCompany?.location,
+              name: sphState?.selectedCompany?.name || '-',
+              location: sphState?.selectedCompany?.locationAddress.line1,
             }}
             customIcon={GantiIcon}
             onPress={() => {
-              console.log('ganti pressed');
               if (onPress) {
                 onPress();
               }
             }}
           />
         </View>
-        <ScrollView>
-          {!isLoading && <BForm inputs={inputsData} />}
-          {isLoading && (
+        <ScrollView style={style.scrollViewStyle}>
+          <BForm inputs={inputsData} />
+          {/* {isLoading && (
             <View>
               <BSpacer size={'medium'} />
               <ShimmerPlaceHolder style={style.labelShimmer} />
@@ -148,11 +171,11 @@ export default function SelectedPic({
               <BSpacer size={'extraSmall'} />
               <ShimmerPlaceHolder style={style.loadingShimmer} />
             </View>
-          )}
+          )} */}
         </ScrollView>
       </View>
       <BButtonPrimary
-        disable={!sphState?.selectedPic ? true : false}
+        disable={!checkSelected(sphState.selectedCompany?.PIC)}
         title="Lanjut"
         onPress={() => {
           if (setCurrentPosition) {
@@ -161,14 +184,23 @@ export default function SelectedPic({
           // setIsLoading((curr) => !curr);
         }}
         rightIcon={ContinueIcon}
-        isLoading={isLoading}
       />
       <BSheetAddPic
         ref={bottomSheetRef}
         initialIndex={-1}
-        addPic={(pic: any) => {
+        addPic={(pic: PIC) => {
           // onChange('selectedPic', pic);
           console.log(pic, 'bsheetaddpic');
+          pic.isSelected = false;
+          const currentList = sphState.selectedCompany?.PIC
+            ? sphState.selectedCompany.PIC
+            : [];
+          stateUpdate('selectedCompany')({
+            ...sphState.selectedCompany,
+            PIC: [...currentList, pic],
+          });
+          // stateUpdate('picList')([...sphState.picList, pic]);
+          // sphState.selectedCompany?.PIC ? sphState.selectedCompany.PIC : [];
         }}
       />
     </View>
@@ -191,5 +223,8 @@ const style = StyleSheet.create({
     width: resScale(335),
     height: resScale(50),
     borderRadius: layout.radius.md,
+  },
+  scrollViewStyle: {
+    maxHeight: resScale(500),
   },
 });

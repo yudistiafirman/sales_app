@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   emptyimage: {
     width: resScale(88),
     height: resScale(88),
-    marginVertical: layout.pad.lg,
+    marginBottom: layout.pad.md,
   },
   emptyText: {
     fontFamily: font.family.montserrat['600'],

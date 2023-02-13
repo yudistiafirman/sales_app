@@ -43,7 +43,7 @@ const style = StyleSheet.create({
   },
 
   countText: {
-    fontFamily: font.family.montserrat[500],
+    fontFamily: font.family.montserrat[300],
     fontSize: font.size.md,
     color: colors.black,
   },
