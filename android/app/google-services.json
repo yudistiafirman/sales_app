@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "81324684184",
+    "project_id": "brik-522cd",
+    "storage_bucket": "brik-522cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81324684184:android:e98a2db0b2108078ccf1ed",
+        "android_client_info": {
+          "package_name": "com.bsa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzbsntxoQ48VxR9h2Nf4NYL9g5EEjYD7A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
