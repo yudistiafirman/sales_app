@@ -30,6 +30,9 @@ interface IProps {
     | 'large'
     | 'extraLarge'
     | number;
+  setSelectedCompany: React.Dispatch<
+    React.SetStateAction<{ id: string; title: string }>
+  >;
 }
 
 const SearchFlow = ({
@@ -37,6 +40,7 @@ const SearchFlow = ({
   isSearch,
   searchingDisable,
   resultSpace,
+  setSelectedCompany,
 }: IProps) => {
   const dispatch = useDispatch();
   const { action, values } = React.useContext(createVisitationContext);
@@ -75,25 +79,27 @@ const SearchFlow = ({
   };
 
   const onSelectProject = (item: any) => {
-    if (item.Company) {
+    if (item.Company?.id) {
       const company = {
         id: item.Company.id,
         title: item.Company.name,
       };
-
-      updateValueOnstep('stepTwo', 'companyName', company);
+      updateValueOnstep('stepTwo', 'companyName', company.title);
+      setSelectedCompany(company);
 
       if (values.stepTwo.options.items) {
         updateValueOnstep('stepTwo', 'options', {
+          ...values.stepTwo.options,
           items: [...values.stepTwo.options.items, company],
         });
       } else {
         updateValueOnstep('stepTwo', 'options', {
+          ...values.stepTwo.options,
           items: [company],
         });
       }
     }
-    const customerType = item.Company ? 'COMPANY' : 'INDIVIDU';
+    const customerType = item.Company?.id ? 'COMPANY' : 'INDIVIDU';
     updateValueOnstep('stepTwo', 'customerType', customerType);
 
     if (item.PIC) {
@@ -103,6 +109,9 @@ const SearchFlow = ({
           isSelected: false,
         };
       });
+      if (picList.length === 1) {
+        picList[0].isSelected = true;
+      }
       updateValueOnstep('stepTwo', 'pics', picList);
     }
     updateValueOnstep('stepTwo', 'projectName', item.name);

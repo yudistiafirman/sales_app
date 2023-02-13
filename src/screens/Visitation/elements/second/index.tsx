@@ -47,10 +47,10 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
 
   useEffect(() => {
     if (values.stepTwo.companyName) {
-      setSelectedCompany({ id: 1, title: values.stepTwo.companyName });
       updateValueOnstep('stepTwo', 'options', {
         items: [{ id: 1, title: values.stepTwo.companyName }],
       });
+      setSelectedCompany({ id: 1, title: values.stepTwo.companyName });
     }
   }, []);
 
@@ -99,7 +99,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         value: state.customerType,
         options: [
           {
-            icon: SVGName.IC_COMPANY,
+            icon: company,
             title: 'Perusahaan',
             value: 'COMPANY',
             onChange: () => {
@@ -107,7 +107,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             },
           },
           {
-            icon: SVGName.IC_PROFILE,
+            icon: profile,
             title: 'Individu',
             value: 'INDIVIDU',
             onChange: () => {
@@ -195,6 +195,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         isSearch={isSearch}
         onSearch={onSearch}
         resultSpace={2}
+        setSelectedCompany={setSelectedCompany}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
         {!isSearch && (

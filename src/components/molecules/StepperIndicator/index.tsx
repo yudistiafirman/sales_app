@@ -83,6 +83,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     height: resScale(25),
     paddingHorizontal: layout.pad.md,
+    zIndex: 2,
+    backgroundColor: 'white',
   },
   scrollContainer: {
     flexDirection: 'row',

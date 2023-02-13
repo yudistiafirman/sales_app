@@ -73,6 +73,7 @@ const BPic = ({
           <RadioButton
             value={phone!}
             status={isSelected ? 'checked' : 'unchecked'}
+            uncheckedColor={colors.border.altGrey}
             onPress={() => {
               if (onSelect) {
                 onSelect(index!);
@@ -92,7 +93,7 @@ const BPic = ({
         <View style={{ width: resScale(120) }}>
           <ScrollView horizontal={true}>
             <BText sizeInNumber={fonts.size.sm} bold="500">
-              {phone ? '+62' + phone : '-'}
+              {phone?.startsWith('+62') ? phone : phone ? '+62' + phone : '-'}
             </BText>
           </ScrollView>
         </View>

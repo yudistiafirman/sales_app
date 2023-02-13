@@ -96,7 +96,6 @@ export default function ThirdStep() {
               isRequired: doc.is_required,
             };
           });
-          console.log(newFileKeys, 'newFileKeys155');
           const documentObj: { [key: string]: any } = {};
           sphDocuments[key].forEach((doc) => {
             documentObj[doc.id] = null;
@@ -260,11 +259,6 @@ export default function ThirdStep() {
     });
     return inputs;
   }, [fileKeys, sphState, stateUpdate, documents]);
-  console.log(
-    sphState?.paymentRequiredDocuments,
-    'documentsparent316',
-    fileKeys
-  );
 
   return (
     <BContainer>

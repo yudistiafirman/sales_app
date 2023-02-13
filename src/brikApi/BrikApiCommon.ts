@@ -19,8 +19,6 @@ export default class BrikApiCommon {
     if (distance) {
       params.append('distance', distance);
     }
-
-    console.log(url.toString(), '====================');
     return url.toString();
   };
   static searchPlaces = (searchValue: string) => {

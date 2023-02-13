@@ -37,7 +37,7 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
 import { CAMERA, SPH_TITLE } from '@/navigation/ScreenNames';
 
-type selectedDateType = {
+export type selectedDateType = {
   date: string;
   prettyDate: string;
   day: string;

@@ -35,6 +35,7 @@ import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
 import {
+  APPOINTMENT,
   CAMERA,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
@@ -235,7 +236,9 @@ const Beranda = () => {
       {
         icon: SvgNames.IC_APPOINTMENT,
         title: 'Buat Janji Temu',
-        action: () => {},
+        action: () => {
+          navigation.navigate(APPOINTMENT);
+        },
       },
     ],
     []
