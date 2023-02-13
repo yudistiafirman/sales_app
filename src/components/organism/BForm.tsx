@@ -84,11 +84,18 @@ const styles: Styles = {
   relative: {
     position: 'relative',
   },
-  TextinputAbsolut: {
+  TextinputAbsolute: {
     position: 'absolute',
     // backgroundColor: 'blue',
     width: '100%',
     height: resScale(73),
+    zIndex: 2,
+  },
+  TextAreaAbsolute: {
+    position: 'absolute',
+    // backgroundColor: 'blue',
+    width: '100%',
+    height: resScale(110),
     zIndex: 2,
   },
 };
@@ -179,7 +186,7 @@ const renderInput = (
         {textInputAsButton && (
           <TouchableOpacity
             onPress={textInputAsButtonOnPress}
-            style={styles.TextinputAbsolut}
+            style={styles.TextinputAbsolute}
           />
         )}
 
@@ -209,7 +216,13 @@ const renderInput = (
   if (type === 'area') {
     const defaultErrorMsg = `${label} harus diisi`;
     return (
-      <React.Fragment>
+      <View style={styles.relative}>
+        {textInputAsButton && (
+          <TouchableOpacity
+            onPress={textInputAsButtonOnPress}
+            style={styles.TextAreaAbsolute}
+          />
+        )}
         <BLabel
           sizeInNumber={input.textSize}
           bold={titleBold}
@@ -223,13 +236,14 @@ const renderInput = (
           numberOfLines={4}
           placeholder={placeholder}
           contentStyle={textStyles}
+          left={LeftIcon && <TextInput.Icon icon={LeftIcon} />}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
             {customerErrorMsg || defaultErrorMsg}
           </BText>
         )}
-      </React.Fragment>
+      </View>
     );
   }
 
@@ -351,7 +365,7 @@ const renderInput = (
     return (
       <React.Fragment>
         <BSpacer size="verySmall" />
-        {!hidePicLabel ? (
+        {!hidePicLabel && (
           <>
             <View style={styles.optionContainer}>
               <BText sizeInNumber={fonts.size.md} bold="600">
@@ -381,7 +395,7 @@ const renderInput = (
               </View>
             )}
           </>
-        ) : null}
+        )}
         <BPicList
           isOption={value?.length > 1}
           data={value}

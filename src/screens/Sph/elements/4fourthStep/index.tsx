@@ -96,7 +96,7 @@ export default function FourthStep() {
     useState<ProductDataInterface | null>(null);
   const [chosenProducts, setChosenProducts] = useState<ChosenProductType>([]);
 
-  const getProduct = useCallback((data: ProductDataInterface) => {
+  const getProduct = useCallback(({ data }: { data: ProductDataInterface }) => {
     setSelectedProduct(data);
     setIsModalVisible(true);
   }, []);
@@ -110,17 +110,14 @@ export default function FourthStep() {
   }, []);
 
   useEffect(() => {
-    if (sphState) {
+    if (sphState.chosenProducts.length > 0) {
       setChosenProducts(sphState?.chosenProducts);
     }
-    DeviceEventEmitter.addListener('event.testEvent', ({ data }) => {
-      getProduct(data);
-    });
+    DeviceEventEmitter.addListener('event.testEvent', getProduct);
     return () => {
       DeviceEventEmitter.removeAllListeners('event.testEvent');
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getProduct]);
 
   useEffect(() => {
     if (stateUpdate) {
