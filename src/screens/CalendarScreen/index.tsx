@@ -194,7 +194,17 @@ export default function CalendarScreen() {
           { month: 'short' }
         )} ${new Date(key).getFullYear()}`;
         let newDate = new Date(key);
-        day = newDate.toLocaleDateString(locale('ID'), { weekday: 'long' });
+        try {
+          day = newDate.toLocaleDateString(locale('ID'), { weekday: 'long' });
+        } catch (err1) {
+          console.log(err1, 'error date parse');
+          try {
+            day = newDate.toLocaleDateString(locale(), { weekday: 'long' });
+          } catch (err2) {
+            day = newDate.toLocaleDateString();
+            console.log(err2, 'still error date parse');
+          }
+        }
 
         selectedDate = {
           date: key,
