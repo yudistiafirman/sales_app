@@ -22,7 +22,11 @@ import { TextInput } from 'react-native-paper';
 
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
-import { ALL_PRODUCT, CREATE_VISITATION, SEARCH_PRODUCT } from '@/navigation/ScreenNames';
+import {
+  ALL_PRODUCT,
+  CREATE_VISITATION,
+  SEARCH_PRODUCT,
+} from '@/navigation/ScreenNames';
 import { fonts } from '@/constants';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
@@ -96,7 +100,7 @@ const ThirdStep = () => {
       options: [
         {
           title: 'Cash Before Delivery',
-          icon: cbd,
+          icon: SVGName.IC_CBD,
           value: 'CBD',
           onChange: () => {
             onChange('paymentType')('CBD');
@@ -104,7 +108,7 @@ const ThirdStep = () => {
         },
         {
           title: 'Credit',
-          icon: credit,
+          icon: SVGName.IC_CREDIT,
           value: 'CREDIT',
           onChange: () => {
             onChange('paymentType')('CREDIT');

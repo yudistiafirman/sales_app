@@ -80,12 +80,12 @@ const BCardOption = (props: IProps) => {
 
   return (
     <TouchableOpacity style={makeStyle(props)} onPress={onPress}>
-      {/* <BSvg
+      <BSvg
         color={isActive ? colors.primary : colors.textInput.input}
         svgName={icon}
-        type='fill'
-      /> */}
-      <Image source={icon} style={makeStyleImage({ isActive })} />
+        type="fill"
+      />
+      {/* <Image source={icon} style={makeStyleImage({ isActive })} /> */}
       <BSpacer size={'verySmall'} />
       <BText {...(isActive && { color: 'primary' })}>{title}</BText>
     </TouchableOpacity>

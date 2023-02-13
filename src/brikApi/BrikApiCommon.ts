@@ -14,16 +14,13 @@ export default class BrikApiCommon {
     const url = new URL(`${API_URL}/common/map/coordinates`);
     const params = url.searchParams;
 
-    if (longitude) {
-      params.append('lon', `${longitude}`);
-    }
-    if (latitude) {
-      params.append('lat', `${latitude}`);
-    }
+    params.append('lon', `${longitude}`);
+    params.append('lat', `${latitude}`);
     if (distance) {
       params.append('distance', distance);
     }
 
+    console.log(url.toString(), '====================');
     return url.toString();
   };
   static searchPlaces = (searchValue: string) => {

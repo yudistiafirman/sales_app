@@ -18,7 +18,6 @@ import {
   BLocation,
   BLocationDetail,
   BMarker,
-  BText,
 } from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
@@ -100,7 +99,10 @@ export default function SecondStep() {
 
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const onChangeRegion = useCallback(
-    async (coordinate: Region, isBiilingAddress?: boolean) => {
+    async (
+      coordinate: Region,
+      { isBiilingAddress }: { isBiilingAddress?: boolean }
+    ) => {
       try {
         setIsMapLoading(() => true);
         const { data } = await getLocationCoordinates(
@@ -113,7 +115,6 @@ export default function SecondStep() {
         if (!result) {
           throw data;
         }
-        console.log(result, 'resultOnChange71secondstep');
 
         const _coordinate = {
           latitude: result?.lat,
@@ -131,12 +132,16 @@ export default function SecondStep() {
           _coordinate.latitude = Number(result.lat);
           _coordinate.lat = Number(result.lat);
         }
+        console.log(isBiilingAddress, 'iniaapa');
+
         if (isBiilingAddress) {
           stateUpdate('billingAddress')({
             ...sphState?.billingAddress,
             addressAutoComplete: _coordinate,
           });
         } else {
+          console.log('elsejalan?');
+
           stateUpdate('distanceFromLegok')(result.distance.value);
           dispatch(updateRegion(_coordinate));
         }
@@ -301,13 +306,12 @@ export default function SecondStep() {
   }, [sphState]);
 
   useEffect(() => {
-    send('askingPermission');
+    // send('askingPermission');
     DeviceEventEmitter.addListener(eventKeyObj.shipp, (data) => {
       onChangeRegion(data.coordinate);
     });
     DeviceEventEmitter.addListener(eventKeyObj.billing, (data) => {
-      console.log(data, 'listener billing');
-      onChangeRegion(data.coordinate, true);
+      onChangeRegion(data.coordinate, { isBiilingAddress: true });
     });
     return () => {
       DeviceEventEmitter.removeAllListeners(eventKeyObj.shipp);
@@ -316,6 +320,8 @@ export default function SecondStep() {
   }, [onChangeRegion]);
 
   useEffect(() => {
+    console.log(sphState.projectAddress);
+
     stateUpdate('projectAddress')(region);
   }, [region]);
 
@@ -324,6 +330,20 @@ export default function SecondStep() {
       bottomSheetRef.current?.expand();
     }
   }, [keyboardVisible]);
+
+  useEffect(() => {
+    if (sphState.projectAddress) {
+      const latitude = +sphState.projectAddress.latitude;
+      const longitude = +sphState.projectAddress.longitude;
+      onChangeRegion({ latitude, longitude }, {});
+    } else if (sphState.selectedCompany) {
+      if (sphState.selectedCompany.locationAddress) {
+        const latitude = +sphState.selectedCompany.locationAddress.lat;
+        const longitude = +sphState.selectedCompany.locationAddress.lon;
+        onChangeRegion({ latitude, longitude }, {});
+      }
+    }
+  }, []);
 
   const nameAddress = React.useMemo(() => {
     const idx = region.formattedAddress?.split(',');

@@ -61,6 +61,7 @@ const Location = () => {
       longitude: Number(lon),
       latitude: Number(lat),
     };
+
     if (
       from === TAB_PRICE_LIST_TITLE ||
       from === TAB_TRANSACTION_TITLE ||
@@ -73,11 +74,12 @@ const Location = () => {
       if (eventKey) {
         DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
         navigation.dispatch(StackActions.pop(2));
+      } else {
+        navigation.navigate(TAB_ROOT, {
+          screen: from,
+          params: { coordinate: coordinate },
+        });
       }
-      navigation.navigate(TAB_ROOT, {
-        screen: from,
-        params: { coordinate: coordinate },
-      });
     } else {
       navigation?.setParams({
         coordinate: coordinate,

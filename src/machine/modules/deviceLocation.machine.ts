@@ -96,6 +96,7 @@ const deviceLocationMachine =
               enableHighAccuracy: true,
               timeout: 15000,
             });
+            console.log(position, 'ini apaa??');
             const { latitude, longitude } = position;
 
             const { data } = await getLocationCoordinates(
@@ -106,6 +107,7 @@ const deviceLocationMachine =
             );
 
             const { result } = data;
+            console.log(result, 'loh loh');
             if (!result) {
               throw data;
             }
@@ -116,8 +118,8 @@ const deviceLocationMachine =
               formattedAddress: result?.formattedAddress,
               PostalId: result?.PostalId,
               distance: {
-                text: result.distance.text,
-                value: result.distance.value,
+                text: result?.distance?.text || 100,
+                value: result?.distance?.value || 100,
               },
             };
           } catch (error) {

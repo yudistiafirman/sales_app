@@ -89,13 +89,9 @@ function stepHandler(
   }
 
   const paymentCondition =
-    sphData.paymentType === 'credit' ? sphData.paymentBankGuarantee : true;
+    sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
 
-  if (
-    sphData.paymentDocumentsFullfilled &&
-    sphData.paymentType &&
-    paymentCondition
-  ) {
+  if (sphData.paymentType && paymentCondition) {
     setSteps((curr) => {
       return [...new Set(curr), 2];
     });
@@ -132,12 +128,6 @@ function SphContent() {
     stepHandler(sphData, stepsDone, setStepsDone, stepControll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
-
-  useEffect(() => {
-    return () => {
-      updateState('chosenProducts')([]);
-    };
-  }, []);
 
   const getLocationCoord = async (coordinate: Region) => {
     try {
@@ -196,6 +186,7 @@ function SphContent() {
       if (project.mainPic) {
         updateState('selectedPic')(project.mainPic);
       }
+      // if ()
       updateState('selectedCompany')(project);
       console.log(locationAddress, 'locationAddress146');
 

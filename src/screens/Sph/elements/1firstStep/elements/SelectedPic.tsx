@@ -95,7 +95,10 @@ export default function SelectedPic({
   useEffect(() => {
     if (sphState.selectedCompany) {
       if (sphState.selectedCompany.mainPic?.id && !sphState.selectedPic) {
-        stateUpdate('selectedPic')(sphState.selectedCompany.mainPic);
+        const foundMainPic = sphState.selectedCompany.PIC.find(
+          (pic) => pic.id === sphState.selectedCompany.mainPic.id
+        );
+        stateUpdate('selectedPic')(foundMainPic);
       }
       if (sphState.selectedCompany.PIC) {
         const listPic = sphState.selectedCompany.PIC.map((pic) => {
@@ -111,6 +114,9 @@ export default function SelectedPic({
           }
           return { ...pic, isSelected: false };
         });
+        if (listPic.length === 1) {
+          listPic[0].isSelected = true;
+        }
         stateUpdate('selectedCompany')({
           ...sphState.selectedCompany,
           PIC: listPic,

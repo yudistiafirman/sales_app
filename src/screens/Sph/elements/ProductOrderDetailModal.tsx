@@ -109,14 +109,8 @@ export default function ProductCartModal({
           additionalData.distance.price = price.price;
         }
       }
-      console.log(price.type, 'inipricetyp112');
 
       if (price.type === 'TRANSPORT') {
-        console.log(
-          'masuktransport114',
-          +detailOrder.volume >= price.min && +detailOrder.volume <= price.max
-        );
-
         if (+detailOrder.volume >= price.min) {
           additionalData.delivery.id = price.id;
           additionalData.delivery.price = price.price;
@@ -125,8 +119,6 @@ export default function ProductCartModal({
     }
     return additionalData;
   }
-
-  console.log(calcPrice, 'calcPrice63');
 
   const onChange = (key: string) => (val: string) => {
     setDetailOrder((curr) => {

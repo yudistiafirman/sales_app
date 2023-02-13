@@ -218,11 +218,17 @@ export default function FifthStep() {
     try {
       const payload = payloadMapper(sphState);
       const photoFiles = Object.values(sphState.paymentRequiredDocuments);
-
-      if (sphState.uploadedAndMappedRequiredDocs.length === 0) {
+      const isNoPhotoToUpload = photoFiles.every((val) => val === null);
+      payload.projectDocs = [];
+      if (
+        sphState.uploadedAndMappedRequiredDocs.length === 0 &&
+        !isNoPhotoToUpload
+      ) {
+        console.log('ini mau upload foto', photoFiles);
         const photoResponse = await dispatch(
           postUploadFiles({ files: photoFiles, from: 'sph' })
         ).unwrap();
+        console.log('upload kelar');
 
         const files = photoResponse.map((photo) => {
           const photoName = `${photo.name}.${photo.type}`;
@@ -238,15 +244,17 @@ export default function FifthStep() {
               )
             ) {
               const photoData = sphState.paymentRequiredDocuments[documentId];
-              if (
-                photoData.name === photoName ||
-                photoData.name === photoNamee
-              ) {
-                // return {
-                // documentId: documentId,
-                // fileId: photo.id,
-                // };
-                foundPhoto = documentId;
+              if (photoData) {
+                if (
+                  photoData.name === photoName ||
+                  photoData.name === photoNamee
+                ) {
+                  // return {
+                  // documentId: documentId,
+                  // fileId: photo.id,
+                  // };
+                  foundPhoto = documentId;
+                }
               }
             }
           }
@@ -258,7 +266,8 @@ export default function FifthStep() {
           }
         });
         payload.projectDocs = files;
-      } else {
+        stateUpdate('uploadedAndMappedRequiredDocs')(files);
+      } else if (!isNoPhotoToUpload) {
         payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
       }
       console.log(JSON.stringify(payload), 'payloadfinal');
@@ -272,6 +281,7 @@ export default function FifthStep() {
       setIsStepDoneVisible(true);
     } catch (error) {
       console.log(error, 'errorbuatSph54');
+      dispatch(closePopUp());
       dispatch(
         openPopUp({
           popUpType: 'error',

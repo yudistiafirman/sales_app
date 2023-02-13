@@ -206,7 +206,7 @@ export default function ThirdStep() {
           {
             title: 'Cash Before Delivery',
             icon: SVGName.IC_CBD,
-            value: 'cbd',
+            value: 'CBD',
             onChange: () => {
               // if (stateUpdate) {
               stateUpdate('paymentType')('CBD');
@@ -217,7 +217,7 @@ export default function ThirdStep() {
           {
             title: 'Credit',
             icon: SVGName.IC_CREDIT,
-            value: 'credit',
+            value: 'CREDIT',
             onChange: () => {
               // if (stateUpdate) {
               stateUpdate('paymentType')('CREDIT');
@@ -252,8 +252,10 @@ export default function ThirdStep() {
         }, //onChange(key.key),
         type: 'fileInput',
         value: sphState?.paymentRequiredDocuments?.[key.key],
-        isRequire: !!key.isRequired,
-        isError: Boolean(!sphState?.paymentRequiredDocuments?.[key.key]),
+        isRequire: key.isRequired,
+        isError: key.isRequired
+          ? !sphState?.paymentRequiredDocuments?.[key.key]
+          : false,
       });
     });
     return inputs;
@@ -281,7 +283,7 @@ export default function ThirdStep() {
         </ScrollView>
 
         <View>
-          {sphState?.paymentType === 'credit' && (
+          {sphState?.paymentType === 'CREDIT' && (
             <View style={style.checkboxContainer}>
               <Checkbox
                 status={
@@ -312,8 +314,7 @@ export default function ThirdStep() {
             disableContinue={
               !(
                 sphState?.paymentType &&
-                sphState?.paymentDocumentsFullfilled &&
-                (sphState.paymentType === 'credit'
+                (sphState.paymentType === 'CREDIT'
                   ? sphState?.paymentBankGuarantee
                   : true)
               ) || isLoading
