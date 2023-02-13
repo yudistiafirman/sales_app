@@ -30,6 +30,7 @@ import { deviceLocationMachine } from '@/machine/modules';
 import { SEARCH_AREA, SPH } from '@/navigation/ScreenNames';
 import { fetchAddressSuggestion } from '@/redux/async-thunks/commonThunks';
 import { useKeyboardActive } from '@/hooks';
+import { TextInput } from 'react-native-paper';
 
 function checkObj(obj: SphStateInterface) {
   const billingAddressFilled =
@@ -44,6 +45,9 @@ function checkObj(obj: SphStateInterface) {
 
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
+}
+function SearchIcon() {
+  return <TextInput.Icon forceTextInputFocus={false} icon="magnify" />;
 }
 //'shippingAddress.event'
 // 'billingAddress.event'
@@ -132,7 +136,6 @@ export default function SecondStep() {
           _coordinate.latitude = Number(result.lat);
           _coordinate.lat = Number(result.lat);
         }
-        console.log(isBiilingAddress, 'iniaapa');
 
         if (isBiilingAddress) {
           stateUpdate('billingAddress')({
@@ -140,8 +143,6 @@ export default function SecondStep() {
             addressAutoComplete: _coordinate,
           });
         } else {
-          console.log('elsejalan?');
-
           stateUpdate('distanceFromLegok')(result.distance.value);
           dispatch(updateRegion(_coordinate));
         }
@@ -154,24 +155,6 @@ export default function SecondStep() {
     [sphState?.billingAddress]
   );
 
-  const [, send] = useMachine(deviceLocationMachine, {
-    actions: {
-      dispatchState: (context, _event, _meta) => {
-        const coordinate = {
-          longitude: context?.lon,
-          latitude: context?.lat,
-          formattedAddress: context?.formattedAddress,
-          postalId: context?.PostalId,
-        };
-        console.log(context, 'contextmachince');
-        stateUpdate('distanceFromLegok')(context?.distance?.value);
-        // updateValueOnstep('stepOne', 'createdLocation', context);
-        if (region.latitude === 0) {
-          dispatch(updateRegion(coordinate));
-        }
-      },
-    },
-  });
   const inputsData: Input[] = useMemo(() => {
     const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
@@ -191,6 +174,9 @@ export default function SecondStep() {
             }
           },
           value: sphState?.isBillingAddressSame,
+          labelStyle: {
+            fontSize: fonts.size.xs,
+          },
         },
       ];
     }
@@ -244,21 +230,16 @@ export default function SecondStep() {
       {
         label: 'Cari Alamat',
         isRequire: true,
-        isError: true,
-        type: 'textInput',
+        isError: sphState?.billingAddress?.addressAutoComplete
+          ? !sphState?.billingAddress?.addressAutoComplete?.formattedAddress
+          : true,
+        type: 'area',
         onChange: (text: string) => {
           getSuggestion(text);
         },
-        items: sphState?.billingAddress?.addressAutoComplete
-          ? [
-              ...addressSuggestions,
-              sphState?.billingAddress?.addressAutoComplete,
-            ]
-          : addressSuggestions,
         value: sphState?.billingAddress?.addressAutoComplete
           ? sphState?.billingAddress?.addressAutoComplete?.formattedAddress
           : '',
-        // loading: isSuggestionLoading,
         placeholder: 'Cari Kelurahan, Kecamatan, Kota',
         textInputAsButton: true,
         textInputAsButtonOnPress: () => {
@@ -267,6 +248,7 @@ export default function SecondStep() {
             eventKey: eventKeyObj.billing,
           });
         },
+        LeftIcon: SearchIcon,
       },
       {
         label: 'Alamat Lengkap',
@@ -308,7 +290,7 @@ export default function SecondStep() {
   useEffect(() => {
     // send('askingPermission');
     DeviceEventEmitter.addListener(eventKeyObj.shipp, (data) => {
-      onChangeRegion(data.coordinate);
+      onChangeRegion(data.coordinate, {});
     });
     DeviceEventEmitter.addListener(eventKeyObj.billing, (data) => {
       onChangeRegion(data.coordinate, { isBiilingAddress: true });
@@ -320,8 +302,6 @@ export default function SecondStep() {
   }, [onChangeRegion]);
 
   useEffect(() => {
-    console.log(sphState.projectAddress);
-
     stateUpdate('projectAddress')(region);
   }, [region]);
 

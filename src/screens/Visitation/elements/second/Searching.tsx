@@ -75,7 +75,7 @@ const SearchFlow = ({
   };
 
   const onSelectProject = (item: any) => {
-    if (item.Company) {
+    if (item.Company?.id) {
       const company = {
         id: item.Company.id,
         title: item.Company.name,
@@ -93,7 +93,7 @@ const SearchFlow = ({
         });
       }
     }
-    const customerType = item.Company ? 'COMPANY' : 'INDIVIDU';
+    const customerType = item.Company?.id ? 'COMPANY' : 'INDIVIDU';
     updateValueOnstep('stepTwo', 'customerType', customerType);
 
     if (item.PIC) {
@@ -103,6 +103,9 @@ const SearchFlow = ({
           isSelected: false,
         };
       });
+      if (picList.length === 1) {
+        picList[0].isSelected = true;
+      }
       updateValueOnstep('stepTwo', 'pics', picList);
     }
     updateValueOnstep('stepTwo', 'projectName', item.name);
