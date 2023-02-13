@@ -113,7 +113,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
       enablePanDownToClose={enableClose}
       footerComponent={FooterButton}
     >
-      <BContainer>
+      <BContainer paddingHorizontal={layout.pad.ml}>
         {renderChild()}
         {!keyboardVisible && <BSpacer size={'medium'} />}
       </BContainer>
