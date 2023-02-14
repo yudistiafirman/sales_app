@@ -19,6 +19,7 @@ import bStorage from '@/actions/BStorage';
 import { signIn } from '@/actions/CommonActions';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import storageKey from '@/constants/storageKey';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const Verification = () => {
   const { phoneNumber } = useSelector(
@@ -72,6 +73,12 @@ const Verification = () => {
           errorOtp: '',
           otpValue: '',
           loading: false,
+        });
+        crashlytics().setUserId(response.data.id);
+        crashlytics().setAttributes({
+          role: response.data.type,
+          email: response.data.email,
+          username: response.data.phone,
         });
       } else {
         throw new Error(response.data.message);
