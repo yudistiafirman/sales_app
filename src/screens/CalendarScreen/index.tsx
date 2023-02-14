@@ -195,7 +195,7 @@ export default function CalendarScreen() {
         )} ${new Date(key).getFullYear()}`;
         let newDate = new Date(key);
         try {
-          day = newDate.toLocaleDateString(locale('ID'), { weekday: 'long' });
+          day = newDate.toLocaleDateString(locale(), { weekday: 'long' });
         } catch (err1) {
           console.log(err1, 'error date parse');
           try {

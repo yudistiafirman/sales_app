@@ -155,6 +155,7 @@ const Appointment = () => {
     };
 
     if (stepOne[customerType].PIC.length === 1) {
+      stepOne[customerType].PIC[0].isSelected = true;
       payload.pic = stepOne[customerType].PIC;
     } else {
       const selectedPic = stepOne[customerType].PIC.filter((v) => v.isSelected);
@@ -300,7 +301,7 @@ const Appointment = () => {
         <View style={style.footer}>
           <BButtonPrimary
             onPress={onBackPress}
-            buttonStyle={{ width: resScale(132) }}
+            buttonStyle={{ paddingHorizontal: layout.pad.md + layout.pad.ml }}
             isOutline
             title="Kembali"
           />
