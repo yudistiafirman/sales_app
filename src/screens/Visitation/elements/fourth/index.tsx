@@ -248,14 +248,14 @@ const Fourth = () => {
           POST: postVisitation,
           PUT: putVisitationFlow,
         };
-        const isDataUpdate = !!payload.visitation.id;
+        const isDataUpdate = !!payload?.visitation?.id;
         const methodStr = isDataUpdate ? 'PUT' : 'POST';
 
         if (uploadedFilesResponse.length === 0) {
           const photoFiles = photoUrls.map((photo) => {
             return {
               ...photo.photo,
-              uri: photo.photo.uri.replace('file:', 'file://'),
+              uri: photo?.photo?.uri?.replace('file:', 'file://'),
             };
           });
 
@@ -268,7 +268,8 @@ const Fourth = () => {
             const photoNamee = `${photo.name}.jpg`;
             const foundObject = photoUrls.find(
               (obj) =>
-                obj.photo.name === photoName || obj.photo.name === photoNamee
+                obj?.photo?.name === photoName ||
+                obj?.photo?.name === photoNamee
             );
             if (foundObject) {
               return {
@@ -284,8 +285,8 @@ const Fourth = () => {
           } = {
             payload,
           };
-          if (payload.visitation.id) {
-            payloadData.visitationId = payload.visitation.id;
+          if (payload?.visitation?.id) {
+            payloadData.visitationId = payload?.visitation?.id;
           }
 
           const response = await dispatch(
@@ -312,8 +313,8 @@ const Fourth = () => {
           } = {
             payload,
           };
-          if (payload.visitation.id) {
-            payloadData.visitationId = payload.visitation.id;
+          if (payload?.visitation?.id) {
+            payloadData.visitationId = payload?.visitation?.id;
           }
           const response = await dispatch(
             visitationMethod[methodStr](payloadData)
