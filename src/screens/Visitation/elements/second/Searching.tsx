@@ -139,7 +139,7 @@ const SearchFlow = ({
     }, [projects]);
 
   const sceneToRender = React.useCallback(() => {
-    if (searchQuery.length <= 3) {
+    if (searchQuery.length <= 2) {
       return null;
     }
     return (

@@ -264,7 +264,7 @@ const CreateVisitation = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: false,
-      headerTitle: () => BHeaderTitle('Buat SPH', 'flex-start'),
+      headerTitle: () => BHeaderTitle('Buat Kunjungan', 'flex-start'),
       headerLeft: () => renderHeaderLeft(),
     });
   }, [navigation, renderHeaderLeft]);
