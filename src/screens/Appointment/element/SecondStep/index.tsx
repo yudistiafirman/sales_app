@@ -22,7 +22,6 @@ const SecondStep = () => {
     DeviceEventEmitter.addListener(
       'CalendarScreen.selectedDate',
       (date: selectedDateType) => {
-        console.log(date);
         dispatchValue({
           type: AppointmentActionType.SET_DATE,
           value: date,
