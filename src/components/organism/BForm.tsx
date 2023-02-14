@@ -144,6 +144,7 @@ const renderInput = (
     labelStyle,
     textInputAsButton,
     textInputAsButtonOnPress,
+    outlineColor,
   } = input;
 
   if (type === 'quantity') {
@@ -203,11 +204,15 @@ const renderInput = (
           disabled={isInputDisable}
           left={LeftIcon && <TextInput.Icon icon={LeftIcon} />}
           contentStyle={textStyles}
+          outlineColor={outlineColor}
         />
         {isError && (
-          <BText size="small" color="primary" bold="100">
-            {customerErrorMsg || defaultErrorMsg}
-          </BText>
+          <>
+            <BSpacer size={'verySmall'} />
+            <BText size="small" color="error" bold="300">
+              {customerErrorMsg || defaultErrorMsg}
+            </BText>
+          </>
         )}
       </View>
     );

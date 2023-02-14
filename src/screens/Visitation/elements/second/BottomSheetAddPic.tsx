@@ -40,6 +40,7 @@ const BSheetAddPic = React.forwardRef(
           label: 'Nama',
           isRequire: true,
           isError: !state.name,
+          outlineColor: !state.name ? colors.text.errorText : undefined,
           type: 'textInput',
           onChange: (event) => {
             onChange('name')(event.nativeEvent.text);
@@ -51,6 +52,7 @@ const BSheetAddPic = React.forwardRef(
           label: 'Jabatan',
           isRequire: true,
           isError: !state.position,
+          outlineColor: !state.position ? colors.text.errorText : undefined,
           type: 'textInput',
           onChange: (event) => {
             onChange('position')(event.nativeEvent.text);
@@ -62,6 +64,9 @@ const BSheetAddPic = React.forwardRef(
           label: 'No. Telepon',
           isRequire: true,
           isError: !phoneNumberRegex.test(state.phone),
+          outlineColor: !phoneNumberRegex.test(state.phone)
+            ? colors.text.errorText
+            : undefined,
           type: 'textInput',
           onChange: (event) => {
             onChange('phone')(event.nativeEvent.text);
@@ -74,8 +79,13 @@ const BSheetAddPic = React.forwardRef(
         },
         {
           label: 'Email',
-          isRequire: true,
-          isError: !emailRegex.test(state.email),
+          isRequire: false,
+          isError: state.email ? !emailRegex.test(state.email) : false,
+          outlineColor: state.email
+            ? emailRegex.test(state.email)
+              ? colors.text.errorText
+              : undefined
+            : undefined,
           type: 'textInput',
           onChange: (event) => {
             onChange('email')(event.nativeEvent.text);
@@ -91,8 +101,9 @@ const BSheetAddPic = React.forwardRef(
       if (ref) {
         ref.current?.close();
       }
+      const emailCondition = state.email ? emailRegex.test(state.email) : true;
       if (
-        emailRegex.test(state.email) &&
+        emailCondition &&
         !!state.name &&
         phoneNumberRegex.test(state.phone) &&
         !!state.position
