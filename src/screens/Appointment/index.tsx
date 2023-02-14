@@ -294,7 +294,7 @@ const Appointment = () => {
         currentStep={step}
         labels={labels}
       />
-      <BSpacer size="medium" />
+      <BSpacer size="small" />
       <Steps currentPosition={step} stepsToRender={stepsToRender} />
       {btnShown && (
         <View style={style.footer}>

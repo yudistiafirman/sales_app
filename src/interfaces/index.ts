@@ -95,6 +95,7 @@ interface Input {
   labelStyle?: ViewStyle;
   textInputAsButton?: boolean;
   textInputAsButtonOnPress?: () => void;
+  outlineColor?: string;
 }
 
 interface Styles {

@@ -13,7 +13,7 @@ const ResendOTP = ({
   return (
     <View style={VerificationStyles.resendContainer}>
       <BText style={VerificationStyles.intrutructionsTextDarkBold}>
-        Tidak menerima OTP?
+        Tidak menerima OTP?{' '}
       </BText>
       {count === 0 ? (
         <BTouchableText

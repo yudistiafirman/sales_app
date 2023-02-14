@@ -13,7 +13,12 @@ export default function PillStatus({ pilStatus }: pillStatusType) {
     return null;
   }
   return (
-    <View style={[pilStatus ? style.greenPill : null]}>
+    <View
+      style={[
+        pilStatus ? style.greenPill : null,
+        pilStatus === 'Belum Selesai' ? style.grayColor : null,
+      ]}
+    >
       <Text style={style.greenPillText}>{pilStatus}</Text>
     </View>
   );
@@ -25,6 +30,9 @@ const style = StyleSheet.create({
     paddingVertical: resScale(1),
     paddingHorizontal: resScale(10),
     borderRadius: resScale(32),
+  },
+  grayColor: {
+    backgroundColor: colors.status.grey,
   },
   greenPillText: {
     fontFamily: font.family.montserrat[300],
