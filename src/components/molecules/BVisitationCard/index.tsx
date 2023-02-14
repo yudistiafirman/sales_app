@@ -86,7 +86,10 @@ const style = StyleSheet.create({
     padding: layout.pad.md,
   },
   leftSide: {
+    flex: 1,
+    paddingStart: layout.pad.md,
     justifyContent: 'space-between',
+    alignSelf: 'center',
   },
   rightSide: {
     justifyContent: 'center',
@@ -97,7 +100,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: layout.pad.sm,
-    width: resScale(285),
+    // width: resScale(285),
     alignItems: 'center',
   },
   row: {

@@ -94,14 +94,14 @@ export default function SelectedPic({
 
   useEffect(() => {
     if (sphState.selectedCompany) {
-      if (sphState.selectedCompany.mainPic?.id && !sphState.selectedPic) {
-        const foundMainPic = sphState.selectedCompany.PIC.find(
-          (pic) => pic.id === sphState.selectedCompany.mainPic.id
+      if (sphState.selectedCompany?.mainPic?.id && !sphState.selectedPic) {
+        const foundMainPic = sphState.selectedCompany?.PIC?.find(
+          (pic) => pic.id === sphState.selectedCompany?.mainPic?.id
         );
-        stateUpdate('selectedPic')(foundMainPic);
+        if (foundMainPic) stateUpdate('selectedPic')(foundMainPic);
       }
-      if (sphState.selectedCompany.PIC) {
-        const listPic = sphState.selectedCompany.PIC.map((pic) => {
+      if (sphState.selectedCompany?.PIC) {
+        const listPic = sphState.selectedCompany?.PIC?.map((pic) => {
           if (sphState.selectedPic) {
             if (sphState.selectedPic.id) {
               if (pic.id === sphState.selectedPic.id) {

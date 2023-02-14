@@ -188,13 +188,21 @@ export default function CalendarScreen() {
     let selectedDate = null;
     Object.keys(markedDate).forEach((key) => {
       if (markedDate[key].selected) {
-        // date = key;
-        date = `${new Date(key).getDate()} ${new Date(key).toLocaleString(
-          'ID',
-          { month: 'short' }
-        )} ${new Date(key).getFullYear()}`;
-        let newDate = new Date(key);
-        day = newDate.toLocaleDateString(locale('ID'), { weekday: 'long' });
+        try {
+          date = `${new Date(key).getDate()} ${new Date(key).toLocaleString(
+            locale(),
+            { month: 'short' }
+          )} ${new Date(key).getFullYear()}`;
+          let newDate = new Date(key);
+          day = newDate.toLocaleDateString(locale(), { weekday: 'long' });
+        } catch (err) {
+          date = `${new Date(key).getDate()} ${new Date(
+            key
+          ).toLocaleString()} ${new Date(key).getFullYear()}`;
+          let newDate = new Date(key);
+          day = newDate.toLocaleDateString();
+          console.log(err, 'error date parse');
+        }
 
         selectedDate = {
           date: key,
@@ -204,8 +212,6 @@ export default function CalendarScreen() {
       }
     });
 
-    // var date = new Date(dateStr);
-    // return date.toLocaleDateString(locale, { weekday: 'long' });
     return [day, date, selectedDate];
   }, [markedDate]);
 

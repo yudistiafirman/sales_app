@@ -23,7 +23,7 @@ const initialState = {
   errorName: '',
   position: '',
   errorPosition: '',
-  phone: '',
+  phone: '+62',
   errorPhone: '',
   email: '',
   errorEmail: '',
@@ -31,6 +31,17 @@ const initialState = {
 
 const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
   const [state, setState] = React.useState<PicFormInitialState>(initialState);
+
+  const onChangePhone = (e: any) => {
+    let value = e.nativeEvent.text;
+    if (value.length >= 3) {
+      setState((prevState) => ({
+        ...prevState,
+        phone: value,
+        errorPhone: '',
+      }));
+    }
+  };
 
   const inputs: Input[] = [
     {
@@ -70,13 +81,8 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       customerErrorMsg: state.errorPhone,
       placeholder: 'Masukkan nomor telepon',
       type: 'textInput',
-      keyboardType: 'phone-pad',
-      onChange: (e) =>
-        setState((prevState) => ({
-          ...prevState,
-          phone: e.nativeEvent.text,
-          errorPhone: '',
-        })),
+      keyboardType: 'number-pad',
+      onChange: onChangePhone,
       value: state.phone,
     },
     {
@@ -111,7 +117,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       const dataPIC: PIC = {
         name: state.name,
         position: state.position,
-        phone: state.phone,
+        phone: state.phone.split('+62').join(''),
         email: state.email,
       };
       addPic(dataPIC);

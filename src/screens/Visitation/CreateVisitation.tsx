@@ -4,6 +4,7 @@ import {
   BBackContinueBtn,
   BButtonPrimary,
   BContainer,
+  BHeaderIcon,
   BSpacer,
 } from '@/components';
 import SecondStep from './elements/second';
@@ -36,6 +37,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { resetRegion, updateRegion } from '@/redux/reducers/locationReducer';
 import { layout } from '@/constants';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 
 const labels = [
   'Alamat Proyek',
@@ -170,6 +172,16 @@ const CreateVisitation = () => {
 
   const existingVisitation: visitationListResponse =
     route?.params?.existingVisitation;
+
+  useCustomHeaderLeft({
+    customHeaderLeft: (
+      <BHeaderIcon
+        size={resScale(23)}
+        onBack={() => navigation.goBack()}
+        iconName="x"
+      />
+    ),
+  });
 
   useEffect(() => {
     if (existingVisitation) {

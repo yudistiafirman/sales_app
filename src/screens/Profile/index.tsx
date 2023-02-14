@@ -8,6 +8,7 @@ import { AppDispatch } from '@/redux/store';
 import * as React from 'react';
 import { Alert, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,10 +16,10 @@ const Profile = () => {
   const onLogout = async () => {
     try {
       const response = await signOut();
-      console.log(response.data)
       if (response) {
         bStorage.deleteItem(storageKey.userToken);
         dispatch(signout(false));
+        crashlytics().setUserId('');
       }
     } catch (error) {
       Alert.alert('Something went wrong', error.message);

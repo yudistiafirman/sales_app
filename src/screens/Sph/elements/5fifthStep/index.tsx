@@ -216,6 +216,13 @@ export default function FifthStep() {
 
   async function buatSph() {
     try {
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: 'Menyimpan SPH',
+          outsideClickClosePopUp: false,
+        })
+      );
       const payload = payloadMapper(sphState);
       const photoFiles = Object.values(sphState.paymentRequiredDocuments);
       const isNoPhotoToUpload = photoFiles.every((val) => val === null);
@@ -278,6 +285,7 @@ export default function FifthStep() {
         throw sphResponse;
       }
       setMadeSphData(sph);
+      dispatch(closePopUp());
       setIsStepDoneVisible(true);
     } catch (error) {
       console.log(error, 'errorbuatSph54');
@@ -291,20 +299,6 @@ export default function FifthStep() {
       );
     }
   }
-
-  useEffect(() => {
-    if (isOrderLoading) {
-      dispatch(
-        openPopUp({
-          popUpType: 'loading',
-          popUpText: 'Menyimpan SPH',
-          outsideClickClosePopUp: false,
-        })
-      );
-    } else {
-      dispatch(closePopUp());
-    }
-  }, [isOrderLoading]);
 
   return (
     <BContainer>

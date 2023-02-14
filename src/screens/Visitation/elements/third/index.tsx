@@ -162,8 +162,14 @@ const ThirdStep = () => {
       <TouchableOpacity
         onPress={() => {
           const coordinate = {
-            longitude: Number(values.stepOne.createdLocation.lon),
-            latitude: Number(values.stepOne.createdLocation.lat),
+            longitude:
+              values.stepOne.locationAddress.lon !== 0
+                ? Number(values.stepOne.locationAddress.lon)
+                : Number(values.stepOne.createdLocation.lon),
+            latitude:
+              values.stepOne.locationAddress.lat !== 0
+                ? Number(values.stepOne.locationAddress.lat)
+                : Number(values.stepOne.createdLocation.lat),
           };
           navigation.navigate(ALL_PRODUCT, {
             coordinate: coordinate,
@@ -181,9 +187,12 @@ const ThirdStep = () => {
         <TouchableOpacity
           style={styles.touchable}
           onPress={() => {
+            const distance = values.stepOne.locationAddress?.distance?.value
+              ? values.stepOne.locationAddress?.distance?.value
+              : values.stepOne.createdLocation?.distance?.value;
             navigation.navigate(SEARCH_PRODUCT, {
               isGobackAfterPress: true,
-              distance: values.stepOne.createdLocation?.distance?.value,
+              distance: distance,
             });
           }}
         />
