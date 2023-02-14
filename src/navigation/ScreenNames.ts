@@ -27,6 +27,7 @@ export const TRANSACTION_DETAIL = 'TRANSACTION_DETAIL';
 export const CUSTOMER_DETAIL = 'CUSTOMER_DETAIL';
 export const ALL_PRODUCT = 'ALL_PRODUCT';
 export const APPOINTMENT = 'APPOINTMENT';
+export const HUNTER_AND_FARMERS = 'HUNTER_AND_FARMERS'
 
 /*
     Screen Title
@@ -56,3 +57,4 @@ export const CALENDAR_TITLE = 'Pilih Tanggal';
 export const TRANSACTION_DETAIL_TITLE = 'Detail Transaksi';
 export const CUSTOMER_DETAIL_TITLE = 'Detil Pelanggan';
 export const APPOINTMENT_TITLE = 'Buat Janji Temu'
+

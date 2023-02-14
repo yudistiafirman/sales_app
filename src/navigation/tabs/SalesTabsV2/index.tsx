@@ -51,12 +51,12 @@ function SalesTabsV2() {
         options={{ headerTitle: TAB_TRANSACTION_TITLE }}
         component={Transaction}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         key={TAB_PROFILE}
         name={TAB_PROFILE_TITLE}
         options={{ headerTitle: TAB_PROFILE_TITLE }}
         component={Profile}
-      />
+      /> */}
       <Tab.Screen
         key={TAB_PRICE_LIST}
         name={TAB_PRICE_LIST_TITLE}

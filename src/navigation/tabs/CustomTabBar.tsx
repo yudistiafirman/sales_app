@@ -14,10 +14,10 @@ interface TabBar {
 const CustomTabBar = ({ state, descriptors, navigation }: TabBar) => {
   const homeIcon = require('@/assets/icon/TabBarIcon/ic_home.png');
   const transIcon = require('@/assets/icon/TabBarIcon/ic_dollar-square.png');
-  const profileIcon = require('@/assets/icon/TabBarIcon/ic_profile.png');
+  // const profileIcon = require('@/assets/icon/TabBarIcon/ic_profile.png');
   const priceIcon = require('@/assets/icon/TabBarIcon/ic_price.png');
 
-  const icons = [homeIcon, transIcon, profileIcon, priceIcon];
+  const icons = [homeIcon, transIcon, priceIcon];
 
   return (
     <View style={TabBarStyle.tabBarContainer}>

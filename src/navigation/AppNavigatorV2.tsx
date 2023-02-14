@@ -19,17 +19,22 @@ import {
   SECURITY_TAB_TITLE,
   VERIFICATION,
   VERIFICATION_TITLE,
+  HUNTER_AND_FARMERS,
 } from './ScreenNames';
 import OperationHeaderRight from './Operation/HeaderRight';
 import OperationStack from './Operation/Stack';
 import SalesStack from './Sales/Stack';
+import HunterAndFarmers from '@/screens/HunterAndFarmers';
+import { useSelector } from 'react-redux';
+import {  RootState } from '@/redux/store';
 
 const Stack = createNativeStackNavigator();
 
 const RootScreen = (
   userData: JwtPayload | null,
   isSignout: boolean,
-  userType?: USER_TYPE
+  userType?: USER_TYPE,
+  hunterScreen?: string | null
 ) => {
   if (userData !== null) {
     switch (userType) {
@@ -65,8 +70,21 @@ const RootScreen = (
           </>
         );
       default:
+        console.log(hunterScreen);
         return (
           <>
+            {hunterScreen && (
+              <Stack.Screen
+                name={HUNTER_AND_FARMERS}
+                key={HUNTER_AND_FARMERS}
+                component={HunterAndFarmers}
+                options={{
+                  headerTitle: '',
+                  headerTitleAlign: 'center',
+                }}
+              />
+            )}
+
             <Stack.Screen
               name={TAB_ROOT}
               key={TAB_ROOT}
@@ -75,6 +93,7 @@ const RootScreen = (
                 headerShown: false,
               }}
             />
+
             {SalesStack(Stack)}
           </>
         );
@@ -107,6 +126,7 @@ const RootScreen = (
 
 function AppNavigatorV2() {
   const { isLoading, userData, isSignout } = useBootStrapAsync();
+  const { hunterScreen } = useSelector((state: RootState) => state.auth);
   const userType = USER_TYPE.SALES;
 
   if (isLoading) {
@@ -125,7 +145,7 @@ function AppNavigatorV2() {
           },
         }}
       >
-        {RootScreen(userData, isSignout, userType)}
+        {RootScreen(userData, isSignout, userType, hunterScreen)}
       </Stack.Navigator>
     );
   }
