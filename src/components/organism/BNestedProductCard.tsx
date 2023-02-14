@@ -58,7 +58,7 @@ const ListChildProduct = (size: number, index: number, item: any) => {
       <BProductCard
         name={item.display_name}
         pricePerVol={+item.offering_price}
-        volume={+item.volume}
+        volume={item.unit ? item.unit : 0}
         totalPrice={+item.total_price}
         backgroundColor={'white'}
       />
