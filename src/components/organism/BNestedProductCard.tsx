@@ -1,39 +1,69 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
 import BSpacer from '../atoms/BSpacer';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BProductCard from '../molecules/BProductCard';
 import BDivider from '../atoms/BDivider';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import CheckBox from '@react-native-community/checkbox';
 
 type BNestedProductCardType = {
+  withoutHeader?: boolean;
+  withoutBottomSpace?: boolean;
   data?: any[];
+  onValueChange?: (product: any, value: boolean) => void;
 };
 
-const ListProduct = (index: number, parentItem: any) => {
-  const [isExpand, setExpand] = useState(true);
+const ListProduct = (
+  index: number,
+  parentItem: any,
+  onValueChange?: (product: any, value: boolean) => void
+) => {
+  const [isExpand, setExpand] = React.useState(true);
+  const [isChecked, setChecked] = React.useState(new Map());
 
   return (
     <View key={index}>
       <View style={styles.containerLastOrder}>
         <View style={styles.flexRow}>
+          {onValueChange && (
+            <CheckBox
+              value={
+                isChecked.get(parentItem.name) &&
+                isChecked.get(parentItem.name).checked
+              }
+              onFillColor={colors.primary}
+              onTintColor={colors.offCheckbox}
+              onCheckColor={colors.primary}
+              tintColors={{ true: colors.primary, false: colors.offCheckbox }}
+              onValueChange={(value) => {
+                setChecked(new Map().set(parentItem.name, value));
+                onValueChange(parentItem, value);
+              }}
+            />
+          )}
           <View style={styles.leftSide}>
-            <Text style={styles.partText}>{parentItem.title}</Text>
+            <Text style={styles.partText}>{parentItem.name}</Text>
             <BSpacer size={'extraSmall'} />
             <View style={styles.flexRow}>
               <Text style={styles.titleLastOrder}>Harga</Text>
               <Text style={styles.valueLastOrder}>
-                IDR {formatCurrency(parentItem.price)}
+                IDR{' '}
+                {formatCurrency(
+                  parentItem.products
+                    .map((item) => item.total_price)
+                    .reduce((prev, next) => prev + next)
+                )}
               </Text>
             </View>
           </View>
           <TouchableOpacity onPress={() => setExpand(isExpand ? false : true)}>
-            <MaterialIcon
-              style={styles.icon}
-              size={40}
+            <Icon
               name={isExpand ? 'chevron-up' : 'chevron-down'}
+              size={30}
+              color={colors.icon.darkGrey}
             />
           </TouchableOpacity>
         </View>
@@ -58,7 +88,7 @@ const ListChildProduct = (size: number, index: number, item: any) => {
       <BProductCard
         name={item.display_name}
         pricePerVol={+item.offering_price}
-        volume={+item.volume}
+        volume={+item.quantity}
         totalPrice={+item.total_price}
         backgroundColor={'white'}
       />
@@ -72,13 +102,22 @@ const ListChildProduct = (size: number, index: number, item: any) => {
   );
 };
 
-export default function BNestedProductCard({ data }: BNestedProductCardType) {
+export default function BNestedProductCard({
+  withoutHeader = false,
+  data,
+  onValueChange,
+  withoutBottomSpace = false,
+}: BNestedProductCardType) {
   return (
     <>
-      <Text style={styles.partText}>Produk</Text>
-      <BSpacer size={'extraSmall'} />
-      {data?.map((item, index) => ListProduct(index, item))}
-      <BSpacer size={'extraSmall'} />
+      {withoutHeader && (
+        <>
+          <Text style={styles.partText}>Produk</Text>
+          <BSpacer size={'extraSmall'} />
+        </>
+      )}
+      {data?.map((item, index) => ListProduct(index, item, onValueChange))}
+      {!withoutBottomSpace && <BSpacer size={'extraSmall'} />}
     </>
   );
 }
@@ -86,6 +125,7 @@ export default function BNestedProductCard({ data }: BNestedProductCardType) {
 const styles = StyleSheet.create({
   flexRow: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   leftSide: {
     flex: 1,
@@ -107,7 +147,7 @@ const styles = StyleSheet.create({
   },
   valueLastOrder: {
     color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[600],
+    fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.sm,
     marginLeft: layout.pad.xl,
   },
@@ -117,7 +157,7 @@ const styles = StyleSheet.create({
   },
   partText: {
     color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[600],
+    fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.md,
   },
 });

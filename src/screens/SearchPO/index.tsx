@@ -1,27 +1,25 @@
 import * as React from 'react';
-import { SafeAreaView, DeviceEventEmitter, StyleSheet } from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { DeviceEventEmitter, SafeAreaView, StyleSheet } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import resScale from '@/utils/resScale';
-import { BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
+import { BHeaderIcon, BTabSections, POList } from '@/components';
 import { colors, layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import SearchPONavbar from './element/SearchPONavbar';
 import { searchPOMachine } from '@/machine/searchPOMachine';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import SelectedPOModal from './element/SelectedPOModal';
+import { CREATE_SCHEDULE } from '@/navigation/ScreenNames';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 
 const SearchPO = () => {
-  const route = useRoute<RouteProp<Record<string, object>, string>>();
-  let isGoback: boolean = false;
-  if (route.params) {
-    const { isGobackAfterPress } = route.params as {
-      isGobackAfterPress: boolean;
-    };
-    isGoback = isGobackAfterPress;
-  }
   const [index, setIndex] = React.useState(0);
   const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();
   const [state, send] = useMachine(searchPOMachine);
+  const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+  const [selectedData, setSelectedData] = React.useState(undefined);
+  const route = useRoute<RootStackScreenProps>();
 
   useCustomHeaderLeft({
     customHeaderLeft: (
@@ -49,38 +47,60 @@ const SearchPO = () => {
   };
 
   const onTabPress = ({ route }) => {
-    const tabIndex = index === 0 ? 1 : 0;
-    if (route.key !== routes[index].key) {
-      send('onChangeTab', { value: tabIndex });
+    if (routes[index].key && route.key !== routes[index].key) {
+      send('onChangeTab', { value: index });
     }
+  };
+
+  const onSubmitData = (productData: any) => {
+    if (route.params?.from === CREATE_SCHEDULE) {
+      DeviceEventEmitter.emit('SearchPO.data', {
+        parent: selectedData,
+        data: productData,
+      });
+    } else {
+      DeviceEventEmitter.emit('SearchPO.data', { data: productData });
+    }
+    navigation.goBack();
+  };
+
+  const openSelectedModel = (data: any) => {
+    setSelectedData(data);
+    setIsModalVisible(true);
   };
 
   const { routes, poData, loadPO } = state.context;
   return (
     <SafeAreaView style={styles.safeArea}>
+      {selectedData && (
+        <SelectedPOModal
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
+          data={selectedData}
+          onPressCompleted={(data) => onSubmitData(data)}
+        />
+      )}
+
       <SearchPONavbar
         customStyle={styles.search}
         value={searchValue}
         onChangeText={onChangeText}
         onClearValue={onClearValue}
       />
-      <BSpacer size="small" />
       {routes.length > 0 && (
         <BTabSections
+          swipeEnabled={false}
           tabStyle={styles.tabStyle}
           indicatorStyle={styles.tabIndicator}
           navigationState={{ index, routes }}
           onTabPress={onTabPress}
           renderScene={() => (
-            <ProductList
-              products={poData}
-              loadProduct={loadPO}
-              emptyProductName={searchValue}
+            <POList
+              poDatas={poData}
+              loadPO={loadPO}
+              emptyPOName={searchValue}
               onPress={(data) => {
-                DeviceEventEmitter.emit('event.testEvent', { data });
-                if (isGoback) {
-                  navigation.goBack();
-                }
+                openSelectedModel(data);
               }}
             />
           )}
@@ -96,7 +116,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  search: { flex: 1, paddingHorizontal: layout.pad.lg },
+  search: { paddingHorizontal: layout.pad.lg },
   tabIndicator: {
     height: 2,
     backgroundColor: colors.primary,

@@ -4,10 +4,11 @@ interface CreateScheduleFirstStep {
   title: string;
   products: [
     {
-      name?: string;
-      price?: number;
-      total?: number;
-      unit?: string;
+      product_id?: string;
+      display_name?: string;
+      offering_price?: number;
+      total_price?: number;
+      quantity?: string;
     }
   ];
   lastDeposit?: number;
@@ -26,10 +27,11 @@ interface CreateScheduleSecondStep {
   hasTechnicalRequest?: boolean;
   products: [
     {
-      name?: string;
-      price?: number;
-      total?: number;
-      unit?: string;
+      product_id?: string;
+      display_name?: string;
+      offering_price?: number;
+      total_price?: number;
+      quantity?: string;
     }
   ];
   totalDeposit: number;
@@ -49,13 +51,14 @@ interface CreateScheduleListResponse {
   createScheduleID: string | null;
   companyName: string;
   locationName?: string;
-  sphs: string[];
+  sph: string;
   products: [
     {
-      name?: string;
-      price?: number;
-      total?: number;
-      unit?: string;
+      product_id?: string;
+      display_name?: string;
+      offering_price?: number;
+      total_price?: number;
+      quantity?: string;
     }
   ];
   lastDeposit?: number;

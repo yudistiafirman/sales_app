@@ -68,13 +68,7 @@ function populateData(
   console.log(JSON.stringify(existingData), 'difunction');
   updateValue('stepOne', 'companyName', existingData.companyName);
   updateValue('stepOne', 'locationName', existingData.locationName);
-  updateValue(
-    'stepOne',
-    'title',
-    existingData.sphs && existingData.sphs.length > 0
-      ? existingData.sphs[0]
-      : '-'
-  );
+  updateValue('stepOne', 'title', existingData.sph ? existingData.sph : '-');
   updateValue('stepOne', 'products', existingData.products);
   updateValue('stepOne', 'addedDeposit', existingData.addedDeposit);
   updateValue('stepOne', 'lastDeposit', existingData.lastDeposit);
@@ -138,6 +132,7 @@ const CreateSchedule = () => {
 
   const stepRender = [<FirstStep />, <SecondStep />];
 
+  console.log('wkwk, ', values.step);
   return (
     <>
       <BStepperIndicator
@@ -153,17 +148,18 @@ const CreateSchedule = () => {
         <View style={styles.container}>
           {stepRender[values.step]}
           <BSpacer size={'extraSmall'} />
-          {!keyboardVisible && shouldScrollView && values.step > 0 && (
+          {!keyboardVisible && shouldScrollView && values.step > -1 && (
             <BBackContinueBtn
               onPressContinue={() => {
                 next(values.step + 1)();
                 DeviceEventEmitter.emit('CreateSchedule.continueButton', true);
               }}
-              onPressBack={next(values.step - 1)}
+              onPressBack={values.step > 0 && next(values.step - 1)}
+              disableBack={values.step > 0 ? false : true}
               disableContinue={!stepsDone.includes(values.step)}
             />
           )}
-          {values.step === 0 && (
+          {/* {values.step === 0 && (
             <View style={styles.conButton}>
               <View style={styles.buttonOne}>
                 <BButtonPrimary
@@ -182,7 +178,7 @@ const CreateSchedule = () => {
                 />
               </View>
             </View>
-          )}
+          )} */}
         </View>
       </BContainer>
     </>

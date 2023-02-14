@@ -7,13 +7,19 @@ import resScale from '@/utils/resScale';
 
 type pillStatusType = {
   pilStatus?: string;
+  color?: string;
 };
-export default function PillStatus({ pilStatus }: pillStatusType) {
+export default function PillStatus({ pilStatus, color }: pillStatusType) {
   if (!pilStatus) {
     return null;
   }
   return (
-    <View style={[pilStatus ? style.greenPill : null]}>
+    <View
+      style={[
+        pilStatus ? style.greenPill : null,
+        color && { backgroundColor: color },
+      ]}
+    >
       <Text style={style.greenPillText}>{pilStatus}</Text>
     </View>
   );

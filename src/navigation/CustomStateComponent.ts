@@ -44,7 +44,7 @@ export type RootStackParamList = {
   TRANSACTION_DETAIL: { title: string; data: any };
   CUSTOMER_DETAIL: { existingVisitation?: visitationListResponse };
   CREATE_SCHEDULE: {};
-  SEARCH_PO: { isGobackAfterPress?: boolean };
+  SEARCH_PO: { from: string };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

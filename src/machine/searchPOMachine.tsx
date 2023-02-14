@@ -114,7 +114,7 @@ export const searchPOMachine =
         assignCategories: assign((_context, event) => {
           const newCategoriesData = event.data.map((item) => {
             return {
-              key: item.id,
+              key: item.count,
               title: item.display_name,
               totalItems: item.count,
               chipPosition: 'right',
@@ -200,22 +200,59 @@ export const searchPOMachine =
             // call api here
             const response = [
               {
-                id: 'xxx-po-test',
+                id: 'xxx-po-test1',
                 companyName: 'PT. Guna Karya Mandiri',
                 locationName: 'Jakarta Barat',
-                sphs: ['SPH/BRIK/2022/11/00021', 'SPH/BRIK/2022/11/00042'],
-                products: [
+                sphs: [
                   {
-                    name: 'Beton K 250 NFA',
-                    price: 1815000,
-                    total: 50820000,
-                    unit: 28,
+                    name: 'SPH/BRIK/2022/11/00021',
+                    products: [
+                      {
+                        product_id: 'product1',
+                        display_name: 'Beton K 250 NFA',
+                        offering_price: 1815000,
+                        total_price: 50820000,
+                        unit: 28,
+                      },
+                      {
+                        product_id: 'product2',
+                        display_name: 'Beton K 200 NFA',
+                        offering_price: 1815000,
+                        total_price: 70000000,
+                        unit: 28,
+                      },
+                    ],
                   },
                   {
-                    name: 'Beton K 200 NFA',
-                    price: 1815000,
-                    total: 70000000,
-                    unit: 28,
+                    name: 'SPH/BRIK/2022/11/00042',
+                    products: [
+                      {
+                        product_id: 'product1',
+                        display_name: 'Beton K 250 NFA',
+                        offering_price: 1815000,
+                        total_price: 50820000,
+                        unit: 28,
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                id: 'xxx-po-test2',
+                companyName: 'PT. Karunaguna Marunda',
+                locationName: 'Marunda',
+                sphs: [
+                  {
+                    name: 'SPH/BRIK/2022/11/00042',
+                    products: [
+                      {
+                        product_id: 'product1',
+                        display_name: 'Beton K 250 NFA',
+                        offering_price: 1815000,
+                        total_price: 50820000,
+                        unit: 28,
+                      },
+                    ],
                   },
                 ],
               },
