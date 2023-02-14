@@ -19,7 +19,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useActor } from '@xstate/react';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { PORoutes } from '../..';
 import { openPopUp, setIsPopUpVisible } from '@/redux/reducers/modalReducer';
