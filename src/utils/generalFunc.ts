@@ -1,6 +1,8 @@
 import { colors } from '@/constants';
 
 export const getColorStatusTrx = (id: string) => {
+  console.log(id.toUpperCase(), 'uppercase');
+
   switch (id.toUpperCase()) {
     case 'DIAJUKAN' || 'DRAFT' || 'DALAM PRODUKSI' || 'SELESAI':
       return { color: colors.status.grey, textColor: colors.black };
@@ -12,17 +14,17 @@ export const getColorStatusTrx = (id: string) => {
       return { color: colors.status.black, textColor: colors.white };
     case 'DITOLAK':
       return { color: colors.status.red, textColor: colors.black };
-    case 'DISETUJUI' || 'DITERIMA':
-      return { color: colors.status.green, textColor: colors.black };
+    case 'DISETUJUI' || 'DITERIMA' || 'DITERBITKAN':
+      return { color: colors.chip.green, textColor: colors.black };
     default:
-      return { color: colors.status.grey, textColor: colors.black };
+      return { color: colors.chip.green, textColor: colors.black };
   }
 };
 
 export const getStatusTrx = (id: string) => {
   switch (id) {
     case 'DRAFT':
-      return 'Diajukan';
+      return 'Diterbitkan';
     case 'SUBMITTED':
       return 'Diajukan';
     case 'PARTIALLY_PROCESSED':
