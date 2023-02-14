@@ -187,9 +187,12 @@ const ThirdStep = () => {
         <TouchableOpacity
           style={styles.touchable}
           onPress={() => {
+            const distance = values.stepOne.locationAddress?.distance?.value
+              ? values.stepOne.locationAddress?.distance?.value
+              : values.stepOne.createdLocation?.distance?.value;
             navigation.navigate(SEARCH_PRODUCT, {
               isGobackAfterPress: true,
-              distance: values.stepOne.createdLocation?.distance?.value,
+              distance: distance,
             });
           }}
         />
