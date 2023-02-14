@@ -117,6 +117,12 @@ const RootScreen = (
           component={Verification}
           options={{
             headerTitle: VERIFICATION_TITLE,
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: fonts.family.montserrat[600],
+              fontSize: fonts.size.lg,
+              color: colors.text.inactive,
+            },
           }}
         />
       </>

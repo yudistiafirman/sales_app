@@ -65,12 +65,12 @@ export default function ProductCartModal({
     sellPrice: '',
   });
 
-  const calcPrice = useMemo(
-    () => calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost,
-    [detailOrder.volume]
-  );
+  const calcPrice = useMemo(() => {
+    return calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost;
+  }, [detailOrder.volume]);
   const totalPrice =
     +detailOrder.volume * +detailOrder.sellPrice + (calcPrice ? calcPrice : 0);
+  console.log(totalPrice, 'totalPrice75', detailOrder, calcPrice);
 
   const distanceCeil = distance ? Math.ceil(distance / 1000) : 0;
 
@@ -124,7 +124,11 @@ export default function ProductCartModal({
     setDetailOrder((curr) => {
       return {
         ...curr,
-        [key]: val.toString(),
+        [key]: val
+          .toString()
+          .split('')
+          .filter((char) => /^\d+$/.test(char))
+          .join(''),
       };
     });
   };
@@ -249,7 +253,9 @@ export default function ProductCartModal({
           <BSpacer size={'small'} />
           <View style={style.priceContainer}>
             <Text style={style.hargaText}>Biaya Mobilisasi</Text>
-            <Text style={style.hargaText}>IDR {calcPrice || '0'}</Text>
+            <Text style={style.hargaText}>
+              IDR {calcPrice ? formatCurrency(calcPrice) : '0'}
+            </Text>
           </View>
           <BSpacer size={'small'} />
           <View style={style.priceContainer}>

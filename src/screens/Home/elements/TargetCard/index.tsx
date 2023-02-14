@@ -49,13 +49,14 @@ export default function TargetCard({
             currentVisitaion={currentVisitaion}
             isLoading={isLoading}
           />
-
-          <TargetBar
-            maxVisitation={maxVisitation}
-            currentVisitaion={currentVisitaion}
-            isExpanded={isExpandedLocal}
-            isLoading={isLoading}
-          />
+          <View style={style.barContainer}>
+            <TargetBar
+              maxVisitation={maxVisitation}
+              currentVisitaion={currentVisitaion}
+              isExpanded={isExpandedLocal}
+              isLoading={isLoading}
+            />
+          </View>
         </View>
       </Animated.View>
     </View>
@@ -68,6 +69,9 @@ const style = StyleSheet.create({
     width: '100%',
     alignSelf: 'flex-start',
     zIndex: 1,
+    paddingHorizontal: layout.pad.lg,
+  },
+  barContainer: {
     paddingHorizontal: layout.pad.lg,
   },
   targetContainer: {

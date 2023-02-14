@@ -142,8 +142,11 @@ export default function StepDone({
     try {
       if (!url) throw 'no url';
       await Share.share({
-        url: url,
-        message: `Link PDF SPH ${stateCompanyName}, ${url}`,
+        url: url.replace(/\s/g, '%20'),
+        message: `Link PDF SPH ${stateCompanyName}, ${url.replace(
+          /\s/g,
+          '%20'
+        )}`,
       });
     } catch (error) {
       console.log(error, 'errorsharefunc');
@@ -204,7 +207,7 @@ export default function StepDone({
             <BProjectDetailCard
               productionTime={sphResponse?.createdTime}
               expiredDate={sphResponse?.expiryTime}
-              status={'Diajukan'}
+              status={'Diterbitkan'}
               paymentMethod={paymentMethod[sphState.paymentType]}
               projectName={sphState.selectedCompany?.name}
             />

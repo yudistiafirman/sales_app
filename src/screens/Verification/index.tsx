@@ -1,10 +1,10 @@
-import { BSpacer } from '@/components';
+import { BHeaderIcon, BSpacer } from '@/components';
 import BErrorText from '@/components/atoms/BErrorText';
-import { colors } from '@/constants';
+import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { Image, SafeAreaView } from 'react-native';
+import { Image, SafeAreaView, Text, View } from 'react-native';
 import OTPField from './element/OTPField';
 import OTPFieldLabel from './element/OTPFieldLabel';
 import ResendOTP from './element/ResendOTP';
@@ -20,6 +20,7 @@ import { signIn } from '@/actions/CommonActions';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import storageKey from '@/constants/storageKey';
 import crashlytics from '@react-native-firebase/crashlytics';
+import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 
 const Verification = () => {
   const { phoneNumber } = useSelector(
@@ -127,6 +128,28 @@ const Verification = () => {
     });
     navigation.goBack();
   };
+
+  const renderHeaderLeft = React.useCallback(
+    () => (
+      <BHeaderIcon
+        size={layout.pad.xl}
+        iconName="chevron-left"
+        marginRight={layout.pad.xs}
+        marginLeft={layout.pad.sm}
+        onBack={() => {
+          navigation.goBack();
+        }}
+      />
+    ),
+    [navigation]
+  );
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackVisible: false,
+      headerLeft: () => renderHeaderLeft(),
+    });
+  }, [navigation, renderHeaderLeft]);
+
   return (
     <KeyboardAwareScrollView>
       <SafeAreaView style={VerificationStyles.container}>
