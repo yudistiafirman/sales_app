@@ -195,6 +195,9 @@ export default function SelectedPic({
           const currentList = sphState.selectedCompany?.PIC
             ? sphState.selectedCompany.PIC
             : [];
+          if (currentList.length === 1) {
+            pic.isSelected = true;
+          }
           stateUpdate('selectedCompany')({
             ...sphState.selectedCompany,
             PIC: [...currentList, pic],
