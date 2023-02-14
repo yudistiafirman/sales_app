@@ -41,6 +41,8 @@ import IcCBD from '@/assets/svg/ic_cbd.svg';
 import IcCredit from '@/assets/svg/ic_credit.svg';
 import IcCompany from '@/assets/svg/ic_company.svg';
 import IcProfile from '@/assets/svg/ic_profile.svg';
+import IcHunter from '@/assets/svg/ic_hunter.svg';
+import IcFarmer from '@/assets/svg/ic_farmer.svg';
 
 // IMG
 import ImgOtpMessege from '@/assets/svg/img_otp_messege.svg';
@@ -89,6 +91,8 @@ const SvgFiles = {
   IcCompany,
   IcProfile,
   ImgOtpMessege,
+  IcFarmer,
+  IcHunter,
   IcLIst,
 };
 

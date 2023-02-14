@@ -41,6 +41,8 @@ const SvgNames = {
   IC_CREDIT: 'IcCredit',
   IC_COMPANY: 'IcCompany',
   IC_PROFILE: 'IcProfile',
+  IC_HUNTER: 'IcHunter',
+  IC_FARMER: 'IcFarmer',
   IMG_OTP_MESSEGE: 'ImgOtpMessege',
   IC_LIST: 'IcLIst',
 };
