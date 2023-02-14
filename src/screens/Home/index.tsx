@@ -38,13 +38,13 @@ import {
   APPOINTMENT,
   CAMERA,
   CREATE_VISITATION,
-  CUSTOMER_DETAIL,
+  // CUSTOMER_DETAIL,
   SPH,
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 const { height } = Dimensions.get('window');
 
-const initialSnapPoints = (height.toFixed() - 115) / 10;
+const initialSnapPoints = (+height.toFixed() - 115) / 10;
 
 const Beranda = () => {
   const dispatch = useDispatch();
@@ -53,6 +53,7 @@ const Beranda = () => {
     target: number;
   }>({ current: 0, target: 10 }); //temporary setCurrentVisit
   const [isExpanded, setIsExpanded] = React.useState(true);
+  const [isTargetLoading, setIsTargetLoading] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
   const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
   const [snapPoints] = React.useState([`${initialSnapPoints}%`, '91%', '100%']); //setSnapPoints
@@ -104,13 +105,16 @@ const Beranda = () => {
 
   const fetchTarget = React.useCallback(async () => {
     try {
+      setIsTargetLoading(true);
       const { data: _data } = await getVisitationTarget();
       console.log(_data.data, 'fetchTarget103');
       setCurrentVisit({
         current: _data.data.totalCompleted,
         target: _data.data.visitationTarget,
       });
+      setIsTargetLoading(false);
     } catch (err) {
+      setIsTargetLoading(false);
       console.log(err);
     }
   }, []);
@@ -385,14 +389,14 @@ const Beranda = () => {
           />
         </View>
       </Modal>
-      {/* <View style={{ padding: layout.mainPad }}> */}
+
       <TargetCard
         isExpanded={isExpanded}
         maxVisitation={currentVisit.target}
         currentVisitaion={currentVisit.current}
-        isLoading={isLoading}
+        isLoading={isTargetLoading}
       />
-      {/* </View> */}
+
       <BSpacer size="small" />
       <BQuickAction buttonProps={buttonsData} />
 

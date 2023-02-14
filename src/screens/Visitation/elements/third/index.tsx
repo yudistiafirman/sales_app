@@ -100,7 +100,7 @@ const ThirdStep = () => {
       options: [
         {
           title: 'Cash Before Delivery',
-          icon: SVGName.IC_CBD,
+          icon: cbd,
           value: 'CBD',
           onChange: () => {
             onChange('paymentType')('CBD');
@@ -108,7 +108,7 @@ const ThirdStep = () => {
         },
         {
           title: 'Credit',
-          icon: SVGName.IC_CREDIT,
+          icon: credit,
           value: 'CREDIT',
           onChange: () => {
             onChange('paymentType')('CREDIT');
