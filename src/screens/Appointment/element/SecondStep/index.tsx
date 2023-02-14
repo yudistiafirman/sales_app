@@ -13,11 +13,16 @@ import { selectedDateType } from '@/screens/Visitation/elements/fourth';
 
 const SecondStep = () => {
   const [values, dispatchValue] = useAppointmentData();
+  const placeHolder =
+    values.selectedDate !== null
+      ? `${values.selectedDate.day} , ${values.selectedDate.prettyDate}`
+      : 'Pilih Tanggal';
 
   useEffect(() => {
     DeviceEventEmitter.addListener(
       'CalendarScreen.selectedDate',
       (date: selectedDateType) => {
+        console.log(date);
         dispatchValue({
           type: AppointmentActionType.SET_DATE,
           value: date,
@@ -39,7 +44,7 @@ const SecondStep = () => {
         <BSearchBar
           disabled
           placeHolderTextColor={colors.text.dark}
-          placeholder="Pilih tanggal"
+          placeholder={placeHolder}
           right={
             <TextInput.Icon forceTextInputFocus={false} icon="chevron-right" />
           }
