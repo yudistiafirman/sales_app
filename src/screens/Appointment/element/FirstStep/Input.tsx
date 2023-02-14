@@ -1,5 +1,4 @@
 import { BDivider, BSpacer, BText, BForm } from '@/components';
-import SvgNames from '@/components/atoms/BSvg/svgName';
 import { AppointmentActionType, StepOne } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
 import { Input, projectResponseType, Styles } from '@/interfaces';
@@ -9,6 +8,8 @@ import debounce from 'lodash.debounce';
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import { useDispatch } from 'react-redux';
+const company = require('@/assets/icon/Visitation/company.png');
+const profile = require('@/assets/icon/Visitation/profile.png');
 
 const Inputs = () => {
   const [values, dispatchValue] = useAppointmentData();
@@ -51,7 +52,7 @@ const Inputs = () => {
         value: state.customerType,
         options: [
           {
-            icon: SvgNames.IC_COMPANY,
+            icon: company,
             title: 'Perusahaan',
             value: 'company',
             onChange: () => {
@@ -62,7 +63,7 @@ const Inputs = () => {
             },
           },
           {
-            icon: SvgNames.IC_PROFILE,
+            icon: profile,
             title: 'Individu',
             value: 'individu',
             onChange: () => {
