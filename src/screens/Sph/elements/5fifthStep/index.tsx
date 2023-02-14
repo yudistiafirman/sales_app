@@ -33,6 +33,16 @@ import { postOrderSph } from '@/redux/async-thunks/orderThunks';
 import { RootState } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 
+function countNonNullValues(array) {
+  let count = 0;
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] !== null) {
+      count++;
+    }
+  }
+  return count;
+}
+
 function payloadMapper(sphState: SphStateInterface) {
   console.log(JSON.stringify(sphState), 'sphState24');
 
@@ -182,7 +192,7 @@ function payloadMapper(sphState: SphStateInterface) {
 export default function FifthStep() {
   const dispatch = useDispatch();
   const { isOrderLoading } = useSelector((state: RootState) => state.order);
-  const [sphState, stateUpdate] = useContext(SphContext);
+  const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
 
   const bottomSheetRef = React.useRef<BottomSheet>(null);
 
@@ -227,9 +237,13 @@ export default function FifthStep() {
       const photoFiles = Object.values(sphState.paymentRequiredDocuments);
       const isNoPhotoToUpload = photoFiles.every((val) => val === null);
       payload.projectDocs = [];
+      const validPhotoCount = countNonNullValues(photoFiles);
+      console.log(validPhotoCount, 'validPhotoCount241');
+
       if (
-        sphState.uploadedAndMappedRequiredDocs.length === 0 &&
-        !isNoPhotoToUpload
+        (sphState.uploadedAndMappedRequiredDocs.length === 0 &&
+          !isNoPhotoToUpload) ||
+        validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
       ) {
         console.log('ini mau upload foto', photoFiles);
         const photoResponse = await dispatch(
@@ -237,10 +251,10 @@ export default function FifthStep() {
         ).unwrap();
         console.log('upload kelar');
 
-        const files = photoResponse.map((photo) => {
+        const files: { documentId: string; fileId: string }[] = [];
+        photoResponse.forEach((photo) => {
           const photoName = `${photo.name}.${photo.type}`;
           const photoNamee = `${photo.name}.jpg`;
-
           Object.keys(sphState.paymentRequiredDocuments);
           let foundPhoto;
           for (const documentId in sphState.paymentRequiredDocuments) {
@@ -266,16 +280,30 @@ export default function FifthStep() {
             }
           }
           if (foundPhoto) {
-            return {
+            // return {
+            //   documentId: foundPhoto,
+            //   fileId: photo.id,
+            // };
+            files.push({
               documentId: foundPhoto,
               fileId: photo.id,
-            };
+            });
           }
         });
-        payload.projectDocs = files;
+        console.log(files, 'filesmapped');
+
+        const isFilePhotoNotNull = files.every((val) => val === null);
+        if (!isFilePhotoNotNull) {
+          payload.projectDocs = files;
+        }
         stateUpdate('uploadedAndMappedRequiredDocs')(files);
       } else if (!isNoPhotoToUpload) {
-        payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
+        const isFilePhotoNotNull = sphState.uploadedAndMappedRequiredDocs.every(
+          (val) => val === null
+        );
+        if (!isFilePhotoNotNull) {
+          payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
+        }
       }
       console.log(JSON.stringify(payload), 'payloadfinal');
 
@@ -288,7 +316,8 @@ export default function FifthStep() {
       dispatch(closePopUp());
       setIsStepDoneVisible(true);
     } catch (error) {
-      console.log(error, 'errorbuatSph54');
+      const messageError = error?.message;
+      console.log(error, 'errorbuatSph54', messageError);
       dispatch(closePopUp());
       dispatch(
         openPopUp({
@@ -370,6 +399,9 @@ export default function FifthStep() {
         isContinueIcon={false}
         continueText={'Buat Sph'}
         onPressContinue={buatSph}
+        onPressBack={() => {
+          setCurrentPosition(3);
+        }}
       />
       <BSheetAddPic
         ref={bottomSheetRef}

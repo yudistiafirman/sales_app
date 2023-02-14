@@ -12,6 +12,7 @@ import IcCrmActive from '@/assets/svg/ic_crm_active.svg';
 import IcCrmInactive from '@/assets/svg/ic_crm_inactive.svg';
 import IcArrowLeft from '@/assets/svg/ic_arrow_left.svg';
 import IcInfoCircle from '@/assets/svg/ic_info_circle.svg';
+import IcLIst from '@/assets/svg/ic_list.svg';
 import IcArrowRight from '@/assets/svg/ic_arrow_right.svg';
 import IcClose from '@/assets/svg/ic_close.svg';
 import IcSearch from '@/assets/svg/ic_search.svg';
@@ -88,6 +89,7 @@ const SvgFiles = {
   IcCompany,
   IcProfile,
   ImgOtpMessege,
+  IcLIst,
 };
 
 export default SvgFiles;

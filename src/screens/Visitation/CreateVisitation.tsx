@@ -227,8 +227,8 @@ const CreateVisitation = () => {
   };
 
   const addPic = (state: PIC) => {
-    if (values.stepTwo.pics.length < 2) {
-      state.isSelected = false;
+    if (values.stepTwo.pics.length === 0) {
+      state.isSelected = true;
     }
     updateValueOnstep('stepTwo', 'pics', [...values.stepTwo.pics, state]);
   };

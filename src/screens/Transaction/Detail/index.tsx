@@ -25,7 +25,7 @@ function ListProduct(item: any) {
       <BProductCard
         name={item.display_name}
         pricePerVol={+item.offering_price}
-        volume={item.volume ? item.volume : 0}
+        volume={item.quantity ? item.quantity : 0}
         totalPrice={+item.total_price}
       />
       <BSpacer size={'extraSmall'} />
@@ -52,6 +52,7 @@ const TransactionDetail = () => {
   };
 
   const data = route?.params?.data;
+
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView>

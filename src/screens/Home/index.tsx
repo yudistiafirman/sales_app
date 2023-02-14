@@ -18,7 +18,7 @@ import {
   BFlatlistItems,
   BSpacer,
 } from '@/components';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import BTabViewScreen from '@/components/organism/BTabViewScreen';
 import { layout } from '@/constants';
@@ -102,11 +102,10 @@ const Beranda = () => {
     }
   };
 
-  const fetchTarget = async () => {
+  const fetchTarget = React.useCallback(async () => {
     try {
       const { data: _data } = await getVisitationTarget();
       console.log(_data.data, 'fetchTarget103');
-
       setCurrentVisit({
         current: _data.data.totalCompleted,
         target: _data.data.visitationTarget,
@@ -114,11 +113,13 @@ const Beranda = () => {
     } catch (err) {
       console.log(err);
     }
-  };
-
-  React.useEffect(() => {
-    fetchTarget();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchTarget();
+    }, [])
+  );
 
   const fetchVisitations = async (search?: string) => {
     setIsLoading(true);
@@ -149,11 +150,11 @@ const Beranda = () => {
             const time = el.finishDate
               ? moment(el.finishDate).format('hh:mm')
               : null;
-
+            const location = el.project?.locationAddress.line1;
             return {
               id: el.id,
               name: el.project?.name || '--',
-              location: 'dummy',
+              location: location ? location : '-',
               time,
               status,
               pilStatus,
@@ -307,6 +308,7 @@ const Beranda = () => {
   ): Promise<void> {
     try {
       const status = dataItem.pilStatus;
+      if (status === 'Selesai') return;
       dispatch(
         openPopUp({
           popUpType: 'loading',
@@ -325,11 +327,12 @@ const Beranda = () => {
           navigateTo: CREATE_VISITATION,
           existingVisitation: response,
         });
-      } else {
-        navigation.navigate(CUSTOMER_DETAIL, {
-          existingVisitation: response,
-        });
       }
+      // else {
+      //   navigation.navigate(CUSTOMER_DETAIL, {
+      //     existingVisitation: response,
+      //   });
+      // }
     } catch (error) {
       dispatch(
         openPopUp({

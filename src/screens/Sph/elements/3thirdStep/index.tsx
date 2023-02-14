@@ -20,6 +20,8 @@ type documentType = {
   payment_type: 'CBD' | 'CREDIT';
   is_required: boolean;
 };
+const cbd = require('@/assets/icon/Visitation/cbd.png');
+const credit = require('@/assets/icon/Visitation/credit.png');
 
 type docResponse = {
   cbd: documentType[];
@@ -204,7 +206,7 @@ export default function ThirdStep() {
         options: [
           {
             title: 'Cash Before Delivery',
-            icon: SVGName.IC_CBD,
+            icon: cbd,
             value: 'CBD',
             onChange: () => {
               // if (stateUpdate) {
@@ -215,7 +217,7 @@ export default function ThirdStep() {
           },
           {
             title: 'Credit',
-            icon: SVGName.IC_CREDIT,
+            icon: credit,
             value: 'CREDIT',
             onChange: () => {
               // if (stateUpdate) {
@@ -299,7 +301,9 @@ export default function ThirdStep() {
           )}
           <BSpacer size={'small'} />
           <BBackContinueBtn
-            onPressBack={() => {}}
+            onPressBack={() => {
+              setCurrentPosition(1);
+            }}
             onPressContinue={() => {
               if (setCurrentPosition) {
                 setCurrentPosition(3);
