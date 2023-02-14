@@ -151,12 +151,21 @@ export const transactionMachine =
         }),
         assignTransactionsDataToContext: assign((context, event) => {
           const transactionsData = [...context.data, ...event.data.data];
+          const newTypeData = context.routes.map((item) => {
+            return {
+              key: event.data.totalItems,
+              title: item.title,
+              totalItems: event.data.totalItems,
+              chipPosition: 'bottom',
+            };
+          });
           return {
             loadTransaction: false,
             isLoadMore: false,
             refreshing: false,
             totalItems: event.data.totalItems,
             data: transactionsData,
+            routes: newTypeData,
           };
         }),
         assignIndexToContext: assign((context, event) => {

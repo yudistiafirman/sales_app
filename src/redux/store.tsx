@@ -17,6 +17,8 @@ export const store = configureStore({
     camera: cameraReducer,
     order: orderReducer,
   },
+  middleware: (getDefaultMiddleWare) =>
+    getDefaultMiddleWare({ serializableCheck: false }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

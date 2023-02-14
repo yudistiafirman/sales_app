@@ -23,9 +23,8 @@ const Transaction = () => {
   const [state, send] = useMachine(transactionMachine);
 
   const onTabPress = () => {
-    const tabIndex = index === 0 ? 1 : 0;
-    if (route.key !== routes[index].key) {
-      send('onChangeType', { payload: tabIndex });
+    if (routes[index].key && route.key !== routes[index].key) {
+      send('onChangeType', { payload: index });
     }
   };
 

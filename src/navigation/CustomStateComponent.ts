@@ -32,6 +32,7 @@ export type RootStackParamList = {
   SUBMIT_FORM: { type?: string };
   CREATE_VISITATION: { existingVisitation?: visitationListResponse };
   SPH: {};
+  APPOINTMENT: {};
   SEARCH_PRODUCT: { distance: number };
   LOCATION: {
     coordinate: { longitude: number; latitude: number };

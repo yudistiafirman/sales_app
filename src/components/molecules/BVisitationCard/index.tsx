@@ -13,25 +13,6 @@ import { colors, layout } from '@/constants';
 import BLocationText from '@/components/atoms/BLocationText';
 import { visitationDataType } from '@/interfaces';
 
-// type visitationDataType = {
-//   id?: number;
-//   name: string;
-//   location?: string;
-//   time?: string;
-//   status?: string;
-//   pilNames?: string[];
-//   pilStatus?: string;
-// };
-
-type VisitationCardType = {
-  id?: string;
-  item: visitationDataType;
-  searchQuery?: string;
-  onPress?: (data: visitationDataType) => void;
-  isRenderIcon?: boolean;
-  customIcon?: () => JSX.Element;
-};
-
 function iconRender(
   isRenderIcon: boolean,
   customIcon: (() => JSX.Element) | undefined
@@ -44,6 +25,15 @@ function iconRender(
   }
   return <MaterialIcon size={24} name="chevron-right" color={'#000000'} />;
 }
+
+type VisitationCardType = {
+  id?: string;
+  item: visitationDataType;
+  searchQuery?: string;
+  onPress?: (data: visitationDataType) => void;
+  isRenderIcon?: boolean;
+  customIcon?: () => JSX.Element;
+};
 
 export default function BVisitationCard({
   item,
@@ -88,7 +78,6 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    width: resScale(330),
     backgroundColor: colors.white,
     justifyContent: 'space-between',
     borderColor: '#EBEBEB',
@@ -97,7 +86,10 @@ const style = StyleSheet.create({
     padding: layout.pad.md,
   },
   leftSide: {
+    flex: 1,
+    paddingStart: layout.pad.md,
     justifyContent: 'space-between',
+    alignSelf: 'center',
   },
   rightSide: {
     justifyContent: 'center',
@@ -108,7 +100,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: layout.pad.sm,
-    width: resScale(285),
+    // width: resScale(285),
     alignItems: 'center',
   },
   row: {
