@@ -357,6 +357,7 @@ export default function FifthStep() {
           isRenderIcon={false}
         />
       </View>
+      <BSpacer size={'extraSmall'} />
       <View style={style.picLable}>
         <Text style={style.picText}>PIC</Text>
         <TouchableOpacity
@@ -367,7 +368,7 @@ export default function FifthStep() {
           <Text style={style.gantiPicText}>Ganti PIC</Text>
         </TouchableOpacity>
       </View>
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size={'verySmall'} />
       <BPic
         name={sphState?.selectedPic?.name}
         position={sphState?.selectedPic?.position}
@@ -397,7 +398,7 @@ export default function FifthStep() {
       <BForm inputs={inputsData} />
       <BBackContinueBtn
         isContinueIcon={false}
-        continueText={'Buat Sph'}
+        continueText={'Buat SPH'}
         onPressContinue={buatSph}
         onPressBack={() => {
           setCurrentPosition(3);
@@ -441,7 +442,7 @@ const style = StyleSheet.create({
   },
   gantiPicText: {
     fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.md,
+    fontSize: fonts.size.sm,
     color: colors.primary,
   },
   produkLabel: {
