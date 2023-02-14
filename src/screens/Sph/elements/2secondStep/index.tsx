@@ -219,7 +219,7 @@ export default function SecondStep() {
         },
         value: sphState.billingAddress.phone,
         keyboardType: 'numeric',
-        customerErrorMsg: 'No. Telepon Harus diisi sesuai format',
+        customerErrorMsg: 'No. Telepon harus diisi sesuai format',
         LeftIcon: LeftIcon,
       },
       {

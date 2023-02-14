@@ -73,7 +73,7 @@ const BSheetAddPic = React.forwardRef(
           },
           value: state.phone,
           keyboardType: 'numeric',
-          customerErrorMsg: 'No. Telepon Harus diisi sesuai format',
+          customerErrorMsg: 'No. Telepon harus diisi sesuai format',
           LeftIcon: state.phone ? LeftIcon : undefined,
           placeholder: 'Masukkan nomor telpon',
         },
