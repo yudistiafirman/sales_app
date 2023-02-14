@@ -196,7 +196,6 @@ const Appointment = () => {
       payload.visitation.bookingDate = selectDate.valueOf();
     }
     payload.visitation.dateVisit = today.valueOf();
-    payload.visitation.finishDate = today.valueOf();
     if (stepOne[customerType].name) {
       payload.project.name = stepOne[customerType].name;
     }
