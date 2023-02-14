@@ -426,12 +426,14 @@ const Beranda = () => {
             value={searchQuery}
           />
         </View>
+        <BSpacer size={'verySmall'} />
         <DateDaily
           markedDatesArray={todayMark}
           isRender={isRenderDateDaily}
           onDateSelected={onDateSelected}
           selectedDate={selectedDate}
         />
+        <BSpacer size={'extraSmall'} />
         <BottomSheetFlatlist
           isLoading={isLoading}
           data={data.data}
