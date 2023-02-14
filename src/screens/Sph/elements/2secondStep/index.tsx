@@ -25,8 +25,6 @@ import { Input, SphStateInterface } from '@/interfaces';
 import { SphContext } from '../context/SphContext';
 import { useNavigation } from '@react-navigation/native';
 import { getLocationCoordinates } from '@/actions/CommonActions';
-import { useMachine } from '@xstate/react';
-import { deviceLocationMachine } from '@/machine/modules';
 import { SEARCH_AREA, SPH } from '@/navigation/ScreenNames';
 import { fetchAddressSuggestion } from '@/redux/async-thunks/commonThunks';
 import { useKeyboardActive } from '@/hooks';

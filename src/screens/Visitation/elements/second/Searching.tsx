@@ -115,6 +115,7 @@ const SearchFlow = ({
       updateValueOnstep('stepTwo', 'pics', picList);
     }
     updateValueOnstep('stepTwo', 'projectName', item.name);
+    updateValueOnstep('stepTwo', 'projectId', item.id);
     if (item.Visitation) {
       updateValueOnstep('stepTwo', 'visitationId', item.Visitation.id);
       let order = +item.Visitation.order;

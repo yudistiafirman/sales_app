@@ -42,6 +42,7 @@ const SvgNames = {
   IC_COMPANY: 'IcCompany',
   IC_PROFILE: 'IcProfile',
   IMG_OTP_MESSEGE: 'ImgOtpMessege',
+  IC_LIST: 'IcLIst',
 };
 
 export default SvgNames;

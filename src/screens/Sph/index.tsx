@@ -5,10 +5,15 @@ import React, {
   useRef,
   useCallback,
   useContext,
+  useLayoutEffect,
 } from 'react';
 // import StepIndicator from 'react-native-step-indicator';
 // import StepperIndicator from '../../components/molecules/StepIndicator';
-import { BStepperIndicator as StepperIndicator } from '@/components';
+import {
+  BHeaderIcon,
+  BHeaderTitle,
+  BStepperIndicator as StepperIndicator,
+} from '@/components';
 
 import Steps from './elements/Steps';
 import { SphContext, SphProvider } from './elements/context/SphContext';
@@ -19,13 +24,14 @@ import SecondStep from './elements/2secondStep';
 import ThirdStep from './elements/3thirdStep';
 import FourthStep from './elements/4fourthStep';
 import FifthStep from './elements/5fifthStep';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
 import { Region } from 'react-native-maps';
 import { getLocationCoordinates } from '@/actions/CommonActions';
+import { layout } from '@/constants';
 
 const labels = [
   'Cari Pelanggan',
@@ -98,8 +104,9 @@ function stepHandler(
   } else {
     setSteps((curr) => curr.filter((num) => num !== 2));
   }
+  console.log(sphData.chosenProducts.length, 'lengthproduct');
 
-  if (sphData.chosenProducts.length > 0) {
+  if (sphData.chosenProducts.length) {
     setSteps((curr) => {
       return [...new Set(curr), 3];
     });
@@ -113,6 +120,7 @@ function stepHandler(
 }
 
 function SphContent() {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const route = useRoute();
   const stepRef = useRef<ScrollView>(null);
@@ -233,6 +241,31 @@ function SphContent() {
       // })();
     }
   }, []);
+
+  const renderHeaderLeft = useCallback(
+    () => (
+      <BHeaderIcon
+        size={layout.pad.xl - layout.pad.md}
+        iconName="x"
+        marginRight={layout.pad.lg}
+        onBack={() => {
+          if (currentPosition) {
+            setCurrentPosition(currentPosition - 1);
+          } else {
+            navigation.goBack();
+          }
+        }}
+      />
+    ),
+    [currentPosition, navigation, setCurrentPosition]
+  );
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackVisible: false,
+      headerTitle: () => BHeaderTitle('Buat SPH', 'flex-start'),
+      headerLeft: () => renderHeaderLeft(),
+    });
+  }, [navigation, renderHeaderLeft, currentPosition]);
 
   return (
     <View style={style.container}>

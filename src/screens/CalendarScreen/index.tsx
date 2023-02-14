@@ -27,12 +27,9 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 export default function CalendarScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const visitationCalendarMapped = useSelector(
-    (state: RootState) => state.productivity.visitationCalendarMapped
-  );
-  const markedDate = useSelector(
-    (state: RootState) => state.productivity.markedDate
-  );
+  const { visitationCalendarMapped, markedDate, isVisitationLoading } =
+    useSelector((state: RootState) => state.productivity);
+
   const [customerDatas, setCustomerDatas] = useState<customerDataInterface[]>(
     []
   );
@@ -65,13 +62,14 @@ export default function CalendarScreen() {
         .unwrap()
         .then((data: visitationListResponse[]) => {
           console.log(JSON.stringify(data), 'visitationListResponse69');
-          const visitMapped = data.reduce(
+          const visitationData = data ? data : [];
+          const visitMapped = visitationData.reduce(
             (
               acc: { [key: string]: customerDataInterface[] },
               obj: visitationListResponse
             ) => {
               const formatedDate = moment(obj.dateVisit).format('yyyy-MM-DD');
-              console.log(formatedDate, obj.dateVisit, 'dateVisit77');
+              // console.log(formatedDate, obj.dateVisit, 'dateVisit77');
 
               if (!acc[formatedDate]) {
                 acc[formatedDate] = [];
@@ -231,6 +229,7 @@ export default function CalendarScreen() {
           onDayPress={onDayPress}
           markedDates={markedDate}
           onMonthChange={onMonthPress}
+          isLoading={isVisitationLoading}
         />
         <BSpacer size="small" />
         <BText color="divider"> Pelanggan yang Dikunjungi </BText>
