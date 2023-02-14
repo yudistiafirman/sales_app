@@ -195,13 +195,13 @@ export default function CalendarScreen() {
           )} ${new Date(key).getFullYear()}`;
           let newDate = new Date(key);
           day = newDate.toLocaleDateString(locale(), { weekday: 'long' });
-        } catch (err2) {
+        } catch (err) {
           date = `${new Date(key).getDate()} ${new Date(
             key
           ).toLocaleString()} ${new Date(key).getFullYear()}`;
           let newDate = new Date(key);
           day = newDate.toLocaleDateString();
-          console.log(err2, 'error date parse');
+          console.log(err, 'error date parse');
         }
 
         selectedDate = {
