@@ -41,7 +41,7 @@ const TransactionDetail = () => {
   });
 
   const onPressLocation = (lat: number, lon: number) => {
-    console.log('kann', lat, lon)
+    console.log('kann', lat, lon);
     navigation.navigate(LOCATION, {
       coordinate: {
         latitude: Number(lat), // -6.1993922
@@ -53,6 +53,7 @@ const TransactionDetail = () => {
   };
 
   const data = route?.params?.data;
+  console.log(data, 'datadetail');
 
   return (
     <SafeAreaView style={styles.parent}>

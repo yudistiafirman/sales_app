@@ -207,7 +207,7 @@ export default function StepDone({
             <BProjectDetailCard
               productionTime={sphResponse?.createdTime}
               expiredDate={sphResponse?.expiryTime}
-              status={'Diajukan'}
+              status={'Diterbitkan'}
               paymentMethod={paymentMethod[sphState.paymentType]}
               projectName={sphState.selectedCompany?.name}
             />
