@@ -185,9 +185,6 @@ export default function FourthStep() {
               );
             }}
             ItemSeparatorComponent={renderSeparator}
-            contentContainerStyle={{
-              height: resScale(500),
-            }}
           />
         </View>
         <BBackContinueBtn
