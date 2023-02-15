@@ -95,7 +95,7 @@ export default function SecondStep() {
           />
           {!deliveryDate && (
             <BText size="small" color="primary" bold="100">
-              Tangga harus dipilih
+              Tanggal harus dipilih
             </BText>
           )}
         </View>
@@ -171,7 +171,7 @@ export default function SecondStep() {
       )}
 
       <BDivider />
-      <BSpacer size={'small'} />
+      <BSpacer size={'verySmall'} />
       <BDepositCard
         style={{ marginBottom: layout.pad.xl }}
         firstSectionText={'Deposit'}
