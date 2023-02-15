@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
+import * as React from 'react';
 import font from '@/constants/fonts';
 import colors from '@/constants/colors';
 import respFS from '@/utils/resFontSize';
@@ -31,6 +31,9 @@ const style = StyleSheet.create({
     paddingVertical: resScale(1),
     paddingHorizontal: resScale(10),
     borderRadius: resScale(32),
+  },
+  grayColor: {
+    backgroundColor: colors.status.grey,
   },
   greenPillText: {
     fontFamily: font.family.montserrat[300],

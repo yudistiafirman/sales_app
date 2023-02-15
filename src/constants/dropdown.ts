@@ -19,7 +19,7 @@ const WEEK_LIST = [
 
 const MONTH_LIST = [
   {
-    label: 'January',
+    label: 'Januari',
     value: 1,
   },
   {

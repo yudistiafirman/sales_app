@@ -12,6 +12,7 @@ import IcCrmActive from '@/assets/svg/ic_crm_active.svg';
 import IcCrmInactive from '@/assets/svg/ic_crm_inactive.svg';
 import IcArrowLeft from '@/assets/svg/ic_arrow_left.svg';
 import IcInfoCircle from '@/assets/svg/ic_info_circle.svg';
+import IcLIst from '@/assets/svg/ic_list.svg';
 import IcArrowRight from '@/assets/svg/ic_arrow_right.svg';
 import IcClose from '@/assets/svg/ic_close.svg';
 import IcSearch from '@/assets/svg/ic_search.svg';
@@ -40,6 +41,8 @@ import IcCBD from '@/assets/svg/ic_cbd.svg';
 import IcCredit from '@/assets/svg/ic_credit.svg';
 import IcCompany from '@/assets/svg/ic_company.svg';
 import IcProfile from '@/assets/svg/ic_profile.svg';
+import IcHunter from '@/assets/svg/ic_hunter.svg';
+import IcFarmer from '@/assets/svg/ic_farmer.svg';
 
 // IMG
 import ImgOtpMessege from '@/assets/svg/img_otp_messege.svg';
@@ -88,6 +91,9 @@ const SvgFiles = {
   IcCompany,
   IcProfile,
   ImgOtpMessege,
+  IcFarmer,
+  IcHunter,
+  IcLIst,
 };
 
 export default SvgFiles;

@@ -8,6 +8,7 @@ const colors = {
   black: '#191919',
   lightGray: '#E6E6E6',
   offCheckbox: '#aaaaaa',
+  whatsAppGreen: '#1DAD22',
   text: {
     dark: '#191919',
     darker: '#202020',
@@ -18,6 +19,7 @@ const colors = {
     medium: '#636363',
     secondary: '#636363',
     secYellow: '#FF7B00',
+    errorText: '#B00020',
   },
   status: {
     grey: '#D7D7D7',

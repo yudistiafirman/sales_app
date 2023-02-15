@@ -18,7 +18,7 @@ import {
   BFlatlistItems,
   BSpacer,
 } from '@/components';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import BTabViewScreen from '@/components/organism/BTabViewScreen';
 import { layout } from '@/constants';
@@ -39,13 +39,13 @@ import {
   CAMERA,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
-  CUSTOMER_DETAIL,
+  // CUSTOMER_DETAIL,
   SPH,
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 const { height } = Dimensions.get('window');
 
-const initialSnapPoints = (height.toFixed() - 115) / 10;
+const initialSnapPoints = (+height.toFixed() - 115) / 10;
 
 const Beranda = () => {
   const dispatch = useDispatch();
@@ -54,6 +54,7 @@ const Beranda = () => {
     target: number;
   }>({ current: 0, target: 10 }); //temporary setCurrentVisit
   const [isExpanded, setIsExpanded] = React.useState(true);
+  const [isTargetLoading, setIsTargetLoading] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
   const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
   const [snapPoints] = React.useState([`${initialSnapPoints}%`, '91%', '100%']); //setSnapPoints
@@ -103,23 +104,27 @@ const Beranda = () => {
     }
   };
 
-  const fetchTarget = async () => {
+  const fetchTarget = React.useCallback(async () => {
     try {
+      setIsTargetLoading(true);
       const { data: _data } = await getVisitationTarget();
       console.log(_data.data, 'fetchTarget103');
-
       setCurrentVisit({
         current: _data.data.totalCompleted,
         target: _data.data.visitationTarget,
       });
+      setIsTargetLoading(false);
     } catch (err) {
+      setIsTargetLoading(false);
       console.log(err);
     }
-  };
-
-  React.useEffect(() => {
-    fetchTarget();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchTarget();
+    }, [])
+  );
 
   const fetchVisitations = async (search?: string) => {
     setIsLoading(true);
@@ -150,11 +155,11 @@ const Beranda = () => {
             const time = el.finishDate
               ? moment(el.finishDate).format('hh:mm')
               : null;
-
+            const location = el.project?.locationAddress.line1;
             return {
               id: el.id,
               name: el.project?.name || '--',
-              location: 'dummy',
+              location: location ? location : '-',
               time,
               status,
               pilStatus,
@@ -310,6 +315,7 @@ const Beranda = () => {
   ): Promise<void> {
     try {
       const status = dataItem.pilStatus;
+      if (status === 'Selesai') return;
       dispatch(
         openPopUp({
           popUpType: 'loading',
@@ -328,11 +334,12 @@ const Beranda = () => {
           navigateTo: CREATE_VISITATION,
           existingVisitation: response,
         });
-      } else {
-        navigation.navigate(CUSTOMER_DETAIL, {
-          existingVisitation: response,
-        });
       }
+      // else {
+      //   navigation.navigate(CUSTOMER_DETAIL, {
+      //     existingVisitation: response,
+      //   });
+      // }
     } catch (error) {
       dispatch(
         openPopUp({
@@ -385,14 +392,14 @@ const Beranda = () => {
           />
         </View>
       </Modal>
-      {/* <View style={{ padding: layout.mainPad }}> */}
+
       <TargetCard
         isExpanded={isExpanded}
         maxVisitation={currentVisit.target}
         currentVisitaion={currentVisit.current}
-        isLoading={isLoading}
+        isLoading={isTargetLoading}
       />
-      {/* </View> */}
+
       <BSpacer size="small" />
       <BQuickAction buttonProps={buttonsData} />
 
@@ -422,12 +429,14 @@ const Beranda = () => {
             value={searchQuery}
           />
         </View>
+        <BSpacer size={'verySmall'} />
         <DateDaily
           markedDatesArray={todayMark}
           isRender={isRenderDateDaily}
           onDateSelected={onDateSelected}
           selectedDate={selectedDate}
         />
+        <BSpacer size={'extraSmall'} />
         <BottomSheetFlatlist
           isLoading={isLoading}
           data={data.data}

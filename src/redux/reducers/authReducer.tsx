@@ -11,6 +11,7 @@ interface AuthState {
   loginCredential: LoginCredential;
   isLoading: boolean;
   isSignout: boolean;
+  hunterScreen: boolean;
 }
 
 const initialState: AuthState = {
@@ -20,6 +21,7 @@ const initialState: AuthState = {
   },
   isLoading: false,
   isSignout: false,
+  hunterScreen: true,
 };
 
 export const authSlice = createSlice({
@@ -56,10 +58,21 @@ export const authSlice = createSlice({
         isSignout: true,
       };
     },
+    toggleHunterScreen: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        hunterScreen: action.payload,
+      };
+    },
   },
 });
 
-export const { setPhoneNumber, setUserData, setIsLoading, signout } =
-  authSlice.actions;
+export const {
+  setPhoneNumber,
+  setUserData,
+  setIsLoading,
+  signout,
+  toggleHunterScreen,
+} = authSlice.actions;
 
 export default authSlice.reducer;

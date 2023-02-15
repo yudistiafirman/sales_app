@@ -20,6 +20,8 @@ export default function BProjectDetailCard({
   productionTime,
 }: BProjectDetailCardType) {
   const { color, textColor } = getColorStatusTrx(status);
+  console.log(color, 'status', status);
+
   return (
     <View>
       <View style={styles.summaryContainer}>

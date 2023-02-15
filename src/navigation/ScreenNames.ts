@@ -29,6 +29,7 @@ export const CREATE_SCHEDULE = 'CREATE_SCHEDULE';
 export const ALL_PRODUCT = 'ALL_PRODUCT';
 export const APPOINTMENT = 'APPOINTMENT';
 export const SEARCH_PO = 'SEARCH_PO';
+export const HUNTER_AND_FARMERS = 'HUNTER_AND_FARMERS';
 
 /*
     Screen Title
@@ -59,5 +60,5 @@ export const TRANSACTION_DETAIL_TITLE = 'Detail Transaksi';
 export const CUSTOMER_DETAIL_TITLE = 'Detil Pelanggan';
 export const CREATE_SCHEDULE_TITLE = 'Buat Jadwal';
 export const ALL_PRODUCT_TITLE = 'Semua Produk';
-export const APPOINTMENT_TITLE = 'Buat Janji Temu';
 export const SEARCH_PO_TITLE = 'Cari PO';
+export const APPOINTMENT_TITLE = 'Buat Janji Temu';

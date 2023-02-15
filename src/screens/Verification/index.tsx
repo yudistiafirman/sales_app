@@ -1,10 +1,10 @@
-import { BSpacer } from '@/components';
+import { BHeaderIcon, BSpacer } from '@/components';
 import BErrorText from '@/components/atoms/BErrorText';
-import { colors } from '@/constants';
+import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { Image, SafeAreaView } from 'react-native';
+import { Image, SafeAreaView, Text, View } from 'react-native';
 import OTPField from './element/OTPField';
 import OTPFieldLabel from './element/OTPFieldLabel';
 import ResendOTP from './element/ResendOTP';
@@ -13,13 +13,14 @@ import VerificationStyles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { setUserData } from '@/redux/reducers/authReducer';
+import { setUserData, toggleHunterScreen } from '@/redux/reducers/authReducer';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import bStorage from '@/actions/BStorage';
 import { signIn } from '@/actions/CommonActions';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import storageKey from '@/constants/storageKey';
 import crashlytics from '@react-native-firebase/crashlytics';
+import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 
 const Verification = () => {
   const { phoneNumber } = useSelector(
@@ -67,18 +68,20 @@ const Verification = () => {
         const { accessToken } = response.data.data;
         const decoded = jwtDecode<JwtPayload>(accessToken);
         await bStorage.setItem(storageKey.userToken, accessToken);
-        dispatch(setUserData(decoded));
-        setVerificationState({
-          ...verificationState,
-          errorOtp: '',
-          otpValue: '',
-          loading: false,
-        });
-        crashlytics().setUserId(response.data.id);
-        crashlytics().setAttributes({
-          role: response.data.type,
-          email: response.data.email,
-          username: response.data.phone,
+        bStorage.setItem('firstLogin', 'true').then(() => {
+          dispatch(setUserData(decoded));
+          setVerificationState({
+            ...verificationState,
+            errorOtp: '',
+            otpValue: '',
+            loading: false,
+          });
+          crashlytics().setUserId(response.data.id);
+          crashlytics().setAttributes({
+            role: response.data.type,
+            email: response.data.email,
+            username: response.data.phone,
+          });
         });
       } else {
         throw new Error(response.data.message);
@@ -125,6 +128,28 @@ const Verification = () => {
     });
     navigation.goBack();
   };
+
+  const renderHeaderLeft = React.useCallback(
+    () => (
+      <BHeaderIcon
+        size={layout.pad.xl}
+        iconName="chevron-left"
+        marginRight={layout.pad.xs}
+        marginLeft={layout.pad.sm}
+        onBack={() => {
+          navigation.goBack();
+        }}
+      />
+    ),
+    [navigation]
+  );
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackVisible: false,
+      headerLeft: () => renderHeaderLeft(),
+    });
+  }, [navigation, renderHeaderLeft]);
+
   return (
     <KeyboardAwareScrollView>
       <SafeAreaView style={VerificationStyles.container}>

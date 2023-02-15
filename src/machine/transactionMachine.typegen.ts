@@ -28,6 +28,7 @@
 "handleError": "error.platform.transaction machine.getTransaction.loadingTransaction:invocation[0]" | "error.platform.transaction machine.getTransaction.typeLoaded.getTransactionsBaseOnType:invocation[0]";
 "incrementPage": "onEndReached";
 "refreshTransactionList": "refreshingList";
+"resetProduct": "backToGetTransactions";
         };
         eventsCausingDelays: {
           
@@ -38,7 +39,7 @@
         };
         eventsCausingServices: {
           "getTransactions": "done.invoke.transaction machine.getTransaction.loadingTransaction:invocation[0]" | "onChangeType" | "onEndReached" | "refreshingList";
-"getTypeTransactions": "xstate.init";
+"getTypeTransactions": "backToGetTransactions" | "xstate.init";
         };
         matchesStates: "errorGettingType" | "getTransaction" | "getTransaction.loadingTransaction" | "getTransaction.typeLoaded" | "getTransaction.typeLoaded.getTransactionsBaseOnType" | "getTransaction.typeLoaded.transactionLoaded" | { "getTransaction"?: "loadingTransaction" | "typeLoaded" | { "typeLoaded"?: "getTransactionsBaseOnType" | "transactionLoaded"; }; };
         tags: never;
