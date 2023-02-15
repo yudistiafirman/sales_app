@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
@@ -10,6 +10,7 @@ type BDepositCardType = {
   secondSectionValue: number;
   secondSectionText: string;
   thirdSectionText: string;
+  style: ViewStyle;
 };
 
 export default function BDepositCard({
@@ -18,9 +19,10 @@ export default function BDepositCard({
   secondSectionValue,
   secondSectionText,
   thirdSectionText,
+  style,
 }: BDepositCardType) {
   return (
-    <View>
+    <View style={style}>
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>{firstSectionText}</Text>
         <Text style={[styles.summary, styles.fontw400]}>

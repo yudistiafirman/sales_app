@@ -19,7 +19,7 @@ import { CREATE_SCHEDULE, SEARCH_PO } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { CreateScheduleContext } from '@/context/CreateScheduleContext';
 import POListCard from '@/components/templates/PO/POListCard';
-import { colors, fonts, layout } from '@/constants';
+import { colors, fonts } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
 
 export default function FirstStep() {
