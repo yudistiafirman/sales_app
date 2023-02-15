@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { BSpacer, BTouchableText } from '@/components';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
@@ -36,6 +40,12 @@ const Transaction = () => {
       />
     ),
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      send('backToGetTransactions')
+    }, [send])
+  );
 
   const getOneOrder = async (id: string) => {
     try {
