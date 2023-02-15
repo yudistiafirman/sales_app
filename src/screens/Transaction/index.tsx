@@ -47,8 +47,6 @@ const Transaction = () => {
     }, [send])
   );
 
-  console.log('state',state.value)
-
   const getOneOrder = async (id: string) => {
     try {
       const { data } = await getOrderByID(id);
