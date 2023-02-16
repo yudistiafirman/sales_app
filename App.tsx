@@ -16,7 +16,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '@/redux/store';
 import Popup from '@/components/templates/PopupGlobal/Popup';
 import AppNavigatorV2 from '@/navigation/AppNavigatorV2';
-
+import HunterAndFarmers from '@/screens/HunterAndFarmers';
 const parentFull = {
   flex: 1,
 };
@@ -58,6 +58,7 @@ function App() {
           <ReduxProvider store={store}>
             <Popup />
             <AppNavigatorV2 />
+            <HunterAndFarmers />
           </ReduxProvider>
         </PaperProvider>
       </NavigationContainer>

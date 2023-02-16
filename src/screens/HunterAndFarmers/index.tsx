@@ -1,6 +1,6 @@
 import { bStorage } from '@/actions';
 import { BSpacer, BSvg, BText, SVGName } from '@/components';
-import { layout } from '@/constants';
+import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 import { APPOINTMENT, TAB_HOME, TAB_ROOT } from '@/navigation/ScreenNames';
@@ -15,67 +15,79 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
+import Modal from 'react-native-modal';
+const { height } = Dimensions.get('screen');
 const HunterAndFarmers = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
-  const { hunterScreen } = useSelector((state: RootState) => state.auth);
-  useCustomHeaderCenter({
-    customHeaderCenter: (
-      <Image
-        style={{ width: resScale(70), height: resScale(33) }}
-        source={require('@/assets/logo/brik_logo.png')}
-      />
-    ),
-  });
+  const { hunterScreen, userData } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const goToHome = () => {
-    bStorage
-      .deleteItem('firstLogin')
-      .then(() => {
-        navigation.navigate(TAB_ROOT);
-      })
-      .catch((err) => {
-        console.log('ini error', err);
-      });
+    dispatch(toggleHunterScreen(false));
+    navigation.navigate(TAB_ROOT);
+  };
+
+  const goToAppointment = () => {
+    dispatch(toggleHunterScreen(false));
+    navigation.navigate(APPOINTMENT);
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <BText style={styles.title}>Bagaimana Anda ingin memulai</BText>
-      </View>
-      <BSpacer size="extraSmall" />
-      <View>
-        <BText style={styles.title}>hari ini?</BText>
-      </View>
-      <BSpacer size="small" />
-      <View style={styles.svgGroup}>
-        <TouchableOpacity onPress={goToHome} style={styles.imageWrapper}>
-          <Image
-            style={styles.image}
-            source={require('@/assets/icon/ic_farmer.png')}
-          />
-          <BText style={styles.text}>Hunter</BText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate(APPOINTMENT)}
-          style={styles.imageWrapper}
-        >
-          <Image
-            style={styles.image}
-            source={require('@/assets/icon/ic_hunter.png')}
-          />
-          <BText style={styles.text}>Farmer</BText>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <Modal
+      isVisible={hunterScreen && userData !== null}
+      style={styles.modalContainer}
+      deviceHeight={height}
+    >
+      <SafeAreaView style={styles.container}>
+        <Image
+          style={styles.imageLogo}
+          source={require('@/assets/logo/brik_logo.png')}
+        />
+        <View>
+          <BText style={styles.title}>Bagaimana Anda ingin memulai</BText>
+        </View>
+        <BSpacer size="extraSmall" />
+        <View>
+          <BText style={styles.title}>hari ini?</BText>
+        </View>
+        <BSpacer size="small" />
+        <View style={styles.svgGroup}>
+          <TouchableOpacity onPress={goToHome} style={styles.imageWrapper}>
+            <Image
+              style={styles.image}
+              source={require('@/assets/icon/ic_farmer.png')}
+            />
+            <BText style={styles.text}>Hunter</BText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={goToAppointment}
+            style={styles.imageWrapper}
+          >
+            <Image
+              style={styles.image}
+              source={require('@/assets/icon/ic_hunter.png')}
+            />
+            <BText style={styles.text}>Farmer</BText>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  modalContainer: { margin: 0, backgroundColor: colors.white },
+  imageLogo:{
+    width: resScale(70),
+    height: resScale(33),
+    position: 'absolute',
+    top: layout.pad.lg,
+  },
   title: {
     fontFamily: font.family.montserrat['700'],
     fontSize: font.size.md,
