@@ -1,19 +1,58 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import React, { useCallback } from 'react';
 import DocumentPicker from 'react-native-document-picker';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import BSpacer from './BSpacer';
 
 //AntDesign
 type BFileInputType = {
   onChange?: (e: any) => void;
   label: string;
   value: any;
+  isLoading?: boolean;
+  isError?: boolean;
 };
 
-export default function BFileInput({ onChange, label, value }: BFileInputType) {
+function iconState(value: any, isLoading?: boolean, isError?: boolean) {
+  if (!value) {
+    return <AntDesign name="upload" size={resScale(15)} />;
+  }
+  if (isError) {
+    return (
+      <View style={style.redIcon}>
+        <Ionicons name="close" size={15} color={'#FFFFFF'} />
+      </View>
+    );
+  }
+  if (isLoading) {
+    return <ActivityIndicator size={resScale(15)} color={colors.primary} />;
+  }
+  if (value) {
+    return (
+      <View style={style.greenDot}>
+        <Entypo size={13} name="check" color={'#FFFFFF'} />
+      </View>
+    );
+  }
+}
+
+export default function BFileInput({
+  onChange,
+  label,
+  value,
+  isLoading,
+  isError,
+}: BFileInputType) {
   const selectFile = useCallback(async () => {
     // Opening Document Picker to select one file
     try {
@@ -62,13 +101,22 @@ export default function BFileInput({ onChange, label, value }: BFileInputType) {
     <TouchableOpacity onPress={selectFile}>
       <View style={[style.container, !value ? style.dashedBorder : null]}>
         <Text style={style.textStyle}>{label}</Text>
-        {value ? (
-          <View style={style.greenDot}>
-            <Entypo size={13} name="check" color={'#FFFFFF'} />
-          </View>
-        ) : (
-          <AntDesign name="upload" size={resScale(15)} />
-        )}
+        {iconState(value, isLoading, isError)}
+        {/* <View style={style.row}>
+          {isLoading && (
+            <>
+              <ActivityIndicator size={resScale(15)} color={colors.primary} />
+              <BSpacer size={'extraSmall'} />
+            </>
+          )}
+          {value && !isLoading ? (
+            <View style={style.greenDot}>
+              <Entypo size={13} name="check" color={'#FFFFFF'} />
+            </View>
+          ) : (
+            <AntDesign name="upload" size={resScale(15)} />
+          )}
+        </View> */}
       </View>
     </TouchableOpacity>
   );
@@ -98,6 +146,18 @@ const style = StyleSheet.create({
     height: resScale(16),
     borderRadius: resScale(16),
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  redIcon: {
+    backgroundColor: colors.primary,
+    width: resScale(16),
+    height: resScale(16),
+    borderRadius: resScale(16),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  row: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
 });

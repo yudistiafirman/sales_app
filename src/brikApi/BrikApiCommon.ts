@@ -90,6 +90,12 @@ export default class BrikApiCommon {
     return url.toString();
   };
 
+  static projectDoc = () => {
+    const url = new URL(`${API_URL}/common/projectDoc`);
+
+    return url.toString();
+  };
+
   // --------------------------------------------------AUTHENTICATION ---------------------------------------------//
 
   static login = () => {
