@@ -38,7 +38,8 @@ import {
   APPOINTMENT,
   CAMERA,
   CREATE_VISITATION,
-  // CUSTOMER_DETAIL,
+  CUSTOMER_DETAIL,
+  DOCUMENTS,
   SPH,
   TAB_HOME,
 } from '@/navigation/ScreenNames';
@@ -316,7 +317,7 @@ const Beranda = () => {
   ): Promise<void> {
     try {
       const status = dataItem.pilStatus;
-      if (status === 'Selesai') return;
+
       dispatch(
         openPopUp({
           popUpType: 'loading',
@@ -335,12 +336,12 @@ const Beranda = () => {
           navigateTo: CREATE_VISITATION,
           existingVisitation: response,
         });
+      } else if (status === 'Selesai') {
+        navigation.navigate(DOCUMENTS, {});
+        // navigation.navigate(CUSTOMER_DETAIL, {
+        //   existingVisitation: response,
+        // });
       }
-      // else {
-      //   navigation.navigate(CUSTOMER_DETAIL, {
-      //     existingVisitation: response,
-      //   });
-      // }
     } catch (error) {
       dispatch(
         openPopUp({

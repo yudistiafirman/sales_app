@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import {
   BFlatlistItems,
   BSearchBar,
@@ -144,18 +144,32 @@ const SearchFlow = ({
     }
     return (
       <BFlatlistItems
-        renderItem={(item) => (
-          <BVisitationCard
-            item={{
-              name: item.name,
-              location: item.locationAddress.line1,
-            }}
-            searchQuery={searchQuery}
-            onPress={() => {
-              onSelectProject(item);
-            }}
-          />
-        )}
+        renderItem={(item) => {
+          let picOrCompanyName = '-';
+          if (item?.Company?.name) {
+            picOrCompanyName = item.Company?.name;
+          } else if (item?.mainPic?.name) {
+            picOrCompanyName = item?.mainPic?.name;
+          }
+
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                onSelectProject(item);
+              }}
+            >
+              <BVisitationCard
+                item={{
+                  name: item.name,
+                  location: item.locationAddress.line1,
+                  picOrCompanyName: picOrCompanyName,
+                }}
+                searchQuery={searchQuery}
+                isRenderIcon={false}
+              />
+            </TouchableOpacity>
+          );
+        }}
         searchQuery={searchQuery}
         isLoading={isProjectLoading}
         data={projects}

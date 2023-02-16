@@ -43,6 +43,7 @@ export type RootStackParamList = {
   CALENDAR: {};
   TRANSACTION_DETAIL: { title: string; data: any };
   CUSTOMER_DETAIL: { existingVisitation?: visitationListResponse };
+  DOCUMENTS: {};
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

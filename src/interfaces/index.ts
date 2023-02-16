@@ -479,6 +479,7 @@ type visitationDataType = {
   status?: string;
   pilNames?: string[];
   pilStatus?: 'Selesai' | 'Belum Selesai';
+  picOrCompanyName?: string;
 };
 
 interface projectResponseType {

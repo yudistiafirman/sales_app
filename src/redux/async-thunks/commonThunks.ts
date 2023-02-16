@@ -6,6 +6,7 @@ import {
   projectGetOneById,
   getSphDocuments,
   getAddressSuggestion,
+  postProjectDoc,
 } from '@/actions/CommonActions';
 import { projectResponseType } from '@/interfaces';
 
@@ -34,7 +35,11 @@ export const postUploadFiles = createAsyncThunk<
     console.log(error.message, 'errormsgcommon/postUploadFiles');
 
     console.log(error?.response?.data, 'error at', 'common/postUploadFiles');
-    return rejectWithValue(error.message);
+    let errorData = error.message;
+    if (error?.response?.data) {
+      errorData = error?.response?.data;
+    }
+    return rejectWithValue(errorData);
   }
 });
 
@@ -119,6 +124,34 @@ export const fetchAddressSuggestion = createAsyncThunk<
     } catch (error) {
       console.log(error.message, 'message/fetchAddressSuggestion');
       return rejectWithValue(error.message);
+    }
+  }
+);
+export const postProjectDocByprojectId = createAsyncThunk<
+  any,
+  {
+    payload: {
+      projectId: string;
+      documentId: string;
+      fileId: string;
+    };
+  }
+>(
+  'common/postProjectDocByprojectId',
+  async ({ payload }, { rejectWithValue }) => {
+    try {
+      const response = await postProjectDoc(payload);
+      const { data } = response;
+      if (data.error) throw data as errorType;
+      return data;
+    } catch (error) {
+      console.log(error.message, 'message/postProjectDocByprojectId');
+      console.log(error?.response, 'message/postProjectDocByprojectId149');
+      let errorData = error.message;
+      if (error?.response?.data) {
+        errorData = error?.response?.data;
+      }
+      return rejectWithValue(errorData);
     }
   }
 );

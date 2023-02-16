@@ -49,8 +49,6 @@ export default function SelectedPic({
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [sphState, stateUpdate] = useContext(SphContext);
 
-  console.log(sphState.picList, 'list51');
-
   const inputsData: Input[] = useMemo(() => {
     return [
       {
@@ -126,21 +124,16 @@ export default function SelectedPic({
     }
   }, []);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     setIsLoading(true);
-  //     setFlatListData([]);
-  //     const data = await dummyReq();
-  //     console.log(data, 'data dummy');
-
-  //     setFlatListData(data);
-  //     setIsLoading(false);
-  //   })();
-  // }, []);
-
   const openBottomSheet = () => {
     bottomSheetRef.current?.expand();
   };
+
+  let picOrCompanyName = '-';
+  if (sphState?.selectedCompany?.Company?.name) {
+    picOrCompanyName = sphState?.selectedCompany.Company?.name;
+  } else if (sphState?.selectedCompany?.mainPic?.name) {
+    picOrCompanyName = sphState?.selectedCompany?.mainPic?.name;
+  }
 
   return (
     <View style={style.container}>
@@ -151,6 +144,7 @@ export default function SelectedPic({
             item={{
               name: sphState?.selectedCompany?.name || '-',
               location: sphState?.selectedCompany?.locationAddress.line1,
+              picOrCompanyName,
             }}
             customIcon={GantiIcon}
             onPress={() => {

@@ -30,6 +30,7 @@ export const CUSTOMER_DETAIL = 'CUSTOMER_DETAIL';
 export const ALL_PRODUCT = 'ALL_PRODUCT';
 export const APPOINTMENT = 'APPOINTMENT';
 export const HUNTER_AND_FARMERS = 'HUNTER_AND_FARMERS';
+export const DOCUMENTS = 'DOCUMENTS';
 
 /*
     Screen Title
