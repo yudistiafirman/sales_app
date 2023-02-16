@@ -12,6 +12,7 @@ import { colors, fonts, layout } from '@/constants';
 import { BButtonPrimary, BContainer, BForm, BSpacer } from '@/components';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Input } from '@/interfaces';
+import { customLog } from '@/utils/generalFunc';
 
 type BillingModalType = {
   isModalVisible: boolean;
@@ -41,7 +42,7 @@ export default function BillingModal({
         type: 'area',
         placeholder: 'contoh: Jalan Kusumadinata no 5',
         onChange: (text: string) => {
-          console.log(text, 'inputsData e');
+          customLog(text, 'inputsData e');
         },
         value: billingState.billingAddress,
       },
@@ -57,7 +58,7 @@ export default function BillingModal({
           //       name: text,
           //     });
           //   }
-          console.log(text, 'kelurahan text');
+          customLog(text, 'kelurahan text');
         },
         value: billingState.kelurahan,
       },
@@ -73,7 +74,7 @@ export default function BillingModal({
           //       name: text,
           //     });
           //   }
-          console.log(text, 'kecamatan text');
+          customLog(text, 'kecamatan text');
         },
         value: billingState.kecamatan,
       },
@@ -89,7 +90,7 @@ export default function BillingModal({
           //       name: text,
           //     });
           //   }
-          console.log(text, 'kota text');
+          customLog(text, 'kota text');
         },
         value: billingState.kabupaten,
       },

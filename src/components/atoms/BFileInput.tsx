@@ -13,6 +13,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BSpacer from './BSpacer';
+import { customLog } from '@/utils/generalFunc';
 
 //AntDesign
 type BFileInputType = {
@@ -56,7 +57,7 @@ export default function BFileInput({
   const selectFile = useCallback(async () => {
     // Opening Document Picker to select one file
     try {
-      console.log('select file');
+      customLog('select file');
 
       const res = await DocumentPicker.pickSingle({
         // Provide which type of file you want user to pick
@@ -70,8 +71,8 @@ export default function BFileInput({
         // DocumentPicker.types.pdf
       });
       // Printing the log realted to the file
-      console.log('res : ' + JSON.stringify(res));
-      console.log('select file 2');
+      customLog('res : ' + JSON.stringify(res));
+      customLog('select file 2');
       // Setting the state to show single file attributes
       //   setSingleFile(res);
       if (onChange) {
@@ -86,10 +87,10 @@ export default function BFileInput({
       if (DocumentPicker.isCancel(err)) {
         // If user canceled the document selection
         // alert('Canceled');
-        console.log('Canceled', JSON.stringify(err));
+        customLog('Canceled', JSON.stringify(err));
       } else {
         // For Unknown Error
-        console.log(JSON.stringify(err));
+        customLog(JSON.stringify(err));
 
         // alert('Unknown Error: ' + JSON.stringify(err));
         throw err;

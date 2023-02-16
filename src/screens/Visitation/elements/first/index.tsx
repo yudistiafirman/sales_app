@@ -33,6 +33,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { customLog } from '@/utils/generalFunc';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -66,7 +67,7 @@ const FirstStep = () => {
   const mapRef = React.useRef<MapView>(null);
   const onChangeRegion = async (coordinate: Region) => {
     try {
-      console.log(coordinate, 'coordinateonchange66');
+      customLog(coordinate, 'coordinateonchange66');
       setIsMapLoading(() => true);
       const { data } = await getLocationCoordinates(
         // '',
@@ -99,7 +100,7 @@ const FirstStep = () => {
       dispatch(updateRegion(_coordinate));
       setIsMapLoading(() => false);
     } catch (error) {
-      console.log(JSON.stringify(error), 'onChangeRegionerror');
+      customLog(JSON.stringify(error), 'onChangeRegionerror');
     }
   };
 
@@ -113,7 +114,7 @@ const FirstStep = () => {
   React.useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step1');
 
-    console.log(values.stepOne.createdLocation.formattedAddress, 'onEffect');
+    customLog(values.stepOne.createdLocation.formattedAddress, 'onEffect');
     if (mapRef.current) {
       mapRef?.current?.animateToRegion(region);
     }
@@ -121,9 +122,8 @@ const FirstStep = () => {
       ...values.stepOne.locationAddress,
       ...region,
     };
-    // console.log(region, 'region116first', locationAddress);
-    console.log(values.stepOne.locationAddress, 'location117', region);
-    console.log(locationAddress, 'locationAddress118');
+    customLog(values.stepOne.locationAddress, 'location117', region);
+    customLog(locationAddress, 'locationAddress118');
 
     updateValueOnstep('stepOne', 'locationAddress', locationAddress);
   }, [
@@ -155,10 +155,9 @@ const FirstStep = () => {
       values.stepOne.createdLocation.lon === 0;
 
     if (isExist) {
-      console.log('jalan143');
+      customLog('jalan143');
       send('askingPermission');
     }
-    // console.log(state.context, 'ini apa?');
   }, []);
 
   const nameAddress = React.useMemo(() => {

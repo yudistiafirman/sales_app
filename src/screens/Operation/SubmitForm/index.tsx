@@ -14,6 +14,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SUBMIT_FORM } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 const SubmitForm = () => {
   const route = useRoute<RootStackScreenProps>();
@@ -69,7 +70,7 @@ const SubmitForm = () => {
           items: TM_CONDITION,
           placeholder: 'Pilih Kondisi TM',
           onChange: (value: any) => {
-            console.log(value);
+            customLog(value);
           },
         },
       },

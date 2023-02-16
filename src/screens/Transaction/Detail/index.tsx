@@ -15,7 +15,7 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { colors, fonts, layout } from '@/constants';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { ScrollView } from 'react-native-gesture-handler';
-import { beautifyPhoneNumber, getStatusTrx } from '@/utils/generalFunc';
+import { beautifyPhoneNumber, customLog, getStatusTrx } from '@/utils/generalFunc';
 import moment from 'moment';
 import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -47,7 +47,7 @@ const TransactionDetail = () => {
   }, []);
 
   const onPressLocation = (lat: number, lon: number) => {
-    console.log('kann', lat, lon);
+    customLog('kann', lat, lon);
     navigation.navigate(LOCATION, {
       coordinate: {
         latitude: Number(lat), // -6.1993922
@@ -59,7 +59,7 @@ const TransactionDetail = () => {
   };
 
   const data = route?.params?.data;
-  console.log(data, 'datadetail');
+  customLog(data, 'datadetail');
 
   return (
     <SafeAreaView style={styles.parent}>

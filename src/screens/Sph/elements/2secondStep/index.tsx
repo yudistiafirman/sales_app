@@ -30,6 +30,7 @@ import { fetchAddressSuggestion } from '@/redux/async-thunks/commonThunks';
 import { useKeyboardActive } from '@/hooks';
 import { TextInput } from 'react-native-paper';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { customLog } from '@/utils/generalFunc';
 
 function checkObj(obj: SphStateInterface) {
   const billingAddressFilled =
@@ -66,17 +67,6 @@ export default function SecondStep() {
   const [isSuggestionLoading, setIsSuggestionLoading] = useState(false);
   const { keyboardVisible } = useKeyboardActive();
 
-  // async function getSuggestion(search: string) {
-  //   try {
-  //     const response = await dispatch(
-  //       fetchAddressSuggestion({ search, page: 1 })
-  //     ).unwrap();
-  //     setAddressSuggestions(response.data);
-  //   } catch (error) {
-  //     console.log(error, 'errorfetchAddressSuggestion');
-  //   }
-  // }
-
   const getSuggestion = useCallback(async (search: string) => {
     try {
       setIsSuggestionLoading(true);
@@ -94,7 +84,7 @@ export default function SecondStep() {
     } catch (error) {
       setIsSuggestionLoading(false);
       setAddressSuggestions([]);
-      console.log(error, 'errorfetchAddressSuggestion');
+      customLog(error, 'errorfetchAddressSuggestion');
     }
   }, []);
 
@@ -148,7 +138,7 @@ export default function SecondStep() {
         setIsMapLoading(() => false);
       } catch (error) {
         setIsMapLoading(() => false);
-        console.log(JSON.stringify(error), 'onChangeRegionerror');
+        customLog(JSON.stringify(error), 'onChangeRegionerror');
       }
     },
     [sphState?.billingAddress]

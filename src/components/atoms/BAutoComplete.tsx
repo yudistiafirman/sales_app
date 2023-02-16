@@ -30,14 +30,6 @@ const BAutoComplete = ({
   showClear = true,
   onClear,
 }: IProps) => {
-  // const [data, setData] = React.useState(items);
-
-  // React.useEffect(() => {
-  //   setData(items);
-  // }, [items]);
-  // // // const data = React.useMemo(() => items, [items]);
-  // console.log(loading, value, 'ini apa? ke render lagi ga?');
-
   return (
     <React.Fragment>
       <AutocompleteDropdown

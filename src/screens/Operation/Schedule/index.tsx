@@ -9,6 +9,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SCHEDULE } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 const Schedule = () => {
   useHeaderTitleChanged({ title: 'Tugaskan DO' });
@@ -46,7 +47,7 @@ const Schedule = () => {
           items: VEHICLE_LIST,
           placeholder: 'Pilih Nomor Plat',
           onChange: (value: any) => {
-            console.log(value);
+            customLog(value);
           },
         },
       },
@@ -60,7 +61,7 @@ const Schedule = () => {
           items: DRIVER_LIST,
           placeholder: 'Pilih Nama Driver',
           onChange: (value: any) => {
-            console.log(value);
+            customLog(value);
           },
         },
       },

@@ -15,6 +15,7 @@ import { fetchSphDocuments } from '@/redux/async-thunks/commonThunks';
 import { useDispatch } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 type documentType = {
   id: string;
@@ -146,7 +147,7 @@ export default function ThirdStep() {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log('error getDocument128', error);
+      customLog('error getDocument128', error);
     }
   }
 
@@ -206,7 +207,7 @@ export default function ThirdStep() {
         onChange: (data: any) => {
           if (data) {
             setDocuments((curr) => {
-              console.log(curr, 'curr298');
+              customLog(curr, 'curr298');
 
               return {
                 ...curr,

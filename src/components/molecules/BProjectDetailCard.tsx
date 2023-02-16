@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
-import { getColorStatusTrx } from '@/utils/generalFunc';
+import { customLog, getColorStatusTrx } from '@/utils/generalFunc';
 import BSpacer from '../atoms/BSpacer';
 
 type BProjectDetailCardType = {
@@ -20,7 +20,7 @@ export default function BProjectDetailCard({
   productionTime,
 }: BProjectDetailCardType) {
   const { color, textColor } = getColorStatusTrx(status);
-  console.log(color, 'status', status);
+  customLog(color, 'status', status);
 
   return (
     <View>

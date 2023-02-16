@@ -45,6 +45,7 @@ import {
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { customLog } from '@/utils/generalFunc';
 
 const { height } = Dimensions.get('window');
 
@@ -111,7 +112,7 @@ const Beranda = () => {
     try {
       setIsTargetLoading(true);
       const { data: _data } = await getVisitationTarget();
-      console.log(_data.data, 'fetchTarget103');
+      customLog(_data.data, 'fetchTarget103');
       setCurrentVisit({
         current: _data.data.totalCompleted,
         target: _data.data.visitationTarget,
@@ -119,7 +120,7 @@ const Beranda = () => {
       setIsTargetLoading(false);
     } catch (err) {
       setIsTargetLoading(false);
-      console.log(err);
+      customLog(err);
     }
   }, []);
 
@@ -183,7 +184,7 @@ const Beranda = () => {
         });
       }
     } catch (error) {
-      console.log(error, 'ini err apa sih??');
+      customLog(error, 'ini err apa sih??');
     }
   };
 
@@ -300,7 +301,7 @@ const Beranda = () => {
             item={item}
             searchQuery={searchQuery}
             onPress={() => {
-              console.log(item, 'sceneToRender');
+              customLog(item, 'sceneToRender');
             }}
           />
         )}

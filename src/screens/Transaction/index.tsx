@@ -23,6 +23,7 @@ import {
 } from '@/navigation/ScreenNames';
 import { getOrderByID } from '@/actions/OrderActions';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { customLog } from '@/utils/generalFunc';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
@@ -64,7 +65,7 @@ const Transaction = () => {
         data: data.data,
       });
     } catch (error) {
-      console.log(error);
+      customLog(error);
     }
   };
 

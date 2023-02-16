@@ -24,6 +24,7 @@ import {
 import formatCurrency from '@/utils/formatCurrency';
 import { TextInput } from 'react-native-paper';
 import calcTrips from '@/utils/calcTrips';
+import { customLog } from '@/utils/generalFunc';
 
 type ProductCartModalType = {
   productData: ProductDataInterface;
@@ -55,7 +56,7 @@ export default function ProductCartModal({
 }: ProductCartModalType) {
   useEffect(() => {
     setDetailOrder(prevData);
-    console.log(JSON.stringify(productData), 'productData53');
+    customLog(JSON.stringify(productData), 'productData53');
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -70,26 +71,10 @@ export default function ProductCartModal({
   }, [detailOrder.volume]);
   const totalPrice =
     +detailOrder.volume * +detailOrder.sellPrice + (calcPrice ? calcPrice : 0);
-  console.log(totalPrice, 'totalPrice75', detailOrder, calcPrice);
+  customLog(totalPrice, 'totalPrice75', detailOrder, calcPrice);
 
   const distanceCeil = distance ? Math.ceil(distance / 1000) : 0;
 
-  // const addPrice = useMemo(() => {
-  //   const { Category } = productData;
-  //   const { Parent } = Category;
-  //   const { AdditionalPrices } = Parent;
-
-  //   for (const price of AdditionalPrices) {
-  //     if (price.type === 'DISTANCE') {
-  //       if (distanceCeil >= price.min && distanceCeil <= price.max) {
-  //         console.log(price, 'additioncalprices87');
-
-  //         return price.price;
-  //       }
-  //     }
-  //   }
-  //   return 0;
-  // }, [productData, distanceCeil]);
   function getAddPrice(): {
     delivery: distanceDeliverType;
     distance: distanceDeliverType;

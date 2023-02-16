@@ -1,4 +1,5 @@
 import { getAllOrders } from '@/actions/OrderActions';
+import { customLog } from '@/utils/generalFunc';
 import { createMachine } from 'xstate';
 import { assign } from 'xstate/lib/actions';
 
@@ -247,7 +248,7 @@ export const transactionMachine =
             ];
             return response;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
         getTransactions: async (_context, _event) => {
@@ -514,7 +515,7 @@ export const transactionMachine =
             // };
             return response.data as any;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
       },

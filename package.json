@@ -11,10 +11,9 @@
     "android": "rm -rf android/build && rm -rf android/app/build && react-native run-android --variant=developmentDebug",
     "androidProd": "rm -rf android/build && rm -rf android/app/build && react-native run-android --variant=productionDebug",
     "androidRelease": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleProductionRelease && cd ..",
-    "androidBuild-DevDebug": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleDevelopmentDebug && cd ..",
-    "androidBundle-DevDebug": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleDevelopmentDebug && cd ..",
-    "androidBuild-ProdDebug": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleProductionDebug && cd ..",
-    "androidBundle-ProdDebug": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleProductionDebug && cd .."
+    "androidReleaseAPK": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleProductionRelease && cd ..",
+    "androidRelease-Dev": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleDevelopmentDebug && cd ..",
+    "androidReleaseAPK-Dev": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleDevelopmentRelease && cd .."
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4",

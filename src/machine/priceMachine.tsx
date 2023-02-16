@@ -3,6 +3,7 @@ import {
   getAllBrikProducts,
   getProductsCategories,
 } from '@/actions/InventoryActions';
+import { customLog } from '@/utils/generalFunc';
 import { hasLocationPermission } from '@/utils/permissions';
 import { Alert } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -409,7 +410,7 @@ export const priceMachine =
             );
             return response.data.result;
           } catch (error) {
-            console.log(error);
+            customLog(error);
             // throw new Error(error.message);
           }
         },
@@ -426,7 +427,7 @@ export const priceMachine =
             );
             return response.data;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
       },
