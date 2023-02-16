@@ -26,8 +26,7 @@ import OperationStack from './Operation/Stack';
 import SalesStack from './Sales/Stack';
 import HunterAndFarmers from '@/screens/HunterAndFarmers';
 import { useSelector } from 'react-redux';
-import {  RootState } from '@/redux/store';
-
+import { RootState } from '@/redux/store';
 const Stack = createNativeStackNavigator();
 
 const RootScreen = (

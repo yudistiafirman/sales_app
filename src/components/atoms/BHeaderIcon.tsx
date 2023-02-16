@@ -1,6 +1,5 @@
 import Icon from 'react-native-vector-icons/Feather';
-
-import React from 'react';
+import * as React from 'react';
 import { TouchableOpacity } from 'react-native';
 import resScale from '@/utils/resScale';
 import colors from '@/constants/colors';

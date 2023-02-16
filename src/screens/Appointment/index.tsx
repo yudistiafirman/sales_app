@@ -34,11 +34,10 @@ import moment from 'moment';
 import { postBookingAppointment } from '@/actions/ProductivityActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import {
-  closePopUp,
-  openPopUp,
-  setIsPopUpVisible,
-} from '@/redux/reducers/modalReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { APPOINTMENT } from '@/navigation/ScreenNames';
+
 const { width } = Dimensions.get('window');
 const Appointment = () => {
   const navigation = useNavigation();
@@ -93,6 +92,10 @@ const Appointment = () => {
       headerLeft: () => renderHeaderLeft(),
     });
   }, [navigation, renderHeaderLeft, step]);
+
+  React.useEffect(() => {
+    crashlytics().log(APPOINTMENT);
+  }, []);
 
   const renderBtnIcon = () => (
     <Icon

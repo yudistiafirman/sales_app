@@ -32,6 +32,8 @@ import { getLocationCoordinates } from '@/actions/CommonActions';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const FirstStep = () => {
@@ -109,6 +111,8 @@ const FirstStep = () => {
   }, []);
 
   React.useEffect(() => {
+    crashlytics().log(CREATE_VISITATION + '-Step1');
+
     console.log(values.stepOne.createdLocation.formattedAddress, 'onEffect');
     if (mapRef.current) {
       mapRef?.current?.animateToRegion(region);

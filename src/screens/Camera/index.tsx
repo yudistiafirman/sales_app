@@ -6,6 +6,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { hasCameraPermissions } from '@/utils/permissions';
+import { CAMERA } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const Camera = () => {
   const dispatch = useDispatch();
@@ -16,6 +18,8 @@ const Camera = () => {
   const photoTitle = route?.params?.photoTitle;
 
   useEffect(() => {
+    crashlytics().log(CAMERA);
+
     navigation.addListener('focus', () => {
       hasCameraPermissions();
     });

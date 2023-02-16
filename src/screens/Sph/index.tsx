@@ -7,8 +7,6 @@ import React, {
   useContext,
   useLayoutEffect,
 } from 'react';
-// import StepIndicator from 'react-native-step-indicator';
-// import StepperIndicator from '../../components/molecules/StepIndicator';
 import {
   BHeaderIcon,
   BHeaderTitle,
@@ -32,6 +30,8 @@ import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
 import { Region } from 'react-native-maps';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import { layout } from '@/constants';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SPH } from '@/navigation/ScreenNames';
 
 const labels = [
   'Cari Pelanggan',
@@ -133,6 +133,8 @@ function SphContent() {
   }, []);
 
   useEffect(() => {
+    crashlytics().log(SPH);
+
     stepHandler(sphData, stepsDone, setStepsDone, stepControll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
