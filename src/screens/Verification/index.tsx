@@ -70,20 +70,18 @@ const Verification = () => {
         const { accessToken } = response.data.data;
         const decoded = jwtDecode<JwtPayload>(accessToken);
         await bStorage.setItem(storageKey.userToken, accessToken);
-        bStorage.setItem('firstLogin', 'true').then(() => {
-          dispatch(setUserData(decoded));
-          setVerificationState({
-            ...verificationState,
-            errorOtp: '',
-            otpValue: '',
-            loading: false,
-          });
-          crashlytics().setUserId(response.data.id);
-          crashlytics().setAttributes({
-            role: response.data.type,
-            email: response.data.email,
-            username: response.data.phone,
-          });
+        dispatch(setUserData(decoded));
+        setVerificationState({
+          ...verificationState,
+          errorOtp: '',
+          otpValue: '',
+          loading: false,
+        });
+        crashlytics().setUserId(response.data.id);
+        crashlytics().setAttributes({
+          role: response.data.type,
+          email: response.data.email,
+          username: response.data.phone,
         });
       } else {
         throw new Error(response.data.message);

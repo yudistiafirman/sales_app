@@ -19,21 +19,21 @@ import {
   SECURITY_TAB_TITLE,
   VERIFICATION,
   VERIFICATION_TITLE,
-  HUNTER_AND_FARMERS,
 } from './ScreenNames';
 import OperationHeaderRight from './Operation/HeaderRight';
 import OperationStack from './Operation/Stack';
 import SalesStack from './Sales/Stack';
-import HunterAndFarmers from '@/screens/HunterAndFarmers';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { useDispatch } from 'react-redux';
+import { toggleHunterScreen } from '@/redux/reducers/authReducer';
+import BackgroundTimer from 'react-native-background-timer';
+import { AppDispatch } from '@/redux/store';
+import moment from 'moment';
 const Stack = createNativeStackNavigator();
 
 const RootScreen = (
   userData: JwtPayload | null,
   isSignout: boolean,
-  userType?: USER_TYPE,
-  hunterScreen?: string | null
+  userType?: USER_TYPE
 ) => {
   if (userData !== null) {
     switch (userType) {
@@ -69,21 +69,8 @@ const RootScreen = (
           </>
         );
       default:
-        console.log(hunterScreen);
         return (
           <>
-            {hunterScreen && (
-              <Stack.Screen
-                name={HUNTER_AND_FARMERS}
-                key={HUNTER_AND_FARMERS}
-                component={HunterAndFarmers}
-                options={{
-                  headerTitle: '',
-                  headerTitleAlign: 'center',
-                }}
-              />
-            )}
-
             <Stack.Screen
               name={TAB_ROOT}
               key={TAB_ROOT}
@@ -131,8 +118,21 @@ const RootScreen = (
 
 function AppNavigatorV2() {
   const { isLoading, userData, isSignout } = useBootStrapAsync();
-  const { hunterScreen } = useSelector((state: RootState) => state.auth);
   const userType = USER_TYPE.SALES;
+  const dispatch = useDispatch<AppDispatch>();
+  let timeoutId = React.useRef();
+  let now = moment();
+  let nextdays = moment().add(1, 'days').format('L');
+  let duration = Math.abs(now.diff(nextdays, 'millisecond'));
+
+  React.useEffect(() => {
+    timeoutId.current = BackgroundTimer.runBackgroundTimer(() => {
+      dispatch(toggleHunterScreen(true));
+    }, duration);
+    return () => {
+      BackgroundTimer.clearTimeout(timeoutId.current);
+    };
+  }, [dispatch, duration]);
 
   if (isLoading) {
     return <Splash />;
@@ -150,7 +150,7 @@ function AppNavigatorV2() {
           },
         }}
       >
-        {RootScreen(userData, isSignout, userType, hunterScreen)}
+        {RootScreen(userData, isSignout, userType)}
       </Stack.Navigator>
     );
   }

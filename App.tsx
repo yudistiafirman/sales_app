@@ -23,7 +23,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '@/redux/store';
 import Popup from '@/components/templates/PopupGlobal/Popup';
 import AppNavigatorV2 from '@/navigation/AppNavigatorV2';
-import { View } from 'react-native';
+import HunterAndFarmers from '@/screens/HunterAndFarmers';
 import NetworkLogger, {
   startNetworkLogging,
 } from 'react-native-network-logger';
@@ -136,6 +136,7 @@ function App() {
           <ReduxProvider store={store}>
             <Popup />
             <AppNavigatorV2 />
+            <HunterAndFarmers />
             {__DEV__ && networkLogger()}
           </ReduxProvider>
         </PaperProvider>
