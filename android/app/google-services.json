@@ -1,15 +1,16 @@
 {
   "project_info": {
     "project_number": "81324684184",
+    "firebase_url": "https://brik-522cd-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "brik-522cd",
     "storage_bucket": "brik-522cd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:81324684184:android:e98a2db0b2108078ccf1ed",
+        "mobilesdk_app_id": "1:81324684184:android:316a19f78c8e0394ccf1ed",
         "android_client_info": {
-          "package_name": "com.bsa"
+          "package_name": "bod.app"
         }
       },
       "oauth_client": [],
