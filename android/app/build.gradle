@@ -138,6 +138,10 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
+def rootVersionCode = 1
+def rootDevVersionName = "0.0.1 (Dev)"
+def rootProdVersionName = "0.0.1"
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -232,11 +236,11 @@ android {
         development {
             dimension "version"
             applicationId developmentAppID
-            versionCode 1
-            versionName "0.0.1 (Dev)"
+            versionCode rootVersionCode
+            versionName rootDevVersionName
             resValue "string", "app_name", developmentAppName
-            buildConfigField "long", "VERSION_CODE", "1"
-            buildConfigField "String", "VERSION_NAME", "\"0.0.1 (Dev)\""
+            buildConfigField "long", "VERSION_CODE", "${rootVersionCode}"
+            buildConfigField "String", "VERSION_NAME", "\"${rootDevVersionName}\""
             ndk {
                 abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
             }
@@ -245,11 +249,11 @@ android {
         production {
             dimension "version"
             applicationId productionAppID
-            versionCode 1
-            versionName "0.0.1"
+            versionCode rootVersionCode
+            versionName rootProdVersionName
             resValue "string", "app_name", productionAppName
-            buildConfigField "long", "VERSION_CODE", "1"
-            buildConfigField "String", "VERSION_NAME", "\"0.0.1\""
+            buildConfigField "long", "VERSION_CODE", "${rootVersionCode}"
+            buildConfigField "String", "VERSION_NAME", "\"${rootProdVersionName}\""
             ndk {
                 abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
             }
@@ -277,8 +281,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            // signingConfig signingConfigs.release
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             firebaseCrashlytics {

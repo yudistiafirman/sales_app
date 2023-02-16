@@ -4,15 +4,16 @@
   "private": true,
   "scripts": {
     "android": "rm -rf android/build && rm -rf android/app/build && react-native run-android --variant=developmentDebug",
-    "android-buildRelease": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleDevelopmentRelease && cd ..",
-    "android-bundleRelease": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleDevelopmentRelease && cd ..",
+    "androidBuild-DevDebug": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleDevelopmentDebug && cd ..",
+    "androidBundle-DevDebug": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleDevelopmentDebug && cd ..",
     "ios": "react-native run-ios",
     "start": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint .",
     "androidProd": "rm -rf android/build && rm -rf android/app/build && react-native run-android --variant=productionDebug",
-    "android-buildProdRelease": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleProductionRelease && cd ..",
-    "android-bundleProdRelease": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleProductionRelease && cd .."
+    "androidBuild-ProdDebug": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleProductionDebug && cd ..",
+    "androidBundle-ProdDebug": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleProductionDebug && cd ..",
+    "androidRelease": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleProductionRelease && cd .."
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4",
