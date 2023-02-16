@@ -6,10 +6,16 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useAppointmentData } from '@/hooks';
 import { StyleSheet } from 'react-native';
 import SearchBar from './SearchBar';
+import { APPOINTMENT } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const FirstStep = () => {
   const [values] = useAppointmentData();
   const { searchQuery } = values;
+
+  React.useEffect(() => {
+    crashlytics().log(APPOINTMENT + '-Step1');
+  }, []);
 
   return (
     <KeyboardAwareScrollView style={styles.firstStepContainer}>

@@ -18,6 +18,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { beautifyPhoneNumber, getStatusTrx } from '@/utils/generalFunc';
 import moment from 'moment';
 import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 function ListProduct(item: any) {
   return (
@@ -36,9 +37,14 @@ function ListProduct(item: any) {
 const TransactionDetail = () => {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
+
   useHeaderTitleChanged({
     title: route?.params?.title,
   });
+
+  React.useEffect(() => {
+    crashlytics().log(TRANSACTION_DETAIL);
+  }, []);
 
   const onPressLocation = (lat: number, lon: number) => {
     console.log('kann', lat, lon);

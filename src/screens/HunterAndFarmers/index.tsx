@@ -1,14 +1,17 @@
 import { bStorage } from '@/actions';
-import { BSpacer, BSvg, BText, SVGName } from '@/components';
+import { BSpacer, BText } from '@/components';
 import { layout } from '@/constants';
 import font from '@/constants/fonts';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
-import { APPOINTMENT, TAB_HOME, TAB_ROOT } from '@/navigation/ScreenNames';
-import { toggleHunterScreen } from '@/redux/reducers/authReducer';
+import {
+  APPOINTMENT,
+  HUNTER_AND_FARMERS,
+  TAB_ROOT,
+} from '@/navigation/ScreenNames';
 import { AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import * as React from 'react';
 import {
   Image,
   SafeAreaView,
@@ -17,6 +20,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const HunterAndFarmers = () => {
   const navigation = useNavigation();
@@ -41,6 +45,10 @@ const HunterAndFarmers = () => {
         console.log('ini error', err);
       });
   };
+
+  React.useEffect(() => {
+    crashlytics().log(HUNTER_AND_FARMERS);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>

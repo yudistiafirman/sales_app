@@ -17,6 +17,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { RootState } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SPH } from '@/navigation/ScreenNames';
 
 export default function FirstStep() {
   const dispatch = useDispatch();
@@ -28,6 +30,10 @@ export default function FirstStep() {
   function resetSearch() {
     setSearchQuery('');
   }
+
+  React.useEffect(() => {
+    crashlytics().log(SPH + '-Step1');
+  }, []);
 
   const tabToRender: { tabTitle: string; totalItems: number }[] =
     useMemo(() => {

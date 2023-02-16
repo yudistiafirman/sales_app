@@ -29,6 +29,7 @@ import { SEARCH_AREA, SPH } from '@/navigation/ScreenNames';
 import { fetchAddressSuggestion } from '@/redux/async-thunks/commonThunks';
 import { useKeyboardActive } from '@/hooks';
 import { TextInput } from 'react-native-paper';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 function checkObj(obj: SphStateInterface) {
   const billingAddressFilled =
@@ -283,7 +284,8 @@ export default function SecondStep() {
   }, [sphState]);
 
   useEffect(() => {
-    // send('askingPermission');
+    crashlytics().log(SPH + '-Step2');
+
     DeviceEventEmitter.addListener(eventKeyObj.shipp, (data) => {
       onChangeRegion(data.coordinate, {});
     });
