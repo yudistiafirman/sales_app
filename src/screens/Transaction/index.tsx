@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { BSpacer, BTouchableText } from '@/components';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
@@ -12,8 +16,13 @@ import { resScale } from '@/utils';
 import TransactionList from './element/TransactionList';
 import { transactionMachine } from '@/machine/transactionMachine';
 import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
-import { SPH, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
+import {
+  SPH,
+  TAB_TRANSACTION,
+  TRANSACTION_DETAIL,
+} from '@/navigation/ScreenNames';
 import { getOrderByID } from '@/actions/OrderActions';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
@@ -36,6 +45,16 @@ const Transaction = () => {
       />
     ),
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      send('backToGetTransactions');
+    }, [send])
+  );
+
+  React.useEffect(() => {
+    crashlytics().log(TAB_TRANSACTION);
+  }, []);
 
   const getOneOrder = async (id: string) => {
     try {

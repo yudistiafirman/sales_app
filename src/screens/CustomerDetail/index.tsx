@@ -13,9 +13,16 @@ import ProjectBetween from './elements/ProjectBetween';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
 import BillingModal from './elements/BillingModal';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { CUSTOMER_DETAIL } from '@/navigation/ScreenNames';
 
 export default function CustomerDetail() {
   const [isBillingVisible, setIsBillingVisible] = useState(false);
+
+  React.useEffect(() => {
+    crashlytics().log(CUSTOMER_DETAIL);
+  }, []);
+
   return (
     <>
       <BillingModal

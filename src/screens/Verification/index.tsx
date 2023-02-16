@@ -4,7 +4,7 @@ import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { Image, SafeAreaView, Text, View } from 'react-native';
+import { Image, SafeAreaView } from 'react-native';
 import OTPField from './element/OTPField';
 import OTPFieldLabel from './element/OTPFieldLabel';
 import ResendOTP from './element/ResendOTP';
@@ -13,14 +13,14 @@ import VerificationStyles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { setUserData, toggleHunterScreen } from '@/redux/reducers/authReducer';
+import { setUserData } from '@/redux/reducers/authReducer';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import bStorage from '@/actions/BStorage';
 import { signIn } from '@/actions/CommonActions';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import storageKey from '@/constants/storageKey';
 import crashlytics from '@react-native-firebase/crashlytics';
-import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
+import { VERIFICATION } from '@/navigation/ScreenNames';
 
 const Verification = () => {
   const { phoneNumber } = useSelector(
@@ -51,6 +51,8 @@ const Verification = () => {
   }, [countDownOtp]);
 
   React.useEffect(() => {
+    crashlytics().log(VERIFICATION);
+
     if (otpValue.length === 6) {
       onLogin();
     }

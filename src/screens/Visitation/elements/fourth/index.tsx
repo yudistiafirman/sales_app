@@ -26,7 +26,6 @@ import { CreateVisitationState } from '@/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
 import {
-  getOneVisitation,
   postVisitation,
   putVisitationFlow,
 } from '@/redux/async-thunks/productivityFlowThunks';
@@ -35,7 +34,8 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import { deleteImage } from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
-import { CAMERA, SPH_TITLE } from '@/navigation/ScreenNames';
+import { CAMERA, CREATE_VISITATION, SPH_TITLE } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export type selectedDateType = {
   date: string;
@@ -205,6 +205,7 @@ const Fourth = () => {
   );
 
   useEffect(() => {
+    crashlytics().log(CREATE_VISITATION + '-Step4');
     // photoUrls;
     onChange('images')(photoUrls);
     // eslint-disable-next-line react-hooks/exhaustive-deps

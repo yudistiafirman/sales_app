@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   BBackContinueBtn,
   BContainer,
@@ -21,7 +21,6 @@ import {
   SphStateInterface,
 } from '@/interfaces';
 import { BFlatlistItems } from '@/components';
-
 import ChoosePicModal from '../ChoosePicModal';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
@@ -32,6 +31,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { postOrderSph } from '@/redux/async-thunks/orderThunks';
 import { RootState } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SPH } from '@/navigation/ScreenNames';
 
 function countNonNullValues(array) {
   let count = 0;
@@ -219,6 +220,11 @@ export default function FifthStep() {
       },
     },
   ];
+
+  React.useEffect(() => {
+    crashlytics().log(SPH + '-Step5');
+  }, []);
+
   function addPicHandler() {
     setIsModalVisible(false);
     bottomSheetRef.current?.expand();

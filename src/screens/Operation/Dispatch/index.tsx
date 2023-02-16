@@ -4,6 +4,8 @@ import colors from '@/constants/colors';
 import { layout } from '@/constants';
 import { USER_TYPE } from '@/models/EnumModel';
 import OperationList from '../element/OperationList';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { TAB_DISPATCH } from '@/navigation/ScreenNames';
 
 const Dispatch = () => {
   const [isLoading] = useState(false);
@@ -21,6 +23,10 @@ const Dispatch = () => {
         }),
     []
   );
+
+  React.useEffect(() => {
+    crashlytics().log(TAB_DISPATCH);
+  }, []);
 
   return (
     <View style={style.container}>
