@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const useBootStrapAsync = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, userData, isSignout, hunterScreen } = useSelector(
+  const { isLoading, userData, isSignout } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -28,13 +28,6 @@ const useBootStrapAsync = () => {
       if (userToken) {
         const decoded = jwtDecode<JwtPayload>(userToken);
         dispatch(setUserData(decoded));
-        const firstLogin = await bStorage.getItem('firstLogin');
-        console.log('ini firstlogin',firstLogin)
-        if (firstLogin === undefined) {
-          dispatch(toggleHunterScreen(false));
-        }else {
-          dispatch(toggleHunterScreen(true))
-        }
       }
       dispatch(setIsLoading(false));
     } catch (error) {
