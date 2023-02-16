@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
 import { customLog } from '@/utils/generalFunc';
+import { useRoute } from '@react-navigation/native';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type documentType = {
@@ -28,36 +29,12 @@ type docResponse = {
   cbd: documentType[];
   credit: documentType[];
 };
-const dummyProjectId = 'cc5b5ed0-ffbf-4ca9-95b9-80e75cd97a22';
-const routeDummy = {
-  params: {
-    docs: [
-      {
-        docId: 'ddf62784-9fe6-5bff-8764-1e6f707fff3e',
-        docName: 'Foto NPWP',
-        paymentType: 'CBD',
-        isRequired: false,
-        type: 'png',
-        fileName: '1000000019',
-        url: 'https://cdn.oreo.brik.id/new-brik/ebbde260-9149-443d-b4e7-b0a8ec6ce248/customerDetail/1000000019_1676531777499.png',
-      },
-      {
-        docId: 'f407d99d-c0e2-5cdf-b972-da308e2b0049',
-        docName: 'Foto KTP',
-        paymentType: 'CBD',
-        isRequired: false,
-        type: 'png',
-        fileName: '1000000019',
-        url: 'https://cdn.oreo.brik.id/new-brik/ebbde260-9149-443d-b4e7-b0a8ec6ce248/customerDetail/1000000019_1676530185165.png',
-      },
-    ],
-  },
-};
 
 export default function RequiredDocuments() {
   const dispatch = useDispatch();
+  const route = useRoute()
 
-  const { params } = routeDummy;
+  const { docs,projectId } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [reqDocuments, setReqDocuments] = useState<docResponse>({});
   const [docState, setDocState] = useState<{ [key: string]: any }>({});
@@ -102,8 +79,8 @@ export default function RequiredDocuments() {
           newDocState[doc.id] = null;
         });
 
-        if (params?.docs && Array.isArray(params.docs)) {
-          params?.docs.forEach((doc) => {
+        if (docs && Array.isArray(docs)) {
+          docs.forEach((doc) => {
             if (doc.docId in newDocState) {
               newDocState[doc.docId] = doc;
             }
@@ -177,7 +154,7 @@ export default function RequiredDocuments() {
       const payloadProjectDoc = {
         documentId,
         fileId: photoResponse.id,
-        projectId: dummyProjectId, //hardcode di atas,
+        projectId: projectId, //hardcode di atas,
       };
 
       const projectDocResponse = await dispatch(

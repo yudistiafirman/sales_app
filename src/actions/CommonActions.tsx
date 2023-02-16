@@ -101,3 +101,24 @@ export const postProjectDoc = async (data: {
     await getOptions('POST', data, true)
   );
 };
+
+export const getProjectDetail = async (companyId?: string) => {
+  return request(
+    BrikApiCommon.getProjectDetail(companyId),
+    await getOptions('GET', undefined, true)
+  );
+};
+
+export const getProjectIndivualDetail = async (projectId: string) => {
+  return request(
+    BrikApiCommon.getProjectDetailIndividual(projectId),
+    await getOptions('GET', undefined, true)
+  );
+};
+
+export const updateBillingAddress = async (projectId: string, payload: any) => {
+  return request(
+    BrikApiCommon.updateBillingAddress(projectId),
+    await getOptions('PUT', payload, true)
+  );
+};
