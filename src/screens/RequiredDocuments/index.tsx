@@ -285,7 +285,11 @@ export default function RequiredDocuments() {
         <ProgressBar
           styleAttr="Horizontal"
           indeterminate={false}
-          progress={filledDocsCount / totalDocsCount}
+          progress={
+            filledDocsCount / totalDocsCount
+              ? filledDocsCount / totalDocsCount
+              : 0
+          }
           color={colors.primary}
         />
       </View>
