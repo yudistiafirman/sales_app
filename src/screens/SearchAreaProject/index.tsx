@@ -17,6 +17,7 @@ import { useDispatch } from 'react-redux';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import {
   CREATE_VISITATION,
+  CUSTOMER_DETAIL,
   LOCATION,
   SEARCH_AREA,
   SPH,
@@ -55,7 +56,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         if (typeof lat === 'string') {
           coordinate.latitude = Number(lat);
         }
-        if (from === CREATE_VISITATION || from === SPH) {
+        if (from === CREATE_VISITATION || from === SPH ||from === CUSTOMER_DETAIL) {
           if (eventKey) {
             DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
           } else {
