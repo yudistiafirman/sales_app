@@ -40,8 +40,11 @@ import {
   CREATE_VISITATION,
   // CUSTOMER_DETAIL,
   SPH,
+  TAB_HOME,
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
+import crashlytics from '@react-native-firebase/crashlytics';
+
 const { height } = Dimensions.get('window');
 
 const initialSnapPoints = (+height.toFixed() - 115) / 10;
@@ -184,6 +187,7 @@ const Beranda = () => {
   };
 
   React.useEffect(() => {
+    crashlytics().log(TAB_HOME);
     fetchVisitations();
   }, [page, selectedDate]);
 

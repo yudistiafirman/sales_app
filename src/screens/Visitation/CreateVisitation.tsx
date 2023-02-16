@@ -44,6 +44,8 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { resetRegion, updateRegion } from '@/redux/reducers/locationReducer';
 import { layout } from '@/constants';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { CREATE_VISITATION } from '@/navigation/ScreenNames';
 
 const labels = [
   'Alamat Proyek',
@@ -190,6 +192,8 @@ const CreateVisitation = () => {
   });
 
   useEffect(() => {
+    crashlytics().log(CREATE_VISITATION);
+
     if (existingVisitation) {
       updateValue('existingVisitationId', existingVisitation.id);
       populateData(existingVisitation, updateValueOnstep);

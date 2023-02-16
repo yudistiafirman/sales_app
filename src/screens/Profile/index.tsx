@@ -9,6 +9,7 @@ import * as React from 'react';
 import { Alert, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { TAB_PROFILE } from '@/navigation/ScreenNames';
 
 const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,6 +30,10 @@ const Profile = () => {
   useCustomHeaderRight({
     customHeaderRight: <BTouchableText onPress={onLogout} title="Logout" />,
   });
+
+  React.useEffect(() => {
+    crashlytics().log(TAB_PROFILE);
+  }, []);
 
   return (
     <View>

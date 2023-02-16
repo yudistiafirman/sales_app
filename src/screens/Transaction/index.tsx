@@ -16,8 +16,13 @@ import { resScale } from '@/utils';
 import TransactionList from './element/TransactionList';
 import { transactionMachine } from '@/machine/transactionMachine';
 import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
-import { SPH, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
+import {
+  SPH,
+  TAB_TRANSACTION,
+  TRANSACTION_DETAIL,
+} from '@/navigation/ScreenNames';
 import { getOrderByID } from '@/actions/OrderActions';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
@@ -43,9 +48,13 @@ const Transaction = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      send('backToGetTransactions')
+      send('backToGetTransactions');
     }, [send])
   );
+
+  React.useEffect(() => {
+    crashlytics().log(TAB_TRANSACTION);
+  }, []);
 
   const getOneOrder = async (id: string) => {
     try {
