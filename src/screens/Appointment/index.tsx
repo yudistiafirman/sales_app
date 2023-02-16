@@ -298,8 +298,8 @@ const Appointment = () => {
     const companyNameCondition = stepOne.company.Company;
     const projectNameConditionIndividu = stepOne.individu.name;
     const projectNameConditionCompany = stepOne.company.name;
-    const picIndividu = stepOne.individu.PIC;
-    const picCompany = stepOne.company.PIC;
+    const picIndividu = stepOne.individu.PIC ? stepOne.individu.PIC : [];
+    const picCompany = stepOne.company.PIC ? stepOne.company.PIC : [];
 
     if (customerTypeCondition === 'company') {
       return (

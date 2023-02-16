@@ -145,6 +145,7 @@ const renderInput = (
     textInputAsButton,
     textInputAsButtonOnPress,
     outlineColor,
+    loading,
   } = input;
 
   if (type === 'quantity') {
@@ -426,10 +427,16 @@ const renderInput = (
   if (type === 'fileInput') {
     return (
       <React.Fragment>
-        <BFileInput label={label} value={value} onChange={onChange} />
+        <BFileInput
+          isLoading={loading}
+          label={label}
+          value={value}
+          onChange={onChange}
+          isError={isError}
+        />
         {isError && (
-          <BText size="small" color="primary" bold="100">
-            {`${label} harus diisi`}
+          <BText style={{ fontSize: fonts.size.xs }} color="primary" bold="400">
+            {customerErrorMsg}
           </BText>
         )}
       </React.Fragment>

@@ -89,3 +89,14 @@ export const getAddressSuggestion = async (search?: string, page?: number) => {
     await getOptions('GET', undefined, true)
   );
 };
+
+export const postProjectDoc = async (data: {
+  projectId: string;
+  documentId: string;
+  fileId: string;
+}) => {
+  return request(
+    BrikApiCommon.projectDoc(),
+    await getOptions('POST', data, true)
+  );
+};
