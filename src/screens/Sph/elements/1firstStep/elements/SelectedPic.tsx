@@ -13,6 +13,7 @@ import { SphContext } from '../../context/SphContext';
 // const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 import Entypo from 'react-native-vector-icons/Entypo';
+import { customLog } from '@/utils/generalFunc';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -184,7 +185,7 @@ export default function SelectedPic({
         initialIndex={-1}
         addPic={(pic: PIC) => {
           // onChange('selectedPic', pic);
-          console.log(pic, 'bsheetaddpic');
+          customLog(pic, 'bsheetaddpic');
           pic.isSelected = false;
           const currentList = sphState.selectedCompany?.PIC
             ? sphState.selectedCompany.PIC

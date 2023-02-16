@@ -60,8 +60,6 @@ const SearchFlow = ({
   }, []);
 
   const onChangeSearch = (text: string) => {
-    // console.log(isSearch, 'isSearch53');
-
     if (!isSearch && text) {
       onSearch(true);
     }

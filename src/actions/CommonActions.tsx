@@ -1,5 +1,6 @@
 import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import { getOptions, request } from '@/networking/request';
+import { customLog } from '@/utils/generalFunc';
 
 export const getLocationCoordinates = async (
   longitude: number,
@@ -45,7 +46,7 @@ export const uploadFileImage = async (files: any[], from: string) => {
     formData.append('photos', file);
   });
   formData.append('name', from);
-  console.log(formData, 'formDatauploadFileImage48');
+  customLog(formData, 'formDatauploadFileImage48');
 
   //http://192.168.18.23:3000/common/file/upload
   //BrikApiCommon.filesUpload(),

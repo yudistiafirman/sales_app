@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 const company = require('@/assets/icon/Visitation/company.png');
 const profile = require('@/assets/icon/Visitation/profile.png');
@@ -61,7 +62,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
 
   const fetchDebounce = useMemo(() => {
     return debounce((searchQuery: string) => {
-      console.log('jalan di second line60', searchQuery);
+      customLog('jalan di second line60', searchQuery);
 
       dispatch(getProjectsByUserThunk({ search: searchQuery }))
         .unwrap()
@@ -93,7 +94,6 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   };
 
   const inputs: Input[] = React.useMemo(() => {
-    // console.log('rerender input');
     const baseInput: Input[] = [
       {
         label: 'Jenis Pelanggan',
@@ -152,7 +152,6 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           isError: false,
           type: 'textInput',
           onChange: (e: any) => {
-            // console.log(e, 'event');
             onChange('projectName')(e.nativeEvent.text);
           },
           value: state.projectName,

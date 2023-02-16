@@ -6,6 +6,7 @@ import { bStorage } from '@/actions';
 import { storageKey } from '@/constants';
 import { setUserData } from '@/redux/reducers/authReducer';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
+import { customLog } from '@/utils/generalFunc';
 const production = false;
 let store: any;
 
@@ -64,9 +65,9 @@ export const getOptions = async (
     }
     return options;
   } catch (error) {
-    console.log('====================================');
-    console.log(error, 'error/getOptions');
-    console.log('====================================');
+    customLog('====================================');
+    customLog(error, 'error/getOptions');
+    customLog('====================================');
   }
 };
 
@@ -80,17 +81,14 @@ export const injectStore = (_store: any) => {
 instance.interceptors.response.use(
   async (res: AxiosResponse<Api.Response, any>) => {
     const { data, config } = res;
-    // console.log(JSON.stringify(res, null, 2), 'ini apa suuuuuu??');
     if (!data.success) {
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
         await bStorage.deleteItem(storageKey.userToken);
         store.dispatch(setUserData(null));
-        // console.log('stop');
         return Promise.resolve(res);
       }
 
-      // console.log('gajalan');
       if (data.error?.code === 'TKN008') {
         const responseRefreshToken = await instance.post<
           any,
@@ -115,7 +113,6 @@ instance.interceptors.response.use(
     return Promise.resolve(res);
   },
   (err: any) => {
-    // console.log(JSON.stringify(err, null, 2), 'ini apa??><><><><><><><>');
     return Promise.reject(err);
   }
 );

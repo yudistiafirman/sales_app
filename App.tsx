@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  Dimensions,
-  StatusBar,
-  TouchableHighlight,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { Dimensions, StatusBar, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import {
   DefaultTheme as NavigationTheme,
@@ -31,6 +25,7 @@ import { layout } from '@/constants';
 import Icon from 'react-native-vector-icons/Feather';
 import { StyleSheet } from 'react-native';
 import Draggable from 'react-native-draggable';
+import { isDevelopment } from '@/utils/generalFunc';
 
 startNetworkLogging();
 const height = Dimensions.get('window').height;
@@ -67,10 +62,8 @@ const paperTheme = {
 function App() {
   const [isNetworkLoggerVisible, setVisibleNetworkLogger] =
     React.useState(false);
-  const [isShowButtonNetwork, setShowButtonNetwork] = React.useState(
-    __DEV__ ? true : false
-  );
-  let lastPress = 0;
+  const [isShowButtonNetwork, setShowButtonNetwork] =
+    React.useState(isDevelopment);
 
   const networkLogger = () => {
     return (
@@ -137,7 +130,7 @@ function App() {
             <Popup />
             <AppNavigatorV2 />
             <HunterAndFarmers />
-            {__DEV__ && networkLogger()}
+            {isDevelopment() && networkLogger()}
           </ReduxProvider>
         </PaperProvider>
       </NavigationContainer>

@@ -20,6 +20,7 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { TouchableOpacity } from 'react-native';
+import { customLog } from '@/utils/generalFunc';
 
 export default function FirstStep() {
   const dispatch = useDispatch();
@@ -122,7 +123,7 @@ export default function FirstStep() {
       .unwrap()
       .then()
       .catch((err) => {
-        console.log(err, 'errgetAllProject');
+        customLog(err, 'errgetAllProject');
         dispatch(
           openPopUp({
             popUpType: 'error',
