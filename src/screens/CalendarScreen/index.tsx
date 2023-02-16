@@ -23,6 +23,8 @@ import {
 } from '@/redux/reducers/productivityFlowReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+import { CALENDAR } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export default function CalendarScreen() {
   const navigation = useNavigation();
@@ -36,6 +38,8 @@ export default function CalendarScreen() {
   // console.log(visitationCalendarMapped, 'visitationCalendarMapped');
   useHeaderTitleChanged({ title: 'Pilih Tanggal' });
   useEffect(() => {
+    crashlytics().log(CALENDAR);
+
     const today = moment();
     fetchVisitation({
       month: today.get('month') + 1,

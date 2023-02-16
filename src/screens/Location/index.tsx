@@ -13,6 +13,7 @@ import { locationMachine } from '@/machine/locationMachine';
 import { Region } from 'react-native-maps';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
+  LOCATION,
   LOCATION_TITLE,
   SEARCH_AREA,
   SPH,
@@ -26,6 +27,7 @@ import {
 } from '@/navigation/ScreenNames';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { resScale } from '@/utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const Location = () => {
   const navigation = useNavigation();
@@ -38,6 +40,7 @@ const Location = () => {
   });
 
   React.useEffect(() => {
+    crashlytics().log(LOCATION);
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude } = params.coordinate;

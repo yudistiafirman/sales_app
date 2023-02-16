@@ -21,7 +21,7 @@ const initialState: AuthState = {
   },
   isLoading: false,
   isSignout: false,
-  hunterScreen: true,
+  hunterScreen: false,
 };
 
 export const authSlice = createSlice({

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { BDivider, BForm, BSpacer, BText, SVGName } from '@/components';
+import { BDivider, BForm, BSpacer, BText } from '@/components';
 import {
   CreateVisitationSecondStep,
   Input,
@@ -19,6 +19,9 @@ import { useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { useDispatch } from 'react-redux';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { CREATE_VISITATION } from '@/navigation/ScreenNames';
+
 const company = require('@/assets/icon/Visitation/company.png');
 const profile = require('@/assets/icon/Visitation/profile.png');
 
@@ -46,6 +49,8 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   };
 
   useEffect(() => {
+    crashlytics().log(CREATE_VISITATION + '-Step2');
+
     if (values.stepTwo.companyName) {
       updateValueOnstep('stepTwo', 'options', {
         items: [{ id: 1, title: values.stepTwo.companyName }],

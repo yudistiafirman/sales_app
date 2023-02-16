@@ -6,10 +6,11 @@ import { resScale } from '@/utils';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { CALENDAR } from '@/navigation/ScreenNames';
+import { APPOINTMENT, CALENDAR } from '@/navigation/ScreenNames';
 import { useAppointmentData } from '@/hooks';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { selectedDateType } from '@/screens/Visitation/elements/fourth';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const SecondStep = () => {
   const [values, dispatchValue] = useAppointmentData();
@@ -19,6 +20,8 @@ const SecondStep = () => {
       : 'Pilih Tanggal';
 
   useEffect(() => {
+    crashlytics().log(APPOINTMENT + '-Step2');
+
     DeviceEventEmitter.addListener(
       'CalendarScreen.selectedDate',
       (date: selectedDateType) => {

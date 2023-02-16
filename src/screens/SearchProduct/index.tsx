@@ -1,20 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import {
-  SafeAreaView,
-  View,
-  DeviceEventEmitter,
-  TouchableOpacity,
-} from 'react-native';
+import { SafeAreaView, View, DeviceEventEmitter } from 'react-native';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import resScale from '@/utils/resScale';
 import { BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
 import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import { searchProductMachine } from '@/machine/searchProductMachine';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
 
 const SearchProduct = () => {
   const route = useRoute<RouteProp<Record<string, object>, string>>();
@@ -48,11 +44,14 @@ const SearchProduct = () => {
   );
 
   React.useEffect(() => {
+    crashlytics().log(SEARCH_PRODUCT);
+
     if (route?.params) {
       const { distance } = route.params;
       send('sendingParams', { value: distance });
     }
   }, [route?.params]);
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: false,

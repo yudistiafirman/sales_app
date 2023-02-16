@@ -7,10 +7,16 @@ import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SCHEDULE } from '@/navigation/ScreenNames';
 
 const Schedule = () => {
   useHeaderTitleChanged({ title: 'Tugaskan DO' });
   const navigation = useNavigation();
+
+  React.useEffect(() => {
+    crashlytics().log(SCHEDULE);
+  }, []);
 
   const inputs: Input[] = React.useMemo(() => {
     const baseInput: Input[] = [

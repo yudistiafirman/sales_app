@@ -22,7 +22,8 @@ import { resScale } from '@/utils';
 import { colors, fonts } from '@/constants';
 import { SphContext } from '../context/SphContext';
 import { useNavigation } from '@react-navigation/native';
-import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
+import { SEARCH_PRODUCT, SPH } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 type ChosenProductType = {
   volume: string;
@@ -110,6 +111,8 @@ export default function FourthStep() {
   }, []);
 
   useEffect(() => {
+    crashlytics().log(SPH + '-Step4');
+
     if (sphState.chosenProducts.length > 0) {
       setChosenProducts(sphState?.chosenProducts);
     }
