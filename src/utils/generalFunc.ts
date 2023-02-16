@@ -59,7 +59,7 @@ export const beautifyPhoneNumber = (text: string) => {
 };
 
 export const customLog = (message?: any, ...optionalParams: any[]) => {
-  if (isDevelopment) console.log(message, optionalParams);
+  if (isDevelopment()) console.log(message, optionalParams);
 };
 
 export const isDevelopment = () => {

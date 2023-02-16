@@ -130,7 +130,7 @@ function App() {
             <Popup />
             <AppNavigatorV2 />
             <HunterAndFarmers />
-            {isDevelopment && networkLogger()}
+            {isDevelopment() && networkLogger()}
           </ReduxProvider>
         </PaperProvider>
       </NavigationContainer>
