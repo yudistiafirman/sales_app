@@ -39,10 +39,10 @@ export type RootStackParamList = {
     isReadOnly: boolean;
     from: string;
   };
-  SEARCH_AREA: { from: string };
+  SEARCH_AREA: { from: string; eventKey: string };
   CALENDAR: {};
   TRANSACTION_DETAIL: { title: string; data: any };
-  CUSTOMER_DETAIL: { existingVisitation?: visitationListResponse };
+  CUSTOMER_DETAIL: { existingVisitation?: any };
   DOCUMENTS: {};
 };
 

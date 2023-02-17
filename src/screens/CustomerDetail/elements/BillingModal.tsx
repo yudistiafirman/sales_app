@@ -19,15 +19,11 @@ import {
   BText,
 } from '@/components';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Input } from '@/interfaces';
-import { customLog } from '@/utils/generalFunc';
-import {
-  SEARCH_AREA,
-  CUSTOMER_DETAIL,
-} from '@/navigation/ScreenNames';
+import { Address, Input } from '@/interfaces';
+import { SEARCH_AREA, CUSTOMER_DETAIL } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { AppDispatch } from '@/redux/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Icons from 'react-native-vector-icons/Feather';
 import { updateBillingAddress } from '@/actions/CommonActions';
 import { openPopUp } from '@/redux/reducers/modalReducer';
@@ -38,10 +34,10 @@ type BillingModalType = {
   setFormattedAddress: React.Dispatch<React.SetStateAction<any>>;
   setRegion: React.Dispatch<React.SetStateAction<any>>;
   region: any;
-  projectId: string;
+  projectId: string | undefined;
 };
 
-const { height, width } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export default function BillingModal({
   isModalVisible,
@@ -120,7 +116,7 @@ export default function BillingModal({
   }, [billingState]);
 
   const onPressAddAddress = async () => {
-    let body = {};
+    let body: Address = {};
 
     if (region?.postalId) {
       body.postalid = region.postalId;
@@ -169,14 +165,14 @@ export default function BillingModal({
         );
       }
     } catch (error) {
-      setIsModalVisible(false)
+      setIsModalVisible(false);
       dispatch(
         openPopUp({
           popUpType: 'error',
           popUpText: error.message,
           outsideClickClosePopUp: true,
         })
-      )
+      );
     }
   };
 
@@ -214,15 +210,7 @@ export default function BillingModal({
             <BLabel bold="500" label={'Alamat Proyek'} isRequired />
             <BSpacer size="verySmall" />
             <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                paddingVertical: layout.pad.md,
-                backgroundColor: colors.border.disabled,
-                borderRadius: layout.radius.sm,
-                paddingHorizontal: layout.pad.ml,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              style={styles.searchAddress}
               onPress={() => {
                 setIsModalVisible(false);
                 navigation.navigate(SEARCH_AREA, {
@@ -238,7 +226,7 @@ export default function BillingModal({
                   color={colors.primary}
                 />
               </View>
-              <View style={{ paddingStart: layout.pad.ml, flex: 1 }}>
+              <View style={styles.selectedAddress}>
                 <>
                   <BLabel bold="500" label={nameAddress!} />
                   <BSpacer size="verySmall" />
@@ -283,4 +271,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.montserrat[700],
     fontSize: fonts.size.lg,
   },
+  searchAddress: {
+    flexDirection: 'row',
+    paddingVertical: layout.pad.md,
+    backgroundColor: colors.border.disabled,
+    borderRadius: layout.radius.sm,
+    paddingHorizontal: layout.pad.ml,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectedAddress: { paddingStart: layout.pad.ml, flex: 1 },
 });
