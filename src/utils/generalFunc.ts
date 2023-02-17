@@ -5,7 +5,7 @@ const { RNCustomConfig } = NativeModules;
 const flavor = RNCustomConfig?.flavor;
 
 export const getColorStatusTrx = (id: string) => {
-  console.log(id.toUpperCase(), 'uppercase');
+  customLog(id.toUpperCase(), 'uppercase');
 
   switch (id.toUpperCase()) {
     case 'DIAJUKAN' || 'DRAFT' || 'DALAM PRODUKSI' || 'SELESAI':

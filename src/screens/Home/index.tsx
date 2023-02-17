@@ -39,7 +39,6 @@ import {
   CAMERA,
   CREATE_VISITATION,
   CUSTOMER_DETAIL,
-  // CUSTOMER_DETAIL,
   SPH,
   TAB_HOME,
 } from '@/navigation/ScreenNames';
@@ -318,7 +317,7 @@ const Beranda = () => {
   ): Promise<void> {
     try {
       const status = dataItem.pilStatus;
-   
+
       dispatch(
         openPopUp({
           popUpType: 'loading',
