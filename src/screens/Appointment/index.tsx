@@ -14,7 +14,7 @@ import {
   StepOne,
 } from '@/context/AppointmentContext';
 import React, { useCallback, useLayoutEffect } from 'react';
-import { Alert, Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Steps from '../Sph/elements/Steps';
 import FirstStep from './element/FirstStep';
@@ -216,8 +216,6 @@ const Appointment = () => {
     if (stepOne[customerType].id) {
       payload.project.id = stepOne[customerType].id;
     }
-
-    console.log('ini payload', payload);
 
     payload.visitation.isBooking = true;
     try {
