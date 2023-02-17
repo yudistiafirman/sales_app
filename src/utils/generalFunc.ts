@@ -77,3 +77,11 @@ export const isProduction = () => {
     return false;
   }
 };
+
+export const isForceUpdate = (text: any): boolean => {
+  return text?.is_forced;
+};
+
+export const getMinVersionUpdate = (text: any): string => {
+  return text.min_version;
+};

@@ -29,9 +29,11 @@ const Splash = () => {
         let fetchedData = {} as Object;
         Object.entries(remoteConfig().getAll()).forEach(($) => {
           const [key, entry] = $;
+          let value = initialState.force_update;
+          if (Object.values(entry).length > 0) value = Object.values(entry)[0];
           fetchedData = {
             ...fetchedData,
-            [key]: JSON.parse(Object.values(entry)[0]),
+            [key]: value,
           };
         });
         customLog('config from remote: ', fetchedData);

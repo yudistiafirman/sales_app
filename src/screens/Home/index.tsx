@@ -1,6 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Linking,
+  NativeModules,
+} from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import resScale from '@/utils/resScale';
@@ -10,18 +17,19 @@ import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import BottomSheet from '@gorhom/bottom-sheet';
 import BVisitationCard from '@/components/molecules/BVisitationCard';
 import moment from 'moment';
-import { TextInput } from 'react-native-paper';
+import { Button, Dialog, Portal, TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
 import {
   BBottomSheet,
   BSearchBar,
   BFlatlistItems,
   BSpacer,
+  BText,
 } from '@/components';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import BTabViewScreen from '@/components/organism/BTabViewScreen';
-import { layout } from '@/constants';
+import { fonts, layout } from '@/constants';
 import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
 import {
   getAllVisitations,
@@ -44,15 +52,22 @@ import {
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { customLog } from '@/utils/generalFunc';
+import {
+  customLog,
+  getMinVersionUpdate,
+  isForceUpdate,
+} from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
+const { RNCustomConfig } = NativeModules;
+
+const versionName = RNCustomConfig?.version_name;
 
 const { height } = Dimensions.get('window');
 
 const initialSnapPoints = (+height.toFixed() - 115) / 10;
 
 const Beranda = () => {
-  const { force_update, enable_hunter_farmer } = useSelector(
+  const { force_update } = useSelector(
     (state: RootState) => state.remoteConfig
   );
   const dispatch = useDispatch();
@@ -71,6 +86,7 @@ const Beranda = () => {
 
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [isHeaderShown, setIsHeaderShown] = React.useState(true);
+  const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
 
   useHeaderStyleChanged({
     titleColor: colors.text.light,
@@ -133,6 +149,51 @@ const Beranda = () => {
     }, [])
   );
 
+  const renderUpdateDialog = () => {
+    return (
+      <Portal>
+        <Dialog
+          visible={isUpdateDialogVisible}
+          dismissable={!isForceUpdate(force_update)}
+          onDismiss={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
+          style={{ backgroundColor: colors.white }}
+        >
+          <Dialog.Title
+            style={{
+              fontFamily: fonts.family.montserrat[500],
+              fontSize: fonts.size.lg,
+            }}
+          >
+            Update Aplikasi
+          </Dialog.Title>
+          <Dialog.Content>
+            <BText bold="300">
+              Aplikasi anda telah usang, silakan update sebelum melanjutkan.
+            </BText>
+          </Dialog.Content>
+          <Dialog.Actions>
+            {!isForceUpdate(force_update) && (
+              <Button
+                onPress={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
+              >
+                Cancel
+              </Button>
+            )}
+            <Button
+              onPress={() =>
+                Linking.openURL(
+                  'https://play.google.com/store/apps/details?id=bod.app'
+                )
+              }
+            >
+              Update
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    );
+  };
+
   const fetchVisitations = async (search?: string) => {
     setIsLoading(true);
     try {
@@ -192,10 +253,9 @@ const Beranda = () => {
   };
 
   React.useEffect(() => {
-    customLog('WOWWWWW 1, ', force_update);
-    customLog('WOWWWWW 2, ', enable_hunter_farmer);
     crashlytics().log(TAB_HOME);
     fetchVisitations();
+    setUpdateDialogVisible(versionName < getMinVersionUpdate(force_update));
   }, [page, selectedDate]);
 
   const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
@@ -452,6 +512,7 @@ const Beranda = () => {
           onPressItem={visitationOnPress}
         />
       </BBottomSheet>
+      {renderUpdateDialog()}
     </View>
   );
 };

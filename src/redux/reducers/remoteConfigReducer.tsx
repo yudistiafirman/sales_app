@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  force_update: { min_version: '0.0.1', isForced: false },
+  force_update: { min_version: '1.0.0', is_forced: false },
   enable_hunter_farmer: true,
 };
 
