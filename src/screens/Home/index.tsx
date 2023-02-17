@@ -30,7 +30,7 @@ import {
 import debounce from 'lodash.debounce';
 import { Api } from '@/models';
 import { visitationDataType } from '@/interfaces';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
@@ -45,12 +45,16 @@ import {
 import SvgNames from '@/components/atoms/BSvg/svgName';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
+import { RootState } from '@/redux/store';
 
 const { height } = Dimensions.get('window');
 
 const initialSnapPoints = (+height.toFixed() - 115) / 10;
 
 const Beranda = () => {
+  const { force_update, enable_hunter_farmer } = useSelector(
+    (state: RootState) => state.remoteConfig
+  );
   const dispatch = useDispatch();
   const [currentVisit, setCurrentVisit] = React.useState<{
     current: number;
@@ -188,6 +192,8 @@ const Beranda = () => {
   };
 
   React.useEffect(() => {
+    customLog('WOWWWWW 1, ', force_update);
+    customLog('WOWWWWW 2, ', enable_hunter_farmer);
     crashlytics().log(TAB_HOME);
     fetchVisitations();
   }, [page, selectedDate]);
