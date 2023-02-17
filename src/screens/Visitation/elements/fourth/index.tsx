@@ -31,7 +31,10 @@ import {
 } from '@/redux/async-thunks/productivityFlowThunks';
 import { RootState } from '@/redux/store';
 import { StackActions, useNavigation } from '@react-navigation/native';
-import { deleteImage } from '@/redux/reducers/cameraReducer';
+import {
+  deleteImage,
+  setuploadedFilesResponse,
+} from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
 import { CAMERA, CREATE_VISITATION, SPH_TITLE } from '@/navigation/ScreenNames';
@@ -258,8 +261,8 @@ const Fourth = () => {
           const data = await dispatch(
             postUploadFiles({ files: photoFiles, from: 'visitation' })
           ).unwrap();
-
-          const files = data.map((photo) => {
+          const files: { id: string; type: 'GALLERY' | 'COVER' }[] = [];
+          data.forEach((photo) => {
             const photoName = `${photo.name}.${photo.type}`;
             const photoNamee = `${photo.name}.jpg`;
             const foundObject = photoUrls.find(
@@ -268,12 +271,17 @@ const Fourth = () => {
                 obj?.photo?.name === photoNamee
             );
             if (foundObject) {
-              return {
+              // return {
+              //   id: photo.id,
+              //   type: foundObject.type,
+              // };
+              files.push({
                 id: photo.id,
                 type: foundObject.type,
-              };
+              });
             }
           });
+          dispatch(setuploadedFilesResponse(files));
           payload.files = files;
           const payloadData: {
             payload: payloadPostType;
@@ -302,6 +310,7 @@ const Fourth = () => {
             navigation.goBack();
           }
         } else {
+          customLog(uploadedFilesResponse, 'iniuploadfileresponse');
           payload.files = uploadedFilesResponse;
           const payloadData: {
             payload: payloadPostType;
