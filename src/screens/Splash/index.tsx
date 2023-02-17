@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setFetchedConfig } from '@/redux/reducers/remoteConfigReducer';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { RootState } from '@/redux/store';
-import { customLog } from '@/utils/generalFunc';
+import { customLog, isJsonString } from '@/utils/generalFunc';
 
 const Splash = () => {
   const dispatch = useDispatch();
@@ -29,8 +29,12 @@ const Splash = () => {
         let fetchedData = {} as Object;
         Object.entries(remoteConfig().getAll()).forEach(($) => {
           const [key, entry] = $;
-          let value = initialState.force_update;
-          if (Object.values(entry).length > 0) value = Object.values(entry)[0];
+          let value = initialState?.[key];
+          if (
+            Object.values(entry).length > 0 &&
+            isJsonString(Object.values(entry)[0])
+          )
+            value = JSON.parse(Object.values(entry)[0]);
           fetchedData = {
             ...fetchedData,
             [key]: value,

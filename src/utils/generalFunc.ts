@@ -85,3 +85,12 @@ export const isForceUpdate = (text: any): boolean => {
 export const getMinVersionUpdate = (text: any): string => {
   return text.min_version;
 };
+
+export const isJsonString = (str) => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};
