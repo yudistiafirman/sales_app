@@ -14,7 +14,7 @@ import {
   StepOne,
 } from '@/context/AppointmentContext';
 import React, { useCallback, useLayoutEffect } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Alert, Dimensions, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Steps from '../Sph/elements/Steps';
 import FirstStep from './element/FirstStep';
@@ -158,10 +158,10 @@ const Appointment = () => {
       } as projectPayloadType,
       pic: [] as picPayloadType[],
     };
-
     if (stepOne[customerType].PIC.length === 1) {
-      stepOne[customerType].PIC[0].isSelected = true;
-      payload.pic = stepOne[customerType].PIC;
+      const pic = [];
+      pic.push({ ...stepOne[customerType].PIC[0], isSelected: true });
+      payload.pic = pic;
     } else {
       const selectedPic = stepOne[customerType].PIC.filter((v) => v.isSelected);
       payload.pic = selectedPic;
@@ -216,6 +216,8 @@ const Appointment = () => {
     if (stepOne[customerType].id) {
       payload.project.id = stepOne[customerType].id;
     }
+
+    console.log('ini payload', payload);
 
     payload.visitation.isBooking = true;
     try {
