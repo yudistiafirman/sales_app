@@ -34,10 +34,7 @@ export const cameraSlice = createSlice({
   initialState,
   reducers: {
     setImageURLS: (state, action: PayloadAction<photoType>) => {
-      return {
-        ...state,
-        photoURLs: [...state.photoURLs, action.payload],
-      };
+      state.photoURLs = [...state.photoURLs, action.payload];
     },
     resetImageURLS: (state) => {
       state.photoURLs = [];
@@ -46,6 +43,9 @@ export const cameraSlice = createSlice({
       const currentImages = state.photoURLs;
       currentImages.splice(action.payload.pos, 1);
       state.photoURLs = [...currentImages];
+    },
+    setuploadedFilesResponse: (state, action) => {
+      state.uploadedRequiredDocsResponse = action.payload;
     },
     // setRequiredDocsResponse: (
     //   state,
@@ -56,25 +56,29 @@ export const cameraSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {
-      if (payload) {
-        state.uploadedFilesResponse = payload.map((photo) => {
-          const photoName = `${photo.name}.${photo.type}`;
-          const foundObject = state.photoURLs.find(
-            (obj) => obj.photo.name === photoName
-          );
-          if (foundObject) {
-            return {
-              id: photo.id,
-              type: foundObject.type,
-            };
-          }
-        });
-      }
+      // if (payload) {
+      //   state.uploadedFilesResponse = payload.map((photo) => {
+      //     const photoName = `${photo.name}.${photo.type}`;
+      //     const foundObject = state.photoURLs.find(
+      //       (obj) => obj.photo.name === photoName
+      //     );
+      //     if (foundObject) {
+      //       return {
+      //         id: photo.id,
+      //         type: foundObject.type,
+      //       };
+      //     }
+      //   });
+      // }
     });
   },
 });
 
-export const { setImageURLS, resetImageURLS, deleteImage } =
-  cameraSlice.actions;
+export const {
+  setImageURLS,
+  resetImageURLS,
+  deleteImage,
+  setuploadedFilesResponse,
+} = cameraSlice.actions;
 
 export default cameraSlice.reducer;
