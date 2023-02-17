@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { JwtPayload } from 'jwt-decode';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 
 interface LoginCredential {
   phoneNumber: string;
@@ -12,6 +13,7 @@ interface AuthState {
   isLoading: boolean;
   isSignout: boolean;
   hunterScreen: boolean;
+  entryType: ENTRY_TYPE | undefined;
 }
 
 const initialState: AuthState = {
@@ -22,6 +24,7 @@ const initialState: AuthState = {
   isLoading: false,
   isSignout: false,
   hunterScreen: false,
+  entryType: undefined,
 };
 
 export const authSlice = createSlice({
@@ -42,6 +45,12 @@ export const authSlice = createSlice({
         ...state,
         userData: action.payload,
         isSignout: false,
+      };
+    },
+    setEntryType: (state, action: PayloadAction<ENTRY_TYPE>) => {
+      return {
+        ...state,
+        entryType: action.payload,
       };
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
@@ -73,6 +82,7 @@ export const {
   setIsLoading,
   signout,
   toggleHunterScreen,
+  setEntryType,
 } = authSlice.actions;
 
 export default authSlice.reducer;

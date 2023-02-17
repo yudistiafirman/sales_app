@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import colors from '@/constants/colors';
 import { layout } from '@/constants';
-import { USER_TYPE } from '@/models/EnumModel';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 import OperationList from '../element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { TAB_DISPATCH } from '@/navigation/ScreenNames';
@@ -31,7 +31,7 @@ const Dispatch = () => {
   return (
     <View style={style.container}>
       <OperationList
-        role={USER_TYPE.SECURITY} // change from redux state
+        role={ENTRY_TYPE.SECURITY} // change from redux state
         isLoading={isLoading}
         data={data}
       />

@@ -3,10 +3,10 @@ import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import {
   APPOINTMENT,
-  HUNTER_AND_FARMERS,
+  HUNTER_AND_FARMER,
   TAB_ROOT,
 } from '@/navigation/ScreenNames';
-import { AppDispatch } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
@@ -22,13 +22,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { toggleHunterScreen } from '@/redux/reducers/authReducer';
+
 const { height } = Dimensions.get('screen');
 const HunterAndFarmers = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
-  const { hunterScreen, userData } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { hunterScreen } = useSelector((state: RootState) => state.auth);
 
   const goToHome = () => {
     dispatch(toggleHunterScreen(false));
@@ -41,12 +40,12 @@ const HunterAndFarmers = () => {
   };
 
   React.useEffect(() => {
-    crashlytics().log(HUNTER_AND_FARMERS);
+    crashlytics().log(HUNTER_AND_FARMER);
   }, []);
 
   return (
     <Modal
-      isVisible={hunterScreen && userData !== null}
+      isVisible={hunterScreen}
       style={styles.modalContainer}
       deviceHeight={height}
     >
@@ -89,7 +88,7 @@ const HunterAndFarmers = () => {
 
 const styles = StyleSheet.create({
   modalContainer: { margin: 0, backgroundColor: colors.white },
-  imageLogo:{
+  imageLogo: {
     width: resScale(70),
     height: resScale(33),
     position: 'absolute',

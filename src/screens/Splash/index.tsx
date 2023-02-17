@@ -4,46 +4,11 @@ import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPLASH } from '@/navigation/ScreenNames';
-import { useDispatch, useSelector } from 'react-redux';
-import { setFetchedConfig } from '@/redux/reducers/remoteConfigReducer';
-import remoteConfig from '@react-native-firebase/remote-config';
-import { RootState } from '@/redux/store';
-import { customLog, isJsonString } from '@/utils/generalFunc';
 
 const Splash = () => {
-  const dispatch = useDispatch();
-  const initialState: any = useSelector(
-    (state: RootState) => state.remoteConfig
-  );
-
   React.useEffect(() => {
     crashlytics().log(SPLASH);
-
-    // default value is 12 hours.
-    // current set is 300 for 5 minutes
-    remoteConfig().fetch(300);
-    remoteConfig()
-      .setDefaults(initialState)
-      .then(() => remoteConfig().fetchAndActivate())
-      .then(() => {
-        let fetchedData = {} as Object;
-        Object.entries(remoteConfig().getAll()).forEach(($) => {
-          const [key, entry] = $;
-          let value = initialState?.[key];
-          if (
-            Object.values(entry).length > 0 &&
-            isJsonString(Object.values(entry)[0])
-          )
-            value = JSON.parse(Object.values(entry)[0]);
-          fetchedData = {
-            ...fetchedData,
-            [key]: value,
-          };
-        });
-        customLog('config from remote: ', fetchedData);
-        dispatch(setFetchedConfig(fetchedData));
-      });
-  }, [initialState, dispatch]);
+  }, []);
 
   return (
     <View style={styles.container}>
