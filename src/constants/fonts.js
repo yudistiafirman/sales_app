@@ -12,6 +12,7 @@ const font = {
     },
   },
   size: {
+    vs: respFS(8),
     xs: respFS(10),
     sm: respFS(12),
     md: respFS(14),
