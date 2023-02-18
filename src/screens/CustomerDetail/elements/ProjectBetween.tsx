@@ -4,8 +4,8 @@ import React from 'react';
 import { colors, fonts, layout } from '@/constants';
 
 type projectType = {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
 };
 
 type ProjectBetweenType = {
