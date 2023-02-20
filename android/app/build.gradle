@@ -140,8 +140,8 @@ def reactNativeArchitectures() {
 }
 
 def rootVersionCode = 2
-def rootDevVersionName = "0.0.1 (Dev)"
-def rootProdVersionName = "0.0.1"
+def rootDevVersionName = "1.0.0 (Dev)"
+def rootProdVersionName = "1.0.0"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
