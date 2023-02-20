@@ -11,6 +11,7 @@ interface BCalendarProps {
   markedDates?: MarkedDates | undefined;
   onMonthChange?: ((date: DateData) => void) | undefined;
   isLoading?: boolean;
+  minDate?: string;
 }
 
 const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
@@ -34,6 +35,7 @@ const BCalendar = ({
   markedDates,
   onMonthChange,
   isLoading,
+  minDate,
 }: BCalendarProps) => {
   LocaleConfig.locales.id = {
     monthNames: [
@@ -89,6 +91,7 @@ const BCalendar = ({
       renderArrow={(direction) => <RenderArrow direction={direction} />}
       onMonthChange={onMonthChange}
       displayLoadingIndicator={isLoading}
+      minDate={minDate}
     />
   );
 };
