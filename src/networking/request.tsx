@@ -101,8 +101,12 @@ instance.interceptors.response.use(
     // performance API logs
     const response = await fetch(config.url);
     if (response?.status) metric?.setHttpResponseCode(response?.status);
-    metric?.setResponseContentType(response?.headers?.get('Content-Type'));
-    metric?.setResponsePayloadSize(response?.headers?.get('Content-Length'));
+    try {
+      metric?.setResponseContentType(response?.headers?.get('Content-Type'));
+      metric?.setResponsePayloadSize(response?.headers?.get('Content-Length'));
+    } catch (err) {
+      customLog(err);
+    }
     await metric?.stop();
     metric = undefined;
 
