@@ -1,3 +1,4 @@
+import { customLog } from '@/utils/generalFunc';
 import { assign, createMachine } from 'xstate';
 
 export const searchPOMachine =
@@ -186,7 +187,7 @@ export const searchPOMachine =
             ];
             return response;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
         onGettingPOData: async (_context) => {
@@ -259,7 +260,7 @@ export const searchPOMachine =
             ];
             return response;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
       },

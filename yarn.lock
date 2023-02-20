@@ -1470,6 +1470,13 @@
     "@expo/config-plugins" "^5.0.4"
     stacktrace-js "^2.0.0"
 
+"@react-native-firebase/perf@^17.3.0":
+  version "17.3.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/perf/-/perf-17.3.0.tgz#ec8f4ef9ee95cba585c9ddbd646ff487f38f29ef"
+  integrity sha512-y4UpZDPmTVG6607KlwDVTwlhncqf01zIR0zYZnE8mjlR+FQJShGeZHFZuIOc3B3q6rDt8eMysym/7F9FOELGMA==
+  dependencies:
+    "@expo/config-plugins" "^5.0.4"
+
 "@react-native-firebase/remote-config@^17.3.0":
   version "17.3.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/remote-config/-/remote-config-17.3.0.tgz#ee2dbc786bccefb11affde82754c9f05a93bb0a3"

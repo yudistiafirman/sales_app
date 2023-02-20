@@ -7,8 +7,11 @@ import { storageKey } from '@/constants';
 import { setUserData } from '@/redux/reducers/authReducer';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { customLog } from '@/utils/generalFunc';
+import perf from '@react-native-firebase/perf';
+
 const production = false;
 let store: any;
+let metric: any;
 
 type FormDataValue =
   | string
@@ -35,6 +38,19 @@ function getContentType<T>(dataToReceived: T) {
   }
   return contentType;
 }
+
+export const customRequest = async (
+  request: any,
+  method: 'GET' | 'POST' | 'DELETE' | 'PUT',
+  data?: Record<string, string> | FormDataValue,
+  withToken?: boolean
+) => {
+  // performance API log
+  metric = await perf().newHttpMetric(request, method);
+  await metric.start();
+
+  return instance(request, await getOptions(method, data, withToken));
+};
 
 export const getOptions = async (
   method: 'GET' | 'POST' | 'DELETE' | 'PUT',
@@ -81,6 +97,15 @@ export const injectStore = (_store: any) => {
 instance.interceptors.response.use(
   async (res: AxiosResponse<Api.Response, any>) => {
     const { data, config } = res;
+
+    // performance API logs
+    const response = await fetch(config.url);
+    if (response?.status) metric?.setHttpResponseCode(response?.status);
+    metric?.setResponseContentType(response?.headers?.get('Content-Type'));
+    metric?.setResponsePayloadSize(response?.headers?.get('Content-Length'));
+    await metric?.stop();
+    metric = undefined;
+
     if (!data.success) {
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
