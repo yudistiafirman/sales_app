@@ -1,5 +1,6 @@
 import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import { getOptions, request } from '@/networking/request';
+import { customLog } from '@/utils/generalFunc';
 
 export const getLocationCoordinates = async (
   longitude: number,
@@ -45,7 +46,7 @@ export const uploadFileImage = async (files: any[], from: string) => {
     formData.append('photos', file);
   });
   formData.append('name', from);
-  console.log(formData, 'formDatauploadFileImage48');
+  customLog(formData, 'formDatauploadFileImage48');
 
   //http://192.168.18.23:3000/common/file/upload
   //BrikApiCommon.filesUpload(),
@@ -87,5 +88,37 @@ export const getAddressSuggestion = async (search?: string, page?: number) => {
   return request(
     BrikApiCommon.addressSuggestion(search, page),
     await getOptions('GET', undefined, true)
+  );
+};
+
+export const postProjectDoc = async (data: {
+  projectId: string;
+  documentId: string;
+  fileId: string;
+}) => {
+  return request(
+    BrikApiCommon.projectDoc(),
+    await getOptions('POST', data, true)
+  );
+};
+
+export const getProjectDetail = async (companyId?: string) => {
+  return request(
+    BrikApiCommon.getProjectDetail(companyId),
+    await getOptions('GET', undefined, true)
+  );
+};
+
+export const getProjectIndivualDetail = async (projectId: string) => {
+  return request(
+    BrikApiCommon.getProjectDetailIndividual(projectId),
+    await getOptions('GET', undefined, true)
+  );
+};
+
+export const updateBillingAddress = async (projectId: string, payload: any) => {
+  return request(
+    BrikApiCommon.updateBillingAddress(projectId),
+    await getOptions('PUT', payload, true)
   );
 };

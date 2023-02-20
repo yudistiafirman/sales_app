@@ -7,8 +7,6 @@ import React, {
   useContext,
   useLayoutEffect,
 } from 'react';
-// import StepIndicator from 'react-native-step-indicator';
-// import StepperIndicator from '../../components/molecules/StepIndicator';
 import {
   BHeaderIcon,
   BHeaderTitle,
@@ -32,6 +30,9 @@ import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
 import { Region } from 'react-native-maps';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import { layout } from '@/constants';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SPH } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 const labels = [
   'Cari Pelanggan',
@@ -104,7 +105,7 @@ function stepHandler(
   } else {
     setSteps((curr) => curr.filter((num) => num !== 2));
   }
-  console.log(sphData.chosenProducts.length, 'lengthproduct');
+  customLog(sphData.chosenProducts.length, 'lengthproduct');
 
   if (sphData.chosenProducts.length) {
     setSteps((curr) => {
@@ -114,7 +115,7 @@ function stepHandler(
     setSteps((curr) => curr.filter((num) => num !== 3));
   }
   const max = Math.max(...stepsDone);
-  console.log(stepsDone, 'stepsDone');
+  customLog(stepsDone, 'stepsDone');
 
   stepController(max);
 }
@@ -129,17 +130,19 @@ function SphContent() {
   const [sphData, updateState, setCurrentPosition, currentPosition] =
     useContext(SphContext);
   const stepControll = useCallback((step: number) => {
-    console.log(step, 'stepsss');
+    customLog(step, 'stepsss');
   }, []);
 
   useEffect(() => {
+    crashlytics().log(SPH);
+
     stepHandler(sphData, stepsDone, setStepsDone, stepControll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
 
   const getLocationCoord = async (coordinate: Region) => {
     try {
-      console.log(coordinate, 'coordinateonchange51');
+      customLog(coordinate, 'coordinateonchange51');
       const { data } = await getLocationCoordinates(
         // '',
         coordinate.longitude as unknown as number,
@@ -150,7 +153,7 @@ function SphContent() {
       if (!result) {
         throw data;
       }
-      console.log(result, 'getLocationCoordinate');
+      customLog(result, 'getLocationCoordinate');
 
       const _coordinate = {
         latitude: result?.lat,
@@ -171,7 +174,7 @@ function SphContent() {
       updateState('distanceFromLegok')(result.distance.value);
       dispatch(updateRegion(_coordinate));
     } catch (error) {
-      console.log(JSON.stringify(error), 'onChangeRegionerror');
+      customLog(JSON.stringify(error), 'onChangeRegionerror');
     }
   };
 
@@ -188,7 +191,7 @@ function SphContent() {
         getOneProjectById({ projectId: projectId })
       ).unwrap();
       dispatch(closePopUp());
-      console.log(JSON.stringify(response), 'response138');
+      customLog(JSON.stringify(response), 'response138');
       const project = response[0];
       const { locationAddress } = project;
       if (project.mainPic) {
@@ -196,7 +199,7 @@ function SphContent() {
       }
       // if ()
       updateState('selectedCompany')(project);
-      console.log(locationAddress, 'locationAddress146');
+      customLog(locationAddress, 'locationAddress146');
 
       if (locationAddress) {
         if (locationAddress.lon && locationAddress.lat) {
@@ -217,7 +220,7 @@ function SphContent() {
         }
       }
     } catch (error) {
-      console.log(error, 'errorgetVisitationById');
+      customLog(error, 'errorgetVisitationById');
       dispatch(closePopUp());
       dispatch(
         openPopUp({
@@ -231,7 +234,7 @@ function SphContent() {
 
   useEffect(() => {
     const projectId = route.params?.projectId;
-    console.log(projectId, 'visitationId122');
+    customLog(projectId, 'visitationId122');
     if (projectId) {
       getProjectById(projectId);
       // (async () => {

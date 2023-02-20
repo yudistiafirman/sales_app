@@ -2,6 +2,7 @@ import { assign, createMachine } from 'xstate';
 import { hasLocationPermission } from '@/utils/permissions';
 import GetLocation from 'react-native-get-location';
 import { getLocationCoordinates } from '../priceMachine';
+import { customLog } from '@/utils/generalFunc';
 // import GetLocation from 'react-native-get-location';
 // import { send } from 'xstate/lib/actions';
 
@@ -96,7 +97,7 @@ const deviceLocationMachine =
               enableHighAccuracy: true,
               timeout: 15000,
             });
-            console.log(position, 'ini apaa??');
+            customLog(position, 'ini apaa??');
             const { latitude, longitude } = position;
 
             const { data } = await getLocationCoordinates(
@@ -107,7 +108,7 @@ const deviceLocationMachine =
             );
 
             const { result } = data;
-            console.log(result, 'loh loh');
+            customLog(result, 'loh loh');
             if (!result) {
               throw data;
             }
@@ -123,7 +124,7 @@ const deviceLocationMachine =
               },
             };
           } catch (error) {
-            console.log(error, 'deviceLocationMachince');
+            customLog(error, 'deviceLocationMachince');
           }
         },
       },

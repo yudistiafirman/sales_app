@@ -12,12 +12,19 @@ import {
 } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SUBMIT_FORM } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 const SubmitForm = () => {
   const route = useRoute<RootStackScreenProps>();
   useHeaderTitleChanged({ title: 'Dispatch' });
   const navigation = useNavigation();
   const [toggleCheckBox, setToggleCheckBox] = useState(true);
+
+  React.useEffect(() => {
+    crashlytics().log(SUBMIT_FORM);
+  }, []);
 
   const deliveryInputs: Input[] = React.useMemo(() => {
     const baseInput: Input[] = [
@@ -63,7 +70,7 @@ const SubmitForm = () => {
           items: TM_CONDITION,
           placeholder: 'Pilih Kondisi TM',
           onChange: (value: any) => {
-            console.log(value);
+            customLog(value);
           },
         },
       },

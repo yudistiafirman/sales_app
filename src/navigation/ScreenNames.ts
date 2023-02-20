@@ -10,6 +10,8 @@ export const TAB_TRANSACTION = 'TAB.TRANSACTION';
 export const TAB_PROFILE = 'TAB.PROFILE';
 export const TAB_PRICE_LIST = 'TAB.PRICE_LIST';
 
+export const SPLASH = 'SPLASH';
+
 export const OPERATION = 'OPERATION';
 export const LOGIN = 'LOGIN';
 export const VERIFICATION = 'VERIFICATION';
@@ -30,6 +32,7 @@ export const ALL_PRODUCT = 'ALL_PRODUCT';
 export const APPOINTMENT = 'APPOINTMENT';
 export const SEARCH_PO = 'SEARCH_PO';
 export const HUNTER_AND_FARMERS = 'HUNTER_AND_FARMERS';
+export const DOCUMENTS = 'DOCUMENTS';
 
 /*
     Screen Title

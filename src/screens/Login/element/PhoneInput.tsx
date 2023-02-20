@@ -1,11 +1,7 @@
-import { BErrorText, BText } from '@/components';
+import { BText } from '@/components';
 import loginStyle from '@/screens/Login/style';
 import React from 'react';
-import {
-  NativeSyntheticEvent,
-  TextInputFocusEventData,
-  View,
-} from 'react-native';
+import { View } from 'react-native';
 import MaskInput from 'react-native-mask-input';
 
 interface PhoneInputProps {

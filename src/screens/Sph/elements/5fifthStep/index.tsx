@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   BBackContinueBtn,
   BContainer,
@@ -21,7 +21,6 @@ import {
   SphStateInterface,
 } from '@/interfaces';
 import { BFlatlistItems } from '@/components';
-
 import ChoosePicModal from '../ChoosePicModal';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
@@ -32,6 +31,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { postOrderSph } from '@/redux/async-thunks/orderThunks';
 import { RootState } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SPH } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 function countNonNullValues(array) {
   let count = 0;
@@ -44,7 +46,7 @@ function countNonNullValues(array) {
 }
 
 function payloadMapper(sphState: SphStateInterface) {
-  console.log(JSON.stringify(sphState), 'sphState24');
+  customLog(JSON.stringify(sphState), 'sphState24');
 
   const payload = {
     shippingAddress: {} as shippingAddressType,
@@ -177,14 +179,14 @@ function payloadMapper(sphState: SphStateInterface) {
     if (sphState.billingAddress.fullAddress) {
       payload.billingAddress.line2 = sphState.billingAddress.fullAddress;
     }
-    console.log(sphState.billingAddress.addressAutoComplete, 'testing9292');
+    customLog(sphState.billingAddress.addressAutoComplete, 'testing9292');
   } else {
     payload.billingAddress = payload.shippingAddress;
   }
 
   // if (!sphState.isBillingAddressSame) {
   // }
-  console.log(JSON.stringify(payload), 'payload1012');
+  customLog(JSON.stringify(payload), 'payload1012');
 
   return payload;
 }
@@ -219,6 +221,11 @@ export default function FifthStep() {
       },
     },
   ];
+
+  React.useEffect(() => {
+    crashlytics().log(SPH + '-Step5');
+  }, []);
+
   function addPicHandler() {
     setIsModalVisible(false);
     bottomSheetRef.current?.expand();
@@ -238,18 +245,18 @@ export default function FifthStep() {
       const isNoPhotoToUpload = photoFiles.every((val) => val === null);
       payload.projectDocs = [];
       const validPhotoCount = countNonNullValues(photoFiles);
-      console.log(validPhotoCount, 'validPhotoCount241');
+      customLog(validPhotoCount, 'validPhotoCount241');
 
       if (
         (sphState.uploadedAndMappedRequiredDocs.length === 0 &&
           !isNoPhotoToUpload) ||
         validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
       ) {
-        console.log('ini mau upload foto', photoFiles);
+        customLog('ini mau upload foto', photoFiles);
         const photoResponse = await dispatch(
           postUploadFiles({ files: photoFiles, from: 'sph' })
         ).unwrap();
-        console.log('upload kelar');
+        customLog('upload kelar');
 
         const files: { documentId: string; fileId: string }[] = [];
         photoResponse.forEach((photo) => {
@@ -290,7 +297,7 @@ export default function FifthStep() {
             });
           }
         });
-        console.log(files, 'filesmapped');
+        customLog(files, 'filesmapped');
 
         const isFilePhotoNotNull = files.every((val) => val === null);
         if (!isFilePhotoNotNull) {
@@ -305,7 +312,7 @@ export default function FifthStep() {
           payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
         }
       }
-      console.log(JSON.stringify(payload), 'payloadfinal');
+      customLog(JSON.stringify(payload), 'payloadfinal');
 
       const sphResponse = await dispatch(postOrderSph({ payload })).unwrap();
       const { sph } = sphResponse;
@@ -317,7 +324,7 @@ export default function FifthStep() {
       setIsStepDoneVisible(true);
     } catch (error) {
       const messageError = error?.message;
-      console.log(error, 'errorbuatSph54', messageError);
+      customLog(error, 'errorbuatSph54', messageError);
       dispatch(closePopUp());
       dispatch(
         openPopUp({

@@ -23,6 +23,9 @@ import {
 } from '@/redux/reducers/productivityFlowReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+import { CALENDAR } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { customLog } from '@/utils/generalFunc';
 
 export default function CalendarScreen() {
   const navigation = useNavigation();
@@ -33,9 +36,10 @@ export default function CalendarScreen() {
   const [customerDatas, setCustomerDatas] = useState<customerDataInterface[]>(
     []
   );
-  // console.log(visitationCalendarMapped, 'visitationCalendarMapped');
   useHeaderTitleChanged({ title: 'Pilih Tanggal' });
   useEffect(() => {
+    crashlytics().log(CALENDAR);
+
     const today = moment();
     fetchVisitation({
       month: today.get('month') + 1,
@@ -61,7 +65,7 @@ export default function CalendarScreen() {
       dispatch(getVisitationsList({ month, year }))
         .unwrap()
         .then((data: visitationListResponse[]) => {
-          console.log(JSON.stringify(data), 'visitationListResponse69');
+          customLog(JSON.stringify(data), 'visitationListResponse69');
           const visitationData = data ? data : [];
           const visitMapped = visitationData.reduce(
             (
@@ -69,7 +73,6 @@ export default function CalendarScreen() {
               obj: visitationListResponse
             ) => {
               const formatedDate = moment(obj.dateVisit).format('yyyy-MM-DD');
-              // console.log(formatedDate, obj.dateVisit, 'dateVisit77');
 
               if (!acc[formatedDate]) {
                 acc[formatedDate] = [];
@@ -106,7 +109,7 @@ export default function CalendarScreen() {
           dispatch(setMarkedData(newMarkedDate));
         })
         .catch((error: any) => {
-          console.log(error, 'error106calendar');
+          customLog(error, 'error106calendar');
 
           dispatch(
             openPopUp({
@@ -120,42 +123,16 @@ export default function CalendarScreen() {
     [markedDate, dispatch]
   );
 
-  // const onDayPress = (day: DateData) => {
-  //   const custData = visitationCalendarMapped[day.dateString] || [];
-  //   console.log(day, 'pressed', markedDate);
-
-  //   setCustomerDatas(custData);
-
-  //   const newMarkedDate = { ...markedDate };
-
-  //   for (const date of Object.keys(newMarkedDate)) {
-  //     if (newMarkedDate[date].selected && newMarkedDate[date].marked) {
-  //       newMarkedDate[date].selected = false;
-  //     }
-
-  //     if (newMarkedDate[date].selected) {
-  //       delete newMarkedDate[date];
-  //     }
-
-  //     newMarkedDate[day.dateString] = {
-  //       ...newMarkedDate[day.dateString],
-  //       selected: true,
-  //     };
-  //   }
-
-  //   setMarkedDate(newMarkedDate);
-  // };
-
   const onDayPress = useCallback(
     (day: DateData) => {
       const custData = visitationCalendarMapped[day.dateString] || [];
 
       setCustomerDatas(custData);
-      console.log('iniiiwkwkw 1, ', custData);
+      customLog('iniiiwkwkw 1, ', custData);
 
       const newMarkedDate = { ...markedDate };
 
-      console.log('diaa 1', newMarkedDate);
+      customLog('diaa 1', newMarkedDate);
 
       for (const date of Object.keys(newMarkedDate)) {
         // if (newMarkedDate[date].selected && newMarkedDate[date].marked) {
@@ -174,7 +151,7 @@ export default function CalendarScreen() {
         selected: true,
       };
 
-      console.log('diaa 2', newMarkedDate);
+      customLog('diaa 2', newMarkedDate);
       dispatch(setMarkedData(newMarkedDate));
     },
     [markedDate, visitationCalendarMapped, dispatch]
@@ -199,7 +176,7 @@ export default function CalendarScreen() {
           ).toLocaleString()} ${new Date(key).getFullYear()}`;
           let newDate = new Date(key);
           day = newDate.toLocaleDateString();
-          console.log(err, 'error date parse');
+          customLog(err, 'error date parse');
         }
 
         selectedDate = {

@@ -39,12 +39,13 @@ export type RootStackParamList = {
     isReadOnly: boolean;
     from: string;
   };
-  SEARCH_AREA: { from: string };
+  SEARCH_AREA: { from: string; eventKey: string };
   CALENDAR: {};
   TRANSACTION_DETAIL: { title: string; data: any };
-  CUSTOMER_DETAIL: { existingVisitation?: visitationListResponse };
   CREATE_SCHEDULE: {};
   SEARCH_PO: { from: string };
+  CUSTOMER_DETAIL: { existingVisitation?: any };
+  DOCUMENTS: {};
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

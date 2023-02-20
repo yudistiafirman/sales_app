@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { postSph } from '@/actions/OrderActions';
 import { postSphResponseType, sphOrderPayloadType } from '@/interfaces';
+import { customLog } from '@/utils/generalFunc';
 
 type errorType = {
   success: boolean;
@@ -23,11 +24,11 @@ export const postOrderSph = createAsyncThunk<
 
     return data.data;
   } catch (error) {
-    console.log(error, 'plainerrorpostOrderSph');
+    customLog(error, 'plainerrorpostOrderSph');
 
-    console.log(error.message, 'erroratpostOrderSph');
+    customLog(error.message, 'erroratpostOrderSph');
 
-    console.log(error?.response?.data, 'error at', 'common/postOrderSph');
+    customLog(error?.response?.data, 'error at', 'common/postOrderSph');
     return rejectWithValue(error.message);
   }
 });

@@ -23,6 +23,7 @@ import {
   CREATE_VISITATION_TITLE,
   CUSTOMER_DETAIL,
   CUSTOMER_DETAIL_TITLE,
+  DOCUMENTS,
   IMAGE_PREVIEW,
   IMAGE_PREVIEW_TITLE,
   LOCATION,
@@ -43,6 +44,7 @@ import CreateSchedule from '@/screens/CreateSchedule';
 import PriceList from '@/screens/Price';
 import AppointmentWithProvider from '@/screens/Appointment';
 import SearchPO from '@/screens/SearchPO';
+import RequiredDocuments from '@/screens/RequiredDocuments';
 
 const SalesStack = (Stack: any) => {
   return (
@@ -157,6 +159,15 @@ const SalesStack = (Stack: any) => {
         component={SearchPO}
         options={{
           headerTitle: SEARCH_PO_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={DOCUMENTS}
+        key={DOCUMENTS}
+        component={RequiredDocuments}
+        options={{
+          headerTitle: 'Dokumen',
+          headerTitleAlign: 'center',
         }}
       />
     </>

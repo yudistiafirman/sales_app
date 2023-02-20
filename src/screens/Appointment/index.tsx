@@ -34,11 +34,10 @@ import moment from 'moment';
 import { postBookingAppointment } from '@/actions/ProductivityActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import {
-  closePopUp,
-  openPopUp,
-  setIsPopUpVisible,
-} from '@/redux/reducers/modalReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { APPOINTMENT } from '@/navigation/ScreenNames';
+
 const { width } = Dimensions.get('window');
 const Appointment = () => {
   const navigation = useNavigation();
@@ -93,6 +92,10 @@ const Appointment = () => {
       headerLeft: () => renderHeaderLeft(),
     });
   }, [navigation, renderHeaderLeft, step]);
+
+  React.useEffect(() => {
+    crashlytics().log(APPOINTMENT);
+  }, []);
 
   const renderBtnIcon = () => (
     <Icon
@@ -155,10 +158,10 @@ const Appointment = () => {
       } as projectPayloadType,
       pic: [] as picPayloadType[],
     };
-
     if (stepOne[customerType].PIC.length === 1) {
-      stepOne[customerType].PIC[0].isSelected = true;
-      payload.pic = stepOne[customerType].PIC;
+      const pic = [];
+      pic.push({ ...stepOne[customerType].PIC[0], isSelected: true });
+      payload.pic = pic;
     } else {
       const selectedPic = stepOne[customerType].PIC.filter((v) => v.isSelected);
       payload.pic = selectedPic;
@@ -295,8 +298,8 @@ const Appointment = () => {
     const companyNameCondition = stepOne.company.Company;
     const projectNameConditionIndividu = stepOne.individu.name;
     const projectNameConditionCompany = stepOne.company.name;
-    const picIndividu = stepOne.individu.PIC;
-    const picCompany = stepOne.company.PIC;
+    const picIndividu = stepOne.individu.PIC ? stepOne.individu.PIC : [];
+    const picCompany = stepOne.company.PIC ? stepOne.company.PIC : [];
 
     if (customerTypeCondition === 'company') {
       return (

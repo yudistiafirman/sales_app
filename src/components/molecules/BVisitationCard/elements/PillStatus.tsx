@@ -37,7 +37,7 @@ const style = StyleSheet.create({
   },
   greenPillText: {
     fontFamily: font.family.montserrat[300],
-    fontSize: respFS(10),
+    fontSize: font.size.xs,
     color: colors.textInput.input,
   },
 });

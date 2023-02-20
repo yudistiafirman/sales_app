@@ -44,6 +44,9 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { resetRegion, updateRegion } from '@/redux/reducers/locationReducer';
 import { layout } from '@/constants';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { CREATE_VISITATION } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 const labels = [
   'Alamat Proyek',
@@ -126,7 +129,7 @@ function populateData(
     value: any
   ) => void
 ) {
-  console.log(JSON.stringify(existingData), 'difunction');
+  customLog(JSON.stringify(existingData), 'difunction');
   const { project } = existingData;
   const { company, PIC: picList, mainPic } = project;
   if (company) {
@@ -190,6 +193,8 @@ const CreateVisitation = () => {
   });
 
   useEffect(() => {
+    crashlytics().log(CREATE_VISITATION);
+
     if (existingVisitation) {
       updateValue('existingVisitationId', existingVisitation.id);
       populateData(existingVisitation, updateValueOnstep);

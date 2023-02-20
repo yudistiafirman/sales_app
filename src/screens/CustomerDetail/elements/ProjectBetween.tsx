@@ -4,17 +4,30 @@ import React from 'react';
 import { colors, fonts, layout } from '@/constants';
 
 type projectType = {
-  [key: string]: any;
+  id?: string;
+  name?: string;
 };
 
 type ProjectBetweenType = {
-  projects: projectType[];
+  projects: projectType;
 };
 
 export default function ProjectBetween({ projects }: ProjectBetweenType) {
   return (
     <View style={styles.container}>
-      {projects.map((project, index) => (
+      <View style={[styles.between]}>
+        <Text style={styles.projectName}>{projects.name}</Text>
+        {/* <TouchableOpacity style={styles.buttonContainer}>
+          <MaterialCommunityIcons
+            name="history"
+            color={colors.primary}
+            size={fonts.size.xs}
+            style={styles.iconStyle}
+          />
+          <Text style={styles.buttonText}>Riwayat Kunjungan</Text>
+        </TouchableOpacity> */}
+      </View>
+      {/* {projects.map((project, index) => (
         <View
           key={index}
           style={[
@@ -22,7 +35,7 @@ export default function ProjectBetween({ projects }: ProjectBetweenType) {
             index !== projects.length - 1 && styles.divider,
           ]}
         >
-          <Text style={styles.projectName}>Playground</Text>
+          <Text style={styles.projectName}>{project[0].name}</Text>
           <TouchableOpacity style={styles.buttonContainer}>
             <MaterialCommunityIcons
               name="history"
@@ -33,7 +46,7 @@ export default function ProjectBetween({ projects }: ProjectBetweenType) {
             <Text style={styles.buttonText}>Riwayat Kunjungan</Text>
           </TouchableOpacity>
         </View>
-      ))}
+      ))} */}
     </View>
   );
 }

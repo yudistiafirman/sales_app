@@ -1,7 +1,11 @@
 import { colors } from '@/constants';
+import { NativeModules } from 'react-native';
+const { RNCustomConfig } = NativeModules;
+
+const flavor = RNCustomConfig?.flavor;
 
 export const getColorStatusTrx = (id: string) => {
-  console.log(id.toUpperCase(), 'uppercase');
+  customLog(id.toUpperCase(), 'uppercase');
 
   switch (id.toUpperCase()) {
     case 'DIAJUKAN' || 'DRAFT' || 'DALAM PRODUKSI' || 'SELESAI':
@@ -52,4 +56,24 @@ export const beautifyPhoneNumber = (text: string) => {
     result += firstChar.join('');
   }
   return result;
+};
+
+export const customLog = (message?: any, ...optionalParams: any[]) => {
+  if (isDevelopment()) console.log(message, optionalParams);
+};
+
+export const isDevelopment = () => {
+  if (flavor === 'development') {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const isProduction = () => {
+  if (flavor === 'production') {
+    return true;
+  } else {
+    return false;
+  }
 };

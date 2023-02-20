@@ -3,6 +3,7 @@ import {
   searchLocation,
   searchLocationById,
 } from '@/actions/CommonActions';
+import { customLog } from '@/utils/generalFunc';
 import { hasLocationPermission } from '@/utils/permissions';
 import Geolocation from 'react-native-geolocation-service';
 import { assign, createMachine, send } from 'xstate';
@@ -227,7 +228,7 @@ export const searchAreaMachine =
 
             return response.data.result;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
         gettingPlacesId: async (context, event) => {
@@ -235,7 +236,7 @@ export const searchAreaMachine =
             const response = await searchLocationById(context.placesId);
             return response.data.result;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
         getLocationByCoordinate: async (context, e) => {
@@ -250,7 +251,7 @@ export const searchAreaMachine =
 
             return response.result;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
       },

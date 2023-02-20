@@ -26,16 +26,20 @@ import { CreateVisitationState } from '@/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
 import {
-  getOneVisitation,
   postVisitation,
   putVisitationFlow,
 } from '@/redux/async-thunks/productivityFlowThunks';
 import { RootState } from '@/redux/store';
 import { StackActions, useNavigation } from '@react-navigation/native';
-import { deleteImage } from '@/redux/reducers/cameraReducer';
+import {
+  deleteImage,
+  setuploadedFilesResponse,
+} from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
-import { CAMERA, SPH_TITLE } from '@/navigation/ScreenNames';
+import { CAMERA, CREATE_VISITATION, SPH_TITLE } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { customLog } from '@/utils/generalFunc';
 
 export type selectedDateType = {
   date: string;
@@ -167,7 +171,6 @@ function payloadMapper(
     payload.visitation.order += 1;
   }
 
-  // console.log(JSON.stringify(payload), 'payloadds');
   return payload;
 }
 
@@ -205,6 +208,7 @@ const Fourth = () => {
   );
 
   useEffect(() => {
+    crashlytics().log(CREATE_VISITATION + '-Step4');
     // photoUrls;
     onChange('images')(photoUrls);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -238,12 +242,7 @@ const Fourth = () => {
     async (type: 'VISIT' | 'SPH' | 'REJECTED' | '') => {
       try {
         let payload: payloadPostType = payloadMapper(values, type);
-        // console.log(uploadedFilesResponse, 'uploadedFilesResponse');
-        console.log(
-          JSON.stringify(payload),
-          'payload216',
-          uploadedFilesResponse
-        );
+        customLog(JSON.stringify(payload), 'payload216', uploadedFilesResponse);
         const visitationMethod = {
           POST: postVisitation,
           PUT: putVisitationFlow,
@@ -262,8 +261,8 @@ const Fourth = () => {
           const data = await dispatch(
             postUploadFiles({ files: photoFiles, from: 'visitation' })
           ).unwrap();
-
-          const files = data.map((photo) => {
+          const files: { id: string; type: 'GALLERY' | 'COVER' }[] = [];
+          data.forEach((photo) => {
             const photoName = `${photo.name}.${photo.type}`;
             const photoNamee = `${photo.name}.jpg`;
             const foundObject = photoUrls.find(
@@ -272,12 +271,17 @@ const Fourth = () => {
                 obj?.photo?.name === photoNamee
             );
             if (foundObject) {
-              return {
+              // return {
+              //   id: photo.id,
+              //   type: foundObject.type,
+              // };
+              files.push({
                 id: photo.id,
                 type: foundObject.type,
-              };
+              });
             }
           });
+          dispatch(setuploadedFilesResponse(files));
           payload.files = files;
           const payloadData: {
             payload: payloadPostType;
@@ -293,7 +297,7 @@ const Fourth = () => {
             visitationMethod[methodStr](payloadData)
           ).unwrap();
 
-          console.log(response, 'response242', type);
+          customLog(response, 'response242', type);
 
           setIsLastStepVisible(false);
           if (type === 'SPH') {
@@ -306,6 +310,7 @@ const Fourth = () => {
             navigation.goBack();
           }
         } else {
+          customLog(uploadedFilesResponse, 'iniuploadfileresponse');
           payload.files = uploadedFilesResponse;
           const payloadData: {
             payload: payloadPostType;
@@ -320,7 +325,7 @@ const Fourth = () => {
             visitationMethod[methodStr](payloadData)
           ).unwrap();
 
-          console.log(response, 'response258');
+          customLog(response, 'response258');
 
           setIsLastStepVisible(false);
           if (type === 'SPH') {
@@ -342,7 +347,7 @@ const Fourth = () => {
           })
         );
       } catch (error) {
-        console.log(error, 'error271fourth');
+        customLog(error, 'error271fourth');
         const message = error.message || 'Error creating visitation';
         dispatch(
           openPopUp({

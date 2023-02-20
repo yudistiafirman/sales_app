@@ -13,7 +13,8 @@ import { useDispatch } from 'react-redux';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { signIn } from '@/actions/CommonActions';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import { VERIFICATION } from '@/navigation/ScreenNames';
+import { LOGIN, VERIFICATION } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 interface LoginState {
   errorMessage: unknown | string;
@@ -41,6 +42,10 @@ const Login = () => {
       />
     ),
   });
+
+  React.useEffect(() => {
+    crashlytics().log(LOGIN);
+  }, []);
 
   const sendOtp = async () => {
     setLoginState({ ...loginState, loading: true });

@@ -90,6 +90,36 @@ export default class BrikApiCommon {
     return url.toString();
   };
 
+  static projectDoc = () => {
+    const url = new URL(`${API_URL}/common/projectDoc`);
+
+    return url.toString();
+  };
+
+  static getProjectDetail = (companyId?: string) => {
+    const url = new URL(`${API_URL}/common/m/flow/project`);
+    const params = url.searchParams;
+    if (companyId) {
+      params.append('companyId', companyId);
+    }
+
+    return url.toString();
+  };
+
+  static getProjectDetailIndividual = (projectId: string) => {
+    const url = new URL(
+      `${API_URL}/common/m/flow/project/${projectId}/individual`
+    );
+    return url.toString();
+  };
+
+  static updateBillingAddress = (projectId: string) => {
+    const url = new URL(
+      `${API_URL}/common/m/flow/project/${projectId}/billing-address`
+    );
+    return url.toString();
+  };
+
   // --------------------------------------------------AUTHENTICATION ---------------------------------------------//
 
   static login = () => {

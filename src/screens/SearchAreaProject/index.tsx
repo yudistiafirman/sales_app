@@ -15,8 +15,15 @@ import LocationListShimmer from './element/LocationListShimmer';
 import { BSpacer } from '@/components';
 import { useDispatch } from 'react-redux';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import { CREATE_VISITATION, LOCATION, SPH } from '@/navigation/ScreenNames';
+import {
+  CREATE_VISITATION,
+  CUSTOMER_DETAIL,
+  LOCATION,
+  SEARCH_AREA,
+  SPH,
+} from '@/navigation/ScreenNames';
 import { updateRegion } from '@/redux/reducers/locationReducer';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const SearchAreaProject = ({ route }: { route: any }) => {
   const navigation = useNavigation();
@@ -49,7 +56,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         if (typeof lat === 'string') {
           coordinate.latitude = Number(lat);
         }
-        if (from === CREATE_VISITATION || from === SPH) {
+        if (from === CREATE_VISITATION || from === SPH ||from === CUSTOMER_DETAIL) {
           if (eventKey) {
             DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
           } else {
@@ -78,6 +85,8 @@ const SearchAreaProject = ({ route }: { route: any }) => {
   });
 
   React.useEffect(() => {
+    crashlytics().log(SEARCH_AREA);
+
     if (state.matches('getLocation.denied')) {
       const subscription = AppState.addEventListener(
         'change',

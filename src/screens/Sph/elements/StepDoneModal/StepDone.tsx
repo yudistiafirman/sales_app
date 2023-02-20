@@ -30,6 +30,7 @@ import ReactNativeBlobUtil from 'react-native-blob-util';
 import RNPrint from 'react-native-print';
 import { useDispatch } from 'react-redux';
 import { openPopUp } from '@/redux/reducers/modalReducer';
+import { customLog } from '@/utils/generalFunc';
 
 type StepDoneType = {
   isModalVisible: boolean;
@@ -83,10 +84,10 @@ function downloadPdf({ url, title, downloadPopup }: downloadType) {
     .then((res) => {
       // the temp file path
       downloadPopup();
-      console.log('The file saved to ', res.path());
+      customLog('The file saved to ', res.path());
     })
     .catch((err) => {
-      console.log(err, 'error download', url);
+      customLog(err, 'error download', url);
     });
 }
 async function printRemotePDF(url?: string) {
@@ -98,7 +99,7 @@ async function printRemotePDF(url?: string) {
       filePath: url,
     });
   } catch (error) {
-    console.log(error, 'error print');
+    customLog(error, 'error print');
   }
 }
 
@@ -149,7 +150,7 @@ export default function StepDone({
         )}`,
       });
     } catch (error) {
-      console.log(error, 'errorsharefunc');
+      customLog(error, 'errorsharefunc');
     }
   };
 

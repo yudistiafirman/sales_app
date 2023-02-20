@@ -13,6 +13,8 @@ import { locationMachine } from '@/machine/locationMachine';
 import { Region } from 'react-native-maps';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
+  CUSTOMER_DETAIL,
+  LOCATION,
   LOCATION_TITLE,
   SEARCH_AREA,
   SPH,
@@ -26,6 +28,7 @@ import {
 } from '@/navigation/ScreenNames';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { resScale } from '@/utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const Location = () => {
   const navigation = useNavigation();
@@ -38,6 +41,7 @@ const Location = () => {
   });
 
   React.useEffect(() => {
+    crashlytics().log(LOCATION);
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude } = params.coordinate;
@@ -54,12 +58,14 @@ const Location = () => {
     }
   };
   const onSaveLocation = () => {
-    const { lon, lat } = locationDetail;
+    const { lon, lat, formattedAddress, postalId } = locationDetail;
     const from = route?.params?.from;
     const eventKey = route?.params?.eventKey;
     const coordinate = {
       longitude: Number(lon),
       latitude: Number(lat),
+      formattedAddress: formattedAddress,
+      postalId: postalId,
     };
 
     if (
@@ -69,7 +75,8 @@ const Location = () => {
       from === TAB_HOME_TITLE ||
       from === TAB_OPERATION_TITLE ||
       from === TAB_DISPATCH_TITLE ||
-      from === SPH
+      from === SPH ||
+      from === CUSTOMER_DETAIL
     ) {
       if (eventKey) {
         DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });

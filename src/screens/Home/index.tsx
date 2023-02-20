@@ -39,10 +39,14 @@ import {
   CAMERA,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
-  // CUSTOMER_DETAIL,
+  CUSTOMER_DETAIL,
   SPH,
+  TAB_HOME,
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { customLog } from '@/utils/generalFunc';
+
 const { height } = Dimensions.get('window');
 
 const initialSnapPoints = (+height.toFixed() - 115) / 10;
@@ -108,7 +112,7 @@ const Beranda = () => {
     try {
       setIsTargetLoading(true);
       const { data: _data } = await getVisitationTarget();
-      console.log(_data.data, 'fetchTarget103');
+      customLog(_data.data, 'fetchTarget103');
       setCurrentVisit({
         current: _data.data.totalCompleted,
         target: _data.data.visitationTarget,
@@ -116,7 +120,7 @@ const Beranda = () => {
       setIsTargetLoading(false);
     } catch (err) {
       setIsTargetLoading(false);
-      console.log(err);
+      customLog(err);
     }
   }, []);
 
@@ -180,11 +184,12 @@ const Beranda = () => {
         });
       }
     } catch (error) {
-      console.log(error, 'ini err apa sih??');
+      customLog(error, 'ini err apa sih??');
     }
   };
 
   React.useEffect(() => {
+    crashlytics().log(TAB_HOME);
     fetchVisitations();
   }, [page, selectedDate]);
 
@@ -298,7 +303,7 @@ const Beranda = () => {
             item={item}
             searchQuery={searchQuery}
             onPress={() => {
-              console.log(item, 'sceneToRender');
+              customLog(item, 'sceneToRender');
             }}
           />
         )}
@@ -315,7 +320,7 @@ const Beranda = () => {
   ): Promise<void> {
     try {
       const status = dataItem.pilStatus;
-      if (status === 'Selesai') return;
+
       dispatch(
         openPopUp({
           popUpType: 'loading',
@@ -334,12 +339,11 @@ const Beranda = () => {
           navigateTo: CREATE_VISITATION,
           existingVisitation: response,
         });
+      } else {
+        navigation.navigate(CUSTOMER_DETAIL, {
+          existingVisitation: response,
+        });
       }
-      // else {
-      //   navigation.navigate(CUSTOMER_DETAIL, {
-      //     existingVisitation: response,
-      //   });
-      // }
     } catch (error) {
       dispatch(
         openPopUp({

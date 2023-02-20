@@ -17,6 +17,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { RootState } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SPH } from '@/navigation/ScreenNames';
+import { TouchableOpacity } from 'react-native';
+import { customLog } from '@/utils/generalFunc';
 
 export default function FirstStep() {
   const dispatch = useDispatch();
@@ -28,6 +32,10 @@ export default function FirstStep() {
   function resetSearch() {
     setSearchQuery('');
   }
+
+  React.useEffect(() => {
+    crashlytics().log(SPH + '-Step1');
+  }, []);
 
   const tabToRender: { tabTitle: string; totalItems: number }[] =
     useMemo(() => {
@@ -58,22 +66,34 @@ export default function FirstStep() {
       }
       return (
         <BFlatlistItems
-          renderItem={(item) => (
-            <BVisitationCard
-              item={{
-                name: item.name,
-                location: item.locationAddress.line1,
-              }}
-              searchQuery={searchQuery}
-              onPress={(data) => {
-                console.log(data, 'visit di pencet', item);
-                // setSelectedPic(data);
-                if (stateUpdate) {
-                  stateUpdate('selectedCompany')(item);
-                }
-              }}
-            />
-          )}
+          renderItem={(item) => {
+            let picOrCompanyName = '-';
+            if (item?.Company?.name) {
+              picOrCompanyName = item.Company?.name;
+            } else if (item?.mainPic?.name) {
+              picOrCompanyName = item?.mainPic?.name;
+            }
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  // setSelectedPic(data);
+                  if (stateUpdate) {
+                    stateUpdate('selectedCompany')(item);
+                  }
+                }}
+              >
+                <BVisitationCard
+                  item={{
+                    name: item.name,
+                    location: item.locationAddress.line1,
+                    picOrCompanyName: picOrCompanyName,
+                  }}
+                  searchQuery={searchQuery}
+                  isRenderIcon={false}
+                />
+              </TouchableOpacity>
+            );
+          }}
           searchQuery={searchQuery}
           data={projects}
           isLoading={isProjectLoading}
@@ -103,7 +123,7 @@ export default function FirstStep() {
       .unwrap()
       .then()
       .catch((err) => {
-        console.log(err, 'errgetAllProject');
+        customLog(err, 'errgetAllProject');
         dispatch(
           openPopUp({
             popUpType: 'error',

@@ -1,3 +1,4 @@
 const a = require('./src/constants/colors');
+const { customLog } = require('./src/utils/generalFunc');
 
-console.log(a);
+customLog(a);
