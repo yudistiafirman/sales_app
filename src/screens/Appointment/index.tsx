@@ -325,21 +325,6 @@ const Appointment = () => {
         <Steps currentPosition={step} stepsToRender={stepsToRender} />
 
         {btnShown && (
-          // <View style={style.footer}>
-          //   <BButtonPrimary
-          //     onPress={onBackPress}
-          //     buttonStyle={{ paddingHorizontal: layout.pad.md + layout.pad.ml }}
-          //     isOutline
-          //     title="Kembali"
-          //   />
-          // <BButtonPrimary
-          //   title="Lanjut"
-          //   onPress={onNext}
-          //   disable={inVisitationDateStep && !selectedDate}
-          //   buttonStyle={{ width: resScale(202) }}
-          //   rightIcon={() => renderBtnIcon()}
-          // />
-          // </View>
           <>
             {step === 0 ? (
               <View style={{ width: '100%' }}>

@@ -2,6 +2,7 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import resScale from '@/utils/resScale';
 import EmptyProduct from '../templates/Price/EmptyProduct';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -58,7 +59,7 @@ export default function BFlatlistItems({
   };
   return (
     <View style={style.container}>
-      <FlatList
+      <KeyboardAwareFlatList
         contentContainerStyle={style.flatlistContent}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.1}

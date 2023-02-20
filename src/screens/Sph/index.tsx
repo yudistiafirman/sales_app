@@ -206,17 +206,6 @@ function SphContent() {
           const longitude = +locationAddress.lon;
           const latitude = +locationAddress.lat;
           getLocationCoord({ longitude: longitude, latitude: latitude });
-          // dispatch(
-          //   updateRegion({
-          //     formattedAddress: locationAddress.line1,
-          //     latitude: latitude,
-          //     longitude: longitude,
-          //     lat: latitude,
-          //     long: latitude,
-          //     PostalId: undefined,
-          //     line2: locationAddress?.line2,
-          //   })
-          // );
         }
       }
     } catch (error) {
@@ -237,11 +226,6 @@ function SphContent() {
     customLog(projectId, 'visitationId122');
     if (projectId) {
       getProjectById(projectId);
-      // (async () => {
-      //   await dispatch(
-      //     getOneVisitation({ visitationId: visitationId })
-      //   ).unwrap();
-      // })();
     }
   }, []);
 

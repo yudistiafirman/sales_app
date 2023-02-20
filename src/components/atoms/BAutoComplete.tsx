@@ -2,7 +2,7 @@ import { colors, fonts, layout } from '@/constants';
 import { Styles } from '@/interfaces';
 import { resScale } from '@/utils';
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import BText from './BText';
 
@@ -30,6 +30,10 @@ const BAutoComplete = ({
   showClear = true,
   onClear,
 }: IProps) => {
+  let isShowChevron = showChevron;
+  if (items?.length === 0) {
+    isShowChevron = false;
+  }
   return (
     <React.Fragment>
       <AutocompleteDropdown
@@ -53,9 +57,9 @@ const BAutoComplete = ({
         useFilter={false}
         clearOnFocus={false}
         onClear={onClear}
-        showChevron={showChevron}
+        showChevron={isShowChevron}
         showClear={showClear}
-        EmptyResultComponent={() => <></>}
+        EmptyResultComponent={<View />}
         emptyResultText={''}
       />
     </React.Fragment>
