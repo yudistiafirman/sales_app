@@ -103,7 +103,11 @@ instance.interceptors.response.use(
     if (response?.status) metric?.setHttpResponseCode(response?.status);
     try {
       metric?.setResponseContentType(response?.headers?.get('Content-Type'));
-      metric?.setResponsePayloadSize(response?.headers?.get('Content-Length'));
+      let contentLength = null;
+      if (response?.headers?.get('Content-Length')) {
+        contentLength = parseInt(response?.headers?.get('Content-Length'));
+      }
+      metric?.setResponsePayloadSize(contentLength);
     } catch (err) {
       customLog(err);
     }
