@@ -33,7 +33,7 @@ export type RootStackParamList = {
   CREATE_VISITATION: { existingVisitation?: visitationListResponse };
   SPH: {};
   APPOINTMENT: {};
-  SEARCH_PRODUCT: { distance: number };
+  SEARCH_PRODUCT: { isGobackAfterPress?: boolean; distance: number };
   LOCATION: {
     coordinate: { longitude: number; latitude: number };
     isReadOnly: boolean;
@@ -42,6 +42,8 @@ export type RootStackParamList = {
   SEARCH_AREA: { from: string; eventKey: string };
   CALENDAR: {};
   TRANSACTION_DETAIL: { title: string; data: any };
+  CREATE_SCHEDULE: {};
+  SEARCH_PO: { from: string };
   CUSTOMER_DETAIL: { existingVisitation?: any };
   DOCUMENTS: {};
 };

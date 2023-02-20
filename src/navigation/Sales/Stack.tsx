@@ -1,6 +1,6 @@
 import Preview from '@/screens/Camera/Preview';
 import Camera from '@/screens/Camera';
-import CalendarScreen from '@/screens/CalendarScreen';
+import CalendarScreen from '@/screens/Calendar';
 import * as React from 'react';
 import SearchAreaProject from '@/screens/SearchAreaProject';
 import Location from '@/screens/Location';
@@ -10,12 +10,15 @@ import CreateVisitation from '@/screens/Visitation/CreateVisitation';
 import TransactionDetail from '@/screens/Transaction/Detail';
 import {
   ALL_PRODUCT,
+  ALL_PRODUCT_TITLE,
   APPOINTMENT,
   APPOINTMENT_TITLE,
   CALENDAR,
   CALENDAR_TITLE,
   CAMERA,
   CAMERA_TITLE,
+  CREATE_SCHEDULE,
+  CREATE_SCHEDULE_TITLE,
   CREATE_VISITATION,
   CREATE_VISITATION_TITLE,
   CUSTOMER_DETAIL,
@@ -27,6 +30,8 @@ import {
   LOCATION_TITLE,
   SEARCH_AREA,
   SEARCH_AREA_TITLE,
+  SEARCH_PO,
+  SEARCH_PO_TITLE,
   SEARCH_PRODUCT,
   SEARCH_PRODUCT_TITLE,
   SPH,
@@ -35,8 +40,10 @@ import {
   TRANSACTION_DETAIL_TITLE,
 } from '../ScreenNames';
 import CustomerDetail from '@/screens/CustomerDetail';
+import CreateSchedule from '@/screens/CreateSchedule';
 import PriceList from '@/screens/Price';
 import AppointmentWithProvider from '@/screens/Appointment';
+import SearchPO from '@/screens/SearchPO';
 import RequiredDocuments from '@/screens/RequiredDocuments';
 
 const SalesStack = (Stack: any) => {
@@ -135,7 +142,23 @@ const SalesStack = (Stack: any) => {
         key={ALL_PRODUCT}
         component={PriceList}
         options={{
-          headerTitle: 'Semua Produk',
+          headerTitle: ALL_PRODUCT_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={CREATE_SCHEDULE}
+        key={CREATE_SCHEDULE}
+        component={CreateSchedule}
+        options={{
+          headerTitle: CREATE_SCHEDULE_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={SEARCH_PO}
+        key={SEARCH_PO}
+        component={SearchPO}
+        options={{
+          headerTitle: SEARCH_PO_TITLE,
         }}
       />
       <Stack.Screen

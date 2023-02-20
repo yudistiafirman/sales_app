@@ -27,9 +27,11 @@ export const SEARCH_AREA = 'SEARCH_AREA';
 export const CALENDAR = 'CALENDAR';
 export const TRANSACTION_DETAIL = 'TRANSACTION_DETAIL';
 export const CUSTOMER_DETAIL = 'CUSTOMER_DETAIL';
+export const CREATE_SCHEDULE = 'CREATE_SCHEDULE';
 export const ALL_PRODUCT = 'ALL_PRODUCT';
 export const APPOINTMENT = 'APPOINTMENT';
-export const HUNTER_AND_FARMER = 'HUNTER_AND_FARMER';
+export const SEARCH_PO = 'SEARCH_PO';
+export const HUNTER_AND_FARMERS = 'HUNTER_AND_FARMERS';
 export const DOCUMENTS = 'DOCUMENTS';
 
 /*
@@ -59,5 +61,8 @@ export const SEARCH_AREA_TITLE = 'Pilih Area Proyek';
 export const CALENDAR_TITLE = 'Pilih Tanggal';
 export const TRANSACTION_DETAIL_TITLE = 'Detail Transaksi';
 export const CUSTOMER_DETAIL_TITLE = 'Detil Pelanggan';
+export const CREATE_SCHEDULE_TITLE = 'Buat Jadwal';
+export const ALL_PRODUCT_TITLE = 'Semua Produk';
+export const SEARCH_PO_TITLE = 'Cari PO';
 export const APPOINTMENT_TITLE = 'Buat Janji Temu';
 export const HUNTER_AND_FARMER_TITLE = 'Hunter & Farmer';

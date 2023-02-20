@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
+import * as React from 'react';
 import font from '@/constants/fonts';
 import colors from '@/constants/colors';
 import respFS from '@/utils/resFontSize';
@@ -7,8 +7,9 @@ import resScale from '@/utils/resScale';
 
 type pillStatusType = {
   pilStatus?: string;
+  color?: string;
 };
-export default function PillStatus({ pilStatus }: pillStatusType) {
+export default function PillStatus({ pilStatus, color }: pillStatusType) {
   if (!pilStatus) {
     return null;
   }
@@ -16,7 +17,7 @@ export default function PillStatus({ pilStatus }: pillStatusType) {
     <View
       style={[
         pilStatus ? style.greenPill : null,
-        pilStatus === 'Belum Selesai' ? style.grayColor : null,
+        color && { backgroundColor: color },
       ]}
     >
       <Text style={style.greenPillText}>{pilStatus}</Text>

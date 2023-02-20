@@ -1,7 +1,6 @@
 import {
   StyleProp,
   ViewStyle,
-  ImageSourcePropType,
   TextStyle,
   KeyboardType,
   KeyboardTypeOptions,

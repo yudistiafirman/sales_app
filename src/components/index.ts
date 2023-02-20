@@ -60,4 +60,5 @@ export { default as BNestedProductCard } from './organism/BNestedProductCard';
 
 //templates
 export { default as ProductList } from './templates/Price/ProductList';
+export { default as POList } from './templates/PO/POList';
 export { default as BottomSheetAddPIC } from './templates/BottomSheetAddPIC';
