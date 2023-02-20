@@ -75,7 +75,9 @@ const useAsyncConfigSetup = () => {
       () => {
         dispatch(toggleHunterScreen(true));
       },
-      isDevelopment ? 60000 : duration
+
+      // in milisecond
+      isDevelopment ? 3600000 : duration
     );
     return () => {
       BackgroundTimer.clearTimeout(timeoutId.current);

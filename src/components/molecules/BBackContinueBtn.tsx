@@ -32,7 +32,6 @@ export default function BBackContinueBtn({
   disableBack = false,
   emptyIconEnable = false,
 }: BackContinueBtnType) {
-  console.log('safasf', onPressBack);
   return (
     <View style={style.buttonContainer}>
       {!disableBack && (

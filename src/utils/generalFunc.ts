@@ -83,7 +83,7 @@ export const isForceUpdate = (text: any): boolean => {
 };
 
 export const getMinVersionUpdate = (text: any): string => {
-  return text?.min_version?.replace(new RegExp('.', 'g'), '');
+  return text?.min_version?.split('.').join('');
 };
 
 export const isJsonString = (str: any) => {

@@ -65,7 +65,6 @@ function populateData(
     value: any
   ) => void
 ) {
-  console.log(JSON.stringify(existingData), 'difunction');
   updateValue('stepOne', 'companyName', existingData.companyName);
   updateValue('stepOne', 'locationName', existingData.locationName);
   updateValue('stepOne', 'title', existingData.sph ? existingData.sph : '-');
@@ -132,7 +131,6 @@ const CreateSchedule = () => {
 
   const stepRender = [<FirstStep />, <SecondStep />];
 
-  console.log('wkwk, ', values.step);
   return (
     <>
       <BStepperIndicator

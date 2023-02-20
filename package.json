@@ -12,7 +12,7 @@
     "androidProd": "rm -rf android/build && rm -rf android/app/build && react-native run-android --variant=productionDebug",
     "androidRelease": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleProductionRelease && cd ..",
     "androidReleaseAPK": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleProductionRelease && cd ..",
-    "androidRelease-Dev": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleDevelopmentDebug && cd ..",
+    "androidRelease-Dev": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleDevelopmentRelease && cd ..",
     "androidReleaseAPK-Dev": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleDevelopmentRelease && cd .."
   },
   "dependencies": {
@@ -24,6 +24,7 @@
     "@react-native-community/progress-bar-android": "^1.0.5",
     "@react-native-firebase/app": "^17.1.0",
     "@react-native-firebase/crashlytics": "^17.1.0",
+    "@react-native-firebase/perf": "^17.3.0",
     "@react-native-firebase/remote-config": "^17.3.0",
     "@react-navigation/bottom-tabs": "^6.5.1",
     "@react-navigation/material-top-tabs": "^6.5.1",
