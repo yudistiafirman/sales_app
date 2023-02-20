@@ -3,12 +3,26 @@ import { resScale } from '@/utils';
 import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { SPLASH } from '@/navigation/ScreenNames';
+import { HUNTER_AND_FARMER, SPLASH } from '@/navigation/ScreenNames';
+import AsyncStorage from '@react-native-community/async-storage';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { toggleHunterScreen } from '@/redux/reducers/authReducer';
 
 const Splash = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const checkStoredState = async () => {
+    const storedState = await AsyncStorage.getItem(HUNTER_AND_FARMER);
+    return storedState;
+  };
+
   React.useEffect(() => {
     crashlytics().log(SPLASH);
-  }, []);
+    checkStoredState().then((item) => {
+      if (item) dispatch(toggleHunterScreen(true));
+    });
+  }, [dispatch]);
 
   return (
     <View style={styles.container}>

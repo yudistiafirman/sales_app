@@ -65,7 +65,7 @@ const RootScreen = (
             {OperationStack(Stack)}
           </>
         );
-      default:
+      case ENTRY_TYPE.SALES:
         return (
           <>
             <Stack.Screen

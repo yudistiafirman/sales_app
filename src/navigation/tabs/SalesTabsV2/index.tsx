@@ -24,7 +24,7 @@ const Tab = createBottomTabNavigator();
 
 function SalesTabsV2() {
   const { enable_transaction_menu, enable_price_menu, enable_profile_menu } =
-    useSelector((state: RootState) => state.remoteConfig);
+    useSelector((state: RootState) => state.auth.remote_config);
   return (
     <Tab.Navigator
       screenOptions={{

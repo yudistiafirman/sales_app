@@ -78,7 +78,7 @@ const Beranda = () => {
     enable_po,
     enable_sph,
     enable_visitation,
-  } = useSelector((state: RootState) => state.remoteConfig);
+  } = useSelector((state: RootState) => state.auth.remote_config);
   const dispatch = useDispatch();
   const [currentVisit, setCurrentVisit] = React.useState<{
     current: number;
