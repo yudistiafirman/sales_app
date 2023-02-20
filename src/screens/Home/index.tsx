@@ -37,6 +37,7 @@ import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
 import {
   APPOINTMENT,
   CAMERA,
+  CREATE_SCHEDULE,
   CREATE_VISITATION,
   CUSTOMER_DETAIL,
   SPH,
@@ -238,7 +239,9 @@ const Beranda = () => {
       {
         icon: SvgNames.IC_MAKE_SCHEDULE,
         title: 'Buat Jadwal',
-        action: () => {},
+        action: () => {
+          navigation.navigate(CREATE_SCHEDULE);
+        },
       },
       {
         icon: SvgNames.IC_APPOINTMENT,

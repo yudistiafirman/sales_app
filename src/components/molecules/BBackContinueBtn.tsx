@@ -13,6 +13,8 @@ type BackContinueBtnType = {
   backText?: string;
   continueText?: string;
   isContinueIcon?: boolean;
+  disableBack?: boolean;
+  emptyIconEnable?: boolean;
 };
 
 function ContinueIcon() {
@@ -27,17 +29,22 @@ export default function BBackContinueBtn({
   backText = 'Kembali',
   continueText = 'Lanjut',
   isContinueIcon = true,
+  disableBack = false,
+  emptyIconEnable = false,
 }: BackContinueBtnType) {
+  console.log('safasf', onPressBack);
   return (
     <View style={style.buttonContainer}>
-      <View style={style.backButtonContainer}>
-        <BButtonPrimary
-          emptyIconEnable
-          onPress={onPressBack}
-          title={backText}
-          isOutline
-        />
-      </View>
+      {!disableBack && (
+        <View style={style.backButtonContainer}>
+          <BButtonPrimary
+            emptyIconEnable={isContinueIcon ? true : emptyIconEnable}
+            onPress={onPressBack}
+            title={backText}
+            isOutline
+          />
+        </View>
+      )}
       <View style={style.continueButtonContainer}>
         <BButtonPrimary
           rightIcon={isContinueIcon ? ContinueIcon : null}
