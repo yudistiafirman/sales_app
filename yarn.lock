@@ -1453,6 +1453,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/progress-bar-android/-/progress-bar-android-1.0.5.tgz#77c03389312ecaf73be55e21d4b7ff6fa4b2b8db"
   integrity sha512-/IYLHdoqeDqqGQMh9/qYgIReISBIu09lLNbrn70r98+IqQe9WFLuhAr/sdrDKxCUZDQyLqUc0p3rJ50VV0tR3g==
 
+"@react-native-firebase/analytics@^17.3.0":
+  version "17.3.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-17.3.0.tgz#0bad29cd6efcc6a6fd405edda55f0815d16f2609"
+  integrity sha512-Sl93q+dEz/V9eSYHc/uXa2T0rSQM44zecGSE6u441IWuC5AjmZ+wMhtv/nuPS9RB1MKsuwQusDdq3vyoXJSmKg==
+
 "@react-native-firebase/app@^17.1.0":
   version "17.3.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.3.0.tgz#f89b120dbf4bd9812028785a7d0485f1091bbb53"

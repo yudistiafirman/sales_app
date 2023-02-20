@@ -22,6 +22,7 @@ import storageKey from '@/constants/storageKey';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { VERIFICATION } from '@/navigation/ScreenNames';
 import { ENTRY_TYPE } from '@/models/EnumModel';
+import analytics from '@react-native-firebase/analytics';
 
 const Verification = () => {
   const { phoneNumber } = useSelector(
@@ -79,6 +80,12 @@ const Verification = () => {
           errorOtp: '',
           otpValue: '',
           loading: false,
+        });
+        analytics().setUserId(response.data.id);
+        analytics().setUserProperties({
+          role: response.data.type,
+          email: response.data.email,
+          username: response.data.phone,
         });
         crashlytics().setUserId(response.data.id);
         crashlytics().setAttributes({
