@@ -426,7 +426,9 @@ interface visitationPayload {
   isBooking?: boolean; // ??
   status?: 'VISIT' | 'SPH' | 'REJECTED' | '';
   files: filesType[];
-  products: { id: string }[];
+  products?: {
+    id?: string;
+  }[];
 }
 
 interface filesType {
@@ -595,7 +597,7 @@ interface ProjectDetail {
   };
   mainPic: PIC;
   pics: PIC[];
-  docs:Docs[]
+  docs: Docs[];
 }
 
 export type {
@@ -634,5 +636,5 @@ export type {
   requiredDocType,
   postSphResponseType,
   Docs,
-  ProjectDetail
+  ProjectDetail,
 };

@@ -1,4 +1,4 @@
-import { visitationListResponse } from '@/interfaces';
+import { Docs, visitationListResponse } from '@/interfaces';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PhotoFile } from 'react-native-vision-camera';
 
@@ -45,7 +45,8 @@ export type RootStackParamList = {
   CREATE_SCHEDULE: {};
   SEARCH_PO: { from: string };
   CUSTOMER_DETAIL: { existingVisitation?: any };
-  DOCUMENTS: {};
+  DOCUMENTS: { projectId?: string; docs?: Docs[] };
+  VISIT_HISTORY: { projectId?: string; projectName?: string };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

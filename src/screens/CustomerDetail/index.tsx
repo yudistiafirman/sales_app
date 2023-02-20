@@ -18,7 +18,7 @@ import ProjectBetween from './elements/ProjectBetween';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
 import BillingModal from './elements/BillingModal';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { CUSTOMER_DETAIL, DOCUMENTS } from '@/navigation/ScreenNames';
+import { CUSTOMER_DETAIL, DOCUMENTS, VISIT_HISTORY } from '@/navigation/ScreenNames';
 import {
   RouteProp,
   useFocusEffect,
@@ -193,6 +193,12 @@ export default function CustomerDetail() {
           <Text style={styles.partText}>Proyek</Text>
           <BSpacer size={'extraSmall'} />
           <ProjectBetween
+            onPress={() => {
+              navigation.navigate(VISIT_HISTORY, {
+                projectId: customerData?.projectId,
+                projectName: customerData?.projectName,
+              });
+            }}
             projects={{
               id: customerData?.projectId,
               name: customerData?.projectName,
