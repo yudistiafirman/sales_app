@@ -60,12 +60,10 @@ import {
 } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import { HOME_MENU } from '../Const';
+
 const { RNCustomConfig } = NativeModules;
-
 const versionName = RNCustomConfig?.version_name;
-
 const { height } = Dimensions.get('window');
-
 const initialSnapPoints = (+height.toFixed() - 115) / 10;
 
 const Beranda = () => {
@@ -299,7 +297,7 @@ const Beranda = () => {
   };
 
   const getButtonsMenu = () => {
-    const buttons = [
+    let buttons = [
       {
         icon: SvgNames.IC_SPH,
         title: HOME_MENU.SPH,
@@ -334,38 +332,38 @@ const Beranda = () => {
     ];
 
     if (!enable_sph) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.SPH;
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.SPH;
       });
-      buttons.splice(index, 1);
+      buttons = filtered;
     }
 
     if (!enable_po) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.PO;
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.PO;
       });
-      buttons.splice(index, 1);
+      buttons = filtered;
     }
 
     if (!enable_deposit) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.DEPOSIT;
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.DEPOSIT;
       });
-      buttons.splice(index, 1);
+      buttons = filtered;
     }
 
     if (!enable_create_schedule) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.SCHEDULE;
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.SCHEDULE;
       });
-      buttons.splice(index, 1);
+      buttons = filtered;
     }
 
     if (!enable_appointment) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.APPOINTMENT;
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.APPOINTMENT;
       });
-      buttons.splice(index, 1);
+      buttons = filtered;
     }
     return buttons;
   };
