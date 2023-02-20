@@ -12,7 +12,7 @@
     "androidProd": "rm -rf android/build && rm -rf android/app/build && react-native run-android --variant=productionDebug",
     "androidRelease": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleProductionRelease && cd ..",
     "androidReleaseAPK": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleProductionRelease && cd ..",
-    "androidRelease-Dev": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleDevelopmentDebug && cd ..",
+    "androidRelease-Dev": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleDevelopmentRelease && cd ..",
     "androidReleaseAPK-Dev": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleDevelopmentRelease && cd .."
   },
   "dependencies": {

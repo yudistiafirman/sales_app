@@ -55,6 +55,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import {
   customLog,
   getMinVersionUpdate,
+  isDevelopment,
   isForceUpdate,
 } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
@@ -263,8 +264,12 @@ const Beranda = () => {
   React.useEffect(() => {
     crashlytics().log(TAB_HOME);
     fetchVisitations();
+
+    let currentVersionName = versionName;
+    if (isDevelopment())
+      currentVersionName = currentVersionName?.replace('(Dev)', '');
     setUpdateDialogVisible(
-      versionName?.replace('(Dev)', '')?.replace(new RegExp('.', 'g'), '') <
+      currentVersionName?.split('.').join('') <
         getMinVersionUpdate(force_update)
     );
   }, [page, selectedDate]);
