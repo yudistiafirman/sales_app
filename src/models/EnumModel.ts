@@ -1,6 +1,7 @@
-export enum USER_TYPE {
+export enum ENTRY_TYPE {
   OPSMANAGER,
   SALES,
   OPERATION,
   SECURITY,
+  HUNTER_FARMER,
 }

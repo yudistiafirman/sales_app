@@ -65,3 +65,4 @@ export const CREATE_SCHEDULE_TITLE = 'Buat Jadwal';
 export const ALL_PRODUCT_TITLE = 'Semua Produk';
 export const SEARCH_PO_TITLE = 'Cari PO';
 export const APPOINTMENT_TITLE = 'Buat Janji Temu';
+export const HUNTER_AND_FARMER_TITLE = 'Hunter & Farmer';

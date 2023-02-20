@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
 import { postOrderSph } from '../async-thunks/orderThunks';
 import { postUploadFiles } from '../async-thunks/commonThunks';
 
@@ -29,5 +28,5 @@ export const orderSlice = createSlice({
     });
   },
 });
-//orderSlice.actions
+
 export default orderSlice.reducer;

@@ -1,27 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Linking,
+  NativeModules,
+} from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import resScale from '@/utils/resScale';
 import DateDaily from './elements/DateDaily';
 import BQuickAction from '@/components/organism/BQuickActionMenu';
-import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import BottomSheet from '@gorhom/bottom-sheet';
 import BVisitationCard from '@/components/molecules/BVisitationCard';
 import moment from 'moment';
-import { TextInput } from 'react-native-paper';
+import { Button, Dialog, Portal, TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
 import {
   BBottomSheet,
   BSearchBar,
   BFlatlistItems,
   BSpacer,
+  BText,
 } from '@/components';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import BTabViewScreen from '@/components/organism/BTabViewScreen';
-import { layout } from '@/constants';
+import { fonts, layout } from '@/constants';
 import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
 import {
   getAllVisitations,
@@ -30,7 +37,7 @@ import {
 import debounce from 'lodash.debounce';
 import { Api } from '@/models';
 import { visitationDataType } from '@/interfaces';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
@@ -45,13 +52,32 @@ import {
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { customLog } from '@/utils/generalFunc';
+import {
+  customLog,
+  getMinVersionUpdate,
+  isForceUpdate,
+} from '@/utils/generalFunc';
+import { RootState } from '@/redux/store';
+import { HOME_MENU } from '../Const';
+const { RNCustomConfig } = NativeModules;
+
+const versionName = RNCustomConfig?.version_name;
 
 const { height } = Dimensions.get('window');
 
 const initialSnapPoints = (+height.toFixed() - 115) / 10;
 
 const Beranda = () => {
+  const {
+    force_update,
+    enable_appointment,
+    enable_create_schedule,
+    enable_customer_detail,
+    enable_deposit,
+    enable_po,
+    enable_sph,
+    enable_visitation,
+  } = useSelector((state: RootState) => state.remoteConfig);
   const dispatch = useDispatch();
   const [currentVisit, setCurrentVisit] = React.useState<{
     current: number;
@@ -68,6 +94,7 @@ const Beranda = () => {
 
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [isHeaderShown, setIsHeaderShown] = React.useState(true);
+  const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
 
   useHeaderStyleChanged({
     titleColor: colors.text.light,
@@ -130,6 +157,51 @@ const Beranda = () => {
     }, [])
   );
 
+  const renderUpdateDialog = () => {
+    return (
+      <Portal>
+        <Dialog
+          visible={isUpdateDialogVisible}
+          dismissable={!isForceUpdate(force_update)}
+          onDismiss={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
+          style={{ backgroundColor: colors.white }}
+        >
+          <Dialog.Title
+            style={{
+              fontFamily: fonts.family.montserrat[500],
+              fontSize: fonts.size.lg,
+            }}
+          >
+            Update Aplikasi
+          </Dialog.Title>
+          <Dialog.Content>
+            <BText bold="300">
+              Aplikasi anda telah usang, silakan update sebelum melanjutkan.
+            </BText>
+          </Dialog.Content>
+          <Dialog.Actions>
+            {!isForceUpdate(force_update) && (
+              <Button
+                onPress={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
+              >
+                Cancel
+              </Button>
+            )}
+            <Button
+              onPress={() =>
+                Linking.openURL(
+                  'https://play.google.com/store/apps/details?id=bod.app'
+                )
+              }
+            >
+              Update
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    );
+  };
+
   const fetchVisitations = async (search?: string) => {
     setIsLoading(true);
     try {
@@ -184,13 +256,17 @@ const Beranda = () => {
         });
       }
     } catch (error) {
-      customLog(error, 'ini err apa sih??');
+      customLog(error, 'ini err apa sih??'.replace);
     }
   };
 
   React.useEffect(() => {
     crashlytics().log(TAB_HOME);
     fetchVisitations();
+    setUpdateDialogVisible(
+      versionName?.replace('(Dev)', '')?.replace(new RegExp('.', 'g'), '') <
+        getMinVersionUpdate(force_update)
+    );
   }, [page, selectedDate]);
 
   const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
@@ -217,42 +293,77 @@ const Beranda = () => {
     }
   };
 
-  const buttonsData: buttonDataType[] = React.useMemo(
-    () => [
+  const getButtonsMenu = () => {
+    const buttons = [
       {
         icon: SvgNames.IC_SPH,
-        title: 'Buat SPH',
+        title: HOME_MENU.SPH,
         action: () => {
           navigation.navigate(SPH);
         },
       },
       {
         icon: SvgNames.IC_PO,
-        title: 'Buat PO',
+        title: HOME_MENU.PO,
         action: () => {},
       },
       {
         icon: SvgNames.IC_DEPOSIT,
-        title: 'Buat Deposit',
+        title: HOME_MENU.DEPOSIT,
         action: () => {},
       },
       {
         icon: SvgNames.IC_MAKE_SCHEDULE,
-        title: 'Buat Jadwal',
+        title: HOME_MENU.SCHEDULE,
         action: () => {
           navigation.navigate(CREATE_SCHEDULE);
         },
       },
       {
         icon: SvgNames.IC_APPOINTMENT,
-        title: 'Buat Janji Temu',
+        title: HOME_MENU.APPOINTMENT,
         action: () => {
           navigation.navigate(APPOINTMENT);
         },
       },
-    ],
-    []
-  );
+    ];
+
+    if (!enable_sph) {
+      const index = buttons.findIndex((item) => {
+        item.title === HOME_MENU.SPH;
+      });
+      buttons.splice(index, 1);
+    }
+
+    if (!enable_po) {
+      const index = buttons.findIndex((item) => {
+        item.title === HOME_MENU.PO;
+      });
+      buttons.splice(index, 1);
+    }
+
+    if (!enable_deposit) {
+      const index = buttons.findIndex((item) => {
+        item.title === HOME_MENU.DEPOSIT;
+      });
+      buttons.splice(index, 1);
+    }
+
+    if (!enable_create_schedule) {
+      const index = buttons.findIndex((item) => {
+        item.title === HOME_MENU.SCHEDULE;
+      });
+      buttons.splice(index, 1);
+    }
+
+    if (!enable_appointment) {
+      const index = buttons.findIndex((item) => {
+        item.title === HOME_MENU.APPOINTMENT;
+      });
+      buttons.splice(index, 1);
+    }
+    return buttons;
+  };
 
   const todayMark = React.useMemo(() => {
     return [
@@ -405,7 +516,7 @@ const Beranda = () => {
       />
 
       <BSpacer size="small" />
-      <BQuickAction buttonProps={buttonsData} />
+      <BQuickAction buttonProps={getButtonsMenu()} />
 
       <BBottomSheet
         onChange={bottomSheetOnchange}
@@ -418,7 +529,8 @@ const Beranda = () => {
           if (!isRenderDateDaily) {
             return null;
           }
-          return BuatKunjungan(props, kunjunganAction);
+
+          if (enable_visitation) return BuatKunjungan(props, kunjunganAction);
         }}
       >
         <View style={style.posRelative}>
@@ -446,9 +558,10 @@ const Beranda = () => {
           data={data.data}
           searchQuery={searchQuery}
           onEndReached={onEndReached}
-          onPressItem={visitationOnPress}
+          onPressItem={enable_customer_detail ? visitationOnPress : undefined}
         />
       </BBottomSheet>
+      {renderUpdateDialog()}
     </View>
   );
 };

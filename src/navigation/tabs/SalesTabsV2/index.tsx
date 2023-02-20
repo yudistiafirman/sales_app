@@ -17,10 +17,14 @@ import {
   TAB_TRANSACTION,
   TAB_TRANSACTION_TITLE,
 } from '@/navigation/ScreenNames';
+import { RootState } from '@/redux/store';
+import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
 function SalesTabsV2() {
+  const { enable_transaction_menu, enable_price_menu, enable_profile_menu } =
+    useSelector((state: RootState) => state.remoteConfig);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -45,24 +49,30 @@ function SalesTabsV2() {
         }}
         component={Home}
       />
-      <Tab.Screen
-        key={TAB_TRANSACTION}
-        name={TAB_TRANSACTION_TITLE}
-        options={{ headerTitle: TAB_TRANSACTION_TITLE }}
-        component={Transaction}
-      />
-      {/* <Tab.Screen
-        key={TAB_PROFILE}
-        name={TAB_PROFILE_TITLE}
-        options={{ headerTitle: TAB_PROFILE_TITLE }}
-        component={Profile}
-      /> */}
-      <Tab.Screen
-        key={TAB_PRICE_LIST}
-        name={TAB_PRICE_LIST_TITLE}
-        options={{ headerTitle: TAB_PRICE_LIST_TITLE }}
-        component={PriceList}
-      />
+      {enable_transaction_menu && (
+        <Tab.Screen
+          key={TAB_TRANSACTION}
+          name={TAB_TRANSACTION_TITLE}
+          options={{ headerTitle: TAB_TRANSACTION_TITLE }}
+          component={Transaction}
+        />
+      )}
+      {enable_profile_menu && (
+        <Tab.Screen
+          key={TAB_PROFILE}
+          name={TAB_PROFILE_TITLE}
+          options={{ headerTitle: TAB_PROFILE_TITLE }}
+          component={Profile}
+        />
+      )}
+      {enable_price_menu && (
+        <Tab.Screen
+          key={TAB_PRICE_LIST}
+          name={TAB_PRICE_LIST_TITLE}
+          options={{ headerTitle: TAB_PRICE_LIST_TITLE }}
+          component={PriceList}
+        />
+      )}
     </Tab.Navigator>
   );
 }

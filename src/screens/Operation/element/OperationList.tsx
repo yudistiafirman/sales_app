@@ -7,12 +7,12 @@ import { resScale } from '@/utils';
 import { layout } from '@/constants';
 import { BSpacer, BOperationCard } from '@/components';
 import { useNavigation } from '@react-navigation/native';
-import { USER_TYPE } from '@/models/EnumModel';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 import { CAMERA, SCHEDULE } from '@/navigation/ScreenNames';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type FooterType = {
-  role?: USER_TYPE;
+  role?: ENTRY_TYPE;
   isLoading?: boolean;
 };
 type OperationListType = {
@@ -49,7 +49,7 @@ export default function OperationList({
   const separator = useCallback(() => <BSpacer size={'small'} />, []);
 
   const onClickItem = (id: string) => {
-    if (role === USER_TYPE.OPERATION) {
+    if (role === ENTRY_TYPE.OPERATION) {
       navigation.navigate(SCHEDULE, { id: id });
     } else {
       navigation.navigate(CAMERA, {

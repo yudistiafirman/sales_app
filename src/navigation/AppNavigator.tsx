@@ -7,17 +7,17 @@ import SalesTabs from './tabs/SalesTabs';
 import TestStack from './stacks/TestStack';
 import Splash from '@/screens/Splash';
 import AuthStack from './stacks/AuthStack';
-import { useBootStrapAsync } from '@/hooks';
 import Operation from '@/screens/Operation';
-import { USER_TYPE } from '@/models/EnumModel';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 import SecurityTabs from './tabs/SecurityTabs';
 import { JwtPayload } from 'jwt-decode';
+import { useAsyncConfigSetup } from '@/hooks';
 
 const Stack = createNativeStackNavigator();
 
-const getTabs = (userType?: USER_TYPE) => {
+const getTabs = (userType?: ENTRY_TYPE) => {
   switch (userType) {
-    case USER_TYPE.OPERATION:
+    case ENTRY_TYPE.OPERATION:
       return BStackScreen({
         Stack: Stack,
         name: 'MainTabs',
@@ -25,9 +25,9 @@ const getTabs = (userType?: USER_TYPE) => {
         type: 'home',
         headerShown: true,
         component: Operation,
-        role: USER_TYPE[USER_TYPE.OPERATION],
+        role: ENTRY_TYPE[ENTRY_TYPE.OPERATION],
       });
-    case USER_TYPE.SECURITY:
+    case ENTRY_TYPE.SECURITY:
       return BStackScreen({
         Stack: Stack,
         name: 'MainTabs',
@@ -35,7 +35,7 @@ const getTabs = (userType?: USER_TYPE) => {
         type: 'home',
         headerShown: true,
         component: SecurityTabs,
-        role: USER_TYPE[USER_TYPE.SECURITY],
+        role: ENTRY_TYPE[ENTRY_TYPE.SECURITY],
       });
     default:
       return BStackScreen({
@@ -62,8 +62,8 @@ const getStacks = (userData: boolean | JwtPayload | null) => {
  * @deprecated The method should not be used
  */
 function AppNavigator() {
-  const [isLoading, userData] = useBootStrapAsync();
-  const userType = USER_TYPE.SECURITY;
+  const [isLoading, userData] = useAsyncConfigSetup();
+  const userType = ENTRY_TYPE.SECURITY;
 
   if (isLoading) {
     return <Splash />;
