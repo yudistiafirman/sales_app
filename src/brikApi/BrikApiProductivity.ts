@@ -15,6 +15,7 @@ interface IGetAll {
   date?: number;
   page: number;
   search?: string;
+  projectId?: string;
 }
 
 type getOneVisitationType = {
@@ -39,16 +40,27 @@ export default class BrikApiProductivity {
   };
 
   // homescreen
-  static getAllVisitations = ({ date, page = 0, search = '' }: IGetAll) => {
+  static getAllVisitations = ({
+    date,
+    page = 0,
+    search = '',
+    projectId,
+  }: IGetAll) => {
     const url = new URL(`${API_URL}/productivity/m/flow/all-visitation`);
     const params = url.searchParams;
 
     if (date) {
       params.append('date', date.toString());
     }
-
-    params.append('page', page.toString());
-    params.append('search', search);
+    if (projectId) {
+      params.append('projectId', projectId);
+    }
+    if (page) {
+      params.append('page', page.toString());
+    }
+    if (search) {
+      params.append('search', search);
+    }
     params.append('size', '10');
 
     return url.toString();

@@ -33,6 +33,7 @@ export const APPOINTMENT = 'APPOINTMENT';
 export const SEARCH_PO = 'SEARCH_PO';
 export const HUNTER_AND_FARMERS = 'HUNTER_AND_FARMERS';
 export const DOCUMENTS = 'DOCUMENTS';
+export const VISIT_HISTORY = 'VISIt_HISTORY';
 
 /*
     Screen Title
@@ -66,3 +67,4 @@ export const ALL_PRODUCT_TITLE = 'Semua Produk';
 export const SEARCH_PO_TITLE = 'Cari PO';
 export const APPOINTMENT_TITLE = 'Buat Janji Temu';
 export const HUNTER_AND_FARMER_TITLE = 'Hunter & Farmer';
+
