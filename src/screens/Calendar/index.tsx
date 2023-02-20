@@ -207,6 +207,7 @@ export default function CalendarScreen() {
           markedDates={markedDate}
           onMonthChange={onMonthPress}
           isLoading={isVisitationLoading}
+          // minDate={new Date().toString()}
         />
         <BSpacer size="small" />
         <BText color="divider"> Pelanggan yang Dikunjungi </BText>

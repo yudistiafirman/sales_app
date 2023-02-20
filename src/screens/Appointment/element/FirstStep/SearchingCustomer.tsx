@@ -34,9 +34,14 @@ const SearchingCustomer = () => {
         });
       }
 
+      const picList = item.PIC;
+      if (picList.length === 1) {
+        picList[0].isSelected = true;
+      }
+
       const companyDataToSave = {
         Company: { id: item.Company.id, title: item.Company.name },
-        PIC: item.PIC,
+        PIC: picList,
         Visitation: item.Visitation,
         locationAddress: item.locationAddress,
         mainPic: item.mainPic,
