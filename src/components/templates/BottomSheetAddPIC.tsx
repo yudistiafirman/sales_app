@@ -11,6 +11,7 @@ import BText from '../atoms/BText';
 import BHeaderIcon from '../atoms/BHeaderIcon';
 import BForm from '../organism/BForm';
 import BButtonPrimary from '../atoms/BButtonPrimary';
+import { resScale } from '@/utils';
 const { height, width } = Dimensions.get('window');
 interface IProps {
   addPic: any;
@@ -138,7 +139,10 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       <View style={styles.contentWrapper}>
         <KeyboardAwareScrollView>
           <View
-            style={[styles.contentOuterContainer, { height: height / 1.67 }]}
+            style={[
+              styles.contentOuterContainer,
+              { height: width + resScale(120) },
+            ]}
           >
             <View style={styles.contentInnerContainer}>
               <View style={styles.headerContainer}>
@@ -152,13 +156,13 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
               </View>
               <View>
                 <BForm inputs={inputs} />
-                <View style={styles.buttonWrapper}>
-                  <BButtonPrimary onPress={onAdd} title="Tambah PIC" />
-                </View>
               </View>
             </View>
           </View>
         </KeyboardAwareScrollView>
+        <View style={styles.buttonWrapper}>
+          <BButtonPrimary onPress={onAdd} title="Tambah PIC" />
+        </View>
       </View>
     </Modal>
   );
@@ -184,9 +188,10 @@ const styles = StyleSheet.create({
     fontSize: font.size.lg,
   },
   buttonWrapper: {
-    position: 'absolute',
     width: '100%',
-    top: width - layout.pad.lg,
+    position: 'absolute',
+    bottom: 10,
+    paddingHorizontal: layout.pad.lg,
   },
 });
 

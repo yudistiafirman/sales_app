@@ -158,10 +158,10 @@ const Appointment = () => {
       } as projectPayloadType,
       pic: [] as picPayloadType[],
     };
-
     if (stepOne[customerType].PIC.length === 1) {
-      stepOne[customerType].PIC[0].isSelected = true;
-      payload.pic = stepOne[customerType].PIC;
+      const pic = [];
+      pic.push({ ...stepOne[customerType].PIC[0], isSelected: true });
+      payload.pic = pic;
     } else {
       const selectedPic = stepOne[customerType].PIC.filter((v) => v.isSelected);
       payload.pic = selectedPic;

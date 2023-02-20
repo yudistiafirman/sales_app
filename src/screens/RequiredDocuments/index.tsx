@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
 import { colors, fonts } from '@/constants';
-import { BContainer, BForm, BSpacer } from '@/components';
+import { BContainer, BForm, BLabel, BSpacer } from '@/components';
 import {
   fetchSphDocuments,
   postProjectDocByprojectId,
@@ -32,9 +32,9 @@ type docResponse = {
 
 export default function RequiredDocuments() {
   const dispatch = useDispatch();
-  const route = useRoute()
+  const route = useRoute();
 
-  const { docs,projectId } = route.params;
+  const { docs, projectId } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [reqDocuments, setReqDocuments] = useState<docResponse>({});
   const [docState, setDocState] = useState<{ [key: string]: any }>({});
@@ -201,7 +201,8 @@ export default function RequiredDocuments() {
       isRequire: boolean;
       key: string;
     };
-    const fileInput: fileInputType[] = [];
+    const fileInputCredit: fileInputType[] = [];
+    const fileInputCbd: fileInputType[] = [];
     reqDocuments?.credit?.forEach((doc) => {
       const input = {
         label: doc.name,
@@ -209,7 +210,7 @@ export default function RequiredDocuments() {
         isRequire: doc.is_required,
         key: doc.id,
       };
-      fileInput.push(input);
+      fileInputCredit.push(input);
     });
     reqDocuments?.cbd?.forEach((doc) => {
       const input = {
@@ -218,14 +219,18 @@ export default function RequiredDocuments() {
         isRequire: doc.is_required,
         key: doc.id,
       };
-      fileInput.push(input);
+      fileInputCbd.push(input);
     });
-    return fileInput;
+    return [fileInputCredit, fileInputCbd];
   }, [reqDocuments]);
 
   const inputsData: Input[] = useMemo(() => {
-    const fileInputs: Input[] = [];
-    files.forEach((each) => {
+    const fileInputsCredit: Input[] = [];
+    const filesInputsCBD: Input[] = [];
+
+    const [fileInputCredit, fileInputCbd] = files;
+
+    fileInputCredit.forEach((each) => {
       const inputFile: Input = {
         ...each,
         value: docState[each.key],
@@ -246,10 +251,35 @@ export default function RequiredDocuments() {
         isError: docLoadingState[each.key].error,
         customerErrorMsg: docLoadingState[each.key].errorMessage,
       };
-      fileInputs.push(inputFile);
+      fileInputsCredit.push(inputFile);
     });
-    return fileInputs;
+    fileInputCbd.forEach((each) => {
+      const inputFile: Input = {
+        ...each,
+        value: docState[each.key],
+        onChange: (data: any) => {
+          if (!data) return;
+          setDocState((curr) => {
+            return {
+              ...curr,
+              [each.key]: {
+                ...data,
+                name: each.key.trim() + data.name,
+              },
+            };
+          });
+          uploadFile(each.key, data);
+        },
+        loading: docLoadingState[each.key].loading,
+        isError: docLoadingState[each.key].error,
+        customerErrorMsg: docLoadingState[each.key].errorMessage,
+      };
+      filesInputsCBD.push(inputFile);
+    });
+    return [fileInputsCredit, filesInputsCBD];
   }, [files, docState, docLoadingState, uploadFile]);
+
+  const [fileInputsCredit, filesInputsCBD] = inputsData;
 
   return (
     <BContainer>
@@ -272,7 +302,12 @@ export default function RequiredDocuments() {
         />
       </View>
       <BSpacer size={'small'} />
-      <BForm inputs={inputsData} />
+      <BLabel label="Cash Before Delivery" isRequired />
+      <BSpacer size="extraSmall" />
+      <BForm inputs={filesInputsCBD} />
+      <BLabel label="Credit" isRequired />
+      <BSpacer size="extraSmall" />
+      <BForm inputs={fileInputsCredit} />
       {isLoading && (
         <View>
           <ShimmerPlaceHolder style={styles.fileInputShimmer} />
