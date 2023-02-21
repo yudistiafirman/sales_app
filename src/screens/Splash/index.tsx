@@ -4,16 +4,16 @@ import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { HUNTER_AND_FARMER, SPLASH } from '@/navigation/ScreenNames';
-import AsyncStorage from '@react-native-community/async-storage';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { toggleHunterScreen } from '@/redux/reducers/authReducer';
+import { bStorage } from '@/actions';
 
 const Splash = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const checkStoredState = async () => {
-    const storedState = await AsyncStorage.getItem(HUNTER_AND_FARMER);
+    const storedState = await bStorage.getItem(HUNTER_AND_FARMER);
     return storedState;
   };
 

@@ -11,13 +11,12 @@ import * as React from 'react';
 import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { customLog, isDevelopment, isJsonString } from '@/utils/generalFunc';
+import { customLog, isJsonString } from '@/utils/generalFunc';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { ENTRY_TYPE } from '@/models/EnumModel';
-import BackgroundTimer from 'react-native-background-timer';
-import AsyncStorage from '@react-native-community/async-storage';
+import BackgroundFetch from 'react-native-background-fetch';
+moment.suppressDeprecationWarnings = true;
 import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
-
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -31,9 +30,6 @@ const useAsyncConfigSetup = () => {
   const { enable_hunter_farmer } = useSelector(
     (state: RootState) => state.auth.remote_config
   );
-  let timeoutId = React.useRef();
-  let nextdays = moment().add(1, 'days').format('L');
-  let duration = Math.abs(moment().diff(nextdays, 'millisecond'));
 
   const userDataSetup = React.useCallback(
     async (fetchedRemoteConfig: any) => {
@@ -72,23 +68,6 @@ const useAsyncConfigSetup = () => {
     [dispatch]
   );
 
-  const hunterFarmerSetup = React.useCallback(async () => {
-    timeoutId.current = BackgroundTimer.runBackgroundTimer(
-      () => {
-        // to save state when app killed
-        AsyncStorage.setItem(HUNTER_AND_FARMER, 'true');
-
-        dispatch(toggleHunterScreen(true));
-      },
-
-      // in milisecond
-      isDevelopment ? 3600000 : duration
-    );
-    return () => {
-      BackgroundTimer.clearTimeout(timeoutId.current);
-    };
-  }, [dispatch, duration]);
-
   const appStateSetup = React.useCallback(async () => {
     remoteConfig().fetch(300);
     remoteConfig()
@@ -117,8 +96,39 @@ const useAsyncConfigSetup = () => {
         hunterFarmerSetup();
         userDataSetup(undefined);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, userDataSetup]);
+
+  const hunterFarmerSetup = React.useCallback(async () => {
+    await BackgroundFetch.configure(
+      {
+        minimumFetchInterval: 15,
+        forceAlarmManager: true,
+      },
+      async (taskId) => {
+        // <-- Event callback
+        const date = await bStorage.getItem('accessDate');
+        if (date !== undefined) {
+          if (moment().date() !== date) {
+            bStorage.setItem(HUNTER_AND_FARMER, 'true');
+            dispatch(toggleHunterScreen(true));
+          }
+        } else {
+          await bStorage.setItem('accessDate', moment().date());
+        }
+        BackgroundFetch.finish(taskId);
+      },
+      async (taskId) => {
+        BackgroundFetch.finish(taskId);
+      }
+    );
+    // And with with #scheduleTask
+    BackgroundFetch.scheduleTask({
+      taskId: 'com.foo.customtask',
+      delay: 0, // milliseconds
+      forceAlarmManager: true,
+      periodic: false,
+    });
+  }, [dispatch]);
 
   React.useEffect(() => {
     appStateSetup();
