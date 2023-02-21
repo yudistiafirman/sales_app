@@ -1,9 +1,5 @@
-import { production } from '../../app.json';
 import Config from 'react-native-config';
-const PRODUCTION = production;
-const API_URL = PRODUCTION
-  ? Config.API_URL_ORDER_PROD
-  : Config.API_URL_ORDER_DEV;
+const API_URL = Config.API_URL_ORDER;
 
 export default class BrikApiOrder {
   static getAllOrders = () => {

@@ -4,12 +4,10 @@ import { Api } from '@/models';
 import { UserModel } from '@/models/User';
 import { bStorage } from '@/actions';
 import { storageKey } from '@/constants';
-import { setUserData, signout } from '@/redux/reducers/authReducer';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import { signout } from '@/redux/reducers/authReducer';
 import { customLog } from '@/utils/generalFunc';
 import perf from '@react-native-firebase/perf';
 
-const production = false;
 let store: any;
 let metric: any;
 
@@ -74,11 +72,7 @@ export const getOptions = async (
       options.data = data;
     }
 
-    if (production) {
-      options.timeoutInterval = timeout;
-    } else {
-      options.timeoutInterval = timeout;
-    }
+    options.timeoutInterval = timeout;
     return options;
   } catch (error) {
     customLog('====================================');
@@ -99,17 +93,25 @@ instance.interceptors.response.use(
     const { data, config } = res;
 
     // performance API logs
-    const response = await fetch(config.url);
-    if (response?.status) metric?.setHttpResponseCode(response?.status);
-    try {
-      metric?.setResponseContentType(response?.headers?.get('Content-Type'));
-      let contentLength = null;
-      if (response?.headers?.get('Content-Length')) {
-        contentLength = parseInt(response?.headers?.get('Content-Length'));
+    if (config.url) {
+      const response = await fetch(config.url);
+      if (response?.status) metric?.setHttpResponseCode(response?.status);
+      try {
+        metric?.setResponseContentType(response?.headers?.get('Content-Type'));
+        let contentLength = null;
+        if (
+          response?.headers?.get('Content-Length') !== undefined &&
+          response?.headers?.get('Content-Length') !== null
+        ) {
+          contentLength = parseInt(
+            response?.headers?.get('Content-Length'),
+            10
+          );
+        }
+        metric?.setResponsePayloadSize(contentLength);
+      } catch (err) {
+        customLog(err);
       }
-      metric?.setResponsePayloadSize(contentLength);
-    } catch (err) {
-      customLog(err);
     }
     await metric?.stop();
     metric = undefined;
@@ -118,7 +120,7 @@ instance.interceptors.response.use(
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
         await bStorage.deleteItem(storageKey.userToken);
-        store.dispatch(signout());
+        store.dispatch(signout(false));
         return Promise.resolve(res);
       }
 

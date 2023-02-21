@@ -1,6 +1,10 @@
 {
   "name": "BOD",
   "displayName": "BOD",
-  "production":false
-
+  "ios": {
+    "bundleIdentifier": "bod.app"
+  },
+  "android": {
+    "package": "bod.app"
+  }
 }

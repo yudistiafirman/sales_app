@@ -1,7 +1,5 @@
 import Config from 'react-native-config';
-const production = false;
-const PRODUCTION = production;
-const API_URL = PRODUCTION ? Config.API_URL_INV_PROD : Config.API_URL_INV_DEV;
+const API_URL = Config.API_URL_INV;
 
 export default class BrikApiInventory {
   static getProductCategories = (
