@@ -8,13 +8,14 @@ import {
 import { AppDispatch, RootState } from '@/redux/store';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import * as React from 'react';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { customLog, isJsonString } from '@/utils/generalFunc';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import BackgroundFetch from 'react-native-background-fetch';
+import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -99,18 +100,16 @@ const useAsyncConfigSetup = () => {
   const hunterFarmerSetup = React.useCallback(async () => {
     await BackgroundFetch.configure(
       {
-        minimumFetchInterval: 15,
+        minimumFetchInterval: Platform.OS === 'android' ? 60 : 15,
         forceAlarmManager: true,
       },
       async (taskId) => {
         // <-- Event callback
-        const date = await bStorage.getItem('accessDate');
-        if (date !== undefined) {
-          if (moment().date() !== date) {
-            dispatch(toggleHunterScreen(true));
-          }
+        const date = await bStorage.getItem(HUNTER_AND_FARMER);
+        if (date !== undefined && moment().date() !== date) {
+          dispatch(toggleHunterScreen(true));
         } else {
-          await bStorage.setItem(storageKey.accessDate, moment().date());
+          await bStorage.setItem(HUNTER_AND_FARMER, moment().date());
         }
         BackgroundFetch.finish(taskId);
       },
