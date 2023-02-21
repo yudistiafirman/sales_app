@@ -15,7 +15,6 @@ import { customLog, isJsonString } from '@/utils/generalFunc';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import BackgroundFetch from 'react-native-background-fetch';
-import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -111,7 +110,7 @@ const useAsyncConfigSetup = () => {
             dispatch(toggleHunterScreen(true));
           }
         } else {
-          await bStorage.setItem('accessDate', moment().date());
+          await bStorage.setItem(storageKey.accessDate, moment().date());
         }
         BackgroundFetch.finish(taskId);
       },
@@ -121,7 +120,7 @@ const useAsyncConfigSetup = () => {
     );
     // And with with #scheduleTask
     BackgroundFetch.scheduleTask({
-      taskId: 'com.foo.customtask',
+      taskId: 'enableHunterFarmers',
       delay: 0, // milliseconds
       forceAlarmManager: true,
       periodic: false,

@@ -1,5 +1,5 @@
 import { BSpacer, BText } from '@/components';
-import { colors, layout } from '@/constants';
+import { colors, layout, storageKey } from '@/constants';
 import font from '@/constants/fonts';
 import {
   APPOINTMENT,
@@ -36,13 +36,13 @@ const HunterAndFarmers = () => {
   const goToHome = () => {
     dispatch(toggleHunterScreen(false));
     navigation.navigate(TAB_ROOT);
-    bStorage.setItem('accessDate', moment().date());
+    bStorage.setItem(storageKey.accessDate, moment().date());
   };
 
   const goToAppointment = () => {
     dispatch(toggleHunterScreen(false));
     navigation.navigate(APPOINTMENT);
-    bStorage.setItem('accessDate', moment().date());
+    bStorage.setItem(storageKey.accessDate, moment().date());
   };
 
   React.useEffect(() => {
