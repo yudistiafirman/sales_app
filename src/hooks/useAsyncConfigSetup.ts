@@ -15,7 +15,6 @@ import { customLog, isJsonString } from '@/utils/generalFunc';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import BackgroundFetch from 'react-native-background-fetch';
-moment.suppressDeprecationWarnings = true;
 import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -109,7 +108,6 @@ const useAsyncConfigSetup = () => {
         const date = await bStorage.getItem('accessDate');
         if (date !== undefined) {
           if (moment().date() !== date) {
-            bStorage.setItem(HUNTER_AND_FARMER, 'true');
             dispatch(toggleHunterScreen(true));
           }
         } else {

@@ -34,14 +34,12 @@ const HunterAndFarmers = () => {
   );
 
   const goToHome = () => {
-    bStorage.deleteItem(HUNTER_AND_FARMER);
     dispatch(toggleHunterScreen(false));
     navigation.navigate(TAB_ROOT);
     bStorage.setItem('accessDate', moment().date());
   };
 
   const goToAppointment = () => {
-    bStorage.deleteItem(HUNTER_AND_FARMER);
     dispatch(toggleHunterScreen(false));
     navigation.navigate(APPOINTMENT);
     bStorage.setItem('accessDate', moment().date());
