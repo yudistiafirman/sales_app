@@ -14,6 +14,20 @@ interface AuthState {
   isSignout: boolean;
   hunterScreen: boolean;
   entryType: ENTRY_TYPE | undefined;
+  remote_config: {
+    enable_appointment: boolean;
+    enable_create_schedule: boolean;
+    enable_customer_detail: boolean;
+    enable_deposit: boolean;
+    enable_hunter_farmer: boolean;
+    enable_po: boolean;
+    enable_price_menu: boolean;
+    enable_profile_menu: boolean;
+    enable_sph: boolean;
+    enable_transaction_menu: boolean;
+    enable_visitation: boolean;
+    force_update: { min_version: string; is_forced: boolean };
+  };
 }
 
 const initialState: AuthState = {
@@ -21,10 +35,24 @@ const initialState: AuthState = {
   loginCredential: {
     phoneNumber: '',
   },
-  isLoading: false,
+  isLoading: true,
   isSignout: false,
   hunterScreen: false,
-  entryType: undefined,
+  entryType: ENTRY_TYPE.SALES,
+  remote_config: {
+    enable_appointment: true,
+    enable_create_schedule: true,
+    enable_customer_detail: true,
+    enable_deposit: true,
+    enable_hunter_farmer: true,
+    enable_po: true,
+    enable_price_menu: true,
+    enable_profile_menu: true,
+    enable_sph: true,
+    enable_transaction_menu: true,
+    enable_visitation: true,
+    force_update: { min_version: '1.0.0', is_forced: false },
+  },
 };
 
 export const authSlice = createSlice({
@@ -40,12 +68,44 @@ export const authSlice = createSlice({
         },
       };
     },
-    setUserData: (state, action: PayloadAction<JwtPayload | null>) => {
-      return {
-        ...state,
-        userData: action.payload,
-        isSignout: false,
-      };
+    setUserData: (state, action: PayloadAction<any>) => {
+      if (action.payload.remoteConfig) {
+        return {
+          ...state,
+          userData: action.payload.userData,
+          entryType: action.payload.entryType,
+          remote_config: {
+            ...state.remote_config,
+            enable_appointment: action.payload.remoteConfig.enable_appointment,
+            enable_create_schedule:
+              action.payload.remoteConfig.enable_create_schedule,
+            enable_customer_detail:
+              action.payload.remoteConfig.enable_customer_detail,
+            enable_deposit: action.payload.remoteConfig.enable_deposit,
+            enable_hunter_farmer:
+              action.payload.remoteConfig.enable_hunter_farmer,
+            enable_po: action.payload.remoteConfig.enable_po,
+            enable_price_menu: action.payload.remoteConfig.enable_price_menu,
+            enable_profile_menu:
+              action.payload.remoteConfig.enable_profile_menu,
+            enable_sph: action.payload.remoteConfig.enable_sph,
+            enable_transaction_menu:
+              action.payload.remoteConfig.enable_transaction_menu,
+            enable_visitation: action.payload.remoteConfig.enable_visitation,
+            force_update: action.payload.remoteConfig.force_update,
+          },
+          isSignout: false,
+          isLoading: false,
+        };
+      } else {
+        return {
+          ...state,
+          userData: action.payload.userData,
+          entryType: action.payload.entryType,
+          isSignout: false,
+          isLoading: false,
+        };
+      }
     },
     setEntryType: (state, action: PayloadAction<ENTRY_TYPE>) => {
       return {
@@ -53,11 +113,40 @@ export const authSlice = createSlice({
         entryType: action.payload,
       };
     },
-    setIsLoading: (state, action: PayloadAction<boolean>) => {
-      return {
-        ...state,
-        isLoading: action.payload,
-      };
+    setIsLoading: (state, action: PayloadAction<any>) => {
+      if (action.payload.remoteConfig) {
+        return {
+          ...state,
+          remote_config: {
+            ...state.remote_config,
+            enable_appointment: action.payload.remoteConfig.enable_appointment,
+            enable_create_schedule:
+              action.payload.remoteConfig.enable_create_schedule,
+            enable_customer_detail:
+              action.payload.remoteConfig.enable_customer_detail,
+            enable_deposit: action.payload.remoteConfig.enable_deposit,
+            enable_hunter_farmer:
+              action.payload.remoteConfig.enable_hunter_farmer,
+            enable_po: action.payload.remoteConfig.enable_po,
+            enable_price_menu: action.payload.remoteConfig.enable_price_menu,
+            enable_profile_menu:
+              action.payload.remoteConfig.enable_profile_menu,
+            enable_sph: action.payload.remoteConfig.enable_sph,
+            enable_transaction_menu:
+              action.payload.remoteConfig.enable_transaction_menu,
+            enable_visitation: action.payload.remoteConfig.enable_visitation,
+            force_update: action.payload.remoteConfig.force_update,
+          },
+          isLoading: action.payload.loading,
+          entryType: action.payload.entryType,
+        };
+      } else {
+        return {
+          ...state,
+          isLoading: action.payload.loading,
+          entryType: action.payload.entryType,
+        };
+      }
     },
     signout: (state, action: PayloadAction<boolean>) => {
       return {

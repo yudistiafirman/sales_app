@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { toggleHunterScreen } from '@/redux/reducers/authReducer';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const { height } = Dimensions.get('screen');
 const HunterAndFarmers = () => {
@@ -30,11 +31,13 @@ const HunterAndFarmers = () => {
   const { hunterScreen } = useSelector((state: RootState) => state.auth);
 
   const goToHome = () => {
+    AsyncStorage.removeItem(HUNTER_AND_FARMER);
     dispatch(toggleHunterScreen(false));
     navigation.navigate(TAB_ROOT);
   };
 
   const goToAppointment = () => {
+    AsyncStorage.removeItem(HUNTER_AND_FARMER);
     dispatch(toggleHunterScreen(false));
     navigation.navigate(APPOINTMENT);
   };

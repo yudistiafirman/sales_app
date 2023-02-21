@@ -1,6 +1,5 @@
 import { production } from '../../app.json';
 import Config from 'react-native-config';
-import moment from 'moment';
 const PRODUCTION = production;
 const API_URL = PRODUCTION
   ? Config.API_URL_ORDER_PROD

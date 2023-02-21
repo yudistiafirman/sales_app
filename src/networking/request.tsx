@@ -4,7 +4,7 @@ import { Api } from '@/models';
 import { UserModel } from '@/models/User';
 import { bStorage } from '@/actions';
 import { storageKey } from '@/constants';
-import { setUserData } from '@/redux/reducers/authReducer';
+import { setUserData, signout } from '@/redux/reducers/authReducer';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { customLog } from '@/utils/generalFunc';
 import perf from '@react-native-firebase/perf';
@@ -103,7 +103,11 @@ instance.interceptors.response.use(
     if (response?.status) metric?.setHttpResponseCode(response?.status);
     try {
       metric?.setResponseContentType(response?.headers?.get('Content-Type'));
-      metric?.setResponsePayloadSize(response?.headers?.get('Content-Length'));
+      let contentLength = null;
+      if (response?.headers?.get('Content-Length')) {
+        contentLength = parseInt(response?.headers?.get('Content-Length'));
+      }
+      metric?.setResponsePayloadSize(contentLength);
     } catch (err) {
       customLog(err);
     }
@@ -114,7 +118,7 @@ instance.interceptors.response.use(
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
         await bStorage.deleteItem(storageKey.userToken);
-        store.dispatch(setUserData(null));
+        store.dispatch(signout());
         return Promise.resolve(res);
       }
 
@@ -130,9 +134,9 @@ instance.interceptors.response.use(
 
         const newAccToken = resultRefreshToken?.accessToken;
         bStorage.setItem(storageKey.userToken, newAccToken);
-        const decoded = jwtDecode<JwtPayload>(newAccToken);
+        // const decoded = jwtDecode<JwtPayload>(newAccToken);
 
-        store.dispatch(setUserData(decoded));
+        // store.dispatch(setUserData({ userData: decoded }));
 
         config.headers.Authorization = `Bearer ${newAccToken}`;
         const finalResponse = await instance(config);
