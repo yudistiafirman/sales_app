@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getAllProject } from '../async-thunks/commonThunks';
 
 type popUpOptions = {
   isRenderActions?: boolean;
@@ -12,6 +11,8 @@ type popUpOptions = {
   primaryBtnTitle?: string;
   outlineBtnAction?: () => void;
   primaryBtnAction?: () => void;
+  isPrimaryButtonLoading?: boolean;
+  isOutlineButtonLoading?: boolean;
 };
 
 type initialStateType = {
@@ -30,6 +31,8 @@ const initialPopupData: popUpOptions = {
   primaryBtnTitle: '',
   outsideClickClosePopUp: true,
   highlightedText: '',
+  isPrimaryButtonLoading: false,
+  isOutlineButtonLoading: false,
 };
 
 const initialState: initialStateType = {
@@ -44,6 +47,8 @@ const initialState: initialStateType = {
     primaryBtnAction: undefined,
     outlineBtnTitle: '',
     primaryBtnTitle: '',
+    isPrimaryButtonLoading: false,
+    isOutlineButtonLoading: false,
   },
 };
 
@@ -89,19 +94,27 @@ export const modalSlice = createSlice({
       if (payload.primaryBtnAction) {
         state.popUpOptions.primaryBtnAction = payload.primaryBtnAction;
       }
+      if (typeof payload.isPrimaryButtonLoading === 'boolean') {
+        state.popUpOptions.isPrimaryButtonLoading =
+          payload.isPrimaryButtonLoading;
+      }
+      if (typeof payload.isOutlineButtonLoading === 'boolean') {
+        state.popUpOptions.isOutlineButtonLoading =
+          payload.isOutlineButtonLoading;
+      }
     },
     closePopUp: (state) => {
       state.isPopUpVisible = false;
       state.popUpOptions = initialPopupData;
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(getAllProject.rejected, (state) => {
-      state.isPopUpVisible = !state.isPopUpVisible;
-      state.popUpOptions.popUpType = 'error';
-      state.popUpOptions.popUpText = 'getAllProject error';
-    });
-  },
+  // extraReducers: (builder) => {
+  //   builder.addCase(getAllProject.rejected, (state) => {
+  //     state.isPopUpVisible = !state.isPopUpVisible;
+  //     state.popUpOptions.popUpType = 'error';
+  //     state.popUpOptions.popUpText = 'getAllProject error';
+  //   });
+  // },
 });
 
 export const { setIsPopUpVisible, openPopUp, closePopUp } = modalSlice.actions;

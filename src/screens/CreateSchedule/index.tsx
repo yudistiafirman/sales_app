@@ -155,7 +155,7 @@ const CreateSchedule = () => {
               isContinueIcon={false}
               onPressBack={values.step > 0 && next(values.step - 1)}
               continueText={values.step > 0 ? 'Buat Jadwal' : 'Lanjut'}
-              disableBack={values.step > 0 ? false : true}
+              unrenderBack={values.step > 0 ? false : true}
               disableContinue={!stepsDone.includes(values.step)}
             />
           )}

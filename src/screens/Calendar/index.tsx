@@ -11,7 +11,7 @@ import { colors, fonts, layout } from '@/constants';
 import { BButtonPrimary, BCalendar, BSpacer, BText } from '@/components';
 import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
 import moment, { locale } from 'moment';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { getVisitationsList } from '@/redux/async-thunks/productivityFlowThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -26,9 +26,12 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { CALENDAR } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 
 export default function CalendarScreen() {
+  const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
+  const useTodayMinDate = route.params?.useTodayMinDate;
   const dispatch = useDispatch();
   const { visitationCalendarMapped, markedDate, isVisitationLoading } =
     useSelector((state: RootState) => state.productivity);
@@ -85,6 +88,7 @@ export default function CalendarScreen() {
                 phone: obj.project?.pic?.phone,
                 position: obj.project?.pic?.position,
                 type: obj.project?.pic?.type,
+                picName: obj.project?.pic?.name,
               });
               return acc;
             },
@@ -207,7 +211,7 @@ export default function CalendarScreen() {
           markedDates={markedDate}
           onMonthChange={onMonthPress}
           isLoading={isVisitationLoading}
-          // minDate={new Date().toString()}
+          minDate={useTodayMinDate ? new Date().toString() : undefined}
         />
         <BSpacer size="small" />
         <BText color="divider"> Pelanggan yang Dikunjungi </BText>

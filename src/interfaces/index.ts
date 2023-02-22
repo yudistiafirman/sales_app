@@ -176,6 +176,7 @@ interface PIC {
   email?: string;
   position?: string;
   isSelected?: boolean;
+  type?: string;
 }
 
 interface NavigationProps {
@@ -371,6 +372,7 @@ interface visitationListResponse {
     name: string;
     stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
     PIC: PIC[];
+    pic: requiredPic;
     mainPic: PIC & { type?: string };
     company: {
       id: string;
@@ -398,6 +400,7 @@ interface customerDataInterface {
   email: string | null;
   phone: string;
   position: string;
+  picName?: string;
 }
 
 interface locationPayloadType {
@@ -461,6 +464,15 @@ interface picPayloadType {
   email?: string;
   type?: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
   isSelected?: boolean;
+}
+interface requiredPic {
+  id: string;
+  name: string;
+  position: string;
+  phone: string;
+  email: string;
+  type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
+  isSelected: boolean;
 }
 
 interface payloadPostType {
@@ -595,7 +607,7 @@ interface ProjectDetail {
   };
   mainPic: PIC;
   pics: PIC[];
-  docs:Docs[]
+  docs: Docs[];
 }
 
 export type {
@@ -634,5 +646,6 @@ export type {
   requiredDocType,
   postSphResponseType,
   Docs,
-  ProjectDetail
+  ProjectDetail,
+  requiredPic,
 };

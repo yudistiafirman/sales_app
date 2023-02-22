@@ -41,6 +41,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
+import { useHeaderShow } from '@/hooks';
 import {
   APPOINTMENT,
   CAMERA,
@@ -80,6 +81,7 @@ const Beranda = () => {
     enable_visitation,
   } = useSelector((state: RootState) => state.remoteConfig);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [currentVisit, setCurrentVisit] = React.useState<{
     current: number;
     target: number;
@@ -91,12 +93,12 @@ const Beranda = () => {
   const [snapPoints] = React.useState([`${initialSnapPoints}%`, '91%', '100%']); //setSnapPoints
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = React.useState('');
-  const navigation = useNavigation();
 
   const [isModalVisible, setModalVisible] = React.useState(false);
-  const [isHeaderShown, setIsHeaderShown] = React.useState(true);
   const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
-
+  useHeaderShow({
+    isHeaderShown: !isModalVisible,
+  });
   useHeaderStyleChanged({
     titleColor: colors.text.light,
     bgColor: colors.primary,
@@ -116,7 +118,6 @@ const Beranda = () => {
 
   const toggleModal = (key: string) => () => {
     setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
-    setIsHeaderShown(!isHeaderShown);
     setModalVisible(!isModalVisible);
     if (key === 'close') {
       setSearchQuery('');
@@ -257,6 +258,7 @@ const Beranda = () => {
         });
       }
     } catch (error) {
+      setIsLoading(false);
       customLog(error, 'ini err apa sih??'.replace);
     }
   };
@@ -333,40 +335,40 @@ const Beranda = () => {
       },
     ];
 
-    if (!enable_sph) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.SPH;
-      });
-      buttons.splice(index, 1);
-    }
+    // if (!enable_sph) {
+    //   const index = buttons.findIndex((item) => {
+    //     item.title === HOME_MENU.SPH;
+    //   });
+    //   buttons.splice(index, 1);
+    // }
 
-    if (!enable_po) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.PO;
-      });
-      buttons.splice(index, 1);
-    }
+    // if (!enable_po) {
+    //   const index = buttons.findIndex((item) => {
+    //     item.title === HOME_MENU.PO;
+    //   });
+    //   buttons.splice(index, 1);
+    // }
 
-    if (!enable_deposit) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.DEPOSIT;
-      });
-      buttons.splice(index, 1);
-    }
+    // if (!enable_deposit) {
+    //   const index = buttons.findIndex((item) => {
+    //     item.title === HOME_MENU.DEPOSIT;
+    //   });
+    //   buttons.splice(index, 1);
+    // }
 
-    if (!enable_create_schedule) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.SCHEDULE;
-      });
-      buttons.splice(index, 1);
-    }
+    // if (!enable_create_schedule) {
+    //   const index = buttons.findIndex((item) => {
+    //     item.title === HOME_MENU.SCHEDULE;
+    //   });
+    //   buttons.splice(index, 1);
+    // }
 
-    if (!enable_appointment) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.APPOINTMENT;
-      });
-      buttons.splice(index, 1);
-    }
+    // if (!enable_appointment) {
+    //   const index = buttons.findIndex((item) => {
+    //     item.title === HOME_MENU.APPOINTMENT;
+    //   });
+    //   buttons.splice(index, 1);
+    // }
     return buttons;
   };
 
@@ -541,7 +543,10 @@ const Beranda = () => {
         <View style={style.posRelative}>
           <TouchableOpacity
             style={style.touchable}
-            onPress={toggleModal('open')}
+            onPress={() => {
+              toggleModal('open')();
+              // navigation.navigate('se')
+            }}
           />
           <BSearchBar
             placeholder="Cari Pelanggan"

@@ -349,14 +349,14 @@ const Fourth = () => {
       } catch (error) {
         customLog(error, 'error271fourth');
         const message = error.message || 'Error creating visitation';
-        dispatch(
-          openPopUp({
-            popUpType: 'error',
-            popUpText: message,
-            highlightedText: 'error',
-            outsideClickClosePopUp: true,
-          })
-        );
+        // dispatch(
+        //   openPopUp({
+        //     popUpType: 'error',
+        //     popUpText: message,
+        //     highlightedText: 'error',
+        //     outsideClickClosePopUp: true,
+        //   })
+        // );
       }
     },
     [values]

@@ -7,7 +7,13 @@ import { setIsPopUpVisible } from '@/redux/reducers/modalReducer';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { BButtonPrimary, BHighlightText, BSpacer, BText } from '@/components';
+import {
+  BBackContinueBtn,
+  BButtonPrimary,
+  BHighlightText,
+  BSpacer,
+  BText,
+} from '@/components';
 import font from '@/constants/fonts';
 
 export default function Popup() {
@@ -42,35 +48,30 @@ export default function Popup() {
             <ActivityIndicator size={resScale(60)} color={colors.primary} />
           )}
         </View>
-        {popUpOptions.popUpText && (
+        {popUpOptions.popUpTitle && (
           <View style={{ paddingBottom: layout.pad.lg }}>
             <BHighlightText
               searchQuery={popUpOptions.highlightedText}
-              name={popUpOptions.popUpText}
+              name={popUpOptions.popUpTitle}
             />
           </View>
         )}
-        {popUpOptions.popUpTitle && (
+        {popUpOptions.popUpText && (
           <View style={{ paddingBottom: layout.pad.lg }}>
-            <BText style={styles.popUpTitle}>{popUpOptions.popUpTitle}</BText>
+            <BText style={styles.popUpTitle}>{popUpOptions.popUpText}</BText>
           </View>
         )}
         {/* <Text style={styles.popUptext}>{popUpOptions.popUpText}</Text> */}
         {popUpOptions.isRenderActions && (
-          <View style={styles.actionContainer}>
-            <BButtonPrimary
-              onPress={popUpOptions.outlineBtnAction}
-              isOutline
-              buttonStyle={{ paddingHorizontal: layout.pad.xl + layout.pad.md }}
-              title={popUpOptions.outlineBtnTitle}
-            />
-            <BSpacer size="extraSmall" />
-            <BButtonPrimary
-              title={popUpOptions.primaryBtnTitle}
-              buttonStyle={{ paddingHorizontal: layout.pad.xl }}
-              onPress={popUpOptions.primaryBtnAction}
-            />
-          </View>
+          <BBackContinueBtn
+            isContinueIcon={false}
+            continueText="Retry"
+            backText="Tutup"
+            loadingContinue={popUpOptions.isPrimaryButtonLoading}
+            onPressBack={popUpOptions.outlineBtnAction}
+            onPressContinue={popUpOptions.primaryBtnAction}
+            disableBack={popUpOptions.isPrimaryButtonLoading}
+          />
         )}
       </View>
     </Modal>
