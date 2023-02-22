@@ -56,7 +56,11 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         if (typeof lat === 'string') {
           coordinate.latitude = Number(lat);
         }
-        if (from === CREATE_VISITATION || from === SPH ||from === CUSTOMER_DETAIL) {
+        if (
+          from === CREATE_VISITATION ||
+          from === SPH ||
+          from === CUSTOMER_DETAIL
+        ) {
           if (eventKey) {
             DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
           } else {
@@ -86,29 +90,9 @@ const SearchAreaProject = ({ route }: { route: any }) => {
 
   React.useEffect(() => {
     crashlytics().log(SEARCH_AREA);
+  }, []);
 
-    if (state.matches('getLocation.denied')) {
-      const subscription = AppState.addEventListener(
-        'change',
-        (nextAppState) => {
-          if (
-            appState.current.match(/inactive|background/) &&
-            nextAppState === 'active'
-          ) {
-            send('appComeForeground');
-          } else {
-            send('appComeBackground');
-          }
-          appState.current = nextAppState;
-        }
-      );
-      return () => {
-        subscription.remove();
-      };
-    }
-  }, [state, send]);
-
-  const { result, loadPlaces, longlat } = state.context;
+  const { result, loadPlaces, longlat, errorMessage } = state.context;
   const onChangeValue = (event: string) => {
     setText(event);
     send('searchingLocation', { payload: event });
@@ -157,11 +141,16 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         onPress={onPressCurrentLocation}
       />
       <BSpacer size="small" />
-      {loadPlaces ? (
-        <LocationListShimmer />
-      ) : (
-        <LocationList onPress={onPressListLocations} locationData={result} />
-      )}
+
+      <LocationList
+        isLoading={loadPlaces}
+        searchValue={text}
+        isError={state.matches('searchLocation.errorGettingLocationData')}
+        errorMessage={errorMessage}
+        onAction={() => send('retryGettingLocation')}
+        onPress={onPressListLocations}
+        locationData={result}
+      />
     </SafeAreaView>
   );
 };

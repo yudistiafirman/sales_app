@@ -57,6 +57,7 @@ export { default as BAlert } from './organism/BAlert';
 export { default as BTabViewScreen } from './organism/BTabViewScreen';
 export { default as BCalendar } from './organism/BCalendar';
 export { default as BNestedProductCard } from './organism/BNestedProductCard';
+export { default as BEmptyState } from './organism/BEmptyState';
 
 //templates
 export { default as ProductList } from './templates/Price/ProductList';

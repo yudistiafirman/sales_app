@@ -6,7 +6,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { BSpacer, BTouchableText } from '@/components';
+import { BEmptyState, BSpacer, BTouchableText } from '@/components';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
@@ -69,13 +69,26 @@ const Transaction = () => {
     }
   };
 
-  const { routes, isLoadMore, refreshing, data, loadTransaction, loadTab } =
-    state.context;
-
+  const {
+    routes,
+    isLoadMore,
+    refreshing,
+    data,
+    loadTransaction,
+    loadTab,
+    errorMessage,
+  } = state.context;
   return (
     <SafeAreaView style={styles.parent}>
       {loadTab && <ShimmerPlaceholder style={styles.shimmer} />}
       <BSpacer size="extraSmall" />
+      {state.matches('getTransaction.errorGettingTypeTransactions') && (
+        <BEmptyState
+          onAction={() => send('retryGettingTransactions')}
+          isError
+          errorMessage={errorMessage}
+        />
+      )}
       {routes.length > 0 && (
         <BTabSections
           swipeEnabled={false}
@@ -87,6 +100,11 @@ const Transaction = () => {
               isLoadMore={isLoadMore}
               loadTransaction={loadTransaction}
               refreshing={refreshing}
+              isError={state.matches(
+                'getTransaction.typeLoaded.errorGettingTypeTransactions'
+              )}
+              errorMessage={errorMessage}
+              onAction={()=> send('retryGettingTypeTransactions')}
               onRefresh={() => send('refreshingList')}
               onPress={(data: any) => getOneOrder(data.id)}
             />
