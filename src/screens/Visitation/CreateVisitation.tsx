@@ -1,16 +1,10 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, DeviceEventEmitter } from 'react-native';
 import {
   BBackContinueBtn,
   BButtonPrimary,
   BContainer,
   BHeaderIcon,
-  BHeaderTitle,
   BSpacer,
 } from '@/components';
 import SecondStep from './elements/second';
@@ -248,31 +242,31 @@ const CreateVisitation = () => {
     bottomSheetRef.current?.expand();
   };
 
-  const renderHeaderLeft = useCallback(
-    () => (
-      <BHeaderIcon
-        size={layout.pad.xl - layout.pad.md}
-        iconName="x"
-        marginRight={layout.pad.lg}
-        onBack={() => {
-          if (values.step) {
-            // setCurrentPosition(currentPosition - 1);
-            updateValue('step', values.step - 1);
-          } else {
-            navigation.goBack();
-          }
-        }}
-      />
-    ),
-    [navigation, values.step, updateValue]
-  );
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerTitle: () => BHeaderTitle('Buat Kunjungan', 'flex-start'),
-      headerLeft: () => renderHeaderLeft(),
-    });
-  }, [navigation, renderHeaderLeft]);
+  // const renderHeaderLeft = useCallback(
+  //   () => (
+  //     <BHeaderIcon
+  //       size={layout.pad.xl - layout.pad.md}
+  //       iconName="x"
+  //       marginRight={layout.pad.lg}
+  //       onBack={() => {
+  //         if (values.step) {
+  //           // setCurrentPosition(currentPosition - 1);
+  //           updateValue('step', values.step - 1);
+  //         } else {
+  //           navigation.goBack();
+  //         }
+  //       }}
+  //     />
+  //   ),
+  //   [navigation, values.step, updateValue]
+  // );
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerBackVisible: false,
+  //     headerTitle: () => BHeaderTitle('Buat Kunjungan', 'flex-start'),
+  //     headerLeft: () => renderHeaderLeft(),
+  //   });
+  // }, [navigation, renderHeaderLeft]);
 
   const stepRender = [
     <FirstStep />,

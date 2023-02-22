@@ -1,134 +1,98 @@
 import * as React from 'react';
-import {
-  BButtonPrimary,
-  BNestedProductCard,
-  BSearchBar,
-  BSpacer,
-} from '@/components';
-import { TextInput } from 'react-native-paper';
-import {
-  DeviceEventEmitter,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { BForm, BGallery } from '@/components';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { resScale } from '@/utils';
-import { CREATE_SCHEDULE, SEARCH_PO } from '@/navigation/ScreenNames';
-import { useNavigation } from '@react-navigation/native';
-import { CreateScheduleContext } from '@/context/CreateScheduleContext';
-import POListCard from '@/components/templates/PO/POListCard';
-import { colors, fonts } from '@/constants';
-import formatCurrency from '@/utils/formatCurrency';
+import {
+  StackActions,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
+import { colors, fonts, layout } from '@/constants';
+import { Input } from '@/interfaces';
+import { CreateDepositContext } from '@/context/CreateDepositContext';
+import { CAMERA } from '@/navigation/ScreenNames';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteImage } from '@/redux/reducers/cameraReducer';
+import { RootState } from '@/redux/store';
 
 export default function FirstStep() {
   const navigation = useNavigation();
-  const { values, action } = React.useContext(CreateScheduleContext);
+  const { values, action } = React.useContext(CreateDepositContext);
   const { stepOne: state } = values;
+  const { photoURLs } = useSelector((state: RootState) => state.camera);
+
   const { updateValueOnstep } = action;
+  const dispatch = useDispatch();
 
-  const listenerCallback = React.useCallback(
-    ({ parent, data }: { parent: any; data: any }) => {
-      updateValueOnstep('stepOne', 'title', data.name);
-      updateValueOnstep('stepOne', 'companyName', parent.companyName);
-      updateValueOnstep('stepOne', 'locationName', parent.locationName);
-      updateValueOnstep('stepOne', 'products', data.products);
-      updateValueOnstep('stepTwo', 'products', data.products);
-    },
-    [updateValueOnstep]
-  );
+  const { deposit, picts } = state;
 
-  React.useEffect(() => {
-    DeviceEventEmitter.addListener('SearchPO.data', listenerCallback);
-    return () => {
-      DeviceEventEmitter.removeAllListeners('SearchPO.data');
-    };
-  }, [listenerCallback]);
-
-  const { products, companyName, locationName, title, lastDeposit } = state;
-
-  const sphData = [
+  const inputs: Input[] = [
     {
-      name: title,
-      products: products,
+      label: 'Tanggal Bayar',
+      isRequire: true,
+      type: 'dropdown',
+      value: deposit?.createdAt,
+      isError: deposit?.createdAt ? false : true,
+      customerErrorMsg: 'Tanggal bayar harus diisi',
+      dropdown: {
+        items: [],
+        placeholder: 'Pilih tanggal bayar',
+        onChange: () => {
+          //   onChange('method')(value);
+        },
+      },
+    },
+    {
+      label: 'Nominal',
+      isRequire: true,
+      type: 'quantity',
+      value: deposit?.nominal,
+      isError: deposit?.nominal ? false : true,
+      customerErrorMsg: 'Nominal harus diisi',
     },
   ];
+
+  const removeImage = React.useCallback(
+    (pos: number) => () => {
+      dispatch(deleteImage({ pos }));
+      updateValueOnstep('stepOne', 'picts', photoURLs);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      updateValueOnstep('stepOne', 'picts', photoURLs);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [photoURLs])
+  );
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {state?.title && state?.products ? (
-        <>
-          <View style={{ height: resScale(80) }}>
-            <POListCard
-              companyName={companyName}
-              locationName={locationName}
-              useChevron={false}
-            />
-          </View>
-          {sphData && sphData.length > 0 && (
-            <BNestedProductCard
-              withoutHeader={false}
-              data={sphData}
-              withoutBottomSpace={true}
-            />
-          )}
-          <View style={style.summaryContainer}>
-            <Text style={style.summary}>Sisa Deposit</Text>
-            <Text style={[style.summary, style.fontw400]}>
-              {lastDeposit ? formatCurrency(lastDeposit) : '-'}
-            </Text>
-          </View>
-          <BSpacer size={'medium'} />
-          <View style={style.summaryContainer}>
-            <Text style={style.summary}>Ada Deposit Baru?</Text>
-            <BButtonPrimary
-              titleStyle={[style.fontw400, { fontSize: fonts.size.md }]}
-              title="Buat Deposit"
-              isOutline
-              onPress={() => {}}
-            />
-          </View>
-        </>
-      ) : (
-        <>
-          <View>
-            <TouchableOpacity
-              style={style.touchable}
-              onPress={() => {
-                navigation.navigate(SEARCH_PO, { from: CREATE_SCHEDULE });
-              }}
-            />
-            <BSearchBar
-              placeholder="Cari PO"
-              activeOutlineColor="gray"
-              left={<TextInput.Icon icon="magnify" />}
-            />
-          </View>
-        </>
-      )}
+    <SafeAreaView style={style.flexFull}>
+      <View style={style.flexFull}>
+        <BGallery
+          picts={picts}
+          addMorePict={() =>
+            navigation.dispatch(
+              StackActions.push(CAMERA, {
+                photoTitle: 'Bukti',
+                closeButton: true,
+              })
+            )
+          }
+          removePict={removeImage}
+        />
+      </View>
+      <View style={style.flexFull}>
+        <BForm titleBold="500" inputs={inputs} />
+      </View>
     </SafeAreaView>
   );
 }
 
 const style = StyleSheet.create({
-  touchable: {
-    position: 'absolute',
-    width: '100%',
-    borderRadius: resScale(4),
-    height: resScale(45),
-    zIndex: 2,
-  },
-  summary: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.sm,
-  },
-  fontw400: {
-    fontFamily: fonts.family.montserrat[400],
-  },
-  summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  flexFull: {
+    flex: 1,
   },
 });

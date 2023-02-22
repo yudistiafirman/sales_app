@@ -44,6 +44,7 @@ import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
 import {
   APPOINTMENT,
   CAMERA,
+  CREATE_DEPOSIT,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
   CUSTOMER_DETAIL,
@@ -302,7 +303,7 @@ const Beranda = () => {
         icon: SvgNames.IC_SPH,
         title: HOME_MENU.SPH,
         action: () => {
-          navigation.navigate(SPH);
+          navigation.navigate(SPH, {});
         },
       },
       {
@@ -313,20 +314,26 @@ const Beranda = () => {
       {
         icon: SvgNames.IC_DEPOSIT,
         title: HOME_MENU.DEPOSIT,
-        action: () => {},
+        action: () => {
+          navigation.navigate(CAMERA, {
+            photoTitle: 'Bukti',
+            navigateTo: CREATE_DEPOSIT,
+            closeButton: true,
+          });
+        },
       },
       {
         icon: SvgNames.IC_MAKE_SCHEDULE,
         title: HOME_MENU.SCHEDULE,
         action: () => {
-          navigation.navigate(CREATE_SCHEDULE);
+          navigation.navigate(CREATE_SCHEDULE, {});
         },
       },
       {
         icon: SvgNames.IC_APPOINTMENT,
         title: HOME_MENU.APPOINTMENT,
         action: () => {
-          navigation.navigate(APPOINTMENT);
+          navigation.navigate(APPOINTMENT, {});
         },
       },
     ];
@@ -404,6 +411,7 @@ const Beranda = () => {
     navigation.navigate(CAMERA, {
       photoTitle: 'Kunjungan',
       navigateTo: CREATE_VISITATION,
+      closeButton: true,
     });
   };
   const sceneToRender = React.useCallback(() => {
@@ -451,6 +459,7 @@ const Beranda = () => {
         navigation.navigate(CAMERA, {
           photoTitle: 'Kunjungan',
           navigateTo: CREATE_VISITATION,
+          closeButton: true,
           existingVisitation: response,
         });
       } else {

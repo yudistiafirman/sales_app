@@ -40,6 +40,7 @@ import moment from 'moment';
 import { CAMERA, CREATE_VISITATION, SPH_TITLE } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
+import { BGallery } from '@/components';
 
 export type selectedDateType = {
   date: string;
@@ -372,6 +373,7 @@ const Fourth = () => {
           navigation.dispatch(
             StackActions.push(CAMERA, {
               photoTitle: 'Kunjungan',
+              closeButton: true,
             })
           );
         }}
@@ -393,80 +395,20 @@ const Fourth = () => {
         onPressSubmit={onPressSubmit}
         isLoading={isPostVisitationLoading || isUploadLoading}
       />
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContentStyle}
-        showsVerticalScrollIndicator={false}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            navigation.dispatch(
-              StackActions.push(CAMERA, {
-                photoTitle: 'Kunjungan',
-              })
-            );
-          }}
-        >
-          <View style={[styles.addImage, styles.container]}>
-            <Feather name="plus" size={resScale(25)} color="#000000" />
-          </View>
-        </TouchableOpacity>
-        {state.images.map((image, index) => {
-          return (
-            <View
-              key={index.toString()}
-              style={[styles.imageContainer, styles.container]}
-            >
-              <Image source={image.photo} style={styles.imageStyle} />
-              {image.type === 'GALLERY' && (
-                <TouchableOpacity
-                  style={styles.closeIcon}
-                  onPress={removeImage(index)}
-                >
-                  <AntDesign
-                    name="closecircle"
-                    size={resScale(15)}
-                    color="#000000"
-                  />
-                </TouchableOpacity>
-              )}
-            </View>
-          );
-        })}
-      </ScrollView>
+      <BGallery
+        picts={state.images}
+        addMorePict={() =>
+          navigation.dispatch(
+            StackActions.push(CAMERA, {
+              photoTitle: 'Kunjungan',
+              closeButton: true,
+            })
+          )
+        }
+        removePict={removeImage}
+      />
     </>
   );
 };
 
 export default Fourth;
-
-const styles = StyleSheet.create({
-  container: {
-    width: resScale(102),
-    height: resScale(120),
-    margin: resScale(5),
-    borderRadius: layout.radius.md,
-  },
-  imageContainer: {
-    // backgroundColor: colors.tertiary,
-    position: 'relative',
-  },
-  addImage: {
-    backgroundColor: colors.tertiary,
-    margin: resScale(5),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scrollViewContentStyle: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    // backgroundColor: 'blue',
-  },
-  closeIcon: {
-    position: 'absolute',
-    right: resScale(-5),
-    top: resScale(-5),
-  },
-  imageStyle: {
-    flex: 1,
-  },
-});

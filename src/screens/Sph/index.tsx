@@ -5,11 +5,9 @@ import React, {
   useRef,
   useCallback,
   useContext,
-  useLayoutEffect,
 } from 'react';
 import {
   BHeaderIcon,
-  BHeaderTitle,
   BStepperIndicator as StepperIndicator,
 } from '@/components';
 
@@ -29,10 +27,11 @@ import { updateRegion } from '@/redux/reducers/locationReducer';
 import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
 import { Region } from 'react-native-maps';
 import { getLocationCoordinates } from '@/actions/CommonActions';
-import { layout } from '@/constants';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { resScale } from '@/utils';
 
 const labels = [
   'Cari Pelanggan',
@@ -221,6 +220,16 @@ function SphContent() {
     }
   }
 
+  useCustomHeaderLeft({
+    customHeaderLeft: (
+      <BHeaderIcon
+        size={resScale(23)}
+        onBack={() => navigation.goBack()}
+        iconName="x"
+      />
+    ),
+  });
+
   useEffect(() => {
     const projectId = route.params?.projectId;
     customLog(projectId, 'visitationId122');
@@ -229,30 +238,30 @@ function SphContent() {
     }
   }, []);
 
-  const renderHeaderLeft = useCallback(
-    () => (
-      <BHeaderIcon
-        size={layout.pad.xl - layout.pad.md}
-        iconName="x"
-        marginRight={layout.pad.lg}
-        onBack={() => {
-          if (currentPosition) {
-            setCurrentPosition(currentPosition - 1);
-          } else {
-            navigation.goBack();
-          }
-        }}
-      />
-    ),
-    [currentPosition, navigation, setCurrentPosition]
-  );
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerTitle: () => BHeaderTitle('Buat SPH', 'flex-start'),
-      headerLeft: () => renderHeaderLeft(),
-    });
-  }, [navigation, renderHeaderLeft, currentPosition]);
+  // const renderHeaderLeft = useCallback(
+  //   () => (
+  //     <BHeaderIcon
+  //       size={layout.pad.xl - layout.pad.md}
+  //       iconName="x"
+  //       marginRight={layout.pad.lg}
+  //       onBack={() => {
+  //         if (currentPosition) {
+  //           setCurrentPosition(currentPosition - 1);
+  //         } else {
+  //           navigation.goBack();
+  //         }
+  //       }}
+  //     />
+  //   ),
+  //   [currentPosition, navigation, setCurrentPosition]
+  // );
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerBackVisible: false,
+  //     headerTitle: () => BHeaderTitle('Buat SPH', 'flex-start'),
+  //     headerLeft: () => renderHeaderLeft(),
+  //   });
+  // }, [navigation, renderHeaderLeft, currentPosition]);
 
   return (
     <View style={style.container}>

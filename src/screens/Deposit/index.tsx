@@ -26,6 +26,8 @@ import {
 } from '@/context/CreateDepositContext';
 import FirstStep from './element/FirstStep';
 import SecondStep from './element/SecondStep';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { useDispatch } from 'react-redux';
 
 const labels = ['Data Pelanggan', 'Cari PO'];
 
@@ -59,22 +61,17 @@ function populateData(
     value: any
   ) => void
 ) {
-  updateValue('stepOne', 'title', existingData.sph ? existingData.sph : '-');
-  updateValue('stepOne', 'deposit', existingData.deposit);
-
-  updateValue('stepTwo', 'companyName', existingData.companyName);
-  updateValue(
-    'stepTwo',
-    'locationName',
-    existingData.locationName ? existingData.locationName : '-'
-  );
-  updateValue('stepTwo', 'title', existingData.sph);
-  updateValue('stepTwo', 'product', existingData.product);
+  updateValue('stepOne', 'title', existingData?.sph);
+  updateValue('stepTwo', 'companyName', existingData?.companyName);
+  updateValue('stepTwo', 'locationName', existingData?.locationName);
+  updateValue('stepTwo', 'title', existingData?.sph);
+  updateValue('stepTwo', 'product', existingData?.product);
 }
 
 const Deposit = () => {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const { values, action } = React.useContext(CreateDepositContext);
   const { shouldScrollView } = values;
   const { updateValue, updateValueOnstep } = action;
@@ -99,8 +96,15 @@ const Deposit = () => {
       updateValue('existingDepositID', existingSchedule.id);
       populateData(existingSchedule, updateValueOnstep);
     }
+    return () => {
+      dispatch(resetImageURLS());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
     stepHandler(values, setStepsDone);
-  }, [existingSchedule, updateValue, updateValueOnstep, values]);
+  }, [values]);
 
   const next = (nextStep: number) => () => {
     const totalStep = stepRender.length;
