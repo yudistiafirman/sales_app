@@ -238,31 +238,6 @@ function SphContent() {
     }
   }, []);
 
-  // const renderHeaderLeft = useCallback(
-  //   () => (
-  //     <BHeaderIcon
-  //       size={layout.pad.xl - layout.pad.md}
-  //       iconName="x"
-  //       marginRight={layout.pad.lg}
-  //       onBack={() => {
-  //         if (currentPosition) {
-  //           setCurrentPosition(currentPosition - 1);
-  //         } else {
-  //           navigation.goBack();
-  //         }
-  //       }}
-  //     />
-  //   ),
-  //   [currentPosition, navigation, setCurrentPosition]
-  // );
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerBackVisible: false,
-  //     headerTitle: () => BHeaderTitle('Buat SPH', 'flex-start'),
-  //     headerLeft: () => renderHeaderLeft(),
-  //   });
-  // }, [navigation, renderHeaderLeft, currentPosition]);
-
   return (
     <View style={style.container}>
       <StepperIndicator

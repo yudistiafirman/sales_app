@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, DeviceEventEmitter } from 'react-native';
+import { View, DeviceEventEmitter, BackHandler } from 'react-native';
 import {
   BBackContinueBtn,
   BContainer,
@@ -108,6 +108,16 @@ const Deposit = () => {
 
   React.useEffect(() => {
     stepHandler(values, setStepsDone);
+
+    const backAction = () => {
+      setPopupVisible(true);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+    return () => backHandler.remove();
   }, [values]);
 
   const next = (nextStep: number) => () => {

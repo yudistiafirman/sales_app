@@ -1,83 +1,149 @@
-// In App.js in a new project
-
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import BStackScreen from './elements/BStackScreen';
-import SalesTabs from './tabs/SalesTabs';
-import TestStack from './stacks/TestStack';
 import Splash from '@/screens/Splash';
-import AuthStack from './stacks/AuthStack';
 import Operation from '@/screens/Operation';
 import { ENTRY_TYPE } from '@/models/EnumModel';
-import SecurityTabs from './tabs/SecurityTabs';
 import { JwtPayload } from 'jwt-decode';
+import SecurityTabsV2 from './tabs/SecurityTabsV2';
+import SalesTabsV2 from './tabs/SalesTabsV2';
+import Login from '@/screens/Login';
+import Verification from '@/screens/Verification';
+import { colors, fonts } from '@/constants';
+import {
+  LOGIN,
+  LOGIN_TITLE,
+  OPERATION,
+  OPERATION_TITLE,
+  TAB_ROOT,
+  SECURITY_TAB_TITLE,
+  VERIFICATION,
+  VERIFICATION_TITLE,
+} from './ScreenNames';
+import OperationHeaderRight from './Operation/HeaderRight';
+import OperationStack from './Operation/Stack';
+import SalesStack from './Sales/Stack';
+import HunterAndFarmers from '@/screens/HunterAndFarmers';
 import { useAsyncConfigSetup } from '@/hooks';
-
+import { customLog } from '@/utils/generalFunc';
 const Stack = createNativeStackNavigator();
 
-const getTabs = (userType?: ENTRY_TYPE) => {
-  switch (userType) {
-    case ENTRY_TYPE.OPERATION:
-      return BStackScreen({
-        Stack: Stack,
-        name: 'MainTabs',
-        title: 'Beranda',
-        type: 'home',
-        headerShown: true,
-        component: Operation,
-        role: ENTRY_TYPE[ENTRY_TYPE.OPERATION],
-      });
-    case ENTRY_TYPE.SECURITY:
-      return BStackScreen({
-        Stack: Stack,
-        name: 'MainTabs',
-        title: 'Beranda',
-        type: 'home',
-        headerShown: true,
-        component: SecurityTabs,
-        role: ENTRY_TYPE[ENTRY_TYPE.SECURITY],
-      });
-    default:
-      return BStackScreen({
-        Stack: Stack,
-        name: 'MainTabs',
-        title: `Beranda - ${userType}`,
-        type: 'home',
-        headerShown: false,
-        component: SalesTabs,
-        role: '',
-      });
-  }
-};
-
-const getStacks = (userData: boolean | JwtPayload | null) => {
-  if (userData) {
-    return TestStack({ Stack: Stack });
+const RootScreen = (
+  userData: JwtPayload | null,
+  isSignout: boolean,
+  userType?: ENTRY_TYPE
+) => {
+  if (userData !== null) {
+    switch (userType) {
+      case ENTRY_TYPE.OPERATION:
+        return (
+          <>
+            <Stack.Screen
+              name={OPERATION}
+              key={OPERATION}
+              component={Operation}
+              options={{
+                headerTitleAlign: 'center',
+                headerTitle: OPERATION_TITLE,
+                headerRight: () => OperationHeaderRight(),
+              }}
+            />
+            {OperationStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.SECURITY:
+        return (
+          <>
+            <Stack.Screen
+              name={TAB_ROOT}
+              key={TAB_ROOT}
+              component={SecurityTabsV2}
+              options={{
+                headerTitle: SECURITY_TAB_TITLE,
+                headerRight: () => OperationHeaderRight(),
+              }}
+            />
+            {OperationStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.SALES:
+        return (
+          <>
+            <Stack.Screen
+              name={TAB_ROOT}
+              key={TAB_ROOT}
+              component={SalesTabsV2}
+              options={{
+                headerShown: false,
+              }}
+            />
+            {SalesStack(Stack)}
+          </>
+        );
+    }
   } else {
-    return AuthStack({ Stack: Stack });
+    return (
+      <>
+        <Stack.Screen
+          name={LOGIN}
+          key={LOGIN}
+          component={Login}
+          options={{
+            headerTitleAlign: 'center',
+            headerTitle: LOGIN_TITLE,
+            animationTypeForReplace: isSignout ? 'pop' : 'push',
+          }}
+        />
+        <Stack.Screen
+          name={VERIFICATION}
+          key={VERIFICATION}
+          component={Verification}
+          options={{
+            headerTitle: VERIFICATION_TITLE,
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: fonts.family.montserrat[600],
+              fontSize: fonts.size.lg,
+              color: colors.text.inactive,
+            },
+          }}
+        />
+      </>
+    );
   }
 };
 
-/**
- * @deprecated The method should not be used
- */
 function AppNavigator() {
-  const [isLoading, userData] = useAsyncConfigSetup();
-  const userType = ENTRY_TYPE.SECURITY;
+  const {
+    isLoading,
+    userData,
+    isSignout,
+    entryType,
+    hunterScreen,
+    enable_hunter_farmer,
+  } = useAsyncConfigSetup();
 
+  customLog('state hunterfarmer: ', hunterScreen, enable_hunter_farmer);
   if (isLoading) {
     return <Splash />;
   } else {
     return (
-      <Stack.Navigator
-        screenOptions={{
-          headerTitleAlign: 'center',
-          headerShadowVisible: false,
-        }}
-      >
-        {userData && getTabs(userType)}
-        {getStacks(userData)}
-      </Stack.Navigator>
+      <>
+        <HunterAndFarmers />
+        <Stack.Navigator
+          screenOptions={{
+            headerTitleAlign: 'left',
+            headerShadowVisible: false,
+            headerShown: true,
+            headerTitleStyle: {
+              color: colors.text.darker,
+              fontSize: fonts.size.lg,
+              fontWeight: fonts.family.montserrat[600],
+            },
+          }}
+        >
+          {RootScreen(userData, isSignout, entryType)}
+        </Stack.Navigator>
+      </>
     );
   }
 }

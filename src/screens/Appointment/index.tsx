@@ -69,40 +69,6 @@ const Appointment = () => {
     ),
   });
 
-  // const renderHeaderLeft = useCallback(
-  //   () => (
-  //     <BHeaderIcon
-  //       size={layout.pad.xl - layout.pad.md}
-  //       iconName="x"
-  //       marginRight={layout.pad.lg}
-  //       onBack={() => {
-  //         if (inVisitationDateStep) {
-  //           if (selectedDate) {
-  //             dispatchValue({
-  //               type: AppointmentActionType.SET_DATE,
-  //               value: null,
-  //             });
-  //           }
-  //           dispatchValue({
-  //             type: AppointmentActionType.DECREASE_STEP,
-  //           });
-  //         } else {
-  //           navigation.goBack();
-  //         }
-  //       }}
-  //     />
-  //   ),
-  //   [dispatchValue, inVisitationDateStep, navigation, selectedDate]
-  // );
-
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerBackVisible: false,
-  //     headerTitle: () => BHeaderTitle('Buat Janji Temu', 'flex-start'),
-  //     headerLeft: () => renderHeaderLeft(),
-  //   });
-  // }, [navigation, renderHeaderLeft, step]);
-
   React.useEffect(() => {
     crashlytics().log(APPOINTMENT);
   }, []);

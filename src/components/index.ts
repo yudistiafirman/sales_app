@@ -40,7 +40,6 @@ export { default as BViewMoreText } from './molecules/BViewMoreText';
 export { default as BTextLocation } from './molecules/BTextLocation';
 export { default as BBackContinueBtn } from './molecules/BBackContinueBtn';
 export { default as BStepperIndicator } from './molecules/StepperIndicator';
-export { default as BHeaderTitle } from './molecules/BHeaderTitle';
 export { default as BProjectDetailCard } from './molecules/BProjectDetailCard';
 export { default as BProductCard } from './molecules/BProductCard';
 export { default as BDepositCard } from './molecules/BDepositCard';
