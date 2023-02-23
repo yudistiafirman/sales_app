@@ -32,6 +32,7 @@ const initialData: CreateDepositState = {
   step: 0,
   stepOne: {
     deposit: undefined,
+    picts: [],
   },
   stepTwo: {
     companyName: '',

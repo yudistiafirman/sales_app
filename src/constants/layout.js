@@ -18,6 +18,7 @@ const layout = {
     ml: resScale(12),
     lg: resScale(16),
     xl: resScale(32),
+    xxl: resScale(48),
   },
 };
 
