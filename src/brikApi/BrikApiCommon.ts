@@ -1,9 +1,5 @@
 import Config from 'react-native-config';
-const production = false;
-const PRODUCTION = production;
-const API_URL = PRODUCTION
-  ? Config.API_URL_COMMON_PROD
-  : Config.API_URL_COMMON_DEV;
+const API_URL = Config.API_URL_COMMON;
 
 export default class BrikApiCommon {
   static getLocationCoordinates = (

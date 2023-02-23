@@ -61,13 +61,9 @@ import {
 } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import { HOME_MENU } from '../Const';
-import SnackbarGlobal from '@/components/templates/SnackbarGlobal';
 const { RNCustomConfig } = NativeModules;
-
 const versionName = RNCustomConfig?.version_name;
-
 const { height } = Dimensions.get('window');
-
 const initialSnapPoints = (+height.toFixed() - 115) / 10;
 
 const Beranda = () => {
@@ -80,7 +76,7 @@ const Beranda = () => {
     enable_po,
     enable_sph,
     enable_visitation,
-  } = useSelector((state: RootState) => state.remoteConfig);
+  } = useSelector((state: RootState) => state.auth.remote_config);
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [currentVisit, setCurrentVisit] = React.useState<{
@@ -94,6 +90,8 @@ const Beranda = () => {
   const [snapPoints] = React.useState([`${initialSnapPoints}%`, '91%', '100%']); //setSnapPoints
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [isError, setIsError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
@@ -112,7 +110,7 @@ const Beranda = () => {
     totalPage: 0,
     data: [],
   });
-  const [page, setPage] = React.useState<number>(0);
+  const [page, setPage] = React.useState<number>(1);
   const [selectedDate, setSelectedDate] = React.useState<moment.Moment>(
     moment()
   );
@@ -207,6 +205,7 @@ const Beranda = () => {
 
   const fetchVisitations = async (search?: string) => {
     setIsLoading(true);
+    setIsError(false);
     try {
       const options = {
         page,
@@ -259,8 +258,10 @@ const Beranda = () => {
         });
       }
     } catch (error) {
+      customLog(error);
       setIsLoading(false);
-      customLog(error, 'ini err apa sih??'.replace);
+      setIsError(true);
+      setErrorMessage(error.message);
     }
   };
 
@@ -278,7 +279,7 @@ const Beranda = () => {
   }, [page, selectedDate]);
 
   const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
-    setPage(0);
+    setPage(1);
     setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
     setSelectedDate(dateTime);
   }, []);
@@ -302,7 +303,7 @@ const Beranda = () => {
   };
 
   const getButtonsMenu = () => {
-    const buttons = [
+    let buttons = [
       {
         icon: SvgNames.IC_SPH,
         title: HOME_MENU.SPH,
@@ -337,38 +338,38 @@ const Beranda = () => {
     ];
 
     if (!enable_sph) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.SPH;
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.SPH;
       });
-      buttons.splice(index, 1);
+      buttons = filtered;
     }
 
     if (!enable_po) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.PO;
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.PO;
       });
-      buttons.splice(index, 1);
+      buttons = filtered;
     }
 
     if (!enable_deposit) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.DEPOSIT;
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.DEPOSIT;
       });
-      buttons.splice(index, 1);
+      buttons = filtered;
     }
 
     if (!enable_create_schedule) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.SCHEDULE;
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.SCHEDULE;
       });
-      buttons.splice(index, 1);
+      buttons = filtered;
     }
 
     if (!enable_appointment) {
-      const index = buttons.findIndex((item) => {
-        item.title === HOME_MENU.APPOINTMENT;
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.APPOINTMENT;
       });
-      buttons.splice(index, 1);
+      buttons = filtered;
     }
     return buttons;
   };
@@ -398,11 +399,22 @@ const Beranda = () => {
       totalPage: 0,
       data: [],
     });
-    setPage(0);
+    setPage(1);
     fetchVisitations(text);
   };
 
   const onChangeWithDebounce = React.useCallback(debounce(reset, 500), []);
+
+  const onRetryFetchVisitation = () => {
+    setPage(1);
+    setData({
+      totalItems: 0,
+      currentPage: 0,
+      totalPage: 0,
+      data: [],
+    });
+    fetchVisitations();
+  };
 
   const kunjunganAction = () => {
     // setIsLoading((curr) => !curr);
@@ -426,13 +438,16 @@ const Beranda = () => {
             }}
           />
         )}
+        isError={isError}
+        errorMessage={errorMessage}
         searchQuery={searchQuery}
         data={data.data}
         isLoading={isLoading}
+        onAction={() => onChangeWithDebounce(searchQuery)}
         onEndReached={onEndReached}
       />
     );
-  }, [data]);
+  }, [data, isError]);
 
   async function visitationOnPress(
     dataItem: visitationDataType
@@ -566,6 +581,9 @@ const Beranda = () => {
         <BottomSheetFlatlist
           isLoading={isLoading}
           data={data.data}
+          onAction={onRetryFetchVisitation}
+          isError={isError}
+          errorMessage={errorMessage}
           searchQuery={searchQuery}
           onEndReached={onEndReached}
           onPressItem={enable_customer_detail ? visitationOnPress : undefined}

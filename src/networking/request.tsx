@@ -4,30 +4,17 @@ import { Api } from '@/models';
 import { UserModel } from '@/models/User';
 import { bStorage } from '@/actions';
 import { storageKey } from '@/constants';
-import { setUserData } from '@/redux/reducers/authReducer';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import { signout } from '@/redux/reducers/authReducer';
 import { customLog } from '@/utils/generalFunc';
 import perf from '@react-native-firebase/perf';
-import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { openSnackbar } from '@/redux/reducers/snackbarReducer';
 import Config from 'react-native-config';
-import { production } from '../../app.json';
-const PRODUCTION = production;
 
-const URL_PRODUCTIVITY = PRODUCTION
-  ? Config.API_URL_PRODUCTIVITY_PROD
-  : Config.API_URL_PRODUCTIVITY_DEV;
-const URL_ORDER = PRODUCTION
-  ? Config.API_URL_ORDER_PROD
-  : Config.API_URL_ORDER_DEV;
-// const URL_INV = PRODUCTION ? Config.API_URL_INV_PROD : Config.API_URL_INV_DEV;
-// const URL_COMMON = PRODUCTION
-//   ? Config.API_URL_COMMON_PROD
-//   : Config.API_URL_COMMON_DEV;
+const URL_PRODUCTIVITY = Config.API_URL_PRODUCTIVITY;
+const URL_ORDER = Config.API_URL_ORDER;
 
 let store: any;
 let metric: any;
-let retryCount = 0;
 
 type FormDataValue =
   | string
@@ -95,11 +82,7 @@ export const getOptions = async (
       options.data = data;
     }
 
-    if (production) {
-      options.timeoutInterval = timeout;
-    } else {
-      options.timeoutInterval = timeout;
-    }
+    options.timeoutInterval = timeout;
     return options;
   } catch (error) {
     customLog('====================================');
@@ -120,13 +103,25 @@ instance.interceptors.response.use(
     const { data, config } = res;
 
     // performance API logs
-    const response = await fetch(config.url);
-    if (response?.status) metric?.setHttpResponseCode(response?.status);
-    try {
-      metric?.setResponseContentType(response?.headers?.get('Content-Type'));
-      metric?.setResponsePayloadSize(response?.headers?.get('Content-Length'));
-    } catch (err) {
-      customLog(err);
+    if (config.url) {
+      const response = await fetch(config.url);
+      if (response?.status) metric?.setHttpResponseCode(response?.status);
+      try {
+        metric?.setResponseContentType(response?.headers?.get('Content-Type'));
+        let contentLength = null;
+        if (
+          response?.headers?.get('Content-Length') !== undefined &&
+          response?.headers?.get('Content-Length') !== null
+        ) {
+          contentLength = parseInt(
+            response?.headers?.get('Content-Length'),
+            10
+          );
+        }
+        metric?.setResponsePayloadSize(contentLength);
+      } catch (err) {
+        customLog(err);
+      }
     }
     await metric?.stop();
     metric = undefined;
@@ -135,7 +130,7 @@ instance.interceptors.response.use(
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
         await bStorage.deleteItem(storageKey.userToken);
-        store.dispatch(setUserData(null));
+        store.dispatch(signout(false));
         return Promise.resolve(res);
       }
 
@@ -151,9 +146,9 @@ instance.interceptors.response.use(
 
         const newAccToken = resultRefreshToken?.accessToken;
         bStorage.setItem(storageKey.userToken, newAccToken);
-        const decoded = jwtDecode<JwtPayload>(newAccToken);
+        // const decoded = jwtDecode<JwtPayload>(newAccToken);
 
-        store.dispatch(setUserData(decoded));
+        // store.dispatch(setUserData({ userData: decoded }));
 
         config.headers.Authorization = `Bearer ${newAccToken}`;
         const finalResponse = await instance(config);

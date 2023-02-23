@@ -1,13 +1,13 @@
 import { View, FlatList, StyleSheet } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import resScale from '@/utils/resScale';
-import EmptyProduct from '../templates/Price/EmptyProduct';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { layout } from '@/constants';
 import BSpacer from '../atoms/BSpacer';
+import BEmptyState from '@/components/organism/BEmptyState';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type visitationType = {
@@ -26,19 +26,11 @@ type BTabScreenType = {
     | undefined;
   refreshing?: boolean;
   initialFetch?: () => Promise<visitationType[] | undefined>;
-  emptyText?: string;
+  isError?: boolean;
+  errorMessage?: string;
+  onAction?: () => void;
 };
-function FlatListFooter(isLoading?: boolean) {
-  if (!isLoading) {
-    return null;
-  }
 
-  return (
-    <View style={style.flatListLoading}>
-      <ShimmerPlaceHolder style={style.flatListShimmer} />
-    </View>
-  );
-}
 export default function BFlatlistItems({
   data,
   renderItem,
@@ -48,14 +40,45 @@ export default function BFlatlistItems({
   refreshing,
   initialFetch,
   isLoading,
-  emptyText,
+  isError,
+  onAction,
+  errorMessage,
 }: BTabScreenType) {
   const [flatListDatas, setFlatListDatas] = useState<any[]>(data!);
   const [currentPage, setCurrentPage] = useState(1);
   const [_isLoading, _setIsLoading] = useState(isLoading || false);
 
+  const renderLoading = () => {
+    return (
+      <View style={style.flatListLoading}>
+        <ShimmerPlaceHolder style={style.flatListShimmer} />
+      </View>
+    );
+  };
+
   const renderItemSeparator = () => {
     return <BSpacer size="middleSmall" />;
+  };
+  const renderFlatListFooter = () => {
+    if (!isLoading) {
+      return null;
+    } else {
+      return null;
+    }
+    // harusnya nambah state baru buat loading untuk get more list
+    // return renderLoading();
+  };
+  const renderEmptyComponent = () => {
+    if (isLoading) {
+      return renderLoading();
+    } else {
+      return BEmptyState({
+        emptyText: `Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`,
+        isError: isError,
+        errorMessage: errorMessage,
+        onAction: onAction,
+      });
+    }
   };
   return (
     <View style={style.container}>
@@ -71,16 +94,8 @@ export default function BFlatlistItems({
         renderItem={({ item }) => {
           return renderItem(item);
         }}
-        ListFooterComponent={() => FlatListFooter(_isLoading)}
-        ListEmptyComponent={() => {
-          // if (_isLoading) {
-          //   return null;
-          // }
-          return EmptyProduct({
-            emptyProductName: searchQuery,
-            emptyText: emptyText,
-          });
-        }}
+        ListFooterComponent={() => renderFlatListFooter()}
+        ListEmptyComponent={() => renderEmptyComponent()}
       />
     </View>
   );

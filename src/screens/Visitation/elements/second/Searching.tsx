@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { Alert, TouchableOpacity, View } from 'react-native';
 import {
   BFlatlistItems,
   BSearchBar,
@@ -13,10 +13,11 @@ import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import { getAllProject } from '@/redux/async-thunks/commonThunks';
 import debounce from 'lodash.debounce';
 import { PIC } from '@/interfaces';
+import { retrying } from '@/redux/reducers/commonReducer';
 
 interface IProps {
   onSearch: (search: boolean) => void;
@@ -42,22 +43,28 @@ const SearchFlow = ({
   resultSpace,
   setSelectedCompany,
 }: IProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { action, values } = React.useContext(createVisitationContext);
   const { updateValueOnstep, updateValue } = action;
   const [searchQuery, setSearchQuery] = React.useState('');
-  const { projects, isProjectLoading } = useSelector(
-    (state: RootState) => state.common
-  );
+  const {
+    projects,
+    isProjectLoading,
+    errorGettingProject,
+    errorGettingProjectMessage,
+  } = useSelector((state: RootState) => state.common);
 
-  const searchDispatch = (text: string) => {
-    dispatch(getAllProject({ search: text }));
-  };
+  const searchDispatch = useCallback(
+    (text: string) => {
+      dispatch(getAllProject({ search: text }));
+    },
+    [dispatch]
+  );
   const onChangeWithDebounce = React.useMemo(() => {
     return debounce((text: string) => {
       searchDispatch(text);
     }, 500);
-  }, []);
+  }, [searchDispatch]);
 
   const onChangeSearch = (text: string) => {
     if (!isSearch && text) {
@@ -140,8 +147,15 @@ const SearchFlow = ({
     if (searchQuery.length <= 2) {
       return null;
     }
+
+    const onRetryGettingProject = () => {
+      dispatch(retrying());
+      onChangeWithDebounce(searchQuery);
+    };
     return (
       <BFlatlistItems
+        isError={errorGettingProject}
+        errorMessage={errorGettingProjectMessage}
         renderItem={(item) => {
           let picOrCompanyName = '-';
           if (item?.Company?.name) {
@@ -171,9 +185,10 @@ const SearchFlow = ({
         searchQuery={searchQuery}
         isLoading={isProjectLoading}
         data={projects}
+        onAction={onRetryGettingProject}
       />
     );
-  }, [searchQuery, projects]);
+  }, [searchQuery, projects, isProjectLoading]);
 
   return (
     <React.Fragment>

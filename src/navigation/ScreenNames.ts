@@ -31,7 +31,7 @@ export const CREATE_SCHEDULE = 'CREATE_SCHEDULE';
 export const ALL_PRODUCT = 'ALL_PRODUCT';
 export const APPOINTMENT = 'APPOINTMENT';
 export const SEARCH_PO = 'SEARCH_PO';
-export const HUNTER_AND_FARMERS = 'HUNTER_AND_FARMERS';
+export const HUNTER_AND_FARMER = 'HUNTER_AND_FARMER';
 export const DOCUMENTS = 'DOCUMENTS';
 
 /*

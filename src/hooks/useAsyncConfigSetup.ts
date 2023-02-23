@@ -1,7 +1,6 @@
 import bStorage from '@/actions/BStorage';
 import storageKey from '@/constants/storageKey';
 import {
-  setEntryType,
   setIsLoading,
   setUserData,
   toggleHunterScreen,
@@ -9,52 +8,75 @@ import {
 import { AppDispatch, RootState } from '@/redux/store';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import * as React from 'react';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { customLog, isDevelopment, isJsonString } from '@/utils/generalFunc';
+import { customLog, isJsonString } from '@/utils/generalFunc';
 import remoteConfig from '@react-native-firebase/remote-config';
-import { setFetchedConfig } from '@/redux/reducers/remoteConfigReducer';
 import { ENTRY_TYPE } from '@/models/EnumModel';
-import BackgroundTimer from 'react-native-background-timer';
-
+import BackgroundFetch from 'react-native-background-fetch';
+import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, userData, isSignout, entryType, hunterScreen } =
-    useSelector((state: RootState) => state.auth);
-  const initialState = useSelector((state: RootState) => state.remoteConfig);
+  const {
+    isLoading,
+    userData,
+    isSignout,
+    entryType,
+    hunterScreen,
+    remote_config,
+  } = useSelector((state: RootState) => state.auth);
   const { enable_hunter_farmer } = useSelector(
-    (state: RootState) => state.remoteConfig
+    (state: RootState) => state.auth.remote_config
   );
-  let timeoutId = React.useRef();
-  let nextdays = moment().add(1, 'days').format('L');
-  let duration = Math.abs(moment().diff(nextdays, 'millisecond'));
 
-  const userDataSetup = React.useCallback(async () => {
-    try {
-      dispatch(setIsLoading(true));
-      const userToken = await bStorage.getItem(storageKey.userToken);
-      if (userToken) {
-        const decoded = jwtDecode<JwtPayload>(userToken);
-        dispatch(setUserData(decoded));
+  const userDataSetup = React.useCallback(
+    async (fetchedRemoteConfig: any) => {
+      customLog('====remote config====', fetchedRemoteConfig);
+      try {
+        const userToken = await bStorage.getItem(storageKey.userToken);
+        if (userToken) {
+          const decoded = jwtDecode<JwtPayload>(userToken);
+          dispatch(
+            setUserData({
+              userData: decoded,
+              entryType: ENTRY_TYPE.SALES,
+              remoteConfig: fetchedRemoteConfig,
+            })
+          );
+        } else {
+          dispatch(
+            setIsLoading({
+              loading: false,
+              entryType: ENTRY_TYPE.SALES,
+              remoteConfig: fetchedRemoteConfig,
+            })
+          );
+        }
+      } catch (error) {
+        Alert.alert('ooops , something went wrong');
+        dispatch(
+          setIsLoading({
+            loading: false,
+            entryType: ENTRY_TYPE.SALES,
+            remoteConfig: fetchedRemoteConfig,
+          })
+        );
       }
-      dispatch(setIsLoading(false));
-    } catch (error) {
-      Alert.alert('ooops , something went wrong');
-      dispatch(setIsLoading(false));
-    }
-  }, [dispatch]);
+    },
+    [dispatch]
+  );
 
-  const remoteConfigSetup = React.useCallback(async () => {
+  const appStateSetup = React.useCallback(async () => {
     remoteConfig().fetch(300);
     remoteConfig()
-      .setDefaults(initialState as any)
+      .setDefaults(remote_config as any)
       .then(() => remoteConfig().fetchAndActivate())
       .then(() => {
         let fetchedData = {} as Object;
         Object.entries(remoteConfig().getAll()).forEach(($) => {
           const [key, entry] = $;
-          let value = initialState?.[key];
+          let value = remote_config?.[key];
           if (
             Object.values(entry).length > 0 &&
             isJsonString(Object.values(entry)[0])
@@ -65,31 +87,48 @@ const useAsyncConfigSetup = () => {
             [key]: value,
           };
         });
-        customLog('====remote config====', fetchedData);
-        dispatch(setFetchedConfig(fetchedData));
+        hunterFarmerSetup();
+        userDataSetup(fetchedData);
+      })
+      .catch((err) => {
+        customLog(err);
+        hunterFarmerSetup();
+        userDataSetup(undefined);
       });
-  }, [dispatch, initialState]);
+  }, [dispatch, userDataSetup]);
 
   const hunterFarmerSetup = React.useCallback(async () => {
-    timeoutId.current = BackgroundTimer.runBackgroundTimer(
-      () => {
-        dispatch(toggleHunterScreen(true));
+    await BackgroundFetch.configure(
+      {
+        minimumFetchInterval: Platform.OS === 'android' ? 60 : 15,
+        forceAlarmManager: true,
       },
-
-      // in milisecond
-      isDevelopment ? 3600000 : duration
+      async (taskId) => {
+        // <-- Event callback
+        const date = await bStorage.getItem(HUNTER_AND_FARMER);
+        if (date !== undefined && moment().date() !== date) {
+          dispatch(toggleHunterScreen(true));
+        } else {
+          await bStorage.setItem(HUNTER_AND_FARMER, moment().date());
+        }
+        BackgroundFetch.finish(taskId);
+      },
+      async (taskId) => {
+        BackgroundFetch.finish(taskId);
+      }
     );
-    return () => {
-      BackgroundTimer.clearTimeout(timeoutId.current);
-    };
-  }, [dispatch, duration]);
+    // And with with #scheduleTask
+    BackgroundFetch.scheduleTask({
+      taskId: 'enableHunterFarmers',
+      delay: 0, // milliseconds
+      forceAlarmManager: true,
+      periodic: false,
+    });
+  }, [dispatch]);
 
   React.useEffect(() => {
-    userDataSetup();
-    remoteConfigSetup();
-    hunterFarmerSetup();
-    dispatch(setEntryType(ENTRY_TYPE.SALES));
-  }, []);
+    appStateSetup();
+  }, [appStateSetup]);
 
   return {
     isLoading,

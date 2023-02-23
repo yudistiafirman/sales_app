@@ -15,20 +15,24 @@ import { SphContext } from '../context/SphContext';
 import { getAllProject } from '@/redux/async-thunks/commonThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
-import { RootState } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { TouchableOpacity } from 'react-native';
 import { customLog } from '@/utils/generalFunc';
+import { retrying } from '@/redux/reducers/commonReducer';
 
 export default function FirstStep() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = useState('');
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
-  const { projects, isProjectLoading } = useSelector(
-    (state: RootState) => state.common
-  );
+  const {
+    projects,
+    isProjectLoading,
+    errorGettingProject,
+    errorGettingProjectMessage,
+  } = useSelector((state: RootState) => state.common);
   function resetSearch() {
     setSearchQuery('');
   }
@@ -59,6 +63,23 @@ export default function FirstStep() {
       ];
     }, [projects]);
 
+  const searchDispatch = React.useCallback(
+    (text: string) => {
+      dispatch(getAllProject({ search: text }));
+    },
+    [dispatch]
+  );
+  const onChangeWithDebounce = React.useMemo(() => {
+    return debounce((text: string) => {
+      searchDispatch(text);
+    }, 500);
+  }, [searchDispatch]);
+
+  const onRetryGettingProject = () => {
+    dispatch(retrying());
+    onChangeWithDebounce(searchQuery);
+  };
+
   const sceneToRender = useCallback(
     (key: string) => {
       if (searchQuery.length <= 3) {
@@ -66,6 +87,9 @@ export default function FirstStep() {
       }
       return (
         <BFlatlistItems
+          isError={errorGettingProject}
+          errorMessage={errorGettingProjectMessage}
+          onAction={onRetryGettingProject}
           renderItem={(item) => {
             let picOrCompanyName = '-';
             if (item?.Company?.name) {
@@ -115,29 +139,8 @@ export default function FirstStep() {
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [searchQuery, projects]
+    [searchQuery, projects, isProjectLoading]
   );
-
-  const searchDispatch = (text: string) => {
-    dispatch(getAllProject({ search: text }))
-      .unwrap()
-      .then()
-      .catch((err) => {
-        customLog(err, 'errgetAllProject');
-        dispatch(
-          openPopUp({
-            popUpType: 'error',
-            popUpText: 'Error get all project',
-            outsideClickClosePopUp: true,
-          })
-        );
-      });
-  };
-  const onChangeWithDebounce = React.useMemo(() => {
-    return debounce((text: string) => {
-      searchDispatch(text);
-    }, 500);
-  }, []);
 
   return (
     <BContainer>
