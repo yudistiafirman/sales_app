@@ -21,7 +21,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { PORoutes } from '../..';
+import { PORoutes } from '..';
 import { openPopUp, setIsPopUpVisible } from '@/redux/reducers/modalReducer';
 
 const CreatePo = () => {

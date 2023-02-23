@@ -25,12 +25,13 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import {  SafeAreaView, StyleSheet, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import CreatePo from './element/CreatePo';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { resScale } from '@/utils';
-const { height, width } = Dimensions.get('window');
+import UploadFiles from './element/PaymentDetail';
+import DetailProduk from './element/ProductDetail';
 
 export type PORoutes = RouteProp<RootStackParamList['PO']>;
 
@@ -45,13 +46,27 @@ const PO = () => {
   const [stepsDone, setStepsDone] = useState<number[]>([]);
 
   const handleBack = useCallback(() => {
-    if (state.matches('firstStep.SearchSph')) {
-      send('backToAddPo');
-    } else {
-      dispatch(resetImageURLS());
-      navigation.dispatch(StackActions.popToTop());
+    if (currentStep === 0) {
+      if (state.matches('firstStep.SearchSph')) {
+        send('backToAddPo');
+      } else {
+        dispatch(resetImageURLS());
+        navigation.dispatch(StackActions.popToTop());
+      }
+    } else if (currentStep === 1) {
+      setCurrentStep((prevState) => prevState - 1);
+      send('goBackToFirstStep');
     }
-  }, [dispatch, navigation, send, state]);
+  }, [currentStep, dispatch, navigation, send, state]);
+
+  const handleNext = useCallback(() => {
+    if (currentStep === 0) {
+      setCurrentStep((prevState) => prevState + 1);
+      send('goToSecondStep');
+    } else if (currentStep === 1) {
+      setCurrentStep((prevState) => prevState + 1);
+    }
+  }, [currentStep, send]);
 
   const renderHeaderLeft = useCallback(
     () => (
@@ -88,7 +103,7 @@ const PO = () => {
     });
   }, [navigation, renderHeaderLeft, renderTitle]);
 
-  const stepToRender = [<CreatePo />];
+  const stepToRender = [<CreatePo />, <UploadFiles />, <DetailProduk />];
 
   return (
     <SafeAreaView style={styles.poContainer}>
@@ -101,22 +116,20 @@ const PO = () => {
       </View>
       <BSpacer size="medium" />
       {stepToRender[currentStep]}
-      {state.matches('firstStep.addPO') && (
-        <View style={styles.footer}>
-          <BButtonPrimary
-            onPress={handleBack}
-            buttonStyle={{ width: resScale(132) }}
-            isOutline
-            title="Kembali"
-          />
-          <BButtonPrimary
-            title="Lanjut"
-            onPress={() => setCurrentStep((prevState) => prevState + 1)}
-            buttonStyle={{ width: resScale(202) }}
-            rightIcon={() => renderBtnIcon()}
-          />
-        </View>
-      )}
+      <View style={styles.footer}>
+        <BButtonPrimary
+          onPress={handleBack}
+          buttonStyle={{ width: resScale(132) }}
+          isOutline
+          title="Kembali"
+        />
+        <BButtonPrimary
+          title="Lanjut"
+          onPress={handleNext}
+          buttonStyle={{ width: resScale(202) }}
+          rightIcon={() => renderBtnIcon()}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -129,7 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     position: 'absolute',
-    top: (height - width) * 2 - layout.pad.xl,
+    bottom: 10,
   },
 });
 

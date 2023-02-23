@@ -19,6 +19,7 @@
         };
         eventsCausingActions: {
           "assignDeleteImageByIndex": "deleteImage";
+"assignFiles": "uploading";
 "assignImages": "addImages";
 "assignIndexChanged": "onChangeCategories";
 "assignPoType": "goToFirstStep";
@@ -39,7 +40,8 @@
           "GetSphList": "searching";
 "getSavedPo": "xstate.init";
         };
-        matchesStates: "Exit" | "checkSavedPo" | "enquirePOType" | "firstStep" | "firstStep.SearchSph" | "firstStep.SearchSph.inputting" | "firstStep.SearchSph.openModalChooseSph" | "firstStep.SearchSph.searchingSph" | "firstStep.addPO" | "openCamera" | { "firstStep"?: "SearchSph" | "addPO" | { "SearchSph"?: "inputting" | "openModalChooseSph" | "searchingSph"; }; };
+        matchesStates: "Exit" | "SecondStep" | "SecondStep.idle" | "SecondStep.uploadFile" | "checkSavedPo" | "enquirePOType" | "firstStep" | "firstStep.SearchSph" | "firstStep.SearchSph.inputting" | "firstStep.SearchSph.openModalChooseSph" | "firstStep.SearchSph.searchingSph" | "firstStep.addPO" | "openCamera" | { "SecondStep"?: "idle" | "uploadFile";
+"firstStep"?: "SearchSph" | "addPO" | { "SearchSph"?: "inputting" | "openModalChooseSph" | "searchingSph"; }; };
         tags: never;
       }
   

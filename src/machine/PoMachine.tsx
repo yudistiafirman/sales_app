@@ -1,10 +1,11 @@
 import { bStorage } from '@/actions';
 import { CompanyData } from '@/components/organism/BCommonCompanyList';
 import { storageKey } from '@/constants';
+import { customLog } from '@/utils/generalFunc';
 import { assign, createMachine } from 'xstate';
 
 const POMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgAsAdkruAHAE5D7u4AzACsAGwhhiFBzgA0IACeiACM3s6U0b5Z3u6GycFBQa4AvsXxkjj4RKTkVDT0TKwQHJy4EBAAkgC2uDCwZvbIVjZ6vPZOCGHpQb6uIa6GYaEhzr5B7vFJk8mulIXOyYthAUHJISGl5RiVMjXyYLwAjqiC6GBsAPIAKgnIYJxQYhfYgAMVesG0DG0YGQAyQICG1lsY3hE2c6MoxzOYVy3hWgSimxSzhxXmSU1cbnJhmclwR12k1TkVAez1e72+v3+gOBYPQEKhMP0yXM8MRIzsqJcGKx4Vx+NyISJCDxIT2aV86JCOx2lLpFUZslqlAAZuDIdDkJQ2s0PpwCLgpMIoAxkNg4ZYkaNxoh3EtKIZA4GfIVDt4gsrgrslqtnKdks53PlvPqGVUjfIzfyLTDre1Pq12gBZUhgbq9OAehHDZE+hArZVnBaUA4UhOpHIxVNSdN3KhZgWWvO27hgAA2YGh5ZgVfFtalkzCyQDSZWQQiyUOS+VIV8nlxzkyeXJJO7NyZxoHOatNoLwjQkLds5r3oXFMoe4i2u8YRxEcSiDRIYlDeIcga+NqMw4rSZT0j2tzMqa5qClaDBgI6OCutgnAAEa4PQwIAIL5sQz5epKoATD4ngQfGhgaoUeLKmkaquL+ByFPRrjZGehp9kh2YoZQaEYdgWFCLwD66LwUD2uhToyWREoopRKSGGsK6zPkhRrj4yprMBOIRHkrihOiSy8b2iFXkJIlSOJ96oNo0mycQfy8M6JYQLgY5KfOqkIBBvggTMzg5Lu7izGE3j6Ri5K+N4P7OFEe45JZCGXshQ52ZhbqUA6Ckum63B8AIGhiBIaYZZmWW5jlYl5QVODOlh6giMQWjImYfmvgFyQxOkmo0gsQSGK4oHRbFwGJYcIThgsOI-ulF41YJ2Xybl2D5Rt2AtcVfAAMJ4DJYAHToYCAuggiViYgwvhRjhqaBAbJeGhyvd4ASRtxLZsWEmprNqgRhMtGb9rVqE7eJbkPF5PlHcQVhgFhnCYGOSNw75t1ivdKmPYFAQBku0SbuSIS5GEkZFJiMS+IcbGuAmfqg-xNnraJ0PuZjCNIyjNo8wQvBYT1D0TOcwW+F+4R4gcXHMec6qxrNYVhHMpSwbwxDkPAYpVSt6B3eReMTAAtJTAEICb6Sy3kEFjWNKzeGxLOIfUyhNBwhvKXWlKNqZXh+FkUWBEELvGgAog4Nhe-5+O+xbeItoH7jzNFCWRWH9xPC8byfD8fwx71+P5NG0VhingYzA2Fs7HklCbpLaxFHNcYlLBBpWZla0woXouAZuH5S9FKxhq4yquP7o1B+EMb2yD7d62DAmDrmt4fL3xuARBXj-SsG6JYeMUW+4YVklMUxuH9ByZ+D3eQxzbob3WeLBYsZzxmTFPKqrnj9WFktLkKKrNuVx4L62XteYSUM8qOWcs6J+C53q-x8GNXIjNxpxATtTGaUQZjAzmiAuC54l5szqtAraTVdoySwggvqYVlzJQBosUyksnbMQHkEUCURQLpypDfCBtlyGUBhrwbm2BEYEBoTjI2dYkH1xQR4MaOw0iNlJvXVYUwaQzHXMEfhIizpdAoLgWh+M4zpDYupaIqtOEJnoo2CIuxWxuFVqkOmUR1bFCAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgAsAdkruAHAE5DAGzuAKwB3s7urs7OADQgAJ6IAIzhlMEAzL5Z3h7p6YauAcEAvsVxkjj4RKTkVDT0TKwQHJy4EBAAkgC2uDCwZvbIVjZ6vPZOCAGxCYiu3t5pAemurr5JvgG+7ulJpeUYlTI18mC8AI6oguhgbADyACrxyGCcUMT3xABiV7DaDNpgZADJAgIbWWxjEETaLOSgBQxJYLuLKRNwrOKJBBJQrpOHOYK+YLOAKbKZ5Pagg7SapyKinC5XG4PJ4vN4fb7oX7-QH6JLmEFgkZ2KEuaJwhFIlFRFauDHJPK4pL4-zOdLOfxJdIBCkVamyWqUABmPz+AOQr3exAYtD4EG5QJMg2GEPGiGCwQW2OyfhWhj9vjlWKiAUovlW3mChWiyOcOqpVX18mNnNNgMobWat04BFwUmEUAYyGwwMs4NGroQkaSlHSwSS8LV0QC2O8gaVtZrRMKJPSfgCKzjUgTxyoya5ZvT7TurXaAFlSGBur04CXQc7yyLK9NMUkfLDDMiD4ZfBH0u5Y2VKUOjrSjSb7ZPM9wwAAbMAApcwVeCl2b7E7ShDG8eFnBSfEkXcQNfGJSg3EyXd6xCdZ3EHQ4aQNMdU2QR9p2ENA-iLb912FUAJmxSIvCSJICh2dZ1V8dJA3CXwvH8ZF5jrdx3Co1C9RHO8Uwfa1cxwQtsE4AAjXB6A+ABBKdiCIssSMcZJnEMWFMgPVVXB2E8AigokvFCJV60yLJQl44db0woSwBE7AxKEXh8N0XgoGzey83cpShUhUjEG2QwvGWXSQg05VZRmBAcmCLxdKAzJXAyEJvCsm8MPvCdhKkJy8NQbQ3I84hnl4fN5wgXAX1838AoQIKQpWM9ggigkop3QxezhVYz2PXc5jcdL0KTLK0xy0Si0oHNvILItuD4AQNDECR4wykbBOyryJuwKatuwfMxPUERiC0CEzBqjc6q44KQmRVxDFCTrvCSQN2NghLvG2eYmtcIbE1HUbsPGxzJumnADrmvgAGE8HcsAoZ0MA3nQQQV0dAViP81T6vyRqwpa6I2tehEvD8DY2OJMNfD+-jbM2hynJK04KqqmHiCsMAxM4TAXw5lnqvR0s-IrQ9WM2Yla2gj1t0QMNYXWKYIubJVdJpmzAcoYHGdK-m2Y5rmMz1gheDEi6VLI9TNIp5Y9OAts-VxfFlf7T61jWNWDWtTBbXtC0ACFpLodlAbNrGJm8PJKAjhElnxW6A2i7EjL8bw-Xcft1ObFDL11azPZtXg7QnQQIDfThUGQXm2nzUOK1TkM1S1GjVQ4hOd3PWEchSBiwnMtKc9W4aqC9n2JwrquIG+Mva83NZgqWEIIi49TdxlrESU71xu61CPslKS9eGIch4AFQf-qdZSw8QABaAzouv2FQL9aiPH-RFj1+gfryHhQlEaVQL7C03FENsulSZZEJBvDI-UPbyAAKIOBsIA2q2MQHRQjLBMm8xohhndNsWBdJziXGuHcR4zxkGXWxkiUBqc4QRh8ORXI2ov5oX+gJccgIKHm1mLQ2s9ZOowmbHMQMRIQw+CyP2JUlswgEPYVhHCtwuFXyDO6NIBQ-QZCyEBO+HUIhwi2J1SMEdiQR1kXTMae0xJKIrESBYfCGyCJbIGIRmCJEZEyKBdYZiNZa0mvlQq+ZrGbiRA3OsDimxOOil9QC2QphRHxOEbxG0LEM1BntCG2Agl1TDJ6OYGRAjNnCM9V66d3r5ByDkbInUkkcKBpYyaTNeC62wOzAgViMaXwrDkygLZ8kkjAsU6KWxcQhGbKBJYEDLIsL4reRpCMugUFwFk7GqpYSFGPHWLYkC5iQUTn2QCyJNRLHmOEAksiR6F3tMsiY54WLun4QSJYKwI5tiRJvFI6dChRAjsw-Y382EXKLmmEub5rmIHCLCJEWoUgKnEW3ZIJJgrLA+WEziB5zkFyBdhcexA2hTzAGC+qXE0hhIehsUKLy9nqU7FReEJJnnnn3sUIAA */
   createMachine(
     {
       id: 'purchase order',
@@ -24,7 +25,15 @@ const POMachine =
           | { type: 'onChangeCategories'; value: number }
           | { type: 'openingModal'; value: CompanyData }
           | { type: 'addChoosenSph'; value: CompanyData }
-          | { type: 'closeModal' },
+          | { type: 'closeModal' }
+          | { type: 'goToSecondStep' }
+          | { type: 'goBackToFirstStep' }
+          | {
+              type: 'uploading';
+              paymentType: string;
+              fileType: string;
+              value: any;
+            },
       },
       context: {
         poImages: [{ photo: null }],
@@ -35,6 +44,62 @@ const POMachine =
         choosenSphDataFromList: {} as CompanyData,
         choosenSphDataFromModal: {} as CompanyData,
         isModalChooseSphVisible: false,
+        files: {
+          credit: {
+            ktpDirektur: {
+              isLoading: false,
+              value: '',
+              errorMessage: '',
+            },
+            skKemenkumham: {
+              isLoading: false,
+              value: '',
+              errorMessage: '',
+            },
+            aktaPendirian: {
+              isLoading: false,
+              value: '',
+              errorMessage: '',
+            },
+            nibPerushaan: {
+              isLoading: false,
+              value: '',
+              errorMessage: '',
+            },
+            npwpDirektur: {
+              isLoading: false,
+              value: '',
+              errorMessage: '',
+            },
+            suratKuasa: {
+              isLoading: false,
+              value: '',
+              errorMessage: '',
+            },
+            bankGuarantee: {
+              isLoading: false,
+              value: '',
+              errorMessage: '',
+            },
+            perjanjian: {
+              isLoading: false,
+              value: '',
+              errorMessage: '',
+            },
+          },
+          cbd: {
+            fotoNpwp: {
+              isLoading: false,
+              value: '',
+              errorMessage: '',
+            },
+            fotoKtp: {
+              isLoading: false,
+              value: '',
+              errorMessage: '',
+            },
+          },
+        },
         routes: [
           {
             key: 'first',
@@ -256,9 +321,35 @@ const POMachine =
           },
 
           initial: 'addPO',
+
+          on: {
+            goToSecondStep: 'SecondStep',
+          },
         },
 
         openCamera: {},
+
+        SecondStep: {
+          states: {
+            idle: {
+              on: {
+                uploading: {
+                  target: 'uploadFile',
+                  actions: 'assignFiles',
+                },
+              },
+            },
+            uploadFile: {
+              always: 'idle',
+            },
+          },
+
+          initial: 'idle',
+
+          on: {
+            goBackToFirstStep: 'firstStep',
+          },
+        },
       },
 
       initial: 'checkSavedPo',
@@ -270,11 +361,11 @@ const POMachine =
             const savedPO = await bStorage.getItem(storageKey.savedPo);
             return savedPO;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
         GetSphList: async (context, event) => {
-          console.log(event.value);
+          customLog(event.value);
         },
       },
       guards: {
@@ -335,6 +426,20 @@ const POMachine =
           const isProvidedByCustomers = event.value === 'yes';
           return {
             isProvidedByCustomers: isProvidedByCustomers,
+          };
+        }),
+        assignFiles: assign((context, event) => {
+          return {
+            files: {
+              ...context.files,
+              [event.paymentType]: {
+                ...context.files[event.paymentType],
+                [event.fileType]: {
+                  ...context.files[event.paymentType][event.fileType],
+                  value: event.value,
+                },
+              },
+            },
           };
         }),
       },
