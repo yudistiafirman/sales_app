@@ -4,17 +4,35 @@ import { AppointmentActionType } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
 import React, { useCallback } from 'react';
 import { Dimensions, TouchableOpacity, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 const { width } = Dimensions.get('window');
 import { selectedCompanyInterface } from '@/interfaces/index';
 import { resScale } from '@/utils';
+import debounce from 'lodash.debounce';
+import { getAllProject } from '@/redux/async-thunks/commonThunks';
+import { resetStates, retrying } from '@/redux/reducers/commonReducer';
 
 const SearchingCustomer = () => {
   const [values, dispatchValue] = useAppointmentData();
   const { searchQuery } = values;
-  const { projects, isProjectLoading } = useSelector(
-    (state: RootState) => state.common
+  const {
+    projects,
+    isProjectLoading,
+    errorGettingProject,
+    errorGettingProjectMessage,
+  } = useSelector((state: RootState) => state.common);
+  const dispatch = useDispatch<AppDispatch>();
+  const searchDispatch = useCallback(
+    (text: string) => {
+      dispatch(getAllProject({ search: text }));
+    },
+    [dispatch]
   );
+  const onChangeWithDebounce = React.useMemo(() => {
+    return debounce((text: string) => {
+      searchDispatch(text);
+    }, 500);
+  }, [searchDispatch]);
 
   const onPressCard = useCallback(
     (item: selectedCompanyInterface) => {
@@ -68,12 +86,21 @@ const SearchingCustomer = () => {
       ];
     }, [projects]);
 
+  const onRetryGettingProjects = () => {
+    dispatch(retrying());
+    onChangeWithDebounce(searchQuery);
+  };
+
   const sceneToRender = React.useCallback(() => {
     if (searchQuery.length <= 3) {
       return null;
     }
+
     return (
       <BFlatlistItems
+        isError={errorGettingProject}
+        errorMessage={errorGettingProjectMessage}
+        onAction={onRetryGettingProjects}
         renderItem={(item) => {
           let picOrCompanyName = '-';
           if (item?.Company?.name) {

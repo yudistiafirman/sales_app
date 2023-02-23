@@ -1,3 +1,4 @@
+import { BEmptyState } from '@/components';
 import { layout } from '@/constants';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import React, { useCallback } from 'react';
@@ -21,18 +22,22 @@ interface TransactionListProps<ArrayOfObject> {
     | null
     | undefined;
   refreshing?: boolean;
-  emptyTransactionName?: string;
   isLoadMore?: boolean;
   loadTransaction?: boolean;
   onRefresh?: () => void;
   onPress?: (data: any) => void;
+  isError?: boolean;
+  errorMessage?: string;
+  onAction?: () => void;
 }
 
 const TransactionList = <ArrayOfObject extends TransactionsData>({
   transactions,
   onEndReached,
   refreshing,
-  emptyTransactionName,
+  isError,
+  errorMessage,
+  onAction,
   isLoadMore,
   onRefresh,
   loadTransaction,
@@ -77,9 +82,11 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
         loadTransaction ? (
           <TransactionListShimmer />
         ) : (
-          <TransactionEmpty
-            errorName="Data transaksi mu tidak tersedia, silakan buat SPH terlebih dahulu."
-            emptyTransactionName={emptyTransactionName}
+          <BEmptyState
+            emptyText="Data transaksi mu tidak tersedia, silakan buat SPH terlebih dahulu."
+            isError={isError}
+            onAction={onAction}
+            errorMessage={errorMessage}
           />
         )
       }

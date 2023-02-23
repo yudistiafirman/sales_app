@@ -9,7 +9,9 @@ import Geolocation from 'react-native-geolocation-service';
 import { assign, createMachine, send } from 'xstate';
 
 export const searchAreaMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACDaAdDAC4AyA9pqiQJYUB2hqsA1gApjoC2tss9BgGIIjMIVoMAbhVbiUGHPnRFSlanUbM2nHnwGMEkmRsEBtAAwBdS1cSgADhQGaG9kAA9EARgsAmABoQAE9EADYAVgB2Qm8-CIBmABYEgA5UpNSo7ySAX1yghSw8AlRiMHIqGkFtDi5efkEhLnQKdEIHABsaADM27kIipVLyytMtFjq9RsNjKtdbW3cnF0F3LwQwpJjUsLiATiiw1ISLBPig0M39v0Iw46iLCKTvBP2kvz98wrRi5VUKupqhNOp0KAB3SAiMQSaSyeS-YYqMpqeY1VCgiGQIxw8YMRbWZbOWiudaIc6pWJ+Cw0tL7Cw5PaXRDxBKEaIJKJRPyvV4fD7fEBDErI0ZA1zMTGQiDNdCtdpdXr9QaIkUAsbApgYsHSnEmTUEuxIEArElrY0bClUmlnVL0xneZkIBIRSlJJLvJ5hZIRX15ApC1X-FGAtFaCBgBi0SCEPoqKCtACuDBlqAcDgAwhRuGAACoUABCqEwrCgbWTECWxtNpItPn8MS2YT8qQs7tS3nSUSdj0pbyycQerwi+0FwuDYrDTAjUZjACNi6WkymhGnM9mwAAxNpgBMUCtVxzE2ugDadiJ3CLxCxhLm3uL+J0nNl2-b7BI+rmPL4B8cjVF4oQLRtAA4hUdAMFA4pNIeJrHuap6IEctzeBE3reE2SRbK6Toum6HppOkWF7BkCRjkG-6hoBmCJnKkYaq4lCoBGMqwTWCGeIgqRobE+zpDS3r7BEDIJLhrqEO+3oJK8Zx0j+PyKGqZTCtBWiSA4iYkBBUBCJgnS-AAkgwGkkGx8GMGSCDvBeBx8a+aTPKJIQ+NJSTsu6fhHNknkelE5GKROKlTrCJnaUIwqSFBU5masFl1gg3jePShCpNSUmZBEiWpU6ORnIQfj0p8eyHJ6fm-hRopBYB6maWFEWQap+LeEaR6xW48VZG53Lnl5bz3N2zkJTylItp2nYNv2-l-CMVWaiFtWRUIjBgVpkXsN0mBwAZlaEtW5ntYhCVJRYKVpR+GVZYEg0yTEDZeZl8TpBEU1IkQs0Sst4GRY10IMOIcxyCqAUzaqjWEJ9q0NVOerRdYMVmnFh0JHssRRO+HYWFEHyeVdVyvO+EkWDcWTSacHzeC9SlA8UYMQ9pP3AQq3QkHGAx-pVoPBXT33Q3MeKGkSbWWcj3io+jvhY583I5S2+zshY6SdmExPnP6CnTRzilg4zK3aQAIjQqBCPDJ6cQgUQZHcaMus8iUMhkMuHOydq7EcrxvBT5XA5rNPBcKABqGKJmATEsUIHiwCQNDiKgPQkFwAAUwkWAAlOFFVvZzgEB0HIcUMxkAmxxZ5ZLcWwYe7aO+JEMs3oQDIjik0RnE8qSU4FWdzaQ2nrcWYDbb9-1woD7OZ1rwXd2tG39xAMP83Du2tQjB1m68UQvrywnZO63gDXjPJsljkRch2+yJc87cg+PgGT5BvebQPjMdMzrPU69ymdxKt9QPfM9zwaC8WpwSFvFNeNlMrvHpG2J4SUcpEzljAjGURnjUhSPkAMDAKARngMaUeqBBbL0sgAWj8EkHsbkPTxDiGhbILoBRew1uqRqBDTYbFITlFGb4qGnDbNyV0z0GHv0nIBSYugGgGBXuxRGZskhE0INsZsxxby+lvPsJ09xKS72OMJHI69jhq0DN7JhwVtRYggCw4uSFcYsg9PIm4tsbyRE5AI9WQiAJzRnNGcxe0QGHQyG5J6bZSHOOOOo6kKU+L6ObIkUh8lDGMJDAxGoniYxxl3MubxS9WFcRuClbiQSUjINCYNXsKU3Z8PsfyS+op3EShSRAQgC4Sx7grBY6RZ4-CRCpMJDsnTthxD3khBWZS9gVPiFUwRVNak1B1l9KGeI2krw2L6C8WQ1lJGiO6G8gznTRHkcjFs7owj2wvpMic0ytA0TogwJJjBQ6QEWZZLkblpJ+DeDcbYnS3lOlIXLShDj7iJGQdUsevsFk+MIfFZIEkjipQ+N6DZnZrEJRpAg1CZ9fQKw9C8EFH9r5zRqpDKAjz4r7GOLEfwHphIcnGTlF4qztkun7L4JKuK37YFpgwXWPNwVZMsQgVKMLjixIRZlbK11MovOiOvF0xzbz0NcVTd6My5SgTmVAA2UcSWHWObcF0klsKum2DsuI6Q7E0JuG2ZIQk2XKq0DnTowd7mZOAZCw6qELaEGyElR6VcbwRBys8OWuxmwdlVp5G1Zyr5gq7uq3+21tWr3uHLaShxjgK0ZGSuBZL2Toqbo8U4rp0G5CAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACDaAdDAC4AyA9pqiQJYUB2hqANixQO6QDEEjYhWgwBuFANYCUGHPnRFSlanUbM2nSAiGil9BgG0ADAF1DRxKAAOFWLWUNzIAB6IAzACYAHIQCMbg-5cPAE4DbwAWADZvABoQAE9ENwBWF0IkgHYXdPS3bxc8sLdCgF9i2KksPAJUYjByKhpdQggwBlpIQgAzCjkodAoAVwYIblQLCwBhCgBbMAAVCgAhVEwxKB6hiFMHKxs7B2cEbwM3dMIIyM8DMLCPbw8PdNiEhHSDLxcgx98I75ckoKlcpoSqyeR1RSNFSYAboOQMeo6RiUVAtEZ8BgCLTiSQgmTVWqIqFMGFw1pEuwotGaEQNOymbZIEC7Wy6A6Iby+M7eIJuCKhDw3DwGdzPRApLwRNyBDxJWVZdL3IEgCr4uQ1VXYSF2QQMCwDEh0BhQbiYFgggCSeoNjMs1lZjHZCCCYQMPn5EXSEXc-IM2TFRzCKUI6SSEXDnJuHuVmrBGrxWrpTSE+sNQhNmvT2t0tuZ9v2TMOnNlhFleT8dxyiqSAe8SUKaROUQMUqC6TbMYTccImuzKhTBqNGYTWaTjD03jMTJZBdAhw8ESCIaSySD-iiblr-zOYRdfiKANXbk70iq6p7Cb7TAHaeN3EYAHE6kOAAosFZwC1bYw7fNswscvcSSlkk5bvN4VZ1rWUaEEUoSgS6Nw3OkJ6ggSvZjkwj7PqOSIMLw-C6qIEgXqe3YYXhhDYbeUBXjS2jEgyP7Tn+joAQg-wRLBxwtoKLaBAYNbxByKSpL43iehBQpfC4qFqkQFHElRDBPjRV7cGAcI9IQFjviQ3ToNMpFoeeik6tRQ50dieFMVOdp7P+c6uGG3Hrnx3rCkJLzhJ4Ia5H4+RFL8C5yWeCmXphhCaf06CqZZmEACI0Kg3ByCQ6BxHFuGMcx9kOvY7HZEuir+IU6RhPkipPMJgYuFxwpuMkfhBkUmSheREWUZqABqrADGAVI8I4sAkDQAioJ0JCaQAFC4-gAJTcLG6GdUpPV9QNFCopAuYzo5TgcguZyetK-iKr4AIeFuQawZ47jCicEnHmUKpditp5XoSr7vpgYBfgRmJETixnyfGH2RaQ30fl+9GYbZv4OWxTlHHVXiCoEAmRBkJxbiuhBBHKQRSskBhthJ7XvZUn2Q+mb7QyM0XabpNAGUZy2matOo08adO-TD1k5SYuV5ojBXI3kbw+B4fJ1S4dV+CutbSl4fJhDyoELi2gmlC9DAUC08BMuzaAI-lToALShuc-h8tLRNBFkvwBubnLeD4-icpk-FJCK3gU+eCiYabs4HQg5unNbTZ24ujuys70qR5GC5uF8pxJP74IUk0rDsFwEDB-thx+IQnxtpVIottKUE1buqSgYq+QtmGQXpy9xs1IHlEtG0kAF0joeCmEpaytcRRZGGV01VKbrBN8JwVV6HiyW3b0BxCkXd+0EBdD0YB9IMwx92LA+8sPPuFAvE8Bm8aNehByS8vWRQZx369d60W+EAARisaz9JsR8nQ-GAhdcCqtFSnGvu8Usd8ciHifmEF+hJPqknhFnZEW00SAPYpGLi7ZPRq3cOEasAZvSliCBQwSvFOTSkBCvMiBJO5KU6EIWwFBsHIwPCGYI0obi+BcGrMMtZ-AlwoSEUSstdwRCQWZfae1+6HDmoQM6oE6wE35KBQItZwgqzuu8P0xxwwoXoSZcK4NKI3iHBw0OBMvDhAgkTbIXpMguFrDkN02RSa3F8IKcsMjOZNAstlEO8jj6HHSF4FRnIARhkEuEWsERgzY09hQ5Ic1EEmNBiDRMlFGaxRwsaK8SVRrWMOACM4nx-ApAiQ9Tk0EI4334t6aeGR-HmLWgmXqLB+qDXzixUWQCMipHKnycsNDLoJOCMoiJ4YMhhjyK0zJYUwZUwhgUqAvM-p9LyiHIs4Yh7-GuEkeseQpSuJqvw4COQl5XEelKJBTCdS0AgOaUpiQ3Sl0yBBCuZzq4vCJh8MR-wIIaxdDrYoQA */
+
+  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACDaAdDAC4AyA9pqiQJYUB2hqANixQO6QDEEjYhWgwBuFANYCUGHPnRFSlanUbM2nSAiGil9BgG0ADAF1DRxKAAOFWLWUNzIAB6IAzACYAHIQCMbg-5cPAE4DbwAWADZvABoQAE9ENwBWF0IkgHYXdPS3bxc8sLdCgF9i2KksPAJUYjByKhpdQkwAV3Q5BnqdRkpUCB4+BgEtcUk0Stl5OsVGlVb2sE6Zu17+iE0RBrtTUwcrGzsHZwRvX3SfILcI0I8wsI8Dd1iEhBSvCLdAjyTvrPTvDylcrjGTVQgVHDLJpCCwtEh0BhQbiYFjjACSDFhJF2SBA+1suiOiCCYQMPmuEXSEXc1wM2WeiHCKUI6SSEXZpzuFKBIAhVTkNT5UJUMLhCKRfKEUGF+mMe2sBMYRJOAKShG+eT8Hm8OX+SQZJyShTSBiu3gMHyC6StPL5k0FIOwMsEmLFUu4ksRMr03jMuPxh1xxw8ESCLKSyTCSX8UTcBryGUIYRJfiKSUuRrctsd9vBjudovh7sYAHE6uKAAosVCYOBoiA4ywKwOgY6nb7qpKagza3XefXxRlcwhFUJdkl3O7pbPSflEIVbJql8tSmW8fgu0QSPOz3ML7pMZdFr2LxgbbSzWUmOX+5uEoOII1eK2RfIuFwfQIDl467WEal+Jk-xBB4yRJDOExgvul6EEe4prmA7QUOghAWNWJAAGbIQAtjukECnhkKnoeDBlse0rEeexE7DeTYHPeraPm4I5Ut4UQAuaSRdhE8ZuJcaQpD2nwGEEOo9hBoIEdBdiEIh6DIWR8HEQAIjQqDcHIJDoHEimrtRtF4neSoPgg2Rhv8-iFOkYT5P86TxjZETqqayR+FGRSZBJc4OrOzp8gAaqwLRgKsPCOLAJA0AIqAYSQiEABQuP4ACUHo5lB+bEYR2CBSwwWhQ2BkBgxTiMiG5yUsJdKnMkIHxi4UYjp47gPKabFZmUvLpVJmUHrU5FVjWYD1uuQybqM2V7r1MGkJW1a1vWVEHjRfp0Yq9gmXkEReLcgSBAYkQZKa9URoQQQ-EEHzJCJ-wRF5U2+Vls1SoNC0QNwcnIah6FYeguF2hlj19c9iKvcN6wjMtxiNoZ9HGYxJxZGSAJXB+74fAYEa8YEI4RGE3jnQCFKY6UnUMBQ-TwLiAMCvKcMbQjAC0rL-v4VygZdQRZNtBqM6c3g+P4IkgUTbhuNZ91ggoxF0+tyqM+LrOmttfGhtz3y858SuciGfGgayksEdLfWsOwXAQLLLalQgfiEC4QRWrZjwWp8-YGsmqRdv8+QWmyRQROBnU01MXQwfMHShysFB9JAlslW24ROdalL4+44R6ga1Lqg7ITRttNX24bIfOhhQi2BQcfw9baYssEnx3L4DX9jxg4nP4ds55j75o8md1B9187TVbxVV8cYQsVE7HapjXY-N+jLhALNlccB7Khh4LhFz5lQFq65GVwz1vnV4i-J9kVKZC48Y5GS2Qifcvi3JqW-Zc6cF6QeB-KukXj+KypzpjZJjcI8YA6e3SKEHUDtkhJTCC-aSTRProF0ieA8qlIpfxMl2ZiB13Diy5mLB2MRW6+E8GdFwXE2SXE+F+eBQ8mgBSCiFaOaxMEI37JkFkhQohp18OmDwoDgiEDpCGAOrIeEZDoUDGaK5QbzXBmw62bE8Z22jFGI0W1PjYzVDkDeng2btVJsUIAA */
   createMachine(
     {
       tsTypes: {} as import('./searchAreaMachine.typegen').Typegen0,
@@ -22,28 +24,15 @@ export const searchAreaMachine =
         result: [] as any[],
         loadPlaces: false as boolean,
         placesId: '' as string,
+        errorMessage: '',
       },
       states: {
         getLocation: {
-          initial: 'askPermission',
           states: {
-            askPermission: {
-              invoke: {
-                src: 'askingPermission',
-
-                onDone: {
-                  target: 'allowed',
-                  cond: 'isGranted',
-                },
-
-                onError: 'denied',
-              },
-            },
-
             allowed: {
               invoke: {
                 src: 'getCurrentLocation',
-                onError: 'errorGettingLocation',
+
                 onDone: {
                   target: 'currentLocationLoaded',
                   actions: 'assignCurrentLocationToContext',
@@ -51,39 +40,22 @@ export const searchAreaMachine =
               },
             },
 
-            denied: {
-              states: {
-                foreground: {
-                  on: {
-                    appComeToBackgorund: 'background',
-                  },
-                },
-                background: {
-                  on: {
-                    appComeForeground: '#search area.getLocation.askPermission',
-                  },
-                },
-              },
-
-              initial: 'foreground',
-            },
-
-            errorGettingLocation: {
-              always: 'askPermission',
-            },
-
             currentLocationLoaded: {
               entry: send('sendingLonglatToLocation'),
-              always: 'askPermission',
+
               invoke: {
                 src: 'getLocationByCoordinate',
+
                 onDone: {
                   actions: 'navigateToLocation',
+                  target: 'finito',
                 },
-                onError: 'errorGettingLocation',
               },
             },
+
+            finito: {},
           },
+          initial: 'allowed',
         },
         searchLocation: {
           states: {
@@ -118,7 +90,10 @@ export const searchAreaMachine =
             onGettingLocation: {
               invoke: {
                 src: 'getLocationBySearch',
-                onError: 'errorGettingData',
+                onError: {
+                  target: 'errorGettingLocationData',
+                  actions: 'handleErrorGettingLocation',
+                },
 
                 onDone: {
                   target: 'inputting',
@@ -127,13 +102,15 @@ export const searchAreaMachine =
               },
             },
 
-            errorGettingData: {
-              always: 'inputting',
+            errorGettingLocationData: {
+              on: {
+                retryGettingLocation: 'onGettingLocation',
+              },
             },
 
             searchValueLoaded: {
               after: {
-                '500': 'onGettingLocation',
+                '300': 'onGettingLocation',
               },
             },
 
@@ -146,7 +123,7 @@ export const searchAreaMachine =
                   actions: 'navigateToLocation',
                 },
 
-                onError: 'errorGettingData',
+                onError: 'errorGettingLocationData',
               },
             },
           },
@@ -157,9 +134,6 @@ export const searchAreaMachine =
     },
     {
       guards: {
-        isGranted: (context, event) => {
-          return event.data === true;
-        },
         searchLengthAccepted: (context, event) => {
           return event.payload.length > 2;
         },
@@ -192,12 +166,15 @@ export const searchAreaMachine =
             placesId: event.payload,
           };
         }),
+        handleErrorGettingLocation: assign((context, event) => {
+          return {
+            errorMessage: event.data.message,
+            loadPlaces: false,
+            result: [],
+          };
+        }),
       },
       services: {
-        askingPermission: async () => {
-          const granted = await hasLocationPermission();
-          return granted;
-        },
         getCurrentLocation: async () => {
           const opt = {
             // timeout:INFINITY,
@@ -225,15 +202,15 @@ export const searchAreaMachine =
         getLocationBySearch: async (context, event) => {
           try {
             const response = await searchLocation(context.searchValue);
-
             return response.data.result;
           } catch (error) {
-            customLog(error);
+            throw new Error(error)
           }
         },
         gettingPlacesId: async (context, event) => {
           try {
             const response = await searchLocationById(context.placesId);
+
             return response.data.result;
           } catch (error) {
             customLog(error);
@@ -251,7 +228,7 @@ export const searchAreaMachine =
 
             return response.result;
           } catch (error) {
-            customLog(error);
+            throw new Error(error);
           }
         },
       },
