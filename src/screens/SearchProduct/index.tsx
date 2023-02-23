@@ -4,7 +4,13 @@ import { SafeAreaView, View, DeviceEventEmitter } from 'react-native';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
+import {
+  BEmptyState,
+  BHeaderIcon,
+  BSpacer,
+  BTabSections,
+  ProductList,
+} from '@/components';
 import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import { searchProductMachine } from '@/machine/searchProductMachine';
@@ -105,10 +111,17 @@ const SearchProduct = () => {
       send('onChangeTab', { value: tabIndex });
     }
   };
-  const { routes, productsData, loadProduct } = state.context;
+  const { routes, productsData, loadProduct, errorMessage } = state.context;
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />
+      {state.matches('errorGettingCategories') && (
+        <BEmptyState
+          isError
+          errorMessage={errorMessage}
+          onAction={() => send('retryGettingCategories')}
+        />
+      )}
       {routes.length > 0 && (
         <BTabSections
           tabStyle={SearchProductStyles.tabStyle}
@@ -120,6 +133,9 @@ const SearchProduct = () => {
               products={productsData}
               loadProduct={loadProduct}
               emptyProductName={searchValue}
+              isError={state.matches('errorGettingProductsData')}
+              errorMessage={errorMessage}
+              onAction={() => send('retryGettingProductsData')}
               onPress={(data) => {
                 DeviceEventEmitter.emit('event.testEvent', { data });
                 if (isGoback) {

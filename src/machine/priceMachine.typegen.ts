@@ -1,5 +1,7 @@
 // This file was automatically generated. Edits will be overwritten
 
+// This file was automatically generated. Edits will be overwritten
+
 export interface Typegen0 {
   '@@xstate/typegen': true;
   internalEvents: {
@@ -16,7 +18,6 @@ export interface Typegen0 {
 'error.platform.price machine.currentLocationLoaded:invocation[0]': { type: 'error.platform.price machine.currentLocationLoaded:invocation[0]'; data: unknown };
 'error.platform.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]': { type: 'error.platform.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]'; data: unknown };
 'error.platform.price machine.getProduct.loadingProduct:invocation[0]': { type: 'error.platform.price machine.getProduct.loadingProduct:invocation[0]'; data: unknown };
-'xstate.after(500)#price machine.errorGettingLocation': { type: 'xstate.after(500)#price machine.errorGettingLocation' };
 'xstate.init': { type: 'xstate.init' };
   };
   invokeSrcNameMap: {
@@ -39,9 +40,13 @@ export interface Typegen0 {
 'assignLocationDetailToContext': 'done.invoke.price machine.currentLocationLoaded:invocation[0]';
 'assignParams': 'sendingParams';
 'assignProductsDataToContext': 'done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]';
-'enableLoadLocation': 'appComeForegroundState' | 'onAskPermission' | 'xstate.after(500)#price machine.errorGettingLocation';
-'enableLoadProducts': 'done.invoke.price machine.getProduct.loadingProduct:invocation[0]' | 'onChangeCategories' | 'onEndReached' | 'refreshingList';
-'handleError': 'error.platform.price machine.allowed:invocation[0]' | 'error.platform.price machine.currentLocationLoaded:invocation[0]' | 'error.platform.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]' | 'error.platform.price machine.getProduct.loadingProduct:invocation[0]';
+'assignStopLoadMore': 'done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]';
+'enableLoadLocation': 'appComeForegroundState' | 'onAskPermission';
+'enableLoadProducts': 'done.invoke.price machine.getProduct.loadingProduct:invocation[0]' | 'onChangeCategories' | 'onEndReached' | 'refreshingList' | 'retryGettingProducts';
+'handleError': 'error.platform.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]' | 'error.platform.price machine.getProduct.loadingProduct:invocation[0]';
+'handleErrorCurrentLocation': 'error.platform.price machine.allowed:invocation[0]';
+'handleErrorFetchLocationDetail': 'error.platform.price machine.currentLocationLoaded:invocation[0]';
+'handleRetryGettingProducts': 'retryGettingProducts';
 'incrementPage': 'onEndReached';
 'refreshPriceList': 'refreshingList';
   };
@@ -52,14 +57,11 @@ export interface Typegen0 {
 'permissionGranted': 'done.invoke.price machine.askPermission:invocation[0]';
   };
   eventsCausingServices: {
-    askingPermission:
-      | 'appComeForegroundState'
-      | 'onAskPermission'
-      | 'xstate.after(500)#price machine.errorGettingLocation';
-'fetchLocationDetail': 'done.invoke.price machine.allowed:invocation[0]' | 'sendingParams';
-'getCategoriesProduct': 'distanceReachable' | 'hideWarning';
-'getCurrentLocation': 'done.invoke.price machine.askPermission:invocation[0]';
-'getProducts': 'done.invoke.price machine.getProduct.loadingProduct:invocation[0]' | 'onChangeCategories' | 'onEndReached' | 'refreshingList';
+    askingPermission: 'appComeForegroundState' | 'onAskPermission';
+'fetchLocationDetail': 'done.invoke.price machine.allowed:invocation[0]' | 'retryFetchLocationDetail' | 'sendingParams';
+'getCategoriesProduct': 'distanceReachable' | 'hideWarning' | 'retryGettingCategories';
+'getCurrentLocation': 'done.invoke.price machine.askPermission:invocation[0]' | 'retryGettingCurrentLocation';
+'getProducts': 'done.invoke.price machine.getProduct.loadingProduct:invocation[0]' | 'onChangeCategories' | 'onEndReached' | 'refreshingList' | 'retryGettingProducts';
   };
   matchesStates:
     | 'allowed'
@@ -68,19 +70,21 @@ export interface Typegen0 {
     | 'denied'
     | 'denied.background'
     | 'denied.foreground'
-    | 'errorGettingCategories'
-    | 'errorGettingLocation'
+    | 'errorFetchLocationDetail'
+    | 'errorGettingCurrentLocation'
     | 'getProduct'
     | 'getProduct.categoriesLoaded'
+    | 'getProduct.categoriesLoaded.errorGettingProducts'
     | 'getProduct.categoriesLoaded.getProductsBaseOnCategories'
     | 'getProduct.categoriesLoaded.productLoaded'
+    | 'getProduct.errorGettingCategories'
     | 'getProduct.loadingProduct'
     | 'idle'
     | 'locationDetailLoaded'
     | 'unreachable'
     | {
         denied?: 'background' | 'foreground';
-'getProduct'?: 'categoriesLoaded' | 'loadingProduct' | { 'categoriesLoaded'?: 'getProductsBaseOnCategories' | 'productLoaded'; }; };
+'getProduct'?: 'categoriesLoaded' | 'errorGettingCategories' | 'loadingProduct' | { 'categoriesLoaded'?: 'errorGettingProducts' | 'getProductsBaseOnCategories' | 'productLoaded'; }; };
       };
   tags: never;
 }

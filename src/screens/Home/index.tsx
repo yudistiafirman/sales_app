@@ -89,6 +89,8 @@ const Beranda = () => {
   const [snapPoints] = React.useState([`${initialSnapPoints}%`, '91%', '100%']); //setSnapPoints
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [isError, setIsError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
   const navigation = useNavigation();
 
   const [isModalVisible, setModalVisible] = React.useState(false);
@@ -107,7 +109,7 @@ const Beranda = () => {
     totalPage: 0,
     data: [],
   });
-  const [page, setPage] = React.useState<number>(0);
+  const [page, setPage] = React.useState<number>(1);
   const [selectedDate, setSelectedDate] = React.useState<moment.Moment>(
     moment()
   );
@@ -203,6 +205,7 @@ const Beranda = () => {
 
   const fetchVisitations = async (search?: string) => {
     setIsLoading(true);
+    setIsError(false);
     try {
       const options = {
         page,
@@ -255,7 +258,10 @@ const Beranda = () => {
         });
       }
     } catch (error) {
-      customLog(error, 'ini err apa sih??'.replace);
+      customLog(error);
+      setIsLoading(false);
+      setIsError(true);
+      setErrorMessage(error.message);
     }
   };
 
@@ -273,7 +279,7 @@ const Beranda = () => {
   }, [page, selectedDate]);
 
   const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
-    setPage(0);
+    setPage(1);
     setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
     setSelectedDate(dateTime);
   }, []);
@@ -395,11 +401,22 @@ const Beranda = () => {
       totalPage: 0,
       data: [],
     });
-    setPage(0);
+    setPage(1);
     fetchVisitations(text);
   };
 
   const onChangeWithDebounce = React.useCallback(debounce(reset, 500), []);
+
+  const onRetryFetchVisitation = () => {
+    setPage(1);
+    setData({
+      totalItems: 0,
+      currentPage: 0,
+      totalPage: 0,
+      data: [],
+    });
+    fetchVisitations();
+  };
 
   const kunjunganAction = () => {
     // setIsLoading((curr) => !curr);
@@ -423,13 +440,16 @@ const Beranda = () => {
             }}
           />
         )}
+        isError={isError}
+        errorMessage={errorMessage}
         searchQuery={searchQuery}
         data={data.data}
         isLoading={isLoading}
+        onAction={() => onChangeWithDebounce(searchQuery)}
         onEndReached={onEndReached}
       />
     );
-  }, [data]);
+  }, [data, isError]);
 
   async function visitationOnPress(
     dataItem: visitationDataType
@@ -561,6 +581,9 @@ const Beranda = () => {
         <BottomSheetFlatlist
           isLoading={isLoading}
           data={data.data}
+          onAction={onRetryFetchVisitation}
+          isError={isError}
+          errorMessage={errorMessage}
           searchQuery={searchQuery}
           onEndReached={onEndReached}
           onPressItem={enable_customer_detail ? visitationOnPress : undefined}

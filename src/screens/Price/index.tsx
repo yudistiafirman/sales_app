@@ -8,7 +8,7 @@ import CurrentLocation from './element/CurrentLocation';
 import PriceStyle from './PriceStyle';
 import PriceSearchBar from './element/PriceSearchBar';
 import ProductList from '@/components/templates/Price/ProductList';
-import { BAlert, BSpacer, BTouchableText } from '@/components';
+import { BAlert, BEmptyState, BSpacer, BTouchableText } from '@/components';
 import { useMachine } from '@xstate/react';
 import { priceMachine } from '@/machine/priceMachine';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -23,10 +23,14 @@ import {
   TAB_PRICE_LIST_TITLE,
 } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<RootStackScreenProps>();
   const [index, setIndex] = React.useState(0);
   const [visibleTnc, setVisibleTnc] = React.useState(false);
@@ -73,6 +77,46 @@ const PriceList = () => {
       send('onAskPermission');
     }
   }, [route, route?.params, send]);
+
+  React.useEffect(() => {
+    if (state.matches('errorGettingCurrentLocation')) {
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: state.context.errorMessage,
+          primaryBtnTitle: 'Retry',
+          outlineBtnTitle: 'Back',
+          isRenderActions: true,
+          primaryBtnAction: () => {
+            dispatch(closePopUp());
+            send('retryGettingCurrentLocation');
+          },
+          outlineBtnAction: () => {
+            dispatch(closePopUp());
+            navigation.goBack();
+          },
+        })
+      );
+    } else if (state.matches('errorFetchLocationDetail')) {
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: state.context.errorMessage,
+          primaryBtnTitle: 'Retry',
+          outlineBtnTitle: 'Back',
+          isRenderActions: true,
+          primaryBtnAction: () => {
+            dispatch(closePopUp());
+            send('retryFetchLocationDetail');
+          },
+          outlineBtnAction: () => {
+            dispatch(closePopUp());
+            navigation.goBack();
+          },
+        })
+      );
+    }
+  }, [dispatch, navigation, send, state]);
 
   const renderHeaderRight = React.useCallback(() => {
     if (fromVisitation) {
@@ -138,8 +182,10 @@ const PriceList = () => {
     isLoadMore,
     refreshing,
     loadLocation,
+    errorMessage,
+    page,
+    totalPage,
   } = state.context;
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />
@@ -172,18 +218,32 @@ const PriceList = () => {
       )}
 
       <BSpacer size="extraSmall" />
+      {state.matches('getProduct.errorGettingCategories') && (
+        <BEmptyState
+          isError
+          errorMessage={errorMessage}
+          onAction={() => send('retryGettingCategories')}
+        />
+      )}
       {routes.length > 0 && (
         <BTabSections
           swipeEnabled={false}
           navigationState={{ index, routes }}
           renderScene={() => (
             <ProductList
-              onEndReached={() => send('onEndReached')}
+              onEndReached={() => {
+                page !== totalPage && send('onEndReached');
+              }}
               products={productsData}
               onPress={onPressProduct}
               isLoadMore={isLoadMore}
               loadProduct={loadProduct}
               refreshing={refreshing}
+              isError={state.matches(
+                'getProduct.categoriesLoaded.errorGettingProducts'
+              )}
+              onAction={() => send('retryGettingProducts')}
+              errorMessage={errorMessage}
               onRefresh={() => send('refreshingList')}
             />
           )}

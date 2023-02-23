@@ -1,9 +1,9 @@
+import BEmptyState from '@/components/organism/BEmptyState';
 import PriceListCard from '@/components/templates/Price/PriceListCard';
 import { layout } from '@/constants';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import React, { useCallback } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
-import EmptyProduct from './EmptyProduct';
 import PriceListShimmer from './PriceListShimmer';
 
 interface productsData {
@@ -33,8 +33,11 @@ interface ProductListProps<ArrayOfObject> {
   emptyProductName?: string;
   isLoadMore?: boolean;
   loadProduct?: boolean;
+  isError?: boolean;
+  errorMessage?: string | unknown;
   onRefresh?: () => void;
   onPress?: (data: any) => void;
+  onAction?: () => void;
 }
 
 const ProductList = <ArrayOfObject extends productsData>({
@@ -45,7 +48,10 @@ const ProductList = <ArrayOfObject extends productsData>({
   isLoadMore,
   onRefresh,
   loadProduct,
+  isError,
+  errorMessage,
   onPress = () => {},
+  onAction,
 }: ProductListProps<ArrayOfObject>) => {
   const renderItem: ListRenderItem<productsData> = useCallback(({ item }) => {
     const fc =
@@ -81,7 +87,12 @@ const ProductList = <ArrayOfObject extends productsData>({
         loadProduct ? (
           <PriceListShimmer />
         ) : (
-          <EmptyProduct emptyProductName={emptyProductName} />
+          <BEmptyState
+            isError={isError}
+            errorMessage={errorMessage}
+            onAction={onAction}
+            emptyText={`Pencarian mu ${emptyProductName} tidak ada. Coba cari produk lainnya.`}
+          />
         )
       }
       renderItem={renderItem}

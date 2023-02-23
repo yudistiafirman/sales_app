@@ -3,16 +3,14 @@ import {
   getAllBrikProducts,
   getProductsCategories,
 } from '@/actions/InventoryActions';
-import { customLog } from '@/utils/generalFunc';
 import { hasLocationPermission } from '@/utils/permissions';
-import { Alert } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { createMachine } from 'xstate';
 import { assign, send } from 'xstate/lib/actions';
 export { getLocationCoordinates } from '@/actions/CommonActions';
 
 export const priceMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXABVQHsIBXTGygG0YInKgbM2NAMQRGFSuQBujANZU0WXIRLkqtQa3ZcefMgKbaaCGY0wEa6CQG0ADAF17DxCkax0Via5AAPRABMAOwALJQArHZRdgCMAMwAHCEJAJxxdiEANCAAnoFBcXGUAGyxpcUJBUFBMUEAvnXZStj4RKSSmkbCurz8WsIiYKhMqJTInJYAZoyoeGMYLartGmD0XTrcvQb97KZkshZeZM7OPsjuntZkPv4IMSF2xZQBdnH3cSEpD+HF2XkIAS+QRKQRSQUB9x+4QCcQaTQWKja6moqx2HEOYCgM3QcAAMnpICi1kJ2LAAEIEWBgADyZAAwpZMdi4GIJFQzAp5spWmoOqj1ujGViMHiCRAiWjyZSafShczYHsDpYridHGcLkcbohQuESpVIuFwulYm8-oFkrrij9AWl4gkAsU4SBmojeSticZKBjhTjYPjeITOiSaFKqbSGTQmSLYINhjMxhMaNNZlzFki+R7ut75f6IIH+cHQzKI1HfYrzMrbI5TkhnRqrlq7g8ni83iEPl87D8zQDisVgX2AuEQv2vikUkanS6ecsJQKvXLo7nCWhg8uICIJABRMgQABKYDakBrbg8mtrtx1eqCBqNUXiMR7Q9Bzw+ISHH2KMQnU4RM+RQaetmS5ivMa5ipu9LEAQBhgCWPpwCedZng2F7aiElr6l2d4mo+uSBP2uoJDEQ4hEEX4JHYN4JL+3JLABBZAYuvrrmBxjriIqBgJMXGwO0UC4ugsA0Eh5wod4aEIFeFQ3thxoPk+1QBJQcQpI8xQpAkqQTsUIS0WmbpzsGC6Rghfqgau7EQQARkQcgACqMAAkhAnBgKJ9YSaAtxxA6lCUSOKTFAEWnJBhPbEZQnzjmCcTBek7Y0Y0zp-vRkiUnIdBDHgQkeBIrKSByiipemVAZVlsy5Vc5aHCq1ZqrWYmXF5fiINCPYxEaTydcUxrVG8MQxPprqzuV2VVfl4iFfs8jFXRpWUGNlWwHlZA1ZWxzVjELiNZ51ySe1+EIG84QpM8MSVCkDrxBkw3-ulnDcAA7pABXsjNnLTmlZWPYwL0QOtRyqjtp7Nft3mIG8TwBRpwWhUk4RPpp-khSRUQJEalRJfC82GQQv3-bGIwJlMMxzF9C3489kCA3VTgNaD54Q8djz+RksMhUkCM9r1ynNgEGFkRk47hHd32UHmZA4uKyaYkwLC7iIBDIMgdKMHgYAUpgchQPLu4AMo0IyHnieDrUIMOwJUcRIQXROiThHh-xvKElBBZdnWQqCjrJRThmS9LlC2druuMArG7K6r6tgAAYjMcthwbRuRibYONsFPbpKpUUyVdMQUXE9S+yVhlDCMADiqxWAY+K1flvjCYyi2TJGqAABSRHYACUIh+7OZczJXNDVwJFZAwzyFp5JAC0JHKTCCSF2RI43uRWRHYN6T+XFfY3uOASc2LC2YCwwxgGQNC1xtHFTe9sifSXs4n2fF9X0c6601W9Mg5PTPm4v0NWwhRSJCPsKQnwZAiIvXyV0+ynVKNjFKuMn6ny4q-MeVwOID1GOMUmKY+7Imfmgy+GCJAfzMHXTa391Sm0bAAlGrxgGgI0j2R2RQeoCytBUIKsQj6GW4JQgAIqsAg6BOA3yEkbMg2ADxtAINZNyqc-63BCspI0akvy6WCKUAIHVahFA0SFW2kQXj2j4bOARG1hFGzERIxu0iwCyJIPIxR20aFT2ZqoiIqlHj53fOROwuiN5djCFwh045QRLz0sXZByIFZcTkQosAIhSB5gAOoEFQFLAwSjULM3BBArslAqKAgojUDShpzHInQK5ZJEgACCsBMrjRWnTdxyjIb5zZoFOGXNwpHVUnzR4nDBrVHCOCWEMSDKzhqW5EQVJdx9EyQQPAsBcktR8n5GGQVOZhURkdF489opgmInESINQGjJTIMwOAZxH7qHaXk82s8gh2FfIvUIoRCJrx7NPXUMUdldliKdOKQ0pkjQYpmdgjyNmBEGhEaIJouZpAyB1NSZ0uGFCtA6V4dhEEEIzGiHo+hDDBhhWbFRp0EXRDtMkFF69-jfjBJQDhE40hJC+D7HG0zIVEuAixMU5LGzRWeMcrSwR7gVCfKpBILLrTBXUZRXSVTCXzn5aKAM4pALCCLOGZitzdq0MkjELsZ13bUTxZ2bsByrRFBePnTqdgwQqvdHy-V5lNVsWEOuIVB0yKipiuKmoI4EiKXtM8Xqjw4olNIi6yg2Ch4j3gvKX1zM-GytGa2e0bxs1Plhm7R2FEuGghSHGpaOVWktSah0hA7YwivLeICMiw4PkdULk8QxvUzmvB1GWgmkBU3m3fJnb8bs85qX0Xi6EcaA4DsNR482cVdTW3iIkIIlF85dkzni4EIabzLy7FypBPLJCzplvHUO4dB23FtkUFdhQsZlC3QM2ouo93VFBJ8MKM7z6B2DjrPWEBr2IEonejGQVQjjkFvs52r6c5aS7DCd8JrJncohZIBNVd+BvyedWp5txp6pCiuRcINsogtvARvQuwJvxGk9rpMEyrwX3SoEQ8+JDKE+vnTW0jHaZJ9h3p+p8tQVLggeLUQaI52xxssUcaxojxGCu4-h7UQQOoZH+cM9swQznruiWhljlB4mHmcUk4DFtmUkc0UOeI+71OGjlQqhVYJ2xFwM+LWZYBzPDqOmpUTnxeZaXtIvaJDQgA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcBOBLAxmABAWwENMALdAOzADoYAXABVQHsIBXTGygG0YInKgbM2NAMQRGFSuQBujANZU0WXIRLkqtQa3ZcefMgKbaaCGY0wEa6CQG0ADAF17DxCkax0Via5AAPRABMAKwAbJR2AJwAzADsACwAHCERQRExEXEhADQgAJ6BUQCMdpQxIUEBAVFxcUF2CdUAvo05Stj4RKSSmkbCurz8WsIiYKhMqJTInJYAZoyoeJMY7apdGmD0vTrcAwZD7KZkshZeZM7OPsjuntZkPv4IhVEp4TF2ARF2ofUNATn5CGCATipUKDSiqQiIRihUKIWarWWKk66moG32HBOYCg83QcAAMnpIGjNkJ2LAAEIEWBgADyZAAwpZsbi4GIJFQzAolsoOmpuuitpjmTiMASiRASRjKdS6YyRazYIdjpZbudHJdrqd7ogYkVKM87CEnmkYgkgmV-oEjVFKE9gYaEnYotCggiQG1kfz1qTjJQsaK8bBCbxiT0yTQZTT6UyaCyxbARmN5pNpjQ5gseSsUQLfX0A4qQxAw4KI1G5bH40HleZVbZHBckB6tbcdY9nkFXu9Pt8Er8rYDgSC+0ljUEXRFgTF3Z6+WspUL-QqE0XiWgI6uICIJABRMgQABKYE6kEbbg82qbDz1hQNn2NzxiZot2TygUKoUoQXNQRfzoCCR6jOSJzqi4Z+gWK4SksG4StujLEAQBhgJWgZwGezYXq2V66vqhoPqa5qWm+g7juEURJG8H5xBEH7AbyqxgaWEHLkGm4wcYm4iKgYAzDxsBdFA+LoLANAYVcWHeDhCA3neRomk+RGvgCVQ0ZQNGFGaARvOUcSxPR2beguEZLnGaHBtB66cXBABGRByAAKowACSECcGA4ktlJoAPE8JR1HYgUWukcTPgOCS3gFQUxKkkRmgZXrzuB+aseKoaSqM4wAOIbFYexComPE0KguQ5TQeWGGWnmSXc0mwg06lBHEH4hO8CQfHqA5VBFlAhI+GTxBESkJaBuYYpQmXzGVFWoYq3EbCV038LNCbVTc3l+IgDU0U6v6tbEcURF1EIRAadhwtEgFvEaI2MZI1JyHQox4CJHgSOykhcooIF3VQD1PQsr23DWJxqg2GpNhJ621T5iAWp2MQBOUMUZBOFEDjRto0VCtHQmOUQurdOZ-bAj3PUD73iJ9RzyN9DHE5Q-3k7Ab1kCDdZnA2hQuJDXkw5tCDw6USPw6jyToyRwSdhEMs6SE5qFDU04tB6P0MwQnDcAA7pAH2cjT3Kzr9jOa4wOsQOzpzqjz57Q22hQBIr5GfLR50hPLUR-CRoRhKFITAgE7xxEFcRE0ZGva7rk0TFMszzIsRvq6b5uW2DTgQ7bl6w48jsgs6LvFHCHtewCoW2u8RRI0U0SRE1YfzsWZB4pKGbYkwLD7iIBDIMgDKMHgYBUpgchQO3+4AMo0Mya1ZwLxRvJQEXAtELrfrEXUwqUNHJLRTohDRSP16ijfN5QdnD6PjAd1u3e9-3YAAGLzG3V8T1PcYz9h2dC4jyOpHp4sEgDliLaQabxHbuw+IkI+kho4Pw2CQQkoMJAABENgEHQJweaxVcjwJoIg2spw0FT0wZ-DaDxqinTsOAi0Q0YSVCiAOWi0sKhlCCLCKoGQAgwKoJgFgYwwBkBoEgjmXEqb61kIbNWRk+ECKESI04m5U71nTjbTCdtpKe1tJpNIdg9LnXNJEZSiBiipEoD2BIQ0kZOgAlEHh-p+E8XkYQ24XFo6pjjpmROMjHGCOES4iQSizDIM5qozUNU2yUK7MEdIgEHZVCYe7Rq2l2qhAJp7bhKtvHzm4CE4hGDOBiJElPMg2AjydAIDZdyZD+YPAiqddhoRChpEdhadeJFigvD6sCaEiQ4TBzsVk6ROSAlkHyZgopokkJlOPCQSp1TubhI0dnBImQ7Sez1HqWiLSS6IDSGECiU50gwjNGCexHceIVKqWAEQpBiwAHUCCoCbgYGpbYKgDkVmURe7VaipA-BUL49j0BuRuRIAAgqTAGL0WZpyWbPXyUR-KBWiiFZ8jCSIgK3roiB-sMgJGBaCkQNJ9yDCeQQPAsA3l1SRV+FFXwnwDXNBigEdQwgVCKBk78udaj2OjktAwDJfHOJCdgxauVlrCv8SE6l2cHZO3zpEQu7t+wkTiJUL8VRih9g9ic+EQz6ZGWSjoSCbFoLGsjFSaM8ozJzXEVIA2dNDJJWYilW1UF0rGWMOWGMqUlTBI5ucRZvMInSVkvhBSz5iIqWaSCb8TVnh9X2RCZoKsyDMDgJcYZ6h4VfwFgAWgdnS2NekoQfHeE8Ac+awj0sCuA7SaRVlugNc6pieZ2C5vIYgCE6khpfG+AdNIR0OmJBiOsh0MsK7JEyYiQ1Lr20cB2PoSqxhO21MCM1cI0R4hJBSEOvSnyLQgm6QApqk4viDNna2sai5TVpWLBANdbZEjaODsaUt8tNKFE+WkTsJ71V6QhEUZWV7EptvGneiynqLU+ptVWTNIbllzz0Z2E6LoUW-lCkAyWVQSir2aVXd2qR7EWtMvBqDD6OLCE3E+6S45byK3kh+iKMJjpmKRXCSx6RJz6tA6NH0EG-XsX5RK-KZZaPZ0+LaJ0k50kccqNhlSftzEAWDtEZp1RCgkddToET5Vlp+okwLYEt5IixESMkVIIUWWBGCuYmoliKjfk0jO1Wc7URM0BrCjaUMEXduab1RINRKiBXVekYBsRsXJD6e1Rll63PXr+snSARmHgpDHe1Z0zT2FBXqBjeW5iZbywtOaf2dcW1gckCfFLiG-MIBHOEahEU+mJF-EET5qzKDL3dhs0ImRJz2Oqy3Z+l9r6pb2S6RrpyWs-na5LRGXXt5miKIrD8ERBuCNPufEeY9H21bzYij4X5MhJEruUeouzAQLe68t2EzViMVf4xNZMqA8EELyegzB42EDGlvG+qoPsnQuku1YxetQZZNRfX2ZtfHjayKcdK0REpvvQkSQEdSHxqiBw+PvCK9jckc3GYU5H+2u0-dhOpI0AOVXOn9p8r4CQDS-P+XpWovGEuVaoBc2ZiFrnfdhMadS8sPY5a44pvZ3y+xHLSJpCKBLHvGxBe5b76rgGbzARWyB+K+UvYFVAIVcjEez18wdraMQmHOhU9EVqTVp0VFTY0IAA */
   createMachine(
     {
       tsTypes: {} as import('./priceMachine.typegen').Typegen0,
@@ -52,7 +50,11 @@ export const priceMachine =
           | { type: 'refreshingList' }
           | { type: 'hideWarning' }
           | { type: 'appComeForegroundState' }
-          | { type: 'appComeBackgroundState' },
+          | { type: 'appComeBackgroundState' }
+          | { type: 'retryGettingCurrentLocation' }
+          | { type: 'retryFetchLocationDetail' }
+          | { type: 'retryGettingCategories' }
+          | { type: 'retryGettingProducts' },
       },
 
       context: {
@@ -68,6 +70,7 @@ export const priceMachine =
         isLoadMore: false,
         loadLocation: false,
         refreshing: false,
+        totalPage: 1,
         errorMessage: '' as string | unknown,
       },
 
@@ -84,7 +87,7 @@ export const priceMachine =
                   },
                 ],
                 onError: {
-                  target: '#price machine.errorGettingCategories',
+                  target: 'errorGettingCategories',
                   actions: 'handleError',
                 },
               },
@@ -96,7 +99,7 @@ export const priceMachine =
                   invoke: {
                     src: 'getProducts',
                     onError: {
-                      target: '#price machine.errorGettingCategories',
+                      target: 'errorGettingProducts',
                       actions: 'handleError',
                     },
                     onDone: [
@@ -104,6 +107,10 @@ export const priceMachine =
                         target: 'productLoaded',
                         actions: 'assignProductsDataToContext',
                         cond: 'isNotLastPage',
+                      },
+                      {
+                        target: 'productLoaded',
+                        actions: 'assignStopLoadMore',
                       },
                     ],
                   },
@@ -135,16 +142,29 @@ export const priceMachine =
                     backToIdle: '#price machine.idle',
                   },
                 },
+
+                errorGettingProducts: {
+                  on: {
+                    retryGettingProducts: {
+                      target: 'getProductsBaseOnCategories',
+                      actions: 'handleRetryGettingProducts',
+                    },
+                  },
+                },
               },
 
               initial: 'getProductsBaseOnCategories',
+            },
+
+            errorGettingCategories: {
+              on: {
+                retryGettingCategories: 'loadingProduct',
+              },
             },
           },
 
           initial: 'loadingProduct',
         },
-
-        errorGettingCategories: {},
 
         askPermission: {
           entry: 'enableLoadLocation',
@@ -165,8 +185,8 @@ export const priceMachine =
           invoke: {
             src: 'getCurrentLocation',
             onError: {
-              target: 'errorGettingLocation',
-              actions: 'handleError',
+              target: 'errorGettingCurrentLocation',
+              actions: 'handleErrorCurrentLocation',
             },
             onDone: {
               target: 'currentLocationLoaded',
@@ -192,12 +212,9 @@ export const priceMachine =
           initial: 'foreground',
         },
 
-        errorGettingLocation: {
-          entry: (context, event) => {
-            Alert.alert('something went wrong', context.errorMessage);
-          },
-          after: {
-            '500': 'askPermission',
+        errorFetchLocationDetail: {
+          on: {
+            retryFetchLocationDetail: 'currentLocationLoaded',
           },
         },
 
@@ -211,8 +228,8 @@ export const priceMachine =
             },
 
             onError: {
-              target: 'errorGettingLocation',
-              actions: 'handleError',
+              target: 'errorFetchLocationDetail',
+              actions: 'handleErrorFetchLocationDetail',
             },
           },
         },
@@ -246,6 +263,12 @@ export const priceMachine =
             },
           },
         },
+
+        errorGettingCurrentLocation: {
+          on: {
+            retryGettingCurrentLocation: 'allowed',
+          },
+        },
       },
 
       initial: 'idle',
@@ -259,7 +282,7 @@ export const priceMachine =
           return event.data === true;
         },
         isNotLastPage: (context, event) => {
-          return context.page !== event.data.totalPage;
+          return context.page <= event.data.totalPage;
         },
       },
       actions: {
@@ -294,6 +317,7 @@ export const priceMachine =
             ...event.data.products,
           ];
           return {
+            totalPage: event.data.totalPage,
             loadProduct: false,
             isLoadMore: false,
             refreshing: false,
@@ -338,12 +362,34 @@ export const priceMachine =
             page: 1,
           };
         }),
+        assignStopLoadMore: assign((context, event) => {
+          return {
+            isLoadMore: false,
+          };
+        }),
         handleError: assign((_context, event) => {
           return {
             loadProduct: false,
             refreshing: false,
             isLoadMore: false,
             loadLocation: false,
+            errorMessage: event.data.message,
+          };
+        }),
+        handleRetryGettingProducts: assign((context, event) => {
+          return {
+            productsData: [],
+            page: 1,
+            loadProduct: true,
+          };
+        }),
+        handleErrorCurrentLocation: assign((context, event) => {
+          return {
+            errorMessage: event.data.message,
+          };
+        }),
+        handleErrorFetchLocationDetail: assign((context, event) => {
+          return {
             errorMessage: event.data.message,
           };
         }),
@@ -410,8 +456,7 @@ export const priceMachine =
             );
             return response.data.result;
           } catch (error) {
-            customLog(error);
-            // throw new Error(error.message);
+            throw new Error(error);
           }
         },
         getProducts: async (context, _event) => {
@@ -427,7 +472,7 @@ export const priceMachine =
             );
             return response.data;
           } catch (error) {
-            customLog(error);
+            throw new Error(error);
           }
         },
       },

@@ -36,7 +36,7 @@ export default class BrikApiProductivity {
   };
 
   // homescreen
-  static getAllVisitations = ({ date, page = 0, search = '' }: IGetAll) => {
+  static getAllVisitations = ({ date, page = 1, search = '' }: IGetAll) => {
     const url = new URL(`${API_URL}/productivity/m/flow/all-visitation`);
     const params = url.searchParams;
 
