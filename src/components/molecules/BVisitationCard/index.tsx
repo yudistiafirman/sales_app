@@ -53,7 +53,12 @@ export default function BVisitationCard({
             name={item.name}
             searchQuery={searchQuery}
           />
-          <PillStatus pilStatus={item.pilStatus} />
+          <PillStatus
+            pilStatus={item.pilStatus}
+            color={
+              item.pilStatus === 'Belum Selesai' ? colors.lightGray : undefined
+            }
+          />
         </View>
         {item.picOrCompanyName ? (
           <>

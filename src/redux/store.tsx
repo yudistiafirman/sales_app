@@ -6,6 +6,7 @@ import locationReducer from './reducers/locationReducer';
 import modalReducer from './reducers/modalReducer';
 import productivityFlowReducer from './reducers/productivityFlowReducer';
 import orderReducer from './reducers/orderReducer';
+import snackbarReducer from './reducers/snackbarReducer';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     common: commonReducer,
     camera: cameraReducer,
     order: orderReducer,
+    snackbar: snackbarReducer,
   },
   middleware: (getDefaultMiddleWare) =>
     getDefaultMiddleWare({ serializableCheck: false }),
