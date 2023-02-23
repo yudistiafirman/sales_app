@@ -24,6 +24,7 @@ import {
 import formatCurrency from '@/utils/formatCurrency';
 import { TextInput } from 'react-native-paper';
 import calcTrips from '@/utils/calcTrips';
+import { customLog } from '@/utils/generalFunc';
 
 type ProductCartModalType = {
   productData: ProductDataInterface;
@@ -55,7 +56,7 @@ export default function ProductCartModal({
 }: ProductCartModalType) {
   useEffect(() => {
     setDetailOrder(prevData);
-    console.log(JSON.stringify(productData), 'productData53');
+    customLog(JSON.stringify(productData), 'productData53');
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -65,31 +66,15 @@ export default function ProductCartModal({
     sellPrice: '',
   });
 
-  const calcPrice = useMemo(
-    () => calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost,
-    [detailOrder.volume]
-  );
+  const calcPrice = useMemo(() => {
+    return calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost;
+  }, [detailOrder.volume]);
   const totalPrice =
     +detailOrder.volume * +detailOrder.sellPrice + (calcPrice ? calcPrice : 0);
+  customLog(totalPrice, 'totalPrice75', detailOrder, calcPrice);
 
   const distanceCeil = distance ? Math.ceil(distance / 1000) : 0;
 
-  // const addPrice = useMemo(() => {
-  //   const { Category } = productData;
-  //   const { Parent } = Category;
-  //   const { AdditionalPrices } = Parent;
-
-  //   for (const price of AdditionalPrices) {
-  //     if (price.type === 'DISTANCE') {
-  //       if (distanceCeil >= price.min && distanceCeil <= price.max) {
-  //         console.log(price, 'additioncalprices87');
-
-  //         return price.price;
-  //       }
-  //     }
-  //   }
-  //   return 0;
-  // }, [productData, distanceCeil]);
   function getAddPrice(): {
     delivery: distanceDeliverType;
     distance: distanceDeliverType;
@@ -124,7 +109,11 @@ export default function ProductCartModal({
     setDetailOrder((curr) => {
       return {
         ...curr,
-        [key]: val.toString(),
+        [key]: val
+          .toString()
+          .split('')
+          .filter((char) => /^\d+$/.test(char))
+          .join(''),
       };
     });
   };
@@ -249,7 +238,9 @@ export default function ProductCartModal({
           <BSpacer size={'small'} />
           <View style={style.priceContainer}>
             <Text style={style.hargaText}>Biaya Mobilisasi</Text>
-            <Text style={style.hargaText}>IDR {calcPrice || '0'}</Text>
+            <Text style={style.hargaText}>
+              IDR {calcPrice ? formatCurrency(calcPrice) : '0'}
+            </Text>
           </View>
           <BSpacer size={'small'} />
           <View style={style.priceContainer}>

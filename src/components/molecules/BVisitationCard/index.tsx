@@ -9,9 +9,11 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import resScale from '@/utils/resScale';
 import PillNames from './elements/PillNames';
 import HighlightText from '../../atoms/BHighlightText';
-import { colors, layout } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import BLocationText from '@/components/atoms/BLocationText';
 import { visitationDataType } from '@/interfaces';
+import { Text } from 'react-native-paper';
+import BSpacer from '@/components/atoms/BSpacer';
 
 function iconRender(
   isRenderIcon: boolean,
@@ -47,12 +49,20 @@ export default function BVisitationCard({
       <View style={style.leftSide}>
         <View style={style.top}>
           <HighlightText
-            fontSize={14}
+            fontSize={fonts.size.md}
             name={item.name}
             searchQuery={searchQuery}
           />
           <PillStatus pilStatus={item.pilStatus} />
         </View>
+        {item.picOrCompanyName ? (
+          <>
+            <Text>{item.picOrCompanyName}</Text>
+            <BSpacer size={'verySmall'} />
+          </>
+        ) : (
+          <BSpacer size={'verySmall'} />
+        )}
         <BLocationText location={item.location} />
         <PillNames pilNames={item.pilNames} searchQuery={searchQuery} />
         <View
@@ -86,7 +96,10 @@ const style = StyleSheet.create({
     padding: layout.pad.md,
   },
   leftSide: {
+    flex: 1,
+    paddingStart: layout.pad.md,
     justifyContent: 'space-between',
+    alignSelf: 'center',
   },
   rightSide: {
     justifyContent: 'center',
@@ -96,8 +109,8 @@ const style = StyleSheet.create({
     // height: resScale(20),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: layout.pad.sm,
-    width: resScale(285),
+    // marginBottom: layout.pad.sm,
+    // width: resScale(285),
     alignItems: 'center',
   },
   row: {

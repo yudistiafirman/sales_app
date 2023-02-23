@@ -4,10 +4,12 @@ import { Api } from '@/models';
 import { UserModel } from '@/models/User';
 import { bStorage } from '@/actions';
 import { storageKey } from '@/constants';
-import { setUserData } from '@/redux/reducers/authReducer';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
-const production = false;
+import { signout } from '@/redux/reducers/authReducer';
+import { customLog } from '@/utils/generalFunc';
+import perf from '@react-native-firebase/perf';
+
 let store: any;
+let metric: any;
 
 type FormDataValue =
   | string
@@ -35,6 +37,19 @@ function getContentType<T>(dataToReceived: T) {
   return contentType;
 }
 
+export const customRequest = async (
+  request: any,
+  method: 'GET' | 'POST' | 'DELETE' | 'PUT',
+  data?: Record<string, string> | FormDataValue,
+  withToken?: boolean
+) => {
+  // performance API log
+  metric = await perf().newHttpMetric(request, method);
+  await metric.start();
+
+  return instance(request, await getOptions(method, data, withToken));
+};
+
 export const getOptions = async (
   method: 'GET' | 'POST' | 'DELETE' | 'PUT',
   data?: Record<string, string> | FormDataValue,
@@ -57,16 +72,12 @@ export const getOptions = async (
       options.data = data;
     }
 
-    if (production) {
-      options.timeoutInterval = timeout;
-    } else {
-      options.timeoutInterval = timeout;
-    }
+    options.timeoutInterval = timeout;
     return options;
   } catch (error) {
-    console.log('====================================');
-    console.log(error, 'error/getOptions');
-    console.log('====================================');
+    customLog('====================================');
+    customLog(error, 'error/getOptions');
+    customLog('====================================');
   }
 };
 
@@ -80,17 +91,39 @@ export const injectStore = (_store: any) => {
 instance.interceptors.response.use(
   async (res: AxiosResponse<Api.Response, any>) => {
     const { data, config } = res;
-    // console.log(JSON.stringify(res, null, 2), 'ini apa suuuuuu??');
+
+    // performance API logs
+    if (config.url) {
+      const response = await fetch(config.url);
+      if (response?.status) metric?.setHttpResponseCode(response?.status);
+      try {
+        metric?.setResponseContentType(response?.headers?.get('Content-Type'));
+        let contentLength = null;
+        if (
+          response?.headers?.get('Content-Length') !== undefined &&
+          response?.headers?.get('Content-Length') !== null
+        ) {
+          contentLength = parseInt(
+            response?.headers?.get('Content-Length'),
+            10
+          );
+        }
+        metric?.setResponsePayloadSize(contentLength);
+      } catch (err) {
+        customLog(err);
+      }
+    }
+    await metric?.stop();
+    metric = undefined;
+
     if (!data.success) {
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
         await bStorage.deleteItem(storageKey.userToken);
-        store.dispatch(setUserData(null));
-        // console.log('stop');
+        store.dispatch(signout(false));
         return Promise.resolve(res);
       }
 
-      // console.log('gajalan');
       if (data.error?.code === 'TKN008') {
         const responseRefreshToken = await instance.post<
           any,
@@ -103,9 +136,9 @@ instance.interceptors.response.use(
 
         const newAccToken = resultRefreshToken?.accessToken;
         bStorage.setItem(storageKey.userToken, newAccToken);
-        const decoded = jwtDecode<JwtPayload>(newAccToken);
+        // const decoded = jwtDecode<JwtPayload>(newAccToken);
 
-        store.dispatch(setUserData(decoded));
+        // store.dispatch(setUserData({ userData: decoded }));
 
         config.headers.Authorization = `Bearer ${newAccToken}`;
         const finalResponse = await instance(config);
@@ -115,7 +148,6 @@ instance.interceptors.response.use(
     return Promise.resolve(res);
   },
   (err: any) => {
-    // console.log(JSON.stringify(err, null, 2), 'ini apa??><><><><><><><>');
     return Promise.reject(err);
   }
 );

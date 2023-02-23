@@ -1,6 +1,6 @@
-import { BSpacer } from '@/components';
+import { BHeaderIcon, BSpacer } from '@/components';
 import BErrorText from '@/components/atoms/BErrorText';
-import { colors } from '@/constants';
+import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
@@ -19,6 +19,10 @@ import bStorage from '@/actions/BStorage';
 import { signIn } from '@/actions/CommonActions';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import storageKey from '@/constants/storageKey';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { VERIFICATION } from '@/navigation/ScreenNames';
+import { ENTRY_TYPE } from '@/models/EnumModel';
+import analytics from '@react-native-firebase/analytics';
 
 const Verification = () => {
   const { phoneNumber } = useSelector(
@@ -49,6 +53,8 @@ const Verification = () => {
   }, [countDownOtp]);
 
   React.useEffect(() => {
+    crashlytics().log(VERIFICATION);
+
     if (otpValue.length === 6) {
       onLogin();
     }
@@ -66,12 +72,26 @@ const Verification = () => {
         const { accessToken } = response.data.data;
         const decoded = jwtDecode<JwtPayload>(accessToken);
         await bStorage.setItem(storageKey.userToken, accessToken);
-        dispatch(setUserData(decoded));
+        dispatch(
+          setUserData({ userData: decoded, entryType: ENTRY_TYPE.SALES })
+        );
         setVerificationState({
           ...verificationState,
           errorOtp: '',
           otpValue: '',
           loading: false,
+        });
+        analytics().setUserId(response.data.id);
+        analytics().setUserProperties({
+          role: response.data.type,
+          email: response.data.email,
+          username: response.data.phone,
+        });
+        crashlytics().setUserId(response.data.id);
+        crashlytics().setAttributes({
+          role: response.data.type,
+          email: response.data.email,
+          username: response.data.phone,
         });
       } else {
         throw new Error(response.data.message);
@@ -118,6 +138,28 @@ const Verification = () => {
     });
     navigation.goBack();
   };
+
+  const renderHeaderLeft = React.useCallback(
+    () => (
+      <BHeaderIcon
+        size={layout.pad.xl}
+        iconName="chevron-left"
+        marginRight={layout.pad.xs}
+        marginLeft={layout.pad.sm}
+        onBack={() => {
+          navigation.goBack();
+        }}
+      />
+    ),
+    [navigation]
+  );
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackVisible: false,
+      headerLeft: () => renderHeaderLeft(),
+    });
+  }, [navigation, renderHeaderLeft]);
+
   return (
     <KeyboardAwareScrollView>
       <SafeAreaView style={VerificationStyles.container}>

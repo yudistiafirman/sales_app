@@ -2,90 +2,254 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
+  DeviceEventEmitter,
 } from 'react-native';
-import React, { useState } from 'react';
-import { colors, fonts, layout } from '@/constants';
-import { BContainer, BPic, BSpacer } from '@/components';
-import { resScale } from '@/utils';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { colors, fonts } from '@/constants';
+import {
+  BContainer,
+  BPic,
+  BSpacer,
+  BSpinner,
+  BTouchableText,
+} from '@/components';
 import ProjectBetween from './elements/ProjectBetween';
-import Octicons from 'react-native-vector-icons/Octicons';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
 import BillingModal from './elements/BillingModal';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { CUSTOMER_DETAIL, DOCUMENTS } from '@/navigation/ScreenNames';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import {
+  getProjectDetail,
+  getProjectIndivualDetail,
+} from '@/actions/CommonActions';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import { resetRegion } from '@/redux/reducers/locationReducer';
+import { RootStackParamList } from '@/navigation/CustomStateComponent';
+import { ProjectDetail, visitationListResponse } from '@/interfaces';
+import DocumentWarning from './elements/DocumentWarning';
+import UpdatedAddressWrapper from './elements/UpdatedAddressWrapper';
+import AddNewAddressWrapper from './elements/AddNewAddressWrapper';
+
+type CustomerDetailRoute = RouteProp<RootStackParamList['CUSTOMER_DETAIL']>;
 
 export default function CustomerDetail() {
+  const route = useRoute<CustomerDetailRoute>();
+  const navigation = useNavigation();
+  const dispatch = useDispatch<AppDispatch>();
   const [isBillingVisible, setIsBillingVisible] = useState(false);
+  const [isCompany, setCompany] = useState(false);
+  const [customerData, setCustomerData] = useState<ProjectDetail>({});
+  const [address, setFormattedAddress] = useState('');
+  const [region, setRegion] = useState(null);
+  const [existedVisitation, setExistingVisitation] =
+    useState<visitationListResponse>(null);
+  const dataNotLoadedYet = JSON.stringify(customerData) === '{}';
+  const documentsNotCompleted = customerData?.docs?.length !== 8;
+  const updatedAddress = address.length > 0;
+  const getCompanyDetail = useCallback(
+    async (companyId?: string) => {
+      try {
+        const response = await getProjectDetail(companyId);
+        setCustomerData(response.data[0]);
+      } catch (error) {
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            highlightedText: 'Error',
+            popUpText: 'Error fetching project detail',
+            outsideClickClosePopUp: true,
+          })
+        );
+      }
+    },
+    [dispatch]
+  );
+
+  const getProjectIndividual = useCallback(
+    async (projectId: string) => {
+      try {
+        const response = await getProjectIndivualDetail(projectId);
+        setCustomerData(response.data);
+      } catch (error) {
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            highlightedText: 'Error',
+            popUpText: 'Error fetching visitation Data',
+            outsideClickClosePopUp: true,
+          })
+        );
+      }
+    },
+    [dispatch]
+  );
+  React.useEffect(() => {
+    crashlytics().log(CUSTOMER_DETAIL);
+    dispatch(resetRegion());
+    if (route?.params) {
+      const { existingVisitation } = route.params;
+      setExistingVisitation(existingVisitation);
+      if (existingVisitation.project.company !== null) {
+        const { id } = existingVisitation.project.company;
+        setCompany(true);
+        getCompanyDetail(id);
+      } else {
+        const { id } = existingVisitation.project;
+        getProjectIndividual(id);
+      }
+    }
+  }, [dispatch, getCompanyDetail, getProjectIndividual, route.params]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (existedVisitation !== null) {
+        if (existedVisitation.project.company !== null) {
+          const id = existedVisitation?.project?.company?.id;
+          getCompanyDetail(id);
+        } else {
+          const id = existedVisitation?.project?.id;
+          getProjectIndividual(id);
+        }
+      }
+    }, [existedVisitation, getCompanyDetail, getProjectIndividual])
+  );
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener(
+      'getCoordinateFromCustomerDetail',
+      (data) => {
+        setRegion(data.coordinate);
+        setIsBillingVisible(true);
+      }
+    );
+  }, [setIsBillingVisible]);
+
+  const [filledDocsCount] = useMemo((): number[] => {
+    let count = 0;
+    let totalProperties = 8;
+
+    for (const key in customerData.docs) {
+      totalProperties++;
+      if (Object.prototype.hasOwnProperty.call(customerData.docs, key)) {
+        if (customerData.docs[key]) {
+          count++;
+        }
+      }
+    }
+
+    return [count, totalProperties];
+  }, [customerData.docs]);
+
+  if (dataNotLoadedYet) {
+    return (
+      <View style={styles.loading}>
+        <BSpinner size="large" />
+      </View>
+    );
+  }
+
   return (
     <>
-      <BillingModal
-        setIsModalVisible={setIsBillingVisible}
-        isModalVisible={isBillingVisible}
-      />
-      <View style={styles.labelWarning}>
-        <Text style={styles.labelText}>
-          Ada dokumen pelanggan yang belum dilengkapi.
-        </Text>
-        <TouchableOpacity style={styles.outlineButton}>
-          <Text style={styles.buttonText}>Lengkapi Dokumen</Text>
-        </TouchableOpacity>
-      </View>
+      {isBillingVisible && (
+        <BillingModal
+          setFormattedAddress={setFormattedAddress}
+          setIsModalVisible={setIsBillingVisible}
+          isModalVisible={isBillingVisible}
+          region={region}
+          setRegion={setRegion}
+          projectId={customerData.projectId}
+        />
+      )}
+
+      {documentsNotCompleted && (
+        <DocumentWarning
+          docs={customerData.docs}
+          projectId={customerData.projectId}
+        />
+      )}
+
       <ScrollView showsVerticalScrollIndicator={false}>
         <BContainer>
           <Text style={styles.partText}>Pelanggan</Text>
           <BSpacer size={'extraSmall'} />
           <View style={styles.between}>
             <Text style={styles.fontW300}>Nama</Text>
-            <Text style={styles.fontW400}>PT. Guna Karya Mandiri</Text>
+            <Text style={styles.fontW400}>
+              {isCompany
+                ? customerData?.company?.name
+                : customerData?.mainPic?.name}
+            </Text>
           </View>
           <BSpacer size={'small'} />
           <Text style={styles.partText}>Proyek</Text>
           <BSpacer size={'extraSmall'} />
-          <ProjectBetween projects={[{}, {}, {}]} />
+          <ProjectBetween
+            projects={{
+              id: customerData?.projectId,
+              name: customerData?.projectName,
+            }}
+          />
           <BSpacer size={'extraSmall'} />
           <View style={styles.between}>
             <Text style={styles.partText}>PIC</Text>
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Text style={styles.seeAllText}>Lihat Semua</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <BSpacer size={'extraSmall'} />
-          <BPic />
+          <BPic
+            name={customerData?.mainPic?.name}
+            email={customerData?.mainPic?.email}
+            phone={customerData?.mainPic?.phone}
+            position={customerData?.mainPic?.position}
+          />
           <BSpacer size={'extraSmall'} />
           <Text style={styles.partText}>Alamat Penagihan</Text>
           <BSpacer size={'extraSmall'} />
           <View style={styles.billingStyle}>
-            <TouchableOpacity
-              style={styles.addBilling}
-              onPress={() => {
-                setIsBillingVisible((curr) => !curr);
-              }}
-            >
-              <Octicons
-                name="plus"
-                color={colors.primary}
-                size={fonts.size.xs}
-                style={styles.plusStyle}
+            {updatedAddress ? (
+              <UpdatedAddressWrapper
+                onPress={() => setIsBillingVisible(true)}
+                address={address}
               />
-              <Text style={styles.seeAllText}>Tambah Alamat Penagihan</Text>
-            </TouchableOpacity>
+            ) : (
+              <AddNewAddressWrapper onPress={() => setIsBillingVisible(true)} />
+            )}
           </View>
           <BSpacer size={'extraSmall'} />
           <View style={styles.between}>
             <Text style={styles.partText}>Dokumen</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllText}>Lihat Semua</Text>
-            </TouchableOpacity>
+            <BTouchableText
+              title="Lihat Semua"
+              textStyle={styles.seeAllText}
+              onPress={() =>
+                navigation.navigate(DOCUMENTS, {
+                  docs: customerData.docs,
+                  projectId: customerData.projectId,
+                })
+              }
+            />
           </View>
           <BSpacer size={'extraSmall'} />
           <View style={styles.between}>
             <Text style={styles.fontW300}>Kelengkapan Dokumen</Text>
-            <Text style={styles.fontW300}>2/6</Text>
+            <Text
+              style={styles.fontW300}
+            >{`${customerData?.docs?.length}/8`}</Text>
           </View>
           <ProgressBar
             styleAttr="Horizontal"
             indeterminate={false}
-            progress={0.33}
+            progress={filledDocsCount / 8 ? filledDocsCount / 8 : 0}
             color={colors.primary}
           />
         </BContainer>
@@ -94,32 +258,6 @@ export default function CustomerDetail() {
   );
 }
 const styles = StyleSheet.create({
-  labelWarning: {
-    backgroundColor: colors.status.offYellow,
-    paddingHorizontal: layout.pad.lg,
-    paddingVertical: layout.pad.md,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  labelText: {
-    color: colors.text.secYellow,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.xs,
-    flex: 0.9,
-  },
-  outlineButton: {
-    borderColor: colors.primary,
-    borderWidth: resScale(1),
-    borderRadius: layout.radius.md,
-    paddingVertical: layout.pad.sm,
-    paddingHorizontal: layout.pad.md,
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: colors.primary,
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.xs,
-  },
   partText: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[600],
@@ -129,11 +267,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  seeAllText: {
-    color: colors.primary,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
-  },
+
   fontW300: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[300],
@@ -146,13 +280,16 @@ const styles = StyleSheet.create({
   },
   billingStyle: {
     alignItems: 'center',
-    padding: layout.pad.lg,
   },
-  addBilling: {
-    flexDirection: 'row',
+
+  loading: {
+    justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
   },
-  plusStyle: {
-    marginRight: layout.pad.sm,
+  seeAllText: {
+    color: colors.primary,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.sm,
   },
 });

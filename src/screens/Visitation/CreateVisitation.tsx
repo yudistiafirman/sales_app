@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { View, DeviceEventEmitter } from 'react-native';
 import {
   BBackContinueBtn,
   BButtonPrimary,
   BContainer,
   BHeaderIcon,
+  BHeaderTitle,
   BSpacer,
 } from '@/components';
 import SecondStep from './elements/second';
@@ -38,6 +44,9 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { resetRegion, updateRegion } from '@/redux/reducers/locationReducer';
 import { layout } from '@/constants';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { CREATE_VISITATION } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 const labels = [
   'Alamat Proyek',
@@ -120,7 +129,7 @@ function populateData(
     value: any
   ) => void
 ) {
-  console.log(JSON.stringify(existingData), 'difunction');
+  customLog(JSON.stringify(existingData), 'difunction');
   const { project } = existingData;
   const { company, PIC: picList, mainPic } = project;
   if (company) {
@@ -184,6 +193,8 @@ const CreateVisitation = () => {
   });
 
   useEffect(() => {
+    crashlytics().log(CREATE_VISITATION);
+
     if (existingVisitation) {
       updateValue('existingVisitationId', existingVisitation.id);
       populateData(existingVisitation, updateValueOnstep);
@@ -227,8 +238,8 @@ const CreateVisitation = () => {
   };
 
   const addPic = (state: PIC) => {
-    if (values.stepTwo.pics.length < 2) {
-      state.isSelected = false;
+    if (values.stepTwo.pics.length === 0) {
+      state.isSelected = true;
     }
     updateValueOnstep('stepTwo', 'pics', [...values.stepTwo.pics, state]);
   };
@@ -236,6 +247,32 @@ const CreateVisitation = () => {
   const openBottomSheet = () => {
     bottomSheetRef.current?.expand();
   };
+
+  const renderHeaderLeft = useCallback(
+    () => (
+      <BHeaderIcon
+        size={layout.pad.xl - layout.pad.md}
+        iconName="x"
+        marginRight={layout.pad.lg}
+        onBack={() => {
+          if (values.step) {
+            // setCurrentPosition(currentPosition - 1);
+            updateValue('step', values.step - 1);
+          } else {
+            navigation.goBack();
+          }
+        }}
+      />
+    ),
+    [navigation, values.step, updateValue]
+  );
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackVisible: false,
+      headerTitle: () => BHeaderTitle('Buat Kunjungan', 'flex-start'),
+      headerLeft: () => renderHeaderLeft(),
+    });
+  }, [navigation, renderHeaderLeft]);
 
   const stepRender = [
     <FirstStep />,

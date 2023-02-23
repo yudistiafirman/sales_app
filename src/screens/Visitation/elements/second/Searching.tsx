@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import {
   BFlatlistItems,
   BSearchBar,
@@ -60,8 +60,6 @@ const SearchFlow = ({
   }, []);
 
   const onChangeSearch = (text: string) => {
-    // console.log(isSearch, 'isSearch53');
-
     if (!isSearch && text) {
       onSearch(true);
     }
@@ -115,6 +113,7 @@ const SearchFlow = ({
       updateValueOnstep('stepTwo', 'pics', picList);
     }
     updateValueOnstep('stepTwo', 'projectName', item.name);
+    updateValueOnstep('stepTwo', 'projectId', item.id);
     if (item.Visitation) {
       updateValueOnstep('stepTwo', 'visitationId', item.Visitation.id);
       let order = +item.Visitation.order;
@@ -138,23 +137,37 @@ const SearchFlow = ({
     }, [projects]);
 
   const sceneToRender = React.useCallback(() => {
-    if (searchQuery.length <= 3) {
+    if (searchQuery.length <= 2) {
       return null;
     }
     return (
       <BFlatlistItems
-        renderItem={(item) => (
-          <BVisitationCard
-            item={{
-              name: item.name,
-              location: item.locationAddress.line1,
-            }}
-            searchQuery={searchQuery}
-            onPress={() => {
-              onSelectProject(item);
-            }}
-          />
-        )}
+        renderItem={(item) => {
+          let picOrCompanyName = '-';
+          if (item?.Company?.name) {
+            picOrCompanyName = item.Company?.name;
+          } else if (item?.mainPic?.name) {
+            picOrCompanyName = item?.mainPic?.name;
+          }
+
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                onSelectProject(item);
+              }}
+            >
+              <BVisitationCard
+                item={{
+                  name: item.name,
+                  location: item.locationAddress.line1,
+                  picOrCompanyName: picOrCompanyName,
+                }}
+                searchQuery={searchQuery}
+                isRenderIcon={false}
+              />
+            </TouchableOpacity>
+          );
+        }}
         searchQuery={searchQuery}
         isLoading={isProjectLoading}
         data={projects}

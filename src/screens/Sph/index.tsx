@@ -5,10 +5,13 @@ import React, {
   useRef,
   useCallback,
   useContext,
+  useLayoutEffect,
 } from 'react';
-// import StepIndicator from 'react-native-step-indicator';
-// import StepperIndicator from '../../components/molecules/StepIndicator';
-import { BStepperIndicator as StepperIndicator } from '@/components';
+import {
+  BHeaderIcon,
+  BHeaderTitle,
+  BStepperIndicator as StepperIndicator,
+} from '@/components';
 
 import Steps from './elements/Steps';
 import { SphContext, SphProvider } from './elements/context/SphContext';
@@ -19,13 +22,17 @@ import SecondStep from './elements/2secondStep';
 import ThirdStep from './elements/3thirdStep';
 import FourthStep from './elements/4fourthStep';
 import FifthStep from './elements/5fifthStep';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
 import { Region } from 'react-native-maps';
 import { getLocationCoordinates } from '@/actions/CommonActions';
+import { layout } from '@/constants';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SPH } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 const labels = [
   'Cari Pelanggan',
@@ -63,7 +70,7 @@ function stepHandler(
   stepController: (step: number) => void
 ) {
   if (sphData.selectedCompany) {
-    if (checkSelected(sphData.selectedCompany.PIC)) {
+    if (checkSelected(sphData.selectedCompany?.PIC)) {
       if (!stepsDone.includes(0)) {
         setSteps((curr) => {
           return [...new Set(curr), 0];
@@ -98,8 +105,9 @@ function stepHandler(
   } else {
     setSteps((curr) => curr.filter((num) => num !== 2));
   }
+  customLog(sphData.chosenProducts.length, 'lengthproduct');
 
-  if (sphData.chosenProducts.length > 0) {
+  if (sphData.chosenProducts.length) {
     setSteps((curr) => {
       return [...new Set(curr), 3];
     });
@@ -107,12 +115,13 @@ function stepHandler(
     setSteps((curr) => curr.filter((num) => num !== 3));
   }
   const max = Math.max(...stepsDone);
-  console.log(stepsDone, 'stepsDone');
+  customLog(stepsDone, 'stepsDone');
 
   stepController(max);
 }
 
 function SphContent() {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const route = useRoute();
   const stepRef = useRef<ScrollView>(null);
@@ -121,17 +130,19 @@ function SphContent() {
   const [sphData, updateState, setCurrentPosition, currentPosition] =
     useContext(SphContext);
   const stepControll = useCallback((step: number) => {
-    console.log(step, 'stepsss');
+    customLog(step, 'stepsss');
   }, []);
 
   useEffect(() => {
+    crashlytics().log(SPH);
+
     stepHandler(sphData, stepsDone, setStepsDone, stepControll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
 
   const getLocationCoord = async (coordinate: Region) => {
     try {
-      console.log(coordinate, 'coordinateonchange51');
+      customLog(coordinate, 'coordinateonchange51');
       const { data } = await getLocationCoordinates(
         // '',
         coordinate.longitude as unknown as number,
@@ -142,7 +153,7 @@ function SphContent() {
       if (!result) {
         throw data;
       }
-      console.log(result, 'getLocationCoordinate');
+      customLog(result, 'getLocationCoordinate');
 
       const _coordinate = {
         latitude: result?.lat,
@@ -163,7 +174,7 @@ function SphContent() {
       updateState('distanceFromLegok')(result.distance.value);
       dispatch(updateRegion(_coordinate));
     } catch (error) {
-      console.log(JSON.stringify(error), 'onChangeRegionerror');
+      customLog(JSON.stringify(error), 'onChangeRegionerror');
     }
   };
 
@@ -180,7 +191,7 @@ function SphContent() {
         getOneProjectById({ projectId: projectId })
       ).unwrap();
       dispatch(closePopUp());
-      console.log(JSON.stringify(response), 'response138');
+      customLog(JSON.stringify(response), 'response138');
       const project = response[0];
       const { locationAddress } = project;
       if (project.mainPic) {
@@ -188,28 +199,17 @@ function SphContent() {
       }
       // if ()
       updateState('selectedCompany')(project);
-      console.log(locationAddress, 'locationAddress146');
+      customLog(locationAddress, 'locationAddress146');
 
       if (locationAddress) {
         if (locationAddress.lon && locationAddress.lat) {
           const longitude = +locationAddress.lon;
           const latitude = +locationAddress.lat;
           getLocationCoord({ longitude: longitude, latitude: latitude });
-          // dispatch(
-          //   updateRegion({
-          //     formattedAddress: locationAddress.line1,
-          //     latitude: latitude,
-          //     longitude: longitude,
-          //     lat: latitude,
-          //     long: latitude,
-          //     PostalId: undefined,
-          //     line2: locationAddress?.line2,
-          //   })
-          // );
         }
       }
     } catch (error) {
-      console.log(error, 'errorgetVisitationById');
+      customLog(error, 'errorgetVisitationById');
       dispatch(closePopUp());
       dispatch(
         openPopUp({
@@ -223,16 +223,36 @@ function SphContent() {
 
   useEffect(() => {
     const projectId = route.params?.projectId;
-    console.log(projectId, 'visitationId122');
+    customLog(projectId, 'visitationId122');
     if (projectId) {
       getProjectById(projectId);
-      // (async () => {
-      //   await dispatch(
-      //     getOneVisitation({ visitationId: visitationId })
-      //   ).unwrap();
-      // })();
     }
   }, []);
+
+  const renderHeaderLeft = useCallback(
+    () => (
+      <BHeaderIcon
+        size={layout.pad.xl - layout.pad.md}
+        iconName="x"
+        marginRight={layout.pad.lg}
+        onBack={() => {
+          if (currentPosition) {
+            setCurrentPosition(currentPosition - 1);
+          } else {
+            navigation.goBack();
+          }
+        }}
+      />
+    ),
+    [currentPosition, navigation, setCurrentPosition]
+  );
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackVisible: false,
+      headerTitle: () => BHeaderTitle('Buat SPH', 'flex-start'),
+      headerLeft: () => renderHeaderLeft(),
+    });
+  }, [navigation, renderHeaderLeft, currentPosition]);
 
   return (
     <View style={style.container}>

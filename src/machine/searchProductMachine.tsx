@@ -2,6 +2,7 @@ import {
   getAllBrikProducts,
   getProductsCategories,
 } from '@/actions/InventoryActions';
+import { customLog } from '@/utils/generalFunc';
 import { assign, createMachine } from 'xstate';
 
 export const searchProductMachine =
@@ -190,7 +191,7 @@ export const searchProductMachine =
             );
             return response.data.result;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
         onGettingProductsData: async (context) => {
@@ -210,7 +211,7 @@ export const searchProductMachine =
             );
             return response.data.products;
           } catch (error) {
-            console.log(error);
+            customLog(error);
           }
         },
       },

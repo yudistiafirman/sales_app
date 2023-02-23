@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   BBackContinueBtn,
   BContainer,
@@ -21,7 +21,6 @@ import {
   SphStateInterface,
 } from '@/interfaces';
 import { BFlatlistItems } from '@/components';
-
 import ChoosePicModal from '../ChoosePicModal';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
@@ -32,9 +31,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { postOrderSph } from '@/redux/async-thunks/orderThunks';
 import { RootState } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SPH } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
+
+function countNonNullValues(array) {
+  let count = 0;
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] !== null) {
+      count++;
+    }
+  }
+  return count;
+}
 
 function payloadMapper(sphState: SphStateInterface) {
-  console.log(JSON.stringify(sphState), 'sphState24');
+  customLog(JSON.stringify(sphState), 'sphState24');
 
   const payload = {
     shippingAddress: {} as shippingAddressType,
@@ -167,14 +179,14 @@ function payloadMapper(sphState: SphStateInterface) {
     if (sphState.billingAddress.fullAddress) {
       payload.billingAddress.line2 = sphState.billingAddress.fullAddress;
     }
-    console.log(sphState.billingAddress.addressAutoComplete, 'testing9292');
+    customLog(sphState.billingAddress.addressAutoComplete, 'testing9292');
   } else {
     payload.billingAddress = payload.shippingAddress;
   }
 
   // if (!sphState.isBillingAddressSame) {
   // }
-  console.log(JSON.stringify(payload), 'payload1012');
+  customLog(JSON.stringify(payload), 'payload1012');
 
   return payload;
 }
@@ -182,7 +194,7 @@ function payloadMapper(sphState: SphStateInterface) {
 export default function FifthStep() {
   const dispatch = useDispatch();
   const { isOrderLoading } = useSelector((state: RootState) => state.order);
-  const [sphState, stateUpdate] = useContext(SphContext);
+  const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
 
   const bottomSheetRef = React.useRef<BottomSheet>(null);
 
@@ -209,6 +221,11 @@ export default function FifthStep() {
       },
     },
   ];
+
+  React.useEffect(() => {
+    crashlytics().log(SPH + '-Step5');
+  }, []);
+
   function addPicHandler() {
     setIsModalVisible(false);
     bottomSheetRef.current?.expand();
@@ -216,24 +233,35 @@ export default function FifthStep() {
 
   async function buatSph() {
     try {
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: 'Menyimpan SPH',
+          outsideClickClosePopUp: false,
+        })
+      );
       const payload = payloadMapper(sphState);
       const photoFiles = Object.values(sphState.paymentRequiredDocuments);
       const isNoPhotoToUpload = photoFiles.every((val) => val === null);
       payload.projectDocs = [];
+      const validPhotoCount = countNonNullValues(photoFiles);
+      customLog(validPhotoCount, 'validPhotoCount241');
+
       if (
-        sphState.uploadedAndMappedRequiredDocs.length === 0 &&
-        !isNoPhotoToUpload
+        (sphState.uploadedAndMappedRequiredDocs.length === 0 &&
+          !isNoPhotoToUpload) ||
+        validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
       ) {
-        console.log('ini mau upload foto', photoFiles);
+        customLog('ini mau upload foto', photoFiles);
         const photoResponse = await dispatch(
           postUploadFiles({ files: photoFiles, from: 'sph' })
         ).unwrap();
-        console.log('upload kelar');
+        customLog('upload kelar');
 
-        const files = photoResponse.map((photo) => {
+        const files: { documentId: string; fileId: string }[] = [];
+        photoResponse.forEach((photo) => {
           const photoName = `${photo.name}.${photo.type}`;
           const photoNamee = `${photo.name}.jpg`;
-
           Object.keys(sphState.paymentRequiredDocuments);
           let foundPhoto;
           for (const documentId in sphState.paymentRequiredDocuments) {
@@ -259,18 +287,32 @@ export default function FifthStep() {
             }
           }
           if (foundPhoto) {
-            return {
+            // return {
+            //   documentId: foundPhoto,
+            //   fileId: photo.id,
+            // };
+            files.push({
               documentId: foundPhoto,
               fileId: photo.id,
-            };
+            });
           }
         });
-        payload.projectDocs = files;
+        customLog(files, 'filesmapped');
+
+        const isFilePhotoNotNull = files.every((val) => val === null);
+        if (!isFilePhotoNotNull) {
+          payload.projectDocs = files;
+        }
         stateUpdate('uploadedAndMappedRequiredDocs')(files);
       } else if (!isNoPhotoToUpload) {
-        payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
+        const isFilePhotoNotNull = sphState.uploadedAndMappedRequiredDocs.every(
+          (val) => val === null
+        );
+        if (!isFilePhotoNotNull) {
+          payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
+        }
       }
-      console.log(JSON.stringify(payload), 'payloadfinal');
+      customLog(JSON.stringify(payload), 'payloadfinal');
 
       const sphResponse = await dispatch(postOrderSph({ payload })).unwrap();
       const { sph } = sphResponse;
@@ -278,9 +320,11 @@ export default function FifthStep() {
         throw sphResponse;
       }
       setMadeSphData(sph);
+      dispatch(closePopUp());
       setIsStepDoneVisible(true);
     } catch (error) {
-      console.log(error, 'errorbuatSph54');
+      const messageError = error?.message;
+      customLog(error, 'errorbuatSph54', messageError);
       dispatch(closePopUp());
       dispatch(
         openPopUp({
@@ -291,20 +335,6 @@ export default function FifthStep() {
       );
     }
   }
-
-  useEffect(() => {
-    if (isOrderLoading) {
-      dispatch(
-        openPopUp({
-          popUpType: 'loading',
-          popUpText: 'Menyimpan SPH',
-          outsideClickClosePopUp: false,
-        })
-      );
-    } else {
-      dispatch(closePopUp());
-    }
-  }, [isOrderLoading]);
 
   return (
     <BContainer>
@@ -334,6 +364,7 @@ export default function FifthStep() {
           isRenderIcon={false}
         />
       </View>
+      <BSpacer size={'extraSmall'} />
       <View style={style.picLable}>
         <Text style={style.picText}>PIC</Text>
         <TouchableOpacity
@@ -344,7 +375,7 @@ export default function FifthStep() {
           <Text style={style.gantiPicText}>Ganti PIC</Text>
         </TouchableOpacity>
       </View>
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size={'verySmall'} />
       <BPic
         name={sphState?.selectedPic?.name}
         position={sphState?.selectedPic?.position}
@@ -374,8 +405,11 @@ export default function FifthStep() {
       <BForm inputs={inputsData} />
       <BBackContinueBtn
         isContinueIcon={false}
-        continueText={'Buat Sph'}
+        continueText={'Buat SPH'}
         onPressContinue={buatSph}
+        onPressBack={() => {
+          setCurrentPosition(3);
+        }}
       />
       <BSheetAddPic
         ref={bottomSheetRef}
@@ -415,7 +449,7 @@ const style = StyleSheet.create({
   },
   gantiPicText: {
     fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.md,
+    fontSize: fonts.size.sm,
     color: colors.primary,
   },
   produkLabel: {

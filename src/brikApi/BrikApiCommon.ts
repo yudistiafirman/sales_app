@@ -1,9 +1,5 @@
 import Config from 'react-native-config';
-const production = false;
-const PRODUCTION = production;
-const API_URL = PRODUCTION
-  ? Config.API_URL_COMMON_PROD
-  : Config.API_URL_COMMON_DEV;
+const API_URL = Config.API_URL_COMMON;
 
 export default class BrikApiCommon {
   static getLocationCoordinates = (
@@ -87,6 +83,36 @@ export default class BrikApiCommon {
     params.append('size', '10');
     // }
 
+    return url.toString();
+  };
+
+  static projectDoc = () => {
+    const url = new URL(`${API_URL}/common/projectDoc`);
+
+    return url.toString();
+  };
+
+  static getProjectDetail = (companyId?: string) => {
+    const url = new URL(`${API_URL}/common/m/flow/project`);
+    const params = url.searchParams;
+    if (companyId) {
+      params.append('companyId', companyId);
+    }
+
+    return url.toString();
+  };
+
+  static getProjectDetailIndividual = (projectId: string) => {
+    const url = new URL(
+      `${API_URL}/common/m/flow/project/${projectId}/individual`
+    );
+    return url.toString();
+  };
+
+  static updateBillingAddress = (projectId: string) => {
+    const url = new URL(
+      `${API_URL}/common/m/flow/project/${projectId}/billing-address`
+    );
     return url.toString();
   };
 

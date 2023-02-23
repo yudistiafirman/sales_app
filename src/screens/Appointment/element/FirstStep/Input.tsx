@@ -165,7 +165,7 @@ const Inputs = () => {
       </View>
       <BSpacer size="small" />
       <View>
-        <BForm inputs={inputs} />
+        <BForm titleBold="500" inputs={inputs} />
         <BSpacer size="large" />
       </View>
     </>

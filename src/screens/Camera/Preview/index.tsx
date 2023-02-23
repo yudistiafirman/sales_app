@@ -18,9 +18,14 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
-import { CREATE_VISITATION, SUBMIT_FORM } from '@/navigation/ScreenNames';
+import {
+  CREATE_VISITATION,
+  IMAGE_PREVIEW,
+  SUBMIT_FORM,
+} from '@/navigation/ScreenNames';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -37,6 +42,10 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const photo = route?.params?.photo?.path;
   const navigateTo = route?.params?.navigateTo;
   const existingVisitation = route?.params?.existingVisitation;
+
+  React.useEffect(() => {
+    crashlytics().log(IMAGE_PREVIEW);
+  }, []);
 
   const savePhoto = () => {
     const imagePayloadType: 'COVER' | 'GALLERY' = navigateTo

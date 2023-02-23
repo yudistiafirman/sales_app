@@ -17,6 +17,7 @@ import { TextInput } from 'react-native-paper';
 import { Input } from '@/interfaces';
 import { useNavigation } from '@react-navigation/native';
 import { CALENDAR } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 type LastStepPopUpType = {
   isVisible: boolean;
@@ -64,7 +65,7 @@ export default function LastStepPopUp({
         ],
         placeholder: 'Pilih Alasan',
         onChange: (value: any) => {
-          console.log(value, 'onchange dropdown');
+          customLog(value, 'onchange dropdown');
           closedLostValueOnChange.dropdownOnchange(value);
         },
       },

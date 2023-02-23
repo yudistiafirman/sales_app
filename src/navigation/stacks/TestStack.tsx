@@ -5,7 +5,7 @@ import Location from '@/screens/Location';
 import SearchAreaProject from '@/screens/SearchAreaProject';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
 import Sph from '@/screens/Sph';
-import CalendarScreen from '@/screens/CalendarScreen';
+import CalendarScreen from '@/screens/Calendar';
 import Preview from '@/screens/Camera/Preview';
 import Camera from '@/screens/Camera';
 import Appointment from '@/screens/Appointment';
@@ -13,6 +13,7 @@ import Schedule from '@/screens/Operation/Schedule';
 import SubmitForm from '@/screens/Operation/SubmitForm';
 import PO from '@/screens/PurchaseOrder';
 import TransactionDetail from '@/screens/Transaction/Detail';
+import CreateSchedule from '@/screens/CreateSchedule';
 import CustomerDetail from '@/screens/CustomerDetail';
 
 /**
@@ -102,6 +103,12 @@ function TestStack({
       name: 'TransactionDetail',
       title: 'Transaksi',
       component: TransactionDetail,
+    }),
+    BStackScreen({
+      Stack: Stack,
+      name: 'CreateSchedule',
+      title: 'Buat Jadwal',
+      component: CreateSchedule,
     }),
     BStackScreen({
       Stack: Stack,

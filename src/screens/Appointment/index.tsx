@@ -1,4 +1,5 @@
 import {
+  BBackContinueBtn,
   BButtonPrimary,
   BHeaderIcon,
   BHeaderTitle,
@@ -33,11 +34,10 @@ import moment from 'moment';
 import { postBookingAppointment } from '@/actions/ProductivityActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import {
-  closePopUp,
-  openPopUp,
-  setIsPopUpVisible,
-} from '@/redux/reducers/modalReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { APPOINTMENT } from '@/navigation/ScreenNames';
+
 const { width } = Dimensions.get('window');
 const Appointment = () => {
   const navigation = useNavigation();
@@ -93,11 +93,16 @@ const Appointment = () => {
     });
   }, [navigation, renderHeaderLeft, step]);
 
+  React.useEffect(() => {
+    crashlytics().log(APPOINTMENT);
+  }, []);
+
   const renderBtnIcon = () => (
     <Icon
       name="right"
       style={{ marginTop: layout.pad.sm }}
       color={colors.white}
+      size={resScale(24)}
     />
   );
 
@@ -153,9 +158,10 @@ const Appointment = () => {
       } as projectPayloadType,
       pic: [] as picPayloadType[],
     };
-
     if (stepOne[customerType].PIC.length === 1) {
-      payload.pic = stepOne[customerType].PIC;
+      const pic = [];
+      pic.push({ ...stepOne[customerType].PIC[0], isSelected: true });
+      payload.pic = pic;
     } else {
       const selectedPic = stepOne[customerType].PIC.filter((v) => v.isSelected);
       payload.pic = selectedPic;
@@ -195,7 +201,6 @@ const Appointment = () => {
       payload.visitation.bookingDate = selectDate.valueOf();
     }
     payload.visitation.dateVisit = today.valueOf();
-    payload.visitation.finishDate = today.valueOf();
     if (stepOne[customerType].name) {
       payload.project.name = stepOne[customerType].name;
     }
@@ -287,6 +292,27 @@ const Appointment = () => {
       navigation.goBack();
     }
   }, [dispatchValue, inVisitationDateStep, navigation, selectedDate]);
+
+  function isCanAdvanceToStep2() {
+    const customerTypeCondition = stepOne.customerType;
+    const companyNameCondition = stepOne.company.Company;
+    const projectNameConditionIndividu = stepOne.individu.name;
+    const projectNameConditionCompany = stepOne.company.name;
+    const picIndividu = stepOne.individu.PIC ? stepOne.individu.PIC : [];
+    const picCompany = stepOne.company.PIC ? stepOne.company.PIC : [];
+
+    if (customerTypeCondition === 'company') {
+      return (
+        !!companyNameCondition &&
+        !!projectNameConditionCompany &&
+        picCompany.length > 0
+      );
+    }
+    if (customerTypeCondition === 'individu') {
+      return !!projectNameConditionIndividu && picIndividu.length > 0;
+    }
+  }
+
   return (
     <View style={style.container}>
       <BStepperIndicator
@@ -294,25 +320,34 @@ const Appointment = () => {
         currentStep={step}
         labels={labels}
       />
-      <BSpacer size="medium" />
-      <Steps currentPosition={step} stepsToRender={stepsToRender} />
-      {btnShown && (
-        <View style={style.footer}>
-          <BButtonPrimary
-            onPress={onBackPress}
-            buttonStyle={{ width: resScale(132) }}
-            isOutline
-            title="Kembali"
-          />
-          <BButtonPrimary
-            title="Lanjut"
-            onPress={onNext}
-            disable={inVisitationDateStep && !selectedDate}
-            buttonStyle={{ width: resScale(202) }}
-            rightIcon={() => renderBtnIcon()}
-          />
-        </View>
-      )}
+      <BSpacer size="small" />
+      <View style={style.content}>
+        <Steps currentPosition={step} stepsToRender={stepsToRender} />
+
+        {btnShown && (
+          <>
+            {step === 0 ? (
+              <View style={{ width: '100%' }}>
+                <BButtonPrimary
+                  title="Lanjut"
+                  onPress={onNext}
+                  disable={!isCanAdvanceToStep2() && !selectedDate}
+                  // buttonStyle={{ width: resScale(202) }}
+                  rightIcon={() => renderBtnIcon()}
+                />
+              </View>
+            ) : (
+              <BBackContinueBtn
+                backText="Kembali"
+                continueText="Lanjut"
+                onPressBack={onBackPress}
+                onPressContinue={onNext}
+                disableContinue={!selectedDate}
+              />
+            )}
+          </>
+        )}
+      </View>
       <BottomSheetAddPIC
         isVisible={isModalPicVisible}
         addPic={(dataPic: PIC) =>
@@ -333,7 +368,7 @@ const Appointment = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     padding: layout.pad.lg,
   },
   footer: {
@@ -342,6 +377,11 @@ const style = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     top: width + width - resScale(100),
+  },
+  content: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
   },
 });
 

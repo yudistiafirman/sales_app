@@ -6,20 +6,12 @@ import {
   TouchableOpacity,
   DeviceEventEmitter,
 } from 'react-native';
-import {
-  BForm,
-  BLabel,
-  BSpacer,
-  BText,
-  BTextInput,
-  SVGName,
-} from '@/components';
+import { BForm, BLabel, BSpacer, BText, BTextInput } from '@/components';
 import { CreateVisitationThirdStep, Input } from '@/interfaces';
 import { MONTH_LIST, STAGE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
 import ProductChip from './ProductChip';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import { TextInput } from 'react-native-paper';
-
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -28,6 +20,7 @@ import {
   SEARCH_PRODUCT,
 } from '@/navigation/ScreenNames';
 import { fonts } from '@/constants';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
@@ -100,7 +93,7 @@ const ThirdStep = () => {
       options: [
         {
           title: 'Cash Before Delivery',
-          icon: SVGName.IC_CBD,
+          icon: cbd,
           value: 'CBD',
           onChange: () => {
             onChange('paymentType')('CBD');
@@ -108,7 +101,7 @@ const ThirdStep = () => {
         },
         {
           title: 'Credit',
-          icon: SVGName.IC_CREDIT,
+          icon: credit,
           value: 'CREDIT',
           onChange: () => {
             onChange('paymentType')('CREDIT');
@@ -149,6 +142,8 @@ const ThirdStep = () => {
   };
 
   useEffect(() => {
+    crashlytics().log(CREATE_VISITATION + '-Step3');
+
     DeviceEventEmitter.addListener('event.testEvent', listenerCallback);
     return () => {
       DeviceEventEmitter.removeAllListeners('event.testEvent');
@@ -187,9 +182,12 @@ const ThirdStep = () => {
         <TouchableOpacity
           style={styles.touchable}
           onPress={() => {
+            const distance = values.stepOne.locationAddress?.distance?.value
+              ? values.stepOne.locationAddress?.distance?.value
+              : values.stepOne.createdLocation?.distance?.value;
             navigation.navigate(SEARCH_PRODUCT, {
               isGobackAfterPress: true,
-              distance: values.stepOne.createdLocation?.distance?.value,
+              distance: distance,
             });
           }}
         />

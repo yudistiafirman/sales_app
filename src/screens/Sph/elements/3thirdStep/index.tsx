@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { BContainer, BForm, BSpacer, SVGName } from '@/components';
+import { BContainer, BForm, BSpacer } from '@/components';
 import { Input } from '@/interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -13,6 +13,9 @@ import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn'
 import { SphContext } from '../context/SphContext';
 import { fetchSphDocuments } from '@/redux/async-thunks/commonThunks';
 import { useDispatch } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SPH } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 type documentType = {
   id: string;
@@ -20,6 +23,8 @@ type documentType = {
   payment_type: 'CBD' | 'CREDIT';
   is_required: boolean;
 };
+const cbd = require('@/assets/icon/Visitation/cbd.png');
+const credit = require('@/assets/icon/Visitation/credit.png');
 
 type docResponse = {
   cbd: documentType[];
@@ -43,40 +48,9 @@ export default function ThirdStep() {
   });
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
 
-  // useEffect(() => {
-  //   if (sphState?.paymentType) {
-  //     // console.log(sphState?.paymentType, 'paymenttype');
-  //     // (async () => {
-  //     //   try {
-  //     //     setFileKeys([]);
-  //     //     setIsLoading(true);
-  //     //     const dataFileKey = await fileToUploads(sphState.paymentType);
-  //     //     const documentObj: { [key: string]: any } = {};
-  //     //     dataFileKey.forEach((key) => {
-  //     //       documentObj[key.key] = null;
-  //     //     });
-  //     //     const parentReqDocKeys = Object.keys(
-  //     //       sphState.paymentRequiredDocuments
-  //     //     );
-  //     //     const localReqDocKeys = Object.keys(documentObj);
-  //     //     const sphDocString = JSON.stringify(parentReqDocKeys);
-  //     //     const stateDocString = JSON.stringify(localReqDocKeys);
-  //     //     if (sphDocString === stateDocString && parentReqDocKeys.length > 0) {
-  //     //       setDocuments(sphState.paymentRequiredDocuments);
-  //     //     } else {
-  //     //       setDocuments(documentObj);
-  //     //     }
-  //     //     setIsLoading(false);
-  //     //     setFileKeys(dataFileKey);
-  //     //   } catch (error) {
-  //     //     setIsLoading(false);
-  //     //     console.log(error, 'error');
-  //     //   }
-  //     // })();
-  //   }
-  // }, [sphState?.paymentType]);
-
   useEffect(() => {
+    crashlytics().log(SPH + '-Step3');
+
     if (sphState?.paymentType) {
       const objKey: {
         CREDIT: 'credit';
@@ -173,7 +147,7 @@ export default function ThirdStep() {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log('error getDocument128', error);
+      customLog('error getDocument128', error);
     }
   }
 
@@ -204,7 +178,7 @@ export default function ThirdStep() {
         options: [
           {
             title: 'Cash Before Delivery',
-            icon: SVGName.IC_CBD,
+            icon: cbd,
             value: 'CBD',
             onChange: () => {
               // if (stateUpdate) {
@@ -215,7 +189,7 @@ export default function ThirdStep() {
           },
           {
             title: 'Credit',
-            icon: SVGName.IC_CREDIT,
+            icon: credit,
             value: 'CREDIT',
             onChange: () => {
               // if (stateUpdate) {
@@ -233,7 +207,7 @@ export default function ThirdStep() {
         onChange: (data: any) => {
           if (data) {
             setDocuments((curr) => {
-              console.log(curr, 'curr298');
+              customLog(curr, 'curr298');
 
               return {
                 ...curr,
@@ -299,7 +273,9 @@ export default function ThirdStep() {
           )}
           <BSpacer size={'small'} />
           <BBackContinueBtn
-            onPressBack={() => {}}
+            onPressBack={() => {
+              setCurrentPosition(1);
+            }}
             onPressContinue={() => {
               if (setCurrentPosition) {
                 setCurrentPosition(3);

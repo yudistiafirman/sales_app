@@ -19,7 +19,7 @@ const WEEK_LIST = [
 
 const MONTH_LIST = [
   {
-    label: 'January',
+    label: 'Januari',
     value: 1,
   },
   {
@@ -102,6 +102,17 @@ const VEHICLE_LIST = [
   },
 ];
 
+const PO_METHOD_LIST = [
+  {
+    label: 'Pompa',
+    value: 'pompa',
+  },
+  {
+    label: 'Non-Pompa',
+    value: 'non-pompa',
+  },
+];
+
 const DRIVER_LIST = [
   {
     label: 'Bejo',
@@ -139,4 +150,5 @@ export {
   VEHICLE_LIST,
   DRIVER_LIST,
   TM_CONDITION,
+  PO_METHOD_LIST,
 };

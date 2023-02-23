@@ -54,7 +54,7 @@ export default function TargetBar({
   }
 
   return (
-    <ShimmerPlaceHolder style={style.shimmerStyle} visible={!isLoading}>
+    <ShimmerPlaceHolder style={style.shimmerStyle} visible={true}>
       <View style={style.targetBar}>
         <View style={style.emptyProgressCont}>
           <View style={style.progressCont}>
@@ -62,17 +62,16 @@ export default function TargetBar({
               <View key={i + 'current'} style={[style.progress]} />
             ))}
           </View>
+          <ShimmerPlaceHolder style={style.loadingCont} visible={!isLoading} />
 
-          {[
-            emptyProgress.map((_, i) => (
-              <EmptyItem
-                key={i.toString()}
-                isLast={i === emptyProgress.length - 1}
-                isFirst={i === 0}
-                isTargetMarker={i === maxVisitation - 1}
-              />
-            )),
-          ]}
+          {emptyProgress.map((_, i) => (
+            <EmptyItem
+              key={i.toString()}
+              isLast={i === emptyProgress.length - 1}
+              isFirst={i === 0}
+              isTargetMarker={i === maxVisitation - 1}
+            />
+          ))}
         </View>
       </View>
     </ShimmerPlaceHolder>
@@ -98,9 +97,17 @@ const style = StyleSheet.create({
   progressCont: {
     position: 'absolute',
     flexDirection: 'row',
-    zIndex: 5,
+    zIndex: 2,
     borderRadius: layout.radius.md,
     backgroundColor: colors.primary,
+  },
+  loadingCont: {
+    position: 'absolute',
+    flexDirection: 'row',
+    zIndex: 5,
+    borderRadius: layout.radius.md,
+    width: '100%',
+    height: resScale(8),
   },
   progress: {
     height: resScale(8),

@@ -88,8 +88,7 @@ export default function BottomSheetFlatlist({
 }
 
 const style = StyleSheet.create({
-  flatListContainer: {
-  },
+  flatListContainer: {},
   flatListLoading: {
     marginTop: layout.pad.md,
     justifyContent: 'center',

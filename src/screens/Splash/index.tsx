@@ -2,7 +2,18 @@ import { colors } from '@/constants';
 import { resScale } from '@/utils';
 import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { SPLASH } from '@/navigation/ScreenNames';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+
 const Splash = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  React.useEffect(() => {
+    crashlytics().log(SPLASH);
+  }, [dispatch]);
+
   return (
     <View style={styles.container}>
       <Image

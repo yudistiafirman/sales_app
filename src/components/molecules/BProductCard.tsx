@@ -97,7 +97,7 @@ const style = StyleSheet.create({
     backgroundColor: colors.white,
   },
   productName: {
-    fontFamily: fonts.family.montserrat[500],
+    fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.md,
     color: colors.text.darker,
   },

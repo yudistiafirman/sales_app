@@ -10,6 +10,8 @@ interface BCalendarProps {
   onDayPress?: ((date: DateData) => void) | undefined;
   markedDates?: MarkedDates | undefined;
   onMonthChange?: ((date: DateData) => void) | undefined;
+  isLoading?: boolean;
+  minDate?: string;
 }
 
 const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
@@ -32,6 +34,8 @@ const BCalendar = ({
   onDayPress,
   markedDates,
   onMonthChange,
+  isLoading,
+  minDate,
 }: BCalendarProps) => {
   LocaleConfig.locales.id = {
     monthNames: [
@@ -62,8 +66,8 @@ const BCalendar = ({
       'Nov.',
       'Des.',
     ],
-    dayNames: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
-    dayNamesShort: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+    dayNames: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
+    dayNamesShort: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
     today: 'Hari ini',
   };
 
@@ -86,6 +90,8 @@ const BCalendar = ({
       markedDates={markedDates}
       renderArrow={(direction) => <RenderArrow direction={direction} />}
       onMonthChange={onMonthChange}
+      displayLoadingIndicator={isLoading}
+      minDate={minDate}
     />
   );
 };

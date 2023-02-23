@@ -37,6 +37,7 @@ export type RootStackParamList = {
   };
   SPH: {};
   TransactionDetail: { title: string; data: any };
+  CreateSchedule: {};
 };
 
 /**

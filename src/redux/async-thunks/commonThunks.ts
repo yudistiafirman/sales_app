@@ -6,8 +6,10 @@ import {
   projectGetOneById,
   getSphDocuments,
   getAddressSuggestion,
+  postProjectDoc,
 } from '@/actions/CommonActions';
 import { projectResponseType } from '@/interfaces';
+import { customLog } from '@/utils/generalFunc';
 
 type errorType = {
   success: boolean;
@@ -31,10 +33,14 @@ export const postUploadFiles = createAsyncThunk<
 
     return data.data;
   } catch (error) {
-    console.log(error.message, 'errormsgcommon/postUploadFiles');
+    customLog(error.message, 'errormsgcommon/postUploadFiles');
 
-    console.log(error?.response?.data, 'error at', 'common/postUploadFiles');
-    return rejectWithValue(error.message);
+    customLog(error?.response?.data, 'error at', 'common/postUploadFiles');
+    let errorData = error.message;
+    if (error?.response?.data) {
+      errorData = error?.response?.data;
+    }
+    return rejectWithValue(errorData);
   }
 });
 
@@ -48,11 +54,11 @@ export const getAllProject = createAsyncThunk<any, { search?: string }>(
 
       return data;
     } catch (error) {
-      console.log(error, 'errorPlain/getAllProject');
+      customLog(error, 'errorPlain/getAllProject');
 
-      console.log(error.message, 'message/getAllProject');
+      customLog(error.message, 'message/getAllProject');
 
-      console.log(error?.response?.data, 'error at', 'common/getAllProject');
+      customLog(error?.response?.data, 'error at', 'common/getAllProject');
       return rejectWithValue(error.message);
     }
   }
@@ -70,7 +76,7 @@ export const getProjectsByUserThunk = createAsyncThunk<
 
     return data;
   } catch (error) {
-    console.log(error.message, 'message/getProjectsByUserThunk');
+    customLog(error.message, 'message/getProjectsByUserThunk');
     return rejectWithValue(error.message);
   }
 });
@@ -85,7 +91,7 @@ export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
 
       return data;
     } catch (error) {
-      console.log(error.message, 'message/getProjectsByUserThunk');
+      customLog(error.message, 'message/getProjectsByUserThunk');
       return rejectWithValue(error.message);
     }
   }
@@ -100,7 +106,7 @@ export const fetchSphDocuments = createAsyncThunk(
       if (data.error) throw data as errorType;
       return data;
     } catch (error) {
-      console.log(error.message, 'message/fetchSphDocuments');
+      customLog(error.message, 'message/fetchSphDocuments');
       return rejectWithValue(error.message);
     }
   }
@@ -117,8 +123,36 @@ export const fetchAddressSuggestion = createAsyncThunk<
       if (data.error) throw data as errorType;
       return data;
     } catch (error) {
-      console.log(error.message, 'message/fetchAddressSuggestion');
+      customLog(error.message, 'message/fetchAddressSuggestion');
       return rejectWithValue(error.message);
+    }
+  }
+);
+export const postProjectDocByprojectId = createAsyncThunk<
+  any,
+  {
+    payload: {
+      projectId: string;
+      documentId: string;
+      fileId: string;
+    };
+  }
+>(
+  'common/postProjectDocByprojectId',
+  async ({ payload }, { rejectWithValue }) => {
+    try {
+      const response = await postProjectDoc(payload);
+      const { data } = response;
+      if (data.error) throw data as errorType;
+      return data;
+    } catch (error) {
+      customLog(error.message, 'message/postProjectDocByprojectId');
+      customLog(error?.response, 'message/postProjectDocByprojectId149');
+      let errorData = error.message;
+      if (error?.response?.data) {
+        errorData = error?.response?.data;
+      }
+      return rejectWithValue(errorData);
     }
   }
 );

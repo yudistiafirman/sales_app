@@ -1,7 +1,6 @@
 import {
   StyleProp,
   ViewStyle,
-  ImageSourcePropType,
   TextStyle,
   KeyboardType,
   KeyboardTypeOptions,
@@ -95,6 +94,7 @@ interface Input {
   labelStyle?: ViewStyle;
   textInputAsButton?: boolean;
   textInputAsButtonOnPress?: () => void;
+  outlineColor?: string;
 }
 
 interface Styles {
@@ -478,6 +478,7 @@ type visitationDataType = {
   status?: string;
   pilNames?: string[];
   pilStatus?: 'Selesai' | 'Belum Selesai';
+  picOrCompanyName?: string;
 };
 
 interface projectResponseType {
@@ -556,6 +557,16 @@ type requiredDocType = {
   fileId: string;
 };
 
+type Docs = {
+  docId?: string;
+  docName?: string;
+  paymentType?: string;
+  isRequired?: boolean;
+  type?: string;
+  fileName?: string;
+  url?: string;
+};
+
 interface pdfDataType {
   type: string;
   name: string;
@@ -571,6 +582,20 @@ interface postSphResponseType {
   letterLink: string;
   letter: pdfDataType[];
   pos: pdfDataType[];
+}
+
+interface ProjectDetail {
+  projectId?: string;
+  projectName?: string;
+  locationAddress?: Address;
+  billingAddress?: Address;
+  company: {
+    id?: string;
+    name?: string;
+  };
+  mainPic: PIC;
+  pics: PIC[];
+  docs:Docs[]
 }
 
 export type {
@@ -608,4 +633,6 @@ export type {
   Address,
   requiredDocType,
   postSphResponseType,
+  Docs,
+  ProjectDetail
 };

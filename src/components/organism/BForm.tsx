@@ -144,6 +144,8 @@ const renderInput = (
     labelStyle,
     textInputAsButton,
     textInputAsButtonOnPress,
+    outlineColor,
+    loading,
   } = input;
 
   if (type === 'quantity') {
@@ -203,11 +205,15 @@ const renderInput = (
           disabled={isInputDisable}
           left={LeftIcon && <TextInput.Icon icon={LeftIcon} />}
           contentStyle={textStyles}
+          outlineColor={outlineColor}
         />
         {isError && (
-          <BText size="small" color="primary" bold="100">
-            {customerErrorMsg || defaultErrorMsg}
-          </BText>
+          <>
+            <BSpacer size={'verySmall'} />
+            <BText size="small" color="error" bold="300">
+              {customerErrorMsg || defaultErrorMsg}
+            </BText>
+          </>
         )}
       </View>
     );
@@ -421,10 +427,16 @@ const renderInput = (
   if (type === 'fileInput') {
     return (
       <React.Fragment>
-        <BFileInput label={label} value={value} onChange={onChange} />
+        <BFileInput
+          isLoading={loading}
+          label={label}
+          value={value}
+          onChange={onChange}
+          isError={isError}
+        />
         {isError && (
-          <BText size="small" color="primary" bold="100">
-            {`${label} harus diisi`}
+          <BText style={{ fontSize: fonts.size.xs }} color="primary" bold="400">
+            {customerErrorMsg}
           </BText>
         )}
       </React.Fragment>

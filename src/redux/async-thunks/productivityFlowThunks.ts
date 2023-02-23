@@ -7,6 +7,7 @@ import {
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { visitationListResponse } from '@/interfaces';
 import { payloadPostType } from '@/interfaces';
+import { customLog } from '@/utils/generalFunc';
 
 type paramType = {
   month: number;
@@ -36,7 +37,7 @@ export const getVisitationsList = createAsyncThunk<
       if (data.error) throw data as errorType;
       return data.data as visitationListResponse[];
     } catch (error) {
-      console.log(
+      customLog(
         error?.response?.data,
         'error at',
         'productivityFlow/getVisitations'
@@ -60,7 +61,7 @@ export const postVisitation = createAsyncThunk<
       if (data.error) throw data as errorType;
       return data.data;
     } catch (error) {
-      console.log(
+      customLog(
         error?.response?.data,
         'error at',
         'productivityFlow/postVisitation'
@@ -85,7 +86,7 @@ export const getOneVisitation = createAsyncThunk<
       if (data.error) throw data as errorType;
       return data.data;
     } catch (error) {
-      console.log(
+      customLog(
         error?.response?.data,
         'error at77',
         'productivityFlow/getOneVisitation'
@@ -109,7 +110,7 @@ export const putVisitationFlow = createAsyncThunk<
       if (data.error) throw data as errorType;
       return data.data;
     } catch (error) {
-      console.log(
+      customLog(
         error?.response?.data,
         'error at106',
         'productivityFlow/putVisitationFlow'

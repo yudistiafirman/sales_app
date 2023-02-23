@@ -30,6 +30,7 @@ import ReactNativeBlobUtil from 'react-native-blob-util';
 import RNPrint from 'react-native-print';
 import { useDispatch } from 'react-redux';
 import { openPopUp } from '@/redux/reducers/modalReducer';
+import { customLog } from '@/utils/generalFunc';
 
 type StepDoneType = {
   isModalVisible: boolean;
@@ -83,10 +84,10 @@ function downloadPdf({ url, title, downloadPopup }: downloadType) {
     .then((res) => {
       // the temp file path
       downloadPopup();
-      console.log('The file saved to ', res.path());
+      customLog('The file saved to ', res.path());
     })
     .catch((err) => {
-      console.log(err, 'error download', url);
+      customLog(err, 'error download', url);
     });
 }
 async function printRemotePDF(url?: string) {
@@ -98,7 +99,7 @@ async function printRemotePDF(url?: string) {
       filePath: url,
     });
   } catch (error) {
-    console.log(error, 'error print');
+    customLog(error, 'error print');
   }
 }
 
@@ -142,11 +143,14 @@ export default function StepDone({
     try {
       if (!url) throw 'no url';
       await Share.share({
-        url: url,
-        message: `Link PDF SPH ${stateCompanyName}, ${url}`,
+        url: url.replace(/\s/g, '%20'),
+        message: `Link PDF SPH ${stateCompanyName}, ${url.replace(
+          /\s/g,
+          '%20'
+        )}`,
       });
     } catch (error) {
-      console.log(error, 'errorsharefunc');
+      customLog(error, 'errorsharefunc');
     }
   };
 
@@ -204,7 +208,7 @@ export default function StepDone({
             <BProjectDetailCard
               productionTime={sphResponse?.createdTime}
               expiredDate={sphResponse?.expiryTime}
-              status={'Diajukan'}
+              status={'Diterbitkan'}
               paymentMethod={paymentMethod[sphState.paymentType]}
               projectName={sphState.selectedCompany?.name}
             />

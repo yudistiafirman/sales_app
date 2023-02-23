@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Splash from '@/screens/Splash';
-import { useBootStrapAsync } from '@/hooks';
 import Operation from '@/screens/Operation';
-import { USER_TYPE } from '@/models/EnumModel';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 import { JwtPayload } from 'jwt-decode';
 import SecurityTabsV2 from './tabs/SecurityTabsV2';
 import SalesTabsV2 from './tabs/SalesTabsV2';
@@ -23,17 +22,19 @@ import {
 import OperationHeaderRight from './Operation/HeaderRight';
 import OperationStack from './Operation/Stack';
 import SalesStack from './Sales/Stack';
-
+import HunterAndFarmers from '@/screens/HunterAndFarmers';
+import { useAsyncConfigSetup } from '@/hooks';
+import { customLog } from '@/utils/generalFunc';
 const Stack = createNativeStackNavigator();
 
 const RootScreen = (
   userData: JwtPayload | null,
   isSignout: boolean,
-  userType?: USER_TYPE
+  userType?: ENTRY_TYPE
 ) => {
   if (userData !== null) {
     switch (userType) {
-      case USER_TYPE.OPERATION:
+      case ENTRY_TYPE.OPERATION:
         return (
           <>
             <Stack.Screen
@@ -49,7 +50,7 @@ const RootScreen = (
             {OperationStack(Stack)}
           </>
         );
-      case USER_TYPE.SECURITY:
+      case ENTRY_TYPE.SECURITY:
         return (
           <>
             <Stack.Screen
@@ -64,7 +65,7 @@ const RootScreen = (
             {OperationStack(Stack)}
           </>
         );
-      default:
+      case ENTRY_TYPE.SALES:
         return (
           <>
             <Stack.Screen
@@ -98,6 +99,12 @@ const RootScreen = (
           component={Verification}
           options={{
             headerTitle: VERIFICATION_TITLE,
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: fonts.family.montserrat[600],
+              fontSize: fonts.size.lg,
+              color: colors.text.inactive,
+            },
           }}
         />
       </>
@@ -106,27 +113,37 @@ const RootScreen = (
 };
 
 function AppNavigatorV2() {
-  const { isLoading, userData, isSignout } = useBootStrapAsync();
-  const userType = USER_TYPE.SALES;
+  const {
+    isLoading,
+    userData,
+    isSignout,
+    entryType,
+    hunterScreen,
+    enable_hunter_farmer,
+  } = useAsyncConfigSetup();
 
+  customLog('state hunterfarmer: ', hunterScreen, enable_hunter_farmer);
   if (isLoading) {
     return <Splash />;
   } else {
     return (
-      <Stack.Navigator
-        screenOptions={{
-          headerTitleAlign: 'left',
-          headerShadowVisible: false,
-          headerShown: true,
-          headerTitleStyle: {
-            color: colors.text.darker,
-            fontSize: fonts.size.lg,
-            fontWeight: fonts.family.montserrat[600],
-          },
-        }}
-      >
-        {RootScreen(userData, isSignout, userType)}
-      </Stack.Navigator>
+      <>
+        <HunterAndFarmers />
+        <Stack.Navigator
+          screenOptions={{
+            headerTitleAlign: 'left',
+            headerShadowVisible: false,
+            headerShown: true,
+            headerTitleStyle: {
+              color: colors.text.darker,
+              fontSize: fonts.size.lg,
+              fontWeight: fonts.family.montserrat[600],
+            },
+          }}
+        >
+          {RootScreen(userData, isSignout, entryType)}
+        </Stack.Navigator>
+      </>
     );
   }
 }

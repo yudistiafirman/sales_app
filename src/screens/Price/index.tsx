@@ -19,8 +19,10 @@ import {
   CREATE_VISITATION,
   LOCATION,
   SEARCH_PRODUCT,
+  TAB_PRICE_LIST,
   TAB_PRICE_LIST_TITLE,
 } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const PriceList = () => {
@@ -33,6 +35,8 @@ const PriceList = () => {
   const [fromVisitation, setFromVisitation] = React.useState(false);
 
   React.useEffect(() => {
+    crashlytics().log(TAB_PRICE_LIST);
+
     if (state.matches('denied')) {
       const subscription = AppState.addEventListener(
         'change',

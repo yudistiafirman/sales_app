@@ -3,7 +3,7 @@ import { colors, layout } from '@/constants';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
 import React, { useCallback } from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 const { width } = Dimensions.get('window');
 import { selectedCompanyInterface } from '@/interfaces/index';
@@ -34,9 +34,14 @@ const SearchingCustomer = () => {
         });
       }
 
+      const picList = item.PIC;
+      if (picList.length === 1) {
+        picList[0].isSelected = true;
+      }
+
       const companyDataToSave = {
         Company: { id: item.Company.id, title: item.Company.name },
-        PIC: item.PIC,
+        PIC: picList,
         Visitation: item.Visitation,
         locationAddress: item.locationAddress,
         mainPic: item.mainPic,
@@ -69,18 +74,36 @@ const SearchingCustomer = () => {
     }
     return (
       <BFlatlistItems
-        renderItem={(item) => (
-          <BVisitationCard
-            item={{
-              name: item.name,
-              location: item.locationAddress.line1,
-            }}
-            searchQuery={searchQuery}
-            onPress={() => {
-              onPressCard(item);
-            }}
-          />
-        )}
+        renderItem={(item) => {
+          let picOrCompanyName = '-';
+          if (item?.Company?.name) {
+            picOrCompanyName = item.Company?.name;
+          } else if (item?.mainPic?.name) {
+            picOrCompanyName = item?.mainPic?.name;
+          }
+
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                let handlePicNull = { ...item };
+                if (!handlePicNull.PIC) {
+                  handlePicNull.PIC = [];
+                }
+                onPressCard(handlePicNull);
+              }}
+            >
+              <BVisitationCard
+                item={{
+                  name: item.name,
+                  location: item.locationAddress.line1,
+                  picOrCompanyName: picOrCompanyName,
+                }}
+                searchQuery={searchQuery}
+                isRenderIcon={false}
+              />
+            </TouchableOpacity>
+          );
+        }}
         searchQuery={searchQuery}
         isLoading={isProjectLoading}
         data={projects}
@@ -89,7 +112,7 @@ const SearchingCustomer = () => {
   }, [searchQuery, isProjectLoading, projects, onPressCard]);
 
   return (
-    <View style={{ height: width + resScale(160)}}>
+    <View style={{ height: width + resScale(160) }}>
       <BTabViewScreen
         isLoading={false}
         screenToRender={sceneToRender}

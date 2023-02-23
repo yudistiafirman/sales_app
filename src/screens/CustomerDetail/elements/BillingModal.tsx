@@ -4,60 +4,85 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import React, { useMemo, useState } from 'react';
 import Modal from 'react-native-modal';
 import { resScale } from '@/utils';
 import { colors, fonts, layout } from '@/constants';
-import { BButtonPrimary, BContainer, BForm, BSpacer } from '@/components';
+import {
+  BButtonPrimary,
+  BContainer,
+  BForm,
+  BLabel,
+  BSpacer,
+  BText,
+} from '@/components';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Input } from '@/interfaces';
+import { Address, Input } from '@/interfaces';
+import { SEARCH_AREA, CUSTOMER_DETAIL } from '@/navigation/ScreenNames';
+import { useNavigation } from '@react-navigation/native';
+import { AppDispatch } from '@/redux/store';
+import { useDispatch } from 'react-redux';
+import Icons from 'react-native-vector-icons/Feather';
+import { updateBillingAddress } from '@/actions/CommonActions';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 type BillingModalType = {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setFormattedAddress: React.Dispatch<React.SetStateAction<any>>;
+  setRegion: React.Dispatch<React.SetStateAction<any>>;
+  region: any;
+  projectId: string | undefined;
 };
+
+const { height } = Dimensions.get('window');
 
 export default function BillingModal({
   isModalVisible,
   setIsModalVisible,
+  setFormattedAddress,
+  projectId,
+  region,
+  setRegion,
 }: BillingModalType) {
   const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
     undefined
   );
   const [billingState, setBillingState] = useState({
     billingAddress: '',
+    errorBilling: '',
     kelurahan: '',
+    errorKelurahan: '',
     kecamatan: '',
+    errorKecamatan: '',
     kabupaten: '', // kota
   });
 
+  const navigation = useNavigation();
+  const dispatch = useDispatch<AppDispatch>();
+  const nameAddress = React.useMemo(() => {
+    const idx = region?.formattedAddress?.split(',');
+    if (idx?.length > 1) {
+      return idx?.[0];
+    }
+
+    return 'Nama Alamat';
+  }, [region?.formattedAddress]);
+
   const inputsData: Input[] = useMemo(() => {
     return [
-      {
-        label: 'Alamat penagihan',
-        isRequire: true,
-        isError: true,
-        type: 'area',
-        placeholder: 'contoh: Jalan Kusumadinata no 5',
-        onChange: (text: string) => {
-          console.log(text, 'inputsData e');
-        },
-        value: billingState.billingAddress,
-      },
       {
         label: 'Kelurahan',
         isRequire: false,
         type: 'textInput',
         placeholder: 'Masukkan kelurahan',
         onChange: (text: string) => {
-          //   if (stateUpdate && sphState) {
-          //     stateUpdate('billingAddress')({
-          //       ...sphState?.billingAddress,
-          //       name: text,
-          //     });
-          //   }
-          console.log(text, 'kelurahan text');
+          setBillingState((prevState) => ({
+            ...prevState,
+            kelurahan: text.nativeEvent.text,
+          }));
         },
         value: billingState.kelurahan,
       },
@@ -67,13 +92,10 @@ export default function BillingModal({
         type: 'textInput',
         placeholder: 'Masukkan kecamatan',
         onChange: (text: string) => {
-          //   if (stateUpdate && sphState) {
-          //     stateUpdate('billingAddress')({
-          //       ...sphState?.billingAddress,
-          //       name: text,
-          //     });
-          //   }
-          console.log(text, 'kecamatan text');
+          setBillingState((prevState) => ({
+            ...prevState,
+            kecamatan: text.nativeEvent.text,
+          }));
         },
         value: billingState.kecamatan,
       },
@@ -83,18 +105,76 @@ export default function BillingModal({
         type: 'textInput',
         placeholder: 'Masukkan kota',
         onChange: (text: string) => {
-          //   if (stateUpdate && sphState) {
-          //     stateUpdate('billingAddress')({
-          //       ...sphState?.billingAddress,
-          //       name: text,
-          //     });
-          //   }
-          console.log(text, 'kota text');
+          setBillingState((prevState) => ({
+            ...prevState,
+            kabupaten: text,
+          }));
         },
         value: billingState.kabupaten,
       },
     ];
   }, [billingState]);
+
+  const onPressAddAddress = async () => {
+    let body: Address = {};
+
+    if (region?.postalId) {
+      body.postalid = region.postalId;
+    }
+    if (region?.longitude) {
+      body.lon = region.longitude;
+    }
+    if (region?.latitude) {
+      body.lat = region.latitude;
+    }
+    if (region?.formattedAddress) {
+      body.line1 = region?.formattedAddress;
+    }
+
+    if (billingState.kelurahan) {
+      body.line2 =
+        body.line2 !== undefined
+          ? body.line2 + ' ' + billingState.kelurahan
+          : billingState.kelurahan;
+    }
+
+    if (billingState.kecamatan) {
+      body.line2 =
+        body.line2 !== undefined
+          ? body.line2 + ' ' + billingState.kecamatan
+          : billingState.kecamatan;
+    }
+    if (billingState.kabupaten) {
+      body.line2 =
+        body.line2 !== undefined
+          ? body.line2 + ' ' + billingState.kabupaten
+          : billingState.kabupaten;
+    }
+    try {
+      const response = await updateBillingAddress(projectId, body);
+      if (response.data.success) {
+        setFormattedAddress(region.formattedAddress);
+        setRegion(null);
+        setIsModalVisible((curr) => !curr);
+        dispatch(
+          openPopUp({
+            popUpType: 'success',
+            popUpText: 'Update alamat berhasil',
+            outsideClickClosePopUp: true,
+          })
+        );
+      }
+    } catch (error) {
+      setIsModalVisible(false);
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: error.message,
+          outsideClickClosePopUp: true,
+        })
+      );
+    }
+  };
 
   return (
     <Modal
@@ -127,10 +207,43 @@ export default function BillingModal({
               setScrollOffSet(event.nativeEvent.contentOffset.y);
             }}
           >
-            {/* <Text>BillingModal</Text> */}
-            <BForm inputs={inputsData} />
+            <BLabel bold="500" label={'Alamat Proyek'} isRequired />
+            <BSpacer size="verySmall" />
+            <TouchableOpacity
+              style={styles.searchAddress}
+              onPress={() => {
+                setIsModalVisible(false);
+                navigation.navigate(SEARCH_AREA, {
+                  from: CUSTOMER_DETAIL,
+                  eventKey: 'getCoordinateFromCustomerDetail',
+                });
+              }}
+            >
+              <View>
+                <Icons
+                  name="map-pin"
+                  size={resScale(20)}
+                  color={colors.primary}
+                />
+              </View>
+              <View style={styles.selectedAddress}>
+                <>
+                  <BLabel bold="500" label={nameAddress!} />
+                  <BSpacer size="verySmall" />
+                  <BText bold="300">
+                    {region?.formattedAddress || 'Detail Alamat'}
+                  </BText>
+                </>
+              </View>
+            </TouchableOpacity>
+            <BSpacer size="extraSmall" />
+            <BForm titleBold="500" inputs={inputsData} />
           </ScrollView>
-          <BButtonPrimary title="Tambah Alamat" />
+          <BButtonPrimary
+            disable={region === null}
+            onPress={onPressAddAddress}
+            title="Tambah Alamat"
+          />
         </BContainer>
       </View>
     </Modal>
@@ -144,7 +257,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
-    height: resScale(400),
+    height: height / 1.6,
     borderTopLeftRadius: layout.radius.lg,
     borderTopRightRadius: layout.radius.lg,
   },
@@ -158,4 +271,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.montserrat[700],
     fontSize: fonts.size.lg,
   },
+  searchAddress: {
+    flexDirection: 'row',
+    paddingVertical: layout.pad.md,
+    backgroundColor: colors.border.disabled,
+    borderRadius: layout.radius.sm,
+    paddingHorizontal: layout.pad.ml,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectedAddress: { paddingStart: layout.pad.ml, flex: 1 },
 });

@@ -1,27 +1,18 @@
 import BrikApiOrder from '@/brikApi/BrikApiOrder';
-import { getOptions, request } from '@/networking/request';
+import { customRequest } from '@/networking/request';
 
 export const getAllOrders = async () => {
-  return request(
-    BrikApiOrder.getAllOrders(),
-    await getOptions('GET', undefined, true)
-  );
+  return customRequest(BrikApiOrder.getAllOrders(), 'GET', undefined, true);
 };
 
 export const getOrderByID = async (id: string) => {
-  return request(
-    BrikApiOrder.getOrderByID(id),
-    await getOptions('GET', undefined, true)
-  );
+  return customRequest(BrikApiOrder.getOrderByID(id), 'GET', undefined, true);
 };
 import { sphOrderPayloadType } from '@/interfaces';
+import { customLog } from '@/utils/generalFunc';
 
 export const postSph = async (payload: sphOrderPayloadType) => {
-  console.log(payload, 'payload sebelum request');
+  customLog(payload, 'payload sebelum request');
 
-  return request(
-    // 'http://192.168.18.23:3004/order/m/flow/quotation',
-    BrikApiOrder.orderSphPost(),
-    await getOptions('POST', payload, true)
-  );
+  return customRequest(BrikApiOrder.orderSphPost(), 'POST', payload, true);
 };

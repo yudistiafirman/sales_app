@@ -13,6 +13,7 @@ import { SphContext } from '../../context/SphContext';
 // const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 import Entypo from 'react-native-vector-icons/Entypo';
+import { customLog } from '@/utils/generalFunc';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -48,8 +49,6 @@ export default function SelectedPic({
 }: SelectedPicType) {
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [sphState, stateUpdate] = useContext(SphContext);
-
-  console.log(sphState.picList, 'list51');
 
   const inputsData: Input[] = useMemo(() => {
     return [
@@ -94,14 +93,14 @@ export default function SelectedPic({
 
   useEffect(() => {
     if (sphState.selectedCompany) {
-      if (sphState.selectedCompany.mainPic?.id && !sphState.selectedPic) {
-        const foundMainPic = sphState.selectedCompany.PIC.find(
-          (pic) => pic.id === sphState.selectedCompany.mainPic.id
+      if (sphState.selectedCompany?.mainPic?.id && !sphState.selectedPic) {
+        const foundMainPic = sphState.selectedCompany?.PIC?.find(
+          (pic) => pic.id === sphState.selectedCompany?.mainPic?.id
         );
-        stateUpdate('selectedPic')(foundMainPic);
+        if (foundMainPic) stateUpdate('selectedPic')(foundMainPic);
       }
-      if (sphState.selectedCompany.PIC) {
-        const listPic = sphState.selectedCompany.PIC.map((pic) => {
+      if (sphState.selectedCompany?.PIC) {
+        const listPic = sphState.selectedCompany?.PIC?.map((pic) => {
           if (sphState.selectedPic) {
             if (sphState.selectedPic.id) {
               if (pic.id === sphState.selectedPic.id) {
@@ -126,21 +125,16 @@ export default function SelectedPic({
     }
   }, []);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     setIsLoading(true);
-  //     setFlatListData([]);
-  //     const data = await dummyReq();
-  //     console.log(data, 'data dummy');
-
-  //     setFlatListData(data);
-  //     setIsLoading(false);
-  //   })();
-  // }, []);
-
   const openBottomSheet = () => {
     bottomSheetRef.current?.expand();
   };
+
+  let picOrCompanyName = '-';
+  if (sphState?.selectedCompany?.Company?.name) {
+    picOrCompanyName = sphState?.selectedCompany.Company?.name;
+  } else if (sphState?.selectedCompany?.mainPic?.name) {
+    picOrCompanyName = sphState?.selectedCompany?.mainPic?.name;
+  }
 
   return (
     <View style={style.container}>
@@ -151,6 +145,7 @@ export default function SelectedPic({
             item={{
               name: sphState?.selectedCompany?.name || '-',
               location: sphState?.selectedCompany?.locationAddress.line1,
+              picOrCompanyName,
             }}
             customIcon={GantiIcon}
             onPress={() => {
@@ -190,11 +185,14 @@ export default function SelectedPic({
         initialIndex={-1}
         addPic={(pic: PIC) => {
           // onChange('selectedPic', pic);
-          console.log(pic, 'bsheetaddpic');
+          customLog(pic, 'bsheetaddpic');
           pic.isSelected = false;
           const currentList = sphState.selectedCompany?.PIC
             ? sphState.selectedCompany.PIC
             : [];
+          if (currentList.length === 1) {
+            pic.isSelected = true;
+          }
           stateUpdate('selectedCompany')({
             ...sphState.selectedCompany,
             PIC: [...currentList, pic],

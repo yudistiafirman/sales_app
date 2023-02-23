@@ -15,9 +15,10 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { colors, fonts, layout } from '@/constants';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { ScrollView } from 'react-native-gesture-handler';
-import { beautifyPhoneNumber, getStatusTrx } from '@/utils/generalFunc';
+import { beautifyPhoneNumber, customLog, getStatusTrx } from '@/utils/generalFunc';
 import moment from 'moment';
 import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 function ListProduct(item: any) {
   return (
@@ -25,7 +26,7 @@ function ListProduct(item: any) {
       <BProductCard
         name={item.display_name}
         pricePerVol={+item.offering_price}
-        volume={item.volume ? item.volume : 0}
+        volume={item.quantity ? item.quantity : 0}
         totalPrice={+item.total_price}
       />
       <BSpacer size={'extraSmall'} />
@@ -36,15 +37,21 @@ function ListProduct(item: any) {
 const TransactionDetail = () => {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
+
   useHeaderTitleChanged({
     title: route?.params?.title,
   });
 
-  const onPressLocation = (lat: number, long: number) => {
+  React.useEffect(() => {
+    crashlytics().log(TRANSACTION_DETAIL);
+  }, []);
+
+  const onPressLocation = (lat: number, lon: number) => {
+    customLog('kann', lat, lon);
     navigation.navigate(LOCATION, {
       coordinate: {
-        latitude: lat, // -6.1993922
-        longitude: long, // 106.7626047
+        latitude: Number(lat), // -6.1993922
+        longitude: Number(lon), // 106.7626047
       },
       isReadOnly: true,
       from: TRANSACTION_DETAIL,
@@ -52,15 +59,17 @@ const TransactionDetail = () => {
   };
 
   const data = route?.params?.data;
+  customLog(data, 'datadetail');
+
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView>
         {data?.address && (
           <BCompanyMapCard
             onPressLocation={() =>
-              onPressLocation(data?.address.lat, data?.address.long)
+              onPressLocation(data?.address.lat, data?.address.lon)
             }
-            disabled={data?.address.lat === null || data?.address.long === null}
+            disabled={data?.address.lat === null || data?.address.lon === null}
             companyName={data?.companyName ? data?.companyName : '-'}
             location={data?.address ? data?.address.line1 : '-'}
           />

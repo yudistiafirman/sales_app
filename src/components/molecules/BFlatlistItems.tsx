@@ -2,6 +2,7 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import resScale from '@/utils/resScale';
 import EmptyProduct from '../templates/Price/EmptyProduct';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -53,52 +54,12 @@ export default function BFlatlistItems({
   const [currentPage, setCurrentPage] = useState(1);
   const [_isLoading, _setIsLoading] = useState(isLoading || false);
 
-  // useEffect(() => {
-  //   if (initialFetch) {
-  //     (async () => {
-  //       _setIsLoading(true);
-  //       const initialData = await initialFetch();
-  //       _setIsLoading(false);
-  //       if (initialData) {
-  //         setFlatListDatas(initialData);
-  //       }
-  //     })();
-  //   } else if (data) {
-  //     // setIsLoading(false);
-  //     setFlatListDatas(data);
-  //   }
-  //   return () => {
-  //     console.log('-----------flatlist cleanup?');
-  //     setFlatListDatas([]);
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
   const renderItemSeparator = () => {
     return <BSpacer size="middleSmall" />;
   };
   return (
     <View style={style.container}>
-      <FlatList
-        // onEndReached={async (info) => {
-        //   // console.log('onEndReached info comp', info);
-
-        //   if (onEndReached && info.distanceFromEnd >= 1) {
-        //     _setIsLoading(true);
-        //     setCurrentPage((current) => current + 1);
-        //     const newData = await onEndReached({ ...info, currentPage });
-        //     _setIsLoading(false);
-        //     //console.log(newData, 'newData'); //onEndReached
-        //     // const fetchNewDataFunc = onEndReached(info);
-
-        //     // const newData = await fetchNewDataFunc();
-        //     if (newData) {
-        //       setFlatListDatas((current) => {
-        //         return current.concat(newData);
-        //         // return [...current, ...newData];
-        //       });
-        //     }
-        //   }
-        // }}
+      <KeyboardAwareFlatList
         contentContainerStyle={style.flatlistContent}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.1}
