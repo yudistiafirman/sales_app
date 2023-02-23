@@ -1,243 +1,255 @@
-import {
-  NativeSyntheticEvent,
-  StyleSheet,
-  Text,
-  TextInputChangeEventData,
-  View,
-} from 'react-native';
 import * as React from 'react';
-
-import { colors, fonts, layout } from '@/constants';
-import { useNavigation } from '@react-navigation/native';
-import { CreateScheduleContext } from '@/context/CreateScheduleContext';
 import {
-  BDepositCard,
   BDivider,
-  BForm,
-  BProductCard,
+  BNestedProductCard,
+  BSearchBar,
   BSpacer,
   BText,
-  BTextInput,
+  BTouchableText,
 } from '@/components';
-import { Input } from '@/interfaces';
-import { PO_METHOD_LIST } from '@/constants/dropdown';
-import CheckBox from '@react-native-community/checkbox';
-
-function ListProduct(size: number, index: number, item: any) {
-  return (
-    <View key={item.product_id}>
-      <BProductCard
-        name={item.display_name}
-        pricePerVol={item.offering_price}
-        volume={item.quantity}
-        totalPrice={item.total_price}
-      />
-      {size - 1 !== index && (
-        <BDivider marginVertical={layout.pad.md} borderColor={colors.white} />
-      )}
-    </View>
-  );
-}
+import { TextInput } from 'react-native-paper';
+import {
+  DeviceEventEmitter,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { resScale } from '@/utils';
+import { CREATE_DEPOSIT, SEARCH_PO } from '@/navigation/ScreenNames';
+import { useNavigation } from '@react-navigation/native';
+import { CreateDepositContext } from '@/context/CreateDepositContext';
+import POListCard from '@/components/templates/PO/POListCard';
+import { colors, fonts, layout } from '@/constants';
+import font from '@/constants/fonts';
+import formatCurrency from '@/utils/formatCurrency';
 
 export default function SecondStep() {
   const navigation = useNavigation();
-  const { values, action } = React.useContext(CreateScheduleContext);
-  const { stepTwo: state } = values;
+  const { values, action } = React.useContext(CreateDepositContext);
+  const { stepTwo: stateTwo, stepOne: stateOne } = values;
   const { updateValueOnstep } = action;
+  const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
 
-  const inputs: Input[] = [
-    {
-      label: 'Pilih metode penuangan',
-      isRequire: true,
-      type: 'dropdown',
-      value: state.method,
-      isError: state.method ? false : true,
-      customerErrorMsg: 'Metode penuangan harus dipilih',
-      dropdown: {
-        items: PO_METHOD_LIST,
-        placeholder: 'Pilih metode penuangan',
-        onChange: (value: any) => {
-          onChange('method')(value);
-        },
-      },
+  const listenerCallback = React.useCallback(
+    ({ parent, data }: { parent: any; data: any }) => {
+      updateValueOnstep('stepTwo', 'companyName', parent.companyName);
+      updateValueOnstep('stepTwo', 'locationName', parent.locationName);
+      updateValueOnstep('stepTwo', 'sphs', data);
     },
-  ];
+    [updateValueOnstep]
+  );
 
-  const {
-    deliveryDate,
-    deliveryTime,
-    isConsecutive,
-    hasTechnicalRequest,
-    products,
-    totalDeposit,
-  } = state;
+  React.useEffect(() => {
+    DeviceEventEmitter.addListener('SearchPO.data', listenerCallback);
+    return () => {
+      DeviceEventEmitter.removeAllListeners('SearchPO.data');
+    };
+  }, [listenerCallback]);
 
-  const onChange = (key: string) => (val: any) => {
-    updateValueOnstep('stepTwo', key, val);
+  const onValueChanged = (item: any, value: boolean) => {
+    let listSelectedPO: any[] = [];
+    if (selectedPO) listSelectedPO.push(...selectedPO);
+    if (value) {
+      listSelectedPO.push(item);
+    } else {
+      listSelectedPO = listSelectedPO.filter((it) => {
+        return it !== item;
+      });
+    }
+    setSelectedPO(listSelectedPO);
   };
 
+  const customAction = () => {
+    return (
+      <BTouchableText
+        textStyle={{
+          fontFamily: font.family.montserrat[500],
+          color: colors.select.selected,
+        }}
+        onPress={changePO}
+        title={'Ganti'}
+      />
+    );
+  };
+
+  const changePO = () => {
+    navigation.navigate(SEARCH_PO, { from: CREATE_DEPOSIT });
+  };
+
+  const calculatedTotal = (): number => {
+    let deposit = 0;
+    if (stateOne.deposit?.nominal) deposit = stateOne.deposit?.nominal;
+    let allProducts: any[] = [];
+    sphs?.forEach((sp) => {
+      if (sp.products) allProducts.push(...sp.products);
+    });
+
+    const totalAmountProducts = allProducts
+      ?.map((prod) => prod?.total_price)
+      .reduce((prev: any, next: any) => prev + next);
+
+    return deposit - totalAmountProducts;
+  };
+
+  const { companyName, locationName, sphs } = stateTwo;
+  const { deposit, picts } = stateOne;
   return (
-    <View style={style.container}>
-      <View style={style.inputContainer}>
-        <View style={style.volumeContainer}>
-          <Text style={style.inputLabel}>Tanggal Pengiriman</Text>
-          <BTextInput
-            onChange={(
-              event: NativeSyntheticEvent<TextInputChangeEventData>
-            ) => {
-              onChange('deliveryDate')(event.nativeEvent.text);
-            }}
-            value={deliveryDate}
-            returnKeyType="next"
-            placeholder="Pilih tanggal"
-            placeholderTextColor={colors.textInput.placeHolder}
-          />
-          {!deliveryDate && (
-            <BText size="small" color="primary" bold="100">
-              Tanggal harus dipilih
-            </BText>
-          )}
-        </View>
-        <BSpacer size={'extraSmall'} />
-        <View style={style.sellPriceContainer}>
-          <Text style={style.inputLabel}>Jam Pengiriman</Text>
-          <BTextInput
-            onChange={(
-              event: NativeSyntheticEvent<TextInputChangeEventData>
-            ) => {
-              onChange('deliveryTime')(event.nativeEvent.text);
-            }}
-            value={deliveryTime}
-            placeholder="Pilih jam"
-            placeholderTextColor={colors.textInput.placeHolder}
-          />
-          {!deliveryTime && (
-            <BText size="small" color="primary" bold="100">
-              Jam harus dipilih
-            </BText>
-          )}
-        </View>
-      </View>
-      <BSpacer size={'extraSmall'} />
-      <BForm titleBold="500" inputs={inputs} />
-      <View style={style.summaryContainer}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <CheckBox
-            value={isConsecutive}
-            onFillColor={colors.primary}
-            onTintColor={colors.offCheckbox}
-            onCheckColor={colors.primary}
-            tintColors={{ true: colors.primary, false: colors.offCheckbox }}
-            onValueChange={(value) => {
-              onChange('isConsecutive')(value);
-            }}
-          />
-          <Text style={style.summary}>Konsekutif?</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginEnd: layout.pad.md,
-          }}
-        >
-          <CheckBox
-            value={hasTechnicalRequest}
-            onFillColor={colors.primary}
-            onTintColor={colors.offCheckbox}
-            onCheckColor={colors.primary}
-            tintColors={{ true: colors.primary, false: colors.offCheckbox }}
-            onValueChange={(value) => {
-              onChange('hasTechnicalRequest')(value);
-            }}
-          />
-          <Text style={style.summary}>Request Teknisi?</Text>
-        </View>
-      </View>
-      {products && products.length > 0 && (
+    <SafeAreaView style={style.flexFull}>
+      {deposit && (
         <>
-          <BSpacer size={'extraSmall'} />
-          <Text style={style.partText}>Produk</Text>
-          <BSpacer size={'verySmall'} />
-          <View>
-            <BDivider />
-            <BSpacer size={'small'} />
-            {products.map((item, index) =>
-              ListProduct(products.length, index, item)
+          <View style={style.summaryContainer}>
+            {picts && picts.length > 0 && (
+              <View
+                style={{
+                  width: resScale(40),
+                  height: resScale(40),
+                  borderRadius: layout.radius.md,
+                }}
+              >
+                <Image style={style.flexFull} source={picts[0]?.photo} />
+                {picts.length > 1 && (
+                  <>
+                    <View style={style.overlay} />
+                    <Text style={style.textOverlay}>
+                      {'+' + (picts.length - 1)}
+                    </Text>
+                  </>
+                )}
+              </View>
             )}
+            <View style={style.rightText}>
+              <BText bold="500" sizeInNumber={fonts.size.lg}>
+                {'IDR ' + formatCurrency(deposit?.nominal)}
+              </BText>
+              <BText bold="400" sizeInNumber={fonts.size.md}>
+                {deposit?.createdAt}
+              </BText>
+            </View>
           </View>
         </>
       )}
+      <>
+        <View>
+          <BSpacer size={'extraSmall'} />
+          <BSpacer size={'verySmall'} />
+          <BDivider />
+        </View>
+        <View style={style.flexFull}>
+          {sphs && sphs.length > 0 ? (
+            <>
+              <ScrollView
+                style={[style.flexFull, { marginBottom: layout.pad.xxl }]}
+              >
+                <View style={style.flexFull}>
+                  <POListCard
+                    companyName={companyName}
+                    locationName={locationName}
+                    useChevron={false}
+                    customAction={customAction}
+                  />
+                  <BSpacer size={'extraSmall'} />
+                </View>
+                <View style={style.flexFull}>
+                  {sphs && sphs.length > 0 && (
+                    <BNestedProductCard
+                      withoutHeader={false}
+                      data={sphs}
+                      selectedPO={selectedPO}
+                      onValueChange={onValueChanged}
+                      deposit={deposit?.nominal}
+                    />
+                  )}
+                </View>
+              </ScrollView>
 
-      <BDivider />
-      <BSpacer size={'verySmall'} />
-      <BDepositCard
-        style={{ marginBottom: layout.pad.xl }}
-        firstSectionText={'Deposit'}
-        firstSectionValue={totalDeposit}
-        secondSectionText={
-          products && products.length > 0 ? products[0].display_name : '-'
-        }
-        secondSectionValue={
-          totalDeposit -
-          products
-            .map((item) => item.total_price)
-            .reduce((prev, next) => prev + next)
-        }
-        thirdSectionText={'Est. Sisa Deposit'}
-      />
-    </View>
+              <View style={style.summContainer}>
+                <Text style={style.summary}>{'Est Deposit Akhir'}</Text>
+                <Text style={[style.summary, style.fontw600]}>
+                  IDR {formatCurrency(calculatedTotal())}
+                </Text>
+              </View>
+            </>
+          ) : (
+            <>
+              <BSpacer size={'extraSmall'} />
+              <TouchableOpacity style={style.touchable} onPress={changePO} />
+              <BSearchBar
+                placeholder="Cari PO"
+                activeOutlineColor="gray"
+                left={<TextInput.Icon icon="magnify" />}
+              />
+            </>
+          )}
+        </View>
+      </>
+    </SafeAreaView>
   );
 }
+
 const style = StyleSheet.create({
-  container: {
+  flexFull: {
     flex: 1,
-    marginTop: layout.pad.md,
   },
-  hargaText: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.md,
-    color: colors.text.darker,
+  overlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.black,
+    opacity: 0.5,
   },
-  priceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  textOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    color: colors.white,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    textAlignVertical: 'center',
   },
-  inputContainer: {
-    flexDirection: 'row',
+  rightText: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
-  textIcon: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.sm,
-    color: colors.text.darker,
-  },
-  inputLabel: {
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
-    color: colors.text.darker,
-  },
-  volumeContainer: {
-    width: '45%',
-  },
-  sellPriceContainer: {
-    width: '50%',
-  },
-  summary: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.sm,
-  },
-  fontw400: {
-    fontFamily: fonts.family.montserrat[400],
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: resScale(4),
+    height: resScale(45),
+    zIndex: 2,
   },
   summaryContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: colors.tertiary,
+    borderRadius: layout.radius.sm,
+    borderColor: colors.border.default,
+    borderWidth: 1,
+    padding: layout.pad.md,
   },
-  partText: {
+  summary: {
     color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.sm,
+  },
+  fontw600: {
     fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.md,
+  },
+  summContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    start: 0,
+    backgroundColor: 'white',
+    paddingTop: layout.pad.lg,
+    paddingBottom: layout.pad.xl,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

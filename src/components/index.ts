@@ -47,6 +47,7 @@ export { default as BDepositCard } from './molecules/BDepositCard';
 export { default as BCompanyMapCard } from './molecules/BCompanyMapCard';
 export { default as BLocationDetail } from './molecules/BLocationDetail';
 export { default as BGallery } from './molecules/BGallery';
+export { default as PopUpQuestion } from './molecules/PopUpQuestion';
 
 // organism
 export { default as BForm } from './organism/BForm';

@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { BForm, BGallery } from '@/components';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
-import { resScale } from '@/utils';
 import {
   StackActions,
   useFocusEffect,
   useNavigation,
 } from '@react-navigation/native';
-import { colors, fonts, layout } from '@/constants';
+import { layout } from '@/constants';
 import { Input } from '@/interfaces';
 import { CreateDepositContext } from '@/context/CreateDepositContext';
 import { CAMERA } from '@/navigation/ScreenNames';
@@ -19,13 +18,13 @@ import moment from 'moment';
 export default function FirstStep() {
   const navigation = useNavigation();
   const { values, action } = React.useContext(CreateDepositContext);
-  const { stepOne: state } = values;
+  const { stepOne: stateOne } = values;
   const { photoURLs } = useSelector((state: RootState) => state.camera);
 
   const { updateValueOnstep } = action;
   const dispatch = useDispatch();
 
-  const { deposit, picts } = state;
+  const { deposit, picts } = stateOne;
 
   const inputs: Input[] = [
     {
@@ -39,7 +38,6 @@ export default function FirstStep() {
       calendar: {
         onDayPress: (value: any) => {
           const date = moment(value.dateString).format('DD/MM/yyyy');
-          console.log('yoiii: ', date);
           onChange('createdAt')(date);
         },
       },
@@ -69,7 +67,7 @@ export default function FirstStep() {
     if (key === 'nominal')
       modifyDeposit = {
         ...modifyDeposit,
-        nominal: val,
+        nominal: val.split('.').join(''),
       };
 
     updateValueOnstep('stepOne', 'deposit', modifyDeposit);
@@ -93,7 +91,7 @@ export default function FirstStep() {
 
   return (
     <SafeAreaView style={style.flexFull}>
-      <View style={{ height: '25%' }}>
+      <View style={style.gallery}>
         <BGallery
           picts={picts}
           addMorePict={() =>
@@ -121,5 +119,8 @@ const style = StyleSheet.create({
   content: {
     flex: 1,
     paddingTop: layout.pad.md,
+  },
+  gallery: {
+    height: '25%',
   },
 });

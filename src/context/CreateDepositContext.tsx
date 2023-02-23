@@ -38,7 +38,7 @@ const initialData: CreateDepositState = {
     companyName: '',
     locationName: '',
     title: '',
-    product: undefined,
+    products: [{}],
   },
   shouldScrollView: true,
   existingDepositID: null,

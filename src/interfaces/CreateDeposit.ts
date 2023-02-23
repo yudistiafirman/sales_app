@@ -9,14 +9,20 @@ interface CreateDepositFirstStep {
 interface CreateDepositSecondStep {
   companyName: string;
   locationName?: string;
-  title: string;
-  product?: {
-    product_id?: string;
-    display_name?: string;
-    offering_price?: number;
-    total_price?: number;
-    quantity?: string;
-  };
+  sphs: [
+    {
+      name: string;
+      products?: [
+        {
+          product_id?: string;
+          display_name?: string;
+          offering_price?: number;
+          total_price?: number;
+          quantity?: string;
+        }
+      ];
+    }
+  ];
 }
 
 interface CreateDepositState {
@@ -33,14 +39,20 @@ interface CreateDepositListResponse {
   createDepositID: string | null;
   companyName: string;
   locationName?: string;
-  sph: string;
-  product: {
-    product_id?: string;
-    display_name?: string;
-    offering_price?: number;
-    total_price?: number;
-    quantity?: string;
-  };
+  sphs: [
+    {
+      name: string;
+      products?: [
+        {
+          product_id?: string;
+          display_name?: string;
+          offering_price?: number;
+          total_price?: number;
+          quantity?: string;
+        }
+      ];
+    }
+  ];
   deposit?: {
     createdAt: string;
     nominal: number;

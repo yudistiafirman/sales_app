@@ -5,6 +5,7 @@ import {
   BContainer,
   BHeaderIcon,
   BSpacer,
+  PopUpQuestion,
 } from '@/components';
 import { Styles } from '@/interfaces';
 import { useKeyboardActive } from '@/hooks';
@@ -12,7 +13,6 @@ import { BStepperIndicator } from '@/components';
 import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
-import { layout } from '@/constants';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import {
   CreateDepositFirstStep,
@@ -37,14 +37,19 @@ function stepHandler(
 ) {
   const { stepOne, stepTwo } = state;
 
-  if (stepOne.deposit?.createdAt && stepOne.deposit?.nominal) {
+  if (
+    stepOne.picts &&
+    stepOne.picts.length > 0 &&
+    stepOne.deposit?.createdAt &&
+    stepOne.deposit?.nominal
+  ) {
     setStepsDone((curr) => {
       return [...new Set(curr), 0];
     });
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 0));
   }
-  if (stepTwo.companyName && stepTwo.title && stepTwo.product) {
+  if (stepTwo.companyName && stepTwo.sphs) {
     setStepsDone((curr) => {
       return [...new Set(curr), 1];
     });
@@ -61,11 +66,9 @@ function populateData(
     value: any
   ) => void
 ) {
-  updateValue('stepOne', 'title', existingData?.sph);
   updateValue('stepTwo', 'companyName', existingData?.companyName);
   updateValue('stepTwo', 'locationName', existingData?.locationName);
-  updateValue('stepTwo', 'title', existingData?.sph);
-  updateValue('stepTwo', 'product', existingData?.product);
+  updateValue('stepTwo', 'sphs', existingData?.sphs);
 }
 
 const Deposit = () => {
@@ -77,12 +80,13 @@ const Deposit = () => {
   const { updateValue, updateValueOnstep } = action;
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
+  const [isPopupVisible, setPopupVisible] = React.useState(false);
 
   useCustomHeaderLeft({
     customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
-        onBack={() => navigation.goBack()}
+        onBack={() => setPopupVisible(true)}
         iconName="x"
       />
     ),
@@ -113,6 +117,10 @@ const Deposit = () => {
     }
   };
 
+  const handleBackButton = () => {
+    return values.step > 0 ? next(values.step - 1)() : setPopupVisible(true);
+  };
+
   const stepRender = [<FirstStep />, <SecondStep />];
 
   return (
@@ -136,43 +144,36 @@ const Deposit = () => {
                 next(values.step + 1)();
                 DeviceEventEmitter.emit('Deposit.continueButton', true);
               }}
-              isContinueIcon={true}
-              onPressBack={() =>
-                values.step > 0 ? next(values.step - 1) : navigation.goBack()
-              }
+              isContinueIcon={false}
+              onPressBack={handleBackButton}
               continueText={values.step > 0 ? 'Buat Deposit' : 'Lanjut'}
               disableContinue={!stepsDone.includes(values.step)}
             />
           )}
         </View>
+        <PopUpQuestion
+          isVisible={isPopupVisible}
+          setIsPopupVisible={() => {
+            setPopupVisible(false);
+            navigation.goBack();
+          }}
+          actionButton={() => {
+            setPopupVisible(false);
+          }}
+          cancelText={'Keluar'}
+          actionText={'Lanjutkan'}
+          text={'Apakah Anda yakin ingin keluar?'}
+          desc={'Progres pembuatan Deposit anda akan hilang'}
+        />
       </BContainer>
     </>
   );
 };
 
 const styles: Styles = {
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  button: { flexDirection: 'row-reverse' },
   container: {
     justifyContent: 'space-between',
     flex: 1,
-  },
-  conButton: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
-  buttonOne: {
-    flex: 1,
-    paddingEnd: layout.pad.md,
-  },
-  buttonTwo: {
-    flex: 1.5,
-    paddingStart: layout.pad.md,
   },
 };
 

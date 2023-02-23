@@ -1,17 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { colors, layout } from '@/constants';
-import {
-  DeviceEventEmitter,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { resScale } from '@/utils';
-import { ScrollView } from 'react-native-gesture-handler';
-import Feather from 'react-native-vector-icons/Feather';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import PopUpQuestion from '../PopUpQuestion';
+import { DeviceEventEmitter } from 'react-native';
 import LastStepPopUp from '../LastStepPopUp';
 import { createVisitationContext } from '@/context/CreateVisitationContext';
 import {
@@ -40,7 +28,7 @@ import moment from 'moment';
 import { CAMERA, CREATE_VISITATION, SPH_TITLE } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
-import { BGallery } from '@/components';
+import { BGallery, PopUpQuestion } from '@/components';
 
 export type selectedDateType = {
   date: string;
@@ -368,7 +356,7 @@ const Fourth = () => {
       <PopUpQuestion
         isVisible={isPopUpVisible}
         setIsPopupVisible={setIsPopUpVisible}
-        initiateCameraModule={() => {
+        actionButton={() => {
           setIsPopUpVisible((curr) => !curr);
           navigation.dispatch(
             StackActions.push(CAMERA, {
