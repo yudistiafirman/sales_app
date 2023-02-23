@@ -95,13 +95,13 @@ export const modalSlice = createSlice({
       state.popUpOptions = initialPopupData;
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(getAllProject.rejected, (state) => {
-      state.isPopUpVisible = !state.isPopUpVisible;
-      state.popUpOptions.popUpType = 'error';
-      state.popUpOptions.popUpText = 'getAllProject error';
-    });
-  },
+  // extraReducers: (builder) => {
+  //   builder.addCase(getAllProject.rejected, (state) => {
+  //     state.isPopUpVisible = !state.isPopUpVisible;
+  //     state.popUpOptions.popUpType = 'error';
+  //     state.popUpOptions.popUpText = 'getAllProject error';
+  //   });
+  // },
 });
 
 export const { setIsPopUpVisible, openPopUp, closePopUp } = modalSlice.actions;

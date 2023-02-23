@@ -4,7 +4,7 @@ import { createMachine } from 'xstate';
 import { assign } from 'xstate/lib/actions';
 
 export const transactionMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDAdrdBjZAlgPaYAEAtngBYGZgB0MyAKhtnoSfQDZHoS0orLDnzFMAYggkGtAG5EA1gzQiO4itVoMmw9mK69+gvaM6YE8ornTmA2gAYAuo6eJQAByKwC59yAAPRABmYIBGegB2ADYAVmiAJmDIgE5Y4OjM2IAaEABPRDDYh3oUspTIhwci1ISHaIBfBtzVfXNNXBo6RjAWNjNxHj4BTCF+9RIJMFRUIlR6D25bADM58npWgZIOrp1e0wnMIeNRg4MLKxt7Z1d-Lx8-JEDChwAWaPow6NeHAA4EmJvSLBHL5RApJL0cIJV5FWIJFKJMKRJotcbnHbaHp9NTnDZ5DxgAAyw0g2LO5lgACF0LAwAB5TDMAlgKQyehWZQbdHtSidLG6HmDZAskn8MmC3GUml0xnMwmWTAKK7iVy3J73XzifxBBAZX5ROKJWKvd6xWK-FK5AoIaIg0rpeoZGEVYKokCbQ6Y7qStrC0WkiDkoUkam0hlMllTGZzBZLZCrVDrT0Yvm7YNS-2EsUQCX7EPYGUR+VgRXK2yqm7OO7eLUkHUvd6fb5-AHRIEg62If4pei-WIQlKvQEpS2-d0p3laH35zNcEXZwPcueYHOQCQkACimAgACUwNRIOrPLXHqBdSCEvRor9Iq9R-9omEUn9QTbIgj6D8n79XsEUhkbzjs0HoFt6ew4n684BuKQaTuIa4QBumAAMJUFgMAlseICamezx6vC163vevyPs+r5dgg-yxH2A4Iv8CS-A4H4TmBaYCrOUFHAuxJLvBJCIRIqBgMswmwF0UBEgQsDINhuHak8F6ETed4PgkT4vv2lEQle0KwnUxr-q8rEruBGZcfii6wcuXGCQARngijMEQADinFbNgcmngp56FMEJQmmErxJLe-4fpElFhA46SlJEqQWv2-ZhF8TQgZgRC5vATz8WQ7F0DWDw+fhAC0MKUaVrz0FUVTJEkqmwmECQmVxZm+h5BV1pgDYIGVYK2sEX7lJkwSWkFlooiBOWte5hzHCMYwrh1eG6h+kV2lE6nwuRYXDhNaKmXlEEUlmvGwUtRUrVafUmgaryOnF0QQqRMTNR502QR5lmnbmQZtYcYaypGhLnfWimIJUNEVHEvzfMlzEOFdNq-EUUIgsRcXBEkN6vV6h3mZ9PGITZHmISDXVgwgjURX1mS9gjiQvpEpFfACOOptODDTLMqBucghCnCyZPdY1-z0PECSxFFYRMQjvzBJR-Z04l5oZBUdRhKlDRAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDAdrdBjZAlgPaYAEAtngBYGZgB0MyAKhtnoSfQDZHoS0orLDnzFMAYggkGtAG5EA1gzQiO4itVoMmw9mK69+gvaM6YE8ornTmA2gAYAuo6eJQAByKwC59yAAPRABmYIA2egB2MIBWMIAmAA4ATniHVMTggBoQAE9EABZEgvpkmOCHMODI0MSqgEZggF8mnNV9c01cGjpGMBY2M3EePgFMIUH1EgkwVFQiVHoPblsAMwXyenahki6enX7TKcwR43GjgwsrG3tnV38vHz8kQJC4qNiElLSM7LzENL1egFZKg2KRAqRNIxMotNqTS57bR9AZqS5bXIeMAAGVGkBRF3MsAAQuhYGAAPKYZiYsBSGT0KzKLYIzqUbrI3Ss4bIWm4-j4rloomk8lUmlYyyYBQ3cSue4vR6+cT+IIIYoReKfArBRIOSI1Ar1HL5BAxeLBehhSLJML1eJQyL1ZL1MJwkDbY5I3pCjo8vl4iAE7kkElkynU2kzOYLJYrZDrVCbT2I9n7YPC-1Y-kQQWHEPYUURiVgKUy2xyu7OB7eZUkVWIeoFIr0Bz6xpai1hEF-U31BzxeL0epQ0IFGIxfthW3ulNsrQ+-OZri87OBlnLzA5yASEgAUUwEAASmBqJAFZ5a89QGrMg5h4lIpP7WE267IibEHbIsPgg7+06upFJEs4Ft6Byon6K4BgKQZzuI24QLumAAMJUFgMAlheIBKterzqhUD5PvUL5vtan4IIB9AxIkNFpHUEI6jEoGbuBGZQScq44uu8EkIhEioGAqyCbAPRQNiBCwMg2G4SqLy3oR9SPs+WpkR+-zqv2ra6skwT9vE-a6sxrQemBaackuHEYmusEbhx-EAEZ4IozBEAA4pZOzYDJV5yTeIQFBE0RxEkqTpEkvYBUOg6xA4dQxJElRxG6Jm8WQ5mLpBXnWdxtmzPMqAecghDnLShLiLAAn9KguRFSVQhlQWsA+U8fn4U2NFWt2+qpDUwRlGEFF2iUDh-k66ROiRmQsRxbG+tl+ULHVJiNZulWCWgtX9PV5Whi1daYA2CDBO8wVfGFvwUfUMT3qCoJ1IkSkASkLQmZgRC5vALxpeBNatfW8mIAAtPEBQUSDlp3ckRRNhaySRJkBQzV5c2eccf0HUdoNDZaN1vrp1S0TdzSpWZC4QbtJxGGMEybhjeFqlCV3lMOILwwlekTsFyNehlFMFjliH021aoThEeNtg4N32s66mmjqEQjvDJEJDUA4Gjzqbk+x2VcYhOvHGGYqRliwsA-56rvDC-UVNERoGskFHs-QFS6dEoTw-ExnwqxfMG+ies8QWQuKr55v4a+JQS220sGfDFFi-QiSDsndRGgU+qa-OHKZZTgvrothXbStWKU19l7-YdgMICO5pJ9bZTJETN3xEN47Uakr4kb1SRZxofvzcc9CF8tpWl01ZtVxbr5Dn+o0vhUrvM8k1GZHpYRVLaoMWq9TRAA */
   createMachine(
     {
       tsTypes: {} as import('./transactionMachine.typegen').Typegen0,
@@ -27,7 +27,9 @@ export const transactionMachine =
             }
           | { type: 'onEndReached' }
           | { type: 'refreshingList' }
-          | { type: 'backToGetTransactions' },
+          | { type: 'backToGetTransactions' }
+          | { type: 'retryGettingTransactions' }
+          | { type: 'retryGettingTypeTransactions' },
       },
 
       context: {
@@ -58,7 +60,7 @@ export const transactionMachine =
                   },
                 ],
                 onError: {
-                  target: '#transaction machine.errorGettingType',
+                  target: 'errorGettingTypeTransactions',
                   actions: 'handleError',
                 },
               },
@@ -70,7 +72,7 @@ export const transactionMachine =
                   invoke: {
                     src: 'getTransactions',
                     onError: {
-                      target: '#transaction machine.errorGettingType',
+                      target: 'errorGettingTypeTransactions',
                       actions: 'handleError',
                     },
                     onDone: [
@@ -114,16 +116,29 @@ export const transactionMachine =
                     },
                   },
                 },
+
+                errorGettingTypeTransactions: {
+                  on: {
+                    retryGettingTypeTransactions: {
+                      target: 'getTransactionsBaseOnType',
+                      actions: 'handleRetryGettingTypeTransactions',
+                    },
+                  },
+                },
               },
 
               initial: 'getTransactionsBaseOnType',
+            },
+
+            errorGettingTypeTransactions: {
+              on: {
+                retryGettingTransactions: 'loadingTransaction',
+              },
             },
           },
 
           initial: 'loadingTransaction',
         },
-
-        errorGettingType: {},
       },
 
       initial: 'getTransaction',
@@ -219,6 +234,13 @@ export const transactionMachine =
             loadTransaction: true,
           };
         }),
+        handleRetryGettingTypeTransactions: assign((context, event) => {
+          return {
+            data: [],
+            page: 1,
+            loadTransaction: true,
+          };
+        }),
       },
       services: {
         getTypeTransactions: async (_context, _event) => {
@@ -248,7 +270,7 @@ export const transactionMachine =
             ];
             return response;
           } catch (error) {
-            customLog(error);
+            throw new Error(error);
           }
         },
         getTransactions: async (_context, _event) => {
@@ -515,7 +537,7 @@ export const transactionMachine =
             // };
             return response.data as any;
           } catch (error) {
-            customLog(error);
+            throw new Error(error)
           }
         },
       },

@@ -2,11 +2,10 @@ import {
   getAllBrikProducts,
   getProductsCategories,
 } from '@/actions/InventoryActions';
-import { customLog } from '@/utils/generalFunc';
 import { assign, createMachine } from 'xstate';
 
 export const searchProductMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACADugPYQCumALgHQCWAdvqRRfVAMQoY6sAKxZlWAG0ADAF1EofEVg0WROpJAAPRAGYArCKoBOAIwAWEQHYAHHp0A2AEwHTOgDQgAnomuWdVAzp3G9Ig2tjG0sNAF8wp04sPEIScmp6RmZWDjQY3n4E4T0JJBBpWXlFfNUEHWsnVwQ9Y2NdYzVDWoMDNRFLEVMIqPScAizKWgYmFjp2BQBhbFRxsAAVVAAjUTypGTkaBSUymyrEU2tTKmsRI7VvDTUgw56QaP64gUSRlPG2TAAbdIBJV9WlIVNttSog9KZtMYTGdgsYDHVTHV9ghzFQNKcRIYjtZfO1upF7n1YoNqA9sKkIAowMMAG5EADW1LJA3iQzJrAQ9DpmFQxVWAPyQOKO3UATRZj0Gg0hx0Gks1zUyN8el0OLUOlMllM6taljuzKeCSo7PeYHQxHQVHwn15ADMiOgALbGoks54urjk8acujc3lbOj88SAjbC0EIdoGcXmKUyuUK5F6PSWFXWdU4pMmNSmAx6fWuw1DHkUMBQB00OAAGSIqAgkCoMDeUD4rIosDYlLo1K5DKZBZJVGLpfLVZrdYgDbATZbz1gPr9fPEAvWRQDIoQfl0Pm3O+3BmRWssDRscIxejU+c9bqNQ7L6ArsGrtfrjbGzZJ7bNFqtNoo9qdHoxNeRa8sO96js+E6vpkrZzj2xYBkGawFKGa7hhoKq7lhPj7i4YJStoGoVDoJgakm6KXkBhbUF+DoAMoUKBbDLihq4gqAZR6JUeE1NYlGPAONAQN8aR0BAvAYKgjrCMGgqoexKiILmJzmCIAT2PKmnBMiaiNFQ4LgiIcpypq+gRASdAkHASgGiSIZsSUHGIAAtDoUbWBYalGVcUqWMYGjIs5-leDupgaBqRm6XmBK2a2wzJG+9nAo5ik1GoR7BPGkrgoc1josiQSeIEIQVEZ8qmGF-HEnFJpQElYZOQgGjGImXHWF49jYvoFVmDoVXAdQt4jo+Y6QPVaGNRh9RcVorQGFcdSysiYXaHYOjtDi6L+f5-XUYOoF3g+T7jpO04fuNCllMZ+l5QErQLcYS08et9REe0Fh+Yi1h8TF-ZxbR6AMaBF0pWUkbRpK0qbfKaaJlK7VrTcoQauY+K9Fee1Cd8IPrs5BhHh5JFqVKmhyv5uHVFFuhNIcalNOt80GOZYRAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACADugPYQCumALgHQCWAdvqRRfVAMQoY6sAKxZlWAG0ADAF1EofEVg0WROpJAAPRADYAHBqoaRAFgCsATgCMAZj0i1mgDQgAnoj1GzVPQCYjaoxr0az7gDsGkYAvqF2nFh4hCTk1PSMzKwcaNG8-PHCJhJIINKy8op5qghq7q4mRgYBgc7mgbYOTiaBVNVmJl3u7nqaFeGRaTgEmZS0DEwsdOwKAMLYqDNgACqoAEaiuVIycjQKSqWa2rqGphZWTY4IZl7tjQbWwUFWeoMgUSOxAgmTyTNsTAAGzSAEk-lslAU9gcSohAl12iIKmZGoEDMEzAY7NcAiY3EZCYFqr0TCJCe9PjExtQqSkIAowBMAG5EADWTKpozi4zpMwQ9FZmFQRS2kLy0KKh0QnSMVAxGhM7i05O8In0OMQXQM2hEnTMIn8Rj0gVRakpw2pPNplpSYHQxHQVHwQJFADMiOgALZULnfeK+238wVEYWi8TinaFfbFUClMwWeUaAzGJXWMlGQKahAmDxqKhpixmDRqEyKwIWrhWn5UMNgKCemhwAAyRFQEEgVBg-ygfGtsDYDLoTJDHMDVe5NbrDfQTdgrfbne7017NNgAroQpFMbF4ihuylcIQBnc2fMPio7gxprUzhTfjeEQ+lsnAenjZbbY7EC7YB7fZ+Ad7UdZ1XQoD1vXHaJX3Gd9Z0-Rcf2XDJ+w3LdwzESN8gPGNpQQZU5VONQRFaPwfACNRs0VeV1XVE0fC6TQzEraD-XGGgIBBVI6AgXgMFQL1hD3CUcNhOMtSvAlCWNQ0fA8DRszvdpPG8Xx-CCEIWK+GkqGAz0AHE-xXOYRXrD8B3QP90HsQyexMigzPgoTtmw6MxJUGUqnlYIlRVLwjDos8r3xB8zFvU1yQGJ8-R0vT0FslcAKyAAREVUDYSyKGshKUMA1KKFQLDJVwo8CJ0fRiNIkJ1Mo5p8PVKg6kJLQTw8BMK3eOgSDgJQYutfc3NjDyEAAWnMEQqE0BjMUMPQH2zEaDHaaSsTmkJOkec1opfNjfiSFcBphIbShNPRJseVpiQqGSRGxOqDC8yxyg8IwryvE0tOrAM+SgQ7D3E0aNHcSbqtafxZvmuq0zldwrC8Exb2vaxPpg6g4LnBdvz+kqAZqbQ9FRE9c2TDFvDPZF8y0ZVbw6fwOqGCddtrUyZwxr8lyM3Ksmx9zSh1fMCfRdxiZTRojDPLozuLamHvJWSUaZjiQR546nFPe7Hqsdw1EaNStDCbbGdih0DM5mZ7McucVbw4IJpNBHemCTNMTPAwrGW8jdFNE8vAV43HRymYksEfLUGto8RtcCrbisQJyXMOns21iaE1u16gcsRUS3CcIgA */
   createMachine(
     {
       id: 'search product',
@@ -20,7 +19,9 @@ export const searchProductMachine =
           | { type: 'onGettingProductsData'; data: any[] }
           | { type: 'getCategoriesData'; data: any[] }
           | { type: 'clearInput' }
-          | { type: 'sendingParams'; value: number },
+          | { type: 'sendingParams'; value: number }
+          | { type: 'retryGettingCategories' }
+          | { type: 'retryGettingProductsData' },
 
         services: {} as {
           getCategoriesData: {
@@ -40,6 +41,7 @@ export const searchProductMachine =
         size: 10,
         productsData: [] as any[],
         loadProduct: false,
+        errorMessage: '',
         distance: 0,
       },
 
@@ -81,7 +83,10 @@ export const searchProductMachine =
               actions: 'assignCategories',
             },
 
-            onError: 'errorState',
+            onError: {
+              target: 'errorGettingCategories',
+              actions: "handleError"
+            },
           },
         },
 
@@ -96,16 +101,15 @@ export const searchProductMachine =
                   actions: 'assignProducts',
                 },
 
-                onError: '#search product.errorState',
+                onError: {
+                  target: '#search product.errorGettingProductsData',
+                  actions: 'handleError',
+                },
               },
 
               entry: 'enableLoadProduct',
             },
           },
-        },
-
-        errorState: {
-          always: 'inputting',
         },
 
         idle: {
@@ -115,6 +119,21 @@ export const searchProductMachine =
               actions: 'assignParams',
             },
           },
+        },
+
+        errorGettingCategories: {
+          on: {
+            retryGettingCategories: 'searching',
+          },
+        },
+
+        errorGettingProductsData: {
+          on: {
+            retryGettingProductsData: {
+              target: 'categoriesLoaded.gettingProducts',
+              actions: 'handleRetryGettingProductsData',
+            },
+          }
         },
       },
 
@@ -173,6 +192,18 @@ export const searchProductMachine =
             distance: event.value / 1000,
           };
         }),
+        handleError: assign((context, event) => {
+          return {
+            loadProduct: false,
+            errorMessage: event.data.message,
+          };
+        }),
+        handleRetryGettingProductsData: assign((context, event) => {
+          return {
+            loadProduct: true,
+            productsData: [],
+          };
+        }),
       },
       guards: {
         searchValueLengthAccepted: (_context, event) => {
@@ -191,7 +222,7 @@ export const searchProductMachine =
             );
             return response.data.result;
           } catch (error) {
-            customLog(error);
+            throw new Error(error);
           }
         },
         onGettingProductsData: async (context) => {
@@ -211,7 +242,7 @@ export const searchProductMachine =
             );
             return response.data.products;
           } catch (error) {
-            customLog(error);
+            throw new Error(error);
           }
         },
       },

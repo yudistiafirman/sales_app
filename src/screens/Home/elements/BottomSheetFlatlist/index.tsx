@@ -8,7 +8,7 @@ import { layout } from '@/constants';
 import { BSpacer, BVisitationCard } from '@/components';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { visitationDataType } from '@/interfaces';
-import EmptyProduct from '@/components/templates/Price/EmptyProduct';
+import EmptyState from '@/components/organism/BEmptyState';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type FooterType = {
@@ -28,6 +28,9 @@ type BottomSheetFlatlistType = {
   data: visitationDataType[];
   searchQuery?: string;
   onPressItem?: (data: visitationDataType) => void;
+  isError?: boolean;
+  errorMessage?: string | unknown;
+  onAction?: () => void;
 };
 
 const FooterLoading = ({ isLoading }: FooterType) => {
@@ -47,12 +50,29 @@ export default function BottomSheetFlatlist({
   searchQuery,
   onEndReached,
   onPressItem,
+  isError,
+  errorMessage,
+  onAction,
 }: FooterType & BottomSheetFlatlistType) {
   const footerComp = useCallback(
     () => <FooterLoading isLoading={isLoading} />,
     [isLoading]
   );
   const separator = useCallback(() => <BSpacer size={'extraSmall'} />, []);
+  const renderEmptyComponent = () => {
+    if (isLoading) {
+      return null;
+    } else {
+      return (
+        <EmptyState
+          onAction={onAction}
+          isError={isError}
+          errorMessage={errorMessage}
+          emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
+        />
+      );
+    }
+  };
 
   return (
     <BottomSheetFlatList
@@ -75,14 +95,7 @@ export default function BottomSheetFlatlist({
       ListFooterComponent={footerComp}
       ItemSeparatorComponent={separator}
       onEndReached={onEndReached}
-      ListEmptyComponent={() => {
-        if (isLoading) {
-          return null;
-        }
-        return (
-          <EmptyProduct emptyText="Tidak ada data kunjungan, silakan ganti tanggal kunjungan!" />
-        );
-      }}
+      ListEmptyComponent={renderEmptyComponent}
     />
   );
 }
