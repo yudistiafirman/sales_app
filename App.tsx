@@ -25,6 +25,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { StyleSheet } from 'react-native';
 import Draggable from 'react-native-draggable';
 import { isDevelopment } from '@/utils/generalFunc';
+import SnackbarGlobal from '@/components/templates/SnackbarGlobal';
 
 startNetworkLogging();
 const height = Dimensions.get('window').height;
@@ -127,6 +128,7 @@ function App() {
         <PaperProvider theme={paperTheme}>
           <ReduxProvider store={store}>
             <Popup />
+            <SnackbarGlobal />
             <AppNavigatorV2 />
             {isDevelopment() && networkLogger()}
           </ReduxProvider>

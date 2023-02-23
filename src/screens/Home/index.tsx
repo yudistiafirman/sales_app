@@ -61,6 +61,7 @@ import {
 } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import { HOME_MENU } from '../Const';
+import SnackbarGlobal from '@/components/templates/SnackbarGlobal';
 const { RNCustomConfig } = NativeModules;
 
 const versionName = RNCustomConfig?.version_name;
@@ -335,40 +336,40 @@ const Beranda = () => {
       },
     ];
 
-    // if (!enable_sph) {
-    //   const index = buttons.findIndex((item) => {
-    //     item.title === HOME_MENU.SPH;
-    //   });
-    //   buttons.splice(index, 1);
-    // }
+    if (!enable_sph) {
+      const index = buttons.findIndex((item) => {
+        item.title === HOME_MENU.SPH;
+      });
+      buttons.splice(index, 1);
+    }
 
-    // if (!enable_po) {
-    //   const index = buttons.findIndex((item) => {
-    //     item.title === HOME_MENU.PO;
-    //   });
-    //   buttons.splice(index, 1);
-    // }
+    if (!enable_po) {
+      const index = buttons.findIndex((item) => {
+        item.title === HOME_MENU.PO;
+      });
+      buttons.splice(index, 1);
+    }
 
-    // if (!enable_deposit) {
-    //   const index = buttons.findIndex((item) => {
-    //     item.title === HOME_MENU.DEPOSIT;
-    //   });
-    //   buttons.splice(index, 1);
-    // }
+    if (!enable_deposit) {
+      const index = buttons.findIndex((item) => {
+        item.title === HOME_MENU.DEPOSIT;
+      });
+      buttons.splice(index, 1);
+    }
 
-    // if (!enable_create_schedule) {
-    //   const index = buttons.findIndex((item) => {
-    //     item.title === HOME_MENU.SCHEDULE;
-    //   });
-    //   buttons.splice(index, 1);
-    // }
+    if (!enable_create_schedule) {
+      const index = buttons.findIndex((item) => {
+        item.title === HOME_MENU.SCHEDULE;
+      });
+      buttons.splice(index, 1);
+    }
 
-    // if (!enable_appointment) {
-    //   const index = buttons.findIndex((item) => {
-    //     item.title === HOME_MENU.APPOINTMENT;
-    //   });
-    //   buttons.splice(index, 1);
-    // }
+    if (!enable_appointment) {
+      const index = buttons.findIndex((item) => {
+        item.title === HOME_MENU.APPOINTMENT;
+      });
+      buttons.splice(index, 1);
+    }
     return buttons;
   };
 
@@ -545,7 +546,6 @@ const Beranda = () => {
             style={style.touchable}
             onPress={() => {
               toggleModal('open')();
-              // navigation.navigate('se')
             }}
           />
           <BSearchBar

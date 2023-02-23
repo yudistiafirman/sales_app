@@ -9,8 +9,22 @@ import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { customLog } from '@/utils/generalFunc';
 import perf from '@react-native-firebase/perf';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { openSnackbar } from '@/redux/reducers/snackbarReducer';
+import Config from 'react-native-config';
+import { production } from '../../app.json';
+const PRODUCTION = production;
 
-const production = false;
+const URL_PRODUCTIVITY = PRODUCTION
+  ? Config.API_URL_PRODUCTIVITY_PROD
+  : Config.API_URL_PRODUCTIVITY_DEV;
+const URL_ORDER = PRODUCTION
+  ? Config.API_URL_ORDER_PROD
+  : Config.API_URL_ORDER_DEV;
+// const URL_INV = PRODUCTION ? Config.API_URL_INV_PROD : Config.API_URL_INV_DEV;
+// const URL_COMMON = PRODUCTION
+//   ? Config.API_URL_COMMON_PROD
+//   : Config.API_URL_COMMON_DEV;
+
 let store: any;
 let metric: any;
 let retryCount = 0;
@@ -28,6 +42,11 @@ interface RequestInfo {
   headers: Record<string, string>;
   data?: Record<string, string> | FormDataValue;
   timeoutInterval?: number;
+}
+
+function setCharAt(str, index, chr) {
+  if (index > str.length - 1) return str;
+  return str.substring(0, index) + chr + str.substring(index + 1);
 }
 
 function getContentType<T>(dataToReceived: T) {
@@ -142,6 +161,35 @@ instance.interceptors.response.use(
       }
 
       console.log(data, 'backenderror');
+    } else if (config.method !== 'get') {
+      console.log(config.url, 'configUrl');
+      let url = config.url;
+      if (url) {
+        if (url[url?.length - 1] === '/') {
+          url = setCharAt(url, url?.length - 1, '');
+        }
+      }
+      const urlArray: string[] = url?.split('/');
+      const respMethod = config.method;
+      const endpoint = urlArray[urlArray?.length - 1] || '';
+      //URL_PRODUCTIVITY
+      ///productivity/m/flow/visitation
+      const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
+      //URL_ORDER
+      const postSphUrl = `${URL_ORDER}/order/m/flow/quotation/`;
+
+      if (
+        endpoint !== 'refresh' &&
+        url !== postVisitationUrl &&
+        url !== postSphUrl
+      ) {
+        store.dispatch(
+          openSnackbar({
+            snackBarText: `Success ${respMethod} ${endpoint}`,
+            isSuccess: true,
+          })
+        );
+      }
     }
     return Promise.resolve(res);
   },
@@ -149,9 +197,8 @@ instance.interceptors.response.use(
     let errorMessage = `There's something wrong`;
     let errorStatus = 500;
     let errorMethod = error.config?.method;
-    let responseSuccess;
 
-    if (errorMethod === 'get') {
+    if (errorMethod !== 'get') {
       if (error.response) {
         if (error.response.data) {
           if (error.response.data.message) {
@@ -168,61 +215,74 @@ instance.interceptors.response.use(
         console.log('Error', error.message);
       }
       console.log(errorMessage, errorStatus, 'messageerror');
-      // console.log(JSON.stringify(error.response), 'responseerror163');
-      store.dispatch(
-        openPopUp({
-          popUpType: 'error',
-          popUpText: errorMessage,
-          outsideClickClosePopUp: true,
-          popUpTitle:
-            'Error code' +
-            ' ' +
-            errorStatus +
-            ' ' +
-            `Retrycount: ${retryCount}`,
-          isRenderActions: true,
-          outlineBtnAction: () => {
-            store.dispatch(closePopUp());
-          },
-          outlineBtnTitle: 'Tutup',
-          primaryBtnAction: async () => {
-            try {
-              retryCount++;
-              store.dispatch(
-                openPopUp({
-                  popUpType: 'loading',
-                  popUpTitle: `Retrycount: ${retryCount}`,
-                  isPrimaryButtonLoading: true,
-                  outsideClickClosePopUp: false,
-                })
-              );
+      const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
+      const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
+      console.log(error.config, 'errorconfig213');
+      console.log(postVisitationUrl, 'postVisitationUrl');
 
-              const retryResponse = await instance({ ...error.config });
-              // Promise.resolve(retryResponse);
-              responseSuccess = retryResponse;
-              store.dispatch(
-                openPopUp({
-                  popUpType: 'success',
-                  isPrimaryButtonLoading: false,
-                })
-              );
-              // store.dispatch(closePopUp());
-            } catch (err) {
-              store.dispatch(
-                openPopUp({
-                  popUpType: 'error',
-                  isPrimaryButtonLoading: false,
-                })
-              );
-              console.log(err);
-            }
-          },
-          primaryBtnTitle: 'Retry request',
-        })
-      );
-    }
-    if (responseSuccess) {
-      return Promise.resolve(responseSuccess);
+      if (
+        error?.config?.url !== postVisitationUrl &&
+        error?.config?.url !== postVisitationBookUrl
+      ) {
+        store.dispatch(
+          openSnackbar({
+            snackBarText: `${errorMessage} code: ${errorStatus}`,
+            isSuccess: false,
+          })
+        );
+      }
+      // console.log(JSON.stringify(error.response), 'responseerror163');
+      // store.dispatch(
+      //   openPopUp({
+      //     popUpType: 'error',
+      //     popUpText: errorMessage,
+      //     outsideClickClosePopUp: true,
+      //     popUpTitle:
+      //       'Error code' +
+      //       ' ' +
+      //       errorStatus +
+      //       ' ' +
+      //       `Retrycount: ${retryCount}`,
+      //     isRenderActions: true,
+      //     outlineBtnAction: () => {
+      //       store.dispatch(closePopUp());
+      //     },
+      //     outlineBtnTitle: 'Tutup',
+      //     primaryBtnAction: async () => {
+      //       try {
+      //         retryCount++;
+      //         store.dispatch(
+      //           openPopUp({
+      //             popUpType: 'loading',
+      //             popUpTitle: `Retrycount: ${retryCount}`,
+      //             isPrimaryButtonLoading: true,
+      //             outsideClickClosePopUp: false,
+      //           })
+      //         );
+
+      //         const retryResponse = await instance({ ...error.config });
+      //         // Promise.resolve(retryResponse);
+      //         responseSuccess = retryResponse;
+      //         store.dispatch(
+      //           openPopUp({
+      //             popUpType: 'success',
+      //             isPrimaryButtonLoading: false,
+      //           })
+      //         );
+      //         // store.dispatch(closePopUp());
+      //       } catch (err) {
+      //         store.dispatch(
+      //           openPopUp({
+      //             popUpType: 'error',
+      //             isPrimaryButtonLoading: false,
+      //           })
+      //         );
+      //         console.log(err);
+      //       }
+      //     },
+      //     primaryBtnTitle: 'Retry request',
+      //   })
+      // );
     }
     return Promise.reject(error);
   }

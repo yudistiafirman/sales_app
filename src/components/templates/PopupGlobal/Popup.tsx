@@ -7,13 +7,7 @@ import { setIsPopUpVisible } from '@/redux/reducers/modalReducer';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {
-  BBackContinueBtn,
-  BButtonPrimary,
-  BHighlightText,
-  BSpacer,
-  BText,
-} from '@/components';
+import { BBackContinueBtn, BHighlightText, BText } from '@/components';
 import font from '@/constants/fonts';
 
 export default function Popup() {
@@ -65,8 +59,8 @@ export default function Popup() {
         {popUpOptions.isRenderActions && (
           <BBackContinueBtn
             isContinueIcon={false}
-            continueText="Retry"
-            backText="Tutup"
+            continueText={popUpOptions.primaryBtnTitle}
+            backText={popUpOptions.outlineBtnTitle}
             loadingContinue={popUpOptions.isPrimaryButtonLoading}
             onPressBack={popUpOptions.outlineBtnAction}
             onPressContinue={popUpOptions.primaryBtnAction}
