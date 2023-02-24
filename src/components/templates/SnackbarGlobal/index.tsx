@@ -28,7 +28,7 @@ export default function SnackbarGlobal() {
     <Snackbar
       visible={isSnackbarVisible}
       onDismiss={onDismissSnackBar}
-      duration={100000}
+      duration={3000}
       style={[!isSuccess ? styles.error : styles.success]}
       wrapperStyle={{ top: resScale(50), zIndex: 10 }}
       //   action={{
