@@ -154,10 +154,7 @@ instance.interceptors.response.use(
         const finalResponse = await instance(config);
         return Promise.resolve(finalResponse);
       }
-
-      console.log(data, 'backenderror');
     } else if (config.method !== 'get') {
-      console.log(config.url, 'configUrl');
       let url = config.url;
       if (url) {
         if (url[url?.length - 1] === '/') {
@@ -201,19 +198,13 @@ instance.interceptors.response.use(
           }
         }
         errorStatus = error.response.status;
-        // console.log(error.response.data);
-        // console.log(error.response.status);
-        // console.log(error.response.headers);
       } else if (error.request) {
-        console.log(error.request);
+        customLog(error.request);
       } else {
-        console.log('Error', error.message);
+        customLog('Error', error.message);
       }
-      console.log(errorMessage, errorStatus, 'messageerror');
       const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
       const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
-      console.log(error.config, 'errorconfig213');
-      console.log(postVisitationUrl, 'postVisitationUrl');
 
       if (
         error?.config?.url !== postVisitationUrl &&
@@ -226,58 +217,6 @@ instance.interceptors.response.use(
           })
         );
       }
-      // console.log(JSON.stringify(error.response), 'responseerror163');
-      // store.dispatch(
-      //   openPopUp({
-      //     popUpType: 'error',
-      //     popUpText: errorMessage,
-      //     outsideClickClosePopUp: true,
-      //     popUpTitle:
-      //       'Error code' +
-      //       ' ' +
-      //       errorStatus +
-      //       ' ' +
-      //       `Retrycount: ${retryCount}`,
-      //     isRenderActions: true,
-      //     outlineBtnAction: () => {
-      //       store.dispatch(closePopUp());
-      //     },
-      //     outlineBtnTitle: 'Tutup',
-      //     primaryBtnAction: async () => {
-      //       try {
-      //         retryCount++;
-      //         store.dispatch(
-      //           openPopUp({
-      //             popUpType: 'loading',
-      //             popUpTitle: `Retrycount: ${retryCount}`,
-      //             isPrimaryButtonLoading: true,
-      //             outsideClickClosePopUp: false,
-      //           })
-      //         );
-
-      //         const retryResponse = await instance({ ...error.config });
-      //         // Promise.resolve(retryResponse);
-      //         responseSuccess = retryResponse;
-      //         store.dispatch(
-      //           openPopUp({
-      //             popUpType: 'success',
-      //             isPrimaryButtonLoading: false,
-      //           })
-      //         );
-      //         // store.dispatch(closePopUp());
-      //       } catch (err) {
-      //         store.dispatch(
-      //           openPopUp({
-      //             popUpType: 'error',
-      //             isPrimaryButtonLoading: false,
-      //           })
-      //         );
-      //         console.log(err);
-      //       }
-      //     },
-      //     primaryBtnTitle: 'Retry request',
-      //   })
-      // );
     }
     return Promise.reject(error);
   }

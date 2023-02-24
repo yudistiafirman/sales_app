@@ -462,7 +462,7 @@ interface picPayloadType {
   position?: string;
   phone?: string;
   email?: string;
-  type?: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
+  type?: 'PROJECT' | 'RECIPIENT' | 'SUPPLIER';
   isSelected?: boolean;
 }
 interface requiredPic {
@@ -471,7 +471,7 @@ interface requiredPic {
   position: string;
   phone: string;
   email: string;
-  type: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
+  type: 'PROJECT' | 'RECIPIENT' | 'SUPPLIER';
   isSelected: boolean;
 }
 
@@ -541,6 +541,7 @@ interface deliveryAndDistance {
   createdAt?: string;
   updatedAt?: string;
   category_id?: string;
+  userDistance?: string | number;
 }
 interface sphOrderPayloadType {
   projectId: string;
