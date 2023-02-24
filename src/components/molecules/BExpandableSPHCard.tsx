@@ -59,7 +59,7 @@ const BExpandableSphCard = ({
         volume={item.volume}
         pricePerVol={item.pricePerVol}
         totalPrice={item.totalPrice}
-        backgroundColor="white"
+        backgroundColor={colors.white}
         containerStyle={styles.productCardContainer}
       />
     );
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   checkBoxContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: layout.pad.md + layout.pad.xs,
+    marginRight: layout.pad.ml,
     paddingTop: layout.pad.lg,
   },
   expandableContainer: { flex: 1, minHeight: resScale(56) },

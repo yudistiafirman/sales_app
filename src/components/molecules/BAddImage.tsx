@@ -10,7 +10,7 @@ const BAddImage = ({ onAddImage }: { onAddImage: () => void }) => {
       onPress={onAddImage}
       style={[styles.addImage, styles.container]}
     >
-      <Feather name="plus" size={resScale(25)} color="#000000" />
+      <Feather name="plus" size={resScale(25)} color={colors.pitchBlack} />
     </TouchableOpacity>
   );
 };

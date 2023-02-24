@@ -205,7 +205,6 @@ const PaymentDetail = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: layout.pad.lg,
     marginBottom: layout.pad.xl * 2,
   },
   paymentType: {

@@ -9,6 +9,7 @@ const colors = {
   lightGray: '#E6E6E6',
   offCheckbox: '#aaaaaa',
   whatsAppGreen: '#1DAD22',
+  pitchBlack: '#000000',
   text: {
     dark: '#191919',
     darker: '#202020',

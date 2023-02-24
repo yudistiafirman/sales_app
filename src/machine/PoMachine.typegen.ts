@@ -27,6 +27,7 @@
 "assignValue": "inputSph";
 "closeModalSph": "addChoosenSph";
 "closingModal": "closeModal";
+"setSelectedChoosenProduct": "selectProduct";
 "triggerModal": "openingModal";
         };
         eventsCausingDelays: {
@@ -40,7 +41,8 @@
           "GetSphList": "searching";
 "getSavedPo": "xstate.init";
         };
-        matchesStates: "Exit" | "SecondStep" | "SecondStep.idle" | "SecondStep.uploadFile" | "checkSavedPo" | "enquirePOType" | "firstStep" | "firstStep.SearchSph" | "firstStep.SearchSph.inputting" | "firstStep.SearchSph.openModalChooseSph" | "firstStep.SearchSph.searchingSph" | "firstStep.addPO" | "openCamera" | { "SecondStep"?: "idle" | "uploadFile";
+        matchesStates: "Exit" | "SecondStep" | "SecondStep.idle" | "SecondStep.uploadFile" | "ThirdStep" | "ThirdStep.idle" | "ThirdStep.productSelected" | "checkSavedPo" | "enquirePOType" | "firstStep" | "firstStep.SearchSph" | "firstStep.SearchSph.inputting" | "firstStep.SearchSph.openModalChooseSph" | "firstStep.SearchSph.searchingSph" | "firstStep.addPO" | "openCamera" | { "SecondStep"?: "idle" | "uploadFile";
+"ThirdStep"?: "idle" | "productSelected";
 "firstStep"?: "SearchSph" | "addPO" | { "SearchSph"?: "inputting" | "openModalChooseSph" | "searchingSph"; }; };
         tags: never;
       }

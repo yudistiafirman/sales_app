@@ -25,7 +25,7 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
-import {  SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import CreatePo from './element/CreatePo';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -41,10 +41,10 @@ const PO = () => {
   const [state] = useActor(purchaseOrderService);
   const { send } = purchaseOrderService;
   const dispatch = useDispatch<AppDispatch>();
-  const labels = ['Cari SPH', 'Detil Pembayaran', 'Detil Produk'];
+
   const [currentStep, setCurrentStep] = useState(0);
   const [stepsDone, setStepsDone] = useState<number[]>([]);
-
+  const labels = ['Cari SPH', 'Detil Pembayaran', 'Detil Produk'];
   const handleBack = useCallback(() => {
     if (currentStep === 0) {
       if (state.matches('firstStep.SearchSph')) {
@@ -56,6 +56,9 @@ const PO = () => {
     } else if (currentStep === 1) {
       setCurrentStep((prevState) => prevState - 1);
       send('goBackToFirstStep');
+    } else if (currentStep === 2) {
+      setCurrentStep((prevState) => prevState - 1);
+      send('goBackToSecondStep');
     }
   }, [currentStep, dispatch, navigation, send, state]);
 
@@ -65,6 +68,7 @@ const PO = () => {
       send('goToSecondStep');
     } else if (currentStep === 1) {
       setCurrentStep((prevState) => prevState + 1);
+      send('goToThirdStep');
     }
   }, [currentStep, send]);
 
@@ -135,14 +139,14 @@ const PO = () => {
 };
 
 const styles = StyleSheet.create({
-  poContainer: { flex: 1, margin: layout.pad.md },
+  poContainer: { flex: 1, margin: layout.pad.lg },
   stepperIndicator: { alignSelf: 'center' },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     position: 'absolute',
-    bottom: 10,
+    bottom: 0,
   },
 });
 

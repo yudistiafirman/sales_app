@@ -3,11 +3,12 @@ import { FlatList, ListRenderItem } from 'react-native';
 import BSpacer from '../atoms/BSpacer';
 import BCommonCompanyCard from '../molecules/BCommonCompanyCard';
 
-type ProductsData = {
+export type ProductsData = {
   name: string;
   volume: number;
   pricePerVol: number;
   totalPrice: number;
+  isSelected?: boolean;
 };
 
 export type SPH = {
