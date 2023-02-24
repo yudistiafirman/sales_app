@@ -1,5 +1,9 @@
-import { BDivider, BLabel, BSpacer } from '@/components';
-import BExpandableProductCard from '@/components/molecules/BExpandableProductCard';
+import {
+  BDivider,
+  BExpandableProductCard,
+  BLabel,
+  BSpacer,
+} from '@/components';
 import { ProductsData } from '@/components/organism/BCommonCompanyList';
 import { colors, fonts } from '@/constants';
 import font from '@/constants/fonts';

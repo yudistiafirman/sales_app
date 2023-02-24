@@ -48,6 +48,7 @@ export { default as BExpandableSPHCard } from './molecules/BExpandableSPHCard';
 export { default as BLocationDetail } from './molecules/BLocationDetail';
 export { default as BGallery } from './molecules/BGallery';
 export { default as PopUpQuestion } from './molecules/PopUpQuestion';
+export { default as BExpandableProductCard } from './molecules/BExpandableProductCard';
 
 // organism
 export { default as BForm } from './organism/BForm';
