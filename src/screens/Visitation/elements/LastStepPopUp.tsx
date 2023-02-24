@@ -192,7 +192,9 @@ export default function LastStepPopUp({
               <TouchableOpacity
                 style={styles.touchable}
                 onPress={() => {
-                  navigation.navigate(CALENDAR);
+                  navigation.navigate(CALENDAR, {
+                    useTodayMinDate: true,
+                  });
                   setIsPopUpVisible((curr) => !curr);
                 }}
               />

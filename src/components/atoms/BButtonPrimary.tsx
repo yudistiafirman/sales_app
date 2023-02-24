@@ -59,6 +59,7 @@ export default function BButtonPrimary({
               style.buttonTitle,
               titleStyle,
               isOutline ? style.outlineTitle : null,
+              disable && style.disableText,
             ]}
           >
             {title}
@@ -86,6 +87,9 @@ const style = StyleSheet.create({
   disableStyle: {
     backgroundColor: colors.disabled,
     borderColor: colors.disabled,
+  },
+  disableText: {
+    color: colors.tertiary,
   },
   buttonTitle: {
     textAlign: 'center',

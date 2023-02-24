@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import { Api } from '@/models';
 import { UserModel } from '@/models/User';
@@ -7,6 +7,11 @@ import { storageKey } from '@/constants';
 import { signout } from '@/redux/reducers/authReducer';
 import { customLog } from '@/utils/generalFunc';
 import perf from '@react-native-firebase/perf';
+import { openSnackbar } from '@/redux/reducers/snackbarReducer';
+import Config from 'react-native-config';
+
+const URL_PRODUCTIVITY = Config.API_URL_PRODUCTIVITY;
+const URL_ORDER = Config.API_URL_ORDER;
 
 let store: any;
 let metric: any;
@@ -24,6 +29,11 @@ interface RequestInfo {
   headers: Record<string, string>;
   data?: Record<string, string> | FormDataValue;
   timeoutInterval?: number;
+}
+
+function setCharAt(str, index, chr) {
+  if (index > str.length - 1) return str;
+  return str.substring(0, index) + chr + str.substring(index + 1);
 }
 
 function getContentType<T>(dataToReceived: T) {
@@ -144,11 +154,71 @@ instance.interceptors.response.use(
         const finalResponse = await instance(config);
         return Promise.resolve(finalResponse);
       }
+    } else if (config.method !== 'get') {
+      let url = config.url;
+      if (url) {
+        if (url[url?.length - 1] === '/') {
+          url = setCharAt(url, url?.length - 1, '');
+        }
+      }
+      const urlArray: string[] = url?.split('/');
+      const respMethod = config.method;
+      const endpoint = urlArray[urlArray?.length - 1] || '';
+      //URL_PRODUCTIVITY
+      ///productivity/m/flow/visitation
+      const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
+      //URL_ORDER
+      const postSphUrl = `${URL_ORDER}/order/m/flow/quotation/`;
+
+      if (
+        endpoint !== 'refresh' &&
+        url !== postVisitationUrl &&
+        url !== postSphUrl
+      ) {
+        store.dispatch(
+          openSnackbar({
+            snackBarText: `Success ${respMethod} ${endpoint}`,
+            isSuccess: true,
+          })
+        );
+      }
     }
     return Promise.resolve(res);
   },
-  (err: any) => {
-    return Promise.reject(err);
+  (error: AxiosError<Api.Response, any>) => {
+    let errorMessage = `There's something wrong`;
+    let errorStatus = 500;
+    let errorMethod = error.config?.method;
+
+    if (errorMethod !== 'get') {
+      if (error.response) {
+        if (error.response.data) {
+          if (error.response.data.message) {
+            errorMessage = error.response.data.message;
+          }
+        }
+        errorStatus = error.response.status;
+      } else if (error.request) {
+        customLog(error.request);
+      } else {
+        customLog('Error', error.message);
+      }
+      const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
+      const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
+
+      if (
+        error?.config?.url !== postVisitationUrl &&
+        error?.config?.url !== postVisitationBookUrl
+      ) {
+        store.dispatch(
+          openSnackbar({
+            snackBarText: `${errorMessage} code: ${errorStatus}`,
+            isSuccess: false,
+          })
+        );
+      }
+    }
+    return Promise.reject(error);
   }
 );
 

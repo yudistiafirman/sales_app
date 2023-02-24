@@ -4,9 +4,10 @@ import { useAppointmentData } from '@/hooks';
 import { Input, projectResponseType, Styles } from '@/interfaces';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
 import { AppDispatch } from '@/redux/store';
+import { resScale } from '@/utils';
 import debounce from 'lodash.debounce';
 import React, { useMemo } from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 const company = require('@/assets/icon/Visitation/company.png');
 const profile = require('@/assets/icon/Visitation/profile.png');
@@ -164,10 +165,13 @@ const Inputs = () => {
         <BDivider />
       </View>
       <BSpacer size="small" />
-      <View>
+      <ScrollView
+        style={styles.inputContainerStyle}
+        showsVerticalScrollIndicator={false}
+      >
         <BForm titleBold="500" inputs={inputs} />
         <BSpacer size="large" />
-      </View>
+      </ScrollView>
     </>
   );
 };
@@ -181,6 +185,9 @@ const styles: Styles = {
     paddingLeft: 20,
     paddingRight: 20,
     backgroundColor: 'red',
+  },
+  inputContainerStyle: {
+    maxHeight: resScale(480),
   },
 };
 
