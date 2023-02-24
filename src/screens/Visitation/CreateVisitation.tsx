@@ -34,7 +34,11 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
 import { useDispatch } from 'react-redux';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { resetRegion, updateRegion } from '@/redux/reducers/locationReducer';
 import { layout } from '@/constants';
@@ -223,24 +227,42 @@ const CreateVisitation = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        if (bottomSheetRef?.current) bottomSheetRef?.current?.close();
+        if (values.step > 0) {
+          next(values.step - 1)();
+        } else {
+          setPopupVisible(true);
+        }
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [values.step])
+  );
+
   useEffect(() => {
     stepHandler(values, setStepsDone);
-
-    const backAction = () => {
-      setPopupVisible(true);
-      return true;
-    };
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction
-    );
-    return () => backHandler.remove();
   }, [values]);
 
   const next = (nextStep: number) => () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
+    }
+  };
+
+  const handleBackButton = () => {
+    if (values.step > 0) {
+      next(values.step - 1)();
+    } else {
+      setPopupVisible(true);
     }
   };
 
@@ -286,7 +308,7 @@ const CreateVisitation = () => {
                   true
                 );
               }}
-              onPressBack={next(values.step - 1)}
+              onPressBack={handleBackButton}
               disableContinue={!stepsDone.includes(values.step)}
             />
           )}
