@@ -25,7 +25,12 @@ import {
 } from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
-import { CAMERA, CREATE_VISITATION, SPH_TITLE } from '@/navigation/ScreenNames';
+import {
+  CAMERA,
+  CREATE_VISITATION,
+  SPH,
+  SPH_TITLE,
+} from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
 import { BGallery, PopUpQuestion } from '@/components';
@@ -291,7 +296,7 @@ const Fourth = () => {
           setIsLastStepVisible(false);
           if (type === 'SPH') {
             navigation.dispatch(
-              StackActions.replace(SPH_TITLE, {
+              StackActions.replace(SPH, {
                 projectId: response.projectId,
               })
             );
