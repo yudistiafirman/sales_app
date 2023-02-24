@@ -154,7 +154,7 @@ instance.interceptors.response.use(
         const finalResponse = await instance(config);
         return Promise.resolve(finalResponse);
       }
-    } else if (config.method !== 'get') {
+    } else if (config.method !== 'get' && config.method !== 'put') {
       let url = config.url;
       if (url) {
         if (url[url?.length - 1] === '/') {
