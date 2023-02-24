@@ -38,7 +38,7 @@ export default function ExpandableCustomerCard({
     <View style={styles.customerCard}>
       <View style={styles.topCard}>
         <BText type="title">
-          {item.display_name ? item.display_name : '-'}
+          {item.display_name ? item.display_name : item.picName}
         </BText>
         <TouchableOpacity
           onPress={changeLayout}

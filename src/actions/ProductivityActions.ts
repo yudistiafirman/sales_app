@@ -22,7 +22,7 @@ export const getVisitations = async ({ month, year }: getVisitationsType) => {
 };
 export const postVisitations = async ({ payload }: visitationPayloadType) => {
   return customRequest(
-    BrikApiProductivity.visitations({}),
+    BrikApiProductivity.visitations(),
     'POST',
     payload,
     true

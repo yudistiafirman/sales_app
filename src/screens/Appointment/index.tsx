@@ -301,7 +301,7 @@ const Appointment = () => {
         <Steps currentPosition={step} stepsToRender={stepsToRender} />
 
         {btnShown && (
-          <>
+          <View style={style.buttonAction}>
             {step === 0 ? (
               <View style={{ width: '100%' }}>
                 <BButtonPrimary
@@ -321,7 +321,7 @@ const Appointment = () => {
                 disableContinue={!selectedDate}
               />
             )}
-          </>
+          </View>
         )}
       </View>
       <BottomSheetAddPIC
@@ -359,6 +359,12 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flex: 1,
+    position: 'relative',
+  },
+  buttonAction: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
   },
 });
 
