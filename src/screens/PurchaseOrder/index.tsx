@@ -4,6 +4,7 @@ import {
   BHeaderTitle,
   BSpacer,
   BStepperIndicator,
+  BText,
 } from '@/components';
 import { colors, layout } from '@/constants';
 import {
@@ -103,7 +104,7 @@ const PO = () => {
     navigation.setOptions({
       headerBackVisible: false,
       headerLeft: () => renderHeaderLeft(),
-      headerTitle: () => BHeaderTitle(renderTitle(), 'flex-start'),
+      headerTitle: renderTitle(),
     });
   }, [navigation, renderHeaderLeft, renderTitle]);
 

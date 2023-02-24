@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { BButtonPrimary } from '@/components';
+import { BButtonPrimary, BHeaderIcon } from '@/components';
 import { layout } from '@/constants';
 import {
   StyleProp,
@@ -19,6 +19,7 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
 import {
+  CREATE_DEPOSIT,
   CREATE_VISITATION,
   IMAGE_PREVIEW,
   SUBMIT_FORM,
@@ -26,6 +27,7 @@ import {
 import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -41,16 +43,29 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const _style = useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
   const navigateTo = route?.params?.navigateTo;
+  const closeButton = route?.params?.closeButton;
   const existingVisitation = route?.params?.existingVisitation;
+
+  if (closeButton) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useCustomHeaderLeft({
+      customHeaderLeft: (
+        <BHeaderIcon
+          size={resScale(23)}
+          onBack={() => navigation.goBack()}
+          iconName="x"
+        />
+      ),
+    });
+  }
 
   React.useEffect(() => {
     crashlytics().log(IMAGE_PREVIEW);
   }, []);
 
   const savePhoto = () => {
-    const imagePayloadType: 'COVER' | 'GALLERY' = navigateTo
-      ? 'COVER'
-      : 'GALLERY';
+    const imagePayloadType: 'COVER' | 'GALLERY' =
+      navigateTo && navigateTo !== CREATE_DEPOSIT ? 'COVER' : 'GALLERY';
     const photoName = photo.split('/').pop();
     const photoNameParts = photoName.split('.');
     let photoType = photoNameParts[photoNameParts.length - 1];

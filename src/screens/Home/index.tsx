@@ -41,9 +41,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
+import { useHeaderShow } from '@/hooks';
 import {
   APPOINTMENT,
   CAMERA,
+  CREATE_DEPOSIT,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
   CUSTOMER_DETAIL,
@@ -60,7 +62,6 @@ import {
 } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import { HOME_MENU } from '../Const';
-
 const { RNCustomConfig } = NativeModules;
 const versionName = RNCustomConfig?.version_name;
 const { height } = Dimensions.get('window');
@@ -78,6 +79,7 @@ const Beranda = () => {
     enable_visitation,
   } = useSelector((state: RootState) => state.auth.remote_config);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [currentVisit, setCurrentVisit] = React.useState<{
     current: number;
     target: number;
@@ -91,12 +93,12 @@ const Beranda = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isError, setIsError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
-  const navigation = useNavigation();
 
   const [isModalVisible, setModalVisible] = React.useState(false);
-  const [isHeaderShown, setIsHeaderShown] = React.useState(true);
   const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
-
+  useHeaderShow({
+    isHeaderShown: !isModalVisible,
+  });
   useHeaderStyleChanged({
     titleColor: colors.text.light,
     bgColor: colors.primary,
@@ -116,7 +118,6 @@ const Beranda = () => {
 
   const toggleModal = (key: string) => () => {
     setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
-    setIsHeaderShown(!isHeaderShown);
     setModalVisible(!isModalVisible);
     if (key === 'close') {
       setSearchQuery('');
@@ -308,7 +309,7 @@ const Beranda = () => {
         icon: SvgNames.IC_SPH,
         title: HOME_MENU.SPH,
         action: () => {
-          navigation.navigate(SPH);
+          navigation.navigate(SPH, {});
         },
       },
       {
@@ -321,20 +322,26 @@ const Beranda = () => {
       {
         icon: SvgNames.IC_DEPOSIT,
         title: HOME_MENU.DEPOSIT,
-        action: () => {},
+        action: () => {
+          navigation.navigate(CAMERA, {
+            photoTitle: 'Bukti',
+            navigateTo: CREATE_DEPOSIT,
+            closeButton: true,
+          });
+        },
       },
       {
         icon: SvgNames.IC_MAKE_SCHEDULE,
         title: HOME_MENU.SCHEDULE,
         action: () => {
-          navigation.navigate(CREATE_SCHEDULE);
+          navigation.navigate(CREATE_SCHEDULE, {});
         },
       },
       {
         icon: SvgNames.IC_APPOINTMENT,
         title: HOME_MENU.APPOINTMENT,
         action: () => {
-          navigation.navigate(APPOINTMENT);
+          navigation.navigate(APPOINTMENT, {});
         },
       },
     ];
@@ -423,6 +430,7 @@ const Beranda = () => {
     navigation.navigate(CAMERA, {
       photoTitle: 'Kunjungan',
       navigateTo: CREATE_VISITATION,
+      closeButton: true,
     });
   };
   const sceneToRender = React.useCallback(() => {
@@ -473,6 +481,7 @@ const Beranda = () => {
         navigation.navigate(CAMERA, {
           photoTitle: 'Kunjungan',
           navigateTo: CREATE_VISITATION,
+          closeButton: true,
           existingVisitation: response,
         });
       } else {
@@ -561,7 +570,9 @@ const Beranda = () => {
         <View style={style.posRelative}>
           <TouchableOpacity
             style={style.touchable}
-            onPress={toggleModal('open')}
+            onPress={() => {
+              toggleModal('open')();
+            }}
           />
           <BSearchBar
             placeholder="Cari Pelanggan"

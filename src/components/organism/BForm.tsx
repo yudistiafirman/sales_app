@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   View,
   StyleProp,
@@ -23,6 +23,9 @@ import CheckBox from '@react-native-community/checkbox';
 import { TextInput } from 'react-native-paper';
 import BSwitch from '../atoms/BSwitch';
 import BFileInput from '../atoms/BFileInput';
+import { TextInputMask } from 'react-native-masked-text';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import BCalendar from './BCalendar';
 
 interface IProps {
   inputs: Input[];
@@ -67,12 +70,53 @@ const styles: Styles = {
   quantityInput: {
     flex: 1,
   },
+  quantityInputPrice: {
+    flex: 1,
+    justifyContent: 'center',
+    borderColor: colors.textInput.placeHolder,
+    borderWidth: 1,
+    borderRadius: layout.radius.sm,
+  },
+  quantityInputCalendar: {
+    flex: 1,
+    justifyContent: 'center',
+    borderColor: colors.textInput.placeHolder,
+    borderWidth: 1,
+    borderRadius: layout.radius.sm,
+    paddingHorizontal: layout.pad.lg,
+    paddingVertical: layout.pad.ml,
+  },
   quantityText: {
     position: 'absolute',
     right: 0,
+    top: 6,
+    bottom: 0,
     alignSelf: 'center',
     justifyContent: 'center',
     marginRight: layout.pad.lg,
+  },
+  priceText: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    paddingStart: layout.pad.lg,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  calendarText: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    paddingEnd: layout.pad.md,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  calendar: {
+    borderWidth: 1,
+    borderRadius: layout.radius.sm,
+    borderColor: colors.lightGray,
   },
   checkboxText: {
     flex: 1,
@@ -86,14 +130,12 @@ const styles: Styles = {
   },
   TextinputAbsolute: {
     position: 'absolute',
-    // backgroundColor: 'blue',
     width: '100%',
     height: resScale(73),
     zIndex: 2,
   },
   TextAreaAbsolute: {
     position: 'absolute',
-    // backgroundColor: 'blue',
     width: '100%',
     height: resScale(110),
     zIndex: 2,
@@ -146,6 +188,7 @@ const renderInput = (
     textInputAsButtonOnPress,
     outlineColor,
     loading,
+    calendar,
   } = input;
 
   if (type === 'quantity') {
@@ -159,7 +202,7 @@ const renderInput = (
         />
         <View style={styles.quantityLayout}>
           <BTextInput
-            style={styles.quantityInput}
+            style={[styles.quantityInput, { paddingEnd: layout.pad.xl }]}
             onChangeText={onChange}
             value={value}
             keyboardType={'numeric'}
@@ -174,6 +217,97 @@ const renderInput = (
           <BText size="small" color="primary" bold="100">
             {`${label} harus diisi`}
           </BText>
+        )}
+      </React.Fragment>
+    );
+  }
+
+  if (type === 'price') {
+    return (
+      <React.Fragment>
+        <BLabel
+          sizeInNumber={input.textSize}
+          bold={titleBold}
+          label={label}
+          isRequired={isRequire}
+        />
+        <View style={[styles.quantityLayout, { marginTop: layout.pad.md }]}>
+          <View
+            style={[
+              styles.quantityInputPrice,
+              { paddingStart: layout.pad.xxl },
+            ]}
+          >
+            <TextInputMask
+              type={'money'}
+              options={{
+                precision: 0,
+                separator: ',',
+                delimiter: '.',
+                unit: '',
+                suffixUnit: '',
+              }}
+              value={value}
+              onChangeText={onChange}
+              placeholder={placeholder}
+              style={textStyles}
+            />
+          </View>
+          <View style={styles.priceText}>
+            <BText>{'IDR'}</BText>
+          </View>
+        </View>
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {`${label} harus diisi`}
+          </BText>
+        )}
+      </React.Fragment>
+    );
+  }
+
+  if (type === 'calendar') {
+    return (
+      <React.Fragment>
+        <BLabel
+          sizeInNumber={input.textSize}
+          bold={titleBold}
+          label={label}
+          isRequired={isRequire}
+        />
+        <TouchableOpacity
+          style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
+          onPress={() => calendar.setCalendarVisible(true)}
+        >
+          <View
+            style={[
+              styles.quantityInputCalendar,
+              { paddingEnd: layout.pad.xl },
+            ]}
+          >
+            <BText>{value ? value : placeholder}</BText>
+          </View>
+          <View style={styles.calendarText}>
+            <Icon name="chevron-right" size={25} color={colors.black} />
+          </View>
+        </TouchableOpacity>
+        {isError && (
+          <BText size="small" color="primary" bold="100">
+            {`${label} harus diisi`}
+          </BText>
+        )}
+        {calendar?.isCalendarVisible && (
+          <>
+            <BSpacer size={'extraSmall'} />
+            <View style={styles.calendar}>
+              <BCalendar
+                onDayPress={(date) => {
+                  calendar.setCalendarVisible(false);
+                  calendar?.onDayPress(date);
+                }}
+              />
+            </View>
+          </>
         )}
       </React.Fragment>
     );

@@ -72,6 +72,11 @@ function payloadMapper(sphState: SphStateInterface) {
     });
 
     payload.distance = sphState.chosenProducts[0].additionalData.distance;
+    if (sphState.distanceFromLegok) {
+      payload.distance.userDistance = Math.ceil(
+        sphState.distanceFromLegok / 1000
+      );
+    }
     // find highest delivery
     const deliveries: deliveryAndDistance[] = [];
     sphState.chosenProducts.forEach((prod) => {

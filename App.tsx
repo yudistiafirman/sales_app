@@ -17,7 +17,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '@/redux/store';
 import Popup from '@/components/templates/PopupGlobal/Popup';
-import AppNavigatorV2 from '@/navigation/AppNavigatorV2';
+import AppNavigator from '@/navigation/AppNavigator';
 import NetworkLogger, {
   startNetworkLogging,
 } from 'react-native-network-logger';
@@ -27,6 +27,7 @@ import { StyleSheet } from 'react-native';
 import Draggable from 'react-native-draggable';
 import { isDevelopment } from '@/utils/generalFunc';
 import analytics from '@react-native-firebase/analytics';
+import SnackbarGlobal from '@/components/templates/SnackbarGlobal';
 
 startNetworkLogging();
 const height = Dimensions.get('window').height;
@@ -157,7 +158,8 @@ function App() {
         <PaperProvider theme={paperTheme}>
           <ReduxProvider store={store}>
             <Popup />
-            <AppNavigatorV2 />
+            <SnackbarGlobal />
+            <AppNavigator />
             {isDevelopment() && networkLogger()}
           </ReduxProvider>
         </PaperProvider>

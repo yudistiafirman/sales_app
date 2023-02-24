@@ -123,7 +123,6 @@ const BSheetAddPic = React.forwardRef(
         snapPoint={['75%']}
         isButtonDisable={
           !(
-            emailRegex.test(state.email) &&
             !!state.name &&
             phoneNumberRegex.test(state.phone) &&
             !!state.position

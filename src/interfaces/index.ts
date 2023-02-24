@@ -8,12 +8,14 @@ import {
 
 import * as React from 'react';
 import { Details } from 'react-native-maps';
+import { DateData } from 'react-native-calendars';
 
 interface Input {
   label: string;
   isRequire: boolean;
   type:
     | 'quantity'
+    | 'price'
     | 'textInput'
     | 'cardOption'
     | 'comboDropdown'
@@ -25,7 +27,8 @@ interface Input {
     | 'switch'
     | 'fileInput'
     | 'map'
-    | 'autocomplete';
+    | 'autocomplete'
+    | 'calendar';
   hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   onFocus?: (e: any) => void;
@@ -46,6 +49,11 @@ interface Input {
     onChange: () => void;
     icon?: string;
   }>;
+  calendar?: {
+    onDayPress: (day: DateData) => void;
+    isCalendarVisible: boolean;
+    setCalendarVisible: (flag: boolean) => void;
+  };
   dropdown?: {
     items: {
       label: string;
@@ -176,6 +184,7 @@ interface PIC {
   email?: string;
   position?: string;
   isSelected?: boolean;
+  type?: string;
 }
 
 interface NavigationProps {
@@ -371,6 +380,7 @@ interface visitationListResponse {
     name: string;
     stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
     PIC: PIC[];
+    pic: requiredPic;
     mainPic: PIC & { type?: string };
     company: {
       id: string;
@@ -398,6 +408,7 @@ interface customerDataInterface {
   email: string | null;
   phone: string;
   position: string;
+  picName?: string;
 }
 
 interface locationPayloadType {
@@ -459,8 +470,17 @@ interface picPayloadType {
   position?: string;
   phone?: string;
   email?: string;
-  type?: 'PROJECT' | 'RECEIPENT' | 'SUPPLIER';
+  type?: 'PROJECT' | 'RECIPIENT' | 'SUPPLIER';
   isSelected?: boolean;
+}
+interface requiredPic {
+  id: string;
+  name: string;
+  position: string;
+  phone: string;
+  email: string;
+  type: 'PROJECT' | 'RECIPIENT' | 'SUPPLIER';
+  isSelected: boolean;
 }
 
 interface payloadPostType {
@@ -529,6 +549,7 @@ interface deliveryAndDistance {
   createdAt?: string;
   updatedAt?: string;
   category_id?: string;
+  userDistance?: string | number;
 }
 interface sphOrderPayloadType {
   projectId: string;
@@ -595,7 +616,7 @@ interface ProjectDetail {
   };
   mainPic: PIC;
   pics: PIC[];
-  docs:Docs[]
+  docs: Docs[];
 }
 
 export type {
@@ -634,5 +655,6 @@ export type {
   requiredDocType,
   postSphResponseType,
   Docs,
-  ProjectDetail
+  ProjectDetail,
+  requiredPic,
 };

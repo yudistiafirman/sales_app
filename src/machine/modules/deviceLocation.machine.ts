@@ -1,9 +1,8 @@
 import { assign, createMachine } from 'xstate';
 import { hasLocationPermission } from '@/utils/permissions';
-import GetLocation from 'react-native-get-location';
+import Geolocation from 'react-native-geolocation-service';
 import { getLocationCoordinates } from '../priceMachine';
 import { customLog } from '@/utils/generalFunc';
-// import GetLocation from 'react-native-get-location';
 // import { send } from 'xstate/lib/actions';
 
 interface IContext {
@@ -93,12 +92,25 @@ const deviceLocationMachine =
         },
         getCurrentLocation: async () => {
           try {
-            const position = await GetLocation.getCurrentPosition({
-              enableHighAccuracy: true,
-              timeout: 15000,
+            // const position = await Geolocation.getCurrentPosition({
+            //   enableHighAccuracy: true,
+            //   timeout: 15000,
+            // });
+            const opt = {
+              // timeout:INFINITY,
+              // maximumAge:INFINITY,
+              // accuracy: { ios: "hundredMeters", android: "balanced" },
+              // enableHighAccuracy: false,
+              // distanceFilter:0,
+              showLocationDialog: true,
+              forceRequestLocation: true,
+            };
+            const position = await new Promise((resolve, error) => {
+              return Geolocation.getCurrentPosition(resolve, error, opt);
             });
-            customLog(position, 'ini apaa??');
-            const { latitude, longitude } = position;
+            customLog(position, 'getCurrentPosition112');
+            const { coords } = position;
+            const { latitude, longitude } = coords;
 
             const { data } = await getLocationCoordinates(
               // '',

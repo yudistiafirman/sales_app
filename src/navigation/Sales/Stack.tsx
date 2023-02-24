@@ -17,6 +17,8 @@ import {
   CALENDAR_TITLE,
   CAMERA,
   CAMERA_TITLE,
+  CREATE_DEPOSIT,
+  CREATE_DEPOSIT_TITLE,
   CREATE_SCHEDULE,
   CREATE_SCHEDULE_TITLE,
   CREATE_VISITATION,
@@ -24,6 +26,7 @@ import {
   CUSTOMER_DETAIL,
   CUSTOMER_DETAIL_TITLE,
   DOCUMENTS,
+  DOCUMENTS_TITLE,
   IMAGE_PREVIEW,
   IMAGE_PREVIEW_TITLE,
   LOCATION,
@@ -47,6 +50,7 @@ import PriceList from '@/screens/Price';
 import AppointmentWithProvider from '@/screens/Appointment';
 import SearchPO from '@/screens/SearchPO';
 import RequiredDocuments from '@/screens/RequiredDocuments';
+import Deposit from '@/screens/Deposit';
 
 const SalesStack = (Stack: any) => {
   return (
@@ -176,8 +180,16 @@ const SalesStack = (Stack: any) => {
         key={DOCUMENTS}
         component={RequiredDocuments}
         options={{
-          headerTitle: 'Dokumen',
+          headerTitle: DOCUMENTS_TITLE,
           headerTitleAlign: 'center',
+        }}
+      />
+      <Stack.Screen
+        name={CREATE_DEPOSIT}
+        key={CREATE_DEPOSIT}
+        component={Deposit}
+        options={{
+          headerTitle: CREATE_DEPOSIT_TITLE,
         }}
       />
     </>
