@@ -16,9 +16,10 @@ interface POListCardProps {
   onPress?: () => void;
   color?: string;
   useChevron?: boolean;
+  customAction?: () => React.ReactNode;
 }
 
-function SPH(color, item: any, index: number) {
+function SPH(color: string | undefined, item: any, index: number) {
   return (
     <View style={{ paddingEnd: layout.pad.sm }} key={index}>
       <PillStatus color={color} pilStatus={item.name} />
@@ -34,13 +35,12 @@ const POListCard = ({
   onPress,
   color,
   useChevron = true,
+  customAction,
 }: POListCardProps) => {
   return (
     <TouchableOpacity
       style={style.container}
-      onPress={() => {
-        onPress();
-      }}
+      onPress={onPress}
       disabled={onPress ? false : true}
     >
       <View style={style.leftSide}>
@@ -52,14 +52,20 @@ const POListCard = ({
           />
         </View>
         <BLocationText location={locationName ? locationName : '-'} />
-        <View style={{ flexDirection: 'row', marginTop: layout.pad.md }}>
+        <View style={style.sph}>
           {sphs && sphs.map((item, index) => SPH(color, item, index))}
         </View>
       </View>
-      {useChevron && (
+      {useChevron ? (
         <View style={style.rightSide}>
           <Icon name="chevron-right" size={25} color={colors.icon.darkGrey} />
         </View>
+      ) : (
+        <>
+          {customAction && (
+            <View style={style.rightSide}>{customAction()}</View>
+          )}
+        </>
       )}
     </TouchableOpacity>
   );
@@ -77,6 +83,10 @@ export const style = StyleSheet.create({
     padding: layout.pad.md,
     marginTop: layout.pad.lg,
   },
+  sph: {
+    flexDirection: 'row',
+    marginTop: layout.pad.md,
+  },
   leftSide: {
     flex: 1,
     justifyContent: 'space-between',
@@ -91,12 +101,6 @@ export const style = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: layout.pad.sm,
     alignItems: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  bottom: {
-    marginTop: layout.pad.md,
   },
 });
 

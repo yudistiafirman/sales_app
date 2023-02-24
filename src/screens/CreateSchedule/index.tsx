@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { View, DeviceEventEmitter } from 'react-native';
+import { View, DeviceEventEmitter, BackHandler } from 'react-native';
 import {
   BBackContinueBtn,
-  BButtonPrimary,
   BContainer,
   BHeaderIcon,
   BSpacer,
+  PopUpQuestion,
 } from '@/components';
 import { Styles } from '@/interfaces';
 import { useKeyboardActive } from '@/hooks';
@@ -30,10 +30,6 @@ import FirstStep from './element/FirstStep';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 
 const labels = ['Cari PO', 'Detil Pengiriman'];
-
-function ContinueIcon() {
-  return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
-}
 
 function stepHandler(
   state: CreateScheduleState,
@@ -100,12 +96,13 @@ const CreateSchedule = () => {
   const { updateValue, updateValueOnstep } = action;
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
+  const [isPopupVisible, setPopupVisible] = React.useState(false);
 
   useCustomHeaderLeft({
     customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
-        onBack={() => navigation.goBack()}
+        onBack={() => setPopupVisible(true)}
         iconName="x"
       />
     ),
@@ -120,6 +117,16 @@ const CreateSchedule = () => {
       populateData(existingSchedule, updateValueOnstep);
     }
     stepHandler(values, setStepsDone);
+
+    const backAction = () => {
+      setPopupVisible(true);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+    return () => backHandler.remove();
   }, [existingSchedule, updateValue, updateValueOnstep, values]);
 
   const next = (nextStep: number) => () => {
@@ -153,32 +160,26 @@ const CreateSchedule = () => {
                 DeviceEventEmitter.emit('CreateSchedule.continueButton', true);
               }}
               isContinueIcon={false}
-              onPressBack={values.step > 0 && next(values.step - 1)}
+              onPressBack={values.step > 0 ? next(values.step - 1) : undefined}
               continueText={values.step > 0 ? 'Buat Jadwal' : 'Lanjut'}
               disableBack={values.step > 0 ? false : true}
               disableContinue={!stepsDone.includes(values.step)}
             />
           )}
-          {/* {values.step === 0 && (
-            <View style={styles.conButton}>
-              <View style={styles.buttonOne}>
-                <BButtonPrimary
-                  title="Kembali"
-                  isOutline
-                  emptyIconEnable
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-              <View style={styles.buttonTwo}>
-                <BButtonPrimary
-                  disable={!stepsDone.includes(values.step)}
-                  title="Lanjut"
-                  onPress={next(values.step + 1)}
-                  rightIcon={ContinueIcon}
-                />
-              </View>
-            </View>
-          )} */}
+          <PopUpQuestion
+            isVisible={isPopupVisible}
+            setIsPopupVisible={() => {
+              setPopupVisible(false);
+              navigation.goBack();
+            }}
+            actionButton={() => {
+              setPopupVisible(false);
+            }}
+            cancelText={'Keluar'}
+            actionText={'Lanjutkan'}
+            text={'Apakah Anda yakin ingin keluar?'}
+            desc={'Progres pembuatan Jadwal anda akan hilang'}
+          />
         </View>
       </BContainer>
     </>

@@ -1,44 +1,51 @@
 import React, { useEffect } from 'react';
-import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import Config from './elements/Config';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { hasCameraPermissions } from '@/utils/permissions';
 import { CAMERA } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { BHeaderIcon } from '@/components';
+import { resScale } from '@/utils';
 
 const Camera = () => {
-  const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
 
   const navigateTo = route?.params?.navigateTo;
+  const closeButton = route?.params?.closeButton;
   const photoTitle = route?.params?.photoTitle;
+
+  if (closeButton) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useCustomHeaderLeft({
+      customHeaderLeft: (
+        <BHeaderIcon
+          size={resScale(23)}
+          onBack={() => navigation.goBack()}
+          iconName="x"
+        />
+      ),
+    });
+  }
 
   useEffect(() => {
     crashlytics().log(CAMERA);
-
     navigation.addListener('focus', () => {
       hasCameraPermissions();
     });
-    const backAction = () => {
-      dispatch(resetImageURLS(undefined));
-      navigation.goBack();
-      return true;
-    };
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction
-    );
-    return () => backHandler.remove();
-  }, []);
+  }, [navigation]);
 
   return (
     <View style={styles.parent}>
       <SafeAreaView style={styles.container}>
-        <Config navigateTo={navigateTo} title={photoTitle} />
+        <Config
+          navigateTo={navigateTo}
+          title={photoTitle}
+          closeButton={closeButton}
+        />
       </SafeAreaView>
     </View>
   );

@@ -27,13 +27,22 @@ export default function SelectedPOModal({
   data,
   onPressCompleted,
 }: SelectedPOModalType) {
-  const [selectedPO, setSelectedPO] = React.useState(undefined);
+  const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
   const [scrollOffSet, setScrollOffSet] = React.useState<number | undefined>(
     undefined
   );
 
   const onValueChanged = (item: any, value: boolean) => {
-    if (value) setSelectedPO(item);
+    let listSelectedPO: any[] = [];
+    if (selectedPO) listSelectedPO.push(...selectedPO);
+    if (value) {
+      listSelectedPO.push(item);
+    } else {
+      listSelectedPO = listSelectedPO.filter((it) => {
+        return it !== item;
+      });
+    }
+    setSelectedPO(listSelectedPO);
   };
 
   return (
@@ -65,6 +74,7 @@ export default function SelectedPOModal({
                   />
                 </TouchableOpacity>
               </View>
+              <BSpacer size={'extraSmall'} />
               <View style={{ height: resScale(250) }}>
                 <ScrollView
                   onScroll={(event) => {
@@ -74,12 +84,14 @@ export default function SelectedPOModal({
                   <POListCard
                     companyName={data.companyName}
                     locationName={data.locationName}
+                    useChevron={false}
                   />
                   <BSpacer size={'extraSmall'} />
                   {data?.sphs && data?.sphs.length > 0 && (
                     <BNestedProductCard
                       withoutHeader={false}
                       data={data?.sphs}
+                      selectedPO={selectedPO}
                       onValueChange={onValueChanged}
                     />
                   )}
@@ -122,20 +134,5 @@ const style = StyleSheet.create({
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[700],
     fontSize: fonts.size.lg,
-  },
-  tambahPicContainer: {
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  tambahPicText: {
-    color: colors.primary,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
-  },
-  loadingShimmer: {
-    width: resScale(335),
-    height: resScale(100),
-    borderRadius: layout.radius.md,
   },
 });
