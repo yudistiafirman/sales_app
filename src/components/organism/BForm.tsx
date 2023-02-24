@@ -26,6 +26,7 @@ import BFileInput from '../atoms/BFileInput';
 import { TextInputMask } from 'react-native-masked-text';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BCalendar from './BCalendar';
+import DatePicker from 'react-native-date-picker';
 
 interface IProps {
   inputs: Input[];
@@ -140,6 +141,12 @@ const styles: Styles = {
     height: resScale(110),
     zIndex: 2,
   },
+  calendarTime: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  calendarOne: { flex: 1, marginEnd: layout.pad.sm },
+  timeOne: { flex: 1, marginStart: layout.pad.sm },
 };
 
 const textStyles: TextStyle = {
@@ -189,6 +196,7 @@ const renderInput = (
     outlineColor,
     loading,
     calendar,
+    calendarTime,
   } = input;
 
   if (type === 'quantity') {
@@ -277,7 +285,7 @@ const renderInput = (
         />
         <TouchableOpacity
           style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
-          onPress={() => calendar.setCalendarVisible(true)}
+          onPress={() => calendar?.setCalendarVisible(true)}
         >
           <View
             style={[
@@ -302,9 +310,134 @@ const renderInput = (
             <View style={styles.calendar}>
               <BCalendar
                 onDayPress={(date) => {
-                  calendar.setCalendarVisible(false);
+                  calendar?.setCalendarVisible(false);
                   calendar?.onDayPress(date);
                 }}
+              />
+            </View>
+          </>
+        )}
+      </React.Fragment>
+    );
+  }
+
+  if (type === 'calendar-time') {
+    return (
+      <React.Fragment>
+        <View style={styles.calendarTime}>
+          <View style={styles.calendarOne}>
+            <BLabel
+              sizeInNumber={input.textSize}
+              bold={titleBold}
+              label={calendarTime?.labelOne}
+              isRequired={isRequire}
+            />
+            <TouchableOpacity
+              style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
+              onPress={() => calendarTime?.setCalendarVisible(true)}
+            >
+              <View
+                style={[
+                  styles.quantityInputCalendar,
+                  { paddingEnd: layout.pad.xl },
+                ]}
+              >
+                <BText
+                  style={
+                    calendarTime?.valueOne
+                      ? {
+                          color: colors.textInput.input,
+                        }
+                      : {
+                          color: colors.textInput.placeHolder,
+                        }
+                  }
+                >
+                  {calendarTime?.valueOne
+                    ? calendarTime?.valueOne
+                    : calendarTime?.placeholderOne}
+                </BText>
+              </View>
+            </TouchableOpacity>
+            {isError && (
+              <BText size="small" color="primary" bold="100">
+                {`${calendarTime?.labelOne} harus diisi`}
+              </BText>
+            )}
+          </View>
+          <View style={styles.timeOne}>
+            <BLabel
+              sizeInNumber={input.textSize}
+              bold={titleBold}
+              label={calendarTime?.labelTwo}
+              isRequired={isRequire}
+            />
+            <TouchableOpacity
+              style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
+              onPress={() => calendarTime?.setTimeVisible(true)}
+            >
+              <View
+                style={[
+                  styles.quantityInputCalendar,
+                  { paddingEnd: layout.pad.xl },
+                ]}
+              >
+                <BText
+                  style={
+                    calendarTime?.valueTwo
+                      ? {
+                          color: colors.textInput.input,
+                        }
+                      : {
+                          color: colors.textInput.placeHolder,
+                        }
+                  }
+                >
+                  {calendarTime?.valueTwo
+                    ? calendarTime?.valueTwo
+                    : calendarTime?.placeholderTwo}
+                </BText>
+              </View>
+            </TouchableOpacity>
+            {isError && (
+              <BText size="small" color="primary" bold="100">
+                {`${calendarTime?.labelTwo} harus diisi`}
+              </BText>
+            )}
+          </View>
+        </View>
+        {calendarTime?.isCalendarVisible && (
+          <>
+            <BSpacer size={'extraSmall'} />
+            <View style={styles.calendar}>
+              <BCalendar
+                onDayPress={(date) => {
+                  calendarTime?.setCalendarVisible(false);
+                  calendarTime?.onDayPress(date);
+                }}
+              />
+            </View>
+          </>
+        )}
+        {calendarTime?.isTimeVisible && (
+          <>
+            <BSpacer size={'extraSmall'} />
+            <View style={styles.calendar}>
+              <DatePicker
+                date={
+                  calendarTime?.valueTwoMock
+                    ? calendarTime?.valueTwoMock
+                    : new Date()
+                }
+                onDateChange={(time) => {
+                  calendarTime?.setTimeVisible(false);
+                  calendarTime?.onTimeChange(time);
+                }}
+                mode={'time'}
+                is24hourSource={'locale'}
+                minuteInterval={1}
+                locale={'id'}
+                timeZoneOffsetInMinutes={new Date().getTimezoneOffset()}
               />
             </View>
           </>

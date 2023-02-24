@@ -1,11 +1,4 @@
-import {
-  NativeSyntheticEvent,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInputChangeEventData,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as React from 'react';
 
 import { colors, fonts, layout } from '@/constants';
@@ -17,20 +10,59 @@ import {
   BProductCard,
   BSpacer,
   BText,
-  BTextInput,
 } from '@/components';
 import { Input } from '@/interfaces';
 import { PO_METHOD_LIST } from '@/constants/dropdown';
 import CheckBox from '@react-native-community/checkbox';
 import { RadioButton } from 'react-native-paper';
+import moment from 'moment';
 
 export default function SecondStep() {
   const { values, action } = React.useContext(CreateScheduleContext);
   const { stepTwo: state } = values;
   const { updateValueOnstep } = action;
   const [selectedIndex, setSelectedIndex] = React.useState('0');
+  const [isVisibleCalendar, setVisibleCalendar] = React.useState(false);
+  const [isVisibleTimePicker, setVisibleTimePicker] = React.useState(false);
+  const [rawTime, setRawTime] = React.useState(undefined);
 
   const inputs: Input[] = [
+    {
+      isRequire: true,
+      type: 'calendar-time',
+      calendarTime: {
+        onDayPress: (value: any) => {
+          const date = moment(value.dateString).format('DD/MM/yyyy');
+          onChange('deliveryDate')(date);
+        },
+        isCalendarVisible: isVisibleCalendar,
+        setCalendarVisible: (flag: boolean) => {
+          setVisibleCalendar(flag);
+        },
+        onTimeChange: (value: any) => {
+          const time = moment(value)
+            .utcOffset(value.getTimezoneOffset() / 60)
+            .format('HH:mm');
+          setRawTime(value);
+          onChange('deliveryTime')(time);
+        },
+        isTimeVisible: isVisibleTimePicker,
+        setTimeVisible: (flag: boolean) => {
+          setVisibleTimePicker(flag);
+        },
+        labelOne: 'Tanggal Pengiriman',
+        labelTwo: 'Jam Pengiriman',
+        placeholderOne: 'Pilih tanggal',
+        placeholderTwo: 'Pilih jam',
+        errMsgOne: 'Tanggal harus dipilih',
+        errMsgTwo: 'Jam harus dipilih',
+        valueOne: state.deliveryDate,
+        valueTwo: state.deliveryTime,
+        valueTwoMock: rawTime,
+        isErrorOne: state.deliveryDate ? false : true,
+        isErrorTwo: state.deliveryTime ? false : true,
+      },
+    },
     {
       label: 'Metode penuangan',
       isRequire: true,
@@ -73,14 +105,7 @@ export default function SecondStep() {
     },
   ];
 
-  const {
-    deliveryDate,
-    deliveryTime,
-    isConsecutive,
-    hasTechnicalRequest,
-    products,
-    totalDeposit,
-  } = state;
+  const { isConsecutive, hasTechnicalRequest, products, totalDeposit } = state;
 
   const onChange = (key: string) => (val: any) => {
     updateValueOnstep('stepTwo', key, val);
@@ -110,47 +135,6 @@ export default function SecondStep() {
   return (
     <View style={style.container}>
       <ScrollView style={style.flexFull}>
-        <View style={style.inputContainer}>
-          <View style={style.volumeContainer}>
-            <Text style={style.inputLabel}>Tanggal Pengiriman</Text>
-            <BTextInput
-              onChange={(
-                event: NativeSyntheticEvent<TextInputChangeEventData>
-              ) => {
-                onChange('deliveryDate')(event.nativeEvent.text);
-              }}
-              value={deliveryDate}
-              returnKeyType="next"
-              placeholder="Pilih tanggal"
-              placeholderTextColor={colors.textInput.placeHolder}
-            />
-            {!deliveryDate && (
-              <BText size="small" color="primary" bold="100">
-                Tanggal harus dipilih
-              </BText>
-            )}
-          </View>
-          <BSpacer size={'extraSmall'} />
-          <View style={style.sellPriceContainer}>
-            <Text style={style.inputLabel}>Jam Pengiriman</Text>
-            <BTextInput
-              onChange={(
-                event: NativeSyntheticEvent<TextInputChangeEventData>
-              ) => {
-                onChange('deliveryTime')(event.nativeEvent.text);
-              }}
-              value={deliveryTime}
-              placeholder="Pilih jam"
-              placeholderTextColor={colors.textInput.placeHolder}
-            />
-            {!deliveryTime && (
-              <BText size="small" color="primary" bold="100">
-                Jam harus dipilih
-              </BText>
-            )}
-          </View>
-        </View>
-        <BSpacer size={'extraSmall'} />
         <BForm titleBold="500" inputs={inputs} spacer="extraSmall" />
         <View style={style.summaryContainer}>
           <View style={style.consecutiveCheck}>
@@ -304,27 +288,10 @@ const style = StyleSheet.create({
     flex: 1,
     marginTop: layout.pad.md,
   },
-  inputContainer: {
-    flexDirection: 'row',
-  },
-  inputLabel: {
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
-    color: colors.text.darker,
-  },
-  volumeContainer: {
-    width: '45%',
-  },
-  sellPriceContainer: {
-    width: '50%',
-  },
   summary: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.sm,
-  },
-  fontw400: {
-    fontFamily: fonts.family.montserrat[400],
   },
   summaryContainer: {
     flexDirection: 'row',
