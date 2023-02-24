@@ -30,6 +30,8 @@ import {
 import SecondStep from './element/SecondStep';
 import FirstStep from './element/FirstStep';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { useDispatch } from 'react-redux';
 
 const labels = ['Cari PO', 'Detil Pengiriman'];
 
@@ -102,6 +104,7 @@ const CreateSchedule = () => {
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
+  const dispatch = useDispatch();
 
   useCustomHeaderLeft({
     customHeaderLeft: (
@@ -140,8 +143,15 @@ const CreateSchedule = () => {
       updateValue('existingScheduleID', existingSchedule.id);
       populateData(existingSchedule, updateValueOnstep);
     }
+    return () => {
+      dispatch(resetImageURLS());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
     stepHandler(values, setStepsDone);
-  }, [existingSchedule, updateValue, updateValueOnstep, values]);
+  }, [values]);
 
   const next = (nextStep: number) => () => {
     const totalStep = stepRender.length;

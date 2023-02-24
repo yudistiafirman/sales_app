@@ -210,7 +210,7 @@ const renderInput = (
             contentStyle={textStyles}
           />
           <View style={styles.quantityText}>
-            <BText>{'m3'}</BText>
+            <BText>{'m³'}</BText>
           </View>
         </View>
         {isError && (

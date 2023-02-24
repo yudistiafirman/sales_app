@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   BButtonPrimary,
+  BGalleryDeposit,
   BNestedProductCard,
   BSearchBar,
   BSpacer,
@@ -16,12 +17,15 @@ import {
   View,
 } from 'react-native';
 import { resScale } from '@/utils';
-import { CREATE_SCHEDULE, SEARCH_PO } from '@/navigation/ScreenNames';
+import { CAMERA, CREATE_SCHEDULE, SEARCH_PO } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { CreateScheduleContext } from '@/context/CreateScheduleContext';
 import POListCard from '@/components/templates/PO/POListCard';
 import { colors, fonts } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
+import AddedDepositModal from '../AddedDepositModal';
+import { useDispatch } from 'react-redux';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 
 export default function FirstStep() {
   const navigation = useNavigation();
@@ -29,8 +33,10 @@ export default function FirstStep() {
   const { stepOne: state } = values;
   const { updateValueOnstep } = action;
   const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
+  const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+  const dispatch = useDispatch();
 
-  const listenerCallback = React.useCallback(
+  const listenerSearchCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
       updateValueOnstep('stepOne', 'sphs', data);
       updateValueOnstep('stepOne', 'companyName', parent.companyName);
@@ -44,12 +50,21 @@ export default function FirstStep() {
     [updateValueOnstep]
   );
 
+  const listenerCameraCallback = React.useCallback(() => {
+    setIsModalVisible(true);
+  }, []);
+
   React.useEffect(() => {
-    DeviceEventEmitter.addListener('SearchPO.data', listenerCallback);
+    DeviceEventEmitter.addListener('SearchPO.data', listenerSearchCallback);
+    DeviceEventEmitter.addListener(
+      'Camera.addedDeposit',
+      listenerCameraCallback
+    );
     return () => {
       DeviceEventEmitter.removeAllListeners('SearchPO.data');
+      DeviceEventEmitter.removeAllListeners('Camera.addedDeposit');
     };
-  }, [listenerCallback]);
+  }, [listenerSearchCallback, listenerCameraCallback]);
 
   const onValueChanged = (item: any, value: boolean) => {
     let listSelectedPO: any[] = [];
@@ -64,7 +79,25 @@ export default function FirstStep() {
     setSelectedPO(listSelectedPO);
   };
 
-  const { sphs, companyName, locationName, lastDeposit } = state;
+  const addNewDeposit = (data: any) => {
+    let added = [];
+    if (state.addedDeposit && state.addedDeposit.length > 0)
+      added = state.addedDeposit;
+    added.push(data);
+    updateValueOnstep('stepOne', 'addedDeposit', added);
+
+    let lastDeposit = 0;
+    if (state.lastDeposit?.nominal) lastDeposit = state.lastDeposit?.nominal;
+    let addedDeposit = 0;
+    if (added && added.length > 0)
+      addedDeposit = added
+        .map((it) => it.nominal)
+        .reduce((prev, next) => prev + next);
+
+    updateValueOnstep('stepTwo', 'totalDeposit', lastDeposit + addedDeposit);
+  };
+
+  const { sphs, companyName, locationName, lastDeposit, addedDeposit } = state;
 
   return (
     <SafeAreaView style={style.flexFull}>
@@ -91,22 +124,57 @@ export default function FirstStep() {
             </View>
             <View style={style.summaryContainer}>
               <Text style={style.summary}>Sisa Deposit</Text>
-              <Text style={[style.summary, style.fontw400]}>
+              <Text
+                style={[
+                  style.summary,
+                  {
+                    fontFamily: fonts.family.montserrat[600],
+                    fontSize: fonts.size.lg,
+                  },
+                ]}
+              >
                 {lastDeposit && lastDeposit?.nominal
                   ? formatCurrency(lastDeposit?.nominal)
-                  : '-'}
+                  : 'IDR 0'}
               </Text>
             </View>
             <BSpacer size={'medium'} />
+            {addedDeposit &&
+              addedDeposit.length > 0 &&
+              addedDeposit?.map((item, index) => {
+                return (
+                  <BGalleryDeposit
+                    key={index.toString()}
+                    nominal={item?.nominal}
+                    createdAt={item?.createdAt}
+                    picts={item?.picts}
+                  />
+                );
+              })}
+            <BSpacer size={'small'} />
             <View style={style.summaryContainer}>
-              <Text style={style.summary}>Ada Deposit Baru?</Text>
+              <Text style={[style.summary, { color: colors.text.medium }]}>
+                Ada Deposit Baru?
+              </Text>
               <BButtonPrimary
                 titleStyle={[style.fontw400, { fontSize: fonts.size.md }]}
                 title="Buat Deposit"
                 isOutline
-                onPress={() => {}}
+                onPress={() => {
+                  dispatch(resetImageURLS());
+                  navigation.navigate(CAMERA, {
+                    photoTitle: 'Bukti',
+                    navigateTo: CREATE_SCHEDULE,
+                    closeButton: true,
+                  });
+                }}
               />
             </View>
+            <AddedDepositModal
+              isModalVisible={isModalVisible}
+              setIsModalVisible={setIsModalVisible}
+              setCompletedData={addNewDeposit}
+            />
           </ScrollView>
         </>
       ) : (
@@ -143,8 +211,8 @@ const style = StyleSheet.create({
   },
   summary: {
     color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.sm,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
   },
   fontw400: {
     fontFamily: fonts.family.montserrat[400],

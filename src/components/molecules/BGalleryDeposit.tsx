@@ -1,0 +1,86 @@
+import { View, StyleSheet, Image, Text } from 'react-native';
+import * as React from 'react';
+import { colors, fonts, layout } from '@/constants';
+import { resScale } from '@/utils';
+import BText from '../atoms/BText';
+import formatCurrency from '@/utils/formatCurrency';
+
+type BGalleryDepositType = {
+  picts: any[];
+  nominal: number;
+  createdAt?: string;
+};
+
+export default function BGalleryDeposit({
+  picts,
+  nominal,
+  createdAt,
+}: BGalleryDepositType) {
+  return (
+    <View style={style.summaryContainer}>
+      {picts && picts.length > 0 && (
+        <View
+          style={{
+            width: resScale(40),
+            height: resScale(40),
+            borderRadius: layout.radius.md,
+          }}
+        >
+          <Image style={style.flexFull} source={picts[0]?.photo} />
+          {picts.length > 1 && (
+            <>
+              <View style={style.overlay} />
+              <Text style={style.textOverlay}>{'+' + (picts.length - 1)}</Text>
+            </>
+          )}
+        </View>
+      )}
+      <View style={style.rightText}>
+        <BText bold="500" sizeInNumber={fonts.size.lg}>
+          {'IDR ' + formatCurrency(nominal)}
+        </BText>
+        <BText bold="400" sizeInNumber={fonts.size.md}>
+          {createdAt}
+        </BText>
+      </View>
+    </View>
+  );
+}
+
+const style = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.black,
+    opacity: 0.5,
+  },
+  textOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    color: colors.white,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    textAlignVertical: 'center',
+  },
+  rightText: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  summaryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: colors.tertiary,
+    borderRadius: layout.radius.sm,
+    borderColor: colors.border.default,
+    borderWidth: 1,
+    padding: layout.pad.md,
+  },
+  flexFull: {
+    flex: 1,
+  },
+});

@@ -25,7 +25,7 @@ function ListChildProduct(size: number, index: number, item: any) {
       <BProductCard
         name={item.display_name}
         pricePerVol={+item.offering_price}
-        volume={item.unit ? item.unit : 0}
+        volume={item.quantity ? item.quantity : 0}
         totalPrice={+item.total_price}
         backgroundColor={'white'}
       />

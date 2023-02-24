@@ -1,9 +1,9 @@
 interface CreateScheduleFirstStep {
   companyName: string;
   locationName?: string;
-  sphs: [
+  sphs?: [
     {
-      name: string;
+      name?: string;
       products?: [
         {
           product_id?: string;
@@ -18,11 +18,13 @@ interface CreateScheduleFirstStep {
   lastDeposit?: {
     createdAt: string;
     nominal: number;
+    picts: any[];
   };
   addedDeposit?: [
     {
       createdAt: string;
       nominal: number;
+      picts: any[];
     }
   ];
 }
@@ -75,11 +77,13 @@ interface CreateScheduleListResponse {
   lastDeposit?: {
     createdAt: string;
     nominal: number;
+    picts: any[];
   };
   addedDeposit?: [
     {
       createdAt: string;
       nominal: number;
+      picts: any[];
     }
   ];
   deliveryDate: string;

@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
 import {
   CREATE_DEPOSIT,
+  CREATE_SCHEDULE,
   CREATE_VISITATION,
   IMAGE_PREVIEW,
   SUBMIT_FORM,
@@ -98,6 +99,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         navigation.dispatch(
           StackActions.replace(navigateTo, { existingVisitation })
         );
+      } else if (navigateTo === CREATE_SCHEDULE) {
+        DeviceEventEmitter.emit('Camera.addedDeposit', 'true');
+        navigation.dispatch(StackActions.pop(2));
       } else {
         navigation.goBack();
         navigation.dispatch(StackActions.replace(navigateTo));

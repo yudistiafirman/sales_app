@@ -1,16 +1,15 @@
 import * as React from 'react';
 import {
   BDivider,
+  BGalleryDeposit,
   BNestedProductCard,
   BSearchBar,
   BSpacer,
-  BText,
   BTouchableText,
 } from '@/components';
 import { TextInput } from 'react-native-paper';
 import {
   DeviceEventEmitter,
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -96,41 +95,15 @@ export default function SecondStep() {
   };
 
   const { companyName, locationName, sphs } = stateTwo;
-  const { deposit, picts } = stateOne;
+  const { deposit } = stateOne;
   return (
     <SafeAreaView style={style.flexFull}>
       {deposit && (
-        <>
-          <View style={style.summaryContainer}>
-            {picts && picts.length > 0 && (
-              <View
-                style={{
-                  width: resScale(40),
-                  height: resScale(40),
-                  borderRadius: layout.radius.md,
-                }}
-              >
-                <Image style={style.flexFull} source={picts[0]?.photo} />
-                {picts.length > 1 && (
-                  <>
-                    <View style={style.overlay} />
-                    <Text style={style.textOverlay}>
-                      {'+' + (picts.length - 1)}
-                    </Text>
-                  </>
-                )}
-              </View>
-            )}
-            <View style={style.rightText}>
-              <BText bold="500" sizeInNumber={fonts.size.lg}>
-                {'IDR ' + formatCurrency(deposit?.nominal)}
-              </BText>
-              <BText bold="400" sizeInNumber={fonts.size.md}>
-                {deposit?.createdAt}
-              </BText>
-            </View>
-          </View>
-        </>
+        <BGalleryDeposit
+          nominal={deposit?.nominal}
+          createdAt={deposit?.createdAt}
+          picts={deposit?.picts}
+        />
       )}
       <>
         <View>
@@ -195,44 +168,12 @@ const style = StyleSheet.create({
   flexFull: {
     flex: 1,
   },
-  overlay: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.black,
-    opacity: 0.5,
-  },
-  textOverlay: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    color: colors.white,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    textAlignVertical: 'center',
-  },
-  rightText: {
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-  },
   touchable: {
     position: 'absolute',
     width: '100%',
     borderRadius: resScale(4),
     height: resScale(45),
     zIndex: 2,
-  },
-  summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: colors.tertiary,
-    borderRadius: layout.radius.sm,
-    borderColor: colors.border.default,
-    borderWidth: 1,
-    padding: layout.pad.md,
   },
   summary: {
     color: colors.text.darker,

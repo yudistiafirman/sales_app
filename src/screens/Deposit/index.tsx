@@ -42,8 +42,8 @@ function stepHandler(
   const { stepOne, stepTwo } = state;
 
   if (
-    stepOne.picts &&
-    stepOne.picts.length > 0 &&
+    stepOne.deposit?.picts &&
+    stepOne.deposit?.picts.length > 0 &&
     stepOne.deposit?.createdAt &&
     stepOne.deposit?.nominal
   ) {
@@ -123,11 +123,14 @@ const Deposit = () => {
       updateValue('existingDepositID', existingSchedule.id);
       populateData(existingSchedule, updateValueOnstep);
     }
-    stepHandler(values, setStepsDone);
     return () => {
       dispatch(resetImageURLS());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
+    stepHandler(values, setStepsDone);
   }, [values]);
 
   const next = (nextStep: number) => () => {
