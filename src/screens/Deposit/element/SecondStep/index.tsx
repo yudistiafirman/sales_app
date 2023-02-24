@@ -85,7 +85,7 @@ export default function SecondStep() {
     if (stateOne.deposit?.nominal) deposit = stateOne.deposit?.nominal;
     let allProducts: any[] = [];
     sphs?.forEach((sp) => {
-      if (sp.products) allProducts.push(...sp.products);
+      if (sp?.products) allProducts.push(...sp.products);
     });
 
     const totalAmountProducts = allProducts
@@ -161,6 +161,7 @@ export default function SecondStep() {
                       selectedPO={selectedPO}
                       onValueChange={onValueChanged}
                       deposit={deposit?.nominal}
+                      withoutSeparator
                     />
                   )}
                 </View>

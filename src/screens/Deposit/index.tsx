@@ -99,17 +99,6 @@ const Deposit = () => {
   const existingSchedule: CreateDepositListResponse =
     route?.params?.existingSchedule;
 
-  React.useEffect(() => {
-    if (existingSchedule) {
-      updateValue('existingDepositID', existingSchedule.id);
-      populateData(existingSchedule, updateValueOnstep);
-    }
-    return () => {
-      dispatch(resetImageURLS());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -130,7 +119,15 @@ const Deposit = () => {
   );
 
   React.useEffect(() => {
+    if (existingSchedule) {
+      updateValue('existingDepositID', existingSchedule.id);
+      populateData(existingSchedule, updateValueOnstep);
+    }
     stepHandler(values, setStepsDone);
+    return () => {
+      dispatch(resetImageURLS());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values]);
 
   const next = (nextStep: number) => () => {
@@ -171,7 +168,6 @@ const Deposit = () => {
                 next(values.step + 1)();
                 DeviceEventEmitter.emit('Deposit.continueButton', true);
               }}
-              isContinueIcon={false}
               onPressBack={handleBackButton}
               continueText={values.step > 0 ? 'Buat Deposit' : 'Lanjut'}
               disableContinue={!stepsDone.includes(values.step)}

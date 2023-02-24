@@ -1,17 +1,24 @@
 interface CreateScheduleFirstStep {
   companyName: string;
   locationName?: string;
-  title: string;
-  products: [
+  sphs: [
     {
-      product_id?: string;
-      display_name?: string;
-      offering_price?: number;
-      total_price?: number;
-      quantity?: string;
+      name: string;
+      products?: [
+        {
+          product_id?: string;
+          display_name?: string;
+          offering_price?: number;
+          total_price?: number;
+          quantity?: string;
+        }
+      ];
     }
   ];
-  lastDeposit?: number;
+  lastDeposit?: {
+    createdAt: string;
+    nominal: number;
+  };
   addedDeposit?: [
     {
       createdAt: string;
@@ -51,17 +58,24 @@ interface CreateScheduleListResponse {
   createScheduleID: string | null;
   companyName: string;
   locationName?: string;
-  sph: string;
-  products: [
+  sphs: [
     {
-      product_id?: string;
-      display_name?: string;
-      offering_price?: number;
-      total_price?: number;
-      quantity?: string;
+      name: string;
+      products?: [
+        {
+          product_id?: string;
+          display_name?: string;
+          offering_price?: number;
+          total_price?: number;
+          quantity?: string;
+        }
+      ];
     }
   ];
-  lastDeposit?: number;
+  lastDeposit?: {
+    createdAt: string;
+    nominal: number;
+  };
   addedDeposit?: [
     {
       createdAt: string;

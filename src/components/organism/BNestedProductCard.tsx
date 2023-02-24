@@ -16,6 +16,7 @@ type BNestedProductCardType = {
   selectedPO?: any[];
   onValueChange?: (product: any, value: boolean) => void;
   deposit?: number;
+  withoutSeparator?: boolean;
 };
 
 function ListChildProduct(size: number, index: number, item: any) {
@@ -45,6 +46,7 @@ export default function BNestedProductCard({
   withoutBottomSpace = false,
   selectedPO,
   deposit,
+  withoutSeparator = false,
 }: BNestedProductCardType) {
   const [isExpand, setExpand] = React.useState<number[]>([]);
 
@@ -150,7 +152,7 @@ export default function BNestedProductCard({
                   </>
                 )}
             </View>
-            <BSpacer size={'extraSmall'} />
+            {!withoutSeparator && <BSpacer size={'extraSmall'} />}
           </View>
         );
       })}

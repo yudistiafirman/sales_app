@@ -9,6 +9,7 @@ import { TextInput } from 'react-native-paper';
 import {
   DeviceEventEmitter,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -27,14 +28,18 @@ export default function FirstStep() {
   const { values, action } = React.useContext(CreateScheduleContext);
   const { stepOne: state } = values;
   const { updateValueOnstep } = action;
+  const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
 
   const listenerCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
-      updateValueOnstep('stepOne', 'title', data.name);
+      updateValueOnstep('stepOne', 'sphs', data);
       updateValueOnstep('stepOne', 'companyName', parent.companyName);
       updateValueOnstep('stepOne', 'locationName', parent.locationName);
-      updateValueOnstep('stepOne', 'products', data.products);
-      updateValueOnstep('stepTwo', 'products', data.products);
+      let allProducts: any[] = [];
+      data?.forEach((sp) => {
+        if (sp?.products) allProducts.push(...sp.products);
+      });
+      updateValueOnstep('stepTwo', 'products', allProducts);
     },
     [updateValueOnstep]
   );
@@ -46,48 +51,63 @@ export default function FirstStep() {
     };
   }, [listenerCallback]);
 
-  const { products, companyName, locationName, title, lastDeposit } = state;
+  const onValueChanged = (item: any, value: boolean) => {
+    let listSelectedPO: any[] = [];
+    if (selectedPO) listSelectedPO.push(...selectedPO);
+    if (value) {
+      listSelectedPO.push(item);
+    } else {
+      listSelectedPO = listSelectedPO.filter((it) => {
+        return it !== item;
+      });
+    }
+    setSelectedPO(listSelectedPO);
+  };
 
-  const sphData = [
-    {
-      name: title,
-      products: products,
-    },
-  ];
+  const { sphs, companyName, locationName, lastDeposit } = state;
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {state?.title && state?.products ? (
+    <SafeAreaView style={style.flexFull}>
+      {sphs && sphs.length > 0 ? (
         <>
-          <View style={{ height: resScale(80) }}>
-            <POListCard
-              companyName={companyName}
-              locationName={locationName}
-              useChevron={false}
-            />
-          </View>
-          {sphData && sphData.length > 0 && (
-            <BNestedProductCard
-              withoutHeader={false}
-              data={sphData}
-              withoutBottomSpace={true}
-            />
-          )}
-          <View style={style.summaryContainer}>
-            <Text style={style.summary}>Sisa Deposit</Text>
-            <Text style={[style.summary, style.fontw400]}>
-              {lastDeposit ? formatCurrency(lastDeposit) : '-'}
-            </Text>
-          </View>
-          <BSpacer size={'medium'} />
-          <View style={style.summaryContainer}>
-            <Text style={style.summary}>Ada Deposit Baru?</Text>
-            <BButtonPrimary
-              titleStyle={[style.fontw400, { fontSize: fonts.size.md }]}
-              title="Buat Deposit"
-              isOutline
-              onPress={() => {}}
-            />
-          </View>
+          <ScrollView style={style.flexFull}>
+            <View style={style.flexFull}>
+              <POListCard
+                companyName={companyName}
+                locationName={locationName}
+                useChevron={false}
+              />
+            </View>
+            <View style={style.flexFull}>
+              {sphs && sphs.length > 0 && (
+                <BNestedProductCard
+                  withoutHeader={false}
+                  data={sphs}
+                  selectedPO={selectedPO}
+                  onValueChange={onValueChanged}
+                  withoutSeparator
+                />
+              )}
+            </View>
+            <View style={style.summaryContainer}>
+              <Text style={style.summary}>Sisa Deposit</Text>
+              <Text style={[style.summary, style.fontw400]}>
+                {lastDeposit && lastDeposit?.nominal
+                  ? formatCurrency(lastDeposit?.nominal)
+                  : '-'}
+              </Text>
+            </View>
+            <BSpacer size={'medium'} />
+            <View style={style.summaryContainer}>
+              <Text style={style.summary}>Ada Deposit Baru?</Text>
+              <BButtonPrimary
+                titleStyle={[style.fontw400, { fontSize: fonts.size.md }]}
+                title="Buat Deposit"
+                isOutline
+                onPress={() => {}}
+              />
+            </View>
+          </ScrollView>
         </>
       ) : (
         <>
@@ -111,6 +131,9 @@ export default function FirstStep() {
 }
 
 const style = StyleSheet.create({
+  flexFull: {
+    flex: 1,
+  },
   touchable: {
     position: 'absolute',
     width: '100%',
