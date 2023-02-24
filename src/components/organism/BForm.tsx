@@ -190,8 +190,6 @@ const renderInput = (
     loading,
     calendar,
   } = input;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [isVisibleCalendar, setVisibleCalendar] = React.useState(false);
 
   if (type === 'quantity') {
     return (
@@ -279,7 +277,7 @@ const renderInput = (
         />
         <TouchableOpacity
           style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
-          onPress={() => setVisibleCalendar(true)}
+          onPress={() => calendar.setCalendarVisible(true)}
         >
           <View
             style={[
@@ -298,13 +296,13 @@ const renderInput = (
             {`${label} harus diisi`}
           </BText>
         )}
-        {isVisibleCalendar && (
+        {calendar?.isCalendarVisible && (
           <>
             <BSpacer size={'extraSmall'} />
             <View style={styles.calendar}>
               <BCalendar
                 onDayPress={(date) => {
-                  setVisibleCalendar(false);
+                  calendar.setCalendarVisible(false);
                   calendar?.onDayPress(date);
                 }}
               />

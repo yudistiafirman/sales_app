@@ -20,6 +20,7 @@ export default function FirstStep() {
   const { values, action } = React.useContext(CreateDepositContext);
   const { stepOne: stateOne } = values;
   const { photoURLs } = useSelector((state: RootState) => state.camera);
+  const [isVisibleCalendar, setVisibleCalendar] = React.useState(false);
 
   const { updateValueOnstep } = action;
   const dispatch = useDispatch();
@@ -39,6 +40,10 @@ export default function FirstStep() {
         onDayPress: (value: any) => {
           const date = moment(value.dateString).format('DD/MM/yyyy');
           onChange('createdAt')(date);
+        },
+        isCalendarVisible: isVisibleCalendar,
+        setCalendarVisible: (flag: boolean) => {
+          setVisibleCalendar(flag);
         },
       },
     },

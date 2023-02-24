@@ -51,6 +51,8 @@ interface Input {
   }>;
   calendar?: {
     onDayPress: (day: DateData) => void;
+    isCalendarVisible: boolean;
+    setCalendarVisible: (flag: boolean) => void;
   };
   dropdown?: {
     items: {
