@@ -86,9 +86,11 @@ const BExpandableSphCard = ({
           </View>
           <View style={styles.textContentContainer}>
             <BText style={styles.parentPrice}>harga</BText>
-            <BText style={styles.totalParentPrice}>{`IDR ${formatCurrency(
-              totalPrice!
-            )}`}</BText>
+            {totalPrice && (
+              <BText style={styles.totalParentPrice}>{`IDR ${formatCurrency(
+                totalPrice
+              )}`}</BText>
+            )}
           </View>
         </View>
         <TouchableOpacity
