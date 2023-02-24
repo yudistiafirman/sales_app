@@ -1,19 +1,27 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import Modal from 'react-native-modal';
-import { BBackContinueBtn } from '@/components';
 import { colors, fonts, layout } from '@/constants';
+import BBackContinueBtn from './BBackContinueBtn';
 
 type PopUpQuestionType = {
   isVisible: boolean;
   setIsPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  initiateCameraModule: () => void;
+  actionButton: () => void;
+  text?: string;
+  desc?: string;
+  actionText?: string;
+  cancelText?: string;
 };
 
 export default function PopUpQuestion({
   isVisible,
   setIsPopupVisible,
-  initiateCameraModule,
+  actionButton,
+  text,
+  desc,
+  actionText,
+  cancelText,
 }: PopUpQuestionType) {
   return (
     <Modal
@@ -26,20 +34,30 @@ export default function PopUpQuestion({
       <View style={styles.modalContent}>
         <View style={styles.questionContainer}>
           <Text style={styles.questionText}>
-            Apakah Anda Ingin Tambah Foto Lagi?
+            {text ? text : 'Apakah Anda Ingin Tambah Foto Lagi?'}
           </Text>
         </View>
-        <BBackContinueBtn
-          onPressBack={() => {
-            setIsPopupVisible((curr) => !curr);
+        {desc && (
+          <View>
+            <Text style={styles.questionDescText}>{desc}</Text>
+          </View>
+        )}
+        <View
+          style={{
+            paddingHorizontal: layout.pad.md,
+            paddingVertical: layout.pad.sm,
           }}
-          onPressContinue={() => {
-            initiateCameraModule();
-          }}
-          isContinueIcon={false}
-          continueText="Ya, Tambah"
-          backText="Tidak"
-        />
+        >
+          <BBackContinueBtn
+            onPressBack={() => {
+              setIsPopupVisible((curr) => !curr);
+            }}
+            onPressContinue={actionButton}
+            isContinueIcon={false}
+            continueText={actionText ? actionText : 'Ya, Tambah'}
+            backText={cancelText ? cancelText : 'Tidak'}
+          />
+        </View>
       </View>
     </Modal>
   );
@@ -61,5 +79,14 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.lg,
     textAlign: 'center',
     padding: layout.pad.lg,
+  },
+  questionDescText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.md,
+    textAlign: 'center',
+    paddingTop: layout.pad.lg,
+    paddingHorizontal: layout.pad.lg,
+    paddingBottom: layout.pad.xl,
   },
 });

@@ -8,12 +8,14 @@ import {
 
 import * as React from 'react';
 import { Details } from 'react-native-maps';
+import { DateData } from 'react-native-calendars';
 
 interface Input {
   label: string;
   isRequire: boolean;
   type:
     | 'quantity'
+    | 'price'
     | 'textInput'
     | 'cardOption'
     | 'comboDropdown'
@@ -25,7 +27,8 @@ interface Input {
     | 'switch'
     | 'fileInput'
     | 'map'
-    | 'autocomplete';
+    | 'autocomplete'
+    | 'calendar';
   hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   onFocus?: (e: any) => void;
@@ -46,6 +49,9 @@ interface Input {
     onChange: () => void;
     icon?: string;
   }>;
+  calendar?: {
+    onDayPress: (day: DateData) => void;
+  };
   dropdown?: {
     items: {
       label: string;
