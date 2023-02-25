@@ -245,6 +245,7 @@ const PriceList = () => {
               onAction={() => send('retryGettingProducts')}
               errorMessage={errorMessage}
               onRefresh={() => send('refreshingList')}
+              disablePressed={fromVisitation ? false : true}
             />
           )}
           onTabPress={onTabPress}
