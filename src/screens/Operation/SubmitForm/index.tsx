@@ -1,9 +1,12 @@
 import {
-  BButtonPrimary,
+  BBackContinueBtn,
+  BDivider,
   BForm,
   BGallery,
+  BLocationText,
   BOperationCard,
   BSpacer,
+  BVisitationCard,
 } from '@/components';
 import { colors, layout } from '@/constants';
 import { TM_CONDITION } from '@/constants/dropdown';
@@ -16,7 +19,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SUBMIT_FORM } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
@@ -53,69 +56,66 @@ const SubmitForm = () => {
 
   useHeaderTitleChanged({ title: getHeaderTitle() });
 
-  const deliveryInputs: Input[] = React.useMemo(() => {
-    const baseInput: Input[] = [
-      {
-        label: 'Nama Penerima',
-        value: '',
-        isRequire: true,
-        isError: false,
-        type: 'textInput',
-        placeholder: 'Masukkan nama penerima',
-      },
-      {
-        label: 'No. Telp Penerima',
-        value: '',
-        isRequire: true,
-        isError: false,
-        type: 'textInput',
-        placeholder: 'Masukkan no telp',
-      },
-    ];
-    return baseInput;
-  }, []);
+  const deliveryInputs: Input[] = [
+    {
+      label: 'Nama Penerima',
+      value: '',
+      isRequire: true,
+      isError: false,
+      type: 'textInput',
+      placeholder: 'Masukkan nama penerima',
+    },
+    {
+      label: 'No. Telp Penerima',
+      value: '',
+      isRequire: true,
+      isError: false,
+      type: 'textInput',
+      placeholder: 'Masukkan no telp',
+    },
+  ];
 
-  const returnInputs: Input[] = React.useMemo(() => {
-    const baseInput: Input[] = [
-      {
-        label: 'Ada Muatan Tersisa di Dalam TM?',
-        value: '',
-        type: 'checkbox',
-        isRequire: false,
-        checkbox: {
-          value: toggleCheckBox,
-          onValueChange: setToggleCheckBox,
+  const returnInputs: Input[] = [
+    {
+      label: 'Ada Muatan Tersisa di Dalam TM?',
+      value: '',
+      type: 'checkbox',
+      isRequire: false,
+      checkbox: {
+        value: toggleCheckBox,
+        onValueChange: setToggleCheckBox,
+      },
+    },
+    {
+      label: 'Kondisi TM',
+      value: '',
+      isRequire: true,
+      isError: false,
+      type: 'dropdown',
+      dropdown: {
+        items: TM_CONDITION,
+        placeholder: 'Pilih Kondisi TM',
+        onChange: (value: any) => {
+          customLog(value);
         },
       },
-      {
-        label: 'Kondisi TM',
-        value: '',
-        isRequire: true,
-        isError: false,
-        type: 'dropdown',
-        dropdown: {
-          items: TM_CONDITION,
-          placeholder: 'Pilih Kondisi TM',
-          onChange: (value: any) => {
-            customLog(value);
-          },
-        },
-      },
-    ];
-    return baseInput;
-  }, [toggleCheckBox]);
+    },
+  ];
 
   return (
-    <View style={style.parent}>
-      <ScrollView style={style.baseContainer}>
+    <SafeAreaView style={style.parent}>
+      <View style={style.flexFull}>
+        {operationType === ENTRY_TYPE.DRIVER && (
+          <BLocationText location="Green Lake City, Cipondoh, Legok 11520" />
+        )}
+        <BSpacer size={'extraSmall'} />
         <View style={style.top}>
-          <BOperationCard
+          <BVisitationCard
             item={{
-              id: 'PT. Guna Karya Mandiri',
-              addressID: 'Jakarta Barat',
+              name: 'PT. Guna Karya Mandiri',
+              location: 'Jakarta Barat',
             }}
-            customStyle={style.headerOne}
-            clickable={false}
+            isRenderIcon={false}
           />
           <BOperationCard
             item={{
@@ -126,75 +126,55 @@ const SubmitForm = () => {
             color={colors.tertiary}
             customStyle={style.headerTwo}
             clickable={false}
+            isQuantity={false}
           />
+        </View>
+        <View>
+          <BDivider />
+          <BSpacer size={'extraSmall'} />
         </View>
         <View>
           <BGallery picts={photoURLs} />
         </View>
-        {(operationType === ENTRY_TYPE.DRIVER ||
-          operationType === ENTRY_TYPE.RETURN) && (
-          <View>
-            <BSpacer size={'small'} />
-          </View>
-        )}
-        {operationType === ENTRY_TYPE.DRIVER && (
-          <View style={style.container}>
-            <BForm inputs={deliveryInputs} />
-          </View>
-        )}
-        {operationType === ENTRY_TYPE.RETURN && (
-          <>
-            <View style={style.container}>
-              <BForm inputs={returnInputs} spacer="extraSmall" />
-            </View>
-          </>
-        )}
-      </ScrollView>
-      <View style={style.conButton}>
-        <View style={style.buttonOne}>
-          <BButtonPrimary
-            title="Kembali"
-            isOutline
-            onPress={() => navigation.goBack()}
-          />
-        </View>
-        <View style={style.buttonTwo}>
-          <BButtonPrimary
-            title="Simpan"
-            onPress={() => navigation.dispatch(StackActions.popToTop())}
-          />
+        <View style={style.flexFull}>
+          {(operationType === ENTRY_TYPE.DRIVER ||
+            operationType === ENTRY_TYPE.RETURN) && <BSpacer size={'small'} />}
+          {operationType === ENTRY_TYPE.DRIVER && (
+            <BForm titleBold="500" inputs={deliveryInputs} />
+          )}
+          {operationType === ENTRY_TYPE.RETURN && (
+            <BForm titleBold="500" inputs={returnInputs} spacer="extraSmall" />
+          )}
         </View>
       </View>
-    </View>
+      <BBackContinueBtn
+        onPressContinue={() => {
+          navigation.dispatch(StackActions.popToTop());
+        }}
+        onPressBack={() => navigation.goBack()}
+        continueText={'Simpan'}
+        isContinueIcon={false}
+      />
+    </SafeAreaView>
   );
 };
 
 const style = StyleSheet.create({
+  flexFull: {
+    flex: 1,
+  },
   parent: {
     flex: 1,
     backgroundColor: colors.white,
-    padding: resScale(16),
+    paddingHorizontal: layout.pad.lg,
+    paddingBottom: layout.pad.lg,
   },
   top: {
-    flex: 1,
-    height: '20%',
+    height: resScale(120),
     marginBottom: layout.pad.lg,
   },
-  headerOne: {
-    borderBottomStartRadius: 0,
-    borderBottomEndRadius: 0,
-    borderColor: colors.border.default,
-  },
   headerTwo: {
-    borderTopStartRadius: 0,
-    borderTopEndRadius: 0,
     borderColor: colors.border.default,
-  },
-  baseContainer: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
   },
   conButton: {
     width: '100%',

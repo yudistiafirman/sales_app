@@ -41,7 +41,7 @@ const Dispatch = () => {
   return (
     <View style={style.container}>
       <OperationList
-        role={ENTRY_TYPE.DISPATCH} // change from redux state
+        role={ENTRY_TYPE.DISPATCH}
         isLoading={isLoading}
         data={data}
       />

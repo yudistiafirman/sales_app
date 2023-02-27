@@ -324,7 +324,7 @@ const Fourth = () => {
           setIsLastStepVisible(false);
           if (type === 'SPH') {
             navigation.dispatch(
-              StackActions.replace(SPH_TITLE, {
+              StackActions.replace(SPH, {
                 projectId: response.projectId,
               })
             );

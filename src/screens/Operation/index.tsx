@@ -42,11 +42,7 @@ const Operation = () => {
 
   return (
     <View style={style.container}>
-      <OperationList
-        role={entryType} // change from redux state
-        isLoading={isLoading}
-        data={data}
-      />
+      <OperationList role={entryType} isLoading={isLoading} data={data} />
     </View>
   );
 };

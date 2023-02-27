@@ -334,14 +334,14 @@ const Beranda = () => {
         icon: SvgNames.IC_MAKE_SCHEDULE,
         title: HOME_MENU.SCHEDULE,
         action: () => {
-          navigation.navigate(CREATE_SCHEDULE, {});
+          navigation.navigate(CREATE_SCHEDULE);
         },
       },
       {
         icon: SvgNames.IC_APPOINTMENT,
         title: HOME_MENU.APPOINTMENT,
         action: () => {
-          navigation.navigate(APPOINTMENT, {});
+          navigation.navigate(APPOINTMENT);
         },
       },
     ];

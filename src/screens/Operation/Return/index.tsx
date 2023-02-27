@@ -41,7 +41,7 @@ const Return = () => {
   return (
     <View style={style.container}>
       <OperationList
-        role={ENTRY_TYPE.RETURN} // change from redux state
+        role={ENTRY_TYPE.RETURN}
         isLoading={isLoading}
         data={data}
       />
