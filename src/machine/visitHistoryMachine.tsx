@@ -17,11 +17,15 @@ export interface Products {
     slump?: number;
   };
   unit?: number;
-};
-
+}
 
 export interface VisitHistoryPayload extends visitationListResponse {
-  products: Products
+  products: Products;
+  rejectCategory: null | string;
+  estimationWeek: string;
+  estimationMonth: string;
+  paymentType: 'CBD' | 'CREDIT';
+  visitNotes: null | string;
 }
 
 const visitHistoryMachine =
@@ -124,7 +128,8 @@ const visitHistoryMachine =
           };
         }),
         assignVisitationDataToContext: assign((_context, event) => {
-          const newRoutes = event.data.map((val, idx) => {
+          const sortedData = event.data.reverse()
+          const newRoutes = sortedData.map((val, idx) => {
             return {
               key: val.id,
               title: `Kunjungan ${idx + 1}`,

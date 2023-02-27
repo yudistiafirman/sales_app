@@ -6,8 +6,9 @@ import { RootStackParamList } from '@/navigation/CustomStateComponent';
 import { resScale } from '@/utils';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { useMachine } from '@xstate/react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import HistoryDetails from './elements/HistoryDetails';
 import HistoryHeader from './elements/HistoryHeader';
 import LocationText from './elements/LocationText';
@@ -39,6 +40,14 @@ const VisitHistory = () => {
 
   const { selectedVisitationByIdx, loading, routes } = state.context;
 
+  const renderVisitHistory = useCallback(() => {
+    return (
+      <HistoryDetails
+        details={selectedVisitationByIdx && selectedVisitationByIdx}
+      />
+    );
+  }, [selectedVisitationByIdx]);
+
   if (loading) {
     return (
       <View style={styles.loading}>
@@ -58,8 +67,10 @@ const VisitHistory = () => {
         swipeEnabled={false}
         navigationState={{ index, routes }}
         renderScene={() => (
-          <HistoryDetails
-            details={selectedVisitationByIdx && selectedVisitationByIdx}
+          <FlatList
+            data={null}
+            renderItem={null}
+            ListHeaderComponent={renderVisitHistory}
           />
         )}
         onTabPress={onTabPress}

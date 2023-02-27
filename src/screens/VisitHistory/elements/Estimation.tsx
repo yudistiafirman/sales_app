@@ -1,10 +1,22 @@
 import { BLabel, BSpacer, BText } from '@/components';
 import { layout } from '@/constants';
 import font from '@/constants/fonts';
+import moment, { locale } from 'moment';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const Estimation = () => {
+interface Props {
+  estimationWeek?: string;
+  estimationMonth?: string;
+}
+
+const Estimation = ({ estimationWeek, estimationMonth }: Props) => {
+  const getMonthName = (monthNumber) => {
+    const date = new Date();
+    date.setMonth(monthNumber - 1);
+
+    return date.toLocaleString(locale(), { month: 'long' });
+  };
   return (
     <View style={styles.container}>
       <BLabel
@@ -13,7 +25,11 @@ const Estimation = () => {
         label="Estimasi waktu dibutuhkannya barang"
       />
       <BSpacer size="extraSmall" />
-      <BText style={styles.date}>Minggu ke 2; Desember</BText>
+      {estimationWeek && estimationMonth && (
+        <BText style={styles.date}>
+          {`Minggu ke ${estimationWeek}; ${getMonthName(estimationMonth)}`}
+        </BText>
+      )}
     </View>
   );
 };

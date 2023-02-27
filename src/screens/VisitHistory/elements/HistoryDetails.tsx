@@ -2,7 +2,7 @@ import { BSpacer, BDivider } from '@/components';
 import { layout } from '@/constants';
 import { VisitHistoryPayload } from '@/machine/visitHistoryMachine';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Estimation from './Estimation';
 import Notes from './Note';
 import PaymentType from './PaymentType';
@@ -13,12 +13,13 @@ import VisitationDatesAndStatus from './VisitationDatesAndStatus';
 
 const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
   return (
-    <ScrollView>
+    <View>
       <BSpacer size="small" />
       <VisitationDatesAndStatus
         status={details.status}
         bookingDate={details.dateVisit}
         finishDate={details.finishDate}
+        rejectCategory={details.rejectCategory}
       />
       <BSpacer size="small" />
       <BDivider
@@ -48,7 +49,10 @@ const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
         marginHorizontal={layout.pad.lg}
       />
       <BSpacer size="small" />
-      <Estimation />
+      <Estimation
+        estimationWeek={details.estimationWeek}
+        estimationMonth={details.estimationMonth}
+      />
       <BSpacer size="small" />
       <BDivider
         borderBottomWidth={1}
@@ -57,7 +61,7 @@ const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
         marginHorizontal={layout.pad.lg}
       />
       <BSpacer size="small" />
-      <PaymentType />
+      <PaymentType paymentType={details.paymentType} />
       <BSpacer size="small" />
       <BDivider
         borderBottomWidth={1}
@@ -66,10 +70,10 @@ const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
         marginHorizontal={layout.pad.lg}
       />
       <BSpacer size="small" />
-      <Notes />
+      <Notes visitNotes={details.visitNotes} />
       <BSpacer size="small" />
       <BSpacer size="small" />
-    </ScrollView>
+    </View>
   );
 };
 

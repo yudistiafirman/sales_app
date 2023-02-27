@@ -1,7 +1,6 @@
 import { BChip, BSpacer, BText, BTouchableText } from '@/components';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
-import { resScale } from '@/utils';
 import moment, { locale } from 'moment';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -12,12 +11,14 @@ interface IProps {
   bookingDate?: string;
   finishDate: string | null;
   status?: status;
+  rejectCategory: string | null;
 }
 
 const VisitationDatesAndStatus = ({
   bookingDate,
   finishDate,
   status,
+  rejectCategory,
 }: IProps) => {
   const getBackgroundColor = () => {
     let color = '';
@@ -64,11 +65,21 @@ const VisitationDatesAndStatus = ({
     return date;
   };
 
+  const getRejectedCategory = (reason: string) => {
+    let rejectReason = '';
+    if (reason === 'MOU_COMPETITOR') {
+      rejectReason = 'Sudah MOU dengan Kompetitor';
+    } else if (reason === 'FINISHED') {
+      rejectReason = 'Proyek sudah selesai dibangun';
+    }
+    return rejectReason;
+  };
+
   const renderCompBaseOnStatus = () => {
     if (status === 'VISIT') {
       return (
-        <BText style={[styles.date, { marginRight: layout.pad.lg }]}>
-          {getLocalFinishDate()}
+        <BText style={[styles.date, { marginRight: layout.pad.md }]}>
+          {finishDate !== null ? getLocalFinishDate() : '-'}
         </BText>
       );
     } else if (status === 'SPH') {
@@ -77,8 +88,8 @@ const VisitationDatesAndStatus = ({
       );
     } else {
       return (
-        <BText style={[styles.date, { marginRight: layout.pad.lg }]}>
-          Kompetitor
+        <BText style={[styles.date, { marginRight: layout.pad.md }]}>
+          {rejectCategory !== null && getRejectedCategory(rejectCategory)}
         </BText>
       );
     }

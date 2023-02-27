@@ -4,16 +4,20 @@ import font from '@/constants/fonts';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const Notes = () => {
-  return (
-    <View style={styles.container}>
-      <BLabel bold="600" sizeInNumber={font.size.md} label="Catatan" />
-      <BSpacer size="extraSmall" />
-      <BText style={styles.textNotes}>
-        ini proyek masih awal awal banget, coba nanti mau follow up lagi
-      </BText>
-    </View>
-  );
+const Notes = ({ visitNotes }: { visitNotes: string | null }) => {
+  if (visitNotes) {
+    return (
+      <View style={styles.container}>
+        <BLabel bold="600" sizeInNumber={font.size.md} label="Catatan" />
+        <BSpacer size="extraSmall" />
+        <BText style={styles.textNotes}>
+          ini proyek masih awal awal banget, coba nanti mau follow up lagi
+        </BText>
+      </View>
+    );
+  } else {
+    return null;
+  }
 };
 const styles = StyleSheet.create({
   container: {
