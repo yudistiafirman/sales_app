@@ -14,6 +14,12 @@ import { SphContext } from '../../context/SphContext';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import { customLog } from '@/utils/generalFunc';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import {
+  updateSelectedCompanyPicList,
+  updateSelectedPic,
+} from '@/redux/reducers/SphReducer';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -47,8 +53,12 @@ export default function SelectedPic({
   onPress,
   setCurrentPosition,
 }: SelectedPicType) {
+  const dispatch = useDispatch();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [sphState, stateUpdate] = useContext(SphContext);
+  const { selectedCompany, selectedPic } = useSelector(
+    (state: RootState) => state.sphState
+  );
 
   const inputsData: Input[] = useMemo(() => {
     return [
@@ -57,54 +67,53 @@ export default function SelectedPic({
         isRequire: true,
         isError: false,
         type: 'PIC',
-        value: sphState.selectedCompany?.PIC
-          ? sphState.selectedCompany.PIC
-          : [],
+        value: selectedCompany?.PIC ? selectedCompany.PIC : [],
         onChange: () => {
           openBottomSheet();
         },
         onSelect: (index: number) => {
-          if (stateUpdate) {
-            // stateUpdate('selectedPic')(flatListData[index]);
-            // const selectPic = (sphState.picList[index].isSelected = true);
-            const listPic = sphState.selectedCompany?.PIC
-              ? sphState.selectedCompany.PIC
-              : [];
-            const selectPic = listPic.map((pic, picIndex) => {
-              if (index === picIndex) {
-                stateUpdate('selectedPic')(pic);
-                pic.isSelected = true;
-              } else {
-                pic.isSelected = false;
-              }
-              return pic;
-            });
-            // stateUpdate('picList')(selectPic);
-            stateUpdate('selectedCompany')({
-              ...sphState.selectedCompany,
-              PIC: selectPic,
-            });
-          }
+          // if (stateUpdate) {
+          // stateUpdate('selectedPic')(flatListData[index]);
+          // const selectPic = (sphState.picList[index].isSelected = true);
+          const listPic = selectedCompany?.PIC ? selectedCompany.PIC : [];
+          const selectPic = listPic.map((pic, picIndex) => {
+            if (index === picIndex) {
+              // stateUpdate('selectedPic')(pic);
+              dispatch(updateSelectedPic(pic));
+              pic.isSelected = true;
+            } else {
+              pic.isSelected = false;
+            }
+            return pic;
+          });
+          dispatch(updateSelectedCompanyPicList(selectPic));
+          // stateUpdate('picList')(selectPic);
+          // stateUpdate('selectedCompany')({
+          //   ...sphState.selectedCompany,
+          //   PIC: selectPic,
+          // });
+          // }
         },
       },
     ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sphState]);
+  }, [selectedCompany?.PIC]);
 
   useEffect(() => {
-    if (sphState.selectedCompany) {
-      if (sphState.selectedCompany?.mainPic?.id && !sphState.selectedPic) {
-        const foundMainPic = sphState.selectedCompany?.PIC?.find(
-          (pic) => pic.id === sphState.selectedCompany?.mainPic?.id
+    if (selectedCompany) {
+      if (selectedCompany?.mainPic?.id && !selectedPic) {
+        const foundMainPic = selectedCompany?.PIC?.find(
+          (pic) => pic.id === selectedCompany?.mainPic?.id
         );
-        if (foundMainPic) stateUpdate('selectedPic')(foundMainPic);
+        if (foundMainPic) dispatch(updateSelectedPic(foundMainPic));
+        // if (foundMainPic) stateUpdate('selectedPic')(foundMainPic);
       }
-      if (sphState.selectedCompany?.PIC) {
-        const listPic = sphState.selectedCompany?.PIC?.map((pic) => {
-          if (sphState.selectedPic) {
-            if (sphState.selectedPic.id) {
-              if (pic.id === sphState.selectedPic.id) {
-                stateUpdate('selectedPic')(pic);
+      if (selectedCompany?.PIC) {
+        const listPic = selectedCompany?.PIC?.map((pic) => {
+          if (selectedPic) {
+            if (selectedPic.id) {
+              if (pic.id === selectedPic.id) {
+                // stateUpdate('selectedPic')(pic);
+                dispatch(updateSelectedPic(pic));
                 return { ...pic, isSelected: true };
               }
             } else {
@@ -116,10 +125,11 @@ export default function SelectedPic({
         if (listPic.length === 1) {
           listPic[0].isSelected = true;
         }
-        stateUpdate('selectedCompany')({
-          ...sphState.selectedCompany,
-          PIC: listPic,
-        });
+        dispatch(updateSelectedCompanyPicList(listPic));
+        // stateUpdate('selectedCompany')({
+        //   ...sphState.selectedCompany,
+        //   PIC: listPic,
+        // });
         // stateUpdate('picList')(listPic);
       }
     }
@@ -130,11 +140,13 @@ export default function SelectedPic({
   };
 
   let picOrCompanyName = '-';
-  if (sphState?.selectedCompany?.Company?.name) {
-    picOrCompanyName = sphState?.selectedCompany.Company?.name;
-  } else if (sphState?.selectedCompany?.mainPic?.name) {
-    picOrCompanyName = sphState?.selectedCompany?.mainPic?.name;
+  if (selectedCompany?.Company?.name) {
+    picOrCompanyName = selectedCompany.Company?.name;
+  } else if (selectedCompany?.mainPic?.name) {
+    picOrCompanyName = selectedCompany?.mainPic?.name;
   }
+  console.log(JSON.stringify(selectedCompany), 'selectedCompanystring');
+  console.log(JSON.stringify(selectedPic), 'selectedPicstring');
 
   return (
     <View style={style.container}>
@@ -143,8 +155,8 @@ export default function SelectedPic({
           {/* <Text>{JSON.stringify(sphState?.selectedCompany)}</Text> */}
           <BVisitationCard
             item={{
-              name: sphState?.selectedCompany?.name || '-',
-              location: sphState?.selectedCompany?.locationAddress.line1,
+              name: selectedCompany?.name || '-',
+              location: selectedCompany?.locationAddress.line1,
               picOrCompanyName,
             }}
             customIcon={GantiIcon}
@@ -170,7 +182,7 @@ export default function SelectedPic({
         </ScrollView>
       </View>
       <BButtonPrimary
-        disable={!checkSelected(sphState.selectedCompany?.PIC)}
+        disable={!checkSelected(selectedCompany?.PIC)}
         title="Lanjut"
         onPress={() => {
           if (setCurrentPosition) {
@@ -187,16 +199,16 @@ export default function SelectedPic({
           // onChange('selectedPic', pic);
           customLog(pic, 'bsheetaddpic');
           pic.isSelected = false;
-          const currentList = sphState.selectedCompany?.PIC
-            ? sphState.selectedCompany.PIC
-            : [];
+          const currentList = selectedCompany?.PIC ? selectedCompany.PIC : [];
           if (currentList.length === 1) {
             pic.isSelected = true;
           }
-          stateUpdate('selectedCompany')({
-            ...sphState.selectedCompany,
-            PIC: [...currentList, pic],
-          });
+          // dispatch(updateSelectedPic([...currentList, pic]));
+          dispatch(updateSelectedCompanyPicList([...currentList, pic]));
+          // stateUpdate('selectedCompany')({
+          //   ...selectedCompany,
+          //   PIC: [...currentList, pic],
+          // });
           // stateUpdate('picList')([...sphState.picList, pic]);
           // sphState.selectedCompany?.PIC ? sphState.selectedCompany.PIC : [];
         }}

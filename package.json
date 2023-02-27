@@ -80,6 +80,7 @@
     "react-native-vision-camera": "2.14.1",
     "react-native-webview": "^11.26.0",
     "react-redux": "^8.0.5",
+    "redux-persist": "^6.0.0",
     "xstate": "^4.35.2"
   },
   "devDependencies": {

@@ -16,7 +16,7 @@ import {
   BSpacer,
 } from '@/components';
 import ProductCartModal from '../ProductOrderDetailModal';
-import { ProductDataInterface } from '@/interfaces';
+import { chosenProductType, ProductDataInterface } from '@/interfaces';
 import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 import { colors, fonts } from '@/constants';
@@ -24,15 +24,9 @@ import { SphContext } from '../context/SphContext';
 import { useNavigation } from '@react-navigation/native';
 import { SEARCH_PRODUCT, SPH } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
-
-type ChosenProductType = {
-  volume: string;
-  sellPrice: string;
-  product: ProductDataInterface;
-  totalPrice: number;
-  productId: string;
-  categoryId: string;
-}[];
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { updateChosenProducts } from '@/redux/reducers/SphReducer';
 
 interface RenderModalType {
   selectedProduct: ProductDataInterface | null;
@@ -42,7 +36,7 @@ interface RenderModalType {
     React.SetStateAction<ProductDataInterface | null>
   >;
   setChosenProducts: React.Dispatch<React.SetStateAction<any[]>>;
-  chosenProducts: ChosenProductType;
+  chosenProducts: chosenProductType[];
   distance: number | null;
 }
 
@@ -90,12 +84,16 @@ function renderSeparator() {
 }
 
 export default function FourthStep() {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] =
     useState<ProductDataInterface | null>(null);
-  const [chosenProducts, setChosenProducts] = useState<ChosenProductType>([]);
+  const [chosenProducts, setChosenProducts] = useState<chosenProductType[]>([]);
+  const { chosenProducts: productsRedux, distanceFromLegok } = useSelector(
+    (state: RootState) => state.sphState
+  );
 
   const getProduct = useCallback(({ data }: { data: ProductDataInterface }) => {
     setSelectedProduct(data);
@@ -113,18 +111,19 @@ export default function FourthStep() {
   useEffect(() => {
     crashlytics().log(SPH + '-Step4');
 
-    if (sphState.chosenProducts.length > 0) {
-      setChosenProducts(sphState?.chosenProducts);
+    if (productsRedux.length > 0) {
+      setChosenProducts(productsRedux);
     }
     DeviceEventEmitter.addListener('event.testEvent', getProduct);
     return () => {
       DeviceEventEmitter.removeAllListeners('event.testEvent');
     };
-  }, [getProduct]);
+  }, []);
 
   useEffect(() => {
     if (stateUpdate) {
-      stateUpdate('chosenProducts')(chosenProducts);
+      // stateUpdate('chosenProducts')(chosenProducts);
+      dispatch(updateChosenProducts(chosenProducts));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chosenProducts]);
@@ -138,7 +137,7 @@ export default function FourthStep() {
         isModalVisible={isModalVisible}
         chosenProducts={chosenProducts}
         selectedProduct={selectedProduct}
-        distance={sphState.distanceFromLegok}
+        distance={distanceFromLegok}
       />
       <View style={style.searchModeContainer}>
         <View>
@@ -153,9 +152,7 @@ export default function FourthStep() {
               onPress={() => {
                 navigation.navigate(SEARCH_PRODUCT, {
                   isGobackAfterPress: true,
-                  distance: sphState.distanceFromLegok
-                    ? sphState.distanceFromLegok
-                    : 0,
+                  distance: distanceFromLegok ? distanceFromLegok : 0,
                 });
               }}
             />
@@ -201,7 +198,7 @@ export default function FourthStep() {
               setCurrentPosition(4);
             }
           }}
-          disableContinue={sphState?.chosenProducts.length === 0}
+          disableContinue={productsRedux.length === 0}
         />
       </View>
 
