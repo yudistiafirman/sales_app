@@ -33,17 +33,22 @@ export default function BDepositCard({
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>{secondSectionText}</Text>
         <Text style={[styles.summary, styles.fontw400]}>
-          IDR{' '}
-          {secondSectionValue < 0
-            ? formatCurrency(secondSectionValue)
-            : '+ ' + formatCurrency(secondSectionValue)}
+          IDR {formatCurrency(secondSectionValue)}
         </Text>
       </View>
       <BSpacer size={'extraSmall'} />
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>{thirdSectionText}</Text>
-        <Text style={[styles.summary, styles.fontw400]}>
-          IDR {formatCurrency(firstSectionValue + secondSectionValue)}
+        <Text
+          style={[
+            styles.summary,
+            {
+              fontFamily: fonts.family.montserrat[600],
+              fontSize: fonts.size.md,
+            },
+          ]}
+        >
+          IDR {formatCurrency(firstSectionValue - secondSectionValue)}
         </Text>
       </View>
     </View>

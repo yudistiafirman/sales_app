@@ -25,7 +25,7 @@ export default function FirstStep() {
   const { updateValueOnstep } = action;
   const dispatch = useDispatch();
 
-  const { deposit, picts } = stateOne;
+  const { deposit } = stateOne;
 
   const inputs: Input[] = [
     {
@@ -56,7 +56,7 @@ export default function FirstStep() {
       isError: deposit?.nominal ? false : true,
       customerErrorMsg: 'Nominal harus diisi',
       onChange: (value: any) => {
-        onChange('nominal')(value);
+        onChange('nominal')(value.split('.').join(''));
       },
     },
   ];
@@ -72,7 +72,7 @@ export default function FirstStep() {
     if (key === 'nominal')
       modifyDeposit = {
         ...modifyDeposit,
-        nominal: val.split('.').join(''),
+        nominal: val,
       };
 
     updateValueOnstep('stepOne', 'deposit', modifyDeposit);
@@ -81,7 +81,13 @@ export default function FirstStep() {
   const removeImage = React.useCallback(
     (pos: number) => () => {
       dispatch(deleteImage({ pos }));
-      updateValueOnstep('stepOne', 'picts', photoURLs);
+      let modifyDeposit = {};
+      if (deposit) modifyDeposit = deposit;
+      modifyDeposit = {
+        ...modifyDeposit,
+        picts: photoURLs,
+      };
+      updateValueOnstep('stepOne', 'deposit', modifyDeposit);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -89,7 +95,13 @@ export default function FirstStep() {
 
   useFocusEffect(
     React.useCallback(() => {
-      updateValueOnstep('stepOne', 'picts', photoURLs);
+      let modifyDeposit = {};
+      if (deposit) modifyDeposit = deposit;
+      modifyDeposit = {
+        ...modifyDeposit,
+        picts: photoURLs,
+      };
+      updateValueOnstep('stepOne', 'deposit', modifyDeposit);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [photoURLs])
   );
@@ -98,7 +110,7 @@ export default function FirstStep() {
     <SafeAreaView style={style.flexFull}>
       <View style={style.gallery}>
         <BGallery
-          picts={picts}
+          picts={deposit?.picts}
           addMorePict={() =>
             navigation.dispatch(
               StackActions.push(CAMERA, {

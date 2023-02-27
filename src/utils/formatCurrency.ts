@@ -2,11 +2,10 @@ import { Platform } from 'react-native';
 
 if (Platform.OS === 'android') {
   require('intl');
-  require('intl/locale-data/jsonp/id-ID'); 
+  require('intl/locale-data/jsonp/id-ID');
 }
 
 const formatCurrency = (number: number) => {
-   
   if (Platform.OS === 'android') {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',

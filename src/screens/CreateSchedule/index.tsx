@@ -10,7 +10,6 @@ import {
 import { Styles } from '@/interfaces';
 import { useKeyboardActive } from '@/hooks';
 import { BStepperIndicator } from '@/components';
-import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
 import {
   useFocusEffect,
@@ -18,7 +17,6 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
-import { layout } from '@/constants';
 import {
   CreateScheduleFirstStep,
   CreateScheduleListResponse,
@@ -32,6 +30,8 @@ import {
 import SecondStep from './element/SecondStep';
 import FirstStep from './element/FirstStep';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { useDispatch } from 'react-redux';
 
 const labels = ['Cari PO', 'Detil Pengiriman'];
 
@@ -41,7 +41,7 @@ function stepHandler(
 ) {
   const { stepOne, stepTwo } = state;
 
-  if (stepOne.products) {
+  if (stepOne.sphs && stepOne.sphs.length > 0) {
     setStepsDone((curr) => {
       return [...new Set(curr), 0];
     });
@@ -65,29 +65,32 @@ function populateData(
     value: any
   ) => void
 ) {
-  updateValue('stepOne', 'companyName', existingData.companyName);
-  updateValue('stepOne', 'locationName', existingData.locationName);
-  updateValue('stepOne', 'title', existingData.sph ? existingData.sph : '-');
-  updateValue('stepOne', 'products', existingData.products);
-  updateValue('stepOne', 'addedDeposit', existingData.addedDeposit);
-  updateValue('stepOne', 'lastDeposit', existingData.lastDeposit);
+  updateValue('stepOne', 'companyName', existingData?.companyName);
+  updateValue('stepOne', 'locationName', existingData?.locationName);
+  updateValue('stepOne', 'sphs', existingData?.sphs);
+  updateValue('stepOne', 'addedDeposit', existingData?.addedDeposit);
+  updateValue('stepOne', 'lastDeposit', existingData?.lastDeposit);
 
-  updateValue('stepTwo', 'deliveryDate', existingData.deliveryDate);
-  updateValue('stepTwo', 'deliveryTime', existingData.deliveryTime);
-  updateValue('stepTwo', 'method', existingData.method);
-  updateValue('stepTwo', 'isConsecutive', existingData.isConsecutive);
+  updateValue('stepTwo', 'deliveryDate', existingData?.deliveryDate);
+  updateValue('stepTwo', 'deliveryTime', existingData?.deliveryTime);
+  updateValue('stepTwo', 'method', existingData?.method);
+  updateValue('stepTwo', 'isConsecutive', existingData?.isConsecutive);
   updateValue(
     'stepTwo',
     'hasTechnicalRequest',
     existingData.hasTechnicalRequest
   );
-  updateValue('stepTwo', 'products', existingData.products);
+  let allProducts: any[] = [];
+  existingData?.sphs?.forEach((sp) => {
+    if (sp?.products) allProducts.push(...sp.products);
+  });
+  updateValue('stepTwo', 'products', allProducts);
   updateValue(
     'stepTwo',
     'totalDeposit',
-    existingData.lastDeposit +
-      existingData.addedDeposit
-        .map((item) => item.nominal)
+    existingData?.lastDeposit?.nominal +
+      existingData?.addedDeposit
+        ?.map((item) => item.nominal)
         .reduce((prev, next) => prev + next)
   );
 }
@@ -101,6 +104,7 @@ const CreateSchedule = () => {
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
+  const dispatch = useDispatch();
 
   useCustomHeaderLeft({
     customHeaderLeft: (
@@ -139,8 +143,15 @@ const CreateSchedule = () => {
       updateValue('existingScheduleID', existingSchedule.id);
       populateData(existingSchedule, updateValueOnstep);
     }
+    return () => {
+      dispatch(resetImageURLS());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
     stepHandler(values, setStepsDone);
-  }, [existingSchedule, updateValue, updateValueOnstep, values]);
+  }, [values]);
 
   const next = (nextStep: number) => () => {
     const totalStep = stepRender.length;
@@ -180,7 +191,6 @@ const CreateSchedule = () => {
                 next(values.step + 1)();
                 DeviceEventEmitter.emit('CreateSchedule.continueButton', true);
               }}
-              isContinueIcon={false}
               onPressBack={handleBackButton}
               continueText={values.step > 0 ? 'Buat Jadwal' : 'Lanjut'}
               unrenderBack={values.step > 0 ? false : true}
@@ -208,28 +218,9 @@ const CreateSchedule = () => {
 };
 
 const styles: Styles = {
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  button: { flexDirection: 'row-reverse' },
   container: {
     justifyContent: 'space-between',
     flex: 1,
-  },
-  conButton: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
-  buttonOne: {
-    flex: 1,
-    paddingEnd: layout.pad.md,
-  },
-  buttonTwo: {
-    flex: 1.5,
-    paddingStart: layout.pad.md,
   },
 };
 
