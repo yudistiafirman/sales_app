@@ -49,12 +49,12 @@ export default function OperationList({
   const separator = useCallback(() => <BSpacer size={'small'} />, []);
 
   const onClickItem = (id: string) => {
-    if (role === ENTRY_TYPE.OPERATION) {
+    if (role === ENTRY_TYPE.OPSMANAGER) {
       navigation.navigate(SCHEDULE, { id: id });
     } else {
       navigation.navigate(CAMERA, {
         photoTitle: 'DO',
-        navigateTo: 'return',
+        navigateTo: role ? ENTRY_TYPE[role] : '',
       });
     }
   };

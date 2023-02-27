@@ -1,4 +1,5 @@
 import { visitationListResponse } from '@/interfaces';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PhotoFile } from 'react-native-vision-camera';
 
@@ -18,6 +19,7 @@ export type RootStackParamList = {
     navigateTo?: string;
     closeButton?: boolean;
     existingVisitation?: visitationListResponse;
+    operationAddedStep?: string;
   };
   ALL_PRODUCT: {
     coordinate: { longitude: number; latitude: number };
@@ -29,9 +31,10 @@ export type RootStackParamList = {
     navigateTo?: string;
     closeButton?: boolean;
     existingVisitation?: visitationListResponse;
+    operationAddedStep?: string;
   };
   SCHEDULE: { id: string };
-  SUBMIT_FORM: { type?: string };
+  SUBMIT_FORM: { operationType?: ENTRY_TYPE };
   CREATE_VISITATION: { existingVisitation?: visitationListResponse };
   SPH: {};
   APPOINTMENT: {};

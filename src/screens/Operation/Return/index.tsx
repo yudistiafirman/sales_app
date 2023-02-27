@@ -2,18 +2,17 @@ import React, { useState, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import colors from '@/constants/colors';
 import { layout } from '@/constants';
-import OperationList from './element/OperationList';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import { ENTRY_TYPE } from '@/models/EnumModel';
+import OperationList from '../element/OperationList';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { TAB_RETURN } from '@/navigation/ScreenNames';
+import { useDispatch } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 
-const Operation = () => {
+const Return = () => {
   const dispatch = useDispatch();
   const [isLoading] = useState(false);
-  const { entryType } = useSelector((state: RootState) => state.auth);
 
   const data = useMemo(
     () =>
@@ -21,10 +20,9 @@ const Operation = () => {
         .fill(0)
         .map((_) => {
           return {
-            id: 'SCH/BRIK/2022/11/00254',
-            name: 'Proyek Ruko 2 lantai',
+            id: 'DISPATCH/BRIK/2022/11/00254',
+            name: 'Proyek Ruko 1 lantai',
             qty: '7 m3',
-            // status: 'Dalam Produksi',
           };
         }),
     []
@@ -37,13 +35,13 @@ const Operation = () => {
   );
 
   React.useEffect(() => {
-    crashlytics().log(entryType ? ENTRY_TYPE[entryType] : 'Operation Default');
-  }, [entryType]);
+    crashlytics().log(TAB_RETURN);
+  }, []);
 
   return (
     <View style={style.container}>
       <OperationList
-        role={entryType} // change from redux state
+        role={ENTRY_TYPE.RETURN} // change from redux state
         isLoading={isLoading}
         data={data}
       />
@@ -60,4 +58,5 @@ const style = StyleSheet.create({
     paddingBottom: layout.pad.lg,
   },
 });
-export default Operation;
+
+export default Return;

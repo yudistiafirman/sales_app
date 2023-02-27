@@ -1,9 +1,14 @@
-import { BButtonPrimary, BDivider, BForm, BOperationCard } from '@/components';
+import {
+  BButtonPrimary,
+  BForm,
+  BGallery,
+  BOperationCard,
+  BSpacer,
+} from '@/components';
 import { colors, layout } from '@/constants';
 import { TM_CONDITION } from '@/constants/dropdown';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { Input } from '@/interfaces';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { resScale } from '@/utils';
 import {
   StackActions,
@@ -11,20 +16,42 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SUBMIT_FORM } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { ENTRY_TYPE } from '@/models/EnumModel';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 
 const SubmitForm = () => {
   const route = useRoute<RootStackScreenProps>();
-  useHeaderTitleChanged({ title: 'Dispatch' });
   const navigation = useNavigation();
   const [toggleCheckBox, setToggleCheckBox] = useState(true);
+  const { photoURLs } = useSelector((state: RootState) => state.camera);
+  const { entryType } = useSelector((state: RootState) => state.auth);
+  const operationType = route?.params?.operationType;
 
   React.useEffect(() => {
     crashlytics().log(SUBMIT_FORM);
   }, []);
+
+  const getHeaderTitle = () => {
+    switch (entryType) {
+      case ENTRY_TYPE.BATCHER:
+        return 'Produksi';
+      case ENTRY_TYPE.SECURITY:
+        if (operationType === ENTRY_TYPE.DISPATCH) return 'Dispatch';
+        else return 'Return';
+      case ENTRY_TYPE.DRIVER:
+        return 'Penuangan';
+      default:
+        return '';
+    }
+  };
+
+  useHeaderTitleChanged({ title: getHeaderTitle() });
 
   const deliveryInputs: Input[] = React.useMemo(() => {
     const baseInput: Input[] = [
@@ -80,7 +107,7 @@ const SubmitForm = () => {
 
   return (
     <View style={style.parent}>
-      <View style={style.baseContainer}>
+      <ScrollView style={style.baseContainer}>
         <View style={style.top}>
           <BOperationCard
             item={{
@@ -101,28 +128,28 @@ const SubmitForm = () => {
             clickable={false}
           />
         </View>
-        {
-          // put array of images here
-        }
-        {(route?.params?.type === 'delivery' ||
-          route?.params?.type === 'return') && (
+        <View>
+          <BGallery picts={photoURLs} />
+        </View>
+        {(operationType === ENTRY_TYPE.DRIVER ||
+          operationType === ENTRY_TYPE.RETURN) && (
           <View>
-            <BDivider />
+            <BSpacer size={'small'} />
           </View>
         )}
-        {route?.params?.type === 'delivery' && (
+        {operationType === ENTRY_TYPE.DRIVER && (
           <View style={style.container}>
             <BForm inputs={deliveryInputs} />
           </View>
         )}
-        {route?.params?.type === 'return' && (
+        {operationType === ENTRY_TYPE.RETURN && (
           <>
             <View style={style.container}>
               <BForm inputs={returnInputs} spacer="extraSmall" />
             </View>
           </>
         )}
-      </View>
+      </ScrollView>
       <View style={style.conButton}>
         <View style={style.buttonOne}>
           <BButtonPrimary
@@ -149,6 +176,7 @@ const style = StyleSheet.create({
     padding: resScale(16),
   },
   top: {
+    flex: 1,
     height: '20%',
     marginBottom: layout.pad.lg,
   },

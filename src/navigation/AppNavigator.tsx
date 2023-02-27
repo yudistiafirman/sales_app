@@ -4,27 +4,30 @@ import Splash from '@/screens/Splash';
 import Operation from '@/screens/Operation';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { JwtPayload } from 'jwt-decode';
-import SecurityTabsV2 from './tabs/SecurityTabsV2';
-import SalesTabsV2 from './tabs/SalesTabsV2';
 import Login from '@/screens/Login';
 import Verification from '@/screens/Verification';
 import { colors, fonts } from '@/constants';
 import {
   LOGIN,
   LOGIN_TITLE,
-  OPERATION,
-  OPERATION_TITLE,
+  OPSMANAGER,
+  OPSMANAGER_TITLE,
   TAB_ROOT,
-  SECURITY_TAB_TITLE,
   VERIFICATION,
   VERIFICATION_TITLE,
+  BATCHER,
+  DRIVER,
+  BATCHER_TITLE,
+  DRIVER_TITLE,
 } from './ScreenNames';
-import OperationHeaderRight from './Operation/HeaderRight';
+import OperationHeaderRight from './Operation/OperationHeaderRight';
 import OperationStack from './Operation/Stack';
 import SalesStack from './Sales/Stack';
 import HunterAndFarmers from '@/screens/HunterAndFarmers';
 import { useAsyncConfigSetup } from '@/hooks';
 import { customLog } from '@/utils/generalFunc';
+import SalesTabs from './tabs/SalesTabs';
+import SecurityTabs from './tabs/SecurityTabs';
 const Stack = createNativeStackNavigator();
 
 const RootScreen = (
@@ -34,17 +37,49 @@ const RootScreen = (
 ) => {
   if (userData !== null) {
     switch (userType) {
-      case ENTRY_TYPE.OPERATION:
+      case ENTRY_TYPE.OPSMANAGER:
         return (
           <>
             <Stack.Screen
-              name={OPERATION}
-              key={OPERATION}
+              name={OPSMANAGER}
+              key={OPSMANAGER}
               component={Operation}
               options={{
                 headerTitleAlign: 'center',
-                headerTitle: OPERATION_TITLE,
-                headerRight: () => OperationHeaderRight(),
+                headerTitle: OPSMANAGER_TITLE,
+                headerRight: () => OperationHeaderRight('Transport'),
+              }}
+            />
+            {OperationStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.BATCHER:
+        return (
+          <>
+            <Stack.Screen
+              name={BATCHER}
+              key={BATCHER}
+              component={Operation}
+              options={{
+                headerTitleAlign: 'center',
+                headerTitle: BATCHER_TITLE,
+                headerRight: () => OperationHeaderRight('Produksi'),
+              }}
+            />
+            {OperationStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.DRIVER:
+        return (
+          <>
+            <Stack.Screen
+              name={DRIVER}
+              key={DRIVER}
+              component={Operation}
+              options={{
+                headerTitleAlign: 'center',
+                headerTitle: DRIVER_TITLE,
+                headerRight: () => OperationHeaderRight('Penuangan'),
               }}
             />
             {OperationStack(Stack)}
@@ -56,10 +91,9 @@ const RootScreen = (
             <Stack.Screen
               name={TAB_ROOT}
               key={TAB_ROOT}
-              component={SecurityTabsV2}
+              component={SecurityTabs}
               options={{
-                headerTitle: SECURITY_TAB_TITLE,
-                headerRight: () => OperationHeaderRight(),
+                headerShown: false,
               }}
             />
             {OperationStack(Stack)}
@@ -71,7 +105,7 @@ const RootScreen = (
             <Stack.Screen
               name={TAB_ROOT}
               key={TAB_ROOT}
-              component={SalesTabsV2}
+              component={SalesTabs}
               options={{
                 headerShown: false,
               }}

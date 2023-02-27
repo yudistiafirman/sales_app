@@ -1,42 +1,49 @@
-// In App.js in a new project
-
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import BTabScreen from '@/navigation/elements/BTabScreen';
-import Operation from '@/screens/Operation';
 import Dispatch from '@/screens/Operation/Dispatch';
 import CustomTabBar from '../CustomTabBar';
+import {
+  SECURITY_TAB_TITLE,
+  TAB_DISPATCH,
+  TAB_DISPATCH_TITLE,
+  TAB_RETURN,
+  TAB_RETURN_TITLE,
+} from '@/navigation/ScreenNames';
+import OperationHeaderRight from '@/navigation/Operation/OperationHeaderRight';
+import Return from '@/screens/Operation/Return';
 
 const Tab = createBottomTabNavigator();
 
-/**
- * @deprecated The method should not be used
- */
 function SecurityTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
+        headerTitleAlign: 'center',
         tabBarHideOnKeyboard: true,
+        headerShown: false,
       }}
       tabBar={(props) => <CustomTabBar {...props} />}
     >
-      {BTabScreen({
-        Tab: Tab,
-        name: 'Dispatch',
-        title: 'Dispatch',
-        type: 'home',
-        color: 'white',
-        headerShown: false,
-        component: Operation,
-      })}
-      {BTabScreen({
-        Tab: Tab,
-        name: 'Return',
-        title: 'Return',
-        type: 'sub',
-        headerShown: false,
-        component: Dispatch,
-      })}
+      <Tab.Screen
+        key={TAB_DISPATCH}
+        name={TAB_DISPATCH_TITLE}
+        options={{
+          headerTitle: SECURITY_TAB_TITLE,
+          headerRight: () => OperationHeaderRight('Dispatch'),
+          headerShown: true,
+        }}
+        component={Dispatch}
+      />
+      <Tab.Screen
+        key={TAB_RETURN}
+        name={TAB_RETURN_TITLE}
+        options={{
+          headerTitle: SECURITY_TAB_TITLE,
+          headerRight: () => OperationHeaderRight('Return'),
+          headerShown: true,
+        }}
+        component={Return}
+      />
     </Tab.Navigator>
   );
 }

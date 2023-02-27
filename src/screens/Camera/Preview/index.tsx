@@ -19,6 +19,7 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { useDispatch } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
 import {
+  CAMERA,
   CREATE_DEPOSIT,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
@@ -29,6 +30,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -44,6 +46,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const _style = useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
   const navigateTo = route?.params?.navigateTo;
+  const operationAddedStep = route?.params?.operationAddedStep;
   const closeButton = route?.params?.closeButton;
   const existingVisitation = route?.params?.existingVisitation;
 
@@ -86,25 +89,90 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
     dispatch(setImageURLS(imageUrls));
     DeviceEventEmitter.emit('Camera.preview', photo);
     if (navigateTo) {
-      if (
-        navigateTo === 'operation' ||
-        navigateTo === 'return' ||
-        navigateTo === 'delivery'
-      ) {
-        navigation.navigate(SUBMIT_FORM, {
-          type: navigateTo,
-        });
-      } else if (navigateTo === CREATE_VISITATION) {
-        navigation.goBack();
-        navigation.dispatch(
-          StackActions.replace(navigateTo, { existingVisitation })
-        );
-      } else if (navigateTo === CREATE_SCHEDULE) {
-        DeviceEventEmitter.emit('Camera.addedDeposit', 'true');
-        navigation.dispatch(StackActions.pop(2));
-      } else {
-        navigation.goBack();
-        navigation.dispatch(StackActions.replace(navigateTo));
+      console.log('screen::: ', navigateTo);
+      switch (navigateTo) {
+        case CREATE_VISITATION:
+          navigation.goBack();
+          navigation.dispatch(
+            StackActions.replace(navigateTo, { existingVisitation })
+          );
+          return;
+        case CREATE_SCHEDULE:
+          DeviceEventEmitter.emit('Camera.addedDeposit', 'true');
+          navigation.dispatch(StackActions.pop(2));
+          return;
+        case ENTRY_TYPE[ENTRY_TYPE.BATCHER]:
+          if (!operationAddedStep || operationAddedStep === '') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Mix Design',
+              navigateTo: navigateTo,
+              operationAddedStep: 'finished',
+            });
+          } else if (operationAddedStep === 'finished') {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: ENTRY_TYPE.BATCHER,
+            });
+          }
+          return;
+        case ENTRY_TYPE[ENTRY_TYPE.DISPATCH]:
+          if (!operationAddedStep || operationAddedStep === '') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Driver',
+              navigateTo: navigateTo,
+              operationAddedStep: 'vehicle_no',
+            });
+          } else if (operationAddedStep === 'vehicle_no') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'No Polisi TM',
+              navigateTo: navigateTo,
+              operationAddedStep: 'seal',
+            });
+          } else if (operationAddedStep === 'seal') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Segel',
+              navigateTo: navigateTo,
+              operationAddedStep: 'finished',
+            });
+          } else if (operationAddedStep === 'finished') {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: ENTRY_TYPE.DISPATCH,
+            });
+          }
+          return;
+        case ENTRY_TYPE[ENTRY_TYPE.DRIVER]:
+          if (!operationAddedStep || operationAddedStep === '') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Penuangan',
+              navigateTo: navigateTo,
+              operationAddedStep: 'tm_value',
+            });
+          } else if (operationAddedStep === 'tm_value') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Isi TM',
+              navigateTo: navigateTo,
+              operationAddedStep: 'do_signed',
+            });
+          } else if (operationAddedStep === 'do_signed') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'DO Saat Ditandatangan',
+              navigateTo: navigateTo,
+              operationAddedStep: 'finished',
+            });
+          } else if (operationAddedStep === 'finished') {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: ENTRY_TYPE.DRIVER,
+            });
+          }
+          return;
+        case ENTRY_TYPE[ENTRY_TYPE.RETURN]:
+          navigation.navigate(SUBMIT_FORM, {
+            operationType: ENTRY_TYPE.RETURN,
+          });
+          return;
+        default:
+          navigation.goBack();
+          navigation.dispatch(StackActions.replace(navigateTo));
+          return;
       }
     } else {
       navigation.dispatch(StackActions.pop(2));

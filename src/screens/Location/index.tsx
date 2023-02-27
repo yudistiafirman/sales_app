@@ -20,7 +20,7 @@ import {
   SPH,
   TAB_DISPATCH_TITLE,
   TAB_HOME_TITLE,
-  TAB_OPERATION_TITLE,
+  TAB_RETURN_TITLE,
   TAB_PRICE_LIST_TITLE,
   TAB_PROFILE_TITLE,
   TAB_ROOT,
@@ -73,7 +73,7 @@ const Location = () => {
       from === TAB_TRANSACTION_TITLE ||
       from === TAB_PROFILE_TITLE ||
       from === TAB_HOME_TITLE ||
-      from === TAB_OPERATION_TITLE ||
+      from === TAB_RETURN_TITLE ||
       from === TAB_DISPATCH_TITLE ||
       from === SPH ||
       from === CUSTOMER_DETAIL

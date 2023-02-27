@@ -3,7 +3,7 @@
 */
 export const TAB_ROOT = 'TAB_ROOT';
 
-export const TAB_OPERATION = 'TAB.OPERATION';
+export const TAB_RETURN = 'TAB.RETURN';
 export const TAB_DISPATCH = 'TAB.DISPATCH';
 export const TAB_HOME = 'TAB.HOME';
 export const TAB_TRANSACTION = 'TAB.TRANSACTION';
@@ -12,7 +12,9 @@ export const TAB_PRICE_LIST = 'TAB.PRICE_LIST';
 
 export const SPLASH = 'SPLASH';
 
-export const OPERATION = 'OPERATION';
+export const OPSMANAGER = 'OPSMANAGER';
+export const BATCHER = 'BATCHER';
+export const DRIVER = 'DRIVER';
 export const LOGIN = 'LOGIN';
 export const VERIFICATION = 'VERIFICATION';
 export const CAMERA = 'CAMERA';
@@ -38,16 +40,19 @@ export const DOCUMENTS = 'DOCUMENTS';
 /*
     Screen Title
 */
-export const TAB_OPERATION_TITLE = 'Beranda';
-export const TAB_DISPATCH_TITLE = 'Beranda';
 export const TAB_HOME_TITLE = 'Beranda';
 export const TAB_TRANSACTION_TITLE = 'Transaksi';
 export const TAB_PROFILE_TITLE = 'Profil';
 export const TAB_PRICE_LIST_TITLE = 'Harga';
+export const TAB_RETURN_TITLE = 'Return';
+export const TAB_DISPATCH_TITLE = 'Dispatch';
 
 export const SALES_TAB_TITLE = 'Beranda';
 export const SECURITY_TAB_TITLE = 'Beranda';
-export const OPERATION_TITLE = 'Operation';
+export const OPSMANAGER_TITLE = 'Beranda';
+export const BATCHER_TITLE = 'Beranda';
+export const DRIVER_TITLE = 'Beranda';
+
 export const LOGIN_TITLE = 'Log in';
 export const VERIFICATION_TITLE = 'Kode Verifikasi';
 export const CAMERA_TITLE = 'Camera';
