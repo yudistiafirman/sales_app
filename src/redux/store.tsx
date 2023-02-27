@@ -10,10 +10,12 @@ import productivityFlowReducer from './reducers/productivityFlowReducer';
 import orderReducer from './reducers/orderReducer';
 import snackbarReducer from './reducers/snackbarReducer';
 import SphReducer from './reducers/SphReducer';
+import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  stateReconciler: autoMergeLevel1,
 };
 
 const sphStatePersisted = persistReducer(persistConfig, SphReducer);
