@@ -6,6 +6,7 @@ import {
   BSearchBar,
   BSpacer,
   BTouchableText,
+  BVisitationCard,
 } from '@/components';
 import { TextInput } from 'react-native-paper';
 import {
@@ -21,7 +22,6 @@ import { resScale } from '@/utils';
 import { CREATE_DEPOSIT, SEARCH_PO } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { CreateDepositContext } from '@/context/CreateDepositContext';
-import POListCard from '@/components/templates/PO/POListCard';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import formatCurrency from '@/utils/formatCurrency';
@@ -118,11 +118,10 @@ export default function SecondStep() {
                 style={[style.flexFull, { marginBottom: layout.pad.xxl }]}
               >
                 <View style={style.flexFull}>
-                  <POListCard
-                    companyName={companyName}
-                    locationName={locationName}
-                    useChevron={false}
-                    customAction={customAction}
+                  <BSpacer size={'extraSmall'} />
+                  <BVisitationCard
+                    item={{ name: companyName, location: locationName }}
+                    customIcon={customAction}
                   />
                   <BSpacer size={'extraSmall'} />
                 </View>

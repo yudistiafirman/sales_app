@@ -5,6 +5,7 @@ import {
   BNestedProductCard,
   BSearchBar,
   BSpacer,
+  BVisitationCard,
 } from '@/components';
 import { TextInput } from 'react-native-paper';
 import {
@@ -20,7 +21,6 @@ import { resScale } from '@/utils';
 import { CAMERA, CREATE_SCHEDULE, SEARCH_PO } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { CreateScheduleContext } from '@/context/CreateScheduleContext';
-import POListCard from '@/components/templates/PO/POListCard';
 import { colors, fonts } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
 import AddedDepositModal from '../AddedDepositModal';
@@ -105,10 +105,10 @@ export default function FirstStep() {
         <>
           <ScrollView style={style.flexFull}>
             <View style={style.flexFull}>
-              <POListCard
-                companyName={companyName}
-                locationName={locationName}
-                useChevron={false}
+              <BSpacer size={'extraSmall'} />
+              <BVisitationCard
+                item={{ name: companyName, location: locationName }}
+                isRenderIcon={false}
               />
             </View>
             <View style={style.flexFull}>

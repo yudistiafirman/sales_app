@@ -7,12 +7,16 @@ import {
 } from 'react-native';
 import * as React from 'react';
 import Modal from 'react-native-modal';
-import { BContainer, BNestedProductCard, BSpacer } from '@/components';
+import {
+  BContainer,
+  BNestedProductCard,
+  BSpacer,
+  BVisitationCard,
+} from '@/components';
 import { resScale } from '@/utils';
 import { colors, fonts, layout } from '@/constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { BButtonPrimary } from '@/components';
-import POListCard from '@/components/templates/PO/POListCard';
 
 type SelectedPOModalType = {
   isModalVisible: boolean;
@@ -81,10 +85,12 @@ export default function SelectedPOModal({
                     setScrollOffSet(event.nativeEvent.contentOffset.y);
                   }}
                 >
-                  <POListCard
-                    companyName={data.companyName}
-                    locationName={data.locationName}
-                    useChevron={false}
+                  <BVisitationCard
+                    item={{
+                      name: data.companyName,
+                      location: data.locationName,
+                    }}
+                    isRenderIcon={false}
                   />
                   <BSpacer size={'extraSmall'} />
                   {data?.sphs && data?.sphs.length > 0 && (
