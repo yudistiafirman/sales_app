@@ -11,8 +11,9 @@ import { signOut } from '@/actions/CommonActions';
 import crashlytics from '@react-native-firebase/crashlytics';
 import Icon from 'react-native-vector-icons/Feather';
 import { BDivider } from '@/components';
-const { RNCustomConfig } = NativeModules;
+import analytics from '@react-native-firebase/analytics';
 
+const { RNCustomConfig } = NativeModules;
 const versionName = RNCustomConfig?.version_name;
 
 const _styles: Styles = {
@@ -69,6 +70,7 @@ export default function SalesHeaderRight() {
         bStorage.clearItem();
         dispatch(signout(false));
         crashlytics().setUserId('');
+        analytics().setUserId('');
       }
     } catch (error) {
       Alert.alert('Something went wrong', error.message);

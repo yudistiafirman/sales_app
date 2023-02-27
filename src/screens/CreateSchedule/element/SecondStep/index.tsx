@@ -24,7 +24,6 @@ import { PO_METHOD_LIST } from '@/constants/dropdown';
 import CheckBox from '@react-native-community/checkbox';
 
 function ListProduct(size: number, index: number, item: any) {
-  console.log('dddd, ' + index, item);
   return (
     <View key={item.product_id}>
       <BProductCard

@@ -12,6 +12,7 @@ const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import { CreateScheduleContext } from '../../context/CreateScheduleContext';
+import { customLog } from '@/utils/generalFunc';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -109,7 +110,6 @@ export default function SelectedPIC({
       setIsLoading(true);
       setFlatListData([]);
       const data = await dummyReq();
-      console.log(data, 'data dummy');
 
       setFlatListData(data);
       setIsLoading(false);
@@ -132,7 +132,6 @@ export default function SelectedPIC({
             }}
             customIcon={GantiIcon}
             onPress={() => {
-              console.log('ganti pressed');
               if (onPress) {
                 onPress();
               }
@@ -170,7 +169,7 @@ export default function SelectedPIC({
         initialIndex={-1}
         addPic={(pic: any) => {
           // onChange('selectedPic', pic);
-          console.log(pic, 'bsheetaddpic');
+          customLog(pic, 'bsheetaddpic');
         }}
       />
     </View>

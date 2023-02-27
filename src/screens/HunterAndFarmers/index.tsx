@@ -22,21 +22,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { toggleHunterScreen } from '@/redux/reducers/authReducer';
+import { bStorage } from '@/actions';
+import moment from 'moment';
 
 const { height } = Dimensions.get('screen');
 const HunterAndFarmers = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
-  const { hunterScreen } = useSelector((state: RootState) => state.auth);
+  const { hunterScreen, userData } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const goToHome = () => {
     dispatch(toggleHunterScreen(false));
     navigation.navigate(TAB_ROOT);
+    bStorage.setItem(HUNTER_AND_FARMER, moment().date());
   };
 
   const goToAppointment = () => {
     dispatch(toggleHunterScreen(false));
     navigation.navigate(APPOINTMENT);
+    bStorage.setItem(HUNTER_AND_FARMER, moment().date());
   };
 
   React.useEffect(() => {
@@ -45,7 +51,7 @@ const HunterAndFarmers = () => {
 
   return (
     <Modal
-      isVisible={hunterScreen}
+      isVisible={hunterScreen && userData !== null}
       style={styles.modalContainer}
       deviceHeight={height}
     >

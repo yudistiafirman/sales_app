@@ -35,8 +35,6 @@ export default function FirstStep() {
       updateValueOnstep('stepOne', 'locationName', parent.locationName);
       updateValueOnstep('stepOne', 'products', data.products);
       updateValueOnstep('stepTwo', 'products', data.products);
-      console.log('pertama, ', parent);
-      console.log('kedua, ', data);
     },
     [updateValueOnstep]
   );

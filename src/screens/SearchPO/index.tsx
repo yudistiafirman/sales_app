@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { DeviceEventEmitter, SafeAreaView, StyleSheet } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import resScale from '@/utils/resScale';
-import { BHeaderIcon, BTabSections, POList } from '@/components';
+import { BHeaderIcon, BSpacer, BTabSections, POList } from '@/components';
 import { colors, layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import SearchPONavbar from './element/SearchPONavbar';
 import { searchPOMachine } from '@/machine/searchPOMachine';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import SelectedPOModal from './element/SelectedPOModal';
-import { CREATE_SCHEDULE } from '@/navigation/ScreenNames';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 
 const SearchPO = () => {
   const [index, setIndex] = React.useState(0);
@@ -19,7 +17,6 @@ const SearchPO = () => {
   const [state, send] = useMachine(searchPOMachine);
   const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
   const [selectedData, setSelectedData] = React.useState(undefined);
-  const route = useRoute<RootStackScreenProps>();
 
   useCustomHeaderLeft({
     customHeaderLeft: (
@@ -53,14 +50,10 @@ const SearchPO = () => {
   };
 
   const onSubmitData = (productData: any) => {
-    if (route.params?.from === CREATE_SCHEDULE) {
-      DeviceEventEmitter.emit('SearchPO.data', {
-        parent: selectedData,
-        data: productData,
-      });
-    } else {
-      DeviceEventEmitter.emit('SearchPO.data', { data: productData });
-    }
+    DeviceEventEmitter.emit('SearchPO.data', {
+      parent: selectedData,
+      data: productData,
+    });
     navigation.goBack();
   };
 
@@ -88,25 +81,28 @@ const SearchPO = () => {
         onClearValue={onClearValue}
       />
       {routes.length > 0 && (
-        <BTabSections
-          swipeEnabled={false}
-          tabStyle={styles.tabStyle}
-          indicatorStyle={styles.tabIndicator}
-          navigationState={{ index, routes }}
-          onTabPress={onTabPress}
-          renderScene={() => (
-            <POList
-              poDatas={poData}
-              loadPO={loadPO}
-              emptyPOName={searchValue}
-              onPress={(data) => {
-                openSelectedModel(data);
-              }}
-            />
-          )}
-          onIndexChange={setIndex}
-          tabBarStyle={styles.tabBarStyle}
-        />
+        <>
+          <BSpacer size={'extraSmall'} />
+          <BTabSections
+            swipeEnabled={false}
+            tabStyle={styles.tabStyle}
+            indicatorStyle={styles.tabIndicator}
+            navigationState={{ index, routes }}
+            onTabPress={onTabPress}
+            renderScene={() => (
+              <POList
+                poDatas={poData}
+                loadPO={loadPO}
+                emptyPOName={searchValue}
+                onPress={(data) => {
+                  openSelectedModel(data);
+                }}
+              />
+            )}
+            onIndexChange={setIndex}
+            tabBarStyle={styles.tabBarStyle}
+          />
+        </>
       )}
     </SafeAreaView>
   );

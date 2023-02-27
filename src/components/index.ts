@@ -40,12 +40,13 @@ export { default as BViewMoreText } from './molecules/BViewMoreText';
 export { default as BTextLocation } from './molecules/BTextLocation';
 export { default as BBackContinueBtn } from './molecules/BBackContinueBtn';
 export { default as BStepperIndicator } from './molecules/StepperIndicator';
-export { default as BHeaderTitle } from './molecules/BHeaderTitle';
 export { default as BProjectDetailCard } from './molecules/BProjectDetailCard';
 export { default as BProductCard } from './molecules/BProductCard';
 export { default as BDepositCard } from './molecules/BDepositCard';
 export { default as BCompanyMapCard } from './molecules/BCompanyMapCard';
 export { default as BLocationDetail } from './molecules/BLocationDetail';
+export { default as BGallery } from './molecules/BGallery';
+export { default as PopUpQuestion } from './molecules/PopUpQuestion';
 
 // organism
 export { default as BForm } from './organism/BForm';
@@ -57,6 +58,7 @@ export { default as BAlert } from './organism/BAlert';
 export { default as BTabViewScreen } from './organism/BTabViewScreen';
 export { default as BCalendar } from './organism/BCalendar';
 export { default as BNestedProductCard } from './organism/BNestedProductCard';
+export { default as BEmptyState } from './organism/BEmptyState';
 
 //templates
 export { default as ProductList } from './templates/Price/ProductList';

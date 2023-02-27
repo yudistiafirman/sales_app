@@ -1,6 +1,6 @@
 import BrikApiProductivity from '@/brikApi/BrikApiProductivity';
 import { payloadPostType } from '@/interfaces';
-import { getOptions, request } from '@/networking/request';
+import { customRequest } from '@/networking/request';
 import { customLog } from '@/utils/generalFunc';
 
 type getVisitationsType = {
@@ -13,15 +13,19 @@ type visitationPayloadType = {
 };
 
 export const getVisitations = async ({ month, year }: getVisitationsType) => {
-  return request(
+  return customRequest(
     BrikApiProductivity.visitations({ month, year }),
-    await getOptions('GET', undefined, true)
+    'GET',
+    undefined,
+    true
   );
 };
 export const postVisitations = async ({ payload }: visitationPayloadType) => {
-  return request(
-    BrikApiProductivity.visitations({}),
-    await getOptions('POST', payload, true)
+  return customRequest(
+    BrikApiProductivity.visitations(),
+    'POST',
+    payload,
+    true
   );
 };
 
@@ -30,9 +34,11 @@ export const oneGetVisitation = async ({
 }: {
   visitationId: string;
 }) => {
-  return request(
+  return customRequest(
     BrikApiProductivity.visitationIdPath({ visitationId }),
-    await getOptions('GET', undefined, true)
+    'GET',
+    undefined,
+    true
   );
 };
 
@@ -41,12 +47,13 @@ export const putVisitation = async ({
   visitationId,
 }: visitationPayloadType) => {
   customLog(visitationId, 'visitationId42');
-
-  return request(
+  return customRequest(
     BrikApiProductivity.visitationIdPath({
       visitationId,
     }),
-    await getOptions('PUT', payload, true)
+    'PUT',
+    payload,
+    true
   );
 };
 
@@ -64,22 +71,23 @@ export const getAllVisitations = async ({
   search = '',
   projectId,
 }: IGetAll) => {
-  return request(
+  return customRequest(
     BrikApiProductivity.getAllVisitations({ page, date, search, projectId }),
-    await getOptions('GET', undefined, true)
+    'GET',
+    undefined,
+    true
   );
 };
 
 export const getVisitationTarget = async () => {
-  return request(
-    BrikApiProductivity.getTarget(),
-    await getOptions('GET', undefined, true)
-  );
+  return customRequest(BrikApiProductivity.getTarget(), 'GET', undefined, true);
 };
 
 export const postBookingAppointment = async ({ payload }) => {
-  return request(
+  return customRequest(
     BrikApiProductivity.bookingAppointment(),
-    await getOptions('POST', payload, true)
+    'POST',
+    payload,
+    true
   );
 };

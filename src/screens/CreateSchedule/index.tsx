@@ -1,18 +1,22 @@
 import * as React from 'react';
-import { View, DeviceEventEmitter } from 'react-native';
+import { View, DeviceEventEmitter, BackHandler } from 'react-native';
 import {
   BBackContinueBtn,
-  BButtonPrimary,
   BContainer,
   BHeaderIcon,
   BSpacer,
+  PopUpQuestion,
 } from '@/components';
 import { Styles } from '@/interfaces';
 import { useKeyboardActive } from '@/hooks';
 import { BStepperIndicator } from '@/components';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { layout } from '@/constants';
 import {
@@ -30,10 +34,6 @@ import FirstStep from './element/FirstStep';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 
 const labels = ['Cari PO', 'Detil Pengiriman'];
-
-function ContinueIcon() {
-  return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
-}
 
 function stepHandler(
   state: CreateScheduleState,
@@ -65,7 +65,6 @@ function populateData(
     value: any
   ) => void
 ) {
-  console.log(JSON.stringify(existingData), 'difunction');
   updateValue('stepOne', 'companyName', existingData.companyName);
   updateValue('stepOne', 'locationName', existingData.locationName);
   updateValue('stepOne', 'title', existingData.sph ? existingData.sph : '-');
@@ -101,12 +100,13 @@ const CreateSchedule = () => {
   const { updateValue, updateValueOnstep } = action;
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
+  const [isPopupVisible, setPopupVisible] = React.useState(false);
 
   useCustomHeaderLeft({
     customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
-        onBack={() => navigation.goBack()}
+        onBack={() => setPopupVisible(true)}
         iconName="x"
       />
     ),
@@ -114,6 +114,25 @@ const CreateSchedule = () => {
 
   const existingSchedule: CreateScheduleListResponse =
     route?.params?.existingSchedule;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        if (values.step > 0) {
+          next(values.step - 1)();
+        } else {
+          setPopupVisible(true);
+        }
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [values.step])
+  );
 
   React.useEffect(() => {
     if (existingSchedule) {
@@ -130,9 +149,16 @@ const CreateSchedule = () => {
     }
   };
 
+  const handleBackButton = () => {
+    if (values.step > 0) {
+      next(values.step - 1)();
+    } else {
+      setPopupVisible(true);
+    }
+  };
+
   const stepRender = [<FirstStep />, <SecondStep />];
 
-  console.log('wkwk, ', values.step);
   return (
     <>
       <BStepperIndicator
@@ -155,32 +181,26 @@ const CreateSchedule = () => {
                 DeviceEventEmitter.emit('CreateSchedule.continueButton', true);
               }}
               isContinueIcon={false}
-              onPressBack={values.step > 0 && next(values.step - 1)}
+              onPressBack={handleBackButton}
               continueText={values.step > 0 ? 'Buat Jadwal' : 'Lanjut'}
-              disableBack={values.step > 0 ? false : true}
+              unrenderBack={values.step > 0 ? false : true}
               disableContinue={!stepsDone.includes(values.step)}
             />
           )}
-          {/* {values.step === 0 && (
-            <View style={styles.conButton}>
-              <View style={styles.buttonOne}>
-                <BButtonPrimary
-                  title="Kembali"
-                  isOutline
-                  emptyIconEnable
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-              <View style={styles.buttonTwo}>
-                <BButtonPrimary
-                  disable={!stepsDone.includes(values.step)}
-                  title="Lanjut"
-                  onPress={next(values.step + 1)}
-                  rightIcon={ContinueIcon}
-                />
-              </View>
-            </View>
-          )} */}
+          <PopUpQuestion
+            isVisible={isPopupVisible}
+            setIsPopupVisible={() => {
+              setPopupVisible(false);
+              navigation.goBack();
+            }}
+            actionButton={() => {
+              setPopupVisible(false);
+            }}
+            cancelText={'Keluar'}
+            actionText={'Lanjutkan'}
+            text={'Apakah Anda yakin ingin keluar?'}
+            desc={'Progres pembuatan Jadwal anda akan hilang'}
+          />
         </View>
       </BContainer>
     </>

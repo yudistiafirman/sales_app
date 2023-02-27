@@ -40,7 +40,11 @@ const SecondStep = () => {
   return (
     <View>
       <TouchableOpacity
-        onPress={() => navigation.navigate(CALENDAR)}
+        onPress={() =>
+          navigation.navigate(CALENDAR, {
+            useTodayMinDate: true,
+          })
+        }
         style={styles.searchBarWrapper}
       >
         <BSearchBar

@@ -5,11 +5,9 @@ import React, {
   useRef,
   useCallback,
   useContext,
-  useLayoutEffect,
 } from 'react';
 import {
   BHeaderIcon,
-  BHeaderTitle,
   BStepperIndicator as StepperIndicator,
 } from '@/components';
 
@@ -29,10 +27,11 @@ import { updateRegion } from '@/redux/reducers/locationReducer';
 import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
 import { Region } from 'react-native-maps';
 import { getLocationCoordinates } from '@/actions/CommonActions';
-import { layout } from '@/constants';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { resScale } from '@/utils';
 
 const labels = [
   'Cari Pelanggan',
@@ -206,17 +205,6 @@ function SphContent() {
           const longitude = +locationAddress.lon;
           const latitude = +locationAddress.lat;
           getLocationCoord({ longitude: longitude, latitude: latitude });
-          // dispatch(
-          //   updateRegion({
-          //     formattedAddress: locationAddress.line1,
-          //     latitude: latitude,
-          //     longitude: longitude,
-          //     lat: latitude,
-          //     long: latitude,
-          //     PostalId: undefined,
-          //     line2: locationAddress?.line2,
-          //   })
-          // );
         }
       }
     } catch (error) {
@@ -232,43 +220,23 @@ function SphContent() {
     }
   }
 
+  useCustomHeaderLeft({
+    customHeaderLeft: (
+      <BHeaderIcon
+        size={resScale(23)}
+        onBack={() => navigation.goBack()}
+        iconName="x"
+      />
+    ),
+  });
+
   useEffect(() => {
     const projectId = route.params?.projectId;
     customLog(projectId, 'visitationId122');
     if (projectId) {
       getProjectById(projectId);
-      // (async () => {
-      //   await dispatch(
-      //     getOneVisitation({ visitationId: visitationId })
-      //   ).unwrap();
-      // })();
     }
   }, []);
-
-  const renderHeaderLeft = useCallback(
-    () => (
-      <BHeaderIcon
-        size={layout.pad.xl - layout.pad.md}
-        iconName="x"
-        marginRight={layout.pad.lg}
-        onBack={() => {
-          if (currentPosition) {
-            setCurrentPosition(currentPosition - 1);
-          } else {
-            navigation.goBack();
-          }
-        }}
-      />
-    ),
-    [currentPosition, navigation, setCurrentPosition]
-  );
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerTitle: () => BHeaderTitle('Buat SPH', 'flex-start'),
-      headerLeft: () => renderHeaderLeft(),
-    });
-  }, [navigation, renderHeaderLeft, currentPosition]);
 
   return (
     <View style={style.container}>

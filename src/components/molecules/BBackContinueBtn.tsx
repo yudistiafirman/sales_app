@@ -15,6 +15,7 @@ type BackContinueBtnType = {
   isContinueIcon?: boolean;
   disableBack?: boolean;
   emptyIconEnable?: boolean;
+  unrenderBack?: boolean;
 };
 
 function ContinueIcon() {
@@ -30,18 +31,19 @@ export default function BBackContinueBtn({
   continueText = 'Lanjut',
   isContinueIcon = true,
   disableBack = false,
+  unrenderBack = false,
   emptyIconEnable = false,
 }: BackContinueBtnType) {
-  console.log('safasf', onPressBack);
   return (
     <View style={style.buttonContainer}>
-      {!disableBack && (
+      {!unrenderBack && (
         <View style={style.backButtonContainer}>
           <BButtonPrimary
             emptyIconEnable={isContinueIcon ? true : emptyIconEnable}
             onPress={onPressBack}
             title={backText}
             isOutline
+            disable={disableBack}
           />
         </View>
       )}

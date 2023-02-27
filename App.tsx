@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Dimensions, StatusBar, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import {
+  createNavigationContainerRef,
   DefaultTheme as NavigationTheme,
   NavigationContainer,
 } from '@react-navigation/native';
@@ -16,7 +17,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '@/redux/store';
 import Popup from '@/components/templates/PopupGlobal/Popup';
-import AppNavigatorV2 from '@/navigation/AppNavigatorV2';
+import AppNavigator from '@/navigation/AppNavigator';
 import NetworkLogger, {
   startNetworkLogging,
 } from 'react-native-network-logger';
@@ -25,6 +26,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import { StyleSheet } from 'react-native';
 import Draggable from 'react-native-draggable';
 import { isDevelopment } from '@/utils/generalFunc';
+import analytics from '@react-native-firebase/analytics';
+import SnackbarGlobal from '@/components/templates/SnackbarGlobal';
 
 startNetworkLogging();
 const height = Dimensions.get('window').height;
@@ -63,6 +66,8 @@ function App() {
     React.useState(false);
   const [isShowButtonNetwork, setShowButtonNetwork] =
     React.useState(isDevelopment);
+  const routeNameRef = React.useRef<any>();
+  const navigationRef = createNavigationContainerRef();
 
   const networkLogger = () => {
     return (
@@ -118,7 +123,33 @@ function App() {
 
   return (
     <GestureHandlerRootView style={parentFull}>
-      <NavigationContainer theme={navTheme}>
+      <NavigationContainer
+        theme={navTheme}
+        ref={navigationRef}
+        onReady={() => {
+          if (
+            navigationRef?.current &&
+            navigationRef?.current?.getCurrentRoute()
+          )
+            routeNameRef.current =
+              navigationRef?.current.getCurrentRoute().name;
+        }}
+        onStateChange={async () => {
+          const previousRouteName = routeNameRef.current;
+          const currentRouteName =
+            navigationRef?.current && navigationRef?.current?.getCurrentRoute()
+              ? navigationRef?.current?.getCurrentRoute().name
+              : '';
+
+          if (previousRouteName !== currentRouteName) {
+            await analytics().logScreenView({
+              screen_name: currentRouteName,
+              screen_class: currentRouteName,
+            });
+          }
+          routeNameRef.current = currentRouteName;
+        }}
+      >
         <StatusBar
           barStyle={'dark-content'}
           backgroundColor={'transparent'}
@@ -127,7 +158,8 @@ function App() {
         <PaperProvider theme={paperTheme}>
           <ReduxProvider store={store}>
             <Popup />
-            <AppNavigatorV2 />
+            <SnackbarGlobal />
+            <AppNavigator />
             {isDevelopment() && networkLogger()}
           </ReduxProvider>
         </PaperProvider>

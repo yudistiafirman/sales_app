@@ -6,6 +6,7 @@ project.ext.envConfigFiles = [
 apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.firebase-perf'
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
@@ -139,8 +140,8 @@ def reactNativeArchitectures() {
 }
 
 def rootVersionCode = 2
-def rootDevVersionName = "0.0.1 (Dev)"
-def rootProdVersionName = "0.0.1"
+def rootDevVersionName = "1.0.0 (Dev)"
+def rootProdVersionName = "1.0.0"
 
 android {
     ndkVersion rootProject.ext.ndkVersion

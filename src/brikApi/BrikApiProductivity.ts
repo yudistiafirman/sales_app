@@ -1,10 +1,7 @@
-import { production } from '../../app.json';
 import Config from 'react-native-config';
 import moment from 'moment';
-const PRODUCTION = production;
-const API_URL = PRODUCTION
-  ? Config.API_URL_PRODUCTIVITY_PROD
-  : Config.API_URL_PRODUCTIVITY_DEV;
+
+const API_URL = Config.API_URL_PRODUCTIVITY;
 
 type getVisitationsType = {
   month?: number;
@@ -42,7 +39,7 @@ export default class BrikApiProductivity {
   // homescreen
   static getAllVisitations = ({
     date,
-    page = 0,
+    page = 1,
     search = '',
     projectId,
   }: IGetAll) => {

@@ -2,7 +2,6 @@ import {
   BBackContinueBtn,
   BButtonPrimary,
   BHeaderIcon,
-  BHeaderTitle,
   BottomSheetAddPIC,
   BSpacer,
   BStepperIndicator,
@@ -13,7 +12,7 @@ import {
   AppointmentProvider,
   StepOne,
 } from '@/context/AppointmentContext';
-import React, { useCallback, useLayoutEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Steps from '../Sph/elements/Steps';
@@ -37,6 +36,7 @@ import { AppDispatch } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { APPOINTMENT } from '@/navigation/ScreenNames';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 
 const { width } = Dimensions.get('window');
 const Appointment = () => {
@@ -59,39 +59,15 @@ const Appointment = () => {
   const inVisitationDateStep = step === 1;
   const stepsToRender = [<FirstStep />, <SecondStep />];
 
-  const renderHeaderLeft = useCallback(
-    () => (
+  useCustomHeaderLeft({
+    customHeaderLeft: (
       <BHeaderIcon
-        size={layout.pad.xl - layout.pad.md}
+        size={resScale(23)}
+        onBack={() => navigation.goBack()}
         iconName="x"
-        marginRight={layout.pad.lg}
-        onBack={() => {
-          if (inVisitationDateStep) {
-            if (selectedDate) {
-              dispatchValue({
-                type: AppointmentActionType.SET_DATE,
-                value: null,
-              });
-            }
-            dispatchValue({
-              type: AppointmentActionType.DECREASE_STEP,
-            });
-          } else {
-            navigation.goBack();
-          }
-        }}
       />
     ),
-    [dispatchValue, inVisitationDateStep, navigation, selectedDate]
-  );
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerTitle: () => BHeaderTitle('Buat Janji Temu', 'flex-start'),
-      headerLeft: () => renderHeaderLeft(),
-    });
-  }, [navigation, renderHeaderLeft, step]);
+  });
 
   React.useEffect(() => {
     crashlytics().log(APPOINTMENT);
@@ -325,22 +301,7 @@ const Appointment = () => {
         <Steps currentPosition={step} stepsToRender={stepsToRender} />
 
         {btnShown && (
-          // <View style={style.footer}>
-          //   <BButtonPrimary
-          //     onPress={onBackPress}
-          //     buttonStyle={{ paddingHorizontal: layout.pad.md + layout.pad.ml }}
-          //     isOutline
-          //     title="Kembali"
-          //   />
-          // <BButtonPrimary
-          //   title="Lanjut"
-          //   onPress={onNext}
-          //   disable={inVisitationDateStep && !selectedDate}
-          //   buttonStyle={{ width: resScale(202) }}
-          //   rightIcon={() => renderBtnIcon()}
-          // />
-          // </View>
-          <>
+          <View style={style.buttonAction}>
             {step === 0 ? (
               <View style={{ width: '100%' }}>
                 <BButtonPrimary
@@ -360,7 +321,7 @@ const Appointment = () => {
                 disableContinue={!selectedDate}
               />
             )}
-          </>
+          </View>
         )}
       </View>
       <BottomSheetAddPIC
@@ -383,8 +344,9 @@ const Appointment = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'center',
-    padding: layout.pad.lg,
+    paddingBottom: layout.pad.lg,
+    paddingStart: layout.pad.lg,
+    paddingEnd: layout.pad.lg,
   },
   footer: {
     flexDirection: 'row',
@@ -397,6 +359,12 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flex: 1,
+    position: 'relative',
+  },
+  buttonAction: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
   },
 });
 

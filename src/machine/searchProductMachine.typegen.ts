@@ -6,6 +6,8 @@
         internalEvents: {
           "done.invoke.search product.categoriesLoaded.gettingProducts:invocation[0]": { type: "done.invoke.search product.categoriesLoaded.gettingProducts:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
 "done.invoke.search product.searching:invocation[0]": { type: "done.invoke.search product.searching:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
+"error.platform.search product.categoriesLoaded.gettingProducts:invocation[0]": { type: "error.platform.search product.categoriesLoaded.gettingProducts:invocation[0]"; data: unknown };
+"error.platform.search product.searching:invocation[0]": { type: "error.platform.search product.searching:invocation[0]"; data: unknown };
 "xstate.init": { type: "xstate.init" };
         };
         invokeSrcNameMap: {
@@ -25,7 +27,9 @@
 "assignProducts": "done.invoke.search product.categoriesLoaded.gettingProducts:invocation[0]";
 "assignSearchValue": "searchingProducts";
 "clearData": "clearInput" | "searchingProducts";
-"enableLoadProduct": "done.invoke.search product.searching:invocation[0]" | "onChangeTab";
+"enableLoadProduct": "done.invoke.search product.searching:invocation[0]" | "onChangeTab" | "retryGettingProductsData";
+"handleError": "error.platform.search product.categoriesLoaded.gettingProducts:invocation[0]" | "error.platform.search product.searching:invocation[0]";
+"handleRetryGettingProductsData": "retryGettingProductsData";
         };
         eventsCausingDelays: {
           
@@ -34,10 +38,10 @@
           "searchValueLengthAccepted": "searchingProducts";
         };
         eventsCausingServices: {
-          "getCategoriesData": "searchingProducts";
-"onGettingProductsData": "done.invoke.search product.searching:invocation[0]" | "onChangeTab";
+          "getCategoriesData": "retryGettingCategories" | "searchingProducts";
+"onGettingProductsData": "done.invoke.search product.searching:invocation[0]" | "onChangeTab" | "retryGettingProductsData";
         };
-        matchesStates: "categoriesLoaded" | "categoriesLoaded.gettingProducts" | "errorState" | "idle" | "inputting" | "searching" | { "categoriesLoaded"?: "gettingProducts"; };
+        matchesStates: "categoriesLoaded" | "categoriesLoaded.gettingProducts" | "errorGettingCategories" | "errorGettingProductsData" | "idle" | "inputting" | "searching" | { "categoriesLoaded"?: "gettingProducts"; };
         tags: never;
       }
   

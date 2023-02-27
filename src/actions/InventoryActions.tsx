@@ -1,5 +1,5 @@
 import BrikApiInventory from '@/brikApi/BrikApiInventory';
-import { getOptions, request } from '@/networking/request';
+import { customRequest } from '@/networking/request';
 
 export const getAllBrikProducts = async (
   page?: number,
@@ -8,9 +8,9 @@ export const getAllBrikProducts = async (
   category?: string,
   distance?: number
 ) => {
-  return request(
+  return customRequest(
     BrikApiInventory.getProducts(page, size, search, category, distance),
-    await getOptions('GET')
+    'GET'
   );
 };
 
@@ -21,8 +21,8 @@ export const getProductsCategories = async (
   pillar?: string,
   count?: boolean
 ) => {
-  return request(
+  return customRequest(
     BrikApiInventory.getProductCategories(page, size, search, pillar, count),
-    await getOptions('GET')
+    'GET'
   );
 };

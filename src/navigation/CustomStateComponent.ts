@@ -16,6 +16,7 @@ export type RootStackParamList = {
   CAMERA: {
     photoTitle: string;
     navigateTo?: string;
+    closeButton?: boolean;
     existingVisitation?: visitationListResponse;
   };
   ALL_PRODUCT: {
@@ -23,9 +24,10 @@ export type RootStackParamList = {
     from: string;
   };
   IMAGE_PREVIEW: {
-    photo: PhotoFile;
+    photo: PhotoFile | undefined;
     photoTitle: string;
     navigateTo?: string;
+    closeButton?: boolean;
     existingVisitation?: visitationListResponse;
   };
   SCHEDULE: { id: string };
@@ -42,11 +44,14 @@ export type RootStackParamList = {
   SEARCH_AREA: { from: string; eventKey: string };
   CALENDAR: {};
   TRANSACTION_DETAIL: { title: string; data: any };
-  CREATE_SCHEDULE: {};
+  CREATE_SCHEDULE: {
+    useTodayMinDate?: boolean;
+  };
   SEARCH_PO: { from: string };
   CUSTOMER_DETAIL: { existingVisitation?: any };
   DOCUMENTS: { projectId?: string; docs?: Docs[] };
   VISIT_HISTORY: { projectId?: string; projectName?: string };
+  CREATE_DEPOSIT: {};
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

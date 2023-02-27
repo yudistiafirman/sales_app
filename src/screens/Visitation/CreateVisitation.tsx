@@ -1,17 +1,12 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
-import { View, DeviceEventEmitter } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, DeviceEventEmitter, BackHandler } from 'react-native';
 import {
   BBackContinueBtn,
   BButtonPrimary,
   BContainer,
   BHeaderIcon,
-  BHeaderTitle,
   BSpacer,
+  PopUpQuestion,
 } from '@/components';
 import SecondStep from './elements/second';
 import ThirdStep from './elements/third';
@@ -39,7 +34,11 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
 import { useDispatch } from 'react-redux';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { resetRegion, updateRegion } from '@/redux/reducers/locationReducer';
 import { layout } from '@/constants';
@@ -178,6 +177,7 @@ const CreateVisitation = () => {
   const { updateValue, updateValueOnstep } = action;
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3]);
+  const [isPopupVisible, setPopupVisible] = React.useState(false);
 
   const existingVisitation: visitationListResponse =
     route?.params?.existingVisitation;
@@ -186,7 +186,7 @@ const CreateVisitation = () => {
     customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
-        onBack={() => navigation.goBack()}
+        onBack={() => setPopupVisible(true)}
         iconName="x"
       />
     ),
@@ -226,6 +226,27 @@ const CreateVisitation = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        if (bottomSheetRef?.current) bottomSheetRef?.current?.close();
+        if (values.step > 0) {
+          next(values.step - 1)();
+        } else {
+          setPopupVisible(true);
+        }
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [values.step])
+  );
+
   useEffect(() => {
     stepHandler(values, setStepsDone);
   }, [values]);
@@ -234,6 +255,14 @@ const CreateVisitation = () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
+    }
+  };
+
+  const handleBackButton = () => {
+    if (values.step > 0) {
+      next(values.step - 1)();
+    } else {
+      setPopupVisible(true);
     }
   };
 
@@ -247,32 +276,6 @@ const CreateVisitation = () => {
   const openBottomSheet = () => {
     bottomSheetRef.current?.expand();
   };
-
-  const renderHeaderLeft = useCallback(
-    () => (
-      <BHeaderIcon
-        size={layout.pad.xl - layout.pad.md}
-        iconName="x"
-        marginRight={layout.pad.lg}
-        onBack={() => {
-          if (values.step) {
-            // setCurrentPosition(currentPosition - 1);
-            updateValue('step', values.step - 1);
-          } else {
-            navigation.goBack();
-          }
-        }}
-      />
-    ),
-    [navigation, values.step, updateValue]
-  );
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerTitle: () => BHeaderTitle('Buat Kunjungan', 'flex-start'),
-      headerLeft: () => renderHeaderLeft(),
-    });
-  }, [navigation, renderHeaderLeft]);
 
   const stepRender = [
     <FirstStep />,
@@ -305,7 +308,7 @@ const CreateVisitation = () => {
                   true
                 );
               }}
-              onPressBack={next(values.step - 1)}
+              onPressBack={handleBackButton}
               disableContinue={!stepsDone.includes(values.step)}
             />
           )}
@@ -316,7 +319,7 @@ const CreateVisitation = () => {
                   title="Kembali"
                   isOutline
                   emptyIconEnable
-                  onPress={() => navigation.goBack()}
+                  onPress={() => setPopupVisible(true)}
                 />
               </View>
               <View style={styles.buttonTwo}>
@@ -334,6 +337,19 @@ const CreateVisitation = () => {
           ref={bottomSheetRef}
           initialIndex={values.sheetIndex}
           addPic={addPic}
+        />
+        <PopUpQuestion
+          isVisible={isPopupVisible}
+          setIsPopupVisible={() => {
+            setPopupVisible(false);
+            navigation.goBack();
+          }}
+          actionButton={() => {
+            setPopupVisible(false);
+          }}
+          cancelText={'Keluar'}
+          actionText={'Lanjutkan'}
+          text={'Apakah Anda yakin ingin keluar?'}
         />
       </BContainer>
     </>

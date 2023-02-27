@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
@@ -6,83 +6,19 @@ import BSpacer from '../atoms/BSpacer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BProductCard from '../molecules/BProductCard';
 import BDivider from '../atoms/BDivider';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
+import font from '@/constants/fonts';
 
 type BNestedProductCardType = {
   withoutHeader?: boolean;
   withoutBottomSpace?: boolean;
   data?: any[];
+  selectedPO?: any[];
   onValueChange?: (product: any, value: boolean) => void;
+  deposit?: number;
 };
 
-const ListProduct = (
-  index: number,
-  parentItem: any,
-  onValueChange?: (product: any, value: boolean) => void
-) => {
-  const [isExpand, setExpand] = React.useState(true);
-  const [isChecked, setChecked] = React.useState(new Map());
-
-  return (
-    <View key={index}>
-      <View style={styles.containerLastOrder}>
-        <View style={styles.flexRow}>
-          {onValueChange && (
-            <CheckBox
-              value={
-                isChecked.get(parentItem.name) &&
-                isChecked.get(parentItem.name).checked
-              }
-              onFillColor={colors.primary}
-              onTintColor={colors.offCheckbox}
-              onCheckColor={colors.primary}
-              tintColors={{ true: colors.primary, false: colors.offCheckbox }}
-              onValueChange={(value) => {
-                setChecked(new Map().set(parentItem.name, value));
-                onValueChange(parentItem, value);
-              }}
-            />
-          )}
-          <View style={styles.leftSide}>
-            <Text style={styles.partText}>{parentItem.name}</Text>
-            <BSpacer size={'extraSmall'} />
-            <View style={styles.flexRow}>
-              <Text style={styles.titleLastOrder}>Harga</Text>
-              <Text style={styles.valueLastOrder}>
-                IDR{' '}
-                {formatCurrency(
-                  parentItem.products
-                    .map((item) => item.total_price)
-                    .reduce((prev, next) => prev + next)
-                )}
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity onPress={() => setExpand(isExpand ? false : true)}>
-            <Icon
-              name={isExpand ? 'chevron-up' : 'chevron-down'}
-              size={30}
-              color={colors.icon.darkGrey}
-            />
-          </TouchableOpacity>
-        </View>
-        {isExpand && (
-          <>
-            <BSpacer size={'small'} />
-            {parentItem?.products &&
-              parentItem?.products.map((item, index) =>
-                ListChildProduct(parentItem?.products.length, index, item)
-              )}
-          </>
-        )}
-      </View>
-      <BSpacer size={'small'} />
-    </View>
-  );
-};
-
-const ListChildProduct = (size: number, index: number, item: any) => {
+function ListChildProduct(size: number, index: number, item: any) {
   return (
     <View key={item.product_id}>
       <BProductCard
@@ -100,14 +36,31 @@ const ListChildProduct = (size: number, index: number, item: any) => {
       )}
     </View>
   );
-};
+}
 
 export default function BNestedProductCard({
   withoutHeader = false,
   data,
   onValueChange,
   withoutBottomSpace = false,
+  selectedPO,
+  deposit,
 }: BNestedProductCardType) {
+  const [isExpand, setExpand] = React.useState<number[]>([]);
+
+  const setExpandContent = (index: number) => {
+    let listExpand: number[] = [];
+    if (isExpand !== undefined) listExpand.push(...isExpand);
+    if (listExpand.find((it) => it === index) !== undefined) {
+      listExpand = listExpand.filter((it) => {
+        return it !== index;
+      });
+    } else {
+      listExpand.push(index);
+    }
+    setExpand(listExpand);
+  };
+
   return (
     <>
       {withoutHeader && (
@@ -116,7 +69,91 @@ export default function BNestedProductCard({
           <BSpacer size={'extraSmall'} />
         </>
       )}
-      {data?.map((item, index) => ListProduct(index, item, onValueChange))}
+      {data?.map((item, index) => {
+        return (
+          <View key={index}>
+            <View style={styles.containerLastOrder}>
+              <View style={styles.flexRow}>
+                {onValueChange && (
+                  <CheckBox
+                    value={selectedPO?.find((it) => it === item) ? true : false}
+                    onFillColor={colors.primary}
+                    onTintColor={colors.offCheckbox}
+                    onCheckColor={colors.primary}
+                    tintColors={{
+                      true: colors.primary,
+                      false: colors.offCheckbox,
+                    }}
+                    onValueChange={(value) => {
+                      onValueChange(item, value);
+                    }}
+                  />
+                )}
+                <View style={styles.leftSide}>
+                  <Text style={styles.partText}>{item.name}</Text>
+                  <BSpacer size={'verySmall'} />
+                  <View style={styles.flexRow}>
+                    <Text style={styles.titleLastOrder}>Harga</Text>
+                    <View style={styles.valueView}>
+                      <Text style={styles.valueLastOrder}>
+                        IDR{' '}
+                        {formatCurrency(
+                          item.products
+                            ?.map((it: any) => it.total_price)
+                            .reduce((prev: any, next: any) => prev + next)
+                        )}
+                      </Text>
+                    </View>
+                  </View>
+                  {deposit && (
+                    <View style={styles.flexRow}>
+                      <Text style={styles.titleLastOrder}>Deposit</Text>
+                      <View style={styles.valueView}>
+                        <Text
+                          style={[
+                            styles.valueLastOrder,
+                            {
+                              fontFamily: fonts.family.montserrat[300],
+                              fontSize: font.size.xs,
+                            },
+                          ]}
+                        >
+                          IDR {formatCurrency(deposit)}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                </View>
+                <TouchableWithoutFeedback
+                  onPress={() => setExpandContent(index)}
+                >
+                  <Icon
+                    name={
+                      isExpand &&
+                      isExpand.find((it) => it === index) !== undefined
+                        ? 'chevron-up'
+                        : 'chevron-down'
+                    }
+                    size={30}
+                    color={colors.icon.darkGrey}
+                  />
+                </TouchableWithoutFeedback>
+              </View>
+              {isExpand &&
+                isExpand?.find((it) => it === index) !== undefined && (
+                  <>
+                    <BSpacer size={'small'} />
+                    {item?.products &&
+                      item?.products?.map((it: any, ind: number) =>
+                        ListChildProduct(it?.products?.length, ind, it)
+                      )}
+                  </>
+                )}
+            </View>
+            <BSpacer size={'extraSmall'} />
+          </View>
+        );
+      })}
       {!withoutBottomSpace && <BSpacer size={'extraSmall'} />}
     </>
   );
@@ -130,9 +167,6 @@ const styles = StyleSheet.create({
   leftSide: {
     flex: 1,
   },
-  icon: {
-    alignSelf: 'center',
-  },
   containerLastOrder: {
     padding: layout.pad.lg,
     borderRadius: layout.radius.md,
@@ -144,20 +178,19 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.sm,
     color: colors.text.darker,
+    marginStart: layout.pad.md,
   },
   valueLastOrder: {
+    flex: 1,
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.sm,
-    marginLeft: layout.pad.xl,
   },
-  contentDetail: {
-    padding: layout.mainPad,
-    flex: 1,
-  },
+  valueView: { flex: 1, alignItems: 'flex-end', marginEnd: layout.pad.xxl },
   partText: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.md,
+    marginStart: layout.pad.md,
   },
 });

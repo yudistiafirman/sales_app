@@ -28,9 +28,15 @@ type configType = {
   title: string;
   style?: StyleProp<ViewStyle>;
   navigateTo?: string;
+  closeButton?: boolean;
 };
 
-const Config = ({ title, style, navigateTo }: configType) => {
+const Config = ({
+  title,
+  style,
+  navigateTo,
+  closeButton = false,
+}: configType) => {
   const getCameraDevice = (
     devices: CameraDevices
   ): CameraDevice | undefined => {
@@ -63,7 +69,7 @@ const Config = ({ title, style, navigateTo }: configType) => {
       Alert.alert('No Camera Found');
     } else {
       try {
-        const takenPhoto = await camera.current.takePhoto({
+        const takenPhoto = await camera?.current?.takePhoto({
           flash: 'off',
         });
         animateElement();
@@ -73,6 +79,7 @@ const Config = ({ title, style, navigateTo }: configType) => {
           photo: takenPhoto,
           photoTitle: title,
           navigateTo,
+          closeButton,
           existingVisitation,
         });
       } catch (error) {
