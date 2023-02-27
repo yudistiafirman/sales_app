@@ -12,6 +12,7 @@ import { useKeyboardActive } from '@/hooks';
 import { BStepperIndicator } from '@/components';
 import { resScale } from '@/utils';
 import {
+  StackActions,
   useFocusEffect,
   useNavigation,
   useRoute,
@@ -85,14 +86,15 @@ function populateData(
     if (sp?.products) allProducts.push(...sp.products);
   });
   updateValue('stepTwo', 'products', allProducts);
-  updateValue(
-    'stepTwo',
-    'totalDeposit',
-    existingData?.lastDeposit?.nominal +
-      existingData?.addedDeposit
-        ?.map((item) => item.nominal)
-        .reduce((prev, next) => prev + next)
-  );
+  let lastDeposit = 0;
+  let addedDeposit = 0;
+  if (existingData?.lastDeposit?.nominal)
+    lastDeposit = existingData?.lastDeposit?.nominal;
+  if (existingData?.addedDeposit && existingData?.addedDeposit.length > 0)
+    addedDeposit = existingData?.addedDeposit
+      ?.map((item) => item.nominal)
+      .reduce((prev, next) => prev + next);
+  updateValue('stepTwo', 'totalDeposit', lastDeposit + addedDeposit);
 }
 
 const CreateSchedule = () => {
@@ -157,6 +159,8 @@ const CreateSchedule = () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
+    } else {
+      navigation.dispatch(StackActions.popToTop());
     }
   };
 
