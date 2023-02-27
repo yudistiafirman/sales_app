@@ -12,7 +12,11 @@ import { useKeyboardActive } from '@/hooks';
 import { BStepperIndicator } from '@/components';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { layout } from '@/constants';
 import {
@@ -111,28 +115,45 @@ const CreateSchedule = () => {
   const existingSchedule: CreateScheduleListResponse =
     route?.params?.existingSchedule;
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        if (values.step > 0) {
+          next(values.step - 1)();
+        } else {
+          setPopupVisible(true);
+        }
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [values.step])
+  );
+
   React.useEffect(() => {
     if (existingSchedule) {
       updateValue('existingScheduleID', existingSchedule.id);
       populateData(existingSchedule, updateValueOnstep);
     }
     stepHandler(values, setStepsDone);
-
-    const backAction = () => {
-      setPopupVisible(true);
-      return true;
-    };
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction
-    );
-    return () => backHandler.remove();
   }, [existingSchedule, updateValue, updateValueOnstep, values]);
 
   const next = (nextStep: number) => () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
+    }
+  };
+
+  const handleBackButton = () => {
+    if (values.step > 0) {
+      next(values.step - 1)();
+    } else {
+      setPopupVisible(true);
     }
   };
 
@@ -160,7 +181,7 @@ const CreateSchedule = () => {
                 DeviceEventEmitter.emit('CreateSchedule.continueButton', true);
               }}
               isContinueIcon={false}
-              onPressBack={values.step > 0 ? next(values.step - 1) : undefined}
+              onPressBack={handleBackButton}
               continueText={values.step > 0 ? 'Buat Jadwal' : 'Lanjut'}
               unrenderBack={values.step > 0 ? false : true}
               disableContinue={!stepsDone.includes(values.step)}
