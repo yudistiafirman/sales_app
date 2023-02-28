@@ -12,6 +12,7 @@ import { useKeyboardActive } from '@/hooks';
 import { BStepperIndicator } from '@/components';
 import { resScale } from '@/utils';
 import {
+  StackActions,
   useFocusEffect,
   useNavigation,
   useRoute,
@@ -137,6 +138,8 @@ const Deposit = () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
+    } else {
+      navigation.dispatch(StackActions.popToTop());
     }
   };
 

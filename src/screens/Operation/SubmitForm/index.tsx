@@ -1,9 +1,17 @@
-import { BButtonPrimary, BDivider, BForm, BOperationCard } from '@/components';
+import {
+  BBackContinueBtn,
+  BDivider,
+  BForm,
+  BGallery,
+  BLocationText,
+  BOperationCard,
+  BSpacer,
+  BVisitationCard,
+} from '@/components';
 import { colors, layout } from '@/constants';
 import { TM_CONDITION } from '@/constants/dropdown';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { Input } from '@/interfaces';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { resScale } from '@/utils';
 import {
   StackActions,
@@ -11,84 +19,103 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SUBMIT_FORM } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { ENTRY_TYPE } from '@/models/EnumModel';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 
 const SubmitForm = () => {
   const route = useRoute<RootStackScreenProps>();
-  useHeaderTitleChanged({ title: 'Dispatch' });
   const navigation = useNavigation();
   const [toggleCheckBox, setToggleCheckBox] = useState(true);
+  const { photoURLs } = useSelector((state: RootState) => state.camera);
+  const { entryType } = useSelector((state: RootState) => state.auth);
+  const operationType = route?.params?.operationType;
 
   React.useEffect(() => {
     crashlytics().log(SUBMIT_FORM);
   }, []);
 
-  const deliveryInputs: Input[] = React.useMemo(() => {
-    const baseInput: Input[] = [
-      {
-        label: 'Nama Penerima',
-        value: '',
-        isRequire: true,
-        isError: false,
-        type: 'textInput',
-        placeholder: 'Masukkan nama penerima',
-      },
-      {
-        label: 'No. Telp Penerima',
-        value: '',
-        isRequire: true,
-        isError: false,
-        type: 'textInput',
-        placeholder: 'Masukkan no telp',
-      },
-    ];
-    return baseInput;
-  }, []);
+  const getHeaderTitle = () => {
+    switch (entryType) {
+      case ENTRY_TYPE.BATCHER:
+        return 'Produksi';
+      case ENTRY_TYPE.SECURITY:
+        if (operationType === ENTRY_TYPE.DISPATCH) return 'Dispatch';
+        else return 'Return';
+      case ENTRY_TYPE.DRIVER:
+        return 'Penuangan';
+      default:
+        return '';
+    }
+  };
 
-  const returnInputs: Input[] = React.useMemo(() => {
-    const baseInput: Input[] = [
-      {
-        label: 'Ada Muatan Tersisa di Dalam TM?',
-        value: '',
-        type: 'checkbox',
-        isRequire: false,
-        checkbox: {
-          value: toggleCheckBox,
-          onValueChange: setToggleCheckBox,
+  useHeaderTitleChanged({ title: getHeaderTitle() });
+
+  const deliveryInputs: Input[] = [
+    {
+      label: 'Nama Penerima',
+      value: '',
+      isRequire: true,
+      isError: false,
+      type: 'textInput',
+      placeholder: 'Masukkan nama penerima',
+    },
+    {
+      label: 'No. Telp Penerima',
+      value: '',
+      isRequire: true,
+      isError: false,
+      type: 'textInput',
+      placeholder: 'Masukkan no telp',
+    },
+  ];
+
+  const returnInputs: Input[] = [
+    {
+      label: 'Ada Muatan Tersisa di Dalam TM?',
+      value: '',
+      type: 'checkbox',
+      isRequire: false,
+      checkbox: {
+        value: toggleCheckBox,
+        onValueChange: setToggleCheckBox,
+      },
+    },
+    {
+      label: 'Kondisi TM',
+      value: '',
+      isRequire: true,
+      isError: false,
+      type: 'dropdown',
+      dropdown: {
+        items: TM_CONDITION,
+        placeholder: 'Pilih Kondisi TM',
+        onChange: (value: any) => {
+          customLog(value);
         },
       },
-      {
-        label: 'Kondisi TM',
-        value: '',
-        isRequire: true,
-        isError: false,
-        type: 'dropdown',
-        dropdown: {
-          items: TM_CONDITION,
-          placeholder: 'Pilih Kondisi TM',
-          onChange: (value: any) => {
-            customLog(value);
-          },
-        },
-      },
-    ];
-    return baseInput;
-  }, [toggleCheckBox]);
+    },
+  ];
 
   return (
-    <View style={style.parent}>
-      <View style={style.baseContainer}>
+    <SafeAreaView style={style.parent}>
+      <View style={style.flexFull}>
+        {operationType === ENTRY_TYPE.DRIVER && (
+          <BLocationText location="Green Lake City, Cipondoh, Legok 11520" />
+        )}
+        <BSpacer size={'extraSmall'} />
         <View style={style.top}>
-          <BOperationCard
+          <BVisitationCard
             item={{
-              id: 'PT. Guna Karya Mandiri',
-              addressID: 'Jakarta Barat',
+              name: 'PT. Guna Karya Mandiri',
+              location: 'Jakarta Barat',
             }}
-            customStyle={style.headerOne}
-            clickable={false}
+            isRenderIcon={false}
           />
           <BOperationCard
             item={{
@@ -99,74 +126,55 @@ const SubmitForm = () => {
             color={colors.tertiary}
             customStyle={style.headerTwo}
             clickable={false}
+            isQuantity={false}
           />
         </View>
-        {
-          // put array of images here
-        }
-        {(route?.params?.type === 'delivery' ||
-          route?.params?.type === 'return') && (
-          <View>
-            <BDivider />
-          </View>
-        )}
-        {route?.params?.type === 'delivery' && (
-          <View style={style.container}>
-            <BForm inputs={deliveryInputs} />
-          </View>
-        )}
-        {route?.params?.type === 'return' && (
-          <>
-            <View style={style.container}>
-              <BForm inputs={returnInputs} spacer="extraSmall" />
-            </View>
-          </>
-        )}
-      </View>
-      <View style={style.conButton}>
-        <View style={style.buttonOne}>
-          <BButtonPrimary
-            title="Kembali"
-            isOutline
-            onPress={() => navigation.goBack()}
-          />
+        <View>
+          <BDivider />
+          <BSpacer size={'extraSmall'} />
         </View>
-        <View style={style.buttonTwo}>
-          <BButtonPrimary
-            title="Simpan"
-            onPress={() => navigation.dispatch(StackActions.popToTop())}
-          />
+        <View>
+          <BGallery picts={photoURLs} />
+        </View>
+        <View style={style.flexFull}>
+          {(operationType === ENTRY_TYPE.DRIVER ||
+            operationType === ENTRY_TYPE.RETURN) && <BSpacer size={'small'} />}
+          {operationType === ENTRY_TYPE.DRIVER && (
+            <BForm titleBold="500" inputs={deliveryInputs} />
+          )}
+          {operationType === ENTRY_TYPE.RETURN && (
+            <BForm titleBold="500" inputs={returnInputs} spacer="extraSmall" />
+          )}
         </View>
       </View>
-    </View>
+      <BBackContinueBtn
+        onPressContinue={() => {
+          navigation.dispatch(StackActions.popToTop());
+        }}
+        onPressBack={() => navigation.goBack()}
+        continueText={'Simpan'}
+        isContinueIcon={false}
+      />
+    </SafeAreaView>
   );
 };
 
 const style = StyleSheet.create({
+  flexFull: {
+    flex: 1,
+  },
   parent: {
     flex: 1,
     backgroundColor: colors.white,
-    padding: resScale(16),
+    paddingHorizontal: layout.pad.lg,
+    paddingBottom: layout.pad.lg,
   },
   top: {
-    height: '20%',
+    height: resScale(120),
     marginBottom: layout.pad.lg,
   },
-  headerOne: {
-    borderBottomStartRadius: 0,
-    borderBottomEndRadius: 0,
-    borderColor: colors.border.default,
-  },
   headerTwo: {
-    borderTopStartRadius: 0,
-    borderTopEndRadius: 0,
     borderColor: colors.border.default,
-  },
-  baseContainer: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
   },
   conButton: {
     width: '100%',

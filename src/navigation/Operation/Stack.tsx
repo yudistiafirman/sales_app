@@ -1,5 +1,5 @@
 import Preview from '@/screens/Camera/Preview';
-import Schedule from '@/screens/Operation/Schedule';
+import CreateDO from '@/screens/Operation/CreateDO';
 import SubmitForm from '@/screens/Operation/SubmitForm';
 import Camera from '@/screens/Camera';
 import * as React from 'react';
@@ -8,7 +8,7 @@ import {
   CAMERA_TITLE,
   IMAGE_PREVIEW,
   IMAGE_PREVIEW_TITLE,
-  SCHEDULE,
+  CREATE_DO,
   SCHEDULE_TITLE,
   SUBMIT_FORM,
   SUBMIT_FORM_TITLE,
@@ -34,9 +34,9 @@ const OperationStack = (Stack: any) => {
         }}
       />
       <Stack.Screen
-        name={SCHEDULE}
-        key={SCHEDULE}
-        component={Schedule}
+        name={CREATE_DO}
+        key={CREATE_DO}
+        component={CreateDO}
         options={{
           headerTitle: SCHEDULE_TITLE,
         }}

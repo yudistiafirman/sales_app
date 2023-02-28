@@ -1,26 +1,32 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import resScale from '@/utils/resScale';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Icons from 'react-native-vector-icons/Feather';
+import IconsEntypo from 'react-native-vector-icons/Entypo';
 import { layout } from '@/constants';
 
 type quantityType = {
   name?: string;
   date?: string;
+  isQuantity: boolean;
 };
-export default function Quantity({ name, date }: quantityType) {
+export default function Quantity({ isQuantity, name, date }: quantityType) {
   if (!name) {
     return null;
   }
   return (
     <View style={style.parent}>
       <View style={style.containerOne}>
-        <FontAwesome name="database" style={style.iconStyle} size={13} />
+        <IconsEntypo
+          name={isQuantity ? 'database' : 'text-document'}
+          style={style.iconStyle}
+          size={13}
+        />
         <Text>{name}</Text>
       </View>
       {date && (
         <View style={style.containerTwo}>
-          <FontAwesome name="calendar" style={style.iconStyle} size={13} />
+          <Icons name="clock" style={style.iconStyle} size={13} />
           <Text>{date}</Text>
         </View>
       )}

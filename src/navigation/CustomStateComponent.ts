@@ -1,27 +1,17 @@
-import { visitationListResponse } from '@/interfaces';
+import { Docs, visitationListResponse } from '@/interfaces';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PhotoFile } from 'react-native-vision-camera';
 
 export type RootStackParamList = {
-  TAB_ROOT: {};
-  TAB_OPERATION: { role?: string };
-  TAB_DISPATCH: {};
-  TAB_HOME: {};
-  TAB_TRANSACTION: {};
-  TAB_PROFILE: {};
-  TAB_PRICE_LIST: { coordinate: { longitude: number; latitude: number } };
-  OPERATION: { role?: string };
-  LOGIN: {};
-  VERIFICATION: {};
+  TAB_ROOT: { screen?: string; params?: any };
+  VERIFICATION: undefined;
   CAMERA: {
     photoTitle: string;
     navigateTo?: string;
     closeButton?: boolean;
     existingVisitation?: visitationListResponse;
-  };
-  ALL_PRODUCT: {
-    coordinate: { longitude: number; latitude: number };
-    from: string;
+    operationAddedStep?: string;
   };
   IMAGE_PREVIEW: {
     photo: PhotoFile | undefined;
@@ -29,28 +19,32 @@ export type RootStackParamList = {
     navigateTo?: string;
     closeButton?: boolean;
     existingVisitation?: visitationListResponse;
+    operationAddedStep?: string;
   };
-  SCHEDULE: { id: string };
-  SUBMIT_FORM: { type?: string };
+  ALL_PRODUCT: {
+    coordinate: { longitude: number; latitude: number };
+    from: string;
+  };
+  CREATE_DO: { id: string };
+  SUBMIT_FORM: { operationType?: ENTRY_TYPE };
   CREATE_VISITATION: { existingVisitation?: visitationListResponse };
-  SPH: {};
-  APPOINTMENT: {};
+  SPH: { projectId?: string };
+  APPOINTMENT: undefined;
   SEARCH_PRODUCT: { isGobackAfterPress?: boolean; distance: number };
   LOCATION: {
     coordinate: { longitude: number; latitude: number };
     isReadOnly: boolean;
     from: string;
+    eventKey?: string;
   };
-  SEARCH_AREA: { from: string; eventKey: string };
-  CALENDAR: {};
+  SEARCH_AREA: { from?: string; eventKey?: string };
+  CALENDAR: { useTodayMinDate: boolean };
   TRANSACTION_DETAIL: { title: string; data: any };
-  CREATE_SCHEDULE: {
-    useTodayMinDate?: boolean;
-  };
+  CREATE_SCHEDULE: undefined;
   SEARCH_PO: { from: string };
   CUSTOMER_DETAIL: { existingVisitation?: any };
-  DOCUMENTS: {};
-  CREATE_DEPOSIT: {};
+  DOCUMENTS: { docs?: Docs[]; projectId?: string };
+  CREATE_DEPOSIT: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

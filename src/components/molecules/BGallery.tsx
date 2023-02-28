@@ -13,7 +13,7 @@ import { resScale } from '@/utils';
 
 type BGalleryType = {
   picts: any[];
-  addMorePict: () => void;
+  addMorePict?: () => void;
   removePict?: (index: number) => void;
 };
 
@@ -27,11 +27,13 @@ export default function BGallery({
       contentContainerStyle={style.scrollViewContentStyle}
       showsVerticalScrollIndicator={false}
     >
-      <TouchableOpacity onPress={addMorePict}>
-        <View style={[style.addImage, style.container]}>
-          <Feather name="plus" size={resScale(25)} color="#000000" />
-        </View>
-      </TouchableOpacity>
+      {addMorePict && (
+        <TouchableOpacity onPress={addMorePict}>
+          <View style={[style.addImage, style.container]}>
+            <Feather name="plus" size={resScale(25)} color="#000000" />
+          </View>
+        </TouchableOpacity>
+      )}
       {picts &&
         picts.length > 0 &&
         picts.map((image, index) => {
