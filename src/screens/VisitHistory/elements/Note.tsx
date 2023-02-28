@@ -10,8 +10,8 @@ const Notes = ({ visitNotes }: { visitNotes: string | null }) => {
       <View style={styles.container}>
         <BLabel bold="600" sizeInNumber={font.size.md} label="Catatan" />
         <BSpacer size="extraSmall" />
-        <BText style={styles.textNotes}>
-          ini proyek masih awal awal banget, coba nanti mau follow up lagi
+        <BText numberOfLines={3} style={styles.textNotes}>
+          {visitNotes}
         </BText>
       </View>
     );

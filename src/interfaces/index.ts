@@ -428,7 +428,7 @@ interface visitationPayload {
   paymentType?: 'CBD' | 'CREDIT';
   estimationWeek?: number;
   estimationMonth?: number;
-  visitationNotes?: string;
+  visitNotes?: string;
   dateVisit?: number;
   finishDate?: number; // ??
   bookingDate?: number;

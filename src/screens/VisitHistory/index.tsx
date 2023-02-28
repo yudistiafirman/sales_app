@@ -24,9 +24,12 @@ const VisitHistory = () => {
   useEffect(() => {
     if (route.params) {
       const { projectId } = route.params;
+      console.log('ini project id',projectId)
       send('assignParams', { value: projectId });
     }
   }, [route.params, send]);
+
+
   useCustomHeaderCenter({
     customHeaderCenter: <HistoryHeader projectName={projectName} />,
   });

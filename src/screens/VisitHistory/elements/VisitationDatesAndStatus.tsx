@@ -12,6 +12,7 @@ interface IProps {
   finishDate: string | null;
   status?: status;
   rejectCategory: string | null;
+  quatationId: string | null;
 }
 
 const VisitationDatesAndStatus = ({
@@ -19,6 +20,7 @@ const VisitationDatesAndStatus = ({
   finishDate,
   status,
   rejectCategory,
+  quatationId
 }: IProps) => {
   const getBackgroundColor = () => {
     let color = '';

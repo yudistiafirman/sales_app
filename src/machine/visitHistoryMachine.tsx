@@ -26,6 +26,7 @@ export interface VisitHistoryPayload extends visitationListResponse {
   estimationMonth: string;
   paymentType: 'CBD' | 'CREDIT';
   visitNotes: null | string;
+  quotationLetterId: null | string;
 }
 
 const visitHistoryMachine =
@@ -128,7 +129,7 @@ const visitHistoryMachine =
           };
         }),
         assignVisitationDataToContext: assign((_context, event) => {
-          const sortedData = event.data.reverse()
+          const sortedData = event.data.reverse();
           const newRoutes = sortedData.map((val, idx) => {
             return {
               key: val.id,
