@@ -1,33 +1,22 @@
 import {
   BButtonPrimary,
   BHeaderIcon,
-  BHeaderTitle,
   BSpacer,
   BStepperIndicator,
-  BText,
 } from '@/components';
 import { colors, layout } from '@/constants';
-import {
-  PurchaseOrderContext,
-  PurchaseOrderProvider,
-} from '@/context/PoContext';
+import { PurchaseOrderProvider } from '@/context/PoContext';
 import { RootStackParamList } from '@/navigation/navTypes';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
-import { AppDispatch } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import {
   RouteProp,
   StackActions,
   useNavigation,
 } from '@react-navigation/native';
-import { useActor } from '@xstate/react';
-import React, {
-  useCallback,
-  useContext,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CreatePo from './element/CreatePo';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { resScale } from '@/utils';
@@ -38,40 +27,43 @@ export type PORoutes = RouteProp<RootStackParamList['PO']>;
 
 const PO = () => {
   const navigation = useNavigation();
-  const { purchaseOrderService } = useContext(PurchaseOrderContext);
-  const [state] = useActor(purchaseOrderService);
-  const { send } = purchaseOrderService;
+  const poGlobalState = useSelector(
+    (postate: RootState) => postate.purchaseOrder
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [stepsDone, setStepsDone] = useState<number[]>([]);
   const labels = ['Cari SPH', 'Detil Pembayaran', 'Detil Produk'];
+
   const handleBack = useCallback(() => {
     if (currentStep === 0) {
-      if (state.matches('firstStep.SearchSph')) {
-        send('backToAddPo');
+      if (poGlobalState.matches('firstStep.SearchSph')) {
+        dispatch({ type: 'backToAddPo' });
       } else {
         dispatch(resetImageURLS());
         navigation.dispatch(StackActions.popToTop());
       }
     } else if (currentStep === 1) {
       setCurrentStep((prevState) => prevState - 1);
-      send('goBackToFirstStep');
+      dispatch({ type: 'goBackToFirstStep' });
     } else if (currentStep === 2) {
       setCurrentStep((prevState) => prevState - 1);
-      send('goBackToSecondStep');
+      dispatch({ type: 'goBackToSecondStep' });
     }
-  }, [currentStep, dispatch, navigation, send, state]);
+  }, [currentStep, dispatch, navigation, poGlobalState]);
 
   const handleNext = useCallback(() => {
     if (currentStep === 0) {
       setCurrentStep((prevState) => prevState + 1);
-      send('goToSecondStep');
+      dispatch({
+        type: 'goToSecondStep',
+      });
     } else if (currentStep === 1) {
       setCurrentStep((prevState) => prevState + 1);
-      send('goToThirdStep');
+      dispatch({ type: 'goToThirdStep' });
     }
-  }, [currentStep, send]);
+  }, [currentStep, dispatch]);
 
   const renderHeaderLeft = useCallback(
     () => (
@@ -87,11 +79,11 @@ const PO = () => {
 
   const renderTitle = useCallback(() => {
     let title = 'Buat PO';
-    if (state.matches('firstStep.SearchSph')) {
+    if (poGlobalState.matches('firstStep.SearchSph')) {
       title = 'Cari SPH';
     }
     return title;
-  }, [state]);
+  }, [poGlobalState]);
 
   const renderBtnIcon = () => (
     <Icon

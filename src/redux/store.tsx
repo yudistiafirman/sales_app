@@ -7,6 +7,10 @@ import modalReducer from './reducers/modalReducer';
 import productivityFlowReducer from './reducers/productivityFlowReducer';
 import orderReducer from './reducers/orderReducer';
 import snackbarReducer from './reducers/snackbarReducer';
+import { createXStateMiddleware } from './middleware/createXStateMiddleware';
+import purchaseOrderReducer, {
+  purchaseOrderSlice,
+} from './reducers/purchaseOrder';
 
 export const store = configureStore({
   reducer: {
@@ -18,9 +22,12 @@ export const store = configureStore({
     camera: cameraReducer,
     order: orderReducer,
     snackbar: snackbarReducer,
+    purchaseOrder: purchaseOrderReducer,
   },
   middleware: (getDefaultMiddleWare) =>
-    getDefaultMiddleWare({ serializableCheck: false }),
+    getDefaultMiddleWare({ serializableCheck: false }, [
+      createXStateMiddleware(purchaseOrderSlice),
+    ]),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
