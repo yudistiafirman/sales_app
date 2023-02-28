@@ -11,13 +11,11 @@ import BCommonCompanyCard from '@/components/molecules/BCommonCompanyCard';
 import BImageList from '@/components/organism/BImagesList';
 import ChoosePOModal from '@/components/templates/ChooseSphModal';
 import { colors } from '@/constants';
-import { PurchaseOrderContext } from '@/context/PoContext';
 import { deleteImage } from '@/redux/reducers/cameraReducer';
 import { RootState, AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useActor } from '@xstate/react';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -26,9 +24,9 @@ import { openPopUp, setIsPopUpVisible } from '@/redux/reducers/modalReducer';
 
 const CreatePo = () => {
   const navigation = useNavigation();
-  const { purchaseOrderService } = useContext(PurchaseOrderContext);
-  const [state] = useActor(purchaseOrderService);
-  const { send } = purchaseOrderService;
+  const poGlobalState = useSelector(
+    (postate: RootState) => postate.purchaseOrder
+  );
   const { photoURLs } = useSelector(
     (_reduxstate: RootState) => _reduxstate.camera
   );
@@ -44,35 +42,45 @@ const CreatePo = () => {
     choosenSphDataFromList,
     choosenSphDataFromModal,
     isModalChooseSphVisible,
-  } = state.context;
+  } = poGlobalState.poState;
 
   const isUserSearchSph = searchQuery.length > 0;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
 
   const getPhotoPo = useCallback(() => {
-    if (state.matches('firstStep.addPO')) {
-      send('addMoreImages');
+    if (poGlobalState.matches('firstStep.addPO')) {
+      dispatch({ type: 'addMoreImages' });
     } else {
-      send('goToFirstStep', { value: 'yes' });
+      dispatch({
+        type: 'goToFirstStep',
+        value: 'yes',
+      });
     }
     navigation.navigate('CAMERA', {
       photoTitle: 'File PO',
       navigateTo: 'PO',
     });
-  }, [navigation, send, state]);
+  }, [dispatch, navigation, poGlobalState]);
 
   const deleteImages = (i: number) => {
     dispatch(deleteImage({ pos: i - 1 }));
-    send('deleteImage', { value: i });
+    dispatch({
+      type: 'deleteImage',
+      value: i,
+    });
   };
 
   useEffect(() => {
     if (route?.params) {
-      send('addImages', { value: photoURLs });
+      dispatch({
+        type: 'addImages',
+        value: photoURLs,
+      });
     }
-  }, [photoURLs, route, send]);
+  }, [dispatch, photoURLs, route]);
+
   useEffect(() => {
-    state.matches('enquirePOType') &&
+    poGlobalState.matches('enquirePOType') &&
       dispatch(
         openPopUp({
           popUpTitle: 'Apakah PO disediakan oleh pelanggan?',
@@ -85,17 +93,20 @@ const CreatePo = () => {
             dispatch(setIsPopUpVisible());
           },
           primaryBtnAction: () => {
-            send('goToFirstStep', { value: 'no' });
+            dispatch({ type: 'goToFirstStep', value: 'no' });
             dispatch(setIsPopUpVisible());
           },
         })
       );
-  }, [dispatch, getPhotoPo, send, state]);
+  }, [dispatch, getPhotoPo, poGlobalState]);
 
   const onTabPress = (tabRoutes: any) => {
     const tabIndex = index === 0 ? 1 : 0;
     if (tabRoutes.key !== routes[index].key) {
-      send('onChangeCategories', { value: tabIndex });
+      dispatch({
+        type: 'onChangeCategories',
+        value: tabIndex,
+      });
     }
   };
 
@@ -106,26 +117,34 @@ const CreatePo = () => {
       isError: false,
       type: 'textInput',
       onChange: (e: any) => {
-        send('inputSph', { value: e.nativeEvent.text });
+        dispatch({
+          type: 'inputSph',
+          value: e.nativeEvent.text,
+        });
       },
-      value: state.context.sphNumber,
+      value: poGlobalState.sphNumber,
     },
   ];
 
   const renderCustomButton = () => {
     return (
-      <BTouchableText onPress={() => send('searchingSph')} title="Ganti" />
+      <BTouchableText
+        onPress={() => dispatch({ type: 'searchingSph' })}
+        title="Ganti"
+      />
     );
   };
 
   return (
     <>
       <View style={styles.firstStepContainer}>
-        {state.matches('firstStep.SearchSph') ? (
+        {poGlobalState.matches('firstStep.SearchSph') ? (
           <View style={styles.firstStepContainer}>
             <BSearchBar
               value={searchQuery}
-              onChangeText={(text) => send('searching', { value: text })}
+              onChangeText={(text) =>
+                dispatch({ type: 'searching', value: text })
+              }
               left={
                 <TextInput.Icon forceTextInputFocus={false} icon="magnify" />
               }
@@ -143,7 +162,9 @@ const CreatePo = () => {
                     <BSpacer size="extraSmall" />
                     <BCommonCompanyList
                       searchQuery={searchQuery}
-                      onPress={(data) => send('openingModal', { value: data })}
+                      onPress={(data) =>
+                        dispatch({ type: 'openingModal', value: data })
+                      }
                       companyData={sphData}
                     />
                   </>
@@ -198,7 +219,7 @@ const CreatePo = () => {
               </>
             ) : (
               <TouchableOpacity
-                onPress={() => send('searchingSph')}
+                onPress={() => dispatch({ type: 'searchingSph' })}
                 style={{ height: resScale(50) }}
               >
                 <BSearchBar
@@ -219,8 +240,8 @@ const CreatePo = () => {
       <ChoosePOModal
         isVisible={isModalChooseSphVisible}
         companyData={choosenSphDataFromList}
-        onCloseModal={() => send('closeModal')}
-        onChoose={(data) => send('addChoosenSph', { value: data })}
+        onCloseModal={() => dispatch({ type: 'closeModal' })}
+        onChoose={(data) => dispatch({ type: 'addChoosenSph', value: data })}
       />
     </>
   );

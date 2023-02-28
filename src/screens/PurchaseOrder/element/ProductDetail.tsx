@@ -7,18 +7,18 @@ import {
 import { ProductsData } from '@/components/organism/BCommonCompanyList';
 import { colors, fonts } from '@/constants';
 import font from '@/constants/fonts';
-import { PurchaseOrderContext } from '@/context/PoContext';
 import { resScale } from '@/utils';
-import { useActor } from '@xstate/react';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ProductDetail = () => {
-  const { purchaseOrderService } = useContext(PurchaseOrderContext);
-  const [state] = useActor(purchaseOrderService);
-  const { send } = purchaseOrderService;
+  const poGlobalState = useSelector(
+    (postate: RootState) => postate.purchaseOrder
+  );
+  const dispatch = useDispatch<AppDispatch>();
 
-  const { choosenSphDataFromModal } = state.context;
+  const { choosenSphDataFromModal } = poGlobalState.poState;
 
   const renderItemChoosenSphProducts: ListRenderItem<ProductsData> =
     useCallback(
@@ -31,11 +31,11 @@ const ProductDetail = () => {
             volume={item.volume}
             index={index}
             totalPrice={item.totalPrice}
-            onChecked={(idx) => send('selectProduct', { value: idx })}
+            onChecked={(idx) => dispatch({ type: 'selectProduct', value: idx })}
           />
         );
       },
-      [send]
+      [dispatch]
     );
 
   const renderItemSeparator = () => {

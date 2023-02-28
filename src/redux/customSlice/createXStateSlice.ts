@@ -57,7 +57,6 @@ export const createXStateSlice = <
     state: TSelectedState | undefined = initialReduxState,
     event: any
   ): TSelectedState => {
-    console.log('ini event type',event.type)
     switch (event.type) {
       case `${params.name}.xstate.update`:
         return event.state;

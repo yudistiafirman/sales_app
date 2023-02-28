@@ -144,11 +144,7 @@ const styles = StyleSheet.create({
 });
 
 const PurchaseOrderWithProvider = () => {
-  return (
-    <PurchaseOrderProvider>
-      <PO />
-    </PurchaseOrderProvider>
-  );
+  return <PO />;
 };
 
 export default PurchaseOrderWithProvider;

@@ -1,21 +1,20 @@
 import { BCardOption, BLabel, BSpacer, BForm } from '@/components';
-import { style } from '@/components/templates/PO/POListCard';
 import { layout } from '@/constants';
 import font from '@/constants/fonts';
-import { PurchaseOrderContext } from '@/context/PoContext';
 import { Input } from '@/interfaces';
-import { useActor } from '@xstate/react';
-import React, { useContext, useMemo } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import React, { useMemo } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
 const PaymentDetail = () => {
-  const { purchaseOrderService } = useContext(PurchaseOrderContext);
-  const [state] = useActor(purchaseOrderService);
-  const { send } = purchaseOrderService;
-  const { choosenSphDataFromModal, files } = state.context;
+  const poGlobalState = useSelector(
+    (postate: RootState) => postate.purchaseOrder
+  );
+  const dispatch = useDispatch<AppDispatch>();
+  const { choosenSphDataFromModal, files } = poGlobalState.poState;
   const paymentTitle =
     choosenSphDataFromModal.paymentType === 'CBD'
       ? 'Cash Before Delivery'
@@ -33,7 +32,8 @@ const PaymentDetail = () => {
         customerErrorMsg: files.credit.ktpDirektur.errorMessage,
         value: files.credit.ktpDirektur.value,
         onChange: (val) =>
-          send('uploading', {
+          dispatch({
+            type: 'uploading',
             paymentType: 'credit',
             fileType: 'ktpDirektur',
             value: val,
@@ -47,7 +47,8 @@ const PaymentDetail = () => {
         customerErrorMsg: files.credit.skKemenkumham.errorMessage,
         value: files.credit.skKemenkumham.value,
         onChange: (val) => {
-          send('uploading', {
+          dispatch({
+            type: 'uploading',
             paymentType: 'credit',
             fileType: 'skKemenkumham',
             value: val,
@@ -62,7 +63,8 @@ const PaymentDetail = () => {
         customerErrorMsg: files.credit.aktaPendirian.errorMessage,
         value: files.credit.aktaPendirian.value,
         onChange: (val) => {
-          send('uploading', {
+          dispatch({
+            type: 'uploading',
             paymentType: 'credit',
             fileType: 'aktaPendirian',
             value: val,
@@ -77,7 +79,8 @@ const PaymentDetail = () => {
         customerErrorMsg: files.credit.nibPerushaan.errorMessage,
         value: files.credit.nibPerushaan.value,
         onChange: (val) => {
-          send('uploading', {
+          dispatch({
+            type: 'uploading',
             paymentType: 'credit',
             fileType: 'nibPerushaan',
             value: val,
@@ -92,7 +95,8 @@ const PaymentDetail = () => {
         customerErrorMsg: files.credit.npwpDirektur.errorMessage,
         value: files.credit.npwpDirektur.value,
         onChange: (val) => {
-          send('uploading', {
+          dispatch({
+            type: 'uploading',
             paymentType: 'credit',
             fileType: 'npwpDirektur',
             value: val,
@@ -107,7 +111,8 @@ const PaymentDetail = () => {
         customerErrorMsg: files.credit.suratKuasa.errorMessage,
         value: files.credit.suratKuasa.value,
         onChange: (val) => {
-          send('uploading', {
+          dispatch({
+            type: 'uploading',
             paymentType: 'credit',
             fileType: 'suratKuasa',
             value: val,
@@ -122,7 +127,8 @@ const PaymentDetail = () => {
         customerErrorMsg: files.credit.bankGuarantee.errorMessage,
         value: files.credit.bankGuarantee.value,
         onChange: (val) => {
-          send('uploading', {
+          dispatch({
+            type: 'uploading',
             paymentType: 'credit',
             fileType: 'bankGuarantee',
             value: val,
@@ -137,7 +143,8 @@ const PaymentDetail = () => {
         customerErrorMsg: files.credit.perjanjian.errorMessage,
         value: files.credit.perjanjian.value,
         onChange: (val) => {
-          send('uploading', {
+          dispatch({
+            type: 'uploading',
             paymentType: 'credit',
             fileType: 'perjanjian',
             value: val,
@@ -155,7 +162,8 @@ const PaymentDetail = () => {
         customerErrorMsg: files.cbd.fotoNpwp.errorMessage,
         value: files.cbd.fotoNpwp.value,
         onChange: (val) => {
-          send('uploading', {
+          dispatch({
+            type: 'uploading',
             paymentType: 'cbd',
             fileType: 'fotoNpwp',
             value: val,
@@ -170,7 +178,8 @@ const PaymentDetail = () => {
         customerErrorMsg: files.cbd.fotoKtp.errorMessage,
         value: files.cbd.fotoKtp.value,
         onChange: (val) => {
-          send('uploading', {
+          dispatch({
+            type: 'uploading',
             paymentType: 'cbd',
             fileType: 'fotoKtp',
             value: val,
@@ -183,7 +192,7 @@ const PaymentDetail = () => {
     } else {
       return fileInputCredit;
     }
-  }, [choosenSphDataFromModal.paymentType, files, send]);
+  }, [choosenSphDataFromModal.paymentType, dispatch]);
 
   return (
     <ScrollView style={styles.container}>
