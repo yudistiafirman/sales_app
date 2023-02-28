@@ -12,6 +12,7 @@ import ProjectPhase from './ProjectPhase';
 import VisitationDatesAndStatus from './VisitationDatesAndStatus';
 
 const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
+
   return (
     <View>
       <BSpacer size="small" />
@@ -20,7 +21,7 @@ const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
         bookingDate={details.dateVisit}
         finishDate={details.finishDate}
         rejectCategory={details.rejectCategory}
-        quatationId={details.quotationLetterId}
+        quatationId={details?.project?.quotationLetterId}
       />
       <BSpacer size="small" />
       <BDivider

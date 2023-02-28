@@ -11,7 +11,10 @@ const Product = ({ products }: { products: Products }) => {
   const renderItem: ListRenderItem<Products> = useCallback(({ item }) => {
     return (
       <View style={{ height: resScale(37) }}>
-        <ProductChip name={item.name} />
+        <ProductChip
+          category={{ name: item.categoryDisplayName }}
+          name={item.displayName}
+        />
       </View>
     );
   }, []);

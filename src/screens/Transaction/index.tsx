@@ -58,6 +58,7 @@ const Transaction = () => {
   }, []);
 
   const getOneOrder = async (id: string) => {
+    customLog('ini id',id)
     try {
       const { data } = await getOrderByID(id);
       navigation.navigate(TRANSACTION_DETAIL, {

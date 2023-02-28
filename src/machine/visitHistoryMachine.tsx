@@ -1,9 +1,5 @@
 import { getAllVisitations } from '@/actions/ProductivityActions';
-import {
-  picPayloadType,
-  visitationListResponse,
-  visitationPayload,
-} from '@/interfaces';
+import { visitationListResponse } from '@/interfaces';
 import { assign, createMachine } from 'xstate';
 
 export interface Products {
@@ -17,6 +13,7 @@ export interface Products {
     slump?: number;
   };
   unit?: number;
+  categoryDisplayName?: string;
 }
 
 export interface VisitHistoryPayload extends visitationListResponse {
@@ -26,7 +23,6 @@ export interface VisitHistoryPayload extends visitationListResponse {
   estimationMonth: string;
   paymentType: 'CBD' | 'CREDIT';
   visitNotes: null | string;
-  quotationLetterId: null | string;
 }
 
 const visitHistoryMachine =

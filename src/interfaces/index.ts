@@ -398,6 +398,7 @@ interface visitationListResponse {
       lat?: string;
       lon?: string;
     };
+    quotationLetterId?: null | string;
   };
 }
 

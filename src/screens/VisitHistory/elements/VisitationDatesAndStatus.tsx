@@ -1,9 +1,15 @@
+import { getOrderByID } from '@/actions/OrderActions';
 import { BChip, BSpacer, BText, BTouchableText } from '@/components';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
+import { TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import { AppDispatch } from '@/redux/store';
+import { useNavigation } from '@react-navigation/native';
 import moment, { locale } from 'moment';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 
 type status = 'VISIT' | 'SPH' | 'REJECTED' | 'PO' | 'SCHEDULING' | 'DO';
 
@@ -12,7 +18,7 @@ interface IProps {
   finishDate: string | null;
   status?: status;
   rejectCategory: string | null;
-  quatationId: string | null;
+  quatationId?: string | null;
 }
 
 const VisitationDatesAndStatus = ({
@@ -20,8 +26,10 @@ const VisitationDatesAndStatus = ({
   finishDate,
   status,
   rejectCategory,
-  quatationId
+  quatationId,
 }: IProps) => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch<AppDispatch>();
   const getBackgroundColor = () => {
     let color = '';
     if (status === 'VISIT') {
@@ -77,16 +85,39 @@ const VisitationDatesAndStatus = ({
     return rejectReason;
   };
 
+  const getOneOrder = async () => {
+    try {
+      const { data } = await getOrderByID(quatationId);
+      navigation.navigate(TRANSACTION_DETAIL, {
+        title: data.data ? data.data.number : 'N/A',
+        data: data.data,
+      });
+    } catch (error) {
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: error.message,
+          highlightedText: 'error',
+          outsideClickClosePopUp: true,
+        })
+      );
+    }
+  };
+
   const renderCompBaseOnStatus = () => {
     if (status === 'VISIT') {
       return (
         <BText style={[styles.date, { marginRight: layout.pad.md }]}>
-          {finishDate !== null ? getLocalFinishDate() : '-'}
+          {finishDate !== null ? getLocalFinishDate() : 'Belum Selesai'}
         </BText>
       );
     } else if (status === 'SPH') {
       return (
-        <BTouchableText textStyle={styles.touchableText} title="Lihat SPH" />
+        <BTouchableText
+          onPress={getOneOrder}
+          textStyle={styles.touchableText}
+          title="Lihat SPH"
+        />
       );
     } else {
       return (
