@@ -307,25 +307,28 @@ interface chosenProductType {
   };
 }
 
+type selectedPicType = {
+  id?: string;
+  name: string;
+  phone: string;
+  email?: string;
+  position?: string;
+  isSelected?: boolean;
+} | null;
+
+type billingAddressType = {
+  name: string;
+  phone: string | number;
+  addressAutoComplete: { [key: string]: any };
+  fullAddress: string;
+};
+
 interface SphStateInterface {
   selectedCompany: selectedCompanyInterface | null;
-  picList: PIC[];
   projectAddress: Address | null;
-  selectedPic: {
-    id?: string;
-    name: string;
-    phone: string;
-    email?: string;
-    position?: string;
-    isSelected?: boolean;
-  } | null;
+  selectedPic: selectedPicType;
   isBillingAddressSame: boolean;
-  billingAddress: {
-    name: string;
-    phone: string | number;
-    addressAutoComplete: { [key: string]: any };
-    fullAddress: string;
-  };
+  billingAddress: billingAddressType;
   distanceFromLegok: number | null;
   paymentType: 'CBD' | 'CREDIT' | '';
   paymentRequiredDocuments: { [key: string]: any };
@@ -677,4 +680,7 @@ export type {
   Docs,
   ProjectDetail,
   requiredPic,
+  selectedPicType,
+  billingAddressType,
+  chosenProductType,
 };

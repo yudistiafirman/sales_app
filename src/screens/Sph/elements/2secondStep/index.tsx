@@ -21,7 +21,7 @@ import {
 } from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
-import { Input, SphStateInterface } from '@/interfaces';
+import { billingAddressType, Input, SphStateInterface } from '@/interfaces';
 import { SphContext } from '../context/SphContext';
 import { useNavigation } from '@react-navigation/native';
 import { getLocationCoordinates } from '@/actions/CommonActions';
@@ -31,14 +31,25 @@ import { useKeyboardActive } from '@/hooks';
 import { TextInput } from 'react-native-paper';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
+import {
+  updateBillingAddressAutoComplete,
+  updateBillingAddressOptions,
+  updateDistanceFromLegok,
+  updateIsBillingAddressSame,
+  updateProjectAddress,
+} from '@/redux/reducers/SphReducer';
 
-function checkObj(obj: SphStateInterface) {
+function checkObj(
+  billingAddress: billingAddressType,
+  isBillingAddressSame: boolean,
+  distanceFromLegok: number | null
+) {
   const billingAddressFilled =
-    Object.values(obj.billingAddress).every((val) => val) &&
-    Object.entries(obj.billingAddress.addressAutoComplete).length > 1;
+    Object.values(billingAddress).every((val) => val) &&
+    Object.entries(billingAddress.addressAutoComplete).length > 1;
 
-  const billingAddressSame = obj.isBillingAddressSame;
-  const distanceFilled = obj.distanceFromLegok !== null;
+  const billingAddressSame = isBillingAddressSame;
+  const distanceFilled = distanceFromLegok !== null;
 
   return (billingAddressFilled || billingAddressSame) && distanceFilled;
 }
@@ -49,8 +60,7 @@ function LeftIcon() {
 function SearchIcon() {
   return <TextInput.Icon forceTextInputFocus={false} icon="magnify" />;
 }
-//'shippingAddress.event'
-// 'billingAddress.event'
+
 const eventKeyObj = {
   shipp: 'shippingAddress.event',
   billing: 'billingAddress.event',
@@ -58,35 +68,42 @@ const eventKeyObj = {
 
 export default function SecondStep() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const { region } = useSelector((state: RootState) => state.location);
   const [sheetIndex] = useState(0); //setSheetIndex
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [sheetSnapPoints, setSheetSnapPoints] = useState(['60%', '90%']);
-  const dispatch = useDispatch();
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [isSuggestionLoading, setIsSuggestionLoading] = useState(false);
   const { keyboardVisible } = useKeyboardActive();
+  const {
+    billingAddress,
+    isBillingAddressSame,
+    distanceFromLegok,
+    projectAddress,
+    selectedCompany,
+  } = useSelector((state: RootState) => state.sphState);
 
-  const getSuggestion = useCallback(async (search: string) => {
-    try {
-      setIsSuggestionLoading(true);
-      const response = await dispatch(
-        fetchAddressSuggestion({ search, page: 1 })
-      ).unwrap();
-      const nameToTile = response.data.map((data) => {
-        return {
-          id: data.id,
-          title: data.name,
-        };
-      });
-      setAddressSuggestions(nameToTile);
-      setIsSuggestionLoading(false);
-    } catch (error) {
-      setIsSuggestionLoading(false);
-      setAddressSuggestions([]);
-      customLog(error, 'errorfetchAddressSuggestion');
-    }
-  }, []);
+  // const getSuggestion = useCallback(async (search: string) => {
+  //   try {
+  //     setIsSuggestionLoading(true);
+  //     const response = await dispatch(
+  //       fetchAddressSuggestion({ search, page: 1 })
+  //     ).unwrap();
+  //     const nameToTile = response.data.map((data) => {
+  //       return {
+  //         id: data.id,
+  //         title: data.name,
+  //       };
+  //     });
+  //     setAddressSuggestions(nameToTile);
+  //     setIsSuggestionLoading(false);
+  //   } catch (error) {
+  //     setIsSuggestionLoading(false);
+  //     setAddressSuggestions([]);
+  //     customLog(error, 'errorfetchAddressSuggestion');
+  //   }
+  // }, []);
 
   const [isMapLoading, setIsMapLoading] = useState(false);
 
@@ -104,6 +121,7 @@ export default function SecondStep() {
           coordinate.latitude as unknown as number,
           'BP-LEGOK'
         );
+
         const { result } = data;
         if (!result) {
           throw data;
@@ -127,12 +145,16 @@ export default function SecondStep() {
         }
 
         if (isBiilingAddress) {
-          stateUpdate('billingAddress')({
-            ...sphState?.billingAddress,
-            addressAutoComplete: _coordinate,
-          });
+          // stateUpdate('billingAddress')({
+          //   ...sphState?.billingAddress,
+          //   addressAutoComplete: _coordinate,
+          // });
+          dispatch(updateBillingAddressAutoComplete(_coordinate));
         } else {
-          stateUpdate('distanceFromLegok')(result.distance.value);
+          if (result.distance) {
+            // stateUpdate('distanceFromLegok')(result.distance.value);
+            dispatch(updateDistanceFromLegok(result.distance.value));
+          }
           dispatch(updateRegion(_coordinate));
         }
         setIsMapLoading(() => false);
@@ -141,13 +163,13 @@ export default function SecondStep() {
         customLog(JSON.stringify(error), 'onChangeRegionerror');
       }
     },
-    [sphState?.billingAddress]
+    []
   );
 
   const inputsData: Input[] = useMemo(() => {
     const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
-    if (sphState?.isBillingAddressSame) {
+    if (isBillingAddressSame) {
       setSheetSnapPoints(['40%']);
       setTimeout(() => {
         bottomSheetRef.current?.collapse();
@@ -158,11 +180,12 @@ export default function SecondStep() {
           isRequire: false,
           type: 'switch',
           onChange: (val: boolean) => {
-            if (stateUpdate) {
-              stateUpdate('isBillingAddressSame')(val);
-            }
+            dispatch(updateIsBillingAddressSame(val));
+            // if (stateUpdate) {
+            //   stateUpdate('isBillingAddressSame')(val);
+            // }
           },
-          value: sphState?.isBillingAddressSame,
+          value: isBillingAddressSame,
         },
       ];
     }
@@ -174,41 +197,46 @@ export default function SecondStep() {
         isRequire: false,
         type: 'switch',
         onChange: (val: boolean) => {
-          if (stateUpdate) {
-            stateUpdate('isBillingAddressSame')(val);
-          }
+          dispatch(updateIsBillingAddressSame(val));
+          // if (stateUpdate) {
+          //   stateUpdate('isBillingAddressSame')(val);
+          // }
         },
-        value: sphState?.isBillingAddressSame,
+        value: isBillingAddressSame,
       },
       {
         label: 'Nama',
         isRequire: true,
-        isError: !sphState?.billingAddress?.name,
+        isError: !billingAddress?.name,
         type: 'textInput',
         onChange: (event: any) => {
-          if (stateUpdate && sphState) {
-            stateUpdate('billingAddress')({
-              ...sphState?.billingAddress,
-              name: event.nativeEvent.text,
-            });
-          }
+          const text: string = event.nativeEvent.text;
+          dispatch(updateBillingAddressOptions({ value: text, key: 'name' }));
+          // if (stateUpdate && sphState) {
+          //   stateUpdate('billingAddress')({
+          //     ...sphState?.billingAddress,
+          //     name: event.nativeEvent.text,
+          //   });
+          // }
         },
-        value: sphState?.billingAddress?.name,
+        value: billingAddress?.name,
       },
       {
         label: 'No. Telepon',
         isRequire: true,
-        isError: !phoneNumberRegex.test(`${sphState.billingAddress.phone}`),
+        isError: !phoneNumberRegex.test(`${billingAddress.phone}`),
         type: 'textInput',
         onChange: (event: any) => {
-          if (stateUpdate && sphState) {
-            stateUpdate('billingAddress')({
-              ...sphState?.billingAddress,
-              phone: event.nativeEvent.text,
-            });
-          }
+          const text: string = event.nativeEvent.text;
+          dispatch(updateBillingAddressOptions({ value: text, key: 'phone' }));
+          // if (stateUpdate && sphState) {
+          //   stateUpdate('billingAddress')({
+          //     ...sphState?.billingAddress,
+          //     phone: event.nativeEvent.text,
+          //   });
+          // }
         },
-        value: sphState.billingAddress.phone,
+        value: billingAddress.phone,
         keyboardType: 'numeric',
         customerErrorMsg: 'No. Telepon harus diisi sesuai format',
         LeftIcon: LeftIcon,
@@ -216,15 +244,15 @@ export default function SecondStep() {
       {
         label: 'Cari Alamat',
         isRequire: true,
-        isError: sphState?.billingAddress?.addressAutoComplete
-          ? !sphState?.billingAddress?.addressAutoComplete?.formattedAddress
+        isError: billingAddress?.addressAutoComplete
+          ? !billingAddress?.addressAutoComplete?.formattedAddress
           : true,
         type: 'area',
-        onChange: (text: string) => {
-          getSuggestion(text);
-        },
-        value: sphState?.billingAddress?.addressAutoComplete
-          ? sphState?.billingAddress?.addressAutoComplete?.formattedAddress
+        // onChange: (text: string) => {
+        //   getSuggestion(text);
+        // },
+        value: billingAddress?.addressAutoComplete
+          ? billingAddress?.addressAutoComplete?.formattedAddress
           : '',
         placeholder: 'Cari Kelurahan, Kecamatan, Kota',
         textInputAsButton: true,
@@ -239,20 +267,28 @@ export default function SecondStep() {
       {
         label: 'Alamat Lengkap',
         isRequire: true,
-        isError: !sphState.billingAddress.fullAddress,
+        isError: !billingAddress.fullAddress,
         type: 'area',
         onChange: (text: string) => {
-          if (stateUpdate && sphState) {
-            stateUpdate('billingAddress')({
-              ...sphState?.billingAddress,
-              fullAddress: text,
-            });
-          }
+          dispatch(
+            updateBillingAddressOptions({ value: text, key: 'fullAddress' })
+          );
+          // if (stateUpdate && sphState) {
+          //   stateUpdate('billingAddress')({
+          //     ...sphState?.billingAddress,
+          //     fullAddress: text,
+          //   });
+          // }
         },
-        value: sphState?.billingAddress?.fullAddress,
+        value: billingAddress?.fullAddress,
       },
     ];
-  }, [sphState, stateUpdate, addressSuggestions, isSuggestionLoading]);
+  }, [
+    billingAddress,
+    isBillingAddressSame,
+    addressSuggestions,
+    isSuggestionLoading,
+  ]);
 
   const customFooterButton = useCallback(() => {
     return (
@@ -267,11 +303,13 @@ export default function SecondStep() {
             setCurrentPosition(2);
           }
         }}
-        disableContinue={!checkObj(sphState)}
+        disableContinue={
+          !checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)
+        }
       />
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sphState]);
+  }, [billingAddress, isBillingAddressSame, distanceFromLegok]);
 
   useEffect(() => {
     crashlytics().log(SPH + '-Step2');
@@ -289,7 +327,8 @@ export default function SecondStep() {
   }, [onChangeRegion]);
 
   useEffect(() => {
-    stateUpdate('projectAddress')(region);
+    // stateUpdate('projectAddress')(region);
+    dispatch(updateProjectAddress(region));
   }, [region]);
 
   useEffect(() => {
@@ -299,14 +338,14 @@ export default function SecondStep() {
   }, [keyboardVisible]);
 
   useEffect(() => {
-    if (sphState.projectAddress) {
-      const latitude = +sphState.projectAddress.latitude;
-      const longitude = +sphState.projectAddress.longitude;
+    if (projectAddress) {
+      const latitude = +projectAddress.latitude;
+      const longitude = +projectAddress.longitude;
       onChangeRegion({ latitude, longitude }, {});
-    } else if (sphState.selectedCompany) {
-      if (sphState.selectedCompany.locationAddress) {
-        const latitude = +sphState.selectedCompany.locationAddress.lat;
-        const longitude = +sphState.selectedCompany.locationAddress.lon;
+    } else if (selectedCompany) {
+      if (selectedCompany.locationAddress) {
+        const latitude = +selectedCompany.locationAddress.lat;
+        const longitude = +selectedCompany.locationAddress.lon;
         onChangeRegion({ latitude, longitude }, {});
       }
     }
@@ -337,11 +376,16 @@ export default function SecondStep() {
         inputs={inputsData}
         buttonTitle={'Lanjut'}
         onAdd={() => {
-          if (setCurrentPosition && checkObj(sphState)) {
+          if (
+            setCurrentPosition &&
+            checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)
+          ) {
             setCurrentPosition(2);
           }
         }}
-        isButtonDisable={!checkObj(sphState)}
+        isButtonDisable={
+          !checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)
+        }
         snapPoint={sheetSnapPoints}
         ref={bottomSheetRef}
         initialIndex={sheetIndex}

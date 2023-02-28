@@ -28,9 +28,11 @@ import { useNavigation } from '@react-navigation/native';
 
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import RNPrint from 'react-native-print';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { customLog } from '@/utils/generalFunc';
+import { RootState } from '@/redux/store';
+import { resetState } from '@/redux/reducers/SphReducer';
 
 type StepDoneType = {
   isModalVisible: boolean;
@@ -123,7 +125,8 @@ export default function StepDone({
 }: StepDoneType) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [sphState] = useContext(SphContext);
+  // const [sphState] = useContext(SphContext);
+  const sphState = useSelector((state: RootState) => state.sphState);
   const stateCompanyName = sphState.selectedCompany?.Company?.name
     ? sphState.selectedCompany?.Company.name
     : sphState.selectedPic?.name;
@@ -169,6 +172,7 @@ export default function StepDone({
             onPress={() => {
               navigation.goBack();
               setIsModalVisible((curr) => !curr);
+              dispatch(resetState());
             }}
           >
             <MaterialCommunityIcons

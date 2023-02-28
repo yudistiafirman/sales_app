@@ -21,7 +21,7 @@ import ThirdStep from './elements/3thirdStep';
 import FourthStep from './elements/4fourthStep';
 import FifthStep from './elements/5fifthStep';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
@@ -32,6 +32,8 @@ import { SPH } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { resScale } from '@/utils';
+import { RootState } from '@/redux/store';
+import { resetState } from '@/redux/reducers/SphReducer';
 
 const labels = [
   'Cari Pelanggan',
@@ -126,12 +128,12 @@ function SphContent() {
   const stepRef = useRef<ScrollView>(null);
   // const [currentPosition, setCurrentPosition] = useState<number>(0);
   const [stepsDone, setStepsDone] = useState<number[]>([]);
-  const [sphData, updateState, setCurrentPosition, currentPosition] =
+  const [, updateState, setCurrentPosition, currentPosition] =
     useContext(SphContext);
   const stepControll = useCallback((step: number) => {
     customLog(step, 'stepsss');
   }, []);
-
+  const sphData = useSelector((state: RootState) => state.sphState);
   useEffect(() => {
     crashlytics().log(SPH);
 

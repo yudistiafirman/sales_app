@@ -16,12 +16,15 @@ import { getAllProject } from '@/redux/async-thunks/commonThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { AppDispatch, RootState } from '@/redux/store';
-import { openPopUp } from '@/redux/reducers/modalReducer';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { TouchableOpacity } from 'react-native';
 import { customLog } from '@/utils/generalFunc';
 import { retrying } from '@/redux/reducers/commonReducer';
+import {
+  updateSelectedCompany,
+  updateSelectedPic,
+} from '@/redux/reducers/SphReducer';
 
 export default function FirstStep() {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,6 +36,7 @@ export default function FirstStep() {
     errorGettingProject,
     errorGettingProjectMessage,
   } = useSelector((state: RootState) => state.common);
+  const { selectedCompany } = useSelector((state: RootState) => state.sphState);
   function resetSearch() {
     setSearchQuery('');
   }
@@ -101,9 +105,10 @@ export default function FirstStep() {
               <TouchableOpacity
                 onPress={() => {
                   // setSelectedPic(data);
-                  if (stateUpdate) {
-                    stateUpdate('selectedCompany')(item);
-                  }
+                  dispatch(updateSelectedCompany(item));
+                  // if (stateUpdate) {
+                  //   stateUpdate('selectedCompany')(item);
+                  // }
                 }}
               >
                 <BVisitationCard
@@ -144,7 +149,7 @@ export default function FirstStep() {
 
   return (
     <BContainer>
-      {!sphState?.selectedCompany && (
+      {!selectedCompany && (
         <>
           <BSearchBar
             activeOutlineColor="gray"
@@ -166,19 +171,19 @@ export default function FirstStep() {
           <BSpacer size={'extraSmall'} />
         </>
       )}
-      {!sphState?.selectedCompany && (
+      {!selectedCompany && (
         <BTabViewScreen
           screenToRender={sceneToRender}
           tabToRender={searchQuery.length > 3 ? tabToRender : []}
         />
       )}
-      {sphState?.selectedCompany && (
+      {selectedCompany && (
         <SelectedPic
           onPress={() => {
-            if (stateUpdate) {
-              stateUpdate('selectedPic')(null);
-              stateUpdate('selectedCompany')(null);
-            }
+            dispatch(updateSelectedCompany(null));
+            dispatch(updateSelectedPic(null));
+            // stateUpdate('selectedPic')(null);
+            // stateUpdate('selectedCompany')(null);
           }}
           setCurrentPosition={setCurrentPosition}
         />

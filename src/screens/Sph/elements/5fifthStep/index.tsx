@@ -199,7 +199,8 @@ function payloadMapper(sphState: SphStateInterface) {
 export default function FifthStep() {
   const dispatch = useDispatch();
   const { isOrderLoading } = useSelector((state: RootState) => state.order);
-  const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
+  const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
+  const sphState = useSelector((state: RootState) => state.sphState);
 
   const bottomSheetRef = React.useRef<BottomSheet>(null);
 
@@ -267,7 +268,6 @@ export default function FifthStep() {
         photoResponse.forEach((photo) => {
           const photoName = `${photo.name}.${photo.type}`;
           const photoNamee = `${photo.name}.jpg`;
-          Object.keys(sphState.paymentRequiredDocuments);
           let foundPhoto;
           for (const documentId in sphState.paymentRequiredDocuments) {
             if (
