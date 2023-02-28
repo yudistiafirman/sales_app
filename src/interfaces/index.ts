@@ -421,6 +421,7 @@ interface visitationListResponse {
       lat?: string;
       lon?: string;
     };
+    quotationLetterId?: null | string;
   };
 }
 
@@ -451,7 +452,7 @@ interface visitationPayload {
   paymentType?: 'CBD' | 'CREDIT';
   estimationWeek?: number;
   estimationMonth?: number;
-  visitationNotes?: string;
+  visitNotes?: string;
   dateVisit?: number;
   finishDate?: number; // ??
   bookingDate?: number;
@@ -460,7 +461,9 @@ interface visitationPayload {
   isBooking?: boolean; // ??
   status?: 'VISIT' | 'SPH' | 'REJECTED' | '';
   files: filesType[];
-  products: { id: string }[];
+  products?: {
+    id?: string;
+  }[];
 }
 
 interface filesType {
