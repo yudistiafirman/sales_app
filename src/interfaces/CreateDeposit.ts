@@ -2,8 +2,8 @@ interface CreateDepositFirstStep {
   deposit?: {
     createdAt: string;
     nominal: number;
+    picts: any[];
   };
-  picts: any[];
 }
 
 interface CreateDepositSecondStep {

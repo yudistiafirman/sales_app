@@ -12,10 +12,16 @@ import font from '@/constants/fonts';
 import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn';
 import { SphContext } from '../context/SphContext';
 import { fetchSphDocuments } from '@/redux/async-thunks/commonThunks';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
+import { RootState } from '@/redux/store';
+import {
+  updatePaymentBankGuarantee,
+  updatePaymentType,
+  updateRequiredDocuments,
+} from '@/redux/reducers/SphReducer';
 
 type documentType = {
   id: string;
@@ -47,11 +53,13 @@ export default function ThirdStep() {
     credit: [],
   });
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
+  const { paymentType, paymentRequiredDocuments, paymentBankGuarantee } =
+    useSelector((state: RootState) => state.sphState);
 
   useEffect(() => {
     crashlytics().log(SPH + '-Step3');
 
-    if (sphState?.paymentType) {
+    if (paymentType) {
       const objKey: {
         CREDIT: 'credit';
         CBD: 'cbd';
@@ -59,7 +67,7 @@ export default function ThirdStep() {
         CREDIT: 'credit',
         CBD: 'cbd',
       };
-      const key: 'cbd' | 'credit' = objKey[sphState?.paymentType];
+      const key: 'cbd' | 'credit' = objKey[paymentType];
 
       if (sphDocuments[key]) {
         if (sphDocuments[key].length) {
@@ -74,9 +82,7 @@ export default function ThirdStep() {
           sphDocuments[key].forEach((doc) => {
             documentObj[doc.id] = null;
           });
-          const parentReqDocKeys = Object.keys(
-            sphState.paymentRequiredDocuments
-          );
+          const parentReqDocKeys = Object.keys(paymentRequiredDocuments);
           const localReqDocKeys = Object.keys(documentObj);
           const parentDocString = JSON.stringify(parentReqDocKeys);
           const localDocString = JSON.stringify(localReqDocKeys);
@@ -85,7 +91,7 @@ export default function ThirdStep() {
             parentDocString === localDocString &&
             parentReqDocKeys.length > 0
           ) {
-            setDocuments(sphState.paymentRequiredDocuments);
+            setDocuments(paymentRequiredDocuments);
           } else {
             setDocuments(documentObj);
           }
@@ -93,7 +99,7 @@ export default function ThirdStep() {
         }
       }
     }
-  }, [sphDocuments, sphState?.paymentType]);
+  }, [sphDocuments, paymentType]);
 
   async function getDocument() {
     try {
@@ -102,7 +108,7 @@ export default function ThirdStep() {
         fetchSphDocuments()
       ).unwrap();
 
-      if (sphState?.paymentType) {
+      if (paymentType) {
         const objKey: {
           CREDIT: 'credit';
           CBD: 'cbd';
@@ -110,7 +116,7 @@ export default function ThirdStep() {
           CREDIT: 'credit',
           CBD: 'cbd',
         };
-        const key: 'cbd' | 'credit' = objKey[sphState?.paymentType];
+        const key: 'cbd' | 'credit' = objKey[paymentType];
         if (response[key]) {
           if (response[key].length) {
             const newFileKeys = response[key].map((doc) => {
@@ -124,9 +130,7 @@ export default function ThirdStep() {
             response[key].forEach((doc) => {
               documentObj[doc.id] = null;
             });
-            const parentReqDocKeys = Object.keys(
-              sphState.paymentRequiredDocuments
-            );
+            const parentReqDocKeys = Object.keys(paymentRequiredDocuments);
             const localReqDocKeys = Object.keys(documentObj);
             const parentDocString = JSON.stringify(parentReqDocKeys);
             const localDocString = JSON.stringify(localReqDocKeys);
@@ -135,7 +139,7 @@ export default function ThirdStep() {
               parentDocString === localDocString &&
               parentReqDocKeys.length > 0
             ) {
-              setDocuments(sphState.paymentRequiredDocuments);
+              setDocuments(paymentRequiredDocuments);
             } else {
               setDocuments(documentObj);
             }
@@ -157,9 +161,10 @@ export default function ThirdStep() {
 
   useEffect(() => {
     // if (stateUpdate) {
-    stateUpdate('paymentRequiredDocuments')(documents);
-    const isFilled = checkDocFilled(documents);
-    stateUpdate('paymentDocumentsFullfilled')(isFilled);
+    // stateUpdate('paymentRequiredDocuments')(documents);
+    dispatch(updateRequiredDocuments(documents));
+    // const isFilled = checkDocFilled(documents);
+    // stateUpdate('paymentDocumentsFullfilled')(isFilled);
     // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documents]);
@@ -169,12 +174,12 @@ export default function ThirdStep() {
       {
         label: 'Tipe Pembayaran',
         isRequire: true,
-        isError: sphState?.paymentType ? false : true,
+        isError: paymentType ? false : true,
         type: 'cardOption',
         // onChange: () => {
         //   getPaymentDocReq();
         // },
-        value: sphState?.paymentType,
+        value: paymentType,
         options: [
           {
             title: 'Cash Before Delivery',
@@ -182,7 +187,8 @@ export default function ThirdStep() {
             value: 'CBD',
             onChange: () => {
               // if (stateUpdate) {
-              stateUpdate('paymentType')('CBD');
+              // stateUpdate('paymentType')('CBD');
+              dispatch(updatePaymentType('CBD'));
               // getPaymentDocReq('cbd');
               // }
             },
@@ -193,7 +199,8 @@ export default function ThirdStep() {
             value: 'CREDIT',
             onChange: () => {
               // if (stateUpdate) {
-              stateUpdate('paymentType')('CREDIT');
+              // stateUpdate('paymentType')('CREDIT');
+              dispatch(updatePaymentType('CREDIT'));
               // getPaymentDocReq('credit');
               // }
             },
@@ -224,15 +231,13 @@ export default function ThirdStep() {
           // });
         }, //onChange(key.key),
         type: 'fileInput',
-        value: sphState?.paymentRequiredDocuments?.[key.key],
+        value: paymentRequiredDocuments?.[key.key],
         isRequire: key.isRequired,
-        isError: key.isRequired
-          ? !sphState?.paymentRequiredDocuments?.[key.key]
-          : false,
+        isError: key.isRequired ? !paymentRequiredDocuments?.[key.key] : false,
       });
     });
     return inputs;
-  }, [fileKeys, sphState, stateUpdate, documents]);
+  }, [fileKeys, documents, paymentRequiredDocuments, paymentType]);
 
   return (
     <BContainer>
@@ -254,15 +259,12 @@ export default function ThirdStep() {
           {sphState?.paymentType === 'CREDIT' && (
             <View style={style.checkboxContainer}>
               <Checkbox
-                status={
-                  sphState?.paymentBankGuarantee ? 'checked' : 'unchecked'
-                }
+                status={paymentBankGuarantee ? 'checked' : 'unchecked'}
                 onPress={() => {
-                  if (stateUpdate) {
-                    stateUpdate('paymentBankGuarantee')(
-                      !sphState?.paymentBankGuarantee
-                    );
-                  }
+                  // if (stateUpdate) {
+                  //   stateUpdate('paymentBankGuarantee')(!paymentBankGuarantee);
+                  // }
+                  dispatch(updatePaymentBankGuarantee(!paymentBankGuarantee));
                 }}
               />
               <Text style={style.checkboxLabel}>
@@ -283,10 +285,8 @@ export default function ThirdStep() {
             }}
             disableContinue={
               !(
-                sphState?.paymentType &&
-                (sphState.paymentType === 'CREDIT'
-                  ? sphState?.paymentBankGuarantee
-                  : true)
+                paymentType &&
+                (paymentType === 'CREDIT' ? paymentBankGuarantee : true)
               ) || isLoading
             }
             loadingContinue={isLoading}

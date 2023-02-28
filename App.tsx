@@ -15,7 +15,8 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider as ReduxProvider } from 'react-redux';
-import { store } from '@/redux/store';
+import { store, persistor } from '@/redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
 import Popup from '@/components/templates/PopupGlobal/Popup';
 import AppNavigator from '@/navigation/AppNavigator';
 import NetworkLogger, {
@@ -157,10 +158,12 @@ function App() {
         />
         <PaperProvider theme={paperTheme}>
           <ReduxProvider store={store}>
-            <Popup />
-            <SnackbarGlobal />
-            <AppNavigator />
-            {isDevelopment() && networkLogger()}
+            <PersistGate loading={null} persistor={persistor}>
+              <Popup />
+              <SnackbarGlobal />
+              <AppNavigator />
+              {isDevelopment() && networkLogger()}
+            </PersistGate>
           </ReduxProvider>
         </PaperProvider>
       </NavigationContainer>

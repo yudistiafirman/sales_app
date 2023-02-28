@@ -1,9 +1,11 @@
+import BVisitationCard from '@/components/molecules/BVisitationCard';
 import { layout } from '@/constants';
 import * as React from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
 import EmptyPO from './EmptyPO';
-import POListCard from './POListCard';
 import POListShimmer from './POListShimmer';
+import { visitationDataType } from '@/interfaces';
+import BSpacer from '@/components/atoms/BSpacer';
 
 interface POData {
   companyName: string;
@@ -35,23 +37,29 @@ const POList = <ArrayOfObject extends POData>({
   isLoadMore,
   onRefresh,
   loadPO,
-  colorStatus,
   onPress,
 }: POListProps<ArrayOfObject>) => {
   const renderItem: ListRenderItem<POData> = React.useCallback(
-    ({ item }) => {
+    ({ item, index }) => {
+      const constructVisitationData: visitationDataType = {
+        id: index,
+        name: item.companyName,
+        location: item.locationName,
+        pilNames: item.sphs.map((it) => it.name),
+      };
       return (
-        <POListCard
-          key={item.id}
-          companyName={item.companyName}
-          locationName={item.locationName}
-          onPress={() => onPress(item)}
-          sphs={item.sphs}
-          color={colorStatus}
-        />
+        <>
+          <BSpacer size={'small'} />
+          <BVisitationCard
+            item={constructVisitationData}
+            key={item.id}
+            onPress={onPress ? () => onPress(item) : undefined}
+            isRenderIcon
+          />
+        </>
       );
     },
-    [onPress, colorStatus]
+    [onPress]
   );
   return (
     <FlatList

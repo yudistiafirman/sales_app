@@ -12,6 +12,7 @@ import { useKeyboardActive } from '@/hooks';
 import { BStepperIndicator } from '@/components';
 import { resScale } from '@/utils';
 import {
+  StackActions,
   useFocusEffect,
   useNavigation,
   useRoute,
@@ -42,8 +43,8 @@ function stepHandler(
   const { stepOne, stepTwo } = state;
 
   if (
-    stepOne.picts &&
-    stepOne.picts.length > 0 &&
+    stepOne.deposit?.picts &&
+    stepOne.deposit?.picts.length > 0 &&
     stepOne.deposit?.createdAt &&
     stepOne.deposit?.nominal
   ) {
@@ -99,17 +100,6 @@ const Deposit = () => {
   const existingSchedule: CreateDepositListResponse =
     route?.params?.existingSchedule;
 
-  React.useEffect(() => {
-    if (existingSchedule) {
-      updateValue('existingDepositID', existingSchedule.id);
-      populateData(existingSchedule, updateValueOnstep);
-    }
-    return () => {
-      dispatch(resetImageURLS());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -130,6 +120,17 @@ const Deposit = () => {
   );
 
   React.useEffect(() => {
+    if (existingSchedule) {
+      updateValue('existingDepositID', existingSchedule.id);
+      populateData(existingSchedule, updateValueOnstep);
+    }
+    return () => {
+      dispatch(resetImageURLS());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
     stepHandler(values, setStepsDone);
   }, [values]);
 
@@ -137,6 +138,8 @@ const Deposit = () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
+    } else {
+      navigation.dispatch(StackActions.popToTop());
     }
   };
 
@@ -171,7 +174,6 @@ const Deposit = () => {
                 next(values.step + 1)();
                 DeviceEventEmitter.emit('Deposit.continueButton', true);
               }}
-              isContinueIcon={false}
               onPressBack={handleBackButton}
               continueText={values.step > 0 ? 'Buat Deposit' : 'Lanjut'}
               disableContinue={!stepsDone.includes(values.step)}

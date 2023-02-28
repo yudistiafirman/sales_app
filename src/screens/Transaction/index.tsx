@@ -41,7 +41,7 @@ const Transaction = () => {
   useCustomHeaderRight({
     customHeaderRight: (
       <BTouchableText
-        onPress={() => navigation.navigate(SPH)}
+        onPress={() => navigation.navigate(SPH, {})}
         title="Buat SPH"
       />
     ),
