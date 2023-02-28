@@ -145,8 +145,6 @@ export default function SelectedPic({
   } else if (selectedCompany?.mainPic?.name) {
     picOrCompanyName = selectedCompany?.mainPic?.name;
   }
-  console.log(JSON.stringify(selectedCompany), 'selectedCompanystring');
-  console.log(JSON.stringify(selectedPic), 'selectedPicstring');
 
   return (
     <View style={style.container}>
