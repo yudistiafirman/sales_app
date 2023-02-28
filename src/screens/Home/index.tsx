@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import {
   View,
@@ -153,10 +152,77 @@ const Beranda = () => {
     }
   }, []);
 
+  const fetchVisitations = React.useCallback(
+    async (date: moment.Moment, search?: string) => {
+      setIsLoading(true);
+      setIsError(false);
+      try {
+        const options = {
+          page,
+          search: search || searchQuery,
+          ...(!search &&
+            !searchQuery && {
+              date: date.valueOf(),
+            }),
+        };
+        const { data: _data } = await getAllVisitations(options);
+
+        const dispalyData =
+          _data.data?.map(
+            (el: {
+              id: string;
+              status: string;
+              order: any;
+              finishDate: moment.MomentInput;
+              dateVisit: moment.MomentInput;
+              project: { name: any };
+            }) => {
+              const status =
+                el.status === 'VISIT' ? `Visit ke ${el.order}` : el.status;
+              const pilStatus = el.finishDate ? 'Selesai' : 'Belum Selesai';
+              const time = el.finishDate
+                ? moment(el.finishDate).format('hh:mm')
+                : null;
+              const location = el.project?.locationAddress.line1;
+              return {
+                id: el.id,
+                name: el.project?.name || '--',
+                location: location ? location : '-',
+                time,
+                status,
+                pilStatus,
+              };
+            }
+          ) || [];
+
+        setIsLoading(false);
+        if (page > 1) {
+          setData({
+            ..._data,
+            data: data.data.concat(dispalyData),
+          });
+        } else {
+          setData({
+            ..._data,
+            data: dispalyData,
+          });
+        }
+      } catch (error) {
+        customLog(error);
+        setIsLoading(false);
+        setIsError(true);
+        setErrorMessage(error.message);
+      }
+    },
+    [data.data, page, searchQuery]
+  );
+
   useFocusEffect(
     React.useCallback(() => {
       fetchTarget();
-    }, [])
+      fetchVisitations(selectedDate);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchTarget, selectedDate])
   );
 
   const renderUpdateDialog = () => {
@@ -204,72 +270,8 @@ const Beranda = () => {
     );
   };
 
-  const fetchVisitations = async (search?: string) => {
-    setIsLoading(true);
-    setIsError(false);
-    try {
-      const options = {
-        page,
-        search: search || searchQuery,
-        ...(!search &&
-          !searchQuery && {
-            date: selectedDate.valueOf(),
-          }),
-      };
-      const { data: _data } = await getAllVisitations(options);
-
-      const dispalyData =
-        _data.data?.map(
-          (el: {
-            id: string;
-            status: string;
-            order: any;
-            finishDate: moment.MomentInput;
-            dateVisit: moment.MomentInput;
-            project: { name: any };
-          }) => {
-            const status =
-              el.status === 'VISIT' ? `Visit ke ${el.order}` : el.status;
-            const pilStatus = el.finishDate ? 'Selesai' : 'Belum Selesai';
-            const time = el.finishDate
-              ? moment(el.finishDate).format('hh:mm')
-              : null;
-            const location = el.project?.locationAddress.line1;
-            return {
-              id: el.id,
-              name: el.project?.name || '--',
-              location: location ? location : '-',
-              time,
-              status,
-              pilStatus,
-            };
-          }
-        ) || [];
-
-      setIsLoading(false);
-      if (page > 0) {
-        setData({
-          ..._data,
-          data: data.data.concat(dispalyData),
-        });
-      } else {
-        setData({
-          ..._data,
-          data: dispalyData,
-        });
-      }
-    } catch (error) {
-      customLog(error);
-      setIsLoading(false);
-      setIsError(true);
-      setErrorMessage(error.message);
-    }
-  };
-
   React.useEffect(() => {
     crashlytics().log(TAB_HOME);
-    fetchVisitations();
-
     let currentVersionName = versionName;
     if (isDevelopment())
       currentVersionName = currentVersionName?.replace('(Dev)', '');
@@ -277,7 +279,7 @@ const Beranda = () => {
       currentVersionName?.split('.').join('') <
         getMinVersionUpdate(force_update)
     );
-  }, [page, selectedDate]);
+  }, [force_update]);
 
   const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
     setPage(1);
@@ -295,13 +297,13 @@ const Beranda = () => {
       ];
     }, [data]);
 
-  const onEndReached = () => {
+  const onEndReached = React.useCallback(() => {
     if (data.totalPage) {
       if (data.totalPage > 0 && page < data.totalPage) {
         setPage(page + 1);
       }
     }
-  };
+  }, [data.totalPage, page]);
 
   const getButtonsMenu = () => {
     let buttons = [
@@ -332,14 +334,14 @@ const Beranda = () => {
         icon: SvgNames.IC_MAKE_SCHEDULE,
         title: HOME_MENU.SCHEDULE,
         action: () => {
-          navigation.navigate(CREATE_SCHEDULE, {});
+          navigation.navigate(CREATE_SCHEDULE);
         },
       },
       {
         icon: SvgNames.IC_APPOINTMENT,
         title: HOME_MENU.APPOINTMENT,
         action: () => {
-          navigation.navigate(APPOINTMENT, {});
+          navigation.navigate(APPOINTMENT);
         },
       },
     ];
@@ -407,9 +409,10 @@ const Beranda = () => {
       data: [],
     });
     setPage(1);
-    fetchVisitations(text);
+    fetchVisitations(selectedDate, text);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onChangeWithDebounce = React.useCallback(debounce(reset, 500), []);
 
   const onRetryFetchVisitation = () => {
@@ -420,7 +423,7 @@ const Beranda = () => {
       totalPage: 0,
       data: [],
     });
-    fetchVisitations();
+    fetchVisitations(selectedDate);
   };
 
   const kunjunganAction = () => {
@@ -455,7 +458,15 @@ const Beranda = () => {
         onEndReached={onEndReached}
       />
     );
-  }, [data, isError]);
+  }, [
+    data.data,
+    errorMessage,
+    isError,
+    isLoading,
+    onChangeWithDebounce,
+    onEndReached,
+    searchQuery,
+  ]);
 
   async function visitationOnPress(
     dataItem: visitationDataType
@@ -508,7 +519,7 @@ const Beranda = () => {
         hideModalContentWhileAnimating={true}
         coverScreen={false}
         onModalHide={() => {
-          fetchVisitations();
+          fetchVisitations(selectedDate);
         }}
       >
         <View style={style.modalContent}>

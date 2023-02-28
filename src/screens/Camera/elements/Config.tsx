@@ -74,6 +74,7 @@ const Config = ({
         });
         animateElement();
         const existingVisitation = route?.params?.existingVisitation;
+        const operationAddedStep = route?.params?.operationAddedStep;
 
         navigation.navigate(IMAGE_PREVIEW, {
           photo: takenPhoto,
@@ -81,6 +82,7 @@ const Config = ({
           navigateTo,
           closeButton,
           existingVisitation,
+          operationAddedStep,
         });
       } catch (error) {
         Alert.alert('Camera Error');

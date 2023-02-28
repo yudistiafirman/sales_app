@@ -35,7 +35,7 @@ const HunterAndFarmers = () => {
 
   const goToHome = () => {
     dispatch(toggleHunterScreen(false));
-    navigation.navigate(TAB_ROOT);
+    navigation.navigate(TAB_ROOT, {});
     bStorage.setItem(HUNTER_AND_FARMER, moment().date());
   };
 

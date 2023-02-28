@@ -6,8 +6,12 @@ import { ENTRY_TYPE } from '@/models/EnumModel';
 import OperationList from '../element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { TAB_DISPATCH } from '@/navigation/ScreenNames';
+import { useDispatch } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 
 const Dispatch = () => {
+  const dispatch = useDispatch();
   const [isLoading] = useState(false);
 
   const data = useMemo(
@@ -24,6 +28,12 @@ const Dispatch = () => {
     []
   );
 
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(resetImageURLS());
+    }, [dispatch])
+  );
+
   React.useEffect(() => {
     crashlytics().log(TAB_DISPATCH);
   }, []);
@@ -31,7 +41,7 @@ const Dispatch = () => {
   return (
     <View style={style.container}>
       <OperationList
-        role={ENTRY_TYPE.SECURITY} // change from redux state
+        role={ENTRY_TYPE.DISPATCH}
         isLoading={isLoading}
         data={data}
       />

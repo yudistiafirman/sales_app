@@ -21,11 +21,18 @@ const _styles: Styles = {
   },
 };
 
-export default function OperationHeaderRight() {
+export default function OperationHeaderRight(badgeName: string) {
   return (
-    <View style={_styles.chipView}>
+    <View
+      style={[
+        _styles.chipView,
+        (badgeName === 'Dispatch' || badgeName === 'Return') && {
+          marginEnd: layout.pad.lg,
+        },
+      ]}
+    >
       <View style={_styles.chip}>
-        <Text style={_styles.chipText}>{'Operation'}</Text>
+        <Text style={_styles.chipText}>{badgeName}</Text>
       </View>
     </View>
   );

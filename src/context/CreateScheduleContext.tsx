@@ -32,8 +32,6 @@ const initialData: CreateScheduleState = {
   step: 0,
   stepOne: {
     companyName: '',
-    title: '',
-    products: [{}],
   },
   stepTwo: {
     deliveryDate: '',

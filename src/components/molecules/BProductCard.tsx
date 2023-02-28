@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
+import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -14,6 +14,8 @@ type BProductCardType = {
   onPressDelete?: () => void;
   onPressEdit?: () => void;
   backgroundColor?: 'white' | 'default';
+  hideVolume?: boolean;
+  withoutBorder?: boolean;
 };
 
 export default function BProductCard({
@@ -24,6 +26,8 @@ export default function BProductCard({
   onPressDelete,
   onPressEdit,
   backgroundColor = 'default',
+  hideVolume = false,
+  withoutBorder = false,
 }: BProductCardType) {
   return (
     <View
@@ -31,10 +35,20 @@ export default function BProductCard({
         backgroundColor === 'default'
           ? style.containerDefault
           : style.containerWhite,
+        withoutBorder && style.noBorder,
       ]}
     >
       <View style={style.nameIcons}>
-        <Text style={style.productName}>{name}</Text>
+        <Text
+          style={[
+            style.productName,
+            backgroundColor === 'default' && {
+              fontFamily: fonts.family.montserrat[500],
+            },
+          ]}
+        >
+          {name}
+        </Text>
         <View style={style.iconsContainer}>
           {onPressDelete && (
             <TouchableOpacity onPress={onPressDelete}>
@@ -60,7 +74,11 @@ export default function BProductCard({
       </View>
       <BSpacer size={'extraSmall'} />
       <View style={style.detail}>
-        <Text style={style.detailText}>{volume > 0 ? volume + 'm³' : '-'}</Text>
+        {!hideVolume && (
+          <Text style={style.detailText}>
+            {volume > 0 ? volume + ' m³' : '-'}
+          </Text>
+        )}
         <Text style={style.detailText}>
           IDR {pricePerVol ? formatCurrency(pricePerVol) : '-'}/m³
         </Text>
@@ -73,8 +91,11 @@ export default function BProductCard({
 }
 
 const style = StyleSheet.create({
+  noBorder: {
+    borderWidth: 0,
+  },
   containerDefault: {
-    width: '100%',
+    flex: 1,
     padding: layout.pad.md,
     borderRadius: layout.radius.md,
     backgroundColor: colors.tertiary,
