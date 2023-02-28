@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     marginHorizontal: layout.pad.lg,
   },
   date: {
-    fontFamily: font.family.montserrat['400'],
+    fontFamily: font.family.montserrat[400],
     fontSize: font.size.md,
   },
 });

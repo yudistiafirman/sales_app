@@ -181,7 +181,7 @@ const SalesStack = (Stack: any) => {
         key={VISIT_HISTORY}
         component={VisitHistory}
         options={{
-          headerTitle: '',
+          headerTitle: false,
           headerTitleAlign: 'center',
         }}
       />

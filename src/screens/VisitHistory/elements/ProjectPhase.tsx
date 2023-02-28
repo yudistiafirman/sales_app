@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   textFase: {
     marginLeft: (layout.pad.xs + layout.pad.sm) * 2,
-    fontFamily: font.family.montserrat['300'],
+    fontFamily: font.family.montserrat[300],
     fontSize: font.size.md,
     color: colors.textInput.inActive,
     marginTop: -layout.pad.sm,

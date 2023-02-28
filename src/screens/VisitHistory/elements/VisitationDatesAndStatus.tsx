@@ -168,17 +168,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   date: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
     color: colors.text.darker,
   },
   status: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
   },
   touchableText: {
     marginRight: layout.pad.md,
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
     color: colors.primary,
   },

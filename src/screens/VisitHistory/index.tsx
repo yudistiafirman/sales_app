@@ -13,7 +13,7 @@ import HistoryDetails from './elements/HistoryDetails';
 import HistoryHeader from './elements/HistoryHeader';
 import LocationText from './elements/LocationText';
 
-type VisitHistoryRoute = RouteProp<RootStackParamList['VISIT_HISTORY']>;
+type VisitHistoryRoute = RouteProp<RootStackParamList, 'VISIT_HISTORY'>;
 
 const VisitHistory = () => {
   const route = useRoute<VisitHistoryRoute>();
@@ -27,7 +27,6 @@ const VisitHistory = () => {
       send('assignParams', { value: projectId });
     }
   }, [route.params, send]);
-
 
   useCustomHeaderCenter({
     customHeaderCenter: <HistoryHeader projectName={projectName} />,

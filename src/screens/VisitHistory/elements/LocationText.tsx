@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     oaddingTop: layout.pad.lg,
   },
   viewMoreText: {
-    fontFamily: font.family.montserrat['300'],
+    fontFamily: font.family.montserrat[300],
     fontSize: font.size.xs,
     color: colors.text.blue,
   },
