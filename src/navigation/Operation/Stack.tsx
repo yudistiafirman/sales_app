@@ -1,7 +1,7 @@
 import Preview from '@/screens/Camera/Preview';
 import CreateDO from '@/screens/Operation/CreateDO';
 import SubmitForm from '@/screens/Operation/SubmitForm';
-import Camera from '@/screens/Camera';
+import CameraScreen from '@/screens/Camera';
 import * as React from 'react';
 import {
   CAMERA,
@@ -20,7 +20,7 @@ const OperationStack = (Stack: any) => {
       <Stack.Screen
         name={CAMERA}
         key={CAMERA}
-        component={Camera}
+        component={CameraScreen}
         options={{
           headerTitle: CAMERA_TITLE,
         }}
