@@ -33,6 +33,7 @@ import FirstStep from './element/FirstStep';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { useDispatch } from 'react-redux';
+import { CREATE_SCHEDULE } from '@/navigation/ScreenNames';
 
 const labels = ['Cari PO', 'Detil Pengiriman'];
 
@@ -146,7 +147,7 @@ const CreateSchedule = () => {
       populateData(existingSchedule, updateValueOnstep);
     }
     return () => {
-      dispatch(resetImageURLS());
+      dispatch(resetImageURLS({ source: CREATE_SCHEDULE }));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
