@@ -12,10 +12,13 @@ export type RootStackParamList = {
     closeButton?: boolean;
     existingVisitation?: visitationListResponse;
     operationAddedStep?: string;
+    disabledDocPicker?: boolean;
+    disabledGalleryPicker?: boolean;
   };
   IMAGE_PREVIEW: {
-    photo: PhotoFile | undefined;
+    photo?: PhotoFile;
     photoTitle: string;
+    picker?: any;
     navigateTo?: string;
     closeButton?: boolean;
     existingVisitation?: visitationListResponse;

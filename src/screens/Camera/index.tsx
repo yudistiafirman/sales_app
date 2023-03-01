@@ -23,6 +23,16 @@ const CameraScreen = () => {
   const navigateTo = route?.params?.navigateTo;
   const closeButton = route?.params?.closeButton;
   const photoTitle = route?.params?.photoTitle;
+  const existingVisitation = route?.params?.existingVisitation;
+  const operationAddedStep = route?.params?.operationAddedStep;
+  const disabledDocPicker =
+    route?.params?.disabledDocPicker !== undefined
+      ? route?.params?.disabledDocPicker
+      : true;
+  const disabledGalleryPicker =
+    route?.params?.disabledGalleryPicker !== undefined
+      ? route?.params?.disabledGalleryPicker
+      : true;
   useHeaderTitleChanged({ title: 'Foto ' + photoTitle });
   if (closeButton) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -63,11 +73,10 @@ const CameraScreen = () => {
           flash: 'off',
         });
         animateElement();
-        const existingVisitation = route?.params?.existingVisitation;
-        const operationAddedStep = route?.params?.operationAddedStep;
 
         navigation.navigate(IMAGE_PREVIEW, {
           photo: takenPhoto,
+          picker: undefined,
           photoTitle,
           navigateTo,
           closeButton,
@@ -78,6 +87,18 @@ const CameraScreen = () => {
         Alert.alert('Camera Error');
       }
     }
+  };
+
+  const onFileSelect = (data: any) => {
+    navigation.navigate(IMAGE_PREVIEW, {
+      photo: undefined,
+      picker: data,
+      photoTitle,
+      navigateTo,
+      closeButton,
+      existingVisitation,
+      operationAddedStep,
+    });
   };
 
   const isFocused = useIsFocused();
@@ -104,7 +125,13 @@ const CameraScreen = () => {
               hdr
               lowLightBoost
             />
-            <CameraButton takePhoto={takePhoto} />
+            <CameraButton
+              takePhoto={takePhoto}
+              onGalleryPress={(data) => onFileSelect(data)}
+              onDocPress={(data) => onFileSelect(data)}
+              disabledDocPicker={disabledDocPicker}
+              disabledGalleryPicker={disabledGalleryPicker}
+            />
           </View>
         )}
       </SafeAreaView>

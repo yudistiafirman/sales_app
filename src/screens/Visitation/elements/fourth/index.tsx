@@ -251,8 +251,8 @@ const Fourth = () => {
         if (uploadedFilesResponse.length === 0) {
           const photoFiles = visitationPhotoURLs.map((photo) => {
             return {
-              ...photo.photo,
-              uri: photo?.photo?.uri?.replace('file:', 'file://'),
+              ...photo.file,
+              uri: photo?.file?.uri?.replace('file:', 'file://'),
             };
           });
 
@@ -265,8 +265,7 @@ const Fourth = () => {
             const photoNamee = `${photo.name}.jpg`;
             const foundObject = visitationPhotoURLs.find(
               (obj) =>
-                obj?.photo?.name === photoName ||
-                obj?.photo?.name === photoNamee
+                obj?.file?.name === photoName || obj?.file?.name === photoNamee
             );
             if (foundObject) {
               // return {

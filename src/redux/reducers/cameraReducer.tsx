@@ -7,15 +7,7 @@ import {
   CREATE_SCHEDULE,
   CREATE_VISITATION,
 } from '@/navigation/ScreenNames';
-
-interface photoType {
-  photo: {
-    uri: string;
-    type: string;
-    name: string;
-  };
-  type: 'COVER' | 'GALLERY';
-}
+import { LocalFileType } from '@/interfaces/LocalFileType';
 
 type fileResponse = {
   id: string;
@@ -23,17 +15,17 @@ type fileResponse = {
 };
 
 export interface MainState {
-  photoURLs: photoType[];
-  visitationPhotoURLs: photoType[];
-  createDepositPhotoURLs: photoType[];
-  createSchedulePhotoURLs: photoType[];
-  operationPhotoURLs: photoType[];
+  localURLs: LocalFileType[];
+  visitationPhotoURLs: LocalFileType[];
+  createDepositPhotoURLs: LocalFileType[];
+  createSchedulePhotoURLs: LocalFileType[];
+  operationPhotoURLs: LocalFileType[];
   uploadedFilesResponse: fileResponse[];
   uploadedRequiredDocsResponse: requiredDocType[];
 }
 
 const initialState: MainState = {
-  photoURLs: [],
+  localURLs: [],
   visitationPhotoURLs: [],
   createDepositPhotoURLs: [],
   createSchedulePhotoURLs: [],
@@ -48,29 +40,29 @@ export const cameraSlice = createSlice({
   reducers: {
     setImageURLS: (
       state,
-      action: PayloadAction<{ photo: photoType; source?: string }>
+      action: PayloadAction<{ file: LocalFileType; source?: string }>
     ) => {
       switch (action.payload.source) {
         case CREATE_VISITATION:
           state.visitationPhotoURLs = [
             ...state.visitationPhotoURLs,
-            action.payload.photo,
+            action.payload.file,
           ];
           return;
         case CREATE_DEPOSIT:
           state.createDepositPhotoURLs = [
             ...state.createDepositPhotoURLs,
-            action.payload.photo,
+            action.payload.file,
           ];
           return;
         case CREATE_SCHEDULE:
           state.createSchedulePhotoURLs = [
             ...state.createSchedulePhotoURLs,
-            action.payload.photo,
+            action.payload.file,
           ];
           return;
         default:
-          state.photoURLs = [...state.photoURLs, action.payload.photo];
+          state.localURLs = [...state.localURLs, action.payload.file];
           return;
       }
     },
@@ -86,7 +78,7 @@ export const cameraSlice = createSlice({
           state.createSchedulePhotoURLs = [];
           return;
         default:
-          state.photoURLs = [];
+          state.localURLs = [];
           return;
       }
     },
@@ -112,9 +104,9 @@ export const cameraSlice = createSlice({
           state.createSchedulePhotoURLs = [...currentImages];
           return;
         default:
-          currentImages = state.photoURLs;
+          currentImages = state.localURLs;
           currentImages.splice(action.payload.pos, 1);
-          state.photoURLs = [...currentImages];
+          state.localURLs = [...currentImages];
           return;
       }
     },

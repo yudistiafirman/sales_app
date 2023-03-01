@@ -10,6 +10,7 @@ import { colors, layout } from '@/constants';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { resScale } from '@/utils';
+import Pdf from 'react-native-pdf';
 
 type BGalleryType = {
   picts: any[];
@@ -39,7 +40,22 @@ export default function BGallery({
         picts.map((image, index) => {
           return (
             <View key={index.toString()} style={style.container}>
-              <Image source={image?.photo} style={style.imageStyle} />
+              {image?.isFromPicker ? (
+                <>
+                  {image?.file?.type === 'image/jpeg' ||
+                  image?.file?.type === 'image/png' ? (
+                    <Image source={image?.file} style={style.imageStyle} />
+                  ) : (
+                    <Pdf
+                      source={{ uri: image?.file?.uri }}
+                      style={style.imageStyle}
+                      page={1}
+                    />
+                  )}
+                </>
+              ) : (
+                <Image source={image?.file} style={style.imageStyle} />
+              )}
               {image?.type === 'GALLERY' && removePict && (
                 <TouchableOpacity
                   style={style.closeIcon}
