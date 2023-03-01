@@ -1,6 +1,5 @@
 import {
   BBackContinueBtn,
-  BButtonPrimary,
   BHeaderIcon,
   BottomSheetAddPIC,
   BSpacer,
@@ -12,12 +11,10 @@ import {
   AppointmentProvider,
   StepOne,
 } from '@/context/AppointmentContext';
-import React, { useCallback } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import * as React from 'react';
+import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import Steps from '../Sph/elements/Steps';
 import FirstStep from './element/FirstStep';
-import { colors } from '@/constants';
 import { resScale } from '@/utils';
 import { useAppointmentData } from '@/hooks';
 import {
@@ -28,7 +25,7 @@ import {
   visitationPayload,
 } from '@/interfaces';
 import SecondStep from './element/SecondStep';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import { postBookingAppointment } from '@/actions/ProductivityActions';
 import { useDispatch } from 'react-redux';
@@ -73,16 +70,26 @@ const Appointment = () => {
     crashlytics().log(APPOINTMENT);
   }, []);
 
-  const renderBtnIcon = () => (
-    <Icon
-      name="right"
-      style={{ marginTop: layout.pad.sm }}
-      color={colors.white}
-      size={resScale(24)}
-    />
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        if (values.step > 0) {
+          onBackPress();
+        } else {
+          navigation.goBack();
+        }
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [values.step])
   );
 
-  const validateCompanyDetailsForm = useCallback(() => {
+  const validateCompanyDetailsForm = React.useCallback(() => {
     const errors: Partial<StepOne> = {};
     if (stepOne.customerType === 'company') {
       if (!stepOne.company.Company?.title) {
@@ -106,7 +113,7 @@ const Appointment = () => {
     return errors;
   }, [customerType, stepOne]);
 
-  const goToVisitationDateStep = useCallback(() => {
+  const goToVisitationDateStep = React.useCallback(() => {
     const errors = validateCompanyDetailsForm();
     if (JSON.stringify(errors) !== '{}') {
       Object.keys(errors).forEach((val) => {
@@ -123,7 +130,7 @@ const Appointment = () => {
     }
   }, [dispatchValue, validateCompanyDetailsForm]);
 
-  const submitAppoinmentData = useCallback(async () => {
+  const submitAppoinmentData = React.useCallback(async () => {
     const today = moment();
     const payload = {
       visitation: {
@@ -245,7 +252,7 @@ const Appointment = () => {
     values.selectedDate,
   ]);
 
-  const onNext = useCallback(() => {
+  const onNext = React.useCallback(() => {
     if (inCustomerDataStep) {
       goToVisitationDateStep();
     } else {
@@ -253,7 +260,7 @@ const Appointment = () => {
     }
   }, [goToVisitationDateStep, inCustomerDataStep, submitAppoinmentData]);
 
-  const onBackPress = useCallback(() => {
+  const onBackPress = React.useCallback(() => {
     if (inVisitationDateStep) {
       if (selectedDate) {
         dispatchValue({
@@ -289,39 +296,41 @@ const Appointment = () => {
     }
   }
 
+  const onTabPress = (nextStep: number) => () => {
+    if (step !== nextStep)
+      if (nextStep > 0) {
+        onNext();
+      } else {
+        onBackPress();
+      }
+  };
+
   return (
     <View style={style.container}>
       <BStepperIndicator
         stepsDone={stepDone}
+        stepOnPress={(pos: number) => {
+          onTabPress(pos)();
+        }}
         currentStep={step}
         labels={labels}
       />
       <BSpacer size="small" />
       <View style={style.content}>
         <Steps currentPosition={step} stepsToRender={stepsToRender} />
-
-        {btnShown && (
-          <View style={style.buttonAction}>
-            {step === 0 ? (
-              <View style={{ width: '100%' }}>
-                <BButtonPrimary
-                  title="Lanjut"
-                  onPress={onNext}
-                  disable={!isCanAdvanceToStep2() && !selectedDate}
-                  // buttonStyle={{ width: resScale(202) }}
-                  rightIcon={() => renderBtnIcon()}
-                />
-              </View>
-            ) : (
-              <BBackContinueBtn
-                backText="Kembali"
-                continueText="Lanjut"
-                onPressBack={onBackPress}
-                onPressContinue={onNext}
-                disableContinue={!selectedDate}
-              />
-            )}
-          </View>
+        <BSpacer size={'extraSmall'} />
+        {values.step > -1 && btnShown && (
+          <BBackContinueBtn
+            onPressContinue={onNext}
+            onPressBack={onBackPress}
+            continueText={'Lanjut'}
+            unrenderBack={values.step > 0 ? false : true}
+            disableContinue={
+              values.step > 0
+                ? !selectedDate
+                : !isCanAdvanceToStep2() && !selectedDate
+            }
+          />
         )}
       </View>
       <BottomSheetAddPIC

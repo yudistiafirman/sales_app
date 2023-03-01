@@ -25,6 +25,7 @@ const colors = {
   status: {
     grey: '#D7D7D7',
     yellow: '#FFE885',
+    secondaryYellow: '#FFCD03',
     orange: '#FFD494',
     red: '#FF8F8F',
     black: '#191919',

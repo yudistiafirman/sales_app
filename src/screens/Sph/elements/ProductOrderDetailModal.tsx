@@ -259,7 +259,7 @@ export default function ProductCartModal({
             }
             onPress={() => {
               choseProduct((curr) => {
-                const currentValue = curr;
+                const currentValue = [...curr];
                 const newData = {
                   product: productData,
                   productId: productData.id,
@@ -282,7 +282,7 @@ export default function ProductCartModal({
               setIsVisible((curr) => !curr);
               setTimeout(() => {
                 resetSelectedProduct();
-              }, 200);
+              }, 100);
             }}
           />
         </View>

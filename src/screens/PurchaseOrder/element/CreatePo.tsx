@@ -19,6 +19,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { PO } from '@/navigation/ScreenNames';
 
 const CreatePo = () => {
   const navigation = useNavigation();
@@ -53,7 +54,7 @@ const CreatePo = () => {
   const goToCamera = useCallback(() => {
     navigation.navigate('CAMERA', {
       photoTitle: 'File PO',
-      navigateTo: 'PO',
+      navigateTo: PO,
     });
   }, []);
 
@@ -155,17 +156,15 @@ const CreatePo = () => {
           </View>
         ) : (
           <View>
-            {isProvidedByCustomers && (
-              <>
-                <BImageList
-                  onAddImage={addMoreImages}
-                  imageData={poImages}
-                  onRemoveImage={(idx) => deleteImages(idx)}
-                />
-                <BSpacer size="small" />
-                <BForm inputs={inputs} />
-              </>
-            )}
+            <>
+              <BImageList
+                onAddImage={addMoreImages}
+                imageData={poImages}
+                onRemoveImage={(idx) => deleteImages(idx)}
+              />
+              <BSpacer size="small" />
+              <BForm inputs={inputs} />
+            </>
 
             {isUserChoosedSph ? (
               <>

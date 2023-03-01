@@ -42,6 +42,7 @@ import {
   SPH_TITLE,
   TRANSACTION_DETAIL,
   TRANSACTION_DETAIL_TITLE,
+  VISIT_HISTORY,
 } from '../ScreenNames';
 import CustomerDetail from '@/screens/CustomerDetail';
 import PurchaseOrderWithProvider from '@/screens/PurchaseOrder';
@@ -50,6 +51,7 @@ import PriceList from '@/screens/Price';
 import AppointmentWithProvider from '@/screens/Appointment';
 import SearchPO from '@/screens/SearchPO';
 import RequiredDocuments from '@/screens/RequiredDocuments';
+import VisitHistory from '@/screens/VisitHistory';
 import Deposit from '@/screens/Deposit';
 
 const SalesStack = (Stack: any) => {
@@ -181,6 +183,15 @@ const SalesStack = (Stack: any) => {
         component={RequiredDocuments}
         options={{
           headerTitle: DOCUMENTS_TITLE,
+          headerTitleAlign: 'center',
+        }}
+      />
+      <Stack.Screen
+        name={VISIT_HISTORY}
+        key={VISIT_HISTORY}
+        component={VisitHistory}
+        options={{
+          headerTitle: false,
           headerTitleAlign: 'center',
         }}
       />

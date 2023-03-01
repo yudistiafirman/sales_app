@@ -1,4 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-community/async-storage';
+import { persistReducer, persistStore } from 'redux-persist';
 import authReducer from './reducers/authReducer';
 import commonReducer from './reducers/commonReducer';
 import cameraReducer from './reducers/cameraReducer';
@@ -11,6 +13,17 @@ import { createXStateMiddleware } from './middleware/createXStateMiddleware';
 import purchaseOrderReducer, {
   purchaseOrderSlice,
 } from './reducers/purchaseOrder';
+import SphReducer from './reducers/SphReducer';
+import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
+
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  stateReconciler: autoMergeLevel1,
+};
+
+const sphStatePersisted = persistReducer(persistConfig, SphReducer);
+const poStatePersisted = persistReducer(persistConfig,purchaseOrderReducer)
 
 export const store = configureStore({
   reducer: {
@@ -22,11 +35,12 @@ export const store = configureStore({
     camera: cameraReducer,
     order: orderReducer,
     snackbar: snackbarReducer,
-    purchaseOrder: purchaseOrderReducer,
+    purchaseOrder: poStatePersisted,
+    sphState: sphStatePersisted,
   },
   middleware: [createXStateMiddleware(purchaseOrderSlice)],
 });
-
+export const persistor = persistStore(store);
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}

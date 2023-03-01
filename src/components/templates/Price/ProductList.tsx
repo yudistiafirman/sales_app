@@ -38,6 +38,7 @@ interface ProductListProps<ArrayOfObject> {
   onRefresh?: () => void;
   onPress?: (data: any) => void;
   onAction?: () => void;
+  disablePressed?: boolean;
 }
 
 const ProductList = <ArrayOfObject extends productsData>({
@@ -50,8 +51,9 @@ const ProductList = <ArrayOfObject extends productsData>({
   loadProduct,
   isError,
   errorMessage,
-  onPress = () => {},
+  onPress,
   onAction,
+  disablePressed = false,
 }: ProductListProps<ArrayOfObject>) => {
   const renderItem: ListRenderItem<productsData> = useCallback(({ item }) => {
     const fc =
@@ -61,6 +63,7 @@ const ProductList = <ArrayOfObject extends productsData>({
         onPress={() => {
           onPress(item);
         }}
+        disabled={disablePressed}
       >
         <PriceListCard
           productName={`${item?.display_name}${fc}`}

@@ -11,7 +11,7 @@ import { Details } from 'react-native-maps';
 import { DateData } from 'react-native-calendars';
 
 interface Input {
-  label: string;
+  label?: string;
   isRequire: boolean;
   type:
     | 'quantity'
@@ -28,11 +28,12 @@ interface Input {
     | 'fileInput'
     | 'map'
     | 'autocomplete'
-    | 'calendar';
+    | 'calendar'
+    | 'calendar-time';
   hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   onFocus?: (e: any) => void;
-  value: string | any;
+  value?: string | any;
   placeholder?: string;
   loading?: boolean;
   isError?: boolean;
@@ -53,6 +54,25 @@ interface Input {
     onDayPress: (day: DateData) => void;
     isCalendarVisible: boolean;
     setCalendarVisible: (flag: boolean) => void;
+  };
+  calendarTime?: {
+    onDayPress: (day: DateData) => void;
+    onTimeChange: (time: any) => void;
+    isCalendarVisible: boolean;
+    isTimeVisible: boolean;
+    setCalendarVisible: (flag: boolean) => void;
+    setTimeVisible: (flag: boolean) => void;
+    labelOne: string;
+    labelTwo: string;
+    errMsgOne?: string;
+    errMsgTwo?: string;
+    placeholderOne?: string;
+    placeholderTwo?: string;
+    valueOne: string;
+    valueTwo: string;
+    valueTwoMock: Date;
+    isErrorOne?: boolean;
+    isErrorTwo?: boolean;
   };
   dropdown?: {
     items: {
@@ -287,25 +307,28 @@ interface chosenProductType {
   };
 }
 
+type selectedPicType = {
+  id?: string;
+  name: string;
+  phone: string;
+  email?: string;
+  position?: string;
+  isSelected?: boolean;
+} | null;
+
+type billingAddressType = {
+  name: string;
+  phone: string | number;
+  addressAutoComplete: { [key: string]: any };
+  fullAddress: string;
+};
+
 interface SphStateInterface {
   selectedCompany: selectedCompanyInterface | null;
-  picList: PIC[];
   projectAddress: Address | null;
-  selectedPic: {
-    id?: string;
-    name: string;
-    phone: string;
-    email?: string;
-    position?: string;
-    isSelected?: boolean;
-  } | null;
+  selectedPic: selectedPicType;
   isBillingAddressSame: boolean;
-  billingAddress: {
-    name: string;
-    phone: string | number;
-    addressAutoComplete: { [key: string]: any };
-    fullAddress: string;
-  };
+  billingAddress: billingAddressType;
   distanceFromLegok: number | null;
   paymentType: 'CBD' | 'CREDIT' | '';
   paymentRequiredDocuments: { [key: string]: any };
@@ -398,6 +421,7 @@ interface visitationListResponse {
       lat?: string;
       lon?: string;
     };
+    quotationLetterId?: null | string;
   };
 }
 
@@ -428,7 +452,7 @@ interface visitationPayload {
   paymentType?: 'CBD' | 'CREDIT';
   estimationWeek?: number;
   estimationMonth?: number;
-  visitationNotes?: string;
+  visitNotes?: string;
   dateVisit?: number;
   finishDate?: number; // ??
   bookingDate?: number;
@@ -437,7 +461,9 @@ interface visitationPayload {
   isBooking?: boolean; // ??
   status?: 'VISIT' | 'SPH' | 'REJECTED' | '';
   files: filesType[];
-  products: { id: string }[];
+  products?: {
+    id?: string;
+  }[];
 }
 
 interface filesType {
@@ -657,4 +683,7 @@ export type {
   Docs,
   ProjectDetail,
   requiredPic,
+  selectedPicType,
+  billingAddressType,
+  chosenProductType,
 };

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/Feather';
 import resScale from '@/utils/resScale';
 import HighlightText from '../../atoms/BHighlightText';
 import { layout } from '@/constants';
@@ -34,6 +34,7 @@ type OperationCardType = {
   useChevron?: boolean;
   color?: string;
   customStyle?: StyleProp<ViewStyle>;
+  isQuantity?: boolean;
 };
 
 export default function BOperationCard({
@@ -43,6 +44,7 @@ export default function BOperationCard({
   color,
   customStyle,
   clickable,
+  isQuantity = true,
 }: OperationCardType) {
   return (
     <TouchableOpacity
@@ -76,11 +78,17 @@ export default function BOperationCard({
               <BLocationText location={item.addressID} />
             </View>
           )}
-          {item.qty && <Quantity name={item.qty} date={item.date} />}
+          {item.qty && (
+            <Quantity
+              isQuantity={isQuantity}
+              name={item.qty}
+              date={item.date}
+            />
+          )}
         </View>
         {useChevron && (
           <View style={style.rightSide}>
-            <MaterialIcon size={20} name="chevron-right" />
+            <Icons size={20} name="chevron-right" />
           </View>
         )}
       </View>

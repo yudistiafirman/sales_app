@@ -399,6 +399,7 @@ const POMachine =
           };
         }),
         assignImages: assign((context, event) => {
+          console.log('ini event',event.value)
           return {
             openCamera: false,
             poImages: [...context.poImages, event.value],

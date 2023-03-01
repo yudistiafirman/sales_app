@@ -1,4 +1,4 @@
-import { MiddlewareAPI } from 'redux';
+import { MiddlewareAPI } from '@reduxjs/toolkit';
 import {
   AnyEventObject,
   EventObject,

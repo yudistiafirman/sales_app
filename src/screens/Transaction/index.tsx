@@ -41,7 +41,7 @@ const Transaction = () => {
   useCustomHeaderRight({
     customHeaderRight: (
       <BTouchableText
-        onPress={() => navigation.navigate(SPH)}
+        onPress={() => navigation.navigate(SPH, {})}
         title="Buat SPH"
       />
     ),
@@ -58,6 +58,7 @@ const Transaction = () => {
   }, []);
 
   const getOneOrder = async (id: string) => {
+    customLog('ini id',id)
     try {
       const { data } = await getOrderByID(id);
       navigation.navigate(TRANSACTION_DETAIL, {

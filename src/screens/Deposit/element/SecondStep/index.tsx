@@ -1,16 +1,16 @@
 import * as React from 'react';
 import {
   BDivider,
+  BGalleryDeposit,
   BNestedProductCard,
   BSearchBar,
   BSpacer,
-  BText,
   BTouchableText,
+  BVisitationCard,
 } from '@/components';
 import { TextInput } from 'react-native-paper';
 import {
   DeviceEventEmitter,
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -22,7 +22,6 @@ import { resScale } from '@/utils';
 import { CREATE_DEPOSIT, SEARCH_PO } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { CreateDepositContext } from '@/context/CreateDepositContext';
-import POListCard from '@/components/templates/PO/POListCard';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import formatCurrency from '@/utils/formatCurrency';
@@ -85,7 +84,7 @@ export default function SecondStep() {
     if (stateOne.deposit?.nominal) deposit = stateOne.deposit?.nominal;
     let allProducts: any[] = [];
     sphs?.forEach((sp) => {
-      if (sp.products) allProducts.push(...sp.products);
+      if (sp?.products) allProducts.push(...sp.products);
     });
 
     const totalAmountProducts = allProducts
@@ -96,41 +95,15 @@ export default function SecondStep() {
   };
 
   const { companyName, locationName, sphs } = stateTwo;
-  const { deposit, picts } = stateOne;
+  const { deposit } = stateOne;
   return (
     <SafeAreaView style={style.flexFull}>
       {deposit && (
-        <>
-          <View style={style.summaryContainer}>
-            {picts && picts.length > 0 && (
-              <View
-                style={{
-                  width: resScale(40),
-                  height: resScale(40),
-                  borderRadius: layout.radius.md,
-                }}
-              >
-                <Image style={style.flexFull} source={picts[0]?.photo} />
-                {picts.length > 1 && (
-                  <>
-                    <View style={style.overlay} />
-                    <Text style={style.textOverlay}>
-                      {'+' + (picts.length - 1)}
-                    </Text>
-                  </>
-                )}
-              </View>
-            )}
-            <View style={style.rightText}>
-              <BText bold="500" sizeInNumber={fonts.size.lg}>
-                {'IDR ' + formatCurrency(deposit?.nominal)}
-              </BText>
-              <BText bold="400" sizeInNumber={fonts.size.md}>
-                {deposit?.createdAt}
-              </BText>
-            </View>
-          </View>
-        </>
+        <BGalleryDeposit
+          nominal={deposit?.nominal}
+          createdAt={deposit?.createdAt}
+          picts={deposit?.picts}
+        />
       )}
       <>
         <View>
@@ -145,11 +118,10 @@ export default function SecondStep() {
                 style={[style.flexFull, { marginBottom: layout.pad.xxl }]}
               >
                 <View style={style.flexFull}>
-                  <POListCard
-                    companyName={companyName}
-                    locationName={locationName}
-                    useChevron={false}
-                    customAction={customAction}
+                  <BSpacer size={'extraSmall'} />
+                  <BVisitationCard
+                    item={{ name: companyName, location: locationName }}
+                    customIcon={customAction}
                   />
                   <BSpacer size={'extraSmall'} />
                 </View>
@@ -161,6 +133,7 @@ export default function SecondStep() {
                       selectedPO={selectedPO}
                       onValueChange={onValueChanged}
                       deposit={deposit?.nominal}
+                      withoutSeparator
                     />
                   )}
                 </View>
@@ -194,44 +167,12 @@ const style = StyleSheet.create({
   flexFull: {
     flex: 1,
   },
-  overlay: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.black,
-    opacity: 0.5,
-  },
-  textOverlay: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    color: colors.white,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    textAlignVertical: 'center',
-  },
-  rightText: {
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-  },
   touchable: {
     position: 'absolute',
     width: '100%',
     borderRadius: resScale(4),
     height: resScale(45),
     zIndex: 2,
-  },
-  summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: colors.tertiary,
-    borderRadius: layout.radius.sm,
-    borderColor: colors.border.default,
-    borderWidth: 1,
-    padding: layout.pad.md,
   },
   summary: {
     color: colors.text.darker,

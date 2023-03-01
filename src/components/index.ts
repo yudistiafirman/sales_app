@@ -47,6 +47,7 @@ export { default as BCompanyMapCard } from './molecules/BCompanyMapCard';
 export { default as BExpandableSPHCard } from './molecules/BExpandableSPHCard';
 export { default as BLocationDetail } from './molecules/BLocationDetail';
 export { default as BGallery } from './molecules/BGallery';
+export { default as BGalleryDeposit } from './molecules/BGalleryDeposit';
 export { default as PopUpQuestion } from './molecules/PopUpQuestion';
 export { default as BExpandableProductCard } from './molecules/BExpandableProductCard';
 

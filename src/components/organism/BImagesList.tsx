@@ -25,6 +25,7 @@ const BImageList = ({
 }: BImageListProps) => {
   const renderItem: ListRenderItem<ImageData> = useCallback(
     ({ item, index }) => {
+      console.log('ini item',item.photo?.uri)
       if (!item.photo) {
         return <BAddImage onAddImage={onAddImage} />;
       }

@@ -61,7 +61,11 @@ function payloadMapper(
     payload.pic = stepTwo.pics;
   }
   payload.visitation.order = 1;
-  payload.visitation.status = type;
+  if (type === 'REJECTED') {
+    payload.visitation.status = type;
+  } else {
+    payload.visitation.status = 'VISIT';
+  }
 
   const { locationAddress, createdLocation } = stepOne;
   const { estimationDate } = stepThree;
@@ -112,7 +116,7 @@ function payloadMapper(
     payload.visitation.estimationMonth = estimationDate.estimationMonth;
   }
   if (stepThree.notes) {
-    payload.visitation.visitationNotes = stepThree.notes;
+    payload.visitation.visitNotes = stepThree.notes;
   }
   if (stepFour.selectedDate && type === 'VISIT') {
     const selectedDate = moment(stepFour.selectedDate.date);
@@ -324,7 +328,7 @@ const Fourth = () => {
           setIsLastStepVisible(false);
           if (type === 'SPH') {
             navigation.dispatch(
-              StackActions.replace(SPH_TITLE, {
+              StackActions.replace(SPH, {
                 projectId: response.projectId,
               })
             );

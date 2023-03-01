@@ -8,11 +8,11 @@ import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 interface IProps {
-  name: string;
-  category: {
+  name?: string;
+  category?: {
     name: string;
   };
-  onDelete: () => void;
+  onDelete?: () => void;
 }
 
 const styles: Styles = {
@@ -66,14 +66,16 @@ const ProductChip = ({ name, category, onDelete }: IProps) => {
     <View style={styles.container}>
       <BText bold="bold">{name}</BText>
       <View style={styles.category}>
-        <BText style={styles.text}>{category.name}</BText>
+        <BText style={styles.text}>{category?.name}</BText>
       </View>
-      <Button
-        icon="close"
-        textColor={colors.textInput.input}
-        style={styles.icon}
-        onPress={onDelete}
-      />
+      {onDelete && (
+        <Button
+          icon="close"
+          textColor={colors.textInput.input}
+          style={styles.icon}
+          onPress={onDelete}
+        />
+      )}
     </View>
   );
 };

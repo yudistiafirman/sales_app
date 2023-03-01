@@ -1,5 +1,5 @@
-import { View, FlatList, StyleSheet } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
 import resScale from '@/utils/resScale';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 
