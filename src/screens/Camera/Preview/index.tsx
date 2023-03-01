@@ -83,6 +83,10 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       type: imagePayloadType,
     };
     dispatch(setImageURLS(imageUrls));
+    dispatch({
+      type: 'addImages',
+      value: imageUrls,
+    });
     DeviceEventEmitter.emit('Camera.preview', photo);
     if (navigateTo) {
       if (
@@ -99,8 +103,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           StackActions.replace(navigateTo, { existingVisitation })
         );
       } else if (navigateTo === 'PO') {
+    
         navigation.dispatch(
-          StackActions.replace(navigateTo, { poImages: imageUrls.photo })
+          StackActions.replace(navigateTo, { poImages: imageUrls })
         );
       } else {
         navigation.goBack();

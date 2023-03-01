@@ -19,8 +19,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { PORoutes } from '..';
-import { openPopUp, setIsPopUpVisible } from '@/redux/reducers/modalReducer';
 
 const CreatePo = () => {
   const navigation = useNavigation();
@@ -31,8 +29,8 @@ const CreatePo = () => {
     (_reduxstate: RootState) => _reduxstate.camera
   );
   const dispatch = useDispatch<AppDispatch>();
-  const route = useRoute<PORoutes>();
   const [index, setIndex] = useState(0);
+  const navRoutes = useRoute();
   const {
     routes,
     searchQuery,
@@ -42,25 +40,22 @@ const CreatePo = () => {
     choosenSphDataFromList,
     choosenSphDataFromModal,
     isModalChooseSphVisible,
+    openCamera,
   } = poGlobalState.poState;
 
   const isUserSearchSph = searchQuery.length > 0;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
 
-  const getPhotoPo = useCallback(() => {
-    if (poGlobalState.matches('firstStep.addPO')) {
-      dispatch({ type: 'addMoreImages' });
-    } else {
-      dispatch({
-        type: 'goToFirstStep',
-        value: 'yes',
-      });
-    }
+  const addMoreImages = useCallback(() => {
+    dispatch({ type: 'addMoreImages' });
+  }, [dispatch]);
+
+  const goToCamera = useCallback(() => {
     navigation.navigate('CAMERA', {
       photoTitle: 'File PO',
       navigateTo: 'PO',
     });
-  }, [dispatch, navigation, poGlobalState]);
+  }, []);
 
   const deleteImages = (i: number) => {
     dispatch(deleteImage({ pos: i - 1 }));
@@ -71,34 +66,17 @@ const CreatePo = () => {
   };
 
   useEffect(() => {
-    if (route?.params) {
-      dispatch({
-        type: 'addImages',
-        value: photoURLs,
-      });
+    if (openCamera) {
+      goToCamera();
     }
-  }, [dispatch, photoURLs, route]);
-
-  useEffect(() => {
-    poGlobalState.matches('enquirePOType') &&
-      dispatch(
-        openPopUp({
-          popUpTitle: 'Apakah PO disediakan oleh pelanggan?',
-          popUpType: 'none',
-          outlineBtnTitle: 'Iya',
-          primaryBtnTitle: 'Tidak',
-          isRenderActions: true,
-          outlineBtnAction: () => {
-            getPhotoPo();
-            dispatch(setIsPopUpVisible());
-          },
-          primaryBtnAction: () => {
-            dispatch({ type: 'goToFirstStep', value: 'no' });
-            dispatch(setIsPopUpVisible());
-          },
-        })
-      );
-  }, [dispatch, getPhotoPo, poGlobalState]);
+  }, [
+    dispatch,
+    goToCamera,
+    navRoutes.params,
+    openCamera,
+    photoURLs,
+    poGlobalState,
+  ]);
 
   const onTabPress = (tabRoutes: any) => {
     const tabIndex = index === 0 ? 1 : 0;
@@ -180,7 +158,7 @@ const CreatePo = () => {
             {isProvidedByCustomers && (
               <>
                 <BImageList
-                  onAddImage={getPhotoPo}
+                  onAddImage={addMoreImages}
                   imageData={poImages}
                   onRemoveImage={(idx) => deleteImages(idx)}
                 />

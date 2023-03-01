@@ -6,6 +6,7 @@
         internalEvents: {
           "done.invoke.purchase order.checkSavedPo:invocation[0]": { type: "done.invoke.purchase order.checkSavedPo:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
 "xstate.init": { type: "xstate.init" };
+"xstate.stop": { type: "xstate.stop" };
         };
         invokeSrcNameMap: {
           "GetSphList": "done.invoke.purchase order.firstStep.SearchSph.searchingSph:invocation[0]";
@@ -22,11 +23,12 @@
 "assignFiles": "uploading";
 "assignImages": "addImages";
 "assignIndexChanged": "onChangeCategories";
-"assignPoType": "goToFirstStep";
 "assignSearchQuery": "searching";
 "assignValue": "inputSph";
 "closeModalSph": "addChoosenSph";
 "closingModal": "closeModal";
+"disableCameraScreen": "addImages" | "xstate.stop";
+"enableCameraScreen": "addMoreImages" | "done.invoke.purchase order.checkSavedPo:invocation[0]";
 "setSelectedChoosenProduct": "selectProduct";
 "triggerModal": "openingModal";
         };
@@ -35,13 +37,12 @@
         };
         eventsCausingGuards: {
           "isHasSavePo": "done.invoke.purchase order.checkSavedPo:invocation[0]";
-"isPOProvidedByCustomers": "goToFirstStep";
         };
         eventsCausingServices: {
           "GetSphList": "searching";
 "getSavedPo": "xstate.init";
         };
-        matchesStates: "Exit" | "SecondStep" | "SecondStep.idle" | "SecondStep.uploadFile" | "ThirdStep" | "ThirdStep.idle" | "ThirdStep.productSelected" | "checkSavedPo" | "enquirePOType" | "firstStep" | "firstStep.SearchSph" | "firstStep.SearchSph.inputting" | "firstStep.SearchSph.openModalChooseSph" | "firstStep.SearchSph.searchingSph" | "firstStep.addPO" | "openCamera" | { "SecondStep"?: "idle" | "uploadFile";
+        matchesStates: "Exit" | "SecondStep" | "SecondStep.idle" | "SecondStep.uploadFile" | "ThirdStep" | "ThirdStep.idle" | "ThirdStep.productSelected" | "checkSavedPo" | "firstStep" | "firstStep.SearchSph" | "firstStep.SearchSph.inputting" | "firstStep.SearchSph.openModalChooseSph" | "firstStep.SearchSph.searchingSph" | "firstStep.addPO" | "openCamera" | { "SecondStep"?: "idle" | "uploadFile";
 "ThirdStep"?: "idle" | "productSelected";
 "firstStep"?: "SearchSph" | "addPO" | { "SearchSph"?: "inputting" | "openModalChooseSph" | "searchingSph"; }; };
         tags: never;

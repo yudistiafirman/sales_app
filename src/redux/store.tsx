@@ -24,10 +24,7 @@ export const store = configureStore({
     snackbar: snackbarReducer,
     purchaseOrder: purchaseOrderReducer,
   },
-  middleware: (getDefaultMiddleWare) =>
-    getDefaultMiddleWare({ serializableCheck: false }, [
-      createXStateMiddleware(purchaseOrderSlice),
-    ]),
+  middleware: [createXStateMiddleware(purchaseOrderSlice)],
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

@@ -5,7 +5,7 @@ import { customLog } from '@/utils/generalFunc';
 import { assign, createMachine } from 'xstate';
 
 const POMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgAsAdkruAHAE5DAGzuAKwB3s7urs7OADQgAJ6IAIzhlMEAzL5Z3h7p6YauAcEAvsVxkjj4RKTkVDT0TKwQHJy4EBAAkgC2uDCwZvbIVjZ6vPZOCAGxCYiu3t5pAemurr5JvgG+7ulJpeUYlTI18mC8AI6oguhgbADyACrxyGCcUMT3xABiV7DaDNpgZADJAgIbWWxjEETaLOSgBQxJYLuLKRNwrOKJBBJQrpOHOYK+YLOAKbKZ5Pagg7SapyKinC5XG4PJ4vN4fb7oX7-QH6JLmEFgkZ2KEuaJwhFIlFRFauDHJPK4pL4-zOdLOfxJdIBCkVamyWqUABmPz+AOQr3exAYtD4EG5QJMg2GEPGiGCwQW2OyfhWhj9vjlWKiAUovlW3mChWiyOcOqpVX18mNnNNgMobWat04BFwUmEUAYyGwwMs4NGroQkaSlHSwSS8LV0QC2O8gaVtZrRMKJPSfgCKzjUgTxyoya5ZvT7TurXaAFlSGBur04CXQc7yyLK9NMUkfLDDMiD4ZfBH0u5Y2VKUOjrSjSb7ZPM9wwAAbMAApcwVeCl2b7E7ShDG8eFnBSfEkXcQNfGJSg3EyXd6xCdZ3EHQ4aQNMdU2QR9p2ENA-iLb912FUAJmxSIvCSJICh2dZ1V8dJA3CXwvH8ZF5jrdx3Co1C9RHO8Uwfa1cxwQtsE4AAjXB6A+ABBKdiCIssSMcZJnEMWFMgPVVXB2E8AigokvFCJV60yLJQl44db0woSwBE7AxKEXh8N0XgoGzey83cpShUhUjEG2QwvGWXSQg05VZRmBAcmCLxdKAzJXAyEJvCsm8MPvCdhKkJy8NQbQ3I84hnl4fN5wgXAX1838AoQIKQpWM9ggigkop3QxezhVYz2PXc5jcdL0KTLK0xy0Si0oHNvILItuD4AQNDECR4wykbBOyryJuwKatuwfMxPUERiC0CEzBqjc6q44KQmRVxDFCTrvCSQN2NghLvG2eYmtcIbE1HUbsPGxzJumnADrmvgAGE8HcsAoZ0MA3nQQQV0dAViP81T6vyRqwpa6I2tehEvD8DY2OJMNfD+-jbM2hynJK04KqqmHiCsMAxM4TAXw5lnqvR0s-IrQ9WM2Yla2gj1t0QMNYXWKYIubJVdJpmzAcoYHGdK-m2Y5rmMz1gheDEi6VLI9TNIp5Y9OAts-VxfFlf7T61jWNWDWtTBbXtC0ACFpLodlAbNrGJm8PJKAjhElnxW6A2i7EjL8bw-Xcft1ObFDL11azPZtXg7TNC0PnufayHtUOK2o91KGS-E-XWSN1VbRPPuCoofHC5ZwnJHPVuGqgvZ9idBAgN9OFQZBebafMq83VOQzVLUaNVDiE53c9YRyFIGLCcy0v769B81gui7TKeZ4gb4J-nuq1g75qIi49TdxlrESW31xd61CPsg9+QZcrjn3NG8AOMkrRn0roLNcykw7JE1HFREu4UrATDM9NspIo6fXuikIo9ZIwAKoEAiuo9x4vAIG+TA2g2DoGIBAVA1C77Y0RB2UkdYaI5A3skN2oZ2xrC1M2JYh99jH3+pQEhIDKDIDoQw6h1oqEAggJwZhZFtjVgKAieYZ52LLDbFkRUUxv6amxJo3YFJeD0LgIMAe-0nRwIrAAWgMtFRxsJQIO17unLYvYthEIUEoRoqh7HC03FENsulSZZEJJ-DI-V-EAFEHA2BCbVbG4TooRlgmTeY0Qwzum2P4+klxrh3EeM8VJl1sZIgianOEEYfDkVyNqI+aFxF00BJU82sw6m1nrJ1GEzY5iBiJCGHwKJaxzHPEifxHTsIZjuF0+BQZa4tXug9cyQEXEdQiHCLYnVIwR2JBHWZGstZFiWRWIkCw+kNkGS2QMQzskTOiLpXJpyNpjT2nlFyBUiqXM3EiJedY7lNgedFL6gFshGMJuED544vkM1BntCG2AAX3zmJQFsGRAjNnCBgiF6d3r5ByFwk8nV4VYVPkinaTNeC62wOzAgYl0XY3QViuYOKSRgQJZiHxxlmygSWNEyyrS+K3jpQjLoFBcCsuhGqOu8JCTIRiVMtsfZALIk1MI3JBJ-HD0LvaOVgV1RpBBQ9DYoUI5tiRF-ZCVFtj3XSPqqBZC3zGpimKJEWoUgKnGdwj+8Iazf0+iCziB4XXe0NROS+xA2g3zAB6rinh3T9IJEsFY1q27qU7FReEJJM3nn8ZIo1GMHF-imXs-BnDVhtm8Xwtw+lHVkmLeXKRY93VltCXVREdZQyFBapEUIqxtjqqRHXFWGkSREmdWKvOgC20PhkfQxhfxXy0CUR63t1YwxFAPMlfsPj9FrAbfBQRZlD6lCAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgAsAdkruAHAE5DAKwAzABsAYEhvu7uADQgAJ6IAIxJIZ7eSc4B7mEh3q5B7gC+RXGSOPhEpORUAGaC6LDaDNpgyJxQxAAqxAy0fBAtbWb2yFY2erz2TgiZhkGUQd7O7gG+oUnr3gFxiQghaZQZIUk5IYZJF4a+JWUYFTLV8vWNza3IlLgQEGwA8pwEXBSYRQBjIbAjJAgMbWWxTKEzKK7FzuQxecIXLJBIIXALeW7Q+7SKpyOoNJpDD5fH7-cgAGzArQAkgBbXAwSGWWGTaaIKIhLxBApBFLuXwrXy+ZH7U6LEI4yLRQwhVy+AIE8rE2Q1SgvCnvT7fP6cYRoZrgznQ8Zw3mzQzONFBNZBZxRdzOJLeFXSgIOyj+SXYsKolLq0qEqSVbXPclvNqUPpAnBg7CcABGuHoPQAgkbiJaYRM7AjEKtvJR5v5nCclh6Qs5pe5Lv6Dptzh6Aq4UhqiVGnmTXpSE2Ak9gU0JeGbdLwoACR8CZwXrTySwhnF7FstvIZXN4cWrJbEEohzgs1SLUdWrgEw3dI49SbrY0PE1Jx6bUNpp7PiMgwLwQQAWWICBcDpJduWLUAZnXAVa23Xd9zWJFjwQMUBW2XxXFcNxvHcJZUh7e8SR1PU4w+V9k3BShAQXUFwW4PgBA0MQJF7B9SOfA1KLHajaJwEEU3UERiC0OEzAgot4WgxAXQFVxlTcQxUTCS5nCCH0Ank4JUmrbYcXdIiHhImNB24+cqOwGiLOwQSGL4ABhPAZzABydDATp0EEOBJJtVdYM3dcdz3a5kKPPZXHOCtDBi6tslSSJnCMrV+yfMz4x48df3-YDQLpJziCsMAU04TA6SK3KwN8lcZIQIV5NcYIYuVMIbwKRsYsoBT5WVQpCgKW8I2M6MB31DKbKyv9eEq-LsEKggSupAqit4FNqqgxxSzxCsgirGtll0xsTi6g4O127ZAiCZK+0fPpMAGSkOmIAAhTM6B6AAxLjhhMUZlw2mZfWlDIuslXw-HrZSkiu8NNRunU7oe94np6LpbLISl1ukzbZgyctFOFZVDG8fJvGlNJHVSU4DiuS4blh9iTKoRHeEGA1BAgBlOFQZByq+EEsdtJJwl8Sh1IKTYlhwjTUJVUWci7e0PElbrro4+QWbZ+Meb5iAvq5wXV2F7a-ECPEnRFG9wpPe0xZVa5VUCJJpbVpnKDRhotfaTpXqzXp+lZzHfqhQs-Nqz1PQretCfOEndx9XwkkoA4AkyHDfES1PXZG930a9oRObAOcGUwbQ2HQEDUFLw3ao7UXsTxNYU-lU5yd9O2FIz7JE-lYoGeInOPYxg1kAriAq+aMAS9aCBOBrnH1ObUVrhJ8UtOxcmdy8e3TZ3UIb2z1Lst4NyWQoXBOGpVl2R84OuSk20gdQy5Orxc5Lk7HCYr7u9htSsihzUmNNSYC6AwDXxgLAeeMw5gLFrKsdYJwtg7FQk2csIokFrGiFELOBJeAgTgKMRmI0-qQWxjMAAtJkaUFCBTNVigUbYOFohJX7n-R8NB6BMFYD8YgpCH6rhwtKFIBRFiZGyF6WmGdD6PgAKIOBsPwsOOMhHP1wkccRB1LhhHUjIzi6VkBKJqjjUIwi9xiwxKFHc9o1T4jYSlR8ACDRAN+EYgGyQYpJ2Fs4V0icXS7QuI2SOxwHR4nyOuHIejTJjQohNcEbjyGIHyNKQozhKCWJ8T452UQsJRNGuRYco53yTk-N+BJQsXTSlVHBa44ptxCglgcPJaUYmFLfHxGydlsDlNXOEBY6FtjeNCMFEIPohRdR0iqJsPh-BJGaU48aRTqLHxmstBa8SQ7-USQgPpXgM6DN9MM3cozUEihbPWFIeFUhdmaZrSkPTw6pMFBLHwfgsLJNQqnVw29uqBgOGqOZ9j4YawDvnDmDIHk42dn6fCLzV7vNcJvDCHgCjE3CFiGGv8HEI1BUOHWxAvj6zAJCmBYQzwK3Bm4BpxNN71xRS6U4dNBpw3VlQIeXsSUuHtGkvcjcMhNidD6WU1ZuoKSdInPczT2VDnBcSzZZDbQOlREcJ02x+XQxQXsc4dL3A4VVPqnIzLiGpWlSPMeE8+jT0gJytcCkAhi3mPMPCW5jnkxSEcel9oXT5BFM04+p9z42uhuYn1kQcRuCVScvYalvmKS0uEz0OIwwlCAA */
   createMachine(
     {
       id: 'purchase order',
@@ -40,7 +40,7 @@ const POMachine =
       },
       context: {
         poImages: [{ photo: null }],
-        isProvidedByCustomers: true,
+        openCamera: false,
         sphNumber: '',
         searchQuery: '',
         sphCategories: '',
@@ -218,43 +218,20 @@ const POMachine =
           invoke: {
             src: 'getSavedPo',
             onDone: {
-              target: 'enquirePOType',
+              target: 'openCamera',
               cond: 'isHasSavePo',
-            },
-          },
-
-          on: {
-            addImages: {
-              target: 'firstStep.addPO',
-              actions: 'assignImages',
             },
           },
         },
 
         Exit: {},
 
-        enquirePOType: {
-          on: {
-            goToFirstStep: [
-              {
-                target: 'openCamera',
-                cond: 'isPOProvidedByCustomers',
-                actions: 'assignPoType',
-              },
-              {
-                target: 'firstStep.addPO',
-                actions: 'assignPoType',
-              },
-            ],
-          },
-        },
-
         firstStep: {
+          initial: 'addPO',
           states: {
             addPO: {
               on: {
                 searchingSph: 'SearchSph',
-                addMoreImages: '#purchase order.openCamera',
 
                 deleteImage: {
                   target: 'addPO',
@@ -267,6 +244,8 @@ const POMachine =
                   internal: true,
                   actions: 'assignValue',
                 },
+
+                addMoreImages: '#purchase order.openCamera',
               },
             },
 
@@ -323,14 +302,10 @@ const POMachine =
             },
           },
 
-          initial: 'addPO',
-
           on: {
             goToSecondStep: 'SecondStep',
           },
         },
-
-        openCamera: {},
 
         SecondStep: {
           states: {
@@ -377,6 +352,18 @@ const POMachine =
 
           initial: 'idle',
         },
+
+        openCamera: {
+          on: {
+            addImages: {
+              target: 'firstStep.addPO',
+              actions: 'assignImages',
+            },
+          },
+
+          entry: 'enableCameraScreen',
+          exit: 'disableCameraScreen',
+        },
       },
 
       initial: 'checkSavedPo',
@@ -399,14 +386,22 @@ const POMachine =
         isHasSavePo: (context, event) => {
           return event.data === undefined;
         },
-        isPOProvidedByCustomers: (context, event) => {
-          return event.value === 'yes';
-        },
       },
       actions: {
+        enableCameraScreen: assign(() => {
+          return {
+            openCamera: true,
+          };
+        }),
+        disableCameraScreen: assign(() => {
+          return {
+            openCamera: false,
+          };
+        }),
         assignImages: assign((context, event) => {
           return {
-            poImages: [...context.poImages, ...event.value],
+            openCamera: false,
+            poImages: [...context.poImages, event.value],
           };
         }),
         assignDeleteImageByIndex: assign((context, event) => {
@@ -447,12 +442,6 @@ const POMachine =
         closingModal: assign((context, event) => {
           return {
             isModalChooseSphVisible: false,
-          };
-        }),
-        assignPoType: assign((context, event) => {
-          const isProvidedByCustomers = event.value === 'yes';
-          return {
-            isProvidedByCustomers: isProvidedByCustomers,
           };
         }),
         setSelectedChoosenProduct: assign((context, event) => {
