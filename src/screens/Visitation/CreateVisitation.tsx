@@ -221,7 +221,7 @@ const CreateVisitation = () => {
     }
 
     return () => {
-      dispatch(resetImageURLS());
+      dispatch(resetImageURLS({ source: CREATE_VISITATION }));
       dispatch(resetRegion());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

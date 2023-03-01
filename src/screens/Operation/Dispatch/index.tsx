@@ -5,7 +5,7 @@ import { layout } from '@/constants';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import OperationList from '../element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { TAB_DISPATCH } from '@/navigation/ScreenNames';
+import { OPERATION, TAB_DISPATCH } from '@/navigation/ScreenNames';
 import { useDispatch } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
@@ -30,7 +30,7 @@ const Dispatch = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(resetImageURLS());
+      dispatch(resetImageURLS({ source: OPERATION }));
     }, [dispatch])
   );
 

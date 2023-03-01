@@ -32,7 +32,9 @@ const SubmitForm = () => {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
   const [toggleCheckBox, setToggleCheckBox] = useState(true);
-  const { photoURLs } = useSelector((state: RootState) => state.camera);
+  const { operationPhotoURLs } = useSelector(
+    (state: RootState) => state.camera
+  );
   const { entryType } = useSelector((state: RootState) => state.auth);
   const operationType = route?.params?.operationType;
 
@@ -134,7 +136,7 @@ const SubmitForm = () => {
           <BSpacer size={'extraSmall'} />
         </View>
         <View>
-          <BGallery picts={photoURLs} />
+          <BGallery picts={operationPhotoURLs} />
         </View>
         <View style={style.flexFull}>
           {(operationType === ENTRY_TYPE.DRIVER ||

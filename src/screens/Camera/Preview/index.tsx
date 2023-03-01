@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import * as React from 'react';
 import { BButtonPrimary, BHeaderIcon } from '@/components';
 import { layout } from '@/constants';
 import {
@@ -23,7 +23,10 @@ import {
   CREATE_DEPOSIT,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
+  GALLERY_DEPOSIT,
+  GALLERY_VISITATION,
   IMAGE_PREVIEW,
+  OPERATION,
   SUBMIT_FORM,
 } from '@/navigation/ScreenNames';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -43,7 +46,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   useHeaderTitleChanged({
     title: 'Foto ' + route?.params?.photoTitle,
   });
-  const _style = useMemo(() => style, [style]);
+  const _style = React.useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
   const navigateTo = route?.params?.navigateTo;
   const operationAddedStep = route?.params?.operationAddedStep;
@@ -67,9 +70,24 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
     crashlytics().log(IMAGE_PREVIEW);
   }, []);
 
+  const getTypeOfImagePayload = () => {
+    if (navigateTo) {
+      if (
+        navigateTo !== CREATE_DEPOSIT &&
+        navigateTo !== GALLERY_VISITATION &&
+        navigateTo !== GALLERY_DEPOSIT
+      ) {
+        return 'COVER';
+      } else {
+        return 'GALLERY';
+      }
+    } else {
+      return 'GALLERY';
+    }
+  };
+
   const savePhoto = () => {
-    const imagePayloadType: 'COVER' | 'GALLERY' =
-      navigateTo && navigateTo !== CREATE_DEPOSIT ? 'COVER' : 'GALLERY';
+    const imagePayloadType: 'COVER' | 'GALLERY' = getTypeOfImagePayload();
     const photoName = photo.split('/').pop();
     const photoNameParts = photoName.split('.');
     let photoType = photoNameParts[photoNameParts.length - 1];
@@ -86,22 +104,26 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       },
       type: imagePayloadType,
     };
-    dispatch(setImageURLS(imageUrls));
     DeviceEventEmitter.emit('Camera.preview', photo);
     if (navigateTo) {
       console.log('screen::: ', navigateTo);
       switch (navigateTo) {
         case CREATE_VISITATION:
+          dispatch(
+            setImageURLS({ photo: imageUrls, source: CREATE_VISITATION })
+          );
           navigation.goBack();
           navigation.dispatch(
             StackActions.replace(navigateTo, { existingVisitation })
           );
           return;
         case CREATE_SCHEDULE:
+          dispatch(setImageURLS({ photo: imageUrls, source: CREATE_SCHEDULE }));
           DeviceEventEmitter.emit('Camera.addedDeposit', 'true');
           navigation.dispatch(StackActions.pop(2));
           return;
         case ENTRY_TYPE[ENTRY_TYPE.BATCHER]:
+          dispatch(setImageURLS({ photo: imageUrls, source: OPERATION }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Mix Design',
@@ -115,6 +137,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE[ENTRY_TYPE.DISPATCH]:
+          dispatch(setImageURLS({ photo: imageUrls, source: OPERATION }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Driver',
@@ -140,6 +163,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE[ENTRY_TYPE.DRIVER]:
+          dispatch(setImageURLS({ photo: imageUrls, source: OPERATION }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Penuangan',
@@ -165,16 +189,34 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE[ENTRY_TYPE.RETURN]:
+          dispatch(setImageURLS({ photo: imageUrls, source: OPERATION }));
           navigation.navigate(SUBMIT_FORM, {
             operationType: ENTRY_TYPE.RETURN,
           });
           return;
+        case CREATE_DEPOSIT:
+          dispatch(setImageURLS({ photo: imageUrls, source: CREATE_DEPOSIT }));
+          navigation.goBack();
+          navigation.dispatch(StackActions.replace(navigateTo));
+          return;
+        case GALLERY_VISITATION:
+          dispatch(
+            setImageURLS({ photo: imageUrls, source: CREATE_VISITATION })
+          );
+          navigation.dispatch(StackActions.pop(2));
+          return;
+        case GALLERY_DEPOSIT:
+          dispatch(setImageURLS({ photo: imageUrls, source: CREATE_DEPOSIT }));
+          navigation.dispatch(StackActions.pop(2));
+          return;
         default:
+          dispatch(setImageURLS({ photo: imageUrls }));
           navigation.goBack();
           navigation.dispatch(StackActions.replace(navigateTo));
           return;
       }
     } else {
+      dispatch(setImageURLS({ photo: imageUrls }));
       navigation.dispatch(StackActions.pop(2));
     }
   };

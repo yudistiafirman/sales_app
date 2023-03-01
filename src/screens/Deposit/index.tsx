@@ -33,6 +33,7 @@ import FirstStep from './element/FirstStep';
 import SecondStep from './element/SecondStep';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { useDispatch } from 'react-redux';
+import { CREATE_DEPOSIT } from '@/navigation/ScreenNames';
 
 const labels = ['Data Pelanggan', 'Cari PO'];
 
@@ -125,7 +126,7 @@ const Deposit = () => {
       populateData(existingSchedule, updateValueOnstep);
     }
     return () => {
-      dispatch(resetImageURLS());
+      dispatch(resetImageURLS({ source: CREATE_DEPOSIT }));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
