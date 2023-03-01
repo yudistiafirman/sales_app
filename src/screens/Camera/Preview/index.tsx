@@ -23,6 +23,8 @@ import {
   CREATE_DEPOSIT,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
+  GALLERY_DEPOSIT,
+  GALLERY_VISITATION,
   IMAGE_PREVIEW,
   OPERATION,
   SUBMIT_FORM,
@@ -68,9 +70,24 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
     crashlytics().log(IMAGE_PREVIEW);
   }, []);
 
+  const getTypeOfImagePayload = () => {
+    if (navigateTo) {
+      if (
+        navigateTo !== CREATE_DEPOSIT &&
+        navigateTo !== GALLERY_VISITATION &&
+        navigateTo !== GALLERY_DEPOSIT
+      ) {
+        return 'COVER';
+      } else {
+        return 'GALLERY';
+      }
+    } else {
+      return 'GALLERY';
+    }
+  };
+
   const savePhoto = () => {
-    const imagePayloadType: 'COVER' | 'GALLERY' =
-      navigateTo && navigateTo !== CREATE_DEPOSIT ? 'COVER' : 'GALLERY';
+    const imagePayloadType: 'COVER' | 'GALLERY' = getTypeOfImagePayload();
     const photoName = photo.split('/').pop();
     const photoNameParts = photoName.split('.');
     let photoType = photoNameParts[photoNameParts.length - 1];
@@ -181,6 +198,16 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           dispatch(setImageURLS({ photo: imageUrls, source: CREATE_DEPOSIT }));
           navigation.goBack();
           navigation.dispatch(StackActions.replace(navigateTo));
+          return;
+        case GALLERY_VISITATION:
+          dispatch(
+            setImageURLS({ photo: imageUrls, source: CREATE_VISITATION })
+          );
+          navigation.dispatch(StackActions.pop(2));
+          return;
+        case GALLERY_DEPOSIT:
+          dispatch(setImageURLS({ photo: imageUrls, source: CREATE_DEPOSIT }));
+          navigation.dispatch(StackActions.pop(2));
           return;
         default:
           dispatch(setImageURLS({ photo: imageUrls }));

@@ -25,7 +25,12 @@ import {
 } from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
-import { CAMERA, CREATE_VISITATION, SPH } from '@/navigation/ScreenNames';
+import {
+  CAMERA,
+  CREATE_VISITATION,
+  GALLERY_VISITATION,
+  SPH,
+} from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
 import { BGallery, PopUpQuestion } from '@/components';
@@ -178,7 +183,7 @@ const Fourth = () => {
     (state: RootState) => state.camera
   );
 
-  const { photoURLs: photoUrls } = useSelector(
+  const { visitationPhotoURLs } = useSelector(
     (state: RootState) => state.camera
   );
   const { values, action } = React.useContext(createVisitationContext);
@@ -203,9 +208,9 @@ const Fourth = () => {
   useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step4');
     // photoUrls;
-    onChange('images')(photoUrls);
+    onChange('images')(visitationPhotoURLs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [photoUrls]);
+  }, [visitationPhotoURLs]);
 
   useEffect(() => {
     DeviceEventEmitter.addListener('CreateVisitation.continueButton', () => {
@@ -244,7 +249,7 @@ const Fourth = () => {
         const methodStr = isDataUpdate ? 'PUT' : 'POST';
 
         if (uploadedFilesResponse.length === 0) {
-          const photoFiles = photoUrls.map((photo) => {
+          const photoFiles = visitationPhotoURLs.map((photo) => {
             return {
               ...photo.photo,
               uri: photo?.photo?.uri?.replace('file:', 'file://'),
@@ -258,7 +263,7 @@ const Fourth = () => {
           data.forEach((photo) => {
             const photoName = `${photo.name}.${photo.type}`;
             const photoNamee = `${photo.name}.jpg`;
-            const foundObject = photoUrls.find(
+            const foundObject = visitationPhotoURLs.find(
               (obj) =>
                 obj?.photo?.name === photoName ||
                 obj?.photo?.name === photoNamee
@@ -352,6 +357,7 @@ const Fourth = () => {
         );
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [values]
   );
 
@@ -366,6 +372,7 @@ const Fourth = () => {
             StackActions.push(CAMERA, {
               photoTitle: 'Kunjungan',
               closeButton: true,
+              navigateTo: GALLERY_VISITATION,
             })
           );
         }}
@@ -394,6 +401,7 @@ const Fourth = () => {
             StackActions.push(CAMERA, {
               photoTitle: 'Kunjungan',
               closeButton: true,
+              navigateTo: GALLERY_VISITATION,
             })
           )
         }

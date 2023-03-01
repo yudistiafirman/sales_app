@@ -38,7 +38,9 @@ export default function AddedDepositModal({
     undefined
   );
   const navigation = useNavigation();
-  const { photoURLs } = useSelector((state: RootState) => state.camera);
+  const { createSchedulePhotoURLs } = useSelector(
+    (state: RootState) => state.camera
+  );
   const [isVisibleCalendar, setVisibleCalendar] = React.useState(false);
   const [addedDeposit, setAddedDeposit] = React.useState<any>({});
 
@@ -89,8 +91,9 @@ export default function AddedDepositModal({
 
   useFocusEffect(
     React.useCallback(() => {
-      setAddedDeposit({ ...addedDeposit, picts: photoURLs });
-    }, [photoURLs])
+      setAddedDeposit({ ...addedDeposit, picts: createSchedulePhotoURLs });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [createSchedulePhotoURLs])
   );
 
   return (
@@ -132,7 +135,7 @@ export default function AddedDepositModal({
                   }}
                 >
                   <BGallery
-                    picts={photoURLs}
+                    picts={createSchedulePhotoURLs}
                     addMorePict={() => {
                       setIsModalVisible((curr) => !curr);
                       navigation.dispatch(
