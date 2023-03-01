@@ -60,17 +60,19 @@ export const putVisitation = async ({
 // home screen
 interface IGetAll {
   date?: number;
-  page: number;
+  page?: number;
   search?: string;
+  projectId?: string;
 }
 
 export const getAllVisitations = async ({
   page = 0,
   date,
   search = '',
+  projectId,
 }: IGetAll) => {
   return customRequest(
-    BrikApiProductivity.getAllVisitations({ page, date, search }),
+    BrikApiProductivity.getAllVisitations({ page, date, search, projectId }),
     'GET',
     undefined,
     true

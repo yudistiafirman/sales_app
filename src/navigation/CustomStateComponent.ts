@@ -43,7 +43,8 @@ export type RootStackParamList = {
   CREATE_SCHEDULE: undefined;
   SEARCH_PO: { from: string };
   CUSTOMER_DETAIL: { existingVisitation?: any };
-  DOCUMENTS: { docs?: Docs[]; projectId?: string };
+  DOCUMENTS: { projectId?: string; docs?: Docs[] };
+  VISIT_HISTORY: { projectId?: string; projectName?: string };
   CREATE_DEPOSIT: undefined;
 };
 

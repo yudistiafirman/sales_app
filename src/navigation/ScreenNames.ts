@@ -37,6 +37,7 @@ export const SEARCH_PO = 'SEARCH_PO';
 export const HUNTER_AND_FARMER = 'HUNTER_AND_FARMER';
 export const DOCUMENTS = 'DOCUMENTS';
 export const OPERATION = 'OPERATION';
+export const VISIT_HISTORY = 'VISIT_HISTORY';
 
 /*
     Screen Title

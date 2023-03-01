@@ -1,0 +1,42 @@
+import { BLabel, BSpacer } from '@/components';
+import { layout } from '@/constants';
+import font from '@/constants/fonts';
+import { Products } from '@/machine/visitHistoryMachine';
+import ProductChip from '@/screens/Visitation/elements/third/ProductChip';
+import { resScale } from '@/utils';
+import React, { useCallback } from 'react';
+import { StyleSheet, View, FlatList, ListRenderItem } from 'react-native';
+
+const Product = ({ products }: { products: Products }) => {
+  const renderItem: ListRenderItem<Products> = useCallback(({ item }) => {
+    return (
+      <View style={{ height: resScale(37) }}>
+        <ProductChip
+          category={{ name: item.categoryDisplayName }}
+          name={item.displayName}
+        />
+      </View>
+    );
+  }, []);
+  return (
+    <View style={styles.container}>
+      <BLabel bold="600" sizeInNumber={font.size.md} label="Produk" />
+      <BSpacer size="extraSmall" />
+      <FlatList
+        data={products}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={renderItem}
+        horizontal
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: layout.pad.lg,
+  },
+});
+
+export default Product;

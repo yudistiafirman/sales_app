@@ -10,14 +10,18 @@ type projectType = {
 
 type ProjectBetweenType = {
   projects: projectType;
+  onPress: () => void;
 };
 
-export default function ProjectBetween({ projects }: ProjectBetweenType) {
+export default function ProjectBetween({
+  projects,
+  onPress,
+}: ProjectBetweenType) {
   return (
     <View style={styles.container}>
       <View style={[styles.between]}>
         <Text style={styles.projectName}>{projects.name}</Text>
-        {/* <TouchableOpacity style={styles.buttonContainer}>
+        <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
           <MaterialCommunityIcons
             name="history"
             color={colors.primary}
@@ -25,7 +29,7 @@ export default function ProjectBetween({ projects }: ProjectBetweenType) {
             style={styles.iconStyle}
           />
           <Text style={styles.buttonText}>Riwayat Kunjungan</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
       {/* {projects.map((project, index) => (
         <View
