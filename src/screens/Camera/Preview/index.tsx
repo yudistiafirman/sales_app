@@ -88,10 +88,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       type: imagePayloadType,
     };
     dispatch(setImageURLS(imageUrls));
-    dispatch({
-      type: 'addImages',
-      value: imageUrls,
-    });
+
     DeviceEventEmitter.emit('Camera.preview', photo);
     if (navigateTo) {
       console.log('screen::: ', navigateTo);
@@ -107,6 +104,10 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(StackActions.pop(2));
           return;
         case PO:
+          dispatch({
+            type: 'addImages',
+            value: imageUrls,
+          });
           navigation.dispatch(StackActions.replace(navigateTo));
           return;
         case ENTRY_TYPE[ENTRY_TYPE.BATCHER]:

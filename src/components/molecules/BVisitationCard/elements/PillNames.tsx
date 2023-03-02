@@ -9,10 +9,12 @@ import HighlightText from '../../../atoms/BHighlightText';
 type PillNamesType = {
   pilNames?: string[];
   searchQuery?: string;
+  pillColor?: string;
 };
 export default function PillNames({
   pilNames = [],
   searchQuery,
+  pillColor = colors.blueSky,
 }: PillNamesType) {
   if (!pilNames.length) {
     return null;
@@ -31,7 +33,9 @@ export default function PillNames({
   }
   return (
     <View style={style.container}>
-      <View style={[style.bluePill, style.margin]}>
+      <View
+        style={[style.bluePill, style.margin, { backgroundColor: pillColor }]}
+      >
         <HighlightText
           fontSize={10}
           name={pilNames[0]}
@@ -49,7 +53,6 @@ const style = StyleSheet.create({
   },
   bluePill: {
     padding: resScale(2),
-    backgroundColor: '#B0D8FF',
     paddingVertical: resScale(1),
     paddingHorizontal: resScale(10),
     borderRadius: resScale(32),

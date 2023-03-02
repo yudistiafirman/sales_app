@@ -34,6 +34,7 @@ type VisitationCardType = {
   searchQuery?: string;
   onPress?: (data: visitationDataType) => void;
   isRenderIcon?: boolean;
+  pillColor?: string;
   customIcon?: () => JSX.Element;
 };
 
@@ -43,6 +44,7 @@ export default function BVisitationCard({
   onPress = () => {},
   isRenderIcon = true,
   customIcon,
+  pillColor,
 }: VisitationCardType) {
   return (
     <View style={style.container}>
@@ -69,7 +71,11 @@ export default function BVisitationCard({
           <BSpacer size={'verySmall'} />
         )}
         <BLocationText location={item.location} />
-        <PillNames pilNames={item.pilNames} searchQuery={searchQuery} />
+        <PillNames
+          pillColor={pillColor}
+          pilNames={item.pilNames}
+          searchQuery={searchQuery}
+        />
         <View
           style={[style.row, item.time || item.status ? style.bottom : null]}
         >

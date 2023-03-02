@@ -1,21 +1,15 @@
 import BVisitationCard from '@/components/molecules/BVisitationCard';
-import { layout } from '@/constants';
 import * as React from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
 import EmptyPO from './EmptyPO';
 import POListShimmer from './POListShimmer';
 import { visitationDataType } from '@/interfaces';
 import BSpacer from '@/components/atoms/BSpacer';
+import { CreatedSPHListResponse } from '@/interfaces/createPurchaseOrder';
+import { colors } from '@/constants';
 
-interface POData {
-  companyName: string;
-  locationName: string;
-  sphs: any[];
-  id: string;
-}
-
-interface POListProps<ArrayOfObject> {
-  poDatas: ArrayOfObject[];
+interface POListProps {
+  poDatas: CreatedSPHListResponse[];
   onEndReached?:
     | ((info: { distanceFromEnd: number }) => void)
     | null
@@ -29,7 +23,7 @@ interface POListProps<ArrayOfObject> {
   colorStatus?: string;
 }
 
-const POList = <ArrayOfObject extends POData>({
+const POList = ({
   poDatas,
   onEndReached,
   refreshing,
@@ -38,14 +32,14 @@ const POList = <ArrayOfObject extends POData>({
   onRefresh,
   loadPO,
   onPress,
-}: POListProps<ArrayOfObject>) => {
-  const renderItem: ListRenderItem<POData> = React.useCallback(
+}: POListProps) => {
+  const renderItem: ListRenderItem<CreatedSPHListResponse> = React.useCallback(
     ({ item, index }) => {
       const constructVisitationData: visitationDataType = {
         id: index,
-        name: item.companyName,
-        location: item.locationName,
-        pilNames: item.sphs.map((it) => it.name),
+        name: item.name,
+        location: item.ShippingAddress.Postal.City.name,
+        pilNames: item.QuotationLetters.map((it) => it.number),
       };
       return (
         <>
@@ -55,6 +49,7 @@ const POList = <ArrayOfObject extends POData>({
             key={item.id}
             onPress={onPress ? () => onPress(item) : undefined}
             isRenderIcon
+            pillColor={colors.status.orange}
           />
         </>
       );
@@ -68,7 +63,6 @@ const POList = <ArrayOfObject extends POData>({
       initialNumToRender={10}
       maxToRenderPerBatch={10}
       onRefresh={onRefresh}
-      contentContainerStyle={{ marginHorizontal: layout.pad.lg }}
       keyExtractor={(item, index) => index.toString()}
       onEndReached={onEndReached}
       refreshing={refreshing}

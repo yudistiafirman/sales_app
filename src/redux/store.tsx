@@ -35,7 +35,7 @@ export const store = configureStore({
     camera: cameraReducer,
     order: orderReducer,
     snackbar: snackbarReducer,
-    purchaseOrder: poStatePersisted,
+    purchaseOrder: purchaseOrderReducer,
     sphState: sphStatePersisted,
   },
   middleware: [createXStateMiddleware(purchaseOrderSlice)],

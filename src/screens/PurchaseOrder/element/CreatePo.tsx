@@ -6,6 +6,7 @@ import {
   BForm,
   BTouchableText,
   BExpandableSPHCard,
+  POList,
 } from '@/components';
 import BCommonCompanyCard from '@/components/molecules/BCommonCompanyCard';
 import BImageList from '@/components/organism/BImagesList';
@@ -36,7 +37,6 @@ const CreatePo = () => {
     routes,
     searchQuery,
     sphData,
-    isProvidedByCustomers,
     poImages,
     choosenSphDataFromList,
     choosenSphDataFromModal,
@@ -139,13 +139,7 @@ const CreatePo = () => {
                 renderScene={() => (
                   <>
                     <BSpacer size="extraSmall" />
-                    <BCommonCompanyList
-                      searchQuery={searchQuery}
-                      onPress={(data) =>
-                        dispatch({ type: 'openingModal', value: data })
-                      }
-                      companyData={sphData}
-                    />
+                    <POList poDatas={sphData} />
                   </>
                 )}
                 tabStyle={styles.tabStyle}
