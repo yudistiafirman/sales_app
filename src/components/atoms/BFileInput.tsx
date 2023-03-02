@@ -5,14 +5,13 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import React, { useCallback } from 'react';
+import * as React from 'react';
 import DocumentPicker from 'react-native-document-picker';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import BSpacer from './BSpacer';
 import { customLog } from '@/utils/generalFunc';
 
 //AntDesign
@@ -54,7 +53,7 @@ export default function BFileInput({
   isLoading,
   isError,
 }: BFileInputType) {
-  const selectFile = useCallback(async () => {
+  const selectFile = React.useCallback(async () => {
     // Opening Document Picker to select one file
     try {
       customLog('select file');

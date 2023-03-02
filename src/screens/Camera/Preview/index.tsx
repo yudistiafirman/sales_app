@@ -34,6 +34,9 @@ import { resScale } from '@/utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { ENTRY_TYPE } from '@/models/EnumModel';
+import Pdf from 'react-native-pdf';
+import { LocalFileType } from '@/interfaces/LocalFileType';
+import { customLog } from '@/utils/generalFunc';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -48,6 +51,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   });
   const _style = React.useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
+  const picker = route?.params?.picker;
   const navigateTo = route?.params?.navigateTo;
   const operationAddedStep = route?.params?.operationAddedStep;
   const closeButton = route?.params?.closeButton;
@@ -88,29 +92,49 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
 
   const savePhoto = () => {
     const imagePayloadType: 'COVER' | 'GALLERY' = getTypeOfImagePayload();
-    const photoName = photo.split('/').pop();
-    const photoNameParts = photoName.split('.');
-    let photoType = photoNameParts[photoNameParts.length - 1];
+    const photoName = photo?.split('/').pop();
+    const pdfName = picker?.name;
+    const photoNameParts = photoName?.split('.');
+    let photoType =
+      photoNameParts && photoNameParts.length > 0
+        ? photoNameParts[photoNameParts.length - 1]
+        : '';
 
     if (photoType === 'jpg') {
       photoType = 'jpeg';
     }
 
-    const imageUrls = {
-      photo: {
-        uri: `file:${photo}`,
-        type: `image/${photoType}`,
-        name: photoName,
-      },
-      type: imagePayloadType,
-    };
-    DeviceEventEmitter.emit('Camera.preview', photo);
+    let localFile: LocalFileType | undefined;
+    if (photo) {
+      localFile = {
+        file: {
+          uri: `file:${photo}`,
+          type: `image/${photoType}`,
+          name: photoName,
+        },
+        isFromPicker: false,
+        type: imagePayloadType,
+      };
+    } else if (picker) {
+      localFile = {
+        file: {
+          uri: picker?.uri,
+          type: picker?.type,
+          name: pdfName,
+        },
+        isFromPicker: true,
+        type: imagePayloadType,
+      };
+    }
+
+    if (photo) DeviceEventEmitter.emit('Camera.preview', photo);
+    else DeviceEventEmitter.emit('Camera.preview', picker);
     if (navigateTo) {
-      console.log('screen::: ', navigateTo);
+      customLog('screen::: ', navigateTo);
       switch (navigateTo) {
         case CREATE_VISITATION:
           dispatch(
-            setImageURLS({ photo: imageUrls, source: CREATE_VISITATION })
+            setImageURLS({ file: localFile, source: CREATE_VISITATION })
           );
           navigation.goBack();
           navigation.dispatch(
@@ -118,12 +142,12 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           );
           return;
         case CREATE_SCHEDULE:
-          dispatch(setImageURLS({ photo: imageUrls, source: CREATE_SCHEDULE }));
+          dispatch(setImageURLS({ file: localFile, source: CREATE_SCHEDULE }));
           DeviceEventEmitter.emit('Camera.addedDeposit', 'true');
           navigation.dispatch(StackActions.pop(2));
           return;
         case ENTRY_TYPE[ENTRY_TYPE.BATCHER]:
-          dispatch(setImageURLS({ photo: imageUrls, source: OPERATION }));
+          dispatch(setImageURLS({ file: localFile, source: OPERATION }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Mix Design',
@@ -137,7 +161,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE[ENTRY_TYPE.DISPATCH]:
-          dispatch(setImageURLS({ photo: imageUrls, source: OPERATION }));
+          dispatch(setImageURLS({ file: localFile, source: OPERATION }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Driver',
@@ -163,7 +187,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE[ENTRY_TYPE.DRIVER]:
-          dispatch(setImageURLS({ photo: imageUrls, source: OPERATION }));
+          dispatch(setImageURLS({ file: localFile, source: OPERATION }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Penuangan',
@@ -189,34 +213,34 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE[ENTRY_TYPE.RETURN]:
-          dispatch(setImageURLS({ photo: imageUrls, source: OPERATION }));
+          dispatch(setImageURLS({ file: localFile, source: OPERATION }));
           navigation.navigate(SUBMIT_FORM, {
             operationType: ENTRY_TYPE.RETURN,
           });
           return;
         case CREATE_DEPOSIT:
-          dispatch(setImageURLS({ photo: imageUrls, source: CREATE_DEPOSIT }));
+          dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
           navigation.goBack();
           navigation.dispatch(StackActions.replace(navigateTo));
           return;
         case GALLERY_VISITATION:
           dispatch(
-            setImageURLS({ photo: imageUrls, source: CREATE_VISITATION })
+            setImageURLS({ file: localFile, source: CREATE_VISITATION })
           );
           navigation.dispatch(StackActions.pop(2));
           return;
         case GALLERY_DEPOSIT:
-          dispatch(setImageURLS({ photo: imageUrls, source: CREATE_DEPOSIT }));
+          dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
           navigation.dispatch(StackActions.pop(2));
           return;
         default:
-          dispatch(setImageURLS({ photo: imageUrls }));
+          dispatch(setImageURLS({ file: localFile }));
           navigation.goBack();
           navigation.dispatch(StackActions.replace(navigateTo));
           return;
       }
     } else {
-      dispatch(setImageURLS({ photo: imageUrls }));
+      dispatch(setImageURLS({ file: localFile }));
       navigation.dispatch(StackActions.pop(2));
     }
   };
@@ -227,6 +251,13 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         {photo && (
           <Image source={{ uri: `file:${photo}` }} style={styles.image} />
         )}
+        {picker && picker.type === 'application/pdf' && (
+          <Pdf style={styles.image} source={{ uri: picker?.uri }} />
+        )}
+        {picker &&
+          (picker.type === 'image/jpeg' || picker.type === 'image/png') && (
+            <Image source={{ uri: picker?.uri }} style={styles.image} />
+          )}
       </View>
       <View style={styles.conButton}>
         <View style={styles.buttonOne}>

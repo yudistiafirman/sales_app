@@ -43,6 +43,8 @@ import IcCompany from '@/assets/svg/ic_company.svg';
 import IcProfile from '@/assets/svg/ic_profile.svg';
 import IcHunter from '@/assets/svg/ic_hunter.svg';
 import IcFarmer from '@/assets/svg/ic_farmer.svg';
+import IcGalleryPicker from '@/assets/svg/ic_gallery_picker.svg';
+import IcDocPicker from '@/assets/svg/ic_doc_picker.svg';
 
 // IMG
 import ImgOtpMessege from '@/assets/svg/img_otp_messege.svg';
@@ -94,6 +96,8 @@ const SvgFiles = {
   IcFarmer,
   IcHunter,
   IcLIst,
+  IcGalleryPicker,
+  IcDocPicker,
 };
 
 export default SvgFiles;

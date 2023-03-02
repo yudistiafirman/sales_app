@@ -45,6 +45,8 @@ const SvgNames = {
   IC_FARMER: 'IcFarmer',
   IMG_OTP_MESSEGE: 'ImgOtpMessege',
   IC_LIST: 'IcLIst',
+  IC_GALLERY_PICKER: 'IcGalleryPicker',
+  IC_DOC_PICKER: 'IcDocPicker',
 };
 
 export default SvgNames;
