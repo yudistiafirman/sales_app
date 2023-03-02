@@ -10,29 +10,16 @@ import {
 } from '@/components';
 import SecondStep from './elements/second';
 import ThirdStep from './elements/third';
-import {
-  CreateVisitationFirstStep,
-  CreateVisitationFourthStep,
-  CreateVisitationSecondStep,
-  CreateVisitationState,
-  CreateVisitationThirdStep,
-  PIC,
-  Styles,
-  visitationListResponse,
-} from '@/interfaces';
+import { PIC, Styles, visitationListResponse } from '@/interfaces';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import BSheetAddPic from './elements/second/BottomSheetAddPic';
-import {
-  createVisitationContext,
-  CreateVisitationProvider,
-} from '@/context/CreateVisitationContext';
 import Fourth from './elements/fourth';
 import { useKeyboardActive } from '@/hooks';
 import FirstStep from './elements/first';
 import { BStepperIndicator } from '@/components';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import {
   useFocusEffect,
@@ -46,6 +33,14 @@ import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
+import {
+  updateCurrentStep,
+  updateExistingVisitationID,
+  updateStepOne,
+  updateStepTwo,
+  VisitationGlobalState,
+} from '@/redux/reducers/VisitationReducer';
+import { RootState } from '@/redux/store';
 
 const labels = [
   'Alamat Proyek',
@@ -59,14 +54,14 @@ function ContinueIcon() {
 }
 
 function stepHandler(
-  state: CreateVisitationState,
+  state: VisitationGlobalState,
   setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
 ) {
   const { stepOne, stepTwo, stepThree, stepFour } = state;
 
   if (
-    stepOne.createdLocation.formattedAddress &&
-    stepOne.locationAddress.formattedAddress
+    stepOne?.createdLocation?.formattedAddress &&
+    stepOne?.locationAddress?.formattedAddress
   ) {
     setStepsDone((curr) => {
       return [...new Set(curr), 0];
@@ -74,17 +69,17 @@ function stepHandler(
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 0));
   }
-  const selectedPic = stepTwo.pics.find((pic) => {
+  const selectedPic = stepTwo?.pics?.find((pic) => {
     if (pic.isSelected) {
       return pic;
     }
   });
   const customerTypeCond =
-    stepTwo.customerType === 'COMPANY' ? !!stepTwo.companyName : true;
+    stepTwo?.customerType === 'COMPANY' ? !!stepTwo?.companyName : true;
   if (
-    stepTwo.customerType &&
+    stepTwo?.customerType &&
     customerTypeCond &&
-    stepTwo.projectName &&
+    stepTwo?.projectName &&
     selectedPic
   ) {
     setStepsDone((curr) => {
@@ -95,11 +90,11 @@ function stepHandler(
   }
 
   if (
-    stepThree.stageProject &&
-    stepThree.products.length > 0 &&
-    stepThree.estimationDate.estimationMonth &&
-    stepThree.estimationDate.estimationWeek &&
-    stepThree.paymentType
+    stepThree?.stageProject &&
+    stepThree?.products?.length > 0 &&
+    stepThree?.estimationDate?.estimationMonth &&
+    stepThree?.estimationDate?.estimationWeek &&
+    stepThree?.paymentType
   ) {
     setStepsDone((curr) => {
       return [...new Set(curr), 2];
@@ -108,7 +103,7 @@ function stepHandler(
     setStepsDone((curr) => curr.filter((num) => num !== 2));
   }
 
-  if (stepFour.images.length > 0) {
+  if (stepFour?.images?.length > 0) {
     setStepsDone((curr) => {
       return [...new Set(curr), 3];
     });
@@ -116,71 +111,66 @@ function stepHandler(
     setStepsDone((curr) => curr.filter((num) => num !== 3));
   }
 }
-function populateData(
-  existingData: visitationListResponse,
-  updateValue: (
-    step: keyof CreateVisitationState,
-    key:
-      | keyof CreateVisitationFirstStep
-      | keyof CreateVisitationSecondStep
-      | keyof CreateVisitationThirdStep
-      | keyof CreateVisitationFourthStep,
-    value: any
-  ) => void
-) {
-  customLog(JSON.stringify(existingData), 'difunction');
-  const { project } = existingData;
-  const { company, PIC: picList, mainPic } = project;
-  if (company) {
-    updateValue('stepTwo', 'customerType', 'COMPANY');
-    // const selectedCompany = {
-    //   id: company.id,
-    //   title: company.displayName,
-    // };
-    updateValue('stepTwo', 'companyName', company.displayName);
-    // updateValue('stepTwo', 'options', {
-    //   loading: false,
-    //   items: [selectedCompany],
-    // });
-  } else {
-    updateValue('stepTwo', 'customerType', 'INDIVIDU');
-  }
-  if (picList) {
-    const list = picList.map((pic) => {
-      if (mainPic) {
-        if (pic.id === mainPic.id) {
-          return {
-            ...pic,
-            isSelected: true,
-          };
-        }
-      }
-      return {
-        ...pic,
-        isSelected: false,
-      };
-    });
-    updateValue('stepTwo', 'pics', list);
-  }
-  updateValue('stepTwo', 'projectId', project.id);
 
-  updateValue('stepTwo', 'projectName', project.name);
-  // updateValue('stepTwo', 'companyName');
-}
 const CreateVisitation = () => {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const { values, action } = React.useContext(createVisitationContext);
-  const { shouldScrollView } = values;
-  const { updateValue, updateValueOnstep } = action;
+  const visitationData = useSelector((state: RootState) => state.visitation);
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3]);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
 
   const existingVisitation: visitationListResponse =
     route?.params?.existingVisitation;
+
+  function populateData(existingData: visitationListResponse) {
+    customLog(JSON.stringify(existingData), 'difunction');
+    const { project } = existingData;
+    const { company, PIC: picList, mainPic } = project;
+    let stepTwo;
+    stepTwo = {
+      ...visitationData,
+      projectId: project.id,
+      projectName: project.name,
+    };
+    if (company) {
+      stepTwo = {
+        ...visitationData,
+        customerType: 'COMPANY',
+        companyName: company.displayName,
+      };
+      dispatch(updateStepTwo(stepTwo));
+    } else {
+      stepTwo = {
+        ...visitationData,
+        customerType: 'INDIVIDU',
+      };
+      dispatch(updateStepTwo(stepTwo));
+    }
+    if (picList) {
+      const list = picList.map((pic) => {
+        if (mainPic) {
+          if (pic.id === mainPic.id) {
+            return {
+              ...pic,
+              isSelected: true,
+            };
+          }
+        }
+        return {
+          ...pic,
+          isSelected: false,
+        };
+      });
+      stepTwo = {
+        ...visitationData,
+        pics: list,
+      };
+      dispatch(updateStepTwo(stepTwo));
+    }
+  }
 
   useCustomHeaderLeft({
     customHeaderLeft: (
@@ -196,18 +186,23 @@ const CreateVisitation = () => {
     crashlytics().log(CREATE_VISITATION);
 
     if (existingVisitation) {
-      updateValue('existingVisitationId', existingVisitation.id);
-      populateData(existingVisitation, updateValueOnstep);
+      dispatch(updateExistingVisitationID(existingVisitation?.id));
+      populateData(existingVisitation);
       const { project } = existingVisitation;
       const { locationAddress } = project;
-      updateValueOnstep('stepOne', 'existingLocationId', locationAddress.id);
+      let stepOne;
+      stepOne = {
+        ...visitationData,
+        existingLocationId: locationAddress?.id,
+      };
+      dispatch(updateStepOne(stepOne));
       if (locationAddress) {
-        if (locationAddress.lon && locationAddress.lat) {
-          const longitude = +locationAddress.lon;
-          const latitude = +locationAddress.lat;
+        if (locationAddress?.lon && locationAddress?.lat) {
+          const longitude = +locationAddress?.lon;
+          const latitude = +locationAddress?.lat;
           dispatch(
             updateRegion({
-              formattedAddress: locationAddress.line1,
+              formattedAddress: locationAddress?.line1,
               latitude: latitude,
               longitude: longitude,
               lat: latitude,
@@ -231,8 +226,8 @@ const CreateVisitation = () => {
     React.useCallback(() => {
       const backAction = () => {
         if (bottomSheetRef?.current) bottomSheetRef?.current?.close();
-        if (values.step > 0) {
-          next(values.step - 1)();
+        if (visitationData?.step > 0) {
+          next(visitationData?.step - 1)();
         } else {
           setPopupVisible(true);
         }
@@ -244,33 +239,38 @@ const CreateVisitation = () => {
       );
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [values.step])
+    }, [visitationData?.step])
   );
 
   useEffect(() => {
-    stepHandler(values, setStepsDone);
-  }, [values]);
+    stepHandler(visitationData, setStepsDone);
+  }, [visitationData]);
 
   const next = (nextStep: number) => () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
-      updateValue('step', nextStep);
+      dispatch(updateCurrentStep(nextStep));
     }
   };
 
   const handleBackButton = () => {
-    if (values.step > 0) {
-      next(values.step - 1)();
+    if (visitationData?.step > 0) {
+      next(visitationData?.step - 1)();
     } else {
       setPopupVisible(true);
     }
   };
 
   const addPic = (state: PIC) => {
-    if (values.stepTwo.pics.length === 0) {
+    if (visitationData?.stepTwo.pics.length === 0) {
       state.isSelected = true;
     }
-    updateValueOnstep('stepTwo', 'pics', [...values.stepTwo.pics, state]);
+    let stepTwo;
+    stepTwo = {
+      ...visitationData,
+      pics: [...visitationData?.stepTwo?.pics, state],
+    };
+    dispatch(updateStepTwo(stepTwo));
   };
 
   const openBottomSheet = () => {
@@ -291,28 +291,30 @@ const CreateVisitation = () => {
         stepOnPress={(pos: number) => {
           next(pos)();
         }}
-        currentStep={values.step}
+        currentStep={visitationData?.step}
         labels={labels}
       />
 
       <BContainer>
         <View style={styles.container}>
-          {stepRender[values.step]}
+          {stepRender[visitationData?.step]}
           <BSpacer size={'extraSmall'} />
-          {!keyboardVisible && shouldScrollView && values.step > 0 && (
-            <BBackContinueBtn
-              onPressContinue={() => {
-                next(values.step + 1)();
-                DeviceEventEmitter.emit(
-                  'CreateVisitation.continueButton',
-                  true
-                );
-              }}
-              onPressBack={handleBackButton}
-              disableContinue={!stepsDone.includes(values.step)}
-            />
-          )}
-          {values.step === 0 && (
+          {!keyboardVisible &&
+            visitationData?.shouldScrollView &&
+            visitationData?.step > 0 && (
+              <BBackContinueBtn
+                onPressContinue={() => {
+                  next(visitationData?.step + 1)();
+                  DeviceEventEmitter.emit(
+                    'CreateVisitation.continueButton',
+                    true
+                  );
+                }}
+                onPressBack={handleBackButton}
+                disableContinue={!stepsDone.includes(visitationData?.step)}
+              />
+            )}
+          {visitationData?.step === 0 && (
             <View style={styles.conButton}>
               <View style={styles.buttonOne}>
                 <BButtonPrimary
@@ -324,20 +326,16 @@ const CreateVisitation = () => {
               </View>
               <View style={styles.buttonTwo}>
                 <BButtonPrimary
-                  disable={!stepsDone.includes(values.step)}
+                  disable={!stepsDone.includes(visitationData?.step)}
                   title="Lanjut"
-                  onPress={next(values.step + 1)}
+                  onPress={next(visitationData?.step + 1)}
                   rightIcon={ContinueIcon}
                 />
               </View>
             </View>
           )}
         </View>
-        <BSheetAddPic
-          ref={bottomSheetRef}
-          initialIndex={values.sheetIndex}
-          addPic={addPic}
-        />
+        <BSheetAddPic ref={bottomSheetRef} initialIndex={-1} addPic={addPic} />
         <PopUpQuestion
           isVisible={isPopupVisible}
           setIsPopupVisible={() => {
@@ -382,12 +380,4 @@ const styles: Styles = {
   },
 };
 
-const CreateVisitationWithProvider = (props: any) => {
-  return (
-    <CreateVisitationProvider>
-      <CreateVisitation {...props} />
-    </CreateVisitationProvider>
-  );
-};
-
-export default CreateVisitationWithProvider;
+export default CreateVisitation;

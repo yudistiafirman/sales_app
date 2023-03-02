@@ -3,6 +3,7 @@ import { BBottomSheetForm } from '@/components';
 import { Input, PIC } from '@/interfaces';
 import { StyleSheet, Text } from 'react-native';
 import { colors, fonts } from '@/constants';
+
 interface IProps {
   initialIndex: number;
   addPic: any;
@@ -23,8 +24,6 @@ const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
 const BSheetAddPic = React.forwardRef(
   ({ initialIndex, addPic }: IProps, ref: any) => {
-    // const { action } = React.useContext(createVisitationContext);
-    // const { updateValueOnstep } = action;
     const [state, setState] = React.useState<PIC>(initialState);
 
     const onChange = (key: keyof PIC) => (text: string) => {
@@ -95,6 +94,7 @@ const BSheetAddPic = React.forwardRef(
           placeholder: 'Masukkan email',
         },
       ];
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.name, state.email, state.position, state.phone]);
 
     const onAdd = () => {

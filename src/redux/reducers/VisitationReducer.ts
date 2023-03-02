@@ -6,7 +6,7 @@ import {
 } from '@/interfaces';
 import { createSlice } from '@reduxjs/toolkit';
 
-interface VisitationGlobalState {
+export interface VisitationGlobalState {
   step: number;
   shouldScrollView: boolean;
   stepOne: CreateVisitationFirstStep;

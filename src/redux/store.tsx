@@ -1,16 +1,18 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-community/async-storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import authReducer from './reducers/authReducer';
 import commonReducer from './reducers/commonReducer';
-import cameraReducer from './reducers/cameraReducer';
+import cameraReducer, { CameraGlobalState } from './reducers/cameraReducer';
 import locationReducer from './reducers/locationReducer';
 import modalReducer from './reducers/modalReducer';
 import productivityFlowReducer from './reducers/productivityFlowReducer';
 import orderReducer from './reducers/orderReducer';
 import snackbarReducer from './reducers/snackbarReducer';
 import SphReducer from './reducers/SphReducer';
-import VisitationReducer from './reducers/VisitationReducer';
+import VisitationReducer, {
+  VisitationGlobalState,
+} from './reducers/VisitationReducer';
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 
 const persistConfig = {
@@ -19,27 +21,26 @@ const persistConfig = {
   stateReconciler: autoMergeLevel1,
 };
 
-const sphReducerPersisted = persistReducer(persistConfig, SphReducer);
-const visitationReducerPersisted = persistReducer(
-  persistConfig,
-  VisitationReducer
-);
+const rootReducer = combineReducers({
+  location: locationReducer,
+  auth: authReducer,
+  modal: modalReducer,
+  productivity: productivityFlowReducer,
+  common: commonReducer,
+  order: orderReducer,
+  snackbar: snackbarReducer,
+  sph: persistReducer(persistConfig, SphReducer),
+  visitation: persistReducer<VisitationGlobalState, any>(
+    persistConfig,
+    VisitationReducer
+  ),
+  camera: persistReducer<CameraGlobalState, any>(persistConfig, cameraReducer),
+});
 
 export const store = configureStore({
-  reducer: {
-    location: locationReducer,
-    auth: authReducer,
-    modal: modalReducer,
-    productivity: productivityFlowReducer,
-    common: commonReducer,
-    camera: cameraReducer,
-    order: orderReducer,
-    snackbar: snackbarReducer,
-    sph: sphReducerPersisted,
-    visitation: visitationReducerPersisted,
-  },
+  reducer: rootReducer,
   middleware: (getDefaultMiddleWare) =>
-    getDefaultMiddleWare({ serializableCheck: false }),
+    getDefaultMiddleWare({ immutableCheck: false, serializableCheck: false }),
 });
 
 export const persistor = persistStore(store);

@@ -186,17 +186,6 @@ interface CreateVisitationFourthStep {
   alasanPenolakan: string;
 }
 
-interface CreateVisitationState {
-  step: number;
-  stepOne: CreateVisitationFirstStep;
-  stepTwo: CreateVisitationSecondStep;
-  stepThree: CreateVisitationThirdStep;
-  stepFour: CreateVisitationFourthStep;
-  sheetIndex: number;
-  shouldScrollView: boolean;
-  existingVisitationId: string | null;
-}
-
 interface PIC {
   id?: string;
   name?: string;
@@ -648,7 +637,6 @@ interface ProjectDetail {
 export type {
   Input,
   Styles,
-  CreateVisitationState,
   CreateVisitationFirstStep,
   CreateVisitationSecondStep,
   CreateVisitationThirdStep,

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
 import LastStepPopUp from '../LastStepPopUp';
-import { createVisitationContext } from '@/context/CreateVisitationContext';
 import {
   CreateVisitationFourthStep,
   locationPayloadType,
@@ -10,7 +9,6 @@ import {
   projectPayloadType,
   visitationPayload,
 } from '@/interfaces';
-import { CreateVisitationState } from '@/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
 import {
@@ -34,6 +32,10 @@ import {
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
 import { BGallery, PopUpQuestion } from '@/components';
+import {
+  updateStepFour,
+  VisitationGlobalState,
+} from '@/redux/reducers/VisitationReducer';
 
 export type selectedDateType = {
   date: string;
@@ -42,7 +44,7 @@ export type selectedDateType = {
 };
 
 function payloadMapper(
-  values: CreateVisitationState,
+  values: VisitationGlobalState,
   type: 'VISIT' | 'SPH' | 'REJECTED' | ''
 ): payloadPostType {
   const { stepOne, stepTwo, stepThree, stepFour } = values;
@@ -175,23 +177,24 @@ function payloadMapper(
 const Fourth = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
   const { isUploadLoading, isPostVisitationLoading } = useSelector(
     (state: RootState) => state.common
   );
   const { uploadedFilesResponse } = useSelector(
     (state: RootState) => state.camera
   );
-
   const { visitationPhotoURLs } = useSelector(
     (state: RootState) => state.camera
   );
-  const { values, action } = React.useContext(createVisitationContext);
-  const { stepFour: state } = values;
-  const { updateValueOnstep } = action;
+  const visitationData = useSelector((state: RootState) => state.visitation);
 
   const onChange = (key: keyof CreateVisitationFourthStep) => (e: any) => {
-    updateValueOnstep('stepFour', key, e);
+    let stepFour;
+    stepFour = {
+      ...visitationData,
+      [key]: e,
+    };
+    dispatch(updateStepFour(stepFour));
   };
 
   const [isPopUpVisible, setIsPopUpVisible] = useState(false);
@@ -239,7 +242,7 @@ const Fourth = () => {
   const onPressSubmit = useCallback(
     async (type: 'VISIT' | 'SPH' | 'REJECTED' | '') => {
       try {
-        let payload: payloadPostType = payloadMapper(values, type);
+        let payload: payloadPostType = payloadMapper(visitationData, type);
         customLog(JSON.stringify(payload), 'payload216', uploadedFilesResponse);
         const visitationMethod = {
           POST: postVisitation,
@@ -268,10 +271,6 @@ const Fourth = () => {
                 obj?.file?.name === photoName || obj?.file?.name === photoNamee
             );
             if (foundObject) {
-              // return {
-              //   id: photo.id,
-              //   type: foundObject.type,
-              // };
               files.push({
                 id: photo.id,
                 type: foundObject.type,
@@ -357,7 +356,7 @@ const Fourth = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [values]
+    [visitationData]
   );
 
   return (
@@ -380,21 +379,21 @@ const Fourth = () => {
         isVisible={isLastStepVisible}
         setIsPopUpVisible={setIsLastStepVisible}
         selectedDate={
-          state.selectedDate
-            ? `${state.selectedDate?.day}, ${state.selectedDate?.prettyDate}`
+          visitationData?.selectedDate
+            ? `${visitationData?.selectedDate?.day}, ${visitationData?.selectedDate?.prettyDate}`
             : ''
         }
         closedLostValueOnChange={{
           dropdownOnchange: onChange('kategoriAlasan'),
-          dropdownValue: state.kategoriAlasan,
+          dropdownValue: visitationData?.kategoriAlasan,
           areaOnChange: onChange('alasanPenolakan'),
-          areaValue: state.alasanPenolakan,
+          areaValue: visitationData?.alasanPenolakan,
         }}
         onPressSubmit={onPressSubmit}
         isLoading={isPostVisitationLoading || isUploadLoading}
       />
       <BGallery
-        picts={state.images}
+        picts={visitationData?.images}
         addMorePict={() =>
           navigation.dispatch(
             StackActions.push(CAMERA, {
