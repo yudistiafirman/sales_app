@@ -133,7 +133,7 @@ function SphContent() {
   const stepControll = useCallback((step: number) => {
     customLog(step, 'stepsss');
   }, []);
-  const sphData = useSelector((state: RootState) => state.sphState);
+  const sphData = useSelector((state: RootState) => state.sph);
   useEffect(() => {
     crashlytics().log(SPH);
 

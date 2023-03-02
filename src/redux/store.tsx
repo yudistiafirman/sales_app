@@ -10,6 +10,7 @@ import productivityFlowReducer from './reducers/productivityFlowReducer';
 import orderReducer from './reducers/orderReducer';
 import snackbarReducer from './reducers/snackbarReducer';
 import SphReducer from './reducers/SphReducer';
+import VisitationReducer from './reducers/VisitationReducer';
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 
 const persistConfig = {
@@ -18,7 +19,11 @@ const persistConfig = {
   stateReconciler: autoMergeLevel1,
 };
 
-const sphStatePersisted = persistReducer(persistConfig, SphReducer);
+const sphReducerPersisted = persistReducer(persistConfig, SphReducer);
+const visitationReducerPersisted = persistReducer(
+  persistConfig,
+  VisitationReducer
+);
 
 export const store = configureStore({
   reducer: {
@@ -30,11 +35,13 @@ export const store = configureStore({
     camera: cameraReducer,
     order: orderReducer,
     snackbar: snackbarReducer,
-    sphState: sphStatePersisted,
+    sph: sphReducerPersisted,
+    visitation: visitationReducerPersisted,
   },
   middleware: (getDefaultMiddleWare) =>
     getDefaultMiddleWare({ serializableCheck: false }),
 });
+
 export const persistor = persistStore(store);
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

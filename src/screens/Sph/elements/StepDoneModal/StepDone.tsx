@@ -126,7 +126,7 @@ export default function StepDone({
   const navigation = useNavigation();
   const dispatch = useDispatch();
   // const [sphState] = useContext(SphContext);
-  const sphState = useSelector((state: RootState) => state.sphState);
+  const sphState = useSelector((state: RootState) => state.sph);
   const stateCompanyName = sphState.selectedCompany?.Company?.name
     ? sphState.selectedCompany?.Company.name
     : sphState.selectedPic?.name;

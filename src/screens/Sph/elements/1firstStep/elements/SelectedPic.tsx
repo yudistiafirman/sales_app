@@ -57,7 +57,7 @@ export default function SelectedPic({
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [sphState, stateUpdate] = useContext(SphContext);
   const { selectedCompany, selectedPic } = useSelector(
-    (state: RootState) => state.sphState
+    (state: RootState) => state.sph
   );
 
   const inputsData: Input[] = useMemo(() => {

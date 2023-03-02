@@ -54,7 +54,7 @@ export default function ThirdStep() {
   });
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const { paymentType, paymentRequiredDocuments, paymentBankGuarantee } =
-    useSelector((state: RootState) => state.sphState);
+    useSelector((state: RootState) => state.sph);
 
   useEffect(() => {
     crashlytics().log(SPH + '-Step3');
