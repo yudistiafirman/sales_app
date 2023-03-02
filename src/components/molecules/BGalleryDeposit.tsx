@@ -4,6 +4,7 @@ import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import BText from '../atoms/BText';
 import formatCurrency from '@/utils/formatCurrency';
+import Pdf from 'react-native-pdf';
 
 type BGalleryDepositType = {
   picts: any[];
@@ -26,7 +27,22 @@ export default function BGalleryDeposit({
             borderRadius: layout.radius.md,
           }}
         >
-          <Image style={style.flexFull} source={picts[0]?.photo} />
+          {picts[0]?.isFromPicker ? (
+            <>
+              {picts[0]?.file?.type === 'image/jpeg' ||
+              picts[0]?.file?.type === 'image/png' ? (
+                <Image style={style.flexFull} source={picts[0]?.file} />
+              ) : (
+                <Pdf
+                  source={{ uri: picts[0]?.file?.uri }}
+                  style={style.flexFull}
+                  page={1}
+                />
+              )}
+            </>
+          ) : (
+            <Image style={style.flexFull} source={picts[0]?.file} />
+          )}
           {picts.length > 1 && (
             <>
               <View style={style.overlay} />

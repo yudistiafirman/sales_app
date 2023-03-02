@@ -2,15 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { postUploadFiles } from '../async-thunks/commonThunks';
 import { requiredDocType } from '@/interfaces';
-
-export interface photoType {
-  photo: {
-    uri: string;
-    type: string;
-    name: string;
-  };
-  type: 'COVER' | 'GALLERY';
-}
+import {
+  CREATE_DEPOSIT,
+  CREATE_SCHEDULE,
+  CREATE_VISITATION,
+} from '@/navigation/ScreenNames';
+import { LocalFileType } from '@/interfaces/LocalFileType';
 
 type fileResponse = {
   id: string;
@@ -18,13 +15,21 @@ type fileResponse = {
 };
 
 export interface MainState {
-  photoURLs: photoType[];
+  localURLs: LocalFileType[];
+  visitationPhotoURLs: LocalFileType[];
+  createDepositPhotoURLs: LocalFileType[];
+  createSchedulePhotoURLs: LocalFileType[];
+  operationPhotoURLs: LocalFileType[];
   uploadedFilesResponse: fileResponse[];
   uploadedRequiredDocsResponse: requiredDocType[];
 }
 
 const initialState: MainState = {
-  photoURLs: [],
+  localURLs: [],
+  visitationPhotoURLs: [],
+  createDepositPhotoURLs: [],
+  createSchedulePhotoURLs: [],
+  operationPhotoURLs: [],
   uploadedFilesResponse: [],
   uploadedRequiredDocsResponse: [],
 };
@@ -33,44 +38,84 @@ export const cameraSlice = createSlice({
   name: 'camera',
   initialState,
   reducers: {
-    setImageURLS: (state, action: PayloadAction<photoType>) => {
-      state.photoURLs = [...state.photoURLs, action.payload];
+    setImageURLS: (
+      state,
+      action: PayloadAction<{ file: LocalFileType; source?: string }>
+    ) => {
+      switch (action.payload.source) {
+        case CREATE_VISITATION:
+          state.visitationPhotoURLs = [
+            ...state.visitationPhotoURLs,
+            action.payload.file,
+          ];
+          return;
+        case CREATE_DEPOSIT:
+          state.createDepositPhotoURLs = [
+            ...state.createDepositPhotoURLs,
+            action.payload.file,
+          ];
+          return;
+        case CREATE_SCHEDULE:
+          state.createSchedulePhotoURLs = [
+            ...state.createSchedulePhotoURLs,
+            action.payload.file,
+          ];
+          return;
+        default:
+          state.localURLs = [...state.localURLs, action.payload.file];
+          return;
+      }
     },
-    resetImageURLS: (state) => {
-      state.photoURLs = [];
+    resetImageURLS: (state, action: PayloadAction<{ source: string }>) => {
+      switch (action.payload.source) {
+        case CREATE_VISITATION:
+          state.visitationPhotoURLs = [];
+          return;
+        case CREATE_DEPOSIT:
+          state.createDepositPhotoURLs = [];
+          return;
+        case CREATE_SCHEDULE:
+          state.createSchedulePhotoURLs = [];
+          return;
+        default:
+          state.localURLs = [];
+          return;
+      }
     },
-    deleteImage: (state, action: PayloadAction<{ pos: number }>) => {
-      const currentImages = state.photoURLs;
-      currentImages.splice(action.payload.pos, 1);
-      state.photoURLs = [...currentImages];
+    deleteImage: (
+      state,
+      action: PayloadAction<{ pos: number; source: string }>
+    ) => {
+      let currentImages;
+      switch (action.payload.source) {
+        case CREATE_VISITATION:
+          currentImages = state.visitationPhotoURLs;
+          currentImages.splice(action.payload.pos, 1);
+          state.visitationPhotoURLs = [...currentImages];
+          return;
+        case CREATE_DEPOSIT:
+          currentImages = state.createDepositPhotoURLs;
+          currentImages.splice(action.payload.pos, 1);
+          state.createDepositPhotoURLs = [...currentImages];
+          return;
+        case CREATE_SCHEDULE:
+          currentImages = state.createSchedulePhotoURLs;
+          currentImages.splice(action.payload.pos, 1);
+          state.createSchedulePhotoURLs = [...currentImages];
+          return;
+        default:
+          currentImages = state.localURLs;
+          currentImages.splice(action.payload.pos, 1);
+          state.localURLs = [...currentImages];
+          return;
+      }
     },
     setuploadedFilesResponse: (state, action) => {
       state.uploadedRequiredDocsResponse = action.payload;
     },
-    // setRequiredDocsResponse: (
-    //   state,
-    //   action: PayloadAction<{ uploadedResponse: requiredDocType[] }>
-    // ) => {
-    //   state.uploadedRequiredDocsResponse = action.payload.uploadedResponse;
-    // },
   },
   extraReducers: (builder) => {
-    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {
-      // if (payload) {
-      //   state.uploadedFilesResponse = payload.map((photo) => {
-      //     const photoName = `${photo.name}.${photo.type}`;
-      //     const foundObject = state.photoURLs.find(
-      //       (obj) => obj.photo.name === photoName
-      //     );
-      //     if (foundObject) {
-      //       return {
-      //         id: photo.id,
-      //         type: foundObject.type,
-      //       };
-      //     }
-      //   });
-      // }
-    });
+    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {});
   },
 });
 

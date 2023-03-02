@@ -161,7 +161,7 @@ export default function FirstStep() {
                 title="Buat Deposit"
                 isOutline
                 onPress={() => {
-                  dispatch(resetImageURLS());
+                  dispatch(resetImageURLS({ source: CREATE_SCHEDULE }));
                   navigation.navigate(CAMERA, {
                     photoTitle: 'Bukti',
                     navigateTo: CREATE_SCHEDULE,

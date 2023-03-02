@@ -28,8 +28,8 @@ import moment from 'moment';
 import {
   CAMERA,
   CREATE_VISITATION,
+  GALLERY_VISITATION,
   SPH,
-  SPH_TITLE,
 } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
@@ -183,7 +183,7 @@ const Fourth = () => {
     (state: RootState) => state.camera
   );
 
-  const { photoURLs: photoUrls } = useSelector(
+  const { visitationPhotoURLs } = useSelector(
     (state: RootState) => state.camera
   );
   const { values, action } = React.useContext(createVisitationContext);
@@ -199,7 +199,7 @@ const Fourth = () => {
 
   const removeImage = useCallback(
     (pos: number) => () => {
-      dispatch(deleteImage({ pos }));
+      dispatch(deleteImage({ pos, source: CREATE_VISITATION }));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -208,9 +208,9 @@ const Fourth = () => {
   useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step4');
     // photoUrls;
-    onChange('images')(photoUrls);
+    onChange('images')(visitationPhotoURLs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [photoUrls]);
+  }, [visitationPhotoURLs]);
 
   useEffect(() => {
     DeviceEventEmitter.addListener('CreateVisitation.continueButton', () => {
@@ -249,10 +249,10 @@ const Fourth = () => {
         const methodStr = isDataUpdate ? 'PUT' : 'POST';
 
         if (uploadedFilesResponse.length === 0) {
-          const photoFiles = photoUrls.map((photo) => {
+          const photoFiles = visitationPhotoURLs.map((photo) => {
             return {
-              ...photo.photo,
-              uri: photo?.photo?.uri?.replace('file:', 'file://'),
+              ...photo.file,
+              uri: photo?.file?.uri?.replace('file:', 'file://'),
             };
           });
 
@@ -263,10 +263,9 @@ const Fourth = () => {
           data.forEach((photo) => {
             const photoName = `${photo.name}.${photo.type}`;
             const photoNamee = `${photo.name}.jpg`;
-            const foundObject = photoUrls.find(
+            const foundObject = visitationPhotoURLs.find(
               (obj) =>
-                obj?.photo?.name === photoName ||
-                obj?.photo?.name === photoNamee
+                obj?.file?.name === photoName || obj?.file?.name === photoNamee
             );
             if (foundObject) {
               // return {
@@ -357,6 +356,7 @@ const Fourth = () => {
         );
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [values]
   );
 
@@ -371,6 +371,7 @@ const Fourth = () => {
             StackActions.push(CAMERA, {
               photoTitle: 'Kunjungan',
               closeButton: true,
+              navigateTo: GALLERY_VISITATION,
             })
           );
         }}
@@ -399,6 +400,7 @@ const Fourth = () => {
             StackActions.push(CAMERA, {
               photoTitle: 'Kunjungan',
               closeButton: true,
+              navigateTo: GALLERY_VISITATION,
             })
           )
         }

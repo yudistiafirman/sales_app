@@ -9,7 +9,11 @@ import {
 import { layout } from '@/constants';
 import { Input } from '@/interfaces';
 import { CreateDepositContext } from '@/context/CreateDepositContext';
-import { CAMERA } from '@/navigation/ScreenNames';
+import {
+  CAMERA,
+  CREATE_DEPOSIT,
+  GALLERY_DEPOSIT,
+} from '@/navigation/ScreenNames';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteImage } from '@/redux/reducers/cameraReducer';
 import { RootState } from '@/redux/store';
@@ -19,7 +23,9 @@ export default function FirstStep() {
   const navigation = useNavigation();
   const { values, action } = React.useContext(CreateDepositContext);
   const { stepOne: stateOne } = values;
-  const { photoURLs } = useSelector((state: RootState) => state.camera);
+  const { createDepositPhotoURLs } = useSelector(
+    (state: RootState) => state.camera
+  );
   const [isVisibleCalendar, setVisibleCalendar] = React.useState(false);
 
   const { updateValueOnstep } = action;
@@ -80,12 +86,12 @@ export default function FirstStep() {
 
   const removeImage = React.useCallback(
     (pos: number) => () => {
-      dispatch(deleteImage({ pos }));
+      dispatch(deleteImage({ pos, source: CREATE_DEPOSIT }));
       let modifyDeposit = {};
       if (deposit) modifyDeposit = deposit;
       modifyDeposit = {
         ...modifyDeposit,
-        picts: photoURLs,
+        picts: createDepositPhotoURLs,
       };
       updateValueOnstep('stepOne', 'deposit', modifyDeposit);
     },
@@ -99,11 +105,11 @@ export default function FirstStep() {
       if (deposit) modifyDeposit = deposit;
       modifyDeposit = {
         ...modifyDeposit,
-        picts: photoURLs,
+        picts: createDepositPhotoURLs,
       };
       updateValueOnstep('stepOne', 'deposit', modifyDeposit);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [photoURLs])
+    }, [createDepositPhotoURLs])
   );
 
   return (
@@ -116,6 +122,7 @@ export default function FirstStep() {
               StackActions.push(CAMERA, {
                 photoTitle: 'Bukti',
                 closeButton: true,
+                navigateTo: GALLERY_DEPOSIT,
               })
             )
           }

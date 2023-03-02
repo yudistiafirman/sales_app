@@ -1,5 +1,5 @@
 import Preview from '@/screens/Camera/Preview';
-import Camera from '@/screens/Camera';
+import CameraScreen from '@/screens/Camera';
 import CalendarScreen from '@/screens/Calendar';
 import * as React from 'react';
 import SearchAreaProject from '@/screens/SearchAreaProject';
@@ -124,7 +124,7 @@ const SalesStack = (Stack: any) => {
       <Stack.Screen
         name={CAMERA}
         key={CAMERA}
-        component={Camera}
+        component={CameraScreen}
         options={{
           headerTitle: CAMERA_TITLE,
         }}

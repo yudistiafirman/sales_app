@@ -9,6 +9,7 @@ import { RootState } from '@/redux/store';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { useFocusEffect } from '@react-navigation/native';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { OPERATION } from '@/navigation/ScreenNames';
 
 const Operation = () => {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ const Operation = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(resetImageURLS());
+      dispatch(resetImageURLS({ source: OPERATION }));
     }, [dispatch])
   );
 
