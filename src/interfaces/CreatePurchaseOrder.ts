@@ -18,11 +18,11 @@ interface RequestedProducts {
   };
 }
 
-interface QuotationLetters {
+interface QuotationRequests {
   id: string;
-  number: string;
-  QuotationRequest: {
-    totalPrice: number;
+  totalPrice: string;
+  QuotationLetter: {
+    number: string;
   };
   RequestedProducts: RequestedProducts[];
 }
@@ -31,12 +31,12 @@ interface CreatedSPHListResponse {
   id: string;
   name: string;
   ShippingAddress: ShippingAddress;
-  QuotationLetters: QuotationLetters[];
+  QuotationRequest: QuotationRequests[];
 }
 
-export type {
+export {
   ShippingAddress,
   RequestedProducts,
-  QuotationLetters,
+  QuotationRequests,
   CreatedSPHListResponse,
 };

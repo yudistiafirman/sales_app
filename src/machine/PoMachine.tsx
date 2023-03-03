@@ -1,11 +1,12 @@
 import { bStorage } from '@/actions';
-import { CompanyData } from '@/components/organism/BCommonCompanyList';
 import { storageKey } from '@/constants';
+import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
+import { LocalFileType } from '@/interfaces/LocalFileType';
 import { customLog } from '@/utils/generalFunc';
 import { assign, createMachine } from 'xstate';
 
 const POMachine =
-  /** @xstate-layout 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-TCXBffPiUK9jnB4h4Ao-NwhYkpjs-xtNUUGi9sQL4vswCYs5mEBY-JVTLAKPxfmz9J6kpdKcSWR1qZQyoDvSkrKXD2h0eBaeGRqxOh9LKNcDkvSnHcqEKpkrO4YuuTg8ezk0Tyu2IqimFYiXXEWKStwfE+I5FFZgtuLNd77yHiPZoYAT6QGlQgJyAQTbzHmEJYCSzhYpCOIK+0Lp8giiqb-XA-90C4D9XQhYcbIg4kbs5N5ew3Kwscl5ehMjAjIKKEAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgAsAdkruAHAE5DAKwAzABsAYEhvu7uADQgAJ6IAIxJIZ7eSc4B7mEh3q5B7gC+RXGSOPhEpORUAGaC6LDaDNpgyJxQxAAqxAy0fBAtbWb2yFY2erz2TgiZhkGUQd7O7gG+oUnr3gFxiQghaZQZIUk5IYZJF4a+JWUYFTLV8vWNza3IlLgQEGwA8pwEXBSYRQBjIbAjJAgMbWWxTKEzKK7FzuQxecIXLJBIIXALeW7Q+7SKpyOoNJpDD5fH7-cgAGzArQAkgBbXAwSGWWGTaaIKIhLxBApBFLuXwrXy+ZH7U6LEI4yLRQwhVy+AIE8rE2Q1SgvCnvT7fP6cYRoZrgznQ8Zw3mzQzONFBNZBZxRdzOJLeFXSgIOyj+SXYsKolLq0qEqSVbXPclvNqGmmcakAWVIYFZ7LglphEzsCOSDoWSxWzpOWx2CUQ7k9i1SmzW0SiASSGqJUaeZNelMofSBODB2E4ACNcPQegBBI3EbPWnn5hCrbyUeb+ZwnYupZzS6to3wHTbnD0BVwpVuRx6k3Wx7u9qQDoS8M26XhQAFgPvYEEz7l50AzZxeosyzeIYrjeDiaqSrElb7PM-rBKc9rnJcARhnc54kjqepxh8t79uCD5PiCnDEMgYC8CCqYQLgdLfrm8J-i4gHFiBYEQWsSIwWKArbL4riuG43juEsqRng8mExl2Bp4dg96AsCL4DtwfACBoYgSG2F5Yde0nvneBHyTgIIDuoIjEFocJmHRNrzi6AquMqbiGKiYSXM4QQ+gE9kISEa7bDi7piVqHZXlJ8YyXJelGYp4IkbwADCeAvmA8U6GAnToIIWYmKMs6-o4TECixoHgdcHHQXsrjnMuhi1Wu2SpJEzhBe2l7YTeUWyQRpHkVRNGJcQVhgEpmB0kNfW0TlUI5jZjEIEK9muMEtXKmEqEFNutWUA58rKoUhQFGhEbidGnb6uFnX3j1vATQNQ1KdSd0ELwA7WXOc0ZJ4AFCl6SRgSk0ogQElAeucGRLXuAFHZqrU6n0mADJSHTEAAQqOdA9AAYjpwxTVy9G2r6gNJNtkq+H4vnOUkQQtVp8jw4j7zIz0XSfmQlJvflMyejWjnCsqhjePk3jSmkjp1mcVyXDc4Yw3TVAM7wgwGoIEAMpwqDIGNXxfnjVo-gxBWzOEvgg0KIpbAJHkwSqps5Ce9oeJKO20xJCv9Er3aa9rEDY+rnOG9zqFLn4gR4k6IqoRViCHiDKrXKqgR-e5runZQrMNMrbTI2jY69B7WfIAHto80ufPYgLQtgT6vgkwczZuK6TXNqnIUZ+zKtq2Ab4Mpg2hsOgxAQKgffF-OR6m9ieJrPX8qnKLvpxw5e7ZLX8rFLLmlu+nbOF5QyCD8Pfd9L3rQQJwY9ze5lyUKK1xC+KXnYqLoFePHoegaEqGt5e12pSyFBcBJm+BmGAsBL5GyJjBS4W08TIUCPxB0zkSjhl4EPOAowt6nVygbW0ABaQ4f0lqbGrD4QoFxpQEJqnVasmwtj+BCD-HUNB6BMFYD8YgOCCbzjwZsW+-FmxRFOOBEMrhpSZAckcT0TofD5ECG4Jh8gACiDgbBcNmkbJazhb61VWG4asS1p7iKWK4SgeQ8iqmPHiZyNNN4YTTu1d46j3pG1COI8CINVSSlXu5eUMt0InRCo4+M1I-jOK5skWqJMki+ldLXF0QR-BJG3DWY4Do8T5AAjkRRZ0cI9kuuCcJgdED5GlIUbRGJ7QrjOKqHJoVzq4QKdgQiqBtDPigEUkuLppSqiKtccUIEhQFEanU4JjSPyRQ-MZQp008rFIQOEBY3FtgxN8SVEIPohTbR8h4YRSTRk43GfpZp11brYEGgQAcnT5yoW0eTVEywrHuFVGIritd-TU2yHkL0bgvJ1MVoXa5c1qbukFMM2RztSkwWbKY+2ZVoioUiPiOxgTLwAu7KrBkQKjbJzRMJcFD8+JQr2OcHiHgCiC3CFiWxATgpooLl7LWxAvh+zANi7mYQFj8lVMsAo-FBYv0nuSl0pxpbQywW3XelJ2UuHtNo8C09PqfJ9LKNcDlgI4g2DS46dKdTtz3pitlszcHj2cmiBV2wlVOkFYsclbg+J8RyOK+xkrM7dgPkPEezQwCn0gDKhATlgaFnmEJYCYENk2xSEcYV9oXT5BFHUv+uAAHoFwP66mHj42RBxI3ZyEa9huVMY5LymTpGBBQUUIAA */
   createMachine(
     {
       id: 'purchase order',
@@ -15,7 +16,7 @@ const POMachine =
         events: {} as
           | { type: 'getSavedPo'; data: Record<string, string> }
           | { type: 'goToFirstStep'; value: string }
-          | { type: 'addImages'; value: any }
+          | { type: 'addImages'; value: LocalFileType }
           | { type: 'deleteImage'; value: number }
           | { type: 'inputSph'; value: string }
           | { type: 'addMoreImages' }
@@ -23,8 +24,8 @@ const POMachine =
           | { type: 'backToAddPo' }
           | { type: 'searching'; value: string }
           | { type: 'onChangeCategories'; value: number }
-          | { type: 'openingModal'; value: CompanyData }
-          | { type: 'addChoosenSph'; value: CompanyData }
+          | { type: 'openingModal'; value: CreatedSPHListResponse }
+          | { type: 'addChoosenSph'; value: CreatedSPHListResponse }
           | { type: 'closeModal' }
           | { type: 'goToSecondStep' }
           | { type: 'goBackToFirstStep' }
@@ -39,13 +40,13 @@ const POMachine =
           | { type: 'selectProduct'; value: number },
       },
       context: {
-        poImages: [{ photo: null }],
+        poImages: [] as LocalFileType[],
         openCamera: false,
         sphNumber: '',
         searchQuery: '',
         sphCategories: '',
-        choosenSphDataFromList: {} as CompanyData,
-        choosenSphDataFromModal: {} as CompanyData,
+        choosenSphDataFromList: {} as CreatedSPHListResponse,
+        choosenSphDataFromModal: {} as CreatedSPHListResponse,
         isModalChooseSphVisible: false,
         files: {
           credit: {
@@ -124,12 +125,12 @@ const POMachine =
               },
               CityName: 'Grogol Kaler',
             },
-            QuotationLetters: [
+            QuotationRequest: [
               {
                 id: '1',
-                number: 'SPH/BRIK/2022/11/00022',
-                QuatationRequest: {
-                  totalPrice: 45000000,
+                totalPrice: 4500000,
+                QuotationLetter: {
+                  number: 'SPH/BRIK/2022/11/00022',
                 },
                 RequestedProducts: [
                   {
@@ -138,6 +139,57 @@ const POMachine =
                     quantity: 2,
                     Product: {
                       name: 'KBO',
+                      unit: 'm3',
+                    },
+                  },
+                ],
+              },
+              {
+                id: '2',
+                totalPrice: 50000000,
+                QuotationLetter: {
+                  number: 'SPH/BRIK/2023/02/00022',
+                },
+                RequestedProducts: [
+                  {
+                    id: '2',
+                    offeringPrice: 7600000,
+                    quantity: 3,
+                    Product: {
+                      name: 'K-100',
+                      unit: 'm3',
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: '2',
+            name: 'PDI Perjuangan',
+            ShippingAddress: {
+              id: '2',
+              Postal: {
+                City: {
+                  name: 'Cimahi',
+                },
+              },
+              CityName: 'Cimahi Wetan',
+            },
+            QuotationRequest: [
+              {
+                id: '3',
+                totalPrice: 45000000,
+                QuotationLetter: {
+                  number: 'SPH/BRIK/2025/11/00022',
+                },
+                RequestedProducts: [
+                  {
+                    id: '3',
+                    offeringPrice: 3400000,
+                    quantity: 2,
+                    Product: {
+                      name: 'K-200',
                       unit: 'm3',
                     },
                   },
@@ -333,7 +385,6 @@ const POMachine =
           };
         }),
         assignImages: assign((context, event) => {
-          console.log('ini event', event.value);
           return {
             openCamera: false,
             poImages: [...context.poImages, event.value],

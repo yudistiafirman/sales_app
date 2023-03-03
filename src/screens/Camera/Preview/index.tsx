@@ -150,7 +150,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         case PO:
           dispatch({
             type: 'addImages',
-            value: imageUrls,
+            value: localFile,
           });
           navigation.dispatch(StackActions.replace(navigateTo));
           return;

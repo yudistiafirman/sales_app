@@ -17,46 +17,92 @@ import { resScale } from '@/utils';
 import { colors, fonts, layout } from '@/constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { BButtonPrimary } from '@/components';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+
+type PoModalData = {
+  companyName: string;
+  locationName: string;
+  sphs: any;
+};
 
 type SelectedPOModalType = {
   isModalVisible: boolean;
-  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  data: any;
+  onCloseModal: () => void;
+  data: PoModalData;
   onPressCompleted: (data: any) => void;
+  modalTitle: string;
 };
 
 export default function SelectedPOModal({
   isModalVisible,
-  setIsModalVisible,
+  onCloseModal,
   data,
   onPressCompleted,
+  modalTitle
 }: SelectedPOModalType) {
-  const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
+  const [sphData, setSphData] = React.useState<any[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
   const [scrollOffSet, setScrollOffSet] = React.useState<number | undefined>(
     undefined
   );
 
-  const onValueChanged = (item: any, value: boolean) => {
-    let listSelectedPO: any[] = [];
-    if (selectedPO) listSelectedPO.push(...selectedPO);
-    if (value) {
-      listSelectedPO.push(item);
-    } else {
-      listSelectedPO = listSelectedPO.filter((it) => {
-        return it !== item;
-      });
-    }
-    setSelectedPO(listSelectedPO);
+  React.useEffect(() => {
+    setSphData(data?.sphs);
+  }, [data?.sphs]);
+
+  const onSelectButton = (idx: number) => {
+    const newSphData = [...sphData];
+    const selectedSphData: any[] = newSphData.map((v, i) => {
+      return {
+        ...v,
+        isSelected: idx === i,
+      };
+    });
+    setSphData(selectedSphData);
   };
+
+  const onSaveSelectedPo = () => {
+    if (sphData.length === 1) {
+      onPressCompleted(sphData);
+      onCloseModal();
+    } else {
+      const selectedSphData = sphData.filter((v) => v.isSelected);
+      if (selectedSphData.length > 0) {
+        onPressCompleted(selectedSphData);
+        onCloseModal();
+      } else {
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            outsideClickClosePopUp: true,
+            popUpText: 'Salah Satu SPH harus di pilih',
+          })
+        );
+      }
+    }
+  };
+
+  // const onValueChanged = (item: any, value: boolean) => {
+  //   let listSelectedPO: any[] = [];
+  //   if (selectedPO) listSelectedPO.push(...selectedPO);
+  //   if (value) {
+  //     listSelectedPO.push(item);
+  //   } else {
+  //     listSelectedPO = listSelectedPO.filter((it) => {
+  //       return it !== item;
+  //     });
+  //   }
+  //   setSelectedPO(listSelectedPO);
+  // };
 
   return (
     <Modal
       hideModalContentWhileAnimating={true}
       backdropOpacity={0.3}
       isVisible={isModalVisible}
-      onBackButtonPress={() => {
-        setIsModalVisible((curr) => !curr);
-      }}
+      onBackButtonPress={onCloseModal}
       style={style.modal}
       scrollOffset={scrollOffSet}
       scrollOffsetMax={resScale(350) - resScale(190)}
@@ -67,10 +113,8 @@ export default function SelectedPOModal({
           <View style={style.container}>
             <View>
               <View style={style.modalHeader}>
-                <Text style={style.headerText}>Pilih PO</Text>
-                <TouchableOpacity
-                  onPress={() => setIsModalVisible((curr) => !curr)}
-                >
+                <Text style={style.headerText}>{modalTitle}</Text>
+                <TouchableOpacity onPress={onCloseModal}>
                   <MaterialCommunityIcons
                     name="close"
                     size={25}
@@ -95,22 +139,16 @@ export default function SelectedPOModal({
                   <BSpacer size={'extraSmall'} />
                   {data?.sphs && data?.sphs.length > 0 && (
                     <BNestedProductCard
+                      isOption={data?.sphs.length > 1}
                       withoutHeader={false}
-                      data={data?.sphs}
-                      selectedPO={selectedPO}
-                      onValueChange={onValueChanged}
+                      data={sphData}
+                      onSelect={onSelectButton}
                     />
                   )}
                 </ScrollView>
               </View>
 
-              <BButtonPrimary
-                title="Simpan"
-                onPress={() => {
-                  setIsModalVisible((curr) => !curr);
-                  onPressCompleted(selectedPO);
-                }}
-              />
+              <BButtonPrimary title="Simpan" onPress={onSaveSelectedPo} />
             </View>
           </View>
         </BContainer>

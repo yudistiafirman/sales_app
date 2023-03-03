@@ -99,5 +99,6 @@ const style = StyleSheet.create({
   },
   imageStyle: {
     flex: 1,
+    borderRadius: layout.radius.md,
   },
 });

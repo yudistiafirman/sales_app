@@ -1,15 +1,24 @@
 import BVisitationCard from '@/components/molecules/BVisitationCard';
+import { layout,colors } from '@/constants';
 import * as React from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
 import EmptyPO from './EmptyPO';
 import POListShimmer from './POListShimmer';
 import { visitationDataType } from '@/interfaces';
 import BSpacer from '@/components/atoms/BSpacer';
-import { CreatedSPHListResponse } from '@/interfaces/createPurchaseOrder';
-import { colors } from '@/constants';
+import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
 
-interface POListProps {
-  poDatas: CreatedSPHListResponse[];
+type POData = {
+  companyName: string;
+  locationName: string;
+  sphs: any[];
+  id: string;
+};
+
+type ListRenderItemData = POData & CreatedSPHListResponse;
+
+interface POListProps<ArrayOfObject> {
+  poDatas: ArrayOfObject[];
   onEndReached?:
     | ((info: { distanceFromEnd: number }) => void)
     | null
@@ -23,7 +32,7 @@ interface POListProps {
   colorStatus?: string;
 }
 
-const POList = ({
+const POList = <ArrayOfObject extends ListRenderItemData>({
   poDatas,
   onEndReached,
   refreshing,
@@ -32,14 +41,16 @@ const POList = ({
   onRefresh,
   loadPO,
   onPress,
-}: POListProps) => {
-  const renderItem: ListRenderItem<CreatedSPHListResponse> = React.useCallback(
+}: POListProps<ArrayOfObject>) => {
+  const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
     ({ item, index }) => {
       const constructVisitationData: visitationDataType = {
         id: index,
-        name: item.name,
-        location: item.ShippingAddress.Postal.City.name,
-        pilNames: item.QuotationLetters.map((it) => it.number),
+        name: item.companyName || item.name,
+        location: item.locationName || item.ShippingAddress.Postal.City.name,
+        pilNames:
+          item?.sphs?.map((it) => it.name) ||
+          item?.QuotationRequest?.map((val) => val.QuotationLetter.number),
       };
       return (
         <>

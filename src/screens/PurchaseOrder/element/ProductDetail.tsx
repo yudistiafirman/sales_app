@@ -49,7 +49,7 @@ const ProductDetail = () => {
       <BDivider borderBottomWidth={1} flex={0} height={0.1} />
       <BSpacer size="extraSmall" />
       <FlatList
-        data={choosenSphDataFromModal?.sph[0].productsData}
+        data={choosenSphDataFromModal?.QuotationLetters}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItemChoosenSphProducts}
         ItemSeparatorComponent={renderItemSeparator}

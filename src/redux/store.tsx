@@ -23,7 +23,7 @@ const persistConfig = {
 };
 
 const sphStatePersisted = persistReducer(persistConfig, SphReducer);
-const poStatePersisted = persistReducer(persistConfig,purchaseOrderReducer)
+const poStatePersisted = persistReducer(persistConfig, purchaseOrderReducer);
 
 export const store = configureStore({
   reducer: {
@@ -38,7 +38,10 @@ export const store = configureStore({
     purchaseOrder: purchaseOrderReducer,
     sphState: sphStatePersisted,
   },
-  middleware: [createXStateMiddleware(purchaseOrderSlice)],
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }).concat([
+      createXStateMiddleware(purchaseOrderSlice),
+    ]),
 });
 export const persistor = persistStore(store);
 // Infer the `RootState` and `AppDispatch` types from the store itself

@@ -2,17 +2,15 @@ import {
   BSearchBar,
   BSpacer,
   BTabSections,
-  BCommonCompanyList,
   BForm,
   BTouchableText,
   BExpandableSPHCard,
   POList,
+  BGallery,
+  BVisitationCard,
+  BNestedProductCard,
 } from '@/components';
-import BCommonCompanyCard from '@/components/molecules/BCommonCompanyCard';
-import BImageList from '@/components/organism/BImagesList';
-import ChoosePOModal from '@/components/templates/ChooseSphModal';
 import { colors } from '@/constants';
-import { deleteImage } from '@/redux/reducers/cameraReducer';
 import { RootState, AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -20,15 +18,17 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { PO } from '@/navigation/ScreenNames';
+import { CAMERA, PO } from '@/navigation/ScreenNames';
+import SelectedPOModal from '@/screens/SearchPO/element/SelectedPOModal';
+import {
+  CreatedSPHListResponse,
+  QuotationLetters,
+} from '@/interfaces/createPurchaseOrder';
 
 const CreatePo = () => {
   const navigation = useNavigation();
   const poGlobalState = useSelector(
     (postate: RootState) => postate.purchaseOrder
-  );
-  const { photoURLs } = useSelector(
-    (_reduxstate: RootState) => _reduxstate.camera
   );
   const dispatch = useDispatch<AppDispatch>();
   const [index, setIndex] = useState(0);
@@ -43,7 +43,7 @@ const CreatePo = () => {
     isModalChooseSphVisible,
     openCamera,
   } = poGlobalState.poState;
-
+  const [picts, setPicts] = useState([]);
   const isUserSearchSph = searchQuery.length > 0;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
 
@@ -52,14 +52,15 @@ const CreatePo = () => {
   }, [dispatch]);
 
   const goToCamera = useCallback(() => {
-    navigation.navigate('CAMERA', {
+    navigation.navigate(CAMERA, {
       photoTitle: 'File PO',
       navigateTo: PO,
+      disabledDocPicker: false,
+      disabledGalleryPicker: false,
     });
-  }, []);
+  }, [navigation]);
 
   const deleteImages = (i: number) => {
-    dispatch(deleteImage({ pos: i - 1 }));
     dispatch({
       type: 'deleteImage',
       value: i,
@@ -70,14 +71,7 @@ const CreatePo = () => {
     if (openCamera) {
       goToCamera();
     }
-  }, [
-    dispatch,
-    goToCamera,
-    navRoutes.params,
-    openCamera,
-    photoURLs,
-    poGlobalState,
-  ]);
+  }, [dispatch, goToCamera, navRoutes.params, openCamera, poGlobalState]);
 
   const onTabPress = (tabRoutes: any) => {
     const tabIndex = index === 0 ? 1 : 0;
@@ -104,6 +98,16 @@ const CreatePo = () => {
       value: poGlobalState.sphNumber,
     },
   ];
+
+  const onPressCompleted = (data: QuotationLetters) => {
+    const selectedSphFromModal = Object.assign({}, choosenSphDataFromList);
+    selectedSphFromModal.QuotationLetters = data;
+
+    dispatch({
+      type: 'addChoosenSph',
+      value: selectedSphFromModal,
+    });
+  };
 
   const renderCustomButton = () => {
     return (
@@ -139,7 +143,15 @@ const CreatePo = () => {
                 renderScene={() => (
                   <>
                     <BSpacer size="extraSmall" />
-                    <POList poDatas={sphData} />
+                    <POList
+                      onPress={(data: CreatedSPHListResponse) =>
+                        dispatch({
+                          type: 'openingModal',
+                          value: data,
+                        })
+                      }
+                      poDatas={sphData}
+                    />
                   </>
                 )}
                 tabStyle={styles.tabStyle}
@@ -151,41 +163,36 @@ const CreatePo = () => {
         ) : (
           <View>
             <>
-              <BImageList
-                onAddImage={addMoreImages}
-                imageData={poImages}
-                onRemoveImage={(idx) => deleteImages(idx)}
+              <BGallery
+                addMorePict={addMoreImages}
+                picts={poImages}
+                removePict={deleteImages}
               />
-              <BSpacer size="small" />
+              <BSpacer size="extraSmall" />
               <BForm inputs={inputs} />
             </>
 
             {isUserChoosedSph ? (
               <>
-                <BCommonCompanyCard
-                  name={choosenSphDataFromModal.name}
-                  location={choosenSphDataFromModal.location}
-                  needRightIcon
-                  customButton={renderCustomButton}
-                />
-                <BSpacer size="small" />
-                <BExpandableSPHCard
-                  sphNo={
-                    choosenSphDataFromModal.sph &&
-                    choosenSphDataFromModal.sph[0].no
-                  }
-                  totalPrice={
-                    choosenSphDataFromModal.sph &&
-                    choosenSphDataFromModal.sph[0].totalPrice
-                  }
-                  checked={
-                    choosenSphDataFromModal.sph &&
-                    choosenSphDataFromModal.sph[0].checked
-                  }
-                  productsData={
-                    choosenSphDataFromModal.sph &&
-                    choosenSphDataFromModal.sph[0].productsData
-                  }
+                <View style={{ height: resScale(57) }}>
+                  <BVisitationCard
+                    item={{
+                      name: choosenSphDataFromModal.name,
+                      location:
+                        choosenSphDataFromModal.ShippingAddress.Postal.City
+                          .name,
+                    }}
+                    isRenderIcon
+                    customIcon={renderCustomButton}
+                  />
+                </View>
+
+                <BSpacer size="extraSmall" />
+                <BNestedProductCard
+                  withoutHeader={false}
+                  data={choosenSphDataFromModal?.QuotationLetters}
+                  selectedPO={choosenSphDataFromModal?.QuotationLetters}
+                  onValueChange={() => console.log('hai')}
                 />
               </>
             ) : (
@@ -208,11 +215,17 @@ const CreatePo = () => {
           </View>
         )}
       </View>
-      <ChoosePOModal
-        isVisible={isModalChooseSphVisible}
-        companyData={choosenSphDataFromList}
+      <SelectedPOModal
+        isModalVisible={isModalChooseSphVisible}
         onCloseModal={() => dispatch({ type: 'closeModal' })}
-        onChoose={(data) => dispatch({ type: 'addChoosenSph', value: data })}
+        data={{
+          companyName: choosenSphDataFromList.name,
+          locationName:
+            choosenSphDataFromList?.ShippingAddress?.Postal?.City?.name,
+          sphs: choosenSphDataFromList.QuotationRequest,
+        }}
+        modalTitle="Pilih SPH"
+        onPressCompleted={onPressCompleted}
       />
     </>
   );

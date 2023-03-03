@@ -6,27 +6,41 @@ import BSpacer from '../atoms/BSpacer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BProductCard from '../molecules/BProductCard';
 import BDivider from '../atoms/BDivider';
-import CheckBox from '@react-native-community/checkbox';
 import font from '@/constants/fonts';
+import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
+import { RadioButton } from 'react-native-paper';
+
+type DepositData = {
+  name: string;
+  products: any[];
+};
+
+type BNestedProductCardData = QuotationRequests & DepositData;
 
 type BNestedProductCardType = {
   withoutHeader?: boolean;
   withoutBottomSpace?: boolean;
-  data?: any[];
+  data?: BNestedProductCardData[];
   selectedPO?: any[];
   onValueChange?: (product: any, value: boolean) => void;
   deposit?: number;
   withoutSeparator?: boolean;
+  isOption?: boolean;
+  onSelect?: (index: number) => void;
 };
 
 function ListChildProduct(size: number, index: number, item: any) {
+  const displayName = item.display_name || item.Product.name;
+  const offeringPrice = +item.offering_price || item.offeringPrice;
+  const totalPrice = item.total_price || item.quantity * offeringPrice;
+  const quantity = item.quantity ? item.quantity : 0;
   return (
-    <View key={item.product_id}>
+    <View key={index}>
       <BProductCard
-        name={item.display_name}
-        pricePerVol={+item.offering_price}
-        volume={item.quantity ? item.quantity : 0}
-        totalPrice={+item.total_price}
+        name={displayName}
+        pricePerVol={offeringPrice}
+        volume={quantity}
+        totalPrice={+totalPrice}
         backgroundColor={'white'}
       />
       {size - 1 !== index && (
@@ -42,26 +56,26 @@ function ListChildProduct(size: number, index: number, item: any) {
 export default function BNestedProductCard({
   withoutHeader = false,
   data,
-  onValueChange,
   withoutBottomSpace = false,
-  selectedPO,
+  onSelect,
   deposit,
   withoutSeparator = false,
+  isOption,
 }: BNestedProductCardType) {
-  const [isExpand, setExpand] = React.useState<number[]>([]);
+  const [isExpand, setExpand] = React.useState<boolean>(true);
 
-  const setExpandContent = (index: number) => {
-    let listExpand: number[] = [];
-    if (isExpand !== undefined) listExpand.push(...isExpand);
-    if (listExpand.find((it) => it === index) !== undefined) {
-      listExpand = listExpand.filter((it) => {
-        return it !== index;
-      });
-    } else {
-      listExpand.push(index);
-    }
-    setExpand(listExpand);
-  };
+  // const setExpandContent = (index: number) => {
+  //   let listExpand: number[] = [];
+  //   if (isExpand !== undefined) listExpand.push(...isExpand);
+  //   if (listExpand.find((it) => it === index) !== undefined) {
+  //     listExpand = listExpand.filter((it) => {
+  //       return it !== index;
+  //     });
+  //   } else {
+  //     listExpand.push(index);
+  //   }
+  //   setExpand(listExpand);
+  // };
 
   return (
     <>
@@ -72,38 +86,36 @@ export default function BNestedProductCard({
         </>
       )}
       {data?.map((item, index) => {
+        const name = item.name || item.QuotationLetter.number;
+        const totalPrice =
+          item?.products
+            ?.map((it: any) => it.total_price)
+            .reduce((prev: any, next: any) => prev + next) || item.totalPrice;
+        const products = item?.products || item?.RequestedProducts;
         return (
           <View key={index}>
             <View style={styles.containerLastOrder}>
               <View style={styles.flexRow}>
-                {onValueChange && (
-                  <CheckBox
-                    value={selectedPO?.find((it) => it === item) ? true : false}
-                    onFillColor={colors.primary}
-                    onTintColor={colors.offCheckbox}
-                    onCheckColor={colors.primary}
-                    tintColors={{
-                      true: colors.primary,
-                      false: colors.offCheckbox,
-                    }}
-                    onValueChange={(value) => {
-                      onValueChange(item, value);
+                {isOption && (
+                  <RadioButton
+                    uncheckedColor={colors.border.altGrey}
+                    value={item.id}
+                    status={item.isSelected ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      if (onSelect) {
+                        onSelect(index);
+                      }
                     }}
                   />
                 )}
                 <View style={styles.leftSide}>
-                  <Text style={styles.partText}>{item.name}</Text>
+                  <Text style={styles.partText}>{name}</Text>
                   <BSpacer size={'verySmall'} />
                   <View style={styles.flexRow}>
                     <Text style={styles.titleLastOrder}>Harga</Text>
                     <View style={styles.valueView}>
                       <Text style={styles.valueLastOrder}>
-                        IDR{' '}
-                        {formatCurrency(
-                          item.products
-                            ?.map((it: any) => it.total_price)
-                            .reduce((prev: any, next: any) => prev + next)
-                        )}
+                        IDR {formatCurrency(totalPrice)}
                       </Text>
                     </View>
                   </View>
@@ -126,31 +138,26 @@ export default function BNestedProductCard({
                     </View>
                   )}
                 </View>
-                <TouchableWithoutFeedback
-                  onPress={() => setExpandContent(index)}
-                >
+                <TouchableWithoutFeedback onPress={() => setExpand(!isExpand)}>
                   <Icon
-                    name={
-                      isExpand &&
-                      isExpand.find((it) => it === index) !== undefined
-                        ? 'chevron-up'
-                        : 'chevron-down'
-                    }
+                    name={isExpand ? 'chevron-up' : 'chevron-down'}
                     size={30}
                     color={colors.icon.darkGrey}
                   />
                 </TouchableWithoutFeedback>
               </View>
-              {isExpand &&
-                isExpand?.find((it) => it === index) !== undefined && (
-                  <>
-                    <BSpacer size={'small'} />
-                    {item?.products &&
-                      item?.products?.map((it: any, ind: number) =>
-                        ListChildProduct(it?.products?.length, ind, it)
-                      )}
-                  </>
-                )}
+
+              {isExpand && (
+                <>
+                  <BSpacer size={'small'} />
+                  {products &&
+                    products?.map((it: any, ind: number) => {
+                      const length =
+                        it?.products?.length || it?.Product?.length;
+                      return ListChildProduct(length, ind, it);
+                    })}
+                </>
+              )}
             </View>
             {!withoutSeparator && <BSpacer size={'extraSmall'} />}
           </View>
