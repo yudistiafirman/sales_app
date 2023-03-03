@@ -1,12 +1,15 @@
 import { bStorage } from '@/actions';
 import { storageKey } from '@/constants';
-import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
+import {
+  CreatedSPHListResponse,
+  QuotationRequests,
+} from '@/interfaces/CreatePurchaseOrder';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import { customLog } from '@/utils/generalFunc';
 import { assign, createMachine } from 'xstate';
 
 const POMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgAsAdkruAHAE5DAKwAzABsAYEhvu7uADQgAJ6IAIxJIZ7eSc4B7mEh3q5B7gC+RXGSOPhEpORUAGaC6LDaDNpgyJxQxAAqxAy0fBAtbWb2yFY2erz2TgiZhkGUQd7O7gG+oUnr3gFxiQghaZQZIUk5IYZJF4a+JWUYFTLV8vWNza3IlLgQEGwA8pwEXBSYRQBjIbAjJAgMbWWxTKEzKK7FzuQxecIXLJBIIXALeW7Q+7SKpyOoNJpDD5fH7-cgAGzArQAkgBbXAwSGWWGTaaIKIhLxBApBFLuXwrXy+ZH7U6LEI4yLRQwhVy+AIE8rE2Q1SgvCnvT7fP6cYRoZrgznQ8Zw3mzQzONFBNZBZxRdzOJLeFXSgIOyj+SXYsKolLq0qEqSVbXPclvNqGmmcakAWVIYFZ7LglphEzsCOSDoWSxWzpOWx2CUQ7k9i1SmzW0SiASSGqJUaeZNelMofSBODB2E4ACNcPQegBBI3EbPWnn5hCrbyUeb+ZwnYupZzS6to3wHTbnD0BVwpVuRx6k3Wx7u9qQDoS8M26XhQAFgPvYEEz7l50AzZxeosyzeIYrjeDiaqSrElb7PM-rBKc9rnJcARhnc54kjqepxh8t79uCD5PiCnDEMgYC8CCqYQLgdLfrm8J-i4gHFiBYEQWsSIwWKArbL4riuG43juEsqRng8mExl2Bp4dg96AsCL4DtwfACBoYgSG2F5Yde0nvneBHyTgIIDuoIjEFocJmHRNrzi6AquMqbiGKiYSXM4QQ+gE9kISEa7bDi7piVqHZXlJ8YyXJelGYp4IkbwADCeAvmA8U6GAnToIIWYmKMs6-o4TECixoHgdcHHQXsrjnMuhi1Wu2SpJEzhBe2l7YTeUWyQRpHkVRNGJcQVhgEpmB0kNfW0TlUI5jZjEIEK9muMEtXKmEqEFNutWUA58rKoUhQFGhEbidGnb6uFnX3j1vATQNQ1KdSd0ELwA7WXOc0ZJ4AFCl6SRgSk0ogQElAeucGRLXuAFHZqrU6n0mADJSHTEAAQqOdA9AAYjpwxTVy9G2r6gNJNtkq+H4vnOUkQQtVp8jw4j7zIz0XSfmQlJvflMyejWjnCsqhjePk3jSmkjp1mcVyXDc4Yw3TVAM7wgwGoIEAMpwqDIGNXxfnjVo-gxBWzOEvgg0KIpbAJHkwSqps5Ce9oeJKO20xJCv9Er3aa9rEDY+rnOG9zqFLn4gR4k6IqoRViCHiDKrXKqgR-e5runZQrMNMrbTI2jY69B7WfIAHto80ufPYgLQtgT6vgkwczZuK6TXNqnIUZ+zKtq2Ab4Mpg2hsOgxAQKgffF-OR6m9ieJrPX8qnKLvpxw5e7ZLX8rFLLmlu+nbOF5QyCD8Pfd9L3rQQJwY9ze5lyUKK1xC+KXnYqLoFePHoegaEqGt5e12pSyFBcBJm+BmGAsBL5GyJjBS4W08TIUCPxB0zkSjhl4EPOAowt6nVygbW0ABaQ4f0lqbGrD4QoFxpQEJqnVasmwtj+BCD-HUNB6BMFYD8YgOCCbzjwZsW+-FmxRFOOBEMrhpSZAckcT0TofD5ECG4Jh8gACiDgbBcNmkbJazhb61VWG4asS1p7iKWK4SgeQ8iqmPHiZyNNN4YTTu1d46j3pG1COI8CINVSSlXu5eUMt0InRCo4+M1I-jOK5skWqJMki+ldLXF0QR-BJG3DWY4Do8T5AAjkRRZ0cI9kuuCcJgdED5GlIUbRGJ7QrjOKqHJoVzq4QKdgQiqBtDPigEUkuLppSqiKtccUIEhQFEanU4JjSPyRQ-MZQp008rFIQOEBY3FtgxN8SVEIPohTbR8h4YRSTRk43GfpZp11brYEGgQAcnT5yoW0eTVEywrHuFVGIritd-TU2yHkL0bgvJ1MVoXa5c1qbukFMM2RztSkwWbKY+2ZVoioUiPiOxgTLwAu7KrBkQKjbJzRMJcFD8+JQr2OcHiHgCiC3CFiWxATgpooLl7LWxAvh+zANi7mYQFj8lVMsAo-FBYv0nuSl0pxpbQywW3XelJ2UuHtNo8C09PqfJ9LKNcDlgI4g2DS46dKdTtz3pitlszcHj2cmiBV2wlVOkFYsclbg+J8RyOK+xkrM7dgPkPEezQwCn0gDKhATlgaFnmEJYCYENk2xSEcYV9oXT5BFHUv+uAAHoFwP66mHj42RBxI3ZyEa9huVMY5LymTpGBBQUUIAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgAsAdkruAHAE5DAGwAzAEAjACsPhHOADQgAJ6IoW4BlN7JrpHhbpmuAL55cZI4+ESk5FQAZoLosNoM2mDInFDEACrEDLR8EA1NZvbIVjZ6vPZOCMmhQZRB3s7u4a4BhqHec3GJCO7OvpRLvuFBrq5BR0FzBUUYJTLl8tW19Y3IlLgQEGwA8pwEuFLCKAMZDYAZIEBDay2Mbgia+dybRBBXaUNy+dHzILwiKLK4Qm7SMpyKo1Op9V7vT4-cgAGzAjQAkgBbXAwMGWKGjcaIXzeVLuY5BdxrbKnYWIhABdx7Qy+YLOAJy5J8gJ44qE2QVSiPMkvN4fb6cYRoeog9kQ4bQ7mTQxBQyzcK+ELePlOhVBCXheaUAKnZzhRVO7zhNZqgmlTUPUnPJr6qmcSkAWVIYGZrLg5shIzssKSzmms3mi2Wq3W3glPnthlcvg8QtCAUbRzDUgj9xJT3JlC6-xwwOwnAARrh6B0AIIG4iZy1c3PbL2UW2+UKGbzuGtzCIVxWUZYrVzpULL4Mt25ErU6mOvHtSftCXgm3S8KC-MC97CA6ecnOgCbOPmFv+EThKufjARKjbOLuRyrochyhKcp4au22rRl2N59iC96PoCnDEMgYC8ICyYQLgNJftmMK-i4AFzEB4QgS6y4MRKwbhA6QZBCujqGIESFtsSqGdnqGHYHefwAs+-bcHwAgaGIEjhncgmXuhb63lhEk4IC-bqCIxBaNCZgUVac7IqkriBCk0q7AeHoJIgYSuJQhxcas7i2o2Db8cpF5oSJ6mYdglBaR+UkgnhvAAMJ4M+YBRToYCtOgggZiYgwzj+jg0akdHpAxoHMeEnprLu6KHDWB7-gsPnnlGwmxqJd74YRJFkTFxBWGA0mYDSXVteR6XglmpnUQgxwWZkdrBq4CGLL4FYLv4YSOgG-pRLVkYdrqjWBWJWEtbwA0dV10mUidBC8P2JmzmNizeIuWIrmuG75axR4uV5lnwr61bOJtKFdJgPTki0xAAEIjnQHQAGL+f0Q0cpR1rZO9+y8YY-rLGsAq7ADglAyDLxgx0bQfmQ5I3VlEyow5kxSs5fInN4mTpGELP41qhO8L0eqCBAdKcKgyB9e8n6Ixa35UdlkwhnsziCjscGBAhFahKEZXruz8wNurnPyNzvOxsLosQHDgtU9LEwRAED1+IE0qY8s3jVhBwQufCdbog76L61QZM1EbzStJDo6dN0POUxLI23TLASxHTERyqi0yWQGDaGI6+SFPira+fIAcU3zAtgK+dKYNobDoMQECoBXlvWpZMwLIKYT5mu0oSg2AZpMkcy+siyyITn6oCVqhdB5QyDV7XFddOXjQQJwDdzgxzmZx4tohMuy4IonKx7FxCu8kssrrH7lCHQlTIULgCYfGmMCwCvY201sK7SvswbHrB7P-XivAa5wEGEpOq6AMpS2tAAWmSBKKB7FyqIKQbyVUI9QFbQUEoJgrBPjEAgcjOcrgE7v2cKQ2YGQYICguJEC+ABRBwNh8GjRlm-FwqxUQgS3jWAIIZZT-2uHnMBQkdrICYbHCYIQJRuA1uudEOx3AKJZikC+qk9SUm+GI6mSRVga2iFxJYRw9yhArC7fYG45S+H-DsCIKj4bXj2v2TRVtEAswlKcDWGNeLx3XGcC4tiGr2PfHeY0qBtBPigE4600xiGIDXmkM+XpeQrksb4fxIjuwOM0ntHSIJImr1tF4OUfhqFs3hHvLYjooKuUzi6L0kRvJoMERg1Ru0gkHQIkdGu7VsCdQII44amVnEIBAjMaUtsnRnFKQois-hdxeTRIYYU-5UmNLPBgw25I8ljWmN6AURDFg8MWW4GJwz3AWU9gebILpAioIEWswGEdJ78zpFsmWCE7ReGOAsAMIEdhELdg9L0q58wgSdKEC+Gy9Qm2IO8c2YBXnW0bDMH69SMhHlrBBYUi4XYKNtKEPZuJVnIUEhPTZAzIFzgVPyPZli5i1n-K4Lu2QNbpByCgjyRxbm53uSS8mTyS4IqRAhLwNKFZ+CIa4-eBY-ABlrHyM5vyL6kr1NPGudd6hgAXpAQVkoayUAQosms1ZMi8kZVK3KhwtaZyVMiC+V9cA33QLgHV0wnRpFOPKHY-pFldxufseOB4nLf1XAUAoQA */
   createMachine(
     {
       id: 'purchase order',
@@ -48,6 +51,7 @@ const POMachine =
         choosenSphDataFromList: {} as CreatedSPHListResponse,
         choosenSphDataFromModal: {} as CreatedSPHListResponse,
         isModalChooseSphVisible: false,
+        selectedProducts: [],
         files: {
           credit: {
             ktpDirektur: {
@@ -157,6 +161,15 @@ const POMachine =
                     quantity: 3,
                     Product: {
                       name: 'K-100',
+                      unit: 'm3',
+                    },
+                  },
+                  {
+                    id: '3',
+                    offeringPrice: 7600000,
+                    quantity: 5,
+                    Product: {
+                      name: 'K-300',
                       unit: 'm3',
                     },
                   },
@@ -431,11 +444,18 @@ const POMachine =
           };
         }),
         setSelectedChoosenProduct: assign((context, event) => {
-          context.choosenSphDataFromModal.sph[0].productsData.map((v, i) => {
-            if (i === event.value) {
-              return (v.isSelected = !v.isSelected);
-            }
-          });
+          const selected = [];
+          selected.push(event.value);
+          // const newSelectedProducts =
+          //   context.choosenSphDataFromModal.QuotationRequest[0].RequestedProducts.find(
+          //     (v, i) => i === event.value
+          //   );
+
+          // console.log(newSelectedProducts);
+
+          // return {
+          //   selectedProducts: [{ ...newSelectedProducts }],
+          // };
         }),
         assignFiles: assign((context, event) => {
           return {

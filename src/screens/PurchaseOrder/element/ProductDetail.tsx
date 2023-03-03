@@ -7,6 +7,7 @@ import {
 import { ProductsData } from '@/components/organism/BCommonCompanyList';
 import { colors, fonts } from '@/constants';
 import font from '@/constants/fonts';
+import { RequestedProducts } from '@/interfaces/CreatePurchaseOrder';
 import { resScale } from '@/utils';
 import React, { useCallback } from 'react';
 import { FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
@@ -18,24 +19,24 @@ const ProductDetail = () => {
   );
   const dispatch = useDispatch<AppDispatch>();
 
-  const { choosenSphDataFromModal } = poGlobalState.poState;
+  const { choosenSphDataFromModal,selectedProducts } = poGlobalState.poState;
 
-  const renderItemChoosenSphProducts: ListRenderItem<ProductsData> =
+  const renderItemChoosenSphProducts: ListRenderItem<RequestedProducts> =
     useCallback(
       ({ item, index }) => {
         return (
           <BExpandableProductCard
-            productName={item.name}
-            checked={item.isSelected}
-            pricePerVol={item.pricePerVol}
-            volume={item.volume}
+            productName={item.Product.name}
+            checked={item?.isSelected}
+            pricePerVol={item.offeringPrice}
+            volume={item.quantity}
             index={index}
-            totalPrice={item.totalPrice}
-            onChecked={(idx) => dispatch({ type: 'selectProduct', value: idx })}
+            totalPrice={item.offeringPrice * item.quantity}
+            onChecked={() => dispatch({ type: 'selectProduct', value: item })}
           />
         );
       },
-      [dispatch]
+      [dispatch, selectedProducts]
     );
 
   const renderItemSeparator = () => {
@@ -49,7 +50,7 @@ const ProductDetail = () => {
       <BDivider borderBottomWidth={1} flex={0} height={0.1} />
       <BSpacer size="extraSmall" />
       <FlatList
-        data={choosenSphDataFromModal?.QuotationLetters}
+        data={choosenSphDataFromModal?.QuotationRequest[0]?.RequestedProducts}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItemChoosenSphProducts}
         ItemSeparatorComponent={renderItemSeparator}

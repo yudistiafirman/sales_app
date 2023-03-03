@@ -101,7 +101,7 @@ const CreatePo = () => {
 
   const onPressCompleted = (data: QuotationLetters) => {
     const selectedSphFromModal = Object.assign({}, choosenSphDataFromList);
-    selectedSphFromModal.QuotationLetters = data;
+    selectedSphFromModal.QuotationRequest = data;
 
     dispatch({
       type: 'addChoosenSph',
@@ -190,9 +190,7 @@ const CreatePo = () => {
                 <BSpacer size="extraSmall" />
                 <BNestedProductCard
                   withoutHeader={false}
-                  data={choosenSphDataFromModal?.QuotationLetters}
-                  selectedPO={choosenSphDataFromModal?.QuotationLetters}
-                  onValueChange={() => console.log('hai')}
+                  data={choosenSphDataFromModal?.QuotationRequest}
                 />
               </>
             ) : (

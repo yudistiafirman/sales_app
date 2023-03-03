@@ -3,6 +3,7 @@ import {
   BHeaderIcon,
   BSpacer,
   BStepperIndicator,
+  PopUpQuestion,
 } from '@/components';
 import { colors, layout } from '@/constants';
 import { PurchaseOrderProvider } from '@/context/PoContext';
@@ -34,6 +35,7 @@ const PO = () => {
 
   const [currentStep, setCurrentStep] = useState(0);
   const [stepsDone, setStepsDone] = useState<number[]>([]);
+  const [popUpVisible, setPopUpQuestion] = useState(false);
   const labels = ['Cari SPH', 'Detil Pembayaran', 'Detil Produk'];
 
   const handleBack = useCallback(() => {
@@ -41,8 +43,7 @@ const PO = () => {
       if (poGlobalState.matches('firstStep.SearchSph')) {
         dispatch({ type: 'backToAddPo' });
       } else {
-        dispatch(resetImageURLS());
-        navigation.dispatch(StackActions.popToTop());
+        setPopUpQuestion(true);
       }
     } else if (currentStep === 1) {
       setCurrentStep((prevState) => prevState - 1);
