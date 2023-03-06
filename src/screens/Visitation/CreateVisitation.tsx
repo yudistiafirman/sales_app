@@ -186,7 +186,7 @@ const CreateVisitation = () => {
     customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
-        onBack={() => setPopupVisible(true)}
+        onBack={() => actionBackButton(true)}
         iconName="x"
       />
     ),
@@ -231,11 +231,7 @@ const CreateVisitation = () => {
     React.useCallback(() => {
       const backAction = () => {
         if (bottomSheetRef?.current) bottomSheetRef?.current?.close();
-        if (values.step > 0) {
-          next(values.step - 1)();
-        } else {
-          setPopupVisible(true);
-        }
+        actionBackButton();
         return true;
       };
       const backHandler = BackHandler.addEventListener(
@@ -258,8 +254,8 @@ const CreateVisitation = () => {
     }
   };
 
-  const handleBackButton = () => {
-    if (values.step > 0) {
+  const actionBackButton = (directlyClose: boolean = false) => {
+    if (values.step > 0 && !directlyClose) {
       next(values.step - 1)();
     } else {
       setPopupVisible(true);
@@ -319,7 +315,7 @@ const CreateVisitation = () => {
                   title="Kembali"
                   isOutline
                   emptyIconEnable
-                  onPress={() => setPopupVisible(true)}
+                  onPress={() => actionBackButton()}
                 />
               </View>
               <View style={styles.buttonTwo}>
