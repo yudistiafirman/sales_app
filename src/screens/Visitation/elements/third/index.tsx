@@ -10,7 +10,6 @@ import { BForm, BLabel, BSpacer, BText, BTextInput } from '@/components';
 import { CreateVisitationThirdStep, Input } from '@/interfaces';
 import { MONTH_LIST, STAGE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
 import ProductChip from './ProductChip';
-import { createVisitationContext } from '@/context/CreateVisitationContext';
 import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
@@ -21,18 +20,25 @@ import {
 } from '@/navigation/ScreenNames';
 import { fonts } from '@/constants';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { updateStepThree } from '@/redux/reducers/VisitationReducer';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
 const ThirdStep = () => {
   const navigation = useNavigation();
-  const { values, action } = React.useContext(createVisitationContext);
-  const { stepThree: state } = values;
-  const { updateValueOnstep } = action;
+  const dispatch = useDispatch();
+  const visitationData = useSelector((state: RootState) => state.visitation);
 
   const onChange = (key: keyof CreateVisitationThirdStep) => (e: any) => {
-    updateValueOnstep('stepThree', key, e);
+    let stepThree;
+    stepThree = {
+      ...visitationData,
+      [key]: e,
+    };
+    dispatch(updateStepThree(stepThree));
   };
 
   const inputs: Input[] = [
@@ -40,7 +46,7 @@ const ThirdStep = () => {
       label: 'Fase Proyek',
       isRequire: true,
       isError: false,
-      value: state.stageProject,
+      value: visitationData?.stageProject,
       onChange: onChange('stageProject'),
       type: 'dropdown',
       dropdown: {
@@ -59,21 +65,35 @@ const ThirdStep = () => {
       isRequire: true,
       type: 'comboDropdown',
       // onChange: onChange('estimationDate'),
-      value: state.estimationDate,
+      value: visitationData?.estimationDate,
       comboDropdown: {
         itemsOne: WEEK_LIST,
         itemsTwo: MONTH_LIST,
-        valueOne: values.stepThree.estimationDate.estimationWeek,
-        valueTwo: values.stepThree.estimationDate.estimationMonth,
+        valueOne: visitationData?.stepThree?.estimationDate?.estimationWeek,
+        valueTwo: visitationData?.stepThree?.estimationDate?.estimationMonth,
         onChangeOne: (value: any) => {
-          const estimateionDate = { ...values.stepThree.estimationDate };
+          const estimateionDate = {
+            ...visitationData?.stepThree?.estimationDate,
+          };
           estimateionDate.estimationWeek = value;
-          updateValueOnstep('stepThree', 'estimationDate', estimateionDate);
+          let stepThree;
+          stepThree = {
+            ...visitationData,
+            estimationDate: estimateionDate,
+          };
+          dispatch(updateStepThree(stepThree));
         },
         onChangeTwo: (value: any) => {
-          const estimateionDate = { ...values.stepThree.estimationDate };
+          const estimateionDate = {
+            ...visitationData?.stepThree?.estimationDate,
+          };
           estimateionDate.estimationMonth = value;
-          updateValueOnstep('stepThree', 'estimationDate', estimateionDate);
+          let stepThree;
+          stepThree = {
+            ...visitationData,
+            estimationDate: estimateionDate,
+          };
+          dispatch(updateStepThree(stepThree));
         },
         placeholderOne: 'Pilih Minggu',
         placeholderTwo: 'Pilih Bulan',
@@ -89,7 +109,7 @@ const ThirdStep = () => {
       isError: false,
       type: 'cardOption',
       onChange: onChange('paymentType'),
-      value: state.paymentType,
+      value: visitationData?.paymentType,
       options: [
         {
           title: 'Cash Before Delivery',
@@ -116,29 +136,40 @@ const ThirdStep = () => {
       type: 'area',
       placeholder: 'Tulis catatan di sini',
       onChange: onChange('notes'),
-      value: state.notes,
+      value: visitationData?.notes,
       textSize: fonts.size.sm,
     },
   ];
 
   const listenerCallback = useCallback(
     ({ data }: { data: any }) => {
-      const newArray = [...state.products, data];
+      const newArray = [...visitationData?.products, data];
       const uniqueArray = newArray.reduce((acc, obj) => {
         if (!acc[obj.id]) {
           acc[obj.id] = obj;
         }
         return acc;
       }, {} as { [id: number]: any });
-      updateValueOnstep('stepThree', 'products', Object.values(uniqueArray));
+      let stepThree;
+      stepThree = {
+        ...visitationData,
+        products: Object.values(uniqueArray),
+      };
+      dispatch(updateStepThree(stepThree));
     },
-    [state.products]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [visitationData?.products]
   );
 
   const deleteProduct = (index: number) => {
-    const products = state.products;
+    const products = visitationData?.products;
     const restProducts = products.filter((o, i) => index !== i);
-    updateValueOnstep('stepThree', 'products', restProducts);
+    let stepThree;
+    stepThree = {
+      ...visitationData,
+      products: restProducts,
+    };
+    dispatch(updateStepThree(stepThree));
   };
 
   useEffect(() => {
@@ -158,13 +189,13 @@ const ThirdStep = () => {
         onPress={() => {
           const coordinate = {
             longitude:
-              values.stepOne.locationAddress.lon !== 0
-                ? Number(values.stepOne.locationAddress.lon)
-                : Number(values.stepOne.createdLocation.lon),
+              visitationData?.stepOne?.locationAddress.lon !== 0
+                ? Number(visitationData?.stepOne?.locationAddress?.lon)
+                : Number(visitationData?.stepOne?.createdLocation?.lon),
             latitude:
-              values.stepOne.locationAddress.lat !== 0
-                ? Number(values.stepOne.locationAddress.lat)
-                : Number(values.stepOne.createdLocation.lat),
+              visitationData?.stepOne.locationAddress.lat !== 0
+                ? Number(visitationData?.stepOne?.locationAddress?.lat)
+                : Number(visitationData?.stepOne?.createdLocation?.lat),
           };
           navigation.navigate(ALL_PRODUCT, {
             coordinate: coordinate,
@@ -182,9 +213,10 @@ const ThirdStep = () => {
         <TouchableOpacity
           style={styles.touchable}
           onPress={() => {
-            const distance = values.stepOne.locationAddress?.distance?.value
-              ? values.stepOne.locationAddress?.distance?.value
-              : values.stepOne.createdLocation?.distance?.value;
+            const distance = visitationData?.stepOne?.locationAddress?.distance
+              ?.value
+              ? visitationData?.stepOne?.locationAddress?.distance?.value
+              : visitationData?.stepOne?.createdLocation?.distance?.value;
             navigation.navigate(SEARCH_PRODUCT, {
               isGobackAfterPress: true,
               distance: distance,
@@ -197,10 +229,10 @@ const ThirdStep = () => {
         />
       </View>
       <BSpacer size={'extraSmall'} />
-      {state.products.length ? (
+      {visitationData?.products?.length ? (
         <>
           <ScrollView horizontal={true}>
-            {state.products.map((val, index) => (
+            {visitationData?.products.map((val, index) => (
               <React.Fragment key={index}>
                 <ProductChip
                   name={val.display_name}

@@ -92,7 +92,7 @@ export default function FourthStep() {
     useState<ProductDataInterface | null>(null);
   const [chosenProducts, setChosenProducts] = useState<chosenProductType[]>([]);
   const { chosenProducts: productsRedux, distanceFromLegok } = useSelector(
-    (state: RootState) => state.sphState
+    (state: RootState) => state.sph
   );
 
   const getProduct = useCallback(({ data }: { data: ProductDataInterface }) => {

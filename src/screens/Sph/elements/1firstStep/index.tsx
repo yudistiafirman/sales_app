@@ -36,7 +36,7 @@ export default function FirstStep() {
     errorGettingProject,
     errorGettingProjectMessage,
   } = useSelector((state: RootState) => state.common);
-  const { selectedCompany } = useSelector((state: RootState) => state.sphState);
+  const { selectedCompany } = useSelector((state: RootState) => state.sph);
   function resetSearch() {
     setSearchQuery('');
   }
