@@ -24,7 +24,6 @@ import { resScale } from '@/utils';
 import { Region, Input } from '@/interfaces';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import { colors, layout } from '@/constants';
-import { createVisitationContext } from '@/context/CreateVisitationContext';
 import { useMachine } from '@xstate/react';
 import { deviceLocationMachine } from '@/machine/modules';
 import { getLocationCoordinates } from '@/actions/CommonActions';
@@ -34,15 +33,14 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
+import { updateStepOne } from '@/redux/reducers/VisitationReducer';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const FirstStep = () => {
-  const { values, action } = React.useContext(createVisitationContext);
-  const { updateValueOnstep } = action;
   const { region } = useSelector((state: RootState) => state.location);
   const [isMapLoading, setIsMapLoading] = React.useState(false);
-
+  const visitationData = useSelector((state: RootState) => state.visitation);
   const navigation = useNavigation();
   const dispatch = useDispatch<any>();
 
@@ -52,13 +50,18 @@ const FirstStep = () => {
       type: 'area',
       isRequire: false,
       onChange: (e: string) => {
-        const newLocation = { ...values.stepOne.locationAddress };
+        const newLocation = { ...visitationData?.stepOne?.locationAddress };
         newLocation.line2 = e;
 
-        updateValueOnstep('stepOne', 'locationAddress', newLocation);
+        let stepOne;
+        stepOne = {
+          ...visitationData,
+          locationAddress: newLocation,
+        };
+        dispatch(updateStepOne(stepOne));
         dispatch(updateRegion({ ...region, line1: e }));
       },
-      value: values?.stepOne?.locationAddress?.line2,
+      value: visitationData?.stepOne?.locationAddress?.line2,
       placeholder: 'contoh: Jalan Kusumadinata no 5',
     },
   ];
@@ -100,6 +103,7 @@ const FirstStep = () => {
       dispatch(updateRegion(_coordinate));
       setIsMapLoading(() => false);
     } catch (error) {
+      setIsMapLoading(() => false);
       customLog(JSON.stringify(error), 'onChangeRegionerror');
     }
   };
@@ -114,21 +118,29 @@ const FirstStep = () => {
   React.useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step1');
 
-    customLog(values.stepOne.createdLocation.formattedAddress, 'onEffect');
+    customLog(
+      visitationData?.stepOne?.createdLocation?.formattedAddress,
+      'onEffect'
+    );
     if (mapRef.current) {
       mapRef?.current?.animateToRegion(region);
     }
     const locationAddress = {
-      ...values.stepOne.locationAddress,
+      ...visitationData?.stepOne?.locationAddress,
       ...region,
     };
-    customLog(values.stepOne.locationAddress, 'location117', region);
+    customLog(visitationData?.stepOne?.locationAddress, 'location117', region);
     customLog(locationAddress, 'locationAddress118');
 
-    updateValueOnstep('stepOne', 'locationAddress', locationAddress);
+    let stepOne;
+    stepOne = {
+      ...visitationData,
+      locationAddress: locationAddress,
+    };
+    dispatch(updateStepOne(stepOne));
   }, [
     region.formattedAddress,
-    values.stepOne.createdLocation.formattedAddress,
+    visitationData?.stepOne?.createdLocation?.formattedAddress,
   ]);
 
   const [, send] = useMachine(deviceLocationMachine, {
@@ -141,7 +153,12 @@ const FirstStep = () => {
           PostalId: context?.PostalId,
         };
 
-        updateValueOnstep('stepOne', 'createdLocation', context);
+        let stepOne;
+        stepOne = {
+          ...visitationData,
+          createdLocation: context,
+        };
+        dispatch(updateStepOne(stepOne));
         if (region.latitude === 0) {
           dispatch(updateRegion(coordinate));
         }
@@ -151,8 +168,8 @@ const FirstStep = () => {
 
   React.useEffect(() => {
     const isExist =
-      !values.stepOne.createdLocation.lat ||
-      values.stepOne.createdLocation.lon === 0;
+      !visitationData?.stepOne?.createdLocation?.lat ||
+      visitationData?.stepOne?.createdLocation?.lon === 0;
 
     if (isExist) {
       customLog('jalan143');

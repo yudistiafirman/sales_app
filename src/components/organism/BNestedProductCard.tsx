@@ -30,10 +30,13 @@ type BNestedProductCardType = {
 };
 
 function ListChildProduct(size: number, index: number, item: any) {
-  const displayName = item.display_name || item.Product.name;
-  const offeringPrice = +item.offering_price || item.offeringPrice;
-  const totalPrice = item.total_price || item.quantity * offeringPrice;
-  const quantity = item.quantity ? item.quantity : 0;
+  const displayName =
+    item?.display_name ||
+    `${item?.Product.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`;
+  const offeringPrice = +item?.offering_price || item?.offeringPrice;
+  const totalPrice = item?.total_price || item?.quantity * offeringPrice;
+  const quantity = item?.quantity ? item?.quantity : 0;
+  const unit = item?.Product?.unit?.toLowerCase();
   return (
     <View key={index}>
       <BProductCard
@@ -41,6 +44,7 @@ function ListChildProduct(size: number, index: number, item: any) {
         pricePerVol={offeringPrice}
         volume={quantity}
         totalPrice={+totalPrice}
+        unit={unit}
         backgroundColor={'white'}
       />
       {size - 1 !== index && (
@@ -63,19 +67,6 @@ export default function BNestedProductCard({
   isOption,
 }: BNestedProductCardType) {
   const [isExpand, setExpand] = React.useState<boolean>(true);
-
-  // const setExpandContent = (index: number) => {
-  //   let listExpand: number[] = [];
-  //   if (isExpand !== undefined) listExpand.push(...isExpand);
-  //   if (listExpand.find((it) => it === index) !== undefined) {
-  //     listExpand = listExpand.filter((it) => {
-  //       return it !== index;
-  //     });
-  //   } else {
-  //     listExpand.push(index);
-  //   }
-  //   setExpand(listExpand);
-  // };
 
   return (
     <>

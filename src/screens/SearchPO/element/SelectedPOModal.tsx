@@ -40,7 +40,7 @@ export default function SelectedPOModal({
   onCloseModal,
   data,
   onPressCompleted,
-  modalTitle
+  modalTitle,
 }: SelectedPOModalType) {
   const [sphData, setSphData] = React.useState<any[]>([]);
   const dispatch = useDispatch<AppDispatch>();
@@ -83,19 +83,6 @@ export default function SelectedPOModal({
       }
     }
   };
-
-  // const onValueChanged = (item: any, value: boolean) => {
-  //   let listSelectedPO: any[] = [];
-  //   if (selectedPO) listSelectedPO.push(...selectedPO);
-  //   if (value) {
-  //     listSelectedPO.push(item);
-  //   } else {
-  //     listSelectedPO = listSelectedPO.filter((it) => {
-  //       return it !== item;
-  //     });
-  //   }
-  //   setSelectedPO(listSelectedPO);
-  // };
 
   return (
     <Modal

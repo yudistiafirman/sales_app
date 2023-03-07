@@ -14,7 +14,7 @@ type fileResponse = {
   type: 'COVER' | 'GALLERY';
 };
 
-export interface MainState {
+export interface CameraGlobalState {
   localURLs: LocalFileType[];
   visitationPhotoURLs: LocalFileType[];
   createDepositPhotoURLs: LocalFileType[];
@@ -24,7 +24,7 @@ export interface MainState {
   uploadedRequiredDocsResponse: requiredDocType[];
 }
 
-const initialState: MainState = {
+const initialState: CameraGlobalState = {
   localURLs: [],
   visitationPhotoURLs: [],
   createDepositPhotoURLs: [],

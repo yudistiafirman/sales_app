@@ -66,5 +66,5 @@ export { default as BEmptyState } from './organism/BEmptyState';
 
 //templates
 export { default as ProductList } from './templates/Price/ProductList';
-export { default as POList } from './templates/PO/POList';
+export { default as BCommonSearchList } from './templates/BCommonSearchList';
 export { default as BottomSheetAddPIC } from './templates/BottomSheetAddPIC';

@@ -23,6 +23,7 @@ interface QuotationRequests {
   totalPrice: string;
   QuotationLetter: {
     number: string;
+    id: string;
   };
   RequestedProducts: RequestedProducts[];
 }
@@ -31,7 +32,29 @@ interface CreatedSPHListResponse {
   id: string;
   name: string;
   ShippingAddress: ShippingAddress;
-  QuotationRequest: QuotationRequests[];
+  QuotationRequests: QuotationRequests[];
+}
+
+interface Documents {
+  id?: string;
+  name?: string;
+  paymentType?: 'CREDIT' | 'CBD';
+  isRequired?: boolean;
+}
+
+interface ProjectDocs {
+  projectDocId?: string | null;
+  File?: null;
+  Document?: Documents;
+}
+
+interface DocumentsData {
+  id?: string;
+  QuotationRequest?: {
+    id?: string;
+    paymentType?: 'CREDIT' | 'CBD';
+    ProjectDocs?: ProjectDocs[];
+  };
 }
 
 export {
@@ -39,4 +62,6 @@ export {
   RequestedProducts,
   QuotationRequests,
   CreatedSPHListResponse,
+  DocumentsData,
+  ProjectDocs,
 };

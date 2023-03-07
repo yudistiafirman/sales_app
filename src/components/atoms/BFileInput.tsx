@@ -21,6 +21,7 @@ type BFileInputType = {
   value: any;
   isLoading?: boolean;
   isError?: boolean;
+  disabled?: boolean;
 };
 
 function iconState(value: any, isLoading?: boolean, isError?: boolean) {
@@ -52,6 +53,7 @@ export default function BFileInput({
   value,
   isLoading,
   isError,
+  disabled,
 }: BFileInputType) {
   const selectFile = React.useCallback(async () => {
     // Opening Document Picker to select one file
@@ -98,7 +100,7 @@ export default function BFileInput({
   }, [onChange]);
 
   return (
-    <TouchableOpacity onPress={selectFile}>
+    <TouchableOpacity disabled={disabled} onPress={selectFile}>
       <View style={[style.container, !value ? style.dashedBorder : null]}>
         <Text style={style.textStyle}>{label}</Text>
         {iconState(value, isLoading, isError)}

@@ -5,48 +5,61 @@ import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { RadioButton } from 'react-native-paper';
 import BText from '../atoms/BText';
-import BTextInput from '../atoms/BTextInput';
 import BForm from '../organism/BForm';
-import { TextInput } from 'react-native-paper';
 
-interface Props {
-  index?: number;
+interface Props<TItem> {
+  item?: TItem;
   onChecked?: (index: number) => void;
   checked?: boolean;
   productName?: string;
   pricePerVol?: number;
   totalPrice?: number;
-  volume?: number;
+  inputsSelection?: Input[];
+  remainingQuantity?: string;
+  isHasMultipleCheck?: boolean;
+  index?: number;
+  onPressRadioButton?: (index: string) => void;
 }
 
 const BExpandableProductCard = ({
-  index,
+  item,
   onChecked,
   checked,
   productName,
   pricePerVol,
   totalPrice,
-  volume,
+  inputsSelection,
+  remainingQuantity,
+  isHasMultipleCheck,
+  index,
+  onPressRadioButton,
 }: Props) => {
   const checkbox = [
     {
       type: 'checkbox',
       checkbox: {
         value: checked,
-        onValueChange: () => onChecked && onChecked(index!),
+        onValueChange: () => onChecked && onChecked(item!),
       },
     },
   ];
 
-  const renderTextIcon = (label: string) => {
-    return <Text style={styles.textIcon}>{label}</Text>;
-  };
   return (
     <View style={styles.customerCard}>
       <View style={styles.parentContainer}>
         <View style={styles.checkBoxContainer}>
-          <BForm inputs={checkbox} />
+          {isHasMultipleCheck ? (
+            <BForm inputs={checkbox} />
+          ) : (
+            <RadioButton
+              value={index.toString()}
+              status={checked ? 'checked' : 'unchecked'}
+              uncheckedColor={colors.border.altGrey}
+              onPress={() => onPressRadioButton(index.toString())}
+            />
+          )}
         </View>
         <View style={styles.expandableContainer}>
           <View style={styles.topCard}>
@@ -57,7 +70,7 @@ const BExpandableProductCard = ({
               {`${formatCurrency(pricePerVol!)}/m3`}
             </BText>
             <BText style={styles.totalParentPrice}>{`IDR ${formatCurrency(
-              totalPrice!
+              totalPrice && totalPrice
             )}`}</BText>
           </View>
         </View>
@@ -65,16 +78,24 @@ const BExpandableProductCard = ({
       {checked && (
         <View style={styles.inputContainer}>
           <View style={styles.volumeContainer}>
-            <Text style={styles.inputLabel}>Volume</Text>
-            <BTextInput
-              value={volume?.toString()}
-              disabled
-              keyboardType="numeric"
-              returnKeyType="next"
-              right={<TextInput.Icon icon={() => renderTextIcon('m³')} />}
-              placeholder="0"
-              placeholderTextColor={colors.textInput.placeHolder}
+            <BForm
+              titleBold="500"
+              inputs={inputsSelection}
+              spacer="extraSmall"
             />
+            {remainingQuantity && (
+              <View style={styles.volContent}>
+                <BText>Sisa vol. yang belum dikirim</BText>
+                <BText
+                  style={{
+                    marginStart: layout.pad.sm,
+                    fontFamily: fonts.family.montserrat[500],
+                  }}
+                >
+                  {remainingQuantity}
+                </BText>
+              </View>
+            )}
           </View>
         </View>
       )}
@@ -127,7 +148,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
-    flex:1
+    flex: 1,
   },
   inputLabel: {
     fontFamily: fonts.family.montserrat[500],
@@ -141,6 +162,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.sm,
     color: colors.text.darker,
+  },
+  volContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

@@ -1,9 +1,10 @@
-import { BCardOption, BLabel, BSpacer, BForm } from '@/components';
+import { BCardOption, BLabel, BSpacer, BForm, BSpinner } from '@/components';
 import { layout } from '@/constants';
 import font from '@/constants/fonts';
 import { Input } from '@/interfaces';
+import { ProjectDocs } from '@/interfaces/CreatePurchaseOrder';
 import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
@@ -14,185 +15,29 @@ const PaymentDetail = () => {
     (postate: RootState) => postate.purchaseOrder
   );
   const dispatch = useDispatch<AppDispatch>();
-  const { choosenSphDataFromModal, files } = poGlobalState.poState;
+  const { files, paymentType, loadingDocument } = poGlobalState.poState;
   const paymentTitle =
-    choosenSphDataFromModal.paymentType === 'CBD'
-      ? 'Cash Before Delivery'
-      : 'Credit';
-  const paymentIcon =
-    choosenSphDataFromModal.paymentType === 'CBD' ? cbd : credit;
+    paymentType === 'CBD' ? 'Cash Before Delivery' : 'Credit';
+  const paymentIcon = paymentType === 'CBD' ? cbd : credit;
 
   const fileInput: Input[] = useMemo(() => {
-    const fileInputCredit: Input[] = [
-      {
-        label: 'KTP Direktur',
-        type: 'fileInput',
-        isRequire: true,
-        isError: files.credit.ktpDirektur.errorMessage.length > 0,
-        customerErrorMsg: files.credit.ktpDirektur.errorMessage,
-        value: files.credit.ktpDirektur.value,
-        onChange: (val) =>
-          dispatch({
-            type: 'uploading',
-            paymentType: 'credit',
-            fileType: 'ktpDirektur',
-            value: val,
-          }),
-      },
-      {
-        label: 'SK Kemenkumham',
-        type: 'fileInput',
-        isRequire: true,
-        isError: files.credit.skKemenkumham.errorMessage.length > 0,
-        customerErrorMsg: files.credit.skKemenkumham.errorMessage,
-        value: files.credit.skKemenkumham.value,
-        onChange: (val) => {
-          dispatch({
-            type: 'uploading',
-            paymentType: 'credit',
-            fileType: 'skKemenkumham',
-            value: val,
-          });
-        },
-      },
-      {
-        label: 'Akta Pendirian',
-        type: 'fileInput',
-        isRequire: true,
-        isError: files.credit.aktaPendirian.errorMessage.length > 0,
-        customerErrorMsg: files.credit.aktaPendirian.errorMessage,
-        value: files.credit.aktaPendirian.value,
-        onChange: (val) => {
-          dispatch({
-            type: 'uploading',
-            paymentType: 'credit',
-            fileType: 'aktaPendirian',
-            value: val,
-          });
-        },
-      },
-      {
-        label: 'NIB Perusahaan',
-        type: 'fileInput',
-        isRequire: true,
-        isError: files.credit.nibPerushaan.errorMessage.length > 0,
-        customerErrorMsg: files.credit.nibPerushaan.errorMessage,
-        value: files.credit.nibPerushaan.value,
-        onChange: (val) => {
-          dispatch({
-            type: 'uploading',
-            paymentType: 'credit',
-            fileType: 'nibPerushaan',
-            value: val,
-          });
-        },
-      },
-      {
-        label: 'Npwp Direktur',
-        type: 'fileInput',
-        isRequire: true,
-        isError: files.credit.npwpDirektur.errorMessage.length > 0,
-        customerErrorMsg: files.credit.npwpDirektur.errorMessage,
-        value: files.credit.npwpDirektur.value,
-        onChange: (val) => {
-          dispatch({
-            type: 'uploading',
-            paymentType: 'credit',
-            fileType: 'npwpDirektur',
-            value: val,
-          });
-        },
-      },
-      {
-        label: 'Surat Kuasa',
-        type: 'fileInput',
-        isRequire: true,
-        isError: files.credit.suratKuasa.errorMessage.length > 0,
-        customerErrorMsg: files.credit.suratKuasa.errorMessage,
-        value: files.credit.suratKuasa.value,
-        onChange: (val) => {
-          dispatch({
-            type: 'uploading',
-            paymentType: 'credit',
-            fileType: 'suratKuasa',
-            value: val,
-          });
-        },
-      },
-      {
-        label: 'Bank Guarantee',
-        type: 'fileInput',
-        isRequire: true,
-        isError: files.credit.bankGuarantee.errorMessage.length > 0,
-        customerErrorMsg: files.credit.bankGuarantee.errorMessage,
-        value: files.credit.bankGuarantee.value,
-        onChange: (val) => {
-          dispatch({
-            type: 'uploading',
-            paymentType: 'credit',
-            fileType: 'bankGuarantee',
-            value: val,
-          });
-        },
-      },
-      {
-        label: 'Perjanjian Kerja Sama',
-        type: 'fileInput',
-        isRequire: true,
-        isError: files.credit.perjanjian.errorMessage.length > 0,
-        customerErrorMsg: files.credit.perjanjian.errorMessage,
-        value: files.credit.perjanjian.value,
-        onChange: (val) => {
-          dispatch({
-            type: 'uploading',
-            paymentType: 'credit',
-            fileType: 'perjanjian',
-            value: val,
-          });
-        },
-      },
-    ];
+    const requiredFileInput = files.map((val: ProjectDocs, idx: number) => {
+      return {
+        ...val,
+        onChange: (newValue: any) =>
+          dispatch({ type: 'uploading', value: newValue, idx: idx }),
+      };
+    });
+    return requiredFileInput;
+  }, [dispatch, files]);
 
-    const fileInputCbd: Input[] = [
-      {
-        label: 'Foto NPWP',
-        type: 'fileInput',
-        isRequire: true,
-        isError: files.cbd.fotoNpwp.errorMessage.length > 0,
-        customerErrorMsg: files.cbd.fotoNpwp.errorMessage,
-        value: files.cbd.fotoNpwp.value,
-        onChange: (val) => {
-          dispatch({
-            type: 'uploading',
-            paymentType: 'cbd',
-            fileType: 'fotoNpwp',
-            value: val,
-          });
-        },
-      },
-      {
-        label: 'Foto KTP',
-        type: 'fileInput',
-        isRequire: true,
-        isError: files.cbd.fotoKtp.errorMessage.length > 0,
-        customerErrorMsg: files.cbd.fotoKtp.errorMessage,
-        value: files.cbd.fotoKtp.value,
-        onChange: (val) => {
-          dispatch({
-            type: 'uploading',
-            paymentType: 'cbd',
-            fileType: 'fotoKtp',
-            value: val,
-          });
-        },
-      },
-    ];
-    if (choosenSphDataFromModal.paymentType === 'CBD') {
-      return fileInputCbd;
-    } else {
-      return fileInputCredit;
-    }
-  }, [choosenSphDataFromModal.paymentType, dispatch]);
+  if (loadingDocument) {
+    return (
+      <View style={styles.loading}>
+        <BSpinner size="large" />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -219,6 +64,11 @@ const styles = StyleSheet.create({
   paymentType: {
     flex: 1,
     flexDirection: 'row',
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

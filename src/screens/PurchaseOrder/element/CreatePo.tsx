@@ -1,16 +1,13 @@
 import {
   BSearchBar,
   BSpacer,
-  BTabSections,
   BForm,
   BTouchableText,
-  BExpandableSPHCard,
-  POList,
   BGallery,
   BVisitationCard,
   BNestedProductCard,
+  BCommonSearchList,
 } from '@/components';
-import { colors } from '@/constants';
 import { RootState, AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -32,19 +29,19 @@ const CreatePo = () => {
   );
   const dispatch = useDispatch<AppDispatch>();
   const [index, setIndex] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
   const navRoutes = useRoute();
   const {
     routes,
-    searchQuery,
     sphData,
     poImages,
     choosenSphDataFromList,
     choosenSphDataFromModal,
     isModalChooseSphVisible,
     openCamera,
+    loadingSphData,
+    errorGettingSphMessage,
   } = poGlobalState.poState;
-  const [picts, setPicts] = useState([]);
-  const isUserSearchSph = searchQuery.length > 0;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
 
   const addMoreImages = useCallback(() => {
@@ -101,7 +98,7 @@ const CreatePo = () => {
 
   const onPressCompleted = (data: QuotationLetters) => {
     const selectedSphFromModal = Object.assign({}, choosenSphDataFromList);
-    selectedSphFromModal.QuotationRequest = data;
+    selectedSphFromModal.QuotationRequests = data;
 
     dispatch({
       type: 'addChoosenSph',
@@ -118,48 +115,36 @@ const CreatePo = () => {
     );
   };
 
+  const onChangeText = useCallback((text: string) => {
+    setSearchQuery(text);
+    dispatch({ type: 'searching', value: text });
+  }, []);
+
   return (
     <>
       <View style={styles.firstStepContainer}>
         {poGlobalState.matches('firstStep.SearchSph') ? (
-          <View style={styles.firstStepContainer}>
-            <BSearchBar
-              value={searchQuery}
-              onChangeText={(text) =>
-                dispatch({ type: 'searching', value: text })
-              }
-              left={
-                <TextInput.Icon forceTextInputFocus={false} icon="magnify" />
-              }
-              placeholder="Cari Sph"
-            />
-            <BSpacer size="small" />
-            {isUserSearchSph && (
-              <BTabSections
-                navigationState={{ index, routes }}
-                swipeEnabled={false}
-                onTabPress={onTabPress}
-                onIndexChange={setIndex}
-                renderScene={() => (
-                  <>
-                    <BSpacer size="extraSmall" />
-                    <POList
-                      onPress={(data: CreatedSPHListResponse) =>
-                        dispatch({
-                          type: 'openingModal',
-                          value: data,
-                        })
-                      }
-                      poDatas={sphData}
-                    />
-                  </>
-                )}
-                tabStyle={styles.tabStyle}
-                tabBarStyle={styles.tabBarStyle}
-                indicatorStyle={styles.tabIndicator}
-              />
+          <BCommonSearchList
+            searchQuery={searchQuery}
+            onChangeText={onChangeText}
+            index={index}
+            routes={routes}
+            onTabPress={onTabPress}
+            onIndexChange={setIndex}
+            loadList={loadingSphData}
+            onPressList={(data: CreatedSPHListResponse) =>
+              dispatch({
+                type: 'openingModal',
+                value: data,
+              })
+            }
+            poDatas={sphData}
+            isError={poGlobalState.matches(
+              'firstStep.SearchSph.errorGettingSphList'
             )}
-          </View>
+            errorMessage={errorGettingSphMessage}
+            onRetry={() => dispatch({ type: 'retryGettingSphList' })}
+          />
         ) : (
           <View>
             <>
@@ -190,7 +175,7 @@ const CreatePo = () => {
                 <BSpacer size="extraSmall" />
                 <BNestedProductCard
                   withoutHeader={false}
-                  data={choosenSphDataFromModal?.QuotationRequest}
+                  data={choosenSphDataFromModal?.QuotationRequests}
                 />
               </>
             ) : (
@@ -220,7 +205,7 @@ const CreatePo = () => {
           companyName: choosenSphDataFromList.name,
           locationName:
             choosenSphDataFromList?.ShippingAddress?.Postal?.City?.name,
-          sphs: choosenSphDataFromList.QuotationRequest,
+          sphs: choosenSphDataFromList.QuotationRequests,
         }}
         modalTitle="Pilih SPH"
         onPressCompleted={onPressCompleted}
@@ -228,18 +213,10 @@ const CreatePo = () => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   firstStepContainer: {
     flex: 1,
-  },
-  tabIndicator: {
-    backgroundColor: colors.primary,
-  },
-  tabStyle: {
-    flex: 1,
-  },
-  tabBarStyle: {
-    backgroundColor: colors.white,
   },
 });
 

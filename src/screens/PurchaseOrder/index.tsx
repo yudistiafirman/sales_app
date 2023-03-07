@@ -6,7 +6,6 @@ import {
   PopUpQuestion,
 } from '@/components';
 import { colors, layout } from '@/constants';
-import { PurchaseOrderProvider } from '@/context/PoContext';
 import { RootStackParamList } from '@/navigation/navTypes';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { AppDispatch, RootState } from '@/redux/store';
@@ -23,6 +22,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { resScale } from '@/utils';
 import UploadFiles from './element/PaymentDetail';
 import DetailProduk from './element/ProductDetail';
+import { useKeyboardActive } from '@/hooks';
 
 export type PORoutes = RouteProp<RootStackParamList['PO']>;
 
@@ -32,11 +32,12 @@ const PO = () => {
     (postate: RootState) => postate.purchaseOrder
   );
   const dispatch = useDispatch<AppDispatch>();
-
-  const [currentStep, setCurrentStep] = useState(0);
+  const { currentStep } = poGlobalState.poState;
   const [stepsDone, setStepsDone] = useState<number[]>([]);
   const [popUpVisible, setPopUpQuestion] = useState(false);
+  const { keyboardVisible } = useKeyboardActive();
   const labels = ['Cari SPH', 'Detil Pembayaran', 'Detil Produk'];
+  const isBtnFooterShown = !poGlobalState.matches('firstStep.SearchSph');
 
   const handleBack = useCallback(() => {
     if (currentStep === 0) {
@@ -46,22 +47,18 @@ const PO = () => {
         setPopUpQuestion(true);
       }
     } else if (currentStep === 1) {
-      setCurrentStep((prevState) => prevState - 1);
       dispatch({ type: 'goBackToFirstStep' });
     } else if (currentStep === 2) {
-      setCurrentStep((prevState) => prevState - 1);
       dispatch({ type: 'goBackToSecondStep' });
     }
-  }, [currentStep, dispatch, navigation, poGlobalState]);
+  }, [currentStep, dispatch, poGlobalState]);
 
   const handleNext = useCallback(() => {
     if (currentStep === 0) {
-      setCurrentStep((prevState) => prevState + 1);
       dispatch({
         type: 'goToSecondStep',
       });
     } else if (currentStep === 1) {
-      setCurrentStep((prevState) => prevState + 1);
       dispatch({ type: 'goToThirdStep' });
     }
   }, [currentStep, dispatch]);
@@ -114,20 +111,22 @@ const PO = () => {
       </View>
       <BSpacer size="medium" />
       {stepToRender[currentStep]}
-      <View style={styles.footer}>
-        <BButtonPrimary
-          onPress={handleBack}
-          buttonStyle={{ width: resScale(132) }}
-          isOutline
-          title="Kembali"
-        />
-        <BButtonPrimary
-          title="Lanjut"
-          onPress={handleNext}
-          buttonStyle={{ width: resScale(202) }}
-          rightIcon={() => renderBtnIcon()}
-        />
-      </View>
+      {isBtnFooterShown && !keyboardVisible && (
+        <View style={styles.footer}>
+          <BButtonPrimary
+            onPress={handleBack}
+            buttonStyle={{ width: resScale(132) }}
+            isOutline
+            title="Kembali"
+          />
+          <BButtonPrimary
+            title="Lanjut"
+            onPress={handleNext}
+            buttonStyle={{ width: resScale(202) }}
+            rightIcon={() => renderBtnIcon()}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -138,14 +137,7 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
-    position: 'absolute',
-    bottom: 0,
   },
 });
 
-const PurchaseOrderWithProvider = () => {
-  return <PO />;
-};
-
-export default PurchaseOrderWithProvider;
+export default PO;

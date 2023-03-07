@@ -200,7 +200,7 @@ export default function FifthStep() {
   const dispatch = useDispatch();
   const { isOrderLoading } = useSelector((state: RootState) => state.order);
   const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
-  const sphState = useSelector((state: RootState) => state.sphState);
+  const sphState = useSelector((state: RootState) => state.sph);
 
   const bottomSheetRef = React.useRef<BottomSheet>(null);
 

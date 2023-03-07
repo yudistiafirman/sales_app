@@ -1,16 +1,6 @@
-import {
-  BDivider,
-  BExpandableProductCard,
-  BLabel,
-  BSpacer,
-} from '@/components';
-import { ProductsData } from '@/components/organism/BCommonCompanyList';
-import { colors, fonts } from '@/constants';
-import font from '@/constants/fonts';
-import { RequestedProducts } from '@/interfaces/CreatePurchaseOrder';
-import { resScale } from '@/utils';
-import React, { useCallback } from 'react';
-import { FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
+import BChoosenProductList from '@/components/templates/BChoosenProductList';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 const ProductDetail = () => {
@@ -19,46 +9,19 @@ const ProductDetail = () => {
   );
   const dispatch = useDispatch<AppDispatch>();
 
-  const { choosenSphDataFromModal,selectedProducts } = poGlobalState.poState;
-
-  const renderItemChoosenSphProducts: ListRenderItem<RequestedProducts> =
-    useCallback(
-      ({ item, index }) => {
-        return (
-          <BExpandableProductCard
-            productName={item.Product.name}
-            checked={item?.isSelected}
-            pricePerVol={item.offeringPrice}
-            volume={item.quantity}
-            index={index}
-            totalPrice={item.offeringPrice * item.quantity}
-            onChecked={() => dispatch({ type: 'selectProduct', value: item })}
-          />
-        );
-      },
-      [dispatch, selectedProducts]
-    );
-
-  const renderItemSeparator = () => {
-    return <BSpacer size="extraSmall" />;
-  };
+  const { choosenSphDataFromModal, selectedProducts } = poGlobalState.poState;
 
   return (
     <View style={styles.container}>
-      <BLabel bold="600" sizeInNumber={font.size.md} label="Produk" />
-      <BSpacer size="extraSmall" />
-      <BDivider borderBottomWidth={1} flex={0} height={0.1} />
-      <BSpacer size="extraSmall" />
-      <FlatList
-        data={choosenSphDataFromModal?.QuotationRequest[0]?.RequestedProducts}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderItemChoosenSphProducts}
-        ItemSeparatorComponent={renderItemSeparator}
+      <BChoosenProductList
+        data={choosenSphDataFromModal?.QuotationRequests[0]?.RequestedProducts}
+        onChecked={(data) => dispatch({ type: 'selectProduct', value: data })}
+        selectedProducts={selectedProducts}
+        isHasMultipleCheck
+        onChangeQuantity={(index: number, value: string) =>
+          dispatch({ type: 'onChangeQuantity', index, value })
+        }
       />
-      <View style={styles.priceContainer}>
-        <Text style={styles.productName}>Total</Text>
-        <Text style={styles.boldPrice}>IDR 58.000.000</Text>
-      </View>
     </View>
   );
 };
@@ -66,21 +29,6 @@ const ProductDetail = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingBottom: resScale(70),
-  },
-  productName: {
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.lg,
-    color: colors.text.darker,
-  },
-  boldPrice: {
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.lg,
-    color: colors.text.darker,
   },
 });
 
