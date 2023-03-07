@@ -82,7 +82,7 @@ export default function SecondStep() {
     distanceFromLegok,
     projectAddress,
     selectedCompany,
-  } = useSelector((state: RootState) => state.sphState);
+  } = useSelector((state: RootState) => state.sph);
 
   // const getSuggestion = useCallback(async (search: string) => {
   //   try {

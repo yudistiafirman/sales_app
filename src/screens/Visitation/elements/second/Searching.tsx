@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback } from 'react';
-import { Alert, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import {
   BFlatlistItems,
   BSearchBar,
@@ -11,13 +11,16 @@ import {
 } from '@/components';
 import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
-import { createVisitationContext } from '@/context/CreateVisitationContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { getAllProject } from '@/redux/async-thunks/commonThunks';
 import debounce from 'lodash.debounce';
 import { PIC } from '@/interfaces';
 import { retrying } from '@/redux/reducers/commonReducer';
+import {
+  updateShouldScrollView,
+  updateStepTwo,
+} from '@/redux/reducers/VisitationReducer';
 
 interface IProps {
   onSearch: (search: boolean) => void;
@@ -44,8 +47,6 @@ const SearchFlow = ({
   setSelectedCompany,
 }: IProps) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { action, values } = React.useContext(createVisitationContext);
-  const { updateValueOnstep, updateValue } = action;
   const [searchQuery, setSearchQuery] = React.useState('');
   const {
     projects,
@@ -53,6 +54,7 @@ const SearchFlow = ({
     errorGettingProject,
     errorGettingProjectMessage,
   } = useSelector((state: RootState) => state.common);
+  const visitationData = useSelector((state: RootState) => state.visitation);
 
   const searchDispatch = useCallback(
     (text: string) => {
@@ -70,8 +72,8 @@ const SearchFlow = ({
     if (!isSearch && text) {
       onSearch(true);
     }
-    if (values.shouldScrollView) {
-      updateValue('shouldScrollView', false);
+    if (visitationData?.shouldScrollView) {
+      dispatch(updateShouldScrollView(false));
     }
     setSearchQuery(text);
     onChangeWithDebounce(text);
@@ -80,32 +82,45 @@ const SearchFlow = ({
   const onClear = () => {
     setSearchQuery('');
     onSearch(false);
-    updateValue('shouldScrollView', true);
+    dispatch(updateShouldScrollView(true));
   };
 
   const onSelectProject = (item: any) => {
+    let stepTwo;
     if (item.Company?.id) {
       const company = {
         id: item.Company.id,
         title: item.Company.name,
       };
-      updateValueOnstep('stepTwo', 'companyName', company.title);
+      stepTwo = {
+        ...visitationData,
+        companyName: company.title,
+      };
       setSelectedCompany(company);
 
-      if (values.stepTwo.options.items) {
-        updateValueOnstep('stepTwo', 'options', {
-          ...values.stepTwo.options,
-          items: [...values.stepTwo.options.items, company],
-        });
+      if (visitationData?.stepTwo?.options?.items) {
+        stepTwo = {
+          ...visitationData,
+          options: {
+            ...visitationData?.stepTwo?.options,
+            items: [...visitationData?.stepTwo?.options?.items, company],
+          },
+        };
       } else {
-        updateValueOnstep('stepTwo', 'options', {
-          ...values.stepTwo.options,
-          items: [company],
-        });
+        stepTwo = {
+          ...visitationData,
+          options: {
+            ...visitationData?.stepTwo?.options,
+            items: [company],
+          },
+        };
       }
     }
     const customerType = item.Company?.id ? 'COMPANY' : 'INDIVIDU';
-    updateValueOnstep('stepTwo', 'customerType', customerType);
+    stepTwo = {
+      ...visitationData,
+      customerType: customerType,
+    };
 
     if (item.PIC) {
       const picList = item.PIC.map((pic: PIC) => {
@@ -117,18 +132,28 @@ const SearchFlow = ({
       if (picList.length === 1) {
         picList[0].isSelected = true;
       }
-      updateValueOnstep('stepTwo', 'pics', picList);
+      stepTwo = {
+        ...visitationData,
+        pics: picList,
+      };
     }
-    updateValueOnstep('stepTwo', 'projectName', item.name);
-    updateValueOnstep('stepTwo', 'projectId', item.id);
+    stepTwo = {
+      ...visitationData,
+      projectName: item.name,
+      projectId: item.id,
+    };
     if (item.Visitation) {
-      updateValueOnstep('stepTwo', 'visitationId', item.Visitation.id);
       let order = +item.Visitation.order;
       if (!item.Visitation.finish_date) {
         order -= 1;
       }
-      updateValueOnstep('stepTwo', 'existingOrderNum', order);
+      stepTwo = {
+        ...visitationData,
+        visitationId: item.Visitation.id,
+        existingOrderNum: order,
+      };
     }
+    dispatch(updateStepTwo(stepTwo));
     onClear();
     // updateValueOnstep('stepTwo', 'pics', item?.pic);
   };
@@ -193,7 +218,7 @@ const SearchFlow = ({
   return (
     <React.Fragment>
       <BTextLocation
-        location={values.stepOne.locationAddress.formattedAddress!}
+        location={visitationData?.stepOne?.locationAddress?.formattedAddress!}
         numberOfLines={1}
       />
       <BSpacer size="extraSmall" />

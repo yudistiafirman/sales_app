@@ -4,7 +4,6 @@ import {
   PIC,
   requiredDocType,
   selectedCompanyInterface,
-  selectedPicType,
   SphStateInterface,
 } from '@/interfaces';
 import { createSlice } from '@reduxjs/toolkit';

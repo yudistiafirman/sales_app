@@ -156,7 +156,7 @@ interface CreateVisitationFirstStep {
 }
 interface CreateVisitationSecondStep {
   companyName: string;
-  customerType: 'INDIVIDU' | 'COMPANY';
+  customerType?: 'INDIVIDU' | 'COMPANY';
   projectName: string;
   projectId?: string;
   location: { [key: string]: any };
@@ -169,13 +169,13 @@ interface CreateVisitationSecondStep {
   existingOrderNum?: number;
 }
 interface CreateVisitationThirdStep {
-  stageProject: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+  stageProject?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
   products: any[];
   estimationDate: {
     estimationWeek: number | null;
     estimationMonth: number | null;
   };
-  paymentType: 'CBD' | 'CREDIT';
+  paymentType?: 'CBD' | 'CREDIT';
   notes: string;
 }
 
@@ -184,17 +184,6 @@ interface CreateVisitationFourthStep {
   images: any[];
   kategoriAlasan?: 'FINISHED' | 'MOU_COMPETITOR';
   alasanPenolakan: string;
-}
-
-interface CreateVisitationState {
-  step: number;
-  stepOne: CreateVisitationFirstStep;
-  stepTwo: CreateVisitationSecondStep;
-  stepThree: CreateVisitationThirdStep;
-  stepFour: CreateVisitationFourthStep;
-  sheetIndex: number;
-  shouldScrollView: boolean;
-  existingVisitationId: string | null;
 }
 
 interface PIC {
@@ -648,7 +637,6 @@ interface ProjectDetail {
 export type {
   Input,
   Styles,
-  CreateVisitationState,
   CreateVisitationFirstStep,
   CreateVisitationSecondStep,
   CreateVisitationThirdStep,
