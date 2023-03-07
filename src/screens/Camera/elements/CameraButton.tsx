@@ -31,7 +31,7 @@ const CameraButton = ({
         const res = await DocumentPicker.pickSingle({
           type:
             typeDocument === 'IMAGE'
-              ? [DocumentPicker.types.images]
+              ? ['image/png', 'image/jpg', 'image/jpeg']
               : [DocumentPicker.types.pdf],
           allowMultiSelection: false,
         });

@@ -5,7 +5,7 @@ import { UserModel } from '@/models/User';
 import { bStorage } from '@/actions';
 import { storageKey } from '@/constants';
 import { signout } from '@/redux/reducers/authReducer';
-import { customLog } from '@/utils/generalFunc';
+import { customLog, getSuccessMsgFromAPI } from '@/utils/generalFunc';
 import perf from '@react-native-firebase/perf';
 import { openSnackbar } from '@/redux/reducers/snackbarReducer';
 import Config from 'react-native-config';
@@ -155,32 +155,40 @@ instance.interceptors.response.use(
         return Promise.resolve(finalResponse);
       }
     } else if (config.method !== 'get' && config.method !== 'put') {
-      // let url = config.url;
-      // if (url) {
-      //   if (url[url?.length - 1] === '/') {
-      //     url = setCharAt(url, url?.length - 1, '');
-      //   }
-      // }
-      // const urlArray: string[] = url?.split('/');
-      // const respMethod = config.method;
-      // const endpoint = urlArray[urlArray?.length - 1] || '';
-      // //URL_PRODUCTIVITY
-      // ///productivity/m/flow/visitation
-      // const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
-      // //URL_ORDER
-      // const postSphUrl = `${URL_ORDER}/order/m/flow/quotation/`;
-      // if (
-      //   endpoint !== 'refresh' &&
-      //   url !== postVisitationUrl &&
-      //   url !== postSphUrl
-      // ) {
-      //   store.dispatch(
-      //     openSnackbar({
-      //       snackBarText: `Success ${respMethod} ${endpoint}`,
-      //       isSuccess: true,
-      //     })
-      //   );
-      // }
+      let url = config.url;
+      if (url) {
+        if (url[url?.length - 1] === '/') {
+          url = setCharAt(url, url?.length - 1, '');
+        }
+      }
+      const urlArray: string[] = url?.split('/');
+      const respMethod = config.method;
+      const endpoint = urlArray[urlArray?.length - 1] || '';
+      //URL_PRODUCTIVITY
+      ///productivity/m/flow/visitation
+      const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
+      //URL_ORDER
+      const postSphUrl = `${URL_ORDER}/order/m/flow/quotation/`;
+      if (
+        endpoint !== 'refresh' &&
+        endpoint !== 'suggestion' &&
+        endpoint !== 'places' &&
+        endpoint !== 'verify-auth' &&
+        url !== postVisitationUrl &&
+        url !== postSphUrl
+      ) {
+        store.dispatch(
+          openSnackbar({
+            snackBarText: getSuccessMsgFromAPI(
+              respMethod,
+              urlArray && urlArray.length > 1 ? urlArray[2] : '',
+              config.url,
+              endpoint
+            ),
+            isSuccess: true,
+          })
+        );
+      }
     }
     return Promise.resolve(res);
   },
