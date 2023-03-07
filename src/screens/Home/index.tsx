@@ -23,6 +23,7 @@ import {
   BFlatlistItems,
   BSpacer,
   BText,
+  PopUpQuestion,
 } from '@/components';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
@@ -61,6 +62,7 @@ import {
 } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import { HOME_MENU } from '../Const';
+import { resetState } from '@/redux/reducers/SphReducer';
 const { RNCustomConfig } = NativeModules;
 const versionName = RNCustomConfig?.version_name;
 const { height } = Dimensions.get('window');
@@ -92,9 +94,11 @@ const Beranda = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isError, setIsError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
-
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
+  const sphData = useSelector((state: RootState) => state.sphState);
+  const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
+
   useHeaderShow({
     isHeaderShown: !isModalVisible,
   });
@@ -270,6 +274,27 @@ const Beranda = () => {
     );
   };
 
+  const renderSPHContinueData = () => {
+    return (
+      <>
+        <View style={style.popupSPHContent}>
+          <BVisitationCard
+            item={{
+              name: sphData?.selectedCompany?.name,
+              location: sphData?.selectedCompany?.locationAddress?.line1,
+            }}
+            isRenderIcon={false}
+          />
+        </View>
+        <BSpacer size={'medium'} />
+        <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
+          SPH yang lama akan hilang kalau Anda buat SPH yang baru
+        </BText>
+        <BSpacer size={'small'} />
+      </>
+    );
+  };
+
   React.useEffect(() => {
     crashlytics().log(TAB_HOME);
     let currentVersionName = versionName;
@@ -311,7 +336,8 @@ const Beranda = () => {
         icon: SvgNames.IC_SPH,
         title: HOME_MENU.SPH,
         action: () => {
-          navigation.navigate(SPH, {});
+          if (sphData.selectedCompany) setPopupSPHVisible(true);
+          else navigation.navigate(SPH, {});
         },
       },
       {
@@ -608,6 +634,22 @@ const Beranda = () => {
           onEndReached={onEndReached}
           onPressItem={enable_customer_detail ? visitationOnPress : undefined}
         />
+        <PopUpQuestion
+          isVisible={isPopupSPHVisible}
+          setIsPopupVisible={() => {
+            setPopupSPHVisible(false);
+            dispatch(resetState());
+            navigation.navigate(SPH, {});
+          }}
+          actionButton={() => {
+            setPopupSPHVisible(false);
+            navigation.navigate(SPH, {});
+          }}
+          descContent={renderSPHContinueData()}
+          cancelText={'Buat Baru'}
+          actionText={'Lanjutkan'}
+          text={'Apakah Anda Ingin Melanjutkan Pembuatan SPH Sebelumnya?'}
+        />
       </BBottomSheet>
       {renderUpdateDialog()}
     </View>
@@ -663,6 +705,12 @@ const style = StyleSheet.create({
     height: resScale(3),
     width: resScale(40),
     backgroundColor: colors.disabled,
+  },
+  popupSPHContent: { height: resScale(78), paddingHorizontal: layout.pad.lg },
+  popupSPHDesc: {
+    alignSelf: 'center',
+    textAlign: 'center',
+    paddingHorizontal: layout.pad.xl,
   },
 });
 export default Beranda;

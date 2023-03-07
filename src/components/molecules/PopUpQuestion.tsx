@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Modal from 'react-native-modal';
 import { colors, fonts, layout } from '@/constants';
 import BBackContinueBtn from './BBackContinueBtn';
@@ -10,6 +10,7 @@ type PopUpQuestionType = {
   actionButton: () => void;
   text?: string;
   desc?: string;
+  descContent?: ReactNode;
   actionText?: string;
   cancelText?: string;
 };
@@ -20,6 +21,7 @@ export default function PopUpQuestion({
   actionButton,
   text,
   desc,
+  descContent,
   actionText,
   cancelText,
 }: PopUpQuestionType) {
@@ -42,6 +44,7 @@ export default function PopUpQuestion({
             <Text style={styles.questionDescText}>{desc}</Text>
           </View>
         )}
+        {descContent && <View>{descContent}</View>}
         <View
           style={{
             paddingHorizontal: layout.pad.md,

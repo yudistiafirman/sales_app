@@ -1,12 +1,19 @@
 import * as React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
 import {
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { BEmptyState, BSpacer, BTouchableText } from '@/components';
+import {
+  BEmptyState,
+  BSpacer,
+  BText,
+  BTouchableText,
+  BVisitationCard,
+  PopUpQuestion,
+} from '@/components';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
@@ -24,6 +31,9 @@ import {
 import { getOrderByID } from '@/actions/OrderActions';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
+import { RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetState } from '@/redux/reducers/SphReducer';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
@@ -31,6 +41,9 @@ const Transaction = () => {
   const route = useRoute<RootStackScreenProps>();
   const [index, setIndex] = React.useState(0);
   const [state, send] = useMachine(transactionMachine);
+  const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
+  const sphData = useSelector((rootState: RootState) => rootState.sphState);
+  const dispatch = useDispatch();
 
   const onTabPress = () => {
     if (routes[index].key && route.key !== routes[index].key) {
@@ -41,7 +54,10 @@ const Transaction = () => {
   useCustomHeaderRight({
     customHeaderRight: (
       <BTouchableText
-        onPress={() => navigation.navigate(SPH, {})}
+        onPress={() => {
+          if (sphData.selectedCompany) setPopupSPHVisible(true);
+          else navigation.navigate(SPH, {});
+        }}
         title="Buat SPH"
       />
     ),
@@ -58,7 +74,7 @@ const Transaction = () => {
   }, []);
 
   const getOneOrder = async (id: string) => {
-    customLog('ini id',id)
+    customLog('ini id', id);
     try {
       const { data } = await getOrderByID(id);
       navigation.navigate(TRANSACTION_DETAIL, {
@@ -68,6 +84,27 @@ const Transaction = () => {
     } catch (error) {
       customLog(error);
     }
+  };
+
+  const renderSPHContinueData = () => {
+    return (
+      <>
+        <View style={styles.popupSPHContent}>
+          <BVisitationCard
+            item={{
+              name: sphData?.selectedCompany?.name,
+              location: sphData?.selectedCompany?.locationAddress?.line1,
+            }}
+            isRenderIcon={false}
+          />
+        </View>
+        <BSpacer size={'medium'} />
+        <BText bold="300" sizeInNumber={14} style={styles.popupSPHDesc}>
+          SPH yang lama akan hilang kalau Anda buat SPH yang baru
+        </BText>
+        <BSpacer size={'small'} />
+      </>
+    );
   };
 
   const {
@@ -105,7 +142,7 @@ const Transaction = () => {
                 'getTransaction.typeLoaded.errorGettingTypeTransactions'
               )}
               errorMessage={errorMessage}
-              onAction={()=> send('retryGettingTypeTransactions')}
+              onAction={() => send('retryGettingTypeTransactions')}
               onRefresh={() => send('refreshingList')}
               onPress={(data: any) => getOneOrder(data.id)}
             />
@@ -118,6 +155,22 @@ const Transaction = () => {
           minTabHeaderWidth={80}
         />
       )}
+      <PopUpQuestion
+        isVisible={isPopupSPHVisible}
+        setIsPopupVisible={() => {
+          setPopupSPHVisible(false);
+          dispatch(resetState());
+          navigation.navigate(SPH, {});
+        }}
+        actionButton={() => {
+          setPopupSPHVisible(false);
+          navigation.navigate(SPH, {});
+        }}
+        cancelText={'Buat Baru'}
+        actionText={'Lanjutkan'}
+        descContent={renderSPHContinueData()}
+        text={'Apakah Anda Ingin Melanjutkan Pembuatan SPH Sebelumnya?'}
+      />
     </SafeAreaView>
   );
 };
@@ -142,6 +195,12 @@ const styles = StyleSheet.create({
   tabBarStyle: {
     backgroundColor: colors.white,
     paddingHorizontal: layout.pad.lg,
+  },
+  popupSPHContent: { height: resScale(78), paddingHorizontal: layout.pad.lg },
+  popupSPHDesc: {
+    alignSelf: 'center',
+    textAlign: 'center',
+    paddingHorizontal: layout.pad.xl,
   },
 });
 
