@@ -1,4 +1,4 @@
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, BackHandler } from 'react-native';
 import React, {
   useEffect,
   useState,
@@ -9,6 +9,7 @@ import React, {
 import {
   BHeaderIcon,
   BStepperIndicator as StepperIndicator,
+  PopUpQuestion,
 } from '@/components';
 
 import Steps from './elements/Steps';
@@ -20,7 +21,11 @@ import SecondStep from './elements/2secondStep';
 import ThirdStep from './elements/3thirdStep';
 import FourthStep from './elements/4fourthStep';
 import FifthStep from './elements/5fifthStep';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { updateRegion } from '@/redux/reducers/locationReducer';
@@ -33,7 +38,6 @@ import { customLog } from '@/utils/generalFunc';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { resScale } from '@/utils';
 import { RootState } from '@/redux/store';
-import { resetState } from '@/redux/reducers/SphReducer';
 
 const labels = [
   'Cari Pelanggan',
@@ -134,6 +138,8 @@ function SphContent() {
     customLog(step, 'stepsss');
   }, []);
   const sphData = useSelector((state: RootState) => state.sph);
+  const [isPopupVisible, setPopupVisible] = React.useState(false);
+
   useEffect(() => {
     crashlytics().log(SPH);
 
@@ -226,11 +232,33 @@ function SphContent() {
     customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
-        onBack={() => navigation.goBack()}
+        onBack={() => {
+          if (sphData.selectedCompany) setPopupVisible(true);
+          else navigation.goBack();
+        }}
         iconName="x"
       />
     ),
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        if (currentPosition > 0) {
+          setCurrentPosition(currentPosition - 1);
+        } else {
+          if (sphData.selectedCompany) setPopupVisible(true);
+          else navigation.goBack();
+        }
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+    }, [currentPosition, navigation, setCurrentPosition, sphData])
+  );
 
   useEffect(() => {
     const projectId = route.params?.projectId;
@@ -238,6 +266,7 @@ function SphContent() {
     if (projectId) {
       getProjectById(projectId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -250,6 +279,20 @@ function SphContent() {
         ref={stepRef}
       />
       <Steps currentPosition={currentPosition} stepsToRender={stepsToRender} />
+      <PopUpQuestion
+        isVisible={isPopupVisible}
+        setIsPopupVisible={() => {
+          setPopupVisible(false);
+          navigation.goBack();
+        }}
+        actionButton={() => {
+          setPopupVisible(false);
+        }}
+        cancelText={'Keluar'}
+        actionText={'Lanjutkan'}
+        desc={'Progres pembuatan SPH Anda sudah tersimpan.'}
+        text={'Apakah Anda yakin ingin keluar?'}
+      />
     </View>
   );
 }
