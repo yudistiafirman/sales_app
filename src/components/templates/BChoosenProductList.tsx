@@ -36,14 +36,19 @@ const ChoosenProductList = <ProductData extends RequestedProducts>({
           onChange: (value: string) => onChangeQuantity(index, value),
         },
       ];
+
+      const productName = `${item?.Product?.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`;
+      const offeringPrice = item?.offeringPrice;
+      const quantity = item?.quantity;
+      const totalPrice = offeringPrice * quantity;
       return (
         <BExpandableProductCard
-          productName={item?.Product?.name}
+          productName={productName}
           checked={(isHasMultipleCheck && checked !== -1) || data?.length === 1}
-          pricePerVol={item?.offeringPrice}
-          volume={item?.quantity}
+          pricePerVol={offeringPrice}
+          volume={quantity}
           item={item}
-          totalPrice={item?.quantity * item?.offeringPrice}
+          totalPrice={totalPrice}
           onChecked={() => isHasMultipleCheck && onChecked && onChecked(item)}
           inputsSelection={inputsSelection}
           isHasMultipleCheck={isHasMultipleCheck}

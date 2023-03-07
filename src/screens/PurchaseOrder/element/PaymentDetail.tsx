@@ -37,23 +37,27 @@ const PaymentDetail = () => {
         <BSpinner size="large" />
       </View>
     );
+  } else {
+    return (
+      <ScrollView style={styles.container}>
+        <BLabel
+          bold="600"
+          sizeInNumber={font.size.md}
+          label="Tipe Pembayaran"
+        />
+        <BSpacer size="extraSmall" />
+        <BCardOption isActive={false} title={paymentTitle} icon={paymentIcon} />
+        <BSpacer size="small" />
+        <BLabel
+          bold="600"
+          sizeInNumber={font.size.md}
+          label="Kelengkapan Dokumen"
+        />
+        <BSpacer size="extraSmall" />
+        <BForm inputs={fileInput} />
+      </ScrollView>
+    );
   }
-
-  return (
-    <ScrollView style={styles.container}>
-      <BLabel bold="600" sizeInNumber={font.size.md} label="Tipe Pembayaran" />
-      <BSpacer size="extraSmall" />
-      <BCardOption isActive={false} title={paymentTitle} icon={paymentIcon} />
-      <BSpacer size="small" />
-      <BLabel
-        bold="600"
-        sizeInNumber={font.size.md}
-        label="Kelengkapan Dokumen"
-      />
-      <BSpacer size="extraSmall" />
-      <BForm inputs={fileInput} />
-    </ScrollView>
-  );
 };
 
 const styles = StyleSheet.create({
