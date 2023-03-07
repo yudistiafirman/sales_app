@@ -96,7 +96,7 @@ const Beranda = () => {
   const [errorMessage, setErrorMessage] = React.useState('');
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
-  const sphData = useSelector((state: RootState) => state.sphState);
+  const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
 
   useHeaderShow({
@@ -336,7 +336,7 @@ const Beranda = () => {
         icon: SvgNames.IC_SPH,
         title: HOME_MENU.SPH,
         action: () => {
-          if (sphData.selectedCompany) setPopupSPHVisible(true);
+          if (sphData?.selectedCompany) setPopupSPHVisible(true);
           else navigation.navigate(SPH, {});
         },
       },

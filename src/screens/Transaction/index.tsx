@@ -42,7 +42,7 @@ const Transaction = () => {
   const [index, setIndex] = React.useState(0);
   const [state, send] = useMachine(transactionMachine);
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
-  const sphData = useSelector((rootState: RootState) => rootState.sphState);
+  const sphData = useSelector((rootState: RootState) => rootState.sph);
   const dispatch = useDispatch();
 
   const onTabPress = () => {
@@ -55,7 +55,7 @@ const Transaction = () => {
     customHeaderRight: (
       <BTouchableText
         onPress={() => {
-          if (sphData.selectedCompany) setPopupSPHVisible(true);
+          if (sphData?.selectedCompany) setPopupSPHVisible(true);
           else navigation.navigate(SPH, {});
         }}
         title="Buat SPH"
