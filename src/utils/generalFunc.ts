@@ -101,7 +101,7 @@ export const getSuccessMsgFromAPI = (
   fullUrl: string,
   endPoint: string
 ) => {
-  // excluding: /refresh , /suggestion , /places , /verify-auth
+  // excluding: /refresh , /suggestion , /places , /verify-auth , /project_sph
 
   let finalText = 'Berhasil ';
   switch (httpMethod.toLowerCase()) {
@@ -217,6 +217,8 @@ export const getSuccessMsgFromAPI = (
       default:
         if (fullUrl.toLowerCase().includes('visitation/'))
           finalText += 'data kunjungan';
+        else if (fullUrl.toLowerCase().includes('sph/'))
+          finalText += 'dokumen sph';
         else finalText += 'data';
         break;
     }

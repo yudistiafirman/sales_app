@@ -174,6 +174,7 @@ instance.interceptors.response.use(
         endpoint !== 'suggestion' &&
         endpoint !== 'places' &&
         endpoint !== 'verify-auth' &&
+        endpoint !== 'project_sph' &&
         url !== postVisitationUrl &&
         url !== postSphUrl
       ) {
