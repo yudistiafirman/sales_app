@@ -171,7 +171,7 @@ const Deposit = () => {
                 next(values.step + 1)();
                 DeviceEventEmitter.emit('Deposit.continueButton', true);
               }}
-              onPressBack={handleBackButton}
+              onPressBack={actionBackButton}
               continueText={values.step > 0 ? 'Buat Deposit' : 'Lanjut'}
               disableContinue={!stepsDone.includes(values.step)}
             />
