@@ -31,6 +31,7 @@ import {
   IMAGE_PREVIEW_TITLE,
   LOCATION,
   LOCATION_TITLE,
+  PO,
   SEARCH_AREA,
   SEARCH_AREA_TITLE,
   SEARCH_PO,
@@ -44,6 +45,7 @@ import {
   VISIT_HISTORY,
 } from '../ScreenNames';
 import CustomerDetail from '@/screens/CustomerDetail';
+import PurchaseOrderWithProvider from '@/screens/PurchaseOrder';
 import CreateSchedule from '@/screens/CreateSchedule';
 import PriceList from '@/screens/Price';
 import AppointmentWithProvider from '@/screens/Appointment';
@@ -69,6 +71,14 @@ const SalesStack = (Stack: any) => {
         component={Sph}
         options={{
           headerTitle: SPH_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={PO}
+        key={PO}
+        component={PurchaseOrderWithProvider}
+        options={{
+          headerTitle: false,
         }}
       />
       <Stack.Screen

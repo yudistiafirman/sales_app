@@ -9,6 +9,10 @@ import modalReducer from './reducers/modalReducer';
 import productivityFlowReducer from './reducers/productivityFlowReducer';
 import orderReducer from './reducers/orderReducer';
 import snackbarReducer from './reducers/snackbarReducer';
+import { createXStateMiddleware } from './middleware/createXStateMiddleware';
+import purchaseOrderReducer, {
+  purchaseOrderSlice,
+} from './reducers/purchaseOrder';
 import SphReducer from './reducers/SphReducer';
 import VisitationReducer, {
   VisitationGlobalState,
@@ -30,6 +34,7 @@ const rootReducer = combineReducers({
   common: commonReducer,
   order: orderReducer,
   snackbar: snackbarReducer,
+  purchaseOrder: purchaseOrderReducer,
   sph: persistReducer<SphStateInterface, any>(persistConfig, SphReducer),
   visitation: persistReducer<VisitationGlobalState, any>(
     persistConfig,
@@ -41,7 +46,10 @@ const rootReducer = combineReducers({
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleWare) =>
-    getDefaultMiddleWare({ immutableCheck: false, serializableCheck: false }),
+    getDefaultMiddleWare({
+      immutableCheck: false,
+      serializableCheck: false,
+    }).concat([createXStateMiddleware(purchaseOrderSlice)]),
 });
 
 export const persistor = persistStore(store);

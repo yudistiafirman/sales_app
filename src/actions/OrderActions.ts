@@ -16,3 +16,21 @@ export const postSph = async (payload: sphOrderPayloadType) => {
 
   return customRequest(BrikApiOrder.orderSphPost(), 'POST', payload, true);
 };
+
+export const getSphByProject = async (searchQuery: string) => {
+  return customRequest(
+    BrikApiOrder.getSphByProject(searchQuery),
+    'GET',
+    undefined,
+    true
+  );
+};
+
+export const getCreatedSphDocuments = async (id: string) => {
+  return customRequest(
+    BrikApiOrder.getSphDocuments(id),
+    'GET',
+    undefined,
+    true
+  );
+};

@@ -38,6 +38,7 @@ interface Input {
   loading?: boolean;
   isError?: boolean;
   customerErrorMsg?: string;
+  disabledFileInput?: boolean;
   LeftIcon?: () => JSX.Element;
   keyboardType?: KeyboardType | KeyboardTypeOptions;
   items?: any;

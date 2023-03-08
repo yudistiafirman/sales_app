@@ -25,6 +25,7 @@ import {
   GALLERY_DEPOSIT,
   GALLERY_VISITATION,
   IMAGE_PREVIEW,
+  PO,
   OPERATION,
   SUBMIT_FORM,
 } from '@/navigation/ScreenNames';
@@ -139,6 +140,13 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(
             StackActions.replace(navigateTo, { existingVisitation })
           );
+          return;
+        case PO:
+          dispatch({
+            type: 'addImages',
+            value: localFile,
+          });
+          navigation.dispatch(StackActions.replace(navigateTo));
           return;
         case ENTRY_TYPE[ENTRY_TYPE.BATCHER]:
           dispatch(setImageURLS({ file: localFile, source: OPERATION }));

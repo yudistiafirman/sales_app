@@ -48,6 +48,7 @@ export { default as BLocationDetail } from './molecules/BLocationDetail';
 export { default as BGallery } from './molecules/BGallery';
 export { default as BGalleryDeposit } from './molecules/BGalleryDeposit';
 export { default as PopUpQuestion } from './molecules/PopUpQuestion';
+export { default as BExpandableProductCard } from './molecules/BExpandableProductCard';
 
 // organism
 export { default as BForm } from './organism/BForm';
@@ -63,5 +64,5 @@ export { default as BEmptyState } from './organism/BEmptyState';
 
 //templates
 export { default as ProductList } from './templates/Price/ProductList';
-export { default as POList } from './templates/PO/POList';
+export { default as BCommonSearchList } from './templates/BCommonSearchList';
 export { default as BottomSheetAddPIC } from './templates/BottomSheetAddPIC';

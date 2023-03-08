@@ -29,19 +29,26 @@ export default function Popup() {
       }}
     >
       <View style={styles.modalContent}>
-        <View
-          style={{ paddingTop: resScale(33), paddingBottom: layout.pad.ml }}
-        >
-          {popUpOptions.popUpType === 'success' && (
-            <AntDesign size={resScale(48)} name="checkcircle" color={'green'} />
-          )}
-          {popUpOptions.popUpType === 'error' && (
-            <AntDesign size={resScale(48)} name="closecircle" color={'red'} />
-          )}
-          {popUpOptions.popUpType === 'loading' && (
-            <ActivityIndicator size={resScale(60)} color={colors.primary} />
-          )}
-        </View>
+        {popUpOptions.popUpType !== 'none' && (
+          <View
+            style={{ paddingTop: resScale(33), paddingBottom: layout.pad.ml }}
+          >
+            {popUpOptions.popUpType === 'success' && (
+              <AntDesign
+                size={resScale(48)}
+                name="checkcircle"
+                color={'green'}
+              />
+            )}
+            {popUpOptions.popUpType === 'error' && (
+              <AntDesign size={resScale(48)} name="closecircle" color={'red'} />
+            )}
+            {popUpOptions.popUpType === 'loading' && (
+              <ActivityIndicator size={resScale(60)} color={colors.primary} />
+            )}
+          </View>
+        )}
+
         {popUpOptions.popUpTitle && (
           <View style={{ paddingBottom: layout.pad.lg }}>
             <BHighlightText

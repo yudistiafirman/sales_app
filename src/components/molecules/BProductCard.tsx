@@ -16,6 +16,7 @@ type BProductCardType = {
   backgroundColor?: 'white' | 'default';
   hideVolume?: boolean;
   withoutBorder?: boolean;
+  unit?: string;
 };
 
 export default function BProductCard({
@@ -23,12 +24,23 @@ export default function BProductCard({
   volume,
   pricePerVol,
   totalPrice,
+  unit,
   onPressDelete,
   onPressEdit,
   backgroundColor = 'default',
   hideVolume = false,
   withoutBorder = false,
 }: BProductCardType) {
+  const getUnit = () => {
+    let formattedUnit = '';
+    if (unit === 'M3') {
+      formattedUnit = 'm³';
+    } else {
+      return unit;
+    }
+    return formattedUnit;
+  };
+
   return (
     <View
       style={[
@@ -76,11 +88,11 @@ export default function BProductCard({
       <View style={style.detail}>
         {!hideVolume && (
           <Text style={style.detailText}>
-            {volume > 0 ? volume + ' m³' : '-'}
+            {volume && volume > 0 ? volume + ` ${getUnit()}` : '-'}
           </Text>
         )}
         <Text style={style.detailText}>
-          IDR {pricePerVol ? formatCurrency(pricePerVol) : '-'}/m³
+          IDR {pricePerVol ? formatCurrency(pricePerVol) : '-'}/{getUnit()}
         </Text>
         <Text style={style.detailText}>
           IDR {totalPrice ? formatCurrency(totalPrice) : '-'}

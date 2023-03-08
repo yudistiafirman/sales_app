@@ -24,6 +24,7 @@ export const SUBMIT_FORM = 'SUBMIT_FORM';
 export const CREATE_VISITATION = 'CREATE_VISITATION';
 export const GALLERY_VISITATION = 'GALLERY_VISITATION';
 export const SPH = 'SPH';
+export const PO = 'PO';
 export const SEARCH_PRODUCT = 'SEARCH_PRODUCT';
 export const LOCATION = 'LOCATION';
 export const SEARCH_AREA = 'SEARCH_AREA';

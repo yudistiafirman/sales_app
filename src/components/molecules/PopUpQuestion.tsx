@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react';
 import Modal from 'react-native-modal';
 import { colors, fonts, layout } from '@/constants';
 import BBackContinueBtn from './BBackContinueBtn';
+import { resScale } from '@/utils';
 
 type PopUpQuestionType = {
   isVisible: boolean;
@@ -23,7 +24,7 @@ export default function PopUpQuestion({
   desc,
   descContent,
   actionText,
-  cancelText,
+  cancelText
 }: PopUpQuestionType) {
   return (
     <Modal

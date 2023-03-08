@@ -197,6 +197,7 @@ const renderInput = (
     loading,
     calendar,
     calendarTime,
+    disabledFileInput,
   } = input;
 
   if (type === 'quantity') {
@@ -700,6 +701,7 @@ const renderInput = (
           value={value}
           onChange={onChange}
           isError={isError}
+          disabled={disabledFileInput}
         />
         {isError && (
           <BText style={{ fontSize: fonts.size.xs }} color="primary" bold="400">

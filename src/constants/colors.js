@@ -9,6 +9,8 @@ const colors = {
   lightGray: '#E6E6E6',
   offCheckbox: '#aaaaaa',
   whatsAppGreen: '#1DAD22',
+  pitchBlack: '#000000',
+  blueSky: '#B0D8FF',
   text: {
     dark: '#191919',
     darker: '#202020',
@@ -48,6 +50,7 @@ const colors = {
     tab: '#C7C7C7',
     altGrey: '#C7C7C7',
     otpField: '#EBEBEB',
+    commonCard: '#EBEBEB',
   },
   chip: {
     green: '#C2FCC8',
@@ -56,6 +59,7 @@ const colors = {
   icon: {
     primary: '#E52525',
     darkGrey: '#202020',
+    closeImg: '#636363',
   },
 };
 

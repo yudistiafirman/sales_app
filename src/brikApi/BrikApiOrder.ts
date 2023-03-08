@@ -16,4 +16,18 @@ export default class BrikApiOrder {
     const url = new URL(`${API_URL}/order/m/flow/quotation`);
     return url.toString();
   };
+
+  static getSphByProject = (searchQuery: string) => {
+    const url = new URL(`${API_URL}/order/m/project-sph`);
+    const params = url.searchParams;
+    if (searchQuery) {
+      params.append('search', searchQuery);
+    }
+    return url.toString();
+  };
+
+  static getSphDocuments = (id: string) => {
+    const url = new URL(`${API_URL}/order/m/sph/${id}`);
+    return url.toString();
+  };
 }

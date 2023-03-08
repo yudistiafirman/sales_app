@@ -343,7 +343,9 @@ const Beranda = () => {
       {
         icon: SvgNames.IC_PO,
         title: HOME_MENU.PO,
-        action: () => {},
+        action: () => {
+          navigation.navigate('PO');
+        },
       },
       {
         icon: SvgNames.IC_DEPOSIT,

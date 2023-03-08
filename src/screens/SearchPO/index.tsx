@@ -68,9 +68,10 @@ const SearchPO = () => {
       {selectedData && (
         <SelectedPOModal
           isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
+          onCloseModal={() => setIsModalVisible(false)}
           data={selectedData}
           onPressCompleted={(data) => onSubmitData(data)}
+          modalTitle="Pilih PO"
         />
       )}
 
