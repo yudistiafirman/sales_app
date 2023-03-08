@@ -306,7 +306,7 @@ const CreateVisitation = () => {
                     true
                   );
                 }}
-                onPressBack={handleBackButton}
+                onPressBack={actionBackButton}
                 disableContinue={!stepsDone.includes(visitationData?.step)}
               />
             )}

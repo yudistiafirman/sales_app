@@ -470,9 +470,7 @@ const Beranda = () => {
           <BVisitationCard
             item={item}
             searchQuery={searchQuery}
-            onPress={() => {
-              customLog(item, 'sceneToRender');
-            }}
+            onPress={enable_customer_detail ? visitationOnPress : undefined}
           />
         )}
         isError={isError}

@@ -21,7 +21,6 @@ import { setImageURLS } from '@/redux/reducers/cameraReducer';
 import {
   CAMERA,
   CREATE_DEPOSIT,
-  CREATE_SCHEDULE,
   CREATE_VISITATION,
   GALLERY_DEPOSIT,
   GALLERY_VISITATION,
@@ -140,11 +139,6 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(
             StackActions.replace(navigateTo, { existingVisitation })
           );
-          return;
-        case CREATE_SCHEDULE:
-          dispatch(setImageURLS({ file: localFile, source: CREATE_SCHEDULE }));
-          DeviceEventEmitter.emit('Camera.addedDeposit', 'true');
-          navigation.dispatch(StackActions.pop(2));
           return;
         case ENTRY_TYPE[ENTRY_TYPE.BATCHER]:
           dispatch(setImageURLS({ file: localFile, source: OPERATION }));
