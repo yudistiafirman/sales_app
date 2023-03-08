@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Modal from 'react-native-modal';
 import { colors, fonts, layout } from '@/constants';
 import BBackContinueBtn from './BBackContinueBtn';
@@ -9,9 +9,9 @@ type PopUpQuestionType = {
   isVisible: boolean;
   setIsPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
   actionButton: () => void;
-  poNumber?: string;
   text?: string;
   desc?: string;
+  descContent?: ReactNode;
   actionText?: string;
   cancelText?: string;
 };
@@ -22,9 +22,9 @@ export default function PopUpQuestion({
   actionButton,
   text,
   desc,
+  descContent,
   actionText,
-  cancelText,
-  poNumber,
+  cancelText
 }: PopUpQuestionType) {
   return (
     <Modal
@@ -39,17 +39,13 @@ export default function PopUpQuestion({
           <Text style={styles.questionText}>
             {text ? text : 'Apakah Anda Ingin Tambah Foto Lagi?'}
           </Text>
-          {poNumber && (
-            <View style={styles.poNumberWrapper}>
-              <Text style={styles.poNumber}>{poNumber}</Text>
-            </View>
-          )}
         </View>
         {desc && (
           <View>
             <Text style={styles.questionDescText}>{desc}</Text>
           </View>
         )}
+        {descContent && <View>{descContent}</View>}
         <View
           style={{
             paddingHorizontal: layout.pad.md,
@@ -87,19 +83,6 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.lg,
     textAlign: 'center',
     padding: layout.pad.lg,
-  },
-  poNumber: {
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.md,
-    color: colors.text.darker,
-  },
-  poNumberWrapper: {
-    backgroundColor: colors.tertiary,
-    height: resScale(37),
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: resScale(277),
-    borderRadius: layout.radius.md,
   },
   questionDescText: {
     color: colors.text.darker,

@@ -127,7 +127,9 @@ const CreatePo = () => {
           <BCommonSearchList
             searchQuery={searchQuery}
             onChangeText={onChangeText}
+            placeholder="Cari SPH"
             index={index}
+            emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari sph lainnya.`}
             routes={routes}
             onTabPress={onTabPress}
             onIndexChange={setIndex}
@@ -191,7 +193,7 @@ const CreatePo = () => {
                     />
                   }
                   disabled
-                  placeholder="Cari Sph"
+                  placeholder="Cari SPH"
                 />
               </TouchableOpacity>
             )}

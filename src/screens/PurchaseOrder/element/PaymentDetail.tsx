@@ -63,7 +63,7 @@ const PaymentDetail = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: layout.pad.xl * 2,
+    marginBottom: layout.pad.xxl,
   },
   paymentType: {
     flex: 1,

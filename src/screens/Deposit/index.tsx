@@ -92,7 +92,7 @@ const Deposit = () => {
     customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
-        onBack={() => setPopupVisible(true)}
+        onBack={() => actionBackButton(true)}
         iconName="x"
       />
     ),
@@ -104,11 +104,7 @@ const Deposit = () => {
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
-        if (values.step > 0) {
-          next(values.step - 1)();
-        } else {
-          setPopupVisible(true);
-        }
+        actionBackButton();
         return true;
       };
       const backHandler = BackHandler.addEventListener(
@@ -144,8 +140,8 @@ const Deposit = () => {
     }
   };
 
-  const handleBackButton = () => {
-    if (values.step > 0) {
+  const actionBackButton = (directlyClose: boolean = false) => {
+    if (values.step > 0 && !directlyClose) {
       next(values.step - 1)();
     } else {
       setPopupVisible(true);
@@ -175,7 +171,7 @@ const Deposit = () => {
                 next(values.step + 1)();
                 DeviceEventEmitter.emit('Deposit.continueButton', true);
               }}
-              onPressBack={handleBackButton}
+              onPressBack={actionBackButton}
               continueText={values.step > 0 ? 'Buat Deposit' : 'Lanjut'}
               disableContinue={!stepsDone.includes(values.step)}
             />

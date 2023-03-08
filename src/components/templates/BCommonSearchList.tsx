@@ -40,7 +40,9 @@ interface BCommonSearchListProps<ArrayOfObject> {
   routes: any[];
   errorMessage?: string;
   isError?: boolean;
+  placeholder?: string;
   onRetry?: () => void;
+  emptyText: string;
 }
 
 const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
@@ -60,6 +62,8 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
   routes,
   isError,
   onRetry,
+  placeholder,
+  emptyText,
 }: BCommonSearchListProps<ArrayOfObject>) => {
   const isSearching = searchQuery.length > 2;
   const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
@@ -95,7 +99,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
         value={searchQuery}
         onChangeText={(text) => onChangeText(text)}
         left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
-        placeholder="Cari Sph"
+        placeholder={placeholder}
       />
       <BSpacer size="extraSmall" />
       {isSearching && (
@@ -125,7 +129,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
                       errorMessage={errorMessage}
                       isError={isError}
                       onAction={onRetry}
-                      emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
+                      emptyText={emptyText}
                     />
                   )
                 }

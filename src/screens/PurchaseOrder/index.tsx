@@ -5,7 +5,7 @@ import {
   BStepperIndicator,
   PopUpQuestion,
 } from '@/components';
-import { colors, layout } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import { RootStackParamList } from '@/navigation/navTypes';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { AppDispatch, RootState } from '@/redux/store';
@@ -15,7 +15,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CreatePo from './element/CreatePo';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -32,7 +32,7 @@ const PO = () => {
     (postate: RootState) => postate.purchaseOrder
   );
   const dispatch = useDispatch<AppDispatch>();
-  const { currentStep } = poGlobalState.poState;
+  const { currentStep, poNumber } = poGlobalState.poState;
   const [stepsDone, setStepsDone] = useState<number[]>([]);
   const [popUpVisible, setPopUpQuestion] = useState(false);
   const { keyboardVisible } = useKeyboardActive();
@@ -74,6 +74,14 @@ const PO = () => {
     ),
     [handleBack]
   );
+
+  const renderPurchaseOrderNumber = () => {
+    return (
+      <View style={styles.poNumberWrapper}>
+        <Text style={styles.poNumber}>{poNumber}</Text>
+      </View>
+    );
+  };
 
   const renderTitle = useCallback(() => {
     let title = 'Buat PO';
@@ -137,6 +145,19 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  poNumber: {
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.md,
+    color: colors.text.darker,
+  },
+  poNumberWrapper: {
+    backgroundColor: colors.tertiary,
+    height: resScale(37),
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: resScale(277),
+    borderRadius: layout.radius.md,
   },
 });
 

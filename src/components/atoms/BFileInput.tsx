@@ -62,14 +62,18 @@ export default function BFileInput({
 
       const res = await DocumentPicker.pickSingle({
         // Provide which type of file you want user to pick
-        type: [DocumentPicker.types.images],
+        type: [
+          'image/png',
+          'image/jpg',
+          'image/jpeg',
+          DocumentPicker.types.pdf,
+        ],
         allowMultiSelection: false,
         // There can me more options as well
         // DocumentPicker.types.allFiles
         // DocumentPicker.types.images
         // DocumentPicker.types.plainText
         // DocumentPicker.types.audio
-        // DocumentPicker.types.pdf
       });
       // Printing the log realted to the file
       customLog('res : ' + JSON.stringify(res));

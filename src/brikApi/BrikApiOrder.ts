@@ -18,7 +18,7 @@ export default class BrikApiOrder {
   };
 
   static getSphByProject = (searchQuery: string) => {
-    const url = new URL(`${API_URL}/order/m/project_sph`);
+    const url = new URL(`${API_URL}/order/m/project-sph`);
     const params = url.searchParams;
     if (searchQuery) {
       params.append('search', searchQuery);

@@ -18,7 +18,7 @@ interface Props<TItem> {
   totalPrice?: number;
   inputsSelection?: Input[];
   remainingQuantity?: string;
-  isHasMultipleCheck?: boolean;
+  hasMultipleCheck?: boolean;
   index?: number;
   onPressRadioButton?: (index: string) => void;
 }
@@ -32,7 +32,7 @@ const BExpandableProductCard = ({
   totalPrice,
   inputsSelection,
   remainingQuantity,
-  isHasMultipleCheck,
+  hasMultipleCheck,
   index,
   onPressRadioButton,
 }: Props) => {
@@ -50,7 +50,7 @@ const BExpandableProductCard = ({
     <View style={styles.customerCard}>
       <View style={styles.parentContainer}>
         <View style={styles.checkBoxContainer}>
-          {isHasMultipleCheck ? (
+          {hasMultipleCheck ? (
             <BForm inputs={checkbox} />
           ) : (
             <RadioButton
@@ -70,7 +70,7 @@ const BExpandableProductCard = ({
               {`${formatCurrency(pricePerVol!)}/m3`}
             </BText>
             <BText style={styles.totalParentPrice}>{`IDR ${formatCurrency(
-              totalPrice && totalPrice
+              totalPrice
             )}`}</BText>
           </View>
         </View>

@@ -78,7 +78,7 @@ const SalesStack = (Stack: any) => {
         key={PO}
         component={PurchaseOrderWithProvider}
         options={{
-          headerTitle: '',
+          headerTitle: false,
         }}
       />
       <Stack.Screen

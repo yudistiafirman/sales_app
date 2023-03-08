@@ -103,6 +103,7 @@ const CreateSchedule = () => {
   const navigation = useNavigation();
   const { values, action } = React.useContext(CreateScheduleContext);
   const { shouldScrollView } = values;
+  const { stepOne: stateOne } = values;
   const { updateValue, updateValueOnstep } = action;
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
@@ -113,7 +114,7 @@ const CreateSchedule = () => {
     customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
-        onBack={() => setPopupVisible(true)}
+        onBack={() => actionBackButton(true)}
         iconName="x"
       />
     ),
@@ -125,11 +126,7 @@ const CreateSchedule = () => {
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
-        if (values.step > 0) {
-          next(values.step - 1)();
-        } else {
-          setPopupVisible(true);
-        }
+        actionBackButton();
         return true;
       };
       const backHandler = BackHandler.addEventListener(
@@ -138,7 +135,7 @@ const CreateSchedule = () => {
       );
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [values.step])
+    }, [values.step, stateOne.companyName])
   );
 
   React.useEffect(() => {
@@ -165,11 +162,12 @@ const CreateSchedule = () => {
     }
   };
 
-  const handleBackButton = () => {
-    if (values.step > 0) {
+  const actionBackButton = (directlyClose: boolean = false) => {
+    if (values.step > 0 && !directlyClose) {
       next(values.step - 1)();
     } else {
-      setPopupVisible(true);
+      if (stateOne.companyName) setPopupVisible(true);
+      else navigation.goBack();
     }
   };
 
@@ -196,7 +194,7 @@ const CreateSchedule = () => {
                 next(values.step + 1)();
                 DeviceEventEmitter.emit('CreateSchedule.continueButton', true);
               }}
-              onPressBack={handleBackButton}
+              onPressBack={actionBackButton}
               continueText={values.step > 0 ? 'Buat Jadwal' : 'Lanjut'}
               unrenderBack={values.step > 0 ? false : true}
               disableContinue={!stepsDone.includes(values.step)}

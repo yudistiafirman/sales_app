@@ -16,7 +16,7 @@ import { assign, createMachine } from 'xstate';
 const purchaseOrderInitialState = {
   poImages: [] as LocalFileType[],
   openCamera: false,
-  sphNumber: '',
+  poNumber: '',
   searchQuery: '',
   sphCategories: '',
   choosenSphDataFromList: {} as CreatedSPHListResponse,
@@ -365,7 +365,7 @@ const POMachine =
         }),
         assignValue: assign((_context, event) => {
           return {
-            sphNumber: event.value,
+            poNumber: event.value,
           };
         }),
         assignSearchQuery: assign((_context, event) => {

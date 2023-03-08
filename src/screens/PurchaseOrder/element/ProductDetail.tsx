@@ -17,7 +17,7 @@ const ProductDetail = () => {
         data={choosenSphDataFromModal?.QuotationRequests[0]?.RequestedProducts}
         onChecked={(data) => dispatch({ type: 'selectProduct', value: data })}
         selectedProducts={selectedProducts}
-        isHasMultipleCheck
+        hasMultipleCheck
         onChangeQuantity={(index: number, value: string) =>
           dispatch({ type: 'onChangeQuantity', index, value })
         }

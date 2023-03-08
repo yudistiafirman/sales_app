@@ -13,7 +13,7 @@ type ChoosenProductListProps<ProductData> = {
   data?: ProductData[];
   onChecked?: (data: ProductData) => void;
   selectedProducts?: ProductData[];
-  isHasMultipleCheck?: boolean;
+  hasMultipleCheck?: boolean;
   onChangeQuantity: (index: number, value: string) => void;
 };
 
@@ -21,7 +21,7 @@ const ChoosenProductList = <ProductData extends RequestedProducts>({
   data,
   onChecked,
   selectedProducts,
-  isHasMultipleCheck,
+  hasMultipleCheck,
   onChangeQuantity,
 }: ChoosenProductListProps<ProductData>) => {
   const renderItem: ListRenderItem<ProductData> = useCallback(
@@ -40,24 +40,25 @@ const ChoosenProductList = <ProductData extends RequestedProducts>({
       const productName = `${item?.Product?.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`;
       const offeringPrice = item?.offeringPrice;
       const quantity = item?.quantity;
-      const totalPrice = offeringPrice * quantity;
+      const totalPrice =
+        item?.quantity && item?.offeringPrice ? offeringPrice * quantity : 0;
       return (
         <BExpandableProductCard
           productName={productName}
-          checked={(isHasMultipleCheck && checked !== -1) || data?.length === 1}
+          checked={(hasMultipleCheck && checked !== -1) || data?.length === 1}
           pricePerVol={offeringPrice}
           volume={quantity}
           item={item}
           totalPrice={totalPrice}
-          onChecked={() => isHasMultipleCheck && onChecked && onChecked(item)}
+          onChecked={() => hasMultipleCheck && onChecked && onChecked(item)}
           inputsSelection={inputsSelection}
-          isHasMultipleCheck={isHasMultipleCheck}
+          hasMultipleCheck={hasMultipleCheck}
         />
       );
     },
     [
       data?.length,
-      isHasMultipleCheck,
+      hasMultipleCheck,
       onChangeQuantity,
       onChecked,
       selectedProducts,

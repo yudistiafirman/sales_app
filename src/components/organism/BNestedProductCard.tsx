@@ -36,7 +36,7 @@ function ListChildProduct(size: number, index: number, item: any) {
   const offeringPrice = +item?.offering_price || item?.offeringPrice;
   const totalPrice = item?.total_price || item?.quantity * offeringPrice;
   const quantity = item?.quantity ? item?.quantity : 0;
-  const unit = item?.Product?.unit?.toLowerCase();
+  const unit = item?.Product?.unit;
   return (
     <View key={index}>
       <BProductCard
