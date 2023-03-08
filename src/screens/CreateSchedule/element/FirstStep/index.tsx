@@ -18,7 +18,12 @@ import {
   View,
 } from 'react-native';
 import { resScale } from '@/utils';
-import { CAMERA, CREATE_SCHEDULE, SEARCH_PO } from '@/navigation/ScreenNames';
+import {
+  CAMERA,
+  CREATE_DEPOSIT,
+  CREATE_SCHEDULE,
+  SEARCH_PO,
+} from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { CreateScheduleContext } from '@/context/CreateScheduleContext';
 import { colors, fonts } from '@/constants';
@@ -50,21 +55,12 @@ export default function FirstStep() {
     [updateValueOnstep]
   );
 
-  const listenerCameraCallback = React.useCallback(() => {
-    setIsModalVisible(true);
-  }, []);
-
   React.useEffect(() => {
     DeviceEventEmitter.addListener('SearchPO.data', listenerSearchCallback);
-    DeviceEventEmitter.addListener(
-      'Camera.addedDeposit',
-      listenerCameraCallback
-    );
     return () => {
       DeviceEventEmitter.removeAllListeners('SearchPO.data');
-      DeviceEventEmitter.removeAllListeners('Camera.addedDeposit');
     };
-  }, [listenerSearchCallback, listenerCameraCallback]);
+  }, [listenerSearchCallback]);
 
   const onValueChanged = (item: any, value: boolean) => {
     let listSelectedPO: any[] = [];
@@ -161,10 +157,11 @@ export default function FirstStep() {
                 title="Buat Deposit"
                 isOutline
                 onPress={() => {
-                  dispatch(resetImageURLS({ source: CREATE_SCHEDULE }));
+                  dispatch(resetImageURLS({ source: CREATE_DEPOSIT }));
+                  navigation.goBack();
                   navigation.navigate(CAMERA, {
                     photoTitle: 'Bukti',
-                    navigateTo: CREATE_SCHEDULE,
+                    navigateTo: CREATE_DEPOSIT,
                     closeButton: true,
                   });
                 }}

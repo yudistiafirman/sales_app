@@ -14,6 +14,7 @@ import VisitationReducer, {
   VisitationGlobalState,
 } from './reducers/VisitationReducer';
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
+import { SphStateInterface } from '@/interfaces';
 
 const persistConfig = {
   key: 'root',
@@ -29,7 +30,7 @@ const rootReducer = combineReducers({
   common: commonReducer,
   order: orderReducer,
   snackbar: snackbarReducer,
-  sph: persistReducer(persistConfig, SphReducer),
+  sph: persistReducer<SphStateInterface, any>(persistConfig, SphReducer),
   visitation: persistReducer<VisitationGlobalState, any>(
     persistConfig,
     VisitationReducer
