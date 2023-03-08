@@ -396,7 +396,7 @@ const POMachine =
                   projectDocId: val?.projectDocId,
                   documentId: val?.Document?.id,
                   label: val?.Document?.name,
-                  isRequired: true,
+                  isRequired: val?.Document?.isRequiredPo,
                   type: 'fileInput',
                   value: val?.File,
                   disabledFileInput: val?.File !== null,

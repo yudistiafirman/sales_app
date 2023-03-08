@@ -40,6 +40,7 @@ interface Documents {
   name?: string;
   paymentType?: 'CREDIT' | 'CBD';
   isRequired?: boolean;
+  isRequiredPo?: boolean;
 }
 
 interface ProjectDocs {
