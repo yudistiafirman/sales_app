@@ -94,3 +94,136 @@ export const isJsonString = (str: any) => {
   }
   return true;
 };
+
+export const getSuccessMsgFromAPI = (
+  httpMethod: string,
+  domainType: string,
+  fullUrl: string,
+  endPoint: string
+) => {
+  // excluding: /refresh , /suggestion , /places , /verify-auth , /project_sph
+
+  let finalText = 'Berhasil ';
+  switch (httpMethod.toLowerCase()) {
+    case 'post':
+      finalText += 'menambahkan ';
+      break;
+    case 'get':
+      finalText += 'mengambil ';
+      break;
+    case 'delete':
+      finalText += 'menghapus ';
+      break;
+    case 'put':
+      finalText += 'mengubah ';
+      break;
+    default:
+      finalText += httpMethod.toLowerCase() + ' ';
+      break;
+  }
+
+  if (
+    domainType === 'common-dev.aggre.id' ||
+    domainType === 'common.aggre.id'
+  ) {
+    switch (endPoint.toLowerCase()) {
+      case 'projectdoc':
+        finalText += 'dokumen';
+        break;
+      case 'coordinates':
+        finalText += 'kordinat lokasi';
+        break;
+      case 'upload':
+        finalText = 'Berhasil upload file';
+        break;
+      case 'project':
+        finalText += 'data proyek';
+        break;
+      case 'companies-by-user':
+        finalText += 'data proyek berdasarkan user';
+        break;
+      case 'sph':
+        finalText += 'dokumen sph';
+        break;
+      case 'individual':
+        finalText += 'detail proyek';
+        break;
+      case 'billing-address':
+        finalText += 'alamat penagihan';
+        break;
+      case 'login':
+        finalText = 'Berhasil login';
+        break;
+      case 'logout':
+        finalText = 'Berhasil logout';
+        break;
+      default:
+        if (fullUrl.toLowerCase().includes('places/'))
+          finalText = 'Berhasil mendapatkan detail alamat';
+        else if (fullUrl.toLowerCase().includes('project/'))
+          finalText += 'detail proyek';
+        else finalText += 'data';
+        break;
+    }
+  } else if (
+    domainType === 'inventory-dev.aggre.id' ||
+    domainType === 'inventory.aggre.id'
+  ) {
+    switch (endPoint.toLowerCase()) {
+      case 'category':
+        finalText += 'data semua produk berdasarkan kategori';
+        break;
+      case 'product':
+        finalText += 'data semua produk';
+        break;
+      default:
+        finalText += 'data';
+        break;
+    }
+  } else if (
+    domainType === 'productivity-dev.aggre.id' ||
+    domainType === 'productivity.aggre.id'
+  ) {
+    switch (endPoint.toLowerCase()) {
+      case 'quotation-letter':
+        finalText += 'data semua transaksi';
+        break;
+      case 'quotation':
+        finalText += 'data sph';
+        break;
+      default:
+        if (fullUrl.toLowerCase().includes('quotation-letter/'))
+          finalText += 'data detail transaksi';
+        else finalText += 'data';
+        break;
+    }
+  } else if (
+    domainType === 'order-dev.aggre.id' ||
+    domainType === 'order.aggre.id'
+  ) {
+    switch (endPoint.toLowerCase()) {
+      case 'visitation':
+        finalText += 'data kunjungan';
+        break;
+      case 'all-visitation':
+        finalText += 'data semua kunjungan';
+        break;
+      case 'completed-visitation':
+        finalText += 'data target kunjungan';
+        break;
+      case 'visitation-book':
+        finalText = 'Berhasil buat janji';
+        break;
+      default:
+        if (fullUrl.toLowerCase().includes('visitation/'))
+          finalText += 'data kunjungan';
+        else if (fullUrl.toLowerCase().includes('sph/'))
+          finalText += 'dokumen sph';
+        else finalText += 'data';
+        break;
+    }
+  } else {
+    finalText += 'data';
+  }
+  return finalText;
+};
