@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
 import { layout } from '@/constants';
-import { BSpacer, BOperationCard } from '@/components';
+import { BSpacer, BVisitationCard } from '@/components';
 import { useNavigation } from '@react-navigation/native';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { CAMERA, CREATE_DO } from '@/navigation/ScreenNames';
@@ -66,11 +66,15 @@ export default function OperationList({
       keyExtractor={(item, index) => `${item.name}-${index}`}
       renderItem={({ item }) => {
         return (
-          <BOperationCard
+          <BVisitationCard
             onPress={() => onClickItem(item.id)}
-            item={item}
-            useChevron
-            clickable
+            item={{
+              name: item.id,
+              picOrCompanyName: item.name,
+              location: item.addressID,
+              unit: item.qty,
+              pilStatus: item.status,
+            }}
           />
         );
       }}

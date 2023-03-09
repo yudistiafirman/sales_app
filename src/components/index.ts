@@ -32,7 +32,6 @@ export { default as BLabel } from './atoms/BLabel';
 export { default as BQuickAction } from './molecules/BQuickAction';
 export { default as BTabLabels } from './molecules/BTabLabels';
 export { default as BVisitationCard } from './molecules/BVisitationCard';
-export { default as BOperationCard } from './molecules/BOperationCard';
 export { default as BPic } from './molecules/BPic';
 export { default as BLocation } from './molecules/BLocation';
 export { default as BFlatlistItems } from './molecules/BFlatlistItems';
