@@ -10,6 +10,8 @@ import { ENTRY_TYPE } from '@/models/EnumModel';
 import { useFocusEffect } from '@react-navigation/native';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { OPERATION } from '@/navigation/ScreenNames';
+import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
+import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
 
 const Operation = () => {
   const dispatch = useDispatch();
@@ -31,6 +33,10 @@ const Operation = () => {
     []
   );
 
+  useCustomHeaderRight({
+    customHeaderRight: SalesHeaderRight(colors.text.darker),
+  });
+
   useFocusEffect(
     React.useCallback(() => {
       dispatch(resetImageURLS({ source: OPERATION }));
@@ -50,7 +56,6 @@ const Operation = () => {
 
 const style = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: colors.white,

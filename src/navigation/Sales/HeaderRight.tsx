@@ -59,7 +59,7 @@ const _styles: Styles = {
   },
 };
 
-export default function SalesHeaderRight() {
+export default function SalesHeaderRight(iconColor: string = '') {
   const dispatch = useDispatch<AppDispatch>();
   const [isShowMore, setShowMore] = React.useState(false);
 
@@ -100,7 +100,11 @@ export default function SalesHeaderRight() {
         style={_styles.chipView}
       >
         <View style={_styles.chip}>
-          <Icon name={'more-vertical'} size={18} color={colors.white} />
+          <Icon
+            name={'more-vertical'}
+            size={18}
+            color={iconColor !== '' ? iconColor : colors.white}
+          />
         </View>
       </TouchableOpacity>
       {isShowMore && renderMore()}

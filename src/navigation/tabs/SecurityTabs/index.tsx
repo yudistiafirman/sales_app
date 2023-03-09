@@ -9,8 +9,9 @@ import {
   TAB_RETURN,
   TAB_RETURN_TITLE,
 } from '@/navigation/ScreenNames';
-import OperationHeaderRight from '@/navigation/Operation/OperationHeaderRight';
 import Return from '@/screens/Operation/Return';
+import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
+import { colors } from '@/constants';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +30,7 @@ function SecurityTabs() {
         name={TAB_DISPATCH_TITLE}
         options={{
           headerTitle: SECURITY_TAB_TITLE,
-          headerRight: () => OperationHeaderRight('Dispatch'),
+          headerRight: () => SalesHeaderRight(colors.text.darker),
           headerShown: true,
         }}
         component={Dispatch}
@@ -39,7 +40,7 @@ function SecurityTabs() {
         name={TAB_RETURN_TITLE}
         options={{
           headerTitle: SECURITY_TAB_TITLE,
-          headerRight: () => OperationHeaderRight('Return'),
+          headerRight: () => SalesHeaderRight(colors.text.darker),
           headerShown: true,
         }}
         component={Return}

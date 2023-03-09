@@ -20,7 +20,6 @@ import {
   BATCHER_TITLE,
   DRIVER_TITLE,
 } from './ScreenNames';
-import OperationHeaderRight from './Operation/OperationHeaderRight';
 import OperationStack from './Operation/Stack';
 import SalesStack from './Sales/Stack';
 import HunterAndFarmers from '@/screens/HunterAndFarmers';
@@ -47,7 +46,6 @@ const RootScreen = (
               options={{
                 headerTitleAlign: 'center',
                 headerTitle: OPSMANAGER_TITLE,
-                headerRight: () => OperationHeaderRight('Transport'),
               }}
             />
             {OperationStack(Stack)}
@@ -63,7 +61,6 @@ const RootScreen = (
               options={{
                 headerTitleAlign: 'center',
                 headerTitle: BATCHER_TITLE,
-                headerRight: () => OperationHeaderRight('Produksi'),
               }}
             />
             {OperationStack(Stack)}
@@ -79,7 +76,6 @@ const RootScreen = (
               options={{
                 headerTitleAlign: 'center',
                 headerTitle: DRIVER_TITLE,
-                headerRight: () => OperationHeaderRight('Penuangan'),
               }}
             />
             {OperationStack(Stack)}
