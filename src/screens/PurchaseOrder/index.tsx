@@ -1,4 +1,5 @@
 import {
+  BBackContinueBtn,
   BButtonPrimary,
   BHeaderIcon,
   BSpacer,
@@ -12,10 +13,11 @@ import { AppDispatch, RootState } from '@/redux/store';
 import {
   RouteProp,
   StackActions,
+  useFocusEffect,
   useNavigation,
 } from '@react-navigation/native';
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CreatePo from './element/CreatePo';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -89,13 +91,20 @@ const PurchaseOrder = () => {
     return title;
   }, [poState.currentState]);
 
-  const renderBtnIcon = () => (
-    <Icon
-      name="right"
-      style={{ marginTop: layout.pad.sm }}
-      color={colors.white}
-    />
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        handleBack();
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+    }, [handleBack])
   );
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: false,
@@ -119,17 +128,9 @@ const PurchaseOrder = () => {
       {stepToRender[currentStep]}
       {isBtnFooterShown && !keyboardVisible && (
         <View style={styles.footer}>
-          <BButtonPrimary
-            onPress={handleBack}
-            buttonStyle={{ width: resScale(132) }}
-            isOutline
-            title="Kembali"
-          />
-          <BButtonPrimary
-            title="Lanjut"
-            onPress={handleNext}
-            buttonStyle={{ width: resScale(202) }}
-            rightIcon={() => renderBtnIcon()}
+          <BBackContinueBtn
+            onPressContinue={handleNext}
+            onPressBack={handleBack}
           />
         </View>
       )}
