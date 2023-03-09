@@ -7,8 +7,9 @@ import { resScale } from '@/utils';
 
 type PopUpQuestionType = {
   isVisible: boolean;
-  setIsPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPopupVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   actionButton: () => void;
+  onCancel?: () => void;
   text?: string;
   desc?: string;
   descContent?: ReactNode;
@@ -24,7 +25,8 @@ export default function PopUpQuestion({
   desc,
   descContent,
   actionText,
-  cancelText
+  cancelText,
+  onCancel,
 }: PopUpQuestionType) {
   return (
     <Modal
@@ -40,12 +42,12 @@ export default function PopUpQuestion({
             {text ? text : 'Apakah Anda Ingin Tambah Foto Lagi?'}
           </Text>
         </View>
+        {descContent && <View>{descContent}</View>}
         {desc && (
           <View>
             <Text style={styles.questionDescText}>{desc}</Text>
           </View>
         )}
-        {descContent && <View>{descContent}</View>}
         <View
           style={{
             paddingHorizontal: layout.pad.md,
@@ -53,9 +55,13 @@ export default function PopUpQuestion({
           }}
         >
           <BBackContinueBtn
-            onPressBack={() => {
-              setIsPopupVisible((curr) => !curr);
-            }}
+            onPressBack={
+              onCancel
+                ? onCancel
+                : () => {
+                    setIsPopupVisible && setIsPopupVisible((curr) => !curr);
+                  }
+            }
             onPressContinue={actionButton}
             isContinueIcon={false}
             continueText={actionText ? actionText : 'Ya, Tambah'}

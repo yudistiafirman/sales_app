@@ -3,7 +3,7 @@ import { layout } from '@/constants';
 import font from '@/constants/fonts';
 import { Input } from '@/interfaces';
 import { ProjectDocs } from '@/interfaces/CreatePurchaseOrder';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -11,11 +11,9 @@ const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
 const PaymentDetail = () => {
-  const poGlobalState = useSelector(
-    (postate: RootState) => postate.purchaseOrder
-  );
+  const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
-  const { files, paymentType, loadingDocument } = poGlobalState.poState;
+  const { files, paymentType, loadingDocument } = poState.currentState.context;
   const paymentTitle =
     paymentType === 'CBD' ? 'Cash Before Delivery' : 'Credit';
   const paymentIcon = paymentType === 'CBD' ? cbd : credit;

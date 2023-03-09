@@ -24,9 +24,7 @@ import {
 
 const CreatePo = () => {
   const navigation = useNavigation();
-  const poGlobalState = useSelector(
-    (postate: RootState) => postate.purchaseOrder
-  );
+  const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
   const [index, setIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,7 +39,8 @@ const CreatePo = () => {
     openCamera,
     loadingSphData,
     errorGettingSphMessage,
-  } = poGlobalState.poState;
+    poNumber,
+  } = poState.currentState.context;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
 
   const addMoreImages = useCallback(() => {
@@ -68,7 +67,13 @@ const CreatePo = () => {
     if (openCamera) {
       goToCamera();
     }
-  }, [dispatch, goToCamera, navRoutes.params, openCamera, poGlobalState]);
+  }, [
+    dispatch,
+    goToCamera,
+    navRoutes.params,
+    openCamera,
+    poState.currentState,
+  ]);
 
   const onTabPress = (tabRoutes: any) => {
     const tabIndex = index === 0 ? 1 : 0;
@@ -92,7 +97,7 @@ const CreatePo = () => {
           value: e.nativeEvent.text,
         });
       },
-      value: poGlobalState.sphNumber,
+      value: poNumber,
     },
   ];
 
@@ -123,7 +128,7 @@ const CreatePo = () => {
   return (
     <>
       <View style={styles.firstStepContainer}>
-        {poGlobalState.matches('firstStep.SearchSph') ? (
+        {poState.currentState.matches('firstStep.SearchSph') ? (
           <BCommonSearchList
             searchQuery={searchQuery}
             onChangeText={onChangeText}
@@ -141,7 +146,7 @@ const CreatePo = () => {
               })
             }
             poDatas={sphData}
-            isError={poGlobalState.matches(
+            isError={poState.currentState.matches(
               'firstStep.SearchSph.errorGettingSphList'
             )}
             errorMessage={errorGettingSphMessage}

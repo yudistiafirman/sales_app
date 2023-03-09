@@ -12,12 +12,9 @@ export const purchaseOrderSlice = createXStateSlice({
    */
   getSelectedState: (state) => {
     return {
-      poState: state.context,
-      matches: state.matches,
-      value: state.value,
+      currentState: state,
     };
   },
-  
 });
 
 export default purchaseOrderSlice.reducer;

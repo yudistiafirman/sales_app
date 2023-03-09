@@ -23,45 +23,51 @@ import { resScale } from '@/utils';
 import UploadFiles from './element/PaymentDetail';
 import DetailProduk from './element/ProductDetail';
 import { useKeyboardActive } from '@/hooks';
+import { bStorage } from '@/actions';
+import { PO } from '@/navigation/ScreenNames';
+import { customLog } from '@/utils/generalFunc';
 
 export type PORoutes = RouteProp<RootStackParamList['PO']>;
 
-const PO = () => {
+const PurchaseOrder = () => {
   const navigation = useNavigation();
-  const poGlobalState = useSelector(
-    (postate: RootState) => postate.purchaseOrder
-  );
+  const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
-  const { currentStep, poNumber } = poGlobalState.poState;
+  const { currentStep, poNumber, isModalContinuePo } =
+    poState.currentState.context;
   const [stepsDone, setStepsDone] = useState<number[]>([]);
-  const [popUpVisible, setPopUpQuestion] = useState(false);
   const { keyboardVisible } = useKeyboardActive();
   const labels = ['Cari SPH', 'Detil Pembayaran', 'Detil Produk'];
-  const isBtnFooterShown = !poGlobalState.matches('firstStep.SearchSph');
+  const isBtnFooterShown = !poState.currentState.matches('firstStep.SearchSph');
 
   const handleBack = useCallback(() => {
     if (currentStep === 0) {
-      if (poGlobalState.matches('firstStep.SearchSph')) {
+      if (poState.currentState.matches('firstStep.SearchSph')) {
         dispatch({ type: 'backToAddPo' });
-      } else {
-        setPopUpQuestion(true);
       }
     } else if (currentStep === 1) {
       dispatch({ type: 'goBackToFirstStep' });
     } else if (currentStep === 2) {
       dispatch({ type: 'goBackToSecondStep' });
     }
-  }, [currentStep, dispatch, poGlobalState]);
+  }, [currentStep, dispatch, poState.currentState]);
 
   const handleNext = useCallback(() => {
     if (currentStep === 0) {
       dispatch({
         type: 'goToSecondStep',
       });
+      bStorage.setItem(PO, {
+        poContext: poState.currentState.context,
+      });
     } else if (currentStep === 1) {
       dispatch({ type: 'goToThirdStep' });
+      const dataToSaved = { ...poState.currentState.context, currentStep: 1 };
+      bStorage.setItem(PO, {
+        poContext: dataToSaved,
+      });
     }
-  }, [currentStep, dispatch]);
+  }, [currentStep, dispatch, poState.currentState.context]);
 
   const renderHeaderLeft = useCallback(
     () => (
@@ -75,21 +81,13 @@ const PO = () => {
     [handleBack]
   );
 
-  const renderPurchaseOrderNumber = () => {
-    return (
-      <View style={styles.poNumberWrapper}>
-        <Text style={styles.poNumber}>{poNumber}</Text>
-      </View>
-    );
-  };
-
   const renderTitle = useCallback(() => {
     let title = 'Buat PO';
-    if (poGlobalState.matches('firstStep.SearchSph')) {
+    if (poState.currentState.matches('firstStep.SearchSph')) {
       title = 'Cari SPH';
     }
     return title;
-  }, [poGlobalState]);
+  }, [poState.currentState]);
 
   const renderBtnIcon = () => (
     <Icon
@@ -135,6 +133,29 @@ const PO = () => {
           />
         </View>
       )}
+      <PopUpQuestion
+        isVisible={isModalContinuePo}
+        onCancel={() => {
+          bStorage.deleteItem(PO);
+          dispatch({ type: 'createNewPo' });
+        }}
+        actionButton={() => {
+          if (currentStep === 0) {
+            dispatch({ type: 'goToSecondStepFromSaved' });
+          } else {
+            dispatch({ type: 'goToThirdStepFromSaved' });
+          }
+        }}
+        descContent={
+          <View style={styles.poNumberWrapper}>
+            <Text style={styles.poNumber}>{poNumber}</Text>
+          </View>
+        }
+        cancelText="Buat Baru"
+        actionText="Lanjutkan"
+        desc="PO yang lama akan hilang kalau Anda buat PO yang baru"
+        text="Apakah Anda ingin melanjutkan pembuatan PO sebelumnya?"
+      />
     </SafeAreaView>
   );
 };
@@ -157,8 +178,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: resScale(277),
+    alignSelf: 'center',
     borderRadius: layout.radius.md,
   },
 });
 
-export default PO;
+export default PurchaseOrder;
