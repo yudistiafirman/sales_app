@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import React from 'react';
 
 import PillStatus from './elements/PillStatus';
@@ -14,6 +14,8 @@ import BLocationText from '@/components/atoms/BLocationText';
 import { visitationDataType } from '@/interfaces';
 import { Text } from 'react-native-paper';
 import BSpacer from '@/components/atoms/BSpacer';
+import Unit from './elements/Unit';
+import BButtonPrimary from '@/components/atoms/BButtonPrimary';
 
 function iconRender(
   isRenderIcon: boolean,
@@ -36,6 +38,7 @@ type VisitationCardType = {
   isRenderIcon?: boolean;
   pillColor?: string;
   customIcon?: () => JSX.Element;
+  customStyle?: ViewStyle;
 };
 
 export default function BVisitationCard({
@@ -45,52 +48,72 @@ export default function BVisitationCard({
   isRenderIcon = true,
   customIcon,
   pillColor,
+  customStyle,
 }: VisitationCardType) {
   return (
-    <View style={style.container}>
-      <View style={style.leftSide}>
-        <View style={style.top}>
-          <HighlightText
-            fontSize={fonts.size.md}
-            name={item.name}
+    <View style={[style.container, customStyle]}>
+      <View style={style.subContainer}>
+        <View style={style.leftSide}>
+          <View style={style.top}>
+            <HighlightText
+              fontSize={fonts.size.md}
+              name={item.name}
+              searchQuery={searchQuery}
+            />
+            <PillStatus
+              pilStatus={item.pilStatus}
+              color={
+                item.pilStatus === 'Belum Selesai'
+                  ? colors.lightGray
+                  : undefined
+              }
+            />
+          </View>
+          {item.picOrCompanyName ? (
+            <>
+              <Text>{item.picOrCompanyName}</Text>
+              <BSpacer size={'verySmall'} />
+            </>
+          ) : (
+            <BSpacer size={'verySmall'} />
+          )}
+          <BLocationText location={item.location} />
+          <PillNames
+            pillColor={pillColor}
+            pilNames={item.pilNames}
             searchQuery={searchQuery}
           />
-          <PillStatus
-            pilStatus={item.pilStatus}
-            color={
-              item.pilStatus === 'Belum Selesai' ? colors.lightGray : undefined
-            }
+          <View
+            style={[
+              style.row,
+              item.time || item.unit || item.status ? style.bottom : null,
+            ]}
+          >
+            <Unit unit={item.unit} />
+            <Time time={item.time} />
+            <VisitStatus status={item.status} />
+          </View>
+        </View>
+        <TouchableOpacity
+          style={style.rightSide}
+          onPress={() => {
+            onPress(item);
+          }}
+        >
+          {iconRender(isRenderIcon, customIcon)}
+        </TouchableOpacity>
+      </View>
+      {item.onLocationPress && (
+        <View style={style.location}>
+          <BButtonPrimary
+            buttonStyle={style.locationButton}
+            titleStyle={style.locationTextButton}
+            title={'Lihat Peta'}
+            isOutline
+            onPress={() => item.onLocationPress(item.locationID)}
           />
         </View>
-        {item.picOrCompanyName ? (
-          <>
-            <Text>{item.picOrCompanyName}</Text>
-            <BSpacer size={'verySmall'} />
-          </>
-        ) : (
-          <BSpacer size={'verySmall'} />
-        )}
-        <BLocationText location={item.location} />
-        <PillNames
-          pillColor={pillColor}
-          pilNames={item.pilNames}
-          searchQuery={searchQuery}
-        />
-        <View
-          style={[style.row, item.time || item.status ? style.bottom : null]}
-        >
-          <Time time={item.time} />
-          <VisitStatus status={item.status} />
-        </View>
-      </View>
-      <TouchableOpacity
-        style={style.rightSide}
-        onPress={() => {
-          onPress(item);
-        }}
-      >
-        {iconRender(isRenderIcon, customIcon)}
-      </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -98,13 +121,16 @@ export default function BVisitationCard({
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
     backgroundColor: colors.white,
-    justifyContent: 'space-between',
     borderColor: '#EBEBEB',
     borderRadius: layout.radius.md,
     borderWidth: resScale(1),
     padding: layout.pad.md,
+  },
+  subContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   leftSide: {
     flex: 1,
@@ -129,5 +155,17 @@ const style = StyleSheet.create({
   },
   bottom: {
     marginTop: layout.pad.md,
+  },
+  location: {
+    marginTop: layout.pad.lg,
+    marginHorizontal: layout.pad.md,
+    marginBottom: layout.pad.md,
+  },
+  locationButton: {
+    borderRadius: 8,
+  },
+  locationTextButton: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
   },
 });

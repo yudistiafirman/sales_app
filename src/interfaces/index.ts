@@ -510,11 +510,15 @@ type visitationDataType = {
   id?: number;
   name: string;
   location?: string;
+  locationID?: string;
   time?: string;
   status?: string;
+  rightStatus?: string;
+  unit?: string;
   pilNames?: string[];
-  pilStatus?: 'Selesai' | 'Belum Selesai';
+  pilStatus?: string;
   picOrCompanyName?: string;
+  onLocationPress?: (id: string) => void;
 };
 
 interface projectResponseType {

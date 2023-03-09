@@ -27,7 +27,7 @@ const Operation = () => {
             id: 'SCH/BRIK/2022/11/00254',
             name: 'Proyek Ruko 2 lantai',
             qty: '7 m3',
-            // status: 'Dalam Produksi',
+            status: 'Dalam Produksi',
           };
         }),
     []

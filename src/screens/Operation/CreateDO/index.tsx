@@ -2,7 +2,6 @@ import {
   BButtonPrimary,
   BDivider,
   BForm,
-  BOperationCard,
   BSpacer,
   BText,
   BVisitationCard,
@@ -85,16 +84,14 @@ const CreateDO = () => {
           item={{ name: 'PT. Guna Karya Mandiri', location: 'Jakarta Barat' }}
           isRenderIcon={false}
         />
-        <BOperationCard
+        <BVisitationCard
           item={{
-            id: 'DO/BRIK/2022/11/00254',
-            qty: '7 m3',
-            date: '23/11/2022 | 08:10',
+            name: 'DO/BRIK/2022/11/00254',
+            unit: '7 m3',
+            time: '23/11/2022 | 08:10',
           }}
-          color={colors.tertiary}
-          customStyle={style.headerTwo}
-          clickable={false}
-          isQuantity={false}
+          customStyle={{ backgroundColor: colors.tertiary }}
+          isRenderIcon={false}
         />
       </View>
       <View>
