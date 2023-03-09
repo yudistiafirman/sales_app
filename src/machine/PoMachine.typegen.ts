@@ -38,11 +38,14 @@
 "closingModal": "closeModal";
 "decreaseStep": "goBackToFirstStep" | "goBackToSecondStep";
 "disableCameraScreen": "addImages" | "xstate.stop";
-"enableCameraScreen": "addMoreImages" | "done.invoke.purchase order.checkSavedPo:invocation[0]";
+"enableCameraScreen": "addMoreImages" | "createNewPo" | "done.invoke.purchase order.checkSavedPo:invocation[0]";
+"enableModalContinuePo": "done.invoke.purchase order.checkSavedPo:invocation[0]";
 "handleError": "error.platform.purchase order.firstStep.SearchSph.searchingSph:invocation[0]";
 "handleErrorGettingDocument": "error.platform.purchase order.SecondStep.gettingSphDocuments:invocation[0]";
 "handleRetry": "retryGettingSphList";
 "increaseStep": "goToSecondStep" | "goToThirdStep";
+"resetPoState": "createNewPo";
+"setNewStep": "goToSecondStepFromSaved" | "goToThirdStepFromSaved";
 "setSelectedChoosenProduct": "selectProduct";
 "triggerModal": "openingModal";
         };
@@ -50,15 +53,15 @@
           
         };
         eventsCausingGuards: {
-          "isHasSavePo": "done.invoke.purchase order.checkSavedPo:invocation[0]";
+          "hasSavedPo": "done.invoke.purchase order.checkSavedPo:invocation[0]";
 "searchValueLengthAccepted": "searching";
         };
         eventsCausingServices: {
           "GetSphList": "retryGettingSphList" | "xstate.after(300)#purchase order.firstStep.SearchSph.searchValueLoaded";
 "getSavedPo": "xstate.init";
-"getSphDocument": "goBackToSecondStep" | "goToSecondStep" | "retryGettingDocument";
+"getSphDocument": "goBackToSecondStep" | "goToSecondStep" | "goToSecondStepFromSaved" | "retryGettingDocument";
         };
-        matchesStates: "SecondStep" | "SecondStep.SphDocumentLoaded" | "SecondStep.errorGettingDocuments" | "SecondStep.gettingSphDocuments" | "ThirdStep" | "ThirdStep.idle" | "checkSavedPo" | "firstStep" | "firstStep.SearchSph" | "firstStep.SearchSph.errorGettingSphList" | "firstStep.SearchSph.inputting" | "firstStep.SearchSph.openModalChooseSph" | "firstStep.SearchSph.searchValueLoaded" | "firstStep.SearchSph.searchingSph" | "firstStep.addPO" | "openCamera" | { "SecondStep"?: "SphDocumentLoaded" | "errorGettingDocuments" | "gettingSphDocuments";
+        matchesStates: "SecondStep" | "SecondStep.SphDocumentLoaded" | "SecondStep.errorGettingDocuments" | "SecondStep.gettingSphDocuments" | "ThirdStep" | "ThirdStep.idle" | "checkSavedPo" | "firstStep" | "firstStep.SearchSph" | "firstStep.SearchSph.errorGettingSphList" | "firstStep.SearchSph.inputting" | "firstStep.SearchSph.openModalChooseSph" | "firstStep.SearchSph.searchValueLoaded" | "firstStep.SearchSph.searchingSph" | "firstStep.addPO" | "hasSavedPo" | "openCamera" | { "SecondStep"?: "SphDocumentLoaded" | "errorGettingDocuments" | "gettingSphDocuments";
 "ThirdStep"?: "idle";
 "firstStep"?: "SearchSph" | "addPO" | { "SearchSph"?: "errorGettingSphList" | "inputting" | "openModalChooseSph" | "searchValueLoaded" | "searchingSph"; }; };
         tags: never;

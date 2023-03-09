@@ -4,12 +4,11 @@ import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 const ProductDetail = () => {
-  const poGlobalState = useSelector(
-    (postate: RootState) => postate.purchaseOrder
-  );
+  const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
 
-  const { choosenSphDataFromModal, selectedProducts } = poGlobalState.poState;
+  const { choosenSphDataFromModal, selectedProducts } =
+    poState.currentState.context;
 
   return (
     <View style={styles.container}>
