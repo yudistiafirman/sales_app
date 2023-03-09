@@ -40,7 +40,7 @@ const useAsyncConfigSetup = () => {
           dispatch(
             setUserData({
               userData: decoded,
-              entryType: ENTRY_TYPE.OPSMANAGER,
+              entryType: ENTRY_TYPE.SALES,
               remoteConfig: fetchedRemoteConfig,
             })
           );
@@ -48,7 +48,7 @@ const useAsyncConfigSetup = () => {
           dispatch(
             setIsLoading({
               loading: false,
-              entryType: ENTRY_TYPE.OPSMANAGER,
+              entryType: ENTRY_TYPE.SALES,
               remoteConfig: fetchedRemoteConfig,
             })
           );
@@ -58,7 +58,7 @@ const useAsyncConfigSetup = () => {
         dispatch(
           setIsLoading({
             loading: false,
-            entryType: ENTRY_TYPE.OPSMANAGER,
+            entryType: ENTRY_TYPE.SALES,
             remoteConfig: fetchedRemoteConfig,
           })
         );
