@@ -38,8 +38,6 @@ const CameraButton = ({
         if (typeDocument === 'IMAGE') onGalleryPress(res);
         else onDocPress(res);
       } catch (err) {
-        if (typeDocument === 'IMAGE') onGalleryPress(null);
-        else onDocPress(null);
         if (DocumentPicker.isCancel(err)) {
           customLog('Canceled', JSON.stringify(err));
         } else {
