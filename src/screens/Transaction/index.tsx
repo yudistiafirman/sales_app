@@ -64,8 +64,12 @@ const Transaction = () => {
     customHeaderRight: (
       <BTouchableText
         onPress={() => {
-          if (sphData?.selectedCompany) setPopupSPHVisible(true);
-          else navigation.navigate(SPH, {});
+          if (selectedType === 'SPH') {
+            if (sphData?.selectedCompany) setPopupSPHVisible(true);
+            else navigation.navigate(SPH, {});
+          } else {
+            navigation.navigate('PO');
+          }
         }}
         title={'Buat ' + selectedType}
       />
@@ -85,20 +89,34 @@ const Transaction = () => {
   const getOneOrder = async (id: string) => {
     customLog('ini id', id);
     try {
-      let data
+      let data;
       if (selectedType === 'SPH') {
         data = await getVisitationOrderByID(id);
-        data = data.data.data
+        data = data.data.data;
       } else {
         data = await getPOOrderByID(id);
-        data = data.data.data
+        data = data.data.data;
+
+        // TODO: handle from BE, ugly when use mapping in FE side
         data = {
           ...data,
           mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
           paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
-        }
+          deposit: data.DepositPurchaseOrders,
+          DepositPurchaseOrders: undefined,
+          products: data.QuotationLetter?.QuotationRequest?.products,
+          QuotationLetter: {
+            ...data.QuotationLetter,
+            QuotationRequest: {
+              ...data.QuotationLetter.QuotationRequest,
+              mainPic: undefined,
+              paymentType: undefined,
+              products: undefined,
+            },
+          },
+        };
       }
-      console.log('inii data: ', JSON.stringify(data.QuotationLetter.QuotationRequest))
+      console.log('inii data: ', JSON.stringify(data));
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data ? data.number : 'N/A',
         data: data,
