@@ -111,7 +111,7 @@ export const transactionMachine =
 
                     backToGetTransactions: {
                       target:
-                        '#transaction machine.getTransaction.loadingTransaction',
+                        'getTransactionsBaseOnType',
                       actions: 'resetProduct',
                     },
                   },
@@ -162,7 +162,7 @@ export const transactionMachine =
             return {
               key: item.index,
               title: item.name,
-              totalItems: item.index,
+              totalItems: _context.totalItems ? _context.totalItems : 0,
               chipPosition: 'bottom',
             };
           });
@@ -175,11 +175,13 @@ export const transactionMachine =
         assignTransactionsDataToContext: assign((context, event) => {
           const transactionsData = [...context.data, ...event.data.data];
           const newTypeData = context.routes.map((item) => {
-            console.log('ywwww: ', item, context.selectedType)
             return {
               key: item.key,
               title: item.title,
-              totalItems: context.selectedType === item.title ? event.data.totalItems : 0,
+              totalItems:
+                context.selectedType === item.title
+                  ? event.data.totalItems
+                  : item.totalItems,
               chipPosition: 'bottom',
             };
           });
@@ -193,8 +195,6 @@ export const transactionMachine =
           };
         }),
         assignIndexToContext: assign((context, event) => {
-          console.log('wakwaw: ', context)
-          console.log('wukwuw: ', event)
           return {
             index: event.payload,
             selectedType: context.routes[event.payload].title,
@@ -265,19 +265,26 @@ export const transactionMachine =
           }
         },
         getTransactions: async (_context, _event) => {
-          console.log('iniii diaaa: ', _context.selectedType)
           try {
             // need to call API
-            let response
+            let response;
             if (_context.selectedType === 'SPH') {
               response = await getAllVisitationOrders();
             } else {
               response = await getAllPOOrders();
             }
-            console.log('iniii lagii: ', JSON.stringify(response.data))
+            response = {
+              ...response,
+              data: {
+                ...response.data,
+                totalItems: response.data?.totalItems
+                  ? response.data.totalItems
+                  : 0,
+              },
+            };
             return response.data as any;
           } catch (error) {
-            throw new Error(error)
+            throw new Error(error);
           }
         },
       },

@@ -24,7 +24,7 @@
           "assignIndexToContext": "onChangeType";
 "assignTransactionsDataToContext": "done.invoke.transaction machine.getTransaction.typeLoaded.getTransactionsBaseOnType:invocation[0]";
 "assignTypeToContext": "done.invoke.transaction machine.getTransaction.loadingTransaction:invocation[0]";
-"enableLoadTransaction": "done.invoke.transaction machine.getTransaction.loadingTransaction:invocation[0]" | "onChangeType" | "onEndReached" | "refreshingList" | "retryGettingTypeTransactions";
+"enableLoadTransaction": "backToGetTransactions" | "done.invoke.transaction machine.getTransaction.loadingTransaction:invocation[0]" | "onChangeType" | "onEndReached" | "refreshingList" | "retryGettingTypeTransactions";
 "handleError": "error.platform.transaction machine.getTransaction.loadingTransaction:invocation[0]" | "error.platform.transaction machine.getTransaction.typeLoaded.getTransactionsBaseOnType:invocation[0]";
 "handleRetryGettingTypeTransactions": "retryGettingTypeTransactions";
 "incrementPage": "onEndReached";
@@ -39,8 +39,8 @@
 "isNotLastPage": "done.invoke.transaction machine.getTransaction.typeLoaded.getTransactionsBaseOnType:invocation[0]";
         };
         eventsCausingServices: {
-          "getTransactions": "done.invoke.transaction machine.getTransaction.loadingTransaction:invocation[0]" | "onChangeType" | "onEndReached" | "refreshingList" | "retryGettingTypeTransactions";
-"getTypeTransactions": "backToGetTransactions" | "retryGettingTransactions" | "xstate.init";
+          "getTransactions": "backToGetTransactions" | "done.invoke.transaction machine.getTransaction.loadingTransaction:invocation[0]" | "onChangeType" | "onEndReached" | "refreshingList" | "retryGettingTypeTransactions";
+"getTypeTransactions": "retryGettingTransactions" | "xstate.init";
         };
         matchesStates: "getTransaction" | "getTransaction.errorGettingTypeTransactions" | "getTransaction.loadingTransaction" | "getTransaction.typeLoaded" | "getTransaction.typeLoaded.errorGettingTypeTransactions" | "getTransaction.typeLoaded.getTransactionsBaseOnType" | "getTransaction.typeLoaded.transactionLoaded" | { "getTransaction"?: "errorGettingTypeTransactions" | "loadingTransaction" | "typeLoaded" | { "typeLoaded"?: "errorGettingTypeTransactions" | "getTransactionsBaseOnType" | "transactionLoaded"; }; };
         tags: never;
