@@ -28,7 +28,7 @@ import {
   TAB_TRANSACTION,
   TRANSACTION_DETAIL,
 } from '@/navigation/ScreenNames';
-import { getOrderByID } from '@/actions/OrderActions';
+import { getPOOrderByID, getVisitationOrderByID } from '@/actions/OrderActions';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
@@ -45,10 +45,19 @@ const Transaction = () => {
   const sphData = useSelector((rootState: RootState) => rootState.sph);
   const dispatch = useDispatch();
 
-  const onTabPress = () => {
-    if (routes[index].key && route.key !== routes[index].key) {
-      send('onChangeType', { payload: index });
-    }
+  const {
+    routes,
+    isLoadMore,
+    refreshing,
+    data,
+    loadTransaction,
+    loadTab,
+    selectedType,
+    errorMessage,
+  } = state.context;
+
+  const onTabPress = (index: number) => {
+    send('onChangeType', { payload: index });
   };
 
   useCustomHeaderRight({
@@ -58,7 +67,7 @@ const Transaction = () => {
           if (sphData?.selectedCompany) setPopupSPHVisible(true);
           else navigation.navigate(SPH, {});
         }}
-        title="Buat SPH"
+        title={'Buat ' + selectedType}
       />
     ),
   });
@@ -76,10 +85,23 @@ const Transaction = () => {
   const getOneOrder = async (id: string) => {
     customLog('ini id', id);
     try {
-      const { data } = await getOrderByID(id);
+      let data
+      if (selectedType === 'SPH') {
+        data = await getVisitationOrderByID(id);
+        data = data.data.data
+      } else {
+        data = await getPOOrderByID(id);
+        data = data.data.data
+        data = {
+          ...data,
+          mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+          paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
+        }
+      }
+      console.log('inii data: ', JSON.stringify(data.QuotationLetter.QuotationRequest))
       navigation.navigate(TRANSACTION_DETAIL, {
-        title: data.data ? data.data.number : 'N/A',
-        data: data.data,
+        title: data ? data.number : 'N/A',
+        data: data,
       });
     } catch (error) {
       customLog(error);
@@ -100,22 +122,16 @@ const Transaction = () => {
         </View>
         <BSpacer size={'medium'} />
         <BText bold="300" sizeInNumber={14} style={styles.popupSPHDesc}>
-          SPH yang lama akan hilang kalau Anda buat SPH yang baru
+          {selectedType +
+            ' yang lama akan hilang kalau Anda buat ' +
+            selectedType +
+            ' yang baru'}
         </BText>
         <BSpacer size={'small'} />
       </>
     );
   };
 
-  const {
-    routes,
-    isLoadMore,
-    refreshing,
-    data,
-    loadTransaction,
-    loadTab,
-    errorMessage,
-  } = state.context;
   return (
     <SafeAreaView style={styles.parent}>
       {loadTab && <ShimmerPlaceholder style={styles.shimmer} />}
@@ -147,7 +163,9 @@ const Transaction = () => {
               onPress={(data: any) => getOneOrder(data.id)}
             />
           )}
-          onTabPress={onTabPress}
+          onTabPress={(data) => {
+            onTabPress(parseInt(data?.route?.key));
+          }}
           onIndexChange={setIndex}
           tabStyle={styles.tabStyle}
           tabBarStyle={styles.tabBarStyle}
@@ -169,7 +187,11 @@ const Transaction = () => {
         cancelText={'Buat Baru'}
         actionText={'Lanjutkan'}
         descContent={renderSPHContinueData()}
-        text={'Apakah Anda Ingin Melanjutkan Pembuatan SPH Sebelumnya?'}
+        text={
+          'Apakah Anda Ingin Melanjutkan Pembuatan ' +
+          selectedType +
+          ' Sebelumnya?'
+        }
       />
     </SafeAreaView>
   );

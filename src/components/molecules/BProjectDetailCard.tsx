@@ -37,11 +37,15 @@ export default function BProjectDetailCard({
         <Text style={styles.summary}>Metode Pembayaran</Text>
         <Text style={[styles.summary, styles.fontw400]}>{paymentMethod}</Text>
       </View>
-      <BSpacer size={'extraSmall'} />
-      <View style={styles.summaryContainer}>
-        <Text style={styles.summary}>Expired</Text>
-        <Text style={[styles.summary, styles.fontw400]}>{expiredDate}</Text>
-      </View>
+      {expiredDate !== '-' && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Expired</Text>
+            <Text style={[styles.summary, styles.fontw400]}>{expiredDate}</Text>
+          </View>
+        </>
+      )}
       <BSpacer size={'extraSmall'} />
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>Nama Proyek</Text>

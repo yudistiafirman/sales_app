@@ -26,7 +26,7 @@ export const getColorStatusTrx = (id: string) => {
 };
 
 export const getStatusTrx = (id: string) => {
-  switch (id) {
+  switch (id.toUpperCase()) {
     case 'DRAFT':
       return 'Diterbitkan';
     case 'SUBMITTED':
@@ -35,12 +35,16 @@ export const getStatusTrx = (id: string) => {
       return 'Persiapan';
     case 'PARTIALLY_PAID':
       return 'Disetujui';
+    case 'CONFIRMED':
+      return 'Disetujui';
     case 'PAID':
       return 'Diterima';
     case 'CANCELLED':
       return 'Ditolak';
+    case 'DECLINED':
+      return 'Ditolak';
     default:
-      return 'N/A';
+      return id;
   }
 };
 
