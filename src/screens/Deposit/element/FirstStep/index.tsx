@@ -123,6 +123,8 @@ export default function FirstStep() {
                 photoTitle: 'Bukti',
                 closeButton: true,
                 navigateTo: GALLERY_DEPOSIT,
+                disabledDocPicker: false,
+                disabledGalleryPicker: false,
               })
             )
           }
