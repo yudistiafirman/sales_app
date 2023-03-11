@@ -62,6 +62,7 @@ const ChoosenProductList = <ProductData extends Products>({
           pricePerVol={offeringPrice}
           volume={quantity}
           item={item}
+          isOptions={ data && data?.length > 1}
           totalPrice={totalPrice}
           onChecked={() => hasMultipleCheck && onChecked && onChecked(item)}
           inputsSelection={inputsSelection}
@@ -98,7 +99,7 @@ const ChoosenProductList = <ProductData extends Products>({
 
       <View style={styles.priceContainer}>
         <Text style={styles.productName}>Total</Text>
-        <Text style={styles.boldPrice}>
+        <Text numberOfLines={1} style={styles.boldPrice}>
           IDR {formatCurrency(calculatedTotalPrice)}
         </Text>
       </View>
@@ -122,6 +123,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.montserrat[600],
     fontSize: fonts.size.lg,
     color: colors.text.darker,
+    width: width - 100,
+    textAlign:'right',
   },
 });
 

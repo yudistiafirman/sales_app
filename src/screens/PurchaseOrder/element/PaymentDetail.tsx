@@ -67,6 +67,7 @@ const PaymentDetail = () => {
             isActive={false}
             title={paymentTitle}
             icon={paymentIcon}
+            flexDirection='row'
           />
           <BSpacer size="small" />
           <BLabel

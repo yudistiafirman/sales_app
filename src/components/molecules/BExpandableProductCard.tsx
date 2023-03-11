@@ -4,7 +4,7 @@ import { Input } from '@/interfaces';
 import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
 import React from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View,Dimensions } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import BText from '../atoms/BText';
 import BForm from '../organism/BForm';
@@ -20,8 +20,11 @@ interface Props<TItem> {
   remainingQuantity?: string;
   hasMultipleCheck?: boolean;
   index?: number;
+  isOptions?:boolean
   onPressRadioButton?: (index: string) => void;
 }
+
+const {width} = Dimensions.get('window')
 
 const BExpandableProductCard = ({
   item,
@@ -35,6 +38,7 @@ const BExpandableProductCard = ({
   hasMultipleCheck,
   index,
   onPressRadioButton,
+  isOptions
 }: Props) => {
   const checkbox = [
     {
@@ -49,8 +53,9 @@ const BExpandableProductCard = ({
   return (
     <View style={styles.customerCard}>
       <View style={styles.parentContainer}>
-        <View style={styles.checkBoxContainer}>
-          {hasMultipleCheck ? (
+        {
+           isOptions && <View style={styles.checkBoxContainer}>
+          {hasMultipleCheck  ? (
             <BForm inputs={checkbox} />
           ) : (
             <RadioButton
@@ -61,6 +66,8 @@ const BExpandableProductCard = ({
             />
           )}
         </View>
+        }
+     
         <View style={styles.expandableContainer}>
           <View style={styles.topCard}>
             <BText type="title">{productName}</BText>
@@ -69,7 +76,7 @@ const BExpandableProductCard = ({
             <BText style={styles.parentPrice}>
               {`${formatCurrency(pricePerVol!)}/m3`}
             </BText>
-            <BText style={styles.totalParentPrice}>{`IDR ${formatCurrency(
+            <BText  numberOfLines={1} style={styles.totalParentPrice}>{`IDR ${formatCurrency(
               totalPrice
             )}`}</BText>
           </View>
@@ -138,6 +145,8 @@ const styles = StyleSheet.create({
     fontFamily: font.family.montserrat['500'],
     fontSize: font.size.sm,
     color: colors.text.darker,
+    textAlign:'right',
+    width:width - 170
   },
   bottomCard: {
     marginTop: layout.pad.sm,

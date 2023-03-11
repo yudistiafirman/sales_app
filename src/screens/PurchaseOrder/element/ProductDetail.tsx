@@ -45,11 +45,11 @@ const ProductDetail = () => {
   const calculatedTotalPrice = (): number => {
     const total = selectedProducts
       .map((v) => {
-        return v.quantity.toString()[0] === '0'
+        return v.quantity.toString()[0] === '0' || v.quantity.length === 0
           ? 0
           : v.offeringPrice * v.quantity;
       })
-      .reduce((a, b) => a + b, 0);
+      .reduce((a, b) => a + b,0);
     return total;
   };
 
@@ -87,6 +87,8 @@ const ProductDetail = () => {
           handleReturnToInitialState();
         }, 3000);
       }
+    } else {
+      dispatch(closePopUp());
     }
   }, [
     dispatch,
