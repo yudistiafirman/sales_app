@@ -6,6 +6,7 @@ import {
   Dimensions,
   Linking,
   NativeModules,
+  Text,
 } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
@@ -49,6 +50,7 @@ import {
   CREATE_SCHEDULE,
   CREATE_VISITATION,
   CUSTOMER_DETAIL,
+  PO,
   SPH,
   TAB_HOME,
 } from '@/navigation/ScreenNames';
@@ -63,6 +65,7 @@ import {
 import { RootState } from '@/redux/store';
 import { HOME_MENU } from '../Const';
 import { resetState } from '@/redux/reducers/SphReducer';
+import { bStorage } from '@/actions';
 const { RNCustomConfig } = NativeModules;
 const versionName = RNCustomConfig?.version_name;
 const { height } = Dimensions.get('window');
@@ -79,6 +82,9 @@ const Beranda = () => {
     enable_sph,
     enable_visitation,
   } = useSelector((state: RootState) => state.auth.remote_config);
+  const poState = useSelector((state: RootState) => state.purchaseOrder);
+  const { isModalContinuePo, poNumber, currentStep } =
+    poState.currentState.context;
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [currentVisit, setCurrentVisit] = React.useState<{
@@ -98,6 +104,8 @@ const Beranda = () => {
   const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
+  const [isPopupContinuePo, setIsPopupContinuePo] = React.useState(false);
+  const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
 
   useHeaderShow({
     isHeaderShown: !isModalVisible,
@@ -274,25 +282,33 @@ const Beranda = () => {
     );
   };
 
-  const renderSPHContinueData = () => {
-    return (
-      <>
-        <View style={style.popupSPHContent}>
-          <BVisitationCard
-            item={{
-              name: sphData?.selectedCompany?.name,
-              location: sphData?.selectedCompany?.locationAddress?.line1,
-            }}
-            isRenderIcon={false}
-          />
+  const renderContinueData = () => {
+    if (feature === 'PO') {
+      return (
+        <View style={style.poNumberWrapper}>
+          <Text style={style.poNumber}>{poNumber}</Text>
         </View>
-        <BSpacer size={'medium'} />
-        <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
-          SPH yang lama akan hilang kalau Anda buat SPH yang baru
-        </BText>
-        <BSpacer size={'small'} />
-      </>
-    );
+      );
+    } else {
+      return (
+        <>
+          <View style={style.popupSPHContent}>
+            <BVisitationCard
+              item={{
+                name: sphData?.selectedCompany?.name,
+                location: sphData?.selectedCompany?.locationAddress?.line1,
+              }}
+              isRenderIcon={false}
+            />
+          </View>
+          <BSpacer size={'medium'} />
+          <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
+            SPH yang lama akan hilang kalau Anda buat SPH yang baru
+          </BText>
+          <BSpacer size={'small'} />
+        </>
+      );
+    }
   };
 
   React.useEffect(() => {
@@ -336,6 +352,7 @@ const Beranda = () => {
         icon: SvgNames.IC_SPH,
         title: HOME_MENU.SPH,
         action: () => {
+          setFeature('SPH');
           if (sphData?.selectedCompany) setPopupSPHVisible(true);
           else navigation.navigate(SPH, {});
         },
@@ -344,7 +361,12 @@ const Beranda = () => {
         icon: SvgNames.IC_PO,
         title: HOME_MENU.PO,
         action: () => {
-          navigation.navigate('PO');
+          setFeature('PO');
+          if (isModalContinuePo) {
+            setIsPopupContinuePo(isModalContinuePo);
+          } else {
+            navigation.navigate(PO, {});
+          }
         },
       },
       {
@@ -536,6 +558,20 @@ const Beranda = () => {
     }
   }
 
+  const continuePopUpAction = () => {
+    if (feature === 'PO') {
+      if (currentStep === 0) {
+        dispatch({ type: 'goToSecondStepFromSaved' });
+      } else {
+        dispatch({ type: 'goToThirdStepFromSaved' });
+      }
+      navigation.navigate(PO, {});
+    } else {
+      setPopupSPHVisible(false);
+      navigation.navigate(SPH, {});
+    }
+  };
+
   return (
     <View style={style.container}>
       <Modal
@@ -635,20 +671,31 @@ const Beranda = () => {
           onPressItem={enable_customer_detail ? visitationOnPress : undefined}
         />
         <PopUpQuestion
-          isVisible={isPopupSPHVisible}
+          isVisible={feature === 'SPH' ? isPopupSPHVisible : isModalContinuePo}
           setIsPopupVisible={() => {
-            setPopupSPHVisible(false);
-            dispatch(resetState());
-            navigation.navigate(SPH, {});
+            if (feature === 'SPH') {
+              setPopupSPHVisible(false);
+              dispatch(resetState());
+              navigation.navigate(SPH, {});
+            } else {
+              bStorage.deleteItem(PO);
+              setIsPopupContinuePo(false);
+              dispatch({ type: 'createNewPo' });
+              navigation.navigate(PO, {});
+            }
           }}
-          actionButton={() => {
-            setPopupSPHVisible(false);
-            navigation.navigate(SPH, {});
-          }}
-          descContent={renderSPHContinueData()}
+          actionButton={continuePopUpAction}
+          descContent={renderContinueData()}
+          desc={
+            feature === 'PO'
+              ? 'PO yang lama akan hilang kalau Anda buat PO yang baru'
+              : ''
+          }
           cancelText={'Buat Baru'}
           actionText={'Lanjutkan'}
-          text={'Apakah Anda Ingin Melanjutkan Pembuatan SPH Sebelumnya?'}
+          text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
+            feature === 'PO' ? 'PO' : 'SPH'
+          } Sebelumnya?`}
         />
       </BBottomSheet>
       {renderUpdateDialog()}
@@ -711,6 +758,20 @@ const style = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     paddingHorizontal: layout.pad.xl,
+  },
+  poNumber: {
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.md,
+    color: colors.text.darker,
+  },
+  poNumberWrapper: {
+    backgroundColor: colors.tertiary,
+    height: resScale(37),
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: resScale(277),
+    alignSelf: 'center',
+    borderRadius: layout.radius.md,
   },
 });
 export default Beranda;

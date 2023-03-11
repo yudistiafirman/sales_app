@@ -11,6 +11,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { resScale } from '@/utils';
 import Pdf from 'react-native-pdf';
+import { color } from 'react-native-reanimated';
 
 type BGalleryType = {
   picts: any[];
@@ -59,12 +60,12 @@ export default function BGallery({
               {image?.type === 'GALLERY' && removePict && (
                 <TouchableOpacity
                   style={style.closeIcon}
-                  onPress={removePict(index)}
+                  onPress={() => removePict(index)}
                 >
                   <AntDesign
-                    name="closecircle"
+                    name="close"
                     size={resScale(15)}
-                    color="#000000"
+                    color={colors.white}
                   />
                 </TouchableOpacity>
               )}
@@ -96,6 +97,8 @@ const style = StyleSheet.create({
     position: 'absolute',
     right: resScale(-5),
     top: resScale(-5),
+    backgroundColor: colors.text.medium,
+    borderRadius:10
   },
   imageStyle: {
     flex: 1,

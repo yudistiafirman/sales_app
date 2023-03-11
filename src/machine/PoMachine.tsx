@@ -1,16 +1,22 @@
 import { bStorage } from '@/actions';
+import { uploadFileImage } from '@/actions/CommonActions';
 import {
   getCreatedSphDocuments,
   getSphByProject,
+  postPurchaseOrder,
 } from '@/actions/OrderActions';
 import {
   CreatedSPHListResponse,
   DocumentsData,
+  PostPoPayload,
+  Products,
   ProjectDocs,
+  UploadFilesResponsePayload,
 } from '@/interfaces/CreatePurchaseOrder';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import { PO } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
+import uniqueStringGenerator from '@/utils/uniqueStringGenerator';
 import { assign, createMachine } from 'xstate';
 
 const purchaseOrderInitialState = {
@@ -24,19 +30,22 @@ const purchaseOrderInitialState = {
   isModalChooseSphVisible: false,
   isModalContinuePo: false,
   loadingSphData: false,
-  loadingDocument: true,
+  loadingDocument: false,
   errorGettingSphMessage: '',
   errorGettingDocMessage: '',
-  selectedProducts: [],
+  selectedProducts: [] as Products[],
   files: [] as any[],
   routes: [],
   sphData: [],
   paymentType: '',
   currentStep: 0,
+  postPoPayload: {} as PostPoPayload,
+  isUseExistingFiles: false,
+  isLoadingPostPurchaseOrder: false,
 };
 
 const POMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgAsAdkruAHN4Cc7n4AjAF+hu5BADQgAJ6I-pSuQQBsye4AzEFB6a7p7slBAL6F0ZI4+ESk5FQ09EysEBzcfAIaYhIY5TJV8rXKDRzqIsRatrxm+kHmSCDIVjZ6vPZOCG6ePv6BIYHhUbGIId7plMmGKYZh3uHu7sWlndKVclQAZoLosNoM2mDIlLgQRoAeU4BFwUmEUAYyGwZnsc2sY2WiHShmcXl8oW2YQi0TiCD8hMomTc3gArLkCmTvHdZg8KrJqpQ3h8vj8-gDgdwwAAbMA-ACSAFtcDA4TMEQs7DMVkFvEFPP5DAU3ClQsk8QdnAFKFl3M5Ua4yVk-DSSnSpAyeq93p9vr9-oC2CDhGgvjDxZZEYtkQg5QVKMayac-BT3MbDK5NX7nIZDCdkklnEFnGlU4YybSyo9GfIWXb2Y6uZyALKkMDC0VwT2zeZImUuSOuQPpMJkwzpVHkzLRoKuSOJbzuOPJfym1LJLP07rPZm2tkOznOzhQYgAFWIDFofAg9uQNcl9dAK1jrmbZNbGY7XYve3xKt17jPFNcyT8r-SU8tM6Z+YXfy3cEcGhbBOAAI1wegNwAQSdYgDzrH0Gz9ak-F1UN0mcZwyRuNJlV7dIh0HYcM2HPJCK-Lonl-ec90oQCpBAoReDdXReCgThiGQMBeEhMsIFwHkEO9aVj0QQlFWcK5gnSZJZL8VICKuQM-DybxR3IslCUonNrTnVk6IY4CYWY1jIVBMAgOwSFhKlJZkIkyhvCki5sjkt9FP2P0PE8SNRwUtEUwCTNzWzK1Zz-QzLMYkywQhdiQOafhmNEcRKDCn881owsjOwJi4pwSEQKGTQdEWCYTHhRDRMcRAcPRZNDCualOwKPJew8Zs-GTdTsIiC8Ox08KaIMnLouM7BKAK6yEphTgKHQUh0p5HQXlIIV0unaistGh1cvy8aZqhGESpGMqDBMWyj1qhB6soRrmqOWTsncXspLJSgzmDSltVSYMhsym1doAw6Dqsoq5r4ABhPB2LAKGdDAVd0EEatKolar7LE279XuoImozJ62teryXu8RJR3DTshy01MAe2oGCz20GTK4nj+MEmHiCsMBEswHkeY5oT0a9OzfT1TxTiCYM4zcM5wje7xmz7ZUTWw98ilCrbc0Z-96JZya2d4IWuZ5xLOVNgheBAq6kOx6WEhCC8sJw-Jhw1Unck8U0SO67qUzyemdf0pmQassGpAANUE1AwAAGWIAFIE4BxPkR-4Xh+dAAApUUMABKTgMoZkO9f22LDujnlY4TpOIFtmrZUOQNXyHcIkjfPxe0TeMU3bdItPDcNwiDvTIrG8OTIW0gAHF+TY47sDjwRPk4dB+XQGI5+0BeQOXz4G6xm7qXRJUpZyUMSfxLJfEDZJsK++UfdcUfZy3TAdz3FdiAAIUgugNwADFsq-EPr6U855Lz9xvD2LyPhfLkmCImbqZIyTalfkyd+n92Tfw3GuayZA9xgOQqiVMTlTSvlTDkdsUYvLtnjFhbIUluzJDDLcLW34S5YN4LuQsMAd4Q2wAAERGKgIUPFtCwCSq0YYaVi7B24bwh0-Dd4whEZgMREjYCnVGOVS6ItawiSPieNB8Ybg5C9kgxM0Z2xoTSApZw+RThHFjOw+4nCFHbh4XRFRgj1GaN4JI+a6BFpUGQCtbQa10AbXkXpRRPj55+NEeIwJ2i2i6IuqYAxh47Y3WwrGLwGQzx5CsbQ+8F4TiYSuGkHI99JwcKop4j+3icpqOSRI2u5AICcFQOExOEAbLZMxuA6pupkx9giO+HCHZoxe0SLeK8BpXymgwfIeJhZp7oG3gvfxKSgnr20JvbZkJdkSOIdjbCuRHwKUCEs-I6RoynGOEwq4mRKH9k1u4xpel8HvCUcgb+f8oKbi8f885N0FJdVOPqOSeRlSjmjC7e6qZgz+EpBmZwqyqC-MIYWQQEA+QWT5JgbQbBFoQFQCS8FKxMJkLIm5OSOElYe3xCiygGEsikmdmET8DTdKzhxf8oQBKwCcV4DDXAcMACKqBJW6G0DEalKI3BoWmYRD8WFUhXwOG+QMcY4ydjOK2FMmK+XDXkEbBG4j0C4E4JySsMBYBKtWDhDEmxgihF2L2eUH1WxK3MaQ5M9Svn8qZNIeoqhcEguaf8wBi0hQRvrkMoxvoSLsqVgqJ8zkgplLqtLLwyYSSuGTD4M8WLKDhpUI0Lgq48EENjfGxNzq00UMza4bN2pc0IHlIkQkEkPVOOVOWytAwuCYHXojAAcmAAA7hwZ1IQ3AtjbNeJqt5ewZHIZhQiss0EyWKOaXgxByDwAlNra0VUU3IQALQssQLez6+rsj+C1cOcM5a+iJo4JesWyFi29jRLqXIBoChHHfJkNxFpvkRRAcgH910TxJDdViT1uIvLBCCE5FMHh8ZKzQSkct49FxOiBPB3JsolbohvK80MwZ74EVNIGMirZGXZBwoR2D+tJ7YDI43FwCQNgoZ2Gh6++NMPKlJPqVEA9PlQdDTtUOXGYqTVdKgAR7FePGPiJ2dlCo+zjI7ArT2CRExKw8P7AIb4OPAyUxNKah1BGad9J2dYmItiobvAcak3sWo4XcsqF+ZrAalyitxygRsTbYG5gQECTnkLZByOy28WRlTBjYwx8m7aSJqoyGaEN5rdaheU-ZqyVca79MgHF+2nYurJfxqwtqZJu6ZE+kkYcBpMg5HyNZxT5dJqbOObNJeK9tBVZuj4OxKqjijnbO2TzfpUSYf7L4e+PhpPqXLes34Y2Tw9XIarWMiZchdovklkkI4rgjyC1w0FCT1OL1OaknbLhUzJH2yqALx2bGogxCmTlNxHEUWu007Be02kaL2Z0yrGMr0XJuAw+hKZpIfLvbdQi7KJP6fbuEEK+Xgtbb+ANxJ7FHuSOe6seH91EcuXfGcVHBRMMRGJtcOSPhy2Cr3OTiD5N6WyUZaW1HzlH2yzlNkVwoYPDs-rXRfFfIueol9epKmbhcjdWjLJTw-Z75BrfK9xM5bLW4GtbgcnWEl19tNLT004RvDesA3kfupo5s3Fx3JgrFb8BfuIOT1BnggzAYKKGPTvYsjElUkspIkfMIhWKEAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJmcAOAIyUPhgJwBmABZA30C-AFYANgAaEABPREjfX0p-NzCPfwB2Z39nEMCAX0LYyRx8IlJyKhp6JlYIDm4+AQ0xCQxymSr5WuUGjnURYi1bXjN9D3MkEGQrGz1eeycEV09vPyCCiJj4xF83N0pDrI9w52TIoI9nYtLO6Uq5KgAzQXRYbQZtMGROACNcPQACrEABCYCgwl4wig3x0YDM9jm1jGy0QHnSRyy4UMeKC-gCSX8sQSCFOzm8QUMhLcuVchg8d1mDwqsmqlDeHy+P2QlFwEEaAHlOARcFJYQxkNgkTMUQs7DMVr4sqTEP48pRnEkshrAllIpFTkUSiypGyeq93p9vr9+YK2CLyAAbMA-ACSAFtcDBZZZUYt0QgPJEbhszm5IoYslkwoZwmqEFdDJRo2EAvHI-5Isyyo92fIuTbefbhZxhGgvtK-bN5milRjIuFwpQck3fIYm4EPJlE+ENZRIs4IgbfB4sqFc6zus9OdaeXaBWWlwBZUhgL0+uA1+X10ArTGBbG4-GBQnZgKJnudwfZZy4-tRwwm+7mmccosLvlLx2cKDEUEGFoPgIFtZAdzrQMG2DLFWxPGkzyJS89lWK5WyScIskMTxqUZcIpzfJ4P3nMDKCA8UcClbAASBOhQQAQQdYgIIDRV9wxNJ-EoMIrmCGMcmbBMUJyFNgkJGNCXCEILgIroiMLEiS3IqQqKEXhK10XgoE4YhkDAGEtLXCBcGdFiFSWaCJ0pGkx0xfJwkOcIPETU4uObTtQn8Z9XN8WT80tOduVI5TKOlNSNNhUUwAo7BYTMvdHEQKzU0JHs6UCBy3CcxNPBTfE6V8I0zmbXzTTzC1Z0-YLopUsKxQlLSqOafg1NEcRKHK98FKCpSatC7BKHqnBJWlIZNB0RYJhMZFILYxKEGzSJuOcTEAnOTE0lVFC3GjY4sjcA0DpDZszj8iriJ6u0QuwVShtixrpU4Ch0FIDrnR0F5SE9Drp3kq1Lr5a7br6+64VGtpRkmkx4qg9iFsNZbVv8da3E2xNQyySgVXvWN8lcG43DOrr-uLK6QeBmKRuovgAGE8C0sAaYRf90EEbdprlWaLLhxbEbcNaVtRg6XJ7Zaog1IIVQiIm-sC0nAfJsLdP0oyTLp4grDAJrMGdTXVdMjn-XMoMVS8Tx7w8btPH2o10fHVMVWbfnsgO1wZYLEmvzIxWBuV3h9fVzWmqXQOCF4KiYbmg9OO4zstn4+9mxcrCscQ593GCKJ3YCqrepiimpAANRM1AwAAGWIAVIE4BxPgRfkXh+dAAAovMMABKThOtl3OyfzuqQeL51S4rquIEj7n5uSSkcX2i4Akk-JExVLjsOHaNIkjXF3GzyrFL72qBue0gAHE3U0sHsDLwRPk4dA3XQOIz+0C+qOvz4J6DbJMZ8EMMsCC4ADDSBD7CtSgTlCrSQuPzHEu8ORAUwCBMCf5wS0VBAAMX3uBQ2tZWKTxWOcK8w5UxnnxDcZIE5oxwPkAgpBvIUGgmBLFMgYFP7QUIShEMvhrJniPNhaMY4VrUKoLQ3goESwwBflTAAIiMVAnp9LaFgM1Vowx2rdw9t7RBYjSKSNftKWRmB5GKNgGNEYE0DDQxwbuWG800jnEHAdHI6VdSGGcImLylIoxnECFcTEVlTplV+po0R4i7R6JkXIhRvAlFPXQC9KgyB3raE+ugb6GiAqhN0efSJRjolKLMZDSxphrFcy-sjQIqR3AanjAA7M7iUL3msniZ8wQnGRG7EyIJhEQnAR0UpAxUTFGj3IBATgqAkmVwgHFUpeCgzdnjNxHwaQjQdKuL4RMrguI3BCDGTsNxxxdNfHJXp2iwl8mPugZ+F9DHGJico++2hH7XNhLc-JbCebakqdwlUho0yHJJChIILYMr+GWeEXw5wowHWEVouhdpBAQFdH+N0VE3mKI+XYr5WMLgGijLGAFmzGTgJaSEKIElYz4W6SczJfTzlCCRWAFFVZsDopiZMaYRsEorDyB0nFvz8XdlcleJyqYWlSQ6TGHwRpYVMPeOclBYI0HECybyTFKwhwisheAjswLgg+Cwrcal-lZxypYfQ-8oIOCfA4OqxADkWwdOwvqZM7ZnKcM3tZQ0HZuF2SCLK5h9LEXIoIK6TA2g2AvQgKgcNdqFqW1bLqM8zg55jm4bsMk45XCtgCGeQ1FxLYBvlaRYNTLab0xgAARVQLgGJNg4hxo1JjJ1TZtRGmSL2D12pUhhC8sdfFQjjXnXkH7JmCj0C4E4EuTcMBYBxo4Zm1wmNNorVpM+LKVLjkmo5KO3A47J2AnoOgl6nox0UFwHG6BS0aQHKuKjPEtthLrFDPGSFW8hyTiHcTSg0h6iqAYSqulYFj3EE9H+8eszjbQRTUEVI3lciMlytkRMYRMYhFDGkdDdIjlmhpbOX9KhGhcEtQBQNwGT3gcvUmuD+oEOYmWVtMkOpjjpDcZ4Okw5UawoIwMLgmB74IgAHJgAAO62sg9ylw1GvK0b7UhxjiA6Qpk3mEI8BzMKBK3cOqg1qI2-SFM8GiIJiDuhhLoEy8IfhxsyLkFKXyMK-0tkQ9IWojyRhDH83xpUtPft02wfTs4UTaBnXAFRrV2g-R6QFPzAWORBZC6YiGFjxhWM5bgqDcM1rcSlkdfUCz3WZqjFxGM6VhwANCIVWFMXCIGbi1YYL3pZ1hbaOo4J0X6v+Zq4F+rCXCnJYmFMGaczoJS0HLkPLNTLYaivFlLiPyLjI38ZhfwVWOuxfkPFxroXLlvQ+l9SLeGOTVbkrVjbPWtuJeGEUlLJS0s2KjklKS3h+a2SU2eVGM2OyDikgUbULTNO4e3fIY7jxTuJPq5g10yieAtRax0KLs4QcVDBx1CHggod9bGFNO7ZToKWxDNxTxTYci7KTpwtsWpc2uHFpCpyq2bXrfB58SH234mvSSXttJB2gc6bW11urzP0dwEx1DW7Q2MvzRuJhQcKnQwdgnOcDZnDPBeAW0EJsfhN6bsB9pygSOCAo6CxwNguA4i6wFM1tR8PDvA75yd7rNriAm7N1MkXxTrNYS8H4Z10Y8j7TPDNg03EIUUkxJ2OkhMv2y312AQ3HWnem-N2MnbHOUn7YyYju3oOHcRoTy7gUbubvWeRktbeBxMgTkhU2GbSQtTpCTfzBZ6R6d6f54WXA6OaYCZ+ERu+D84gx7B9ZpyKZPDBAOA+51RKdreBWh4A4gjV1UtNLwYg5B4Byja88cXkmEAAFobiJj37Z5IBwjRuIykugHGeOR9HAxwHftiVjDhxFUtjGc8SuBFpSa8mF7yoyjEwlhV7mQEfwe3hk2WCHQhVDbDCGbH1GAKwVLEdDAPwUbGzHAXn1xAyiciwhxBcjBXARTTWAASkhjG8x12-RAO9n7mwFQKDHSBQ1g0ZEKkOHPH2mjCyEQIBhoMPnClQCkS0noOgiHCOAJlyA7E3gqyVzJA40HFqRRjpCkm1xv26nll4P6kGhBipmELhhs2XmITHH7EyC8hU0qyj00WoKBiVj0n9jXzVmwA1gICol0Ml3IW8A6R7DODSl1AU3JEILEhgMkmkgoNUM9mqloK0JiiHhHimUgFcIPHcL-i8Kcn8WQxQkKjmwOBxGRiygXhwzCLli9msKPjZyuRyQeivhvm0ASPtVRmOGzEQyyjOCuAaSY1g2zAcnn2HA1G6NhVVV+FqNWAOBbHcBuC7CiAchARQjQnggCBVwhVpH6KAwkQqMvjZSUSGOzEyGOG8gn2fDODaPVGJWjDH1DG1EOhUK33gRWKukGTyWGTiIgCGJ4hSH7HTRsmULOA8XyHAX2h7Dxh2ghU7GWLOVIkuReS0g2I3y5Sf2OIHDGO1GUKbEYKBWyGOCSFRlxGRl1CNR81lgGL5FLS2PHCWnKwNGpyCEOCvG1Qcg1DfXOFRl1SLXNUGM5mGzhjbUTQJBTQKm6IzQxH7COFYxWk9RvS4IsICjNSDUZS2ICGD1OEpV8TpE1WV1+PyGJ1yBgSzklNnF3X3SGILUqQkgyn5kZCHD8PSC8BfQhQcibA-RfEoNlh41UENOBIaIhXyHjDOHEhcjAUaMwgODyCclDBb063t2qCGNjCWhg3lw1POH2hFQJ15LgOHElWv2uNtwZzbyZway3BhPS13wnEqVjOjHjN5KvE9xzWRlyDBTcWbBW11KOyz2RxzxZwLPuzQODBWm+U7BEhuFOG4TcErOJQnGuBwnnjxKdM0UHxz2N0TymSGJDFODG2HAOBCB8G1COODDxSxhDym3nyPH7DDMZ0GhjUwDgFgC72ih7wf3ZIlwPH2hSH2j1FciNAdSJSiGOHcENHSAAQfRPJzM5A72dGvIRCIyXIqQ2BLywP-jpCJX2j2gOXjGwjWkbOKCAA */
   createMachine(
     {
       id: 'purchase order',
@@ -49,6 +58,18 @@ const POMachine =
           };
           getSphDocument: {
             data: DocumentsData;
+          };
+          getSavedPo: {
+            data: { poContext: typeof purchaseOrderInitialState };
+          };
+          uploadFiles: {
+            data: UploadFilesResponsePayload[];
+          };
+          uploadPhoto: {
+            data: UploadFilesResponsePayload[];
+          };
+          postPo: {
+            data: { success: boolean; message: string };
           };
         },
         events: {} as
@@ -78,7 +99,17 @@ const POMachine =
           | { type: 'onChangeQuantity'; value: string; index: number }
           | { type: 'retryGettingSphList' }
           | { type: 'retryGettingDocument' }
-          | { type: 'gettingBackDocuments' },
+          | { type: 'gettingBackDocuments' }
+          | { type: 'goToSecondStepFromSaved' }
+          | { type: 'goToThirdStepFromSaved' }
+          | { type: 'createNewPo' }
+          | { type: 'goToPostPo' }
+          | { type: 'backToBeginningState' }
+          | { type: 'getSphDocument' }
+          | { type: 'retryPostPurchaseOrder' }
+          | { type: 'backToInitialStateFromFailPostPo' }
+          | { type: 'backToInitialState' }
+          | { type: 'backFromCamera' },
       },
       context: purchaseOrderInitialState,
       states: {
@@ -120,7 +151,7 @@ const POMachine =
                 addMoreImages: '#purchase order.openCamera',
 
                 goToSecondStep: {
-                  target: '#purchase order.SecondStep.gettingSphDocuments',
+                  target: '#purchase order.SecondStep',
                   actions: 'increaseStep',
                 },
               },
@@ -203,6 +234,13 @@ const POMachine =
               },
             },
           },
+
+          on: {
+            backToBeginningState: {
+              target: 'checkSavedPo',
+              actions: 'resetPoState',
+            },
+          },
         },
 
         SecondStep: {
@@ -233,12 +271,30 @@ const POMachine =
 
             errorGettingDocuments: {
               on: {
-                retryGettingDocument: 'gettingSphDocuments',
+                retryGettingDocument: {
+                  target: 'gettingSphDocuments',
+                  actions: "handleRetryDocument"
+                },
+              },
+            },
+
+            idle: {
+              on: {
+                getSphDocument: [
+                  {
+                    target: 'SphDocumentLoaded',
+                    cond: 'useExistingFiles',
+                  },
+                  {
+                    target: 'gettingSphDocuments',
+                    actions: 'enableLoadingDocument',
+                  },
+                ],
               },
             },
           },
 
-          initial: 'gettingSphDocuments',
+          initial: 'idle',
 
           on: {
             goBackToFirstStep: {
@@ -247,7 +303,7 @@ const POMachine =
             },
             goToThirdStep: {
               target: 'ThirdStep',
-              actions: 'increaseStep',
+              actions: ['increaseStep', 'assignSelectedProducts'],
             },
           },
         },
@@ -256,7 +312,12 @@ const POMachine =
           on: {
             goBackToSecondStep: {
               target: 'SecondStep',
-              actions: 'decreaseStep',
+              actions: 'decreaseStepFromThirdStep',
+            },
+
+            goToPostPo: {
+              target: 'PostPurchaseOrder',
+              actions: 'assignPoPayload',
             },
           },
 
@@ -287,6 +348,8 @@ const POMachine =
               target: 'firstStep.addPO',
               actions: 'assignImages',
             },
+
+            backFromCamera: 'firstStep.addPO',
           },
 
           entry: 'enableCameraScreen',
@@ -296,17 +359,91 @@ const POMachine =
         hasSavedPo: {
           on: {
             goToSecondStepFromSaved: {
-              target: 'SecondStep.gettingSphDocuments',
+              target: 'SecondStep',
               actions: 'setNewStep',
             },
 
             goToThirdStepFromSaved: {
               target: 'ThirdStep',
-              actions: 'setNewStep',
+              actions: ['setNewStep', 'assignSelectedProducts'],
             },
 
             createNewPo: {
               target: 'openCamera',
+              actions: 'resetPoState',
+            },
+          },
+        },
+
+        PostPurchaseOrder: {
+          states: {
+            postImages: {
+              invoke: {
+                src: 'uploadPhoto',
+
+                onDone: [
+                  {
+                    target: 'postFiles',
+                    actions: 'assignPhotoToPayload',
+                    cond: 'needUploadFiles',
+                  },
+                  {
+                    target: 'postPoPayload',
+                    actions: 'assignPhotoToPayload',
+                  },
+                ],
+
+                onError: {
+                  target: '#purchase order.ThirdStep',
+                  actions: 'disableLoadingPostPurchaseOrder',
+                },
+              },
+            },
+
+            postFiles: {
+              invoke: {
+                src: 'uploadFiles',
+                onDone: {
+                  target: 'postPoPayload',
+                  actions: 'assignFilesToPayload',
+                },
+                onError: {
+                  target: '#purchase order.ThirdStep',
+                  actions: 'disableLoadingPostPurchaseOrder',
+                },
+              },
+            },
+
+            postPoPayload: {
+              invoke: {
+                src: 'postPo',
+                onDone: {
+                  target: 'successCreatedPo',
+                  actions: 'disableLoadingPostPurchaseOrder',
+                },
+                onError: {
+                  target: 'failCreatedPo',
+                  actions: 'disableLoadingPostPurchaseOrder',
+                },
+              },
+            },
+
+            successCreatedPo: {},
+            failCreatedPo: {
+              on: {
+                retryPostPurchaseOrder: {
+                  target: 'postPoPayload',
+                  actions: 'enableLoadingPostPurchaseOrder',
+                },
+              },
+            },
+          },
+
+          initial: 'postImages',
+
+          on: {
+            backToInitialState: {
+              target: 'checkSavedPo',
               actions: 'resetPoState',
             },
           },
@@ -344,6 +481,48 @@ const POMachine =
             throw new Error(error);
           }
         },
+        uploadPhoto: async (context) => {
+          try {
+            const photoFiles = context.poImages.map((photo) => {
+              return {
+                ...photo.file,
+                uri: photo?.file?.uri?.replace('file:', 'file://'),
+              };
+            });
+            const response = await uploadFileImage(
+              photoFiles,
+              'Purchase Order'
+            );
+
+            return response.data.data;
+          } catch (error) {
+            throw new Error(error);
+          }
+        },
+        uploadFiles: async (context) => {
+          try {
+            const docsToUpload = context.files
+              .filter((v) => v.projectDocId === null)
+              .map((v) => {
+                return v.value;
+              });
+            const response = await uploadFileImage(
+              docsToUpload,
+              'Purchase Order'
+            );
+            return response.data.data;
+          } catch (error) {
+            throw new Error(error);
+          }
+        },
+        postPo: async (context) => {
+          try {
+            const response = await postPurchaseOrder(context.postPoPayload);
+            return response.data;
+          } catch (error) {
+            throw new Error(error);
+          }
+        },
       },
       guards: {
         hasSavedPo: (_context, event) => {
@@ -352,20 +531,87 @@ const POMachine =
         searchValueLengthAccepted: (_context, event) => {
           return event.value.length > 2;
         },
+        useExistingFiles: (context) => {
+          return (
+            context.isUseExistingFiles === true && context.files.length > 0
+          );
+        },
+        needUploadFiles: (context) => {
+          const hasFileNotUploadedBefore = context.files.filter(
+            (v) => v.projectDocId === null
+          );
+          return hasFileNotUploadedBefore.length > 0;
+        },
       },
       actions: {
         resetPoState: assign(() => {
           return purchaseOrderInitialState;
+        }),
+        assignPhotoToPayload: assign((context, event) => {
+          return {
+            postPoPayload: {
+              ...context.postPoPayload,
+              poFiles: event.data.map((v) => {
+                return {
+                  fileId: v.id,
+                };
+              }),
+            },
+          };
+        }),
+        assignFilesToPayload: assign((context, event) => {
+          const files: { documentId: string; fileId: string }[] = [];
+          event.data.forEach((photo) => {
+            const photoName = `${photo.name}.${photo.type}`;
+            const photoNamee = `${photo.name}.jpg`;
+            let foundPhoto;
+            for (const documentId in context.files) {
+              if (
+                Object.prototype.hasOwnProperty.call(context.files, documentId)
+              ) {
+                const photoData = context.files[documentId].value;
+                if (photoData) {
+                  if (
+                    photoData.name === photoName ||
+                    photoData.name === photoNamee
+                  ) {
+                    foundPhoto = context.files[documentId].documentId;
+                  }
+                }
+              }
+            }
+            if (foundPhoto) {
+              files.push({
+                documentId: foundPhoto,
+                fileId: photo.id,
+              });
+            }
+          });
+          return {
+            postPoPayload: { ...context.postPoPayload, projectDocs: files },
+          };
+        }),
+        enableLoadingPostPurchaseOrder: assign(() => {
+          return {
+            isLoadingPostPurchaseOrder: true,
+          };
         }),
         enableCameraScreen: assign(() => {
           return {
             openCamera: true,
           };
         }),
-        enableModalContinuePo: assign((context, event) => {
-          const { poContext } = event.data;
-          const newPoContext = { ...poContext, isModalContinuePo: true };
+        enableModalContinuePo: assign((_context, event) => {
+          const newPoContext = {
+            ...event.data.poContext,
+            isModalContinuePo: true,
+          };
           return newPoContext;
+        }),
+        enableLoadingDocument: assign((context, event) => {
+          return {
+            loadingDocument: true,
+          };
         }),
         increaseStep: assign((context, _event) => {
           return {
@@ -377,16 +623,28 @@ const POMachine =
             currentStep: context.currentStep - 1,
           };
         }),
+        decreaseStepFromThirdStep: assign((context) => {
+          return {
+            currentStep: context.currentStep - 1,
+            isUseExistingFiles: true,
+          };
+        }),
         setNewStep: assign((context) => {
           const newStep = context.currentStep === 0 ? 1 : 2;
           return {
             isModalContinuePo: false,
             currentStep: newStep,
+            isUseExistingFiles: true,
           };
         }),
         disableCameraScreen: assign(() => {
           return {
             openCamera: false,
+          };
+        }),
+        disableLoadingPostPurchaseOrder: assign(() => {
+          return {
+            isLoadingPostPurchaseOrder: false,
           };
         }),
         assignImages: assign((context, event) => {
@@ -439,7 +697,7 @@ const POMachine =
                   isRequired: val?.Document?.isRequiredPo,
                   type: 'fileInput',
                   value: val?.File,
-                  disabledFileInput: val?.File !== null,
+                  disabledFileInput: val?.projectDocId !== null,
                 };
               }
             );
@@ -467,6 +725,12 @@ const POMachine =
             errorGettingSphMessage: '',
           };
         }),
+        handleRetryDocument:assign((context,event)=> {
+          return {
+            loadingDocument:true,
+            files:[]
+          }
+        }),
         assignIndexChanged: assign((context, event) => {
           return {
             sphCategories: context.routes[event.value].title,
@@ -482,6 +746,8 @@ const POMachine =
           return {
             isModalChooseSphVisible: false,
             choosenSphDataFromModal: event.value,
+            isUseExistingFiles: false,
+            selectedProducts: [],
           };
         }),
         closingModal: assign((_context, _event) => {
@@ -509,7 +775,13 @@ const POMachine =
           const newFilesData = [...context.files];
           const newFilesDataValue = newFilesData.map((v, i) => {
             if (i === event.idx) {
-              return { ...v, value: event.value };
+              return {
+                ...v,
+                value: {
+                  ...event.value,
+                  name: `PO-${uniqueStringGenerator()}-${event.value.name}`,
+                },
+              };
             } else {
               return { ...v };
             }
@@ -518,21 +790,62 @@ const POMachine =
             files: newFilesDataValue,
           };
         }),
+        assignPoPayload: assign((context) => {
+          const { QuotationLetter, products } =
+            context.choosenSphDataFromModal.QuotationRequests[0];
+          const totalPrice = context.selectedProducts
+            .map((v) => {
+              return v.offeringPrice * v.quantity;
+            })
+            .reduce((a, b) => a + b, 0);
+          return {
+            isLoadingPostPurchaseOrder: true,
+            postPoPayload: {
+              quotationLetterId: QuotationLetter.id,
+              projectId: context.choosenSphDataFromModal.id,
+              poNumber: context.poNumber,
+              poProducts:
+                products.length > 0
+                  ? products.map((val) => {
+                      return {
+                        requestedProductId: val.id,
+                        requestedQuantity: val.quantity,
+                      };
+                    })
+                  : [],
+              totalPrice: totalPrice,
+            },
+          };
+        }),
+        assignSelectedProducts: assign((context) => {
+          return {
+            selectedProducts:
+              context.choosenSphDataFromModal.QuotationRequests[0].products,
+          };
+        }),
         assignNewQuantity: assign((context, event) => {
+          const filteredValue = event.value.replace(/[^0-9]/g, '');
           const newQuotationRequest = [
             ...context.choosenSphDataFromModal.QuotationRequests,
           ][0];
-          const newRequestedProducts =
-            newQuotationRequest.RequestedProducts.map((v, i) => {
-              if (i === event.index) {
-                return { ...v, quantity: event.value };
-              } else {
-                return { ...v };
-              }
-            });
+          const newproducts = newQuotationRequest.products.map((v, i) => {
+            if (i === event.index) {
+              return { ...v, quantity: filteredValue };
+            } else {
+              return { ...v };
+            }
+          });
+          const newSelectedProduct = [...context.selectedProducts];
+          const newQuantitySelectedProducts = newSelectedProduct.map((v, i) => {
+            if (i === event.index) {
+              return { ...v, quantity: filteredValue };
+            } else {
+              return { ...v };
+            }
+          });
           const modifiedQuotationRequest = {
             ...newQuotationRequest,
-            RequestedProducts: newRequestedProducts,
+            products: newproducts,
           };
 
           return {
@@ -540,6 +853,7 @@ const POMachine =
               ...context.choosenSphDataFromModal,
               QuotationRequests: [modifiedQuotationRequest],
             },
+            selectedProducts: newQuantitySelectedProducts,
           };
         }),
       },

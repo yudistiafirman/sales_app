@@ -13,7 +13,7 @@ import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
 import SelectedPOModal from '@/screens/SearchPO/element/SelectedPOModal';
@@ -53,6 +53,7 @@ const CreatePo = () => {
       navigateTo: PO,
       disabledDocPicker: false,
       disabledGalleryPicker: false,
+      closeButton: true,
     });
   }, [navigation]);
 
@@ -153,12 +154,13 @@ const CreatePo = () => {
             onRetry={() => dispatch({ type: 'retryGettingSphList' })}
           />
         ) : (
-          <View>
+          <ScrollView>
             <>
               <BGallery
                 addMorePict={addMoreImages}
                 picts={poImages}
                 removePict={deleteImages}
+                isUsedByPo
               />
               <BSpacer size="extraSmall" />
               <BForm inputs={inputs} />
@@ -171,8 +173,10 @@ const CreatePo = () => {
                     item={{
                       name: choosenSphDataFromModal.name,
                       location:
-                        choosenSphDataFromModal.ShippingAddress.Postal.City
-                          .name,
+                        choosenSphDataFromList?.ShippingAddress !== null
+                          ? choosenSphDataFromModal?.ShippingAddress?.Postal
+                              ?.City?.name
+                          : '',
                     }}
                     isRenderIcon
                     customIcon={renderCustomButton}
@@ -202,7 +206,7 @@ const CreatePo = () => {
                 />
               </TouchableOpacity>
             )}
-          </View>
+          </ScrollView>
         )}
       </View>
       <SelectedPOModal
@@ -211,7 +215,9 @@ const CreatePo = () => {
         data={{
           companyName: choosenSphDataFromList.name,
           locationName:
-            choosenSphDataFromList?.ShippingAddress?.Postal?.City?.name,
+            choosenSphDataFromList?.ShippingAddress !== null
+              ? choosenSphDataFromList?.ShippingAddress?.Postal?.City?.name
+              : '',
           sphs: choosenSphDataFromList.QuotationRequests,
         }}
         modalTitle="Pilih SPH"

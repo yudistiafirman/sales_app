@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { hasCameraPermissions } from '@/utils/permissions';
-import { CAMERA } from '@/navigation/ScreenNames';
+import { CAMERA, PO } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { BHeaderIcon } from '@/components';
@@ -16,9 +16,12 @@ import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { IMAGE_PREVIEW } from '@/navigation/ScreenNames';
 import CameraButton from './elements/CameraButton';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
 
 const CameraScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<RootStackScreenProps>();
   const navigateTo = route?.params?.navigateTo;
   const closeButton = route?.params?.closeButton;
@@ -34,15 +37,18 @@ const CameraScreen = () => {
       ? route?.params?.disabledGalleryPicker
       : true;
   useHeaderTitleChanged({ title: 'Foto ' + photoTitle });
+
+  const handleBack = React.useCallback(() => {
+    if (navigateTo === PO) {
+      dispatch({ type: 'backFromCamera' });
+    }
+    navigation.goBack();
+  }, [dispatch, navigateTo, navigation]);
   if (closeButton) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useCustomHeaderLeft({
       customHeaderLeft: (
-        <BHeaderIcon
-          size={resScale(23)}
-          onBack={() => navigation.goBack()}
-          iconName="x"
-        />
+        <BHeaderIcon size={resScale(23)} onBack={handleBack} iconName="x" />
       ),
     });
   }

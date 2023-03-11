@@ -2,12 +2,23 @@ import BDivider from '@/components/atoms/BDivider';
 import BLabel from '@/components/atoms/BLabel';
 import BSpacer from '@/components/atoms/BSpacer';
 import BExpandableProductCard from '@/components/molecules/BExpandableProductCard';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
-import { RequestedProducts } from '@/interfaces/CreatePurchaseOrder';
+import { Products } from '@/interfaces/CreatePurchaseOrder';
 import { resScale } from '@/utils';
+import formatCurrency from '@/utils/formatCurrency';
 import React, { useCallback } from 'react';
-import { FlatList, View, Text, StyleSheet, ListRenderItem } from 'react-native';
+import {
+  FlatList,
+  View,
+  Text,
+  StyleSheet,
+  ListRenderItem,
+  KeyboardAvoidingView,
+  Dimensions,
+} from 'react-native';
+
+const { width } = Dimensions.get('window');
 
 type ChoosenProductListProps<ProductData> = {
   data?: ProductData[];
@@ -15,14 +26,16 @@ type ChoosenProductListProps<ProductData> = {
   selectedProducts?: ProductData[];
   hasMultipleCheck?: boolean;
   onChangeQuantity: (index: number, value: string) => void;
+  calculatedTotalPrice: number;
 };
 
-const ChoosenProductList = <ProductData extends RequestedProducts>({
+const ChoosenProductList = <ProductData extends Products>({
   data,
   onChecked,
   selectedProducts,
   hasMultipleCheck,
   onChangeQuantity,
+  calculatedTotalPrice,
 }: ChoosenProductListProps<ProductData>) => {
   const renderItem: ListRenderItem<ProductData> = useCallback(
     ({ item, index }) => {
@@ -36,16 +49,16 @@ const ChoosenProductList = <ProductData extends RequestedProducts>({
           onChange: (value: string) => onChangeQuantity(index, value),
         },
       ];
-
       const productName = `${item?.Product?.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`;
       const offeringPrice = item?.offeringPrice;
-      const quantity = item?.quantity;
+      const quantity =
+        item?.quantity.toString()[0] === '0' ? 0 : item?.quantity;
       const totalPrice =
         item?.quantity && item?.offeringPrice ? offeringPrice * quantity : 0;
       return (
         <BExpandableProductCard
           productName={productName}
-          checked={(hasMultipleCheck && checked !== -1) || data?.length === 1}
+          checked={hasMultipleCheck && checked !== -1}
           pricePerVol={offeringPrice}
           volume={quantity}
           item={item}
@@ -69,31 +82,36 @@ const ChoosenProductList = <ProductData extends RequestedProducts>({
     return <BSpacer size="extraSmall" />;
   };
   return (
-    <>
+    <View>
       <BLabel bold="600" sizeInNumber={font.size.md} label="Produk" />
       <BSpacer size="extraSmall" />
       <BDivider borderBottomWidth={1} flex={0} height={0.1} />
       <BSpacer size="extraSmall" />
+      <View style={{ height: width * 1.2 }}>
+        <FlatList
+          data={data}
+          keyExtractor={(_item, index) => index.toString()}
+          renderItem={renderItem}
+          ItemSeparatorComponent={renderItemSeparator}
+        />
+      </View>
 
-      <FlatList
-        data={data}
-        keyExtractor={(_item, index) => index.toString()}
-        renderItem={renderItem}
-        ItemSeparatorComponent={renderItemSeparator}
-      />
       <View style={styles.priceContainer}>
         <Text style={styles.productName}>Total</Text>
-        <Text style={styles.boldPrice}>IDR 58.000.000</Text>
+        <Text style={styles.boldPrice}>
+          IDR {formatCurrency(calculatedTotalPrice)}
+        </Text>
       </View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
+    paddingTop: layout.pad.xxl,
+    paddingBottom: layout.pad.lg,
     justifyContent: 'space-between',
-    paddingBottom: resScale(70),
   },
   productName: {
     fontFamily: fonts.family.montserrat[600],

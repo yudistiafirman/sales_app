@@ -81,8 +81,9 @@ export default function BNestedProductCard({
         const totalPrice =
           item?.products
             ?.map((it: any) => it.total_price)
-            .reduce((prev: any, next: any) => prev + next) || item.totalPrice;
-        const products = item?.products || item?.RequestedProducts;
+            .reduce((prev: any, next: any) => prev + next, 0) ||
+          item.totalPrice;
+        const products = item?.products;
         return (
           <View key={index}>
             <View style={styles.containerLastOrder}>

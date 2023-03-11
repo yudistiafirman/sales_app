@@ -9,7 +9,6 @@ type PopUpQuestionType = {
   isVisible: boolean;
   setIsPopupVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   actionButton: () => void;
-  onCancel?: () => void;
   text?: string;
   desc?: string;
   descContent?: ReactNode;
@@ -26,7 +25,6 @@ export default function PopUpQuestion({
   descContent,
   actionText,
   cancelText,
-  onCancel,
 }: PopUpQuestionType) {
   return (
     <Modal
@@ -55,13 +53,9 @@ export default function PopUpQuestion({
           }}
         >
           <BBackContinueBtn
-            onPressBack={
-              onCancel
-                ? onCancel
-                : () => {
-                    setIsPopupVisible && setIsPopupVisible((curr) => !curr);
-                  }
-            }
+            onPressBack={() => {
+              setIsPopupVisible && setIsPopupVisible((curr) => !curr);
+            }}
             onPressContinue={actionButton}
             isContinueIcon={false}
             continueText={actionText ? actionText : 'Ya, Tambah'}

@@ -4,7 +4,7 @@ import { Input } from '@/interfaces';
 import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import BText from '../atoms/BText';
 import BForm from '../organism/BForm';
