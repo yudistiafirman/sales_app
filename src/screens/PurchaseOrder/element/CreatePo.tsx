@@ -160,7 +160,6 @@ const CreatePo = () => {
                 addMorePict={addMoreImages}
                 picts={poImages}
                 removePict={deleteImages}
-                isUsedByPo
               />
               <BSpacer size="extraSmall" />
               <BForm inputs={inputs} />
