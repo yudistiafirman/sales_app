@@ -7,7 +7,7 @@ export const getAllVisitationOrders = async () => {
   return customRequest(BrikApiOrder.getAllVisitationOrders(), 'GET', undefined, true);
 };
 
-export const getAllPOOrders = async () => {
+export const getAllPurchaseOrders = async () => {
   return customRequest(BrikApiOrder.getAllPurchaseOrders(), 'GET', undefined, true);
 };
 
@@ -15,7 +15,7 @@ export const getVisitationOrderByID = async (id: string) => {
   return customRequest(BrikApiOrder.getVisitationOrderByID(id), 'GET', undefined, true);
 };
 
-export const getPOOrderByID = async (id: string) => {
+export const getPurchaseOrderByID = async (id: string) => {
   return customRequest(BrikApiOrder.getPurchaseOrderByID(id), 'GET', undefined, true);
 };
 

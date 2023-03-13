@@ -28,7 +28,7 @@ import {
   TAB_TRANSACTION,
   TRANSACTION_DETAIL,
 } from '@/navigation/ScreenNames';
-import { getPOOrderByID, getVisitationOrderByID } from '@/actions/OrderActions';
+import { getPurchaseOrderByID, getVisitationOrderByID } from '@/actions/OrderActions';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
@@ -94,7 +94,7 @@ const Transaction = () => {
         data = await getVisitationOrderByID(id);
         data = data.data.data;
       } else {
-        data = await getPOOrderByID(id);
+        data = await getPurchaseOrderByID(id);
         data = data.data.data;
 
         // TODO: handle from BE, ugly when use mapping in FE side

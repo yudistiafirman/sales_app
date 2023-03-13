@@ -1,4 +1,4 @@
-import { getAllPOOrders, getAllVisitationOrders } from '@/actions/OrderActions';
+import { getAllPurchaseOrders, getAllVisitationOrders } from '@/actions/OrderActions';
 import { customLog } from '@/utils/generalFunc';
 import { createMachine } from 'xstate';
 import { assign } from 'xstate/lib/actions';
@@ -271,7 +271,7 @@ export const transactionMachine =
             if (_context.selectedType === 'SPH') {
               response = await getAllVisitationOrders();
             } else {
-              response = await getAllPOOrders();
+              response = await getAllPurchaseOrders();
             }
             response = {
               ...response,
