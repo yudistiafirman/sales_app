@@ -28,7 +28,7 @@ import {
   TAB_TRANSACTION,
   TRANSACTION_DETAIL,
 } from '@/navigation/ScreenNames';
-import { getOrderByID } from '@/actions/OrderActions';
+import { getPurchaseOrderByID, getVisitationOrderByID } from '@/actions/OrderActions';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
@@ -45,20 +45,33 @@ const Transaction = () => {
   const sphData = useSelector((rootState: RootState) => rootState.sph);
   const dispatch = useDispatch();
 
-  const onTabPress = () => {
-    if (routes[index].key && route.key !== routes[index].key) {
-      send('onChangeType', { payload: index });
-    }
+  const {
+    routes,
+    isLoadMore,
+    refreshing,
+    data,
+    loadTransaction,
+    loadTab,
+    selectedType,
+    errorMessage,
+  } = state.context;
+
+  const onTabPress = (index: number) => {
+    send('onChangeType', { payload: index });
   };
 
   useCustomHeaderRight({
     customHeaderRight: (
       <BTouchableText
         onPress={() => {
-          if (sphData?.selectedCompany) setPopupSPHVisible(true);
-          else navigation.navigate(SPH, {});
+          if (selectedType === 'SPH') {
+            if (sphData?.selectedCompany) setPopupSPHVisible(true);
+            else navigation.navigate(SPH, {});
+          } else {
+            navigation.navigate('PO');
+          }
         }}
-        title="Buat SPH"
+        title={'Buat ' + selectedType}
       />
     ),
   });
@@ -76,10 +89,36 @@ const Transaction = () => {
   const getOneOrder = async (id: string) => {
     customLog('ini id', id);
     try {
-      const { data } = await getOrderByID(id);
+      let data;
+      if (selectedType === 'SPH') {
+        data = await getVisitationOrderByID(id);
+        data = data.data.data;
+      } else {
+        data = await getPurchaseOrderByID(id);
+        data = data.data.data;
+
+        // TODO: handle from BE, ugly when use mapping in FE side
+        data = {
+          ...data,
+          mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+          paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
+          deposit: data.DepositPurchaseOrders,
+          DepositPurchaseOrders: undefined,
+          products: data.QuotationLetter?.QuotationRequest?.products,
+          QuotationLetter: {
+            ...data.QuotationLetter,
+            QuotationRequest: {
+              ...data.QuotationLetter.QuotationRequest,
+              mainPic: undefined,
+              paymentType: undefined,
+              products: undefined,
+            },
+          },
+        };
+      }
       navigation.navigate(TRANSACTION_DETAIL, {
-        title: data.data ? data.data.number : 'N/A',
-        data: data.data,
+        title: data ? data.number : 'N/A',
+        data: data,
       });
     } catch (error) {
       customLog(error);
@@ -100,22 +139,16 @@ const Transaction = () => {
         </View>
         <BSpacer size={'medium'} />
         <BText bold="300" sizeInNumber={14} style={styles.popupSPHDesc}>
-          SPH yang lama akan hilang kalau Anda buat SPH yang baru
+          {selectedType +
+            ' yang lama akan hilang kalau Anda buat ' +
+            selectedType +
+            ' yang baru'}
         </BText>
         <BSpacer size={'small'} />
       </>
     );
   };
 
-  const {
-    routes,
-    isLoadMore,
-    refreshing,
-    data,
-    loadTransaction,
-    loadTab,
-    errorMessage,
-  } = state.context;
   return (
     <SafeAreaView style={styles.parent}>
       {loadTab && <ShimmerPlaceholder style={styles.shimmer} />}
@@ -147,7 +180,9 @@ const Transaction = () => {
               onPress={(data: any) => getOneOrder(data.id)}
             />
           )}
-          onTabPress={onTabPress}
+          onTabPress={(data) => {
+            onTabPress(parseInt(data?.route?.key));
+          }}
           onIndexChange={setIndex}
           tabStyle={styles.tabStyle}
           tabBarStyle={styles.tabBarStyle}
@@ -169,7 +204,11 @@ const Transaction = () => {
         cancelText={'Buat Baru'}
         actionText={'Lanjutkan'}
         descContent={renderSPHContinueData()}
-        text={'Apakah Anda Ingin Melanjutkan Pembuatan SPH Sebelumnya?'}
+        text={
+          'Apakah Anda Ingin Melanjutkan Pembuatan ' +
+          selectedType +
+          ' Sebelumnya?'
+        }
       />
     </SafeAreaView>
   );

@@ -1,10 +1,10 @@
-import { getAllOrders } from '@/actions/OrderActions';
+import { getAllPurchaseOrders, getAllVisitationOrders } from '@/actions/OrderActions';
 import { customLog } from '@/utils/generalFunc';
 import { createMachine } from 'xstate';
 import { assign } from 'xstate/lib/actions';
 
 export const transactionMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDAdrdBjZAlgPaYAEAtngBYGZgB0MyAKhtnoSfQDZHoS0orLDnzFMAYggkGtAG5EA1gzQiO4itVoMmw9mK69+gvaM6YE8ornTmA2gAYAuo6eJQAByKwC59yAAPRABmYIA2egB2MIBWMIAmAA4ATniHVMTggBoQAE9EABZEgvpkmOCHMODI0MSqgEZggF8mnNV9c01cGjpGMBY2M3EePgFMIUH1EgkwVFQiVHoPblsAMwXyenahki6enX7TKcwR43GjgwsrG3tnV38vHz8kQJC4qNiElLSM7LzENL1egFZKg2KRAqRNIxMotNqTS57bR9AZqS5bXIeMAAGVGkBRF3MsAAQuhYGAAPKYZiYsBSGT0KzKLYIzqUbrI3Ss4bIWm4-j4rloomk8lUmlYyyYBQ3cSue4vR6+cT+IIIYoReKfArBRIOSI1Ar1HL5BAxeLBehhSLJML1eJQyL1ZL1MJwkDbY5I3pCjo8vl4iAE7kkElkynU2kzOYLJYrZDrVCbT2I9n7YPC-1Y-kQQWHEPYUURiVgKUy2xyu7OB7eZUkVWIeoFIr0Bz6xpai1hEF-U31BzxeL0epQ0IFGIxfthW3ulNsrQ+-OZri87OBlnLzA5yASEgAUUwEAASmBqJAFZ5a89QGrMg5h4lIpP7WE267IibEHbIsPgg7+06upFJEs4Ft6Byon6K4BgKQZzuI24QLumAAMJUFgMAlheIBKterzqhUD5PvUL5vtan4IIB9AxIkNFpHUEI6jEoGbuBGZQScq44uu8EkIhEioGAqyCbAPRQNiBCwMg2G4SqLy3oR9SPs+WpkR+-zqv2ra6skwT9vE-a6sxrQemBaackuHEYmusEbhx-EAEZ4IozBEAA4pZOzYDJV5yTeIQFBE0RxEkqTpEkvYBUOg6xA4dQxJElRxG6Jm8WQ5mLpBXnWdxtmzPMqAecghDnLShLiLAAn9KguRFSVQhlQWsA+U8fn4U2NFWt2+qpDUwRlGEFF2iUDh-k66ROiRmQsRxbG+tl+ULHVJiNZulWCWgtX9PV5Whi1daYA2CDBO8wVfGFvwUfUMT3qCoJ1IkSkASkLQmZgRC5vALxpeBNatfW8mIAAtPEBQUSDlp3ckRRNhaySRJkBQzV5c2eccf0HUdoNDZaN1vrp1S0TdzSpWZC4QbtJxGGMEybhjeFqlCV3lMOILwwlekTsFyNehlFMFjliH021aoThEeNtg4N32s66mmjqEQjvDJEJDUA4Gjzqbk+x2VcYhOvHGGYqRliwsA-56rvDC-UVNERoGskFHs-QFS6dEoTw-ExnwqxfMG+ies8QWQuKr55v4a+JQS220sGfDFFi-QiSDsndRGgU+qa-OHKZZTgvrothXbStWKU19l7-YdgMICO5pJ9bZTJETN3xEN47Uakr4kb1SRZxofvzcc9CF8tpWl01ZtVxbr5Dn+o0vhUrvM8k1GZHpYRVLaoMWq9TRAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDAdrdBjZAlgPaYAEAtngBYGZgB0MyAKhtnoSfQDZHoS0orLDnzFMAYggkGtAG5EA1gzQiO4itVoMmw9mK69+gvaM6YE8ornTmA2gAYAuo6eJQAByKwC59yAAPRABmYIA2egB2MIBWMIAmAA4ATniHVMTggBoQAE9EABZEgvpkmOCHMODI0MSqgEZggF8mnNV9c01cGjpGMBY2M3EePgFMIUH1EgkwVFQiVHoPblsAMwXyenahki6enX7TKcwR43GjgwsrG3tnV38vHz8kQJC4qNiElLSM7LzENL1egFZKg2KRAqRNIxMotNqTS57bR9AZqS5bXIeMAAGVGkBRF3MsAAQuhYGAAPKYZiYsBSGT0KzKLYIzqUbrI3Ss4bIWm4-j4rloomk8lUmlYyyYBQ3cSue4vR6+cT+IIIYoReKfArBRIOSI1Ar1HL5BAxeLBehhSLJML1eJQyL1ZL1MJwkDbY5I3pCjo8vl4iAE7kkElkynU2kzOYLJYrZDrVCbT2I9n7YPC-1Y-kQQWHEPYUURiVgKUy2xyu7OB7eZUkVWIeoFIr0Bz6xpai1hEF-U31BzxeL0epQ0IFGIxfthW3ulNsrQ+-OZri87OBlnLzA5yASEgAUUwEAASmBqJAFZ5a89QGrMg5h4lIpP7WE267IibEHbIsPgg7+06upFJEs4Ft6Byon6K4BgKQZzuI24QLumAAMJUFgMAlheIBKterzqhUD5PvUL5vtan4IIB9AxIkNFpHUEI6jEoGbuBGZQScq44uu8EkIhEioGAqyCbAPRQNiBCwMg2G4SqLy3oR9SPs+WpkR+-zqv2ra6skwT9vE-a6sxrQemBaackuHEYmusEbhx-EAEZ4IozBEAA4pZOzYDJV5yTeIQFBE0RxEkqTpEkvYBUOg6xA4dQxJElRxG6Jm8WQ5mLpBXnWdxtmzPMqAecghDnLShLiLAAn9KguRFSVQhlQWsA+U8fn4U2NFWt2+qpDUwRlGEFF2iUDh-k66ROiRmQsRxbG+tl+ULHVJiNZulWCWgtX9PV5Whi1daYA2CDBO8wVfGFvwUfUMT3qCoJ1IkSkASkLQmZgRC5vALxpeBNatfW8mIAAtPEBQUSDI1tg4zp6pUrrWjNXlzZ5xx-QdR2g0NlogmCiSg82Rq2il8KsRlEG7ScRhjBMm5o3hapQld5TDjjT41NdCWxIjXpk+x2VcYhdNtWq5Q-gZI5486oNKfEFE6hEI62qDYSS6E3Opgu5MFjliF88cYZipGWJCwD-nqu8ML9RU0RGgayQUckT70BUunRKEjvxMZJOzbz83HDrPEFoLiq+ab+E0TE9Di5EkupEaeMUTCkdxWEsQWmk440er84cplFMB3lMaFdtK1YhTX2Xv9h2AwgI7mvQtG6WUyS0ROA5DeO1GpK+JG9Uk2caL7KPootxfFaXYDlyb1dm6+Q5-qNL4VC7TPJNRmR6an-UJAUFqvU0QA */
   createMachine(
     {
       tsTypes: {} as import('./transactionMachine.typegen').Typegen0,
@@ -36,7 +36,7 @@ export const transactionMachine =
         routes: [] as any[],
         size: 10,
         page: 0,
-        selectedType: '',
+        selectedType: 'SPH',
         data: [] as any[],
         index: 0,
         loadTab: true,
@@ -111,7 +111,7 @@ export const transactionMachine =
 
                     backToGetTransactions: {
                       target:
-                        '#transaction machine.getTransaction.loadingTransaction',
+                        'getTransactionsBaseOnType',
                       actions: 'resetProduct',
                     },
                   },
@@ -162,7 +162,7 @@ export const transactionMachine =
             return {
               key: item.index,
               title: item.name,
-              totalItems: item.index,
+              totalItems: _context.totalItems ? _context.totalItems : 0,
               chipPosition: 'bottom',
             };
           });
@@ -176,9 +176,12 @@ export const transactionMachine =
           const transactionsData = [...context.data, ...event.data.data];
           const newTypeData = context.routes.map((item) => {
             return {
-              key: event.data.totalItems,
+              key: item.key,
               title: item.title,
-              totalItems: event.data.totalItems,
+              totalItems:
+                context.selectedType === item.title
+                  ? event.data.totalItems
+                  : item.totalItems,
               chipPosition: 'bottom',
             };
           });
@@ -248,25 +251,13 @@ export const transactionMachine =
             // need to call API
             const response = [
               {
-                index: 1,
+                index: 0,
                 name: 'SPH',
               },
-              // {
-              //   index: 2,
-              //   name: 'DO',
-              // },
-              // {
-              //   index: 3,
-              //   name: 'Deposit',
-              // },
-              // {
-              //   index: 4,
-              //   name: 'Jadwal',
-              // },
-              // {
-              //   index: 5,
-              //   name: 'PO',
-              // },
+              {
+                index: 1,
+                name: 'PO',
+              },
             ];
             return response;
           } catch (error) {
@@ -276,268 +267,24 @@ export const transactionMachine =
         getTransactions: async (_context, _event) => {
           try {
             // need to call API
-            const response = await getAllOrders();
-            // const response = {
-            //   transactions: [
-            //     {
-            //       title: 'SPH/BRIK/2022/11/07856',
-            //       name: '',
-            //       desc: 'Proyek Jembatan',
-            //       status: 'Diajukan',
-            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-            //       chosenProducts: [
-            //         {
-            //           id: 'k350',
-            //           product: {
-            //             name: 'Beton K 350 NFA',
-            //           },
-            //           sellPrice: 1815000,
-            //           volume: 28,
-            //         },
-            //         {
-            //           id: 'k200',
-            //           product: {
-            //             name: 'Beton K 200 NFA',
-            //           },
-            //           sellPrice: 1815000,
-            //           volume: 28,
-            //         },
-            //       ],
-            //       company: 'PT. Guna Karya Mandiri',
-            //       pic: {
-            //         name: 'Agus',
-            //         jabatan: 'Finance',
-            //         phone: '8972633212',
-            //         email: 'agus@agus.com',
-            //       },
-            //       paymentMethod: 'Cash',
-            //       expiredDate: '20 December 2022',
-            //       createdDate: '28 Dec 2022 14:58',
-            //     },
-            //     {
-            //       title: 'SPH/BRIK/2022/11/07856',
-            //       name: 'SPH/BRIK/2022/11/00254',
-            //       desc: 'Proyek Jembatan',
-            //       status: 'Cek Barang',
-            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-            //       chosenProducts: [
-            //         {
-            //           id: 'k350',
-            //           product: {
-            //             name: 'Beton K 350 NFA',
-            //           },
-            //           sellPrice: 1815000,
-            //           volume: 28,
-            //         },
-            //         {
-            //           id: 'k200',
-            //           product: {
-            //             name: 'Beton K 200 NFA',
-            //           },
-            //           sellPrice: 1815000,
-            //           volume: 28,
-            //         },
-            //       ],
-            //       lastOrder: [
-            //         {
-            //           title: 'PO/BRIK/2022/11/00023',
-            //           price: 50820000,
-            //           chosenProducts: [
-            //             {
-            //               id: 'k350',
-            //               product: {
-            //                 name: 'Beton K 350 NFA',
-            //               },
-            //               sellPrice: 1815000,
-            //               volume: 28,
-            //             },
-            //             {
-            //               id: 'k200',
-            //               product: {
-            //                 name: 'Beton K 200 NFA',
-            //               },
-            //               sellPrice: 1815000,
-            //               volume: 28,
-            //             },
-            //           ],
-            //         },
-            //         {
-            //           title: 'PO/BRIK/2022/11/00023',
-            //           price: 50820000,
-            //           chosenProducts: [
-            //             {
-            //               id: 'k350',
-            //               product: {
-            //                 name: 'Beton K 350 NFA',
-            //               },
-            //               sellPrice: 1815000,
-            //               volume: 28,
-            //             },
-            //             {
-            //               id: 'k200',
-            //               product: {
-            //                 name: 'Beton K 200 NFA',
-            //               },
-            //               sellPrice: 1815000,
-            //               volume: 28,
-            //             },
-            //           ],
-            //         },
-            //       ],
-            //       company: 'PT. Guna Karya Mandiri',
-            //       pic: {
-            //         name: 'Agus',
-            //         jabatan: 'Finance',
-            //         phone: '8972633212',
-            //         email: 'agus@agus.com',
-            //       },
-            //       paymentMethod: 'Cash',
-            //       expiredDate: '20 December 2022',
-            //       createdDate: '28 Dec 2022 14:58',
-            //       deposit: {
-            //         firstSection: 'Deposit Awal',
-            //         firstSectionValue: 60000000,
-            //         secondSection: 'Tambahan Deposit',
-            //         secondSectionValue: 7000000,
-            //         thirdSection: 'Deposit Akhir',
-            //       },
-            //     },
-            //     {
-            //       title: 'SPH/BRIK/2022/11/07856',
-            //       name: 'SPH/BRIK/2022/11/00254',
-            //       desc: 'Proyek Jembatan',
-            //       status: 'Persiapan',
-            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-            //       chosenProducts: [
-            //         {
-            //           id: 'k350',
-            //           product: {
-            //             name: 'Beton K 350 NFA',
-            //           },
-            //           sellPrice: 1815000,
-            //           volume: 28,
-            //         },
-            //         {
-            //           id: 'k200',
-            //           product: {
-            //             name: 'Beton K 200 NFA',
-            //           },
-            //           sellPrice: 1815000,
-            //           volume: 28,
-            //         },
-            //       ],
-            //       lastOrder: [
-            //         {
-            //           title: 'PO/BRIK/2022/11/00023',
-            //           price: 50820000,
-            //           chosenProducts: [
-            //             {
-            //               id: 'k350',
-            //               product: {
-            //                 name: 'Beton K 350 NFA',
-            //               },
-            //               sellPrice: 1815000,
-            //               volume: 28,
-            //             },
-            //             {
-            //               id: 'k200',
-            //               product: {
-            //                 name: 'Beton K 200 NFA',
-            //               },
-            //               sellPrice: 1815000,
-            //               volume: 28,
-            //             },
-            //           ],
-            //         },
-            //       ],
-            //       company: 'PT. Guna Karya Mandiri',
-            //       pic: {
-            //         name: 'Agus',
-            //         jabatan: 'Finance',
-            //         phone: '8972633212',
-            //         email: 'agus@agus.com',
-            //       },
-            //       paymentMethod: 'Cash',
-            //       expiredDate: '20 December 2022',
-            //       createdDate: '28 Dec 2022 14:58',
-            //       deposit: {
-            //         firstSection: 'Deposit Awal',
-            //         firstSectionValue: 60000000,
-            //         secondSection: 'Tambahan Deposit',
-            //         secondSectionValue: 7000000,
-            //         thirdSection: 'Deposit Akhir',
-            //       },
-            //     },
-            //     {
-            //       title: 'SPH/BRIK/2022/11/07856',
-            //       name: 'SPH/BRIK/2022/11/00254',
-            //       desc: 'Proyek Jembatan',
-            //       status: 'Diajukan',
-            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-            //       chosenProducts: [],
-            //       company: 'PT. Guna Karya Mandiri',
-            //       pic: {
-            //         name: 'Agus',
-            //         jabatan: 'Finance',
-            //         phone: '8972633212',
-            //         email: 'agus@agus.com',
-            //       },
-            //       paymentMethod: 'Cash',
-            //       expiredDate: '20 December 2022',
-            //       createdDate: '28 Dec 2022 14:58',
-            //       deposit: {
-            //         firstSection: 'Deposit',
-            //         firstSectionValue: 28000000,
-            //         secondSection: 'Beton K 250 NFA',
-            //         secondSectionValue: -25410000,
-            //         thirdSection: 'Est. Sisa Deposit',
-            //       },
-            //     },
-            //     {
-            //       title: 'SPH/BRIK/2022/11/07856',
-            //       name: 'SPH/BRIK/2022/11/00254',
-            //       desc: 'Proyek Jembatan',
-            //       status: 'Kadaluarsa',
-            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-            //       chosenProducts: [],
-            //       company: 'PT. Guna Karya Mandiri',
-            //       paymentMethod: 'Cash',
-            //       expiredDate: '20 December 2022',
-            //       createdDate: '28 Dec 2022 14:58',
-            //       deposit: {
-            //         firstSection: 'Deposit',
-            //         firstSectionValue: 28000000,
-            //         secondSection: 'Beton K 250 NFA',
-            //         secondSectionValue: -25410000,
-            //         thirdSection: 'Est. Sisa Deposit',
-            //       },
-            //     },
-            //     {
-            //       title: 'SPH/BRIK/2022/11/07856',
-            //       name: 'SPH/BRIK/2022/11/00254',
-            //       desc: 'Proyek Jembatan',
-            //       status: 'Ditolak',
-            //       address: 'Jalan Kramat 3 no 15 Kel Sukatani Kec Tapos  Depok',
-            //       chosenProducts: [],
-            //       company: 'PT. Guna Karya Mandiri',
-            //       pic: {
-            //         name: 'Agus',
-            //         jabatan: 'Finance',
-            //         phone: '8972633212',
-            //         email: 'agus@agus.com',
-            //       },
-            //       paymentMethod: 'Cash',
-            //       expiredDate: '20 December 2022',
-            //       createdDate: '28 Dec 2022 14:58',
-            //     },
-            //   ],
-            //   message: '',
-            //   totalItems: 6,
-            //   totalPage: 1,
-            // };
+            let response;
+            if (_context.selectedType === 'SPH') {
+              response = await getAllVisitationOrders();
+            } else {
+              response = await getAllPurchaseOrders();
+            }
+            response = {
+              ...response,
+              data: {
+                ...response.data,
+                totalItems: response.data?.totalItems
+                  ? response.data.totalItems
+                  : 0,
+              },
+            };
             return response.data as any;
           } catch (error) {
-            throw new Error(error)
+            throw new Error(error);
           }
         },
       },

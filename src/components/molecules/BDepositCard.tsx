@@ -10,7 +10,7 @@ type BDepositCardType = {
   secondSectionValue: number;
   secondSectionText: string;
   thirdSectionText: string;
-  style: ViewStyle;
+  style?: ViewStyle;
 };
 
 export default function BDepositCard({

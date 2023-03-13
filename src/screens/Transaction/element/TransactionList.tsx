@@ -13,6 +13,8 @@ interface TransactionsData {
   expiredDate: string;
   projectName: string;
   status: string;
+  QuotationLetter: any;
+  project?: any;
 }
 
 interface TransactionListProps<ArrayOfObject> {
@@ -55,8 +57,9 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
             id={item.id}
             number={item.number}
             expiredDate={item.expiredDate}
-            projectName={item.projectName}
+            projectName={item.projectName ? item.projectName : item.project.name}
             status={item.status}
+            name={item.QuotationLetter?.number}
           />
         </TouchableOpacity>
       );

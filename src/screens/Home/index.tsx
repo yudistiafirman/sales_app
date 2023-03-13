@@ -377,6 +377,8 @@ const Beranda = () => {
             photoTitle: 'Bukti',
             navigateTo: CREATE_DEPOSIT,
             closeButton: true,
+            disabledDocPicker: false,
+            disabledGalleryPicker: false,
           });
         },
       },

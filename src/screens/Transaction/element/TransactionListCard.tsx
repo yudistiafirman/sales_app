@@ -25,7 +25,8 @@ const TransactionListCard = ({
   status,
   name,
 }: TransactionListCardProps) => {
-  const { color, textColor } = getColorStatusTrx(status);
+  const statusFinal = getStatusTrx(status)
+  const { color, textColor } = getColorStatusTrx(statusFinal);
   return (
     <View
       style={[
@@ -37,7 +38,7 @@ const TransactionListCard = ({
         <View style={styles.container}>
           <BText style={styles.title}>{number}</BText>
           <BChip type="default" backgroundColor={color} textColor={textColor}>
-            {getStatusTrx(status)}
+            {statusFinal}
           </BChip>
         </View>
         {name && <BText style={styles.name}>{name}</BText>}

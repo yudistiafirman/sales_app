@@ -15,19 +15,26 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { colors, fonts, layout } from '@/constants';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { ScrollView } from 'react-native-gesture-handler';
-import { beautifyPhoneNumber, customLog, getStatusTrx } from '@/utils/generalFunc';
+import {
+  beautifyPhoneNumber,
+  customLog,
+  getStatusTrx,
+} from '@/utils/generalFunc';
 import moment from 'moment';
-import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
+import { LOCATION, SPH, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 
-function ListProduct(item: any) {
+function ListProduct(item: any, index: number) {
   return (
-    <View key={item.product_id}>
+    <View key={index}>
       <BProductCard
-        name={item.display_name}
-        pricePerVol={+item.offering_price}
+        name={item.display_name ? item.display_name : item.displayName}
+        pricePerVol={
+          item.offering_price ? item.offering_price : item.offeringPrice
+        }
         volume={item.quantity ? item.quantity : 0}
-        totalPrice={+item.total_price}
+        totalPrice={item.total_price ? item.total_price : item.totalPrice}
+        unit={item.unit}
       />
       <BSpacer size={'extraSmall'} />
     </View>
@@ -56,6 +63,10 @@ const TransactionDetail = () => {
       isReadOnly: true,
       from: TRANSACTION_DETAIL,
     });
+  };
+
+  const gotoSPHPage = () => {
+    navigation.navigate(SPH, { projectId: data.project.id });
   };
 
   const data = route?.params?.data;
@@ -110,6 +121,8 @@ const TransactionDetail = () => {
                 ? moment(data?.createdAt).format('DD MMM yyyy HH:mm')
                 : '-'
             }
+            quotation={data?.QuotationLetter}
+            gotoSPHPage={gotoSPHPage}
           />
           <BSpacer size={'small'} />
           {data?.lastOrder && data?.lastOrder.length > 0 ? (
@@ -120,22 +133,34 @@ const TransactionDetail = () => {
                 <>
                   <Text style={styles.partText}>Produk</Text>
                   <BSpacer size={'extraSmall'} />
-                  {data?.products.map((item) => ListProduct(item))}
+                  {data?.products.map((item, index) =>
+                    ListProduct(item, index)
+                  )}
                   <BSpacer size={'small'} />
                 </>
               )}
             </>
           )}
-          {data?.deposit && (
+          {data?.deposit && data?.deposit.length > 0 && (
             <>
               <BDivider />
               <BSpacer size={'small'} />
               <BDepositCard
-                firstSectionText={data?.deposit.firstSection}
-                firstSectionValue={data?.deposit.firstSectionValue}
-                secondSectionText={data?.deposit.secondSection}
-                secondSectionValue={data?.deposit.secondSectionValue}
-                thirdSectionText={data?.deposit.thirdSection}
+                firstSectionText={'Deposit'}
+                firstSectionValue={data?.totalDeposit}
+                secondSectionText={
+                  data?.products && data?.products.length > 0
+                    ? data?.products[0].display_name
+                      ? data?.products[0].display_name
+                      : data?.products[0].displayName
+                    : '-'
+                }
+                secondSectionValue={data?.products
+                  ?.map((it: any) =>
+                    it.total_price ? it.total_price : it.totalPrice
+                  )
+                  .reduce((prev: any, next: any) => prev + next)}
+                thirdSectionText={'Est. Sisa Deposit'}
               />
             </>
           )}
