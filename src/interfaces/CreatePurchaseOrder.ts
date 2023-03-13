@@ -8,7 +8,7 @@ interface ShippingAddress {
   CityName?: string;
 }
 
-interface RequestedProducts {
+interface Products {
   id: string;
   offeringPrice: number;
   quantity: number;
@@ -25,7 +25,7 @@ interface QuotationRequests {
     number: string;
     id: string;
   };
-  RequestedProducts: RequestedProducts[];
+  products: Products[];
 }
 
 interface CreatedSPHListResponse {
@@ -49,6 +49,23 @@ interface ProjectDocs {
   Document?: Documents;
 }
 
+interface PostPoPayload {
+  quotationLetterId: string; //uuid,
+  projectId: string; //uuid,
+  poFiles: { fileId: string }[];
+  projectDocs: {
+    // projectDocId: string
+    documentId: string;
+    fileId: string;
+  }[];
+  poNumber: string;
+  totalPrice: number;
+  poProducts: {
+    requestedProductId: string;
+    requestedQuantity: number;
+  }[];
+}
+
 interface DocumentsData {
   id?: string;
   QuotationRequest?: {
@@ -58,11 +75,22 @@ interface DocumentsData {
   };
 }
 
+interface UploadFilesResponsePayload {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  type: string;
+  name: string;
+  url: string;
+}
+
 export {
   ShippingAddress,
-  RequestedProducts,
+  Products,
   QuotationRequests,
   CreatedSPHListResponse,
   DocumentsData,
   ProjectDocs,
+  PostPoPayload,
+  UploadFilesResponsePayload
 };

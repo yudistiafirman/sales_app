@@ -22,6 +22,7 @@ interface IProps {
   fullWidth?: boolean;
   isActive?: boolean;
   onPress?: () => void;
+  flexDirection?: 'column' | 'row'
 }
 
 const baseStyle: StyleProp<ViewStyle> = {
@@ -39,8 +40,8 @@ const baseStyleImage: StyleProp<ViewStyle> = {
 };
 
 const makeStyle = (props: IProps): StyleProp<ViewStyle> => {
-  const { fullWidth = false, isActive = false } = props;
-  let style = baseStyle;
+  const { fullWidth = false, isActive = false,flexDirection = 'column' } = props;
+  let style = {...baseStyle,flexDirection : flexDirection}
 
   if (fullWidth) {
     style = {
@@ -77,7 +78,7 @@ const makeStyleImage = ({
 };
 
 const BCardOption = (props: IProps) => {
-  const { icon, title, isActive, onPress } = props;
+  const { icon, title, isActive, onPress,flexDirection } = props;
 
   return (
     <TouchableOpacity style={makeStyle(props)} onPress={onPress}>

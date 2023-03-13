@@ -27,6 +27,8 @@ type BNestedProductCardType = {
   withoutSeparator?: boolean;
   isOption?: boolean;
   onSelect?: (index: number) => void;
+  onExpand:(idx:number,data:any)=> void
+  expandData:any[]
 };
 
 function ListChildProduct(size: number, index: number, item: any) {
@@ -65,9 +67,9 @@ export default function BNestedProductCard({
   deposit,
   withoutSeparator = false,
   isOption,
+  onExpand,
+  expandData
 }: BNestedProductCardType) {
-  const [isExpand, setExpand] = React.useState<boolean>(true);
-
   return (
     <>
       {withoutHeader && (
@@ -81,8 +83,11 @@ export default function BNestedProductCard({
         const totalPrice =
           item?.products
             ?.map((it: any) => it.total_price)
-            .reduce((prev: any, next: any) => prev + next) || item.totalPrice;
-        const products = item?.products || item?.RequestedProducts;
+            .reduce((prev: any, next: any) => prev + next, 0) ||
+          item.totalPrice;
+        const products = item?.products;
+        const expandItems = expandData?.findIndex((val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id);
+        const isExpand = expandItems === -1
         return (
           <View key={index}>
             <View style={styles.containerLastOrder}>
@@ -129,7 +134,7 @@ export default function BNestedProductCard({
                     </View>
                   )}
                 </View>
-                <TouchableWithoutFeedback onPress={() => setExpand(!isExpand)}>
+                <TouchableWithoutFeedback onPress={() => setCollapsed(index,item)}>
                   <Icon
                     name={isExpand ? 'chevron-up' : 'chevron-down'}
                     size={30}
@@ -138,7 +143,7 @@ export default function BNestedProductCard({
                 </TouchableWithoutFeedback>
               </View>
 
-              {isExpand && (
+              {isExpand&& (
                 <>
                   <BSpacer size={'small'} />
                   {products &&

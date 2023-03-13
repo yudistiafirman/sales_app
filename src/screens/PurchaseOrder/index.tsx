@@ -1,14 +1,12 @@
 import {
   BBackContinueBtn,
-  BButtonPrimary,
   BHeaderIcon,
   BSpacer,
   BStepperIndicator,
   PopUpQuestion,
 } from '@/components';
-import { colors, fonts, layout } from '@/constants';
+import { layout } from '@/constants';
 import { RootStackParamList } from '@/navigation/navTypes';
-import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { AppDispatch, RootState } from '@/redux/store';
 import {
   RouteProp,
@@ -17,17 +15,14 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { BackHandler, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CreatePo from './element/CreatePo';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { resScale } from '@/utils';
 import UploadFiles from './element/PaymentDetail';
 import DetailProduk from './element/ProductDetail';
 import { useKeyboardActive } from '@/hooks';
 import { bStorage } from '@/actions';
 import { PO } from '@/navigation/ScreenNames';
-import { customLog } from '@/utils/generalFunc';
 
 export type PORoutes = RouteProp<RootStackParamList['PO']>;
 
@@ -35,24 +30,62 @@ const PurchaseOrder = () => {
   const navigation = useNavigation();
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
-  const { currentStep, poNumber, isModalContinuePo } =
-    poState.currentState.context;
+  const {
+    currentStep,
+    poNumber,
+    choosenSphDataFromModal,
+    files,
+    selectedProducts,
+    poImages,
+  } = poState.currentState.context;
   const [stepsDone, setStepsDone] = useState<number[]>([]);
   const { keyboardVisible } = useKeyboardActive();
+  const [isPopupExitVisible, setIsPopupExitVisible] = useState(false);
   const labels = ['Cari SPH', 'Detil Pembayaran', 'Detil Produk'];
   const isBtnFooterShown = !poState.currentState.matches('firstStep.SearchSph');
+
+  const handleDisableContinueBtn = () => {
+    if (currentStep === 0) {
+      return (
+        poNumber.length === 0 ||
+        JSON.stringify(choosenSphDataFromModal) === '{}' ||
+        poImages.length === 0
+      );
+    } else if (currentStep === 1) {
+      const isFilesValueNull = files.filter((v) => v.value === null);
+      return isFilesValueNull.length > 0;
+    } else {
+      const hasNoQuantityMultiProducts = selectedProducts.filter(
+        (v) => v.quantity.length === 0 || v.quantity[0] === '0'
+      );
+      return (
+        hasNoQuantityMultiProducts.length > 0 || selectedProducts.length === 0
+      );
+    }
+  };
 
   const handleBack = useCallback(() => {
     if (currentStep === 0) {
       if (poState.currentState.matches('firstStep.SearchSph')) {
         dispatch({ type: 'backToAddPo' });
+      } else {
+        bStorage.getItem(PO).then((value) => {
+          if (value) {
+            setIsPopupExitVisible(true);
+          } else {
+            dispatch({
+              type: 'backToBeginningState',
+            });
+            navigation.dispatch(StackActions.popToTop());
+          }
+        });
       }
     } else if (currentStep === 1) {
       dispatch({ type: 'goBackToFirstStep' });
     } else if (currentStep === 2) {
       dispatch({ type: 'goBackToSecondStep' });
     }
-  }, [currentStep, dispatch, poState.currentState]);
+  }, [currentStep, dispatch, navigation, poState.currentState]);
 
   const handleNext = useCallback(() => {
     if (currentStep === 0) {
@@ -68,6 +101,8 @@ const PurchaseOrder = () => {
       bStorage.setItem(PO, {
         poContext: dataToSaved,
       });
+    } else {
+      dispatch({ type: 'goToPostPo' });
     }
   }, [currentStep, dispatch, poState.currentState.context]);
 
@@ -131,56 +166,35 @@ const PurchaseOrder = () => {
           <BBackContinueBtn
             onPressContinue={handleNext}
             onPressBack={handleBack}
+            disableContinue={handleDisableContinueBtn()}
           />
         </View>
       )}
       <PopUpQuestion
-        isVisible={isModalContinuePo}
-        onCancel={() => {
+        isVisible={isPopupExitVisible}
+        setIsPopupVisible={() => {
           bStorage.deleteItem(PO);
-          dispatch({ type: 'createNewPo' });
+          dispatch({
+            type: 'backToBeginningState',
+          });
+          navigation.dispatch(StackActions.popToTop());
         }}
-        actionButton={() => {
-          if (currentStep === 0) {
-            dispatch({ type: 'goToSecondStepFromSaved' });
-          } else {
-            dispatch({ type: 'goToThirdStepFromSaved' });
-          }
-        }}
-        descContent={
-          <View style={styles.poNumberWrapper}>
-            <Text style={styles.poNumber}>{poNumber}</Text>
-          </View>
-        }
-        cancelText="Buat Baru"
-        actionText="Lanjutkan"
-        desc="PO yang lama akan hilang kalau Anda buat PO yang baru"
-        text="Apakah Anda ingin melanjutkan pembuatan PO sebelumnya?"
+        actionButton={() => setIsPopupExitVisible(false)}
+        cancelText={'Keluar'}
+        actionText={'Lanjutkan'}
+        desc={'Progres pembuatan PO Anda sudah tersimpan.'}
+        text={'Apakah Anda yakin ingin keluar?'}
       />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  poContainer: { flex: 1, margin: layout.pad.lg },
+  poContainer: { flex: 1,marginHorizontal:layout.pad.lg,marginBottom:layout.pad.lg},
   stepperIndicator: { alignSelf: 'center' },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  poNumber: {
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.md,
-    color: colors.text.darker,
-  },
-  poNumberWrapper: {
-    backgroundColor: colors.tertiary,
-    height: resScale(37),
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: resScale(277),
-    alignSelf: 'center',
-    borderRadius: layout.radius.md,
   },
 });
 

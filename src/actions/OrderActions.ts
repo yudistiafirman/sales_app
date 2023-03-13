@@ -41,3 +41,7 @@ export const getCreatedSphDocuments = async (id: string) => {
     true
   );
 };
+
+export const postPurchaseOrder = async (payload) => {
+  return customRequest(BrikApiOrder.postPurchaseOrder(), 'POST',payload, true);
+};

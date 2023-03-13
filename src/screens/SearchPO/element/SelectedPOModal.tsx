@@ -43,6 +43,7 @@ export default function SelectedPOModal({
   modalTitle,
 }: SelectedPOModalType) {
   const [sphData, setSphData] = React.useState<any[]>([]);
+  const [expandData,setExpandData]= React.useState<any[]>([])
   const dispatch = useDispatch<AppDispatch>();
   const [scrollOffSet, setScrollOffSet] = React.useState<number | undefined>(
     undefined
@@ -63,15 +64,36 @@ export default function SelectedPOModal({
     setSphData(selectedSphData);
   };
 
+  const onExpand = (index:number,data:any)=> {
+    let newExpandData;
+    const isExisted = expandData?.findIndex(
+      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
+    );
+    if (isExisted === -1) {
+      newExpandData = [...expandData, data];
+    } else {
+      newExpandData = expandData.filter(
+        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
+      );
+    }
+    setExpandData(newExpandData);
+  }
+
+  const onCloseSelectedPoModal =()=> {
+    setSphData([...sphData])
+    setExpandData([])
+    onCloseModal()
+  }
+
   const onSaveSelectedPo = () => {
     if (sphData.length === 1) {
       onPressCompleted(sphData);
-      onCloseModal();
+      onCloseSelectedPoModal()
     } else {
       const selectedSphData = sphData.filter((v) => v.isSelected);
       if (selectedSphData.length > 0) {
         onPressCompleted(selectedSphData);
-        onCloseModal();
+        onCloseSelectedPoModal()
       } else {
         dispatch(
           openPopUp({
@@ -101,7 +123,7 @@ export default function SelectedPOModal({
             <View>
               <View style={style.modalHeader}>
                 <Text style={style.headerText}>{modalTitle}</Text>
-                <TouchableOpacity onPress={onCloseModal}>
+                <TouchableOpacity onPress={onCloseSelectedPoModal}>
                   <MaterialCommunityIcons
                     name="close"
                     size={25}
@@ -129,7 +151,9 @@ export default function SelectedPOModal({
                       isOption={data?.sphs.length > 1}
                       withoutHeader={false}
                       data={sphData}
+                      expandData={expandData}
                       onSelect={onSelectButton}
+                      onExpand={onExpand}
                     />
                   )}
                 </ScrollView>

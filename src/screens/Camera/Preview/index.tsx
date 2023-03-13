@@ -79,7 +79,8 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       if (
         navigateTo !== CREATE_DEPOSIT &&
         navigateTo !== GALLERY_VISITATION &&
-        navigateTo !== GALLERY_DEPOSIT
+        navigateTo !== GALLERY_DEPOSIT &&
+        navigateTo !== PO
       ) {
         return 'COVER';
       } else {

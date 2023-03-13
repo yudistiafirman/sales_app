@@ -28,6 +28,7 @@ export type RootStackParamList = {
     coordinate: { longitude: number; latitude: number };
     from: string;
   };
+  PO: undefined;
   CREATE_DO: { id: string };
   SUBMIT_FORM: { operationType?: ENTRY_TYPE };
   CREATE_VISITATION: { existingVisitation?: visitationListResponse };

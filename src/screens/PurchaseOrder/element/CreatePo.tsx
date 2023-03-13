@@ -13,7 +13,7 @@ import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
 import SelectedPOModal from '@/screens/SearchPO/element/SelectedPOModal';
@@ -42,7 +42,7 @@ const CreatePo = () => {
     poNumber,
   } = poState.currentState.context;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
-
+  const [expandData,setExpandData]= React.useState<any[]>([])
   const addMoreImages = useCallback(() => {
     dispatch({ type: 'addMoreImages' });
   }, [dispatch]);
@@ -53,6 +53,7 @@ const CreatePo = () => {
       navigateTo: PO,
       disabledDocPicker: false,
       disabledGalleryPicker: false,
+      closeButton: true,
     });
   }, [navigation]);
 
@@ -125,6 +126,21 @@ const CreatePo = () => {
     dispatch({ type: 'searching', value: text });
   }, []);
 
+  const onExpand = (index:number,data:any)=> {
+    let newExpandsetExpandData;
+    const isExisted = expandData?.findIndex(
+      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
+    );
+    if (isExisted === -1) {
+      newExpandsetExpandData = [...expandData, data];
+    } else {
+      newExpandsetExpandData = expandData.filter(
+        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
+      );
+    }
+    setExpandData(newExpandsetExpandData);
+  }
+
   return (
     <>
       <View style={styles.firstStepContainer}>
@@ -153,7 +169,7 @@ const CreatePo = () => {
             onRetry={() => dispatch({ type: 'retryGettingSphList' })}
           />
         ) : (
-          <View>
+          <ScrollView>
             <>
               <BGallery
                 addMorePict={addMoreImages}
@@ -171,8 +187,10 @@ const CreatePo = () => {
                     item={{
                       name: choosenSphDataFromModal.name,
                       location:
-                        choosenSphDataFromModal.ShippingAddress.Postal.City
-                          .name,
+                        choosenSphDataFromList?.ShippingAddress !== null
+                          ? choosenSphDataFromModal?.ShippingAddress?.Postal
+                              ?.City?.name
+                          : '',
                     }}
                     isRenderIcon
                     customIcon={renderCustomButton}
@@ -183,6 +201,8 @@ const CreatePo = () => {
                 <BNestedProductCard
                   withoutHeader={false}
                   data={choosenSphDataFromModal?.QuotationRequests}
+                  expandData={expandData}
+                  onExpand={onExpand}
                 />
               </>
             ) : (
@@ -202,7 +222,7 @@ const CreatePo = () => {
                 />
               </TouchableOpacity>
             )}
-          </View>
+          </ScrollView>
         )}
       </View>
       <SelectedPOModal
@@ -211,7 +231,9 @@ const CreatePo = () => {
         data={{
           companyName: choosenSphDataFromList.name,
           locationName:
-            choosenSphDataFromList?.ShippingAddress?.Postal?.City?.name,
+            choosenSphDataFromList?.ShippingAddress !== null
+              ? choosenSphDataFromList?.ShippingAddress?.Postal?.City?.name
+              : '',
           sphs: choosenSphDataFromList.QuotationRequests,
         }}
         modalTitle="Pilih SPH"
