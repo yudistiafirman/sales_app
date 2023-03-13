@@ -42,7 +42,7 @@ const CreatePo = () => {
     poNumber,
   } = poState.currentState.context;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
-
+  const [collapsedSph,setCollapsedSph]= React.useState<any[]>([])
   const addMoreImages = useCallback(() => {
     dispatch({ type: 'addMoreImages' });
   }, [dispatch]);
@@ -126,6 +126,21 @@ const CreatePo = () => {
     dispatch({ type: 'searching', value: text });
   }, []);
 
+  const setCollapsed = (index:number,data:any)=> {
+    let newCollapsedSph;
+    const isExisted = collapsedSph?.findIndex(
+      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
+    );
+    if (isExisted === -1) {
+      newCollapsedSph = [...collapsedSph, data];
+    } else {
+      newCollapsedSph = collapsedSph.filter(
+        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
+      );
+    }
+    setCollapsedSph(newCollapsedSph);
+  }
+
   return (
     <>
       <View style={styles.firstStepContainer}>
@@ -186,6 +201,8 @@ const CreatePo = () => {
                 <BNestedProductCard
                   withoutHeader={false}
                   data={choosenSphDataFromModal?.QuotationRequests}
+                  collapsedData={collapsedSph}
+                  setCollapsed={setCollapsed}
                 />
               </>
             ) : (

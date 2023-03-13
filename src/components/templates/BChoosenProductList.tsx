@@ -17,6 +17,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const { width } = Dimensions.get('window');
 
@@ -83,12 +84,12 @@ const ChoosenProductList = <ProductData extends Products>({
     return <BSpacer size="extraSmall" />;
   };
   return (
-    <View>
+    <KeyboardAvoidingView behavior='position'>
       <BLabel bold="600" sizeInNumber={font.size.md} label="Produk" />
       <BSpacer size="extraSmall" />
       <BDivider borderBottomWidth={1} flex={0} height={0.1} />
       <BSpacer size="extraSmall" />
-      <View style={{ height: width * 1.2 }}>
+      <View style={{ minHeight: width * 1.2 }}>
         <FlatList
           data={data}
           keyExtractor={(_item, index) => index.toString()}
@@ -103,7 +104,7 @@ const ChoosenProductList = <ProductData extends Products>({
           IDR {formatCurrency(calculatedTotalPrice)}
         </Text>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

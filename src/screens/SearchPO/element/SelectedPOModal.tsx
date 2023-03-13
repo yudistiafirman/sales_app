@@ -43,6 +43,7 @@ export default function SelectedPOModal({
   modalTitle,
 }: SelectedPOModalType) {
   const [sphData, setSphData] = React.useState<any[]>([]);
+  const [collapsedSph,setCollapsedSph]= React.useState<any[]>([])
   const dispatch = useDispatch<AppDispatch>();
   const [scrollOffSet, setScrollOffSet] = React.useState<number | undefined>(
     undefined
@@ -50,6 +51,10 @@ export default function SelectedPOModal({
 
   React.useEffect(() => {
     setSphData(data?.sphs);
+    return ()=> {
+      setCollapsedSph([])
+      setSphData([])
+    }
   }, [data?.sphs]);
 
   const onSelectButton = (idx: number) => {
@@ -63,15 +68,36 @@ export default function SelectedPOModal({
     setSphData(selectedSphData);
   };
 
+  const setCollapsed = (index:number,data:any)=> {
+    let newCollapsedSph;
+    const isExisted = collapsedSph?.findIndex(
+      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
+    );
+    if (isExisted === -1) {
+      newCollapsedSph = [...collapsedSph, data];
+    } else {
+      newCollapsedSph = collapsedSph.filter(
+        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
+      );
+    }
+    setCollapsedSph(newCollapsedSph);
+  }
+
+  const onCloseSelectedPoModal =()=> {
+    setSphData([...sphData])
+    setCollapsedSph([])
+    onCloseModal()
+  }
+
   const onSaveSelectedPo = () => {
     if (sphData.length === 1) {
       onPressCompleted(sphData);
-      onCloseModal();
+      onCloseSelectedPoModal()
     } else {
       const selectedSphData = sphData.filter((v) => v.isSelected);
       if (selectedSphData.length > 0) {
         onPressCompleted(selectedSphData);
-        onCloseModal();
+        onCloseSelectedPoModal()
       } else {
         dispatch(
           openPopUp({
@@ -101,7 +127,7 @@ export default function SelectedPOModal({
             <View>
               <View style={style.modalHeader}>
                 <Text style={style.headerText}>{modalTitle}</Text>
-                <TouchableOpacity onPress={onCloseModal}>
+                <TouchableOpacity onPress={onCloseSelectedPoModal}>
                   <MaterialCommunityIcons
                     name="close"
                     size={25}
@@ -129,7 +155,9 @@ export default function SelectedPOModal({
                       isOption={data?.sphs.length > 1}
                       withoutHeader={false}
                       data={sphData}
+                      collapsedData={collapsedSph}
                       onSelect={onSelectButton}
+                      setCollapsed={setCollapsed}
                     />
                   )}
                 </ScrollView>
