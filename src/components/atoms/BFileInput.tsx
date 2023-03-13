@@ -13,6 +13,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { customLog } from '@/utils/generalFunc';
+import BLabel from './BLabel';
 
 //AntDesign
 type BFileInputType = {
@@ -22,6 +23,22 @@ type BFileInputType = {
   isLoading?: boolean;
   isError?: boolean;
   disabled?: boolean;
+  isRequire?:boolean;
+  sizeInNumber?:number;
+  titleBold?:
+  | 'bold'
+  | '400'
+  | 'normal'
+  | '100'
+  | '200'
+  | '300'
+  | '500'
+  | '600'
+  | '700'
+  | '800'
+  | '900'
+  | undefined;
+
 };
 
 function iconState(value: any, isLoading?: boolean, isError?: boolean) {
@@ -54,6 +71,9 @@ export default function BFileInput({
   isLoading,
   isError,
   disabled,
+  isRequire,
+  sizeInNumber,
+  titleBold,
 }: BFileInputType) {
   const selectFile = React.useCallback(async () => {
     // Opening Document Picker to select one file
@@ -106,7 +126,12 @@ export default function BFileInput({
   return (
     <TouchableOpacity disabled={disabled} onPress={selectFile}>
       <View style={[style.container, !value ? style.dashedBorder : null]}>
-        <Text style={style.textStyle}>{label}</Text>
+        <BLabel
+            sizeInNumber={sizeInNumber}
+            bold={titleBold}
+            label={label}
+            isRequired={isRequire}
+          />
         {iconState(value, isLoading, isError)}
         {/* <View style={style.row}>
           {isLoading && (
