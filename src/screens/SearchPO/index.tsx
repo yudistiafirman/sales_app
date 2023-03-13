@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DeviceEventEmitter, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import resScale from '@/utils/resScale';
-import { BCommonSearchList, BHeaderIcon, BSpacer, BTabSections, POList } from '@/components';
+import { BCommonSearchList, BHeaderIcon } from '@/components';
 import { colors, layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import SearchPONavbar from './element/SearchPONavbar';
