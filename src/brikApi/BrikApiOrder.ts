@@ -7,7 +7,7 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static getAllPOOrders = () => {
+  static getAllPurchaseOrders = () => {
     const url = new URL(`${API_URL}/order/m/purchase-order`);
     return url.toString();
   };
@@ -17,7 +17,7 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static getPOOrderByID = (id: string) => {
+  static getPurchaseOrderByID = (id: string) => {
     const url = new URL(`${API_URL}/order/m/purchase-order/${id}`);
     return url.toString();
   };
