@@ -791,7 +791,7 @@ const POMachine =
           };
         }),
         assignPoPayload: assign((context) => {
-          const { QuotationLetter, products } =
+          const { QuotationLetter } =
             context.choosenSphDataFromModal.QuotationRequests[0];
           const totalPrice = context.selectedProducts
             .map((v) => {
@@ -805,8 +805,8 @@ const POMachine =
               projectId: context.choosenSphDataFromModal.id,
               poNumber: context.poNumber,
               poProducts:
-                products.length > 0
-                  ? products.map((val) => {
+                context.selectedProducts.length > 0
+                  ? context.selectedProducts?.map((val) => {
                       return {
                         requestedProductId: val.id,
                         requestedQuantity: val.quantity,
