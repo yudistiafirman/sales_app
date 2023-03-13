@@ -36,7 +36,7 @@ export default function BProductCard({
     if (unit === 'M3') {
       formattedUnit = 'm³';
     } else {
-      return unit;
+      return 'm³';
     }
     return formattedUnit;
   };

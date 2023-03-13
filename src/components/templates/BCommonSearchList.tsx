@@ -70,7 +70,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
     ({ item, idx }) => {
       const constructVisitationData: visitationDataType = {
         id: idx,
-        name: item.companyName || item?.name,
+        name: item?.companyName || item?.name,
         location:
           item.locationName || item?.ShippingAddress?.Postal?.City?.name,
         pilNames:

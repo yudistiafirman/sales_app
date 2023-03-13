@@ -140,8 +140,8 @@ export default function SelectedPOModal({
                 >
                   <BVisitationCard
                     item={{
-                      name: data.companyName,
-                      location: data.locationName,
+                      name: data?.companyName,
+                      location: data?.locationName,
                     }}
                     isRenderIcon={false}
                   />

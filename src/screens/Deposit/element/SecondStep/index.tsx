@@ -32,10 +32,10 @@ export default function SecondStep() {
   const { stepTwo: stateTwo, stepOne: stateOne } = values;
   const { updateValueOnstep } = action;
   const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
-
+  const [expandData,setExpandData]= React.useState<any[]>([])
   const listenerCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
-      updateValueOnstep('stepTwo', 'companyName', parent.companyName);
+      updateValueOnstep('stepTwo', 'companyName', parent.name);
       updateValueOnstep('stepTwo', 'locationName', parent.locationName);
       updateValueOnstep('stepTwo', 'sphs', data);
     },
@@ -49,18 +49,18 @@ export default function SecondStep() {
     };
   }, [listenerCallback]);
 
-  const onValueChanged = (item: any, value: boolean) => {
-    let listSelectedPO: any[] = [];
-    if (selectedPO) listSelectedPO.push(...selectedPO);
-    if (value) {
-      listSelectedPO.push(item);
-    } else {
-      listSelectedPO = listSelectedPO.filter((it) => {
-        return it !== item;
-      });
-    }
-    setSelectedPO(listSelectedPO);
-  };
+  // const onValueChanged = (item: any, value: boolean) => {
+  //   let listSelectedPO: any[] = [];
+  //   if (selectedPO) listSelectedPO.push(...selectedPO);
+  //   if (value) {
+  //     listSelectedPO.push(item);
+  //   } else {
+  //     listSelectedPO = listSelectedPO.filter((it) => {
+  //       return it !== item;
+  //     });
+  //   }
+  //   setSelectedPO(listSelectedPO);
+  // };
 
   const customAction = () => {
     return (
@@ -86,13 +86,26 @@ export default function SecondStep() {
     sphs?.forEach((sp) => {
       if (sp?.products) allProducts.push(...sp.products);
     });
-
     const totalAmountProducts = allProducts
-      ?.map((prod) => prod?.total_price)
+      ?.map((prod) => prod?.offeringPrice * prod?.quantity)
       .reduce((prev: any, next: any) => prev + next);
 
-    return deposit - totalAmountProducts;
+    return totalAmountProducts - deposit;
   };
+  const onExpand = (index:number,data:any)=> {
+    let newExpandsetExpandData;
+    const isExisted = expandData?.findIndex(
+      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
+    );
+    if (isExisted === -1) {
+      newExpandsetExpandData = [...expandData, data];
+    } else {
+      newExpandsetExpandData = expandData.filter(
+        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
+      );
+    }
+    setExpandData(newExpandsetExpandData);
+  }
 
   const { companyName, locationName, sphs } = stateTwo;
   const { deposit } = stateOne;
@@ -125,13 +138,13 @@ export default function SecondStep() {
                   />
                   <BSpacer size={'extraSmall'} />
                 </View>
-                <View style={style.flexFull}>
+             <View style={style.flexFull}>
                   {sphs && sphs.length > 0 && (
                     <BNestedProductCard
                       withoutHeader={false}
                       data={sphs}
-                      selectedPO={selectedPO}
-                      onValueChange={onValueChanged}
+                      expandData={expandData}
+                      onExpand={onExpand}
                       deposit={deposit?.nominal}
                       withoutSeparator
                     />

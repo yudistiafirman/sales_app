@@ -188,10 +188,10 @@ export default function SecondStep() {
                           onPress={() => setSelectedIndex(index.toString())}
                         />
                         <BProductCard
-                          name={item.display_name}
-                          pricePerVol={item.offering_price}
+                          name={item.Product.displayName}
+                          pricePerVol={item.offeringPrice}
                           volume={parseInt(item.quantity, 10)}
-                          totalPrice={item.total_price}
+                          totalPrice={item.offeringPrice * item.quantity}
                           hideVolume
                           withoutBorder
                         />
