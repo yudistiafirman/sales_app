@@ -3,6 +3,7 @@ import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import { customLog, getColorStatusTrx } from '@/utils/generalFunc';
 import BSpacer from '../atoms/BSpacer';
+import BTouchableText from '../atoms/BTouchableText';
 
 type BProjectDetailCardType = {
   status?: string;
@@ -10,6 +11,8 @@ type BProjectDetailCardType = {
   expiredDate?: string;
   projectName?: string;
   productionTime?: string;
+  quotation?: any;
+  gotoSPHPage?: () => void;
 };
 
 export default function BProjectDetailCard({
@@ -18,6 +21,8 @@ export default function BProjectDetailCard({
   expiredDate,
   projectName,
   productionTime,
+  quotation,
+  gotoSPHPage,
 }: BProjectDetailCardType) {
   const { color, textColor } = getColorStatusTrx(status);
   customLog(color, 'status', status);
@@ -32,16 +37,33 @@ export default function BProjectDetailCard({
           </Text>
         </View>
       </View>
+      {quotation && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>SPH</Text>
+            <BTouchableText
+              textStyle={[styles.summaryBtn, styles.fontw400]}
+              onPress={gotoSPHPage}
+              title="Lihat SPH"
+            />
+          </View>
+        </>
+      )}
       <BSpacer size={'extraSmall'} />
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>Metode Pembayaran</Text>
         <Text style={[styles.summary, styles.fontw400]}>{paymentMethod}</Text>
       </View>
-      <BSpacer size={'extraSmall'} />
-      <View style={styles.summaryContainer}>
-        <Text style={styles.summary}>Expired</Text>
-        <Text style={[styles.summary, styles.fontw400]}>{expiredDate}</Text>
-      </View>
+      {expiredDate !== '-' && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Expired</Text>
+            <Text style={[styles.summary, styles.fontw400]}>{expiredDate}</Text>
+          </View>
+        </>
+      )}
       <BSpacer size={'extraSmall'} />
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>Nama Proyek</Text>
@@ -59,6 +81,11 @@ export default function BProjectDetailCard({
 const styles = StyleSheet.create({
   summary: {
     color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.sm,
+  },
+  summaryBtn: {
+    color: colors.primary,
     fontFamily: fonts.family.montserrat[300],
     fontSize: fonts.size.sm,
   },

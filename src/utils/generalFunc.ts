@@ -26,7 +26,7 @@ export const getColorStatusTrx = (id: string) => {
 };
 
 export const getStatusTrx = (id: string) => {
-  switch (id) {
+  switch (id.toUpperCase()) {
     case 'DRAFT':
       return 'Diterbitkan';
     case 'SUBMITTED':
@@ -35,12 +35,16 @@ export const getStatusTrx = (id: string) => {
       return 'Persiapan';
     case 'PARTIALLY_PAID':
       return 'Disetujui';
+    case 'CONFIRMED':
+      return 'Disetujui';
     case 'PAID':
       return 'Diterima';
     case 'CANCELLED':
       return 'Ditolak';
+    case 'DECLINED':
+      return 'Ditolak';
     default:
-      return 'N/A';
+      return id;
   }
 };
 
@@ -143,7 +147,7 @@ export const getSuccessMsgFromAPI = (
         finalText += 'data proyek berdasarkan user';
         break;
       case 'sph':
-        finalText += 'dokumen sph';
+        finalText += 'dokumen SPH';
         break;
       case 'individual':
         finalText += 'detail proyek';
@@ -185,15 +189,21 @@ export const getSuccessMsgFromAPI = (
     domainType === 'productivity.aggre.id'
   ) {
     switch (endPoint.toLowerCase()) {
-      case 'quotation-letter':
-        finalText += 'data semua transaksi';
+      case 'all-visitation':
+        finalText += 'data semua kunjungan';
         break;
-      case 'quotation':
-        finalText += 'data sph';
+      case 'completed-visitation':
+        finalText += 'data target kunjungan';
+        break;
+      case 'visitation':
+        finalText += 'data kunjungan';
+        break;
+      case 'visitation-book':
+        finalText = 'Berhasil buat janji';
         break;
       default:
-        if (fullUrl.toLowerCase().includes('quotation-letter/'))
-          finalText += 'data detail transaksi';
+        if (fullUrl.toLowerCase().includes('visitation/'))
+          finalText += 'data kunjungan';
         else finalText += 'data';
         break;
     }
@@ -202,23 +212,24 @@ export const getSuccessMsgFromAPI = (
     domainType === 'order.aggre.id'
   ) {
     switch (endPoint.toLowerCase()) {
-      case 'visitation':
-        finalText += 'data kunjungan';
+      case 'project-sph':
+        finalText += 'data semua SPH berdasarkan proyek';
         break;
-      case 'all-visitation':
-        finalText += 'data semua kunjungan';
+      case 'quotation':
+        finalText += 'data SPH';
         break;
-      case 'completed-visitation':
-        finalText += 'data target kunjungan';
+      case 'purchase-order':
+        finalText += 'data PO';
         break;
-      case 'visitation-book':
-        finalText = 'Berhasil buat janji';
+      case 'quotation-letter':
+        finalText += 'data SPH';
         break;
       default:
-        if (fullUrl.toLowerCase().includes('visitation/'))
-          finalText += 'data kunjungan';
-        else if (fullUrl.toLowerCase().includes('sph/'))
-          finalText += 'dokumen sph';
+        if (fullUrl.toLowerCase().includes('sph/')) finalText += 'dokumen SPH';
+        else if (fullUrl.toLowerCase().includes('purchase-order/'))
+          finalText += 'data detail PO';
+        else if (fullUrl.toLowerCase().includes('quotation-letter/'))
+          finalText += 'data detail SPH';
         else finalText += 'data';
         break;
     }

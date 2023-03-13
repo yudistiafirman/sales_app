@@ -163,6 +163,8 @@ export default function FirstStep() {
                     photoTitle: 'Bukti',
                     navigateTo: CREATE_DEPOSIT,
                     closeButton: true,
+                    disabledDocPicker: false,
+                    disabledGalleryPicker: false,
                   });
                 }}
               />

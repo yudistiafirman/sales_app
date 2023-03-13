@@ -90,7 +90,7 @@ const BPic = ({
         </BText>
         <BSpacer size="extraSmall" />
         <BText style={titleStyles}>No. Telepon</BText>
-        <View style={{ width: resScale(120) }}>
+        <View style={{ width: resScale(140) }}>
           <ScrollView horizontal={true}>
             <BText sizeInNumber={fonts.size.sm} bold="500">
               {phone ? '+62' + phone : '-'}
@@ -106,7 +106,7 @@ const BPic = ({
         </BText>
         <BSpacer size="extraSmall" />
         <BText style={titleStyles}>Email</BText>
-        <View style={{ width: resScale(120) }}>
+        <View style={{ width: resScale(140) }}>
           <ScrollView horizontal={true}>
             <BText sizeInNumber={fonts.size.sm} bold="500">
               {email ? email : '-'}

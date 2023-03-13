@@ -1,4 +1,4 @@
-import { getOrderByID } from '@/actions/OrderActions';
+import { getVisitationOrderByID } from '@/actions/OrderActions';
 import { BChip, BSpacer, BText, BTouchableText } from '@/components';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
@@ -87,7 +87,7 @@ const VisitationDatesAndStatus = ({
 
   const getOneOrder = async () => {
     try {
-      const { data } = await getOrderByID(quatationId);
+      const { data } = await getVisitationOrderByID(quatationId);
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data.data ? data.data.number : 'N/A',
         data: data.data,
