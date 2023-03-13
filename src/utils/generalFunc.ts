@@ -219,10 +219,10 @@ export const getSuccessMsgFromAPI = (
         finalText += 'data SPH';
         break;
       case 'purchase-order':
-        finalText += 'data semua PO';
+        finalText += 'data PO';
         break;
       case 'quotation-letter':
-        finalText += 'data semua SPH';
+        finalText += 'data SPH';
         break;
       default:
         if (fullUrl.toLowerCase().includes('sph/')) finalText += 'dokumen SPH';
