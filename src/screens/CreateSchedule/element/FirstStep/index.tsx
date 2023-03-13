@@ -39,14 +39,17 @@ export default function FirstStep() {
   const { updateValueOnstep } = action;
   const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
   const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+    const [expandData,setExpandData]= React.useState<any[]>([])
   const dispatch = useDispatch();
 
   const listenerSearchCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
       updateValueOnstep('stepOne', 'sphs', data);
-      updateValueOnstep('stepOne', 'companyName', parent.companyName);
+      updateValueOnstep('stepOne', 'companyName', parent.name);
       updateValueOnstep('stepOne', 'locationName', parent.locationName);
       let allProducts: any[] = [];
+
+      console.log('ini data',data)
       data?.forEach((sp) => {
         if (sp?.products) allProducts.push(...sp.products);
       });
@@ -62,18 +65,33 @@ export default function FirstStep() {
     };
   }, [listenerSearchCallback]);
 
-  const onValueChanged = (item: any, value: boolean) => {
-    let listSelectedPO: any[] = [];
-    if (selectedPO) listSelectedPO.push(...selectedPO);
-    if (value) {
-      listSelectedPO.push(item);
+  // const onValueChanged = (item: any, value: boolean) => {
+  //   let listSelectedPO: any[] = [];
+  //   if (selectedPO) listSelectedPO.push(...selectedPO);
+  //   if (value) {
+  //     listSelectedPO.push(item);
+  //   } else {
+  //     listSelectedPO = listSelectedPO.filter((it) => {
+  //       return it !== item;
+  //     });
+  //   }
+  //   setSelectedPO(listSelectedPO);
+  // };
+
+    const onExpand = (index:number,data:any)=> {
+    let newExpandsetExpandData;
+    const isExisted = expandData?.findIndex(
+      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
+    );
+    if (isExisted === -1) {
+      newExpandsetExpandData = [...expandData, data];
     } else {
-      listSelectedPO = listSelectedPO.filter((it) => {
-        return it !== item;
-      });
+      newExpandsetExpandData = expandData.filter(
+        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
+      );
     }
-    setSelectedPO(listSelectedPO);
-  };
+    setExpandData(newExpandsetExpandData);
+  }
 
   const addNewDeposit = (data: any) => {
     let added = [];
@@ -112,8 +130,8 @@ export default function FirstStep() {
                 <BNestedProductCard
                   withoutHeader={false}
                   data={sphs}
-                  selectedPO={selectedPO}
-                  onValueChange={onValueChanged}
+                  onExpand={onExpand}
+                  expandData={expandData}
                   withoutSeparator
                 />
               )}

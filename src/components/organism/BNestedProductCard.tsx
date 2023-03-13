@@ -134,7 +134,7 @@ export default function BNestedProductCard({
                     </View>
                   )}
                 </View>
-                <TouchableWithoutFeedback onPress={() => setCollapsed(index,item)}>
+                <TouchableWithoutFeedback onPress={() => onExpand(index,item)}>
                   <Icon
                     name={isExpand ? 'chevron-up' : 'chevron-down'}
                     size={30}

@@ -229,7 +229,7 @@ const CreatePo = () => {
         isModalVisible={isModalChooseSphVisible}
         onCloseModal={() => dispatch({ type: 'closeModal' })}
         data={{
-          companyName: choosenSphDataFromList.name,
+          companyName: choosenSphDataFromList?.name,
           locationName:
             choosenSphDataFromList?.ShippingAddress !== null
               ? choosenSphDataFromList?.ShippingAddress?.Postal?.City?.name

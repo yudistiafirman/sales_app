@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DeviceEventEmitter, SafeAreaView, StyleSheet } from 'react-native';
+import { DeviceEventEmitter, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import resScale from '@/utils/resScale';
-import { BHeaderIcon, BSpacer, BTabSections, POList } from '@/components';
+import { BCommonSearchList, BHeaderIcon } from '@/components';
 import { colors, layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import SearchPONavbar from './element/SearchPONavbar';
@@ -17,6 +17,7 @@ const SearchPO = () => {
   const [state, send] = useMachine(searchPOMachine);
   const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
   const [selectedData, setSelectedData] = React.useState(undefined);
+  const [expandData,setExpandData]= React.useState<any[]>([])
 
   useCustomHeaderLeft({
     customHeaderLeft: (
@@ -65,46 +66,36 @@ const SearchPO = () => {
   const { routes, poData, loadPO } = state.context;
   return (
     <SafeAreaView style={styles.safeArea}>
-      {selectedData && (
         <SelectedPOModal
           isModalVisible={isModalVisible}
           onCloseModal={() => setIsModalVisible(false)}
-          data={selectedData}
+          data={{
+            companyName: selectedData?.name,
+            locationName:
+              selectedData?.ShippingAddress !== null
+                ? selectedData?.ShippingAddress?.Postal?.City?.name
+                : '',
+            sphs: selectedData?.QuotationRequests,
+          }}
           onPressCompleted={(data) => onSubmitData(data)}
           modalTitle="Pilih PO"
         />
-      )}
-
-      <SearchPONavbar
-        customStyle={styles.search}
-        value={searchValue}
+        <View style={styles.search}>
+        <BCommonSearchList
+        searchQuery={searchValue}
         onChangeText={onChangeText}
-        onClearValue={onClearValue}
-      />
-      {routes.length > 0 && (
-        <>
-          <BSpacer size={'extraSmall'} />
-          <BTabSections
-            swipeEnabled={false}
-            tabStyle={styles.tabStyle}
-            indicatorStyle={styles.tabIndicator}
-            navigationState={{ index, routes }}
-            onTabPress={onTabPress}
-            renderScene={() => (
-              <POList
-                poDatas={poData}
-                loadPO={loadPO}
-                emptyPOName={searchValue}
-                onPress={(data) => {
-                  openSelectedModel(data);
-                }}
-              />
-            )}
-            onIndexChange={setIndex}
-            tabBarStyle={styles.tabBarStyle}
-          />
-        </>
-      )}
+        placeholder='Cari PO'
+        index={index}
+        routes={routes}
+        emptyText={`Pencarian mu ${searchValue} tidak ada. Coba cari PO lainnya.`}
+       onTabPress={onTabPress}
+       onIndexChange={setIndex}
+       loadList={loadPO}
+       onPressList={(data:any)=> openSelectedModel(data)}
+       poDatas={poData}
+       />
+        </View>
+   
     </SafeAreaView>
   );
 };
@@ -113,7 +104,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  search: { paddingHorizontal: layout.pad.lg },
+  search: { paddingHorizontal: layout.pad.lg,flex:1 },
   tabIndicator: {
     height: 2,
     backgroundColor: colors.primary,
