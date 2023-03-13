@@ -698,6 +698,9 @@ const renderInput = (
         <BFileInput
           isLoading={loading}
           label={label}
+          sizeInNumber={input.textSize}
+          bold={titleBold}
+          isRequire={isRequire}
           value={value}
           onChange={onChange}
           isError={isError}
