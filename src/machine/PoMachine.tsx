@@ -15,8 +15,7 @@ import {
 } from '@/interfaces/CreatePurchaseOrder';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import { PO } from '@/navigation/ScreenNames';
-import { customLog } from '@/utils/generalFunc';
-import uniqueStringGenerator from '@/utils/uniqueStringGenerator';
+import { customLog, uniqueStringGenerator } from '@/utils/generalFunc';
 import { assign, createMachine } from 'xstate';
 
 const purchaseOrderInitialState = {

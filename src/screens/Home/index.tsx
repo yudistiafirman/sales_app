@@ -282,33 +282,39 @@ const Beranda = () => {
     );
   };
 
+  const renderPoNumber = () => {
+    return (
+      <View style={style.poNumberWrapper}>
+      <Text style={style.poNumber}>{poNumber}</Text>
+      </View> 
+    )
+  }
+
   const renderContinueData = () => {
-    if (feature === 'PO') {
-      return (
-        <View style={style.poNumberWrapper}>
-          <Text style={style.poNumber}>{poNumber}</Text>
-        </View>
-      );
-    } else {
+
       return (
         <>
           <View style={style.popupSPHContent}>
-            <BVisitationCard
+            {
+              poNumber ?  renderPoNumber()
+           :<BVisitationCard
               item={{
                 name: sphData?.selectedCompany?.name,
                 location: sphData?.selectedCompany?.locationAddress?.line1,
               }}
               isRenderIcon={false}
             />
+            }
+          
           </View>
           <BSpacer size={'medium'} />
           <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
-            SPH yang lama akan hilang kalau Anda buat SPH yang baru
+            {`${feature} yang lama akan hilang kalau Anda buat ${feature} yang baru`}
           </BText>
           <BSpacer size={'small'} />
         </>
       );
-    }
+
   };
 
   React.useEffect(() => {
@@ -365,7 +371,7 @@ const Beranda = () => {
           if (isModalContinuePo) {
             setIsPopupContinuePo(isModalContinuePo);
           } else {
-            navigation.navigate(PO, {});
+            navigation.navigate(PO);
           }
         },
       },
@@ -567,7 +573,7 @@ const Beranda = () => {
       } else {
         dispatch({ type: 'goToThirdStepFromSaved' });
       }
-      navigation.navigate(PO, {});
+      navigation.navigate(PO);
     } else {
       setPopupSPHVisible(false);
       navigation.navigate(SPH, {});
@@ -683,16 +689,11 @@ const Beranda = () => {
               bStorage.deleteItem(PO);
               setIsPopupContinuePo(false);
               dispatch({ type: 'createNewPo' });
-              navigation.navigate(PO, {});
+              navigation.navigate(PO);
             }
           }}
           actionButton={continuePopUpAction}
           descContent={renderContinueData()}
-          desc={
-            feature === 'PO'
-              ? 'PO yang lama akan hilang kalau Anda buat PO yang baru'
-              : ''
-          }
           cancelText={'Buat Baru'}
           actionText={'Lanjutkan'}
           text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
@@ -765,11 +766,12 @@ const style = StyleSheet.create({
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.md,
     color: colors.text.darker,
+    padding:layout.pad.xs + layout.pad.md
   },
   poNumberWrapper: {
     backgroundColor: colors.tertiary,
     height: resScale(37),
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     width: resScale(277),
     alignSelf: 'center',

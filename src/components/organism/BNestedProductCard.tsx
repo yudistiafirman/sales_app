@@ -27,8 +27,8 @@ type BNestedProductCardType = {
   withoutSeparator?: boolean;
   isOption?: boolean;
   onSelect?: (index: number) => void;
-  setCollapsed:(idx:number,data:any)=> void
-  collapsedData:any[]
+  onExpand:(idx:number,data:any)=> void
+  expandData:any[]
 };
 
 function ListChildProduct(size: number, index: number, item: any) {
@@ -67,8 +67,8 @@ export default function BNestedProductCard({
   deposit,
   withoutSeparator = false,
   isOption,
-  setCollapsed,
-  collapsedData
+  onExpand,
+  expandData
 }: BNestedProductCardType) {
   return (
     <>
@@ -86,8 +86,8 @@ export default function BNestedProductCard({
             .reduce((prev: any, next: any) => prev + next, 0) ||
           item.totalPrice;
         const products = item?.products;
-        const collapsedItem = collapsedData?.findIndex((val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id);
-        const isCollapse = collapsedItem === -1
+        const expandItems = expandData?.findIndex((val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id);
+        const isExpand = expandItems === -1
         return (
           <View key={index}>
             <View style={styles.containerLastOrder}>
@@ -136,14 +136,14 @@ export default function BNestedProductCard({
                 </View>
                 <TouchableWithoutFeedback onPress={() => setCollapsed(index,item)}>
                   <Icon
-                    name={isCollapse ? 'chevron-up' : 'chevron-down'}
+                    name={isExpand ? 'chevron-up' : 'chevron-down'}
                     size={30}
                     color={colors.icon.darkGrey}
                   />
                 </TouchableWithoutFeedback>
               </View>
 
-              {isCollapse&& (
+              {isExpand&& (
                 <>
                   <BSpacer size={'small'} />
                   {products &&

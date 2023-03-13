@@ -98,7 +98,7 @@ const style = StyleSheet.create({
     right: resScale(-5),
     top: resScale(-5),
     backgroundColor: colors.text.medium,
-    borderRadius:10
+    borderRadius:layout.radius.lg
   },
   imageStyle: {
     flex: 1,

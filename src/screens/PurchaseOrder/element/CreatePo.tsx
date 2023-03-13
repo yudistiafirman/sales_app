@@ -42,7 +42,7 @@ const CreatePo = () => {
     poNumber,
   } = poState.currentState.context;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
-  const [collapsedSph,setCollapsedSph]= React.useState<any[]>([])
+  const [expandData,setExpandData]= React.useState<any[]>([])
   const addMoreImages = useCallback(() => {
     dispatch({ type: 'addMoreImages' });
   }, [dispatch]);
@@ -126,19 +126,19 @@ const CreatePo = () => {
     dispatch({ type: 'searching', value: text });
   }, []);
 
-  const setCollapsed = (index:number,data:any)=> {
-    let newCollapsedSph;
-    const isExisted = collapsedSph?.findIndex(
+  const onExpand = (index:number,data:any)=> {
+    let newExpandsetExpandData;
+    const isExisted = expandData?.findIndex(
       (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
     );
     if (isExisted === -1) {
-      newCollapsedSph = [...collapsedSph, data];
+      newExpandsetExpandData = [...expandData, data];
     } else {
-      newCollapsedSph = collapsedSph.filter(
+      newExpandsetExpandData = expandData.filter(
         (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
       );
     }
-    setCollapsedSph(newCollapsedSph);
+    setExpandData(newExpandsetExpandData);
   }
 
   return (
@@ -201,8 +201,8 @@ const CreatePo = () => {
                 <BNestedProductCard
                   withoutHeader={false}
                   data={choosenSphDataFromModal?.QuotationRequests}
-                  collapsedData={collapsedSph}
-                  setCollapsed={setCollapsed}
+                  expandData={expandData}
+                  onExpand={onExpand}
                 />
               </>
             ) : (

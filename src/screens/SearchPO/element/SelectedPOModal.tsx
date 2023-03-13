@@ -43,7 +43,7 @@ export default function SelectedPOModal({
   modalTitle,
 }: SelectedPOModalType) {
   const [sphData, setSphData] = React.useState<any[]>([]);
-  const [collapsedSph,setCollapsedSph]= React.useState<any[]>([])
+  const [expandData,setExpandData]= React.useState<any[]>([])
   const dispatch = useDispatch<AppDispatch>();
   const [scrollOffSet, setScrollOffSet] = React.useState<number | undefined>(
     undefined
@@ -51,10 +51,6 @@ export default function SelectedPOModal({
 
   React.useEffect(() => {
     setSphData(data?.sphs);
-    return ()=> {
-      setCollapsedSph([])
-      setSphData([])
-    }
   }, [data?.sphs]);
 
   const onSelectButton = (idx: number) => {
@@ -68,24 +64,24 @@ export default function SelectedPOModal({
     setSphData(selectedSphData);
   };
 
-  const setCollapsed = (index:number,data:any)=> {
-    let newCollapsedSph;
-    const isExisted = collapsedSph?.findIndex(
+  const onExpand = (index:number,data:any)=> {
+    let newExpandData;
+    const isExisted = expandData?.findIndex(
       (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
     );
     if (isExisted === -1) {
-      newCollapsedSph = [...collapsedSph, data];
+      newExpandData = [...expandData, data];
     } else {
-      newCollapsedSph = collapsedSph.filter(
+      newExpandData = expandData.filter(
         (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
       );
     }
-    setCollapsedSph(newCollapsedSph);
+    setExpandData(newExpandData);
   }
 
   const onCloseSelectedPoModal =()=> {
     setSphData([...sphData])
-    setCollapsedSph([])
+    setExpandData([])
     onCloseModal()
   }
 
@@ -155,9 +151,9 @@ export default function SelectedPOModal({
                       isOption={data?.sphs.length > 1}
                       withoutHeader={false}
                       data={sphData}
-                      collapsedData={collapsedSph}
+                      expandData={expandData}
                       onSelect={onSelectButton}
-                      setCollapsed={setCollapsed}
+                      onExpand={onExpand}
                     />
                   )}
                 </ScrollView>
