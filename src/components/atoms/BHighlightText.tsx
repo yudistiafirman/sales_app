@@ -3,6 +3,7 @@ import React from 'react';
 import font from '@/constants/fonts';
 import respFS from '@/utils/resFontSize';
 import colors from '@/constants/colors';
+import { resScale } from '@/utils';
 
 type higlightTextType = {
   searchQuery?: string;
@@ -65,6 +66,7 @@ const style = StyleSheet.create({
   normalText: {
     fontFamily: font.family.montserrat[500],
     color: colors.textInput.input,
+    width:resScale(200),
   },
   boldText: {
     fontWeight: '900',

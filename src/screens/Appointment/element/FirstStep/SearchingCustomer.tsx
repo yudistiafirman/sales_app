@@ -1,8 +1,8 @@
-import { BFlatlistItems, BTabViewScreen, BVisitationCard } from '@/components';
+import { BCommonSearchList, BFlatlistItems, BTabViewScreen, BVisitationCard } from '@/components';
 import { colors, layout } from '@/constants';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Dimensions, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 const { width } = Dimensions.get('window');
@@ -14,6 +14,7 @@ import { resetStates, retrying } from '@/redux/reducers/commonReducer';
 
 const SearchingCustomer = () => {
   const [values, dispatchValue] = useAppointmentData();
+  const [index,setIndex]=useState(0)
   const { searchQuery } = values;
   const {
     projects,
@@ -33,6 +34,11 @@ const SearchingCustomer = () => {
       searchDispatch(text);
     }, 500);
   }, [searchDispatch]);
+
+  const onChangeSearch = (text: string) => {
+    dispatchValue({ type: AppointmentActionType.SEARCH_QUERY, value: text });
+    onChangeWithDebounce(text);
+  };
 
   const onPressCard = useCallback(
     (item: selectedCompanyInterface) => {
@@ -76,12 +82,14 @@ const SearchingCustomer = () => {
     [dispatchValue, values.stepOne.options.items]
   );
 
-  const tabToRender: { tabTitle: string; totalItems: number }[] =
+  const routes: { title: string; totalItems: number }[] =
     React.useMemo(() => {
       return [
         {
-          tabTitle: 'Proyek',
+          key:'first',
+          title: 'Proyek',
           totalItems: projects.length,
+          chipPosition:'right'
         },
       ];
     }, [projects]);
@@ -91,60 +99,41 @@ const SearchingCustomer = () => {
     onChangeWithDebounce(searchQuery);
   };
 
-  const sceneToRender = React.useCallback(() => {
-    if (searchQuery.length <= 3) {
-      return null;
-    }
-
-    return (
-      <BFlatlistItems
-        isError={errorGettingProject}
-        errorMessage={errorGettingProjectMessage}
-        onAction={onRetryGettingProjects}
-        renderItem={(item) => {
-          let picOrCompanyName = '-';
-          if (item?.Company?.name) {
-            picOrCompanyName = item.Company?.name;
-          } else if (item?.mainPic?.name) {
-            picOrCompanyName = item?.mainPic?.name;
-          }
-
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                let handlePicNull = { ...item };
-                if (!handlePicNull.PIC) {
-                  handlePicNull.PIC = [];
-                }
-                onPressCard(handlePicNull);
-              }}
-            >
-              <BVisitationCard
-                item={{
-                  name: item.name,
-                  location: item.locationAddress.line1,
-                  picOrCompanyName: picOrCompanyName,
-                }}
-                searchQuery={searchQuery}
-                isRenderIcon={false}
-              />
-            </TouchableOpacity>
-          );
-        }}
-        searchQuery={searchQuery}
-        isLoading={isProjectLoading}
-        data={projects}
-      />
-    );
-  }, [searchQuery, isProjectLoading, projects, onPressCard]);
+  const onClearValue = () => {
+  dispatchValue({
+      type: AppointmentActionType.SEARCH_QUERY,
+      value: '',
+    })
+  dispatchValue({
+    type:AppointmentActionType.ENABLE_SEARCHING,
+    value:false
+  })
+  }
 
   return (
     <View style={{ height: width + resScale(160) }}>
-      <BTabViewScreen
-        isLoading={false}
-        screenToRender={sceneToRender}
-        tabToRender={searchQuery ? tabToRender : []}
-      />
+        <BCommonSearchList
+            searchQuery={searchQuery}
+            onChangeText={onChangeSearch}
+            onClearValue={onClearValue}
+            placeholder="Cari Pelanggan"
+            index={index}
+            emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
+            routes={routes}
+            onIndexChange={setIndex}
+            loadList={isProjectLoading}
+            onPressList={(item) => {
+              let handlePicNull = { ...item };
+              if (!handlePicNull.PIC) {
+                handlePicNull.PIC = [];
+              }
+              onPressCard(handlePicNull);
+            }}
+            data={projects}
+            isError={errorGettingProject}
+            errorMessage={errorGettingProjectMessage}
+            onRetry={onRetryGettingProjects}
+          />
     </View>
   );
 };
