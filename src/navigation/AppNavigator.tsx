@@ -27,6 +27,7 @@ import { useAsyncConfigSetup } from '@/hooks';
 import { customLog } from '@/utils/generalFunc';
 import SalesTabs from './tabs/SalesTabs';
 import SecurityTabs from './tabs/SecurityTabs';
+import SalesHeaderRight from './Sales/HeaderRight';
 const Stack = createNativeStackNavigator();
 
 const RootScreen = (
@@ -46,6 +47,8 @@ const RootScreen = (
               options={{
                 headerTitleAlign: 'center',
                 headerTitle: OPSMANAGER_TITLE,
+                headerRight: () => (SalesHeaderRight(colors.text.darker)),
+                headerShown: true,
               }}
             />
             {OperationStack(Stack)}
@@ -61,6 +64,8 @@ const RootScreen = (
               options={{
                 headerTitleAlign: 'center',
                 headerTitle: BATCHER_TITLE,
+                headerRight: () => SalesHeaderRight(colors.text.darker),
+                headerShown: true,
               }}
             />
             {OperationStack(Stack)}
@@ -76,6 +81,8 @@ const RootScreen = (
               options={{
                 headerTitleAlign: 'center',
                 headerTitle: DRIVER_TITLE,
+                headerRight: () => SalesHeaderRight(colors.text.darker),
+                headerShown: true,
               }}
             />
             {OperationStack(Stack)}

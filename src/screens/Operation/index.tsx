@@ -1,7 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, StyleSheet } from 'react-native';
-import colors from '@/constants/colors';
-import { layout } from '@/constants';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import OperationList from './element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,8 +8,6 @@ import { ENTRY_TYPE } from '@/models/EnumModel';
 import { useFocusEffect } from '@react-navigation/native';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { OPERATION } from '@/navigation/ScreenNames';
-import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
-import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
 
 const Operation = () => {
   const dispatch = useDispatch();
@@ -33,10 +29,6 @@ const Operation = () => {
     []
   );
 
-  useCustomHeaderRight({
-    customHeaderRight: SalesHeaderRight(colors.text.darker),
-  });
-
   useFocusEffect(
     React.useCallback(() => {
       dispatch(resetImageURLS({ source: OPERATION }));
@@ -48,18 +40,15 @@ const Operation = () => {
   }, [entryType]);
 
   return (
-    <View style={style.container}>
+    <SafeAreaView style={style.container}>
       <OperationList role={entryType} isLoading={isLoading} data={data} />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const style = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    backgroundColor: colors.white,
-    paddingBottom: layout.pad.lg,
+    flex: 1,
   },
 });
 export default Operation;
