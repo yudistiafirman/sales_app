@@ -86,8 +86,8 @@ export default function OperationList({
 
 const style = StyleSheet.create({
   flatList: {
-    width: '100%',
-    paddingVertical: layout.pad.lg,
+    flex: 1,
+    paddingBottom: layout.pad.lg,
     paddingHorizontal: layout.pad.lg,
   },
   flatListLoading: {

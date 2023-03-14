@@ -1,7 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
-import colors from '@/constants/colors';
-import { layout } from '@/constants';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import OperationList from '../element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -52,10 +50,6 @@ const Return = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    backgroundColor: colors.white,
-    paddingBottom: layout.pad.lg,
   },
 });
 

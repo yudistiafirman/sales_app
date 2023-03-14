@@ -1771,6 +1771,14 @@
     "@types/react-native" "*"
     "@types/xdate" "*"
 
+"@types/react-native-material-menu@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@types/react-native-material-menu/-/react-native-material-menu-1.0.6.tgz#953dd6cfce18baee9930290e7926b12f5b6676e7"
+  integrity sha512-qGqqRo5a74n3jB+9wvtW7m+qriqFWpg0JnbpHIir9g39FxRFxe71b7M0WOMdsC2ue5I/OeyJLaCmwXKUFk3zug==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
 "@types/react-native@*":
   version "0.71.3"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.71.3.tgz#537f669ed6b38b5ae47444bd9d253c4cff23bed7"
@@ -6261,6 +6269,11 @@ react-native-masked-text@^1.13.0:
   dependencies:
     date-and-time "0.9.0"
     tinymask "1.0.2"
+
+react-native-material-menu@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-material-menu/-/react-native-material-menu-2.0.0.tgz#139f407a52fbc0d47e5351d50ac769e05812da5c"
+  integrity sha512-SmO9PLE3E469EPbVWZqvdu6JGPPZIm7YjqDcWs2PPoY0k7w2V9tFo3BmmLXNzNZDCVCAi+PPSsL7h/5WkfHcSg==
 
 react-native-modal@^13.0.1:
   version "13.0.1"

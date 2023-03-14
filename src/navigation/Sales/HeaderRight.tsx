@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import { Styles } from '@/interfaces';
-import { View, Text, NativeModules, Alert } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { NativeModules, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { signout } from '@/redux/reducers/authReducer';
 import { AppDispatch } from '@/redux/store';
@@ -10,58 +9,33 @@ import bStorage from '@/actions/BStorage';
 import { signOut } from '@/actions/CommonActions';
 import crashlytics from '@react-native-firebase/crashlytics';
 import Icon from 'react-native-vector-icons/Feather';
-import { BDivider } from '@/components';
 import analytics from '@react-native-firebase/analytics';
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 
 const { RNCustomConfig } = NativeModules;
 const versionName = RNCustomConfig?.version_name;
 
 const _styles: Styles = {
-  fullParent: {
-    flex: 1,
-  },
-  chipView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: layout.pad.lg,
-  },
-  chip: {
-    padding: layout.pad.sm,
-    alignItems: 'flex-end',
-  },
   chipText: {
     fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
+    fontSize: fonts.size.md,
     color: colors.text.darker,
-  },
-  moreView: {
-    backgroundColor: colors.white,
-    borderRadius: layout.radius.sm,
-    borderWidth: 1,
-    borderColor: colors.lightGray,
-    position: 'absolute',
-    top: 50,
-    right: 15,
-    elevation: 8,
-  },
-  logout: {
-    paddingHorizontal: layout.pad.lg,
-    paddingVertical: layout.pad.md,
-    alignSelf: 'center',
+    textAlign: 'center',
   },
   version: {
     fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.vs,
-    paddingHorizontal: layout.pad.md,
-    paddingVertical: layout.pad.sm,
-    alignSelf: 'center',
+    fontSize: fonts.size.xs,
     color: colors.text.darker,
+    textAlign: 'center',
   },
 };
 
 export default function SalesHeaderRight(iconColor: string = '') {
   const dispatch = useDispatch<AppDispatch>();
-  const [isShowMore, setShowMore] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
+
+  const hideMenu = () => setVisible(false);
+  const showMenu = () => setVisible(true);
 
   const onLogout = async () => {
     try {
@@ -77,37 +51,27 @@ export default function SalesHeaderRight(iconColor: string = '') {
     }
   };
 
-  const renderMore = () => {
-    return (
-      <View style={_styles.moreView}>
-        <View style={_styles.fullParent}>
-          <TouchableOpacity style={_styles.logout} onPress={onLogout}>
-            <Text style={_styles.chipText}>{'Logout'}</Text>
-          </TouchableOpacity>
-          <View>
-            <BDivider />
-          </View>
-          <Text style={_styles.version}>{'APP Version ' + versionName}</Text>
-        </View>
-      </View>
-    );
-  };
-
   return (
-    <>
-      <TouchableOpacity
-        onPress={() => setShowMore(!isShowMore)}
-        style={_styles.chipView}
-      >
-        <View style={_styles.chip}>
-          <Icon
-            name={'more-vertical'}
-            size={18}
-            color={iconColor !== '' ? iconColor : colors.white}
-          />
-        </View>
-      </TouchableOpacity>
-      {isShowMore && renderMore()}
-    </>
+    <Menu
+      visible={visible}
+      anchor={
+        <Icon
+          name="more-vertical"
+          size={18}
+          color={iconColor !== '' ? iconColor : colors.white}
+          style={{ padding: layout.pad.lg }}
+          onPress={showMenu}
+        />
+      }
+      onRequestClose={hideMenu}
+    >
+      <MenuItem textStyle={_styles.chipText} onPress={onLogout}>
+        Logout
+      </MenuItem>
+      <MenuDivider />
+      <MenuItem textStyle={_styles.version} disabled>
+        {'APP Version ' + versionName}
+      </MenuItem>
+    </Menu>
   );
 }
