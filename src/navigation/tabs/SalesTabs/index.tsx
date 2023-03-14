@@ -5,7 +5,6 @@ import CustomTabBar from '../CustomTabBar';
 import Profile from '@/screens/Profile';
 import Home from '@/screens/Home';
 import { colors, fonts } from '@/constants';
-import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
 import Transaction from '@/screens/Transaction';
 import {
   TAB_HOME,
@@ -19,6 +18,7 @@ import {
 } from '@/navigation/ScreenNames';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
+import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
 
 const Tab = createBottomTabNavigator();
 
