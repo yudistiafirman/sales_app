@@ -22,7 +22,6 @@ import {
   updateShouldScrollView,
   updateStepTwo,
 } from '@/redux/reducers/VisitationReducer';
-import { project } from 'react-native.config';
 
 interface IProps {
   onSearch: (search: boolean) => void;
@@ -89,7 +88,7 @@ const SearchFlow = ({
 
   const onSelectProject = (item: any) => {
     let stepTwo;
-    console.log('ini item pressed',item)
+
     if (item?.Company?.id) {
       const company = {
         id: item?.Company?.id,
