@@ -4,19 +4,39 @@ import { sphOrderPayloadType } from '@/interfaces';
 import { customLog } from '@/utils/generalFunc';
 
 export const getAllVisitationOrders = async () => {
-  return customRequest(BrikApiOrder.getAllVisitationOrders(), 'GET', undefined, true);
+  return customRequest(
+    BrikApiOrder.getAllVisitationOrders(),
+    'GET',
+    undefined,
+    true
+  );
 };
 
 export const getAllPurchaseOrders = async () => {
-  return customRequest(BrikApiOrder.getAllPurchaseOrders(), 'GET', undefined, true);
+  return customRequest(
+    BrikApiOrder.getAllPurchaseOrders(),
+    'GET',
+    undefined,
+    true
+  );
 };
 
 export const getVisitationOrderByID = async (id: string) => {
-  return customRequest(BrikApiOrder.getVisitationOrderByID(id), 'GET', undefined, true);
+  return customRequest(
+    BrikApiOrder.getVisitationOrderByID(id),
+    'GET',
+    undefined,
+    true
+  );
 };
 
 export const getPurchaseOrderByID = async (id: string) => {
-  return customRequest(BrikApiOrder.getPurchaseOrderByID(id), 'GET', undefined, true);
+  return customRequest(
+    BrikApiOrder.getPurchaseOrderByID(id),
+    'GET',
+    undefined,
+    true
+  );
 };
 
 export const postSph = async (payload: sphOrderPayloadType) => {
@@ -43,5 +63,13 @@ export const getCreatedSphDocuments = async (id: string) => {
 };
 
 export const postPurchaseOrder = async (payload) => {
-  return customRequest(BrikApiOrder.postPurchaseOrder(), 'POST',payload, true);
+  return customRequest(BrikApiOrder.postPurchaseOrder(), 'POST', payload, true);
+};
+
+export const postDeposit = async (payload) => {
+  return customRequest(BrikApiOrder.postDeposit(), 'POST', payload, true);
+};
+
+export const postSchedule = async (payload) => {
+  return customRequest(BrikApiOrder.postSchedule(), 'POST', payload, true);
 };

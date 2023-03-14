@@ -45,4 +45,14 @@ export default class BrikApiOrder {
     const url = new URL(`${API_URL}/order/m/purchase-order`);
     return url.toString();
   };
+
+  static postDeposit = () => {
+    const url = new URL(`${API_URL}/order/m/deposit`);
+    return url.toString();
+  };
+
+  static postSchedule = () => {
+    const url = new URL(`${API_URL}/order/m/schedule`);
+    return url.toString();
+  };
 }
