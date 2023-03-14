@@ -3,7 +3,7 @@ import { colors, layout } from '@/constants';
 import * as React from 'react';
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native';
 import BCommonListShimmer from './BCommonListShimmer';
-import { visitationDataType } from '@/interfaces';
+import { selectedCompanyInterface, visitationDataType } from '@/interfaces';
 import BSpacer from '@/components/atoms/BSpacer';
 import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
 import BSearchBar from '@/components/molecules/BSearchBar';
@@ -17,10 +17,10 @@ type POData = {
   id: string;
 };
 
-type ListRenderItemData = POData & CreatedSPHListResponse;
+type ListRenderItemData = POData & CreatedSPHListResponse & selectedCompanyInterface;
 
 interface BCommonSearchListProps<ArrayOfObject> {
-  poDatas: ArrayOfObject[];
+  data: ArrayOfObject[];
   onEndReached?:
     | ((info: { distanceFromEnd: number }) => void)
     | null
@@ -33,6 +33,8 @@ interface BCommonSearchListProps<ArrayOfObject> {
   onPressList?: (data: any) => void;
   colorStatus?: string;
   onChangeText: (text: string) => void;
+  onClearValue?:()=> void;
+  onPressMagnify?:()=> void;
   searchQuery: string;
   onTabPress?: (tabroutes: any) => any;
   onIndexChange: (index: number) => void;
@@ -46,7 +48,7 @@ interface BCommonSearchListProps<ArrayOfObject> {
 }
 
 const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
-  poDatas,
+  data,
   onEndReached,
   refreshing,
   errorMessage,
@@ -64,18 +66,30 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
   onRetry,
   placeholder,
   emptyText,
+  onClearValue,
+  onPressMagnify,
 }: BCommonSearchListProps<ArrayOfObject>) => {
   const isSearching = searchQuery.length > 2;
   const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
     ({ item, idx }) => {
+      let picOrCompanyName;
+      if (item?.Company?.name) {
+        picOrCompanyName = item.Company?.name;
+      } else if (item?.mainPic?.name) {
+        picOrCompanyName = item?.mainPic?.name;
+      }
       const constructVisitationData: visitationDataType = {
         id: idx,
         name: item?.companyName || item?.name,
         location:
-          item.locationName || item?.ShippingAddress?.Postal?.City?.name,
+          item.locationName || item?.ShippingAddress?.Postal?.City?.name || item?.location || item?.locationAddress?.line1,
         pilNames:
           item?.sphs?.map((it) => it.name) ||
           item?.QuotationRequests?.map((val) => val?.QuotationLetter?.number),
+          picOrCompanyName: picOrCompanyName,
+        status:item?.status,
+        pilStatus:item?.pilStatus
+       
       };
       return (
         <>
@@ -98,7 +112,12 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
       <BSearchBar
         value={searchQuery}
         onChangeText={(text) => onChangeText(text)}
-        left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
+        left={<TextInput.Icon onPress={onPressMagnify && onPressMagnify} forceTextInputFocus={false} icon="magnify" />}
+        right={onClearValue && <TextInput.Icon
+          onPress={onClearValue}
+          forceTextInputFocus={false}
+          icon="close"
+        />}
         placeholder={placeholder}
       />
       <BSpacer size="extraSmall" />
@@ -112,7 +131,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
             <>
               <BSpacer size="extraSmall" />
               <FlatList
-                data={poDatas}
+                data={data}
                 removeClippedSubviews={false}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
