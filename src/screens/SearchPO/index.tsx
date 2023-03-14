@@ -92,7 +92,7 @@ const SearchPO = () => {
        onIndexChange={setIndex}
        loadList={loadPO}
        onPressList={(data:any)=> openSelectedModel(data)}
-       poDatas={poData}
+       data={poData}
        />
         </View>
    

@@ -47,6 +47,7 @@ const Appointment = () => {
     step,
     stepDone,
     selectedDate,
+    isSearching
   } = values;
   const customerType =
     stepOne.customerType === 'company' ? 'company' : 'individu';
@@ -60,7 +61,7 @@ const Appointment = () => {
     customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
-        onBack={() => navigation.goBack()}
+        onBack={()=>navigation.goBack()}
         iconName="x"
       />
     ),
@@ -272,7 +273,15 @@ const Appointment = () => {
         type: AppointmentActionType.DECREASE_STEP,
       });
     } else {
-      navigation.goBack();
+        if(isSearching){
+          dispatchValue({
+            type:AppointmentActionType.ENABLE_SEARCHING,
+            value:false
+          })
+        }else {
+          navigation.goBack();
+        }
+      
     }
   }, [dispatchValue, inVisitationDateStep, navigation, selectedDate]);
 
