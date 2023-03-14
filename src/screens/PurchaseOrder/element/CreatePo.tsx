@@ -161,7 +161,7 @@ const CreatePo = () => {
                 value: data,
               })
             }
-            poDatas={sphData}
+            data={sphData}
             isError={poState.currentState.matches(
               'firstStep.SearchSph.errorGettingSphList'
             )}

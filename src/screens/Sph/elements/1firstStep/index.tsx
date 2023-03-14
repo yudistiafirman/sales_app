@@ -5,6 +5,7 @@ import {
   BVisitationCard,
   BFlatlistItems,
   BSpacer,
+  BCommonSearchList,
 } from '@/components';
 import { TextInput } from 'react-native-paper';
 
@@ -29,6 +30,7 @@ import {
 export default function FirstStep() {
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = useState('');
+  const [index,setIndex]=useState(0)
   const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const {
     projects,
@@ -45,7 +47,7 @@ export default function FirstStep() {
     crashlytics().log(SPH + '-Step1');
   }, []);
 
-  const tabToRender: { tabTitle: string; totalItems: number }[] =
+  const routes: {title: string; totalItems: number }[] =
     useMemo(() => {
       return [
         // {
@@ -53,8 +55,10 @@ export default function FirstStep() {
         //   totalItems: 8,
         // },
         {
-          tabTitle: 'Proyek',
+          key:'first',
+          title: 'Proyek',
           totalItems: projects.length,
+          chipPosition:'right'
         },
         // {
         //   tabTitle: 'Proyek',
@@ -84,110 +88,39 @@ export default function FirstStep() {
     onChangeWithDebounce(searchQuery);
   };
 
-  const sceneToRender = useCallback(
-    (key: string) => {
-      if (searchQuery.length <= 3) {
-        return null;
-      }
-      return (
-        <BFlatlistItems
-          isError={errorGettingProject}
-          errorMessage={errorGettingProjectMessage}
-          onAction={onRetryGettingProject}
-          renderItem={(item) => {
-            let picOrCompanyName = '-';
-            if (item?.Company?.name) {
-              picOrCompanyName = item.Company?.name;
-            } else if (item?.mainPic?.name) {
-              picOrCompanyName = item?.mainPic?.name;
-            }
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  // setSelectedPic(data);
-                  dispatch(updateSelectedCompany(item));
-                  // if (stateUpdate) {
-                  //   stateUpdate('selectedCompany')(item);
-                  // }
-                }}
-              >
-                <BVisitationCard
-                  item={{
-                    name: item.name,
-                    location: item.locationAddress.line1,
-                    picOrCompanyName: picOrCompanyName,
-                  }}
-                  searchQuery={searchQuery}
-                  isRenderIcon={false}
-                />
-              </TouchableOpacity>
-            );
-          }}
-          searchQuery={searchQuery}
-          data={projects}
-          isLoading={isProjectLoading}
-          // initialFetch={() => {
-          //   return tabOnEndReached({
-          //     key,
-          //     currentPage: 1,
-          //     query: searchQuery,
-          //   });
-          // }}
-          // onEndReached={(info) => {
-          //   return tabOnEndReached({
-          //     ...info,
-          //     key,
-          //     query: searchQuery,
-          //   });
-          // }}
-        />
-      );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [searchQuery, projects, isProjectLoading]
-  );
-
   return (
     <BContainer>
-      {!selectedCompany && (
-        <>
-          <BSearchBar
-            activeOutlineColor="gray"
-            value={searchQuery}
-            onChangeText={(text: string) => {
-              setSearchQuery(text);
-              onChangeWithDebounce(text);
-            }}
-            placeholder="Search"
-            left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
-            right={
-              <TextInput.Icon
-                onPress={resetSearch}
-                forceTextInputFocus={true}
-                icon="close"
-              />
-            }
-          />
-          <BSpacer size={'extraSmall'} />
-        </>
-      )}
-      {!selectedCompany && (
-        <BTabViewScreen
-          screenToRender={sceneToRender}
-          tabToRender={searchQuery.length > 3 ? tabToRender : []}
+      {!selectedCompany ? (
+       <BCommonSearchList
+        index={index}
+        onIndexChange={setIndex}
+        routes={routes}
+        placeholder="Cari Pelanggan"
+        searchQuery={searchQuery}
+        onChangeText={(text:string)=> {
+          setSearchQuery(text)
+          onChangeWithDebounce(text)
+        }}
+        onClearValue={resetSearch}
+        data={projects}
+        onPressList={(item)=> dispatch(updateSelectedCompany(item))}
+        isError={errorGettingProject}
+        loadList={isProjectLoading}
+        errorMessage={errorGettingProjectMessage}
+        emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
+        onRetry={onRetryGettingProject}
         />
-      )}
-      {selectedCompany && (
+      ) :(
         <SelectedPic
-          onPress={() => {
-            dispatch(updateSelectedCompany(null));
-            dispatch(updateSelectedPic(null));
-            // stateUpdate('selectedPic')(null);
-            // stateUpdate('selectedCompany')(null);
-          }}
-          setCurrentPosition={setCurrentPosition}
-        />
-      )}
+        onPress={() => {
+          dispatch(updateSelectedCompany(null));
+          dispatch(updateSelectedPic(null));
+          // stateUpdate('selectedPic')(null);
+          // stateUpdate('selectedCompany')(null);
+        }}
+        setCurrentPosition={setCurrentPosition}
+      />
+      ) }
     </BContainer>
   );
 }

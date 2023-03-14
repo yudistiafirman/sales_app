@@ -39,6 +39,7 @@ export interface AppointmentState {
   selectedDate: DateData | null;
   selectedCustomerData: DataCompany | null;
   isModalCompanyVisible: boolean;
+  isSearching:boolean
 }
 
 const initialData: AppointmentState = {
@@ -121,6 +122,7 @@ const initialData: AppointmentState = {
   selectedCustomerData: null,
   isModalPicVisible: false,
   isModalCompanyVisible: false,
+  isSearching:false
 };
 
 type ActionMap<M extends { [index: string]: any }> = {
@@ -155,6 +157,7 @@ export enum AppointmentActionType {
   INCREASE_STEP = 'INCREASE_STEP',
   DECREASE_STEP = 'DECREASE_STEP',
   RESET_STATE = 'RESET_STATE',
+  ENABLE_SEARCHING = 'ENABLE_SEARCHING'
 }
 
 type AppointmentPayload = {
@@ -211,6 +214,9 @@ type AppointmentPayload = {
   [AppointmentActionType.INCREASE_STEP]: {};
   [AppointmentActionType.DECREASE_STEP]: {};
   [AppointmentActionType.RESET_STATE]: {};
+  [AppointmentActionType.ENABLE_SEARCHING]:{
+    value:boolean
+  }
 };
 
 export type AppointmentAction =
@@ -314,6 +320,7 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
       return {
         ...state,
         isModalCompanyVisible: false,
+        isSearching:false,
         searchQuery: '',
         stepOne: {
           ...state.stepOne,
@@ -393,6 +400,12 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
     }
     case AppointmentActionType.RESET_STATE: {
       return initialData;
+    }
+    case AppointmentActionType.ENABLE_SEARCHING:{
+      return {
+        ...state,
+        isSearching:action.value
+      }
     }
     default:
       return state;

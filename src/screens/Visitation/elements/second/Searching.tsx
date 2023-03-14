@@ -2,6 +2,7 @@
 import React, { useCallback } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import {
+  BCommonSearchList,
   BFlatlistItems,
   BSearchBar,
   BSpacer,
@@ -21,6 +22,7 @@ import {
   updateShouldScrollView,
   updateStepTwo,
 } from '@/redux/reducers/VisitationReducer';
+import { project } from 'react-native.config';
 
 interface IProps {
   onSearch: (search: boolean) => void;
@@ -48,6 +50,7 @@ const SearchFlow = ({
 }: IProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [index,setIndex]=React.useState(0)
   const {
     projects,
     isProjectLoading,
@@ -55,7 +58,6 @@ const SearchFlow = ({
     errorGettingProjectMessage,
   } = useSelector((state: RootState) => state.common);
   const visitationData = useSelector((state: RootState) => state.visitation);
-
   const searchDispatch = useCallback(
     (text: string) => {
       dispatch(getAllProject({ search: text }));
@@ -87,10 +89,11 @@ const SearchFlow = ({
 
   const onSelectProject = (item: any) => {
     let stepTwo;
-    if (item.Company?.id) {
+    console.log('ini item pressed',item)
+    if (item?.Company?.id) {
       const company = {
-        id: item.Company.id,
-        title: item.Company.name,
+        id: item?.Company?.id,
+        title: item?.Company?.name,
       };
       stepTwo = {
         ...visitationData,
@@ -116,14 +119,14 @@ const SearchFlow = ({
         };
       }
     }
-    const customerType = item.Company?.id ? 'COMPANY' : 'INDIVIDU';
+    const customerType = item?.Company?.id ? 'COMPANY' : 'INDIVIDU';
     stepTwo = {
       ...visitationData,
       customerType: customerType,
     };
 
-    if (item.PIC) {
-      const picList = item.PIC.map((pic: PIC) => {
+    if (item?.PIC) {
+      const picList = item?.PIC?.map((pic: PIC) => {
         return {
           ...pic,
           isSelected: false,
@@ -139,17 +142,17 @@ const SearchFlow = ({
     }
     stepTwo = {
       ...visitationData,
-      projectName: item.name,
-      projectId: item.id,
+      projectName: item?.name,
+      projectId: item?.id,
     };
-    if (item.Visitation) {
-      let order = +item.Visitation.order;
-      if (!item.Visitation.finish_date) {
+    if (item?.Visitation) {
+      let order = +item?.Visitation?.order;
+      if (!item?.Visitation?.finish_date) {
         order -= 1;
       }
       stepTwo = {
         ...visitationData,
-        visitationId: item.Visitation.id,
+        visitationId: item?.Visitation?.id,
         existingOrderNum: order,
       };
     }
@@ -158,62 +161,24 @@ const SearchFlow = ({
     // updateValueOnstep('stepTwo', 'pics', item?.pic);
   };
 
-  const tabToRender: { tabTitle: string; totalItems: number }[] =
+  const routes: { title: string; totalItems: number }[] =
     React.useMemo(() => {
       return [
         {
-          tabTitle: 'Proyek',
+          key:'first',
+          title: 'Proyek',
           totalItems: projects.length,
+          chipPosition:'right'
         },
       ];
     }, [projects]);
 
-  const sceneToRender = React.useCallback(() => {
-    if (searchQuery.length <= 2) {
-      return null;
-    }
 
     const onRetryGettingProject = () => {
       dispatch(retrying());
       onChangeWithDebounce(searchQuery);
     };
-    return (
-      <BFlatlistItems
-        isError={errorGettingProject}
-        errorMessage={errorGettingProjectMessage}
-        renderItem={(item) => {
-          let picOrCompanyName = '-';
-          if (item?.Company?.name) {
-            picOrCompanyName = item.Company?.name;
-          } else if (item?.mainPic?.name) {
-            picOrCompanyName = item?.mainPic?.name;
-          }
-
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                onSelectProject(item);
-              }}
-            >
-              <BVisitationCard
-                item={{
-                  name: item.name,
-                  location: item.locationAddress.line1,
-                  picOrCompanyName: picOrCompanyName,
-                }}
-                searchQuery={searchQuery}
-                isRenderIcon={false}
-              />
-            </TouchableOpacity>
-          );
-        }}
-        searchQuery={searchQuery}
-        isLoading={isProjectLoading}
-        data={projects}
-        onAction={onRetryGettingProject}
-      />
-    );
-  }, [searchQuery, projects, isProjectLoading]);
+ 
 
   return (
     <React.Fragment>
@@ -222,7 +187,30 @@ const SearchFlow = ({
         numberOfLines={1}
       />
       <BSpacer size="extraSmall" />
+      <BSpacer size={resultSpace ? resultSpace : 'extraSmall'} />
+      {isSearch ? (
+        <View style={{ height: resScale(500) }}>
+          <BCommonSearchList
+            index={index}
+            onIndexChange={setIndex}
+            routes={routes}
+            placeholder="Cari Pelanggan"
+            searchQuery={searchQuery}
+            onChangeText={onChangeSearch}
+            onClearValue={onClear}
+            data={projects}
+            onPressList={onSelectProject}
+            isError={errorGettingProject}
+            loadList={isProjectLoading}
+            errorMessage={errorGettingProjectMessage}
+            onRetry={onRetryGettingProject}
+            emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
+            />
+        </View>
+      ): 
+      <TouchableOpacity onPress={()=> onSearch(true)} disabled={searchingDisable}>
       <BSearchBar
+        disabled
         placeholder="Cari pelanggan"
         activeOutlineColor="gray"
         left={
@@ -232,29 +220,8 @@ const SearchFlow = ({
             icon="magnify"
           />
         }
-        right={
-          isSearch && (
-            <TextInput.Icon
-              forceTextInputFocus={false}
-              onPress={onClear}
-              icon="close"
-            />
-          )
-        }
-        value={searchQuery}
-        onChangeText={onChangeSearch}
-        disabled={searchingDisable}
       />
-      <BSpacer size={resultSpace ? resultSpace : 'extraSmall'} />
-      {searchQuery && (
-        <View style={{ height: resScale(500) }}>
-          <BTabViewScreen
-            isLoading={false}
-            screenToRender={sceneToRender}
-            tabToRender={searchQuery ? tabToRender : []}
-          />
-        </View>
-      )}
+      </TouchableOpacity>}
     </React.Fragment>
   );
 };
