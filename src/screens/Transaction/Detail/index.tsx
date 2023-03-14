@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackActions, useNavigation, useRoute } from '@react-navigation/native';
 import {
   BDivider,
   BPic,
@@ -21,8 +21,9 @@ import {
   getStatusTrx,
 } from '@/utils/generalFunc';
 import moment from 'moment';
-import { LOCATION, SPH, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
+import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { getVisitationOrderByID } from '@/actions/OrderActions';
 
 function ListProduct(item: any, index: number) {
   return (
@@ -44,6 +45,7 @@ function ListProduct(item: any, index: number) {
 const TransactionDetail = () => {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
+  const data = route?.params?.data;
 
   useHeaderTitleChanged({
     title: route?.params?.title,
@@ -65,12 +67,21 @@ const TransactionDetail = () => {
     });
   };
 
-  const gotoSPHPage = () => {
-    navigation.navigate(SPH, { projectId: data.project.id });
+  const gotoSPHPage = async () => {
+    try {
+      let getData;
+      getData = await getVisitationOrderByID(data.QuotationLetter.id);
+      getData = getData.data.data;
+      navigation.dispatch(
+        StackActions.replace(TRANSACTION_DETAIL, {
+          title: getData ? getData.number : 'N/A',
+          data: getData,
+        })
+      );
+    } catch (error) {
+      customLog(error);
+    }
   };
-
-  const data = route?.params?.data;
-  customLog(data, 'datadetail');
 
   return (
     <SafeAreaView style={styles.parent}>
@@ -122,7 +133,7 @@ const TransactionDetail = () => {
                 : '-'
             }
             quotation={data?.QuotationLetter}
-            gotoSPHPage={gotoSPHPage}
+            gotoSPHPage={() => gotoSPHPage()}
           />
           <BSpacer size={'small'} />
           {data?.lastOrder && data?.lastOrder.length > 0 ? (
