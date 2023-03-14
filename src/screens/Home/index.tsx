@@ -25,6 +25,7 @@ import {
   BSpacer,
   BText,
   PopUpQuestion,
+  BCommonSearchList,
 } from '@/components';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
@@ -92,6 +93,7 @@ const Beranda = () => {
     target: number;
   }>({ current: 0, target: 10 }); //temporary setCurrentVisit
   const [isExpanded, setIsExpanded] = React.useState(true);
+  const [index,setIndex]=React.useState(0)
   const [isTargetLoading, setIsTargetLoading] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
   const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
@@ -178,7 +180,6 @@ const Beranda = () => {
             }),
         };
         const { data: _data } = await getAllVisitations(options);
-
         const dispalyData =
           _data.data?.map(
             (el: {
@@ -334,12 +335,14 @@ const Beranda = () => {
     setSelectedDate(dateTime);
   }, []);
 
-  const tabToRender: { tabTitle: string; totalItems: number }[] =
+  const routes: { title: string; totalItems: number }[] =
     React.useMemo(() => {
       return [
         {
-          tabTitle: 'Proyek',
+          key:'first',
+          title: 'Proyek',
           totalItems: data.totalItems || 0,
+          chipPosition:'right'
         },
       ];
     }, [data]);
@@ -492,37 +495,7 @@ const Beranda = () => {
       closeButton: true,
     });
   };
-  const sceneToRender = React.useCallback(() => {
-    if (searchQuery.length <= 2) {
-      return null;
-    }
-    return (
-      <BFlatlistItems
-        renderItem={(item) => (
-          <BVisitationCard
-            item={item}
-            searchQuery={searchQuery}
-            onPress={enable_customer_detail ? visitationOnPress : undefined}
-          />
-        )}
-        isError={isError}
-        errorMessage={errorMessage}
-        searchQuery={searchQuery}
-        data={data.data}
-        isLoading={isLoading}
-        onAction={() => onChangeWithDebounce(searchQuery)}
-        onEndReached={onEndReached}
-      />
-    );
-  }, [
-    data.data,
-    errorMessage,
-    isError,
-    isLoading,
-    onChangeWithDebounce,
-    onEndReached,
-    searchQuery,
-  ]);
+
 
   async function visitationOnPress(
     dataItem: visitationDataType
@@ -593,31 +566,24 @@ const Beranda = () => {
         }}
       >
         <View style={style.modalContent}>
-          <BSearchBar
-            placeholder="Search"
-            activeOutlineColor="gray"
-            left={
-              <TextInput.Icon
-                onPress={kunjunganAction}
-                forceTextInputFocus={false}
-                icon="magnify"
-              />
-            }
-            right={
-              <TextInput.Icon
-                forceTextInputFocus={false}
-                onPress={toggleModal('close')}
-                icon="close"
-              />
-            }
-            value={searchQuery}
+          <BCommonSearchList
+            placeholder='Search'
+            index={index}
+            onIndexChange={setIndex}
+            onPressMagnify={kunjunganAction}
+            onClearValue={toggleModal('close')}
+            searchQuery={searchQuery}
             onChangeText={onChangeSearch}
-          />
-          <BTabViewScreen
-            screenToRender={sceneToRender}
-            isLoading={isLoading}
-            tabToRender={tabToRender}
-          />
+            routes={routes}
+            loadList={isLoading}
+            onPressList={enable_customer_detail ? visitationOnPress : undefined}
+            data={data.data}
+            onEndReached={onEndReached}
+            isError={isError}
+            errorMessage={errorMessage}
+            emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
+            onRetry={()=> onChangeWithDebounce(searchQuery)}
+            />
         </View>
       </Modal>
 

@@ -48,8 +48,6 @@ export default function FirstStep() {
       updateValueOnstep('stepOne', 'companyName', parent.name);
       updateValueOnstep('stepOne', 'locationName', parent.locationName);
       let allProducts: any[] = [];
-
-      console.log('ini data',data)
       data?.forEach((sp) => {
         if (sp?.products) allProducts.push(...sp.products);
       });
