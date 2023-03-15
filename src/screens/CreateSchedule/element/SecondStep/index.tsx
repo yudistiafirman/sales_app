@@ -100,6 +100,7 @@ export default function SecondStep() {
           allProducts[selectedIndex].inputQuantity =
             allProducts[selectedIndex].quantity.toString();
         }
+        onChange('inputtedVolume')(allProducts[selectedIndex].inputQuantity)
         onChange('products')(allProducts);
       },
     },

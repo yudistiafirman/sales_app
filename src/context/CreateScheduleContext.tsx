@@ -39,6 +39,7 @@ const initialData: CreateScheduleState = {
     method: '',
     products: [{}],
     totalDeposit: 0,
+    inputtedVolume: 0,
   },
   shouldScrollView: true,
   existingScheduleID: null,

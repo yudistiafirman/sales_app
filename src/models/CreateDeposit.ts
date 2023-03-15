@@ -3,11 +3,11 @@ export interface CreateDeposit {
   quotationLetterId: string;
   purchaseOrderId: string;
   value: number;
-  paymentDate: number;
+  paymentDate: string;
   status: string;
-  files: FileDepost[];
+  files?: FileDeposit[];
 }
 
-interface FileDepost {
+export interface FileDeposit {
   fileId: string;
 }

@@ -34,6 +34,10 @@ import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { useDispatch } from 'react-redux';
 import { CREATE_SCHEDULE } from '@/navigation/ScreenNames';
+import { CreateSchedule } from '@/models/CreateSchedule';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import { postOrderSchedule } from '@/redux/async-thunks/orderThunks';
+import moment from 'moment';
 
 const labels = ['Cari PO', 'Detil Pengiriman'];
 
@@ -98,7 +102,7 @@ function populateData(
   updateValue('stepTwo', 'totalDeposit', lastDeposit + addedDeposit);
 }
 
-const CreateSchedule = () => {
+const CreateScheduleScreen = () => {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
   const { values, action } = React.useContext(CreateScheduleContext);
@@ -126,7 +130,7 @@ const CreateSchedule = () => {
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
-        actionBackButton();
+        actionBackButton(false);
         return true;
       };
       const backHandler = BackHandler.addEventListener(
@@ -153,12 +157,48 @@ const CreateSchedule = () => {
     stepHandler(values, setStepsDone);
   }, [values]);
 
-  const next = (nextStep: number) => () => {
+  const next = (nextStep: number) => async () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
     } else {
-      navigation.dispatch(StackActions.popToTop());
+      try {
+        let payload: CreateSchedule = {
+          saleOrderId: '',
+          projectId: '',
+          purchaseOrderId: '',
+          quotationLetterId: '',
+          quantity: values.stepTwo.inputtedVolume, // volume inputted
+          date: moment(
+            values.stepTwo.deliveryDate + ' ' + values.stepTwo.deliveryTime,
+            'DD/MM/yyyy HH:mm'
+          ).valueOf(), // date + time
+          withPump: values.stepTwo?.method === 'pompa' ? true : false,
+          consecutive: values.stepTwo?.isConsecutive,
+          withTechnician: values.stepTwo?.hasTechnicalRequest,
+          status: 'SUBMITTED',
+        };
+        await dispatch(postOrderSchedule({ payload })).unwrap();
+        navigation.dispatch(StackActions.popToTop());
+        dispatch(
+          openPopUp({
+            popUpType: 'success',
+            popUpText: 'Successfully create schedule',
+            highlightedText: 'schedule',
+            outsideClickClosePopUp: true,
+          })
+        );
+      } catch (error) {
+        const message = error.message || 'Error creating schedule';
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText: message,
+            highlightedText: 'error',
+            outsideClickClosePopUp: true,
+          })
+        );
+      }
     }
   };
 
@@ -194,7 +234,7 @@ const CreateSchedule = () => {
                 next(values.step + 1)();
                 DeviceEventEmitter.emit('CreateSchedule.continueButton', true);
               }}
-              onPressBack={actionBackButton}
+              onPressBack={() => actionBackButton(false)}
               continueText={values.step > 0 ? 'Buat Jadwal' : 'Lanjut'}
               unrenderBack={values.step > 0 ? false : true}
               disableContinue={!stepsDone.includes(values.step)}
@@ -230,7 +270,7 @@ const styles: Styles = {
 const CreateScheduleWithProvider = (props: any) => {
   return (
     <CreateScheduleProvider>
-      <CreateSchedule {...props} />
+      <CreateScheduleScreen {...props} />
     </CreateScheduleProvider>
   );
 };

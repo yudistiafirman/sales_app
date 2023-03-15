@@ -32,7 +32,7 @@ export default function SecondStep() {
   const { stepTwo: stateTwo, stepOne: stateOne } = values;
   const { updateValueOnstep } = action;
   const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
-  const [expandData,setExpandData]= React.useState<any[]>([])
+  const [expandData, setExpandData] = React.useState<any[]>([]);
   const listenerCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
       updateValueOnstep('stepTwo', 'companyName', parent.name);
@@ -90,22 +90,23 @@ export default function SecondStep() {
       ?.map((prod) => prod?.offeringPrice * prod?.quantity)
       .reduce((prev: any, next: any) => prev + next);
 
-    return totalAmountProducts - deposit;
+    return deposit - totalAmountProducts;
   };
-  const onExpand = (index:number,data:any)=> {
-    let newExpandsetExpandData;
+
+  const onExpand = (index: number, data: any) => {
+    let newExpandedData;
     const isExisted = expandData?.findIndex(
       (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
     );
     if (isExisted === -1) {
-      newExpandsetExpandData = [...expandData, data];
+      newExpandedData = [...expandData, data];
     } else {
-      newExpandsetExpandData = expandData.filter(
+      newExpandedData = expandData.filter(
         (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
       );
     }
-    setExpandData(newExpandsetExpandData);
-  }
+    setExpandData(newExpandedData);
+  };
 
   const { companyName, locationName, sphs } = stateTwo;
   const { deposit } = stateOne;
@@ -138,7 +139,7 @@ export default function SecondStep() {
                   />
                   <BSpacer size={'extraSmall'} />
                 </View>
-             <View style={style.flexFull}>
+                <View style={style.flexFull}>
                   {sphs && sphs.length > 0 && (
                     <BNestedProductCard
                       withoutHeader={false}

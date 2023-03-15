@@ -178,17 +178,17 @@ instance.interceptors.response.use(
         url !== postVisitationUrl &&
         url !== postSphUrl
       ) {
-        store.dispatch(
-          openSnackbar({
-            snackBarText: getSuccessMsgFromAPI(
-              respMethod,
-              urlArray && urlArray.length > 1 ? urlArray[2] : '',
-              config.url,
-              endpoint
-            ),
-            isSuccess: true,
-          })
+        const successMsg = getSuccessMsgFromAPI(
+          respMethod,
+          urlArray && urlArray.length > 1 ? urlArray[2] : '',
+          config.url,
+          endpoint
         );
+
+        if (successMsg && successMsg !== '')
+          store.dispatch(
+            openSnackbar({ snackBarText: successMsg, isSuccess: true })
+          );
       }
     }
     return Promise.resolve(res);

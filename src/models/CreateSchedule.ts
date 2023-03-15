@@ -4,7 +4,7 @@ export interface CreateSchedule {
   purchaseOrderId: string;
   quotationLetterId: string;
   quantity: number;
-  date: number;
+  date: string;
   withPump: boolean;
   consecutive: boolean;
   withTechnician: boolean;

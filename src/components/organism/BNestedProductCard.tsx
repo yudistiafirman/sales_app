@@ -27,8 +27,8 @@ type BNestedProductCardType = {
   withoutSeparator?: boolean;
   isOption?: boolean;
   onSelect?: (index: number) => void;
-  onExpand:(idx:number,data:any)=> void
-  expandData:any[]
+  onExpand: (idx: number, data: any) => void;
+  expandData: any[];
 };
 
 function ListChildProduct(size: number, index: number, item: any) {
@@ -68,7 +68,7 @@ export default function BNestedProductCard({
   withoutSeparator = false,
   isOption,
   onExpand,
-  expandData
+  expandData,
 }: BNestedProductCardType) {
   return (
     <>
@@ -82,12 +82,13 @@ export default function BNestedProductCard({
         const name = item.name || item.QuotationLetter.number;
         const totalPrice =
           item?.products
-            ?.map((it: any) => it.total_price)
-            .reduce((prev: any, next: any) => prev + next, 0) ||
-          item.totalPrice;
+            ?.map((it: any) => it.offeringPrice * it.quantity)
+            .reduce((prev: any, next: any) => prev + next) || item.totalPrice;
         const products = item?.products;
-        const expandItems = expandData?.findIndex((val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id);
-        const isExpand = expandItems === -1
+        const expandItems = expandData?.findIndex(
+          (val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id
+        );
+        const isExpand = expandItems === -1;
         return (
           <View key={index}>
             <View style={styles.containerLastOrder}>
@@ -134,7 +135,7 @@ export default function BNestedProductCard({
                     </View>
                   )}
                 </View>
-                <TouchableWithoutFeedback onPress={() => onExpand(index,item)}>
+                <TouchableWithoutFeedback onPress={() => onExpand(index, item)}>
                   <Icon
                     name={isExpand ? 'chevron-up' : 'chevron-down'}
                     size={30}
@@ -143,7 +144,7 @@ export default function BNestedProductCard({
                 </TouchableWithoutFeedback>
               </View>
 
-              {isExpand&& (
+              {isExpand && (
                 <>
                   <BSpacer size={'small'} />
                   {products &&
