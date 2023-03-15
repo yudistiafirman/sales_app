@@ -23,7 +23,7 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 
 type PoModalData = {
   companyName: string;
-  locationName: string;
+  locationName?: string;
   sphs: any;
 };
 
@@ -33,6 +33,7 @@ type SelectedPOModalType = {
   data: PoModalData;
   onPressCompleted: (data: any) => void;
   modalTitle: string;
+  isDeposit?:boolean
 };
 
 export default function SelectedPOModal({
@@ -41,6 +42,7 @@ export default function SelectedPOModal({
   data,
   onPressCompleted,
   modalTitle,
+  isDeposit
 }: SelectedPOModalType) {
   const [sphData, setSphData] = React.useState<any[]>([]);
   const [expandData,setExpandData]= React.useState<any[]>([])
@@ -66,15 +68,17 @@ export default function SelectedPOModal({
 
   const onExpand = (index:number,data:any)=> {
     let newExpandData;
-    const isExisted = expandData?.findIndex(
+    const isExisted =sphData[0]?.QuotationLetter?.id ? expandData?.findIndex(
       (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
-    );
+    ):  expandData?.findIndex(
+      (val) => val?.id === data?.id)
     if (isExisted === -1) {
       newExpandData = [...expandData, data];
     } else {
-      newExpandData = expandData.filter(
+      newExpandData = sphData[0]?.QuotationLetter?.id? expandData.filter(
         (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
-      );
+      ) : expandData.filter(
+        (val) => val?.id !== data?.id)
     }
     setExpandData(newExpandData);
   }
@@ -151,6 +155,7 @@ export default function SelectedPOModal({
                       isOption={data?.sphs.length > 1}
                       withoutHeader={false}
                       data={sphData}
+                      isDeposit={isDeposit}
                       expandData={expandData}
                       onSelect={onSelectButton}
                       onExpand={onExpand}

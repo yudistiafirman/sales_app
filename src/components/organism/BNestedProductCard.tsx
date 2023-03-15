@@ -7,15 +7,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BProductCard from '../molecules/BProductCard';
 import BDivider from '../atoms/BDivider';
 import font from '@/constants/fonts';
-import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
+import { QuotationRequests,Products } from '@/interfaces/CreatePurchaseOrder';
 import { RadioButton } from 'react-native-paper';
+import { PoProductData, PurchaseOrdersData, SalesOrdersData } from '@/interfaces/CreateDeposit';
 
-type DepositData = {
-  name: string;
-  products: any[];
-};
 
-type BNestedProductCardData = QuotationRequests & DepositData;
+type BNestedProductCardData = QuotationRequests & PurchaseOrdersData;
 
 type BNestedProductCardType = {
   withoutHeader?: boolean;
@@ -23,29 +20,55 @@ type BNestedProductCardType = {
   data?: BNestedProductCardData[];
   selectedPO?: any[];
   onValueChange?: (product: any, value: boolean) => void;
-  deposit?: number;
   withoutSeparator?: boolean;
   isOption?: boolean;
   onSelect?: (index: number) => void;
-  onExpand: (idx: number, data: any) => void;
-  expandData: any[];
+  onExpand:(idx:number,data:any)=> void
+  expandData:any[];
+  isDeposit?:boolean
 };
 
-function ListChildProduct(size: number, index: number, item: any) {
-  const displayName =
-    item?.display_name ||
-    `${item?.Product.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`;
-  const offeringPrice = +item?.offering_price || item?.offeringPrice;
-  const totalPrice = item?.total_price || item?.quantity * offeringPrice;
-  const quantity = item?.quantity ? item?.quantity : 0;
-  const unit = item?.Product?.unit;
+function ListChildProduct(size: number, index: number, item: SalesOrdersData & Products & PoProductData) {
+
+
+const getDataToDisplay = () => {
+  let displayName
+  let offeringPrice
+  let totalPrice
+  let quantity
+  let unit 
+  if(item?.Product){
+      displayName = `${item?.Product?.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`
+      offeringPrice = item?.offeringPrice
+      totalPrice = item?.quantity * item?.offeringPrice
+      quantity = item?.quantity
+      unit = item?.Product?.unit
+  }else if (item?.RequestedProduct){
+     displayName = `${item?.RequestedProduct?.Product?.category?.Parent?.name} ${item?.RequestedProduct?.displayName} ${item?.RequestedProduct?.Product?.category?.name}`
+     offeringPrice = item?.RequestedProduct?.offeringPrice
+     totalPrice = item?.requestedQuantity && item?.RequestedProduct?.offeringPrice ? item?.requestedQuantity * item?.RequestedProduct?.offeringPrice : 0
+     quantity = item?.requestedQuantity
+     unit = item?.RequestedProduct?.Product?.unit
+  }else {
+    displayName = `${item?.PoProduct?.RequestedProduct?.Product?.category?.parent?.name} ${item?.PoProduct?.RequestedProduct?.Product?.displayName} ${item?.PoProduct?.RequestedProduct?.Product?.category?.name}`
+    offeringPrice = item?.PoProduct?.RequestedProduct?.offeringPrice
+    totalPrice = item?.PoProduct?.requestedQuantity && item?.PoProduct?.RequestedProduct?.offeringPrice ? item?.PoProduct?.requestedQuantity * item?.PoProduct?.RequestedProduct?.offeringPrice : 0
+    quantity =  item?.PoProduct?.requestedQuantity
+    unit = item?.PoProduct?.RequestedProduct?.Product?.unit
+  }
+
+  return { displayName,offeringPrice,totalPrice,quantity,unit}
+}
+
+  const {displayName,offeringPrice,totalPrice,quantity,unit} = getDataToDisplay()
+
   return (
     <View key={index}>
       <BProductCard
         name={displayName}
         pricePerVol={offeringPrice}
         volume={quantity}
-        totalPrice={+totalPrice}
+        totalPrice={totalPrice}
         unit={unit}
         backgroundColor={'white'}
       />
@@ -64,11 +87,11 @@ export default function BNestedProductCard({
   data,
   withoutBottomSpace = false,
   onSelect,
-  deposit,
   withoutSeparator = false,
   isOption,
   onExpand,
   expandData,
+  isDeposit
 }: BNestedProductCardType) {
   return (
     <>
@@ -79,16 +102,13 @@ export default function BNestedProductCard({
         </>
       )}
       {data?.map((item, index) => {
-        const name = item.name || item.QuotationLetter.number;
-        const totalPrice =
-          item?.products
-            ?.map((it: any) => it.offeringPrice * it.quantity)
-            .reduce((prev: any, next: any) => prev + next) || item.totalPrice;
-        const products = item?.products;
-        const expandItems = expandData?.findIndex(
-          (val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id
-        );
-        const isExpand = expandItems === -1;
+
+        const name = item?.QuotationLetter?.number || item?.brikNumber;
+        const totalPrice = item?.totalPrice;
+        const products = item?.products || item?.PoProducts || item?.SaleOrders;
+        const deposit = item?.totalDeposit
+        const expandItems = item?.products ?  expandData?.findIndex((val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id) : expandData?.findIndex((val) => val?.id === item?.id)
+        const isExpand = expandItems === -1
         return (
           <View key={index}>
             <View style={styles.containerLastOrder}>
@@ -116,7 +136,7 @@ export default function BNestedProductCard({
                       </Text>
                     </View>
                   </View>
-                  {deposit && (
+                  {isDeposit && (
                     <View style={styles.flexRow}>
                       <Text style={styles.titleLastOrder}>Deposit</Text>
                       <View style={styles.valueView}>
@@ -129,7 +149,7 @@ export default function BNestedProductCard({
                             },
                           ]}
                         >
-                          IDR {formatCurrency(deposit)}
+                          IDR {formatCurrency(deposit ? deposit : 0)}
                         </Text>
                       </View>
                     </View>

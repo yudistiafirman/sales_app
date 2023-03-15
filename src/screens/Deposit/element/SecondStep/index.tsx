@@ -10,7 +10,6 @@ import {
 } from '@/components';
 import { TextInput } from 'react-native-paper';
 import {
-  DeviceEventEmitter,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -19,12 +18,12 @@ import {
   View,
 } from 'react-native';
 import { resScale } from '@/utils';
-import { CREATE_DEPOSIT, SEARCH_PO } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { CreateDepositContext } from '@/context/CreateDepositContext';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import formatCurrency from '@/utils/formatCurrency';
+import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
 
 export default function SecondStep() {
   const navigation = useNavigation();
@@ -32,22 +31,17 @@ export default function SecondStep() {
   const { stepTwo: stateTwo, stepOne: stateOne } = values;
   const { updateValueOnstep } = action;
   const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
-  const [expandData, setExpandData] = React.useState<any[]>([]);
+  const [expandData, setExpandData] = React.useState<any[]>([])
+  const [isSearchingPurchaseOrder, setIsSearchingPurchaseOrder] = React.useState(false)
   const listenerCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
       updateValueOnstep('stepTwo', 'companyName', parent.name);
       updateValueOnstep('stepTwo', 'locationName', parent.locationName);
       updateValueOnstep('stepTwo', 'sphs', data);
+      setIsSearchingPurchaseOrder(false)
     },
     [updateValueOnstep]
   );
-
-  React.useEffect(() => {
-    DeviceEventEmitter.addListener('SearchPO.data', listenerCallback);
-    return () => {
-      DeviceEventEmitter.removeAllListeners('SearchPO.data');
-    };
-  }, [listenerCallback]);
 
   // const onValueChanged = (item: any, value: boolean) => {
   //   let listSelectedPO: any[] = [];
@@ -76,7 +70,7 @@ export default function SecondStep() {
   };
 
   const changePO = () => {
-    navigation.navigate(SEARCH_PO, { from: CREATE_DEPOSIT });
+    setIsSearchingPurchaseOrder(true)
   };
 
   const calculatedTotal = (): number => {
@@ -88,7 +82,7 @@ export default function SecondStep() {
     });
     const totalAmountProducts = allProducts
       ?.map((prod) => prod?.offeringPrice * prod?.quantity)
-      .reduce((prev: any, next: any) => prev + next);
+      .reduce((prev: any, next: any) => prev + next, 0);
 
     return deposit - totalAmountProducts;
   };
@@ -96,13 +90,13 @@ export default function SecondStep() {
   const onExpand = (index: number, data: any) => {
     let newExpandedData;
     const isExisted = expandData?.findIndex(
-      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
+      (val) => val?.id === data?.id
     );
     if (isExisted === -1) {
       newExpandedData = [...expandData, data];
     } else {
       newExpandedData = expandData.filter(
-        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
+        (val) => val?.id !== data?.id
       );
     }
     setExpandData(newExpandedData);
@@ -126,7 +120,7 @@ export default function SecondStep() {
           <BDivider />
         </View>
         <View style={style.flexFull}>
-          {sphs && sphs.length > 0 ? (
+          {sphs && sphs.length > 0 && !isSearchingPurchaseOrder ? (
             <>
               <ScrollView
                 style={[style.flexFull, { marginBottom: layout.pad.xxl }]}
@@ -146,7 +140,7 @@ export default function SecondStep() {
                       data={sphs}
                       expandData={expandData}
                       onExpand={onExpand}
-                      deposit={deposit?.nominal}
+                      isDeposit
                       withoutSeparator
                     />
                   )}
@@ -163,12 +157,17 @@ export default function SecondStep() {
           ) : (
             <>
               <BSpacer size={'extraSmall'} />
-              <TouchableOpacity style={style.touchable} onPress={changePO} />
-              <BSearchBar
-                placeholder="Cari PO"
-                activeOutlineColor="gray"
-                left={<TextInput.Icon icon="magnify" />}
-              />
+              {
+                isSearchingPurchaseOrder ? <SelectPurchaseOrderData dataToGet='DEPOSITDATA' onSubmitData={({ parentData, data }) => listenerCallback({ parent: parentData, data })} /> :
+                  <TouchableOpacity style={style.touchable} onPress={changePO}>
+                    <BSearchBar
+                      placeholder="Cari PO"
+                      activeOutlineColor="gray"
+                      disabled
+                      left={<TextInput.Icon icon="magnify" />}
+                    />
+                  </TouchableOpacity>
+              }
             </>
           )}
         </View>

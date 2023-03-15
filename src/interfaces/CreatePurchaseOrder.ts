@@ -15,6 +15,13 @@ interface Products {
   Product: {
     name: string;
     unit: string;
+    displayName:string;
+    category: {
+      name: string,
+      Parent: {
+          name: string
+      }
+  }
   };
 }
 
