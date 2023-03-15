@@ -16,7 +16,7 @@ import { TextInput } from 'react-native-paper';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
-import SelectedPOModal from '@/screens/SearchPO/element/SelectedPOModal';
+import SelectedPOModal from '@/components/templates/SelectPurchaseOrder/element/SelectedPOModal';
 import {
   CreatedSPHListResponse,
   QuotationLetters,
@@ -42,7 +42,7 @@ const CreatePo = () => {
     poNumber,
   } = poState.currentState.context;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
-  const [expandData,setExpandData]= React.useState<any[]>([])
+  const [expandData, setExpandData] = React.useState<any[]>([])
   const addMoreImages = useCallback(() => {
     dispatch({ type: 'addMoreImages' });
   }, [dispatch]);
@@ -126,7 +126,7 @@ const CreatePo = () => {
     dispatch({ type: 'searching', value: text });
   }, []);
 
-  const onExpand = (index:number,data:any)=> {
+  const onExpand = (index: number, data: any) => {
     let newExpandsetExpandData;
     const isExisted = expandData?.findIndex(
       (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
@@ -189,7 +189,7 @@ const CreatePo = () => {
                       location:
                         choosenSphDataFromList?.ShippingAddress !== null
                           ? choosenSphDataFromModal?.ShippingAddress?.Postal
-                              ?.City?.name
+                            ?.City?.name
                           : '',
                     }}
                     isRenderIcon

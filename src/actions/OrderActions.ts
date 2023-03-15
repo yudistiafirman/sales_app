@@ -45,3 +45,7 @@ export const getCreatedSphDocuments = async (id: string) => {
 export const postPurchaseOrder = async (payload) => {
   return customRequest(BrikApiOrder.postPurchaseOrder(), 'POST',payload, true);
 };
+
+export const getConfirmedPurchaseOrder = async (page:string,size:string,searchQuery:string,productPo='1')=>{
+  return customRequest(BrikApiOrder.getConfirmedPurchaseOrder(page,size,searchQuery ,productPo),'GET',undefined,true)
+}

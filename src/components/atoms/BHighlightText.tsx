@@ -66,7 +66,7 @@ const style = StyleSheet.create({
   normalText: {
     fontFamily: font.family.montserrat[500],
     color: colors.textInput.input,
-    width:resScale(200),
+    maxWidth:resScale(200),
   },
   boldText: {
     fontWeight: '900',
