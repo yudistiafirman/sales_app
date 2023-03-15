@@ -155,7 +155,7 @@ export default function BNestedProductCard({
                     </View>
                   )}
                 </View>
-                <TouchableWithoutFeedback onPress={() => onExpand(index,item)}>
+                <TouchableWithoutFeedback onPress={() => onExpand(index, item)}>
                   <Icon
                     name={isExpand ? 'chevron-up' : 'chevron-down'}
                     size={30}
@@ -164,7 +164,7 @@ export default function BNestedProductCard({
                 </TouchableWithoutFeedback>
               </View>
 
-              {isExpand&& (
+              {isExpand && (
                 <>
                   <BSpacer size={'small'} />
                   {products &&

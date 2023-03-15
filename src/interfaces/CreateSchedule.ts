@@ -44,6 +44,7 @@ interface CreateScheduleSecondStep {
     }
   ];
   totalDeposit: number;
+  inputtedVolume: number;
 }
 
 interface CreateScheduleState {

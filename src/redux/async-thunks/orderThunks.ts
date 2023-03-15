@@ -1,7 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { postSph } from '@/actions/OrderActions';
+import { postDeposit, postSchedule, postSph } from '@/actions/OrderActions';
 import { postSphResponseType, sphOrderPayloadType } from '@/interfaces';
 import { customLog } from '@/utils/generalFunc';
+import { CreateDeposit } from '@/models/CreateDeposit';
+import { CreateSchedule } from '@/models/CreateSchedule';
 
 type errorType = {
   success: boolean;
@@ -29,6 +31,38 @@ export const postOrderSph = createAsyncThunk<
     customLog(error.message, 'erroratpostOrderSph');
 
     customLog(error?.response?.data, 'error at', 'common/postOrderSph');
+    return rejectWithValue(error.message);
+  }
+});
+
+export const postOrderDeposit = createAsyncThunk<
+  { deposit: CreateDeposit },
+  { payload: CreateDeposit }
+>('order/postOrderDeposit', async ({ payload }, { rejectWithValue }) => {
+  try {
+    const response = await postDeposit(payload);
+    const { data } = response;
+
+    if (data.error) throw data as errorType;
+
+    return data.data;
+  } catch (error) {
+    return rejectWithValue(error.message);
+  }
+});
+
+export const postOrderSchedule = createAsyncThunk<
+  { schedule: CreateSchedule },
+  { payload: CreateSchedule }
+>('order/postOrderSchedule', async ({ payload }, { rejectWithValue }) => {
+  try {
+    const response = await postSchedule(payload);
+    const { data } = response;
+
+    if (data.error) throw data as errorType;
+
+    return data.data;
+  } catch (error) {
     return rejectWithValue(error.message);
   }
 });

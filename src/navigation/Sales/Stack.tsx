@@ -44,7 +44,7 @@ import {
 } from '../ScreenNames';
 import CustomerDetail from '@/screens/CustomerDetail';
 import PurchaseOrderWithProvider from '@/screens/PurchaseOrder';
-import CreateSchedule from '@/screens/CreateSchedule';
+import CreateScheduleScreen from '@/screens/CreateSchedule';
 import PriceList from '@/screens/Price';
 import AppointmentWithProvider from '@/screens/Appointment';
 import SearchPO from '@/components/templates/SelectPurchaseOrder';
@@ -162,7 +162,7 @@ const SalesStack = (Stack: any) => {
       <Stack.Screen
         name={CREATE_SCHEDULE}
         key={CREATE_SCHEDULE}
-        component={CreateSchedule}
+        component={CreateScheduleScreen}
         options={{
           headerTitle: CREATE_SCHEDULE_TITLE,
         }}

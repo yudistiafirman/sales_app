@@ -34,6 +34,11 @@ import SecondStep from './element/SecondStep';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { useDispatch } from 'react-redux';
 import { CREATE_DEPOSIT } from '@/navigation/ScreenNames';
+import { CreateDeposit } from '@/models/CreateDeposit';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import moment from 'moment';
+import { postOrderDeposit } from '@/redux/async-thunks/orderThunks';
+import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
 
 const labels = ['Data Pelanggan', 'Cari PO'];
 
@@ -55,7 +60,20 @@ function stepHandler(
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 0));
   }
-  if (stepTwo.companyName && stepTwo.sphs) {
+
+  let allProducts: any[] = [];
+  stepTwo.sphs?.forEach((sp) => {
+    if (sp?.products) allProducts.push(...sp.products);
+  });
+  const totalAmountProducts = allProducts
+    ?.map((prod) => prod?.offeringPrice * prod?.quantity)
+    .reduce((prev: any, next: any) => prev + next);
+
+  if (
+    stepTwo.companyName &&
+    stepTwo.sphs &&
+    stepOne.deposit.nominal >= totalAmountProducts
+  ) {
     setStepsDone((curr) => {
       return [...new Set(curr), 1];
     });
@@ -104,7 +122,7 @@ const Deposit = () => {
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
-        actionBackButton();
+        actionBackButton(false);
         return true;
       };
       const backHandler = BackHandler.addEventListener(
@@ -131,12 +149,59 @@ const Deposit = () => {
     stepHandler(values, setStepsDone);
   }, [values]);
 
-  const next = (nextStep: number) => () => {
+  const next = (nextStep: number) => async () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
       updateValue('step', nextStep);
     } else {
-      navigation.dispatch(StackActions.popToTop());
+      try {
+        const photoFiles = values.stepOne?.deposit?.picts?.map((photo) => {
+          return {
+            ...photo.file,
+            uri: photo?.file?.uri?.replace('file:', 'file://'),
+          };
+        });
+        const uploadedImage = await dispatch(
+          postUploadFiles({ files: photoFiles, from: 'deposit' })
+        ).unwrap();
+
+        let payload: CreateDeposit = {
+          projectId: '',
+          quotationLetterId: '',
+          purchaseOrderId: '',
+          value: values.stepOne?.deposit?.nominal,
+          paymentDate: moment(
+            values.stepOne?.deposit?.createdAt,
+            'DD/MM/yyyy'
+          ).valueOf(),
+          status: 'SUBMITTED',
+          files: [],
+        };
+        uploadedImage.forEach((item) => {
+          payload.files.push({ fileId: item?.id });
+        });
+        console.log('pussh: ', payload);
+        await dispatch(postOrderDeposit({ payload })).unwrap();
+        navigation.dispatch(StackActions.popToTop());
+        dispatch(
+          openPopUp({
+            popUpType: 'success',
+            popUpText: 'Successfully create deposit',
+            highlightedText: 'deposit',
+            outsideClickClosePopUp: true,
+          })
+        );
+      } catch (error) {
+        const message = error.message || 'Error creating deposit';
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText: message,
+            highlightedText: 'error',
+            outsideClickClosePopUp: true,
+          })
+        );
+      }
     }
   };
 
@@ -171,7 +236,7 @@ const Deposit = () => {
                 next(values.step + 1)();
                 DeviceEventEmitter.emit('Deposit.continueButton', true);
               }}
-              onPressBack={actionBackButton}
+              onPressBack={() => actionBackButton(false)}
               continueText={values.step > 0 ? 'Buat Deposit' : 'Lanjut'}
               disableContinue={!stepsDone.includes(values.step)}
             />

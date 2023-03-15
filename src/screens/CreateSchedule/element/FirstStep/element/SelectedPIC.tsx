@@ -11,8 +11,8 @@ import LinearGradient from 'react-native-linear-gradient';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 import Entypo from 'react-native-vector-icons/Entypo';
-import { CreateScheduleContext } from '../../context/CreateScheduleContext';
 import { customLog } from '@/utils/generalFunc';
+import { CreateScheduleContext } from '@/context/CreateScheduleContext';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;

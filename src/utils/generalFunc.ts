@@ -224,6 +224,12 @@ export const getSuccessMsgFromAPI = (
       case 'quotation-letter':
         finalText += 'data SPH';
         break;
+      case 'deposit':
+        finalText = '';
+        break;
+      case 'schedule':
+        finalText = '';
+        break;
       default:
         if (fullUrl.toLowerCase().includes('sph/')) finalText += 'dokumen SPH';
         else if (fullUrl.toLowerCase().includes('purchase-order/'))
@@ -241,4 +247,4 @@ export const getSuccessMsgFromAPI = (
 
 export const uniqueStringGenerator = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
-}
+};

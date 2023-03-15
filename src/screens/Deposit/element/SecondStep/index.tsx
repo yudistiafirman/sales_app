@@ -10,7 +10,6 @@ import {
 } from '@/components';
 import { TextInput } from 'react-native-paper';
 import {
-  DeviceEventEmitter,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -19,7 +18,6 @@ import {
   View,
 } from 'react-native';
 import { resScale } from '@/utils';
-import { CREATE_DEPOSIT, SEARCH_PO } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { CreateDepositContext } from '@/context/CreateDepositContext';
 import { colors, fonts, layout } from '@/constants';
@@ -86,22 +84,23 @@ export default function SecondStep() {
       ?.map((prod) => prod?.offeringPrice * prod?.quantity)
       .reduce((prev: any, next: any) => prev + next, 0);
 
-    return totalAmountProducts - deposit;
+    return deposit - totalAmountProducts;
   };
+
   const onExpand = (index: number, data: any) => {
-    let newExpandsetExpandData;
+    let newExpandedData;
     const isExisted = expandData?.findIndex(
       (val) => val?.id === data?.id
     );
     if (isExisted === -1) {
-      newExpandsetExpandData = [...expandData, data];
+      newExpandedData = [...expandData, data];
     } else {
-      newExpandsetExpandData = expandData.filter(
+      newExpandedData = expandData.filter(
         (val) => val?.id !== data?.id
       );
     }
-    setExpandData(newExpandsetExpandData);
-  }
+    setExpandData(newExpandedData);
+  };
 
   const { companyName, locationName, sphs } = stateTwo;
   const { deposit } = stateOne;
