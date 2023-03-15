@@ -10,14 +10,10 @@ import BSearchBar from '@/components/molecules/BSearchBar';
 import { TextInput } from 'react-native-paper';
 import BTabSections from '@/components/organism/TabSections';
 import BEmptyState from '../organism/BEmptyState';
-type POData = {
-  companyName: string;
-  locationName: string;
-  sphs: any[];
-  id: string;
-};
+import { CreatedPurchaseOrderListResponse } from '@/interfaces/CreateDeposit';
 
-type ListRenderItemData = POData & CreatedSPHListResponse & selectedCompanyInterface;
+
+type ListRenderItemData = CreatedPurchaseOrderListResponse & CreatedSPHListResponse & selectedCompanyInterface;
 
 interface BCommonSearchListProps<ArrayOfObject> {
   data: ArrayOfObject[];
@@ -45,6 +41,7 @@ interface BCommonSearchListProps<ArrayOfObject> {
   placeholder?: string;
   onRetry?: () => void;
   emptyText: string;
+  hidePicName?:boolean
 }
 
 const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
@@ -68,6 +65,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
   emptyText,
   onClearValue,
   onPressMagnify,
+  hidePicName
 }: BCommonSearchListProps<ArrayOfObject>) => {
   const isSearching = searchQuery.length > 2;
   const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
@@ -80,13 +78,13 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
       }
       const constructVisitationData: visitationDataType = {
         id: idx,
-        name: item?.companyName || item?.name,
+        name:  item?.name,
         location:
-          item.locationName || item?.ShippingAddress?.Postal?.City?.name || item?.location || item?.locationAddress?.line1,
+          item.locationName || item?.ShippingAddress?.Postal?.City?.name || item?.location || item?.locationAddress?.line1 || item?.address?.line1,
         pilNames:
-          item?.sphs?.map((it) => it.name) ||
+          item?.PurchaseOrders?.map((it) => it.brikNumber) ||
           item?.QuotationRequests?.map((val) => val?.QuotationLetter?.number),
-          picOrCompanyName: picOrCompanyName,
+          picOrCompanyName: !hidePicName ? picOrCompanyName :'',
         status:item?.status,
         pilStatus:item?.pilStatus
        

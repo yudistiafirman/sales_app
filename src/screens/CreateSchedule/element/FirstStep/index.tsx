@@ -31,6 +31,7 @@ import formatCurrency from '@/utils/formatCurrency';
 import AddedDepositModal from '../AddedDepositModal';
 import { useDispatch } from 'react-redux';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
 
 export default function FirstStep() {
   const navigation = useNavigation();
@@ -39,7 +40,8 @@ export default function FirstStep() {
   const { updateValueOnstep } = action;
   const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
   const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-    const [expandData,setExpandData]= React.useState<any[]>([])
+  const [expandData, setExpandData] = React.useState<any[]>([])
+  const [isSearchingPoData, setIsSearhingPoData] = React.useState(false)
   const dispatch = useDispatch();
 
   const listenerSearchCallback = React.useCallback(
@@ -52,16 +54,10 @@ export default function FirstStep() {
         if (sp?.products) allProducts.push(...sp.products);
       });
       updateValueOnstep('stepTwo', 'products', allProducts);
+      setIsSearhingPoData(false)
     },
     [updateValueOnstep]
   );
-
-  React.useEffect(() => {
-    DeviceEventEmitter.addListener('SearchPO.data', listenerSearchCallback);
-    return () => {
-      DeviceEventEmitter.removeAllListeners('SearchPO.data');
-    };
-  }, [listenerSearchCallback]);
 
   // const onValueChanged = (item: any, value: boolean) => {
   //   let listSelectedPO: any[] = [];
@@ -76,16 +72,16 @@ export default function FirstStep() {
   //   setSelectedPO(listSelectedPO);
   // };
 
-    const onExpand = (index:number,data:any)=> {
+  const onExpand = (index: number, data: any) => {
     let newExpandsetExpandData;
     const isExisted = expandData?.findIndex(
-      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
+      (val) => val?.id === data?.id
     );
     if (isExisted === -1) {
       newExpandsetExpandData = [...expandData, data];
     } else {
       newExpandsetExpandData = expandData.filter(
-        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
+        (val) => val?.id !== data?.id
       );
     }
     setExpandData(newExpandsetExpandData);
@@ -194,18 +190,27 @@ export default function FirstStep() {
         </>
       ) : (
         <>
-          <View>
-            <TouchableOpacity
-              style={style.touchable}
-              onPress={() => {
-                navigation.navigate(SEARCH_PO, { from: CREATE_SCHEDULE });
-              }}
-            />
-            <BSearchBar
-              placeholder="Cari PO"
-              activeOutlineColor="gray"
-              left={<TextInput.Icon icon="magnify" />}
-            />
+          <View style={{ flex: 1 }}>
+            {
+              isSearchingPoData ? (
+                <SelectPurchaseOrderData dataToGet='SCHEDULEDATA' onSubmitData={({ parentData, data }) => listenerSearchCallback({ parent: parentData, data: data })} />
+              ) : (
+                <>
+                  <TouchableOpacity
+                    style={style.touchable}
+                    onPress={() => setIsSearhingPoData(true)}
+                  />
+                  <BSearchBar
+                    placeholder="Cari PO"
+                    disabled
+                    activeOutlineColor="gray"
+                    left={<TextInput.Icon icon="magnify" />}
+                  />
+                </>
+              )
+
+            }
+
           </View>
         </>
       )}

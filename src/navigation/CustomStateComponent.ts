@@ -45,7 +45,6 @@ export type RootStackParamList = {
   CALENDAR: { useTodayMinDate: boolean };
   TRANSACTION_DETAIL: { title: string; data: any };
   CREATE_SCHEDULE: undefined;
-  SEARCH_PO: { from: string };
   CUSTOMER_DETAIL: { existingVisitation?: any };
   DOCUMENTS: { projectId?: string; docs?: Docs[] };
   VISIT_HISTORY: { projectId?: string; projectName?: string };
@@ -57,6 +56,6 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> =
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    interface RootParamList extends RootStackParamList { }
   }
 }
