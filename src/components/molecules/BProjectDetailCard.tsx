@@ -1,7 +1,10 @@
 import { View, Text, StyleSheet } from 'react-native';
 import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
-import { customLog, getColorStatusTrx } from '@/utils/generalFunc';
+import {
+  getColorStatusTrx,
+  getStatusTrx,
+} from '@/utils/generalFunc';
 import BSpacer from '../atoms/BSpacer';
 import BTouchableText from '../atoms/BTouchableText';
 import formatCurrency from '@/utils/formatCurrency';
@@ -15,6 +18,12 @@ type BProjectDetailCardType = {
   quotation?: any;
   nominal?: number;
   paymentDate?: string;
+  deliveryDate?: string;
+  deliveryTime?: string;
+  scheduleMethod?: string;
+  useBEStatus?: boolean;
+  tmNumber?: string;
+  driverName?: string;
   gotoSPHPage?: () => void;
 };
 
@@ -27,10 +36,16 @@ export default function BProjectDetailCard({
   quotation,
   nominal,
   paymentDate,
+  deliveryDate,
+  deliveryTime,
+  scheduleMethod,
+  tmNumber,
+  driverName,
+  useBEStatus = false,
   gotoSPHPage,
 }: BProjectDetailCardType) {
-  const { color, textColor } = getColorStatusTrx(status);
-  customLog(color, 'status', status);
+  const statusFinal = useBEStatus ? status : getStatusTrx(status);
+  const { color, textColor } = getColorStatusTrx(statusFinal);
 
   return (
     <View>
@@ -38,7 +53,7 @@ export default function BProjectDetailCard({
         <Text style={styles.summary}>Status</Text>
         <View style={[styles.chip, { backgroundColor: color }]}>
           <Text style={[styles.summary, styles.fontw400, { color: textColor }]}>
-            {status}
+            {statusFinal}
           </Text>
         </View>
       </View>
@@ -100,6 +115,61 @@ export default function BProjectDetailCard({
             <Text style={styles.summary}>Nominal</Text>
             <Text style={[styles.summary, styles.fontw400]}>
               {'IDR ' + formatCurrency(nominal)}
+            </Text>
+          </View>
+        </>
+      )}
+      {deliveryDate && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Tanggal Pengiriman</Text>
+            <Text style={[styles.summary, styles.fontw400]}>
+              {deliveryDate}
+            </Text>
+          </View>
+        </>
+      )}
+      {deliveryTime && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Jam Pengiriman</Text>
+            <Text style={[styles.summary, styles.fontw400]}>
+              {deliveryTime}
+            </Text>
+          </View>
+        </>
+      )}
+      {scheduleMethod && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Metode Penuangan</Text>
+            <Text style={[styles.summary, styles.fontw400]}>
+              {scheduleMethod}
+            </Text>
+          </View>
+        </>
+      )}
+      {tmNumber && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Nomor TM</Text>
+            <Text style={[styles.summary, styles.fontw400]}>
+              {tmNumber}
+            </Text>
+          </View>
+        </>
+      )}
+      {driverName && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Nama Sopir</Text>
+            <Text style={[styles.summary, styles.fontw400]}>
+              {driverName}
             </Text>
           </View>
         </>

@@ -19,23 +19,35 @@ import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { colors, fonts, layout } from '@/constants';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { ScrollView } from 'react-native-gesture-handler';
-import {
-  beautifyPhoneNumber,
-  customLog,
-  getStatusTrx,
-} from '@/utils/generalFunc';
+import { beautifyPhoneNumber, customLog } from '@/utils/generalFunc';
 import moment from 'moment';
 import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { getVisitationOrderByID } from '@/actions/OrderActions';
 import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
+import { PO_METHOD_LIST } from '@/constants/dropdown';
 
-function ListProduct(item: any, index: number) {
+function ListProduct(
+  item: any,
+  index: number,
+  selectedType: string,
+  quantity: number | undefined
+) {
   let displayName = '';
   if (item.display_name) {
     displayName = `${
       item?.category?.Parent ? item?.category?.Parent?.name + ' ' : ''
     }${item?.display_name} ${item?.category ? item?.category?.name : ''}`;
+  } else if (item.ReqProduct) {
+    displayName = `${
+      item?.ReqProduct?.product?.category?.Parent
+        ? item?.ReqProduct?.product?.category?.Parent?.name + ' '
+        : ''
+    }${item?.ReqProduct?.product?.displayName} ${
+      item?.ReqProduct?.product?.category
+        ? item?.ReqProduct?.product?.category?.name
+        : ''
+    }`;
   } else {
     displayName = `${
       item?.category?.Parent ? item?.category?.Parent?.name + ' ' : ''
@@ -46,11 +58,37 @@ function ListProduct(item: any, index: number) {
       <BProductCard
         name={displayName}
         pricePerVol={
-          item.offering_price ? item.offering_price : item.offeringPrice
+          item.ReqProduct
+            ? item.ReqProduct?.offeringPrice
+            : item.offering_price
+            ? item.offering_price
+            : item.offeringPrice
         }
-        volume={item.quantity ? item.quantity : 0}
-        totalPrice={item.total_price ? item.total_price : item.totalPrice}
-        unit={item.unit}
+        volume={
+          quantity
+            ? quantity
+            : item.requestedQuantity
+            ? item.requestedQuantity
+            : item.quantity
+            ? item.quantity
+            : 0
+        }
+        totalPrice={
+          item.ReqProduct
+            ? item.ReqProduct?.totalPrice
+            : item.total_price
+            ? item.total_price
+            : item.totalPrice
+        }
+        unit={
+          item.ReqProduct?.product ? item.ReqProduct?.product.unit : item.unit
+        }
+        hideTotal={
+          selectedType !== 'Jadwal' && selectedType !== 'DO' ? false : true
+        }
+        hidePricePerVolume={
+          selectedType !== 'Jadwal' && selectedType !== 'DO' ? false : true
+        }
       />
       <BSpacer size={'extraSmall'} />
     </View>
@@ -65,7 +103,7 @@ const TransactionDetail = () => {
   const [expandData, setExpandData] = React.useState<any[]>([]);
 
   useHeaderTitleChanged({
-    title: route?.params?.title,
+    title: route?.params?.title ? route?.params?.title : '-',
   });
 
   React.useEffect(() => {
@@ -151,9 +189,10 @@ const TransactionDetail = () => {
                 : '-'
             }
             location={
-              data?.address
+              data?.address && data?.address.line1
                 ? data?.address.line1
-                : data?.project?.LocationAddress
+                : data?.project?.LocationAddress &&
+                  data?.project?.LocationAddress.line1
                 ? data?.project?.LocationAddress.line1
                 : '-'
             }
@@ -176,7 +215,7 @@ const TransactionDetail = () => {
           <Text style={styles.partText}>Rincian</Text>
           <BSpacer size={'extraSmall'} />
           <BProjectDetailCard
-            status={getStatusTrx(data?.status)}
+            status={data?.status}
             paymentMethod={
               selectedType === 'SPH' || selectedType === 'PO'
                 ? !data?.paymentType
@@ -197,7 +236,11 @@ const TransactionDetail = () => {
                 : undefined
             }
             productionTime={
-              data?.createdAt
+              selectedType === 'DO'
+                ? data?.date
+                  ? moment(data?.date).format('DD MMM yyyy HH:mm')
+                  : '-'
+                : data?.createdAt
                 ? moment(data?.createdAt).format('DD MMM yyyy HH:mm')
                 : '-'
             }
@@ -210,7 +253,39 @@ const TransactionDetail = () => {
                 ? moment(data?.datePayment).format('DD MMM yyyy')
                 : undefined
             }
+            deliveryDate={
+              selectedType === 'Jadwal' && data?.date
+                ? moment(data?.date).format('DD MMM yyyy')
+                : undefined
+            }
+            deliveryTime={
+              selectedType === 'Jadwal' && data?.date
+                ? moment(data?.date).format('HH:mm')
+                : undefined
+            }
+            scheduleMethod={
+              data?.withPump !== undefined
+                ? data?.withPump === true
+                  ? PO_METHOD_LIST[0].label
+                  : PO_METHOD_LIST[1].label
+                : undefined
+            }
             gotoSPHPage={() => gotoSPHPage()}
+            tmNumber={
+              selectedType === 'DO'
+                ? data?.tmNumber
+                  ? data?.tmNumber
+                  : '-'
+                : undefined
+            }
+            driverName={
+              selectedType === 'DO'
+                ? data?.driverName
+                  ? data?.driverName
+                  : '-'
+                : undefined
+            }
+            useBEStatus={selectedType === 'SPH' ? false : true}
           />
           <BSpacer size={'small'} />
           {selectedType === 'Deposit' ? (
@@ -229,28 +304,57 @@ const TransactionDetail = () => {
                   <Text style={styles.partText}>Produk</Text>
                   <BSpacer size={'extraSmall'} />
                   {data?.products.map((item, index) =>
-                    ListProduct(item, index)
+                    ListProduct(
+                      item,
+                      index,
+                      selectedType,
+                      data?.quantity ? data?.quantity : data?.Schedule?.quantity
+                    )
                   )}
                   <BSpacer size={'small'} />
                 </>
               )}
             </>
           )}
-          {selectedType === 'Deposit' && (
+          {(selectedType === 'Deposit' || selectedType === 'Jadwal') && (
             <>
               <BDivider />
               <BSpacer size={'small'} />
               <BDepositCard
-                firstSectionText={'Deposit Awal'}
+                firstSectionText={
+                  selectedType === 'Jadwal' ? 'Deposit' : 'Deposit Awal'
+                }
                 firstSectionValue={
-                  data?.PurchaseOrder?.totalDeposit
+                  selectedType === 'Jadwal'
+                    ? data.SaleOrder?.availableDeposit
+                      ? data.SaleOrder?.availableDeposit
+                      : 0
+                    : data?.PurchaseOrder?.totalDeposit
                     ? data?.PurchaseOrder?.totalDeposit
                     : 0
                 }
-                secondSectionText={'Tambahan Deposit'}
-                secondSectionValue={data?.value ? data?.value : 0}
-                thirdSectionText={'Deposit Akhir'}
-                isSum
+                secondSectionText={
+                  selectedType === 'Jadwal'
+                    ? data?.products && data?.products.length > 0
+                      ? data?.products[0].displayName
+                      : '-'
+                    : 'Tambahan Deposit'
+                }
+                secondSectionValue={
+                  selectedType === 'Jadwal'
+                    ? data?.products && data?.products.length > 0
+                      ? data?.products[0].totalPrice
+                      : 0
+                    : data?.value
+                    ? data?.value
+                    : 0
+                }
+                thirdSectionText={
+                  selectedType === 'Jadwal'
+                    ? 'Est. Sisa Deposit'
+                    : 'Deposit Akhir'
+                }
+                isSum={selectedType === 'Jadwal' ? false : true}
               />
             </>
           )}

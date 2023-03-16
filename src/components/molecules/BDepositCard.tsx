@@ -28,6 +28,18 @@ export default function BDepositCard({
   style,
   isSum = false,
 }: BDepositCardType) {
+  const getTotalDifference = () => {
+    let result = 0;
+    result = firstSectionValue - secondSectionValue;
+    if (result < 0) result = -result;
+    return result;
+  };
+  const getTotalSum = () => {
+    let result = 0;
+    result = firstSectionValue + secondSectionValue;
+    return result;
+  };
+
   return (
     <View style={style}>
       <View style={styles.summaryContainer}>
@@ -40,8 +52,7 @@ export default function BDepositCard({
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>{secondSectionText}</Text>
         <Text style={[styles.summary, styles.fontw400]}>
-          {isSum ? '+ ' : ''} IDR
-          {formatCurrency(secondSectionValue)}
+          {isSum ? '+' : '-'} IDR {formatCurrency(secondSectionValue)}
         </Text>
       </View>
       <BSpacer size={'extraSmall'} />
@@ -57,11 +68,7 @@ export default function BDepositCard({
           ]}
         >
           {'IDR ' +
-            formatCurrency(
-              isSum
-                ? firstSectionValue + secondSectionValue
-                : firstSectionValue - secondSectionValue
-            )}
+            formatCurrency(isSum ? getTotalSum() : getTotalDifference())}
         </Text>
       </View>
       {isError && (

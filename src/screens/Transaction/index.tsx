@@ -124,7 +124,7 @@ const Transaction = () => {
         if (selectedType === 'PO') {
           data = await getPurchaseOrderByID(id);
           data = data.data.data;
-  
+
           // TODO: handle from BE, ugly when use mapping in FE side
           data = {
             ...data,
@@ -132,7 +132,12 @@ const Transaction = () => {
             paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
             deposit: data.DepositPurchaseOrders,
             DepositPurchaseOrders: undefined,
+            address: data.project.Address,
             products: data.QuotationLetter?.QuotationRequest?.products,
+            project: {
+              ...data.project,
+              Address: undefined,
+            },
             QuotationLetter: {
               ...data.QuotationLetter,
               QuotationRequest: {
@@ -151,26 +156,60 @@ const Transaction = () => {
           data = {
             ...data,
             mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
-            paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
             QuotationLetter: {
               ...data.QuotationLetter,
               QuotationRequest: {
                 ...data.QuotationLetter.QuotationRequest,
                 mainPic: undefined,
-                paymentType: undefined,
               },
             },
           };
         } else if (selectedType === 'Jadwal') {
           data = await getScheduleByID(id);
           data = data.data.data;
+
+          // TODO: handle from BE, ugly when use mapping in FE side
+          data = {
+            ...data,
+            mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+            products: data.QuotationLetter?.QuotationRequest?.products,
+            QuotationLetter: {
+              ...data.QuotationLetter,
+              QuotationRequest: {
+                ...data.QuotationLetter.QuotationRequest,
+                mainPic: undefined,
+                products: undefined,
+              },
+            },
+          };
         } else if (selectedType === 'DO') {
           data = await getDeliveryOrderByID(id);
           data = data.data.data;
+
+          // TODO: handle from BE, ugly when use mapping in FE side
+          let products: any[] = [];
+          products.push(data.Schedule?.SaleOrder?.PoProduct);
+          data = {
+            ...data,
+            mainPic: data.project?.mainPic,
+            address: data.project.Address,
+            products: products,
+            project: {
+              ...data.project,
+              mainPic: undefined,
+              Address: undefined,
+            },
+            Schedule: {
+              ...data.Schedule,
+              SaleOrder: {
+                ...data.Schedule.SaleOrder,
+                PoProduct: undefined,
+              },
+            },
+          };
         }
       }
 
-      console.log('iniii dia:: ', JSON.stringify(data))
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data ? data.number : 'N/A',
         data: data,

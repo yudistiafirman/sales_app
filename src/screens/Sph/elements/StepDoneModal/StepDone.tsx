@@ -8,7 +8,7 @@ import {
   Platform,
   Linking,
 } from 'react-native';
-import React, { useContext } from 'react';
+import React from 'react';
 import Modal from 'react-native-modal';
 import { colors, fonts, layout } from '@/constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,7 +22,6 @@ import {
   BCompanyMapCard,
   BProjectDetailCard,
 } from '@/components';
-import { SphContext } from '../context/SphContext';
 import { postSphResponseType } from '@/interfaces';
 import { useNavigation } from '@react-navigation/native';
 
