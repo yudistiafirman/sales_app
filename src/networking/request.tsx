@@ -215,12 +215,14 @@ instance.interceptors.response.use(
       const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
       const postDepositUrl = `${URL_ORDER}/order/m/deposit/`;
       const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
+      const postPO = `${URL_ORDER}/order/m/purchase-order`;
 
       if (
         error?.config?.url !== postVisitationUrl &&
         error?.config?.url !== postVisitationBookUrl &&
         error?.config?.url !== postDepositUrl &&
-        error?.config?.url !== postScheduleUrl
+        error?.config?.url !== postScheduleUrl &&
+        error?.config?.url !== postPO
       ) {
         store.dispatch(
           openSnackbar({

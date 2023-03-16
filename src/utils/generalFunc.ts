@@ -219,7 +219,7 @@ export const getSuccessMsgFromAPI = (
         finalText += 'data SPH';
         break;
       case 'purchase-order':
-        finalText += 'data PO';
+        finalText = '';
         break;
       case 'quotation-letter':
         finalText += 'data SPH';
