@@ -33,7 +33,7 @@ type SelectedPOModalType = {
   data: PoModalData;
   onPressCompleted: (data: any) => void;
   modalTitle: string;
-  isDeposit?:boolean
+  isDeposit?: boolean
 };
 
 export default function SelectedPOModal({
@@ -45,7 +45,7 @@ export default function SelectedPOModal({
   isDeposit
 }: SelectedPOModalType) {
   const [sphData, setSphData] = React.useState<any[]>([]);
-  const [expandData,setExpandData]= React.useState<any[]>([])
+  const [expandData, setExpandData] = React.useState<any[]>([])
   const dispatch = useDispatch<AppDispatch>();
   const [scrollOffSet, setScrollOffSet] = React.useState<number | undefined>(
     undefined
@@ -66,16 +66,16 @@ export default function SelectedPOModal({
     setSphData(selectedSphData);
   };
 
-  const onExpand = (index:number,data:any)=> {
+  const onExpand = (index: number, data: any) => {
     let newExpandData;
-    const isExisted =sphData[0]?.QuotationLetter?.id ? expandData?.findIndex(
+    const isExisted = sphData[0]?.QuotationLetter?.id ? expandData?.findIndex(
       (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
-    ):  expandData?.findIndex(
+    ) : expandData?.findIndex(
       (val) => val?.id === data?.id)
     if (isExisted === -1) {
       newExpandData = [...expandData, data];
     } else {
-      newExpandData = sphData[0]?.QuotationLetter?.id? expandData.filter(
+      newExpandData = sphData[0]?.QuotationLetter?.id ? expandData.filter(
         (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
       ) : expandData.filter(
         (val) => val?.id !== data?.id)
@@ -83,7 +83,7 @@ export default function SelectedPOModal({
     setExpandData(newExpandData);
   }
 
-  const onCloseSelectedPoModal =()=> {
+  const onCloseSelectedPoModal = () => {
     setSphData([...sphData])
     setExpandData([])
     onCloseModal()
