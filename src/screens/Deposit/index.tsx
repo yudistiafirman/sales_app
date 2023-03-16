@@ -180,7 +180,6 @@ const Deposit = () => {
         uploadedImage.forEach((item) => {
           payload.files.push({ fileId: item?.id });
         });
-        console.log('pussh: ', payload);
         await dispatch(postOrderDeposit({ payload })).unwrap();
         navigation.dispatch(StackActions.popToTop());
         dispatch(

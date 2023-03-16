@@ -6,7 +6,6 @@ import {
   BGallery,
   BVisitationCard,
   BNestedProductCard,
-  BCommonSearchList,
 } from '@/components';
 import { RootState, AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
@@ -16,29 +15,20 @@ import { TextInput } from 'react-native-paper';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
-import SelectedPOModal from '@/components/templates/SelectPurchaseOrder/element/SelectedPOModal';
 import {
-  CreatedSPHListResponse,
-  QuotationLetters,
+  QuotationRequests,
 } from '@/interfaces/createPurchaseOrder';
+import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
 
 const CreatePo = () => {
   const navigation = useNavigation();
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
-  const [index, setIndex] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
   const navRoutes = useRoute();
   const {
-    routes,
-    sphData,
     poImages,
-    choosenSphDataFromList,
     choosenSphDataFromModal,
-    isModalChooseSphVisible,
     openCamera,
-    loadingSphData,
-    errorGettingSphMessage,
     poNumber,
   } = poState.currentState.context;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
@@ -46,6 +36,7 @@ const CreatePo = () => {
   const addMoreImages = useCallback(() => {
     dispatch({ type: 'addMoreImages' });
   }, [dispatch]);
+
 
   const goToCamera = useCallback(() => {
     navigation.navigate(CAMERA, {
@@ -76,16 +67,6 @@ const CreatePo = () => {
     poState.currentState,
   ]);
 
-  const onTabPress = (tabRoutes: any) => {
-    const tabIndex = index === 0 ? 1 : 0;
-    if (tabRoutes.key !== routes[index].key) {
-      dispatch({
-        type: 'onChangeCategories',
-        value: tabIndex,
-      });
-    }
-  };
-
   const inputs: Input[] = [
     {
       label: 'No. Purchase Order',
@@ -102,8 +83,11 @@ const CreatePo = () => {
     },
   ];
 
-  const onPressCompleted = (data: QuotationLetters) => {
-    const selectedSphFromModal = Object.assign({}, choosenSphDataFromList);
+  const onPressCompleted = ({ parentData, data }: { parentData: { name: string; locationName: string; projectId: string }; data: QuotationRequests }) => {
+    const selectedSphFromModal = Object.assign({});
+    selectedSphFromModal.name = parentData.name
+    selectedSphFromModal.locationName = parentData.locationName
+    selectedSphFromModal.id = parentData.projectId
     selectedSphFromModal.QuotationRequests = data;
 
     dispatch({
@@ -120,11 +104,6 @@ const CreatePo = () => {
       />
     );
   };
-
-  const onChangeText = useCallback((text: string) => {
-    setSearchQuery(text);
-    dispatch({ type: 'searching', value: text });
-  }, []);
 
   const onExpand = (index: number, data: any) => {
     let newExpandsetExpandData;
@@ -145,28 +124,9 @@ const CreatePo = () => {
     <>
       <View style={styles.firstStepContainer}>
         {poState.currentState.matches('firstStep.SearchSph') ? (
-          <BCommonSearchList
-            searchQuery={searchQuery}
-            onChangeText={onChangeText}
-            placeholder="Cari SPH"
-            index={index}
-            emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari sph lainnya.`}
-            routes={routes}
-            onTabPress={onTabPress}
-            onIndexChange={setIndex}
-            loadList={loadingSphData}
-            onPressList={(data: CreatedSPHListResponse) =>
-              dispatch({
-                type: 'openingModal',
-                value: data,
-              })
-            }
-            data={sphData}
-            isError={poState.currentState.matches(
-              'firstStep.SearchSph.errorGettingSphList'
-            )}
-            errorMessage={errorGettingSphMessage}
-            onRetry={() => dispatch({ type: 'retryGettingSphList' })}
+          <SelectPurchaseOrderData
+            dataToGet='SPHDATA'
+            onSubmitData={({ parentData, data }) => onPressCompleted({ parentData, data })}
           />
         ) : (
           <ScrollView>
@@ -186,11 +146,7 @@ const CreatePo = () => {
                   <BVisitationCard
                     item={{
                       name: choosenSphDataFromModal.name,
-                      location:
-                        choosenSphDataFromList?.ShippingAddress !== null
-                          ? choosenSphDataFromModal?.ShippingAddress?.Postal
-                            ?.City?.name
-                          : '',
+                      location: choosenSphDataFromModal.locationName
                     }}
                     isRenderIcon
                     customIcon={renderCustomButton}
@@ -225,20 +181,6 @@ const CreatePo = () => {
           </ScrollView>
         )}
       </View>
-      <SelectedPOModal
-        isModalVisible={isModalChooseSphVisible}
-        onCloseModal={() => dispatch({ type: 'closeModal' })}
-        data={{
-          companyName: choosenSphDataFromList?.name,
-          locationName:
-            choosenSphDataFromList?.ShippingAddress !== null
-              ? choosenSphDataFromList?.ShippingAddress?.Postal?.City?.name
-              : '',
-          sphs: choosenSphDataFromList.QuotationRequests,
-        }}
-        modalTitle="Pilih SPH"
-        onPressCompleted={onPressCompleted}
-      />
     </>
   );
 };
