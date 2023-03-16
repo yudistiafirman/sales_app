@@ -24,7 +24,7 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 type PoModalData = {
   companyName: string;
   locationName?: string;
-  sphs: any;
+  listData: any;
 };
 
 type SelectedPOModalType = {
@@ -33,7 +33,7 @@ type SelectedPOModalType = {
   data: PoModalData;
   onPressCompleted: (data: any) => void;
   modalTitle: string;
-  isDeposit?: boolean
+  isDeposit?: boolean;
 };
 
 export default function SelectedPOModal({
@@ -42,18 +42,18 @@ export default function SelectedPOModal({
   data,
   onPressCompleted,
   modalTitle,
-  isDeposit
+  isDeposit,
 }: SelectedPOModalType) {
   const [sphData, setSphData] = React.useState<any[]>([]);
-  const [expandData, setExpandData] = React.useState<any[]>([])
+  const [expandData, setExpandData] = React.useState<any[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const [scrollOffSet, setScrollOffSet] = React.useState<number | undefined>(
     undefined
   );
 
   React.useEffect(() => {
-    setSphData(data?.sphs);
-  }, [data?.sphs]);
+    setSphData(data?.listData);
+  }, [data?.listData]);
 
   const onSelectButton = (idx: number) => {
     const newSphData = [...sphData];
@@ -68,36 +68,38 @@ export default function SelectedPOModal({
 
   const onExpand = (index: number, data: any) => {
     let newExpandData;
-    const isExisted = sphData[0]?.QuotationLetter?.id ? expandData?.findIndex(
-      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
-    ) : expandData?.findIndex(
-      (val) => val?.id === data?.id)
+    const isExisted = sphData[0]?.QuotationLetter?.id
+      ? expandData?.findIndex(
+          (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
+        )
+      : expandData?.findIndex((val) => val?.id === data?.id);
     if (isExisted === -1) {
       newExpandData = [...expandData, data];
     } else {
-      newExpandData = sphData[0]?.QuotationLetter?.id ? expandData.filter(
-        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
-      ) : expandData.filter(
-        (val) => val?.id !== data?.id)
+      newExpandData = sphData[0]?.QuotationLetter?.id
+        ? expandData.filter(
+            (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
+          )
+        : expandData.filter((val) => val?.id !== data?.id);
     }
     setExpandData(newExpandData);
-  }
+  };
 
   const onCloseSelectedPoModal = () => {
-    setSphData([...sphData])
-    setExpandData([])
-    onCloseModal()
-  }
+    setSphData([...sphData]);
+    setExpandData([]);
+    onCloseModal();
+  };
 
   const onSaveSelectedPo = () => {
     if (sphData.length === 1) {
       onPressCompleted(sphData);
-      onCloseSelectedPoModal()
+      onCloseSelectedPoModal();
     } else {
       const selectedSphData = sphData.filter((v) => v.isSelected);
       if (selectedSphData.length > 0) {
         onPressCompleted(selectedSphData);
-        onCloseSelectedPoModal()
+        onCloseSelectedPoModal();
       } else {
         dispatch(
           openPopUp({
@@ -150,9 +152,9 @@ export default function SelectedPOModal({
                     isRenderIcon={false}
                   />
                   <BSpacer size={'extraSmall'} />
-                  {data?.sphs && data?.sphs.length > 0 && (
+                  {data?.listData && data?.listData.length > 0 && (
                     <BNestedProductCard
-                      isOption={data?.sphs.length > 1}
+                      isOption={data?.listData.length > 1}
                       withoutHeader={false}
                       data={sphData}
                       isDeposit={isDeposit}

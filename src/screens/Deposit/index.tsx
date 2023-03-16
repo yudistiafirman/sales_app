@@ -15,16 +15,9 @@ import {
   StackActions,
   useFocusEffect,
   useNavigation,
-  useRoute,
 } from '@react-navigation/native';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import {
-  CreateDepositFirstStep,
-  CreateDepositListResponse,
-  CreateDepositSecondStep,
-  CreateDepositState,
-} from '@/interfaces/CreateDeposit';
+import { CreateDepositState } from '@/interfaces/CreateDeposit';
 import {
   CreateDepositContext,
   CreateDepositProvider,
@@ -39,6 +32,7 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 import moment from 'moment';
 import { postOrderDeposit } from '@/redux/async-thunks/orderThunks';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
+import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 
 const labels = ['Data Pelanggan', 'Cari PO'];
 
@@ -46,13 +40,13 @@ function stepHandler(
   state: CreateDepositState,
   setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
 ) {
-  const { stepOne, stepTwo } = state;
+  const { stepOne, stepTwo, existingProjectID } = state;
 
   if (
-    stepOne.deposit?.picts &&
-    stepOne.deposit?.picts.length > 0 &&
-    stepOne.deposit?.createdAt &&
-    stepOne.deposit?.nominal
+    stepOne?.deposit?.picts &&
+    stepOne?.deposit?.picts.length > 0 &&
+    stepOne?.deposit?.createdAt &&
+    stepOne?.deposit?.nominal
   ) {
     setStepsDone((curr) => {
       return [...new Set(curr), 0];
@@ -61,19 +55,7 @@ function stepHandler(
     setStepsDone((curr) => curr.filter((num) => num !== 0));
   }
 
-  let allProducts: any[] = [];
-  stepTwo.sphs?.forEach((sp) => {
-    if (sp?.products) allProducts.push(...sp.products);
-  });
-  const totalAmountProducts = allProducts
-    ?.map((prod) => prod?.offeringPrice * prod?.quantity)
-    .reduce((prev: any, next: any) => prev + next);
-
-  if (
-    stepTwo.companyName &&
-    stepTwo.sphs &&
-    stepOne.deposit.nominal >= totalAmountProducts
-  ) {
+  if (stepTwo?.companyName && stepTwo?.purchaseOrders && existingProjectID) {
     setStepsDone((curr) => {
       return [...new Set(curr), 1];
     });
@@ -82,26 +64,10 @@ function stepHandler(
   }
 }
 
-function populateData(
-  existingData: CreateDepositListResponse,
-  updateValue: (
-    step: keyof CreateDepositState,
-    key: keyof CreateDepositFirstStep | keyof CreateDepositSecondStep,
-    value: any
-  ) => void
-) {
-  updateValue('stepTwo', 'companyName', existingData?.companyName);
-  updateValue('stepTwo', 'locationName', existingData?.locationName);
-  updateValue('stepTwo', 'sphs', existingData?.sphs);
-}
-
 const Deposit = () => {
-  const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { values, action } = React.useContext(CreateDepositContext);
-  const { shouldScrollView } = values;
-  const { updateValue, updateValueOnstep } = action;
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
@@ -116,8 +82,10 @@ const Deposit = () => {
     ),
   });
 
-  const existingSchedule: CreateDepositListResponse =
-    route?.params?.existingSchedule;
+  useHeaderTitleChanged({
+    title:
+      values.isSearchingPurchaseOrder === true ? 'Cari PO' : 'Buat Deposit',
+  });
 
   useFocusEffect(
     React.useCallback(() => {
@@ -131,14 +99,10 @@ const Deposit = () => {
       );
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [values.step])
+    }, [values.step, values.isSearchingPurchaseOrder])
   );
 
   React.useEffect(() => {
-    if (existingSchedule) {
-      updateValue('existingDepositID', existingSchedule.id);
-      populateData(existingSchedule, updateValueOnstep);
-    }
     return () => {
       dispatch(resetImageURLS({ source: CREATE_DEPOSIT }));
     };
@@ -152,7 +116,7 @@ const Deposit = () => {
   const next = (nextStep: number) => async () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
-      updateValue('step', nextStep);
+      action.updateValue('step', nextStep);
     } else {
       try {
         const photoFiles = values.stepOne?.deposit?.picts?.map((photo) => {
@@ -166,9 +130,10 @@ const Deposit = () => {
         ).unwrap();
 
         let payload: CreateDeposit = {
-          projectId: '',
-          quotationLetterId: '',
-          purchaseOrderId: '',
+          projectId: values.existingProjectID,
+          quotationLetterId:
+            values.stepTwo?.purchaseOrders[0]?.quotationLetterId,
+          purchaseOrderId: values.stepTwo?.purchaseOrders[0]?.id,
           value: values.stepOne?.deposit?.nominal,
           paymentDate: moment(
             values.stepOne?.deposit?.createdAt,
@@ -185,18 +150,18 @@ const Deposit = () => {
         dispatch(
           openPopUp({
             popUpType: 'success',
-            popUpText: 'Successfully create deposit',
-            highlightedText: 'deposit',
+            popUpText: 'Penambahan Deposit\nBerhasil',
+            highlightedText: 'Deposit',
             outsideClickClosePopUp: true,
           })
         );
       } catch (error) {
-        const message = error.message || 'Error creating deposit';
+        const message = error.message || 'Penambahan Deposit Gagal';
         dispatch(
           openPopUp({
             popUpType: 'error',
             popUpText: message,
-            highlightedText: 'error',
+            highlightedText: 'Deposit',
             outsideClickClosePopUp: true,
           })
         );
@@ -205,10 +170,14 @@ const Deposit = () => {
   };
 
   const actionBackButton = (directlyClose: boolean = false) => {
-    if (values.step > 0 && !directlyClose) {
-      next(values.step - 1)();
+    if (values.isSearchingPurchaseOrder === true) {
+      action.updateValue('isSearchingPurchaseOrder', false);
     } else {
-      setPopupVisible(true);
+      if (values.step > 0 && !directlyClose) {
+        next(values.step - 1)();
+      } else {
+        setPopupVisible(true);
+      }
     }
   };
 
@@ -216,20 +185,22 @@ const Deposit = () => {
 
   return (
     <>
-      <BStepperIndicator
-        stepsDone={stepsDone}
-        stepOnPress={(pos: number) => {
-          next(pos)();
-        }}
-        currentStep={values.step}
-        labels={labels}
-      />
+      {values.isSearchingPurchaseOrder === false && (
+        <BStepperIndicator
+          stepsDone={stepsDone}
+          stepOnPress={(pos: number) => {
+            next(pos)();
+          }}
+          currentStep={values.step}
+          labels={labels}
+        />
+      )}
 
       <BContainer>
         <View style={styles.container}>
           {stepRender[values.step]}
           <BSpacer size={'extraSmall'} />
-          {!keyboardVisible && shouldScrollView && values.step > -1 && (
+          {!keyboardVisible && values.shouldScrollView && values.step > -1 && (
             <BBackContinueBtn
               onPressContinue={() => {
                 next(values.step + 1)();

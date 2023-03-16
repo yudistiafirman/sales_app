@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   BButtonPrimary,
-  BGalleryDeposit,
   BNestedProductCard,
   BSearchBar,
   BSpacer,
@@ -9,7 +8,6 @@ import {
 } from '@/components';
 import { TextInput } from 'react-native-paper';
 import {
-  DeviceEventEmitter,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -18,17 +16,11 @@ import {
   View,
 } from 'react-native';
 import { resScale } from '@/utils';
-import {
-  CAMERA,
-  CREATE_DEPOSIT,
-  CREATE_SCHEDULE,
-  SEARCH_PO,
-} from '@/navigation/ScreenNames';
+import { CAMERA, CREATE_DEPOSIT } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { CreateScheduleContext } from '@/context/CreateScheduleContext';
 import { colors, fonts } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
-import AddedDepositModal from '../AddedDepositModal';
 import { useDispatch } from 'react-redux';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
@@ -36,99 +28,98 @@ import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder'
 export default function FirstStep() {
   const navigation = useNavigation();
   const { values, action } = React.useContext(CreateScheduleContext);
-  const { stepOne: state } = values;
-  const { updateValueOnstep } = action;
-  const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
-  const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-  const [expandData, setExpandData] = React.useState<any[]>([])
-  const [isSearchingPoData, setIsSearhingPoData] = React.useState(false)
+  const { stepOne: stateOne } = values;
+  const { updateValueOnstep, updateValue } = action;
+  const [expandData, setExpandData] = React.useState<any[]>([]);
   const dispatch = useDispatch();
 
   const listenerSearchCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
-      updateValueOnstep('stepOne', 'sphs', data);
-      updateValueOnstep('stepOne', 'companyName', parent.name);
+      updateValueOnstep('stepOne', 'companyName', parent.companyName);
       updateValueOnstep('stepOne', 'locationName', parent.locationName);
-      let allProducts: any[] = [];
-      data?.forEach((sp) => {
-        if (sp?.products) allProducts.push(...sp.products);
-      });
-      updateValueOnstep('stepTwo', 'products', allProducts);
-      setIsSearhingPoData(false)
+      updateValue('existingProjectID', parent.projectId);
+      updateValueOnstep('stepOne', 'purchaseOrders', data);
+      updateValueOnstep(
+        'stepTwo',
+        'totalDeposit',
+        getTotalLastDeposit(data && data.length > 0 && data[0]?.totalDeposit)
+      );
+      updateValueOnstep(
+        'stepTwo',
+        'inputtedVolume',
+        data &&
+          data.length > 0 &&
+          data[0]?.SaleOrders &&
+          data[0]?.SaleOrders.length > 0 &&
+          data[0]?.SaleOrders[0]?.usedQuantity
+          ? data[0]?.SaleOrders[0]?.usedQuantity
+          : 0
+      );
+      updateValueOnstep(
+        'stepTwo',
+        'salesOrder',
+        data &&
+          data.length > 0 &&
+          data[0]?.SaleOrders &&
+          data[0]?.SaleOrders.length > 0 &&
+          data[0]?.SaleOrders[0]
+      );
+      updateValue('isSearchingPurchaseOrder', false);
     },
     [updateValueOnstep]
   );
 
-  // const onValueChanged = (item: any, value: boolean) => {
-  //   let listSelectedPO: any[] = [];
-  //   if (selectedPO) listSelectedPO.push(...selectedPO);
-  //   if (value) {
-  //     listSelectedPO.push(item);
-  //   } else {
-  //     listSelectedPO = listSelectedPO.filter((it) => {
-  //       return it !== item;
-  //     });
-  //   }
-  //   setSelectedPO(listSelectedPO);
-  // };
-
   const onExpand = (index: number, data: any) => {
     let newExpandsetExpandData;
-    const isExisted = expandData?.findIndex(
-      (val) => val?.id === data?.id
-    );
+    const isExisted = expandData?.findIndex((val) => val?.id === data?.id);
     if (isExisted === -1) {
       newExpandsetExpandData = [...expandData, data];
     } else {
-      newExpandsetExpandData = expandData.filter(
-        (val) => val?.id !== data?.id
-      );
+      newExpandsetExpandData = expandData.filter((val) => val?.id !== data?.id);
     }
     setExpandData(newExpandsetExpandData);
-  }
-
-  const addNewDeposit = (data: any) => {
-    let added = [];
-    if (state.addedDeposit && state.addedDeposit.length > 0)
-      added = state.addedDeposit;
-    added.push(data);
-    updateValueOnstep('stepOne', 'addedDeposit', added);
-
-    let lastDeposit = 0;
-    if (state.lastDeposit?.nominal) lastDeposit = state.lastDeposit?.nominal;
-    let addedDeposit = 0;
-    if (added && added.length > 0)
-      addedDeposit = added
-        .map((it) => it.nominal)
-        .reduce((prev, next) => prev + next);
-
-    updateValueOnstep('stepTwo', 'totalDeposit', lastDeposit + addedDeposit);
   };
 
-  const { sphs, companyName, locationName, lastDeposit, addedDeposit } = state;
+  const getTotalLastDeposit = (totalAmount: number | undefined) => {
+    let total: number = 0;
+    if (totalAmount) {
+      total = totalAmount;
+    } else {
+      if (stateOne?.purchaseOrders && stateOne?.purchaseOrders.length > 0) {
+        stateOne?.purchaseOrders?.forEach((it) => {
+          total = it.totalDeposit;
+        });
+      }
+    }
+    return total;
+  };
 
   return (
     <SafeAreaView style={style.flexFull}>
-      {sphs && sphs.length > 0 ? (
+      {stateOne?.purchaseOrders && stateOne?.purchaseOrders.length > 0 ? (
         <>
           <ScrollView style={style.flexFull}>
             <View style={style.flexFull}>
               <BSpacer size={'extraSmall'} />
               <BVisitationCard
-                item={{ name: companyName, location: locationName }}
+                item={{
+                  name: stateOne?.companyName,
+                  location: stateOne?.locationName,
+                }}
                 isRenderIcon={false}
               />
             </View>
             <View style={style.flexFull}>
-              {sphs && sphs.length > 0 && (
-                <BNestedProductCard
-                  withoutHeader={false}
-                  data={sphs}
-                  onExpand={onExpand}
-                  expandData={expandData}
-                  withoutSeparator
-                />
-              )}
+              {stateOne?.purchaseOrders &&
+                stateOne?.purchaseOrders.length > 0 && (
+                  <BNestedProductCard
+                    withoutHeader={false}
+                    data={stateOne?.purchaseOrders}
+                    onExpand={onExpand}
+                    expandData={expandData}
+                    withoutSeparator
+                  />
+                )}
             </View>
             <View style={style.summaryContainer}>
               <Text style={style.summary}>Sisa Deposit</Text>
@@ -141,24 +132,9 @@ export default function FirstStep() {
                   },
                 ]}
               >
-                {lastDeposit && lastDeposit?.nominal
-                  ? formatCurrency(lastDeposit?.nominal)
-                  : 'IDR 0'}
+                {formatCurrency(getTotalLastDeposit(undefined))}
               </Text>
             </View>
-            <BSpacer size={'medium'} />
-            {addedDeposit &&
-              addedDeposit.length > 0 &&
-              addedDeposit?.map((item, index) => {
-                return (
-                  <BGalleryDeposit
-                    key={index.toString()}
-                    nominal={item?.nominal}
-                    createdAt={item?.createdAt}
-                    picts={item?.picts}
-                  />
-                );
-              })}
             <BSpacer size={'small'} />
             <View style={style.summaryContainer}>
               <Text style={[style.summary, { color: colors.text.medium }]}>
@@ -181,36 +157,33 @@ export default function FirstStep() {
                 }}
               />
             </View>
-            <AddedDepositModal
-              isModalVisible={isModalVisible}
-              setIsModalVisible={setIsModalVisible}
-              setCompletedData={addNewDeposit}
-            />
           </ScrollView>
         </>
       ) : (
         <>
           <View style={{ flex: 1 }}>
-            {
-              isSearchingPoData ? (
-                <SelectPurchaseOrderData dataToGet='SCHEDULEDATA' onSubmitData={({ parentData, data }) => listenerSearchCallback({ parent: parentData, data: data })} />
-              ) : (
-                <>
-                  <TouchableOpacity
-                    style={style.touchable}
-                    onPress={() => setIsSearhingPoData(true)}
-                  />
-                  <BSearchBar
-                    placeholder="Cari PO"
-                    disabled
-                    activeOutlineColor="gray"
-                    left={<TextInput.Icon icon="magnify" />}
-                  />
-                </>
-              )
-
-            }
-
+            {values.isSearchingPurchaseOrder ? (
+              <SelectPurchaseOrderData
+                dataToGet="SCHEDULEDATA"
+                onSubmitData={({ parentData, data }) =>
+                  listenerSearchCallback({ parent: parentData, data: data })
+                }
+                onDismiss={() => updateValue('isSearchingPurchaseOrder', false)}
+              />
+            ) : (
+              <>
+                <TouchableOpacity
+                  style={style.touchable}
+                  onPress={() => updateValue('isSearchingPurchaseOrder', true)}
+                />
+                <BSearchBar
+                  placeholder="Cari PO"
+                  disabled
+                  activeOutlineColor="gray"
+                  left={<TextInput.Icon icon="magnify" />}
+                />
+              </>
+            )}
           </View>
         </>
       )}

@@ -10,14 +10,12 @@ import {
 import { RootState, AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { TextInput } from 'react-native-paper';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
-import {
-  QuotationRequests,
-} from '@/interfaces/createPurchaseOrder';
+import { QuotationRequests } from '@/interfaces/createPurchaseOrder';
 import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
 
 const CreatePo = () => {
@@ -25,18 +23,13 @@ const CreatePo = () => {
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
   const navRoutes = useRoute();
-  const {
-    poImages,
-    choosenSphDataFromModal,
-    openCamera,
-    poNumber,
-  } = poState.currentState.context;
+  const { poImages, choosenSphDataFromModal, openCamera, poNumber } =
+    poState.currentState.context;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
-  const [expandData, setExpandData] = React.useState<any[]>([])
+  const [expandData, setExpandData] = React.useState<any[]>([]);
   const addMoreImages = useCallback(() => {
     dispatch({ type: 'addMoreImages' });
   }, [dispatch]);
-
 
   const goToCamera = useCallback(() => {
     navigation.navigate(CAMERA, {
@@ -83,11 +76,17 @@ const CreatePo = () => {
     },
   ];
 
-  const onPressCompleted = ({ parentData, data }: { parentData: { name: string; locationName: string; projectId: string }; data: QuotationRequests }) => {
+  const onPressCompleted = ({
+    parentData,
+    data,
+  }: {
+    parentData: { name: string; locationName: string; projectId: string };
+    data: QuotationRequests;
+  }) => {
     const selectedSphFromModal = Object.assign({});
-    selectedSphFromModal.name = parentData.name
-    selectedSphFromModal.locationName = parentData.locationName
-    selectedSphFromModal.id = parentData.projectId
+    selectedSphFromModal.name = parentData.name;
+    selectedSphFromModal.locationName = parentData.locationName;
+    selectedSphFromModal.id = parentData.projectId;
     selectedSphFromModal.QuotationRequests = data;
 
     dispatch({
@@ -118,15 +117,17 @@ const CreatePo = () => {
       );
     }
     setExpandData(newExpandsetExpandData);
-  }
+  };
 
   return (
     <>
       <View style={styles.firstStepContainer}>
         {poState.currentState.matches('firstStep.SearchSph') ? (
           <SelectPurchaseOrderData
-            dataToGet='SPHDATA'
-            onSubmitData={({ parentData, data }) => onPressCompleted({ parentData, data })}
+            dataToGet="SPHDATA"
+            onSubmitData={({ parentData, data }) =>
+              onPressCompleted({ parentData, data })
+            }
           />
         ) : (
           <ScrollView>
@@ -146,7 +147,7 @@ const CreatePo = () => {
                   <BVisitationCard
                     item={{
                       name: choosenSphDataFromModal.name,
-                      location: choosenSphDataFromModal.locationName
+                      location: choosenSphDataFromModal.locationName,
                     }}
                     isRenderIcon
                     customIcon={renderCustomButton}

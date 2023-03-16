@@ -16,10 +16,11 @@ import { PO_METHOD_LIST } from '@/constants/dropdown';
 import CheckBox from '@react-native-community/checkbox';
 import { RadioButton } from 'react-native-paper';
 import moment from 'moment';
+import { SalesOrdersData } from '@/interfaces/SelectConfirmedPO';
 
 export default function SecondStep() {
   const { values, action } = React.useContext(CreateScheduleContext);
-  const { stepTwo: state } = values;
+  const { stepOne: stateOne, stepTwo: stateTwo } = values;
   const { updateValueOnstep } = action;
   const [selectedIndex, setSelectedIndex] = React.useState('0');
   const [isVisibleCalendar, setVisibleCalendar] = React.useState(false);
@@ -56,19 +57,19 @@ export default function SecondStep() {
         placeholderTwo: 'Pilih jam',
         errMsgOne: 'Tanggal harus dipilih',
         errMsgTwo: 'Jam harus dipilih',
-        valueOne: state.deliveryDate,
-        valueTwo: state.deliveryTime,
+        valueOne: stateTwo?.deliveryDate,
+        valueTwo: stateTwo?.deliveryTime,
         valueTwoMock: rawTime,
-        isErrorOne: state.deliveryDate ? false : true,
-        isErrorTwo: state.deliveryTime ? false : true,
+        isErrorOne: stateTwo?.deliveryDate ? false : true,
+        isErrorTwo: stateTwo?.deliveryTime ? false : true,
       },
     },
     {
       label: 'Metode penuangan',
       isRequire: true,
       type: 'dropdown',
-      value: state.method,
-      isError: state.method ? false : true,
+      value: stateTwo?.method,
+      isError: stateTwo?.method ? false : true,
       customerErrorMsg: 'Metode penuangan harus dipilih',
       dropdown: {
         items: PO_METHOD_LIST,
@@ -85,52 +86,34 @@ export default function SecondStep() {
       label: 'Volume',
       isRequire: true,
       type: 'quantity',
-      value: state.products[selectedIndex].inputQuantity,
+      value: stateTwo?.inputtedVolume?.toString(),
       onChange: (value: any) => {
-        let allProducts = [];
-        if (state.products && state.products.length > 0) {
-          allProducts = state.products;
-        }
-
-        if (parseInt(value, 10) < allProducts[selectedIndex].quantity) {
-          allProducts[selectedIndex].inputQuantity = value;
-        } else if (value === '') {
-          allProducts[selectedIndex].inputQuantity = 0;
+        if (value && value !== '') {
+          onChange('inputtedVolume')(parseInt(value, 10));
         } else {
-          allProducts[selectedIndex].inputQuantity =
-            allProducts[selectedIndex].quantity.toString();
+          onChange('inputtedVolume')(0);
         }
-        onChange('inputtedVolume')(allProducts[selectedIndex].inputQuantity)
-        onChange('products')(allProducts);
       },
+      customerErrorMsg:
+        'Volume tidak boleh lebih besar dari sisa yang belum dikirim',
+      isError: stateTwo?.inputtedVolume > stateTwo?.salesOrder?.usedQuantity,
     },
   ];
 
-  const { isConsecutive, hasTechnicalRequest, products, totalDeposit } = state;
-
-  const onChange = (key: string) => (val: any) => {
+  const onChange = (key: any) => (val: any) => {
     updateValueOnstep('stepTwo', key, val);
   };
 
   const getTotalProduct = (): number => {
-    let total = 0;
-    if (products[selectedIndex] && products[selectedIndex].inputQuantity)
-      total =
-        parseInt(products[selectedIndex].inputQuantity, 10) *
-        products[selectedIndex].offering_price;
+    let total =
+      stateTwo?.inputtedVolume *
+      stateTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
     return total;
   };
 
-  const getProductQuantity = (): number => {
-    let quantity = 0;
-    if (products && products.length > 0 && products[selectedIndex].quantity)
-      quantity = products[selectedIndex].quantity;
-    return (
-      quantity -
-      (products[selectedIndex].inputQuantity
-        ? parseInt(products[selectedIndex].inputQuantity, 10)
-        : 0)
-    );
+  const getDisplayName = (salesOrder: SalesOrdersData) => {
+    // BE bugs -> response category.`parent` should be `Parent`
+    return `${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name} ${salesOrder.PoProduct?.RequestedProduct?.displayName} ${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.name}`;
   };
 
   return (
@@ -140,7 +123,7 @@ export default function SecondStep() {
         <View style={style.summaryContainer}>
           <View style={style.consecutiveCheck}>
             <CheckBox
-              value={isConsecutive}
+              value={stateTwo?.isConsecutive}
               onFillColor={colors.primary}
               onTintColor={colors.offCheckbox}
               onCheckColor={colors.primary}
@@ -153,7 +136,7 @@ export default function SecondStep() {
           </View>
           <View style={style.technicalCheck}>
             <CheckBox
-              value={hasTechnicalRequest}
+              value={stateTwo?.hasTechnicalRequest}
               onFillColor={colors.primary}
               onTintColor={colors.offCheckbox}
               onCheckColor={colors.primary}
@@ -166,70 +149,93 @@ export default function SecondStep() {
           </View>
         </View>
         <BSpacer size={'extraSmall'} />
-        {products && products.length > 0 && (
-          <>
-            <Text style={style.partText}>Produk</Text>
-            <BSpacer size={'verySmall'} />
-            <View style={style.flexFull}>
-              <BDivider />
-              <BSpacer size={'extraSmall'} />
-              {products.map((item, index) => {
-                return (
-                  <View key={index.toString()} style={style.flexFull}>
-                    <View style={style.selectionProduct}>
-                      <View style={style.contentProduct}>
-                        <RadioButton
-                          value={index.toString()}
-                          status={
-                            selectedIndex === index.toString()
-                              ? 'checked'
-                              : 'unchecked'
-                          }
-                          uncheckedColor={colors.border.altGrey}
-                          onPress={() => setSelectedIndex(index.toString())}
-                        />
-                        <BProductCard
-                          name={item.Product.displayName}
-                          pricePerVol={item.offeringPrice}
-                          volume={parseInt(item.quantity, 10)}
-                          totalPrice={item.offeringPrice * item.quantity}
-                          hideVolume
-                          withoutBorder
-                        />
-                      </View>
-                      {selectedIndex === index.toString() && (
-                        <View style={style.formInput}>
-                          <BForm
-                            titleBold="500"
-                            inputs={inputsSelection}
-                            spacer="extraSmall"
+        {stateOne?.purchaseOrders[0]?.SaleOrders &&
+          stateOne?.purchaseOrders[0]?.SaleOrders.length > 0 && (
+            <>
+              <Text style={style.partText}>Produk</Text>
+              <BSpacer size={'verySmall'} />
+              <View style={style.flexFull}>
+                <BDivider />
+                <BSpacer size={'extraSmall'} />
+                {stateOne?.purchaseOrders[0]?.SaleOrders.map((item, index) => {
+                  return (
+                    <View key={index.toString()} style={style.flexFull}>
+                      <View style={style.selectionProduct}>
+                        <View style={style.contentProduct}>
+                          <RadioButton
+                            value={index.toString()}
+                            status={
+                              selectedIndex === index.toString()
+                                ? 'checked'
+                                : 'unchecked'
+                            }
+                            uncheckedColor={colors.border.altGrey}
+                            onPress={() => {
+                              if (selectedIndex !== index.toString()) {
+                                updateValueOnstep(
+                                  'stepTwo',
+                                  'inputtedVolume',
+                                  0
+                                );
+                                updateValueOnstep(
+                                  'stepTwo',
+                                  'salesOrder',
+                                  item
+                                );
+                              }
+                              setSelectedIndex(index.toString());
+                            }}
                           />
-                          <View style={style.volContent}>
-                            <BText>Sisa vol. yang belum dikirim</BText>
-                            <BText
-                              style={{
-                                marginStart: layout.pad.sm,
-                                fontFamily: fonts.family.montserrat[500],
-                              }}
-                            >
-                              {getProductQuantity() + ' m³'}
-                            </BText>
-                          </View>
+                          <BProductCard
+                            name={getDisplayName(item)}
+                            pricePerVol={
+                              item?.PoProduct?.RequestedProduct?.offeringPrice
+                            }
+                            volume={parseInt(item?.usedQuantity, 10)}
+                            totalPrice={
+                              item?.PoProduct?.RequestedProduct?.offeringPrice *
+                              (item?.usedQuantity ? item?.usedQuantity : 0)
+                            }
+                            hideVolume
+                            withoutBorder
+                          />
                         </View>
+                        {selectedIndex === index.toString() && (
+                          <View style={style.formInput}>
+                            <BForm
+                              titleBold="500"
+                              inputs={inputsSelection}
+                              spacer="extraSmall"
+                            />
+                            <View style={style.volContent}>
+                              <BText>Sisa vol. yang belum dikirim</BText>
+                              <BText
+                                style={{
+                                  marginStart: layout.pad.sm,
+                                  fontFamily: fonts.family.montserrat[500],
+                                }}
+                              >
+                                {item.usedQuantity
+                                  ? item.usedQuantity
+                                  : 0 + ' m³'}
+                              </BText>
+                            </View>
+                          </View>
+                        )}
+                      </View>
+                      {stateOne?.purchaseOrders[0]?.SaleOrders.length - 1 !==
+                        index && (
+                        <BDivider
+                          marginVertical={layout.pad.md}
+                          borderColor={colors.white}
+                        />
                       )}
                     </View>
-                    {products.length - 1 !== index && (
-                      <BDivider
-                        marginVertical={layout.pad.md}
-                        borderColor={colors.white}
-                      />
-                    )}
-                  </View>
-                );
-              })}
-            </View>
-          </>
-        )}
+                  );
+                })}
+              </View>
+            </>
+          )}
       </ScrollView>
 
       <View>
@@ -239,14 +245,12 @@ export default function SecondStep() {
         <BDepositCard
           style={{ marginBottom: layout.pad.xl }}
           firstSectionText={'Deposit'}
-          firstSectionValue={totalDeposit}
-          secondSectionText={
-            products && products.length > 0
-              ? products[selectedIndex].display_name
-              : '-'
-          }
+          firstSectionValue={stateTwo?.totalDeposit}
+          secondSectionText={getDisplayName(stateTwo?.salesOrder)}
           secondSectionValue={getTotalProduct()}
           thirdSectionText={'Est. Sisa Deposit'}
+          isError={getTotalProduct() > stateTwo?.totalDeposit}
+          customErrorMsg={'Silakan lakukan penambahan deposit'}
         />
       </View>
     </View>
