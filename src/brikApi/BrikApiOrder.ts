@@ -2,8 +2,15 @@ import Config from 'react-native-config';
 const API_URL = Config.API_URL_ORDER;
 
 export default class BrikApiOrder {
-  static getAllVisitationOrders = () => {
+  static getAllVisitationOrders = (page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/flow/quotation-letter`);
+    const params = url.searchParams
+    if (page) {
+      params.append('page', page)
+    }
+    if (size) {
+      params.append('size', size)
+    }
     return url.toString();
   };
 
@@ -36,20 +43,20 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static getConfirmedPurchaseOrder =(page?:string,size?:string,searchQuery?:string,productPo?:'1'| '0')=>{
+  static getConfirmedPurchaseOrder = (page?: string, size?: string, searchQuery?: string, productPo?: '1' | '0') => {
     const url = new URL(`${API_URL}/order/m/project-po`)
     const params = url.searchParams;
-    if(page){
-      params.append('page',page)
+    if (page) {
+      params.append('page', page)
     }
-    if(size){
-      params.append('size',size)
+    if (size) {
+      params.append('size', size)
     }
-    if(searchQuery){
-      params.append('search',searchQuery)
+    if (searchQuery) {
+      params.append('search', searchQuery)
     }
-    if(productPo){
-      params.append('productPo',productPo)
+    if (productPo) {
+      params.append('productPo', productPo)
     }
     return url.toString()
   }

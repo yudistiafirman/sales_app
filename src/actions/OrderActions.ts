@@ -3,9 +3,9 @@ import { customRequest } from '@/networking/request';
 import { sphOrderPayloadType } from '@/interfaces';
 import { customLog } from '@/utils/generalFunc';
 
-export const getAllVisitationOrders = async () => {
+export const getAllVisitationOrders = async (page?: string, size?: string) => {
   return customRequest(
-    BrikApiOrder.getAllVisitationOrders(),
+    BrikApiOrder.getAllVisitationOrders(page, size),
     'GET',
     undefined,
     true
@@ -74,6 +74,6 @@ export const postSchedule = async (payload) => {
   return customRequest(BrikApiOrder.postSchedule(), 'POST', payload, true);
 };
 
-export const getConfirmedPurchaseOrder = async (page:string,size:string,searchQuery:string,productPo='1')=>{
-  return customRequest(BrikApiOrder.getConfirmedPurchaseOrder(page,size,searchQuery ,productPo),'GET',undefined,true)
+export const getConfirmedPurchaseOrder = async (page: string, size: string, searchQuery: string, productPo = '1') => {
+  return customRequest(BrikApiOrder.getConfirmedPurchaseOrder(page, size, searchQuery, productPo), 'GET', undefined, true)
 }
