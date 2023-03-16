@@ -35,7 +35,7 @@ export default function SecondStep() {
     ({ parent, data }: { parent: any; data: any }) => {
       updateValueOnstep('stepTwo', 'companyName', parent.companyName);
       updateValueOnstep('stepTwo', 'locationName', parent.locationName);
-      updateValue('existingProjectID', parent.projectID);
+      updateValue('existingProjectID', parent.projectId);
       updateValueOnstep('stepTwo', 'purchaseOrders', data);
       updateValue('isSearchingPurchaseOrder', false);
     },

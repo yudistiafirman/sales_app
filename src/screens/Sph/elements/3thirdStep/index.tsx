@@ -168,7 +168,6 @@ export default function ThirdStep() {
     // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documents]);
-
   const inputsData2: Input[] = useMemo(() => {
     const inputs: Input[] = [
       {
@@ -238,7 +237,6 @@ export default function ThirdStep() {
     });
     return inputs;
   }, [fileKeys, documents, paymentRequiredDocuments, paymentType]);
-
   return (
     <BContainer>
       <View style={style.container}>
@@ -256,7 +254,7 @@ export default function ThirdStep() {
         </ScrollView>
 
         <View>
-          {sphState?.paymentType === 'CREDIT' && (
+          {paymentType === 'CREDIT' && (
             <View style={style.checkboxContainer}>
               <Checkbox
                 status={paymentBankGuarantee ? 'checked' : 'unchecked'}

@@ -37,7 +37,7 @@ export default function FirstStep() {
     ({ parent, data }: { parent: any; data: any }) => {
       updateValueOnstep('stepOne', 'companyName', parent.companyName);
       updateValueOnstep('stepOne', 'locationName', parent.locationName);
-      updateValue('existingProjectID', parent.projectID);
+      updateValue('existingProjectID', parent.projectId);
       updateValueOnstep('stepOne', 'purchaseOrders', data);
       updateValueOnstep(
         'stepTwo',

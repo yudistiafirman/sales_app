@@ -49,7 +49,7 @@ const ProductDetail = () => {
           ? 0
           : v.offeringPrice * v.quantity;
       })
-      .reduce((a, b) => a + b,0);
+      .reduce((a, b) => a + b, 0);
     return total;
   };
 
@@ -73,7 +73,7 @@ const ProductDetail = () => {
           popUpTitle: !isLoadingPostPurchaseOrder ? 'PO' : '',
           popUpText: modalText,
           isRenderActions: failPostPurchaseOrder && !isLoadingPostPurchaseOrder,
-          outsideClickClosePopUp: false,
+          outsideClickClosePopUp: successPostPurchaseOrder,
           outlineBtnTitle: 'Kembali',
           primaryBtnTitle: 'Coba Lagi',
           isPrimaryButtonLoading: isLoadingPostPurchaseOrder,
@@ -83,9 +83,12 @@ const ProductDetail = () => {
       );
 
       if (successPostPurchaseOrder) {
-        setTimeout(() => {
-          handleReturnToInitialState();
-        }, 3000);
+        bStorage.deleteItem(PO);
+        if (navigation.canGoBack()) {
+          navigation.dispatch(StackActions.popToTop());
+        }
+
+        dispatch({ type: 'backToInitialState' });
       }
     } else {
       dispatch(closePopUp());

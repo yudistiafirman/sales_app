@@ -33,14 +33,16 @@ const SelectPurchaseOrderData = ({
     errorGettingListMessage,
     searchValue,
   } = state.context;
+
   React.useEffect(() => {
     send('setDataType', { value: dataToGet });
   }, [dataToGet]);
+
   const getDataToDisplayInsideModal = () => {
     let companyName = choosenDataFromList?.name;
     let locationName;
     let listData;
-    let projectID;
+    let projectId;
     if (dataToGet === 'SPHDATA') {
       locationName =
         choosenDataFromList?.ShippingAddress !== null
@@ -54,8 +56,8 @@ const SelectPurchaseOrderData = ({
           : '';
       listData = choosenDataFromList?.PurchaseOrders;
     }
-    projectID = choosenDataFromList?.id;
-    return { companyName, locationName, listData, projectID };
+    projectId = choosenDataFromList?.id;
+    return { companyName, locationName, listData, projectId };
   };
 
   const getDataToDisplay = () => {
@@ -65,7 +67,7 @@ const SelectPurchaseOrderData = ({
       return sphData;
     }
   };
-  const { companyName, locationName, listData, projectID } =
+  const { companyName, locationName, listData, projectId } =
     getDataToDisplayInsideModal();
 
   const onChangeText = (text: string) => {
@@ -85,7 +87,7 @@ const SelectPurchaseOrderData = ({
   const onCloseModal = (
     productData: PurchaseOrdersData | QuotationRequests
   ) => {
-    const parentData = { companyName, locationName, projectID };
+    const parentData = { companyName, locationName, projectId };
     onSubmitData({ parentData, data: productData });
     send('onCloseModal');
   };
@@ -103,7 +105,7 @@ const SelectPurchaseOrderData = ({
       <BCommonSearchList
         searchQuery={searchQuery}
         onChangeText={onChangeText}
-        placeholder="Cari PO"
+        placeholder={dataToGet === 'SPHDATA' ? 'Cari SPH' : 'Cari PO'}
         onClearValue={onClearValue}
         index={index}
         routes={routes}

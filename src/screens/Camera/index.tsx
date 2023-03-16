@@ -4,6 +4,7 @@ import {
   useNavigation,
   useRoute,
   useIsFocused,
+  StackActions,
 } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { hasCameraPermissions } from '@/utils/permissions';
@@ -16,13 +17,15 @@ import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { IMAGE_PREVIEW } from '@/navigation/ScreenNames';
 import CameraButton from './elements/CameraButton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 
 const CameraScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<RootStackScreenProps>();
+  const poState = useSelector((state: RootState) => state.purchaseOrder);
+  const { isFirstTimeOpenCamera } = poState.currentState.context
   const navigateTo = route?.params?.navigateTo;
   const closeButton = route?.params?.closeButton;
   const photoTitle = route?.params?.photoTitle;
@@ -40,10 +43,20 @@ const CameraScreen = () => {
 
   const handleBack = React.useCallback(() => {
     if (navigateTo === PO) {
-      dispatch({ type: 'backFromCamera' });
+      if (isFirstTimeOpenCamera) {
+        if (navigation.canGoBack()) {
+          dispatch({ type: 'backToSavedPoFromCamera' })
+          navigation.dispatch(StackActions.popToTop())
+        }
+      } else {
+        dispatch({ type: 'backFromCamera' });
+        navigation.goBack()
+      }
+
+    } else {
+      navigation.goBack()
     }
-    navigation.goBack();
-  }, [dispatch, navigateTo, navigation]);
+  }, [dispatch, navigateTo, navigation, isFirstTimeOpenCamera]);
   if (closeButton) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useCustomHeaderLeft({
