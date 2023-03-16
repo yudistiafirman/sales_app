@@ -4,6 +4,7 @@ import { colors, fonts, layout } from '@/constants';
 import { customLog, getColorStatusTrx } from '@/utils/generalFunc';
 import BSpacer from '../atoms/BSpacer';
 import BTouchableText from '../atoms/BTouchableText';
+import formatCurrency from '@/utils/formatCurrency';
 
 type BProjectDetailCardType = {
   status?: string;
@@ -12,6 +13,8 @@ type BProjectDetailCardType = {
   projectName?: string;
   productionTime?: string;
   quotation?: any;
+  nominal?: number;
+  paymentDate?: string;
   gotoSPHPage?: () => void;
 };
 
@@ -22,6 +25,8 @@ export default function BProjectDetailCard({
   projectName,
   productionTime,
   quotation,
+  nominal,
+  paymentDate,
   gotoSPHPage,
 }: BProjectDetailCardType) {
   const { color, textColor } = getColorStatusTrx(status);
@@ -50,11 +55,17 @@ export default function BProjectDetailCard({
           </View>
         </>
       )}
-      <BSpacer size={'extraSmall'} />
-      <View style={styles.summaryContainer}>
-        <Text style={styles.summary}>Metode Pembayaran</Text>
-        <Text style={[styles.summary, styles.fontw400]}>{paymentMethod}</Text>
-      </View>
+      {paymentMethod && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Metode Pembayaran</Text>
+            <Text style={[styles.summary, styles.fontw400]}>
+              {paymentMethod}
+            </Text>
+          </View>
+        </>
+      )}
       {expiredDate !== '-' && (
         <>
           <BSpacer size={'extraSmall'} />
@@ -64,11 +75,35 @@ export default function BProjectDetailCard({
           </View>
         </>
       )}
-      <BSpacer size={'extraSmall'} />
-      <View style={styles.summaryContainer}>
-        <Text style={styles.summary}>Nama Proyek</Text>
-        <Text style={[styles.summary, styles.fontw400]}>{projectName}</Text>
-      </View>
+      {projectName && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Nama Proyek</Text>
+            <Text style={[styles.summary, styles.fontw400]}>{projectName}</Text>
+          </View>
+        </>
+      )}
+      {paymentDate && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Tanggal Bayar</Text>
+            <Text style={[styles.summary, styles.fontw400]}>{paymentDate}</Text>
+          </View>
+        </>
+      )}
+      {nominal && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>Nominal</Text>
+            <Text style={[styles.summary, styles.fontw400]}>
+              {'IDR ' + formatCurrency(nominal)}
+            </Text>
+          </View>
+        </>
+      )}
       <BSpacer size={'extraSmall'} />
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>Waktu Pembuatan</Text>

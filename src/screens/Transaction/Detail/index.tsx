@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
-import { StackActions, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {
   BDivider,
   BPic,
@@ -24,12 +28,23 @@ import moment from 'moment';
 import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { getVisitationOrderByID } from '@/actions/OrderActions';
+import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
 
 function ListProduct(item: any, index: number) {
+  let displayName = '';
+  if (item.display_name) {
+    displayName = `${
+      item?.category?.Parent ? item?.category?.Parent?.name + ' ' : ''
+    }${item?.display_name} ${item?.category ? item?.category?.name : ''}`;
+  } else {
+    displayName = `${
+      item?.category?.Parent ? item?.category?.Parent?.name + ' ' : ''
+    }${item?.displayName} ${item?.category ? item?.category?.name : ''}`;
+  }
   return (
     <View key={index}>
       <BProductCard
-        name={item.display_name ? item.display_name : item.displayName}
+        name={displayName}
         pricePerVol={
           item.offering_price ? item.offering_price : item.offeringPrice
         }
@@ -46,6 +61,8 @@ const TransactionDetail = () => {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
   const data = route?.params?.data;
+  const selectedType = route?.params?.type;
+  const [expandData, setExpandData] = React.useState<any[]>([]);
 
   useHeaderTitleChanged({
     title: route?.params?.title,
@@ -76,6 +93,7 @@ const TransactionDetail = () => {
         StackActions.replace(TRANSACTION_DETAIL, {
           title: getData ? getData.number : 'N/A',
           data: getData,
+          type: selectedType,
         })
       );
     } catch (error) {
@@ -83,17 +101,62 @@ const TransactionDetail = () => {
     }
   };
 
+  const arrayQuotationLetter = () => {
+    let arrayQuote: QuotationRequests[] = [];
+    arrayQuote.push(data?.QuotationLetter?.QuotationRequest);
+    return arrayQuote;
+  };
+
+  const onExpand = (index: number, data: any) => {
+    let newExpandedData;
+    const isExisted = expandData?.findIndex((val) => val?.id === data?.id);
+    if (isExisted === -1) {
+      newExpandedData = [...expandData, data];
+    } else {
+      newExpandedData = expandData.filter((val) => val?.id !== data?.id);
+    }
+    setExpandData(newExpandedData);
+  };
+
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView>
-        {data?.address && (
+        {(data?.address || data?.project?.LocationAddress) && (
           <BCompanyMapCard
             onPressLocation={() =>
-              onPressLocation(data?.address.lat, data?.address.lon)
+              onPressLocation(
+                data?.address
+                  ? data?.address.lat
+                  : data?.project?.LocationAddress
+                  ? data?.project?.LocationAddress.lat
+                  : null,
+                data?.address
+                  ? data?.address.lon
+                  : data?.project?.LocationAddress
+                  ? data?.project?.LocationAddress.lon
+                  : null
+              )
             }
-            disabled={data?.address.lat === null || data?.address.lon === null}
-            companyName={data?.companyName ? data?.companyName : '-'}
-            location={data?.address ? data?.address.line1 : '-'}
+            disabled={
+              data?.address?.lat === null ||
+              data?.address?.lon === null ||
+              data?.project?.LocationAddress?.lat === null ||
+              data?.project?.LocationAddress?.lon === null
+            }
+            companyName={
+              data?.companyName
+                ? data?.companyName
+                : data?.project?.companyName
+                ? data?.project?.companyName
+                : '-'
+            }
+            location={
+              data?.address
+                ? data?.address.line1
+                : data?.project?.LocationAddress
+                ? data?.project?.LocationAddress.line1
+                : '-'
+            }
           />
         )}
         <View style={styles.contentDetail}>
@@ -115,29 +178,50 @@ const TransactionDetail = () => {
           <BProjectDetailCard
             status={getStatusTrx(data?.status)}
             paymentMethod={
-              !data?.paymentType
-                ? 'N/A'
-                : data?.paymentType === 'CBD'
-                ? 'Cash'
-                : 'Debit'
+              selectedType === 'SPH' || selectedType === 'PO'
+                ? !data?.paymentType
+                  ? 'N/A'
+                  : data?.paymentType === 'CBD'
+                  ? 'Cash'
+                  : 'Debit'
+                : undefined
             }
             expiredDate={
               data?.expiredDate
                 ? moment(data?.expiredDate).format('DD MMMM yyyy')
                 : '-'
             }
-            projectName={data?.project.name}
+            projectName={
+              selectedType === 'SPH' || selectedType === 'PO'
+                ? data?.project.name
+                : undefined
+            }
             productionTime={
               data?.createdAt
                 ? moment(data?.createdAt).format('DD MMM yyyy HH:mm')
                 : '-'
             }
-            quotation={data?.QuotationLetter}
+            quotation={
+              selectedType === 'PO' ? data?.QuotationLetter : undefined
+            }
+            nominal={data?.value}
+            paymentDate={
+              data?.datePayment
+                ? moment(data?.datePayment).format('DD MMM yyyy')
+                : undefined
+            }
             gotoSPHPage={() => gotoSPHPage()}
           />
           <BSpacer size={'small'} />
-          {data?.lastOrder && data?.lastOrder.length > 0 ? (
-            <BNestedProductCard data={data?.lastOrder} />
+          {selectedType === 'Deposit' ? (
+            <BNestedProductCard
+              withoutHeader={false}
+              data={arrayQuotationLetter()}
+              expandData={expandData}
+              onExpand={onExpand}
+              withoutSeparator
+              poNumber={data?.PurchaseOrder?.number}
+            />
           ) : (
             <>
               {data?.products && (
@@ -152,26 +236,21 @@ const TransactionDetail = () => {
               )}
             </>
           )}
-          {data?.deposit && data?.deposit.length > 0 && (
+          {selectedType === 'Deposit' && (
             <>
               <BDivider />
               <BSpacer size={'small'} />
               <BDepositCard
-                firstSectionText={'Deposit'}
-                firstSectionValue={data?.totalDeposit}
-                secondSectionText={
-                  data?.products && data?.products.length > 0
-                    ? data?.products[0].display_name
-                      ? data?.products[0].display_name
-                      : data?.products[0].displayName
-                    : '-'
+                firstSectionText={'Deposit Awal'}
+                firstSectionValue={
+                  data?.PurchaseOrder?.totalDeposit
+                    ? data?.PurchaseOrder?.totalDeposit
+                    : 0
                 }
-                secondSectionValue={data?.products
-                  ?.map((it: any) =>
-                    it.total_price ? it.total_price : it.totalPrice
-                  )
-                  .reduce((prev: any, next: any) => prev + next)}
-                thirdSectionText={'Est. Sisa Deposit'}
+                secondSectionText={'Tambahan Deposit'}
+                secondSectionValue={data?.value ? data?.value : 0}
+                thirdSectionText={'Deposit Akhir'}
+                isSum
               />
             </>
           )}

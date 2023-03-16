@@ -14,6 +14,7 @@ type BDepositCardType = {
   isError?: boolean;
   customErrorMsg?: string;
   style?: ViewStyle;
+  isSum?: boolean;
 };
 
 export default function BDepositCard({
@@ -25,6 +26,7 @@ export default function BDepositCard({
   isError,
   customErrorMsg,
   style,
+  isSum = false,
 }: BDepositCardType) {
   return (
     <View style={style}>
@@ -38,7 +40,8 @@ export default function BDepositCard({
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>{secondSectionText}</Text>
         <Text style={[styles.summary, styles.fontw400]}>
-          IDR {formatCurrency(secondSectionValue)}
+          {isSum ? '+ ' : ''} IDR
+          {formatCurrency(secondSectionValue)}
         </Text>
       </View>
       <BSpacer size={'extraSmall'} />
@@ -53,7 +56,12 @@ export default function BDepositCard({
             },
           ]}
         >
-          IDR {formatCurrency(firstSectionValue - secondSectionValue)}
+          {'IDR ' +
+            formatCurrency(
+              isSum
+                ? firstSectionValue + secondSectionValue
+                : firstSectionValue - secondSectionValue
+            )}
         </Text>
       </View>
       {isError && (

@@ -123,37 +123,58 @@ const Transaction = () => {
       } else {
         if (selectedType === 'PO') {
           data = await getPurchaseOrderByID(id);
+          data = data.data.data;
+  
+          // TODO: handle from BE, ugly when use mapping in FE side
+          data = {
+            ...data,
+            mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+            paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
+            deposit: data.DepositPurchaseOrders,
+            DepositPurchaseOrders: undefined,
+            products: data.QuotationLetter?.QuotationRequest?.products,
+            QuotationLetter: {
+              ...data.QuotationLetter,
+              QuotationRequest: {
+                ...data.QuotationLetter.QuotationRequest,
+                mainPic: undefined,
+                paymentType: undefined,
+                products: undefined,
+              },
+            },
+          };
         } else if (selectedType === 'Deposit') {
           data = await getDepositByID(id);
+          data = data.data.data;
+
+          // TODO: handle from BE, ugly when use mapping in FE side
+          data = {
+            ...data,
+            mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+            paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
+            QuotationLetter: {
+              ...data.QuotationLetter,
+              QuotationRequest: {
+                ...data.QuotationLetter.QuotationRequest,
+                mainPic: undefined,
+                paymentType: undefined,
+              },
+            },
+          };
         } else if (selectedType === 'Jadwal') {
           data = await getScheduleByID(id);
+          data = data.data.data;
         } else if (selectedType === 'DO') {
           data = await getDeliveryOrderByID(id);
+          data = data.data.data;
         }
-        data = data.data.data;
-
-        // TODO: handle from BE, ugly when use mapping in FE side
-        data = {
-          ...data,
-          mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
-          paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
-          deposit: data.DepositPurchaseOrders,
-          DepositPurchaseOrders: undefined,
-          products: data.QuotationLetter?.QuotationRequest?.products,
-          QuotationLetter: {
-            ...data.QuotationLetter,
-            QuotationRequest: {
-              ...data.QuotationLetter.QuotationRequest,
-              mainPic: undefined,
-              paymentType: undefined,
-              products: undefined,
-            },
-          },
-        };
       }
+
+      console.log('iniii dia:: ', JSON.stringify(data))
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data ? data.number : 'N/A',
         data: data,
+        type: selectedType,
       });
     } catch (error) {
       customLog(error);
