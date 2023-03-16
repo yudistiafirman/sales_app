@@ -1,4 +1,11 @@
-import { getAllPurchaseOrders, getAllVisitationOrders } from '@/actions/OrderActions';
+import {
+  getAllFinishedDeliveryOrders,
+  getAllDeposits,
+  getAllPurchaseOrders,
+  getAllSchedules,
+  getAllVisitationOrders,
+  getTransactionTab,
+} from '@/actions/OrderActions';
 import { customLog } from '@/utils/generalFunc';
 import { createMachine } from 'xstate';
 import { assign } from 'xstate/lib/actions';
@@ -110,8 +117,7 @@ export const transactionMachine =
                     ],
 
                     backToGetTransactions: {
-                      target:
-                        'getTransactionsBaseOnType',
+                      target: 'getTransactionsBaseOnType',
                       actions: 'resetProduct',
                     },
                   },
@@ -160,8 +166,8 @@ export const transactionMachine =
         assignTypeToContext: assign((_context, event) => {
           const newTypeData = event.data.map((item) => {
             return {
-              key: item.index,
-              title: item.name,
+              key: item.name,
+              title: item.totalItems,
               totalItems: _context.totalItems ? _context.totalItems : 0,
               chipPosition: 'bottom',
             };
@@ -248,40 +254,48 @@ export const transactionMachine =
       services: {
         getTypeTransactions: async (_context, _event) => {
           try {
-            // need to call API
-            const response = [
-              {
-                index: 0,
-                name: 'SPH',
-              },
-              {
-                index: 1,
-                name: 'PO',
-              },
-            ];
-            return response;
+            let response = await getTransactionTab();
+            // const response = [
+            //   {
+            //     index: 0,
+            //     name: 'SPH',
+            //   },
+            //   {
+            //     index: 1,
+            //     name: 'PO',
+            //   },
+            //   {
+            //     index: 2,
+            //     name: 'Deposit',
+            //   },
+            //   {
+            //     index: 4,
+            //     name: 'Jadwal',
+            //   },
+            //   {
+            //     index: 5,
+            //     name: 'DO',
+            //   },
+            // ];
+            return response.data;
           } catch (error) {
             throw new Error(error);
           }
         },
         getTransactions: async (_context, _event) => {
           try {
-            // need to call API
             let response;
-            if (_context.selectedType === 'SPH') {
-              response = await getAllVisitationOrders();
-            } else {
+            if (_context.selectedType === 'PO') {
               response = await getAllPurchaseOrders();
+            } else if (_context.selectedType === 'Deposit') {
+              response = await getAllDeposits();
+            } else if (_context.selectedType === 'Jadwal') {
+              response = await getAllSchedules();
+            } else if (_context.selectedType === 'DO') {
+              response = await getAllFinishedDeliveryOrders();
+            } else {
+              response = await getAllVisitationOrders();
             }
-            response = {
-              ...response,
-              data: {
-                ...response.data,
-                totalItems: response.data?.totalItems
-                  ? response.data.totalItems
-                  : 0,
-              },
-            };
             return response.data as any;
           } catch (error) {
             throw new Error(error);
