@@ -55,7 +55,6 @@ const SelectPurchaseOrderData = ({
       listData = choosenDataFromList?.PurchaseOrders;
     }
     projectID = choosenDataFromList?.id;
-    console.log('ini diaaa: ', choosenDataFromList);
     return { companyName, locationName, listData, projectID };
   };
 

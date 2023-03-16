@@ -37,8 +37,6 @@ export default function SecondStep() {
       updateValueOnstep('stepTwo', 'locationName', parent.locationName);
       updateValue('existingProjectID', parent.projectID);
       updateValueOnstep('stepTwo', 'purchaseOrders', data);
-      console.log('iniiii 1: ', JSON.stringify(parent.projectID));
-      console.log('iniiii 2: ', JSON.stringify(data));
       updateValue('isSearchingPurchaseOrder', false);
     },
     [updateValueOnstep]
