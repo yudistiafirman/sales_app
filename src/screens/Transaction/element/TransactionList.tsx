@@ -3,7 +3,6 @@ import { layout } from '@/constants';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import React, { useCallback } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
-import TransactionEmpty from './TransactionEmpty';
 import TransactionListCard from './TransactionListCard';
 import TransactionListShimmer from './TransactionListShimmer';
 
@@ -14,6 +13,7 @@ interface TransactionsData {
   projectName: string;
   status: string;
   QuotationLetter: any;
+  PurchaseOrder: any;
   project?: any;
 }
 
@@ -31,6 +31,7 @@ interface TransactionListProps<ArrayOfObject> {
   isError?: boolean;
   errorMessage?: string;
   onAction?: () => void;
+  selectedType: string;
 }
 
 const TransactionList = <ArrayOfObject extends TransactionsData>({
@@ -44,6 +45,7 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
   onRefresh,
   loadTransaction,
   onPress = () => {},
+  selectedType,
 }: TransactionListProps<ArrayOfObject>) => {
   const renderItem: ListRenderItem<TransactionsData> = useCallback(
     ({ item }) => {
@@ -54,12 +56,26 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
           }}
         >
           <TransactionListCard
-            id={item.id}
-            number={item.number}
-            expiredDate={item.expiredDate}
-            projectName={item.projectName ? item.projectName : item.project.name}
+            number={item.number ? item.number : '-'}
+            // TODO: handle from BE, ugly when use mapping in FE side
+            projectName={
+              item.projectName ? item.projectName : item.project?.name
+            }
             status={item.status}
-            name={item.QuotationLetter?.number}
+            // TODO: handle from BE, ugly when use mapping in FE side
+            name={
+              item.SaleOrder
+                ? item.SaleOrder?.number
+                : item.Schedule
+                ? item.Schedule.number
+                : item.PurchaseOrder
+                ? item.PurchaseOrder?.number
+                : item.QuotationLetter?.number
+            }
+            // TODO: handle from BE, ugly when use mapping in FE side
+            nominal={item.value ? item.value : item.totalPrice}
+            // TODO: handle from BE, ugly when use mapping in FE side
+            useBEStatus={selectedType === 'SPH' ? false : true}
           />
         </TouchableOpacity>
       );
@@ -86,7 +102,7 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
           <TransactionListShimmer />
         ) : (
           <BEmptyState
-            emptyText="Data transaksi mu tidak tersedia, silakan buat SPH terlebih dahulu."
+            emptyText={`Data transaksi mu tidak tersedia, silakan buat ${selectedType} terlebih dahulu.`}
             isError={isError}
             onAction={onAction}
             errorMessage={errorMessage}

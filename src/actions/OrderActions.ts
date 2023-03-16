@@ -7,17 +7,22 @@ export const getTransactionTab = async () => {
   return customRequest(BrikApiOrder.transactionTab(), 'GET', undefined, true);
 };
 
-export const getAllVisitationOrders = async () => {
+export const getAllVisitationOrders = async (page?: string, size?: string) => {
   return customRequest(
-    BrikApiOrder.getAllVisitationOrders(),
+    BrikApiOrder.getAllVisitationOrders(page, size),
     'GET',
     undefined,
     true
   );
 };
 
-export const getAllPurchaseOrders = async () => {
-  return customRequest(BrikApiOrder.purchaseOrder(), 'GET', undefined, true);
+export const getAllPurchaseOrders = async (page?: string, size?: string) => {
+  return customRequest(
+    BrikApiOrder.purchaseOrder(page, size),
+    'GET',
+    undefined,
+    true
+  );
 };
 
 export const getPurchaseOrderByID = async (id: string) => {
@@ -29,16 +34,26 @@ export const getPurchaseOrderByID = async (id: string) => {
   );
 };
 
-export const getAllDeposits = async () => {
-  return customRequest(BrikApiOrder.deposit(), 'GET', undefined, true);
+export const getAllDeposits = async (page?: string, size?: string) => {
+  return customRequest(
+    BrikApiOrder.deposit(page, size),
+    'GET',
+    undefined,
+    true
+  );
 };
 
 export const getDepositByID = async (id: string) => {
   return customRequest(BrikApiOrder.getDepositByID(id), 'GET', undefined, true);
 };
 
-export const getAllSchedules = async () => {
-  return customRequest(BrikApiOrder.schedule(), 'GET', undefined, true);
+export const getAllSchedules = async (page?: string, size?: string) => {
+  return customRequest(
+    BrikApiOrder.schedule(page, size),
+    'GET',
+    undefined,
+    true
+  );
 };
 
 export const getScheduleByID = async (id: string) => {
@@ -50,9 +65,12 @@ export const getScheduleByID = async (id: string) => {
   );
 };
 
-export const getAllFinishedDeliveryOrders = async () => {
+export const getAllFinishedDeliveryOrders = async (
+  page?: string,
+  size?: string
+) => {
   return customRequest(
-    BrikApiOrder.deliveryOrder('FINISHED'),
+    BrikApiOrder.deliveryOrder('FINISH', page, size),
     'GET',
     undefined,
     true

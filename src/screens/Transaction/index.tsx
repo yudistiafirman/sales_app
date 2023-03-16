@@ -19,6 +19,7 @@ import TransactionList from './element/TransactionList';
 import { transactionMachine } from '@/machine/transactionMachine';
 import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
 import {
+  CAMERA,
   CREATE_DEPOSIT,
   CREATE_SCHEDULE,
   PO,
@@ -62,10 +63,12 @@ const Transaction = () => {
     loadTab,
     selectedType,
     errorMessage,
+    isErrorData: isError,
   } = state.context;
 
-  const onTabPress = (index: number) => {
-    send('onChangeType', { payload: index });
+  const onTabPress = (title: string) => {
+    if (isError) send('retryGettingTransactions', { payload: title });
+    else send('onChangeType', { payload: title });
   };
 
   useCustomHeaderRight({
@@ -80,7 +83,13 @@ const Transaction = () => {
                 navigation.navigate(PO);
               }
             } else if (selectedType === 'Deposit') {
-              navigation.navigate(CREATE_DEPOSIT);
+              navigation.navigate(CAMERA, {
+                photoTitle: 'Bukti',
+                navigateTo: CREATE_DEPOSIT,
+                closeButton: true,
+                disabledDocPicker: false,
+                disabledGalleryPicker: false,
+              });
             } else if (selectedType === 'Jadwal') {
               navigation.navigate(CREATE_SCHEDULE);
             } else {
@@ -207,7 +216,7 @@ const Transaction = () => {
       <BSpacer size="extraSmall" />
       {state.matches('getTransaction.errorGettingTypeTransactions') && (
         <BEmptyState
-          onAction={() => send('retryGettingTransactions')}
+          onAction={() => send('retryGettingTypeTransactions')}
           isError
           errorMessage={errorMessage}
         />
@@ -224,16 +233,19 @@ const Transaction = () => {
               loadTransaction={loadTransaction}
               refreshing={refreshing}
               isError={state.matches(
-                'getTransaction.typeLoaded.errorGettingTypeTransactions'
+                'getTransaction.typeLoaded.errorGettingTransactions'
               )}
               errorMessage={errorMessage}
-              onAction={() => send('retryGettingTypeTransactions')}
+              onAction={() =>
+                send('retryGettingTransactions', { payload: selectedType })
+              }
               onRefresh={() => send('refreshingList')}
               onPress={(data: any) => getOneOrder(data.id)}
+              selectedType={selectedType}
             />
           )}
           onTabPress={(data) => {
-            onTabPress(parseInt(data?.route?.key));
+            onTabPress(data?.route?.title);
           }}
           onIndexChange={setIndex}
           tabStyle={styles.tabStyle}

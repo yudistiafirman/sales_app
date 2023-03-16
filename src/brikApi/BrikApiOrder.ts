@@ -7,8 +7,15 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static getAllVisitationOrders = () => {
+  static getAllVisitationOrders = (page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/flow/quotation-letter`);
+    const params = url.searchParams;
+    if (page) {
+      params.append('page', page);
+    }
+    if (size) {
+      params.append('size', size);
+    }
     return url.toString();
   };
 
@@ -79,24 +86,51 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static purchaseOrder = () => {
+  static purchaseOrder = (page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/purchase-order`);
+    const params = url.searchParams;
+    if (page) {
+      params.append('page', page);
+    }
+    if (size) {
+      params.append('size', size);
+    }
     return url.toString();
   };
 
-  static deposit = () => {
+  static deposit = (page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/deposit`);
+    const params = url.searchParams;
+    if (page) {
+      params.append('page', page);
+    }
+    if (size) {
+      params.append('size', size);
+    }
     return url.toString();
   };
 
-  static schedule = () => {
+  static schedule = (page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/schedule`);
+    const params = url.searchParams;
+    if (page) {
+      params.append('page', page);
+    }
+    if (size) {
+      params.append('size', size);
+    }
     return url.toString();
   };
 
-  static deliveryOrder = (status: string) => {
+  static deliveryOrder = (status?: string, page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/delivery-order`);
     const params = url.searchParams;
+    if (page) {
+      params.append('page', page);
+    }
+    if (size) {
+      params.append('size', size);
+    }
     if (status) {
       params.append('status', status);
     }
