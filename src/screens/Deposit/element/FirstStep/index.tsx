@@ -31,16 +31,14 @@ export default function FirstStep() {
   const { updateValueOnstep } = action;
   const dispatch = useDispatch();
 
-  const { deposit } = stateOne;
-
   const inputs: Input[] = [
     {
       label: 'Tanggal Bayar',
       isRequire: true,
       type: 'calendar',
-      value: deposit?.createdAt,
+      value: stateOne?.deposit?.createdAt,
       placeholder: 'Pilih tanggal bayar',
-      isError: deposit?.createdAt ? false : true,
+      isError: stateOne?.deposit?.createdAt ? false : true,
       customerErrorMsg: 'Tanggal bayar harus diisi',
       calendar: {
         onDayPress: (value: any) => {
@@ -57,9 +55,9 @@ export default function FirstStep() {
       label: 'Nominal',
       isRequire: true,
       type: 'price',
-      value: deposit?.nominal,
+      value: stateOne?.deposit?.nominal,
       placeholder: '0',
-      isError: deposit?.nominal ? false : true,
+      isError: stateOne?.deposit?.nominal ? false : true,
       customerErrorMsg: 'Nominal harus diisi',
       onChange: (value: any) => {
         onChange('nominal')(value.split('.').join(''));
@@ -69,7 +67,7 @@ export default function FirstStep() {
 
   const onChange = (key: string) => (val: any) => {
     let modifyDeposit = {};
-    if (deposit) modifyDeposit = deposit;
+    if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
     if (key === 'createdAt')
       modifyDeposit = {
         ...modifyDeposit,
@@ -88,7 +86,7 @@ export default function FirstStep() {
     (pos: number) => () => {
       dispatch(deleteImage({ pos, source: CREATE_DEPOSIT }));
       let modifyDeposit = {};
-      if (deposit) modifyDeposit = deposit;
+      if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
       modifyDeposit = {
         ...modifyDeposit,
         picts: createDepositPhotoURLs,
@@ -102,7 +100,7 @@ export default function FirstStep() {
   useFocusEffect(
     React.useCallback(() => {
       let modifyDeposit = {};
-      if (deposit) modifyDeposit = deposit;
+      if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
       modifyDeposit = {
         ...modifyDeposit,
         picts: createDepositPhotoURLs,
@@ -116,7 +114,7 @@ export default function FirstStep() {
     <SafeAreaView style={style.flexFull}>
       <View style={style.gallery}>
         <BGallery
-          picts={deposit?.picts}
+          picts={stateOne?.deposit?.picts}
           addMorePict={() =>
             navigation.dispatch(
               StackActions.push(CAMERA, {

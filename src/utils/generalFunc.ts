@@ -138,7 +138,7 @@ export const getSuccessMsgFromAPI = (
         finalText += 'kordinat lokasi';
         break;
       case 'upload':
-        finalText = 'Berhasil upload file';
+        finalText = '';
         break;
       case 'project':
         finalText += 'data proyek';

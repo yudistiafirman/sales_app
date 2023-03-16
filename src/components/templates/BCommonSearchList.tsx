@@ -1,5 +1,5 @@
 import BVisitationCard from '@/components/molecules/BVisitationCard';
-import { colors, layout } from '@/constants';
+import { colors } from '@/constants';
 import * as React from 'react';
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native';
 import BCommonListShimmer from './BCommonListShimmer';
@@ -12,11 +12,12 @@ import BTabSections from '@/components/organism/TabSections';
 import BEmptyState from '../organism/BEmptyState';
 import { CreatedPurchaseOrderListResponse } from '@/interfaces/CreateDeposit';
 
-
-type ListRenderItemData = CreatedPurchaseOrderListResponse & CreatedSPHListResponse & selectedCompanyInterface;
+type ListRenderItemData = CreatedPurchaseOrderListResponse &
+  CreatedSPHListResponse &
+  selectedCompanyInterface;
 
 interface BCommonSearchListProps<ArrayOfObject> {
-  data: ArrayOfObject[];
+  data: CreatedSPHListResponse[] | CreatedPurchaseOrderListResponse[] | ArrayOfObject[];
   onEndReached?:
     | ((info: { distanceFromEnd: number }) => void)
     | null
@@ -29,19 +30,19 @@ interface BCommonSearchListProps<ArrayOfObject> {
   onPressList?: (data: any) => void;
   colorStatus?: string;
   onChangeText: (text: string) => void;
-  onClearValue?:()=> void;
-  onPressMagnify?:()=> void;
+  onClearValue?: () => void;
+  onPressMagnify?: () => void;
   searchQuery: string;
   onTabPress?: (tabroutes: any) => any;
   onIndexChange: (index: number) => void;
   index: number;
   routes: any[];
-  errorMessage?: string;
+  errorMessage?: unknown;
   isError?: boolean;
   placeholder?: string;
   onRetry?: () => void;
   emptyText: string;
-  hidePicName?:boolean
+  hidePicName?: boolean;
 }
 
 const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
@@ -65,7 +66,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
   emptyText,
   onClearValue,
   onPressMagnify,
-  hidePicName
+  hidePicName,
 }: BCommonSearchListProps<ArrayOfObject>) => {
   const isSearching = searchQuery.length > 2;
   const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
@@ -78,16 +79,19 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
       }
       const constructVisitationData: visitationDataType = {
         id: idx,
-        name:  item?.name,
+        name: item?.name,
         location:
-          item.locationName || item?.ShippingAddress?.Postal?.City?.name || item?.location || item?.locationAddress?.line1 || item?.address?.line1,
+          item.locationName ||
+          item?.ShippingAddress?.Postal?.City?.name ||
+          item?.location ||
+          item?.locationAddress?.line1 ||
+          item?.address?.line1,
         pilNames:
           item?.PurchaseOrders?.map((it) => it.brikNumber) ||
           item?.QuotationRequests?.map((val) => val?.QuotationLetter?.number),
-          picOrCompanyName: !hidePicName ? picOrCompanyName :'',
-        status:item?.status,
-        pilStatus:item?.pilStatus
-       
+        picOrCompanyName: !hidePicName ? picOrCompanyName : '',
+        status: item?.status,
+        pilStatus: item?.pilStatus,
       };
       return (
         <>
@@ -110,12 +114,22 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
       <BSearchBar
         value={searchQuery}
         onChangeText={(text) => onChangeText(text)}
-        left={<TextInput.Icon onPress={onPressMagnify && onPressMagnify} forceTextInputFocus={false} icon="magnify" />}
-        right={onClearValue && <TextInput.Icon
-          onPress={onClearValue}
-          forceTextInputFocus={false}
-          icon="close"
-        />}
+        left={
+          <TextInput.Icon
+            onPress={onPressMagnify && onPressMagnify}
+            forceTextInputFocus={false}
+            icon="magnify"
+          />
+        }
+        right={
+          onClearValue && (
+            <TextInput.Icon
+              onPress={onClearValue}
+              forceTextInputFocus={false}
+              icon="close"
+            />
+          )
+        }
         placeholder={placeholder}
       />
       <BSpacer size="extraSmall" />

@@ -234,7 +234,7 @@ const CreatePo = () => {
             choosenSphDataFromList?.ShippingAddress !== null
               ? choosenSphDataFromList?.ShippingAddress?.Postal?.City?.name
               : '',
-          sphs: choosenSphDataFromList.QuotationRequests,
+          listData: choosenSphDataFromList.QuotationRequests,
         }}
         modalTitle="Pilih SPH"
         onPressCompleted={onPressCompleted}

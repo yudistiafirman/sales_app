@@ -11,13 +11,10 @@ import { QuotationRequests,Products } from '@/interfaces/CreatePurchaseOrder';
 import { RadioButton } from 'react-native-paper';
 import { PoProductData, PurchaseOrdersData, SalesOrdersData } from '@/interfaces/CreateDeposit';
 
-
-type BNestedProductCardData = QuotationRequests & PurchaseOrdersData;
-
 type BNestedProductCardType = {
   withoutHeader?: boolean;
   withoutBottomSpace?: boolean;
-  data?: BNestedProductCardData[];
+  data?: QuotationRequests[] | PurchaseOrdersData[];
   selectedPO?: any[];
   onValueChange?: (product: any, value: boolean) => void;
   withoutSeparator?: boolean;
