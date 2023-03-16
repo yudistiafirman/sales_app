@@ -1,19 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { JwtPayload } from 'jwt-decode';
 import { ENTRY_TYPE } from '@/models/EnumModel';
+import { UserModel } from '@/models/User';
 
 interface LoginCredential {
   phoneNumber: string;
 }
 
 interface AuthState {
-  userData: JwtPayload | null;
+  userData: UserModel.DataSuccessLogin | null;
   loginCredential: LoginCredential;
   isLoading: boolean;
   isSignout: boolean;
   hunterScreen: boolean;
-  entryType: ENTRY_TYPE | undefined;
   remote_config: {
     enable_appointment: boolean;
     enable_create_schedule: boolean;
@@ -38,7 +37,6 @@ const initialState: AuthState = {
   isLoading: true,
   isSignout: false,
   hunterScreen: false,
-  entryType: ENTRY_TYPE.SALES,
   remote_config: {
     enable_appointment: true,
     enable_create_schedule: true,
@@ -73,7 +71,6 @@ export const authSlice = createSlice({
         return {
           ...state,
           userData: action.payload.userData,
-          entryType: action.payload.entryType,
           remote_config: {
             ...state.remote_config,
             enable_appointment: action.payload.remoteConfig.enable_appointment,
@@ -101,17 +98,10 @@ export const authSlice = createSlice({
         return {
           ...state,
           userData: action.payload.userData,
-          entryType: action.payload.entryType,
           isSignout: false,
           isLoading: false,
         };
       }
-    },
-    setEntryType: (state, action: PayloadAction<ENTRY_TYPE>) => {
-      return {
-        ...state,
-        entryType: action.payload,
-      };
     },
     setIsLoading: (state, action: PayloadAction<any>) => {
       if (action.payload.remoteConfig) {
@@ -138,13 +128,11 @@ export const authSlice = createSlice({
             force_update: action.payload.remoteConfig.force_update,
           },
           isLoading: action.payload.loading,
-          entryType: action.payload.entryType,
         };
       } else {
         return {
           ...state,
           isLoading: action.payload.loading,
-          entryType: action.payload.entryType,
         };
       }
     },
@@ -171,7 +159,6 @@ export const {
   setIsLoading,
   signout,
   toggleHunterScreen,
-  setEntryType,
 } = authSlice.actions;
 
 export default authSlice.reducer;

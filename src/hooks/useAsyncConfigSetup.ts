@@ -6,7 +6,7 @@ import {
   toggleHunterScreen,
 } from '@/redux/reducers/authReducer';
 import { AppDispatch, RootState } from '@/redux/store';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import * as React from 'react';
 import { Alert, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,13 +16,13 @@ import remoteConfig from '@react-native-firebase/remote-config';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import BackgroundFetch from 'react-native-background-fetch';
 import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
+import { UserModel } from '@/models/User';
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
     isLoading,
     userData,
     isSignout,
-    entryType,
     hunterScreen,
     remote_config,
   } = useSelector((state: RootState) => state.auth);
@@ -36,11 +36,10 @@ const useAsyncConfigSetup = () => {
       try {
         const userToken = await bStorage.getItem(storageKey.userToken);
         if (userToken) {
-          const decoded = jwtDecode<JwtPayload>(userToken);
+          const decoded = jwtDecode<UserModel.DataSuccessLogin>(userToken);
           dispatch(
             setUserData({
               userData: decoded,
-              entryType: ENTRY_TYPE.SALES,
               remoteConfig: fetchedRemoteConfig,
             })
           );
@@ -48,7 +47,6 @@ const useAsyncConfigSetup = () => {
           dispatch(
             setIsLoading({
               loading: false,
-              entryType: ENTRY_TYPE.SALES,
               remoteConfig: fetchedRemoteConfig,
             })
           );
@@ -58,7 +56,6 @@ const useAsyncConfigSetup = () => {
         dispatch(
           setIsLoading({
             loading: false,
-            entryType: ENTRY_TYPE.SALES,
             remoteConfig: fetchedRemoteConfig,
           })
         );
@@ -134,7 +131,6 @@ const useAsyncConfigSetup = () => {
     isLoading,
     userData,
     isSignout,
-    entryType,
     hunterScreen,
     enable_hunter_farmer,
   };

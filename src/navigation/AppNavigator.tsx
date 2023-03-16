@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Splash from '@/screens/Splash';
 import Operation from '@/screens/Operation';
 import { ENTRY_TYPE } from '@/models/EnumModel';
-import { JwtPayload } from 'jwt-decode';
 import Login from '@/screens/Login';
 import Verification from '@/screens/Verification';
 import { colors, fonts } from '@/constants';
@@ -28,15 +27,17 @@ import { customLog } from '@/utils/generalFunc';
 import SalesTabs from './tabs/SalesTabs';
 import SecurityTabs from './tabs/SecurityTabs';
 import SalesHeaderRight from './Sales/HeaderRight';
+import { UserModel } from '@/models/User';
 const Stack = createNativeStackNavigator();
 
 const RootScreen = (
-  userData: JwtPayload | null,
+  userData: UserModel.DataSuccessLogin | null,
   isSignout: boolean,
   userType?: ENTRY_TYPE
 ) => {
   if (userData !== null) {
-    switch (userType) {
+    console.log('userData', userData.type)
+    switch (userData.type) {
       case ENTRY_TYPE.OPSMANAGER:
         return (
           <>
@@ -102,7 +103,7 @@ const RootScreen = (
             {OperationStack(Stack)}
           </>
         );
-      case ENTRY_TYPE.SALES:
+      case ENTRY_TYPE.ADMIN || ENTRY_TYPE.ADMIN:
         return (
           <>
             <Stack.Screen
@@ -154,7 +155,6 @@ function AppNavigator() {
     isLoading,
     userData,
     isSignout,
-    entryType,
     hunterScreen,
     enable_hunter_farmer,
   } = useAsyncConfigSetup();
@@ -178,7 +178,7 @@ function AppNavigator() {
             },
           }}
         >
-          {RootScreen(userData, isSignout, entryType)}
+          {RootScreen(userData, isSignout)}
         </Stack.Navigator>
       </>
     );

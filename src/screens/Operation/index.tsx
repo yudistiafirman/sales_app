@@ -12,7 +12,7 @@ import { OPERATION } from '@/navigation/ScreenNames';
 const Operation = () => {
   const dispatch = useDispatch();
   const [isLoading] = useState(false);
-  const { entryType } = useSelector((state: RootState) => state.auth);
+  const { userData } = useSelector((state: RootState) => state.auth);
 
   const data = useMemo(
     () =>
@@ -36,12 +36,12 @@ const Operation = () => {
   );
 
   React.useEffect(() => {
-    crashlytics().log(entryType ? ENTRY_TYPE[entryType] : 'Operation Default');
-  }, [entryType]);
+    crashlytics().log(userData?.type ? ENTRY_TYPE[userData.type] : 'Operation Default');
+  }, [userData?.type]);
 
   return (
     <SafeAreaView style={style.container}>
-      <OperationList role={entryType} isLoading={isLoading} data={data} />
+      <OperationList role={userData?.type} isLoading={isLoading} data={data} />
     </SafeAreaView>
   );
 };
