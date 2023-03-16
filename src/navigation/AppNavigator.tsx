@@ -36,7 +36,6 @@ const RootScreen = (
   userType?: ENTRY_TYPE
 ) => {
   if (userData !== null) {
-    console.log('userData', userData.type)
     switch (userData.type) {
       case ENTRY_TYPE.OPSMANAGER:
         return (
