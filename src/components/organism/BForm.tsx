@@ -211,8 +211,12 @@ const renderInput = (
         />
         <View style={styles.quantityLayout}>
           <BTextInput
-            style={[styles.quantityInput, { paddingEnd: layout.pad.xl }]}
-            onChangeText={onChange}
+            style={[
+              styles.quantityInput,
+              { paddingEnd: layout.pad.xl },
+              isError && { borderColor: colors.primary },
+            ]}
+            onChangeText={(vl) => onChange(vl.replace(/\D/g, ''))}
             value={value}
             keyboardType={'numeric'}
             placeholder={placeholder}
@@ -224,7 +228,7 @@ const renderInput = (
         </View>
         {isError && (
           <BText size="small" color="primary" bold="100">
-            {`${label} harus diisi`}
+            {customerErrorMsg || `${label} harus diisi`}
           </BText>
         )}
       </React.Fragment>
@@ -245,6 +249,7 @@ const renderInput = (
             style={[
               styles.quantityInputPrice,
               { paddingStart: layout.pad.xxl },
+              isError && { borderColor: colors.primary },
             ]}
           >
             <TextInputMask
@@ -292,6 +297,7 @@ const renderInput = (
             style={[
               styles.quantityInputCalendar,
               { paddingEnd: layout.pad.xl },
+              isError && { borderColor: colors.primary },
             ]}
           >
             <BText>{value ? value : placeholder}</BText>
@@ -341,6 +347,7 @@ const renderInput = (
                 style={[
                   styles.quantityInputCalendar,
                   { paddingEnd: layout.pad.xl },
+                  calendarTime?.isErrorOne && { borderColor: colors.primary },
                 ]}
               >
                 <BText
@@ -360,7 +367,7 @@ const renderInput = (
                 </BText>
               </View>
             </TouchableOpacity>
-            {isError && (
+            {calendarTime?.isErrorOne && (
               <BText size="small" color="primary" bold="100">
                 {`${calendarTime?.labelOne} harus diisi`}
               </BText>
@@ -381,6 +388,7 @@ const renderInput = (
                 style={[
                   styles.quantityInputCalendar,
                   { paddingEnd: layout.pad.xl },
+                  calendarTime?.isErrorTwo && { borderColor: colors.primary },
                 ]}
               >
                 <BText
@@ -400,7 +408,7 @@ const renderInput = (
                 </BText>
               </View>
             </TouchableOpacity>
-            {isError && (
+            {calendarTime?.isErrorTwo && (
               <BText size="small" color="primary" bold="100">
                 {`${calendarTime?.labelTwo} harus diisi`}
               </BText>

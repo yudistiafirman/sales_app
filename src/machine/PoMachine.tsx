@@ -22,29 +22,23 @@ const purchaseOrderInitialState = {
   poImages: [] as LocalFileType[],
   openCamera: false,
   poNumber: '',
-  searchQuery: '',
   sphCategories: '',
-  choosenSphDataFromList: {} as CreatedSPHListResponse,
   choosenSphDataFromModal: {} as CreatedSPHListResponse,
-  isModalChooseSphVisible: false,
   isModalContinuePo: false,
-  loadingSphData: false,
   loadingDocument: false,
-  errorGettingSphMessage: '',
   errorGettingDocMessage: '',
   selectedProducts: [] as Products[],
   files: [] as any[],
-  routes: [],
-  sphData: [],
   paymentType: '',
   currentStep: 0,
   postPoPayload: {} as PostPoPayload,
   isUseExistingFiles: false,
   isLoadingPostPurchaseOrder: false,
+  isFirstTimeOpenCamera: true
 };
 
 const POMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJmcAOAIyUPhgJwBmABZA30C-AFYANgAaEABPREjfX0p-NzCPfwB2Z39nEMCAX0LYyRx8IlJyKhp6JlYIDm4+AQ0xCQxymSr5WuUGjnURYi1bXjN9D3MkEGQrGz1eeycEV09vPyCCiJj4xF83N0pDrI9w52TIoI9nYtLO6Uq5KgAzQXRYbQZtMGROACNcPQACrEABCYCgwl4wig3x0YDM9jm1jGy0QHnSRyy4UMeKC-gCSX8sQSCFOzm8QUMhLcuVchg8d1mDwqsmqlDeHy+P2QlFwEEaAHlOARcFJYQxkNgkTMUQs7DMVr4sqTEP48pRnEkshrAllIpFTkUSiypGyeq93p9vr9+YK2CLyAAbMA-ACSAFtcDBZZZUYt0QgPJEbhszm5IoYslkwoZwmqEFdDJRo2EAvHI-5Isyyo92fIuTbefbhZxhGgvtK-bN5milRjIuFwpQck3fIYm4EPJlE+ENZRIs4IgbfB4sqFc6zus9OdaeXaBWWlwBZUhgL0+uA1+X10ArTGBbG4-GBQnZgKJnudwfZZy4-tRwwm+7mmccosLvlLx2cKDEUEGFoPgIFtZAdzrQMG2DLFWxPGkzyJS89lWK5WyScIskMTxqUZcIpzfJ4P3nMDKCA8UcClbAASBOhQQAQQdYgIIDRV9wxNJ-EoMIrmCGMcmbBMUJyFNgkJGNCXCEILgIroiMLEiS3IqQqKEXhK10XgoE4YhkDAGEtLXCBcGdFiFSWaCJ0pGkx0xfJwkOcIPETU4uObTtQn8Z9XN8WT80tOduVI5TKOlNSNNhUUwAo7BYTMvdHEQKzU0JHs6UCBy3CcxNPBTfE6V8I0zmbXzTTzC1Z0-YLopUsKxQlLSqOafg1NEcRKHK98FKCpSatC7BKHqnBJWlIZNB0RYJhMZFILYxKEGzSJuOcTEAnOTE0lVFC3GjY4sjcA0DpDZszj8iriJ6u0QuwVShtixrpU4Ch0FIDrnR0F5SE9Drp3kq1Lr5a7br6+64VGtpRkmkx4qg9iFsNZbVv8da3E2xNQyySgVXvWN8lcG43DOrr-uLK6QeBmKRuovgAGE8C0sAaYRf90EEbdprlWaLLhxbEbcNaVtRg6XJ7Zaog1IIVQiIm-sC0nAfJsLdP0oyTLp4grDAJrMGdTXVdMjn-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-6bYtjSA0iYr-reSMkLVmRnw3F2wn2WfRKPEDP0+1WGjBbDyF4wzjxFcBFkpGvEwnvFRijEwlhV7mQEAPwXVBzRcGCHQhVFRkhQAR4iyGQKwVLEdDQKDBDGzHAU31xAyiciwhxBcjBXAQzTWAASkhjGCyNx7hIKBmlHIOgnSBw1Q0ZEKgoTTENHjxCx4IBm9n7gGgrFQCkS0gELhiHCOAJlyA7E3kaw1zJH40HFqRRjpCkkN2FwunljkMPkGhBiplUPlzyGXmITHH7EyC8h0yax-00RQKsP6koD9gDmwA1gIConsIPHIW8A6R7DODSl1A03JGYLEhVF1HwJ+WINkL4IGjuiHhHimUgDCIxAiL-miKcn8WwxQkKhfwOn7BdQXhI3MO6ksMyMoEuReQeivhvm0AKIQAci4gQMwyyjOCuAaU41Q2zAck32HA1EmNhVVV+G6OgRbHcBuC7CiAchARQjQhPB8CciaSbykO4NOXhT5AiXaLZSUW6OzEyGOG8iX0-w3XVGJWjAX1DG1EOjMJP3gSgwGVZSGRiRGXyM5hmzhh4hSH7GzRslMLOA8XyHAX2h7Dxh2ghU7FmO+LtFaJyS0nOKPy5XP0eIHGWO1FMKbCEKBWyGOCSFRlxGRl1FuC8NpTOTDUZUuPHCWgawNGZyCEOCvEhXAVRkkiymqQ7G-2kM0SrXOQWIRgknTUzUmMwODH7COB4032JDHEJBDWrQRWZKBLlx5QCEj1OEpQtW1BGIxHSl82p1yBgSznpJnT0l4DvQXQWNLVTWBX5kZCHHiPSC8B-QhQcibAAzLQaKoGEwGAAJ1Or3vGBypO4TCCcnBPiJyC8GzHjAnFRgtlDF7yGzF2qG6NjCWhQ1V3yF7X2hFQpwzRwlpO8UNCzM53N0+EyzzNCC1BSOjGLPOFLPp2JQnGRlyDBTcWbBFMOIGw537y520HxxxIK2rwOW+U7BEhuFOG4TcCvH9wLWuBwnnjpNFJHL7xzPuwdTTy9wFG6JDFOHm2HAOBCB8BNNXIRkhVNjPE3yPH7FrLHMGgTUwDgFgGH2ilHw4FPP2hSH2j1FciNBdSJSiGOHcEkOCHXhzFtOu0L1d0qkH2dF-IRFE1PIqQ2FrxoP-jpCJX2j2gOXjGwjWm-2KCAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJlfPKAVgAsANgDsAIwAzIZ+Ps4hXgA0IACeiF4AnEGUABweyekBzqlBQV5eHgC+RTGSOPhEpORUNPRMrBAc3HwCGmISGBUy1fJ1yo0c6iLEWra8ZvoB5kggyFY2erz2TgiuXqmUQd6hhqmpiV7BMfEIAT5efpSFXoaG235BruclZV3SVXJUAGaC6LDaBjaMDITgAI1w9AAKsQAEJgKDCXjCKBAnRgMz2ebWcYrFxuTy+QIhMIRQzROKIAJHRKUZweDyBVJHR4BRKvObvSqyGqUX7-QHA5CUXAQJoAeU4BFwUhRDGQ2Exs2xizss1WzgKPi22S820SAT8iR8Hh8Jyp5K81xu4WSziNAQ55Q+PPk-IBQJBIrFbEl5AANmBgQBJAC2uBgSssOKWeLWPnydJNer8qR8hh8AXNZ1ctJC9tNiUSoW8xVKnKk3N6Pz+HqF3olnGEaEBCqjcwWuPVLn8VwOlvyhoyl2zAWC7mZxr8HjuhnZ5edVa+fNrgq9osbG4AsqQwGGI3B2yqu6ANYlnNrzn5fA9U4YPKOgrlKIkZ3r6YznNkgk6uT1l+6a7ChuvqcFAxAwgwtB8BAnrIEenaxt2azFoYL7BKkqZBAEDLEqOmpoV+BqPMW3g+D4v6Vv+vKAXBlBQTKODytg4KQnQMIAII+sQCExmqp4uF49KeH4hiGqk9ypGyvijnOVqHN4r6XBsuRlm8VGfDRq50QxUjMZwG4AMLYMQVhgLwzG8aqyzIZqwmMmJd5PtJZqUmc1IeNaDI5GJPiJGElHdJp8hQZgMFwWBcJsTCABi2lClZJ6OPiQmEv4wShOEkTZo8nlhKavhJMORaBS61b0dBvCwUKkUwlC2B-NVIKJUhAkIAUiZjv4JrbCa3iyRJ1rGq4PipPShx+KVS68qF4X1jA2i6LwqIKgAIqMqChuZ2iwC0-BCCM4iUIu1EhZVTXCgtS0rdg62YJt22wMMmg6EskwmFiiH8clCBBP5aGpgEdznB4X4bA+bljkalC2vqBrnkEfjOFNp1ULNVV0VdcprRtW28DtnAUOgpDHf6OjfKQobHX+wVo+dmNBtdzF3Q9+NPe0YxvSYLXfas+RjdcX4miWRZBKOhq0rDGTwxESMo7TFVhRj9bM7j20ADLEKKkCcKgyD+lrEAojzNltUJESePcHjnPsYmuOLdyUDhF5hFD2yGMjC4066dNKxdlBE6QADijMoizeME+gQboLEIeLWHav4ybcZ5MklAe08FznuOhz4Y86djUV5ISTkk1expPuK3NXqCBAgZgUGqv3RHyfIanKQZxeSRfk8ueQ-c7jdX9k4uz+5dBZX6P+7X9cLU3rPaFMMzRtZKd-R3ERd9nvcUqcQPPoa4R+EaziZGP6kT+V9WNRF4GwtFxBT3Brdm3qVpdflvUMrvVLOPcaQMkSPsDIfU5bjzKsua+ZBb4QWIBwAEHAX4-VBtmKSltZx-1EnkK88tK5QOnnXMAUowCBkwNoNgxMICoDIUg1YylaT7E1KmNwyREijnTIPfI-kCLbCSLgq+DVoH1hnkQvgxlcDLTAAARVQBI3Q2hYi0ISMfdw15jTpCwcyVIo4ZyXikv2I4QQ-IFH4cuYgyBzKGVwFtdAuADJin3DAWASi1j0ncGRYkmUyQ-wQLkdwX5MI5HBhJEx4DpryHMZY6xFA7EQnoDFYmoYrE2NwC4zUSQXx3H8JlOcjJHyYUoKmV8gQ2T3ifGXC+EDeTSAaKoWqj96ZCgScQUMtSIBpP8HlISlp0w4SLNmbuWwMiI3yGDRkvhTHVPwG05o4E6qCIus01pKh2kfWVF9U2P0XZdL-lqMS0tsxGM2K+bC6ZMyl1ypM+QNSVnNEwFHdEAA5MAAB3RBayV5JQ1J0wp3S9l9LYW5Dw+w0jZA8NhY0tx7hXKoPA8hNNxRfFYtCYgwZkS6FwP6NEwIXEBH0TDTUhwQh3HBqOGkdJcJ4pZBCmFlA4VsARcubE2hHFwD2m0Q6nQK7lXpYy3kzLWXsxGJzAw3MPkdj4psvmGZrijWnBeZIeQjj4QFvaA09pyQGiOJ7Sp4TYVWHhRpRF-KDWCvZQdUQR0ToK15UaplprwxOOeqMV6orTDTE+pKlOMrfCYVBn5PIg5szJE8gcBMf10zknHLS21QVjXyAFY6tlgcqD63JpTam3Llyxo+PG1NDqDxCpeuMd6y8JWr2QnivFBKkh6lnKSyGo0UiPCIgaEIvSKkVkvtmg1DK7UmoBHFQMu0eD7XaFa72PLe18oTQaodcBnUiomGKstx5Wo-WZFcPYGRxKXH8tsfCo106n11DkfIZEY3Tv7bOwdghh2E3QMTVNZNtAU3QFTa1lcc2VDzcdOdd6F0c1dcu0w4q128ypPi8ItbiXFwhqcEahSLzDOLhsc4Oqu1VPkN+ggv7mUcDYLgWIBtRTmvHVy7tvIcNgDw72uBRGSMQEXcB0tnqK1tWCNkIZyQNhIzUXigaVx-Cnz2IXVwoRL0IJnfmhB9HiOGwfU+0m6b32Zso9hq9cb7WycI-J0UzGS0rrY18xAm6C47tTHu3KslUxO1zKEc4Gw5yScNVpmiuA72GQecCJoXAo7aBjtRvNLizPbuIpu-d8GqSGgCCJdM5tkgUTCajSgkTeDJJici9ij9bnECWRl2xaSwh9ieKEIxM50gHshqadwr4GTnEiK+YIJRyy8GIOQeAypJ1fGM+u1YABaQFpx+valnFkzM9x7zWww5+8q-QZnEF6xBtYYlYvTjCE1o4b8yVsjpE8ekY4cJ4s7bNgC8UQRLalfiP6aVPGkmym5V82oFI3DcThJ8tLaL1hAuKS7cYFWbCbYjcLBpjiQzyADBkuQDgSXTPsT753hS6SYgqP7tlS63Yyvd8kslzwvhuEpa8+xti0qfkKNHbVsLBC2NeVMAbyJ3D8MGwoTswg0jBsaNkpPGleixsteeEdOufL64gEZsWYfiWPteaD4tbNAx3QaNMjIPvJYVmTr0AuNaG0gBTn6RwCkJk1KaDR0v8JiRhveUHX56RplSNzv2dEU1x2uuHR6uu+bnFi4jS4aZEuRqZ5DHImxLjG6BtSA4hR7fV2FCI93ovIieE3uRc8Cr6QO0IkYpP2CTvdd5PguCcf2qiXF4XZhuY-o7cB-oqSjwQjK9pfn4RhDC8bByJ4BnqEDT3izJDUSVpROYKSJhdIdvVeVzSwV3AhfsJfhpz7+n-udFcZPqEZkdxcKj91Slm5gxFvrK9bZcF-iW0lO6YfbM1tQ36iMUJG2XgXN9rcxQafQ3TMbC2Mac94RvwGgf9Jv9AIgqhemEwaDIvyRok26GRo58mGeqdKmmua2m2g86Qu5aJmCAFwnkNW3cLIwQQCKqkOxuCYjmUuf+16Mm5CcmjGheY4iMgsVKRYhwXiA0l4tao0c4OEjIZBT+VAsA1CmAcAsAXmYA6IvmNBGQg8r4F4hovCQsDsksbBq262Hs3BiB7mnm3mqgheo0eYaipImY+Qrke88uMMY0RoSMR2jwZcJQQAA */
   createMachine(
     {
       id: 'purchase order',
@@ -90,10 +84,10 @@ const POMachine =
           | { type: 'goToThirdStep' }
           | { type: 'goBackToSecondStep' }
           | {
-              type: 'uploading';
-              idx: number;
-              value: any;
-            }
+            type: 'uploading';
+            idx: number;
+            value: any;
+          }
           | { type: 'selectProduct'; value: number }
           | { type: 'onChangeQuantity'; value: string; index: number }
           | { type: 'retryGettingSphList' }
@@ -108,7 +102,8 @@ const POMachine =
           | { type: 'retryPostPurchaseOrder' }
           | { type: 'backToInitialStateFromFailPostPo' }
           | { type: 'backToInitialState' }
-          | { type: 'backFromCamera' },
+          | { type: 'backFromCamera' }
+          | { type: 'backToSavedPoFromCamera' },
       },
       context: purchaseOrderInitialState,
       states: {
@@ -147,7 +142,10 @@ const POMachine =
                   actions: 'assignValue',
                 },
 
-                addMoreImages: '#purchase order.openCamera',
+                addMoreImages: {
+                  target: '#purchase order.openCamera',
+                  actions: "assignSecondTimeUsingCamera"
+                },
 
                 goToSecondStep: {
                   target: '#purchase order.SecondStep',
@@ -157,80 +155,14 @@ const POMachine =
             },
 
             SearchSph: {
-              states: {
-                inputting: {
-                  on: {
-                    openingModal: {
-                      target: 'openModalChooseSph',
-                      actions: 'triggerModal',
-                    },
-
-                    searching: {
-                      target: 'searchValueLoaded',
-                      actions: 'assignSearchQuery',
-                      cond: 'searchValueLengthAccepted',
-                    },
-                  },
-                },
-
-                searchingSph: {
-                  invoke: {
-                    src: 'GetSphList',
-
-                    onDone: {
-                      target: 'inputting',
-                      actions: 'assignSphData',
-                    },
-
-                    onError: {
-                      target: 'errorGettingSphList',
-                      actions: 'handleError',
-                    },
-                  },
-
-                  on: {
-                    onChangeCategories: {
-                      target: 'inputting',
-                      actions: 'assignIndexChanged',
-                    },
-                  },
-                },
-
-                openModalChooseSph: {
-                  on: {
-                    closeModal: {
-                      target: 'inputting',
-                      actions: 'closingModal',
-                    },
-
-                    addChoosenSph: {
-                      target: '#purchase order.firstStep.addPO',
-                      actions: 'closeModalSph',
-                    },
-                  },
-                },
-
-                searchValueLoaded: {
-                  after: {
-                    '300': 'searchingSph',
-                  },
-                },
-
-                errorGettingSphList: {
-                  on: {
-                    retryGettingSphList: {
-                      target: 'searchingSph',
-                      actions: 'handleRetry',
-                    },
-                  },
-                },
-              },
-
-              initial: 'inputting',
-
               on: {
                 backToAddPo: 'addPO',
-              },
+
+                addChoosenSph: {
+                  target: "addPO",
+                  actions: 'closeModalSph',
+                }
+              }
             },
           },
 
@@ -349,6 +281,7 @@ const POMachine =
             },
 
             backFromCamera: 'firstStep.addPO',
+            backToSavedPoFromCamera: "checkSavedPo"
           },
 
           entry: 'enableCameraScreen',
@@ -446,7 +379,7 @@ const POMachine =
               actions: 'resetPoState',
             },
           },
-        },
+        }
       },
 
       initial: 'checkSavedPo',
@@ -459,14 +392,6 @@ const POMachine =
             return savedPO;
           } catch (error) {
             customLog(error);
-          }
-        },
-        GetSphList: async (context) => {
-          try {
-            const response = await getSphByProject(context.searchQuery);
-            return response.data.data;
-          } catch (error) {
-            throw new Error(error);
           }
         },
         getSphDocument: async (context) => {
@@ -527,9 +452,6 @@ const POMachine =
         hasSavedPo: (_context, event) => {
           return event.data !== undefined;
         },
-        searchValueLengthAccepted: (_context, event) => {
-          return event.value.length > 2;
-        },
         useExistingFiles: (context) => {
           return (
             context.isUseExistingFiles === true && context.files.length > 0
@@ -545,6 +467,11 @@ const POMachine =
       actions: {
         resetPoState: assign(() => {
           return purchaseOrderInitialState;
+        }),
+        assignSecondTimeUsingCamera: assign(() => {
+          return {
+            isFirstTimeOpenCamera: false
+          }
         }),
         assignPhotoToPayload: assign((context, event) => {
           return {
@@ -665,26 +592,6 @@ const POMachine =
             poNumber: event.value,
           };
         }),
-        assignSearchQuery: assign((_context, event) => {
-          return {
-            searchQuery: event.value,
-            loadingSphData: true,
-          };
-        }),
-        assignSphData: assign((_context, event) => {
-          return {
-            routes: [
-              {
-                key: 'first',
-                title: 'Perusahaan',
-                totalItems: event.data.length,
-                chipPosition: 'right',
-              },
-            ],
-            sphData: event.data,
-            loadingSphData: false,
-          };
-        }),
         assignDocument: assign((_context, event) => {
           const requiredFileInput =
             event.data?.QuotationRequest?.ProjectDocs?.map(
@@ -694,7 +601,7 @@ const POMachine =
                   documentId: val?.Document?.id,
                   label: val?.Document?.name,
                   isRequire: val?.Document?.isRequiredPo,
-                  titleBold:'500',
+                  titleBold: '500',
                   type: 'fileInput',
                   value: val?.File,
                   disabledFileInput: val?.projectDocId !== null,
@@ -707,22 +614,10 @@ const POMachine =
             loadingDocument: false,
           };
         }),
-        handleError: assign((_context, event) => {
-          return {
-            loadingSphData: false,
-            errorGettingSphMessage: event.data.message,
-          };
-        }),
         handleErrorGettingDocument: assign((_context, event) => {
           return {
             loadingDocument: false,
             errorGettingSphMessage: event.data.message,
-          };
-        }),
-        handleRetry: assign((_context, _event) => {
-          return {
-            loadingSphData: true,
-            errorGettingSphMessage: '',
           };
         }),
         handleRetryDocument: assign((context, event) => {
@@ -731,28 +626,11 @@ const POMachine =
             files: [],
           };
         }),
-        assignIndexChanged: assign((context, event) => {
-          return {
-            sphCategories: context.routes[event.value].title,
-          };
-        }),
-        triggerModal: assign((_context, event) => {
-          return {
-            isModalChooseSphVisible: true,
-            choosenSphDataFromList: event.value,
-          };
-        }),
         closeModalSph: assign((_context, event) => {
           return {
-            isModalChooseSphVisible: false,
             choosenSphDataFromModal: event.value,
             isUseExistingFiles: false,
             selectedProducts: [],
-          };
-        }),
-        closingModal: assign((_context, _event) => {
-          return {
-            isModalChooseSphVisible: false,
           };
         }),
         setSelectedChoosenProduct: assign((context, event) => {
@@ -807,11 +685,11 @@ const POMachine =
               poProducts:
                 context.selectedProducts.length > 0
                   ? context.selectedProducts?.map((val) => {
-                      return {
-                        requestedProductId: val.id,
-                        requestedQuantity: val.quantity,
-                      };
-                    })
+                    return {
+                      requestedProductId: val.id,
+                      requestedQuantity: val.quantity,
+                    };
+                  })
                   : [],
               totalPrice: totalPrice,
             },

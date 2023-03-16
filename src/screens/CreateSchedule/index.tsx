@@ -15,12 +15,8 @@ import {
   StackActions,
   useFocusEffect,
   useNavigation,
-  useRoute,
 } from '@react-navigation/native';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
-  CreateScheduleFirstStep,
-  CreateScheduleListResponse,
   CreateScheduleSecondStep,
   CreateScheduleState,
 } from '@/interfaces/CreateSchedule';
@@ -38,6 +34,7 @@ import { CreateSchedule } from '@/models/CreateSchedule';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { postOrderSchedule } from '@/redux/async-thunks/orderThunks';
 import moment from 'moment';
+import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 
 const labels = ['Cari PO', 'Detil Pengiriman'];
 
@@ -47,14 +44,21 @@ function stepHandler(
 ) {
   const { stepOne, stepTwo } = state;
 
-  if (stepOne.sphs && stepOne.sphs.length > 0) {
+  if (stepOne?.purchaseOrders && stepOne?.purchaseOrders.length > 0) {
     setStepsDone((curr) => {
       return [...new Set(curr), 0];
     });
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 0));
   }
-  if (stepTwo.deliveryDate && stepTwo.deliveryTime && stepTwo.method) {
+  if (
+    stepTwo?.deliveryDate &&
+    stepTwo?.deliveryTime &&
+    stepTwo?.method &&
+    stepTwo?.inputtedVolume &&
+    stepTwo?.salesOrder &&
+    getTotalProduct(stepTwo) <= stepTwo?.totalDeposit
+  ) {
     setStepsDone((curr) => {
       return [...new Set(curr), 1];
     });
@@ -63,52 +67,16 @@ function stepHandler(
   }
 }
 
-function populateData(
-  existingData: CreateScheduleListResponse,
-  updateValue: (
-    step: keyof CreateScheduleState,
-    key: keyof CreateScheduleFirstStep | keyof CreateScheduleSecondStep,
-    value: any
-  ) => void
-) {
-  updateValue('stepOne', 'companyName', existingData?.companyName);
-  updateValue('stepOne', 'locationName', existingData?.locationName);
-  updateValue('stepOne', 'sphs', existingData?.sphs);
-  updateValue('stepOne', 'addedDeposit', existingData?.addedDeposit);
-  updateValue('stepOne', 'lastDeposit', existingData?.lastDeposit);
-
-  updateValue('stepTwo', 'deliveryDate', existingData?.deliveryDate);
-  updateValue('stepTwo', 'deliveryTime', existingData?.deliveryTime);
-  updateValue('stepTwo', 'method', existingData?.method);
-  updateValue('stepTwo', 'isConsecutive', existingData?.isConsecutive);
-  updateValue(
-    'stepTwo',
-    'hasTechnicalRequest',
-    existingData.hasTechnicalRequest
-  );
-  let allProducts: any[] = [];
-  existingData?.sphs?.forEach((sp) => {
-    if (sp?.products) allProducts.push(...sp.products);
-  });
-  updateValue('stepTwo', 'products', allProducts);
-  let lastDeposit = 0;
-  let addedDeposit = 0;
-  if (existingData?.lastDeposit?.nominal)
-    lastDeposit = existingData?.lastDeposit?.nominal;
-  if (existingData?.addedDeposit && existingData?.addedDeposit.length > 0)
-    addedDeposit = existingData?.addedDeposit
-      ?.map((item) => item.nominal)
-      .reduce((prev, next) => prev + next);
-  updateValue('stepTwo', 'totalDeposit', lastDeposit + addedDeposit);
-}
+const getTotalProduct = (stepTwo: CreateScheduleSecondStep): number => {
+  let total =
+    stepTwo?.inputtedVolume *
+    stepTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
+  return total;
+};
 
 const CreateScheduleScreen = () => {
-  const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
   const { values, action } = React.useContext(CreateScheduleContext);
-  const { shouldScrollView } = values;
-  const { stepOne: stateOne } = values;
-  const { updateValue, updateValueOnstep } = action;
   const { keyboardVisible } = useKeyboardActive();
   const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
@@ -124,8 +92,9 @@ const CreateScheduleScreen = () => {
     ),
   });
 
-  const existingSchedule: CreateScheduleListResponse =
-    route?.params?.existingSchedule;
+  useHeaderTitleChanged({
+    title: values.isSearchingPurchaseOrder === true ? 'Cari PO' : 'Buat Jadwal',
+  });
 
   useFocusEffect(
     React.useCallback(() => {
@@ -139,14 +108,14 @@ const CreateScheduleScreen = () => {
       );
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [values.step, stateOne.companyName])
+    }, [
+      values.step,
+      values.stepOne?.companyName,
+      values.isSearchingPurchaseOrder,
+    ])
   );
 
   React.useEffect(() => {
-    if (existingSchedule) {
-      updateValue('existingScheduleID', existingSchedule.id);
-      populateData(existingSchedule, updateValueOnstep);
-    }
     return () => {
       dispatch(resetImageURLS({ source: CREATE_SCHEDULE }));
     };
@@ -160,17 +129,18 @@ const CreateScheduleScreen = () => {
   const next = (nextStep: number) => async () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
-      updateValue('step', nextStep);
+      action.updateValue('step', nextStep);
     } else {
       try {
         let payload: CreateSchedule = {
-          saleOrderId: '',
-          projectId: '',
-          purchaseOrderId: '',
-          quotationLetterId: '',
-          quantity: values.stepTwo.inputtedVolume, // volume inputted
+          saleOrderId: values.stepTwo?.salesOrder?.id,
+          projectId: values.existingProjectID,
+          purchaseOrderId: values.stepOne?.purchaseOrders[0].id,
+          quotationLetterId:
+            values.stepOne?.purchaseOrders[0].quotationLetterId,
+          quantity: values.stepTwo?.inputtedVolume, // volume inputted
           date: moment(
-            values.stepTwo.deliveryDate + ' ' + values.stepTwo.deliveryTime,
+            values.stepTwo?.deliveryDate + ' ' + values.stepTwo?.deliveryTime,
             'DD/MM/yyyy HH:mm'
           ).valueOf(), // date + time
           withPump: values.stepTwo?.method === 'pompa' ? true : false,
@@ -183,13 +153,13 @@ const CreateScheduleScreen = () => {
         dispatch(
           openPopUp({
             popUpType: 'success',
-            popUpText: 'Successfully create schedule',
+            popUpText: 'Pembuatan Jadwal\nBerhasil',
             highlightedText: 'schedule',
             outsideClickClosePopUp: true,
           })
         );
       } catch (error) {
-        const message = error.message || 'Error creating schedule';
+        const message = error.message || 'Pembuatan Jadwal Gagal';
         dispatch(
           openPopUp({
             popUpType: 'error',
@@ -203,11 +173,15 @@ const CreateScheduleScreen = () => {
   };
 
   const actionBackButton = (directlyClose: boolean = false) => {
-    if (values.step > 0 && !directlyClose) {
-      next(values.step - 1)();
+    if (values.isSearchingPurchaseOrder === true) {
+      action.updateValue('isSearchingPurchaseOrder', false);
     } else {
-      if (stateOne.companyName) setPopupVisible(true);
-      else navigation.goBack();
+      if (values.step > 0 && !directlyClose) {
+        next(values.step - 1)();
+      } else {
+        if (values.stepOne?.companyName) setPopupVisible(true);
+        else navigation.goBack();
+      }
     }
   };
 
@@ -215,20 +189,22 @@ const CreateScheduleScreen = () => {
 
   return (
     <>
-      <BStepperIndicator
-        stepsDone={stepsDone}
-        stepOnPress={(pos: number) => {
-          next(pos)();
-        }}
-        currentStep={values.step}
-        labels={labels}
-      />
+      {values.isSearchingPurchaseOrder === false && (
+        <BStepperIndicator
+          stepsDone={stepsDone}
+          stepOnPress={(pos: number) => {
+            next(pos)();
+          }}
+          currentStep={values.step}
+          labels={labels}
+        />
+      )}
 
       <BContainer>
         <View style={styles.container}>
           {stepRender[values.step]}
           <BSpacer size={'extraSmall'} />
-          {!keyboardVisible && shouldScrollView && values.step > -1 && (
+          {!keyboardVisible && values.shouldScrollView && values.step > -1 && (
             <BBackContinueBtn
               onPressContinue={() => {
                 next(values.step + 1)();

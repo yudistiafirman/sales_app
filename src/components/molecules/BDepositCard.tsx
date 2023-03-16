@@ -3,6 +3,7 @@ import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
 import BSpacer from '../atoms/BSpacer';
+import BText from '../atoms/BText';
 
 type BDepositCardType = {
   firstSectionValue: number;
@@ -10,6 +11,8 @@ type BDepositCardType = {
   secondSectionValue: number;
   secondSectionText: string;
   thirdSectionText: string;
+  isError?: boolean;
+  customErrorMsg?: string;
   style?: ViewStyle;
 };
 
@@ -19,6 +22,8 @@ export default function BDepositCard({
   secondSectionValue,
   secondSectionText,
   thirdSectionText,
+  isError,
+  customErrorMsg,
   style,
 }: BDepositCardType) {
   return (
@@ -51,6 +56,12 @@ export default function BDepositCard({
           IDR {formatCurrency(firstSectionValue - secondSectionValue)}
         </Text>
       </View>
+      {isError && (
+        <BText size="small" color="primary" bold="100">
+          {customErrorMsg ||
+            `${firstSectionText} harus lebih besar dari ${secondSectionText}`}
+        </BText>
+      )}
     </View>
   );
 }

@@ -18,43 +18,29 @@ import {
   View,
 } from 'react-native';
 import { resScale } from '@/utils';
-import { useNavigation } from '@react-navigation/native';
 import { CreateDepositContext } from '@/context/CreateDepositContext';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import formatCurrency from '@/utils/formatCurrency';
 import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
+import { PoProductData } from '@/interfaces/SelectConfirmedPO';
 
 export default function SecondStep() {
-  const navigation = useNavigation();
   const { values, action } = React.useContext(CreateDepositContext);
   const { stepTwo: stateTwo, stepOne: stateOne } = values;
-  const { updateValueOnstep } = action;
-  const [selectedPO, setSelectedPO] = React.useState<any[]>([]);
-  const [expandData, setExpandData] = React.useState<any[]>([])
-  const [isSearchingPurchaseOrder, setIsSearchingPurchaseOrder] = React.useState(false)
+  const { updateValueOnstep, updateValue } = action;
+  const [expandData, setExpandData] = React.useState<any[]>([]);
+
   const listenerCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
-      updateValueOnstep('stepTwo', 'companyName', parent.name);
+      updateValueOnstep('stepTwo', 'companyName', parent.companyName);
       updateValueOnstep('stepTwo', 'locationName', parent.locationName);
-      updateValueOnstep('stepTwo', 'sphs', data);
-      setIsSearchingPurchaseOrder(false)
+      updateValue('existingProjectID', parent.projectId);
+      updateValueOnstep('stepTwo', 'purchaseOrders', data);
+      updateValue('isSearchingPurchaseOrder', false);
     },
     [updateValueOnstep]
   );
-
-  // const onValueChanged = (item: any, value: boolean) => {
-  //   let listSelectedPO: any[] = [];
-  //   if (selectedPO) listSelectedPO.push(...selectedPO);
-  //   if (value) {
-  //     listSelectedPO.push(item);
-  //   } else {
-  //     listSelectedPO = listSelectedPO.filter((it) => {
-  //       return it !== item;
-  //     });
-  //   }
-  //   setSelectedPO(listSelectedPO);
-  // };
 
   const customAction = () => {
     return (
@@ -63,103 +49,114 @@ export default function SecondStep() {
           fontFamily: font.family.montserrat[500],
           color: colors.select.selected,
         }}
-        onPress={changePO}
+        onPress={() => updateValue('isSearchingPurchaseOrder', true)}
         title={'Ganti'}
       />
     );
   };
 
-  const changePO = () => {
-    setIsSearchingPurchaseOrder(true)
-  };
-
   const calculatedTotal = (): number => {
-    let deposit = 0;
-    if (stateOne.deposit?.nominal) deposit = stateOne.deposit?.nominal;
-    let allProducts: any[] = [];
-    sphs?.forEach((sp) => {
-      if (sp?.products) allProducts.push(...sp.products);
-    });
-    const totalAmountProducts = allProducts
-      ?.map((prod) => prod?.offeringPrice * prod?.quantity)
-      .reduce((prev: any, next: any) => prev + next, 0);
-
-    return deposit - totalAmountProducts;
+    let deposit: number = 0;
+    if (stateOne?.deposit?.nominal) deposit += parseInt(stateOne?.deposit?.nominal, 10);
+    deposit += getTotalLastDeposit();
+    return deposit;
   };
 
   const onExpand = (index: number, data: any) => {
     let newExpandedData;
-    const isExisted = expandData?.findIndex(
-      (val) => val?.id === data?.id
-    );
+    const isExisted = expandData?.findIndex((val) => val?.id === data?.id);
     if (isExisted === -1) {
       newExpandedData = [...expandData, data];
     } else {
-      newExpandedData = expandData.filter(
-        (val) => val?.id !== data?.id
-      );
+      newExpandedData = expandData.filter((val) => val?.id !== data?.id);
     }
     setExpandData(newExpandedData);
   };
 
-  const { companyName, locationName, sphs } = stateTwo;
-  const { deposit } = stateOne;
+  const getTotalLastDeposit = () => {
+    let total: number = 0;
+    if (stateTwo?.purchaseOrders && stateTwo?.purchaseOrders.length > 0) {
+      stateTwo?.purchaseOrders?.forEach((it) => {
+        total = it.totalDeposit;
+      });
+    }
+    return total;
+  };
+
   return (
     <SafeAreaView style={style.flexFull}>
-      {deposit && (
-        <BGalleryDeposit
-          nominal={deposit?.nominal}
-          createdAt={deposit?.createdAt}
-          picts={deposit?.picts}
+      {values.isSearchingPurchaseOrder === true ? (
+        <SelectPurchaseOrderData
+          dataToGet="DEPOSITDATA"
+          onSubmitData={({ parentData, data }) =>
+            listenerCallback({ parent: parentData, data })
+          }
+          onDismiss={() => updateValue('isSearchingPurchaseOrder', false)}
         />
-      )}
-      <>
-        <View>
-          <BSpacer size={'extraSmall'} />
-          <BSpacer size={'verySmall'} />
-          <BDivider />
-        </View>
-        <View style={style.flexFull}>
-          {sphs && sphs.length > 0 && !isSearchingPurchaseOrder ? (
-            <>
-              <ScrollView
-                style={[style.flexFull, { marginBottom: layout.pad.xxl }]}
-              >
-                <View style={style.flexFull}>
-                  <BSpacer size={'extraSmall'} />
-                  <BVisitationCard
-                    item={{ name: companyName, location: locationName }}
-                    customIcon={customAction}
-                  />
-                  <BSpacer size={'extraSmall'} />
-                </View>
-                <View style={style.flexFull}>
-                  {sphs && sphs.length > 0 && (
-                    <BNestedProductCard
-                      withoutHeader={false}
-                      data={sphs}
-                      expandData={expandData}
-                      onExpand={onExpand}
-                      isDeposit
-                      withoutSeparator
-                    />
-                  )}
-                </View>
-              </ScrollView>
-
-              <View style={style.summContainer}>
-                <Text style={style.summary}>{'Est Deposit Akhir'}</Text>
-                <Text style={[style.summary, style.fontw600]}>
-                  IDR {formatCurrency(calculatedTotal())}
-                </Text>
-              </View>
-            </>
-          ) : (
-            <>
+      ) : (
+        <>
+          {stateOne?.deposit && (
+            <BGalleryDeposit
+              nominal={stateOne?.deposit?.nominal}
+              createdAt={stateOne?.deposit?.createdAt}
+              picts={stateOne?.deposit?.picts}
+            />
+          )}
+          <>
+            <View>
+              <BSpacer size={'small'} />
+              <BDivider />
               <BSpacer size={'extraSmall'} />
-              {
-                isSearchingPurchaseOrder ? <SelectPurchaseOrderData dataToGet='DEPOSITDATA' onSubmitData={({ parentData, data }) => listenerCallback({ parent: parentData, data })} /> :
-                  <TouchableOpacity style={style.touchable} onPress={changePO}>
+            </View>
+            <View style={style.flexFull}>
+              {stateTwo?.purchaseOrders &&
+              stateTwo?.purchaseOrders.length > 0 ? (
+                <>
+                  <ScrollView
+                    style={[style.flexFull, { marginBottom: layout.pad.xxl }]}
+                  >
+                    <View style={style.flexFull}>
+                      <BSpacer size={'extraSmall'} />
+                      <BVisitationCard
+                        item={{
+                          name: stateTwo?.companyName,
+                          location: stateTwo?.locationName,
+                        }}
+                        customIcon={customAction}
+                      />
+                      <BSpacer size={'extraSmall'} />
+                    </View>
+                    <View style={style.flexFull}>
+                      {stateTwo?.purchaseOrders &&
+                        stateTwo?.purchaseOrders.length > 0 && (
+                          <BNestedProductCard
+                            withoutHeader={false}
+                            data={stateTwo?.purchaseOrders}
+                            expandData={expandData}
+                            onExpand={onExpand}
+                            isDeposit
+                            withoutSeparator
+                          />
+                        )}
+                    </View>
+                  </ScrollView>
+
+                  <View style={style.summContainer}>
+                    <Text style={style.summary}>{'Est Deposit Akhir'}</Text>
+                    <Text style={[style.summary, style.fontw600]}>
+                      IDR {formatCurrency(calculatedTotal())}
+                    </Text>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <BSpacer size={'extraSmall'} />
+                  <TouchableOpacity
+                    style={style.touchable}
+                    onPress={() =>
+                      updateValue('isSearchingPurchaseOrder', true)
+                    }
+                  >
                     <BSearchBar
                       placeholder="Cari PO"
                       activeOutlineColor="gray"
@@ -167,11 +164,12 @@ export default function SecondStep() {
                       left={<TextInput.Icon icon="magnify" />}
                     />
                   </TouchableOpacity>
-              }
-            </>
-          )}
-        </View>
-      </>
+                </>
+              )}
+            </View>
+          </>
+        </>
+      )}
     </SafeAreaView>
   );
 }

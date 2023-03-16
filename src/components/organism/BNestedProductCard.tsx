@@ -7,60 +7,72 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BProductCard from '../molecules/BProductCard';
 import BDivider from '../atoms/BDivider';
 import font from '@/constants/fonts';
-import { QuotationRequests,Products } from '@/interfaces/CreatePurchaseOrder';
+import { QuotationRequests, Products } from '@/interfaces/CreatePurchaseOrder';
 import { RadioButton } from 'react-native-paper';
-import { PoProductData, PurchaseOrdersData, SalesOrdersData } from '@/interfaces/CreateDeposit';
-
-
-type BNestedProductCardData = QuotationRequests & PurchaseOrdersData;
+import {
+  PoProductData,
+  PurchaseOrdersData,
+  SalesOrdersData,
+} from '@/interfaces/SelectConfirmedPO';
 
 type BNestedProductCardType = {
   withoutHeader?: boolean;
   withoutBottomSpace?: boolean;
-  data?: BNestedProductCardData[];
+  data?: QuotationRequests[] | PurchaseOrdersData[];
   selectedPO?: any[];
   onValueChange?: (product: any, value: boolean) => void;
   withoutSeparator?: boolean;
   isOption?: boolean;
   onSelect?: (index: number) => void;
-  onExpand:(idx:number,data:any)=> void
-  expandData:any[];
-  isDeposit?:boolean
+  onExpand: (idx: number, data: any) => void;
+  expandData: any[];
+  isDeposit?: boolean;
 };
 
-function ListChildProduct(size: number, index: number, item: SalesOrdersData & Products & PoProductData) {
+function ListChildProduct(
+  size: number,
+  index: number,
+  item: SalesOrdersData & Products & PoProductData
+) {
+  const getDataToDisplay = () => {
+    let displayName;
+    let offeringPrice;
+    let totalPrice;
+    let quantity;
+    let unit;
+    if (item?.Product) {
+      displayName = `${item?.Product?.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`;
+      offeringPrice = item?.offeringPrice;
+      totalPrice = item?.quantity * item?.offeringPrice;
+      quantity = item?.quantity;
+      unit = item?.Product?.unit;
+    } else if (item?.RequestedProduct) {
+      displayName = `${item?.RequestedProduct?.Product?.category?.Parent?.name} ${item?.RequestedProduct?.displayName} ${item?.RequestedProduct?.Product?.category?.name}`;
+      offeringPrice = item?.RequestedProduct?.offeringPrice;
+      totalPrice =
+        item?.requestedQuantity && item?.RequestedProduct?.offeringPrice
+          ? item?.requestedQuantity * item?.RequestedProduct?.offeringPrice
+          : 0;
+      quantity = item?.requestedQuantity;
+      unit = item?.RequestedProduct?.Product?.unit;
+    } else {
+      displayName = `${item?.PoProduct?.RequestedProduct?.Product?.category?.parent?.name} ${item?.PoProduct?.RequestedProduct?.Product?.displayName} ${item?.PoProduct?.RequestedProduct?.Product?.category?.name}`;
+      offeringPrice = item?.PoProduct?.RequestedProduct?.offeringPrice;
+      totalPrice =
+        item?.PoProduct?.requestedQuantity &&
+        item?.PoProduct?.RequestedProduct?.offeringPrice
+          ? item?.PoProduct?.requestedQuantity *
+            item?.PoProduct?.RequestedProduct?.offeringPrice
+          : 0;
+      quantity = item?.PoProduct?.requestedQuantity;
+      unit = item?.PoProduct?.RequestedProduct?.Product?.unit;
+    }
 
+    return { displayName, offeringPrice, totalPrice, quantity, unit };
+  };
 
-const getDataToDisplay = () => {
-  let displayName
-  let offeringPrice
-  let totalPrice
-  let quantity
-  let unit 
-  if(item?.Product){
-      displayName = `${item?.Product?.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`
-      offeringPrice = item?.offeringPrice
-      totalPrice = item?.quantity * item?.offeringPrice
-      quantity = item?.quantity
-      unit = item?.Product?.unit
-  }else if (item?.RequestedProduct){
-     displayName = `${item?.RequestedProduct?.Product?.category?.Parent?.name} ${item?.RequestedProduct?.displayName} ${item?.RequestedProduct?.Product?.category?.name}`
-     offeringPrice = item?.RequestedProduct?.offeringPrice
-     totalPrice = item?.requestedQuantity && item?.RequestedProduct?.offeringPrice ? item?.requestedQuantity * item?.RequestedProduct?.offeringPrice : 0
-     quantity = item?.requestedQuantity
-     unit = item?.RequestedProduct?.Product?.unit
-  }else {
-    displayName = `${item?.PoProduct?.RequestedProduct?.Product?.category?.parent?.name} ${item?.PoProduct?.RequestedProduct?.Product?.displayName} ${item?.PoProduct?.RequestedProduct?.Product?.category?.name}`
-    offeringPrice = item?.PoProduct?.RequestedProduct?.offeringPrice
-    totalPrice = item?.PoProduct?.requestedQuantity && item?.PoProduct?.RequestedProduct?.offeringPrice ? item?.PoProduct?.requestedQuantity * item?.PoProduct?.RequestedProduct?.offeringPrice : 0
-    quantity =  item?.PoProduct?.requestedQuantity
-    unit = item?.PoProduct?.RequestedProduct?.Product?.unit
-  }
-
-  return { displayName,offeringPrice,totalPrice,quantity,unit}
-}
-
-  const {displayName,offeringPrice,totalPrice,quantity,unit} = getDataToDisplay()
+  const { displayName, offeringPrice, totalPrice, quantity, unit } =
+    getDataToDisplay();
 
   return (
     <View key={index}>
@@ -91,7 +103,7 @@ export default function BNestedProductCard({
   isOption,
   onExpand,
   expandData,
-  isDeposit
+  isDeposit,
 }: BNestedProductCardType) {
   return (
     <>
@@ -102,13 +114,16 @@ export default function BNestedProductCard({
         </>
       )}
       {data?.map((item, index) => {
-
         const name = item?.QuotationLetter?.number || item?.brikNumber;
         const totalPrice = item?.totalPrice;
         const products = item?.products || item?.PoProducts || item?.SaleOrders;
-        const deposit = item?.totalDeposit
-        const expandItems = item?.products ?  expandData?.findIndex((val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id) : expandData?.findIndex((val) => val?.id === item?.id)
-        const isExpand = expandItems === -1
+        const deposit = item?.totalDeposit;
+        const expandItems = item?.products
+          ? expandData?.findIndex(
+              (val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id
+            )
+          : expandData?.findIndex((val) => val?.id === item?.id);
+        const isExpand = expandItems === -1;
         return (
           <View key={index}>
             <View style={styles.containerLastOrder}>
