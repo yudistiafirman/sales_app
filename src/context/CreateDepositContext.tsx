@@ -30,18 +30,11 @@ interface context {
 const initialData: CreateDepositState = {
   sheetIndex: -1,
   step: 0,
-  stepOne: {
-    deposit: undefined,
-    picts: [],
-  },
-  stepTwo: {
-    companyName: '',
-    locationName: '',
-    title: '',
-    products: [{}],
-  },
+  stepOne: undefined,
+  stepTwo: undefined,
   shouldScrollView: true,
-  existingDepositID: null,
+  existingProjectID: undefined,
+  isSearchingPurchaseOrder: false,
 };
 
 const CreateDepositContext = React.createContext<context>({
@@ -60,7 +53,8 @@ const reducerForm = (
     case 'sheetIndex':
     case 'step':
     case 'shouldScrollView':
-    case 'existingDepositID':
+    case 'isSearchingPurchaseOrder':
+    case 'existingProjectID':
       return { ...state, [action.type]: action.value };
     case 'stepOne':
     case 'stepTwo':
