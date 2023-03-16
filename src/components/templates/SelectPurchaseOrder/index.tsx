@@ -4,13 +4,13 @@ import { BCommonSearchList } from '@/components';
 import { useMachine } from '@xstate/react';
 import { searchPOMachine } from '@/machine/searchPOMachine';
 import SelectedPOModal from './element/SelectedPOModal';
-import { PurchaseOrdersData } from '@/interfaces/CreateDeposit';
 import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
+import { PurchaseOrdersData } from '@/interfaces/SelectConfirmedPO';
 
 interface IProps {
   dataToGet: 'SPHDATA' | 'DEPOSITDATA' | 'SCHEDULEDATA';
   onSubmitData: ({ parentData, data }) => void;
-  onDismiss: () => void;
+  onDismiss?: () => void;
 }
 
 const SelectPurchaseOrderData = ({

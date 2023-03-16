@@ -30,19 +30,11 @@ interface context {
 const initialData: CreateScheduleState = {
   sheetIndex: -1,
   step: 0,
-  stepOne: {
-    companyName: '',
-  },
-  stepTwo: {
-    deliveryDate: '',
-    deliveryTime: '',
-    method: '',
-    products: [{}],
-    totalDeposit: 0,
-    inputtedVolume: 0,
-  },
+  stepOne: undefined,
+  stepTwo: undefined,
   shouldScrollView: true,
-  existingScheduleID: null,
+  existingProjectID: undefined,
+  isSearchingPurchaseOrder: false,
 };
 
 const CreateScheduleContext = React.createContext<context>({
@@ -61,7 +53,8 @@ const reducerForm = (
     case 'sheetIndex':
     case 'step':
     case 'shouldScrollView':
-    case 'existingScheduleID':
+    case 'isSearchingPurchaseOrder':
+    case 'existingProjectID':
       return { ...state, [action.type]: action.value };
     case 'stepOne':
     case 'stepTwo':

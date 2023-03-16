@@ -10,14 +10,14 @@ import BSearchBar from '@/components/molecules/BSearchBar';
 import { TextInput } from 'react-native-paper';
 import BTabSections from '@/components/organism/TabSections';
 import BEmptyState from '../organism/BEmptyState';
-import { CreatedPurchaseOrderListResponse } from '@/interfaces/CreateDeposit';
+import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO';
 
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
   CreatedSPHListResponse &
   selectedCompanyInterface;
 
-interface BCommonSearchListProps<ArrayOfObject> {
-  data: CreatedSPHListResponse[] | CreatedPurchaseOrderListResponse[] | ArrayOfObject[];
+interface BCommonSearchListProps {
+  data: CreatedSPHListResponse[] | CreatedPurchaseOrderListResponse[] | any[];
   onEndReached?:
     | ((info: { distanceFromEnd: number }) => void)
     | null
@@ -37,7 +37,7 @@ interface BCommonSearchListProps<ArrayOfObject> {
   onIndexChange: (index: number) => void;
   index: number;
   routes: any[];
-  errorMessage?: unknown;
+  errorMessage?: any;
   isError?: boolean;
   placeholder?: string;
   onRetry?: () => void;
@@ -67,7 +67,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
   onClearValue,
   onPressMagnify,
   hidePicName,
-}: BCommonSearchListProps<ArrayOfObject>) => {
+}: BCommonSearchListProps) => {
   const isSearching = searchQuery.length > 2;
   const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
     ({ item, idx }) => {

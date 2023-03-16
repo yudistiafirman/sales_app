@@ -23,7 +23,7 @@ import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import formatCurrency from '@/utils/formatCurrency';
 import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
-import { PoProductData } from '@/interfaces/CreateDeposit';
+import { PoProductData } from '@/interfaces/SelectConfirmedPO';
 
 export default function SecondStep() {
   const { values, action } = React.useContext(CreateDepositContext);
@@ -57,26 +57,9 @@ export default function SecondStep() {
 
   const calculatedTotal = (): number => {
     let deposit: number = 0;
-    if (stateOne?.deposit?.nominal) deposit = stateOne?.deposit?.nominal;
-    let allProducts: PoProductData[] = [];
-    stateTwo?.purchaseOrders?.forEach((sp) => {
-      if (sp?.PoProducts) allProducts.push(...sp.PoProducts);
-    });
-
-    let totalAmountProducts = 0;
-    if (allProducts.length > 0)
-      totalAmountProducts = allProducts
-        ?.map(
-          (prod) =>
-            prod?.RequestedProduct?.offeringPrice * prod?.requestedQuantity
-        )
-        ?.reduce((prev: any, next: any) => prev + next, 0);
-
-    return (
-      getTotalLastDeposit() +
-      parseInt(stateOne?.deposit?.nominal, 0) -
-      totalAmountProducts
-    );
+    if (stateOne?.deposit?.nominal) deposit += parseInt(stateOne?.deposit?.nominal, 10);
+    deposit += getTotalLastDeposit();
+    return deposit;
   };
 
   const onExpand = (index: number, data: any) => {

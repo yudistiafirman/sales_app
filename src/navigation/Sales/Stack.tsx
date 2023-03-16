@@ -47,7 +47,6 @@ import PurchaseOrderWithProvider from '@/screens/PurchaseOrder';
 import CreateScheduleScreen from '@/screens/CreateSchedule';
 import PriceList from '@/screens/Price';
 import AppointmentWithProvider from '@/screens/Appointment';
-import SearchPO from '@/components/templates/SelectPurchaseOrder';
 import RequiredDocuments from '@/screens/RequiredDocuments';
 import VisitHistory from '@/screens/VisitHistory';
 import Deposit from '@/screens/Deposit';

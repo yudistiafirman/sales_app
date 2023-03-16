@@ -17,11 +17,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import {
-  CreateDepositState,
-  PoProductData,
-  PurchaseOrdersData,
-} from '@/interfaces/CreateDeposit';
+import { CreateDepositState } from '@/interfaces/CreateDeposit';
 import {
   CreateDepositContext,
   CreateDepositProvider,
@@ -59,28 +55,7 @@ function stepHandler(
     setStepsDone((curr) => curr.filter((num) => num !== 0));
   }
 
-  let allProducts: PoProductData[] = [];
-  stepTwo?.purchaseOrders?.forEach((sp) => {
-    if (sp?.PoProducts) allProducts.push(...sp.PoProducts);
-  });
-
-  let totalAmountProducts = 0;
-  if (allProducts.length > 0)
-    totalAmountProducts = allProducts
-      ?.map(
-        (prod) =>
-          prod?.RequestedProduct?.offeringPrice * prod?.requestedQuantity
-      )
-      ?.reduce((prev: any, next: any) => prev + next);
-
-  if (
-    stepTwo?.companyName &&
-    stepTwo?.purchaseOrders &&
-    getTotalLastDeposit(stepTwo?.purchaseOrders) +
-      parseInt(stepOne?.deposit?.nominal, 0) >=
-      totalAmountProducts &&
-    existingProjectID
-  ) {
+  if (stepTwo?.companyName && stepTwo?.purchaseOrders && existingProjectID) {
     setStepsDone((curr) => {
       return [...new Set(curr), 1];
     });
@@ -88,16 +63,6 @@ function stepHandler(
     setStepsDone((curr) => curr.filter((num) => num !== 1));
   }
 }
-
-const getTotalLastDeposit = (purchaseOrders: PurchaseOrdersData[]) => {
-  let total: number = 0;
-  if (purchaseOrders && purchaseOrders.length > 0) {
-    purchaseOrders.forEach((it) => {
-      total = it.totalDeposit;
-    });
-  }
-  return total;
-};
 
 const Deposit = () => {
   const navigation = useNavigation();
@@ -118,7 +83,8 @@ const Deposit = () => {
   });
 
   useHeaderTitleChanged({
-    title: values.isSearchingPurchaseOrder === true ? 'Cari PO' : 'Buat Deposit',
+    title:
+      values.isSearchingPurchaseOrder === true ? 'Cari PO' : 'Buat Deposit',
   });
 
   useFocusEffect(
@@ -184,13 +150,13 @@ const Deposit = () => {
         dispatch(
           openPopUp({
             popUpType: 'success',
-            popUpText: 'Penambahan Deposit Berhasil',
+            popUpText: 'Penambahan Deposit\nBerhasil',
             highlightedText: 'Deposit',
             outsideClickClosePopUp: true,
           })
         );
       } catch (error) {
-        const message = error.message || 'Gagal Menambah Deposit';
+        const message = error.message || 'Penambahan Deposit Gagal';
         dispatch(
           openPopUp({
             popUpType: 'error',
@@ -204,14 +170,14 @@ const Deposit = () => {
   };
 
   const actionBackButton = (directlyClose: boolean = false) => {
-    if (values.step > 0 && !directlyClose) {
-      if (values.isSearchingPurchaseOrder === true) {
-        action.updateValue('isSearchingPurchaseOrder', false);
-      } else {
-        next(values.step - 1)();
-      }
+    if (values.isSearchingPurchaseOrder === true) {
+      action.updateValue('isSearchingPurchaseOrder', false);
     } else {
-      setPopupVisible(true);
+      if (values.step > 0 && !directlyClose) {
+        next(values.step - 1)();
+      } else {
+        setPopupVisible(true);
+      }
     }
   };
 

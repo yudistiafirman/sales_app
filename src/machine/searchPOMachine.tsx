@@ -2,8 +2,8 @@ import {
   getConfirmedPurchaseOrder,
   getSphByProject,
 } from '@/actions/OrderActions';
-import { CreatedPurchaseOrderListResponse } from '@/interfaces/CreateDeposit';
 import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
+import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO';
 import { assign, createMachine } from 'xstate';
 
 export const searchPOMachine = createMachine(
@@ -58,14 +58,15 @@ export const searchPOMachine = createMachine(
         totalPage: number;
         poData: CreatedPurchaseOrderListResponse[];
         sphData: CreatedSPHListResponse[];
-        errorGettingListMessage: unknown;
+        errorGettingListMessage: any;
         loadData: boolean;
         loadMoreData: boolean;
         isRefreshing: boolean;
         isModalVisible: boolean;
-        dataType: 'DEPOSITDATA' | 'SPHDATA' | 'SCHEDULEDATA';
-        choosenDataFromList: CreatedSPHListResponse &
-          CreatedPurchaseOrderListResponse;
+        dataType: 'DEPOSITDATA' | 'SPHDATA' | 'SCHEDULEDATA' | '';
+        choosenDataFromList:
+          | CreatedSPHListResponse
+          | CreatedPurchaseOrderListResponse;
       },
     },
 
