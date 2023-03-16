@@ -102,7 +102,21 @@ const RootScreen = (
             {OperationStack(Stack)}
           </>
         );
-      case ENTRY_TYPE.ADMIN || ENTRY_TYPE.ADMIN:
+      case ENTRY_TYPE.SALES:
+        return (
+          <>
+            <Stack.Screen
+              name={TAB_ROOT}
+              key={TAB_ROOT}
+              component={SalesTabs}
+              options={{
+                headerShown: false,
+              }}
+            />
+            {SalesStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.ADMIN:
         return (
           <>
             <Stack.Screen
