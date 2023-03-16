@@ -1,5 +1,12 @@
-import { getAllPurchaseOrders, getAllVisitationOrders } from '@/actions/OrderActions';
-import { customLog } from '@/utils/generalFunc';
+import {
+  getAllFinishedDeliveryOrders,
+  getAllDeposits,
+  getAllPurchaseOrders,
+  getAllSchedules,
+  getAllVisitationOrders,
+  getTransactionTab,
+} from '@/actions/OrderActions';
+import { uniqueStringGenerator } from '@/utils/generalFunc';
 import { createMachine } from 'xstate';
 import { assign } from 'xstate/lib/actions';
 
@@ -21,30 +28,28 @@ export const transactionMachine =
           };
         },
         events: {} as
-          | {
-              type: 'onChangeType';
-              payload: number;
-            }
+          | { type: 'onChangeType'; payload: string }
           | { type: 'onEndReached' }
           | { type: 'refreshingList' }
           | { type: 'backToGetTransactions' }
-          | { type: 'retryGettingTransactions' }
+          | { type: 'retryGettingTransactions'; payload: string }
           | { type: 'retryGettingTypeTransactions' },
       },
 
       context: {
         routes: [] as any[],
         size: 10,
-        page: 0,
+        page: 1,
         selectedType: 'SPH',
         data: [] as any[],
-        index: 0,
         loadTab: true,
         loadTransaction: false,
         isLoadMore: false,
         refreshing: false,
         errorMessage: '' as string | unknown,
         totalItems: 0,
+        isErrorType: false,
+        isErrorData: false,
       },
 
       states: {
@@ -66,20 +71,25 @@ export const transactionMachine =
               },
             },
 
+            errorGettingTypeTransactions: {
+              on: {
+                retryGettingTypeTransactions: 'loadingTransaction',
+              },
+            },
+
             typeLoaded: {
               states: {
                 getTransactionsBaseOnType: {
                   invoke: {
                     src: 'getTransactions',
                     onError: {
-                      target: 'errorGettingTypeTransactions',
+                      target: 'errorGettingTransactions',
                       actions: 'handleError',
                     },
                     onDone: [
                       {
                         target: 'transactionLoaded',
                         actions: 'assignTransactionsDataToContext',
-                        cond: 'isNotLastPage',
                       },
                     ],
                   },
@@ -110,18 +120,17 @@ export const transactionMachine =
                     ],
 
                     backToGetTransactions: {
-                      target:
-                        'getTransactionsBaseOnType',
+                      target: 'getTransactionsBaseOnType',
                       actions: 'resetProduct',
                     },
                   },
                 },
 
-                errorGettingTypeTransactions: {
+                errorGettingTransactions: {
                   on: {
-                    retryGettingTypeTransactions: {
+                    retryGettingTransactions: {
                       target: 'getTransactionsBaseOnType',
-                      actions: 'handleRetryGettingTypeTransactions',
+                      actions: 'handleRetryGettingTransactions',
                     },
                   },
                 },
@@ -129,14 +138,7 @@ export const transactionMachine =
 
               initial: 'getTransactionsBaseOnType',
             },
-
-            errorGettingTypeTransactions: {
-              on: {
-                retryGettingTransactions: 'loadingTransaction',
-              },
-            },
           },
-
           initial: 'loadingTransaction',
         },
       },
@@ -145,24 +147,19 @@ export const transactionMachine =
     },
     {
       guards: {
-        isNotLastPage: (context, event) => {
-          if (event.data && event.data.totalPage > 1) {
-            return context.page !== event.data.totalPage;
-          } else {
-            return true;
-          }
-        },
         hasNoDataOnNextLoad: (context, _event) => {
-          return context.totalItems >= 20;
+          return context.page * context.size < context.totalItems
+            ? true
+            : false;
         },
       },
       actions: {
         assignTypeToContext: assign((_context, event) => {
           const newTypeData = event.data.map((item) => {
             return {
-              key: item.index,
+              key: uniqueStringGenerator(),
               title: item.name,
-              totalItems: _context.totalItems ? _context.totalItems : 0,
+              totalItems: item.totalItems,
               chipPosition: 'bottom',
             };
           });
@@ -170,34 +167,45 @@ export const transactionMachine =
             routes: newTypeData,
             selectedCategories: newTypeData[0].title,
             loadTab: false,
+            isErrorData: false,
           };
         }),
         assignTransactionsDataToContext: assign((context, event) => {
-          const transactionsData = [...context.data, ...event.data.data];
-          const newTypeData = context.routes.map((item) => {
+          if (event.data.data.length > 0) {
+            const transactionsData = [...context.data, ...event.data.data];
+            const newTypeData = context.routes.map((item) => {
+              return {
+                key: item.key,
+                title: item.title,
+                totalItems:
+                  context.selectedType === item.title
+                    ? event.data.totalItems
+                    : item.totalItems,
+                chipPosition: 'bottom',
+              };
+            });
             return {
-              key: item.key,
-              title: item.title,
-              totalItems:
-                context.selectedType === item.title
-                  ? event.data.totalItems
-                  : item.totalItems,
-              chipPosition: 'bottom',
+              loadTransaction: false,
+              isLoadMore: false,
+              refreshing: false,
+              totalItems: event.data.totalItems,
+              data: transactionsData,
+              routes: newTypeData,
+              isErrorData: false,
             };
-          });
-          return {
-            loadTransaction: false,
-            isLoadMore: false,
-            refreshing: false,
-            totalItems: event.data.totalItems,
-            data: transactionsData,
-            routes: newTypeData,
-          };
+          } else {
+            return {
+              loadTransaction: false,
+              isLoadMore: false,
+              refreshing: false,
+              isErrorData: false,
+              loadTab: false,
+            };
+          }
         }),
-        assignIndexToContext: assign((context, event) => {
+        assignIndexToContext: assign((_context, event) => {
           return {
-            index: event.payload,
-            selectedType: context.routes[event.payload].title,
+            selectedType: event.payload,
             page: 1,
             loadTransaction: true,
             data: [],
@@ -227,7 +235,12 @@ export const transactionMachine =
             loadTransaction: false,
             refreshing: false,
             isLoadMore: false,
+            data: [],
+            loadTab: false,
+            page: 1,
+            totalItems: 0,
             errorMessage: event.data.message,
+            isErrorData: true,
           };
         }),
         resetProduct: assign((context, event) => {
@@ -237,51 +250,57 @@ export const transactionMachine =
             loadTransaction: true,
           };
         }),
-        handleRetryGettingTypeTransactions: assign((context, event) => {
+        handleRetryGettingTransactions: assign((context, event) => {
           return {
             data: [],
             page: 1,
             loadTransaction: true,
+            selectedType: event.payload,
           };
         }),
       },
       services: {
         getTypeTransactions: async (_context, _event) => {
           try {
-            // need to call API
-            const response = [
-              {
-                index: 0,
-                name: 'SPH',
-              },
-              {
-                index: 1,
-                name: 'PO',
-              },
-            ];
-            return response;
+            let response = await getTransactionTab();
+            return response.data.data as any;
           } catch (error) {
             throw new Error(error);
           }
         },
         getTransactions: async (_context, _event) => {
           try {
-            // need to call API
             let response;
-            if (_context.selectedType === 'SPH') {
-              response = await getAllVisitationOrders();
+            if (_context.selectedType === 'PO') {
+              response = await getAllPurchaseOrders(
+                _context.page.toString(),
+                _context.size.toString()
+              );
+              response = response.data;
+            } else if (_context.selectedType === 'Deposit') {
+              response = await getAllDeposits(
+                _context.page.toString(),
+                _context.size.toString()
+              );
+              response = response.data;
+            } else if (_context.selectedType === 'Jadwal') {
+              response = await getAllSchedules(
+                _context.page.toString(),
+                _context.size.toString()
+              );
+              response = response.data;
+            } else if (_context.selectedType === 'DO') {
+              response = await getAllFinishedDeliveryOrders(
+                _context.page.toString(),
+                _context.size.toString()
+              );
+              response = response.data;
             } else {
-              response = await getAllPurchaseOrders();
+              response = await getAllVisitationOrders(
+                _context.page.toString(),
+                _context.size.toString()
+              );
             }
-            response = {
-              ...response,
-              data: {
-                ...response.data,
-                totalItems: response.data?.totalItems
-                  ? response.data.totalItems
-                  : 0,
-              },
-            };
             return response.data as any;
           } catch (error) {
             throw new Error(error);

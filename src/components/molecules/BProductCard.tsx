@@ -15,6 +15,8 @@ type BProductCardType = {
   onPressEdit?: () => void;
   backgroundColor?: 'white' | 'default';
   hideVolume?: boolean;
+  hideTotal?: boolean;
+  hidePricePerVolume?: boolean;
   withoutBorder?: boolean;
   unit?: string;
 };
@@ -29,6 +31,8 @@ export default function BProductCard({
   onPressEdit,
   backgroundColor = 'default',
   hideVolume = false,
+  hideTotal = false,
+  hidePricePerVolume = false,
   withoutBorder = false,
 }: BProductCardType) {
   const getUnit = () => {
@@ -91,12 +95,16 @@ export default function BProductCard({
             {volume && volume > 0 ? volume + ` ${getUnit()}` : '-'}
           </Text>
         )}
-        <Text style={style.detailText}>
-          IDR {pricePerVol ? formatCurrency(pricePerVol) : '-'}/{getUnit()}
-        </Text>
-        <Text style={style.detailText}>
-          IDR {totalPrice ? formatCurrency(totalPrice) : '-'}
-        </Text>
+        {!hidePricePerVolume && (
+          <Text style={style.detailText}>
+            IDR {pricePerVol ? formatCurrency(pricePerVol) : '-'}/{getUnit()}
+          </Text>
+        )}
+        {!hideTotal && (
+          <Text style={style.detailText}>
+            IDR {totalPrice ? formatCurrency(totalPrice) : '-'}
+          </Text>
+        )}
       </View>
     </View>
   );

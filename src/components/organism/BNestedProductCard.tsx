@@ -27,6 +27,7 @@ type BNestedProductCardType = {
   onExpand: (idx: number, data: any) => void;
   expandData: any[];
   isDeposit?: boolean;
+  poNumber?: string;
 };
 
 function ListChildProduct(
@@ -41,13 +42,27 @@ function ListChildProduct(
     let quantity;
     let unit;
     if (item?.Product) {
-      displayName = `${item?.Product?.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`;
+      displayName = `${
+        item?.Product?.category?.Parent
+          ? item?.Product?.category?.Parent?.name + ' '
+          : ''
+      }${item?.Product?.displayName} ${
+        item?.Product?.category ? item?.Product?.category?.name : ''
+      }`;
       offeringPrice = item?.offeringPrice;
       totalPrice = item?.quantity * item?.offeringPrice;
       quantity = item?.quantity;
       unit = item?.Product?.unit;
     } else if (item?.RequestedProduct) {
-      displayName = `${item?.RequestedProduct?.Product?.category?.Parent?.name} ${item?.RequestedProduct?.displayName} ${item?.RequestedProduct?.Product?.category?.name}`;
+      displayName = `${
+        item?.RequestedProduct?.Product?.category?.Parent
+          ? item?.RequestedProduct?.Product?.category?.Parent?.name + ' '
+          : ''
+      }${item?.RequestedProduct?.displayName} ${
+        item?.RequestedProduct?.Product?.category
+          ? item?.RequestedProduct?.Product?.category?.name
+          : ''
+      }`;
       offeringPrice = item?.RequestedProduct?.offeringPrice;
       totalPrice =
         item?.requestedQuantity && item?.RequestedProduct?.offeringPrice
@@ -56,7 +71,16 @@ function ListChildProduct(
       quantity = item?.requestedQuantity;
       unit = item?.RequestedProduct?.Product?.unit;
     } else {
-      displayName = `${item?.PoProduct?.RequestedProduct?.Product?.category?.parent?.name} ${item?.PoProduct?.RequestedProduct?.Product?.displayName} ${item?.PoProduct?.RequestedProduct?.Product?.category?.name}`;
+      displayName = `${
+        item?.PoProduct?.RequestedProduct?.Product?.category?.parent
+          ? item?.PoProduct?.RequestedProduct?.Product?.category?.parent?.name +
+            ' '
+          : ''
+      }${item?.PoProduct?.RequestedProduct?.Product?.displayName} ${
+        item?.PoProduct?.RequestedProduct?.Product?.category
+          ? item?.PoProduct?.RequestedProduct?.Product?.category?.name
+          : ''
+      }`;
       offeringPrice = item?.PoProduct?.RequestedProduct?.offeringPrice;
       totalPrice =
         item?.PoProduct?.requestedQuantity &&
@@ -104,6 +128,7 @@ export default function BNestedProductCard({
   onExpand,
   expandData,
   isDeposit,
+  poNumber,
 }: BNestedProductCardType) {
   return (
     <>
@@ -114,8 +139,18 @@ export default function BNestedProductCard({
         </>
       )}
       {data?.map((item, index) => {
-        const name = item?.QuotationLetter?.number || item?.brikNumber;
-        const totalPrice = item?.totalPrice;
+        const name = poNumber
+          ? poNumber
+          : item?.QuotationLetter?.number || item?.brikNumber;
+        const totalPrice = item?.totalPrice
+          ? item?.totalPrice
+          : item?.products && item?.products.length > 0
+          ? item?.products
+              ?.map((it) => {
+                return it.totalPrice;
+              })
+              ?.reduce((a, b) => a + b)
+          : 0;
         const products = item?.products || item?.PoProducts || item?.SaleOrders;
         const deposit = item?.totalDeposit;
         const expandItems = item?.products

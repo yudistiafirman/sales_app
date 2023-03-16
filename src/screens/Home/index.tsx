@@ -21,7 +21,6 @@ import BuatKunjungan from './elements/BuatKunjungan';
 import {
   BBottomSheet,
   BSearchBar,
-  BFlatlistItems,
   BSpacer,
   BText,
   PopUpQuestion,
@@ -29,7 +28,6 @@ import {
 } from '@/components';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
-import BTabViewScreen from '@/components/organism/BTabViewScreen';
 import { fonts, layout } from '@/constants';
 import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
 import {
@@ -93,7 +91,7 @@ const Beranda = () => {
     target: number;
   }>({ current: 0, target: 10 }); //temporary setCurrentVisit
   const [isExpanded, setIsExpanded] = React.useState(true);
-  const [index,setIndex]=React.useState(0)
+  const [index, setIndex] = React.useState(0);
   const [isTargetLoading, setIsTargetLoading] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
   const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
@@ -106,7 +104,6 @@ const Beranda = () => {
   const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
-  const [isPopupContinuePo, setIsPopupContinuePo] = React.useState(false);
   const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
 
   useHeaderShow({
@@ -286,36 +283,34 @@ const Beranda = () => {
   const renderPoNumber = () => {
     return (
       <View style={style.poNumberWrapper}>
-      <Text style={style.poNumber}>{poNumber}</Text>
-      </View> 
-    )
-  }
+        <Text style={style.poNumber}>{poNumber}</Text>
+      </View>
+    );
+  };
 
   const renderContinueData = () => {
-
-      return (
-        <>
-          <View style={style.popupSPHContent}>
-            {
-              poNumber ?  renderPoNumber()
-           :<BVisitationCard
+    return (
+      <>
+        <View style={style.popupSPHContent}>
+          {poNumber ? (
+            renderPoNumber()
+          ) : (
+            <BVisitationCard
               item={{
                 name: sphData?.selectedCompany?.name,
                 location: sphData?.selectedCompany?.locationAddress?.line1,
               }}
               isRenderIcon={false}
             />
-            }
-          
-          </View>
-          <BSpacer size={'medium'} />
-          <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
-            {`${feature} yang lama akan hilang kalau Anda buat ${feature} yang baru`}
-          </BText>
-          <BSpacer size={'small'} />
-        </>
-      );
-
+          )}
+        </View>
+        <BSpacer size={'medium'} />
+        <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
+          {`${feature} yang lama akan hilang kalau Anda buat ${feature} yang baru`}
+        </BText>
+        <BSpacer size={'small'} />
+      </>
+    );
   };
 
   React.useEffect(() => {
@@ -335,17 +330,16 @@ const Beranda = () => {
     setSelectedDate(dateTime);
   }, []);
 
-  const routes: { title: string; totalItems: number }[] =
-    React.useMemo(() => {
-      return [
-        {
-          key:'first',
-          title: 'Proyek',
-          totalItems: data.totalItems || 0,
-          chipPosition:'right'
-        },
-      ];
-    }, [data]);
+  const routes: { title: string; totalItems: number }[] = React.useMemo(() => {
+    return [
+      {
+        key: 'first',
+        title: 'Proyek',
+        totalItems: data.totalItems || 0,
+        chipPosition: 'right',
+      },
+    ];
+  }, [data]);
 
   const onEndReached = React.useCallback(() => {
     if (data.totalPage) {
@@ -371,9 +365,7 @@ const Beranda = () => {
         title: HOME_MENU.PO,
         action: () => {
           setFeature('PO');
-          if (isModalContinuePo) {
-            setIsPopupContinuePo(isModalContinuePo);
-          } else {
+          if (!isModalContinuePo) {
             navigation.navigate(PO);
           }
         },
@@ -496,7 +488,6 @@ const Beranda = () => {
     });
   };
 
-
   async function visitationOnPress(
     dataItem: visitationDataType
   ): Promise<void> {
@@ -567,7 +558,7 @@ const Beranda = () => {
       >
         <View style={style.modalContent}>
           <BCommonSearchList
-            placeholder='Search'
+            placeholder="Search"
             index={index}
             onIndexChange={setIndex}
             onPressMagnify={kunjunganAction}
@@ -582,8 +573,8 @@ const Beranda = () => {
             isError={isError}
             errorMessage={errorMessage}
             emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
-            onRetry={()=> onChangeWithDebounce(searchQuery)}
-            />
+            onRetry={() => onChangeWithDebounce(searchQuery)}
+          />
         </View>
       </Modal>
 
@@ -653,7 +644,6 @@ const Beranda = () => {
               navigation.navigate(SPH, {});
             } else {
               bStorage.deleteItem(PO);
-              setIsPopupContinuePo(false);
               dispatch({ type: 'createNewPo' });
               navigation.navigate(PO);
             }
@@ -732,7 +722,7 @@ const style = StyleSheet.create({
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.md,
     color: colors.text.darker,
-    padding:layout.pad.xs + layout.pad.md
+    padding: layout.pad.xs + layout.pad.md,
   },
   poNumberWrapper: {
     backgroundColor: colors.tertiary,

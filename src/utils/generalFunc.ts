@@ -5,21 +5,41 @@ const { RNCustomConfig } = NativeModules;
 const flavor = RNCustomConfig?.flavor;
 
 export const getColorStatusTrx = (id: string) => {
-  customLog(id.toUpperCase(), 'uppercase');
-
   switch (id.toUpperCase()) {
-    case 'DIAJUKAN' || 'DRAFT' || 'DALAM PRODUKSI' || 'SELESAI':
+    case 'DIAJUKAN':
       return { color: colors.status.grey, textColor: colors.black };
-    case 'CEK BARANG' || 'PEMERIKSAAN' || 'DALAM PERJALANAN':
+    case 'DRAFT':
+      return { color: colors.status.grey, textColor: colors.black };
+    case 'DALAM PRODUKSI':
+      return { color: colors.status.grey, textColor: colors.black };
+    case 'SELESAI':
+      return { color: colors.status.grey, textColor: colors.black };
+    case 'SUBMITTED':
+      return { color: colors.status.grey, textColor: colors.black };
+    case 'CEK BARANG':
       return { color: colors.status.yellow, textColor: colors.black };
-    case 'PERSIAPAN' || 'BERLANGSUNG' || 'BONGKAR':
+    case 'PEMERIKSAAN':
+      return { color: colors.status.yellow, textColor: colors.black };
+    case 'DALAM PERJALANAN':
+      return { color: colors.status.yellow, textColor: colors.black };
+    case 'PERSIAPAN':
+      return { color: colors.status.orange, textColor: colors.black };
+    case 'BERLANGSUNG':
+      return { color: colors.status.orange, textColor: colors.black };
+    case 'BONGKAR':
       return { color: colors.status.orange, textColor: colors.black };
     case 'KADALUARSA':
       return { color: colors.status.black, textColor: colors.white };
     case 'DITOLAK':
       return { color: colors.status.red, textColor: colors.black };
-    case 'DISETUJUI' || 'DITERIMA' || 'DITERBITKAN':
+    case 'DISETUJUI':
       return { color: colors.chip.green, textColor: colors.black };
+    case 'DITERIMA':
+      return { color: colors.chip.green, textColor: colors.black };
+    case 'DITERBITKAN':
+      return { color: colors.chip.green, textColor: colors.black };
+    case 'DECLINED':
+      return { color: colors.status.red, textColor: colors.black };
     default:
       return { color: colors.chip.green, textColor: colors.black };
   }
@@ -230,12 +250,24 @@ export const getSuccessMsgFromAPI = (
       case 'schedule':
         finalText = '';
         break;
+      case 'delivery-order':
+        finalText = '';
+        break;
+      case 'transaction':
+        finalText = '';
+        break;
       default:
         if (fullUrl.toLowerCase().includes('sph/')) finalText += 'dokumen SPH';
         else if (fullUrl.toLowerCase().includes('purchase-order/'))
           finalText += 'data detail PO';
         else if (fullUrl.toLowerCase().includes('quotation-letter/'))
           finalText += 'data detail SPH';
+        else if (fullUrl.toLowerCase().includes('deposit/'))
+          finalText += 'data detail deposit';
+        else if (fullUrl.toLowerCase().includes('schedule/'))
+          finalText += 'data detail jadwal';
+        else if (fullUrl.toLowerCase().includes('delivery-order/'))
+          finalText += 'data detail DO';
         else finalText += 'data';
         break;
     }
