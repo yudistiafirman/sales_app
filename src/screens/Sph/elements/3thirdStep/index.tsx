@@ -168,10 +168,6 @@ export default function ThirdStep() {
     // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documents]);
-
-
-  console.log('ini payment type', sphState?.paymentType)
-
   const inputsData2: Input[] = useMemo(() => {
     const inputs: Input[] = [
       {
