@@ -79,7 +79,6 @@ const displayOperationListMachine = createMachine({
 }, {
     guards: {
         isNotLastPage: (context, event) => {
-            console.log('ini page', context.page, context.totalPage)
             return context.page <= context.totalPage
         }
     },
