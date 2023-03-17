@@ -216,7 +216,7 @@ export const getSuccessMsgFromAPI = (
         finalText += 'data target kunjungan';
         break;
       case 'visitation':
-        finalText += 'data kunjungan';
+        finalText = '';
         break;
       case 'visitation-book':
         finalText = 'Berhasil buat janji';
@@ -236,7 +236,7 @@ export const getSuccessMsgFromAPI = (
         finalText += 'data semua SPH berdasarkan proyek';
         break;
       case 'quotation':
-        finalText += 'data SPH';
+        finalText = '';
         break;
       case 'purchase-order':
         finalText = '';
