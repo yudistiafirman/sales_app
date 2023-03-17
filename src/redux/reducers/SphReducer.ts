@@ -46,7 +46,7 @@ export const sphSlice = createSlice({
     resetFocusedStepperFlag: (state) => {
       state.stepperShouldNotFocused = false;
     },
-    resetState: () => {
+    resetSPHState: () => {
       return initialState;
     },
     setStepperFocused: (state, { payload }) => {
@@ -173,7 +173,7 @@ export const {
   updateChosenProducts,
   updateUseHighway,
   updateUploadedAndMappedRequiredDocs,
-  resetState,
+  resetSPHState,
   setStepperFocused,
   resetStepperFocused,
   resetFocusedStepperFlag,

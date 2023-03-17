@@ -77,6 +77,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const getTypeOfImagePayload = () => {
     if (navigateTo) {
       if (
+        navigateTo !== CREATE_VISITATION &&
         navigateTo !== CREATE_DEPOSIT &&
         navigateTo !== GALLERY_VISITATION &&
         navigateTo !== GALLERY_DEPOSIT &&

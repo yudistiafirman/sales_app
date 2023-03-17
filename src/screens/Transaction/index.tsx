@@ -40,7 +40,7 @@ import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   resetFocusedStepperFlag,
-  resetState,
+  resetSPHState,
 } from '@/redux/reducers/SphReducer';
 import { bStorage } from '@/actions';
 
@@ -323,7 +323,7 @@ const Transaction = () => {
         setIsPopupVisible={() => {
           if (feature === 'SPH') {
             setPopupSPHVisible(false);
-            dispatch(resetState());
+            dispatch(resetSPHState());
             navigation.navigate(SPH, {});
           } else {
             bStorage.deleteItem(PO);

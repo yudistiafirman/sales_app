@@ -614,7 +614,7 @@ const renderInput = (
           <BSpacer size="verySmall" />
           <BDropdown
             open={false}
-            value={null}
+            value={value}
             items={dropdown.items}
             onChange={dropdown.onChange}
             placeholder={dropdown.placeholder}

@@ -76,8 +76,7 @@ function stepHandler(
   sphData: SphStateInterface,
   stepsDone: number[],
   setSteps: (e: number[] | ((curr: number[]) => number[])) => void,
-  stepController: (step: number) => void,
-  setCurrentPosition: any
+  stepController: (step: number) => void
 ) {
   if (sphData.selectedCompany) {
     if (checkSelected(sphData.selectedCompany?.PIC)) {
@@ -127,14 +126,6 @@ function stepHandler(
   const max = Math.max(...stepsDone);
 
   stepController(max);
-
-  // to continue stepper focus when entering sph page
-  if (!sphData.stepperShouldNotFocused) {
-    if (sphData.stepFourFinished) setCurrentPosition(4);
-    else if (sphData.stepThreeFinished) setCurrentPosition(3);
-    else if (sphData.stepTwoFinished) setCurrentPosition(2);
-    else if (sphData.stepOneFinished) setCurrentPosition(1);
-  }
 }
 
 function SphContent() {
@@ -153,19 +144,21 @@ function SphContent() {
   useEffect(() => {
     crashlytics().log(SPH);
 
-    stepHandler(
-      sphData,
-      stepsDone,
-      setStepsDone,
-      stepControll,
-      setCurrentPosition
-    );
-    resetStepperFocus();
+    stepHandler(sphData, stepsDone, setStepsDone, stepControll);
+    handleStepperFocus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
 
-  // to reset stepper focus when continuing progress data
-  const resetStepperFocus = () => {
+  const handleStepperFocus = () => {
+    // to continue stepper focus when entering sph page
+    if (!sphData.stepperShouldNotFocused) {
+      if (sphData.stepFourFinished) setCurrentPosition(4);
+      else if (sphData.stepThreeFinished) setCurrentPosition(3);
+      else if (sphData.stepTwoFinished) setCurrentPosition(2);
+      else if (sphData.stepOneFinished) setCurrentPosition(1);
+    }
+
+    // to reset stepper focus when continuing progress data
     if (
       sphData.stepperShouldNotFocused &&
       currentPosition === 0 &&
@@ -173,7 +166,6 @@ function SphContent() {
     ) {
       dispatch(resetStepperFocused(1));
     }
-
     const billingAddressFilled =
       !Object.values(sphData.billingAddress).every((val) => !val) &&
       Object.entries(sphData.billingAddress?.addressAutoComplete).length > 1;
@@ -185,7 +177,6 @@ function SphContent() {
     ) {
       dispatch(resetStepperFocused(2));
     }
-
     const paymentCondition =
       sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
     if (
@@ -195,7 +186,6 @@ function SphContent() {
     ) {
       dispatch(resetStepperFocused(3));
     }
-
     if (
       sphData.stepperShouldNotFocused &&
       currentPosition === 3 &&
