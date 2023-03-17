@@ -26,7 +26,10 @@ import { SEARCH_PRODUCT, SPH } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { updateChosenProducts } from '@/redux/reducers/SphReducer';
+import {
+  setStepperFocused,
+  updateChosenProducts,
+} from '@/redux/reducers/SphReducer';
 
 interface RenderModalType {
   selectedProduct: ProductDataInterface | null;
@@ -102,7 +105,9 @@ export default function FourthStep() {
 
   const deleteSelectedProduct = useCallback((index: number) => {
     setChosenProducts((curr) => {
-      const currentProducts = curr;
+      let currentProducts: any[] = [];
+      if (curr && curr.length > 0)
+        currentProducts = [...curr]
       currentProducts.splice(index, 1);
       return [...currentProducts];
     });
@@ -195,6 +200,7 @@ export default function FourthStep() {
           }}
           onPressContinue={() => {
             if (setCurrentPosition) {
+              dispatch(setStepperFocused(4));
               setCurrentPosition(4);
             }
           }}

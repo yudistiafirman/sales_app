@@ -38,6 +38,10 @@ import { customLog } from '@/utils/generalFunc';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { resScale } from '@/utils';
 import { RootState } from '@/redux/store';
+import {
+  resetStepperFocused,
+  setStepperFocused,
+} from '@/redux/reducers/SphReducer';
 
 const labels = [
   'Cari Pelanggan',
@@ -72,7 +76,8 @@ function stepHandler(
   sphData: SphStateInterface,
   stepsDone: number[],
   setSteps: (e: number[] | ((curr: number[]) => number[])) => void,
-  stepController: (step: number) => void
+  stepController: (step: number) => void,
+  setCurrentPosition: any
 ) {
   if (sphData.selectedCompany) {
     if (checkSelected(sphData.selectedCompany?.PIC)) {
@@ -85,6 +90,7 @@ function stepHandler(
   } else {
     setSteps((curr) => curr.filter((num) => num !== 0));
   }
+
   const billingAddressFilled =
     !Object.values(sphData.billingAddress).every((val) => !val) &&
     Object.entries(sphData.billingAddress.addressAutoComplete).length > 1;
@@ -110,7 +116,6 @@ function stepHandler(
   } else {
     setSteps((curr) => curr.filter((num) => num !== 2));
   }
-  customLog(sphData.chosenProducts.length, 'lengthproduct');
 
   if (sphData.chosenProducts.length) {
     setSteps((curr) => {
@@ -120,9 +125,16 @@ function stepHandler(
     setSteps((curr) => curr.filter((num) => num !== 3));
   }
   const max = Math.max(...stepsDone);
-  customLog(stepsDone, 'stepsDone');
 
   stepController(max);
+
+  // to continue stepper focus when entering sph page
+  if (!sphData.stepperShouldNotFocused) {
+    if (sphData.stepFourFinished) setCurrentPosition(4);
+    else if (sphData.stepThreeFinished) setCurrentPosition(3);
+    else if (sphData.stepTwoFinished) setCurrentPosition(2);
+    else if (sphData.stepOneFinished) setCurrentPosition(1);
+  }
 }
 
 function SphContent() {
@@ -134,18 +146,64 @@ function SphContent() {
   const [stepsDone, setStepsDone] = useState<number[]>([]);
   const [, updateState, setCurrentPosition, currentPosition] =
     useContext(SphContext);
-  const stepControll = useCallback((step: number) => {
-    customLog(step, 'stepsss');
-  }, []);
+  const stepControll = useCallback((step: number) => {}, []);
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
 
   useEffect(() => {
     crashlytics().log(SPH);
 
-    stepHandler(sphData, stepsDone, setStepsDone, stepControll);
+    stepHandler(
+      sphData,
+      stepsDone,
+      setStepsDone,
+      stepControll,
+      setCurrentPosition
+    );
+    resetStepperFocus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
+
+  // to reset stepper focus when continuing progress data
+  const resetStepperFocus = () => {
+    if (
+      sphData.stepperShouldNotFocused &&
+      currentPosition === 0 &&
+      !sphData.selectedCompany
+    ) {
+      dispatch(resetStepperFocused(1));
+    }
+
+    const billingAddressFilled =
+      !Object.values(sphData.billingAddress).every((val) => !val) &&
+      Object.entries(sphData.billingAddress?.addressAutoComplete).length > 1;
+    if (
+      sphData.stepperShouldNotFocused &&
+      currentPosition === 1 &&
+      ((!sphData.isBillingAddressSame && !billingAddressFilled) ||
+        sphData.distanceFromLegok === null)
+    ) {
+      dispatch(resetStepperFocused(2));
+    }
+
+    const paymentCondition =
+      sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
+    if (
+      sphData.stepperShouldNotFocused &&
+      currentPosition === 2 &&
+      (!sphData.paymentType || !paymentCondition)
+    ) {
+      dispatch(resetStepperFocused(3));
+    }
+
+    if (
+      sphData.stepperShouldNotFocused &&
+      currentPosition === 3 &&
+      (!sphData.chosenProducts || !sphData.chosenProducts?.length)
+    ) {
+      dispatch(resetStepperFocused(4));
+    }
+  };
 
   const getLocationCoord = async (coordinate: Region) => {
     try {
@@ -233,8 +291,7 @@ function SphContent() {
       <BHeaderIcon
         size={resScale(23)}
         onBack={() => {
-          if (sphData.selectedCompany) setPopupVisible(true);
-          else navigation.goBack();
+          actionBackButton(true);
         }}
         iconName="x"
       />
@@ -247,8 +304,7 @@ function SphContent() {
         if (currentPosition > 0) {
           setCurrentPosition(currentPosition - 1);
         } else {
-          if (sphData.selectedCompany) setPopupVisible(true);
-          else navigation.goBack();
+          actionBackButton(true);
         }
         return true;
       };
@@ -269,11 +325,27 @@ function SphContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const actionBackButton = (popupVisible: boolean = false) => {
+    if (popupVisible) {
+      if (sphData.selectedCompany) {
+        setPopupVisible(true);
+      } else {
+        navigation.goBack();
+      }
+    } else {
+      setPopupVisible(false);
+      navigation.goBack();
+    }
+  };
+
   return (
     <View style={style.container}>
       <StepperIndicator
         stepsDone={stepsDone}
-        stepOnPress={setCurrentPosition}
+        stepOnPress={(num) => {
+          dispatch(setStepperFocused(num));
+          setCurrentPosition(num);
+        }}
         currentStep={currentPosition}
         labels={labels}
         ref={stepRef}
@@ -281,10 +353,7 @@ function SphContent() {
       <Steps currentPosition={currentPosition} stepsToRender={stepsToRender} />
       <PopUpQuestion
         isVisible={isPopupVisible}
-        setIsPopupVisible={() => {
-          setPopupVisible(false);
-          navigation.goBack();
-        }}
+        setIsPopupVisible={() => actionBackButton()}
         actionButton={() => {
           setPopupVisible(false);
         }}

@@ -32,14 +32,56 @@ const initialState: SphStateInterface = {
   chosenProducts: [],
   useHighway: false,
   uploadedAndMappedRequiredDocs: [],
+  stepOneFinished: false,
+  stepTwoFinished: false,
+  stepThreeFinished: false,
+  stepFourFinished: false,
+  stepperShouldNotFocused: false,
 };
 
 export const sphSlice = createSlice({
   name: 'sphstate',
   initialState,
   reducers: {
+    resetFocusedStepperFlag: (state) => {
+      state.stepperShouldNotFocused = false;
+    },
     resetState: () => {
       return initialState;
+    },
+    setStepperFocused: (state, { payload }) => {
+      state.stepperShouldNotFocused = true;
+      switch (payload) {
+        case 1:
+          state.stepOneFinished = true;
+          break;
+        case 2:
+          state.stepTwoFinished = true;
+          break;
+        case 3:
+          state.stepThreeFinished = true;
+          break;
+        case 4:
+          state.stepFourFinished = true;
+          break;
+      }
+    },
+    resetStepperFocused: (state, { payload }) => {
+      state.stepperShouldNotFocused = true;
+      switch (payload) {
+        case 1:
+          state.stepOneFinished = false;
+          break;
+        case 2:
+          state.stepTwoFinished = false;
+          break;
+        case 3:
+          state.stepThreeFinished = false;
+          break;
+        case 4:
+          state.stepFourFinished = false;
+          break;
+      }
     },
     updateProjectAddress: (state, { payload }) => {
       state.projectAddress = payload;
@@ -132,5 +174,8 @@ export const {
   updateUseHighway,
   updateUploadedAndMappedRequiredDocs,
   resetState,
+  setStepperFocused,
+  resetStepperFocused,
+  resetFocusedStepperFlag,
 } = sphSlice.actions;
 export default sphSlice.reducer;

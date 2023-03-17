@@ -21,17 +21,17 @@ import {
 } from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
-import { billingAddressType, Input, SphStateInterface } from '@/interfaces';
+import { billingAddressType, Input } from '@/interfaces';
 import { SphContext } from '../context/SphContext';
 import { useNavigation } from '@react-navigation/native';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import { SEARCH_AREA, SPH } from '@/navigation/ScreenNames';
-import { fetchAddressSuggestion } from '@/redux/async-thunks/commonThunks';
 import { useKeyboardActive } from '@/hooks';
 import { TextInput } from 'react-native-paper';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
 import {
+  setStepperFocused,
   updateBillingAddressAutoComplete,
   updateBillingAddressOptions,
   updateDistanceFromLegok,
@@ -300,6 +300,7 @@ export default function SecondStep() {
         }}
         onPressContinue={() => {
           if (setCurrentPosition) {
+            dispatch(setStepperFocused(2));
             setCurrentPosition(2);
           }
         }}
