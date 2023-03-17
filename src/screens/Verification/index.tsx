@@ -17,12 +17,12 @@ import { setUserData } from '@/redux/reducers/authReducer';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import bStorage from '@/actions/BStorage';
 import { signIn } from '@/actions/CommonActions';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import storageKey from '@/constants/storageKey';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { VERIFICATION } from '@/navigation/ScreenNames';
-import { ENTRY_TYPE } from '@/models/EnumModel';
 import analytics from '@react-native-firebase/analytics';
+import { UserModel } from '@/models/User';
 
 const Verification = () => {
   const { phoneNumber } = useSelector(
@@ -70,10 +70,10 @@ const Verification = () => {
       const response = await signIn(params);
       if (response.data.success) {
         const { accessToken } = response.data.data;
-        const decoded = jwtDecode<JwtPayload>(accessToken);
+        const decoded = jwtDecode<UserModel.DataSuccessLogin>(accessToken);
         await bStorage.setItem(storageKey.userToken, accessToken);
         dispatch(
-          setUserData({ userData: decoded, entryType: ENTRY_TYPE.SALES })
+          setUserData({ userData: decoded })
         );
         setVerificationState({
           ...verificationState,

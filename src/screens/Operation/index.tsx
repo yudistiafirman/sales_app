@@ -4,7 +4,6 @@ import OperationList from './element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { ENTRY_TYPE } from '@/models/EnumModel';
 import { useFocusEffect } from '@react-navigation/native';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { OPERATION } from '@/navigation/ScreenNames';
@@ -12,7 +11,7 @@ import { OPERATION } from '@/navigation/ScreenNames';
 const Operation = () => {
   const dispatch = useDispatch();
   const [isLoading] = useState(false);
-  const { entryType } = useSelector((state: RootState) => state.auth);
+  const { userData } = useSelector((state: RootState) => state.auth);
 
   const data = useMemo(
     () =>
@@ -36,12 +35,12 @@ const Operation = () => {
   );
 
   React.useEffect(() => {
-    crashlytics().log(entryType ? ENTRY_TYPE[entryType] : 'Operation Default');
-  }, [entryType]);
+    crashlytics().log(userData?.type ? userData.type : 'Operation Default');
+  }, [userData?.type]);
 
   return (
     <SafeAreaView style={style.container}>
-      <OperationList role={entryType} isLoading={isLoading} data={data} />
+      <OperationList role={userData?.type} isLoading={isLoading} data={data} />
     </SafeAreaView>
   );
 };

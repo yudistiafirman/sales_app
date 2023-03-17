@@ -1,3 +1,5 @@
+import { ENTRY_TYPE } from "./EnumModel";
+
 export namespace UserModel {
   export interface Login {
     phone: string;
@@ -9,6 +11,6 @@ export namespace UserModel {
     phone: string;
     id: string;
     email: string;
-    type: 'ADMIN' | 'MOBILE';
+    type: ENTRY_TYPE;
   }
 }

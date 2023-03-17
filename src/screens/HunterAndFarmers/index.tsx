@@ -24,11 +24,13 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import { toggleHunterScreen } from '@/redux/reducers/authReducer';
 import { bStorage } from '@/actions';
 import moment from 'moment';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 
 const { height } = Dimensions.get('screen');
 const HunterAndFarmers = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
+  const whiteListUserType = [ENTRY_TYPE.ADMIN, ENTRY_TYPE.SALES]
   const { hunterScreen, userData } = useSelector(
     (state: RootState) => state.auth
   );
@@ -51,7 +53,7 @@ const HunterAndFarmers = () => {
 
   return (
     <Modal
-      isVisible={hunterScreen && userData !== null}
+      isVisible={hunterScreen && userData !== null && (whiteListUserType.includes(userData.type))}
       style={styles.modalContainer}
       deviceHeight={height}
     >

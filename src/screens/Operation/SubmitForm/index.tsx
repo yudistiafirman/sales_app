@@ -34,7 +34,7 @@ const SubmitForm = () => {
   const { operationPhotoURLs } = useSelector(
     (state: RootState) => state.camera
   );
-  const { entryType } = useSelector((state: RootState) => state.auth);
+  const { userData } = useSelector((state: RootState) => state.auth);
   const operationType = route?.params?.operationType;
 
   React.useEffect(() => {
@@ -42,7 +42,7 @@ const SubmitForm = () => {
   }, []);
 
   const getHeaderTitle = () => {
-    switch (entryType) {
+    switch (userData?.type) {
       case ENTRY_TYPE.BATCHER:
         return 'Produksi';
       case ENTRY_TYPE.SECURITY:
