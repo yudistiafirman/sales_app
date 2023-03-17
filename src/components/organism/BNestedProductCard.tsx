@@ -41,6 +41,8 @@ function ListChildProduct(
     let totalPrice;
     let quantity;
     let unit;
+
+    // TODO: handle from BE, ugly when use mapping in FE side
     if (item?.Product) {
       displayName = `${
         item?.Product?.category?.parent
@@ -70,6 +72,23 @@ function ListChildProduct(
           : 0;
       quantity = item?.requestedQuantity;
       unit = item?.RequestedProduct?.Product?.unit;
+    } else if (item?.PoProduct) {
+      displayName = `${
+        item?.PoProduct?.RequestedProduct?.Product?.category?.Parent
+          ? item?.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name + ' '
+          : ''
+      }${item?.PoProduct?.RequestedProduct?.displayName} ${
+        item?.PoProduct?.RequestedProduct?.Product?.category
+          ? item?.PoProduct?.RequestedProduct?.Product?.category?.name
+          : ''
+      }`;
+      offeringPrice = item?.PoProduct?.RequestedProduct?.offeringPrice;
+      totalPrice =
+        item?.PoProduct?.requestedQuantity && item?.PoProduct?.RequestedProduct?.offeringPrice
+          ? item?.PoProduct?.requestedQuantity * item?.PoProduct?.RequestedProduct?.offeringPrice
+          : 0;
+      quantity = item?.PoProduct?.requestedQuantity;
+      unit = item?.PoProduct?.RequestedProduct?.Product?.unit;
     } else {
       displayName = `${
         item?.PoProduct?.RequestedProduct?.Product?.category?.parent
@@ -139,6 +158,8 @@ export default function BNestedProductCard({
         </>
       )}
       {data?.map((item, index) => {
+
+        // TODO: handle from BE, ugly when use mapping in FE side
         const name = poNumber
           ? poNumber
           : item?.QuotationLetter?.number || item?.brikNumber;
@@ -159,6 +180,7 @@ export default function BNestedProductCard({
             )
           : expandData?.findIndex((val) => val?.id === item?.id);
         const isExpand = expandItems === -1;
+        
         return (
           <View key={index}>
             <View style={styles.containerLastOrder}>
