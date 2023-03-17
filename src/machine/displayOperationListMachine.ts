@@ -1,6 +1,4 @@
 import { getAllVisitationOrders } from "@/actions/OrderActions";
-import { getAllVisitations } from "@/actions/ProductivityActions";
-import { event } from "react-native-reanimated";
 import { assign, createMachine } from "xstate";
 
 const displayOperationListMachine = createMachine({
@@ -23,12 +21,16 @@ const displayOperationListMachine = createMachine({
         },
         services: {} as {
             fetchOperationListData: { data: { totalPage: number; data: any[]; message: string | unknown } }
-        }
+        },
+        events: {} as
+            | { type: 'retryGettingList' }
+            | { type: 'onRefreshList' }
+            | { type: 'onEndReached' }
     },
 
     context: {
         operationListData: [],
-        isLoading: false,
+        isLoading: true,
         isLoadMore: false,
         isRefreshing: false,
         errorMessage: '',
@@ -76,6 +78,7 @@ const displayOperationListMachine = createMachine({
 }, {
     guards: {
         isNotLastPage: (context, event) => {
+            console.log('ini page', context.page, context.totalPage)
             return context.page <= context.totalPage
         }
     },
@@ -91,7 +94,7 @@ const displayOperationListMachine = createMachine({
     },
     actions: {
         assignListData: assign((context, event) => {
-            const listData = [...context.operationListData, event.data.data]
+            const listData = [...context.operationListData, ...event.data.data]
             return {
                 totalPage: event.data.totalPage,
                 operationListData: listData,
@@ -111,12 +114,13 @@ const displayOperationListMachine = createMachine({
         handleRefresh: assign((context, event) => {
             return {
                 totalPage: 1,
-                isRefreshing: true
+                isRefreshing: true,
+                operationListData: []
             }
         }),
         handleEndReached: assign((context, event) => {
             return {
-                totalPage: context.totalPage + 1,
+                page: context.page + 1,
                 isLoadMore: true
             }
         })

@@ -190,13 +190,15 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE[ENTRY_TYPE.DRIVER]:
-          dispatch(setImageURLS({ file: localFile, source: OPERATION }));
+
           if (!operationAddedStep || operationAddedStep === '') {
+            dispatch(setImageURLS({ file: localFile, source: OPERATION, key: 'penuangan' }));
             navigation.navigate(CAMERA, {
               photoTitle: 'Penuangan',
               navigateTo: navigateTo,
               operationAddedStep: 'tm_value',
             });
+
           } else if (operationAddedStep === 'tm_value') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Isi TM',

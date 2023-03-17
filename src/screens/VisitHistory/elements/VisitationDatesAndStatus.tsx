@@ -91,6 +91,7 @@ const VisitationDatesAndStatus = ({
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data.data ? data.data.number : 'N/A',
         data: data.data,
+        type: 'SPH'
       });
     } catch (error) {
       dispatch(

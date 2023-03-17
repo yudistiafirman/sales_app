@@ -144,8 +144,14 @@ const CreateScheduleScreen = () => {
             'DD/MM/yyyy HH:mm'
           ).valueOf(), // date + time
           withPump: values.stepTwo?.method === 'pompa' ? true : false,
-          consecutive: values.stepTwo?.isConsecutive,
-          withTechnician: values.stepTwo?.hasTechnicalRequest,
+          consecutive:
+            values.stepTwo?.isConsecutive !== undefined
+              ? values.stepTwo?.isConsecutive
+              : false,
+          withTechnician:
+            values.stepTwo?.hasTechnicalRequest !== undefined
+              ? values.stepTwo?.hasTechnicalRequest
+              : false,
           status: 'SUBMITTED',
         };
         await dispatch(postOrderSchedule({ payload })).unwrap();

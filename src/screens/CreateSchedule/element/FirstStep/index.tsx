@@ -44,17 +44,7 @@ export default function FirstStep() {
         'totalDeposit',
         getTotalLastDeposit(data && data.length > 0 && data[0]?.totalDeposit)
       );
-      updateValueOnstep(
-        'stepTwo',
-        'inputtedVolume',
-        data &&
-          data.length > 0 &&
-          data[0]?.SaleOrders &&
-          data[0]?.SaleOrders.length > 0 &&
-          data[0]?.SaleOrders[0]?.usedQuantity
-          ? data[0]?.SaleOrders[0]?.usedQuantity
-          : 0
-      );
+      updateValueOnstep('stepTwo', 'inputtedVolume', 0);
       updateValueOnstep(
         'stepTwo',
         'salesOrder',

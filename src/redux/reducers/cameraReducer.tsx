@@ -6,6 +6,7 @@ import {
   CREATE_DEPOSIT,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
+  OPERATION,
 } from '@/navigation/ScreenNames';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 
@@ -14,12 +15,18 @@ type fileResponse = {
   type: 'COVER' | 'GALLERY';
 };
 
+
+interface OperationPhotoUrls extends LocalFileType {
+  photoTakenType?: string
+}
+
+
 export interface CameraGlobalState {
   localURLs: LocalFileType[];
   visitationPhotoURLs: LocalFileType[];
   createDepositPhotoURLs: LocalFileType[];
   createSchedulePhotoURLs: LocalFileType[];
-  operationPhotoURLs: LocalFileType[];
+  operationPhotoURLs: OperationPhotoUrls[];
   uploadedFilesResponse: fileResponse[];
   uploadedRequiredDocsResponse: requiredDocType[];
 }
@@ -40,7 +47,7 @@ export const cameraSlice = createSlice({
   reducers: {
     setImageURLS: (
       state,
-      action: PayloadAction<{ file: LocalFileType; source?: string }>
+      action: PayloadAction<{ file: LocalFileType; source?: string; key?: string }>
     ) => {
       switch (action.payload.source) {
         case CREATE_VISITATION:
@@ -61,6 +68,15 @@ export const cameraSlice = createSlice({
             action.payload.file,
           ];
           return;
+        case OPERATION:
+          let operationPhotos
+          const operationPhotosIndex = state.operationPhotoURLs.findIndex((v) => v.photoTakenType === action.payload.key)
+          if (operationPhotosIndex === -1) {
+            operationPhotos = [...state.operationPhotoURLs, { ...action.payload.file, photoTakenType: action.payload.key }]
+          } else {
+            operationPhotos = state.operationPhotoURLs[operationPhotosIndex] = { ...action.payload.file, photoTakenType: action.payload.key }
+          }
+          state.operationPhotoURLs = operationPhotos
         default:
           state.localURLs = [...state.localURLs, action.payload.file];
           return;
@@ -115,7 +131,7 @@ export const cameraSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {});
+    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => { });
   },
 });
 

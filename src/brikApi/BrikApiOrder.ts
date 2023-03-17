@@ -2,20 +2,20 @@ import Config from 'react-native-config';
 const API_URL = Config.API_URL_ORDER;
 
 export default class BrikApiOrder {
-  static getAllVisitationOrders = (page?: string, size?: string) => {
-    const url = new URL(`${API_URL}/order/m/flow/quotation-letter`);
-    const params = url.searchParams
-    if (page) {
-      params.append('page', page)
-    }
-    if (size) {
-      params.append('size', size)
-    }
+  static transactionTab = () => {
+    const url = new URL(`${API_URL}/order/m/tab/transaction`);
     return url.toString();
   };
 
-  static getAllPurchaseOrders = () => {
-    const url = new URL(`${API_URL}/order/m/purchase-order`);
+  static getAllVisitationOrders = (page?: string, size?: string) => {
+    const url = new URL(`${API_URL}/order/m/flow/quotation-letter`);
+    const params = url.searchParams;
+    if (page) {
+      params.append('page', page);
+    }
+    if (size) {
+      params.append('size', size);
+    }
     return url.toString();
   };
 
@@ -26,6 +26,21 @@ export default class BrikApiOrder {
 
   static getPurchaseOrderByID = (id: string) => {
     const url = new URL(`${API_URL}/order/m/purchase-order/${id}`);
+    return url.toString();
+  };
+
+  static getDepositByID = (id: string) => {
+    const url = new URL(`${API_URL}/order/m/deposit/${id}`);
+    return url.toString();
+  };
+
+  static getScheduleByID = (id: string) => {
+    const url = new URL(`${API_URL}/order/m/schedule/${id}`);
+    return url.toString();
+  };
+
+  static getDeliveryOrderByID = (id: string) => {
+    const url = new URL(`${API_URL}/order/m/delivery-order/${id}`);
     return url.toString();
   };
 
@@ -58,26 +73,62 @@ export default class BrikApiOrder {
     if (productPo) {
       params.append('productPo', productPo)
     }
-    return url.toString()
-  }
+    return url.toString();
+  };
 
   static getSphDocuments = (id: string) => {
     const url = new URL(`${API_URL}/order/m/sph/${id}`);
     return url.toString();
   };
 
-  static postPurchaseOrder = () => {
+  static purchaseOrder = (page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/purchase-order`);
+    const params = url.searchParams;
+    if (page) {
+      params.append('page', page);
+    }
+    if (size) {
+      params.append('size', size);
+    }
     return url.toString();
   };
 
-  static postDeposit = () => {
+  static deposit = (page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/deposit`);
+    const params = url.searchParams;
+    if (page) {
+      params.append('page', page);
+    }
+    if (size) {
+      params.append('size', size);
+    }
     return url.toString();
   };
 
-  static postSchedule = () => {
+  static schedule = (page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/schedule`);
+    const params = url.searchParams;
+    if (page) {
+      params.append('page', page);
+    }
+    if (size) {
+      params.append('size', size);
+    }
+    return url.toString();
+  };
+
+  static deliveryOrder = (status?: string, page?: string, size?: string) => {
+    const url = new URL(`${API_URL}/order/m/delivery-order`);
+    const params = url.searchParams;
+    if (page) {
+      params.append('page', page);
+    }
+    if (size) {
+      params.append('size', size);
+    }
+    if (status) {
+      params.append('status', status);
+    }
     return url.toString();
   };
 }

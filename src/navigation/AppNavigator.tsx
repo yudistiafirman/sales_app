@@ -28,6 +28,7 @@ import SalesTabs from './tabs/SalesTabs';
 import SecurityTabs from './tabs/SecurityTabs';
 import SalesHeaderRight from './Sales/HeaderRight';
 import { UserModel } from '@/models/User';
+import { View } from 'react-native';
 const Stack = createNativeStackNavigator();
 
 const RootScreen = (
@@ -102,7 +103,7 @@ const RootScreen = (
             {OperationStack(Stack)}
           </>
         );
-      case ENTRY_TYPE.ADMIN || ENTRY_TYPE.ADMIN:
+      case ENTRY_TYPE.SALES:
         return (
           <>
             <Stack.Screen
@@ -116,6 +117,22 @@ const RootScreen = (
             {SalesStack(Stack)}
           </>
         );
+      case ENTRY_TYPE.ADMIN:
+        return (
+          <>
+            <Stack.Screen
+              name={TAB_ROOT}
+              key={TAB_ROOT}
+              component={SalesTabs}
+              options={{
+                headerShown: false,
+              }}
+            />
+            {SalesStack(Stack)}
+          </>
+        );
+      default:
+        return <View />
     }
   } else {
     return (

@@ -1,11 +1,7 @@
 import * as React from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import BTabSections from '@/components/organism/TabSections';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import {
   BEmptyState,
   BSpacer,
@@ -16,34 +12,47 @@ import {
 } from '@/components';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { useMachine } from '@xstate/react';
-import { colors, layout } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import TransactionList from './element/TransactionList';
 import { transactionMachine } from '@/machine/transactionMachine';
 import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
 import {
+  CAMERA,
+  CREATE_DEPOSIT,
+  CREATE_SCHEDULE,
+  PO,
   SPH,
   TAB_TRANSACTION,
   TRANSACTION_DETAIL,
 } from '@/navigation/ScreenNames';
-import { getPurchaseOrderByID, getVisitationOrderByID } from '@/actions/OrderActions';
+import {
+  getDeliveryOrderByID,
+  getDepositByID,
+  getPurchaseOrderByID,
+  getScheduleByID,
+  getVisitationOrderByID,
+} from '@/actions/OrderActions';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetState } from '@/redux/reducers/SphReducer';
+import { bStorage } from '@/actions';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
   const navigation = useNavigation();
-  const route = useRoute<RootStackScreenProps>();
   const [index, setIndex] = React.useState(0);
   const [state, send] = useMachine(transactionMachine);
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
   const sphData = useSelector((rootState: RootState) => rootState.sph);
   const dispatch = useDispatch();
+  const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
+  const poState = useSelector((state: RootState) => state.purchaseOrder);
+  const { isModalContinuePo, poNumber, currentStep } =
+    poState.currentState.context;
 
   const {
     routes,
@@ -54,26 +63,44 @@ const Transaction = () => {
     loadTab,
     selectedType,
     errorMessage,
+    isErrorData: isError,
   } = state.context;
 
-  const onTabPress = (index: number) => {
-    send('onChangeType', { payload: index });
+  const onTabPress = (title: string) => {
+    if (isError) send('retryGettingTransactions', { payload: title });
+    else send('onChangeType', { payload: title });
   };
 
   useCustomHeaderRight({
-    customHeaderRight: (
-      <BTouchableText
-        onPress={() => {
-          if (selectedType === 'SPH') {
-            if (sphData?.selectedCompany) setPopupSPHVisible(true);
-            else navigation.navigate(SPH, {});
-          } else {
-            navigation.navigate('PO');
-          }
-        }}
-        title={'Buat ' + selectedType}
-      />
-    ),
+    customHeaderRight:
+      selectedType === 'DO' ||
+      (selectedType === 'SPH' && loadTab) ? undefined : (
+        <BTouchableText
+          onPress={() => {
+            if (selectedType === 'PO') {
+              setFeature('PO');
+              if (!isModalContinuePo) {
+                navigation.navigate(PO);
+              }
+            } else if (selectedType === 'Deposit') {
+              navigation.navigate(CAMERA, {
+                photoTitle: 'Bukti',
+                navigateTo: CREATE_DEPOSIT,
+                closeButton: true,
+                disabledDocPicker: false,
+                disabledGalleryPicker: false,
+              });
+            } else if (selectedType === 'Jadwal') {
+              navigation.navigate(CREATE_SCHEDULE);
+            } else {
+              setFeature('SPH');
+              if (sphData?.selectedCompany) setPopupSPHVisible(true);
+              else navigation.navigate(SPH, {});
+            }
+          }}
+          title={'Buat ' + selectedType}
+        />
+      ),
   });
 
   useFocusEffect(
@@ -94,48 +121,128 @@ const Transaction = () => {
         data = await getVisitationOrderByID(id);
         data = data.data.data;
       } else {
-        data = await getPurchaseOrderByID(id);
-        data = data.data.data;
+        if (selectedType === 'PO') {
+          data = await getPurchaseOrderByID(id);
+          data = data.data.data;
 
-        // TODO: handle from BE, ugly when use mapping in FE side
-        data = {
-          ...data,
-          mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
-          paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
-          deposit: data.DepositPurchaseOrders,
-          DepositPurchaseOrders: undefined,
-          products: data.QuotationLetter?.QuotationRequest?.products,
-          QuotationLetter: {
-            ...data.QuotationLetter,
-            QuotationRequest: {
-              ...data.QuotationLetter.QuotationRequest,
-              mainPic: undefined,
-              paymentType: undefined,
-              products: undefined,
+          // TODO: handle from BE, ugly when use mapping in FE side
+          data = {
+            ...data,
+            mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+            paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
+            deposit: data.DepositPurchaseOrders,
+            DepositPurchaseOrders: undefined,
+            address: data.project.Address,
+            products: data.QuotationLetter?.QuotationRequest?.products,
+            project: {
+              ...data.project,
+              Address: undefined,
             },
-          },
-        };
+            QuotationLetter: {
+              ...data.QuotationLetter,
+              QuotationRequest: {
+                ...data.QuotationLetter.QuotationRequest,
+                mainPic: undefined,
+                paymentType: undefined,
+                products: undefined,
+              },
+            },
+          };
+        } else if (selectedType === 'Deposit') {
+          data = await getDepositByID(id);
+          data = data.data.data;
+
+          // TODO: handle from BE, ugly when use mapping in FE side
+          data = {
+            ...data,
+            mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+            QuotationLetter: {
+              ...data.QuotationLetter,
+              QuotationRequest: {
+                ...data.QuotationLetter.QuotationRequest,
+                mainPic: undefined,
+              },
+            },
+          };
+        } else if (selectedType === 'Jadwal') {
+          data = await getScheduleByID(id);
+          data = data.data.data;
+
+          // TODO: handle from BE, ugly when use mapping in FE side
+          data = {
+            ...data,
+            mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+            products: data.QuotationLetter?.QuotationRequest?.products,
+            QuotationLetter: {
+              ...data.QuotationLetter,
+              QuotationRequest: {
+                ...data.QuotationLetter.QuotationRequest,
+                mainPic: undefined,
+                products: undefined,
+              },
+            },
+          };
+        } else if (selectedType === 'DO') {
+          data = await getDeliveryOrderByID(id);
+          data = data.data.data;
+
+          // TODO: handle from BE, ugly when use mapping in FE side
+          let products: any[] = [];
+          products.push(data.Schedule?.SaleOrder?.PoProduct);
+          data = {
+            ...data,
+            mainPic: data.project?.mainPic,
+            address: data.project.Address,
+            products: products,
+            project: {
+              ...data.project,
+              mainPic: undefined,
+              Address: undefined,
+            },
+            Schedule: {
+              ...data.Schedule,
+              SaleOrder: {
+                ...data.Schedule.SaleOrder,
+                PoProduct: undefined,
+              },
+            },
+          };
+        }
       }
+
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data ? data.number : 'N/A',
         data: data,
+        type: selectedType,
       });
     } catch (error) {
       customLog(error);
     }
   };
 
-  const renderSPHContinueData = () => {
+  const renderPoNumber = () => {
+    return (
+      <View style={styles.poNumberWrapper}>
+        <Text style={styles.poNumber}>{poNumber}</Text>
+      </View>
+    );
+  };
+
+  const renderContinueData = () => {
     return (
       <>
         <View style={styles.popupSPHContent}>
-          <BVisitationCard
-            item={{
-              name: sphData?.selectedCompany?.name,
-              location: sphData?.selectedCompany?.locationAddress?.line1,
-            }}
-            isRenderIcon={false}
-          />
+          {poNumber ? (
+            renderPoNumber()
+          ) : (
+            <BVisitationCard
+              item={{
+                name: sphData?.selectedCompany?.name,
+                location: sphData?.selectedCompany?.locationAddress?.line1,
+              }}
+              isRenderIcon={false}
+            />
+          )}
         </View>
         <BSpacer size={'medium'} />
         <BText bold="300" sizeInNumber={14} style={styles.popupSPHDesc}>
@@ -149,13 +256,27 @@ const Transaction = () => {
     );
   };
 
+  const continuePopUpAction = () => {
+    if (feature === 'PO') {
+      if (currentStep === 0) {
+        dispatch({ type: 'goToSecondStepFromSaved' });
+      } else {
+        dispatch({ type: 'goToThirdStepFromSaved' });
+      }
+      navigation.navigate(PO);
+    } else {
+      setPopupSPHVisible(false);
+      navigation.navigate(SPH, {});
+    }
+  };
+
   return (
     <SafeAreaView style={styles.parent}>
       {loadTab && <ShimmerPlaceholder style={styles.shimmer} />}
       <BSpacer size="extraSmall" />
       {state.matches('getTransaction.errorGettingTypeTransactions') && (
         <BEmptyState
-          onAction={() => send('retryGettingTransactions')}
+          onAction={() => send('retryGettingTypeTransactions')}
           isError
           errorMessage={errorMessage}
         />
@@ -172,16 +293,19 @@ const Transaction = () => {
               loadTransaction={loadTransaction}
               refreshing={refreshing}
               isError={state.matches(
-                'getTransaction.typeLoaded.errorGettingTypeTransactions'
+                'getTransaction.typeLoaded.errorGettingTransactions'
               )}
               errorMessage={errorMessage}
-              onAction={() => send('retryGettingTypeTransactions')}
+              onAction={() =>
+                send('retryGettingTransactions', { payload: selectedType })
+              }
               onRefresh={() => send('refreshingList')}
               onPress={(data: any) => getOneOrder(data.id)}
+              selectedType={selectedType}
             />
           )}
           onTabPress={(data) => {
-            onTabPress(parseInt(data?.route?.key));
+            onTabPress(data?.route?.title);
           }}
           onIndexChange={setIndex}
           tabStyle={styles.tabStyle}
@@ -191,24 +315,25 @@ const Transaction = () => {
         />
       )}
       <PopUpQuestion
-        isVisible={isPopupSPHVisible}
+        isVisible={feature === 'SPH' ? isPopupSPHVisible : isModalContinuePo}
         setIsPopupVisible={() => {
-          setPopupSPHVisible(false);
-          dispatch(resetState());
-          navigation.navigate(SPH, {});
+          if (feature === 'SPH') {
+            setPopupSPHVisible(false);
+            dispatch(resetState());
+            navigation.navigate(SPH, {});
+          } else {
+            bStorage.deleteItem(PO);
+            dispatch({ type: 'createNewPo' });
+            navigation.navigate(PO);
+          }
         }}
-        actionButton={() => {
-          setPopupSPHVisible(false);
-          navigation.navigate(SPH, {});
-        }}
+        actionButton={continuePopUpAction}
+        descContent={renderContinueData()}
         cancelText={'Buat Baru'}
         actionText={'Lanjutkan'}
-        descContent={renderSPHContinueData()}
-        text={
-          'Apakah Anda Ingin Melanjutkan Pembuatan ' +
-          selectedType +
-          ' Sebelumnya?'
-        }
+        text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
+          feature === 'PO' ? 'PO' : 'SPH'
+        } Sebelumnya?`}
       />
     </SafeAreaView>
   );
@@ -240,6 +365,21 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     paddingHorizontal: layout.pad.xl,
+  },
+  poNumber: {
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.md,
+    color: colors.text.darker,
+    padding: layout.pad.xs + layout.pad.md,
+  },
+  poNumberWrapper: {
+    backgroundColor: colors.tertiary,
+    height: resScale(37),
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    width: resScale(277),
+    alignSelf: 'center',
+    borderRadius: layout.radius.md,
   },
 });
 
