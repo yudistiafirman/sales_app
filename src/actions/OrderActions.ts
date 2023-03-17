@@ -70,7 +70,7 @@ export const getAllFinishedDeliveryOrders = async (
   size?: string
 ) => {
   return customRequest(
-    BrikApiOrder.deliveryOrder('FINISH', page, size),
+    BrikApiOrder.deliveryOrder('FINISHED', page, size),
     'GET',
     undefined,
     true

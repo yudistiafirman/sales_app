@@ -212,7 +212,6 @@ const Transaction = () => {
           };
         }
       }
-
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data ? data.number : 'N/A',
         data: data,

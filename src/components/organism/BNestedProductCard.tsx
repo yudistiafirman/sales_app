@@ -43,8 +43,8 @@ function ListChildProduct(
     let unit;
     if (item?.Product) {
       displayName = `${
-        item?.Product?.category?.Parent
-          ? item?.Product?.category?.Parent?.name + ' '
+        item?.Product?.category?.parent
+          ? item?.Product?.category?.parent?.name + ' '
           : ''
       }${item?.Product?.displayName} ${
         item?.Product?.category ? item?.Product?.category?.name : ''
