@@ -223,7 +223,7 @@ export const getSuccessMsgFromAPI = (
         break;
       default:
         if (fullUrl.toLowerCase().includes('visitation/'))
-          finalText += 'data kunjungan';
+          finalText = '';
         else finalText += 'data';
         break;
     }
@@ -259,15 +259,15 @@ export const getSuccessMsgFromAPI = (
       default:
         if (fullUrl.toLowerCase().includes('sph/')) finalText += 'dokumen SPH';
         else if (fullUrl.toLowerCase().includes('purchase-order/'))
-          finalText += 'data detail PO';
+          finalText = '';
         else if (fullUrl.toLowerCase().includes('quotation-letter/'))
-          finalText += 'data detail SPH';
+          finalText = '';
         else if (fullUrl.toLowerCase().includes('deposit/'))
-          finalText += 'data detail deposit';
+          finalText = '';
         else if (fullUrl.toLowerCase().includes('schedule/'))
-          finalText += 'data detail jadwal';
+          finalText = '';
         else if (fullUrl.toLowerCase().includes('delivery-order/'))
-          finalText += 'data detail DO';
+          finalText = '';
         else finalText += 'data';
         break;
     }
