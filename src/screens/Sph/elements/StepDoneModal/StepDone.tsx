@@ -36,8 +36,6 @@ import { resetSPHState } from '@/redux/reducers/SphReducer';
 type StepDoneType = {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  //   openAddPic: () => void;
-  //   selectPic?: () => void;
   sphResponse: postSphResponseType | null;
 };
 const paymentMethod: {
@@ -124,16 +122,10 @@ export default function StepDone({
 }: StepDoneType) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  // const [sphState] = useContext(SphContext);
   const sphState = useSelector((state: RootState) => state.sph);
   const stateCompanyName = sphState.selectedCompany?.Company?.name
     ? sphState.selectedCompany?.Company.name
     : sphState.selectedPic?.name;
-
-  // const locationState = sphState?.billingAddress.addressAutoComplete
-  //   ?.formattedAddress
-  //   ? sphState?.billingAddress.addressAutoComplete.formattedAddress
-  //   : sphState.selectedCompany?.locationAddress.line1;
   const locationState = sphState.isBillingAddressSame
     ? sphState.selectedCompany?.locationAddress.line1
     : sphState?.billingAddress.addressAutoComplete.formattedAddress;
@@ -297,7 +289,6 @@ const styles = StyleSheet.create({
   },
   modalHeader: {
     flexDirection: 'row',
-    // backgroundColor: 'red',
     alignItems: 'center',
     paddingHorizontal: layout.pad.md,
   },
@@ -311,7 +302,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    // backgroundColor: 'blue',
     paddingVertical: layout.mainPad,
     borderTopColor: colors.border,
     borderTopWidth: resScale(0.5),
@@ -323,7 +313,6 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     flex: 1,
-    // backgroundColor: 'red',
   },
   labelSuccess: {
     backgroundColor: colors.chip.green,
@@ -364,7 +353,6 @@ const styles = StyleSheet.create({
   },
   footerButton: {
     flex: 0.3,
-    // backgroundColor: 'red',
     alignItems: 'center',
   },
   footerButtonText: {
