@@ -216,7 +216,7 @@ export default function SecondStep() {
                                 }}
                               >
                                 {item.usedQuantity
-                                  ? item.usedQuantity
+                                  ? item.usedQuantity + ' m³'
                                   : 0 + ' m³'}
                               </BText>
                             </View>
