@@ -38,6 +38,8 @@ import Pdf from 'react-native-pdf';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import { customLog } from '@/utils/generalFunc';
 import { resetAllStepperFocused } from '@/redux/reducers/VisitationReducer';
+import OperationFileType from '@/constants/operationFileType';
+import { setOperationPhoto } from '@/redux/reducers/operationReducer';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -192,10 +194,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
             });
           }
           return;
-        case ENTRY_TYPE[ENTRY_TYPE.DRIVER]:
-
+        case ENTRY_TYPE.DRIVER:
+          dispatch(setOperationPhoto({ file: localFile }))
           if (!operationAddedStep || operationAddedStep === '') {
-            dispatch(setImageURLS({ file: localFile, source: OPERATION, key: 'penuangan' }));
             navigation.navigate(CAMERA, {
               photoTitle: 'Penuangan',
               navigateTo: navigateTo,

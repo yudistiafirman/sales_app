@@ -9,10 +9,10 @@ export default class BrikApiCommon {
   ) => {
     const url = new URL(`${API_URL}/common/map/coordinates`);
     const params = url.searchParams;
-    if(longitude){
+    if (longitude) {
       params.append('lon', `${longitude}`);
     }
-    if(latitude){
+    if (latitude) {
       params.append('lat', `${latitude}`);
     }
     if (distance) {

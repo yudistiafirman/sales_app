@@ -9,6 +9,7 @@ import {
   OPERATION,
 } from '@/navigation/ScreenNames';
 import { LocalFileType } from '@/interfaces/LocalFileType';
+import OperationFileType from '@/constants/operationFileType';
 
 type fileResponse = {
   id: string;
@@ -16,17 +17,12 @@ type fileResponse = {
 };
 
 
-interface OperationPhotoUrls extends LocalFileType {
-  photoTakenType?: string
-}
-
-
 export interface CameraGlobalState {
   localURLs: LocalFileType[];
   visitationPhotoURLs: LocalFileType[];
   createDepositPhotoURLs: LocalFileType[];
   createSchedulePhotoURLs: LocalFileType[];
-  operationPhotoURLs: OperationPhotoUrls[];
+  operationPhotoURLs: LocalFileType[];
   uploadedFilesResponse: fileResponse[];
   uploadedRequiredDocsResponse: requiredDocType[];
 }
@@ -47,7 +43,7 @@ export const cameraSlice = createSlice({
   reducers: {
     setImageURLS: (
       state,
-      action: PayloadAction<{ file: LocalFileType; source?: string; key?: string }>
+      action: PayloadAction<{ file: LocalFileType; source?: string }>
     ) => {
       switch (action.payload.source) {
         case CREATE_VISITATION:
@@ -68,15 +64,6 @@ export const cameraSlice = createSlice({
             action.payload.file,
           ];
           return;
-        case OPERATION:
-          let operationPhotos
-          const operationPhotosIndex = state.operationPhotoURLs.findIndex((v) => v.photoTakenType === action.payload.key)
-          if (operationPhotosIndex === -1) {
-            operationPhotos = [...state.operationPhotoURLs, { ...action.payload.file, photoTakenType: action.payload.key }]
-          } else {
-            operationPhotos = state.operationPhotoURLs[operationPhotosIndex] = { ...action.payload.file, photoTakenType: action.payload.key }
-          }
-          state.operationPhotoURLs = operationPhotos
         default:
           state.localURLs = [...state.localURLs, action.payload.file];
           return;

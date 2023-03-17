@@ -1,4 +1,5 @@
 import { getAllDeliveryOrders, getAllVisitationOrders } from "@/actions/OrderActions";
+import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import { assign, createMachine } from "xstate";
 
 const displayOperationListMachine = createMachine({
@@ -10,7 +11,7 @@ const displayOperationListMachine = createMachine({
 
     schema: {
         context: {} as {
-            operationListData: any[];
+            operationListData: OperationsDeliveryOrdersListResponse[];
             isLoading: boolean;
             isLoadMore: boolean;
             isRefreshing: boolean;
@@ -20,7 +21,7 @@ const displayOperationListMachine = createMachine({
             totalPage: number
         },
         services: {} as {
-            fetchOperationListData: { data: { data: { totalPages: number; data: any[]; message: string | unknown } } }
+            fetchOperationListData: { data: { data: { totalPages: number; data: OperationsDeliveryOrdersListResponse[]; message: string | unknown } } }
         },
         events: {} as
             | { type: 'retryGettingList' }
@@ -113,7 +114,7 @@ const displayOperationListMachine = createMachine({
         }),
         handleRefresh: assign((context, event) => {
             return {
-                totalPage: 1,
+                page: 1,
                 isRefreshing: true,
                 operationListData: []
             }

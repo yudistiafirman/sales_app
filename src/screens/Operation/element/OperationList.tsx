@@ -1,29 +1,15 @@
 import { StyleSheet, FlatList, ListRenderItem } from 'react-native';
 import React, { useCallback } from 'react';
-
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { layout } from '@/constants';
 import { BEmptyState, BSpacer, BVisitationCard } from '@/components';
-import { useNavigation } from '@react-navigation/native';
 import BCommonListShimmer from '@/components/templates/BCommonListShimmer'
-import { ENTRY_TYPE } from '@/models/EnumModel';
-import { CAMERA, CREATE_DO } from '@/navigation/ScreenNames';
+import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-
-type OperationListType = {
-  data: {
-    id: string;
-    name: string;
-    qty?: string;
-    status?: string;
-    addressID?: string;
-  }[];
-};
-
 interface OperationListProps {
-  data: OperationListType[];
+  data: OperationsDeliveryOrdersListResponse[];
   onEndReached?:
   | ((info: { distanceFromEnd: number }) => void)
   | null
@@ -36,10 +22,8 @@ interface OperationListProps {
   errorMessage?: any;
   isError?: boolean;
   onRetry?: () => void;
-  onLocationPress?: (id: string) => void
+  onLocationPress: (lonlat: { longitude: string, latitude: string }) => void
 }
-
-
 
 export default function OperationList({
   data,
@@ -57,22 +41,22 @@ export default function OperationList({
 
   const separator = useCallback(() => <BSpacer size={'small'} />, []);
 
-  const renderItem: ListRenderItem<OperationListType> = useCallback(({ item }) => {
+  const renderItem: ListRenderItem<OperationsDeliveryOrdersListResponse> = useCallback(({ item }) => {
     return (
       <BVisitationCard
         onPress={() => onPressList(item)}
-        onLocationPress={item.project.Address.id && onLocationPress ? () => onLocationPress(item.project.Address.id) : null}
+        onLocationPress={(lonlat) => onLocationPress(lonlat)}
         item={{
-          name: item.number,
-          picOrCompanyName: item.project.projectName,
-          unit: `${item.Schedule.SaleOrder.PoProduct.requestedQuantity} m³'`,
-          pilStatus: item.status,
+          name: item?.number,
+          picOrCompanyName: item?.project?.projectName,
+          unit: `${item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity} m³`,
+          pilStatus: item?.status,
+          lonlat: { longitude: item.project?.Address?.lon!, latitude: item.project?.Address?.lat! }
+
         }}
       />
     )
   }, [])
-
-
 
   return (
     <FlatList

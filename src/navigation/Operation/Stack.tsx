@@ -12,7 +12,10 @@ import {
   SCHEDULE_TITLE,
   SUBMIT_FORM,
   SUBMIT_FORM_TITLE,
+  LOCATION,
+  LOCATION_TITLE,
 } from '../ScreenNames';
+import Location from '@/screens/Location';
 
 const OperationStack = (Stack: any) => {
   return (
@@ -47,6 +50,14 @@ const OperationStack = (Stack: any) => {
         component={SubmitForm}
         options={{
           headerTitle: SUBMIT_FORM_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={LOCATION}
+        key={LOCATION}
+        component={Location}
+        options={{
+          headerTitle: LOCATION_TITLE,
         }}
       />
     </>
