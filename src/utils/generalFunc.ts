@@ -216,14 +216,14 @@ export const getSuccessMsgFromAPI = (
         finalText += 'data target kunjungan';
         break;
       case 'visitation':
-        finalText += 'data kunjungan';
+        finalText = '';
         break;
       case 'visitation-book':
         finalText = 'Berhasil buat janji';
         break;
       default:
         if (fullUrl.toLowerCase().includes('visitation/'))
-          finalText += 'data kunjungan';
+          finalText = '';
         else finalText += 'data';
         break;
     }
@@ -236,7 +236,7 @@ export const getSuccessMsgFromAPI = (
         finalText += 'data semua SPH berdasarkan proyek';
         break;
       case 'quotation':
-        finalText += 'data SPH';
+        finalText = '';
         break;
       case 'purchase-order':
         finalText = '';
@@ -259,15 +259,15 @@ export const getSuccessMsgFromAPI = (
       default:
         if (fullUrl.toLowerCase().includes('sph/')) finalText += 'dokumen SPH';
         else if (fullUrl.toLowerCase().includes('purchase-order/'))
-          finalText += 'data detail PO';
+          finalText = '';
         else if (fullUrl.toLowerCase().includes('quotation-letter/'))
-          finalText += 'data detail SPH';
+          finalText = '';
         else if (fullUrl.toLowerCase().includes('deposit/'))
-          finalText += 'data detail deposit';
+          finalText = '';
         else if (fullUrl.toLowerCase().includes('schedule/'))
-          finalText += 'data detail jadwal';
+          finalText = '';
         else if (fullUrl.toLowerCase().includes('delivery-order/'))
-          finalText += 'data detail DO';
+          finalText = '';
         else finalText += 'data';
         break;
     }

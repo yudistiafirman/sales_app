@@ -185,10 +185,10 @@ const Fourth = () => {
   );
   const visitationData = useSelector((state: RootState) => state.visitation);
 
-  const onChange = (key: keyof CreateVisitationFourthStep) => (e: any) => {
+  const onChange = (key: any) => (e: any) => {
     dispatch(
       updateDataVisitation({
-        type: [key],
+        type: key,
         value: e,
       })
     );
@@ -197,17 +197,12 @@ const Fourth = () => {
   const [isPopUpVisible, setIsPopUpVisible] = useState(false);
   const [isLastStepVisible, setIsLastStepVisible] = useState(false);
 
-  const removeImage = useCallback(
-    (pos: number) => () => {
-      dispatch(deleteImage({ pos, source: CREATE_VISITATION }));
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  const removeImage = (pos: number) => {
+    dispatch(deleteImage({ pos, source: CREATE_VISITATION }));
+  };
 
   useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step4');
-    // photoUrls;
     onChange('images')(visitationPhotoURLs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visitationPhotoURLs]);
@@ -401,7 +396,7 @@ const Fourth = () => {
             })
           )
         }
-        removePict={removeImage}
+        removePict={(pos) => removeImage(pos)}
       />
     </>
   );

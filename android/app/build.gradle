@@ -139,7 +139,7 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
-def rootVersionCode = 3
+def rootVersionCode = 4
 def rootDevVersionName = "1.0.0 (Dev)"
 def rootProdVersionName = "1.0.0"
 
