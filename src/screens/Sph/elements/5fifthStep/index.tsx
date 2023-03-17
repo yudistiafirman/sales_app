@@ -34,6 +34,12 @@ import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
+import {
+  updateSelectedCompany,
+  updateSelectedPic,
+  updateUploadedAndMappedRequiredDocs,
+  updateUseHighway,
+} from '@/redux/reducers/SphReducer';
 
 function countNonNullValues(array) {
   let count = 0;
@@ -189,8 +195,6 @@ function payloadMapper(sphState: SphStateInterface) {
     payload.billingAddress = payload.shippingAddress;
   }
 
-  // if (!sphState.isBillingAddressSame) {
-  // }
   customLog(JSON.stringify(payload), 'payload1012');
 
   return payload;
@@ -216,9 +220,7 @@ export default function FifthStep() {
       isRequire: false,
       type: 'switch',
       onChange: (val: boolean) => {
-        if (stateUpdate) {
-          stateUpdate('useHighway')(val);
-        }
+        dispatch(updateUseHighway(val));
       },
       value: sphState?.useHighway,
       labelStyle: {
@@ -282,20 +284,12 @@ export default function FifthStep() {
                   photoData.name === photoName ||
                   photoData.name === photoNamee
                 ) {
-                  // return {
-                  // documentId: documentId,
-                  // fileId: photo.id,
-                  // };
                   foundPhoto = documentId;
                 }
               }
             }
           }
           if (foundPhoto) {
-            // return {
-            //   documentId: foundPhoto,
-            //   fileId: photo.id,
-            // };
             files.push({
               documentId: foundPhoto,
               fileId: photo.id,
@@ -308,7 +302,7 @@ export default function FifthStep() {
         if (!isFilePhotoNotNull) {
           payload.projectDocs = files;
         }
-        stateUpdate('uploadedAndMappedRequiredDocs')(files);
+        dispatch(updateUploadedAndMappedRequiredDocs(files));
       } else if (!isNoPhotoToUpload) {
         const isFilePhotoNotNull = sphState.uploadedAndMappedRequiredDocs.every(
           (val) => val === null
@@ -353,8 +347,7 @@ export default function FifthStep() {
         setIsModalVisible={setIsModalVisible}
         openAddPic={addPicHandler}
         selectPic={(pic) => {
-          // setIsStepDoneVisible((curr) => !curr);
-          stateUpdate('selectedPic')(pic);
+          dispatch(updateSelectedPic(pic));
           setIsModalVisible((curr) => !curr);
         }}
       />
@@ -425,12 +418,12 @@ export default function FifthStep() {
               ...sphState.selectedCompany.PIC,
               { ...pic, isSelected: false },
             ];
-
-            stateUpdate('selectedCompany')({
-              ...sphState.selectedCompany,
-              PIC: newList,
-            });
-            // stateUpdate('picList')(newList);
+            dispatch(
+              updateSelectedCompany({
+                ...sphState.selectedCompany,
+                PIC: newList,
+              })
+            );
           }
         }}
       />

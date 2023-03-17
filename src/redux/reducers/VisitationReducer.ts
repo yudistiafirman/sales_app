@@ -1,11 +1,4 @@
-import {
-  Address,
-  CreateVisitationFirstStep,
-  CreateVisitationFourthStep,
-  CreateVisitationSecondStep,
-  CreateVisitationThirdStep,
-  PIC,
-} from '@/interfaces';
+import { Address, PIC } from '@/interfaces';
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface VisitationGlobalState {
@@ -39,10 +32,10 @@ export interface VisitationGlobalState {
   kategoriAlasan?: 'FINISHED' | 'MOU_COMPETITOR';
   alasanPenolakan: string;
   existingVisitationId: string | null;
-  stepOneFinished: boolean;
-  stepTwoFinished: boolean;
-  stepThreeFinished: boolean;
-  stepperShouldNotFocused: boolean;
+  stepOneVisitationFinished: boolean;
+  stepTwoVisitationFinished: boolean;
+  stepThreeVisitationFinished: boolean;
+  stepperVisitationShouldNotFocused: boolean;
 }
 
 const initialState: VisitationGlobalState = {
@@ -82,10 +75,10 @@ const initialState: VisitationGlobalState = {
   kategoriAlasan: null,
   alasanPenolakan: '',
   existingVisitationId: null,
-  stepOneFinished: false,
-  stepTwoFinished: false,
-  stepThreeFinished: false,
-  stepperShouldNotFocused: false,
+  stepOneVisitationFinished: false,
+  stepTwoVisitationFinished: false,
+  stepThreeVisitationFinished: false,
+  stepperVisitationShouldNotFocused: false,
 };
 
 export const visitationSlice = createSlice({
@@ -96,33 +89,39 @@ export const visitationSlice = createSlice({
       return initialState;
     },
     resetFocusedStepperFlag: (state) => {
-      state.stepperShouldNotFocused = false;
+      state.stepperVisitationShouldNotFocused = false;
     },
     setStepperFocused: (state, { payload }) => {
-      state.stepperShouldNotFocused = true;
+      state.stepperVisitationShouldNotFocused = true;
       switch (payload) {
         case 1:
-          state.stepOneFinished = true;
+          state.stepOneVisitationFinished = true;
           break;
         case 2:
-          state.stepTwoFinished = true;
+          state.stepTwoVisitationFinished = true;
           break;
         case 3:
-          state.stepThreeFinished = true;
+          state.stepThreeVisitationFinished = true;
           break;
       }
     },
+    resetAllStepperFocused: (state) => {
+      state.stepperVisitationShouldNotFocused = true;
+      state.stepOneVisitationFinished = false;
+      state.stepTwoVisitationFinished = false;
+      state.stepThreeVisitationFinished = false;
+    },
     resetStepperFocused: (state, { payload }) => {
-      state.stepperShouldNotFocused = true;
+      state.stepperVisitationShouldNotFocused = true;
       switch (payload) {
         case 1:
-          state.stepOneFinished = false;
+          state.stepOneVisitationFinished = false;
           break;
         case 2:
-          state.stepTwoFinished = false;
+          state.stepTwoVisitationFinished = false;
           break;
         case 3:
-          state.stepThreeFinished = false;
+          state.stepThreeVisitationFinished = false;
           break;
       }
     },
@@ -205,30 +204,6 @@ export const visitationSlice = createSlice({
           break;
       }
     },
-    // updateStepOne: (
-    //   state,
-    //   { payload }: { payload: CreateVisitationFirstStep }
-    // ) => {
-    //   state.stepOne = payload;
-    // },
-    // updateStepTwo: (
-    //   state,
-    //   { payload }: { payload: CreateVisitationSecondStep }
-    // ) => {
-    //   state.stepTwo = payload;
-    // },
-    // updateStepThree: (
-    //   state,
-    //   { payload }: { payload: CreateVisitationThirdStep }
-    // ) => {
-    //   state.stepThree = payload;
-    // },
-    // updateStepFour: (
-    //   state,
-    //   { payload }: { payload: CreateVisitationFourthStep }
-    // ) => {
-    //   state.stepFour = payload;
-    // },
   },
 });
 
@@ -237,13 +212,10 @@ export const {
   updateShouldScrollView,
   updateExistingVisitationID,
   updateCurrentStep,
-  // updateStepOne,
-  // updateStepTwo,
-  // updateStepThree,
-  // updateStepFour,
   updateDataVisitation,
   resetFocusedStepperFlag,
   setStepperFocused,
   resetStepperFocused,
+  resetAllStepperFocused,
 } = visitationSlice.actions;
 export default visitationSlice.reducer;

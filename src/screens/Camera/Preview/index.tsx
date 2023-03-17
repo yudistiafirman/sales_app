@@ -37,6 +37,7 @@ import { ENTRY_TYPE } from '@/models/EnumModel';
 import Pdf from 'react-native-pdf';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import { customLog } from '@/utils/generalFunc';
+import { resetAllStepperFocused } from '@/redux/reducers/VisitationReducer';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -138,6 +139,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           dispatch(
             setImageURLS({ file: localFile, source: CREATE_VISITATION })
           );
+          dispatch(resetAllStepperFocused());
           navigation.goBack();
           navigation.dispatch(
             StackActions.replace(navigateTo, { existingVisitation })

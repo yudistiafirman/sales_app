@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import Modal from 'react-native-modal';
 import { BContainer, BForm, BSpacer } from '@/components';
 import { resScale } from '@/utils';
@@ -17,6 +17,9 @@ import { Input, PIC } from '@/interfaces';
 
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateSelectedCompany } from '@/redux/reducers/SphReducer';
+import { RootState } from '@/redux/store';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type dummyType = {
@@ -71,48 +74,23 @@ export default function ChoosePicModal({
   selectPic = () => {},
 }: ChoosePicModalType) {
   const [isLoading, setIsLoading] = useState(false);
-  const [sphState, stateUpdate] = useContext(SphContext);
+  const [, stateUpdate] = useContext(SphContext);
+  const sphData = useSelector((state: RootState) => state.sph);
+  const dispatch = useDispatch();
 
   const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
     undefined
   );
   function selectedPicData() {
-    if (sphState.selectedCompany?.PIC.length) {
-      const listPic = sphState.selectedCompany?.PIC;
+    if (sphData.selectedCompany?.PIC.length) {
+      const listPic = sphData.selectedCompany?.PIC;
       for (const pic of listPic) {
         if (pic.isSelected) {
-          // stateUpdate('selectedPic')(pic);
           return pic;
         }
       }
     }
   }
-  // useEffect(() => {
-  //   // if (sphState.picList) {
-  //   //   setFlatListData(sphState.picList);
-  //   // }
-  // }, []);
-
-  //   function handleOnScroll(event) {
-  //     setScrollOffSet(event.nativeEvent.contentOffset.y);
-  //   }
-  // useEffect(() => {
-  //   (async () => {
-  //     setIsLoading(true);
-  //     setFlatListData([]);
-  //     const data = await dummyReq();
-  //     //sphState?.selectedPic?.id
-  //     const findPicById = data.find(
-  //       (item: dummyType) => item.id === sphState?.selectedPic?.id
-  //     );
-  //     if (findPicById) {
-  //       setSelectedPic(findPicById);
-  //     }
-  //     setFlatListData(data);
-  //     setIsLoading(false);
-  //   })();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const inputsData: Input[] = useMemo(() => {
     return [
@@ -121,38 +99,29 @@ export default function ChoosePicModal({
         isRequire: true,
         isError: false,
         type: 'PIC',
-        value: sphState.selectedCompany?.PIC
-          ? sphState.selectedCompany.PIC
-          : [],
+        value: sphData.selectedCompany?.PIC ? sphData.selectedCompany.PIC : [],
         hidePicLabel: true,
-        // onChange: () => {
-        //   //   openBottomSheet();
-        //   openAddPic();
-        // },
         onSelect: (index: number) => {
-          // setSelectedPic(flatListData[index]);
-          // stateUpdate('selectedPic')(flatListData[index]);
-          const listPic = sphState.selectedCompany?.PIC
-            ? sphState.selectedCompany.PIC
-            : [];
-          const selectPicData = listPic.map((pic, picIndex) => {
+          const listPic = [];
+          sphData?.selectedCompany?.PIC?.forEach((pic, picIndex) => {
+            let picChanged = { ...pic };
             if (index === picIndex) {
-              pic.isSelected = true;
+              picChanged.isSelected = true;
             } else {
-              pic.isSelected = false;
+              picChanged.isSelected = false;
             }
-            return pic;
+            listPic.push(picChanged);
           });
-
-          stateUpdate('selectedCompany')({
-            ...sphState.selectedCompany,
-            PIC: selectPicData,
-          });
-          // stateUpdate('picList')(selectPicData);
+          dispatch(
+            updateSelectedCompany({
+              ...sphData.selectedCompany,
+              PIC: listPic,
+            })
+          );
         },
       },
     ];
-  }, [sphState.selectedCompany]);
+  }, [sphData.selectedCompany]);
 
   return (
     <Modal
@@ -163,18 +132,11 @@ export default function ChoosePicModal({
         setIsModalVisible((curr) => !curr);
       }}
       style={style.modal}
-      //   scrollOffset={10}
       scrollOffset={scrollOffSet}
       scrollOffsetMax={resScale(350) - resScale(190)}
       propagateSwipe={true}
-      //   swipeDirection={'down'}
-      //   onSwipeComplete={() => {
-      //     setIsModalVisible((curr) => !curr);
-      //   }}
     >
       <View style={style.modalContent}>
-        {/* <Text>testing</Text> */}
-
         <BContainer>
           <View style={style.container}>
             <View>
@@ -190,8 +152,6 @@ export default function ChoosePicModal({
                   />
                 </TouchableOpacity>
               </View>
-              {/* <BSpacer size={'small'} /> */}
-              {/* <ScrollView contentContainerStyle={{ height: 150 }}> */}
               <View style={{ height: resScale(250) }}>
                 <View style={style.tambahPicContainer}>
                   <TouchableOpacity onPress={openAddPic}>
@@ -215,8 +175,6 @@ export default function ChoosePicModal({
                   )}
                 </ScrollView>
               </View>
-
-              {/* </ScrollView> selectedPicData()*/}
               <BButtonPrimary
                 title="Pilih"
                 onPress={() => {

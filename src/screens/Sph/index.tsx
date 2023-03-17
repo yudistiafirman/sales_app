@@ -41,6 +41,9 @@ import { RootState } from '@/redux/store';
 import {
   resetStepperFocused,
   setStepperFocused,
+  updateDistanceFromLegok,
+  updateSelectedCompany,
+  updateSelectedPic,
 } from '@/redux/reducers/SphReducer';
 
 const labels = [
@@ -151,16 +154,16 @@ function SphContent() {
 
   const handleStepperFocus = () => {
     // to continue stepper focus when entering sph page
-    if (!sphData.stepperShouldNotFocused) {
-      if (sphData.stepFourFinished) setCurrentPosition(4);
-      else if (sphData.stepThreeFinished) setCurrentPosition(3);
-      else if (sphData.stepTwoFinished) setCurrentPosition(2);
-      else if (sphData.stepOneFinished) setCurrentPosition(1);
+    if (!sphData.stepperSPHShouldNotFocused) {
+      if (sphData.stepSPHFourFinished) setCurrentPosition(4);
+      else if (sphData.stepSPHThreeFinished) setCurrentPosition(3);
+      else if (sphData.stepSPHTwoFinished) setCurrentPosition(2);
+      else if (sphData.stepSPHOneFinished) setCurrentPosition(1);
     }
 
     // to reset stepper focus when continuing progress data
     if (
-      sphData.stepperShouldNotFocused &&
+      sphData.stepperSPHShouldNotFocused &&
       currentPosition === 0 &&
       !sphData.selectedCompany
     ) {
@@ -170,7 +173,7 @@ function SphContent() {
       !Object.values(sphData.billingAddress).every((val) => !val) &&
       Object.entries(sphData.billingAddress?.addressAutoComplete).length > 1;
     if (
-      sphData.stepperShouldNotFocused &&
+      sphData.stepperSPHShouldNotFocused &&
       currentPosition === 1 &&
       ((!sphData.isBillingAddressSame && !billingAddressFilled) ||
         sphData.distanceFromLegok === null)
@@ -180,14 +183,14 @@ function SphContent() {
     const paymentCondition =
       sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
     if (
-      sphData.stepperShouldNotFocused &&
+      sphData.stepperSPHShouldNotFocused &&
       currentPosition === 2 &&
       (!sphData.paymentType || !paymentCondition)
     ) {
       dispatch(resetStepperFocused(3));
     }
     if (
-      sphData.stepperShouldNotFocused &&
+      sphData.stepperSPHShouldNotFocused &&
       currentPosition === 3 &&
       (!sphData.chosenProducts || !sphData.chosenProducts?.length)
     ) {
@@ -226,7 +229,7 @@ function SphContent() {
         _coordinate.latitude = Number(result.lat);
         _coordinate.lat = Number(result.lat);
       }
-      updateState('distanceFromLegok')(result.distance.value);
+      dispatch(updateDistanceFromLegok(result.distance.value));
       dispatch(updateRegion(_coordinate));
     } catch (error) {
       customLog(JSON.stringify(error), 'onChangeRegionerror');
@@ -250,10 +253,10 @@ function SphContent() {
       const project = response[0];
       const { locationAddress } = project;
       if (project.mainPic) {
-        updateState('selectedPic')(project.mainPic);
+        dispatch(updateSelectedPic(project.mainPic));
       }
-      // if ()
-      updateState('selectedCompany')(project);
+
+      dispatch(updateSelectedCompany(project));
       customLog(locationAddress, 'locationAddress146');
 
       if (locationAddress) {

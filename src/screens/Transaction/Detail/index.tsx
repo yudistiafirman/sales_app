@@ -34,11 +34,7 @@ function ListProduct(
   quantity: number | undefined
 ) {
   let displayName = '';
-  if (item.display_name) {
-    displayName = `${
-      item?.category?.parent ? item?.category?.parent?.name + ' ' : ''
-    }${item?.display_name} ${item?.category ? item?.category?.name : ''}`;
-  } else if (item.ReqProduct) {
+  if (item.ReqProduct) {
     displayName = `${
       item?.ReqProduct?.product?.category?.parent
         ? item?.ReqProduct?.product?.category?.parent?.name + ' '
@@ -167,16 +163,12 @@ const TransactionDetail = () => {
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView>
-        {(data?.address ||
-          data?.project?.LocationAddress ||
-          data?.project?.ShippingAddress) && (
+        {(data?.project?.LocationAddress || data?.project?.ShippingAddress) && (
           <BCompanyMapCard
             onPressLocation={() =>
               selectedType === 'DO'
                 ? onPressLocation(
-                    data?.project?.LocationAddress
-                      ? data?.project?.LocationAddress.lon
-                      : data?.project?.ShippingAddress
+                    data?.project?.ShippingAddress
                       ? data?.project?.ShippingAddress.lat
                       : null,
                     data?.project?.ShippingAddress
@@ -184,47 +176,32 @@ const TransactionDetail = () => {
                       : null
                   )
                 : onPressLocation(
-                    data?.address
-                      ? data?.address.lat
-                      : data?.project?.LocationAddress
+                    data?.project?.LocationAddress
                       ? data?.project?.LocationAddress.lat
                       : null,
-                    data?.address
-                      ? data?.address.lon
-                      : data?.project?.LocationAddress
+                    data?.project?.LocationAddress
                       ? data?.project?.LocationAddress.lon
                       : null
                   )
             }
             disabled={
               selectedType === 'DO'
-                ? data?.project?.LocationAddress?.lat === null ||
-                  data?.project?.LocationAddress?.lon === null ||
-                  data?.project?.ShippingAddress?.lat === null ||
+                ? data?.project?.ShippingAddress?.lat === null ||
                   data?.project?.ShippingAddress?.lon === null
-                : data?.address?.lat === null ||
-                  data?.address?.lon === null ||
-                  data?.project?.LocationAddress?.lat === null ||
+                : data?.project?.LocationAddress?.lat === null ||
                   data?.project?.LocationAddress?.lon === null
             }
             companyName={
-              data?.companyName
-                ? data?.companyName
-                : data?.project?.Company?.displayName
+              data?.project?.Company?.displayName
                 ? data?.project?.Company.displayName
                 : '-'
             }
             location={
               selectedType === 'DO'
-                ? data?.project?.LocationAddress &&
-                  data?.project?.LocationAddress.line1
-                  ? data?.project?.LocationAddress.line1
-                  : data?.project?.ShippingAddress &&
-                    data?.project?.ShippingAddress.line1
+                ? data?.project?.ShippingAddress &&
+                  data?.project?.ShippingAddress.line1
                   ? data?.project?.ShippingAddress.line1
                   : '-'
-                : data?.address && data?.address.line1
-                ? data?.address.line1
                 : data?.project?.LocationAddress &&
                   data?.project?.LocationAddress.line1
                 ? data?.project?.LocationAddress.line1

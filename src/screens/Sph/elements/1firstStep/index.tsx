@@ -21,7 +21,7 @@ export default function FirstStep() {
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = useState('');
   const [index, setIndex] = useState(0);
-  const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
+  const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const {
     projects,
     isProjectLoading,
@@ -39,24 +39,12 @@ export default function FirstStep() {
 
   const routes: { title: string; totalItems: number }[] = useMemo(() => {
     return [
-      // {
-      //   tabTitle: 'Semua',
-      //   totalItems: 8,
-      // },
       {
         key: 'first',
         title: 'Proyek',
         totalItems: projects.length,
         chipPosition: 'right',
       },
-      // {
-      //   tabTitle: 'Proyek',
-      //   totalItems: 3,
-      // },
-      // {
-      //   tabTitle: 'PIC',
-      //   totalItems: 0,
-      // },
     ];
   }, [projects]);
 
@@ -104,8 +92,6 @@ export default function FirstStep() {
           onPress={() => {
             dispatch(updateSelectedCompany(null));
             dispatch(updateSelectedPic(null));
-            // stateUpdate('selectedPic')(null);
-            // stateUpdate('selectedCompany')(null);
           }}
           setCurrentPosition={(num) => {
             dispatch(setStepperFocused(1));
@@ -116,19 +102,3 @@ export default function FirstStep() {
     </BContainer>
   );
 }
-
-// const style = StyleSheet.create({
-//   sectionTitle: {
-//     borderBottomColor: colors.border.tab,
-//     borderBottomWidth: 2,
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     paddingBottom: layout.pad.md,
-//   },
-//   title: {
-//     fontFamily: fonts.family.montserrat[600],
-//     fontWeight: '600',
-//     color: colors.black,
-//     fontSize: font.size.md,
-//   },
-// });

@@ -232,15 +232,15 @@ const CreateVisitation = () => {
 
   const handleStepperFocus = () => {
     // to continue stepper focus when entering visitation page
-    if (!visitationData.stepperShouldNotFocused) {
-      if (visitationData.stepThreeFinished) dispatch(updateCurrentStep(3));
-      else if (visitationData.stepTwoFinished) dispatch(updateCurrentStep(2));
-      else if (visitationData.stepOneFinished) dispatch(updateCurrentStep(1));
+    if (!visitationData.stepperVisitationShouldNotFocused) {
+      if (visitationData.stepThreeVisitationFinished) dispatch(updateCurrentStep(3));
+      else if (visitationData.stepTwoVisitationFinished) dispatch(updateCurrentStep(2));
+      else if (visitationData.stepOneVisitationFinished) dispatch(updateCurrentStep(1));
     }
 
     // to reset stepper focus when continuing progress data
     if (
-      visitationData.stepperShouldNotFocused &&
+      visitationData.stepperVisitationShouldNotFocused &&
       visitationData.step === 0 &&
       (!visitationData.createdLocation?.formattedAddress ||
         !visitationData.locationAddress?.formattedAddress)
@@ -257,7 +257,7 @@ const CreateVisitation = () => {
         ? !!visitationData.companyName
         : true;
     if (
-      visitationData.stepperShouldNotFocused &&
+      visitationData.stepperVisitationShouldNotFocused &&
       visitationData.step === 1 &&
       (visitationData.customerType ||
         customerTypeCond ||
@@ -267,7 +267,7 @@ const CreateVisitation = () => {
       dispatch(resetStepperFocused(2));
     }
     if (
-      visitationData.stepperShouldNotFocused &&
+      visitationData.stepperVisitationShouldNotFocused &&
       visitationData.step === 2 &&
       (visitationData.stageProject ||
         visitationData.products?.length <= 0 ||

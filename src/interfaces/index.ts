@@ -327,11 +327,11 @@ interface SphStateInterface {
   chosenProducts: chosenProductType[];
   useHighway: boolean;
   uploadedAndMappedRequiredDocs: requiredDocType[];
-  stepOneFinished: boolean;
-  stepTwoFinished: boolean;
-  stepThreeFinished: boolean;
-  stepFourFinished: boolean;
-  stepperShouldNotFocused: boolean;
+  stepSPHOneFinished: boolean;
+  stepSPHTwoFinished: boolean;
+  stepSPHThreeFinished: boolean;
+  stepSPHFourFinished: boolean;
+  stepperSPHShouldNotFocused: boolean;
 }
 
 type SphContextInterface = [

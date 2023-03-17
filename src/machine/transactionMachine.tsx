@@ -1,5 +1,5 @@
 import {
-  getAllFinishedDeliveryOrders,
+  getAllDeliveryOrders,
   getAllDeposits,
   getAllPurchaseOrders,
   getAllSchedules,
@@ -290,7 +290,8 @@ export const transactionMachine =
               );
               response = response.data;
             } else if (_context.selectedType === 'DO') {
-              response = await getAllFinishedDeliveryOrders(
+              response = await getAllDeliveryOrders(
+                'FINISHED',
                 _context.page.toString(),
                 _context.size.toString()
               );

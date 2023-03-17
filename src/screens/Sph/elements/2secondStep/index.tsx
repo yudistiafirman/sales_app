@@ -84,30 +84,9 @@ export default function SecondStep() {
     selectedCompany,
   } = useSelector((state: RootState) => state.sph);
 
-  // const getSuggestion = useCallback(async (search: string) => {
-  //   try {
-  //     setIsSuggestionLoading(true);
-  //     const response = await dispatch(
-  //       fetchAddressSuggestion({ search, page: 1 })
-  //     ).unwrap();
-  //     const nameToTile = response.data.map((data) => {
-  //       return {
-  //         id: data.id,
-  //         title: data.name,
-  //       };
-  //     });
-  //     setAddressSuggestions(nameToTile);
-  //     setIsSuggestionLoading(false);
-  //   } catch (error) {
-  //     setIsSuggestionLoading(false);
-  //     setAddressSuggestions([]);
-  //     customLog(error, 'errorfetchAddressSuggestion');
-  //   }
-  // }, []);
-
   const [isMapLoading, setIsMapLoading] = useState(false);
 
-  const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
+  const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const onChangeRegion = useCallback(
     async (
       coordinate: Region,
@@ -145,14 +124,9 @@ export default function SecondStep() {
         }
 
         if (isBiilingAddress) {
-          // stateUpdate('billingAddress')({
-          //   ...sphState?.billingAddress,
-          //   addressAutoComplete: _coordinate,
-          // });
           dispatch(updateBillingAddressAutoComplete(_coordinate));
         } else {
           if (result.distance) {
-            // stateUpdate('distanceFromLegok')(result.distance.value);
             dispatch(updateDistanceFromLegok(result.distance.value));
           }
           dispatch(updateRegion(_coordinate));
@@ -181,9 +155,6 @@ export default function SecondStep() {
           type: 'switch',
           onChange: (val: boolean) => {
             dispatch(updateIsBillingAddressSame(val));
-            // if (stateUpdate) {
-            //   stateUpdate('isBillingAddressSame')(val);
-            // }
           },
           value: isBillingAddressSame,
         },
@@ -198,9 +169,6 @@ export default function SecondStep() {
         type: 'switch',
         onChange: (val: boolean) => {
           dispatch(updateIsBillingAddressSame(val));
-          // if (stateUpdate) {
-          //   stateUpdate('isBillingAddressSame')(val);
-          // }
         },
         value: isBillingAddressSame,
       },
@@ -212,12 +180,6 @@ export default function SecondStep() {
         onChange: (event: any) => {
           const text: string = event.nativeEvent.text;
           dispatch(updateBillingAddressOptions({ value: text, key: 'name' }));
-          // if (stateUpdate && sphState) {
-          //   stateUpdate('billingAddress')({
-          //     ...sphState?.billingAddress,
-          //     name: event.nativeEvent.text,
-          //   });
-          // }
         },
         value: billingAddress?.name,
       },
@@ -229,12 +191,6 @@ export default function SecondStep() {
         onChange: (event: any) => {
           const text: string = event.nativeEvent.text;
           dispatch(updateBillingAddressOptions({ value: text, key: 'phone' }));
-          // if (stateUpdate && sphState) {
-          //   stateUpdate('billingAddress')({
-          //     ...sphState?.billingAddress,
-          //     phone: event.nativeEvent.text,
-          //   });
-          // }
         },
         value: billingAddress.phone,
         keyboardType: 'numeric',
@@ -248,9 +204,6 @@ export default function SecondStep() {
           ? !billingAddress?.addressAutoComplete?.formattedAddress
           : true,
         type: 'area',
-        // onChange: (text: string) => {
-        //   getSuggestion(text);
-        // },
         value: billingAddress?.addressAutoComplete
           ? billingAddress?.addressAutoComplete?.formattedAddress
           : '',
@@ -273,12 +226,6 @@ export default function SecondStep() {
           dispatch(
             updateBillingAddressOptions({ value: text, key: 'fullAddress' })
           );
-          // if (stateUpdate && sphState) {
-          //   stateUpdate('billingAddress')({
-          //     ...sphState?.billingAddress,
-          //     fullAddress: text,
-          //   });
-          // }
         },
         value: billingAddress?.fullAddress,
       },
@@ -328,7 +275,6 @@ export default function SecondStep() {
   }, [onChangeRegion]);
 
   useEffect(() => {
-    // stateUpdate('projectAddress')(region);
     dispatch(updateProjectAddress(region));
   }, [region]);
 
@@ -363,14 +309,12 @@ export default function SecondStep() {
 
   return (
     <View style={style.container}>
-      {/* <View style={style.blocationcontainer}> */}
       <BLocation
         region={region}
         onRegionChangeComplete={onChangeRegion}
         CustomMarker={<BMarker />}
         mapStyle={style.map}
       />
-      {/* </View> */}
       <View style={{ flex: 0.5 }} />
       <BBottomSheetForm
         enableClose={false}
@@ -433,7 +377,6 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     height: '100%',
     flex: 0.1,
-    // backgroundColor: 'red',
   },
   detailCoordContainer: {
     flex: 1,
@@ -445,7 +388,6 @@ const style = StyleSheet.create({
   detailContainer: {
     flex: 0.75,
     justifyContent: 'center',
-    // backgroundColor: 'blue',
   },
   leftIconStyle: {
     fontFamily: fonts.family.montserrat['400'],
