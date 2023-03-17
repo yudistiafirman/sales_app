@@ -22,7 +22,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
-import { updateStepTwo } from '@/redux/reducers/VisitationReducer';
+import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
 
 const company = require('@/assets/icon/Visitation/company.png');
 const profile = require('@/assets/icon/Visitation/profile.png');
@@ -33,44 +33,39 @@ interface IProps {
 
 const SecondStep = ({ openBottomSheet }: IProps) => {
   const dispatch = useDispatch();
+  const route = useRoute<RootStackScreenProps>();
+  const existingVisitation = route?.params?.existingVisitation;
+  const visitationData = useSelector((state: RootState) => state.visitation);
   const [selectedCompany, setSelectedCompany] = useState<
     | {
         id: number;
         title: string;
       }
     | {}
-  >({});
-  const route = useRoute<RootStackScreenProps>();
-  const existingVisitation = route?.params?.existingVisitation;
-  const visitationData = useSelector((state: RootState) => state.visitation);
+  >({ id: 1, title: visitationData.companyName });
 
-  const onChange = (key: keyof CreateVisitationSecondStep) => (e: any) => {
-    let stepTwo;
-    stepTwo = {
-      ...visitationData,
-      [key]: e,
-    };
-    dispatch(updateStepTwo(stepTwo));
+  const onChange = (key: any) => (e: any) => {
+    dispatch(updateDataVisitation({ type: key, value: e }));
   };
 
   useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step2');
 
-    if (visitationData?.stepTwo?.companyName) {
-      let stepTwo;
-      stepTwo = {
-        ...visitationData,
-        options: {
-          items: [{ id: 1, title: visitationData?.stepTwo?.companyName }],
-        },
-      };
-      dispatch(updateStepTwo(stepTwo));
+    if (visitationData.companyName) {
+      dispatch(
+        updateDataVisitation({
+          type: 'options',
+          value: {
+            items: [{ id: 1, title: visitationData.companyName }],
+          },
+        })
+      );
       setSelectedCompany({
         id: 1,
-        title: visitationData?.stepTwo?.companyName,
+        title: visitationData.companyName,
       });
     }
-  }, []);
+  }, [visitationData.companyName]);
 
   const fetchDebounce = useMemo(() => {
     return debounce((searchQuery: string) => {
@@ -85,25 +80,44 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
               title: project.display_name,
             };
           });
-          let stepTwo;
-          stepTwo = {
-            ...visitationData,
-            options: {
-              items: items,
-            },
-          };
-          dispatch(updateStepTwo(stepTwo));
+          dispatch(
+            updateDataVisitation({
+              type: 'options',
+              value: {
+                items: items,
+              },
+            })
+          );
+
+          if (items.length <= 0) {
+            dispatch(
+              updateDataVisitation({
+                type: 'companyName',
+                value: searchQuery,
+              })
+            );
+            setSelectedCompany({
+              id: 1,
+              title: searchQuery,
+            });
+          }
+        })
+        .catch((err) => {
+          dispatch(
+            updateDataVisitation({
+              type: 'companyName',
+              value: searchQuery,
+            })
+          );
+          setSelectedCompany({
+            id: 1,
+            title: searchQuery,
+          });
         });
     }, 500);
-  }, []);
+  }, [selectedCompany]);
 
   const onChangeText = (searchQuery: string): void => {
-    let stepTwo;
-    stepTwo = {
-      ...visitationData,
-      companyName: searchQuery,
-    };
-    dispatch(updateStepTwo(stepTwo));
     fetchDebounce(searchQuery);
     //fetchDebounce(searchQuery)
     // setSelectedCompany({ id: 1, title: searchQuery });
@@ -123,7 +137,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         isError: false,
         type: 'cardOption',
         onChange: onChange('customerType'),
-        value: visitationData?.customerType,
+        value: visitationData.customerType,
         options: [
           {
             icon: company,
@@ -145,7 +159,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         isInputDisable: !!existingVisitation,
       },
     ];
-    if (visitationData?.customerType?.length > 0) {
+    if (visitationData.customerType?.length > 0) {
       const companyNameInput: Input = {
         label: 'Nama Perusahaan',
         isRequire: true,
@@ -153,16 +167,16 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         type: 'autocomplete',
         onChange: onChangeText,
         value: selectedCompany,
-        items: visitationData?.options?.items,
-        loading: visitationData?.options?.loading,
+        items: visitationData.options?.items,
+        loading: visitationData.options?.loading,
         onSelect: (item: { id: string; title: string }): void => {
           if (item) {
-            let stepTwo;
-            stepTwo = {
-              ...visitationData,
-              companyName: item.title,
-            };
-            dispatch(updateStepTwo(stepTwo));
+            dispatch(
+              updateDataVisitation({
+                type: 'companyName',
+                value: item.title,
+              })
+            );
             setSelectedCompany(item);
           }
         },
@@ -181,7 +195,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           onChange: (e: any) => {
             onChange('projectName')(e.nativeEvent.text);
           },
-          value: visitationData?.projectName,
+          value: visitationData.projectName,
           placeholder: 'Masukkan Nama Proyek',
           isInputDisable: !!existingVisitation,
         },
@@ -190,35 +204,33 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           isRequire: true,
           isError: false,
           type: 'PIC',
-          value: visitationData?.pics,
+          value: visitationData.pics,
           onChange: () => {
             openBottomSheet();
           },
           onSelect: (index: number) => {
-            const newPicList = visitationData?.stepTwo?.pics.map(
-              (el, _index) => {
-                return {
-                  ...el,
-                  isSelected: _index === index,
-                };
-              }
+            const newPicList = visitationData.pics.map((el, _index) => {
+              return {
+                ...el,
+                isSelected: _index === index,
+              };
+            });
+            dispatch(
+              updateDataVisitation({
+                type: 'pics',
+                value: newPicList,
+              })
             );
-            let stepTwo;
-            stepTwo = {
-              ...visitationData,
-              pics: newPicList,
-            };
-            dispatch(updateStepTwo(stepTwo));
           },
         },
       ];
-      if (visitationData?.customerType === 'COMPANY') {
+      if (visitationData.customerType === 'COMPANY') {
         aditionalInput.unshift(companyNameInput);
       }
       baseInput.push(...aditionalInput);
     }
     return baseInput;
-  }, [visitationData]);
+  }, [visitationData, selectedCompany]);
 
   const [isSearch, setSearch] = React.useState<boolean>(false);
 

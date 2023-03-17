@@ -89,7 +89,7 @@ function renderSeparator() {
 export default function FourthStep() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
+  const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] =
     useState<ProductDataInterface | null>(null);
@@ -106,8 +106,7 @@ export default function FourthStep() {
   const deleteSelectedProduct = useCallback((index: number) => {
     setChosenProducts((curr) => {
       let currentProducts: any[] = [];
-      if (curr && curr.length > 0)
-        currentProducts = [...curr]
+      if (curr && curr.length > 0) currentProducts = [...curr];
       currentProducts.splice(index, 1);
       return [...currentProducts];
     });
@@ -126,10 +125,7 @@ export default function FourthStep() {
   }, []);
 
   useEffect(() => {
-    if (stateUpdate) {
-      // stateUpdate('chosenProducts')(chosenProducts);
-      dispatch(updateChosenProducts(chosenProducts));
-    }
+    dispatch(updateChosenProducts(chosenProducts));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chosenProducts]);
 

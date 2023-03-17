@@ -65,9 +65,11 @@ import { RootState } from '@/redux/store';
 import { HOME_MENU } from '../Const';
 import {
   resetFocusedStepperFlag,
-  resetState,
+  resetSPHState,
 } from '@/redux/reducers/SphReducer';
 import { bStorage } from '@/actions';
+import { resetRegion } from '@/redux/reducers/locationReducer';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 const { RNCustomConfig } = NativeModules;
 const versionName = RNCustomConfig?.version_name;
 const { height } = Dimensions.get('window');
@@ -108,6 +110,7 @@ const Beranda = () => {
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
   const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
+  const cameraData = useSelector((state: RootState) => state.camera);
 
   useHeaderShow({
     isHeaderShown: !isModalVisible,
@@ -483,12 +486,21 @@ const Beranda = () => {
   };
 
   const kunjunganAction = () => {
-    // setIsLoading((curr) => !curr);
-    navigation.navigate(CAMERA, {
-      photoTitle: 'Kunjungan',
-      navigateTo: CREATE_VISITATION,
-      closeButton: true,
-    });
+    if (
+      cameraData.visitationPhotoURLs &&
+      cameraData.visitationPhotoURLs.length > 0
+    ) {
+      dispatch(resetFocusedStepperFlag());
+      navigation.navigate(CREATE_VISITATION, {});
+    } else {
+      dispatch(resetImageURLS({ source: CREATE_VISITATION }));
+      dispatch(resetRegion());
+      navigation.navigate(CAMERA, {
+        photoTitle: 'Kunjungan',
+        navigateTo: CREATE_VISITATION,
+        closeButton: true,
+      });
+    }
   };
 
   async function visitationOnPress(
@@ -644,7 +656,7 @@ const Beranda = () => {
           setIsPopupVisible={() => {
             if (feature === 'SPH') {
               setPopupSPHVisible(false);
-              dispatch(resetState());
+              dispatch(resetSPHState());
               navigation.navigate(SPH, {});
             } else {
               bStorage.deleteItem(PO);

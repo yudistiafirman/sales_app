@@ -19,8 +19,8 @@ import debounce from 'lodash.debounce';
 import { PIC } from '@/interfaces';
 import { retrying } from '@/redux/reducers/commonReducer';
 import {
+  updateDataVisitation,
   updateShouldScrollView,
-  updateStepTwo,
 } from '@/redux/reducers/VisitationReducer';
 
 interface IProps {
@@ -49,7 +49,7 @@ const SearchFlow = ({
 }: IProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [index,setIndex]=React.useState(0)
+  const [index, setIndex] = React.useState(0);
   const {
     projects,
     isProjectLoading,
@@ -73,7 +73,7 @@ const SearchFlow = ({
     if (!isSearch && text) {
       onSearch(true);
     }
-    if (visitationData?.shouldScrollView) {
+    if (visitationData.shouldScrollView) {
       dispatch(updateShouldScrollView(false));
     }
     setSearchQuery(text);
@@ -87,42 +87,48 @@ const SearchFlow = ({
   };
 
   const onSelectProject = (item: any) => {
-    let stepTwo;
-
     if (item?.Company?.id) {
       const company = {
         id: item?.Company?.id,
         title: item?.Company?.name,
       };
-      stepTwo = {
-        ...visitationData,
-        companyName: company.title,
-      };
       setSelectedCompany(company);
+      dispatch(
+        updateDataVisitation({
+          type: 'companyName',
+          value: company.title,
+        })
+      );
 
-      if (visitationData?.stepTwo?.options?.items) {
-        stepTwo = {
-          ...visitationData,
-          options: {
-            ...visitationData?.stepTwo?.options,
-            items: [...visitationData?.stepTwo?.options?.items, company],
-          },
-        };
+      if (visitationData.options?.items) {
+        dispatch(
+          updateDataVisitation({
+            type: 'options',
+            value: {
+              ...visitationData.options,
+              items: [...visitationData.options?.items, company],
+            },
+          })
+        );
       } else {
-        stepTwo = {
-          ...visitationData,
-          options: {
-            ...visitationData?.stepTwo?.options,
-            items: [company],
-          },
-        };
+        dispatch(
+          updateDataVisitation({
+            type: 'options',
+            value: {
+              ...visitationData.options,
+              items: [company],
+            },
+          })
+        );
       }
     }
     const customerType = item?.Company?.id ? 'COMPANY' : 'INDIVIDU';
-    stepTwo = {
-      ...visitationData,
-      customerType: customerType,
-    };
+    dispatch(
+      updateDataVisitation({
+        type: 'customerType',
+        value: customerType,
+      })
+    );
 
     if (item?.PIC) {
       const picList = item?.PIC?.map((pic: PIC) => {
@@ -134,55 +140,67 @@ const SearchFlow = ({
       if (picList.length === 1) {
         picList[0].isSelected = true;
       }
-      stepTwo = {
-        ...visitationData,
-        pics: picList,
-      };
+      dispatch(
+        updateDataVisitation({
+          type: 'pics',
+          value: picList,
+        })
+      );
     }
-    stepTwo = {
-      ...visitationData,
-      projectName: item?.name,
-      projectId: item?.id,
-    };
+    dispatch(
+      updateDataVisitation({
+        type: 'projectName',
+        value: item?.name,
+      })
+    );
+    dispatch(
+      updateDataVisitation({
+        type: 'projectId',
+        value: item?.id,
+      })
+    );
     if (item?.Visitation) {
       let order = +item?.Visitation?.order;
       if (!item?.Visitation?.finish_date) {
         order -= 1;
       }
-      stepTwo = {
-        ...visitationData,
-        visitationId: item?.Visitation?.id,
-        existingOrderNum: order,
-      };
+      dispatch(
+        updateDataVisitation({
+          type: 'visitationId',
+          value: item?.Visitation?.id,
+        })
+      );
+      dispatch(
+        updateDataVisitation({
+          type: 'existingOrderNum',
+          value: order,
+        })
+      );
     }
-    dispatch(updateStepTwo(stepTwo));
     onClear();
     // updateValueOnstep('stepTwo', 'pics', item?.pic);
   };
 
-  const routes: { title: string; totalItems: number }[] =
-    React.useMemo(() => {
-      return [
-        {
-          key:'first',
-          title: 'Proyek',
-          totalItems: projects.length,
-          chipPosition:'right'
-        },
-      ];
-    }, [projects]);
+  const routes: { title: string; totalItems: number }[] = React.useMemo(() => {
+    return [
+      {
+        key: 'first',
+        title: 'Proyek',
+        totalItems: projects.length,
+        chipPosition: 'right',
+      },
+    ];
+  }, [projects]);
 
-
-    const onRetryGettingProject = () => {
-      dispatch(retrying());
-      onChangeWithDebounce(searchQuery);
-    };
- 
+  const onRetryGettingProject = () => {
+    dispatch(retrying());
+    onChangeWithDebounce(searchQuery);
+  };
 
   return (
     <React.Fragment>
       <BTextLocation
-        location={visitationData?.stepOne?.locationAddress?.formattedAddress!}
+        location={visitationData.locationAddress?.formattedAddress!}
         numberOfLines={1}
       />
       <BSpacer size="extraSmall" />
@@ -204,23 +222,27 @@ const SearchFlow = ({
             errorMessage={errorGettingProjectMessage}
             onRetry={onRetryGettingProject}
             emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
-            />
-        </View>
-      ): 
-      <TouchableOpacity onPress={()=> onSearch(true)} disabled={searchingDisable}>
-      <BSearchBar
-        disabled
-        placeholder="Cari pelanggan"
-        activeOutlineColor="gray"
-        left={
-          <TextInput.Icon
-            // onPress={onSearch}
-            forceTextInputFocus={false}
-            icon="magnify"
           />
-        }
-      />
-      </TouchableOpacity>}
+        </View>
+      ) : (
+        <TouchableOpacity
+          onPress={() => onSearch(true)}
+          disabled={searchingDisable}
+        >
+          <BSearchBar
+            disabled
+            placeholder="Cari pelanggan"
+            activeOutlineColor="gray"
+            left={
+              <TextInput.Icon
+                // onPress={onSearch}
+                forceTextInputFocus={false}
+                icon="magnify"
+              />
+            }
+          />
+        </TouchableOpacity>
+      )}
     </React.Fragment>
   );
 };

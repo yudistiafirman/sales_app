@@ -32,11 +32,11 @@ const initialState: SphStateInterface = {
   chosenProducts: [],
   useHighway: false,
   uploadedAndMappedRequiredDocs: [],
-  stepOneFinished: false,
-  stepTwoFinished: false,
-  stepThreeFinished: false,
-  stepFourFinished: false,
-  stepperShouldNotFocused: false,
+  stepSPHOneFinished: false,
+  stepSPHTwoFinished: false,
+  stepSPHThreeFinished: false,
+  stepSPHFourFinished: false,
+  stepperSPHShouldNotFocused: false,
 };
 
 export const sphSlice = createSlice({
@@ -44,42 +44,42 @@ export const sphSlice = createSlice({
   initialState,
   reducers: {
     resetFocusedStepperFlag: (state) => {
-      state.stepperShouldNotFocused = false;
+      state.stepperSPHShouldNotFocused = false;
     },
-    resetState: () => {
+    resetSPHState: () => {
       return initialState;
     },
     setStepperFocused: (state, { payload }) => {
-      state.stepperShouldNotFocused = true;
+      state.stepperSPHShouldNotFocused = true;
       switch (payload) {
         case 1:
-          state.stepOneFinished = true;
+          state.stepSPHOneFinished = true;
           break;
         case 2:
-          state.stepTwoFinished = true;
+          state.stepSPHTwoFinished = true;
           break;
         case 3:
-          state.stepThreeFinished = true;
+          state.stepSPHThreeFinished = true;
           break;
         case 4:
-          state.stepFourFinished = true;
+          state.stepSPHFourFinished = true;
           break;
       }
     },
     resetStepperFocused: (state, { payload }) => {
-      state.stepperShouldNotFocused = true;
+      state.stepperSPHShouldNotFocused = true;
       switch (payload) {
         case 1:
-          state.stepOneFinished = false;
+          state.stepSPHOneFinished = false;
           break;
         case 2:
-          state.stepTwoFinished = false;
+          state.stepSPHTwoFinished = false;
           break;
         case 3:
-          state.stepThreeFinished = false;
+          state.stepSPHThreeFinished = false;
           break;
         case 4:
-          state.stepFourFinished = false;
+          state.stepSPHFourFinished = false;
           break;
       }
     },
@@ -173,7 +173,7 @@ export const {
   updateChosenProducts,
   updateUseHighway,
   updateUploadedAndMappedRequiredDocs,
-  resetState,
+  resetSPHState,
   setStepperFocused,
   resetStepperFocused,
   resetFocusedStepperFlag,

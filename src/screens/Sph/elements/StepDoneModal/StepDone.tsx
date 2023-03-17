@@ -31,7 +31,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
-import { resetState } from '@/redux/reducers/SphReducer';
+import { resetSPHState } from '@/redux/reducers/SphReducer';
 
 type StepDoneType = {
   isModalVisible: boolean;
@@ -171,7 +171,7 @@ export default function StepDone({
             onPress={() => {
               navigation.goBack();
               setIsModalVisible((curr) => !curr);
-              dispatch(resetState());
+              dispatch(resetSPHState());
             }}
           >
             <MaterialCommunityIcons
