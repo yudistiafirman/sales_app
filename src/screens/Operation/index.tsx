@@ -10,6 +10,7 @@ import { CAMERA, CREATE_DO, OPERATION } from '@/navigation/ScreenNames';
 import { useMachine } from '@xstate/react';
 import displayOperationListMachine from '@/machine/displayOperationListMachine';
 import { ENTRY_TYPE } from '@/models/EnumModel';
+import { layout } from '@/constants';
 
 const Operation = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,14 +26,20 @@ const Operation = () => {
 
 
   const onPressItem = (item) => {
-    if (userData?.type === ENTRY_TYPE.OPSMANAGER) {
-      navigation.navigate(CREATE_DO, { id: item });
-    } else {
-      navigation.navigate(CAMERA, {
-        photoTitle: 'DO',
-        navigateTo: userData?.type,
-      });
+    if (userData?.type) {
+      if (userData.type === ENTRY_TYPE.OPSMANAGER) {
+        navigation.navigate(CREATE_DO, { id: item });
+      } else {
+        navigation.navigate(CAMERA, {
+          photoTitle: 'DO',
+          navigateTo: userData.type,
+        });
+      }
     }
+  }
+
+  const onLocationPress = (locationId: string) => {
+    console.log('ini location id', locationId)
   }
 
   return (
@@ -45,7 +52,9 @@ const Operation = () => {
         refreshing={isRefreshing}
         onEndReached={() => send('onEndReached')}
         onPressList={(item) => onPressItem(item)}
-
+        onLocationPress={(locationId: string) => onLocationPress(locationId)}
+        onRefresh={() => send('onRefreshList')}
+        onRetry={() => send('retryGettingList')}
       />
     </SafeAreaView>
   );
@@ -54,6 +63,8 @@ const Operation = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: layout.pad.lg,
+    paddingBottom: layout.pad.lg
   },
 });
 export default Operation;

@@ -1,4 +1,4 @@
-import { getAllVisitationOrders } from "@/actions/OrderActions";
+import { getAllDeliveryOrders, getAllVisitationOrders } from "@/actions/OrderActions";
 import { assign, createMachine } from "xstate";
 
 const displayOperationListMachine = createMachine({
@@ -20,7 +20,7 @@ const displayOperationListMachine = createMachine({
             totalPage: number
         },
         services: {} as {
-            fetchOperationListData: { data: { totalPage: number; data: any[]; message: string | unknown } }
+            fetchOperationListData: { data: { data: { totalPages: number; data: any[]; message: string | unknown } } }
         },
         events: {} as
             | { type: 'retryGettingList' }
@@ -85,7 +85,7 @@ const displayOperationListMachine = createMachine({
     services: {
         fetchOperationListData: async (context, event) => {
             try {
-                const response = await getAllVisitationOrders(context.page.toString(), context.size.toString())
+                const response = await getAllDeliveryOrders('SUBMITTED', context.size.toString(), context.page.toString())
                 return response.data
             } catch (error) {
                 throw new Error(error)
@@ -94,9 +94,9 @@ const displayOperationListMachine = createMachine({
     },
     actions: {
         assignListData: assign((context, event) => {
-            const listData = [...context.operationListData, ...event.data.data]
+            const listData = [...context.operationListData, ...event.data.data.data]
             return {
-                totalPage: event.data.totalPage,
+                totalPage: event.data.data.totalPages,
                 operationListData: listData,
                 isLoading: false,
                 isLoadMore: false,

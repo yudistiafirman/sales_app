@@ -36,6 +36,7 @@ interface OperationListProps {
   errorMessage?: any;
   isError?: boolean;
   onRetry?: () => void;
+  onLocationPress?: (id: string) => void
 }
 
 
@@ -50,7 +51,8 @@ export default function OperationList({
   onPressList,
   errorMessage,
   isError,
-  onRetry
+  onRetry,
+  onLocationPress
 }: OperationListProps) {
 
   const separator = useCallback(() => <BSpacer size={'small'} />, []);
@@ -59,12 +61,11 @@ export default function OperationList({
     return (
       <BVisitationCard
         onPress={() => onPressList(item)}
-        onLocationPress={() => console.log('hai')}
+        onLocationPress={item.project.Address.id && onLocationPress ? () => onLocationPress(item.project.Address.id) : null}
         item={{
           name: item.number,
-          picOrCompanyName: item.projectName,
-          location: item.addressID,
-          unit: '7m3',
+          picOrCompanyName: item.project.projectName,
+          unit: `${item.Schedule.SaleOrder.PoProduct.requestedQuantity} m³'`,
           pilStatus: item.status,
         }}
       />
