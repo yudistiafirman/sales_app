@@ -4,7 +4,6 @@ import {
   searchLocationById,
 } from '@/actions/CommonActions';
 import { customLog } from '@/utils/generalFunc';
-import { hasLocationPermission } from '@/utils/permissions';
 import Geolocation from 'react-native-geolocation-service';
 import { assign, createMachine, send } from 'xstate';
 

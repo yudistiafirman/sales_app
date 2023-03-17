@@ -7,11 +7,6 @@ import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSh
 import { Input, PIC } from '@/interfaces';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import { SphContext } from '../../context/SphContext';
-
-// import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-// import LinearGradient from 'react-native-linear-gradient';
-// const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
-
 import Entypo from 'react-native-vector-icons/Entypo';
 import { customLog } from '@/utils/generalFunc';
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,7 +50,7 @@ export default function SelectedPic({
 }: SelectedPicType) {
   const dispatch = useDispatch();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const [sphState, stateUpdate] = useContext(SphContext);
+  const [, stateUpdate] = useContext(SphContext);
   const { selectedCompany, selectedPic } = useSelector(
     (state: RootState) => state.sph
   );
@@ -72,27 +67,18 @@ export default function SelectedPic({
           openBottomSheet();
         },
         onSelect: (index: number) => {
-          // if (stateUpdate) {
-          // stateUpdate('selectedPic')(flatListData[index]);
-          // const selectPic = (sphState.picList[index].isSelected = true);
-          const listPic = selectedCompany?.PIC ? selectedCompany.PIC : [];
-          const selectPic = listPic.map((pic, picIndex) => {
+          const listPic = [];
+          selectedCompany?.PIC?.forEach((pic, picIndex) => {
+            let picChanged = { ...pic };
             if (index === picIndex) {
-              // stateUpdate('selectedPic')(pic);
               dispatch(updateSelectedPic(pic));
-              pic.isSelected = true;
+              picChanged.isSelected = true;
             } else {
-              pic.isSelected = false;
+              picChanged.isSelected = false;
             }
-            return pic;
+            listPic.push(picChanged);
           });
-          dispatch(updateSelectedCompanyPicList(selectPic));
-          // stateUpdate('picList')(selectPic);
-          // stateUpdate('selectedCompany')({
-          //   ...sphState.selectedCompany,
-          //   PIC: selectPic,
-          // });
-          // }
+          dispatch(updateSelectedCompanyPicList(listPic));
         },
       },
     ];
@@ -105,14 +91,12 @@ export default function SelectedPic({
           (pic) => pic.id === selectedCompany?.mainPic?.id
         );
         if (foundMainPic) dispatch(updateSelectedPic(foundMainPic));
-        // if (foundMainPic) stateUpdate('selectedPic')(foundMainPic);
       }
       if (selectedCompany?.PIC) {
         const listPic = selectedCompany?.PIC?.map((pic) => {
           if (selectedPic) {
             if (selectedPic.id) {
               if (pic.id === selectedPic.id) {
-                // stateUpdate('selectedPic')(pic);
                 dispatch(updateSelectedPic(pic));
                 return { ...pic, isSelected: true };
               }
@@ -126,11 +110,6 @@ export default function SelectedPic({
           listPic[0].isSelected = true;
         }
         dispatch(updateSelectedCompanyPicList(listPic));
-        // stateUpdate('selectedCompany')({
-        //   ...sphState.selectedCompany,
-        //   PIC: listPic,
-        // });
-        // stateUpdate('picList')(listPic);
       }
     }
   }, []);
@@ -150,7 +129,6 @@ export default function SelectedPic({
     <View style={style.container}>
       <View>
         <View style={{ minHeight: resScale(75) }}>
-          {/* <Text>{JSON.stringify(sphState?.selectedCompany)}</Text> */}
           <BVisitationCard
             item={{
               name: selectedCompany?.name || '-',
@@ -167,16 +145,6 @@ export default function SelectedPic({
         </View>
         <ScrollView style={style.scrollViewStyle}>
           <BForm inputs={inputsData} />
-          {/* {isLoading && (
-            <View>
-              <BSpacer size={'medium'} />
-              <ShimmerPlaceHolder style={style.labelShimmer} />
-              <BSpacer size={'extraSmall'} />
-              <ShimmerPlaceHolder style={style.loadingShimmer} />
-              <BSpacer size={'extraSmall'} />
-              <ShimmerPlaceHolder style={style.loadingShimmer} />
-            </View>
-          )} */}
         </ScrollView>
       </View>
       <BButtonPrimary
@@ -186,7 +154,6 @@ export default function SelectedPic({
           if (setCurrentPosition) {
             setCurrentPosition(1);
           }
-          // setIsLoading((curr) => !curr);
         }}
         rightIcon={ContinueIcon}
       />
@@ -194,21 +161,13 @@ export default function SelectedPic({
         ref={bottomSheetRef}
         initialIndex={-1}
         addPic={(pic: PIC) => {
-          // onChange('selectedPic', pic);
           customLog(pic, 'bsheetaddpic');
           pic.isSelected = false;
           const currentList = selectedCompany?.PIC ? selectedCompany.PIC : [];
           if (currentList.length === 1) {
             pic.isSelected = true;
           }
-          // dispatch(updateSelectedPic([...currentList, pic]));
           dispatch(updateSelectedCompanyPicList([...currentList, pic]));
-          // stateUpdate('selectedCompany')({
-          //   ...selectedCompany,
-          //   PIC: [...currentList, pic],
-          // });
-          // stateUpdate('picList')([...sphState.picList, pic]);
-          // sphState.selectedCompany?.PIC ? sphState.selectedCompany.PIC : [];
         }}
       />
     </View>

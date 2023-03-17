@@ -4,14 +4,13 @@ import resScale from '@/utils/resScale';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { TextInput } from 'react-native-paper';
-import { SafeAreaView, AppState, DeviceEventEmitter } from 'react-native';
+import { SafeAreaView, DeviceEventEmitter } from 'react-native';
 import SearchAreaStyles from './styles';
 import CurrentLocation from './element/SearchAreaCurrentLocation';
 import LocationList from './element/LocationList';
 import { useMachine } from '@xstate/react';
 import { searchAreaMachine } from '@/machine/searchAreaMachine';
 import { assign } from 'xstate';
-import LocationListShimmer from './element/LocationListShimmer';
 import { BSpacer } from '@/components';
 import { useDispatch } from 'react-redux';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
@@ -29,7 +28,6 @@ const SearchAreaProject = ({ route }: { route: any }) => {
   const navigation = useNavigation();
   const [text, setText] = React.useState('');
   const dispatch = useDispatch();
-  const appState = React.useRef(AppState.currentState);
   const [state, send] = useMachine(searchAreaMachine, {
     actions: {
       clearInputValue: assign((context, event) => {

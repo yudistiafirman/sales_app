@@ -1,74 +1,129 @@
-import {
-  CreateVisitationFirstStep,
-  CreateVisitationFourthStep,
-  CreateVisitationSecondStep,
-  CreateVisitationThirdStep,
-} from '@/interfaces';
+import { Address, PIC } from '@/interfaces';
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface VisitationGlobalState {
   step: number;
   shouldScrollView: boolean;
-  stepOne: CreateVisitationFirstStep;
-  stepTwo: CreateVisitationSecondStep;
-  stepThree: CreateVisitationThirdStep;
-  stepFour: CreateVisitationFourthStep;
+  createdLocation: Address;
+  locationAddress: Address;
+  existingLocationId?: string;
+  companyName: string;
+  customerType?: 'INDIVIDU' | 'COMPANY';
+  projectName: string;
+  projectId?: string;
+  location: { [key: string]: any };
+  pics: PIC[];
+  options: {
+    loading: boolean;
+    items: { title: string; id: string }[] | null;
+  };
+  visitationId?: string;
+  existingOrderNum?: number;
+  stageProject?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+  products: any[];
+  estimationDate: {
+    estimationWeek: number | null;
+    estimationMonth: number | null;
+  };
+  paymentType?: 'CBD' | 'CREDIT';
+  notes: string;
+  selectedDate: any;
+  images: any[];
+  kategoriAlasan?: 'FINISHED' | 'MOU_COMPETITOR';
+  alasanPenolakan: string;
   existingVisitationId: string | null;
+  stepOneVisitationFinished: boolean;
+  stepTwoVisitationFinished: boolean;
+  stepThreeVisitationFinished: boolean;
+  stepperVisitationShouldNotFocused: boolean;
 }
 
 const initialState: VisitationGlobalState = {
   step: 0,
   shouldScrollView: true,
-  stepOne: {
-    createdLocation: {
-      lat: 0,
-      lon: 0,
-      postalId: undefined,
-      formattedAddress: '',
-    },
-    locationAddress: {
-      lat: 0,
-      lon: 0,
-      postalId: undefined,
-      formattedAddress: '',
-      line2: '',
-    },
-    existingLocationId: '',
+  createdLocation: {
+    lat: 0,
+    lon: 0,
+    postalId: undefined,
+    formattedAddress: '',
   },
-  stepTwo: {
-    companyName: '',
-    location: {},
-    pics: [],
-    projectName: '',
-    options: {
-      items: null,
-      loading: false,
-    },
-    projectId: '',
+  locationAddress: {
+    lat: 0,
+    lon: 0,
+    postalId: undefined,
+    formattedAddress: '',
+    line2: '',
   },
-  stepThree: {
-    estimationDate: {
-      estimationMonth: null,
-      estimationWeek: null,
-    },
-    notes: '',
-    products: [],
+  existingLocationId: '',
+  companyName: '',
+  location: {},
+  pics: [],
+  projectName: '',
+  options: {
+    items: null,
+    loading: false,
   },
-  stepFour: {
-    selectedDate: null,
-    images: [],
-    kategoriAlasan: null,
-    alasanPenolakan: '',
+  projectId: '',
+  estimationDate: {
+    estimationMonth: null,
+    estimationWeek: null,
   },
+  notes: '',
+  products: [],
+  selectedDate: null,
+  images: [],
+  kategoriAlasan: null,
+  alasanPenolakan: '',
   existingVisitationId: null,
+  stepOneVisitationFinished: false,
+  stepTwoVisitationFinished: false,
+  stepThreeVisitationFinished: false,
+  stepperVisitationShouldNotFocused: false,
 };
 
 export const visitationSlice = createSlice({
   name: 'visitation',
   initialState,
   reducers: {
-    resetState: () => {
+    resetVisitationState: () => {
       return initialState;
+    },
+    resetFocusedStepperFlag: (state) => {
+      state.stepperVisitationShouldNotFocused = false;
+    },
+    setStepperFocused: (state, { payload }) => {
+      state.stepperVisitationShouldNotFocused = true;
+      switch (payload) {
+        case 1:
+          state.stepOneVisitationFinished = true;
+          break;
+        case 2:
+          state.stepTwoVisitationFinished = true;
+          break;
+        case 3:
+          state.stepThreeVisitationFinished = true;
+          break;
+      }
+    },
+    resetAllStepperFocused: (state) => {
+      state.stepperVisitationShouldNotFocused = true;
+      state.stepOneVisitationFinished = false;
+      state.stepTwoVisitationFinished = false;
+      state.stepThreeVisitationFinished = false;
+    },
+    resetStepperFocused: (state, { payload }) => {
+      state.stepperVisitationShouldNotFocused = true;
+      switch (payload) {
+        case 1:
+          state.stepOneVisitationFinished = false;
+          break;
+        case 2:
+          state.stepTwoVisitationFinished = false;
+          break;
+        case 3:
+          state.stepThreeVisitationFinished = false;
+          break;
+      }
     },
     updateShouldScrollView: (state, { payload }: { payload: boolean }) => {
       state.shouldScrollView = payload;
@@ -79,41 +134,88 @@ export const visitationSlice = createSlice({
     updateCurrentStep: (state, { payload }) => {
       state.step = payload;
     },
-    updateStepOne: (
+    updateDataVisitation: (
       state,
-      { payload }: { payload: CreateVisitationFirstStep }
+      { payload }: { payload: { type: any; value: any } }
     ) => {
-      state.stepOne = payload;
-    },
-    updateStepTwo: (
-      state,
-      { payload }: { payload: CreateVisitationSecondStep }
-    ) => {
-      state.stepTwo = payload;
-    },
-    updateStepThree: (
-      state,
-      { payload }: { payload: CreateVisitationThirdStep }
-    ) => {
-      state.stepThree = payload;
-    },
-    updateStepFour: (
-      state,
-      { payload }: { payload: CreateVisitationFourthStep }
-    ) => {
-      state.stepFour = payload;
+      switch (payload.type) {
+        case 'createdLocation':
+          state.createdLocation = payload.value;
+          break;
+        case 'locationAddress':
+          state.locationAddress = payload.value;
+          break;
+        case 'existingLocationId':
+          state.existingLocationId = payload.value;
+          break;
+        case 'companyName':
+          state.companyName = payload.value;
+          break;
+        case 'customerType':
+          state.customerType = payload.value;
+          break;
+        case 'projectName':
+          state.projectName = payload.value;
+          break;
+        case 'projectId':
+          state.projectId = payload.value;
+          break;
+        case 'location':
+          state.location = payload.value;
+          break;
+        case 'pics':
+          state.pics = payload.value;
+          break;
+        case 'options':
+          state.options = payload.value;
+          break;
+        case 'visitationId':
+          state.visitationId = payload.value;
+          break;
+        case 'existingOrderNum':
+          state.existingOrderNum = payload.value;
+          break;
+        case 'stageProject':
+          state.stageProject = payload.value;
+          break;
+        case 'products':
+          state.products = payload.value;
+          break;
+        case 'estimationDate':
+          state.estimationDate = payload.value;
+          break;
+        case 'paymentType':
+          state.paymentType = payload.value;
+          break;
+        case 'notes':
+          state.notes = payload.value;
+          break;
+        case 'selectedDate':
+          state.selectedDate = payload.value;
+          break;
+        case 'images':
+          state.images = payload.value;
+          break;
+        case 'kategoriAlasan':
+          state.kategoriAlasan = payload.value;
+          break;
+        case 'alasanPenolakan':
+          state.alasanPenolakan = payload.value;
+          break;
+      }
     },
   },
 });
 
 export const {
-  resetState,
+  resetVisitationState,
   updateShouldScrollView,
   updateExistingVisitationID,
   updateCurrentStep,
-  updateStepOne,
-  updateStepTwo,
-  updateStepThree,
-  updateStepFour,
+  updateDataVisitation,
+  resetFocusedStepperFlag,
+  setStepperFocused,
+  resetStepperFocused,
+  resetAllStepperFocused,
 } = visitationSlice.actions;
 export default visitationSlice.reducer;

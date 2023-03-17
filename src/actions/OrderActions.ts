@@ -65,12 +65,13 @@ export const getScheduleByID = async (id: string) => {
   );
 };
 
-export const getAllFinishedDeliveryOrders = async (
-  page?: string,
-  size?: string
+export const getAllDeliveryOrders = async (
+  status?: string,
+  size?: string,
+  page?: string
 ) => {
   return customRequest(
-    BrikApiOrder.deliveryOrder('FINISH', page, size),
+    BrikApiOrder.deliveryOrder(status, page, size),
     'GET',
     undefined,
     true
@@ -130,6 +131,16 @@ export const postSchedule = async (payload) => {
   return customRequest(BrikApiOrder.schedule(), 'POST', payload, true);
 };
 
-export const getConfirmedPurchaseOrder = async (page: string, size: string, searchQuery: string, productPo = '1') => {
-  return customRequest(BrikApiOrder.getConfirmedPurchaseOrder(page, size, searchQuery, productPo), 'GET', undefined, true)
-}
+export const getConfirmedPurchaseOrder = async (
+  page: string,
+  size: string,
+  searchQuery: string,
+  productPo = '1'
+) => {
+  return customRequest(
+    BrikApiOrder.getConfirmedPurchaseOrder(page, size, searchQuery, productPo),
+    'GET',
+    undefined,
+    true
+  );
+};

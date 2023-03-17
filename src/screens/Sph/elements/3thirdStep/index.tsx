@@ -5,7 +5,6 @@ import { Input } from '@/interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
-const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 import { Checkbox } from 'react-native-paper';
 import { colors, fonts } from '@/constants';
 import font from '@/constants/fonts';
@@ -18,10 +17,13 @@ import { SPH } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import {
+  setStepperFocused,
   updatePaymentBankGuarantee,
   updatePaymentType,
   updateRequiredDocuments,
 } from '@/redux/reducers/SphReducer';
+
+const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type documentType = {
   id: string;
@@ -52,7 +54,7 @@ export default function ThirdStep() {
     cbd: [],
     credit: [],
   });
-  const [sphState, stateUpdate, setCurrentPosition] = useContext(SphContext);
+  const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const { paymentType, paymentRequiredDocuments, paymentBankGuarantee } =
     useSelector((state: RootState) => state.sph);
 
@@ -160,12 +162,7 @@ export default function ThirdStep() {
   }, []);
 
   useEffect(() => {
-    // if (stateUpdate) {
-    // stateUpdate('paymentRequiredDocuments')(documents);
     dispatch(updateRequiredDocuments(documents));
-    // const isFilled = checkDocFilled(documents);
-    // stateUpdate('paymentDocumentsFullfilled')(isFilled);
-    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documents]);
   const inputsData2: Input[] = useMemo(() => {
@@ -175,9 +172,6 @@ export default function ThirdStep() {
         isRequire: true,
         isError: paymentType ? false : true,
         type: 'cardOption',
-        // onChange: () => {
-        //   getPaymentDocReq();
-        // },
         value: paymentType,
         options: [
           {
@@ -185,11 +179,7 @@ export default function ThirdStep() {
             icon: cbd,
             value: 'CBD',
             onChange: () => {
-              // if (stateUpdate) {
-              // stateUpdate('paymentType')('CBD');
               dispatch(updatePaymentType('CBD'));
-              // getPaymentDocReq('cbd');
-              // }
             },
           },
           {
@@ -197,11 +187,7 @@ export default function ThirdStep() {
             icon: credit,
             value: 'CREDIT',
             onChange: () => {
-              // if (stateUpdate) {
-              // stateUpdate('paymentType')('CREDIT');
               dispatch(updatePaymentType('CREDIT'));
-              // getPaymentDocReq('credit');
-              // }
             },
           },
         ],
@@ -224,11 +210,7 @@ export default function ThirdStep() {
               };
             });
           }
-          // stateUpdate('paymentRequiredDocuments')({
-          //   ...sphState.paymentRequiredDocuments,
-          //   [key.key]: data,
-          // });
-        }, //onChange(key.key),
+        },
         type: 'fileInput',
         value: paymentRequiredDocuments?.[key.key],
         isRequire: key.isRequired,
@@ -259,16 +241,15 @@ export default function ThirdStep() {
               <Checkbox
                 status={paymentBankGuarantee ? 'checked' : 'unchecked'}
                 onPress={() => {
-                  // if (stateUpdate) {
-                  //   stateUpdate('paymentBankGuarantee')(!paymentBankGuarantee);
-                  // }
                   dispatch(updatePaymentBankGuarantee(!paymentBankGuarantee));
                 }}
               />
-              <Text style={style.checkboxLabel}>
-                Bersedia untuk menyediakan Bank Guarantee{' '}
-                <Text style={style.redStar}>*</Text>
-              </Text>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
+                <Text style={style.redStar}>* </Text>
+                <Text numberOfLines={1} style={style.checkboxLabel}>
+                  Bersedia untuk menyediakan Bank Guarantee
+                </Text>
+              </View>
             </View>
           )}
           <BSpacer size={'small'} />
@@ -278,6 +259,7 @@ export default function ThirdStep() {
             }}
             onPressContinue={() => {
               if (setCurrentPosition) {
+                dispatch(setStepperFocused(3));
                 setCurrentPosition(3);
               }
             }}
@@ -289,14 +271,6 @@ export default function ThirdStep() {
             }
             loadingContinue={isLoading}
           />
-          {/* <View style={style.buttonContainer}>
-            <View style={style.backButtonContainer}>
-              <BButtonPrimary title="Kembali" isOutline />
-            </View>
-            <View style={style.continueButtonContainer}>
-              <BButtonPrimary title="Lanjut" />
-            </View>
-          </View> */}
         </View>
       </View>
     </BContainer>

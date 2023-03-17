@@ -34,23 +34,27 @@ function ListProduct(
   quantity: number | undefined
 ) {
   let displayName = '';
-  if (item.display_name) {
+  if (item.ReqProduct) {
     displayName = `${
-      item?.category?.Parent ? item?.category?.Parent?.name + ' ' : ''
-    }${item?.display_name} ${item?.category ? item?.category?.name : ''}`;
-  } else if (item.ReqProduct) {
-    displayName = `${
-      item?.ReqProduct?.product?.category?.Parent
-        ? item?.ReqProduct?.product?.category?.Parent?.name + ' '
+      item?.ReqProduct?.product?.category?.parent
+        ? item?.ReqProduct?.product?.category?.parent?.name + ' '
         : ''
     }${item?.ReqProduct?.product?.displayName} ${
       item?.ReqProduct?.product?.category
         ? item?.ReqProduct?.product?.category?.name
         : ''
     }`;
+  } else if (item.Product) {
+    displayName = `${
+      item?.Product?.category?.parent
+        ? item?.Product?.category?.parent?.name + ' '
+        : ''
+    }${item?.Product?.displayName} ${
+      item?.Product?.category ? item?.Product?.category?.name : ''
+    }`;
   } else {
     displayName = `${
-      item?.category?.Parent ? item?.category?.Parent?.name + ' ' : ''
+      item?.category?.parent ? item?.category?.parent?.name + ' ' : ''
     }${item?.displayName} ${item?.category ? item?.category?.name : ''}`;
   }
   return (
@@ -159,38 +163,45 @@ const TransactionDetail = () => {
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView>
-        {(data?.address || data?.project?.LocationAddress) && (
+        {(data?.project?.LocationAddress || data?.project?.ShippingAddress) && (
           <BCompanyMapCard
             onPressLocation={() =>
-              onPressLocation(
-                data?.address
-                  ? data?.address.lat
-                  : data?.project?.LocationAddress
-                  ? data?.project?.LocationAddress.lat
-                  : null,
-                data?.address
-                  ? data?.address.lon
-                  : data?.project?.LocationAddress
-                  ? data?.project?.LocationAddress.lon
-                  : null
-              )
+              selectedType === 'DO'
+                ? onPressLocation(
+                    data?.project?.ShippingAddress
+                      ? data?.project?.ShippingAddress.lat
+                      : null,
+                    data?.project?.ShippingAddress
+                      ? data?.project?.ShippingAddress.lon
+                      : null
+                  )
+                : onPressLocation(
+                    data?.project?.LocationAddress
+                      ? data?.project?.LocationAddress.lat
+                      : null,
+                    data?.project?.LocationAddress
+                      ? data?.project?.LocationAddress.lon
+                      : null
+                  )
             }
             disabled={
-              data?.address?.lat === null ||
-              data?.address?.lon === null ||
-              data?.project?.LocationAddress?.lat === null ||
-              data?.project?.LocationAddress?.lon === null
+              selectedType === 'DO'
+                ? data?.project?.ShippingAddress?.lat === null ||
+                  data?.project?.ShippingAddress?.lon === null
+                : data?.project?.LocationAddress?.lat === null ||
+                  data?.project?.LocationAddress?.lon === null
             }
             companyName={
-              data?.companyName
-                ? data?.companyName
-                : data?.project?.companyName
-                ? data?.project?.companyName
+              data?.project?.Company?.displayName
+                ? data?.project?.Company.displayName
                 : '-'
             }
             location={
-              data?.address && data?.address.line1
-                ? data?.address.line1
+              selectedType === 'DO'
+                ? data?.project?.ShippingAddress &&
+                  data?.project?.ShippingAddress.line1
+                  ? data?.project?.ShippingAddress.line1
+                  : '-'
                 : data?.project?.LocationAddress &&
                   data?.project?.LocationAddress.line1
                 ? data?.project?.LocationAddress.line1
@@ -232,7 +243,7 @@ const TransactionDetail = () => {
             }
             projectName={
               selectedType === 'SPH' || selectedType === 'PO'
-                ? data?.project.name
+                ? data?.project?.projectName
                 : undefined
             }
             productionTime={

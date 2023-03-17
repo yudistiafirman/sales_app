@@ -38,7 +38,10 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetState } from '@/redux/reducers/SphReducer';
+import {
+  resetFocusedStepperFlag,
+  resetSPHState,
+} from '@/redux/reducers/SphReducer';
 import { bStorage } from '@/actions';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -266,6 +269,7 @@ const Transaction = () => {
       navigation.navigate(PO);
     } else {
       setPopupSPHVisible(false);
+      dispatch(resetFocusedStepperFlag());
       navigation.navigate(SPH, {});
     }
   };
@@ -319,7 +323,7 @@ const Transaction = () => {
         setIsPopupVisible={() => {
           if (feature === 'SPH') {
             setPopupSPHVisible(false);
-            dispatch(resetState());
+            dispatch(resetSPHState());
             navigation.navigate(SPH, {});
           } else {
             bStorage.deleteItem(PO);
