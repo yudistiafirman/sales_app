@@ -63,7 +63,10 @@ import {
 } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import { HOME_MENU } from '../Const';
-import { resetState } from '@/redux/reducers/SphReducer';
+import {
+  resetFocusedStepperFlag,
+  resetState,
+} from '@/redux/reducers/SphReducer';
 import { bStorage } from '@/actions';
 const { RNCustomConfig } = NativeModules;
 const versionName = RNCustomConfig?.version_name;
@@ -540,6 +543,7 @@ const Beranda = () => {
       navigation.navigate(PO);
     } else {
       setPopupSPHVisible(false);
+      dispatch(resetFocusedStepperFlag());
       navigation.navigate(SPH, {});
     }
   };

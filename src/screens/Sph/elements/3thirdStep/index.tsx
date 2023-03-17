@@ -5,7 +5,6 @@ import { Input } from '@/interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
-const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 import { Checkbox } from 'react-native-paper';
 import { colors, fonts } from '@/constants';
 import font from '@/constants/fonts';
@@ -18,10 +17,13 @@ import { SPH } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import {
+  setStepperFocused,
   updatePaymentBankGuarantee,
   updatePaymentType,
   updateRequiredDocuments,
 } from '@/redux/reducers/SphReducer';
+
+const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type documentType = {
   id: string;
@@ -278,6 +280,7 @@ export default function ThirdStep() {
             }}
             onPressContinue={() => {
               if (setCurrentPosition) {
+                dispatch(setStepperFocused(3));
                 setCurrentPosition(3);
               }
             }}
