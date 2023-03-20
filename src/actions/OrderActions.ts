@@ -81,7 +81,7 @@ export const getAllDeliveryOrders = async (
 
 export const getDeliveryOrderByID = async (id: string) => {
   return customRequest(
-    BrikApiOrder.getDeliveryOrderByID(id),
+    BrikApiOrder.deliveryOrderByID(id),
     'GET',
     undefined,
     true
@@ -147,5 +147,5 @@ export const getConfirmedPurchaseOrder = async (
 };
 
 export const updateDeliveryOrder = async (payload: updateDeliverOrder, deliveryOrderId: string) => {
-  return customRequest(BrikApiOrder.updateDeliveryOrder(deliveryOrderId), 'PUT', payload, true)
+  return customRequest(BrikApiOrder.deliveryOrderByID(deliveryOrderId), 'PUT', payload, true)
 }

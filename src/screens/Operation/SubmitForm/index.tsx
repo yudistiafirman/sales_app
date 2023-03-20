@@ -124,7 +124,7 @@ const SubmitForm = () => {
           dispatch(
             openPopUp({
               popUpType: 'error',
-              popUpText: 'Error Memperbarui Delivery Order',
+              popUpText: responseFiles.data.message || 'Error Memperbarui Delivery Order',
               outsideClickClosePopUp: true,
             })
           );
@@ -134,7 +134,7 @@ const SubmitForm = () => {
         dispatch(
           openPopUp({
             popUpType: 'error',
-            popUpText: 'Error Memperbarui Delivery Order',
+            popUpText: responseFiles.data.message || 'Error Memperbarui Delivery Order',
             outsideClickClosePopUp: true,
           })
         );
@@ -145,7 +145,7 @@ const SubmitForm = () => {
       dispatch(
         openPopUp({
           popUpType: 'error',
-          popUpText: 'Error Memperbarui Delivery Order',
+          popUpText: error.message || 'Error Memperbarui Delivery Order',
           outsideClickClosePopUp: true,
         })
       );

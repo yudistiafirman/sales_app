@@ -39,7 +39,7 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static getDeliveryOrderByID = (id: string) => {
+  static deliveryOrderByID = (id: string) => {
     const url = new URL(`${API_URL}/order/m/delivery-order/${id}`);
     return url.toString();
   };
@@ -131,9 +131,4 @@ export default class BrikApiOrder {
     }
     return url.toString();
   };
-
-  static updateDeliveryOrder = (id: string) => {
-    const url = new URL(`${API_URL}/order/m/delivery-order/${id}`)
-    return url.toString()
-  }
 }
