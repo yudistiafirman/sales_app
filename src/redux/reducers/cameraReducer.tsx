@@ -6,10 +6,8 @@ import {
   CREATE_DEPOSIT,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
-  OPERATION,
 } from '@/navigation/ScreenNames';
 import { LocalFileType } from '@/interfaces/LocalFileType';
-import OperationFileType from '@/constants/operationFileType';
 
 type fileResponse = {
   id: string;
