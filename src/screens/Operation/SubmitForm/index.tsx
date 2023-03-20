@@ -21,7 +21,7 @@ import {
 import React, { useState } from 'react';
 import { BackHandler, KeyboardAvoidingView, SafeAreaView, StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { OPERATION, SUBMIT_FORM } from '@/navigation/ScreenNames';
+import { SUBMIT_FORM } from '@/navigation/ScreenNames';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { ENTRY_TYPE } from '@/models/EnumModel';
@@ -30,6 +30,11 @@ import { onChangeInputValue, resetOperationState } from '@/redux/reducers/operat
 import { useKeyboardActive } from '@/hooks';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment';
+import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { uploadFileImage } from '@/actions/CommonActions';
+import { OperationFileType } from '@/interfaces/Operation';
+import { updateDeliveryOrder } from '@/actions/OrderActions';
 
 const SubmitForm = () => {
   const route = useRoute<RootStackScreenProps>();
@@ -37,9 +42,10 @@ const SubmitForm = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [toggleCheckBox, setToggleCheckBox] = useState(true);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { inputsValue, projectDetails, photoFiles } = useSelector((state: RootState) => state.operation)
+  const { inputsValue, projectDetails, photoFiles, isLoading } = useSelector((state: RootState) => state.operation)
   const { keyboardVisible } = useKeyboardActive();
   const operationType = route?.params?.operationType;
+  const operationFileType = [OperationFileType.DO_DEPARTURE, OperationFileType.ARRIVAL, OperationFileType.TRUCK_CONDITION, OperationFileType.DO_SIGNED]
   const enableLocationHeader = operationType === ENTRY_TYPE.DRIVER && projectDetails.address && projectDetails.address?.length > 0
 
   React.useEffect(() => {
@@ -62,13 +68,94 @@ const SubmitForm = () => {
 
   const handleDisableContinueButton = () => {
     if (userData?.type === ENTRY_TYPE.DRIVER) {
-      return photoFiles.length === 0 || inputsValue.recepientName.length === 0 || inputsValue.recepientPhoneNumber.length === 0
+      return photoFiles.length < 4
+        || inputsValue.recepientName.length === 0
+        || inputsValue.recepientPhoneNumber.length === 0
+        || !/^(^\+62)(\d{3,4}-?){2}\d{3,4}$/g.test(inputsValue.recepientPhoneNumber)
     }
   }
 
   const handleBack = () => {
     dispatch(resetOperationState())
     navigation.dispatch(StackActions.popToTop())
+  }
+
+  const onPressContinueDriver = async () => {
+    try {
+      dispatch(openPopUp({
+        popUpType: 'loading',
+        popUpText: 'Memperbarui Deliver Order',
+        outsideClickClosePopUp: false,
+      }))
+      const payload = {} as updateDeliverOrder
+      const photoFilestoUpload = photoFiles.map((photo) => {
+        return {
+          ...photo.file,
+          uri: photo?.file?.uri?.replace('file:', 'file://'),
+        };
+      });
+      const responseFiles = await uploadFileImage(
+        photoFilestoUpload,
+        'Update Deliver Order'
+      );
+      if (responseFiles.data.success) {
+        const newFileData = responseFiles.data.data.map((v, i) => {
+          return {
+            fileId: v.id,
+            type: operationFileType[i]
+          }
+        })
+        payload.doFiles = newFileData
+        payload.recepientName = inputsValue.recepientName
+        payload.recipientNumber = inputsValue.recepientPhoneNumber
+        const responseUpdateDeliveryOrder = await updateDeliveryOrder(payload, projectDetails.deliveryOrderId)
+        if (responseUpdateDeliveryOrder.data.success) {
+          dispatch(openPopUp({
+            popUpType: 'success',
+            popUpText: 'Berhasil Memperbarui Delivery Order',
+            outsideClickClosePopUp: true
+          }))
+          if (navigation.canGoBack()) {
+            dispatch(resetOperationState())
+            navigation.dispatch(StackActions.popToTop())
+          }
+        } else {
+          dispatch(closePopUp());
+          dispatch(
+            openPopUp({
+              popUpType: 'error',
+              popUpText: 'Error Memperbarui Delivery Order',
+              outsideClickClosePopUp: true,
+            })
+          );
+        }
+      } else {
+        dispatch(closePopUp());
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText: 'Error Memperbarui Delivery Order',
+            outsideClickClosePopUp: true,
+          })
+        );
+      }
+
+    } catch (error) {
+      dispatch(closePopUp());
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: 'Error Memperbarui Delivery Order',
+          outsideClickClosePopUp: true,
+        })
+      );
+    }
+  }
+
+  const onPressContinue = () => {
+    if (userData?.type === ENTRY_TYPE.DRIVER) {
+      onPressContinueDriver()
+    }
   }
 
 
@@ -186,9 +273,7 @@ const SubmitForm = () => {
       </KeyboardAwareScrollView>
       {
         !keyboardVisible && <BBackContinueBtn
-          onPressContinue={() => {
-            navigation.dispatch(StackActions.popToTop());
-          }}
+          onPressContinue={onPressContinue}
           disableContinue={handleDisableContinueButton()}
           onPressBack={handleBack}
           continueText={'Simpan'}

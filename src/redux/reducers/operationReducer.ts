@@ -1,6 +1,8 @@
 import { LocalFileType } from "@/interfaces/LocalFileType";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { makeMutable } from "react-native-reanimated";
+import { postUploadFiles } from "../async-thunks/commonThunks";
+import { putUpdateDeliverOrder } from "../async-thunks/orderThunks";
 
 interface inputsValue {
     recepientName: string;
@@ -9,6 +11,7 @@ interface inputsValue {
 }
 
 export interface OperationProjectDetails {
+    deliveryOrderId: string;
     projectName: string;
     address?: string;
     lonlat: { longitude: number, latitude: number };
@@ -32,6 +35,7 @@ const initialState: operationInitState = {
         truckMixCondition: ''
     },
     projectDetails: {
+        deliveryOrderId: '',
         projectName: '',
         doNumber: '',
         address: '',
@@ -57,15 +61,15 @@ export const operationSlice = createSlice({
         },
         setOperationPhoto: (state, actions: PayloadAction<{ file: LocalFileType }>) => {
             state.photoFiles = [...state.photoFiles, actions.payload.file]
-        }
-    }
+        },
+    },
 })
 
 export const {
     resetOperationState,
     onChangeInputValue,
     onChangeProjectDetails,
-    setOperationPhoto
+    setOperationPhoto,
 } = operationSlice.actions
 
 export default operationSlice.reducer

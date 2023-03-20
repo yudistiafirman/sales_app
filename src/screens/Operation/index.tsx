@@ -36,6 +36,7 @@ const Operation = () => {
         navigation.navigate(CREATE_DO, { id: item });
       } else {
         const dataToDeliver: OperationProjectDetails = {
+          deliveryOrderId: item?.id ? item.id : '',
           doNumber: item?.number ? item.number : '',
           projectName: item.project?.projectName ? item.project.projectName : '',
           address: item.project?.Address?.line1 ? item.project.Address.line1 : '',
