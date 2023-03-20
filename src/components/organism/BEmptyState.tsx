@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     marginBottom: layout.pad.md,
   },
   emptyText: {
-    fontFamily: font.family.montserrat['600'],
+    fontFamily: font.family.montserrat[600],
     fontSize: font.size.md,
     textAlign: 'center',
     color: colors.text.darker,

@@ -54,16 +54,26 @@ export default function CustomerDetail() {
   const [customerData, setCustomerData] = useState<ProjectDetail>({});
   const [address, setFormattedAddress] = useState('');
   const [region, setRegion] = useState(null);
+  const [regionExisting, setExistingRegion] = useState(null);
   const [existedVisitation, setExistingVisitation] =
     useState<visitationListResponse>(null);
   const dataNotLoadedYet = JSON.stringify(customerData) === '{}';
   const documentsNotCompleted = customerData?.docs?.length !== 8;
-  const updatedAddress = address.length > 0;
+  const updatedAddress = address?.length > 0;
   const getCompanyDetail = useCallback(
     async (companyId?: string) => {
       try {
         const response = await getProjectDetail(companyId);
         setCustomerData(response.data[0]);
+        if (response.data && response.data.length > 0) {
+          let region: any = {
+            formattedAddress: response.data[0].billingAddress.line1,
+            latitude: response.data[0].billingAddress.lat,
+            longitude: response.data[0].billingAddress.lon,
+          };
+          setExistingRegion(region);
+          setFormattedAddress(response.data[0].billingAddress.line1);
+        }
       } catch (error) {
         dispatch(
           openPopUp({
@@ -83,6 +93,15 @@ export default function CustomerDetail() {
       try {
         const response = await getProjectIndivualDetail(projectId);
         setCustomerData(response.data);
+        if (response.data) {
+          let region: any = {
+            formattedAddress: response.data.billingAddress.line1,
+            latitude: response.data.billingAddress.lat,
+            longitude: response.data.billingAddress.lon,
+          };
+          setExistingRegion(region);
+          setFormattedAddress(response.data.billingAddress.line1);
+        }
       } catch (error) {
         dispatch(
           openPopUp({
@@ -168,7 +187,8 @@ export default function CustomerDetail() {
           setFormattedAddress={setFormattedAddress}
           setIsModalVisible={setIsBillingVisible}
           isModalVisible={isBillingVisible}
-          region={region}
+          region={region || regionExisting}
+          isUpdate={address !== undefined && address !== '' ? true : false}
           setRegion={setRegion}
           projectId={customerData.projectId}
         />

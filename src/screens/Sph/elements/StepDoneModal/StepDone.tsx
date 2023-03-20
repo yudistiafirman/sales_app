@@ -184,14 +184,16 @@ export default function StepDone({
             companyName={stateCompanyName}
             location={locationState}
             onPressLocation={() => {
-              if (locationObj && locationObj.lat && locationObj.lon) {
-                openAddressOnMap(
-                  stateCompanyName,
-                  locationObj.lat,
-                  locationObj.lon
-                );
-              }
+              openAddressOnMap(
+                stateCompanyName,
+                locationObj?.locationAddress?.lat,
+                locationObj?.locationAddress?.lon
+              );
             }}
+            disabled={
+              locationObj?.locationAddress?.lat === null ||
+              locationObj?.locationAddress?.lon === null
+            }
           />
           <View style={styles.contentDetail}>
             <Text style={styles.partText}>PIC</Text>

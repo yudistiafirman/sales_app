@@ -6,10 +6,8 @@ import {
   PopUpQuestion,
 } from '@/components';
 import { layout } from '@/constants';
-import { RootStackParamList } from '@/navigation/navTypes';
 import { AppDispatch, RootState } from '@/redux/store';
 import {
-  RouteProp,
   StackActions,
   useFocusEffect,
   useNavigation,
@@ -23,8 +21,6 @@ import DetailProduk from './element/ProductDetail';
 import { useKeyboardActive } from '@/hooks';
 import { bStorage } from '@/actions';
 import { PO } from '@/navigation/ScreenNames';
-
-export type PORoutes = RouteProp<RootStackParamList['PO']>;
 
 const PurchaseOrder = () => {
   const navigation = useNavigation();
@@ -190,7 +186,11 @@ const PurchaseOrder = () => {
 };
 
 const styles = StyleSheet.create({
-  poContainer: { flex: 1,marginHorizontal:layout.pad.lg,marginBottom:layout.pad.lg},
+  poContainer: {
+    flex: 1,
+    marginHorizontal: layout.pad.lg,
+    marginBottom: layout.pad.lg,
+  },
   stepperIndicator: { alignSelf: 'center' },
   footer: {
     flexDirection: 'row',

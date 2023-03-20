@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     marginVertical: layout.pad.lg,
   },
   emptyText: {
-    fontFamily: font.family.montserrat['600'],
+    fontFamily: font.family.montserrat[600],
     fontSize: font.size.md,
     textAlign: 'center',
     color: colors.text.darker,

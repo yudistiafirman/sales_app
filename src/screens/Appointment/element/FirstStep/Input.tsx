@@ -4,7 +4,6 @@ import { useAppointmentData } from '@/hooks';
 import { Input, projectResponseType, Styles } from '@/interfaces';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
 import { AppDispatch } from '@/redux/store';
-import { resScale } from '@/utils';
 import debounce from 'lodash.debounce';
 import React, { useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
@@ -164,13 +163,13 @@ const Inputs = () => {
         <BSpacer size="extraSmall" />
         <BDivider />
       </View>
-      <BSpacer size="small" />
+      <BSpacer size="extraSmall" />
       <ScrollView
         style={styles.inputContainerStyle}
         showsVerticalScrollIndicator={false}
       >
         <BForm titleBold="500" inputs={inputs} />
-        <BSpacer size="large" />
+        <BSpacer size="extraSmall" />
       </ScrollView>
     </>
   );
@@ -187,7 +186,7 @@ const styles: Styles = {
     backgroundColor: 'red',
   },
   inputContainerStyle: {
-    maxHeight: resScale(480),
+    flex: 1,
   },
 };
 

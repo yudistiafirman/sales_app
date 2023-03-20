@@ -17,7 +17,7 @@ interface BTouchableTextProps {
 }
 
 const BTouchableTextDefaultStyle: TextStyle = {
-  fontFamily: font.family.montserrat['400'],
+  fontFamily: font.family.montserrat[400],
   color: colors.primary,
   fontSize: font.size.sm,
   marginRight: resScale(14),

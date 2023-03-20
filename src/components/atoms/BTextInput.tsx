@@ -11,7 +11,7 @@ interface IProps extends Partial<TextInputProps> {
 }
 
 const baseStyle: TextStyle = {
-  fontFamily: fonts.family.montserrat['400'],
+  fontFamily: fonts.family.montserrat[400],
   fontSize: fonts.size.md,
   lineHeight: resScale(14),
   backgroundColor: colors.white,

@@ -30,7 +30,12 @@ const PaymentType = ({ paymentType }: Props) => {
     <View style={styles.container}>
       <BLabel bold="600" sizeInNumber={font.size.md} label="Tipe Pembayaran" />
       <BSpacer size="extraSmall" />
-      <BCardOption isActive={false} title={title} icon={icon} />
+      <BCardOption
+        isClickable={false}
+        isActive={false}
+        title={title}
+        icon={icon}
+      />
     </View>
   );
 };

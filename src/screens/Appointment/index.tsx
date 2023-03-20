@@ -1,11 +1,11 @@
 import {
   BBackContinueBtn,
+  BContainer,
   BHeaderIcon,
   BottomSheetAddPIC,
   BSpacer,
   BStepperIndicator,
 } from '@/components';
-import { layout } from '@/constants';
 import {
   AppointmentActionType,
   AppointmentProvider,
@@ -13,7 +13,6 @@ import {
 } from '@/context/AppointmentContext';
 import * as React from 'react';
 import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
-import Steps from '../Sph/elements/Steps';
 import FirstStep from './element/FirstStep';
 import { resScale } from '@/utils';
 import { useAppointmentData } from '@/hooks';
@@ -47,7 +46,7 @@ const Appointment = () => {
     step,
     stepDone,
     selectedDate,
-    isSearching
+    isSearching,
   } = values;
   const customerType =
     stepOne.customerType === 'company' ? 'company' : 'individu';
@@ -61,7 +60,7 @@ const Appointment = () => {
     customHeaderLeft: (
       <BHeaderIcon
         size={resScale(23)}
-        onBack={()=>navigation.goBack()}
+        onBack={() => navigation.goBack()}
         iconName="x"
       />
     ),
@@ -273,15 +272,14 @@ const Appointment = () => {
         type: AppointmentActionType.DECREASE_STEP,
       });
     } else {
-        if(isSearching){
-          dispatchValue({
-            type:AppointmentActionType.ENABLE_SEARCHING,
-            value:false
-          })
-        }else {
-          navigation.goBack();
-        }
-      
+      if (isSearching) {
+        dispatchValue({
+          type: AppointmentActionType.ENABLE_SEARCHING,
+          value: false,
+        });
+      } else {
+        navigation.goBack();
+      }
     }
   }, [dispatchValue, inVisitationDateStep, navigation, selectedDate]);
 
@@ -315,7 +313,7 @@ const Appointment = () => {
   };
 
   return (
-    <View style={style.container}>
+    <>
       <BStepperIndicator
         stepsDone={stepDone}
         stepOnPress={(pos: number) => {
@@ -324,47 +322,47 @@ const Appointment = () => {
         currentStep={step}
         labels={labels}
       />
-      <BSpacer size="small" />
-      <View style={style.content}>
-        <Steps currentPosition={step} stepsToRender={stepsToRender} />
-        <BSpacer size={'extraSmall'} />
-        {values.step > -1 && btnShown && (
-          <BBackContinueBtn
-            onPressContinue={onNext}
-            onPressBack={onBackPress}
-            continueText={'Lanjut'}
-            unrenderBack={values.step > 0 ? false : true}
-            disableContinue={
-              values.step > 0
-                ? !selectedDate
-                : !isCanAdvanceToStep2() && !selectedDate
+
+      <BContainer>
+        <View style={style.container}>
+          {stepsToRender[step]}
+          <BSpacer size={'extraSmall'} />
+          {values.step > -1 && btnShown && (
+            <BBackContinueBtn
+              onPressContinue={onNext}
+              onPressBack={onBackPress}
+              continueText={'Lanjut'}
+              unrenderBack={values.step > 0 ? false : true}
+              disableContinue={
+                values.step > 0
+                  ? !selectedDate
+                  : !isCanAdvanceToStep2() && !selectedDate
+              }
+            />
+          )}
+          <BottomSheetAddPIC
+            isVisible={isModalPicVisible}
+            addPic={(dataPic: PIC) =>
+              dispatchValue({
+                type: AppointmentActionType.SET_PICS,
+                key: customerType,
+                value: [...values.stepOne[customerType].PIC, dataPic],
+              })
+            }
+            onClose={() =>
+              dispatchValue({ type: AppointmentActionType.TOGGLE_MODAL_PICS })
             }
           />
-        )}
-      </View>
-      <BottomSheetAddPIC
-        isVisible={isModalPicVisible}
-        addPic={(dataPic: PIC) =>
-          dispatchValue({
-            type: AppointmentActionType.SET_PICS,
-            key: customerType,
-            value: [...values.stepOne[customerType].PIC, dataPic],
-          })
-        }
-        onClose={() =>
-          dispatchValue({ type: AppointmentActionType.TOGGLE_MODAL_PICS })
-        }
-      />
-    </View>
+        </View>
+      </BContainer>
+    </>
   );
 };
 
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: layout.pad.lg,
-    paddingStart: layout.pad.lg,
-    paddingEnd: layout.pad.lg,
+    justifyContent: 'space-between',
   },
   footer: {
     flexDirection: 'row',
@@ -372,12 +370,6 @@ const style = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     top: width + width - resScale(100),
-  },
-  content: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flex: 1,
-    position: 'relative',
   },
   buttonAction: {
     position: 'absolute',

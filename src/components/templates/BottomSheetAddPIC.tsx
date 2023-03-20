@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     height: layout.pad.xl + layout.pad.lg,
   },
   headerTitle: {
-    fontFamily: font.family.montserrat['700'],
+    fontFamily: font.family.montserrat[700],
     fontSize: font.size.lg,
   },
   buttonWrapper: {

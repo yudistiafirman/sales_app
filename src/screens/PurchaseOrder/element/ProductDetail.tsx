@@ -2,6 +2,7 @@ import { bStorage } from '@/actions';
 import BChoosenProductList from '@/components/templates/BChoosenProductList';
 import { PO } from '@/navigation/ScreenNames';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { AppDispatch, RootState } from '@/redux/store';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

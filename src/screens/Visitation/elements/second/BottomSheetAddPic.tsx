@@ -135,7 +135,7 @@ const BSheetAddPic = React.forwardRef(
 
 const style = StyleSheet.create({
   leftIconStyle: {
-    fontFamily: fonts.family.montserrat['400'],
+    fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.md,
     color: colors.textInput.input,
   },

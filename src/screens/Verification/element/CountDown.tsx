@@ -1,13 +1,15 @@
 import { BText } from '@/components';
-import font from '@/constants/fonts';
 import React from 'react';
-import { colors } from '@/constants';
 import VerificationStyles from '../styles';
 
 const CountDown = ({ count }: { count: number }): JSX.Element => {
+  let finalCount = count.toString();
+  if (count.toString().match(/^\d$/)) {
+    finalCount = '0' + count.toString();
+  }
   return (
     <BText style={VerificationStyles.countDownText}>
-      Kirim lagi {`(00:${count})`}
+      Kirim lagi {`(00:${finalCount})`}
     </BText>
   );
 };

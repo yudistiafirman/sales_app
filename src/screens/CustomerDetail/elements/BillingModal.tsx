@@ -35,6 +35,7 @@ type BillingModalType = {
   setRegion: React.Dispatch<React.SetStateAction<any>>;
   region: any;
   projectId: string | undefined;
+  isUpdate?: boolean;
 };
 
 const { height } = Dimensions.get('window');
@@ -46,6 +47,7 @@ export default function BillingModal({
   projectId,
   region,
   setRegion,
+  isUpdate = false,
 }: BillingModalType) {
   const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
     undefined
@@ -154,7 +156,7 @@ export default function BillingModal({
       const response = await updateBillingAddress(projectId, body);
       if (response.data.success) {
         setFormattedAddress(region.formattedAddress);
-        setRegion(null);
+        setRegion(region);
         setIsModalVisible((curr) => !curr);
         dispatch(
           openPopUp({
@@ -193,7 +195,7 @@ export default function BillingModal({
         <BContainer>
           <View style={styles.modalHeader}>
             <Text style={styles.headerText} numberOfLines={1}>
-              Tambah Alamat Penagihan
+              {(isUpdate ? 'Ubah' : 'Tambah') + ' Alamat Penagihan'}
             </Text>
             <TouchableOpacity
               onPress={() => setIsModalVisible((curr) => !curr)}
@@ -242,7 +244,7 @@ export default function BillingModal({
           <BButtonPrimary
             disable={region === null}
             onPress={onPressAddAddress}
-            title="Tambah Alamat"
+            title={(isUpdate ? 'Ubah' : 'Tambah') + ' Alamat'}
           />
         </BContainer>
       </View>

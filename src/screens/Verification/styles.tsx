@@ -10,23 +10,23 @@ const VerificationStyles = StyleSheet.create({
     alignSelf: 'center',
   },
   intructionsTextDark: {
-    fontFamily: font.family.montserrat['300'],
+    fontFamily: font.family.montserrat[300],
     color: colors.text.dark,
     fontSize: font.size.md,
     textAlign: 'center',
   },
   intructionsTextRed: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
     color: colors.primary,
   },
   intrutructionsTextDarkBold: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
     color: colors.text.dark,
   },
   otpLabel: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     color: colors.text.dark,
     fontSize: font.size.sm,
   },
@@ -35,7 +35,7 @@ const VerificationStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   countDownText: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
     color: colors.text.divider,
   },

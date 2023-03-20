@@ -137,12 +137,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   parentPrice: {
-    fontFamily: font.family.montserrat['300'],
+    fontFamily: font.family.montserrat[300],
     fontSize: font.size.xs,
     color: colors.text.darker,
   },
   totalParentPrice: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.sm,
     color: colors.text.darker,
     textAlign:'right',

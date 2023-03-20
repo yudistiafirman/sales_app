@@ -20,7 +20,9 @@ export default function BLocationText({ location }: locationType) {
         color="#0080FF"
         style={style.iconStyle}
       />
-      <Text numberOfLines={1} style={style.locationText}>{location}</Text>
+      <Text numberOfLines={1} style={style.locationText}>
+        {location}
+      </Text>
     </View>
   );
 }
@@ -29,9 +31,9 @@ const style = StyleSheet.create({
   location: {
     flexDirection: 'row',
     alignItems: 'center',
-    maxWidth: resScale(210),
   },
   locationText: {
+    flex: 1,
     color: '#0080FF',
     fontFamily: font.family.montserrat[300],
     fontSize: fonts.size.xs,

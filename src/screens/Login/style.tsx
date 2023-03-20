@@ -10,19 +10,19 @@ const loginStyle = StyleSheet.create({
     marginHorizontal: layout.pad.lg,
   },
   textInfo: {
-    fontFamily: font.family.montserrat['400'],
+    fontFamily: font.family.montserrat[400],
     fontSize: font.size.md,
     color: colors.text.dark,
     textAlign: 'center',
   },
   whatsapp: {
-    fontFamily: font.family.montserrat['300'],
+    fontFamily: font.family.montserrat[300],
     fontSize: font.size.md,
     color: colors.primary,
     textAlign: 'left',
   },
   inputLabel: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.sm,
     color: colors.text.dark,
     alignSelf: 'flex-start',
@@ -43,13 +43,13 @@ const loginStyle = StyleSheet.create({
     justifyContent: 'center',
   },
   counterCodeText: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: resScale(14),
     color: colors.text.dark,
     marginBottom: layout.pad.sm,
   },
   maskInputStyle: {
-    fontFamily: font.family.montserrat['400'],
+    fontFamily: font.family.montserrat[400],
     fontSize: font.size.md,
     backgroundColor: colors.white,
     color: colors.textInput.input,

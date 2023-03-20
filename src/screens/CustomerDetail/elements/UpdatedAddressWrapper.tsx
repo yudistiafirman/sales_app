@@ -42,13 +42,13 @@ const styles = StyleSheet.create({
     marginLeft: layout.pad.lg,
   },
   mainAddress: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
     color: colors.text.darker,
     marginBottom: layout.pad.sm,
   },
   secondAddress: {
-    fontFamily: font.family.montserrat['300'],
+    fontFamily: font.family.montserrat[300],
     fontSize: font.size.xs,
     color: colors.text.darker,
     marginBottom: layout.pad.md,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     borderRadius: layout.radius.sm,
   },
   changeAddressText: {
-    fontFamily: font.family.montserrat['400'],
+    fontFamily: font.family.montserrat[400],
     fontSize: font.size.sm,
     color: colors.text.medium,
   },

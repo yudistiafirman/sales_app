@@ -19,6 +19,7 @@ interface IProps {
   status?: status;
   rejectCategory: string | null;
   quatationId?: string | null;
+  rejectNotes?: string;
 }
 
 const VisitationDatesAndStatus = ({
@@ -27,6 +28,7 @@ const VisitationDatesAndStatus = ({
   status,
   rejectCategory,
   quatationId,
+  rejectNotes,
 }: IProps) => {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
@@ -91,7 +93,7 @@ const VisitationDatesAndStatus = ({
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data.data ? data.data.number : 'N/A',
         data: data.data,
-        type: 'SPH'
+        type: 'SPH',
       });
     } catch (error) {
       dispatch(
@@ -155,6 +157,15 @@ const VisitationDatesAndStatus = ({
           {renderCompBaseOnStatus()}
         </>
       </View>
+      {status === 'REJECTED' && (
+        <>
+          <BSpacer size={'medium'} />
+          <BText bold="600" sizeInNumber={font.size.md}>
+            Alasan
+          </BText>
+          <BText bold="400">{rejectNotes ? rejectNotes : '-'}</BText>
+        </>
+      )}
     </View>
   );
 };

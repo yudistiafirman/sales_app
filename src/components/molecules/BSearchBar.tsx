@@ -23,12 +23,13 @@ interface BSearchBarProp {
   editable?: boolean | undefined;
   outlineStyle?: ViewStyle | undefined;
   placeHolderTextColor?: string | undefined;
+  textColor?: string | undefined;
   dense?: boolean | undefined;
   onFocus?: () => void;
 }
 
 const BSearchBarDefaultTextStyle = {
-  fontFamily: font.family.montserrat['400'],
+  fontFamily: font.family.montserrat[400],
   fontSize: font.size.md,
   lineHeight: resScale(14),
   backgroundColor: colors.white,
@@ -68,6 +69,7 @@ const BSearchBar = ({
   editable,
   outlineStyle,
   placeHolderTextColor,
+  textColor,
   dense,
   onFocus,
 }: BSearchBarProp & typeof BSearchBarDefaultProps) => {
@@ -90,6 +92,7 @@ const BSearchBar = ({
       style={textInputStyle}
       editable={editable}
       outlineStyle={outlineStyle}
+      textColor={textColor}
       placeholderTextColor={placeHolderTextColor}
       dense={dense}
     />

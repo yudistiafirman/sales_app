@@ -10,7 +10,7 @@ const SearchAreaStyles = StyleSheet.create({
     alignItems: 'center',
   },
   currentLocationText: {
-    fontFamily: font.family.montserrat['400'],
+    fontFamily: font.family.montserrat[400],
     fontSize: font.size.md,
     color: colors.text.darker,
   },
@@ -25,12 +25,12 @@ const SearchAreaStyles = StyleSheet.create({
     alignItems: 'center',
   },
   addressTitle: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
     color: colors.text.darker,
   },
   addressDetail: {
-    fontFamily: font.family.montserrat['300'],
+    fontFamily: font.family.montserrat[300],
     fontSize: font.size.sm,
     color: colors.text.darker,
   },

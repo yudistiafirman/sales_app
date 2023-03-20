@@ -124,6 +124,14 @@ const CreateScheduleScreen = () => {
 
   React.useEffect(() => {
     stepHandler(values, setStepsDone);
+
+    if (!values.stepTwo?.deliveryTime) {
+      action.updateValueOnstep(
+        'stepTwo',
+        'deliveryTime',
+        moment(new Date()).format('HH:mm')
+      );
+    }
   }, [values]);
 
   const next = (nextStep: number) => async () => {

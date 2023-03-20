@@ -65,12 +65,12 @@ export const PriceListCardStyles = StyleSheet.create({
     marginTop: resScale(6),
   },
   productName: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     color: colors.text.darker,
     fontSize: font.size.md,
   },
   productPrice: {
-    fontFamily: font.family.montserrat['400'],
+    fontFamily: font.family.montserrat[400],
     color: colors.text.darker,
     fontSize: font.size.md,
   },

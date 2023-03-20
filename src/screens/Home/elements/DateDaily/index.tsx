@@ -157,7 +157,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   todayText: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.sm,
     color: colors.primary,
   },

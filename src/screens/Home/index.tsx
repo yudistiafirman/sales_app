@@ -7,6 +7,7 @@ import {
   Linking,
   NativeModules,
   Text,
+  BackHandler,
 } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
@@ -26,7 +27,11 @@ import {
   PopUpQuestion,
   BCommonSearchList,
 } from '@/components';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import { fonts, layout } from '@/constants';
 import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
@@ -183,44 +188,35 @@ const Beranda = () => {
             }),
         };
         const { data: _data } = await getAllVisitations(options);
-        const dispalyData =
-          _data.data?.map(
-            (el: {
-              id: string;
-              status: string;
-              order: any;
-              finishDate: moment.MomentInput;
-              dateVisit: moment.MomentInput;
-              project: { name: any };
-            }) => {
-              const status =
-                el.status === 'VISIT' ? `Visit ke ${el.order}` : el.status;
-              const pilStatus = el.finishDate ? 'Selesai' : 'Belum Selesai';
-              const time = el.finishDate
-                ? moment(el.finishDate).format('hh:mm')
-                : null;
-              const location = el.project?.locationAddress.line1;
-              return {
-                id: el.id,
-                name: el.project?.name || '--',
-                location: location ? location : '-',
-                time,
-                status,
-                pilStatus,
-              };
-            }
-          ) || [];
+        const displayData =
+          _data.data?.data?.map((el: any) => {
+            const status =
+              el.status === 'VISIT' ? `Visit ke ${el.order}` : el.status;
+            const pilStatus = el.finishDate ? 'Selesai' : 'Belum Selesai';
+            const time = el.finishDate
+              ? moment(el.finishDate).format('hh:mm')
+              : null;
+            const location = el.project?.LocationAddress.line1;
+            return {
+              id: el.id,
+              name: el.project?.Company?.displayName || '--',
+              location: location ? location : '-',
+              time,
+              status,
+              pilStatus,
+            };
+          }) || [];
 
         setIsLoading(false);
         if (page > 1) {
           setData({
-            ..._data,
-            data: data.data.concat(dispalyData),
+            ..._data.data,
+            data: data.data.concat(displayData),
           });
         } else {
           setData({
-            ..._data,
-            data: dispalyData,
+            ..._data.data,
+            data: displayData,
           });
         }
       } catch (error) {
@@ -238,7 +234,7 @@ const Beranda = () => {
       fetchTarget();
       fetchVisitations(selectedDate);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchTarget, selectedDate])
+    }, [fetchTarget, selectedDate, isModalVisible])
   );
 
   const renderUpdateDialog = () => {
@@ -568,22 +564,37 @@ const Beranda = () => {
         backdropColor="white"
         hideModalContentWhileAnimating={true}
         coverScreen={false}
+        onBackButtonPress={toggleModal('close')}
         onModalHide={() => {
           fetchVisitations(selectedDate);
         }}
       >
         <View style={style.modalContent}>
+          <BSpacer size={'extraSmall'} />
           <BCommonSearchList
             placeholder="Search"
             index={index}
             onIndexChange={setIndex}
             onPressMagnify={kunjunganAction}
-            onClearValue={toggleModal('close')}
+            onClearValue={() => {
+              if (searchQuery && searchQuery.trim() !== '') {
+                setSearchQuery('');
+              } else {
+                toggleModal('close')();
+              }
+            }}
             searchQuery={searchQuery}
             onChangeText={onChangeSearch}
             routes={routes}
             loadList={isLoading}
-            onPressList={enable_customer_detail ? visitationOnPress : undefined}
+            onPressList={
+              enable_customer_detail
+                ? (data) => {
+                    toggleModal('close')();
+                    visitationOnPress(data);
+                  }
+                : undefined
+            }
             data={data.data}
             onEndReached={onEndReached}
             isError={isError}

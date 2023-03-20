@@ -24,7 +24,7 @@ const style = StyleSheet.create({
     color: colors.white,
     zIndex: 2,
     textAlign: 'center',
-    fontFamily: fonts.family.montserrat['500'],
+    fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.xs,
     marginTop: resScale(2),
   },

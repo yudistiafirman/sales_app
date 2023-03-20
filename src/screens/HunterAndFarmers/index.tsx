@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     top: layout.pad.lg,
   },
   title: {
-    fontFamily: font.family.montserrat['700'],
+    fontFamily: font.family.montserrat[700],
     fontSize: font.size.md,
     color: '#000000',
   },
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontFamily: font.family.montserrat['400'],
+    fontFamily: font.family.montserrat[400],
     fontSize: font.size.md,
     color: '#000000',
   },
