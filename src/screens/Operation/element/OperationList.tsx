@@ -1,84 +1,90 @@
-import { View, StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, ListRenderItem } from 'react-native';
 import React, { useCallback } from 'react';
-
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { resScale } from '@/utils';
 import { layout } from '@/constants';
-import { BSpacer, BVisitationCard } from '@/components';
-import { useNavigation } from '@react-navigation/native';
-import { ENTRY_TYPE } from '@/models/EnumModel';
-import { CAMERA, CREATE_DO } from '@/navigation/ScreenNames';
+import { BEmptyState, BSpacer, BVisitationCard } from '@/components';
+import BCommonListShimmer from '@/components/templates/BCommonListShimmer'
+import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-type FooterType = {
-  role?: ENTRY_TYPE;
-  isLoading?: boolean;
-};
-type OperationListType = {
-  data: {
-    id: string;
-    name: string;
-    qty?: string;
-    status?: string;
-    addressID?: string;
-  }[];
-};
-
-const FooterLoading = ({ isLoading }: FooterType) => {
-  if (!isLoading) {
-    return null;
-  }
-  return (
-    <View style={style.flatListLoading}>
-      <ShimmerPlaceHolder style={style.flatListShimmer} />
-    </View>
-  );
-};
+interface OperationListProps {
+  data: OperationsDeliveryOrdersListResponse[];
+  onEndReached?:
+  | ((info: { distanceFromEnd: number }) => void)
+  | null
+  | undefined;
+  refreshing?: boolean;
+  loadList?: boolean;
+  isLoadMore?: boolean;
+  onRefresh?: () => void;
+  onPressList: (data: any) => void;
+  errorMessage?: any;
+  isError?: boolean;
+  onRetry?: () => void;
+  onLocationPress: (lonlat: { longitude: string, latitude: string }) => void
+}
 
 export default function OperationList({
-  isLoading,
   data,
-  role,
-}: FooterType & OperationListType) {
-  const navigation = useNavigation();
-  const footerComp = useCallback(
-    () => <FooterLoading isLoading={isLoading} />,
-    [isLoading]
-  );
+  onEndReached,
+  refreshing,
+  loadList,
+  isLoadMore,
+  onRefresh,
+  onPressList,
+  errorMessage,
+  isError,
+  onRetry,
+  onLocationPress
+}: OperationListProps) {
+
   const separator = useCallback(() => <BSpacer size={'small'} />, []);
 
-  const onClickItem = (id: string) => {
-    if (role === ENTRY_TYPE.OPSMANAGER) {
-      navigation.navigate(CREATE_DO, { id: id });
-    } else {
-      navigation.navigate(CAMERA, {
-        photoTitle: 'DO',
-        navigateTo: role ? ENTRY_TYPE[role] : '',
-      });
-    }
-  };
+  const renderItem: ListRenderItem<OperationsDeliveryOrdersListResponse> = useCallback(({ item }) => {
+    return (
+      <BVisitationCard
+        onPress={() => onPressList(item)}
+        onLocationPress={(lonlat) => onLocationPress(lonlat)}
+        item={{
+          name: item?.number,
+          picOrCompanyName: item?.project?.projectName,
+          unit: `${item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity} m³`,
+          pilStatus: item?.status,
+          lonlat: { longitude: item.project?.Address?.lon!, latitude: item.project?.Address?.lat! }
+
+        }}
+      />
+    )
+  }, [])
 
   return (
     <FlatList
-      style={style.flatList}
       data={data}
-      keyExtractor={(item, index) => `${item.name}-${index}`}
-      renderItem={({ item }) => {
-        return (
-          <BVisitationCard
-            onPress={() => onClickItem(item.id)}
-            item={{
-              name: item.id,
-              picOrCompanyName: item.name,
-              location: item.addressID,
-              unit: item.qty,
-              pilStatus: item.status,
-            }}
+      removeClippedSubviews={false}
+      initialNumToRender={10}
+      maxToRenderPerBatch={10}
+      onRefresh={onRefresh}
+      keyExtractor={(item, index) => index.toString()}
+      refreshing={refreshing}
+      onEndReached={onEndReached}
+      renderItem={renderItem}
+      ListEmptyComponent={
+        loadList || refreshing ? (
+          <BCommonListShimmer />
+        ) : (
+          <BEmptyState
+            errorMessage={errorMessage}
+            isError={isError}
+            onAction={onRetry}
           />
-        );
-      }}
-      ListFooterComponent={footerComp}
+        )
+      }
+      ListFooterComponent={
+        isLoadMore ? (
+          <BCommonListShimmer />
+        ) : null
+      }
       ItemSeparatorComponent={separator}
     />
   );
@@ -89,15 +95,6 @@ const style = StyleSheet.create({
     flex: 1,
     paddingBottom: layout.pad.lg,
     paddingHorizontal: layout.pad.lg,
-  },
-  flatListLoading: {
-    marginTop: layout.pad.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  flatListShimmer: {
-    width: resScale(330),
-    height: resScale(60),
-    borderRadius: layout.radius.md,
+    borderWidth: 1
   },
 });

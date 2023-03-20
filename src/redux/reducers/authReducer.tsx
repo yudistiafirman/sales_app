@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { ENTRY_TYPE } from '@/models/EnumModel';
 import { UserModel } from '@/models/User';
 
 interface LoginCredential {

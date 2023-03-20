@@ -190,7 +190,7 @@ const PurchaseOrder = () => {
 };
 
 const styles = StyleSheet.create({
-  poContainer: { flex: 1,marginHorizontal:layout.pad.lg,marginBottom:layout.pad.lg},
+  poContainer: { flex: 1, marginHorizontal: layout.pad.lg, marginBottom: layout.pad.lg },
   stepperIndicator: { alignSelf: 'center' },
   footer: {
     flexDirection: 'row',
