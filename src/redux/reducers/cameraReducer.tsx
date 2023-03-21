@@ -14,6 +14,7 @@ type fileResponse = {
   type: 'COVER' | 'GALLERY';
 };
 
+
 export interface CameraGlobalState {
   localURLs: LocalFileType[];
   visitationPhotoURLs: LocalFileType[];
@@ -115,7 +116,7 @@ export const cameraSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {});
+    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => { });
   },
 });
 

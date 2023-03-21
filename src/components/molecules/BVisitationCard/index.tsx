@@ -39,16 +39,18 @@ type VisitationCardType = {
   pillColor?: string;
   customIcon?: () => JSX.Element;
   customStyle?: ViewStyle;
+  onLocationPress?: (lonlat: { longitude: string, latitude: string }) => void
 };
 
 export default function BVisitationCard({
   item,
   searchQuery,
-  onPress = () => {},
+  onPress = () => { },
   isRenderIcon = true,
   customIcon,
   pillColor,
   customStyle,
+  onLocationPress
 }: VisitationCardType) {
   return (
     <View style={[style.container, customStyle]}>
@@ -103,14 +105,14 @@ export default function BVisitationCard({
           {iconRender(isRenderIcon, customIcon)}
         </TouchableOpacity>
       </View>
-      {item.onLocationPress && (
+      {item?.lonlat?.latitude && item?.lonlat.longitude && onLocationPress && (
         <View style={style.location}>
           <BButtonPrimary
             buttonStyle={style.locationButton}
             titleStyle={style.locationTextButton}
             title={'Lihat Peta'}
             isOutline
-            onPress={() => item.onLocationPress(item.locationID)}
+            onPress={() => onLocationPress(item.lonlat)}
           />
         </View>
       )}
