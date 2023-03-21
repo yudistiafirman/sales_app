@@ -131,10 +131,10 @@ const SearchFlow = ({
     );
 
     if (item?.PIC) {
-      const picList = item?.PIC?.map((pic: PIC) => {
+      const picList = item?.PIC?.map((pic: PIC, index: number) => {
         return {
           ...pic,
-          isSelected: false,
+          isSelected: index === 0 ? true : false,
         };
       });
       if (picList.length === 1) {

@@ -53,7 +53,7 @@ const ThirdStep = () => {
         placeholder: visitationData.stageProject
           ? STAGE_PROJECT.find((it) => {
               return it.value === visitationData.stageProject;
-            }).label
+            })?.label
           : 'Fase Proyek',
         onChange: (value: any) => {
           onChange('stageProject')(value);

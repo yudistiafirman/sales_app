@@ -53,7 +53,8 @@ const ProjectPhase = ({ phase }: { phase: string }) => {
             style={[
               styles.textFase,
               {
-                color: item.phase === phase ? colors.primary : colors.textInput,
+                color:
+                  item.phase === phase ? colors.primary : colors.text.darker,
               },
             ]}
           >

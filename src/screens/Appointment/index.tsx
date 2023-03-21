@@ -342,13 +342,31 @@ const Appointment = () => {
           )}
           <BottomSheetAddPIC
             isVisible={isModalPicVisible}
-            addPic={(dataPic: PIC) =>
+            addPic={(dataPic: PIC) => {
+              let finalPIC: any[] = [...values.stepOne[customerType].PIC];
+              let finalData = undefined;
+              if (dataPic)
+                finalData = {
+                  ...dataPic,
+                  isSelected: true,
+                };
+              if (
+                values.stepOne[customerType].PIC &&
+                values.stepOne[customerType].PIC.length > 0
+              ) {
+                finalPIC.forEach((it, index) => {
+                  finalPIC[index] = {
+                    ...finalPIC[index],
+                    isSelected: false,
+                  };
+                });
+              }
               dispatchValue({
                 type: AppointmentActionType.SET_PICS,
                 key: customerType,
-                value: [...values.stepOne[customerType].PIC, dataPic],
-              })
-            }
+                value: [...finalPIC, finalData],
+              });
+            }}
             onClose={() =>
               dispatchValue({ type: AppointmentActionType.TOGGLE_MODAL_PICS })
             }

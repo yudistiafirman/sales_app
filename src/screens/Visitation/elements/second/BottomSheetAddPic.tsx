@@ -85,6 +85,7 @@ const BSheetAddPic = React.forwardRef(
               ? colors.text.errorText
               : undefined
             : undefined,
+          keyboardType: 'email-address',
           type: 'textInput',
           onChange: (event) => {
             onChange('email')(event.nativeEvent.text);

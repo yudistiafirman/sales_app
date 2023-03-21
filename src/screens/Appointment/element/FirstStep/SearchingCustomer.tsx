@@ -124,6 +124,17 @@ const SearchingCustomer = () => {
           if (!handlePicNull.PIC) {
             handlePicNull.PIC = [];
           }
+
+          if (item.PIC && item.PIC.length > 0) {
+            let finalPIC = [...item.PIC];
+            finalPIC.forEach((it, index) => {
+              finalPIC[index] = {
+                ...finalPIC[index],
+                isSelected: index === 0 ? true : false,
+              };
+            });
+            if (handlePicNull.PIC) handlePicNull.PIC = finalPIC;
+          }
           onPressCard(handlePicNull);
         }}
         data={projects}

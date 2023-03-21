@@ -291,7 +291,7 @@ const renderInput = (
         />
         <TouchableOpacity
           style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
-          onPress={() => calendar?.setCalendarVisible(true)}
+          onPress={() => calendar?.setCalendarVisible(!calendar?.isCalendarVisible)}
         >
           <View
             style={[

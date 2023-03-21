@@ -67,7 +67,7 @@ export default function SelectedPic({
           openBottomSheet();
         },
         onSelect: (index: number) => {
-          const listPic = [];
+          const listPic: any[] = [];
           selectedCompany?.PIC?.forEach((pic, picIndex) => {
             let picChanged = { ...pic };
             if (index === picIndex) {
@@ -167,11 +167,13 @@ export default function SelectedPic({
           const currentList = selectedCompany?.PIC
             ? [...selectedCompany.PIC]
             : [];
-          if (currentList && currentList.length === 1) {
-            currentList[0] = {
-              ...currentList[0],
-              isSelected: false,
-            };
+          if (currentList && currentList.length > 0) {
+            currentList.forEach((it, index) => {
+              currentList[index] = {
+                ...currentList[index],
+                isSelected: false,
+              };
+            });
           }
           if (newPic) {
             newPic.isSelected = true;
