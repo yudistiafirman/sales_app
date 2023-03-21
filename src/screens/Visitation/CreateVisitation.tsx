@@ -41,6 +41,7 @@ import {
   VisitationGlobalState,
 } from '@/redux/reducers/VisitationReducer';
 import { RootState } from '@/redux/store';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 
 const labels = [
   'Alamat Proyek',
@@ -384,6 +385,7 @@ const CreateVisitation = () => {
         <PopUpQuestion
           isVisible={isPopupVisible}
           setIsPopupVisible={() => {
+            dispatch(resetImageURLS({ source: CREATE_VISITATION }));
             dispatch(resetVisitationState());
             setPopupVisible(false);
             navigation.goBack();

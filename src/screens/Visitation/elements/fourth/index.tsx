@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
 import LastStepPopUp from '../LastStepPopUp';
 import {
-  CreateVisitationFourthStep,
   locationPayloadType,
   payloadPostType,
   picPayloadType,
@@ -19,6 +18,7 @@ import { RootState } from '@/redux/store';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import {
   deleteImage,
+  resetImageURLS,
   setuploadedFilesResponse,
 } from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
@@ -180,9 +180,6 @@ const Fourth = () => {
   const { uploadedFilesResponse } = useSelector(
     (state: RootState) => state.camera
   );
-  const { visitationPhotoURLs } = useSelector(
-    (state: RootState) => state.camera
-  );
   const visitationData = useSelector((state: RootState) => state.visitation);
 
   const onChange = (key: any) => (e: any) => {
@@ -199,13 +196,14 @@ const Fourth = () => {
 
   const removeImage = (pos: number) => {
     dispatch(deleteImage({ pos, source: CREATE_VISITATION }));
+    let images = [...visitationData?.images];
+    images.splice(pos, 1);
+    onChange('images')(images);
   };
 
   useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step4');
-    onChange('images')(visitationPhotoURLs);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visitationPhotoURLs]);
+  }, [visitationData.images]);
 
   useEffect(() => {
     DeviceEventEmitter.addListener('CreateVisitation.continueButton', () => {
@@ -244,7 +242,7 @@ const Fourth = () => {
         const methodStr = isDataUpdate ? 'PUT' : 'POST';
 
         if (uploadedFilesResponse.length === 0) {
-          const photoFiles = visitationPhotoURLs.map((photo) => {
+          const photoFiles = visitationData.images?.map((photo) => {
             return {
               ...photo.file,
               uri: photo?.file?.uri?.replace('file:', 'file://'),
@@ -258,7 +256,7 @@ const Fourth = () => {
           data.forEach((photo) => {
             const photoName = `${photo.name}.${photo.type}`;
             const photoNamee = `${photo.name}.jpg`;
-            const foundObject = visitationPhotoURLs.find(
+            const foundObject = visitationData.images?.find(
               (obj) =>
                 obj?.file?.name === photoName || obj?.file?.name === photoNamee
             );
@@ -326,6 +324,7 @@ const Fourth = () => {
             navigation.goBack();
           }
         }
+        dispatch(resetImageURLS({ source: CREATE_VISITATION }));
         dispatch(resetVisitationState());
         dispatch(
           openPopUp({

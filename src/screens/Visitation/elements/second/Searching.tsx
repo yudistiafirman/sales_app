@@ -27,14 +27,6 @@ interface IProps {
   onSearch: (search: boolean) => void;
   isSearch: boolean;
   searchingDisable?: boolean;
-  resultSpace?:
-    | 'verySmall'
-    | 'extraSmall'
-    | 'small'
-    | 'medium'
-    | 'large'
-    | 'extraLarge'
-    | number;
   setSelectedCompany: React.Dispatch<
     React.SetStateAction<{ id: string; title: string }>
   >;
@@ -44,7 +36,6 @@ const SearchFlow = ({
   onSearch,
   isSearch,
   searchingDisable,
-  resultSpace,
   setSelectedCompany,
 }: IProps) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -198,15 +189,14 @@ const SearchFlow = ({
   };
 
   return (
-    <React.Fragment>
+    <>
       <BTextLocation
         location={visitationData.locationAddress?.formattedAddress!}
         numberOfLines={1}
       />
       <BSpacer size="extraSmall" />
-      <BSpacer size={resultSpace ? resultSpace : 'extraSmall'} />
       {isSearch ? (
-        <View style={{ height: resScale(500) }}>
+        <View style={{ flex: 1 }}>
           <BCommonSearchList
             index={index}
             onIndexChange={setIndex}
@@ -243,7 +233,7 @@ const SearchFlow = ({
           />
         </TouchableOpacity>
       )}
-    </React.Fragment>
+    </>
   );
 };
 
