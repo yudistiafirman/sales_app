@@ -139,9 +139,9 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
-def rootVersionCode = 4
-def rootDevVersionName = "1.0.0 (Dev)"
-def rootProdVersionName = "1.0.0"
+def rootVersionCode = 6
+def rootDevVersionName = "1.1.0 (Dev)"
+def rootProdVersionName = "1.1.0"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
