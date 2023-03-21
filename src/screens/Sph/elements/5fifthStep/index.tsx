@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  FlatList,
+} from 'react-native';
 import React, { useContext, useState } from 'react';
 import {
   BBackContinueBtn,
@@ -20,7 +27,6 @@ import {
   sphOrderPayloadType,
   SphStateInterface,
 } from '@/interfaces';
-import { BFlatlistItems } from '@/components';
 import ChoosePicModal from '../ChoosePicModal';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
@@ -328,7 +334,7 @@ export default function FifthStep() {
       dispatch(
         openPopUp({
           popUpType: 'error',
-          popUpText: 'Error Menyimpan SPH',
+          popUpText: error || 'Error Menyimpan SPH',
           outsideClickClosePopUp: true,
         })
       );
@@ -336,98 +342,114 @@ export default function FifthStep() {
   }
 
   return (
-    <BContainer>
-      <StepDone
-        isModalVisible={isStepDoneVisible}
-        setIsModalVisible={setIsStepDoneVisible}
-        sphResponse={madeSphData}
-      />
-      <ChoosePicModal
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-        openAddPic={addPicHandler}
-        selectPic={(pic) => {
-          dispatch(updateSelectedPic(pic));
-          setIsModalVisible((curr) => !curr);
-        }}
-      />
-      <View style={{ minHeight: resScale(80) }}>
-        <BVisitationCard
-          item={{
-            name: sphState?.selectedCompany?.name
-              ? sphState?.selectedCompany?.name
-              : '-',
-            location: sphState?.selectedCompany?.locationAddress.line1,
-          }}
-          isRenderIcon={false}
+    <SafeAreaView style={{ flex: 1 }}>
+      <BContainer>
+        <StepDone
+          isModalVisible={isStepDoneVisible}
+          setIsModalVisible={setIsStepDoneVisible}
+          sphResponse={madeSphData}
         />
-      </View>
-      <BSpacer size={'extraSmall'} />
-      <View style={style.picLable}>
-        <Text style={style.picText}>PIC</Text>
-        <TouchableOpacity
-          onPress={() => {
+        <ChoosePicModal
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
+          openAddPic={addPicHandler}
+          selectPic={(pic) => {
+            dispatch(updateSelectedPic(pic));
             setIsModalVisible((curr) => !curr);
           }}
-        >
-          <Text style={style.gantiPicText}>Ganti PIC</Text>
-        </TouchableOpacity>
-      </View>
-      <BSpacer size={'verySmall'} />
-      <BPic
-        name={sphState?.selectedPic?.name}
-        position={sphState?.selectedPic?.position}
-        phone={sphState?.selectedPic?.phone}
-        email={sphState?.selectedPic?.email}
-      />
-      <BSpacer size={'extraSmall'} />
-      <View style={style.produkLabel}>
-        <Text style={style.picText}>Produk</Text>
-      </View>
-
-      <BFlatlistItems
-        renderItem={(item) => {
-          return (
-            <BProductCard
-              name={item.product.name}
-              pricePerVol={+item.sellPrice}
-              volume={+item.volume}
-              totalPrice={+item.totalPrice}
+        />
+        <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, maxHeight: resScale(70) }}>
+            <BVisitationCard
+              item={{
+                name: sphState?.selectedCompany?.name
+                  ? sphState?.selectedCompany?.name
+                  : '-',
+                location: sphState?.selectedCompany?.locationAddress.line1,
+              }}
+              isRenderIcon={false}
             />
-          );
-        }}
-        data={sphState?.chosenProducts}
-        emptyText={'Produk tidak ada yang terpilih'}
-      />
-      <BSpacer size={'extraSmall'} />
-      <BForm inputs={inputsData} />
-      <BBackContinueBtn
-        isContinueIcon={false}
-        continueText={'Buat SPH'}
-        onPressContinue={buatSph}
-        onPressBack={() => {
-          setCurrentPosition(3);
-        }}
-      />
-      <BSheetAddPic
-        ref={bottomSheetRef}
-        initialIndex={-1}
-        addPic={(pic: any) => {
-          if (sphState.selectedCompany) {
-            const newList = [
-              ...sphState.selectedCompany.PIC,
-              { ...pic, isSelected: false },
-            ];
-            dispatch(
-              updateSelectedCompany({
-                ...sphState.selectedCompany,
-                PIC: newList,
-              })
-            );
-          }
-        }}
-      />
-    </BContainer>
+          </View>
+          <View>
+            <BSpacer size={'extraSmall'} />
+            <View style={style.picLable}>
+              <Text style={style.picText}>PIC</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsModalVisible((curr) => !curr);
+                }}
+              >
+                <Text style={style.gantiPicText}>Ganti PIC</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View>
+            <BSpacer size={'verySmall'} />
+            <BPic
+              name={sphState?.selectedPic?.name}
+              position={sphState?.selectedPic?.position}
+              phone={sphState?.selectedPic?.phone}
+              email={sphState?.selectedPic?.email}
+            />
+          </View>
+          <View>
+            <BSpacer size={'extraSmall'} />
+            <View style={style.produkLabel}>
+              <Text style={style.picText}>Produk</Text>
+            </View>
+            <BSpacer size={'small'} />
+          </View>
+          <View>
+            <FlatList
+              data={sphState?.chosenProducts}
+              renderItem={(item) => {
+                return (
+                  <>
+                    <BProductCard
+                      name={item.item.product.name}
+                      pricePerVol={+item.item.sellPrice}
+                      volume={+item.item.volume}
+                      totalPrice={+item.item.totalPrice}
+                    />
+                    <BSpacer size={'small'} />
+                  </>
+                );
+              }}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <BSpacer size={'extraSmall'} />
+            <BForm inputs={inputsData} />
+          </View>
+        </View>
+        <BBackContinueBtn
+          isContinueIcon={false}
+          continueText={'Buat SPH'}
+          onPressContinue={buatSph}
+          onPressBack={() => {
+            setCurrentPosition(3);
+          }}
+        />
+        <BSheetAddPic
+          ref={bottomSheetRef}
+          initialIndex={-1}
+          addPic={(pic: any) => {
+            if (sphState.selectedCompany) {
+              const newList = [
+                ...sphState.selectedCompany.PIC,
+                { ...pic, isSelected: false },
+              ];
+              dispatch(
+                updateSelectedCompany({
+                  ...sphState.selectedCompany,
+                  PIC: newList,
+                })
+              );
+            }
+          }}
+        />
+      </BContainer>
+    </SafeAreaView>
   );
 }
 

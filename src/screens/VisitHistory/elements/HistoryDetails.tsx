@@ -12,7 +12,6 @@ import ProjectPhase from './ProjectPhase';
 import VisitationDatesAndStatus from './VisitationDatesAndStatus';
 
 const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
-
   return (
     <View>
       <BSpacer size="small" />
@@ -22,6 +21,7 @@ const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
         finishDate={details.finishDate}
         rejectCategory={details.rejectCategory}
         quatationId={details?.project?.quotationLetterId}
+        rejectNotes={details?.rejectNotes}
       />
       <BSpacer size="small" />
       <BDivider
@@ -31,7 +31,7 @@ const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
         marginHorizontal={layout.pad.lg}
       />
       <BSpacer size="small" />
-      <Pic pic={details?.project?.pic} />
+      <Pic pic={details?.project?.Pic} />
       <BSpacer size="small" />
       <ProjectPhase phase={details?.project?.stage} />
       <BSpacer size="small" />
@@ -42,7 +42,7 @@ const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
         marginHorizontal={layout.pad.lg}
       />
       <BSpacer size="small" />
-      <Product products={details?.project?.products} />
+      <Product products={details?.products} />
       <BSpacer size="small" />
       <BDivider
         borderBottomWidth={1}

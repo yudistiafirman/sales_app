@@ -35,7 +35,7 @@ const BTextLocation = ({
       <BText
         numberOfLines={numberOfLines}
         style={{
-          fontFamily: font.family.montserrat['300'],
+          fontFamily: font.family.montserrat[300],
           fontSize: fonts.size.xs,
           color: colors.text.blue,
         }}

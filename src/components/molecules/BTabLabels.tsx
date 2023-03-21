@@ -33,8 +33,8 @@ const BTabLabels = ({ route, focused, minWidth }: BTabLabelsProps) => {
   const BTabLabelsTextStyle: TextStyle = {
     color: focused ? colors.primary : colors.text.dark,
     fontFamily: focused
-      ? font.family.montserrat['600']
-      : font.family.montserrat['400'],
+      ? font.family.montserrat[600]
+      : font.family.montserrat[400],
     fontSize: font.size.md,
     minWidth: minWidth && minWidth,
     alignSelf: 'center',

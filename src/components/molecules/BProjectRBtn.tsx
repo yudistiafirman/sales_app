@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     marginBottom:layout.pad.lg
   },
   radioTitle: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
   },
 });

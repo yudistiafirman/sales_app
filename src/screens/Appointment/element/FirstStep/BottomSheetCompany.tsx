@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     flex: 0.15,
   },
   headerTitle: {
-    fontFamily: font.family.montserrat['700'],
+    fontFamily: font.family.montserrat[700],
     fontSize: font.size.lg,
   },
   addProjectContainer: {
@@ -112,12 +112,12 @@ const styles = StyleSheet.create({
   companyDetailsCardWrapper: { flex: 0.25 },
   projectNameListContainer: { flex: 0.3, paddingTop: layout.pad.lg },
   notFoundProjectText: {
-    fontFamily: font.family.montserrat['400'],
+    fontFamily: font.family.montserrat[400],
     fontSize: font.size.md,
     color: colors.text.medium,
   },
   addProjectButton: { borderRadius: layout.radius.sm },
-  addProjectBtnText: { fontFamily: font.family.montserrat['400'] },
+  addProjectBtnText: { fontFamily: font.family.montserrat[400] },
   chooseBtn: {
     position: 'absolute',
     width: '100%',

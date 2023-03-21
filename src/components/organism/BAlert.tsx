@@ -16,7 +16,7 @@ interface BAlertProps {
 }
 
 const BAlertDefaultContentStyle: TextStyle = {
-  fontFamily: font.family.montserrat['600'],
+  fontFamily: font.family.montserrat[600],
   fontSize: resScale(16),
   textAlign: 'center',
   marginBottom: resScale(34),

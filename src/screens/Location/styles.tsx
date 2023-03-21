@@ -34,13 +34,13 @@ const LocationStyles = StyleSheet.create({
     height: '100%',
   },
   addressTitle: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
     color: colors.text.darker,
     marginBottom: layout.pad.sm,
   },
   addressDetails: {
-    fontFamily: font.family.montserrat['300'],
+    fontFamily: font.family.montserrat[300],
     fontSize: font.size.sm,
     color: colors.text.darker,
     marginBottom: layout.pad.sm,

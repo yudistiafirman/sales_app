@@ -79,8 +79,8 @@ const CustomTabBar = ({ state, descriptors, navigation }: TabBar) => {
               style={{
                 color: isFocused ? colors.primary : `${colors.text.inactive}40`,
                 fontFamily: isFocused
-                  ? font.family.montserrat['700']
-                  : font.family.montserrat['500'],
+                  ? font.family.montserrat[700]
+                  : font.family.montserrat[500],
                 fontSize: font.size.xs,
               }}
             >

@@ -35,7 +35,7 @@ export default function FirstStep() {
 
   React.useEffect(() => {
     crashlytics().log(SPH + '-Step1');
-  }, []);
+  }, [selectedCompany?.PIC, selectedCompany?.mainPic]);
 
   const routes: { title: string; totalItems: number }[] = useMemo(() => {
     return [
@@ -80,7 +80,25 @@ export default function FirstStep() {
           }}
           onClearValue={resetSearch}
           data={projects}
-          onPressList={(item) => dispatch(updateSelectedCompany(item))}
+          onPressList={(item) => {
+            let finalPIC: any[] = [];
+            let finalItem;
+            if (item.PIC && item.PIC.length > 0 && !selectedCompany) {
+              finalPIC = [...item.PIC];
+              finalPIC.forEach((it, index) => {
+                finalPIC[index] = {
+                  ...finalPIC[index],
+                  isSelected: index === 0 ? true : false,
+                };
+              });
+              finalItem = { ...item };
+              if (finalItem.PIC) finalItem.PIC = finalPIC;
+              dispatch(updateSelectedPic(finalPIC[0]));
+              dispatch(updateSelectedCompany(finalItem));
+            } else {
+              dispatch(updateSelectedCompany(item));
+            }
+          }}
           isError={errorGettingProject}
           loadList={isProjectLoading}
           errorMessage={errorGettingProjectMessage}

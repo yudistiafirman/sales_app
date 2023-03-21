@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import React, { useContext, useEffect, useMemo } from 'react';
-import { BButtonPrimary, BForm, BVisitationCard } from '@/components';
+import { BButtonPrimary, BForm, BSpacer, BVisitationCard } from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
@@ -67,7 +67,7 @@ export default function SelectedPic({
           openBottomSheet();
         },
         onSelect: (index: number) => {
-          const listPic = [];
+          const listPic: any[] = [];
           selectedCompany?.PIC?.forEach((pic, picIndex) => {
             let picChanged = { ...pic };
             if (index === picIndex) {
@@ -127,7 +127,7 @@ export default function SelectedPic({
 
   return (
     <View style={style.container}>
-      <View>
+      <View style={{ flex: 1 }}>
         <View style={{ minHeight: resScale(75) }}>
           <BVisitationCard
             item={{
@@ -143,10 +143,12 @@ export default function SelectedPic({
             }}
           />
         </View>
+        <BSpacer size={'extraSmall'} />
         <ScrollView style={style.scrollViewStyle}>
           <BForm inputs={inputsData} />
         </ScrollView>
       </View>
+      <BSpacer size={'extraSmall'} />
       <BButtonPrimary
         disable={!checkSelected(selectedCompany?.PIC)}
         title="Lanjut"
@@ -161,13 +163,23 @@ export default function SelectedPic({
         ref={bottomSheetRef}
         initialIndex={-1}
         addPic={(pic: PIC) => {
-          customLog(pic, 'bsheetaddpic');
-          pic.isSelected = false;
-          const currentList = selectedCompany?.PIC ? selectedCompany.PIC : [];
-          if (currentList.length === 1) {
-            pic.isSelected = true;
+          let newPic = { ...pic };
+          const currentList = selectedCompany?.PIC
+            ? [...selectedCompany.PIC]
+            : [];
+          if (currentList && currentList.length > 0) {
+            currentList.forEach((it, index) => {
+              currentList[index] = {
+                ...currentList[index],
+                isSelected: false,
+              };
+            });
           }
-          dispatch(updateSelectedCompanyPicList([...currentList, pic]));
+          if (newPic) {
+            newPic.isSelected = true;
+            currentList.push(newPic);
+          }
+          dispatch(updateSelectedCompanyPicList(currentList));
         }}
       />
     </View>
@@ -192,6 +204,6 @@ const style = StyleSheet.create({
     borderRadius: layout.radius.md,
   },
   scrollViewStyle: {
-    maxHeight: resScale(500),
+    flex: 1,
   },
 });

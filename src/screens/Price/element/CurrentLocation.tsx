@@ -23,11 +23,9 @@ const CurrentLocation = ({ location, onPress }: CurrentLocationProps) => {
         style={{ marginRight: layout.pad.md }}
         color={colors.text.darker}
       />
-      <BViewMoreText numberOfLines={1}>
-        <Text numberOfLines={1} style={CurrentLocationStyles.viewMoreText}>
-          {location}
-        </Text>
-      </BViewMoreText>
+      <Text numberOfLines={1} style={CurrentLocationStyles.viewMoreText}>
+        {location}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -35,13 +33,14 @@ const CurrentLocation = ({ location, onPress }: CurrentLocationProps) => {
 const CurrentLocationStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginHorizontal: layout.pad.lg,
-    width: '91%',
+    marginStart: layout.pad.lg,
   },
   viewMoreText: {
-    fontFamily: font.family.montserrat['300'],
+    flex: 1,
+    fontFamily: font.family.montserrat[300],
     fontSize: font.size.xs,
     color: colors.text.blue,
+    marginEnd: layout.pad.lg,
   },
 });
 

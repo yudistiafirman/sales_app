@@ -4,6 +4,7 @@ import { layout } from '@/constants';
 import font from '@/constants/fonts';
 import { Input } from '@/interfaces';
 import { ProjectDocs } from '@/interfaces/CreatePurchaseOrder';
+import { AppDispatch, RootState } from '@/redux/store';
 import React, { useEffect, useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -67,7 +68,8 @@ const PaymentDetail = () => {
             isActive={false}
             title={paymentTitle}
             icon={paymentIcon}
-            flexDirection='row'
+            isClickable={false}
+            flexDirection="row"
           />
           <BSpacer size="small" />
           <BLabel

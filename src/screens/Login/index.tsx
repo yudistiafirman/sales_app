@@ -78,6 +78,7 @@ const Login = () => {
       <Instruction />
       <BSpacer size={layout.pad.lg} />
       <Label />
+      <BSpacer size={'extraSmall'} />
       <PhoneInput
         value={phoneNumber}
         onChangeText={(val) =>

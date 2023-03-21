@@ -2,10 +2,9 @@ import React from 'react';
 
 import { Input, PIC, PicFormInitialState } from '@/interfaces';
 import Modal from 'react-native-modal';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import { colors, layout } from '@/constants';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
-import validatePicForm from '@/utils/validatePicForm';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import BText from '../atoms/BText';
 import BHeaderIcon from '../atoms/BHeaderIcon';
@@ -21,84 +20,86 @@ interface IProps {
 
 const initialState = {
   name: '',
-  errorName: '',
   position: '',
-  errorPosition: '',
-  phone: '+62',
-  errorPhone: '',
+  phone: '',
   email: '',
-  errorEmail: '',
 };
+
+function LeftIcon() {
+  return <Text style={styles.leftIconStyle}>+62</Text>;
+}
+const emailRegex =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
 const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
   const [state, setState] = React.useState<PicFormInitialState>(initialState);
-
-  const onChangePhone = (e: any) => {
-    let value = e.nativeEvent.text;
-    if (value.length >= 3) {
-      setState((prevState) => ({
-        ...prevState,
-        phone: value,
-        errorPhone: '',
-      }));
-    }
-  };
 
   const inputs: Input[] = [
     {
       label: 'Nama',
       isRequire: true,
-      isError: state.errorName.length > 0,
-      customerErrorMsg: state.errorName,
+      isError: !state.name,
+      outlineColor: !state.name ? colors.text.errorText : undefined,
       placeholder: 'Masukkan Nama',
       type: 'textInput',
       onChange: (e) =>
         setState((prevState: PicFormInitialState) => ({
           ...prevState,
           name: e.nativeEvent.text,
-          errorName: '',
         })),
       value: state.name,
     },
     {
       label: 'Jabatan',
       isRequire: true,
-      isError: state.errorPosition.length > 0,
-      customerErrorMsg: state.errorPosition,
+      isError: !state.position,
+      outlineColor: !state.position ? colors.text.errorText : undefined,
       placeholder: 'Masukkan jabatan',
       type: 'textInput',
       onChange: (e) =>
         setState((prevState) => ({
           ...prevState,
           position: e.nativeEvent.text,
-          errorPosition: '',
         })),
       value: state.position,
     },
     {
       label: 'No. Telepon',
       isRequire: true,
-      isError: state.errorPhone.length > 0,
-      customerErrorMsg: state.errorPhone,
+      isError: !phoneNumberRegex.test(state.phone),
+      outlineColor: !phoneNumberRegex.test(state.phone)
+        ? colors.text.errorText
+        : undefined,
       placeholder: 'Masukkan nomor telepon',
       type: 'textInput',
-      keyboardType: 'number-pad',
-      onChange: onChangePhone,
+      keyboardType: 'numeric',
+      customerErrorMsg: 'No. Telepon harus diisi sesuai format',
+      LeftIcon: state.phone ? LeftIcon : undefined,
+      onChange: (e) =>
+        setState((prevState) => ({
+          ...prevState,
+          phone: e.nativeEvent.text,
+        })),
       value: state.phone,
     },
     {
       label: 'Email',
-      isRequire: true,
-      isError: state.errorEmail.length > 0,
-      customerErrorMsg: state.errorEmail,
+      isRequire: false,
+      isError: state.email ? !emailRegex.test(state.email) : false,
+      outlineColor: state.email
+        ? emailRegex.test(state.email)
+          ? colors.text.errorText
+          : undefined
+        : undefined,
       keyboardType: 'email-address',
       placeholder: 'Masukkan email',
       type: 'textInput',
+      customerErrorMsg: 'Email harus diisi sesuai format',
       onChange: (e) =>
         setState((prevState) => ({
           ...prevState,
           email: e.nativeEvent.text,
-          errorEmail: '',
         })),
       value: state.email,
     },
@@ -106,15 +107,13 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
 
   const onAdd = () => {
     const { name, position, email, phone } = state;
-    const errors = validatePicForm({ name, position, email, phone });
-    if (JSON.stringify(errors) !== '{}') {
-      Object.keys(errors).forEach((val) => {
-        setState((prevState) => ({
-          ...prevState,
-          [val]: errors[val as keyof typeof initialState],
-        }));
-      });
-    } else {
+    const emailCondition = state.email ? emailRegex.test(state.email) : true;
+    if (
+      emailCondition &&
+      !!state.name &&
+      phoneNumberRegex.test(state.phone) &&
+      !!state.position
+    ) {
       const dataPIC: PIC = {
         name: state.name,
         position: state.position,
@@ -155,13 +154,23 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
                 />
               </View>
               <View>
-                <BForm inputs={inputs} />
+                <BForm titleBold="500" inputs={inputs} />
               </View>
             </View>
           </View>
         </KeyboardAwareScrollView>
         <View style={styles.buttonWrapper}>
-          <BButtonPrimary onPress={onAdd} title="Tambah PIC" />
+          <BButtonPrimary
+            disable={
+              !(
+                !!state.name &&
+                phoneNumberRegex.test(state.phone) &&
+                !!state.position
+              )
+            }
+            onPress={onAdd}
+            title="Tambah PIC"
+          />
         </View>
       </View>
     </Modal>
@@ -184,7 +193,7 @@ const styles = StyleSheet.create({
     height: layout.pad.xl + layout.pad.lg,
   },
   headerTitle: {
-    fontFamily: font.family.montserrat['700'],
+    fontFamily: font.family.montserrat[700],
     fontSize: font.size.lg,
   },
   buttonWrapper: {
@@ -192,6 +201,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     paddingHorizontal: layout.pad.lg,
+  },
+  leftIconStyle: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+    color: colors.textInput.input,
   },
 });
 

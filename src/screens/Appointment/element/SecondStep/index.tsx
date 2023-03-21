@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { BSearchBar } from '@/components';
-import { colors, layout } from '@/constants';
-import { DeviceEventEmitter, StyleSheet, View } from 'react-native';
+import {
+  DeviceEventEmitter,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import { resScale } from '@/utils';
-import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { APPOINTMENT, CALENDAR } from '@/navigation/ScreenNames';
@@ -11,17 +14,14 @@ import { useAppointmentData } from '@/hooks';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { selectedDateType } from '@/screens/Visitation/elements/fourth';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { colors } from '@/constants';
 
 const SecondStep = () => {
   const [values, dispatchValue] = useAppointmentData();
-  const placeHolder =
-    values.selectedDate !== null
-      ? `${values.selectedDate.day} , ${values.selectedDate.prettyDate}`
-      : 'Pilih Tanggal';
+  const { selectedDate } = values;
 
   useEffect(() => {
     crashlytics().log(APPOINTMENT + '-Step2');
-
     DeviceEventEmitter.addListener(
       'CalendarScreen.selectedDate',
       (date: selectedDateType) => {
@@ -38,33 +38,46 @@ const SecondStep = () => {
 
   const navigation = useNavigation();
   return (
-    <View>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate(CALENDAR, {
-            useTodayMinDate: true,
-          })
-        }
-        style={styles.searchBarWrapper}
-      >
+    <SafeAreaView style={styles.flexFull}>
+      <>
+        <TouchableOpacity
+          style={styles.touchable}
+          onPress={() =>
+            navigation.navigate(CALENDAR, {
+              useTodayMinDate: true,
+            })
+          }
+        />
         <BSearchBar
           disabled
-          placeHolderTextColor={colors.text.dark}
-          placeholder={placeHolder}
+          activeOutlineColor="gray"
+          value={
+            selectedDate
+              ? selectedDate.day + ' , ' + selectedDate.prettyDate
+              : ''
+          }
+          textColor={colors.textInput.input}
+          placeholder={'Pilih Tanggal'}
           right={
             <TextInput.Icon forceTextInputFocus={false} icon="chevron-right" />
           }
         />
-      </TouchableOpacity>
-    </View>
+      </>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  searchBarWrapper: {
-    marginHorizontal: layout.pad.lg,
-    width: resScale(328),
-    height: resScale(50),
+  flexFull: {
+    flex: 1,
+  },
+  touchable: {
+    position: 'absolute',
+    display: 'flex',
+    width: '100%',
+    borderRadius: resScale(4),
+    height: resScale(45),
+    zIndex: 2,
   },
 });
 

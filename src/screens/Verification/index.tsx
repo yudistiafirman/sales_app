@@ -72,9 +72,7 @@ const Verification = () => {
         const { accessToken } = response.data.data;
         const decoded = jwtDecode<UserModel.DataSuccessLogin>(accessToken);
         await bStorage.setItem(storageKey.userToken, accessToken);
-        dispatch(
-          setUserData({ userData: decoded })
-        );
+        dispatch(setUserData({ userData: decoded }));
         setVerificationState({
           ...verificationState,
           errorOtp: '',
@@ -173,6 +171,7 @@ const Verification = () => {
         <BSpacer size="large" />
 
         <OTPFieldLabel />
+        <BSpacer size="extraSmall" />
         <OTPField
           value={otpValue}
           setValue={(code) =>

@@ -15,12 +15,7 @@ const LocationText = ({ locationAddress }: { locationAddress?: string }) => {
 const styles = StyleSheet.create({
   locationWrapper: {
     paddingHorizontal: layout.pad.lg,
-    oaddingTop: layout.pad.lg,
-  },
-  viewMoreText: {
-    fontFamily: font.family.montserrat[300],
-    fontSize: font.size.xs,
-    color: colors.text.blue,
+    paddingTop: layout.pad.md,
   },
 });
 export default LocationText;

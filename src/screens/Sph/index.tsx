@@ -295,6 +295,7 @@ function SphContent() {
     React.useCallback(() => {
       const backAction = () => {
         if (currentPosition > 0) {
+          dispatch(setStepperFocused(currentPosition - 1));
           setCurrentPosition(currentPosition - 1);
         } else {
           actionBackButton(true);
@@ -346,7 +347,7 @@ function SphContent() {
       <Steps currentPosition={currentPosition} stepsToRender={stepsToRender} />
       <PopUpQuestion
         isVisible={isPopupVisible}
-        setIsPopupVisible={() => actionBackButton()}
+        setIsPopupVisible={() => actionBackButton(false)}
         actionButton={() => {
           setPopupVisible(false);
         }}

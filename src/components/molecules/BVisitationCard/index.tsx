@@ -143,6 +143,7 @@ const style = StyleSheet.create({
   rightSide: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginStart: layout.pad.lg,
   },
   top: {
     // height: resScale(20),

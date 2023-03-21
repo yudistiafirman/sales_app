@@ -19,7 +19,7 @@ const PriceStyle = StyleSheet.create({
   },
 
   titleStyle: {
-    fontFamily: font.family.montserrat['600'],
+    fontFamily: font.family.montserrat[600],
     fontSize: font.size.lg,
     color: colors.text.darker,
   },

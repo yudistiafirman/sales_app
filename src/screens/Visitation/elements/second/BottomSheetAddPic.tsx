@@ -85,6 +85,7 @@ const BSheetAddPic = React.forwardRef(
               ? colors.text.errorText
               : undefined
             : undefined,
+          keyboardType: 'email-address',
           type: 'textInput',
           onChange: (event) => {
             onChange('email')(event.nativeEvent.text);
@@ -135,7 +136,7 @@ const BSheetAddPic = React.forwardRef(
 
 const style = StyleSheet.create({
   leftIconStyle: {
-    fontFamily: fonts.family.montserrat['400'],
+    fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.md,
     color: colors.textInput.input,
   },

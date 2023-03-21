@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   popUpTitle: {
     color: colors.text.darker,
-    fontFamily: font.family.montserrat['600'],
+    fontFamily: font.family.montserrat[600],
     fontSize: font.size.md,
     textAlign: 'center',
     lineHeight: resScale(24),

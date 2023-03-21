@@ -291,7 +291,7 @@ const renderInput = (
         />
         <TouchableOpacity
           style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
-          onPress={() => calendar?.setCalendarVisible(true)}
+          onPress={() => calendar?.setCalendarVisible(!calendar?.isCalendarVisible)}
         >
           <View
             style={[
@@ -341,7 +341,11 @@ const renderInput = (
             />
             <TouchableOpacity
               style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
-              onPress={() => calendarTime?.setCalendarVisible(true)}
+              onPress={() =>
+                calendarTime?.setCalendarVisible(
+                  !calendarTime?.isCalendarVisible
+                )
+              }
             >
               <View
                 style={[
@@ -382,7 +386,9 @@ const renderInput = (
             />
             <TouchableOpacity
               style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
-              onPress={() => calendarTime?.setTimeVisible(true)}
+              onPress={() =>
+                calendarTime?.setTimeVisible(!calendarTime?.isTimeVisible)
+              }
             >
               <View
                 style={[
@@ -433,6 +439,7 @@ const renderInput = (
             <BSpacer size={'extraSmall'} />
             <View style={styles.calendar}>
               <DatePicker
+                textColor={colors.text.darker}
                 date={
                   calendarTime?.valueTwoMock
                     ? calendarTime?.valueTwoMock
@@ -446,7 +453,7 @@ const renderInput = (
                 is24hourSource={'locale'}
                 minuteInterval={1}
                 locale={'id'}
-                timeZoneOffsetInMinutes={new Date().getTimezoneOffset()}
+                // timeZoneOffsetInMinutes={new Date().getTimezoneOffset()}
               />
             </View>
           </>

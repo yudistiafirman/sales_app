@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   container: { flexDirection: 'row', alignSelf: 'flex-start' },
   warningIcon: { marginRight: resScale(11), alignSelf: 'center' },
   warningText: {
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,
     color: colors.primary,
   },

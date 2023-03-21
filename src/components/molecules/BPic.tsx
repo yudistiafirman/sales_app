@@ -83,14 +83,18 @@ const BPic = ({
           <BSpacer size="extraSmall" />
         </React.Fragment>
       )}
-      <View>
+      <View style={{ flex: 1, paddingEnd: layout.pad.xs }}>
         <BText style={titleStyles}>Nama</BText>
-        <BText sizeInNumber={fonts.size.sm} bold="500">
-          {name ? name : '-'}
-        </BText>
+        <View>
+          <ScrollView horizontal={true}>
+            <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
+              {name ? name : '-'}
+            </BText>
+          </ScrollView>
+        </View>
         <BSpacer size="extraSmall" />
         <BText style={titleStyles}>No. Telepon</BText>
-        <View style={{ width: resScale(140) }}>
+        <View>
           <ScrollView horizontal={true}>
             <BText sizeInNumber={fonts.size.sm} bold="500">
               {phone ? '+62' + phone : '-'}
@@ -99,16 +103,20 @@ const BPic = ({
         </View>
       </View>
       <BSpacer size="extraSmall" />
-      <View>
+      <View style={{ flex: 1, paddingEnd: layout.pad.sm }}>
         <BText style={titleStyles}>Jabatan</BText>
-        <BText sizeInNumber={fonts.size.sm} bold="500">
-          {position ? position : '-'}
-        </BText>
+        <View>
+          <ScrollView horizontal={true}>
+            <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
+              {position ? position : '-'}
+            </BText>
+          </ScrollView>
+        </View>
         <BSpacer size="extraSmall" />
         <BText style={titleStyles}>Email</BText>
-        <View style={{ width: resScale(140) }}>
+        <View>
           <ScrollView horizontal={true}>
-            <BText sizeInNumber={fonts.size.sm} bold="500">
+            <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
               {email ? email : '-'}
             </BText>
           </ScrollView>

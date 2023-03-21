@@ -39,7 +39,7 @@ const TncNavBar = ({
     alignItems: 'flex-end',
   };
   const titleStyles: TextStyle = {
-    fontFamily: font.family.montserrat['600'],
+    fontFamily: font.family.montserrat[600],
     fontSize: font.size.lg,
     color: colors.text.darker,
   };

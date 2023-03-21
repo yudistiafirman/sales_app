@@ -12,8 +12,8 @@ const Product = ({ products }: { products: Products }) => {
     return (
       <View style={{ height: resScale(37) }}>
         <ProductChip
-          category={{ name: item.categoryDisplayName }}
-          name={item.displayName}
+          category={{ name: item.Product.category.displayName }}
+          name={item.Product.displayName}
         />
       </View>
     );

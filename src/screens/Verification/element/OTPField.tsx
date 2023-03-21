@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     height: resScale(54),
     fontSize: resScale(20),
     borderRadius: resScale(4),
-    fontFamily: font.family.montserrat['500'],
+    fontFamily: font.family.montserrat[500],
     color: colors.text.dark,
     borderColor: colors.border.otpField,
     textAlign: 'center',

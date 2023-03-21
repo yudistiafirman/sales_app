@@ -1,20 +1,18 @@
-import { BCommonSearchList, BFlatlistItems, BTabViewScreen, BVisitationCard } from '@/components';
-import { colors, layout } from '@/constants';
+import { BCommonSearchList } from '@/components';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
 import React, { useCallback, useState } from 'react';
-import { Dimensions, TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-const { width } = Dimensions.get('window');
 import { selectedCompanyInterface } from '@/interfaces/index';
-import { resScale } from '@/utils';
 import debounce from 'lodash.debounce';
 import { getAllProject } from '@/redux/async-thunks/commonThunks';
-import { resetStates, retrying } from '@/redux/reducers/commonReducer';
+import { retrying } from '@/redux/reducers/commonReducer';
+import { AppDispatch, RootState } from '@/redux/store';
 
 const SearchingCustomer = () => {
   const [values, dispatchValue] = useAppointmentData();
-  const [index,setIndex]=useState(0)
+  const [index, setIndex] = useState(0);
   const { searchQuery } = values;
   const {
     projects,
@@ -82,17 +80,16 @@ const SearchingCustomer = () => {
     [dispatchValue, values.stepOne.options.items]
   );
 
-  const routes: { title: string; totalItems: number }[] =
-    React.useMemo(() => {
-      return [
-        {
-          key:'first',
-          title: 'Proyek',
-          totalItems: projects.length,
-          chipPosition:'right'
-        },
-      ];
-    }, [projects]);
+  const routes: { title: string; totalItems: number }[] = React.useMemo(() => {
+    return [
+      {
+        key: 'first',
+        title: 'Proyek',
+        totalItems: projects.length,
+        chipPosition: 'right',
+      },
+    ];
+  }, [projects]);
 
   const onRetryGettingProjects = () => {
     dispatch(retrying());
@@ -100,40 +97,51 @@ const SearchingCustomer = () => {
   };
 
   const onClearValue = () => {
-  dispatchValue({
+    dispatchValue({
       type: AppointmentActionType.SEARCH_QUERY,
       value: '',
-    })
-  dispatchValue({
-    type:AppointmentActionType.ENABLE_SEARCHING,
-    value:false
-  })
-  }
+    });
+    dispatchValue({
+      type: AppointmentActionType.ENABLE_SEARCHING,
+      value: false,
+    });
+  };
 
   return (
-    <View style={{ height: width + resScale(160) }}>
-        <BCommonSearchList
-            searchQuery={searchQuery}
-            onChangeText={onChangeSearch}
-            onClearValue={onClearValue}
-            placeholder="Cari Pelanggan"
-            index={index}
-            emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
-            routes={routes}
-            onIndexChange={setIndex}
-            loadList={isProjectLoading}
-            onPressList={(item) => {
-              let handlePicNull = { ...item };
-              if (!handlePicNull.PIC) {
-                handlePicNull.PIC = [];
-              }
-              onPressCard(handlePicNull);
-            }}
-            data={projects}
-            isError={errorGettingProject}
-            errorMessage={errorGettingProjectMessage}
-            onRetry={onRetryGettingProjects}
-          />
+    <View style={{ flex: 1 }}>
+      <BCommonSearchList
+        searchQuery={searchQuery}
+        onChangeText={onChangeSearch}
+        onClearValue={onClearValue}
+        placeholder="Cari Pelanggan"
+        index={index}
+        emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
+        routes={routes}
+        onIndexChange={setIndex}
+        loadList={isProjectLoading}
+        onPressList={(item) => {
+          let handlePicNull = { ...item };
+          if (!handlePicNull.PIC) {
+            handlePicNull.PIC = [];
+          }
+
+          if (item.PIC && item.PIC.length > 0) {
+            let finalPIC = [...item.PIC];
+            finalPIC.forEach((it, index) => {
+              finalPIC[index] = {
+                ...finalPIC[index],
+                isSelected: index === 0 ? true : false,
+              };
+            });
+            if (handlePicNull.PIC) handlePicNull.PIC = finalPIC;
+          }
+          onPressCard(handlePicNull);
+        }}
+        data={projects}
+        isError={errorGettingProject}
+        errorMessage={errorGettingProjectMessage}
+        onRetry={onRetryGettingProjects}
+      />
     </View>
   );
 };

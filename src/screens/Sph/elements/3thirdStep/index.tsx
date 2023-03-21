@@ -1,12 +1,12 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { BContainer, BForm, BSpacer } from '@/components';
+import { BContainer, BForm, BSpacer, BText } from '@/components';
 import { Input } from '@/interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
 import { Checkbox } from 'react-native-paper';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn';
 import { SphContext } from '../context/SphContext';
@@ -237,20 +237,33 @@ export default function ThirdStep() {
 
         <View>
           {paymentType === 'CREDIT' && (
-            <View style={style.checkboxContainer}>
-              <Checkbox
-                status={paymentBankGuarantee ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  dispatch(updatePaymentBankGuarantee(!paymentBankGuarantee));
-                }}
-              />
-              <View style={{ flex: 1, flexDirection: 'row' }}>
-                <Text style={style.redStar}>* </Text>
-                <Text numberOfLines={1} style={style.checkboxLabel}>
-                  Bersedia untuk menyediakan Bank Guarantee
-                </Text>
+            <>
+              <View style={style.checkboxContainer}>
+                <Checkbox
+                  status={paymentBankGuarantee ? 'checked' : 'unchecked'}
+                  onPress={() => {
+                    dispatch(updatePaymentBankGuarantee(!paymentBankGuarantee));
+                  }}
+                />
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                  <Text numberOfLines={2} style={style.checkboxLabel}>
+                    Bersedia untuk menyediakan Bank Guarantee
+                  </Text>
+                  <Text style={style.redStar}> * </Text>
+                </View>
               </View>
-            </View>
+              {paymentBankGuarantee !== undefined &&
+                paymentBankGuarantee === false && (
+                  <BText
+                    style={{ marginStart: layout.pad.xl + 2 }}
+                    size="small"
+                    color="primary"
+                    bold="100"
+                  >
+                    {'Pastikan pelanggan menyediakan Bank Guarantee'}
+                  </BText>
+                )}
+            </>
           )}
           <BSpacer size={'small'} />
           <BBackContinueBtn

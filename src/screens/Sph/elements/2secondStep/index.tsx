@@ -361,7 +361,7 @@ const style = StyleSheet.create({
     marginTop: layout.pad.md,
   },
   titleText: {
-    fontFamily: fonts.family.montserrat['500'],
+    fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.sm,
     color: colors.text.darker,
   },
@@ -390,7 +390,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   leftIconStyle: {
-    fontFamily: fonts.family.montserrat['400'],
+    fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.md,
     color: colors.textInput.input,
   },

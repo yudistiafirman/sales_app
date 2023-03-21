@@ -114,7 +114,7 @@ const visitHistoryMachine =
           const response = await getAllVisitations({
             projectId: context.projectId,
           });
-          return response.data.data;
+          return response.data.data.data;
         },
       },
       actions: {

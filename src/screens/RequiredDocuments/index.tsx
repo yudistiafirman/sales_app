@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
 import { colors, fonts } from '@/constants';
-import { BContainer, BForm, BLabel, BSpacer } from '@/components';
+import { BContainer, BDivider, BForm, BLabel, BSpacer } from '@/components';
 import {
   fetchSphDocuments,
   postProjectDocByprojectId,
@@ -305,6 +305,7 @@ export default function RequiredDocuments() {
       <BLabel label="Cash Before Delivery" isRequired />
       <BSpacer size="extraSmall" />
       <BForm inputs={filesInputsCBD} />
+      <BSpacer size="extraSmall" />
       <BLabel label="Credit" isRequired />
       <BSpacer size="extraSmall" />
       <BForm inputs={fileInputsCredit} />

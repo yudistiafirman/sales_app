@@ -1,46 +1,67 @@
-import React, { useState } from 'react';
-import { BSpacer } from '@/components';
+import React from 'react';
+import { BSearchBar, BSpacer } from '@/components';
 import Inputs from './Input';
 import SearchingCustomer from './SearchingCustomer';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useAppointmentData } from '@/hooks';
-import { StyleSheet, View } from 'react-native';
-import SearchBar from './SearchBar';
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { APPOINTMENT } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { AppointmentActionType } from '@/context/AppointmentContext';
+import { resScale } from '@/utils';
+import { TextInput } from 'react-native-paper';
 
 const FirstStep = () => {
-  const [values,dispatchValue] = useAppointmentData();
-  const { searchQuery,isSearching } = values;
+  const [values, dispatchValue] = useAppointmentData();
+  const { searchQuery, isSearching } = values;
 
   React.useEffect(() => {
     crashlytics().log(APPOINTMENT + '-Step1');
   }, []);
 
   return (
-    <View style={styles.firstStepContainer}>
+    <SafeAreaView style={styles.flexFull}>
       {isSearching ? (
         <SearchingCustomer />
       ) : (
         <>
-        <SearchBar onPress={()=>dispatchValue({
-          type:AppointmentActionType.ENABLE_SEARCHING,
-          value:true
-        })}/>
-        <BSpacer size="extraSmall" />
-        <KeyboardAwareScrollView>
-          <Inputs />
-        </KeyboardAwareScrollView>
+          <TouchableOpacity
+            style={styles.touchable}
+            onPress={() =>
+              dispatchValue({
+                type: AppointmentActionType.ENABLE_SEARCHING,
+                value: true,
+              })
+            }
+          />
+          <BSearchBar
+            placeholder="Cari Pelanggan"
+            activeOutlineColor="gray"
+            disabled
+            left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
+          />
+          <View style={{ flex: 1 }}>
+            <BSpacer size="extraSmall" />
+            <KeyboardAwareScrollView>
+              <Inputs />
+            </KeyboardAwareScrollView>
+          </View>
         </>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  firstStepContainer: {
+  flexFull: {
+    flex: 1,
+  },
+  touchable: {
+    position: 'absolute',
     width: '100%',
+    borderRadius: resScale(4),
+    height: resScale(45),
+    zIndex: 2,
   },
 });
 

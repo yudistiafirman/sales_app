@@ -148,6 +148,7 @@ const SalesStack = (Stack: any) => {
         component={CustomerDetail}
         options={{
           headerTitle: CUSTOMER_DETAIL_TITLE,
+          headerTitleAlign: 'center',
         }}
       />
       <Stack.Screen

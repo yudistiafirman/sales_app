@@ -93,12 +93,10 @@ export const sphSlice = createSlice({
       state.selectedCompany = payload;
     },
     updateSelectedCompanyPicList: (state, { payload }: { payload: PIC[] }) => {
-      if (state.selectedCompany) {
-        if (payload.length === 1) {
-          payload[0].isSelected = true;
-        }
-        state.selectedCompany.PIC = payload;
-      }
+      state.selectedCompany = {
+        ...state.selectedCompany,
+        PIC: payload,
+      };
     },
     updateSelectedPic: (state, { payload }: { payload: PIC }) => {
       state.selectedPic = payload;

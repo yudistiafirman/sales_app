@@ -83,7 +83,7 @@ function RenderModal({
 }
 
 function renderSeparator() {
-  return <BSpacer size={'extraSmall'} />;
+  return <BSpacer size={'small'} />;
 }
 
 export default function FourthStep() {
@@ -144,6 +144,7 @@ export default function FourthStep() {
         <View>
           <Text style={style.productText}>Produk</Text>
           <View>
+            <BSpacer size={'verySmall'} />
             <BDivider />
           </View>
           <BSpacer size={'extraSmall'} />
@@ -163,7 +164,7 @@ export default function FourthStep() {
               left={<TextInput.Icon icon="magnify" />}
             />
           </View>
-          <BSpacer size={'small'} />
+          <BSpacer size={'verySmall'} />
           {/* <Text>Tidak ada produk yang terpilih</Text> */}
           <FlatList
             data={chosenProducts}

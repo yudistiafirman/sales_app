@@ -42,7 +42,7 @@ export default function SecondStep() {
         },
         onTimeChange: (value: any) => {
           const time = moment(value)
-            .utcOffset(value.getTimezoneOffset() / 60)
+            // .utcOffset(value.getTimezoneOffset() / 60)
             .format('HH:mm');
           setRawTime(value);
           onChange('deliveryTime')(time);

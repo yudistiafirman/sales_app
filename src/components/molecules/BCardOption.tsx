@@ -21,8 +21,9 @@ interface IProps {
   title: string;
   fullWidth?: boolean;
   isActive?: boolean;
+  isClickable?: boolean;
   onPress?: () => void;
-  flexDirection?: 'column' | 'row'
+  flexDirection?: 'column' | 'row';
 }
 
 const baseStyle: StyleProp<ViewStyle> = {
@@ -40,8 +41,12 @@ const baseStyleImage: StyleProp<ViewStyle> = {
 };
 
 const makeStyle = (props: IProps): StyleProp<ViewStyle> => {
-  const { fullWidth = false, isActive = false,flexDirection = 'column' } = props;
-  let style = {...baseStyle,flexDirection : flexDirection}
+  const {
+    fullWidth = false,
+    isActive = false,
+    flexDirection = 'column',
+  } = props;
+  let style = { ...baseStyle, flexDirection: flexDirection };
 
   if (fullWidth) {
     style = {
@@ -78,10 +83,14 @@ const makeStyleImage = ({
 };
 
 const BCardOption = (props: IProps) => {
-  const { icon, title, isActive, onPress,flexDirection } = props;
+  const { isClickable, icon, title, isActive, onPress, flexDirection } = props;
 
   return (
-    <TouchableOpacity style={makeStyle(props)} onPress={onPress}>
+    <TouchableOpacity
+      disabled={isClickable !== undefined ? !isClickable : false}
+      style={makeStyle(props)}
+      onPress={onPress}
+    >
       {typeof icon === 'string' ? (
         <BSvg
           color={isActive ? colors.primary : colors.textInput.input}

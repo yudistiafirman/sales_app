@@ -33,6 +33,7 @@ import { CREATE_VISITATION } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
 import {
   resetStepperFocused,
+  resetVisitationState,
   setStepperFocused,
   updateCurrentStep,
   updateDataVisitation,
@@ -213,7 +214,7 @@ const CreateVisitation = () => {
     React.useCallback(() => {
       const backAction = () => {
         if (bottomSheetRef?.current) bottomSheetRef?.current?.close();
-        actionBackButton();
+        actionBackButton(false);
         return true;
       };
       const backHandler = BackHandler.addEventListener(
@@ -233,9 +234,12 @@ const CreateVisitation = () => {
   const handleStepperFocus = () => {
     // to continue stepper focus when entering visitation page
     if (!visitationData.stepperVisitationShouldNotFocused) {
-      if (visitationData.stepThreeVisitationFinished) dispatch(updateCurrentStep(3));
-      else if (visitationData.stepTwoVisitationFinished) dispatch(updateCurrentStep(2));
-      else if (visitationData.stepOneVisitationFinished) dispatch(updateCurrentStep(1));
+      if (visitationData.stepThreeVisitationFinished)
+        dispatch(updateCurrentStep(3));
+      else if (visitationData.stepTwoVisitationFinished)
+        dispatch(updateCurrentStep(2));
+      else if (visitationData.stepOneVisitationFinished)
+        dispatch(updateCurrentStep(1));
     }
 
     // to reset stepper focus when continuing progress data
@@ -295,13 +299,20 @@ const CreateVisitation = () => {
   };
 
   const addPic = (state: PIC) => {
-    if (visitationData.pics.length === 0) {
-      state.isSelected = true;
+    state.isSelected = true;
+    let finalPIC = [...visitationData.pics];
+    if (visitationData.pics && visitationData.pics.length > 0) {
+      finalPIC.forEach((it, index) => {
+        finalPIC[index] = {
+          ...finalPIC[index],
+          isSelected: false,
+        };
+      });
     }
     dispatch(
       updateDataVisitation({
         type: 'pics',
-        value: [...visitationData.pics, state],
+        value: [...finalPIC, state],
       })
     );
   };
@@ -344,7 +355,7 @@ const CreateVisitation = () => {
                   true
                 );
               }}
-              onPressBack={actionBackButton}
+              onPressBack={() => actionBackButton(false)}
               disableContinue={!stepsDone.includes(visitationData.step)}
             />
           )}
@@ -373,6 +384,7 @@ const CreateVisitation = () => {
         <PopUpQuestion
           isVisible={isPopupVisible}
           setIsPopupVisible={() => {
+            dispatch(resetVisitationState());
             setPopupVisible(false);
             navigation.goBack();
           }}
