@@ -77,7 +77,10 @@ function payloadMapper(sphState: SphStateInterface) {
       };
     });
 
-    payload.distance = sphState.chosenProducts[0].additionalData.distance;
+    payload.distance.id = sphState.chosenProducts[0].additionalData.distance.id;
+    payload.distance.price =
+      sphState.chosenProducts[0].additionalData.distance.price;
+
     if (sphState.distanceFromLegok) {
       payload.distance.userDistance = Math.ceil(
         sphState.distanceFromLegok / 1000
