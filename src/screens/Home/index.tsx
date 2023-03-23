@@ -7,7 +7,6 @@ import {
   Linking,
   NativeModules,
   Text,
-  BackHandler,
 } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
@@ -27,11 +26,7 @@ import {
   PopUpQuestion,
   BCommonSearchList,
 } from '@/components';
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import { fonts, layout } from '@/constants';
 import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
@@ -115,7 +110,7 @@ const Beranda = () => {
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
   const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
-  const cameraData = useSelector((state: RootState) => state.camera);
+  const visitationData = useSelector((state: RootState) => state.visitation);
 
   useHeaderShow({
     isHeaderShown: !isModalVisible,
@@ -482,10 +477,7 @@ const Beranda = () => {
   };
 
   const kunjunganAction = () => {
-    if (
-      cameraData.visitationPhotoURLs &&
-      cameraData.visitationPhotoURLs.length > 0
-    ) {
+    if (visitationData.images && visitationData.images.length > 0) {
       dispatch(resetFocusedStepperFlag());
       navigation.navigate(CREATE_VISITATION, {});
     } else {

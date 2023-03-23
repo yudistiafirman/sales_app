@@ -16,7 +16,7 @@ import {
 } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
 import {
   CAMERA,
@@ -37,9 +37,13 @@ import { ENTRY_TYPE } from '@/models/EnumModel';
 import Pdf from 'react-native-pdf';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import { customLog } from '@/utils/generalFunc';
-import { resetAllStepperFocused } from '@/redux/reducers/VisitationReducer';
+import {
+  resetAllStepperFocused,
+  updateDataVisitation,
+} from '@/redux/reducers/VisitationReducer';
 import OperationFileType from '@/constants/operationFileType';
 import { setOperationPhoto } from '@/redux/reducers/operationReducer';
+import { RootState } from '@/redux/store';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -59,6 +63,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const operationAddedStep = route?.params?.operationAddedStep;
   const closeButton = route?.params?.closeButton;
   const existingVisitation = route?.params?.existingVisitation;
+  const visitationData = useSelector((state: RootState) => state.visitation);
 
   if (closeButton) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -80,7 +85,6 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const getTypeOfImagePayload = () => {
     if (navigateTo) {
       if (
-        navigateTo !== CREATE_VISITATION &&
         navigateTo !== CREATE_DEPOSIT &&
         navigateTo !== GALLERY_VISITATION &&
         navigateTo !== GALLERY_DEPOSIT &&
@@ -134,6 +138,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
 
     if (photo) DeviceEventEmitter.emit('Camera.preview', photo);
     else DeviceEventEmitter.emit('Camera.preview', picker);
+    let images: any[] = [];
     if (navigateTo) {
       customLog('screen::: ', navigateTo);
       switch (navigateTo) {
@@ -141,6 +146,10 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           dispatch(
             setImageURLS({ file: localFile, source: CREATE_VISITATION })
           );
+          if (visitationData.images && visitationData.images.length > 0)
+            images = [...visitationData.images];
+          images.push(localFile);
+          dispatch(updateDataVisitation({ type: 'images', value: images }));
           dispatch(resetAllStepperFocused());
           navigation.goBack();
           navigation.dispatch(
@@ -195,14 +204,13 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.DRIVER:
-          dispatch(setOperationPhoto({ file: localFile }))
+          dispatch(setOperationPhoto({ file: localFile }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Penuangan',
               navigateTo: navigateTo,
               operationAddedStep: 'tm_value',
             });
-
           } else if (operationAddedStep === 'tm_value') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Isi TM',
@@ -236,6 +244,10 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           dispatch(
             setImageURLS({ file: localFile, source: CREATE_VISITATION })
           );
+          if (visitationData.images && visitationData.images.length > 0)
+            images = [...visitationData.images];
+          images.push(localFile);
+          dispatch(updateDataVisitation({ type: 'images', value: images }));
           navigation.dispatch(StackActions.pop(2));
           return;
         case GALLERY_DEPOSIT:

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { BDivider, BForm, BSpacer, BText } from '@/components';
 import {
   CreateVisitationSecondStep,
@@ -239,7 +239,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   };
 
   return (
-    <>
+    <SafeAreaView style={styles.flexFull}>
       <SearchFlow
         searchingDisable={!!existingVisitation}
         isSearch={isSearch}
@@ -247,31 +247,32 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         resultSpace={2}
         setSelectedCompany={setSelectedCompany}
       />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {!isSearch && (
-          <>
-            <BSpacer size={6} />
-            <View style={styles.dividerContainer}>
-              <BDivider />
-              <BSpacer size="verySmall" />
-              <BText bold="500" color="divider">
-                Atau Buat Baru Dibawah
-              </BText>
-              <BSpacer size="verySmall" />
-              <BDivider />
-            </View>
-            <BSpacer size={8} />
-            <View>
-              <BForm titleBold="500" inputs={inputs} />
-            </View>
-          </>
-        )}
-      </ScrollView>
-    </>
+      {!isSearch && (
+        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+          <BSpacer size={6} />
+          <View style={styles.dividerContainer}>
+            <BDivider />
+            <BSpacer size="verySmall" />
+            <BText bold="500" color="divider">
+              Atau Buat Baru Dibawah
+            </BText>
+            <BSpacer size="verySmall" />
+            <BDivider />
+          </View>
+          <BSpacer size={8} />
+          <View>
+            <BForm titleBold="500" inputs={inputs} />
+          </View>
+        </ScrollView>
+      )}
+    </SafeAreaView>
   );
 };
 
 const styles: Styles = {
+  flexFull: {
+    flex: 1,
+  },
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
