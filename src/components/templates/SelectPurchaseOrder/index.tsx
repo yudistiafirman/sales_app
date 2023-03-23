@@ -109,6 +109,7 @@ const SelectPurchaseOrderData = ({
         onClearValue={onClearValue}
         index={index}
         routes={routes}
+        autoFocus={true}
         emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari PO lainnya.`}
         onIndexChange={setIndex}
         data={getDataToDisplay()}

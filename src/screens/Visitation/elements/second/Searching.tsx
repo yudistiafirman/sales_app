@@ -1,17 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import {
   BCommonSearchList,
-  BFlatlistItems,
   BSearchBar,
   BSpacer,
-  BTabViewScreen,
   BTextLocation,
-  BVisitationCard,
 } from '@/components';
 import { TextInput } from 'react-native-paper';
-import { resScale } from '@/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { getAllProject } from '@/redux/async-thunks/commonThunks';
@@ -19,6 +14,7 @@ import debounce from 'lodash.debounce';
 import { PIC } from '@/interfaces';
 import { retrying } from '@/redux/reducers/commonReducer';
 import {
+  setSearchQuery,
   updateDataVisitation,
   updateShouldScrollView,
 } from '@/redux/reducers/VisitationReducer';
@@ -39,7 +35,6 @@ const SearchFlow = ({
   setSelectedCompany,
 }: IProps) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [searchQuery, setSearchQuery] = React.useState('');
   const [index, setIndex] = React.useState(0);
   const {
     projects,
@@ -67,14 +62,12 @@ const SearchFlow = ({
     if (visitationData.shouldScrollView) {
       dispatch(updateShouldScrollView(false));
     }
-    setSearchQuery(text);
+    dispatch(setSearchQuery(text));
     onChangeWithDebounce(text);
   };
 
   const onClear = () => {
-    setSearchQuery('');
-    onSearch(false);
-    dispatch(updateShouldScrollView(true));
+    dispatch(setSearchQuery(''));
   };
 
   const onSelectProject = (item: any) => {
@@ -185,7 +178,7 @@ const SearchFlow = ({
 
   const onRetryGettingProject = () => {
     dispatch(retrying());
-    onChangeWithDebounce(searchQuery);
+    onChangeWithDebounce(visitationData.searchQuery);
   };
 
   return (
@@ -202,16 +195,27 @@ const SearchFlow = ({
             onIndexChange={setIndex}
             routes={routes}
             placeholder="Cari Pelanggan"
-            searchQuery={searchQuery}
+            searchQuery={visitationData.searchQuery}
+            autoFocus={true}
             onChangeText={onChangeSearch}
-            onClearValue={onClear}
+            onClearValue={() => {
+              if (
+                visitationData.searchQuery &&
+                visitationData.searchQuery.trim() !== ''
+              ) {
+                onClear();
+              } else {
+                onSearch(false);
+                dispatch(updateShouldScrollView(true));
+              }
+            }}
             data={projects}
             onPressList={onSelectProject}
             isError={errorGettingProject}
             loadList={isProjectLoading}
             errorMessage={errorGettingProjectMessage}
             onRetry={onRetryGettingProject}
-            emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
+            emptyText={`Pencarian mu ${visitationData.searchQuery} tidak ada. Coba cari proyek lainnya.`}
           />
         </View>
       ) : (

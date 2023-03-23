@@ -7,7 +7,7 @@ import {
   BSpacer,
   BVisitationCard,
 } from '@/components';
-import { colors, layout } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import { TM_CONDITION } from '@/constants/dropdown';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { Input } from '@/interfaces';
@@ -19,14 +19,24 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { BackHandler, KeyboardAvoidingView, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  BackHandler,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SUBMIT_FORM } from '@/navigation/ScreenNames';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
-import { onChangeInputValue, resetOperationState } from '@/redux/reducers/operationReducer';
+import {
+  onChangeInputValue,
+  resetOperationState,
+} from '@/redux/reducers/operationReducer';
 import { useKeyboardActive } from '@/hooks';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment';
@@ -36,17 +46,32 @@ import { uploadFileImage } from '@/actions/CommonActions';
 import { OperationFileType } from '@/interfaces/Operation';
 import { updateDeliveryOrder } from '@/actions/OrderActions';
 
+function LeftIcon() {
+  return <Text style={style.leftIconStyle}>+62</Text>;
+}
+const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
+
 const SubmitForm = () => {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>();
   const [toggleCheckBox, setToggleCheckBox] = useState(true);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { inputsValue, projectDetails, photoFiles, isLoading } = useSelector((state: RootState) => state.operation)
+  const { inputsValue, projectDetails, photoFiles, isLoading } = useSelector(
+    (state: RootState) => state.operation
+  );
   const { keyboardVisible } = useKeyboardActive();
   const operationType = route?.params?.operationType;
-  const operationFileType = [OperationFileType.DO_DEPARTURE, OperationFileType.ARRIVAL, OperationFileType.TRUCK_CONDITION, OperationFileType.DO_SIGNED]
-  const enableLocationHeader = operationType === ENTRY_TYPE.DRIVER && projectDetails.address && projectDetails.address?.length > 0
+  const operationFileType = [
+    OperationFileType.DO_DEPARTURE,
+    OperationFileType.ARRIVAL,
+    OperationFileType.TRUCK_CONDITION,
+    OperationFileType.DO_SIGNED,
+  ];
+  const enableLocationHeader =
+    operationType === ENTRY_TYPE.DRIVER &&
+    projectDetails.address &&
+    projectDetails.address?.length > 0;
 
   React.useEffect(() => {
     crashlytics().log(SUBMIT_FORM);
@@ -68,26 +93,29 @@ const SubmitForm = () => {
 
   const handleDisableContinueButton = () => {
     if (userData?.type === ENTRY_TYPE.DRIVER) {
-      return photoFiles.length < 4
-        || inputsValue.recepientName.length === 0
-        || inputsValue.recepientPhoneNumber.length === 0
-        || !/^(^\+62)(\d{3,4}-?){2}\d{3,4}$/g.test(inputsValue.recepientPhoneNumber)
+      return (
+        photoFiles.length < 4 ||
+        inputsValue.recepientName.length === 0 ||
+        !phoneNumberRegex.test(inputsValue.recepientPhoneNumber)
+      );
     }
-  }
+  };
 
   const handleBack = () => {
-    dispatch(resetOperationState())
-    navigation.dispatch(StackActions.popToTop())
-  }
+    dispatch(resetOperationState());
+    navigation.dispatch(StackActions.popToTop());
+  };
 
   const onPressContinueDriver = async () => {
     try {
-      dispatch(openPopUp({
-        popUpType: 'loading',
-        popUpText: 'Memperbarui Deliver Order',
-        outsideClickClosePopUp: false,
-      }))
-      const payload = {} as updateDeliverOrder
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: 'Memperbarui Deliver Order',
+          outsideClickClosePopUp: false,
+        })
+      );
+      const payload = {} as updateDeliverOrder;
       const photoFilestoUpload = photoFiles.map((photo) => {
         return {
           ...photo.file,
@@ -102,29 +130,36 @@ const SubmitForm = () => {
         const newFileData = responseFiles.data.data.map((v, i) => {
           return {
             fileId: v.id,
-            type: operationFileType[i]
-          }
-        })
-        payload.doFiles = newFileData
-        payload.recepientName = inputsValue.recepientName
-        payload.recipientNumber = inputsValue.recepientPhoneNumber
-        const responseUpdateDeliveryOrder = await updateDeliveryOrder(payload, projectDetails.deliveryOrderId)
+            type: operationFileType[i],
+          };
+        });
+        payload.doFiles = newFileData;
+        payload.recepientName = inputsValue.recepientName;
+        payload.recipientNumber = inputsValue.recepientPhoneNumber;
+        const responseUpdateDeliveryOrder = await updateDeliveryOrder(
+          payload,
+          projectDetails.deliveryOrderId
+        );
         if (responseUpdateDeliveryOrder.data.success) {
-          dispatch(openPopUp({
-            popUpType: 'success',
-            popUpText: 'Berhasil Memperbarui Delivery Order',
-            outsideClickClosePopUp: true
-          }))
+          dispatch(
+            openPopUp({
+              popUpType: 'success',
+              popUpText: 'Berhasil Memperbarui Delivery Order',
+              outsideClickClosePopUp: true,
+            })
+          );
           if (navigation.canGoBack()) {
-            dispatch(resetOperationState())
-            navigation.dispatch(StackActions.popToTop())
+            dispatch(resetOperationState());
+            navigation.dispatch(StackActions.popToTop());
           }
         } else {
           dispatch(closePopUp());
           dispatch(
             openPopUp({
               popUpType: 'error',
-              popUpText: responseFiles.data.message || 'Error Memperbarui Delivery Order',
+              popUpText:
+                responseFiles.data.message ||
+                'Error Memperbarui Delivery Order',
               outsideClickClosePopUp: true,
             })
           );
@@ -134,12 +169,12 @@ const SubmitForm = () => {
         dispatch(
           openPopUp({
             popUpType: 'error',
-            popUpText: responseFiles.data.message || 'Error Memperbarui Delivery Order',
+            popUpText:
+              responseFiles.data.message || 'Error Memperbarui Delivery Order',
             outsideClickClosePopUp: true,
           })
         );
       }
-
     } catch (error) {
       dispatch(closePopUp());
       dispatch(
@@ -150,14 +185,13 @@ const SubmitForm = () => {
         })
       );
     }
-  }
+  };
 
   const onPressContinue = () => {
     if (userData?.type === ENTRY_TYPE.DRIVER) {
-      onPressContinueDriver()
+      onPressContinueDriver();
     }
-  }
-
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -179,25 +213,42 @@ const SubmitForm = () => {
     {
       label: 'Nama Penerima',
       value: inputsValue.recepientName,
-      onChange: (e) => dispatch(onChangeInputValue({ inputType: 'recepientName', value: e.nativeEvent.text })),
+      onChange: (e) =>
+        dispatch(
+          onChangeInputValue({
+            inputType: 'recepientName',
+            value: e.nativeEvent.text,
+          })
+        ),
       isRequire: true,
-      isError: false,
       type: 'textInput',
       placeholder: 'Masukkan nama penerima',
+      isError: !inputsValue.recepientName,
+      outlineColor: !inputsValue.recepientName
+        ? colors.text.errorText
+        : undefined,
     },
     {
       label: 'No. Telp Penerima',
       value: inputsValue.recepientPhoneNumber,
       onChange: (e) => {
-        if (e.nativeEvent.text.length >= 3) {
-          dispatch(onChangeInputValue({ inputType: 'recepientPhoneNumber', value: e.nativeEvent.text }))
-        }
+        dispatch(
+          onChangeInputValue({
+            inputType: 'recepientPhoneNumber',
+            value: e.nativeEvent.text,
+          })
+        );
       },
+      isError: !phoneNumberRegex.test(inputsValue.recepientPhoneNumber),
+      outlineColor: !phoneNumberRegex.test(inputsValue.recepientPhoneNumber)
+        ? colors.text.errorText
+        : undefined,
       isRequire: true,
-      isError: false,
       keyboardType: 'numeric',
       type: 'textInput',
-      placeholder: 'Masukkan no telp',
+      placeholder: 'Masukkan nomor telp penerima',
+      customerErrorMsg: 'No. Telepon harus diisi sesuai format',
+      LeftIcon: inputsValue.recepientPhoneNumber ? LeftIcon : undefined,
     },
   ];
 
@@ -222,7 +273,9 @@ const SubmitForm = () => {
         items: TM_CONDITION,
         placeholder: 'Pilih Kondisi TM',
         onChange: (value: any) => {
-          dispatch(onChangeInputValue({ inputType: 'truckMixCondition', value: value }))
+          dispatch(
+            onChangeInputValue({ inputType: 'truckMixCondition', value: value })
+          );
         },
       },
     },
@@ -247,7 +300,9 @@ const SubmitForm = () => {
             item={{
               name: projectDetails.doNumber,
               unit: `${projectDetails.requestedQuantity} m3`,
-              time: `${moment(projectDetails.deliveryTime).format('L')} | ${moment(projectDetails.deliveryTime).format('hh:mm A')}`,
+              time: `${moment(projectDetails.deliveryTime).format(
+                'L'
+              )} | ${moment(projectDetails.deliveryTime).format('hh:mm A')}`,
             }}
             customStyle={{ backgroundColor: colors.tertiary }}
             isRenderIcon={false}
@@ -271,16 +326,15 @@ const SubmitForm = () => {
           )}
         </View>
       </KeyboardAwareScrollView>
-      {
-        !keyboardVisible && <BBackContinueBtn
+      {!keyboardVisible && (
+        <BBackContinueBtn
           onPressContinue={onPressContinue}
           disableContinue={handleDisableContinueButton()}
           onPressBack={handleBack}
           continueText={'Simpan'}
           isContinueIcon={false}
         />
-      }
-
+      )}
     </SafeAreaView>
   );
 };
@@ -288,6 +342,11 @@ const SubmitForm = () => {
 const style = StyleSheet.create({
   flexFull: {
     flex: 1,
+  },
+  leftIconStyle: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+    color: colors.textInput.input,
   },
   parent: {
     flex: 1,

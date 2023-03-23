@@ -58,7 +58,7 @@ export default function BVisitationCard({
         <View style={style.leftSide}>
           <View style={style.top}>
             <HighlightText
-              fontSize={fonts.size.md}
+              fontSize={14}
               name={item.name}
               searchQuery={searchQuery}
             />

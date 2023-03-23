@@ -101,10 +101,6 @@ const SearchingCustomer = () => {
       type: AppointmentActionType.SEARCH_QUERY,
       value: '',
     });
-    dispatchValue({
-      type: AppointmentActionType.ENABLE_SEARCHING,
-      value: false,
-    });
   };
 
   return (
@@ -112,11 +108,21 @@ const SearchingCustomer = () => {
       <BCommonSearchList
         searchQuery={searchQuery}
         onChangeText={onChangeSearch}
-        onClearValue={onClearValue}
+        onClearValue={() => {
+          if (searchQuery && searchQuery.trim() !== '') {
+            onClearValue();
+          } else {
+            dispatchValue({
+              type: AppointmentActionType.ENABLE_SEARCHING,
+              value: false,
+            });
+          }
+        }}
         placeholder="Cari Pelanggan"
         index={index}
         emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
         routes={routes}
+        autoFocus={true}
         onIndexChange={setIndex}
         loadList={isProjectLoading}
         onPressList={(item) => {

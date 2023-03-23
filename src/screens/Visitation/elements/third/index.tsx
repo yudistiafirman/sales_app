@@ -226,7 +226,7 @@ const ThirdStep = () => {
         />
         <BTextInput
           placeholder="Cari Produk"
-          left={<TextInput.Icon icon={'magnify'} />}
+          left={<TextInput.Icon forceTextInputFocus={false} icon={'magnify'} />}
         />
       </View>
       <BSpacer size={'extraSmall'} />

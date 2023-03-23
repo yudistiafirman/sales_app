@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -158,7 +157,7 @@ const FirstStep = () => {
 
   const nameAddress = React.useMemo(() => {
     const idx = region.formattedAddress?.split(',');
-    if (idx?.length > 1) {
+    if (idx && idx?.length > 1) {
       return idx?.[0];
     }
 

@@ -583,6 +583,7 @@ const Beranda = () => {
                 toggleModal('close')();
               }
             }}
+            autoFocus={true}
             searchQuery={searchQuery}
             onChangeText={onChangeSearch}
             routes={routes}
@@ -640,7 +641,7 @@ const Beranda = () => {
           <BSearchBar
             placeholder="Cari Pelanggan"
             activeOutlineColor="gray"
-            left={<TextInput.Icon icon="magnify" />}
+            left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
             value={searchQuery}
           />
         </View>

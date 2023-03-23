@@ -253,7 +253,7 @@ const Fourth = () => {
             postUploadFiles({ files: photoFiles, from: 'visitation' })
           ).unwrap();
           const files: { id: string; type: 'GALLERY' | 'COVER' }[] = [];
-          data.forEach((photo) => {
+          data.forEach((photo: any) => {
             const photoName = `${photo.name}.${photo.type}`;
             const photoNamee = `${photo.name}.jpg`;
             const foundObject = visitationData.images?.find(
@@ -334,7 +334,7 @@ const Fourth = () => {
             outsideClickClosePopUp: true,
           })
         );
-      } catch (error) {
+      } catch (error: any) {
         customLog(error, 'error271fourth');
         const message = error.message || 'Error creating visitation';
         dispatch(

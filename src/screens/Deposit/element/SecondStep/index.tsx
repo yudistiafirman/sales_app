@@ -161,7 +161,7 @@ export default function SecondStep() {
                       placeholder="Cari PO"
                       activeOutlineColor="gray"
                       disabled
-                      left={<TextInput.Icon icon="magnify" />}
+                      left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
                     />
                   </TouchableOpacity>
                 </>

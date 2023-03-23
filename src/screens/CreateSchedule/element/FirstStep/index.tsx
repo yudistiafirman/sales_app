@@ -170,7 +170,7 @@ export default function FirstStep() {
                   placeholder="Cari PO"
                   disabled
                   activeOutlineColor="gray"
-                  left={<TextInput.Icon icon="magnify" />}
+                  left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
                 />
               </>
             )}
