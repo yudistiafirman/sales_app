@@ -161,7 +161,7 @@ export default function FourthStep() {
             <BSearchBar
               placeholder="Cari Produk"
               activeOutlineColor="gray"
-              left={<TextInput.Icon icon="magnify" />}
+              left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
             />
           </View>
           <BSpacer size={'verySmall'} />

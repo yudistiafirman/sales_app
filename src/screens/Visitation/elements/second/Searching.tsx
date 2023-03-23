@@ -73,8 +73,6 @@ const SearchFlow = ({
 
   const onClear = () => {
     setSearchQuery('');
-    onSearch(false);
-    dispatch(updateShouldScrollView(true));
   };
 
   const onSelectProject = (item: any) => {
@@ -203,8 +201,16 @@ const SearchFlow = ({
             routes={routes}
             placeholder="Cari Pelanggan"
             searchQuery={searchQuery}
+            autoFocus={true}
             onChangeText={onChangeSearch}
-            onClearValue={onClear}
+            onClearValue={() => {
+              if (searchQuery && searchQuery.trim() !== '') {
+                onClear();
+              } else {
+                onSearch(false);
+                dispatch(updateShouldScrollView(true));
+              }
+            }}
             data={projects}
             onPressList={onSelectProject}
             isError={errorGettingProject}

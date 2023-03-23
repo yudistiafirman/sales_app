@@ -43,6 +43,7 @@ interface BCommonSearchListProps {
   onRetry?: () => void;
   emptyText: string;
   hidePicName?: boolean;
+  autoFocus?: boolean;
 }
 
 const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
@@ -67,6 +68,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
   onClearValue,
   onPressMagnify,
   hidePicName,
+  autoFocus,
 }: BCommonSearchListProps) => {
   const isSearching = searchQuery.length > 2;
   const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
@@ -117,7 +119,6 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
         left={
           <TextInput.Icon
             onPress={onPressMagnify && onPressMagnify}
-            forceTextInputFocus={false}
             icon="magnify"
           />
         }
@@ -125,11 +126,11 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
           onClearValue && (
             <TextInput.Icon
               onPress={onClearValue}
-              forceTextInputFocus={false}
               icon="close"
             />
           )
         }
+        autoFocus={autoFocus}
         placeholder={placeholder}
       />
       <BSpacer size="extraSmall" />

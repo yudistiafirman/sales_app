@@ -95,6 +95,7 @@ const SearchProduct = () => {
               width: '75%',
               justifyContent: 'center',
             }}
+            autoFocus={true}
             value={searchValue}
             onChangeText={onChangeText}
             onClearValue={onClearValue}

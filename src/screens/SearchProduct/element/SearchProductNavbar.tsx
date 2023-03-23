@@ -9,6 +9,7 @@ interface SearchProductNavbarProps {
   value?: string;
   onClearValue?: (event: GestureResponderEvent) => void;
   customStyle?: ViewStyle;
+  autoFocus?: boolean;
 }
 
 const SearchProductNavbar = ({
@@ -16,6 +17,7 @@ const SearchProductNavbar = ({
   value,
   onClearValue,
   customStyle,
+  autoFocus
 }: SearchProductNavbarProps) => {
   return (
     <View
@@ -25,6 +27,7 @@ const SearchProductNavbar = ({
         value={value}
         onChangeText={onChangeText}
         placeholder="Cari Produk"
+        autoFocus={autoFocus}
         left={<TextInput.Icon icon="magnify" />}
         right={
           value &&

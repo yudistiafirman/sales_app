@@ -486,7 +486,7 @@ const renderInput = (
           keyboardType={keyboardType ? keyboardType : 'default'}
           placeholder={placeholder}
           disabled={isInputDisable}
-          left={LeftIcon && <TextInput.Icon icon={LeftIcon} />}
+          left={LeftIcon && <TextInput.Icon forceTextInputFocus={false} icon={LeftIcon} />}
           contentStyle={textStyles}
           outlineColor={outlineColor}
         />
@@ -525,7 +525,7 @@ const renderInput = (
           numberOfLines={4}
           placeholder={placeholder}
           contentStyle={textStyles}
-          left={LeftIcon && <TextInput.Icon icon={LeftIcon} />}
+          left={LeftIcon && <TextInput.Icon forceTextInputFocus={false} icon={LeftIcon} />}
         />
         {isError && (
           <BText size="small" color="primary" bold="100">

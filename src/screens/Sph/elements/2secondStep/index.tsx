@@ -58,7 +58,13 @@ function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
 }
 function SearchIcon() {
-  return <TextInput.Icon forceTextInputFocus={false} icon="magnify" />;
+  return (
+    <TextInput.Icon
+      style={{ marginTop: -layout.pad.ml, marginStart: -layout.pad.sm }}
+      forceTextInputFocus={false}
+      icon="magnify"
+    />
+  );
 }
 
 const eventKeyObj = {
@@ -182,6 +188,7 @@ export default function SecondStep() {
           dispatch(updateBillingAddressOptions({ value: text, key: 'name' }));
         },
         value: billingAddress?.name,
+        placeholder: 'Masukkan nama',
       },
       {
         label: 'No. Telepon',
@@ -194,8 +201,9 @@ export default function SecondStep() {
         },
         value: billingAddress.phone,
         keyboardType: 'numeric',
+        placeholder: 'Masukkan nomor telepon',
         customerErrorMsg: 'No. Telepon harus diisi sesuai format',
-        LeftIcon: LeftIcon,
+        LeftIcon: billingAddress.phone ? LeftIcon : undefined,
       },
       {
         label: 'Cari Alamat',
@@ -228,6 +236,7 @@ export default function SecondStep() {
           );
         },
         value: billingAddress?.fullAddress,
+        placeholder: 'Masukkan alamat lengkap',
       },
     ];
   }, [

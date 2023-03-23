@@ -74,7 +74,7 @@ const BSheetAddPic = React.forwardRef(
           keyboardType: 'numeric',
           customerErrorMsg: 'No. Telepon harus diisi sesuai format',
           LeftIcon: state.phone ? LeftIcon : undefined,
-          placeholder: 'Masukkan nomor telpon',
+          placeholder: 'Masukkan nomor telepon',
         },
         {
           label: 'Email',

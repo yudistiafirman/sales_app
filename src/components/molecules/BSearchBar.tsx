@@ -25,6 +25,7 @@ interface BSearchBarProp {
   placeHolderTextColor?: string | undefined;
   textColor?: string | undefined;
   dense?: boolean | undefined;
+  autoFocus?: boolean;
   onFocus?: () => void;
 }
 
@@ -71,12 +72,14 @@ const BSearchBar = ({
   placeHolderTextColor,
   textColor,
   dense,
+  autoFocus,
   onFocus,
 }: BSearchBarProp & typeof BSearchBarDefaultProps) => {
   return (
     <TextInput
       onFocus={onFocus}
       mode={mode}
+      autoFocus={autoFocus}
       left={left}
       right={right}
       placeholder={placeholder}
