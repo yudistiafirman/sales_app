@@ -140,7 +140,7 @@ function SphContent() {
   const [stepsDone, setStepsDone] = useState<number[]>([]);
   const [, updateState, setCurrentPosition, currentPosition] =
     useContext(SphContext);
-  const stepControll = useCallback((step: number) => {}, []);
+  const stepControll = useCallback((step: number) => { }, []);
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
 
@@ -151,6 +151,8 @@ function SphContent() {
     handleStepperFocus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
+
+  console.log('ini steps done', stepsDone)
 
   const handleStepperFocus = () => {
     // to continue stepper focus when entering sph page

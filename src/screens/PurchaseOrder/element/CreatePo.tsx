@@ -80,11 +80,11 @@ const CreatePo = () => {
     parentData,
     data,
   }: {
-    parentData: { name: string; locationName: string; projectId: string };
+    parentData: { companyName: string; locationName: string; projectId: string };
     data: QuotationRequests;
   }) => {
     const selectedSphFromModal = Object.assign({});
-    selectedSphFromModal.name = parentData.name;
+    selectedSphFromModal.name = parentData.companyName;
     selectedSphFromModal.locationName = parentData.locationName;
     selectedSphFromModal.id = parentData.projectId;
     selectedSphFromModal.QuotationRequests = data;

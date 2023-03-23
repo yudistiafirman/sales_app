@@ -63,7 +63,7 @@ const ChoosenProductList = <ProductData extends Products>({
           pricePerVol={offeringPrice}
           volume={quantity}
           item={item}
-          isOptions={ data && data?.length > 1}
+          isOptions={data && data?.length > 1}
           totalPrice={totalPrice}
           onChecked={() => hasMultipleCheck && onChecked && onChecked(item)}
           inputsSelection={inputsSelection}
@@ -89,7 +89,7 @@ const ChoosenProductList = <ProductData extends Products>({
       <BSpacer size="extraSmall" />
       <BDivider borderBottomWidth={1} flex={0} height={0.1} />
       <BSpacer size="extraSmall" />
-      <View style={{ minHeight: width * 1.2 }}>
+      <View style={{ minHeight: width }}>
         <FlatList
           data={data}
           keyExtractor={(_item, index) => index.toString()}
@@ -111,8 +111,6 @@ const ChoosenProductList = <ProductData extends Products>({
 const styles = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
-    paddingTop: layout.pad.xxl,
-    paddingBottom: layout.pad.lg,
     justifyContent: 'space-between',
   },
   productName: {
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.lg,
     color: colors.text.darker,
     width: width - 100,
-    textAlign:'right',
+    textAlign: 'right',
   },
 });
 

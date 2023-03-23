@@ -20,7 +20,7 @@ import UploadFiles from './element/PaymentDetail';
 import DetailProduk from './element/ProductDetail';
 import { useKeyboardActive } from '@/hooks';
 import { bStorage } from '@/actions';
-import { PO } from '@/navigation/ScreenNames';
+import { PO, TAB_ROOT } from '@/navigation/ScreenNames';
 
 const PurchaseOrder = () => {
   const navigation = useNavigation();
@@ -33,8 +33,8 @@ const PurchaseOrder = () => {
     files,
     selectedProducts,
     poImages,
+    stepsDone
   } = poState.currentState.context;
-  const [stepsDone, setStepsDone] = useState<number[]>([]);
   const { keyboardVisible } = useKeyboardActive();
   const [isPopupExitVisible, setIsPopupExitVisible] = useState(false);
   const labels = ['Cari SPH', 'Detil Pembayaran', 'Detil Produk'];
@@ -59,6 +59,7 @@ const PurchaseOrder = () => {
       );
     }
   };
+
 
   const handleBack = useCallback(() => {
     if (currentStep === 0) {
@@ -88,12 +89,14 @@ const PurchaseOrder = () => {
       dispatch({
         type: 'goToSecondStep',
       });
+
+      const dataToSaved = { ...poState.currentState.context, currentStep: 0, stepsDone: [0] };
       bStorage.setItem(PO, {
-        poContext: poState.currentState.context,
+        poContext: dataToSaved,
       });
     } else if (currentStep === 1) {
       dispatch({ type: 'goToThirdStep' });
-      const dataToSaved = { ...poState.currentState.context, currentStep: 1 };
+      const dataToSaved = { ...poState.currentState.context, currentStep: 1, stepsDone: [0, 1] };
       bStorage.setItem(PO, {
         poContext: dataToSaved,
       });
@@ -102,13 +105,30 @@ const PurchaseOrder = () => {
     }
   }, [currentStep, dispatch, poState.currentState.context]);
 
+  const handleClose = useCallback(() => {
+    if (currentStep === 0) {
+      bStorage.getItem(PO).then((value) => {
+        if (value) {
+          setIsPopupExitVisible(true);
+        } else {
+          dispatch({
+            type: 'backToBeginningState',
+          });
+          navigation.dispatch(StackActions.replace(TAB_ROOT));
+        }
+      });
+    } else {
+      setIsPopupExitVisible(true)
+    }
+  }, [])
+
   const renderHeaderLeft = useCallback(
     () => (
       <BHeaderIcon
         size={layout.pad.lg + layout.pad.md}
         iconName="x"
         marginRight={layout.pad.lg}
-        onBack={handleBack}
+        onBack={handleClose}
       />
     ),
     [handleBack]
@@ -144,6 +164,31 @@ const PurchaseOrder = () => {
     });
   }, [navigation, renderHeaderLeft, renderTitle]);
 
+  const onPressStepper = (pressedNum: number) => {
+    if (pressedNum !== currentStep) {
+      if (pressedNum === 1) {
+        if (currentStep === 0) {
+          dispatch({ type: 'goToSecondStepFromStepOnePressed', value: pressedNum })
+        } else {
+          dispatch({ type: 'goToStepTwoFromStepThreePressed', value: pressedNum })
+        }
+      } else if (pressedNum === 2) {
+        if (currentStep === 0) {
+          dispatch({ type: 'goToThirdFromStepOnePressed', value: pressedNum })
+        } else {
+          dispatch({ type: 'goToStepThreeFromStepTwoPressed', value: pressedNum })
+        }
+      } else {
+        if (currentStep === 1) {
+
+          dispatch({ type: 'goToStepOneFromStepTwoPressed', value: pressedNum })
+        } else {
+          dispatch({ type: 'goToStepOneFromStepThreePressed', value: pressedNum })
+        }
+      }
+    }
+  }
+
   const stepToRender = [<CreatePo />, <UploadFiles />, <DetailProduk />];
 
   return (
@@ -153,6 +198,7 @@ const PurchaseOrder = () => {
           labels={labels}
           currentStep={currentStep}
           stepsDone={stepsDone}
+          stepOnPress={onPressStepper}
         />
       </View>
       <BSpacer size="medium" />
@@ -169,11 +215,23 @@ const PurchaseOrder = () => {
       <PopUpQuestion
         isVisible={isPopupExitVisible}
         setIsPopupVisible={() => {
-          bStorage.deleteItem(PO);
-          dispatch({
-            type: 'backToBeginningState',
-          });
-          navigation.dispatch(StackActions.popToTop());
+          if (currentStep === 0) {
+            dispatch({
+              type: 'backToBeginningState',
+            });
+            navigation.dispatch(StackActions.replace(TAB_ROOT));
+          } else if (currentStep === 1) {
+            dispatch({
+              type: 'backToBeginningStateFromSecondStep',
+            });
+            navigation.dispatch(StackActions.replace(TAB_ROOT));
+          } else {
+            dispatch({
+              type: 'backToBeginningStateFromThirdStep',
+            });
+            navigation.dispatch(StackActions.replace(TAB_ROOT));
+          }
+
         }}
         actionButton={() => setIsPopupExitVisible(false)}
         cancelText={'Keluar'}
@@ -195,6 +253,8 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: 0
   },
 });
 

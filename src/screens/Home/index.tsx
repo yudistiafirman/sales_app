@@ -110,7 +110,9 @@ const Beranda = () => {
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
   const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
+  const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false)
   const visitationData = useSelector((state: RootState) => state.visitation);
+
 
   useHeaderShow({
     isHeaderShown: !isModalVisible,
@@ -179,8 +181,8 @@ const Beranda = () => {
           search: search || searchQuery,
           ...(!search &&
             !searchQuery && {
-              date: date.valueOf(),
-            }),
+            date: date.valueOf(),
+          }),
         };
         const { data: _data } = await getAllVisitations(options);
         const displayData =
@@ -289,7 +291,7 @@ const Beranda = () => {
     return (
       <>
         <View style={style.popupSPHContent}>
-          {poNumber ? (
+          {feature === 'PO' ? (
             renderPoNumber()
           ) : (
             <BVisitationCard
@@ -317,7 +319,7 @@ const Beranda = () => {
       currentVersionName = currentVersionName?.replace('(Dev)', '');
     setUpdateDialogVisible(
       currentVersionName?.split('.').join('') <
-        getMinVersionUpdate(force_update)
+      getMinVersionUpdate(force_update)
     );
   }, [force_update]);
 
@@ -364,6 +366,9 @@ const Beranda = () => {
           setFeature('PO');
           if (!isModalContinuePo) {
             navigation.navigate(PO);
+            setLocalContinueModalPo(false)
+          } else {
+            setLocalContinueModalPo(true)
           }
         },
       },
@@ -537,10 +542,13 @@ const Beranda = () => {
     if (feature === 'PO') {
       if (currentStep === 0) {
         dispatch({ type: 'goToSecondStepFromSaved' });
+        setLocalContinueModalPo(false)
       } else {
         dispatch({ type: 'goToThirdStepFromSaved' });
+        setLocalContinueModalPo(false)
       }
       navigation.navigate(PO);
+
     } else {
       setPopupSPHVisible(false);
       dispatch(resetFocusedStepperFlag());
@@ -582,9 +590,9 @@ const Beranda = () => {
             onPressList={
               enable_customer_detail
                 ? (data) => {
-                    toggleModal('close')();
-                    visitationOnPress(data);
-                  }
+                  toggleModal('close')();
+                  visitationOnPress(data);
+                }
                 : undefined
             }
             data={data.data}
@@ -655,7 +663,7 @@ const Beranda = () => {
           onPressItem={enable_customer_detail ? visitationOnPress : undefined}
         />
         <PopUpQuestion
-          isVisible={feature === 'SPH' ? isPopupSPHVisible : isModalContinuePo}
+          isVisible={feature === 'SPH' ? isPopupSPHVisible : localModalContinuePo}
           setIsPopupVisible={() => {
             if (feature === 'SPH') {
               setPopupSPHVisible(false);
@@ -671,9 +679,8 @@ const Beranda = () => {
           descContent={renderContinueData()}
           cancelText={'Buat Baru'}
           actionText={'Lanjutkan'}
-          text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
-            feature === 'PO' ? 'PO' : 'SPH'
-          } Sebelumnya?`}
+          text={`Apakah Anda Ingin Melanjutkan Pembuatan ${feature === 'PO' ? 'PO' : 'SPH'
+            } Sebelumnya?`}
         />
       </BBottomSheet>
       {renderUpdateDialog()}
