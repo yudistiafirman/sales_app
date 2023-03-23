@@ -1,13 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { BDivider, BForm, BSpacer, BText } from '@/components';
-import {
-  CreateVisitationSecondStep,
-  Input,
-  projectResponseType,
-  Styles,
-} from '@/interfaces';
+import { Input, projectResponseType, Styles } from '@/interfaces';
 import SearchFlow from './Searching';
 import { ScrollView } from 'react-native-gesture-handler';
 import debounce from 'lodash.debounce';
@@ -22,7 +16,10 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
 import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
-import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
+import {
+  setSearchProject,
+  updateDataVisitation,
+} from '@/redux/reducers/VisitationReducer';
 
 const company = require('@/assets/icon/Visitation/company.png');
 const profile = require('@/assets/icon/Visitation/profile.png');
@@ -102,7 +99,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             });
           }
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch(
             updateDataVisitation({
               type: 'companyName',
@@ -159,7 +156,10 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
         isInputDisable: !!existingVisitation,
       },
     ];
-    if (visitationData.customerType?.length > 0) {
+    if (
+      visitationData.customerType &&
+      visitationData.customerType?.length > 0
+    ) {
       const companyNameInput: Input = {
         label: 'Nama Perusahaan',
         isRequire: true,
@@ -232,22 +232,19 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
     return baseInput;
   }, [visitationData, selectedCompany]);
 
-  const [isSearch, setSearch] = React.useState<boolean>(false);
-
   const onSearch = (searching: boolean) => {
-    setSearch(searching);
+    dispatch(setSearchProject(searching));
   };
 
   return (
     <SafeAreaView style={styles.flexFull}>
       <SearchFlow
         searchingDisable={!!existingVisitation}
-        isSearch={isSearch}
+        isSearch={visitationData.isSearchProject}
         onSearch={onSearch}
-        resultSpace={2}
         setSelectedCompany={setSelectedCompany}
       />
-      {!isSearch && (
+      {!visitationData.isSearchProject && (
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <BSpacer size={6} />
           <View style={styles.dividerContainer}>
