@@ -152,8 +152,6 @@ function SphContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sphData]);
 
-  console.log('ini steps done', stepsDone)
-
   const handleStepperFocus = () => {
     // to continue stepper focus when entering sph page
     if (!sphData.stepperSPHShouldNotFocused) {
