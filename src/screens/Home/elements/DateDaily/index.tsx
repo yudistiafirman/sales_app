@@ -115,16 +115,14 @@ const style = StyleSheet.create({
   calendarHeaderStyle: {
     color: colors.text.secondary,
     fontSize: font.size.sm,
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '500',
+    fontFamily: font.family.montserrat[500],
     alignSelf: 'flex-end',
     marginRight: layout.pad.lg,
   },
   dateNumberStyle: {
-    fontFamily: 'Montserrat-Regular',
     color: colors.textInput.input,
     fontSize: fonts.size.lg,
-    fontWeight: '500',
+    fontFamily: font.family.montserrat[500],
   },
   dateNameStyle: {
     fontFamily: font.family.montserrat[300],
@@ -137,8 +135,7 @@ const style = StyleSheet.create({
     borderRadius: resScale(100),
     paddingHorizontal: layout.pad.md,
     fontSize: font.size.lg,
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '500',
+    fontFamily: font.family.montserrat[500],
   },
   icon: {
     width: resScale(12),

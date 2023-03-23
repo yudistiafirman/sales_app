@@ -67,4 +67,7 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 
+# react-native-config codegen
+ios/tmp.xcconfig
+
 /android/app/src/main/assets/index.android.bundle

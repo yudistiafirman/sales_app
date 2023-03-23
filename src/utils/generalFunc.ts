@@ -1,8 +1,12 @@
 import { colors } from '@/constants';
-import { NativeModules } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
+import accessEnv from './accessEnv';
 const { RNCustomConfig } = NativeModules;
 
 const flavor = RNCustomConfig?.flavor;
+
+export const isUndefined = (state: any): boolean =>
+  typeof state === 'undefined';
 
 export const getColorStatusTrx = (id: string) => {
   switch (id.toUpperCase()) {
@@ -87,7 +91,7 @@ export const customLog = (message?: any, ...optionalParams: any[]) => {
 };
 
 export const isDevelopment = () => {
-  if (flavor === 'development') {
+  if (flavor === 'development' || Platform.OS !== 'android') {
     return true;
   } else {
     return false;
@@ -100,6 +104,14 @@ export const isProduction = () => {
   } else {
     return false;
   }
+};
+
+export const getAppVersionName = (): string => {
+  let version = `${accessEnv('MAJOR_VERSION')}.${accessEnv(
+    'MINOR_VERSION'
+  )}.${accessEnv('PATCH_VERSION')}`;
+  if (isDevelopment()) version += ' (Dev)';
+  return version;
 };
 
 export const isForceUpdate = (text: any): boolean => {
@@ -222,8 +234,7 @@ export const getSuccessMsgFromAPI = (
         finalText = 'Berhasil buat janji';
         break;
       default:
-        if (fullUrl.toLowerCase().includes('visitation/'))
-          finalText = '';
+        if (fullUrl.toLowerCase().includes('visitation/')) finalText = '';
         else finalText += 'data';
         break;
     }
@@ -262,10 +273,8 @@ export const getSuccessMsgFromAPI = (
           finalText = '';
         else if (fullUrl.toLowerCase().includes('quotation-letter/'))
           finalText = '';
-        else if (fullUrl.toLowerCase().includes('deposit/'))
-          finalText = '';
-        else if (fullUrl.toLowerCase().includes('schedule/'))
-          finalText = '';
+        else if (fullUrl.toLowerCase().includes('deposit/')) finalText = '';
+        else if (fullUrl.toLowerCase().includes('schedule/')) finalText = '';
         else if (fullUrl.toLowerCase().includes('delivery-order/'))
           finalText = '';
         else finalText += 'data';

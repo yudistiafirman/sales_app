@@ -5,7 +5,7 @@
 #import <React/RCTRootView.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import <React/RCTAppSetupUtils.h>
-#import "ReactNativeConfig.h"
+#import "RNCConfig.h"
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -13,14 +13,14 @@
 #import <React/RCTSurfacePresenter.h>
 #import <React/RCTSurfacePresenterBridgeAdapter.h>
 #import <ReactCommon/RCTTurboModuleManager.h>
-#import <react/config/ReactNativeConfig.h>
+#import <react/config/RNCConfig.h>
 
 static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 @interface AppDelegate () <RCTCxxBridgeDelegate, RCTTurboModuleManagerDelegate> {
   RCTTurboModuleManager *_turboModuleManager;
   RCTSurfacePresenterBridgeAdapter *_bridgeAdapter;
-  std::shared_ptr<const facebook::react::ReactNativeConfig> _reactNativeConfig;
+  std::shared_ptr<const facebook::react::RNCConfig> _reactNativeConfig;
   facebook::react::ContextContainer::Shared _contextContainer;
 }
 @end
@@ -53,7 +53,7 @@ static void ClearKeychainIfNecessary() {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
-  NSString *googleMapApiKeys = [ReactNativeConfig envFor:@"GOOGLE_MAPS_API_KEY"];
+  NSString *googleMapApiKeys = [RNCConfig envFor:@"GOOGLE_MAPS_API_KEY"];
   
   [GMSServices provideAPIKey:googleMapApiKeys];
 
@@ -66,7 +66,7 @@ static void ClearKeychainIfNecessary() {
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
   _reactNativeConfig = std::make_shared<facebook::react::EmptyReactNativeConfig const>();
-  _contextContainer->insert("ReactNativeConfig", _reactNativeConfig);
+  _contextContainer->insert("RNCConfig", _reactNativeConfig);
   _bridgeAdapter = [[RCTSurfacePresenterBridgeAdapter alloc] initWithBridge:bridge contextContainer:_contextContainer];
   bridge.surfacePresenter = _bridgeAdapter.surfacePresenter;
 #endif

@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   Dimensions,
   Linking,
-  NativeModules,
   Text,
+  Platform,
 } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
@@ -57,6 +57,7 @@ import SvgNames from '@/components/atoms/BSvg/svgName';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
   customLog,
+  getAppVersionName,
   getMinVersionUpdate,
   isDevelopment,
   isForceUpdate,
@@ -70,8 +71,6 @@ import {
 import { bStorage } from '@/actions';
 import { resetRegion } from '@/redux/reducers/locationReducer';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
-const { RNCustomConfig } = NativeModules;
-const versionName = RNCustomConfig?.version_name;
 const { height } = Dimensions.get('window');
 const initialSnapPoints = (+height.toFixed() - 115) / 10;
 
@@ -110,9 +109,8 @@ const Beranda = () => {
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
   const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
-  const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false)
+  const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false);
   const visitationData = useSelector((state: RootState) => state.visitation);
-
 
   useHeaderShow({
     isHeaderShown: !isModalVisible,
@@ -181,8 +179,8 @@ const Beranda = () => {
           search: search || searchQuery,
           ...(!search &&
             !searchQuery && {
-            date: date.valueOf(),
-          }),
+              date: date.valueOf(),
+            }),
         };
         const { data: _data } = await getAllVisitations(options);
         const displayData =
@@ -267,7 +265,9 @@ const Beranda = () => {
             <Button
               onPress={() =>
                 Linking.openURL(
-                  'https://play.google.com/store/apps/details?id=bod.app'
+                  Platform.OS === 'ios'
+                    ? 'http://itunes.com/apps/bod'
+                    : 'https://play.google.com/store/apps/details?id=bod.app'
                 )
               }
             >
@@ -314,12 +314,12 @@ const Beranda = () => {
 
   React.useEffect(() => {
     crashlytics().log(TAB_HOME);
-    let currentVersionName = versionName;
+    let currentVersionName = getAppVersionName();
     if (isDevelopment())
       currentVersionName = currentVersionName?.replace('(Dev)', '');
     setUpdateDialogVisible(
       currentVersionName?.split('.').join('') <
-      getMinVersionUpdate(force_update)
+        getMinVersionUpdate(force_update)
     );
   }, [force_update]);
 
@@ -366,9 +366,9 @@ const Beranda = () => {
           setFeature('PO');
           if (!isModalContinuePo) {
             navigation.navigate(PO);
-            setLocalContinueModalPo(false)
+            setLocalContinueModalPo(false);
           } else {
-            setLocalContinueModalPo(true)
+            setLocalContinueModalPo(true);
           }
         },
       },
@@ -542,13 +542,12 @@ const Beranda = () => {
     if (feature === 'PO') {
       if (currentStep === 0) {
         dispatch({ type: 'goToSecondStepFromSaved' });
-        setLocalContinueModalPo(false)
+        setLocalContinueModalPo(false);
       } else {
         dispatch({ type: 'goToThirdStepFromSaved' });
-        setLocalContinueModalPo(false)
+        setLocalContinueModalPo(false);
       }
       navigation.navigate(PO);
-
     } else {
       setPopupSPHVisible(false);
       dispatch(resetFocusedStepperFlag());
@@ -591,9 +590,9 @@ const Beranda = () => {
             onPressList={
               enable_customer_detail
                 ? (data) => {
-                  toggleModal('close')();
-                  visitationOnPress(data);
-                }
+                    toggleModal('close')();
+                    visitationOnPress(data);
+                  }
                 : undefined
             }
             data={data.data}
@@ -664,7 +663,9 @@ const Beranda = () => {
           onPressItem={enable_customer_detail ? visitationOnPress : undefined}
         />
         <PopUpQuestion
-          isVisible={feature === 'SPH' ? isPopupSPHVisible : localModalContinuePo}
+          isVisible={
+            feature === 'SPH' ? isPopupSPHVisible : localModalContinuePo
+          }
           setIsPopupVisible={() => {
             if (feature === 'SPH') {
               setPopupSPHVisible(false);
@@ -680,8 +681,9 @@ const Beranda = () => {
           descContent={renderContinueData()}
           cancelText={'Buat Baru'}
           actionText={'Lanjutkan'}
-          text={`Apakah Anda Ingin Melanjutkan Pembuatan ${feature === 'PO' ? 'PO' : 'SPH'
-            } Sebelumnya?`}
+          text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
+            feature === 'PO' ? 'PO' : 'SPH'
+          } Sebelumnya?`}
         />
       </BBottomSheet>
       {renderUpdateDialog()}

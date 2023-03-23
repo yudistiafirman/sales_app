@@ -27,6 +27,5 @@ const style = StyleSheet.create({
     color: colors.white,
     fontFamily: font.family.montserrat[600],
     fontSize: respFS(16),
-    fontWeight: '600',
   },
 });

@@ -49,7 +49,7 @@ const TransactionListCard = ({
           </BText>
           {nominal !== undefined && (
             <BText sizeInNumber={14} bold={'500'}>
-              {'IDR ' + formatCurrency(nominal)}
+              {'IDR ' + formatCurrency(nominal ? nominal : 0)}
             </BText>
           )}
         </View>

@@ -96,7 +96,6 @@ const style = StyleSheet.create({
     color: colors.white,
     fontFamily: font.family.montserrat[600],
     fontSize: font.size.lg,
-    fontWeight: '600',
   },
   outlineTitle: {
     color: colors.primary,

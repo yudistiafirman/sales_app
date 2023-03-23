@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import { Styles } from '@/interfaces';
-import { NativeModules, Alert } from 'react-native';
+import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { signout } from '@/redux/reducers/authReducer';
 import { AppDispatch } from '@/redux/store';
@@ -11,9 +11,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import Icon from 'react-native-vector-icons/Feather';
 import analytics from '@react-native-firebase/analytics';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
-
-const { RNCustomConfig } = NativeModules;
-const versionName = RNCustomConfig?.version_name;
+import { getAppVersionName } from '@/utils/generalFunc';
 
 const _styles: Styles = {
   chipText: {
@@ -70,7 +68,7 @@ export default function SalesHeaderRight(iconColor: string = '') {
       </MenuItem>
       <MenuDivider />
       <MenuItem textStyle={_styles.version} disabled>
-        {'APP Version ' + versionName}
+        {'APP Version ' + getAppVersionName()}
       </MenuItem>
     </Menu>
   );

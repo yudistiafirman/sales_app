@@ -19,6 +19,8 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A2F22DBC52A5480A9DC0E26A /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A2A7DC1F5A641B4BFFBB529 /* Montserrat-Medium.ttf */; };
 		C2BF311E099C4D40970FC9F8 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3EF09608305444B944FB465 /* Montserrat-Bold.ttf */; };
+		CE80065A29CC81AF0010CA18 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = CE80065929CC81AF0010CA18 /* Config.xcconfig */; };
+		CE80065B29CC81AF0010CA18 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = CE80065929CC81AF0010CA18 /* Config.xcconfig */; };
 		CEBB439729CC42E200107A4E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CEBB439629CC42E200107A4E /* GoogleService-Info.plist */; };
 		CEBB439829CC42E200107A4E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CEBB439629CC42E200107A4E /* GoogleService-Info.plist */; };
 		E10A22B2FAB64BE587D6D500 /* Montserrat-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B38471996DC5405DBC8A60D3 /* Montserrat-ExtraBold.ttf */; };
@@ -61,6 +63,7 @@
 		9CD86B5A166FE7F5F51B7EBB /* Pods-BOD-BODTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BOD-BODTests.debug.xcconfig"; path = "Target Support Files/Pods-BOD-BODTests/Pods-BOD-BODTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B38471996DC5405DBC8A60D3 /* Montserrat-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraBold.ttf"; path = "../src/assets/fonts/Montserrat-ExtraBold.ttf"; sourceTree = "<group>"; };
 		B9F050760DB44614B06AB338 /* Montserrat-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Light.ttf"; path = "../src/assets/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; };
+		CE80065929CC81AF0010CA18 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		CEBB439629CC42E200107A4E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D411E8430CD9E73B315B4D07 /* Pods_BOD_BODTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BOD_BODTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3EF09608305444B944FB465 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Bold.ttf"; path = "../src/assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
@@ -138,6 +141,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				CE80065929CC81AF0010CA18 /* Config.xcconfig */,
 				CEBB439629CC42E200107A4E /* GoogleService-Info.plist */,
 				7DC8BF8A295D579F003706D8 /* File.swift */,
 				13B07FAE1A68108700A75B9A /* BOD */,
@@ -280,6 +284,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE80065B29CC81AF0010CA18 /* Config.xcconfig in Resources */,
 				CEBB439829CC42E200107A4E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,6 +299,7 @@
 				C2BF311E099C4D40970FC9F8 /* Montserrat-Bold.ttf in Resources */,
 				E10A22B2FAB64BE587D6D500 /* Montserrat-ExtraBold.ttf in Resources */,
 				1492AED2D6DD4BFB84BB3B49 /* Montserrat-Light.ttf in Resources */,
+				CE80065A29CC81AF0010CA18 /* Config.xcconfig in Resources */,
 				A2F22DBC52A5480A9DC0E26A /* Montserrat-Medium.ttf in Resources */,
 				E561A3AFEACE46F5959BDA0B /* Montserrat-Regular.ttf in Resources */,
 				6D1581618FA44471BF5020BA /* Montserrat-SemiBold.ttf in Resources */,
@@ -623,6 +629,7 @@
 		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE80065929CC81AF0010CA18 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				"ARCHS[sdk=iphonesimulator*]" = x86_64;
@@ -697,6 +704,7 @@
 		};
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE80065929CC81AF0010CA18 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				"ARCHS[sdk=iphonesimulator*]" = x86_64;
