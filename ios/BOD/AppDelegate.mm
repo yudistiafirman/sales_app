@@ -1,5 +1,5 @@
 #import "AppDelegate.h"
-
+#import <Firebase.h>
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -52,6 +52,7 @@ static void ClearKeychainIfNecessary() {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
   NSString *googleMapApiKeys = [ReactNativeConfig envFor:@"GOOGLE_MAPS_API_KEY"];
   
   [GMSServices provideAPIKey:googleMapApiKeys];
@@ -71,7 +72,7 @@ static void ClearKeychainIfNecessary() {
 #endif
 
   NSDictionary *initProps = [self prepareInitialProps];
-  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"BSA", initProps);
+  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"BOD", initProps);
 
   if (@available(iOS 13.0, *)) {
     rootView.backgroundColor = [UIColor systemBackgroundColor];
