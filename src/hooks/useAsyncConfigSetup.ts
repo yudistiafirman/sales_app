@@ -19,13 +19,8 @@ import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
 import { UserModel } from '@/models/User';
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {
-    isLoading,
-    userData,
-    isSignout,
-    hunterScreen,
-    remote_config,
-  } = useSelector((state: RootState) => state.auth);
+  const { isLoading, userData, isSignout, hunterScreen, remote_config } =
+    useSelector((state: RootState) => state.auth);
   const { enable_hunter_farmer } = useSelector(
     (state: RootState) => state.auth.remote_config
   );
@@ -97,14 +92,17 @@ const useAsyncConfigSetup = () => {
   const hunterFarmerSetup = React.useCallback(async () => {
     await BackgroundFetch.configure(
       {
-        minimumFetchInterval: Platform.OS === 'android' ? 60 : 15,
+        minimumFetchInterval: 60,
         forceAlarmManager: true,
       },
       async (taskId) => {
         // <-- Event callback
         const date = await bStorage.getItem(HUNTER_AND_FARMER);
         if (date !== undefined && moment().date() !== date) {
-          dispatch(toggleHunterScreen(true));
+          setTimeout(
+            () => dispatch(toggleHunterScreen(true)),
+            Platform.OS === 'ios' ? 1000 : 0
+          );
         } else {
           await bStorage.setItem(HUNTER_AND_FARMER, moment().date());
         }

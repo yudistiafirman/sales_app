@@ -5,6 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   FlatList,
+  Platform,
 } from 'react-native';
 import React, { useContext, useState } from 'react';
 import {
@@ -329,7 +330,7 @@ export default function FifthStep() {
       }
       setMadeSphData(sph);
       dispatch(closePopUp());
-      setIsStepDoneVisible(true);
+      setTimeout(() => setIsStepDoneVisible(true), Platform.OS === "ios" ? 500 : 0); 
     } catch (error) {
       const messageError = error?.message;
       customLog(error, 'errorbuatSph54', messageError);

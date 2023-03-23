@@ -91,7 +91,7 @@ export const customLog = (message?: any, ...optionalParams: any[]) => {
 };
 
 export const isDevelopment = () => {
-  if (flavor === 'development' || Platform.OS !== 'android') {
+  if (flavor === 'development' || (Platform.OS !== 'android' && __DEV__)) {
     return true;
   } else {
     return false;
