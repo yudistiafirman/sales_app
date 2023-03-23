@@ -140,7 +140,7 @@ function SphContent() {
   const [stepsDone, setStepsDone] = useState<number[]>([]);
   const [, updateState, setCurrentPosition, currentPosition] =
     useContext(SphContext);
-  const stepControll = useCallback((step: number) => {}, []);
+  const stepControll = useCallback((step: number) => { }, []);
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
 

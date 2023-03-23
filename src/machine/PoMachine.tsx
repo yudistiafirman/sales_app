@@ -31,6 +31,7 @@ const purchaseOrderInitialState = {
   files: [] as any[],
   paymentType: '',
   currentStep: 0,
+  stepsDone: [],
   postPoPayload: {} as PostPoPayload,
   isUseExistingFiles: false,
   isLoadingPostPurchaseOrder: false,
@@ -38,7 +39,7 @@ const purchaseOrderInitialState = {
 };
 
 const POMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJlfPKAVgAsANgDsAIwAzIZ+Ps4hXgA0IACeiF4AnEGUABweyekBzqlBQV5eHgC+RTGSOPhEpORUNPRMrBAc3HwCGmISGBUy1fJ1yo0c6iLEWra8ZvoB5kggyFY2erz2TgiuXqmUQd6hhqmpiV7BMfEIAT5efpSFXoaG235BruclZV3SVXJUAGaC6LDaBjaMDITgAI1w9AAKsQAEJgKDCXjCKBAnRgMz2ebWcYrFxuTy+QIhMIRQzROKIAJHRKUZweDyBVJHR4BRKvObvSqyGqUX7-QHA5CUXAQJoAeU4BFwUhRDGQ2Exs2xizss1WzgKPi22S820SAT8iR8Hh8Jyp5K81xu4WSziNAQ55Q+PPk-IBQJBIrFbEl5AANmBgQBJAC2uBgSssOKWeLWPnydJNer8qR8hh8AXNZ1ctJC9tNiUSoW8xVKnKk3N6Pz+HqF3olnGEaEBCqjcwWuPVLn8VwOlvyhoyl2zAWC7mZxr8HjuhnZ5edVa+fNrgq9osbG4AsqQwGGI3B2yqu6ANYlnNrzn5fA9U4YPKOgrlKIkZ3r6YznNkgk6uT1l+6a7ChuvqcFAxAwgwtB8BAnrIEenaxt2azFoYL7BKkqZBAEDLEqOmpoV+BqPMW3g+D4v6Vv+vKAXBlBQTKODytg4KQnQMIAII+sQCExmqp4uF49KeH4hiGqk9ypGyvijnOVqHN4r6XBsuRlm8VGfDRq50QxUjMZwG4AMLYMQVhgLwzG8aqyzIZqwmMmJd5PtJZqUmc1IeNaDI5GJPiJGElHdJp8hQZgMFwWBcJsTCABi2lClZJ6OPiQmEv4wShOEkTZo8nlhKavhJMORaBS61b0dBvCwUKkUwlC2B-NVIKJUhAkIAUiZjv4JrbCa3iyRJ1rGq4PipPShx+KVS68qF4X1jA2i6LwqIKgAIqMqChuZ2iwC0-BCCM4iUIu1EhZVTXCgtS0rdg62YJt22wMMmg6EskwmFiiH8clCBBP5aGpgEdznB4X4bA+bljkalC2vqBrnkEfjOFNp1ULNVV0VdcprRtW28DtnAUOgpDHf6OjfKQobHX+wVo+dmNBtdzF3Q9+NPe0YxvSYLXfas+RjdcX4miWRZBKOhq0rDGTwxESMo7TFVhRj9bM7j20ADLEKKkCcKgyD+lrEAojzNltUJESePcHjnPsYmuOLdyUDhF5hFD2yGMjC4066dNKxdlBE6QADijMoizeME+gQboLEIeLWHav4ybcZ5MklAe08FznuOhz4Y86djUV5ISTkk1expPuK3NXqCBAgZgUGqv3RHyfIanKQZxeSRfk8ueQ-c7jdX9k4uz+5dBZX6P+7X9cLU3rPaFMMzRtZKd-R3ERd9nvcUqcQPPoa4R+EaziZGP6kT+V9WNRF4GwtFxBT3Brdm3qVpdflvUMrvVLOPcaQMkSPsDIfU5bjzKsua+ZBb4QWIBwAEHAX4-VBtmKSltZx-1EnkK88tK5QOnnXMAUowCBkwNoNgxMICoDIUg1YylaT7E1KmNwyREijnTIPfI-kCLbCSLgq+DVoH1hnkQvgxlcDLTAAARVQBI3Q2hYi0ISMfdw15jTpCwcyVIo4ZyXikv2I4QQ-IFH4cuYgyBzKGVwFtdAuADJin3DAWASi1j0ncGRYkmUyQ-wQLkdwX5MI5HBhJEx4DpryHMZY6xFA7EQnoDFYmoYrE2NwC4zUSQXx3H8JlOcjJHyYUoKmV8gQ2T3ifGXC+EDeTSAaKoWqj96ZCgScQUMtSIBpP8HlISlp0w4SLNmbuWwMiI3yGDRkvhTHVPwG05o4E6qCIus01pKh2kfWVF9U2P0XZdL-lqMS0tsxGM2K+bC6ZMyl1ypM+QNSVnNEwFHdEAA5MAAB3RBayV5JQ1J0wp3S9l9LYW5Dw+w0jZA8NhY0tx7hXKoPA8hNNxRfFYtCYgwZkS6FwP6NEwIXEBH0TDTUhwQh3HBqOGkdJcJ4pZBCmFlA4VsARcubE2hHFwD2m0Q6nQK7lXpYy3kzLWXsxGJzAw3MPkdj4psvmGZrijWnBeZIeQjj4QFvaA09pyQGiOJ7Sp4TYVWHhRpRF-KDWCvZQdUQR0ToK15UaplprwxOOeqMV6orTDTE+pKlOMrfCYVBn5PIg5szJE8gcBMf10zknHLS21QVjXyAFY6tlgcqD63JpTam3Llyxo+PG1NDqDxCpeuMd6y8JWr2QnivFBKkh6lnKSyGo0UiPCIgaEIvSKkVkvtmg1DK7UmoBHFQMu0eD7XaFa72PLe18oTQaodcBnUiomGKstx5Wo-WZFcPYGRxKXH8tsfCo106n11DkfIZEY3Tv7bOwdghh2E3QMTVNZNtAU3QFTa1lcc2VDzcdOdd6F0c1dcu0w4q128ypPi8ItbiXFwhqcEahSLzDOLhsc4Oqu1VPkN+ggv7mUcDYLgWIBtRTmvHVy7tvIcNgDw72uBRGSMQEXcB0tnqK1tWCNkIZyQNhIzUXigaVx-Cnz2IXVwoRL0IJnfmhB9HiOGwfU+0m6b32Zso9hq9cb7WycI-J0UzGS0rrY18xAm6C47tTHu3KslUxO1zKEc4Gw5yScNVpmiuA72GQecCJoXAo7aBjtRvNLizPbuIpu-d8GqSGgCCJdM5tkgUTCajSgkTeDJJici9ij9bnECWRl2xaSwh9ieKEIxM50gHshqadwr4GTnEiK+YIJRyy8GIOQeAypJ1fGM+u1YABaQFpx+valnFkzM9x7zWww5+8q-QZnEF6xBtYYlYvTjCE1o4b8yVsjpE8ekY4cJ4s7bNgC8UQRLalfiP6aVPGkmym5V82oFI3DcThJ8tLaL1hAuKS7cYFWbCbYjcLBpjiQzyADBkuQDgSXTPsT753hS6SYgqP7tlS63Yyvd8kslzwvhuEpa8+xti0qfkKNHbVsLBC2NeVMAbyJ3D8MGwoTswg0jBsaNkpPGleixsteeEdOufL64gEZsWYfiWPteaD4tbNAx3QaNMjIPvJYVmTr0AuNaG0gBTn6RwCkJk1KaDR0v8JiRhveUHX56RplSNzv2dEU1x2uuHR6uu+bnFi4jS4aZEuRqZ5DHImxLjG6BtSA4hR7fV2FCI93ovIieE3uRc8Cr6QO0IkYpP2CTvdd5PguCcf2qiXF4XZhuY-o7cB-oqSjwQjK9pfn4RhDC8bByJ4BnqEDT3izJDUSVpROYKSJhdIdvVeVzSwV3AhfsJfhpz7+n-udFcZPqEZkdxcKj91Slm5gxFvrK9bZcF-iW0lO6YfbM1tQ36iMUJG2XgXN9rcxQafQ3TMbC2Mac94RvwGgf9Jv9AIgqhemEwaDIvyRok26GRo58mGeqdKmmua2m2g86Qu5aJmCAFwnkNW3cLIwQQCKqkOxuCYjmUuf+16Mm5CcmjGheY4iMgsVKRYhwXiA0l4tao0c4OEjIZBT+VAsA1CmAcAsAXmYA6IvmNBGQg8r4F4hovCQsDsksbBq262Hs3BiB7mnm3mqgheo0eYaipImY+Qrke88uMMY0RoSMR2jwZcJQQAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJmcAWZ5QCsbgGwAOAEYvAHZDAE5-EN8QgBoQAE9EEJDPAGZ-Z38053CcoLSvAF8i+MkcfCJScioaeiZWCA5uPgENMQkMCplq+TrlRo51EWItW14zfUDzJBBkKxs9XnsnBFcc7z8g0IiomPikhB9AyjC0wLS3P0CPQ2cSsq7pKrkqADNBdFhtBm0wZE4ACNcPQACrEABCYCgwl4wigvx0YDM9nm1nGK2SbkMlDSMUC-jcgRCXnOhjcB0Q2TclHCvl8gWcqQZNzyDzmT0qshqlA+Xx+fwBUGI4IYtD4EF+-wAYuhiABbKXIADy-DY6DgBAgKNmaMWdlmqwJzl8lAJITc-l8GS8rl8XkpCEC5Jpl2chi8hkM-h8ISt7PKz258j53yVlFwECays4BFwUnhDGQ2B1lnRS0xay8XlO9t8uTcXkC+cMeMd-n84VxjMCNzx2WtbgDnJ6r15nzDgojUbYMfIABswH8AJLy3AwVNzBYYw2IK5pU7mtzRaK+L0UxKIZ2Ws2+cLuItuy5N0ocqRc3rvDsC-7d6OcYRoH7Jyd6megVaWkK4txpC1pfdDBCPITUdcIi0XBlsR9W1DECZtz1bHlQxvZA717ThIwgABZUgwFHcc4FfacM1nBAQjSHE8RCAkiRJMkN0OJkc2ZLwAhyE1Cng09AwvNsUPDLCMOFUVxV4SVBWI9MDQ-LdMn8Sh8zccJlPCcJayyR1aw2NjnEPH0mV8K4EO6F5kOvcMxXjHAk2wIEQTocEAEEe2IKT9WWMjnEKSg7mPYtPSyfM0jAgDKCCd06QtbyTKDS9235SywGs7BbMwqMAGFsGIKwwF4Wz3PfRwXB8vyrgCu4rW8sDwiomti1rbEQlivieTFTAJSVThhQhBzwWlCzJJMVESJk4q1nAqsaKibyMmtcDfC0oscWyQlmSuPcAJapD5HazrBW6kURWwT4JP+QrSNkhB90dLJLjNcliy9Hw-wubazN2sSzoBYEwUhaFYUTbQkVlBU9vEpULrG1YTXA04iUiMJKxNZwwKyXyfXAv9Sy8NT3uDKhwe+ygYG0XReARZMABFRlQeU8u0WAWn4IQRnESheJ2wmvvDUnycp7AacwOmGdgYZNB0JZJmG3VRs8q6MhuM09MLec6RCzcnSyHEQKZck4LuFT8fioneaHfnbKFkXeEZzgKDlKhkH7HQ3lIeUOZbD7uY6iGuz5xNqdp+mbbF9oxilkwofl8a0hyFj7XU38-EmrTtdpDiwmxZ0C2NttTa7S2g4ZgAZYhI0gThUCdsuIHhKPM2xelwstYI-Dgq4KNTuDKELNjzg8Qzc7anmu3t0gAHFzfhK3g9tjVtHQBJJ7J6ei5t+uyJyPFcRiSi6R9ck4k1i4LVxH16zxNi12anjPYJyh89vQQIEHbqh0L4XZ43hXvNNai94CJ6ZcWkLgLnCMBVwQFCzIxvo8RCXsH4jyfi-MAb9nyCzXtoKYMw0weUzFvP+u8IiAMPiAwkPdgLFgZM4QIalfBD3kKCE6ZAuo9T6sQR+yBv7jUyLdcC35lpNXUqWK4J44GmXvkw06rCjocG+BwbhqxbS3TxDie0uxiTAXxAwqgUiWEHV+o5f6MJeBwgpoiP4oN5R6O+oolwrhPA+ACMEMIiN9jH3Aaafc5U3TZnPjoygNjwzP1fgQQcmBtDqmIBAVAES7EIAyOkQoKkPSZFjsuDWhx+4nHVh4PcFxPTkgCUErsITUF8CyrgCmYAACKqAqm6G0AkeJ2IczunOD4X8hIAJHyyeSHMy0AL0kohcMRZ4JHxWIMgPKGVcD03QLgdKEACIwFgPE-MWkNhei9A1bItZ-G33gffKZMy5kUEWYYqxsz5m4HicozWQQe5qToUEUZhJuLiLim2E5vBrnnPsn9BoqgrlnIWfEhxjitguN2CuR0CMe6kkZOA2sDIAnSCBU0LgIkOFIOQFYjF4K9wsQRlEb0+4NnH0MpQLItUE77iyB88ZXyeTopUJiw64ISkyjlIqNlhK4YWloaS5GFLDgkm-I3PSwEog3D0mi-AGLmiYA1EiAAcmAAA7gomWuCiowyJfDIVSNyWo01vSHWiLCiRVoSaAJcjIme2VK8AFRjhxwl0LgfsFjkQ6qnNJaORoggKSUipZ5Gl-ChROAjE059-BwS8P4O1VgHXwKdTyNE2gVlwGZm0NmnQjnxXtWwR1bYM1ZtDiMcOBhI6+rfJdGOhhTRbHon+Okjbwi3XbT3ZclZSQRFJEyJN8iS3puTeWnNrNRDs05ggotI75BlrHKs8WoxJbVtMNMEa-r8GNp7gEFtWj21aVSAuRtnoE241jvSodKbTJpoXWOpd2ax6O2dtoV26B3YzvvnO1NpbH2EQrRLcY0scF+rwWRUViA445nVgmhkB95w3uLX+0d3wBqDiZjwFm7Rp130LcmlDd7-3ocEJhldVaJg1rA3W6GVJlwYwTXslcpJO3ZjNOAisitPQATGd+gjw7UMPtI5hu26AHYczfR+r9+G2y-uI2h7QGG4AUbXVR0wta5aZmNMG9woa1Lhs7dEDjfpVrBFLEbQ5Ey5OEfnY7QjxA2C4ASP2GuE7cP5uszyeTzx732fkY55zrnIyqZA9RrdEGroXEZLiXGuQSFGU7sfKINJ3m4yijkMIjL+M2cEwp4TkTAsubcy+yTLs3YewLbl29vmSOFac8VkLYc1OgYi3q+j35vRMfOCxzJcl7TUvUtfUIOxE1WeZfIHzlQ-O8lwGRjKKq-jsvnovKbBA-PxLWoxrjxIYisY8Qm+Gy4PQ+FLABYo43WohkGv8Dlx1Tr4sFKqMA6pNSQHiakb81F3B+UuHuLS2zaQxCZNF20jIAmcLu0qZ7j3-igg1Y5jUsAtTgobIuGascrTncWsfYInhgJFnAV6JkUQ0gQ9xVDwUTCNRgFh8geHiO3vak09uryaPponrmtjrSQ3aTuCJL4i9ZPLtc0Ccw76lP-gw55UqanYAXtI5RyzyL40rhVgCkWIIFE-K9JcDRE4JJKzJLO4ye4IuEFcqFEdWXCO6dy4V0zlpVxczgTV1aG4ERGIuErApA2RYNKURgiUU8vBolwFRLJmobX62rAALQds1rH2DzzwGUSJPSQ8AT+iKuINHujaw4IG9CCSBNRJnp9eusWasekIi0L8eEAJAlBR54DXOBPhw40nAioyO4tpCT+nN-fJvt4hLKhb5mT0CkLjA-JJxluIDlKKXWFaIktY4Jm8+Vdq8iUC7JSkLZcfZFwGhW-BFYh0Vheb9F5ww-V1chsXR5zrHC0Ad+AoSa7I5w1JjavwgzhJMp5zFA5P5RZb8Y4RtqUPAoCWRzhY5U5gIe5vRMgCRwFYEmUt9EEfZiYP5rZtBS5y4IAwDPxSwdZohwF9xgJIgI1j5KJPBaoKxiFwE25stI9PosDwwX1l5+YZ5QDZZWcFZ1xH9Zpn82JNlKxTg-RgoE0UgSQN90Dr9cUhAUEiDoMbhT98QuN8wggcdDge8ThSRao5o41Y5chilxclQVCEl7pY5cZWk0lLgksmJwJfdnR-dGRA9swzDpFSllC+CVdPwGRfI697QKIaF3RqCsl3AFx081xNdMgvRL95CEEfk-kFlLCsgH8aEkDQgVI-AdDoMEDG07gSRnRMZeN5VYAc90jsxPAmQcgGRrRchIh8jyIVJYs8hapUhtDG1kM7NLCAItJrQBl1EshmITteihN-NM0n14A-D2sEAohj0PBaQqEkD8gg9B8BMatps6tlNZjdUY9EAjJhj3AKweMIgyxNZ3QYg+crhdhvQ8RwIJj8spiOAGtgtCC5jDinQT4e4aFohMhgo-wHRksKJqwg1tCZCPBnjaseRYBYlMBNQFtkolsOBLDgh9xFJwI9JL0UCrQtJKxTQg1iRcY9s3QYSdjkI5t+xkSkRMVLCAgqw-xlJPQ21XBCwCTMSfQbhpCAgogxsSggA */
   createMachine(
     {
       id: 'purchase order',
@@ -103,7 +104,15 @@ const POMachine =
           | { type: 'backToInitialStateFromFailPostPo' }
           | { type: 'backToInitialState' }
           | { type: 'backFromCamera' }
-          | { type: 'backToSavedPoFromCamera' },
+          | { type: 'backToSavedPoFromCamera' }
+          | { type: 'backToBeginningStateFromSecondStep' }
+          | { type: 'backToBeginningStateFromThirdStep' }
+          | { type: 'goToSecondStepFromStepOnePressed'; value: number }
+          | { type: 'goToThirdFromStepOnePressed'; value: number }
+          | { type: 'goToStepOneFromStepTwoPressed'; value: number }
+          | { type: 'goToStepThreeFromStepTwoPressed'; value: number }
+          | { type: 'goToStepOneFromStepThreePressed'; value: number }
+          | { type: 'goToStepTwoFromStepThreePressed'; value: number },
       },
       context: purchaseOrderInitialState,
       states: {
@@ -171,6 +180,16 @@ const POMachine =
               target: 'checkSavedPo',
               actions: 'resetPoState',
             },
+
+            goToSecondStepFromStepOnePressed: {
+              target: "SecondStep",
+              actions: "assignPressedStep"
+            },
+
+            goToThirdFromStepOnePressed: {
+              target: "ThirdStep",
+              actions: "assignPressedStep"
+            }
           },
         },
 
@@ -222,7 +241,7 @@ const POMachine =
                   },
                 ],
               },
-            },
+            }
           },
 
           initial: 'idle',
@@ -232,10 +251,26 @@ const POMachine =
               target: 'firstStep',
               actions: 'decreaseStep',
             },
+
             goToThirdStep: {
               target: 'ThirdStep',
               actions: ['increaseStep', 'assignSelectedProducts'],
             },
+
+            backToBeginningStateFromSecondStep: {
+              target: "checkSavedPo",
+              actions: "resetPoState"
+            },
+
+            goToStepOneFromStepTwoPressed: {
+              target: "firstStep",
+              actions: "assignPressedStep"
+            },
+
+            goToStepThreeFromStepTwoPressed: {
+              target: "ThirdStep",
+              actions: "assignPressedStep"
+            }
           },
         },
 
@@ -250,6 +285,18 @@ const POMachine =
               target: 'PostPurchaseOrder',
               actions: 'assignPoPayload',
             },
+
+            backToBeginningStateFromThirdStep: "checkSavedPo",
+
+            goToStepOneFromStepThreePressed: {
+              target: "firstStep",
+              actions: "assignPressedStep"
+            },
+
+            goToStepTwoFromStepThreePressed: {
+              target: "SecondStep",
+              actions: "assignPressedStep"
+            }
           },
 
           states: {
@@ -382,7 +429,7 @@ const POMachine =
         }
       },
 
-      initial: 'checkSavedPo',
+      initial: "checkSavedPo",
     },
     {
       services: {
@@ -542,6 +589,7 @@ const POMachine =
         increaseStep: assign((context, _event) => {
           return {
             currentStep: context.currentStep + 1,
+            stepsDone: [...context.stepsDone, context.currentStep]
           };
         }),
         decreaseStep: assign((context, _event) => {
@@ -554,6 +602,11 @@ const POMachine =
             currentStep: context.currentStep - 1,
             isUseExistingFiles: true,
           };
+        }),
+        assignPressedStep: assign((context, event) => {
+          return {
+            currentStep: event.value
+          }
         }),
         setNewStep: assign((context) => {
           const newStep = context.currentStep === 0 ? 1 : 2;
