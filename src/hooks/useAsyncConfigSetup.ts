@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { customLog, isJsonString } from '@/utils/generalFunc';
 import remoteConfig from '@react-native-firebase/remote-config';
-import { ENTRY_TYPE } from '@/models/EnumModel';
 import BackgroundFetch from 'react-native-background-fetch';
 import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
 import { UserModel } from '@/models/User';
@@ -101,7 +100,7 @@ const useAsyncConfigSetup = () => {
         if (date !== undefined && moment().date() !== date) {
           setTimeout(
             () => dispatch(toggleHunterScreen(true)),
-            Platform.OS === 'ios' ? 1000 : 0
+            Platform.OS === 'ios' ? 500 : 0
           );
         } else {
           await bStorage.setItem(HUNTER_AND_FARMER, moment().date());
