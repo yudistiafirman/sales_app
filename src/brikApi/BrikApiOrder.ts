@@ -1,5 +1,11 @@
+import { Platform } from 'react-native';
 import Config from 'react-native-config';
-const API_URL = Config.API_URL_ORDER;
+const API_URL =
+  Platform.OS === 'android'
+    ? Config.API_URL_ORDER
+    : __DEV__
+    ? Config.API_URL_ORDER
+    : Config.API_URL_ORDER_PROD;
 
 export default class BrikApiOrder {
   static transactionTab = () => {

@@ -1,5 +1,11 @@
+import { Platform } from 'react-native';
 import Config from 'react-native-config';
-const API_URL = Config.API_URL_INV;
+const API_URL =
+  Platform.OS === 'android'
+    ? Config.API_URL_INV
+    : __DEV__
+    ? Config.API_URL_INV
+    : Config.API_URL_INV_PROD;
 
 export default class BrikApiInventory {
   static getProductCategories = (

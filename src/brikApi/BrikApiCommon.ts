@@ -1,5 +1,11 @@
+import { Platform } from 'react-native';
 import Config from 'react-native-config';
-const API_URL = Config.API_URL_COMMON;
+const API_URL =
+  Platform.OS === 'android'
+    ? Config.API_URL_COMMON
+    : __DEV__
+    ? Config.API_URL_COMMON
+    : Config.API_URL_COMMON_PROD;
 
 export default class BrikApiCommon {
   static getLocationCoordinates = (

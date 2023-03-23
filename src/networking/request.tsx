@@ -9,9 +9,20 @@ import { customLog, getSuccessMsgFromAPI } from '@/utils/generalFunc';
 import perf from '@react-native-firebase/perf';
 import { openSnackbar } from '@/redux/reducers/snackbarReducer';
 import Config from 'react-native-config';
+import { Platform } from 'react-native';
 
-const URL_PRODUCTIVITY = Config.API_URL_PRODUCTIVITY;
-const URL_ORDER = Config.API_URL_ORDER;
+const URL_PRODUCTIVITY =
+  Platform.OS === 'android'
+    ? Config.API_URL_PRODUCTIVITY
+    : __DEV__
+    ? Config.API_URL_PRODUCTIVITY
+    : Config.API_URL_PRODUCTIVITY_PROD;
+const URL_ORDER =
+  Platform.OS === 'android'
+    ? Config.API_URL_ORDER
+    : __DEV__
+    ? Config.API_URL_ORDER
+    : Config.API_URL_ORDER_PROD;
 
 let store: any;
 let metric: any;
