@@ -12,7 +12,7 @@ const PriceSearchBar = ({
   return (
     <TouchableOpacity style={PriceStyle.searchBarWrapper} onPress={onPress}>
       <BSearchBar
-        left={<TextInput.Icon icon="magnify" />}
+        left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
         placeholder="Cari Produk"
         disabled
       />

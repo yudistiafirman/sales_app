@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { BContainer, BCommonSearchList } from '@/components';
+import { BContainer, BCommonSearchList, BSearchBar } from '@/components';
 
 import SelectedPic from './elements/SelectedPic';
 
@@ -16,12 +16,16 @@ import {
   updateSelectedCompany,
   updateSelectedPic,
 } from '@/redux/reducers/SphReducer';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { resScale } from '@/utils';
 
 export default function FirstStep() {
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = useState('');
   const [index, setIndex] = useState(0);
   const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
+  const [isSearching, setSearching] = useState(false);
   const {
     projects,
     isProjectLoading,
@@ -68,43 +72,69 @@ export default function FirstStep() {
   return (
     <BContainer>
       {!selectedCompany ? (
-        <BCommonSearchList
-          index={index}
-          onIndexChange={setIndex}
-          routes={routes}
-          placeholder="Cari Pelanggan"
-          searchQuery={searchQuery}
-          onChangeText={(text: string) => {
-            setSearchQuery(text);
-            onChangeWithDebounce(text);
-          }}
-          onClearValue={resetSearch}
-          data={projects}
-          onPressList={(item) => {
-            let finalPIC: any[] = [];
-            let finalItem;
-            if (item.PIC && item.PIC.length > 0 && !selectedCompany) {
-              finalPIC = [...item.PIC];
-              finalPIC.forEach((it, index) => {
-                finalPIC[index] = {
-                  ...finalPIC[index],
-                  isSelected: index === 0 ? true : false,
-                };
-              });
-              finalItem = { ...item };
-              if (finalItem.PIC) finalItem.PIC = finalPIC;
-              dispatch(updateSelectedPic(finalPIC[0]));
-              dispatch(updateSelectedCompany(finalItem));
-            } else {
-              dispatch(updateSelectedCompany(item));
-            }
-          }}
-          isError={errorGettingProject}
-          loadList={isProjectLoading}
-          errorMessage={errorGettingProjectMessage}
-          emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
-          onRetry={onRetryGettingProject}
-        />
+        <>
+          {!isSearching ? (
+            <>
+              <TouchableOpacity
+                style={styles.touchable}
+                onPress={() => setSearching(!isSearching)}
+              />
+              <BSearchBar
+                placeholder="Cari Pelanggan"
+                activeOutlineColor="gray"
+                disabled
+                left={
+                  <TextInput.Icon forceTextInputFocus={false} icon="magnify" />
+                }
+              />
+            </>
+          ) : (
+            <BCommonSearchList
+              index={index}
+              onIndexChange={setIndex}
+              routes={routes}
+              placeholder="Cari Pelanggan"
+              searchQuery={searchQuery}
+              onChangeText={(text: string) => {
+                setSearchQuery(text);
+                onChangeWithDebounce(text);
+              }}
+              autoFocus={true}
+              onClearValue={() => {
+                if (searchQuery && searchQuery.trim() !== '') {
+                  resetSearch();
+                } else {
+                  setSearching(!isSearching);
+                }
+              }}
+              data={projects}
+              onPressList={(item) => {
+                let finalPIC: any[] = [];
+                let finalItem;
+                if (item.PIC && item.PIC.length > 0 && !selectedCompany) {
+                  finalPIC = [...item.PIC];
+                  finalPIC.forEach((it, index) => {
+                    finalPIC[index] = {
+                      ...finalPIC[index],
+                      isSelected: index === 0 ? true : false,
+                    };
+                  });
+                  finalItem = { ...item };
+                  if (finalItem.PIC) finalItem.PIC = finalPIC;
+                  dispatch(updateSelectedPic(finalPIC[0]));
+                  dispatch(updateSelectedCompany(finalItem));
+                } else {
+                  dispatch(updateSelectedCompany(item));
+                }
+              }}
+              isError={errorGettingProject}
+              loadList={isProjectLoading}
+              errorMessage={errorGettingProjectMessage}
+              emptyText={`Pencarian mu ${searchQuery} tidak ada. Coba cari proyek lainnya.`}
+              onRetry={onRetryGettingProject}
+            />
+          )}
+        </>
       ) : (
         <SelectedPic
           onPress={() => {
@@ -120,3 +150,13 @@ export default function FirstStep() {
     </BContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: resScale(4),
+    height: resScale(45),
+    zIndex: 2,
+  },
+});

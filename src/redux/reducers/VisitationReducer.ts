@@ -36,6 +36,8 @@ export interface VisitationGlobalState {
   stepTwoVisitationFinished: boolean;
   stepThreeVisitationFinished: boolean;
   stepperVisitationShouldNotFocused: boolean;
+  isSearchProject: boolean;
+  searchQuery: string;
 }
 
 const initialState: VisitationGlobalState = {
@@ -72,13 +74,15 @@ const initialState: VisitationGlobalState = {
   products: [],
   selectedDate: null,
   images: [],
-  kategoriAlasan: null,
+  kategoriAlasan: undefined,
   alasanPenolakan: '',
   existingVisitationId: null,
   stepOneVisitationFinished: false,
   stepTwoVisitationFinished: false,
   stepThreeVisitationFinished: false,
   stepperVisitationShouldNotFocused: false,
+  isSearchProject: false,
+  searchQuery: '',
 };
 
 export const visitationSlice = createSlice({
@@ -133,6 +137,12 @@ export const visitationSlice = createSlice({
     },
     updateCurrentStep: (state, { payload }) => {
       state.step = payload;
+    },
+    setSearchProject: (state, { payload }) => {
+      state.isSearchProject = payload;
+    },
+    setSearchQuery: (state, { payload }) => {
+      state.searchQuery = payload;
     },
     updateDataVisitation: (
       state,
@@ -217,5 +227,7 @@ export const {
   setStepperFocused,
   resetStepperFocused,
   resetAllStepperFocused,
+  setSearchProject,
+  setSearchQuery,
 } = visitationSlice.actions;
 export default visitationSlice.reducer;

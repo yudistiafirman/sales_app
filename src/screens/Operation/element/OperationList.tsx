@@ -1,19 +1,16 @@
 import { StyleSheet, FlatList, ListRenderItem } from 'react-native';
 import React, { useCallback } from 'react';
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { layout } from '@/constants';
 import { BEmptyState, BSpacer, BVisitationCard } from '@/components';
-import BCommonListShimmer from '@/components/templates/BCommonListShimmer'
+import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
-const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 interface OperationListProps {
   data: OperationsDeliveryOrdersListResponse[];
   onEndReached?:
-  | ((info: { distanceFromEnd: number }) => void)
-  | null
-  | undefined;
+    | ((info: { distanceFromEnd: number }) => void)
+    | null
+    | undefined;
   refreshing?: boolean;
   loadList?: boolean;
   isLoadMore?: boolean;
@@ -22,7 +19,7 @@ interface OperationListProps {
   errorMessage?: any;
   isError?: boolean;
   onRetry?: () => void;
-  onLocationPress: (lonlat: { longitude: string, latitude: string }) => void
+  onLocationPress: (lonlat: { longitude: string; latitude: string }) => void;
 }
 
 export default function OperationList({
@@ -36,27 +33,29 @@ export default function OperationList({
   errorMessage,
   isError,
   onRetry,
-  onLocationPress
+  onLocationPress,
 }: OperationListProps) {
-
   const separator = useCallback(() => <BSpacer size={'small'} />, []);
 
-  const renderItem: ListRenderItem<OperationsDeliveryOrdersListResponse> = useCallback(({ item }) => {
-    return (
-      <BVisitationCard
-        onPress={() => onPressList(item)}
-        onLocationPress={(lonlat) => onLocationPress(lonlat)}
-        item={{
-          name: item?.number,
-          picOrCompanyName: item?.project?.projectName,
-          unit: `${item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity} m³`,
-          pilStatus: item?.status,
-          lonlat: { longitude: item.project?.Address?.lon!, latitude: item.project?.Address?.lat! }
-
-        }}
-      />
-    )
-  }, [])
+  const renderItem: ListRenderItem<OperationsDeliveryOrdersListResponse> =
+    useCallback(({ item }) => {
+      return (
+        <BVisitationCard
+          onPress={() => onPressList(item)}
+          onLocationPress={(lonlat) => onLocationPress(lonlat)}
+          item={{
+            name: item?.number,
+            picOrCompanyName: item?.project?.projectName,
+            unit: `${item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity} m³`,
+            pilStatus: item?.status,
+            lonlat: {
+              longitude: item.project?.Address?.lon!,
+              latitude: item.project?.Address?.lat!,
+            },
+          }}
+        />
+      );
+    }, []);
 
   return (
     <FlatList
@@ -77,14 +76,13 @@ export default function OperationList({
             errorMessage={errorMessage}
             isError={isError}
             onAction={onRetry}
+            emptyText={
+              'Data mu tidak tersedia. Silakan buat DO terlebih dahulu.'
+            }
           />
         )
       }
-      ListFooterComponent={
-        isLoadMore ? (
-          <BCommonListShimmer />
-        ) : null
-      }
+      ListFooterComponent={isLoadMore ? <BCommonListShimmer /> : null}
       ItemSeparatorComponent={separator}
     />
   );
@@ -95,6 +93,6 @@ const style = StyleSheet.create({
     flex: 1,
     paddingBottom: layout.pad.lg,
     paddingHorizontal: layout.pad.lg,
-    borderWidth: 1
+    borderWidth: 1,
   },
 });

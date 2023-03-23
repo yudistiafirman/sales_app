@@ -200,7 +200,7 @@ export default function ProductCartModal({
                 value={detailOrder.volume}
                 keyboardType="numeric"
                 returnKeyType="next"
-                right={<TextInput.Icon icon={() => TextIcon('m³')} />}
+                right={<TextInput.Icon forceTextInputFocus={false} icon={() => TextIcon('m³')} />}
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
               />
@@ -221,8 +221,8 @@ export default function ProductCartModal({
                 }}
                 value={detailOrder.sellPrice}
                 keyboardType="numeric"
-                left={<TextInput.Icon icon={() => TextIcon('IDR')} />}
-                right={<TextInput.Icon icon={() => TextIcon('/m³')} />}
+                left={<TextInput.Icon forceTextInputFocus={false} icon={() => TextIcon('IDR')} />}
+                right={<TextInput.Icon forceTextInputFocus={false} icon={() => TextIcon('/m³')} />}
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
               />

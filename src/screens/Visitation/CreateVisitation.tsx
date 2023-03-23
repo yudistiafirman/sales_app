@@ -34,10 +34,13 @@ import { customLog } from '@/utils/generalFunc';
 import {
   resetStepperFocused,
   resetVisitationState,
+  setSearchProject,
+  setSearchQuery,
   setStepperFocused,
   updateCurrentStep,
   updateDataVisitation,
   updateExistingVisitationID,
+  updateShouldScrollView,
   VisitationGlobalState,
 } from '@/redux/reducers/VisitationReducer';
 import { RootState } from '@/redux/store';
@@ -215,7 +218,19 @@ const CreateVisitation = () => {
     React.useCallback(() => {
       const backAction = () => {
         if (bottomSheetRef?.current) bottomSheetRef?.current?.close();
-        actionBackButton(false);
+        if (visitationData.isSearchProject) {
+          if (
+            visitationData.searchQuery &&
+            visitationData.searchQuery.trim() !== ''
+          ) {
+            dispatch(setSearchQuery(''));
+          } else {
+            dispatch(updateShouldScrollView(true));
+            dispatch(setSearchProject(false));
+          }
+        } else {
+          actionBackButton(false);
+        }
         return true;
       };
       const backHandler = BackHandler.addEventListener(
@@ -224,7 +239,11 @@ const CreateVisitation = () => {
       );
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [visitationData.step])
+    }, [
+      visitationData.step,
+      visitationData.isSearchProject,
+      visitationData.searchQuery,
+    ])
   );
 
   useEffect(() => {

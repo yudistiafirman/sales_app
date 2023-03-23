@@ -201,7 +201,7 @@ export default function LastStepPopUp({
               <BTextInput
                 value={selectedDate}
                 placeholder="Pilih Tanggal"
-                right={<TextInput.Icon icon={chevronRight} />}
+                right={<TextInput.Icon forceTextInputFocus={false} icon={chevronRight} />}
               />
             </View>
             <BSpacer size={'extraSmall'} />
