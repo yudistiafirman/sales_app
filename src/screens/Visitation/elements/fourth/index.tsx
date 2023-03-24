@@ -33,6 +33,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import { customLog } from '@/utils/generalFunc';
 import { BGallery, PopUpQuestion } from '@/components';
 import {
+  deleteImagesVisitation,
   resetVisitationState,
   updateDataVisitation,
   VisitationGlobalState,
@@ -196,9 +197,7 @@ const Fourth = () => {
 
   const removeImage = (pos: number) => {
     dispatch(deleteImage({ pos, source: CREATE_VISITATION }));
-    let images = [...visitationData?.images];
-    images.splice(pos, 1);
-    onChange('images')(images);
+    dispatch(deleteImagesVisitation({ value: pos + 1 }))
   };
 
   useEffect(() => {
@@ -395,7 +394,7 @@ const Fourth = () => {
             })
           )
         }
-        removePict={(pos) => removeImage(pos)}
+        removePict={removeImage}
       />
     </>
   );

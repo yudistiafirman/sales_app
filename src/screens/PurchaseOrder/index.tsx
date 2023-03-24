@@ -114,7 +114,7 @@ const PurchaseOrder = () => {
           dispatch({
             type: 'backToBeginningState',
           });
-          navigation.dispatch(StackActions.replace(TAB_ROOT));
+          navigation.dispatch(StackActions.popToTop());
         }
       });
     } else {
@@ -246,7 +246,7 @@ const PurchaseOrder = () => {
 const styles = StyleSheet.create({
   poContainer: {
     flex: 1,
-    marginHorizontal: layout.pad.lg,
+    marginHorizontal: layout.pad.lg + layout.pad.xs,
     marginBottom: layout.pad.lg,
   },
   stepperIndicator: { alignSelf: 'center' },

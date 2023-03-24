@@ -45,6 +45,7 @@ import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { uploadFileImage } from '@/actions/CommonActions';
 import { OperationFileType } from '@/interfaces/Operation';
 import { updateDeliveryOrder } from '@/actions/OrderActions';
+import { FlatList } from 'react-native-gesture-handler';
 
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
@@ -283,49 +284,56 @@ const SubmitForm = () => {
 
   return (
     <SafeAreaView style={style.parent}>
-      <KeyboardAwareScrollView style={style.flexFull}>
-        {enableLocationHeader && (
-          <BLocationText location={projectDetails.address} />
-        )}
-        <BSpacer size={'extraSmall'} />
-        <View style={style.top}>
-          <BVisitationCard
-            item={{
-              name: projectDetails.projectName,
-              location: projectDetails.address,
-            }}
-            isRenderIcon={false}
-          />
-          <BVisitationCard
-            item={{
-              name: projectDetails.doNumber,
-              unit: `${projectDetails.requestedQuantity} m3`,
-              time: `${moment(projectDetails.deliveryTime).format(
-                'L'
-              )} | ${moment(projectDetails.deliveryTime).format('hh:mm A')}`,
-            }}
-            customStyle={{ backgroundColor: colors.tertiary }}
-            isRenderIcon={false}
-          />
-        </View>
-        <View>
-          <BDivider />
-          <BSpacer size={'extraSmall'} />
-        </View>
-        <View>
-          <BGallery picts={photoFiles} />
-        </View>
-        <View style={style.flexFull}>
-          {(operationType === ENTRY_TYPE.DRIVER ||
-            operationType === ENTRY_TYPE.RETURN) && <BSpacer size={'small'} />}
-          {operationType === ENTRY_TYPE.DRIVER && (
-            <BForm titleBold="500" inputs={deliveryInputs} />
-          )}
-          {operationType === ENTRY_TYPE.RETURN && (
-            <BForm titleBold="500" inputs={returnInputs} spacer="extraSmall" />
-          )}
-        </View>
-      </KeyboardAwareScrollView>
+      <FlatList
+        data={null}
+        renderItem={null}
+        ListHeaderComponent={
+          <View style={style.flexFull}>
+            {enableLocationHeader && (
+              <BLocationText location={projectDetails.address} />
+            )}
+            <BSpacer size={'extraSmall'} />
+            <View style={style.top}>
+              <BVisitationCard
+                item={{
+                  name: projectDetails.projectName,
+                  location: projectDetails.address,
+                }}
+                isRenderIcon={false}
+              />
+              <BVisitationCard
+                item={{
+                  name: projectDetails.doNumber,
+                  unit: `${projectDetails.requestedQuantity} m3`,
+                  time: `${moment(projectDetails.deliveryTime).format(
+                    'L'
+                  )} | ${moment(projectDetails.deliveryTime).format('hh:mm A')}`,
+                }}
+                customStyle={{ backgroundColor: colors.tertiary }}
+                isRenderIcon={false}
+              />
+            </View>
+            <View>
+              <BDivider />
+              <BSpacer size={'extraSmall'} />
+            </View>
+            <View>
+              <BGallery picts={photoFiles} />
+            </View>
+            <View style={style.flexFull}>
+              {(operationType === ENTRY_TYPE.DRIVER ||
+                operationType === ENTRY_TYPE.RETURN) && <BSpacer size={'small'} />}
+              {operationType === ENTRY_TYPE.DRIVER && (
+                <BForm titleBold="500" inputs={deliveryInputs} />
+              )}
+              {operationType === ENTRY_TYPE.RETURN && (
+                <BForm titleBold="500" inputs={returnInputs} spacer="extraSmall" />
+              )}
+            </View>
+          </View>
+        }
+      />
+
       {!keyboardVisible && (
         <BBackContinueBtn
           onPressContinue={onPressContinue}

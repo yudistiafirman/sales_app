@@ -33,6 +33,7 @@ import moment from 'moment';
 import { postOrderDeposit } from '@/redux/async-thunks/orderThunks';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+import { layout } from '@/constants';
 
 const labels = ['Data Pelanggan', 'Cari PO'];
 
@@ -196,7 +197,7 @@ const Deposit = () => {
         />
       )}
 
-      <BContainer>
+      <BContainer paddingHorizontal={layout.pad.lg + layout.pad.xs}>
         <View style={styles.container}>
           {stepRender[values.step]}
           <BSpacer size={'extraSmall'} />

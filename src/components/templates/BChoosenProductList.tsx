@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 type ChoosenProductListProps<ProductData> = {
   data?: ProductData[];
@@ -89,7 +89,7 @@ const ChoosenProductList = <ProductData extends Products>({
       <BSpacer size="extraSmall" />
       <BDivider borderBottomWidth={1} flex={0} height={0.1} />
       <BSpacer size="extraSmall" />
-      <View style={{ minHeight: width }}>
+      <View style={{ minHeight: height - width + resScale(120) }}>
         <FlatList
           data={data}
           keyExtractor={(_item, index) => index.toString()}

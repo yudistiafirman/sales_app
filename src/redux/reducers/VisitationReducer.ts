@@ -1,5 +1,5 @@
 import { Address, PIC } from '@/interfaces';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface VisitationGlobalState {
   step: number;
@@ -73,7 +73,7 @@ const initialState: VisitationGlobalState = {
   notes: '',
   products: [],
   selectedDate: null,
-  images: [],
+  images: [{ file: null }],
   kategoriAlasan: undefined,
   alasanPenolakan: '',
   existingVisitationId: null,
@@ -143,6 +143,10 @@ export const visitationSlice = createSlice({
     },
     setSearchQuery: (state, { payload }) => {
       state.searchQuery = payload;
+    },
+    deleteImagesVisitation: (state, actions: PayloadAction<{ value: number }>) => {
+      const filteredImages = state.images.filter((v, i) => i !== actions.payload.value)
+      state.images = filteredImages
     },
     updateDataVisitation: (
       state,
@@ -229,5 +233,6 @@ export const {
   resetAllStepperFocused,
   setSearchProject,
   setSearchQuery,
+  deleteImagesVisitation
 } = visitationSlice.actions;
 export default visitationSlice.reducer;

@@ -360,7 +360,7 @@ const CreateVisitation = () => {
         labels={labels}
       />
 
-      <BContainer>
+      <BContainer paddingHorizontal={layout.pad.lg + layout.pad.xs}>
         <View style={styles.container}>
           {stepRender[visitationData.step]}
           <BSpacer size={'extraSmall'} />

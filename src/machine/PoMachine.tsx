@@ -19,7 +19,7 @@ import { customLog, uniqueStringGenerator } from '@/utils/generalFunc';
 import { assign, createMachine } from 'xstate';
 
 const purchaseOrderInitialState = {
-  poImages: [] as LocalFileType[],
+  poImages: [{ file: null }] as LocalFileType[],
   openCamera: false,
   poNumber: '',
   sphCategories: '',
