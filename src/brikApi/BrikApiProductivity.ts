@@ -1,7 +1,12 @@
-import Config from 'react-native-config';
+import { Platform } from 'react-native';
 import moment from 'moment';
-
-const API_URL = Config.API_URL_PRODUCTIVITY;
+import Config from 'react-native-config';
+const API_URL =
+  Platform.OS === 'android'
+    ? Config.API_URL_PRODUCTIVITY
+    : __DEV__
+    ? Config.API_URL_PRODUCTIVITY
+    : Config.API_URL_PRODUCTIVITY_PROD;
 
 type getVisitationsType = {
   month?: number;

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { SafeAreaView, View, DeviceEventEmitter } from 'react-native';
+import { SafeAreaView, View, DeviceEventEmitter, Platform } from 'react-native';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -84,17 +84,23 @@ const SearchProduct = () => {
     {
       customHeaderCenter: (
         <View
-          style={{
-            width: '98%',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-          }}
+          style={[
+            {
+              width: '98%',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            },
+            Platform.OS !== 'android' && { height: '80%' },
+          ]}
         >
           <SearchProductNavbar
-            customStyle={{
-              width: '75%',
-              justifyContent: 'center',
-            }}
+            customStyle={[
+              {
+                width: '75%',
+                justifyContent: 'center',
+              },
+              Platform.OS !== 'android' && { height: '80%' },
+            ]}
             autoFocus={true}
             value={searchValue}
             onChangeText={onChangeText}

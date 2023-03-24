@@ -1,4 +1,5 @@
-import { Alert, Linking, PermissionsAndroid } from 'react-native';
+import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
+import { Camera } from 'react-native-vision-camera';
 import { displayName } from '../../../app.json';
 
 const openSetting = () => {
@@ -15,16 +16,34 @@ const showAlertCamera = () => {
 
 export const hasCameraPermissions = async () => {
   try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    } else {
-      if (granted === PermissionsAndroid.RESULTS.DENIED) {
-        showAlertCamera();
+    if (Platform.OS === 'ios') {
+      const cameraPermission = await Camera.getCameraPermissionStatus();
+      if (cameraPermission === 'not-determined') {
+        const newCameraPermission = await Camera.requestCameraPermission();
+        if (newCameraPermission === 'authorized') {
+          return true;
+        } else {
+          showAlertCamera();
+        }
       } else {
-        showAlertCamera();
+        if (cameraPermission === 'authorized') {
+          return true;
+        } else {
+          showAlertCamera();
+        }
+      }
+    } else {
+      const status = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA
+      );
+      if (status === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        if (status === PermissionsAndroid.RESULTS.DENIED) {
+          showAlertCamera();
+        } else {
+          showAlertCamera();
+        }
       }
     }
   } catch (err) {

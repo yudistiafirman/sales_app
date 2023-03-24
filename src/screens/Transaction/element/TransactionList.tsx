@@ -73,7 +73,12 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
                 : item.QuotationLetter?.number
             }
             // TODO: handle from BE, ugly when use mapping in FE side
-            nominal={item.value ? item.value : item.totalPrice}
+            nominal={
+              (selectedType === 'Deposit' || selectedType === 'Jadwal' || selectedType === 'DO') &&
+              item.value
+                ? item.value
+                : item.totalPrice
+            }
             // TODO: handle from BE, ugly when use mapping in FE side
             useBEStatus={selectedType === 'SPH' ? false : true}
           />

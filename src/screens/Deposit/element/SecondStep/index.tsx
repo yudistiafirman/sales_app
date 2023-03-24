@@ -57,7 +57,8 @@ export default function SecondStep() {
 
   const calculatedTotal = (): number => {
     let deposit: number = 0;
-    if (stateOne?.deposit?.nominal) deposit += parseInt(stateOne?.deposit?.nominal, 10);
+    if (stateOne?.deposit?.nominal)
+      deposit += parseInt(stateOne?.deposit?.nominal, 10);
     deposit += getTotalLastDeposit();
     return deposit;
   };
@@ -161,7 +162,12 @@ export default function SecondStep() {
                       placeholder="Cari PO"
                       activeOutlineColor="gray"
                       disabled
-                      left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
+                      left={
+                        <TextInput.Icon
+                          forceTextInputFocus={false}
+                          icon="magnify"
+                        />
+                      }
                     />
                   </TouchableOpacity>
                 </>

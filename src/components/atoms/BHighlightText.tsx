@@ -4,6 +4,7 @@ import font from '@/constants/fonts';
 import respFS from '@/utils/resFontSize';
 import colors from '@/constants/colors';
 import { resScale } from '@/utils';
+import { fonts } from '@/constants';
 
 type higlightTextType = {
   searchQuery?: string;
@@ -69,6 +70,6 @@ const style = StyleSheet.create({
     maxWidth:resScale(200),
   },
   boldText: {
-    fontWeight: '900',
+    fontFamily: fonts.family.montserrat[800],
   },
 });

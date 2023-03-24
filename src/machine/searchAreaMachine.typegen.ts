@@ -8,6 +8,7 @@
 "done.invoke.search area.getLocation.currentLocationLoaded:invocation[0]": { type: "done.invoke.search area.getLocation.currentLocationLoaded:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
 "done.invoke.search area.searchLocation.gettingPlaceId:invocation[0]": { type: "done.invoke.search area.searchLocation.gettingPlaceId:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
 "done.invoke.search area.searchLocation.onGettingLocation:invocation[0]": { type: "done.invoke.search area.searchLocation.onGettingLocation:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
+"error.platform.search area.getLocation.allowed:invocation[0]": { type: "error.platform.search area.getLocation.allowed:invocation[0]"; data: unknown };
 "error.platform.search area.searchLocation.onGettingLocation:invocation[0]": { type: "error.platform.search area.searchLocation.onGettingLocation:invocation[0]"; data: unknown };
 "xstate.after(300)#search area.searchLocation.searchValueLoaded": { type: "xstate.after(300)#search area.searchLocation.searchValueLoaded" };
 "xstate.init": { type: "xstate.init" };
@@ -30,7 +31,7 @@
 "assignResult": "done.invoke.search area.searchLocation.onGettingLocation:invocation[0]";
 "assignSearchValue": "searchingLocation";
 "clearInputValue": "clearInput";
-"clearResult": "searchingLocation";
+"clearResult": "error.platform.search area.getLocation.allowed:invocation[0]" | "searchingLocation";
 "handleErrorGettingLocation": "error.platform.search area.searchLocation.onGettingLocation:invocation[0]";
 "navigateToLocation": "done.invoke.search area.getLocation.currentLocationLoaded:invocation[0]" | "done.invoke.search area.searchLocation.gettingPlaceId:invocation[0]";
         };

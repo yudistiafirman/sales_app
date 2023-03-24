@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as React from 'react';
 
 import { colors, fonts, layout } from '@/constants';
@@ -120,7 +120,12 @@ export default function SecondStep() {
     <View style={style.container}>
       <ScrollView style={style.flexFull}>
         <BForm titleBold="500" inputs={inputs} spacer="extraSmall" />
-        <View style={style.summaryContainer}>
+        <View
+          style={[
+            style.summaryContainer,
+            Platform.OS !== 'android' && { zIndex: -1 },
+          ]}
+        >
           <View style={style.consecutiveCheck}>
             <CheckBox
               value={stateTwo?.isConsecutive}

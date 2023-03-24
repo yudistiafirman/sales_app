@@ -1,10 +1,18 @@
 import * as React from 'react';
-import { Alert, Animated, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Platform,
+} from 'react-native';
 import {
   useNavigation,
   useRoute,
   useIsFocused,
   StackActions,
+  useFocusEffect,
 } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { hasCameraPermissions } from '@/utils/permissions';
@@ -25,7 +33,7 @@ const CameraScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<RootStackScreenProps>();
   const poState = useSelector((state: RootState) => state.purchaseOrder);
-  const { isFirstTimeOpenCamera } = poState.currentState.context
+  const { isFirstTimeOpenCamera } = poState.currentState.context;
   const navigateTo = route?.params?.navigateTo;
   const closeButton = route?.params?.closeButton;
   const photoTitle = route?.params?.photoTitle;
@@ -45,16 +53,15 @@ const CameraScreen = () => {
     if (navigateTo === PO) {
       if (isFirstTimeOpenCamera) {
         if (navigation.canGoBack()) {
-          dispatch({ type: 'backToSavedPoFromCamera' })
-          navigation.dispatch(StackActions.popToTop())
+          dispatch({ type: 'backToSavedPoFromCamera' });
+          navigation.dispatch(StackActions.popToTop());
         }
       } else {
         dispatch({ type: 'backFromCamera' });
-        navigation.goBack()
+        navigation.goBack();
       }
-
     } else {
-      navigation.goBack()
+      navigation.goBack();
     }
   }, [dispatch, navigateTo, navigation, isFirstTimeOpenCamera]);
   if (closeButton) {
@@ -121,18 +128,22 @@ const CameraScreen = () => {
   };
 
   const isFocused = useIsFocused();
+  
   React.useEffect(() => {
     crashlytics().log(CAMERA);
-    navigation.addListener('focus', () => {
-      hasCameraPermissions();
-    });
   }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      hasCameraPermissions();
+    }, [])
+  );
 
   return (
     <View style={styles.parent}>
       <SafeAreaView style={styles.container}>
-        {device && (
-          <View style={styles.containerCamera}>
+        <View style={styles.containerCamera}>
+          {device && (
             <Camera
               ref={camera}
               style={styles.camera}
@@ -144,15 +155,15 @@ const CameraScreen = () => {
               hdr
               lowLightBoost
             />
-            <CameraButton
-              takePhoto={takePhoto}
-              onGalleryPress={(data) => onFileSelect(data)}
-              onDocPress={(data) => onFileSelect(data)}
-              disabledDocPicker={disabledDocPicker}
-              disabledGalleryPicker={disabledGalleryPicker}
-            />
-          </View>
-        )}
+          )}
+          <CameraButton
+            takePhoto={takePhoto}
+            onGalleryPress={(data) => onFileSelect(data)}
+            onDocPress={(data) => onFileSelect(data)}
+            disabledDocPicker={disabledDocPicker}
+            disabledGalleryPicker={disabledGalleryPicker}
+          />
+        </View>
       </SafeAreaView>
     </View>
   );

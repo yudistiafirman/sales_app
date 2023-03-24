@@ -139,9 +139,20 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
-def rootVersionCode = 6
-def rootDevVersionName = "1.1.0 (Dev)"
-def rootProdVersionName = "1.1.0"
+/**
+ * Internal version number generator
+ * Refer https://developer.android.com/google/play/publishing/multiple-apks.html#using-a-version-code-scheme
+*/
+private Integer generateVersionCode() {
+  return rootProject.ext.minSdkVersion * 10000000 + project.env.get("MAJOR_VERSION").toInteger() * 10000 + project.env.get("MINOR_VERSION").toInteger() * 100 + project.env.get("PATCH_VERSION").toInteger()
+}
+
+/**
+ * Internal version name generator
+*/
+private String generateVersionName() {
+   return "${project.env.get("MAJOR_VERSION")}.${project.env.get("MINOR_VERSION")}.${project.env.get("PATCH_VERSION")}"
+}
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -237,11 +248,11 @@ android {
         development {
             dimension "version"
             applicationId developmentAppID
-            versionCode rootVersionCode
-            versionName rootDevVersionName
+            versionCode generateVersionCode()
+            versionName generateVersionName()
             resValue "string", "app_name", developmentAppName
-            buildConfigField "long", "VERSION_CODE", "${rootVersionCode}"
-            buildConfigField "String", "VERSION_NAME", "\"${rootDevVersionName}\""
+            buildConfigField "long", "VERSION_CODE", "${generateVersionCode()}"
+            buildConfigField "String", "VERSION_NAME", "\"${generateVersionName()}\""
             ndk {
                 abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
             }
@@ -250,11 +261,11 @@ android {
         production {
             dimension "version"
             applicationId productionAppID
-            versionCode rootVersionCode
-            versionName rootProdVersionName
+            versionCode generateVersionCode()
+            versionName generateVersionName()
             resValue "string", "app_name", productionAppName
-            buildConfigField "long", "VERSION_CODE", "${rootVersionCode}"
-            buildConfigField "String", "VERSION_NAME", "\"${rootProdVersionName}\""
+            buildConfigField "long", "VERSION_CODE", "${generateVersionCode()}"
+            buildConfigField "String", "VERSION_NAME", "\"${generateVersionName()}\""
             ndk {
                 abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
             }

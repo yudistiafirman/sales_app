@@ -35,7 +35,7 @@ function SalesTabs() {
         headerTitleStyle: {
           color: colors.text.darker,
           fontSize: fonts.size.lg,
-          fontWeight: fonts.family.montserrat[600],
+          fontFamily: fonts.family.montserrat[600],
         },
       }}
       tabBar={(props) => <CustomTabBar {...props} />}
