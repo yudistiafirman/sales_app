@@ -162,7 +162,8 @@ const SearchFlow = ({
       );
     }
     onClear();
-    // updateValueOnstep('stepTwo', 'pics', item?.pic);
+    onSearch(false);
+    dispatch(updateShouldScrollView(true));
   };
 
   const routes: { title: string; totalItems: number }[] = React.useMemo(() => {

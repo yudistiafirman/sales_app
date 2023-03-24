@@ -15,8 +15,6 @@ const hasPermissionIOS = async () => {
   if (status === 'disabled') {
     showAlertLocation();
   }
-
-  showAlertLocation();
 };
 
 const openSetting = () => {
@@ -34,38 +32,41 @@ const showAlertLocation = () => {
 };
 
 const hasLocationPermission = async () => {
-  if (Platform.OS === 'ios') {
-    const hasPermission = await hasPermissionIOS();
-    return hasPermission;
+  try {
+    if (Platform.OS === 'ios') {
+      const hasPermission = await hasPermissionIOS();
+      return hasPermission;
+    } else {
+      if (Platform.OS === 'android' && Platform.Version < 23) {
+        return true;
+      }
+
+      const hasPermission = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+
+      if (hasPermission) {
+        return true;
+      }
+
+      const status = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+
+      if (status === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        if (status === PermissionsAndroid.RESULTS.DENIED) {
+          showAlertLocation();
+        } else {
+          showAlertLocation();
+        }
+      }
+    }
+  } catch (err) {
+    console.warn(err);
+    return;
   }
-
-  if (Platform.OS === 'android' && Platform.Version < 23) {
-    return true;
-  }
-
-  const hasPermission = await PermissionsAndroid.check(
-    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-  );
-
-  if (hasPermission) {
-    return true;
-  }
-
-  const status = await PermissionsAndroid.request(
-    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-  );
-
-  if (status === PermissionsAndroid.RESULTS.GRANTED) {
-    return true;
-  }
-
-  if (status === PermissionsAndroid.RESULTS.DENIED) {
-    showAlertLocation();
-  } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-    showAlertLocation();
-  }
-
-  showAlertLocation();
 };
 
 export default hasLocationPermission;

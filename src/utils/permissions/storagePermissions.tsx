@@ -1,4 +1,5 @@
-import { PermissionsAndroid } from 'react-native';
+import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
+import { displayName } from '../../../app.json';
 
 const checkWritePermissions = async () => {
   try {
@@ -21,20 +22,37 @@ const checkWritePermissions = async () => {
   }
 };
 
+const openSetting = () => {
+  Linking.openSettings().catch(() => {
+    Alert.alert('Unable to open settings');
+  });
+};
+
+const showAlertStorage = () => {
+  Alert.alert(
+    `Turn on Storage Permission to allow ${displayName} to pick file and picture.`,
+    '',
+    [{ text: 'Go to Settings', onPress: openSetting }]
+  );
+};
+
 const checkReadPermissions = async () => {
   try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      {
-        title: 'Permissions for read access',
-        message: 'Give permission to your storage to read a file',
-        buttonPositive: 'ok',
-      }
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    if (Platform.OS === 'ios') {
       return true;
     } else {
-      return false;
+      const status = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+      );
+      if (status === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        if (status === PermissionsAndroid.RESULTS.DENIED) {
+          showAlertStorage();
+        } else {
+          showAlertStorage();
+        }
+      }
     }
   } catch (err) {
     console.warn(err);
