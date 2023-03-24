@@ -5,6 +5,7 @@ import {
   ViewStyle,
   TouchableOpacity,
   TextStyle,
+  Platform,
 } from 'react-native';
 import { Input } from '@/interfaces';
 import BSpacer from '../atoms/BSpacer';
@@ -202,14 +203,14 @@ const renderInput = (
 
   if (type === 'quantity') {
     return (
-      <React.Fragment>
+      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
         <BLabel
           sizeInNumber={input.textSize}
           bold={titleBold}
           label={label}
           isRequired={isRequire}
         />
-        <View style={styles.quantityLayout}>
+        <View style={[styles.quantityLayout]}>
           <BTextInput
             style={[
               styles.quantityInput,
@@ -231,13 +232,13 @@ const renderInput = (
             {customerErrorMsg || `${label} harus diisi`}
           </BText>
         )}
-      </React.Fragment>
+      </View>
     );
   }
 
   if (type === 'price') {
     return (
-      <React.Fragment>
+      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
         <BLabel
           sizeInNumber={input.textSize}
           bold={titleBold}
@@ -264,7 +265,10 @@ const renderInput = (
               value={value}
               onChangeText={onChange}
               placeholder={placeholder}
-              style={textStyles}
+              style={[
+                textStyles,
+                Platform.OS !== 'android' && { minHeight: 40 },
+              ]}
             />
           </View>
           <View style={styles.priceText}>
@@ -276,13 +280,13 @@ const renderInput = (
             {`${label} harus diisi`}
           </BText>
         )}
-      </React.Fragment>
+      </View>
     );
   }
 
   if (type === 'calendar') {
     return (
-      <React.Fragment>
+      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
         <BLabel
           sizeInNumber={input.textSize}
           bold={titleBold}
@@ -291,7 +295,9 @@ const renderInput = (
         />
         <TouchableOpacity
           style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
-          onPress={() => calendar?.setCalendarVisible(!calendar?.isCalendarVisible)}
+          onPress={() =>
+            calendar?.setCalendarVisible(!calendar?.isCalendarVisible)
+          }
         >
           <View
             style={[
@@ -324,13 +330,13 @@ const renderInput = (
             </View>
           </>
         )}
-      </React.Fragment>
+      </View>
     );
   }
 
   if (type === 'calendar-time') {
     return (
-      <React.Fragment>
+      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
         <View style={styles.calendarTime}>
           <View style={styles.calendarOne}>
             <BLabel
@@ -458,7 +464,7 @@ const renderInput = (
             </View>
           </>
         )}
-      </React.Fragment>
+      </View>
     );
   }
 
@@ -467,7 +473,9 @@ const renderInput = (
     const defaultErrorMsg = `${label} harus diisi`;
     //textInputAsButton
     return (
-      <View style={styles.relative}>
+      <View
+        style={[styles.relative, Platform.OS !== 'android' && { zIndex: -1 }]}
+      >
         {textInputAsButton && (
           <TouchableOpacity
             onPress={textInputAsButtonOnPress}
@@ -486,7 +494,11 @@ const renderInput = (
           keyboardType={keyboardType ? keyboardType : 'default'}
           placeholder={placeholder}
           disabled={isInputDisable}
-          left={LeftIcon && <TextInput.Icon forceTextInputFocus={false} icon={LeftIcon} />}
+          left={
+            LeftIcon && (
+              <TextInput.Icon forceTextInputFocus={false} icon={LeftIcon} />
+            )
+          }
           contentStyle={textStyles}
           outlineColor={outlineColor}
         />
@@ -505,7 +517,9 @@ const renderInput = (
   if (type === 'area') {
     const defaultErrorMsg = `${label} harus diisi`;
     return (
-      <View style={styles.relative}>
+      <View
+        style={[styles.relative, Platform.OS !== 'android' && { zIndex: -1 }]}
+      >
         {textInputAsButton && (
           <TouchableOpacity
             onPress={textInputAsButtonOnPress}
@@ -523,9 +537,14 @@ const renderInput = (
           value={value}
           multiline={true}
           numberOfLines={4}
+          minHeight={Platform.OS === 'ios' ? 20 * 4 : null}
           placeholder={placeholder}
           contentStyle={textStyles}
-          left={LeftIcon && <TextInput.Icon forceTextInputFocus={false} icon={LeftIcon} />}
+          left={
+            LeftIcon && (
+              <TextInput.Icon forceTextInputFocus={false} icon={LeftIcon} />
+            )
+          }
         />
         {isError && (
           <BText size="small" color="primary" bold="100">
@@ -538,7 +557,7 @@ const renderInput = (
 
   if (type === 'cardOption') {
     return (
-      <React.Fragment>
+      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
         <BLabel
           sizeInNumber={input.textSize}
           bold={titleBold}
@@ -548,7 +567,7 @@ const renderInput = (
         <BSpacer size="verySmall" />
         <View
           pointerEvents={isInputDisable ? 'none' : 'auto'}
-          style={styles.optionContainer}
+          style={[styles.optionContainer]}
         >
           {options?.map((val, index) => (
             <React.Fragment key={index}>
@@ -568,7 +587,7 @@ const renderInput = (
             {`${label} harus diisi`}
           </BText>
         )}
-      </React.Fragment>
+      </View>
     );
   }
 
@@ -576,13 +595,15 @@ const renderInput = (
     const defaultErrorMsg = `${label} harus diisi`;
     return (
       <React.Fragment>
-        <BLabel
-          sizeInNumber={input.textSize}
-          bold={titleBold}
-          label={label}
-          isRequired={isRequire}
-        />
-        <BSpacer size="verySmall" />
+        <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+          <BLabel
+            sizeInNumber={input.textSize}
+            bold={titleBold}
+            label={label}
+            isRequired={isRequire}
+          />
+          <BSpacer size="verySmall" />
+        </View>
 
         {!isInputDisable ? (
           <BAutoComplete
@@ -612,13 +633,15 @@ const renderInput = (
     if (dropdown) {
       return (
         <React.Fragment>
-          <BLabel
-            sizeInNumber={input.textSize}
-            bold={titleBold}
-            label={label}
-            isRequired={isRequire}
-          />
-          <BSpacer size="verySmall" />
+          <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+            <BLabel
+              sizeInNumber={input.textSize}
+              bold={titleBold}
+              label={label}
+              isRequired={isRequire}
+            />
+            <BSpacer size="verySmall" />
+          </View>
           <BDropdown
             open={false}
             value={value}
@@ -637,13 +660,15 @@ const renderInput = (
     if (comboDropdown) {
       return (
         <React.Fragment>
-          <BLabel
-            sizeInNumber={input.textSize}
-            bold={titleBold}
-            label={label}
-            isRequired={isRequire}
-          />
-          <BSpacer size="verySmall" />
+          <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+            <BLabel
+              sizeInNumber={input.textSize}
+              bold={titleBold}
+              label={label}
+              isRequired={isRequire}
+            />
+            <BSpacer size="verySmall" />
+          </View>
           <BComboDropdown {...comboDropdown} />
         </React.Fragment>
       );
@@ -652,11 +677,11 @@ const renderInput = (
 
   if (type === 'PIC') {
     return (
-      <React.Fragment>
+      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
         <BSpacer size="verySmall" />
         {!hidePicLabel && (
           <>
-            <View style={styles.optionContainer}>
+            <View style={[styles.optionContainer]}>
               <BText sizeInNumber={fonts.size.md} bold="600">
                 PIC
               </BText>
@@ -690,26 +715,26 @@ const renderInput = (
           data={value}
           onSelect={onSelect!}
         />
-      </React.Fragment>
+      </View>
     );
   }
 
   if (type === 'switch') {
     return (
-      <React.Fragment>
+      <View style={Platform.OS !== 'android' && { zIndex: -1, marginTop: layout.pad.md }}>
         <BSwitch
           labelStyle={labelStyle}
           label={label}
           value={value}
           onChange={onChange}
         />
-      </React.Fragment>
+      </View>
     );
   }
 
   if (type === 'fileInput') {
     return (
-      <React.Fragment>
+      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
         <BFileInput
           isLoading={loading}
           label={label}
@@ -726,13 +751,13 @@ const renderInput = (
             {customerErrorMsg}
           </BText>
         )}
-      </React.Fragment>
+      </View>
     );
   }
 
   if (type === 'checkbox') {
     return (
-      <React.Fragment>
+      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
         <View style={styles.flexRow}>
           <View style={styles.checkboxText}>
             <BLabel bold={titleBold} label={label} isRequired={isRequire} />
@@ -747,7 +772,7 @@ const renderInput = (
             onValueChange={checkbox?.onValueChange}
           />
         </View>
-      </React.Fragment>
+      </View>
     );
   }
 };

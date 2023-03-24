@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   DeviceEventEmitter,
+  Platform,
 } from 'react-native';
 import { BForm, BLabel, BSpacer, BText, BTextInput } from '@/components';
 import { Input } from '@/interfaces';
@@ -204,14 +205,22 @@ const ThirdStep = () => {
             from: CREATE_VISITATION,
           });
         }}
-        style={styles.labelContainer}
+        style={[
+          styles.labelContainer,
+          Platform.OS !== 'android' && { zIndex: -1 },
+        ]}
       >
         <BLabel bold="500" label="Produk" isRequired />
         <BText bold="500" color="primary">
           Lihat Semua
         </BText>
       </TouchableOpacity>
-      <View style={styles.posRelative}>
+      <View
+        style={[
+          styles.posRelative,
+          Platform.OS !== 'android' && { zIndex: -1 },
+        ]}
+      >
         <TouchableOpacity
           style={styles.touchable}
           onPress={() => {
@@ -232,7 +241,10 @@ const ThirdStep = () => {
       <BSpacer size={'extraSmall'} />
       {visitationData.products?.length ? (
         <>
-          <ScrollView horizontal={true}>
+          <ScrollView
+            horizontal={true}
+            style={Platform.OS !== 'android' && { zIndex: -1 }}
+          >
             {visitationData.products?.map((val, index) => (
               <React.Fragment key={index}>
                 <ProductChip

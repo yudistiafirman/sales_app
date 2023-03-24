@@ -4,8 +4,8 @@ import layout from '@/constants/layout';
 import { Styles } from '@/interfaces';
 import { resFontSize, resScale } from '@/utils';
 import React from 'react';
-import { View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { TouchableOpacity, View } from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 interface IProps {
   name?: string;
@@ -20,7 +20,6 @@ const styles: Styles = {
     position: 'relative',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // borderColor: Colors.border.grey,
     borderWidth: 1,
     borderRadius: layout.radius.sm,
     paddingHorizontal: resScale(10),
@@ -32,9 +31,6 @@ const styles: Styles = {
     borderLeftWidth: 5,
   },
   category: {
-    // position: 'absolute',
-    // // right: -200,
-    // top: 50,
     marginLeft: 10,
     backgroundColor: colors.secondary,
     paddingHorizontal: resScale(10),
@@ -46,15 +42,12 @@ const styles: Styles = {
   },
   icon: {
     padding: 0,
-    // width: 10,
-    height: resScale(10),
-    width: resScale(20),
-    position: 'relative',
-    right: resScale(10),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginStart: layout.pad.md,
   },
   close: {
     padding: 0,
-    // width: 10,
     height: resScale(10),
     width: resScale(10),
     right: resScale(10),
@@ -69,12 +62,13 @@ const ProductChip = ({ name, category, onDelete }: IProps) => {
         <BText style={styles.text}>{category?.name}</BText>
       </View>
       {onDelete && (
-        <Button
-          icon="close"
-          textColor={colors.textInput.input}
-          style={styles.icon}
-          onPress={onDelete}
-        />
+        <TouchableOpacity style={styles.icon} onPress={onDelete}>
+          <AntDesign
+            name="close"
+            color={colors.textInput.input}
+            size={resScale(15)}
+          />
+        </TouchableOpacity>
       )}
     </View>
   );
