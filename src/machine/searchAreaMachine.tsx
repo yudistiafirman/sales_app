@@ -36,6 +36,10 @@ export const searchAreaMachine =
                   target: 'currentLocationLoaded',
                   actions: 'assignCurrentLocationToContext',
                 },
+
+                onError: {
+                  actions: 'clearResult',
+                },
               },
             },
 
@@ -203,7 +207,7 @@ export const searchAreaMachine =
             const response = await searchLocation(context.searchValue);
             return response.data.result;
           } catch (error) {
-            throw new Error(error)
+            throw new Error(error);
           }
         },
         gettingPlacesId: async (context, event) => {

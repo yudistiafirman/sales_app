@@ -12,6 +12,7 @@ import {
   useRoute,
   useIsFocused,
   StackActions,
+  useFocusEffect,
 } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { hasCameraPermissions } from '@/utils/permissions';
@@ -127,12 +128,16 @@ const CameraScreen = () => {
   };
 
   const isFocused = useIsFocused();
+  
   React.useEffect(() => {
     crashlytics().log(CAMERA);
-    navigation.addListener('focus', () => {
-      hasCameraPermissions();
-    });
   }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      hasCameraPermissions();
+    }, [])
+  );
 
   return (
     <View style={styles.parent}>

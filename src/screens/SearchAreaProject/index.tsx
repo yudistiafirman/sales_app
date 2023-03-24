@@ -1,7 +1,7 @@
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import BSearchBar from '@/components/molecules/BSearchBar';
 import resScale from '@/utils/resScale';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { TextInput } from 'react-native-paper';
 import { SafeAreaView, DeviceEventEmitter } from 'react-native';
@@ -23,6 +23,7 @@ import {
 } from '@/navigation/ScreenNames';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { hasLocationPermission } from '@/utils/permissions';
 
 const SearchAreaProject = ({ route }: { route: any }) => {
   const navigation = useNavigation();
@@ -89,6 +90,12 @@ const SearchAreaProject = ({ route }: { route: any }) => {
   React.useEffect(() => {
     crashlytics().log(SEARCH_AREA);
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      hasLocationPermission();
+    }, [])
+  );
 
   const { result, loadPlaces, longlat, errorMessage } = state.context;
   const onChangeValue = (event: string) => {
