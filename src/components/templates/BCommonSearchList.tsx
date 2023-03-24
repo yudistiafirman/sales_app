@@ -1,7 +1,7 @@
 import BVisitationCard from '@/components/molecules/BVisitationCard';
-import { colors } from '@/constants';
+import { colors, layout } from '@/constants';
 import * as React from 'react';
-import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native';
+import { FlatList, ListRenderItem, Platform, StyleSheet, View } from 'react-native';
 import BCommonListShimmer from './BCommonListShimmer';
 import { selectedCompanyInterface, visitationDataType } from '@/interfaces';
 import BSpacer from '@/components/atoms/BSpacer';
@@ -114,6 +114,9 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
   return (
     <View style={styles.container}>
       <BSearchBar
+        textInputStyle={
+          Platform.OS !== 'android' && { paddingBottom: layout.pad.sm }
+        }
         value={searchQuery}
         onChangeText={(text) => onChangeText(text)}
         left={

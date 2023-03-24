@@ -1,6 +1,7 @@
 import { BSearchBar } from '@/components';
+import { layout } from '@/constants';
 import React from 'react';
-import { View, GestureResponderEvent, ViewStyle } from 'react-native';
+import { View, GestureResponderEvent, ViewStyle, Platform } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import SearchProductStyles from '../styles';
 
@@ -17,7 +18,7 @@ const SearchProductNavbar = ({
   value,
   onClearValue,
   customStyle,
-  autoFocus
+  autoFocus,
 }: SearchProductNavbarProps) => {
   return (
     <View
@@ -25,6 +26,9 @@ const SearchProductNavbar = ({
     >
       <BSearchBar
         value={value}
+        textInputStyle={
+          Platform.OS !== 'android' && { paddingBottom: layout.pad.sm }
+        }
         onChangeText={onChangeText}
         placeholder="Cari Produk"
         autoFocus={autoFocus}

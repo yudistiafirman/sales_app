@@ -640,6 +640,7 @@ const Beranda = () => {
           <BSearchBar
             placeholder="Cari Pelanggan"
             activeOutlineColor="gray"
+            disabled
             left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
             value={searchQuery}
           />

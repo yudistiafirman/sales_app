@@ -4,7 +4,7 @@ import resScale from '@/utils/resScale';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { TextInput } from 'react-native-paper';
-import { SafeAreaView, DeviceEventEmitter } from 'react-native';
+import { SafeAreaView, DeviceEventEmitter, Platform } from 'react-native';
 import SearchAreaStyles from './styles';
 import CurrentLocation from './element/SearchAreaCurrentLocation';
 import LocationList from './element/LocationList';
@@ -24,6 +24,7 @@ import {
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { hasLocationPermission } from '@/utils/permissions';
+import { layout } from '@/constants';
 
 const SearchAreaProject = ({ route }: { route: any }) => {
   const navigation = useNavigation();
@@ -132,6 +133,9 @@ const SearchAreaProject = ({ route }: { route: any }) => {
     <SafeAreaView style={SearchAreaStyles.container}>
       <BSpacer size="small" />
       <BSearchBar
+        textInputStyle={
+          Platform.OS !== 'android' && { paddingBottom: layout.pad.sm }
+        }
         onChangeText={onChangeValue}
         placeholder="Cari alamat Area Proyek"
         value={text}

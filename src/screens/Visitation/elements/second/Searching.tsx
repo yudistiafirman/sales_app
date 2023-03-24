@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import {
   BCommonSearchList,
   BSearchBar,
@@ -18,6 +18,7 @@ import {
   updateDataVisitation,
   updateShouldScrollView,
 } from '@/redux/reducers/VisitationReducer';
+import { resScale } from '@/utils';
 
 interface IProps {
   onSearch: (search: boolean) => void;
@@ -184,11 +185,13 @@ const SearchFlow = ({
 
   return (
     <>
-      <BTextLocation
-        location={visitationData.locationAddress?.formattedAddress!}
-        numberOfLines={1}
-      />
-      <BSpacer size="extraSmall" />
+      <View>
+        <BTextLocation
+          location={visitationData.locationAddress?.formattedAddress!}
+          numberOfLines={1}
+        />
+        <BSpacer size="extraSmall" />
+      </View>
       {isSearch ? (
         <View style={{ flex: 1 }}>
           <BCommonSearchList
@@ -220,26 +223,31 @@ const SearchFlow = ({
           />
         </View>
       ) : (
-        <TouchableOpacity
-          onPress={() => onSearch(true)}
-          disabled={searchingDisable}
-        >
+        <View>
+          <TouchableOpacity
+            style={style.touchable}
+            onPress={() => onSearch(true)}
+          />
           <BSearchBar
             disabled
             placeholder="Cari pelanggan"
             activeOutlineColor="gray"
-            left={
-              <TextInput.Icon
-                // onPress={onSearch}
-                forceTextInputFocus={false}
-                icon="magnify"
-              />
-            }
+            left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
           />
-        </TouchableOpacity>
+        </View>
       )}
     </>
   );
 };
+
+const style = StyleSheet.create({
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: resScale(4),
+    height: resScale(45),
+    zIndex: 2,
+  },
+});
 
 export default SearchFlow;
