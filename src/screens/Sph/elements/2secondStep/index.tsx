@@ -1,4 +1,10 @@
-import { DeviceEventEmitter, StyleSheet, Text, View } from 'react-native';
+import {
+  DeviceEventEmitter,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -60,7 +66,11 @@ function LeftIcon() {
 function SearchIcon() {
   return (
     <TextInput.Icon
-      style={{ marginTop: -layout.pad.ml, marginStart: -layout.pad.sm }}
+      style={[
+        Platform.OS === 'android'
+          ? { marginTop: -layout.pad.ml, marginStart: -layout.pad.sm }
+          : { marginTop: -layout.pad.sm, marginStart: -layout.pad.sm },
+      ]}
       forceTextInputFocus={false}
       icon="magnify"
     />
