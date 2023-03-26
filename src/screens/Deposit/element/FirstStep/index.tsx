@@ -83,7 +83,8 @@ export default function FirstStep() {
   };
 
   const removeImage = React.useCallback(
-    (pos: number) => () => {
+    (pos: number) => {
+
       dispatch(deleteImage({ pos, source: CREATE_DEPOSIT }));
       let modifyDeposit = {};
       if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
@@ -103,7 +104,7 @@ export default function FirstStep() {
       if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
       modifyDeposit = {
         ...modifyDeposit,
-        picts: createDepositPhotoURLs,
+        picts: [{ file: null }, ...createDepositPhotoURLs],
       };
       updateValueOnstep('stepOne', 'deposit', modifyDeposit);
       // eslint-disable-next-line react-hooks/exhaustive-deps

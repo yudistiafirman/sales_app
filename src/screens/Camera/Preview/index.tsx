@@ -147,7 +147,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
             setImageURLS({ file: localFile, source: CREATE_VISITATION })
           );
           if (visitationData.images && visitationData.images.length > 0)
-            images = [...visitationData.images];
+            images = [{ file: null }];
           images.push(localFile);
           dispatch(updateDataVisitation({ type: 'images', value: images }));
           dispatch(resetAllStepperFocused());

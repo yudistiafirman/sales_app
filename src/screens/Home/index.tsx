@@ -482,7 +482,7 @@ const Beranda = () => {
   };
 
   const kunjunganAction = () => {
-    if (visitationData.images && visitationData.images.length > 0) {
+    if (visitationData.images && visitationData.images.length > 1) {
       dispatch(resetFocusedStepperFlag());
       navigation.navigate(CREATE_VISITATION, {});
     } else {
