@@ -1,12 +1,11 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { BContainer, BForm, BSpacer, BText } from '@/components';
+import { BContainer, BForm, BSpacer } from '@/components';
 import { Input } from '@/interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
-import { Checkbox } from 'react-native-paper';
-import { colors, fonts, layout } from '@/constants';
+import { colors, fonts } from '@/constants';
 import font from '@/constants/fonts';
 import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn';
 import { SphContext } from '../context/SphContext';
@@ -39,10 +38,6 @@ type docResponse = {
   credit: documentType[];
 };
 
-function checkDocFilled(data: { [key: string]: any }) {
-  return Object.values(data).every((val) => !!val);
-}
-
 export default function ThirdStep() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -57,6 +52,22 @@ export default function ThirdStep() {
   const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const { paymentType, paymentRequiredDocuments, paymentBankGuarantee } =
     useSelector((state: RootState) => state.sph);
+
+  const checkboxInputs: Input[] = [
+    {
+      label: 'Bersedia untuk menyediakan Bank Guarantee',
+      type: 'checkbox',
+      isRequire: true,
+      isError: paymentBankGuarantee === false,
+      customerErrorMsg: 'Pastikan pelanggan menyediakan Bank Guarantee',
+      checkbox: {
+        value: paymentBankGuarantee,
+        onValueChange: (value) => {
+          dispatch(updatePaymentBankGuarantee(value));
+        },
+      },
+    },
+  ];
 
   useEffect(() => {
     crashlytics().log(SPH + '-Step3');
@@ -238,31 +249,11 @@ export default function ThirdStep() {
         <View>
           {paymentType === 'CREDIT' && (
             <>
-              <View style={style.checkboxContainer}>
-                <Checkbox
-                  status={paymentBankGuarantee ? 'checked' : 'unchecked'}
-                  onPress={() => {
-                    dispatch(updatePaymentBankGuarantee(!paymentBankGuarantee));
-                  }}
-                />
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <Text numberOfLines={2} style={style.checkboxLabel}>
-                    Bersedia untuk menyediakan Bank Guarantee
-                  </Text>
-                  <Text style={style.redStar}> * </Text>
-                </View>
-              </View>
-              {paymentBankGuarantee !== undefined &&
-                paymentBankGuarantee === false && (
-                  <BText
-                    style={{ marginStart: layout.pad.xl + 2 }}
-                    size="small"
-                    color="primary"
-                    bold="100"
-                  >
-                    {'Pastikan pelanggan menyediakan Bank Guarantee'}
-                  </BText>
-                )}
+              <BForm
+                titleBold="500"
+                inputs={checkboxInputs}
+                spacer="extraSmall"
+              />
             </>
           )}
           <BSpacer size={'small'} />

@@ -13,7 +13,6 @@ import {
 } from '@/components';
 import { Input } from '@/interfaces';
 import { PO_METHOD_LIST } from '@/constants/dropdown';
-import CheckBox from '@react-native-community/checkbox';
 import { RadioButton } from 'react-native-paper';
 import moment from 'moment';
 import { SalesOrdersData } from '@/interfaces/SelectConfirmedPO';
@@ -100,6 +99,34 @@ export default function SecondStep() {
     },
   ];
 
+  const consecutiveInputs: Input[] = [
+    {
+      label: 'Konsekutif?',
+      type: 'checkbox',
+      isRequire: false,
+      checkbox: {
+        value: stateTwo?.isConsecutive,
+        onValueChange: (value) => {
+          onChange('isConsecutive')(value);
+        },
+      },
+    },
+  ];
+
+  const technicalInputs: Input[] = [
+    {
+      label: 'Request Teknisi?',
+      type: 'checkbox',
+      isRequire: false,
+      checkbox: {
+        value: stateTwo?.hasTechnicalRequest,
+        onValueChange: (value) => {
+          onChange('hasTechnicalRequest')(value);
+        },
+      },
+    },
+  ];
+
   const onChange = (key: any) => (val: any) => {
     updateValueOnstep('stepTwo', key, val);
   };
@@ -127,30 +154,18 @@ export default function SecondStep() {
           ]}
         >
           <View style={style.consecutiveCheck}>
-            <CheckBox
-              value={stateTwo?.isConsecutive}
-              onFillColor={colors.primary}
-              onTintColor={colors.offCheckbox}
-              onCheckColor={colors.primary}
-              tintColors={{ true: colors.primary, false: colors.offCheckbox }}
-              onValueChange={(value) => {
-                onChange('isConsecutive')(value);
-              }}
+            <BForm
+              titleBold="500"
+              inputs={consecutiveInputs}
+              spacer="extraSmall"
             />
-            <Text style={style.summary}>Konsekutif?</Text>
           </View>
           <View style={style.technicalCheck}>
-            <CheckBox
-              value={stateTwo?.hasTechnicalRequest}
-              onFillColor={colors.primary}
-              onTintColor={colors.offCheckbox}
-              onCheckColor={colors.primary}
-              tintColors={{ true: colors.primary, false: colors.offCheckbox }}
-              onValueChange={(value) => {
-                onChange('hasTechnicalRequest')(value);
-              }}
+            <BForm
+              titleBold="500"
+              inputs={technicalInputs}
+              spacer="extraSmall"
             />
-            <Text style={style.summary}>Request Teknisi?</Text>
           </View>
         </View>
         <BSpacer size={'extraSmall'} />
@@ -174,6 +189,7 @@ export default function SecondStep() {
                                 ? 'checked'
                                 : 'unchecked'
                             }
+                            color={colors.primary}
                             uncheckedColor={colors.border.altGrey}
                             onPress={() => {
                               if (selectedIndex !== index.toString()) {
@@ -250,11 +266,18 @@ export default function SecondStep() {
         <BDepositCard
           style={{ marginBottom: layout.pad.xl }}
           firstSectionText={'Deposit'}
-          firstSectionValue={stateTwo?.totalDeposit}
-          secondSectionText={getDisplayName(stateTwo?.salesOrder)}
+          firstSectionValue={
+            stateTwo?.totalDeposit ? stateTwo?.totalDeposit : 0
+          }
+          secondSectionText={
+            stateTwo?.salesOrder ? getDisplayName(stateTwo?.salesOrder) : '-'
+          }
           secondSectionValue={getTotalProduct()}
           thirdSectionText={'Est. Sisa Deposit'}
-          isError={getTotalProduct() > stateTwo?.totalDeposit}
+          isError={
+            getTotalProduct() >
+            (stateTwo?.totalDeposit ? stateTwo?.totalDeposit : 0)
+          }
           customErrorMsg={'Silakan lakukan penambahan deposit'}
         />
       </View>
@@ -274,11 +297,17 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  consecutiveCheck: { flexDirection: 'row', alignItems: 'center' },
+  consecutiveCheck: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
   technicalCheck: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    marginEnd: layout.pad.md,
+    justifyContent: 'flex-end',
   },
   selectionProduct: {
     flex: 1,
@@ -304,6 +333,7 @@ const style = StyleSheet.create({
     fontSize: fonts.size.sm,
   },
   summaryContainer: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

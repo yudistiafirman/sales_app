@@ -330,7 +330,10 @@ export default function FifthStep() {
       }
       setMadeSphData(sph);
       dispatch(closePopUp());
-      setTimeout(() => setIsStepDoneVisible(true), Platform.OS === "ios" ? 500 : 0); 
+      setTimeout(
+        () => setIsStepDoneVisible(true),
+        Platform.OS === 'ios' ? 500 : 0
+      );
     } catch (error) {
       const messageError = error?.message;
       customLog(error, 'errorbuatSph54', messageError);
