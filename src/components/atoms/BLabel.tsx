@@ -19,18 +19,26 @@ interface IProps {
     | '900'
     | undefined;
   sizeInNumber?: number;
+  numberOfLines?: number;
 }
 
 const container: ViewStyle = {
   flexDirection: 'row',
 };
 
-const BLabel = ({ label, isRequired, bold, sizeInNumber }: IProps) => {
+const BLabel = ({ label, isRequired, bold, sizeInNumber, numberOfLines }: IProps) => {
   return (
     <View style={container}>
-      <BText sizeInNumber={sizeInNumber} bold={bold ? bold : '700'}>{label}</BText>
+      <BText
+        numberOfLines={numberOfLines}
+        sizeInNumber={sizeInNumber}
+        bold={bold ? bold : '700'}
+      >
+        {label}
+      </BText>
       {isRequired && (
         <BText
+          numberOfLines={numberOfLines}
           sizeInNumber={sizeInNumber}
           color="primary"
           bold={bold ? bold : 'bold'}

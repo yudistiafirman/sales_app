@@ -21,7 +21,6 @@ import {
 import React, { useState } from 'react';
 import {
   BackHandler,
-  KeyboardAvoidingView,
   SafeAreaView,
   StyleSheet,
   Text,

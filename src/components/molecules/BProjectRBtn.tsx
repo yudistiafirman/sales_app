@@ -32,6 +32,7 @@ const BProjectRBtn = ({
           <RadioButton
             uncheckedColor={colors.border.altGrey}
             value={projectId!}
+            color={colors.primary}
             status={isSelected ? 'checked' : 'unchecked'}
             onPress={() => {
               if (onSelect) {

@@ -4,7 +4,7 @@ import { Input } from '@/interfaces';
 import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
 import React from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View,Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import BText from '../atoms/BText';
 import BForm from '../organism/BForm';
@@ -20,11 +20,11 @@ interface Props<TItem> {
   remainingQuantity?: string;
   hasMultipleCheck?: boolean;
   index?: number;
-  isOptions?:boolean
+  isOptions?: boolean;
   onPressRadioButton?: (index: string) => void;
 }
 
-const {width} = Dimensions.get('window')
+const { width } = Dimensions.get('window');
 
 const BExpandableProductCard = ({
   item,
@@ -38,7 +38,7 @@ const BExpandableProductCard = ({
   hasMultipleCheck,
   index,
   onPressRadioButton,
-  isOptions
+  isOptions,
 }: Props) => {
   const checkbox = [
     {
@@ -53,21 +53,22 @@ const BExpandableProductCard = ({
   return (
     <View style={styles.customerCard}>
       <View style={styles.parentContainer}>
-        {
-           isOptions && <View style={styles.checkBoxContainer}>
-          {hasMultipleCheck  ? (
-            <BForm inputs={checkbox} />
-          ) : (
-            <RadioButton
-              value={index.toString()}
-              status={checked ? 'checked' : 'unchecked'}
-              uncheckedColor={colors.border.altGrey}
-              onPress={() => onPressRadioButton(index.toString())}
-            />
-          )}
-        </View>
-        }
-     
+        {isOptions && (
+          <View style={styles.checkBoxContainer}>
+            {hasMultipleCheck ? (
+              <BForm titleBold="500" inputs={checkbox} />
+            ) : (
+              <RadioButton
+                value={index.toString()}
+                status={checked ? 'checked' : 'unchecked'}
+                color={colors.primary}
+                uncheckedColor={colors.border.altGrey}
+                onPress={() => onPressRadioButton(index.toString())}
+              />
+            )}
+          </View>
+        )}
+
         <View style={styles.expandableContainer}>
           <View style={styles.topCard}>
             <BText type="title">{productName}</BText>
@@ -76,9 +77,10 @@ const BExpandableProductCard = ({
             <BText style={styles.parentPrice}>
               {`${formatCurrency(pricePerVol!)}/m3`}
             </BText>
-            <BText  numberOfLines={1} style={styles.totalParentPrice}>{`IDR ${formatCurrency(
-              totalPrice
-            )}`}</BText>
+            <BText
+              numberOfLines={1}
+              style={styles.totalParentPrice}
+            >{`IDR ${formatCurrency(totalPrice)}`}</BText>
           </View>
         </View>
       </View>
@@ -145,8 +147,8 @@ const styles = StyleSheet.create({
     fontFamily: font.family.montserrat[500],
     fontSize: font.size.sm,
     color: colors.text.darker,
-    textAlign:'right',
-    width:width - 170
+    textAlign: 'right',
+    width: width - 170,
   },
   bottomCard: {
     marginTop: layout.pad.sm,
