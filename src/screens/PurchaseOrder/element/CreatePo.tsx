@@ -17,6 +17,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
 import { QuotationRequests } from '@/interfaces/createPurchaseOrder';
 import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
+import { FlatList } from 'react-native-gesture-handler';
+import { layout } from '@/constants';
 
 const CreatePo = () => {
   const navigation = useNavigation();
@@ -44,7 +46,7 @@ const CreatePo = () => {
   const deleteImages = (i: number) => {
     dispatch({
       type: 'deleteImage',
-      value: i,
+      value: i + 1,
     });
   };
 
@@ -130,56 +132,61 @@ const CreatePo = () => {
             }
           />
         ) : (
-          <ScrollView>
-            <>
-              <BGallery
-                addMorePict={addMoreImages}
-                picts={poImages}
-                removePict={deleteImages}
-              />
-              <BSpacer size="extraSmall" />
-              <BForm inputs={inputs} />
-            </>
-
-            {isUserChoosedSph ? (
+          <FlatList
+            data={null}
+            renderItem={null}
+            ListHeaderComponent={<View>
               <>
-                <View style={{ height: resScale(57) }}>
-                  <BVisitationCard
-                    item={{
-                      name: choosenSphDataFromModal.name,
-                      location: choosenSphDataFromModal.locationName,
-                    }}
-                    isRenderIcon
-                    customIcon={renderCustomButton}
-                  />
-                </View>
-
+                <BGallery
+                  addMorePict={addMoreImages}
+                  picts={poImages}
+                  removePict={deleteImages}
+                />
                 <BSpacer size="extraSmall" />
-                <BNestedProductCard
-                  withoutHeader={false}
-                  data={choosenSphDataFromModal?.QuotationRequests}
-                  expandData={expandData}
-                  onExpand={onExpand}
-                />
+                <BForm inputs={inputs} />
               </>
-            ) : (
-              <TouchableOpacity
-                onPress={() => dispatch({ type: 'searchingSph' })}
-                style={{ height: resScale(50) }}
-              >
-                <BSearchBar
-                  left={
-                    <TextInput.Icon
-                      forceTextInputFocus={false}
-                      icon="magnify"
+
+              {isUserChoosedSph ? (
+                <>
+                  <View style={{ height: resScale(57) }}>
+                    <BVisitationCard
+                      item={{
+                        name: choosenSphDataFromModal.name,
+                        location: choosenSphDataFromModal.locationName,
+                      }}
+                      isRenderIcon
+                      customIcon={renderCustomButton}
                     />
-                  }
-                  disabled
-                  placeholder="Cari SPH"
-                />
-              </TouchableOpacity>
-            )}
-          </ScrollView>
+                  </View>
+
+                  <BSpacer size="extraSmall" />
+                  <BNestedProductCard
+                    withoutHeader={false}
+                    data={choosenSphDataFromModal?.QuotationRequests}
+                    expandData={expandData}
+                    onExpand={onExpand}
+                  />
+                </>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => dispatch({ type: 'searchingSph' })}
+                  style={{ height: resScale(50) }}
+                >
+                  <BSearchBar
+                    left={
+                      <TextInput.Icon
+                        forceTextInputFocus={false}
+                        icon="magnify"
+                      />
+                    }
+                    disabled
+                    placeholder="Cari SPH"
+                  />
+                </TouchableOpacity>
+              )}
+            </View>}
+          />
+
         )}
       </View>
     </>
@@ -189,6 +196,7 @@ const CreatePo = () => {
 const styles = StyleSheet.create({
   firstStepContainer: {
     flex: 1,
+    paddingBottom: layout.pad.xxl
   },
 });
 

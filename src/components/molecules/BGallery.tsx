@@ -4,6 +4,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  FlatList,
+  ListRenderItem,
 } from 'react-native';
 import * as React from 'react';
 import { colors, layout } from '@/constants';
@@ -11,7 +13,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { resScale } from '@/utils';
 import Pdf from 'react-native-pdf';
-import { color } from 'react-native-reanimated';
+import { LocalFileType } from '@/interfaces/LocalFileType';
 
 type BGalleryType = {
   picts: any[];
@@ -24,55 +26,55 @@ export default function BGallery({
   addMorePict,
   removePict,
 }: BGalleryType) {
-  return (
-    <ScrollView
-      contentContainerStyle={style.scrollViewContentStyle}
-      showsVerticalScrollIndicator={false}
-    >
-      {addMorePict && (
-        <TouchableOpacity onPress={addMorePict}>
-          <View style={[style.addImage, style.container]}>
-            <Feather name="plus" size={resScale(25)} color="#000000" />
-          </View>
-        </TouchableOpacity>
-      )}
-      {picts &&
-        picts.length > 0 &&
-        picts.map((image, index) => {
-          return (
-            <View key={index.toString()} style={style.container}>
-              {image?.isFromPicker ? (
-                <>
-                  {image?.file?.type === 'image/jpeg' ||
-                  image?.file?.type === 'image/png' ? (
-                    <Image source={image?.file} style={style.imageStyle} />
-                  ) : (
-                    <Pdf
-                      source={{ uri: image?.file?.uri }}
-                      style={style.imageStyle}
-                      page={1}
-                    />
-                  )}
-                </>
-              ) : (
-                <Image source={image?.file} style={style.imageStyle} />
-              )}
-              {image?.type === 'GALLERY' && removePict && (
-                <TouchableOpacity
-                  style={style.closeIcon}
-                  onPress={() => removePict(index)}
-                >
-                  <AntDesign
-                    name="close"
-                    size={resScale(15)}
-                    color={colors.white}
-                  />
-                </TouchableOpacity>
-              )}
+
+  const renderItem: ListRenderItem<LocalFileType> = React.useCallback(({ item, index }) => {
+    return (
+      <View style={style.container}>
+        {item.file === null && (
+          <TouchableOpacity onPress={addMorePict}>
+            <View style={[style.addImage]}>
+              <Feather name="plus" size={resScale(25)} color="#000000" />
             </View>
-          );
-        })}
-    </ScrollView>
+          </TouchableOpacity>
+        )}
+        {item?.isFromPicker ? (
+          <>
+            {item?.file?.type === 'image/jpeg' ||
+              item?.file?.type === 'image/png' ? (
+              <Image source={item?.file} style={style.imageStyle} />
+            ) : (
+              <Pdf
+                source={{ uri: item?.file?.uri }}
+                style={style.imageStyle}
+                page={1}
+              />
+            )}
+          </>
+        ) : (
+          <Image source={item?.file} style={style.imageStyle} />
+        )}
+        {item?.type === 'GALLERY' && removePict && (
+          <TouchableOpacity
+            style={style.closeIcon}
+            onPress={() => removePict(index - 1)}
+          >
+            <AntDesign
+              name="close"
+              size={resScale(15)}
+              color={colors.white}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+    )
+  }, [])
+  return (
+    <FlatList
+      data={picts}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={renderItem}
+      numColumns={3}
+    />
   );
 }
 
@@ -85,9 +87,10 @@ const style = StyleSheet.create({
   },
   addImage: {
     backgroundColor: colors.tertiary,
-    margin: resScale(5),
     justifyContent: 'center',
     alignItems: 'center',
+    height: '100%',
+    borderRadius: layout.radius.md,
   },
   scrollViewContentStyle: {
     flexDirection: 'row',
@@ -95,10 +98,10 @@ const style = StyleSheet.create({
   },
   closeIcon: {
     position: 'absolute',
-    right: resScale(-5),
+    right: resScale(-3),
     top: resScale(-5),
     backgroundColor: colors.text.medium,
-    borderRadius:layout.radius.lg
+    borderRadius: layout.radius.lg
   },
   imageStyle: {
     flex: 1,
