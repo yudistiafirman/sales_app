@@ -65,14 +65,15 @@ export default function CustomerDetail() {
       try {
         const response = await getProjectDetail(companyId);
         setCustomerData(response.data[0]);
+        console.log('iniii diaaa 1: ', JSON.stringify(response.data[0]));
         if (response.data && response.data.length > 0) {
           let region: any = {
-            formattedAddress: response.data[0].billingAddress.line1,
-            latitude: response.data[0].billingAddress.lat,
-            longitude: response.data[0].billingAddress.lon,
+            formattedAddress: response.data[0].billingAddress?.line1,
+            latitude: response.data[0].billingAddress?.lat,
+            longitude: response.data[0].billingAddress?.lon,
           };
           setExistingRegion(region);
-          setFormattedAddress(response.data[0].billingAddress.line1);
+          setFormattedAddress(response.data[0].billingAddres?.line1);
         }
       } catch (error) {
         dispatch(
@@ -93,14 +94,15 @@ export default function CustomerDetail() {
       try {
         const response = await getProjectIndivualDetail(projectId);
         setCustomerData(response.data);
+        console.log('iniii diaaa 2: ', JSON.stringify(response.data));
         if (response.data) {
           let region: any = {
-            formattedAddress: response.data.billingAddress.line1,
-            latitude: response.data.billingAddress.lat,
-            longitude: response.data.billingAddress.lon,
+            formattedAddress: response.data.billingAddress?.line1,
+            latitude: response.data.billingAddress?.lat,
+            longitude: response.data.billingAddress?.lon,
           };
           setExistingRegion(region);
-          setFormattedAddress(response.data.billingAddress.line1);
+          setFormattedAddress(response.data.billingAddress?.line1);
         }
       } catch (error) {
         dispatch(
@@ -121,12 +123,13 @@ export default function CustomerDetail() {
     if (route?.params) {
       const { existingVisitation } = route.params;
       setExistingVisitation(existingVisitation);
-      if (existingVisitation.project.company !== null) {
-        const { id } = existingVisitation.project.company;
+      if (existingVisitation.project.companyId !== null) {
+        const { id } = existingVisitation.project.companyId;
         setCompany(true);
         getCompanyDetail(id);
       } else {
         const { id } = existingVisitation.project;
+        setCompany(false);
         getProjectIndividual(id);
       }
     }
@@ -190,15 +193,12 @@ export default function CustomerDetail() {
           region={region || regionExisting}
           isUpdate={address !== undefined && address !== '' ? true : false}
           setRegion={setRegion}
-          projectId={customerData.projectId}
+          projectId={customerData.id}
         />
       )}
 
       {documentsNotCompleted && (
-        <DocumentWarning
-          docs={customerData.docs}
-          projectId={customerData.projectId}
-        />
+        <DocumentWarning docs={customerData.docs} projectId={customerData.id} />
       )}
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -209,7 +209,7 @@ export default function CustomerDetail() {
             <Text style={styles.fontW300}>Nama</Text>
             <Text style={styles.fontW400}>
               {isCompany
-                ? customerData?.company?.name
+                ? customerData?.Company?.name
                 : customerData?.mainPic?.name}
             </Text>
           </View>
@@ -219,13 +219,13 @@ export default function CustomerDetail() {
           <ProjectBetween
             onPress={() => {
               navigation.navigate(VISIT_HISTORY, {
-                projectId: customerData?.projectId,
-                projectName: customerData?.projectName,
+                projectId: customerData?.id,
+                projectName: customerData?.name,
               });
             }}
             projects={{
-              id: customerData?.projectId,
-              name: customerData?.projectName,
+              id: customerData?.id,
+              name: customerData?.name,
             }}
           />
           <BSpacer size={'extraSmall'} />
@@ -264,7 +264,7 @@ export default function CustomerDetail() {
               onPress={() =>
                 navigation.navigate(DOCUMENTS, {
                   docs: customerData.docs,
-                  projectId: customerData.projectId,
+                  projectId: customerData.id,
                 })
               }
             />

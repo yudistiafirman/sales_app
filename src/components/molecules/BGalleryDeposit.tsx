@@ -19,7 +19,7 @@ export default function BGalleryDeposit({
 }: BGalleryDepositType) {
   return (
     <View style={style.summaryContainer}>
-      {picts && picts.length > 0 && (
+      {picts && picts.length > 1 && (
         <View
           style={{
             width: resScale(40),
@@ -27,26 +27,26 @@ export default function BGalleryDeposit({
             borderRadius: layout.radius.md,
           }}
         >
-          {picts[0]?.isFromPicker ? (
+          {picts[1]?.isFromPicker ? (
             <>
-              {picts[0]?.file?.type === 'image/jpeg' ||
-              picts[0]?.file?.type === 'image/png' ? (
-                <Image style={style.flexFull} source={picts[0]?.file} />
+              {picts[1]?.file?.type === 'image/jpeg' ||
+              picts[1]?.file?.type === 'image/png' ? (
+                <Image style={style.flexFull} source={picts[1]?.file} />
               ) : (
                 <Pdf
-                  source={{ uri: picts[0]?.file?.uri }}
+                  source={{ uri: picts[1]?.file?.uri }}
                   style={style.flexFull}
                   page={1}
                 />
               )}
             </>
           ) : (
-            <Image style={style.flexFull} source={picts[0]?.file} />
+            <Image style={style.flexFull} source={picts[1]?.file} />
           )}
-          {picts.length > 1 && (
+          {picts.length > 2 && (
             <>
               <View style={style.overlay} />
-              <Text style={style.textOverlay}>{'+' + (picts.length - 1)}</Text>
+              <Text style={style.textOverlay}>{'+' + (picts.length - 2)}</Text>
             </>
           )}
         </View>

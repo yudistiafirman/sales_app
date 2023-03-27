@@ -36,12 +36,12 @@ function ListProduct(
   let displayName = '';
   if (item.ReqProduct) {
     displayName = `${
-      item?.ReqProduct?.product?.category?.parent
-        ? item?.ReqProduct?.product?.category?.parent?.name + ' '
+      item?.ReqProduct?.Product?.category?.parent
+        ? item?.ReqProduct?.Product?.category?.parent?.name + ' '
         : ''
-    }${item?.ReqProduct?.product?.displayName} ${
-      item?.ReqProduct?.product?.category
-        ? item?.ReqProduct?.product?.category?.name
+    }${item?.ReqProduct?.Product?.displayName} ${
+      item?.ReqProduct?.Product?.category
+        ? item?.ReqProduct?.Product?.category?.name
         : ''
     }`;
   } else if (item.Product) {
@@ -191,11 +191,7 @@ const TransactionDetail = () => {
                 : data?.project?.LocationAddress?.lat === null ||
                   data?.project?.LocationAddress?.lon === null
             }
-            companyName={
-              data?.project?.Company?.displayName
-                ? data?.project?.Company.displayName
-                : '-'
-            }
+            companyName={data?.project?.displayName}
             location={
               selectedType === 'DO'
                 ? data?.project?.ShippingAddress &&
@@ -319,7 +315,7 @@ const TransactionDetail = () => {
                       item,
                       index,
                       selectedType,
-                      data?.quantity ? data?.quantity : data?.Schedule?.quantity
+                      selectedType === 'PO' ? data?.requestedQuantity : data?.quantity ? data?.quantity : data?.Schedule?.quantity
                     )
                   )}
                   <BSpacer size={'small'} />
