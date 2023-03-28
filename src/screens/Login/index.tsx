@@ -15,7 +15,7 @@ import { signIn } from '@/actions/CommonActions';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { LOGIN, VERIFICATION } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
-import Config from 'react-native-config';
+
 interface LoginState {
   errorMessage: unknown | string;
   loading: boolean;
