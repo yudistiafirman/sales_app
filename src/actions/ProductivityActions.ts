@@ -1,7 +1,6 @@
 import BrikApiProductivity from '@/brikApi/BrikApiProductivity';
 import { payloadPostType } from '@/interfaces';
 import { customRequest } from '@/networking/request';
-import { customLog } from '@/utils/generalFunc';
 
 type getVisitationsType = {
   month?: number;
@@ -46,7 +45,6 @@ export const putVisitation = async ({
   payload,
   visitationId,
 }: visitationPayloadType) => {
-  customLog(visitationId, 'visitationId42');
   return customRequest(
     BrikApiProductivity.visitationIdPath({
       visitationId,

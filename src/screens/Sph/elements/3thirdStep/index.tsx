@@ -14,7 +14,6 @@ import { fetchSphDocuments } from '@/redux/async-thunks/commonThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
-import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import {
   setStepperFocused,
@@ -153,7 +152,7 @@ export default function ThirdStep() {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      customLog('error getDocument128', error);
+      console.log('error getDocument128', error);
     }
   }
 
@@ -199,8 +198,6 @@ export default function ThirdStep() {
         onChange: (data: any) => {
           if (data) {
             setDocuments((curr) => {
-              customLog(curr, 'curr298');
-
               return {
                 ...curr,
                 [key.key]: {

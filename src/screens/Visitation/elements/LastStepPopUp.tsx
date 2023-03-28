@@ -17,7 +17,6 @@ import { TextInput } from 'react-native-paper';
 import { Input } from '@/interfaces';
 import { useNavigation } from '@react-navigation/native';
 import { CALENDAR } from '@/navigation/ScreenNames';
-import { customLog } from '@/utils/generalFunc';
 
 type LastStepPopUpType = {
   isVisible: boolean;
@@ -65,7 +64,6 @@ export default function LastStepPopUp({
         ],
         placeholder: 'Pilih Alasan',
         onChange: (value: any) => {
-          customLog(value, 'onchange dropdown');
           closedLostValueOnChange.dropdownOnchange(value);
         },
       },
@@ -201,7 +199,12 @@ export default function LastStepPopUp({
               <BTextInput
                 value={selectedDate}
                 placeholder="Pilih Tanggal"
-                right={<TextInput.Icon forceTextInputFocus={false} icon={chevronRight} />}
+                right={
+                  <TextInput.Icon
+                    forceTextInputFocus={false}
+                    icon={chevronRight}
+                  />
+                }
               />
             </View>
             <BSpacer size={'extraSmall'} />

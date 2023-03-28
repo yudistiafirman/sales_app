@@ -40,7 +40,6 @@ import { RootState } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
-import { customLog } from '@/utils/generalFunc';
 import {
   updateSelectedCompany,
   updateSelectedPic,
@@ -59,8 +58,6 @@ function countNonNullValues(array) {
 }
 
 function payloadMapper(sphState: SphStateInterface) {
-  customLog(JSON.stringify(sphState), 'sphState24');
-
   const payload = {
     shippingAddress: {} as shippingAddressType,
     requestedProducts: [] as requestedProductsType[],
@@ -200,13 +197,9 @@ function payloadMapper(sphState: SphStateInterface) {
     if (sphState.billingAddress.fullAddress) {
       payload.billingAddress.line2 = sphState.billingAddress.fullAddress;
     }
-    customLog(sphState.billingAddress.addressAutoComplete, 'testing9292');
   } else {
     payload.billingAddress = payload.shippingAddress;
   }
-
-  customLog(JSON.stringify(payload), 'payload1012');
-
   return payload;
 }
 
@@ -263,19 +256,14 @@ export default function FifthStep() {
       const isNoPhotoToUpload = photoFiles.every((val) => val === null);
       payload.projectDocs = [];
       const validPhotoCount = countNonNullValues(photoFiles);
-      customLog(validPhotoCount, 'validPhotoCount241');
-
       if (
         (sphState.uploadedAndMappedRequiredDocs.length === 0 &&
           !isNoPhotoToUpload) ||
         validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
       ) {
-        customLog('ini mau upload foto', photoFiles);
         const photoResponse = await dispatch(
           postUploadFiles({ files: photoFiles, from: 'sph' })
         ).unwrap();
-        customLog('upload kelar');
-
         const files: { documentId: string; fileId: string }[] = [];
         photoResponse.forEach((photo) => {
           const photoName = `${photo.name}.${photo.type}`;
@@ -306,8 +294,6 @@ export default function FifthStep() {
             });
           }
         });
-        customLog(files, 'filesmapped');
-
         const isFilePhotoNotNull = files.every((val) => val === null);
         if (!isFilePhotoNotNull) {
           payload.projectDocs = files;
@@ -321,8 +307,6 @@ export default function FifthStep() {
           payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
         }
       }
-      customLog(JSON.stringify(payload), 'payloadfinal');
-
       const sphResponse = await dispatch(postOrderSph({ payload })).unwrap();
       const { sph } = sphResponse;
       if (!sph) {
@@ -330,10 +314,12 @@ export default function FifthStep() {
       }
       setMadeSphData(sph);
       dispatch(closePopUp());
-      setTimeout(() => setIsStepDoneVisible(true), Platform.OS === "ios" ? 500 : 0); 
+      setTimeout(
+        () => setIsStepDoneVisible(true),
+        Platform.OS === 'ios' ? 500 : 0
+      );
     } catch (error) {
       const messageError = error?.message;
-      customLog(error, 'errorbuatSph54', messageError);
       dispatch(closePopUp());
       dispatch(
         openPopUp({

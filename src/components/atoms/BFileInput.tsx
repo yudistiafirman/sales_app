@@ -12,7 +12,6 @@ import { resScale } from '@/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { customLog } from '@/utils/generalFunc';
 import BLabel from './BLabel';
 
 //AntDesign
@@ -23,22 +22,21 @@ type BFileInputType = {
   isLoading?: boolean;
   isError?: boolean;
   disabled?: boolean;
-  isRequire?:boolean;
-  sizeInNumber?:number;
+  isRequire?: boolean;
+  sizeInNumber?: number;
   titleBold?:
-  | 'bold'
-  | '400'
-  | 'normal'
-  | '100'
-  | '200'
-  | '300'
-  | '500'
-  | '600'
-  | '700'
-  | '800'
-  | '900'
-  | undefined;
-
+    | 'bold'
+    | '400'
+    | 'normal'
+    | '100'
+    | '200'
+    | '300'
+    | '500'
+    | '600'
+    | '700'
+    | '800'
+    | '900'
+    | undefined;
 };
 
 function iconState(value: any, isLoading?: boolean, isError?: boolean) {
@@ -78,8 +76,6 @@ export default function BFileInput({
   const selectFile = React.useCallback(async () => {
     // Opening Document Picker to select one file
     try {
-      customLog('select file');
-
       const res = await DocumentPicker.pickSingle({
         // Provide which type of file you want user to pick
         type: [
@@ -96,8 +92,6 @@ export default function BFileInput({
         // DocumentPicker.types.audio
       });
       // Printing the log realted to the file
-      customLog('res : ' + JSON.stringify(res));
-      customLog('select file 2');
       // Setting the state to show single file attributes
       //   setSingleFile(res);
       if (onChange) {
@@ -112,11 +106,8 @@ export default function BFileInput({
       if (DocumentPicker.isCancel(err)) {
         // If user canceled the document selection
         // alert('Canceled');
-        customLog('Canceled', JSON.stringify(err));
       } else {
         // For Unknown Error
-        customLog(JSON.stringify(err));
-
         // alert('Unknown Error: ' + JSON.stringify(err));
         throw err;
       }
@@ -127,11 +118,11 @@ export default function BFileInput({
     <TouchableOpacity disabled={disabled} onPress={selectFile}>
       <View style={[style.container, !value ? style.dashedBorder : null]}>
         <BLabel
-            sizeInNumber={sizeInNumber}
-            bold={titleBold}
-            label={label}
-            isRequired={isRequire}
-          />
+          sizeInNumber={sizeInNumber}
+          bold={titleBold}
+          label={label}
+          isRequired={isRequire}
+        />
         {iconState(value, isLoading, isError)}
         {/* <View style={style.row}>
           {isLoading && (

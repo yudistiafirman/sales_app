@@ -34,7 +34,6 @@ import { Region } from 'react-native-maps';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
-import { customLog } from '@/utils/generalFunc';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { resScale } from '@/utils';
 import { RootState } from '@/redux/store';
@@ -140,7 +139,7 @@ function SphContent() {
   const [stepsDone, setStepsDone] = useState<number[]>([]);
   const [, updateState, setCurrentPosition, currentPosition] =
     useContext(SphContext);
-  const stepControll = useCallback((step: number) => { }, []);
+  const stepControll = useCallback((step: number) => {}, []);
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
 
@@ -200,7 +199,6 @@ function SphContent() {
 
   const getLocationCoord = async (coordinate: Region) => {
     try {
-      customLog(coordinate, 'coordinateonchange51');
       const { data } = await getLocationCoordinates(
         // '',
         coordinate.longitude as unknown as number,
@@ -211,8 +209,6 @@ function SphContent() {
       if (!result) {
         throw data;
       }
-      customLog(result, 'getLocationCoordinate');
-
       const _coordinate = {
         latitude: result?.lat,
         longitude: result?.lon,
@@ -232,7 +228,7 @@ function SphContent() {
       dispatch(updateDistanceFromLegok(result.distance.value));
       dispatch(updateRegion(_coordinate));
     } catch (error) {
-      customLog(JSON.stringify(error), 'onChangeRegionerror');
+      console.log(JSON.stringify(error), 'onChangeRegionerror');
     }
   };
 
@@ -249,7 +245,6 @@ function SphContent() {
         getOneProjectById({ projectId: projectId })
       ).unwrap();
       dispatch(closePopUp());
-      customLog(JSON.stringify(response), 'response138');
       const project = response[0];
       const { locationAddress } = project;
       if (project.mainPic) {
@@ -257,8 +252,6 @@ function SphContent() {
       }
 
       dispatch(updateSelectedCompany(project));
-      customLog(locationAddress, 'locationAddress146');
-
       if (locationAddress) {
         if (locationAddress.lon && locationAddress.lat) {
           const longitude = +locationAddress.lon;
@@ -267,7 +260,6 @@ function SphContent() {
         }
       }
     } catch (error) {
-      customLog(error, 'errorgetVisitationById');
       dispatch(closePopUp());
       dispatch(
         openPopUp({
@@ -312,7 +304,6 @@ function SphContent() {
 
   useEffect(() => {
     const projectId = route.params?.projectId;
-    customLog(projectId, 'visitationId122');
     if (projectId) {
       getProjectById(projectId);
     }

@@ -11,7 +11,7 @@ import * as React from 'react';
 import { Alert, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { customLog, isJsonString } from '@/utils/generalFunc';
+import { isJsonString } from '@/utils/generalFunc';
 import remoteConfig from '@react-native-firebase/remote-config';
 import BackgroundFetch from 'react-native-background-fetch';
 import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
@@ -26,7 +26,6 @@ const useAsyncConfigSetup = () => {
 
   const userDataSetup = React.useCallback(
     async (fetchedRemoteConfig: any) => {
-      customLog('====remote config====', fetchedRemoteConfig);
       try {
         const userToken = await bStorage.getItem(storageKey.userToken);
         if (userToken) {
@@ -82,7 +81,6 @@ const useAsyncConfigSetup = () => {
         userDataSetup(fetchedData);
       })
       .catch((err) => {
-        customLog(err);
         hunterFarmerSetup();
         userDataSetup(undefined);
       });

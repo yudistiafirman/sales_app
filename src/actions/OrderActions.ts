@@ -1,7 +1,6 @@
 import BrikApiOrder from '@/brikApi/BrikApiOrder';
 import { customRequest } from '@/networking/request';
 import { sphOrderPayloadType } from '@/interfaces';
-import { customLog } from '@/utils/generalFunc';
 import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
 
 export const getTransactionTab = async () => {
@@ -98,7 +97,6 @@ export const getVisitationOrderByID = async (id: string) => {
 };
 
 export const postSph = async (payload: sphOrderPayloadType) => {
-  customLog(payload, 'payload sebelum request');
   return customRequest(BrikApiOrder.orderSphPost(), 'POST', payload, true);
 };
 
@@ -146,6 +144,14 @@ export const getConfirmedPurchaseOrder = async (
   );
 };
 
-export const updateDeliveryOrder = async (payload: updateDeliverOrder, deliveryOrderId: string) => {
-  return customRequest(BrikApiOrder.deliveryOrderByID(deliveryOrderId), 'PUT', payload, true)
-}
+export const updateDeliveryOrder = async (
+  payload: updateDeliverOrder,
+  deliveryOrderId: string
+) => {
+  return customRequest(
+    BrikApiOrder.deliveryOrderByID(deliveryOrderId),
+    'PUT',
+    payload,
+    true
+  );
+};

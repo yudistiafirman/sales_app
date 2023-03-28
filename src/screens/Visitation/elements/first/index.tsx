@@ -31,7 +31,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { customLog } from '@/utils/generalFunc';
 import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -51,7 +50,9 @@ const FirstStep = () => {
       onChange: (e: string) => {
         const newLocation = { ...visitationData.locationAddress };
         newLocation.line2 = e;
-        dispatch(updateDataVisitation({ type: 'locationAddress', value: newLocation }));
+        dispatch(
+          updateDataVisitation({ type: 'locationAddress', value: newLocation })
+        );
         dispatch(updateRegion({ ...region, line1: e }));
       },
       value: visitationData.locationAddress?.line2,
@@ -63,7 +64,6 @@ const FirstStep = () => {
   const mapRef = React.useRef<MapView>(null);
   const onChangeRegion = async (coordinate: Region) => {
     try {
-      customLog(coordinate, 'coordinateonchange66');
       setIsMapLoading(() => true);
       const { data } = await getLocationCoordinates(
         // '',
@@ -97,7 +97,7 @@ const FirstStep = () => {
       setIsMapLoading(() => false);
     } catch (error) {
       setIsMapLoading(() => false);
-      customLog(JSON.stringify(error), 'onChangeRegionerror');
+      console.log(JSON.stringify(error), 'onChangeRegionerror');
     }
   };
 
@@ -110,8 +110,6 @@ const FirstStep = () => {
 
   React.useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step1');
-
-    customLog(visitationData.createdLocation?.formattedAddress, 'onEffect');
     if (mapRef.current) {
       mapRef?.current?.animateToRegion(region);
     }
@@ -119,9 +117,9 @@ const FirstStep = () => {
       ...visitationData.locationAddress,
       ...region,
     };
-    customLog(visitationData.locationAddress, 'location117', region);
-    customLog(locationAddress, 'locationAddress118');
-    dispatch(updateDataVisitation({ type: 'locationAddress', value: locationAddress }));
+    dispatch(
+      updateDataVisitation({ type: 'locationAddress', value: locationAddress })
+    );
   }, [
     region.formattedAddress,
     visitationData.createdLocation?.formattedAddress,
@@ -136,7 +134,9 @@ const FirstStep = () => {
           formattedAddress: context?.formattedAddress,
           PostalId: context?.PostalId,
         };
-        dispatch(updateDataVisitation({ type: 'createdLocation', value: context }));
+        dispatch(
+          updateDataVisitation({ type: 'createdLocation', value: context })
+        );
         if (region.latitude === 0) {
           dispatch(updateRegion(coordinate));
         }
@@ -150,7 +150,6 @@ const FirstStep = () => {
       visitationData.createdLocation?.lon === 0;
 
     if (isExist) {
-      customLog('jalan143');
       send('askingPermission');
     }
   }, []);

@@ -8,7 +8,6 @@ import { Input, PIC } from '@/interfaces';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import { SphContext } from '../../context/SphContext';
 import Entypo from 'react-native-vector-icons/Entypo';
-import { customLog } from '@/utils/generalFunc';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import {

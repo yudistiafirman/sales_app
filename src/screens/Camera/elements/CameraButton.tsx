@@ -3,7 +3,6 @@ import { StyleProp, ViewStyle, View, StyleSheet, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
-import { customLog } from '@/utils/generalFunc';
 import DocumentPicker from 'react-native-document-picker';
 import { BSvg } from '@/components';
 import SvgNames from '@/components/atoms/BSvg/svgName';
@@ -39,10 +38,7 @@ const CameraButton = ({
         else onDocPress(res);
       } catch (err) {
         if (DocumentPicker.isCancel(err)) {
-          customLog('Canceled', JSON.stringify(err));
         } else {
-          Alert.alert('File Picker Error');
-          customLog(JSON.stringify(err));
           throw err;
         }
       }

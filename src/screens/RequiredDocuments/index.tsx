@@ -14,7 +14,6 @@ import { Input } from '@/interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
-import { customLog } from '@/utils/generalFunc';
 import { useRoute } from '@react-navigation/native';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -120,7 +119,7 @@ export default function RequiredDocuments() {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      customLog('error getDocument128', error);
+      console.log('error getDocument128', error);
     }
   }, []);
 
@@ -144,8 +143,6 @@ export default function RequiredDocuments() {
       const response = await dispatch(
         postUploadFiles({ files: [file], from: 'customerDetail' })
       ).unwrap();
-      customLog(response, 'responseuploadfiles');
-
       if (!response[0]) {
         throw response;
       }
@@ -160,9 +157,6 @@ export default function RequiredDocuments() {
       const projectDocResponse = await dispatch(
         postProjectDocByprojectId({ payload: payloadProjectDoc })
       ).unwrap();
-
-      customLog(projectDocResponse, 'projectDocResponse138');
-
       setDocLoadingState((curr) => {
         return {
           ...curr,
@@ -175,7 +169,6 @@ export default function RequiredDocuments() {
         };
       });
     } catch (error) {
-      customLog(error, 'erroruploadfiles requiredocuments161');
       let messsage = 'Upload error';
       if (error.message) {
         messsage = error.message;

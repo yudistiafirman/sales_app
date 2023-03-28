@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
-import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import {
   setSearchProject,
@@ -66,8 +65,6 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
 
   const fetchDebounce = useMemo(() => {
     return debounce((searchQuery: string) => {
-      customLog('jalan di second line60', searchQuery);
-
       dispatch(getProjectsByUserThunk({ search: searchQuery }))
         .unwrap()
         .then((response: projectResponseType[]) => {

@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { postDeposit, postSchedule, postSph } from '@/actions/OrderActions';
 import { postSphResponseType, sphOrderPayloadType } from '@/interfaces';
-import { customLog } from '@/utils/generalFunc';
 import { CreateDeposit } from '@/models/CreateDeposit';
 import { CreateSchedule } from '@/models/CreateSchedule';
 
@@ -26,11 +25,6 @@ export const postOrderSph = createAsyncThunk<
 
     return data.data;
   } catch (error) {
-    customLog(error, 'plainerrorpostOrderSph');
-
-    customLog(error.message, 'erroratpostOrderSph');
-
-    customLog(error?.response?.data, 'error at', 'common/postOrderSph');
     return rejectWithValue(error.message);
   }
 });
