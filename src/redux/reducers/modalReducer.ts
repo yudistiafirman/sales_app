@@ -13,6 +13,7 @@ type popUpOptions = {
   primaryBtnAction?: () => void;
   isPrimaryButtonLoading?: boolean;
   isOutlineButtonLoading?: boolean;
+  unRenderBackButton?: boolean;
 };
 
 type initialStateType = {
@@ -33,6 +34,7 @@ const initialPopupData: popUpOptions = {
   highlightedText: '',
   isPrimaryButtonLoading: false,
   isOutlineButtonLoading: false,
+  unRenderBackButton: false,
 };
 
 const initialState: initialStateType = {
@@ -49,6 +51,7 @@ const initialState: initialStateType = {
     primaryBtnTitle: '',
     isPrimaryButtonLoading: false,
     isOutlineButtonLoading: false,
+    unRenderBackButton: false,
   },
 };
 
@@ -93,6 +96,9 @@ export const modalSlice = createSlice({
       }
       if (payload.primaryBtnAction) {
         state.popUpOptions.primaryBtnAction = payload.primaryBtnAction;
+      }
+      if (payload.unRenderBackButton) {
+        state.popUpOptions.unRenderBackButton = payload.unRenderBackButton;
       }
       if (typeof payload.isPrimaryButtonLoading === 'boolean') {
         state.popUpOptions.isPrimaryButtonLoading =
