@@ -64,7 +64,9 @@ const hasLocationPermission = async () => {
       }
     }
   } catch (err) {
-    console.warn(err);
+    const errorMessage =
+      err.message || 'Terjadi error dalam request location permission';
+    Alert.alert(errorMessage);
     return;
   }
 };

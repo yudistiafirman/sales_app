@@ -47,7 +47,9 @@ export const hasCameraPermissions = async () => {
       }
     }
   } catch (err) {
-    console.warn(err);
+    const errorMessage =
+      err.message || 'Terjadi error dalam request camera permission';
+    Alert.alert(errorMessage);
     return;
   }
 };

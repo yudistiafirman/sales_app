@@ -324,7 +324,7 @@ export default function FifthStep() {
       dispatch(
         openPopUp({
           popUpType: 'error',
-          popUpText: error || 'Error Menyimpan SPH',
+          popUpText: messageError || 'Error Menyimpan SPH',
           outsideClickClosePopUp: true,
         })
       );

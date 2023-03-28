@@ -171,7 +171,8 @@ export default function BillingModal({
       dispatch(
         openPopUp({
           popUpType: 'error',
-          popUpText: error.message,
+          popUpText:
+            error.message || 'Terjadi error saat update alamat pembayaran',
           outsideClickClosePopUp: true,
         })
       );

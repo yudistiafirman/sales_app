@@ -42,6 +42,7 @@ import {
   resetSPHState,
 } from '@/redux/reducers/SphReducer';
 import { bStorage } from '@/actions';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
@@ -217,7 +218,15 @@ const Transaction = () => {
         type: selectedType,
       });
     } catch (error) {
-      console.log(error);
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText:
+            error.message ||
+            `Terjadi error saat pengambilan ${selectedType} data  `,
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   };
 

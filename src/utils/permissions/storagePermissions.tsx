@@ -55,7 +55,9 @@ const checkReadPermissions = async () => {
       }
     }
   } catch (err) {
-    console.warn(err);
+    const errorMessage =
+      err.message || 'Terjadi error dalam request external storage permission';
+    Alert.alert(errorMessage);
     return;
   }
 };
