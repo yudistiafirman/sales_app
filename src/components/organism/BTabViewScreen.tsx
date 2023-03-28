@@ -7,7 +7,6 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import resScale from '@/utils/resScale';
 import { layout } from '@/constants';
 import BTabSections from './TabSections';
-import { customLog } from '@/utils/generalFunc';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type BTabViewScreenType = {
@@ -32,7 +31,6 @@ export default function BTabViewScreen({
   const [indexRoute, setIndexRoute] = useState(0);
 
   const [routes] = useMemo(() => {
-    customLog('routes , usememo');
     const routesArray = tabToRender.map((key) => {
       return {
         key: key.tabTitle,
@@ -45,8 +43,6 @@ export default function BTabViewScreen({
   }, [tabToRender]);
 
   const sceneData = useMemo(() => {
-    customLog('sceneData , usememo');
-
     const sceneMapData: { [key: string]: () => JSX.Element | null } =
       tabToRender.reduce((acc: AccumulatorReduceType, curr) => {
         acc[curr.tabTitle] = () => {

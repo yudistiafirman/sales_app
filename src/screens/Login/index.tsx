@@ -33,7 +33,6 @@ const Login = () => {
 
   const { errorMessage, loading, phoneNumber } = loginState;
   const disableBtn = phoneNumber.length < 6;
-
   useCustomHeaderLeft({
     customHeaderLeft: (
       <Image

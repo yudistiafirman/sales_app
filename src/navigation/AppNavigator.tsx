@@ -23,7 +23,6 @@ import OperationStack from './Operation/Stack';
 import SalesStack from './Sales/Stack';
 import HunterAndFarmers from '@/screens/HunterAndFarmers';
 import { useAsyncConfigSetup } from '@/hooks';
-import { customLog } from '@/utils/generalFunc';
 import SalesTabs from './tabs/SalesTabs';
 import SecurityTabs from './tabs/SecurityTabs';
 import SalesHeaderRight from './Sales/HeaderRight';
@@ -48,7 +47,7 @@ const RootScreen = (
               options={{
                 headerTitleAlign: 'center',
                 headerTitle: OPSMANAGER_TITLE,
-                headerRight: () => (SalesHeaderRight(colors.text.darker)),
+                headerRight: () => SalesHeaderRight(colors.text.darker),
                 headerShown: true,
               }}
             />
@@ -132,7 +131,7 @@ const RootScreen = (
           </>
         );
       default:
-        return <View />
+        return <View />;
     }
   } else {
     return (
@@ -167,15 +166,8 @@ const RootScreen = (
 };
 
 function AppNavigator() {
-  const {
-    isLoading,
-    userData,
-    isSignout,
-    hunterScreen,
-    enable_hunter_farmer,
-  } = useAsyncConfigSetup();
-
-  customLog('state hunterfarmer: ', hunterScreen, enable_hunter_farmer);
+  const { isLoading, userData, isSignout, hunterScreen, enable_hunter_farmer } =
+    useAsyncConfigSetup();
   if (isLoading) {
     return <Splash />;
   } else {

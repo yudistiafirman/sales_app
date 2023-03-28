@@ -25,7 +25,6 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { CALENDAR } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { customLog } from '@/utils/generalFunc';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 
 export default function CalendarScreen() {
@@ -68,7 +67,6 @@ export default function CalendarScreen() {
       dispatch(getVisitationsList({ month, year }))
         .unwrap()
         .then((data: visitationListResponse[]) => {
-          customLog(JSON.stringify(data), 'visitationListResponse69');
           const visitationData = data ? data : [];
           const visitMapped = visitationData.reduce(
             (
@@ -113,8 +111,6 @@ export default function CalendarScreen() {
           dispatch(setMarkedData(newMarkedDate));
         })
         .catch((error: any) => {
-          customLog(error, 'error106calendar');
-
           dispatch(
             openPopUp({
               popUpType: 'error',
@@ -130,14 +126,8 @@ export default function CalendarScreen() {
   const onDayPress = useCallback(
     (day: DateData) => {
       const custData = visitationCalendarMapped[day.dateString] || [];
-
       setCustomerDatas(custData);
-      customLog('iniiiwkwkw 1, ', custData);
-
       const newMarkedDate = { ...markedDate };
-
-      customLog('diaa 1', newMarkedDate);
-
       for (const date of Object.keys(newMarkedDate)) {
         // if (newMarkedDate[date].selected && newMarkedDate[date].marked) {
         //   newMarkedDate[date].selected = false;
@@ -154,8 +144,6 @@ export default function CalendarScreen() {
         ...newMarkedDate[day.dateString],
         selected: true,
       };
-
-      customLog('diaa 2', newMarkedDate);
       dispatch(setMarkedData(newMarkedDate));
     },
     [markedDate, visitationCalendarMapped, dispatch]
@@ -180,7 +168,6 @@ export default function CalendarScreen() {
           ).toLocaleString()} ${new Date(key).getFullYear()}`;
           let newDate = new Date(key);
           day = newDate.toLocaleDateString();
-          customLog(err, 'error date parse');
         }
 
         selectedDate = {

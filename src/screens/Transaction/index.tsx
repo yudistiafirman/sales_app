@@ -35,7 +35,6 @@ import {
   getVisitationOrderByID,
 } from '@/actions/OrderActions';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -117,7 +116,6 @@ const Transaction = () => {
   }, []);
 
   const getOneOrder = async (id: string) => {
-    customLog('ini id', id);
     try {
       let data;
       if (selectedType === 'SPH') {
@@ -219,7 +217,7 @@ const Transaction = () => {
         type: selectedType,
       });
     } catch (error) {
-      customLog(error);
+      console.log(error);
     }
   };
 

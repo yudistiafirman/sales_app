@@ -36,7 +36,6 @@ import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import Pdf from 'react-native-pdf';
 import { LocalFileType } from '@/interfaces/LocalFileType';
-import { customLog } from '@/utils/generalFunc';
 import {
   resetAllStepperFocused,
   updateDataVisitation,
@@ -140,7 +139,6 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
     else DeviceEventEmitter.emit('Camera.preview', picker);
     let images: any[] = [];
     if (navigateTo) {
-      customLog('screen::: ', navigateTo);
       switch (navigateTo) {
         case CREATE_VISITATION:
           dispatch(

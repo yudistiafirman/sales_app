@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { SphContextInterface, SphStateInterface } from '@/interfaces';
-import { customLog } from '@/utils/generalFunc';
 
 const initialState: SphStateInterface = {
   selectedCompany: null,
@@ -24,7 +23,7 @@ const initialState: SphStateInterface = {
 };
 function initialFunction(key: keyof SphStateInterface) {
   return (data: any) => {
-    customLog(key, data);
+    console.log(key, data);
   };
 }
 
@@ -32,7 +31,7 @@ export const SphContext = React.createContext<SphContextInterface>([
   initialState,
   initialFunction,
   (index) => {
-    customLog(index);
+    console.log(index);
   },
   0,
 ]);

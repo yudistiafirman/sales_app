@@ -5,7 +5,7 @@ import { UserModel } from '@/models/User';
 import { bStorage } from '@/actions';
 import { storageKey } from '@/constants';
 import { signout } from '@/redux/reducers/authReducer';
-import { customLog, getSuccessMsgFromAPI } from '@/utils/generalFunc';
+import { getSuccessMsgFromAPI } from '@/utils/generalFunc';
 import perf from '@react-native-firebase/perf';
 import { openSnackbar } from '@/redux/reducers/snackbarReducer';
 import Config from 'react-native-config';
@@ -96,9 +96,7 @@ export const getOptions = async (
     options.timeoutInterval = timeout;
     return options;
   } catch (error) {
-    customLog('====================================');
-    customLog(error, 'error/getOptions');
-    customLog('====================================');
+    console.log(error, 'error/getOptions');
   }
 };
 
@@ -131,7 +129,7 @@ instance.interceptors.response.use(
         }
         metric?.setResponsePayloadSize(contentLength);
       } catch (err) {
-        customLog(err);
+        console.log(err);
       }
     }
     await metric?.stop();
@@ -218,9 +216,9 @@ instance.interceptors.response.use(
         }
         errorStatus = error.response.status;
       } else if (error.request) {
-        customLog(error.request);
+        console.log(error.request);
       } else {
-        customLog('Error', error.message);
+        console.log('Error', error.message);
       }
       const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
       const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;

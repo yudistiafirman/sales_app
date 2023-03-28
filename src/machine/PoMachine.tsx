@@ -15,7 +15,7 @@ import {
 } from '@/interfaces/CreatePurchaseOrder';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import { PO } from '@/navigation/ScreenNames';
-import { customLog, uniqueStringGenerator } from '@/utils/generalFunc';
+import { uniqueStringGenerator } from '@/utils/generalFunc';
 import { assign, createMachine } from 'xstate';
 
 const purchaseOrderInitialState = {
@@ -35,7 +35,7 @@ const purchaseOrderInitialState = {
   postPoPayload: {} as PostPoPayload,
   isUseExistingFiles: false,
   isLoadingPostPurchaseOrder: false,
-  isFirstTimeOpenCamera: true
+  isFirstTimeOpenCamera: true,
 };
 
 const POMachine =
@@ -85,10 +85,10 @@ const POMachine =
           | { type: 'goToThirdStep' }
           | { type: 'goBackToSecondStep' }
           | {
-            type: 'uploading';
-            idx: number;
-            value: any;
-          }
+              type: 'uploading';
+              idx: number;
+              value: any;
+            }
           | { type: 'selectProduct'; value: number }
           | { type: 'onChangeQuantity'; value: string; index: number }
           | { type: 'retryGettingSphList' }
@@ -153,7 +153,7 @@ const POMachine =
 
                 addMoreImages: {
                   target: '#purchase order.openCamera',
-                  actions: "assignSecondTimeUsingCamera"
+                  actions: 'assignSecondTimeUsingCamera',
                 },
 
                 goToSecondStep: {
@@ -168,10 +168,10 @@ const POMachine =
                 backToAddPo: 'addPO',
 
                 addChoosenSph: {
-                  target: "addPO",
+                  target: 'addPO',
                   actions: 'closeModalSph',
-                }
-              }
+                },
+              },
             },
           },
 
@@ -182,14 +182,14 @@ const POMachine =
             },
 
             goToSecondStepFromStepOnePressed: {
-              target: "SecondStep",
-              actions: "assignPressedStep"
+              target: 'SecondStep',
+              actions: 'assignPressedStep',
             },
 
             goToThirdFromStepOnePressed: {
-              target: "ThirdStep",
-              actions: "assignPressedStep"
-            }
+              target: 'ThirdStep',
+              actions: 'assignPressedStep',
+            },
           },
         },
 
@@ -241,7 +241,7 @@ const POMachine =
                   },
                 ],
               },
-            }
+            },
           },
 
           initial: 'idle',
@@ -258,19 +258,19 @@ const POMachine =
             },
 
             backToBeginningStateFromSecondStep: {
-              target: "checkSavedPo",
-              actions: "resetPoState"
+              target: 'checkSavedPo',
+              actions: 'resetPoState',
             },
 
             goToStepOneFromStepTwoPressed: {
-              target: "firstStep",
-              actions: "assignPressedStep"
+              target: 'firstStep',
+              actions: 'assignPressedStep',
             },
 
             goToStepThreeFromStepTwoPressed: {
-              target: "ThirdStep",
-              actions: "assignPressedStep"
-            }
+              target: 'ThirdStep',
+              actions: 'assignPressedStep',
+            },
           },
         },
 
@@ -286,17 +286,17 @@ const POMachine =
               actions: 'assignPoPayload',
             },
 
-            backToBeginningStateFromThirdStep: "checkSavedPo",
+            backToBeginningStateFromThirdStep: 'checkSavedPo',
 
             goToStepOneFromStepThreePressed: {
-              target: "firstStep",
-              actions: "assignPressedStep"
+              target: 'firstStep',
+              actions: 'assignPressedStep',
             },
 
             goToStepTwoFromStepThreePressed: {
-              target: "SecondStep",
-              actions: "assignPressedStep"
-            }
+              target: 'SecondStep',
+              actions: 'assignPressedStep',
+            },
           },
 
           states: {
@@ -328,7 +328,7 @@ const POMachine =
             },
 
             backFromCamera: 'firstStep.addPO',
-            backToSavedPoFromCamera: "checkSavedPo"
+            backToSavedPoFromCamera: 'checkSavedPo',
           },
 
           entry: 'enableCameraScreen',
@@ -426,10 +426,10 @@ const POMachine =
               actions: 'resetPoState',
             },
           },
-        }
+        },
       },
 
-      initial: "checkSavedPo",
+      initial: 'checkSavedPo',
     },
     {
       services: {
@@ -438,7 +438,7 @@ const POMachine =
             const savedPO = await bStorage.getItem(PO);
             return savedPO;
           } catch (error) {
-            customLog(error);
+            console.log(error);
           }
         },
         getSphDocument: async (context) => {
@@ -517,8 +517,8 @@ const POMachine =
         }),
         assignSecondTimeUsingCamera: assign(() => {
           return {
-            isFirstTimeOpenCamera: false
-          }
+            isFirstTimeOpenCamera: false,
+          };
         }),
         assignPhotoToPayload: assign((context, event) => {
           return {
@@ -589,7 +589,7 @@ const POMachine =
         increaseStep: assign((context, _event) => {
           return {
             currentStep: context.currentStep + 1,
-            stepsDone: [...context.stepsDone, context.currentStep]
+            stepsDone: [...context.stepsDone, context.currentStep],
           };
         }),
         decreaseStep: assign((context, _event) => {
@@ -605,8 +605,8 @@ const POMachine =
         }),
         assignPressedStep: assign((context, event) => {
           return {
-            currentStep: event.value
-          }
+            currentStep: event.value,
+          };
         }),
         setNewStep: assign((context) => {
           const newStep = context.currentStep === 0 ? 1 : 2;
@@ -738,25 +738,26 @@ const POMachine =
               poProducts:
                 context.selectedProducts.length > 0
                   ? context.selectedProducts?.map((val) => {
-                    return {
-                      requestedProductId: val.id,
-                      requestedQuantity: val.quantity,
-                    };
-                  })
+                      return {
+                        requestedProductId: val.id,
+                        requestedQuantity: val.quantity,
+                      };
+                    })
                   : [],
               totalPrice: totalPrice,
             },
           };
         }),
         assignSelectedProducts: assign((context) => {
+          const productsData = [
+            ...context.choosenSphDataFromModal.QuotationRequests[0].products,
+          ];
 
-          const productsData = [...context.choosenSphDataFromModal.QuotationRequests[0].products]
-
-          const newSelectedProducts = productsData.length === 1 ? productsData : []
+          const newSelectedProducts =
+            productsData.length === 1 ? productsData : [];
 
           return {
-            selectedProducts:
-              newSelectedProducts
+            selectedProducts: newSelectedProducts,
           };
         }),
         assignNewQuantity: assign((context, event) => {

@@ -3,7 +3,6 @@ import {
   searchLocation,
   searchLocationById,
 } from '@/actions/CommonActions';
-import { customLog } from '@/utils/generalFunc';
 import Geolocation from 'react-native-geolocation-service';
 import { assign, createMachine, send } from 'xstate';
 
@@ -216,7 +215,7 @@ export const searchAreaMachine =
 
             return response.data.result;
           } catch (error) {
-            customLog(error);
+            console.log(error);
           }
         },
         getLocationByCoordinate: async (context, e) => {

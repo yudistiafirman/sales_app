@@ -35,7 +35,6 @@ import { SEARCH_AREA, SPH } from '@/navigation/ScreenNames';
 import { useKeyboardActive } from '@/hooks';
 import { TextInput } from 'react-native-paper';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { customLog } from '@/utils/generalFunc';
 import {
   setStepperFocused,
   updateBillingAddressAutoComplete,
@@ -150,7 +149,7 @@ export default function SecondStep() {
         setIsMapLoading(() => false);
       } catch (error) {
         setIsMapLoading(() => false);
-        customLog(JSON.stringify(error), 'onChangeRegionerror');
+        console.log(JSON.stringify(error), 'onChangeRegionerror');
       }
     },
     []
