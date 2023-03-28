@@ -121,7 +121,7 @@ const styles: Styles = {
     borderColor: colors.lightGray,
   },
   checkboxText: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
   },
   flexRow: {
@@ -721,7 +721,11 @@ const renderInput = (
 
   if (type === 'switch') {
     return (
-      <View style={Platform.OS !== 'android' && { zIndex: -1, marginTop: layout.pad.md }}>
+      <View
+        style={
+          Platform.OS !== 'android' && { zIndex: -1, marginTop: layout.pad.md }
+        }
+      >
         <BSwitch
           labelStyle={labelStyle}
           label={label}
@@ -759,19 +763,60 @@ const renderInput = (
     return (
       <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
         <View style={styles.flexRow}>
-          <View style={styles.checkboxText}>
-            <BLabel bold={titleBold} label={label} isRequired={isRequire} />
-          </View>
           <CheckBox
             disabled={checkbox?.disabled}
             value={checkbox?.value}
             onFillColor={colors.primary}
             onTintColor={colors.offCheckbox}
             onCheckColor={colors.primary}
-            tintColors={{ true: colors.primary, false: colors.offCheckbox }}
+            tintColors={{
+              true: colors.primary,
+              false: colors.offCheckbox,
+            }}
+            tintColor={colors.offCheckbox}
+            onCheckColor={colors.white}
+            onFillColor={colors.primary}
+            onTintColor={colors.primary}
+            boxType={'square'}
             onValueChange={checkbox?.onValueChange}
+            style={[
+              { marginStart: layout.pad.xs },
+              Platform.OS !== 'android' && {
+                height: resScale(20),
+                width: resScale(20),
+              },
+            ]}
           />
+          <View
+            style={[
+              styles.checkboxText,
+              { paddingEnd: layout.pad.md },
+              Platform.OS !== 'android' && {
+                marginStart: layout.pad.md,
+                marginEnd: layout.pad.xl,
+              },
+            ]}
+          >
+            <BLabel
+              numberOfLines={1}
+              bold={titleBold}
+              label={label}
+              isRequired={isRequire}
+            />
+          </View>
         </View>
+        {isError && (
+          <BText
+            style={[
+              { fontSize: fonts.size.xs, marginStart: layout.pad.xl },
+              Platform.OS !== 'android' && { marginTop: layout.pad.md },
+            ]}
+            color="primary"
+            bold="400"
+          >
+            {customerErrorMsg}
+          </BText>
+        )}
       </View>
     );
   }

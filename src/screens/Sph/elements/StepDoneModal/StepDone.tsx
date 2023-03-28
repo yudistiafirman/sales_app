@@ -7,6 +7,7 @@ import {
   Share,
   Platform,
   Linking,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import Modal from 'react-native-modal';
@@ -51,43 +52,61 @@ type downloadType = {
   url?: string;
   title?: string;
   downloadPopup: () => void;
+  downloadError: () => void;
 };
 
 function Separator() {
   return <BSpacer size={'extraSmall'} />;
 }
 
-function downloadPdf({ url, title, downloadPopup }: downloadType) {
+function downloadPdf({
+  url,
+  title,
+  downloadPopup,
+  downloadError,
+}: downloadType) {
   if (!url) return null;
   let dirs = ReactNativeBlobUtil.fs.dirs;
   const downloadTitle = title
     ? `${title} berhasil di download`
     : 'PDF sph berhasil di download';
-  ReactNativeBlobUtil.config({
-    // add this option that makes response data to be stored as a file,
-    // this is much more performant.
-    fileCache: true,
-    path: dirs.DocumentDir,
-    addAndroidDownloads: {
-      useDownloadManager: true,
-      notification: true,
-      title: downloadTitle,
-      description: 'SPH PDF',
-      mediaScannable: true,
-    },
-  })
+  ReactNativeBlobUtil.config(
+    Platform.OS === 'android'
+      ? {
+          // add this option that makes response data to be stored as a file,
+          // this is much more performant.
+          fileCache: true,
+          path: dirs.DocumentDir,
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            title: downloadTitle,
+            description: 'SPH PDF',
+            mediaScannable: true,
+          },
+        }
+      : { fileCache: true }
+  )
     .fetch('GET', url, {
       //some headers ..
     })
     .then((res) => {
       // the temp file path
-      downloadPopup();
+      if (Platform.OS === 'android') {
+        downloadPopup();
+      } else {
+        Alert.alert('Gagal mendownload SPH');
+      }
     })
     .catch((err) => {
-      console.log(err, 'error download', url);
+      if (Platform.OS === 'android') {
+        downloadError();
+      } else {
+        Alert.alert('Gagal mendownload SPH');
+      }
     });
 }
-async function printRemotePDF(url?: string) {
+async function printRemotePDF(url?: string, printError: () => void) {
   try {
     if (!url) {
       throw 'error url missing';
@@ -96,7 +115,11 @@ async function printRemotePDF(url?: string) {
       filePath: url,
     });
   } catch (error) {
-    console.log(error, 'error print');
+    if (Platform.OS === 'android') {
+      printError();
+    } else {
+      Alert.alert('Gagal print SPH');
+    }
   }
 }
 
@@ -153,7 +176,10 @@ export default function StepDone({
       hideModalContentWhileAnimating={true}
       coverScreen={true}
       isVisible={isModalVisible}
-      style={styles.modal}
+      style={[
+        styles.modal,
+        Platform.OS !== 'android' && { marginTop: layout.pad.xxl },
+      ]}
     >
       <View style={styles.modalStyle}>
         <View style={styles.modalHeader}>
@@ -230,7 +256,17 @@ export default function StepDone({
         <View style={styles.modalFooter}>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() => printRemotePDF(sphResponse?.thermalLink)}
+            onPress={() =>
+              printRemotePDF(sphResponse?.thermalLink, () => {
+                dispatch(
+                  openPopUp({
+                    popUpText: 'Gagal print SPH',
+                    popUpType: 'error',
+                    outsideClickClosePopUp: true,
+                  })
+                );
+              })
+            }
           >
             <MaterialCommunityIcons
               name="printer"
@@ -261,6 +297,15 @@ export default function StepDone({
                     openPopUp({
                       popUpText: 'Berhasil mendownload SPH',
                       popUpType: 'success',
+                      outsideClickClosePopUp: true,
+                    })
+                  );
+                },
+                downloadError: () => {
+                  dispatch(
+                    openPopUp({
+                      popUpText: 'Gagal mendownload SPH',
+                      popUpType: 'error',
                       outsideClickClosePopUp: true,
                     })
                   );

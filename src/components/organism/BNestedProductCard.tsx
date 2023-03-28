@@ -189,6 +189,7 @@ export default function BNestedProductCard({
                   <RadioButton
                     uncheckedColor={colors.border.altGrey}
                     value={item.id}
+                    color={colors.primary}
                     status={item.isSelected ? 'checked' : 'unchecked'}
                     onPress={() => {
                       if (onSelect) {
