@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { closeSnackbar } from '@/redux/reducers/snackbarReducer';
 import { resScale } from '@/utils';
-import { customLog } from '@/utils/generalFunc';
 
 export default function SnackbarGlobal() {
   //   const [visible, setVisible] = useState(true);
@@ -20,10 +19,7 @@ export default function SnackbarGlobal() {
   const onDismissSnackBar = () => {
     dispatch(closeSnackbar());
   };
-  customLog(isSnackbarVisible, 'isSnackbarVisible');
   //#D7F6D8 green
-  customLog(isSuccess, 'isSuccess');
-
   return (
     // <View style={styles.container}>
     <Snackbar

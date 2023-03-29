@@ -2,8 +2,6 @@ import { assign, createMachine } from 'xstate';
 import { hasLocationPermission } from '@/utils/permissions';
 import Geolocation from 'react-native-geolocation-service';
 import { getLocationCoordinates } from '../priceMachine';
-import { customLog } from '@/utils/generalFunc';
-// import { send } from 'xstate/lib/actions';
 
 interface IContext {
   PostalId: any;
@@ -108,7 +106,6 @@ const deviceLocationMachine =
             const position = await new Promise((resolve, error) => {
               return Geolocation.getCurrentPosition(resolve, error, opt);
             });
-            customLog(position, 'getCurrentPosition112');
             const { coords } = position;
             const { latitude, longitude } = coords;
 
@@ -118,9 +115,7 @@ const deviceLocationMachine =
               latitude,
               'BP-LEGOK'
             );
-
             const { result } = data;
-            customLog(result, 'loh loh');
             if (!result) {
               throw data;
             }
@@ -136,7 +131,7 @@ const deviceLocationMachine =
               },
             };
           } catch (error) {
-            customLog(error, 'deviceLocationMachince');
+            console.log(error, 'deviceLocationMachince');
           }
         },
       },

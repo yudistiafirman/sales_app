@@ -15,7 +15,6 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_DO } from '@/navigation/ScreenNames';
-import { customLog } from '@/utils/generalFunc';
 import { resScale } from '@/utils';
 import font from '@/constants/fonts';
 
@@ -57,7 +56,7 @@ const CreateDO = () => {
         items: VEHICLE_LIST,
         placeholder: 'Pilih Nomor Plat',
         onChange: (value: any) => {
-          customLog(value);
+          console.log(value);
         },
       },
     },
@@ -71,7 +70,7 @@ const CreateDO = () => {
         items: DRIVER_LIST,
         placeholder: 'Pilih Nama Driver',
         onChange: (value: any) => {
-          customLog(value);
+          console.log(value);
         },
       },
     },

@@ -30,7 +30,6 @@ import { layout } from '@/constants';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
-import { customLog } from '@/utils/generalFunc';
 import {
   resetStepperFocused,
   resetVisitationState,
@@ -128,7 +127,6 @@ const CreateVisitation = () => {
     route?.params?.existingVisitation;
 
   function populateData(existingData: visitationListResponse) {
-    customLog(JSON.stringify(existingData), 'difunction');
     const { project } = existingData;
     const { company, PIC: picList, mainPic } = project;
     dispatch(updateDataVisitation({ type: 'projectId', value: project.id }));

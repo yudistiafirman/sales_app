@@ -30,7 +30,6 @@ import ReactNativeBlobUtil from 'react-native-blob-util';
 import RNPrint from 'react-native-print';
 import { useDispatch, useSelector } from 'react-redux';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import { customLog } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
 import { resetSPHState } from '@/redux/reducers/SphReducer';
 
@@ -98,7 +97,6 @@ function downloadPdf({
       } else {
         Alert.alert('Gagal mendownload SPH');
       }
-      customLog('The file saved to ', res.path());
     })
     .catch((err) => {
       if (Platform.OS === 'android') {
@@ -106,7 +104,6 @@ function downloadPdf({
       } else {
         Alert.alert('Gagal mendownload SPH');
       }
-      customLog(err, 'error download', url);
     });
 }
 async function printRemotePDF(url?: string, printError: () => void) {
@@ -123,7 +120,6 @@ async function printRemotePDF(url?: string, printError: () => void) {
     } else {
       Alert.alert('Gagal print SPH');
     }
-    customLog(error, 'error print');
   }
 }
 
@@ -169,7 +165,7 @@ export default function StepDone({
         )}`,
       });
     } catch (error) {
-      customLog(error, 'errorsharefunc');
+      console.log(error, 'errorsharefunc');
     }
   };
 

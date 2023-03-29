@@ -86,10 +86,6 @@ export const beautifyPhoneNumber = (text: string) => {
   return result;
 };
 
-export const customLog = (message?: any, ...optionalParams: any[]) => {
-  if (isDevelopment()) console.log(message, optionalParams);
-};
-
 export const isDevelopment = () => {
   if (flavor === 'development' || (Platform.OS !== 'android' && __DEV__)) {
     return true;

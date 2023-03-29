@@ -30,7 +30,6 @@ import {
   SPH,
 } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { customLog } from '@/utils/generalFunc';
 import { BGallery, PopUpQuestion } from '@/components';
 import {
   deleteImagesVisitation,
@@ -197,7 +196,7 @@ const Fourth = () => {
 
   const removeImage = (pos: number) => {
     dispatch(deleteImage({ pos, source: CREATE_VISITATION }));
-    dispatch(deleteImagesVisitation({ value: pos + 1 }))
+    dispatch(deleteImagesVisitation({ value: pos + 1 }));
   };
 
   useEffect(() => {
@@ -232,7 +231,6 @@ const Fourth = () => {
     async (type: 'VISIT' | 'SPH' | 'REJECTED' | '') => {
       try {
         let payload: payloadPostType = payloadMapper(visitationData, type);
-        customLog(JSON.stringify(payload), 'payload216', uploadedFilesResponse);
         const visitationMethod = {
           POST: postVisitation,
           PUT: putVisitationFlow,
@@ -281,9 +279,6 @@ const Fourth = () => {
           const response = await dispatch(
             visitationMethod[methodStr](payloadData)
           ).unwrap();
-
-          customLog(response, 'response242', type);
-
           setIsLastStepVisible(false);
           if (type === 'SPH') {
             navigation.dispatch(
@@ -295,7 +290,6 @@ const Fourth = () => {
             navigation.goBack();
           }
         } else {
-          customLog(uploadedFilesResponse, 'iniuploadfileresponse');
           payload.files = uploadedFilesResponse;
           const payloadData: {
             payload: payloadPostType;
@@ -309,9 +303,6 @@ const Fourth = () => {
           const response = await dispatch(
             visitationMethod[methodStr](payloadData)
           ).unwrap();
-
-          customLog(response, 'response258');
-
           setIsLastStepVisible(false);
           if (type === 'SPH') {
             navigation.dispatch(
@@ -334,7 +325,6 @@ const Fourth = () => {
           })
         );
       } catch (error: any) {
-        customLog(error, 'error271fourth');
         const message = error.message || 'Error creating visitation';
         dispatch(
           openPopUp({

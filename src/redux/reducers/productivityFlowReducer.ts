@@ -6,7 +6,6 @@ import {
 } from '../async-thunks/productivityFlowThunks';
 import { visitationListResponse, customerDataInterface } from '@/interfaces';
 import { MarkedDates } from 'react-native-calendars/src/types';
-import { customLog } from '@/utils/generalFunc';
 
 type initialStateType = {
   visitationList: visitationListResponse[];
@@ -47,7 +46,6 @@ export const productivityFlowSlice = createSlice({
     });
     builder.addCase(getVisitationsList.rejected, (state, { payload }) => {
       state.isVisitationLoading = false;
-      customLog(payload, 'error at reducer', 'getVisitationsList.rejected');
       //   state.visitationList = [];
     });
     builder.addCase(postVisitation.pending, (state) => {

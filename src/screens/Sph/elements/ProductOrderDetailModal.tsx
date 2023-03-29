@@ -24,7 +24,6 @@ import {
 import formatCurrency from '@/utils/formatCurrency';
 import { TextInput } from 'react-native-paper';
 import calcTrips from '@/utils/calcTrips';
-import { customLog } from '@/utils/generalFunc';
 
 type ProductCartModalType = {
   productData: ProductDataInterface;
@@ -56,8 +55,6 @@ export default function ProductCartModal({
 }: ProductCartModalType) {
   useEffect(() => {
     setDetailOrder(prevData);
-    customLog(JSON.stringify(productData), 'productData53');
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -71,10 +68,7 @@ export default function ProductCartModal({
   }, [detailOrder.volume]);
   const totalPrice =
     +detailOrder.volume * +detailOrder.sellPrice + (calcPrice ? calcPrice : 0);
-  customLog(totalPrice, 'totalPrice75', detailOrder, calcPrice);
-
   const distanceCeil = distance ? Math.ceil(distance / 1000) : 0;
-
   function getAddPrice(): {
     delivery: distanceDeliverType;
     distance: distanceDeliverType;
@@ -200,7 +194,12 @@ export default function ProductCartModal({
                 value={detailOrder.volume}
                 keyboardType="numeric"
                 returnKeyType="next"
-                right={<TextInput.Icon forceTextInputFocus={false} icon={() => TextIcon('m³')} />}
+                right={
+                  <TextInput.Icon
+                    forceTextInputFocus={false}
+                    icon={() => TextIcon('m³')}
+                  />
+                }
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
               />
@@ -221,8 +220,18 @@ export default function ProductCartModal({
                 }}
                 value={detailOrder.sellPrice}
                 keyboardType="numeric"
-                left={<TextInput.Icon forceTextInputFocus={false} icon={() => TextIcon('IDR')} />}
-                right={<TextInput.Icon forceTextInputFocus={false} icon={() => TextIcon('/m³')} />}
+                left={
+                  <TextInput.Icon
+                    forceTextInputFocus={false}
+                    icon={() => TextIcon('IDR')}
+                  />
+                }
+                right={
+                  <TextInput.Icon
+                    forceTextInputFocus={false}
+                    icon={() => TextIcon('/m³')}
+                  />
+                }
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
               />
