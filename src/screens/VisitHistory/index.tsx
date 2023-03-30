@@ -61,7 +61,7 @@ const VisitHistory = () => {
     <View style={styles.container}>
       <LocationText
         locationAddress={
-          selectedVisitationByIdx?.project?.LocationAddress?.line1
+          selectedVisitationByIdx?.project?.ShippingAddress?.line1
         }
       />
       <BTabSections

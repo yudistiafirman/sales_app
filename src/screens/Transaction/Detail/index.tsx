@@ -55,6 +55,16 @@ function ListProduct(
     }${item?.Product?.displayName} ${
       item?.Product?.category ? item?.Product?.category?.name : ''
     }`;
+  } else if (item.RequestedProduct) {
+    displayName = `${
+      item?.RequestedProduct?.product?.category?.parent?.name
+        ? item?.RequestedProduct?.product?.category?.parent?.name + ' '
+        : ''
+    }${item?.RequestedProduct?.product?.displayName} ${
+      item?.RequestedProduct?.product?.category
+        ? item?.RequestedProduct?.product?.category?.name
+        : ''
+    }`;
   } else {
     displayName = `${
       item?.category?.parent ? item?.category?.parent?.name + ' ' : ''
@@ -177,41 +187,24 @@ const TransactionDetail = () => {
         {(data?.project?.LocationAddress || data?.project?.ShippingAddress) && (
           <BCompanyMapCard
             onPressLocation={() =>
-              selectedType === 'DO'
-                ? onPressLocation(
-                    data?.project?.ShippingAddress
-                      ? data?.project?.ShippingAddress.lat
-                      : null,
-                    data?.project?.ShippingAddress
-                      ? data?.project?.ShippingAddress.lon
-                      : null
-                  )
-                : onPressLocation(
-                    data?.project?.LocationAddress
-                      ? data?.project?.LocationAddress.lat
-                      : null,
-                    data?.project?.LocationAddress
-                      ? data?.project?.LocationAddress.lon
-                      : null
-                  )
+              onPressLocation(
+                data?.project?.ShippingAddress
+                  ? data?.project?.ShippingAddress.lat
+                  : null,
+                data?.project?.ShippingAddress
+                  ? data?.project?.ShippingAddress.lon
+                  : null
+              )
             }
             disabled={
-              selectedType === 'DO'
-                ? data?.project?.ShippingAddress?.lat === null ||
-                  data?.project?.ShippingAddress?.lon === null
-                : data?.project?.LocationAddress?.lat === null ||
-                  data?.project?.LocationAddress?.lon === null
+              data?.project?.ShippingAddress?.lat === null ||
+              data?.project?.ShippingAddress?.lon === null
             }
             companyName={data?.project?.displayName}
             location={
-              selectedType === 'DO'
-                ? data?.project?.ShippingAddress &&
-                  data?.project?.ShippingAddress.line1
-                  ? data?.project?.ShippingAddress.line1
-                  : '-'
-                : data?.project?.LocationAddress &&
-                  data?.project?.LocationAddress.line1
-                ? data?.project?.LocationAddress.line1
+              data?.project?.ShippingAddress &&
+              data?.project?.ShippingAddress.line1
+                ? data?.project?.ShippingAddress.line1
                 : '-'
             }
           />
@@ -326,7 +319,11 @@ const TransactionDetail = () => {
                       item,
                       index,
                       selectedType,
-                      selectedType === 'PO' ? data?.requestedQuantity : data?.quantity ? data?.quantity : data?.Schedule?.quantity
+                      selectedType === 'PO'
+                        ? data?.requestedQuantity
+                        : data?.quantity
+                        ? data?.quantity
+                        : data?.Schedule?.quantity
                     )
                   )}
                   <BSpacer size={'small'} />
