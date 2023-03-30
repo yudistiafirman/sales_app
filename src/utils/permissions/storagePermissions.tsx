@@ -18,7 +18,16 @@ const checkWritePermissions = async () => {
       return false;
     }
   } catch (err) {
-    console.warn(err);
+    const errorMessage =
+      err.message ||
+      'Terjadi error dalam meminta izin membuat file di external storage permission';
+    store.dispatch(
+      openPopUp({
+        popUpType: 'error',
+        popUpText: errorMessage,
+        outsideClickClosePopUp: true,
+      })
+    );
     return;
   }
 };

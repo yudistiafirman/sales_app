@@ -454,12 +454,14 @@ const POMachine =
         },
         uploadPhoto: async (context) => {
           try {
-            const photoFiles = context.poImages.map((photo) => {
-              return {
-                ...photo.file,
-                uri: photo?.file?.uri?.replace('file:', 'file://'),
-              };
-            });
+            const photoFiles = context.poImages
+              .filter((v) => v.file !== null)
+              .map((photo) => {
+                return {
+                  ...photo.file,
+                  uri: photo?.file?.uri?.replace('file:', 'file://'),
+                };
+              });
             const response = await uploadFileImage(
               photoFiles,
               'Purchase Order'

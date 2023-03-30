@@ -292,8 +292,8 @@ export const transactionMachine =
             } else if (_context.selectedType === 'DO') {
               response = await getAllDeliveryOrders(
                 'FINISHED',
-                _context.page.toString(),
-                _context.size.toString()
+                _context.size.toString(),
+                _context.page.toString()
               );
               response = response.data;
             } else {

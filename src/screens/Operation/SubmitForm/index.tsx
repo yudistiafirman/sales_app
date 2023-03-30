@@ -111,17 +111,20 @@ const SubmitForm = () => {
       dispatch(
         openPopUp({
           popUpType: 'loading',
+          popUpTitle: '',
           popUpText: 'Memperbarui Deliver Order',
           outsideClickClosePopUp: false,
         })
       );
       const payload = {} as updateDeliverOrder;
-      const photoFilestoUpload = photoFiles.map((photo) => {
-        return {
-          ...photo.file,
-          uri: photo?.file?.uri?.replace('file:', 'file://'),
-        };
-      });
+      const photoFilestoUpload = photoFiles
+        .filter((v) => v.file !== null)
+        .map((photo) => {
+          return {
+            ...photo.file,
+            uri: photo?.file?.uri?.replace('file:', 'file://'),
+          };
+        });
       const responseFiles = await uploadFileImage(
         photoFilestoUpload,
         'Update Deliver Order'
@@ -306,7 +309,9 @@ const SubmitForm = () => {
                   unit: `${projectDetails.requestedQuantity} m3`,
                   time: `${moment(projectDetails.deliveryTime).format(
                     'L'
-                  )} | ${moment(projectDetails.deliveryTime).format('hh:mm A')}`,
+                  )} | ${moment(projectDetails.deliveryTime).format(
+                    'hh:mm A'
+                  )}`,
                 }}
                 customStyle={{ backgroundColor: colors.tertiary }}
                 isRenderIcon={false}
@@ -321,12 +326,18 @@ const SubmitForm = () => {
             </View>
             <View style={style.flexFull}>
               {(operationType === ENTRY_TYPE.DRIVER ||
-                operationType === ENTRY_TYPE.RETURN) && <BSpacer size={'small'} />}
+                operationType === ENTRY_TYPE.RETURN) && (
+                <BSpacer size={'small'} />
+              )}
               {operationType === ENTRY_TYPE.DRIVER && (
                 <BForm titleBold="500" inputs={deliveryInputs} />
               )}
               {operationType === ENTRY_TYPE.RETURN && (
-                <BForm titleBold="500" inputs={returnInputs} spacer="extraSmall" />
+                <BForm
+                  titleBold="500"
+                  inputs={returnInputs}
+                  spacer="extraSmall"
+                />
               )}
             </View>
           </View>

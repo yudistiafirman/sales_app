@@ -30,7 +30,9 @@ export default function BCompanyMapCard({
           style={styles.iconStyle}
         />
         <View>
-          <Text style={styles.mapLocation}>{location}</Text>
+          <Text numberOfLines={2} style={styles.mapLocation}>
+            {location}
+          </Text>
           <BTouchableText
             disabled={disabled}
             title="Lihat Peta"

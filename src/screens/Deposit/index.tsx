@@ -120,12 +120,14 @@ const Deposit = () => {
       action.updateValue('step', nextStep);
     } else {
       try {
-        const photoFiles = values.stepOne?.deposit?.picts?.map((photo) => {
-          return {
-            ...photo.file,
-            uri: photo?.file?.uri?.replace('file:', 'file://'),
-          };
-        });
+        const photoFiles = values.stepOne?.deposit?.picts
+          ?.filter((v) => v.file !== null)
+          .map((photo) => {
+            return {
+              ...photo.file,
+              uri: photo?.file?.uri?.replace('file:', 'file://'),
+            };
+          });
         const uploadedImage = await dispatch(
           postUploadFiles({ files: photoFiles, from: 'deposit' })
         ).unwrap();

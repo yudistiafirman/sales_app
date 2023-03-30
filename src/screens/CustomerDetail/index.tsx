@@ -65,7 +65,6 @@ export default function CustomerDetail() {
       try {
         const response = await getProjectDetail(companyId);
         setCustomerData(response.data[0]);
-        console.log('iniii diaaa 1: ', JSON.stringify(response.data[0]));
         if (response.data && response.data.length > 0) {
           let region: any = {
             formattedAddress: response.data[0].billingAddress?.line1,
@@ -94,7 +93,6 @@ export default function CustomerDetail() {
       try {
         const response = await getProjectIndivualDetail(projectId);
         setCustomerData(response.data);
-        console.log('iniii diaaa 2: ', JSON.stringify(response.data));
         if (response.data) {
           let region: any = {
             formattedAddress: response.data.billingAddress?.line1,

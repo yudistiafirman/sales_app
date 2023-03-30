@@ -239,13 +239,14 @@ const Fourth = () => {
         const methodStr = isDataUpdate ? 'PUT' : 'POST';
 
         if (uploadedFilesResponse.length === 0) {
-          const photoFiles = visitationData.images?.map((photo) => {
-            return {
-              ...photo.file,
-              uri: photo?.file?.uri?.replace('file:', 'file://'),
-            };
-          });
-
+          const photoFiles = visitationData.images
+            ?.filter((v, i) => v.file !== null)
+            .map((photo) => {
+              return {
+                ...photo.file,
+                uri: photo?.file?.uri?.replace('file:', 'file://'),
+              };
+            });
           const data = await dispatch(
             postUploadFiles({ files: photoFiles, from: 'visitation' })
           ).unwrap();
