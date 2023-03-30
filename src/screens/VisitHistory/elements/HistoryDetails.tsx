@@ -20,7 +20,8 @@ const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
         bookingDate={details.dateVisit}
         finishDate={details.finishDate}
         rejectCategory={details.rejectCategory}
-        quatationId={details?.project?.quotationLetterId}
+        quatationId={details?.QuotationRequests && details?.QuotationRequests.length > 0 ? 
+          details?.QuotationRequests[0]?.QuotationLetter?.id : undefined}
         rejectNotes={details?.rejectNotes}
       />
       <BSpacer size="small" />

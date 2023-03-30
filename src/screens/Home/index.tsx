@@ -200,7 +200,7 @@ const Beranda = () => {
             const location = el.project?.LocationAddress.line1;
             return {
               id: el.id,
-              name: el.project?.Company?.displayName || '--',
+              name: el.project?.displayName || '--',
               location: location ? location : '-',
               time,
               status,

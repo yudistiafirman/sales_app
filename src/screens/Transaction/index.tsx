@@ -135,7 +135,7 @@ const Transaction = () => {
             deposit: data.DepositPurchaseOrders,
             DepositPurchaseOrders: undefined,
             address: data.project.Address,
-            products: data.QuotationLetter?.QuotationRequest?.products,
+            products: data.PoProducts,
             project: {
               ...data.project,
               Address: undefined,

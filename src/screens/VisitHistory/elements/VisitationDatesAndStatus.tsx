@@ -114,7 +114,7 @@ const VisitationDatesAndStatus = ({
           {finishDate !== null ? getLocalFinishDate() : 'Belum Selesai'}
         </BText>
       );
-    } else if (status === 'SPH') {
+    } else if (status === 'SPH' && quatationId !== undefined) {
       return (
         <BTouchableText
           onPress={getOneOrder}
