@@ -13,6 +13,7 @@ interface IContext {
     text: string;
     value: number | null;
   };
+  errorMessage: string | unknown;
 }
 
 interface IGuard {
@@ -21,7 +22,7 @@ interface IGuard {
 }
 
 const deviceLocationMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QTANwJYGMwBkD2mAhgC7p4B2AdOhADZgDEhsA1uuVAApgBOAtuliwy5ANoAGALqJQABzzDSFGSAAeiAIwA2LZQDMBvQCZxRrXq0B2cQFYALABoQAT0RGjeypZvjfNgJwadnriVpYAvuFOKBjY+ERKVMws3PyCwhQMEBRg1OSoeCy5MVi4BCQilMmpAkIiCOwFCSISkq0q8ooiKuoIAbqm4gAcGpb+RkF2dv5OrgjuNpRGPr5apnajvnqR0Wil8RUUVbS0eADukFk5eQVFlCVx5YnHpxcQDflPLVLtSCCd6ESPUQVjslDsWiGljs9hM4ksE1miBGlBWviMQ38IR0dgiURADzKzSOKAARngAK7kbAMVSwYgkXKEABmxF4AAoVgBKLJ7R7EqhkynUsC-OQKQHdP69IwIyhaOyhZZIhB6DTiJYrDQ2cwI4Y7Al8omHKgwYikDgHRIAETADPQtFgAHlyABhAAWhA4jGy5FyjUKxSNVsqZotUBDFFt9sdLo9XpgHyaJtaYv+EqB0sQekClChNhVao1y182t1JiGBsJkaSJ3Ol14PDwPEosloJGZzb492DXyOhDrbyTfbEPykHQzUtAvXV4g0qI0JhsQymHihRkLlnn4jVehsGgsE38UO2BvIeBQ8D+1ZHE66yizCAAtHYhiqn4t-F-vyENF-pmYVa9gK1B0GAd6Sg+06IHYG4uG42iUNoOhDHuNg+P4NjGEBsTGs81S8LUGTkBBmbQaqNiWKiNgmFYoyBLYBbwfMvheFqOp6HqYw2Dh+wji89YQKRU5qIg0K6EYWJ6DCIzoSMcFzNJEkjHu4i4uhsG4rx-Imj25JUtgwlQaJCDiCqipDEhOiQmhGFYTx+I3iBYbsBGI7RoQDrOm6nrekZJGPmZzHLv48rWah6F2aekRAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QTANwJYGMwBkD2mAhgC7p4B2AdOhADZgDEhsA1uuVAApgBOAtuliwy5ANoAGALqJQABzzDSFGSAAeiAIwA2LZQDMBvQCZxRrXq0B2cQFYALABoQAT0RGjeypZvjfNgJwadnriVpYAvuFOKBjY+ERKVMws3PyCwhQMEBRg1OSoeCy5MVi4BCQilMmpAkIiCOwFCSISkq0q8ooiKuoIAbqm4gAcGpb+RkF2dv5OrgjuNpRGPr5apnajvnqR0Wil8RUUVbS0eADukFk5eQVFlCVx5YnHpxcQDflPLVLtSCCd6ESPUQVjslDsWiGljs9hM4ksE1miBGlBWviMQ38IR0dgiURADzKzSOhBO50uvB4eB4lFktBIADNqXx7ntHsSkmS3h8mocxD8pB0FIDun9ejpdP5bCFLCNxBCNBokQhcUNKPKrP5IRobFDFTsCWyiXzKJTqQBxMDEUgcA6JBgAI0ImBYABU8DR6L85MKgWLEABaWXKuxDIyUfw2bT2GwGZb+SL48h4FDwP6Eu2in1dZT+hABjRmZUBga+Xz+IZTDHDewGjNfI6esBCnPkYEqozKia6bQ6IZ6GyD8SR4x1o2ZkmsGrpLP-X2z3oDyyomwmKyjQK2Gxd3xeFY68wI+GRsexY3PUmvSAtkW50C9aG6IxYvQwkaDkadlyIV9PkYD+VvFhXFT32BsqDNHhLWtdgoAnNs-gBP170QYJ-C8DZ5UVWUBwsZVYQjKMtBjOMAkTcIgA */
   createMachine(
     {
       id: 'deviceLocation',
@@ -32,6 +33,7 @@ const deviceLocationMachine =
       predictableActionArguments: true,
       tsTypes: {} as import('./deviceLocation.machine.typegen').Typegen0,
       context: {
+        errorMessage: '',
         formattedAddress: '',
         lat: 0,
         lon: 0,
@@ -48,6 +50,7 @@ const deviceLocationMachine =
             askingPermission: 'askPermission',
           },
         },
+
         askPermission: {
           invoke: {
             src: 'askingPermission',
@@ -57,9 +60,11 @@ const deviceLocationMachine =
             },
           },
         },
+
         allowed: {
           invoke: {
             src: 'getCurrentLocation',
+
             // onError: 'errorGettingLocation',
             // onDone: {
             //   target: 'currentLocationLoaded',
@@ -68,6 +73,17 @@ const deviceLocationMachine =
             onDone: {
               actions: ['assignCurrentLocationToContext', 'dispatchState'],
             },
+
+            onError: {
+              target: 'errorGettingLocation',
+              actions: 'assignError',
+            },
+          },
+        },
+
+        errorGettingLocation: {
+          on: {
+            backToidle: 'idle',
           },
         },
       },
@@ -81,6 +97,11 @@ const deviceLocationMachine =
       actions: {
         assignCurrentLocationToContext: assign((context, event) => {
           return event.data;
+        }),
+        assignError: assign((context, event) => {
+          return {
+            errorMessage: event.data.message,
+          };
         }),
       },
       services: {
@@ -131,7 +152,7 @@ const deviceLocationMachine =
               },
             };
           } catch (error) {
-            console.log(error, 'deviceLocationMachince');
+            throw new Error(error);
           }
         },
       },

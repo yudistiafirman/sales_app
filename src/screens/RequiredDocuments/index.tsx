@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
 import { useRoute } from '@react-navigation/native';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type documentType = {
@@ -119,7 +120,14 @@ export default function RequiredDocuments() {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log('error getDocument128', error);
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText:
+            error.message || 'Terjadi error saat pengambilan data document',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   }, []);
 

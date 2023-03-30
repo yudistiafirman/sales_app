@@ -5,7 +5,7 @@ import Operation from '@/screens/Operation';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import Login from '@/screens/Login';
 import Verification from '@/screens/Verification';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, storageKey } from '@/constants';
 import {
   LOGIN,
   LOGIN_TITLE,
@@ -18,6 +18,7 @@ import {
   DRIVER,
   BATCHER_TITLE,
   DRIVER_TITLE,
+  BLANK_SCREEN,
 } from './ScreenNames';
 import OperationStack from './Operation/Stack';
 import SalesStack from './Sales/Stack';
@@ -27,13 +28,15 @@ import SalesTabs from './tabs/SalesTabs';
 import SecurityTabs from './tabs/SecurityTabs';
 import SalesHeaderRight from './Sales/HeaderRight';
 import { UserModel } from '@/models/User';
-import { View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import BlankScreen from '@/screens/BlankScreen';
 const Stack = createNativeStackNavigator();
 
 const RootScreen = (
   userData: UserModel.DataSuccessLogin | null,
   isSignout: boolean,
-  userType?: ENTRY_TYPE
+  dispatch: AppDispatch
 ) => {
   if (userData !== null) {
     switch (userData.type) {
@@ -131,7 +134,16 @@ const RootScreen = (
           </>
         );
       default:
-        return <View />;
+        return (
+          <Stack.Screen
+            name={BLANK_SCREEN}
+            key={BLANK_SCREEN}
+            component={BlankScreen}
+            options={{
+              headerTitle: '',
+            }}
+          />
+        );
     }
   } else {
     return (
@@ -166,8 +178,8 @@ const RootScreen = (
 };
 
 function AppNavigator() {
-  const { isLoading, userData, isSignout, hunterScreen, enable_hunter_farmer } =
-    useAsyncConfigSetup();
+  const { isLoading, userData, isSignout } = useAsyncConfigSetup();
+  const dispatch = useDispatch<AppDispatch>();
   if (isLoading) {
     return <Splash />;
   } else {
@@ -186,7 +198,7 @@ function AppNavigator() {
             },
           }}
         >
-          {RootScreen(userData, isSignout)}
+          {RootScreen(userData, isSignout, dispatch)}
         </Stack.Navigator>
       </>
     );

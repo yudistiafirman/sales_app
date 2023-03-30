@@ -163,7 +163,15 @@ const Beranda = () => {
       setIsTargetLoading(false);
     } catch (err) {
       setIsTargetLoading(false);
-      console.log(err);
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText:
+            err.message ||
+            'Terjadi error saat pengambilan data target harian kunjungan',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   }, []);
 

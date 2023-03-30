@@ -6,10 +6,11 @@ import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
 import { signout } from '@/redux/reducers/authReducer';
 import { AppDispatch } from '@/redux/store';
 import * as React from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { TAB_PROFILE } from '@/navigation/ScreenNames';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,7 +24,13 @@ const Profile = () => {
         crashlytics().setUserId('');
       }
     } catch (error) {
-      Alert.alert('Something went wrong', error.message);
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: error.message || 'Terjadi error saat logout',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   };
 

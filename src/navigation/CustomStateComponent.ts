@@ -6,6 +6,7 @@ import { PhotoFile } from 'react-native-vision-camera';
 export type RootStackParamList = {
   TAB_ROOT: { screen?: string; params?: any };
   VERIFICATION: undefined;
+  BLANKSCREEN: undefined;
   CAMERA: {
     photoTitle: string;
     navigateTo?: string;
@@ -43,7 +44,7 @@ export type RootStackParamList = {
   };
   SEARCH_AREA: { from?: string; eventKey?: string };
   CALENDAR: { useTodayMinDate: boolean };
-  TRANSACTION_DETAIL: { title: string; data: any, type: string };
+  TRANSACTION_DETAIL: { title: string; data: any; type: string };
   CREATE_SCHEDULE: undefined;
   CUSTOMER_DETAIL: { existingVisitation?: any };
   DOCUMENTS: { projectId?: string; docs?: Docs[] };
@@ -56,6 +57,6 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> =
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList { }
+    interface RootParamList extends RootStackParamList {}
   }
 }

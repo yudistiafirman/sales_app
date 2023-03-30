@@ -20,6 +20,7 @@ import {
   updatePaymentType,
   updateRequiredDocuments,
 } from '@/redux/reducers/SphReducer';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -163,7 +164,15 @@ export default function ThirdStep() {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log('error getDocument128', error);
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText:
+            error.message ||
+            'Terjadi error saat pengambilan data SPH Documents',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   }
 

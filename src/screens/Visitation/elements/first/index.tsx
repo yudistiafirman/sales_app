@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import MapView from 'react-native-maps';
@@ -32,6 +32,7 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -40,7 +41,7 @@ const FirstStep = () => {
   const [isMapLoading, setIsMapLoading] = React.useState(false);
   const visitationData = useSelector((state: RootState) => state.visitation);
   const navigation = useNavigation();
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch<AppDispatch>();
 
   const inputs: Input[] = [
     {
@@ -97,7 +98,15 @@ const FirstStep = () => {
       setIsMapLoading(() => false);
     } catch (error) {
       setIsMapLoading(() => false);
-      console.log(JSON.stringify(error), 'onChangeRegionerror');
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText:
+            error.message ||
+            'Terjadi error pengambilan data saat perpindahan region',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   };
 
@@ -125,7 +134,7 @@ const FirstStep = () => {
     visitationData.createdLocation?.formattedAddress,
   ]);
 
-  const [, send] = useMachine(deviceLocationMachine, {
+  const [state, send] = useMachine(deviceLocationMachine, {
     actions: {
       dispatchState: (context, _event, _meta) => {
         const coordinate = {
@@ -143,6 +152,24 @@ const FirstStep = () => {
       },
     },
   });
+
+  React.useEffect(() => {
+    if (state.matches('errorGettingLocation')) {
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: state.context.errorMessage,
+          outsideClickClosePopUp: false,
+          isRenderActions: true,
+          primaryBtnTitle: 'Ok',
+          primaryBtnAction: () => {
+            send('backToidle');
+            dispatch(closePopUp());
+          },
+        })
+      );
+    }
+  }, [state, send]);
 
   React.useEffect(() => {
     const isExist =
