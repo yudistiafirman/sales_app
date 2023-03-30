@@ -91,11 +91,7 @@ function downloadPdf({
     })
     .then((res) => {
       // the temp file path
-      if (Platform.OS === 'android') {
-        downloadPopup();
-      } else {
-        dispatch;
-      }
+      downloadPopup();
     })
     .catch((err) => {
       downloadError(err.message);

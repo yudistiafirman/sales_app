@@ -271,7 +271,8 @@ function SphContent() {
       dispatch(
         openPopUp({
           popUpType: 'error',
-          popUpText: error.message || 'Error fetching visitation',
+          popUpText:
+            error.message || 'Terjadi error saat pengambilan data Proyek',
           outsideClickClosePopUp: true,
         })
       );
