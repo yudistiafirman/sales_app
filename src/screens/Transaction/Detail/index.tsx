@@ -26,6 +26,9 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import { getVisitationOrderByID } from '@/actions/OrderActions';
 import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
 import { PO_METHOD_LIST } from '@/constants/dropdown';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 function ListProduct(
   item: any,
@@ -104,6 +107,7 @@ const TransactionDetail = () => {
   const route = useRoute<RootStackScreenProps>();
   const data = route?.params?.data;
   const selectedType = route?.params?.type;
+  const dispatch = useDispatch<AppDispatch>();
   const [expandData, setExpandData] = React.useState<any[]>([]);
 
   useHeaderTitleChanged({
@@ -138,7 +142,15 @@ const TransactionDetail = () => {
         })
       );
     } catch (error) {
-      console.log(error);
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText:
+            error.message ||
+            'Terjadi error saat perpindahan screen menuju ke halaman sph',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   };
 

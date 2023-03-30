@@ -68,6 +68,7 @@ export default function Popup() {
             isContinueIcon={false}
             continueText={popUpOptions.primaryBtnTitle}
             backText={popUpOptions.outlineBtnTitle}
+            unrenderBack={popUpOptions.unRenderBackButton}
             loadingContinue={popUpOptions.isPrimaryButtonLoading}
             onPressBack={popUpOptions.outlineBtnAction}
             onPressContinue={popUpOptions.primaryBtnAction}

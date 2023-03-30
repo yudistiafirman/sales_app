@@ -13,6 +13,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BLabel from './BLabel';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
 
 //AntDesign
 type BFileInputType = {
@@ -73,6 +76,7 @@ export default function BFileInput({
   sizeInNumber,
   titleBold,
 }: BFileInputType) {
+  const dispatch = useDispatch<AppDispatch>();
   const selectFile = React.useCallback(async () => {
     // Opening Document Picker to select one file
     try {
@@ -104,12 +108,15 @@ export default function BFileInput({
       }
       // Handling any exception (If any)
       if (DocumentPicker.isCancel(err)) {
-        // If user canceled the document selection
-        // alert('Canceled');
+        console.log('User Canceled Document Picker');
       } else {
-        // For Unknown Error
-        // alert('Unknown Error: ' + JSON.stringify(err));
-        throw err;
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText: err.message || 'Terjadi error dalam pengambilan file',
+            outsideClickClosePopUp: true,
+          })
+        );
       }
     }
   }, [onChange]);

@@ -228,7 +228,14 @@ function SphContent() {
       dispatch(updateDistanceFromLegok(result.distance.value));
       dispatch(updateRegion(_coordinate));
     } catch (error) {
-      console.log(JSON.stringify(error), 'onChangeRegionerror');
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText:
+            error.message || 'Terjadi error saat pengambilan data coordinate',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   };
 
@@ -264,7 +271,8 @@ function SphContent() {
       dispatch(
         openPopUp({
           popUpType: 'error',
-          popUpText: 'Error fetching visitation',
+          popUpText:
+            error.message || 'Terjadi error saat pengambilan data Proyek',
           outsideClickClosePopUp: true,
         })
       );

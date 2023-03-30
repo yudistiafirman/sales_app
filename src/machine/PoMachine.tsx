@@ -438,7 +438,7 @@ const POMachine =
             const savedPO = await bStorage.getItem(PO);
             return savedPO;
           } catch (error) {
-            console.log(error);
+            throw new Error(error);
           }
         },
         getSphDocument: async (context) => {

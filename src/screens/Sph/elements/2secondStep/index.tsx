@@ -43,6 +43,7 @@ import {
   updateIsBillingAddressSame,
   updateProjectAddress,
 } from '@/redux/reducers/SphReducer';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 function checkObj(
   billingAddress: billingAddressType,
@@ -149,7 +150,15 @@ export default function SecondStep() {
         setIsMapLoading(() => false);
       } catch (error) {
         setIsMapLoading(() => false);
-        console.log(JSON.stringify(error), 'onChangeRegionerror');
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText:
+              error.message ||
+              'Terjadi error pengambilan data saat perpindahan region',
+            outsideClickClosePopUp: true,
+          })
+        );
       }
     },
     []

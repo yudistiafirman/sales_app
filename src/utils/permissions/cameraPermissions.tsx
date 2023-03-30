@@ -1,17 +1,37 @@
-import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
+import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import { Camera } from 'react-native-vision-camera';
 import { displayName } from '../../../app.json';
-
+import { store } from '@/redux/store';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 const openSetting = () => {
   Linking.openSettings().catch(() => {
-    Alert.alert('Unable to open settings');
+    store.dispatch(
+      openPopUp({
+        popUpType: 'error',
+        popUpText: 'Terjadi error saat membuka Setting',
+        outsideClickClosePopUp: true,
+      })
+    );
   });
 };
 
 const showAlertCamera = () => {
-  Alert.alert(`Turn on Camera to allow ${displayName} to take a picture.`, '', [
-    { text: 'Go to Settings', onPress: openSetting },
-  ]);
+  store.dispatch(
+    openPopUp({
+      popUpType: 'none',
+      popUpText: `Aktifkan Izin Kamera untuk mengizinkan ${displayName} mengambil gambar.`,
+      isRenderActions: true,
+      outsideClickClosePopUp: false,
+      unRenderBackButton: true,
+      primaryBtnTitle: 'Buka Setting',
+      primaryBtnAction: () => {
+        setTimeout(() => {
+          store.dispatch(closePopUp());
+        }, 100);
+        openSetting();
+      },
+    })
+  );
 };
 
 export const hasCameraPermissions = async () => {
@@ -47,7 +67,15 @@ export const hasCameraPermissions = async () => {
       }
     }
   } catch (err) {
-    console.warn(err);
+    const errorMessage =
+      err.message || 'Terjadi error dalam meminta izin untuk mengakses camera';
+    store.dispatch(
+      openPopUp({
+        popUpType: 'error',
+        popUpText: errorMessage,
+        outsideClickClosePopUp: true,
+      })
+    );
     return;
   }
 };

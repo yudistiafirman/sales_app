@@ -1,6 +1,7 @@
-import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
+import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import { displayName } from '../../../app.json';
-
+import { store } from '@/redux/store';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 const checkWritePermissions = async () => {
   try {
     const granted = await PermissionsAndroid.request(
@@ -24,15 +25,32 @@ const checkWritePermissions = async () => {
 
 const openSetting = () => {
   Linking.openSettings().catch(() => {
-    Alert.alert('Unable to open settings');
+    store.dispatch(
+      openPopUp({
+        popUpType: 'error',
+        popUpText: 'Terjadi error saat membuka Setting',
+        outsideClickClosePopUp: true,
+      })
+    );
   });
 };
 
 const showAlertStorage = () => {
-  Alert.alert(
-    `Turn on Storage Permission to allow ${displayName} to pick file and picture.`,
-    '',
-    [{ text: 'Go to Settings', onPress: openSetting }]
+  store.dispatch(
+    openPopUp({
+      popUpType: 'none',
+      popUpText: `Aktifkan Izin Penyimpanan untuk mengizinkan ${displayName} memilih file dan gambar.`,
+      isRenderActions: true,
+      outsideClickClosePopUp: false,
+      unRenderBackButton: true,
+      primaryBtnTitle: 'Buka Setting',
+      primaryBtnAction: () => {
+        setTimeout(() => {
+          store.dispatch(closePopUp());
+        }, 100);
+        openSetting();
+      },
+    })
   );
 };
 
@@ -55,7 +73,15 @@ const checkReadPermissions = async () => {
       }
     }
   } catch (err) {
-    console.warn(err);
+    const errorMessage =
+      err.message || 'Terjadi error dalam request external storage permission';
+    store.dispatch(
+      openPopUp({
+        popUpType: 'error',
+        popUpText: errorMessage,
+        outsideClickClosePopUp: true,
+      })
+    );
     return;
   }
 };

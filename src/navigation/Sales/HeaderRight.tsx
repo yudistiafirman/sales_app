@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import { Styles } from '@/interfaces';
-import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { signout } from '@/redux/reducers/authReducer';
 import { AppDispatch } from '@/redux/store';
@@ -12,6 +11,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import analytics from '@react-native-firebase/analytics';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import { getAppVersionName } from '@/utils/generalFunc';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 const _styles: Styles = {
   chipText: {
@@ -45,7 +45,13 @@ export default function SalesHeaderRight(iconColor: string = '') {
         analytics().setUserId('');
       }
     } catch (error) {
-      Alert.alert('Something went wrong', error.message);
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: error.message || 'Terjadi error saat logout',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   };
 

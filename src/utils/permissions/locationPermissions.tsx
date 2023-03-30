@@ -1,6 +1,8 @@
 import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { displayName } from '../../../app.json';
+import { store } from '@/redux/store';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 const hasPermissionIOS = async () => {
   const status = await Geolocation.requestAuthorization('whenInUse');
 
@@ -19,15 +21,32 @@ const hasPermissionIOS = async () => {
 
 const openSetting = () => {
   Linking.openSettings().catch(() => {
-    Alert.alert('Unable to open settings');
+    store.dispatch(
+      openPopUp({
+        popUpType: 'error',
+        popUpText: 'Terjadi error saat membuka Setting',
+        outsideClickClosePopUp: true,
+      })
+    );
   });
 };
 
 const showAlertLocation = () => {
-  Alert.alert(
-    `Turn on Location Services to allow ${displayName} to determine your location.`,
-    '',
-    [{ text: 'Go to Settings', onPress: openSetting }]
+  store.dispatch(
+    openPopUp({
+      popUpType: 'none',
+      popUpText: `Aktifkan Layanan Lokasi untuk mengizinkan ${displayName} menentukan lokasi Anda.`,
+      isRenderActions: true,
+      outsideClickClosePopUp: false,
+      unRenderBackButton: true,
+      primaryBtnTitle: 'Buka Setting',
+      primaryBtnAction: () => {
+        setTimeout(() => {
+          store.dispatch(closePopUp());
+        }, 100);
+        openSetting();
+      },
+    })
   );
 };
 
@@ -64,7 +83,16 @@ const hasLocationPermission = async () => {
       }
     }
   } catch (err) {
-    console.warn(err);
+    const errorMessage =
+      err.message ||
+      'Terjadi error dalam meminta izin mengakses layanan lokasi';
+    store.dispatch(
+      openPopUp({
+        popUpType: 'error',
+        popUpText: errorMessage,
+        outsideClickClosePopUp: true,
+      })
+    );
     return;
   }
 };

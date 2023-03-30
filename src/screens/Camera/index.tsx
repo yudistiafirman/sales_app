@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  Alert,
   Animated,
   SafeAreaView,
   StyleSheet,
@@ -27,6 +26,7 @@ import { IMAGE_PREVIEW } from '@/navigation/ScreenNames';
 import CameraButton from './elements/CameraButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 
 const CameraScreen = () => {
   const navigation = useNavigation();
@@ -92,7 +92,13 @@ const CameraScreen = () => {
 
   const takePhoto = async () => {
     if (camera === undefined || camera.current === undefined) {
-      Alert.alert('No Camera Found');
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: 'No Camera Found',
+          outsideClickClosePopUp: true,
+        })
+      );
     } else {
       try {
         const takenPhoto = await camera?.current?.takePhoto({
@@ -110,7 +116,13 @@ const CameraScreen = () => {
           operationAddedStep,
         });
       } catch (error) {
-        Alert.alert('Camera Error');
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText: 'Camera error',
+            outsideClickClosePopUp: true,
+          })
+        );
       }
     }
   };
@@ -128,7 +140,7 @@ const CameraScreen = () => {
   };
 
   const isFocused = useIsFocused();
-  
+
   React.useEffect(() => {
     crashlytics().log(CAMERA);
   }, [navigation]);

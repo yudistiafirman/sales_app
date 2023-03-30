@@ -8,7 +8,7 @@ import {
 import { AppDispatch, RootState } from '@/redux/store';
 import jwtDecode from 'jwt-decode';
 import * as React from 'react';
-import { Alert, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { isJsonString } from '@/utils/generalFunc';
@@ -16,6 +16,7 @@ import remoteConfig from '@react-native-firebase/remote-config';
 import BackgroundFetch from 'react-native-background-fetch';
 import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
 import { UserModel } from '@/models/User';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, userData, isSignout, hunterScreen, remote_config } =
@@ -45,11 +46,19 @@ const useAsyncConfigSetup = () => {
           );
         }
       } catch (error) {
-        Alert.alert('ooops , something went wrong');
+        bStorage.deleteItem(storageKey.userToken);
         dispatch(
           setIsLoading({
             loading: false,
             remoteConfig: fetchedRemoteConfig,
+          })
+        );
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText:
+              error.message || 'Terjadi error dalam pengambilan user token',
+            outsideClickClosePopUp: true,
           })
         );
       }
@@ -83,6 +92,14 @@ const useAsyncConfigSetup = () => {
       .catch((err) => {
         hunterFarmerSetup();
         userDataSetup(undefined);
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText:
+              err.message || 'Terjadi error dalam pengambilan App Setup',
+            outsideClickClosePopUp: true,
+          })
+        );
       });
   }, [dispatch, userDataSetup]);
 

@@ -7,7 +7,6 @@ import {
   Share,
   Platform,
   Linking,
-  Alert,
 } from 'react-native';
 import React from 'react';
 import Modal from 'react-native-modal';
@@ -52,7 +51,7 @@ type downloadType = {
   url?: string;
   title?: string;
   downloadPopup: () => void;
-  downloadError: () => void;
+  downloadError: (errorMessage: string | unknown) => void;
 };
 
 function Separator() {
@@ -92,21 +91,16 @@ function downloadPdf({
     })
     .then((res) => {
       // the temp file path
-      if (Platform.OS === 'android') {
-        downloadPopup();
-      } else {
-        Alert.alert('Gagal mendownload SPH');
-      }
+      downloadPopup();
     })
     .catch((err) => {
-      if (Platform.OS === 'android') {
-        downloadError();
-      } else {
-        Alert.alert('Gagal mendownload SPH');
-      }
+      downloadError(err.message);
     });
 }
-async function printRemotePDF(url?: string, printError: () => void) {
+async function printRemotePDF(
+  url?: string,
+  printError: (errorMessage: string | unknown) => void
+) {
   try {
     if (!url) {
       throw 'error url missing';
@@ -115,11 +109,7 @@ async function printRemotePDF(url?: string, printError: () => void) {
       filePath: url,
     });
   } catch (error) {
-    if (Platform.OS === 'android') {
-      printError();
-    } else {
-      Alert.alert('Gagal print SPH');
-    }
+    printError(error.message);
   }
 }
 
@@ -165,7 +155,13 @@ export default function StepDone({
         )}`,
       });
     } catch (error) {
-      console.log(error, 'errorsharefunc');
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: error.message || 'Terjadi error saat share Link PDF SPH',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
   };
 
@@ -257,15 +253,18 @@ export default function StepDone({
           <TouchableOpacity
             style={styles.footerButton}
             onPress={() =>
-              printRemotePDF(sphResponse?.thermalLink, () => {
-                dispatch(
-                  openPopUp({
-                    popUpText: 'Gagal print SPH',
-                    popUpType: 'error',
-                    outsideClickClosePopUp: true,
-                  })
-                );
-              })
+              printRemotePDF(
+                sphResponse?.thermalLink,
+                (errorMessage: string | unknown) => {
+                  dispatch(
+                    openPopUp({
+                      popUpText: errorMessage || 'Gagal print SPH',
+                      popUpType: 'error',
+                      outsideClickClosePopUp: true,
+                    })
+                  );
+                }
+              )
             }
           >
             <MaterialCommunityIcons
@@ -301,10 +300,10 @@ export default function StepDone({
                     })
                   );
                 },
-                downloadError: () => {
+                downloadError: (err) => {
                   dispatch(
                     openPopUp({
-                      popUpText: 'Gagal mendownload SPH',
+                      popUpText: err || 'Gagal mendownload SPH',
                       popUpType: 'error',
                       outsideClickClosePopUp: true,
                     })

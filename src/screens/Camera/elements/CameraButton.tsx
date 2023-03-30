@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleProp, ViewStyle, View, StyleSheet, Alert } from 'react-native';
+import { StyleProp, ViewStyle, View, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
