@@ -33,7 +33,8 @@ const PurchaseOrder = () => {
     files,
     selectedProducts,
     poImages,
-    stepsDone
+    stepsDone,
+    paymentType,
   } = poState.currentState.context;
   const { keyboardVisible } = useKeyboardActive();
   const [isPopupExitVisible, setIsPopupExitVisible] = useState(false);
@@ -48,8 +49,13 @@ const PurchaseOrder = () => {
         poImages.length === 0
       );
     } else if (currentStep === 1) {
+      const isRequiredFileEmpty = files.filter(
+        (v) => v.isRequire && v.value === null
+      );
       const isFilesValueNull = files.filter((v) => v.value === null);
-      return isFilesValueNull.length > 0;
+      return paymentType === 'CBD'
+        ? isRequiredFileEmpty.length > 0
+        : isFilesValueNull.length > 0;
     } else {
       const hasNoQuantityMultiProducts = selectedProducts.filter(
         (v) => v.quantity.length === 0 || v.quantity[0] === '0'
@@ -59,7 +65,6 @@ const PurchaseOrder = () => {
       );
     }
   };
-
 
   const handleBack = useCallback(() => {
     if (currentStep === 0) {
@@ -90,13 +95,21 @@ const PurchaseOrder = () => {
         type: 'goToSecondStep',
       });
 
-      const dataToSaved = { ...poState.currentState.context, currentStep: 0, stepsDone: [0] };
+      const dataToSaved = {
+        ...poState.currentState.context,
+        currentStep: 0,
+        stepsDone: [0],
+      };
       bStorage.setItem(PO, {
         poContext: dataToSaved,
       });
     } else if (currentStep === 1) {
       dispatch({ type: 'goToThirdStep' });
-      const dataToSaved = { ...poState.currentState.context, currentStep: 1, stepsDone: [0, 1] };
+      const dataToSaved = {
+        ...poState.currentState.context,
+        currentStep: 1,
+        stepsDone: [0, 1],
+      };
       bStorage.setItem(PO, {
         poContext: dataToSaved,
       });
@@ -118,9 +131,9 @@ const PurchaseOrder = () => {
         }
       });
     } else {
-      setIsPopupExitVisible(true)
+      setIsPopupExitVisible(true);
     }
-  }, [])
+  }, []);
 
   const renderHeaderLeft = useCallback(
     () => (
@@ -168,26 +181,40 @@ const PurchaseOrder = () => {
     if (pressedNum !== currentStep) {
       if (pressedNum === 1) {
         if (currentStep === 0) {
-          dispatch({ type: 'goToSecondStepFromStepOnePressed', value: pressedNum })
+          dispatch({
+            type: 'goToSecondStepFromStepOnePressed',
+            value: pressedNum,
+          });
         } else {
-          dispatch({ type: 'goToStepTwoFromStepThreePressed', value: pressedNum })
+          dispatch({
+            type: 'goToStepTwoFromStepThreePressed',
+            value: pressedNum,
+          });
         }
       } else if (pressedNum === 2) {
         if (currentStep === 0) {
-          dispatch({ type: 'goToThirdFromStepOnePressed', value: pressedNum })
+          dispatch({ type: 'goToThirdFromStepOnePressed', value: pressedNum });
         } else {
-          dispatch({ type: 'goToStepThreeFromStepTwoPressed', value: pressedNum })
+          dispatch({
+            type: 'goToStepThreeFromStepTwoPressed',
+            value: pressedNum,
+          });
         }
       } else {
         if (currentStep === 1) {
-
-          dispatch({ type: 'goToStepOneFromStepTwoPressed', value: pressedNum })
+          dispatch({
+            type: 'goToStepOneFromStepTwoPressed',
+            value: pressedNum,
+          });
         } else {
-          dispatch({ type: 'goToStepOneFromStepThreePressed', value: pressedNum })
+          dispatch({
+            type: 'goToStepOneFromStepThreePressed',
+            value: pressedNum,
+          });
         }
       }
     }
-  }
+  };
 
   const stepToRender = [<CreatePo />, <UploadFiles />, <DetailProduk />];
 
@@ -231,7 +258,6 @@ const PurchaseOrder = () => {
             });
             navigation.dispatch(StackActions.replace(TAB_ROOT));
           }
-
         }}
         actionButton={() => setIsPopupExitVisible(false)}
         cancelText={'Keluar'}
@@ -254,7 +280,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     position: 'absolute',
-    bottom: 0
+    bottom: 0,
   },
 });
 

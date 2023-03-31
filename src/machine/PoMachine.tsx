@@ -2,7 +2,6 @@ import { bStorage } from '@/actions';
 import { uploadFileImage } from '@/actions/CommonActions';
 import {
   getCreatedSphDocuments,
-  getSphByProject,
   postPurchaseOrder,
 } from '@/actions/OrderActions';
 import {
@@ -476,6 +475,7 @@ const POMachine =
           try {
             const docsToUpload = context.files
               .filter((v) => v.projectDocId === null)
+              .filter((v) => v.value !== null)
               .map((v) => {
                 return v.value;
               });

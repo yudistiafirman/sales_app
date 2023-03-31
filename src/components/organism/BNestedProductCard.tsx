@@ -75,7 +75,8 @@ function ListChildProduct(
     } else if (item?.PoProduct) {
       displayName = `${
         item?.PoProduct?.RequestedProduct?.Product?.category?.Parent
-          ? item?.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name + ' '
+          ? item?.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name +
+            ' '
           : ''
       }${item?.PoProduct?.RequestedProduct?.displayName} ${
         item?.PoProduct?.RequestedProduct?.Product?.category
@@ -84,8 +85,10 @@ function ListChildProduct(
       }`;
       offeringPrice = item?.PoProduct?.RequestedProduct?.offeringPrice;
       totalPrice =
-        item?.PoProduct?.requestedQuantity && item?.PoProduct?.RequestedProduct?.offeringPrice
-          ? item?.PoProduct?.requestedQuantity * item?.PoProduct?.RequestedProduct?.offeringPrice
+        item?.PoProduct?.requestedQuantity &&
+        item?.PoProduct?.RequestedProduct?.offeringPrice
+          ? item?.PoProduct?.requestedQuantity *
+            item?.PoProduct?.RequestedProduct?.offeringPrice
           : 0;
       quantity = item?.PoProduct?.requestedQuantity;
       unit = item?.PoProduct?.RequestedProduct?.Product?.unit;
@@ -158,7 +161,6 @@ export default function BNestedProductCard({
         </>
       )}
       {data?.map((item, index) => {
-
         // TODO: handle from BE, ugly when use mapping in FE side
         const name = poNumber
           ? poNumber
@@ -180,7 +182,7 @@ export default function BNestedProductCard({
             )
           : expandData?.findIndex((val) => val?.id === item?.id);
         const isExpand = expandItems === -1;
-        
+
         return (
           <View key={index}>
             <View style={styles.containerLastOrder}>
@@ -228,13 +230,17 @@ export default function BNestedProductCard({
                     </View>
                   )}
                 </View>
-                <TouchableWithoutFeedback onPress={() => onExpand(index, item)}>
-                  <Icon
-                    name={isExpand ? 'chevron-up' : 'chevron-down'}
-                    size={30}
-                    color={colors.icon.darkGrey}
-                  />
-                </TouchableWithoutFeedback>
+                {products.length > 0 && (
+                  <TouchableWithoutFeedback
+                    onPress={() => onExpand(index, item)}
+                  >
+                    <Icon
+                      name={isExpand ? 'chevron-up' : 'chevron-down'}
+                      size={30}
+                      color={colors.icon.darkGrey}
+                    />
+                  </TouchableWithoutFeedback>
+                )}
               </View>
 
               {isExpand && (
