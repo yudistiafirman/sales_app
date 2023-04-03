@@ -24,8 +24,8 @@ const URL_ORDER =
     ? Config.API_URL_ORDER
     : Config.API_URL_ORDER_PROD;
 
-let store: any;
-let metric: any;
+// let store: any;
+// let metric: any;
 
 type FormDataValue =
   | string
@@ -65,8 +65,8 @@ export const customRequest = async (
   withToken?: boolean
 ) => {
   // performance API log
-  metric = await perf().newHttpMetric(request, method);
-  await metric.start();
+  // metric = await perf().newHttpMetric(request, method);
+  // await metric.start();
 
   return instance(request, await getOptions(method, data, withToken));
 };

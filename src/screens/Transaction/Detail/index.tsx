@@ -178,8 +178,6 @@ const TransactionDetail = () => {
   const renderRequestedProducts = () => {
     const productData = data?.QuotationRequest?.RequestedProducts
       ? data?.QuotationRequest?.RequestedProducts
-      : data?.PoProducts
-      ? data?.PoProducts
       : data?.PoProducts;
 
     return productData.map((item, index) =>
