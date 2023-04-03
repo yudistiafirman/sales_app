@@ -48,6 +48,7 @@ import {
   updateDeliveryOrderWeight,
 } from '@/actions/OrderActions';
 import { FlatList } from 'react-native-gesture-handler';
+import { all } from 'axios';
 
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
@@ -128,10 +129,10 @@ const SubmitForm = () => {
       );
     } else if (userData?.type === ENTRY_TYPE.WB) {
       return inputsValue.weightBridge.length === 0;
-    } else if (ENTRY_TYPE.DISPATCH) {
-      return photoFiles.length !== 4;
-    } else if (ENTRY_TYPE.RETURN) {
+    } else if (operationType === ENTRY_TYPE.RETURN) {
       return inputsValue.truckMixCondition.length === 0;
+    } else if (operationType === ENTRY_TYPE.DISPATCH) {
+      return photoFiles.length !== 4;
     }
   };
 
