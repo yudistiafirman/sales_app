@@ -138,7 +138,7 @@ export default function StepDone({
     ? sphState.selectedCompany?.Company.name
     : sphState.selectedPic?.name;
   const locationState = sphState.isBillingAddressSame
-    ? sphState.selectedCompany?.locationAddress.line1
+    ? sphState.selectedCompany?.LocationAddress.line1
     : sphState?.billingAddress.addressAutoComplete.formattedAddress;
   const locationObj = sphState.isBillingAddressSame
     ? sphState.selectedCompany
