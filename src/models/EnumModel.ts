@@ -3,6 +3,7 @@ export enum ENTRY_TYPE {
   SALES = 'SALES',
   BATCHER = 'BATCHER',
   SECURITY = 'SECURITY',
+  WB = 'WB',
   DISPATCH = 'DISPATCH',
   RETURN = 'RETURN',
   DRIVER = 'DRIVER',

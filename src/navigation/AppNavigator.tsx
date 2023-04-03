@@ -105,6 +105,20 @@ const RootScreen = (
             {OperationStack(Stack)}
           </>
         );
+      case ENTRY_TYPE.WB:
+        return (
+          <>
+            <Stack.Screen
+              name={TAB_ROOT}
+              key={TAB_ROOT}
+              component={SecurityTabs}
+              options={{
+                headerShown: false,
+              }}
+            />
+            {OperationStack(Stack)}
+          </>
+        );
       case ENTRY_TYPE.SALES:
         return (
           <>

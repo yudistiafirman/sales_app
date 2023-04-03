@@ -4,6 +4,7 @@ import { layout } from '@/constants';
 import { BEmptyState, BSpacer, BVisitationCard } from '@/components';
 import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 
 interface OperationListProps {
   data: OperationsDeliveryOrdersListResponse[];
@@ -19,7 +20,8 @@ interface OperationListProps {
   errorMessage?: any;
   isError?: boolean;
   onRetry?: () => void;
-  onLocationPress: (lonlat: { longitude: string; latitude: string }) => void;
+  onLocationPress?: (lonlat: { longitude: string; latitude: string }) => void;
+  userType?: ENTRY_TYPE;
 }
 
 export default function OperationList({
@@ -34,6 +36,7 @@ export default function OperationList({
   isError,
   onRetry,
   onLocationPress,
+  userType
 }: OperationListProps) {
   const separator = useCallback(() => <BSpacer size={'small'} />, []);
 
@@ -47,7 +50,7 @@ export default function OperationList({
             name: item?.number,
             picOrCompanyName: item?.project?.projectName,
             unit: `${item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity} m³`,
-            pilStatus: item?.status,
+            pilStatus: userType !== ENTRY_TYPE.SECURITY ? item?.status : undefined,
             lonlat: {
               longitude: item.project?.Address?.lon!,
               latitude: item.project?.Address?.lat!,
@@ -84,6 +87,7 @@ export default function OperationList({
       }
       ListFooterComponent={isLoadMore ? <BCommonListShimmer /> : null}
       ItemSeparatorComponent={separator}
+      style={style.flatList}
     />
   );
 }
@@ -91,8 +95,8 @@ export default function OperationList({
 const style = StyleSheet.create({
   flatList: {
     flex: 1,
+    width: '100%',
     paddingBottom: layout.pad.lg,
     paddingHorizontal: layout.pad.lg,
-    borderWidth: 1,
   },
 });

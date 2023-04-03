@@ -47,7 +47,9 @@ const CustomTabBar = ({ state, descriptors, navigation }: TabBar) => {
             canPreventDefault: true,
           });
 
+          console.log('apaa:: ', isFocused, event.defaultPrevented)
           if (!isFocused && !event.defaultPrevented) {
+            console.log('apaa:: ', route.name)
             // The `merge: true` option makes sure that the params inside the tab screen are preserved
 
             navigation.navigate({ name: route.name, merge: true });
