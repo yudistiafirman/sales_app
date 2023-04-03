@@ -37,7 +37,6 @@ import {
   resetOperationState,
 } from '@/redux/reducers/operationReducer';
 import { useKeyboardActive } from '@/hooks';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment';
 import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
@@ -86,6 +85,8 @@ const SubmitForm = () => {
         else return 'Return';
       case ENTRY_TYPE.DRIVER:
         return 'Penuangan';
+      case ENTRY_TYPE.WB:
+        return 'Weigh Bridge';
       default:
         return '';
     }
@@ -112,7 +113,7 @@ const SubmitForm = () => {
         openPopUp({
           popUpType: 'loading',
           popUpTitle: '',
-          popUpText: 'Memperbarui Deliver Order',
+          popUpText: 'Memperbarui Delivery Order',
           outsideClickClosePopUp: false,
         })
       );
@@ -127,7 +128,7 @@ const SubmitForm = () => {
         });
       const responseFiles = await uploadFileImage(
         photoFilestoUpload,
-        'Update Deliver Order'
+        'Update Delivery Order'
       );
       if (responseFiles.data.success) {
         const newFileData = responseFiles.data.data.map((v, i) => {

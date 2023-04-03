@@ -40,7 +40,6 @@ import {
   resetAllStepperFocused,
   updateDataVisitation,
 } from '@/redux/reducers/VisitationReducer';
-import OperationFileType from '@/constants/operationFileType';
 import { setOperationPhoto } from '@/redux/reducers/operationReducer';
 import { RootState } from '@/redux/store';
 
@@ -224,6 +223,20 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           } else if (operationAddedStep === 'finished') {
             navigation.navigate(SUBMIT_FORM, {
               operationType: ENTRY_TYPE.DRIVER,
+            });
+          }
+          return;
+        case ENTRY_TYPE.WB:
+          dispatch(setOperationPhoto({ file: localFile }));
+          if (!operationAddedStep || operationAddedStep === '') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Hasil',
+              navigateTo: navigateTo,
+              operationAddedStep: 'finished',
+            });
+          } else if (operationAddedStep === 'finished') {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: ENTRY_TYPE.WB,
             });
           }
           return;
