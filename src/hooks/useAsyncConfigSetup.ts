@@ -38,7 +38,7 @@ const useAsyncConfigSetup = () => {
           
           dispatch(
             setUserData({
-              userData: decoded,
+              userData: mockedData,
               remoteConfig: fetchedRemoteConfig,
             })
           );

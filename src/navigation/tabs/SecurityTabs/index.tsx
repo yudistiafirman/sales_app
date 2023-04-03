@@ -35,11 +35,11 @@ function SecurityTabs() {
       tabBar={(props) => <CustomTabBar {...props} />}
     >
       <Tab.Screen
-        key={userData?.type === ENTRY_TYPE.SECURITY ? TAB_DISPATCH : TAB_WB_IN}
+        key={userData?.type === ENTRY_TYPE.SECURITY ? TAB_DISPATCH : TAB_WB_OUT}
         name={
           userData?.type === ENTRY_TYPE.SECURITY
             ? TAB_DISPATCH_TITLE
-            : TAB_WB_IN_TITLE
+            : TAB_WB_OUT_TITLE
         }
         options={{
           headerTitle: SECURITY_TAB_TITLE,
@@ -49,11 +49,11 @@ function SecurityTabs() {
         component={Dispatch}
       />
       <Tab.Screen
-        key={userData?.type === ENTRY_TYPE.SECURITY ? TAB_RETURN : TAB_WB_OUT}
+        key={userData?.type === ENTRY_TYPE.SECURITY ? TAB_RETURN : TAB_WB_IN}
         name={
           userData?.type === ENTRY_TYPE.SECURITY
             ? TAB_RETURN_TITLE
-            : TAB_WB_OUT_TITLE
+            : TAB_WB_IN_TITLE
         }
         options={{
           headerTitle: SECURITY_TAB_TITLE,
