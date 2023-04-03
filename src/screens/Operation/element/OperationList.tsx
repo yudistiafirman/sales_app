@@ -36,7 +36,7 @@ export default function OperationList({
   isError,
   onRetry,
   onLocationPress,
-  userType
+  userType,
 }: OperationListProps) {
   const separator = useCallback(() => <BSpacer size={'small'} />, []);
 
@@ -50,11 +50,14 @@ export default function OperationList({
             name: item?.number,
             picOrCompanyName: item?.project?.projectName,
             unit: `${item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity} m³`,
-            pilStatus: userType !== ENTRY_TYPE.SECURITY ? item?.status : undefined,
-            lonlat: {
-              longitude: item.project?.Address?.lon!,
-              latitude: item.project?.Address?.lat!,
-            },
+            pilStatus: undefined,
+            lonlat:
+              userType === ENTRY_TYPE.DRIVER
+                ? {
+                    longitude: item.project?.ShippingAddress?.lon,
+                    latitude: item.project?.ShippingAddress?.lat,
+                  }
+                : undefined,
           }}
         />
       );

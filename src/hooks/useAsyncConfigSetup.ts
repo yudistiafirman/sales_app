@@ -34,11 +34,11 @@ const useAsyncConfigSetup = () => {
           const decoded = jwtDecode<UserModel.DataSuccessLogin>(userToken);
 
           // remove later, hardcoded usertype
-          const mockedData = {...decoded, type: ENTRY_TYPE.WB}
+          const mockedData = {...decoded, type: ENTRY_TYPE.SECURITY}
           
           dispatch(
             setUserData({
-              userData: mockedData,
+              userData: decoded,
               remoteConfig: fetchedRemoteConfig,
             })
           );

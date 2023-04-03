@@ -49,15 +49,15 @@ const Operation = () => {
           projectName: item.project?.projectName
             ? item.project.projectName
             : '',
-          address: item.project?.Address?.line1
-            ? item.project.Address.line1
+          address: item.project?.ShippingAddress?.line1
+            ? item.project.ShippingAddress.line1
             : '',
           lonlat: {
-            longitude: item.project?.Address?.lon
-              ? Number(item.project.Address.lon)
+            longitude: item.project?.ShippingAddress?.lon
+              ? Number(item.project.ShippingAddress.lon)
               : 0,
-            latitude: item.project?.Address?.lat
-              ? Number(item.project.Address.lat)
+            latitude: item.project?.ShippingAddress?.lat
+              ? Number(item.project.ShippingAddress.lat)
               : 0,
           },
           requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct
