@@ -45,7 +45,7 @@ export const getAllProject = createAsyncThunk<any, { search?: string }>(
   async ({ search }, { rejectWithValue }) => {
     try {
       const response = await allVisitationGetAction(search);
-      const { data } = response;
+      const { data } = response.data.data;
       if (data.error) throw data as errorType;
 
       return data;
