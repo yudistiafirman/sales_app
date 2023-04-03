@@ -155,3 +155,15 @@ export const updateDeliveryOrder = async (
     true
   );
 };
+
+export const updateDeliveryOrderWeight = async (
+  payload: updateDeliverOrder,
+  deliveryOrderId: string
+) => {
+  return customRequest(
+    BrikApiOrder.deliveryOrderWeightByID(deliveryOrderId),
+    'PUT',
+    payload,
+    true
+  );
+};

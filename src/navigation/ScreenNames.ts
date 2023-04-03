@@ -4,7 +4,9 @@
 export const TAB_ROOT = 'TAB_ROOT';
 
 export const TAB_RETURN = 'TAB.RETURN';
+export const TAB_WB_OUT = 'TAB.WB_OUT';
 export const TAB_DISPATCH = 'TAB.DISPATCH';
+export const TAB_WB_IN = 'TAB.WB_IN';
 export const TAB_HOME = 'TAB.HOME';
 export const TAB_TRANSACTION = 'TAB.TRANSACTION';
 export const TAB_PROFILE = 'TAB.PROFILE';
@@ -50,7 +52,9 @@ export const TAB_TRANSACTION_TITLE = 'Transaksi';
 export const TAB_PROFILE_TITLE = 'Profil';
 export const TAB_PRICE_LIST_TITLE = 'Harga';
 export const TAB_RETURN_TITLE = 'Return';
+export const TAB_WB_OUT_TITLE = 'Out';
 export const TAB_DISPATCH_TITLE = 'Dispatch';
+export const TAB_WB_IN_TITLE = 'In';
 
 export const SALES_TAB_TITLE = 'Beranda';
 export const SECURITY_TAB_TITLE = 'Beranda';

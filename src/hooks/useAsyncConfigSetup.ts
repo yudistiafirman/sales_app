@@ -17,6 +17,7 @@ import BackgroundFetch from 'react-native-background-fetch';
 import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
 import { UserModel } from '@/models/User';
 import { openPopUp } from '@/redux/reducers/modalReducer';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, userData, isSignout, hunterScreen, remote_config } =
@@ -31,6 +32,7 @@ const useAsyncConfigSetup = () => {
         const userToken = await bStorage.getItem(storageKey.userToken);
         if (userToken) {
           const decoded = jwtDecode<UserModel.DataSuccessLogin>(userToken);
+
           dispatch(
             setUserData({
               userData: decoded,

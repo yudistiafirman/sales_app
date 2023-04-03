@@ -40,7 +40,6 @@ import {
   resetAllStepperFocused,
   updateDataVisitation,
 } from '@/redux/reducers/VisitationReducer';
-import OperationFileType from '@/constants/operationFileType';
 import { setOperationPhoto } from '@/redux/reducers/operationReducer';
 import { RootState } from '@/redux/store';
 
@@ -176,7 +175,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE[ENTRY_TYPE.DISPATCH]:
-          dispatch(setImageURLS({ file: localFile, source: OPERATION }));
+          dispatch(setOperationPhoto({ file: localFile }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Driver',
@@ -227,11 +226,47 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
             });
           }
           return;
+        case ENTRY_TYPE.IN:
+          dispatch(setOperationPhoto({ file: localFile }));
+          if (!operationAddedStep || operationAddedStep === '') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Hasil',
+              navigateTo: navigateTo,
+              operationAddedStep: 'finished',
+            });
+          } else if (operationAddedStep === 'finished') {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: ENTRY_TYPE.IN,
+            });
+          }
+          return;
+        case ENTRY_TYPE.OUT:
+          dispatch(setOperationPhoto({ file: localFile }));
+          if (!operationAddedStep || operationAddedStep === '') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Hasil',
+              navigateTo: navigateTo,
+              operationAddedStep: 'finished',
+            });
+          } else if (operationAddedStep === 'finished') {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: ENTRY_TYPE.OUT,
+            });
+          }
+          return;
         case ENTRY_TYPE[ENTRY_TYPE.RETURN]:
-          dispatch(setImageURLS({ file: localFile, source: OPERATION }));
-          navigation.navigate(SUBMIT_FORM, {
-            operationType: ENTRY_TYPE.RETURN,
-          });
+          dispatch(setOperationPhoto({ file: localFile }));
+          if (!operationAddedStep || operationAddedStep === '') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Kondisi TM',
+              navigateTo: navigateTo,
+              operationAddedStep: 'finished',
+            });
+          } else if (operationAddedStep === 'finished') {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: ENTRY_TYPE.RETURN,
+            });
+          }
           return;
         case CREATE_DEPOSIT:
           dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));

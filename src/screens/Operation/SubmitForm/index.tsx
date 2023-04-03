@@ -3,6 +3,7 @@ import {
   BDivider,
   BForm,
   BGallery,
+  BHeaderIcon,
   BLocationText,
   BSpacer,
   BVisitationCard,
@@ -18,7 +19,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import {
   BackHandler,
   SafeAreaView,
@@ -37,13 +38,15 @@ import {
   resetOperationState,
 } from '@/redux/reducers/operationReducer';
 import { useKeyboardActive } from '@/hooks';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment';
 import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { uploadFileImage } from '@/actions/CommonActions';
 import { OperationFileType } from '@/interfaces/Operation';
-import { updateDeliveryOrder } from '@/actions/OrderActions';
+import {
+  updateDeliveryOrder,
+  updateDeliveryOrderWeight,
+} from '@/actions/OrderActions';
 import { FlatList } from 'react-native-gesture-handler';
 
 function LeftIcon() {
@@ -62,12 +65,35 @@ const SubmitForm = () => {
   );
   const { keyboardVisible } = useKeyboardActive();
   const operationType = route?.params?.operationType;
-  const operationFileType = [
+  const driversFileType = [
     OperationFileType.DO_DEPARTURE,
     OperationFileType.ARRIVAL,
     OperationFileType.TRUCK_CONDITION,
     OperationFileType.DO_SIGNED,
   ];
+  const wbsFileType = [
+    OperationFileType.DO_DEPARTURE,
+    operationType === ENTRY_TYPE.OUT
+      ? OperationFileType.WEIGHT_OUT
+      : OperationFileType.WEIGHT_IN,
+  ];
+
+  const securityDispatchFileType = [
+    OperationFileType.DO_DEPARTURE_SECURITY,
+    OperationFileType.DO_DRIVER_SECURITY,
+    OperationFileType.DO_TRUCK_CONDITION_SECURITY,
+    OperationFileType.DO_SEAL_SECURITY,
+  ];
+  const securityReturnFileType = [
+    OperationFileType.DO_RETURN_SECURITY,
+    OperationFileType.DO_RETURN_TRUCK_CONDITION_SECURITY,
+  ];
+
+  const securityFileType =
+    operationType === ENTRY_TYPE.DISPATCH
+      ? securityDispatchFileType
+      : securityReturnFileType;
+
   const enableLocationHeader =
     operationType === ENTRY_TYPE.DRIVER &&
     projectDetails.address &&
@@ -86,6 +112,8 @@ const SubmitForm = () => {
         else return 'Return';
       case ENTRY_TYPE.DRIVER:
         return 'Penuangan';
+      case ENTRY_TYPE.WB:
+        return 'Weigh Bridge';
       default:
         return '';
     }
@@ -98,6 +126,12 @@ const SubmitForm = () => {
         inputsValue.recepientName.length === 0 ||
         !phoneNumberRegex.test(inputsValue.recepientPhoneNumber)
       );
+    } else if (userData?.type === ENTRY_TYPE.WB) {
+      return inputsValue.weightBridge.length === 0;
+    } else if (ENTRY_TYPE.DISPATCH) {
+      return photoFiles.length !== 4;
+    } else if (ENTRY_TYPE.RETURN) {
+      return inputsValue.truckMixCondition.length === 0;
     }
   };
 
@@ -106,13 +140,13 @@ const SubmitForm = () => {
     navigation.dispatch(StackActions.popToTop());
   };
 
-  const onPressContinueDriver = async () => {
+  const onSubmitData = async () => {
     try {
       dispatch(
         openPopUp({
           popUpType: 'loading',
           popUpTitle: '',
-          popUpText: 'Memperbarui Deliver Order',
+          popUpText: 'Memperbarui Delivery Order',
           outsideClickClosePopUp: false,
         })
       );
@@ -127,22 +161,55 @@ const SubmitForm = () => {
         });
       const responseFiles = await uploadFileImage(
         photoFilestoUpload,
-        'Update Deliver Order'
+        'Update Delivery Order'
       );
       if (responseFiles.data.success) {
-        const newFileData = responseFiles.data.data.map((v, i) => {
-          return {
-            fileId: v.id,
-            type: operationFileType[i],
-          };
-        });
-        payload.doFiles = newFileData;
-        payload.recepientName = inputsValue.recepientName;
-        payload.recipientNumber = inputsValue.recepientPhoneNumber;
-        const responseUpdateDeliveryOrder = await updateDeliveryOrder(
-          payload,
-          projectDetails.deliveryOrderId
-        );
+        let responseUpdateDeliveryOrder: any;
+        if (userData?.type === ENTRY_TYPE.DRIVER) {
+          const newFileData = responseFiles.data.data.map((v, i) => {
+            return {
+              fileId: v.id,
+              type: driversFileType[i],
+            };
+          });
+          payload.doFiles = newFileData;
+          payload.recepientName = inputsValue.recepientName;
+          payload.recipientNumber = inputsValue.recepientPhoneNumber;
+          responseUpdateDeliveryOrder = await updateDeliveryOrder(
+            payload,
+            projectDetails.deliveryOrderId
+          );
+        } else if (userData?.type === ENTRY_TYPE.WB) {
+          const newFileData = responseFiles.data.data.map((v, i) => {
+            return {
+              fileId: v.id,
+              type: wbsFileType[i],
+            };
+          });
+          payload.doFiles = newFileData;
+          payload.weight = inputsValue.weightBridge;
+          responseUpdateDeliveryOrder = await updateDeliveryOrderWeight(
+            payload,
+            projectDetails.deliveryOrderId
+          );
+        } else if (userData?.type === ENTRY_TYPE.SECURITY) {
+          const newFileData = responseFiles.data.data.map((v, i) => {
+            return {
+              fileId: v.id,
+              type: securityFileType[i],
+            };
+          });
+          payload.doFiles = newFileData;
+          if (ENTRY_TYPE.RETURN) {
+            payload.conditionTruck = inputsValue.truckMixCondition;
+          }
+          console.log('ini payload', payload);
+          responseUpdateDeliveryOrder = await updateDeliveryOrder(
+            payload,
+            projectDetails.deliveryOrderId
+          );
+        }
+
         if (responseUpdateDeliveryOrder.data.success) {
           dispatch(
             openPopUp({
@@ -191,11 +258,27 @@ const SubmitForm = () => {
   };
 
   const onPressContinue = () => {
-    if (userData?.type === ENTRY_TYPE.DRIVER) {
-      onPressContinueDriver();
-    }
+    onSubmitData();
   };
 
+  const renderHeaderLeft = useCallback(
+    () => (
+      <BHeaderIcon
+        size={layout.pad.lg + layout.pad.md}
+        iconName="arrow-left"
+        marginRight={layout.pad.lg}
+        onBack={handleBack}
+      />
+    ),
+    [handleBack]
+  );
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackVisible: false,
+      headerLeft: () => renderHeaderLeft(),
+    });
+  }, [navigation, renderHeaderLeft]);
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -211,6 +294,30 @@ const SubmitForm = () => {
   );
 
   useHeaderTitleChanged({ title: getHeaderTitle() });
+
+  const weightInputs: Input[] = [
+    {
+      label: 'Berat',
+      value: inputsValue.weightBridge,
+      onChange: (e) => {
+        let result: string = '' + e;
+        dispatch(
+          onChangeInputValue({
+            inputType: 'weightBridge',
+            value: result,
+          })
+        );
+      },
+      isRequire: true,
+      type: 'quantity',
+      quantityType: 'kg',
+      placeholder: 'Masukkan berat',
+      isError: !inputsValue.weightBridge,
+      outlineColor: !inputsValue.weightBridge
+        ? colors.text.errorText
+        : undefined,
+    },
+  ];
 
   const deliveryInputs: Input[] = [
     {
@@ -326,18 +433,24 @@ const SubmitForm = () => {
             </View>
             <View style={style.flexFull}>
               {(operationType === ENTRY_TYPE.DRIVER ||
-                operationType === ENTRY_TYPE.RETURN) && (
-                <BSpacer size={'small'} />
-              )}
+                operationType === ENTRY_TYPE.RETURN ||
+                operationType === ENTRY_TYPE.IN ||
+                operationType === ENTRY_TYPE.OUT) && <BSpacer size={'small'} />}
               {operationType === ENTRY_TYPE.DRIVER && (
                 <BForm titleBold="500" inputs={deliveryInputs} />
               )}
+              {(operationType === ENTRY_TYPE.IN ||
+                operationType === ENTRY_TYPE.OUT) && (
+                <BForm titleBold="500" inputs={weightInputs} />
+              )}
               {operationType === ENTRY_TYPE.RETURN && (
-                <BForm
-                  titleBold="500"
-                  inputs={returnInputs}
-                  spacer="extraSmall"
-                />
+                <View style={{ height: resScale(300) }}>
+                  <BForm
+                    titleBold="500"
+                    inputs={returnInputs}
+                    spacer="extraSmall"
+                  />
+                </View>
               )}
             </View>
           </View>

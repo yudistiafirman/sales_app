@@ -140,7 +140,12 @@ function payloadMapper(sphState: SphStateInterface) {
   }
   if (selectedCompany) {
     payload.projectId = selectedCompany.id;
-    payload.picArr = selectedCompany.PIC;
+    if (selectedCompany?.PIC?.length > 0) {
+      payload.picArr = selectedCompany.PIC;
+    } else {
+      const newPicArr = [{ ...selectedCompany?.Pic, isSelected: true }];
+      payload.picArr = newPicArr;
+    }
   }
   if (typeof sphState.paymentBankGuarantee === 'boolean') {
     payload.isProvideBankGuarantee = sphState.paymentBankGuarantee;

@@ -4,21 +4,30 @@ import OperationList from './element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { CAMERA, CREATE_DO, LOCATION, OPERATION } from '@/navigation/ScreenNames';
+import {
+  CAMERA,
+  CREATE_DO,
+  LOCATION,
+  OPERATION,
+} from '@/navigation/ScreenNames';
 import { useMachine } from '@xstate/react';
 import displayOperationListMachine from '@/machine/displayOperationListMachine';
 import { ENTRY_TYPE } from '@/models/EnumModel';
-import { layout } from '@/constants';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
-import { onChangeProjectDetails, OperationProjectDetails } from '@/redux/reducers/operationReducer';
+import {
+  onChangeProjectDetails,
+  OperationProjectDetails,
+} from '@/redux/reducers/operationReducer';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 
 const Operation = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigation = useNavigation()
-  const [state, send] = useMachine(displayOperationListMachine)
+  const navigation = useNavigation();
+  const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { operationListData, isLoadMore, isLoading, isRefreshing } = state.context
+  const { operationListData, isLoadMore, isLoading, isRefreshing } =
+    state.context;
 
   React.useEffect(() => {
     crashlytics().log(userData?.type ? userData.type : 'Operation Default');
@@ -26,7 +35,8 @@ const Operation = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      send('onRefreshList')
+      send('assignUserData', { payload: userData?.type });
+      dispatch(resetImageURLS({ source: OPERATION }));
     }, [send])
   );
 
@@ -38,30 +48,49 @@ const Operation = () => {
         const dataToDeliver: OperationProjectDetails = {
           deliveryOrderId: item?.id ? item.id : '',
           doNumber: item?.number ? item.number : '',
-          projectName: item.project?.projectName ? item.project.projectName : '',
-          address: item.project?.Address?.line1 ? item.project.Address.line1 : '',
-          lonlat: { longitude: item.project?.Address?.lon ? Number(item.project.Address.lon) : 0, latitude: item.project?.Address?.lat ? Number(item.project.Address.lat) : 0 },
-          requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity ? item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity : 0,
-          deliveryTime: item?.date ? item.date : ''
-        }
+          projectName: item.project?.projectName
+            ? item.project.projectName
+            : '',
+          address: item.project?.ShippingAddress?.line1
+            ? item.project.ShippingAddress.line1
+            : '',
+          lonlat: {
+            longitude: item.project?.ShippingAddress?.lon
+              ? Number(item.project.ShippingAddress.lon)
+              : 0,
+            latitude: item.project?.ShippingAddress?.lat
+              ? Number(item.project.ShippingAddress.lat)
+              : 0,
+          },
+          requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct
+            ?.requestedQuantity
+            ? item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity
+            : 0,
+          deliveryTime: item?.date ? item.date : '',
+        };
 
-        dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }))
+        dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
         navigation.navigate(CAMERA, {
           photoTitle: 'DO',
           navigateTo: userData.type,
         });
       }
     }
-  }
+  };
 
-  const onLocationPress = async (lonlat: { longitude: string, latitude: string }) => {
-    navigation.navigate(LOCATION,
-      {
-        coordinate: { longitude: Number(lonlat.longitude), latitude: Number(lonlat.latitude) },
-        isReadOnly: true,
-        from: OPERATION
-      })
-  }
+  const onLocationPress = async (lonlat: {
+    longitude: string;
+    latitude: string;
+  }) => {
+    navigation.navigate(LOCATION, {
+      coordinate: {
+        longitude: Number(lonlat.longitude),
+        latitude: Number(lonlat.latitude),
+      },
+      isReadOnly: true,
+      from: OPERATION,
+    });
+  };
 
   return (
     <SafeAreaView style={style.container}>
@@ -74,8 +103,9 @@ const Operation = () => {
         onEndReached={() => send('onEndReached')}
         onPressList={(item) => onPressItem(item)}
         onLocationPress={(lonlat) => onLocationPress(lonlat)}
-        onRefresh={() => send('onRefreshList')}
-        onRetry={() => send('retryGettingList')}
+        onRefresh={() => send('onRefreshList', { payload: userData?.type })}
+        onRetry={() => send('retryGettingList', { payload: userData?.type })}
+        userType={userData?.type}
       />
     </SafeAreaView>
   );
@@ -84,8 +114,6 @@ const Operation = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: layout.pad.lg,
-    paddingBottom: layout.pad.lg
   },
 });
 export default Operation;

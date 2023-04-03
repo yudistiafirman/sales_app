@@ -130,16 +130,16 @@ const DRIVER_LIST = [
 
 const TM_CONDITION = [
   {
-    label: 'Bersih',
-    value: 'bersih',
+    label: 'Terisi Air',
+    value: 'WATER',
   },
   {
-    label: 'Kotor',
-    value: 'kotor',
+    label: 'Kosong Bersih',
+    value: 'CLEAN',
   },
   {
-    label: 'Barang Tertinggal',
-    value: 'tertinggal',
+    label: 'Beton Rusak',
+    value: 'BROKEN_CONCRETE',
   },
 ];
 

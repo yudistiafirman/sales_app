@@ -26,6 +26,7 @@ export interface Typegen0 {
   eventsCausingActions: {
     assignError: 'error.platform.operation list machine.fetchingListData:invocation[0]';
     assignListData: 'done.invoke.operation list machine.fetchingListData:invocation[0]';
+    assignUserDataToContext: 'assignUserData';
     handleEndReached: 'onEndReached';
     handleRefresh: 'onRefreshList';
   };
@@ -35,11 +36,15 @@ export interface Typegen0 {
   };
   eventsCausingServices: {
     fetchOperationListData:
+      | 'assignUserData'
       | 'onEndReached'
       | 'onRefreshList'
-      | 'retryGettingList'
-      | 'xstate.init';
+      | 'retryGettingList';
   };
-  matchesStates: 'errorGettingList' | 'fetchingListData' | 'listLoaded';
+  matchesStates:
+    | 'errorGettingList'
+    | 'fetchingListData'
+    | 'idle'
+    | 'listLoaded';
   tags: never;
 }
