@@ -112,28 +112,28 @@ instance.interceptors.response.use(
     const { data, config } = res;
 
     // performance API logs
-    if (config.url) {
-      const response = await fetch(config.url);
-      if (response?.status) metric?.setHttpResponseCode(response?.status);
-      try {
-        metric?.setResponseContentType(response?.headers?.get('Content-Type'));
-        let contentLength = null;
-        if (
-          response?.headers?.get('Content-Length') !== undefined &&
-          response?.headers?.get('Content-Length') !== null
-        ) {
-          contentLength = parseInt(
-            response?.headers?.get('Content-Length'),
-            10
-          );
-        }
-        metric?.setResponsePayloadSize(contentLength);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    await metric?.stop();
-    metric = undefined;
+    // if (config.url) {
+    //   const response = await fetch(config.url);
+    //   if (response?.status) metric?.setHttpResponseCode(response?.status);
+    //   try {
+    //     metric?.setResponseContentType(response?.headers?.get('Content-Type'));
+    //     let contentLength = null;
+    //     if (
+    //       response?.headers?.get('Content-Length') !== undefined &&
+    //       response?.headers?.get('Content-Length') !== null
+    //     ) {
+    //       contentLength = parseInt(
+    //         response?.headers?.get('Content-Length'),
+    //         10
+    //       );
+    //     }
+    //     metric?.setResponsePayloadSize(contentLength);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // }
+    // await metric?.stop();
+    // metric = undefined;
 
     if (!data.success) {
       // automatic logout

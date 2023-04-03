@@ -14,22 +14,22 @@ interface Input {
   label?: string;
   isRequire: boolean;
   type:
-  | 'quantity'
-  | 'price'
-  | 'textInput'
-  | 'cardOption'
-  | 'comboDropdown'
-  | 'area'
-  | 'dropdown'
-  | 'PIC'
-  | 'autocomplete'
-  | 'checkbox'
-  | 'switch'
-  | 'fileInput'
-  | 'map'
-  | 'autocomplete'
-  | 'calendar'
-  | 'calendar-time';
+    | 'quantity'
+    | 'price'
+    | 'textInput'
+    | 'cardOption'
+    | 'comboDropdown'
+    | 'area'
+    | 'dropdown'
+    | 'PIC'
+    | 'autocomplete'
+    | 'checkbox'
+    | 'switch'
+    | 'fileInput'
+    | 'map'
+    | 'autocomplete'
+    | 'calendar'
+    | 'calendar-time';
   hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   onFocus?: (e: any) => void;
@@ -81,9 +81,9 @@ interface Input {
       value: string | number | any;
     }[];
     onChange:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
     placeholder: string;
   };
   comboDropdown?: {
@@ -96,13 +96,13 @@ interface Input {
       value: string | number | any;
     }[];
     onChangeOne:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
     onChangeTwo:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
     placeholderOne: string;
     placeholderTwo: string;
     isErrorOne?: boolean;
@@ -237,8 +237,8 @@ interface BLocationProps {
   mapStyle?: ViewStyle | undefined;
   region?: Region & LatLang;
   onRegionChangeComplete?:
-  | ((region: Region & LatLang, details: Details) => void)
-  | undefined;
+    | ((region: Region & LatLang, details: Details) => void)
+    | undefined;
   CustomMarker?: React.ReactNode | undefined;
   isUninteractable?: boolean;
 }
@@ -247,14 +247,14 @@ interface selectedCompanyInterface {
   id: string;
   name: string;
   Company:
-  | {
-    id: string | null;
-    name: string | null;
-  }
-  | {
-    id: string | null;
-    title: string | null;
-  };
+    | {
+        id: string | null;
+        name: string | null;
+      }
+    | {
+        id: string | null;
+        title: string | null;
+      };
   PIC: PIC[];
   Visitation: {
     finish_date: string | null;
@@ -523,7 +523,7 @@ type visitationDataType = {
   pilNames?: string[];
   pilStatus?: string;
   picOrCompanyName?: string;
-  lonlat?: { longitude: string | null; latitude: string | null }
+  lonlat?: { longitude: string | null; latitude: string | null };
 };
 
 interface projectResponseType {
@@ -631,17 +631,18 @@ interface postSphResponseType {
 }
 
 interface ProjectDetail {
+  id: string;
   projectId?: string;
   projectName?: string;
+
   locationAddress?: Address;
-  billingAddress?: Address;
-  company: {
-    id?: string;
-    name?: string;
-  };
-  mainPic: PIC;
+  BillingAddress?: Address;
+  name?: string;
+  companyName?: string;
+  displayName?: string;
+  Pic: PIC;
   pics: PIC[];
-  docs: Docs[];
+  ProjectDocs: Docs[];
 }
 
 export type {

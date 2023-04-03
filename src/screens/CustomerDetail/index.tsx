@@ -30,8 +30,8 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {
-  getProjectDetail,
   getProjectIndivualDetail,
+  projectGetOneById,
 } from '@/actions/CommonActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
@@ -50,7 +50,6 @@ export default function CustomerDetail() {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const [isBillingVisible, setIsBillingVisible] = useState(false);
-  const [isCompany, setCompany] = useState(false);
   const [customerData, setCustomerData] = useState<ProjectDetail>({});
   const [address, setFormattedAddress] = useState('');
   const [region, setRegion] = useState(null);
@@ -58,23 +57,24 @@ export default function CustomerDetail() {
   const [existedVisitation, setExistingVisitation] =
     useState<visitationListResponse>(null);
   const dataNotLoadedYet = JSON.stringify(customerData) === '{}';
-  const documentsNotCompleted = customerData?.docs?.length !== 8;
+  const documentsNotCompleted = customerData?.ProjectDocs?.length !== 8;
   const updatedAddress = address?.length > 0;
-  const getCompanyDetail = useCallback(
-    async (companyId?: string) => {
+  const getProjectDetail = useCallback(
+    async (projectId: string) => {
       try {
-        const response = await getProjectDetail(companyId);
-        setCustomerData(response.data[0]);
-        if (response.data && response.data.length > 0) {
+        const response = await projectGetOneById(projectId);
+        setCustomerData(response.data.data);
+        if (response.data.data) {
           let region: any = {
-            formattedAddress: response.data[0].billingAddress?.line1,
-            latitude: response.data[0].billingAddress?.lat,
-            longitude: response.data[0].billingAddress?.lon,
+            formattedAddress: response.data.data.BillingAddress?.line1,
+            latitude: response.data.data.BillingAddress?.lat,
+            longitude: response.data.data.BillingAddress?.lon,
           };
           setExistingRegion(region);
-          setFormattedAddress(response.data[0].billingAddres?.line1);
+          setFormattedAddress(response.data.data.BillingAddress?.line1);
         }
       } catch (error) {
+        console.log(error.message);
         dispatch(
           openPopUp({
             popUpType: 'error',
@@ -95,12 +95,12 @@ export default function CustomerDetail() {
         setCustomerData(response.data);
         if (response.data) {
           let region: any = {
-            formattedAddress: response.data.billingAddress?.line1,
-            latitude: response.data.billingAddress?.lat,
-            longitude: response.data.billingAddress?.lon,
+            formattedAddress: response.data.BillingAddress?.line1,
+            latitude: response.data.BillingAddress?.lat,
+            longitude: response.data.BillingAddress?.lon,
           };
           setExistingRegion(region);
-          setFormattedAddress(response.data.billingAddress?.line1);
+          setFormattedAddress(response.data.data.BillingAddress?.line1);
         }
       } catch (error) {
         dispatch(
@@ -121,30 +121,18 @@ export default function CustomerDetail() {
     if (route?.params) {
       const { existingVisitation } = route.params;
       setExistingVisitation(existingVisitation);
-      if (existingVisitation.project.companyId !== null) {
-        const { id } = existingVisitation.project.companyId;
-        setCompany(true);
-        getCompanyDetail(id);
-      } else {
-        const { id } = existingVisitation.project;
-        setCompany(false);
-        getProjectIndividual(id);
-      }
+      const { id } = existingVisitation.project;
+      getProjectDetail(id);
     }
-  }, [dispatch, getCompanyDetail, getProjectIndividual, route.params]);
+  }, [dispatch, getProjectDetail, getProjectIndividual, route.params]);
 
   useFocusEffect(
     useCallback(() => {
       if (existedVisitation !== null) {
-        if (existedVisitation.project.company !== null) {
-          const id = existedVisitation?.project?.company?.id;
-          getCompanyDetail(id);
-        } else {
-          const id = existedVisitation?.project?.id;
-          getProjectIndividual(id);
-        }
+        const { id } = existedVisitation?.project;
+        getProjectDetail(id);
       }
-    }, [existedVisitation, getCompanyDetail, getProjectIndividual])
+    }, [existedVisitation, getProjectDetail, getProjectIndividual])
   );
 
   useEffect(() => {
@@ -161,17 +149,17 @@ export default function CustomerDetail() {
     let count = 0;
     let totalProperties = 8;
 
-    for (const key in customerData.docs) {
+    for (const key in customerData?.ProjectDocs) {
       totalProperties++;
-      if (Object.prototype.hasOwnProperty.call(customerData.docs, key)) {
-        if (customerData.docs[key]) {
+      if (Object.prototype.hasOwnProperty.call(customerData.ProjectDocs, key)) {
+        if (customerData?.ProjectDocs[key]) {
           count++;
         }
       }
     }
 
     return [count, totalProperties];
-  }, [customerData.docs]);
+  }, [customerData.ProjectDocs]);
 
   if (dataNotLoadedYet) {
     return (
@@ -196,7 +184,10 @@ export default function CustomerDetail() {
       )}
 
       {documentsNotCompleted && (
-        <DocumentWarning docs={customerData.docs} projectId={customerData.id} />
+        <DocumentWarning
+          docs={customerData.ProjectDocs}
+          projectId={customerData.id}
+        />
       )}
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -205,11 +196,7 @@ export default function CustomerDetail() {
           <BSpacer size={'extraSmall'} />
           <View style={styles.between}>
             <Text style={styles.fontW300}>Nama</Text>
-            <Text style={styles.fontW400}>
-              {isCompany
-                ? customerData?.Company?.name
-                : customerData?.mainPic?.name}
-            </Text>
+            <Text style={styles.fontW400}>{customerData?.displayName}</Text>
           </View>
           <BSpacer size={'small'} />
           <Text style={styles.partText}>Proyek</Text>
@@ -235,10 +222,10 @@ export default function CustomerDetail() {
           </View>
           <BSpacer size={'extraSmall'} />
           <BPic
-            name={customerData?.mainPic?.name}
-            email={customerData?.mainPic?.email}
-            phone={customerData?.mainPic?.phone}
-            position={customerData?.mainPic?.position}
+            name={customerData?.Pic?.name}
+            email={customerData?.Pic?.email}
+            phone={customerData?.Pic?.phone}
+            position={customerData?.Pic?.position}
           />
           <BSpacer size={'extraSmall'} />
           <Text style={styles.partText}>Alamat Penagihan</Text>
@@ -261,7 +248,7 @@ export default function CustomerDetail() {
               textStyle={styles.seeAllText}
               onPress={() =>
                 navigation.navigate(DOCUMENTS, {
-                  docs: customerData.docs,
+                  docs: customerData.ProjectDocs,
                   projectId: customerData.id,
                 })
               }
@@ -272,7 +259,7 @@ export default function CustomerDetail() {
             <Text style={styles.fontW300}>Kelengkapan Dokumen</Text>
             <Text
               style={styles.fontW300}
-            >{`${customerData?.docs?.length}/8`}</Text>
+            >{`${customerData?.ProjectDocs?.length}/8`}</Text>
           </View>
           <ProgressBar
             styleAttr="Horizontal"
