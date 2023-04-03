@@ -34,17 +34,18 @@ function ListProduct(
   item: any,
   index: number,
   selectedType: string,
-  quantity: number | undefined
+  quantity: number | undefined,
+  isPoData: boolean
 ) {
   let displayName = '';
   if (item.ReqProduct) {
     displayName = `${
-      item?.ReqProduct?.Product?.category?.parent
-        ? item?.ReqProduct?.Product?.category?.parent?.name + ' '
+      item?.ReqProduct?.product?.category?.parent
+        ? item?.ReqProduct?.product?.category?.parent?.name + ' '
         : ''
-    }${item?.ReqProduct?.Product?.displayName} ${
-      item?.ReqProduct?.Product?.category
-        ? item?.ReqProduct?.Product?.category?.name
+    }${item?.ReqProduct?.product?.displayName} ${
+      item?.ReqProduct?.product?.category
+        ? item?.ReqProduct?.product?.category?.name
         : ''
     }`;
   } else if (item.Product) {
@@ -55,21 +56,12 @@ function ListProduct(
     }${item?.Product?.displayName} ${
       item?.Product?.category ? item?.Product?.category?.name : ''
     }`;
-  } else if (item.RequestedProduct) {
-    displayName = `${
-      item?.RequestedProduct?.product?.category?.parent?.name
-        ? item?.RequestedProduct?.product?.category?.parent?.name + ' '
-        : ''
-    }${item?.RequestedProduct?.product?.displayName} ${
-      item?.RequestedProduct?.product?.category
-        ? item?.RequestedProduct?.product?.category?.name
-        : ''
-    }`;
   } else {
     displayName = `${
       item?.category?.parent ? item?.category?.parent?.name + ' ' : ''
     }${item?.displayName} ${item?.category ? item?.category?.name : ''}`;
   }
+
   return (
     <View key={index}>
       <BProductCard
@@ -91,7 +83,9 @@ function ListProduct(
             : 0
         }
         totalPrice={
-          item.ReqProduct
+          isPoData
+            ? item.requestedQuantity * item.ReqProduct.offeringPrice
+            : item.ReqProduct
             ? item.ReqProduct?.totalPrice
             : item.total_price
             ? item.total_price
@@ -181,69 +175,136 @@ const TransactionDetail = () => {
     setExpandData(newExpandedData);
   };
 
+  const renderRequestedProducts = () => {
+    const productData = data?.QuotationRequest?.RequestedProducts
+      ? data?.QuotationRequest?.RequestedProducts
+      : data?.PoProducts;
+
+    return productData.map((item, index) =>
+      ListProduct(
+        item,
+        index,
+        selectedType,
+        selectedType === 'PO'
+          ? data?.requestedQuantity
+          : data?.quantity
+          ? data?.quantity
+          : data?.Schedule?.quantity,
+        data?.PoProducts?.length > 0
+      )
+    );
+  };
+
+  const renderProductList = () => {
+    if (data?.QuotationRequest?.RequestedProducts || data?.PoProducts) {
+      return (
+        <>
+          <Text style={styles.partText}>Produk</Text>
+          <BSpacer size={'extraSmall'} />
+          {renderRequestedProducts()}
+          <BSpacer size={'small'} />
+        </>
+      );
+    }
+  };
+  const renderPic = () => {
+    if (data?.project?.Pic || data?.QuotationRequest?.project?.Pic) {
+      return (
+        <>
+          <Text style={styles.partText}>PIC</Text>
+          <BSpacer size={'extraSmall'} />
+          <BPic
+            name={
+              data?.project?.Pic?.name ||
+              data?.QuotationRequest?.project?.Pic?.name
+            }
+            position={
+              data?.project?.Pic?.position ||
+              data?.QuotationRequest?.project?.Pic?.position
+            }
+            phone={beautifyPhoneNumber(
+              data?.project?.Pic?.phone ||
+                data?.QuotationRequest?.project?.Pic?.phone
+            )}
+            email={
+              data?.project?.Pic?.email ||
+              data?.QuotationRequest?.project?.Pic?.email
+            }
+          />
+          <BSpacer size={'small'} />
+        </>
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView>
-        {(data?.project?.LocationAddress || data?.project?.ShippingAddress) && (
+        {(data?.project?.LocationAddress ||
+          data?.project?.ShippingAddress ||
+          data?.QuotationRequest?.project?.LocationAddress ||
+          data?.QuotationRequest?.project?.ShippingAddress) && (
           <BCompanyMapCard
             onPressLocation={() =>
               onPressLocation(
-                data?.project?.ShippingAddress
+                data?.QuotationRequest?.project?.ShippingAddress
+                  ? data?.QuotationRequest?.project?.ShippingAddress.lat
+                  : data?.project?.ShippingAddress
                   ? data?.project?.ShippingAddress.lat
                   : null,
-                data?.project?.ShippingAddress
+                data?.QuotationRequest?.project?.ShippingAddress.lon
+                  ? data?.QuotationRequest?.project?.ShippingAddress.lon
+                  : data?.project?.ShippingAddress
                   ? data?.project?.ShippingAddress.lon
                   : null
               )
             }
             disabled={
               data?.project?.ShippingAddress?.lat === null ||
-              data?.project?.ShippingAddress?.lon === null
+              data?.project?.ShippingAddress?.lon === null ||
+              data?.QuotationRequest?.project?.ShippingAddress.lat === null ||
+              data?.QuotationRequest?.project?.ShippingAddress.lon === null
             }
-            companyName={data?.project?.displayName}
+            companyName={
+              data?.project?.displayName ||
+              data?.QuotationRequest?.project?.displayName
+            }
             location={
-              data?.project?.ShippingAddress &&
-              data?.project?.ShippingAddress.line1
+              data?.QuotationRequest?.project?.ShippingAddress.line1
+                ? data?.QuotationRequest?.project?.ShippingAddress.line1
+                : data?.project?.ShippingAddress.line1
                 ? data?.project?.ShippingAddress.line1
                 : '-'
             }
           />
         )}
         <View style={styles.contentDetail}>
-          {data?.mainPic && (
-            <>
-              <Text style={styles.partText}>PIC</Text>
-              <BSpacer size={'extraSmall'} />
-              <BPic
-                name={data?.mainPic.name}
-                position={data?.mainPic.position}
-                phone={beautifyPhoneNumber(data?.mainPic.phone)}
-                email={data?.mainPic.email}
-              />
-              <BSpacer size={'small'} />
-            </>
-          )}
+          {renderPic()}
           <Text style={styles.partText}>Rincian</Text>
           <BSpacer size={'extraSmall'} />
           <BProjectDetailCard
-            status={data?.status}
+            status={data?.status || data?.QuotationRequest?.status}
             paymentMethod={
               selectedType === 'SPH' || selectedType === 'PO'
-                ? !data?.paymentType
+                ? !data?.paymentType && !data?.QuotationRequest?.paymentType
                   ? 'N/A'
-                  : data?.paymentType === 'CBD'
+                  : data?.paymentType === 'CBD' ||
+                    data?.QuotationRequest?.paymentType === 'CBD'
                   ? 'Cash'
                   : 'Debit'
                 : undefined
             }
             expiredDate={
-              data?.expiredDate
-                ? moment(data?.expiredDate).format('DD MMMM yyyy')
+              data?.expiredDate || data?.expiryDate
+                ? moment(data?.expiredDate || data?.expiryDate).format(
+                    'DD MMMM yyyy'
+                  )
                 : '-'
             }
             projectName={
               selectedType === 'SPH' || selectedType === 'PO'
-                ? data?.project?.projectName
+                ? data?.project?.projectName ||
+                  data?.QuotationRequest?.project?.projectName
                 : undefined
             }
             productionTime={
@@ -309,27 +370,7 @@ const TransactionDetail = () => {
               poNumber={data?.PurchaseOrder?.number}
             />
           ) : (
-            <>
-              {data?.products && (
-                <>
-                  <Text style={styles.partText}>Produk</Text>
-                  <BSpacer size={'extraSmall'} />
-                  {data?.products.map((item, index) =>
-                    ListProduct(
-                      item,
-                      index,
-                      selectedType,
-                      selectedType === 'PO'
-                        ? data?.requestedQuantity
-                        : data?.quantity
-                        ? data?.quantity
-                        : data?.Schedule?.quantity
-                    )
-                  )}
-                  <BSpacer size={'small'} />
-                </>
-              )}
-            </>
+            <>{renderProductList()}</>
           )}
           {(selectedType === 'Deposit' || selectedType === 'Jadwal') && (
             <>

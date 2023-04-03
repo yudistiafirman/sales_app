@@ -208,7 +208,6 @@ const Beranda = () => {
             };
           }) || [];
 
-        setIsLoading(false);
         if (page > 1) {
           setData({
             ..._data.data,
@@ -220,6 +219,7 @@ const Beranda = () => {
             data: displayData,
           });
         }
+        setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
         setIsError(true);
@@ -472,7 +472,6 @@ const Beranda = () => {
     fetchVisitations(selectedDate, text);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onChangeWithDebounce = React.useCallback(debounce(reset, 500), []);
 
   const onRetryFetchVisitation = () => {

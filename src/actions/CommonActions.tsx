@@ -62,7 +62,7 @@ export const projectByUserGetAction = async (search?: string) => {
     true
   );
 };
-export const projectGetOneById = async (projectId?: string) => {
+export const projectGetOneById = async (projectId: string) => {
   return customRequest(
     BrikApiCommon.oneGetProject(projectId),
     'GET',

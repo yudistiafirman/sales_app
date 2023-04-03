@@ -24,8 +24,8 @@ const URL_ORDER =
     ? Config.API_URL_ORDER
     : Config.API_URL_ORDER_PROD;
 
-let store: any;
-let metric: any;
+// let store: any;
+// let metric: any;
 
 type FormDataValue =
   | string
@@ -65,8 +65,8 @@ export const customRequest = async (
   withToken?: boolean
 ) => {
   // performance API log
-  metric = await perf().newHttpMetric(request, method);
-  await metric.start();
+  // metric = await perf().newHttpMetric(request, method);
+  // await metric.start();
 
   return instance(request, await getOptions(method, data, withToken));
 };
@@ -112,28 +112,28 @@ instance.interceptors.response.use(
     const { data, config } = res;
 
     // performance API logs
-    if (config.url) {
-      const response = await fetch(config.url);
-      if (response?.status) metric?.setHttpResponseCode(response?.status);
-      try {
-        metric?.setResponseContentType(response?.headers?.get('Content-Type'));
-        let contentLength = null;
-        if (
-          response?.headers?.get('Content-Length') !== undefined &&
-          response?.headers?.get('Content-Length') !== null
-        ) {
-          contentLength = parseInt(
-            response?.headers?.get('Content-Length'),
-            10
-          );
-        }
-        metric?.setResponsePayloadSize(contentLength);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    await metric?.stop();
-    metric = undefined;
+    // if (config.url) {
+    //   const response = await fetch(config.url);
+    //   if (response?.status) metric?.setHttpResponseCode(response?.status);
+    //   try {
+    //     metric?.setResponseContentType(response?.headers?.get('Content-Type'));
+    //     let contentLength = null;
+    //     if (
+    //       response?.headers?.get('Content-Length') !== undefined &&
+    //       response?.headers?.get('Content-Length') !== null
+    //     ) {
+    //       contentLength = parseInt(
+    //         response?.headers?.get('Content-Length'),
+    //         10
+    //       );
+    //     }
+    //     metric?.setResponsePayloadSize(contentLength);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // }
+    // await metric?.stop();
+    // metric = undefined;
 
     if (!data.success) {
       // automatic logout

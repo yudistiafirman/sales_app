@@ -45,7 +45,6 @@ export default function RequiredDocuments() {
       errorMessage: string;
     };
   }>({});
-
   const [filledDocsCount, totalDocsCount] = useMemo((): number[] => {
     let count = 0;
     let totalProperties = 0;
@@ -81,8 +80,8 @@ export default function RequiredDocuments() {
 
         if (docs && Array.isArray(docs)) {
           docs.forEach((doc) => {
-            if (doc.docId in newDocState) {
-              newDocState[doc.docId] = doc;
+            if (doc.documentId in newDocState) {
+              newDocState[doc.documentId] = doc;
             }
           });
         }
