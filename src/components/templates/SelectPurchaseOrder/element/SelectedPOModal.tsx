@@ -34,6 +34,7 @@ type SelectedPOModalType = {
   onPressCompleted: (data: any) => void;
   modalTitle: string;
   isDeposit?: boolean;
+  dataToGet?: 'SPHDATA' | 'DEPOSITDATA' | 'SCHEDULEDATA';
 };
 
 export default function SelectedPOModal({
@@ -43,6 +44,7 @@ export default function SelectedPOModal({
   onPressCompleted,
   modalTitle,
   isDeposit,
+  dataToGet,
 }: SelectedPOModalType) {
   const [sphData, setSphData] = React.useState<any[]>([]);
   const [expandData, setExpandData] = React.useState<any[]>([]);
@@ -52,7 +54,11 @@ export default function SelectedPOModal({
   );
 
   React.useEffect(() => {
-    setSphData(data?.listData);
+    const listData =
+      data?.listData && dataToGet === 'SCHEDULEDATA'
+        ? data?.listData.filter((v) => v.SaleOrders.length > 0)
+        : data?.listData;
+    setSphData(listData);
   }, [data?.listData]);
 
   const onSelectButton = (idx: number) => {

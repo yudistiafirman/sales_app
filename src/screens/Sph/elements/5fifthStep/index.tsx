@@ -66,7 +66,7 @@ function payloadMapper(sphState: SphStateInterface) {
     billingAddress: {},
   } as sphOrderPayloadType;
   const { selectedCompany, projectAddress } = sphState;
-  const locationAddress = selectedCompany?.locationAddress;
+  const LocationAddress = selectedCompany?.LocationAddress;
 
   if (sphState.chosenProducts.length > 0) {
     //harcode m3
@@ -101,9 +101,9 @@ function payloadMapper(sphState: SphStateInterface) {
     payload.delivery = highestPrice;
   }
 
-  if (locationAddress) {
-    if (locationAddress.id) {
-      payload.shippingAddress.id = locationAddress.id;
+  if (LocationAddress) {
+    if (LocationAddress.id) {
+      payload.shippingAddress.id = LocationAddress.id;
     }
   }
   if (projectAddress) {
@@ -355,7 +355,7 @@ export default function FifthStep() {
                 name: sphState?.selectedCompany?.name
                   ? sphState?.selectedCompany?.name
                   : '-',
-                location: sphState?.selectedCompany?.locationAddress.line1,
+                location: sphState?.selectedCompany?.LocationAddress.line1,
               }}
               isRenderIcon={false}
             />

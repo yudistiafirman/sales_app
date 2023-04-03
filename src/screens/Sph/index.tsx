@@ -225,6 +225,7 @@ function SphContent() {
         _coordinate.latitude = Number(result.lat);
         _coordinate.lat = Number(result.lat);
       }
+
       dispatch(updateDistanceFromLegok(result.distance.value));
       dispatch(updateRegion(_coordinate));
     } catch (error) {
@@ -252,17 +253,18 @@ function SphContent() {
         getOneProjectById({ projectId: projectId })
       ).unwrap();
       dispatch(closePopUp());
-      const project = response[0];
-      const { locationAddress } = project;
-      if (project.mainPic) {
-        dispatch(updateSelectedPic(project.mainPic));
+      const project = response.data;
+      const { LocationAddress } = project;
+      if (project.Pic) {
+        dispatch(updateSelectedPic(project.Pic));
       }
 
       dispatch(updateSelectedCompany(project));
-      if (locationAddress) {
-        if (locationAddress.lon && locationAddress.lat) {
-          const longitude = +locationAddress.lon;
-          const latitude = +locationAddress.lat;
+
+      if (LocationAddress) {
+        if (LocationAddress.lon && LocationAddress.lat) {
+          const longitude = +LocationAddress.lon;
+          const latitude = +LocationAddress.lat;
           getLocationCoord({ longitude: longitude, latitude: latitude });
         }
       }
