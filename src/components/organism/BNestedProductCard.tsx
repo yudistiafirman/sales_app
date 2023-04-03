@@ -44,13 +44,23 @@ function ListChildProduct(
 
     // TODO: handle from BE, ugly when use mapping in FE side
     if (item?.Product) {
-      displayName = `${
-        item?.Product?.category?.parent
-          ? item?.Product?.category?.parent?.name + ' '
-          : ''
-      }${item?.Product?.displayName} ${
-        item?.Product?.category ? item?.Product?.category?.name : ''
-      }`;
+      if (item?.Product?.category?.parent) {
+        displayName = `${
+          item?.Product?.category?.parent
+            ? item?.Product?.category?.parent?.name + ' '
+            : ''
+        }${item?.Product?.displayName} ${
+          item?.Product?.category ? item?.Product?.category?.name : ''
+        }`;
+      } else {
+        displayName = `${
+          item?.Product?.category?.Parent
+            ? item?.Product?.category?.Parent?.name + ' '
+            : ''
+        }${item?.Product?.displayName} ${
+          item?.Product?.category ? item?.Product?.category?.name : ''
+        }`;
+      }
       offeringPrice = item?.offeringPrice;
       totalPrice = item?.quantity * item?.offeringPrice;
       quantity = item?.quantity;

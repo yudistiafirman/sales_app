@@ -59,7 +59,11 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
             number={item.number ? item.number : '-'}
             // TODO: handle from BE, ugly when use mapping in FE side
             projectName={
-              item.projectName ? item.projectName : item.project?.name
+              item.QuotationRequest?.Project
+                ? item.QuotationRequest?.Project.projectName
+                : item.project?.projectName
+                ? item.project?.projectName
+                : '-'
             }
             status={item.status}
             // TODO: handle from BE, ugly when use mapping in FE side
@@ -74,7 +78,9 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
             }
             // TODO: handle from BE, ugly when use mapping in FE side
             nominal={
-              (selectedType === 'Deposit' || selectedType === 'Jadwal' || selectedType === 'DO') &&
+              (selectedType === 'Deposit' ||
+                selectedType === 'Jadwal' ||
+                selectedType === 'DO') &&
               item.value
                 ? item.value
                 : item.totalPrice

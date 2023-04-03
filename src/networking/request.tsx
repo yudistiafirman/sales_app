@@ -24,7 +24,7 @@ const URL_ORDER =
     ? Config.API_URL_ORDER
     : Config.API_URL_ORDER_PROD;
 
-// let store: any;
+let store: any;
 // let metric: any;
 
 type FormDataValue =
