@@ -101,6 +101,7 @@ const SelectPurchaseOrderData = ({
         onPressCompleted={(data) => onCloseModal(data)}
         modalTitle={dataToGet === 'SPHDATA' ? 'Pilih SPH' : 'Pilih PO'}
         isDeposit={dataToGet === 'DEPOSITDATA'}
+        dataToGet={dataToGet}
       />
       <BCommonSearchList
         searchQuery={searchQuery}

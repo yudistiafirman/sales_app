@@ -197,7 +197,7 @@ const Beranda = () => {
             const time = el.finishDate
               ? moment(el.finishDate).format('hh:mm')
               : null;
-            const location = el.project?.LocationAddress.line1;
+            const location = el.project?.LocationAddress?.line1;
             return {
               id: el.id,
               name: el.project?.displayName || '--',

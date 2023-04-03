@@ -85,9 +85,9 @@ export default function SelectedPic({
 
   useEffect(() => {
     if (selectedCompany) {
-      if (selectedCompany?.mainPic?.id && !selectedPic) {
+      if (selectedCompany?.Pic?.id && !selectedPic) {
         const foundMainPic = selectedCompany?.PIC?.find(
-          (pic) => pic.id === selectedCompany?.mainPic?.id
+          (pic) => pic.id === selectedCompany?.Pic?.id
         );
         if (foundMainPic) dispatch(updateSelectedPic(foundMainPic));
       }
@@ -120,8 +120,8 @@ export default function SelectedPic({
   let picOrCompanyName = '-';
   if (selectedCompany?.Company?.name) {
     picOrCompanyName = selectedCompany.Company?.name;
-  } else if (selectedCompany?.mainPic?.name) {
-    picOrCompanyName = selectedCompany?.mainPic?.name;
+  } else if (selectedCompany?.Pic?.name) {
+    picOrCompanyName = selectedCompany?.Pic?.name;
   }
 
   return (
@@ -131,7 +131,7 @@ export default function SelectedPic({
           <BVisitationCard
             item={{
               name: selectedCompany?.name || '-',
-              location: selectedCompany?.locationAddress.line1,
+              location: selectedCompany?.LocationAddress.line1,
               picOrCompanyName,
             }}
             customIcon={GantiIcon}
