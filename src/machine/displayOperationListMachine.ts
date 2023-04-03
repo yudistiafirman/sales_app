@@ -187,7 +187,6 @@ const displayOperationListMachine = createMachine(
         };
       }),
       handleRefresh: assign((context, event) => {
-        console.log('ini dia 2:: ', event?.payload);
         return {
           page: 1,
           isRefreshing: true,

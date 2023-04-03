@@ -19,6 +19,7 @@ import {
   onChangeProjectDetails,
   OperationProjectDetails,
 } from '@/redux/reducers/operationReducer';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 
 const Operation = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,6 +36,7 @@ const Operation = () => {
   useFocusEffect(
     React.useCallback(() => {
       send('assignUserData', { payload: userData?.type });
+      dispatch(resetImageURLS({ source: OPERATION }));
     }, [send])
   );
 

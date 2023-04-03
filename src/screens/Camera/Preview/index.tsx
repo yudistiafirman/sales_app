@@ -226,7 +226,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
             });
           }
           return;
-        case ENTRY_TYPE.WB:
+        case ENTRY_TYPE.IN:
           dispatch(setOperationPhoto({ file: localFile }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
@@ -236,7 +236,21 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
             });
           } else if (operationAddedStep === 'finished') {
             navigation.navigate(SUBMIT_FORM, {
-              operationType: ENTRY_TYPE.WB,
+              operationType: ENTRY_TYPE.IN,
+            });
+          }
+          return;
+        case ENTRY_TYPE.OUT:
+          dispatch(setOperationPhoto({ file: localFile }));
+          if (!operationAddedStep || operationAddedStep === '') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Hasil',
+              navigateTo: navigateTo,
+              operationAddedStep: 'finished',
+            });
+          } else if (operationAddedStep === 'finished') {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: ENTRY_TYPE.OUT,
             });
           }
           return;

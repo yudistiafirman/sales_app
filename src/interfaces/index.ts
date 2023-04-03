@@ -45,6 +45,7 @@ interface Input {
   showChevronAutoCompleted?: boolean;
   showClearAutoCompleted?: boolean;
   textSize?: number;
+  quantityType?: string;
   options?: Array<{
     title: string;
     value: string | any;

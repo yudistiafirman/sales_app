@@ -5,6 +5,7 @@ interface inputsValue {
   recepientName: string;
   recepientPhoneNumber: string;
   truckMixCondition: string;
+  weightBridge: string;
 }
 
 export interface OperationProjectDetails {
@@ -30,6 +31,7 @@ const initialState: operationInitState = {
     recepientName: '',
     recepientPhoneNumber: '',
     truckMixCondition: '',
+    weightBridge: '',
   },
   projectDetails: {
     deliveryOrderId: '',

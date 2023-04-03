@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import OperationList from '../element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { CAMERA, TAB_RETURN } from '@/navigation/ScreenNames';
+import { CAMERA, OPERATION, TAB_RETURN } from '@/navigation/ScreenNames';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { colors, layout } from '@/constants';
@@ -14,6 +14,8 @@ import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 import { AppDispatch, RootState } from '@/redux/store';
 import { useMachine } from '@xstate/react';
 import displayOperationListMachine from '@/machine/displayOperationListMachine';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 
 const Return = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,6 +28,7 @@ const Return = () => {
   useFocusEffect(
     React.useCallback(() => {
       send('assignUserData', { payload: userData?.type, tabActive: 'right' });
+      dispatch(resetImageURLS({ source: OPERATION }));
     }, [send, userData?.type])
   );
 
@@ -38,13 +41,15 @@ const Return = () => {
       deliveryOrderId: item?.id ? item.id : '',
       doNumber: item?.number ? item.number : '',
       projectName: item.project?.projectName ? item.project.projectName : '',
-      address: item.project?.Address?.line1 ? item.project.Address.line1 : '',
+      address: item.project?.ShippingAddress?.line1
+        ? item.project.ShippingAddress.line1
+        : '',
       lonlat: {
-        longitude: item.project?.Address?.lon
-          ? Number(item.project.Address.lon)
+        longitude: item.project?.ShippingAddress?.lon
+          ? Number(item.project.ShippingAddress.lon)
           : 0,
-        latitude: item.project?.Address?.lat
-          ? Number(item.project.Address.lat)
+        latitude: item.project?.ShippingAddress?.lat
+          ? Number(item.project.ShippingAddress.lat)
           : 0,
       },
       requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity
@@ -56,7 +61,8 @@ const Return = () => {
     dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
     navigation.navigate(CAMERA, {
       photoTitle: 'DO',
-      navigateTo: userData?.type,
+      navigateTo:
+        userData?.type === ENTRY_TYPE.WB ? ENTRY_TYPE.IN : ENTRY_TYPE.RETURN,
     });
   };
 
@@ -70,9 +76,7 @@ const Return = () => {
         refreshing={isRefreshing}
         onEndReached={() => send('onEndReached')}
         onPressList={(item) => onPressItem(item)}
-        onRefresh={() =>
-          send('onRefreshList', { payload: userData?.type })
-        }
+        onRefresh={() => send('onRefreshList', { payload: userData?.type })}
         onRetry={() => send('retryGettingList', { payload: userData?.type })}
         userType={userData?.type}
       />

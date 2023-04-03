@@ -50,6 +50,11 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
+  static deliveryOrderWeightByID = (id: string) => {
+    const url = new URL(`${API_URL}/order/m/delivery-order/${id}/weight`);
+    return url.toString();
+  };
+
   static orderSphPost = () => {
     const url = new URL(`${API_URL}/order/m/flow/quotation`);
     return url.toString();

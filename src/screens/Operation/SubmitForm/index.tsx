@@ -42,7 +42,10 @@ import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { uploadFileImage } from '@/actions/CommonActions';
 import { OperationFileType } from '@/interfaces/Operation';
-import { updateDeliveryOrder } from '@/actions/OrderActions';
+import {
+  updateDeliveryOrder,
+  updateDeliveryOrderWeight,
+} from '@/actions/OrderActions';
 import { FlatList } from 'react-native-gesture-handler';
 
 function LeftIcon() {
@@ -61,11 +64,17 @@ const SubmitForm = () => {
   );
   const { keyboardVisible } = useKeyboardActive();
   const operationType = route?.params?.operationType;
-  const operationFileType = [
+  const driversFileType = [
     OperationFileType.DO_DEPARTURE,
     OperationFileType.ARRIVAL,
     OperationFileType.TRUCK_CONDITION,
     OperationFileType.DO_SIGNED,
+  ];
+  const wbsFileType = [
+    OperationFileType.DO_DEPARTURE,
+    operationType === ENTRY_TYPE.OUT
+      ? OperationFileType.WEIGHT_OUT
+      : OperationFileType.WEIGHT_IN,
   ];
   const enableLocationHeader =
     operationType === ENTRY_TYPE.DRIVER &&
@@ -99,6 +108,8 @@ const SubmitForm = () => {
         inputsValue.recepientName.length === 0 ||
         !phoneNumberRegex.test(inputsValue.recepientPhoneNumber)
       );
+    } else if (userData?.type === ENTRY_TYPE.WB) {
+      return inputsValue.weightBridge.length === 0;
     }
   };
 
@@ -107,7 +118,7 @@ const SubmitForm = () => {
     navigation.dispatch(StackActions.popToTop());
   };
 
-  const onPressContinueDriver = async () => {
+  const onSubmitData = async () => {
     try {
       dispatch(
         openPopUp({
@@ -131,19 +142,36 @@ const SubmitForm = () => {
         'Update Delivery Order'
       );
       if (responseFiles.data.success) {
-        const newFileData = responseFiles.data.data.map((v, i) => {
-          return {
-            fileId: v.id,
-            type: operationFileType[i],
-          };
-        });
-        payload.doFiles = newFileData;
-        payload.recepientName = inputsValue.recepientName;
-        payload.recipientNumber = inputsValue.recepientPhoneNumber;
-        const responseUpdateDeliveryOrder = await updateDeliveryOrder(
-          payload,
-          projectDetails.deliveryOrderId
-        );
+        let responseUpdateDeliveryOrder: any;
+        if (userData?.type === ENTRY_TYPE.DRIVER) {
+          const newFileData = responseFiles.data.data.map((v, i) => {
+            return {
+              fileId: v.id,
+              type: driversFileType[i],
+            };
+          });
+          payload.doFiles = newFileData;
+          payload.recepientName = inputsValue.recepientName;
+          payload.recipientNumber = inputsValue.recepientPhoneNumber;
+          responseUpdateDeliveryOrder = await updateDeliveryOrder(
+            payload,
+            projectDetails.deliveryOrderId
+          );
+        } else if (userData?.type === ENTRY_TYPE.WB) {
+          const newFileData = responseFiles.data.data.map((v, i) => {
+            return {
+              fileId: v.id,
+              type: wbsFileType[i],
+            };
+          });
+          payload.doFiles = newFileData;
+          payload.weight = inputsValue.weightBridge;
+          responseUpdateDeliveryOrder = await updateDeliveryOrderWeight(
+            payload,
+            projectDetails.deliveryOrderId
+          );
+        }
+
         if (responseUpdateDeliveryOrder.data.success) {
           dispatch(
             openPopUp({
@@ -192,9 +220,7 @@ const SubmitForm = () => {
   };
 
   const onPressContinue = () => {
-    if (userData?.type === ENTRY_TYPE.DRIVER) {
-      onPressContinueDriver();
-    }
+    onSubmitData();
   };
 
   useFocusEffect(
@@ -212,6 +238,30 @@ const SubmitForm = () => {
   );
 
   useHeaderTitleChanged({ title: getHeaderTitle() });
+
+  const weightInputs: Input[] = [
+    {
+      label: 'Berat',
+      value: inputsValue.weightBridge,
+      onChange: (e) => {
+        let result: string = '' + e;
+        dispatch(
+          onChangeInputValue({
+            inputType: 'weightBridge',
+            value: result,
+          })
+        );
+      },
+      isRequire: true,
+      type: 'quantity',
+      quantityType: 'kg',
+      placeholder: 'Masukkan berat',
+      isError: !inputsValue.weightBridge,
+      outlineColor: !inputsValue.weightBridge
+        ? colors.text.errorText
+        : undefined,
+    },
+  ];
 
   const deliveryInputs: Input[] = [
     {
@@ -327,11 +377,15 @@ const SubmitForm = () => {
             </View>
             <View style={style.flexFull}>
               {(operationType === ENTRY_TYPE.DRIVER ||
-                operationType === ENTRY_TYPE.RETURN) && (
-                <BSpacer size={'small'} />
-              )}
+                operationType === ENTRY_TYPE.RETURN ||
+                operationType === ENTRY_TYPE.IN ||
+                operationType === ENTRY_TYPE.OUT) && <BSpacer size={'small'} />}
               {operationType === ENTRY_TYPE.DRIVER && (
                 <BForm titleBold="500" inputs={deliveryInputs} />
+              )}
+              {(operationType === ENTRY_TYPE.IN ||
+                operationType === ENTRY_TYPE.OUT) && (
+                <BForm titleBold="500" inputs={weightInputs} />
               )}
               {operationType === ENTRY_TYPE.RETURN && (
                 <BForm

@@ -199,6 +199,7 @@ const renderInput = (
     calendar,
     calendarTime,
     disabledFileInput,
+    quantityType
   } = input;
 
   if (type === 'quantity') {
@@ -224,7 +225,7 @@ const renderInput = (
             contentStyle={textStyles}
           />
           <View style={styles.quantityText}>
-            <BText>{'m³'}</BText>
+            <BText>{quantityType ? quantityType : 'm³'}</BText>
           </View>
         </View>
         {isError && (

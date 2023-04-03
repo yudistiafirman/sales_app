@@ -5,7 +5,9 @@ export enum ENTRY_TYPE {
   SECURITY = 'SECURITY',
   WB = 'WB',
   DISPATCH = 'DISPATCH',
+  IN = 'IN',
   RETURN = 'RETURN',
+  OUT = 'OUT',
   DRIVER = 'DRIVER',
   ADMIN = 'ADMIN'
 }
