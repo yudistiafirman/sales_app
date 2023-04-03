@@ -175,7 +175,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE[ENTRY_TYPE.DISPATCH]:
-          dispatch(setImageURLS({ file: localFile, source: OPERATION }));
+          dispatch(setOperationPhoto({ file: localFile }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Driver',
@@ -255,10 +255,18 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE[ENTRY_TYPE.RETURN]:
-          dispatch(setImageURLS({ file: localFile, source: OPERATION }));
-          navigation.navigate(SUBMIT_FORM, {
-            operationType: ENTRY_TYPE.RETURN,
-          });
+          dispatch(setOperationPhoto({ file: localFile }));
+          if (!operationAddedStep || operationAddedStep === '') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Kondisi TM',
+              navigateTo: navigateTo,
+              operationAddedStep: 'finished',
+            });
+          } else if (operationAddedStep === 'finished') {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: ENTRY_TYPE.RETURN,
+            });
+          }
           return;
         case CREATE_DEPOSIT:
           dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));

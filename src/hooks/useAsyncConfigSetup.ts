@@ -33,9 +33,6 @@ const useAsyncConfigSetup = () => {
         if (userToken) {
           const decoded = jwtDecode<UserModel.DataSuccessLogin>(userToken);
 
-          // remove later, hardcoded usertype
-          const mockedData = {...decoded, type: ENTRY_TYPE.SECURITY}
-          
           dispatch(
             setUserData({
               userData: decoded,

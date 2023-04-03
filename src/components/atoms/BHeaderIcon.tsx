@@ -7,7 +7,7 @@ import colors from '@/constants/colors';
 interface BHeaderIconProps {
   onBack?: () => void;
   size: number;
-  iconName: 'chevron-left' | 'x';
+  iconName: 'chevron-left' | 'x' | 'arrow-left';
   marginRight?: number;
   marginLeft?: number;
 }

@@ -3,6 +3,7 @@ import {
   BDivider,
   BForm,
   BGallery,
+  BHeaderIcon,
   BLocationText,
   BSpacer,
   BVisitationCard,
@@ -18,7 +19,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import {
   BackHandler,
   SafeAreaView,
@@ -76,6 +77,23 @@ const SubmitForm = () => {
       ? OperationFileType.WEIGHT_OUT
       : OperationFileType.WEIGHT_IN,
   ];
+
+  const securityDispatchFileType = [
+    OperationFileType.DO_DEPARTURE_SECURITY,
+    OperationFileType.DO_DRIVER_SECURITY,
+    OperationFileType.DO_TRUCK_CONDITION_SECURITY,
+    OperationFileType.DO_SEAL_SECURITY,
+  ];
+  const securityReturnFileType = [
+    OperationFileType.DO_RETURN_SECURITY,
+    OperationFileType.DO_RETURN_TRUCK_CONDITION_SECURITY,
+  ];
+
+  const securityFileType =
+    operationType === ENTRY_TYPE.DISPATCH
+      ? securityDispatchFileType
+      : securityReturnFileType;
+
   const enableLocationHeader =
     operationType === ENTRY_TYPE.DRIVER &&
     projectDetails.address &&
@@ -110,6 +128,10 @@ const SubmitForm = () => {
       );
     } else if (userData?.type === ENTRY_TYPE.WB) {
       return inputsValue.weightBridge.length === 0;
+    } else if (ENTRY_TYPE.DISPATCH) {
+      return photoFiles.length !== 4;
+    } else if (ENTRY_TYPE.RETURN) {
+      return inputsValue.truckMixCondition.length === 0;
     }
   };
 
@@ -170,6 +192,22 @@ const SubmitForm = () => {
             payload,
             projectDetails.deliveryOrderId
           );
+        } else if (userData?.type === ENTRY_TYPE.SECURITY) {
+          const newFileData = responseFiles.data.data.map((v, i) => {
+            return {
+              fileId: v.id,
+              type: securityFileType[i],
+            };
+          });
+          payload.doFiles = newFileData;
+          if (ENTRY_TYPE.RETURN) {
+            payload.conditionTruck = inputsValue.truckMixCondition;
+          }
+          console.log('ini payload', payload);
+          responseUpdateDeliveryOrder = await updateDeliveryOrder(
+            payload,
+            projectDetails.deliveryOrderId
+          );
         }
 
         if (responseUpdateDeliveryOrder.data.success) {
@@ -223,6 +261,24 @@ const SubmitForm = () => {
     onSubmitData();
   };
 
+  const renderHeaderLeft = useCallback(
+    () => (
+      <BHeaderIcon
+        size={layout.pad.lg + layout.pad.md}
+        iconName="arrow-left"
+        marginRight={layout.pad.lg}
+        onBack={handleBack}
+      />
+    ),
+    [handleBack]
+  );
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackVisible: false,
+      headerLeft: () => renderHeaderLeft(),
+    });
+  }, [navigation, renderHeaderLeft]);
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -388,11 +444,13 @@ const SubmitForm = () => {
                 <BForm titleBold="500" inputs={weightInputs} />
               )}
               {operationType === ENTRY_TYPE.RETURN && (
-                <BForm
-                  titleBold="500"
-                  inputs={returnInputs}
-                  spacer="extraSmall"
-                />
+                <View style={{ height: resScale(300) }}>
+                  <BForm
+                    titleBold="500"
+                    inputs={returnInputs}
+                    spacer="extraSmall"
+                  />
+                </View>
               )}
             </View>
           </View>

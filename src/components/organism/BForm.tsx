@@ -199,7 +199,7 @@ const renderInput = (
     calendar,
     calendarTime,
     disabledFileInput,
-    quantityType
+    quantityType,
   } = input;
 
   if (type === 'quantity') {

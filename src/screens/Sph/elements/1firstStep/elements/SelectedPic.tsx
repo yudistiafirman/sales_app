@@ -27,17 +27,6 @@ function GantiIcon() {
   );
 }
 
-function checkSelected(picList?: PIC[]) {
-  let isSelectedExist = false;
-  const list = picList ? picList : [];
-  list.forEach((pic) => {
-    if (pic.isSelected) {
-      isSelectedExist = true;
-    }
-  });
-  return isSelectedExist;
-}
-
 type SelectedPicType = {
   onPress?: () => void;
   setCurrentPosition?: (num: number) => void;
@@ -82,6 +71,17 @@ export default function SelectedPic({
       },
     ];
   }, [selectedCompany?.PIC]);
+
+  function checkSelected() {
+    let isSelectedExist = false;
+    const list = selectedCompany?.PIC ? selectedCompany?.PIC : [];
+    list.forEach((pic) => {
+      if (pic.isSelected) {
+        isSelectedExist = true;
+      }
+    });
+    return isSelectedExist || JSON.stringify(selectedCompany?.Pic) !== '{}';
+  }
 
   useEffect(() => {
     if (selectedCompany) {
@@ -149,7 +149,7 @@ export default function SelectedPic({
       </View>
       <BSpacer size={'extraSmall'} />
       <BButtonPrimary
-        disable={!checkSelected(selectedCompany?.PIC)}
+        disable={!checkSelected()}
         title="Lanjut"
         onPress={() => {
           if (setCurrentPosition) {
