@@ -203,10 +203,6 @@ const Transaction = () => {
             },
             Schedule: {
               ...data.Schedule,
-              SaleOrder: {
-                ...data.Schedule.SaleOrder,
-                PoProduct: undefined,
-              },
             },
           };
         }

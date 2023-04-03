@@ -50,8 +50,10 @@ function ListProduct(
     }`;
   } else if (item.Product) {
     displayName = `${
-      item?.Product?.category?.parent
+      item?.Product?.category?.parent?.name
         ? item?.Product?.category?.parent?.name + ' '
+        : item?.Product?.category?.parent?.na
+        ? item?.Product?.category?.parent?.na + ' '
         : ''
     }${item?.Product?.displayName} ${
       item?.Product?.category ? item?.Product?.category?.name : ''
@@ -178,25 +180,44 @@ const TransactionDetail = () => {
   const renderRequestedProducts = () => {
     const productData = data?.QuotationRequest?.RequestedProducts
       ? data?.QuotationRequest?.RequestedProducts
-      : data?.PoProducts;
+      : data?.PoProducts
+      ? data?.PoProducts
+      : data?.SaleOrder?.PoProduct?.RequestedProduct
+      ? data?.SaleOrder?.PoProduct?.RequestedProduct
+      : data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct;
 
-    return productData.map((item, index) =>
-      ListProduct(
-        item,
-        index,
+    if (productData?.length > 0) {
+      return productData.map((item, index) =>
+        ListProduct(
+          item,
+          index,
+          selectedType,
+          selectedType === 'PO'
+            ? data?.requestedQuantity
+            : data?.quantity
+            ? data?.quantity
+            : data?.Schedule?.quantity,
+          data?.PoProducts?.length > 0
+        )
+      );
+    } else {
+      return ListProduct(
+        productData,
+        0,
         selectedType,
-        selectedType === 'PO'
-          ? data?.requestedQuantity
-          : data?.quantity
-          ? data?.quantity
-          : data?.Schedule?.quantity,
-        data?.PoProducts?.length > 0
-      )
-    );
+        productData.quantity,
+        false
+      );
+    }
   };
 
   const renderProductList = () => {
-    if (data?.QuotationRequest?.RequestedProducts || data?.PoProducts) {
+    if (
+      data?.QuotationRequest?.RequestedProducts ||
+      data?.PoProducts ||
+      data?.SaleOrder?.PoProduct?.RequestedProduct ||
+      data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct
+    ) {
       return (
         <>
           <Text style={styles.partText}>Produk</Text>
