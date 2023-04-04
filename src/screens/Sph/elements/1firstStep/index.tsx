@@ -39,7 +39,14 @@ export default function FirstStep() {
 
 	React.useEffect(() => {
 		crashlytics().log(SPH + '-Step1');
-	}, [selectedCompany?.PIC, selectedCompany?.mainPic]);
+	}, [selectedCompany?.Pics, selectedCompany?.Pic]);
+
+	React.useEffect(() => {
+		console.log(selectedCompany, "selectedCompany");
+		console.log(selectedCompany?.Pic, "selectedCompany?.Pic");
+		console.log(selectedCompany?.Pics, "selectedCompany?.Pics");
+		console.log(selectedCompany?.mainPic, "selectedCompany?.mainPic");
+	}, [selectedCompany]);
 
 	const routes: { title: string; totalItems: number }[] = useMemo(() => {
 		return [
@@ -111,8 +118,8 @@ export default function FirstStep() {
 							onPressList={(item) => {
 								let finalPIC: any[] = [];
 								let finalItem;
-								if (item.PIC && item.PIC.length > 0 && !selectedCompany) {
-									finalPIC = [...item.PIC];
+								if (item.Pics && item.Pics.length > 0 && !selectedCompany) {
+									finalPIC = [...item.Pics];
 									finalPIC.forEach((it, index) => {
 										finalPIC[index] = {
 											...finalPIC[index],
@@ -120,7 +127,7 @@ export default function FirstStep() {
 										};
 									});
 									finalItem = { ...item };
-									if (finalItem.PIC) finalItem.PIC = finalPIC;
+									if (finalItem.Pics) finalItem.Pics = finalPIC;
 									dispatch(updateSelectedPic(finalPIC[0]));
 									dispatch(updateSelectedCompany(finalItem));
 								} else {

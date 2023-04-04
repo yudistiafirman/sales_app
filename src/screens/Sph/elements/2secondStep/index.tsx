@@ -264,6 +264,9 @@ export default function SecondStep() {
 		isSuggestionLoading,
 	]);
 
+	console.log(!!billingAddress, !!isBillingAddressSame, !!distanceFromLegok);
+	console.log(checkObj(billingAddress, isBillingAddressSame, distanceFromLegok), "checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)");
+
 	const customFooterButton = useCallback(() => {
 		return (
 			<BBackContinueBtn
@@ -420,8 +423,6 @@ const style = StyleSheet.create({
 		fontFamily: fonts.family.montserrat[400],
 		fontSize: fonts.size.md,
 		color: colors.textInput.input,
-		backgroundColor: colors.primary,
-		marginBottom: layout.pad.md
 	},
 	blocationcontainer: {
 		flex: 0.5,
