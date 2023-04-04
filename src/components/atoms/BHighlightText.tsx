@@ -17,6 +17,9 @@ export default function HighlightText({
   name,
   fontSize,
 }: higlightTextType) {
+  function escapeRegExp(text: string) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  }
   if (!searchQuery) {
     return (
       <Text
@@ -32,7 +35,11 @@ export default function HighlightText({
       </Text>
     );
   }
-  const parts = name.split(new RegExp(`(${searchQuery})`, 'gi'));
+
+  const regexStr =
+    '(' + searchQuery.trim().split(/\s+/).map(escapeRegExp).join('|') + ')';
+  const regex = new RegExp(regexStr, 'gi');
+  const parts = name.split(regex);
 
   return (
     <Text
@@ -42,24 +49,26 @@ export default function HighlightText({
       ]}
       numberOfLines={1}
     >
-      {parts.map((part, index) =>
-        part.toLowerCase() === searchQuery.toLowerCase() ? (
-          <Text
-            key={part + index}
-            style={[
-              style.normalText,
-              style.boldText,
-              fontSize
-                ? { fontSize: respFS(fontSize) }
-                : { fontSize: font.size.md },
-            ]}
-          >
-            {part}
-          </Text>
-        ) : (
-          part
-        )
-      )}
+      {parts
+        .filter((part) => part)
+        .map((part, i) =>
+          regex.test(part) ? (
+            <Text
+              key={part + i}
+              style={[
+                style.normalText,
+                style.boldText,
+                fontSize
+                  ? { fontSize: respFS(fontSize) }
+                  : { fontSize: font.size.md },
+              ]}
+            >
+              {part}
+            </Text>
+          ) : (
+            part
+          )
+        )}
     </Text>
   );
 }
@@ -67,7 +76,7 @@ const style = StyleSheet.create({
   normalText: {
     fontFamily: font.family.montserrat[500],
     color: colors.textInput.input,
-    maxWidth:resScale(200),
+    maxWidth: resScale(200),
   },
   boldText: {
     fontFamily: fonts.family.montserrat[800],
