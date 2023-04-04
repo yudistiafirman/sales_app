@@ -228,7 +228,7 @@ export default function SecondStep() {
                               inputs={inputsSelection}
                               spacer="extraSmall"
                             />
-                            <View style={style.volContent}>
+                            {/* <View style={style.volContent}>
                               <BText>Sisa vol. yang belum dikirim</BText>
                               <BText
                                 style={{
@@ -240,7 +240,7 @@ export default function SecondStep() {
                                   ? item.usedQuantity + ' m³'
                                   : 0 + ' m³'}
                               </BText>
-                            </View>
+                            </View> */}
                           </View>
                         )}
                       </View>

@@ -48,7 +48,6 @@ import {
   updateDeliveryOrderWeight,
 } from '@/actions/OrderActions';
 import { FlatList } from 'react-native-gesture-handler';
-import { all } from 'axios';
 
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
