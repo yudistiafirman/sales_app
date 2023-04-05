@@ -5,6 +5,7 @@ interface inputsValue {
   recepientName: string;
   recepientPhoneNumber: string;
   truckMixCondition: string;
+  truckMixHaveLoad: boolean;
   weightBridge: string;
 }
 
@@ -18,7 +19,7 @@ export interface OperationProjectDetails {
   doNumber: string;
 }
 
-interface operationInitState {
+export interface operationInitState {
   photoFiles: LocalFileType[];
   inputsValue: inputsValue;
   projectDetails: OperationProjectDetails;
@@ -32,6 +33,7 @@ const initialState: operationInitState = {
     recepientPhoneNumber: '',
     truckMixCondition: '',
     weightBridge: '',
+    truckMixHaveLoad: false,
   },
   projectDetails: {
     deliveryOrderId: '',
@@ -62,7 +64,7 @@ export const operationSlice = createSlice({
     },
     onChangeProjectDetails: (
       state,
-      actions: PayloadAction<{ projectDetails: ProjectDetails }>
+      actions: PayloadAction<{ projectDetails: OperationProjectDetails }>
     ) => {
       state.projectDetails = actions.payload.projectDetails;
     },
@@ -72,6 +74,12 @@ export const operationSlice = createSlice({
     ) => {
       state.photoFiles = [...state.photoFiles, actions.payload.file];
     },
+    setAllOperationPhoto: (
+      state,
+      actions: PayloadAction<{ file: LocalFileType[] }>
+    ) => {
+      state.photoFiles = [...actions.payload.file];
+    },
   },
 });
 
@@ -80,6 +88,7 @@ export const {
   onChangeInputValue,
   onChangeProjectDetails,
   setOperationPhoto,
+  setAllOperationPhoto,
 } = operationSlice.actions;
 
 export default operationSlice.reducer;

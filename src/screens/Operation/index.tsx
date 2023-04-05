@@ -9,34 +9,31 @@ import {
   CREATE_DO,
   LOCATION,
   OPERATION,
+  SUBMIT_FORM,
 } from '@/navigation/ScreenNames';
 import { useMachine } from '@xstate/react';
 import displayOperationListMachine from '@/machine/displayOperationListMachine';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
-import {
-  onChangeProjectDetails,
-  OperationProjectDetails,
-} from '@/redux/reducers/operationReducer';
-import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { OperationProjectDetails } from '@/redux/reducers/operationReducer';
 
 const Operation = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation();
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
+  const { projectDetails } = useSelector((state: RootState) => state.operation);
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
 
   React.useEffect(() => {
     crashlytics().log(userData?.type ? userData.type : 'Operation Default');
-  }, [userData?.type]);
+  }, [userData?.type, projectDetails, operationListData]);
 
   useFocusEffect(
     React.useCallback(() => {
       send('assignUserData', { payload: userData?.type });
-      dispatch(resetImageURLS({ source: OPERATION }));
     }, [send])
   );
 
@@ -45,35 +42,41 @@ const Operation = () => {
       if (userData.type === ENTRY_TYPE.OPSMANAGER) {
         navigation.navigate(CREATE_DO, { id: item });
       } else {
-        const dataToDeliver: OperationProjectDetails = {
-          deliveryOrderId: item?.id ? item.id : '',
-          doNumber: item?.number ? item.number : '',
-          projectName: item.project?.projectName
-            ? item.project.projectName
-            : '',
-          address: item.project?.ShippingAddress?.line1
-            ? item.project.ShippingAddress.line1
-            : '',
-          lonlat: {
-            longitude: item.project?.ShippingAddress?.lon
-              ? Number(item.project.ShippingAddress.lon)
+        if (projectDetails && projectDetails.deliveryOrderId === item.id) {
+          navigation.navigate(SUBMIT_FORM, {
+            operationType: userData.type,
+          });
+        } else {
+          const dataToDeliver: OperationProjectDetails = {
+            deliveryOrderId: item?.id ? item.id : '',
+            doNumber: item?.number ? item.number : '',
+            projectName: item.project?.projectName
+              ? item.project.projectName
+              : '',
+            address: item.project?.ShippingAddress?.line1
+              ? item.project.ShippingAddress.line1
+              : '',
+            lonlat: {
+              longitude: item.project?.ShippingAddress?.lon
+                ? Number(item.project.ShippingAddress.lon)
+                : 0,
+              latitude: item.project?.ShippingAddress?.lat
+                ? Number(item.project.ShippingAddress.lat)
+                : 0,
+            },
+            requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct
+              ?.requestedQuantity
+              ? item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity
               : 0,
-            latitude: item.project?.ShippingAddress?.lat
-              ? Number(item.project.ShippingAddress.lat)
-              : 0,
-          },
-          requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct
-            ?.requestedQuantity
-            ? item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity
-            : 0,
-          deliveryTime: item?.date ? item.date : '',
-        };
-
-        dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
-        navigation.navigate(CAMERA, {
-          photoTitle: 'DO',
-          navigateTo: userData.type,
-        });
+            deliveryTime: item?.date ? item.date : '',
+          };
+          dispatch(setAllOperationPhoto({ file: [] }));
+          navigation.navigate(CAMERA, {
+            photoTitle: 'DO',
+            navigateTo: userData.type,
+            operationTempData: dataToDeliver,
+          });
+        }
       }
     }
   };
@@ -117,3 +120,6 @@ const style = StyleSheet.create({
   },
 });
 export default Operation;
+function setAllOperationPhoto(arg0: { file: any }): any {
+  throw new Error('Function not implemented.');
+}

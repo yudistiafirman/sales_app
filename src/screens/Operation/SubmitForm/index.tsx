@@ -19,7 +19,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect } from 'react';
 import {
   BackHandler,
   SafeAreaView,
@@ -28,14 +28,18 @@ import {
   View,
 } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { SUBMIT_FORM } from '@/navigation/ScreenNames';
+import {
+  CAMERA,
+  GALLERY_OPERATION,
+  SUBMIT_FORM,
+} from '@/navigation/ScreenNames';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
   onChangeInputValue,
-  resetOperationState,
+  setAllOperationPhoto,
 } from '@/redux/reducers/operationReducer';
 import { useKeyboardActive } from '@/hooks';
 import moment from 'moment';
@@ -58,7 +62,6 @@ const SubmitForm = () => {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
-  const [toggleCheckBox, setToggleCheckBox] = useState(true);
   const { userData } = useSelector((state: RootState) => state.auth);
   const { inputsValue, projectDetails, photoFiles, isLoading } = useSelector(
     (state: RootState) => state.operation
@@ -72,7 +75,9 @@ const SubmitForm = () => {
     OperationFileType.DO_SIGNED,
   ];
   const wbsFileType = [
-    OperationFileType.DO_DEPARTURE,
+    operationType === ENTRY_TYPE.OUT
+      ? OperationFileType.WEIGHT_OUT
+      : OperationFileType.WEIGHT_IN,
     operationType === ENTRY_TYPE.OUT
       ? OperationFileType.WEIGHT_OUT
       : OperationFileType.WEIGHT_IN,
@@ -136,7 +141,7 @@ const SubmitForm = () => {
   };
 
   const handleBack = () => {
-    dispatch(resetOperationState());
+    // dispatch(resetOperationState());
     navigation.dispatch(StackActions.popToTop());
   };
 
@@ -219,7 +224,7 @@ const SubmitForm = () => {
             })
           );
           if (navigation.canGoBack()) {
-            dispatch(resetOperationState());
+            // dispatch(resetOperationState());
             navigation.dispatch(StackActions.popToTop());
           }
         } else {
@@ -279,6 +284,7 @@ const SubmitForm = () => {
       headerLeft: () => renderHeaderLeft(),
     });
   }, [navigation, renderHeaderLeft]);
+
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -369,19 +375,26 @@ const SubmitForm = () => {
       type: 'checkbox',
       isRequire: false,
       checkbox: {
-        value: toggleCheckBox,
-        onValueChange: setToggleCheckBox,
+        value: inputsValue.truckMixHaveLoad,
+        onValueChange: (e) => {
+          dispatch(
+            onChangeInputValue({ inputType: 'truckMixHaveLoad', value: e })
+          );
+        },
       },
     },
     {
       label: 'Kondisi TM',
-      value: '',
       isRequire: true,
       isError: false,
       type: 'dropdown',
       dropdown: {
         items: TM_CONDITION,
-        placeholder: 'Pilih Kondisi TM',
+        placeholder: inputsValue.truckMixCondition
+          ? TM_CONDITION.find((it) => {
+              return it.value === inputsValue.truckMixCondition;
+            })?.label ?? ''
+          : 'Pilih Kondisi TM',
         onChange: (value: any) => {
           dispatch(
             onChangeInputValue({ inputType: 'truckMixCondition', value: value })
@@ -390,6 +403,93 @@ const SubmitForm = () => {
       },
     },
   ];
+
+  const deleteImages = (i: number) => {
+    const filteredImages = photoFiles.filter((v, index) => index !== i + 1);
+    dispatch(setAllOperationPhoto({ file: filteredImages }));
+  };
+
+  const addMoreImages = () => {
+    switch (userData?.type) {
+      case ENTRY_TYPE.DRIVER:
+        if (photoFiles.length > 3) {
+          dispatch(
+            openPopUp({
+              popUpType: 'error',
+              popUpText: 'Maksimum file telah tercapai',
+              outsideClickClosePopUp: true,
+            })
+          );
+        } else {
+          navigation.dispatch(
+            StackActions.push(CAMERA, {
+              photoTitle: '',
+              closeButton: true,
+              navigateTo: GALLERY_OPERATION,
+            })
+          );
+        }
+        break;
+      case ENTRY_TYPE.SECURITY:
+        if (operationType === ENTRY_TYPE.DISPATCH) {
+          if (photoFiles.length > 3) {
+            dispatch(
+              openPopUp({
+                popUpType: 'error',
+                popUpText: 'Maksimum file telah tercapai',
+                outsideClickClosePopUp: true,
+              })
+            );
+          } else {
+            navigation.dispatch(
+              StackActions.push(CAMERA, {
+                photoTitle: '',
+                closeButton: true,
+                navigateTo: GALLERY_OPERATION,
+              })
+            );
+          }
+        } else {
+          if (photoFiles.length > 0) {
+            dispatch(
+              openPopUp({
+                popUpType: 'error',
+                popUpText: 'Maksimum file telah tercapai',
+                outsideClickClosePopUp: true,
+              })
+            );
+          } else {
+            navigation.dispatch(
+              StackActions.push(CAMERA, {
+                photoTitle: '',
+                closeButton: true,
+                navigateTo: GALLERY_OPERATION,
+              })
+            );
+          }
+        }
+        break;
+      case ENTRY_TYPE.WB:
+        if (photoFiles.length > 1) {
+          dispatch(
+            openPopUp({
+              popUpType: 'error',
+              popUpText: 'Maksimum file telah tercapai',
+              outsideClickClosePopUp: true,
+            })
+          );
+        } else {
+          navigation.dispatch(
+            StackActions.push(CAMERA, {
+              photoTitle: '',
+              closeButton: true,
+              navigateTo: GALLERY_OPERATION,
+            })
+          );
+        }
+        break;
+    }
+  };
 
   return (
     <SafeAreaView style={style.parent}>
@@ -429,7 +529,11 @@ const SubmitForm = () => {
               <BSpacer size={'extraSmall'} />
             </View>
             <View>
-              <BGallery picts={photoFiles} />
+              <BGallery
+                addMorePict={addMoreImages}
+                removePict={deleteImages}
+                picts={photoFiles}
+              />
             </View>
             <View style={style.flexFull}>
               {(operationType === ENTRY_TYPE.DRIVER ||

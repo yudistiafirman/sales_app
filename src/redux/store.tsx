@@ -19,7 +19,9 @@ import VisitationReducer, {
 } from './reducers/VisitationReducer';
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 import { SphStateInterface } from '@/interfaces';
-import operationReducer from './reducers/operationReducer';
+import operationReducer, {
+  operationInitState,
+} from './reducers/operationReducer';
 
 const persistConfig = {
   key: 'root',
@@ -36,14 +38,16 @@ const rootReducer = combineReducers({
   order: orderReducer,
   snackbar: snackbarReducer,
   purchaseOrder: purchaseOrderReducer,
-  operation: operationReducer,
+  operation: persistReducer<operationInitState, any>(
+    persistConfig,
+    operationReducer
+  ),
   sph: persistReducer<SphStateInterface, any>(persistConfig, SphReducer),
   visitation: persistReducer<VisitationGlobalState, any>(
     persistConfig,
     VisitationReducer
   ),
   camera: persistReducer<CameraGlobalState, any>(persistConfig, cameraReducer),
-
 });
 
 export const store = configureStore({

@@ -43,6 +43,7 @@ export const DOCUMENTS = 'DOCUMENTS';
 export const OPERATION = 'OPERATION';
 export const VISIT_HISTORY = 'VISIT_HISTORY';
 export const BLANK_SCREEN = 'BLANK_SCREEN';
+export const GALLERY_OPERATION = 'GALLERY_OPERATION';
 
 /*
     Screen Title
