@@ -30,7 +30,7 @@ const initialState: SphStateInterface = {
 	paymentDocumentsFullfilled: false,
 	paymentBankGuarantee: false,
 	chosenProducts: [],
-	useHighway: false,
+	useHighway: true,
 	uploadedAndMappedRequiredDocs: [],
 	stepSPHOneFinished: false,
 	stepSPHTwoFinished: false,

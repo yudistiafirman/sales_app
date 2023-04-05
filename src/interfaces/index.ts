@@ -395,8 +395,8 @@ interface visitationListResponse {
 		id: string;
 		name: string;
 		stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
-		PIC: PIC[];
-		pic: requiredPic;
+		Pics: PIC[];
+		Pic: requiredPic;
 		mainPic: PIC & { type?: string };
 		company: {
 			id: string;

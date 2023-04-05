@@ -115,8 +115,8 @@ const SearchFlow = ({
 			})
 		);
 
-		if (item?.PIC) {
-			const picList = item?.PIC?.map((pic: PIC, index: number) => {
+		if (item?.Pics) {
+			const picList = item?.Pics?.map((pic: Pics, index: number) => {
 				return {
 					...pic,
 					isSelected: index === 0 ? true : false,

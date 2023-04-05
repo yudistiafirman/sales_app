@@ -834,7 +834,7 @@ const renderInput = (
 const BForm = ({ inputs, spacer, noSpaceEnd, titleBold }: IProps) => {
 	return (
 		<View>
-			{inputs.map((input, index) => (
+			{inputs?.map((input, index) => (
 				<React.Fragment key={index}>
 					{renderInput(input, titleBold)}
 					{(index < inputs.length - 1 || !noSpaceEnd) && (
