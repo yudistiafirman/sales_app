@@ -7,100 +7,100 @@ import { FlatList, ListRenderItem } from 'react-native';
 import PriceListShimmer from './PriceListShimmer';
 
 interface productsData {
-  display_name?: string;
-  calcPrice: number;
-  properties: {
-    fc: string;
-    fs: string;
-    sc: string;
-    slump: number;
-  };
-  Category: {
-    name?: string;
-    Parent?: {
-      name: string;
-    };
-  };
+	display_name?: string;
+	calcPrice: number;
+	properties: {
+		fc: string;
+		fs: string;
+		sc: string;
+		slump: number;
+	};
+	Category: {
+		name?: string;
+		Parent?: {
+			name: string;
+		};
+	};
 }
 
 interface ProductListProps<ArrayOfObject> {
-  products: ArrayOfObject[];
-  onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
-  refreshing?: boolean;
-  emptyProductName?: string;
-  isLoadMore?: boolean;
-  loadProduct?: boolean;
-  isError?: boolean;
-  errorMessage?: string | unknown;
-  onRefresh?: () => void;
-  onPress?: (data: any) => void;
-  onAction?: () => void;
-  disablePressed?: boolean;
+	products: ArrayOfObject[];
+	onEndReached?:
+	| ((info: { distanceFromEnd: number }) => void)
+	| null
+	| undefined;
+	refreshing?: boolean;
+	emptyProductName?: string;
+	isLoadMore?: boolean;
+	loadProduct?: boolean;
+	isError?: boolean;
+	errorMessage?: string | unknown;
+	onRefresh?: () => void;
+	onPress?: (data: any) => void;
+	onAction?: () => void;
+	disablePressed?: boolean;
 }
 
 const ProductList = <ArrayOfObject extends productsData>({
-  products,
-  onEndReached,
-  refreshing,
-  emptyProductName,
-  isLoadMore,
-  onRefresh,
-  loadProduct,
-  isError,
-  errorMessage,
-  onPress,
-  onAction,
-  disablePressed = false,
+	products,
+	onEndReached,
+	refreshing,
+	emptyProductName,
+	isLoadMore,
+	onRefresh,
+	loadProduct,
+	isError,
+	errorMessage,
+	onPress,
+	onAction,
+	disablePressed = false,
 }: ProductListProps<ArrayOfObject>) => {
-  const renderItem: ListRenderItem<productsData> = useCallback(({ item }) => {
-    const fc =
-      item?.properties?.fc?.length > 0 ? ` / FC${item.properties.fc}` : '';
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          onPress(item);
-        }}
-        disabled={disablePressed}
-      >
-        <PriceListCard
-          productName={`${item?.display_name}${fc}`}
-          productPrice={item?.calcPrice}
-          categories={item?.Category?.Parent?.name}
-          slump={item?.properties?.slump}
-        />
-      </TouchableOpacity>
-    );
-  }, []);
-  return (
-    <FlatList
-      data={products}
-      removeClippedSubviews={false}
-      initialNumToRender={10}
-      maxToRenderPerBatch={10}
-      onRefresh={onRefresh}
-      contentContainerStyle={{ marginHorizontal: layout.pad.lg }}
-      keyExtractor={(item, index) => index.toString()}
-      onEndReached={onEndReached}
-      refreshing={refreshing}
-      ListFooterComponent={isLoadMore ? <PriceListShimmer /> : null}
-      ListEmptyComponent={
-        loadProduct ? (
-          <PriceListShimmer />
-        ) : (
-          <BEmptyState
-            isError={isError}
-            errorMessage={errorMessage}
-            onAction={onAction}
-            emptyText={`Pencarian mu ${emptyProductName} tidak ada. Coba cari produk lainnya.`}
-          />
-        )
-      }
-      renderItem={renderItem}
-    />
-  );
+	const renderItem: ListRenderItem<productsData> = useCallback(({ item }) => {
+		const fc =
+			item?.properties?.fc?.length > 0 ? ` / FC${item.properties.fc}` : '';
+		return (
+			<TouchableOpacity
+				onPress={() => {
+					onPress(item);
+				}}
+				disabled={disablePressed}
+			>
+				<PriceListCard
+					productName={`${item?.display_name}${fc}`}
+					productPrice={item?.calcPrice}
+					categories={item?.Category?.Parent?.name}
+					slump={item?.properties?.slump}
+				/>
+			</TouchableOpacity>
+		);
+	}, []);
+	return (
+		<FlatList
+			data={products}
+			removeClippedSubviews={false}
+			initialNumToRender={10}
+			maxToRenderPerBatch={10}
+			onRefresh={onRefresh}
+			contentContainerStyle={{ marginHorizontal: layout.pad.lg }}
+			keyExtractor={(item, index) => index.toString()}
+			onEndReached={onEndReached}
+			refreshing={refreshing}
+			ListFooterComponent={isLoadMore ? <PriceListShimmer /> : null}
+			ListEmptyComponent={
+				loadProduct ? (
+					<PriceListShimmer />
+				) : (
+					<BEmptyState
+						isError={isError}
+						errorMessage={errorMessage}
+						onAction={onAction}
+						emptyText={`${emptyProductName} tidak ditemukan!`}
+					/>
+				)
+			}
+			renderItem={renderItem}
+		/>
+	);
 };
 
 export default ProductList;
