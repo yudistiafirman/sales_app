@@ -37,8 +37,8 @@ const displayOperationListMachine = createMachine(
       },
       events: {} as
         | { type: 'assignUserData'; payload: string; tabActive: string }
-        | { type: 'retryGettingList'; payload: string }
-        | { type: 'onRefreshList'; payload: string }
+        | { type: 'retryGettingList'; payload: string; tabActive: string }
+        | { type: 'onRefreshList'; payload: string; tabActive: string }
         | { type: 'onEndReached' },
     },
 

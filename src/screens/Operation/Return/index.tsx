@@ -92,8 +92,8 @@ const Return = () => {
         refreshing={isRefreshing}
         onEndReached={() => send('onEndReached')}
         onPressList={(item) => onPressItem(item)}
-        onRefresh={() => send('onRefreshList', { payload: userData?.type })}
-        onRetry={() => send('retryGettingList', { payload: userData?.type })}
+        onRefresh={() => send('onRefreshList', { payload: userData?.type, tabActive: 'right' })}
+        onRetry={() => send('retryGettingList', { payload: userData?.type, tabActive: 'right' })}
         userType={userData?.type}
       />
     </SafeAreaView>
