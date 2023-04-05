@@ -532,7 +532,7 @@ const TransactionDetail = () => {
 						</>
 					)}
 				</View>
-				<View style={styles.modalFooter}>
+				{sphFiles && <View style={styles.modalFooter}>
 					<TouchableOpacity
 						style={styles.footerButton}
 						onPress={() =>
@@ -602,7 +602,7 @@ const TransactionDetail = () => {
 						/>
 						<Text style={styles.footerButtonText}>Download</Text>
 					</TouchableOpacity>
-				</View>
+				</View>}
 			</ScrollView>
 		</SafeAreaView>
 	);
