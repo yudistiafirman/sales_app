@@ -50,6 +50,7 @@ export type RootStackParamList = {
   DOCUMENTS: { projectId?: string; docs?: Docs[] };
   VISIT_HISTORY: { projectId?: string; projectName?: string };
   CREATE_DEPOSIT: undefined;
+  SEARCH_SO: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

@@ -43,6 +43,7 @@ export const DOCUMENTS = 'DOCUMENTS';
 export const OPERATION = 'OPERATION';
 export const VISIT_HISTORY = 'VISIT_HISTORY';
 export const BLANK_SCREEN = 'BLANK_SCREEN';
+export const SEARCH_SO = 'SEARCH_SO';
 
 /*
     Screen Title
@@ -82,3 +83,4 @@ export const ALL_PRODUCT_TITLE = 'Semua Produk';
 export const APPOINTMENT_TITLE = 'Buat Janji Temu';
 export const HUNTER_AND_FARMER_TITLE = 'Hunter & Farmer';
 export const DOCUMENTS_TITLE = 'Dokumen';
+export const SEARCH_SO_TITLE = 'Cari File SO';
