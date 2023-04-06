@@ -5,6 +5,7 @@ interface inputsValue {
   recepientName: string;
   recepientPhoneNumber: string;
   truckMixCondition: string;
+  truckMixHaveLoad: boolean;
   weightBridge: string;
 }
 
@@ -18,7 +19,7 @@ export interface OperationProjectDetails {
   doNumber: string;
 }
 
-interface operationInitState {
+export interface operationInitState {
   photoFiles: LocalFileType[];
   inputsValue: inputsValue;
   projectDetails: OperationProjectDetails;
@@ -32,6 +33,7 @@ const initialState: operationInitState = {
     recepientPhoneNumber: '',
     truckMixCondition: '',
     weightBridge: '',
+    truckMixHaveLoad: false,
   },
   projectDetails: {
     deliveryOrderId: '',
@@ -51,6 +53,15 @@ export const operationSlice = createSlice({
     resetOperationState: () => {
       return initialState;
     },
+    resetInputsValue: (state) => {
+      state.inputsValue = {
+        recepientName: '',
+        recepientPhoneNumber: '',
+        truckMixCondition: '',
+        weightBridge: '',
+        truckMixHaveLoad: false,
+      };
+    },
     onChangeInputValue: (
       state,
       actions: PayloadAction<{ inputType: keyof inputsValue; value: string }>
@@ -62,24 +73,46 @@ export const operationSlice = createSlice({
     },
     onChangeProjectDetails: (
       state,
-      actions: PayloadAction<{ projectDetails: ProjectDetails }>
+      actions: PayloadAction<{ projectDetails: OperationProjectDetails }>
     ) => {
       state.projectDetails = actions.payload.projectDetails;
     },
     setOperationPhoto: (
       state,
-      actions: PayloadAction<{ file: LocalFileType }>
+      actions: PayloadAction<{ file: LocalFileType; withoutAddButton: boolean }>
     ) => {
-      state.photoFiles = [...state.photoFiles, actions.payload.file];
+      let currentImages = [...state.photoFiles];
+      if (actions.payload.withoutAddButton)
+        currentImages = currentImages.filter((it) => it.file !== null);
+      currentImages.push(actions.payload.file);
+      state.photoFiles = [...currentImages];
+    },
+    setAllOperationPhoto: (
+      state,
+      actions: PayloadAction<{ file: LocalFileType[] }>
+    ) => {
+      state.photoFiles = [...actions.payload.file];
+    },
+    removeOperationPhoto: (
+      state,
+      actions: PayloadAction<{ index: number }>
+    ) => {
+      let currentImages = state.photoFiles.filter((it) => it.file !== null);
+      currentImages.splice(actions.payload.index, 1);
+      currentImages.unshift({ file: null });
+      state.photoFiles = [...currentImages];
     },
   },
 });
 
 export const {
   resetOperationState,
+  resetInputsValue,
   onChangeInputValue,
   onChangeProjectDetails,
   setOperationPhoto,
+  setAllOperationPhoto,
+  removeOperationPhoto,
 } = operationSlice.actions;
 
 export default operationSlice.reducer;

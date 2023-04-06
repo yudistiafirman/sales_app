@@ -20,7 +20,6 @@ export interface CameraGlobalState {
   visitationPhotoURLs: LocalFileType[];
   createDepositPhotoURLs: LocalFileType[];
   createSchedulePhotoURLs: LocalFileType[];
-  operationPhotoURLs: LocalFileType[];
   uploadedFilesResponse: fileResponse[];
   uploadedRequiredDocsResponse: requiredDocType[];
 }
@@ -30,7 +29,6 @@ const initialState: CameraGlobalState = {
   visitationPhotoURLs: [],
   createDepositPhotoURLs: [],
   createSchedulePhotoURLs: [],
-  operationPhotoURLs: [],
   uploadedFilesResponse: [],
   uploadedRequiredDocsResponse: [],
 };

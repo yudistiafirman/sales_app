@@ -39,6 +39,7 @@ const CameraScreen = () => {
   const photoTitle = route?.params?.photoTitle;
   const existingVisitation = route?.params?.existingVisitation;
   const operationAddedStep = route?.params?.operationAddedStep;
+  const operationTempData = route?.params?.operationTempData;
   const disabledDocPicker =
     route?.params?.disabledDocPicker !== undefined
       ? route?.params?.disabledDocPicker
@@ -114,6 +115,7 @@ const CameraScreen = () => {
           closeButton,
           existingVisitation,
           operationAddedStep,
+          operationTempData
         });
       } catch (error) {
         dispatch(
@@ -136,6 +138,7 @@ const CameraScreen = () => {
       closeButton,
       existingVisitation,
       operationAddedStep,
+      operationTempData
     });
   };
 
