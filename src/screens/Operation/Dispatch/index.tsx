@@ -71,7 +71,7 @@ const Dispatch = () => {
           : 0,
         deliveryTime: item?.date ? item.date : '',
       };
-      dispatch(setAllOperationPhoto({ file: [] }));
+      dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
       navigation.navigate(CAMERA, {
         photoTitle: 'DO',
         navigateTo:

@@ -70,7 +70,7 @@ const Return = () => {
           : 0,
         deliveryTime: item?.date ? item.date : '',
       };
-      dispatch(setAllOperationPhoto({ file: [] }));
+      dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
       navigation.navigate(CAMERA, {
         photoTitle: 'DO',
         navigateTo:
@@ -92,8 +92,15 @@ const Return = () => {
         refreshing={isRefreshing}
         onEndReached={() => send('onEndReached')}
         onPressList={(item) => onPressItem(item)}
-        onRefresh={() => send('onRefreshList', { payload: userData?.type, tabActive: 'right' })}
-        onRetry={() => send('retryGettingList', { payload: userData?.type, tabActive: 'right' })}
+        onRefresh={() =>
+          send('onRefreshList', { payload: userData?.type, tabActive: 'right' })
+        }
+        onRetry={() =>
+          send('retryGettingList', {
+            payload: userData?.type,
+            tabActive: 'right',
+          })
+        }
         userType={userData?.type}
       />
     </SafeAreaView>

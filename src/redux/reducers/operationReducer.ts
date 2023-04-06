@@ -79,9 +79,13 @@ export const operationSlice = createSlice({
     },
     setOperationPhoto: (
       state,
-      actions: PayloadAction<{ file: LocalFileType }>
+      actions: PayloadAction<{ file: LocalFileType; withoutAddButton: boolean }>
     ) => {
-      state.photoFiles = [...state.photoFiles, actions.payload.file];
+      let currentImages = [...state.photoFiles];
+      if (actions.payload.withoutAddButton)
+        currentImages = currentImages.filter((it) => it.file !== null);
+      currentImages.push(actions.payload.file);
+      state.photoFiles = [...currentImages];
     },
     setAllOperationPhoto: (
       state,
@@ -93,8 +97,9 @@ export const operationSlice = createSlice({
       state,
       actions: PayloadAction<{ index: number }>
     ) => {
-      let currentImages = state.photoFiles;
+      let currentImages = state.photoFiles.filter((it) => it.file !== null);
       currentImages.splice(actions.payload.index, 1);
+      currentImages.unshift({ file: null });
       state.photoFiles = [...currentImages];
     },
   },

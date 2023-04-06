@@ -67,7 +67,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const closeButton = route?.params?.closeButton;
   const existingVisitation = route?.params?.existingVisitation;
   const visitationData = useSelector((state: RootState) => state.visitation);
-  const { photoFiles } = useSelector((state: RootState) => state.operation);
+  const operationData = useSelector((state: RootState) => state.operation);
 
   if (closeButton) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -157,10 +157,6 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         dispatch(resetInputsValue());
         dispatch(onChangeProjectDetails({ projectDetails: operationTempData }));
       }
-
-      if (!photoFiles || photoFiles.length <= 0) {
-        dispatch(setOperationPhoto({ file: { file: null } }));
-      }
     }
 
     if (photo) DeviceEventEmitter.emit('Camera.preview', photo);
@@ -190,7 +186,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(StackActions.replace(navigateTo));
           return;
         case ENTRY_TYPE.BATCHER:
-          dispatch(setOperationPhoto({ file: localFile }));
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Mix Design',
@@ -205,7 +201,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.DISPATCH:
-          dispatch(setOperationPhoto({ file: localFile }));
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Driver',
@@ -234,7 +230,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.DRIVER:
-          dispatch(setOperationPhoto({ file: localFile }));
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Penuangan',
@@ -263,7 +259,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.IN:
-          dispatch(setOperationPhoto({ file: localFile }));
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Hasil',
@@ -278,7 +274,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.OUT:
-          dispatch(setOperationPhoto({ file: localFile }));
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Hasil',
@@ -293,7 +289,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.RETURN:
-          dispatch(setOperationPhoto({ file: localFile }));
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Kondisi TM',
@@ -327,7 +323,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(StackActions.pop(2));
           return;
         case GALLERY_OPERATION:
-          dispatch(setOperationPhoto({ file: localFile }));
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: false }));
           navigation.dispatch(StackActions.pop(2));
           return;
         default:
