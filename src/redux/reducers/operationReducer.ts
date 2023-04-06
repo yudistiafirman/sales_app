@@ -53,6 +53,15 @@ export const operationSlice = createSlice({
     resetOperationState: () => {
       return initialState;
     },
+    resetInputsValue: (state) => {
+      state.inputsValue = {
+        recepientName: '',
+        recepientPhoneNumber: '',
+        truckMixCondition: '',
+        weightBridge: '',
+        truckMixHaveLoad: false,
+      };
+    },
     onChangeInputValue: (
       state,
       actions: PayloadAction<{ inputType: keyof inputsValue; value: string }>
@@ -80,15 +89,25 @@ export const operationSlice = createSlice({
     ) => {
       state.photoFiles = [...actions.payload.file];
     },
+    removeOperationPhoto: (
+      state,
+      actions: PayloadAction<{ index: number }>
+    ) => {
+      let currentImages = state.photoFiles;
+      currentImages.splice(actions.payload.index, 1);
+      state.photoFiles = [...currentImages];
+    },
   },
 });
 
 export const {
   resetOperationState,
+  resetInputsValue,
   onChangeInputValue,
   onChangeProjectDetails,
   setOperationPhoto,
   setAllOperationPhoto,
+  removeOperationPhoto,
 } = operationSlice.actions;
 
 export default operationSlice.reducer;

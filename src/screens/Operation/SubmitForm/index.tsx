@@ -22,6 +22,7 @@ import {
 import React, { useCallback, useLayoutEffect } from 'react';
 import {
   BackHandler,
+  DeviceEventEmitter,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -39,7 +40,9 @@ import { ENTRY_TYPE } from '@/models/EnumModel';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
   onChangeInputValue,
-  setAllOperationPhoto,
+  removeOperationPhoto,
+  resetOperationState,
+  setOperationPhoto,
 } from '@/redux/reducers/operationReducer';
 import { useKeyboardActive } from '@/hooks';
 import moment from 'moment';
@@ -52,6 +55,7 @@ import {
   updateDeliveryOrderWeight,
 } from '@/actions/OrderActions';
 import { FlatList } from 'react-native-gesture-handler';
+import { LocalFileType } from '@/interfaces/LocalFileType';
 
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
@@ -127,7 +131,7 @@ const SubmitForm = () => {
   const handleDisableContinueButton = () => {
     if (userData?.type === ENTRY_TYPE.DRIVER) {
       return (
-        photoFiles.length < 4 ||
+        photoFiles.length < 5 ||
         inputsValue.recepientName.length === 0 ||
         !phoneNumberRegex.test(inputsValue.recepientPhoneNumber)
       );
@@ -136,7 +140,7 @@ const SubmitForm = () => {
     } else if (operationType === ENTRY_TYPE.RETURN) {
       return inputsValue.truckMixCondition.length === 0;
     } else if (operationType === ENTRY_TYPE.DISPATCH) {
-      return photoFiles.length !== 4;
+      return photoFiles.length !== 5;
     }
   };
 
@@ -208,7 +212,6 @@ const SubmitForm = () => {
           if (ENTRY_TYPE.RETURN) {
             payload.conditionTruck = inputsValue.truckMixCondition;
           }
-          console.log('ini payload', payload);
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             projectDetails.deliveryOrderId
@@ -216,6 +219,7 @@ const SubmitForm = () => {
         }
 
         if (responseUpdateDeliveryOrder.data.success) {
+          dispatch(resetOperationState());
           dispatch(
             openPopUp({
               popUpType: 'success',
@@ -296,7 +300,7 @@ const SubmitForm = () => {
         backAction
       );
       return () => backHandler.remove();
-    }, [handleBack])
+    }, [handleBack, photoFiles, userData?.type])
   );
 
   useHeaderTitleChanged({ title: getHeaderTitle() });
@@ -404,15 +408,18 @@ const SubmitForm = () => {
     },
   ];
 
-  const deleteImages = (i: number) => {
-    const filteredImages = photoFiles.filter((v, index) => index !== i + 1);
-    dispatch(setAllOperationPhoto({ file: filteredImages }));
-  };
+  const deleteImages = useCallback(
+    (i: number) => {
+      dispatch(removeOperationPhoto({ index: i + 1 }));
+    },
+    [photoFiles, dispatch, removeOperationPhoto]
+  );
 
-  const addMoreImages = () => {
+  const addMoreImages = useCallback(() => {
+    let title = '';
     switch (userData?.type) {
       case ENTRY_TYPE.DRIVER:
-        if (photoFiles.length > 3) {
+        if (photoFiles.length > 4) {
           dispatch(
             openPopUp({
               popUpType: 'error',
@@ -421,9 +428,18 @@ const SubmitForm = () => {
             })
           );
         } else {
+          if (photoFiles.length <= 1) {
+            title = 'DO';
+          } else if (photoFiles.length <= 2) {
+            title = 'Penuangan';
+          } else if (photoFiles.length <= 3) {
+            title = 'Isi TM';
+          } else if (photoFiles.length <= 4) {
+            title = 'DO Saat Ditandatangan';
+          }
           navigation.dispatch(
             StackActions.push(CAMERA, {
-              photoTitle: '',
+              photoTitle: title,
               closeButton: true,
               navigateTo: GALLERY_OPERATION,
             })
@@ -432,7 +448,7 @@ const SubmitForm = () => {
         break;
       case ENTRY_TYPE.SECURITY:
         if (operationType === ENTRY_TYPE.DISPATCH) {
-          if (photoFiles.length > 3) {
+          if (photoFiles.length > 4) {
             dispatch(
               openPopUp({
                 popUpType: 'error',
@@ -441,16 +457,25 @@ const SubmitForm = () => {
               })
             );
           } else {
+            if (photoFiles.length <= 1) {
+              title = 'DO';
+            } else if (photoFiles.length <= 2) {
+              title = 'Driver';
+            } else if (photoFiles.length <= 3) {
+              title = 'No Polisi TM';
+            } else if (photoFiles.length <= 4) {
+              title = 'Segel';
+            }
             navigation.dispatch(
               StackActions.push(CAMERA, {
-                photoTitle: '',
+                photoTitle: title,
                 closeButton: true,
                 navigateTo: GALLERY_OPERATION,
               })
             );
           }
         } else {
-          if (photoFiles.length > 0) {
+          if (photoFiles.length > 2) {
             dispatch(
               openPopUp({
                 popUpType: 'error',
@@ -459,9 +484,14 @@ const SubmitForm = () => {
               })
             );
           } else {
+            if (photoFiles.length <= 1) {
+              title = 'DO';
+            } else if (photoFiles.length <= 2) {
+              title = 'Kondisi TM';
+            }
             navigation.dispatch(
               StackActions.push(CAMERA, {
-                photoTitle: '',
+                photoTitle: title,
                 closeButton: true,
                 navigateTo: GALLERY_OPERATION,
               })
@@ -470,7 +500,7 @@ const SubmitForm = () => {
         }
         break;
       case ENTRY_TYPE.WB:
-        if (photoFiles.length > 1) {
+        if (photoFiles.length > 2) {
           dispatch(
             openPopUp({
               popUpType: 'error',
@@ -479,9 +509,14 @@ const SubmitForm = () => {
             })
           );
         } else {
+          if (photoFiles.length <= 1) {
+            title = 'DO';
+          } else if (photoFiles.length <= 2) {
+            title = 'Hasil';
+          }
           navigation.dispatch(
             StackActions.push(CAMERA, {
-              photoTitle: '',
+              photoTitle: title,
               closeButton: true,
               navigateTo: GALLERY_OPERATION,
             })
@@ -489,7 +524,7 @@ const SubmitForm = () => {
         }
         break;
     }
-  };
+  }, [photoFiles, dispatch]);
 
   return (
     <SafeAreaView style={style.parent}>
@@ -530,8 +565,8 @@ const SubmitForm = () => {
             </View>
             <View>
               <BGallery
-                addMorePict={addMoreImages}
-                removePict={deleteImages}
+                addMorePict={() => addMoreImages()}
+                removePict={(pos) => deleteImages(pos)}
                 picts={photoFiles}
               />
             </View>

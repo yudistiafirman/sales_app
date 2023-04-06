@@ -16,7 +16,7 @@ import displayOperationListMachine from '@/machine/displayOperationListMachine';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
-import { OperationProjectDetails } from '@/redux/reducers/operationReducer';
+import { OperationProjectDetails, setAllOperationPhoto } from '@/redux/reducers/operationReducer';
 
 const Operation = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -120,6 +120,3 @@ const style = StyleSheet.create({
   },
 });
 export default Operation;
-function setAllOperationPhoto(arg0: { file: any }): any {
-  throw new Error('Function not implemented.');
-}

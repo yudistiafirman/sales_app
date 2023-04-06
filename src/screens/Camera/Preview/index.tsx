@@ -23,6 +23,7 @@ import {
   CREATE_DEPOSIT,
   CREATE_VISITATION,
   GALLERY_DEPOSIT,
+  GALLERY_OPERATION,
   GALLERY_VISITATION,
   IMAGE_PREVIEW,
   PO,
@@ -41,6 +42,7 @@ import {
 } from '@/redux/reducers/VisitationReducer';
 import {
   onChangeProjectDetails,
+  resetInputsValue,
   setOperationPhoto,
 } from '@/redux/reducers/operationReducer';
 import { RootState } from '@/redux/store';
@@ -95,7 +97,8 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         navigateTo !== ENTRY_TYPE.DISPATCH &&
         navigateTo !== ENTRY_TYPE.RETURN &&
         navigateTo !== ENTRY_TYPE.IN &&
-        navigateTo !== ENTRY_TYPE.OUT
+        navigateTo !== ENTRY_TYPE.OUT &&
+        navigateTo !== GALLERY_OPERATION
       ) {
         return 'COVER';
       } else {
@@ -151,12 +154,12 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       navigateTo === ENTRY_TYPE.OUT
     ) {
       if (operationTempData) {
-        console.log('DATAAA:: ', JSON.stringify(operationTempData));
+        dispatch(resetInputsValue());
         dispatch(onChangeProjectDetails({ projectDetails: operationTempData }));
       }
 
       if (!photoFiles || photoFiles.length <= 0) {
-        dispatch(setOperationPhoto({ file: null }));
+        dispatch(setOperationPhoto({ file: { file: null } }));
       }
     }
 
@@ -321,6 +324,10 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           return;
         case GALLERY_DEPOSIT:
           dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
+          navigation.dispatch(StackActions.pop(2));
+          return;
+        case GALLERY_OPERATION:
+          dispatch(setOperationPhoto({ file: localFile }));
           navigation.dispatch(StackActions.pop(2));
           return;
         default:
