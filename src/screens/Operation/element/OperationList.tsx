@@ -1,5 +1,5 @@
-import { StyleSheet, FlatList, ListRenderItem } from 'react-native';
-import React, { useCallback } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
+import React from 'react';
 import { layout } from '@/constants';
 import { BEmptyState, BSpacer, BVisitationCard } from '@/components';
 import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
@@ -38,42 +38,39 @@ export default function OperationList({
   onLocationPress,
   userType,
 }: OperationListProps) {
-  const separator = useCallback(() => <BSpacer size={'small'} />, []);
-
-  const renderItem: ListRenderItem<OperationsDeliveryOrdersListResponse> =
-    useCallback(({ item }) => {
-      return (
-        <BVisitationCard
-          onPress={() => onPressList(item)}
-          onLocationPress={(lonlat) => onLocationPress(lonlat)}
-          item={{
-            name: item?.number,
-            picOrCompanyName: item?.project?.projectName,
-            unit: `${item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity} m³`,
-            pilStatus: undefined,
-            lonlat:
-              userType === ENTRY_TYPE.DRIVER
-                ? {
-                    longitude: item.project?.ShippingAddress?.lon,
-                    latitude: item.project?.ShippingAddress?.lat,
-                  }
-                : undefined,
-          }}
-        />
-      );
-    }, []);
+  const renderItem = (item: OperationsDeliveryOrdersListResponse) => {
+    return (
+      <BVisitationCard
+        onPress={() => onPressList(item)}
+        onLocationPress={(lonlat) => onLocationPress(lonlat)}
+        item={{
+          name: item?.number,
+          picOrCompanyName: item?.project?.projectName,
+          unit: `${item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity} m³`,
+          pilStatus: undefined,
+          lonlat:
+            userType === ENTRY_TYPE.DRIVER
+              ? {
+                  longitude: item.project?.ShippingAddress?.lon,
+                  latitude: item.project?.ShippingAddress?.lat,
+                }
+              : undefined,
+        }}
+      />
+    );
+  };
 
   return (
     <FlatList
       data={data}
-      removeClippedSubviews={false}
-      initialNumToRender={10}
-      maxToRenderPerBatch={10}
+      // removeClippedSubviews={false}
+      // initialNumToRender={10}
+      // maxToRenderPerBatch={10}
       onRefresh={onRefresh}
       keyExtractor={(item, index) => index.toString()}
       refreshing={refreshing}
       onEndReached={onEndReached}
-      renderItem={renderItem}
+      renderItem={(item) => renderItem(item.item)}
       ListEmptyComponent={
         loadList || refreshing ? (
           <BCommonListShimmer />
@@ -89,7 +86,7 @@ export default function OperationList({
         )
       }
       ListFooterComponent={isLoadMore ? <BCommonListShimmer /> : null}
-      ItemSeparatorComponent={separator}
+      ItemSeparatorComponent={() => <BSpacer size={'small'} />}
       style={style.flatList}
     />
   );

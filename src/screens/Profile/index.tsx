@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { TAB_PROFILE } from '@/navigation/ScreenNames';
 import { openPopUp } from '@/redux/reducers/modalReducer';
+import { resetOperationState } from '@/redux/reducers/operationReducer';
 
 const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,6 +21,7 @@ const Profile = () => {
       const response = await signOut();
       if (response) {
         bStorage.deleteItem(storageKey.userToken);
+        dispatch(resetOperationState())
         dispatch(signout(false));
         crashlytics().setUserId('');
       }

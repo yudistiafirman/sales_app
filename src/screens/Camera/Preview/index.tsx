@@ -23,10 +23,10 @@ import {
   CREATE_DEPOSIT,
   CREATE_VISITATION,
   GALLERY_DEPOSIT,
+  GALLERY_OPERATION,
   GALLERY_VISITATION,
   IMAGE_PREVIEW,
   PO,
-  OPERATION,
   SUBMIT_FORM,
 } from '@/navigation/ScreenNames';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -40,7 +40,11 @@ import {
   resetAllStepperFocused,
   updateDataVisitation,
 } from '@/redux/reducers/VisitationReducer';
-import { setOperationPhoto } from '@/redux/reducers/operationReducer';
+import {
+  onChangeProjectDetails,
+  resetInputsValue,
+  setOperationPhoto,
+} from '@/redux/reducers/operationReducer';
 import { RootState } from '@/redux/store';
 
 function ContinueIcon() {
@@ -59,9 +63,11 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const picker = route?.params?.picker;
   const navigateTo = route?.params?.navigateTo;
   const operationAddedStep = route?.params?.operationAddedStep;
+  const operationTempData = route?.params?.operationTempData;
   const closeButton = route?.params?.closeButton;
   const existingVisitation = route?.params?.existingVisitation;
   const visitationData = useSelector((state: RootState) => state.visitation);
+  const operationData = useSelector((state: RootState) => state.operation);
 
   if (closeButton) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -86,7 +92,13 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         navigateTo !== CREATE_DEPOSIT &&
         navigateTo !== GALLERY_VISITATION &&
         navigateTo !== GALLERY_DEPOSIT &&
-        navigateTo !== PO
+        navigateTo !== PO &&
+        navigateTo !== ENTRY_TYPE.DRIVER &&
+        navigateTo !== ENTRY_TYPE.DISPATCH &&
+        navigateTo !== ENTRY_TYPE.RETURN &&
+        navigateTo !== ENTRY_TYPE.IN &&
+        navigateTo !== ENTRY_TYPE.OUT &&
+        navigateTo !== GALLERY_OPERATION
       ) {
         return 'COVER';
       } else {
@@ -134,6 +146,19 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       };
     }
 
+    if (
+      navigateTo === ENTRY_TYPE.DRIVER ||
+      navigateTo === ENTRY_TYPE.DISPATCH ||
+      navigateTo === ENTRY_TYPE.RETURN ||
+      navigateTo === ENTRY_TYPE.IN ||
+      navigateTo === ENTRY_TYPE.OUT
+    ) {
+      if (operationTempData) {
+        dispatch(resetInputsValue());
+        dispatch(onChangeProjectDetails({ projectDetails: operationTempData }));
+      }
+    }
+
     if (photo) DeviceEventEmitter.emit('Camera.preview', photo);
     else DeviceEventEmitter.emit('Camera.preview', picker);
     let images: any[] = [];
@@ -160,13 +185,14 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           });
           navigation.dispatch(StackActions.replace(navigateTo));
           return;
-        case ENTRY_TYPE[ENTRY_TYPE.BATCHER]:
-          dispatch(setImageURLS({ file: localFile, source: OPERATION }));
+        case ENTRY_TYPE.BATCHER:
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Mix Design',
               navigateTo: navigateTo,
               operationAddedStep: 'finished',
+              operationTempData: operationTempData,
             });
           } else if (operationAddedStep === 'finished') {
             navigation.navigate(SUBMIT_FORM, {
@@ -174,25 +200,28 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
             });
           }
           return;
-        case ENTRY_TYPE[ENTRY_TYPE.DISPATCH]:
-          dispatch(setOperationPhoto({ file: localFile }));
+        case ENTRY_TYPE.DISPATCH:
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Driver',
               navigateTo: navigateTo,
               operationAddedStep: 'vehicle_no',
+              operationTempData: operationTempData,
             });
           } else if (operationAddedStep === 'vehicle_no') {
             navigation.navigate(CAMERA, {
               photoTitle: 'No Polisi TM',
               navigateTo: navigateTo,
               operationAddedStep: 'seal',
+              operationTempData: operationTempData,
             });
           } else if (operationAddedStep === 'seal') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Segel',
               navigateTo: navigateTo,
               operationAddedStep: 'finished',
+              operationTempData: operationTempData,
             });
           } else if (operationAddedStep === 'finished') {
             navigation.navigate(SUBMIT_FORM, {
@@ -201,24 +230,27 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.DRIVER:
-          dispatch(setOperationPhoto({ file: localFile }));
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Penuangan',
               navigateTo: navigateTo,
               operationAddedStep: 'tm_value',
+              operationTempData: operationTempData,
             });
           } else if (operationAddedStep === 'tm_value') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Isi TM',
               navigateTo: navigateTo,
               operationAddedStep: 'do_signed',
+              operationTempData: operationTempData,
             });
           } else if (operationAddedStep === 'do_signed') {
             navigation.navigate(CAMERA, {
               photoTitle: 'DO Saat Ditandatangan',
               navigateTo: navigateTo,
               operationAddedStep: 'finished',
+              operationTempData: operationTempData,
             });
           } else if (operationAddedStep === 'finished') {
             navigation.navigate(SUBMIT_FORM, {
@@ -227,12 +259,13 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.IN:
-          dispatch(setOperationPhoto({ file: localFile }));
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Hasil',
               navigateTo: navigateTo,
               operationAddedStep: 'finished',
+              operationTempData: operationTempData,
             });
           } else if (operationAddedStep === 'finished') {
             navigation.navigate(SUBMIT_FORM, {
@@ -241,12 +274,13 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.OUT:
-          dispatch(setOperationPhoto({ file: localFile }));
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Hasil',
               navigateTo: navigateTo,
               operationAddedStep: 'finished',
+              operationTempData: operationTempData,
             });
           } else if (operationAddedStep === 'finished') {
             navigation.navigate(SUBMIT_FORM, {
@@ -254,13 +288,14 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
             });
           }
           return;
-        case ENTRY_TYPE[ENTRY_TYPE.RETURN]:
-          dispatch(setOperationPhoto({ file: localFile }));
+        case ENTRY_TYPE.RETURN:
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Kondisi TM',
               navigateTo: navigateTo,
               operationAddedStep: 'finished',
+              operationTempData: operationTempData,
             });
           } else if (operationAddedStep === 'finished') {
             navigation.navigate(SUBMIT_FORM, {
@@ -285,6 +320,10 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           return;
         case GALLERY_DEPOSIT:
           dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
+          navigation.dispatch(StackActions.pop(2));
+          return;
+        case GALLERY_OPERATION:
+          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: false }));
           navigation.dispatch(StackActions.pop(2));
           return;
         default:

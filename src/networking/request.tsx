@@ -10,6 +10,7 @@ import perf from '@react-native-firebase/perf';
 import { openSnackbar } from '@/redux/reducers/snackbarReducer';
 import Config from 'react-native-config';
 import { Platform } from 'react-native';
+import { resetOperationState } from '@/redux/reducers/operationReducer';
 
 const URL_PRODUCTIVITY =
   Platform.OS === 'android'
@@ -139,6 +140,7 @@ instance.interceptors.response.use(
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
         await bStorage.deleteItem(storageKey.userToken);
+        store.dispatch(resetOperationState())
         store.dispatch(signout(false));
         return Promise.resolve(res);
       }

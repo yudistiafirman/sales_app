@@ -1,5 +1,6 @@
 import { Docs, visitationListResponse } from '@/interfaces';
 import { ENTRY_TYPE } from '@/models/EnumModel';
+import { OperationProjectDetails } from '@/redux/reducers/operationReducer';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PhotoFile } from 'react-native-vision-camera';
 
@@ -15,6 +16,7 @@ export type RootStackParamList = {
     operationAddedStep?: string;
     disabledDocPicker?: boolean;
     disabledGalleryPicker?: boolean;
+    operationTempData?: OperationProjectDetails;
   };
   IMAGE_PREVIEW: {
     photo?: PhotoFile;
@@ -24,6 +26,7 @@ export type RootStackParamList = {
     closeButton?: boolean;
     existingVisitation?: visitationListResponse;
     operationAddedStep?: string;
+    operationTempData?: OperationProjectDetails;
   };
   ALL_PRODUCT: {
     coordinate: { longitude: number; latitude: number };
