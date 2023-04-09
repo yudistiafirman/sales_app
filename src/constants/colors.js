@@ -11,6 +11,7 @@ const colors = {
   whatsAppGreen: '#1DAD22',
   pitchBlack: '#000000',
   blueSky: '#B0D8FF',
+  lightRed: '#ECECEC',
   text: {
     dark: '#191919',
     darker: '#202020',

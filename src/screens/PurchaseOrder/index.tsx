@@ -35,11 +35,24 @@ const PurchaseOrder = () => {
     poImages,
     stepsDone,
     paymentType,
+    checked,
+    lessThanSixValue,
+    lessThanFiveValue,
   } = poState.currentState.context;
   const { keyboardVisible } = useKeyboardActive();
   const [isPopupExitVisible, setIsPopupExitVisible] = useState(false);
   const labels = ['Cari SPH', 'Detil Pembayaran', 'Detil Produk'];
   const isBtnFooterShown = !poState.currentState.matches('firstStep.SearchSph');
+
+  const checkHasSpecialMobilizationPrice = () => {
+    if (checked === 'first') {
+      if (lessThanFiveValue === '0' || lessThanSixValue === '') {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
 
   const handleDisableContinueBtn = () => {
     if (currentStep === 0) {
@@ -61,7 +74,9 @@ const PurchaseOrder = () => {
         (v) => v.quantity.length === 0 || v.quantity[0] === '0'
       );
       return (
-        hasNoQuantityMultiProducts.length > 0 || selectedProducts.length === 0
+        hasNoQuantityMultiProducts.length > 0 ||
+        selectedProducts.length === 0 ||
+        checkHasSpecialMobilizationPrice()
       );
     }
   };

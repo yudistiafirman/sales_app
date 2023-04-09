@@ -1,10 +1,13 @@
 import { bStorage } from '@/actions';
+import { BForm } from '@/components';
 import BChoosenProductList from '@/components/templates/BChoosenProductList';
+import { Input } from '@/interfaces';
 import { PO } from '@/navigation/ScreenNames';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { AppDispatch, RootState } from '@/redux/store';
+import formatCurrency from '@/utils/formatCurrency';
 import { StackActions, useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 type ModalType = 'loading' | 'success' | 'error';
@@ -18,6 +21,9 @@ const ProductDetail = () => {
     choosenSphDataFromModal,
     selectedProducts,
     isLoadingPostPurchaseOrder,
+    checked,
+    lessThanSixValue,
+    lessThanFiveValue,
   } = poState.currentState.context;
   const isPostingPurchaseOrder =
     poState.currentState.matches('PostPurchaseOrder');
@@ -65,6 +71,61 @@ const ProductDetail = () => {
 
     dispatch({ type: 'backToInitialState' });
   }, [dispatch, navigation]);
+
+  const comboRadioBtnInput: Input[] = [
+    {
+      type: 'comboRadioButton',
+      isRequire: false,
+      label: 'Biaya Mobilisasi Spesial',
+      comboRadioBtn: {
+        firstText: 'Ya',
+        secondText: 'Tidak',
+        firstValue: 'first',
+        secondValue: 'second',
+        firstStatus: checked === 'first' ? 'checked' : 'unchecked',
+        secondStatus: checked === 'second' ? 'checked' : 'unchecked',
+        onSetComboRadioButtonValue: (value: string) =>
+          dispatch({ type: 'switchingMobilizationValue', value: value }),
+        firstChildren: checked === 'first' && (
+          <BForm
+            titleBold="500"
+            inputs={[
+              {
+                type: 'tableInput',
+                isRequire: false,
+                tableInput: {
+                  firstColumnLabel: 'Volume',
+                  secondColumnLabel: 'Harga Mobilisasi Spesial',
+                  onChangeValue: (value, index) =>
+                    dispatch({
+                      type: 'onChangeMobilizationPrice',
+                      value: value,
+                      index: index,
+                    }),
+                  tableInputListItem: [
+                    {
+                      firstColumnRangeTitle: '5-6',
+                      tableInputPlaceholder: '0',
+                      tableInputKeyboardType: 'numeric',
+                      tableInputValue: formatCurrency(Number(lessThanSixValue)),
+                    },
+                    {
+                      firstColumnRangeTitle: '<5',
+                      tableInputPlaceholder: '0',
+                      tableInputKeyboardType: 'numeric',
+                      tableInputValue: formatCurrency(
+                        Number(lessThanFiveValue)
+                      ),
+                    },
+                  ],
+                },
+              },
+            ]}
+          />
+        ),
+      },
+    },
+  ];
 
   useEffect(() => {
     if (isPostingPurchaseOrder) {
@@ -114,6 +175,7 @@ const ProductDetail = () => {
       onChecked={(data) => dispatch({ type: 'selectProduct', value: data })}
       selectedProducts={selectedProducts}
       hasMultipleCheck
+      comboRadioBtnInput={comboRadioBtnInput}
       calculatedTotalPrice={calculatedTotalPrice()}
       onChangeQuantity={(index: number, value: string) =>
         dispatch({ type: 'onChangeQuantity', index, value })
