@@ -12,7 +12,7 @@ import {
   StepOne,
 } from '@/context/AppointmentContext';
 import * as React from 'react';
-import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
+import { Alert, BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import FirstStep from './element/FirstStep';
 import { resScale } from '@/utils';
 import { useAppointmentData } from '@/hooks';
