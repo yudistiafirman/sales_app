@@ -44,6 +44,7 @@ export const OPERATION = 'OPERATION';
 export const VISIT_HISTORY = 'VISIT_HISTORY';
 export const BLANK_SCREEN = 'BLANK_SCREEN';
 export const SEARCH_SO = 'SEARCH_SO';
+export const SEARCH_SO_SIGNED_PHOTO = 'SEARCH_SO.SIGNED_PHOTO';
 export const GALLERY_OPERATION = 'GALLERY_OPERATION';
 
 /*

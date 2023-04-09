@@ -27,6 +27,8 @@ import {
   GALLERY_VISITATION,
   IMAGE_PREVIEW,
   PO,
+  SEARCH_SO,
+  SEARCH_SO_SIGNED_PHOTO,
   SUBMIT_FORM,
 } from '@/navigation/ScreenNames';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -186,7 +188,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(StackActions.replace(navigateTo));
           return;
         case ENTRY_TYPE.BATCHER:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Mix Design',
@@ -201,7 +205,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.DISPATCH:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Driver',
@@ -230,7 +236,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.DRIVER:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Penuangan',
@@ -259,7 +267,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.IN:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Hasil',
@@ -274,7 +284,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.OUT:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Hasil',
@@ -289,7 +301,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.RETURN:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Kondisi TM',
@@ -302,6 +316,21 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
               operationType: ENTRY_TYPE.RETURN,
             });
           }
+          return;
+        case SEARCH_SO_SIGNED_PHOTO:
+          dispatch(setImageURLS({ file: localFile, source: SEARCH_SO }));
+          navigation.navigate(CAMERA, {
+            photoTitle: '/ File SO yang telah di TTD',
+            navigateTo: SEARCH_SO,
+            closeButton: true,
+            disabledDocPicker: false,
+            disabledGalleryPicker: false,
+          });
+          return;
+        case SEARCH_SO:
+          dispatch(setImageURLS({ file: localFile, source: SEARCH_SO }));
+          navigation.goBack();
+          navigation.dispatch(StackActions.replace(navigateTo));
           return;
         case CREATE_DEPOSIT:
           dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
@@ -323,7 +352,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(StackActions.pop(2));
           return;
         case GALLERY_OPERATION:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: false }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: false })
+          );
           navigation.dispatch(StackActions.pop(2));
           return;
         default:

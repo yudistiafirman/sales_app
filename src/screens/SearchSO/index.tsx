@@ -1,44 +1,25 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import {
-  SafeAreaView,
-  View,
-  DeviceEventEmitter,
-  Platform,
-  StyleSheet,
-} from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import {
-  BEmptyState,
-  BHeaderIcon,
-  BSpacer,
-  BTabSections,
-  ProductList,
-} from '@/components';
-import { colors, layout } from '@/constants';
+import { SafeAreaView, View, Platform } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { BEmptyState, BHeaderIcon, BSpacer } from '@/components';
+import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
-import { searchProductMachine } from '@/machine/searchProductMachine';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { SEARCH_SO } from '@/navigation/ScreenNames';
+import {
+  CAMERA,
+  SEARCH_SO,
+  SEARCH_SO_SIGNED_PHOTO,
+} from '@/navigation/ScreenNames';
 import SearchSONavbar from './element/SearchSONavbar';
-import { resScale } from '@/utils';
+import SOList from './element/SOList';
+import searchSOMachine from '@/machine/searchSOMachine';
 
 const SearchSO = () => {
-  const route = useRoute<RouteProp<Record<string, object>, string>>();
-  let isGoback: boolean = false;
-  if (route.params) {
-    const { isGobackAfterPress } = route.params as {
-      isGobackAfterPress: boolean;
-      distance: number;
-    };
-    isGoback = isGobackAfterPress;
-  }
-
-  const [index, setIndex] = React.useState(0);
   const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();
-  const [state, send] = useMachine(searchProductMachine);
+  const [state, send] = useMachine(searchSOMachine);
 
   const renderHeaderLeft = React.useCallback(
     () => (
@@ -57,12 +38,13 @@ const SearchSO = () => {
 
   React.useEffect(() => {
     crashlytics().log(SEARCH_SO);
+  }, []);
 
-    if (route?.params) {
-      const { distance } = route.params;
-      send('sendingParams', { value: distance });
-    }
-  }, [route?.params]);
+  useFocusEffect(
+    React.useCallback(() => {
+      send('assignKeyword', { payload: searchValue });
+    }, [send])
+  );
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -74,16 +56,23 @@ const SearchSO = () => {
   const onChangeText = (text: string) => {
     setSearchValue(text);
 
-    if (text.length === 0) {
-      send('clearInput');
-    } else {
-      send('searchingProducts', { value: text });
-    }
+    if (text.length > 2) send('onRefreshList', { payload: text });
+    else if (text.length < 1) send('onRefreshList', { payload: '' });
   };
 
   const onClearValue = () => {
     setSearchValue('');
-    send('clearInput');
+    send('assignKeyword', { payload: '' });
+  };
+
+  const onPressItem = (item: any) => {
+    navigation.navigate(CAMERA, {
+      photoTitle: '/ File SO',
+      navigateTo: SEARCH_SO_SIGNED_PHOTO,
+      closeButton: true,
+      disabledDocPicker: false,
+      disabledGalleryPicker: false,
+    });
   };
 
   useCustomHeaderCenter(
@@ -118,70 +107,36 @@ const SearchSO = () => {
     [searchValue]
   );
 
-  const onTabPress = ({ route }) => {
-    const tabIndex = index === 0 ? 1 : 0;
-    if (route.key !== routes[index].key) {
-      send('onChangeTab', { value: tabIndex });
-    }
-  };
+  const {
+    soListData,
+    isLoading,
+    isLoadMore,
+    errorMessage,
+    isRefreshing,
+    keyword,
+  } = state.context;
 
-  const { routes, productsData, loadProduct, errorMessage } = state.context;
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />
-      {state.matches('errorGettingCategories') && (
-        <BEmptyState
-          isError
-          errorMessage={errorMessage}
-          onAction={() => send('retryGettingCategories')}
-        />
-      )}
-      {routes.length > 0 ? (
-        <BTabSections
-          tabStyle={styles.tabStyle}
-          indicatorStyle={styles.tabIndicator}
-          navigationState={{ index, routes }}
-          onTabPress={onTabPress}
-          renderScene={() => (
-            <ProductList
-              products={productsData}
-              loadProduct={loadProduct}
-              emptyProductName={searchValue}
-              isError={state.matches('errorGettingProductsData')}
-              errorMessage={errorMessage}
-              onAction={() => send('retryGettingProductsData')}
-              onPress={(data) => {
-                DeviceEventEmitter.emit('event.testEvent', { data });
-                if (isGoback) {
-                  navigation.goBack();
-                }
-              }}
-            />
-          )}
-          onIndexChange={setIndex}
-          tabBarStyle={styles.tabBarStyle}
-        />
-      ) : (
+      {keyword !== '' && searchValue.length < 3 ? (
         <BEmptyState emptyText={'Minimal 3 huruf!'} />
+      ) : (
+        <SOList
+          data={soListData}
+          loadList={isLoading}
+          isLoadMore={isLoadMore}
+          refreshing={isRefreshing}
+          onEndReached={() => send('onEndReached', { payload: searchValue })}
+          onPressList={(item) => onPressItem(item)}
+          onRefresh={() => send('onRefreshList', { payload: searchValue })}
+          onRetry={() => send('retryGettingList', { payload: searchValue })}
+          keyword={keyword}
+          errorMessage={errorMessage}
+        />
       )}
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  tabIndicator: {
-    height: 2,
-    backgroundColor: colors.primary,
-    marginLeft: resScale(15.5),
-  },
-  tabStyle: {
-    width: 'auto',
-    paddingHorizontal: layout.pad.lg,
-  },
-  tabBarStyle: {
-    backgroundColor: colors.white,
-    paddingHorizontal: layout.pad.lg,
-  },
-});
 
 export default SearchSO;
