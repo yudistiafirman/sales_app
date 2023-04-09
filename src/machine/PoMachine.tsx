@@ -35,6 +35,7 @@ const purchaseOrderInitialState = {
   isUseExistingFiles: false,
   isLoadingPostPurchaseOrder: false,
   isFirstTimeOpenCamera: true,
+  customerType: 'COMPANY',
 };
 
 const POMachine =
@@ -510,7 +511,24 @@ const POMachine =
           const hasFileNotUploadedBefore = context.files.filter(
             (v) => v.projectDocId === null
           );
-          return hasFileNotUploadedBefore.length > 0;
+          if (context.customerType === 'INDIVIDU') {
+            return hasFileNotUploadedBefore.length > 0;
+          } else {
+            if (context.paymentType === 'CREDIT') {
+              return hasFileNotUploadedBefore.length > 0;
+            } else {
+              const hasUploadedNpwpBefore = context.files.filter(
+                (v) => v.isRequire === true && v.projectDocId === null
+              );
+              const hasUploadedKtpBefore = context.files.find(
+                (v) => v.isRequire === false && v.projectDocId === null
+              );
+              return (
+                hasUploadedNpwpBefore.length > 0 ||
+                JSON.stringify(hasFileNotUploadedBefore) !== '{}'
+              );
+            }
+          }
         },
       },
       actions: {
@@ -684,6 +702,8 @@ const POMachine =
         closeModalSph: assign((_context, event) => {
           return {
             choosenSphDataFromModal: event.value,
+            customerType:
+              event.value.QuotationRequests[0].Visitation.customerType,
             isUseExistingFiles: false,
             selectedProducts: [],
           };
@@ -736,7 +756,8 @@ const POMachine =
             postPoPayload: {
               quotationLetterId: QuotationLetter.id,
               projectId: context.choosenSphDataFromModal.id,
-              poNumber: context.poNumber,
+              poNumber:
+                context.customerType === 'INDIVIDU' ? '' : context.poNumber,
               poProducts:
                 context.selectedProducts.length > 0
                   ? context.selectedProducts?.map((val) => {
