@@ -525,7 +525,7 @@ const POMachine =
               );
               return (
                 hasUploadedNpwpBefore.length > 0 ||
-                JSON.stringify(hasFileNotUploadedBefore) !== '{}'
+                JSON.stringify(hasUploadedKtpBefore) === '{}'
               );
             }
           }

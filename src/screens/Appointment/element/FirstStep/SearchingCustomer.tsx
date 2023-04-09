@@ -56,7 +56,7 @@ const SearchingCustomer = () => {
             value: [{ id: item.Company.id, title: item.Company.name }],
           });
         }
-
+        console.log('ini item', item);
         const picList = item.Pics;
         if (picList.length === 1) {
           picList[0].isSelected = true;
