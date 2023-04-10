@@ -140,6 +140,14 @@ const CreateScheduleScreen = () => {
       action.updateValue('step', nextStep);
     } else {
       try {
+        dispatch(
+          openPopUp({
+            popUpType: 'loading',
+            popUpText: 'Membuat Jadwal',
+            highlightedText: 'schedule',
+            outsideClickClosePopUp: false,
+          })
+        );
         let payload: CreateSchedule = {
           saleOrderId: values.stepTwo?.salesOrder?.id,
           projectId: values.existingProjectID,

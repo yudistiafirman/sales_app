@@ -120,6 +120,14 @@ const Deposit = () => {
       action.updateValue('step', nextStep);
     } else {
       try {
+        dispatch(
+          openPopUp({
+            popUpType: 'loading',
+            popUpText: 'Menambahkan deposit',
+            highlightedText: 'Deposit',
+            outsideClickClosePopUp: false,
+          })
+        );
         const photoFiles = values.stepOne?.deposit?.picts
           ?.filter((v) => v.file !== null)
           .map((photo) => {
