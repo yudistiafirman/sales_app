@@ -6,4 +6,5 @@ export interface updateDeliverOrder {
   recepientName: string;
   recipientNumber: string;
   conditionTruck: string;
+  status?: string
 }
