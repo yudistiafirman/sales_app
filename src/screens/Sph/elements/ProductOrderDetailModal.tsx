@@ -235,13 +235,15 @@ export default function ProductCartModal({
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
               />
-              {!!(+detailOrder.sellPrice < productData.calcPrice) && (
-                <BText size="small" color="primary" bold="100">
-                  {!detailOrder.sellPrice
-                    ? 'Harga jual harus diisi'
-                    : 'Harga tidak bisa lebih rendah dari Harga Jual Terendah'}
-                </BText>
-              )}
+              {
+              // !!(+detailOrder.sellPrice < productData.calcPrice) && (
+              //   <BText size="small" color="primary" bold="100">
+              //     {!detailOrder.sellPrice
+              //       ? 'Harga jual harus diisi'
+              //       : 'Harga tidak bisa lebih rendah dari Harga Jual Terendah'}
+              //   </BText>
+              // )
+              }
             </View>
           </View>
           <BSpacer size={'small'} />
@@ -263,7 +265,7 @@ export default function ProductCartModal({
           <BButtonPrimary
             title="Tambah Produk"
             disable={
-              +detailOrder.sellPrice < productData.calcPrice ||
+              // +detailOrder.sellPrice < productData.calcPrice ||
               !detailOrder.volume
             }
             onPress={() => {
