@@ -7,19 +7,18 @@ import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {
-  CAMERA,
-  SEARCH_SO,
-  SEARCH_SO_SIGNED_PHOTO,
-} from '@/navigation/ScreenNames';
+import { CAMERA, FORM_SO, SEARCH_SO } from '@/navigation/ScreenNames';
 import SearchSONavbar from './element/SearchSONavbar';
 import SOList from './element/SOList';
 import searchSOMachine from '@/machine/searchSOMachine';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 const SearchSO = () => {
   const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();
   const [state, send] = useMachine(searchSOMachine);
+  const soData = useSelector((state: RootState) => state.salesOrder);
 
   const renderHeaderLeft = React.useCallback(
     () => (
@@ -66,13 +65,21 @@ const SearchSO = () => {
   };
 
   const onPressItem = (item: any) => {
-    navigation.navigate(CAMERA, {
-      photoTitle: '/ File SO',
-      navigateTo: SEARCH_SO_SIGNED_PHOTO,
-      closeButton: true,
-      disabledDocPicker: false,
-      disabledGalleryPicker: false,
-    });
+    const number = item?.brikNumber;
+    const id = item?.id;
+    if (soData.photoFiles && soData.selectedID === id) {
+      navigation.navigate(FORM_SO);
+    } else {
+      navigation.navigate(CAMERA, {
+        photoTitle: '/ File SO yang telah di TTD',
+        navigateTo: FORM_SO,
+        closeButton: true,
+        disabledDocPicker: false,
+        disabledGalleryPicker: false,
+        soID: id,
+        soNumber: number,
+      });
+    }
   };
 
   useCustomHeaderCenter(

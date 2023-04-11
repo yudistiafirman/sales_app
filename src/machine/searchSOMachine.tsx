@@ -1,4 +1,4 @@
-import { getConfirmedPurchaseOrder } from '@/actions/OrderActions';
+import { getAllPurchaseOrders, getConfirmedPurchaseOrder } from '@/actions/OrderActions';
 import { assign, createMachine } from 'xstate';
 
 const searchSOMachine = createMachine(
@@ -106,12 +106,12 @@ const searchSOMachine = createMachine(
     services: {
       fetchSOListData: async (context, event) => {
         try {
-          let response = await getConfirmedPurchaseOrder(
+          let response = await getAllPurchaseOrders(
             context.page.toString(),
             context.size.toString(),
-            context.keyword
+            context.keyword,
+            'CONFIRMED'
           );
-
           return response.data;
         } catch (error) {
           throw new Error(error);

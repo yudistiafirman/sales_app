@@ -17,6 +17,8 @@ export type RootStackParamList = {
     disabledDocPicker?: boolean;
     disabledGalleryPicker?: boolean;
     operationTempData?: OperationProjectDetails;
+    soID?: string;
+    soNumber?: string;
   };
   IMAGE_PREVIEW: {
     photo?: PhotoFile;
@@ -27,6 +29,8 @@ export type RootStackParamList = {
     existingVisitation?: visitationListResponse;
     operationAddedStep?: string;
     operationTempData?: OperationProjectDetails;
+    soID?: string;
+    soNumber?: string;
   };
   ALL_PRODUCT: {
     coordinate: { longitude: number; latitude: number };
@@ -54,6 +58,7 @@ export type RootStackParamList = {
   VISIT_HISTORY: { projectId?: string; projectName?: string };
   CREATE_DEPOSIT: undefined;
   SEARCH_SO: undefined;
+  FORM_SO: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

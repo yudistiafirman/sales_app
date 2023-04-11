@@ -22,13 +22,13 @@ import {
   CAMERA,
   CREATE_DEPOSIT,
   CREATE_VISITATION,
+  FORM_SO,
   GALLERY_DEPOSIT,
   GALLERY_OPERATION,
+  GALLERY_SO,
   GALLERY_VISITATION,
   IMAGE_PREVIEW,
   PO,
-  SEARCH_SO,
-  SEARCH_SO_SIGNED_PHOTO,
   SUBMIT_FORM,
 } from '@/navigation/ScreenNames';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -48,6 +48,12 @@ import {
   setOperationPhoto,
 } from '@/redux/reducers/operationReducer';
 import { RootState } from '@/redux/store';
+import {
+  onUpdateSOID,
+  onUpdateSONumber,
+  setAllSOPhoto,
+  setSOPhoto,
+} from '@/redux/reducers/salesOrder';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -68,6 +74,8 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const operationTempData = route?.params?.operationTempData;
   const closeButton = route?.params?.closeButton;
   const existingVisitation = route?.params?.existingVisitation;
+  const soNumber = route?.params?.soNumber;
+  const soID = route?.params?.soID;
   const visitationData = useSelector((state: RootState) => state.visitation);
   const operationData = useSelector((state: RootState) => state.operation);
 
@@ -100,7 +108,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         navigateTo !== ENTRY_TYPE.RETURN &&
         navigateTo !== ENTRY_TYPE.IN &&
         navigateTo !== ENTRY_TYPE.OUT &&
-        navigateTo !== GALLERY_OPERATION
+        navigateTo !== GALLERY_OPERATION &&
+        navigateTo !== FORM_SO &&
+        navigateTo !== GALLERY_SO
       ) {
         return 'COVER';
       } else {
@@ -159,6 +169,12 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         dispatch(resetInputsValue());
         dispatch(onChangeProjectDetails({ projectDetails: operationTempData }));
       }
+    }
+
+    if (navigateTo === FORM_SO) {
+      dispatch(onUpdateSONumber({ number: soNumber }));
+      dispatch(onUpdateSOID({ id: soID }));
+      dispatch(setAllSOPhoto({ file: [{ file: null }] }));
     }
 
     if (photo) DeviceEventEmitter.emit('Camera.preview', photo);
@@ -317,23 +333,17 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
             });
           }
           return;
-        case SEARCH_SO_SIGNED_PHOTO:
-          dispatch(setImageURLS({ file: localFile, source: SEARCH_SO }));
-          navigation.navigate(CAMERA, {
-            photoTitle: '/ File SO yang telah di TTD',
-            navigateTo: SEARCH_SO,
-            closeButton: true,
-            disabledDocPicker: false,
-            disabledGalleryPicker: false,
-          });
+        case FORM_SO:
+          dispatch(setSOPhoto({ file: localFile }));
+          navigation.dispatch(StackActions.pop(2));
+          navigation.navigate(navigateTo);
           return;
-        case SEARCH_SO:
-          dispatch(setImageURLS({ file: localFile, source: SEARCH_SO }));
-          navigation.goBack();
-          navigation.dispatch(StackActions.replace(navigateTo));
+        case GALLERY_SO:
+          dispatch(setSOPhoto({ file: localFile }));
+          navigation.dispatch(StackActions.pop(2));
           return;
         case CREATE_DEPOSIT:
-          dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
+          dispatch(setSOPhoto({ file: localFile }));
           navigation.goBack();
           navigation.dispatch(StackActions.replace(navigateTo));
           return;

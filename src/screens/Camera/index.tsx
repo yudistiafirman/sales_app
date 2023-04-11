@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  Animated,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Platform,
-} from 'react-native';
+import { Animated, SafeAreaView, StyleSheet, View } from 'react-native';
 import {
   useNavigation,
   useRoute,
@@ -40,6 +34,8 @@ const CameraScreen = () => {
   const existingVisitation = route?.params?.existingVisitation;
   const operationAddedStep = route?.params?.operationAddedStep;
   const operationTempData = route?.params?.operationTempData;
+  const soNumber = route?.params?.soNumber;
+  const soID = route?.params?.soID;
   const disabledDocPicker =
     route?.params?.disabledDocPicker !== undefined
       ? route?.params?.disabledDocPicker
@@ -115,7 +111,9 @@ const CameraScreen = () => {
           closeButton,
           existingVisitation,
           operationAddedStep,
-          operationTempData
+          operationTempData,
+          soID,
+          soNumber,
         });
       } catch (error) {
         dispatch(
@@ -138,7 +136,9 @@ const CameraScreen = () => {
       closeButton,
       existingVisitation,
       operationAddedStep,
-      operationTempData
+      operationTempData,
+      soID,
+      soNumber,
     });
   };
 

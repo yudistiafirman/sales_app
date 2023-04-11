@@ -30,14 +30,14 @@ export default function SOList({
   onPressList,
   keyword,
   errorMessage,
-  onRetry
+  onRetry,
 }: SOListProps) {
   const renderItem = (item: any) => {
     let picOrCompanyName;
-    if (item?.Company?.name) {
-      picOrCompanyName = item.Company?.name;
-    } else if (item?.mainPic?.name) {
-      picOrCompanyName = item?.mainPic?.name;
+    if (item?.project?.Company?.displayName) {
+      picOrCompanyName = item.project?.Company?.displayName;
+    } else if (item?.project?.Pic?.name) {
+      picOrCompanyName = item?.project?.Pic?.name;
     }
     return (
       <TouchableOpacity
@@ -45,9 +45,7 @@ export default function SOList({
         onPress={() => onPressList(item)}
       >
         <BText style={{ flex: 1 }} bold="500" sizeInNumber={14}>
-          {item?.PurchaseOrders && item?.PurchaseOrders.length > 0
-            ? item?.PurchaseOrders[0].brikNumber
-            : '-'}
+          {item?.brikNumber ? item?.brikNumber : '-'}
         </BText>
         <BText style={{ flex: 1 }} bold="400" sizeInNumber={14}>
           {picOrCompanyName ? picOrCompanyName : '-'}

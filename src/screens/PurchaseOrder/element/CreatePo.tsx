@@ -143,7 +143,7 @@ const CreatePo = () => {
                   removePict={deleteImages}
                 />
                 <BSpacer size="extraSmall" />
-                <BForm inputs={inputs} />
+                <BForm titleBold="500" inputs={inputs} />
               </>
 
               {isUserChoosedSph ? (

@@ -2,6 +2,7 @@ import BrikApiOrder from '@/brikApi/BrikApiOrder';
 import { customRequest } from '@/networking/request';
 import { sphOrderPayloadType } from '@/interfaces';
 import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
+import { UploadSOSigned } from '@/models/SOSigned';
 
 export const getTransactionTab = async () => {
   return customRequest(BrikApiOrder.transactionTab(), 'GET', undefined, true);
@@ -16,9 +17,14 @@ export const getAllVisitationOrders = async (page?: string, size?: string) => {
   );
 };
 
-export const getAllPurchaseOrders = async (page?: string, size?: string) => {
+export const getAllPurchaseOrders = async (
+  page?: string,
+  size?: string,
+  searchQuery?: string,
+  status?: string
+) => {
   return customRequest(
-    BrikApiOrder.purchaseOrder(page, size),
+    BrikApiOrder.purchaseOrder(page, size, searchQuery, status),
     'GET',
     undefined,
     true
@@ -150,6 +156,18 @@ export const updateDeliveryOrder = async (
 ) => {
   return customRequest(
     BrikApiOrder.deliveryOrderByID(deliveryOrderId),
+    'PUT',
+    payload,
+    true
+  );
+};
+
+export const uploadSOSignedDocs = async (
+  payload: UploadSOSigned,
+  id: string
+) => {
+  return customRequest(
+    BrikApiOrder.uploadSOSignedDocs(id),
     'PUT',
     payload,
     true

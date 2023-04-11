@@ -304,11 +304,11 @@ export default function RequiredDocuments() {
       <BSpacer size={'small'} />
       <BLabel label="Cash Before Delivery" isRequired />
       <BSpacer size="extraSmall" />
-      <BForm inputs={filesInputsCBD} />
+      <BForm titleBold="500" inputs={filesInputsCBD} />
       <BSpacer size="extraSmall" />
       <BLabel label="Credit" isRequired />
       <BSpacer size="extraSmall" />
-      <BForm inputs={fileInputsCredit} />
+      <BForm titleBold="500" inputs={fileInputsCredit} />
       {isLoading && (
         <View>
           <ShimmerPlaceHolder style={styles.fileInputShimmer} />
