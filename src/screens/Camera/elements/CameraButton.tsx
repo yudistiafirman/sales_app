@@ -14,6 +14,7 @@ type configType = {
   onGalleryPress?: (data: any) => void;
   disabledGalleryPicker?: boolean;
   disabledDocPicker?: boolean;
+  flashModeEnable?: boolean;
 };
 
 const CameraButton = ({
@@ -23,6 +24,7 @@ const CameraButton = ({
   onGalleryPress,
   disabledGalleryPicker = true,
   disabledDocPicker = true,
+  flashModeEnable = false,
 }: configType) => {
   const selectFile = React.useCallback(
     async (typeDocument: 'IMAGE' | 'DOC') => {

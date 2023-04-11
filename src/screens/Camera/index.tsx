@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  Animated,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Platform,
-} from 'react-native';
+import { Animated, SafeAreaView, StyleSheet, View } from 'react-native';
 import {
   useNavigation,
   useRoute,
@@ -25,14 +19,17 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { IMAGE_PREVIEW } from '@/navigation/ScreenNames';
 import CameraButton from './elements/CameraButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
+import HeaderButton from './elements/HeaderButton';
 
 const CameraScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<RootStackScreenProps>();
   const poState = useSelector((state: RootState) => state.purchaseOrder);
+  const [enableFlashlight, onEnableFlashlight] = React.useState<boolean>(false);
+  const [enableHDR, onEnableHDR] = React.useState<boolean>(true);
   const { isFirstTimeOpenCamera } = poState.currentState.context;
   const navigateTo = route?.params?.navigateTo;
   const closeButton = route?.params?.closeButton;
@@ -103,7 +100,7 @@ const CameraScreen = () => {
     } else {
       try {
         const takenPhoto = await camera?.current?.takePhoto({
-          flash: 'off',
+          flash: enableFlashlight ? 'on' : 'off',
         });
         animateElement();
 
@@ -115,7 +112,7 @@ const CameraScreen = () => {
           closeButton,
           existingVisitation,
           operationAddedStep,
-          operationTempData
+          operationTempData,
         });
       } catch (error) {
         dispatch(
@@ -138,7 +135,7 @@ const CameraScreen = () => {
       closeButton,
       existingVisitation,
       operationAddedStep,
-      operationTempData
+      operationTempData,
     });
   };
 
@@ -167,10 +164,16 @@ const CameraScreen = () => {
               photo
               enableHighQualityPhotos
               enableZoomGesture
-              hdr
+              hdr={enableHDR ? true : false}
               lowLightBoost
             />
           )}
+          <HeaderButton
+            onPressFlashlight={() => onEnableFlashlight(!enableFlashlight)}
+            onPressHDR={() => onEnableHDR(!enableHDR)}
+            enableFlashlight={enableFlashlight}
+            enableHDR={enableHDR}
+          />
           <CameraButton
             takePhoto={takePhoto}
             onGalleryPress={(data) => onFileSelect(data)}
