@@ -9,12 +9,12 @@
     "lint": "eslint .",
     "clean": "react-native clean cache",
     "pod-install": "cd ios && rm -rf build && rm -rf Pods && rm -rf Podfile.lock && pod install --repo-update && cd ..",
-    "android": "rm -rf android/build && rm -rf android/app/build && react-native run-android --variant=developmentDebug",
+    "android": "react-native run-android --variant=developmentDebug",
     "androidProd": "rm -rf android/build && rm -rf android/app/build && react-native run-android --variant=productionDebug",
     "androidRelease": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleProductionRelease && cd ..",
     "androidReleaseAPK": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleProductionRelease && cd ..",
     "androidRelease-Dev": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleDevelopmentRelease && cd ..",
-    "androidReleaseAPK-Dev": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleDevelopmentRelease && cd .."
+    "androidReleaseAPK-Dev": "cd android && gradlew app:assembleDevelopmentRelease && cd .."
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4",

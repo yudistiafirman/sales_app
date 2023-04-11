@@ -69,13 +69,27 @@ const SubmitForm = () => {
   const operationData = useSelector((state: RootState) => state.operation);
   const { keyboardVisible } = useKeyboardActive();
   const operationType = route?.params?.operationType;
+  console.log(operationType, 'optype<<<')
   const driversFileType = [
-    OperationFileType.DO_DEPARTURE,
-    OperationFileType.ARRIVAL,
-    OperationFileType.TRUCK_CONDITION,
-    OperationFileType.DO_SIGNED,
+    OperationFileType.DRIVER_ARRIVE_PROJECT,
+    OperationFileType.DRIVER_BNIB,
+    OperationFileType.DRIVER_RECEIPIENT,
+    OperationFileType.DRIVER_WATER,
+    OperationFileType.DRIVER_DO,
+    OperationFileType.DRIVER_UNBOXING,
+    OperationFileType.DRIVER_EMTPY,
+    OperationFileType.DRIVER_FINISH,
   ];
   const wbsFileType = [
+    operationType === ENTRY_TYPE.OUT
+      ? OperationFileType.WB_OUT_DO
+      : OperationFileType.WEIGHT_IN,
+    operationType === ENTRY_TYPE.OUT
+      ? OperationFileType.WB_OUT_RESULT
+      : OperationFileType.WEIGHT_IN,
+    operationType === ENTRY_TYPE.OUT
+      ? OperationFileType.WEIGHT_OUT
+      : OperationFileType.WEIGHT_IN,
     operationType === ENTRY_TYPE.OUT
       ? OperationFileType.WEIGHT_OUT
       : OperationFileType.WEIGHT_IN,
@@ -85,10 +99,11 @@ const SubmitForm = () => {
   ];
 
   const securityDispatchFileType = [
-    OperationFileType.DO_DEPARTURE_SECURITY,
     OperationFileType.DO_DRIVER_SECURITY,
-    OperationFileType.DO_TRUCK_CONDITION_SECURITY,
+    OperationFileType.DO_DO_SECURITY,
+    OperationFileType.DO_LICENSE_SECURITY,
     OperationFileType.DO_SEAL_SECURITY,
+    OperationFileType.DO_CONDOM_SECURITY,
   ];
   const securityReturnFileType = [
     OperationFileType.DO_RETURN_SECURITY,
@@ -188,7 +203,7 @@ const SubmitForm = () => {
         photos.length < 2
       );
     } else if (operationType === ENTRY_TYPE.DISPATCH) {
-      return photos.length !== 4;
+      return photos.length !== 5;
     }
   };
 
@@ -215,6 +230,9 @@ const SubmitForm = () => {
             uri: photo?.file?.uri?.replace('file:', 'file://'),
           };
         });
+        console.log("IMAGEEEEEEEEEE")
+        console.log(JSON.stringify(photoFilestoUpload, null, 2))
+        console.log("IMAGEEEEEEEEEE")
       const responseFiles = await uploadFileImage(
         photoFilestoUpload,
         'Update Delivery Order'
@@ -232,6 +250,8 @@ const SubmitForm = () => {
           payload.recepientName = operationData.inputsValue.recepientName;
           payload.recipientNumber =
             operationData.inputsValue.recepientPhoneNumber;
+          payload.status = 'RECEIVED'
+          console.log(JSON.stringify(payload, null, 2), '<<<PAYLOAD')
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             operationData.projectDetails.deliveryOrderId
@@ -257,9 +277,11 @@ const SubmitForm = () => {
             };
           });
           payload.doFiles = newFileData;
+          payload.status = 'ON_DELIVERY'
           if (ENTRY_TYPE.RETURN) {
             payload.conditionTruck =
               operationData.inputsValue.truckMixCondition;
+            payload.status = "AWAIT_WB_IN"
           }
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
