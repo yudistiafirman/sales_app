@@ -26,6 +26,7 @@ const Operation = () => {
   const { projectDetails } = useSelector((state: RootState) => state.operation);
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
+    console.log('rendeeer', userData?.type)
 
   React.useEffect(() => {
     crashlytics().log(userData?.type ? userData.type : 'Operation Default');
@@ -72,7 +73,7 @@ const Operation = () => {
           };
           dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
           navigation.navigate(CAMERA, {
-            photoTitle: 'DO',
+            photoTitle: 'Tiba Di Proyek',
             navigateTo: userData.type,
             operationTempData: dataToDeliver,
           });

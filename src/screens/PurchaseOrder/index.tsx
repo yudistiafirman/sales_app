@@ -38,6 +38,7 @@ const PurchaseOrder = () => {
     checked,
     lessThanSixValue,
     lessThanFiveValue,
+    customerType,
   } = poState.currentState.context;
   const { keyboardVisible } = useKeyboardActive();
   const [isPopupExitVisible, setIsPopupExitVisible] = useState(false);
@@ -57,7 +58,7 @@ const PurchaseOrder = () => {
   const handleDisableContinueBtn = () => {
     if (currentStep === 0) {
       return (
-        poNumber.length === 0 ||
+        (customerType === 'COMPANY' && poNumber.length === 0) ||
         JSON.stringify(choosenSphDataFromModal) === '{}' ||
         poImages.length === 0
       );

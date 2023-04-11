@@ -52,10 +52,10 @@ export const TAB_HOME_TITLE = 'Beranda';
 export const TAB_TRANSACTION_TITLE = 'Transaksi';
 export const TAB_PROFILE_TITLE = 'Profil';
 export const TAB_PRICE_LIST_TITLE = 'Harga';
-export const TAB_RETURN_TITLE = 'Return';
-export const TAB_WB_OUT_TITLE = 'Out';
-export const TAB_DISPATCH_TITLE = 'Dispatch';
-export const TAB_WB_IN_TITLE = 'In';
+export const TAB_WB_OUT_TITLE = 'Keberangkatan';
+export const TAB_WB_IN_TITLE = 'Kedatangan';
+export const TAB_DISPATCH_TITLE = 'Keberangkatan';
+export const TAB_RETURN_TITLE = 'Kedatangan';
 
 export const SALES_TAB_TITLE = 'Beranda';
 export const SECURITY_TAB_TITLE = 'Beranda';
