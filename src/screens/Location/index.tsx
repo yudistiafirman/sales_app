@@ -33,6 +33,8 @@ import crashlytics from '@react-native-firebase/crashlytics';
 const Location = () => {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
+  const [searchedAddress, setSearchedAddress] = React.useState('');
+  const [useSearchedAddress, setUseSearchedAddress] = React.useState(false);
   const [state, send] = useMachine(locationMachine);
   const isReadOnly = route?.params.isReadOnly;
 
@@ -44,7 +46,12 @@ const Location = () => {
     crashlytics().log(LOCATION);
     if (route?.params) {
       const { params } = route;
-      const { latitude, longitude } = params.coordinate;
+      const { latitude, longitude, formattedAddress } = params.coordinate;
+      if (formattedAddress) {
+        setSearchedAddress(formattedAddress);
+      }
+
+      setUseSearchedAddress(true);
       send('sendingCoorParams', { value: { latitude, longitude } });
     }
   }, [route?.params]);
@@ -105,6 +112,7 @@ const Location = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <BLocation
         onRegionChangeComplete={onRegionChangeComplete}
+        onRegionChange={() => setUseSearchedAddress(false)}
         region={region}
         scrollEnabled={isReadOnly === true ? false : true}
         CustomMarker={<BMarker />}
@@ -118,9 +126,9 @@ const Location = () => {
         <CoordinatesDetail
           loadingLocation={loadingLocation}
           address={
-            coordinate?.formattedAddress?.length > 0
-              ? coordinate?.formattedAddress
-              : locationDetail?.formattedAddress?.length > 0
+            useSearchedAddress && searchedAddress.length > 0
+              ? searchedAddress
+              : locationDetail?.formattedAddress
               ? locationDetail?.formattedAddress
               : ''
           }

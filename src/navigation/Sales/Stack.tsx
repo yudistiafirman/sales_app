@@ -27,6 +27,8 @@ import {
   CUSTOMER_DETAIL_TITLE,
   DOCUMENTS,
   DOCUMENTS_TITLE,
+  FORM_SO,
+  FORM_SO_TITLE,
   IMAGE_PREVIEW,
   IMAGE_PREVIEW_TITLE,
   LOCATION,
@@ -36,6 +38,8 @@ import {
   SEARCH_AREA_TITLE,
   SEARCH_PRODUCT,
   SEARCH_PRODUCT_TITLE,
+  SEARCH_SO,
+  SEARCH_SO_TITLE,
   SPH,
   SPH_TITLE,
   TRANSACTION_DETAIL,
@@ -50,6 +54,8 @@ import AppointmentWithProvider from '@/screens/Appointment';
 import RequiredDocuments from '@/screens/RequiredDocuments';
 import VisitHistory from '@/screens/VisitHistory';
 import Deposit from '@/screens/Deposit';
+import SearchSO from '@/screens/SearchSO';
+import FormSO from '@/screens/SearchSO/Form/FormSO';
 
 const SalesStack = (Stack: any) => {
   return (
@@ -191,6 +197,22 @@ const SalesStack = (Stack: any) => {
         component={Deposit}
         options={{
           headerTitle: CREATE_DEPOSIT_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={SEARCH_SO}
+        key={SEARCH_SO}
+        component={SearchSO}
+        options={{
+          headerTitle: SEARCH_SO_TITLE,
+        }}
+      />
+      <Stack.Screen
+        name={FORM_SO}
+        key={FORM_SO}
+        component={FormSO}
+        options={{
+          headerTitle: FORM_SO_TITLE,
         }}
       />
     </>

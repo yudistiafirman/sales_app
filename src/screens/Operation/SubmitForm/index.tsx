@@ -71,7 +71,7 @@ const SubmitForm = () => {
   const operationData = useSelector((state: RootState) => state.operation);
   const { keyboardVisible } = useKeyboardActive();
   const operationType = route?.params?.operationType;
-  console.log(operationType, 'optype<<<')
+  console.log(operationType, 'optype<<<');
   const driversFileType = [
     OperationFileType.DRIVER_ARRIVE_PROJECT,
     OperationFileType.DRIVER_BNIB,
@@ -133,7 +133,7 @@ const SubmitForm = () => {
         }
         break;
       case ENTRY_TYPE.DRIVER:
-        if (operationData.photoFiles.length > 3) {
+        if (operationData.photoFiles.length > 7) {
           let tempImages = [
             ...operationData.photoFiles.filter((it) => it.file !== null),
           ];
@@ -142,7 +142,7 @@ const SubmitForm = () => {
         break;
       case ENTRY_TYPE.SECURITY:
         if (operationType === ENTRY_TYPE.DISPATCH) {
-          if (operationData.photoFiles.length > 3) {
+          if (operationData.photoFiles.length > 4) {
             let tempImages = [
               ...operationData.photoFiles.filter((it) => it.file !== null),
             ];
@@ -191,7 +191,7 @@ const SubmitForm = () => {
     let photos = [...operationData.photoFiles.filter((it) => it.file !== null)];
     if (userData?.type === ENTRY_TYPE.DRIVER) {
       return (
-        photos.length < 4 ||
+        photos.length < 8 ||
         operationData.inputsValue.recepientName.length === 0 ||
         !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber)
       );
@@ -210,6 +210,7 @@ const SubmitForm = () => {
   };
 
   const handleBack = () => {
+    DeviceEventEmitter.emit('Operation.refreshlist', true);
     navigation.dispatch(StackActions.popToTop());
   };
 
@@ -232,9 +233,9 @@ const SubmitForm = () => {
             uri: photo?.file?.uri?.replace('file:', 'file://'),
           };
         });
-        console.log("IMAGEEEEEEEEEE")
-        console.log(JSON.stringify(photoFilestoUpload, null, 2))
-        console.log("IMAGEEEEEEEEEE")
+      console.log('IMAGEEEEEEEEEE');
+      console.log(JSON.stringify(photoFilestoUpload, null, 2));
+      console.log('IMAGEEEEEEEEEE');
       const responseFiles = await uploadFileImage(
         photoFilestoUpload,
         'Update Delivery Order'
@@ -252,8 +253,8 @@ const SubmitForm = () => {
           payload.recepientName = operationData.inputsValue.recepientName;
           payload.recipientNumber =
             operationData.inputsValue.recepientPhoneNumber;
-          payload.status = 'RECEIVED'
-          console.log(JSON.stringify(payload, null, 2), '<<<PAYLOAD')
+          payload.status = 'RECEIVED';
+          console.log(JSON.stringify(payload, null, 2), '<<<PAYLOAD');
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             operationData.projectDetails.deliveryOrderId
@@ -279,12 +280,19 @@ const SubmitForm = () => {
             };
           });
           payload.doFiles = newFileData;
-          payload.status = 'ON_DELIVERY'
-          if (ENTRY_TYPE.RETURN) {
-            payload.conditionTruck =
-              operationData.inputsValue.truckMixCondition;
-            payload.status = "AWAIT_WB_IN"
-          }
+          responseUpdateDeliveryOrder = await updateDeliveryOrder(
+            payload,
+            operationData.projectDetails.deliveryOrderId
+          );
+        } else if (userData?.type === ENTRY_TYPE.RETURN) {
+          const newFileData = responseFiles.data.data.map((v, i) => {
+            return {
+              fileId: v.id,
+              type: securityFileType[i],
+            };
+          });
+          payload.doFiles = newFileData;
+          payload.conditionTruck = operationData.inputsValue.truckMixCondition;
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             operationData.projectDetails.deliveryOrderId
@@ -301,7 +309,7 @@ const SubmitForm = () => {
             })
           );
           if (navigation.canGoBack()) {
-            navigation.dispatch(StackActions.popToTop());
+            handleBack();
           }
         } else {
           dispatch(closePopUp());

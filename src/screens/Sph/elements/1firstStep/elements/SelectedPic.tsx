@@ -144,7 +144,7 @@ export default function SelectedPic({
 				</View>
 				<BSpacer size={'extraSmall'} />
 				<ScrollView style={style.scrollViewStyle}>
-					<BForm inputs={inputsData} />
+					<BForm titleBold="500" inputs={inputsData} />
 				</ScrollView>
 			</View>
 			<BSpacer size={'extraSmall'} />

@@ -153,7 +153,7 @@ const CreatePo = () => {
                     removePict={deleteImages}
                   />
                   <BSpacer size="extraSmall" />
-                  {customerType === 'COMPANY' && <BForm inputs={inputs} />}
+                  {customerType === 'COMPANY' && <BForm titleBold="500" inputs={inputs} />}
                 </>
 
                 {isUserChoosedSph ? (

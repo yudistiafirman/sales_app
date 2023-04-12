@@ -164,7 +164,7 @@ export default function ChoosePicModal({
 										setScrollOffSet(event.nativeEvent.contentOffset.y);
 									}}
 								>
-									{!isLoading && <BForm inputs={inputsData} />}
+									{!isLoading && <BForm titleBold="500" inputs={inputsData} />}
 									{isLoading && (
 										<View>
 											<BSpacer size={'extraSmall'} />

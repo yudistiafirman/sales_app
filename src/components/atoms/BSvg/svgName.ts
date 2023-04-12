@@ -47,6 +47,7 @@ const SvgNames = {
   IC_LIST: 'IcLIst',
   IC_GALLERY_PICKER: 'IcGalleryPicker',
   IC_DOC_PICKER: 'IcDocPicker',
+  IC_SIGN_SO: 'IcSignSO',
 };
 
 export default SvgNames;

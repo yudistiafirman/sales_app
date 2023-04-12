@@ -4,4 +4,5 @@ export const HOME_MENU = {
   DEPOSIT: 'Buat Deposit',
   SCHEDULE: 'Buat Jadwal',
   APPOINTMENT: 'Buat Janji Temu',
+  SIGN_SO: 'Upload Signed SO',
 };

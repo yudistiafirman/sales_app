@@ -353,7 +353,6 @@ export const priceMachine =
           };
         }),
         assignParams: assign((_context, event) => {
-          console.log('ini event longlat', event.value);
           return {
             longlat: event.value,
             loadLocation: true,

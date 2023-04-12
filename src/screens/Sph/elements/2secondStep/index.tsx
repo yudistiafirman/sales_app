@@ -36,7 +36,11 @@ import { useKeyboardActive } from '@/hooks';
 import { TextInput } from 'react-native-paper';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
+  setSearchAddress,
+  setSearchedBillingAddress,
   setStepperFocused,
+  setUseBillingAddress,
+  setUseSearchAddress,
   updateBillingAddressAutoComplete,
   updateBillingAddressOptions,
   updateDistanceFromLegok,
@@ -98,6 +102,10 @@ export default function SecondStep() {
     distanceFromLegok,
     projectAddress,
     selectedCompany,
+    useSearchAddress,
+    searchedAddress,
+    searchedBillingAddress,
+    useSearchedBillingAddress,
   } = useSelector((state: RootState) => state.sph);
 
   const [isMapLoading, setIsMapLoading] = useState(false);
@@ -121,7 +129,6 @@ export default function SecondStep() {
         if (!result) {
           throw data;
         }
-
         const _coordinate = {
           latitude: result?.lat,
           longitude: result?.lon,
@@ -230,7 +237,9 @@ export default function SecondStep() {
           ? !billingAddress?.addressAutoComplete?.formattedAddress
           : true,
         type: 'area',
-        value: billingAddress?.addressAutoComplete
+        value: useSearchedBillingAddress
+          ? searchedBillingAddress
+          : billingAddress?.addressAutoComplete
           ? billingAddress?.addressAutoComplete?.formattedAddress
           : '',
         placeholder: 'Cari Kelurahan, Kecamatan, Kota',
@@ -264,12 +273,6 @@ export default function SecondStep() {
     isSuggestionLoading,
   ]);
 
-  console.log(!!billingAddress, !!isBillingAddressSame, !!distanceFromLegok);
-  console.log(
-    checkObj(billingAddress, isBillingAddressSame, distanceFromLegok),
-    'checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)'
-  );
-
   const customFooterButton = useCallback(() => {
     return (
       <BBackContinueBtn
@@ -296,9 +299,15 @@ export default function SecondStep() {
     crashlytics().log(SPH + '-Step2');
 
     DeviceEventEmitter.addListener(eventKeyObj.shipp, (data) => {
+      dispatch(setUseSearchAddress({ value: true }));
+      dispatch(setSearchAddress({ value: data.coordinate.formattedAddress }));
       onChangeRegion(data.coordinate, {});
     });
     DeviceEventEmitter.addListener(eventKeyObj.billing, (data) => {
+      dispatch(setUseBillingAddress({ value: true }));
+      dispatch(
+        setSearchedBillingAddress({ value: data.coordinate.formattedAddress })
+      );
       onChangeRegion(data.coordinate, { isBiilingAddress: true });
     });
     return () => {
@@ -332,7 +341,10 @@ export default function SecondStep() {
   }, []);
 
   const nameAddress = React.useMemo(() => {
-    const idx = region.formattedAddress?.split(',');
+    const address = useSearchAddress
+      ? searchedAddress
+      : region.formattedAddress;
+    const idx = address?.split(',');
     if (idx?.length > 1) {
       return idx?.[0];
     }
@@ -344,6 +356,10 @@ export default function SecondStep() {
     <View style={style.container}>
       <BLocation
         region={region}
+        onRegionChange={() => {
+          dispatch(setUseSearchAddress({ value: false }));
+          dispatch(setUseBillingAddress({ value: false }));
+        }}
         onRegionChangeComplete={onChangeRegion}
         CustomMarker={<BMarker />}
         mapStyle={style.map}
@@ -380,7 +396,9 @@ export default function SecondStep() {
               });
             }}
             nameAddress={nameAddress}
-            formattedAddress={region.formattedAddress}
+            formattedAddress={
+              useSearchAddress ? searchedAddress : region.formattedAddress
+            }
             isLoading={isMapLoading}
           />
         </>

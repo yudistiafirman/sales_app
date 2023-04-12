@@ -37,6 +37,8 @@ const PriceList = () => {
   const appState = React.useRef(AppState.currentState);
   const [state, send] = useMachine(priceMachine);
   const [fromVisitation, setFromVisitation] = React.useState(false);
+  const [searchFormattedAddress, setSearchFormattedAddress] =
+    React.useState('');
 
   React.useEffect(() => {
     crashlytics().log(TAB_PRICE_LIST);
@@ -66,6 +68,7 @@ const PriceList = () => {
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude, formattedAddress } = params.coordinate;
+      setSearchFormattedAddress(formattedAddress);
       const { from } = params;
       if (from === CREATE_VISITATION) {
         setFromVisitation(true);
@@ -164,6 +167,8 @@ const PriceList = () => {
       const coordinate = {
         longitude: Number(lon),
         latitude: Number(lat),
+        formattedAddress:
+          searchFormattedAddress.length > 0 ? searchFormattedAddress : '',
       };
 
       navigation.navigate(LOCATION, {
@@ -194,8 +199,8 @@ const PriceList = () => {
         <CurrentLocation
           onPress={goToLocation}
           location={
-            route?.params?.coordinate?.formattedAddress
-              ? route?.params?.coordinate?.formattedAddress
+            searchFormattedAddress.length > 0
+              ? searchFormattedAddress
               : locationDetail?.formattedAddress
           }
         />

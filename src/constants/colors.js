@@ -42,6 +42,7 @@ const colors = {
     inActive: '#C7C7C7',
     placeHolder: '#C7C7C7',
     input: '#202020',
+    disabled: '#ECECEC',
   },
   border: {
     default: '#E6EDF6',
