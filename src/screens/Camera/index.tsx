@@ -22,7 +22,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import HeaderButton from './elements/HeaderButton';
-import RNFetchBlob from 'react-native-blob-util';
 
 const CameraScreen = () => {
   const navigation = useNavigation();
@@ -168,7 +167,6 @@ const CameraScreen = () => {
               photo
               enableHighQualityPhotos={enableHighQuality ? true : false}
               enableZoomGesture
-              preset="cif-352x288"
               hdr={enableHDR ? true : false}
               lowLightBoost={enableLowBoost}
             />
