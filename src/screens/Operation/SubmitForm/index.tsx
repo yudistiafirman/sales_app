@@ -279,12 +279,14 @@ const SubmitForm = () => {
             };
           });
           payload.doFiles = newFileData;
-          payload.status = 'ON_DELIVERY'
+          // payload.status = 'ON_DELIVERY'
           if (ENTRY_TYPE.RETURN) {
             payload.conditionTruck =
               operationData.inputsValue.truckMixCondition;
-            payload.status = "AWAIT_WB_IN"
+            // payload.status = "AWAIT_WB_IN"
           }
+          // console.log(JSON.stringify(payload, null, 2), '<<<ini paylo', userData?.type)
+          // return;
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             operationData.projectDetails.deliveryOrderId
