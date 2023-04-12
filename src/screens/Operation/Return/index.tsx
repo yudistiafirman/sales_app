@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
 import OperationList from '../element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -26,7 +26,9 @@ const Return = () => {
   const navigation = useNavigation();
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { projectDetails } = useSelector((state: RootState) => state.operation);
+  const { projectDetails, photoFiles } = useSelector(
+    (state: RootState) => state.operation
+  );
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
 
@@ -38,16 +40,34 @@ const Return = () => {
 
   React.useEffect(() => {
     crashlytics().log(ENTRY_TYPE.SECURITY ? TAB_RETURN : TAB_WB_IN);
+
+    DeviceEventEmitter.addListener('Operation.refreshlist', () => {
+      send('onRefreshList', { payload: userData?.type, tabActive: 'right' });
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners('Operation.refreshlist');
+    };
   }, [projectDetails, operationListData]);
 
   const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
     if (projectDetails && projectDetails.deliveryOrderId === item.id) {
-      navigation.navigate(SUBMIT_FORM, {
-        operationType:
-          userData?.type === ENTRY_TYPE.SECURITY
-            ? ENTRY_TYPE.RETURN
-            : ENTRY_TYPE.IN,
-      });
+      if (photoFiles.length > 1) {
+        navigation.navigate(SUBMIT_FORM, {
+          operationType:
+            userData?.type === ENTRY_TYPE.SECURITY
+              ? ENTRY_TYPE.RETURN
+              : ENTRY_TYPE.IN,
+        });
+      } else {
+        navigation.navigate(CAMERA, {
+          photoTitle: 'DO',
+          navigateTo:
+            userData?.type === ENTRY_TYPE.SECURITY
+              ? ENTRY_TYPE.RETURN
+              : ENTRY_TYPE.IN,
+        });
+      }
     } else {
       const dataToDeliver: OperationProjectDetails = {
         deliveryOrderId: item?.id ? item.id : '',

@@ -36,9 +36,18 @@ const displayOperationListMachine = createMachine(
         };
       },
       events: {} as
-        | { type: 'assignUserData'; payload: string; tabActive: string }
-        | { type: 'retryGettingList'; payload: string; tabActive: string }
-        | { type: 'onRefreshList'; payload: string; tabActive: string }
+        | {
+            type: 'assignUserData';
+            value: { payload: string; tabActive: string };
+          }
+        | {
+            type: 'retryGettingList';
+            value: { payload: string; tabActive: string };
+          }
+        | {
+            type: 'onRefreshList';
+            value: { payload: string; tabActive: string };
+          }
         | { type: 'onEndReached' },
     },
 
@@ -111,11 +120,9 @@ const displayOperationListMachine = createMachine(
       fetchOperationListData: async (context, event) => {
         try {
           let response: any;
-          switch (event?.payload) {
-            // change to SUBMITTED temporary due to API still not finished
-
+          switch (context?.userType) {
             case ENTRY_TYPE.SECURITY:
-              if (event?.tabActive === 'left') {
+              if (context?.tabActive === 'left') {
                 response = await getAllDeliveryOrders(
                   'WB_OUT',
                   context.size.toString(),
@@ -132,7 +139,7 @@ const displayOperationListMachine = createMachine(
               }
               break;
             case ENTRY_TYPE.WB:
-              if (event?.tabActive === 'left') {
+              if (context?.tabActive === 'left') {
                 response = await getAllDeliveryOrders(
                   'SUBMITTED',
                   context.size.toString(),
@@ -205,6 +212,8 @@ const displayOperationListMachine = createMachine(
         return {
           userType: event?.payload,
           tabActive: event?.tabActive,
+          isRefreshing: true,
+          isLoading: true,
         };
       }),
     },
