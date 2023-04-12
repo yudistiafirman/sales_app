@@ -133,7 +133,7 @@ const SubmitForm = () => {
         }
         break;
       case ENTRY_TYPE.DRIVER:
-        if (operationData.photoFiles.length > 3) {
+        if (operationData.photoFiles.length > 7) {
           let tempImages = [
             ...operationData.photoFiles.filter((it) => it.file !== null),
           ];
@@ -142,7 +142,7 @@ const SubmitForm = () => {
         break;
       case ENTRY_TYPE.SECURITY:
         if (operationType === ENTRY_TYPE.DISPATCH) {
-          if (operationData.photoFiles.length > 3) {
+          if (operationData.photoFiles.length > 4) {
             let tempImages = [
               ...operationData.photoFiles.filter((it) => it.file !== null),
             ];
@@ -191,7 +191,7 @@ const SubmitForm = () => {
     let photos = [...operationData.photoFiles.filter((it) => it.file !== null)];
     if (userData?.type === ENTRY_TYPE.DRIVER) {
       return (
-        photos.length < 4 ||
+        photos.length < 8 ||
         operationData.inputsValue.recepientName.length === 0 ||
         !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber)
       );
