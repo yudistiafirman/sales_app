@@ -149,8 +149,9 @@ const TransactionDetail = () => {
       }
     } else if (selectedType === 'Deposit') {
       if (data?.DepositFiles) {
+        // TODO: need to change the type to download the deposit files
         setDownloadFiles({
-          letter: data?.DepositFiles?.find((v: any) => v?.type == 'jpeg'),
+          letter: data?.DepositFiles?.find((v: any) => v?.type == ''),
         });
       }
     } else {
@@ -231,7 +232,10 @@ const TransactionDetail = () => {
     downloadPopup,
     downloadError,
   }: downloadType) {
-    if (!url) return null;
+    if (!url) {
+      downloadError(undefined);
+      return null;
+    }
     let dirs = ReactNativeBlobUtil.fs.dirs;
     const downloadTitle = title
       ? `${title} berhasil di download`
