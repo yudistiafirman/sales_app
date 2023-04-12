@@ -136,6 +136,7 @@ const CreatePo = () => {
         {poState.currentState.matches('firstStep.SearchSph') ? (
           <SelectPurchaseOrderData
             dataToGet="SPHDATA"
+            onDismiss={() => dispatch({ type: 'backToAddPo' })}
             onSubmitData={({ parentData, data }) =>
               onPressCompleted({ parentData, data })
             }
@@ -146,15 +147,17 @@ const CreatePo = () => {
             renderItem={null}
             ListHeaderComponent={
               <View>
-                <>
-                  <BGallery
-                    addMorePict={addMoreImages}
-                    picts={poImages}
-                    removePict={deleteImages}
-                  />
-                  <BSpacer size="extraSmall" />
-                  {customerType === 'COMPANY' && <BForm inputs={inputs} />}
-                </>
+                {customerType === 'COMPANY' && (
+                  <>
+                    <BGallery
+                      addMorePict={addMoreImages}
+                      picts={poImages}
+                      removePict={deleteImages}
+                    />
+                    <BSpacer size="extraSmall" />
+                    <BForm inputs={inputs} />
+                  </>
+                )}
 
                 {isUserChoosedSph ? (
                   <>

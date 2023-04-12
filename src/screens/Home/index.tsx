@@ -322,12 +322,6 @@ const Beranda = () => {
     let currentVersionName = getAppVersionName();
     if (isDevelopment())
       currentVersionName = currentVersionName?.replace('(Dev)', '');
-    console.log(
-      currentVersionName,
-      currentVersionName?.split('.').join(''),
-      getMinVersionUpdate(force_update),
-      'vers'
-    );
     setUpdateDialogVisible(
       currentVersionName?.split('.').join('') <
         getMinVersionUpdate(force_update)
@@ -379,17 +373,17 @@ const Beranda = () => {
             dispatch(
               openPopUp({
                 popUpType: 'none',
-                popUpText: 'Apakah PO disediakan oleh Pelanggan?',
+                popUpText: 'Tipe pelanggan',
                 isRenderActions: true,
-                outlineBtnTitle: 'Tidak',
-                primaryBtnTitle: 'Ya',
+                outlineBtnTitle: 'Individu',
+                primaryBtnTitle: 'Perusahaan',
                 outlineBtnAction: () => {
-                  dispatch({ type: 'openingCamera', value: false });
+                  dispatch({ type: 'openingCamera', value: 'INDIVIDU' });
                   dispatch(closePopUp());
                   navigation.navigate(PO);
                 },
                 primaryBtnAction: () => {
-                  dispatch({ type: 'openingCamera', value: true });
+                  dispatch({ type: 'openingCamera', value: 'COMPANY' });
                   dispatch(closePopUp());
                   navigation.navigate(PO);
                 },
@@ -708,17 +702,17 @@ const Beranda = () => {
               dispatch(
                 openPopUp({
                   popUpType: 'none',
-                  popUpText: 'Apakah PO disediakan oleh Pelanggan?',
+                  popUpText: 'Tipe pelanggan',
                   isRenderActions: true,
-                  outlineBtnTitle: 'Tidak',
-                  primaryBtnTitle: 'Ya',
+                  outlineBtnTitle: 'Individu',
+                  primaryBtnTitle: 'Perusahaan',
                   outlineBtnAction: () => {
-                    dispatch({ type: 'openingCamera', value: false });
+                    dispatch({ type: 'openingCamera', value: 'INDIVIDU' });
                     dispatch(closePopUp());
                     navigation.navigate(PO);
                   },
                   primaryBtnAction: () => {
-                    dispatch({ type: 'openingCamera', value: true });
+                    dispatch({ type: 'openingCamera', value: 'COMPANY' });
                     dispatch(closePopUp());
                     navigation.navigate(PO);
                   },

@@ -264,12 +264,6 @@ export default function SecondStep() {
     isSuggestionLoading,
   ]);
 
-  console.log(!!billingAddress, !!isBillingAddressSame, !!distanceFromLegok);
-  console.log(
-    checkObj(billingAddress, isBillingAddressSame, distanceFromLegok),
-    'checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)'
-  );
-
   const customFooterButton = useCallback(() => {
     return (
       <BBackContinueBtn

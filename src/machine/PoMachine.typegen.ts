@@ -1,5 +1,4 @@
 // This file was automatically generated. Edits will be overwritten
-// This file was automatically generated. Edits will be overwritten
 
 export interface Typegen0 {
   '@@xstate/typegen': true;
@@ -114,7 +113,11 @@ export interface Typegen0 {
   eventsCausingDelays: {};
   eventsCausingGuards: {
     hasSavedPo: 'done.invoke.purchase order.checkSavedPo:invocation[0]';
-    needUploadFiles: 'done.invoke.purchase order.PostPurchaseOrder.postImages:invocation[0]';
+    isChoosenCustomerCompany: 'goToPostPo';
+    isCompany: 'openingCamera';
+    needUploadFiles:
+      | 'done.invoke.purchase order.PostPurchaseOrder.postImages:invocation[0]'
+      | 'goToPostPo';
     useExistingFiles: 'getSphDocument';
   };
   eventsCausingServices: {
@@ -129,8 +132,11 @@ export interface Typegen0 {
     postPo:
       | 'done.invoke.purchase order.PostPurchaseOrder.postFiles:invocation[0]'
       | 'done.invoke.purchase order.PostPurchaseOrder.postImages:invocation[0]'
+      | 'goToPostPo'
       | 'retryPostPurchaseOrder';
-    uploadFiles: 'done.invoke.purchase order.PostPurchaseOrder.postImages:invocation[0]';
+    uploadFiles:
+      | 'done.invoke.purchase order.PostPurchaseOrder.postImages:invocation[0]'
+      | 'goToPostPo';
     uploadPhoto: 'goToPostPo';
   };
   matchesStates:

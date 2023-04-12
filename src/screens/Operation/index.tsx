@@ -16,7 +16,10 @@ import displayOperationListMachine from '@/machine/displayOperationListMachine';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
-import { OperationProjectDetails, setAllOperationPhoto } from '@/redux/reducers/operationReducer';
+import {
+  OperationProjectDetails,
+  setAllOperationPhoto,
+} from '@/redux/reducers/operationReducer';
 
 const Operation = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,7 +29,6 @@ const Operation = () => {
   const { projectDetails } = useSelector((state: RootState) => state.operation);
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
-    console.log('rendeeer', userData?.type)
 
   React.useEffect(() => {
     crashlytics().log(userData?.type ? userData.type : 'Operation Default');

@@ -57,11 +57,15 @@ const PurchaseOrder = () => {
 
   const handleDisableContinueBtn = () => {
     if (currentStep === 0) {
-      return (
-        (customerType === 'COMPANY' && poNumber.length === 0) ||
-        JSON.stringify(choosenSphDataFromModal) === '{}' ||
-        poImages.length === 0
-      );
+      if (customerType === 'INDIVIDU') {
+        return JSON.stringify(choosenSphDataFromModal) === '{}';
+      } else {
+        return (
+          poNumber.length === 0 ||
+          JSON.stringify(choosenSphDataFromModal) === '{}' ||
+          poImages.length <= 1
+        );
+      }
     } else if (currentStep === 1) {
       const isRequiredFileEmpty = files.filter(
         (v) => v.isRequire && v.value === null

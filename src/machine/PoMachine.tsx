@@ -43,7 +43,7 @@ const purchaseOrderInitialState = {
 };
 
 const POMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJmcAWZ5QCsbgGwAOAEYvAHZDAE5-EN8QgBoQAE9EEJDPAGZ-Z38053CcoLSvAF8i+MkcfCJScioaeiZWCA5uPgENMQkMCplq+TrlRo51EWItW14zfUDzJBBkKxs9XnsnBFcc7z8g0IiomPikhB9AyjC0wLS3P0CPQ2cSsq7pKrkqADNBdFhtBm0wZE4ACNcPQACrEABCYCgwl4wigvx0YDM9nm1nGK2SbkMlDSMUC-jcgRCXnOhjcB0Q2TclHCvl8gWcqQZNzyDzmT0qshqlA+Xx+fwBUGI4IYtD4EF+-wAYuhiABbKXIADy-DY6DgBAgKNmaMWdlmqwJzl8lAJITc-l8GS8rl8XkpCEC5Jpl2chi8hkM-h8ISt7PKz258j53yVnGF4NB2E+EFlCqVqrA6s1kB1lnRS0xCFSIVxMXcdzSl184Udzq9tILIQuwWcjIDnJ6r15nzDgsouAgTWVnAIuCk8IYyGw6bmCwxhpcXi8p3tvlybi8gQXhjxjv8-nCuMZgRueOy1rcjakXN67zbAv+ne7bF75AANmA-gBJeW4GBjvWT0CrK5pU5zTcaJol8L0KUSRBnUtM1S3cZc3UuY9Sg5U9mx5UMr2QG8e04YQ0B+EcvwnLMpwQS080uNILTScJ3RCPITUdcJl0AhlsR9W1DECE9uheDDLyVHC704LsIAAWVIMA3w-OBiMzA1f2SNIcTxGtCWJUloMdJlZ2ZLwAhyE1Ch4lDAzPFtMKEsSRMjYgxUwCUlXk-VljI41-EoBc3HCHzwnCPcsnLC5PAM5wEJ9JlfCuXig3PVt+SEsUBxwYdsCBEE6HBABBW9iBcn9HBcQpKCLK4V09LIFzSZjaMoIJ3TpC1nDSWKLIExKO2SqQ0tE7sAGFsGIKwwF4NKCtIpS1hKsqiXtO4rRa5jwlU3cVz3bEQja9D5AcpzBQjSFMvBaVBMFCbFKKtYWO3dTUmLK1aIM8tlxxbJCWZK5S1o7b+N28VeElA67OjWNnJMVESMu1Y6J06kzXJFcvR8aiLl+4MqD2wHw2BMFIWhWEh20JF40VAGgf+C63Kmk0WNOIlIjCLcTWcZislKn0WOotcvH89H4qximhRFezBSTUmlVBAB3YgU1gLUqezLI8UAqIWoya0WN8YLbVOFjAnCMI7j9EJWrMps-sx8nwzsyXsA1MAJcFaXZY1eW0wh3Uoepq7ldNO71cerXywC006PKt0Zx9M3HjQy3KEFoSYG0XReAREcABFRlQeVRu0WAWn4IQRnEShzJ2q3HOxjtk9T9PsCzzAc7z2Bhk0HQlkmT2M1c7MMhuM1wqXf86RqyCnSyHFGKZcluLuXz+ZbROa+fOu0sb5veHzzgKDlKhkAfHQ3lIeUy4tjGE+tleU6HTPs9zrfW-aMZO5MRWyOLcK515-c-Bu8tJ60iMmEbEzpFyLx5Mva869755wADLEC7JATgqAD6IIgPCd+U1sT0nqpaYIfhuJXFNgA7ilAlwGXOB4KKED-pVyFpQXepAADiq94QbwftvDU2h0AJFYTfNOHC85YKujkFWakVJ0h9OSOI48LgWlxNHQy84wJbXNnHC+UDsKCAgE+CMz4YFN04SI1YYjTQSIiAET0wFgrFlpAxVwhgLReGZmo2OfFNFX2vDovRydDGb20FMGYPdCqmJauYmIkirEyOCoSchDEVwMnrP5XwtCqCgzIDbI6eMtEmKpKzceuRQjeGgk4gKa4rjIXcXFFsGShaHXBBwb4HA8lHAKYccJOJ5qRGJAxfEaTKB1JxsdfGMJeBwjToiP4pMhnnW7uOBSPtViuFcJsAIwQwiM32HIw2Yd3BEkji40kAzZn-AaaLf44s5SKmdvbMAyY3YK3md+SaV0rjbgqsuIIpsiyyI6TWE4JItyFBWsWRk9x1EePiqc4WopnYyydv8aMDs5ZPOCQs3uZFKlzhYu8q0NwIgQQ6VuTyc9lyBRUpxE5MZMkdh8WAPsYAnyYG0OqYgEBUAstaRkdIILsQuPVsBMehwqEnFHh4UsFxPTkmpWDOluiGV8EGrgNOYAACKqAVW6G0AkVp-LKDunOD4NwGQTWG0dCpJcJS1x0mtNxS4AziDIFGv1XAud0C4D6hAGSMBYCtIXOWDYXovTrWyHuaOjrnW8Fde6z1uM6CkxjRQXArTbQbhOH5FJQQLiWiJJGl1brk0ZRySoJoxBE2Fo9a0lZoUtgbN2CBR0DNyFaVyAChkAzpANFUOcrREtS3VtLHpBmURvR0QDXIqKBqtyGHtP5VwQRO34G7WW85ML+2NEHXTC0BtR3MwnYcEkeYcHhQYlEG44Ul2wBXc0TAGokQADkwBSxac872SsZx5hWqkLIVxvQej+YgBcpo-CELEdRS4xRIU1J5E01lFtlSvGLVlYgL44S6FwA+KZyI32LOzASAkXl3C+X8gFRk-haoZoNiaaO-huIuIGXBtgCGWxom0D6uAhc2gl06Bo+KTGWM8jYxxp+IwX4GDfrhzFU0VIgYCCSYsfTZ1lkKcp8hwEtykgiKSJkjGrDwbjohoT+mRNceLqIUu5d44CcM6xkz75fVt1GB3CTphpiQzwx-Wd5D5OkmonSZT5Z7qlXmkcvItFXB6eaYJ+QwmHOcaYfvQ+2hj7oFPlZi+Nm+JGdi-Z2Son27jC7uil50MgPtMQDkGcVZCj4ukf+KLBnst2e+KdJ8BceBF3aJZ8+-H9PMds8Z1rgh2tOfExMSTJX31kQ+hzFxYaQKkh0h6WcBs-TvWCDaqpqEoUtiy88HL+99NtYS+gPeZdkupfS71vb-WYtHeG6N5+LmJumCk6EqCmRPLeRI-5QKFHVPRDNIbTc-dPS0W2xlvr0XBu5eabLXACQHzoLM913ju3YN3dhw91lCOkfoLGy94rHnpNXVrOkXmuRonRRIXIqININK8yajkMIplqntXkPtyoh2y79bx8jrsO8zukAu0fE+Z8+O3Zh81obuO2CI4FxAQnRXJsk4+wgWb3p5vnEW8Kz79oDWhycaEHY-hGsDZlyGXAI3+r3r+Ku7hvCucEEO60zXPpQfEhiEtnZLj6bARW9iYsLEBmjQAI6oE+MmEUCRnWcCdaNeESaq3vdecslI24x2RFnT4HwPpHQzgzdkA8yMLR3FlbS7xCq+xSxsDgeEklAQjcEAALxewANUw6gHDU3PPYKuDinTK3oiEgtZ-WkuR4J7HC24nbMH5AwqENXpVeBVWN+b238Y6pBCYB72rtPxU9J7mJHiW0Jqh5j9SN4Xm9qoi8xyKk9kvB2VwFRDdmo++ysIAALQqcON-00YNcCaIPEckQvAZfoG9YgT-JZFwbiQFUIEkFxIkZGPXBAUOHccKCIA2KOcIAZKyQUGA7MHyDcMhBqcNbEbEd0KDdnCuBKdsa8GyZUIgsiT0TyC4AsckEHfBYKHyIjFqK0IkPcbiCFWg+OAg6BMAFKbANKFgqac1cePIPMBqSxZqGOOfDnSufaf4OQ32LWVWe6DWJ6bWORckEDBJM9W1UsM3aDTQy+ehJONhSZO+IxFuXQ0xE3A1Dwbwlkc4YsABBichb0TIAkQ2WfKHJeLxbCfxThBBJBCAdwxAIPKeaIQ2OiBiSIAHQ4C4O4WkYIyxQ2QhNnDQugrRRhYXdAfhOuIRR+RIhAFSckAwwOTWZ6ORDIW6P0aqFxFIEkUQko+OMo+lOoqhZQ-EUHBcIIEw7I90E4UkUFK0OjT+PA2wugmFOo80QCPcU2e0dwKrIlFwFiUlZ0Wic0AKaiSHd-BfGlBhIYr2PvN5BkUqHAlSUIGIaKQIC1GechIpQlMCNkFY+OBPaNStXAOorIAyA1Z0TcUIXyPwKYyrQI2dY2V6TmCHK9KAsEnwD5TcO4GcJcU2QDDXD0LyJxGnKnFSNGAEzLLHS3dAYYv-KCa0WcAyV6EkC4OiZYsQ6k6XA7FrdjeLeAO40nVYKIILDwWkRJYI-IKlKk6HJrXk2XE7QUkJA-BAaKZk7yaEtcCIdcVTGICfP9bPQ8EPWUqXeU7nPkjgeXfHLsdY+Rb4r3TIaqaiB0OnU2HcIITcFcHojwc3e7SgWATlXfeWW3KQ+3DgdYynLyFicKe-UIq0csLcU0T0zSJqUkX000zHHki0jCa3B8UMpEMtOogIbcc4liSxO4eCRMuieqZcJcPYTcP0UPXgCPKPDgUEWPMATEumVGH5RiYeC1GCekOCSIUIDIDIEoEoIAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcCuAnAxgCwIazAAIB7dCMdAOhzEwGsBlXAN0gAViBiCYgOzEoBLXs2J0BaLHgIkyFatlqMW7YgmGjMuAC6C+AbQAMAXSPHEKYrEG6+FkAA9EAJgCMhygBYArAE4AzAAc7s6B3oGeroEANCAAni4AbK6ulM4A7K7pvr6eYene6YkAvsWxkjj4RKTkVDT0TKwQHNx8AhpiEhiVMjXy9cpNHOoixFq2vGb6ruZIIMhWNnq89k4Iic6xCQj+iemBXoneiZ6+zmeBhuml5d3S1XJUAGaC6LDaDNpgyJwARrj0AAqxAAQmAoMJeMIoJ8dGAzPYFtYJqtEAVvGlgv5QntPG50p4tohkv5KN5DN5wqFnKFXNibvM7lVZLVKC83h8vj8oMRgQxaHwIJ9vgAxdDEAC2wuQAHl+Gx0HACBAEXMkUs7HM1ujMXScQT8YT4ogsZQQoF0gTXIVnN5-AyKvcWfJ2e9pZwecDAdhXhAxZLpXKwAqlZBVZZkctUQgCRjadjArjDUSEK5zr4vAVAudXJ5EkF7WVGVJmX1nq83VzKLgIM0ZZwCLgpNCGMhsOH5osUVqXOkPEVbVd-P4oolDL4U8cM3ncsO-IZ-D5C7cS71HmyK5zvtXa2x6+QADZgL4ASQluBgHfV3dAax8B0SiQt2T22dcOW8KfS-gzoXHT-8dJqWuItHVLddXS3ZAdzrThhDQD42yvLsox7BByWcNJfEMR9fD8bxnF2GJjXWPFKF8DZCMItNQkTB0mTXVlIOlGC904GsIAAWVIMAzwvOBkMjTVb0QfxvE8LwAn2XCnwtVwU2HXxUlzJ8ijTRNnApejVweJjNxYji2M9Yh+UwQVpUEjUVjQnV431PEsiNbZsOnNwjgpbIlPHbSel0l19KrfkmxwVtsD+AE6GBABBXdiEsm9HBcclKEMHDnFwyIHOSFNkgzXJPE8ccCoyEcQJXXznXLDkWKCqRQvY2sAGFsGIKwwF4UL4tQkSEEHFK0oy3M3Pkki9g8SIAjCc5vBSbMfKdMtKFM8yuQ9UEIuBEUAu+LrhMShACsSSgIkSC5AjwmaJxItwInIu1DBSNTUoiebwNZZbeCFVbjO9X0LJMREUL2tZc0MCSHuOQq9iGqIUzpM4yTTIICoIikglexj5A+r7vnCoFQXBSEW20OF-SlAVPv+2YIys6N-ApDEznJK1CiiJzEFnShALCVLjjtXxvwxvyqGx91jMDfgyelQEAHdiBDWBlV26yeqAhT0rNRNAkCIIjjOZwhcqpaKZx7leRMrlvUVMApctuWFaVgG1SBlX9rpAkUutE4cMyBziO2FIFzJY4cNOPxTkfQ3FtFqsYG0XReBhNsABExlQCV2u0WBWn4IRRnESgwMxkWTZYuOE6T7BU8wdPM9gEZNB0ZYpidmmErWW0BcoPZyR8Dzwiu5zzq5vxToiSlCjBqP1xj7dy5bFO04z3gs84ChxSoZADx0J5SAlQuGOF42zMp2Pjwr0Lq9rlf646cZm5MZXozcccuYtSkBbcEcKRTXxh7Eiif8fCUj7J4ae71S6BUXjXZe2gAAyxAayQE4KgLeiCIDQifmhUIyVhxZjOLiQwmwSIuTumJd8BDswlFAofI2s9oLr1IAAcXPtCK+sDs6Km0OgOILD45sKXpnLBPVNKaRSouQq+xxJSM-CRdw2Zu77B8BsVw7kTjgKxpA7cggIBHg9MeS+giV7CP2qIjwC4CpXDCJ4GRKYIiYWOGOChADQhgJoTpOhWjoI6L0XHQxMChEzEBkJV2HciHmIkVY6RYRZHbHOqSMG45bQ5mRoEDRVBfpkDFutfG9CTEg2Rp7SGPsYb+0QCkHIx0CQ62CIRJ86V0mUEyabNawIODvA4Pk8puxwZeyhr7G6KZNLa27ouEcf5IhZEac07JbSrDaE6UE52ITozu16cU6Gfs4aJlSNrPEuQ9mZEKNMn0WTvrm3aQsuKzhqadhWWhOkt0Ibe02YMuRwRUiFTOHkO0-M8InL+qtf4+MwQQl4FCROsIvhkxmVyLpqYelFJeQM2Gci0YpWCA9HZWKAVnNxuLLkQZbbfCtmAYMipFZhlbnc2mNliEB08COMkP4BZAWzJpS0uKWkEpJXLYlyBSXktDCqal15upux-Os5FpS4bnCOu+XYKRQjSTmu4iqi1YXaN0WABsYAjyYAWeKCAqADXwvcNkEe1pwgFDOLkdIcNjgHBmqcNwNj0oRDSWqha65NXeO1ZwPgzVcCJzAAARVQMG3Q2g4hmpCGkdKp13z7DTHkOGbqzQUVzDrQwEQ-7LmLOqn1pzTZCH9bAGWNgcDQm4r8QQB5BAAC8m58AAGq4APKgeEoqXarKuMpbC+ZAJ4ROIPbpBQqnfgKLmRlaYyoFu9ayX1pa9GBrwCGmtdbG3Nt4AqQQmAu23LFcDcpVwPAERmppGa91EyyotZSRMD0-4PXSnOouR9iDIHao1XAGd0C4AahAPiMBYDwsRacbmMltaZHVjYrwFo8h4TzARQWXq3ryA-V+n9FB-3AroGTb9v7cDwoIkMs45iU0zs-o9RpGHeAEew3jSKJkVDNGIPhrDf7QPiUkhB06sloMkTEoUSgbK0zJCiLmXwjTpCNFUK0kyXipYsfhS-LwfggjmnCJEMpvUfCpGTSkHwQEaQFWk-gWTrH5O+qU00FTqU1OTU0xEVF2wqIPiRskQiuRxJmdgBZlomBFRwgAHJgBlp07t9yRH2Z8I5ohYRnM6YyHaLwI4FUcqfKZ1DxdKCXLYIfGUjxGPAhPFCXQ7aoUHuCbSnqQmJJFHCMOQiwDxJDJsRmS0bNALnEItrRpeWCvriRNoIDcAc7tHzl0Dxi0Bs6UK6yYbo3b6jHvgYR+kWaumOfcdEc9MsjZHJHaOGBzjo5ucAhh9PnstH1m75eb8hFvnmA+NvOogC5vqNrd+493N7zKWw3MY26phLLbuKsJaYdt0gepaPCaMhnjg8HSPEOtCqaVnP1+Z+W5tDb+09sbjDN7b20LvdA+8Pszcx4NhbuP+LLcbhMFuh6e0PIKKSQqqVCqAUTbmB1JwyT4gHmDMST4McdKpw9+ZW0jzZx4LnDo73aEU7F9j6n7wpdwAB6tyY62mdRdMZSUkI5tZ8dBrkY7sGBanDBgRVR6VvCi4WeL37au634-QBvQuROSdk8V+uL7VQfuF0l67ungOGc6+q+3cprOvCpUSVzpSPO5FHHSMdQqM1HxHB61J67n3Kcq4lx0+WuA4gHnQS9+XU3C2sn9wQQPw2OBsBL2XmsmugcR+WZttY9MghkkkYmDY1rEhDPOKnqRw5FU7LornpXjuC-O6uU30v5eCee53nvA+02-f57uzjovS+W8QDb+H0wG2o+9QN1zKIiZM1fPZr1KiWFdiUWzMcUIDuse76YrgOtjUgtfEsy4R4VrzAB+xU0vyNxv2SDvyGWxAxE8zxA50XDzUaXagAEdUBXhgxeQ4hP0A1P0IUoB6NOMz8wdEACJMJhw6RZp6kbcFIjgjpxJAJk0dYCQgJUDeAMCsCOBARcCdVaNoRiCiMQcaVz8NhtkHEMhTg2UghzhSgixeBiByB4A1RfdahI8yCDpf4MQFwcgcgrR0R7cZ91wBh-NiANDj0dgChU8whEMfwdZChYliQyIp1IhkhChMhztGlmIuQLDQlnCUw8hUg-5r8M9E1PVyoF1-JqoqxDIZQ-DowCIEkCgKQnw0xz178Igz19DIg7Q+w6RvDtpoJaoQo2wEiHk0wcoshyIxJElOspEc9Ii0MS4T5TZyiepHJxo49OcihE978dQokaQfwghxJGj51mjj4Vo55WFIVoFr4s52jTExIDgUch00ZmZ-Bf4LQRMpFbR3xyQxJGl6Elo5jYEEEkEIBFiO5ggJJYsJpLRbQdY4YHpUgMgaQAhxx3AUgjCmictjiCc+EK52E64rjo8Rl2d49ejDNni-5+oH1HxvxHIDZjCIFWiWIfEwBQTUwAhXiZx6ZyRtZChNiSF3BxFLQ8RMpMgAguVpQsSQhJCL0KRrR6Yb05F3xMI+13AZwNgBYxjyci1AUtUjw6TrQbCig9hsJzswYIg4ZcIdtdhch8xVIp4UT0MCChCsTs00hAJxIMgc18w1ZBMSptTkYcIKI8gIjxicsZMWMOAsSSNrogiUpGUhwsw5UfirSbsd9vtHg6SdQISejud782YJI9YsgpTkNI5VSqAQD68adgM6TLg2duiFwoSk9XMc0nV7oAFFx0o8QP8ncg8XdpcsTCIZpjpr9TpH0iEThjtsQzQ8x6j3APJX01D5BYy99F9m90FSzExSQNhsxcgcgdYTMR8KI0g6iocAhzh81+Sa9vSA91xYATV91FY-8wA4RWMsSqCViMI0wHoDz79qIMxTp9gfxL16ZqFfivTlcv8XQf8Dx1zNy7TO9z8vN4DBxHxUjGViTXNFwPBcg8yhiggIhZy2yqB0DMDFQeC+Dty-AeNpI+MoMRpthdgLVh1CIihMhOtCxSggA */
   createMachine(
     {
       id: 'purchase order',
@@ -117,7 +117,7 @@ const POMachine =
           | { type: 'goToStepThreeFromStepTwoPressed'; value: number }
           | { type: 'goToStepOneFromStepThreePressed'; value: number }
           | { type: 'goToStepTwoFromStepThreePressed'; value: number }
-          | { type: 'openingCamera'; value: boolean }
+          | { type: 'openingCamera'; value: 'COMPANY' | 'INDIVIDU' }
           | { type: 'switchingMobilizationValue'; value: 'first' | 'second' }
           | { type: 'onChangeMobilizationPrice'; value: string; index: number },
       },
@@ -288,10 +288,18 @@ const POMachine =
               actions: 'decreaseStepFromThirdStep',
             },
 
-            goToPostPo: {
-              target: 'PostPurchaseOrder',
-              actions: 'assignPoPayload',
-            },
+            goToPostPo: [
+              {
+                target: 'PostPurchaseOrder.postImages',
+                actions: 'assignPoPayload',
+                cond: 'isChoosenCustomerCompany',
+              },
+              {
+                target: 'PostPurchaseOrder.postFiles',
+                cond: 'needUploadFiles',
+              },
+              'PostPurchaseOrder.postPoPayload',
+            ],
 
             backToBeginningStateFromThirdStep: 'checkSavedPo',
 
@@ -449,10 +457,17 @@ const POMachine =
 
         enquirePoType: {
           on: {
-            openingCamera: {
-              target: 'openCamera',
-              actions: 'assignCustomerType',
-            },
+            openingCamera: [
+              {
+                target: 'openCamera',
+                actions: 'assignCustomerType',
+                cond: 'isCompany',
+              },
+              {
+                target: 'firstStep.SearchSph',
+                actions: 'assignCustomerType',
+              },
+            ],
           },
         },
       },
@@ -482,6 +497,7 @@ const POMachine =
         },
         uploadPhoto: async (context) => {
           try {
+            console.log('company masuk sini');
             const photoFiles = context.poImages
               .filter((v) => v.file !== null)
               .map((photo) => {
@@ -502,6 +518,7 @@ const POMachine =
         },
         uploadFiles: async (context) => {
           try {
+            console.log('individu masuk sini kalau docsnya kosong');
             const docsToUpload = context.files
               .filter((v) => v.projectDocId === null)
               .filter((v) => v.value !== null)
@@ -519,14 +536,22 @@ const POMachine =
         },
         postPo: async (context) => {
           try {
+            console.log('ini payload', context.postPoPayload);
             const response = await postPurchaseOrder(context.postPoPayload);
             return response.data;
           } catch (error) {
+            console.log('ini error', error.message);
             throw new Error(error);
           }
         },
       },
       guards: {
+        isCompany: (context, event) => {
+          return event.value === 'COMPANY';
+        },
+        isChoosenCustomerCompany: (context, event) => {
+          return context.customerType === 'COMPANY';
+        },
         hasSavedPo: (_context, event) => {
           return event.data !== undefined;
         },
@@ -567,7 +592,7 @@ const POMachine =
         }),
         assignCustomerType: assign((_context, event) => {
           return {
-            isProvidedByCustomer: event.value,
+            customerType: event.value,
           };
         }),
         resetPoState: assign(() => {
@@ -740,8 +765,6 @@ const POMachine =
         closeModalSph: assign((_context, event) => {
           return {
             choosenSphDataFromModal: event.value,
-            customerType:
-              event.value.QuotationRequests[0].Visitation.customerType,
             isUseExistingFiles: false,
             selectedProducts: [],
           };
