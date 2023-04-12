@@ -43,8 +43,7 @@ const Dispatch = () => {
     crashlytics().log(ENTRY_TYPE.SECURITY ? TAB_DISPATCH : TAB_WB_OUT);
 
     DeviceEventEmitter.addListener('Operation.refreshlist', () => {
-      console.log('KENAAA REFRESHH');
-      send('assignUserData', { payload: userData?.type, tabActive: 'left' });
+      send('onRefreshList', { payload: userData?.type, tabActive: 'left' });
     });
 
     return () => {
@@ -114,9 +113,9 @@ const Dispatch = () => {
         refreshing={isRefreshing}
         onEndReached={() => send('onEndReached')}
         onPressList={(item) => onPressItem(item)}
-        onRefresh={() =>
-          send('onRefreshList', { payload: userData?.type, tabActive: 'left' })
-        }
+        onRefresh={() => {
+          send('onRefreshList', { payload: userData?.type, tabActive: 'left' });
+        }}
         onRetry={() =>
           send('retryGettingList', {
             payload: userData?.type,

@@ -31,13 +31,11 @@ const Operation = () => {
   );
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
-  console.log('rendeeer', userData?.type);
 
   React.useEffect(() => {
     crashlytics().log(userData?.type ? userData.type : 'Operation Default');
     DeviceEventEmitter.addListener('Operation.refreshlist', () => {
-      console.log('KENAAA REFRESHH');
-      send('assignUserData', { payload: userData?.type });
+      send('onRefreshList', { payload: userData?.type });
     });
 
     return () => {

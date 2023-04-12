@@ -42,8 +42,7 @@ const Return = () => {
     crashlytics().log(ENTRY_TYPE.SECURITY ? TAB_RETURN : TAB_WB_IN);
 
     DeviceEventEmitter.addListener('Operation.refreshlist', () => {
-      console.log('KENAAA REFRESHH');
-      send('assignUserData', { payload: userData?.type, tabActive: 'right' });
+      send('onRefreshList', { payload: userData?.type, tabActive: 'right' });
     });
 
     return () => {
