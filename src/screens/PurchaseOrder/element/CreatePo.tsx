@@ -25,8 +25,13 @@ const CreatePo = () => {
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
   const navRoutes = useRoute();
-  const { poImages, choosenSphDataFromModal, openCamera, poNumber } =
-    poState.currentState.context;
+  const {
+    poImages,
+    choosenSphDataFromModal,
+    openCamera,
+    poNumber,
+    customerType,
+  } = poState.currentState.context;
   const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
   const [expandData, setExpandData] = React.useState<any[]>([]);
   const addMoreImages = useCallback(() => {
@@ -82,7 +87,11 @@ const CreatePo = () => {
     parentData,
     data,
   }: {
-    parentData: { companyName: string; locationName: string; projectId: string };
+    parentData: {
+      companyName: string;
+      locationName: string;
+      projectId: string;
+    };
     data: QuotationRequests;
   }) => {
     const selectedSphFromModal = Object.assign({});
@@ -135,58 +144,59 @@ const CreatePo = () => {
           <FlatList
             data={null}
             renderItem={null}
-            ListHeaderComponent={<View>
-              <>
-                <BGallery
-                  addMorePict={addMoreImages}
-                  picts={poImages}
-                  removePict={deleteImages}
-                />
-                <BSpacer size="extraSmall" />
-                <BForm titleBold="500" inputs={inputs} />
-              </>
-
-              {isUserChoosedSph ? (
+            ListHeaderComponent={
+              <View>
                 <>
-                  <View style={{ height: resScale(57) }}>
-                    <BVisitationCard
-                      item={{
-                        name: choosenSphDataFromModal.name,
-                        location: choosenSphDataFromModal.locationName,
-                      }}
-                      isRenderIcon
-                      customIcon={renderCustomButton}
-                    />
-                  </View>
-
+                  <BGallery
+                    addMorePict={addMoreImages}
+                    picts={poImages}
+                    removePict={deleteImages}
+                  />
                   <BSpacer size="extraSmall" />
-                  <BNestedProductCard
-                    withoutHeader={false}
-                    data={choosenSphDataFromModal?.QuotationRequests}
-                    expandData={expandData}
-                    onExpand={onExpand}
-                  />
+                  {customerType === 'COMPANY' && <BForm titleBold="500" inputs={inputs} />}
                 </>
-              ) : (
-                <TouchableOpacity
-                  onPress={() => dispatch({ type: 'searchingSph' })}
-                  style={{ height: resScale(50) }}
-                >
-                  <BSearchBar
-                    left={
-                      <TextInput.Icon
-                        forceTextInputFocus={false}
-                        icon="magnify"
-                      />
-                    }
-                    disabled
-                    placeholder="Cari SPH"
-                  />
-                </TouchableOpacity>
-              )}
-            </View>}
-          />
 
+                {isUserChoosedSph ? (
+                  <>
+                    <View style={{ height: resScale(57) }}>
+                      <BVisitationCard
+                        item={{
+                          name: choosenSphDataFromModal.name,
+                          location: choosenSphDataFromModal.locationName,
+                        }}
+                        isRenderIcon
+                        customIcon={renderCustomButton}
+                      />
+                    </View>
+
+                    <BSpacer size="extraSmall" />
+                    <BNestedProductCard
+                      withoutHeader={false}
+                      data={choosenSphDataFromModal?.QuotationRequests}
+                      expandData={expandData}
+                      onExpand={onExpand}
+                    />
+                  </>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => dispatch({ type: 'searchingSph' })}
+                    style={{ height: resScale(50) }}
+                  >
+                    <BSearchBar
+                      left={
+                        <TextInput.Icon
+                          forceTextInputFocus={false}
+                          icon="magnify"
+                        />
+                      }
+                      disabled
+                      placeholder="Cari SPH"
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+            }
+          />
         )}
       </View>
     </>
@@ -196,7 +206,7 @@ const CreatePo = () => {
 const styles = StyleSheet.create({
   firstStepContainer: {
     flex: 1,
-    paddingBottom: layout.pad.xxl
+    paddingBottom: layout.pad.xxl,
   },
 });
 

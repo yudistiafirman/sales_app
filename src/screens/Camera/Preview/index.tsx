@@ -226,21 +226,28 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
-              photoTitle: 'Driver',
+              photoTitle: 'DO',
               navigateTo: navigateTo,
-              operationAddedStep: 'vehicle_no',
+              operationAddedStep: 'driver',
               operationTempData: operationTempData,
             });
-          } else if (operationAddedStep === 'vehicle_no') {
+          } else if (operationAddedStep === 'driver') {
             navigation.navigate(CAMERA, {
-              photoTitle: 'No Polisi TM',
+              photoTitle: 'NOPOL',
               navigateTo: navigateTo,
-              operationAddedStep: 'seal',
+              operationAddedStep: 'DO',
               operationTempData: operationTempData,
             });
-          } else if (operationAddedStep === 'seal') {
+          } else if (operationAddedStep === 'DO') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Segel',
+              navigateTo: navigateTo,
+              operationAddedStep: 'NOPOL',
+              operationTempData: operationTempData,
+            });
+          } else if (operationAddedStep === 'NOPOL') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Kondom',
               navigateTo: navigateTo,
               operationAddedStep: 'finished',
               operationTempData: operationTempData,
@@ -257,21 +264,49 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
-              photoTitle: 'Penuangan',
+              photoTitle: 'Beton Dalam Gentong Pas Sampai',
               navigateTo: navigateTo,
-              operationAddedStep: 'tm_value',
+              operationAddedStep: 'bnib',
               operationTempData: operationTempData,
             });
-          } else if (operationAddedStep === 'tm_value') {
+          } else if (operationAddedStep === 'bnib') {
             navigation.navigate(CAMERA, {
-              photoTitle: 'Isi TM',
+              photoTitle: 'Penerima',
               navigateTo: navigateTo,
-              operationAddedStep: 'do_signed',
+              operationAddedStep: 'receipient',
               operationTempData: operationTempData,
             });
-          } else if (operationAddedStep === 'do_signed') {
+          } else if (operationAddedStep === 'receipient') {
             navigation.navigate(CAMERA, {
-              photoTitle: 'DO Saat Ditandatangan',
+              photoTitle: 'Penambahan Air (jika ada)',
+              navigateTo: navigateTo,
+              operationAddedStep: 'water',
+              operationTempData: operationTempData,
+            });
+          } else if (operationAddedStep === 'water') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'DO',
+              navigateTo: navigateTo,
+              operationAddedStep: 'DO',
+              operationTempData: operationTempData,
+            });
+          } else if (operationAddedStep === 'DO') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Beton Saat Dituang',
+              navigateTo: navigateTo,
+              operationAddedStep: 'unboxing',
+              operationTempData: operationTempData,
+            });
+          } else if (operationAddedStep === 'unboxing') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Gentong Saat Sudah Selesei Dituang (kosong)',
+              navigateTo: navigateTo,
+              operationAddedStep: 'out',
+              operationTempData: operationTempData,
+            });
+          } else if (operationAddedStep === 'out') {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Lokasi Proyek Saat Selesai Dituang',
               navigateTo: navigateTo,
               operationAddedStep: 'finished',
               operationTempData: operationTempData,

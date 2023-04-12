@@ -149,11 +149,11 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static deliveryOrder = (status?: string, page?: string, size?: string) => {
+  static deliveryOrder = (status?: string | string[], page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/delivery-order`);
     const params = url.searchParams;
     if (status) {
-      params.append('status', status);
+      params.append('status', typeof status === 'object' ? JSON.stringify(status) : status);
     }
     if (page) {
       params.append('page', page);

@@ -91,7 +91,7 @@ const style = StyleSheet.create({
   flatList: {
     flex: 1,
     width: '100%',
-    paddingBottom: layout.pad.lg,
+    marginBottom: layout.pad.md,
     paddingHorizontal: layout.pad.lg,
   },
 });

@@ -31,7 +31,7 @@ const PaymentDetail = () => {
     });
     return requiredFileInput;
   }, [dispatch, files]);
-
+  console.log('ini files', files);
   useEffect(() => {
     if (poState.currentState.matches('SecondStep.idle')) {
       dispatch({

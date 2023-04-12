@@ -31,6 +31,7 @@ const Dispatch = () => {
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
 
+    console.log('rendeeer 2')
   useFocusEffect(
     React.useCallback(() => {
       send('assignUserData', { payload: userData?.type, tabActive: 'left' });
@@ -73,7 +74,7 @@ const Dispatch = () => {
       };
       dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
       navigation.navigate(CAMERA, {
-        photoTitle: 'DO',
+        photoTitle: userData?.type === ENTRY_TYPE.SECURITY ? 'Driver' : 'DO',
         navigateTo:
           userData?.type === ENTRY_TYPE.SECURITY
             ? ENTRY_TYPE.DISPATCH

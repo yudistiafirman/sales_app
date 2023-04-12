@@ -72,7 +72,7 @@ export const getScheduleByID = async (id: string) => {
 };
 
 export const getAllDeliveryOrders = async (
-  status?: string,
+  status?: string | string[],
   size?: string,
   page?: string
 ) => {

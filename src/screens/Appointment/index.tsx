@@ -12,7 +12,7 @@ import {
   StepOne,
 } from '@/context/AppointmentContext';
 import * as React from 'react';
-import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
+import { Alert, BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import FirstStep from './element/FirstStep';
 import { resScale } from '@/utils';
 import { useAppointmentData } from '@/hooks';
@@ -131,77 +131,87 @@ const Appointment = () => {
   }, [dispatchValue, validateCompanyDetailsForm]);
 
   const submitAppoinmentData = React.useCallback(async () => {
-    const today = moment();
-    const payload = {
-      visitation: {
-        location: {} as locationPayloadType,
-      } as visitationPayload,
-      project: {
-        location: {} as locationPayloadType,
-      } as projectPayloadType,
-      pic: [] as picPayloadType[],
-    };
-    if (stepOne[customerType].PIC.length === 1) {
-      const pic = [];
-      pic.push({ ...stepOne[customerType].PIC[0], isSelected: true });
-      payload.pic = pic;
-    } else {
-      const selectedPic = stepOne[customerType].PIC.filter((v) => v.isSelected);
-      payload.pic = selectedPic;
-    }
-    const typeCustomer = customerType === 'individu' ? 'INDIVIDU' : 'COMPANY';
-    payload.visitation.order = stepOne[customerType].Visitation.finish_date
-      ? stepOne[customerType].Visitation.order
-      : stepOne[customerType].Visitation.order - 1;
-    payload.visitation.status = 'VISIT';
-    if (stepOne[customerType].locationAddress.line1) {
-      payload.project.location.line1 =
-        stepOne[customerType].locationAddress.line1;
-    }
-    if (stepOne[customerType].locationAddress.line2) {
-      payload.project.location.line2 =
-        stepOne[customerType].locationAddress.line2;
-    }
-    if (stepOne[customerType].locationAddress.postalCode) {
-      payload.project.location.postalId =
-        stepOne[customerType].locationAddress.postalCode;
-    }
-    if (stepOne[customerType].locationAddress.formattedAddress) {
-      payload.project.location.formattedAddress =
-        stepOne[customerType].locationAddress.formattedAddress;
-    }
-    if (stepOne[customerType].locationAddress.lon) {
-      payload.project.location.lon = stepOne[customerType].locationAddress.lon;
-    }
-    if (stepOne[customerType].locationAddress.lat) {
-      payload.project.location.lat = stepOne[customerType].locationAddress.lat;
-    }
-    if (stepOne.customerType) {
-      payload.visitation.customerType = typeCustomer;
-    }
-    if (values.selectedDate) {
-      const selectDate = moment(values.selectedDate.date);
-      payload.visitation.bookingDate = selectDate.valueOf();
-    }
-    payload.visitation.dateVisit = today.valueOf();
-    if (stepOne[customerType].name) {
-      payload.project.name = stepOne[customerType].name;
-    }
-    if (stepOne.customerType === 'company') {
-      if (stepOne[customerType].Company?.title) {
-        payload.project.companyDisplayName =
-          stepOne[customerType].Company?.title;
-      }
-    }
-    if (stepOne[customerType].Visitation.id) {
-      payload.visitation.visitationId = stepOne[customerType].Visitation.id;
-    }
-    if (stepOne[customerType].id) {
-      payload.project.id = stepOne[customerType].id;
-    }
-
-    payload.visitation.isBooking = true;
     try {
+      const today = moment();
+      const payload = {
+        visitation: {
+          location: {} as locationPayloadType,
+        } as visitationPayload,
+        project: {
+          location: {} as locationPayloadType,
+        } as projectPayloadType,
+        pic: [] as picPayloadType[],
+      };
+      if (stepOne[customerType].PIC.length === 1) {
+        const pic = [];
+        pic.push({ ...stepOne[customerType].PIC[0], isSelected: true });
+        payload.pic = pic;
+      } else {
+        const selectedPic = stepOne[customerType].PIC.filter(
+          (v) => v.isSelected
+        );
+        payload.pic = selectedPic;
+      }
+      const typeCustomer = customerType === 'individu' ? 'INDIVIDU' : 'COMPANY';
+      if (stepOne[customerType].Visitation) {
+        payload.visitation.order = stepOne[customerType].Visitation.finishDate
+          ? stepOne[customerType].Visitation.order
+          : stepOne[customerType].Visitation.order - 1;
+      } else {
+        payload.visitation.order = 0;
+      }
+      payload.visitation.status = 'VISIT';
+
+      if (stepOne[customerType].locationAddress.line1) {
+        payload.project.location.line1 =
+          stepOne[customerType].locationAddress.line1;
+      }
+      if (stepOne[customerType].locationAddress.line2) {
+        payload.project.location.line2 =
+          stepOne[customerType].locationAddress.line2;
+      }
+      if (stepOne[customerType].locationAddress.postalCode) {
+        payload.project.location.postalId =
+          stepOne[customerType].locationAddress.postalCode;
+      }
+      if (stepOne[customerType].locationAddress.formattedAddress) {
+        payload.project.location.formattedAddress =
+          stepOne[customerType].locationAddress.formattedAddress;
+      }
+      if (stepOne[customerType].locationAddress.lon) {
+        payload.project.location.lon =
+          stepOne[customerType].locationAddress.lon;
+      }
+      if (stepOne[customerType].locationAddress.lat) {
+        payload.project.location.lat =
+          stepOne[customerType].locationAddress.lat;
+      }
+      if (stepOne.customerType) {
+        payload.visitation.customerType = typeCustomer;
+      }
+      if (values.selectedDate) {
+        const selectDate = moment(values.selectedDate.date);
+        payload.visitation.bookingDate = selectDate.valueOf();
+      }
+      payload.visitation.dateVisit = today.valueOf();
+      if (stepOne[customerType].name) {
+        payload.project.name = stepOne[customerType].name;
+      }
+      if (stepOne.customerType === 'company') {
+        if (stepOne[customerType].Company?.title) {
+          payload.project.companyDisplayName =
+            stepOne[customerType].Company?.title;
+        }
+      }
+      if (stepOne[customerType].Visitation?.id) {
+        payload.visitation.visitationId = stepOne[customerType].Visitation.id;
+      }
+      if (stepOne[customerType].id) {
+        payload.project.id = stepOne[customerType].id;
+      }
+
+      payload.visitation.isBooking = true;
+
       const response = await postBookingAppointment({ payload });
       if (response.data.success) {
         dispatch(
@@ -234,6 +244,8 @@ const Appointment = () => {
         );
       }
     } catch (error) {
+      console.log(error, 'errorcatch');
+
       dispatch(
         openPopUp({
           popUpType: 'error',
