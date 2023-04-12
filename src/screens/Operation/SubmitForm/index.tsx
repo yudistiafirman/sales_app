@@ -33,6 +33,8 @@ import {
   CAMERA,
   GALLERY_OPERATION,
   SUBMIT_FORM,
+  TAB_DISPATCH_TITLE,
+  TAB_RETURN_TITLE,
 } from '@/navigation/ScreenNames';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
@@ -174,8 +176,8 @@ const SubmitForm = () => {
       case ENTRY_TYPE.BATCHER:
         return 'Produksi';
       case ENTRY_TYPE.SECURITY:
-        if (operationType === ENTRY_TYPE.DISPATCH) return 'Dispatch';
-        else return 'Return';
+        if (operationType === ENTRY_TYPE.DISPATCH) return TAB_DISPATCH_TITLE;
+        else return TAB_RETURN_TITLE;
       case ENTRY_TYPE.DRIVER:
         return 'Penuangan';
       case ENTRY_TYPE.WB:
