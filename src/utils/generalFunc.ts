@@ -133,7 +133,7 @@ export const getSuccessMsgFromAPI = (
   fullUrl: string,
   endPoint: string
 ) => {
-  // excluding: /refresh , /suggestion , /places , /verify-auth , /project_sph
+  // excluding: /refresh , /suggestion , /places , /verify-auth , /project_sph , all finalText that empty
 
   let finalText = 'Berhasil ';
   switch (httpMethod.toLowerCase()) {
@@ -241,6 +241,9 @@ export const getSuccessMsgFromAPI = (
     switch (endPoint.toLowerCase()) {
       case 'project-sph':
         finalText += 'data semua SPH berdasarkan proyek';
+        break;
+      case 'project-po':
+        finalText += 'data semua PO berdasarkan proyek';
         break;
       case 'quotation':
         finalText = '';
