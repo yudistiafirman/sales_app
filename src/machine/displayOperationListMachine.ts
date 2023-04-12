@@ -111,9 +111,8 @@ const displayOperationListMachine = createMachine(
       fetchOperationListData: async (context, event) => {
         try {
           let response: any;
+          console.log('inii payload:: ', event?.payload)
           switch (event?.payload) {
-            // change to SUBMITTED temporary due to API still not finished
-
             case ENTRY_TYPE.SECURITY:
               if (event?.tabActive === 'left') {
                 response = await getAllDeliveryOrders(
@@ -166,6 +165,7 @@ const displayOperationListMachine = createMachine(
     },
     actions: {
       assignListData: assign((context, event) => {
+        console.log('inii payload 1:: ', context.operationListData)
         const listData = [
           ...context.operationListData,
           ...event.data.data.data,
@@ -202,6 +202,8 @@ const displayOperationListMachine = createMachine(
         };
       }),
       assignUserDataToContext: assign((context, event) => {
+        console.log('inii payload 2.1:: ', event?.payload)
+        console.log('inii payload 2.2:: ', event?.tabActive)
         return {
           userType: event?.payload,
           tabActive: event?.tabActive,

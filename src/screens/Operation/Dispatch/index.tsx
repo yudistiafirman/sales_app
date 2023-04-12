@@ -27,11 +27,12 @@ const Dispatch = () => {
   const navigation = useNavigation();
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { projectDetails } = useSelector((state: RootState) => state.operation);
+  const { projectDetails, photoFiles } = useSelector(
+    (state: RootState) => state.operation
+  );
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
 
-    console.log('rendeeer 2')
   useFocusEffect(
     React.useCallback(() => {
       send('assignUserData', { payload: userData?.type, tabActive: 'left' });
@@ -44,12 +45,22 @@ const Dispatch = () => {
 
   const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
     if (projectDetails && projectDetails.deliveryOrderId === item.id) {
-      navigation.navigate(SUBMIT_FORM, {
-        operationType:
-          userData?.type === ENTRY_TYPE.SECURITY
-            ? ENTRY_TYPE.DISPATCH
-            : ENTRY_TYPE.OUT,
-      });
+      if (photoFiles.length > 1) {
+        navigation.navigate(SUBMIT_FORM, {
+          operationType:
+            userData?.type === ENTRY_TYPE.SECURITY
+              ? ENTRY_TYPE.DISPATCH
+              : ENTRY_TYPE.OUT,
+        });
+      } else {
+        navigation.navigate(CAMERA, {
+          photoTitle: userData?.type === ENTRY_TYPE.SECURITY ? 'Driver' : 'DO',
+          navigateTo:
+            userData?.type === ENTRY_TYPE.SECURITY
+              ? ENTRY_TYPE.DISPATCH
+              : ENTRY_TYPE.OUT,
+        });
+      }
     } else {
       const dataToDeliver: OperationProjectDetails = {
         deliveryOrderId: item?.id ? item.id : '',
@@ -94,8 +105,15 @@ const Dispatch = () => {
         refreshing={isRefreshing}
         onEndReached={() => send('onEndReached')}
         onPressList={(item) => onPressItem(item)}
-        onRefresh={() => send('onRefreshList', { payload: userData?.type, tabActive: 'left' })}
-        onRetry={() => send('retryGettingList', { payload: userData?.type, tabActive: 'left' })}
+        onRefresh={() =>
+          send('onRefreshList', { payload: userData?.type, tabActive: 'left' })
+        }
+        onRetry={() =>
+          send('retryGettingList', {
+            payload: userData?.type,
+            tabActive: 'left',
+          })
+        }
         userType={userData?.type}
       />
     </SafeAreaView>

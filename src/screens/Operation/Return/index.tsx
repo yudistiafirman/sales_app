@@ -26,7 +26,9 @@ const Return = () => {
   const navigation = useNavigation();
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { projectDetails } = useSelector((state: RootState) => state.operation);
+  const { projectDetails, photoFiles } = useSelector(
+    (state: RootState) => state.operation
+  );
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
 
@@ -42,12 +44,22 @@ const Return = () => {
 
   const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
     if (projectDetails && projectDetails.deliveryOrderId === item.id) {
-      navigation.navigate(SUBMIT_FORM, {
-        operationType:
-          userData?.type === ENTRY_TYPE.SECURITY
-            ? ENTRY_TYPE.RETURN
-            : ENTRY_TYPE.IN,
-      });
+      if (photoFiles.length > 1) {
+        navigation.navigate(SUBMIT_FORM, {
+          operationType:
+            userData?.type === ENTRY_TYPE.SECURITY
+              ? ENTRY_TYPE.RETURN
+              : ENTRY_TYPE.IN,
+        });
+      } else {
+        navigation.navigate(CAMERA, {
+          photoTitle: 'DO',
+          navigateTo:
+            userData?.type === ENTRY_TYPE.SECURITY
+              ? ENTRY_TYPE.RETURN
+              : ENTRY_TYPE.IN,
+        });
+      }
     } else {
       const dataToDeliver: OperationProjectDetails = {
         deliveryOrderId: item?.id ? item.id : '',

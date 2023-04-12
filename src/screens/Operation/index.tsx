@@ -16,17 +16,22 @@ import displayOperationListMachine from '@/machine/displayOperationListMachine';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
-import { OperationProjectDetails, setAllOperationPhoto } from '@/redux/reducers/operationReducer';
+import {
+  OperationProjectDetails,
+  setAllOperationPhoto,
+} from '@/redux/reducers/operationReducer';
 
 const Operation = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation();
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { projectDetails } = useSelector((state: RootState) => state.operation);
+  const { projectDetails, photoFiles } = useSelector(
+    (state: RootState) => state.operation
+  );
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
-    console.log('rendeeer', userData?.type)
+  console.log('rendeeer', userData?.type);
 
   React.useEffect(() => {
     crashlytics().log(userData?.type ? userData.type : 'Operation Default');
@@ -44,9 +49,16 @@ const Operation = () => {
         navigation.navigate(CREATE_DO, { id: item });
       } else {
         if (projectDetails && projectDetails.deliveryOrderId === item.id) {
-          navigation.navigate(SUBMIT_FORM, {
-            operationType: userData.type,
-          });
+          if (photoFiles.length > 1) {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: userData.type,
+            });
+          } else {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Tiba Di Proyek',
+              navigateTo: userData.type,
+            });
+          }
         } else {
           const dataToDeliver: OperationProjectDetails = {
             deliveryOrderId: item?.id ? item.id : '',
