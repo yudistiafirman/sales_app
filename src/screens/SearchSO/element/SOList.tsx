@@ -54,6 +54,7 @@ export default function SOList({
     );
   };
 
+  const isSearch = keyword && keyword.length > 2 ? false : true;
   return (
     <FlatList
       data={data}
@@ -67,10 +68,14 @@ export default function SOList({
           <BCommonListShimmer />
         ) : (
           <BEmptyState
-            isError={keyword && keyword.length > 2 ? false : true}
+            isError={isSearch && errorMessage}
             errorMessage={errorMessage}
             onAction={onRetry}
-            emptyText={`SO ${keyword} tidak ditemukan!`}
+            emptyText={
+              keyword
+                ? `SO ${keyword} tidak ditemukan!`
+                : 'Data SO tidak tersedia. Silakan buat terlebih dahulu.'
+            }
           />
         )
       }
