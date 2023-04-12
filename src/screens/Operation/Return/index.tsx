@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
 import OperationList from '../element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -40,6 +40,15 @@ const Return = () => {
 
   React.useEffect(() => {
     crashlytics().log(ENTRY_TYPE.SECURITY ? TAB_RETURN : TAB_WB_IN);
+
+    DeviceEventEmitter.addListener('Operation.refreshlist', () => {
+      console.log('KENAAA REFRESHH');
+      send('assignUserData', { payload: userData?.type, tabActive: 'right' });
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners('Operation.refreshlist');
+    };
   }, [projectDetails, operationListData]);
 
   const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {

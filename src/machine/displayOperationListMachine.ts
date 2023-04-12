@@ -36,9 +36,9 @@ const displayOperationListMachine = createMachine(
         };
       },
       events: {} as
-        | { type: 'assignUserData'; payload: string; tabActive: string }
-        | { type: 'retryGettingList'; payload: string; tabActive: string }
-        | { type: 'onRefreshList'; payload: string; tabActive: string }
+        | { type: 'assignUserData'; value: { payload: string; tabActive: string } }
+        | { type: 'retryGettingList'; value: { payload: string; tabActive: string } }
+        | { type: 'onRefreshList'; value: { payload: string; tabActive: string } }
         | { type: 'onEndReached' },
     },
 
@@ -111,7 +111,7 @@ const displayOperationListMachine = createMachine(
       fetchOperationListData: async (context, event) => {
         try {
           let response: any;
-          console.log('inii payload:: ', event?.payload)
+          console.log('inii payload:: ', event?.payload);
           switch (event?.payload) {
             case ENTRY_TYPE.SECURITY:
               if (event?.tabActive === 'left') {
@@ -165,7 +165,7 @@ const displayOperationListMachine = createMachine(
     },
     actions: {
       assignListData: assign((context, event) => {
-        console.log('inii payload 1:: ', context.operationListData)
+        console.log('inii payload 1:: ', context.operationListData);
         const listData = [
           ...context.operationListData,
           ...event.data.data.data,
@@ -179,6 +179,7 @@ const displayOperationListMachine = createMachine(
         };
       }),
       assignError: assign((context, event) => {
+        console.log('inii payload error:: ', event?.payload);
         return {
           errorMessage: event.data.message,
           isLoading: false,
@@ -202,8 +203,8 @@ const displayOperationListMachine = createMachine(
         };
       }),
       assignUserDataToContext: assign((context, event) => {
-        console.log('inii payload 2.1:: ', event?.payload)
-        console.log('inii payload 2.2:: ', event?.tabActive)
+        console.log('inii payload 2.1:: ', event?.payload);
+        console.log('inii payload 2.2:: ', event?.tabActive);
         return {
           userType: event?.payload,
           tabActive: event?.tabActive,

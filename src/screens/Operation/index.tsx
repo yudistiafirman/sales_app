@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
 import OperationList from './element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,6 +35,14 @@ const Operation = () => {
 
   React.useEffect(() => {
     crashlytics().log(userData?.type ? userData.type : 'Operation Default');
+    DeviceEventEmitter.addListener('Operation.refreshlist', () => {
+      console.log('KENAAA REFRESHH');
+      send('assignUserData', { payload: userData?.type });
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners('Operation.refreshlist');
+    };
   }, [userData?.type, projectDetails, operationListData]);
 
   useFocusEffect(

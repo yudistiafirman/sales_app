@@ -210,6 +210,7 @@ const SubmitForm = () => {
   };
 
   const handleBack = () => {
+    DeviceEventEmitter.emit('Operation.refreshlist', true);
     navigation.dispatch(StackActions.popToTop());
   };
 
@@ -308,7 +309,7 @@ const SubmitForm = () => {
             })
           );
           if (navigation.canGoBack()) {
-            navigation.dispatch(StackActions.popToTop());
+            handleBack();
           }
         } else {
           dispatch(closePopUp());
