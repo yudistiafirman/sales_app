@@ -65,7 +65,7 @@ const PriceList = () => {
   React.useEffect(() => {
     if (route?.params) {
       const { params } = route;
-      const { latitude, longitude } = params.coordinate;
+      const { latitude, longitude, formattedAddress } = params.coordinate;
       const { from } = params;
       if (from === CREATE_VISITATION) {
         setFromVisitation(true);
@@ -193,7 +193,11 @@ const PriceList = () => {
       {!loadLocation ? (
         <CurrentLocation
           onPress={goToLocation}
-          location={locationDetail?.formattedAddress}
+          location={
+            route?.params?.coordinate?.formattedAddress
+              ? route?.params?.coordinate?.formattedAddress
+              : locationDetail?.formattedAddress
+          }
         />
       ) : (
         <ShimmerPlaceholder

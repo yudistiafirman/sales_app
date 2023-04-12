@@ -64,7 +64,9 @@ const Location = () => {
     const coordinate = {
       longitude: Number(lon),
       latitude: Number(lat),
-      formattedAddress: formattedAddress,
+      formattedAddress: route?.params?.coordinate?.formattedAddress
+        ? route?.params?.coordinate?.formattedAddress
+        : formattedAddress,
       postalId: postalId,
     };
 
@@ -97,6 +99,8 @@ const Location = () => {
     }
   };
   const { region, locationDetail, loadingLocation } = state.context;
+  const { params } = route;
+  const { coordinate } = params;
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BLocation
@@ -114,7 +118,9 @@ const Location = () => {
         <CoordinatesDetail
           loadingLocation={loadingLocation}
           address={
-            locationDetail?.formattedAddress?.length > 0
+            coordinate?.formattedAddress?.length > 0
+              ? coordinate?.formattedAddress
+              : locationDetail?.formattedAddress?.length > 0
               ? locationDetail?.formattedAddress
               : ''
           }

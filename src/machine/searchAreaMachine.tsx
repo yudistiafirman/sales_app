@@ -18,6 +18,7 @@ export const searchAreaMachine = createMachine(
       searchValue: '' as string,
       result: [] as any[],
       loadPlaces: false as boolean,
+      formattedAddress: '',
       placesId: '' as string,
       errorMessage: '',
     },
@@ -162,7 +163,8 @@ export const searchAreaMachine = createMachine(
       }),
       assignPlacesId: assign((context, event) => {
         return {
-          placesId: event.payload,
+          placesId: event.payload.place_id,
+          formattedAddress: event.payload.description,
         };
       }),
       handleErrorGettingLocation: assign((context, event) => {

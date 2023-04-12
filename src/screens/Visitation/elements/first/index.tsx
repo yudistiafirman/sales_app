@@ -126,6 +126,8 @@ const FirstStep = () => {
       ...visitationData.locationAddress,
       ...region,
     };
+
+    console.log('masuk ', locationAddress);
     dispatch(
       updateDataVisitation({ type: 'locationAddress', value: locationAddress })
     );
