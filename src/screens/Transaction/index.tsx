@@ -76,7 +76,7 @@ const Transaction = () => {
 
   useCustomHeaderRight({
     customHeaderRight:
-      selectedType === 'DO' ||
+      selectedType === 'DO' || selectedType === 'SO' ||
       (selectedType === 'SPH' && loadTab) ? undefined : (
         <BTouchableText
           onPress={() => {
@@ -123,7 +123,7 @@ const Transaction = () => {
         data = await getVisitationOrderByID(id);
         data = data.data.data;
       } else {
-        if (selectedType === 'PO') {
+        if (selectedType === 'PO' || selectedType === 'SO') {
           data = await getPurchaseOrderByID(id);
           data = data.data.data;
 

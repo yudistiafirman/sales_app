@@ -298,7 +298,7 @@ const TransactionDetail = () => {
           item,
           index,
           selectedType,
-          selectedType === 'PO'
+          (selectedType === 'PO' || selectedType === 'SO')
             ? data?.requestedQuantity
             : data?.quantity
             ? data?.quantity
@@ -412,7 +412,7 @@ const TransactionDetail = () => {
           <BProjectDetailCard
             status={data?.status || data?.QuotationRequest?.status}
             paymentMethod={
-              selectedType === 'SPH' || selectedType === 'PO'
+              selectedType === 'SPH' || selectedType === 'PO' || selectedType === 'SO'
                 ? !data?.paymentType && !data?.QuotationRequest?.paymentType
                   ? 'N/A'
                   : data?.paymentType === 'CBD' ||
@@ -429,7 +429,7 @@ const TransactionDetail = () => {
                 : '-'
             }
             projectName={
-              selectedType === 'SPH' || selectedType === 'PO'
+              selectedType === 'SPH' || selectedType === 'PO' || selectedType === 'SO'
                 ? data?.project?.projectName ||
                   data?.QuotationRequest?.project?.projectName
                 : undefined
@@ -444,7 +444,7 @@ const TransactionDetail = () => {
                 : '-'
             }
             quotation={
-              selectedType === 'PO' ? data?.QuotationLetter : undefined
+              (selectedType === 'PO' || selectedType === 'SO') ? data?.QuotationLetter : undefined
             }
             nominal={data?.value}
             paymentDate={
