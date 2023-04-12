@@ -153,7 +153,9 @@ export default class BrikApiOrder {
     const url = new URL(`${API_URL}/order/m/delivery-order`);
     const params = url.searchParams;
     if (status) {
-      params.append('status', typeof status === 'object' ? JSON.stringify(status) : status);
+      const finalStatus = typeof status === 'object' ? statusJSON.stringify(status) : status
+      console.log('STATUS DELIVERY ORDER=== ', finalStatus)
+      params.append('status', finalStatus);
     }
     if (page) {
       params.append('page', page);

@@ -157,7 +157,8 @@ const displayOperationListMachine = createMachine(
               break;
             case ENTRY_TYPE.DRIVER:
               response = await getAllDeliveryOrders(
-                'ON_DELIVERY',
+                ['ON_DELIVERY', 'ARRIVED'],
+                // 'ON_DELIVERY',
                 context.size.toString(),
                 context.page.toString()
               );
