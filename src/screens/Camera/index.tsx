@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import HeaderButton from './elements/HeaderButton';
+import RNFetchBlob from 'react-native-blob-util';
 
 const CameraScreen = () => {
   const navigation = useNavigation();
@@ -29,7 +30,10 @@ const CameraScreen = () => {
   const route = useRoute<RootStackScreenProps>();
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const [enableFlashlight, onEnableFlashlight] = React.useState<boolean>(false);
-  const [enableHDR, onEnableHDR] = React.useState<boolean>(true);
+  const [enableHDR, onEnableHDR] = React.useState<boolean>(false);
+  const [enableLowBoost, onEnableLowBoost] = React.useState<boolean>(false);
+  const [enableHighQuality, onEnableHighQuality] =
+    React.useState<boolean>(false);
   const { isFirstTimeOpenCamera } = poState.currentState.context;
   const navigateTo = route?.params?.navigateTo;
   const closeButton = route?.params?.closeButton;
@@ -99,11 +103,11 @@ const CameraScreen = () => {
       );
     } else {
       try {
-        const takenPhoto = await camera?.current?.takePhoto({
+        const takenPhoto = await camera?.current?.takeSnapshot({
           flash: enableFlashlight ? 'on' : 'off',
+          quality: 70,
         });
         animateElement();
-
         navigation.navigate(IMAGE_PREVIEW, {
           photo: takenPhoto,
           picker: undefined,
@@ -162,15 +166,20 @@ const CameraScreen = () => {
               device={device}
               isActive={isFocused}
               photo
-              enableHighQualityPhotos
+              enableHighQualityPhotos={enableHighQuality ? true : false}
               enableZoomGesture
+              preset="cif-352x288"
               hdr={enableHDR ? true : false}
-              lowLightBoost
+              lowLightBoost={enableLowBoost}
             />
           )}
           <HeaderButton
             onPressFlashlight={() => onEnableFlashlight(!enableFlashlight)}
             onPressHDR={() => onEnableHDR(!enableHDR)}
+            onPressHighQuality={() => onEnableHighQuality(!enableHighQuality)}
+            onPressLowBoost={() => onEnableLowBoost(!enableLowBoost)}
+            enableLowBoost={enableLowBoost}
+            enableHighQuality={enableHighQuality}
             enableFlashlight={enableFlashlight}
             enableHDR={enableHDR}
           />
