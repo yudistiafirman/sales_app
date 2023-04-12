@@ -140,8 +140,8 @@ function payloadMapper(sphState: SphStateInterface) {
   }
   if (selectedCompany) {
     payload.projectId = selectedCompany.id;
-    if (selectedCompany?.PIC?.length > 0) {
-      payload.picArr = selectedCompany.PIC;
+    if (selectedCompany?.Pics?.length > 0) {
+      payload.picArr = selectedCompany.Pics;
     } else {
       const newPicArr = [{ ...selectedCompany?.Pic, isSelected: true }];
       payload.picArr = newPicArr;
@@ -431,13 +431,13 @@ export default function FifthStep() {
           addPic={(pic: any) => {
             if (sphState.selectedCompany) {
               const newList = [
-                ...sphState.selectedCompany.PIC,
+                ...sphState.selectedCompany.Pics,
                 { ...pic, isSelected: false },
               ];
               dispatch(
                 updateSelectedCompany({
                   ...sphState.selectedCompany,
-                  PIC: newList,
+                  Pics: newList,
                 })
               );
             }
