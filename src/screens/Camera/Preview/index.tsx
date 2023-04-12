@@ -22,8 +22,10 @@ import {
   CAMERA,
   CREATE_DEPOSIT,
   CREATE_VISITATION,
+  FORM_SO,
   GALLERY_DEPOSIT,
   GALLERY_OPERATION,
+  GALLERY_SO,
   GALLERY_VISITATION,
   IMAGE_PREVIEW,
   PO,
@@ -46,6 +48,12 @@ import {
   setOperationPhoto,
 } from '@/redux/reducers/operationReducer';
 import { RootState } from '@/redux/store';
+import {
+  onUpdateSOID,
+  onUpdateSONumber,
+  setAllSOPhoto,
+  setSOPhoto,
+} from '@/redux/reducers/salesOrder';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -66,6 +74,8 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const operationTempData = route?.params?.operationTempData;
   const closeButton = route?.params?.closeButton;
   const existingVisitation = route?.params?.existingVisitation;
+  const soNumber = route?.params?.soNumber;
+  const soID = route?.params?.soID;
   const visitationData = useSelector((state: RootState) => state.visitation);
   const operationData = useSelector((state: RootState) => state.operation);
 
@@ -98,7 +108,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         navigateTo !== ENTRY_TYPE.RETURN &&
         navigateTo !== ENTRY_TYPE.IN &&
         navigateTo !== ENTRY_TYPE.OUT &&
-        navigateTo !== GALLERY_OPERATION
+        navigateTo !== GALLERY_OPERATION &&
+        navigateTo !== FORM_SO &&
+        navigateTo !== GALLERY_SO
       ) {
         return 'COVER';
       } else {
@@ -159,6 +171,12 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       }
     }
 
+    if (navigateTo === FORM_SO) {
+      dispatch(onUpdateSONumber({ number: soNumber }));
+      dispatch(onUpdateSOID({ id: soID }));
+      dispatch(setAllSOPhoto({ file: [{ file: null }] }));
+    }
+
     if (photo) DeviceEventEmitter.emit('Camera.preview', photo);
     else DeviceEventEmitter.emit('Camera.preview', picker);
     let images: any[] = [];
@@ -186,7 +204,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(StackActions.replace(navigateTo));
           return;
         case ENTRY_TYPE.BATCHER:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Mix Design',
@@ -201,7 +221,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.DISPATCH:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'DO',
@@ -237,7 +259,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.DRIVER:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Beton Dalam Gentong Pas Sampai',
@@ -294,7 +318,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.IN:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Hasil',
@@ -309,7 +335,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.OUT:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Hasil',
@@ -324,7 +352,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           }
           return;
         case ENTRY_TYPE.RETURN:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: true }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: true })
+          );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Kondisi TM',
@@ -338,8 +368,17 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
             });
           }
           return;
+        case FORM_SO:
+          dispatch(setSOPhoto({ file: localFile }));
+          navigation.dispatch(StackActions.pop(2));
+          navigation.navigate(navigateTo);
+          return;
+        case GALLERY_SO:
+          dispatch(setSOPhoto({ file: localFile }));
+          navigation.dispatch(StackActions.pop(2));
+          return;
         case CREATE_DEPOSIT:
-          dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
+          dispatch(setSOPhoto({ file: localFile }));
           navigation.goBack();
           navigation.dispatch(StackActions.replace(navigateTo));
           return;
@@ -358,7 +397,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(StackActions.pop(2));
           return;
         case GALLERY_OPERATION:
-          dispatch(setOperationPhoto({ file: localFile, withoutAddButton: false }));
+          dispatch(
+            setOperationPhoto({ file: localFile, withoutAddButton: false })
+          );
           navigation.dispatch(StackActions.pop(2));
           return;
         default:

@@ -11,120 +11,121 @@ import { Details } from 'react-native-maps';
 import { DateData } from 'react-native-calendars';
 
 interface Input {
-  label?: string;
-  isRequire: boolean;
-  type:
-    | 'quantity'
-    | 'price'
-    | 'textInput'
-    | 'cardOption'
-    | 'comboDropdown'
-    | 'area'
-    | 'dropdown'
-    | 'PIC'
-    | 'autocomplete'
-    | 'checkbox'
-    | 'switch'
-    | 'fileInput'
-    | 'map'
-    | 'autocomplete'
-    | 'calendar'
-    | 'calendar-time';
-  hidePicLabel?: boolean;
-  onChange?: (e: any) => void;
-  onFocus?: (e: any) => void;
-  value?: string | any;
-  placeholder?: string;
-  loading?: boolean;
-  isError?: boolean;
-  customerErrorMsg?: string;
-  disabledFileInput?: boolean;
-  LeftIcon?: () => JSX.Element;
-  keyboardType?: KeyboardType | KeyboardTypeOptions;
-  items?: any;
-  showChevronAutoCompleted?: boolean;
-  showClearAutoCompleted?: boolean;
-  textSize?: number;
-  quantityType?: string;
-  options?: Array<{
-    title: string;
-    value: string | any;
-    onChange: () => void;
-    icon?: string;
-  }>;
-  calendar?: {
-    onDayPress: (day: DateData) => void;
-    isCalendarVisible: boolean;
-    setCalendarVisible: (flag: boolean) => void;
-  };
-  calendarTime?: {
-    onDayPress: (day: DateData) => void;
-    onTimeChange: (time: any) => void;
-    isCalendarVisible: boolean;
-    isTimeVisible: boolean;
-    setCalendarVisible: (flag: boolean) => void;
-    setTimeVisible: (flag: boolean) => void;
-    labelOne: string;
-    labelTwo: string;
-    errMsgOne?: string;
-    errMsgTwo?: string;
-    placeholderOne?: string;
-    placeholderTwo?: string;
-    valueOne: string;
-    valueTwo: string;
-    valueTwoMock: Date;
-    isErrorOne?: boolean;
-    isErrorTwo?: boolean;
-  };
-  dropdown?: {
-    items: {
-      label: string;
-      value: string | number | any;
-    }[];
-    onChange:
-      | ((value: any) => void)
-      | ((value: any[] | null) => void)
-      | undefined;
-    placeholder: string;
-  };
-  comboDropdown?: {
-    itemsOne: {
-      label: string;
-      value: string | number | any;
-    }[];
-    itemsTwo: {
-      label: string;
-      value: string | number | any;
-    }[];
-    onChangeOne:
-      | ((value: any) => void)
-      | ((value: any[] | null) => void)
-      | undefined;
-    onChangeTwo:
-      | ((value: any) => void)
-      | ((value: any[] | null) => void)
-      | undefined;
-    placeholderOne: string;
-    placeholderTwo: string;
-    isErrorOne?: boolean;
-    isErrorTwo?: boolean;
-    errorMessageOne?: string;
-    errorMessageTwo?: string;
-    valueOne?: any;
-    valueTwo?: any;
-  };
-  checkbox?: {
-    disabled?: boolean;
-    value: any;
-    onValueChange: (value: any) => void;
-  };
-  onSelect?: (index: number | any) => void; //eg for pic radio
-  isInputDisable?: boolean;
-  onClear?: () => void;
-  labelStyle?: ViewStyle;
-  textInputAsButton?: boolean;
-  textInputAsButtonOnPress?: () => void;
-  outlineColor?: string;
+	label?: string;
+	isRequire: boolean;
+	type:
+	| 'quantity'
+	| 'price'
+	| 'textInput'
+	| 'cardOption'
+	| 'comboDropdown'
+	| 'area'
+	| 'dropdown'
+	| 'PIC'
+	| 'autocomplete'
+	| 'checkbox'
+	| 'switch'
+	| 'fileInput'
+	| 'map'
+	| 'autocomplete'
+	| 'calendar'
+	| 'calendar-time';
+	hidePicLabel?: boolean;
+	onChange?: (e: any) => void;
+	onFocus?: (e: any) => void;
+	value?: string | any;
+	placeholder?: string;
+	loading?: boolean;
+	isError?: boolean;
+	customerErrorMsg?: string;
+	disabledFileInput?: boolean;
+	LeftIcon?: () => JSX.Element;
+	keyboardType?: KeyboardType | KeyboardTypeOptions;
+	items?: any;
+	showChevronAutoCompleted?: boolean;
+	showClearAutoCompleted?: boolean;
+	textSize?: number;
+	quantityType?: string;
+	options?: Array<{
+		title: string;
+		value: string | any;
+		onChange: () => void;
+		icon?: string;
+	}>;
+	calendar?: {
+		onDayPress: (day: DateData) => void;
+		isCalendarVisible: boolean;
+		setCalendarVisible: (flag: boolean) => void;
+	};
+	calendarTime?: {
+		onDayPress: (day: DateData) => void;
+		onTimeChange: (time: any) => void;
+		isCalendarVisible: boolean;
+		isTimeVisible: boolean;
+		setCalendarVisible: (flag: boolean) => void;
+		setTimeVisible: (flag: boolean) => void;
+		labelOne: string;
+		labelTwo: string;
+		errMsgOne?: string;
+		errMsgTwo?: string;
+		placeholderOne?: string;
+		placeholderTwo?: string;
+		valueOne: string;
+		valueTwo: string;
+		valueTwoMock: Date;
+		isErrorOne?: boolean;
+		isErrorTwo?: boolean;
+	};
+	dropdown?: {
+		items: {
+			label: string;
+			value: string | number | any;
+		}[];
+		onChange:
+		| ((value: any) => void)
+		| ((value: any[] | null) => void)
+		| undefined;
+		placeholder: string;
+	};
+	comboDropdown?: {
+		itemsOne: {
+			label: string;
+			value: string | number | any;
+		}[];
+		itemsTwo: {
+			label: string;
+			value: string | number | any;
+		}[];
+		onChangeOne:
+		| ((value: any) => void)
+		| ((value: any[] | null) => void)
+		| undefined;
+		onChangeTwo:
+		| ((value: any) => void)
+		| ((value: any[] | null) => void)
+		| undefined;
+		placeholderOne: string;
+		placeholderTwo: string;
+		isErrorOne?: boolean;
+		isErrorTwo?: boolean;
+		errorMessageOne?: string;
+		errorMessageTwo?: string;
+		valueOne?: any;
+		valueTwo?: any;
+	};
+	checkbox?: {
+		disabled?: boolean;
+		value: any;
+		onValueChange: (value: any) => void;
+	};
+	onSelect?: (index: number | any) => void; //eg for pic radio
+	isInputDisable?: boolean;
+	disableColor?: string;
+	onClear?: () => void;
+	labelStyle?: ViewStyle;
+	textInputAsButton?: boolean;
+	textInputAsButtonOnPress?: () => void;
+	outlineColor?: string;
 }
 
 interface Styles {

@@ -414,7 +414,7 @@ export default function FifthStep() {
           </View>
           <View style={{ flex: 1 }}>
             <BSpacer size={'extraSmall'} />
-            <BForm inputs={inputsData} />
+            <BForm titleBold="500" inputs={inputsData} />
           </View>
         </View>
         <BBackContinueBtn
