@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
 import OperationList from './element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,12 +26,21 @@ const Operation = () => {
   const navigation = useNavigation();
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { projectDetails } = useSelector((state: RootState) => state.operation);
+  const { projectDetails, photoFiles } = useSelector(
+    (state: RootState) => state.operation
+  );
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
 
   React.useEffect(() => {
     crashlytics().log(userData?.type ? userData.type : 'Operation Default');
+    DeviceEventEmitter.addListener('Operation.refreshlist', () => {
+      send('onRefreshList', { payload: userData?.type });
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners('Operation.refreshlist');
+    };
   }, [userData?.type, projectDetails, operationListData]);
 
   useFocusEffect(
@@ -46,9 +55,16 @@ const Operation = () => {
         navigation.navigate(CREATE_DO, { id: item });
       } else {
         if (projectDetails && projectDetails.deliveryOrderId === item.id) {
-          navigation.navigate(SUBMIT_FORM, {
-            operationType: userData.type,
-          });
+          if (photoFiles.length > 1) {
+            navigation.navigate(SUBMIT_FORM, {
+              operationType: userData.type,
+            });
+          } else {
+            navigation.navigate(CAMERA, {
+              photoTitle: 'Tiba Di Proyek',
+              navigateTo: userData.type,
+            });
+          }
         } else {
           const dataToDeliver: OperationProjectDetails = {
             deliveryOrderId: item?.id ? item.id : '',

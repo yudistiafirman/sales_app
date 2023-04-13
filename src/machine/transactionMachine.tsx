@@ -277,6 +277,14 @@ export const transactionMachine =
                 _context.size.toString()
               );
               response = response.data;
+            } else if (_context.selectedType === 'SO') {
+              response = await getAllPurchaseOrders(
+                _context.page.toString(),
+                _context.size.toString(),
+                undefined,
+                'CONFIRMED'
+              );
+              response = response.data;
             } else if (_context.selectedType === 'Deposit') {
               response = await getAllDeposits(
                 _context.page.toString(),

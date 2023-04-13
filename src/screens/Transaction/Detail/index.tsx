@@ -128,7 +128,7 @@ const TransactionDetail = () => {
   const selectedType = route?.params?.type;
   const dispatch = useDispatch<AppDispatch>();
   const [expandData, setExpandData] = React.useState<any[]>([]);
-  const [sphFiles, setSphFiles] = React.useState<any>(null);
+  const [downloadFiles, setDownloadFiles] = React.useState<any>(null);
 
   useHeaderTitleChanged({
     title: route?.params?.title ? route?.params?.title : '-',
@@ -139,13 +139,30 @@ const TransactionDetail = () => {
   }, []);
 
   React.useEffect(() => {
-    if (data?.QuotationLetterFiles) {
-      setSphFiles({
-        pos: data?.QuotationLetterFiles?.find((v: any) => v?.type == 'POS'),
-        letter: data?.QuotationLetterFiles?.find(
-          (v: any) => v?.type == 'LETTER'
-        ),
-      });
+    if (selectedType === 'SO') {
+      if (data?.PurchaseOrderDocs) {
+        setDownloadFiles({
+          letter: data?.PurchaseOrderDocs?.find(
+            (v: any) => v?.type == 'BRIK_SIGNED'
+          ),
+        });
+      }
+    } else if (selectedType === 'Deposit') {
+      if (data?.DepositFiles) {
+        // TODO: need to change the type to download the deposit files
+        setDownloadFiles({
+          letter: data?.DepositFiles?.find((v: any) => v?.type == ''),
+        });
+      }
+    } else {
+      if (data?.QuotationLetterFiles) {
+        setDownloadFiles({
+          pos: data?.QuotationLetterFiles?.find((v: any) => v?.type == 'POS'),
+          letter: data?.QuotationLetterFiles?.find(
+            (v: any) => v?.type == 'LETTER'
+          ),
+        });
+      }
     }
   }, [data]);
 
@@ -215,11 +232,14 @@ const TransactionDetail = () => {
     downloadPopup,
     downloadError,
   }: downloadType) {
-    if (!url) return null;
+    if (!url) {
+      downloadError(undefined);
+      return null;
+    }
     let dirs = ReactNativeBlobUtil.fs.dirs;
     const downloadTitle = title
       ? `${title} berhasil di download`
-      : 'PDF sph berhasil di download';
+      : 'PDF berhasil di download';
     ReactNativeBlobUtil.config(
       Platform.OS === 'android'
         ? {
@@ -231,7 +251,7 @@ const TransactionDetail = () => {
               useDownloadManager: true,
               notification: true,
               title: downloadTitle,
-              description: 'SPH PDF',
+              description: `${selectedType} PDF`,
               mediaScannable: true,
             },
           }
@@ -268,7 +288,7 @@ const TransactionDetail = () => {
       if (!url) throw 'no url';
       await Share.share({
         url: url.replace(/\s/g, '%20'),
-        message: `Link PDF SPH ${
+        message: `Link PDF ${selectedType} ${
           data?.Company?.name ? data?.Company.name : data?.Pic?.name
         }, ${url.replace(/\s/g, '%20')}`,
       });
@@ -276,7 +296,9 @@ const TransactionDetail = () => {
       dispatch(
         openPopUp({
           popUpType: 'error',
-          popUpText: error.message || 'Terjadi error saat share Link PDF SPH',
+          popUpText:
+            error.message ||
+            `Terjadi error saat share Link PDF ${selectedType}`,
           outsideClickClosePopUp: true,
         })
       );
@@ -298,7 +320,7 @@ const TransactionDetail = () => {
           item,
           index,
           selectedType,
-          selectedType === 'PO'
+          selectedType === 'PO' || selectedType === 'SO'
             ? data?.requestedQuantity
             : data?.quantity
             ? data?.quantity
@@ -412,7 +434,9 @@ const TransactionDetail = () => {
           <BProjectDetailCard
             status={data?.status || data?.QuotationRequest?.status}
             paymentMethod={
-              selectedType === 'SPH' || selectedType === 'PO'
+              selectedType === 'SPH' ||
+              selectedType === 'PO' ||
+              selectedType === 'SO'
                 ? !data?.paymentType && !data?.QuotationRequest?.paymentType
                   ? 'N/A'
                   : data?.paymentType === 'CBD' ||
@@ -429,7 +453,9 @@ const TransactionDetail = () => {
                 : '-'
             }
             projectName={
-              selectedType === 'SPH' || selectedType === 'PO'
+              selectedType === 'SPH' ||
+              selectedType === 'PO' ||
+              selectedType === 'SO'
                 ? data?.project?.projectName ||
                   data?.QuotationRequest?.project?.projectName
                 : undefined
@@ -444,7 +470,9 @@ const TransactionDetail = () => {
                 : '-'
             }
             quotation={
-              selectedType === 'PO' ? data?.QuotationLetter : undefined
+              selectedType === 'PO' || selectedType === 'SO'
+                ? data?.QuotationLetter
+                : undefined
             }
             nominal={data?.value}
             paymentDate={
@@ -542,35 +570,38 @@ const TransactionDetail = () => {
             </>
           )}
         </View>
-        {sphFiles && (
+        {downloadFiles && (
           <View style={styles.modalFooter}>
+            {downloadFiles?.pos && (
+              <TouchableOpacity
+                style={styles.footerButton}
+                onPress={() =>
+                  printRemotePDF(
+                    downloadFiles.pos?.File?.url,
+                    (errorMessage: string | unknown) => {
+                      dispatch(
+                        openPopUp({
+                          popUpText:
+                            errorMessage || `Gagal print ${selectedType}`,
+                          popUpType: 'error',
+                          outsideClickClosePopUp: true,
+                        })
+                      );
+                    }
+                  )
+                }
+              >
+                <MaterialCommunityIcons
+                  name="printer"
+                  size={resScale(25)}
+                  color={colors.primary}
+                />
+                <Text style={styles.footerButtonText}>Print</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               style={styles.footerButton}
-              onPress={() =>
-                printRemotePDF(
-                  sphFiles?.pos?.File?.url,
-                  (errorMessage: string | unknown) => {
-                    dispatch(
-                      openPopUp({
-                        popUpText: errorMessage || 'Gagal print SPH',
-                        popUpType: 'error',
-                        outsideClickClosePopUp: true,
-                      })
-                    );
-                  }
-                )
-              }
-            >
-              <MaterialCommunityIcons
-                name="printer"
-                size={resScale(25)}
-                color={colors.primary}
-              />
-              <Text style={styles.footerButtonText}>Print</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.footerButton}
-              onPress={() => shareFunc(sphFiles?.letter?.File?.url)}
+              onPress={() => shareFunc(downloadFiles?.letter?.File?.url)}
             >
               <MaterialCommunityIcons
                 name="share-variant-outline"
@@ -583,12 +614,12 @@ const TransactionDetail = () => {
               style={styles.footerButton}
               onPress={() =>
                 downloadPdf({
-                  url: sphFiles?.letter?.File?.url,
+                  url: downloadFiles?.letter?.File?.url,
                   title: data?.number,
                   downloadPopup: () => {
                     dispatch(
                       openPopUp({
-                        popUpText: 'Berhasil mendownload SPH',
+                        popUpText: `Berhasil mendownload ${selectedType}`,
                         popUpType: 'success',
                         outsideClickClosePopUp: true,
                       })
@@ -597,7 +628,7 @@ const TransactionDetail = () => {
                   downloadError: (err) => {
                     dispatch(
                       openPopUp({
-                        popUpText: err || 'Gagal mendownload SPH',
+                        popUpText: err || `Gagal mendownload ${selectedType}`,
                         popUpType: 'error',
                         outsideClickClosePopUp: true,
                       })

@@ -140,7 +140,7 @@ instance.interceptors.response.use(
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
         await bStorage.deleteItem(storageKey.userToken);
-        store.dispatch(resetOperationState())
+        store.dispatch(resetOperationState());
         store.dispatch(signout(false));
         return Promise.resolve(res);
       }
@@ -175,10 +175,7 @@ instance.interceptors.response.use(
       const urlArray: string[] = url?.split('/');
       const respMethod = config.method;
       const endpoint = urlArray[urlArray?.length - 1] || '';
-      //URL_PRODUCTIVITY
-      ///productivity/m/flow/visitation
       const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
-      //URL_ORDER
       const postSphUrl = `${URL_ORDER}/order/m/flow/quotation/`;
       if (
         endpoint !== 'refresh' &&
@@ -226,14 +223,16 @@ instance.interceptors.response.use(
       const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
       const postDepositUrl = `${URL_ORDER}/order/m/deposit/`;
       const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
-      const postPO = `${URL_ORDER}/order/m/purchase-order`;
+      const postPO = `${URL_ORDER}/order/m/purchase-order/`;
+      const postSOSigned = `${URL_ORDER}/order/m/purchase-order/docs/`;
 
       if (
         error?.config?.url !== postVisitationUrl &&
         error?.config?.url !== postVisitationBookUrl &&
         error?.config?.url !== postDepositUrl &&
         error?.config?.url !== postScheduleUrl &&
-        error?.config?.url !== postPO
+        error?.config?.url !== postPO &&
+        error?.config?.url !== postSOSigned
       ) {
         store.dispatch(
           openSnackbar({

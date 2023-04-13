@@ -50,6 +50,7 @@ import {
   CREATE_VISITATION,
   CUSTOMER_DETAIL,
   PO,
+  SEARCH_SO,
   SPH,
   TAB_HOME,
 } from '@/navigation/ScreenNames';
@@ -77,6 +78,7 @@ const Beranda = () => {
   const {
     force_update,
     enable_appointment,
+    enable_signed_so,
     enable_create_schedule,
     enable_customer_detail,
     enable_deposit,
@@ -423,6 +425,13 @@ const Beranda = () => {
           navigation.navigate(APPOINTMENT);
         },
       },
+      {
+        icon: SvgNames.IC_SIGN_SO,
+        title: HOME_MENU.SIGN_SO,
+        action: () => {
+          navigation.navigate(SEARCH_SO);
+        },
+      },
     ];
 
     if (!enable_sph) {
@@ -456,6 +465,13 @@ const Beranda = () => {
     if (!enable_appointment) {
       const filtered = buttons.filter((item) => {
         return item.title !== HOME_MENU.APPOINTMENT;
+      });
+      buttons = filtered;
+    }
+
+    if (!enable_signed_so) {
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.SIGN_SO;
       });
       buttons = filtered;
     }

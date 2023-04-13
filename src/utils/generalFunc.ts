@@ -133,7 +133,7 @@ export const getSuccessMsgFromAPI = (
   fullUrl: string,
   endPoint: string
 ) => {
-  // excluding: /refresh , /suggestion , /places , /verify-auth , /project_sph
+  // excluding: /refresh , /suggestion , /places , /verify-auth , /project_sph , all finalText that empty
 
   let finalText = 'Berhasil ';
   switch (httpMethod.toLowerCase()) {
@@ -156,7 +156,9 @@ export const getSuccessMsgFromAPI = (
 
   if (
     domainType === 'common-dev.aggre.id' ||
-    domainType === 'common.aggre.id'
+    domainType === 'common.aggre.id' ||
+    domainType === 'common.apis.oreo.brik.id' ||
+    domainType === 'common.apis.brik.id'
   ) {
     switch (endPoint.toLowerCase()) {
       case 'projectdoc':
@@ -199,7 +201,9 @@ export const getSuccessMsgFromAPI = (
     }
   } else if (
     domainType === 'inventory-dev.aggre.id' ||
-    domainType === 'inventory.aggre.id'
+    domainType === 'inventory.aggre.id' ||
+    domainType === 'inventory.apis.oreo.brik.id' ||
+    domainType === 'inventory.apis.brik.id'
   ) {
     switch (endPoint.toLowerCase()) {
       case 'category':
@@ -214,7 +218,9 @@ export const getSuccessMsgFromAPI = (
     }
   } else if (
     domainType === 'productivity-dev.aggre.id' ||
-    domainType === 'productivity.aggre.id'
+    domainType === 'productivity.aggre.id' ||
+    domainType === 'productivity.apis.oreo.brik.id' ||
+    domainType === 'productivity.apis.brik.id'
   ) {
     switch (endPoint.toLowerCase()) {
       case 'all-visitation':
@@ -236,11 +242,16 @@ export const getSuccessMsgFromAPI = (
     }
   } else if (
     domainType === 'order-dev.aggre.id' ||
-    domainType === 'order.aggre.id'
+    domainType === 'order.aggre.id' ||
+    domainType === 'order.apis.oreo.brik.id' ||
+    domainType === 'order.apis.brik.id'
   ) {
     switch (endPoint.toLowerCase()) {
       case 'project-sph':
         finalText += 'data semua SPH berdasarkan proyek';
+        break;
+      case 'project-po':
+        finalText += 'data semua PO berdasarkan proyek';
         break;
       case 'quotation':
         finalText = '';

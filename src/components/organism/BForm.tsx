@@ -48,6 +48,22 @@ interface IProps {
     | '800'
     | '900'
     | undefined;
+  inputs: Input[];
+  spacer?: 'extraSmall' | 'small' | 'medium' | 'large' | 'extraLarge' | number;
+  noSpaceEnd?: boolean;
+  titleBold?:
+    | 'bold'
+    | '400'
+    | 'normal'
+    | '100'
+    | '200'
+    | '300'
+    | '500'
+    | '600'
+    | '700'
+    | '800'
+    | '900'
+    | undefined;
 }
 
 interface Styles {
@@ -150,9 +166,107 @@ const styles: Styles = {
   },
   calendarOne: { flex: 1, marginEnd: layout.pad.sm },
   timeOne: { flex: 1, marginStart: layout.pad.sm },
+  optionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  errorPicContainer: {
+    width: resScale(213),
+    height: resScale(40),
+    borderRadius: layout.pad.xs + layout.pad.sm,
+    backgroundColor: colors.status.errorPic,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: layout.pad.sm,
+  },
+  quantityLayout: {
+    flexDirection: 'row',
+  },
+  quantityInput: {
+    flex: 1,
+  },
+  quantityInputPrice: {
+    flex: 1,
+    justifyContent: 'center',
+    borderColor: colors.textInput.placeHolder,
+    borderWidth: 1,
+    borderRadius: layout.radius.sm,
+  },
+  quantityInputCalendar: {
+    flex: 1,
+    justifyContent: 'center',
+    borderColor: colors.textInput.placeHolder,
+    borderWidth: 1,
+    borderRadius: layout.radius.sm,
+    paddingHorizontal: layout.pad.lg,
+    paddingVertical: layout.pad.ml,
+  },
+  quantityText: {
+    position: 'absolute',
+    right: 0,
+    top: 6,
+    bottom: 0,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginRight: layout.pad.lg,
+  },
+  priceText: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    paddingStart: layout.pad.lg,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  calendarText: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    paddingEnd: layout.pad.md,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  calendar: {
+    borderWidth: 1,
+    borderRadius: layout.radius.sm,
+    borderColor: colors.lightGray,
+  },
+  checkboxText: {
+    // flex: 1,
+    justifyContent: 'center',
+  },
+  flexRow: {
+    flexDirection: 'row',
+  },
+  relative: {
+    position: 'relative',
+  },
+  TextinputAbsolute: {
+    position: 'absolute',
+    width: '100%',
+    height: resScale(73),
+    zIndex: 2,
+  },
+  TextAreaAbsolute: {
+    position: 'absolute',
+    width: '100%',
+    height: resScale(110),
+    zIndex: 2,
+  },
+  calendarTime: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  calendarOne: { flex: 1, marginEnd: layout.pad.sm },
+  timeOne: { flex: 1, marginStart: layout.pad.sm },
 };
 
 const textStyles: TextStyle = {
+  color: colors.textInput.input,
+  fontFamily: fonts.family.montserrat[400],
+  fontSize: fonts.size.md,
   color: colors.textInput.input,
   fontFamily: fonts.family.montserrat[400],
   fontSize: fonts.size.md,

@@ -13,6 +13,7 @@ interface AuthState {
   isSignout: boolean;
   hunterScreen: boolean;
   remote_config: {
+    enable_signed_so: boolean;
     enable_appointment: boolean;
     enable_create_schedule: boolean;
     enable_customer_detail: boolean;
@@ -37,6 +38,7 @@ const initialState: AuthState = {
   isSignout: false,
   hunterScreen: false,
   remote_config: {
+    enable_signed_so: true,
     enable_appointment: true,
     enable_create_schedule: true,
     enable_customer_detail: true,
@@ -72,6 +74,7 @@ export const authSlice = createSlice({
           userData: action.payload.userData,
           remote_config: {
             ...state.remote_config,
+            enable_signed_so: action.payload.remoteConfig.enable_signed_so,
             enable_appointment: action.payload.remoteConfig.enable_appointment,
             enable_create_schedule:
               action.payload.remoteConfig.enable_create_schedule,
@@ -108,6 +111,7 @@ export const authSlice = createSlice({
           ...state,
           remote_config: {
             ...state.remote_config,
+            enable_signed_so: action.payload.remoteConfig.enable_signed_so,
             enable_appointment: action.payload.remoteConfig.enable_appointment,
             enable_create_schedule:
               action.payload.remoteConfig.enable_create_schedule,

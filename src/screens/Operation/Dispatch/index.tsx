@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
 import colors from '@/constants/colors';
 import { layout } from '@/constants';
 import OperationList from '../element/OperationList';
@@ -27,7 +27,9 @@ const Dispatch = () => {
   const navigation = useNavigation();
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { projectDetails } = useSelector((state: RootState) => state.operation);
+  const { projectDetails, photoFiles } = useSelector(
+    (state: RootState) => state.operation
+  );
   const { operationListData, isLoadMore, isLoading, isRefreshing } =
     state.context;
 
@@ -39,16 +41,34 @@ const Dispatch = () => {
 
   React.useEffect(() => {
     crashlytics().log(ENTRY_TYPE.SECURITY ? TAB_DISPATCH : TAB_WB_OUT);
-  }, [projectDetails, operationListData]);
+
+    DeviceEventEmitter.addListener('Operation.refreshlist', () => {
+      send('onRefreshList', { payload: userData?.type, tabActive: 'left' });
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners('Operation.refreshlist');
+    };
+  }, [send, projectDetails, operationListData]);
 
   const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
     if (projectDetails && projectDetails.deliveryOrderId === item.id) {
-      navigation.navigate(SUBMIT_FORM, {
-        operationType:
-          userData?.type === ENTRY_TYPE.SECURITY
-            ? ENTRY_TYPE.DISPATCH
-            : ENTRY_TYPE.OUT,
-      });
+      if (photoFiles.length > 1) {
+        navigation.navigate(SUBMIT_FORM, {
+          operationType:
+            userData?.type === ENTRY_TYPE.SECURITY
+              ? ENTRY_TYPE.DISPATCH
+              : ENTRY_TYPE.OUT,
+        });
+      } else {
+        navigation.navigate(CAMERA, {
+          photoTitle: userData?.type === ENTRY_TYPE.SECURITY ? 'Driver' : 'DO',
+          navigateTo:
+            userData?.type === ENTRY_TYPE.SECURITY
+              ? ENTRY_TYPE.DISPATCH
+              : ENTRY_TYPE.OUT,
+        });
+      }
     } else {
       const dataToDeliver: OperationProjectDetails = {
         deliveryOrderId: item?.id ? item.id : '',
@@ -93,9 +113,9 @@ const Dispatch = () => {
         refreshing={isRefreshing}
         onEndReached={() => send('onEndReached')}
         onPressList={(item) => onPressItem(item)}
-        onRefresh={() =>
-          send('onRefreshList', { payload: userData?.type, tabActive: 'left' })
-        }
+        onRefresh={() => {
+          send('onRefreshList', { payload: userData?.type, tabActive: 'left' });
+        }}
         onRetry={() =>
           send('retryGettingList', {
             payload: userData?.type,

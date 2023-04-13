@@ -33,6 +33,8 @@ import {
   CAMERA,
   GALLERY_OPERATION,
   SUBMIT_FORM,
+  TAB_DISPATCH_TITLE,
+  TAB_RETURN_TITLE,
 } from '@/navigation/ScreenNames';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
@@ -130,7 +132,7 @@ const SubmitForm = () => {
         }
         break;
       case ENTRY_TYPE.DRIVER:
-        if (operationData.photoFiles.length > 3) {
+        if (operationData.photoFiles.length > 7) {
           let tempImages = [
             ...operationData.photoFiles.filter((it) => it.file !== null),
           ];
@@ -139,7 +141,7 @@ const SubmitForm = () => {
         break;
       case ENTRY_TYPE.SECURITY:
         if (operationType === ENTRY_TYPE.DISPATCH) {
-          if (operationData.photoFiles.length > 3) {
+          if (operationData.photoFiles.length > 4) {
             let tempImages = [
               ...operationData.photoFiles.filter((it) => it.file !== null),
             ];
@@ -173,8 +175,8 @@ const SubmitForm = () => {
       case ENTRY_TYPE.BATCHER:
         return 'Produksi';
       case ENTRY_TYPE.SECURITY:
-        if (operationType === ENTRY_TYPE.DISPATCH) return 'Dispatch';
-        else return 'Return';
+        if (operationType === ENTRY_TYPE.DISPATCH) return TAB_DISPATCH_TITLE;
+        else return TAB_RETURN_TITLE;
       case ENTRY_TYPE.DRIVER:
         return 'Penuangan';
       case ENTRY_TYPE.WB:
@@ -188,7 +190,7 @@ const SubmitForm = () => {
     let photos = [...operationData.photoFiles.filter((it) => it.file !== null)];
     if (userData?.type === ENTRY_TYPE.DRIVER) {
       return (
-        photos.length < 4 ||
+        photos.length < 8 ||
         operationData.inputsValue.recepientName.length === 0 ||
         !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber)
       );
@@ -207,6 +209,7 @@ const SubmitForm = () => {
   };
 
   const handleBack = () => {
+    DeviceEventEmitter.emit('Operation.refreshlist', true);
     navigation.dispatch(StackActions.popToTop());
   };
 
@@ -273,12 +276,12 @@ const SubmitForm = () => {
             };
           });
           payload.doFiles = newFileData;
-          payload.status = 'ON_DELIVERY';
-          if (ENTRY_TYPE.RETURN) {
+
+          if (operationType === ENTRY_TYPE.RETURN) {
             payload.conditionTruck =
               operationData.inputsValue.truckMixCondition;
-            payload.status = 'AWAIT_WB_IN';
           }
+
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             operationData.projectDetails.deliveryOrderId
@@ -295,7 +298,7 @@ const SubmitForm = () => {
             })
           );
           if (navigation.canGoBack()) {
-            navigation.dispatch(StackActions.popToTop());
+            handleBack();
           }
         } else {
           dispatch(closePopUp());

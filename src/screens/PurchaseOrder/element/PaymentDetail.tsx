@@ -78,7 +78,7 @@ const PaymentDetail = () => {
             label="Kelengkapan Dokumen"
           />
           <BSpacer size="extraSmall" />
-          <BForm inputs={fileInput} />
+          <BForm titleBold="500" inputs={fileInput} />
         </>
       </ScrollView>
     );

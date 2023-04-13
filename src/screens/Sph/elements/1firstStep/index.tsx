@@ -13,10 +13,12 @@ import { SPH } from '@/navigation/ScreenNames';
 import { retrying } from '@/redux/reducers/commonReducer';
 import {
   setStepperFocused,
+  setUseBillingAddress,
   updateSelectedCompany,
   updateSelectedPic,
+  setUseSearchAddress,
 } from '@/redux/reducers/SphReducer';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 
@@ -51,6 +53,16 @@ export default function FirstStep() {
       },
     ];
   }, [projects]);
+  const routes: { title: string; totalItems: number }[] = useMemo(() => {
+    return [
+      {
+        key: 'first',
+        title: 'Proyek',
+        totalItems: projects.length,
+        chipPosition: 'right',
+      },
+    ];
+  }, [projects]);
 
   const searchDispatch = React.useCallback(
     (text: string) => {
@@ -63,7 +75,22 @@ export default function FirstStep() {
       searchDispatch(text);
     }, 500);
   }, [searchDispatch]);
+  const searchDispatch = React.useCallback(
+    (text: string) => {
+      dispatch(getAllProject({ search: text }));
+    },
+    [dispatch]
+  );
+  const onChangeWithDebounce = React.useMemo(() => {
+    return debounce((text: string) => {
+      searchDispatch(text);
+    }, 500);
+  }, [searchDispatch]);
 
+  const onRetryGettingProject = () => {
+    dispatch(retrying());
+    onChangeWithDebounce(searchQuery);
+  };
   const onRetryGettingProject = () => {
     dispatch(retrying());
     onChangeWithDebounce(searchQuery);
@@ -111,6 +138,7 @@ export default function FirstStep() {
               onPressList={(item) => {
                 let finalPIC: any[] = [];
                 let finalItem;
+
                 if (item.Pics && item.Pics.length > 0 && !selectedCompany) {
                   finalPIC = [...item.Pics];
                   finalPIC.forEach((it, index) => {
@@ -140,6 +168,8 @@ export default function FirstStep() {
           onPress={() => {
             dispatch(updateSelectedCompany(null));
             dispatch(updateSelectedPic(null));
+            dispatch(setUseSearchAddress({ value: false }));
+            dispatch(setUseBillingAddress({ value: false }));
           }}
           setCurrentPosition={(num) => {
             dispatch(setStepperFocused(1));

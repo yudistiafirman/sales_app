@@ -241,7 +241,7 @@ export default function ThirdStep() {
       <View style={style.container}>
         <ScrollView>
           <View pointerEvents={isLoading ? 'none' : 'auto'}>
-            <BForm inputs={inputsData2} />
+            <BForm titleBold="500" inputs={inputsData2} />
           </View>
           {isLoading && (
             <View>

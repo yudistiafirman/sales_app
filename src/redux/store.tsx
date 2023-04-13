@@ -22,6 +22,7 @@ import { SphStateInterface } from '@/interfaces';
 import operationReducer, {
   operationInitState,
 } from './reducers/operationReducer';
+import salesOrderReducer, { SOGlobalState } from './reducers/salesOrder';
 
 const persistConfig = {
   key: 'root',
@@ -41,6 +42,10 @@ const rootReducer = combineReducers({
   operation: persistReducer<operationInitState, any>(
     persistConfig,
     operationReducer
+  ),
+  salesOrder: persistReducer<SOGlobalState, any>(
+    persistConfig,
+    salesOrderReducer
   ),
   sph: persistReducer<SphStateInterface, any>(persistConfig, SphReducer),
   visitation: persistReducer<VisitationGlobalState, any>(

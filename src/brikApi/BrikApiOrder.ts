@@ -35,6 +35,11 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
+  static uploadSOSignedDocs = (id: string) => {
+    const url = new URL(`${API_URL}/order/m/purchase-order/docs/${id}`);
+    return url.toString();
+  };
+
   static getDepositByID = (id: string) => {
     const url = new URL(`${API_URL}/order/m/deposit/${id}`);
     return url.toString();
@@ -97,7 +102,12 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static purchaseOrder = (page?: string, size?: string) => {
+  static purchaseOrder = (
+    page?: string,
+    size?: string,
+    searchQuery?: string,
+    status?: string
+  ) => {
     const url = new URL(`${API_URL}/order/m/purchase-order`);
     const params = url.searchParams;
     if (page) {
@@ -105,6 +115,12 @@ export default class BrikApiOrder {
     }
     if (size) {
       params.append('size', size);
+    }
+    if (searchQuery) {
+      params.append('search', searchQuery);
+    }
+    if (status) {
+      params.append('status', status);
     }
     return url.toString();
   };
@@ -137,7 +153,9 @@ export default class BrikApiOrder {
     const url = new URL(`${API_URL}/order/m/delivery-order`);
     const params = url.searchParams;
     if (status) {
-      params.append('status', typeof status === 'object' ? JSON.stringify(status) : status);
+      const finalStatus = typeof status === 'object' ? JSON.stringify(status) : status
+      console.log('STATUS DELIVERY ORDER=== ', finalStatus)
+      params.append('status', finalStatus);
     }
     if (page) {
       params.append('page', page);
