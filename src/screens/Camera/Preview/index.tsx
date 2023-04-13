@@ -54,6 +54,8 @@ import {
   setAllSOPhoto,
   setSOPhoto,
 } from '@/redux/reducers/salesOrder';
+import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
+import { updateDeliveryOrder } from '@/actions/OrderActions';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -118,6 +120,29 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       }
     } else {
       return 'GALLERY';
+    }
+  };
+
+  const onArrivedDriver = async () => {
+    try {
+      const payload = {} as updateDeliverOrder;
+      payload.status = 'ARRIVED';
+      const responseUpdateDeliveryOrder = await updateDeliveryOrder(
+        payload,
+        operationTempData?.deliveryOrderId ||
+          operationData?.projectDetails?.deliveryOrderId
+      );
+
+      if (responseUpdateDeliveryOrder.data.success) {
+        // do nothing
+        console.log('SUCCESS ARRIVED');
+      } else {
+        // do nothing
+        console.log('FAILED ARRIVED');
+      }
+    } catch (error) {
+      // do nothing
+      console.log('FAILED ARRIVED, ', error);
     }
   };
 
@@ -263,6 +288,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
             setOperationPhoto({ file: localFile, withoutAddButton: true })
           );
           if (!operationAddedStep || operationAddedStep === '') {
+            onArrivedDriver();
             navigation.navigate(CAMERA, {
               photoTitle: 'Beton Dalam Gentong Pas Sampai',
               navigateTo: navigateTo,

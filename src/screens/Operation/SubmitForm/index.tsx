@@ -280,19 +280,12 @@ const SubmitForm = () => {
             };
           });
           payload.doFiles = newFileData;
-          responseUpdateDeliveryOrder = await updateDeliveryOrder(
-            payload,
-            operationData.projectDetails.deliveryOrderId
-          );
-        } else if (userData?.type === ENTRY_TYPE.RETURN) {
-          const newFileData = responseFiles.data.data.map((v, i) => {
-            return {
-              fileId: v.id,
-              type: securityFileType[i],
-            };
-          });
-          payload.doFiles = newFileData;
-          payload.conditionTruck = operationData.inputsValue.truckMixCondition;
+
+          if (operationType === ENTRY_TYPE.RETURN) {
+            payload.conditionTruck =
+              operationData.inputsValue.truckMixCondition;
+          }
+
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             operationData.projectDetails.deliveryOrderId
