@@ -129,7 +129,8 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       payload.status = 'ARRIVED';
       const responseUpdateDeliveryOrder = await updateDeliveryOrder(
         payload,
-        operationData.projectDetails.deliveryOrderId
+        operationTempData?.deliveryOrderId ||
+          operationData?.projectDetails?.deliveryOrderId
       );
 
       if (responseUpdateDeliveryOrder.data.success) {
