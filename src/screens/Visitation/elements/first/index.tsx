@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { DeviceEventEmitter, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -31,7 +31,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
+import {
+  setSearchedAddress,
+  setUseSearchedAddress,
+  updateDataVisitation,
+} from '@/redux/reducers/VisitationReducer';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -76,6 +80,7 @@ const FirstStep = () => {
       if (!result) {
         throw data;
       }
+
       const _coordinate = {
         latitude: result?.lat,
         longitude: result?.lon,
@@ -119,13 +124,15 @@ const FirstStep = () => {
 
   React.useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step1');
-    if (mapRef.current) {
-      mapRef?.current?.animateToRegion(region);
-    }
+
     const locationAddress = {
       ...visitationData.locationAddress,
       ...region,
     };
+
+    if (visitationData.useSearchedAddress) {
+      locationAddress.formattedAddress = visitationData.searchedAddress;
+    }
     dispatch(
       updateDataVisitation({ type: 'locationAddress', value: locationAddress })
     );
@@ -152,6 +159,17 @@ const FirstStep = () => {
       },
     },
   });
+
+  React.useEffect(() => {
+    DeviceEventEmitter.addListener('visitationSearchCoordinate', (data) => {
+      dispatch(setUseSearchedAddress({ value: true }));
+      dispatch(setSearchedAddress({ value: data.coordinate.formattedAddress }));
+      onChangeRegion(data.coordinate);
+    });
+    return () => {
+      DeviceEventEmitter.removeAllListeners('visitationSearchCoordinate');
+    };
+  }, [onChangeRegion]);
 
   React.useEffect(() => {
     if (state.matches('errorGettingLocation')) {
@@ -182,7 +200,10 @@ const FirstStep = () => {
   }, []);
 
   const nameAddress = React.useMemo(() => {
-    const idx = region.formattedAddress?.split(',');
+    const address = visitationData.useSearchedAddress
+      ? visitationData.searchedAddress
+      : region.formattedAddress;
+    const idx = address?.split(',');
     if (idx && idx?.length > 1) {
       return idx?.[0];
     }
@@ -196,6 +217,9 @@ const FirstStep = () => {
         <BLocation
           ref={mapRef}
           region={region}
+          onRegionChange={() =>
+            dispatch(setUseSearchedAddress({ value: false }))
+          }
           onRegionChangeComplete={debounceResult}
           CustomMarker={<BMarker />}
           mapStyle={styles.map}
@@ -230,6 +254,7 @@ const FirstStep = () => {
                 onPress={() =>
                   navigation.navigate(SEARCH_AREA, {
                     from: CREATE_VISITATION,
+                    eventKey: 'visitationSearchCoordinate',
                   })
                 }
               >
@@ -251,7 +276,11 @@ const FirstStep = () => {
                       <BLabel bold="500" label={nameAddress!} />
                       <BSpacer size="verySmall" />
                       <BText bold="300">
-                        {region.formattedAddress || 'Detail Alamat'}
+                        {visitationData.useSearchedAddress
+                          ? visitationData.searchedAddress
+                          : region.formattedAddress
+                          ? region.formattedAddress
+                          : 'Detail Alamat'}
                       </BText>
                     </>
                   )}

@@ -40,13 +40,14 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         };
       }),
       navigateToLocation: (context, event) => {
-        const { lon, lat, formattedAddress } = event.data;
+        const { lon, lat } = event.data;
+        const { formattedAddress } = context;
         const from = route?.params?.from;
         const eventKey = route?.params?.eventKey;
         let coordinate = {
           longitude: lon,
           latitude: lat,
-          formattedAddress,
+          formattedAddress: formattedAddress,
         };
 
         if (typeof lon === 'string') {
@@ -125,8 +126,8 @@ const SearchAreaProject = ({ route }: { route: any }) => {
     }
   };
 
-  const onPressListLocations = (placeId: string) => {
-    send('onGettingPlacesId', { payload: placeId });
+  const onPressListLocations = (item: string) => {
+    send('onGettingPlacesId', { payload: item });
   };
 
   return (

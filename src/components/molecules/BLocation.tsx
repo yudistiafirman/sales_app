@@ -44,6 +44,7 @@ const BLocation = React.forwardRef(
       mapStyle,
       region,
       onRegionChangeComplete,
+      onRegionChange,
       CustomMarker,
       scrollEnabled = true,
     }: BLocationProps & typeof BLocationDefaultProps,
@@ -57,6 +58,7 @@ const BLocation = React.forwardRef(
           initialRegion={region}
           provider={MAPSPROVIDER}
           rotateEnabled={false}
+          onRegionChange={onRegionChange}
           onRegionChangeComplete={onRegionChangeComplete}
           region={region}
           scrollEnabled={scrollEnabled}

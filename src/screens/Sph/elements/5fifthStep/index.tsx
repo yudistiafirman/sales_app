@@ -120,7 +120,11 @@ function payloadMapper(sphState: SphStateInterface) {
       payload.shippingAddress.lon = projectAddress.lon.toString();
     }
     if (projectAddress.formattedAddress) {
-      payload.shippingAddress.line1 = projectAddress.formattedAddress;
+      if (sphState.useSearchAddress) {
+        payload.shippingAddress.line1 = sphState.searchedAddress;
+      } else {
+        payload.shippingAddress.line1 = projectAddress.formattedAddress;
+      }
     }
     if (projectAddress.rural) {
       payload.shippingAddress.rural = projectAddress.rural;
@@ -171,8 +175,12 @@ function payloadMapper(sphState: SphStateInterface) {
   if (!sphState.isBillingAddressSame) {
     if (sphState.billingAddress.addressAutoComplete) {
       if (sphState.billingAddress.addressAutoComplete.formattedAddress) {
-        payload.billingAddress.line1 =
-          sphState.billingAddress.addressAutoComplete.formattedAddress;
+        if (sphState.useSearchedBillingAddress) {
+          payload.billingAddress.line1 = sphState.searchedBillingAddress;
+        } else {
+          payload.billingAddress.line1 =
+            sphState.billingAddress.addressAutoComplete.formattedAddress;
+        }
       }
       if (sphState.billingAddress.addressAutoComplete.postalId) {
         payload.billingAddress.postalId =

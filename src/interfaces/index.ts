@@ -241,8 +241,12 @@ interface BLocationProps {
   onRegionChangeComplete?:
     | ((region: Region & LatLang, details: Details) => void)
     | undefined;
+  onRegionChange?:
+    | ((region: Region & LatLang, details: Details) => void)
+    | undefined;
   CustomMarker?: React.ReactNode | undefined;
   isUninteractable?: boolean;
+  formattedAddress?: string;
 }
 
 interface selectedCompanyInterface {
@@ -331,6 +335,10 @@ interface SphStateInterface {
   stepSPHThreeFinished: boolean;
   stepSPHFourFinished: boolean;
   stepperSPHShouldNotFocused: boolean;
+  useSearchAddress: boolean;
+  searchedAddress: string;
+  searchedBillingAddress: string;
+  useSearchedBillingAddress: boolean;
 }
 
 type SphContextInterface = [

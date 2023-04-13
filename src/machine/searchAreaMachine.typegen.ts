@@ -31,8 +31,8 @@ export interface Typegen0 {
       type: 'error.platform.search area.searchLocation.onGettingLocation:invocation[0]';
       data: unknown;
     };
-    'xstate.after(300)#search area.searchLocation.searchValueLoaded': {
-      type: 'xstate.after(300)#search area.searchLocation.searchValueLoaded';
+    'xstate.after(100)#search area.searchLocation.searchValueLoaded': {
+      type: 'xstate.after(100)#search area.searchLocation.searchValueLoaded';
     };
     'xstate.init': { type: 'xstate.init' };
   };
@@ -71,7 +71,7 @@ export interface Typegen0 {
     getLocationByCoordinate: 'done.invoke.search area.getLocation.allowed:invocation[0]';
     getLocationBySearch:
       | 'retryGettingLocation'
-      | 'xstate.after(300)#search area.searchLocation.searchValueLoaded';
+      | 'xstate.after(100)#search area.searchLocation.searchValueLoaded';
     gettingPlacesId: 'onGettingPlacesId';
   };
   matchesStates:

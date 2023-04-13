@@ -38,6 +38,8 @@ export interface VisitationGlobalState {
   stepperVisitationShouldNotFocused: boolean;
   isSearchProject: boolean;
   searchQuery: string;
+  useSearchedAddress: boolean;
+  searchedAddress: string;
 }
 
 const initialState: VisitationGlobalState = {
@@ -83,6 +85,8 @@ const initialState: VisitationGlobalState = {
   stepperVisitationShouldNotFocused: false,
   isSearchProject: false,
   searchQuery: '',
+  useSearchedAddress: false,
+  searchedAddress: '',
 };
 
 export const visitationSlice = createSlice({
@@ -144,9 +148,23 @@ export const visitationSlice = createSlice({
     setSearchQuery: (state, { payload }) => {
       state.searchQuery = payload;
     },
-    deleteImagesVisitation: (state, actions: PayloadAction<{ value: number }>) => {
-      const filteredImages = state.images.filter((v, i) => i !== actions.payload.value)
-      state.images = filteredImages
+    deleteImagesVisitation: (
+      state,
+      actions: PayloadAction<{ value: number }>
+    ) => {
+      const filteredImages = state.images.filter(
+        (v, i) => i !== actions.payload.value
+      );
+      state.images = filteredImages;
+    },
+    setUseSearchedAddress: (
+      state,
+      actions: PayloadAction<{ value: boolean }>
+    ) => {
+      state.useSearchedAddress = actions.payload.value;
+    },
+    setSearchedAddress: (state, actions: PayloadAction<{ value: string }>) => {
+      state.searchedAddress = actions.payload.value;
     },
     updateDataVisitation: (
       state,
@@ -233,6 +251,8 @@ export const {
   resetAllStepperFocused,
   setSearchProject,
   setSearchQuery,
-  deleteImagesVisitation
+  deleteImagesVisitation,
+  setSearchedAddress,
+  setUseSearchedAddress,
 } = visitationSlice.actions;
 export default visitationSlice.reducer;
