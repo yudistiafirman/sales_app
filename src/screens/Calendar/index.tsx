@@ -79,14 +79,14 @@ export default function CalendarScreen() {
                 acc[formatedDate] = [];
               }
               acc[formatedDate].push({
-                display_name: obj.project?.company?.displayName,
+                display_name: obj.project?.Company?.displayName,
                 name: obj.project?.name,
                 // location: obj.project.locationAddress.district,
-                email: obj.project?.pic?.email,
-                phone: obj.project?.pic?.phone,
-                position: obj.project?.pic?.position,
-                type: obj.project?.pic?.type,
-                picName: obj.project?.pic?.name,
+                email: obj.project?.Pic?.email,
+                phone: obj.project?.Pic?.phone,
+                position: obj.project?.Pic?.position,
+                type: obj.project?.Pic?.type,
+                picName: obj.project?.Pic?.name,
               });
               return acc;
             },
