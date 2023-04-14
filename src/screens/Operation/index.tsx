@@ -61,7 +61,7 @@ const Operation = () => {
             });
           } else {
             navigation.navigate(CAMERA, {
-              photoTitle: 'Tiba Di Proyek',
+              photoTitle: 'Kedatangan',
               navigateTo: userData.type,
             });
           }
@@ -91,7 +91,7 @@ const Operation = () => {
           };
           dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
           navigation.navigate(CAMERA, {
-            photoTitle: 'Tiba Di Proyek',
+            photoTitle: 'Kedatangan',
             navigateTo: userData.type,
             operationTempData: dataToDeliver,
           });
