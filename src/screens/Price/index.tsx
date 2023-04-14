@@ -199,7 +199,7 @@ const PriceList = () => {
         <CurrentLocation
           onPress={goToLocation}
           location={
-            searchFormattedAddress.length > 0
+            searchFormattedAddress?.length > 0
               ? searchFormattedAddress
               : locationDetail?.formattedAddress
           }

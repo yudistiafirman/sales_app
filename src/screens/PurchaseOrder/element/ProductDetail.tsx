@@ -41,10 +41,10 @@ const ProductDetail = () => {
       modalText = 'Menyimpan PO';
     } else if (successPostPurchaseOrder) {
       modalType = 'success';
-      modalText = 'Berhasil Dibuat';
+      modalText = 'PO Berhasil Dibuat';
     } else {
       modalType = 'error';
-      modalText = 'Gagal Dibuat';
+      modalText = 'PO Gagal Dibuat';
     }
     return [modalType, modalText];
   }, [isLoadingPostPurchaseOrder, successPostPurchaseOrder]);
@@ -136,7 +136,6 @@ const ProductDetail = () => {
       dispatch(
         openPopUp({
           popUpType: modalType,
-          popUpTitle: !isLoadingPostPurchaseOrder ? 'PO' : '',
           popUpText: modalText,
           isRenderActions: failPostPurchaseOrder && !isLoadingPostPurchaseOrder,
           outsideClickClosePopUp: successPostPurchaseOrder,
@@ -153,7 +152,6 @@ const ProductDetail = () => {
         if (navigation.canGoBack()) {
           navigation.dispatch(StackActions.popToTop());
         }
-
         dispatch({ type: 'backToInitialState' });
       }
     } else {
