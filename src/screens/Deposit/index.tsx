@@ -221,6 +221,7 @@ const Deposit = () => {
               onPressBack={() => actionBackButton(false)}
               continueText={values.step > 0 ? 'Buat Deposit' : 'Lanjut'}
               disableContinue={!stepsDone.includes(values.step)}
+              isContinueIcon={values.step < 1 ? true : false}
             />
           )}
         </View>

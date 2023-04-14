@@ -51,6 +51,7 @@ function ListProduct(
   isPoData: boolean
 ) {
   let displayName = '';
+  let pricePerlVol;
   if (item.ReqProduct) {
     displayName = `${
       item?.ReqProduct?.product?.category?.parent
@@ -61,6 +62,7 @@ function ListProduct(
         ? item?.ReqProduct?.product?.category?.name
         : ''
     }`;
+    pricePerlVol = item.ReqProduct?.offeringPrice
   } else if (item.Product) {
     displayName = `${
       item?.Product?.category?.parent?.name
@@ -71,23 +73,19 @@ function ListProduct(
     }${item?.Product?.displayName} ${
       item?.Product?.category ? item?.Product?.category?.name : ''
     }`;
+    pricePerlVol = item.offering_price ? item.offering_price : item.offeringPrice
   } else {
     displayName = `${
       item?.category?.parent ? item?.category?.parent?.name + ' ' : ''
     }${item?.displayName} ${item?.category ? item?.category?.name : ''}`;
+    pricePerlVol = item.offering_price ? item.offering_price : item.offeringPrice
   }
 
   return (
     <View key={index}>
       <BProductCard
         name={displayName}
-        pricePerVol={
-          item.ReqProduct
-            ? item.ReqProduct?.offeringPrice
-            : item.offering_price
-            ? item.offering_price
-            : item.offeringPrice
-        }
+        pricePerVol={pricePerlVol}
         volume={
           quantity
             ? quantity

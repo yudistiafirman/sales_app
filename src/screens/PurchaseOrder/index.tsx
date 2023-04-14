@@ -235,6 +235,8 @@ const PurchaseOrder = () => {
       {isBtnFooterShown && !keyboardVisible && (
         <View style={styles.footer}>
           <BBackContinueBtn
+            continueText={currentStep < 2 ? 'Lanjut' : 'Buat PO'}
+            isContinueIcon={currentStep < 2 ? true : false}
             onPressContinue={handleNext}
             onPressBack={handleBack}
             disableContinue={handleDisableContinueBtn()}

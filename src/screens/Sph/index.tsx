@@ -81,7 +81,7 @@ function stepHandler(
   stepController: (step: number) => void
 ) {
   if (sphData.selectedCompany) {
-    if (checkSelected(sphData.selectedCompany?.PIC)) {
+    if (checkSelected(sphData.selectedCompany?.Pics)) {
       if (!stepsDone.includes(0)) {
         setSteps((curr) => {
           return [...new Set(curr), 0];

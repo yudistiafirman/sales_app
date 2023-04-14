@@ -236,6 +236,7 @@ const CreateScheduleScreen = () => {
               continueText={values.step > 0 ? 'Buat Jadwal' : 'Lanjut'}
               unrenderBack={values.step > 0 ? false : true}
               disableContinue={!stepsDone.includes(values.step)}
+              isContinueIcon={values.step < 1 ? true : false}
             />
           )}
           <PopUpQuestion
