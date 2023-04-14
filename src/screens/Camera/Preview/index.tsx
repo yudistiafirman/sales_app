@@ -450,7 +450,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(StackActions.pop(2));
           return;
         case CREATE_DEPOSIT:
-          dispatch(setSOPhoto({ file: localFile }));
+          dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
           navigation.goBack();
           navigation.dispatch(StackActions.replace(navigateTo));
           return;
