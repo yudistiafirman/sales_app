@@ -122,6 +122,7 @@ interface Input {
   };
   onSelect?: (index: number | any) => void; //eg for pic radio
   isInputDisable?: boolean;
+  disableColor?: string;
   onClear?: () => void;
   labelStyle?: ViewStyle;
   textInputAsButton?: boolean;
