@@ -62,7 +62,7 @@ function ListProduct(
         ? item?.ReqProduct?.product?.category?.name
         : ''
     }`;
-    pricePerlVol = item.ReqProduct?.offeringPrice
+    pricePerlVol = item.ReqProduct?.offeringPrice;
   } else if (item.Product) {
     displayName = `${
       item?.Product?.category?.parent?.name
@@ -73,12 +73,16 @@ function ListProduct(
     }${item?.Product?.displayName} ${
       item?.Product?.category ? item?.Product?.category?.name : ''
     }`;
-    pricePerlVol = item.offering_price ? item.offering_price : item.offeringPrice
+    pricePerlVol = item.offering_price
+      ? item.offering_price
+      : item.offeringPrice;
   } else {
     displayName = `${
       item?.category?.parent ? item?.category?.parent?.name + ' ' : ''
     }${item?.displayName} ${item?.category ? item?.category?.name : ''}`;
-    pricePerlVol = item.offering_price ? item.offering_price : item.offeringPrice
+    pricePerlVol = item.offering_price
+      ? item.offering_price
+      : item.offeringPrice;
   }
 
   return (
@@ -355,28 +359,23 @@ const TransactionDetail = () => {
     }
   };
   const renderPic = () => {
-    if (data?.project?.Pic || data?.QuotationRequest?.project?.Pic) {
+    let picData = data?.Pic || data?.project?.Pic;
+
+    if (selectedType === 'SPH') {
+      picData =
+        data?.QuotationRequest?.Pic || data?.QuotationRequest?.project?.Pic;
+    }
+
+    if (picData) {
       return (
         <>
           <Text style={styles.partText}>PIC</Text>
           <BSpacer size={'extraSmall'} />
           <BPic
-            name={
-              data?.project?.Pic?.name ||
-              data?.QuotationRequest?.project?.Pic?.name
-            }
-            position={
-              data?.project?.Pic?.position ||
-              data?.QuotationRequest?.project?.Pic?.position
-            }
-            phone={beautifyPhoneNumber(
-              data?.project?.Pic?.phone ||
-                data?.QuotationRequest?.project?.Pic?.phone
-            )}
-            email={
-              data?.project?.Pic?.email ||
-              data?.QuotationRequest?.project?.Pic?.email
-            }
+            name={picData?.name}
+            position={picData?.position}
+            phone={beautifyPhoneNumber(picData?.phone)}
+            email={picData?.email}
           />
           <BSpacer size={'small'} />
         </>
