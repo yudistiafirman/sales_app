@@ -17,6 +17,7 @@ const ProductDetail = () => {
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation();
+
   const {
     choosenSphDataFromModal,
     selectedProducts,
@@ -24,6 +25,7 @@ const ProductDetail = () => {
     checked,
     fiveToSix,
     lessThanFive,
+    customerType,
   } = poState.currentState.context;
   const isPostingPurchaseOrder =
     poState.currentState.matches('PostPurchaseOrder');
@@ -33,18 +35,19 @@ const ProductDetail = () => {
   const failPostPurchaseOrder = poState.currentState.matches(
     'PostPurchaseOrder.failCreatedPo'
   );
+  const featureName = customerType === 'INDIVIDU' ? 'SO' : 'PO';
   const getGlobalModalType = useCallback((): [ModalType, ModalText] => {
     let modalType = '' as ModalType;
     let modalText = '';
     if (isLoadingPostPurchaseOrder) {
       modalType = 'loading';
-      modalText = 'Menyimpan PO';
+      modalText = `Menyimpan ${featureName} `;
     } else if (successPostPurchaseOrder) {
       modalType = 'success';
-      modalText = 'PO Berhasil Dibuat';
+      modalText = `${featureName} Berhasil Dibuat`;
     } else {
       modalType = 'error';
-      modalText = 'PO Gagal Dibuat';
+      modalText = `${featureName} Gagal Dibuat`;
     }
     return [modalType, modalText];
   }, [isLoadingPostPurchaseOrder, successPostPurchaseOrder]);
