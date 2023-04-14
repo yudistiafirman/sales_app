@@ -46,7 +46,7 @@ import {
 } from '@/redux/reducers/SphReducer';
 
 const labels = [
-  'Cari Pelanggan',
+  'Cari PT / Proyek',
   'Konfirmasi Alamat',
   'Tipe Pembayaran',
   'Pilih Produk',

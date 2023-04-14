@@ -121,7 +121,7 @@ const SearchingCustomer = () => {
             });
           }
         }}
-        placeholder="Cari Pelanggan"
+        placeholder="Cari PT / Proyek"
         index={index}
         emptyText={`${searchQuery} tidak ditemukan!`}
         routes={routes}
