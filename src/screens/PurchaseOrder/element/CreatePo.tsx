@@ -12,7 +12,7 @@ import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect } from 'react';
 import { TextInput } from 'react-native-paper';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
 import { QuotationRequests } from '@/interfaces/createPurchaseOrder';
@@ -136,6 +136,7 @@ const CreatePo = () => {
         {poState.currentState.matches('firstStep.SearchSph') ? (
           <SelectPurchaseOrderData
             dataToGet="SPHDATA"
+            filterSphDataBy={customerType}
             onDismiss={() => dispatch({ type: 'backToAddPo' })}
             onSubmitData={({ parentData, data }) =>
               onPressCompleted({ parentData, data })

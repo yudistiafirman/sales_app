@@ -65,12 +65,19 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static getSphByProject = (searchQuery: string) => {
+  static getSphByProject = (
+    searchQuery: string,
+    customerType: 'COMPANY' | 'INDIVIDU'
+  ) => {
     const url = new URL(`${API_URL}/order/m/project-sph`);
     const params = url.searchParams;
     if (searchQuery) {
       params.append('search', searchQuery);
     }
+    if (customerType) {
+      params.append('customerType', customerType);
+    }
+
     return url.toString();
   };
 
@@ -149,12 +156,17 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static deliveryOrder = (status?: string | string[], page?: string, size?: string) => {
+  static deliveryOrder = (
+    status?: string | string[],
+    page?: string,
+    size?: string
+  ) => {
     const url = new URL(`${API_URL}/order/m/delivery-order`);
     const params = url.searchParams;
     if (status) {
-      const finalStatus = typeof status === 'object' ? JSON.stringify(status) : status
-      console.log('STATUS DELIVERY ORDER=== ', finalStatus)
+      const finalStatus =
+        typeof status === 'object' ? JSON.stringify(status) : status;
+      console.log('STATUS DELIVERY ORDER=== ', finalStatus);
       params.append('status', finalStatus);
     }
     if (page) {

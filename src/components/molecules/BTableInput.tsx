@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
   inputPrice: {
     flex: 1,
     paddingHorizontal: layout.pad.lg + layout.pad.ml,
+
     bottom: layout.pad.xs,
   },
   inputLabel: {

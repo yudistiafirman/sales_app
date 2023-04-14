@@ -53,16 +53,6 @@ export default function FirstStep() {
       },
     ];
   }, [projects]);
-  const routes: { title: string; totalItems: number }[] = useMemo(() => {
-    return [
-      {
-        key: 'first',
-        title: 'Proyek',
-        totalItems: projects.length,
-        chipPosition: 'right',
-      },
-    ];
-  }, [projects]);
 
   const searchDispatch = React.useCallback(
     (text: string) => {
@@ -75,22 +65,7 @@ export default function FirstStep() {
       searchDispatch(text);
     }, 500);
   }, [searchDispatch]);
-  const searchDispatch = React.useCallback(
-    (text: string) => {
-      dispatch(getAllProject({ search: text }));
-    },
-    [dispatch]
-  );
-  const onChangeWithDebounce = React.useMemo(() => {
-    return debounce((text: string) => {
-      searchDispatch(text);
-    }, 500);
-  }, [searchDispatch]);
 
-  const onRetryGettingProject = () => {
-    dispatch(retrying());
-    onChangeWithDebounce(searchQuery);
-  };
   const onRetryGettingProject = () => {
     dispatch(retrying());
     onChangeWithDebounce(searchQuery);

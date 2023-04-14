@@ -22,8 +22,8 @@ const ProductDetail = () => {
     selectedProducts,
     isLoadingPostPurchaseOrder,
     checked,
-    lessThanSixValue,
-    lessThanFiveValue,
+    fiveToSix,
+    lessThanFive,
   } = poState.currentState.context;
   const isPostingPurchaseOrder =
     poState.currentState.matches('PostPurchaseOrder');
@@ -107,15 +107,19 @@ const ProductDetail = () => {
                       firstColumnRangeTitle: '5-6',
                       tableInputPlaceholder: '0',
                       tableInputKeyboardType: 'numeric',
-                      tableInputValue: formatCurrency(Number(lessThanSixValue)),
+                      tableInputValue:
+                        fiveToSix[0] !== '0' && fiveToSix.length > 0
+                          ? formatCurrency(fiveToSix)
+                          : '',
                     },
                     {
                       firstColumnRangeTitle: '<5',
                       tableInputPlaceholder: '0',
                       tableInputKeyboardType: 'numeric',
-                      tableInputValue: formatCurrency(
-                        Number(lessThanFiveValue)
-                      ),
+                      tableInputValue:
+                        lessThanFive[0] !== '0' && lessThanFive.length > 0
+                          ? formatCurrency(lessThanFive)
+                          : '',
                     },
                   ],
                 },

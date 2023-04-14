@@ -36,8 +36,8 @@ const PurchaseOrder = () => {
     stepsDone,
     paymentType,
     checked,
-    lessThanSixValue,
-    lessThanFiveValue,
+    fiveToSix,
+    lessThanFive,
     customerType,
   } = poState.currentState.context;
   const { keyboardVisible } = useKeyboardActive();
@@ -47,7 +47,9 @@ const PurchaseOrder = () => {
 
   const checkHasSpecialMobilizationPrice = () => {
     if (checked === 'first') {
-      if (lessThanFiveValue === '0' || lessThanSixValue === '') {
+      if (fiveToSix === '' && lessThanFive === '') {
+        return true;
+      } else if (fiveToSix[0] === '0' || lessThanFive[0] === '0') {
         return true;
       }
     } else {
@@ -168,7 +170,7 @@ const PurchaseOrder = () => {
   );
 
   const renderTitle = useCallback(() => {
-    let title = 'Buat PO';
+    let title = customerType === 'INDIVIDU' ? 'Buat SO' : 'Buat PO';
     if (poState.currentState.matches('firstStep.SearchSph')) {
       title = 'Cari SPH';
     }
@@ -236,6 +238,18 @@ const PurchaseOrder = () => {
     }
   };
 
+  const renderContinueText = () => {
+    if (currentStep === 2) {
+      if (customerType === 'INDIVIDU') {
+        return 'Buat SO';
+      } else {
+        return 'Buat PO';
+      }
+    } else {
+      return 'Lanjut';
+    }
+  };
+
   const stepToRender = [<CreatePo />, <UploadFiles />, <DetailProduk />];
 
   return (
@@ -255,6 +269,7 @@ const PurchaseOrder = () => {
           <BBackContinueBtn
             onPressContinue={handleNext}
             onPressBack={handleBack}
+            continueText={renderContinueText()}
             disableContinue={handleDisableContinueBtn()}
           />
         </View>

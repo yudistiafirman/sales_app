@@ -87,7 +87,7 @@ const Beranda = () => {
     enable_visitation,
   } = useSelector((state: RootState) => state.auth.remote_config);
   const poState = useSelector((state: RootState) => state.purchaseOrder);
-  const { isModalContinuePo, poNumber, currentStep } =
+  const { isModalContinuePo, poNumber, currentStep, customerType } =
     poState.currentState.context;
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -288,8 +288,15 @@ const Beranda = () => {
 
   const renderPoNumber = () => {
     return (
-      <View style={style.poNumberWrapper}>
-        <Text style={style.poNumber}>{poNumber}</Text>
+      <View
+        style={[
+          style.poNumberWrapper,
+          { alignItems: customerType === 'COMPANY' ? 'flex-start' : 'center' },
+        ]}
+      >
+        <Text style={style.poNumber}>
+          {customerType === 'COMPANY' ? poNumber : '-'}
+        </Text>
       </View>
     );
   };

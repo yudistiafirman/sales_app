@@ -115,9 +115,8 @@ export interface Typegen0 {
     hasSavedPo: 'done.invoke.purchase order.checkSavedPo:invocation[0]';
     isChoosenCustomerCompany: 'goToPostPo';
     isCompany: 'openingCamera';
-    needUploadFiles:
-      | 'done.invoke.purchase order.PostPurchaseOrder.postImages:invocation[0]'
-      | 'goToPostPo';
+    needUploadFiles: 'done.invoke.purchase order.PostPurchaseOrder.postImages:invocation[0]';
+    needUploadFilesIndividu: 'goToPostPo';
     useExistingFiles: 'getSphDocument';
   };
   eventsCausingServices: {

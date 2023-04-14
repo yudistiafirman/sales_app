@@ -26,6 +26,7 @@ export const searchPOMachine = createMachine(
         | {
             type: 'setDataType';
             value: 'SPHDATA' | 'DEPOSITDATA' | 'SCHEDULEDATA';
+            filterBy: 'INDIVIDU' | 'COMPANY';
           }
         | { type: 'onRefresh' }
         | { type: 'onEndReached' },
@@ -64,6 +65,7 @@ export const searchPOMachine = createMachine(
         isRefreshing: boolean;
         isModalVisible: boolean;
         dataType: 'DEPOSITDATA' | 'SPHDATA' | 'SCHEDULEDATA' | '';
+        filterSphDataBy: 'INDIVIDU' | 'COMPANY';
         choosenDataFromList:
           | CreatedSPHListResponse
           | CreatedPurchaseOrderListResponse;
@@ -85,6 +87,7 @@ export const searchPOMachine = createMachine(
       isRefreshing: false,
       isModalVisible: false,
       dataType: '',
+      filterSphDataBy: 'INDIVIDU',
       choosenDataFromList: {} as
         | CreatedPurchaseOrderListResponse
         | CreatedSPHListResponse,
@@ -257,6 +260,7 @@ export const searchPOMachine = createMachine(
       assignDataType: assign((context, event) => {
         return {
           dataType: event.value,
+          filterSphDataBy: event.filterBy,
         };
       }),
       assignPurchaseOrderListData: assign((context, event) => {
@@ -315,7 +319,10 @@ export const searchPOMachine = createMachine(
     services: {
       GetSphList: async (context) => {
         try {
-          const response = await getSphByProject(context.searchValue);
+          const response = await getSphByProject(
+            context.searchValue,
+            context.filterSphDataBy
+          );
           return response.data.data;
         } catch (error) {
           throw new Error(error);

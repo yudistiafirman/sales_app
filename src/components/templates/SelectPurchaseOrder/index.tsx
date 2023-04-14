@@ -9,6 +9,7 @@ import { PurchaseOrdersData } from '@/interfaces/SelectConfirmedPO';
 
 interface IProps {
   dataToGet: 'SPHDATA' | 'DEPOSITDATA' | 'SCHEDULEDATA';
+  filterSphDataBy?: 'INDIVIDU' | 'COMPANY';
   onSubmitData: ({ parentData, data }) => void;
   onDismiss?: () => void;
 }
@@ -17,6 +18,7 @@ const SelectPurchaseOrderData = ({
   dataToGet,
   onSubmitData,
   onDismiss,
+  filterSphDataBy,
 }: IProps) => {
   const [index, setIndex] = React.useState(0);
   const [state, send] = useMachine(searchPOMachine);
@@ -35,7 +37,7 @@ const SelectPurchaseOrderData = ({
   } = state.context;
 
   React.useEffect(() => {
-    send('setDataType', { value: dataToGet });
+    send('setDataType', { value: dataToGet, filterBy: filterSphDataBy });
   }, [dataToGet]);
 
   const getDataToDisplayInsideModal = () => {

@@ -55,7 +55,7 @@ const Transaction = () => {
   const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
   const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false);
   const poState = useSelector((state: RootState) => state.purchaseOrder);
-  const { isModalContinuePo, poNumber, currentStep } =
+  const { isModalContinuePo, poNumber, currentStep, customerType } =
     poState.currentState.context;
 
   const {
@@ -77,7 +77,8 @@ const Transaction = () => {
 
   useCustomHeaderRight({
     customHeaderRight:
-      selectedType === 'DO' || selectedType === 'SO' ||
+      selectedType === 'DO' ||
+      selectedType === 'SO' ||
       (selectedType === 'SPH' && loadTab) ? undefined : (
         <BTouchableText
           onPress={() => {
@@ -248,11 +249,17 @@ const Transaction = () => {
       );
     }
   };
-
   const renderPoNumber = () => {
     return (
-      <View style={styles.poNumberWrapper}>
-        <Text style={styles.poNumber}>{poNumber}</Text>
+      <View
+        style={[
+          styles.poNumberWrapper,
+          { alignItems: customerType === 'COMPANY' ? 'flex-start' : 'center' },
+        ]}
+      >
+        <Text style={styles.poNumber}>
+          {customerType === 'COMPANY' ? poNumber : '-'}
+        </Text>
       </View>
     );
   };
@@ -261,7 +268,7 @@ const Transaction = () => {
     return (
       <>
         <View style={styles.popupSPHContent}>
-          {poNumber ? (
+          {feature === 'PO' ? (
             renderPoNumber()
           ) : (
             <BVisitationCard
@@ -275,9 +282,9 @@ const Transaction = () => {
         </View>
         <BSpacer size={'medium'} />
         <BText bold="300" sizeInNumber={14} style={styles.popupSPHDesc}>
-          {selectedType +
+          {feature +
             ' yang lama akan hilang kalau Anda buat ' +
-            selectedType +
+            feature +
             ' yang baru'}
         </BText>
         <BSpacer size={'small'} />
