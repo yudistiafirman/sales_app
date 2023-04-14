@@ -43,13 +43,6 @@ export default function FirstStep() {
     crashlytics().log(SPH + '-Step1');
   }, [selectedCompany?.Pics, selectedCompany?.Pic]);
 
-  React.useEffect(() => {
-    console.log(selectedCompany, 'selectedCompany');
-    console.log(selectedCompany?.Pic, 'selectedCompany?.Pic');
-    console.log(selectedCompany?.Pics, 'selectedCompany?.Pics');
-    console.log(selectedCompany?.mainPic, 'selectedCompany?.mainPic');
-  }, [selectedCompany]);
-
   const routes: { title: string; totalItems: number }[] = useMemo(() => {
     return [
       {

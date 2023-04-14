@@ -42,7 +42,7 @@ import {
   resetSPHState,
 } from '@/redux/reducers/SphReducer';
 import { bStorage } from '@/actions';
-import { openPopUp } from '@/redux/reducers/modalReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
@@ -53,8 +53,9 @@ const Transaction = () => {
   const sphData = useSelector((rootState: RootState) => rootState.sph);
   const dispatch = useDispatch();
   const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
+  const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false);
   const poState = useSelector((state: RootState) => state.purchaseOrder);
-  const { isModalContinuePo, poNumber, currentStep } =
+  const { isModalContinuePo, poNumber, currentStep, customerType } =
     poState.currentState.context;
 
   const {
@@ -76,14 +77,37 @@ const Transaction = () => {
 
   useCustomHeaderRight({
     customHeaderRight:
-      selectedType === 'DO' || selectedType === 'SO' ||
+      selectedType === 'DO' ||
+      selectedType === 'SO' ||
       (selectedType === 'SPH' && loadTab) ? undefined : (
         <BTouchableText
           onPress={() => {
             if (selectedType === 'PO') {
               setFeature('PO');
               if (!isModalContinuePo) {
-                navigation.navigate(PO);
+                dispatch(
+                  openPopUp({
+                    popUpType: 'none',
+                    popUpText: 'Tipe pelanggan',
+                    isRenderActions: true,
+                    outlineBtnTitle: 'Individu',
+                    primaryBtnTitle: 'Perusahaan',
+                    outlineBtnAction: () => {
+                      dispatch({ type: 'openingCamera', value: 'INDIVIDU' });
+                      dispatch(closePopUp());
+                      navigation.navigate(PO);
+                    },
+                    primaryBtnAction: () => {
+                      dispatch({ type: 'openingCamera', value: 'COMPANY' });
+                      dispatch(closePopUp());
+                      navigation.navigate(PO);
+                    },
+                  })
+                );
+
+                setLocalContinueModalPo(false);
+              } else {
+                setLocalContinueModalPo(true);
               }
             } else if (selectedType === 'Deposit') {
               navigation.navigate(CAMERA, {
@@ -225,11 +249,17 @@ const Transaction = () => {
       );
     }
   };
-
   const renderPoNumber = () => {
     return (
-      <View style={styles.poNumberWrapper}>
-        <Text style={styles.poNumber}>{poNumber}</Text>
+      <View
+        style={[
+          styles.poNumberWrapper,
+          { alignItems: customerType === 'COMPANY' ? 'flex-start' : 'center' },
+        ]}
+      >
+        <Text style={styles.poNumber}>
+          {customerType === 'COMPANY' ? poNumber : '-'}
+        </Text>
       </View>
     );
   };
@@ -238,7 +268,7 @@ const Transaction = () => {
     return (
       <>
         <View style={styles.popupSPHContent}>
-          {poNumber ? (
+          {feature === 'PO' ? (
             renderPoNumber()
           ) : (
             <BVisitationCard
@@ -252,9 +282,9 @@ const Transaction = () => {
         </View>
         <BSpacer size={'medium'} />
         <BText bold="300" sizeInNumber={14} style={styles.popupSPHDesc}>
-          {selectedType +
+          {feature +
             ' yang lama akan hilang kalau Anda buat ' +
-            selectedType +
+            feature +
             ' yang baru'}
         </BText>
         <BSpacer size={'small'} />
@@ -322,7 +352,7 @@ const Transaction = () => {
         />
       )}
       <PopUpQuestion
-        isVisible={feature === 'SPH' ? isPopupSPHVisible : isModalContinuePo}
+        isVisible={feature === 'SPH' ? isPopupSPHVisible : localModalContinuePo}
         setIsPopupVisible={() => {
           if (feature === 'SPH') {
             setPopupSPHVisible(false);
@@ -330,8 +360,27 @@ const Transaction = () => {
             navigation.navigate(SPH, {});
           } else {
             bStorage.deleteItem(PO);
+            setLocalContinueModalPo(false);
             dispatch({ type: 'createNewPo' });
-            navigation.navigate(PO);
+            dispatch(
+              openPopUp({
+                popUpType: 'none',
+                popUpText: 'Tipe pelanggan',
+                isRenderActions: true,
+                outlineBtnTitle: 'Individu',
+                primaryBtnTitle: 'Perusahaan',
+                outlineBtnAction: () => {
+                  dispatch({ type: 'openingCamera', value: 'INDIVIDU' });
+                  dispatch(closePopUp());
+                  navigation.navigate(PO);
+                },
+                primaryBtnAction: () => {
+                  dispatch({ type: 'openingCamera', value: 'COMPANY' });
+                  dispatch(closePopUp());
+                  navigation.navigate(PO);
+                },
+              })
+            );
           }
         }}
         actionButton={continuePopUpAction}

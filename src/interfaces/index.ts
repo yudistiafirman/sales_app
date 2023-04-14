@@ -11,121 +11,176 @@ import { Details } from 'react-native-maps';
 import { DateData } from 'react-native-calendars';
 
 interface Input {
-	label?: string;
-	isRequire: boolean;
-	type:
-	| 'quantity'
-	| 'price'
-	| 'textInput'
-	| 'cardOption'
-	| 'comboDropdown'
-	| 'area'
-	| 'dropdown'
-	| 'PIC'
-	| 'autocomplete'
-	| 'checkbox'
-	| 'switch'
-	| 'fileInput'
-	| 'map'
-	| 'autocomplete'
-	| 'calendar'
-	| 'calendar-time';
-	hidePicLabel?: boolean;
-	onChange?: (e: any) => void;
-	onFocus?: (e: any) => void;
-	value?: string | any;
-	placeholder?: string;
-	loading?: boolean;
-	isError?: boolean;
-	customerErrorMsg?: string;
-	disabledFileInput?: boolean;
-	LeftIcon?: () => JSX.Element;
-	keyboardType?: KeyboardType | KeyboardTypeOptions;
-	items?: any;
-	showChevronAutoCompleted?: boolean;
-	showClearAutoCompleted?: boolean;
-	textSize?: number;
-	quantityType?: string;
-	options?: Array<{
-		title: string;
-		value: string | any;
-		onChange: () => void;
-		icon?: string;
-	}>;
-	calendar?: {
-		onDayPress: (day: DateData) => void;
-		isCalendarVisible: boolean;
-		setCalendarVisible: (flag: boolean) => void;
-	};
-	calendarTime?: {
-		onDayPress: (day: DateData) => void;
-		onTimeChange: (time: any) => void;
-		isCalendarVisible: boolean;
-		isTimeVisible: boolean;
-		setCalendarVisible: (flag: boolean) => void;
-		setTimeVisible: (flag: boolean) => void;
-		labelOne: string;
-		labelTwo: string;
-		errMsgOne?: string;
-		errMsgTwo?: string;
-		placeholderOne?: string;
-		placeholderTwo?: string;
-		valueOne: string;
-		valueTwo: string;
-		valueTwoMock: Date;
-		isErrorOne?: boolean;
-		isErrorTwo?: boolean;
-	};
-	dropdown?: {
-		items: {
-			label: string;
-			value: string | number | any;
-		}[];
-		onChange:
-		| ((value: any) => void)
-		| ((value: any[] | null) => void)
-		| undefined;
-		placeholder: string;
-	};
-	comboDropdown?: {
-		itemsOne: {
-			label: string;
-			value: string | number | any;
-		}[];
-		itemsTwo: {
-			label: string;
-			value: string | number | any;
-		}[];
-		onChangeOne:
-		| ((value: any) => void)
-		| ((value: any[] | null) => void)
-		| undefined;
-		onChangeTwo:
-		| ((value: any) => void)
-		| ((value: any[] | null) => void)
-		| undefined;
-		placeholderOne: string;
-		placeholderTwo: string;
-		isErrorOne?: boolean;
-		isErrorTwo?: boolean;
-		errorMessageOne?: string;
-		errorMessageTwo?: string;
-		valueOne?: any;
-		valueTwo?: any;
-	};
-	checkbox?: {
-		disabled?: boolean;
-		value: any;
-		onValueChange: (value: any) => void;
-	};
-	onSelect?: (index: number | any) => void; //eg for pic radio
-	isInputDisable?: boolean;
-	disableColor?: string;
-	onClear?: () => void;
-	labelStyle?: ViewStyle;
-	textInputAsButton?: boolean;
-	textInputAsButtonOnPress?: () => void;
-	outlineColor?: string;
+  label?: string;
+  isRequire: boolean;
+  type:
+    | 'quantity'
+    | 'price'
+    | 'textInput'
+    | 'cardOption'
+    | 'comboDropdown'
+    | 'area'
+    | 'dropdown'
+    | 'PIC'
+    | 'autocomplete'
+    | 'checkbox'
+    | 'switch'
+    | 'fileInput'
+    | 'map'
+    | 'autocomplete'
+    | 'calendar'
+    | 'calendar-time'
+    | 'comboRadioButton'
+    | 'tableInput';
+  hidePicLabel?: boolean;
+  onChange?: (e: any) => void;
+  onFocus?: (e: any) => void;
+  value?: string | any;
+  placeholder?: string;
+  loading?: boolean;
+  isError?: boolean;
+  customerErrorMsg?: string;
+  disabledFileInput?: boolean;
+  LeftIcon?: () => JSX.Element;
+  keyboardType?: KeyboardType | KeyboardTypeOptions;
+  items?: any;
+  showChevronAutoCompleted?: boolean;
+  showClearAutoCompleted?: boolean;
+  textSize?: number;
+  quantityType?: string;
+  options?: Array<{
+    title: string;
+    value: string | any;
+    onChange: () => void;
+    icon?: string;
+  }>;
+  calendar?: {
+    onDayPress: (day: DateData) => void;
+    isCalendarVisible: boolean;
+    setCalendarVisible: (flag: boolean) => void;
+  };
+  calendarTime?: {
+    onDayPress: (day: DateData) => void;
+    onTimeChange: (time: any) => void;
+    isCalendarVisible: boolean;
+    isTimeVisible: boolean;
+    setCalendarVisible: (flag: boolean) => void;
+    setTimeVisible: (flag: boolean) => void;
+    labelOne: string;
+    labelTwo: string;
+    errMsgOne?: string;
+    errMsgTwo?: string;
+    placeholderOne?: string;
+    placeholderTwo?: string;
+    valueOne: string;
+    valueTwo: string;
+    valueTwoMock: Date;
+    isErrorOne?: boolean;
+    isErrorTwo?: boolean;
+  };
+  dropdown?: {
+    items: {
+      label: string;
+      value: string | number | any;
+    }[];
+    onChange:
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
+    placeholder: string;
+  };
+  comboDropdown?: {
+    itemsOne: {
+      label: string;
+      value: string | number | any;
+    }[];
+    itemsTwo: {
+      label: string;
+      value: string | number | any;
+    }[];
+    onChangeOne:
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
+    onChangeTwo:
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
+    placeholderOne: string;
+    placeholderTwo: string;
+    isErrorOne?: boolean;
+    isErrorTwo?: boolean;
+    errorMessageOne?: string;
+    errorMessageTwo?: string;
+    valueOne?: any;
+    valueTwo?: any;
+  };
+  checkbox?: {
+    disabled?: boolean;
+    value: any;
+    onValueChange: (value: any) => void;
+  };
+  onSelect?: (index: number | any) => void; //eg for pic radio
+  isInputDisable?: boolean;
+  disableColor?: string;
+  onClear?: () => void;
+  labelStyle?: ViewStyle;
+  textInputAsButton?: boolean;
+  textInputAsButtonOnPress?: () => void;
+  outlineColor?: string;
+  comboRadioBtn?: IComboRadioBtn;
+  tableInput?: ITableInput;
+}
+
+interface IComboRadioBtn {
+  firstValue?: string;
+  firstText?: string;
+  firstStatus?: 'checked' | 'unchecked';
+  secondValue?: string;
+  secondText?: string;
+  secondStatus?: 'checked' | 'unchecked';
+  firstChildren?: React.ReactNode;
+  secondChildren?: React.ReactNode;
+  onSetComboRadioButtonValue?: (value: string) => void;
+}
+
+interface ITableInputListItem {
+  firstColumnRangeTitle?: string;
+  firstColumnUnit?: string;
+  secondColumnNominalInput?: string;
+  secondColumnUnitInput?: string;
+  tableInputValue?: string;
+  tableInputPlaceholder?: string;
+  tableInputKeyboardType?: KeyboardTypeOptions;
+}
+
+interface ITableInputItem {
+  item?: ITableInputListItem;
+  index?: number;
+}
+
+interface ITableInput {
+  textSize?: number;
+  firstColumnLabel?: string;
+  secondColumnLabel?: string;
+  onChangeValue?: (value: string, index: number) => void;
+  tableInputListItem?: ITableInputListItem[];
+}
+
+interface TitleBold {
+  titleBold?:
+    | 'bold'
+    | '400'
+    | 'normal'
+    | '100'
+    | '200'
+    | '300'
+    | '500'
+    | '600'
+    | '700'
+    | '800'
+    | '900'
+    | undefined;
 }
 
 interface Styles {
@@ -263,7 +318,7 @@ interface selectedCompanyInterface {
       };
   Pics: PIC[];
   Visitation: {
-    finishDate: string | null;
+    finish_date: string | null;
     id: string;
     order: number;
     visitation_id: string | null;
@@ -692,4 +747,9 @@ export type {
   selectedPicType,
   billingAddressType,
   chosenProductType,
+  TitleBold,
+  IComboRadioBtn,
+  ITableInput,
+  ITableInputItem,
+  ITableInputListItem,
 };

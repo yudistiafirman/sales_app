@@ -12,7 +12,7 @@ import { resScale } from '@/utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect } from 'react';
 import { TextInput } from 'react-native-paper';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
 import { QuotationRequests } from '@/interfaces/createPurchaseOrder';
@@ -136,6 +136,8 @@ const CreatePo = () => {
         {poState.currentState.matches('firstStep.SearchSph') ? (
           <SelectPurchaseOrderData
             dataToGet="SPHDATA"
+            filterSphDataBy={customerType}
+            onDismiss={() => dispatch({ type: 'backToAddPo' })}
             onSubmitData={({ parentData, data }) =>
               onPressCompleted({ parentData, data })
             }
@@ -146,15 +148,17 @@ const CreatePo = () => {
             renderItem={null}
             ListHeaderComponent={
               <View>
-                <>
-                  <BGallery
-                    addMorePict={addMoreImages}
-                    picts={poImages}
-                    removePict={deleteImages}
-                  />
-                  <BSpacer size="extraSmall" />
-                  {customerType === 'COMPANY' && <BForm titleBold="500" inputs={inputs} />}
-                </>
+                {customerType === 'COMPANY' && (
+                  <>
+                    <BGallery
+                      addMorePict={addMoreImages}
+                      picts={poImages}
+                      removePict={deleteImages}
+                    />
+                    <BSpacer size="extraSmall" />
+                    <BForm inputs={inputs} />
+                  </>
+                )}
 
                 {isUserChoosedSph ? (
                   <>

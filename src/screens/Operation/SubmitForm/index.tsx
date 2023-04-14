@@ -71,7 +71,6 @@ const SubmitForm = () => {
   const operationData = useSelector((state: RootState) => state.operation);
   const { keyboardVisible } = useKeyboardActive();
   const operationType = route?.params?.operationType;
-  console.log(operationType, 'optype<<<');
   const driversFileType = [
     OperationFileType.DO_DRIVER_ARRIVE_PROJECT,
     OperationFileType.DO_DRIVER_BNIB,
@@ -224,9 +223,7 @@ const SubmitForm = () => {
             uri: photo?.file?.uri?.replace('file:', 'file://'),
           };
         });
-      console.log('IMAGEEEEEEEEEE');
-      console.log(JSON.stringify(photoFilestoUpload, null, 2));
-      console.log('IMAGEEEEEEEEEE');
+
       const responseFiles = await uploadFileImage(
         photoFilestoUpload,
         'Update Delivery Order'
@@ -245,7 +242,6 @@ const SubmitForm = () => {
           payload.recipientNumber =
             operationData.inputsValue.recepientPhoneNumber;
           payload.status = 'RECEIVED';
-          console.log(JSON.stringify(payload, null, 2), '<<<PAYLOAD');
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             operationData.projectDetails.deliveryOrderId

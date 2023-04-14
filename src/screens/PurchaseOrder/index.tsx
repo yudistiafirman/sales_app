@@ -35,6 +35,9 @@ const PurchaseOrder = () => {
     poImages,
     stepsDone,
     paymentType,
+    checked,
+    fiveToSix,
+    lessThanFive,
     customerType,
   } = poState.currentState.context;
   const { keyboardVisible } = useKeyboardActive();
@@ -42,14 +45,29 @@ const PurchaseOrder = () => {
   const labels = ['Cari PT / Proyek', 'Detil Pembayaran', 'Detil Produk'];
   const isBtnFooterShown = !poState.currentState.matches('firstStep.SearchSph');
 
+  const checkHasSpecialMobilizationPrice = () => {
+    if (checked === 'first') {
+      if (fiveToSix === '' && lessThanFive === '') {
+        return true;
+      } else if (fiveToSix[0] === '0' || lessThanFive[0] === '0') {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
+
   const handleDisableContinueBtn = () => {
     if (currentStep === 0) {
-      const images = poImages.filter((v) => v.file !== null);
-      return (
-        (customerType === 'COMPANY' && poNumber.length === 0) ||
-        JSON.stringify(choosenSphDataFromModal) === '{}' ||
-        images.length === 0
-      );
+      if (customerType === 'INDIVIDU') {
+        return JSON.stringify(choosenSphDataFromModal) === '{}';
+      } else {
+        return (
+          poNumber.length === 0 ||
+          JSON.stringify(choosenSphDataFromModal) === '{}' ||
+          poImages.length <= 1
+        );
+      }
     } else if (currentStep === 1) {
       const isRequiredFileEmpty = files.filter(
         (v) => v.isRequire && v.value === null
@@ -63,7 +81,9 @@ const PurchaseOrder = () => {
         (v) => v.quantity.length === 0 || v.quantity[0] === '0'
       );
       return (
-        hasNoQuantityMultiProducts.length > 0 || selectedProducts.length === 0
+        hasNoQuantityMultiProducts.length > 0 ||
+        selectedProducts.length === 0 ||
+        checkHasSpecialMobilizationPrice()
       );
     }
   };
@@ -150,7 +170,7 @@ const PurchaseOrder = () => {
   );
 
   const renderTitle = useCallback(() => {
-    let title = 'Buat PO';
+    let title = customerType === 'INDIVIDU' ? 'Buat SO' : 'Buat PO';
     if (poState.currentState.matches('firstStep.SearchSph')) {
       title = 'Cari PT / Proyek';
     }
@@ -218,6 +238,18 @@ const PurchaseOrder = () => {
     }
   };
 
+  const renderContinueText = () => {
+    if (currentStep === 2) {
+      if (customerType === 'INDIVIDU') {
+        return 'Buat SO';
+      } else {
+        return 'Buat PO';
+      }
+    } else {
+      return 'Lanjut';
+    }
+  };
+
   const stepToRender = [<CreatePo />, <UploadFiles />, <DetailProduk />];
 
   return (
@@ -235,10 +267,10 @@ const PurchaseOrder = () => {
       {isBtnFooterShown && !keyboardVisible && (
         <View style={styles.footer}>
           <BBackContinueBtn
-            continueText={currentStep < 2 ? 'Lanjut' : 'Buat PO'}
             isContinueIcon={currentStep < 2 ? true : false}
             onPressContinue={handleNext}
             onPressBack={handleBack}
+            continueText={renderContinueText()}
             disableContinue={handleDisableContinueBtn()}
           />
         </View>

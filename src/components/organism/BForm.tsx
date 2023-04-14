@@ -28,6 +28,8 @@ import { TextInputMask } from 'react-native-masked-text';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BCalendar from './BCalendar';
 import DatePicker from 'react-native-date-picker';
+import BComboRadioButton from '../molecules/BComboRadioButton';
+import BTableInput from '../molecules/BTableInput';
 
 interface IProps {
   inputs: Input[];
@@ -201,7 +203,42 @@ const renderInput = (
     disabledFileInput,
     quantityType,
     disableColor,
+    comboRadioBtn,
+    tableInput,
   } = input;
+
+  if (type === 'tableInput') {
+    return (
+      <BTableInput
+        titleBold={titleBold}
+        textSize={input.textSize}
+        onChangeValue={tableInput?.onChangeValue}
+        firstColumnLabel={tableInput?.firstColumnLabel}
+        secondColumnLabel={tableInput?.secondColumnLabel}
+        tableInputListItem={tableInput?.tableInputListItem}
+      />
+    );
+  }
+
+  if (type === 'comboRadioButton') {
+    return (
+      <BComboRadioButton
+        onSetComboRadioButtonValue={comboRadioBtn?.onSetComboRadioButtonValue}
+        isRequire={isRequire}
+        sizeInNumber={input.textSize}
+        label={label}
+        titleBold={titleBold}
+        firstStatus={comboRadioBtn?.firstStatus}
+        firstText={comboRadioBtn?.firstText}
+        firstValue={comboRadioBtn?.firstValue}
+        secondText={comboRadioBtn?.secondText}
+        secondValue={comboRadioBtn?.secondValue}
+        secondStatus={comboRadioBtn?.secondStatus}
+        firstChildren={comboRadioBtn?.firstChildren}
+        secondChildren={comboRadioBtn?.secondChildren}
+      />
+    );
+  }
 
   if (type === 'quantity') {
     return (

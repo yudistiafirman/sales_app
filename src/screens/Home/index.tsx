@@ -43,16 +43,16 @@ import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
 import { useHeaderShow } from '@/hooks';
 import {
-	APPOINTMENT,
-	CAMERA,
-	CREATE_DEPOSIT,
-	CREATE_SCHEDULE,
-	CREATE_VISITATION,
-	CUSTOMER_DETAIL,
-	PO,
-	SEARCH_SO,
-	SPH,
-	TAB_HOME,
+  APPOINTMENT,
+  CAMERA,
+  CREATE_DEPOSIT,
+  CREATE_SCHEDULE,
+  CREATE_VISITATION,
+  CUSTOMER_DETAIL,
+  PO,
+  SEARCH_SO,
+  SPH,
+  TAB_HOME,
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -75,43 +75,43 @@ const { height } = Dimensions.get('window');
 const initialSnapPoints = (+height.toFixed() - 115) / 10;
 
 const Beranda = () => {
-	const {
-		force_update,
-		enable_appointment,
-		enable_signed_so,
-		enable_create_schedule,
-		enable_customer_detail,
-		enable_deposit,
-		enable_po,
-		enable_sph,
-		enable_visitation,
-	} = useSelector((state: RootState) => state.auth.remote_config);
-	const poState = useSelector((state: RootState) => state.purchaseOrder);
-	const { isModalContinuePo, poNumber, currentStep } =
-		poState.currentState.context;
-	const dispatch = useDispatch();
-	const navigation = useNavigation();
-	const [currentVisit, setCurrentVisit] = React.useState<{
-		current: number;
-		target: number;
-	}>({ current: 0, target: 10 }); //temporary setCurrentVisit
-	const [isExpanded, setIsExpanded] = React.useState(true);
-	const [index, setIndex] = React.useState(0);
-	const [isTargetLoading, setIsTargetLoading] = React.useState(false);
-	const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
-	const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
-	const [snapPoints] = React.useState([`${initialSnapPoints}%`, '91%', '100%']); //setSnapPoints
-	const bottomSheetRef = React.useRef<BottomSheet>(null);
-	const [searchQuery, setSearchQuery] = React.useState('');
-	const [isError, setIsError] = React.useState(false);
-	const [errorMessage, setErrorMessage] = React.useState('');
-	const [isModalVisible, setModalVisible] = React.useState(false);
-	const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
-	const sphData = useSelector((state: RootState) => state.sph);
-	const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
-	const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
-	const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false);
-	const visitationData = useSelector((state: RootState) => state.visitation);
+  const {
+    force_update,
+    enable_appointment,
+    enable_signed_so,
+    enable_create_schedule,
+    enable_customer_detail,
+    enable_deposit,
+    enable_po,
+    enable_sph,
+    enable_visitation,
+  } = useSelector((state: RootState) => state.auth.remote_config);
+  const poState = useSelector((state: RootState) => state.purchaseOrder);
+  const { isModalContinuePo, poNumber, currentStep, customerType } =
+    poState.currentState.context;
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const [currentVisit, setCurrentVisit] = React.useState<{
+    current: number;
+    target: number;
+  }>({ current: 0, target: 10 }); //temporary setCurrentVisit
+  const [isExpanded, setIsExpanded] = React.useState(true);
+  const [index, setIndex] = React.useState(0);
+  const [isTargetLoading, setIsTargetLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
+  const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
+  const [snapPoints] = React.useState([`${initialSnapPoints}%`, '91%', '100%']); //setSnapPoints
+  const bottomSheetRef = React.useRef<BottomSheet>(null);
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [isError, setIsError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const [isModalVisible, setModalVisible] = React.useState(false);
+  const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
+  const sphData = useSelector((state: RootState) => state.sph);
+  const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
+  const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
+  const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false);
+  const visitationData = useSelector((state: RootState) => state.visitation);
 
   useHeaderShow({
     isHeaderShown: !isModalVisible,
@@ -158,7 +158,6 @@ const Beranda = () => {
     try {
       setIsTargetLoading(true);
       const { data: _data } = await getVisitationTarget();
-      console.log('ini data', data);
       setCurrentVisit({
         current: _data.data.totalCompleted,
         target: _data.data.visitationTarget,
@@ -289,8 +288,15 @@ const Beranda = () => {
 
   const renderPoNumber = () => {
     return (
-      <View style={style.poNumberWrapper}>
-        <Text style={style.poNumber}>{poNumber}</Text>
+      <View
+        style={[
+          style.poNumberWrapper,
+          { alignItems: customerType === 'COMPANY' ? 'flex-start' : 'center' },
+        ]}
+      >
+        <Text style={style.poNumber}>
+          {customerType === 'COMPANY' ? poNumber : '-'}
+        </Text>
       </View>
     );
   };
@@ -325,12 +331,6 @@ const Beranda = () => {
     let currentVersionName = getAppVersionName();
     if (isDevelopment())
       currentVersionName = currentVersionName?.replace('(Dev)', '');
-    console.log(
-      currentVersionName,
-      currentVersionName?.split('.').join(''),
-      getMinVersionUpdate(force_update),
-      'vers'
-    );
     setUpdateDialogVisible(
       currentVersionName?.split('.').join('') <
         getMinVersionUpdate(force_update)
@@ -362,65 +362,84 @@ const Beranda = () => {
     }
   }, [data.totalPage, page]);
 
-	const getButtonsMenu = () => {
-		let buttons = [
-			{
-				icon: SvgNames.IC_SPH,
-				title: HOME_MENU.SPH,
-				action: () => {
-					setFeature('SPH');
-					if (sphData?.selectedCompany) setPopupSPHVisible(true);
-					else navigation.navigate(SPH, {});
-				},
-			},
-			{
-				icon: SvgNames.IC_PO,
-				title: HOME_MENU.PO,
-				action: () => {
-					setFeature('PO');
-					if (!isModalContinuePo) {
-						navigation.navigate(PO);
-						setLocalContinueModalPo(false);
-					} else {
-						setLocalContinueModalPo(true);
-					}
-				},
-			},
-			{
-				icon: SvgNames.IC_DEPOSIT,
-				title: HOME_MENU.DEPOSIT,
-				action: () => {
-					navigation.navigate(CAMERA, {
-						photoTitle: 'Bukti',
-						navigateTo: CREATE_DEPOSIT,
-						closeButton: true,
-						disabledDocPicker: false,
-						disabledGalleryPicker: false,
-					});
-				},
-			},
-			{
-				icon: SvgNames.IC_MAKE_SCHEDULE,
-				title: HOME_MENU.SCHEDULE,
-				action: () => {
-					navigation.navigate(CREATE_SCHEDULE);
-				},
-			},
-			{
-				icon: SvgNames.IC_APPOINTMENT,
-				title: HOME_MENU.APPOINTMENT,
-				action: () => {
-					navigation.navigate(APPOINTMENT);
-				},
-			},
-			{
-				icon: SvgNames.IC_SIGN_SO,
-				title: HOME_MENU.SIGN_SO,
-				action: () => {
-					navigation.navigate(SEARCH_SO);
-				},
-			},
-		];
+  const getButtonsMenu = () => {
+    let buttons = [
+      {
+        icon: SvgNames.IC_SPH,
+        title: HOME_MENU.SPH,
+        action: () => {
+          setFeature('SPH');
+          if (sphData?.selectedCompany) setPopupSPHVisible(true);
+          else navigation.navigate(SPH, {});
+        },
+      },
+      {
+        icon: SvgNames.IC_PO,
+        title: HOME_MENU.PO,
+        action: () => {
+          setFeature('PO');
+          if (!isModalContinuePo) {
+            dispatch(
+              openPopUp({
+                popUpType: 'none',
+                popUpText: 'Tipe pelanggan',
+                isRenderActions: true,
+                outlineBtnTitle: 'Individu',
+                primaryBtnTitle: 'Perusahaan',
+                outlineBtnAction: () => {
+                  dispatch({ type: 'openingCamera', value: 'INDIVIDU' });
+                  dispatch(closePopUp());
+                  navigation.navigate(PO);
+                },
+                primaryBtnAction: () => {
+                  dispatch({ type: 'openingCamera', value: 'COMPANY' });
+                  dispatch(closePopUp());
+                  navigation.navigate(PO);
+                },
+              })
+            );
+
+            setLocalContinueModalPo(false);
+          } else {
+            setLocalContinueModalPo(true);
+          }
+        },
+      },
+      {
+        icon: SvgNames.IC_DEPOSIT,
+        title: HOME_MENU.DEPOSIT,
+        action: () => {
+          navigation.navigate(CAMERA, {
+            photoTitle: 'Bukti',
+            navigateTo: CREATE_DEPOSIT,
+            closeButton: true,
+            disabledDocPicker: false,
+            disabledGalleryPicker: false,
+          });
+        },
+      },
+      {
+        icon: SvgNames.IC_MAKE_SCHEDULE,
+        title: HOME_MENU.SCHEDULE,
+        action: () => {
+          navigation.navigate(CREATE_SCHEDULE);
+        },
+      },
+      {
+        icon: SvgNames.IC_APPOINTMENT,
+        title: HOME_MENU.APPOINTMENT,
+        action: () => {
+          navigation.navigate(APPOINTMENT);
+        },
+      },
+      {
+        icon: SvgNames.IC_SIGN_SO,
+        title: HOME_MENU.SIGN_SO,
+        action: () => {
+          navigation.navigate(SEARCH_SO);
+        },
+      },
+    ];
 
     if (!enable_sph) {
       const filtered = buttons.filter((item) => {
@@ -450,21 +469,21 @@ const Beranda = () => {
       buttons = filtered;
     }
 
-		if (!enable_appointment) {
-			const filtered = buttons.filter((item) => {
-				return item.title !== HOME_MENU.APPOINTMENT;
-			});
-			buttons = filtered;
-		}
+    if (!enable_appointment) {
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.APPOINTMENT;
+      });
+      buttons = filtered;
+    }
 
-		if (!enable_signed_so) {
-			const filtered = buttons.filter((item) => {
-				return item.title !== HOME_MENU.SIGN_SO;
-			});
-			buttons = filtered;
-		}
-		return buttons;
-	};
+    if (!enable_signed_so) {
+      const filtered = buttons.filter((item) => {
+        return item.title !== HOME_MENU.SIGN_SO;
+      });
+      buttons = filtered;
+    }
+    return buttons;
+  };
 
   const todayMark = React.useMemo(() => {
     return [
@@ -701,8 +720,27 @@ const Beranda = () => {
               navigation.navigate(SPH, {});
             } else {
               bStorage.deleteItem(PO);
+              setLocalContinueModalPo(false);
               dispatch({ type: 'createNewPo' });
-              navigation.navigate(PO);
+              dispatch(
+                openPopUp({
+                  popUpType: 'none',
+                  popUpText: 'Tipe pelanggan',
+                  isRenderActions: true,
+                  outlineBtnTitle: 'Individu',
+                  primaryBtnTitle: 'Perusahaan',
+                  outlineBtnAction: () => {
+                    dispatch({ type: 'openingCamera', value: 'INDIVIDU' });
+                    dispatch(closePopUp());
+                    navigation.navigate(PO);
+                  },
+                  primaryBtnAction: () => {
+                    dispatch({ type: 'openingCamera', value: 'COMPANY' });
+                    dispatch(closePopUp());
+                    navigation.navigate(PO);
+                  },
+                })
+              );
             }
           }}
           actionButton={continuePopUpAction}

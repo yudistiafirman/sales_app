@@ -3,7 +3,7 @@ import { View, ViewStyle } from 'react-native';
 import BText from './BText';
 
 interface IProps {
-  label: string;
+  label?: string;
   isRequired?: boolean;
   bold?:
     | 'bold'
@@ -26,7 +26,13 @@ const container: ViewStyle = {
   flexDirection: 'row',
 };
 
-const BLabel = ({ label, isRequired, bold, sizeInNumber, numberOfLines }: IProps) => {
+const BLabel = ({
+  label,
+  isRequired,
+  bold,
+  sizeInNumber,
+  numberOfLines,
+}: IProps) => {
   return (
     <View style={container}>
       <BText

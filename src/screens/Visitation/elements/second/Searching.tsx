@@ -150,12 +150,6 @@ const SearchFlow = ({
       if (!item?.Visitations[0]?.finishDate) {
         order -= 1;
       }
-      console.log(
-        item?.Visitations,
-        'item?.Visitations153',
-        item?.Visitations[0]?.id
-      );
-
       dispatch(
         updateDataVisitation({
           type: 'visitationId',

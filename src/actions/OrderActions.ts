@@ -106,9 +106,12 @@ export const postSph = async (payload: sphOrderPayloadType) => {
   return customRequest(BrikApiOrder.orderSphPost(), 'POST', payload, true);
 };
 
-export const getSphByProject = async (searchQuery: string) => {
+export const getSphByProject = async (
+  searchQuery: string,
+  customerType: 'INDIVIDU' | 'COMPANY'
+) => {
   return customRequest(
-    BrikApiOrder.getSphByProject(searchQuery),
+    BrikApiOrder.getSphByProject(searchQuery, customerType),
     'GET',
     undefined,
     true

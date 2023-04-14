@@ -15,13 +15,13 @@ interface Products {
   Product: {
     name: string;
     unit: string;
-    displayName:string;
+    displayName: string;
     category: {
-      name: string,
+      name: string;
       Parent: {
-          name: string
-      }
-  }
+        name: string;
+      };
+    };
   };
 }
 
@@ -71,6 +71,8 @@ interface PostPoPayload {
     requestedProductId: string;
     requestedQuantity: number;
   }[];
+  fiveToSix: number;
+  lessThanFive: number;
 }
 
 interface DocumentsData {
@@ -99,5 +101,5 @@ export {
   DocumentsData,
   ProjectDocs,
   PostPoPayload,
-  UploadFilesResponsePayload
+  UploadFilesResponsePayload,
 };
