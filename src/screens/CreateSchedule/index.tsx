@@ -36,7 +36,7 @@ import { postOrderSchedule } from '@/redux/async-thunks/orderThunks';
 import moment from 'moment';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 
-const labels = ['Cari PO', 'Detil Pengiriman'];
+const labels = ['Cari PT / Proyek', 'Detil Pengiriman'];
 
 function stepHandler(
   state: CreateScheduleState,
@@ -93,7 +93,7 @@ const CreateScheduleScreen = () => {
   });
 
   useHeaderTitleChanged({
-    title: values.isSearchingPurchaseOrder === true ? 'Cari PO' : 'Buat Jadwal',
+    title: values.isSearchingPurchaseOrder === true ? 'Cari PT / Proyek' : 'Buat Jadwal',
   });
 
   useFocusEffect(
@@ -236,6 +236,7 @@ const CreateScheduleScreen = () => {
               continueText={values.step > 0 ? 'Buat Jadwal' : 'Lanjut'}
               unrenderBack={values.step > 0 ? false : true}
               disableContinue={!stepsDone.includes(values.step)}
+              isContinueIcon={values.step < 1 ? true : false}
             />
           )}
           <PopUpQuestion

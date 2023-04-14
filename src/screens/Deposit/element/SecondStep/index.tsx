@@ -159,7 +159,7 @@ export default function SecondStep() {
                     }
                   >
                     <BSearchBar
-                      placeholder="Cari PO"
+                      placeholder="Cari PT / Proyek"
                       activeOutlineColor="gray"
                       disabled
                       left={

@@ -3,8 +3,9 @@ import { OperationFileType } from '@/interfaces/Operation';
 export interface updateDeliverOrder {
   deliveryOrderId: string;
   doFiles: { fileId: string; type: OperationFileType }[];
-  recepientName: string;
+  recipientName: string;
   recipientNumber: string;
   conditionTruck: string;
-  status?: string
+  status?: string;
+  weight: string;
 }

@@ -35,7 +35,7 @@ const FirstStep = () => {
             }
           />
           <BSearchBar
-            placeholder="Cari Pelanggan"
+            placeholder="Cari PT / Proyek"
             activeOutlineColor="gray"
             disabled
             left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
