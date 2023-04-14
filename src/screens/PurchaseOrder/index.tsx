@@ -44,10 +44,11 @@ const PurchaseOrder = () => {
 
   const handleDisableContinueBtn = () => {
     if (currentStep === 0) {
+      const images = poImages.filter((v) => v.file !== null);
       return (
         (customerType === 'COMPANY' && poNumber.length === 0) ||
         JSON.stringify(choosenSphDataFromModal) === '{}' ||
-        poImages.length === 0
+        images.length === 0
       );
     } else if (currentStep === 1) {
       const isRequiredFileEmpty = files.filter(

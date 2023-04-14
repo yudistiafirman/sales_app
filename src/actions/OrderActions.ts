@@ -129,11 +129,11 @@ export const postPurchaseOrder = async (payload) => {
 };
 
 export const postDeposit = async (payload) => {
-  return customRequest(BrikApiOrder.deposit(), 'POST', payload, true);
+  return customRequest(BrikApiOrder.postDeposit(), 'POST', payload, true);
 };
 
 export const postSchedule = async (payload) => {
-  return customRequest(BrikApiOrder.schedule(), 'POST', payload, true);
+  return customRequest(BrikApiOrder.postSchedule(), 'POST', payload, true);
 };
 
 export const getConfirmedPurchaseOrder = async (
