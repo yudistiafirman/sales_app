@@ -26,7 +26,7 @@ import { layout } from '@/constants';
 import Icon from 'react-native-vector-icons/Feather';
 import { StyleSheet } from 'react-native';
 import Draggable from 'react-native-draggable';
-import { isDevelopment } from '@/utils/generalFunc';
+import { isDevelopment, isProduction } from '@/utils/generalFunc';
 import analytics from '@react-native-firebase/analytics';
 import SnackbarGlobal from '@/components/templates/SnackbarGlobal';
 
@@ -65,8 +65,9 @@ const paperTheme = {
 function App() {
   const [isNetworkLoggerVisible, setVisibleNetworkLogger] =
     React.useState(false);
-  const [isShowButtonNetwork, setShowButtonNetwork] =
-    React.useState(isDevelopment);
+  const [isShowButtonNetwork, setShowButtonNetwork] = React.useState(
+    isDevelopment() || (isProduction() && __DEV__)
+  );
   const routeNameRef = React.useRef<any>();
   const navigationRef = createNavigationContainerRef();
 
@@ -162,7 +163,8 @@ function App() {
               <Popup />
               <SnackbarGlobal />
               <AppNavigator />
-              {isDevelopment() && networkLogger()}
+              {(isDevelopment() || (isProduction() && __DEV__)) &&
+                networkLogger()}
             </PersistGate>
           </ReduxProvider>
         </PaperProvider>
