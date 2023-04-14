@@ -132,6 +132,11 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
+  static postDeposit = () => {
+    const url = new URL(`${API_URL}/order/m/deposit`);
+    return url.toString();
+  };
+
   static deposit = (page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/deposit`);
     const params = url.searchParams;
@@ -141,6 +146,11 @@ export default class BrikApiOrder {
     if (size) {
       params.append('size', size);
     }
+    return url.toString();
+  };
+
+  static postSchedule = () => {
+    const url = new URL(`${API_URL}/order/m/schedule`);
     return url.toString();
   };
 
