@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {
   StackActions,
+  useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
@@ -56,6 +57,9 @@ import {
 } from '@/redux/reducers/salesOrder';
 import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
 import { updateDeliveryOrder } from '@/actions/OrderActions';
+import moment from 'moment';
+import Geolocation from 'react-native-geolocation-service';
+import { hasLocationPermission } from '@/utils/permissions';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -80,6 +84,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const soID = route?.params?.soID;
   const visitationData = useSelector((state: RootState) => state.visitation);
   const operationData = useSelector((state: RootState) => state.operation);
+  let latlongResult: string = '';
 
   if (closeButton) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -97,6 +102,18 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   React.useEffect(() => {
     crashlytics().log(IMAGE_PREVIEW);
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      hasLocationPermission().then((result) => {
+        if (result) {
+          getCurrentLocation().then((longlat) => {
+            latlongResult = longlat.latitude + ', ' + longlat.longitude;
+          });
+        }
+      });
+    }, [])
+  );
 
   const getTypeOfImagePayload = () => {
     if (navigateTo) {
@@ -146,6 +163,31 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
     }
   };
 
+  const getCurrentLocation = async () => {
+    const opt = {
+      showLocationDialog: true,
+      forceRequestLocation: true,
+      // timeout:INFINITY,
+      // maximumAge:INFINITY,
+      // accuracy: { ios: "hundredMeters", android: "balanced" },
+      // enableHighAccuracy: false,
+      // distanceFilter:0,
+    };
+    const getCurrentPosition = () =>
+      new Promise((resolve, error) =>
+        Geolocation.getCurrentPosition(resolve, error, opt)
+      );
+
+    try {
+      const response = await getCurrentPosition();
+      const { coords } = response;
+      const { longitude, latitude } = coords;
+      return { longitude, latitude };
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   const savePhoto = () => {
     const imagePayloadType: 'COVER' | 'GALLERY' = getTypeOfImagePayload();
     const photoName = photo?.split('/').pop();
@@ -167,6 +209,8 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           uri: `file:${photo}`,
           type: `image/${photoType}`,
           name: photoName,
+          longlat: latlongResult,
+          datetime: moment(new Date()).format('DD/MM/yyyy HH:mm:ss'),
         },
         isFromPicker: false,
         type: imagePayloadType,
@@ -177,6 +221,8 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           uri: picker?.uri,
           type: picker?.type,
           name: pdfName,
+          longlat: latlongResult,
+          datetime: moment(new Date()).format('DD/MM/yyyy HH:mm:ss'),
         },
         isFromPicker: true,
         type: imagePayloadType,
@@ -404,7 +450,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           navigation.dispatch(StackActions.pop(2));
           return;
         case CREATE_DEPOSIT:
-          dispatch(setSOPhoto({ file: localFile }));
+          dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
           navigation.goBack();
           navigation.dispatch(StackActions.replace(navigateTo));
           return;

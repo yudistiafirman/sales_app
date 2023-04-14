@@ -3,6 +3,8 @@ interface LocalFileType {
     uri: string;
     type: string;
     name: string;
+    longlat: string;
+    datetime: string;
   };
   isFromPicker: boolean;
   type?: 'COVER' | 'GALLERY';

@@ -43,9 +43,10 @@ function stepHandler(
 ) {
   const { stepOne, stepTwo, existingProjectID } = state;
 
+  const images = stepOne?.deposit?.picts.filter((v) => v.file !== null);
   if (
-    stepOne?.deposit?.picts &&
-    stepOne?.deposit?.picts.length > 0 &&
+    images &&
+    images.length > 0 &&
     stepOne?.deposit?.createdAt &&
     stepOne?.deposit?.nominal
   ) {
