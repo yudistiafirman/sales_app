@@ -109,7 +109,7 @@ export default function BillingModal({
         onChange: (text: string) => {
           setBillingState((prevState) => ({
             ...prevState,
-            kabupaten: text,
+            kabupaten: text.nativeEvent.text,
           }));
         },
         value: billingState.kabupaten,
