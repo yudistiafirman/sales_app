@@ -13,7 +13,6 @@ type initialStateType = {
 
 const initialSnackbarOptions: snackbarOptionsType = {
   isRenderAction: false,
-  snackBarText: '',
 };
 const initialState: initialStateType = {
   isSnackbarVisible: false,
