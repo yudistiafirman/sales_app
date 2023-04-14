@@ -72,39 +72,30 @@ const SubmitForm = () => {
   const { keyboardVisible } = useKeyboardActive();
   const operationType = route?.params?.operationType;
   const driversFileType = [
-    OperationFileType.DRIVER_ARRIVE_PROJECT,
-    OperationFileType.DRIVER_BNIB,
-    OperationFileType.DRIVER_RECEIPIENT,
-    OperationFileType.DRIVER_WATER,
-    OperationFileType.DRIVER_DO,
-    OperationFileType.DRIVER_UNBOXING,
-    OperationFileType.DRIVER_EMTPY,
-    OperationFileType.DRIVER_FINISH,
+    OperationFileType.DO_DRIVER_ARRIVE_PROJECT,
+    OperationFileType.DO_DRIVER_BNIB,
+    OperationFileType.DO_DRIVER_RECEIPIENT,
+    OperationFileType.DO_DRIVER_WATER,
+    OperationFileType.DO_DRIVER_DO,
+    OperationFileType.DO_DRIVER_UNBOXING,
+    OperationFileType.DO_DRIVER_EMPTY,
+    OperationFileType.DO_DRIVER_FINISH_PROJECT,
   ];
   const wbsFileType = [
     operationType === ENTRY_TYPE.OUT
       ? OperationFileType.WB_OUT_DO
-      : OperationFileType.WEIGHT_IN,
+      : OperationFileType.DO_WEIGHT_IN,
     operationType === ENTRY_TYPE.OUT
       ? OperationFileType.WB_OUT_RESULT
-      : OperationFileType.WEIGHT_IN,
-    operationType === ENTRY_TYPE.OUT
-      ? OperationFileType.WEIGHT_OUT
-      : OperationFileType.WEIGHT_IN,
-    operationType === ENTRY_TYPE.OUT
-      ? OperationFileType.WEIGHT_OUT
-      : OperationFileType.WEIGHT_IN,
-    operationType === ENTRY_TYPE.OUT
-      ? OperationFileType.WEIGHT_OUT
       : OperationFileType.WEIGHT_IN,
   ];
 
   const securityDispatchFileType = [
+    OperationFileType.DO_SECURITY,
     OperationFileType.DO_DRIVER_SECURITY,
-    OperationFileType.DO_DO_SECURITY,
     OperationFileType.DO_LICENSE_SECURITY,
     OperationFileType.DO_SEAL_SECURITY,
-    OperationFileType.DO_CONDOM_SECURITY,
+    OperationFileType.DO_KONDOM_SECURITY,
   ];
   const securityReturnFileType = [
     OperationFileType.DO_RETURN_SECURITY,
@@ -247,7 +238,7 @@ const SubmitForm = () => {
             };
           });
           payload.doFiles = newFileData;
-          payload.recepientName = operationData.inputsValue.recepientName;
+          payload.recipientName = operationData.inputsValue.recepientName;
           payload.recipientNumber =
             operationData.inputsValue.recepientPhoneNumber;
           payload.status = 'RECEIVED';

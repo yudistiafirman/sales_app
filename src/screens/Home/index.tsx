@@ -617,7 +617,7 @@ const Beranda = () => {
         <View style={style.modalContent}>
           <BSpacer size={'extraSmall'} />
           <BCommonSearchList
-            placeholder="Search"
+            placeholder="Cari PT / Proyek"
             index={index}
             onIndexChange={setIndex}
             onPressMagnify={kunjunganAction}
@@ -684,7 +684,7 @@ const Beranda = () => {
             }}
           />
           <BSearchBar
-            placeholder="Cari Pelanggan"
+            placeholder="Cari PT / Proyek"
             activeOutlineColor="gray"
             disabled
             left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}

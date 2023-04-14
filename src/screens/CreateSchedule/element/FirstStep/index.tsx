@@ -167,7 +167,7 @@ export default function FirstStep() {
                   onPress={() => updateValue('isSearchingPurchaseOrder', true)}
                 />
                 <BSearchBar
-                  placeholder="Cari PO"
+                  placeholder="Cari PT / Proyek"
                   disabled
                   activeOutlineColor="gray"
                   left={

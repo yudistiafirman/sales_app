@@ -108,7 +108,7 @@ const SelectPurchaseOrderData = ({
       <BCommonSearchList
         searchQuery={searchQuery}
         onChangeText={onChangeText}
-        placeholder={dataToGet === 'SPHDATA' ? 'Cari SPH' : 'Cari PO'}
+        placeholder={'Cari PT / Proyek'}
         onClearValue={onClearValue}
         index={index}
         routes={routes}

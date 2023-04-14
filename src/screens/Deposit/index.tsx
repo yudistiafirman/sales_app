@@ -35,7 +35,7 @@ import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { layout } from '@/constants';
 
-const labels = ['Data Pelanggan', 'Cari PO'];
+const labels = ['Data Pelanggan', 'Cari PT / Proyek'];
 
 function stepHandler(
   state: CreateDepositState,
@@ -86,7 +86,7 @@ const Deposit = () => {
 
   useHeaderTitleChanged({
     title:
-      values.isSearchingPurchaseOrder === true ? 'Cari PO' : 'Buat Deposit',
+      values.isSearchingPurchaseOrder === true ? 'Cari PT / Proyek' : 'Buat Deposit',
   });
 
   useFocusEffect(
@@ -221,6 +221,7 @@ const Deposit = () => {
               onPressBack={() => actionBackButton(false)}
               continueText={values.step > 0 ? 'Buat Deposit' : 'Lanjut'}
               disableContinue={!stepsDone.includes(values.step)}
+              isContinueIcon={values.step < 1 ? true : false}
             />
           )}
         </View>

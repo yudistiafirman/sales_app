@@ -199,7 +199,7 @@ const SearchFlow = ({
             index={index}
             onIndexChange={setIndex}
             routes={routes}
-            placeholder="Cari Pelanggan"
+            placeholder="Cari PT / Proyek"
             searchQuery={visitationData.searchQuery}
             autoFocus={true}
             onChangeText={onChangeSearch}
@@ -231,7 +231,7 @@ const SearchFlow = ({
           />
           <BSearchBar
             disabled
-            placeholder="Cari pelanggan"
+            placeholder="Cari PT / Proyek"
             activeOutlineColor="gray"
             left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
           />

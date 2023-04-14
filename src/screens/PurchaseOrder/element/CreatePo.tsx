@@ -194,7 +194,7 @@ const CreatePo = () => {
                         />
                       }
                       disabled
-                      placeholder="Cari SPH"
+                      placeholder="Cari PT / Proyek"
                     />
                   </TouchableOpacity>
                 )}

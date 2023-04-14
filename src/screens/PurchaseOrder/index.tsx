@@ -42,7 +42,7 @@ const PurchaseOrder = () => {
   } = poState.currentState.context;
   const { keyboardVisible } = useKeyboardActive();
   const [isPopupExitVisible, setIsPopupExitVisible] = useState(false);
-  const labels = ['Cari SPH', 'Detil Pembayaran', 'Detil Produk'];
+  const labels = ['Cari PT / Proyek', 'Detil Pembayaran', 'Detil Produk'];
   const isBtnFooterShown = !poState.currentState.matches('firstStep.SearchSph');
 
   const checkHasSpecialMobilizationPrice = () => {
@@ -172,7 +172,7 @@ const PurchaseOrder = () => {
   const renderTitle = useCallback(() => {
     let title = customerType === 'INDIVIDU' ? 'Buat SO' : 'Buat PO';
     if (poState.currentState.matches('firstStep.SearchSph')) {
-      title = 'Cari SPH';
+      title = 'Cari PT / Proyek';
     }
     return title;
   }, [poState.currentState]);
@@ -267,6 +267,7 @@ const PurchaseOrder = () => {
       {isBtnFooterShown && !keyboardVisible && (
         <View style={styles.footer}>
           <BBackContinueBtn
+            isContinueIcon={currentStep < 2 ? true : false}
             onPressContinue={handleNext}
             onPressBack={handleBack}
             continueText={renderContinueText()}

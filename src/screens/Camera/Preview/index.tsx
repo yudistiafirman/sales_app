@@ -297,26 +297,26 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
           );
           if (!operationAddedStep || operationAddedStep === '') {
             navigation.navigate(CAMERA, {
-              photoTitle: 'DO',
+              photoTitle: 'Driver',
               navigateTo: navigateTo,
-              operationAddedStep: 'driver',
+              operationAddedStep: 'nopol',
               operationTempData: operationTempData,
             });
-          } else if (operationAddedStep === 'driver') {
+          } else if (operationAddedStep === 'nopol') {
             navigation.navigate(CAMERA, {
-              photoTitle: 'NOPOL',
+              photoTitle: 'No Polisi TM',
               navigateTo: navigateTo,
-              operationAddedStep: 'DO',
+              operationAddedStep: 'segel',
               operationTempData: operationTempData,
             });
-          } else if (operationAddedStep === 'DO') {
+          } else if (operationAddedStep === 'segel') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Segel',
               navigateTo: navigateTo,
-              operationAddedStep: 'NOPOL',
+              operationAddedStep: 'kondom',
               operationTempData: operationTempData,
             });
-          } else if (operationAddedStep === 'NOPOL') {
+          } else if (operationAddedStep === 'kondom') {
             navigation.navigate(CAMERA, {
               photoTitle: 'Kondom',
               navigateTo: navigateTo,
