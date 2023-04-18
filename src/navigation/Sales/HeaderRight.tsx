@@ -12,7 +12,6 @@ import analytics from '@react-native-firebase/analytics';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import { getAppVersionName } from '@/utils/generalFunc';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import { resetOperationState } from '@/redux/reducers/operationReducer';
 
 const _styles: Styles = {
   chipText: {
@@ -41,7 +40,6 @@ export default function SalesHeaderRight(iconColor: string = '') {
       const response = await signOut();
       if (response) {
         bStorage.clearItem();
-        dispatch(resetOperationState())
         dispatch(signout(false));
         crashlytics().setUserId('');
         analytics().setUserId('');
