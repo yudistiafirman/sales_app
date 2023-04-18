@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { AppState, DeviceEventEmitter, StyleSheet, View } from 'react-native';
+import { DeviceEventEmitter, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 import MapView from 'react-native-maps';
 import debounce from 'lodash.debounce';
 
@@ -23,13 +23,8 @@ import Icons from 'react-native-vector-icons/Feather';
 import { resScale } from '@/utils';
 import { Region, Input } from '@/interfaces';
 import { updateRegion } from '@/redux/reducers/locationReducer';
-import { colors, layout } from '@/constants';
-import { useMachine } from '@xstate/react';
-import { deviceLocationMachine } from '@/machine/modules';
+import { layout } from '@/constants';
 import { getLocationCoordinates } from '@/actions/CommonActions';
-
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -37,18 +32,15 @@ import {
   setUseSearchedAddress,
   updateDataVisitation,
 } from '@/redux/reducers/VisitationReducer';
-import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 import getUserCurrentLocationDetail from '@/utils/getUserCurrentLocationDetail';
 import { hasLocationPermission } from '@/utils/permissions';
-
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const FirstStep = () => {
   const { region } = useSelector((state: RootState) => state.location);
   const [isMapLoading, setIsMapLoading] = React.useState(false);
   const [grantedLocationPermission, setGrantedLocationPermission] =
     React.useState(false);
-  const appState = React.useRef(AppState.currentState);
   const visitationData = useSelector((state: RootState) => state.visitation);
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
