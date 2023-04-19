@@ -76,6 +76,7 @@ function payloadMapper(sphState: SphStateInterface) {
         categoryId: product.categoryId,
         offeringPrice: +product.sellPrice,
         quantity: +product.volume,
+        withPump: product.method === 'pompa',
         productName: product.product.name,
         productUnit: 'm3',
       };
@@ -145,7 +146,7 @@ function payloadMapper(sphState: SphStateInterface) {
   if (selectedCompany) {
     payload.projectId = selectedCompany.id;
     if (selectedCompany?.Pics?.length > 0) {
-      payload.picArr = selectedCompany.Pics
+      payload.picArr = selectedCompany.Pics;
     } else {
       const newPicArr = [{ ...selectedCompany?.Pic, isSelected: true }];
       payload.picArr = newPicArr;
