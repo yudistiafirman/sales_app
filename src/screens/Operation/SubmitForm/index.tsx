@@ -42,6 +42,7 @@ import { ENTRY_TYPE } from '@/models/EnumModel';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
   onChangeInputValue,
+  removeDriverPhoto,
   removeOperationPhoto,
   resetOperationState,
   setAllOperationPhoto,
@@ -57,6 +58,7 @@ import {
   updateDeliveryOrderWeight,
 } from '@/actions/OrderActions';
 import { FlatList } from 'react-native-gesture-handler';
+import { LocalFileType } from '@/interfaces/LocalFileType';
 
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
@@ -121,15 +123,7 @@ const SubmitForm = () => {
           ];
           dispatch(setAllOperationPhoto({ file: tempImages }));
         }
-        break;
-      case ENTRY_TYPE.DRIVER:
-        if (operationData.photoFiles.length > 7) {
-          let tempImages = [
-            ...operationData.photoFiles.filter((it) => it.file !== null),
-          ];
-          dispatch(setAllOperationPhoto({ file: tempImages }));
-        }
-        break;
+        return;
       case ENTRY_TYPE.SECURITY:
         if (operationType === ENTRY_TYPE.DISPATCH) {
           if (operationData.photoFiles.length > 4) {
@@ -146,7 +140,7 @@ const SubmitForm = () => {
             dispatch(setAllOperationPhoto({ file: tempImages }));
           }
         }
-        break;
+        return;
     }
   };
 
@@ -201,7 +195,7 @@ const SubmitForm = () => {
 
   const handleBack = () => {
     DeviceEventEmitter.emit('Operation.refreshlist', true);
-    navigation.dispatch(StackActions.popToTop());
+    navigation.dispatch(StackActions.pop());
   };
 
   const onSubmitData = async () => {
@@ -475,44 +469,54 @@ const SubmitForm = () => {
   ];
 
   const deleteImages = useCallback(
-    (i: number) => {
-      dispatch(removeOperationPhoto({ index: i }));
+    (i: number, attachType?: string) => {
+      if (userData?.type === ENTRY_TYPE.DRIVER) {
+        dispatch(removeDriverPhoto({ index: i, attachType: attachType }));
+      } else {
+        dispatch(removeOperationPhoto({ index: i }));
+      }
     },
-    [operationData.photoFiles, dispatch, removeOperationPhoto]
+    [
+      operationData.photoFiles,
+      dispatch,
+      removeOperationPhoto,
+      removeDriverPhoto,
+    ]
   );
 
-  const addMoreImages = useCallback(() => {
-    let title = '';
-    switch (userData?.type) {
-      case ENTRY_TYPE.DRIVER:
-        // if (operationData.photoFiles.length <= 1) {
-        //   title = 'DO';
-        // } else if (operationData.photoFiles.length <= 2) {
-        //   title = 'Penuangan';
-        // } else if (operationData.photoFiles.length <= 3) {
-        //   title = 'Isi TM';
-        // } else if (operationData.photoFiles.length <= 4) {
-        //   title = 'DO Saat Ditandatangan';
-        // }
-        navigation.dispatch(
-          StackActions.push(CAMERA, {
-            photoTitle: 'Tambahan',
-            closeButton: true,
-            navigateTo: GALLERY_OPERATION,
-          })
-        );
-        break;
-      case ENTRY_TYPE.SECURITY:
-        if (operationType === ENTRY_TYPE.DISPATCH) {
-          // if (operationData.photoFiles.length <= 1) {
-          //   title = 'DO';
-          // } else if (operationData.photoFiles.length <= 2) {
-          //   title = 'Driver';
-          // } else if (operationData.photoFiles.length <= 3) {
-          //   title = 'No Polisi TM';
-          // } else if (operationData.photoFiles.length <= 4) {
-          //   title = 'Segel';
-          // }
+  const addMoreImages = useCallback(
+    (attachType?: string) => {
+      switch (userData?.type) {
+        case ENTRY_TYPE.DRIVER:
+          navigation.dispatch(
+            StackActions.push(CAMERA, {
+              photoTitle: attachType,
+              closeButton: true,
+              navigateTo: ENTRY_TYPE.DRIVER,
+              operationAddedStep: attachType,
+            })
+          );
+          return;
+        case ENTRY_TYPE.SECURITY:
+          if (operationType === ENTRY_TYPE.DISPATCH) {
+            navigation.dispatch(
+              StackActions.push(CAMERA, {
+                photoTitle: 'Tambahan',
+                closeButton: true,
+                navigateTo: GALLERY_OPERATION,
+              })
+            );
+          } else {
+            navigation.dispatch(
+              StackActions.push(CAMERA, {
+                photoTitle: 'Tambahan',
+                closeButton: true,
+                navigateTo: GALLERY_OPERATION,
+              })
+            );
+          }
+          return;
+        case ENTRY_TYPE.WB:
           navigation.dispatch(
             StackActions.push(CAMERA, {
               photoTitle: 'Tambahan',
@@ -520,37 +524,11 @@ const SubmitForm = () => {
               navigateTo: GALLERY_OPERATION,
             })
           );
-        } else {
-          // if (operationData.photoFiles.length <= 1) {
-          //   title = 'DO';
-          // } else if (operationData.photoFiles.length <= 2) {
-          //   title = 'Kondisi TM';
-          // }
-          navigation.dispatch(
-            StackActions.push(CAMERA, {
-              photoTitle: 'Tambahan',
-              closeButton: true,
-              navigateTo: GALLERY_OPERATION,
-            })
-          );
-        }
-        break;
-      case ENTRY_TYPE.WB:
-        // if (operationData.photoFiles.length <= 1) {
-        //   title = 'DO';
-        // } else if (operationData.photoFiles.length <= 2) {
-        //   title = 'Hasil';
-        // }
-        navigation.dispatch(
-          StackActions.push(CAMERA, {
-            photoTitle: 'Tambahan',
-            closeButton: true,
-            navigateTo: GALLERY_OPERATION,
-          })
-        );
-        break;
-    }
-  }, [operationData.photoFiles, dispatch]);
+          return;
+      }
+    },
+    [operationData.photoFiles, dispatch]
+  );
 
   return (
     <SafeAreaView style={style.parent}>
@@ -591,8 +569,8 @@ const SubmitForm = () => {
             </View>
             <View>
               <BGallery
-                addMorePict={() => addMoreImages()}
-                removePict={(pos) => deleteImages(pos)}
+                addMorePict={(attachType) => addMoreImages(attachType)}
+                removePict={(pos, attachType) => deleteImages(pos, attachType)}
                 picts={operationData.photoFiles}
               />
             </View>
