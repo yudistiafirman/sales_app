@@ -1,45 +1,222 @@
-// In App.js in a new project
-
 import * as React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import BStackScreen from './elements/BStackScreen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Splash from '@/screens/Splash';
+import Operation from '@/screens/Operation';
+import { ENTRY_TYPE } from '@/models/EnumModel';
+import Login from '@/screens/Login';
+import Verification from '@/screens/Verification';
+import { colors, fonts, storageKey } from '@/constants';
+import {
+  LOGIN,
+  LOGIN_TITLE,
+  OPSMANAGER,
+  OPSMANAGER_TITLE,
+  TAB_ROOT,
+  VERIFICATION,
+  VERIFICATION_TITLE,
+  BATCHER,
+  DRIVER,
+  BATCHER_TITLE,
+  DRIVER_TITLE,
+  BLANK_SCREEN,
+} from './ScreenNames';
+import OperationStack from './Operation/Stack';
+import SalesStack from './Sales/Stack';
+import HunterAndFarmers from '@/screens/HunterAndFarmers';
+import { useAsyncConfigSetup } from '@/hooks';
 import SalesTabs from './tabs/SalesTabs';
-import TestStack from './stacks/TestStack';
-import OpsManTabs from './tabs/OpsManTabs';
-
+import SecurityTabs from './tabs/SecurityTabs';
+import SalesHeaderRight from './Sales/HeaderRight';
+import { UserModel } from '@/models/User';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import BlankScreen from '@/screens/BlankScreen';
 const Stack = createNativeStackNavigator();
 
-const getTabs = (userType?: 'opsManager' | 'sales' | undefined) => {
-  let tabs = SalesTabs;
-  if (userType === 'opsManager') tabs = OpsManTabs;
-  return BStackScreen({
-    Stack: Stack,
-    name: 'MainTabs',
-    title: `Beranda - ${userType}`,
-    type: 'home',
-    color: 'primary',
-    headerShown: false,
-    component: tabs,
-  });
-};
-
-const getStacks = (userType?: 'opsManager' | 'sales' | undefined) => {
-  if (userType === 'opsManager') return TestStack({Stack: Stack});
-  return TestStack({Stack: Stack});
+const RootScreen = (
+  userData: UserModel.DataSuccessLogin | null,
+  isSignout: boolean,
+  dispatch: AppDispatch
+) => {
+  if (userData !== null) {
+    switch (userData.type) {
+      case ENTRY_TYPE.OPSMANAGER:
+        return (
+          <>
+            <Stack.Screen
+              name={OPSMANAGER}
+              key={OPSMANAGER}
+              component={Operation}
+              options={{
+                headerTitleAlign: 'center',
+                headerTitle: OPSMANAGER_TITLE,
+                headerRight: () => SalesHeaderRight(colors.text.darker),
+                headerShown: true,
+              }}
+            />
+            {OperationStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.BATCHER:
+        return (
+          <>
+            <Stack.Screen
+              name={BATCHER}
+              key={BATCHER}
+              component={Operation}
+              options={{
+                headerTitleAlign: 'center',
+                headerTitle: BATCHER_TITLE,
+                headerRight: () => SalesHeaderRight(colors.text.darker),
+                headerShown: true,
+              }}
+            />
+            {OperationStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.DRIVER:
+        return (
+          <>
+            <Stack.Screen
+              name={DRIVER}
+              key={DRIVER}
+              component={Operation}
+              options={{
+                headerTitleAlign: 'center',
+                headerTitle: DRIVER_TITLE,
+                headerRight: () => SalesHeaderRight(colors.text.darker),
+                headerShown: true,
+              }}
+            />
+            {OperationStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.SECURITY:
+        return (
+          <>
+            <Stack.Screen
+              name={TAB_ROOT}
+              key={TAB_ROOT}
+              component={SecurityTabs}
+              options={{
+                headerShown: false,
+              }}
+            />
+            {OperationStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.WB:
+        return (
+          <>
+            <Stack.Screen
+              name={TAB_ROOT}
+              key={TAB_ROOT}
+              component={SecurityTabs}
+              options={{
+                headerShown: false,
+              }}
+            />
+            {OperationStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.SALES:
+        return (
+          <>
+            <Stack.Screen
+              name={TAB_ROOT}
+              key={TAB_ROOT}
+              component={SalesTabs}
+              options={{
+                headerShown: false,
+              }}
+            />
+            {SalesStack(Stack)}
+          </>
+        );
+      case ENTRY_TYPE.ADMIN:
+        return (
+          <>
+            <Stack.Screen
+              name={TAB_ROOT}
+              key={TAB_ROOT}
+              component={SalesTabs}
+              options={{
+                headerShown: false,
+              }}
+            />
+            {SalesStack(Stack)}
+          </>
+        );
+      default:
+        return (
+          <Stack.Screen
+            name={BLANK_SCREEN}
+            key={BLANK_SCREEN}
+            component={BlankScreen}
+            options={{
+              headerTitle: '',
+            }}
+          />
+        );
+    }
+  } else {
+    return (
+      <>
+        <Stack.Screen
+          name={LOGIN}
+          key={LOGIN}
+          component={Login}
+          options={{
+            headerTitleAlign: 'center',
+            headerTitle: LOGIN_TITLE,
+            animationTypeForReplace: isSignout ? 'pop' : 'push',
+          }}
+        />
+        <Stack.Screen
+          name={VERIFICATION}
+          key={VERIFICATION}
+          component={Verification}
+          options={{
+            headerTitle: VERIFICATION_TITLE,
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: fonts.family.montserrat[600],
+              fontSize: fonts.size.lg,
+              color: colors.text.inactive,
+            },
+          }}
+        />
+      </>
+    );
+  }
 };
 
 function AppNavigator() {
-  const userType = 'opsManager';
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerTitleAlign: 'center',
-        headerShadowVisible: false,
-      }}>
-      {getTabs(userType)}
-      {getStacks(userType)}
-    </Stack.Navigator>
-  );
+  const { isLoading, userData, isSignout } = useAsyncConfigSetup();
+  const dispatch = useDispatch<AppDispatch>();
+  if (isLoading) {
+    return <Splash />;
+  } else {
+    return (
+      <>
+        <HunterAndFarmers />
+        <Stack.Navigator
+          screenOptions={{
+            headerTitleAlign: 'left',
+            headerShadowVisible: false,
+            headerShown: true,
+            headerTitleStyle: {
+              color: colors.text.darker,
+              fontSize: fonts.size.lg,
+              fontFamily: fonts.family.montserrat[600],
+            },
+          }}
+        >
+          {RootScreen(userData, isSignout, dispatch)}
+        </Stack.Navigator>
+      </>
+    );
+  }
 }
 
 export default AppNavigator;

@@ -1,28 +1,41 @@
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import layout from '@/constants/layout';
-import {TextStyle, View, ViewStyle} from 'react-native';
+import React from 'react';
+import { TextStyle, View, ViewStyle } from 'react-native';
 import BText from './BText';
+import { resScale } from '@/utils';
+import { colors, fonts, layout } from '@/constants';
 
-const BChip = ({
-  children,
-  type,
-}: {
+interface BChipProps {
   children: any;
   type?: 'default' | 'header';
-}) => {
-  let _style: ViewStyle = {
-    backgroundColor: colors.border,
-    paddingHorizontal: layout.pad.md,
-    paddingVertical: layout.pad.xs,
-    borderRadius: layout.radius.sm,
+  backgroundColor?: string | undefined;
+  textColor?: string | undefined;
+}
+
+const BChip = ({ children, type, backgroundColor, textColor }: BChipProps) => {
+  let BChipHeaderStyle: ViewStyle = {
+    paddingHorizontal: resScale(layout.pad.md),
+    paddingVertical: resScale(layout.pad.xs),
+    borderRadius: resScale(layout.radius.sm),
   };
+
+  let BChipDefaultStyle: ViewStyle = {
+    paddingVertical: resScale(2),
+    paddingHorizontal: resScale(10),
+    borderRadius: resScale(32),
+    marginRight: resScale(8),
+  };
+
+  let _style: ViewStyle =
+    type === 'header' ? BChipHeaderStyle : BChipDefaultStyle;
+
   let _textStyle: TextStyle = {
-    color: colors.text.dark,
-    fontFamily: font.family.montserrat[400],
+    color: textColor ? textColor : colors.text.dark,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.xs,
   };
+
   return (
-    <View style={[_style]}>
+    <View style={[_style, { backgroundColor: backgroundColor }]}>
       <BText style={[_textStyle]}>{children}</BText>
     </View>
   );

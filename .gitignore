@@ -31,12 +31,17 @@ local.properties
 *.iml
 *.hprof
 .cxx/
+android/app/release.brik
 
 # node.js
 #
 node_modules/
 npm-debug.log
 yarn-error.log
+.env
+.env.production
+yarn.lock
+package-lock.json
 
 # BUCK
 buck-out/
@@ -62,5 +67,8 @@ buck-out/
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+
+# react-native-config codegen
+ios/tmp.xcconfig
 
 /android/app/src/main/assets/index.android.bundle

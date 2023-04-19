@@ -1,4 +1,10 @@
 {
-  "name": "BSA",
-  "displayName": "BSA"
+  "name": "BOD",
+  "displayName": "BOD",
+  "ios": {
+    "bundleIdentifier": "bod.app"
+  },
+  "android": {
+    "package": "bod.app"
+  }
 }

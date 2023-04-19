@@ -1,19 +1,24 @@
+import { resScale } from "@/utils";
+
 const layout = {
-  mainPad: 16,
-  spaceBetween: 10,
+  mainPad: resScale(16),
+  spaceBetween: resScale(10),
   radius: {
-    sm: 2,
-    sm: 4,
-    md: 8,
-    lg: 16,
-    xl: 32,
+    xs: resScale(2),
+    sm: resScale(4),
+    md: resScale(8),
+    lg: resScale(16),
+    xl: resScale(32),
   },
   pad: {
-    xs: 2,
-    sm: 4,
-    md: 8,
-    lg: 16,
-    xl: 32,
+    zero: resScale(0),
+    xs: resScale(2),
+    sm: resScale(4),
+    md: resScale(8),
+    ml: resScale(12),
+    lg: resScale(16),
+    xl: resScale(32),
+    xxl: resScale(48),
   },
 };
 
