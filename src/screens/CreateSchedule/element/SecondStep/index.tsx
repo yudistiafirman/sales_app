@@ -267,7 +267,7 @@ export default function SecondStep() {
 					style={{ marginBottom: layout.pad.xl }}
 					firstSectionText={'Deposit'}
 					firstSectionValue={
-						stateTwo?.totalDeposit ? stateTwo?.totalDeposit : 0
+						stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0
 					}
 					secondSectionText={
 						stateTwo?.salesOrder ? getDisplayName(stateTwo?.salesOrder) : '-'
@@ -276,7 +276,7 @@ export default function SecondStep() {
 					thirdSectionText={'Est. Sisa Deposit'}
 					isError={
 						getTotalProduct() >
-						(stateTwo?.totalDeposit ? stateTwo?.totalDeposit : 0)
+						(stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
 					}
 					customErrorMsg={'Silakan lakukan penambahan deposit'}
 				/>

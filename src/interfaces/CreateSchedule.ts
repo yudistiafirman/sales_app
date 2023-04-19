@@ -12,7 +12,7 @@ interface CreateScheduleSecondStep {
   method?: string;
   isConsecutive?: boolean;
   hasTechnicalRequest?: boolean;
-  totalDeposit?: number;
+  availableDeposit?: number;
   inputtedVolume?: number;
   salesOrder?: SalesOrdersData;
 }
