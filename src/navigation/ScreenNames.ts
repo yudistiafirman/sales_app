@@ -88,3 +88,12 @@ export const HUNTER_AND_FARMER_TITLE = 'Hunter & Farmer';
 export const DOCUMENTS_TITLE = 'Dokumen';
 export const SEARCH_SO_TITLE = 'Cari File SO';
 export const FORM_SO_TITLE = 'Sign SO';
+
+export const HOME_MENU = {
+  SPH: 'Buat SPH',
+  PO: 'Buat PO/SO',
+  DEPOSIT: 'Buat Deposit',
+  SCHEDULE: 'Buat Jadwal',
+  APPOINTMENT: 'Buat Janji Temu',
+  SIGN_SO: 'Upload Signed SO',
+};
