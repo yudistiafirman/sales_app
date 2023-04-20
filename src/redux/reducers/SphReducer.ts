@@ -207,5 +207,6 @@ export const {
   setSearchAddress,
   setUseBillingAddress,
   setSearchedBillingAddress,
+  onChangeMethod,
 } = sphSlice.actions;
 export default sphSlice.reducer;
