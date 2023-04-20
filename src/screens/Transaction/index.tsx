@@ -43,6 +43,7 @@ import {
 } from '@/redux/reducers/SphReducer';
 import { bStorage } from '@/actions';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
@@ -57,7 +58,8 @@ const Transaction = () => {
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const { isModalContinuePo, poNumber, currentStep, customerType } =
     poState.currentState.context;
-
+  const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] =
+    React.useState(false);
   const {
     routes,
     isLoadMore,
@@ -85,26 +87,7 @@ const Transaction = () => {
             if (selectedType === 'PO') {
               setFeature('PO');
               if (!isModalContinuePo) {
-                dispatch(
-                  openPopUp({
-                    popUpType: 'none',
-                    popUpText: 'Tipe pelanggan',
-                    isRenderActions: true,
-                    outlineBtnTitle: 'Individu',
-                    primaryBtnTitle: 'Perusahaan',
-                    outlineBtnAction: () => {
-                      dispatch({ type: 'openingCamera', value: 'INDIVIDU' });
-                      dispatch(closePopUp());
-                      navigation.navigate(PO);
-                    },
-                    primaryBtnAction: () => {
-                      dispatch({ type: 'openingCamera', value: 'COMPANY' });
-                      dispatch(closePopUp());
-                      navigation.navigate(PO);
-                    },
-                  })
-                );
-
+                setIsVisibleSelectCustomerType(true);
                 setLocalContinueModalPo(false);
               } else {
                 setLocalContinueModalPo(true);
@@ -362,25 +345,7 @@ const Transaction = () => {
             bStorage.deleteItem(PO);
             setLocalContinueModalPo(false);
             dispatch({ type: 'createNewPo' });
-            dispatch(
-              openPopUp({
-                popUpType: 'none',
-                popUpText: 'Tipe pelanggan',
-                isRenderActions: true,
-                outlineBtnTitle: 'Individu',
-                primaryBtnTitle: 'Perusahaan',
-                outlineBtnAction: () => {
-                  dispatch({ type: 'openingCamera', value: 'INDIVIDU' });
-                  dispatch(closePopUp());
-                  navigation.navigate(PO);
-                },
-                primaryBtnAction: () => {
-                  dispatch({ type: 'openingCamera', value: 'COMPANY' });
-                  dispatch(closePopUp());
-                  navigation.navigate(PO);
-                },
-              })
-            );
+            setIsVisibleSelectCustomerType(true);
           }
         }}
         actionButton={continuePopUpAction}
@@ -390,6 +355,18 @@ const Transaction = () => {
         text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
           feature === 'PO' ? 'PO' : 'SPH'
         } Sebelumnya?`}
+      />
+      <SelectCustomerTypeModal
+        isVisible={isVisibleSelectCustomerType}
+        onClose={() => setIsVisibleSelectCustomerType(false)}
+        onSelect={(selectedCustomerType) => {
+          dispatch({
+            type: 'openingCamera',
+            value: selectedCustomerType,
+          });
+          setIsVisibleSelectCustomerType(false);
+          navigation.navigate(PO);
+        }}
       />
     </SafeAreaView>
   );
