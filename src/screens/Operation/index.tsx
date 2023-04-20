@@ -89,8 +89,8 @@ const Operation = () => {
             { file: null, attachType: 'Cuci gentong' },
             { file: null, attachType: 'DO' },
             { file: null, attachType: 'Penerima' },
-            { file: null, attachType: 'Penambahan Air' },
-            { file: null, attachType: 'Lokasi Proyek' },
+            { file: null, attachType: 'Penambahan air' },
+            { file: null, attachType: 'Tambahan' },
           ],
         })
       );

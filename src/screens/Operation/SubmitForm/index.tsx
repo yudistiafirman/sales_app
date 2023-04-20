@@ -76,11 +76,11 @@ const SubmitForm = () => {
   const driversFileType = [
     OperationFileType.DO_DRIVER_ARRIVE_PROJECT,
     OperationFileType.DO_DRIVER_BNIB,
-    OperationFileType.DO_DRIVER_RECEIPIENT,
-    OperationFileType.DO_DRIVER_WATER,
-    OperationFileType.DO_DRIVER_DO,
     OperationFileType.DO_DRIVER_UNBOXING,
     OperationFileType.DO_DRIVER_EMPTY,
+    OperationFileType.DO_DRIVER_DO,
+    OperationFileType.DO_DRIVER_RECEIPIENT,
+    OperationFileType.DO_DRIVER_WATER,
     OperationFileType.DO_DRIVER_FINISH_PROJECT,
   ];
   const wbsFileType = [
@@ -175,7 +175,7 @@ const SubmitForm = () => {
     let photos = [...operationData.photoFiles.filter((it) => it.file !== null)];
     if (userData?.type === ENTRY_TYPE.DRIVER) {
       return (
-        photos.length < 8 ||
+        photos.length < 7 ||
         operationData.inputsValue.recepientName.length === 0 ||
         !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber)
       );
