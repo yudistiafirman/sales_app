@@ -299,7 +299,7 @@ export const transactionMachine =
               response = response.data;
             } else if (_context.selectedType === 'DO') {
               response = await getAllDeliveryOrders(
-                'FINISHED',
+                undefined,
                 _context.size.toString(),
                 _context.page.toString()
               );

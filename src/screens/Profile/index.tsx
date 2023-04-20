@@ -1,7 +1,6 @@
 import bStorage from '@/actions/BStorage';
 import { signOut } from '@/actions/CommonActions';
 import { BTouchableText } from '@/components';
-import storageKey from '@/constants/storageKey';
 import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
 import { signout } from '@/redux/reducers/authReducer';
 import { AppDispatch } from '@/redux/store';
@@ -11,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { TAB_PROFILE } from '@/navigation/ScreenNames';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import { resetOperationState } from '@/redux/reducers/operationReducer';
+import analytics from '@react-native-firebase/analytics';
 
 const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,10 +19,10 @@ const Profile = () => {
     try {
       const response = await signOut();
       if (response) {
-        bStorage.deleteItem(storageKey.userToken);
-        dispatch(resetOperationState())
+        bStorage.clearItem();
         dispatch(signout(false));
         crashlytics().setUserId('');
+        analytics().setUserId('');
       }
     } catch (error) {
       dispatch(

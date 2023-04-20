@@ -62,7 +62,7 @@ const Dispatch = () => {
         });
       } else {
         navigation.navigate(CAMERA, {
-          photoTitle: userData?.type === ENTRY_TYPE.SECURITY ? 'Driver' : 'DO',
+          photoTitle: 'DO',
           navigateTo:
             userData?.type === ENTRY_TYPE.SECURITY
               ? ENTRY_TYPE.DISPATCH
@@ -93,7 +93,7 @@ const Dispatch = () => {
       };
       dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
       navigation.navigate(CAMERA, {
-        photoTitle: userData?.type === ENTRY_TYPE.SECURITY ? 'Driver' : 'DO',
+        photoTitle: 'DO',
         navigateTo:
           userData?.type === ENTRY_TYPE.SECURITY
             ? ENTRY_TYPE.DISPATCH

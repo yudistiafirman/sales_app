@@ -46,6 +46,7 @@ const BLocation = React.forwardRef(
       onRegionChangeComplete,
       onRegionChange,
       CustomMarker,
+      onMapReady,
       scrollEnabled = true,
     }: BLocationProps & typeof BLocationDefaultProps,
     ref: React.LegacyRef<MapView> | undefined
@@ -58,6 +59,7 @@ const BLocation = React.forwardRef(
           initialRegion={region}
           provider={MAPSPROVIDER}
           rotateEnabled={false}
+          onMapReady={onMapReady}
           onRegionChange={onRegionChange}
           onRegionChangeComplete={onRegionChangeComplete}
           region={region}

@@ -6,11 +6,11 @@ import { bStorage } from '@/actions';
 import { storageKey } from '@/constants';
 import { signout } from '@/redux/reducers/authReducer';
 import { getSuccessMsgFromAPI } from '@/utils/generalFunc';
-import perf from '@react-native-firebase/perf';
 import { openSnackbar } from '@/redux/reducers/snackbarReducer';
 import Config from 'react-native-config';
 import { Platform } from 'react-native';
-import { resetOperationState } from '@/redux/reducers/operationReducer';
+import crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
 
 const URL_PRODUCTIVITY =
   Platform.OS === 'android'
@@ -24,6 +24,12 @@ const URL_ORDER =
     : __DEV__
     ? Config.API_URL_ORDER
     : Config.API_URL_ORDER_PROD;
+const URL_COMMON =
+  Platform.OS === 'android'
+    ? Config.API_URL_COMMON
+    : __DEV__
+    ? Config.API_URL_COMMON
+    : Config.API_URL_COMMON_PROD;
 
 let store: any;
 // let metric: any;
@@ -139,9 +145,10 @@ instance.interceptors.response.use(
     if (!data.success) {
       // automatic logout
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
-        await bStorage.deleteItem(storageKey.userToken);
-        store.dispatch(resetOperationState());
+        bStorage.clearItem();
         store.dispatch(signout(false));
+        crashlytics().setUserId('');
+        analytics().setUserId('');
         return Promise.resolve(res);
       }
 
@@ -212,6 +219,10 @@ instance.interceptors.response.use(
           if (error.response.data.message) {
             errorMessage = error.response.data.message;
           }
+        } else {
+          if (error.message) {
+            errorMessage = error.message;
+          }
         }
         errorStatus = error.response.status;
       } else if (error.request) {
@@ -225,21 +236,29 @@ instance.interceptors.response.use(
       const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
       const postPO = `${URL_ORDER}/order/m/purchase-order/`;
       const postSOSigned = `${URL_ORDER}/order/m/purchase-order/docs/`;
+      const refreshToken = `${URL_COMMON}/common/m/auth/refresh/`;
 
-      if (
-        error?.config?.url !== postVisitationUrl &&
-        error?.config?.url !== postVisitationBookUrl &&
-        error?.config?.url !== postDepositUrl &&
-        error?.config?.url !== postScheduleUrl &&
-        error?.config?.url !== postPO &&
-        error?.config?.url !== postSOSigned
-      ) {
-        store.dispatch(
-          openSnackbar({
-            snackBarText: `${errorMessage} code: ${errorStatus}`,
-            isSuccess: false,
-          })
-        );
+      if (error?.config?.url === refreshToken && errorStatus === 500) {
+        bStorage.clearItem();
+        store.dispatch(signout(false));
+        crashlytics().setUserId('');
+        analytics().setUserId('');
+      } else {
+        if (
+          error?.config?.url !== postVisitationUrl &&
+          error?.config?.url !== postVisitationBookUrl &&
+          error?.config?.url !== postDepositUrl &&
+          error?.config?.url !== postScheduleUrl &&
+          error?.config?.url !== postPO &&
+          error?.config?.url !== postSOSigned
+        ) {
+          store.dispatch(
+            openSnackbar({
+              snackBarText: `${errorMessage} code: ${errorStatus}`,
+              isSuccess: false,
+            })
+          );
+        }
       }
     }
     return Promise.reject(error);

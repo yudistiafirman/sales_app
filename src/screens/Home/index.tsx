@@ -53,6 +53,7 @@ import {
   SEARCH_SO,
   SPH,
   TAB_HOME,
+  HOME_MENU,
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -63,7 +64,6 @@ import {
   isForceUpdate,
 } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
-import { HOME_MENU } from '../Const';
 import {
   resetFocusedStepperFlag,
   resetSPHState,
@@ -71,6 +71,7 @@ import {
 import { bStorage } from '@/actions';
 import { resetRegion } from '@/redux/reducers/locationReducer';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
 const { height } = Dimensions.get('window');
 const initialSnapPoints = (+height.toFixed() - 115) / 10;
 
@@ -111,6 +112,8 @@ const Beranda = () => {
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
   const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
   const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false);
+  const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] =
+    React.useState(false);
   const visitationData = useSelector((state: RootState) => state.visitation);
 
   useHeaderShow({
@@ -379,26 +382,7 @@ const Beranda = () => {
         action: () => {
           setFeature('PO');
           if (!isModalContinuePo) {
-            dispatch(
-              openPopUp({
-                popUpType: 'none',
-                popUpText: 'Tipe pelanggan',
-                isRenderActions: true,
-                outlineBtnTitle: 'Individu',
-                primaryBtnTitle: 'Perusahaan',
-                outlineBtnAction: () => {
-                  dispatch({ type: 'openingCamera', value: 'INDIVIDU' });
-                  dispatch(closePopUp());
-                  navigation.navigate(PO);
-                },
-                primaryBtnAction: () => {
-                  dispatch({ type: 'openingCamera', value: 'COMPANY' });
-                  dispatch(closePopUp());
-                  navigation.navigate(PO);
-                },
-              })
-            );
-
+            setIsVisibleSelectCustomerType(true);
             setLocalContinueModalPo(false);
           } else {
             setLocalContinueModalPo(true);
@@ -722,25 +706,7 @@ const Beranda = () => {
               bStorage.deleteItem(PO);
               setLocalContinueModalPo(false);
               dispatch({ type: 'createNewPo' });
-              dispatch(
-                openPopUp({
-                  popUpType: 'none',
-                  popUpText: 'Tipe pelanggan',
-                  isRenderActions: true,
-                  outlineBtnTitle: 'Individu',
-                  primaryBtnTitle: 'Perusahaan',
-                  outlineBtnAction: () => {
-                    dispatch({ type: 'openingCamera', value: 'INDIVIDU' });
-                    dispatch(closePopUp());
-                    navigation.navigate(PO);
-                  },
-                  primaryBtnAction: () => {
-                    dispatch({ type: 'openingCamera', value: 'COMPANY' });
-                    dispatch(closePopUp());
-                    navigation.navigate(PO);
-                  },
-                })
-              );
+              setIsVisibleSelectCustomerType(true);
             }
           }}
           actionButton={continuePopUpAction}
@@ -750,6 +716,18 @@ const Beranda = () => {
           text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
             feature === 'PO' ? 'PO' : 'SPH'
           } Sebelumnya?`}
+        />
+        <SelectCustomerTypeModal
+          isVisible={isVisibleSelectCustomerType}
+          onClose={() => setIsVisibleSelectCustomerType(false)}
+          onSelect={(selectedCustomerType) => {
+            dispatch({
+              type: 'openingCamera',
+              value: selectedCustomerType,
+            });
+            setIsVisibleSelectCustomerType(false);
+            navigation.navigate(PO);
+          }}
         />
       </BBottomSheet>
       {renderUpdateDialog()}

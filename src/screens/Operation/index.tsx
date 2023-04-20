@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import {
   CAMERA,
-  CREATE_DO,
   LOCATION,
   OPERATION,
   SUBMIT_FORM,
@@ -18,6 +17,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 import {
   OperationProjectDetails,
+  onChangeProjectDetails,
   setAllOperationPhoto,
 } from '@/redux/reducers/operationReducer';
 
@@ -50,53 +50,56 @@ const Operation = () => {
   );
 
   const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
-    if (userData?.type) {
-      if (userData.type === ENTRY_TYPE.OPSMANAGER) {
-        navigation.navigate(CREATE_DO, { id: item });
-      } else {
-        if (projectDetails && projectDetails.deliveryOrderId === item.id) {
-          if (photoFiles.length > 1) {
-            navigation.navigate(SUBMIT_FORM, {
-              operationType: userData.type,
-            });
-          } else {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Kedatangan',
-              navigateTo: userData.type,
-            });
-          }
-        } else {
-          const dataToDeliver: OperationProjectDetails = {
-            deliveryOrderId: item?.id ? item.id : '',
-            doNumber: item?.number ? item.number : '',
-            projectName: item.project?.projectName
-              ? item.project.projectName
-              : '',
-            address: item.project?.ShippingAddress?.line1
-              ? item.project.ShippingAddress.line1
-              : '',
-            lonlat: {
-              longitude: item.project?.ShippingAddress?.lon
-                ? Number(item.project.ShippingAddress.lon)
-                : 0,
-              latitude: item.project?.ShippingAddress?.lat
-                ? Number(item.project.ShippingAddress.lat)
-                : 0,
-            },
-            requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct
-              ?.requestedQuantity
-              ? item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity
-              : 0,
-            deliveryTime: item?.date ? item.date : '',
-          };
-          dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
-          navigation.navigate(CAMERA, {
-            photoTitle: 'Kedatangan',
-            navigateTo: userData.type,
-            operationTempData: dataToDeliver,
-          });
-        }
-      }
+    // NOTE: currently driver only
+
+    if (projectDetails && projectDetails.deliveryOrderId === item.id) {
+      navigation.navigate(SUBMIT_FORM, {
+        operationType: userData.type,
+      });
+    } else {
+      const dataToDeliver: OperationProjectDetails = {
+        deliveryOrderId: item?.id ? item.id : '',
+        doNumber: item?.number ? item.number : '',
+        projectName: item.project?.projectName ? item.project.projectName : '',
+        address: item.project?.ShippingAddress?.line1
+          ? item.project.ShippingAddress.line1
+          : '',
+        lonlat: {
+          longitude: item.project?.ShippingAddress?.lon
+            ? Number(item.project.ShippingAddress.lon)
+            : 0,
+          latitude: item.project?.ShippingAddress?.lat
+            ? Number(item.project.ShippingAddress.lat)
+            : 0,
+        },
+        requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct
+          ?.requestedQuantity
+          ? item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity
+          : 0,
+        deliveryTime: item?.date ? item.date : '',
+      };
+
+      dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
+      dispatch(
+        setAllOperationPhoto({
+          file: [
+            { file: null, attachType: 'Tiba di lokasi' },
+            { file: null, attachType: 'Dalam gentong isi' },
+            { file: null, attachType: 'Tuang beton' },
+            { file: null, attachType: 'Cuci gentong' },
+            { file: null, attachType: 'DO' },
+            { file: null, attachType: 'Penerima' },
+            { file: null, attachType: 'Penambahan air' },
+            { file: null, attachType: 'Tambahan' },
+          ],
+        })
+      );
+      navigation.navigate(CAMERA, {
+        photoTitle: 'Tiba di lokasi',
+        closeButton: true,
+        navigateTo: ENTRY_TYPE.DRIVER,
+        operationAddedStep: 'Tiba di lokasi',
+      });
     }
   };
 
