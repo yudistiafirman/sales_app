@@ -299,6 +299,9 @@ interface BLocationProps {
   onRegionChange?:
     | ((region: Region & LatLang, details: Details) => void)
     | undefined;
+  onMapReady?:
+    | ((event?: NativeSyntheticEvent<{}> | undefined) => void)
+    | undefined;
   CustomMarker?: React.ReactNode | undefined;
   isUninteractable?: boolean;
   formattedAddress?: string;
