@@ -53,6 +53,7 @@ import {
   SEARCH_SO,
   SPH,
   TAB_HOME,
+  HOME_MENU,
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -63,7 +64,6 @@ import {
   isForceUpdate,
 } from '@/utils/generalFunc';
 import { RootState } from '@/redux/store';
-import { HOME_MENU } from '../Const';
 import {
   resetFocusedStepperFlag,
   resetSPHState,
