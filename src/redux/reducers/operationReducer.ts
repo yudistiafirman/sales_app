@@ -102,6 +102,21 @@ export const operationSlice = createSlice({
       currentImages.unshift({ file: null });
       state.photoFiles = [...currentImages];
     },
+    removeDriverPhoto: (
+      state,
+      actions: PayloadAction<{ index: number; attachType: string }>
+    ) => {
+      const newPhotoFiles: LocalFileType[] = [];
+      state.photoFiles.forEach((item) => {
+        let selectedItem: LocalFileType | undefined = { ...item };
+        if (selectedItem.attachType === actions.payload.attachType) {
+          selectedItem = { file: null, attachType: actions.payload.attachType };
+        }
+
+        if (selectedItem) newPhotoFiles.push(selectedItem);
+      });
+      state.photoFiles = [...newPhotoFiles];
+    },
   },
 });
 
@@ -113,6 +128,7 @@ export const {
   setOperationPhoto,
   setAllOperationPhoto,
   removeOperationPhoto,
+  removeDriverPhoto,
 } = operationSlice.actions;
 
 export default operationSlice.reducer;
