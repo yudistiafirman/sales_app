@@ -8,6 +8,7 @@ interface LocalFileType {
   };
   isFromPicker: boolean;
   type?: 'COVER' | 'GALLERY';
+  attachType?: string;
 }
 
 export type { LocalFileType };
