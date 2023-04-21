@@ -144,7 +144,8 @@ const styles = StyleSheet.create({
     paddingTop: layout.pad.md,
   },
   cameraBtn: {
-    position: 'absolute',
+    // position: 'absolute',
+    flex: 0.160,
     left: 0,
     right: 0,
     bottom: 0,
