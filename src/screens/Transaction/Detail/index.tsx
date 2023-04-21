@@ -84,7 +84,6 @@ function ListProduct(
       ? item.offering_price
       : item.offeringPrice;
   }
-
   return (
     <View key={index}>
       <BProductCard
@@ -331,13 +330,7 @@ const TransactionDetail = () => {
         )
       );
     } else {
-      return ListProduct(
-        productData,
-        0,
-        selectedType,
-        productData.quantity,
-        false
-      );
+      return ListProduct(productData, 0, selectedType, data?.quantity, false);
     }
   };
 
