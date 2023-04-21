@@ -46,6 +46,7 @@ import {
 import {
   onChangeProjectDetails,
   resetInputsValue,
+  setAllOperationPhoto,
   setOperationPhoto,
 } from '@/redux/reducers/operationReducer';
 import { RootState } from '@/redux/store';
@@ -214,6 +215,8 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         },
         isFromPicker: false,
         type: imagePayloadType,
+        attachType:
+          navigateTo === ENTRY_TYPE.DRIVER ? operationAddedStep : undefined,
       };
     } else if (picker) {
       localFile = {
@@ -226,6 +229,8 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         },
         isFromPicker: true,
         type: imagePayloadType,
+        attachType:
+          navigateTo === ENTRY_TYPE.DRIVER ? operationAddedStep : undefined,
       };
     }
 
@@ -251,238 +256,176 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
     if (photo) DeviceEventEmitter.emit('Camera.preview', photo);
     else DeviceEventEmitter.emit('Camera.preview', picker);
     let images: any[] = [];
-    if (navigateTo) {
-      switch (navigateTo) {
-        case CREATE_VISITATION:
-          dispatch(
-            setImageURLS({ file: localFile, source: CREATE_VISITATION })
-          );
-          if (visitationData.images && visitationData.images.length > 0)
-            images = [{ file: null }];
-          images.push(localFile);
-          dispatch(updateDataVisitation({ type: 'images', value: images }));
-          dispatch(resetAllStepperFocused());
-          navigation.goBack();
-          navigation.dispatch(
-            StackActions.replace(navigateTo, { existingVisitation })
-          );
-          return;
-        case PO:
-          dispatch({
-            type: 'addImages',
-            value: localFile,
+    switch (navigateTo) {
+      case CREATE_VISITATION:
+        dispatch(setImageURLS({ file: localFile, source: CREATE_VISITATION }));
+        if (visitationData.images && visitationData.images.length > 0)
+          images = [{ file: null }];
+        images.push(localFile);
+        dispatch(updateDataVisitation({ type: 'images', value: images }));
+        dispatch(resetAllStepperFocused());
+        navigation.goBack();
+        navigation.dispatch(
+          StackActions.replace(navigateTo, { existingVisitation })
+        );
+        return;
+      case PO:
+        dispatch({
+          type: 'addImages',
+          value: localFile,
+        });
+        navigation.dispatch(StackActions.replace(navigateTo));
+        return;
+      case ENTRY_TYPE.DISPATCH:
+        dispatch(
+          setOperationPhoto({ file: localFile, withoutAddButton: true })
+        );
+        navigation.dispatch(StackActions.pop(2));
+        if (!operationAddedStep || operationAddedStep === '') {
+          navigation.navigate(CAMERA, {
+            photoTitle: 'Driver',
+            navigateTo: navigateTo,
+            operationAddedStep: 'nopol',
+            operationTempData: operationTempData,
           });
-          navigation.dispatch(StackActions.replace(navigateTo));
-          return;
-        case ENTRY_TYPE.BATCHER:
-          dispatch(
-            setOperationPhoto({ file: localFile, withoutAddButton: true })
-          );
-          if (!operationAddedStep || operationAddedStep === '') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Mix Design',
-              navigateTo: navigateTo,
-              operationAddedStep: 'finished',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'finished') {
-            navigation.navigate(SUBMIT_FORM, {
-              operationType: ENTRY_TYPE.BATCHER,
-            });
+        } else if (operationAddedStep === 'nopol') {
+          navigation.navigate(CAMERA, {
+            photoTitle: 'No Polisi TM',
+            navigateTo: navigateTo,
+            operationAddedStep: 'segel',
+            operationTempData: operationTempData,
+          });
+        } else if (operationAddedStep === 'segel') {
+          navigation.navigate(CAMERA, {
+            photoTitle: 'Segel',
+            navigateTo: navigateTo,
+            operationAddedStep: 'kondom',
+            operationTempData: operationTempData,
+          });
+        } else if (operationAddedStep === 'kondom') {
+          navigation.navigate(CAMERA, {
+            photoTitle: 'Kondom',
+            navigateTo: navigateTo,
+            operationAddedStep: 'finished',
+            operationTempData: operationTempData,
+          });
+        } else if (operationAddedStep === 'finished') {
+          navigation.navigate(SUBMIT_FORM, {
+            operationType: ENTRY_TYPE.DISPATCH,
+          });
+        }
+        return;
+      case ENTRY_TYPE.DRIVER:
+        const newPhotoFiles: LocalFileType[] = [];
+        operationData.photoFiles.forEach((item) => {
+          let selectedItem: LocalFileType | undefined = { ...item };
+          if (selectedItem.attachType === operationAddedStep) {
+            selectedItem = localFile;
           }
-          return;
-        case ENTRY_TYPE.DISPATCH:
-          dispatch(
-            setOperationPhoto({ file: localFile, withoutAddButton: true })
-          );
-          if (!operationAddedStep || operationAddedStep === '') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Driver',
-              navigateTo: navigateTo,
-              operationAddedStep: 'nopol',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'nopol') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'No Polisi TM',
-              navigateTo: navigateTo,
-              operationAddedStep: 'segel',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'segel') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Segel',
-              navigateTo: navigateTo,
-              operationAddedStep: 'kondom',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'kondom') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Kondom',
-              navigateTo: navigateTo,
-              operationAddedStep: 'finished',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'finished') {
-            navigation.navigate(SUBMIT_FORM, {
-              operationType: ENTRY_TYPE.DISPATCH,
-            });
-          }
-          return;
-        case ENTRY_TYPE.DRIVER:
-          dispatch(
-            setOperationPhoto({ file: localFile, withoutAddButton: true })
-          );
-          if (!operationAddedStep || operationAddedStep === '') {
-            onArrivedDriver();
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Beton Dalam Gentong Pas Sampai',
-              navigateTo: navigateTo,
-              operationAddedStep: 'bnib',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'bnib') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Penerima',
-              navigateTo: navigateTo,
-              operationAddedStep: 'receipient',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'receipient') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Penambahan Air (jika ada)',
-              navigateTo: navigateTo,
-              operationAddedStep: 'water',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'water') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'DO',
-              navigateTo: navigateTo,
-              operationAddedStep: 'DO',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'DO') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Beton Saat Dituang',
-              navigateTo: navigateTo,
-              operationAddedStep: 'unboxing',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'unboxing') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Gentong Saat Sudah Selesei Dituang (kosong)',
-              navigateTo: navigateTo,
-              operationAddedStep: 'out',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'out') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Lokasi Proyek Saat Selesai Dituang',
-              navigateTo: navigateTo,
-              operationAddedStep: 'finished',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'finished') {
-            navigation.navigate(SUBMIT_FORM, {
-              operationType: ENTRY_TYPE.DRIVER,
-            });
-          }
-          return;
-        case ENTRY_TYPE.IN:
-          dispatch(
-            setOperationPhoto({ file: localFile, withoutAddButton: true })
-          );
-          if (!operationAddedStep || operationAddedStep === '') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Hasil',
-              navigateTo: navigateTo,
-              operationAddedStep: 'finished',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'finished') {
-            navigation.navigate(SUBMIT_FORM, {
-              operationType: ENTRY_TYPE.IN,
-            });
-          }
-          return;
-        case ENTRY_TYPE.OUT:
-          dispatch(
-            setOperationPhoto({ file: localFile, withoutAddButton: true })
-          );
-          if (!operationAddedStep || operationAddedStep === '') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Hasil',
-              navigateTo: navigateTo,
-              operationAddedStep: 'finished',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'finished') {
-            navigation.navigate(SUBMIT_FORM, {
-              operationType: ENTRY_TYPE.OUT,
-            });
-          }
-          return;
-        case ENTRY_TYPE.RETURN:
-          dispatch(
-            setOperationPhoto({ file: localFile, withoutAddButton: true })
-          );
-          if (!operationAddedStep || operationAddedStep === '') {
-            navigation.navigate(CAMERA, {
-              photoTitle: 'Kondisi TM',
-              navigateTo: navigateTo,
-              operationAddedStep: 'finished',
-              operationTempData: operationTempData,
-            });
-          } else if (operationAddedStep === 'finished') {
-            navigation.navigate(SUBMIT_FORM, {
-              operationType: ENTRY_TYPE.RETURN,
-            });
-          }
-          return;
-        case FORM_SO:
-          dispatch(setSOPhoto({ file: localFile }));
-          navigation.dispatch(StackActions.pop(2));
-          navigation.navigate(navigateTo);
-          return;
-        case GALLERY_SO:
-          dispatch(setSOPhoto({ file: localFile }));
-          navigation.dispatch(StackActions.pop(2));
-          return;
-        case CREATE_DEPOSIT:
-          dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
-          navigation.goBack();
-          navigation.dispatch(StackActions.replace(navigateTo));
-          return;
-        case GALLERY_VISITATION:
-          dispatch(
-            setImageURLS({ file: localFile, source: CREATE_VISITATION })
-          );
-          if (visitationData.images && visitationData.images.length > 0)
-            images = [...visitationData.images];
-          images.push(localFile);
-          dispatch(updateDataVisitation({ type: 'images', value: images }));
-          navigation.dispatch(StackActions.pop(2));
-          return;
-        case GALLERY_DEPOSIT:
-          dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
-          navigation.dispatch(StackActions.pop(2));
-          return;
-        case GALLERY_OPERATION:
-          dispatch(
-            setOperationPhoto({ file: localFile, withoutAddButton: false })
-          );
-          navigation.dispatch(StackActions.pop(2));
-          return;
-        default:
-          dispatch(setImageURLS({ file: localFile }));
-          navigation.goBack();
-          navigation.dispatch(StackActions.replace(navigateTo));
-          return;
-      }
-    } else {
-      dispatch(setImageURLS({ file: localFile }));
-      navigation.dispatch(StackActions.pop(2));
+
+          if (selectedItem) newPhotoFiles.push(selectedItem);
+        });
+        dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
+
+        navigation.dispatch(StackActions.pop(2));
+        if (operationAddedStep === 'Tiba di lokasi') {
+          onArrivedDriver();
+          navigation.navigate(SUBMIT_FORM, {
+            operationType: ENTRY_TYPE.DRIVER,
+          });
+        }
+        return;
+      case ENTRY_TYPE.IN:
+        dispatch(
+          setOperationPhoto({ file: localFile, withoutAddButton: true })
+        );
+        navigation.dispatch(StackActions.pop(2));
+        if (!operationAddedStep || operationAddedStep === '') {
+          navigation.navigate(CAMERA, {
+            photoTitle: 'Hasil',
+            navigateTo: navigateTo,
+            operationAddedStep: 'finished',
+            operationTempData: operationTempData,
+          });
+        } else if (operationAddedStep === 'finished') {
+          navigation.navigate(SUBMIT_FORM, {
+            operationType: ENTRY_TYPE.IN,
+          });
+        }
+        return;
+      case ENTRY_TYPE.OUT:
+        dispatch(
+          setOperationPhoto({ file: localFile, withoutAddButton: true })
+        );
+        navigation.dispatch(StackActions.pop(2));
+        if (!operationAddedStep || operationAddedStep === '') {
+          navigation.navigate(CAMERA, {
+            photoTitle: 'Hasil',
+            navigateTo: navigateTo,
+            operationAddedStep: 'finished',
+            operationTempData: operationTempData,
+          });
+        } else if (operationAddedStep === 'finished') {
+          navigation.navigate(SUBMIT_FORM, {
+            operationType: ENTRY_TYPE.OUT,
+          });
+        }
+        return;
+      case ENTRY_TYPE.RETURN:
+        dispatch(
+          setOperationPhoto({ file: localFile, withoutAddButton: true })
+        );
+        navigation.dispatch(StackActions.pop(2));
+        if (!operationAddedStep || operationAddedStep === '') {
+          navigation.navigate(CAMERA, {
+            photoTitle: 'Kondisi TM',
+            navigateTo: navigateTo,
+            operationAddedStep: 'finished',
+            operationTempData: operationTempData,
+          });
+        } else if (operationAddedStep === 'finished') {
+          navigation.navigate(SUBMIT_FORM, {
+            operationType: ENTRY_TYPE.RETURN,
+          });
+        }
+        return;
+      case FORM_SO:
+        dispatch(setSOPhoto({ file: localFile }));
+        navigation.dispatch(StackActions.pop(2));
+        navigation.navigate(navigateTo);
+        return;
+      case GALLERY_SO:
+        dispatch(setSOPhoto({ file: localFile }));
+        navigation.dispatch(StackActions.pop(2));
+        return;
+      case CREATE_DEPOSIT:
+        dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
+        navigation.goBack();
+        navigation.dispatch(StackActions.replace(navigateTo));
+        return;
+      case GALLERY_VISITATION:
+        dispatch(setImageURLS({ file: localFile, source: CREATE_VISITATION }));
+        if (visitationData.images && visitationData.images.length > 0)
+          images = [...visitationData.images];
+        images.push(localFile);
+        dispatch(updateDataVisitation({ type: 'images', value: images }));
+        navigation.dispatch(StackActions.pop(2));
+        return;
+      case GALLERY_DEPOSIT:
+        dispatch(setImageURLS({ file: localFile, source: CREATE_DEPOSIT }));
+        navigation.dispatch(StackActions.pop(2));
+        return;
+      case GALLERY_OPERATION:
+        dispatch(
+          setOperationPhoto({ file: localFile, withoutAddButton: false })
+        );
+        navigation.dispatch(StackActions.pop(2));
+        return;
+      default:
+        dispatch(setImageURLS({ file: localFile }));
+        navigation.goBack();
+        navigation.dispatch(StackActions.replace(navigateTo));
+        return;
     }
   };
 
