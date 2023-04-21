@@ -155,13 +155,15 @@ private String generateVersionName() {
    return "${project.env.get("MAJOR_VERSION")}.${project.env.get("MINOR_VERSION")}.${project.env.get("PATCH_VERSION")}"
 }
 
+private String generateCodePushKey() {
+   return "${project.env.get("CODE_PUSH_KEY")}"
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        versionCode generateVersionCode()
-        versionName generateVersionName()
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
@@ -256,6 +258,8 @@ android {
             resValue "string", "app_name", developmentAppName
             buildConfigField "long", "VERSION_CODE", "${generateVersionCode()}"
             buildConfigField "String", "VERSION_NAME", "\"${generateVersionName()}\""
+            // buildConfigField "String", "CodePushDeploymentKey", "\"${generateCodePushKey()}\""
+            resValue "string", "CodePushDeploymentKey", "\"${generateCodePushKey()}\""
             ndk {
                 abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
             }
@@ -269,6 +273,8 @@ android {
             resValue "string", "app_name", productionAppName
             buildConfigField "long", "VERSION_CODE", "${generateVersionCode()}"
             buildConfigField "String", "VERSION_NAME", "\"${generateVersionName()}\""
+            // buildConfigField "String", "CodePushDeploymentKey", "\"${generateCodePushKey()}\""
+            resValue "string", "CodePushDeploymentKey", "\"${generateCodePushKey()}\""
             ndk {
                 abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
             }
