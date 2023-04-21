@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import resScale from '@/utils/resScale';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 
 type TimeType = {
   time?: string;
@@ -25,12 +25,12 @@ export default function Time({ time }: TimeType) {
 }
 const style = StyleSheet.create({
   container: {
-    marginRight: resScale(7),
+    marginRight: layout.pad.md,
     alignItems: 'center',
     flexDirection: 'row',
   },
   iconStyle: {
-    marginRight: resScale(7),
+    marginRight: layout.pad.md,
   },
   textStyle: {
     fontFamily: fonts.family.montserrat[300],

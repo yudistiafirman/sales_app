@@ -5,6 +5,7 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import SearchAreaStyles from '../styles';
+import { layout } from '@/constants';
 
 const SearchAreaCurrentLocation = ({
   onPress,
@@ -21,7 +22,7 @@ const SearchAreaCurrentLocation = ({
     >
       <Icons
         name="my-location"
-        style={{ marginRight: resScale(12) }}
+        style={{ marginRight: layout.pad.ml }}
         size={resScale(16)}
         color={disabled ? `${colors.text.darker}40` : colors.text.darker}
       />

@@ -12,13 +12,13 @@ const LocationStyles = StyleSheet.create({
     bottom: 0,
     backgroundColor: colors.white,
     borderTopStartRadius: layout.pad.lg,
-    borderTopEndRadius: layout.pad.lg
+    borderTopEndRadius: layout.pad.lg,
   },
   coordinateDetailsOuterContainer: {
     flex: 1,
     marginHorizontal: layout.pad.lg,
     height: resScale(67),
-    marginTop: resScale(10),
+    marginTop: layout.pad.xs + layout.pad.md,
     marginBottom: layout.pad.md,
     backgroundColor: colors.tertiary,
   },

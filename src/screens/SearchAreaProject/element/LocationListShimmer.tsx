@@ -31,12 +31,12 @@ const styles = StyleSheet.create({
   iconShimmer: {
     width: resScale(18),
     height: resScale(20),
-    marginRight: resScale(11),
+    marginRight: layout.pad.ml,
   },
   titleShimmer: {
     width: resScale(108),
     height: resScale(17),
-    marginBottom: resScale(4),
+    marginBottom: layout.pad.sm,
   },
   secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
 });

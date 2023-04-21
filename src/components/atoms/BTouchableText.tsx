@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import BText from './BText';
+import { layout } from '@/constants';
 
 interface BTouchableTextProps {
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
@@ -20,7 +21,7 @@ const BTouchableTextDefaultStyle: TextStyle = {
   fontFamily: font.family.montserrat[400],
   color: colors.primary,
   fontSize: font.size.sm,
-  marginRight: resScale(14),
+  marginRight: layout.pad.ml + layout.pad.xs,
 };
 
 const BTouchableTextDefaultProps = {

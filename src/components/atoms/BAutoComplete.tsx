@@ -96,7 +96,7 @@ const styles: Styles = {
   },
   separator: {
     backgroundColor: colors.border.default,
-    paddingHorizontal: resScale(5),
+    paddingHorizontal: layout.pad.xs + layout.pad.sm,
     width: '95%',
     alignSelf: 'center',
   },

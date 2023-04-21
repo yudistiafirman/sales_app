@@ -19,7 +19,7 @@ import { resScale } from '@/utils';
 import { CAMERA, CREATE_DEPOSIT } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { CreateScheduleContext } from '@/context/CreateScheduleContext';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
 import { useDispatch } from 'react-redux';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
@@ -42,7 +42,9 @@ export default function FirstStep() {
       updateValueOnstep(
         'stepTwo',
         'availableDeposit',
-        getTotalLastDeposit(data && data.length > 0 && data[0]?.availableDeposit)
+        getTotalLastDeposit(
+          data && data.length > 0 && data[0]?.availableDeposit
+        )
       );
       updateValueOnstep('stepTwo', 'inputtedVolume', 0);
       updateValueOnstep(
@@ -193,7 +195,7 @@ const style = StyleSheet.create({
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
   },

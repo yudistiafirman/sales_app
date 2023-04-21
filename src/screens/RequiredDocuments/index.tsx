@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import { BContainer, BDivider, BForm, BLabel, BSpacer } from '@/components';
 import {
   fetchSphDocuments,
@@ -332,6 +332,6 @@ const styles = StyleSheet.create({
   fileInputShimmer: {
     width: resScale(330),
     height: resScale(30),
-    borderRadius: resScale(8),
+    borderRadius: layout.radius.md,
   },
 });

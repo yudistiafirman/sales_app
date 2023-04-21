@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   tabIndicator: {
     backgroundColor: colors.primary,
-    marginLeft: resScale(15.5),
+    marginLeft: layout.pad.lg,
   },
   tabStyle: {
     width: 'auto',

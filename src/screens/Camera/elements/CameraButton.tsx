@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
   outerShutter: {
     flex: 1,
-    borderRadius: 40,
+    borderRadius: layout.radius.xl + layout.radius.md,
     height: 68,
     width: 68,
     borderWidth: 4,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     marginTop: layout.pad.lg,
   },
   innerShutter: {
-    borderRadius: 40,
+    borderRadius: layout.radius.xl + layout.radius.md,
     height: 58,
     width: 58,
   },

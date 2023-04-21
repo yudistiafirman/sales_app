@@ -15,7 +15,7 @@ interface IProps {
 
 const containerStyle: StyleProp<ViewStyle> = {
   flex: 1,
-  padding: resScale(20),
+  padding: layout.pad.md + layout.pad.ml,
 };
 
 const makeStyle = ({

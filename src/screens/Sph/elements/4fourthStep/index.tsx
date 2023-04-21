@@ -19,7 +19,7 @@ import ProductCartModal from '../ProductOrderDetailModal';
 import { chosenProductType, ProductDataInterface } from '@/interfaces';
 import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import { SphContext } from '../context/SphContext';
 import { useNavigation } from '@react-navigation/native';
 import { SEARCH_PRODUCT, SPH } from '@/navigation/ScreenNames';
@@ -217,12 +217,12 @@ export default function FourthStep() {
 const style = StyleSheet.create({
   posRelative: {
     position: 'relative',
-    marginBottom: resScale(10),
+    marginBottom: layout.pad.xs + layout.pad.md,
   },
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
   },
