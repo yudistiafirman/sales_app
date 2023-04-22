@@ -68,6 +68,7 @@ export interface OperationsDeliveryOrdersListResponse {
   number: string;
   sealNumber?: string;
   driverId?: string;
+  quantity?: number;
   status?: 'SUBMITTED' | 'FINISHED';
   conditionTruck?: string | null;
   project?: OperationsDeliverOrderProjectResponse;

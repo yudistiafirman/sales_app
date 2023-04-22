@@ -46,7 +46,7 @@ export default function OperationList({
         item={{
           name: item?.number,
           picOrCompanyName: item?.project?.projectName,
-          unit: `${item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity} m³`,
+          unit: `${item?.quantity} m³`,
           pilStatus: undefined,
           lonlat:
             userType === ENTRY_TYPE.DRIVER
