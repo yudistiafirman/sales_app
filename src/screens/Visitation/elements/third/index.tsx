@@ -23,7 +23,7 @@ import {
   WEEK_LIST,
 } from '@/constants/dropdown';
 import ProductChip from './ProductChip';
-import { TextInput } from 'react-native-paper';
+import { RadioButton, TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -31,7 +31,7 @@ import {
   CREATE_VISITATION,
   SEARCH_PRODUCT,
 } from '@/navigation/ScreenNames';
-import { fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -200,28 +200,9 @@ const ThirdStep = () => {
       },
       value: visitationData.currentCompetitor.name,
     },
-    {
-      label: 'Apakah sudah memiliki PKS/MOU?',
-      isRequire: true,
-      isError: false,
-      type: 'textInput',
-      placeholder: 'Iya / Tidak',
-      onChange: (event) => {
-        onChangeCompetitor('mou')(event.nativeEvent.text);
-      },
-      value: visitationData.currentCompetitor.mou,
-    },
-    {
-      label: 'Apakah PKS nya ekslusif?',
-      isRequire: true,
-      isError: false,
-      type: 'textInput',
-      placeholder: 'Iya / Tidak',
-      onChange: (event) => {
-        onChangeCompetitor('exclusive')(event.nativeEvent.text);
-      },
-      value: visitationData.currentCompetitor.exclusive,
-    },
+  ];
+
+  const inputsFour: Input[] = [
     {
       label: 'Apakah ada masalah yang ditemukan dari supplier beton sekarang?',
       isRequire: false,
@@ -372,6 +353,107 @@ const ThirdStep = () => {
       <BDivider />
       <BSpacer size={'small'} />
       <BForm titleBold="500" inputs={inputsThree} />
+      <BLabel
+        isRequired
+        bold={'500'}
+        label={'Apakah sudah memiliki PKS / MOU?'}
+      />
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <RadioButton
+            value={'Iya'}
+            status={
+              visitationData.currentCompetitor &&
+              visitationData.currentCompetitor.mou?.toLowerCase() === 'iya'
+                ? 'checked'
+                : 'unchecked'
+            }
+            color={colors.primary}
+            uncheckedColor={colors.border.altGrey}
+            onPress={() => onChangeCompetitor('mou')('Iya')}
+          />
+          <BText>{'Iya'}</BText>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginStart: layout.pad.xxl,
+          }}
+        >
+          <RadioButton
+            value={'Tidak'}
+            status={
+              visitationData.currentCompetitor &&
+              visitationData.currentCompetitor.mou?.toLowerCase() === 'tidak'
+                ? 'checked'
+                : 'unchecked'
+            }
+            color={colors.primary}
+            uncheckedColor={colors.border.altGrey}
+            onPress={() => onChangeCompetitor('mou')('Tidak')}
+          />
+          <BText>{'Tidak'}</BText>
+        </View>
+      </View>
+      <BSpacer size={'extraSmall'} />
+      <BLabel isRequired bold={'500'} label={'Apakah PKS nya ekslusif?'} />
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <RadioButton
+            value={'Iya'}
+            status={
+              visitationData.currentCompetitor &&
+              visitationData.currentCompetitor.exclusive?.toLowerCase() ===
+                'iya'
+                ? 'checked'
+                : 'unchecked'
+            }
+            color={colors.primary}
+            uncheckedColor={colors.border.altGrey}
+            onPress={() => onChangeCompetitor('exclusive')('Iya')}
+          />
+          <BText>{'Iya'}</BText>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginStart: layout.pad.xxl,
+          }}
+        >
+          <RadioButton
+            value={'Tidak'}
+            status={
+              visitationData.currentCompetitor &&
+              visitationData.currentCompetitor.exclusive?.toLowerCase() ===
+                'tidak'
+                ? 'checked'
+                : 'unchecked'
+            }
+            color={colors.primary}
+            uncheckedColor={colors.border.altGrey}
+            onPress={() => onChangeCompetitor('exclusive')('Tidak')}
+          />
+          <BText>{'Tidak'}</BText>
+        </View>
+      </View>
+      <BSpacer size={'extraSmall'} />
+      <BForm titleBold="500" inputs={inputsFour} />
     </ScrollView>
   );
 };
