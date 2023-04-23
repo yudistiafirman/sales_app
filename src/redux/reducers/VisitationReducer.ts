@@ -1,4 +1,4 @@
-import { Address, PIC } from '@/interfaces';
+import { Address, Competitor, PIC } from '@/interfaces';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface VisitationGlobalState {
@@ -20,11 +20,19 @@ export interface VisitationGlobalState {
   visitationId?: string;
   existingOrderNum?: number;
   stageProject?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+  typeProject?:
+    | 'INFRASTRUKTUR'
+    | 'HIGH-RISE'
+    | 'RUMAH'
+    | 'KOMERSIAL'
+    | 'INDUSTRIAL';
   products: any[];
   estimationDate: {
     estimationWeek: number | null;
     estimationMonth: number | null;
   };
+  competitors: Competitor[];
+  currentCompetitor: Competitor;
   paymentType?: 'CBD' | 'CREDIT';
   notes: string;
   selectedDate: any;
@@ -58,9 +66,17 @@ const initialState: VisitationGlobalState = {
     formattedAddress: '',
     line2: '',
   },
+  currentCompetitor: {
+    name: '',
+    mou: '',
+    exclusive: '',
+    hope: '',
+    problem: '',
+  },
   existingLocationId: '',
   companyName: '',
   location: {},
+  competitors: [],
   pics: [],
   projectName: '',
   options: {
@@ -198,6 +214,11 @@ export const visitationSlice = createSlice({
         case 'pics':
           state.pics = payload.value;
           break;
+        case 'competitors':
+          state.competitors = payload.value;
+          break;
+        case 'currentCompetitor':
+          state.currentCompetitor = payload.value;
         case 'options':
           state.options = payload.value;
           break;
@@ -209,6 +230,9 @@ export const visitationSlice = createSlice({
           break;
         case 'stageProject':
           state.stageProject = payload.value;
+          break;
+        case 'typeProject':
+          state.typeProject = payload.value;
           break;
         case 'products':
           state.products = payload.value;

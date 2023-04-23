@@ -1,29 +1,11 @@
 import { BLabel, BSpacer } from '@/components';
 import { colors, layout } from '@/constants';
+import { STAGE_PROJECT } from '@/constants/dropdown';
 import font from '@/constants/fonts';
 import React, { useCallback } from 'react';
 import { StyleSheet, View, FlatList, Text } from 'react-native';
 
 const ProjectPhase = ({ phase }: { phase: string }) => {
-  const projectPhase = [
-    {
-      phase: 'LAND_PREP',
-      name: 'Pasang Ceker Ayam',
-    },
-    {
-      phase: 'FOUNDATION',
-      name: 'Cor lantai',
-    },
-    {
-      phase: 'FORMWORK',
-      name: 'Pasang bekisting',
-    },
-    {
-      phase: 'FINISHING',
-      name: 'Finishing',
-    },
-  ];
-
   const renderItem = useCallback(
     ({ item, index }) => {
       return (
@@ -32,7 +14,7 @@ const ProjectPhase = ({ phase }: { phase: string }) => {
             styles.faseContainer,
             {
               borderColor:
-                index === projectPhase.length - 1
+                index === STAGE_PROJECT.length - 1
                   ? colors.white
                   : colors.textInput.inActive,
             },
@@ -63,14 +45,14 @@ const ProjectPhase = ({ phase }: { phase: string }) => {
         </View>
       );
     },
-    [phase, projectPhase.length]
+    [phase, STAGE_PROJECT.length]
   );
   return (
     <View style={styles.container}>
       <BLabel bold="600" sizeInNumber={font.size.md} label="Fase Proyek" />
       <BSpacer size="extraSmall" />
       <FlatList
-        data={projectPhase}
+        data={STAGE_PROJECT}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{ paddingLeft: layout.pad.sm + 1 }}

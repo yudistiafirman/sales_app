@@ -4,6 +4,7 @@ import {
   TextStyle,
   KeyboardType,
   KeyboardTypeOptions,
+  NativeSyntheticEvent,
 } from 'react-native';
 
 import * as React from 'react';
@@ -244,6 +245,14 @@ interface CreateVisitationFourthStep {
   alasanPenolakan: string;
 }
 
+interface Competitor {
+  name: string;
+  mou: string;
+  exclusive: string;
+  problem: string;
+  hope: string;
+}
+
 interface PIC {
   id?: string;
   name?: string;
@@ -455,6 +464,7 @@ interface visitationListResponse {
   dateVisit: string;
   finishDate: string | null;
   isBooking: boolean;
+  competitors: Competitor[];
   status: 'VISIT' | 'SPH' | 'PO' | 'SCHEDULING' | 'DO' | 'REJECTED';
   address: {
     id: string;
@@ -463,6 +473,7 @@ interface visitationListResponse {
     id: string;
     name: string;
     stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+    type: 'INFRASTRUKTUR' | 'HIGH-RISE' | 'RUMAH' | 'KOMERSIAL' | 'INDUSTRIAL';
     Pics: PIC[];
     Pic: requiredPic;
     mainPic: PIC & { type?: string };
@@ -525,6 +536,7 @@ interface visitationPayload {
   products?: {
     id?: string;
   }[];
+  competitors?: Competitor[];
 }
 
 interface filesType {
@@ -550,6 +562,7 @@ interface projectPayloadType {
   companyDisplayName?: string;
   location: locationPayloadType;
   stage?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+  type?: 'INFRASTRUKTUR' | 'HIGH-RISE' | 'RUMAH' | 'KOMERSIAL' | 'INDUSTRIAL';
 }
 
 interface picPayloadType {
@@ -719,6 +732,7 @@ export type {
   CreateVisitationSecondStep,
   CreateVisitationThirdStep,
   PIC,
+  Competitor,
   NavigationProps,
   BLocationProps,
   Region,

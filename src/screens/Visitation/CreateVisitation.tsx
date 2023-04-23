@@ -92,6 +92,9 @@ function stepHandler(
 
   if (
     state?.stageProject &&
+    state?.currentCompetitor?.name !== '' &&
+    state?.currentCompetitor?.mou !== '' &&
+    state?.currentCompetitor?.exclusive !== '' &&
     state?.products?.length > 0 &&
     state?.estimationDate?.estimationMonth &&
     state?.estimationDate?.estimationWeek &&
@@ -148,6 +151,40 @@ const CreateVisitation = () => {
         updateDataVisitation({ type: 'customerType', value: 'INDIVIDU' })
       );
     }
+
+    if (existingData.project?.stage) {
+      dispatch(
+        updateDataVisitation({
+          type: 'stageProject',
+          value: existingData.project?.stage,
+        })
+      );
+    }
+
+    if (existingData.project?.type) {
+      dispatch(
+        updateDataVisitation({
+          type: 'typeProject',
+          value: existingData.project?.type,
+        })
+      );
+    }
+
+    if (existingData.competitors?.length > 0) {
+      dispatch(
+        updateDataVisitation({
+          type: 'competitors',
+          value: existingData.competitors,
+        })
+      );
+      dispatch(
+        updateDataVisitation({
+          type: 'currentCompetitor',
+          value: existingData.competitors[0],
+        })
+      );
+    }
+
     if (picList) {
       const list = picList.map((pic) => {
         if (mainPic) {
@@ -292,6 +329,9 @@ const CreateVisitation = () => {
       visitationData.stepperVisitationShouldNotFocused &&
       visitationData.step === 2 &&
       (visitationData.stageProject ||
+        visitationData.currentCompetitor?.name !== '' ||
+        visitationData.currentCompetitor?.mou !== '' ||
+        visitationData.currentCompetitor?.exclusive !== '' ||
         visitationData.products?.length <= 0 ||
         visitationData.estimationDate?.estimationMonth ||
         visitationData.estimationDate?.estimationWeek ||
