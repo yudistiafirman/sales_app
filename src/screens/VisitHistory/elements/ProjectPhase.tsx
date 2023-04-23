@@ -25,7 +25,7 @@ const ProjectPhase = ({ phase }: { phase: string }) => {
               styles.circle,
               {
                 backgroundColor:
-                  item.phase === phase
+                  item.value === phase
                     ? colors.primary
                     : colors.textInput.inActive,
               },
@@ -36,11 +36,11 @@ const ProjectPhase = ({ phase }: { phase: string }) => {
               styles.textFase,
               {
                 color:
-                  item.phase === phase ? colors.primary : colors.text.darker,
+                  item.value === phase ? colors.primary : colors.text.darker,
               },
             ]}
           >
-            {item.name}
+            {item.label}
           </Text>
         </View>
       );
