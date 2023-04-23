@@ -64,7 +64,6 @@ const SearchAreaProject = ({ route }: { route: any }) => {
           from === CUSTOMER_DETAIL
         ) {
           if (eventKey) {
-            console.log('aoaaa', sourceType);
             if (sourceType) {
               DeviceEventEmitter.emit(eventKey, {
                 coordinate: coordinate,

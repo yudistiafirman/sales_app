@@ -160,7 +160,6 @@ export default function CustomerDetail() {
     DeviceEventEmitter.addListener(
       'getCoordinateFromCustomerDetail',
       (data) => {
-        console.log('inii diaaa', data)
         if (data.sourceType === 'billing') {
           setRegion(data.coordinate);
           setIsBillingLocationVisible(true);

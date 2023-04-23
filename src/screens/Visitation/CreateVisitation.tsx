@@ -170,17 +170,83 @@ const CreateVisitation = () => {
       );
     }
 
-    if (existingData.competitors?.length > 0) {
+    if (existingData.project?.Competitors?.length > 0) {
       dispatch(
         updateDataVisitation({
           type: 'competitors',
-          value: existingData.competitors,
+          value: existingData.project?.Competitors,
         })
       );
       dispatch(
         updateDataVisitation({
           type: 'currentCompetitor',
-          value: existingData.competitors[0],
+          value: existingData.project?.Competitors[0],
+        })
+      );
+    }
+
+    if (existingData.paymentType) {
+      dispatch(
+        updateDataVisitation({
+          type: 'paymentType',
+          value: existingData.paymentType,
+        })
+      );
+    }
+
+    if (existingData.visitNotes) {
+      dispatch(
+        updateDataVisitation({
+          type: 'notes',
+          value: existingData.visitNotes,
+        })
+      );
+    }
+
+    let estimationDate = {};
+
+    if (existingData.estimationWeek) {
+      estimationDate = {
+        ...estimationDate,
+        estimationWeek: Number(existingData.estimationWeek),
+      };
+    }
+    if (existingData.estimationMonth) {
+      estimationDate = {
+        ...estimationDate,
+        estimationMonth: Number(existingData.estimationMonth),
+      };
+    }
+    if (estimationDate) {
+      dispatch(
+        updateDataVisitation({
+          type: 'estimationDate',
+          value: estimationDate,
+        })
+      );
+    }
+
+    if (existingData.products?.length > 0) {
+      let newProductIDList = [];
+      existingData.products.forEach((it) => {
+        let newProduct = {
+          id: it.productId,
+          name: it.Product?.name,
+          display_name: it.Product?.displayName,
+          properties: it.Product?.properties,
+          Category: {
+            name: it.Product?.category?.name,
+            Parent: {
+              name: it.Product?.category?.parent?.name,
+            },
+          },
+        };
+        newProductIDList.push(newProduct);
+      });
+      dispatch(
+        updateDataVisitation({
+          type: 'products',
+          value: newProductIDList,
         })
       );
     }
@@ -201,6 +267,12 @@ const CreateVisitation = () => {
         };
       });
       dispatch(updateDataVisitation({ type: 'pics', value: list }));
+    } else {
+      if (project.Pic) {
+        let selectedPic = { ...project.Pic };
+        selectedPic.isSelected = true;
+        dispatch(updateDataVisitation({ type: 'pics', value: [selectedPic] }));
+      }
     }
   }
 

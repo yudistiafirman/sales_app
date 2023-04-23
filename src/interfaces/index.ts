@@ -464,7 +464,7 @@ interface visitationListResponse {
   dateVisit: string;
   finishDate: string | null;
   isBooking: boolean;
-  competitors: Competitor[];
+  paymentType: string;
   status: 'VISIT' | 'SPH' | 'PO' | 'SCHEDULING' | 'DO' | 'REJECTED';
   address: {
     id: string;
@@ -494,7 +494,12 @@ interface visitationListResponse {
       lon?: string;
     };
     quotationLetterId?: null | string;
+    Competitors: Competitor[];
   };
+  visitNotes: string | null;
+  estimationWeek: number;
+  estimationMonth: number;
+  products: any[];
 }
 
 interface customerDataInterface {

@@ -185,7 +185,6 @@ const ThirdStep = () => {
       placeholder: 'Tulis catatan di sini',
       onChange: onChange('notes'),
       value: visitationData.notes,
-      textSize: fonts.size.sm,
     },
   ];
 
@@ -200,7 +199,6 @@ const ThirdStep = () => {
         onChangeCompetitor('name')(event.nativeEvent.text);
       },
       value: visitationData.currentCompetitor.name,
-      textSize: fonts.size.sm,
     },
     {
       label: 'Apakah sudah memiliki PKS/MOU?',
@@ -212,7 +210,6 @@ const ThirdStep = () => {
         onChangeCompetitor('mou')(event.nativeEvent.text);
       },
       value: visitationData.currentCompetitor.mou,
-      textSize: fonts.size.sm,
     },
     {
       label: 'Apakah PKS nya ekslusif?',
@@ -224,31 +221,28 @@ const ThirdStep = () => {
         onChangeCompetitor('exclusive')(event.nativeEvent.text);
       },
       value: visitationData.currentCompetitor.exclusive,
-      textSize: fonts.size.sm,
     },
     {
-      label: 'Ada masalah yang ditemui?',
+      label: 'Apakah ada masalah yang ditemukan dari supplier beton sekarang?',
       isRequire: false,
       isError: false,
-      type: 'textInput',
+      type: 'area',
       placeholder: 'Tulis masalah yang Anda temui',
       onChange: (event) => {
         onChangeCompetitor('problem')(event.nativeEvent.text);
       },
       value: visitationData.currentCompetitor.problem,
-      textSize: fonts.size.sm,
     },
     {
-      label: 'Ada yang diharapkan?',
+      label: 'Apakah ada masalah yang ditemukan dari supplier beton sekarang?',
       isRequire: false,
       isError: false,
-      type: 'textInput',
+      type: 'area',
       placeholder: 'Tulis harapan Anda',
       onChange: (event) => {
         onChangeCompetitor('hope')(event.nativeEvent.text);
       },
       value: visitationData.currentCompetitor.hope,
-      textSize: fonts.size.sm,
     },
   ];
 
