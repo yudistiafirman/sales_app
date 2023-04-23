@@ -123,6 +123,13 @@ export default class BrikApiCommon {
     );
     return url.toString();
   };
+  
+  static updateLocationAddress = (projectId: string) => {
+    const url = new URL(
+      `${API_URL}/common/m/flow/project/${projectId}/location-address`
+    );
+    return url.toString();
+  };
 
   // --------------------------------------------------AUTHENTICATION ---------------------------------------------//
 

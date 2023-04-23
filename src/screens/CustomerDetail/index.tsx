@@ -49,29 +49,43 @@ export default function CustomerDetail() {
   const route = useRoute<CustomerDetailRoute>();
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
-  const [isBillingVisible, setIsBillingVisible] = useState(false);
+  const [isBillingLocationVisible, setIsBillingLocationVisible] =
+    useState(false);
+  const [isProjectLocationVisible, setIsProjectLocationVisible] =
+    useState(false);
   const [customerData, setCustomerData] = useState<ProjectDetail>({});
-  const [address, setFormattedAddress] = useState('');
+  const [billingAddress, setFormattedBillingAddress] = useState('');
+  const [projectAddress, setFormattedProjectAddress] = useState('');
   const [region, setRegion] = useState(null);
+  const [project, setProject] = useState(null);
   const [regionExisting, setExistingRegion] = useState(null);
+  const [projectExisting, setExistingProject] = useState(null);
   const [existedVisitation, setExistingVisitation] =
     useState<visitationListResponse>(null);
   const dataNotLoadedYet = JSON.stringify(customerData) === '{}';
   const documentsNotCompleted = customerData?.ProjectDocs?.length !== 8;
-  const updatedAddress = address?.length > 0;
+  const updatedAddressBilling = billingAddress?.length > 0;
+  const updateAddressProject = projectAddress?.length > 0;
   const getProjectDetail = useCallback(
     async (projectId: string) => {
       try {
         const response = await projectGetOneById(projectId);
         setCustomerData(response.data.data);
         if (response.data.data) {
-          let region: any = {
+          let regionBilling: any = {
             formattedAddress: response.data.data.BillingAddress?.line1,
             latitude: response.data.data.BillingAddress?.lat,
             longitude: response.data.data.BillingAddress?.lon,
           };
-          setExistingRegion(region);
-          setFormattedAddress(response.data.data.BillingAddress?.line1);
+          let regionProject: any = {
+            formattedAddress: response.data.data.LocationAddress?.line1,
+            latitude: response.data.data.LocationAddress?.lat,
+            longitude: response.data.data.LocationAddress?.lon,
+          };
+          setExistingRegion(regionBilling);
+          setExistingProject(regionProject);
+          setFormattedBillingAddress(response.data.data.BillingAddress?.line1);
+          setFormattedProjectAddress(response.data.data.LocationAddress?.line1);
         }
       } catch (error) {
         console.log(error.message);
@@ -94,13 +108,20 @@ export default function CustomerDetail() {
         const response = await getProjectIndivualDetail(projectId);
         setCustomerData(response.data);
         if (response.data) {
-          let region: any = {
+          let regionBilling: any = {
             formattedAddress: response.data.BillingAddress?.line1,
             latitude: response.data.BillingAddress?.lat,
             longitude: response.data.BillingAddress?.lon,
           };
-          setExistingRegion(region);
-          setFormattedAddress(response.data.data.BillingAddress?.line1);
+          let regionProject: any = {
+            formattedAddress: response.data.LocationAddress?.line1,
+            latitude: response.data.LocationAddress?.lat,
+            longitude: response.data.LocationAddress?.lon,
+          };
+          setExistingRegion(regionBilling);
+          setExistingProject(regionProject);
+          setFormattedBillingAddress(response.data.data.BillingAddress?.line1);
+          setFormattedProjectAddress(response.data.data.LocationAddress?.line1);
         }
       } catch (error) {
         dispatch(
@@ -139,11 +160,17 @@ export default function CustomerDetail() {
     DeviceEventEmitter.addListener(
       'getCoordinateFromCustomerDetail',
       (data) => {
-        setRegion(data.coordinate);
-        setIsBillingVisible(true);
+        console.log('inii diaaa', data)
+        if (data.sourceType === 'billing') {
+          setRegion(data.coordinate);
+          setIsBillingLocationVisible(true);
+        } else {
+          setProject(data.coordinate);
+          setIsProjectLocationVisible(true);
+        }
       }
     );
-  }, [setIsBillingVisible]);
+  }, [setIsBillingLocationVisible, setIsProjectLocationVisible]);
 
   const [filledDocsCount] = useMemo((): number[] => {
     let count = 0;
@@ -171,14 +198,31 @@ export default function CustomerDetail() {
 
   return (
     <>
-      {isBillingVisible && (
+      {isBillingLocationVisible && (
         <BillingModal
-          setFormattedAddress={setFormattedAddress}
-          setIsModalVisible={setIsBillingVisible}
-          isModalVisible={isBillingVisible}
+          isBilling
+          setFormattedAddress={setFormattedBillingAddress}
+          setIsModalVisible={setIsBillingLocationVisible}
+          isModalVisible={isBillingLocationVisible}
           region={region || regionExisting}
-          isUpdate={address !== undefined && address !== '' ? true : false}
+          isUpdate={
+            billingAddress !== undefined && billingAddress !== '' ? true : false
+          }
           setRegion={setRegion}
+          projectId={customerData.id}
+        />
+      )}
+      {isProjectLocationVisible && (
+        <BillingModal
+          isBilling={false}
+          setFormattedAddress={setFormattedProjectAddress}
+          setIsModalVisible={setIsProjectLocationVisible}
+          isModalVisible={isProjectLocationVisible}
+          region={project || projectExisting}
+          isUpdate={
+            projectAddress !== undefined && projectAddress !== '' ? true : false
+          }
+          setRegion={setProject}
           projectId={customerData.id}
         />
       )}
@@ -231,13 +275,32 @@ export default function CustomerDetail() {
           <Text style={styles.partText}>Alamat Penagihan</Text>
           <BSpacer size={'extraSmall'} />
           <View style={styles.billingStyle}>
-            {updatedAddress ? (
+            {updatedAddressBilling ? (
               <UpdatedAddressWrapper
-                onPress={() => setIsBillingVisible(true)}
-                address={address}
+                onPress={() => setIsBillingLocationVisible(true)}
+                address={billingAddress}
               />
             ) : (
-              <AddNewAddressWrapper onPress={() => setIsBillingVisible(true)} />
+              <AddNewAddressWrapper
+                isBilling
+                onPress={() => setIsBillingLocationVisible(true)}
+              />
+            )}
+          </View>
+          <BSpacer size={'small'} />
+          <Text style={styles.partText}>Alamat Proyek</Text>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.billingStyle}>
+            {updateAddressProject ? (
+              <UpdatedAddressWrapper
+                onPress={() => setIsProjectLocationVisible(true)}
+                address={projectAddress}
+              />
+            ) : (
+              <AddNewAddressWrapper
+                isBilling={false}
+                onPress={() => setIsProjectLocationVisible(true)}
+              />
             )}
           </View>
           <BSpacer size={'extraSmall'} />
