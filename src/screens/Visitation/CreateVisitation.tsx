@@ -234,6 +234,8 @@ const CreateVisitation = () => {
           name: it.Product?.name,
           display_name: it.Product?.displayName,
           properties: it.Product?.properties,
+          pouringMethod: it?.pouringMethod,
+          quantity: it?.quantity,
           Category: {
             name: it.Product?.category?.name,
             Parent: {
@@ -243,6 +245,7 @@ const CreateVisitation = () => {
         };
         newProductIDList.push(newProduct);
       });
+
       dispatch(
         updateDataVisitation({
           type: 'products',

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   ScrollView,
@@ -36,6 +36,8 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
+import ProductDetailModal from './ProductDetailModal';
+import purchaseOrder from '@/redux/reducers/purchaseOrder';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
@@ -44,6 +46,8 @@ const ThirdStep = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const visitationData = useSelector((state: RootState) => state.visitation);
+  const [isVisible, setIsVisible] = useState(false);
+  const [choosenProduct, setChoosenProduct] = useState({});
 
   const onChange = (key: any) => (e: any) => {
     dispatch(
@@ -229,22 +233,11 @@ const ThirdStep = () => {
 
   const listenerCallback = useCallback(
     ({ data }: { data: any }) => {
-      const newArray = [...visitationData.products, data];
-      const uniqueArray = newArray.reduce((acc, obj) => {
-        if (!acc[obj.id]) {
-          acc[obj.id] = obj;
-        }
-        return acc;
-      }, {} as { [id: number]: any });
-      dispatch(
-        updateDataVisitation({
-          type: 'products',
-          value: Object.values(uniqueArray),
-        })
-      );
+      setIsVisible(true);
+      setChoosenProduct(data);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [visitationData.products]
+    [isVisible]
   );
 
   const deleteProduct = (index: number) => {
@@ -257,6 +250,29 @@ const ThirdStep = () => {
       })
     );
   };
+
+  const onSelectProduct = useCallback(
+    ({ quantity, pouringMethod }) => {
+      const newArray = [
+        ...visitationData.products,
+        { ...choosenProduct, quantity, pouringMethod },
+      ];
+      const uniqueArray = newArray.reduce((acc, obj) => {
+        if (!acc[obj.id]) {
+          acc[obj.id] = obj;
+        }
+        return acc;
+      }, {} as { [id: number]: any });
+      dispatch(
+        updateDataVisitation({
+          type: 'products',
+          value: Object.values(uniqueArray),
+        })
+      );
+      setIsVisible(false);
+    },
+    [choosenProduct, isVisible]
+  );
 
   useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step3');
@@ -454,6 +470,14 @@ const ThirdStep = () => {
       </View>
       <BSpacer size={'extraSmall'} />
       <BForm titleBold="500" inputs={inputsFour} />
+      <ProductDetailModal
+        isVisible={isVisible}
+        onChoose={onSelectProduct}
+        onClose={() => {
+          setChoosenProduct({});
+          setIsVisible(false);
+        }}
+      />
     </ScrollView>
   );
 };
