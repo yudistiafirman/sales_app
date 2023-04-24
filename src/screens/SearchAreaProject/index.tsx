@@ -44,6 +44,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         const { formattedAddress } = context;
         const from = route?.params?.from;
         const eventKey = route?.params?.eventKey;
+        const sourceType = route?.params?.sourceType;
         let coordinate = {
           longitude: lon,
           latitude: lat,
@@ -63,7 +64,14 @@ const SearchAreaProject = ({ route }: { route: any }) => {
           from === CUSTOMER_DETAIL
         ) {
           if (eventKey) {
-            DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
+            if (sourceType) {
+              DeviceEventEmitter.emit(eventKey, {
+                coordinate: coordinate,
+                sourceType: sourceType,
+              });
+            } else {
+              DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
+            }
           } else {
             dispatch(updateRegion(coordinate));
           }
@@ -108,6 +116,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
   const onPressCurrentLocation = () => {
     const { latitude, longitude } = longlat;
     const eventKey = route?.params?.eventKey;
+    const sourceType = route?.params?.sourceType;
 
     const coordinate = {
       longitude: longitude,
@@ -122,6 +131,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         from: route?.params?.from,
         isReadOnly: false,
         eventKey: eventKey,
+        sourceType: sourceType,
       });
     }
   };

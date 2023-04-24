@@ -118,3 +118,12 @@ export const updateBillingAddress = async (projectId: string, payload: any) => {
     true
   );
 };
+
+export const updateLocationAddress = async (projectId: string, payload: any) => {
+  return customRequest(
+    BrikApiCommon.updateLocationAddress(projectId),
+    'PUT',
+    payload,
+    true
+  );
+};
