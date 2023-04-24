@@ -234,6 +234,8 @@ const CreateVisitation = () => {
           name: it.Product?.name,
           display_name: it.Product?.displayName,
           properties: it.Product?.properties,
+          pouringMethod: it.Product?.pouringMethod,
+          quantity: it?.Product?.quantity,
           Category: {
             name: it.Product?.category?.name,
             Parent: {

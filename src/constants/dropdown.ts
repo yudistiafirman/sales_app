@@ -136,6 +136,21 @@ const PO_METHOD_LIST = [
   },
 ];
 
+const METHOD_LIST = [
+  {
+    label: 'Rigid',
+    value: 'Rigid',
+  },
+  {
+    label: 'Manual',
+    value: 'Manual',
+  },
+  {
+    label: 'Concrete Pump',
+    value: 'Concrete Pump',
+  },
+];
+
 const DRIVER_LIST = [
   {
     label: 'Bejo',
@@ -175,4 +190,5 @@ export {
   DRIVER_LIST,
   TM_CONDITION,
   PO_METHOD_LIST,
+  METHOD_LIST,
 };

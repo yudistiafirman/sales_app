@@ -137,6 +137,8 @@ function payloadMapper(
     payload.visitation.products = values.products?.map((product) => {
       return {
         id: product.id,
+        quantity: product.quantity,
+        pouringMethod: product.pouringMethod,
       };
     });
   }
