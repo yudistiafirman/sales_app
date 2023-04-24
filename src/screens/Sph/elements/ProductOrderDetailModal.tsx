@@ -5,10 +5,11 @@ import {
   TouchableOpacity,
   NativeSyntheticEvent,
   TextInputChangeEventData,
+  ScrollView,
 } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import Modal from 'react-native-modal';
-import { ProductDataInterface } from '@/interfaces';
+import { Input, ProductDataInterface } from '@/interfaces';
 import { resScale } from '@/utils';
 import { colors, fonts, layout } from '@/constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,10 +21,12 @@ import {
   BButtonPrimary,
   BText,
   BTextInput,
+  BForm,
 } from '@/components';
 import formatCurrency from '@/utils/formatCurrency';
 import { TextInput } from 'react-native-paper';
 import calcTrips from '@/utils/calcTrips';
+import { PO_METHOD_LIST } from '@/constants/dropdown';
 
 type ProductCartModalType = {
   productData: ProductDataInterface;
@@ -61,6 +64,7 @@ export default function ProductCartModal({
   const [detailOrder, setDetailOrder] = useState({
     volume: '',
     sellPrice: '',
+    method: '',
   });
 
   const calcPrice = useMemo(() => {
@@ -111,6 +115,24 @@ export default function ProductCartModal({
       };
     });
   };
+
+  const methodInput: Input[] = [
+    {
+      label: 'Metode penuangan',
+      isRequire: true,
+      type: 'dropdown',
+      value: detailOrder.method,
+      isError: detailOrder.method === '',
+      customerErrorMsg: 'Metode penuangan harus dipilih',
+      dropdown: {
+        items: PO_METHOD_LIST,
+        placeholder: 'Pilih metode penuangan',
+        onChange: (value: any) => {
+          setDetailOrder((prev) => ({ ...prev, method: value }));
+        },
+      },
+    },
+  ];
 
   return (
     <Modal style={style.modal} isVisible={isVisible}>
@@ -181,7 +203,8 @@ export default function ProductCartModal({
             </Text>
           </View>
         </View>
-        <BContainer>
+        <View style={style.outerInputContainer}>
+          <BSpacer size="extraSmall" />
           <View style={style.inputContainer}>
             <View style={style.volumeContainer}>
               <Text style={style.inputLabel}>Volume</Text>
@@ -236,37 +259,42 @@ export default function ProductCartModal({
                 placeholderTextColor={colors.textInput.placeHolder}
               />
               {
-              // !!(+detailOrder.sellPrice < productData.calcPrice) && (
-              //   <BText size="small" color="primary" bold="100">
-              //     {!detailOrder.sellPrice
-              //       ? 'Harga jual harus diisi'
-              //       : 'Harga tidak bisa lebih rendah dari Harga Jual Terendah'}
-              //   </BText>
-              // )
+                // !!(+detailOrder.sellPrice < productData.calcPrice) && (
+                //   <BText size="small" color="primary" bold="100">
+                //     {!detailOrder.sellPrice
+                //       ? 'Harga jual harus diisi'
+                //       : 'Harga tidak bisa lebih rendah dari Harga Jual Terendah'}
+                //   </BText>
+                // )
               }
             </View>
           </View>
-          <BSpacer size={'small'} />
+          <BSpacer size="extraSmall" />
           <View style={style.priceContainer}>
             <Text style={style.hargaText}>Biaya Mobilisasi</Text>
             <Text style={style.hargaText}>
               IDR {calcPrice ? formatCurrency(calcPrice) : '0'}
             </Text>
           </View>
-          <BSpacer size={'small'} />
+          <BSpacer size="extraSmall" />
+          <View>
+            <BForm titleBold="500" inputs={methodInput} />
+          </View>
+          <BSpacer size="extraSmall" />
           <View style={style.priceContainer}>
             <Text style={style.productName}>Total Harga</Text>
             <Text style={style.boldPrice}>
               IDR {formatCurrency(totalPrice)}
             </Text>
           </View>
-        </BContainer>
+          <BSpacer size="large" />
+        </View>
         <View style={style.buttonContainer}>
           <BButtonPrimary
             title="Tambah Produk"
             disable={
               // +detailOrder.sellPrice < productData.calcPrice ||
-              !detailOrder.volume
+              !detailOrder.volume || !detailOrder.method
             }
             onPress={() => {
               choseProduct((curr) => {
@@ -277,6 +305,7 @@ export default function ProductCartModal({
                   categoryId: productData.Category.id,
                   sellPrice: detailOrder.sellPrice,
                   volume: detailOrder.volume,
+                  method: detailOrder.method,
                   totalPrice: totalPrice,
                   additionalData: getAddPrice(),
                 };
@@ -306,16 +335,15 @@ const style = StyleSheet.create({
   modal: { justifyContent: 'flex-end', margin: 0 },
   modalContent: {
     backgroundColor: 'white',
-    height: resScale(550),
-    borderTopLeftRadius: layout.radius.sm,
-    borderTopRightRadius: layout.radius.sm,
+    height: '95%',
+    borderTopLeftRadius: layout.radius.lg,
+    borderTopRightRadius: layout.radius.lg,
   },
   modalHeader: {
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: layout.mainPad,
-    paddingTop: layout.mainPad,
+    padding: layout.pad.ml,
   },
   headerText: {
     color: colors.text.darker,
@@ -325,7 +353,8 @@ const style = StyleSheet.create({
   grayContent: {
     backgroundColor: colors.tertiary,
     height: resScale(250),
-    padding: layout.mainPad,
+    paddingHorizontal: layout.mainPad,
+    paddingTop: layout.mainPad,
   },
   productName: {
     fontFamily: fonts.family.montserrat[600],
@@ -349,6 +378,10 @@ const style = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  outerInputContainer: {
+    paddingHorizontal: layout.mainPad,
+    paddingTop: layout.pad.xs,
   },
   hargaJualText: {
     fontFamily: fonts.family.montserrat[500],

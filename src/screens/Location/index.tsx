@@ -68,6 +68,7 @@ const Location = () => {
     const { lon, lat, formattedAddress, postalId } = locationDetail;
     const from = route?.params?.from;
     const eventKey = route?.params?.eventKey;
+    const sourceType = route?.params?.sourceType;
     const coordinate = {
       longitude: Number(lon),
       latitude: Number(lat),
@@ -88,7 +89,14 @@ const Location = () => {
       from === CUSTOMER_DETAIL
     ) {
       if (eventKey) {
-        DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
+        if (sourceType) {
+          DeviceEventEmitter.emit(eventKey, {
+            coordinate: coordinate,
+            sourceType: sourceType,
+          });
+        } else {
+          DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
+        }
         navigation.dispatch(StackActions.pop(2));
       } else {
         navigation.navigate(TAB_ROOT, {

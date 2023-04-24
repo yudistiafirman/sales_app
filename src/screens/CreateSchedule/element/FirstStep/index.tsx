@@ -41,8 +41,8 @@ export default function FirstStep() {
       updateValueOnstep('stepOne', 'purchaseOrders', data);
       updateValueOnstep(
         'stepTwo',
-        'totalDeposit',
-        getTotalLastDeposit(data && data.length > 0 && data[0]?.totalDeposit)
+        'availableDeposit',
+        getTotalLastDeposit(data && data.length > 0 && data[0]?.availableDeposit)
       );
       updateValueOnstep('stepTwo', 'inputtedVolume', 0);
       updateValueOnstep(
@@ -77,7 +77,7 @@ export default function FirstStep() {
     } else {
       if (stateOne?.purchaseOrders && stateOne?.purchaseOrders.length > 0) {
         stateOne?.purchaseOrders?.forEach((it) => {
-          total = it.totalDeposit;
+          total = it.availableDeposit;
         });
       }
     }

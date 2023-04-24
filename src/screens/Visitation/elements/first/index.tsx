@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DeviceEventEmitter, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import MapView from 'react-native-maps';
 import debounce from 'lodash.debounce';
@@ -13,6 +13,7 @@ import {
   BForm,
   BLabel,
   BLocation,
+  BLocationDetail,
   BMarker,
   BSpacer,
   BText,
@@ -22,13 +23,8 @@ import Icons from 'react-native-vector-icons/Feather';
 import { resScale } from '@/utils';
 import { Region, Input } from '@/interfaces';
 import { updateRegion } from '@/redux/reducers/locationReducer';
-import { colors, layout } from '@/constants';
-import { useMachine } from '@xstate/react';
-import { deviceLocationMachine } from '@/machine/modules';
+import { layout } from '@/constants';
 import { getLocationCoordinates } from '@/actions/CommonActions';
-
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -36,13 +32,15 @@ import {
   setUseSearchedAddress,
   updateDataVisitation,
 } from '@/redux/reducers/VisitationReducer';
-import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
-
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import getUserCurrentLocationDetail from '@/utils/getUserCurrentLocationDetail';
+import { hasLocationPermission } from '@/utils/permissions';
 
 const FirstStep = () => {
   const { region } = useSelector((state: RootState) => state.location);
   const [isMapLoading, setIsMapLoading] = React.useState(false);
+  const [grantedLocationPermission, setGrantedLocationPermission] =
+    React.useState(false);
   const visitationData = useSelector((state: RootState) => state.visitation);
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
@@ -117,6 +115,7 @@ const FirstStep = () => {
 
   const debounceResult = React.useMemo(() => debounce(onChangeRegion, 500), []);
   React.useEffect(() => {
+    askingPermission();
     return () => {
       debounceResult.cancel();
     };
@@ -141,24 +140,50 @@ const FirstStep = () => {
     visitationData.createdLocation?.formattedAddress,
   ]);
 
-  const [state, send] = useMachine(deviceLocationMachine, {
-    actions: {
-      dispatchState: (context, _event, _meta) => {
+  const askingPermission = async () => {
+    const granted = await hasLocationPermission();
+    if (granted) {
+      setGrantedLocationPermission(granted);
+    }
+  };
+
+  React.useEffect(() => {
+    onMapReady();
+  }, [region, grantedLocationPermission]);
+
+  const onMapReady = async () => {
+    try {
+      if (grantedLocationPermission) {
+        setIsMapLoading(() => true);
+        const { result } = await getUserCurrentLocationDetail();
         const coordinate = {
-          longitude: context?.lon,
-          latitude: context?.lat,
-          formattedAddress: context?.formattedAddress,
-          PostalId: context?.PostalId,
+          longitude: Number(result?.lon),
+          latitude: Number(result?.lat),
+          formattedAddress: result?.formattedAddress,
+          PostalId: result?.PostalId,
         };
         dispatch(
-          updateDataVisitation({ type: 'createdLocation', value: context })
+          updateDataVisitation({ type: 'createdLocation', value: result })
         );
         if (region.latitude === 0) {
           dispatch(updateRegion(coordinate));
         }
-      },
-    },
-  });
+
+        setIsMapLoading(() => false);
+      } else {
+        askingPermission();
+      }
+    } catch (error) {
+      setIsMapLoading(() => false);
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          popUpText: error.message,
+          outsideClickClosePopUp: true,
+        })
+      );
+    }
+  };
 
   React.useEffect(() => {
     DeviceEventEmitter.addListener('visitationSearchCoordinate', (data) => {
@@ -170,34 +195,6 @@ const FirstStep = () => {
       DeviceEventEmitter.removeAllListeners('visitationSearchCoordinate');
     };
   }, [onChangeRegion]);
-
-  React.useEffect(() => {
-    if (state.matches('errorGettingLocation')) {
-      dispatch(
-        openPopUp({
-          popUpType: 'error',
-          popUpText: state.context.errorMessage,
-          outsideClickClosePopUp: false,
-          isRenderActions: true,
-          primaryBtnTitle: 'Ok',
-          primaryBtnAction: () => {
-            send('backToidle');
-            dispatch(closePopUp());
-          },
-        })
-      );
-    }
-  }, [state, send]);
-
-  React.useEffect(() => {
-    const isExist =
-      !visitationData.createdLocation?.lat ||
-      visitationData.createdLocation?.lon === 0;
-
-    if (isExist) {
-      send('askingPermission');
-    }
-  }, []);
 
   const nameAddress = React.useMemo(() => {
     const address = visitationData.useSearchedAddress
@@ -211,12 +208,23 @@ const FirstStep = () => {
     return 'Nama Alamat';
   }, [region.formattedAddress]);
 
+  React.useEffect(() => {
+    const isExist =
+      !visitationData.createdLocation?.lat ||
+      visitationData.createdLocation?.lon === 0;
+
+    if (isExist) {
+      onMapReady();
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={{ flex: 1 }}>
         <BLocation
           ref={mapRef}
           region={region}
+          onMapReady={onMapReady}
           onRegionChange={() =>
             dispatch(setUseSearchedAddress({ value: false }))
           }
@@ -241,51 +249,21 @@ const FirstStep = () => {
             >
               <BLabel bold="500" label={'Alamat Proyek'} isRequired />
               <BSpacer size="verySmall" />
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  paddingVertical: layout.pad.md,
-                  backgroundColor: colors.border.disabled,
-                  borderRadius: layout.radius.sm,
-                  paddingHorizontal: layout.pad.ml,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+              <BLocationDetail
+                nameAddress={nameAddress}
+                isLoading={isMapLoading}
+                formattedAddress={
+                  visitationData.useSearchedAddress
+                    ? visitationData.searchedAddress
+                    : region.formattedAddress
+                }
                 onPress={() =>
                   navigation.navigate(SEARCH_AREA, {
                     from: CREATE_VISITATION,
                     eventKey: 'visitationSearchCoordinate',
                   })
                 }
-              >
-                <View>
-                  <Icons
-                    name="map-pin"
-                    size={resScale(20)}
-                    color={colors.primary}
-                  />
-                </View>
-                <View style={{ paddingStart: layout.pad.ml, flex: 1 }}>
-                  {isMapLoading ? (
-                    <View>
-                      <ShimmerPlaceholder style={styles.titleShimmer} />
-                      <ShimmerPlaceholder style={styles.secondaryTextShimmer} />
-                    </View>
-                  ) : (
-                    <>
-                      <BLabel bold="500" label={nameAddress!} />
-                      <BSpacer size="verySmall" />
-                      <BText bold="300">
-                        {visitationData.useSearchedAddress
-                          ? visitationData.searchedAddress
-                          : region.formattedAddress
-                          ? region.formattedAddress
-                          : 'Detail Alamat'}
-                      </BText>
-                    </>
-                  )}
-                </View>
-              </TouchableOpacity>
+              />
               <BSpacer size="medium" />
               <BForm titleBold="500" inputs={inputs} />
             </BContainer>

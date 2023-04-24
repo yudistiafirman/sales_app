@@ -219,6 +219,10 @@ instance.interceptors.response.use(
           if (error.response.data.message) {
             errorMessage = error.response.data.message;
           }
+        } else {
+          if (error.message) {
+            errorMessage = error.message;
+          }
         }
         errorStatus = error.response.status;
       } else if (error.request) {

@@ -74,16 +74,39 @@ const STAGE_PROJECT = [
     value: 'LAND_PREP',
   },
   {
-    label: 'Pasang Ceker Ayam',
+    label: 'Pasang Pondasi',
     value: 'FOUNDATION',
   },
   {
-    label: 'Pemasangan Bekisting',
+    label: 'Struktur',
     value: 'FORMWORK',
   },
   {
     label: 'Finishing',
     value: 'FINISHING',
+  },
+];
+
+const TYPE_PROJECT = [
+  {
+    label: 'Infrastruktur',
+    value: 'INFRASTRUKTUR',
+  },
+  {
+    label: 'High-rise',
+    value: 'HIGH-RISE',
+  },
+  {
+    label: 'Rumah',
+    value: 'RUMAH',
+  },
+  {
+    label: 'Komersial',
+    value: 'KOMERSIAL',
+  },
+  {
+    label: 'Industrial',
+    value: 'INDUSTRIAL',
   },
 ];
 
@@ -110,6 +133,21 @@ const PO_METHOD_LIST = [
   {
     label: 'Non-Pompa',
     value: 'non-pompa',
+  },
+];
+
+const METHOD_LIST = [
+  {
+    label: 'Rigid',
+    value: 'Rigid',
+  },
+  {
+    label: 'Manual',
+    value: 'Manual',
+  },
+  {
+    label: 'Concrete Pump',
+    value: 'Concrete Pump',
   },
 ];
 
@@ -147,8 +185,10 @@ export {
   MONTH_LIST,
   WEEK_LIST,
   STAGE_PROJECT,
+  TYPE_PROJECT,
   VEHICLE_LIST,
   DRIVER_LIST,
   TM_CONDITION,
   PO_METHOD_LIST,
+  METHOD_LIST,
 };
