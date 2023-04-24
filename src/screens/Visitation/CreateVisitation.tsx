@@ -296,26 +296,26 @@ const CreateVisitation = () => {
       dispatch(updateExistingVisitationID(existingVisitation?.id));
       populateData(existingVisitation);
       const { project } = existingVisitation;
-      const { locationAddress } = project;
+      const { LocationAddress } = project;
       dispatch(
         updateDataVisitation({
           type: 'existingLocationId',
-          value: locationAddress?.id,
+          value: LocationAddress?.id,
         })
       );
-      if (locationAddress) {
-        if (locationAddress?.lon && locationAddress?.lat) {
-          const longitude = +locationAddress?.lon;
-          const latitude = +locationAddress?.lat;
+      if (LocationAddress) {
+        if (LocationAddress?.lon && LocationAddress?.lat) {
+          const longitude = +LocationAddress?.lon;
+          const latitude = +LocationAddress?.lat;
           dispatch(
             updateRegion({
-              formattedAddress: locationAddress?.line1,
+              formattedAddress: LocationAddress?.line1,
               latitude: latitude,
               longitude: longitude,
               lat: latitude,
               long: latitude,
               PostalId: undefined,
-              line2: locationAddress?.line2,
+              line2: LocationAddress?.line2,
             })
           );
         }
