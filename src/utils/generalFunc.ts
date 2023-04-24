@@ -185,6 +185,9 @@ export const getSuccessMsgFromAPI = (
       case 'billing-address':
         finalText += 'alamat penagihan';
         break;
+      case 'location-address':
+        finalText += 'alamat proyek';
+        break;
       case 'login':
         finalText = 'Berhasil login';
         break;

@@ -48,8 +48,9 @@ export type RootStackParamList = {
     isReadOnly: boolean;
     from: string;
     eventKey?: string;
+    sourceType?: string;
   };
-  SEARCH_AREA: { from?: string; eventKey?: string };
+  SEARCH_AREA: { from?: string; eventKey?: string; sourceType?: string };
   CALENDAR: { useTodayMinDate: boolean };
   TRANSACTION_DETAIL: { title: string; data: any; type: string };
   CREATE_SCHEDULE: undefined;

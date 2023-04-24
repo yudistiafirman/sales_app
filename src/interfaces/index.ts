@@ -4,6 +4,7 @@ import {
   TextStyle,
   KeyboardType,
   KeyboardTypeOptions,
+  NativeSyntheticEvent,
 } from 'react-native';
 
 import * as React from 'react';
@@ -244,6 +245,14 @@ interface CreateVisitationFourthStep {
   alasanPenolakan: string;
 }
 
+interface Competitor {
+  name: string;
+  mou: string;
+  exclusive: string;
+  problem: string;
+  hope: string;
+}
+
 interface PIC {
   id?: string;
   name?: string;
@@ -299,6 +308,9 @@ interface BLocationProps {
   onRegionChange?:
     | ((region: Region & LatLang, details: Details) => void)
     | undefined;
+  onMapReady?:
+    | ((event?: NativeSyntheticEvent<{}> | undefined) => void)
+    | undefined;
   CustomMarker?: React.ReactNode | undefined;
   isUninteractable?: boolean;
   formattedAddress?: string;
@@ -343,6 +355,7 @@ interface chosenProductType {
   sellPrice: string;
   volume: string;
   totalPrice: number;
+  method: string;
   additionalData: {
     distance: {
       id: string;
@@ -451,6 +464,7 @@ interface visitationListResponse {
   dateVisit: string;
   finishDate: string | null;
   isBooking: boolean;
+  paymentType: string;
   status: 'VISIT' | 'SPH' | 'PO' | 'SCHEDULING' | 'DO' | 'REJECTED';
   address: {
     id: string;
@@ -459,6 +473,7 @@ interface visitationListResponse {
     id: string;
     name: string;
     stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+    type: 'INFRASTRUKTUR' | 'HIGH-RISE' | 'RUMAH' | 'KOMERSIAL' | 'INDUSTRIAL';
     Pics: PIC[];
     Pic: requiredPic;
     mainPic: PIC & { type?: string };
@@ -479,7 +494,12 @@ interface visitationListResponse {
       lon?: string;
     };
     quotationLetterId?: null | string;
+    Competitors: Competitor[];
   };
+  visitNotes: string | null;
+  estimationWeek: number;
+  estimationMonth: number;
+  products: any[];
 }
 
 interface customerDataInterface {
@@ -521,6 +541,7 @@ interface visitationPayload {
   products?: {
     id?: string;
   }[];
+  competitors?: Competitor[];
 }
 
 interface filesType {
@@ -546,6 +567,7 @@ interface projectPayloadType {
   companyDisplayName?: string;
   location: locationPayloadType;
   stage?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+  type?: 'INFRASTRUKTUR' | 'HIGH-RISE' | 'RUMAH' | 'KOMERSIAL' | 'INDUSTRIAL';
 }
 
 interface picPayloadType {
@@ -620,6 +642,7 @@ interface requestedProductsType {
   productId: string;
   categoryId: string;
   offeringPrice: number;
+  withPump: boolean;
   quantity: number;
   productName: string;
   productUnit: string;
@@ -714,6 +737,7 @@ export type {
   CreateVisitationSecondStep,
   CreateVisitationThirdStep,
   PIC,
+  Competitor,
   NavigationProps,
   BLocationProps,
   Region,

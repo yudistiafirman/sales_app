@@ -144,7 +144,8 @@ const styles = StyleSheet.create({
     paddingTop: layout.pad.md,
   },
   cameraBtn: {
-    position: 'absolute',
+    // position: 'absolute',
+    height: resScale(120),
     left: 0,
     right: 0,
     bottom: 0,
@@ -153,10 +154,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   outerShutter: {
-    flex: 1,
-    borderRadius: 40,
-    height: 68,
-    width: 68,
+    // flex: 1,
+    borderRadius: resScale(40),
+    height: resScale(68),
+    width: resScale(68),
     borderWidth: 4,
     borderColor: 'white',
     justifyContent: 'center',
@@ -165,9 +166,9 @@ const styles = StyleSheet.create({
     marginTop: layout.pad.lg,
   },
   innerShutter: {
-    borderRadius: 40,
-    height: 58,
-    width: 58,
+    borderRadius: resScale(40),
+    height: resScale(58),
+    width: resScale(58),
   },
 });
 

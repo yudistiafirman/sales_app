@@ -55,7 +55,7 @@ function RenderModal({
   if (!selectedProduct) {
     return null;
   }
-  let prevData = { volume: '', sellPrice: '' };
+  let prevData = { volume: '', sellPrice: '', method: '' };
   const existingDataIndex = chosenProducts.findIndex(
     (data) => data.product.id === selectedProduct.id
   );
@@ -63,6 +63,7 @@ function RenderModal({
   if (existingDataIndex !== -1) {
     prevData.sellPrice = chosenProducts[existingDataIndex].sellPrice;
     prevData.volume = chosenProducts[existingDataIndex].volume;
+    prevData.method = chosenProducts[existingDataIndex].method;
     // productDataProp = chosenProducts[existingDataIndex].product;
   }
 

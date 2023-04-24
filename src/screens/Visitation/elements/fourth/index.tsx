@@ -137,6 +137,8 @@ function payloadMapper(
     payload.visitation.products = values.products?.map((product) => {
       return {
         id: product.id,
+        quantity: product.quantity,
+        pouringMethod: product.pouringMethod,
       };
     });
   }
@@ -150,6 +152,15 @@ function payloadMapper(
   }
   if (values.stageProject) {
     payload.project.stage = values.stageProject;
+  }
+  if (values.typeProject) {
+    payload.project.type = values.typeProject;
+  }
+  if (values.competitors?.length > 0) {
+    payload.visitation.competitors = values.competitors;
+  }
+  if (values.currentCompetitor) {
+    payload.visitation.competitors = [values.currentCompetitor];
   }
   payload.visitation.isBooking = type === 'VISIT' ? true : false;
 

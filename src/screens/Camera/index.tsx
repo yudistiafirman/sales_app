@@ -164,19 +164,21 @@ const CameraScreen = () => {
     <View style={styles.parent}>
       <SafeAreaView style={styles.container}>
         <View style={styles.containerCamera}>
-          {device && (
-            <Camera
-              ref={camera}
-              style={styles.camera}
-              device={device}
-              isActive={isFocused}
-              photo
-              enableHighQualityPhotos={enableHighQuality ? true : false}
-              enableZoomGesture
-              hdr={enableHDR ? true : false}
-              lowLightBoost={enableLowBoost}
-            />
-          )}
+          <View style={{ flex: 1 }}>
+            {device && (
+              <Camera
+                ref={camera}
+                style={styles.camera}
+                device={device}
+                isActive={isFocused}
+                photo
+                enableHighQualityPhotos={enableHighQuality ? true : false}
+                enableZoomGesture
+                hdr={enableHDR ? true : false}
+                lowLightBoost={enableLowBoost}
+              />
+            )}
+          </View>
           <HeaderButton
             onPressFlashlight={() => onEnableFlashlight(!enableFlashlight)}
             onPressHDR={() => onEnableHDR(!enableHDR)}

@@ -266,11 +266,11 @@ const PriceList = () => {
       )}
 
       <Tnc isVisible={visibleTnc} onCloseTnc={() => setVisibleTnc(false)} />
-      <BAlert
+      {/* <BAlert
         isVisible={state.matches('unreachable')}
         type="warning"
         onClose={() => send('hideWarning')}
-      />
+      /> */}
     </SafeAreaView>
   );
 };
