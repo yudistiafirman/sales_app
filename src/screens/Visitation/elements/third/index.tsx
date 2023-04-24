@@ -213,8 +213,8 @@ const ThirdStep = () => {
       isError: false,
       type: 'area',
       placeholder: 'Tulis masalah yang Anda temui',
-      onChange: (event) => {
-        onChangeCompetitor('problem')(event.nativeEvent.text);
+      onChange: (val) => {
+        onChangeCompetitor('problem')(val);
       },
       value: visitationData.currentCompetitor.problem,
     },
@@ -224,8 +224,8 @@ const ThirdStep = () => {
       isError: false,
       type: 'area',
       placeholder: 'Tulis harapan Anda',
-      onChange: (event) => {
-        onChangeCompetitor('hope')(event.nativeEvent.text);
+      onChange: (val) => {
+        onChangeCompetitor('hope')(val);
       },
       value: visitationData.currentCompetitor.hope,
     },
