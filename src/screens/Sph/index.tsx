@@ -38,6 +38,7 @@ import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { resScale } from '@/utils';
 import { RootState } from '@/redux/store';
 import {
+  resetSPHState,
   resetStepperFocused,
   setStepperFocused,
   updateDistanceFromLegok,
@@ -242,6 +243,7 @@ function SphContent() {
 
   async function getProjectById(projectId: string) {
     try {
+      dispatch(resetSPHState());
       dispatch(
         openPopUp({
           popUpType: 'loading',
