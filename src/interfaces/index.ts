@@ -355,7 +355,7 @@ interface chosenProductType {
   sellPrice: string;
   volume: string;
   totalPrice: number;
-  method: string;
+  pouringMethod: string;
   additionalData: {
     distance: {
       id: string;
@@ -642,7 +642,7 @@ interface requestedProductsType {
   productId: string;
   categoryId: string;
   offeringPrice: number;
-  withPump: boolean;
+  pouringMethod: string;
   quantity: number;
   productName: string;
   productUnit: string;

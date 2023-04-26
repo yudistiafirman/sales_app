@@ -219,7 +219,7 @@ const ThirdStep = () => {
       value: visitationData.currentCompetitor.problem,
     },
     {
-      label: 'Apakah ada masalah yang ditemukan dari supplier beton sekarang?',
+      label: 'Harapan apa yang diinginkan dari BRIK?',
       isRequire: false,
       isError: false,
       type: 'area',
@@ -355,14 +355,13 @@ const ThirdStep = () => {
                   category={val.Category}
                   onDelete={() => deleteProduct(index)}
                 />
-                <BSpacer size="extraSmall" />
               </React.Fragment>
             ))}
           </ScrollView>
-          <BSpacer size="medium" />
+          <BSpacer size="verySmall" />
         </>
       ) : (
-        <BSpacer size="extraSmall" />
+        <BSpacer size="verySmall" />
       )}
       <BForm titleBold="500" inputs={inputsTwo} />
       <BSpacer size={'verySmall'} />
@@ -420,7 +419,7 @@ const ThirdStep = () => {
         </View>
       </View>
       <BSpacer size={'extraSmall'} />
-      <BLabel isRequired bold={'500'} label={'Apakah PKS nya ekslusif?'} />
+      <BLabel isRequired bold={'500'} label={'Apakah PKS-nya Ekslusif?'} />
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View
           style={{

@@ -76,7 +76,7 @@ function payloadMapper(sphState: SphStateInterface) {
         categoryId: product.categoryId,
         offeringPrice: +product.sellPrice,
         quantity: +product.volume,
-        withPump: product.method === 'pompa',
+        pouringMethod: product.pouringMethod,
         productName: product.product.name,
         productUnit: 'm3',
       };

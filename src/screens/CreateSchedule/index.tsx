@@ -93,7 +93,10 @@ const CreateScheduleScreen = () => {
   });
 
   useHeaderTitleChanged({
-    title: values.isSearchingPurchaseOrder === true ? 'Cari PT / Proyek' : 'Buat Jadwal',
+    title:
+      values.isSearchingPurchaseOrder === true
+        ? 'Cari PT / Proyek'
+        : 'Buat Jadwal',
   });
 
   useFocusEffect(
@@ -159,7 +162,7 @@ const CreateScheduleScreen = () => {
             values.stepTwo?.deliveryDate + ' ' + values.stepTwo?.deliveryTime,
             'DD/MM/yyyy HH:mm'
           ).valueOf(), // date + time
-          withPump: values.stepTwo?.method === 'pompa' ? true : false,
+          pouringMethod: values.stepTwo?.method,
           consecutive:
             values.stepTwo?.isConsecutive !== undefined
               ? values.stepTwo?.isConsecutive
