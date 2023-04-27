@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   DeviceEventEmitter,
+  Dimensions,
 } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
@@ -19,7 +20,7 @@ import ProductCartModal from '../ProductOrderDetailModal';
 import { chosenProductType, ProductDataInterface } from '@/interfaces';
 import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import { SphContext } from '../context/SphContext';
 import { useNavigation } from '@react-navigation/native';
 import { SEARCH_PRODUCT, SPH } from '@/navigation/ScreenNames';
@@ -30,6 +31,8 @@ import {
   setStepperFocused,
   updateChosenProducts,
 } from '@/redux/reducers/SphReducer';
+import { styles } from '@/screens/Transaction/element/TransactionListCard';
+const { width } = Dimensions.get('window');
 
 interface RenderModalType {
   selectedProduct: ProductDataInterface | null;
@@ -173,6 +176,9 @@ export default function FourthStep() {
           <FlatList
             data={chosenProducts}
             keyExtractor={(item) => item.product.id}
+            ListFooterComponent={
+              <View style={{ width: resScale(160), height: resScale(160) }} />
+            }
             renderItem={({ item, index }) => {
               return (
                 <BProductCard
@@ -193,20 +199,22 @@ export default function FourthStep() {
             ItemSeparatorComponent={renderSeparator}
           />
         </View>
-        <BBackContinueBtn
-          onPressBack={() => {
-            if (setCurrentPosition) {
-              setCurrentPosition(2);
-            }
-          }}
-          onPressContinue={() => {
-            if (setCurrentPosition) {
-              dispatch(setStepperFocused(4));
-              setCurrentPosition(4);
-            }
-          }}
-          disableContinue={productsRedux.length === 0}
-        />
+        <View style={style.backContinueWrapper}>
+          <BBackContinueBtn
+            onPressBack={() => {
+              if (setCurrentPosition) {
+                setCurrentPosition(2);
+              }
+            }}
+            onPressContinue={() => {
+              if (setCurrentPosition) {
+                dispatch(setStepperFocused(4));
+                setCurrentPosition(4);
+              }
+            }}
+            disableContinue={productsRedux.length === 0}
+          />
+        </View>
       </View>
 
       {/* <Text>ini step 4</Text> */}
@@ -234,5 +242,11 @@ const style = StyleSheet.create({
   searchModeContainer: {
     flex: 1,
     justifyContent: 'space-between',
+  },
+  backContinueWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    alignSelf: 'center',
+    width: width - layout.pad.xl,
   },
 });
