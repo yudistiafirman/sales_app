@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
-import resScale, { verticalScale } from '@/utils/resScale';
+import resScale from '@/utils/resScale';
 import DateDaily from './elements/DateDaily';
 import BQuickAction from '@/components/organism/BQuickActionMenu';
 import BottomSheet from '@gorhom/bottom-sheet';
