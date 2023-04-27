@@ -73,10 +73,6 @@ import { resetRegion } from '@/redux/reducers/locationReducer';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
 const { height, width } = Dimensions.get('window');
-console.log('ini height', height);
-const initialSnapPoints = (+height - width) / 5;
-
-console.log(initialSnapPoints);
 
 const Beranda = () => {
   const {
