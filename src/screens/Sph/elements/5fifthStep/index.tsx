@@ -18,7 +18,7 @@ import {
 } from '@/components';
 import { BVisitationCard } from '@/components';
 import { resScale } from '@/utils';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import {
   deliveryAndDistance,
   Input,
@@ -479,6 +479,6 @@ const style = StyleSheet.create({
   produkLabel: {
     borderBottomWidth: 1,
     borderBottomColor: colors.border.altGrey,
-    paddingBottom: resScale(5),
+    paddingBottom: layout.pad.sm,
   },
 });

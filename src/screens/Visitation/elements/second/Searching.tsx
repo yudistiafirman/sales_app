@@ -19,6 +19,7 @@ import {
   updateShouldScrollView,
 } from '@/redux/reducers/VisitationReducer';
 import { resScale } from '@/utils';
+import { layout } from '@/constants';
 
 interface IProps {
   onSearch: (search: boolean) => void;
@@ -245,7 +246,7 @@ const style = StyleSheet.create({
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
   },

@@ -1,3 +1,4 @@
+import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
@@ -38,7 +39,7 @@ const BSearchBarDefaultTextStyle = {
 };
 
 const BSearchBarDefaultContainerStyle = {
-  borderRadius: resScale(4),
+  borderRadius: layout.radius.sm,
   height: resScale(40),
 };
 

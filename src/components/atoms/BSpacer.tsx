@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { resScale } from '@/utils';
 import { View, StyleProp, ViewStyle } from 'react-native';
+import { layout } from '@/constants';
 
 interface IProps {
   size:
@@ -22,7 +23,7 @@ const makeStyle = ({ size }: IProps): ViewStyle => {
   if (size === 'verySmall') {
     return {
       ...styles,
-      margin: resScale(3),
+      margin: layout.pad.xs,
     };
   }
 

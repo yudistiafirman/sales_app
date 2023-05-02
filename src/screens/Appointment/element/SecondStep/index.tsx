@@ -14,7 +14,7 @@ import { useAppointmentData } from '@/hooks';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { selectedDateType } from '@/screens/Visitation/elements/fourth';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { colors } from '@/constants';
+import { colors, layout } from '@/constants';
 
 const SecondStep = () => {
   const [values, dispatchValue] = useAppointmentData();
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     display: 'flex',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.pad.sm,
     height: resScale(45),
     zIndex: 2,
   },

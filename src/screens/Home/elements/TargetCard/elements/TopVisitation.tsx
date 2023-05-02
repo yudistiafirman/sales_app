@@ -6,6 +6,7 @@ import resScale from '@/utils/resScale';
 import colors from '@/constants/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { layout } from '@/constants';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -49,6 +50,6 @@ const style = StyleSheet.create({
   },
 
   shimmerStyle: {
-    borderRadius: resScale(8),
+    borderRadius: layout.radius.md,
   },
 });

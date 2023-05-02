@@ -36,10 +36,10 @@ const makeStyle = ({ isOption, border }: IProps) => {
     _style = {
       container: {
         ...(_style.container as Object),
-        borderWidth: 2,
+        borderWidth: resScale(2),
         borderColor: colors.border.default,
-        paddingHorizontal: resScale(20),
-        paddingVertical: resScale(10),
+        paddingHorizontal: layout.pad.md + layout.pad.ml,
+        paddingVertical: layout.pad.md + layout.pad.xs,
       },
     };
   }

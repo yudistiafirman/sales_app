@@ -62,7 +62,7 @@ const styles: Styles = {
   errorPicContainer: {
     width: resScale(213),
     height: resScale(40),
-    borderRadius: layout.pad.xs + layout.pad.sm,
+    borderRadius: layout.radius.xs + layout.radius.sm,
     backgroundColor: colors.status.errorPic,
     justifyContent: 'center',
     alignItems: 'center',
@@ -306,7 +306,7 @@ const renderInput = (
               placeholder={placeholder}
               style={[
                 textStyles,
-                Platform.OS !== 'android' && { minHeight: 40 },
+                Platform.OS !== 'android' && { minHeight: resScale(40) },
               ]}
             />
           </View>
@@ -539,7 +539,7 @@ const renderInput = (
                 forceTextInputFocus={false}
                 icon={LeftIcon}
                 style={{
-                  marginTop: 3,
+                  marginTop: layout.pad.xs,
                 }}
               />
             )
@@ -548,7 +548,7 @@ const renderInput = (
             textStyles,
             disableColor && {
               backgroundColor: disableColor,
-              borderRadius: 4,
+              borderRadius: layout.radius.sm,
               borderColor: colors.textInput.placeHolder,
               borderWidth: 1,
             },
@@ -599,7 +599,7 @@ const renderInput = (
                 forceTextInputFocus={false}
                 icon={LeftIcon}
                 style={{
-                  marginTop: 3,
+                  marginTop: layout.pad.xs,
                 }}
               />
             )

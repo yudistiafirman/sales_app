@@ -31,13 +31,12 @@ import {
   CREATE_VISITATION,
   SEARCH_PRODUCT,
 } from '@/navigation/ScreenNames';
-import { colors, fonts, layout } from '@/constants';
+import { colors, layout } from '@/constants';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
 import ProductDetailModal from './ProductDetailModal';
-import purchaseOrder from '@/redux/reducers/purchaseOrder';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
@@ -491,7 +490,7 @@ const styles = StyleSheet.create({
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
     // backgroundColor: 'red',

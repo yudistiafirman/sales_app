@@ -33,7 +33,7 @@ export default function BGallery({
         <View
           style={[
             style.container,
-            item.attachType ? { marginBottom: resScale(25) } : {},
+            item.attachType ? { marginBottom: layout.pad.ml * 2 } : {},
           ]}
         >
           {item.file === null && addMorePict && (

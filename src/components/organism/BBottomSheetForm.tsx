@@ -49,7 +49,9 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
   function renderChild() {
     if (!children) {
       return (
-        <BottomSheetScrollView style={{ marginBottom: resScale(20) }}>
+        <BottomSheetScrollView
+          style={{ marginBottom: layout.pad.ml + layout.pad.xs }}
+        >
           <BForm spacer={'extraSmall'} titleBold="500" inputs={inputs} />
         </BottomSheetScrollView>
       );
@@ -59,7 +61,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
         {children}
         <BottomSheetScrollView
           nestedScrollEnabled={true}
-          style={{ marginBottom: resScale(20) }}
+          style={{ marginBottom: layout.pad.ml + layout.pad.xs }}
         >
           <BForm spacer={'extraSmall'} titleBold="500" inputs={inputs} />
         </BottomSheetScrollView>
