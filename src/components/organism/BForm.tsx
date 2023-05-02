@@ -770,7 +770,9 @@ const renderInput = (
           </>
         )}
         <BPicList
-          isOption={value?.length > 1}
+          isOption={
+            label?.toLowerCase() === 'kompetitor' ? false : value?.length > 1
+          }
           data={value}
           onSelect={onSelect!}
           isCompetitor={label?.toLowerCase() === 'kompetitor' ? true : false}
