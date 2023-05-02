@@ -238,7 +238,7 @@ interface CreateVisitationThirdStep {
   notes: string;
 }
 
-interface CreateVisitationFourthStep {
+interface CreateVisitationFifthStep {
   selectedDate: any;
   images: any[];
   kategoriAlasan?: 'FINISHED' | 'MOU_COMPETITOR';
@@ -746,7 +746,7 @@ export type {
   AdditionalPricesInterface,
   productParentInterface,
   ProductDataInterface,
-  CreateVisitationFourthStep,
+  CreateVisitationFifthStep,
   visitationListResponse,
   customerDataInterface,
   locationPayloadType,

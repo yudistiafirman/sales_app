@@ -742,7 +742,7 @@ const renderInput = (
           <>
             <View style={[styles.optionContainer]}>
               <BText sizeInNumber={fonts.size.md} bold="600">
-                PIC
+                {label}
               </BText>
               <BText
                 bold="500"
@@ -750,7 +750,7 @@ const renderInput = (
                 color="primary"
                 onPress={onChange}
               >
-                + Tambah PIC
+                {'+ Tambah ' + label}
               </BText>
             </View>
             <BSpacer size="verySmall" />
@@ -773,6 +773,7 @@ const renderInput = (
           isOption={value?.length > 1}
           data={value}
           onSelect={onSelect!}
+          isCompetitor={label?.toLowerCase() === 'kompetitor' ? true : false}
         />
       </View>
     );

@@ -189,6 +189,9 @@ const FormSO = () => {
     }, [])
   );
 
+  const filteredPhotoFiles = soData.photoFiles?.filter(
+    (it) => it?.file !== null
+  );
   return (
     <View style={{ flex: 1, padding: layout.pad.lg }}>
       <FlatList
@@ -214,6 +217,7 @@ const FormSO = () => {
         isContinueIcon={false}
         continueText={'Upload'}
         backText={'Kembali'}
+        disableContinue={!(filteredPhotoFiles?.length > 0)}
       />
       <PopUpQuestion
         isVisible={isPopupVisible}

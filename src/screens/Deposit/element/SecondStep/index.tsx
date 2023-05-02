@@ -78,7 +78,7 @@ export default function SecondStep() {
     let total: number = 0;
     if (stateTwo?.purchaseOrders && stateTwo?.purchaseOrders.length > 0) {
       stateTwo?.purchaseOrders?.forEach((it) => {
-        total = it.totalDeposit;
+        total = it.availableDeposit;
       });
     }
     return total;
