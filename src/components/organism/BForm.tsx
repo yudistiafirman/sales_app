@@ -306,7 +306,7 @@ const renderInput = (
               placeholder={placeholder}
               style={[
                 textStyles,
-                Platform.OS !== 'android' && { minHeight: 40 },
+                Platform.OS !== 'android' && { minHeight: resScale(40) },
               ]}
             />
           </View>
