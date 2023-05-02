@@ -19,12 +19,12 @@ import moment from 'moment';
 import { Button, Dialog, Portal, TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
 import {
-  BBottomSheet,
   BSearchBar,
   BSpacer,
   BText,
   PopUpQuestion,
   BCommonSearchList,
+  BBottomSheet,
 } from '@/components';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
@@ -72,8 +72,7 @@ import { bStorage } from '@/actions';
 import { resetRegion } from '@/redux/reducers/locationReducer';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
-const { height } = Dimensions.get('window');
-const initialSnapPoints = (+height.toFixed() - 115) / 10;
+const { height, width } = Dimensions.get('window');
 
 const Beranda = () => {
   const {
@@ -101,7 +100,7 @@ const Beranda = () => {
   const [isTargetLoading, setIsTargetLoading] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
   const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
-  const [snapPoints] = React.useState([`${initialSnapPoints}%`, '91%', '100%']); //setSnapPoints
+
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isError, setIsError] = React.useState(false);
@@ -115,6 +114,11 @@ const Beranda = () => {
   const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] =
     React.useState(false);
   const visitationData = useSelector((state: RootState) => state.visitation);
+  const initialSnapPoints =
+    height > 890
+      ? height - width + layout.pad.xxl
+      : height - width + layout.pad.xxl + layout.pad.md;
+  const snapPoints = React.useMemo(() => [initialSnapPoints, '100%'], []);
 
   useHeaderShow({
     isHeaderShown: !isModalVisible,
@@ -167,6 +171,7 @@ const Beranda = () => {
       });
       setIsTargetLoading(false);
     } catch (err) {
+      console.log('error catch 1:: ', err);
       setIsTargetLoading(false);
       dispatch(
         openPopUp({
@@ -226,6 +231,7 @@ const Beranda = () => {
         }
         setIsLoading(false);
       } catch (error) {
+        console.log('error catch 2:: ', error);
         setIsLoading(false);
         setIsError(true);
         setErrorMessage(error.message);
@@ -557,6 +563,7 @@ const Beranda = () => {
         });
       }
     } catch (error) {
+      console.log('error catch 3:: ', error);
       dispatch(
         openPopUp({
           popUpType: 'error',

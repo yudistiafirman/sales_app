@@ -92,6 +92,9 @@ function stepHandler(
 
   if (
     state?.stageProject &&
+    state?.currentCompetitor?.name !== '' &&
+    state?.currentCompetitor?.mou !== '' &&
+    state?.currentCompetitor?.exclusive !== '' &&
     state?.products?.length > 0 &&
     state?.estimationDate?.estimationMonth &&
     state?.estimationDate?.estimationWeek &&
@@ -148,6 +151,109 @@ const CreateVisitation = () => {
         updateDataVisitation({ type: 'customerType', value: 'INDIVIDU' })
       );
     }
+
+    if (existingData.project?.stage) {
+      dispatch(
+        updateDataVisitation({
+          type: 'stageProject',
+          value: existingData.project?.stage,
+        })
+      );
+    }
+
+    if (existingData.project?.type) {
+      dispatch(
+        updateDataVisitation({
+          type: 'typeProject',
+          value: existingData.project?.type,
+        })
+      );
+    }
+
+    if (existingData.project?.Competitors?.length > 0) {
+      dispatch(
+        updateDataVisitation({
+          type: 'competitors',
+          value: existingData.project?.Competitors,
+        })
+      );
+      dispatch(
+        updateDataVisitation({
+          type: 'currentCompetitor',
+          value: existingData.project?.Competitors[0],
+        })
+      );
+    }
+
+    if (existingData.paymentType) {
+      dispatch(
+        updateDataVisitation({
+          type: 'paymentType',
+          value: existingData.paymentType,
+        })
+      );
+    }
+
+    if (existingData.visitNotes) {
+      dispatch(
+        updateDataVisitation({
+          type: 'notes',
+          value: existingData.visitNotes,
+        })
+      );
+    }
+
+    let estimationDate = {};
+
+    if (existingData.estimationWeek) {
+      estimationDate = {
+        ...estimationDate,
+        estimationWeek: Number(existingData.estimationWeek),
+      };
+    }
+    if (existingData.estimationMonth) {
+      estimationDate = {
+        ...estimationDate,
+        estimationMonth: Number(existingData.estimationMonth),
+      };
+    }
+    if (estimationDate) {
+      dispatch(
+        updateDataVisitation({
+          type: 'estimationDate',
+          value: estimationDate,
+        })
+      );
+    }
+
+    if (existingData.products?.length > 0) {
+      let newProductIDList = [];
+      existingData.products.forEach((it) => {
+        let newProduct = {
+          id: it.productId,
+          name: it.Product?.name,
+          display_name: it.Product?.displayName,
+          properties: it.Product?.properties,
+          pouringMethod: it?.pouringMethod,
+          quantity: it?.quantity,
+          Category: {
+            name: it.Product?.category?.name,
+            Parent: {
+              name: it.Product?.category?.parent?.name,
+            },
+          },
+        };
+        newProductIDList.push(newProduct);
+      });
+
+      dispatch(
+        updateDataVisitation({
+          type: 'products',
+          value: newProductIDList,
+        })
+      );
+    }
+
     if (picList) {
       const list = picList.map((pic) => {
         if (mainPic) {
@@ -164,6 +270,12 @@ const CreateVisitation = () => {
         };
       });
       dispatch(updateDataVisitation({ type: 'pics', value: list }));
+    } else {
+      if (project.Pic) {
+        let selectedPic = { ...project.Pic };
+        selectedPic.isSelected = true;
+        dispatch(updateDataVisitation({ type: 'pics', value: [selectedPic] }));
+      }
     }
   }
 
@@ -184,26 +296,26 @@ const CreateVisitation = () => {
       dispatch(updateExistingVisitationID(existingVisitation?.id));
       populateData(existingVisitation);
       const { project } = existingVisitation;
-      const { locationAddress } = project;
+      const { LocationAddress } = project;
       dispatch(
         updateDataVisitation({
           type: 'existingLocationId',
-          value: locationAddress?.id,
+          value: LocationAddress?.id,
         })
       );
-      if (locationAddress) {
-        if (locationAddress?.lon && locationAddress?.lat) {
-          const longitude = +locationAddress?.lon;
-          const latitude = +locationAddress?.lat;
+      if (LocationAddress) {
+        if (LocationAddress?.lon && LocationAddress?.lat) {
+          const longitude = +LocationAddress?.lon;
+          const latitude = +LocationAddress?.lat;
           dispatch(
             updateRegion({
-              formattedAddress: locationAddress?.line1,
+              formattedAddress: LocationAddress?.line1,
               latitude: latitude,
               longitude: longitude,
               lat: latitude,
               long: latitude,
               PostalId: undefined,
-              line2: locationAddress?.line2,
+              line2: LocationAddress?.line2,
             })
           );
         }
@@ -292,6 +404,9 @@ const CreateVisitation = () => {
       visitationData.stepperVisitationShouldNotFocused &&
       visitationData.step === 2 &&
       (visitationData.stageProject ||
+        visitationData.currentCompetitor?.name !== '' ||
+        visitationData.currentCompetitor?.mou !== '' ||
+        visitationData.currentCompetitor?.exclusive !== '' ||
         visitationData.products?.length <= 0 ||
         visitationData.estimationDate?.estimationMonth ||
         visitationData.estimationDate?.estimationWeek ||

@@ -88,6 +88,7 @@ const BDropdown = (props: IProps) => {
         setItems={setItems}
         onChangeValue={props.onChange}
         placeholder={props.placeholder}
+        dropDownDirection="BOTTOM"
         placeholderStyle={{
           color: colors.textInput.placeHolder,
         }}

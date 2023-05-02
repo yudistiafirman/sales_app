@@ -29,6 +29,7 @@ import Draggable from 'react-native-draggable';
 import { isDevelopment, isProduction } from '@/utils/generalFunc';
 import analytics from '@react-native-firebase/analytics';
 import SnackbarGlobal from '@/components/templates/SnackbarGlobal';
+import codePush from "react-native-code-push";
 
 startNetworkLogging();
 const height = Dimensions.get('window').height;
@@ -195,4 +196,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default codePush(App);

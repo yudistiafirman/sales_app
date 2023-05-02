@@ -147,6 +147,10 @@ const FirstStep = () => {
     }
   };
 
+  React.useEffect(() => {
+    onMapReady();
+  }, [region, grantedLocationPermission]);
+
   const onMapReady = async () => {
     try {
       if (grantedLocationPermission) {

@@ -25,7 +25,10 @@ import { useNavigation } from '@react-navigation/native';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
 import Icons from 'react-native-vector-icons/Feather';
-import { updateBillingAddress } from '@/actions/CommonActions';
+import {
+  updateBillingAddress,
+  updateLocationAddress,
+} from '@/actions/CommonActions';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 
 type BillingModalType = {
@@ -36,6 +39,7 @@ type BillingModalType = {
   region: any;
   projectId: string | undefined;
   isUpdate?: boolean;
+  isBilling?: boolean;
 };
 
 const { height } = Dimensions.get('window');
@@ -48,6 +52,7 @@ export default function BillingModal({
   region,
   setRegion,
   isUpdate = false,
+  isBilling = false,
 }: BillingModalType) {
   const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
     undefined
@@ -153,8 +158,13 @@ export default function BillingModal({
           : billingState.kabupaten;
     }
     try {
-      const response = await updateBillingAddress(projectId, body);
-      if (response.data.success) {
+      let response = undefined;
+      if (isBilling) {
+        response = await updateBillingAddress(projectId, body);
+      } else {
+        response = await updateLocationAddress(projectId, body);
+      }
+      if (response?.data?.success) {
         setFormattedAddress(region.formattedAddress);
         setRegion(region);
         setIsModalVisible((curr) => !curr);
@@ -172,7 +182,9 @@ export default function BillingModal({
         openPopUp({
           popUpType: 'error',
           popUpText:
-            error.message || 'Terjadi error saat update alamat pembayaran',
+            error.message ||
+            'Terjadi error saat update alamat ' +
+              (isBilling ? 'pembayaran' : 'proyek'),
           outsideClickClosePopUp: true,
         })
       );
@@ -196,7 +208,8 @@ export default function BillingModal({
         <BContainer>
           <View style={styles.modalHeader}>
             <Text style={styles.headerText} numberOfLines={1}>
-              {(isUpdate ? 'Ubah' : 'Tambah') + ' Alamat Penagihan'}
+              {(isUpdate ? 'Ubah' : 'Tambah') +
+                (isBilling ? ' Alamat Penagihan' : ' Alamat Proyek')}
             </Text>
             <TouchableOpacity
               onPress={() => setIsModalVisible((curr) => !curr)}
@@ -210,7 +223,11 @@ export default function BillingModal({
               setScrollOffSet(event.nativeEvent.contentOffset.y);
             }}
           >
-            <BLabel bold="500" label={'Alamat Proyek'} isRequired />
+            <BLabel
+              bold="500"
+              label={isBilling ? 'Alamat Penagihan' : 'Alamat Proyek'}
+              isRequired
+            />
             <BSpacer size="verySmall" />
             <TouchableOpacity
               style={styles.searchAddress}
@@ -219,6 +236,7 @@ export default function BillingModal({
                 navigation.navigate(SEARCH_AREA, {
                   from: CUSTOMER_DETAIL,
                   eventKey: 'getCoordinateFromCustomerDetail',
+                  sourceType: isBilling ? 'billing' : 'project',
                 });
               }}
             >

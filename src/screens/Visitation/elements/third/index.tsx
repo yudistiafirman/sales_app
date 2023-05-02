@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   ScrollView,
@@ -7,11 +7,23 @@ import {
   DeviceEventEmitter,
   Platform,
 } from 'react-native';
-import { BForm, BLabel, BSpacer, BText, BTextInput } from '@/components';
-import { Input } from '@/interfaces';
-import { MONTH_LIST, STAGE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
+import {
+  BDivider,
+  BForm,
+  BLabel,
+  BSpacer,
+  BText,
+  BTextInput,
+} from '@/components';
+import { Competitor, Input } from '@/interfaces';
+import {
+  MONTH_LIST,
+  STAGE_PROJECT,
+  TYPE_PROJECT,
+  WEEK_LIST,
+} from '@/constants/dropdown';
 import ProductChip from './ProductChip';
-import { TextInput } from 'react-native-paper';
+import { RadioButton, TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -19,11 +31,12 @@ import {
   CREATE_VISITATION,
   SEARCH_PRODUCT,
 } from '@/navigation/ScreenNames';
-import { fonts, layout } from '@/constants';
+import { colors, layout } from '@/constants';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
+import ProductDetailModal from './ProductDetailModal';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
@@ -32,12 +45,28 @@ const ThirdStep = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const visitationData = useSelector((state: RootState) => state.visitation);
+  const [isVisible, setIsVisible] = useState(false);
+  const [choosenProduct, setChoosenProduct] = useState({});
 
   const onChange = (key: any) => (e: any) => {
     dispatch(
       updateDataVisitation({
         type: key,
         value: e,
+      })
+    );
+  };
+
+  const onChangeCompetitor = (key: keyof Competitor) => (text: string) => {
+    let current: Competitor = { ...visitationData.currentCompetitor };
+    current = {
+      ...current,
+      [key]: text,
+    };
+    dispatch(
+      updateDataVisitation({
+        type: 'currentCompetitor',
+        value: current,
       })
     );
   };
@@ -58,6 +87,24 @@ const ThirdStep = () => {
           : 'Fase Proyek',
         onChange: (value: any) => {
           onChange('stageProject')(value);
+        },
+      },
+    },
+    {
+      label: 'Tipe Proyek',
+      isRequire: false,
+      isError: false,
+      onChange: onChange('typeProject'),
+      type: 'dropdown',
+      dropdown: {
+        items: TYPE_PROJECT,
+        placeholder: visitationData.typeProject
+          ? TYPE_PROJECT.find((it) => {
+              return it.value === visitationData.typeProject;
+            })?.label ?? ''
+          : 'Tipe Proyek',
+        onChange: (value: any) => {
+          onChange('typeProject')(value);
         },
       },
     },
@@ -141,28 +188,55 @@ const ThirdStep = () => {
       placeholder: 'Tulis catatan di sini',
       onChange: onChange('notes'),
       value: visitationData.notes,
-      textSize: fonts.size.sm,
+    },
+  ];
+
+  const inputsThree: Input[] = [
+    {
+      label: 'Nama Pesaing / Kompetisi',
+      isRequire: true,
+      isError: false,
+      type: 'textInput',
+      placeholder: 'Nama pesaing',
+      onChange: (event) => {
+        onChangeCompetitor('name')(event.nativeEvent.text);
+      },
+      value: visitationData.currentCompetitor.name,
+    },
+  ];
+
+  const inputsFour: Input[] = [
+    {
+      label: 'Apakah ada masalah yang ditemukan dari supplier beton sekarang?',
+      isRequire: false,
+      isError: false,
+      type: 'area',
+      placeholder: 'Tulis masalah yang Anda temui',
+      onChange: (val) => {
+        onChangeCompetitor('problem')(val);
+      },
+      value: visitationData.currentCompetitor.problem,
+    },
+    {
+      label: 'Harapan apa yang diinginkan dari BRIK?',
+      isRequire: false,
+      isError: false,
+      type: 'area',
+      placeholder: 'Tulis harapan Anda',
+      onChange: (val) => {
+        onChangeCompetitor('hope')(val);
+      },
+      value: visitationData.currentCompetitor.hope,
     },
   ];
 
   const listenerCallback = useCallback(
     ({ data }: { data: any }) => {
-      const newArray = [...visitationData.products, data];
-      const uniqueArray = newArray.reduce((acc, obj) => {
-        if (!acc[obj.id]) {
-          acc[obj.id] = obj;
-        }
-        return acc;
-      }, {} as { [id: number]: any });
-      dispatch(
-        updateDataVisitation({
-          type: 'products',
-          value: Object.values(uniqueArray),
-        })
-      );
+      setIsVisible(true);
+      setChoosenProduct(data);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [visitationData.products]
+    [isVisible]
   );
 
   const deleteProduct = (index: number) => {
@@ -176,13 +250,41 @@ const ThirdStep = () => {
     );
   };
 
+  const onSelectProduct = useCallback(
+    ({ quantity, pouringMethod }) => {
+      const newArray = [
+        ...visitationData.products,
+        { ...choosenProduct, quantity, pouringMethod },
+      ];
+      const uniqueArray = newArray.reduce((acc, obj) => {
+        if (!acc[obj.id]) {
+          acc[obj.id] = obj;
+        }
+        return acc;
+      }, {} as { [id: number]: any });
+      dispatch(
+        updateDataVisitation({
+          type: 'products',
+          value: Object.values(uniqueArray),
+        })
+      );
+      setIsVisible(false);
+    },
+    [choosenProduct, isVisible]
+  );
+
   useEffect(() => {
     crashlytics().log(CREATE_VISITATION + '-Step3');
     DeviceEventEmitter.addListener('event.testEvent', listenerCallback);
     return () => {
       DeviceEventEmitter.removeAllListeners('event.testEvent');
     };
-  }, [listenerCallback, visitationData.stageProject]);
+  }, [
+    listenerCallback,
+    visitationData.stageProject,
+    visitationData.typeProject,
+    visitationData.currentCompetitor,
+  ]);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -252,16 +354,128 @@ const ThirdStep = () => {
                   category={val.Category}
                   onDelete={() => deleteProduct(index)}
                 />
-                <BSpacer size="extraSmall" />
               </React.Fragment>
             ))}
           </ScrollView>
-          <BSpacer size="medium" />
+          <BSpacer size="verySmall" />
         </>
       ) : (
-        <BSpacer size="extraSmall" />
+        <BSpacer size="verySmall" />
       )}
       <BForm titleBold="500" inputs={inputsTwo} />
+      <BSpacer size={'verySmall'} />
+      <BDivider />
+      <BSpacer size={'small'} />
+      <BForm titleBold="500" inputs={inputsThree} />
+      <BLabel
+        isRequired
+        bold={'500'}
+        label={'Apakah sudah memiliki PKS / MOU?'}
+      />
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <RadioButton
+            value={'Iya'}
+            status={
+              visitationData.currentCompetitor &&
+              visitationData.currentCompetitor.mou?.toLowerCase() === 'iya'
+                ? 'checked'
+                : 'unchecked'
+            }
+            color={colors.primary}
+            uncheckedColor={colors.border.altGrey}
+            onPress={() => onChangeCompetitor('mou')('Iya')}
+          />
+          <BText>{'Iya'}</BText>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginStart: layout.pad.xxl,
+          }}
+        >
+          <RadioButton
+            value={'Tidak'}
+            status={
+              visitationData.currentCompetitor &&
+              visitationData.currentCompetitor.mou?.toLowerCase() === 'tidak'
+                ? 'checked'
+                : 'unchecked'
+            }
+            color={colors.primary}
+            uncheckedColor={colors.border.altGrey}
+            onPress={() => onChangeCompetitor('mou')('Tidak')}
+          />
+          <BText>{'Tidak'}</BText>
+        </View>
+      </View>
+      <BSpacer size={'extraSmall'} />
+      <BLabel isRequired bold={'500'} label={'Apakah PKS-nya Ekslusif?'} />
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <RadioButton
+            value={'Iya'}
+            status={
+              visitationData.currentCompetitor &&
+              visitationData.currentCompetitor.exclusive?.toLowerCase() ===
+                'iya'
+                ? 'checked'
+                : 'unchecked'
+            }
+            color={colors.primary}
+            uncheckedColor={colors.border.altGrey}
+            onPress={() => onChangeCompetitor('exclusive')('Iya')}
+          />
+          <BText>{'Iya'}</BText>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginStart: layout.pad.xxl,
+          }}
+        >
+          <RadioButton
+            value={'Tidak'}
+            status={
+              visitationData.currentCompetitor &&
+              visitationData.currentCompetitor.exclusive?.toLowerCase() ===
+                'tidak'
+                ? 'checked'
+                : 'unchecked'
+            }
+            color={colors.primary}
+            uncheckedColor={colors.border.altGrey}
+            onPress={() => onChangeCompetitor('exclusive')('Tidak')}
+          />
+          <BText>{'Tidak'}</BText>
+        </View>
+      </View>
+      <BSpacer size={'extraSmall'} />
+      <BForm titleBold="500" inputs={inputsFour} />
+      <ProductDetailModal
+        isVisible={isVisible}
+        onChoose={onSelectProduct}
+        onClose={() => {
+          setChoosenProduct({});
+          setIsVisible(false);
+        }}
+      />
     </ScrollView>
   );
 };

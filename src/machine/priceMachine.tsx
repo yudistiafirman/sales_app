@@ -243,7 +243,7 @@ export const priceMachine =
                 target: 'getProduct.loadingProduct',
                 cond: 'isLocationReachable',
               },
-              'unreachable',
+              'getProduct.loadingProduct',
             ],
           },
         },

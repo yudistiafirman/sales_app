@@ -79,7 +79,7 @@ export default function FirstStep() {
     } else {
       if (stateOne?.purchaseOrders && stateOne?.purchaseOrders.length > 0) {
         stateOne?.purchaseOrders?.forEach((it) => {
-          total = it.totalDeposit;
+          total = it.availableDeposit;
         });
       }
     }
