@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   shimmerChip: {
     width: resScale(51),
     height: layout.pad.lg,
-    borderRadius: resScale(32),
+    borderRadius: layout.radius.xl,
   },
 });
 

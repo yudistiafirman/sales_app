@@ -165,7 +165,7 @@ const style = StyleSheet.create({
     marginBottom: layout.pad.md,
   },
   locationButton: {
-    borderRadius: 8,
+    borderRadius: layout.radius.md,
   },
   locationTextButton: {
     fontFamily: fonts.family.montserrat[400],
