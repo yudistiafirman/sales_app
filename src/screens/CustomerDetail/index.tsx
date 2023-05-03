@@ -42,6 +42,7 @@ import { ProjectDetail, visitationListResponse } from '@/interfaces';
 import DocumentWarning from './elements/DocumentWarning';
 import UpdatedAddressWrapper from './elements/UpdatedAddressWrapper';
 import AddNewAddressWrapper from './elements/AddNewAddressWrapper';
+import formatCurrency from '@/utils/formatCurrency';
 
 type CustomerDetailRoute = RouteProp<RootStackParamList['CUSTOMER_DETAIL']>;
 
@@ -256,6 +257,16 @@ export default function CustomerDetail() {
               name: customerData?.name,
             }}
           />
+          <BSpacer size={'small'} />
+          <Text style={styles.partText}>Sisa Deposit</Text>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.between}>
+            <Text style={styles.fontW300}>
+              {customerData?.availableDeposit
+                ? formatCurrency(parseInt(customerData.availableDeposit, 10))
+                : '-'}
+            </Text>
+          </View>
           <BSpacer size={'extraSmall'} />
           <View style={styles.between}>
             <Text style={styles.partText}>PIC</Text>
