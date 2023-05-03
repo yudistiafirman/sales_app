@@ -12,7 +12,7 @@ import ThirdStep from './elements/third';
 import { PIC, Styles, visitationListResponse } from '@/interfaces';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import BSheetAddPic from './elements/second/BottomSheetAddPic';
-import Fourth from './elements/fourth';
+import Fifth from './elements/fifth';
 import { useKeyboardActive } from '@/hooks';
 import FirstStep from './elements/first';
 import { BStepperIndicator } from '@/components';
@@ -44,17 +44,15 @@ import {
 } from '@/redux/reducers/VisitationReducer';
 import { RootState } from '@/redux/store';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import Fourth from './elements/fourth';
 
 const labels = [
   'Alamat Proyek',
   'Data Pelanggan',
   'Data Proyek',
+  'Kompetitor',
   'Kelengkapan Foto',
 ];
-
-function ContinueIcon() {
-  return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
-}
 
 function stepHandler(
   state: VisitationGlobalState,
@@ -92,9 +90,6 @@ function stepHandler(
 
   if (
     state?.stageProject &&
-    state?.currentCompetitor?.name !== '' &&
-    state?.currentCompetitor?.mou !== '' &&
-    state?.currentCompetitor?.exclusive !== '' &&
     state?.products?.length > 0 &&
     state?.estimationDate?.estimationMonth &&
     state?.estimationDate?.estimationWeek &&
@@ -107,12 +102,21 @@ function stepHandler(
     setStepsDone((curr) => curr.filter((num) => num !== 2));
   }
 
-  if (state?.images?.length > 0) {
+  if (state?.competitors?.length > 0) {
     setStepsDone((curr) => {
       return [...new Set(curr), 3];
     });
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 3));
+  }
+
+  const filteredImages = state?.images?.filter((it) => it?.file !== null);
+  if (filteredImages?.length > 0) {
+    setStepsDone((curr) => {
+      return [...new Set(curr), 4];
+    });
+  } else {
+    setStepsDone((curr) => curr.filter((num) => num !== 4));
   }
 }
 
@@ -177,12 +181,12 @@ const CreateVisitation = () => {
           value: existingData.project?.Competitors,
         })
       );
-      dispatch(
-        updateDataVisitation({
-          type: 'currentCompetitor',
-          value: existingData.project?.Competitors[0],
-        })
-      );
+      // dispatch(
+      //   updateDataVisitation({
+      //     type: 'currentCompetitor',
+      //     value: existingData.project?.Competitors[0],
+      //   })
+      // );
     }
 
     if (existingData.paymentType) {
@@ -404,15 +408,20 @@ const CreateVisitation = () => {
       visitationData.stepperVisitationShouldNotFocused &&
       visitationData.step === 2 &&
       (visitationData.stageProject ||
-        visitationData.currentCompetitor?.name !== '' ||
-        visitationData.currentCompetitor?.mou !== '' ||
-        visitationData.currentCompetitor?.exclusive !== '' ||
         visitationData.products?.length <= 0 ||
         visitationData.estimationDate?.estimationMonth ||
         visitationData.estimationDate?.estimationWeek ||
         visitationData.paymentType)
     ) {
       dispatch(resetStepperFocused(3));
+    }
+
+    if (
+      visitationData.stepperVisitationShouldNotFocused &&
+      visitationData.step === 3 &&
+      visitationData.competitors?.length <= 0
+    ) {
+      dispatch(resetStepperFocused(4));
     }
   };
 
@@ -459,6 +468,7 @@ const CreateVisitation = () => {
     <SecondStep openBottomSheet={openBottomSheet} />,
     <ThirdStep />,
     <Fourth />,
+    <Fifth />,
   ];
 
   return (

@@ -283,7 +283,7 @@ const ThirdStep = () => {
     listenerCallback,
     visitationData.stageProject,
     visitationData.typeProject,
-    visitationData.currentCompetitor,
+    // visitationData.currentCompetitor,
   ]);
 
   return (
@@ -363,7 +363,7 @@ const ThirdStep = () => {
         <BSpacer size="verySmall" />
       )}
       <BForm titleBold="500" inputs={inputsTwo} />
-      <BSpacer size={'verySmall'} />
+      {/* <BSpacer size={'verySmall'} />
       <BDivider />
       <BSpacer size={'small'} />
       <BForm titleBold="500" inputs={inputsThree} />
@@ -467,7 +467,7 @@ const ThirdStep = () => {
         </View>
       </View>
       <BSpacer size={'extraSmall'} />
-      <BForm titleBold="500" inputs={inputsFour} />
+      <BForm titleBold="500" inputs={inputsFour} /> */}
       <ProductDetailModal
         isVisible={isVisible}
         onChoose={onSelectProduct}

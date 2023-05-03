@@ -43,7 +43,7 @@ function stepHandler(
 ) {
   const { stepOne, stepTwo, existingProjectID } = state;
 
-  const images = stepOne?.deposit?.picts.filter((v) => v.file !== null);
+  const images = stepOne?.deposit?.picts?.filter((v) => v?.file !== null);
   if (
     images &&
     images.length > 0 &&
@@ -130,10 +130,10 @@ const Deposit = () => {
           })
         );
         const photoFiles = values.stepOne?.deposit?.picts
-          ?.filter((v) => v.file !== null)
+          ?.filter((v) => v?.file !== null)
           .map((photo) => {
             return {
-              ...photo.file,
+              ...photo?.file,
               uri: photo?.file?.uri?.replace('file:', 'file://'),
             };
           });
@@ -155,7 +155,7 @@ const Deposit = () => {
           files: [],
         };
         uploadedImage.forEach((item) => {
-          payload.files.push({ fileId: item?.id });
+          payload.files?.push({ fileId: item?.id });
         });
         await dispatch(postOrderDeposit({ payload })).unwrap();
         navigation.dispatch(StackActions.popToTop());
