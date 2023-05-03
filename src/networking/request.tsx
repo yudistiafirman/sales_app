@@ -11,6 +11,7 @@ import Config from 'react-native-config';
 import { Platform } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
+import perf from '@react-native-firebase/perf';
 
 const URL_PRODUCTIVITY =
   Platform.OS === 'android'
@@ -32,7 +33,7 @@ const URL_COMMON =
     : Config.API_URL_COMMON_PROD;
 
 let store: any;
-// let metric: any;
+let metric: any;
 
 type FormDataValue =
   | string
@@ -72,8 +73,8 @@ export const customRequest = async (
   withToken?: boolean
 ) => {
   // performance API log
-  // metric = await perf().newHttpMetric(request, method);
-  // await metric.start();
+  metric = await perf().newHttpMetric(request, method);
+  await metric.start();
 
   return instance(request, await getOptions(method, data, withToken));
 };
@@ -119,28 +120,30 @@ instance.interceptors.response.use(
     const { data, config } = res;
 
     // performance API logs
-    // if (config.url) {
-    //   const response = await fetch(config.url);
-    //   if (response?.status) metric?.setHttpResponseCode(response?.status);
-    //   try {
-    //     metric?.setResponseContentType(response?.headers?.get('Content-Type'));
-    //     let contentLength = null;
-    //     if (
-    //       response?.headers?.get('Content-Length') !== undefined &&
-    //       response?.headers?.get('Content-Length') !== null
-    //     ) {
-    //       contentLength = parseInt(
-    //         response?.headers?.get('Content-Length'),
-    //         10
-    //       );
-    //     }
-    //     metric?.setResponsePayloadSize(contentLength);
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // }
-    // await metric?.stop();
-    // metric = undefined;
+    if (config.url) {
+      if (res?.status) metric?.setHttpResponseCode(res?.status);
+      try {
+        let authorization = config?.headers?.get('Authorization');
+        if (authorization && authorization !== null) {
+          metric?.setResponseContentType(authorization);
+        }
+        let contentType = config?.headers?.get('Content-Type');
+        if (contentType && contentType !== null) {
+          metric?.setResponseContentType(contentType);
+        }
+        let contentLength = config?.headers?.get('Content-Length');
+        if (contentLength && contentLength !== null) {
+          if (typeof contentLength === 'string') {
+            contentLength = parseInt(contentLength, 10);
+          }
+          metric?.setResponsePayloadSize(contentLength);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    await metric?.stop();
+    metric = undefined;
 
     if (!data.success) {
       // automatic logout
