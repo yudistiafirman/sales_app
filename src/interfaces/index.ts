@@ -719,7 +719,7 @@ interface ProjectDetail {
   id: string;
   projectId?: string;
   projectName?: string;
-
+  availableDeposit?: string;
   locationAddress?: Address;
   BillingAddress?: Address;
   name?: string;
