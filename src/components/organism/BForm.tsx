@@ -62,7 +62,7 @@ const styles: Styles = {
   errorPicContainer: {
     width: resScale(213),
     height: resScale(40),
-    borderRadius: layout.pad.xs + layout.pad.sm,
+    borderRadius: layout.radius.xs + layout.radius.sm,
     backgroundColor: colors.status.errorPic,
     justifyContent: 'center',
     alignItems: 'center',
@@ -306,7 +306,7 @@ const renderInput = (
               placeholder={placeholder}
               style={[
                 textStyles,
-                Platform.OS !== 'android' && { minHeight: 40 },
+                Platform.OS !== 'android' && { minHeight: resScale(40) },
               ]}
             />
           </View>
@@ -539,7 +539,7 @@ const renderInput = (
                 forceTextInputFocus={false}
                 icon={LeftIcon}
                 style={{
-                  marginTop: 3,
+                  marginTop: layout.pad.xs,
                 }}
               />
             )
@@ -548,7 +548,7 @@ const renderInput = (
             textStyles,
             disableColor && {
               backgroundColor: disableColor,
-              borderRadius: 4,
+              borderRadius: layout.radius.sm,
               borderColor: colors.textInput.placeHolder,
               borderWidth: 1,
             },
@@ -599,7 +599,7 @@ const renderInput = (
                 forceTextInputFocus={false}
                 icon={LeftIcon}
                 style={{
-                  marginTop: 3,
+                  marginTop: layout.pad.xs,
                 }}
               />
             )
@@ -742,7 +742,7 @@ const renderInput = (
           <>
             <View style={[styles.optionContainer]}>
               <BText sizeInNumber={fonts.size.md} bold="600">
-                PIC
+                {label}
               </BText>
               <BText
                 bold="500"
@@ -750,7 +750,7 @@ const renderInput = (
                 color="primary"
                 onPress={onChange}
               >
-                + Tambah PIC
+                {'+ Tambah ' + label}
               </BText>
             </View>
             <BSpacer size="verySmall" />
@@ -770,9 +770,12 @@ const renderInput = (
           </>
         )}
         <BPicList
-          isOption={value?.length > 1}
+          isOption={
+            label?.toLowerCase() === 'kompetitor' ? false : value?.length > 1
+          }
           data={value}
           onSelect={onSelect!}
+          isCompetitor={label?.toLowerCase() === 'kompetitor' ? true : false}
         />
       </View>
     );

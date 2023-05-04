@@ -28,20 +28,20 @@ const styles = StyleSheet.create({
     height: resScale(56),
     borderBottomWidth: 1,
     borderColor: colors.border.disabled,
-    marginTop: resScale(6),
+    marginTop: layout.pad.sm + layout.pad.xs,
   },
   nameAndPriceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: layout.pad.md,
-    marginTop: resScale(6),
+    marginTop: layout.pad.sm + layout.pad.xs,
   },
   shimmerName: { width: resScale(75), height: resScale(17) },
   shimmerPrice: { width: resScale(91), height: resScale(17) },
   shimmerChip: {
     width: resScale(51),
-    height: resScale(16),
-    borderRadius: resScale(32),
+    height: layout.pad.lg,
+    borderRadius: layout.radius.xl,
   },
 });
 

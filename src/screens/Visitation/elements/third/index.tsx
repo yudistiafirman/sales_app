@@ -31,13 +31,12 @@ import {
   CREATE_VISITATION,
   SEARCH_PRODUCT,
 } from '@/navigation/ScreenNames';
-import { colors, fonts, layout } from '@/constants';
+import { colors, layout } from '@/constants';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
 import ProductDetailModal from './ProductDetailModal';
-import purchaseOrder from '@/redux/reducers/purchaseOrder';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
@@ -219,7 +218,7 @@ const ThirdStep = () => {
       value: visitationData.currentCompetitor.problem,
     },
     {
-      label: 'Apakah ada masalah yang ditemukan dari supplier beton sekarang?',
+      label: 'Harapan apa yang diinginkan dari BRIK?',
       isRequire: false,
       isError: false,
       type: 'area',
@@ -284,7 +283,7 @@ const ThirdStep = () => {
     listenerCallback,
     visitationData.stageProject,
     visitationData.typeProject,
-    visitationData.currentCompetitor,
+    // visitationData.currentCompetitor,
   ]);
 
   return (
@@ -355,17 +354,16 @@ const ThirdStep = () => {
                   category={val.Category}
                   onDelete={() => deleteProduct(index)}
                 />
-                <BSpacer size="extraSmall" />
               </React.Fragment>
             ))}
           </ScrollView>
-          <BSpacer size="medium" />
+          <BSpacer size="verySmall" />
         </>
       ) : (
-        <BSpacer size="extraSmall" />
+        <BSpacer size="verySmall" />
       )}
       <BForm titleBold="500" inputs={inputsTwo} />
-      <BSpacer size={'verySmall'} />
+      {/* <BSpacer size={'verySmall'} />
       <BDivider />
       <BSpacer size={'small'} />
       <BForm titleBold="500" inputs={inputsThree} />
@@ -420,7 +418,7 @@ const ThirdStep = () => {
         </View>
       </View>
       <BSpacer size={'extraSmall'} />
-      <BLabel isRequired bold={'500'} label={'Apakah PKS nya ekslusif?'} />
+      <BLabel isRequired bold={'500'} label={'Apakah PKS-nya Ekslusif?'} />
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View
           style={{
@@ -469,7 +467,7 @@ const ThirdStep = () => {
         </View>
       </View>
       <BSpacer size={'extraSmall'} />
-      <BForm titleBold="500" inputs={inputsFour} />
+      <BForm titleBold="500" inputs={inputsFour} /> */}
       <ProductDetailModal
         isVisible={isVisible}
         onChoose={onSelectProduct}
@@ -492,7 +490,7 @@ const styles = StyleSheet.create({
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
     // backgroundColor: 'red',

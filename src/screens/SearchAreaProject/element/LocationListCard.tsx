@@ -28,7 +28,7 @@ const LocationListCard = ({
           name="map-pin"
           size={resScale(20)}
           color={colors.text.darker}
-          style={{ marginRight: resScale(11) }}
+          style={{ marginRight: layout.pad.ml }}
         />
 
         <View>

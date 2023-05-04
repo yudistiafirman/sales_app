@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   titleShimmer: {
     width: resScale(108),
     height: resScale(17),
-    marginBottom: resScale(4),
+    marginBottom: layout.pad.sm,
   },
   secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
   textContainer: {

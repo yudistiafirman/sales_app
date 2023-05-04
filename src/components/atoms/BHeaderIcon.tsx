@@ -3,6 +3,7 @@ import * as React from 'react';
 import { TouchableOpacity } from 'react-native';
 import resScale from '@/utils/resScale';
 import colors from '@/constants/colors';
+import { layout } from '@/constants';
 
 interface BHeaderIconProps {
   onBack?: () => void;
@@ -16,7 +17,7 @@ const BHeaderIcon = ({
   onBack,
   size,
   iconName,
-  marginRight = resScale(26),
+  marginRight = layout.pad.xs + layout.pad.md + layout.pad.lg,
   marginLeft = 0,
 }: BHeaderIconProps) => {
   return (

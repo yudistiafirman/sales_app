@@ -10,6 +10,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { resScale } from '@/utils';
 import { TextInput } from 'react-native-paper';
+import { layout } from '@/constants';
 
 const FirstStep = () => {
   const [values, dispatchValue] = useAppointmentData();
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
   },

@@ -31,7 +31,7 @@ export default function Popup() {
       <View style={styles.modalContent}>
         {popUpOptions.popUpType !== 'none' && (
           <View
-            style={{ paddingTop: resScale(33), paddingBottom: layout.pad.ml }}
+            style={{ paddingTop: layout.pad.xl, paddingBottom: layout.pad.ml }}
           >
             {popUpOptions.popUpType === 'success' && (
               <AntDesign

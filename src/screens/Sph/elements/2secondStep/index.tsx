@@ -417,7 +417,7 @@ const style = StyleSheet.create({
     color: colors.text.darker,
   },
   customPadding: {
-    padding: resScale(2),
+    padding: layout.pad.xs,
   },
   map: {
     height: resScale(450),
@@ -432,7 +432,7 @@ const style = StyleSheet.create({
   detailCoordContainer: {
     flex: 1,
     backgroundColor: colors.tertiary,
-    borderRadius: 8,
+    borderRadius: layout.radius.md,
     flexDirection: 'row',
     padding: layout.pad.md,
   },

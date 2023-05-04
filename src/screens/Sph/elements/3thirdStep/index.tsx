@@ -5,7 +5,7 @@ import { Input } from '@/interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn';
 import { SphContext } from '../context/SphContext';
@@ -290,7 +290,7 @@ const style = StyleSheet.create({
   fileInputShimmer: {
     width: resScale(330),
     height: resScale(30),
-    borderRadius: resScale(8),
+    borderRadius: layout.radius.md,
   },
   container: {
     flex: 1,

@@ -2,6 +2,7 @@ import { BLabel, BSpacer } from '@/components';
 import { colors, layout } from '@/constants';
 import { STAGE_PROJECT } from '@/constants/dropdown';
 import font from '@/constants/fonts';
+import { resScale } from '@/utils';
 import React, { useCallback } from 'react';
 import { StyleSheet, View, FlatList, Text } from 'react-native';
 
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
   faseContainer: {
     borderLeftWidth: 1,
     borderColor: colors.textInput.inActive,
-    height: 26,
+    height: resScale(26),
   },
   circle: {
     position: 'absolute',

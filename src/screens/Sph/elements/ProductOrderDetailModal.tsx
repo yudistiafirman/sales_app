@@ -26,7 +26,7 @@ import {
 import formatCurrency from '@/utils/formatCurrency';
 import { TextInput } from 'react-native-paper';
 import calcTrips from '@/utils/calcTrips';
-import { PO_METHOD_LIST } from '@/constants/dropdown';
+import { METHOD_LIST, PO_METHOD_LIST } from '@/constants/dropdown';
 
 type ProductCartModalType = {
   productData: ProductDataInterface;
@@ -125,7 +125,7 @@ export default function ProductCartModal({
       isError: detailOrder.method === '',
       customerErrorMsg: 'Metode penuangan harus dipilih',
       dropdown: {
-        items: PO_METHOD_LIST,
+        items: METHOD_LIST,
         placeholder: 'Pilih metode penuangan',
         onChange: (value: any) => {
           setDetailOrder((prev) => ({ ...prev, method: value }));
@@ -305,7 +305,7 @@ export default function ProductCartModal({
                   categoryId: productData.Category.id,
                   sellPrice: detailOrder.sellPrice,
                   volume: detailOrder.volume,
-                  method: detailOrder.method,
+                  pouringMethod: detailOrder.method,
                   totalPrice: totalPrice,
                   additionalData: getAddPrice(),
                 };

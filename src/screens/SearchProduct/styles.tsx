@@ -8,9 +8,9 @@ const SearchProductStyles = StyleSheet.create({
     width: resScale(293),
   },
   tabIndicator: {
-    height: 2,
+    height: resScale(2),
     backgroundColor: colors.primary,
-    marginLeft: resScale(15.5),
+    marginLeft: layout.pad.lg,
   },
   tabStyle: {
     width: 'auto',

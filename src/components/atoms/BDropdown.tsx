@@ -38,7 +38,7 @@ const styles: Styles = {
     lineHeight: resScale(14),
     backgroundColor: colors.white,
     color: colors.textInput.input,
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     borderColor: colors.textInput.inActive,
     zIndex: 1,
   },
@@ -61,7 +61,7 @@ const styles: Styles = {
   },
   separator: {
     backgroundColor: colors.border.default,
-    paddingHorizontal: resScale(5),
+    paddingHorizontal: layout.pad.sm + layout.pad.xs,
     width: '95%',
     alignSelf: 'center',
   },

@@ -155,10 +155,10 @@ const styles = StyleSheet.create({
   },
   outerShutter: {
     // flex: 1,
-    borderRadius: resScale(40),
+    borderRadius: layout.radius.xl + layout.radius.md,
     height: resScale(68),
     width: resScale(68),
-    borderWidth: 4,
+    borderWidth: resScale(4),
     borderColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     marginTop: layout.pad.lg,
   },
   innerShutter: {
-    borderRadius: resScale(40),
+    borderRadius: layout.radius.xl + layout.radius.md,
     height: resScale(58),
     width: resScale(58),
   },

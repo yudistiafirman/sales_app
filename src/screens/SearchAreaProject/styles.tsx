@@ -1,10 +1,11 @@
+import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
 import { StyleSheet } from 'react-native';
 
 const SearchAreaStyles = StyleSheet.create({
-  container: { flex: 1, marginHorizontal: resScale(16) },
+  container: { flex: 1, marginHorizontal: layout.pad.lg },
   currentLocationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -18,7 +19,7 @@ const SearchAreaStyles = StyleSheet.create({
     height: resScale(56),
     borderBottomWidth: 1,
     borderColor: colors.border.disabled,
-    marginBottom: resScale(8),
+    marginBottom: layout.pad.md,
   },
   innerListContainer: {
     flexDirection: 'row',

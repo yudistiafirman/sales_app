@@ -5,7 +5,7 @@ export interface CreateSchedule {
   quotationLetterId: string;
   quantity: number;
   date: string;
-  withPump: boolean;
+  pouringMethod: string;
   consecutive: boolean;
   withTechnician: boolean;
   status: string;

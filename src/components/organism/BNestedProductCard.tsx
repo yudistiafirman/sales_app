@@ -185,7 +185,7 @@ export default function BNestedProductCard({
               ?.reduce((a, b) => a + b)
           : 0;
         const products = item?.products || item?.PoProducts || item?.SaleOrders;
-        const deposit = item?.totalDeposit;
+        const deposit = item?.availableDeposit;
         const expandItems = item?.products
           ? expandData?.findIndex(
               (val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id
