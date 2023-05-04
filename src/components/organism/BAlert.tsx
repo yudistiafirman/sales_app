@@ -6,6 +6,7 @@ import { Image, StyleSheet, TextStyle, View } from 'react-native';
 import Modal from 'react-native-modal';
 import BButtonPrimary from '../atoms/BButtonPrimary';
 import BText from '../atoms/BText';
+import { fonts, layout } from '@/constants';
 
 interface BAlertProps {
   isVisible: boolean;
@@ -17,9 +18,9 @@ interface BAlertProps {
 
 const BAlertDefaultContentStyle: TextStyle = {
   fontFamily: font.family.montserrat[600],
-  fontSize: resScale(16),
+  fontSize: fonts.size.lg,
   textAlign: 'center',
-  marginBottom: resScale(34),
+  marginBottom: layout.pad.xl + layout.pad.xs,
 };
 
 const BalertDefaultProps = {
@@ -53,7 +54,7 @@ const BAlert = ({
               <BButtonPrimary
                 onPress={onClose}
                 isOutline
-                buttonStyle={{padding:resScale(20)}}
+                buttonStyle={{ padding: layout.pad.md + layout.pad.ml }}
                 title="Saya Mengerti"
               />
             )}
@@ -76,17 +77,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   alertContainer: {
-    paddingVertical: resScale(20),
-    paddingHorizontal: resScale(16),
+    paddingVertical: layout.pad.sm + layout.pad.lg,
+    paddingHorizontal: layout.pad.lg,
     alignItems: 'center',
     minHeight: resScale(160),
-    borderRadius: resScale(8),
+    borderRadius: layout.radius.md,
     backgroundColor: colors.white,
   },
   image: {
     width: resScale(66),
     height: resScale(66),
-    marginBottom: resScale(31),
+    marginBottom: layout.pad.xl,
   },
   content: {},
 });

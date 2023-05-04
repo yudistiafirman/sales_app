@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import resScale from '@/utils/resScale';
 import colors from '@/constants/colors';
-import { fonts } from '@/constants';
+import { fonts, layout } from '@/constants';
 
 export default function TargetMarker() {
   return (
@@ -26,12 +26,12 @@ const style = StyleSheet.create({
     textAlign: 'center',
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.xs,
-    marginTop: resScale(2),
+    marginTop: layout.pad.xs,
   },
   targetMarker: {
     position: 'absolute',
     backgroundColor: colors.black,
-    borderRadius: resScale(10),
+    borderRadius: layout.radius.xs + layout.radius.md,
     top: resScale(-25),
     width: resScale(100),
     height: resScale(18),

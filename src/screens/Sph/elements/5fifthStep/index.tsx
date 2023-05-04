@@ -18,7 +18,7 @@ import {
 } from '@/components';
 import { BVisitationCard } from '@/components';
 import { resScale } from '@/utils';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import {
   deliveryAndDistance,
   Input,
@@ -76,7 +76,7 @@ function payloadMapper(sphState: SphStateInterface) {
         categoryId: product.categoryId,
         offeringPrice: +product.sellPrice,
         quantity: +product.volume,
-        withPump: product.method === 'pompa',
+        pouringMethod: product.pouringMethod,
         productName: product.product.name,
         productUnit: 'm3',
       };
@@ -479,6 +479,6 @@ const style = StyleSheet.create({
   produkLabel: {
     borderBottomWidth: 1,
     borderBottomColor: colors.border.altGrey,
-    paddingBottom: resScale(5),
+    paddingBottom: layout.pad.sm,
   },
 });

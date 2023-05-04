@@ -1,4 +1,4 @@
-import { colors } from '@/constants';
+import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
 import React from 'react';
@@ -20,7 +20,7 @@ const BErrorText = ({ text }: { text: string | unknown }) => {
 };
 const styles = StyleSheet.create({
   container: { flexDirection: 'row', alignSelf: 'flex-start' },
-  warningIcon: { marginRight: resScale(11), alignSelf: 'center' },
+  warningIcon: { marginRight: layout.pad.ml, alignSelf: 'center' },
   warningText: {
     fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,

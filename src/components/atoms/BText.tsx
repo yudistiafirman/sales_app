@@ -106,7 +106,7 @@ const BText = ({
   if (size) {
     _style = {
       ..._style,
-      fontSize: resFontSize(10),
+      fontSize: fonts.size.xs,
     };
   }
 

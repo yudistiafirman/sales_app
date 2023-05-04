@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { BBottomSheetForm } from '@/components';
 import { Input, PIC } from '@/interfaces';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { colors, fonts } from '@/constants';
 
 interface IProps {

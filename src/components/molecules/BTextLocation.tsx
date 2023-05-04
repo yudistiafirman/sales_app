@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { fonts } from '@/constants';
+import { fonts, layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
@@ -29,7 +29,7 @@ const BTextLocation = ({
     >
       <Icon
         name="map-pin"
-        style={{ marginRight: resScale(8) }}
+        style={{ marginRight: layout.pad.md }}
         color={colors.text.blue}
       />
       <BText

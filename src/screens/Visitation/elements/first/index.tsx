@@ -275,7 +275,7 @@ const FirstStep = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginHorizontal: -resScale(20) },
+  container: { flex: 1, marginHorizontal: -(layout.pad.md + layout.pad.ml) },
   map: {
     flex: 1,
     width: '100%',
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
   titleShimmer: {
     width: resScale(108),
     height: resScale(17),
-    marginBottom: resScale(4),
+    marginBottom: layout.pad.sm,
   },
   secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
 });

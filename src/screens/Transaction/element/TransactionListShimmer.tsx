@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import colors from '@/constants/colors';
+import { layout } from '@/constants';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const TransactionListShimmer = () => {
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
   shimmerChip: {
     width: resScale(51),
     height: resScale(16),
-    borderRadius: resScale(32),
+    borderRadius: layout.radius.xl,
   },
 });
 

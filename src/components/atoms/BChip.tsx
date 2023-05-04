@@ -13,16 +13,16 @@ interface BChipProps {
 
 const BChip = ({ children, type, backgroundColor, textColor }: BChipProps) => {
   let BChipHeaderStyle: ViewStyle = {
-    paddingHorizontal: resScale(layout.pad.md),
-    paddingVertical: resScale(layout.pad.xs),
-    borderRadius: resScale(layout.radius.sm),
+    paddingHorizontal: layout.pad.md,
+    paddingVertical: layout.pad.xs,
+    borderRadius: layout.radius.sm,
   };
 
   let BChipDefaultStyle: ViewStyle = {
-    paddingVertical: resScale(2),
-    paddingHorizontal: resScale(10),
-    borderRadius: resScale(32),
-    marginRight: resScale(8),
+    paddingVertical: layout.pad.xs,
+    paddingHorizontal: layout.pad.md + layout.pad.xs,
+    borderRadius: layout.radius.xl,
+    marginRight: layout.pad.md,
   };
 
   let _style: ViewStyle =

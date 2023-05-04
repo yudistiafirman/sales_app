@@ -56,13 +56,13 @@ export const PriceListCardStyles = StyleSheet.create({
     height: resScale(56),
     borderBottomWidth: 1,
     borderColor: colors.border.disabled,
-    marginTop: resScale(6),
+    marginTop: layout.pad.xs + layout.pad.sm,
   },
   nameAndPriceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: layout.pad.md,
-    marginTop: resScale(6),
+    marginTop: layout.pad.xs + layout.pad.sm,
   },
   productName: {
     fontFamily: font.family.montserrat[500],

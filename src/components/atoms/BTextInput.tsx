@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import { TextStyle, ViewStyle } from 'react-native';
 import { TextInput, TextInputProps } from 'react-native-paper';
 import { resScale } from '@/utils';
@@ -20,7 +20,7 @@ const baseStyle: TextStyle = {
 };
 
 const baseContainerStyle: TextStyle = {
-  borderRadius: resScale(4),
+  borderRadius: layout.radius.sm,
   minHeight: resScale(40),
   backgroundColor: colors.white,
 };

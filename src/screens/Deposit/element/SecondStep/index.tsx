@@ -78,7 +78,7 @@ export default function SecondStep() {
     let total: number = 0;
     if (stateTwo?.purchaseOrders && stateTwo?.purchaseOrders.length > 0) {
       stateTwo?.purchaseOrders?.forEach((it) => {
-        total = it.totalDeposit;
+        total = it.availableDeposit;
       });
     }
     return total;
@@ -187,7 +187,7 @@ const style = StyleSheet.create({
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
   },

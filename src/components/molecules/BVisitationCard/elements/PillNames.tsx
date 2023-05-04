@@ -5,6 +5,7 @@ import font from '@/constants/fonts';
 import respFS from '@/utils/resFontSize';
 import colors from '@/constants/colors';
 import HighlightText from '../../../atoms/BHighlightText';
+import { fonts, layout } from '@/constants';
 
 type PillNamesType = {
   pilNames?: string[];
@@ -37,7 +38,7 @@ export default function PillNames({
         style={[style.bluePill, style.margin, { backgroundColor: pillColor }]}
       >
         <HighlightText
-          fontSize={10}
+          fontSize={fonts.size.xs}
           name={pilNames[0]}
           searchQuery={searchQuery}
         />
@@ -49,20 +50,20 @@ export default function PillNames({
 const style = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginTop: resScale(10),
+    marginTop: layout.pad.xs + layout.pad.md,
   },
   bluePill: {
-    padding: resScale(2),
-    paddingVertical: resScale(1),
-    paddingHorizontal: resScale(10),
-    borderRadius: resScale(32),
+    padding: layout.pad.xs,
+    paddingVertical: layout.pad.xs,
+    paddingHorizontal: layout.pad.xs + layout.pad.md,
+    borderRadius: layout.radius.xl,
   },
   bluePillText: {
     fontFamily: font.family.montserrat[400],
-    fontSize: respFS(10),
+    fontSize: fonts.size.xs,
     color: colors.textInput.input,
   },
   margin: {
-    marginRight: resScale(10),
+    marginRight: layout.pad.md + layout.pad.xs,
   },
 });

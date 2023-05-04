@@ -12,6 +12,7 @@ interface IProps extends PIC {
   onSelect?: (index: number) => void;
   index?: number;
   border?: boolean;
+  isCompetitor?: boolean;
 }
 
 const styles: Styles = {
@@ -36,10 +37,10 @@ const makeStyle = ({ isOption, border }: IProps) => {
     _style = {
       container: {
         ...(_style.container as Object),
-        borderWidth: 2,
+        borderWidth: resScale(2),
         borderColor: colors.border.default,
-        paddingHorizontal: resScale(20),
-        paddingVertical: resScale(10),
+        paddingHorizontal: layout.pad.md + layout.pad.ml,
+        paddingVertical: layout.pad.md + layout.pad.xs,
       },
     };
   }
@@ -61,10 +62,13 @@ const BPic = ({
   name,
   phone,
   position,
+  exclusive,
+  mou,
   isSelected,
   onSelect,
   index,
   border = true,
+  isCompetitor = false,
 }: IProps): JSX.Element => {
   return (
     <View style={makeStyle({ isOption, index, onSelect, border }).container}>
@@ -94,31 +98,35 @@ const BPic = ({
           </ScrollView>
         </View>
         <BSpacer size="extraSmall" />
-        <BText style={titleStyles}>No. Telepon</BText>
+        <BText style={titleStyles}>
+          {isCompetitor ? 'Apakah PKS-nya ekslusif?' : 'No. Telepon'}
+        </BText>
         <View>
           <ScrollView horizontal={true}>
             <BText sizeInNumber={fonts.size.sm} bold="500">
-              {phone ? '+62' + phone : '-'}
+              {isCompetitor ? exclusive : phone ? '+62' + phone : '-'}
             </BText>
           </ScrollView>
         </View>
       </View>
       <BSpacer size="extraSmall" />
       <View style={{ flex: 1, paddingEnd: layout.pad.sm }}>
-        <BText style={titleStyles}>Jabatan</BText>
+        <BText style={titleStyles}>
+          {isCompetitor ? 'Apakah memiliki PKS?' : 'Jabatan'}
+        </BText>
         <View>
           <ScrollView horizontal={true}>
             <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
-              {position ? position : '-'}
+              {isCompetitor ? mou : position ? position : '-'}
             </BText>
           </ScrollView>
         </View>
         <BSpacer size="extraSmall" />
-        <BText style={titleStyles}>Email</BText>
+        <BText style={titleStyles}>{isCompetitor ? ' ' : 'Email'}</BText>
         <View>
           <ScrollView horizontal={true}>
             <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
-              {email ? email : '-'}
+              {isCompetitor ? ' ' : email ? email : '-'}
             </BText>
           </ScrollView>
         </View>

@@ -3,6 +3,7 @@ import React from 'react';
 import TargetMarker from './TargetMarker';
 import colors from '@/constants/colors';
 import resScale from '@/utils/resScale';
+import { layout } from '@/constants';
 
 type EmptyItemType = {
   isLast: boolean;
@@ -36,7 +37,7 @@ const style = StyleSheet.create({
     borderLeftColor: colors.border.altGrey,
   },
   progressEnd: {
-    borderTopEndRadius: resScale(5),
-    borderBottomEndRadius: resScale(5),
+    borderTopEndRadius: layout.radius.sm,
+    borderBottomEndRadius: layout.radius.sm,
   },
 });

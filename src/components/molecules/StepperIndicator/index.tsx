@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   dot: {
     width: resScale(16),
     height: resScale(16),
-    borderRadius: resScale(16),
+    borderRadius: layout.radius.lg,
     marginHorizontal: layout.pad.sm,
     justifyContent: 'center',
     alignItems: 'center',

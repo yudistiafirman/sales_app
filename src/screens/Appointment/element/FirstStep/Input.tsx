@@ -1,4 +1,5 @@
 import { BDivider, BSpacer, BText, BForm } from '@/components';
+import { layout } from '@/constants';
 import { AppointmentActionType, StepOne } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
 import { Input, projectResponseType, Styles } from '@/interfaces';
@@ -181,8 +182,8 @@ const styles: Styles = {
     alignItems: 'center',
   },
   sheetStyle: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: layout.pad.md + layout.pad.ml,
+    paddingRight: layout.pad.md + layout.pad.ml,
     backgroundColor: 'red',
   },
   inputContainerStyle: {

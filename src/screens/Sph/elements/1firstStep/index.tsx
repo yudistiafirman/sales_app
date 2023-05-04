@@ -21,6 +21,7 @@ import {
 import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
+import { layout } from '@/constants';
 
 export default function FirstStep() {
   const dispatch = useDispatch<AppDispatch>();
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
   touchable: {
     position: 'absolute',
     width: '100%',
-    borderRadius: resScale(4),
+    borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
   },

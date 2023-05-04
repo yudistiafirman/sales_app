@@ -1,4 +1,4 @@
-import { colors, layout } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
 import { StyleSheet } from 'react-native';
@@ -44,7 +44,7 @@ const loginStyle = StyleSheet.create({
   },
   counterCodeText: {
     fontFamily: font.family.montserrat[500],
-    fontSize: resScale(14),
+    fontSize: fonts.size.md,
     color: colors.text.dark,
     marginBottom: layout.pad.sm,
   },
@@ -67,6 +67,6 @@ const loginStyle = StyleSheet.create({
   },
   buttonStyle: {
     width: resScale(328),
-  }
+  },
 });
 export default loginStyle;

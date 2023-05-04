@@ -3,7 +3,7 @@ import font from '@/constants/fonts';
 import { resScale } from '@/utils';
 import { StyleSheet } from 'react-native';
 const VerificationStyles = StyleSheet.create({
-  container: { flex: 1, marginHorizontal: resScale(16) },
+  container: { flex: 1, marginHorizontal: layout.pad.lg },
   otpMessageImage: {
     width: resScale(180),
     height: resScale(125.5),
