@@ -42,7 +42,11 @@ export type RootStackParamList = {
   CREATE_VISITATION: { existingVisitation?: visitationListResponse };
   SPH: { projectId?: string };
   APPOINTMENT: undefined;
-  SEARCH_PRODUCT: { isGobackAfterPress?: boolean; distance: number };
+  SEARCH_PRODUCT: {
+    isGobackAfterPress?: boolean;
+    distance: number;
+    disablePressed?: boolean;
+  };
   LOCATION: {
     coordinate: { longitude: number; latitude: number };
     isReadOnly: boolean;

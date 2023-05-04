@@ -1,8 +1,8 @@
 import EmptyState from '@/components/organism/BEmptyState';
 import React from 'react';
-import { FlatList } from 'react-native';
 import LocationListCard from './LocationListCard';
 import LocationListShimmer from './LocationListShimmer';
+import { FlashList } from '@shopify/flash-list';
 
 interface LocationData {
   description?: string;
@@ -52,7 +52,8 @@ const LocationList = <ArrayOfObject extends LocationData>({
     }
   };
   return (
-    <FlatList
+    <FlashList
+      estimatedItemSize={10}
       data={locationData}
       render
       keyExtractor={(item, index) => index.toString()}

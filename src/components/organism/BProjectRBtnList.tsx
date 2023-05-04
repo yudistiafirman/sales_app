@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
-import { FlatList, ListRenderItem } from 'react-native';
+import { ListRenderItem } from 'react-native';
 import BProjectRBtn from '../molecules/BProjectRBtn';
+import { FlashList } from '@shopify/flash-list';
 
 type BProjectData = {
   id?: string;
@@ -32,7 +33,8 @@ const BProjectRBtnList = ({ data, isOption, onSelect }: IProps) => {
   );
 
   return (
-    <FlatList
+    <FlashList
+      estimatedItemSize={10}
       data={data}
       keyExtractor={(item, index) => index.toString()}
       renderItem={renderItem}

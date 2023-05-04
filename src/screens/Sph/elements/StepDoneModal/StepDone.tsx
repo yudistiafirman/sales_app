@@ -3,7 +3,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  FlatList,
   Share,
   Platform,
   Linking,
@@ -31,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { RootState } from '@/redux/store';
 import { resetSPHState } from '@/redux/reducers/SphReducer';
+import { FlashList } from '@shopify/flash-list';
 
 type StepDoneType = {
   isModalVisible: boolean;
@@ -232,7 +232,8 @@ export default function StepDone({
             <BSpacer size={'extraSmall'} />
             <Text style={styles.partText}>Produk</Text>
             <BSpacer size={'extraSmall'} />
-            <FlatList
+            <FlashList
+              estimatedItemSize={10}
               renderItem={({ item }) => {
                 return (
                   <BProductCard

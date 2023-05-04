@@ -1,8 +1,9 @@
-import { StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { colors, layout } from '@/constants';
 import { BDivider, BEmptyState, BSpacer, BText } from '@/components';
 import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
+import { FlashList } from '@shopify/flash-list';
 
 interface SOListProps {
   data: any[];
@@ -56,7 +57,9 @@ export default function SOList({
 
   const isSearch = keyword && keyword.length > 2 ? false : true;
   return (
-    <FlatList
+    <FlashList
+      estimatedItemSize={10}
+      onEndReachedThreshold={0.5}
       data={data}
       onRefresh={onRefresh}
       keyExtractor={(item, index) => index.toString()}
@@ -87,7 +90,10 @@ export default function SOList({
           <BSpacer size={'verySmall'} />
         </>
       )}
-      style={style.flatList}
+      contentContainerStyle={{
+        paddingBottom: layout.pad.md,
+        paddingHorizontal: layout.pad.lg,
+      }}
     />
   );
 }
@@ -96,7 +102,5 @@ const style = StyleSheet.create({
   flatList: {
     flex: 1,
     width: '100%',
-    marginBottom: layout.pad.md,
-    paddingHorizontal: layout.pad.lg,
   },
 });

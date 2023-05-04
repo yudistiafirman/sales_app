@@ -155,6 +155,7 @@ const PriceList = () => {
     if (!fromVisitation) {
       navigation.navigate(SEARCH_PRODUCT, {
         distance: locationDetail?.distance?.value,
+        disablePressed: fromVisitation ? false : true,
       });
     } else {
       navigation.goBack();

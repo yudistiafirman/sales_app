@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  DeviceEventEmitter,
-} from 'react-native';
+import { View, Text, StyleSheet, DeviceEventEmitter } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DateData } from 'react-native-calendars';
 import { colors, fonts, layout } from '@/constants';
@@ -26,6 +20,7 @@ import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { CALENDAR } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
+import { FlashList } from '@shopify/flash-list';
 
 export default function CalendarScreen() {
   const route = useRoute<RootStackScreenProps>();
@@ -87,6 +82,7 @@ export default function CalendarScreen() {
                 position: obj.project?.Pic?.position,
                 type: obj.project?.Pic?.type,
                 picName: obj.project?.Pic?.name,
+                location: obj.project?.LocationAddress?.line1,
               });
               return acc;
             },
@@ -192,27 +188,44 @@ export default function CalendarScreen() {
 
   return (
     <View style={styles.container}>
-      <View>
-        <BCalendar
-          onDayPress={onDayPress}
-          markedDates={markedDate}
-          onMonthChange={onMonthPress}
-          isLoading={isVisitationLoading}
-          minDate={useTodayMinDate ? new Date().toString() : undefined}
+      <View style={{ flex: 1, flexDirection: 'row' }}>
+        <FlashList
+          estimatedItemSize={10}
+          data={customerDatas}
+          ListHeaderComponent={
+            <View>
+              <BCalendar
+                onDayPress={onDayPress}
+                markedDates={markedDate}
+                onMonthChange={onMonthPress}
+                isLoading={isVisitationLoading}
+                minDate={useTodayMinDate ? new Date().toString() : undefined}
+              />
+              <BSpacer size="small" />
+              <BText bold="300" color="darker">
+                {' Pelanggan yang Dikunjungi '}
+              </BText>
+              <BSpacer size="extraSmall" />
+            </View>
+          }
+          contentContainerStyle={{ paddingBottom: layout.pad.md }}
+          ItemSeparatorComponent={() => <BSpacer size={'extraSmall'} />}
+          renderItem={({ item }) => <ExpandableCustomerCard item={item} />}
+          keyExtractor={(_, index) => index.toString()}
         />
-        <BSpacer size="small" />
-        <BText color="divider"> Pelanggan yang Dikunjungi </BText>
-        <BSpacer size="extraSmall" />
       </View>
-      <FlatList
-        style={{ marginBottom: layout.pad.md }}
-        data={customerDatas}
-        ItemSeparatorComponent={() => <BSpacer size={'extraSmall'} />}
-        renderItem={({ item }) => <ExpandableCustomerCard item={item} />}
-        keyExtractor={(_, index) => index.toString()}
-      />
-      {selectedData && (
-        <>
+      {selectedData ? (
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: colors.white,
+            padding: layout.pad.lg,
+            paddingTop: layout.pad.md,
+          }}
+        >
           <View>
             <Text style={styles.tanggalKunjunganText}>
               Tanggal Kunjungan Berikutnya
@@ -233,7 +246,9 @@ export default function CalendarScreen() {
             }}
             disable={!selectedData[0]}
           />
-        </>
+        </View>
+      ) : (
+        <></>
       )}
     </View>
   );

@@ -3,7 +3,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  FlatList,
   ListRenderItem,
 } from 'react-native';
 import * as React from 'react';
@@ -15,6 +14,7 @@ import Pdf from 'react-native-pdf';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import BText from '../atoms/BText';
 import BSpacer from '../atoms/BSpacer';
+import { FlashList } from '@shopify/flash-list';
 
 type BGalleryType = {
   picts: any[];
@@ -85,7 +85,8 @@ export default function BGallery({
     []
   );
   return (
-    <FlatList
+    <FlashList
+      estimatedItemSize={10}
       data={picts}
       keyExtractor={(item, index) => index.toString()}
       renderItem={renderItem}

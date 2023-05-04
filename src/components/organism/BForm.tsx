@@ -254,13 +254,14 @@ const renderInput = (
             style={[
               styles.quantityInput,
               { paddingEnd: layout.pad.xl },
-              isError && { borderColor: colors.primary },
+              // isError && { borderColor: colors.primary },
             ]}
             onChangeText={(vl) => onChange(vl.replace(/\D/g, ''))}
             value={value}
             keyboardType={'numeric'}
             placeholder={placeholder}
             contentStyle={textStyles}
+            outlineColor={outlineColor}
           />
           <View style={styles.quantityText}>
             <BText>{quantityType ? quantityType : 'm³'}</BText>
