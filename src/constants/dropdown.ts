@@ -151,6 +151,17 @@ const METHOD_LIST = [
   },
 ];
 
+const METHOD_LIST_DEPRECATED = [
+  {
+    label: 'Pompa',
+    value: true,
+  },
+  {
+    label: 'Non-Pompa',
+    value: false,
+  },
+];
+
 const DRIVER_LIST = [
   {
     label: 'Bejo',
@@ -191,4 +202,5 @@ export {
   TM_CONDITION,
   PO_METHOD_LIST,
   METHOD_LIST,
+  METHOD_LIST_DEPRECATED,
 };
