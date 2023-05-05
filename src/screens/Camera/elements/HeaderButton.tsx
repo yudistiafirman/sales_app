@@ -6,12 +6,12 @@ import {
   StyleSheet,
   ListRenderItem,
 } from 'react-native';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { BSpacer } from '@/components';
+import { FlashList } from '@shopify/flash-list';
 
 type configType = {
   style?: StyleProp<ViewStyle>;
@@ -80,7 +80,8 @@ const HeaderButton = ({
     <>
       <View style={[styles.cameraBtn, style]}>
         <View>
-          <FlatList
+          <FlashList
+            estimatedItemSize={4}
             renderItem={renderItem}
             data={cameraHeaderButtonValue}
             keyExtractor={(item, index) => index.toString()}
@@ -94,8 +95,13 @@ const HeaderButton = ({
 
 const styles = StyleSheet.create({
   cameraBtn: {
+    top: 0,
+    bottom: 0,
     position: 'absolute',
-    right: layout.pad.md,
+    right: 0,
+    alignItems: 'flex-end',
+    marginRight: layout.pad.md,
+    left: 0,
   },
   photoIconContainer: {
     width: layout.pad.xl,

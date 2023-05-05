@@ -129,18 +129,20 @@ const SearchSO = () => {
       {keyword !== '' && searchValue.length < 3 ? (
         <BEmptyState emptyText={'Minimal 3 huruf!'} />
       ) : (
-        <SOList
-          data={soListData}
-          loadList={isLoading}
-          isLoadMore={isLoadMore}
-          refreshing={isRefreshing}
-          onEndReached={() => send('onEndReached', { payload: searchValue })}
-          onPressList={(item) => onPressItem(item)}
-          onRefresh={() => send('onRefreshList', { payload: searchValue })}
-          onRetry={() => send('retryGettingList', { payload: searchValue })}
-          keyword={keyword}
-          errorMessage={errorMessage}
-        />
+        <View style={{ flexGrow: 1, flexDirection: 'row' }}>
+          <SOList
+            data={soListData}
+            loadList={isLoading}
+            isLoadMore={isLoadMore}
+            refreshing={isRefreshing}
+            onEndReached={() => send('onEndReached', { payload: searchValue })}
+            onPressList={(item) => onPressItem(item)}
+            onRefresh={() => send('onRefreshList', { payload: searchValue })}
+            onRetry={() => send('retryGettingList', { payload: searchValue })}
+            keyword={keyword}
+            errorMessage={errorMessage}
+          />
+        </View>
       )}
     </SafeAreaView>
   );

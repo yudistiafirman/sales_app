@@ -131,8 +131,6 @@ const Dispatch = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
     backgroundColor: colors.white,
     paddingBottom: layout.pad.lg,
   },

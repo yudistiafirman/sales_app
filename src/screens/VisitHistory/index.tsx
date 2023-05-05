@@ -1,17 +1,16 @@
-import { BSpinner, BTabSections } from '@/components';
+import { BSpacer, BSpinner, BTabSections } from '@/components';
 import { colors, layout } from '@/constants';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 import visitHistoryMachine from '@/machine/visitHistoryMachine';
 import { RootStackParamList } from '@/navigation/CustomStateComponent';
-import { resScale } from '@/utils';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { useMachine } from '@xstate/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
 import HistoryDetails from './elements/HistoryDetails';
 import HistoryHeader from './elements/HistoryHeader';
 import LocationText from './elements/LocationText';
+import { FlashList } from '@shopify/flash-list';
 
 type VisitHistoryRoute = RouteProp<RootStackParamList, 'VISIT_HISTORY'>;
 
@@ -68,9 +67,12 @@ const VisitHistory = () => {
         swipeEnabled={false}
         navigationState={{ index, routes }}
         renderScene={() => (
-          <FlatList
-            data={null}
-            renderItem={null}
+          <FlashList
+            estimatedItemSize={1}
+            data={[1]}
+            renderItem={() => {
+              return <BSpacer size={'verySmall'} />;
+            }}
             ListHeaderComponent={renderVisitHistory}
           />
         )}

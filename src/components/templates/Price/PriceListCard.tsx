@@ -54,8 +54,8 @@ const PriceListCard = ({
 export const PriceListCardStyles = StyleSheet.create({
   container: {
     height: resScale(56),
-    borderBottomWidth: 1,
-    borderColor: colors.border.disabled,
+    // borderBottomWidth: 1,
+    // borderColor: colors.border.disabled,
     marginTop: layout.pad.xs + layout.pad.sm,
   },
   nameAndPriceContainer: {

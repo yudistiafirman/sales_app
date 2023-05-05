@@ -17,8 +17,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
 import { QuotationRequests } from '@/interfaces/createPurchaseOrder';
 import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
-import { FlatList } from 'react-native-gesture-handler';
 import { layout } from '@/constants';
+import { FlashList } from '@shopify/flash-list';
 
 const CreatePo = () => {
   const navigation = useNavigation();
@@ -143,64 +143,69 @@ const CreatePo = () => {
             }
           />
         ) : (
-          <FlatList
-            data={null}
-            renderItem={null}
-            ListHeaderComponent={
-              <View>
-                {customerType === 'COMPANY' && (
-                  <>
-                    <BGallery
-                      addMorePict={addMoreImages}
-                      picts={poImages}
-                      removePict={deleteImages}
-                    />
-                    <BSpacer size="extraSmall" />
-                    <BForm inputs={inputs} />
-                  </>
-                )}
-
-                {isUserChoosedSph ? (
-                  <>
-                    <View style={{ height: resScale(57) }}>
-                      <BVisitationCard
-                        item={{
-                          name: choosenSphDataFromModal.name,
-                          location: choosenSphDataFromModal.locationName,
-                        }}
-                        isRenderIcon
-                        customIcon={renderCustomButton}
+          <View style={{ height: '100%', flexDirection: 'row' }}>
+            <FlashList
+              estimatedItemSize={1}
+              data={[1]}
+              renderItem={() => {
+                return <BSpacer size={'verySmall'} />;
+              }}
+              ListHeaderComponent={
+                <View>
+                  {customerType === 'COMPANY' && (
+                    <>
+                      <BGallery
+                        addMorePict={addMoreImages}
+                        picts={poImages}
+                        removePict={deleteImages}
                       />
-                    </View>
+                      <BSpacer size="extraSmall" />
+                      <BForm inputs={inputs} />
+                    </>
+                  )}
 
-                    <BSpacer size="extraSmall" />
-                    <BNestedProductCard
-                      withoutHeader={false}
-                      data={choosenSphDataFromModal?.QuotationRequests}
-                      expandData={expandData}
-                      onExpand={onExpand}
-                    />
-                  </>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => dispatch({ type: 'searchingSph' })}
-                    style={{ height: resScale(50) }}
-                  >
-                    <BSearchBar
-                      left={
-                        <TextInput.Icon
-                          forceTextInputFocus={false}
-                          icon="magnify"
+                  {isUserChoosedSph ? (
+                    <>
+                      <View style={{ height: resScale(57) }}>
+                        <BVisitationCard
+                          item={{
+                            name: choosenSphDataFromModal.name,
+                            location: choosenSphDataFromModal.locationName,
+                          }}
+                          isRenderIcon
+                          customIcon={renderCustomButton}
                         />
-                      }
-                      disabled
-                      placeholder="Cari PT / Proyek"
-                    />
-                  </TouchableOpacity>
-                )}
-              </View>
-            }
-          />
+                      </View>
+
+                      <BSpacer size="extraSmall" />
+                      <BNestedProductCard
+                        withoutHeader={false}
+                        data={choosenSphDataFromModal?.QuotationRequests}
+                        expandData={expandData}
+                        onExpand={onExpand}
+                      />
+                    </>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => dispatch({ type: 'searchingSph' })}
+                      style={{ height: resScale(50) }}
+                    >
+                      <BSearchBar
+                        left={
+                          <TextInput.Icon
+                            forceTextInputFocus={false}
+                            icon="magnify"
+                          />
+                        }
+                        disabled
+                        placeholder="Cari PT / Proyek"
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              }
+            />
+          </View>
         )}
       </View>
     </>

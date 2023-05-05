@@ -3,7 +3,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  FlatList,
   DeviceEventEmitter,
   Dimensions,
 } from 'react-native';
@@ -31,7 +30,7 @@ import {
   setStepperFocused,
   updateChosenProducts,
 } from '@/redux/reducers/SphReducer';
-import { styles } from '@/screens/Transaction/element/TransactionListCard';
+import { FlashList } from '@shopify/flash-list';
 const { width } = Dimensions.get('window');
 
 interface RenderModalType {
@@ -173,31 +172,34 @@ export default function FourthStep() {
           </View>
           <BSpacer size={'verySmall'} />
           {/* <Text>Tidak ada produk yang terpilih</Text> */}
-          <FlatList
-            data={chosenProducts}
-            keyExtractor={(item) => item.product.id}
-            ListFooterComponent={
-              <View style={{ width: resScale(160), height: resScale(160) }} />
-            }
-            renderItem={({ item, index }) => {
-              return (
-                <BProductCard
-                  name={item.product.name}
-                  volume={+item.volume}
-                  pricePerVol={+item.sellPrice}
-                  totalPrice={+item.totalPrice}
-                  onPressEdit={() => {
-                    setSelectedProduct(item.product);
-                    setIsModalVisible(true);
-                  }}
-                  onPressDelete={() => {
-                    deleteSelectedProduct(index);
-                  }}
-                />
-              );
-            }}
-            ItemSeparatorComponent={renderSeparator}
-          />
+          <View style={{ flexGrow: 1, flexDirection: 'row' }}>
+            <FlashList
+              estimatedItemSize={10}
+              data={chosenProducts}
+              keyExtractor={(item) => item.product.id}
+              ListFooterComponent={
+                <View style={{ width: resScale(160), height: resScale(160) }} />
+              }
+              renderItem={({ item, index }) => {
+                return (
+                  <BProductCard
+                    name={item.product.name}
+                    volume={+item.volume}
+                    pricePerVol={+item.sellPrice}
+                    totalPrice={+item.totalPrice}
+                    onPressEdit={() => {
+                      setSelectedProduct(item.product);
+                      setIsModalVisible(true);
+                    }}
+                    onPressDelete={() => {
+                      deleteSelectedProduct(index);
+                    }}
+                  />
+                );
+              }}
+              ItemSeparatorComponent={renderSeparator}
+            />
+          </View>
         </View>
         <View style={style.backContinueWrapper}>
           <BBackContinueBtn

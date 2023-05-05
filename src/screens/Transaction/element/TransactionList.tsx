@@ -2,9 +2,10 @@ import { BEmptyState } from '@/components';
 import { layout } from '@/constants';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import React, { useCallback } from 'react';
-import { FlatList, ListRenderItem } from 'react-native';
+import { ListRenderItem } from 'react-native';
 import TransactionListCard from './TransactionListCard';
 import TransactionListShimmer from './TransactionListShimmer';
+import { FlashList } from '@shopify/flash-list';
 
 interface TransactionsData {
   id: string;
@@ -94,14 +95,16 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
     [onPress]
   );
   return (
-    <FlatList
+    <FlashList
+      estimatedItemSize={10}
+      onEndReachedThreshold={0.5}
       data={transactions}
       removeClippedSubviews={false}
       initialNumToRender={10}
       maxToRenderPerBatch={10}
       onRefresh={onRefresh}
       contentContainerStyle={{
-        marginHorizontal: layout.pad.lg,
+        paddingHorizontal: layout.pad.lg,
         paddingBottom: layout.pad.lg,
       }}
       keyExtractor={(item, index) => index.toString()}

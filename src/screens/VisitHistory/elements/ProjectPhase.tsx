@@ -3,8 +3,9 @@ import { colors, layout } from '@/constants';
 import { STAGE_PROJECT } from '@/constants/dropdown';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
+import { FlashList } from '@shopify/flash-list';
 import React, { useCallback } from 'react';
-import { StyleSheet, View, FlatList, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 const ProjectPhase = ({ phase }: { phase: string }) => {
   const renderItem = useCallback(
@@ -52,7 +53,8 @@ const ProjectPhase = ({ phase }: { phase: string }) => {
     <View style={styles.container}>
       <BLabel bold="600" sizeInNumber={font.size.md} label="Fase Proyek" />
       <BSpacer size="extraSmall" />
-      <FlatList
+      <FlashList
+        estimatedItemSize={10}
         data={STAGE_PROJECT}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}

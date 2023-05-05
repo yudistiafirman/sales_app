@@ -5,6 +5,7 @@ import { BEmptyState, BSpacer, BVisitationCard } from '@/components';
 import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 import { ENTRY_TYPE } from '@/models/EnumModel';
+import { FlashList } from '@shopify/flash-list';
 
 interface OperationListProps {
   data: OperationsDeliveryOrdersListResponse[];
@@ -61,7 +62,9 @@ export default function OperationList({
   };
 
   return (
-    <FlatList
+    <FlashList
+      estimatedItemSize={10}
+      onEndReachedThreshold={0.5}
       data={data}
       // removeClippedSubviews={false}
       // initialNumToRender={10}
@@ -87,15 +90,13 @@ export default function OperationList({
       }
       ListFooterComponent={isLoadMore ? <BCommonListShimmer /> : null}
       ItemSeparatorComponent={() => <BSpacer size={'small'} />}
-      style={style.flatList}
+      contentContainerStyle={style.flatList}
     />
   );
 }
 
 const style = StyleSheet.create({
   flatList: {
-    flex: 1,
-    width: '100%',
     paddingBottom: layout.pad.lg,
     paddingHorizontal: layout.pad.lg,
   },

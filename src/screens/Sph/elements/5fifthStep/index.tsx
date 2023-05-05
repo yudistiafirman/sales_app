@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  FlatList,
   Platform,
 } from 'react-native';
 import React, { useContext, useState } from 'react';
@@ -46,6 +45,7 @@ import {
   updateUploadedAndMappedRequiredDocs,
   updateUseHighway,
 } from '@/redux/reducers/SphReducer';
+import { FlashList } from '@shopify/flash-list';
 
 function countNonNullValues(array) {
   let count = 0;
@@ -403,8 +403,9 @@ export default function FifthStep() {
             </View>
             <BSpacer size={'small'} />
           </View>
-          <View>
-            <FlatList
+          <View style={{ flexGrow: 1, flexDirection: 'row' }}>
+            <FlashList
+              estimatedItemSize={10}
               data={sphState?.chosenProducts}
               renderItem={(item) => {
                 return (
@@ -421,9 +422,9 @@ export default function FifthStep() {
               }}
             />
           </View>
-          <View style={{ flex: 1 }}>
-            <BSpacer size={'extraSmall'} />
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <BForm titleBold="500" inputs={inputsData} />
+            <BSpacer size={'extraSmall'} />
           </View>
         </View>
         <BBackContinueBtn

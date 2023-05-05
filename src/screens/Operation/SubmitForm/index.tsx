@@ -57,8 +57,7 @@ import {
   updateDeliveryOrder,
   updateDeliveryOrderWeight,
 } from '@/actions/OrderActions';
-import { FlatList } from 'react-native-gesture-handler';
-import { LocalFileType } from '@/interfaces/LocalFileType';
+import { FlashList } from '@shopify/flash-list';
 
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
@@ -532,9 +531,16 @@ const SubmitForm = () => {
 
   return (
     <SafeAreaView style={style.parent}>
-      <FlatList
-        data={null}
-        renderItem={null}
+      <FlashList
+        estimatedItemSize={1}
+        data={[1]}
+        contentContainerStyle={{
+          paddingHorizontal: layout.pad.lg,
+          paddingBottom: layout.pad.lg,
+        }}
+        renderItem={() => {
+          return <BSpacer size={'verySmall'} />;
+        }}
         ListHeaderComponent={
           <View style={style.flexFull}>
             {enableLocationHeader && (
@@ -601,13 +607,20 @@ const SubmitForm = () => {
       />
 
       {!keyboardVisible && (
-        <BBackContinueBtn
-          onPressContinue={onPressContinue}
-          disableContinue={handleDisableContinueButton()}
-          onPressBack={handleBack}
-          continueText={'Simpan'}
-          isContinueIcon={false}
-        />
+        <View
+          style={{
+            paddingHorizontal: layout.pad.lg,
+            paddingBottom: layout.pad.lg,
+          }}
+        >
+          <BBackContinueBtn
+            onPressContinue={onPressContinue}
+            disableContinue={handleDisableContinueButton()}
+            onPressBack={handleBack}
+            continueText={'Simpan'}
+            isContinueIcon={false}
+          />
+        </View>
       )}
     </SafeAreaView>
   );
@@ -624,9 +637,8 @@ const style = StyleSheet.create({
   },
   parent: {
     flex: 1,
+    flexDirection: 'column',
     backgroundColor: colors.white,
-    paddingHorizontal: layout.pad.lg,
-    paddingBottom: layout.pad.lg,
   },
   top: {
     height: resScale(120),

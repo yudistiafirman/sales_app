@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { BackHandler, FlatList, View } from 'react-native';
+import { BackHandler, View } from 'react-native';
 import {
   useNavigation,
   StackActions,
@@ -27,6 +27,7 @@ import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { uploadFileImage } from '@/actions/CommonActions';
 import { UploadSOSigned } from '@/models/SOSigned';
 import { uploadSOSignedDocs } from '@/actions/OrderActions';
+import { FlashList } from '@shopify/flash-list';
 
 const FormSO = () => {
   const navigation = useNavigation();
@@ -194,9 +195,12 @@ const FormSO = () => {
   );
   return (
     <View style={{ flex: 1, padding: layout.pad.lg }}>
-      <FlatList
-        data={null}
-        renderItem={null}
+      <FlashList
+        estimatedItemSize={1}
+        data={[1]}
+        renderItem={() => {
+          return <BSpacer size={'verySmall'} />;
+        }}
         ListHeaderComponent={
           <>
             <BGallery

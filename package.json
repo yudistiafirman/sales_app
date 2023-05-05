@@ -31,6 +31,7 @@
     "@react-navigation/native": "^6.1.1",
     "@react-navigation/native-stack": "^6.9.6",
     "@reduxjs/toolkit": "^1.9.1",
+    "@shopify/flash-list": "^1.4.3",
     "@types/react-native-material-menu": "^1.0.6",
     "@xstate/react": "^3.0.1",
     "algebra.js": "^0.2.6",

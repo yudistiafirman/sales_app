@@ -4,8 +4,9 @@ import font from '@/constants/fonts';
 import { Products } from '@/machine/visitHistoryMachine';
 import ProductChip from '@/screens/Visitation/elements/third/ProductChip';
 import { resScale } from '@/utils';
+import { FlashList } from '@shopify/flash-list';
 import React, { useCallback } from 'react';
-import { StyleSheet, View, FlatList, ListRenderItem } from 'react-native';
+import { StyleSheet, View, ListRenderItem } from 'react-native';
 
 const Product = ({ products }: { products: Products }) => {
   const renderItem: ListRenderItem<Products> = useCallback(({ item }) => {
@@ -22,7 +23,8 @@ const Product = ({ products }: { products: Products }) => {
     <View style={styles.container}>
       <BLabel bold="600" sizeInNumber={font.size.md} label="Produk" />
       <BSpacer size="extraSmall" />
-      <FlatList
+      <FlashList
+        estimatedItemSize={10}
         data={products}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
