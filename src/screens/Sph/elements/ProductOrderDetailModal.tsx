@@ -276,10 +276,10 @@ export default function ProductCartModal({
               IDR {calcPrice ? formatCurrency(calcPrice) : '0'}
             </Text>
           </View>
-          <BSpacer size="extraSmall" />
+          {/* <BSpacer size="extraSmall" />
           <View>
             <BForm titleBold="500" inputs={methodInput} />
-          </View>
+          </View> */}
           <BSpacer size="extraSmall" />
           <View style={style.priceContainer}>
             <Text style={style.productName}>Total Harga</Text>
@@ -294,7 +294,8 @@ export default function ProductCartModal({
             title="Tambah Produk"
             disable={
               // +detailOrder.sellPrice < productData.calcPrice ||
-              !detailOrder.volume || !detailOrder.method
+              // !detailOrder.volume || !detailOrder.method
+              !detailOrder.volume
             }
             onPress={() => {
               choseProduct((curr) => {
