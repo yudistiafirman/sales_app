@@ -67,8 +67,8 @@ export default function SecondStep() {
       label: 'Metode penuangan',
       isRequire: true,
       type: 'dropdown',
-      value: stateTwo?.method ? stateTwo?.method : false, 
-      // isError: stateTwo?.method ? false : true,
+      value: stateTwo?.method, 
+      isError: stateTwo?.method === undefined ? true : false,
       customerErrorMsg: 'Metode penuangan harus dipilih',
       dropdown: {
         items: METHOD_LIST_DEPRECATED,
