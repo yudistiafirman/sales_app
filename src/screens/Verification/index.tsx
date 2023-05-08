@@ -87,10 +87,10 @@ const Verification = () => {
         });
         crashlytics().setUserId(response.data.id);
         crashlytics().setAttributes({
-        //   role: response.data.type,
-        //   email: response.data.email,
-        //   username: response.data.phone,
-        // });
+          role: response.data.type,
+          email: response.data.email,
+          username: response.data.phone,
+        });
       } else {
         throw new Error(response.data.message);
       }
