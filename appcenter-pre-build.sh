@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
-# Creates an .env from existing env files for use with react-native-config 
-# based on branch
-
 echo MAJOR_VERSION=$MAJOR_VERSION >> .env
 echo MINOR_VERSION=$MINOR_VERSION >> .env
 echo PATCH_VERSION=$PATCH_VERSION >> .env
