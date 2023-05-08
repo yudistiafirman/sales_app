@@ -11,7 +11,7 @@ import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn'
 import { SphContext } from '../context/SphContext';
 import { fetchSphDocuments } from '@/redux/async-thunks/commonThunks';
 import { useDispatch, useSelector } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { RootState } from '@/redux/store';
 import {
@@ -70,7 +70,7 @@ export default function ThirdStep() {
   ];
 
   useEffect(() => {
-    crashlytics().log(SPH + '-Step3');
+    // crashlytics().log(SPH + '-Step3');
 
     if (paymentType) {
       const objKey: {

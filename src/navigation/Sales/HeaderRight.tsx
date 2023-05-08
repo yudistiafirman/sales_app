@@ -6,7 +6,7 @@ import { signout } from '@/redux/reducers/authReducer';
 import { AppDispatch } from '@/redux/store';
 import bStorage from '@/actions/BStorage';
 import { signOut } from '@/actions/CommonActions';
-import crashlytics from '@react-native-firebase/crashlytics';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 import Icon from 'react-native-vector-icons/Feather';
 import analytics from '@react-native-firebase/analytics';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
@@ -41,7 +41,7 @@ export default function SalesHeaderRight(iconColor: string = '') {
       if (response) {
         bStorage.clearItem();
         dispatch(signout(false));
-        crashlytics().setUserId('');
+        // // crashlytics().setUserId('');
         analytics().setUserId('');
       }
     } catch (error) {

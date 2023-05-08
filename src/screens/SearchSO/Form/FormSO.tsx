@@ -15,7 +15,7 @@ import {
   PopUpQuestion,
 } from '@/components';
 import { colors, layout } from '@/constants';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import { CAMERA, FORM_SO, GALLERY_SO } from '@/navigation/ScreenNames';
 import { Input } from '@/interfaces';
 import { AppDispatch, RootState } from '@/redux/store';
@@ -160,7 +160,7 @@ const FormSO = () => {
   };
 
   React.useEffect(() => {
-    crashlytics().log(FORM_SO);
+    // crashlytics().log(FORM_SO);
   }, []);
 
   const actionBackButton = (popupVisible: boolean = false) => {

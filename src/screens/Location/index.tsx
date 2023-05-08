@@ -28,7 +28,7 @@ import {
 } from '@/navigation/ScreenNames';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { resScale } from '@/utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 
 const Location = () => {
   const navigation = useNavigation();
@@ -43,7 +43,7 @@ const Location = () => {
   });
 
   React.useEffect(() => {
-    crashlytics().log(LOCATION);
+    // // crashlytics().log(LOCATION);
     if (route?.params) {
       const { params } = route;
       const { latitude, longitude, formattedAddress } = params.coordinate;

@@ -10,7 +10,7 @@ import {
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { hasCameraPermissions } from '@/utils/permissions';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { BHeaderIcon } from '@/components';
 import { resScale } from '@/utils';
@@ -151,7 +151,7 @@ const CameraScreen = () => {
   const isFocused = useIsFocused();
 
   React.useEffect(() => {
-    crashlytics().log(CAMERA);
+    // // crashlytics().log(CAMERA);
   }, [navigation]);
 
   useFocusEffect(

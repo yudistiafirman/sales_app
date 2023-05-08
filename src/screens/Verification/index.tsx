@@ -19,7 +19,7 @@ import bStorage from '@/actions/BStorage';
 import { signIn } from '@/actions/CommonActions';
 import jwtDecode from 'jwt-decode';
 import storageKey from '@/constants/storageKey';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import { VERIFICATION } from '@/navigation/ScreenNames';
 import analytics from '@react-native-firebase/analytics';
 import { UserModel } from '@/models/User';
@@ -53,7 +53,7 @@ const Verification = () => {
   }, [countDownOtp]);
 
   React.useEffect(() => {
-    crashlytics().log(VERIFICATION);
+    // crashlytics().log(VERIFICATION);
 
     if (otpValue.length === 6) {
       onLogin();
@@ -85,12 +85,12 @@ const Verification = () => {
           email: response.data.email,
           username: response.data.phone,
         });
-        crashlytics().setUserId(response.data.id);
-        crashlytics().setAttributes({
-          role: response.data.type,
-          email: response.data.email,
-          username: response.data.phone,
-        });
+        // crashlytics().setUserId(response.data.id);
+        // crashlytics().setAttributes({
+        //   role: response.data.type,
+        //   email: response.data.email,
+        //   username: response.data.phone,
+        // });
       } else {
         throw new Error(response.data.message);
       }

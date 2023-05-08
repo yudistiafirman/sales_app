@@ -9,7 +9,7 @@ import { getSuccessMsgFromAPI } from '@/utils/generalFunc';
 import { openSnackbar } from '@/redux/reducers/snackbarReducer';
 import Config from 'react-native-config';
 import { Platform } from 'react-native';
-import crashlytics from '@react-native-firebase/crashlytics';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import perf from '@react-native-firebase/perf';
 
@@ -150,7 +150,7 @@ instance.interceptors.response.use(
       if (data.error?.code === 'TKN001' || data.error?.code === 'TKN003') {
         bStorage.clearItem();
         store.dispatch(signout(false));
-        crashlytics().setUserId('');
+        // // crashlytics().setUserId('');
         analytics().setUserId('');
         return Promise.resolve(res);
       }
@@ -244,7 +244,7 @@ instance.interceptors.response.use(
       if (error?.config?.url === refreshToken && errorStatus === 500) {
         bStorage.clearItem();
         store.dispatch(signout(false));
-        crashlytics().setUserId('');
+        // // crashlytics().setUserId('');
         analytics().setUserId('');
       } else {
         if (

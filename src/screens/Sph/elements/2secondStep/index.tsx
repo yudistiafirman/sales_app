@@ -34,7 +34,7 @@ import { getLocationCoordinates } from '@/actions/CommonActions';
 import { SEARCH_AREA, SPH } from '@/navigation/ScreenNames';
 import { useKeyboardActive } from '@/hooks';
 import { TextInput } from 'react-native-paper';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import {
   setSearchAddress,
   setSearchedBillingAddress,
@@ -296,7 +296,7 @@ export default function SecondStep() {
   }, [billingAddress, isBillingAddressSame, distanceFromLegok]);
 
   useEffect(() => {
-    crashlytics().log(SPH + '-Step2');
+    // crashlytics().log(SPH + '-Step2');
 
     DeviceEventEmitter.addListener(eventKeyObj.shipp, (data) => {
       dispatch(setUseSearchAddress({ value: true }));

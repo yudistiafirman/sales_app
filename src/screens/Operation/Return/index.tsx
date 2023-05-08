@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
 import OperationList from '../element/OperationList';
-import crashlytics from '@react-native-firebase/crashlytics';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 import {
   CAMERA,
   SUBMIT_FORM,
@@ -39,7 +39,7 @@ const Return = () => {
   );
 
   React.useEffect(() => {
-    crashlytics().log(ENTRY_TYPE.SECURITY ? TAB_RETURN : TAB_WB_IN);
+    // // crashlytics().log(ENTRY_TYPE.SECURITY ? TAB_RETURN : TAB_WB_IN);
 
     DeviceEventEmitter.addListener('Operation.refreshlist', () => {
       send('onRefreshList', { payload: userData?.type, tabActive: 'right' });

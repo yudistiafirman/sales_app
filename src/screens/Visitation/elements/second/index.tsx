@@ -12,7 +12,7 @@ import { useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
 import { RootState } from '@/redux/store';
 import {
@@ -45,7 +45,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   };
 
   useEffect(() => {
-    crashlytics().log(CREATE_VISITATION + '-Step2');
+    // crashlytics().log(CREATE_VISITATION + '-Step2');
 
     if (visitationData.companyName) {
       dispatch(

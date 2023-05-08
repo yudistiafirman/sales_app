@@ -23,7 +23,7 @@ import { colors, fonts, layout } from '@/constants';
 import { SphContext } from '../context/SphContext';
 import { useNavigation } from '@react-navigation/native';
 import { SEARCH_PRODUCT, SPH } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import {
@@ -116,7 +116,7 @@ export default function FourthStep() {
   }, []);
 
   useEffect(() => {
-    crashlytics().log(SPH + '-Step4');
+    // crashlytics().log(SPH + '-Step4');
 
     if (productsRedux.length > 0) {
       setChosenProducts(productsRedux);

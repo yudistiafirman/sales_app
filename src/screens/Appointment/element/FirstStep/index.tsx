@@ -6,7 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useAppointmentData } from '@/hooks';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { APPOINTMENT } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { resScale } from '@/utils';
 import { TextInput } from 'react-native-paper';
@@ -17,7 +17,7 @@ const FirstStep = () => {
   const { searchQuery, isSearching } = values;
 
   React.useEffect(() => {
-    crashlytics().log(APPOINTMENT + '-Step1');
+    // // crashlytics().log(APPOINTMENT + '-Step1');
   }, []);
 
   return (

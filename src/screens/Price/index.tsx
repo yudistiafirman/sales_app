@@ -22,7 +22,7 @@ import {
   TAB_PRICE_LIST,
   TAB_PRICE_LIST_TITLE,
 } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
@@ -41,7 +41,7 @@ const PriceList = () => {
     React.useState('');
 
   React.useEffect(() => {
-    crashlytics().log(TAB_PRICE_LIST);
+    // crashlytics().log(TAB_PRICE_LIST);
 
     if (state.matches('denied')) {
       const subscription = AppState.addEventListener(

@@ -6,7 +6,7 @@ import { BEmptyState, BHeaderIcon, BSpacer } from '@/components';
 import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import { CAMERA, FORM_SO, SEARCH_SO } from '@/navigation/ScreenNames';
 import SearchSONavbar from './element/SearchSONavbar';
 import SOList from './element/SOList';
@@ -36,7 +36,7 @@ const SearchSO = () => {
   );
 
   React.useEffect(() => {
-    crashlytics().log(SEARCH_SO);
+    // crashlytics().log(SEARCH_SO);
   }, []);
 
   useFocusEffect(

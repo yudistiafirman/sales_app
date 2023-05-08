@@ -7,7 +7,7 @@ import { AppDispatch } from '@/redux/store';
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import { TAB_PROFILE } from '@/navigation/ScreenNames';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import analytics from '@react-native-firebase/analytics';
@@ -21,7 +21,7 @@ const Profile = () => {
       if (response) {
         bStorage.clearItem();
         dispatch(signout(false));
-        crashlytics().setUserId('');
+        // crashlytics().setUserId('');
         analytics().setUserId('');
       }
     } catch (error) {
@@ -40,7 +40,7 @@ const Profile = () => {
   });
 
   React.useEffect(() => {
-    crashlytics().log(TAB_PROFILE);
+    // crashlytics().log(TAB_PROFILE);
   }, []);
 
   return (

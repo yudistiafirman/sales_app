@@ -6,7 +6,7 @@ import { AppDispatch } from '@/redux/store';
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 
@@ -20,7 +20,7 @@ const BlankScreen = () => {
       if (response) {
         bStorage.clearItem();
         dispatch(signout(false));
-        crashlytics().setUserId('');
+        // // crashlytics().setUserId('');
         analytics().setUserId('');
       }
     } catch (error) {

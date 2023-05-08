@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
 import OperationList from './element/OperationList';
-import crashlytics from '@react-native-firebase/crashlytics';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import {
@@ -33,7 +33,7 @@ const Operation = () => {
     state.context;
 
   React.useEffect(() => {
-    crashlytics().log(userData?.type ? userData.type : 'Operation Default');
+    // // crashlytics().log(userData?.type ? userData.type : 'Operation Default');
     DeviceEventEmitter.addListener('Operation.refreshlist', () => {
       send('onRefreshList', { payload: userData?.type });
     });

@@ -14,7 +14,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { signIn } from '@/actions/CommonActions';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { LOGIN, VERIFICATION } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 
 interface LoginState {
   errorMessage: unknown | string;
@@ -43,7 +43,7 @@ const Login = () => {
   });
 
   React.useEffect(() => {
-    crashlytics().log(LOGIN);
+    // // crashlytics().log(LOGIN);
   }, []);
 
   const sendOtp = async () => {

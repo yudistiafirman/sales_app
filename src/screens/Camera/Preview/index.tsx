@@ -34,7 +34,7 @@ import {
 } from '@/navigation/ScreenNames';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import Pdf from 'react-native-pdf';
@@ -101,7 +101,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   }
 
   React.useEffect(() => {
-    crashlytics().log(IMAGE_PREVIEW);
+    // // crashlytics().log(IMAGE_PREVIEW);
   }, []);
 
   useFocusEffect(
