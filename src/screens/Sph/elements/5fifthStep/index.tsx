@@ -37,7 +37,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { postOrderSph } from '@/redux/async-thunks/orderThunks';
 import { RootState } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import {
   updateSelectedCompany,
@@ -248,7 +248,7 @@ export default function FifthStep() {
   ];
 
   React.useEffect(() => {
-    // crashlytics().log(SPH + '-Step5');
+    crashlytics().log(SPH + '-Step5');
   }, []);
 
   function addPicHandler() {

@@ -34,7 +34,7 @@ import {
   getScheduleByID,
   getVisitationOrderByID,
 } from '@/actions/OrderActions';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -120,7 +120,7 @@ const Transaction = () => {
   );
 
   React.useEffect(() => {
-    // crashlytics().log(TAB_TRANSACTION);
+    crashlytics().log(TAB_TRANSACTION);
   }, []);
 
   const getOneOrder = async (id: string) => {

@@ -15,7 +15,7 @@ import { layout } from '@/constants';
 import { useMachine } from '@xstate/react';
 import { searchProductMachine } from '@/machine/searchProductMachine';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
 
 const SearchProduct = () => {
@@ -51,7 +51,7 @@ const SearchProduct = () => {
   );
 
   React.useEffect(() => {
-    // crashlytics().log(SEARCH_PRODUCT);
+    crashlytics().log(SEARCH_PRODUCT);
 
     if (route?.params) {
       const { distance } = route.params;

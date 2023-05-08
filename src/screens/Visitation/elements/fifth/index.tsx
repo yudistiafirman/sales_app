@@ -29,7 +29,7 @@ import {
   GALLERY_VISITATION,
   SPH,
 } from '@/navigation/ScreenNames';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { BGallery, PopUpQuestion } from '@/components';
 import {
   deleteImagesVisitation,
@@ -211,7 +211,7 @@ const Fifth = () => {
   };
 
   useEffect(() => {
-    // crashlytics().log(CREATE_VISITATION + '-Step5');
+    crashlytics().log(CREATE_VISITATION + '-Step5');
   }, [visitationData.images]);
 
   useEffect(() => {

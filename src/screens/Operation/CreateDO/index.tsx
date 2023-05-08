@@ -13,7 +13,7 @@ import { Input } from '@/interfaces';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-// // import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_DO } from '@/navigation/ScreenNames';
 import { resScale } from '@/utils';
 import font from '@/constants/fonts';
@@ -23,7 +23,7 @@ const CreateDO = () => {
   const navigation = useNavigation();
 
   React.useEffect(() => {
-    // // crashlytics().log(CREATE_DO);
+    crashlytics().log(CREATE_DO);
   }, []);
 
   const quantityInputs: Input[] = [

@@ -32,7 +32,7 @@ import {
   SEARCH_PRODUCT,
 } from '@/navigation/ScreenNames';
 import { colors, layout } from '@/constants';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
@@ -274,7 +274,7 @@ const ThirdStep = () => {
   );
 
   useEffect(() => {
-    // crashlytics().log(CREATE_VISITATION + '-Step3');
+    crashlytics().log(CREATE_VISITATION + '-Step3');
     DeviceEventEmitter.addListener('event.testEvent', listenerCallback);
     return () => {
       DeviceEventEmitter.removeAllListeners('event.testEvent');

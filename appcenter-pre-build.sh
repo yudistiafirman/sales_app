@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Creates an .env from ENV variables for use with react-native-config
-if [ $ENVIRONMENT_VARIABLE = "prod" ]; then
-   cp .env.production .env
+# Creates an .env from existing env files for use with react-native-config 
+# based on branch
+if ["$APPCENTER_BRANCH" == "master"]; then
+   cp .env.production .env.production
 else
    cp .env .env
 fi

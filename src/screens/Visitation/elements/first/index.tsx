@@ -26,7 +26,7 @@ import { updateRegion } from '@/redux/reducers/locationReducer';
 import { layout } from '@/constants';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {
   setSearchedAddress,
   setUseSearchedAddress,
@@ -122,7 +122,7 @@ const FirstStep = () => {
   }, []);
 
   React.useEffect(() => {
-    // crashlytics().log(CREATE_VISITATION + '-Step1');
+    crashlytics().log(CREATE_VISITATION + '-Step1');
 
     const locationAddress = {
       ...visitationData.locationAddress,

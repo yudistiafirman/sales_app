@@ -20,7 +20,7 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
-// // import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { toggleHunterScreen } from '@/redux/reducers/authReducer';
 import { bStorage } from '@/actions';
 import moment from 'moment';
@@ -48,7 +48,7 @@ const HunterAndFarmers = () => {
   };
 
   React.useEffect(() => {
-    // // crashlytics().log(HUNTER_AND_FARMER);
+    crashlytics().log(HUNTER_AND_FARMER);
   }, []);
 
   return (

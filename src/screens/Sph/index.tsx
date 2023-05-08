@@ -32,7 +32,7 @@ import { updateRegion } from '@/redux/reducers/locationReducer';
 import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
 import { Region } from 'react-native-maps';
 import { getLocationCoordinates } from '@/actions/CommonActions';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { resScale } from '@/utils';
@@ -145,7 +145,7 @@ function SphContent() {
   const [isPopupVisible, setPopupVisible] = React.useState(false);
 
   useEffect(() => {
-    // crashlytics().log(SPH);
+    crashlytics().log(SPH);
 
     stepHandler(sphData, stepsDone, setStepsDone, stepControll);
     handleStepperFocus();

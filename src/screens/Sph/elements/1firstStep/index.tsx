@@ -8,7 +8,7 @@ import { getAllProject } from '@/redux/async-thunks/commonThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { AppDispatch, RootState } from '@/redux/store';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { retrying } from '@/redux/reducers/commonReducer';
 import {
@@ -41,7 +41,7 @@ export default function FirstStep() {
   }
 
   React.useEffect(() => {
-    // crashlytics().log(SPH + '-Step1');
+    crashlytics().log(SPH + '-Step1');
   }, [selectedCompany?.Pics, selectedCompany?.Pic]);
 
   const routes: { title: string; totalItems: number }[] = useMemo(() => {

@@ -28,7 +28,7 @@ import {
   Text,
   View,
 } from 'react-native';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {
   CAMERA,
   GALLERY_OPERATION,
@@ -144,7 +144,7 @@ const SubmitForm = () => {
   };
 
   React.useEffect(() => {
-    // crashlytics().log(SUBMIT_FORM);
+    crashlytics().log(SUBMIT_FORM);
     DeviceEventEmitter.addListener('Camera.preview', () => {
       removedAddButtonImage();
     });

@@ -56,7 +56,7 @@ import {
   HOME_MENU,
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
-// // import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {
   getAppVersionName,
   getMinVersionUpdate,
@@ -336,7 +336,7 @@ const Beranda = () => {
   };
 
   React.useEffect(() => {
-    // // crashlytics().log(TAB_HOME);
+    crashlytics().log(TAB_HOME);
     let currentVersionName = getAppVersionName();
     if (isDevelopment())
       currentVersionName = currentVersionName?.replace('(Dev)', '');

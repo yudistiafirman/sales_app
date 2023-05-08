@@ -30,7 +30,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { beautifyPhoneNumber } from '@/utils/generalFunc';
 import moment from 'moment';
 import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { getVisitationOrderByID } from '@/actions/OrderActions';
 import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
 import { PO_METHOD_LIST } from '@/constants/dropdown';
@@ -136,7 +136,7 @@ const TransactionDetail = () => {
   });
 
   React.useEffect(() => {
-    // crashlytics().log(TRANSACTION_DETAIL);
+    crashlytics().log(TRANSACTION_DETAIL);
   }, []);
 
   React.useEffect(() => {

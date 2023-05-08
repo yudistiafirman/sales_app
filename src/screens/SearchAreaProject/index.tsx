@@ -22,7 +22,7 @@ import {
   SPH,
 } from '@/navigation/ScreenNames';
 import { updateRegion } from '@/redux/reducers/locationReducer';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { hasLocationPermission } from '@/utils/permissions';
 import { layout } from '@/constants';
 
@@ -98,7 +98,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
   });
 
   React.useEffect(() => {
-    // crashlytics().log(SEARCH_AREA);
+    crashlytics().log(SEARCH_AREA);
   }, []);
 
   useFocusEffect(

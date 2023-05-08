@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { BForm, BSpacer } from '@/components';
 import { Competitor, Input } from '@/interfaces';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -38,7 +38,7 @@ const Fourth = () => {
   }, [visitationData?.competitors]);
 
   useEffect(() => {
-    // crashlytics().log(CREATE_VISITATION + '-Step4');
+    crashlytics().log(CREATE_VISITATION + '-Step4');
   }, [visitationData.images]);
 
   return (

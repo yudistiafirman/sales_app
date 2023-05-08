@@ -13,7 +13,7 @@ import { APPOINTMENT, CALENDAR } from '@/navigation/ScreenNames';
 import { useAppointmentData } from '@/hooks';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { selectedDateType } from '@/screens/Visitation/elements/fifth';
-// // import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { colors, layout } from '@/constants';
 
 const SecondStep = () => {
@@ -21,7 +21,7 @@ const SecondStep = () => {
   const { selectedDate } = values;
 
   useEffect(() => {
-    // // crashlytics().log(APPOINTMENT + '-Step2');
+    crashlytics().log(APPOINTMENT + '-Step2');
     DeviceEventEmitter.addListener(
       'CalendarScreen.selectedDate',
       (date: selectedDateType) => {

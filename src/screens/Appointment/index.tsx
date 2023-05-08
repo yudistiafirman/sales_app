@@ -30,7 +30,7 @@ import { postBookingAppointment } from '@/actions/ProductivityActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { APPOINTMENT } from '@/navigation/ScreenNames';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 
@@ -67,7 +67,7 @@ const Appointment = () => {
   });
 
   React.useEffect(() => {
-    // crashlytics().log(APPOINTMENT);
+    crashlytics().log(APPOINTMENT);
   }, []);
 
   useFocusEffect(

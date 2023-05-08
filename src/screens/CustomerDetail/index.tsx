@@ -17,7 +17,7 @@ import {
 import ProjectBetween from './elements/ProjectBetween';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
 import BillingModal from './elements/BillingModal';
-// // import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {
   CUSTOMER_DETAIL,
   DOCUMENTS,
@@ -138,7 +138,7 @@ export default function CustomerDetail() {
     [dispatch]
   );
   React.useEffect(() => {
-    // // crashlytics().log(CUSTOMER_DETAIL);
+    crashlytics().log(CUSTOMER_DETAIL);
     dispatch(resetRegion());
     if (route?.params) {
       const { existingVisitation } = route.params;

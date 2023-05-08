@@ -18,7 +18,7 @@ import {
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { CALENDAR } from '@/navigation/ScreenNames';
-// // import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { FlashList } from '@shopify/flash-list';
 
@@ -35,7 +35,7 @@ export default function CalendarScreen() {
   );
   useHeaderTitleChanged({ title: 'Pilih Tanggal' });
   useEffect(() => {
-    // // crashlytics().log(CALENDAR);
+    crashlytics().log(CALENDAR);
 
     const today = moment();
     fetchVisitation({
