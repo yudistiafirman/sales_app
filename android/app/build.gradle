@@ -288,10 +288,10 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file("release.brik")
-            storePassword "br1K1d"
-            keyAlias "br1K"
-            keyPassword "br1K1d"
+            storeFile file("release.jks")
+            storePassword System.getProperty("APPCENTER_KEYSTORE_PASSWORD")
+            keyAlias System.getProperty("APPCENTER_KEY_ALIAS")
+            keyPassword System.getProperty("APPCENTER_KEY_PASSWORD")
         }
     }
     buildTypes {
@@ -345,14 +345,6 @@ android {
        pickFirst 'lib/x86_64/libc++_shared.so'
        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
     }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }     
-    // kotlinOptions {
-    //     jvmTarget = '11'
-    // }
 }
 
 dependencies {

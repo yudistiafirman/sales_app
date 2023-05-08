@@ -32,6 +32,7 @@ local.properties
 *.hprof
 .cxx/
 android/app/release.brik
+android/app/release.jks
 
 # node.js
 #
