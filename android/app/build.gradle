@@ -345,6 +345,14 @@ android {
        pickFirst 'lib/x86_64/libc++_shared.so'
        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }     
+    // kotlinOptions {
+    //     jvmTarget = '11'
+    // }
 }
 
 dependencies {
