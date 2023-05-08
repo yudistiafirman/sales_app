@@ -15,7 +15,8 @@
     "androidRelease": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:bundleProductionRelease && cd ..",
     "androidRelease-Dev": "cd android && ./gradlew app:bundleDevelopmentRelease && cd ..",
     "androidReleaseAPK": "rm -rf android/build && rm -rf android/app/build && cd android && ./gradlew app:assembleProductionRelease && cd ..",
-    "androidReleaseAPK-Dev": "cd android && ./gradlew app:assembleDevelopmentRelease && cd .."
+    "androidReleaseAPK-Dev": "cd android && ./gradlew app:assembleDevelopmentRelease && cd ..",
+    "postinstall": "yarn androidRelease"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4",
