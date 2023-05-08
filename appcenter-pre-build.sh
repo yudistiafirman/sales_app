@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 # Creates an .env from existing env files for use with react-native-config 
 # based on branch
-if ["$APPCENTER_BRANCH" == "master"]; then
-   cp .env.production .env.production
-else
-   cp .env .env
-fi
 
-printf "\n.env created with contents:\n"
-cat .env
+echo MAJOR_VERSION=$MAJOR_VERSION >> .env
+echo MINOR_VERSION=$MINOR_VERSION >> .env
+echo PATCH_VERSION=$PATCH_VERSION >> .env
+
+echo CODE_PUSH_KEY=$CODE_PUSH_KEY >> .env
+echo GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY >> .env
+echo API_URL_COMMON=$API_URL_COMMON >> .env
+echo API_URL_INV=$API_URL_INV >> .env
+echo API_URL_PRODUCTIVITY=$API_URL_PRODUCTIVITY >> .env
+echo API_URL_ORDER=$API_URL_ORDER >> .env
