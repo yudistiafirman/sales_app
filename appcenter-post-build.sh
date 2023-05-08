@@ -1,5 +1,5 @@
 if ["$APPCENTER_BRANCH" == "master"]; then
-    cd android && ./gradlew app:bundleProductionRelease
+    cd android && ./gradlew app:assembleProductionRelease
 else
-    cd android && ./gradlew app:bundleDevelopmentRelease
+    cd android && ./gradlew app:assembleDevelopmentRelease
 fi
