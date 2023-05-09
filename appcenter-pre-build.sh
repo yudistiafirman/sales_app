@@ -1,4 +1,4 @@
-if ["$APPCENTER_ANDROID_VARIANT" == "productionRelease" || "$APPCENTER_ANDROID_VARIANT" == "productionDebug"]; then
+if ["$APPCENTER_ANDROID_VARIANT" == "productionRelease"]; then
     echo MAJOR_VERSION=$MAJOR_VERSION >> .env.production
     echo MINOR_VERSION=$MINOR_VERSION >> .env.production
     echo PATCH_VERSION=$PATCH_VERSION >> .env.production
