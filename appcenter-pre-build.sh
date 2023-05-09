@@ -1,0 +1,21 @@
+## development env
+echo MAJOR_VERSION=$MAJOR_VERSION_DEV >> .env
+echo MINOR_VERSION=$MINOR_VERSION_DEV >> .env
+echo PATCH_VERSION=$PATCH_VERSION_DEV >> .env
+echo CODE_PUSH_KEY=$CODE_PUSH_KEY_DEV >> .env
+echo GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY_DEV >> .env
+echo API_URL_COMMON=$API_URL_COMMON_DEV >> .env
+echo API_URL_INV=$API_URL_INV_DEV >> .env
+echo API_URL_PRODUCTIVITY=$API_URL_PRODUCTIVITY_DEV >> .env
+echo API_URL_ORDER=$API_URL_ORDER_DEV >> .env
+
+## production env
+echo MAJOR_VERSION=$MAJOR_VERSION_PROD >> .env.production
+echo MINOR_VERSION=$MINOR_VERSION_PROD >> .env.production
+echo PATCH_VERSION=$PATCH_VERSION_PROD >> .env.production
+echo CODE_PUSH_KEY=$CODE_PUSH_KEY_PROD >> .env.production
+echo GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY_PROD >> .env.production
+echo API_URL_COMMON=$API_URL_COMMON_PROD >> .env.production
+echo API_URL_INV=$API_URL_INV_PROD >> .env.production
+echo API_URL_PRODUCTIVITY=$API_URL_PRODUCTIVITY_PROD >> .env.production
+echo API_URL_ORDER=$API_URL_ORDER_PROD >> .env.production
