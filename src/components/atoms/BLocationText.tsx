@@ -3,12 +3,16 @@ import React from 'react';
 import font from '@/constants/fonts';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import resScale from '@/utils/resScale';
-import { fonts, layout } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 
 type locationType = {
   location?: string;
+  color?: string;
 };
-export default function BLocationText({ location }: locationType) {
+export default function BLocationText({
+  location,
+  color = colors.text.blue,
+}: locationType) {
   if (!location) {
     return null;
   }
@@ -17,10 +21,10 @@ export default function BLocationText({ location }: locationType) {
       <SimpleLineIcons
         name="location-pin"
         size={13}
-        color="#0080FF"
+        color={color}
         style={style.iconStyle}
       />
-      <Text numberOfLines={1} style={style.locationText}>
+      <Text numberOfLines={1} style={[style.locationText, { color: color }]}>
         {location}
       </Text>
     </View>

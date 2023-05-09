@@ -2,7 +2,13 @@ import { colors, fonts, layout } from '@/constants';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Octicons from 'react-native-vector-icons/Octicons';
-const AddNewAddressWrapper = ({ isBilling, onPress }: { isBilling: boolean, onPress: () => void }) => {
+const AddNewAddressWrapper = ({
+  isBilling,
+  onPress,
+}: {
+  isBilling: boolean;
+  onPress: () => void;
+}) => {
   return (
     <TouchableOpacity style={styles.addBilling} onPress={onPress}>
       <Octicons
@@ -11,7 +17,9 @@ const AddNewAddressWrapper = ({ isBilling, onPress }: { isBilling: boolean, onPr
         size={fonts.size.xs}
         style={styles.plusStyle}
       />
-      <Text style={styles.seeAllText}>{isBilling ? 'Tambah Alamat Penagihan' : 'Tambah Alamat Proyek'}</Text>
+      <Text style={styles.seeAllText}>
+        {isBilling ? 'Tambah Alamat Penagihan' : 'Tambah Alamat Proyek'}
+      </Text>
     </TouchableOpacity>
   );
 };

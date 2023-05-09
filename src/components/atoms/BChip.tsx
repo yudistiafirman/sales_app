@@ -9,9 +9,16 @@ interface BChipProps {
   type?: 'default' | 'header';
   backgroundColor?: string | undefined;
   textColor?: string | undefined;
+  endIcon?: React.ReactNode;
 }
 
-const BChip = ({ children, type, backgroundColor, textColor }: BChipProps) => {
+const BChip = ({
+  children,
+  type,
+  backgroundColor,
+  textColor,
+  endIcon,
+}: BChipProps) => {
   let BChipHeaderStyle: ViewStyle = {
     paddingHorizontal: layout.pad.md,
     paddingVertical: layout.pad.xs,
@@ -23,6 +30,8 @@ const BChip = ({ children, type, backgroundColor, textColor }: BChipProps) => {
     paddingHorizontal: layout.pad.md + layout.pad.xs,
     borderRadius: layout.radius.xl,
     marginRight: layout.pad.md,
+    flexDirection: 'row',
+    alignItems: 'center',
   };
 
   let _style: ViewStyle =
@@ -37,6 +46,7 @@ const BChip = ({ children, type, backgroundColor, textColor }: BChipProps) => {
   return (
     <View style={[_style, { backgroundColor: backgroundColor }]}>
       <BText style={[_textStyle]}>{children}</BText>
+      {endIcon}
     </View>
   );
 };
