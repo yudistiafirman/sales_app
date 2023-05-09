@@ -22,6 +22,7 @@ public class CustomConfigModule extends ReactContextBaseJavaModule {
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("flavor", BuildConfig.FLAVOR);
+        constants.put("versionName", BuildConfig.VERSION_NAME);
         return constants;
     }
 }
