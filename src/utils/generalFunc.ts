@@ -1,9 +1,9 @@
 import { colors } from '@/constants';
 import { NativeModules, Platform } from 'react-native';
-import accessEnv from './accessEnv';
 const { RNCustomConfig } = NativeModules;
 
 const flavor = RNCustomConfig?.flavor;
+const versionName = RNCustomConfig?.versionName;
 
 export const isUndefined = (state: any): boolean =>
   typeof state === 'undefined';
@@ -103,9 +103,7 @@ export const isProduction = () => {
 };
 
 export const getAppVersionName = (): string => {
-  let version = `${accessEnv('MAJOR_VERSION')}.${accessEnv(
-    'MINOR_VERSION'
-  )}.${accessEnv('PATCH_VERSION')}`;
+  let version = versionName;
   if (isDevelopment()) version += ' (Dev)';
   return version;
 };
