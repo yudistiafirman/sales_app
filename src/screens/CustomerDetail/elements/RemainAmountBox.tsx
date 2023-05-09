@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     borderColor: colors.border.default,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     width: '85%',
     marginHorizontal: layout.pad.lg,
   },

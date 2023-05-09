@@ -6,13 +6,16 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { colors, fonts } from '@/constants';
+import { colors, fonts, layout } from '@/constants';
 import {
+  BChip,
   BContainer,
   BPic,
   BSpacer,
   BSpinner,
+  BSvg,
   BTouchableText,
+  BVisitationCard,
 } from '@/components';
 import ProjectBetween from './elements/ProjectBetween';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
@@ -42,7 +45,11 @@ import { ProjectDetail, visitationListResponse } from '@/interfaces';
 import DocumentWarning from './elements/DocumentWarning';
 import UpdatedAddressWrapper from './elements/UpdatedAddressWrapper';
 import AddNewAddressWrapper from './elements/AddNewAddressWrapper';
-import formatCurrency from '@/utils/formatCurrency';
+import AntIcon from 'react-native-vector-icons/AntDesign';
+import FeatIcon from 'react-native-vector-icons/Feather';
+import CustomerDetailLoader from './elements/CustomerDetailLoader';
+import SvgNames from '@/components/atoms/BSvg/svgName';
+import RemainingAmountBox from './elements/RemainAmountBox';
 
 type CustomerDetailRoute = RouteProp<RootStackParamList['CUSTOMER_DETAIL']>;
 
@@ -189,11 +196,7 @@ export default function CustomerDetail() {
   }, [customerData.ProjectDocs]);
 
   if (dataNotLoadedYet) {
-    return (
-      <View style={styles.loading}>
-        <BSpinner size="large" />
-      </View>
-    );
+    return <CustomerDetailLoader />;
   }
 
   return (
@@ -227,120 +230,156 @@ export default function CustomerDetail() {
         />
       )}
 
-      {documentsNotCompleted && (
-        <DocumentWarning
-          docs={customerData.ProjectDocs}
-          projectId={customerData.id}
-        />
-      )}
+      <DocumentWarning docs={[]} projectId="123456" />
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <BContainer>
-          <Text style={styles.partText}>Pelanggan</Text>
-          <BSpacer size={'extraSmall'} />
           <View style={styles.between}>
-            <Text style={styles.fontW300}>Nama</Text>
-            <Text style={styles.fontW400}>{customerData?.displayName}</Text>
+            <Text style={styles.fontW400}>Nama</Text>
+            <Text style={styles.fontW500}>Pt.Coba</Text>
           </View>
-          <BSpacer size={'small'} />
-          <Text style={styles.partText}>Proyek</Text>
-          <BSpacer size={'extraSmall'} />
-          <ProjectBetween
-            onPress={() => {
-              navigation.navigate(VISIT_HISTORY, {
-                projectId: customerData?.id,
-                projectName: customerData?.name,
-              });
-            }}
-            projects={{
-              id: customerData?.id,
-              name: customerData?.name,
-            }}
-          />
-          <BSpacer size={'small'} />
-          <Text style={styles.partText}>Sisa Deposit</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size={'middleSmall'} />
           <View style={styles.between}>
-            <Text style={styles.fontW300}>
-              {customerData?.availableDeposit
-                ? formatCurrency(parseInt(customerData.availableDeposit, 10))
-                : '-'}
-            </Text>
+            <Text style={styles.fontW400}>No. NPWP</Text>
+            <Text style={styles.fontW500}>09.223.828-3.119.000</Text>
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size={'middleSmall'} />
           <View style={styles.between}>
-            <Text style={styles.partText}>PIC</Text>
-            {/* <TouchableOpacity>
-              <Text style={styles.seeAllText}>Lihat Semua</Text>
-            </TouchableOpacity> */}
+            <Text style={styles.fontW400}>No. KTP</Text>
+            <Text style={styles.fontW500}>09.223.828-3.119.000</Text>
           </View>
+          <BSpacer size={'middleSmall'} />
+          <View style={styles.between}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ ...styles.fontW400, marginRight: layout.pad.md }}>
+                Dokumen Legalitas
+              </Text>
+              <BChip
+                endIcon={
+                  <BSvg
+                    svgName={SvgNames.IC_EXCLA_CERT}
+                    width={layout.pad.ml}
+                    height={layout.pad.ml}
+                    style={{ marginLeft: layout.pad.sm }}
+                    type="fill"
+                    color={colors.white}
+                  />
+                }
+                backgroundColor={colors.danger}
+              >
+                <Text style={styles.chipText}>0/1</Text>
+              </BChip>
+              <BChip
+                endIcon={
+                  <BSvg
+                    svgName={SvgNames.IC_CHECK_CERT}
+                    width={layout.pad.ml}
+                    style={{ marginLeft: layout.pad.sm }}
+                    height={layout.pad.ml}
+                    type="fill"
+                    color={colors.white}
+                  />
+                }
+                backgroundColor={colors.greenLantern}
+              >
+                <Text style={styles.chipText}>0/1</Text>
+              </BChip>
+            </View>
+
+            <BTouchableText
+              startIcon={
+                <AntIcon
+                  name="search1"
+                  style={{ marginRight: layout.pad.xs }}
+                  color={colors.danger}
+                />
+              }
+              textStyle={styles.touchableText}
+              title="Lihat Semua"
+            />
+          </View>
+
+          <BSpacer size={'middleSmall'} />
+          <View style={styles.between}>
+            <Text style={styles.fontW400}>PIC Penagihan</Text>
+            <BTouchableText
+              startIcon={
+                <FeatIcon
+                  name="edit"
+                  style={{ marginRight: layout.pad.xs }}
+                  color={colors.danger}
+                />
+              }
+              textStyle={styles.touchableText}
+              title="Ubah"
+            />
+          </View>
+
           <BSpacer size={'extraSmall'} />
           <BPic
-            name={customerData?.Pic?.name}
-            email={customerData?.Pic?.email}
-            phone={customerData?.Pic?.phone}
-            position={customerData?.Pic?.position}
+            name="Ada"
+            email="Jajang@gmail.com"
+            phone="08122089655"
+            position="Supervisor"
           />
-          <BSpacer size={'extraSmall'} />
-          <Text style={styles.partText}>Alamat Penagihan</Text>
-          <BSpacer size={'extraSmall'} />
-          <View style={styles.billingStyle}>
-            {updatedAddressBilling ? (
-              <UpdatedAddressWrapper
-                onPress={() => setIsBillingLocationVisible(true)}
-                address={billingAddress}
-              />
-            ) : (
-              <AddNewAddressWrapper
-                isBilling
-                onPress={() => setIsBillingLocationVisible(true)}
-              />
-            )}
-          </View>
-          <BSpacer size={'small'} />
-          <Text style={styles.partText}>Alamat Proyek</Text>
-          <BSpacer size={'extraSmall'} />
-          <View style={styles.billingStyle}>
-            {updateAddressProject ? (
-              <UpdatedAddressWrapper
-                onPress={() => setIsProjectLocationVisible(true)}
-                address={projectAddress}
-              />
-            ) : (
-              <AddNewAddressWrapper
-                isBilling={false}
-                onPress={() => setIsProjectLocationVisible(true)}
-              />
-            )}
-          </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size={'middleSmall'} />
           <View style={styles.between}>
-            <Text style={styles.partText}>Dokumen</Text>
+            <Text style={styles.fontW400}>Alamat Penagihan</Text>
             <BTouchableText
-              title="Lihat Semua"
-              textStyle={styles.seeAllText}
-              onPress={() =>
-                navigation.navigate(DOCUMENTS, {
-                  docs: customerData.ProjectDocs,
-                  projectId: customerData.id,
-                })
+              startIcon={
+                <FeatIcon
+                  name="edit"
+                  style={{ marginRight: layout.pad.xs }}
+                  color={colors.danger}
+                />
               }
+              onPress={() => setIsBillingLocationVisible(true)}
+              textStyle={styles.touchableText}
+              title="Ubah"
             />
           </View>
           <BSpacer size={'extraSmall'} />
-          <View style={styles.between}>
-            <Text style={styles.fontW300}>Kelengkapan Dokumen</Text>
-            <Text
-              style={styles.fontW300}
-            >{`${customerData?.ProjectDocs?.length}/8`}</Text>
+          <View style={styles.billingStyle}>
+            <UpdatedAddressWrapper address="Jalan Bendi Besar No.36" />
           </View>
-          <ProgressBar
-            styleAttr="Horizontal"
-            indeterminate={false}
-            progress={filledDocsCount / 8 ? filledDocsCount / 8 : 0}
-            color={colors.primary}
-          />
+          <BSpacer size={'middleSmall'} />
+          <View style={styles.between}>
+            <Text style={styles.fontW400}>Dompet</Text>
+          </View>
+          <BSpacer size={'extraSmall'} />
+          <View style={{ flexDirection: 'row', width: '100%' }}>
+            <RemainingAmountBox title="Sisa Deposit" firstAmount={24000200} />
+            <BSpacer size={'extraSmall'} />
+            <RemainingAmountBox
+              title="Sisa Deposit"
+              firstAmount={32800200}
+              secondAmount={150000000}
+            />
+          </View>
         </BContainer>
+        <View style={styles.projectListContainer}>
+          <BContainer>
+            <Text style={styles.fontW400}>Proyek</Text>
+            <BSpacer size="extraSmall" />
+            <BVisitationCard
+              nameSize={fonts.size.sm}
+              locationTextColor={colors.text.lightGray}
+              item={{
+                name: 'Project Firman',
+                location: 'jalan bendi besar no 36 A',
+              }}
+            />
+            <BSpacer size="extraSmall" />
+            <BVisitationCard
+              nameSize={fonts.size.sm}
+              locationTextColor={colors.text.lightGray}
+              item={{
+                name: 'Project Firman',
+                location: 'jalan bendi besar no 36 A',
+              }}
+            />
+          </BContainer>
+        </View>
       </ScrollView>
     </>
   );
@@ -355,16 +394,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  touchableText: {
+    color: colors.danger,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.xs,
+    margin: 0,
+  },
+  chipText: {
+    fontSize: fonts.size.xs,
+    color: colors.offWhite,
+    fontFamily: fonts.family.montserrat[400],
+  },
 
   fontW300: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.md,
+    fontSize: fonts.size.xs,
   },
   fontW400: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.md,
+    fontSize: fonts.size.sm,
+  },
+  fontW500: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.sm,
   },
   billingStyle: {
     alignItems: 'center',
@@ -379,5 +434,10 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.sm,
+  },
+  projectListContainer: {
+    backgroundColor: colors.tertiary,
+    borderTopStartRadius: layout.radius.lg,
+    borderTopEndRadius: layout.radius.lg,
   },
 });

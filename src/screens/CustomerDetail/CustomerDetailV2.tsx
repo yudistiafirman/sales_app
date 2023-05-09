@@ -372,6 +372,10 @@ export default function CustomerDetail() {
             <BSpacer size="extraSmall" />
             <BVisitationCard
               nameSize={fonts.size.xs}
+              customStyle={{
+                borderColor: colors.border.default,
+                borderWidth: 2,
+              }}
               locationTextColor={colors.text.lightGray}
               item={{
                 name: 'Project Firman',
