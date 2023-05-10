@@ -260,6 +260,7 @@ android {
             buildConfigField "String", "VERSION_NAME", "\"${generateVersionName()}\""
             // buildConfigField "String", "CodePushDeploymentKey", "\"${generateCodePushKey()}\""
             resValue "string", "CodePushDeploymentKey", "\"${generateCodePushKey()}\""
+            resValue "string", "GOOGLE_MAPS_API_KEY", "\"${project.env.get("GOOGLE_MAPS_API_KEY")}\""
             ndk {
                 abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
             }
@@ -275,6 +276,7 @@ android {
             buildConfigField "String", "VERSION_NAME", "\"${generateVersionName()}\""
             // buildConfigField "String", "CodePushDeploymentKey", "\"${generateCodePushKey()}\""
             resValue "string", "CodePushDeploymentKey", "\"${generateCodePushKey()}\""
+            resValue "string", "GOOGLE_MAPS_API_KEY", "\"${project.env.get("GOOGLE_MAPS_API_KEY")}\""
             ndk {
                 abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
             }
