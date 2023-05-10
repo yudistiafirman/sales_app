@@ -1,6 +1,3 @@
-import { colors, fonts, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { resScale } from '@/utils';
 import React, { useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import {
@@ -9,6 +6,10 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import { colors, fonts, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { resScale } from '@/utils';
+
 const CELL_COUNT = 6;
 
 interface OTPFieldProps {
@@ -16,7 +17,7 @@ interface OTPFieldProps {
   setValue: (text: string) => void;
 }
 
-const OTPField = ({ value = '', setValue }: OTPFieldProps) => {
+function OTPField({ value = '', setValue }: OTPFieldProps) {
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
@@ -43,7 +44,7 @@ const OTPField = ({ value = '', setValue }: OTPFieldProps) => {
       )}
     />
   );
-};
+}
 const styles = StyleSheet.create({
   root: { flex: 1, padding: layout.pad.md + layout.pad.ml },
   title: { textAlign: 'center', fontSize: fonts.size.vs + fonts.size.sm },

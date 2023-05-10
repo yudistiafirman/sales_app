@@ -1,3 +1,9 @@
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useCallback, useEffect } from 'react';
+import { TextInput } from 'react-native-paper';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { FlashList } from '@shopify/flash-list';
 import {
   BSearchBar,
   BSpacer,
@@ -9,18 +15,12 @@ import {
 } from '@/components';
 import { RootState, AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useCallback, useEffect } from 'react';
-import { TextInput } from 'react-native-paper';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
 import { CAMERA, PO } from '@/navigation/ScreenNames';
 import { QuotationRequests } from '@/interfaces/createPurchaseOrder';
 import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
 import { layout } from '@/constants';
-import { FlashList } from '@shopify/flash-list';
 
-const CreatePo = () => {
+function CreatePo() {
   const navigation = useNavigation();
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
@@ -94,7 +94,7 @@ const CreatePo = () => {
     };
     data: QuotationRequests;
   }) => {
-    const selectedSphFromModal = Object.assign({});
+    const selectedSphFromModal = {};
     selectedSphFromModal.name = parentData.companyName;
     selectedSphFromModal.locationName = parentData.locationName;
     selectedSphFromModal.id = parentData.projectId;
@@ -106,111 +106,103 @@ const CreatePo = () => {
     });
   };
 
-  const renderCustomButton = () => {
-    return (
-      <BTouchableText
-        onPress={() => dispatch({ type: 'searchingSph' })}
-        title="Ganti"
-      />
-    );
-  };
+  const renderCustomButton = () => (
+    <BTouchableText
+      onPress={() => dispatch({ type: 'searchingSph' })}
+      title="Ganti"
+    />
+  );
 
   const onExpand = (index: number, data: any) => {
     let newExpandsetExpandData;
     const isExisted = expandData?.findIndex(
-      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
+      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id,
     );
     if (isExisted === -1) {
       newExpandsetExpandData = [...expandData, data];
     } else {
       newExpandsetExpandData = expandData.filter(
-        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
+        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id,
       );
     }
     setExpandData(newExpandsetExpandData);
   };
 
   return (
-    <>
-      <View style={styles.firstStepContainer}>
-        {poState.currentState.matches('firstStep.SearchSph') ? (
-          <SelectPurchaseOrderData
-            dataToGet="SPHDATA"
-            filterSphDataBy={customerType}
-            onDismiss={() => dispatch({ type: 'backToAddPo' })}
-            onSubmitData={({ parentData, data }) =>
-              onPressCompleted({ parentData, data })
-            }
-          />
-        ) : (
-          <View style={{ height: '100%', flexDirection: 'row' }}>
-            <FlashList
-              estimatedItemSize={1}
-              data={[1]}
-              renderItem={() => {
-                return <BSpacer size={'verySmall'} />;
-              }}
-              ListHeaderComponent={
-                <View>
-                  {customerType === 'COMPANY' && (
-                    <>
-                      <BGallery
-                        addMorePict={addMoreImages}
-                        picts={poImages}
-                        removePict={deleteImages}
-                      />
-                      <BSpacer size="extraSmall" />
-                      <BForm inputs={inputs} />
-                    </>
-                  )}
+    <View style={styles.firstStepContainer}>
+      {poState.currentState.matches('firstStep.SearchSph') ? (
+        <SelectPurchaseOrderData
+          dataToGet="SPHDATA"
+          filterSphDataBy={customerType}
+          onDismiss={() => dispatch({ type: 'backToAddPo' })}
+          onSubmitData={({ parentData, data }) => onPressCompleted({ parentData, data })}
+        />
+      ) : (
+        <View style={{ height: '100%', flexDirection: 'row' }}>
+          <FlashList
+            estimatedItemSize={1}
+            data={[1]}
+            renderItem={() => <BSpacer size="verySmall" />}
+            ListHeaderComponent={(
+              <View>
+                {customerType === 'COMPANY' && (
+                <>
+                  <BGallery
+                    addMorePict={addMoreImages}
+                    picts={poImages}
+                    removePict={deleteImages}
+                  />
+                  <BSpacer size="extraSmall" />
+                  <BForm inputs={inputs} />
+                </>
+                )}
 
-                  {isUserChoosedSph ? (
-                    <>
-                      <View style={{ height: resScale(57) }}>
-                        <BVisitationCard
-                          item={{
-                            name: choosenSphDataFromModal.name,
-                            location: choosenSphDataFromModal.locationName,
-                          }}
-                          isRenderIcon
-                          customIcon={renderCustomButton}
+                {isUserChoosedSph ? (
+                  <>
+                    <View style={{ height: resScale(57) }}>
+                      <BVisitationCard
+                        item={{
+                          name: choosenSphDataFromModal.name,
+                          location: choosenSphDataFromModal.locationName,
+                        }}
+                        isRenderIcon
+                        customIcon={renderCustomButton}
+                      />
+                    </View>
+
+                    <BSpacer size="extraSmall" />
+                    <BNestedProductCard
+                      withoutHeader={false}
+                      data={choosenSphDataFromModal?.QuotationRequests}
+                      expandData={expandData}
+                      onExpand={onExpand}
+                    />
+                  </>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => dispatch({ type: 'searchingSph' })}
+                    style={{ height: resScale(50) }}
+                  >
+                    <BSearchBar
+                      left={(
+                        <TextInput.Icon
+                          forceTextInputFocus={false}
+                          icon="magnify"
                         />
-                      </View>
-
-                      <BSpacer size="extraSmall" />
-                      <BNestedProductCard
-                        withoutHeader={false}
-                        data={choosenSphDataFromModal?.QuotationRequests}
-                        expandData={expandData}
-                        onExpand={onExpand}
-                      />
-                    </>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => dispatch({ type: 'searchingSph' })}
-                      style={{ height: resScale(50) }}
-                    >
-                      <BSearchBar
-                        left={
-                          <TextInput.Icon
-                            forceTextInputFocus={false}
-                            icon="magnify"
-                          />
-                        }
-                        disabled
-                        placeholder="Cari PT / Proyek"
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              }
-            />
-          </View>
-        )}
-      </View>
-    </>
+                        )}
+                      disabled
+                      placeholder="Cari PT / Proyek"
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+              )}
+          />
+        </View>
+      )}
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   firstStepContainer: {

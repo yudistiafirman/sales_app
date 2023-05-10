@@ -1,20 +1,22 @@
 import {
+  StackActions,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
+import {
+  BackHandler, SafeAreaView, StyleSheet, View,
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
+import { layout } from '@/constants';
+import {
   BBackContinueBtn,
   BHeaderIcon,
   BSpacer,
   BStepperIndicator,
   PopUpQuestion,
 } from '@/components';
-import { layout } from '@/constants';
-import { AppDispatch, RootState } from '@/redux/store';
-import {
-  StackActions,
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native';
-import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import CreatePo from './element/CreatePo';
 import UploadFiles from './element/PaymentDetail';
 import DetailProduk from './element/ProductDetail';
@@ -22,7 +24,7 @@ import { useKeyboardActive } from '@/hooks';
 import { bStorage } from '@/actions';
 import { PO, TAB_ROOT } from '@/navigation/ScreenNames';
 
-const PurchaseOrder = () => {
+function PurchaseOrder() {
   const navigation = useNavigation();
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
@@ -49,7 +51,7 @@ const PurchaseOrder = () => {
     if (checked === 'first') {
       if (fiveToSix === '' && lessThanFive === '') {
         return true;
-      } else if (fiveToSix[0] === '0' || lessThanFive[0] === '0') {
+      } if (fiveToSix[0] === '0' || lessThanFive[0] === '0') {
         return true;
       }
     } else {
@@ -61,31 +63,29 @@ const PurchaseOrder = () => {
     if (currentStep === 0) {
       if (customerType === 'INDIVIDU') {
         return JSON.stringify(choosenSphDataFromModal) === '{}';
-      } else {
-        return (
-          poNumber.length === 0 ||
-          JSON.stringify(choosenSphDataFromModal) === '{}' ||
-          poImages.length <= 1
-        );
       }
-    } else if (currentStep === 1) {
+      return (
+        poNumber.length === 0
+          || JSON.stringify(choosenSphDataFromModal) === '{}'
+          || poImages.length <= 1
+      );
+    } if (currentStep === 1) {
       const isRequiredFileEmpty = files.filter(
-        (v) => v.isRequire && v.value === null
+        (v) => v.isRequire && v.value === null,
       );
       const isFilesValueNull = files.filter((v) => v.value === null);
       return paymentType === 'CBD'
         ? isRequiredFileEmpty.length > 0
         : isFilesValueNull.length > 0;
-    } else {
-      const hasNoQuantityMultiProducts = selectedProducts.filter(
-        (v) => v.quantity.length === 0 || v.quantity[0] === '0'
-      );
-      return (
-        hasNoQuantityMultiProducts.length > 0 ||
-        selectedProducts.length === 0 ||
-        checkHasSpecialMobilizationPrice()
-      );
     }
+    const hasNoQuantityMultiProducts = selectedProducts.filter(
+      (v) => v.quantity.length === 0 || v.quantity[0] === '0',
+    );
+    return (
+      hasNoQuantityMultiProducts.length > 0
+        || selectedProducts.length === 0
+        || checkHasSpecialMobilizationPrice()
+    );
   };
 
   const handleBack = useCallback(() => {
@@ -166,7 +166,7 @@ const PurchaseOrder = () => {
         onBack={handleClose}
       />
     ),
-    [handleBack]
+    [handleBack],
   );
 
   const renderTitle = useCallback(() => {
@@ -185,10 +185,10 @@ const PurchaseOrder = () => {
       };
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
-        backAction
+        backAction,
       );
       return () => backHandler.remove();
-    }, [handleBack])
+    }, [handleBack]),
   );
 
   useLayoutEffect(() => {
@@ -222,18 +222,16 @@ const PurchaseOrder = () => {
             value: pressedNum,
           });
         }
+      } else if (currentStep === 1) {
+        dispatch({
+          type: 'goToStepOneFromStepTwoPressed',
+          value: pressedNum,
+        });
       } else {
-        if (currentStep === 1) {
-          dispatch({
-            type: 'goToStepOneFromStepTwoPressed',
-            value: pressedNum,
-          });
-        } else {
-          dispatch({
-            type: 'goToStepOneFromStepThreePressed',
-            value: pressedNum,
-          });
-        }
+        dispatch({
+          type: 'goToStepOneFromStepThreePressed',
+          value: pressedNum,
+        });
       }
     }
   };
@@ -242,12 +240,10 @@ const PurchaseOrder = () => {
     if (currentStep === 2) {
       if (customerType === 'INDIVIDU') {
         return 'Buat SO';
-      } else {
-        return 'Buat PO';
       }
-    } else {
-      return 'Lanjut';
+      return 'Buat PO';
     }
+    return 'Lanjut';
   };
 
   const stepToRender = [<CreatePo />, <UploadFiles />, <DetailProduk />];
@@ -267,7 +263,7 @@ const PurchaseOrder = () => {
       {isBtnFooterShown && !keyboardVisible && (
         <View style={styles.footer}>
           <BBackContinueBtn
-            isContinueIcon={currentStep < 2 ? true : false}
+            isContinueIcon={currentStep < 2}
             onPressContinue={handleNext}
             onPressBack={handleBack}
             continueText={renderContinueText()}
@@ -296,14 +292,14 @@ const PurchaseOrder = () => {
           }
         }}
         actionButton={() => setIsPopupExitVisible(false)}
-        cancelText={'Keluar'}
-        actionText={'Lanjutkan'}
-        desc={'Progres pembuatan PO Anda sudah tersimpan.'}
-        text={'Apakah Anda yakin ingin keluar?'}
+        cancelText="Keluar"
+        actionText="Lanjutkan"
+        desc="Progres pembuatan PO Anda sudah tersimpan."
+        text="Apakah Anda yakin ingin keluar?"
       />
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   poContainer: {

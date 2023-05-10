@@ -8,15 +8,22 @@ import {
   Text,
   Platform,
 } from 'react-native';
+import BottomSheet from '@gorhom/bottom-sheet';
+import moment from 'moment';
+import {
+  Button, Dialog, Portal, TextInput,
+} from 'react-native-paper';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import Modal from 'react-native-modal';
+import debounce from 'lodash.debounce';
+import { useDispatch, useSelector } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
 import colors from '@/constants/colors';
 import TargetCard from './elements/TargetCard';
 import resScale from '@/utils/resScale';
 import DateDaily from './elements/DateDaily';
 import BQuickAction from '@/components/organism/BQuickActionMenu';
-import BottomSheet from '@gorhom/bottom-sheet';
 import BVisitationCard from '@/components/molecules/BVisitationCard';
-import moment from 'moment';
-import { Button, Dialog, Portal, TextInput } from 'react-native-paper';
 import BuatKunjungan from './elements/BuatKunjungan';
 import {
   BSearchBar,
@@ -26,18 +33,14 @@ import {
   BCommonSearchList,
   BBottomSheet,
 } from '@/components';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import Modal from 'react-native-modal';
 import { fonts, layout } from '@/constants';
 import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
 import {
   getAllVisitations,
   getVisitationTarget,
 } from '@/actions/ProductivityActions';
-import debounce from 'lodash.debounce';
 import { Api } from '@/models';
 import { visitationDataType } from '@/interfaces';
-import { useDispatch, useSelector } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
 import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
@@ -56,7 +59,6 @@ import {
   HOME_MENU,
 } from '@/navigation/ScreenNames';
 import SvgNames from '@/components/atoms/BSvg/svgName';
-import crashlytics from '@react-native-firebase/crashlytics';
 import {
   getAppVersionName,
   getMinVersionUpdate,
@@ -72,9 +74,10 @@ import { bStorage } from '@/actions';
 import { resetRegion } from '@/redux/reducers/locationReducer';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
+
 const { height, width } = Dimensions.get('window');
 
-const Beranda = () => {
+function Beranda() {
   const {
     force_update,
     enable_appointment,
@@ -87,19 +90,20 @@ const Beranda = () => {
     enable_visitation,
   } = useSelector((state: RootState) => state.auth.remote_config);
   const poState = useSelector((state: RootState) => state.purchaseOrder);
-  const { isModalContinuePo, poNumber, currentStep, customerType } =
-    poState.currentState.context;
+  const {
+    isModalContinuePo, poNumber, currentStep, customerType,
+  } = poState.currentState.context;
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [currentVisit, setCurrentVisit] = React.useState<{
     current: number;
     target: number;
-  }>({ current: 0, target: 10 }); //temporary setCurrentVisit
+  }>({ current: 0, target: 10 }); // temporary setCurrentVisit
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [index, setIndex] = React.useState(0);
   const [isTargetLoading, setIsTargetLoading] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
-  const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
+  const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); // setIsRenderDateDaily
 
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -111,13 +115,11 @@ const Beranda = () => {
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
   const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
   const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false);
-  const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] =
-    React.useState(false);
+  const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] = React.useState(false);
   const visitationData = useSelector((state: RootState) => state.visitation);
-  const initialSnapPoints =
-    height > 890
-      ? height - width + layout.pad.xxl
-      : height - width + layout.pad.xxl + layout.pad.md;
+  const initialSnapPoints = height > 890
+    ? height - width + layout.pad.xxl
+    : height - width + layout.pad.xxl + layout.pad.md;
   const snapPoints = React.useMemo(() => [initialSnapPoints, '100%'], []);
 
   useHeaderShow({
@@ -137,11 +139,13 @@ const Beranda = () => {
   });
   const [page, setPage] = React.useState<number>(1);
   const [selectedDate, setSelectedDate] = React.useState<moment.Moment>(
-    moment()
+    moment(),
   );
 
   const toggleModal = (key: string) => () => {
-    setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
+    setData({
+      totalItems: 0, currentPage: 0, totalPage: 0, data: [],
+    });
     setModalVisible(!isModalVisible);
     if (key === 'close') {
       setSearchQuery('');
@@ -177,10 +181,10 @@ const Beranda = () => {
         openPopUp({
           popUpType: 'error',
           popUpText:
-            err.message ||
-            'Terjadi error saat pengambilan data target harian kunjungan',
+            err.message
+            || 'Terjadi error saat pengambilan data target harian kunjungan',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   }, []);
@@ -193,30 +197,28 @@ const Beranda = () => {
         const options = {
           page,
           search: search || searchQuery,
-          ...(!search &&
-            !searchQuery && {
-              date: date.valueOf(),
-            }),
+          ...(!search
+            && !searchQuery && {
+            date: date.valueOf(),
+          }),
         };
         const { data: _data } = await getAllVisitations(options);
-        const displayData =
-          _data.data?.data?.map((el: any) => {
-            const status =
-              el.status === 'VISIT' ? `Visit ke ${el.order}` : el.status;
-            const pilStatus = el.finishDate ? 'Selesai' : 'Belum Selesai';
-            const time = el.finishDate
-              ? moment(el.finishDate).format('hh:mm')
-              : null;
-            const location = el.project?.LocationAddress?.line1;
-            return {
-              id: el.id,
-              name: el.project?.displayName || '--',
-              location: location ? location : '-',
-              time,
-              status,
-              pilStatus,
-            };
-          }) || [];
+        const displayData = _data.data?.data?.map((el: any) => {
+          const status = el.status === 'VISIT' ? `Visit ke ${el.order}` : el.status;
+          const pilStatus = el.finishDate ? 'Selesai' : 'Belum Selesai';
+          const time = el.finishDate
+            ? moment(el.finishDate).format('hh:mm')
+            : null;
+          const location = el.project?.LocationAddress?.line1;
+          return {
+            id: el.id,
+            name: el.project?.displayName || '--',
+            location: location || '-',
+            time,
+            status,
+            pilStatus,
+          };
+        }) || [];
 
         if (page > 1) {
           setData({
@@ -237,7 +239,7 @@ const Beranda = () => {
         setErrorMessage(error.message);
       }
     },
-    [data.data, page, searchQuery]
+    [data.data, page, searchQuery],
   );
 
   useFocusEffect(
@@ -245,123 +247,114 @@ const Beranda = () => {
       fetchTarget();
       fetchVisitations(selectedDate);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchTarget, selectedDate, isModalVisible])
+    }, [fetchTarget, selectedDate, isModalVisible]),
   );
 
-  const renderUpdateDialog = () => {
-    return (
-      <Portal>
-        <Dialog
-          visible={isUpdateDialogVisible}
-          dismissable={!isForceUpdate(force_update)}
-          onDismiss={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
-          style={{ backgroundColor: colors.white }}
-        >
-          <Dialog.Title
-            style={{
-              fontFamily: fonts.family.montserrat[500],
-              fontSize: fonts.size.lg,
-            }}
-          >
-            Update Aplikasi
-          </Dialog.Title>
-          <Dialog.Content>
-            <BText bold="300">
-              Aplikasi anda telah usang, silakan update sebelum melanjutkan.
-            </BText>
-          </Dialog.Content>
-          <Dialog.Actions>
-            {!isForceUpdate(force_update) && (
-              <Button
-                onPress={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
-              >
-                Cancel
-              </Button>
-            )}
-            <Button
-              onPress={() =>
-                Linking.openURL(
-                  Platform.OS === 'ios'
-                    ? 'http://itunes.com/apps/bod'
-                    : 'https://play.google.com/store/apps/details?id=bod.app'
-                )
-              }
-            >
-              Update
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-    );
-  };
-
-  const renderPoNumber = () => {
-    return (
-      <View
-        style={[
-          style.poNumberWrapper,
-          { alignItems: customerType === 'COMPANY' ? 'flex-start' : 'center' },
-        ]}
+  const renderUpdateDialog = () => (
+    <Portal>
+      <Dialog
+        visible={isUpdateDialogVisible}
+        dismissable={!isForceUpdate(force_update)}
+        onDismiss={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
+        style={{ backgroundColor: colors.white }}
       >
-        <Text style={style.poNumber}>
-          {customerType === 'COMPANY' ? poNumber : '-'}
-        </Text>
-      </View>
-    );
-  };
-
-  const renderContinueData = () => {
-    return (
-      <>
-        <View style={style.popupSPHContent}>
-          {feature === 'PO' ? (
-            renderPoNumber()
-          ) : (
-            <BVisitationCard
-              item={{
-                name: sphData?.selectedCompany?.name,
-                location: sphData?.selectedCompany?.locationAddress?.line1,
-              }}
-              isRenderIcon={false}
-            />
+        <Dialog.Title
+          style={{
+            fontFamily: fonts.family.montserrat[500],
+            fontSize: fonts.size.lg,
+          }}
+        >
+          Update Aplikasi
+        </Dialog.Title>
+        <Dialog.Content>
+          <BText bold="300">
+            Aplikasi anda telah usang, silakan update sebelum melanjutkan.
+          </BText>
+        </Dialog.Content>
+        <Dialog.Actions>
+          {!isForceUpdate(force_update) && (
+          <Button
+            onPress={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
+          >
+            Cancel
+          </Button>
           )}
-        </View>
-        <BSpacer size={'medium'} />
-        <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
-          {`${feature} yang lama akan hilang kalau Anda buat ${feature} yang baru`}
-        </BText>
-        <BSpacer size={'small'} />
-      </>
-    );
-  };
+          <Button
+            onPress={() => Linking.openURL(
+              Platform.OS === 'ios'
+                ? 'http://itunes.com/apps/bod'
+                : 'https://play.google.com/store/apps/details?id=bod.app',
+            )}
+          >
+            Update
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
+    </Portal>
+  );
+
+  const renderPoNumber = () => (
+    <View
+      style={[
+        style.poNumberWrapper,
+        { alignItems: customerType === 'COMPANY' ? 'flex-start' : 'center' },
+      ]}
+    >
+      <Text style={style.poNumber}>
+        {customerType === 'COMPANY' ? poNumber : '-'}
+      </Text>
+    </View>
+  );
+
+  const renderContinueData = () => (
+    <>
+      <View style={style.popupSPHContent}>
+        {feature === 'PO' ? (
+          renderPoNumber()
+        ) : (
+          <BVisitationCard
+            item={{
+              name: sphData?.selectedCompany?.name,
+              location: sphData?.selectedCompany?.locationAddress?.line1,
+            }}
+            isRenderIcon={false}
+          />
+        )}
+      </View>
+      <BSpacer size="medium" />
+      <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
+        {`${feature} yang lama akan hilang kalau Anda buat ${feature} yang baru`}
+      </BText>
+      <BSpacer size="small" />
+    </>
+  );
 
   React.useEffect(() => {
     crashlytics().log(TAB_HOME);
     let currentVersionName = getAppVersionName();
-    if (isDevelopment())
-      currentVersionName = currentVersionName?.replace('(Dev)', '');
+    if (isDevelopment()) currentVersionName = currentVersionName?.replace('(Dev)', '');
     setUpdateDialogVisible(
-      currentVersionName?.split('.').join('') <
-        getMinVersionUpdate(force_update)
+      currentVersionName?.split('.').join('')
+        < getMinVersionUpdate(force_update),
     );
   }, [force_update]);
 
   const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
     setPage(1);
-    setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
+    setData({
+      totalItems: 0, currentPage: 0, totalPage: 0, data: [],
+    });
     setSelectedDate(dateTime);
   }, []);
 
-  const routes: { title: string; totalItems: number }[] = React.useMemo(() => {
-    return [
-      {
-        key: 'first',
-        title: 'Proyek',
-        totalItems: data.totalItems || 0,
-        chipPosition: 'right',
-      },
-    ];
-  }, [data]);
+  const routes: { title: string; totalItems: number }[] = React.useMemo(() => [
+    {
+      key: 'first',
+      title: 'Proyek',
+      totalItems: data.totalItems || 0,
+      chipPosition: 'right',
+    },
+  ], [data]);
 
   const onEndReached = React.useCallback(() => {
     if (data.totalPage) {
@@ -432,61 +425,47 @@ const Beranda = () => {
     ];
 
     if (!enable_sph) {
-      const filtered = buttons.filter((item) => {
-        return item.title !== HOME_MENU.SPH;
-      });
+      const filtered = buttons.filter((item) => item.title !== HOME_MENU.SPH);
       buttons = filtered;
     }
 
     if (!enable_po) {
-      const filtered = buttons.filter((item) => {
-        return item.title !== HOME_MENU.PO;
-      });
+      const filtered = buttons.filter((item) => item.title !== HOME_MENU.PO);
       buttons = filtered;
     }
 
     if (!enable_deposit) {
-      const filtered = buttons.filter((item) => {
-        return item.title !== HOME_MENU.DEPOSIT;
-      });
+      const filtered = buttons.filter((item) => item.title !== HOME_MENU.DEPOSIT);
       buttons = filtered;
     }
 
     if (!enable_create_schedule) {
-      const filtered = buttons.filter((item) => {
-        return item.title !== HOME_MENU.SCHEDULE;
-      });
+      const filtered = buttons.filter((item) => item.title !== HOME_MENU.SCHEDULE);
       buttons = filtered;
     }
 
     if (!enable_appointment) {
-      const filtered = buttons.filter((item) => {
-        return item.title !== HOME_MENU.APPOINTMENT;
-      });
+      const filtered = buttons.filter((item) => item.title !== HOME_MENU.APPOINTMENT);
       buttons = filtered;
     }
 
     if (!enable_signed_so) {
-      const filtered = buttons.filter((item) => {
-        return item.title !== HOME_MENU.SIGN_SO;
-      });
+      const filtered = buttons.filter((item) => item.title !== HOME_MENU.SIGN_SO);
       buttons = filtered;
     }
     return buttons;
   };
 
-  const todayMark = React.useMemo(() => {
-    return [
-      {
-        date: moment(),
-        lines: [
-          {
-            color: colors.primary,
-          },
-        ],
-      },
-    ];
-  }, []);
+  const todayMark = React.useMemo(() => [
+    {
+      date: moment(),
+      lines: [
+        {
+          color: colors.primary,
+        },
+      ],
+    },
+  ], []);
 
   const onChangeSearch = (text: string) => {
     setSearchQuery(text);
@@ -533,7 +512,7 @@ const Beranda = () => {
   };
 
   async function visitationOnPress(
-    dataItem: visitationDataType
+    dataItem: visitationDataType,
   ): Promise<void> {
     try {
       const status = dataItem.pilStatus;
@@ -543,10 +522,10 @@ const Beranda = () => {
           popUpType: 'loading',
           popUpText: 'Loading visitation Data...',
           outsideClickClosePopUp: false,
-        })
+        }),
       );
       const response = await dispatch(
-        getOneVisitation({ visitationId: dataItem.id })
+        getOneVisitation({ visitationId: dataItem.id }),
       ).unwrap();
 
       dispatch(closePopUp());
@@ -570,7 +549,7 @@ const Beranda = () => {
           highlightedText: 'Error',
           popUpText: 'Error fetching visitation Data',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   }
@@ -598,7 +577,7 @@ const Beranda = () => {
         isVisible={isModalVisible}
         backdropOpacity={1}
         backdropColor="white"
-        hideModalContentWhileAnimating={true}
+        hideModalContentWhileAnimating
         coverScreen={false}
         onBackButtonPress={toggleModal('close')}
         onModalHide={() => {
@@ -606,7 +585,7 @@ const Beranda = () => {
         }}
       >
         <View style={style.modalContent}>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <BCommonSearchList
             placeholder="Cari PT / Proyek"
             index={index}
@@ -619,7 +598,7 @@ const Beranda = () => {
                 toggleModal('close')();
               }
             }}
-            autoFocus={true}
+            autoFocus
             searchQuery={searchQuery}
             onChangeText={onChangeSearch}
             routes={routes}
@@ -627,9 +606,9 @@ const Beranda = () => {
             onPressList={
               enable_customer_detail
                 ? (data) => {
-                    toggleModal('close')();
-                    visitationOnPress(data);
-                  }
+                  toggleModal('close')();
+                  visitationOnPress(data);
+                }
                 : undefined
             }
             data={data.data}
@@ -656,7 +635,7 @@ const Beranda = () => {
         onChange={bottomSheetOnchange}
         percentSnapPoints={snapPoints}
         ref={bottomSheetRef}
-        enableContentPanningGesture={true}
+        enableContentPanningGesture
         handleIndicatorStyle={style.handleIndicator}
         style={style.BsheetStyle}
         footerComponent={(props: any) => {
@@ -682,14 +661,14 @@ const Beranda = () => {
             value={searchQuery}
           />
         </View>
-        <BSpacer size={'verySmall'} />
+        <BSpacer size="verySmall" />
         <DateDaily
           markedDatesArray={todayMark}
           isRender={isRenderDateDaily}
           onDateSelected={onDateSelected}
           selectedDate={selectedDate}
         />
-        <BSpacer size={'extraSmall'} />
+        <BSpacer size="extraSmall" />
         <BottomSheetFlatlist
           isLoading={isLoading}
           data={data.data}
@@ -718,8 +697,8 @@ const Beranda = () => {
           }}
           actionButton={continuePopUpAction}
           descContent={renderContinueData()}
-          cancelText={'Buat Baru'}
-          actionText={'Lanjutkan'}
+          cancelText="Buat Baru"
+          actionText="Lanjutkan"
           text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
             feature === 'PO' ? 'PO' : 'SPH'
           } Sebelumnya?`}
@@ -740,7 +719,7 @@ const Beranda = () => {
       {renderUpdateDialog()}
     </View>
   );
-};
+}
 
 const style = StyleSheet.create({
   container: {

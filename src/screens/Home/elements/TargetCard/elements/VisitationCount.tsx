@@ -13,14 +13,17 @@ export default function VisitationCount({
   currentVisitaion,
 }: VisitationCountPropsType) {
   if (
-    typeof maxVisitation !== 'number' ||
-    typeof currentVisitaion !== 'number'
+    typeof maxVisitation !== 'number'
+    || typeof currentVisitaion !== 'number'
   ) {
     return <Text style={style.countText}> - / - </Text>;
   }
   return (
     <Text style={style.count}>
-      {currentVisitaion} / {maxVisitation}
+      {currentVisitaion}
+      {' '}
+      /
+      {maxVisitation}
     </Text>
   );
 }

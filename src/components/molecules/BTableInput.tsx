@@ -1,5 +1,7 @@
 import React from 'react';
-import { KeyboardTypeOptions, StyleSheet, Text, View } from 'react-native';
+import {
+  KeyboardTypeOptions, StyleSheet, Text, View,
+} from 'react-native';
 import BLabel from '../atoms/BLabel';
 import BSpacer from '../atoms/BSpacer';
 import BTextInput from '../atoms/BTextInput';
@@ -13,67 +15,61 @@ import {
   TitleBold,
 } from '@/interfaces';
 
-const BTableInput = ({
+function BTableInput({
   titleBold,
   textSize,
   firstColumnLabel,
   secondColumnLabel,
   tableInputListItem,
   onChangeValue,
-}: ITableInput & TitleBold) => {
+}: ITableInput & TitleBold) {
   const renderTableItems = ({ item, index }: ITableInputItem) => {
-    const renderFirstColumnCell = () => {
-      return (
-        <View style={styles.outerCell}>
-          <View style={styles.innerCell}>
-            <Text style={styles.cellText}>
-              {item?.firstColumnRangeTitle ? item.firstColumnRangeTitle : '0'}
-            </Text>
-            <Text style={styles.cellText}>
-              {item?.firstColumnUnit ? item.firstColumnUnit : 'm³'}
-            </Text>
-          </View>
+    const renderFirstColumnCell = () => (
+      <View style={styles.outerCell}>
+        <View style={styles.innerCell}>
+          <Text style={styles.cellText}>
+            {item?.firstColumnRangeTitle ? item.firstColumnRangeTitle : '0'}
+          </Text>
+          <Text style={styles.cellText}>
+            {item?.firstColumnUnit ? item.firstColumnUnit : 'm³'}
+          </Text>
         </View>
-      );
-    };
+      </View>
+    );
 
-    const renderInputColumnCell = () => {
-      return (
-        <View style={styles.outerCellSpecialPriceContainer}>
-          <View style={[styles.inputLabel, { left: layout.pad.ml }]}>
-            <Text style={[styles.cellText]}>
-              {item?.secondColumnNominalInput
-                ? item.secondColumnNominalInput
-                : 'IDR'}
-            </Text>
-          </View>
+    const renderInputColumnCell = () => (
+      <View style={styles.outerCellSpecialPriceContainer}>
+        <View style={[styles.inputLabel, { left: layout.pad.ml }]}>
+          <Text style={[styles.cellText]}>
+            {item?.secondColumnNominalInput
+              ? item.secondColumnNominalInput
+              : 'IDR'}
+          </Text>
+        </View>
 
-          <View style={{ flex: 1 }}>
-            <BTextInput
-              contentStyle={styles.cellText}
-              placeholder={
+        <View style={{ flex: 1 }}>
+          <BTextInput
+            contentStyle={styles.cellText}
+            placeholder={
                 item?.tableInputPlaceholder ? item.tableInputPlaceholder : ''
               }
-              onChangeText={(val) =>
-                onChangeValue && onChangeValue(val, index!)
-              }
-              value={item?.tableInputValue ?? item?.tableInputValue}
-              keyboardType={
+            onChangeText={(val) => onChangeValue && onChangeValue(val, index!)}
+            value={item?.tableInputValue ?? item?.tableInputValue}
+            keyboardType={
                 item?.tableInputKeyboardType
                   ? item.tableInputKeyboardType
                   : 'numeric'
               }
-              style={styles.inputPrice}
-            />
-          </View>
-          <View style={[styles.inputLabel, { right: layout.pad.ml }]}>
-            <Text style={styles.cellText}>
-              {item?.secondColumnUnitInput ? item.secondColumnUnitInput : '/m³'}
-            </Text>
-          </View>
+            style={styles.inputPrice}
+          />
         </View>
-      );
-    };
+        <View style={[styles.inputLabel, { right: layout.pad.ml }]}>
+          <Text style={styles.cellText}>
+            {item?.secondColumnUnitInput ? item.secondColumnUnitInput : '/m³'}
+          </Text>
+        </View>
+      </View>
+    );
     return (
       <View key={index} style={styles.cellContainer}>
         {renderFirstColumnCell()}
@@ -83,29 +79,25 @@ const BTableInput = ({
     );
   };
 
-  const renderFirstColumnLabel = () => {
-    return (
-      <View>
-        <BLabel
-          label={firstColumnLabel ? firstColumnLabel : ''}
-          bold={titleBold}
-          sizeInNumber={textSize}
-        />
-      </View>
-    );
-  };
+  const renderFirstColumnLabel = () => (
+    <View>
+      <BLabel
+        label={firstColumnLabel || ''}
+        bold={titleBold}
+        sizeInNumber={textSize}
+      />
+    </View>
+  );
 
-  const renderSecondColumnLabel = () => {
-    return (
-      <View style={styles.priceLabelContainer}>
-        <BLabel
-          label={secondColumnLabel ? secondColumnLabel : ''}
-          sizeInNumber={textSize}
-          bold={titleBold}
-        />
-      </View>
-    );
-  };
+  const renderSecondColumnLabel = () => (
+    <View style={styles.priceLabelContainer}>
+      <BLabel
+        label={secondColumnLabel || ''}
+        sizeInNumber={textSize}
+        bold={titleBold}
+      />
+    </View>
+  );
 
   return (
     <>
@@ -114,14 +106,12 @@ const BTableInput = ({
         {renderSecondColumnLabel()}
       </View>
       <BSpacer size="verySmall" />
-      {tableInputListItem &&
-        tableInputListItem.length > 0 &&
-        tableInputListItem.map((item: ITableInputListItem, index: number) => {
-          return renderTableItems({ item, index });
-        })}
+      {tableInputListItem
+        && tableInputListItem.length > 0
+        && tableInputListItem.map((item: ITableInputListItem, index: number) => renderTableItems({ item, index }))}
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   labelContainer: {

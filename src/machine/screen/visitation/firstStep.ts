@@ -1,5 +1,5 @@
-import { deviceLocationMachine } from '@/machine/modules';
 import { createMachine, Machine } from 'xstate';
+import { deviceLocationMachine } from '@/machine/modules';
 
 const firsStepMachine = createMachine({
   id: 'firsStepMachine',

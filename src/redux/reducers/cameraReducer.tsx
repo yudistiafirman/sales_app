@@ -14,7 +14,6 @@ type fileResponse = {
   type: 'COVER' | 'GALLERY';
 };
 
-
 export interface CameraGlobalState {
   localURLs: LocalFileType[];
   visitationPhotoURLs: LocalFileType[];
@@ -39,7 +38,7 @@ export const cameraSlice = createSlice({
   reducers: {
     setImageURLS: (
       state,
-      action: PayloadAction<{ file: LocalFileType; source?: string }>
+      action: PayloadAction<{ file: LocalFileType; source?: string }>,
     ) => {
       switch (action.payload.source) {
         case CREATE_VISITATION:
@@ -62,7 +61,6 @@ export const cameraSlice = createSlice({
           return;
         default:
           state.localURLs = [...state.localURLs, action.payload.file];
-          return;
       }
     },
     resetImageURLS: (state, action: PayloadAction<{ source: string }>) => {
@@ -78,12 +76,11 @@ export const cameraSlice = createSlice({
           return;
         default:
           state.localURLs = [];
-          return;
       }
     },
     deleteImage: (
       state,
-      action: PayloadAction<{ pos: number; source: string }>
+      action: PayloadAction<{ pos: number; source: string }>,
     ) => {
       let currentImages;
       switch (action.payload.source) {
@@ -106,7 +103,6 @@ export const cameraSlice = createSlice({
           currentImages = state.localURLs;
           currentImages.splice(action.payload.pos, 1);
           state.localURLs = [...currentImages];
-          return;
       }
     },
     setuploadedFilesResponse: (state, action) => {

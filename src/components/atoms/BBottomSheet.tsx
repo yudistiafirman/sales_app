@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useMemo, forwardRef, Ref } from 'react';
+import React, {
+  useCallback, useMemo, forwardRef, Ref,
+} from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { ViewStyle } from 'react-native';
 
@@ -59,7 +61,7 @@ const BBottomSheet = forwardRef(
       topInset,
       onChangeAnimate = () => {},
     }: BBottomSheetType,
-    ref: Ref<BottomSheet>
+    ref: Ref<BottomSheet>,
   ) => {
     const snapPoints = useMemo(() => percentSnapPoints, [percentSnapPoints]);
 
@@ -96,7 +98,7 @@ const BBottomSheet = forwardRef(
         {children}
       </BottomSheet>
     );
-  }
+  },
 );
 
 export default BBottomSheet;

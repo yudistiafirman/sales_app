@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { DeviceEventEmitter, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/redux/store';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import MapView from 'react-native-maps';
 import debounce from 'lodash.debounce';
+import Icons from 'react-native-vector-icons/Feather';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { AppDispatch, RootState } from '@/redux/store';
 
 import {
   BBottomSheet,
@@ -18,7 +20,6 @@ import {
   BSpacer,
   BText,
 } from '@/components';
-import Icons from 'react-native-vector-icons/Feather';
 
 import { resScale } from '@/utils';
 import { Region, Input } from '@/interfaces';
@@ -26,7 +27,6 @@ import { updateRegion } from '@/redux/reducers/locationReducer';
 import { layout } from '@/constants';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import { CREATE_VISITATION, SEARCH_AREA } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
 import {
   setSearchedAddress,
   setUseSearchedAddress,
@@ -36,11 +36,10 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 import getUserCurrentLocationDetail from '@/utils/getUserCurrentLocationDetail';
 import { hasLocationPermission } from '@/utils/permissions';
 
-const FirstStep = () => {
+function FirstStep() {
   const { region } = useSelector((state: RootState) => state.location);
   const [isMapLoading, setIsMapLoading] = React.useState(false);
-  const [grantedLocationPermission, setGrantedLocationPermission] =
-    React.useState(false);
+  const [grantedLocationPermission, setGrantedLocationPermission] = React.useState(false);
   const visitationData = useSelector((state: RootState) => state.visitation);
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
@@ -54,7 +53,7 @@ const FirstStep = () => {
         const newLocation = { ...visitationData.locationAddress };
         newLocation.line2 = e;
         dispatch(
-          updateDataVisitation({ type: 'locationAddress', value: newLocation })
+          updateDataVisitation({ type: 'locationAddress', value: newLocation }),
         );
         dispatch(updateRegion({ ...region, line1: e }));
       },
@@ -72,7 +71,7 @@ const FirstStep = () => {
         // '',
         coordinate.longitude as unknown as number,
         coordinate.latitude as unknown as number,
-        ''
+        '',
       );
       const { result } = data;
       if (!result) {
@@ -105,10 +104,10 @@ const FirstStep = () => {
         openPopUp({
           popUpType: 'error',
           popUpText:
-            error.message ||
-            'Terjadi error pengambilan data saat perpindahan region',
+            error.message
+            || 'Terjadi error pengambilan data saat perpindahan region',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
@@ -122,7 +121,7 @@ const FirstStep = () => {
   }, []);
 
   React.useEffect(() => {
-    crashlytics().log(CREATE_VISITATION + '-Step1');
+    crashlytics().log(`${CREATE_VISITATION}-Step1`);
 
     const locationAddress = {
       ...visitationData.locationAddress,
@@ -133,7 +132,7 @@ const FirstStep = () => {
       locationAddress.formattedAddress = visitationData.searchedAddress;
     }
     dispatch(
-      updateDataVisitation({ type: 'locationAddress', value: locationAddress })
+      updateDataVisitation({ type: 'locationAddress', value: locationAddress }),
     );
   }, [
     region.formattedAddress,
@@ -163,7 +162,7 @@ const FirstStep = () => {
           PostalId: result?.PostalId,
         };
         dispatch(
-          updateDataVisitation({ type: 'createdLocation', value: result })
+          updateDataVisitation({ type: 'createdLocation', value: result }),
         );
         if (region.latitude === 0) {
           dispatch(updateRegion(coordinate));
@@ -180,7 +179,7 @@ const FirstStep = () => {
           popUpType: 'error',
           popUpText: error.message,
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
@@ -209,9 +208,8 @@ const FirstStep = () => {
   }, [region.formattedAddress]);
 
   React.useEffect(() => {
-    const isExist =
-      !visitationData.createdLocation?.lat ||
-      visitationData.createdLocation?.lon === 0;
+    const isExist = !visitationData.createdLocation?.lat
+      || visitationData.createdLocation?.lon === 0;
 
     if (isExist) {
       onMapReady();
@@ -225,9 +223,7 @@ const FirstStep = () => {
           ref={mapRef}
           region={region}
           onMapReady={onMapReady}
-          onRegionChange={() =>
-            dispatch(setUseSearchedAddress({ value: false }))
-          }
+          onRegionChange={() => dispatch(setUseSearchedAddress({ value: false }))}
           onRegionChangeComplete={debounceResult}
           CustomMarker={<BMarker />}
           mapStyle={styles.map}
@@ -247,7 +243,7 @@ const FirstStep = () => {
               paddingHorizontal={layout.pad.lg}
               paddingVertical={layout.pad.zero}
             >
-              <BLabel bold="500" label={'Alamat Proyek'} isRequired />
+              <BLabel bold="500" label="Alamat Proyek" isRequired />
               <BSpacer size="verySmall" />
               <BLocationDetail
                 nameAddress={nameAddress}
@@ -257,12 +253,10 @@ const FirstStep = () => {
                     ? visitationData.searchedAddress
                     : region.formattedAddress
                 }
-                onPress={() =>
-                  navigation.navigate(SEARCH_AREA, {
-                    from: CREATE_VISITATION,
-                    eventKey: 'visitationSearchCoordinate',
-                  })
-                }
+                onPress={() => navigation.navigate(SEARCH_AREA, {
+                  from: CREATE_VISITATION,
+                  eventKey: 'visitationSearchCoordinate',
+                })}
               />
               <BSpacer size="medium" />
               <BForm titleBold="500" inputs={inputs} />
@@ -272,7 +266,7 @@ const FirstStep = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: { flex: 1, marginHorizontal: -(layout.pad.md + layout.pad.ml) },

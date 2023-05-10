@@ -1,18 +1,18 @@
+import * as React from 'react';
+import { Text, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
 import bStorage from '@/actions/BStorage';
 import { signOut } from '@/actions/CommonActions';
 import { BTouchableText } from '@/components';
 import useCustomHeaderRight from '@/hooks/useCustomHeaderRight';
 import { signout } from '@/redux/reducers/authReducer';
 import { AppDispatch } from '@/redux/store';
-import * as React from 'react';
-import { Text, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { TAB_PROFILE } from '@/navigation/ScreenNames';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import analytics from '@react-native-firebase/analytics';
 
-const Profile = () => {
+function Profile() {
   const dispatch = useDispatch<AppDispatch>();
 
   const onLogout = async () => {
@@ -30,7 +30,7 @@ const Profile = () => {
           popUpType: 'error',
           popUpText: error.message || 'Terjadi error saat logout',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
@@ -48,6 +48,6 @@ const Profile = () => {
       <Text>Profile</Text>
     </View>
   );
-};
+}
 
 export default Profile;

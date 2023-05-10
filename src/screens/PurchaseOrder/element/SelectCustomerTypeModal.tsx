@@ -1,13 +1,16 @@
-import { BBackContinueBtn, BButtonPrimary, BForm, BText } from '@/components';
-import { colors, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { resScale } from '@/utils';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {
+  BBackContinueBtn, BButtonPrimary, BForm, BText,
+} from '@/components';
+import { colors, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { resScale } from '@/utils';
+
 const company = require('@/assets/icon/Visitation/company.png');
 const profile = require('@/assets/icon/Visitation/profile.png');
-import AntDesign from 'react-native-vector-icons/AntDesign';
 
 interface IProps {
   isVisible: boolean;
@@ -15,9 +18,8 @@ interface IProps {
   onSelect: (customerType: 'COMPANY' | 'INDIVIDU') => void;
 }
 
-const SelectCustomerTypeModal = ({ isVisible, onClose, onSelect }: IProps) => {
-  const [purchaseOrderCustomerType, setPurchaseOrderCompanytype] =
-    React.useState<'COMPANY' | 'INDIVIDU'>('COMPANY');
+function SelectCustomerTypeModal({ isVisible, onClose, onSelect }: IProps) {
+  const [purchaseOrderCustomerType, setPurchaseOrderCompanytype] = React.useState<'COMPANY' | 'INDIVIDU'>('COMPANY');
 
   const input: Input[] = [
     {
@@ -78,7 +80,7 @@ const SelectCustomerTypeModal = ({ isVisible, onClose, onSelect }: IProps) => {
       </View>
     </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   modalStyle: {

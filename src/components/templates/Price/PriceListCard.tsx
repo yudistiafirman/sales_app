@@ -1,14 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import { StyleSheet, Text, View } from 'react-native';
 import BChip from '../../atoms/BChip';
 import BText from '../../atoms/BText';
 import resScale from '@/utils/resScale';
 import { layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface PriceListCardProps {
   productName?: string;
@@ -17,12 +17,12 @@ interface PriceListCardProps {
   slump?: number;
 }
 
-const PriceListCard = ({
+function PriceListCard({
   productName,
   productPrice,
   categories,
   slump,
-}: PriceListCardProps) => {
+}: PriceListCardProps) {
   return (
     <View style={PriceListCardStyles.container}>
       <View style={PriceListCardStyles.nameAndPriceContainer}>
@@ -43,13 +43,13 @@ const PriceListCard = ({
               size={font.size.xs}
               name="plus-minus"
             />
-            {'2cm'}
+            2cm
           </BChip>
         )}
       </View>
     </View>
   );
-};
+}
 
 export const PriceListCardStyles = StyleSheet.create({
   container: {

@@ -10,11 +10,9 @@ export const purchaseOrderSlice = createXStateSlice({
    * Get the state we want to pass from the machine
    * to Redux.
    */
-  getSelectedState: (state) => {
-    return {
-      currentState: state,
-    };
-  },
+  getSelectedState: (state) => ({
+    currentState: state,
+  }),
 });
 
 export default purchaseOrderSlice.reducer;

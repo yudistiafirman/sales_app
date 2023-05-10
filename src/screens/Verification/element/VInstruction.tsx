@@ -1,17 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
+import React from 'react';
+import { View } from 'react-native';
 import { BText, BTouchableText } from '@/components';
 import { colors } from '@/constants';
 import { resScale } from '@/utils';
-import React from 'react';
-import { View } from 'react-native';
 import VerificationStyles from '../styles';
-const VIntstruction = ({
+
+function VIntstruction({
   phoneNumber,
   onPress,
 }: {
   phoneNumber: string;
   onPress: () => void;
-}) => {
+}) {
   return (
     <View style={{ alignItems: 'center' }}>
       <View style={{ flexDirection: 'row' }}>
@@ -39,5 +40,5 @@ const VIntstruction = ({
       </View>
     </View>
   );
-};
+}
 export default VIntstruction;

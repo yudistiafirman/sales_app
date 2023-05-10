@@ -1,8 +1,10 @@
-import { PicFormInitialState } from '@/interfaces';
+import { PicFormInitialState } from '../interfaces';
 
 function validatePicForm(payload: Partial<PicFormInitialState>) {
   const errors: Partial<PicFormInitialState> = {};
-  const { name, position, email, phone } = payload;
+  const {
+    name, position, email, phone,
+  } = payload;
   if (!name) {
     errors.errorName = 'Nama harus diisi';
   } else if (name.length < 4) {

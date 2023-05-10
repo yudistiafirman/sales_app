@@ -1,14 +1,18 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import {
+  View, Text, ScrollView, StyleSheet,
+} from 'react-native';
 import React, { useContext, useEffect, useMemo } from 'react';
-import { BButtonPrimary, BForm, BSpacer, BVisitationCard } from '@/components';
+import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  BButtonPrimary, BForm, BSpacer, BVisitationCard,
+} from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
-import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import { Input, PIC } from '@/interfaces';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import { SphContext } from '../../context/SphContext';
-import Entypo from 'react-native-vector-icons/Entypo';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import {
   updateSelectedCompanyPicList,
@@ -40,37 +44,35 @@ export default function SelectedPic({
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [, stateUpdate] = useContext(SphContext);
   const { selectedCompany, selectedPic } = useSelector(
-    (state: RootState) => state.sph
+    (state: RootState) => state.sph,
   );
 
-  const inputsData: Input[] = useMemo(() => {
-    return [
-      {
-        label: 'PIC',
-        isRequire: true,
-        isError: false,
-        type: 'PIC',
-        value: selectedCompany?.Pics ? selectedCompany.Pics : [],
-        onChange: () => {
-          openBottomSheet();
-        },
-        onSelect: (index: number) => {
-          const listPic: any[] = [];
-          selectedCompany?.Pics?.forEach((pic, picIndex) => {
-            let picChanged = { ...pic };
-            if (index === picIndex) {
-              dispatch(updateSelectedPic(pic));
-              picChanged.isSelected = true;
-            } else {
-              picChanged.isSelected = false;
-            }
-            listPic.push(picChanged);
-          });
-          dispatch(updateSelectedCompanyPicList(listPic));
-        },
+  const inputsData: Input[] = useMemo(() => [
+    {
+      label: 'PIC',
+      isRequire: true,
+      isError: false,
+      type: 'PIC',
+      value: selectedCompany?.Pics ? selectedCompany.Pics : [],
+      onChange: () => {
+        openBottomSheet();
       },
-    ];
-  }, [selectedCompany?.Pics]);
+      onSelect: (index: number) => {
+        const listPic: any[] = [];
+        selectedCompany?.Pics?.forEach((pic, picIndex) => {
+          const picChanged = { ...pic };
+          if (index === picIndex) {
+            dispatch(updateSelectedPic(pic));
+            picChanged.isSelected = true;
+          } else {
+            picChanged.isSelected = false;
+          }
+          listPic.push(picChanged);
+        });
+        dispatch(updateSelectedCompanyPicList(listPic));
+      },
+    },
+  ], [selectedCompany?.Pics]);
 
   function checkSelected() {
     let isSelectedExist = false;
@@ -87,7 +89,7 @@ export default function SelectedPic({
     if (selectedCompany) {
       if (selectedCompany?.Pic?.id && !selectedPic) {
         const foundMainPic = selectedCompany?.Pics?.find(
-          (pic) => pic.id === selectedCompany?.Pic?.id
+          (pic) => pic.id === selectedCompany?.Pic?.id,
         );
         if (foundMainPic) dispatch(updateSelectedPic(foundMainPic));
       }
@@ -142,12 +144,12 @@ export default function SelectedPic({
             }}
           />
         </View>
-        <BSpacer size={'extraSmall'} />
+        <BSpacer size="extraSmall" />
         <ScrollView style={style.scrollViewStyle}>
           <BForm titleBold="500" inputs={inputsData} />
         </ScrollView>
       </View>
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size="extraSmall" />
       <BButtonPrimary
         disable={!checkSelected()}
         title="Lanjut"
@@ -162,7 +164,7 @@ export default function SelectedPic({
         ref={bottomSheetRef}
         initialIndex={-1}
         addPic={(pic: PIC) => {
-          let newPic = { ...pic };
+          const newPic = { ...pic };
           const currentList = selectedCompany?.Pics
             ? [...selectedCompany.Pics]
             : [];

@@ -1,23 +1,25 @@
 import React from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {
+  SafeAreaView, StyleSheet, TouchableOpacity, View,
+} from 'react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { TextInput } from 'react-native-paper';
 import { BSearchBar, BSpacer } from '@/components';
 import Inputs from './Input';
 import SearchingCustomer from './SearchingCustomer';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useAppointmentData } from '@/hooks';
-import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { APPOINTMENT } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { resScale } from '@/utils';
-import { TextInput } from 'react-native-paper';
 import { layout } from '@/constants';
 
-const FirstStep = () => {
+function FirstStep() {
   const [values, dispatchValue] = useAppointmentData();
   const { searchQuery, isSearching } = values;
 
   React.useEffect(() => {
-    crashlytics().log(APPOINTMENT + '-Step1');
+    crashlytics().log(`${APPOINTMENT}-Step1`);
   }, []);
 
   return (
@@ -28,12 +30,10 @@ const FirstStep = () => {
         <>
           <TouchableOpacity
             style={styles.touchable}
-            onPress={() =>
-              dispatchValue({
-                type: AppointmentActionType.ENABLE_SEARCHING,
-                value: true,
-              })
-            }
+            onPress={() => dispatchValue({
+              type: AppointmentActionType.ENABLE_SEARCHING,
+              value: true,
+            })}
           />
           <BSearchBar
             placeholder="Cari PT / Proyek"
@@ -51,7 +51,7 @@ const FirstStep = () => {
       )}
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   flexFull: {

@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { StyleProp, ViewStyle, View, StyleSheet } from 'react-native';
+import {
+  StyleProp, ViewStyle, View, StyleSheet,
+} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import DocumentPicker from 'react-native-document-picker';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
-import DocumentPicker from 'react-native-document-picker';
 import { BSvg } from '@/components';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 
@@ -17,7 +19,7 @@ type configType = {
   flashModeEnable?: boolean;
 };
 
-const CameraButton = ({
+function CameraButton({
   style,
   takePhoto,
   onDocPress,
@@ -25,7 +27,7 @@ const CameraButton = ({
   disabledGalleryPicker = true,
   disabledDocPicker = true,
   flashModeEnable = false,
-}: configType) => {
+}: configType) {
   const selectFile = React.useCallback(
     async (typeDocument: 'IMAGE' | 'DOC') => {
       try {
@@ -45,57 +47,55 @@ const CameraButton = ({
         }
       }
     },
-    [onDocPress, onGalleryPress]
+    [onDocPress, onGalleryPress],
   );
 
   return (
-    <>
-      <View style={[styles.cameraBtn, style]}>
-        <View style={styles.optionButton}>
-          <View style={styles.flexFull}>
-            {!disabledGalleryPicker && (
-              <View style={styles.gallery}>
-                <TouchableOpacity
-                  style={styles.roundedViewButton}
-                  onPress={() => selectFile('IMAGE')}
-                >
-                  <BSvg
-                    widthHeight={resScale(20)}
-                    svgName={SvgNames.IC_GALLERY_PICKER}
-                    color={colors.white}
-                    type="color"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+    <View style={[styles.cameraBtn, style]}>
+      <View style={styles.optionButton}>
+        <View style={styles.flexFull}>
+          {!disabledGalleryPicker && (
+          <View style={styles.gallery}>
+            <TouchableOpacity
+              style={styles.roundedViewButton}
+              onPress={() => selectFile('IMAGE')}
+            >
+              <BSvg
+                widthHeight={resScale(20)}
+                svgName={SvgNames.IC_GALLERY_PICKER}
+                color={colors.white}
+                type="color"
+              />
+            </TouchableOpacity>
           </View>
-          {!disabledDocPicker && (
-            <View style={styles.flexFull}>
-              <View style={styles.doc}>
-                <TouchableOpacity
-                  style={styles.roundedViewButton}
-                  onPress={() => selectFile('DOC')}
-                >
-                  <BSvg
-                    widthHeight={resScale(20)}
-                    svgName={SvgNames.IC_DOC_PICKER}
-                    color={colors.white}
-                    type="color"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
           )}
         </View>
-        <TouchableOpacity onPress={() => takePhoto()}>
-          <View style={styles.outerShutter}>
-            <View style={styles.innerShutter} />
+        {!disabledDocPicker && (
+        <View style={styles.flexFull}>
+          <View style={styles.doc}>
+            <TouchableOpacity
+              style={styles.roundedViewButton}
+              onPress={() => selectFile('DOC')}
+            >
+              <BSvg
+                widthHeight={resScale(20)}
+                svgName={SvgNames.IC_DOC_PICKER}
+                color={colors.white}
+                type="color"
+              />
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        </View>
+        )}
       </View>
-    </>
+      <TouchableOpacity onPress={() => takePhoto()}>
+        <View style={styles.outerShutter}>
+          <View style={styles.innerShutter} />
+        </View>
+      </TouchableOpacity>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   flexFull: {

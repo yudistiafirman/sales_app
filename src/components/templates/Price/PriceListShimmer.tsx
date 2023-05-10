@@ -1,12 +1,13 @@
-import { resScale } from '@/utils';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { resScale } from '@/utils';
 import { PriceListCardStyles } from './PriceListCard';
 import { layout } from '@/constants';
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const PriceListShimmer = () => {
+function PriceListShimmer() {
   return (
     <View style={[PriceListCardStyles.container]}>
       <View style={PriceListCardStyles.nameAndPriceContainer}>
@@ -18,7 +19,7 @@ const PriceListShimmer = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   shimmerName: { width: resScale(75), height: resScale(17) },

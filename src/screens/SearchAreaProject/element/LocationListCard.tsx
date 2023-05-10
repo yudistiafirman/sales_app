@@ -1,9 +1,9 @@
-import colors from '@/constants/colors';
-import resScale from '@/utils/resScale';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import SearchAreaStyles from '../styles';
 import Icons from 'react-native-vector-icons/Feather';
+import colors from '@/constants/colors';
+import resScale from '@/utils/resScale';
+import SearchAreaStyles from '../styles';
 import { BSpacer, BText } from '@/components';
 import { layout } from '@/constants';
 
@@ -13,11 +13,11 @@ interface LocationListCardProps {
   addressDetail: string;
 }
 
-const LocationListCard = ({
+function LocationListCard({
   onPress,
   addressTitle,
   addressDetail,
-}: LocationListCardProps) => {
+}: LocationListCardProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -39,6 +39,6 @@ const LocationListCard = ({
       </View>
     </TouchableOpacity>
   );
-};
+}
 
 export default LocationListCard;

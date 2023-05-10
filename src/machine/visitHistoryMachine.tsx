@@ -1,6 +1,6 @@
+import { assign, createMachine } from 'xstate';
 import { getAllVisitations } from '@/actions/ProductivityActions';
 import { visitationListResponse } from '@/interfaces';
-import { assign, createMachine } from 'xstate';
 
 export interface Products {
   name?: string;
@@ -46,7 +46,7 @@ const visitHistoryMachine =
               title: string;
               totalItems: 0;
               chipPosition: string;
-            }
+            },
           ];
           selectedVisitationByIdx: VisitHistoryPayload;
         },
@@ -118,25 +118,21 @@ const visitHistoryMachine =
         },
       },
       actions: {
-        assignProjectIdToContext: assign((_context, event) => {
-          return {
-            projectId: event.value,
-            loading: true,
-          };
-        }),
+        assignProjectIdToContext: assign((_context, event) => ({
+          projectId: event.value,
+          loading: true,
+        })),
         assignVisitationDataToContext: assign((_context, event) => {
           const sortedData = event.data.reverse();
-          const newRoutes = sortedData.map((val, idx) => {
-            return {
-              key: val.id,
-              title: `Kunjungan ${idx + 1}`,
-              totalItems: 0,
-              chipPosition: 'right',
-            };
-          });
+          const newRoutes = sortedData.map((val, idx) => ({
+            key: val.id,
+            title: `Kunjungan ${idx + 1}`,
+            totalItems: 0,
+            chipPosition: 'right',
+          }));
 
           const initialSelectedVisitation = event.data.filter(
-            (v, i) => i === 0
+            (v, i) => i === 0,
           );
           return {
             visitationData: event.data,
@@ -146,8 +142,8 @@ const visitHistoryMachine =
           };
         }),
         sliceVisitationData: assign((context, event) => {
-          let newSelectedVisitationData = context.visitationData.filter(
-            (v, i) => i === event.value
+          const newSelectedVisitationData = context.visitationData.filter(
+            (v, i) => i === event.value,
           );
 
           return {
@@ -155,7 +151,7 @@ const visitHistoryMachine =
           };
         }),
       },
-    }
+    },
   );
 
 export default visitHistoryMachine;

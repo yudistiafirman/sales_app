@@ -1,17 +1,19 @@
+import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import {
+  StyleSheet, Text, TouchableOpacity, View,
+} from 'react-native';
 import { colors, fonts, layout } from '@/constants';
 import { DOCUMENTS } from '@/navigation/ScreenNames';
 import { resScale } from '@/utils';
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const DocumentWarning = ({
+function DocumentWarning({
   docs,
   projectId,
 }: {
   docs?: Docs[];
   projectId?: string;
-}) => {
+}) {
   const navigation = useNavigation();
   return (
     <View style={styles.labelWarning}>
@@ -19,19 +21,17 @@ const DocumentWarning = ({
         Ada dokumen pelanggan yang belum dilengkapi.
       </Text>
       <TouchableOpacity
-        onPress={() =>
-          navigation.navigate(DOCUMENTS, {
-            docs: docs,
-            projectId: projectId,
-          })
-        }
+        onPress={() => navigation.navigate(DOCUMENTS, {
+          docs,
+          projectId,
+        })}
         style={styles.outlineButton}
       >
         <Text style={styles.buttonText}>Lengkapi Dokumen</Text>
       </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   labelWarning: {

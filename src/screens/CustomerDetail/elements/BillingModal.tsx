@@ -8,6 +8,10 @@ import {
 } from 'react-native';
 import React, { useMemo, useState } from 'react';
 import Modal from 'react-native-modal';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import Icons from 'react-native-vector-icons/Feather';
 import { resScale } from '@/utils';
 import { colors, fonts, layout } from '@/constants';
 import {
@@ -18,13 +22,9 @@ import {
   BSpacer,
   BText,
 } from '@/components';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Address, Input } from '@/interfaces';
 import { SEARCH_AREA, CUSTOMER_DETAIL } from '@/navigation/ScreenNames';
-import { useNavigation } from '@react-navigation/native';
 import { AppDispatch } from '@/redux/store';
-import { useDispatch } from 'react-redux';
-import Icons from 'react-native-vector-icons/Feather';
 import {
   updateBillingAddress,
   updateLocationAddress,
@@ -55,7 +55,7 @@ export default function BillingModal({
   isBilling = false,
 }: BillingModalType) {
   const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
-    undefined
+    undefined,
   );
   const [billingState, setBillingState] = useState({
     billingAddress: '',
@@ -78,52 +78,50 @@ export default function BillingModal({
     return 'Nama Alamat';
   }, [region?.formattedAddress]);
 
-  const inputsData: Input[] = useMemo(() => {
-    return [
-      {
-        label: 'Kelurahan',
-        isRequire: false,
-        type: 'textInput',
-        placeholder: 'Masukkan kelurahan',
-        onChange: (text: string) => {
-          setBillingState((prevState) => ({
-            ...prevState,
-            kelurahan: text.nativeEvent.text,
-          }));
-        },
-        value: billingState.kelurahan,
+  const inputsData: Input[] = useMemo(() => [
+    {
+      label: 'Kelurahan',
+      isRequire: false,
+      type: 'textInput',
+      placeholder: 'Masukkan kelurahan',
+      onChange: (text: string) => {
+        setBillingState((prevState) => ({
+          ...prevState,
+          kelurahan: text.nativeEvent.text,
+        }));
       },
-      {
-        label: 'Kecamatan',
-        isRequire: false,
-        type: 'textInput',
-        placeholder: 'Masukkan kecamatan',
-        onChange: (text: string) => {
-          setBillingState((prevState) => ({
-            ...prevState,
-            kecamatan: text.nativeEvent.text,
-          }));
-        },
-        value: billingState.kecamatan,
+      value: billingState.kelurahan,
+    },
+    {
+      label: 'Kecamatan',
+      isRequire: false,
+      type: 'textInput',
+      placeholder: 'Masukkan kecamatan',
+      onChange: (text: string) => {
+        setBillingState((prevState) => ({
+          ...prevState,
+          kecamatan: text.nativeEvent.text,
+        }));
       },
-      {
-        label: 'Kota / Kabupaten',
-        isRequire: false,
-        type: 'textInput',
-        placeholder: 'Masukkan kota',
-        onChange: (text: string) => {
-          setBillingState((prevState) => ({
-            ...prevState,
-            kabupaten: text.nativeEvent.text,
-          }));
-        },
-        value: billingState.kabupaten,
+      value: billingState.kecamatan,
+    },
+    {
+      label: 'Kota / Kabupaten',
+      isRequire: false,
+      type: 'textInput',
+      placeholder: 'Masukkan kota',
+      onChange: (text: string) => {
+        setBillingState((prevState) => ({
+          ...prevState,
+          kabupaten: text.nativeEvent.text,
+        }));
       },
-    ];
-  }, [billingState]);
+      value: billingState.kabupaten,
+    },
+  ], [billingState]);
 
   const onPressAddAddress = async () => {
-    let body: Address = {};
+    const body: Address = {};
 
     if (region?.postalId) {
       body.postalid = region.postalId;
@@ -139,26 +137,23 @@ export default function BillingModal({
     }
 
     if (billingState.kelurahan) {
-      body.line2 =
-        body.line2 !== undefined
-          ? body.line2 + ' ' + billingState.kelurahan
-          : billingState.kelurahan;
+      body.line2 = body.line2 !== undefined
+        ? `${body.line2} ${billingState.kelurahan}`
+        : billingState.kelurahan;
     }
 
     if (billingState.kecamatan) {
-      body.line2 =
-        body.line2 !== undefined
-          ? body.line2 + ' ' + billingState.kecamatan
-          : billingState.kecamatan;
+      body.line2 = body.line2 !== undefined
+        ? `${body.line2} ${billingState.kecamatan}`
+        : billingState.kecamatan;
     }
     if (billingState.kabupaten) {
-      body.line2 =
-        body.line2 !== undefined
-          ? body.line2 + ' ' + billingState.kabupaten
-          : billingState.kabupaten;
+      body.line2 = body.line2 !== undefined
+        ? `${body.line2} ${billingState.kabupaten}`
+        : billingState.kabupaten;
     }
     try {
-      let response = undefined;
+      let response;
       if (isBilling) {
         response = await updateBillingAddress(projectId, body);
       } else {
@@ -173,7 +168,7 @@ export default function BillingModal({
             popUpType: 'success',
             popUpText: 'Update alamat berhasil',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     } catch (error) {
@@ -182,18 +177,18 @@ export default function BillingModal({
         openPopUp({
           popUpType: 'error',
           popUpText:
-            error.message ||
-            'Terjadi error saat update alamat ' +
-              (isBilling ? 'pembayaran' : 'proyek'),
+            error.message
+            || `Terjadi error saat update alamat ${
+              isBilling ? 'pembayaran' : 'proyek'}`,
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
 
   return (
     <Modal
-      hideModalContentWhileAnimating={true}
+      hideModalContentWhileAnimating
       backdropOpacity={0.3}
       isVisible={isModalVisible}
       onBackButtonPress={() => {
@@ -201,15 +196,15 @@ export default function BillingModal({
       }}
       scrollOffset={scrollOffSet}
       scrollOffsetMax={resScale(400) - resScale(190)}
-      propagateSwipe={true}
+      propagateSwipe
       style={styles.modal}
     >
       <View style={styles.modalContent}>
         <BContainer>
           <View style={styles.modalHeader}>
             <Text style={styles.headerText} numberOfLines={1}>
-              {(isUpdate ? 'Ubah' : 'Tambah') +
-                (isBilling ? ' Alamat Penagihan' : ' Alamat Proyek')}
+              {(isUpdate ? 'Ubah' : 'Tambah')
+                + (isBilling ? ' Alamat Penagihan' : ' Alamat Proyek')}
             </Text>
             <TouchableOpacity
               onPress={() => setIsModalVisible((curr) => !curr)}
@@ -217,7 +212,7 @@ export default function BillingModal({
               <MaterialCommunityIcons name="close" size={30} color="#000000" />
             </TouchableOpacity>
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <ScrollView
             onScroll={(event) => {
               setScrollOffSet(event.nativeEvent.contentOffset.y);
@@ -249,7 +244,7 @@ export default function BillingModal({
               </View>
               <View style={styles.selectedAddress}>
                 <>
-                  <BLabel bold="500" label={nameAddress!} />
+                  <BLabel bold="500" label={nameAddress} />
                   <BSpacer size="verySmall" />
                   <BText bold="300">
                     {region?.formattedAddress || 'Detail Alamat'}
@@ -263,7 +258,7 @@ export default function BillingModal({
           <BButtonPrimary
             disable={region === null}
             onPress={onPressAddAddress}
-            title={(isUpdate ? 'Ubah' : 'Tambah') + ' Alamat'}
+            title={`${isUpdate ? 'Ubah' : 'Tambah'} Alamat`}
           />
         </BContainer>
       </View>

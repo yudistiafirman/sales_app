@@ -1,13 +1,13 @@
-import { colors } from '@/constants';
-import { resScale } from '@/utils';
 import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { SPLASH } from '@/navigation/ScreenNames';
 import { useDispatch } from 'react-redux';
+import { SPLASH } from '@/navigation/ScreenNames';
+import { resScale } from '@/utils';
+import { colors } from '@/constants';
 import { AppDispatch } from '@/redux/store';
 
-const Splash = () => {
+function Splash() {
   const dispatch = useDispatch<AppDispatch>();
 
   React.useEffect(() => {
@@ -22,7 +22,7 @@ const Splash = () => {
       />
     </View>
   );
-};
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,18 +1,18 @@
 import { StyleSheet, FlatList } from 'react-native';
 import React from 'react';
+import { FlashList } from '@shopify/flash-list';
 import { layout } from '@/constants';
 import { BEmptyState, BSpacer, BVisitationCard } from '@/components';
 import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 import { ENTRY_TYPE } from '@/models/EnumModel';
-import { FlashList } from '@shopify/flash-list';
 
 interface OperationListProps {
   data: OperationsDeliveryOrdersListResponse[];
   onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  | ((info: { distanceFromEnd: number }) => void)
+  | null
+  | undefined;
   refreshing?: boolean;
   loadList?: boolean;
   isLoadMore?: boolean;
@@ -39,27 +39,25 @@ export default function OperationList({
   onLocationPress,
   userType,
 }: OperationListProps) {
-  const renderItem = (item: OperationsDeliveryOrdersListResponse) => {
-    return (
-      <BVisitationCard
-        onPress={() => onPressList(item)}
-        onLocationPress={(lonlat) => onLocationPress(lonlat)}
-        item={{
-          name: item?.number,
-          picOrCompanyName: item?.project?.projectName,
-          unit: `${item?.quantity} m³`,
-          pilStatus: undefined,
-          lonlat:
+  const renderItem = (item: OperationsDeliveryOrdersListResponse) => (
+    <BVisitationCard
+      onPress={() => onPressList(item)}
+      onLocationPress={(lonlat) => onLocationPress(lonlat)}
+      item={{
+        name: item?.number,
+        picOrCompanyName: item?.project?.projectName,
+        unit: `${item?.quantity} m³`,
+        pilStatus: undefined,
+        lonlat:
             userType === ENTRY_TYPE.DRIVER
               ? {
-                  longitude: item.project?.ShippingAddress?.lon,
-                  latitude: item.project?.ShippingAddress?.lat,
-                }
+                longitude: item.project?.ShippingAddress?.lon,
+                latitude: item.project?.ShippingAddress?.lat,
+              }
               : undefined,
-        }}
-      />
-    );
-  };
+      }}
+    />
+  );
 
   return (
     <FlashList
@@ -82,14 +80,12 @@ export default function OperationList({
             errorMessage={errorMessage}
             isError={isError}
             onAction={onRetry}
-            emptyText={
-              'Data mu tidak tersedia. Silakan buat DO terlebih dahulu.'
-            }
+            emptyText="Data mu tidak tersedia. Silakan buat DO terlebih dahulu."
           />
         )
       }
       ListFooterComponent={isLoadMore ? <BCommonListShimmer /> : null}
-      ItemSeparatorComponent={() => <BSpacer size={'small'} />}
+      ItemSeparatorComponent={() => <BSpacer size="small" />}
       contentContainerStyle={style.flatList}
     />
   );

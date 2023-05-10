@@ -20,8 +20,8 @@ type errorType = {
 };
 
 export const postUploadFiles = createAsyncThunk<
-  any,
-  { files: any[]; from: string }
+any,
+{ files: any[]; from: string }
 >('common/postUploadFiles', async ({ files, from }, { rejectWithValue }) => {
   try {
     const response = await uploadFileImage(files, from);
@@ -52,12 +52,12 @@ export const getAllProject = createAsyncThunk<any, { search?: string }>(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const getProjectsByUserThunk = createAsyncThunk<
-  projectResponseType,
-  { search?: string }
+projectResponseType,
+{ search?: string }
 >('common/getProjectsByUserThunk', async ({ search }, { rejectWithValue }) => {
   // projectByUserGetAction
   try {
@@ -70,7 +70,7 @@ export const getProjectsByUserThunk = createAsyncThunk<
     return rejectWithValue(error.message);
   }
 });
-//projectGetOneById
+// projectGetOneById
 export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
   'common/getOneProjectById',
   async ({ projectId }, { rejectWithValue }) => {
@@ -83,7 +83,7 @@ export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const fetchSphDocuments = createAsyncThunk(
@@ -97,11 +97,11 @@ export const fetchSphDocuments = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 export const fetchAddressSuggestion = createAsyncThunk<
-  any,
-  { search: string; page: number }
+any,
+{ search: string; page: number }
 >(
   'common/fetchAddressSuggestion',
   async ({ search, page }, { rejectWithValue }) => {
@@ -113,17 +113,17 @@ export const fetchAddressSuggestion = createAsyncThunk<
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 export const postProjectDocByprojectId = createAsyncThunk<
-  any,
-  {
-    payload: {
-      projectId: string;
-      documentId: string;
-      fileId: string;
-    };
-  }
+any,
+{
+  payload: {
+    projectId: string;
+    documentId: string;
+    fileId: string;
+  };
+}
 >(
   'common/postProjectDocByprojectId',
   async ({ payload }, { rejectWithValue }) => {
@@ -139,5 +139,5 @@ export const postProjectDocByprojectId = createAsyncThunk<
       }
       return rejectWithValue(errorData);
     }
-  }
+  },
 );

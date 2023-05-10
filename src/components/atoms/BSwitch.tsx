@@ -1,4 +1,6 @@
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import {
+  View, Text, StyleSheet, ViewStyle,
+} from 'react-native';
 import React from 'react';
 import { Switch } from 'react-native-paper';
 import { colors, fonts, layout } from '@/constants';

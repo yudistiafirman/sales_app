@@ -1,10 +1,10 @@
-import BTab from '@/components/molecules/BTab';
 import { ViewStyle } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import * as React from 'react';
+import { Scene, Route } from 'react-native-tab-view/lib/typescript/src/types';
 import colors from '@/constants/colors';
 import BTabLabels from '@/components/molecules/BTabLabels';
-import { Scene, Route } from 'react-native-tab-view/lib/typescript/src/types';
+import BTab from '@/components/molecules/BTab';
 
 interface BTabSectionProps {
   onIndexChange: (index: number) => void;
@@ -18,7 +18,7 @@ interface BTabSectionProps {
   minTabHeaderWidth?: number | undefined;
 }
 
-const BTabSections = ({
+function BTabSections({
   onIndexChange,
   navigationState,
   renderScene,
@@ -28,7 +28,7 @@ const BTabSections = ({
   onTabPress,
   swipeEnabled,
   minTabHeaderWidth,
-}: BTabSectionProps) => {
+}: BTabSectionProps) {
   return (
     <BTab
       onIndexChange={onIndexChange}
@@ -49,11 +49,11 @@ const BTabSections = ({
               minWidth={minTabHeaderWidth}
             />
           )}
-          scrollEnabled={true}
+          scrollEnabled
         />
       )}
     />
   );
-};
+}
 
 export default BTabSections;

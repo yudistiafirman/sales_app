@@ -1,10 +1,10 @@
+import { assign, createMachine } from 'xstate';
 import {
   getConfirmedPurchaseOrder,
   getSphByProject,
 } from '@/actions/OrderActions';
 import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
 import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO';
-import { assign, createMachine } from 'xstate';
 
 export const searchPOMachine = createMachine(
   {
@@ -24,10 +24,10 @@ export const searchPOMachine = createMachine(
         | { type: 'retryGettingList' }
         | { type: 'onCloseModal' }
         | {
-            type: 'setDataType';
-            value: 'SPHDATA' | 'DEPOSITDATA' | 'SCHEDULEDATA';
-            filterBy: 'INDIVIDU' | 'COMPANY';
-          }
+          type: 'setDataType';
+          value: 'SPHDATA' | 'DEPOSITDATA' | 'SCHEDULEDATA';
+          filterBy: 'INDIVIDU' | 'COMPANY';
+        }
         | { type: 'onRefresh' }
         | { type: 'onEndReached' },
 
@@ -67,8 +67,8 @@ export const searchPOMachine = createMachine(
         dataType: 'DEPOSITDATA' | 'SPHDATA' | 'SCHEDULEDATA' | '';
         filterSphDataBy: 'INDIVIDU' | 'COMPANY';
         choosenDataFromList:
-          | CreatedSPHListResponse
-          | CreatedPurchaseOrderListResponse;
+        | CreatedSPHListResponse
+        | CreatedPurchaseOrderListResponse;
       },
     },
 
@@ -159,7 +159,7 @@ export const searchPOMachine = createMachine(
 
       searchValueLoaded: {
         after: {
-          '500': [
+          500: [
             {
               target: 'searchingDataSph',
               cond: 'isDataTypeSph',
@@ -205,123 +205,93 @@ export const searchPOMachine = createMachine(
   },
   {
     actions: {
-      triggerModal: assign((context, event) => {
-        return {
-          isModalVisible: true,
-          choosenDataFromList: event.value,
-        };
-      }),
-      assignSearchValue: assign((context, event) => {
-        return {
-          searchValue: event.value,
-          loadData: true,
-        };
-      }),
-      assignSphData: assign((_context, event) => {
-        return {
-          routes: [
-            {
-              key: 'first',
-              title: 'Perusahaan',
-              totalItems: event.data.length,
-              chipPosition: 'right',
-            },
-          ],
-          sphData: event.data,
-          loadData: false,
-          isRefreshing: false,
-          loadMoreData: false,
-        };
-      }),
-      closeModal: assign(() => {
-        return {
-          isModalVisible: false,
-        };
-      }),
-      handleErrorGettingList: assign((context, event) => {
-        return {
-          errorGettingListMessage: event.data.message,
-          loadData: false,
-          loadMoreData: false,
-          isRefreshing: false,
-        };
-      }),
-      handleRetryGettingList: assign(() => {
-        return {
-          errorGettingListMessage: '',
-          loadData: true,
-        };
-      }),
-      handleClearInput: assign(() => {
-        return {
-          searchValue: '',
-        };
-      }),
-      assignDataType: assign((context, event) => {
-        return {
-          dataType: event.value,
-          filterSphDataBy: event.filterBy,
-        };
-      }),
-      assignPurchaseOrderListData: assign((context, event) => {
-        return {
-          routes: [
-            {
-              key: 'first',
-              title: 'Perusahaan',
-              totalItems: event.data.totalItems,
-              chipPosition: 'right',
-            },
-          ],
-          totalPage: event.data.totalPages,
-          poData: event.data.data,
-          loadData: false,
-          isRefreshing: false,
-          loadMoreData: false,
-        };
-      }),
-      handleRefresh: assign(() => {
-        return {
-          isRefreshing: true,
-          sphData: [],
-          poData: [],
-          page: 1,
-        };
-      }),
-      handleOnEndReached: assign((context) => {
-        return {
-          page: context.page + 1,
-          loadMoreData: true,
-        };
-      }),
+      triggerModal: assign((context, event) => ({
+        isModalVisible: true,
+        choosenDataFromList: event.value,
+      })),
+      assignSearchValue: assign((context, event) => ({
+        searchValue: event.value,
+        loadData: true,
+      })),
+      assignSphData: assign((_context, event) => ({
+        routes: [
+          {
+            key: 'first',
+            title: 'Perusahaan',
+            totalItems: event.data.length,
+            chipPosition: 'right',
+          },
+        ],
+        sphData: event.data,
+        loadData: false,
+        isRefreshing: false,
+        loadMoreData: false,
+      })),
+      closeModal: assign(() => ({
+        isModalVisible: false,
+      })),
+      handleErrorGettingList: assign((context, event) => ({
+        errorGettingListMessage: event.data.message,
+        loadData: false,
+        loadMoreData: false,
+        isRefreshing: false,
+      })),
+      handleRetryGettingList: assign(() => ({
+        errorGettingListMessage: '',
+        loadData: true,
+      })),
+      handleClearInput: assign(() => ({
+        searchValue: '',
+      })),
+      assignDataType: assign((context, event) => ({
+        dataType: event.value,
+        filterSphDataBy: event.filterBy,
+      })),
+      assignPurchaseOrderListData: assign((context, event) => ({
+        routes: [
+          {
+            key: 'first',
+            title: 'Perusahaan',
+            totalItems: event.data.totalItems,
+            chipPosition: 'right',
+          },
+        ],
+        totalPage: event.data.totalPages,
+        poData: event.data.data,
+        loadData: false,
+        isRefreshing: false,
+        loadMoreData: false,
+      })),
+      handleRefresh: assign(() => ({
+        isRefreshing: true,
+        sphData: [],
+        poData: [],
+        page: 1,
+      })),
+      handleOnEndReached: assign((context) => ({
+        page: context.page + 1,
+        loadMoreData: true,
+      })),
     },
     guards: {
-      searchValueLengthAccepted: (_context, event) => {
-        return event.value.length > 2;
-      },
-      isDataTypeSph: (context) => {
-        return context.dataType === 'SPHDATA';
-      },
-      isDataTypePurchaseOrder: (context) => {
-        return (
-          context.dataType === 'DEPOSITDATA' ||
-          context.dataType === 'SCHEDULEDATA'
-        );
-      },
-      isGettingPurchaseOrder: (context) => {
-        return (
-          context.dataType === 'DEPOSITDATA' ||
-          (context.dataType === 'SCHEDULEDATA' &&
-            context.page <= context.totalPage)
-        );
-      },
+      searchValueLengthAccepted: (_context, event) => event.value.length > 2,
+      isDataTypeSph: (context) => context.dataType === 'SPHDATA',
+      isDataTypePurchaseOrder: (context) => (
+        context.dataType === 'DEPOSITDATA'
+          || context.dataType === 'SCHEDULEDATA'
+      ),
+      isGettingPurchaseOrder: (context) => (
+        context.dataType === 'DEPOSITDATA'
+          || (context.dataType === 'SCHEDULEDATA'
+            && context.page <= context.totalPage)
+      ),
     },
     services: {
       GetSphList: async (context) => {
         try {
           const response = await getSphByProject(
             context.searchValue,
-            context.filterSphDataBy
+            context.filterSphDataBy,
           );
           return response.data.data;
         } catch (error) {
@@ -336,7 +306,7 @@ export const searchPOMachine = createMachine(
             page.toString(),
             size.toString(),
             searchValue,
-            productPo
+            productPo,
           );
           return response.data.data;
         } catch (error) {
@@ -344,5 +314,5 @@ export const searchPOMachine = createMachine(
         }
       },
     },
-  }
+  },
 );

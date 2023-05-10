@@ -1,11 +1,11 @@
-import { BEmptyState } from '@/components';
-import { layout } from '@/constants';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import React, { useCallback } from 'react';
 import { ListRenderItem } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { BEmptyState } from '@/components';
+import { layout } from '@/constants';
 import TransactionListCard from './TransactionListCard';
 import TransactionListShimmer from './TransactionListShimmer';
-import { FlashList } from '@shopify/flash-list';
 
 interface TransactionsData {
   id: string;
@@ -21,9 +21,9 @@ interface TransactionsData {
 interface TransactionListProps<ArrayOfObject> {
   transactions: ArrayOfObject[];
   onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  | ((info: { distanceFromEnd: number }) => void)
+  | null
+  | undefined;
   refreshing?: boolean;
   isLoadMore?: boolean;
   loadTransaction?: boolean;
@@ -35,7 +35,7 @@ interface TransactionListProps<ArrayOfObject> {
   selectedType: string;
 }
 
-const TransactionList = <ArrayOfObject extends TransactionsData>({
+function TransactionList<ArrayOfObject extends TransactionsData>({
   transactions,
   onEndReached,
   refreshing,
@@ -47,52 +47,50 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
   loadTransaction,
   onPress = () => {},
   selectedType,
-}: TransactionListProps<ArrayOfObject>) => {
+}: TransactionListProps<ArrayOfObject>) {
   const renderItem: ListRenderItem<TransactionsData> = useCallback(
-    ({ item }) => {
-      return (
-        <TouchableOpacity
-          onPress={() => {
-            onPress(item);
-          }}
-        >
-          <TransactionListCard
-            number={item.number ? item.number : '-'}
+    ({ item }) => (
+      <TouchableOpacity
+        onPress={() => {
+          onPress(item);
+        }}
+      >
+        <TransactionListCard
+          number={item.number ? item.number : '-'}
             // TODO: handle from BE, ugly when use mapping in FE side
-            projectName={
+          projectName={
               item.QuotationRequest?.Project
                 ? item.QuotationRequest?.Project.projectName
                 : item.project?.projectName
-                ? item.project?.projectName
-                : '-'
+                  ? item.project?.projectName
+                  : '-'
             }
-            status={item.status}
+          status={item.status}
             // TODO: handle from BE, ugly when use mapping in FE side
-            name={
+          name={
               item.SaleOrder
                 ? item.SaleOrder?.number
                 : item.Schedule
-                ? item.Schedule.number
-                : item.PurchaseOrder
-                ? item.PurchaseOrder?.number
-                : item.QuotationLetter?.number
+                  ? item.Schedule.number
+                  : item.PurchaseOrder
+                    ? item.PurchaseOrder?.number
+                    : item.QuotationLetter?.number
             }
             // TODO: handle from BE, ugly when use mapping in FE side
-            nominal={
-              (selectedType === 'Deposit' ||
-                selectedType === 'Jadwal' ||
-                selectedType === 'DO') &&
-              item.value
+          nominal={
+              (selectedType === 'Deposit'
+                || selectedType === 'Jadwal'
+                || selectedType === 'DO')
+              && item.value
                 ? item.value
                 : item.totalPrice
             }
             // TODO: handle from BE, ugly when use mapping in FE side
-            useBEStatus={selectedType === 'SPH' ? false : true}
-          />
-        </TouchableOpacity>
-      );
-    },
-    [onPress]
+          useBEStatus={selectedType !== 'SPH'}
+        />
+      </TouchableOpacity>
+    ),
+    [onPress],
   );
   return (
     <FlashList
@@ -126,6 +124,6 @@ const TransactionList = <ArrayOfObject extends TransactionsData>({
       renderItem={renderItem}
     />
   );
-};
+}
 
 export default TransactionList;

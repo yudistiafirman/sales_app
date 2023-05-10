@@ -1,7 +1,8 @@
-import { BText } from '@/components';
 import React from 'react';
+import { BText } from '@/components';
 import loginStyle from '../style';
-const Instruction = () => {
+
+function Instruction() {
   return (
     <BText style={loginStyle.textInfo}>
       Masukkan No. Telepon
@@ -9,5 +10,5 @@ const Instruction = () => {
       untuk Lanjut.
     </BText>
   );
-};
+}
 export default Instruction;

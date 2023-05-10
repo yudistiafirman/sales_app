@@ -1,19 +1,19 @@
-import { BText } from '@/components';
-import colors from '@/constants/colors';
-import resScale from '@/utils/resScale';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import { BText } from '@/components';
+import colors from '@/constants/colors';
+import resScale from '@/utils/resScale';
 import SearchAreaStyles from '../styles';
 import { layout } from '@/constants';
 
-const SearchAreaCurrentLocation = ({
+function SearchAreaCurrentLocation({
   onPress,
   disabled,
 }: {
   onPress: () => void;
   disabled: boolean;
-}) => {
+}) {
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -36,6 +36,6 @@ const SearchAreaCurrentLocation = ({
       </BText>
     </TouchableOpacity>
   );
-};
+}
 
 export default SearchAreaCurrentLocation;

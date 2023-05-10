@@ -1,4 +1,3 @@
-import resScale from '@/utils/resScale';
 import * as React from 'react';
 import {
   Text,
@@ -6,9 +5,10 @@ import {
   StyleSheet,
   ViewStyle,
   TouchableOpacity,
+  StyleProp, TextStyle,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { StyleProp, TextStyle } from 'react-native';
+import resScale from '@/utils/resScale';
 import colors from '@/constants/colors';
 
 type ViewMoreTextProps = typeof BViewMoreText.defaultProps &
@@ -41,7 +41,9 @@ const styles = StyleSheet.create({
 
 class BViewMoreText extends React.Component<ViewMoreTextProps> {
   trimmedTextHeight = null;
+
   fullTextHeight = null;
+
   shouldShowMore = false;
 
   state = {
@@ -52,11 +54,12 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
   static defaultProps = {
     textStyle: {},
   };
+
   hideFullText = () => {
     if (
-      this.state.isFulltextShown &&
-      this.trimmedTextHeight &&
-      this.fullTextHeight
+      this.state.isFulltextShown
+      && this.trimmedTextHeight
+      && this.fullTextHeight
     ) {
       this.shouldShowMore = this.trimmedTextHeight < this.fullTextHeight;
       this.setState({
@@ -116,11 +119,11 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
     if (this.shouldShowMore === true) {
       if (numberOfLines > 0) {
         return (this.props.renderViewMore || this.renderViewMore)(
-          this.onPressMore
+          this.onPressMore,
         );
       }
       return (this.props.renderViewLess || this.renderViewLess)(
-        this.onPressLess
+        this.onPressLess,
       );
     }
     return null;

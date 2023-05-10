@@ -1,13 +1,4 @@
 import * as React from 'react';
-import {
-  BDivider,
-  BGalleryDeposit,
-  BNestedProductCard,
-  BSearchBar,
-  BSpacer,
-  BTouchableText,
-  BVisitationCard,
-} from '@/components';
 import { TextInput } from 'react-native-paper';
 import {
   SafeAreaView,
@@ -17,6 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {
+  BDivider,
+  BGalleryDeposit,
+  BNestedProductCard,
+  BSearchBar,
+  BSpacer,
+  BTouchableText,
+  BVisitationCard,
+} from '@/components';
 import { resScale } from '@/utils';
 import { CreateDepositContext } from '@/context/CreateDepositContext';
 import { colors, fonts, layout } from '@/constants';
@@ -39,26 +39,23 @@ export default function SecondStep() {
       updateValueOnstep('stepTwo', 'purchaseOrders', data);
       updateValue('isSearchingPurchaseOrder', false);
     },
-    [updateValueOnstep]
+    [updateValueOnstep],
   );
 
-  const customAction = () => {
-    return (
-      <BTouchableText
-        textStyle={{
-          fontFamily: font.family.montserrat[500],
-          color: colors.select.selected,
-        }}
-        onPress={() => updateValue('isSearchingPurchaseOrder', true)}
-        title={'Ganti'}
-      />
-    );
-  };
+  const customAction = () => (
+    <BTouchableText
+      textStyle={{
+        fontFamily: font.family.montserrat[500],
+        color: colors.select.selected,
+      }}
+      onPress={() => updateValue('isSearchingPurchaseOrder', true)}
+      title="Ganti"
+    />
+  );
 
   const calculatedTotal = (): number => {
-    let deposit: number = 0;
-    if (stateOne?.deposit?.nominal)
-      deposit += parseInt(stateOne?.deposit?.nominal, 10);
+    let deposit = 0;
+    if (stateOne?.deposit?.nominal) deposit += parseInt(stateOne?.deposit?.nominal, 10);
     deposit += getTotalLastDeposit();
     return deposit;
   };
@@ -75,7 +72,7 @@ export default function SecondStep() {
   };
 
   const getTotalLastDeposit = () => {
-    let total: number = 0;
+    let total = 0;
     if (stateTwo?.purchaseOrders && stateTwo?.purchaseOrders.length > 0) {
       stateTwo?.purchaseOrders?.forEach((it) => {
         total = it.availableDeposit;
@@ -89,9 +86,7 @@ export default function SecondStep() {
       {values.isSearchingPurchaseOrder === true ? (
         <SelectPurchaseOrderData
           dataToGet="DEPOSITDATA"
-          onSubmitData={({ parentData, data }) =>
-            listenerCallback({ parent: parentData, data })
-          }
+          onSubmitData={({ parentData, data }) => listenerCallback({ parent: parentData, data })}
           onDismiss={() => updateValue('isSearchingPurchaseOrder', false)}
         />
       ) : (
@@ -105,19 +100,19 @@ export default function SecondStep() {
           )}
           <>
             <View>
-              <BSpacer size={'small'} />
+              <BSpacer size="small" />
               <BDivider />
-              <BSpacer size={'extraSmall'} />
+              <BSpacer size="extraSmall" />
             </View>
             <View style={style.flexFull}>
-              {stateTwo?.purchaseOrders &&
-              stateTwo?.purchaseOrders.length > 0 ? (
+              {stateTwo?.purchaseOrders
+              && stateTwo?.purchaseOrders.length > 0 ? (
                 <>
                   <ScrollView
                     style={[style.flexFull, { marginBottom: layout.pad.xxl }]}
                   >
                     <View style={style.flexFull}>
-                      <BSpacer size={'extraSmall'} />
+                      <BSpacer size="extraSmall" />
                       <BVisitationCard
                         item={{
                           name: stateTwo?.companyName,
@@ -125,11 +120,11 @@ export default function SecondStep() {
                         }}
                         customIcon={customAction}
                       />
-                      <BSpacer size={'extraSmall'} />
+                      <BSpacer size="extraSmall" />
                     </View>
                     <View style={style.flexFull}>
-                      {stateTwo?.purchaseOrders &&
-                        stateTwo?.purchaseOrders.length > 0 && (
+                      {stateTwo?.purchaseOrders
+                        && stateTwo?.purchaseOrders.length > 0 && (
                           <BNestedProductCard
                             withoutHeader={false}
                             data={stateTwo?.purchaseOrders}
@@ -138,40 +133,40 @@ export default function SecondStep() {
                             isDeposit
                             withoutSeparator
                           />
-                        )}
+                      )}
                     </View>
                   </ScrollView>
 
                   <View style={style.summContainer}>
-                    <Text style={style.summary}>{'Est Deposit Akhir'}</Text>
+                    <Text style={style.summary}>Est Deposit Akhir</Text>
                     <Text style={[style.summary, style.fontw600]}>
-                      IDR {formatCurrency(calculatedTotal())}
+                      IDR
+                      {' '}
+                      {formatCurrency(calculatedTotal())}
                     </Text>
                   </View>
                 </>
-              ) : (
-                <>
-                  <BSpacer size={'extraSmall'} />
-                  <TouchableOpacity
-                    style={style.touchable}
-                    onPress={() =>
-                      updateValue('isSearchingPurchaseOrder', true)
-                    }
-                  >
-                    <BSearchBar
-                      placeholder="Cari PT / Proyek"
-                      activeOutlineColor="gray"
-                      disabled
-                      left={
-                        <TextInput.Icon
-                          forceTextInputFocus={false}
-                          icon="magnify"
-                        />
-                      }
-                    />
-                  </TouchableOpacity>
-                </>
-              )}
+                ) : (
+                  <>
+                    <BSpacer size="extraSmall" />
+                    <TouchableOpacity
+                      style={style.touchable}
+                      onPress={() => updateValue('isSearchingPurchaseOrder', true)}
+                    >
+                      <BSearchBar
+                        placeholder="Cari PT / Proyek"
+                        activeOutlineColor="gray"
+                        disabled
+                        left={(
+                          <TextInput.Icon
+                            forceTextInputFocus={false}
+                            icon="magnify"
+                          />
+                      )}
+                      />
+                    </TouchableOpacity>
+                  </>
+                )}
             </View>
           </>
         </>

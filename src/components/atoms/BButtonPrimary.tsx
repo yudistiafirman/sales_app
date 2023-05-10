@@ -52,7 +52,7 @@ export default function BButtonPrimary({
         <View>{leftIcon && leftIcon()}</View>
         <>{emptyIconEnable && <View style={{ height: resScale(24) }} />}</>
         {isLoading ? (
-          <ActivityIndicator size={resScale(24)} color={'white'} />
+          <ActivityIndicator size={resScale(24)} color="white" />
         ) : (
           <Text
             style={[

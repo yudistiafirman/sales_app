@@ -1,21 +1,26 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
+import { useDispatch } from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { useRoute } from '@react-navigation/native';
 import { colors, fonts, layout } from '@/constants';
-import { BContainer, BDivider, BForm, BLabel, BSpacer } from '@/components';
+import {
+  BContainer, BDivider, BForm, BLabel, BSpacer,
+} from '@/components';
 import {
   fetchSphDocuments,
   postProjectDocByprojectId,
   postUploadFiles,
 } from '@/redux/async-thunks/commonThunks';
-import { useDispatch } from 'react-redux';
 import { Input } from '@/interfaces';
 
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
-import { useRoute } from '@react-navigation/native';
 import { openPopUp } from '@/redux/reducers/modalReducer';
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type documentType = {
@@ -65,7 +70,7 @@ export default function RequiredDocuments() {
     try {
       setIsLoading(true);
       const response: docResponse = await dispatch(
-        fetchSphDocuments()
+        fetchSphDocuments(),
       ).unwrap();
 
       setDocState(() => {
@@ -125,7 +130,7 @@ export default function RequiredDocuments() {
           popUpText:
             error.message || 'Terjadi error saat pengambilan data document',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   }, []);
@@ -136,19 +141,17 @@ export default function RequiredDocuments() {
 
   const uploadFile = useCallback(async (documentId: string, file: any) => {
     try {
-      setDocLoadingState((curr) => {
-        return {
-          ...curr,
-          [documentId]: {
-            ...curr[documentId],
-            loading: true,
-            error: false,
-            errorMessage: '',
-          },
-        };
-      });
+      setDocLoadingState((curr) => ({
+        ...curr,
+        [documentId]: {
+          ...curr[documentId],
+          loading: true,
+          error: false,
+          errorMessage: '',
+        },
+      }));
       const response = await dispatch(
-        postUploadFiles({ files: [file], from: 'customerDetail' })
+        postUploadFiles({ files: [file], from: 'customerDetail' }),
       ).unwrap();
       if (!response[0]) {
         throw response;
@@ -158,39 +161,35 @@ export default function RequiredDocuments() {
       const payloadProjectDoc = {
         documentId,
         fileId: photoResponse.id,
-        projectId: projectId, //hardcode di atas,
+        projectId, // hardcode di atas,
       };
 
       const projectDocResponse = await dispatch(
-        postProjectDocByprojectId({ payload: payloadProjectDoc })
+        postProjectDocByprojectId({ payload: payloadProjectDoc }),
       ).unwrap();
-      setDocLoadingState((curr) => {
-        return {
-          ...curr,
-          [documentId]: {
-            ...curr[documentId],
-            loading: false,
-            error: false,
-            errorMessage: '',
-          },
-        };
-      });
+      setDocLoadingState((curr) => ({
+        ...curr,
+        [documentId]: {
+          ...curr[documentId],
+          loading: false,
+          error: false,
+          errorMessage: '',
+        },
+      }));
     } catch (error) {
       let messsage = 'Upload error';
       if (error.message) {
         messsage = error.message;
       }
-      setDocLoadingState((curr) => {
-        return {
-          ...curr,
-          [documentId]: {
-            ...curr[documentId],
-            loading: false,
-            error: true,
-            errorMessage: messsage,
-          },
-        };
-      });
+      setDocLoadingState((curr) => ({
+        ...curr,
+        [documentId]: {
+          ...curr[documentId],
+          loading: false,
+          error: true,
+          errorMessage: messsage,
+        },
+      }));
     }
   }, []);
 
@@ -236,15 +235,13 @@ export default function RequiredDocuments() {
         value: docState[each.key],
         onChange: (data: any) => {
           if (!data) return;
-          setDocState((curr) => {
-            return {
-              ...curr,
-              [each.key]: {
-                ...data,
-                name: each.key.trim() + data.name,
-              },
-            };
-          });
+          setDocState((curr) => ({
+            ...curr,
+            [each.key]: {
+              ...data,
+              name: each.key.trim() + data.name,
+            },
+          }));
           uploadFile(each.key, data);
         },
         loading: docLoadingState[each.key].loading,
@@ -259,15 +256,13 @@ export default function RequiredDocuments() {
         value: docState[each.key],
         onChange: (data: any) => {
           if (!data) return;
-          setDocState((curr) => {
-            return {
-              ...curr,
-              [each.key]: {
-                ...data,
-                name: each.key.trim() + data.name,
-              },
-            };
-          });
+          setDocState((curr) => ({
+            ...curr,
+            [each.key]: {
+              ...data,
+              name: each.key.trim() + data.name,
+            },
+          }));
           uploadFile(each.key, data);
         },
         loading: docLoadingState[each.key].loading,
@@ -287,7 +282,9 @@ export default function RequiredDocuments() {
         <View style={styles.between}>
           <Text style={styles.fontW500}>Kelengkapan Dokumen</Text>
           <Text style={styles.fontW500}>
-            {filledDocsCount}/{totalDocsCount}
+            {filledDocsCount}
+            /
+            {totalDocsCount}
           </Text>
         </View>
         <ProgressBar
@@ -301,7 +298,7 @@ export default function RequiredDocuments() {
           color={colors.primary}
         />
       </View>
-      <BSpacer size={'small'} />
+      <BSpacer size="small" />
       <BLabel label="Cash Before Delivery" isRequired />
       <BSpacer size="extraSmall" />
       <BForm titleBold="500" inputs={filesInputsCBD} />
@@ -312,7 +309,7 @@ export default function RequiredDocuments() {
       {isLoading && (
         <View>
           <ShimmerPlaceHolder style={styles.fileInputShimmer} />
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <ShimmerPlaceHolder style={styles.fileInputShimmer} />
         </View>
       )}

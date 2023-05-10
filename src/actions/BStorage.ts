@@ -10,12 +10,15 @@ class BStorage {
       }
     });
   }
+
   async setItem(key: string, item: Dict): Promise<void> {
     return EncryptedStorage.setItem(key, JSON.stringify(item));
   }
+
   async deleteItem(key: string): Promise<void> {
     return EncryptedStorage.removeItem(key);
   }
+
   async clearItem(): Promise<void> {
     return EncryptedStorage.clear();
   }

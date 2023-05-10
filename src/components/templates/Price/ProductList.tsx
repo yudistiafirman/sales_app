@@ -1,11 +1,11 @@
-import BEmptyState from '@/components/organism/BEmptyState';
-import PriceListCard from '@/components/templates/Price/PriceListCard';
-import { layout } from '@/constants';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import React, { useCallback } from 'react';
 import { ListRenderItem } from 'react-native';
-import PriceListShimmer from './PriceListShimmer';
 import { FlashList } from '@shopify/flash-list';
+import BEmptyState from '@/components/organism/BEmptyState';
+import PriceListCard from '@/components/templates/Price/PriceListCard';
+import { layout } from '@/constants';
+import PriceListShimmer from './PriceListShimmer';
 import BDivider from '@/components/atoms/BDivider';
 import BSpacer from '@/components/atoms/BSpacer';
 
@@ -29,9 +29,9 @@ interface productsData {
 interface ProductListProps<ArrayOfObject> {
   products: ArrayOfObject[];
   onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  | ((info: { distanceFromEnd: number }) => void)
+  | null
+  | undefined;
   refreshing?: boolean;
   emptyProductName?: string;
   isLoadMore?: boolean;
@@ -44,7 +44,7 @@ interface ProductListProps<ArrayOfObject> {
   disablePressed?: boolean;
 }
 
-const ProductList = <ArrayOfObject extends productsData>({
+function ProductList<ArrayOfObject extends productsData>({
   products,
   onEndReached,
   refreshing,
@@ -57,10 +57,9 @@ const ProductList = <ArrayOfObject extends productsData>({
   onPress,
   onAction,
   disablePressed = false,
-}: ProductListProps<ArrayOfObject>) => {
+}: ProductListProps<ArrayOfObject>) {
   const renderItem: ListRenderItem<productsData> = useCallback(({ item }) => {
-    const fc =
-      item?.properties?.fc?.length > 0 ? ` / FC${item.properties.fc}` : '';
+    const fc = item?.properties?.fc?.length > 0 ? ` / FC${item.properties.fc}` : '';
     return (
       <TouchableOpacity
         onPress={() => {
@@ -74,7 +73,7 @@ const ProductList = <ArrayOfObject extends productsData>({
           categories={item?.Category?.Parent?.name}
           slump={item?.properties?.slump}
         />
-        <BSpacer size={'extraSmall'} />
+        <BSpacer size="extraSmall" />
         <BDivider />
       </TouchableOpacity>
     );
@@ -108,6 +107,6 @@ const ProductList = <ArrayOfObject extends productsData>({
       renderItem={renderItem}
     />
   );
-};
+}
 
 export default ProductList;

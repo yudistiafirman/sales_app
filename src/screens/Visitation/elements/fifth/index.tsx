@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import moment from 'moment';
+import crashlytics from '@react-native-firebase/crashlytics';
 import LastStepPopUp from '../LastStepPopUp';
 import {
   locationPayloadType,
@@ -8,28 +12,24 @@ import {
   projectPayloadType,
   visitationPayload,
 } from '@/interfaces';
-import { useDispatch, useSelector } from 'react-redux';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
 import {
   postVisitation,
   putVisitationFlow,
 } from '@/redux/async-thunks/productivityFlowThunks';
 import { RootState } from '@/redux/store';
-import { StackActions, useNavigation } from '@react-navigation/native';
 import {
   deleteImage,
   resetImageURLS,
   setuploadedFilesResponse,
 } from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import moment from 'moment';
 import {
   CAMERA,
   CREATE_VISITATION,
   GALLERY_VISITATION,
   SPH,
 } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { BGallery, PopUpQuestion } from '@/components';
 import {
   deleteImagesVisitation,
@@ -46,7 +46,7 @@ export type selectedDateType = {
 
 function payloadMapper(
   values: VisitationGlobalState,
-  type: 'VISIT' | 'SPH' | 'REJECTED' | ''
+  type: 'VISIT' | 'SPH' | 'REJECTED' | '',
 ): payloadPostType {
   const today = moment();
   const payload = {
@@ -82,8 +82,7 @@ function payloadMapper(
     payload.project.locationAddressId = values.existingLocationId;
   }
   if (values.locationAddress?.formattedAddress) {
-    payload.project.location.formattedAddress =
-      values.locationAddress?.formattedAddress;
+    payload.project.location.formattedAddress = values.locationAddress?.formattedAddress;
   }
   if (values.locationAddress?.longitude) {
     payload.project.location.lon = values.locationAddress?.longitude;
@@ -92,8 +91,7 @@ function payloadMapper(
     payload.project.location.lat = values.locationAddress?.latitude;
   }
   if (values.createdLocation?.formattedAddress) {
-    payload.visitation.location.formattedAddress =
-      values.createdLocation?.formattedAddress;
+    payload.visitation.location.formattedAddress = values.createdLocation?.formattedAddress;
   }
   if (values.createdLocation?.lon) {
     payload.visitation.location.lon = values.createdLocation?.lon;
@@ -134,13 +132,11 @@ function payloadMapper(
     payload.visitation.rejectNotes = values.alasanPenolakan;
   }
   if (values.products && values.products.length > 0) {
-    payload.visitation.products = values.products?.map((product) => {
-      return {
-        id: product.id,
-        quantity: product.quantity,
-        pouringMethod: product.pouringMethod,
-      };
-    });
+    payload.visitation.products = values.products?.map((product) => ({
+      id: product.id,
+      quantity: product.quantity,
+      pouringMethod: product.pouringMethod,
+    }));
   }
   if (values.projectName) {
     payload.project.name = values.projectName;
@@ -162,7 +158,7 @@ function payloadMapper(
   // if (values.currentCompetitor) {
   //   payload.visitation.competitors = [values.currentCompetitor];
   // }
-  payload.visitation.isBooking = type === 'VISIT' ? true : false;
+  payload.visitation.isBooking = type === 'VISIT';
 
   if (values.visitationId) {
     payload.visitation.visitationId = values.visitationId;
@@ -182,14 +178,14 @@ function payloadMapper(
   return payload;
 }
 
-const Fifth = () => {
+function Fifth() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { isUploadLoading, isPostVisitationLoading } = useSelector(
-    (state: RootState) => state.common
+    (state: RootState) => state.common,
   );
   const { uploadedFilesResponse } = useSelector(
-    (state: RootState) => state.camera
+    (state: RootState) => state.camera,
   );
   const visitationData = useSelector((state: RootState) => state.visitation);
 
@@ -198,7 +194,7 @@ const Fifth = () => {
       updateDataVisitation({
         type: key,
         value: e,
-      })
+      }),
     );
   };
 
@@ -211,7 +207,7 @@ const Fifth = () => {
   };
 
   useEffect(() => {
-    crashlytics().log(CREATE_VISITATION + '-Step5');
+    crashlytics().log(`${CREATE_VISITATION}-Step5`);
   }, [visitationData.images]);
 
   useEffect(() => {
@@ -227,7 +223,7 @@ const Fifth = () => {
       (date: selectedDateType) => {
         onChange('selectedDate')(date);
         setIsLastStepVisible((curr) => !curr);
-      }
+      },
     );
 
     return () => {
@@ -241,7 +237,7 @@ const Fifth = () => {
   const onPressSubmit = useCallback(
     async (type: 'VISIT' | 'SPH' | 'REJECTED' | '') => {
       try {
-        let payload: payloadPostType = payloadMapper(visitationData, type);
+        const payload: payloadPostType = payloadMapper(visitationData, type);
 
         const visitationMethod = {
           POST: postVisitation,
@@ -253,22 +249,19 @@ const Fifth = () => {
         if (uploadedFilesResponse.length === 0) {
           const photoFiles = visitationData.images
             ?.filter((v, i) => v.file !== null)
-            .map((photo) => {
-              return {
-                ...photo.file,
-                uri: photo?.file?.uri?.replace('file:', 'file://'),
-              };
-            });
+            .map((photo) => ({
+              ...photo.file,
+              uri: photo?.file?.uri?.replace('file:', 'file://'),
+            }));
           const data = await dispatch(
-            postUploadFiles({ files: photoFiles, from: 'visitation' })
+            postUploadFiles({ files: photoFiles, from: 'visitation' }),
           ).unwrap();
           const files: { id: string; type: 'GALLERY' | 'COVER' }[] = [];
           data.forEach((photo: any) => {
             const photoName = `${photo.name}.${photo.type}`;
             const photoNamee = `${photo.name}.jpg`;
             const foundObject = visitationData.images?.find(
-              (obj) =>
-                obj?.file?.name === photoName || obj?.file?.name === photoNamee
+              (obj) => obj?.file?.name === photoName || obj?.file?.name === photoNamee,
             );
             if (foundObject) {
               files.push({
@@ -290,14 +283,14 @@ const Fifth = () => {
           }
 
           const response = await dispatch(
-            visitationMethod[methodStr](payloadData)
+            visitationMethod[methodStr](payloadData),
           ).unwrap();
           setIsLastStepVisible(false);
           if (type === 'SPH') {
             navigation.dispatch(
               StackActions.replace(SPH, {
                 projectId: response.projectId,
-              })
+              }),
             );
           } else {
             navigation.goBack();
@@ -314,14 +307,14 @@ const Fifth = () => {
             payloadData.visitationId = payload?.visitation?.id;
           }
           const response = await dispatch(
-            visitationMethod[methodStr](payloadData)
+            visitationMethod[methodStr](payloadData),
           ).unwrap();
           setIsLastStepVisible(false);
           if (type === 'SPH') {
             navigation.dispatch(
               StackActions.replace(SPH, {
                 projectId: response.projectId,
-              })
+              }),
             );
           } else {
             navigation.goBack();
@@ -335,7 +328,7 @@ const Fifth = () => {
             popUpText: 'Berhasil membuat jadwal kunjungan',
             highlightedText: 'visitation',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       } catch (error: any) {
         const message = error.message || 'Error membuat jadwal kunjungan';
@@ -345,12 +338,12 @@ const Fifth = () => {
             popUpText: message,
             highlightedText: 'error',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [visitationData]
+    [visitationData],
   );
 
   return (
@@ -365,7 +358,7 @@ const Fifth = () => {
               photoTitle: 'Kunjungan',
               closeButton: true,
               navigateTo: GALLERY_VISITATION,
-            })
+            }),
           );
         }}
       />
@@ -388,19 +381,17 @@ const Fifth = () => {
       />
       <BGallery
         picts={visitationData.images}
-        addMorePict={() =>
-          navigation.dispatch(
-            StackActions.push(CAMERA, {
-              photoTitle: 'Kunjungan',
-              closeButton: true,
-              navigateTo: GALLERY_VISITATION,
-            })
-          )
-        }
+        addMorePict={() => navigation.dispatch(
+          StackActions.push(CAMERA, {
+            photoTitle: 'Kunjungan',
+            closeButton: true,
+            navigateTo: GALLERY_VISITATION,
+          }),
+        )}
         removePict={removeImage}
       />
     </>
   );
-};
+}
 
 export default Fifth;

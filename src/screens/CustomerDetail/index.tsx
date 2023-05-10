@@ -5,7 +5,18 @@ import {
   ScrollView,
   DeviceEventEmitter,
 } from 'react-native';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
+import { ProgressBar } from '@react-native-community/progress-bar-android';
+import crashlytics from '@react-native-firebase/crashlytics';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 import { colors, fonts } from '@/constants';
 import {
   BContainer,
@@ -15,25 +26,16 @@ import {
   BTouchableText,
 } from '@/components';
 import ProjectBetween from './elements/ProjectBetween';
-import { ProgressBar } from '@react-native-community/progress-bar-android';
 import BillingModal from './elements/BillingModal';
-import crashlytics from '@react-native-firebase/crashlytics';
 import {
   CUSTOMER_DETAIL,
   DOCUMENTS,
   VISIT_HISTORY,
 } from '@/navigation/ScreenNames';
 import {
-  RouteProp,
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {
   getProjectIndivualDetail,
   projectGetOneById,
 } from '@/actions/CommonActions';
-import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { resetRegion } from '@/redux/reducers/locationReducer';
@@ -50,10 +52,8 @@ export default function CustomerDetail() {
   const route = useRoute<CustomerDetailRoute>();
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
-  const [isBillingLocationVisible, setIsBillingLocationVisible] =
-    useState(false);
-  const [isProjectLocationVisible, setIsProjectLocationVisible] =
-    useState(false);
+  const [isBillingLocationVisible, setIsBillingLocationVisible] = useState(false);
+  const [isProjectLocationVisible, setIsProjectLocationVisible] = useState(false);
   const [customerData, setCustomerData] = useState<ProjectDetail>({});
   const [billingAddress, setFormattedBillingAddress] = useState('');
   const [projectAddress, setFormattedProjectAddress] = useState('');
@@ -61,8 +61,7 @@ export default function CustomerDetail() {
   const [project, setProject] = useState(null);
   const [regionExisting, setExistingRegion] = useState(null);
   const [projectExisting, setExistingProject] = useState(null);
-  const [existedVisitation, setExistingVisitation] =
-    useState<visitationListResponse>(null);
+  const [existedVisitation, setExistingVisitation] = useState<visitationListResponse>(null);
   const dataNotLoadedYet = JSON.stringify(customerData) === '{}';
   const documentsNotCompleted = customerData?.ProjectDocs?.length !== 8;
   const updatedAddressBilling = billingAddress?.length > 0;
@@ -73,12 +72,12 @@ export default function CustomerDetail() {
         const response = await projectGetOneById(projectId);
         setCustomerData(response.data.data);
         if (response.data.data) {
-          let regionBilling: any = {
+          const regionBilling: any = {
             formattedAddress: response.data.data.BillingAddress?.line1,
             latitude: response.data.data.BillingAddress?.lat,
             longitude: response.data.data.BillingAddress?.lon,
           };
-          let regionProject: any = {
+          const regionProject: any = {
             formattedAddress: response.data.data.LocationAddress?.line1,
             latitude: response.data.data.LocationAddress?.lat,
             longitude: response.data.data.LocationAddress?.lon,
@@ -96,11 +95,11 @@ export default function CustomerDetail() {
             highlightedText: 'Error',
             popUpText: 'Error fetching project detail',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     },
-    [dispatch]
+    [dispatch],
   );
 
   const getProjectIndividual = useCallback(
@@ -109,12 +108,12 @@ export default function CustomerDetail() {
         const response = await getProjectIndivualDetail(projectId);
         setCustomerData(response.data);
         if (response.data) {
-          let regionBilling: any = {
+          const regionBilling: any = {
             formattedAddress: response.data.BillingAddress?.line1,
             latitude: response.data.BillingAddress?.lat,
             longitude: response.data.BillingAddress?.lon,
           };
-          let regionProject: any = {
+          const regionProject: any = {
             formattedAddress: response.data.LocationAddress?.line1,
             latitude: response.data.LocationAddress?.lat,
             longitude: response.data.LocationAddress?.lon,
@@ -131,11 +130,11 @@ export default function CustomerDetail() {
             highlightedText: 'Error',
             popUpText: 'Error fetching visitation Data',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     },
-    [dispatch]
+    [dispatch],
   );
   React.useEffect(() => {
     crashlytics().log(CUSTOMER_DETAIL);
@@ -154,7 +153,7 @@ export default function CustomerDetail() {
         const { id } = existedVisitation?.project;
         getProjectDetail(id);
       }
-    }, [existedVisitation, getProjectDetail, getProjectIndividual])
+    }, [existedVisitation, getProjectDetail, getProjectIndividual]),
   );
 
   useEffect(() => {
@@ -168,7 +167,7 @@ export default function CustomerDetail() {
           setProject(data.coordinate);
           setIsProjectLocationVisible(true);
         }
-      }
+      },
     );
   }, [setIsBillingLocationVisible, setIsProjectLocationVisible]);
 
@@ -206,7 +205,7 @@ export default function CustomerDetail() {
           isModalVisible={isBillingLocationVisible}
           region={region || regionExisting}
           isUpdate={
-            billingAddress !== undefined && billingAddress !== '' ? true : false
+            !!(billingAddress !== undefined && billingAddress !== '')
           }
           setRegion={setRegion}
           projectId={customerData.id}
@@ -220,7 +219,7 @@ export default function CustomerDetail() {
           isModalVisible={isProjectLocationVisible}
           region={project || projectExisting}
           isUpdate={
-            projectAddress !== undefined && projectAddress !== '' ? true : false
+            !!(projectAddress !== undefined && projectAddress !== '')
           }
           setRegion={setProject}
           projectId={customerData.id}
@@ -237,14 +236,14 @@ export default function CustomerDetail() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <BContainer>
           <Text style={styles.partText}>Pelanggan</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={styles.between}>
             <Text style={styles.fontW300}>Nama</Text>
             <Text style={styles.fontW400}>{customerData?.displayName}</Text>
           </View>
-          <BSpacer size={'small'} />
+          <BSpacer size="small" />
           <Text style={styles.partText}>Proyek</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <ProjectBetween
             onPress={() => {
               navigation.navigate(VISIT_HISTORY, {
@@ -257,9 +256,9 @@ export default function CustomerDetail() {
               name: customerData?.name,
             }}
           />
-          <BSpacer size={'small'} />
+          <BSpacer size="small" />
           <Text style={styles.partText}>Sisa Deposit</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={styles.between}>
             <Text style={styles.fontW300}>
               {customerData?.availableDeposit
@@ -267,23 +266,23 @@ export default function CustomerDetail() {
                 : '-'}
             </Text>
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={styles.between}>
             <Text style={styles.partText}>PIC</Text>
             {/* <TouchableOpacity>
               <Text style={styles.seeAllText}>Lihat Semua</Text>
             </TouchableOpacity> */}
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <BPic
             name={customerData?.Pic?.name}
             email={customerData?.Pic?.email}
             phone={customerData?.Pic?.phone}
             position={customerData?.Pic?.position}
           />
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <Text style={styles.partText}>Alamat Penagihan</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={styles.billingStyle}>
             {updatedAddressBilling ? (
               <UpdatedAddressWrapper
@@ -297,9 +296,9 @@ export default function CustomerDetail() {
               />
             )}
           </View>
-          <BSpacer size={'small'} />
+          <BSpacer size="small" />
           <Text style={styles.partText}>Alamat Proyek</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={styles.billingStyle}>
             {updateAddressProject ? (
               <UpdatedAddressWrapper
@@ -313,26 +312,26 @@ export default function CustomerDetail() {
               />
             )}
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={styles.between}>
             <Text style={styles.partText}>Dokumen</Text>
             <BTouchableText
               title="Lihat Semua"
               textStyle={styles.seeAllText}
-              onPress={() =>
-                navigation.navigate(DOCUMENTS, {
-                  docs: customerData.ProjectDocs,
-                  projectId: customerData.id,
-                })
-              }
+              onPress={() => navigation.navigate(DOCUMENTS, {
+                docs: customerData.ProjectDocs,
+                projectId: customerData.id,
+              })}
             />
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={styles.between}>
             <Text style={styles.fontW300}>Kelengkapan Dokumen</Text>
             <Text
               style={styles.fontW300}
-            >{`${customerData?.ProjectDocs?.length}/8`}</Text>
+            >
+              {`${customerData?.ProjectDocs?.length}/8`}
+            </Text>
           </View>
           <ProgressBar
             styleAttr="Horizontal"

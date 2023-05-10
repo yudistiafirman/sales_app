@@ -16,9 +16,8 @@ const formatCurrency = (number: number) => {
       .join('')
       .split(',00')
       .join('');
-  } else {
-    return number?.toLocaleString('id-ID');
   }
+  return number?.toLocaleString('id-ID');
 };
 
 export default formatCurrency;

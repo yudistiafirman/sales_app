@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet, Text, View, TouchableOpacity,
+} from 'react-native';
 import React from 'react';
 import CalendarStrip from 'react-native-calendar-strip';
-import resScale from '@/utils/resScale';
 import moment from 'moment';
+import resScale from '@/utils/resScale';
 import font from '@/constants/fonts';
 import colors from '@/constants/colors';
 import { fonts, layout } from '@/constants';
@@ -49,36 +51,34 @@ export default function DateDaily({
     },
   };
 
-  const renderTodayBtn = () => {
-    return (
-      <TouchableOpacity
-        onPress={() => onDateSelected(moment())}
-        style={[
-          style.today,
-          {
-            borderColor:
+  const renderTodayBtn = () => (
+    <TouchableOpacity
+      onPress={() => onDateSelected(moment())}
+      style={[
+        style.today,
+        {
+          borderColor:
               moment().date() === moment(selectedDate).date()
                 ? colors.primary
                 : colors.text.secondary,
-          },
-        ]}
-      >
-        <Text
-          style={[
-            style.todayText,
-            {
-              color:
+        },
+      ]}
+    >
+      <Text
+        style={[
+          style.todayText,
+          {
+            color:
                 moment().date() === moment(selectedDate).date()
                   ? colors.primary
                   : colors.text.secondary,
-            },
-          ]}
-        >
-          Hari ini
-        </Text>
-      </TouchableOpacity>
-    );
-  };
+          },
+        ]}
+      >
+        Hari ini
+      </Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View>
@@ -100,7 +100,7 @@ export default function DateDaily({
         iconLeftStyle={style.icon}
         iconRightStyle={style.icon}
         markedDates={markedDatesArray}
-        scrollable={true}
+        scrollable
         locale={locale}
       />
     </View>

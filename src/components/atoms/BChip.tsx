@@ -11,34 +11,35 @@ interface BChipProps {
   textColor?: string | undefined;
 }
 
-const BChip = ({ children, type, backgroundColor, textColor }: BChipProps) => {
-  let BChipHeaderStyle: ViewStyle = {
+function BChip({
+  children, type, backgroundColor, textColor,
+}: BChipProps) {
+  const BChipHeaderStyle: ViewStyle = {
     paddingHorizontal: layout.pad.md,
     paddingVertical: layout.pad.xs,
     borderRadius: layout.radius.sm,
   };
 
-  let BChipDefaultStyle: ViewStyle = {
+  const BChipDefaultStyle: ViewStyle = {
     paddingVertical: layout.pad.xs,
     paddingHorizontal: layout.pad.md + layout.pad.xs,
     borderRadius: layout.radius.xl,
     marginRight: layout.pad.md,
   };
 
-  let _style: ViewStyle =
-    type === 'header' ? BChipHeaderStyle : BChipDefaultStyle;
+  const _style: ViewStyle = type === 'header' ? BChipHeaderStyle : BChipDefaultStyle;
 
-  let _textStyle: TextStyle = {
-    color: textColor ? textColor : colors.text.dark,
+  const _textStyle: TextStyle = {
+    color: textColor || colors.text.dark,
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.xs,
   };
 
   return (
-    <View style={[_style, { backgroundColor: backgroundColor }]}>
+    <View style={[_style, { backgroundColor }]}>
       <BText style={[_textStyle]}>{children}</BText>
     </View>
   );
-};
+}
 
 export default BChip;

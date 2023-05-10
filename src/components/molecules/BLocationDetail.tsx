@@ -1,15 +1,15 @@
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
+import Icons from 'react-native-vector-icons/Feather';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { colors, layout } from '@/constants';
 import BLabel from '../atoms/BLabel';
 import BText from '../atoms/BText';
 
-import Icons from 'react-native-vector-icons/Feather';
-
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 type BLocationDetailType = {

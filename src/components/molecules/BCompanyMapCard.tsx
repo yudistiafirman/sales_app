@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import * as React from 'react';
-import { colors, fonts, layout } from '@/constants';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { colors, fonts, layout } from '@/constants';
 import BTouchableText from '../atoms/BTouchableText';
 import BSpacer from '../atoms/BSpacer';
 
@@ -21,7 +21,7 @@ export default function BCompanyMapCard({
   return (
     <View style={styles.company}>
       <Text style={styles.companyText}>{companyName}</Text>
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size="extraSmall" />
       <View style={styles.locationContainer}>
         <SimpleLineIcons
           name="location-pin"

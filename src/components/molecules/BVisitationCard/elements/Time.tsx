@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
-import resScale from '@/utils/resScale';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import resScale from '@/utils/resScale';
 import { colors, fonts, layout } from '@/constants';
 
 type TimeType = {

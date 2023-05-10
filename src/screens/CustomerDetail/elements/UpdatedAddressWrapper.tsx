@@ -1,17 +1,17 @@
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { BText } from '@/components';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-const UpdatedAddressWrapper = ({
+function UpdatedAddressWrapper({
   address,
   onPress,
 }: {
   address: string;
   onPress: () => void;
-}) => {
+}) {
   return (
     <View style={styles.filledAddressContainer}>
       <View style={styles.filledAddressInnerContainer}>
@@ -27,7 +27,7 @@ const UpdatedAddressWrapper = ({
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   filledAddressContainer: {

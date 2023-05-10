@@ -1,53 +1,51 @@
+import { FlashList } from '@shopify/flash-list';
+import React, { useCallback } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 import { BLabel, BSpacer } from '@/components';
 import { colors, layout } from '@/constants';
 import { STAGE_PROJECT } from '@/constants/dropdown';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
-import { FlashList } from '@shopify/flash-list';
-import React, { useCallback } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
 
-const ProjectPhase = ({ phase }: { phase: string }) => {
+function ProjectPhase({ phase }: { phase: string }) {
   const renderItem = useCallback(
-    ({ item, index }) => {
-      return (
-        <View
-          style={[
-            styles.faseContainer,
-            {
-              borderColor:
+    ({ item, index }) => (
+      <View
+        style={[
+          styles.faseContainer,
+          {
+            borderColor:
                 index === STAGE_PROJECT.length - 1
                   ? colors.white
                   : colors.textInput.inActive,
-            },
-          ]}
-        >
-          <View
-            style={[
-              styles.circle,
-              {
-                backgroundColor:
+          },
+        ]}
+      >
+        <View
+          style={[
+            styles.circle,
+            {
+              backgroundColor:
                   item.value === phase
                     ? colors.primary
                     : colors.textInput.inActive,
-              },
-            ]}
-          />
-          <Text
-            style={[
-              styles.textFase,
-              {
-                color:
+            },
+          ]}
+        />
+        <Text
+          style={[
+            styles.textFase,
+            {
+              color:
                   item.value === phase ? colors.primary : colors.text.darker,
-              },
-            ]}
-          >
-            {item.label}
-          </Text>
-        </View>
-      );
-    },
-    [phase, STAGE_PROJECT.length]
+            },
+          ]}
+        >
+          {item.label}
+        </Text>
+      </View>
+    ),
+    [phase, STAGE_PROJECT.length],
   );
   return (
     <View style={styles.container}>
@@ -62,7 +60,7 @@ const ProjectPhase = ({ phase }: { phase: string }) => {
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

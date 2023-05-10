@@ -1,5 +1,5 @@
-import { Address, Competitor, PIC } from '@/interfaces';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Address, Competitor, PIC } from '@/interfaces';
 
 export interface VisitationGlobalState {
   step: number;
@@ -21,11 +21,11 @@ export interface VisitationGlobalState {
   existingOrderNum?: number;
   stageProject?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
   typeProject?:
-    | 'INFRASTRUKTUR'
-    | 'HIGH-RISE'
-    | 'RUMAH'
-    | 'KOMERSIAL'
-    | 'INDUSTRIAL';
+  | 'INFRASTRUKTUR'
+  | 'HIGH-RISE'
+  | 'RUMAH'
+  | 'KOMERSIAL'
+  | 'INDUSTRIAL';
   products: any[];
   estimationDate: {
     estimationWeek: number | null;
@@ -109,9 +109,7 @@ export const visitationSlice = createSlice({
   name: 'visitation',
   initialState,
   reducers: {
-    resetVisitationState: () => {
-      return initialState;
-    },
+    resetVisitationState: () => initialState,
     resetFocusedStepperFlag: (state) => {
       state.stepperVisitationShouldNotFocused = false;
     },
@@ -166,16 +164,16 @@ export const visitationSlice = createSlice({
     },
     deleteImagesVisitation: (
       state,
-      actions: PayloadAction<{ value: number }>
+      actions: PayloadAction<{ value: number }>,
     ) => {
       const filteredImages = state.images.filter(
-        (v, i) => i !== actions.payload.value
+        (v, i) => i !== actions.payload.value,
       );
       state.images = filteredImages;
     },
     setUseSearchedAddress: (
       state,
-      actions: PayloadAction<{ value: boolean }>
+      actions: PayloadAction<{ value: boolean }>,
     ) => {
       state.useSearchedAddress = actions.payload.value;
     },
@@ -184,7 +182,7 @@ export const visitationSlice = createSlice({
     },
     updateDataVisitation: (
       state,
-      { payload }: { payload: { type: any; value: any } }
+      { payload }: { payload: { type: any; value: any } },
     ) => {
       switch (payload.type) {
         case 'createdLocation':

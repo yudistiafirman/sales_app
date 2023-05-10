@@ -1,6 +1,7 @@
 import { Dimensions } from 'react-native';
 import { assign, createMachine } from 'xstate';
 import { getLocationCoordinates } from './priceMachine';
+
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
@@ -17,18 +18,18 @@ export const locationMachine =
       schema: {
         events: {} as
           | {
-              type: 'sendingCoorParams';
-              value: { longitude: number; latitude: number };
-            }
+            type: 'sendingCoorParams';
+            value: { longitude: number; latitude: number };
+          }
           | {
-              type: 'onChangeRegion';
-              value: {
-                longitude: number;
-                latitude: number;
-                latitudeDelta: number;
-                longitudeDelta: number;
-              };
-            },
+            type: 'onChangeRegion';
+            value: {
+              longitude: number;
+              latitude: number;
+              latitudeDelta: number;
+              longitudeDelta: number;
+            };
+          },
         services: {} as {
           onGettingLocationDetails: {
             data: {
@@ -79,7 +80,7 @@ export const locationMachine =
           entry: 'enabledLoadingDetails',
 
           after: {
-            '500': 'gettingLocationDetails',
+            500: 'gettingLocationDetails',
           },
         },
       },
@@ -88,44 +89,36 @@ export const locationMachine =
     },
     {
       actions: {
-        assignParamsToContext: assign((context, event) => {
-          return {
-            region: {
-              latitude: event.value.latitude,
-              longitude: event.value.longitude,
-              latitudeDelta: LATITUDE_DELTA,
-              longitudeDelta: LONGITUDE_DELTA,
-            },
-          };
-        }),
-        assignLocationDetail: assign((context, event) => {
-          return {
-            locationDetail: {
-              formattedAddress: event.data?.formattedAddress
-                ? event.data.formattedAddress
-                : '',
-              postalId: event.data?.PostalId,
-              lon: event?.data?.lon,
-              lat: event?.data?.lat,
-            },
-            loadingLocation: false,
-          };
-        }),
-        assignOnChangeRegionValue: assign((context, event) => {
-          return {
-            region: {
-              latitude: event.value.latitude,
-              longitude: event.value.longitude,
-              latitudeDelta: event.value.latitudeDelta,
-              longitudeDelta: event.value.longitudeDelta,
-            },
-          };
-        }),
-        enabledLoadingDetails: assign((context, event) => {
-          return {
-            loadingLocation: true,
-          };
-        }),
+        assignParamsToContext: assign((context, event) => ({
+          region: {
+            latitude: event.value.latitude,
+            longitude: event.value.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          },
+        })),
+        assignLocationDetail: assign((context, event) => ({
+          locationDetail: {
+            formattedAddress: event.data?.formattedAddress
+              ? event.data.formattedAddress
+              : '',
+            postalId: event.data?.PostalId,
+            lon: event?.data?.lon,
+            lat: event?.data?.lat,
+          },
+          loadingLocation: false,
+        })),
+        assignOnChangeRegionValue: assign((context, event) => ({
+          region: {
+            latitude: event.value.latitude,
+            longitude: event.value.longitude,
+            latitudeDelta: event.value.latitudeDelta,
+            longitudeDelta: event.value.longitudeDelta,
+          },
+        })),
+        enabledLoadingDetails: assign((context, event) => ({
+          loadingLocation: true,
+        })),
       },
       services: {
         onGettingLocationDetails: async (context, event) => {
@@ -134,5 +127,5 @@ export const locationMachine =
           return response.data.result;
         },
       },
-    }
+    },
   );

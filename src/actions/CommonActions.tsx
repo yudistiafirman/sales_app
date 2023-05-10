@@ -4,21 +4,15 @@ import { customRequest } from '@/networking/request';
 export const getLocationCoordinates = async (
   longitude: number,
   latitude: number,
-  distance?: string
-) => {
-  return customRequest(
-    BrikApiCommon.getLocationCoordinates(longitude, latitude, distance),
-    'GET'
-  );
-};
+  distance?: string,
+) => customRequest(
+  BrikApiCommon.getLocationCoordinates(longitude, latitude, distance),
+  'GET',
+);
 
-export const searchLocation = async (searchValue: string) => {
-  return customRequest(BrikApiCommon.searchPlaces(searchValue), 'GET');
-};
+export const searchLocation = async (searchValue: string) => customRequest(BrikApiCommon.searchPlaces(searchValue), 'GET');
 
-export const searchLocationById = async (id: string) => {
-  return customRequest(BrikApiCommon.searchPlacesById(id), 'GET');
-};
+export const searchLocationById = async (id: string) => customRequest(BrikApiCommon.searchPlacesById(id), 'GET');
 
 export const signIn = async (body: Record<string, string>) => {
   const params = new URLSearchParams();
@@ -29,9 +23,7 @@ export const signIn = async (body: Record<string, string>) => {
   return customRequest(BrikApiCommon.login(), 'POST', params.toString());
 };
 
-export const signOut = async () => {
-  return customRequest(BrikApiCommon.logout(), 'POST');
-};
+export const signOut = async () => customRequest(BrikApiCommon.logout(), 'POST');
 
 export const uploadFileImage = async (files: any[], from: string) => {
   const formData = new FormData();
@@ -40,90 +32,70 @@ export const uploadFileImage = async (files: any[], from: string) => {
   });
   formData.append('name', from);
 
-  //http://192.168.18.23:3000/common/file/upload
-  //BrikApiCommon.filesUpload(),
+  // http://192.168.18.23:3000/common/file/upload
+  // BrikApiCommon.filesUpload(),
   return customRequest(BrikApiCommon.filesUpload(), 'POST', formData, true);
 };
 
-export const allVisitationGetAction = async (search?: string) => {
-  return customRequest(
-    BrikApiCommon.allVisitation(search),
-    'GET',
-    undefined,
-    true
-  );
-};
+export const allVisitationGetAction = async (search?: string) => customRequest(
+  BrikApiCommon.allVisitation(search),
+  'GET',
+  undefined,
+  true,
+);
 
-export const projectByUserGetAction = async (search?: string) => {
-  return customRequest(
-    BrikApiCommon.getProjectByUser(search),
-    'GET',
-    undefined,
-    true
-  );
-};
-export const projectGetOneById = async (projectId: string) => {
-  return customRequest(
-    BrikApiCommon.oneGetProject(projectId),
-    'GET',
-    undefined,
-    true
-  );
-};
+export const projectByUserGetAction = async (search?: string) => customRequest(
+  BrikApiCommon.getProjectByUser(search),
+  'GET',
+  undefined,
+  true,
+);
+export const projectGetOneById = async (projectId: string) => customRequest(
+  BrikApiCommon.oneGetProject(projectId),
+  'GET',
+  undefined,
+  true,
+);
 
-export const getSphDocuments = async () => {
-  return customRequest(BrikApiCommon.sphDocuments(), 'GET', undefined, true);
-};
+export const getSphDocuments = async () => customRequest(BrikApiCommon.sphDocuments(), 'GET', undefined, true);
 
-export const getAddressSuggestion = async (search?: string, page?: number) => {
-  return customRequest(
-    BrikApiCommon.addressSuggestion(search, page),
-    'GET',
-    undefined,
-    true
-  );
-};
+export const getAddressSuggestion = async (search?: string, page?: number) => customRequest(
+  BrikApiCommon.addressSuggestion(search, page),
+  'GET',
+  undefined,
+  true,
+);
 
 export const postProjectDoc = async (data: {
   projectId: string;
   documentId: string;
   fileId: string;
-}) => {
-  return customRequest(BrikApiCommon.projectDoc(), 'POST', data, true);
-};
+}) => customRequest(BrikApiCommon.projectDoc(), 'POST', data, true);
 
-export const getProjectDetail = async (companyId?: string) => {
-  return customRequest(
-    BrikApiCommon.getProjectDetail(companyId),
-    'GET',
-    undefined,
-    true
-  );
-};
+export const getProjectDetail = async (companyId?: string) => customRequest(
+  BrikApiCommon.getProjectDetail(companyId),
+  'GET',
+  undefined,
+  true,
+);
 
-export const getProjectIndivualDetail = async (projectId: string) => {
-  return customRequest(
-    BrikApiCommon.getProjectDetailIndividual(projectId),
-    'GET',
-    undefined,
-    true
-  );
-};
+export const getProjectIndivualDetail = async (projectId: string) => customRequest(
+  BrikApiCommon.getProjectDetailIndividual(projectId),
+  'GET',
+  undefined,
+  true,
+);
 
-export const updateBillingAddress = async (projectId: string, payload: any) => {
-  return customRequest(
-    BrikApiCommon.updateBillingAddress(projectId),
-    'PUT',
-    payload,
-    true
-  );
-};
+export const updateBillingAddress = async (projectId: string, payload: any) => customRequest(
+  BrikApiCommon.updateBillingAddress(projectId),
+  'PUT',
+  payload,
+  true,
+);
 
-export const updateLocationAddress = async (projectId: string, payload: any) => {
-  return customRequest(
-    BrikApiCommon.updateLocationAddress(projectId),
-    'PUT',
-    payload,
-    true
-  );
-};
+export const updateLocationAddress = async (projectId: string, payload: any) => customRequest(
+  BrikApiCommon.updateLocationAddress(projectId),
+  'PUT',
+  payload,
+  true,
+);

@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { View, ViewStyle } from 'react-native';
+import { BottomSheetFooter, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { colors, layout } from '@/constants';
 import { Input, Styles } from '@/interfaces';
 import { resScale } from '@/utils';
-import { BottomSheetFooter, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import BBottomSheet from '../atoms/BBottomSheet';
 import BButtonPrimary from '../atoms/BButtonPrimary';
 import BForm from './BForm';
@@ -52,7 +52,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
         <BottomSheetScrollView
           style={{ marginBottom: layout.pad.ml + layout.pad.xs }}
         >
-          <BForm spacer={'extraSmall'} titleBold="500" inputs={inputs} />
+          <BForm spacer="extraSmall" titleBold="500" inputs={inputs} />
         </BottomSheetScrollView>
       );
     }
@@ -60,10 +60,10 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
       <>
         {children}
         <BottomSheetScrollView
-          nestedScrollEnabled={true}
+          nestedScrollEnabled
           style={{ marginBottom: layout.pad.ml + layout.pad.xs }}
         >
-          <BForm spacer={'extraSmall'} titleBold="500" inputs={inputs} />
+          <BForm spacer="extraSmall" titleBold="500" inputs={inputs} />
         </BottomSheetScrollView>
       </>
     );
@@ -100,7 +100,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
         </BottomSheetFooter>
       );
     },
-    [buttonTitle, onAdd, isButtonDisable, CustomFooterButton, keyboardVisible]
+    [buttonTitle, onAdd, isButtonDisable, CustomFooterButton, keyboardVisible],
   );
 
   return (
@@ -109,7 +109,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
       percentSnapPoints={snapPoint}
       ref={ref}
       initialSnapIndex={initialIndex}
-      enableContentPanningGesture={true}
+      enableContentPanningGesture
       style={styles.sheetStyle as ViewStyle}
       // containerHeight={resScale(150)}
       enablePanDownToClose={enableClose}
@@ -117,7 +117,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
     >
       <BContainer paddingHorizontal={layout.pad.ml}>
         {renderChild()}
-        {!keyboardVisible && <BSpacer size={'medium'} />}
+        {!keyboardVisible && <BSpacer size="medium" />}
       </BContainer>
     </BBottomSheet>
   );

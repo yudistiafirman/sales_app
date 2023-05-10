@@ -1,3 +1,11 @@
+import * as React from 'react';
+import {
+  Alert, BackHandler, Dimensions, StyleSheet, View,
+} from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {
   BBackContinueBtn,
   BContainer,
@@ -11,8 +19,6 @@ import {
   AppointmentProvider,
   StepOne,
 } from '@/context/AppointmentContext';
-import * as React from 'react';
-import { Alert, BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import FirstStep from './element/FirstStep';
 import { resScale } from '@/utils';
 import { useAppointmentData } from '@/hooks';
@@ -24,18 +30,14 @@ import {
   visitationPayload,
 } from '@/interfaces';
 import SecondStep from './element/SecondStep';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import moment from 'moment';
 import { postBookingAppointment } from '@/actions/ProductivityActions';
-import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { APPOINTMENT } from '@/navigation/ScreenNames';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 
 const { width } = Dimensions.get('window');
-const Appointment = () => {
+function Appointment() {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const [values, dispatchValue] = useAppointmentData();
@@ -48,8 +50,7 @@ const Appointment = () => {
     selectedDate,
     isSearching,
   } = values;
-  const customerType =
-    stepOne.customerType === 'company' ? 'company' : 'individu';
+  const customerType = stepOne.customerType === 'company' ? 'company' : 'individu';
   const btnShown = searchQuery.length === 0 && stepOne.customerType.length > 0;
   const labels = ['Data Pelanggan', 'Tanggal Kunjungan'];
   const inCustomerDataStep = step === 0;
@@ -82,11 +83,11 @@ const Appointment = () => {
       };
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
-        backAction
+        backAction,
       );
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [values.step])
+    }, [values.step]),
   );
 
   const validateCompanyDetailsForm = React.useCallback(() => {
@@ -148,7 +149,7 @@ const Appointment = () => {
         payload.pic = pic;
       } else {
         const selectedPic = stepOne[customerType].PIC.filter(
-          (v) => v.isSelected
+          (v) => v.isSelected,
         );
         payload.pic = selectedPic;
       }
@@ -163,28 +164,22 @@ const Appointment = () => {
       payload.visitation.status = 'VISIT';
 
       if (stepOne[customerType].locationAddress.line1) {
-        payload.project.location.line1 =
-          stepOne[customerType].locationAddress.line1;
+        payload.project.location.line1 = stepOne[customerType].locationAddress.line1;
       }
       if (stepOne[customerType].locationAddress.line2) {
-        payload.project.location.line2 =
-          stepOne[customerType].locationAddress.line2;
+        payload.project.location.line2 = stepOne[customerType].locationAddress.line2;
       }
       if (stepOne[customerType].locationAddress.postalCode) {
-        payload.project.location.postalId =
-          stepOne[customerType].locationAddress.postalCode;
+        payload.project.location.postalId = stepOne[customerType].locationAddress.postalCode;
       }
       if (stepOne[customerType].locationAddress.formattedAddress) {
-        payload.project.location.formattedAddress =
-          stepOne[customerType].locationAddress.formattedAddress;
+        payload.project.location.formattedAddress = stepOne[customerType].locationAddress.formattedAddress;
       }
       if (stepOne[customerType].locationAddress.lon) {
-        payload.project.location.lon =
-          stepOne[customerType].locationAddress.lon;
+        payload.project.location.lon = stepOne[customerType].locationAddress.lon;
       }
       if (stepOne[customerType].locationAddress.lat) {
-        payload.project.location.lat =
-          stepOne[customerType].locationAddress.lat;
+        payload.project.location.lat = stepOne[customerType].locationAddress.lat;
       }
       if (stepOne.customerType) {
         payload.visitation.customerType = typeCustomer;
@@ -199,8 +194,7 @@ const Appointment = () => {
       }
       if (stepOne.customerType === 'company') {
         if (stepOne[customerType].Company?.title) {
-          payload.project.companyDisplayName =
-            stepOne[customerType].Company?.title;
+          payload.project.companyDisplayName = stepOne[customerType].Company?.title;
         }
       }
       if (stepOne[customerType].Visitation?.id) {
@@ -231,7 +225,7 @@ const Appointment = () => {
             },
             primaryBtnTitle: 'Buat Janji',
             isRenderActions: true,
-          })
+          }),
         );
       } else {
         dispatch(
@@ -240,7 +234,7 @@ const Appointment = () => {
             popUpText: 'Something went wrong',
             highlightedText: 'error',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     } catch (error) {
@@ -252,7 +246,7 @@ const Appointment = () => {
           popUpText: error.message,
           highlightedText: 'error',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   }, [
@@ -283,15 +277,13 @@ const Appointment = () => {
       dispatchValue({
         type: AppointmentActionType.DECREASE_STEP,
       });
+    } else if (isSearching) {
+      dispatchValue({
+        type: AppointmentActionType.ENABLE_SEARCHING,
+        value: false,
+      });
     } else {
-      if (isSearching) {
-        dispatchValue({
-          type: AppointmentActionType.ENABLE_SEARCHING,
-          value: false,
-        });
-      } else {
-        navigation.goBack();
-      }
+      navigation.goBack();
     }
   }, [dispatchValue, inVisitationDateStep, navigation, selectedDate]);
 
@@ -305,9 +297,9 @@ const Appointment = () => {
 
     if (customerTypeCondition === 'company') {
       return (
-        !!companyNameCondition &&
-        !!projectNameConditionCompany &&
-        picCompany.length > 0
+        !!companyNameCondition
+        && !!projectNameConditionCompany
+        && picCompany.length > 0
       );
     }
     if (customerTypeCondition === 'individu') {
@@ -316,12 +308,13 @@ const Appointment = () => {
   }
 
   const onTabPress = (nextStep: number) => () => {
-    if (step !== nextStep)
+    if (step !== nextStep) {
       if (nextStep > 0) {
         onNext();
       } else {
         onBackPress();
       }
+    }
   };
 
   return (
@@ -338,13 +331,13 @@ const Appointment = () => {
       <BContainer>
         <View style={style.container}>
           {stepsToRender[step]}
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           {values.step > -1 && btnShown && (
             <BBackContinueBtn
               onPressContinue={onNext}
               onPressBack={onBackPress}
-              continueText={'Lanjut'}
-              unrenderBack={values.step > 0 ? false : true}
+              continueText="Lanjut"
+              unrenderBack={!(values.step > 0)}
               disableContinue={
                 values.step > 0
                   ? !selectedDate
@@ -355,16 +348,17 @@ const Appointment = () => {
           <BottomSheetAddPIC
             isVisible={isModalPicVisible}
             addPic={(dataPic: PIC) => {
-              let finalPIC: any[] = [...values.stepOne[customerType].PIC];
-              let finalData = undefined;
-              if (dataPic)
+              const finalPIC: any[] = [...values.stepOne[customerType].PIC];
+              let finalData;
+              if (dataPic) {
                 finalData = {
                   ...dataPic,
                   isSelected: true,
                 };
+              }
               if (
-                values.stepOne[customerType].PIC &&
-                values.stepOne[customerType].PIC.length > 0
+                values.stepOne[customerType].PIC
+                && values.stepOne[customerType].PIC.length > 0
               ) {
                 finalPIC.forEach((it, index) => {
                   finalPIC[index] = {
@@ -379,15 +373,13 @@ const Appointment = () => {
                 value: [...finalPIC, finalData],
               });
             }}
-            onClose={() =>
-              dispatchValue({ type: AppointmentActionType.TOGGLE_MODAL_PICS })
-            }
+            onClose={() => dispatchValue({ type: AppointmentActionType.TOGGLE_MODAL_PICS })}
           />
         </View>
       </BContainer>
     </>
   );
-};
+}
 
 const style = StyleSheet.create({
   container: {
@@ -408,12 +400,12 @@ const style = StyleSheet.create({
   },
 });
 
-const AppointmentWithProvider = () => {
+function AppointmentWithProvider() {
   return (
     <AppointmentProvider>
       <Appointment />
     </AppointmentProvider>
   );
-};
+}
 
 export default AppointmentWithProvider;

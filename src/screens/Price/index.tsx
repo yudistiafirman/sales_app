@@ -1,18 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { AppState, DeviceEventEmitter, SafeAreaView, View } from 'react-native';
-import BTabSections from '@/components/organism/TabSections';
+import {
+  AppState, DeviceEventEmitter, SafeAreaView, View,
+} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useMachine } from '@xstate/react';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch } from 'react-redux';
+import BTabSections from '@/components/organism/TabSections';
 import Tnc from '@/screens/Price/element/Tnc';
 import CurrentLocation from './element/CurrentLocation';
 import PriceStyle from './PriceStyle';
 import PriceSearchBar from './element/PriceSearchBar';
 import ProductList from '@/components/templates/Price/ProductList';
-import { BAlert, BEmptyState, BSpacer, BTouchableText } from '@/components';
-import { useMachine } from '@xstate/react';
+import {
+  BAlert, BEmptyState, BSpacer, BTouchableText,
+} from '@/components';
 import { priceMachine } from '@/machine/priceMachine';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import LinearGradient from 'react-native-linear-gradient';
 import { layout } from '@/constants';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
@@ -22,13 +28,11 @@ import {
   TAB_PRICE_LIST,
   TAB_PRICE_LIST_TITLE,
 } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const PriceList = () => {
+function PriceList() {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<RootStackScreenProps>();
@@ -37,8 +41,7 @@ const PriceList = () => {
   const appState = React.useRef(AppState.currentState);
   const [state, send] = useMachine(priceMachine);
   const [fromVisitation, setFromVisitation] = React.useState(false);
-  const [searchFormattedAddress, setSearchFormattedAddress] =
-    React.useState('');
+  const [searchFormattedAddress, setSearchFormattedAddress] = React.useState('');
 
   React.useEffect(() => {
     crashlytics().log(TAB_PRICE_LIST);
@@ -48,15 +51,15 @@ const PriceList = () => {
         'change',
         (nextAppState) => {
           if (
-            appState.current.match(/inactive|background/) &&
-            nextAppState === 'active'
+            appState.current.match(/inactive|background/)
+            && nextAppState === 'active'
           ) {
             send('appComeForegroundState');
           } else {
             send('appComeBackgroundState');
           }
           appState.current = nextAppState;
-        }
+        },
       );
       return () => {
         subscription.remove();
@@ -98,7 +101,7 @@ const PriceList = () => {
             dispatch(closePopUp());
             navigation.goBack();
           },
-        })
+        }),
       );
     } else if (state.matches('errorFetchLocationDetail')) {
       dispatch(
@@ -116,7 +119,7 @@ const PriceList = () => {
             dispatch(closePopUp());
             navigation.goBack();
           },
-        })
+        }),
       );
     }
   }, [dispatch, navigation, send, state]);
@@ -124,11 +127,10 @@ const PriceList = () => {
   const renderHeaderRight = React.useCallback(() => {
     if (fromVisitation) {
       return <View />;
-    } else {
-      return (
-        <BTouchableText onPress={() => setVisibleTnc(true)} title="Ketentuan" />
-      );
     }
+    return (
+      <BTouchableText onPress={() => setVisibleTnc(true)} title="Ketentuan" />
+    );
   }, [fromVisitation]);
 
   React.useLayoutEffect(() => {
@@ -155,7 +157,7 @@ const PriceList = () => {
     if (!fromVisitation) {
       navigation.navigate(SEARCH_PRODUCT, {
         distance: locationDetail?.distance?.value,
-        disablePressed: fromVisitation ? false : true,
+        disablePressed: !fromVisitation,
       });
     } else {
       navigation.goBack();
@@ -173,7 +175,7 @@ const PriceList = () => {
       };
 
       navigation.navigate(LOCATION, {
-        coordinate: coordinate,
+        coordinate,
         isReadOnly: false,
         from: TAB_PRICE_LIST_TITLE,
       });
@@ -250,12 +252,12 @@ const PriceList = () => {
               loadProduct={loadProduct}
               refreshing={refreshing}
               isError={state.matches(
-                'getProduct.categoriesLoaded.errorGettingProducts'
+                'getProduct.categoriesLoaded.errorGettingProducts',
               )}
               onAction={() => send('retryGettingProducts')}
               errorMessage={errorMessage}
               onRefresh={() => send('refreshingList')}
-              disablePressed={fromVisitation ? false : true}
+              disablePressed={!fromVisitation}
             />
           )}
           onTabPress={onTabPress}
@@ -274,6 +276,6 @@ const PriceList = () => {
       /> */}
     </SafeAreaView>
   );
-};
+}
 
 export default PriceList;

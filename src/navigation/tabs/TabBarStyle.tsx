@@ -1,7 +1,7 @@
+import { StyleSheet } from 'react-native';
 import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import { resScale } from '@/utils';
-import { StyleSheet } from 'react-native';
 
 const TabBarStyle = StyleSheet.create({
   tabBarContainer: {

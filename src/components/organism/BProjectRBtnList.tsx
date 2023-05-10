@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { ListRenderItem } from 'react-native';
-import BProjectRBtn from '../molecules/BProjectRBtn';
 import { FlashList } from '@shopify/flash-list';
+import BProjectRBtn from '../molecules/BProjectRBtn';
 
 type BProjectData = {
   id?: string;
@@ -15,21 +15,19 @@ interface IProps {
   onSelect?: (index: number) => void;
 }
 
-const BProjectRBtnList = ({ data, isOption, onSelect }: IProps) => {
+function BProjectRBtnList({ data, isOption, onSelect }: IProps) {
   const renderItem: ListRenderItem<BProjectData> = useCallback(
-    ({ item, index }) => {
-      return (
-        <BProjectRBtn
-          isOption={isOption}
-          onSelect={onSelect}
-          idx={index}
-          projectId={item?.id}
-          projectName={item?.display_name}
-          isSelected={item?.isSelected}
-        />
-      );
-    },
-    [isOption, onSelect]
+    ({ item, index }) => (
+      <BProjectRBtn
+        isOption={isOption}
+        onSelect={onSelect}
+        idx={index}
+        projectId={item?.id}
+        projectName={item?.display_name}
+        isSelected={item?.isSelected}
+      />
+    ),
+    [isOption, onSelect],
   );
 
   return (
@@ -40,6 +38,6 @@ const BProjectRBtnList = ({ data, isOption, onSelect }: IProps) => {
       renderItem={renderItem}
     />
   );
-};
+}
 
 export default BProjectRBtnList;

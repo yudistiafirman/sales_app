@@ -57,8 +57,8 @@ interface ProjectDocs {
 }
 
 interface PostPoPayload {
-  quotationLetterId: string; //uuid,
-  projectId: string; //uuid,
+  quotationLetterId: string; // uuid,
+  projectId: string; // uuid,
   poFiles: { fileId: string }[];
   projectDocs: {
     // projectDocId: string

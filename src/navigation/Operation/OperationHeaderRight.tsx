@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { View, Text } from 'react-native';
 import { colors, fonts, layout } from '@/constants';
 import { Styles } from '@/interfaces';
-import { View, Text } from 'react-native';
 
 const _styles: Styles = {
   chipView: {

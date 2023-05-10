@@ -1,14 +1,14 @@
-import { BText } from '@/components';
-import loginStyle from '@/screens/Login/style';
 import React from 'react';
 import { View } from 'react-native';
 import MaskInput from 'react-native-mask-input';
+import loginStyle from '@/screens/Login/style';
+import { BText } from '@/components';
 
 interface PhoneInputProps {
   value: string;
   onChangeText: ((text: string) => void) & Function;
 }
-const PhoneInput = ({ value, onChangeText }: PhoneInputProps) => {
+function PhoneInput({ value, onChangeText }: PhoneInputProps) {
   const phonenumberMask = [
     /\d/,
     /\d/,
@@ -46,5 +46,5 @@ const PhoneInput = ({ value, onChangeText }: PhoneInputProps) => {
       </View>
     </View>
   );
-};
+}
 export default PhoneInput;

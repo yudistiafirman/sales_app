@@ -1,16 +1,19 @@
 import React from 'react';
 
-import { Input, PIC, PicFormInitialState } from '@/interfaces';
 import Modal from 'react-native-modal';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import {
+  Dimensions, StyleSheet, Text, View,
+} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Input, PIC, PicFormInitialState } from '@/interfaces';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import BText from '../atoms/BText';
 import BHeaderIcon from '../atoms/BHeaderIcon';
 import BForm from '../organism/BForm';
 import BButtonPrimary from '../atoms/BButtonPrimary';
 import { resScale } from '@/utils';
+
 const { height, width } = Dimensions.get('window');
 interface IProps {
   addPic: any;
@@ -28,11 +31,10 @@ const initialState = {
 function LeftIcon() {
   return <Text style={styles.leftIconStyle}>+62</Text>;
 }
-const emailRegex =
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
-const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
+function BSheetAddPic({ addPic, isVisible, onClose }: IProps) {
   const [state, setState] = React.useState<PicFormInitialState>(initialState);
 
   const inputs: Input[] = [
@@ -43,11 +45,10 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       outlineColor: !state.name ? colors.text.errorText : undefined,
       placeholder: 'Masukkan Nama',
       type: 'textInput',
-      onChange: (e) =>
-        setState((prevState: PicFormInitialState) => ({
-          ...prevState,
-          name: e.nativeEvent.text,
-        })),
+      onChange: (e) => setState((prevState: PicFormInitialState) => ({
+        ...prevState,
+        name: e.nativeEvent.text,
+      })),
       value: state.name,
     },
     {
@@ -57,11 +58,10 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       outlineColor: !state.position ? colors.text.errorText : undefined,
       placeholder: 'Masukkan jabatan',
       type: 'textInput',
-      onChange: (e) =>
-        setState((prevState) => ({
-          ...prevState,
-          position: e.nativeEvent.text,
-        })),
+      onChange: (e) => setState((prevState) => ({
+        ...prevState,
+        position: e.nativeEvent.text,
+      })),
       value: state.position,
     },
     {
@@ -76,11 +76,10 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       keyboardType: 'numeric',
       customerErrorMsg: 'No. Telepon harus diisi sesuai format',
       LeftIcon: state.phone ? LeftIcon : undefined,
-      onChange: (e) =>
-        setState((prevState) => ({
-          ...prevState,
-          phone: e.nativeEvent.text,
-        })),
+      onChange: (e) => setState((prevState) => ({
+        ...prevState,
+        phone: e.nativeEvent.text,
+      })),
       value: state.phone,
     },
     {
@@ -96,23 +95,24 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       placeholder: 'Masukkan email',
       type: 'textInput',
       customerErrorMsg: 'Email harus diisi sesuai format',
-      onChange: (e) =>
-        setState((prevState) => ({
-          ...prevState,
-          email: e.nativeEvent.text,
-        })),
+      onChange: (e) => setState((prevState) => ({
+        ...prevState,
+        email: e.nativeEvent.text,
+      })),
       value: state.email,
     },
   ];
 
   const onAdd = () => {
-    const { name, position, email, phone } = state;
+    const {
+      name, position, email, phone,
+    } = state;
     const emailCondition = state.email ? emailRegex.test(state.email) : true;
     if (
-      emailCondition &&
-      !!state.name &&
-      phoneNumberRegex.test(state.phone) &&
-      !!state.position
+      emailCondition
+      && !!state.name
+      && phoneNumberRegex.test(state.phone)
+      && !!state.position
     ) {
       const dataPIC: PIC = {
         name: state.name,
@@ -163,9 +163,9 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
           <BButtonPrimary
             disable={
               !(
-                !!state.name &&
-                phoneNumberRegex.test(state.phone) &&
-                !!state.position
+                !!state.name
+                && phoneNumberRegex.test(state.phone)
+                && !!state.position
               )
             }
             onPress={onAdd}
@@ -175,7 +175,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
       </View>
     </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   modalContainer: { margin: 0, justifyContent: 'flex-end' },

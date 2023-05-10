@@ -1,13 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
-import colors from '@/constants/colors';
-import resScale from '@/utils/resScale';
 import React from 'react';
 import AutoHeightWebView from 'react-native-autoheight-webview';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { SafeAreaView, TouchableOpacity, View, ViewStyle } from 'react-native';
-import TncNavBar from '@/screens/Price/element/TncNavBar';
+import {
+  SafeAreaView, TouchableOpacity, View, ViewStyle,
+} from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
+import TncNavBar from '@/screens/Price/element/TncNavBar';
+import resScale from '@/utils/resScale';
+import colors from '@/constants/colors';
 import tncHTML from './TncHtml';
 import { layout } from '@/constants';
 
@@ -16,7 +18,7 @@ interface TncProps {
   onCloseTnc: () => void;
 }
 
-const Tnc = ({ isVisible, onCloseTnc }: TncProps) => {
+function Tnc({ isVisible, onCloseTnc }: TncProps) {
   const webViewStyle: ViewStyle = {
     backgroundColor: colors.white,
     width: '100%',
@@ -42,13 +44,11 @@ const Tnc = ({ isVisible, onCloseTnc }: TncProps) => {
     height: 100%;
   }`;
 
-  const leftIcon = () => {
-    return (
-      <TouchableOpacity onPress={onCloseTnc}>
-        <Icon name="close" size={resScale(19)} color={colors.text.darker} />
-      </TouchableOpacity>
-    );
-  };
+  const leftIcon = () => (
+    <TouchableOpacity onPress={onCloseTnc}>
+      <Icon name="close" size={resScale(19)} color={colors.text.darker} />
+    </TouchableOpacity>
+  );
 
   return (
     <Modal style={{ margin: 0 }} isVisible={isVisible}>
@@ -70,6 +70,6 @@ const Tnc = ({ isVisible, onCloseTnc }: TncProps) => {
       </SafeAreaView>
     </Modal>
   );
-};
+}
 
 export default Tnc;

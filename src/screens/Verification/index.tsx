@@ -1,32 +1,32 @@
+import { useNavigation } from '@react-navigation/native';
+import * as React from 'react';
+import { Image, SafeAreaView } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import jwtDecode from 'jwt-decode';
+import crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
 import { BHeaderIcon, BSpacer } from '@/components';
 import BErrorText from '@/components/atoms/BErrorText';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
-import { useNavigation } from '@react-navigation/native';
-import * as React from 'react';
-import { Image, SafeAreaView } from 'react-native';
 import OTPField from './element/OTPField';
 import OTPFieldLabel from './element/OTPFieldLabel';
 import ResendOTP from './element/ResendOTP';
 import VIntstruction from './element/VInstruction';
 import VerificationStyles from './styles';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { setUserData } from '@/redux/reducers/authReducer';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import bStorage from '@/actions/BStorage';
 import { signIn } from '@/actions/CommonActions';
-import jwtDecode from 'jwt-decode';
 import storageKey from '@/constants/storageKey';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { VERIFICATION } from '@/navigation/ScreenNames';
-import analytics from '@react-native-firebase/analytics';
 import { UserModel } from '@/models/User';
 
-const Verification = () => {
+function Verification() {
   const { phoneNumber } = useSelector(
-    (state: RootState) => state.auth.loginCredential
+    (state: RootState) => state.auth.loginCredential,
   );
   const navigation = useNavigation();
   const [verificationState, setVerificationState] = React.useState({
@@ -36,8 +36,10 @@ const Verification = () => {
     countDownOtp: 10,
   });
   const dispatch = useDispatch();
-  const { otpValue, errorOtp, loading, countDownOtp } = verificationState;
-  let timer = React.useRef<number | undefined>();
+  const {
+    otpValue, errorOtp, loading, countDownOtp,
+  } = verificationState;
+  const timer = React.useRef<number | undefined>();
   React.useEffect(() => {
     timer.current = setInterval(() => {
       if (countDownOtp !== 0) {
@@ -149,7 +151,7 @@ const Verification = () => {
         }}
       />
     ),
-    [navigation]
+    [navigation],
   );
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -174,9 +176,7 @@ const Verification = () => {
         <BSpacer size="extraSmall" />
         <OTPField
           value={otpValue}
-          setValue={(code) =>
-            setVerificationState({ ...verificationState, otpValue: code })
-          }
+          setValue={(code) => setVerificationState({ ...verificationState, otpValue: code })}
         />
         {errorOtp && <BErrorText text={errorOtp} />}
 
@@ -192,5 +192,5 @@ const Verification = () => {
       </SafeAreaView>
     </KeyboardAwareScrollView>
   );
-};
+}
 export default Verification;

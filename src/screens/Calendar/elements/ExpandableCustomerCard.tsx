@@ -8,8 +8,10 @@ import {
   ViewStyle,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { BLocationText, BPic, BSpacer, BText } from '@/components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  BLocationText, BPic, BSpacer, BText,
+} from '@/components';
 import { colors, layout } from '@/constants';
 import { customerDataInterface } from '@/interfaces';
 

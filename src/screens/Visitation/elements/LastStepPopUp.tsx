@@ -1,7 +1,15 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View, Text, StyleSheet, TouchableOpacity,
+} from 'react-native';
 import React, { useState } from 'react';
 import Modal from 'react-native-modal';
-import { colors, fonts, layout } from '@/constants';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { TextInput } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { Input } from '@/interfaces';
+import { resScale } from '@/utils';
 import {
   BButtonPrimary,
   BForm,
@@ -9,13 +17,7 @@ import {
   BSpacer,
   BTextInput,
 } from '@/components';
-import { resScale } from '@/utils';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Entypo from 'react-native-vector-icons/Entypo';
-import { TextInput } from 'react-native-paper';
-import { Input } from '@/interfaces';
-import { useNavigation } from '@react-navigation/native';
+import { colors, fonts, layout } from '@/constants';
 import { CALENDAR } from '@/navigation/ScreenNames';
 
 type LastStepPopUpType = {
@@ -81,7 +83,7 @@ export default function LastStepPopUp({
   return (
     <Modal
       isVisible={isVisible}
-      hideModalContentWhileAnimating={true}
+      hideModalContentWhileAnimating
       backdropOpacity={0.3}
       backdropColor="#000000"
       style={styles.modalStyle}
@@ -99,7 +101,7 @@ export default function LastStepPopUp({
             {lastStepPicked === '' ? 'Tahap Terakhir' : 'Tahap Selanjutnya'}
           </Text>
         </View>
-        <BSpacer size={'small'} />
+        <BSpacer size="small" />
         <View
           pointerEvents={isLoading ? 'none' : 'auto'}
           style={styles.buttonLastStepContainer}
@@ -118,7 +120,7 @@ export default function LastStepPopUp({
                 name="add-location-alt"
                 size={resScale(25)}
               />
-              <BSpacer size={'extraSmall'} />
+              <BSpacer size="extraSmall" />
               <Text
                 style={[
                   styles.lastStepText,
@@ -144,7 +146,7 @@ export default function LastStepPopUp({
                 name="file-edit-outline"
                 size={resScale(25)}
               />
-              <BSpacer size={'extraSmall'} />
+              <BSpacer size="extraSmall" />
               <Text
                 style={[
                   styles.lastStepText,
@@ -170,7 +172,7 @@ export default function LastStepPopUp({
                 name="close-octagon-outline"
                 size={resScale(25)}
               />
-              <BSpacer size={'extraSmall'} />
+              <BSpacer size="extraSmall" />
               <Text
                 style={[
                   styles.lastStepText,
@@ -182,7 +184,7 @@ export default function LastStepPopUp({
             </View>
           </TouchableOpacity>
         </View>
-        {lastStepPicked && <BSpacer size={'extraSmall'} />}
+        {lastStepPicked && <BSpacer size="extraSmall" />}
         {lastStepPicked === 'VISIT' && (
           <View>
             <BLabel bold="500" label="Tanggal" isRequired />
@@ -199,15 +201,15 @@ export default function LastStepPopUp({
               <BTextInput
                 value={selectedDate}
                 placeholder="Pilih Tanggal"
-                right={
+                right={(
                   <TextInput.Icon
                     forceTextInputFocus={false}
                     icon={chevronRight}
                   />
-                }
+                )}
               />
             </View>
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
             <BButtonPrimary
               title="Submit"
               isLoading={isLoading}
@@ -235,8 +237,8 @@ export default function LastStepPopUp({
               isLoading={isLoading}
               disable={
                 !(
-                  !!closedLostValueOnChange.areaValue &&
-                  !!closedLostValueOnChange.dropdownValue
+                  !!closedLostValueOnChange.areaValue
+                  && !!closedLostValueOnChange.dropdownValue
                 )
               }
               onPress={() => {

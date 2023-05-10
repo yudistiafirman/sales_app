@@ -1,11 +1,11 @@
 import React from 'react';
 import { ScrollView, TextStyle, View } from 'react-native';
+import { RadioButton } from 'react-native-paper';
 import { colors, fonts, layout } from '@/constants';
 import { PIC, Styles } from '@/interfaces';
 import { resScale } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
 import BText from '../atoms/BText';
-import { RadioButton } from 'react-native-paper';
 
 interface IProps extends PIC {
   isOption?: boolean;
@@ -56,7 +56,7 @@ const makeStyle = ({ isOption, border }: IProps) => {
   return _style;
 };
 
-const BPic = ({
+function BPic({
   isOption,
   email,
   name,
@@ -69,11 +69,14 @@ const BPic = ({
   index,
   border = true,
   isCompetitor = false,
-}: IProps): JSX.Element => {
+}: IProps): JSX.Element {
   return (
-    <View style={makeStyle({ isOption, index, onSelect, border }).container}>
+    <View style={makeStyle({
+      isOption, index, onSelect, border,
+    }).container}
+    >
       {isOption && (
-        <React.Fragment>
+        <>
           <RadioButton
             value={phone!}
             status={isSelected ? 'checked' : 'unchecked'}
@@ -86,14 +89,14 @@ const BPic = ({
             }}
           />
           <BSpacer size="extraSmall" />
-        </React.Fragment>
+        </>
       )}
       <View style={{ flex: 1, paddingEnd: layout.pad.xs }}>
         <BText style={titleStyles}>Nama</BText>
         <View>
-          <ScrollView horizontal={true}>
+          <ScrollView horizontal>
             <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
-              {name ? name : '-'}
+              {name || '-'}
             </BText>
           </ScrollView>
         </View>
@@ -102,9 +105,9 @@ const BPic = ({
           {isCompetitor ? 'Apakah PKS-nya ekslusif?' : 'No. Telepon'}
         </BText>
         <View>
-          <ScrollView horizontal={true}>
+          <ScrollView horizontal>
             <BText sizeInNumber={fonts.size.sm} bold="500">
-              {isCompetitor ? exclusive : phone ? '+62' + phone : '-'}
+              {isCompetitor ? exclusive : phone ? `+62${phone}` : '-'}
             </BText>
           </ScrollView>
         </View>
@@ -115,24 +118,24 @@ const BPic = ({
           {isCompetitor ? 'Apakah memiliki PKS?' : 'Jabatan'}
         </BText>
         <View>
-          <ScrollView horizontal={true}>
+          <ScrollView horizontal>
             <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
-              {isCompetitor ? mou : position ? position : '-'}
+              {isCompetitor ? mou : position || '-'}
             </BText>
           </ScrollView>
         </View>
         <BSpacer size="extraSmall" />
         <BText style={titleStyles}>{isCompetitor ? ' ' : 'Email'}</BText>
         <View>
-          <ScrollView horizontal={true}>
+          <ScrollView horizontal>
             <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
-              {isCompetitor ? ' ' : email ? email : '-'}
+              {isCompetitor ? ' ' : email || '-'}
             </BText>
           </ScrollView>
         </View>
       </View>
     </View>
   );
-};
+}
 
 export default BPic;

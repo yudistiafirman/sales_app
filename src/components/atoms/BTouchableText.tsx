@@ -1,12 +1,12 @@
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import resScale from '@/utils/resScale';
 import React from 'react';
 import {
   GestureResponderEvent,
   TextStyle,
   TouchableOpacity,
 } from 'react-native';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
+import resScale from '@/utils/resScale';
 import BText from './BText';
 import { layout } from '@/constants';
 
@@ -28,12 +28,12 @@ const BTouchableTextDefaultProps = {
   textStyle: BTouchableTextDefaultStyle,
 };
 
-const BTouchableText = ({
+function BTouchableText({
   onPress,
   textStyle,
   title,
   disabled = false,
-}: BTouchableTextProps & typeof BTouchableTextDefaultProps) => {
+}: BTouchableTextProps & typeof BTouchableTextDefaultProps) {
   return (
     <TouchableOpacity disabled={disabled} onPress={onPress}>
       <BText style={[textStyle, disabled && { color: colors.text.inactive }]}>
@@ -41,7 +41,7 @@ const BTouchableText = ({
       </BText>
     </TouchableOpacity>
   );
-};
+}
 
 BTouchableText.defaultProps = BTouchableTextDefaultProps;
 

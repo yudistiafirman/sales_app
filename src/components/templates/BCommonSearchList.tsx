@@ -1,5 +1,3 @@
-import BVisitationCard from '@/components/molecules/BVisitationCard';
-import { colors, layout } from '@/constants';
 import * as React from 'react';
 import {
   ListRenderItem,
@@ -7,27 +5,29 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { FlashList } from '@shopify/flash-list';
+import BVisitationCard from '@/components/molecules/BVisitationCard';
+import { colors, layout } from '@/constants';
 import BCommonListShimmer from './BCommonListShimmer';
 import { selectedCompanyInterface, visitationDataType } from '@/interfaces';
 import BSpacer from '@/components/atoms/BSpacer';
 import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
 import BSearchBar from '@/components/molecules/BSearchBar';
-import { TextInput } from 'react-native-paper';
 import BTabSections from '@/components/organism/TabSections';
 import BEmptyState from '../organism/BEmptyState';
 import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO';
-import { FlashList } from '@shopify/flash-list';
 
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
-  CreatedSPHListResponse &
-  selectedCompanyInterface;
+CreatedSPHListResponse &
+selectedCompanyInterface;
 
 interface BCommonSearchListProps {
   data: CreatedSPHListResponse[] | CreatedPurchaseOrderListResponse[] | any[];
   onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  | ((info: { distanceFromEnd: number }) => void)
+  | null
+  | undefined;
   refreshing?: boolean;
   emptyPOName?: string;
   isLoadMore?: boolean;
@@ -52,7 +52,7 @@ interface BCommonSearchListProps {
   autoFocus?: boolean;
 }
 
-const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
+function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
   data,
   onEndReached,
   refreshing,
@@ -75,7 +75,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
   onPressMagnify,
   hidePicName,
   autoFocus,
-}: BCommonSearchListProps) => {
+}: BCommonSearchListProps) {
   const isSearching = searchQuery.length > 2;
   const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
     ({ item, idx }) => {
@@ -89,21 +89,21 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
         id: idx,
         name: item?.name,
         location:
-          item.locationName ||
-          item?.ShippingAddress?.Postal?.City?.name ||
-          item?.location ||
-          item?.locationAddress?.line1 ||
-          item?.address?.line1,
+          item.locationName
+          || item?.ShippingAddress?.Postal?.City?.name
+          || item?.location
+          || item?.locationAddress?.line1
+          || item?.address?.line1,
         pilNames:
-          item?.PurchaseOrders?.map((it) => it.brikNumber) ||
-          item?.QuotationRequests?.map((val) => val?.QuotationLetter?.number),
+          item?.PurchaseOrders?.map((it) => it.brikNumber)
+          || item?.QuotationRequests?.map((val) => val?.QuotationLetter?.number),
         picOrCompanyName: !hidePicName ? picOrCompanyName : '',
         status: item?.status,
         pilStatus: item?.pilStatus,
       };
       return (
         <>
-          <BSpacer size={'small'} />
+          <BSpacer size="small" />
           <BVisitationCard
             item={constructVisitationData}
             key={item.id}
@@ -115,7 +115,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
         </>
       );
     },
-    [onPressList, searchQuery]
+    [onPressList, searchQuery],
   );
   return (
     <View style={styles.container}>
@@ -125,12 +125,12 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
         }
         value={searchQuery}
         onChangeText={(text) => onChangeText(text)}
-        left={
+        left={(
           <TextInput.Icon
             onPress={onPressMagnify && onPressMagnify}
             icon="magnify"
           />
-        }
+        )}
         right={
           onClearValue && <TextInput.Icon onPress={onClearValue} icon="close" />
         }
@@ -149,7 +149,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
               <BSpacer size="extraSmall" />
               <FlashList
                 estimatedItemSize={10}
-				onEndReachedThreshold={0.5}
+                onEndReachedThreshold={0.5}
                 data={data}
                 removeClippedSubviews={false}
                 initialNumToRender={10}
@@ -180,11 +180,11 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
           indicatorStyle={styles.tabIndicator}
         />
       ) : (
-        <BEmptyState emptyText={`Minimal 3 huruf!`} />
+        <BEmptyState emptyText="Minimal 3 huruf!" />
       )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

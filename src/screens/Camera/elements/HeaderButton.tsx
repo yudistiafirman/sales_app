@@ -7,11 +7,11 @@ import {
   ListRenderItem,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { FlashList } from '@shopify/flash-list';
 import { colors, layout } from '@/constants';
 import { resScale } from '@/utils';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { BSpacer } from '@/components';
-import { FlashList } from '@shopify/flash-list';
 
 type configType = {
   style?: StyleProp<ViewStyle>;
@@ -25,7 +25,7 @@ type configType = {
   enableLowBoost: boolean;
 };
 
-const HeaderButton = ({
+function HeaderButton({
   style,
   onPressFlashlight,
   onPressHDR,
@@ -35,7 +35,7 @@ const HeaderButton = ({
   enableHighQuality,
   onPressLowBoost,
   enableLowBoost,
-}: configType) => {
+}: configType) {
   const cameraHeaderButtonValue = [
     {
       onPress: onPressFlashlight,
@@ -57,41 +57,36 @@ const HeaderButton = ({
     },
   ];
 
-  const renderItem: ListRenderItem<{ onPress: () => void; iconName: String }> =
-    React.useCallback(({ item }) => {
-      return (
-        <>
-          <BSpacer size={'small'} />
-          <TouchableOpacity
-            style={styles.photoIconContainer}
-            onPress={item.onPress}
-          >
-            <MaterialCommunityIcons
-              name={item.iconName}
-              color={colors.white}
-              size={resScale(20)}
-            />
-          </TouchableOpacity>
-        </>
-      );
-    }, []);
+  const renderItem: ListRenderItem<{ onPress: () => void; iconName: string }> = React.useCallback(({ item }) => (
+    <>
+      <BSpacer size="small" />
+      <TouchableOpacity
+        style={styles.photoIconContainer}
+        onPress={item.onPress}
+      >
+        <MaterialCommunityIcons
+          name={item.iconName}
+          color={colors.white}
+          size={resScale(20)}
+        />
+      </TouchableOpacity>
+    </>
+  ), []);
 
   return (
-    <>
-      <View style={[styles.cameraBtn, style]}>
-        <View>
-          <FlashList
-            estimatedItemSize={4}
-            renderItem={renderItem}
-            data={cameraHeaderButtonValue}
-            keyExtractor={(item, index) => index.toString()}
-          />
-          <BSpacer size={'medium'} />
-        </View>
+    <View style={[styles.cameraBtn, style]}>
+      <View>
+        <FlashList
+          estimatedItemSize={4}
+          renderItem={renderItem}
+          data={cameraHeaderButtonValue}
+          keyExtractor={(item, index) => index.toString()}
+        />
+        <BSpacer size="medium" />
       </View>
-    </>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   cameraBtn: {

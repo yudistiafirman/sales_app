@@ -1,15 +1,16 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
-import OperationList from '../element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useMachine } from '@xstate/react';
+import OperationList from '../element/OperationList';
 import {
   CAMERA,
   SUBMIT_FORM,
   TAB_RETURN,
   TAB_WB_IN,
 } from '@/navigation/ScreenNames';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { colors, layout } from '@/constants';
 import {
   OperationProjectDetails,
@@ -17,25 +18,25 @@ import {
 } from '@/redux/reducers/operationReducer';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 import { AppDispatch, RootState } from '@/redux/store';
-import { useMachine } from '@xstate/react';
 import displayOperationListMachine from '@/machine/displayOperationListMachine';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 
-const Return = () => {
+function Return() {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation();
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
   const { projectDetails, photoFiles } = useSelector(
-    (state: RootState) => state.operation
+    (state: RootState) => state.operation,
   );
-  const { operationListData, isLoadMore, isLoading, isRefreshing } =
-    state.context;
+  const {
+    operationListData, isLoadMore, isLoading, isRefreshing,
+  } = state.context;
 
   useFocusEffect(
     React.useCallback(() => {
       send('assignUserData', { payload: userData?.type, tabActive: 'right' });
-    }, [send, userData?.type])
+    }, [send, userData?.type]),
   );
 
   React.useEffect(() => {
@@ -112,20 +113,16 @@ const Return = () => {
         refreshing={isRefreshing}
         onEndReached={() => send('onEndReached')}
         onPressList={(item) => onPressItem(item)}
-        onRefresh={() =>
-          send('onRefreshList', { payload: userData?.type, tabActive: 'right' })
-        }
-        onRetry={() =>
-          send('retryGettingList', {
-            payload: userData?.type,
-            tabActive: 'right',
-          })
-        }
+        onRefresh={() => send('onRefreshList', { payload: userData?.type, tabActive: 'right' })}
+        onRetry={() => send('retryGettingList', {
+          payload: userData?.type,
+          tabActive: 'right',
+        })}
         userType={userData?.type}
       />
     </SafeAreaView>
   );
-};
+}
 
 const style = StyleSheet.create({
   container: {

@@ -16,6 +16,9 @@ import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSh
 import { useDispatch, useSelector } from 'react-redux';
 import { Region } from 'react-native-maps';
 
+import { useNavigation } from '@react-navigation/native';
+import { TextInput } from 'react-native-paper';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import { RootState } from '@/redux/store';
 import {
@@ -29,12 +32,9 @@ import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import { billingAddressType, Input } from '@/interfaces';
 import { SphContext } from '../context/SphContext';
-import { useNavigation } from '@react-navigation/native';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import { SEARCH_AREA, SPH } from '@/navigation/ScreenNames';
 import { useKeyboardActive } from '@/hooks';
-import { TextInput } from 'react-native-paper';
-import crashlytics from '@react-native-firebase/crashlytics';
 import {
   setSearchAddress,
   setSearchedBillingAddress,
@@ -52,11 +52,10 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 function checkObj(
   billingAddress: billingAddressType,
   isBillingAddressSame: boolean,
-  distanceFromLegok: number | null
+  distanceFromLegok: number | null,
 ) {
-  const billingAddressFilled =
-    Object.values(billingAddress).every((val) => val) &&
-    Object.entries(billingAddress.addressAutoComplete).length > 1;
+  const billingAddressFilled = Object.values(billingAddress).every((val) => val)
+    && Object.entries(billingAddress.addressAutoComplete).length > 1;
 
   const billingAddressSame = isBillingAddressSame;
   const distanceFilled = distanceFromLegok !== null;
@@ -90,7 +89,7 @@ export default function SecondStep() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { region } = useSelector((state: RootState) => state.location);
-  const [sheetIndex] = useState(0); //setSheetIndex
+  const [sheetIndex] = useState(0); // setSheetIndex
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [sheetSnapPoints, setSheetSnapPoints] = useState(['60%', '90%']);
   const [addressSuggestions, setAddressSuggestions] = useState([]);
@@ -114,7 +113,7 @@ export default function SecondStep() {
   const onChangeRegion = useCallback(
     async (
       coordinate: Region,
-      { isBiilingAddress }: { isBiilingAddress?: boolean }
+      { isBiilingAddress }: { isBiilingAddress?: boolean },
     ) => {
       try {
         setIsMapLoading(() => true);
@@ -122,7 +121,7 @@ export default function SecondStep() {
           // '',
           coordinate.longitude as unknown as number,
           coordinate.latitude as unknown as number,
-          'BP-LEGOK'
+          'BP-LEGOK',
         );
 
         const { result } = data;
@@ -161,14 +160,14 @@ export default function SecondStep() {
           openPopUp({
             popUpType: 'error',
             popUpText:
-              error.message ||
-              'Terjadi error pengambilan data saat perpindahan region',
+              error.message
+              || 'Terjadi error pengambilan data saat perpindahan region',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     },
-    []
+    [],
   );
 
   const inputsData: Input[] = useMemo(() => {
@@ -209,7 +208,7 @@ export default function SecondStep() {
         isError: !billingAddress?.name,
         type: 'textInput',
         onChange: (event: any) => {
-          const text: string = event.nativeEvent.text;
+          const { text } = event.nativeEvent;
           dispatch(updateBillingAddressOptions({ value: text, key: 'name' }));
         },
         value: billingAddress?.name,
@@ -221,7 +220,7 @@ export default function SecondStep() {
         isError: !phoneNumberRegex.test(`${billingAddress.phone}`),
         type: 'textInput',
         onChange: (event: any) => {
-          const text: string = event.nativeEvent.text;
+          const { text } = event.nativeEvent;
           dispatch(updateBillingAddressOptions({ value: text, key: 'phone' }));
         },
         value: billingAddress.phone,
@@ -240,8 +239,8 @@ export default function SecondStep() {
         value: useSearchedBillingAddress
           ? searchedBillingAddress
           : billingAddress?.addressAutoComplete
-          ? billingAddress?.addressAutoComplete?.formattedAddress
-          : '',
+            ? billingAddress?.addressAutoComplete?.formattedAddress
+            : '',
         placeholder: 'Cari Kelurahan, Kecamatan, Kota',
         textInputAsButton: true,
         textInputAsButtonOnPress: () => {
@@ -259,7 +258,7 @@ export default function SecondStep() {
         type: 'area',
         onChange: (text: string) => {
           dispatch(
-            updateBillingAddressOptions({ value: text, key: 'fullAddress' })
+            updateBillingAddressOptions({ value: text, key: 'fullAddress' }),
           );
         },
         value: billingAddress?.fullAddress,
@@ -273,8 +272,8 @@ export default function SecondStep() {
     isSuggestionLoading,
   ]);
 
-  const customFooterButton = useCallback(() => {
-    return (
+  const customFooterButton = useCallback(
+    () => (
       <BBackContinueBtn
         onPressBack={() => {
           if (setCurrentPosition) {
@@ -291,12 +290,13 @@ export default function SecondStep() {
           !checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)
         }
       />
-    );
+    ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [billingAddress, isBillingAddressSame, distanceFromLegok]);
+    [billingAddress, isBillingAddressSame, distanceFromLegok],
+  );
 
   useEffect(() => {
-    crashlytics().log(SPH + '-Step2');
+    crashlytics().log(`${SPH}-Step2`);
 
     DeviceEventEmitter.addListener(eventKeyObj.shipp, (data) => {
       dispatch(setUseSearchAddress({ value: true }));
@@ -306,7 +306,7 @@ export default function SecondStep() {
     DeviceEventEmitter.addListener(eventKeyObj.billing, (data) => {
       dispatch(setUseBillingAddress({ value: true }));
       dispatch(
-        setSearchedBillingAddress({ value: data.coordinate.formattedAddress })
+        setSearchedBillingAddress({ value: data.coordinate.formattedAddress }),
       );
       onChangeRegion(data.coordinate, { isBiilingAddress: true });
     });
@@ -368,11 +368,11 @@ export default function SecondStep() {
       <BBottomSheetForm
         enableClose={false}
         inputs={inputsData}
-        buttonTitle={'Lanjut'}
+        buttonTitle="Lanjut"
         onAdd={() => {
           if (
-            setCurrentPosition &&
-            checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)
+            setCurrentPosition
+            && checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)
           ) {
             setCurrentPosition(2);
           }

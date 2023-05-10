@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Modal from 'react-native-modal';
 import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import { colors, layout } from '@/constants';
 import Draggable from 'react-native-draggable';
 import Icon from 'react-native-vector-icons/Feather';
 import NetworkLogger from 'react-native-network-logger';
+import { colors, layout } from '@/constants';
 
-const height = Dimensions.get('window').height;
-const width = Dimensions.get('window').width;
+const { height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 interface BHttpLoggerProps {
   isShowButtonNetwork: boolean;
@@ -16,13 +16,12 @@ interface BHttpLoggerProps {
   setVisibleNetworkLogger: () => void;
 }
 
-const BHttpLogger = ({
+function BHttpLogger({
   isShowButtonNetwork,
   isNetworkLoggerVisible,
   setShowButtonNetwork,
   setVisibleNetworkLogger,
-}: BHttpLoggerProps) => {
-
+}: BHttpLoggerProps) {
   return (
     <>
       {isShowButtonNetwork && (
@@ -40,21 +39,21 @@ const BHttpLogger = ({
                 style={styles.close}
                 onPress={setShowButtonNetwork}
               >
-                <Icon name={'x'} size={10} color={colors.white} />
+                <Icon name="x" size={10} color={colors.white} />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={setVisibleNetworkLogger}
                 style={styles.container}
               >
-                <Icon name={'cloud'} size={30} color={colors.primary} />
+                <Icon name="cloud" size={30} color={colors.primary} />
               </TouchableOpacity>
             </>
           </Draggable>
           <Modal
             backdropOpacity={0.5}
             backdropColor={colors.text.darker}
-            hideModalContentWhileAnimating={true}
-            coverScreen={true}
+            hideModalContentWhileAnimating
+            coverScreen
             isVisible={isNetworkLoggerVisible}
             style={{ margin: layout.pad.xl }}
           >
@@ -62,7 +61,7 @@ const BHttpLogger = ({
               onPress={setVisibleNetworkLogger}
               style={styles.button}
             >
-              <Icon name={'x'} size={30} color={colors.white} />
+              <Icon name="x" size={30} color={colors.white} />
             </TouchableOpacity>
             <NetworkLogger />
           </Modal>
@@ -70,7 +69,7 @@ const BHttpLogger = ({
       )}
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   close: {

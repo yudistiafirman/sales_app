@@ -1,13 +1,3 @@
-import { BSpacer, BText } from '@/components';
-import { colors, layout } from '@/constants';
-import font from '@/constants/fonts';
-import {
-  APPOINTMENT,
-  HUNTER_AND_FARMER,
-  TAB_ROOT,
-} from '@/navigation/ScreenNames';
-import { AppDispatch, RootState } from '@/redux/store';
-import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -21,18 +11,28 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
 import crashlytics from '@react-native-firebase/crashlytics';
+import moment from 'moment';
+import { BSpacer, BText } from '@/components';
+import { colors, layout } from '@/constants';
+import font from '@/constants/fonts';
+import {
+  APPOINTMENT,
+  HUNTER_AND_FARMER,
+  TAB_ROOT,
+} from '@/navigation/ScreenNames';
+import { AppDispatch, RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 import { toggleHunterScreen } from '@/redux/reducers/authReducer';
 import { bStorage } from '@/actions';
-import moment from 'moment';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 
 const { height } = Dimensions.get('screen');
-const HunterAndFarmers = () => {
+function HunterAndFarmers() {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
-  const whiteListUserType = [ENTRY_TYPE.ADMIN, ENTRY_TYPE.SALES]
+  const whiteListUserType = [ENTRY_TYPE.ADMIN, ENTRY_TYPE.SALES];
   const { hunterScreen, userData } = useSelector(
-    (state: RootState) => state.auth
+    (state: RootState) => state.auth,
   );
 
   const goToHome = () => {
@@ -92,7 +92,7 @@ const HunterAndFarmers = () => {
       </SafeAreaView>
     </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   modalContainer: { margin: 0, backgroundColor: colors.white },

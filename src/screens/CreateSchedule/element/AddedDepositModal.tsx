@@ -7,19 +7,21 @@ import {
 } from 'react-native';
 import * as React from 'react';
 import Modal from 'react-native-modal';
-import { BContainer, BForm, BGallery, BSpacer } from '@/components';
-import { resScale } from '@/utils';
-import { colors, fonts, layout } from '@/constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { BButtonPrimary } from '@/components';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import moment from 'moment';
 import {
   StackActions,
   useFocusEffect,
   useNavigation,
 } from '@react-navigation/native';
+import {
+  BContainer, BForm, BGallery, BSpacer,
+  BButtonPrimary,
+} from '@/components';
+import { resScale } from '@/utils';
+import { colors, fonts, layout } from '@/constants';
+import { RootState } from '@/redux/store';
 import { Input } from '@/interfaces';
 import { CAMERA, CREATE_SCHEDULE } from '@/navigation/ScreenNames';
 
@@ -35,11 +37,11 @@ export default function AddedDepositModal({
   setCompletedData,
 }: AddedDepositModalType) {
   const [scrollOffSet, setScrollOffSet] = React.useState<number | undefined>(
-    undefined
+    undefined,
   );
   const navigation = useNavigation();
   const { createSchedulePhotoURLs } = useSelector(
-    (state: RootState) => state.camera
+    (state: RootState) => state.camera,
   );
   const [isVisibleCalendar, setVisibleCalendar] = React.useState(false);
   const [addedDeposit, setAddedDeposit] = React.useState<any>({});
@@ -51,7 +53,7 @@ export default function AddedDepositModal({
       type: 'calendar',
       value: addedDeposit?.createdAt,
       placeholder: 'Pilih tanggal bayar',
-      isError: addedDeposit?.createdAt ? false : true,
+      isError: !addedDeposit?.createdAt,
       customerErrorMsg: 'Tanggal bayar harus diisi',
       calendar: {
         onDayPress: (value: any) => {
@@ -70,7 +72,7 @@ export default function AddedDepositModal({
       type: 'price',
       value: addedDeposit?.nominal,
       placeholder: '0',
-      isError: addedDeposit?.nominal ? false : true,
+      isError: !addedDeposit?.nominal,
       customerErrorMsg: 'Nominal harus diisi',
       onChange: (value: any) => {
         setAddedDeposit({
@@ -84,21 +86,20 @@ export default function AddedDepositModal({
   const isButtonDisable = () => {
     if (addedDeposit && addedDeposit?.nominal && addedDeposit?.createdAt) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   };
 
   useFocusEffect(
     React.useCallback(() => {
       setAddedDeposit({ ...addedDeposit, picts: createSchedulePhotoURLs });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [createSchedulePhotoURLs])
+    }, [createSchedulePhotoURLs]),
   );
 
   return (
     <Modal
-      hideModalContentWhileAnimating={true}
+      hideModalContentWhileAnimating
       backdropOpacity={0.3}
       isVisible={isModalVisible}
       onBackButtonPress={() => {
@@ -107,7 +108,7 @@ export default function AddedDepositModal({
       style={style.modal}
       scrollOffset={scrollOffSet}
       scrollOffsetMax={resScale(350) - resScale(190)}
-      propagateSwipe={true}
+      propagateSwipe
     >
       <View style={style.modalContent}>
         <BContainer>
@@ -127,7 +128,7 @@ export default function AddedDepositModal({
                   />
                 </TouchableOpacity>
               </View>
-              <BSpacer size={'extraSmall'} />
+              <BSpacer size="extraSmall" />
               <View style={{ height: resScale(340) }}>
                 <ScrollView
                   onScroll={(event) => {
@@ -143,11 +144,11 @@ export default function AddedDepositModal({
                           photoTitle: 'Bukti',
                           navigateTo: CREATE_SCHEDULE,
                           closeButton: true,
-                        })
+                        }),
                       );
                     }}
                   />
-                  <BSpacer size={'extraSmall'} />
+                  <BSpacer size="extraSmall" />
                   <BForm titleBold="500" inputs={inputs} />
                 </ScrollView>
               </View>

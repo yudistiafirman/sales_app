@@ -1,9 +1,11 @@
+import React from 'react';
+import {
+  Image, StyleSheet, TextStyle, View,
+} from 'react-native';
+import Modal from 'react-native-modal';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
-import React from 'react';
-import { Image, StyleSheet, TextStyle, View } from 'react-native';
-import Modal from 'react-native-modal';
 import BButtonPrimary from '../atoms/BButtonPrimary';
 import BText from '../atoms/BText';
 import { fonts, layout } from '@/constants';
@@ -30,13 +32,13 @@ const BalertDefaultProps = {
   contentStyle: BAlertDefaultContentStyle,
 };
 
-const BAlert = ({
+function BAlert({
   isVisible,
   content,
   type,
   contentStyle,
   onClose,
-}: BAlertProps & typeof BalertDefaultProps) => {
+}: BAlertProps & typeof BalertDefaultProps) {
   const warningIcon = require('@/assets/icon/ic_warning.png');
   const successIcon = require('@/assets/icon/ic_success.png');
 
@@ -63,7 +65,7 @@ const BAlert = ({
       </View>
     </Modal>
   );
-};
+}
 
 BAlert.defaultProps = BalertDefaultProps;
 

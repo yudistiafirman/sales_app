@@ -46,7 +46,7 @@ const makeStyle = (props: IProps): StyleProp<ViewStyle> => {
     isActive = false,
     flexDirection = 'column',
   } = props;
-  let style = { ...baseStyle, flexDirection: flexDirection };
+  let style = { ...baseStyle, flexDirection };
 
   if (fullWidth) {
     style = {
@@ -82,8 +82,10 @@ const makeStyleImage = ({
   };
 };
 
-const BCardOption = (props: IProps) => {
-  const { isClickable, icon, title, isActive, onPress, flexDirection } = props;
+function BCardOption(props: IProps) {
+  const {
+    isClickable, icon, title, isActive, onPress, flexDirection,
+  } = props;
 
   return (
     <TouchableOpacity
@@ -100,10 +102,10 @@ const BCardOption = (props: IProps) => {
       ) : (
         <Image source={icon} style={makeStyleImage({ isActive })} />
       )}
-      <BSpacer size={'verySmall'} />
+      <BSpacer size="verySmall" />
       <BText {...(isActive && { color: 'primary' })}>{title}</BText>
     </TouchableOpacity>
   );
-};
+}
 
 export default BCardOption;

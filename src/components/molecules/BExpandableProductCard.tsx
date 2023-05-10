@@ -1,11 +1,11 @@
+import React from 'react';
+import { StyleSheet, View, Dimensions } from 'react-native';
+import { RadioButton } from 'react-native-paper';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { Input } from '@/interfaces';
 import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
-import React from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
-import { RadioButton } from 'react-native-paper';
 import BText from '../atoms/BText';
 import BForm from '../organism/BForm';
 
@@ -26,7 +26,7 @@ interface Props<TItem> {
 
 const { width } = Dimensions.get('window');
 
-const BExpandableProductCard = ({
+function BExpandableProductCard({
   item,
   onChecked,
   checked,
@@ -39,13 +39,13 @@ const BExpandableProductCard = ({
   index,
   onPressRadioButton,
   isOptions,
-}: Props) => {
+}: Props) {
   const checkbox = [
     {
       type: 'checkbox',
       checkbox: {
         value: checked,
-        onValueChange: () => onChecked && onChecked(item!),
+        onValueChange: () => onChecked && onChecked(item),
       },
     },
   ];
@@ -75,12 +75,14 @@ const BExpandableProductCard = ({
           </View>
           <View style={styles.textContentContainer}>
             <BText style={styles.parentPrice}>
-              {`${formatCurrency(pricePerVol!)}/m3`}
+              {`${formatCurrency(pricePerVol)}/m3`}
             </BText>
             <BText
               numberOfLines={1}
               style={styles.totalParentPrice}
-            >{`IDR ${formatCurrency(totalPrice)}`}</BText>
+            >
+              {`IDR ${formatCurrency(totalPrice)}`}
+            </BText>
           </View>
         </View>
       </View>
@@ -110,7 +112,7 @@ const BExpandableProductCard = ({
       )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   customerCard: {

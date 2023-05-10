@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { resScale } from '@/utils';
 import { View, StyleProp, ViewStyle } from 'react-native';
+import { resScale } from '@/utils';
 import { layout } from '@/constants';
 
 interface IProps {
   size:
-    | 'verySmall'
-    | 'extraSmall'
-    | 'middleSmall'
-    | 'small'
-    | 'medium'
-    | 'large'
-    | 'extraLarge'
-    | number;
+  | 'verySmall'
+  | 'extraSmall'
+  | 'middleSmall'
+  | 'small'
+  | 'medium'
+  | 'large'
+  | 'extraLarge'
+  | number;
 }
 
 const styles: StyleProp<ViewStyle> = {
@@ -72,8 +72,8 @@ const makeStyle = ({ size }: IProps): ViewStyle => {
   return styles;
 };
 
-const BSpacer = ({ size = 'small' }: IProps) => (
-  <View style={makeStyle({ size })} />
-);
+function BSpacer({ size = 'small' }: IProps) {
+  return <View style={makeStyle({ size })} />;
+}
 
 export default BSpacer;

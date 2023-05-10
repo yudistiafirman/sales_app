@@ -1,9 +1,9 @@
 import { Platform } from 'react-native';
 import Config from 'react-native-config';
-const API_URL =
-  Platform.OS === 'android'
-    ? Config.API_URL_COMMON
-    : __DEV__
+
+const API_URL = Platform.OS === 'android'
+  ? Config.API_URL_COMMON
+  : __DEV__
     ? Config.API_URL_COMMON
     : Config.API_URL_COMMON_PROD;
 
@@ -11,7 +11,7 @@ export default class BrikApiCommon {
   static getLocationCoordinates = (
     longitude: number,
     latitude: number,
-    distance = 'BP-LEGOK'
+    distance = 'BP-LEGOK',
   ) => {
     const url = new URL(`${API_URL}/common/map/coordinates`);
     const params = url.searchParams;
@@ -26,6 +26,7 @@ export default class BrikApiCommon {
     }
     return url.toString();
   };
+
   static searchPlaces = (searchValue: string) => {
     const url = new URL(`${API_URL}/common/map/places`);
     const params = url.searchParams;
@@ -112,21 +113,21 @@ export default class BrikApiCommon {
 
   static getProjectDetailIndividual = (projectId: string) => {
     const url = new URL(
-      `${API_URL}/common/m/flow/project/${projectId}/individual`
+      `${API_URL}/common/m/flow/project/${projectId}/individual`,
     );
     return url.toString();
   };
 
   static updateBillingAddress = (projectId: string) => {
     const url = new URL(
-      `${API_URL}/common/m/flow/project/${projectId}/billing-address`
+      `${API_URL}/common/m/flow/project/${projectId}/billing-address`,
     );
     return url.toString();
   };
-  
+
   static updateLocationAddress = (projectId: string) => {
     const url = new URL(
-      `${API_URL}/common/m/flow/project/${projectId}/location-address`
+      `${API_URL}/common/m/flow/project/${projectId}/location-address`,
     );
     return url.toString();
   };
@@ -142,6 +143,7 @@ export default class BrikApiCommon {
     const url = new URL(`${API_URL}/common/m/auth/logout`);
     return url.toString();
   };
+
   static getRefreshToken = () => {
     const url = new URL(`${API_URL}/common/m/auth/refresh`);
     return url.toString();

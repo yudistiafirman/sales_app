@@ -1,11 +1,3 @@
-import BDivider from '@/components/atoms/BDivider';
-import BLabel from '@/components/atoms/BLabel';
-import BSpacer from '@/components/atoms/BSpacer';
-import BExpandableProductCard from '@/components/molecules/BExpandableProductCard';
-import { colors, fonts, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { Products } from '@/interfaces/CreatePurchaseOrder';
-import formatCurrency from '@/utils/formatCurrency';
 import React, { useCallback } from 'react';
 import {
   FlatList,
@@ -18,6 +10,14 @@ import {
   ScrollView,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import BDivider from '@/components/atoms/BDivider';
+import BLabel from '@/components/atoms/BLabel';
+import BSpacer from '@/components/atoms/BSpacer';
+import BExpandableProductCard from '@/components/molecules/BExpandableProductCard';
+import { colors, fonts, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { Products } from '@/interfaces/CreatePurchaseOrder';
+import formatCurrency from '@/utils/formatCurrency';
 import BForm from '../organism/BForm';
 import { Input } from '@/interfaces';
 import { resScale } from '@/utils';
@@ -34,7 +34,7 @@ type ChoosenProductListProps<ProductData> = {
   comboRadioBtnInput?: Input[];
 };
 
-const ChoosenProductList = <ProductData extends Products>({
+function ChoosenProductList<ProductData extends Products>({
   data,
   onChecked,
   selectedProducts,
@@ -42,7 +42,7 @@ const ChoosenProductList = <ProductData extends Products>({
   onChangeQuantity,
   calculatedTotalPrice,
   comboRadioBtnInput,
-}: ChoosenProductListProps<ProductData>) => {
+}: ChoosenProductListProps<ProductData>) {
   const renderItem = useCallback(
     ({ item, index }) => {
       const checked = selectedProducts?.findIndex((val) => val.id === item.id);
@@ -57,10 +57,8 @@ const ChoosenProductList = <ProductData extends Products>({
       ];
       const productName = `${item?.Product?.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`;
       const offeringPrice = item?.offeringPrice;
-      const quantity =
-        item?.quantity.toString()[0] === '0' ? 0 : item?.quantity;
-      const totalPrice =
-        item?.quantity && item?.offeringPrice ? offeringPrice * quantity : 0;
+      const quantity = item?.quantity.toString()[0] === '0' ? 0 : item?.quantity;
+      const totalPrice = item?.quantity && item?.offeringPrice ? offeringPrice * quantity : 0;
       return (
         <BExpandableProductCard
           key={index}
@@ -83,12 +81,10 @@ const ChoosenProductList = <ProductData extends Products>({
       onChangeQuantity,
       onChecked,
       selectedProducts,
-    ]
+    ],
   );
 
-  const renderItemSeparator = () => {
-    return <BSpacer size="extraSmall" />;
-  };
+  const renderItemSeparator = () => <BSpacer size="extraSmall" />;
 
   return (
     <ScrollView>
@@ -96,9 +92,7 @@ const ChoosenProductList = <ProductData extends Products>({
       <BSpacer size="extraSmall" />
       <BDivider borderBottomWidth={1} flex={0} height={0.1} />
       <BSpacer size="extraSmall" />
-      {data?.map((item: ProductData, index: number) =>
-        renderItem({ item, index })
-      )}
+      {data?.map((item: ProductData, index: number) => renderItem({ item, index }))}
       <BSpacer size="extraSmall" />
 
       {comboRadioBtnInput && (
@@ -108,12 +102,14 @@ const ChoosenProductList = <ProductData extends Products>({
       <View style={styles.priceContainer}>
         <Text style={styles.productName}>Total</Text>
         <Text numberOfLines={1} style={styles.boldPrice}>
-          IDR {formatCurrency(calculatedTotalPrice)}
+          IDR
+          {' '}
+          {formatCurrency(calculatedTotalPrice)}
         </Text>
       </View>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   priceContainer: {

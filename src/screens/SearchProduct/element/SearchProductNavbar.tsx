@@ -1,8 +1,10 @@
-import { BSearchBar } from '@/components';
-import { layout } from '@/constants';
 import React from 'react';
-import { View, GestureResponderEvent, ViewStyle, Platform } from 'react-native';
+import {
+  View, GestureResponderEvent, ViewStyle, Platform,
+} from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { layout } from '@/constants';
+import { BSearchBar } from '@/components';
 import SearchProductStyles from '../styles';
 
 interface SearchProductNavbarProps {
@@ -13,16 +15,16 @@ interface SearchProductNavbarProps {
   autoFocus?: boolean;
 }
 
-const SearchProductNavbar = ({
+function SearchProductNavbar({
   onChangeText,
   value,
   onClearValue,
   customStyle,
   autoFocus,
-}: SearchProductNavbarProps) => {
+}: SearchProductNavbarProps) {
   return (
     <View
-      style={customStyle ? customStyle : SearchProductStyles.searchBarContainer}
+      style={customStyle || SearchProductStyles.searchBarContainer}
     >
       <BSearchBar
         value={value}
@@ -34,14 +36,14 @@ const SearchProductNavbar = ({
         autoFocus={autoFocus}
         left={<TextInput.Icon icon="magnify" />}
         right={
-          value &&
-          value?.length > 0 && (
+          value
+          && value?.length > 0 && (
             <TextInput.Icon onPress={onClearValue} icon="close" />
           )
         }
       />
     </View>
   );
-};
+}
 
 export default SearchProductNavbar;

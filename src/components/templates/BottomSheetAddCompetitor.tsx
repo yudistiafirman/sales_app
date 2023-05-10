@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { Competitor, Input } from '@/interfaces';
 import Modal from 'react-native-modal';
 import { Dimensions, StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { RadioButton } from 'react-native-paper';
+import { Competitor, Input } from '@/interfaces';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import BText from '../atoms/BText';
 import BHeaderIcon from '../atoms/BHeaderIcon';
 import BForm from '../organism/BForm';
@@ -14,7 +15,7 @@ import { resScale } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
 import BDivider from '../atoms/BDivider';
 import BLabel from '../atoms/BLabel';
-import { RadioButton } from 'react-native-paper';
+
 const { height, width } = Dimensions.get('window');
 interface IProps {
   addCompetitor: any;
@@ -30,7 +31,7 @@ const initialState = {
   hope: '',
 };
 
-const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
+function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
   const [state, setState] = React.useState<Competitor>(initialState);
 
   const onChange = (key: keyof Competitor) => (text: string) => {
@@ -88,9 +89,8 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
   const buttonStateDisabled = (): boolean => {
     if (state.name !== '' && state.mou !== '' && state.exclusive !== '') {
       return false;
-    } else {
-      return true;
     }
+    return true;
   };
 
   const onCloseModal = () => {
@@ -123,14 +123,14 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
                 />
               </View>
               <View>
-                <BSpacer size={'verySmall'} />
+                <BSpacer size="verySmall" />
                 <BDivider />
-                <BSpacer size={'small'} />
+                <BSpacer size="small" />
                 <BForm titleBold="500" inputs={inputs} />
                 <BLabel
                   isRequired
-                  bold={'500'}
-                  label={'Apakah sudah memiliki PKS / MOU?'}
+                  bold="500"
+                  label="Apakah sudah memiliki PKS / MOU?"
                 />
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <View
@@ -141,7 +141,7 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
                     }}
                   >
                     <RadioButton
-                      value={'Iya'}
+                      value="Iya"
                       status={
                         state.mou?.toLowerCase() === 'iya'
                           ? 'checked'
@@ -151,7 +151,7 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
                       uncheckedColor={colors.border.altGrey}
                       onPress={() => onChange('mou')('Iya')}
                     />
-                    <BText>{'Iya'}</BText>
+                    <BText>Iya</BText>
                   </View>
                   <View
                     style={{
@@ -162,7 +162,7 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
                     }}
                   >
                     <RadioButton
-                      value={'Tidak'}
+                      value="Tidak"
                       status={
                         state.mou?.toLowerCase() === 'tidak'
                           ? 'checked'
@@ -172,14 +172,14 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
                       uncheckedColor={colors.border.altGrey}
                       onPress={() => onChange('mou')('Tidak')}
                     />
-                    <BText>{'Tidak'}</BText>
+                    <BText>Tidak</BText>
                   </View>
                 </View>
-                <BSpacer size={'extraSmall'} />
+                <BSpacer size="extraSmall" />
                 <BLabel
                   isRequired
-                  bold={'500'}
-                  label={'Apakah PKS-nya Ekslusif?'}
+                  bold="500"
+                  label="Apakah PKS-nya Ekslusif?"
                 />
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <View
@@ -190,7 +190,7 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
                     }}
                   >
                     <RadioButton
-                      value={'Iya'}
+                      value="Iya"
                       status={
                         state.exclusive?.toLowerCase() === 'iya'
                           ? 'checked'
@@ -200,7 +200,7 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
                       uncheckedColor={colors.border.altGrey}
                       onPress={() => onChange('exclusive')('Iya')}
                     />
-                    <BText>{'Iya'}</BText>
+                    <BText>Iya</BText>
                   </View>
                   <View
                     style={{
@@ -211,7 +211,7 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
                     }}
                   >
                     <RadioButton
-                      value={'Tidak'}
+                      value="Tidak"
                       status={
                         state.exclusive?.toLowerCase() === 'tidak'
                           ? 'checked'
@@ -221,10 +221,10 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
                       uncheckedColor={colors.border.altGrey}
                       onPress={() => onChange('exclusive')('Tidak')}
                     />
-                    <BText>{'Tidak'}</BText>
+                    <BText>Tidak</BText>
                   </View>
                 </View>
-                <BSpacer size={'extraSmall'} />
+                <BSpacer size="extraSmall" />
                 <BForm titleBold="500" inputs={inputsTwo} />
               </View>
             </View>
@@ -240,7 +240,7 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
       </View>
     </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   modalContainer: { margin: 0, justifyContent: 'flex-end' },

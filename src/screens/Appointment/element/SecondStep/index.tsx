@@ -1,27 +1,27 @@
 import React, { useEffect } from 'react';
-import { BSearchBar } from '@/components';
 import {
   DeviceEventEmitter,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { resScale } from '@/utils';
 import { TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { BSearchBar } from '@/components';
+import { resScale } from '@/utils';
 import { APPOINTMENT, CALENDAR } from '@/navigation/ScreenNames';
 import { useAppointmentData } from '@/hooks';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { selectedDateType } from '@/screens/Visitation/elements/fifth';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { colors, layout } from '@/constants';
 
-const SecondStep = () => {
+function SecondStep() {
   const [values, dispatchValue] = useAppointmentData();
   const { selectedDate } = values;
 
   useEffect(() => {
-    crashlytics().log(APPOINTMENT + '-Step2');
+    crashlytics().log(`${APPOINTMENT}-Step2`);
     DeviceEventEmitter.addListener(
       'CalendarScreen.selectedDate',
       (date: selectedDateType) => {
@@ -29,7 +29,7 @@ const SecondStep = () => {
           type: AppointmentActionType.SET_DATE,
           value: date,
         });
-      }
+      },
     );
     return () => {
       DeviceEventEmitter.removeAllListeners('CalendarScreen.selectedDate');
@@ -42,22 +42,20 @@ const SecondStep = () => {
       <>
         <TouchableOpacity
           style={styles.touchable}
-          onPress={() =>
-            navigation.navigate(CALENDAR, {
-              useTodayMinDate: true,
-            })
-          }
+          onPress={() => navigation.navigate(CALENDAR, {
+            useTodayMinDate: true,
+          })}
         />
         <BSearchBar
           disabled
           activeOutlineColor="gray"
           value={
             selectedDate
-              ? selectedDate.day + ' , ' + selectedDate.prettyDate
+              ? `${selectedDate.day} , ${selectedDate.prettyDate}`
               : ''
           }
           textColor={colors.textInput.input}
-          placeholder={'Pilih Tanggal'}
+          placeholder="Pilih Tanggal"
           right={
             <TextInput.Icon forceTextInputFocus={false} icon="chevron-right" />
           }
@@ -65,7 +63,7 @@ const SecondStep = () => {
       </>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   flexFull: {

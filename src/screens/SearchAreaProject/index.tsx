@@ -1,18 +1,19 @@
-import BHeaderIcon from '@/components/atoms/BHeaderIcon';
-import BSearchBar from '@/components/molecules/BSearchBar';
-import resScale from '@/utils/resScale';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { TextInput } from 'react-native-paper';
 import { SafeAreaView, DeviceEventEmitter, Platform } from 'react-native';
+import { useMachine } from '@xstate/react';
+import { assign } from 'xstate';
+import { useDispatch } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
+import BHeaderIcon from '@/components/atoms/BHeaderIcon';
+import BSearchBar from '@/components/molecules/BSearchBar';
+import resScale from '@/utils/resScale';
 import SearchAreaStyles from './styles';
 import CurrentLocation from './element/SearchAreaCurrentLocation';
 import LocationList from './element/LocationList';
-import { useMachine } from '@xstate/react';
 import { searchAreaMachine } from '@/machine/searchAreaMachine';
-import { assign } from 'xstate';
 import { BSpacer } from '@/components';
-import { useDispatch } from 'react-redux';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import {
   CREATE_VISITATION,
@@ -22,11 +23,10 @@ import {
   SPH,
 } from '@/navigation/ScreenNames';
 import { updateRegion } from '@/redux/reducers/locationReducer';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { hasLocationPermission } from '@/utils/permissions';
 import { layout } from '@/constants';
 
-const SearchAreaProject = ({ route }: { route: any }) => {
+function SearchAreaProject({ route }: { route: any }) {
   const navigation = useNavigation();
   const [text, setText] = React.useState('');
   const dispatch = useDispatch();
@@ -45,10 +45,10 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         const from = route?.params?.from;
         const eventKey = route?.params?.eventKey;
         const sourceType = route?.params?.sourceType;
-        let coordinate = {
+        const coordinate = {
           longitude: lon,
           latitude: lat,
-          formattedAddress: formattedAddress,
+          formattedAddress,
         };
 
         if (typeof lon === 'string') {
@@ -59,18 +59,18 @@ const SearchAreaProject = ({ route }: { route: any }) => {
           coordinate.latitude = Number(lat);
         }
         if (
-          from === CREATE_VISITATION ||
-          from === SPH ||
-          from === CUSTOMER_DETAIL
+          from === CREATE_VISITATION
+          || from === SPH
+          || from === CUSTOMER_DETAIL
         ) {
           if (eventKey) {
             if (sourceType) {
               DeviceEventEmitter.emit(eventKey, {
-                coordinate: coordinate,
-                sourceType: sourceType,
+                coordinate,
+                sourceType,
               });
             } else {
-              DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
+              DeviceEventEmitter.emit(eventKey, { coordinate });
             }
           } else {
             dispatch(updateRegion(coordinate));
@@ -78,7 +78,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
           navigation.goBack();
         } else {
           navigation.navigate(LOCATION, {
-            coordinate: coordinate,
+            coordinate,
             isReadOnly: false,
             from: route?.params?.from,
           });
@@ -104,10 +104,12 @@ const SearchAreaProject = ({ route }: { route: any }) => {
   useFocusEffect(
     React.useCallback(() => {
       hasLocationPermission();
-    }, [])
+    }, []),
   );
 
-  const { result, loadPlaces, longlat, errorMessage } = state.context;
+  const {
+    result, loadPlaces, longlat, errorMessage,
+  } = state.context;
   const onChangeValue = (event: string) => {
     setText(event);
     send('searchingLocation', { payload: event });
@@ -119,19 +121,19 @@ const SearchAreaProject = ({ route }: { route: any }) => {
     const sourceType = route?.params?.sourceType;
 
     const coordinate = {
-      longitude: longitude,
-      latitude: latitude,
+      longitude,
+      latitude,
     };
     if (route?.params?.from === CREATE_VISITATION) {
       dispatch(updateRegion(coordinate));
       navigation.goBack();
     } else {
       navigation.navigate(LOCATION, {
-        coordinate: coordinate,
+        coordinate,
         from: route?.params?.from,
         isReadOnly: false,
-        eventKey: eventKey,
-        sourceType: sourceType,
+        eventKey,
+        sourceType,
       });
     }
   };
@@ -173,6 +175,6 @@ const SearchAreaProject = ({ route }: { route: any }) => {
       />
     </SafeAreaView>
   );
-};
+}
 
 export default SearchAreaProject;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { colors, fonts, layout } from '@/constants';
 import { TextStyle, ViewStyle } from 'react-native';
 import { TextInput, TextInputProps } from 'react-native-paper';
+import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 
 interface IProps extends Partial<TextInputProps> {
@@ -35,13 +35,15 @@ const defaultProps = {
   dense: true,
 };
 
-const BTextInput = ({ ...props }: IProps & typeof defaultProps) => (
-  <TextInput
-    {...props}
-    placeholderTextColor={colors.textInput.placeHolder}
-    contentStyle={props.contentStyle}
-  />
-);
+function BTextInput({ ...props }: IProps & typeof defaultProps) {
+  return (
+    <TextInput
+      {...props}
+      placeholderTextColor={colors.textInput.placeHolder}
+      contentStyle={props.contentStyle}
+    />
+  );
+}
 
 BTextInput.defaultProps = defaultProps;
 

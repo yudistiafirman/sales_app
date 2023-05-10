@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { BButtonPrimary, BHeaderIcon } from '@/components';
-import { layout } from '@/constants';
 import {
   StyleProp,
   ViewStyle,
@@ -15,9 +13,16 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import Entypo from 'react-native-vector-icons/Entypo';
+import crashlytics from '@react-native-firebase/crashlytics';
+import Pdf from 'react-native-pdf';
+import moment from 'moment';
+import Geolocation from 'react-native-geolocation-service';
+import { BButtonPrimary, BHeaderIcon } from '@/components';
+import { layout } from '@/constants';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
-import { useDispatch, useSelector } from 'react-redux';
 import { setImageURLS } from '@/redux/reducers/cameraReducer';
 import {
   CAMERA,
@@ -32,12 +37,9 @@ import {
   PO,
   SUBMIT_FORM,
 } from '@/navigation/ScreenNames';
-import Entypo from 'react-native-vector-icons/Entypo';
 import { resScale } from '@/utils';
-import crashlytics from '@react-native-firebase/crashlytics';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { ENTRY_TYPE } from '@/models/EnumModel';
-import Pdf from 'react-native-pdf';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import {
   resetAllStepperFocused,
@@ -58,20 +60,18 @@ import {
 } from '@/redux/reducers/salesOrder';
 import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
 import { updateDeliveryOrder } from '@/actions/OrderActions';
-import moment from 'moment';
-import Geolocation from 'react-native-geolocation-service';
 import { hasLocationPermission } from '@/utils/permissions';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
 }
 
-const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
+function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
   useHeaderTitleChanged({
-    title: 'Foto ' + route?.params?.photoTitle,
+    title: `Foto ${route?.params?.photoTitle}`,
   });
   const _style = React.useMemo(() => style, [style]);
   const photo = route?.params?.photo?.path;
@@ -85,7 +85,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
   const soID = route?.params?.soID;
   const visitationData = useSelector((state: RootState) => state.visitation);
   const operationData = useSelector((state: RootState) => state.operation);
-  let latlongResult: string = '';
+  let latlongResult = '';
 
   if (closeButton) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -109,36 +109,34 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       hasLocationPermission().then((result) => {
         if (result) {
           getCurrentLocation().then((longlat) => {
-            latlongResult = longlat.latitude + ', ' + longlat.longitude;
+            latlongResult = `${longlat.latitude}, ${longlat.longitude}`;
           });
         }
       });
-    }, [])
+    }, []),
   );
 
   const getTypeOfImagePayload = () => {
     if (navigateTo) {
       if (
-        navigateTo !== CREATE_DEPOSIT &&
-        navigateTo !== GALLERY_VISITATION &&
-        navigateTo !== GALLERY_DEPOSIT &&
-        navigateTo !== PO &&
-        navigateTo !== ENTRY_TYPE.DRIVER &&
-        navigateTo !== ENTRY_TYPE.DISPATCH &&
-        navigateTo !== ENTRY_TYPE.RETURN &&
-        navigateTo !== ENTRY_TYPE.IN &&
-        navigateTo !== ENTRY_TYPE.OUT &&
-        navigateTo !== GALLERY_OPERATION &&
-        navigateTo !== FORM_SO &&
-        navigateTo !== GALLERY_SO
+        navigateTo !== CREATE_DEPOSIT
+        && navigateTo !== GALLERY_VISITATION
+        && navigateTo !== GALLERY_DEPOSIT
+        && navigateTo !== PO
+        && navigateTo !== ENTRY_TYPE.DRIVER
+        && navigateTo !== ENTRY_TYPE.DISPATCH
+        && navigateTo !== ENTRY_TYPE.RETURN
+        && navigateTo !== ENTRY_TYPE.IN
+        && navigateTo !== ENTRY_TYPE.OUT
+        && navigateTo !== GALLERY_OPERATION
+        && navigateTo !== FORM_SO
+        && navigateTo !== GALLERY_SO
       ) {
         return 'COVER';
-      } else {
-        return 'GALLERY';
       }
-    } else {
       return 'GALLERY';
     }
+    return 'GALLERY';
   };
 
   const onArrivedDriver = async () => {
@@ -147,8 +145,8 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       payload.status = 'ARRIVED';
       const responseUpdateDeliveryOrder = await updateDeliveryOrder(
         payload,
-        operationTempData?.deliveryOrderId ||
-          operationData?.projectDetails?.deliveryOrderId
+        operationTempData?.deliveryOrderId
+          || operationData?.projectDetails?.deliveryOrderId,
       );
 
       if (responseUpdateDeliveryOrder.data.success) {
@@ -174,10 +172,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       // enableHighAccuracy: false,
       // distanceFilter:0,
     };
-    const getCurrentPosition = () =>
-      new Promise((resolve, error) =>
-        Geolocation.getCurrentPosition(resolve, error, opt)
-      );
+    const getCurrentPosition = () => new Promise((resolve, error) => Geolocation.getCurrentPosition(resolve, error, opt));
 
     try {
       const response = await getCurrentPosition();
@@ -194,10 +189,9 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
     const photoName = photo?.split('/').pop();
     const pdfName = picker?.name;
     const photoNameParts = photoName?.split('.');
-    let photoType =
-      photoNameParts && photoNameParts.length > 0
-        ? photoNameParts[photoNameParts.length - 1]
-        : '';
+    let photoType = photoNameParts && photoNameParts.length > 0
+      ? photoNameParts[photoNameParts.length - 1]
+      : '';
 
     if (photoType === 'jpg') {
       photoType = 'jpeg';
@@ -235,11 +229,11 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
     }
 
     if (
-      navigateTo === ENTRY_TYPE.DRIVER ||
-      navigateTo === ENTRY_TYPE.DISPATCH ||
-      navigateTo === ENTRY_TYPE.RETURN ||
-      navigateTo === ENTRY_TYPE.IN ||
-      navigateTo === ENTRY_TYPE.OUT
+      navigateTo === ENTRY_TYPE.DRIVER
+      || navigateTo === ENTRY_TYPE.DISPATCH
+      || navigateTo === ENTRY_TYPE.RETURN
+      || navigateTo === ENTRY_TYPE.IN
+      || navigateTo === ENTRY_TYPE.OUT
     ) {
       if (operationTempData) {
         dispatch(resetInputsValue());
@@ -259,14 +253,13 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
     switch (navigateTo) {
       case CREATE_VISITATION:
         dispatch(setImageURLS({ file: localFile, source: CREATE_VISITATION }));
-        if (visitationData.images && visitationData.images.length > 0)
-          images = [{ file: null }];
+        if (visitationData.images && visitationData.images.length > 0) images = [{ file: null }];
         images.push(localFile);
         dispatch(updateDataVisitation({ type: 'images', value: images }));
         dispatch(resetAllStepperFocused());
         navigation.goBack();
         navigation.dispatch(
-          StackActions.replace(navigateTo, { existingVisitation })
+          StackActions.replace(navigateTo, { existingVisitation }),
         );
         return;
       case PO:
@@ -278,36 +271,36 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         return;
       case ENTRY_TYPE.DISPATCH:
         dispatch(
-          setOperationPhoto({ file: localFile, withoutAddButton: true })
+          setOperationPhoto({ file: localFile, withoutAddButton: true }),
         );
         navigation.dispatch(StackActions.pop(2));
         if (!operationAddedStep || operationAddedStep === '') {
           navigation.navigate(CAMERA, {
             photoTitle: 'Driver',
-            navigateTo: navigateTo,
+            navigateTo,
             operationAddedStep: 'nopol',
-            operationTempData: operationTempData,
+            operationTempData,
           });
         } else if (operationAddedStep === 'nopol') {
           navigation.navigate(CAMERA, {
             photoTitle: 'No Polisi TM',
-            navigateTo: navigateTo,
+            navigateTo,
             operationAddedStep: 'segel',
-            operationTempData: operationTempData,
+            operationTempData,
           });
         } else if (operationAddedStep === 'segel') {
           navigation.navigate(CAMERA, {
             photoTitle: 'Segel',
-            navigateTo: navigateTo,
+            navigateTo,
             operationAddedStep: 'kondom',
-            operationTempData: operationTempData,
+            operationTempData,
           });
         } else if (operationAddedStep === 'kondom') {
           navigation.navigate(CAMERA, {
             photoTitle: 'Kondom',
-            navigateTo: navigateTo,
+            navigateTo,
             operationAddedStep: 'finished',
-            operationTempData: operationTempData,
+            operationTempData,
           });
         } else if (operationAddedStep === 'finished') {
           navigation.navigate(SUBMIT_FORM, {
@@ -337,15 +330,15 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         return;
       case ENTRY_TYPE.IN:
         dispatch(
-          setOperationPhoto({ file: localFile, withoutAddButton: true })
+          setOperationPhoto({ file: localFile, withoutAddButton: true }),
         );
         navigation.dispatch(StackActions.pop(2));
         if (!operationAddedStep || operationAddedStep === '') {
           navigation.navigate(CAMERA, {
             photoTitle: 'Hasil',
-            navigateTo: navigateTo,
+            navigateTo,
             operationAddedStep: 'finished',
-            operationTempData: operationTempData,
+            operationTempData,
           });
         } else if (operationAddedStep === 'finished') {
           navigation.navigate(SUBMIT_FORM, {
@@ -355,15 +348,15 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         return;
       case ENTRY_TYPE.OUT:
         dispatch(
-          setOperationPhoto({ file: localFile, withoutAddButton: true })
+          setOperationPhoto({ file: localFile, withoutAddButton: true }),
         );
         navigation.dispatch(StackActions.pop(2));
         if (!operationAddedStep || operationAddedStep === '') {
           navigation.navigate(CAMERA, {
             photoTitle: 'Hasil',
-            navigateTo: navigateTo,
+            navigateTo,
             operationAddedStep: 'finished',
-            operationTempData: operationTempData,
+            operationTempData,
           });
         } else if (operationAddedStep === 'finished') {
           navigation.navigate(SUBMIT_FORM, {
@@ -373,15 +366,15 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         return;
       case ENTRY_TYPE.RETURN:
         dispatch(
-          setOperationPhoto({ file: localFile, withoutAddButton: true })
+          setOperationPhoto({ file: localFile, withoutAddButton: true }),
         );
         navigation.dispatch(StackActions.pop(2));
         if (!operationAddedStep || operationAddedStep === '') {
           navigation.navigate(CAMERA, {
             photoTitle: 'Kondisi TM',
-            navigateTo: navigateTo,
+            navigateTo,
             operationAddedStep: 'finished',
-            operationTempData: operationTempData,
+            operationTempData,
           });
         } else if (operationAddedStep === 'finished') {
           navigation.navigate(SUBMIT_FORM, {
@@ -405,8 +398,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         return;
       case GALLERY_VISITATION:
         dispatch(setImageURLS({ file: localFile, source: CREATE_VISITATION }));
-        if (visitationData.images && visitationData.images.length > 0)
-          images = [...visitationData.images];
+        if (visitationData.images && visitationData.images.length > 0) images = [...visitationData.images];
         images.push(localFile);
         dispatch(updateDataVisitation({ type: 'images', value: images }));
         navigation.dispatch(StackActions.pop(2));
@@ -417,7 +409,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         return;
       case GALLERY_OPERATION:
         dispatch(
-          setOperationPhoto({ file: localFile, withoutAddButton: false })
+          setOperationPhoto({ file: localFile, withoutAddButton: false }),
         );
         navigation.dispatch(StackActions.pop(2));
         return;
@@ -425,7 +417,6 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         dispatch(setImageURLS({ file: localFile }));
         navigation.goBack();
         navigation.dispatch(StackActions.replace(navigateTo));
-        return;
     }
   };
 
@@ -438,10 +429,10 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
         {picker && picker.type === 'application/pdf' && (
           <Pdf style={styles.image} source={{ uri: picker?.uri }} />
         )}
-        {picker &&
-          (picker.type === 'image/jpeg' || picker.type === 'image/png') && (
+        {picker
+          && (picker.type === 'image/jpeg' || picker.type === 'image/png') && (
             <Image source={{ uri: picker?.uri }} style={styles.image} />
-          )}
+        )}
       </View>
       <View style={styles.conButton}>
         <View style={styles.buttonOne}>
@@ -462,7 +453,7 @@ const Preview = ({ style }: { style?: StyleProp<ViewStyle> }) => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   parent: {

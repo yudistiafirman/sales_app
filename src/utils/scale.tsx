@@ -10,8 +10,7 @@ const scale = (size: number) => (width / guidelineBaseWidth) * size;
 
 const resScale = {
   verticalScale: (size: number) => (height / guidelineBaseHeight) * size,
-  moderateScale: (size: number, factor = 0.5) =>
-    size + (scale(size) - size) * factor,
+  moderateScale: (size: number, factor = 0.5) => size + (scale(size) - size) * factor,
 };
 
 export default resScale;

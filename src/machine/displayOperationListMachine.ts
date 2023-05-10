@@ -1,7 +1,7 @@
+import { assign, createMachine } from 'xstate';
 import { getAllDeliveryOrders } from '@/actions/OrderActions';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 import { ENTRY_TYPE } from '@/models/EnumModel';
-import { assign, createMachine } from 'xstate';
 
 const displayOperationListMachine = createMachine(
   {
@@ -37,17 +37,17 @@ const displayOperationListMachine = createMachine(
       },
       events: {} as
         | {
-            type: 'assignUserData';
-            value: { payload: string; tabActive: string };
-          }
+          type: 'assignUserData';
+          value: { payload: string; tabActive: string };
+        }
         | {
-            type: 'retryGettingList';
-            value: { payload: string; tabActive: string };
-          }
+          type: 'retryGettingList';
+          value: { payload: string; tabActive: string };
+        }
         | {
-            type: 'onRefreshList';
-            value: { payload: string; tabActive: string };
-          }
+          type: 'onRefreshList';
+          value: { payload: string; tabActive: string };
+        }
         | { type: 'onEndReached' },
     },
 
@@ -112,9 +112,7 @@ const displayOperationListMachine = createMachine(
   },
   {
     guards: {
-      isNotLastPage: (context, event) => {
-        return context.page <= context.totalPage;
-      },
+      isNotLastPage: (context, event) => context.page <= context.totalPage,
     },
     services: {
       fetchOperationListData: async (context, event) => {
@@ -126,14 +124,14 @@ const displayOperationListMachine = createMachine(
                 response = await getAllDeliveryOrders(
                   'WB_OUT',
                   context.size.toString(),
-                  context.page.toString()
+                  context.page.toString(),
                 );
                 console.log('SECURITY-DISPATCH');
               } else {
                 response = await getAllDeliveryOrders(
                   'RECEIVED',
                   context.size.toString(),
-                  context.page.toString()
+                  context.page.toString(),
                 );
                 console.log('SECURITY-RETURN');
               }
@@ -143,14 +141,14 @@ const displayOperationListMachine = createMachine(
                 response = await getAllDeliveryOrders(
                   'SUBMITTED',
                   context.size.toString(),
-                  context.page.toString()
+                  context.page.toString(),
                 );
                 console.log('WB-OUT');
               } else {
                 response = await getAllDeliveryOrders(
                   'AWAIT_WB_IN',
                   context.size.toString(),
-                  context.page.toString()
+                  context.page.toString(),
                 );
                 console.log('WB-IN');
               }
@@ -160,7 +158,7 @@ const displayOperationListMachine = createMachine(
                 ['ON_DELIVERY', 'ARRIVED'],
                 // 'ON_DELIVERY',
                 context.size.toString(),
-                context.page.toString()
+                context.page.toString(),
               );
               console.log('DRIVER');
               break;
@@ -186,39 +184,31 @@ const displayOperationListMachine = createMachine(
           isRefreshing: false,
         };
       }),
-      assignError: assign((context, event) => {
-        return {
-          errorMessage: event.data.message,
-          isLoading: false,
-          isLoadMore: false,
-          isRefreshing: false,
-        };
-      }),
-      handleRefresh: assign((context, event) => {
-        return {
-          page: 1,
-          isRefreshing: true,
-          operationListData: [],
-          userType: event?.payload,
-          tabActive: event?.tabActive,
-        };
-      }),
-      handleEndReached: assign((context, event) => {
-        return {
-          page: context.page + 1,
-          isLoadMore: true,
-        };
-      }),
-      assignUserDataToContext: assign((context, event) => {
-        return {
-          userType: event?.payload,
-          tabActive: event?.tabActive,
-          isRefreshing: true,
-          isLoading: true,
-        };
-      }),
+      assignError: assign((context, event) => ({
+        errorMessage: event.data.message,
+        isLoading: false,
+        isLoadMore: false,
+        isRefreshing: false,
+      })),
+      handleRefresh: assign((context, event) => ({
+        page: 1,
+        isRefreshing: true,
+        operationListData: [],
+        userType: event?.payload,
+        tabActive: event?.tabActive,
+      })),
+      handleEndReached: assign((context, event) => ({
+        page: context.page + 1,
+        isLoadMore: true,
+      })),
+      assignUserDataToContext: assign((context, event) => ({
+        userType: event?.payload,
+        tabActive: event?.tabActive,
+        isRefreshing: true,
+        isLoading: true,
+      })),
     },
-  }
+  },
 );
 
 export default displayOperationListMachine;

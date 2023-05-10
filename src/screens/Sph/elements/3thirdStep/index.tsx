@@ -1,17 +1,19 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { BContainer, BForm, BSpacer } from '@/components';
-import { Input } from '@/interfaces';
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { useDispatch, useSelector } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { BContainer, BForm, BSpacer } from '@/components';
+import { Input } from '@/interfaces';
 import { resScale } from '@/utils';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn';
 import { SphContext } from '../context/SphContext';
 import { fetchSphDocuments } from '@/redux/async-thunks/commonThunks';
-import { useDispatch, useSelector } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { RootState } from '@/redux/store';
 import {
@@ -42,7 +44,7 @@ export default function ThirdStep() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [fileKeys, setFileKeys] = useState<
-    { key: string; label: string; isRequired: boolean }[]
+  { key: string; label: string; isRequired: boolean }[]
   >([]);
   const [documents, setDocuments] = useState<{ [key: string]: any }>({});
   const [sphDocuments, setSphDocuments] = useState<docResponse>({
@@ -50,8 +52,7 @@ export default function ThirdStep() {
     credit: [],
   });
   const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
-  const { paymentType, paymentRequiredDocuments, paymentBankGuarantee } =
-    useSelector((state: RootState) => state.sph);
+  const { paymentType, paymentRequiredDocuments, paymentBankGuarantee } = useSelector((state: RootState) => state.sph);
 
   const checkboxInputs: Input[] = [
     {
@@ -70,7 +71,7 @@ export default function ThirdStep() {
   ];
 
   useEffect(() => {
-    crashlytics().log(SPH + '-Step3');
+    crashlytics().log(`${SPH}-Step3`);
 
     if (paymentType) {
       const objKey: {
@@ -84,13 +85,11 @@ export default function ThirdStep() {
 
       if (sphDocuments[key]) {
         if (sphDocuments[key].length) {
-          const newFileKeys = sphDocuments[key].map((doc) => {
-            return {
-              key: doc.id,
-              label: doc.name,
-              isRequired: doc.is_required,
-            };
-          });
+          const newFileKeys = sphDocuments[key].map((doc) => ({
+            key: doc.id,
+            label: doc.name,
+            isRequired: doc.is_required,
+          }));
           const documentObj: { [key: string]: any } = {};
           sphDocuments[key].forEach((doc) => {
             documentObj[doc.id] = null;
@@ -101,8 +100,8 @@ export default function ThirdStep() {
           const localDocString = JSON.stringify(localReqDocKeys);
 
           if (
-            parentDocString === localDocString &&
-            parentReqDocKeys.length > 0
+            parentDocString === localDocString
+            && parentReqDocKeys.length > 0
           ) {
             setDocuments(paymentRequiredDocuments);
           } else {
@@ -118,7 +117,7 @@ export default function ThirdStep() {
     try {
       setIsLoading(true);
       const response: docResponse = await dispatch(
-        fetchSphDocuments()
+        fetchSphDocuments(),
       ).unwrap();
 
       if (paymentType) {
@@ -132,13 +131,11 @@ export default function ThirdStep() {
         const key: 'cbd' | 'credit' = objKey[paymentType];
         if (response[key]) {
           if (response[key].length) {
-            const newFileKeys = response[key].map((doc) => {
-              return {
-                key: doc.id,
-                label: doc.name,
-                isRequired: doc.is_required,
-              };
-            });
+            const newFileKeys = response[key].map((doc) => ({
+              key: doc.id,
+              label: doc.name,
+              isRequired: doc.is_required,
+            }));
             const documentObj: { [key: string]: any } = {};
             response[key].forEach((doc) => {
               documentObj[doc.id] = null;
@@ -149,8 +146,8 @@ export default function ThirdStep() {
             const localDocString = JSON.stringify(localReqDocKeys);
 
             if (
-              parentDocString === localDocString &&
-              parentReqDocKeys.length > 0
+              parentDocString === localDocString
+              && parentReqDocKeys.length > 0
             ) {
               setDocuments(paymentRequiredDocuments);
             } else {
@@ -168,10 +165,10 @@ export default function ThirdStep() {
         openPopUp({
           popUpType: 'error',
           popUpText:
-            error.message ||
-            'Terjadi error saat pengambilan data SPH Documents',
+            error.message
+            || 'Terjadi error saat pengambilan data SPH Documents',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   }
@@ -189,7 +186,7 @@ export default function ThirdStep() {
       {
         label: 'Tipe Pembayaran',
         isRequire: true,
-        isError: paymentType ? false : true,
+        isError: !paymentType,
         type: 'cardOption',
         value: paymentType,
         options: [
@@ -217,15 +214,13 @@ export default function ThirdStep() {
         label: key.label,
         onChange: (data: any) => {
           if (data) {
-            setDocuments((curr) => {
-              return {
-                ...curr,
-                [key.key]: {
-                  ...data,
-                  name: key.key.trim() + data.name.trim(),
-                },
-              };
-            });
+            setDocuments((curr) => ({
+              ...curr,
+              [key.key]: {
+                ...data,
+                name: key.key.trim() + data.name.trim(),
+              },
+            }));
           }
         },
         type: 'fileInput',
@@ -246,7 +241,7 @@ export default function ThirdStep() {
           {isLoading && (
             <View>
               <ShimmerPlaceHolder style={style.fileInputShimmer} />
-              <BSpacer size={'extraSmall'} />
+              <BSpacer size="extraSmall" />
               <ShimmerPlaceHolder style={style.fileInputShimmer} />
             </View>
           )}
@@ -254,15 +249,13 @@ export default function ThirdStep() {
 
         <View>
           {paymentType === 'CREDIT' && (
-            <>
-              <BForm
-                titleBold="500"
-                inputs={checkboxInputs}
-                spacer="extraSmall"
-              />
-            </>
+            <BForm
+              titleBold="500"
+              inputs={checkboxInputs}
+              spacer="extraSmall"
+            />
           )}
-          <BSpacer size={'small'} />
+          <BSpacer size="small" />
           <BBackContinueBtn
             onPressBack={() => {
               setCurrentPosition(1);
@@ -275,8 +268,8 @@ export default function ThirdStep() {
             }}
             disableContinue={
               !(
-                paymentType &&
-                (paymentType === 'CREDIT' ? paymentBankGuarantee : true)
+                paymentType
+                && (paymentType === 'CREDIT' ? paymentBankGuarantee : true)
               ) || isLoading
             }
             loadingContinue={isLoading}

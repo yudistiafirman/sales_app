@@ -1,6 +1,6 @@
 import { assign, createMachine } from 'xstate';
-import { hasLocationPermission } from '@/utils/permissions';
 import Geolocation from 'react-native-geolocation-service';
+import { hasLocationPermission } from '@/utils/permissions';
 import { getLocationCoordinates } from '../priceMachine';
 
 interface IContext {
@@ -90,19 +90,13 @@ const deviceLocationMachine =
     },
     {
       guards: {
-        isGranted: (context, event) => {
-          return event.data;
-        },
+        isGranted: (context, event) => event.data,
       },
       actions: {
-        assignCurrentLocationToContext: assign((context, event) => {
-          return event.data;
-        }),
-        assignError: assign((context, event) => {
-          return {
-            errorMessage: event.data.message,
-          };
-        }),
+        assignCurrentLocationToContext: assign((context, event) => event.data),
+        assignError: assign((context, event) => ({
+          errorMessage: event.data.message,
+        })),
       },
       services: {
         askingPermission: async () => {
@@ -124,9 +118,7 @@ const deviceLocationMachine =
               showLocationDialog: true,
               forceRequestLocation: true,
             };
-            const position = await new Promise((resolve, error) => {
-              return Geolocation.getCurrentPosition(resolve, error, opt);
-            });
+            const position = await new Promise((resolve, error) => Geolocation.getCurrentPosition(resolve, error, opt));
             const { coords } = position;
             const { latitude, longitude } = coords;
 
@@ -134,7 +126,7 @@ const deviceLocationMachine =
               // '',
               longitude,
               latitude,
-              'BP-LEGOK'
+              'BP-LEGOK',
             );
             const { result } = data;
             if (!result) {
@@ -156,7 +148,7 @@ const deviceLocationMachine =
           }
         },
       },
-    }
+    },
   );
 
 export { deviceLocationMachine };

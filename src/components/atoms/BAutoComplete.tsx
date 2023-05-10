@@ -1,9 +1,9 @@
-import { colors, fonts, layout } from '@/constants';
-import { Styles } from '@/interfaces';
-import { resScale } from '@/utils';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import { colors, fonts, layout } from '@/constants';
+import { Styles } from '@/interfaces';
+import { resScale } from '@/utils';
 import BText from './BText';
 
 interface IProps {
@@ -19,7 +19,7 @@ interface IProps {
   showClear?: boolean;
   onClear?: () => void;
 }
-const BAutoComplete = ({
+function BAutoComplete({
   value,
   items,
   onChange,
@@ -29,42 +29,40 @@ const BAutoComplete = ({
   showChevron = true,
   showClear = true,
   onClear,
-}: IProps) => {
+}: IProps) {
   let isShowChevron = showChevron;
   if (items?.length === 0) {
     isShowChevron = false;
   }
   return (
-    <React.Fragment>
-      <AutocompleteDropdown
-        containerStyle={styles.container}
-        inputContainerStyle={styles.inputContainer}
-        suggestionsListContainerStyle={styles.dropdownContainer}
-        suggestionsListTextStyle={styles.text}
-        textInputProps={{
-          placeholder: placeholder,
-          autoCorrect: false,
-          autoCapitalize: 'none',
-          style: styles.text,
-        }}
-        debounce={500}
-        loading={loading}
-        initialValue={value} // or just '2'
-        onSelectItem={onSelect}
-        dataSet={items}
-        onChangeText={onChange}
-        closeOnBlur={false}
-        useFilter={false}
-        clearOnFocus={false}
-        onClear={onClear}
-        showChevron={isShowChevron}
-        showClear={showClear}
-        EmptyResultComponent={<View />}
-        emptyResultText={''}
-      />
-    </React.Fragment>
+    <AutocompleteDropdown
+      containerStyle={styles.container}
+      inputContainerStyle={styles.inputContainer}
+      suggestionsListContainerStyle={styles.dropdownContainer}
+      suggestionsListTextStyle={styles.text}
+      textInputProps={{
+        placeholder,
+        autoCorrect: false,
+        autoCapitalize: 'none',
+        style: styles.text,
+      }}
+      debounce={500}
+      loading={loading}
+      initialValue={value} // or just '2'
+      onSelectItem={onSelect}
+      dataSet={items}
+      onChangeText={onChange}
+      closeOnBlur={false}
+      useFilter={false}
+      clearOnFocus={false}
+      onClear={onClear}
+      showChevron={isShowChevron}
+      showClear={showClear}
+      EmptyResultComponent={<View />}
+      emptyResultText=""
+    />
   );
-};
+}
 
 const styles: Styles = {
   inputContainer: {

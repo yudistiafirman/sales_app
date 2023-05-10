@@ -36,8 +36,7 @@ export default function HighlightText({
     );
   }
 
-  const regexStr =
-    '(' + searchQuery.trim().split(/\s+/).map(escapeRegExp).join('|') + ')';
+  const regexStr = `(${searchQuery.trim().split(/\s+/).map(escapeRegExp).join('|')})`;
   const regex = new RegExp(regexStr, 'gi');
   const parts = name.split(regex);
 
@@ -51,24 +50,22 @@ export default function HighlightText({
     >
       {parts
         .filter((part) => part)
-        .map((part, i) =>
-          regex.test(part) ? (
-            <Text
-              key={part + i}
-              style={[
-                style.normalText,
-                style.boldText,
-                fontSize
-                  ? { fontSize: respFS(fontSize) }
-                  : { fontSize: font.size.md },
-              ]}
-            >
-              {part}
-            </Text>
-          ) : (
-            part
-          )
-        )}
+        .map((part, i) => (regex.test(part) ? (
+          <Text
+            key={part + i}
+            style={[
+              style.normalText,
+              style.boldText,
+              fontSize
+                ? { fontSize: respFS(fontSize) }
+                : { fontSize: font.size.md },
+            ]}
+          >
+            {part}
+          </Text>
+        ) : (
+          part
+        )))}
     </Text>
   );
 }

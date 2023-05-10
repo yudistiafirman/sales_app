@@ -1,15 +1,15 @@
-import { colors, layout } from '@/constants';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { RadioButton } from 'react-native-paper';
+import { colors, layout } from '@/constants';
 import BSpacer from '../atoms/BSpacer';
 import BLabel from '../atoms/BLabel';
-import { RadioButton } from 'react-native-paper';
 import BText from '../atoms/BText';
 import font from '@/constants/fonts';
 import { IComboRadioBtn, Input, TitleBold } from '@/interfaces';
 import { resScale } from '@/utils';
 
-const BComboRadioButton = ({
+function BComboRadioButton({
   isRequire,
   textSize,
   titleBold,
@@ -23,7 +23,7 @@ const BComboRadioButton = ({
   firstChildren,
   secondChildren,
   onSetComboRadioButtonValue,
-}: Partial<Input> & IComboRadioBtn & TitleBold) => {
+}: Partial<Input> & IComboRadioBtn & TitleBold) {
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -43,10 +43,8 @@ const BComboRadioButton = ({
             status={firstStatus}
             color={colors.primary}
             uncheckedColor={colors.border.altGrey}
-            onPress={() =>
-              onSetComboRadioButtonValue &&
-              onSetComboRadioButtonValue(firstValue!)
-            }
+            onPress={() => onSetComboRadioButtonValue
+              && onSetComboRadioButtonValue(firstValue!)}
           />
           <BText style={styles.radioValue}>{firstText}</BText>
         </View>
@@ -57,10 +55,8 @@ const BComboRadioButton = ({
             status={secondStatus}
             color={colors.primary}
             uncheckedColor={colors.border.altGrey}
-            onPress={() =>
-              onSetComboRadioButtonValue &&
-              onSetComboRadioButtonValue(secondValue!)
-            }
+            onPress={() => onSetComboRadioButtonValue
+              && onSetComboRadioButtonValue(secondValue!)}
           />
           <BText style={styles.radioValue}>{secondText}</BText>
         </View>
@@ -68,7 +64,7 @@ const BComboRadioButton = ({
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

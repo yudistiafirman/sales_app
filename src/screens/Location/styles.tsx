@@ -1,8 +1,8 @@
+import { Dimensions, StyleSheet } from 'react-native';
 import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
-import { Dimensions, StyleSheet } from 'react-native';
 
 const LocationStyles = StyleSheet.create({
   bottomSheetContainer: {

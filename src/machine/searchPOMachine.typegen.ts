@@ -48,28 +48,28 @@ export interface Typegen0 {
   eventsCausingDelays: {};
   eventsCausingGuards: {
     isDataTypePurchaseOrder:
-      | 'retryGettingList'
-      | 'xstate.after(500)#search PO.searchValueLoaded';
+    | 'retryGettingList'
+    | 'xstate.after(500)#search PO.searchValueLoaded';
     isDataTypeSph:
-      | 'retryGettingList'
-      | 'xstate.after(500)#search PO.searchValueLoaded';
+    | 'retryGettingList'
+    | 'xstate.after(500)#search PO.searchValueLoaded';
     isGettingPurchaseOrder: 'onEndReached';
     searchValueLengthAccepted: 'searching';
   };
   eventsCausingServices: {
     GetPurchaseOrderList:
-      | 'retryGettingList'
-      | 'xstate.after(500)#search PO.searchValueLoaded';
+    | 'retryGettingList'
+    | 'xstate.after(500)#search PO.searchValueLoaded';
     GetSphList:
-      | 'retryGettingList'
-      | 'xstate.after(500)#search PO.searchValueLoaded';
+    | 'retryGettingList'
+    | 'xstate.after(500)#search PO.searchValueLoaded';
   };
   matchesStates:
-    | 'SearchingDataPurchaseOrder'
-    | 'errorGettingList'
-    | 'inputting'
-    | 'openModalChooseData'
-    | 'searchValueLoaded'
-    | 'searchingDataSph';
+  | 'SearchingDataPurchaseOrder'
+  | 'errorGettingList'
+  | 'inputting'
+  | 'openModalChooseData'
+  | 'searchValueLoaded'
+  | 'searchingDataSph';
   tags: never;
 }

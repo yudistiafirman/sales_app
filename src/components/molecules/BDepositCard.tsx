@@ -1,4 +1,6 @@
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import {
+  View, Text, StyleSheet, ViewStyle,
+} from 'react-native';
 import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
@@ -45,17 +47,22 @@ export default function BDepositCard({
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>{firstSectionText}</Text>
         <Text style={[styles.summary, styles.fontw400]}>
-          IDR {formatCurrency(firstSectionValue)}
+          IDR
+          {' '}
+          {formatCurrency(firstSectionValue)}
         </Text>
       </View>
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size="extraSmall" />
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>{secondSectionText}</Text>
         <Text style={[styles.summary, styles.fontw400]}>
-          {isSum ? '+' : '-'} IDR {formatCurrency(secondSectionValue)}
+          {isSum ? '+' : '-'}
+          {' '}
+          IDR
+          {formatCurrency(secondSectionValue)}
         </Text>
       </View>
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size="extraSmall" />
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>{thirdSectionText}</Text>
         <Text
@@ -67,14 +74,14 @@ export default function BDepositCard({
             },
           ]}
         >
-          {'IDR ' +
-            formatCurrency(isSum ? getTotalSum() : getTotalDifference())}
+          {`IDR ${
+            formatCurrency(isSum ? getTotalSum() : getTotalDifference())}`}
         </Text>
       </View>
       {isError && (
         <BText size="small" color="primary" bold="100">
-          {customErrorMsg ||
-            `${firstSectionText} harus lebih besar dari ${secondSectionText}`}
+          {customErrorMsg
+            || `${firstSectionText} harus lebih besar dari ${secondSectionText}`}
         </BText>
       )}
     </View>

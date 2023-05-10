@@ -1,14 +1,14 @@
 import React from 'react';
 import { GestureResponderEvent, TouchableOpacity } from 'react-native';
-import PriceStyle from '../PriceStyle';
 import { TextInput } from 'react-native-paper';
+import PriceStyle from '../PriceStyle';
 import { BSearchBar } from '@/components';
 
-const PriceSearchBar = ({
+function PriceSearchBar({
   onPress,
 }: {
   onPress?: (event: GestureResponderEvent) => void;
-}) => {
+}) {
   return (
     <TouchableOpacity style={PriceStyle.searchBarWrapper} onPress={onPress}>
       <BSearchBar
@@ -18,6 +18,6 @@ const PriceSearchBar = ({
       />
     </TouchableOpacity>
   );
-};
+}
 
 export default PriceSearchBar;

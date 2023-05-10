@@ -6,15 +6,15 @@ import {
   ListRenderItem,
 } from 'react-native';
 import * as React from 'react';
-import { colors, layout } from '@/constants';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { resScale } from '@/utils';
 import Pdf from 'react-native-pdf';
+import { FlashList } from '@shopify/flash-list';
+import { colors, layout } from '@/constants';
+import { resScale } from '@/utils';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import BText from '../atoms/BText';
 import BSpacer from '../atoms/BSpacer';
-import { FlashList } from '@shopify/flash-list';
 
 type BGalleryType = {
   picts: any[];
@@ -28,25 +28,24 @@ export default function BGallery({
   removePict,
 }: BGalleryType) {
   const renderItem: ListRenderItem<LocalFileType> = React.useCallback(
-    ({ item, index }) => {
-      return (
-        <View
-          style={[
-            style.container,
-            item.attachType ? { marginBottom: layout.pad.ml * 2 } : {},
-          ]}
-        >
-          {item.file === null && addMorePict && (
-            <TouchableOpacity onPress={() => addMorePict(item.attachType)}>
-              <View style={[style.addImage]}>
-                <Feather name="plus" size={resScale(25)} color="#000000" />
-              </View>
-            </TouchableOpacity>
-          )}
-          {item?.isFromPicker ? (
-            <>
-              {item?.file?.type === 'image/jpeg' ||
-              item?.file?.type === 'image/png' ? (
+    ({ item, index }) => (
+      <View
+        style={[
+          style.container,
+          item.attachType ? { marginBottom: layout.pad.ml * 2 } : {},
+        ]}
+      >
+        {item.file === null && addMorePict && (
+        <TouchableOpacity onPress={() => addMorePict(item.attachType)}>
+          <View style={[style.addImage]}>
+            <Feather name="plus" size={resScale(25)} color="#000000" />
+          </View>
+        </TouchableOpacity>
+        )}
+        {item?.isFromPicker ? (
+          <>
+            {item?.file?.type === 'image/jpeg'
+              || item?.file?.type === 'image/png' ? (
                 <Image source={item?.file} style={style.imageStyle} />
               ) : (
                 <Pdf
@@ -55,34 +54,33 @@ export default function BGallery({
                   page={1}
                 />
               )}
-            </>
-          ) : (
-            <Image source={item?.file} style={style.imageStyle} />
-          )}
-          {item?.type === 'GALLERY' && removePict && (
-            <TouchableOpacity
-              style={style.closeIcon}
-              onPress={() => removePict(index - 1, item.attachType)}
-            >
-              <AntDesign
-                name="close"
-                size={resScale(15)}
-                color={colors.white}
-              />
-            </TouchableOpacity>
-          )}
-          {item.attachType && (
-            <View style={style.attachType}>
-              <BSpacer size={'verySmall'} />
-              <BText bold="300" sizeInNumber={10}>
-                {item.attachType}
-              </BText>
-            </View>
-          )}
+          </>
+        ) : (
+          <Image source={item?.file} style={style.imageStyle} />
+        )}
+        {item?.type === 'GALLERY' && removePict && (
+        <TouchableOpacity
+          style={style.closeIcon}
+          onPress={() => removePict(index - 1, item.attachType)}
+        >
+          <AntDesign
+            name="close"
+            size={resScale(15)}
+            color={colors.white}
+          />
+        </TouchableOpacity>
+        )}
+        {item.attachType && (
+        <View style={style.attachType}>
+          <BSpacer size="verySmall" />
+          <BText bold="300" sizeInNumber={10}>
+            {item.attachType}
+          </BText>
         </View>
-      );
-    },
-    []
+        )}
+      </View>
+    ),
+    [],
   );
   return (
     <FlashList

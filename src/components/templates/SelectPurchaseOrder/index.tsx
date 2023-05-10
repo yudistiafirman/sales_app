@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
-import { BCommonSearchList } from '@/components';
 import { useMachine } from '@xstate/react';
+import { BCommonSearchList } from '@/components';
 import { searchPOMachine } from '@/machine/searchPOMachine';
 import SelectedPOModal from './element/SelectedPOModal';
 import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
@@ -14,12 +14,12 @@ interface IProps {
   onDismiss?: () => void;
 }
 
-const SelectPurchaseOrderData = ({
+function SelectPurchaseOrderData({
   dataToGet,
   onSubmitData,
   onDismiss,
   filterSphDataBy,
-}: IProps) => {
+}: IProps) {
   const [index, setIndex] = React.useState(0);
   const [state, send] = useMachine(searchPOMachine);
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -41,36 +41,36 @@ const SelectPurchaseOrderData = ({
   }, [dataToGet]);
 
   const getDataToDisplayInsideModal = () => {
-    let companyName = choosenDataFromList?.name;
+    const companyName = choosenDataFromList?.name;
     let locationName;
     let listData;
     let projectId;
     if (dataToGet === 'SPHDATA') {
-      locationName =
-        choosenDataFromList?.ShippingAddress !== null
-          ? choosenDataFromList?.ShippingAddress?.Postal?.City?.name
-          : '';
+      locationName = choosenDataFromList?.ShippingAddress !== null
+        ? choosenDataFromList?.ShippingAddress?.Postal?.City?.name
+        : '';
       listData = choosenDataFromList?.QuotationRequests;
     } else {
-      locationName =
-        choosenDataFromList?.address?.line1 !== null
-          ? choosenDataFromList?.address?.line1
-          : '';
+      locationName = choosenDataFromList?.address?.line1 !== null
+        ? choosenDataFromList?.address?.line1
+        : '';
       listData = choosenDataFromList?.PurchaseOrders;
     }
     projectId = choosenDataFromList?.id;
-    return { companyName, locationName, listData, projectId };
+    return {
+      companyName, locationName, listData, projectId,
+    };
   };
 
   const getDataToDisplay = () => {
     if (dataToGet === 'DEPOSITDATA' || dataToGet === 'SCHEDULEDATA') {
       return poData;
-    } else {
-      return sphData;
     }
+    return sphData;
   };
-  const { companyName, locationName, listData, projectId } =
-    getDataToDisplayInsideModal();
+  const {
+    companyName, locationName, listData, projectId,
+  } = getDataToDisplayInsideModal();
 
   const onChangeText = (text: string) => {
     setSearchQuery(text);
@@ -87,7 +87,7 @@ const SelectPurchaseOrderData = ({
   };
 
   const onCloseModal = (
-    productData: PurchaseOrdersData | QuotationRequests
+    productData: PurchaseOrdersData | QuotationRequests,
   ) => {
     const parentData = { companyName, locationName, projectId };
     onSubmitData({ parentData, data: productData });
@@ -108,11 +108,11 @@ const SelectPurchaseOrderData = ({
       <BCommonSearchList
         searchQuery={searchQuery}
         onChangeText={onChangeText}
-        placeholder={'Cari PT / Proyek'}
+        placeholder="Cari PT / Proyek"
         onClearValue={onClearValue}
         index={index}
         routes={routes}
-        autoFocus={true}
+        autoFocus
         emptyText={`${searchQuery} tidak ditemukan!`}
         onIndexChange={setIndex}
         data={getDataToDisplay()}
@@ -128,7 +128,7 @@ const SelectPurchaseOrderData = ({
       />
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   safeArea: {

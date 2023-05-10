@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
-import font from '@/constants/fonts';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
 import { fonts, layout } from '@/constants';
 

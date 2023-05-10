@@ -1,15 +1,17 @@
-import { fonts, colors, layout } from '@/constants';
-import { resScale } from '@/utils';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import React, { forwardRef, Ref, useMemo } from 'react';
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import {
+  View, StyleSheet, Text, ScrollView,
+} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
+import { resScale } from '@/utils';
+import { fonts, colors, layout } from '@/constants';
 
 interface StepperIndicatorProps {
   currentStep: number;
   labels: string[];
   stepOnPress?: (pos: number) => void;
-  stepsDone: number[]; //index of done steps
+  stepsDone: number[]; // index of done steps
 }
 
 const StepperIndicator = forwardRef(
@@ -20,10 +22,10 @@ const StepperIndicator = forwardRef(
       stepOnPress = () => {},
       stepsDone,
     }: StepperIndicatorProps,
-    ref: Ref<ScrollView>
+    ref: Ref<ScrollView>,
   ) => {
-    const dots = useMemo(() => {
-      return labels.map((label, index) => {
+    const dots = useMemo(
+      () => labels.map((label, index) => {
         const steps = labels.length;
         const maxNumber = Math.max(...stepsDone);
         const isStepDone = stepsDone.includes(index);
@@ -49,7 +51,7 @@ const StepperIndicator = forwardRef(
             <View style={styles.dotContainer}>
               <View style={dotStyle}>
                 {isStepDone && currentStep !== index ? (
-                  <Entypo size={13} name="check" color={'#FFFFFF'} />
+                  <Entypo size={13} name="check" color="#FFFFFF" />
                 ) : (
                   <Text style={styles.dotNumber}>{index + 1}</Text>
                 )}
@@ -60,15 +62,16 @@ const StepperIndicator = forwardRef(
             </View>
           </TouchableOpacity>
         );
-      });
+      }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [stepsDone, labels, currentStep]);
+      [stepsDone, labels, currentStep],
+    );
 
     return (
       <View style={styles.mainContainer}>
         <ScrollView
           ref={ref}
-          horizontal={true}
+          horizontal
           contentContainerStyle={styles.scrollContainer}
           showsHorizontalScrollIndicator={false}
         >
@@ -76,7 +79,7 @@ const StepperIndicator = forwardRef(
         </ScrollView>
       </View>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({

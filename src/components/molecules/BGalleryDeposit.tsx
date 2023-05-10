@@ -1,10 +1,12 @@
-import { View, StyleSheet, Image, Text } from 'react-native';
+import {
+  View, StyleSheet, Image, Text,
+} from 'react-native';
 import * as React from 'react';
+import Pdf from 'react-native-pdf';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import BText from '../atoms/BText';
 import formatCurrency from '@/utils/formatCurrency';
-import Pdf from 'react-native-pdf';
 
 type BGalleryDepositType = {
   picts: any[];
@@ -29,16 +31,16 @@ export default function BGalleryDeposit({
         >
           {picts[1]?.isFromPicker ? (
             <>
-              {picts[1]?.file?.type === 'image/jpeg' ||
-              picts[1]?.file?.type === 'image/png' ? (
+              {picts[1]?.file?.type === 'image/jpeg'
+              || picts[1]?.file?.type === 'image/png' ? (
                 <Image style={style.flexFull} source={picts[1]?.file} />
-              ) : (
-                <Pdf
-                  source={{ uri: picts[1]?.file?.uri }}
-                  style={style.flexFull}
-                  page={1}
-                />
-              )}
+                ) : (
+                  <Pdf
+                    source={{ uri: picts[1]?.file?.uri }}
+                    style={style.flexFull}
+                    page={1}
+                  />
+                )}
             </>
           ) : (
             <Image style={style.flexFull} source={picts[1]?.file} />
@@ -46,14 +48,14 @@ export default function BGalleryDeposit({
           {picts.length > 2 && (
             <>
               <View style={style.overlay} />
-              <Text style={style.textOverlay}>{'+' + (picts.length - 2)}</Text>
+              <Text style={style.textOverlay}>{`+${picts.length - 2}`}</Text>
             </>
           )}
         </View>
       )}
       <View style={style.rightText}>
         <BText bold="500" sizeInNumber={fonts.size.lg}>
-          {'IDR ' + formatCurrency(nominal)}
+          {`IDR ${formatCurrency(nominal)}`}
         </BText>
         <BText bold="400" sizeInNumber={fonts.size.md}>
           {createdAt}

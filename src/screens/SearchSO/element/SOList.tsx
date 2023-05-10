@@ -1,16 +1,18 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { colors, layout } from '@/constants';
-import { BDivider, BEmptyState, BSpacer, BText } from '@/components';
-import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
 import { FlashList } from '@shopify/flash-list';
+import { colors, layout } from '@/constants';
+import {
+  BDivider, BEmptyState, BSpacer, BText,
+} from '@/components';
+import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
 
 interface SOListProps {
   data: any[];
   onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  | ((info: { distanceFromEnd: number }) => void)
+  | null
+  | undefined;
   refreshing?: boolean;
   loadList?: boolean;
   isLoadMore?: boolean;
@@ -49,13 +51,13 @@ export default function SOList({
           {item?.brikNumber ? item?.brikNumber : '-'}
         </BText>
         <BText style={{ flex: 1 }} bold="400" sizeInNumber={14}>
-          {picOrCompanyName ? picOrCompanyName : '-'}
+          {picOrCompanyName || '-'}
         </BText>
       </TouchableOpacity>
     );
   };
 
-  const isSearch = keyword && keyword.length > 2 ? false : true;
+  const isSearch = !(keyword && keyword.length > 2);
   return (
     <FlashList
       estimatedItemSize={10}
@@ -85,9 +87,9 @@ export default function SOList({
       ListFooterComponent={isLoadMore ? <BCommonListShimmer /> : null}
       ItemSeparatorComponent={() => (
         <>
-          <BSpacer size={'verySmall'} />
+          <BSpacer size="verySmall" />
           <BDivider borderColor={colors.border.disabled} />
-          <BSpacer size={'verySmall'} />
+          <BSpacer size="verySmall" />
         </>
       )}
       contentContainerStyle={{

@@ -8,24 +8,24 @@ interface IProps {
   type?: 'default' | 'header' | 'title';
   color?: 'primary' | 'divider' | 'error' | 'darker';
   bold?:
-    | 'bold'
-    | '400'
-    | 'normal'
-    | '100'
-    | '200'
-    | '300'
-    | '500'
-    | '600'
-    | '700'
-    | '800'
-    | '900'
-    | undefined;
+  | 'bold'
+  | '400'
+  | 'normal'
+  | '100'
+  | '200'
+  | '300'
+  | '500'
+  | '600'
+  | '700'
+  | '800'
+  | '900'
+  | undefined;
   size?: 'small' | 'normal' | 'large';
   sizeInNumber?: number;
   numberOfLines?: number;
 }
 
-const BText = ({
+function BText({
   children,
   style,
   type,
@@ -35,7 +35,7 @@ const BText = ({
   numberOfLines,
   sizeInNumber,
   ...props
-}: IProps & TextProps) => {
+}: IProps & TextProps) {
   const _defaultStyle: TextStyle = {
     color: colors.text.dark,
     fontFamily: fonts.family.montserrat[400],
@@ -96,11 +96,11 @@ const BText = ({
     };
 
     if (
-      bold !== 'normal' &&
-      bold !== 'bold' &&
-      bold !== '100' &&
-      bold !== '200' &&
-      bold !== '900'
+      bold !== 'normal'
+      && bold !== 'bold'
+      && bold !== '100'
+      && bold !== '200'
+      && bold !== '900'
     ) {
       _style = {
         ..._style,
@@ -128,6 +128,6 @@ const BText = ({
       {children}
     </Text>
   );
-};
+}
 
 export default BText;

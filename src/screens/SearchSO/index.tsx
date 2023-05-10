@@ -2,19 +2,19 @@
 import * as React from 'react';
 import { SafeAreaView, View, Platform } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useMachine } from '@xstate/react';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useSelector } from 'react-redux';
 import { BEmptyState, BHeaderIcon, BSpacer } from '@/components';
 import { layout } from '@/constants';
-import { useMachine } from '@xstate/react';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { CAMERA, FORM_SO, SEARCH_SO } from '@/navigation/ScreenNames';
 import SearchSONavbar from './element/SearchSONavbar';
 import SOList from './element/SOList';
 import searchSOMachine from '@/machine/searchSOMachine';
-import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
-const SearchSO = () => {
+function SearchSO() {
   const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();
   const [state, send] = useMachine(searchSOMachine);
@@ -32,7 +32,7 @@ const SearchSO = () => {
         }}
       />
     ),
-    [navigation]
+    [navigation],
   );
 
   React.useEffect(() => {
@@ -42,7 +42,7 @@ const SearchSO = () => {
   useFocusEffect(
     React.useCallback(() => {
       send('assignKeyword', { payload: searchValue });
-    }, [send])
+    }, [send]),
   );
 
   React.useLayoutEffect(() => {
@@ -103,7 +103,7 @@ const SearchSO = () => {
               },
               Platform.OS !== 'android' && { height: '80%' },
             ]}
-            autoFocus={true}
+            autoFocus
             value={searchValue}
             onChangeText={onChangeText}
             onClearValue={onClearValue}
@@ -111,7 +111,7 @@ const SearchSO = () => {
         </View>
       ),
     },
-    [searchValue]
+    [searchValue],
   );
 
   const {
@@ -127,7 +127,7 @@ const SearchSO = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />
       {keyword !== '' && searchValue.length < 3 ? (
-        <BEmptyState emptyText={'Minimal 3 huruf!'} />
+        <BEmptyState emptyText="Minimal 3 huruf!" />
       ) : (
         <View style={{ flexGrow: 1, flexDirection: 'row' }}>
           <SOList
@@ -146,6 +146,6 @@ const SearchSO = () => {
       )}
     </SafeAreaView>
   );
-};
+}
 
 export default SearchSO;

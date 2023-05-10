@@ -24,9 +24,11 @@ export default function PillNames({
     if (pilNames?.length > 1) {
       return (
         <View style={[style.bluePill]}>
-          <Text style={style.bluePillText}>{`+${
-            pilNames.length - 1
-          } lagi`}</Text>
+          <Text style={style.bluePillText}>
+            {`+${
+              pilNames.length - 1
+            } lagi`}
+          </Text>
         </View>
       );
     }

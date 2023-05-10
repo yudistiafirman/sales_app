@@ -29,7 +29,7 @@ export default function PopUpQuestion({
   return (
     <Modal
       isVisible={isVisible}
-      hideModalContentWhileAnimating={true}
+      hideModalContentWhileAnimating
       backdropOpacity={0.3}
       backdropColor="#000000"
       style={styles.modal}
@@ -37,7 +37,7 @@ export default function PopUpQuestion({
       <View style={styles.modalContent}>
         <View style={styles.questionContainer}>
           <Text style={styles.questionText}>
-            {text ? text : 'Apakah Anda Ingin Tambah Foto Lagi?'}
+            {text || 'Apakah Anda Ingin Tambah Foto Lagi?'}
           </Text>
         </View>
         {descContent && <View>{descContent}</View>}
@@ -58,8 +58,8 @@ export default function PopUpQuestion({
             }}
             onPressContinue={actionButton}
             isContinueIcon={false}
-            continueText={actionText ? actionText : 'Ya, Tambah'}
-            backText={cancelText ? cancelText : 'Tidak'}
+            continueText={actionText || 'Ya, Tambah'}
+            backText={cancelText || 'Tidak'}
           />
         </View>
       </View>

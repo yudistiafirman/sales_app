@@ -1,15 +1,17 @@
-import { getVisitationOrderByID } from '@/actions/OrderActions';
-import { BChip, BSpacer, BText, BTouchableText } from '@/components';
-import { colors, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
-import { openPopUp } from '@/redux/reducers/modalReducer';
-import { AppDispatch } from '@/redux/store';
 import { useNavigation } from '@react-navigation/native';
 import moment, { locale } from 'moment';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { getVisitationOrderByID } from '@/actions/OrderActions';
+import {
+  BChip, BSpacer, BText, BTouchableText,
+} from '@/components';
+import { colors, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import { AppDispatch } from '@/redux/store';
 
 type status = 'VISIT' | 'SPH' | 'REJECTED' | 'PO' | 'SCHEDULING' | 'DO';
 
@@ -22,14 +24,14 @@ interface IProps {
   rejectNotes?: string;
 }
 
-const VisitationDatesAndStatus = ({
+function VisitationDatesAndStatus({
   bookingDate,
   finishDate,
   status,
   rejectCategory,
   quatationId,
   rejectNotes,
-}: IProps) => {
+}: IProps) {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const getBackgroundColor = () => {
@@ -47,32 +49,31 @@ const VisitationDatesAndStatus = ({
   const getStatus = () => {
     if (status === 'VISIT') {
       return 'Kunjungan Lagi';
-    } else if (status === 'REJECTED') {
+    } if (status === 'REJECTED') {
       return 'Closed Lost';
-    } else {
-      return 'SPH';
     }
+    return 'SPH';
   };
 
   const getLocalBookingDate = () => {
     let date = '-';
     let day = null;
     date = `${new Date(bookingDate).getDate()} ${new Date(
-      bookingDate
+      bookingDate,
     ).toLocaleString(locale(), { month: 'short' })} ${new Date(
-      bookingDate
+      bookingDate,
     ).getFullYear()}`;
-    let newDate = new Date(bookingDate);
+    const newDate = new Date(bookingDate);
     day = newDate.toLocaleDateString(locale(), { weekday: 'long' });
-    return day + ', ' + date;
+    return `${day}, ${date}`;
   };
 
   const getLocalFinishDate = () => {
     let date = '-';
     date = `${new Date(finishDate).getDate()} ${new Date(
-      finishDate
+      finishDate,
     ).toLocaleString(locale(), { month: 'short' })} ${new Date(
-      finishDate
+      finishDate,
     ).getFullYear()}`;
     return date;
   };
@@ -102,7 +103,7 @@ const VisitationDatesAndStatus = ({
           popUpText: error.message,
           highlightedText: 'error',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
@@ -114,7 +115,7 @@ const VisitationDatesAndStatus = ({
           {finishDate !== null ? getLocalFinishDate() : 'Belum Selesai'}
         </BText>
       );
-    } else if (status === 'SPH' && quatationId !== undefined) {
+    } if (status === 'SPH' && quatationId !== undefined) {
       return (
         <BTouchableText
           onPress={getOneOrder}
@@ -122,13 +123,12 @@ const VisitationDatesAndStatus = ({
           title="Lihat SPH"
         />
       );
-    } else {
-      return (
-        <BText style={[styles.date, { marginRight: layout.pad.md }]}>
-          {rejectCategory !== null && getRejectedCategory(rejectCategory)}
-        </BText>
-      );
     }
+    return (
+      <BText style={[styles.date, { marginRight: layout.pad.md }]}>
+        {rejectCategory !== null && getRejectedCategory(rejectCategory)}
+      </BText>
+    );
   };
   return (
     <View style={styles.container}>
@@ -159,16 +159,16 @@ const VisitationDatesAndStatus = ({
       </View>
       {status === 'REJECTED' && (
         <>
-          <BSpacer size={'medium'} />
+          <BSpacer size="medium" />
           <BText bold="600" sizeInNumber={font.size.md}>
             Alasan
           </BText>
-          <BText bold="400">{rejectNotes ? rejectNotes : '-'}</BText>
+          <BText bold="400">{rejectNotes || '-'}</BText>
         </>
       )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

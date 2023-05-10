@@ -1,11 +1,11 @@
 import { View, StyleSheet } from 'react-native';
 import React, { useMemo } from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import colors from '@/constants/colors';
 import EmptyItem from './EmptyItem';
 import resScale from '@/utils/resScale';
 
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { layout } from '@/constants';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
@@ -54,12 +54,12 @@ export default function TargetBar({
   }
 
   return (
-    <ShimmerPlaceHolder style={style.shimmerStyle} visible={true}>
+    <ShimmerPlaceHolder style={style.shimmerStyle} visible>
       <View style={style.targetBar}>
         <View style={style.emptyProgressCont}>
           <View style={style.progressCont}>
             {currentProgress.map((_, i) => (
-              <View key={i + 'current'} style={[style.progress]} />
+              <View key={`${i}current`} style={[style.progress]} />
             ))}
           </View>
           <ShimmerPlaceHolder style={style.loadingCont} visible={!isLoading} />

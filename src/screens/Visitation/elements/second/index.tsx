@@ -1,18 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { SafeAreaView, View } from 'react-native';
-import { BDivider, BForm, BSpacer, BText } from '@/components';
-import { Input, projectResponseType, Styles } from '@/interfaces';
-import SearchFlow from './Searching';
 import { ScrollView } from 'react-native-gesture-handler';
 import debounce from 'lodash.debounce';
+import { useRoute } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
+import {
+  BDivider, BForm, BSpacer, BText,
+} from '@/components';
+import { Input, projectResponseType, Styles } from '@/interfaces';
+import SearchFlow from './Searching';
 
 import { resScale } from '@/utils';
 import { layout } from '@/constants';
-import { useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
-import { useDispatch, useSelector } from 'react-redux';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
 import { RootState } from '@/redux/store';
 import {
@@ -27,17 +29,17 @@ interface IProps {
   openBottomSheet: () => void;
 }
 
-const SecondStep = ({ openBottomSheet }: IProps) => {
+function SecondStep({ openBottomSheet }: IProps) {
   const dispatch = useDispatch();
   const route = useRoute<RootStackScreenProps>();
   const existingVisitation = route?.params?.existingVisitation;
   const visitationData = useSelector((state: RootState) => state.visitation);
   const [selectedCompany, setSelectedCompany] = useState<
-    | {
-        id: number;
-        title: string;
-      }
-    | {}
+  | {
+    id: number;
+    title: string;
+  }
+  | {}
   >({ id: 1, title: visitationData.companyName });
 
   const onChange = (key: any) => (e: any) => {
@@ -45,7 +47,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
   };
 
   useEffect(() => {
-    crashlytics().log(CREATE_VISITATION + '-Step2');
+    crashlytics().log(`${CREATE_VISITATION}-Step2`);
 
     if (visitationData.companyName) {
       dispatch(
@@ -54,7 +56,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
           value: {
             items: [{ id: 1, title: visitationData.companyName }],
           },
-        })
+        }),
       );
       setSelectedCompany({
         id: 1,
@@ -63,64 +65,59 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
     }
   }, [visitationData.companyName]);
 
-  const fetchDebounce = useMemo(() => {
-    return debounce((searchQuery: string) => {
-      dispatch(getProjectsByUserThunk({ search: searchQuery }))
-        .unwrap()
-        .then((response: projectResponseType[]) => {
-          const items = response.map((project) => {
-            return {
-              id: project.id,
-              title: project.display_name,
-            };
-          });
-          dispatch(
-            updateDataVisitation({
-              type: 'options',
-              value: {
-                items: items,
-              },
-            })
-          );
+  const fetchDebounce = useMemo(() => debounce((searchQuery: string) => {
+    dispatch(getProjectsByUserThunk({ search: searchQuery }))
+      .unwrap()
+      .then((response: projectResponseType[]) => {
+        const items = response.map((project) => ({
+          id: project.id,
+          title: project.display_name,
+        }));
+        dispatch(
+          updateDataVisitation({
+            type: 'options',
+            value: {
+              items,
+            },
+          }),
+        );
 
-          if (items.length <= 0) {
-            dispatch(
-              updateDataVisitation({
-                type: 'companyName',
-                value: searchQuery,
-              })
-            );
-            setSelectedCompany({
-              id: 1,
-              title: searchQuery,
-            });
-          }
-        })
-        .catch(() => {
+        if (items.length <= 0) {
           dispatch(
             updateDataVisitation({
               type: 'companyName',
               value: searchQuery,
-            })
+            }),
           );
           setSelectedCompany({
             id: 1,
             title: searchQuery,
           });
+        }
+      })
+      .catch(() => {
+        dispatch(
+          updateDataVisitation({
+            type: 'companyName',
+            value: searchQuery,
+          }),
+        );
+        setSelectedCompany({
+          id: 1,
+          title: searchQuery,
         });
-    }, 500);
-  }, [selectedCompany]);
+      });
+  }, 500), [selectedCompany]);
 
   const onChangeText = (searchQuery: string): void => {
     fetchDebounce(searchQuery);
-    //fetchDebounce(searchQuery)
+    // fetchDebounce(searchQuery)
     // setSelectedCompany({ id: 1, title: searchQuery });
 
     // fetching then merge with the thing user type
     // updateValueOnstep('stepTwo', 'options', {
     //   items: [{ id: 1, title: searchQuery }],
     // });
-    return;
   };
 
   const inputs: Input[] = React.useMemo(() => {
@@ -154,8 +151,8 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
       },
     ];
     if (
-      visitationData.customerType &&
-      visitationData.customerType?.length > 0
+      visitationData.customerType
+      && visitationData.customerType?.length > 0
     ) {
       const companyNameInput: Input = {
         label: 'Nama Perusahaan',
@@ -172,7 +169,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
               updateDataVisitation({
                 type: 'companyName',
                 value: item.title,
-              })
+              }),
             );
             setSelectedCompany(item);
           }
@@ -206,17 +203,15 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
             openBottomSheet();
           },
           onSelect: (index: number) => {
-            const newPicList = visitationData.pics.map((el, _index) => {
-              return {
-                ...el,
-                isSelected: _index === index,
-              };
-            });
+            const newPicList = visitationData.pics.map((el, _index) => ({
+              ...el,
+              isSelected: _index === index,
+            }));
             dispatch(
               updateDataVisitation({
                 type: 'pics',
                 value: newPicList,
-              })
+              }),
             );
           },
         },
@@ -261,7 +256,7 @@ const SecondStep = ({ openBottomSheet }: IProps) => {
       )}
     </SafeAreaView>
   );
-};
+}
 
 const styles: Styles = {
   flexFull: {

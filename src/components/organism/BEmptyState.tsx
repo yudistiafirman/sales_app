@@ -1,4 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
+import React from 'react';
+import { View, Image, StyleSheet } from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import BButtonPrimary from '@/components/atoms/BButtonPrimary';
 import BSpacer from '@/components/atoms/BSpacer';
 import BText from '@/components/atoms/BText';
@@ -6,9 +9,7 @@ import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
-import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+
 type EmptyStateProps = {
   emptyProductName?: string;
   emptyText?: string;
@@ -18,32 +19,30 @@ type EmptyStateProps = {
   onAction?: () => void;
 };
 
-const EmptyState = ({
+function EmptyState({
   emptyText,
   isError,
   errorMessage,
   actionBtnTitle = 'Retry',
   onAction,
-}: EmptyStateProps) => {
+}: EmptyStateProps) {
   const renderIcon = () => {
     if (isError) {
-      return <AntDesign size={resScale(48)} name="closecircle" color={'red'} />;
-    } else {
-      return (
-        <Image
-          style={styles.emptyimage}
-          source={require('@/assets/icon/ic_not_found.png')}
-        />
-      );
+      return <AntDesign size={resScale(48)} name="closecircle" color="red" />;
     }
+    return (
+      <Image
+        style={styles.emptyimage}
+        source={require('@/assets/icon/ic_not_found.png')}
+      />
+    );
   };
 
   const renderContent = () => {
     if (isError) {
       return <BText style={styles.emptyText}>{errorMessage}</BText>;
-    } else {
-      return <BText style={styles.emptyText}>{emptyText}</BText>;
     }
+    return <BText style={styles.emptyText}>{emptyText}</BText>;
   };
 
   return (
@@ -66,7 +65,7 @@ const EmptyState = ({
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

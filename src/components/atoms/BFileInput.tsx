@@ -7,17 +7,17 @@ import {
 } from 'react-native';
 import * as React from 'react';
 import DocumentPicker from 'react-native-document-picker';
-import { colors, fonts, layout } from '@/constants';
-import { resScale } from '@/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useDispatch } from 'react-redux';
+import { colors, fonts, layout } from '@/constants';
+import { resScale } from '@/utils';
 import BLabel from './BLabel';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 
-//AntDesign
+// AntDesign
 type BFileInputType = {
   onChange?: (e: any) => void;
   label: string;
@@ -28,18 +28,18 @@ type BFileInputType = {
   isRequire?: boolean;
   sizeInNumber?: number;
   titleBold?:
-    | 'bold'
-    | '400'
-    | 'normal'
-    | '100'
-    | '200'
-    | '300'
-    | '500'
-    | '600'
-    | '700'
-    | '800'
-    | '900'
-    | undefined;
+  | 'bold'
+  | '400'
+  | 'normal'
+  | '100'
+  | '200'
+  | '300'
+  | '500'
+  | '600'
+  | '700'
+  | '800'
+  | '900'
+  | undefined;
 };
 
 function iconState(value: any, isLoading?: boolean, isError?: boolean) {
@@ -49,7 +49,7 @@ function iconState(value: any, isLoading?: boolean, isError?: boolean) {
   if (isError) {
     return (
       <View style={style.redIcon}>
-        <Ionicons name="close" size={15} color={'#FFFFFF'} />
+        <Ionicons name="close" size={15} color="#FFFFFF" />
       </View>
     );
   }
@@ -59,7 +59,7 @@ function iconState(value: any, isLoading?: boolean, isError?: boolean) {
   if (value) {
     return (
       <View style={style.greenDot}>
-        <Entypo size={13} name="check" color={'#FFFFFF'} />
+        <Entypo size={13} name="check" color="#FFFFFF" />
       </View>
     );
   }
@@ -115,7 +115,7 @@ export default function BFileInput({
             popUpType: 'error',
             popUpText: err.message || 'Terjadi error dalam pengambilan file',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     }

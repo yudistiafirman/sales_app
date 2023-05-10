@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import { StyleSheet, View } from 'react-native';
 import resScale from '@/utils/resScale';
 import { BChip, BText } from '@/components';
 import { layout } from '@/constants';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getColorStatusTrx, getStatusTrx } from '@/utils/generalFunc';
 import formatCurrency from '@/utils/formatCurrency';
 
@@ -18,14 +18,14 @@ interface TransactionListCardProps {
   useBEStatus?: boolean;
 }
 
-const TransactionListCard = ({
+function TransactionListCard({
   number,
   projectName,
   status,
   name,
   nominal,
-  useBEStatus
-}: TransactionListCardProps) => {
+  useBEStatus,
+}: TransactionListCardProps) {
   const statusFinal = useBEStatus ? status : getStatusTrx(status);
   const { color, textColor } = getColorStatusTrx(statusFinal);
   return (
@@ -48,8 +48,8 @@ const TransactionListCard = ({
             {projectName}
           </BText>
           {nominal !== undefined && (
-            <BText sizeInNumber={14} bold={'500'}>
-              {'IDR ' + formatCurrency(nominal ? nominal : 0)}
+            <BText sizeInNumber={14} bold="500">
+              {`IDR ${formatCurrency(nominal || 0)}`}
             </BText>
           )}
         </View>
@@ -59,7 +59,7 @@ const TransactionListCard = ({
       </View>
     </View>
   );
-};
+}
 
 export const styles = StyleSheet.create({
   parent: {

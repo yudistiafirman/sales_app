@@ -1,4 +1,6 @@
-import { View, ScrollView, StyleSheet, BackHandler } from 'react-native';
+import {
+  View, ScrollView, StyleSheet, BackHandler,
+} from 'react-native';
 import React, {
   useEffect,
   useState,
@@ -6,6 +8,14 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { Region } from 'react-native-maps';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {
   BHeaderIcon,
   BStepperIndicator as StepperIndicator,
@@ -21,18 +31,10 @@ import SecondStep from './elements/2secondStep';
 import ThirdStep from './elements/3thirdStep';
 import FourthStep from './elements/4fourthStep';
 import FifthStep from './elements/5fifthStep';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
-import { Region } from 'react-native-maps';
 import { getLocationCoordinates } from '@/actions/CommonActions';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { resScale } from '@/utils';
@@ -66,7 +68,7 @@ const stepsToRender = [
 function checkSelected(picList: PIC[]) {
   let isSelectedExist = false;
 
-  const list = picList ? picList : [];
+  const list = picList || [];
   list.forEach((pic) => {
     if (pic.isSelected) {
       isSelectedExist = true;
@@ -79,50 +81,40 @@ function stepHandler(
   sphData: SphStateInterface,
   stepsDone: number[],
   setSteps: (e: number[] | ((curr: number[]) => number[])) => void,
-  stepController: (step: number) => void
+  stepController: (step: number) => void,
 ) {
   if (sphData.selectedCompany) {
     if (checkSelected(sphData.selectedCompany?.Pics)) {
       if (!stepsDone.includes(0)) {
-        setSteps((curr) => {
-          return [...new Set(curr), 0];
-        });
+        setSteps((curr) => [...new Set(curr), 0]);
       }
     }
   } else {
     setSteps((curr) => curr.filter((num) => num !== 0));
   }
 
-  const billingAddressFilled =
-    !Object.values(sphData.billingAddress).every((val) => !val) &&
-    Object.entries(sphData.billingAddress.addressAutoComplete).length > 1;
+  const billingAddressFilled = !Object.values(sphData.billingAddress).every((val) => !val)
+    && Object.entries(sphData.billingAddress.addressAutoComplete).length > 1;
 
   if (
-    (sphData.isBillingAddressSame || billingAddressFilled) &&
-    sphData.distanceFromLegok !== null
+    (sphData.isBillingAddressSame || billingAddressFilled)
+    && sphData.distanceFromLegok !== null
   ) {
-    setSteps((curr) => {
-      return [...new Set(curr), 1];
-    });
+    setSteps((curr) => [...new Set(curr), 1]);
   } else {
     setSteps((curr) => curr.filter((num) => num !== 1));
   }
 
-  const paymentCondition =
-    sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
+  const paymentCondition = sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
 
   if (sphData.paymentType && paymentCondition) {
-    setSteps((curr) => {
-      return [...new Set(curr), 2];
-    });
+    setSteps((curr) => [...new Set(curr), 2]);
   } else {
     setSteps((curr) => curr.filter((num) => num !== 2));
   }
 
   if (sphData.chosenProducts.length) {
-    setSteps((curr) => {
-      return [...new Set(curr), 3];
-    });
+    setSteps((curr) => [...new Set(curr), 3]);
   } else {
     setSteps((curr) => curr.filter((num) => num !== 3));
   }
@@ -138,8 +130,7 @@ function SphContent() {
   const stepRef = useRef<ScrollView>(null);
   // const [currentPosition, setCurrentPosition] = useState<number>(0);
   const [stepsDone, setStepsDone] = useState<number[]>([]);
-  const [, updateState, setCurrentPosition, currentPosition] =
-    useContext(SphContext);
+  const [, updateState, setCurrentPosition, currentPosition] = useContext(SphContext);
   const stepControll = useCallback((step: number) => {}, []);
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
@@ -163,36 +154,34 @@ function SphContent() {
 
     // to reset stepper focus when continuing progress data
     if (
-      sphData.stepperSPHShouldNotFocused &&
-      currentPosition === 0 &&
-      !sphData.selectedCompany
+      sphData.stepperSPHShouldNotFocused
+      && currentPosition === 0
+      && !sphData.selectedCompany
     ) {
       dispatch(resetStepperFocused(1));
     }
-    const billingAddressFilled =
-      !Object.values(sphData.billingAddress).every((val) => !val) &&
-      Object.entries(sphData.billingAddress?.addressAutoComplete).length > 1;
+    const billingAddressFilled = !Object.values(sphData.billingAddress).every((val) => !val)
+      && Object.entries(sphData.billingAddress?.addressAutoComplete).length > 1;
     if (
-      sphData.stepperSPHShouldNotFocused &&
-      currentPosition === 1 &&
-      ((!sphData.isBillingAddressSame && !billingAddressFilled) ||
-        sphData.distanceFromLegok === null)
+      sphData.stepperSPHShouldNotFocused
+      && currentPosition === 1
+      && ((!sphData.isBillingAddressSame && !billingAddressFilled)
+        || sphData.distanceFromLegok === null)
     ) {
       dispatch(resetStepperFocused(2));
     }
-    const paymentCondition =
-      sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
+    const paymentCondition = sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
     if (
-      sphData.stepperSPHShouldNotFocused &&
-      currentPosition === 2 &&
-      (!sphData.paymentType || !paymentCondition)
+      sphData.stepperSPHShouldNotFocused
+      && currentPosition === 2
+      && (!sphData.paymentType || !paymentCondition)
     ) {
       dispatch(resetStepperFocused(3));
     }
     if (
-      sphData.stepperSPHShouldNotFocused &&
-      currentPosition === 3 &&
-      (!sphData.chosenProducts || !sphData.chosenProducts?.length)
+      sphData.stepperSPHShouldNotFocused
+      && currentPosition === 3
+      && (!sphData.chosenProducts || !sphData.chosenProducts?.length)
     ) {
       dispatch(resetStepperFocused(4));
     }
@@ -204,7 +193,7 @@ function SphContent() {
         // '',
         coordinate.longitude as unknown as number,
         coordinate.latitude as unknown as number,
-        'BP-LEGOK'
+        'BP-LEGOK',
       );
       const { result } = data;
       if (!result) {
@@ -236,7 +225,7 @@ function SphContent() {
           popUpText:
             error.message || 'Terjadi error saat pengambilan data coordinate',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
@@ -249,10 +238,10 @@ function SphContent() {
           popUpType: 'loading',
           popUpText: 'loading fetching data',
           outsideClickClosePopUp: false,
-        })
+        }),
       );
       const response = await dispatch(
-        getOneProjectById({ projectId: projectId })
+        getOneProjectById({ projectId }),
       ).unwrap();
       dispatch(closePopUp());
       const project = response.data;
@@ -267,7 +256,7 @@ function SphContent() {
         if (LocationAddress.lon && LocationAddress.lat) {
           const longitude = +LocationAddress.lon;
           const latitude = +LocationAddress.lat;
-          getLocationCoord({ longitude: longitude, latitude: latitude });
+          getLocationCoord({ longitude, latitude });
         }
       }
     } catch (error) {
@@ -278,7 +267,7 @@ function SphContent() {
           popUpText:
             error.message || 'Terjadi error saat pengambilan data Proyek',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   }
@@ -308,10 +297,10 @@ function SphContent() {
       };
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
-        backAction
+        backAction,
       );
       return () => backHandler.remove();
-    }, [currentPosition, navigation, setCurrentPosition, sphData])
+    }, [currentPosition, navigation, setCurrentPosition, sphData]),
   );
 
   useEffect(() => {
@@ -322,7 +311,7 @@ function SphContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const actionBackButton = (popupVisible: boolean = false) => {
+  const actionBackButton = (popupVisible = false) => {
     if (popupVisible) {
       if (sphData.selectedCompany) {
         setPopupVisible(true);
@@ -354,10 +343,10 @@ function SphContent() {
         actionButton={() => {
           setPopupVisible(false);
         }}
-        cancelText={'Keluar'}
-        actionText={'Lanjutkan'}
-        desc={'Progres pembuatan SPH Anda sudah tersimpan.'}
-        text={'Apakah Anda yakin ingin keluar?'}
+        cancelText="Keluar"
+        actionText="Lanjutkan"
+        desc="Progres pembuatan SPH Anda sudah tersimpan."
+        text="Apakah Anda yakin ingin keluar?"
       />
     </View>
   );

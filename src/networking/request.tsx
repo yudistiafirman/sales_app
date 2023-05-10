@@ -1,4 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import Config from 'react-native-config';
+import { Platform } from 'react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
+import perf from '@react-native-firebase/perf';
 import BrikApiCommon from '@/brikApi/BrikApiCommon';
 import { Api } from '@/models';
 import { UserModel } from '@/models/User';
@@ -7,28 +12,20 @@ import { storageKey } from '@/constants';
 import { signout } from '@/redux/reducers/authReducer';
 import { getSuccessMsgFromAPI } from '@/utils/generalFunc';
 import { openSnackbar } from '@/redux/reducers/snackbarReducer';
-import Config from 'react-native-config';
-import { Platform } from 'react-native';
-import crashlytics from '@react-native-firebase/crashlytics';
-import analytics from '@react-native-firebase/analytics';
-import perf from '@react-native-firebase/perf';
 
-const URL_PRODUCTIVITY =
-  Platform.OS === 'android'
-    ? Config.API_URL_PRODUCTIVITY
-    : __DEV__
+const URL_PRODUCTIVITY = Platform.OS === 'android'
+  ? Config.API_URL_PRODUCTIVITY
+  : __DEV__
     ? Config.API_URL_PRODUCTIVITY
     : Config.API_URL_PRODUCTIVITY_PROD;
-const URL_ORDER =
-  Platform.OS === 'android'
-    ? Config.API_URL_ORDER
-    : __DEV__
+const URL_ORDER = Platform.OS === 'android'
+  ? Config.API_URL_ORDER
+  : __DEV__
     ? Config.API_URL_ORDER
     : Config.API_URL_ORDER_PROD;
-const URL_COMMON =
-  Platform.OS === 'android'
-    ? Config.API_URL_COMMON
-    : __DEV__
+const URL_COMMON = Platform.OS === 'android'
+  ? Config.API_URL_COMMON
+  : __DEV__
     ? Config.API_URL_COMMON
     : Config.API_URL_COMMON_PROD;
 
@@ -38,10 +35,10 @@ let metric: any;
 type FormDataValue =
   | string
   | {
-      name?: string | undefined;
-      type?: string | undefined;
-      uri: string;
-    };
+    name?: string | undefined;
+    type?: string | undefined;
+    uri: string;
+  };
 
 interface RequestInfo {
   method: 'GET' | 'POST' | 'DELETE' | 'PUT';
@@ -70,7 +67,7 @@ export const customRequest = async (
   request: any,
   method: 'GET' | 'POST' | 'DELETE' | 'PUT',
   data?: Record<string, string> | FormDataValue,
-  withToken?: boolean
+  withToken?: boolean,
 ) => {
   // performance API log
   metric = await perf().newHttpMetric(request, method);
@@ -83,7 +80,7 @@ export const getOptions = async (
   method: 'GET' | 'POST' | 'DELETE' | 'PUT',
   data?: Record<string, string> | FormDataValue,
   withToken?: boolean,
-  timeout = 10000
+  timeout = 10000,
 ) => {
   try {
     const options = {} as RequestInfo;
@@ -123,11 +120,11 @@ instance.interceptors.response.use(
     if (config.url) {
       if (res?.status) metric?.setHttpResponseCode(res?.status);
       try {
-        let authorization = config?.headers?.get('Authorization');
+        const authorization = config?.headers?.get('Authorization');
         if (authorization && authorization !== null) {
           metric?.setResponseContentType(authorization);
         }
-        let contentType = config?.headers?.get('Content-Type');
+        const contentType = config?.headers?.get('Content-Type');
         if (contentType && contentType !== null) {
           metric?.setResponseContentType(contentType);
         }
@@ -157,13 +154,12 @@ instance.interceptors.response.use(
 
       if (data.error?.code === 'TKN008') {
         const responseRefreshToken = await instance.post<
-          any,
-          AxiosResponse<Api.Response, any>
+        any,
+        AxiosResponse<Api.Response, any>
         >(BrikApiCommon.getRefreshToken(), {});
 
         const { data: dataRefreshToken } = responseRefreshToken;
-        const resultRefreshToken =
-          dataRefreshToken.data as UserModel.DataSuccessLogin;
+        const resultRefreshToken = dataRefreshToken.data as UserModel.DataSuccessLogin;
 
         const newAccToken = resultRefreshToken?.accessToken;
         bStorage.setItem(storageKey.userToken, newAccToken);
@@ -176,7 +172,7 @@ instance.interceptors.response.use(
         return Promise.resolve(finalResponse);
       }
     } else if (config.method !== 'get' && config.method !== 'put') {
-      let url = config.url;
+      let { url } = config;
       if (url) {
         if (url[url?.length - 1] === '/') {
           url = setCharAt(url, url?.length - 1, '');
@@ -188,33 +184,34 @@ instance.interceptors.response.use(
       const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
       const postSphUrl = `${URL_ORDER}/order/m/flow/quotation/`;
       if (
-        endpoint !== 'refresh' &&
-        endpoint !== 'suggestion' &&
-        endpoint !== 'places' &&
-        endpoint !== 'verify-auth' &&
-        endpoint !== 'project_sph' &&
-        url !== postVisitationUrl &&
-        url !== postSphUrl
+        endpoint !== 'refresh'
+        && endpoint !== 'suggestion'
+        && endpoint !== 'places'
+        && endpoint !== 'verify-auth'
+        && endpoint !== 'project_sph'
+        && url !== postVisitationUrl
+        && url !== postSphUrl
       ) {
         const successMsg = getSuccessMsgFromAPI(
           respMethod,
           urlArray && urlArray.length > 1 ? urlArray[2] : '',
           config.url,
-          endpoint
+          endpoint,
         );
 
-        if (successMsg && successMsg !== '')
+        if (successMsg && successMsg !== '') {
           store.dispatch(
-            openSnackbar({ snackBarText: successMsg, isSuccess: true })
+            openSnackbar({ snackBarText: successMsg, isSuccess: true }),
           );
+        }
       }
     }
     return Promise.resolve(res);
   },
   (error: AxiosError<Api.Response, any>) => {
-    let errorMessage = `There's something wrong`;
+    let errorMessage = 'There\'s something wrong';
     let errorStatus = 500;
-    let errorMethod = error.config?.method;
+    const errorMethod = error.config?.method;
 
     if (errorMethod !== 'get') {
       if (error.response) {
@@ -222,10 +219,8 @@ instance.interceptors.response.use(
           if (error.response.data.message) {
             errorMessage = error.response.data.message;
           }
-        } else {
-          if (error.message) {
-            errorMessage = error.message;
-          }
+        } else if (error.message) {
+          errorMessage = error.message;
         }
         errorStatus = error.response.status;
       } else if (error.request) {
@@ -246,26 +241,24 @@ instance.interceptors.response.use(
         store.dispatch(signout(false));
         crashlytics().setUserId('');
         analytics().setUserId('');
-      } else {
-        if (
-          error?.config?.url !== postVisitationUrl &&
-          error?.config?.url !== postVisitationBookUrl &&
-          error?.config?.url !== postDepositUrl &&
-          error?.config?.url !== postScheduleUrl &&
-          error?.config?.url !== postPO &&
-          error?.config?.url !== postSOSigned
-        ) {
-          store.dispatch(
-            openSnackbar({
-              snackBarText: `${errorMessage} code: ${errorStatus}`,
-              isSuccess: false,
-            })
-          );
-        }
+      } else if (
+        error?.config?.url !== postVisitationUrl
+          && error?.config?.url !== postVisitationBookUrl
+          && error?.config?.url !== postDepositUrl
+          && error?.config?.url !== postScheduleUrl
+          && error?.config?.url !== postPO
+          && error?.config?.url !== postSOSigned
+      ) {
+        store.dispatch(
+          openSnackbar({
+            snackBarText: `${errorMessage} code: ${errorStatus}`,
+            isSuccess: false,
+          }),
+        );
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export const request = instance;

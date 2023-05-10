@@ -7,18 +7,16 @@ import { XStateSlice } from '../customSlice/createXStateSlice';
  */
 export const createXStateMiddleware = (
   ...slices: XStateSlice[]
-): Middleware => {
-  return function exampleMiddleware(storeAPI) {
-    const services = slices.map((slice) => slice._start(storeAPI));
+): Middleware => function exampleMiddleware(storeAPI) {
+  const services = slices.map((slice) => slice._start(storeAPI));
 
-    return function wrapDispatch(next) {
-      return function handleAction(action) {
-        const nextResult = next(action);
-        services.forEach((service) => {
-          service.send(action);
-        });
-        return nextResult;
-      };
+  return function wrapDispatch(next) {
+    return function handleAction(action) {
+      const nextResult = next(action);
+      services.forEach((service) => {
+        service.send(action);
+      });
+      return nextResult;
     };
   };
 };

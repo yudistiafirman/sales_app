@@ -1,16 +1,16 @@
 import React, { useCallback } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import debounce from 'lodash.debounce';
 import {
   BCommonSearchList,
   BSearchBar,
   BSpacer,
   BTextLocation,
 } from '@/components';
-import { TextInput } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { getAllProject } from '@/redux/async-thunks/commonThunks';
-import debounce from 'lodash.debounce';
 import { PIC } from '@/interfaces';
 import { retrying } from '@/redux/reducers/commonReducer';
 import {
@@ -26,16 +26,16 @@ interface IProps {
   isSearch: boolean;
   searchingDisable?: boolean;
   setSelectedCompany: React.Dispatch<
-    React.SetStateAction<{ id: string; title: string }>
+  React.SetStateAction<{ id: string; title: string }>
   >;
 }
 
-const SearchFlow = ({
+function SearchFlow({
   onSearch,
   isSearch,
   searchingDisable,
   setSelectedCompany,
-}: IProps) => {
+}: IProps) {
   const dispatch = useDispatch<AppDispatch>();
   const [index, setIndex] = React.useState(0);
   const {
@@ -49,13 +49,11 @@ const SearchFlow = ({
     (text: string) => {
       dispatch(getAllProject({ search: text }));
     },
-    [dispatch]
+    [dispatch],
   );
-  const onChangeWithDebounce = React.useMemo(() => {
-    return debounce((text: string) => {
-      searchDispatch(text);
-    }, 500);
-  }, [searchDispatch]);
+  const onChangeWithDebounce = React.useMemo(() => debounce((text: string) => {
+    searchDispatch(text);
+  }, 500), [searchDispatch]);
 
   const onChangeSearch = (text: string) => {
     if (!isSearch && text) {
@@ -83,7 +81,7 @@ const SearchFlow = ({
         updateDataVisitation({
           type: 'companyName',
           value: company.title,
-        })
+        }),
       );
 
       if (visitationData.options?.items) {
@@ -94,7 +92,7 @@ const SearchFlow = ({
               ...visitationData.options,
               items: [...visitationData.options?.items, company],
             },
-          })
+          }),
         );
       } else {
         dispatch(
@@ -104,7 +102,7 @@ const SearchFlow = ({
               ...visitationData.options,
               items: [company],
             },
-          })
+          }),
         );
       }
     }
@@ -113,16 +111,14 @@ const SearchFlow = ({
       updateDataVisitation({
         type: 'customerType',
         value: customerType,
-      })
+      }),
     );
 
     if (item?.Pics) {
-      const picList = item?.Pics?.map((pic: PIC, index: number) => {
-        return {
-          ...pic,
-          isSelected: index === 0 ? true : false,
-        };
-      });
+      const picList = item?.Pics?.map((pic: PIC, index: number) => ({
+        ...pic,
+        isSelected: index === 0,
+      }));
       if (picList.length === 1) {
         picList[0].isSelected = true;
       }
@@ -130,20 +126,20 @@ const SearchFlow = ({
         updateDataVisitation({
           type: 'pics',
           value: picList,
-        })
+        }),
       );
     }
     dispatch(
       updateDataVisitation({
         type: 'projectName',
         value: item?.name,
-      })
+      }),
     );
     dispatch(
       updateDataVisitation({
         type: 'projectId',
         value: item?.id,
-      })
+      }),
     );
 
     if (item?.Visitations) {
@@ -155,13 +151,13 @@ const SearchFlow = ({
         updateDataVisitation({
           type: 'visitationId',
           value: item?.Visitations[0]?.id,
-        })
+        }),
       );
       dispatch(
         updateDataVisitation({
           type: 'existingOrderNum',
           value: order,
-        })
+        }),
       );
     }
     onClear();
@@ -169,16 +165,14 @@ const SearchFlow = ({
     dispatch(updateShouldScrollView(true));
   };
 
-  const routes: { title: string; totalItems: number }[] = React.useMemo(() => {
-    return [
-      {
-        key: 'first',
-        title: 'Proyek',
-        totalItems: projects.length,
-        chipPosition: 'right',
-      },
-    ];
-  }, [projects]);
+  const routes: { title: string; totalItems: number }[] = React.useMemo(() => [
+    {
+      key: 'first',
+      title: 'Proyek',
+      totalItems: projects.length,
+      chipPosition: 'right',
+    },
+  ], [projects]);
 
   const onRetryGettingProject = () => {
     dispatch(retrying());
@@ -202,12 +196,12 @@ const SearchFlow = ({
             routes={routes}
             placeholder="Cari PT / Proyek"
             searchQuery={visitationData.searchQuery}
-            autoFocus={true}
+            autoFocus
             onChangeText={onChangeSearch}
             onClearValue={() => {
               if (
-                visitationData.searchQuery &&
-                visitationData.searchQuery.trim() !== ''
+                visitationData.searchQuery
+                && visitationData.searchQuery.trim() !== ''
               ) {
                 onClear();
               } else {
@@ -240,7 +234,7 @@ const SearchFlow = ({
       )}
     </>
   );
-};
+}
 
 const style = StyleSheet.create({
   touchable: {

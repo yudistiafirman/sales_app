@@ -1,3 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {
   BButtonPrimary,
   BDivider,
@@ -10,15 +14,11 @@ import { colors, layout } from '@/constants';
 import { DRIVER_LIST, VEHICLE_LIST } from '@/constants/dropdown';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { Input } from '@/interfaces';
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_DO } from '@/navigation/ScreenNames';
 import { resScale } from '@/utils';
 import font from '@/constants/fonts';
 
-const CreateDO = () => {
+function CreateDO() {
   useHeaderTitleChanged({ title: 'Tugaskan DO' });
   const navigation = useNavigation();
 
@@ -99,15 +99,15 @@ const CreateDO = () => {
       <View style={style.container}>
         <BForm noSpaceEnd titleBold="500" inputs={quantityInputs} />
         <BText style={style.quantity}>
-          {'Maksimum kuantitas adalah ' + 14 + 'm³'}
+          {`Maksimum kuantitas adalah ${14}m³`}
         </BText>
-        <BSpacer size={'extraSmall'} />
+        <BSpacer size="extraSmall" />
         <BForm titleBold="500" inputs={inputs} />
       </View>
       <BButtonPrimary title="Simpan" onPress={() => navigation.goBack()} />
     </View>
   );
-};
+}
 
 const style = StyleSheet.create({
   parent: {

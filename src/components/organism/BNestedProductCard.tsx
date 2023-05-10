@@ -1,14 +1,16 @@
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import {
+  View, Text, StyleSheet, TouchableWithoutFeedback,
+} from 'react-native';
 import * as React from 'react';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { RadioButton } from 'react-native-paper';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
 import BSpacer from '../atoms/BSpacer';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BProductCard from '../molecules/BProductCard';
 import BDivider from '../atoms/BDivider';
 import font from '@/constants/fonts';
 import { QuotationRequests, Products } from '@/interfaces/CreatePurchaseOrder';
-import { RadioButton } from 'react-native-paper';
 import {
   PoProductData,
   PurchaseOrdersData,
@@ -33,7 +35,7 @@ type BNestedProductCardType = {
 function ListChildProduct(
   size: number,
   index: number,
-  item: SalesOrdersData & Products & PoProductData
+  item: SalesOrdersData & Products & PoProductData,
 ) {
   const getDataToDisplay = () => {
     let displayName;
@@ -47,7 +49,7 @@ function ListChildProduct(
       if (item?.Product?.category?.parent) {
         displayName = `${
           item?.Product?.category?.parent
-            ? item?.Product?.category?.parent?.name + ' '
+            ? `${item?.Product?.category?.parent?.name} `
             : ''
         }${item?.Product?.displayName} ${
           item?.Product?.category ? item?.Product?.category?.name : ''
@@ -55,7 +57,7 @@ function ListChildProduct(
       } else {
         displayName = `${
           item?.Product?.category?.Parent
-            ? item?.Product?.category?.Parent?.name + ' '
+            ? `${item?.Product?.category?.Parent?.name} `
             : ''
         }${item?.Product?.displayName} ${
           item?.Product?.category ? item?.Product?.category?.name : ''
@@ -68,7 +70,7 @@ function ListChildProduct(
     } else if (item?.RequestedProduct) {
       displayName = `${
         item?.RequestedProduct?.Product?.category?.Parent
-          ? item?.RequestedProduct?.Product?.category?.Parent?.name + ' '
+          ? `${item?.RequestedProduct?.Product?.category?.Parent?.name} `
           : ''
       }${item?.RequestedProduct?.displayName} ${
         item?.RequestedProduct?.Product?.category
@@ -76,17 +78,16 @@ function ListChildProduct(
           : ''
       }`;
       offeringPrice = item?.RequestedProduct?.offeringPrice;
-      totalPrice =
-        item?.requestedQuantity && item?.RequestedProduct?.offeringPrice
-          ? item?.requestedQuantity * item?.RequestedProduct?.offeringPrice
-          : 0;
+      totalPrice = item?.requestedQuantity && item?.RequestedProduct?.offeringPrice
+        ? item?.requestedQuantity * item?.RequestedProduct?.offeringPrice
+        : 0;
       quantity = item?.requestedQuantity;
       unit = item?.RequestedProduct?.Product?.unit;
     } else if (item?.PoProduct) {
       displayName = `${
         item?.PoProduct?.RequestedProduct?.Product?.category?.Parent
-          ? item?.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name +
-            ' '
+          ? `${item?.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name
+          } `
           : ''
       }${item?.PoProduct?.RequestedProduct?.displayName} ${
         item?.PoProduct?.RequestedProduct?.Product?.category
@@ -94,19 +95,18 @@ function ListChildProduct(
           : ''
       }`;
       offeringPrice = item?.PoProduct?.RequestedProduct?.offeringPrice;
-      totalPrice =
-        item?.PoProduct?.requestedQuantity &&
-        item?.PoProduct?.RequestedProduct?.offeringPrice
-          ? item?.PoProduct?.requestedQuantity *
-            item?.PoProduct?.RequestedProduct?.offeringPrice
-          : 0;
+      totalPrice = item?.PoProduct?.requestedQuantity
+        && item?.PoProduct?.RequestedProduct?.offeringPrice
+        ? item?.PoProduct?.requestedQuantity
+            * item?.PoProduct?.RequestedProduct?.offeringPrice
+        : 0;
       quantity = item?.PoProduct?.requestedQuantity;
       unit = item?.PoProduct?.RequestedProduct?.Product?.unit;
     } else {
       displayName = `${
         item?.PoProduct?.RequestedProduct?.Product?.category?.parent
-          ? item?.PoProduct?.RequestedProduct?.Product?.category?.parent?.name +
-            ' '
+          ? `${item?.PoProduct?.RequestedProduct?.Product?.category?.parent?.name
+          } `
           : ''
       }${item?.PoProduct?.RequestedProduct?.Product?.displayName} ${
         item?.PoProduct?.RequestedProduct?.Product?.category
@@ -114,21 +114,23 @@ function ListChildProduct(
           : ''
       }`;
       offeringPrice = item?.PoProduct?.RequestedProduct?.offeringPrice;
-      totalPrice =
-        item?.PoProduct?.requestedQuantity &&
-        item?.PoProduct?.RequestedProduct?.offeringPrice
-          ? item?.PoProduct?.requestedQuantity *
-            item?.PoProduct?.RequestedProduct?.offeringPrice
-          : 0;
+      totalPrice = item?.PoProduct?.requestedQuantity
+        && item?.PoProduct?.RequestedProduct?.offeringPrice
+        ? item?.PoProduct?.requestedQuantity
+            * item?.PoProduct?.RequestedProduct?.offeringPrice
+        : 0;
       quantity = item?.PoProduct?.requestedQuantity;
       unit = item?.PoProduct?.RequestedProduct?.Product?.unit;
     }
 
-    return { displayName, offeringPrice, totalPrice, quantity, unit };
+    return {
+      displayName, offeringPrice, totalPrice, quantity, unit,
+    };
   };
 
-  const { displayName, offeringPrice, totalPrice, quantity, unit } =
-    getDataToDisplay();
+  const {
+    displayName, offeringPrice, totalPrice, quantity, unit,
+  } = getDataToDisplay();
 
   return (
     <View key={index}>
@@ -138,7 +140,7 @@ function ListChildProduct(
         volume={quantity}
         totalPrice={totalPrice}
         unit={unit}
-        backgroundColor={'white'}
+        backgroundColor="white"
       />
       {size - 1 !== index && (
         <BDivider
@@ -167,29 +169,25 @@ export default function BNestedProductCard({
       {withoutHeader && (
         <>
           <Text style={styles.partText}>Produk</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
         </>
       )}
       {data?.map((item, index) => {
         // TODO: handle from BE, ugly when use mapping in FE side
-        const name = poNumber
-          ? poNumber
-          : item?.QuotationLetter?.number || item?.brikNumber;
+        const name = poNumber || item?.QuotationLetter?.number || item?.brikNumber;
         const totalPrice = item?.totalPrice
           ? item?.totalPrice
           : item?.products && item?.products.length > 0
-          ? item?.products
-              ?.map((it) => {
-                return it.totalPrice;
-              })
+            ? item?.products
+              ?.map((it) => it.totalPrice)
               ?.reduce((a, b) => a + b)
-          : 0;
+            : 0;
         const products = item?.products || item?.PoProducts || item?.SaleOrders;
         const deposit = item?.availableDeposit;
         const expandItems = item?.products
           ? expandData?.findIndex(
-              (val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id
-            )
+            (val) => val?.QuotationLetter?.id === item?.QuotationLetter?.id,
+          )
           : expandData?.findIndex((val) => val?.id === item?.id);
         const isExpand = expandItems === -1;
 
@@ -212,12 +210,14 @@ export default function BNestedProductCard({
                 )}
                 <View style={styles.leftSide}>
                   <Text style={styles.partText}>{name}</Text>
-                  <BSpacer size={'verySmall'} />
+                  <BSpacer size="verySmall" />
                   <View style={styles.flexRow}>
                     <Text style={styles.titleLastOrder}>Harga</Text>
                     <View style={styles.valueView}>
                       <Text style={styles.valueLastOrder}>
-                        IDR {formatCurrency(totalPrice)}
+                        IDR
+                        {' '}
+                        {formatCurrency(totalPrice)}
                       </Text>
                     </View>
                   </View>
@@ -234,7 +234,9 @@ export default function BNestedProductCard({
                             },
                           ]}
                         >
-                          IDR {formatCurrency(deposit ? deposit : 0)}
+                          IDR
+                          {' '}
+                          {formatCurrency(deposit || 0)}
                         </Text>
                       </View>
                     </View>
@@ -255,21 +257,20 @@ export default function BNestedProductCard({
 
               {isExpand && (
                 <>
-                  <BSpacer size={'small'} />
-                  {products &&
-                    products?.map((it: any, ind: number) => {
-                      const length =
-                        it?.products?.length || it?.Product?.length;
+                  <BSpacer size="small" />
+                  {products
+                    && products?.map((it: any, ind: number) => {
+                      const length = it?.products?.length || it?.Product?.length;
                       return ListChildProduct(length, ind, it);
                     })}
                 </>
               )}
             </View>
-            {!withoutSeparator && <BSpacer size={'extraSmall'} />}
+            {!withoutSeparator && <BSpacer size="extraSmall" />}
           </View>
         );
       })}
-      {!withoutBottomSpace && <BSpacer size={'extraSmall'} />}
+      {!withoutBottomSpace && <BSpacer size="extraSmall" />}
     </>
   );
 }

@@ -1,7 +1,7 @@
+import * as React from 'react';
 import Preview from '@/screens/Camera/Preview';
 import CameraScreen from '@/screens/Camera';
 import CalendarScreen from '@/screens/Calendar';
-import * as React from 'react';
 import SearchAreaProject from '@/screens/SearchAreaProject';
 import Location from '@/screens/Location';
 import SearchProduct from '@/screens/SearchProduct';
@@ -57,7 +57,7 @@ import Deposit from '@/screens/Deposit';
 import SearchSO from '@/screens/SearchSO';
 import FormSO from '@/screens/SearchSO/Form/FormSO';
 
-const SalesStack = (Stack: any) => {
+function SalesStack(Stack: any) {
   return (
     <>
       <Stack.Screen
@@ -217,6 +217,6 @@ const SalesStack = (Stack: any) => {
       />
     </>
   );
-};
+}
 
 export default SalesStack;

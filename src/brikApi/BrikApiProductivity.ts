@@ -1,10 +1,10 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 import Config from 'react-native-config';
-const API_URL =
-  Platform.OS === 'android'
-    ? Config.API_URL_PRODUCTIVITY
-    : __DEV__
+
+const API_URL = Platform.OS === 'android'
+  ? Config.API_URL_PRODUCTIVITY
+  : __DEV__
     ? Config.API_URL_PRODUCTIVITY
     : Config.API_URL_PRODUCTIVITY_PROD;
 
@@ -79,7 +79,7 @@ export default class BrikApiProductivity {
 
   static visitationIdPath = ({ visitationId }: getOneVisitationType) => {
     const url = new URL(
-      `${API_URL}/productivity/m/flow/visitation/${visitationId}`
+      `${API_URL}/productivity/m/flow/visitation/${visitationId}`,
     );
 
     return url.toString();

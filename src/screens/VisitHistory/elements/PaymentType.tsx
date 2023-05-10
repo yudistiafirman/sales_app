@@ -1,8 +1,9 @@
+import React, { useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { BCardOption, BLabel, BSpacer } from '@/components';
 import { layout } from '@/constants';
 import font from '@/constants/fonts';
-import React, { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
@@ -10,7 +11,7 @@ interface Props {
   paymentType: 'CBD' | 'CREDIT';
 }
 
-const PaymentType = ({ paymentType }: Props) => {
+function PaymentType({ paymentType }: Props) {
   const renderPaymentTitleAndIcon = useMemo(() => {
     let title;
     let icon;
@@ -38,7 +39,7 @@ const PaymentType = ({ paymentType }: Props) => {
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

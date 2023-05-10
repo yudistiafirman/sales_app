@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { BBottomSheetForm } from '@/components';
 import { Input, PIC } from '@/interfaces';
-import { StyleSheet, Text, View } from 'react-native';
 import { colors, fonts } from '@/constants';
 
 interface IProps {
@@ -18,8 +18,7 @@ const initialState = {
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
 }
-const emailRegex =
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
 const BSheetAddPic = React.forwardRef(
@@ -33,8 +32,8 @@ const BSheetAddPic = React.forwardRef(
       });
     };
 
-    const inputs: Input[] = useMemo(() => {
-      return [
+    const inputs: Input[] = useMemo(
+      () => [
         {
           label: 'Nama',
           isRequire: true,
@@ -94,9 +93,10 @@ const BSheetAddPic = React.forwardRef(
           customerErrorMsg: 'Email harus diisi sesuai format',
           placeholder: 'Masukkan email',
         },
-      ];
+      ],
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.name, state.email, state.position, state.phone]);
+      [state.name, state.email, state.position, state.phone],
+    );
 
     const onAdd = () => {
       if (ref) {
@@ -104,10 +104,10 @@ const BSheetAddPic = React.forwardRef(
       }
       const emailCondition = state.email ? emailRegex.test(state.email) : true;
       if (
-        emailCondition &&
-        !!state.name &&
-        phoneNumberRegex.test(state.phone) &&
-        !!state.position
+        emailCondition
+        && !!state.name
+        && phoneNumberRegex.test(state.phone)
+        && !!state.position
       ) {
         addPic(state);
         setState(initialState);
@@ -120,18 +120,18 @@ const BSheetAddPic = React.forwardRef(
         initialIndex={initialIndex}
         onAdd={onAdd}
         inputs={inputs}
-        buttonTitle={'Tambah PIC'}
+        buttonTitle="Tambah PIC"
         snapPoint={['75%']}
         isButtonDisable={
           !(
-            !!state.name &&
-            phoneNumberRegex.test(state.phone) &&
-            !!state.position
+            !!state.name
+            && phoneNumberRegex.test(state.phone)
+            && !!state.position
           )
         }
       />
     );
-  }
+  },
 );
 
 const style = StyleSheet.create({

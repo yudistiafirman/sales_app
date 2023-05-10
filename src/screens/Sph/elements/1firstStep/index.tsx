@@ -1,14 +1,16 @@
 import React, { useContext, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import debounce from 'lodash.debounce';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import { BContainer, BCommonSearchList, BSearchBar } from '@/components';
 
 import SelectedPic from './elements/SelectedPic';
 
 import { SphContext } from '../context/SphContext';
 import { getAllProject } from '@/redux/async-thunks/commonThunks';
-import { useDispatch, useSelector } from 'react-redux';
-import debounce from 'lodash.debounce';
 import { AppDispatch, RootState } from '@/redux/store';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import { retrying } from '@/redux/reducers/commonReducer';
 import {
@@ -18,8 +20,6 @@ import {
   updateSelectedPic,
   setUseSearchAddress,
 } from '@/redux/reducers/SphReducer';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 import { layout } from '@/constants';
 
@@ -41,31 +41,27 @@ export default function FirstStep() {
   }
 
   React.useEffect(() => {
-    crashlytics().log(SPH + '-Step1');
+    crashlytics().log(`${SPH}-Step1`);
   }, [selectedCompany?.Pics, selectedCompany?.Pic]);
 
-  const routes: { title: string; totalItems: number }[] = useMemo(() => {
-    return [
-      {
-        key: 'first',
-        title: 'Proyek',
-        totalItems: projects.length,
-        chipPosition: 'right',
-      },
-    ];
-  }, [projects]);
+  const routes: { title: string; totalItems: number }[] = useMemo(() => [
+    {
+      key: 'first',
+      title: 'Proyek',
+      totalItems: projects.length,
+      chipPosition: 'right',
+    },
+  ], [projects]);
 
   const searchDispatch = React.useCallback(
     (text: string) => {
       dispatch(getAllProject({ search: text }));
     },
-    [dispatch]
+    [dispatch],
   );
-  const onChangeWithDebounce = React.useMemo(() => {
-    return debounce((text: string) => {
-      searchDispatch(text);
-    }, 500);
-  }, [searchDispatch]);
+  const onChangeWithDebounce = React.useMemo(() => debounce((text: string) => {
+    searchDispatch(text);
+  }, 500), [searchDispatch]);
 
   const onRetryGettingProject = () => {
     dispatch(retrying());
@@ -102,7 +98,7 @@ export default function FirstStep() {
                 setSearchQuery(text);
                 onChangeWithDebounce(text);
               }}
-              autoFocus={true}
+              autoFocus
               onClearValue={() => {
                 if (searchQuery && searchQuery.trim() !== '') {
                   resetSearch();
@@ -120,7 +116,7 @@ export default function FirstStep() {
                   finalPIC.forEach((it, index) => {
                     finalPIC[index] = {
                       ...finalPIC[index],
-                      isSelected: index === 0 ? true : false,
+                      isSelected: index === 0,
                     };
                   });
                   finalItem = { ...item };

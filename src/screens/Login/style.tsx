@@ -1,7 +1,8 @@
+import { StyleSheet } from 'react-native';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
-import { StyleSheet } from 'react-native';
+
 const loginStyle = StyleSheet.create({
   container: {
     flex: 1,

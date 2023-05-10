@@ -1,5 +1,5 @@
-import { getAllPurchaseOrders, getConfirmedPurchaseOrder } from '@/actions/OrderActions';
 import { assign, createMachine } from 'xstate';
+import { getAllPurchaseOrders, getConfirmedPurchaseOrder } from '@/actions/OrderActions';
 
 const searchSOMachine = createMachine(
   {
@@ -99,18 +99,16 @@ const searchSOMachine = createMachine(
   },
   {
     guards: {
-      isNotLastPage: (context, event) => {
-        return context.page <= context.totalPage;
-      },
+      isNotLastPage: (context, event) => context.page <= context.totalPage,
     },
     services: {
       fetchSOListData: async (context, event) => {
         try {
-          let response = await getAllPurchaseOrders(
+          const response = await getAllPurchaseOrders(
             context.page.toString(),
             context.size.toString(),
             context.keyword,
-            'CONFIRMED'
+            'CONFIRMED',
           );
           return response.data;
         } catch (error) {
@@ -129,35 +127,27 @@ const searchSOMachine = createMachine(
           isRefreshing: false,
         };
       }),
-      assignError: assign((context, event) => {
-        return {
-          errorMessage: event.data.message,
-          isLoading: false,
-          isLoadMore: false,
-          isRefreshing: false,
-        };
-      }),
-      handleRefresh: assign((context, event) => {
-        return {
-          page: 1,
-          isRefreshing: true,
-          soListData: [],
-          keyword: event?.payload,
-        };
-      }),
-      handleEndReached: assign((context, event) => {
-        return {
-          page: context.page + 1,
-          isLoadMore: true,
-        };
-      }),
-      assignKeywordToContext: assign((context, event) => {
-        return {
-          keyword: event?.payload,
-        };
-      }),
+      assignError: assign((context, event) => ({
+        errorMessage: event.data.message,
+        isLoading: false,
+        isLoadMore: false,
+        isRefreshing: false,
+      })),
+      handleRefresh: assign((context, event) => ({
+        page: 1,
+        isRefreshing: true,
+        soListData: [],
+        keyword: event?.payload,
+      })),
+      handleEndReached: assign((context, event) => ({
+        page: context.page + 1,
+        isLoadMore: true,
+      })),
+      assignKeywordToContext: assign((context, event) => ({
+        keyword: event?.payload,
+      })),
     },
-  }
+  },
 );
 
 export default searchSOMachine;

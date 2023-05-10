@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { SceneMap } from 'react-native-tab-view';
-import colors from '@/constants/colors';
 import { View, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import colors from '@/constants/colors';
 import resScale from '@/utils/resScale';
 import { layout } from '@/constants';
 import BTabSections from './TabSections';
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type BTabViewScreenType = {
@@ -31,28 +32,25 @@ export default function BTabViewScreen({
   const [indexRoute, setIndexRoute] = useState(0);
 
   const [routes] = useMemo(() => {
-    const routesArray = tabToRender.map((key) => {
-      return {
-        key: key.tabTitle,
-        title: key.tabTitle, //uppercase the first letter .charAt(0).toUpperCase() + key.slice(1)
-        totalItems: key.totalItems,
-        chipPosition: 'right',
-      };
-    });
+    const routesArray = tabToRender.map((key) => ({
+      key: key.tabTitle,
+      title: key.tabTitle, // uppercase the first letter .charAt(0).toUpperCase() + key.slice(1)
+      totalItems: key.totalItems,
+      chipPosition: 'right',
+    }));
     return [routesArray];
   }, [tabToRender]);
 
   const sceneData = useMemo(() => {
-    const sceneMapData: { [key: string]: () => JSX.Element | null } =
-      tabToRender.reduce((acc: AccumulatorReduceType, curr) => {
-        acc[curr.tabTitle] = () => {
-          if (!screenToRender) {
-            return null;
-          }
-          return screenToRender(curr.tabTitle);
-        };
-        return acc;
-      }, {});
+    const sceneMapData: { [key: string]: () => JSX.Element | null } = tabToRender.reduce((acc: AccumulatorReduceType, curr) => {
+      acc[curr.tabTitle] = () => {
+        if (!screenToRender) {
+          return null;
+        }
+        return screenToRender(curr.tabTitle);
+      };
+      return acc;
+    }, {});
     return sceneMapData;
   }, [screenToRender, tabToRender]);
 

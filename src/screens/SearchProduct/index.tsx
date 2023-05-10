@@ -1,9 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { SafeAreaView, View, DeviceEventEmitter, Platform } from 'react-native';
+import {
+  SafeAreaView, View, DeviceEventEmitter, Platform,
+} from 'react-native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useMachine } from '@xstate/react';
+import crashlytics from '@react-native-firebase/crashlytics';
 import SearchProductNavbar from './element/SearchProductNavbar';
 import SearchProductStyles from './styles';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import {
   BEmptyState,
   BHeaderIcon,
@@ -12,15 +16,13 @@ import {
   ProductList,
 } from '@/components';
 import { layout } from '@/constants';
-import { useMachine } from '@xstate/react';
 import { searchProductMachine } from '@/machine/searchProductMachine';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
 
-const SearchProduct = () => {
+function SearchProduct() {
   const route = useRoute<RouteProp<Record<string, object>, string>>();
-  let isGoback: boolean = false;
+  let isGoback = false;
   if (route.params) {
     const { isGobackAfterPress } = route.params as {
       isGobackAfterPress: boolean;
@@ -47,7 +49,7 @@ const SearchProduct = () => {
         }}
       />
     ),
-    [navigation]
+    [navigation],
   );
 
   React.useEffect(() => {
@@ -102,7 +104,7 @@ const SearchProduct = () => {
               },
               Platform.OS !== 'android' && { height: '80%' },
             ]}
-            autoFocus={true}
+            autoFocus
             value={searchValue}
             onChangeText={onChangeText}
             onClearValue={onClearValue}
@@ -110,7 +112,7 @@ const SearchProduct = () => {
         </View>
       ),
     },
-    [searchValue]
+    [searchValue],
   );
 
   const onTabPress = ({ route }) => {
@@ -119,7 +121,9 @@ const SearchProduct = () => {
       send('onChangeTab', { value: tabIndex });
     }
   };
-  const { routes, productsData, loadProduct, errorMessage } = state.context;
+  const {
+    routes, productsData, loadProduct, errorMessage,
+  } = state.context;
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />
@@ -150,17 +154,17 @@ const SearchProduct = () => {
                   navigation.goBack();
                 }
               }}
-              disablePressed={disablePressed ? disablePressed : false}
+              disablePressed={disablePressed || false}
             />
           )}
           onIndexChange={setIndex}
           tabBarStyle={SearchProductStyles.tabBarStyle}
         />
       ) : (
-        <BEmptyState emptyText={'Minimal 3 huruf!'} />
+        <BEmptyState emptyText="Minimal 3 huruf!" />
       )}
     </SafeAreaView>
   );
-};
+}
 
 export default SearchProduct;

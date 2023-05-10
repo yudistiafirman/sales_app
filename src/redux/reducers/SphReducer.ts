@@ -1,3 +1,4 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   billingAddressType,
   chosenProductType,
@@ -6,11 +7,10 @@ import {
   selectedCompanyInterface,
   SphStateInterface,
 } from '@/interfaces';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type updateBillAddressType = Pick<
-  billingAddressType,
-  'name' | 'phone' | 'fullAddress'
+billingAddressType,
+'name' | 'phone' | 'fullAddress'
 >;
 
 const initialState: SphStateInterface = {
@@ -52,7 +52,7 @@ export const sphSlice = createSlice({
     },
     setUseSearchAddress: (
       state,
-      actions: PayloadAction<{ value: boolean }>
+      actions: PayloadAction<{ value: boolean }>,
     ) => {
       state.useSearchAddress = actions.payload.value;
     },
@@ -61,19 +61,17 @@ export const sphSlice = createSlice({
     },
     setUseBillingAddress: (
       state,
-      actions: PayloadAction<{ value: boolean }>
+      actions: PayloadAction<{ value: boolean }>,
     ) => {
       state.useSearchedBillingAddress = actions.payload.value;
     },
     setSearchedBillingAddress: (
       state,
-      actions: PayloadAction<{ value: string }>
+      actions: PayloadAction<{ value: string }>,
     ) => {
       state.searchedBillingAddress = actions.payload.value;
     },
-    resetSPHState: () => {
-      return initialState;
-    },
+    resetSPHState: () => initialState,
     setStepperFocused: (state, { payload }) => {
       state.stepperSPHShouldNotFocused = true;
       switch (payload) {
@@ -113,7 +111,7 @@ export const sphSlice = createSlice({
     },
     updateSelectedCompany: (
       state,
-      { payload }: { payload: selectedCompanyInterface }
+      { payload }: { payload: selectedCompanyInterface },
     ) => {
       console.log(payload);
       console.log(payload?.Pic, 'c');
@@ -138,14 +136,14 @@ export const sphSlice = createSlice({
       state,
       {
         payload,
-      }: { payload: { value: string; key: keyof updateBillAddressType } }
+      }: { payload: { value: string; key: keyof updateBillAddressType } },
     ) => {
       const { value, key } = payload;
       state.billingAddress[key] = value;
     },
     updateBillingAddressAutoComplete: (
       state,
-      { payload }: { payload: { [key: string]: any } }
+      { payload }: { payload: { [key: string]: any } },
     ) => {
       state.billingAddress.addressAutoComplete = payload;
     },
@@ -157,7 +155,7 @@ export const sphSlice = createSlice({
     },
     updateRequiredDocuments: (
       state,
-      { payload }: { payload: { [key: string]: any } }
+      { payload }: { payload: { [key: string]: any } },
     ) => {
       state.paymentRequiredDocuments = payload;
     },
@@ -168,7 +166,7 @@ export const sphSlice = createSlice({
     },
     updateChosenProducts: (
       state,
-      { payload }: { payload: chosenProductType[] }
+      { payload }: { payload: chosenProductType[] },
     ) => {
       state.chosenProducts = payload;
     },
@@ -177,7 +175,7 @@ export const sphSlice = createSlice({
     },
     updateUploadedAndMappedRequiredDocs: (
       state,
-      { payload }: { payload: requiredDocType[] }
+      { payload }: { payload: requiredDocType[] },
     ) => {
       state.uploadedAndMappedRequiredDocs = payload;
     },

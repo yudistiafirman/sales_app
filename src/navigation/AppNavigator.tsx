@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useDispatch } from 'react-redux';
 import Splash from '@/screens/Splash';
 import Operation from '@/screens/Operation';
 import { ENTRY_TYPE } from '@/models/EnumModel';
@@ -28,7 +29,6 @@ import SalesTabs from './tabs/SalesTabs';
 import SecurityTabs from './tabs/SecurityTabs';
 import SalesHeaderRight from './Sales/HeaderRight';
 import { UserModel } from '@/models/User';
-import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import BlankScreen from '@/screens/BlankScreen';
 import { BHttpLogger } from '@/components';
@@ -36,12 +36,13 @@ import {
   setShowButtonNetwork,
   setVisibleNetworkLogger,
 } from '@/redux/reducers/authReducer';
+
 const Stack = createNativeStackNavigator();
 
-const RootScreen = (
+function RootScreen(
   userData: UserModel.DataSuccessLogin | null,
-  isSignout: boolean
-) => {
+  isSignout: boolean,
+) {
   if (userData !== null) {
     switch (userData.type) {
       case ENTRY_TYPE.OPSMANAGER:
@@ -193,7 +194,7 @@ const RootScreen = (
       </>
     );
   }
-};
+}
 
 function AppNavigator() {
   const {
@@ -206,37 +207,32 @@ function AppNavigator() {
   const dispatch = useDispatch<AppDispatch>();
   if (isLoading) {
     return <Splash />;
-  } else {
-    return (
-      <>
-        <HunterAndFarmers />
-        <Stack.Navigator
-          screenOptions={{
-            headerTitleAlign: 'left',
-            headerShadowVisible: false,
-            headerShown: true,
-            headerTitleStyle: {
-              color: colors.text.darker,
-              fontSize: fonts.size.lg,
-              fontFamily: fonts.family.montserrat[600],
-            },
-          }}
-        >
-          {RootScreen(userData, isSignout)}
-        </Stack.Navigator>
-        <BHttpLogger
-          isShowButtonNetwork={isShowButtonNetwork}
-          isNetworkLoggerVisible={isNetworkLoggerVisible}
-          setShowButtonNetwork={() =>
-            dispatch(setShowButtonNetwork(!isShowButtonNetwork))
-          }
-          setVisibleNetworkLogger={() =>
-            dispatch(setVisibleNetworkLogger(!isNetworkLoggerVisible))
-          }
-        />
-      </>
-    );
   }
+  return (
+    <>
+      <HunterAndFarmers />
+      <Stack.Navigator
+        screenOptions={{
+          headerTitleAlign: 'left',
+          headerShadowVisible: false,
+          headerShown: true,
+          headerTitleStyle: {
+            color: colors.text.darker,
+            fontSize: fonts.size.lg,
+            fontFamily: fonts.family.montserrat[600],
+          },
+        }}
+      >
+        {RootScreen(userData, isSignout)}
+      </Stack.Navigator>
+      <BHttpLogger
+        isShowButtonNetwork={isShowButtonNetwork}
+        isNetworkLoggerVisible={isNetworkLoggerVisible}
+        setShowButtonNetwork={() => dispatch(setShowButtonNetwork(!isShowButtonNetwork))}
+        setVisibleNetworkLogger={() => dispatch(setVisibleNetworkLogger(!isNetworkLoggerVisible))}
+      />
+    </>
+  );
 }
 
 export default AppNavigator;

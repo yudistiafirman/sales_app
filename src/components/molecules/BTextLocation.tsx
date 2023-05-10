@@ -1,11 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
+import React, { Children } from 'react';
+import { GestureResponderEvent, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import { fonts, layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
-import React, { Children } from 'react';
-import { GestureResponderEvent, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
 import BText from '../atoms/BText';
 
 type BTextLocationProps = {
@@ -15,12 +15,12 @@ type BTextLocationProps = {
   numberOfLines?: number;
 };
 
-const BTextLocation = ({
+function BTextLocation({
   onPress,
   location,
   disabled,
   numberOfLines,
-}: BTextLocationProps) => {
+}: BTextLocationProps) {
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -44,6 +44,6 @@ const BTextLocation = ({
       </BText>
     </TouchableOpacity>
   );
-};
+}
 
 export default BTextLocation;

@@ -11,7 +11,7 @@ export default function SnackbarGlobal() {
   //   const [visible, setVisible] = useState(true);
   const dispatch = useDispatch();
   const { isSnackbarVisible, snackBarOptions } = useSelector(
-    (state: RootState) => state.snackbar
+    (state: RootState) => state.snackbar,
   );
   const { isSuccess, snackBarText } = snackBarOptions;
 
@@ -20,7 +20,7 @@ export default function SnackbarGlobal() {
   const onDismissSnackBar = () => {
     dispatch(closeSnackbar());
   };
-  //#D7F6D8 green
+  // #D7F6D8 green
   return (
     // <View style={styles.container}>
     <Snackbar

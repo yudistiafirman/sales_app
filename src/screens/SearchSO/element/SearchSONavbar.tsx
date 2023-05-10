@@ -1,6 +1,3 @@
-import { BSearchBar } from '@/components';
-import { layout } from '@/constants';
-import { resScale } from '@/utils';
 import React from 'react';
 import {
   View,
@@ -10,6 +7,9 @@ import {
   StyleSheet,
 } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { BSearchBar } from '@/components';
+import { layout } from '@/constants';
+import { resScale } from '@/utils';
 
 interface SearchSONavbarProps {
   onChangeText?: (((text: string) => void) & Function) | undefined;
@@ -19,15 +19,15 @@ interface SearchSONavbarProps {
   autoFocus?: boolean;
 }
 
-const SearchSONavbar = ({
+function SearchSONavbar({
   onChangeText,
   value,
   onClearValue,
   customStyle,
   autoFocus,
-}: SearchSONavbarProps) => {
+}: SearchSONavbarProps) {
   return (
-    <View style={customStyle ? customStyle : styles.searchBarContainer}>
+    <View style={customStyle || styles.searchBarContainer}>
       <BSearchBar
         value={value}
         textInputStyle={
@@ -38,15 +38,15 @@ const SearchSONavbar = ({
         autoFocus={autoFocus}
         left={<TextInput.Icon icon="magnify" />}
         right={
-          value &&
-          value?.length > 0 && (
+          value
+          && value?.length > 0 && (
             <TextInput.Icon onPress={onClearValue} icon="close" />
           )
         }
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   searchBarContainer: {

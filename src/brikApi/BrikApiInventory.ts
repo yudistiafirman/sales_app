@@ -1,9 +1,9 @@
 import { Platform } from 'react-native';
 import Config from 'react-native-config';
-const API_URL =
-  Platform.OS === 'android'
-    ? Config.API_URL_INV
-    : __DEV__
+
+const API_URL = Platform.OS === 'android'
+  ? Config.API_URL_INV
+  : __DEV__
     ? Config.API_URL_INV
     : Config.API_URL_INV_PROD;
 
@@ -13,7 +13,7 @@ export default class BrikApiInventory {
     size?: number,
     search?: string,
     pillar?: string,
-    count?: boolean
+    count?: boolean,
   ) => {
     const url = new URL(`${API_URL}/inventory/m/category`);
     const params = url.searchParams;
@@ -41,7 +41,7 @@ export default class BrikApiInventory {
     size?: number,
     search?: string,
     category?: string,
-    distance?: number
+    distance?: number,
   ) => {
     const url = new URL(`${API_URL}/inventory/m/product`);
     const params = url.searchParams;

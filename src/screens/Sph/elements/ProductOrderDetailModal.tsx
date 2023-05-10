@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import Modal from 'react-native-modal';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { TextInput } from 'react-native-paper';
 import { Input, ProductDataInterface } from '@/interfaces';
 import { resScale } from '@/utils';
 import { colors, fonts, layout } from '@/constants';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   BSpacer,
   BChip,
@@ -24,7 +25,6 @@ import {
   BForm,
 } from '@/components';
 import formatCurrency from '@/utils/formatCurrency';
-import { TextInput } from 'react-native-paper';
 import calcTrips from '@/utils/calcTrips';
 import { METHOD_LIST, PO_METHOD_LIST } from '@/constants/dropdown';
 
@@ -67,11 +67,8 @@ export default function ProductCartModal({
     method: '',
   });
 
-  const calcPrice = useMemo(() => {
-    return calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost;
-  }, [detailOrder.volume]);
-  const totalPrice =
-    +detailOrder.volume * +detailOrder.sellPrice + (calcPrice ? calcPrice : 0);
+  const calcPrice = useMemo(() => calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost, [detailOrder.volume]);
+  const totalPrice = +detailOrder.volume * +detailOrder.sellPrice + (calcPrice || 0);
   const distanceCeil = distance ? Math.ceil(distance / 1000) : 0;
   function getAddPrice(): {
     delivery: distanceDeliverType;
@@ -104,16 +101,14 @@ export default function ProductCartModal({
   }
 
   const onChange = (key: string) => (val: string) => {
-    setDetailOrder((curr) => {
-      return {
-        ...curr,
-        [key]: val
-          .toString()
-          .split('')
-          .filter((char) => /^\d+$/.test(char))
-          .join(''),
-      };
-    });
+    setDetailOrder((curr) => ({
+      ...curr,
+      [key]: val
+        .toString()
+        .split('')
+        .filter((char) => /^\d+$/.test(char))
+        .join(''),
+    }));
   };
 
   const methodInput: Input[] = [
@@ -154,43 +149,52 @@ export default function ProductCartModal({
             />
           </TouchableOpacity>
         </View>
-        <BSpacer size={'extraSmall'} />
+        <BSpacer size="extraSmall" />
         <View style={style.grayContent}>
           <Text style={style.productName}>{productData.name}</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={style.chipContainer}>
             <BChip backgroundColor={colors.chip.green}>
               {productData.Category?.Parent?.name}
             </BChip>
             <BChip backgroundColor={colors.chip.disabled}>
-              slump {productData?.properties?.slump}±12 cm
+              slump
+              {' '}
+              {productData?.properties?.slump}
+              ±12 cm
             </BChip>
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={style.priceContainer}>
             <Text style={style.hargaText}>Harga Dasar</Text>
             <Text style={style.hargaText}>
-              IDR {formatCurrency(productData?.Price?.price)}
+              IDR
+              {' '}
+              {formatCurrency(productData?.Price?.price)}
             </Text>
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View>
             <BDivider />
           </View>
-          <BSpacer size={'small'} />
+          <BSpacer size="small" />
           <View style={style.chipContainer}>
             <MaterialCommunityIcons
               name="map-marker-distance"
               size={resScale(20)}
               color="#000000"
             />
-            <Text style={style.distanceText}>{distanceCeil} KM</Text>
+            <Text style={style.distanceText}>
+              {distanceCeil}
+              {' '}
+              KM
+            </Text>
           </View>
-          <BSpacer size={'small'} />
+          <BSpacer size="small" />
           <View>
             <BDivider />
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={style.priceContainer}>
             <View style={{ maxWidth: resScale(200) }}>
               <Text style={style.hargaJualText}>Harga Jual Terendah</Text>
@@ -199,7 +203,9 @@ export default function ProductCartModal({
               </Text>
             </View>
             <Text style={style.hargaJualPrice}>
-              IDR {formatCurrency(productData.calcPrice)}
+              IDR
+              {' '}
+              {formatCurrency(productData.calcPrice)}
             </Text>
           </View>
         </View>
@@ -210,19 +216,19 @@ export default function ProductCartModal({
               <Text style={style.inputLabel}>Volume</Text>
               <BTextInput
                 onChange={(
-                  event: NativeSyntheticEvent<TextInputChangeEventData>
+                  event: NativeSyntheticEvent<TextInputChangeEventData>,
                 ) => {
                   onChange('volume')(event.nativeEvent.text);
                 }}
                 value={detailOrder.volume}
                 keyboardType="numeric"
                 returnKeyType="next"
-                right={
+                right={(
                   <TextInput.Icon
                     forceTextInputFocus={false}
                     icon={() => TextIcon('m³')}
                   />
-                }
+                )}
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
               />
@@ -232,29 +238,29 @@ export default function ProductCartModal({
                 </BText>
               )}
             </View>
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
             <View style={style.sellPriceContainer}>
               <Text style={style.inputLabel}>Harga Jual</Text>
               <BTextInput
                 onChange={(
-                  event: NativeSyntheticEvent<TextInputChangeEventData>
+                  event: NativeSyntheticEvent<TextInputChangeEventData>,
                 ) => {
                   onChange('sellPrice')(event.nativeEvent.text);
                 }}
                 value={detailOrder.sellPrice}
                 keyboardType="numeric"
-                left={
+                left={(
                   <TextInput.Icon
                     forceTextInputFocus={false}
                     icon={() => TextIcon('IDR')}
                   />
-                }
-                right={
+                )}
+                right={(
                   <TextInput.Icon
                     forceTextInputFocus={false}
                     icon={() => TextIcon('/m³')}
                   />
-                }
+                )}
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
               />
@@ -273,7 +279,9 @@ export default function ProductCartModal({
           <View style={style.priceContainer}>
             <Text style={style.hargaText}>Biaya Mobilisasi</Text>
             <Text style={style.hargaText}>
-              IDR {calcPrice ? formatCurrency(calcPrice) : '0'}
+              IDR
+              {' '}
+              {calcPrice ? formatCurrency(calcPrice) : '0'}
             </Text>
           </View>
           {/* <BSpacer size="extraSmall" />
@@ -284,7 +292,9 @@ export default function ProductCartModal({
           <View style={style.priceContainer}>
             <Text style={style.productName}>Total Harga</Text>
             <Text style={style.boldPrice}>
-              IDR {formatCurrency(totalPrice)}
+              IDR
+              {' '}
+              {formatCurrency(totalPrice)}
             </Text>
           </View>
           <BSpacer size="large" />
@@ -307,11 +317,11 @@ export default function ProductCartModal({
                   sellPrice: detailOrder.sellPrice,
                   volume: detailOrder.volume,
                   pouringMethod: detailOrder.method,
-                  totalPrice: totalPrice,
+                  totalPrice,
                   additionalData: getAddPrice(),
                 };
                 const existingDataIndex = currentValue.findIndex(
-                  (data) => data.product.id === productData.id
+                  (data) => data.product.id === productData.id,
                 );
                 if (existingDataIndex !== -1) {
                   currentValue.splice(existingDataIndex, 1, newData);

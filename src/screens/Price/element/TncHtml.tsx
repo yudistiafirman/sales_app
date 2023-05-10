@@ -1,4 +1,4 @@
-import colors from "@/constants/colors";
+import colors from '@/constants/colors';
 
 const tncHTML = `<!DOCTYPE html>
 <html>
@@ -99,5 +99,4 @@ const tncHTML = `<!DOCTYPE html>
 </body>
 </html>`;
 
-
-export default tncHTML
+export default tncHTML;

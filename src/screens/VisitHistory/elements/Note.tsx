@@ -1,10 +1,10 @@
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { BLabel, BSpacer, BText } from '@/components';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
 
-const Notes = ({ visitNotes }: { visitNotes: string | null }) => {
+function Notes({ visitNotes }: { visitNotes: string | null }) {
   if (visitNotes) {
     return (
       <View style={styles.container}>
@@ -15,10 +15,9 @@ const Notes = ({ visitNotes }: { visitNotes: string | null }) => {
         </BText>
       </View>
     );
-  } else {
-    return null;
   }
-};
+  return null;
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

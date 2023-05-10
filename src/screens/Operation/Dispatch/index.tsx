@@ -1,18 +1,18 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useMachine } from '@xstate/react';
 import colors from '@/constants/colors';
 import { layout } from '@/constants';
 import OperationList from '../element/OperationList';
-import crashlytics from '@react-native-firebase/crashlytics';
 import {
   CAMERA,
   SUBMIT_FORM,
   TAB_DISPATCH,
   TAB_WB_OUT,
 } from '@/navigation/ScreenNames';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { useMachine } from '@xstate/react';
 import displayOperationListMachine from '@/machine/displayOperationListMachine';
 import { AppDispatch, RootState } from '@/redux/store';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
@@ -22,21 +22,22 @@ import {
 } from '@/redux/reducers/operationReducer';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 
-const Dispatch = () => {
+function Dispatch() {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation();
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
   const { projectDetails, photoFiles } = useSelector(
-    (state: RootState) => state.operation
+    (state: RootState) => state.operation,
   );
-  const { operationListData, isLoadMore, isLoading, isRefreshing } =
-    state.context;
+  const {
+    operationListData, isLoadMore, isLoading, isRefreshing,
+  } = state.context;
 
   useFocusEffect(
     React.useCallback(() => {
       send('assignUserData', { payload: userData?.type, tabActive: 'left' });
-    }, [send, userData?.type])
+    }, [send, userData?.type]),
   );
 
   React.useEffect(() => {
@@ -116,17 +117,15 @@ const Dispatch = () => {
         onRefresh={() => {
           send('onRefreshList', { payload: userData?.type, tabActive: 'left' });
         }}
-        onRetry={() =>
-          send('retryGettingList', {
-            payload: userData?.type,
-            tabActive: 'left',
-          })
-        }
+        onRetry={() => send('retryGettingList', {
+          payload: userData?.type,
+          tabActive: 'left',
+        })}
         userType={userData?.type}
       />
     </SafeAreaView>
   );
-};
+}
 
 const style = StyleSheet.create({
   container: {

@@ -1,13 +1,17 @@
-import { BButtonPrimary, BForm, BSpacer, BText } from '@/components';
+import React, { useState } from 'react';
+import {
+  Dimensions, StyleSheet, View, TouchableOpacity,
+} from 'react-native';
+import Modal from 'react-native-modal';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {
+  BButtonPrimary, BForm, BSpacer, BText,
+} from '@/components';
 import { colors, layout } from '@/constants';
 import { METHOD_LIST } from '@/constants/dropdown';
 import font from '@/constants/fonts';
 import { Input } from '@/interfaces';
 import { resScale } from '@/utils';
-import React, { useState } from 'react';
-import { Dimensions, StyleSheet, View, TouchableOpacity } from 'react-native';
-import Modal from 'react-native-modal';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 
 type IProductDetailModal = {
   isVisible: boolean;
@@ -17,11 +21,11 @@ type IProductDetailModal = {
 
 const { width, height } = Dimensions.get('window');
 
-const ProductDetailModal = ({
+function ProductDetailModal({
   isVisible,
   onClose,
   onChoose,
-}: IProductDetailModal) => {
+}: IProductDetailModal) {
   const [inputsValue, setInputsValue] = useState({
     volume: '',
     pouringMethods: '',
@@ -94,7 +98,7 @@ const ProductDetailModal = ({
       </View>
     </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   modal: {

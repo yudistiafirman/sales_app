@@ -1,13 +1,21 @@
-import { View, Text, StyleSheet, DeviceEventEmitter } from 'react-native';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  View, Text, StyleSheet, DeviceEventEmitter,
+} from 'react-native';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import { DateData } from 'react-native-calendars';
-import { colors, fonts, layout } from '@/constants';
-import { BButtonPrimary, BCalendar, BSpacer, BText } from '@/components';
-import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
 import moment, { locale } from 'moment';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { getVisitationsList } from '@/redux/async-thunks/productivityFlowThunks';
 import { useDispatch, useSelector } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { FlashList } from '@shopify/flash-list';
+import { colors, fonts, layout } from '@/constants';
+import {
+  BButtonPrimary, BCalendar, BSpacer, BText,
+} from '@/components';
+import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
+import { getVisitationsList } from '@/redux/async-thunks/productivityFlowThunks';
 import { RootState } from '@/redux/store';
 import { customerDataInterface, visitationListResponse } from '@/interfaces';
 import {
@@ -18,20 +26,17 @@ import {
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { CALENDAR } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
-import { FlashList } from '@shopify/flash-list';
 
 export default function CalendarScreen() {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
   const useTodayMinDate = route.params?.useTodayMinDate;
   const dispatch = useDispatch();
-  const { visitationCalendarMapped, markedDate, isVisitationLoading } =
-    useSelector((state: RootState) => state.productivity);
+  const { visitationCalendarMapped, markedDate, isVisitationLoading } = useSelector((state: RootState) => state.productivity);
 
   const [customerDatas, setCustomerDatas] = useState<customerDataInterface[]>(
-    []
+    [],
   );
   useHeaderTitleChanged({ title: 'Pilih Tanggal' });
   useEffect(() => {
@@ -62,11 +67,11 @@ export default function CalendarScreen() {
       dispatch(getVisitationsList({ month, year }))
         .unwrap()
         .then((data: visitationListResponse[]) => {
-          const visitationData = data ? data : [];
+          const visitationData = data || [];
           const visitMapped = visitationData.reduce(
             (
               acc: { [key: string]: customerDataInterface[] },
-              obj: visitationListResponse
+              obj: visitationListResponse,
             ) => {
               const formatedDate = moment(obj.dateVisit).format('yyyy-MM-DD');
 
@@ -86,7 +91,7 @@ export default function CalendarScreen() {
               });
               return acc;
             },
-            {}
+            {},
           );
           dispatch(setVisitationMapped(visitMapped));
           const newMarkedDate = { ...markedDate };
@@ -110,13 +115,13 @@ export default function CalendarScreen() {
           dispatch(
             openPopUp({
               popUpType: 'error',
-              popUpText: 'Error fetching calendar data' + error,
+              popUpText: `Error fetching calendar data${error}`,
               highlightedText: 'calendar data',
-            })
+            }),
           );
         });
     },
-    [markedDate, dispatch]
+    [markedDate, dispatch],
   );
 
   const onDayPress = useCallback(
@@ -142,7 +147,7 @@ export default function CalendarScreen() {
       };
       dispatch(setMarkedData(newMarkedDate));
     },
-    [markedDate, visitationCalendarMapped, dispatch]
+    [markedDate, visitationCalendarMapped, dispatch],
   );
 
   const selectedData = useMemo(() => {
@@ -154,15 +159,15 @@ export default function CalendarScreen() {
         try {
           date = `${new Date(key).getDate()} ${new Date(key).toLocaleString(
             locale(),
-            { month: 'short' }
+            { month: 'short' },
           )} ${new Date(key).getFullYear()}`;
-          let newDate = new Date(key);
+          const newDate = new Date(key);
           day = newDate.toLocaleDateString(locale(), { weekday: 'long' });
         } catch (err) {
           date = `${new Date(key).getDate()} ${new Date(
-            key
+            key,
           ).toLocaleString()} ${new Date(key).getFullYear()}`;
-          let newDate = new Date(key);
+          const newDate = new Date(key);
           day = newDate.toLocaleDateString();
         }
 
@@ -192,7 +197,7 @@ export default function CalendarScreen() {
         <FlashList
           estimatedItemSize={10}
           data={customerDatas}
-          ListHeaderComponent={
+          ListHeaderComponent={(
             <View>
               <BCalendar
                 onDayPress={onDayPress}
@@ -207,9 +212,9 @@ export default function CalendarScreen() {
               </BText>
               <BSpacer size="extraSmall" />
             </View>
-          }
+          )}
           contentContainerStyle={{ paddingBottom: layout.pad.md }}
-          ItemSeparatorComponent={() => <BSpacer size={'extraSmall'} />}
+          ItemSeparatorComponent={() => <BSpacer size="extraSmall" />}
           renderItem={({ item }) => <ExpandableCustomerCard item={item} />}
           keyExtractor={(_, index) => index.toString()}
         />
@@ -231,16 +236,18 @@ export default function CalendarScreen() {
               Tanggal Kunjungan Berikutnya
             </Text>
             <Text style={styles.dateText}>
-              {selectedData[0] && `${selectedData[0]} ,`} {selectedData[1]}
+              {selectedData[0] && `${selectedData[0]} ,`}
+              {' '}
+              {selectedData[1]}
             </Text>
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <BButtonPrimary
             title="Simpan"
             onPress={() => {
               DeviceEventEmitter.emit(
                 'CalendarScreen.selectedDate',
-                selectedData[2]
+                selectedData[2],
               );
               navigation.goBack();
             }}

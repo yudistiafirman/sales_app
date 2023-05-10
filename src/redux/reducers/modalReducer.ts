@@ -82,8 +82,7 @@ export const modalSlice = createSlice({
         state.popUpOptions.popUpType = 'success';
       }
       if (typeof payload.outsideClickClosePopUp === 'boolean') {
-        state.popUpOptions.outsideClickClosePopUp =
-          payload.outsideClickClosePopUp;
+        state.popUpOptions.outsideClickClosePopUp = payload.outsideClickClosePopUp;
       }
       if (payload.outlineBtnTitle) {
         state.popUpOptions.outlineBtnTitle = payload.outlineBtnTitle;
@@ -101,12 +100,10 @@ export const modalSlice = createSlice({
         state.popUpOptions.unRenderBackButton = payload.unRenderBackButton;
       }
       if (typeof payload.isPrimaryButtonLoading === 'boolean') {
-        state.popUpOptions.isPrimaryButtonLoading =
-          payload.isPrimaryButtonLoading;
+        state.popUpOptions.isPrimaryButtonLoading = payload.isPrimaryButtonLoading;
       }
       if (typeof payload.isOutlineButtonLoading === 'boolean') {
-        state.popUpOptions.isOutlineButtonLoading =
-          payload.isOutlineButtonLoading;
+        state.popUpOptions.isOutlineButtonLoading = payload.isOutlineButtonLoading;
       }
     },
     closePopUp: (state) => {

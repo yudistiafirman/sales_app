@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { RootState } from '@/redux/store';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { BForm, BSpacer } from '@/components';
 import { Competitor, Input } from '@/interfaces';
-import { ScrollView, StyleSheet, View } from 'react-native';
 import BSheetAddCompetitor from '@/components/templates/BottomSheetAddCompetitor';
 import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
 import { colors, fonts, layout } from '@/constants';
@@ -17,28 +17,26 @@ export type selectedDateType = {
   day: string;
 };
 
-const Fourth = () => {
+function Fourth() {
   const dispatch = useDispatch();
   const visitationData = useSelector((state: RootState) => state.visitation);
   const [isCompetitorVisible, setIsCompetitorVisible] = useState(false);
 
-  const inputsData: Input[] = useMemo(() => {
-    return [
-      {
-        label: 'Kompetitor',
-        isRequire: true,
-        isError: false,
-        type: 'PIC',
-        value: visitationData?.competitors ? visitationData.competitors : [],
-        onChange: () => {
-          setIsCompetitorVisible(!isCompetitorVisible);
-        },
+  const inputsData: Input[] = useMemo(() => [
+    {
+      label: 'Kompetitor',
+      isRequire: true,
+      isError: false,
+      type: 'PIC',
+      value: visitationData?.competitors ? visitationData.competitors : [],
+      onChange: () => {
+        setIsCompetitorVisible(!isCompetitorVisible);
       },
-    ];
-  }, [visitationData?.competitors]);
+    },
+  ], [visitationData?.competitors]);
 
   useEffect(() => {
-    crashlytics().log(CREATE_VISITATION + '-Step4');
+    crashlytics().log(`${CREATE_VISITATION}-Step4`);
   }, [visitationData.images]);
 
   return (
@@ -48,7 +46,7 @@ const Fourth = () => {
           <BForm titleBold="500" inputs={inputsData} />
         </ScrollView>
       </View>
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size="extraSmall" />
       <BSheetAddCompetitor
         onClose={() => setIsCompetitorVisible(!isCompetitorVisible)}
         isVisible={isCompetitorVisible}
@@ -61,13 +59,13 @@ const Fourth = () => {
             updateDataVisitation({
               type: 'competitors',
               value: currentList,
-            })
+            }),
           );
         }}
       />
     </View>
   );
-};
+}
 
 const style = StyleSheet.create({
   container: { flex: 1, justifyContent: 'space-between' },

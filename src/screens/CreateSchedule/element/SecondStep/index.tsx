@@ -1,6 +1,10 @@
-import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Platform, ScrollView, StyleSheet, Text, View,
+} from 'react-native';
 import * as React from 'react';
 
+import { RadioButton } from 'react-native-paper';
+import moment from 'moment';
 import { colors, fonts, layout } from '@/constants';
 import { CreateScheduleContext } from '@/context/CreateScheduleContext';
 import {
@@ -13,8 +17,6 @@ import {
 } from '@/components';
 import { Input } from '@/interfaces';
 import { METHOD_LIST, METHOD_LIST_DEPRECATED, PO_METHOD_LIST } from '@/constants/dropdown';
-import { RadioButton } from 'react-native-paper';
-import moment from 'moment';
 import { SalesOrdersData } from '@/interfaces/SelectConfirmedPO';
 
 export default function SecondStep() {
@@ -59,16 +61,16 @@ export default function SecondStep() {
         valueOne: stateTwo?.deliveryDate,
         valueTwo: stateTwo?.deliveryTime,
         valueTwoMock: rawTime,
-        isErrorOne: stateTwo?.deliveryDate ? false : true,
-        isErrorTwo: stateTwo?.deliveryTime ? false : true,
+        isErrorOne: !stateTwo?.deliveryDate,
+        isErrorTwo: !stateTwo?.deliveryTime,
       },
     },
     {
       label: 'Metode penuangan',
       isRequire: true,
       type: 'dropdown',
-      value: stateTwo?.method, 
-      isError: stateTwo?.method === undefined ? true : false,
+      value: stateTwo?.method,
+      isError: stateTwo?.method === undefined,
       customerErrorMsg: 'Metode penuangan harus dipilih',
       dropdown: {
         items: METHOD_LIST_DEPRECATED,
@@ -132,17 +134,14 @@ export default function SecondStep() {
   };
 
   const getTotalProduct = (): number => {
-    let total =
-      stateTwo?.inputtedVolume *
-      stateTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
+    const total = stateTwo?.inputtedVolume
+      * stateTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
     return total;
   };
 
-  const getDisplayName = (salesOrder: SalesOrdersData) => {
+  const getDisplayName = (salesOrder: SalesOrdersData) =>
     // BE bugs -> response category.`parent` should be `Parent`
-    return `${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name} ${salesOrder.PoProduct?.RequestedProduct?.displayName} ${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.name}`;
-  };
-
+    `${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name} ${salesOrder.PoProduct?.RequestedProduct?.displayName} ${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.name}`;
   return (
     <View style={style.container}>
       <ScrollView style={style.flexFull}>
@@ -168,67 +167,66 @@ export default function SecondStep() {
             />
           </View>
         </View>
-        <BSpacer size={'extraSmall'} />
-        {stateOne?.purchaseOrders[0]?.SaleOrders &&
-          stateOne?.purchaseOrders[0]?.SaleOrders.length > 0 && (
+        <BSpacer size="extraSmall" />
+        {stateOne?.purchaseOrders[0]?.SaleOrders
+          && stateOne?.purchaseOrders[0]?.SaleOrders.length > 0 && (
             <>
               <Text style={style.partText}>Produk</Text>
-              <BSpacer size={'verySmall'} />
+              <BSpacer size="verySmall" />
               <View style={style.flexFull}>
                 <BDivider />
-                <BSpacer size={'extraSmall'} />
-                {stateOne?.purchaseOrders[0]?.SaleOrders.map((item, index) => {
-                  return (
-                    <View key={index.toString()} style={style.flexFull}>
-                      <View style={style.selectionProduct}>
-                        <View style={style.contentProduct}>
-                          <RadioButton
-                            value={index.toString()}
-                            status={
+                <BSpacer size="extraSmall" />
+                {stateOne?.purchaseOrders[0]?.SaleOrders.map((item, index) => (
+                  <View key={index.toString()} style={style.flexFull}>
+                    <View style={style.selectionProduct}>
+                      <View style={style.contentProduct}>
+                        <RadioButton
+                          value={index.toString()}
+                          status={
                               selectedIndex === index.toString()
                                 ? 'checked'
                                 : 'unchecked'
                             }
-                            color={colors.primary}
-                            uncheckedColor={colors.border.altGrey}
-                            onPress={() => {
-                              if (selectedIndex !== index.toString()) {
-                                updateValueOnstep(
-                                  'stepTwo',
-                                  'inputtedVolume',
-                                  0
-                                );
-                                updateValueOnstep(
-                                  'stepTwo',
-                                  'salesOrder',
-                                  item
-                                );
-                              }
-                              setSelectedIndex(index.toString());
-                            }}
-                          />
-                          <BProductCard
-                            name={getDisplayName(item)}
-                            pricePerVol={
+                          color={colors.primary}
+                          uncheckedColor={colors.border.altGrey}
+                          onPress={() => {
+                            if (selectedIndex !== index.toString()) {
+                              updateValueOnstep(
+                                'stepTwo',
+                                'inputtedVolume',
+                                0,
+                              );
+                              updateValueOnstep(
+                                'stepTwo',
+                                'salesOrder',
+                                item,
+                              );
+                            }
+                            setSelectedIndex(index.toString());
+                          }}
+                        />
+                        <BProductCard
+                          name={getDisplayName(item)}
+                          pricePerVol={
                               item?.PoProduct?.RequestedProduct?.offeringPrice
                             }
-                            volume={parseInt(item?.usedQuantity, 10)}
-                            totalPrice={
-                              item?.PoProduct?.RequestedProduct?.offeringPrice *
-                              (item?.usedQuantity ? item?.usedQuantity : 0)
+                          volume={parseInt(item?.usedQuantity, 10)}
+                          totalPrice={
+                              item?.PoProduct?.RequestedProduct?.offeringPrice
+                              * (item?.usedQuantity ? item?.usedQuantity : 0)
                             }
-                            hideVolume
-                            withoutBorder
-                          />
-                        </View>
-                        {selectedIndex === index.toString() && (
-                          <View style={style.formInput}>
-                            <BForm
-                              titleBold="500"
-                              inputs={inputsSelection}
-                              spacer="extraSmall"
-                            />
-                            {/* <View style={style.volContent}>
+                          hideVolume
+                          withoutBorder
+                        />
+                      </View>
+                      {selectedIndex === index.toString() && (
+                      <View style={style.formInput}>
+                        <BForm
+                          titleBold="500"
+                          inputs={inputsSelection}
+                          spacer="extraSmall"
+                        />
+                        {/* <View style={style.volContent}>
                               <BText>Sisa vol. yang belum dikirim</BText>
                               <BText
                                 style={{
@@ -241,31 +239,30 @@ export default function SecondStep() {
                                   : 0 + ' m³'}
                               </BText>
                             </View> */}
-                          </View>
-                        )}
                       </View>
-                      {stateOne?.purchaseOrders[0]?.SaleOrders.length - 1 !==
-                        index && (
+                      )}
+                    </View>
+                    {stateOne?.purchaseOrders[0]?.SaleOrders.length - 1
+                        !== index && (
                         <BDivider
                           marginVertical={layout.pad.md}
                           borderColor={colors.white}
                         />
-                      )}
-                    </View>
-                  );
-                })}
+                    )}
+                  </View>
+                ))}
               </View>
             </>
-          )}
+        )}
       </ScrollView>
 
       <View>
-        <BSpacer size={'extraSmall'} />
+        <BSpacer size="extraSmall" />
         <BDivider />
-        <BSpacer size={'verySmall'} />
+        <BSpacer size="verySmall" />
         <BDepositCard
           style={{ marginBottom: layout.pad.xl }}
-          firstSectionText={'Deposit'}
+          firstSectionText="Deposit"
           firstSectionValue={
             stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0
           }
@@ -273,12 +270,12 @@ export default function SecondStep() {
             stateTwo?.salesOrder ? getDisplayName(stateTwo?.salesOrder) : '-'
           }
           secondSectionValue={getTotalProduct()}
-          thirdSectionText={'Est. Sisa Deposit'}
+          thirdSectionText="Est. Sisa Deposit"
           isError={
-            getTotalProduct() >
-            (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
+            getTotalProduct()
+            > (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
           }
-          customErrorMsg={'Silakan lakukan penambahan deposit'}
+          customErrorMsg="Silakan lakukan penambahan deposit"
         />
       </View>
     </View>

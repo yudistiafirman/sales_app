@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSelector } from 'react-redux';
 import PriceList from '@/screens/Price';
 import CustomTabBar from '../CustomTabBar';
 import Profile from '@/screens/Profile';
@@ -17,14 +18,12 @@ import {
   TAB_TRANSACTION_TITLE,
 } from '@/navigation/ScreenNames';
 import { RootState } from '@/redux/store';
-import { useSelector } from 'react-redux';
 import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
 
 const Tab = createBottomTabNavigator();
 
 function SalesTabs() {
-  const { enable_transaction_menu, enable_price_menu, enable_profile_menu } =
-    useSelector((state: RootState) => state.auth.remote_config);
+  const { enable_transaction_menu, enable_price_menu, enable_profile_menu } = useSelector((state: RootState) => state.auth.remote_config);
   return (
     <Tab.Navigator
       screenOptions={{

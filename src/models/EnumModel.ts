@@ -9,5 +9,5 @@ export enum ENTRY_TYPE {
   RETURN = 'RETURN',
   OUT = 'OUT',
   DRIVER = 'DRIVER',
-  ADMIN = 'ADMIN'
+  ADMIN = 'ADMIN',
 }

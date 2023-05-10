@@ -13,24 +13,24 @@ interface BHeaderIconProps {
   marginLeft?: number;
 }
 
-const BHeaderIcon = ({
+function BHeaderIcon({
   onBack,
   size,
   iconName,
   marginRight = layout.pad.xs + layout.pad.md + layout.pad.lg,
   marginLeft = 0,
-}: BHeaderIconProps) => {
+}: BHeaderIconProps) {
   return (
     <TouchableOpacity
       style={{
-        marginRight: marginRight,
-        marginLeft: marginLeft,
+        marginRight,
+        marginLeft,
       }}
       onPress={onBack}
     >
       <Icon name={iconName} size={size} color={colors.text.darker} />
     </TouchableOpacity>
   );
-};
+}
 
 export default BHeaderIcon;

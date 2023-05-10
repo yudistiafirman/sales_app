@@ -1,19 +1,19 @@
-import bStorage from '@/actions/BStorage';
-import storageKey from '@/constants/storageKey';
-import {
-  setIsLoading,
-  setUserData,
-  toggleHunterScreen,
-} from '@/redux/reducers/authReducer';
-import { AppDispatch, RootState } from '@/redux/store';
 import jwtDecode from 'jwt-decode';
 import * as React from 'react';
 import { Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { isJsonString } from '@/utils/generalFunc';
 import remoteConfig from '@react-native-firebase/remote-config';
 import BackgroundFetch from 'react-native-background-fetch';
+import { isJsonString } from '@/utils/generalFunc';
+import { AppDispatch, RootState } from '@/redux/store';
+import {
+  setIsLoading,
+  setUserData,
+  toggleHunterScreen,
+} from '@/redux/reducers/authReducer';
+import storageKey from '@/constants/storageKey';
+import bStorage from '@/actions/BStorage';
 import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
 import { UserModel } from '@/models/User';
 import { openPopUp } from '@/redux/reducers/modalReducer';
@@ -39,14 +39,14 @@ const useAsyncConfigSetup = () => {
             setUserData({
               userData: decoded,
               remoteConfig: fetchedRemoteConfig,
-            })
+            }),
           );
         } else {
           dispatch(
             setIsLoading({
               loading: false,
               remoteConfig: fetchedRemoteConfig,
-            })
+            }),
           );
         }
       } catch (error) {
@@ -55,7 +55,7 @@ const useAsyncConfigSetup = () => {
           setIsLoading({
             loading: false,
             remoteConfig: fetchedRemoteConfig,
-          })
+          }),
         );
         dispatch(
           openPopUp({
@@ -63,11 +63,11 @@ const useAsyncConfigSetup = () => {
             popUpText:
               error.message || 'Terjadi error dalam pengambilan user token',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     },
-    [dispatch]
+    [dispatch],
   );
 
   const appStateSetup = React.useCallback(async () => {
@@ -81,10 +81,9 @@ const useAsyncConfigSetup = () => {
           const [key, entry] = $;
           let value = remote_config?.[key];
           if (
-            Object.values(entry).length > 0 &&
-            isJsonString(Object.values(entry)[0])
-          )
-            value = JSON.parse(Object.values(entry)[0]);
+            Object.values(entry).length > 0
+            && isJsonString(Object.values(entry)[0])
+          ) value = JSON.parse(Object.values(entry)[0]);
           fetchedData = {
             ...fetchedData,
             [key]: value,
@@ -102,7 +101,7 @@ const useAsyncConfigSetup = () => {
             popUpText:
               err.message || 'Terjadi error dalam pengambilan App Setup',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       });
   }, [dispatch, userDataSetup]);
@@ -119,7 +118,7 @@ const useAsyncConfigSetup = () => {
         if (date !== undefined && moment().date() !== date) {
           setTimeout(
             () => dispatch(toggleHunterScreen(true)),
-            Platform.OS === 'ios' ? 500 : 0
+            Platform.OS === 'ios' ? 500 : 0,
           );
         } else {
           await bStorage.setItem(HUNTER_AND_FARMER, moment().date());
@@ -128,7 +127,7 @@ const useAsyncConfigSetup = () => {
       },
       async (taskId) => {
         BackgroundFetch.finish(taskId);
-      }
+      },
     );
     // And with with #scheduleTask
     BackgroundFetch.scheduleTask({

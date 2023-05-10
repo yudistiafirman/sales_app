@@ -2,18 +2,18 @@ import Modal from 'react-native-modal';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { RootState } from '@/redux/store';
 import { setIsPopUpVisible } from '@/redux/reducers/modalReducer';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import { BBackContinueBtn, BHighlightText, BText } from '@/components';
 import font from '@/constants/fonts';
 
 export default function Popup() {
   const dispatch = useDispatch();
   const { isPopUpVisible, popUpOptions } = useSelector(
-    (state: RootState) => state.modal
+    (state: RootState) => state.modal,
   );
 
   return (
@@ -37,11 +37,11 @@ export default function Popup() {
               <AntDesign
                 size={resScale(48)}
                 name="checkcircle"
-                color={'green'}
+                color="green"
               />
             )}
             {popUpOptions.popUpType === 'error' && (
-              <AntDesign size={resScale(48)} name="closecircle" color={'red'} />
+              <AntDesign size={resScale(48)} name="closecircle" color="red" />
             )}
             {popUpOptions.popUpType === 'loading' && (
               <ActivityIndicator size={resScale(60)} color={colors.primary} />

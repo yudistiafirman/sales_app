@@ -6,7 +6,14 @@ import {
   DeviceEventEmitter,
   Dimensions,
 } from 'react-native';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useState,
+} from 'react';
+import { TextInput } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch, useSelector } from 'react-redux';
+import { FlashList } from '@shopify/flash-list';
 import {
   BBackContinueBtn,
   BContainer,
@@ -17,20 +24,16 @@ import {
 } from '@/components';
 import ProductCartModal from '../ProductOrderDetailModal';
 import { chosenProductType, ProductDataInterface } from '@/interfaces';
-import { TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
 import { colors, fonts, layout } from '@/constants';
 import { SphContext } from '../context/SphContext';
-import { useNavigation } from '@react-navigation/native';
 import { SEARCH_PRODUCT, SPH } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import {
   setStepperFocused,
   updateChosenProducts,
 } from '@/redux/reducers/SphReducer';
-import { FlashList } from '@shopify/flash-list';
+
 const { width } = Dimensions.get('window');
 
 interface RenderModalType {
@@ -38,7 +41,7 @@ interface RenderModalType {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedProduct: React.Dispatch<
-    React.SetStateAction<ProductDataInterface | null>
+  React.SetStateAction<ProductDataInterface | null>
   >;
   setChosenProducts: React.Dispatch<React.SetStateAction<any[]>>;
   chosenProducts: chosenProductType[];
@@ -57,9 +60,9 @@ function RenderModal({
   if (!selectedProduct) {
     return null;
   }
-  let prevData = { volume: '', sellPrice: '', pouringMethod: '' };
+  const prevData = { volume: '', sellPrice: '', pouringMethod: '' };
   const existingDataIndex = chosenProducts.findIndex(
-    (data) => data.product.id === selectedProduct.id
+    (data) => data.product.id === selectedProduct.id,
   );
 
   if (existingDataIndex !== -1) {
@@ -86,7 +89,7 @@ function RenderModal({
 }
 
 function renderSeparator() {
-  return <BSpacer size={'small'} />;
+  return <BSpacer size="small" />;
 }
 
 export default function FourthStep() {
@@ -94,11 +97,10 @@ export default function FourthStep() {
   const navigation = useNavigation();
   const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedProduct, setSelectedProduct] =
-    useState<ProductDataInterface | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductDataInterface | null>(null);
   const [chosenProducts, setChosenProducts] = useState<chosenProductType[]>([]);
   const { chosenProducts: productsRedux, distanceFromLegok } = useSelector(
-    (state: RootState) => state.sph
+    (state: RootState) => state.sph,
   );
 
   const getProduct = useCallback(({ data }: { data: ProductDataInterface }) => {
@@ -116,7 +118,7 @@ export default function FourthStep() {
   }, []);
 
   useEffect(() => {
-    crashlytics().log(SPH + '-Step4');
+    crashlytics().log(`${SPH}-Step4`);
 
     if (productsRedux.length > 0) {
       setChosenProducts(productsRedux);
@@ -147,17 +149,17 @@ export default function FourthStep() {
         <View>
           <Text style={style.productText}>Produk</Text>
           <View>
-            <BSpacer size={'verySmall'} />
+            <BSpacer size="verySmall" />
             <BDivider />
           </View>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <View style={style.posRelative}>
             <TouchableOpacity
               style={style.touchable}
               onPress={() => {
                 navigation.navigate(SEARCH_PRODUCT, {
                   isGobackAfterPress: true,
-                  distance: distanceFromLegok ? distanceFromLegok : 0,
+                  distance: distanceFromLegok || 0,
                 });
               }}
             />
@@ -170,7 +172,7 @@ export default function FourthStep() {
               }
             />
           </View>
-          <BSpacer size={'verySmall'} />
+          <BSpacer size="verySmall" />
           {/* <Text>Tidak ada produk yang terpilih</Text> */}
           <View style={{ flexGrow: 1, flexDirection: 'row' }}>
             <FlashList
@@ -180,23 +182,21 @@ export default function FourthStep() {
               ListFooterComponent={
                 <View style={{ width: resScale(160), height: resScale(160) }} />
               }
-              renderItem={({ item, index }) => {
-                return (
-                  <BProductCard
-                    name={item.product.name}
-                    volume={+item.volume}
-                    pricePerVol={+item.sellPrice}
-                    totalPrice={+item.totalPrice}
-                    onPressEdit={() => {
-                      setSelectedProduct(item.product);
-                      setIsModalVisible(true);
-                    }}
-                    onPressDelete={() => {
-                      deleteSelectedProduct(index);
-                    }}
-                  />
-                );
-              }}
+              renderItem={({ item, index }) => (
+                <BProductCard
+                  name={item.product.name}
+                  volume={+item.volume}
+                  pricePerVol={+item.sellPrice}
+                  totalPrice={+item.totalPrice}
+                  onPressEdit={() => {
+                    setSelectedProduct(item.product);
+                    setIsModalVisible(true);
+                  }}
+                  onPressDelete={() => {
+                    deleteSelectedProduct(index);
+                  }}
+                />
+              )}
               ItemSeparatorComponent={renderSeparator}
             />
           </View>

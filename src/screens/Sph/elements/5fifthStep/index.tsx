@@ -7,6 +7,10 @@ import {
   Platform,
 } from 'react-native';
 import React, { useContext, useState } from 'react';
+import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
+import { useDispatch, useSelector } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { FlashList } from '@shopify/flash-list';
 import {
   BBackContinueBtn,
   BContainer,
@@ -14,8 +18,8 @@ import {
   BPic,
   BSpacer,
   BProductCard,
+  BVisitationCard,
 } from '@/components';
-import { BVisitationCard } from '@/components';
 import { resScale } from '@/utils';
 import { colors, fonts, layout } from '@/constants';
 import {
@@ -29,15 +33,12 @@ import {
 } from '@/interfaces';
 import ChoosePicModal from '../ChoosePicModal';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
-import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import { SphContext } from '../context/SphContext';
 import StepDone from '../StepDoneModal/StepDone';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
-import { useDispatch, useSelector } from 'react-redux';
 import { postOrderSph } from '@/redux/async-thunks/orderThunks';
 import { RootState } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { SPH } from '@/navigation/ScreenNames';
 import {
   updateSelectedCompany,
@@ -45,7 +46,6 @@ import {
   updateUploadedAndMappedRequiredDocs,
   updateUseHighway,
 } from '@/redux/reducers/SphReducer';
-import { FlashList } from '@shopify/flash-list';
 
 function countNonNullValues(array) {
   let count = 0;
@@ -69,26 +69,23 @@ function payloadMapper(sphState: SphStateInterface) {
   const LocationAddress = selectedCompany?.LocationAddress;
 
   if (sphState.chosenProducts.length > 0) {
-    //harcode m3
-    payload.requestedProducts = sphState.chosenProducts.map((product) => {
-      return {
-        productId: product.productId,
-        categoryId: product.categoryId,
-        offeringPrice: +product.sellPrice,
-        quantity: +product.volume,
-        pouringMethod: product.pouringMethod,
-        productName: product.product.name,
-        productUnit: 'm3',
-      };
-    });
+    // harcode m3
+    payload.requestedProducts = sphState.chosenProducts.map((product) => ({
+      productId: product.productId,
+      categoryId: product.categoryId,
+      offeringPrice: +product.sellPrice,
+      quantity: +product.volume,
+      pouringMethod: product.pouringMethod,
+      productName: product.product.name,
+      productUnit: 'm3',
+    }));
 
     payload.distance.id = sphState.chosenProducts[0].additionalData.distance.id;
-    payload.distance.price =
-      sphState.chosenProducts[0].additionalData.distance.price;
+    payload.distance.price = sphState.chosenProducts[0].additionalData.distance.price;
 
     if (sphState.distanceFromLegok) {
       payload.distance.userDistance = Math.ceil(
-        sphState.distanceFromLegok / 1000
+        sphState.distanceFromLegok / 1000,
       );
     }
     // find highest delivery
@@ -96,9 +93,7 @@ function payloadMapper(sphState: SphStateInterface) {
     sphState.chosenProducts.forEach((prod) => {
       deliveries.push(prod.additionalData.delivery);
     });
-    const highestPrice = deliveries.reduce(function (prev, curr) {
-      return prev.price > curr.price ? prev : curr;
-    });
+    const highestPrice = deliveries.reduce((prev, curr) => (prev.price > curr.price ? prev : curr));
     payload.delivery = highestPrice;
   }
 
@@ -179,33 +174,26 @@ function payloadMapper(sphState: SphStateInterface) {
         if (sphState.useSearchedBillingAddress) {
           payload.billingAddress.line1 = sphState.searchedBillingAddress;
         } else {
-          payload.billingAddress.line1 =
-            sphState.billingAddress.addressAutoComplete.formattedAddress;
+          payload.billingAddress.line1 = sphState.billingAddress.addressAutoComplete.formattedAddress;
         }
       }
       if (sphState.billingAddress.addressAutoComplete.postalId) {
-        payload.billingAddress.postalId =
-          sphState.billingAddress.addressAutoComplete.postalId;
+        payload.billingAddress.postalId = sphState.billingAddress.addressAutoComplete.postalId;
       }
       if (sphState.billingAddress.addressAutoComplete.lat) {
-        payload.billingAddress.lat =
-          sphState.billingAddress.addressAutoComplete.lat;
+        payload.billingAddress.lat = sphState.billingAddress.addressAutoComplete.lat;
       }
       if (sphState.billingAddress.addressAutoComplete.lon) {
-        payload.billingAddress.lon =
-          sphState.billingAddress.addressAutoComplete.lon;
+        payload.billingAddress.lon = sphState.billingAddress.addressAutoComplete.lon;
       }
       if (sphState.billingAddress.addressAutoComplete.rural) {
-        payload.billingAddress.rural =
-          sphState.billingAddress.addressAutoComplete.rural;
+        payload.billingAddress.rural = sphState.billingAddress.addressAutoComplete.rural;
       }
       if (sphState.billingAddress.addressAutoComplete.district) {
-        payload.billingAddress.district =
-          sphState.billingAddress.addressAutoComplete.district;
+        payload.billingAddress.district = sphState.billingAddress.addressAutoComplete.district;
       }
       if (sphState.billingAddress.addressAutoComplete.city) {
-        payload.billingAddress.city =
-          sphState.billingAddress.addressAutoComplete.city;
+        payload.billingAddress.city = sphState.billingAddress.addressAutoComplete.city;
       }
     }
     if (sphState.billingAddress.fullAddress) {
@@ -228,7 +216,7 @@ export default function FifthStep() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isStepDoneVisible, setIsStepDoneVisible] = useState(false);
   const [madeSphData, setMadeSphData] = useState<postSphResponseType | null>(
-    null
+    null,
   );
 
   const inputsData: Input[] = [
@@ -248,7 +236,7 @@ export default function FifthStep() {
   ];
 
   React.useEffect(() => {
-    crashlytics().log(SPH + '-Step5');
+    crashlytics().log(`${SPH}-Step5`);
   }, []);
 
   function addPicHandler() {
@@ -263,7 +251,7 @@ export default function FifthStep() {
           popUpType: 'loading',
           popUpText: 'Menyimpan SPH',
           outsideClickClosePopUp: false,
-        })
+        }),
       );
       const payload = payloadMapper(sphState);
       const photoFiles = Object.values(sphState.paymentRequiredDocuments);
@@ -271,12 +259,12 @@ export default function FifthStep() {
       payload.projectDocs = [];
       const validPhotoCount = countNonNullValues(photoFiles);
       if (
-        (sphState.uploadedAndMappedRequiredDocs.length === 0 &&
-          !isNoPhotoToUpload) ||
-        validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
+        (sphState.uploadedAndMappedRequiredDocs.length === 0
+          && !isNoPhotoToUpload)
+        || validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
       ) {
         const photoResponse = await dispatch(
-          postUploadFiles({ files: photoFiles, from: 'sph' })
+          postUploadFiles({ files: photoFiles, from: 'sph' }),
         ).unwrap();
         const files: { documentId: string; fileId: string }[] = [];
         photoResponse.forEach((photo) => {
@@ -287,14 +275,14 @@ export default function FifthStep() {
             if (
               Object.prototype.hasOwnProperty.call(
                 sphState.paymentRequiredDocuments,
-                documentId
+                documentId,
               )
             ) {
               const photoData = sphState.paymentRequiredDocuments[documentId];
               if (photoData) {
                 if (
-                  photoData.name === photoName ||
-                  photoData.name === photoNamee
+                  photoData.name === photoName
+                  || photoData.name === photoNamee
                 ) {
                   foundPhoto = documentId;
                 }
@@ -315,7 +303,7 @@ export default function FifthStep() {
         dispatch(updateUploadedAndMappedRequiredDocs(files));
       } else if (!isNoPhotoToUpload) {
         const isFilePhotoNotNull = sphState.uploadedAndMappedRequiredDocs.every(
-          (val) => val === null
+          (val) => val === null,
         );
         if (!isFilePhotoNotNull) {
           payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
@@ -330,7 +318,7 @@ export default function FifthStep() {
       dispatch(closePopUp());
       setTimeout(
         () => setIsStepDoneVisible(true),
-        Platform.OS === 'ios' ? 500 : 0
+        Platform.OS === 'ios' ? 500 : 0,
       );
     } catch (error) {
       const messageError = error?.message;
@@ -340,7 +328,7 @@ export default function FifthStep() {
           popUpType: 'error',
           popUpText: messageError || 'Error Menyimpan SPH',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   }
@@ -375,7 +363,7 @@ export default function FifthStep() {
             />
           </View>
           <View>
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
             <View style={style.picLable}>
               <Text style={style.picText}>PIC</Text>
               <TouchableOpacity
@@ -388,7 +376,7 @@ export default function FifthStep() {
             </View>
           </View>
           <View>
-            <BSpacer size={'verySmall'} />
+            <BSpacer size="verySmall" />
             <BPic
               name={sphState?.selectedPic?.name}
               position={sphState?.selectedPic?.position}
@@ -397,39 +385,37 @@ export default function FifthStep() {
             />
           </View>
           <View>
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
             <View style={style.produkLabel}>
               <Text style={style.picText}>Produk</Text>
             </View>
-            <BSpacer size={'small'} />
+            <BSpacer size="small" />
           </View>
           <View style={{ flexGrow: 1, flexDirection: 'row' }}>
             <FlashList
               estimatedItemSize={10}
               data={sphState?.chosenProducts}
-              renderItem={(item) => {
-                return (
-                  <>
-                    <BProductCard
-                      name={item.item.product.name}
-                      pricePerVol={+item.item.sellPrice}
-                      volume={+item.item.volume}
-                      totalPrice={+item.item.totalPrice}
-                    />
-                    <BSpacer size={'small'} />
-                  </>
-                );
-              }}
+              renderItem={(item) => (
+                <>
+                  <BProductCard
+                    name={item.item.product.name}
+                    pricePerVol={+item.item.sellPrice}
+                    volume={+item.item.volume}
+                    totalPrice={+item.item.totalPrice}
+                  />
+                  <BSpacer size="small" />
+                </>
+              )}
             />
           </View>
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <BForm titleBold="500" inputs={inputsData} />
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
           </View>
         </View>
         <BBackContinueBtn
           isContinueIcon={false}
-          continueText={'Buat SPH'}
+          continueText="Buat SPH"
           onPressContinue={buatSph}
           onPressBack={() => {
             setCurrentPosition(3);
@@ -448,7 +434,7 @@ export default function FifthStep() {
                 updateSelectedCompany({
                   ...sphState.selectedCompany,
                   Pics: newList,
-                })
+                }),
               );
             }
           }}

@@ -1,6 +1,6 @@
-import colors from '@/constants/colors';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import colors from '@/constants/colors';
 
 interface BSpinnerProps {
   size?: 'large' | 'small';
@@ -12,16 +12,16 @@ const BSpinnerDefaultProps = {
   color: colors.primary,
 };
 
-const BSpinner = ({
+function BSpinner({
   size,
   color,
-}: BSpinnerProps & typeof BSpinnerDefaultProps) => {
+}: BSpinnerProps & typeof BSpinnerDefaultProps) {
   return (
     <View style={styles.spinnerContainer}>
       <ActivityIndicator animating size={size} color={color} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   spinnerContainer: {

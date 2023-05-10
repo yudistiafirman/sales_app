@@ -1,4 +1,6 @@
-import { View, StyleSheet, Animated, Easing } from 'react-native';
+import {
+  View, StyleSheet, Animated, Easing,
+} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';

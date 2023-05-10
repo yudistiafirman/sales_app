@@ -1,4 +1,3 @@
-import colors from '@/constants/colors';
 import React from 'react';
 import {
   GestureResponderEvent,
@@ -7,15 +6,17 @@ import {
   Text,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import { layout } from '@/constants';
 import { BViewMoreText } from '@/components';
+
 interface CurrentLocationProps {
   location?: string | undefined;
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
 }
 
-const CurrentLocation = ({ location, onPress }: CurrentLocationProps) => {
+function CurrentLocation({ location, onPress }: CurrentLocationProps) {
   return (
     <TouchableOpacity style={CurrentLocationStyles.container} onPress={onPress}>
       <Icon
@@ -28,7 +29,7 @@ const CurrentLocation = ({ location, onPress }: CurrentLocationProps) => {
       </Text>
     </TouchableOpacity>
   );
-};
+}
 
 const CurrentLocationStyles = StyleSheet.create({
   container: {

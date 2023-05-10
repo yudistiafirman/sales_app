@@ -9,9 +9,14 @@ import {
 } from 'react-native';
 import React from 'react';
 import Modal from 'react-native-modal';
-import { colors, fonts, layout } from '@/constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import RNPrint from 'react-native-print';
+import { useDispatch, useSelector } from 'react-redux';
+import { FlashList } from '@shopify/flash-list';
+import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import LabelSuccess from './elements/LabelSuccess';
 import {
@@ -22,15 +27,10 @@ import {
   BProjectDetailCard,
 } from '@/components';
 import { postSphResponseType } from '@/interfaces';
-import { useNavigation } from '@react-navigation/native';
 
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import RNPrint from 'react-native-print';
-import { useDispatch, useSelector } from 'react-redux';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { RootState } from '@/redux/store';
 import { resetSPHState } from '@/redux/reducers/SphReducer';
-import { FlashList } from '@shopify/flash-list';
 
 type StepDoneType = {
   isModalVisible: boolean;
@@ -55,7 +55,7 @@ type downloadType = {
 };
 
 function Separator() {
-  return <BSpacer size={'extraSmall'} />;
+  return <BSpacer size="extraSmall" />;
 }
 
 function downloadPdf({
@@ -65,29 +65,29 @@ function downloadPdf({
   downloadError,
 }: downloadType) {
   if (!url) return null;
-  let dirs = ReactNativeBlobUtil.fs.dirs;
+  const { dirs } = ReactNativeBlobUtil.fs;
   const downloadTitle = title
     ? `${title} berhasil di download`
     : 'PDF sph berhasil di download';
   ReactNativeBlobUtil.config(
     Platform.OS === 'android'
       ? {
-          // add this option that makes response data to be stored as a file,
-          // this is much more performant.
-          fileCache: true,
-          path: dirs.DocumentDir,
-          addAndroidDownloads: {
-            useDownloadManager: true,
-            notification: true,
-            title: downloadTitle,
-            description: 'SPH PDF',
-            mediaScannable: true,
-          },
-        }
-      : { fileCache: true }
+        // add this option that makes response data to be stored as a file,
+        // this is much more performant.
+        fileCache: true,
+        path: dirs.DocumentDir,
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          title: downloadTitle,
+          description: 'SPH PDF',
+          mediaScannable: true,
+        },
+      }
+      : { fileCache: true },
   )
     .fetch('GET', url, {
-      //some headers ..
+      // some headers ..
     })
     .then((res) => {
       // the temp file path
@@ -99,7 +99,7 @@ function downloadPdf({
 }
 async function printRemotePDF(
   url?: string,
-  printError: (errorMessage: string | unknown) => void
+  printError: (errorMessage: string | unknown) => void,
 ) {
   try {
     if (!url) {
@@ -151,7 +151,7 @@ export default function StepDone({
         url: url.replace(/\s/g, '%20'),
         message: `Link PDF SPH ${stateCompanyName}, ${url.replace(
           /\s/g,
-          '%20'
+          '%20',
         )}`,
       });
     } catch (error) {
@@ -160,7 +160,7 @@ export default function StepDone({
           popUpType: 'error',
           popUpText: error.message || 'Terjadi error saat share Link PDF SPH',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
@@ -169,8 +169,8 @@ export default function StepDone({
     <Modal
       backdropOpacity={1}
       backdropColor="white"
-      hideModalContentWhileAnimating={true}
-      coverScreen={true}
+      hideModalContentWhileAnimating
+      coverScreen
       isVisible={isModalVisible}
       style={[
         styles.modal,
@@ -207,43 +207,41 @@ export default function StepDone({
               openAddressOnMap(
                 stateCompanyName,
                 locationObj?.locationAddress?.lat,
-                locationObj?.locationAddress?.lon
+                locationObj?.locationAddress?.lon,
               );
             }}
             disabled={
-              locationObj?.locationAddress?.lat === null ||
-              locationObj?.locationAddress?.lon === null
+              locationObj?.locationAddress?.lat === null
+              || locationObj?.locationAddress?.lon === null
             }
           />
           <View style={styles.contentDetail}>
             <Text style={styles.partText}>PIC</Text>
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
             <BPic {...sphState.selectedPic} />
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
             <Text style={styles.partText}>Rincian</Text>
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
             <BProjectDetailCard
               productionTime={sphResponse?.createdTime}
               expiredDate={sphResponse?.expiryTime}
-              status={'Diterbitkan'}
+              status="Diterbitkan"
               paymentMethod={paymentMethod[sphState.paymentType]}
               projectName={sphState.selectedCompany?.name}
             />
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
             <Text style={styles.partText}>Produk</Text>
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
             <FlashList
               estimatedItemSize={10}
-              renderItem={({ item }) => {
-                return (
-                  <BProductCard
-                    name={item.product.name}
-                    pricePerVol={+item.sellPrice}
-                    volume={+item.volume}
-                    totalPrice={+item.totalPrice}
-                  />
-                );
-              }}
+              renderItem={({ item }) => (
+                <BProductCard
+                  name={item.product.name}
+                  pricePerVol={+item.sellPrice}
+                  volume={+item.volume}
+                  totalPrice={+item.totalPrice}
+                />
+              )}
               data={sphState?.chosenProducts}
               keyExtractor={(item) => item.productId}
               ItemSeparatorComponent={Separator}
@@ -253,20 +251,18 @@ export default function StepDone({
         <View style={styles.modalFooter}>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() =>
-              printRemotePDF(
-                sphResponse?.thermalLink,
-                (errorMessage: string | unknown) => {
-                  dispatch(
-                    openPopUp({
-                      popUpText: errorMessage || 'Gagal print SPH',
-                      popUpType: 'error',
-                      outsideClickClosePopUp: true,
-                    })
-                  );
-                }
-              )
-            }
+            onPress={() => printRemotePDF(
+              sphResponse?.thermalLink,
+              (errorMessage: string | unknown) => {
+                dispatch(
+                  openPopUp({
+                    popUpText: errorMessage || 'Gagal print SPH',
+                    popUpType: 'error',
+                    outsideClickClosePopUp: true,
+                  }),
+                );
+              },
+            )}
           >
             <MaterialCommunityIcons
               name="printer"
@@ -288,30 +284,28 @@ export default function StepDone({
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() =>
-              downloadPdf({
-                url: sphResponse?.letterLink,
-                title: sphResponse?.number,
-                downloadPopup: () => {
-                  dispatch(
-                    openPopUp({
-                      popUpText: 'Berhasil mendownload SPH',
-                      popUpType: 'success',
-                      outsideClickClosePopUp: true,
-                    })
-                  );
-                },
-                downloadError: (err) => {
-                  dispatch(
-                    openPopUp({
-                      popUpText: err || 'Gagal mendownload SPH',
-                      popUpType: 'error',
-                      outsideClickClosePopUp: true,
-                    })
-                  );
-                },
-              })
-            }
+            onPress={() => downloadPdf({
+              url: sphResponse?.letterLink,
+              title: sphResponse?.number,
+              downloadPopup: () => {
+                dispatch(
+                  openPopUp({
+                    popUpText: 'Berhasil mendownload SPH',
+                    popUpType: 'success',
+                    outsideClickClosePopUp: true,
+                  }),
+                );
+              },
+              downloadError: (err) => {
+                dispatch(
+                  openPopUp({
+                    popUpText: err || 'Gagal mendownload SPH',
+                    popUpType: 'error',
+                    outsideClickClosePopUp: true,
+                  }),
+                );
+              },
+            })}
           >
             <Feather
               name="download"

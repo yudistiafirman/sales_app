@@ -99,7 +99,7 @@ const SvgFiles = {
   IcLIst,
   IcGalleryPicker,
   IcDocPicker,
-  IcSignSO
+  IcSignSO,
 };
 
 export default SvgFiles;

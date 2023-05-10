@@ -2,6 +2,7 @@ import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import { displayName } from '../../../app.json';
 import { store } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+
 const checkWritePermissions = async () => {
   try {
     const granted = await PermissionsAndroid.request(
@@ -10,25 +11,22 @@ const checkWritePermissions = async () => {
         title: 'Permissions for write access',
         message: 'Give permission to your storage to write a file',
         buttonPositive: 'ok',
-      }
+      },
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   } catch (err) {
-    const errorMessage =
-      err.message ||
-      'Terjadi error dalam meminta izin membuat file di external storage permission';
+    const errorMessage = err.message
+      || 'Terjadi error dalam meminta izin membuat file di external storage permission';
     store.dispatch(
       openPopUp({
         popUpType: 'error',
         popUpText: errorMessage,
         outsideClickClosePopUp: true,
-      })
+      }),
     );
-    return;
   }
 };
 
@@ -39,7 +37,7 @@ const openSetting = () => {
         popUpType: 'error',
         popUpText: 'Terjadi error saat membuka Setting',
         outsideClickClosePopUp: true,
-      })
+      }),
     );
   });
 };
@@ -59,7 +57,7 @@ const showAlertStorage = () => {
         }, 100);
         openSetting();
       },
-    })
+    }),
   );
 };
 
@@ -67,31 +65,27 @@ const checkReadPermissions = async () => {
   try {
     if (Platform.OS === 'ios') {
       return true;
+    }
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+    );
+    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    }
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      showAlertStorage();
     } else {
-      const status = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
-      );
-      if (status === PermissionsAndroid.RESULTS.GRANTED) {
-        return true;
-      } else {
-        if (status === PermissionsAndroid.RESULTS.DENIED) {
-          showAlertStorage();
-        } else {
-          showAlertStorage();
-        }
-      }
+      showAlertStorage();
     }
   } catch (err) {
-    const errorMessage =
-      err.message || 'Terjadi error dalam request external storage permission';
+    const errorMessage = err.message || 'Terjadi error dalam request external storage permission';
     store.dispatch(
       openPopUp({
         popUpType: 'error',
         popUpText: errorMessage,
         outsideClickClosePopUp: true,
-      })
+      }),
     );
-    return;
   }
 };
 

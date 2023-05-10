@@ -1,12 +1,13 @@
+import Geolocation from 'react-native-geolocation-service';
+import { createMachine } from 'xstate';
+import { assign, send } from 'xstate/lib/actions';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import {
   getAllBrikProducts,
   getProductsCategories,
 } from '@/actions/InventoryActions';
 import { hasLocationPermission } from '@/utils/permissions';
-import Geolocation from 'react-native-geolocation-service';
-import { createMachine } from 'xstate';
-import { assign, send } from 'xstate/lib/actions';
+
 export { getLocationCoordinates } from '@/actions/CommonActions';
 
 export const priceMachine =
@@ -37,13 +38,13 @@ export const priceMachine =
         },
         events: {} as
           | {
-              type: 'sendingParams';
-              value: { latitude: number; longitude: number };
-            }
+            type: 'sendingParams';
+            value: { latitude: number; longitude: number };
+          }
           | {
-              type: 'onChangeCategories';
-              payload: number;
-            }
+            type: 'onChangeCategories';
+            payload: number;
+          }
           | { type: 'backToIdle' }
           | { type: 'onEndReached' }
           | { type: 'onAskPermission' }
@@ -275,37 +276,25 @@ export const priceMachine =
     },
     {
       guards: {
-        isLocationReachable: (context, _event) => {
-          return context.locationDetail?.distance?.value < 40000;
-        },
-        permissionGranted: (_context, event) => {
-          return event.data === true;
-        },
-        isNotLastPage: (context, event) => {
-          return context.page <= event.data.totalPage;
-        },
+        isLocationReachable: (context, _event) => context.locationDetail?.distance?.value < 40000,
+        permissionGranted: (_context, event) => event.data === true,
+        isNotLastPage: (context, event) => context.page <= event.data.totalPage,
       },
       actions: {
-        assignCurrentLocationToContext: assign((_context, event) => {
-          return {
-            longlat: event.data,
-          };
-        }),
-        assignLocationDetailToContext: assign((_context, event) => {
-          return {
-            locationDetail: event.data.result,
-            loadLocation: false,
-          };
-        }),
+        assignCurrentLocationToContext: assign((_context, event) => ({
+          longlat: event.data,
+        })),
+        assignLocationDetailToContext: assign((_context, event) => ({
+          locationDetail: event.data.result,
+          loadLocation: false,
+        })),
         assignCategoriesToContext: assign((_context, event) => {
-          const newCategoriesData = event.data.map((item) => {
-            return {
-              key: item.id,
-              title: item.name,
-              totalItems: 0,
-              chipPosition: 'right',
-            };
-          });
+          const newCategoriesData = event.data.map((item) => ({
+            key: item.id,
+            title: item.name,
+            totalItems: 0,
+            chipPosition: 'right',
+          }));
           return {
             routes: newCategoriesData,
             selectedCategories: newCategoriesData[0].title,
@@ -321,83 +310,61 @@ export const priceMachine =
             loadProduct: false,
             isLoadMore: false,
             refreshing: false,
-            productsData: productsData,
+            productsData,
           };
         }),
-        assignIndexToContext: assign((context, event) => {
-          return {
-            index: event.payload,
-            selectedCategories: context.routes[event.payload].title,
-            page: 1,
-            loadProduct: true,
-            productsData: [],
-          };
-        }),
-        incrementPage: assign((context, _event) => {
-          return {
-            page: context.page + 1,
-            isLoadMore: true,
-          };
-        }),
-        refreshPriceList: assign((_context, _event) => {
-          return {
-            page: 1,
-            refreshing: true,
-            loadProduct: true,
-            productsData: [],
-          };
-        }),
-        enableLoadProducts: assign((_context, _event) => {
-          return {
-            loadProduct: true,
-          };
-        }),
-        assignParams: assign((_context, event) => {
-          return {
-            longlat: event.value,
-            loadLocation: true,
-            loadProduct: true,
-            productsData: [],
-            selectedCategories: [],
-            page: 1,
-          };
-        }),
-        assignStopLoadMore: assign((context, event) => {
-          return {
-            isLoadMore: false,
-          };
-        }),
-        handleError: assign((_context, event) => {
-          return {
-            loadProduct: false,
-            refreshing: false,
-            isLoadMore: false,
-            loadLocation: false,
-            errorMessage: event.data.message,
-          };
-        }),
-        handleRetryGettingProducts: assign((context, event) => {
-          return {
-            productsData: [],
-            page: 1,
-            loadProduct: true,
-          };
-        }),
-        handleErrorCurrentLocation: assign((context, event) => {
-          return {
-            errorMessage: event.data.message,
-          };
-        }),
-        handleErrorFetchLocationDetail: assign((context, event) => {
-          return {
-            errorMessage: event.data.message,
-          };
-        }),
-        enableLoadLocation: assign((_context, _event) => {
-          return {
-            loadLocation: true,
-          };
-        }),
+        assignIndexToContext: assign((context, event) => ({
+          index: event.payload,
+          selectedCategories: context.routes[event.payload].title,
+          page: 1,
+          loadProduct: true,
+          productsData: [],
+        })),
+        incrementPage: assign((context, _event) => ({
+          page: context.page + 1,
+          isLoadMore: true,
+        })),
+        refreshPriceList: assign((_context, _event) => ({
+          page: 1,
+          refreshing: true,
+          loadProduct: true,
+          productsData: [],
+        })),
+        enableLoadProducts: assign((_context, _event) => ({
+          loadProduct: true,
+        })),
+        assignParams: assign((_context, event) => ({
+          longlat: event.value,
+          loadLocation: true,
+          loadProduct: true,
+          productsData: [],
+          selectedCategories: [],
+          page: 1,
+        })),
+        assignStopLoadMore: assign((context, event) => ({
+          isLoadMore: false,
+        })),
+        handleError: assign((_context, event) => ({
+          loadProduct: false,
+          refreshing: false,
+          isLoadMore: false,
+          loadLocation: false,
+          errorMessage: event.data.message,
+        })),
+        handleRetryGettingProducts: assign((context, event) => ({
+          productsData: [],
+          page: 1,
+          loadProduct: true,
+        })),
+        handleErrorCurrentLocation: assign((context, event) => ({
+          errorMessage: event.data.message,
+        })),
+        handleErrorFetchLocationDetail: assign((context, event) => ({
+          errorMessage: event.data.message,
+        })),
+        enableLoadLocation: assign((_context, _event) => ({
+          loadLocation: true,
+        })),
       },
       services: {
         askingPermission: async () => {
@@ -418,10 +385,7 @@ export const priceMachine =
             showLocationDialog: true,
             forceRequestLocation: true,
           };
-          const getCurrentPosition = () =>
-            new Promise((resolve, error) =>
-              Geolocation.getCurrentPosition(resolve, error, opt)
-            );
+          const getCurrentPosition = () => new Promise((resolve, error) => Geolocation.getCurrentPosition(resolve, error, opt));
 
           try {
             const response = await getCurrentPosition();
@@ -438,7 +402,7 @@ export const priceMachine =
             const response = await getLocationCoordinates(
               longitude,
               latitude,
-              'BP-LEGOK'
+              'BP-LEGOK',
             );
             return response.data;
           } catch (error) {
@@ -452,7 +416,7 @@ export const priceMachine =
               undefined,
               undefined,
               'BRIK_MIX',
-              false
+              false,
             );
             return response.data.result;
           } catch (error) {
@@ -460,7 +424,9 @@ export const priceMachine =
           }
         },
         getProducts: async (context, _event) => {
-          const { page, size, selectedCategories, locationDetail } = context;
+          const {
+            page, size, selectedCategories, locationDetail,
+          } = context;
           const distance = locationDetail?.distance?.value / 1000;
           try {
             const response = await getAllBrikProducts(
@@ -468,7 +434,7 @@ export const priceMachine =
               size,
               undefined,
               selectedCategories,
-              distance
+              distance,
             );
             return response.data;
           } catch (error) {
@@ -476,5 +442,5 @@ export const priceMachine =
           }
         },
       },
-    }
+    },
   );

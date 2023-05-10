@@ -15,24 +15,24 @@ interface Input {
   label?: string;
   isRequire: boolean;
   type:
-    | 'quantity'
-    | 'price'
-    | 'textInput'
-    | 'cardOption'
-    | 'comboDropdown'
-    | 'area'
-    | 'dropdown'
-    | 'PIC'
-    | 'autocomplete'
-    | 'checkbox'
-    | 'switch'
-    | 'fileInput'
-    | 'map'
-    | 'autocomplete'
-    | 'calendar'
-    | 'calendar-time'
-    | 'comboRadioButton'
-    | 'tableInput';
+  | 'quantity'
+  | 'price'
+  | 'textInput'
+  | 'cardOption'
+  | 'comboDropdown'
+  | 'area'
+  | 'dropdown'
+  | 'PIC'
+  | 'autocomplete'
+  | 'checkbox'
+  | 'switch'
+  | 'fileInput'
+  | 'map'
+  | 'autocomplete'
+  | 'calendar'
+  | 'calendar-time'
+  | 'comboRadioButton'
+  | 'tableInput';
   hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   onFocus?: (e: any) => void;
@@ -85,9 +85,9 @@ interface Input {
       value: string | number | any;
     }[];
     onChange:
-      | ((value: any) => void)
-      | ((value: any[] | null) => void)
-      | undefined;
+    | ((value: any) => void)
+    | ((value: any[] | null) => void)
+    | undefined;
     placeholder: string;
   };
   comboDropdown?: {
@@ -100,13 +100,13 @@ interface Input {
       value: string | number | any;
     }[];
     onChangeOne:
-      | ((value: any) => void)
-      | ((value: any[] | null) => void)
-      | undefined;
+    | ((value: any) => void)
+    | ((value: any[] | null) => void)
+    | undefined;
     onChangeTwo:
-      | ((value: any) => void)
-      | ((value: any[] | null) => void)
-      | undefined;
+    | ((value: any) => void)
+    | ((value: any[] | null) => void)
+    | undefined;
     placeholderOne: string;
     placeholderTwo: string;
     isErrorOne?: boolean;
@@ -121,7 +121,7 @@ interface Input {
     value: any;
     onValueChange: (value: any) => void;
   };
-  onSelect?: (index: number | any) => void; //eg for pic radio
+  onSelect?: (index: number | any) => void; // eg for pic radio
   isInputDisable?: boolean;
   disableColor?: string;
   onClear?: () => void;
@@ -170,18 +170,18 @@ interface ITableInput {
 
 interface TitleBold {
   titleBold?:
-    | 'bold'
-    | '400'
-    | 'normal'
-    | '100'
-    | '200'
-    | '300'
-    | '500'
-    | '600'
-    | '700'
-    | '800'
-    | '900'
-    | undefined;
+  | 'bold'
+  | '400'
+  | 'normal'
+  | '100'
+  | '200'
+  | '300'
+  | '500'
+  | '600'
+  | '700'
+  | '800'
+  | '900'
+  | undefined;
 }
 
 interface Styles {
@@ -303,14 +303,14 @@ interface BLocationProps {
   mapStyle?: ViewStyle | undefined;
   region?: Region & LatLang;
   onRegionChangeComplete?:
-    | ((region: Region & LatLang, details: Details) => void)
-    | undefined;
+  | ((region: Region & LatLang, details: Details) => void)
+  | undefined;
   onRegionChange?:
-    | ((region: Region & LatLang, details: Details) => void)
-    | undefined;
+  | ((region: Region & LatLang, details: Details) => void)
+  | undefined;
   onMapReady?:
-    | ((event?: NativeSyntheticEvent<{}> | undefined) => void)
-    | undefined;
+  | ((event?: NativeSyntheticEvent<{}> | undefined) => void)
+  | undefined;
   CustomMarker?: React.ReactNode | undefined;
   isUninteractable?: boolean;
   formattedAddress?: string;
@@ -320,14 +320,14 @@ interface selectedCompanyInterface {
   id: string;
   name: string;
   Company:
-    | {
-        id: string | null;
-        name: string | null;
-      }
-    | {
-        id: string | null;
-        title: string | null;
-      };
+  | {
+    id: string | null;
+    name: string | null;
+  }
+  | {
+    id: string | null;
+    title: string | null;
+  };
   Pics: PIC[];
   Visitation: {
     finish_date: string | null;
@@ -413,7 +413,7 @@ type SphContextInterface = [
   SphStateInterface,
   (key: keyof SphStateInterface) => (data: any) => void,
   (index: number) => void,
-  number
+  number,
 ];
 
 interface AdditionalPricesInterface {

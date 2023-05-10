@@ -36,17 +36,15 @@ export const SphContext = React.createContext<SphContextInterface>([
   0,
 ]);
 
-export const SphProvider = ({ children }: { children: React.ReactNode }) => {
+export function SphProvider({ children }: { children: React.ReactNode }) {
   const [sphData, setSphData] = useState<SphStateInterface>(initialState);
   const [currentPosition, setCurrentPosition] = useState<number>(0);
 
   const stateUpdate = (key: keyof SphStateInterface) => (e: any) => {
-    setSphData((current) => {
-      return {
-        ...current,
-        [key]: e,
-      };
-    });
+    setSphData((current) => ({
+      ...current,
+      [key]: e,
+    }));
   };
 
   return (
@@ -63,4 +61,4 @@ export const SphProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
     </SphContext.Provider>
   );
-};
+}

@@ -1,10 +1,10 @@
+import Geolocation from 'react-native-geolocation-service';
+import { assign, createMachine, send } from 'xstate';
 import {
   getLocationCoordinates,
   searchLocation,
   searchLocationById,
 } from '@/actions/CommonActions';
-import Geolocation from 'react-native-geolocation-service';
-import { assign, createMachine, send } from 'xstate';
 
 export const searchAreaMachine = createMachine(
   {
@@ -110,7 +110,7 @@ export const searchAreaMachine = createMachine(
 
           searchValueLoaded: {
             after: {
-              '100': 'onGettingLocation',
+              100: 'onGettingLocation',
             },
           },
 
@@ -134,46 +134,32 @@ export const searchAreaMachine = createMachine(
   },
   {
     guards: {
-      searchLengthAccepted: (context, event) => {
-        return event.payload.length > 2;
-      },
+      searchLengthAccepted: (context, event) => event.payload.length > 2,
     },
     actions: {
-      assignCurrentLocationToContext: assign((context, event) => {
-        return {
-          longlat: event.data,
-        };
-      }),
-      assignSearchValue: assign((context, event) => {
-        return {
-          searchValue: event.payload,
-          loadPlaces: true,
-        };
-      }),
-      assignResult: assign((context, event) => {
-        return {
-          result: event.data,
-          loadPlaces: false,
-        };
-      }),
-      clearResult: assign((context, event) => {
-        return {
-          result: [],
-        };
-      }),
-      assignPlacesId: assign((context, event) => {
-        return {
-          placesId: event.payload.place_id,
-          formattedAddress: event.payload.description,
-        };
-      }),
-      handleErrorGettingLocation: assign((context, event) => {
-        return {
-          errorMessage: event.data.message,
-          loadPlaces: false,
-          result: [],
-        };
-      }),
+      assignCurrentLocationToContext: assign((context, event) => ({
+        longlat: event.data,
+      })),
+      assignSearchValue: assign((context, event) => ({
+        searchValue: event.payload,
+        loadPlaces: true,
+      })),
+      assignResult: assign((context, event) => ({
+        result: event.data,
+        loadPlaces: false,
+      })),
+      clearResult: assign((context, event) => ({
+        result: [],
+      })),
+      assignPlacesId: assign((context, event) => ({
+        placesId: event.payload.place_id,
+        formattedAddress: event.payload.description,
+      })),
+      handleErrorGettingLocation: assign((context, event) => ({
+        errorMessage: event.data.message,
+        loadPlaces: false,
+        result: [],
+      })),
     },
     services: {
       getCurrentLocation: async () => {
@@ -186,10 +172,7 @@ export const searchAreaMachine = createMachine(
           showLocationDialog: true,
           forceRequestLocation: true,
         };
-        const getCurrentPosition = () =>
-          new Promise((resolve, error) =>
-            Geolocation.getCurrentPosition(resolve, error, opt)
-          );
+        const getCurrentPosition = () => new Promise((resolve, error) => Geolocation.getCurrentPosition(resolve, error, opt));
 
         try {
           const response = await getCurrentPosition();
@@ -224,7 +207,7 @@ export const searchAreaMachine = createMachine(
             // '',
             longitude,
             latitude,
-            ''
+            '',
           );
 
           return response.result;
@@ -233,5 +216,5 @@ export const searchAreaMachine = createMachine(
         }
       },
     },
-  }
+  },
 );

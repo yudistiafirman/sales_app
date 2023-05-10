@@ -1,6 +1,6 @@
-import { PIC } from '@/interfaces';
 import React from 'react';
 import { View } from 'react-native';
+import { PIC } from '@/interfaces';
 import BSpacer from '../atoms/BSpacer';
 import BPic from '../molecules/BPic';
 
@@ -11,12 +11,12 @@ interface IProps {
   isCompetitor: boolean;
 }
 
-const BPicList = ({
+function BPicList({
   data,
   isOption = false,
   onSelect,
   isCompetitor = false,
-}: IProps) => {
+}: IProps) {
   return (
     <View>
       {data?.map((el, key) => (
@@ -36,6 +36,6 @@ const BPicList = ({
       ))}
     </View>
   );
-};
+}
 
 export default BPicList;

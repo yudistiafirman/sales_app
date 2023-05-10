@@ -1,12 +1,12 @@
-import { colors } from '@/constants';
 import { NativeModules, Platform } from 'react-native';
+import { colors } from '@/constants';
+
 const { RNCustomConfig } = NativeModules;
 
 const flavor = RNCustomConfig?.flavor;
 const versionName = RNCustomConfig?.versionName;
 
-export const isUndefined = (state: any): boolean =>
-  typeof state === 'undefined';
+export const isUndefined = (state: any): boolean => typeof state === 'undefined';
 
 export const getColorStatusTrx = (id: string) => {
   switch (id.toUpperCase()) {
@@ -79,7 +79,7 @@ export const beautifyPhoneNumber = (text: string) => {
     result += firstChar[0];
     firstChar = firstChar.splice(1, 4);
     firstChar = firstChar.join('').match(/.{1,4}/g) ?? [];
-    result += ' ' + firstChar.join(' ');
+    result += ` ${firstChar.join(' ')}`;
   } else {
     result += firstChar.join('');
   }
@@ -89,17 +89,15 @@ export const beautifyPhoneNumber = (text: string) => {
 export const isDevelopment = () => {
   if (flavor === 'development' || (Platform.OS !== 'android' && __DEV__)) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 export const isProduction = () => {
   if (flavor === 'production') {
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 export const getAppVersionName = (): string => {
@@ -108,13 +106,9 @@ export const getAppVersionName = (): string => {
   return version;
 };
 
-export const isForceUpdate = (text: any): boolean => {
-  return text?.is_forced;
-};
+export const isForceUpdate = (text: any): boolean => text?.is_forced;
 
-export const getMinVersionUpdate = (text: any): string => {
-  return text?.min_version?.split('.').join('');
-};
+export const getMinVersionUpdate = (text: any): string => text?.min_version?.split('.').join('');
 
 export const isJsonString = (str: any) => {
   try {
@@ -129,7 +123,7 @@ export const getSuccessMsgFromAPI = (
   httpMethod: string,
   domainType: string,
   fullUrl: string,
-  endPoint: string
+  endPoint: string,
 ) => {
   // excluding: /refresh , /suggestion , /places , /verify-auth , /project_sph , all finalText that empty
 
@@ -148,15 +142,15 @@ export const getSuccessMsgFromAPI = (
       finalText += 'mengubah ';
       break;
     default:
-      finalText += httpMethod.toLowerCase() + ' ';
+      finalText += `${httpMethod.toLowerCase()} `;
       break;
   }
 
   if (
-    domainType === 'common-dev.aggre.id' ||
-    domainType === 'common.aggre.id' ||
-    domainType === 'common.apis.oreo.brik.id' ||
-    domainType === 'common.apis.brik.id'
+    domainType === 'common-dev.aggre.id'
+    || domainType === 'common.aggre.id'
+    || domainType === 'common.apis.oreo.brik.id'
+    || domainType === 'common.apis.brik.id'
   ) {
     switch (endPoint.toLowerCase()) {
       case 'projectdoc':
@@ -193,18 +187,16 @@ export const getSuccessMsgFromAPI = (
         finalText = 'Berhasil logout';
         break;
       default:
-        if (fullUrl.toLowerCase().includes('places/'))
-          finalText = 'Berhasil mendapatkan detail alamat';
-        else if (fullUrl.toLowerCase().includes('project/'))
-          finalText += 'detail proyek';
+        if (fullUrl.toLowerCase().includes('places/')) finalText = 'Berhasil mendapatkan detail alamat';
+        else if (fullUrl.toLowerCase().includes('project/')) finalText += 'detail proyek';
         else finalText += 'data';
         break;
     }
   } else if (
-    domainType === 'inventory-dev.aggre.id' ||
-    domainType === 'inventory.aggre.id' ||
-    domainType === 'inventory.apis.oreo.brik.id' ||
-    domainType === 'inventory.apis.brik.id'
+    domainType === 'inventory-dev.aggre.id'
+    || domainType === 'inventory.aggre.id'
+    || domainType === 'inventory.apis.oreo.brik.id'
+    || domainType === 'inventory.apis.brik.id'
   ) {
     switch (endPoint.toLowerCase()) {
       case 'category':
@@ -218,10 +210,10 @@ export const getSuccessMsgFromAPI = (
         break;
     }
   } else if (
-    domainType === 'productivity-dev.aggre.id' ||
-    domainType === 'productivity.aggre.id' ||
-    domainType === 'productivity.apis.oreo.brik.id' ||
-    domainType === 'productivity.apis.brik.id'
+    domainType === 'productivity-dev.aggre.id'
+    || domainType === 'productivity.aggre.id'
+    || domainType === 'productivity.apis.oreo.brik.id'
+    || domainType === 'productivity.apis.brik.id'
   ) {
     switch (endPoint.toLowerCase()) {
       case 'all-visitation':
@@ -242,10 +234,10 @@ export const getSuccessMsgFromAPI = (
         break;
     }
   } else if (
-    domainType === 'order-dev.aggre.id' ||
-    domainType === 'order.aggre.id' ||
-    domainType === 'order.apis.oreo.brik.id' ||
-    domainType === 'order.apis.brik.id'
+    domainType === 'order-dev.aggre.id'
+    || domainType === 'order.aggre.id'
+    || domainType === 'order.apis.oreo.brik.id'
+    || domainType === 'order.apis.brik.id'
   ) {
     switch (endPoint.toLowerCase()) {
       case 'project-sph':
@@ -277,14 +269,11 @@ export const getSuccessMsgFromAPI = (
         break;
       default:
         if (fullUrl.toLowerCase().includes('sph/')) finalText += 'dokumen SPH';
-        else if (fullUrl.toLowerCase().includes('purchase-order/'))
-          finalText = '';
-        else if (fullUrl.toLowerCase().includes('quotation-letter/'))
-          finalText = '';
+        else if (fullUrl.toLowerCase().includes('purchase-order/')) finalText = '';
+        else if (fullUrl.toLowerCase().includes('quotation-letter/')) finalText = '';
         else if (fullUrl.toLowerCase().includes('deposit/')) finalText = '';
         else if (fullUrl.toLowerCase().includes('schedule/')) finalText = '';
-        else if (fullUrl.toLowerCase().includes('delivery-order/'))
-          finalText = '';
+        else if (fullUrl.toLowerCase().includes('delivery-order/')) finalText = '';
         else finalText += 'data';
         break;
     }
@@ -294,6 +283,4 @@ export const getSuccessMsgFromAPI = (
   return finalText;
 };
 
-export const uniqueStringGenerator = () => {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
-};
+export const uniqueStringGenerator = () => Date.now().toString(36) + Math.random().toString(36).substr(2);

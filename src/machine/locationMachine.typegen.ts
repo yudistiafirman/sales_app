@@ -32,8 +32,8 @@ export interface Typegen0 {
   eventsCausingGuards: {};
   eventsCausingServices: {
     onGettingLocationDetails:
-      | 'sendingCoorParams'
-      | 'xstate.after(500)#location.debounce';
+    | 'sendingCoorParams'
+    | 'xstate.after(500)#location.debounce';
   };
   matchesStates: 'debounce' | 'gettingLocationDetails' | 'receivingParams';
   tags: never;

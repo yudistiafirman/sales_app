@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-community/async-storage';
 import { persistReducer, persistStore } from 'redux-persist';
+import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 import authReducer from './reducers/authReducer';
 import commonReducer from './reducers/commonReducer';
 import cameraReducer, { CameraGlobalState } from './reducers/cameraReducer';
@@ -17,7 +18,6 @@ import SphReducer from './reducers/SphReducer';
 import VisitationReducer, {
   VisitationGlobalState,
 } from './reducers/VisitationReducer';
-import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 import { SphStateInterface } from '@/interfaces';
 import operationReducer, {
   operationInitState,
@@ -41,27 +41,26 @@ const rootReducer = combineReducers({
   purchaseOrder: purchaseOrderReducer,
   operation: persistReducer<operationInitState, any>(
     persistConfig,
-    operationReducer
+    operationReducer,
   ),
   salesOrder: persistReducer<SOGlobalState, any>(
     persistConfig,
-    salesOrderReducer
+    salesOrderReducer,
   ),
   sph: persistReducer<SphStateInterface, any>(persistConfig, SphReducer),
   visitation: persistReducer<VisitationGlobalState, any>(
     persistConfig,
-    VisitationReducer
+    VisitationReducer,
   ),
   camera: persistReducer<CameraGlobalState, any>(persistConfig, cameraReducer),
 });
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleWare) =>
-    getDefaultMiddleWare({
-      immutableCheck: false,
-      serializableCheck: false,
-    }).concat([createXStateMiddleware(purchaseOrderSlice)]),
+  middleware: (getDefaultMiddleWare) => getDefaultMiddleWare({
+    immutableCheck: false,
+    serializableCheck: false,
+  }).concat([createXStateMiddleware(purchaseOrderSlice)]),
 });
 
 export const persistor = persistStore(store);

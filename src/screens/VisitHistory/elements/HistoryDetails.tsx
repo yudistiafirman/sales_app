@@ -1,8 +1,8 @@
+import React from 'react';
+import { View } from 'react-native';
 import { BSpacer, BDivider } from '@/components';
 import { layout } from '@/constants';
 import { VisitHistoryPayload } from '@/machine/visitHistoryMachine';
-import React from 'react';
-import { View } from 'react-native';
 import Estimation from './Estimation';
 import Notes from './Note';
 import PaymentType from './PaymentType';
@@ -11,7 +11,7 @@ import Product from './Product';
 import ProjectPhase from './ProjectPhase';
 import VisitationDatesAndStatus from './VisitationDatesAndStatus';
 
-const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
+function HistoryDetails({ details }: { details: VisitHistoryPayload }) {
   return (
     <View>
       <BSpacer size="small" />
@@ -20,8 +20,8 @@ const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
         bookingDate={details.dateVisit}
         finishDate={details.finishDate}
         rejectCategory={details.rejectCategory}
-        quatationId={details?.QuotationRequests && details?.QuotationRequests.length > 0 ? 
-          details?.QuotationRequests[0]?.QuotationLetter?.id : undefined}
+        quatationId={details?.QuotationRequests && details?.QuotationRequests.length > 0
+          ? details?.QuotationRequests[0]?.QuotationLetter?.id : undefined}
         rejectNotes={details?.rejectNotes}
       />
       <BSpacer size="small" />
@@ -78,6 +78,6 @@ const HistoryDetails = ({ details }: { details: VisitHistoryPayload }) => {
       <BSpacer size="small" />
     </View>
   );
-};
+}
 
 export default HistoryDetails;

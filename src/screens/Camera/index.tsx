@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Animated, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  Animated, SafeAreaView, StyleSheet, View,
+} from 'react-native';
 import {
   useNavigation,
   useRoute,
@@ -7,23 +9,22 @@ import {
   StackActions,
   useFocusEffect,
 } from '@react-navigation/native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { Camera, useCameraDevices } from 'react-native-vision-camera';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { hasCameraPermissions } from '@/utils/permissions';
-import { CAMERA, PO } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
+import { CAMERA, PO, IMAGE_PREVIEW } from '@/navigation/ScreenNames';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { BHeaderIcon } from '@/components';
 import { resScale } from '@/utils';
-import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
-import { IMAGE_PREVIEW } from '@/navigation/ScreenNames';
 import CameraButton from './elements/CameraButton';
-import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import HeaderButton from './elements/HeaderButton';
 
-const CameraScreen = () => {
+function CameraScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<RootStackScreenProps>();
@@ -31,8 +32,7 @@ const CameraScreen = () => {
   const [enableFlashlight, onEnableFlashlight] = React.useState<boolean>(false);
   const [enableHDR, onEnableHDR] = React.useState<boolean>(false);
   const [enableLowBoost, onEnableLowBoost] = React.useState<boolean>(false);
-  const [enableHighQuality, onEnableHighQuality] =
-    React.useState<boolean>(false);
+  const [enableHighQuality, onEnableHighQuality] = React.useState<boolean>(false);
   const { isFirstTimeOpenCamera } = poState.currentState.context;
   const navigateTo = route?.params?.navigateTo;
   const closeButton = route?.params?.closeButton;
@@ -42,15 +42,13 @@ const CameraScreen = () => {
   const operationTempData = route?.params?.operationTempData;
   const soNumber = route?.params?.soNumber;
   const soID = route?.params?.soID;
-  const disabledDocPicker =
-    route?.params?.disabledDocPicker !== undefined
-      ? route?.params?.disabledDocPicker
-      : true;
-  const disabledGalleryPicker =
-    route?.params?.disabledGalleryPicker !== undefined
-      ? route?.params?.disabledGalleryPicker
-      : true;
-  useHeaderTitleChanged({ title: 'Foto ' + photoTitle });
+  const disabledDocPicker = route?.params?.disabledDocPicker !== undefined
+    ? route?.params?.disabledDocPicker
+    : true;
+  const disabledGalleryPicker = route?.params?.disabledGalleryPicker !== undefined
+    ? route?.params?.disabledGalleryPicker
+    : true;
+  useHeaderTitleChanged({ title: `Foto ${photoTitle}` });
 
   const handleBack = React.useCallback(() => {
     if (navigateTo === PO) {
@@ -100,7 +98,7 @@ const CameraScreen = () => {
           popUpType: 'error',
           popUpText: 'No Camera Found',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     } else {
       try {
@@ -127,7 +125,7 @@ const CameraScreen = () => {
             popUpType: 'error',
             popUpText: 'Camera error',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     }
@@ -157,7 +155,7 @@ const CameraScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       hasCameraPermissions();
-    }, [])
+    }, []),
   );
 
   return (
@@ -172,9 +170,9 @@ const CameraScreen = () => {
                 device={device}
                 isActive={isFocused}
                 photo
-                enableHighQualityPhotos={enableHighQuality ? true : false}
+                enableHighQualityPhotos={!!enableHighQuality}
                 enableZoomGesture
-                hdr={enableHDR ? true : false}
+                hdr={!!enableHDR}
                 lowLightBoost={enableLowBoost}
               />
             )}
@@ -200,7 +198,7 @@ const CameraScreen = () => {
       </SafeAreaView>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   parent: {

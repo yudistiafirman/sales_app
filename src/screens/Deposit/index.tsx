@@ -1,21 +1,23 @@
 import * as React from 'react';
 import { View, DeviceEventEmitter, BackHandler } from 'react-native';
 import {
+  StackActions,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import moment from 'moment';
+import {
   BBackContinueBtn,
   BContainer,
   BHeaderIcon,
   BSpacer,
   PopUpQuestion,
+  BStepperIndicator,
 } from '@/components';
 import { Styles } from '@/interfaces';
 import { useKeyboardActive } from '@/hooks';
-import { BStepperIndicator } from '@/components';
 import { resScale } from '@/utils';
-import {
-  StackActions,
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { CreateDepositState } from '@/interfaces/CreateDeposit';
 import {
@@ -25,11 +27,9 @@ import {
 import FirstStep from './element/FirstStep';
 import SecondStep from './element/SecondStep';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
-import { useDispatch } from 'react-redux';
 import { CREATE_DEPOSIT } from '@/navigation/ScreenNames';
 import { CreateDeposit } from '@/models/CreateDeposit';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import moment from 'moment';
 import { postOrderDeposit } from '@/redux/async-thunks/orderThunks';
 import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
@@ -39,34 +39,30 @@ const labels = ['Data Pelanggan', 'Cari PT / Proyek'];
 
 function stepHandler(
   state: CreateDepositState,
-  setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
+  setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void,
 ) {
   const { stepOne, stepTwo, existingProjectID } = state;
 
   const images = stepOne?.deposit?.picts?.filter((v) => v?.file !== null);
   if (
-    images &&
-    images.length > 0 &&
-    stepOne?.deposit?.createdAt &&
-    stepOne?.deposit?.nominal
+    images
+    && images.length > 0
+    && stepOne?.deposit?.createdAt
+    && stepOne?.deposit?.nominal
   ) {
-    setStepsDone((curr) => {
-      return [...new Set(curr), 0];
-    });
+    setStepsDone((curr) => [...new Set(curr), 0]);
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 0));
   }
 
   if (stepTwo?.companyName && stepTwo?.purchaseOrders && existingProjectID) {
-    setStepsDone((curr) => {
-      return [...new Set(curr), 1];
-    });
+    setStepsDone((curr) => [...new Set(curr), 1]);
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 1));
   }
 }
 
-const Deposit = () => {
+function Deposit() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { values, action } = React.useContext(CreateDepositContext);
@@ -97,19 +93,20 @@ const Deposit = () => {
       };
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
-        backAction
+        backAction,
       );
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [values.step, values.isSearchingPurchaseOrder])
+    }, [values.step, values.isSearchingPurchaseOrder]),
   );
 
-  React.useEffect(() => {
-    return () => {
+  React.useEffect(
+    () => () => {
       dispatch(resetImageURLS({ source: CREATE_DEPOSIT }));
-    };
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    [],
+  );
 
   React.useEffect(() => {
     stepHandler(values, setStepsDone);
@@ -127,21 +124,19 @@ const Deposit = () => {
             popUpText: 'Menambahkan deposit',
             highlightedText: 'Deposit',
             outsideClickClosePopUp: false,
-          })
+          }),
         );
         const photoFiles = values.stepOne?.deposit?.picts
           ?.filter((v) => v?.file !== null)
-          .map((photo) => {
-            return {
-              ...photo?.file,
-              uri: photo?.file?.uri?.replace('file:', 'file://'),
-            };
-          });
+          .map((photo) => ({
+            ...photo?.file,
+            uri: photo?.file?.uri?.replace('file:', 'file://'),
+          }));
         const uploadedImage = await dispatch(
-          postUploadFiles({ files: photoFiles, from: 'deposit' })
+          postUploadFiles({ files: photoFiles, from: 'deposit' }),
         ).unwrap();
 
-        let payload: CreateDeposit = {
+        const payload: CreateDeposit = {
           projectId: values.existingProjectID,
           quotationLetterId:
             values.stepTwo?.purchaseOrders[0]?.quotationLetterId,
@@ -149,7 +144,7 @@ const Deposit = () => {
           value: values.stepOne?.deposit?.nominal,
           paymentDate: moment(
             values.stepOne?.deposit?.createdAt,
-            'DD/MM/yyyy'
+            'DD/MM/yyyy',
           ).valueOf(),
           status: 'SUBMITTED',
           files: [],
@@ -165,7 +160,7 @@ const Deposit = () => {
             popUpText: 'Penambahan Deposit\nBerhasil',
             highlightedText: 'Deposit',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       } catch (error) {
         const message = error.message || 'Penambahan Deposit Gagal';
@@ -175,21 +170,19 @@ const Deposit = () => {
             popUpText: message,
             highlightedText: 'Deposit',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     }
   };
 
-  const actionBackButton = (directlyClose: boolean = false) => {
+  const actionBackButton = (directlyClose = false) => {
     if (values.isSearchingPurchaseOrder === true) {
       action.updateValue('isSearchingPurchaseOrder', false);
+    } else if (values.step > 0 && !directlyClose) {
+      next(values.step - 1)();
     } else {
-      if (values.step > 0 && !directlyClose) {
-        next(values.step - 1)();
-      } else {
-        setPopupVisible(true);
-      }
+      setPopupVisible(true);
     }
   };
 
@@ -211,7 +204,7 @@ const Deposit = () => {
       <BContainer paddingHorizontal={layout.pad.lg + layout.pad.xs}>
         <View style={styles.container}>
           {stepRender[values.step]}
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           {!keyboardVisible && values.shouldScrollView && values.step > -1 && (
             <BBackContinueBtn
               onPressContinue={() => {
@@ -221,7 +214,7 @@ const Deposit = () => {
               onPressBack={() => actionBackButton(false)}
               continueText={values.step > 0 ? 'Buat Deposit' : 'Lanjut'}
               disableContinue={!stepsDone.includes(values.step)}
-              isContinueIcon={values.step < 1 ? true : false}
+              isContinueIcon={values.step < 1}
             />
           )}
         </View>
@@ -234,15 +227,15 @@ const Deposit = () => {
           actionButton={() => {
             setPopupVisible(false);
           }}
-          cancelText={'Keluar'}
-          actionText={'Lanjutkan'}
-          text={'Apakah Anda yakin ingin keluar?'}
-          desc={'Progres pembuatan Deposit anda akan hilang'}
+          cancelText="Keluar"
+          actionText="Lanjutkan"
+          text="Apakah Anda yakin ingin keluar?"
+          desc="Progres pembuatan Deposit anda akan hilang"
         />
       </BContainer>
     </>
   );
-};
+}
 
 const styles: Styles = {
   container: {
@@ -251,12 +244,12 @@ const styles: Styles = {
   },
 };
 
-const DepositWithProvider = (props: any) => {
+function DepositWithProvider(props: any) {
   return (
     <CreateDepositProvider>
       <Deposit {...props} />
     </CreateDepositProvider>
   );
-};
+}
 
 export default DepositWithProvider;

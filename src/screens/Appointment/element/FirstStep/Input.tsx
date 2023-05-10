@@ -1,40 +1,39 @@
-import { BDivider, BSpacer, BText, BForm } from '@/components';
+import debounce from 'lodash.debounce';
+import React, { useMemo } from 'react';
+import { ScrollView, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import {
+  BDivider, BSpacer, BText, BForm,
+} from '@/components';
 import { layout } from '@/constants';
 import { AppointmentActionType, StepOne } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
 import { Input, projectResponseType, Styles } from '@/interfaces';
 import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
 import { AppDispatch } from '@/redux/store';
-import debounce from 'lodash.debounce';
-import React, { useMemo } from 'react';
-import { ScrollView, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+
 const company = require('@/assets/icon/Visitation/company.png');
 const profile = require('@/assets/icon/Visitation/profile.png');
 
-const Inputs = () => {
+function Inputs() {
   const [values, dispatchValue] = useAppointmentData();
   const { stepOne: state } = values;
   const dispatch = useDispatch<AppDispatch>();
   const isCompany = state.customerType === 'company';
-  const fetchDebounce = useMemo(() => {
-    return debounce((searchQuery: string) => {
-      dispatch(getProjectsByUserThunk({ search: searchQuery }))
-        .unwrap()
-        .then((response: projectResponseType[]) => {
-          const items = response.map((project) => {
-            return {
-              id: project.id,
-              title: project.display_name,
-            };
-          });
-          dispatchValue({
-            type: AppointmentActionType.ADD_COMPANIES,
-            value: items,
-          });
+  const fetchDebounce = useMemo(() => debounce((searchQuery: string) => {
+    dispatch(getProjectsByUserThunk({ search: searchQuery }))
+      .unwrap()
+      .then((response: projectResponseType[]) => {
+        const items = response.map((project) => ({
+          id: project.id,
+          title: project.display_name,
+        }));
+        dispatchValue({
+          type: AppointmentActionType.ADD_COMPANIES,
+          value: items,
         });
-    }, 500);
-  }, [dispatch, dispatchValue]);
+      });
+  }, 500), [dispatch, dispatchValue]);
 
   const onChangeText = (searchQuery: string): void => {
     dispatchValue({
@@ -86,11 +85,10 @@ const Inputs = () => {
           customerErrorMsg: state.errorCompany,
           type: 'autocomplete',
           onChange: onChangeText,
-          onClear: () =>
-            dispatchValue({
-              type: AppointmentActionType.SET_COMPANIES_NAME,
-              value: null,
-            }),
+          onClear: () => dispatchValue({
+            type: AppointmentActionType.SET_COMPANIES_NAME,
+            value: null,
+          }),
           value: values.stepOne.company.Company,
           items: state.options.items,
           placeholder: 'Masukan Nama Perusahaan',
@@ -133,12 +131,10 @@ const Inputs = () => {
             const picsValue = isCompany
               ? state.company.PIC
               : state.individu.PIC;
-            const newPicList = picsValue.map((el, _index) => {
-              return {
-                ...el,
-                isSelected: _index === index,
-              };
-            });
+            const newPicList = picsValue.map((el, _index) => ({
+              ...el,
+              isSelected: _index === index,
+            }));
             dispatchValue({
               type: AppointmentActionType.SET_PICS,
               key: state.customerType as keyof StepOne,
@@ -174,7 +170,7 @@ const Inputs = () => {
       </ScrollView>
     </>
   );
-};
+}
 
 const styles: Styles = {
   dividerContainer: {

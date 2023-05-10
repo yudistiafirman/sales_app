@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSelector } from 'react-redux';
 import Dispatch from '@/screens/Operation/Dispatch';
 import CustomTabBar from '../CustomTabBar';
 import {
@@ -16,7 +17,6 @@ import {
 import Return from '@/screens/Operation/Return';
 import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
 import { colors } from '@/constants';
-import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 

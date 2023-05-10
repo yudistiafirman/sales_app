@@ -13,6 +13,14 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
+import moment from 'moment';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch } from 'react-redux';
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import RNPrint from 'react-native-print';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
 import {
   BDivider,
   BPic,
@@ -26,36 +34,28 @@ import {
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { colors, fonts, layout } from '@/constants';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
-import { ScrollView } from 'react-native-gesture-handler';
 import { beautifyPhoneNumber } from '@/utils/generalFunc';
-import moment from 'moment';
 import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { getVisitationOrderByID } from '@/actions/OrderActions';
 import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
 import { PO_METHOD_LIST } from '@/constants/dropdown';
-import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import RNPrint from 'react-native-print';
 import { resScale } from '@/utils';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Feather from 'react-native-vector-icons/Feather';
 
 function ListProduct(
   item: any,
   index: number,
   selectedType: string,
   quantity: number | undefined,
-  isPoData: boolean
+  isPoData: boolean,
 ) {
   let displayName = '';
   let pricePerlVol;
   if (item.ReqProduct) {
     displayName = `${
       item?.ReqProduct?.product?.category?.parent
-        ? item?.ReqProduct?.product?.category?.parent?.name + ' '
+        ? `${item?.ReqProduct?.product?.category?.parent?.name} `
         : ''
     }${item?.ReqProduct?.product?.displayName} ${
       item?.ReqProduct?.product?.category
@@ -66,10 +66,10 @@ function ListProduct(
   } else if (item.Product) {
     displayName = `${
       item?.Product?.category?.parent?.name
-        ? item?.Product?.category?.parent?.name + ' '
+        ? `${item?.Product?.category?.parent?.name} `
         : item?.Product?.category?.parent?.na
-        ? item?.Product?.category?.parent?.na + ' '
-        : ''
+          ? `${item?.Product?.category?.parent?.na} `
+          : ''
     }${item?.Product?.displayName} ${
       item?.Product?.category ? item?.Product?.category?.name : ''
     }`;
@@ -78,7 +78,7 @@ function ListProduct(
       : item.offeringPrice;
   } else {
     displayName = `${
-      item?.category?.parent ? item?.category?.parent?.name + ' ' : ''
+      item?.category?.parent ? `${item?.category?.parent?.name} ` : ''
     }${item?.displayName} ${item?.category ? item?.category?.name : ''}`;
     pricePerlVol = item.offering_price
       ? item.offering_price
@@ -90,39 +90,37 @@ function ListProduct(
         name={displayName}
         pricePerVol={pricePerlVol}
         volume={
-          quantity
-            ? quantity
-            : item.requestedQuantity
+          quantity || (item.requestedQuantity
             ? item.requestedQuantity
             : item.quantity
-            ? item.quantity
-            : 0
+              ? item.quantity
+              : 0)
         }
         totalPrice={
           isPoData
             ? item.requestedQuantity * item.ReqProduct.offeringPrice
             : item.ReqProduct
-            ? item.ReqProduct?.totalPrice
-            : item.total_price
-            ? item.total_price
-            : item.totalPrice
+              ? item.ReqProduct?.totalPrice
+              : item.total_price
+                ? item.total_price
+                : item.totalPrice
         }
         unit={
           item.ReqProduct?.product ? item.ReqProduct?.product.unit : item.unit
         }
         hideTotal={
-          selectedType !== 'Jadwal' && selectedType !== 'DO' ? false : true
+          !(selectedType !== 'Jadwal' && selectedType !== 'DO')
         }
         hidePricePerVolume={
-          selectedType !== 'Jadwal' && selectedType !== 'DO' ? false : true
+          !(selectedType !== 'Jadwal' && selectedType !== 'DO')
         }
       />
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size="extraSmall" />
     </View>
   );
 }
 
-const TransactionDetail = () => {
+function TransactionDetail() {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
   const data = route?.params?.data;
@@ -144,7 +142,7 @@ const TransactionDetail = () => {
       if (data?.PurchaseOrderDocs) {
         setDownloadFiles({
           letter: data?.PurchaseOrderDocs?.find(
-            (v: any) => v?.type == 'BRIK_SIGNED'
+            (v: any) => v?.type == 'BRIK_SIGNED',
           ),
         });
       }
@@ -155,15 +153,13 @@ const TransactionDetail = () => {
           letter: data?.DepositFiles?.find((v: any) => v?.type == ''),
         });
       }
-    } else {
-      if (data?.QuotationLetterFiles) {
-        setDownloadFiles({
-          pos: data?.QuotationLetterFiles?.find((v: any) => v?.type == 'POS'),
-          letter: data?.QuotationLetterFiles?.find(
-            (v: any) => v?.type == 'LETTER'
-          ),
-        });
-      }
+    } else if (data?.QuotationLetterFiles) {
+      setDownloadFiles({
+        pos: data?.QuotationLetterFiles?.find((v: any) => v?.type == 'POS'),
+        letter: data?.QuotationLetterFiles?.find(
+          (v: any) => v?.type == 'LETTER',
+        ),
+      });
     }
   }, [data]);
 
@@ -188,23 +184,23 @@ const TransactionDetail = () => {
           title: getData ? getData.number : 'N/A',
           data: getData,
           type: selectedType,
-        })
+        }),
       );
     } catch (error) {
       dispatch(
         openPopUp({
           popUpType: 'error',
           popUpText:
-            error.message ||
-            'Terjadi error saat perpindahan screen menuju ke halaman sph',
+            error.message
+            || 'Terjadi error saat perpindahan screen menuju ke halaman sph',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
 
   const arrayQuotationLetter = () => {
-    let arrayQuote: QuotationRequests[] = [];
+    const arrayQuote: QuotationRequests[] = [];
     arrayQuote.push(data?.QuotationLetter?.QuotationRequest);
     return arrayQuote;
   };
@@ -237,29 +233,29 @@ const TransactionDetail = () => {
       downloadError(undefined);
       return null;
     }
-    let dirs = ReactNativeBlobUtil.fs.dirs;
+    const { dirs } = ReactNativeBlobUtil.fs;
     const downloadTitle = title
       ? `${title} berhasil di download`
       : 'PDF berhasil di download';
     ReactNativeBlobUtil.config(
       Platform.OS === 'android'
         ? {
-            // add this option that makes response data to be stored as a file,
-            // this is much more performant.
-            fileCache: true,
-            path: dirs.DocumentDir,
-            addAndroidDownloads: {
-              useDownloadManager: true,
-              notification: true,
-              title: downloadTitle,
-              description: `${selectedType} PDF`,
-              mediaScannable: true,
-            },
-          }
-        : { fileCache: true }
+          // add this option that makes response data to be stored as a file,
+          // this is much more performant.
+          fileCache: true,
+          path: dirs.DocumentDir,
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            title: downloadTitle,
+            description: `${selectedType} PDF`,
+            mediaScannable: true,
+          },
+        }
+        : { fileCache: true },
     )
       .fetch('GET', url, {
-        //some headers ..
+        // some headers ..
       })
       .then((res) => {
         // the temp file path
@@ -271,7 +267,7 @@ const TransactionDetail = () => {
   }
   async function printRemotePDF(
     url?: string,
-    printError: (errorMessage: string | unknown) => void
+    printError: (errorMessage: string | unknown) => void,
   ) {
     try {
       if (!url) {
@@ -298,10 +294,10 @@ const TransactionDetail = () => {
         openPopUp({
           popUpType: 'error',
           popUpText:
-            error.message ||
-            `Terjadi error saat share Link PDF ${selectedType}`,
+            error.message
+            || `Terjadi error saat share Link PDF ${selectedType}`,
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
@@ -310,43 +306,40 @@ const TransactionDetail = () => {
     const productData = data?.QuotationRequest?.RequestedProducts
       ? data?.QuotationRequest?.RequestedProducts
       : data?.PoProducts
-      ? data?.PoProducts
-      : data?.SaleOrder?.PoProduct?.RequestedProduct
-      ? data?.SaleOrder?.PoProduct?.RequestedProduct
-      : data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct;
+        ? data?.PoProducts
+        : data?.SaleOrder?.PoProduct?.RequestedProduct
+          ? data?.SaleOrder?.PoProduct?.RequestedProduct
+          : data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct;
 
     if (productData?.length > 0) {
-      return productData.map((item, index) =>
-        ListProduct(
-          item,
-          index,
-          selectedType,
-          selectedType === 'PO' || selectedType === 'SO'
-            ? data?.requestedQuantity
-            : data?.quantity
+      return productData.map((item, index) => ListProduct(
+        item,
+        index,
+        selectedType,
+        selectedType === 'PO' || selectedType === 'SO'
+          ? data?.requestedQuantity
+          : data?.quantity
             ? data?.quantity
             : data?.Schedule?.quantity,
-          data?.PoProducts?.length > 0
-        )
-      );
-    } else {
-      return ListProduct(productData, 0, selectedType, data?.quantity, false);
+        data?.PoProducts?.length > 0,
+      ));
     }
+    return ListProduct(productData, 0, selectedType, data?.quantity, false);
   };
 
   const renderProductList = () => {
     if (
-      data?.QuotationRequest?.RequestedProducts ||
-      data?.PoProducts ||
-      data?.SaleOrder?.PoProduct?.RequestedProduct ||
-      data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct
+      data?.QuotationRequest?.RequestedProducts
+      || data?.PoProducts
+      || data?.SaleOrder?.PoProduct?.RequestedProduct
+      || data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct
     ) {
       return (
         <>
           <Text style={styles.partText}>Produk</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           {renderRequestedProducts()}
-          <BSpacer size={'small'} />
+          <BSpacer size="small" />
         </>
       );
     }
@@ -355,22 +348,21 @@ const TransactionDetail = () => {
     let picData = data?.Pic || data?.project?.Pic;
 
     if (selectedType === 'SPH') {
-      picData =
-        data?.QuotationRequest?.Pic || data?.QuotationRequest?.project?.Pic;
+      picData = data?.QuotationRequest?.Pic || data?.QuotationRequest?.project?.Pic;
     }
 
     if (picData) {
       return (
         <>
           <Text style={styles.partText}>PIC</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <BPic
             name={picData?.name}
             position={picData?.position}
             phone={beautifyPhoneNumber(picData?.phone)}
             email={picData?.email}
           />
-          <BSpacer size={'small'} />
+          <BSpacer size="small" />
         </>
       );
     }
@@ -379,75 +371,73 @@ const TransactionDetail = () => {
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        {(data?.project?.LocationAddress ||
-          data?.project?.ShippingAddress ||
-          data?.QuotationRequest?.project?.LocationAddress ||
-          data?.QuotationRequest?.project?.ShippingAddress) && (
+        {(data?.project?.LocationAddress
+          || data?.project?.ShippingAddress
+          || data?.QuotationRequest?.project?.LocationAddress
+          || data?.QuotationRequest?.project?.ShippingAddress) && (
           <BCompanyMapCard
-            onPressLocation={() =>
-              onPressLocation(
-                data?.QuotationRequest?.project?.ShippingAddress
-                  ? data?.QuotationRequest?.project?.ShippingAddress.lat
-                  : data?.project?.ShippingAddress
+            onPressLocation={() => onPressLocation(
+              data?.QuotationRequest?.project?.ShippingAddress
+                ? data?.QuotationRequest?.project?.ShippingAddress.lat
+                : data?.project?.ShippingAddress
                   ? data?.project?.ShippingAddress.lat
                   : null,
-                data?.QuotationRequest?.project?.ShippingAddress.lon
-                  ? data?.QuotationRequest?.project?.ShippingAddress.lon
-                  : data?.project?.ShippingAddress
+              data?.QuotationRequest?.project?.ShippingAddress.lon
+                ? data?.QuotationRequest?.project?.ShippingAddress.lon
+                : data?.project?.ShippingAddress
                   ? data?.project?.ShippingAddress.lon
-                  : null
-              )
-            }
+                  : null,
+            )}
             disabled={
-              data?.project?.ShippingAddress?.lat === null ||
-              data?.project?.ShippingAddress?.lon === null ||
-              data?.QuotationRequest?.project?.ShippingAddress.lat === null ||
-              data?.QuotationRequest?.project?.ShippingAddress.lon === null
+              data?.project?.ShippingAddress?.lat === null
+              || data?.project?.ShippingAddress?.lon === null
+              || data?.QuotationRequest?.project?.ShippingAddress.lat === null
+              || data?.QuotationRequest?.project?.ShippingAddress.lon === null
             }
             companyName={
-              data?.project?.displayName ||
-              data?.QuotationRequest?.project?.displayName
+              data?.project?.displayName
+              || data?.QuotationRequest?.project?.displayName
             }
             location={
               data?.QuotationRequest?.project?.ShippingAddress.line1
                 ? data?.QuotationRequest?.project?.ShippingAddress.line1
                 : data?.project?.ShippingAddress.line1
-                ? data?.project?.ShippingAddress.line1
-                : '-'
+                  ? data?.project?.ShippingAddress.line1
+                  : '-'
             }
           />
         )}
         <View style={styles.contentDetail}>
           {renderPic()}
           <Text style={styles.partText}>Rincian</Text>
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           <BProjectDetailCard
             status={data?.status || data?.QuotationRequest?.status}
             paymentMethod={
-              selectedType === 'SPH' ||
-              selectedType === 'PO' ||
-              selectedType === 'SO'
+              selectedType === 'SPH'
+              || selectedType === 'PO'
+              || selectedType === 'SO'
                 ? !data?.paymentType && !data?.QuotationRequest?.paymentType
                   ? 'N/A'
-                  : data?.paymentType === 'CBD' ||
-                    data?.QuotationRequest?.paymentType === 'CBD'
-                  ? 'Cash'
-                  : 'Debit'
+                  : data?.paymentType === 'CBD'
+                    || data?.QuotationRequest?.paymentType === 'CBD'
+                    ? 'Cash'
+                    : 'Debit'
                 : undefined
             }
             expiredDate={
               data?.expiredDate || data?.expiryDate
                 ? moment(data?.expiredDate || data?.expiryDate).format(
-                    'DD MMMM yyyy'
-                  )
+                  'DD MMMM yyyy',
+                )
                 : '-'
             }
             projectName={
-              selectedType === 'SPH' ||
-              selectedType === 'PO' ||
-              selectedType === 'SO'
-                ? data?.project?.projectName ||
-                  data?.QuotationRequest?.project?.projectName
+              selectedType === 'SPH'
+              || selectedType === 'PO'
+              || selectedType === 'SO'
+                ? data?.project?.projectName
+                  || data?.QuotationRequest?.project?.projectName
                 : undefined
             }
             productionTime={
@@ -456,8 +446,8 @@ const TransactionDetail = () => {
                   ? moment(data?.date).format('DD MMM yyyy HH:mm')
                   : '-'
                 : data?.createdAt
-                ? moment(data?.createdAt).format('DD MMM yyyy HH:mm')
-                : '-'
+                  ? moment(data?.createdAt).format('DD MMM yyyy HH:mm')
+                  : '-'
             }
             quotation={
               selectedType === 'PO' || selectedType === 'SO'
@@ -502,9 +492,9 @@ const TransactionDetail = () => {
                   : '-'
                 : undefined
             }
-            useBEStatus={selectedType === 'SPH' ? false : true}
+            useBEStatus={selectedType !== 'SPH'}
           />
-          <BSpacer size={'small'} />
+          <BSpacer size="small" />
           {selectedType === 'Deposit' ? (
             <BNestedProductCard
               withoutHeader={false}
@@ -520,7 +510,7 @@ const TransactionDetail = () => {
           {(selectedType === 'Deposit' || selectedType === 'Jadwal') && (
             <>
               <BDivider />
-              <BSpacer size={'small'} />
+              <BSpacer size="small" />
               <BDepositCard
                 firstSectionText={
                   selectedType === 'Jadwal' ? 'Deposit' : 'Deposit Awal'
@@ -531,8 +521,8 @@ const TransactionDetail = () => {
                       ? data.SaleOrder?.availableDeposit
                       : 0
                     : data?.PurchaseOrder?.totalDeposit
-                    ? data?.PurchaseOrder?.totalDeposit
-                    : 0
+                      ? data?.PurchaseOrder?.totalDeposit
+                      : 0
                 }
                 secondSectionText={
                   selectedType === 'Jadwal'
@@ -547,15 +537,15 @@ const TransactionDetail = () => {
                       ? data?.products[0].totalPrice
                       : 0
                     : data?.value
-                    ? data?.value
-                    : 0
+                      ? data?.value
+                      : 0
                 }
                 thirdSectionText={
                   selectedType === 'Jadwal'
                     ? 'Est. Sisa Deposit'
                     : 'Deposit Akhir'
                 }
-                isSum={selectedType === 'Jadwal' ? false : true}
+                isSum={selectedType !== 'Jadwal'}
               />
             </>
           )}
@@ -565,21 +555,19 @@ const TransactionDetail = () => {
             {downloadFiles?.pos && (
               <TouchableOpacity
                 style={styles.footerButton}
-                onPress={() =>
-                  printRemotePDF(
-                    downloadFiles.pos?.File?.url,
-                    (errorMessage: string | unknown) => {
-                      dispatch(
-                        openPopUp({
-                          popUpText:
+                onPress={() => printRemotePDF(
+                  downloadFiles.pos?.File?.url,
+                  (errorMessage: string | unknown) => {
+                    dispatch(
+                      openPopUp({
+                        popUpText:
                             errorMessage || `Gagal print ${selectedType}`,
-                          popUpType: 'error',
-                          outsideClickClosePopUp: true,
-                        })
-                      );
-                    }
-                  )
-                }
+                        popUpType: 'error',
+                        outsideClickClosePopUp: true,
+                      }),
+                    );
+                  },
+                )}
               >
                 <MaterialCommunityIcons
                   name="printer"
@@ -602,30 +590,28 @@ const TransactionDetail = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.footerButton}
-              onPress={() =>
-                downloadPdf({
-                  url: downloadFiles?.letter?.File?.url,
-                  title: data?.number,
-                  downloadPopup: () => {
-                    dispatch(
-                      openPopUp({
-                        popUpText: `Berhasil mendownload ${selectedType}`,
-                        popUpType: 'success',
-                        outsideClickClosePopUp: true,
-                      })
-                    );
-                  },
-                  downloadError: (err) => {
-                    dispatch(
-                      openPopUp({
-                        popUpText: err || `Gagal mendownload ${selectedType}`,
-                        popUpType: 'error',
-                        outsideClickClosePopUp: true,
-                      })
-                    );
-                  },
-                })
-              }
+              onPress={() => downloadPdf({
+                url: downloadFiles?.letter?.File?.url,
+                title: data?.number,
+                downloadPopup: () => {
+                  dispatch(
+                    openPopUp({
+                      popUpText: `Berhasil mendownload ${selectedType}`,
+                      popUpType: 'success',
+                      outsideClickClosePopUp: true,
+                    }),
+                  );
+                },
+                downloadError: (err) => {
+                  dispatch(
+                    openPopUp({
+                      popUpText: err || `Gagal mendownload ${selectedType}`,
+                      popUpType: 'error',
+                      outsideClickClosePopUp: true,
+                    }),
+                  );
+                },
+              })}
             >
               <Feather
                 name="download"
@@ -639,7 +625,7 @@ const TransactionDetail = () => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   modalFooter: {

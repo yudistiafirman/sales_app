@@ -1,20 +1,20 @@
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { useMachine } from '@xstate/react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { BSpacer, BSpinner, BTabSections } from '@/components';
 import { colors, layout } from '@/constants';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 import visitHistoryMachine from '@/machine/visitHistoryMachine';
 import { RootStackParamList } from '@/navigation/CustomStateComponent';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { useMachine } from '@xstate/react';
-import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
 import HistoryDetails from './elements/HistoryDetails';
 import HistoryHeader from './elements/HistoryHeader';
 import LocationText from './elements/LocationText';
-import { FlashList } from '@shopify/flash-list';
 
 type VisitHistoryRoute = RouteProp<RootStackParamList, 'VISIT_HISTORY'>;
 
-const VisitHistory = () => {
+function VisitHistory() {
   const route = useRoute<VisitHistoryRoute>();
   const { projectName } = route.params;
   const [state, send] = useMachine(visitHistoryMachine);
@@ -33,20 +33,18 @@ const VisitHistory = () => {
 
   const onTabPress = (tabroute: any) => {
     const tabIndex = state.context.routes.findIndex(
-      (v) => v.key === tabroute.route.key
+      (v) => v.key === tabroute.route.key,
     );
     send('onChangeVisitationIdx', { value: tabIndex });
   };
 
   const { selectedVisitationByIdx, loading, routes } = state.context;
 
-  const renderVisitHistory = useCallback(() => {
-    return (
-      <HistoryDetails
-        details={selectedVisitationByIdx && selectedVisitationByIdx}
-      />
-    );
-  }, [selectedVisitationByIdx]);
+  const renderVisitHistory = useCallback(() => (
+    <HistoryDetails
+      details={selectedVisitationByIdx && selectedVisitationByIdx}
+    />
+  ), [selectedVisitationByIdx]);
 
   if (loading) {
     return (
@@ -70,9 +68,7 @@ const VisitHistory = () => {
           <FlashList
             estimatedItemSize={1}
             data={[1]}
-            renderItem={() => {
-              return <BSpacer size={'verySmall'} />;
-            }}
+            renderItem={() => <BSpacer size="verySmall" />}
             ListHeaderComponent={renderVisitHistory}
           />
         )}
@@ -84,7 +80,7 @@ const VisitHistory = () => {
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

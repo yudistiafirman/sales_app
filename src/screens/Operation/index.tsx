@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
-import OperationList from './element/OperationList';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch, useSelector } from 'react-redux';
+import { useMachine } from '@xstate/react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import OperationList from './element/OperationList';
 import { AppDispatch, RootState } from '@/redux/store';
 import {
   CAMERA,
@@ -10,10 +12,8 @@ import {
   OPERATION,
   SUBMIT_FORM,
 } from '@/navigation/ScreenNames';
-import { useMachine } from '@xstate/react';
 import displayOperationListMachine from '@/machine/displayOperationListMachine';
 import { ENTRY_TYPE } from '@/models/EnumModel';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 import {
   OperationProjectDetails,
@@ -21,16 +21,17 @@ import {
   setAllOperationPhoto,
 } from '@/redux/reducers/operationReducer';
 
-const Operation = () => {
+function Operation() {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation();
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
   const { projectDetails, photoFiles } = useSelector(
-    (state: RootState) => state.operation
+    (state: RootState) => state.operation,
   );
-  const { operationListData, isLoadMore, isLoading, isRefreshing } =
-    state.context;
+  const {
+    operationListData, isLoadMore, isLoading, isRefreshing,
+  } = state.context;
 
   React.useEffect(() => {
     crashlytics().log(userData?.type ? userData.type : 'Operation Default');
@@ -46,7 +47,7 @@ const Operation = () => {
   useFocusEffect(
     React.useCallback(() => {
       send('assignUserData', { payload: userData?.type });
-    }, [send])
+    }, [send]),
   );
 
   const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
@@ -92,7 +93,7 @@ const Operation = () => {
             { file: null, attachType: 'Penambahan air' },
             { file: null, attachType: 'Tambahan' },
           ],
-        })
+        }),
       );
       navigation.navigate(CAMERA, {
         photoTitle: 'Tiba di lokasi',
@@ -134,7 +135,7 @@ const Operation = () => {
       />
     </SafeAreaView>
   );
-};
+}
 
 const style = StyleSheet.create({
   container: {

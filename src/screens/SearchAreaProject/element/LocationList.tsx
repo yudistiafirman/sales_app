@@ -1,8 +1,8 @@
-import EmptyState from '@/components/organism/BEmptyState';
 import React from 'react';
+import { FlashList } from '@shopify/flash-list';
+import EmptyState from '@/components/organism/BEmptyState';
 import LocationListCard from './LocationListCard';
 import LocationListShimmer from './LocationListShimmer';
-import { FlashList } from '@shopify/flash-list';
 
 interface LocationData {
   description?: string;
@@ -28,7 +28,7 @@ interface LocationDatarops<ArrayOfObject> {
   onAction?: () => void;
 }
 
-const LocationList = <ArrayOfObject extends LocationData>({
+function LocationList<ArrayOfObject extends LocationData>({
   locationData,
   onPress,
   isError,
@@ -36,11 +36,11 @@ const LocationList = <ArrayOfObject extends LocationData>({
   isLoading,
   searchValue,
   onAction,
-}: LocationDatarops<ArrayOfObject>) => {
+}: LocationDatarops<ArrayOfObject>) {
   const renderEmptyComponent = () => {
     if (isLoading) {
       return <LocationListShimmer />;
-    } else if (searchValue?.length > 2) {
+    } if (searchValue?.length > 2) {
       return (
         <EmptyState
           emptyText={`${searchValue} tidak ditemukan!`}
@@ -67,6 +67,6 @@ const LocationList = <ArrayOfObject extends LocationData>({
       )}
     />
   );
-};
+}
 
 export default LocationList;

@@ -1,10 +1,10 @@
-import { colors } from '@/constants';
-import { resScale } from '@/utils';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 import { MarkedDates } from 'react-native-calendars/src/types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { resScale } from '@/utils';
+import { colors } from '@/constants';
 
 interface BCalendarProps {
   onDayPress?: ((date: DateData) => void) | undefined;
@@ -14,7 +14,7 @@ interface BCalendarProps {
   minDate?: string;
 }
 
-const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
+function RenderArrow({ direction }: { direction: 'left' | 'right' }) {
   if (direction === 'right') {
     return (
       <View style={styles.arrowStyleRight}>
@@ -28,15 +28,15 @@ const RenderArrow = ({ direction }: { direction: 'left' | 'right' }) => {
       <Icon name="chevron-left" size={25} color={colors.black} />
     </View>
   );
-};
+}
 
-const BCalendar = ({
+function BCalendar({
   onDayPress,
   markedDates,
   onMonthChange,
   isLoading,
   minDate,
-}: BCalendarProps) => {
+}: BCalendarProps) {
   LocaleConfig.locales.id = {
     monthNames: [
       'Januari',
@@ -94,7 +94,7 @@ const BCalendar = ({
       minDate={minDate}
     />
   );
-};
+}
 
 const styles = StyleSheet.create({
   arrowStyleRight: {

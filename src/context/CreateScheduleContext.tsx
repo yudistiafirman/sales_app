@@ -1,9 +1,9 @@
+import * as React from 'react';
 import {
   CreateScheduleFirstStep,
   CreateScheduleSecondStep,
   CreateScheduleState,
 } from '@/interfaces/CreateSchedule';
-import * as React from 'react';
 
 interface IProvider {
   children: React.ReactNode;
@@ -47,7 +47,7 @@ const CreateScheduleContext = React.createContext<context>({
 
 const reducerForm = (
   state: CreateScheduleState,
-  action: ActionCreateScheduleState
+  action: ActionCreateScheduleState,
 ) => {
   switch (action.type) {
     case 'sheetIndex':
@@ -71,19 +71,19 @@ const reducerForm = (
   }
 };
 
-const CreateScheduleProvider = (props: IProvider) => {
+function CreateScheduleProvider(props: IProvider) {
   const { children } = props;
 
   const [values, dispatchValue] = React.useReducer(reducerForm, initialData);
 
   const updateValue = (key: keyof CreateScheduleState, value: any) => {
-    dispatchValue({ type: key, value: value });
+    dispatchValue({ type: key, value });
   };
 
   const updateValueOnstep = (
     step: keyof CreateScheduleState,
     key: keyof CreateScheduleFirstStep | keyof CreateScheduleSecondStep,
-    value: any
+    value: any,
   ) => {
     dispatchValue({
       type: step,
@@ -95,7 +95,7 @@ const CreateScheduleProvider = (props: IProvider) => {
   return (
     <CreateScheduleContext.Provider
       value={{
-        values: values,
+        values,
         action: {
           updateValue,
           updateValueOnstep,
@@ -105,6 +105,6 @@ const CreateScheduleProvider = (props: IProvider) => {
       {children}
     </CreateScheduleContext.Provider>
   );
-};
+}
 
 export { CreateScheduleContext, CreateScheduleProvider };

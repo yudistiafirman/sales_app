@@ -14,13 +14,13 @@ interface IProps {
     value: string | number | any;
   }[];
   onChangeOne:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+  | ((value: any) => void)
+  | ((value: any[] | null) => void)
+  | undefined;
   onChangeTwo:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+  | ((value: any) => void)
+  | ((value: any[] | null) => void)
+  | undefined;
   placeholderOne: string;
   placeholderTwo: string;
   isErrorOne?: boolean;
@@ -30,7 +30,7 @@ interface IProps {
   valueOne?: any;
   valueTwo?: any;
 }
-const BComboDropdown = (props: IProps) => {
+function BComboDropdown(props: IProps) {
   const {
     itemsOne,
     itemsTwo,
@@ -73,6 +73,6 @@ const BComboDropdown = (props: IProps) => {
       </View>
     </View>
   );
-};
+}
 
 export default BComboDropdown;

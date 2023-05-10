@@ -1,7 +1,8 @@
+import { StyleSheet } from 'react-native';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
-import { StyleSheet } from 'react-native';
+
 const VerificationStyles = StyleSheet.create({
   container: { flex: 1, marginHorizontal: layout.pad.lg },
   otpMessageImage: {

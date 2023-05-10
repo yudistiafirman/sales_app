@@ -6,6 +6,9 @@ import {
   StackActions,
   useFocusEffect,
 } from '@react-navigation/native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch, useSelector } from 'react-redux';
+import { FlashList } from '@shopify/flash-list';
 import {
   BBackContinueBtn,
   BForm,
@@ -15,11 +18,9 @@ import {
   PopUpQuestion,
 } from '@/components';
 import { colors, layout } from '@/constants';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { CAMERA, FORM_SO, GALLERY_SO } from '@/navigation/ScreenNames';
 import { Input } from '@/interfaces';
 import { AppDispatch, RootState } from '@/redux/store';
-import { useDispatch, useSelector } from 'react-redux';
 import { removeSOPhoto, resetSOState } from '@/redux/reducers/salesOrder';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { resScale } from '@/utils';
@@ -27,9 +28,8 @@ import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { uploadFileImage } from '@/actions/CommonActions';
 import { UploadSOSigned } from '@/models/SOSigned';
 import { uploadSOSignedDocs } from '@/actions/OrderActions';
-import { FlashList } from '@shopify/flash-list';
 
-const FormSO = () => {
+function FormSO() {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const soData = useSelector((state: RootState) => state.salesOrder);
@@ -67,7 +67,7 @@ const FormSO = () => {
         closeButton: true,
         disabledDocPicker: false,
         disabledGalleryPicker: false,
-      })
+      }),
     );
   };
 
@@ -79,32 +79,28 @@ const FormSO = () => {
           popUpTitle: '',
           popUpText: 'Mengupload Dokumen SO',
           outsideClickClosePopUp: false,
-        })
+        }),
       );
       const photoFilestoUpload = soData.photoFiles
         .filter((v) => v.file !== null)
-        .map((photo) => {
-          return {
-            ...photo.file,
-            uri: photo?.file?.uri?.replace('file:', 'file://'),
-          };
-        });
+        .map((photo) => ({
+          ...photo.file,
+          uri: photo?.file?.uri?.replace('file:', 'file://'),
+        }));
       const responseFiles = await uploadFileImage(
         photoFilestoUpload,
-        'SO Signed'
+        'SO Signed',
       );
       if (responseFiles.data.success) {
         const payload = {} as UploadSOSigned;
-        const newFileData = responseFiles.data.data.map((v, i) => {
-          return {
-            fileId: v.id,
-            type: 'BRIK_SIGNED',
-          };
-        });
+        const newFileData = responseFiles.data.data.map((v, i) => ({
+          fileId: v.id,
+          type: 'BRIK_SIGNED',
+        }));
         payload.poDocs = newFileData;
         const responseSOSigned = await uploadSOSignedDocs(
           payload,
-          soData.selectedID
+          soData.selectedID,
         );
 
         if (responseSOSigned.data.success) {
@@ -115,7 +111,7 @@ const FormSO = () => {
               popUpText: 'SO\nBerhasil ditandatangani oleh klien',
               highlightedText: 'SO',
               outsideClickClosePopUp: true,
-            })
+            }),
           );
           if (navigation.canGoBack()) {
             navigation.dispatch(StackActions.popToTop());
@@ -128,7 +124,7 @@ const FormSO = () => {
               highlightedText: 'SO',
               popUpText: responseFiles.data.message || 'SO\nGagal diupload',
               outsideClickClosePopUp: true,
-            })
+            }),
           );
         }
       } else {
@@ -139,7 +135,7 @@ const FormSO = () => {
             highlightedText: 'SO',
             popUpText: responseFiles.data.message || 'SO\nGagal diupload',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     } catch (error) {
@@ -150,7 +146,7 @@ const FormSO = () => {
           highlightedText: 'SO',
           popUpText: error.message || 'SO\nGagal diupload',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
@@ -163,7 +159,7 @@ const FormSO = () => {
     crashlytics().log(FORM_SO);
   }, []);
 
-  const actionBackButton = (popupVisible: boolean = false) => {
+  const actionBackButton = (popupVisible = false) => {
     if (popupVisible) {
       if (soData.photoFiles) {
         setPopupVisible(true);
@@ -184,24 +180,22 @@ const FormSO = () => {
       };
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
-        backAction
+        backAction,
       );
       return () => backHandler.remove();
-    }, [])
+    }, []),
   );
 
   const filteredPhotoFiles = soData.photoFiles?.filter(
-    (it) => it?.file !== null
+    (it) => it?.file !== null,
   );
   return (
     <View style={{ flex: 1, padding: layout.pad.lg }}>
       <FlashList
         estimatedItemSize={1}
         data={[1]}
-        renderItem={() => {
-          return <BSpacer size={'verySmall'} />;
-        }}
-        ListHeaderComponent={
+        renderItem={() => <BSpacer size="verySmall" />}
+        ListHeaderComponent={(
           <>
             <BGallery
               addMorePict={addMorePict}
@@ -211,7 +205,7 @@ const FormSO = () => {
             <BSpacer size="extraSmall" />
             <BForm titleBold="500" inputs={inputs} />
           </>
-        }
+        )}
       />
       <BBackContinueBtn
         onPressContinue={onSubmit}
@@ -219,8 +213,8 @@ const FormSO = () => {
           actionBackButton(true);
         }}
         isContinueIcon={false}
-        continueText={'Upload'}
-        backText={'Kembali'}
+        continueText="Upload"
+        backText="Kembali"
         disableContinue={!(filteredPhotoFiles?.length > 0)}
       />
       <PopUpQuestion
@@ -229,13 +223,13 @@ const FormSO = () => {
         actionButton={() => {
           setPopupVisible(false);
         }}
-        cancelText={'Keluar'}
-        actionText={'Lanjutkan'}
-        desc={'Progres pembuatan SO Anda sudah tersimpan.'}
-        text={'Apakah Anda yakin ingin keluar?'}
+        cancelText="Keluar"
+        actionText="Lanjutkan"
+        desc="Progres pembuatan SO Anda sudah tersimpan."
+        text="Apakah Anda yakin ingin keluar?"
       />
     </View>
   );
-};
+}
 
 export default FormSO;

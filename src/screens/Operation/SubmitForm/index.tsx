@@ -1,19 +1,4 @@
 import {
-  BBackContinueBtn,
-  BDivider,
-  BForm,
-  BGallery,
-  BHeaderIcon,
-  BLocationText,
-  BSpacer,
-  BVisitationCard,
-} from '@/components';
-import { colors, fonts, layout } from '@/constants';
-import { TM_CONDITION } from '@/constants/dropdown';
-import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
-import { Input } from '@/interfaces';
-import { resScale } from '@/utils';
-import {
   StackActions,
   useFocusEffect,
   useNavigation,
@@ -29,6 +14,24 @@ import {
   View,
 } from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+import { FlashList } from '@shopify/flash-list';
+import {
+  BBackContinueBtn,
+  BDivider,
+  BForm,
+  BGallery,
+  BHeaderIcon,
+  BLocationText,
+  BSpacer,
+  BVisitationCard,
+} from '@/components';
+import { colors, fonts, layout } from '@/constants';
+import { TM_CONDITION } from '@/constants/dropdown';
+import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+import { Input } from '@/interfaces';
+import { resScale } from '@/utils';
 import {
   CAMERA,
   GALLERY_OPERATION,
@@ -36,7 +39,6 @@ import {
   TAB_DISPATCH_TITLE,
   TAB_RETURN_TITLE,
 } from '@/navigation/ScreenNames';
-import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
@@ -48,7 +50,6 @@ import {
   setAllOperationPhoto,
 } from '@/redux/reducers/operationReducer';
 import { useKeyboardActive } from '@/hooks';
-import moment from 'moment';
 import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { uploadFileImage } from '@/actions/CommonActions';
@@ -57,14 +58,13 @@ import {
   updateDeliveryOrder,
   updateDeliveryOrderWeight,
 } from '@/actions/OrderActions';
-import { FlashList } from '@shopify/flash-list';
 
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
 }
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
-const SubmitForm = () => {
+function SubmitForm() {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
@@ -103,21 +103,19 @@ const SubmitForm = () => {
     OperationFileType.DO_RETURN_TRUCK_CONDITION_SECURITY,
   ];
 
-  const securityFileType =
-    operationType === ENTRY_TYPE.DISPATCH
-      ? securityDispatchFileType
-      : securityReturnFileType;
+  const securityFileType = operationType === ENTRY_TYPE.DISPATCH
+    ? securityDispatchFileType
+    : securityReturnFileType;
 
-  const enableLocationHeader =
-    operationType === ENTRY_TYPE.DRIVER &&
-    operationData.projectDetails.address &&
-    operationData.projectDetails.address?.length > 0;
+  const enableLocationHeader = operationType === ENTRY_TYPE.DRIVER
+    && operationData.projectDetails.address
+    && operationData.projectDetails.address?.length > 0;
 
   const removedAddButtonImage = () => {
     switch (userData?.type) {
       case ENTRY_TYPE.WB:
         if (operationData.photoFiles.length > 1) {
-          let tempImages = [
+          const tempImages = [
             ...operationData.photoFiles.filter((it) => it.file !== null),
           ];
           dispatch(setAllOperationPhoto({ file: tempImages }));
@@ -126,20 +124,17 @@ const SubmitForm = () => {
       case ENTRY_TYPE.SECURITY:
         if (operationType === ENTRY_TYPE.DISPATCH) {
           if (operationData.photoFiles.length > 4) {
-            let tempImages = [
+            const tempImages = [
               ...operationData.photoFiles.filter((it) => it.file !== null),
             ];
             dispatch(setAllOperationPhoto({ file: tempImages }));
           }
-        } else {
-          if (operationData.photoFiles.length > 1) {
-            let tempImages = [
-              ...operationData.photoFiles.filter((it) => it.file !== null),
-            ];
-            dispatch(setAllOperationPhoto({ file: tempImages }));
-          }
+        } else if (operationData.photoFiles.length > 1) {
+          const tempImages = [
+            ...operationData.photoFiles.filter((it) => it.file !== null),
+          ];
+          dispatch(setAllOperationPhoto({ file: tempImages }));
         }
-        return;
     }
   };
 
@@ -160,7 +155,7 @@ const SubmitForm = () => {
         return 'Produksi';
       case ENTRY_TYPE.SECURITY:
         if (operationType === ENTRY_TYPE.DISPATCH) return TAB_DISPATCH_TITLE;
-        else return TAB_RETURN_TITLE;
+        return TAB_RETURN_TITLE;
       case ENTRY_TYPE.DRIVER:
         return 'Penuangan';
       case ENTRY_TYPE.WB:
@@ -171,23 +166,23 @@ const SubmitForm = () => {
   };
 
   const handleDisableContinueButton = () => {
-    let photos = [...operationData.photoFiles.filter((it) => it.file !== null)];
+    const photos = [...operationData.photoFiles.filter((it) => it.file !== null)];
     if (userData?.type === ENTRY_TYPE.DRIVER) {
       return (
-        photos.length < 7 ||
-        operationData.inputsValue.recepientName.length === 0 ||
-        !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber)
+        photos.length < 7
+        || operationData.inputsValue.recepientName.length === 0
+        || !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber)
       );
-    } else if (userData?.type === ENTRY_TYPE.WB) {
+    } if (userData?.type === ENTRY_TYPE.WB) {
       return (
         operationData.inputsValue.weightBridge.length === 0 || photos.length < 2
       );
-    } else if (operationType === ENTRY_TYPE.RETURN) {
+    } if (operationType === ENTRY_TYPE.RETURN) {
       return (
-        operationData.inputsValue.truckMixCondition.length === 0 ||
-        photos.length < 2
+        operationData.inputsValue.truckMixCondition.length === 0
+        || photos.length < 2
       );
-    } else if (operationType === ENTRY_TYPE.DISPATCH) {
+    } if (operationType === ENTRY_TYPE.DISPATCH) {
       return photos.length !== 5;
     }
   };
@@ -205,70 +200,60 @@ const SubmitForm = () => {
           popUpTitle: '',
           popUpText: 'Memperbarui Delivery Order',
           outsideClickClosePopUp: false,
-        })
+        }),
       );
       const payload = {} as updateDeliverOrder;
       const photoFilestoUpload = operationData.photoFiles
         .filter((v) => v.file !== null)
-        .map((photo) => {
-          return {
-            ...photo.file,
-            uri: photo?.file?.uri?.replace('file:', 'file://'),
-          };
-        });
+        .map((photo) => ({
+          ...photo.file,
+          uri: photo?.file?.uri?.replace('file:', 'file://'),
+        }));
 
       const responseFiles = await uploadFileImage(
         photoFilestoUpload,
-        'Update Delivery Order'
+        'Update Delivery Order',
       );
       if (responseFiles.data.success) {
         let responseUpdateDeliveryOrder: any;
         if (userData?.type === ENTRY_TYPE.DRIVER) {
-          const newFileData = responseFiles.data.data.map((v, i) => {
-            return {
-              fileId: v.id,
-              type: driversFileType[i],
-            };
-          });
+          const newFileData = responseFiles.data.data.map((v, i) => ({
+            fileId: v.id,
+            type: driversFileType[i],
+          }));
           payload.doFiles = newFileData;
           payload.recipientName = operationData.inputsValue.recepientName;
-          payload.recipientNumber =
-            operationData.inputsValue.recepientPhoneNumber;
+          payload.recipientNumber = operationData.inputsValue.recepientPhoneNumber;
           payload.status = 'RECEIVED';
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
-            operationData.projectDetails.deliveryOrderId
+            operationData.projectDetails.deliveryOrderId,
           );
         } else if (userData?.type === ENTRY_TYPE.WB) {
-          const newFileData = responseFiles.data.data.map((v, i) => {
-            return {
-              fileId: v.id,
-              type: wbsFileType[i],
-            };
-          });
+          const newFileData = responseFiles.data.data.map((v, i) => ({
+            fileId: v.id,
+            type: wbsFileType[i],
+          }));
           payload.doFiles = newFileData;
           payload.weight = operationData.inputsValue.weightBridge;
           responseUpdateDeliveryOrder = await updateDeliveryOrderWeight(
             payload,
-            operationData.projectDetails.deliveryOrderId
+            operationData.projectDetails.deliveryOrderId,
           );
         } else if (userData?.type === ENTRY_TYPE.SECURITY) {
-          const newFileData = responseFiles.data.data.map((v, i) => {
-            return {
-              fileId: v.id,
-              type: securityFileType[i],
-            };
-          });
+          const newFileData = responseFiles.data.data.map((v, i) => ({
+            fileId: v.id,
+            type: securityFileType[i],
+          }));
           payload.doFiles = newFileData;
 
           if (operationType === ENTRY_TYPE.RETURN) {
-            payload.conditionTruck =
-              operationData.inputsValue.truckMixCondition;
+            payload.conditionTruck = operationData.inputsValue.truckMixCondition;
           }
 
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
-            operationData.projectDetails.deliveryOrderId
+            operationData.projectDetails.deliveryOrderId,
           );
         }
 
@@ -279,7 +264,7 @@ const SubmitForm = () => {
               popUpType: 'success',
               popUpText: 'Berhasil Memperbarui Delivery Order',
               outsideClickClosePopUp: true,
-            })
+            }),
           );
           if (navigation.canGoBack()) {
             handleBack();
@@ -290,10 +275,10 @@ const SubmitForm = () => {
             openPopUp({
               popUpType: 'error',
               popUpText:
-                responseFiles.data.message ||
-                'Error Memperbarui Delivery Order',
+                responseFiles.data.message
+                || 'Error Memperbarui Delivery Order',
               outsideClickClosePopUp: true,
-            })
+            }),
           );
         }
       } else {
@@ -304,7 +289,7 @@ const SubmitForm = () => {
             popUpText:
               responseFiles.data.message || 'Error Memperbarui Delivery Order',
             outsideClickClosePopUp: true,
-          })
+          }),
         );
       }
     } catch (error) {
@@ -314,7 +299,7 @@ const SubmitForm = () => {
           popUpType: 'error',
           popUpText: error.message || 'Error Memperbarui Delivery Order',
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
@@ -332,7 +317,7 @@ const SubmitForm = () => {
         onBack={handleBack}
       />
     ),
-    [handleBack]
+    [handleBack],
   );
 
   useLayoutEffect(() => {
@@ -350,10 +335,10 @@ const SubmitForm = () => {
       };
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
-        backAction
+        backAction,
       );
       return () => backHandler.remove();
-    }, [handleBack, operationData.photoFiles, userData?.type])
+    }, [handleBack, operationData.photoFiles, userData?.type]),
   );
 
   useHeaderTitleChanged({ title: getHeaderTitle() });
@@ -363,12 +348,12 @@ const SubmitForm = () => {
       label: 'Berat',
       value: operationData.inputsValue.weightBridge,
       onChange: (e) => {
-        let result: string = '' + e;
+        const result = `${e}`;
         dispatch(
           onChangeInputValue({
             inputType: 'weightBridge',
             value: result,
-          })
+          }),
         );
       },
       isRequire: true,
@@ -386,13 +371,12 @@ const SubmitForm = () => {
     {
       label: 'Nama Penerima',
       value: operationData.inputsValue.recepientName,
-      onChange: (e) =>
-        dispatch(
-          onChangeInputValue({
-            inputType: 'recepientName',
-            value: e.nativeEvent.text,
-          })
-        ),
+      onChange: (e) => dispatch(
+        onChangeInputValue({
+          inputType: 'recepientName',
+          value: e.nativeEvent.text,
+        }),
+      ),
       isRequire: true,
       type: 'textInput',
       placeholder: 'Masukkan nama penerima',
@@ -409,14 +393,14 @@ const SubmitForm = () => {
           onChangeInputValue({
             inputType: 'recepientPhoneNumber',
             value: e.nativeEvent.text,
-          })
+          }),
         );
       },
       isError: !phoneNumberRegex.test(
-        operationData.inputsValue.recepientPhoneNumber
+        operationData.inputsValue.recepientPhoneNumber,
       ),
       outlineColor: !phoneNumberRegex.test(
-        operationData.inputsValue.recepientPhoneNumber
+        operationData.inputsValue.recepientPhoneNumber,
       )
         ? colors.text.errorText
         : undefined,
@@ -454,13 +438,11 @@ const SubmitForm = () => {
       dropdown: {
         items: TM_CONDITION,
         placeholder: operationData.inputsValue.truckMixCondition
-          ? TM_CONDITION.find((it) => {
-              return it.value === operationData.inputsValue.truckMixCondition;
-            })?.label ?? ''
+          ? TM_CONDITION.find((it) => it.value === operationData.inputsValue.truckMixCondition)?.label ?? ''
           : 'Pilih Kondisi TM',
         onChange: (value: any) => {
           dispatch(
-            onChangeInputValue({ inputType: 'truckMixCondition', value: value })
+            onChangeInputValue({ inputType: 'truckMixCondition', value }),
           );
         },
       },
@@ -470,7 +452,7 @@ const SubmitForm = () => {
   const deleteImages = useCallback(
     (i: number, attachType?: string) => {
       if (userData?.type === ENTRY_TYPE.DRIVER) {
-        dispatch(removeDriverPhoto({ index: i, attachType: attachType }));
+        dispatch(removeDriverPhoto({ index: i, attachType }));
       } else {
         dispatch(removeOperationPhoto({ index: i }));
       }
@@ -480,7 +462,7 @@ const SubmitForm = () => {
       dispatch,
       removeOperationPhoto,
       removeDriverPhoto,
-    ]
+    ],
   );
 
   const addMoreImages = useCallback(
@@ -493,7 +475,7 @@ const SubmitForm = () => {
               closeButton: true,
               navigateTo: ENTRY_TYPE.DRIVER,
               operationAddedStep: attachType,
-            })
+            }),
           );
           return;
         case ENTRY_TYPE.SECURITY:
@@ -503,7 +485,7 @@ const SubmitForm = () => {
                 photoTitle: 'Tambahan',
                 closeButton: true,
                 navigateTo: GALLERY_OPERATION,
-              })
+              }),
             );
           } else {
             navigation.dispatch(
@@ -511,7 +493,7 @@ const SubmitForm = () => {
                 photoTitle: 'Tambahan',
                 closeButton: true,
                 navigateTo: GALLERY_OPERATION,
-              })
+              }),
             );
           }
           return;
@@ -521,12 +503,11 @@ const SubmitForm = () => {
               photoTitle: 'Tambahan',
               closeButton: true,
               navigateTo: GALLERY_OPERATION,
-            })
+            }),
           );
-          return;
       }
     },
-    [operationData.photoFiles, dispatch]
+    [operationData.photoFiles, dispatch],
   );
 
   return (
@@ -538,15 +519,13 @@ const SubmitForm = () => {
           paddingHorizontal: layout.pad.lg,
           paddingBottom: layout.pad.lg,
         }}
-        renderItem={() => {
-          return <BSpacer size={'verySmall'} />;
-        }}
-        ListHeaderComponent={
+        renderItem={() => <BSpacer size="verySmall" />}
+        ListHeaderComponent={(
           <View style={style.flexFull}>
             {enableLocationHeader && (
               <BLocationText location={operationData.projectDetails.address} />
             )}
-            <BSpacer size={'extraSmall'} />
+            <BSpacer size="extraSmall" />
             <View style={style.top}>
               <BVisitationCard
                 item={{
@@ -560,9 +539,9 @@ const SubmitForm = () => {
                   name: operationData.projectDetails.doNumber,
                   unit: `${operationData.projectDetails.requestedQuantity} m3`,
                   time: `${moment(
-                    operationData.projectDetails.deliveryTime
+                    operationData.projectDetails.deliveryTime,
                   ).format('L')} | ${moment(
-                    operationData.projectDetails.deliveryTime
+                    operationData.projectDetails.deliveryTime,
                   ).format('hh:mm A')}`,
                 }}
                 customStyle={{ backgroundColor: colors.tertiary }}
@@ -571,7 +550,7 @@ const SubmitForm = () => {
             </View>
             <View>
               <BDivider />
-              <BSpacer size={'extraSmall'} />
+              <BSpacer size="extraSmall" />
             </View>
             <View>
               <BGallery
@@ -581,15 +560,15 @@ const SubmitForm = () => {
               />
             </View>
             <View style={style.flexFull}>
-              {(operationType === ENTRY_TYPE.DRIVER ||
-                operationType === ENTRY_TYPE.RETURN ||
-                operationType === ENTRY_TYPE.IN ||
-                operationType === ENTRY_TYPE.OUT) && <BSpacer size={'small'} />}
+              {(operationType === ENTRY_TYPE.DRIVER
+                || operationType === ENTRY_TYPE.RETURN
+                || operationType === ENTRY_TYPE.IN
+                || operationType === ENTRY_TYPE.OUT) && <BSpacer size="small" />}
               {operationType === ENTRY_TYPE.DRIVER && (
                 <BForm titleBold="500" inputs={deliveryInputs} />
               )}
-              {(operationType === ENTRY_TYPE.IN ||
-                operationType === ENTRY_TYPE.OUT) && (
+              {(operationType === ENTRY_TYPE.IN
+                || operationType === ENTRY_TYPE.OUT) && (
                 <BForm titleBold="500" inputs={weightInputs} />
               )}
               {operationType === ENTRY_TYPE.RETURN && (
@@ -603,7 +582,7 @@ const SubmitForm = () => {
               )}
             </View>
           </View>
-        }
+        )}
       />
 
       {!keyboardVisible && (
@@ -617,14 +596,14 @@ const SubmitForm = () => {
             onPressContinue={onPressContinue}
             disableContinue={handleDisableContinueButton()}
             onPressBack={handleBack}
-            continueText={'Simpan'}
+            continueText="Simpan"
             isContinueIcon={false}
           />
         </View>
       )}
     </SafeAreaView>
   );
-};
+}
 
 const style = StyleSheet.create({
   flexFull: {

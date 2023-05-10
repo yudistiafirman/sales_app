@@ -1,7 +1,14 @@
 import * as React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import BTabSections from '@/components/organism/TabSections';
+import {
+  SafeAreaView, StyleSheet, Text, View,
+} from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+import { useMachine } from '@xstate/react';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch, useSelector } from 'react-redux';
+import BTabSections from '@/components/organism/TabSections';
 import {
   BEmptyState,
   BSpacer,
@@ -10,9 +17,6 @@ import {
   BVisitationCard,
   PopUpQuestion,
 } from '@/components';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import LinearGradient from 'react-native-linear-gradient';
-import { useMachine } from '@xstate/react';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import TransactionList from './element/TransactionList';
@@ -34,9 +38,7 @@ import {
   getScheduleByID,
   getVisitationOrderByID,
 } from '@/actions/OrderActions';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { RootState } from '@/redux/store';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   resetFocusedStepperFlag,
   resetSPHState,
@@ -46,7 +48,7 @@ import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const Transaction = () => {
+function Transaction() {
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
   const [state, send] = useMachine(transactionMachine);
@@ -56,10 +58,10 @@ const Transaction = () => {
   const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
   const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false);
   const poState = useSelector((state: RootState) => state.purchaseOrder);
-  const { isModalContinuePo, poNumber, currentStep, customerType } =
-    poState.currentState.context;
-  const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] =
-    React.useState(false);
+  const {
+    isModalContinuePo, poNumber, currentStep, customerType,
+  } = poState.currentState.context;
+  const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] = React.useState(false);
   const {
     routes,
     isLoadMore,
@@ -79,9 +81,9 @@ const Transaction = () => {
 
   useCustomHeaderRight({
     customHeaderRight:
-      selectedType === 'DO' ||
-      selectedType === 'SO' ||
-      (selectedType === 'SPH' && loadTab) ? undefined : (
+      selectedType === 'DO'
+      || selectedType === 'SO'
+      || (selectedType === 'SPH' && loadTab) ? undefined : (
         <BTouchableText
           onPress={() => {
             if (selectedType === 'PO') {
@@ -108,15 +110,15 @@ const Transaction = () => {
               else navigation.navigate(SPH, {});
             }
           }}
-          title={'Buat ' + selectedType}
+          title={`Buat ${selectedType}`}
         />
-      ),
+        ),
   });
 
   useFocusEffect(
     React.useCallback(() => {
       send('backToGetTransactions');
-    }, [send])
+    }, [send]),
   );
 
   React.useEffect(() => {
@@ -129,95 +131,93 @@ const Transaction = () => {
       if (selectedType === 'SPH') {
         data = await getVisitationOrderByID(id);
         data = data.data.data;
-      } else {
-        if (selectedType === 'PO' || selectedType === 'SO') {
-          data = await getPurchaseOrderByID(id);
-          data = data.data.data;
+      } else if (selectedType === 'PO' || selectedType === 'SO') {
+        data = await getPurchaseOrderByID(id);
+        data = data.data.data;
 
-          // TODO: handle from BE, ugly when use mapping in FE side
-          data = {
-            ...data,
-            mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
-            paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
-            deposit: data.DepositPurchaseOrders,
-            DepositPurchaseOrders: undefined,
-            address: data.project.Address,
-            products: data.PoProducts,
-            project: {
-              ...data.project,
-              Address: undefined,
-            },
-            QuotationLetter: {
-              ...data.QuotationLetter,
-              QuotationRequest: {
-                ...data.QuotationLetter.QuotationRequest,
-                mainPic: undefined,
-                paymentType: undefined,
-                products: undefined,
-              },
-            },
-          };
-        } else if (selectedType === 'Deposit') {
-          data = await getDepositByID(id);
-          data = data.data.data;
-
-          // TODO: handle from BE, ugly when use mapping in FE side
-          data = {
-            ...data,
-            mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
-            QuotationLetter: {
-              ...data.QuotationLetter,
-              QuotationRequest: {
-                ...data.QuotationLetter.QuotationRequest,
-                mainPic: undefined,
-              },
-            },
-          };
-        } else if (selectedType === 'Jadwal') {
-          data = await getScheduleByID(id);
-          data = data.data.data;
-
-          // TODO: handle from BE, ugly when use mapping in FE side
-          data = {
-            ...data,
-            mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
-            products: data.QuotationLetter?.QuotationRequest?.products,
-            QuotationLetter: {
-              ...data.QuotationLetter,
-              QuotationRequest: {
-                ...data.QuotationLetter.QuotationRequest,
-                mainPic: undefined,
-                products: undefined,
-              },
-            },
-          };
-        } else if (selectedType === 'DO') {
-          data = await getDeliveryOrderByID(id);
-          data = data.data.data;
-
-          // TODO: handle from BE, ugly when use mapping in FE side
-          let products: any[] = [];
-          products.push(data.Schedule?.SaleOrder?.PoProduct);
-          data = {
-            ...data,
-            mainPic: data.project?.mainPic,
-            address: data.project.Address,
-            products: products,
-            project: {
-              ...data.project,
+        // TODO: handle from BE, ugly when use mapping in FE side
+        data = {
+          ...data,
+          mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+          paymentType: data.QuotationLetter?.QuotationRequest?.paymentType,
+          deposit: data.DepositPurchaseOrders,
+          DepositPurchaseOrders: undefined,
+          address: data.project.Address,
+          products: data.PoProducts,
+          project: {
+            ...data.project,
+            Address: undefined,
+          },
+          QuotationLetter: {
+            ...data.QuotationLetter,
+            QuotationRequest: {
+              ...data.QuotationLetter.QuotationRequest,
               mainPic: undefined,
-              Address: undefined,
+              paymentType: undefined,
+              products: undefined,
             },
-            Schedule: {
-              ...data.Schedule,
+          },
+        };
+      } else if (selectedType === 'Deposit') {
+        data = await getDepositByID(id);
+        data = data.data.data;
+
+        // TODO: handle from BE, ugly when use mapping in FE side
+        data = {
+          ...data,
+          mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+          QuotationLetter: {
+            ...data.QuotationLetter,
+            QuotationRequest: {
+              ...data.QuotationLetter.QuotationRequest,
+              mainPic: undefined,
             },
-          };
-        }
+          },
+        };
+      } else if (selectedType === 'Jadwal') {
+        data = await getScheduleByID(id);
+        data = data.data.data;
+
+        // TODO: handle from BE, ugly when use mapping in FE side
+        data = {
+          ...data,
+          mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+          products: data.QuotationLetter?.QuotationRequest?.products,
+          QuotationLetter: {
+            ...data.QuotationLetter,
+            QuotationRequest: {
+              ...data.QuotationLetter.QuotationRequest,
+              mainPic: undefined,
+              products: undefined,
+            },
+          },
+        };
+      } else if (selectedType === 'DO') {
+        data = await getDeliveryOrderByID(id);
+        data = data.data.data;
+
+        // TODO: handle from BE, ugly when use mapping in FE side
+        const products: any[] = [];
+        products.push(data.Schedule?.SaleOrder?.PoProduct);
+        data = {
+          ...data,
+          mainPic: data.project?.mainPic,
+          address: data.project.Address,
+          products,
+          project: {
+            ...data.project,
+            mainPic: undefined,
+            Address: undefined,
+          },
+          Schedule: {
+            ...data.Schedule,
+          },
+        };
       }
 
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data ? data.number : 'N/A',
-        data: data,
+        data,
         type: selectedType,
       });
     } catch (error) {
@@ -225,55 +225,51 @@ const Transaction = () => {
         openPopUp({
           popUpType: 'error',
           popUpText:
-            error.message ||
-            `Terjadi error saat pengambilan ${selectedType} data  `,
+            error.message
+            || `Terjadi error saat pengambilan ${selectedType} data  `,
           outsideClickClosePopUp: true,
-        })
+        }),
       );
     }
   };
-  const renderPoNumber = () => {
-    return (
-      <View
-        style={[
-          styles.poNumberWrapper,
-          { alignItems: customerType === 'COMPANY' ? 'flex-start' : 'center' },
-        ]}
-      >
-        <Text style={styles.poNumber}>
-          {customerType === 'COMPANY' ? poNumber : '-'}
-        </Text>
-      </View>
-    );
-  };
+  const renderPoNumber = () => (
+    <View
+      style={[
+        styles.poNumberWrapper,
+        { alignItems: customerType === 'COMPANY' ? 'flex-start' : 'center' },
+      ]}
+    >
+      <Text style={styles.poNumber}>
+        {customerType === 'COMPANY' ? poNumber : '-'}
+      </Text>
+    </View>
+  );
 
-  const renderContinueData = () => {
-    return (
-      <>
-        <View style={styles.popupSPHContent}>
-          {feature === 'PO' ? (
-            renderPoNumber()
-          ) : (
-            <BVisitationCard
-              item={{
-                name: sphData?.selectedCompany?.name,
-                location: sphData?.selectedCompany?.locationAddress?.line1,
-              }}
-              isRenderIcon={false}
-            />
-          )}
-        </View>
-        <BSpacer size={'medium'} />
-        <BText bold="300" sizeInNumber={14} style={styles.popupSPHDesc}>
-          {feature +
-            ' yang lama akan hilang kalau Anda buat ' +
-            feature +
-            ' yang baru'}
-        </BText>
-        <BSpacer size={'small'} />
-      </>
-    );
-  };
+  const renderContinueData = () => (
+    <>
+      <View style={styles.popupSPHContent}>
+        {feature === 'PO' ? (
+          renderPoNumber()
+        ) : (
+          <BVisitationCard
+            item={{
+              name: sphData?.selectedCompany?.name,
+              location: sphData?.selectedCompany?.locationAddress?.line1,
+            }}
+            isRenderIcon={false}
+          />
+        )}
+      </View>
+      <BSpacer size="medium" />
+      <BText bold="300" sizeInNumber={14} style={styles.popupSPHDesc}>
+        {`${feature
+        } yang lama akan hilang kalau Anda buat ${
+          feature
+        } yang baru`}
+      </BText>
+      <BSpacer size="small" />
+    </>
+  );
 
   const continuePopUpAction = () => {
     if (feature === 'PO') {
@@ -313,12 +309,10 @@ const Transaction = () => {
               loadTransaction={loadTransaction}
               refreshing={refreshing}
               isError={state.matches(
-                'getTransaction.typeLoaded.errorGettingTransactions'
+                'getTransaction.typeLoaded.errorGettingTransactions',
               )}
               errorMessage={errorMessage}
-              onAction={() =>
-                send('retryGettingTransactions', { payload: selectedType })
-              }
+              onAction={() => send('retryGettingTransactions', { payload: selectedType })}
               onRefresh={() => send('refreshingList')}
               onPress={(data: any) => getOneOrder(data.id)}
               selectedType={selectedType}
@@ -350,8 +344,8 @@ const Transaction = () => {
         }}
         actionButton={continuePopUpAction}
         descContent={renderContinueData()}
-        cancelText={'Buat Baru'}
-        actionText={'Lanjutkan'}
+        cancelText="Buat Baru"
+        actionText="Lanjutkan"
         text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
           feature === 'PO' ? 'PO' : 'SPH'
         } Sebelumnya?`}
@@ -370,7 +364,7 @@ const Transaction = () => {
       />
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   parent: {

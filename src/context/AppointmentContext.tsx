@@ -1,6 +1,6 @@
-import { PIC, selectedCompanyInterface } from '@/interfaces';
 import React, { createContext, useReducer, Dispatch } from 'react';
 import { DateData } from 'react-native-calendars';
+import { PIC, selectedCompanyInterface } from '@/interfaces';
 
 interface IProvider {
   children: React.ReactNode;
@@ -122,19 +122,19 @@ const initialData: AppointmentState = {
   selectedCustomerData: null,
   isModalPicVisible: false,
   isModalCompanyVisible: false,
-  isSearching:false
+  isSearching: false,
 };
 
 type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
     ? {
-        type: Key;
-      }
+      type: Key;
+    }
     : {
-        type: Key;
-        key?: keyof StepOne;
-        value?: any;
-      };
+      type: Key;
+      key?: keyof StepOne;
+      value?: any;
+    };
 };
 
 export enum AppointmentActionType {
@@ -157,7 +157,7 @@ export enum AppointmentActionType {
   INCREASE_STEP = 'INCREASE_STEP',
   DECREASE_STEP = 'DECREASE_STEP',
   RESET_STATE = 'RESET_STATE',
-  ENABLE_SEARCHING = 'ENABLE_SEARCHING'
+  ENABLE_SEARCHING = 'ENABLE_SEARCHING',
 }
 
 type AppointmentPayload = {
@@ -223,7 +223,7 @@ export type AppointmentAction =
   ActionMap<AppointmentPayload>[keyof ActionMap<AppointmentPayload>];
 
 const AppoinmentContext = createContext<
-  [AppointmentState, Dispatch<AppointmentAction>]
+[AppointmentState, Dispatch<AppointmentAction>]
 >([initialData, () => {}]);
 
 const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
@@ -320,7 +320,7 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
       return {
         ...state,
         isModalCompanyVisible: false,
-        isSearching:false,
+        isSearching: false,
         searchQuery: '',
         stepOne: {
           ...state.stepOne,
@@ -401,18 +401,18 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
     case AppointmentActionType.RESET_STATE: {
       return initialData;
     }
-    case AppointmentActionType.ENABLE_SEARCHING:{
+    case AppointmentActionType.ENABLE_SEARCHING: {
       return {
         ...state,
-        isSearching:action.value
-      }
+        isSearching: action.value,
+      };
     }
     default:
       return state;
   }
 };
 
-const AppointmentProvider = (props: IProvider) => {
+function AppointmentProvider(props: IProvider) {
   const { children } = props;
 
   const [values, dispatchValue] = useReducer(reducerForm, initialData);
@@ -421,6 +421,6 @@ const AppointmentProvider = (props: IProvider) => {
       {children}
     </AppoinmentContext.Provider>
   );
-};
+}
 
 export { AppoinmentContext, AppointmentProvider };

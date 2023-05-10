@@ -1,3 +1,8 @@
+import { StackActions, useNavigation } from '@react-navigation/native';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { bStorage } from '@/actions';
 import { BForm } from '@/components';
 import BChoosenProductList from '@/components/templates/BChoosenProductList';
@@ -6,14 +11,11 @@ import { PO } from '@/navigation/ScreenNames';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { AppDispatch, RootState } from '@/redux/store';
 import formatCurrency from '@/utils/formatCurrency';
-import { StackActions, useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 type ModalType = 'loading' | 'success' | 'error';
 type ModalText = string;
 
-const ProductDetail = () => {
+function ProductDetail() {
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation();
@@ -27,13 +29,12 @@ const ProductDetail = () => {
     lessThanFive,
     customerType,
   } = poState.currentState.context;
-  const isPostingPurchaseOrder =
-    poState.currentState.matches('PostPurchaseOrder');
+  const isPostingPurchaseOrder = poState.currentState.matches('PostPurchaseOrder');
   const successPostPurchaseOrder = poState.currentState.matches(
-    'PostPurchaseOrder.successCreatedPo'
+    'PostPurchaseOrder.successCreatedPo',
   );
   const failPostPurchaseOrder = poState.currentState.matches(
-    'PostPurchaseOrder.failCreatedPo'
+    'PostPurchaseOrder.failCreatedPo',
   );
   const featureName = customerType === 'INDIVIDU' ? 'SO' : 'PO';
   const getGlobalModalType = useCallback((): [ModalType, ModalText] => {
@@ -54,11 +55,9 @@ const ProductDetail = () => {
 
   const calculatedTotalPrice = (): number => {
     const total = selectedProducts
-      .map((v) => {
-        return v.quantity.toString()[0] === '0' || v.quantity.length === 0
-          ? 0
-          : v.offeringPrice * v.quantity;
-      })
+      .map((v) => (v.quantity.toString()[0] === '0' || v.quantity.length === 0
+        ? 0
+        : v.offeringPrice * v.quantity))
       .reduce((a, b) => a + b, 0);
     return total;
   };
@@ -87,8 +86,7 @@ const ProductDetail = () => {
         secondValue: 'second',
         firstStatus: checked === 'first' ? 'checked' : 'unchecked',
         secondStatus: checked === 'second' ? 'checked' : 'unchecked',
-        onSetComboRadioButtonValue: (value: string) =>
-          dispatch({ type: 'switchingMobilizationValue', value: value }),
+        onSetComboRadioButtonValue: (value: string) => dispatch({ type: 'switchingMobilizationValue', value }),
         firstChildren: checked === 'first' && (
           <BForm
             titleBold="500"
@@ -99,12 +97,11 @@ const ProductDetail = () => {
                 tableInput: {
                   firstColumnLabel: 'Volume',
                   secondColumnLabel: 'Harga Mobilisasi Spesial',
-                  onChangeValue: (value, index) =>
-                    dispatch({
-                      type: 'onChangeMobilizationPrice',
-                      value: value,
-                      index: index,
-                    }),
+                  onChangeValue: (value, index) => dispatch({
+                    type: 'onChangeMobilizationPrice',
+                    value,
+                    index,
+                  }),
                   tableInputListItem: [
                     {
                       firstColumnRangeTitle: '5-6',
@@ -147,7 +144,7 @@ const ProductDetail = () => {
           isPrimaryButtonLoading: isLoadingPostPurchaseOrder,
           primaryBtnAction: () => dispatch({ type: 'retryPostPurchaseOrder' }),
           outlineBtnAction: handleReturnToInitialState,
-        })
+        }),
       );
 
       if (successPostPurchaseOrder) {
@@ -182,11 +179,9 @@ const ProductDetail = () => {
       hasMultipleCheck
       comboRadioBtnInput={comboRadioBtnInput}
       calculatedTotalPrice={calculatedTotalPrice()}
-      onChangeQuantity={(index: number, value: string) =>
-        dispatch({ type: 'onChangeQuantity', index, value })
-      }
+      onChangeQuantity={(index: number, value: string) => dispatch({ type: 'onChangeQuantity', index, value })}
     />
   );
-};
+}
 
 export default ProductDetail;

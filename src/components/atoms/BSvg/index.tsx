@@ -1,7 +1,8 @@
-import { resScale } from '@/utils';
 import React from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
+import { resScale } from '@/utils';
 import SvgFiles from './svgFile';
+
 interface SvgProps {
   svgName: string;
   color?: string;
@@ -12,7 +13,7 @@ interface SvgProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const BSvg = ({
+function BSvg({
   svgName,
   width,
   height,
@@ -20,13 +21,13 @@ const BSvg = ({
   color,
   type,
   style,
-}: SvgProps) => {
+}: SvgProps) {
   if (!svgName) return <View />;
   const I = SvgFiles[svgName as keyof typeof SvgFiles];
   const _type: string = svgName.startsWith('Ic')
     ? String(type || 'stroke')
     : 'img';
-  const _color: string = String(color || '#010206');
+  const _color = String(color || '#010206');
   const _width: string | number = widthHeight || width || resScale(25);
   const _height: string | number = widthHeight || height || resScale(25);
   return (
@@ -40,6 +41,6 @@ const BSvg = ({
       />
     </View>
   );
-};
+}
 
 export default BSvg;

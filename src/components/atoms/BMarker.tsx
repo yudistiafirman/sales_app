@@ -1,9 +1,9 @@
-import { colors } from '@/constants';
-import resScale from '@/utils/resScale';
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
+import { colors } from '@/constants';
+import resScale from '@/utils/resScale';
 
-const BMarker = () => {
+function BMarker() {
   return (
     <View style={styles.markerFixed}>
       <Image
@@ -15,11 +15,11 @@ const BMarker = () => {
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   markerFixed: {
-    position:'absolute',
+    position: 'absolute',
     width: resScale(129),
     height: resScale(129),
     borderRadius: resScale(129),

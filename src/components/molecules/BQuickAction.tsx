@@ -1,4 +1,6 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import {
+  View, Text, TouchableOpacity, Image, StyleSheet,
+} from 'react-native';
 import React from 'react';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import resScale from '@/utils/resScale';

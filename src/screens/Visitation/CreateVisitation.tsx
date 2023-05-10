@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { View, DeviceEventEmitter, BackHandler } from 'react-native';
-import {
-  BBackContinueBtn,
-  BContainer,
-  BHeaderIcon,
-  BSpacer,
-  PopUpQuestion,
-} from '@/components';
-import SecondStep from './elements/second';
-import ThirdStep from './elements/third';
-import { PIC, Styles, visitationListResponse } from '@/interfaces';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
-import BSheetAddPic from './elements/second/BottomSheetAddPic';
-import Fifth from './elements/fifth';
-import { useKeyboardActive } from '@/hooks';
-import FirstStep from './elements/first';
-import { BStepperIndicator } from '@/components';
 import Entypo from 'react-native-vector-icons/Entypo';
-import { resScale } from '@/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import {
+  BBackContinueBtn,
+  BContainer,
+  BHeaderIcon,
+  BSpacer,
+  PopUpQuestion,
+  BStepperIndicator,
+} from '@/components';
+import SecondStep from './elements/second';
+import ThirdStep from './elements/third';
+import { PIC, Styles, visitationListResponse } from '@/interfaces';
+import BSheetAddPic from './elements/second/BottomSheetAddPic';
+import Fifth from './elements/fifth';
+import { useKeyboardActive } from '@/hooks';
+import FirstStep from './elements/first';
+import { resScale } from '@/utils';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import { layout } from '@/constants';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { CREATE_VISITATION } from '@/navigation/ScreenNames';
 import {
   resetStepperFocused,
@@ -56,15 +56,13 @@ const labels = [
 
 function stepHandler(
   state: VisitationGlobalState,
-  setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
+  setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void,
 ) {
   if (
-    state?.createdLocation?.formattedAddress &&
-    state?.locationAddress?.formattedAddress
+    state?.createdLocation?.formattedAddress
+    && state?.locationAddress?.formattedAddress
   ) {
-    setStepsDone((curr) => {
-      return [...new Set(curr), 0];
-    });
+    setStepsDone((curr) => [...new Set(curr), 0]);
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 0));
   }
@@ -73,54 +71,45 @@ function stepHandler(
       return pic;
     }
   });
-  const customerTypeCond =
-    state?.customerType === 'COMPANY' ? !!state?.companyName : true;
+  const customerTypeCond = state?.customerType === 'COMPANY' ? !!state?.companyName : true;
   if (
-    state?.customerType &&
-    customerTypeCond &&
-    state?.projectName &&
-    selectedPic
+    state?.customerType
+    && customerTypeCond
+    && state?.projectName
+    && selectedPic
   ) {
-    setStepsDone((curr) => {
-      return [...new Set(curr), 1];
-    });
+    setStepsDone((curr) => [...new Set(curr), 1]);
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 1));
   }
 
   if (
-    state?.stageProject &&
-    state?.products?.length > 0 &&
-    state?.estimationDate?.estimationMonth &&
-    state?.estimationDate?.estimationWeek &&
-    state?.paymentType
+    state?.stageProject
+    && state?.products?.length > 0
+    && state?.estimationDate?.estimationMonth
+    && state?.estimationDate?.estimationWeek
+    && state?.paymentType
   ) {
-    setStepsDone((curr) => {
-      return [...new Set(curr), 2];
-    });
+    setStepsDone((curr) => [...new Set(curr), 2]);
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 2));
   }
 
   if (state?.competitors?.length > 0) {
-    setStepsDone((curr) => {
-      return [...new Set(curr), 3];
-    });
+    setStepsDone((curr) => [...new Set(curr), 3]);
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 3));
   }
 
   const filteredImages = state?.images?.filter((it) => it?.file !== null);
   if (filteredImages?.length > 0) {
-    setStepsDone((curr) => {
-      return [...new Set(curr), 4];
-    });
+    setStepsDone((curr) => [...new Set(curr), 4]);
   } else {
     setStepsDone((curr) => curr.filter((num) => num !== 4));
   }
 }
 
-const CreateVisitation = () => {
+function CreateVisitation() {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -130,29 +119,28 @@ const CreateVisitation = () => {
   const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3]);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
 
-  const existingVisitation: visitationListResponse =
-    route?.params?.existingVisitation;
+  const existingVisitation: visitationListResponse = route?.params?.existingVisitation;
 
   function populateData(existingData: visitationListResponse) {
     const { project } = existingData;
     const { company, Pics: picList, mainPic } = project;
     dispatch(updateDataVisitation({ type: 'projectId', value: project.id }));
     dispatch(
-      updateDataVisitation({ type: 'projectName', value: project.name })
+      updateDataVisitation({ type: 'projectName', value: project.name }),
     );
     if (company) {
       dispatch(
-        updateDataVisitation({ type: 'customerType', value: 'COMPANY' })
+        updateDataVisitation({ type: 'customerType', value: 'COMPANY' }),
       );
       dispatch(
         updateDataVisitation({
           type: 'companyName',
           value: company.displayName,
-        })
+        }),
       );
     } else {
       dispatch(
-        updateDataVisitation({ type: 'customerType', value: 'INDIVIDU' })
+        updateDataVisitation({ type: 'customerType', value: 'INDIVIDU' }),
       );
     }
 
@@ -161,7 +149,7 @@ const CreateVisitation = () => {
         updateDataVisitation({
           type: 'stageProject',
           value: existingData.project?.stage,
-        })
+        }),
       );
     }
 
@@ -170,7 +158,7 @@ const CreateVisitation = () => {
         updateDataVisitation({
           type: 'typeProject',
           value: existingData.project?.type,
-        })
+        }),
       );
     }
 
@@ -179,7 +167,7 @@ const CreateVisitation = () => {
         updateDataVisitation({
           type: 'competitors',
           value: existingData.project?.Competitors,
-        })
+        }),
       );
       // dispatch(
       //   updateDataVisitation({
@@ -194,7 +182,7 @@ const CreateVisitation = () => {
         updateDataVisitation({
           type: 'paymentType',
           value: existingData.paymentType,
-        })
+        }),
       );
     }
 
@@ -203,7 +191,7 @@ const CreateVisitation = () => {
         updateDataVisitation({
           type: 'notes',
           value: existingData.visitNotes,
-        })
+        }),
       );
     }
 
@@ -226,14 +214,14 @@ const CreateVisitation = () => {
         updateDataVisitation({
           type: 'estimationDate',
           value: estimationDate,
-        })
+        }),
       );
     }
 
     if (existingData.products?.length > 0) {
-      let newProductIDList = [];
+      const newProductIDList = [];
       existingData.products.forEach((it) => {
-        let newProduct = {
+        const newProduct = {
           id: it.productId,
           name: it.Product?.name,
           display_name: it.Product?.displayName,
@@ -254,7 +242,7 @@ const CreateVisitation = () => {
         updateDataVisitation({
           type: 'products',
           value: newProductIDList,
-        })
+        }),
       );
     }
 
@@ -274,12 +262,10 @@ const CreateVisitation = () => {
         };
       });
       dispatch(updateDataVisitation({ type: 'pics', value: list }));
-    } else {
-      if (project.Pic) {
-        let selectedPic = { ...project.Pic };
-        selectedPic.isSelected = true;
-        dispatch(updateDataVisitation({ type: 'pics', value: [selectedPic] }));
-      }
+    } else if (project.Pic) {
+      const selectedPic = { ...project.Pic };
+      selectedPic.isSelected = true;
+      dispatch(updateDataVisitation({ type: 'pics', value: [selectedPic] }));
     }
   }
 
@@ -305,7 +291,7 @@ const CreateVisitation = () => {
         updateDataVisitation({
           type: 'existingLocationId',
           value: LocationAddress?.id,
-        })
+        }),
       );
       if (LocationAddress) {
         if (LocationAddress?.lon && LocationAddress?.lat) {
@@ -314,13 +300,13 @@ const CreateVisitation = () => {
           dispatch(
             updateRegion({
               formattedAddress: LocationAddress?.line1,
-              latitude: latitude,
-              longitude: longitude,
+              latitude,
+              longitude,
               lat: latitude,
               long: latitude,
               PostalId: undefined,
               line2: LocationAddress?.line2,
-            })
+            }),
           );
         }
       }
@@ -334,8 +320,8 @@ const CreateVisitation = () => {
         if (bottomSheetRef?.current) bottomSheetRef?.current?.close();
         if (visitationData.isSearchProject) {
           if (
-            visitationData.searchQuery &&
-            visitationData.searchQuery.trim() !== ''
+            visitationData.searchQuery
+            && visitationData.searchQuery.trim() !== ''
           ) {
             dispatch(setSearchQuery(''));
           } else {
@@ -349,7 +335,7 @@ const CreateVisitation = () => {
       };
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
-        backAction
+        backAction,
       );
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -357,7 +343,7 @@ const CreateVisitation = () => {
       visitationData.step,
       visitationData.isSearchProject,
       visitationData.searchQuery,
-    ])
+    ]),
   );
 
   useEffect(() => {
@@ -368,20 +354,17 @@ const CreateVisitation = () => {
   const handleStepperFocus = () => {
     // to continue stepper focus when entering visitation page
     if (!visitationData.stepperVisitationShouldNotFocused) {
-      if (visitationData.stepThreeVisitationFinished)
-        dispatch(updateCurrentStep(3));
-      else if (visitationData.stepTwoVisitationFinished)
-        dispatch(updateCurrentStep(2));
-      else if (visitationData.stepOneVisitationFinished)
-        dispatch(updateCurrentStep(1));
+      if (visitationData.stepThreeVisitationFinished) dispatch(updateCurrentStep(3));
+      else if (visitationData.stepTwoVisitationFinished) dispatch(updateCurrentStep(2));
+      else if (visitationData.stepOneVisitationFinished) dispatch(updateCurrentStep(1));
     }
 
     // to reset stepper focus when continuing progress data
     if (
-      visitationData.stepperVisitationShouldNotFocused &&
-      visitationData.step === 0 &&
-      (!visitationData.createdLocation?.formattedAddress ||
-        !visitationData.locationAddress?.formattedAddress)
+      visitationData.stepperVisitationShouldNotFocused
+      && visitationData.step === 0
+      && (!visitationData.createdLocation?.formattedAddress
+        || !visitationData.locationAddress?.formattedAddress)
     ) {
       dispatch(resetStepperFocused(1));
     }
@@ -390,36 +373,35 @@ const CreateVisitation = () => {
         return pic;
       }
     });
-    const customerTypeCond =
-      visitationData.customerType === 'COMPANY'
-        ? !!visitationData.companyName
-        : true;
+    const customerTypeCond = visitationData.customerType === 'COMPANY'
+      ? !!visitationData.companyName
+      : true;
     if (
-      visitationData.stepperVisitationShouldNotFocused &&
-      visitationData.step === 1 &&
-      (visitationData.customerType ||
-        customerTypeCond ||
-        visitationData.projectName ||
-        selectedPic)
+      visitationData.stepperVisitationShouldNotFocused
+      && visitationData.step === 1
+      && (visitationData.customerType
+        || customerTypeCond
+        || visitationData.projectName
+        || selectedPic)
     ) {
       dispatch(resetStepperFocused(2));
     }
     if (
-      visitationData.stepperVisitationShouldNotFocused &&
-      visitationData.step === 2 &&
-      (visitationData.stageProject ||
-        visitationData.products?.length <= 0 ||
-        visitationData.estimationDate?.estimationMonth ||
-        visitationData.estimationDate?.estimationWeek ||
-        visitationData.paymentType)
+      visitationData.stepperVisitationShouldNotFocused
+      && visitationData.step === 2
+      && (visitationData.stageProject
+        || visitationData.products?.length <= 0
+        || visitationData.estimationDate?.estimationMonth
+        || visitationData.estimationDate?.estimationWeek
+        || visitationData.paymentType)
     ) {
       dispatch(resetStepperFocused(3));
     }
 
     if (
-      visitationData.stepperVisitationShouldNotFocused &&
-      visitationData.step === 3 &&
-      visitationData.competitors?.length <= 0
+      visitationData.stepperVisitationShouldNotFocused
+      && visitationData.step === 3
+      && visitationData.competitors?.length <= 0
     ) {
       dispatch(resetStepperFocused(4));
     }
@@ -432,7 +414,7 @@ const CreateVisitation = () => {
     }
   };
 
-  const actionBackButton = (directlyClose: boolean = false) => {
+  const actionBackButton = (directlyClose = false) => {
     if (visitationData.step > 0 && !directlyClose) {
       next(visitationData.step - 1)();
     } else {
@@ -442,7 +424,7 @@ const CreateVisitation = () => {
 
   const addPic = (state: PIC) => {
     state.isSelected = true;
-    let finalPIC = [...visitationData.pics];
+    const finalPIC = [...visitationData.pics];
     if (visitationData.pics && visitationData.pics.length > 0) {
       finalPIC.forEach((it, index) => {
         finalPIC[index] = {
@@ -455,7 +437,7 @@ const CreateVisitation = () => {
       updateDataVisitation({
         type: 'pics',
         value: [...finalPIC, state],
-      })
+      }),
     );
   };
 
@@ -486,16 +468,16 @@ const CreateVisitation = () => {
       <BContainer paddingHorizontal={layout.pad.lg + layout.pad.xs}>
         <View style={styles.container}>
           {stepRender[visitationData.step]}
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           {!keyboardVisible && visitationData.shouldScrollView && (
             <BBackContinueBtn
               onPressContinue={() => {
-                let step = visitationData.step + 1;
+                const step = visitationData.step + 1;
                 next(step)();
                 dispatch(setStepperFocused(step));
                 DeviceEventEmitter.emit(
                   'CreateVisitation.continueButton',
-                  true
+                  true,
                 );
               }}
               onPressBack={() => actionBackButton(false)}
@@ -535,14 +517,14 @@ const CreateVisitation = () => {
           actionButton={() => {
             setPopupVisible(false);
           }}
-          cancelText={'Keluar'}
-          actionText={'Lanjutkan'}
-          text={'Apakah Anda yakin ingin keluar?'}
+          cancelText="Keluar"
+          actionText="Lanjutkan"
+          text="Apakah Anda yakin ingin keluar?"
         />
       </BContainer>
     </>
   );
-};
+}
 
 const styles: Styles = {
   footer: {

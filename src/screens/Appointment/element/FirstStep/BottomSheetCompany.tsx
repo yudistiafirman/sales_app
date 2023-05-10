@@ -1,3 +1,6 @@
+import React from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import Modal from 'react-native-modal';
 import {
   BText,
   BHeaderIcon,
@@ -8,9 +11,7 @@ import BProjectRBtnList from '@/components/organism/BProjectRBtnList';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { DataCompany } from '@/context/AppointmentContext';
-import React from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import Modal from 'react-native-modal';
+
 const { height } = Dimensions.get('window');
 
 interface BSheetCompanyProps {
@@ -22,14 +23,14 @@ interface BSheetCompanyProps {
   onSelect: (index: number) => void;
 }
 
-const BottomSheetCompany = ({
+function BottomSheetCompany({
   onChoose,
   isVisible,
   onChooseProject,
   dataCompany,
   onCloseModal,
   onSelect,
-}: BSheetCompanyProps) => {
+}: BSheetCompanyProps) {
   return (
     <Modal
       deviceHeight={height}
@@ -84,7 +85,7 @@ const BottomSheetCompany = ({
       </View>
     </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   modalContainer: { margin: 0, justifyContent: 'flex-end' },

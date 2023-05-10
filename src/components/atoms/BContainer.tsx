@@ -1,7 +1,6 @@
 import React from 'react';
+import { StyleProp, ViewStyle, View } from 'react-native';
 import { resScale } from '@/utils';
-import { StyleProp, ViewStyle } from 'react-native';
-import { View } from 'react-native';
 import { colors, layout } from '@/constants';
 
 interface IProps {
@@ -36,14 +35,14 @@ const makeStyle = ({
   if (paddingHorizontal || paddingHorizontal === 0) {
     styles = {
       ...styles,
-      paddingHorizontal: paddingHorizontal,
+      paddingHorizontal,
     };
   }
 
   if (paddingVertical || paddingVertical === 0) {
     styles = {
       ...styles,
-      paddingVertical: paddingVertical,
+      paddingVertical,
     };
   }
 
@@ -54,8 +53,8 @@ const makeStyle = ({
         radius === 'sm'
           ? layout.radius.sm
           : radius === 'md'
-          ? layout.radius.md
-          : layout.radius.lg,
+            ? layout.radius.md
+            : layout.radius.lg,
     };
   }
 
@@ -70,9 +69,9 @@ const makeStyle = ({
   return styles;
 };
 
-const BContainer = (props: IProps) => {
+function BContainer(props: IProps) {
   const { children } = props;
   return <View style={makeStyle(props)}>{children}</View>;
-};
+}
 
 export default BContainer;

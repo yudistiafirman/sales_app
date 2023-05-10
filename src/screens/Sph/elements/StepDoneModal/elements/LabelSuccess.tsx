@@ -9,7 +9,11 @@ type LabelSuccessType = {
 export default function LabelSuccess({ sphId }: LabelSuccessType) {
   return (
     <View style={styles.labelSuccess}>
-      <Text style={styles.labelText}>{sphId} telah berhasil dibuat</Text>
+      <Text style={styles.labelText}>
+        {sphId}
+        {' '}
+        telah berhasil dibuat
+      </Text>
     </View>
   );
 }

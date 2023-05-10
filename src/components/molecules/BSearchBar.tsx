@@ -1,10 +1,10 @@
+import * as React from 'react';
+import { TextStyle, ViewStyle } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
-import * as React from 'react';
-import { TextStyle, ViewStyle } from 'react-native';
-import { TextInput } from 'react-native-paper';
 
 interface BSearchBarProp {
   mode?: 'flat' | 'outlined' | undefined;
@@ -53,7 +53,7 @@ const BSearchBarDefaultProps = {
   dense: true,
 };
 
-const BSearchBar = ({
+function BSearchBar({
   mode,
   left,
   right,
@@ -75,7 +75,7 @@ const BSearchBar = ({
   dense,
   autoFocus,
   onFocus,
-}: BSearchBarProp & typeof BSearchBarDefaultProps) => {
+}: BSearchBarProp & typeof BSearchBarDefaultProps) {
   return (
     <TextInput
       onFocus={onFocus}
@@ -101,7 +101,7 @@ const BSearchBar = ({
       dense={dense}
     />
   );
-};
+}
 
 BSearchBar.defaultProps = BSearchBarDefaultProps;
 

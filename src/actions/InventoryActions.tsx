@@ -6,23 +6,19 @@ export const getAllBrikProducts = async (
   size?: number,
   search?: string,
   category?: string,
-  distance?: number
-) => {
-  return customRequest(
-    BrikApiInventory.getProducts(page, size, search, category, distance),
-    'GET'
-  );
-};
+  distance?: number,
+) => customRequest(
+  BrikApiInventory.getProducts(page, size, search, category, distance),
+  'GET',
+);
 
 export const getProductsCategories = async (
   page?: number,
   size?: number,
   search?: string,
   pillar?: string,
-  count?: boolean
-) => {
-  return customRequest(
-    BrikApiInventory.getProductCategories(page, size, search, pillar, count),
-    'GET'
-  );
-};
+  count?: boolean,
+) => customRequest(
+  BrikApiInventory.getProductCategories(page, size, search, pillar, count),
+  'GET',
+);

@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { BForm, BGallery } from '@/components';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  SafeAreaView, ScrollView, StyleSheet, View,
+} from 'react-native';
 import {
   StackActions,
   useFocusEffect,
   useNavigation,
 } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+import { BForm, BGallery } from '@/components';
 import { layout } from '@/constants';
 import { Input } from '@/interfaces';
 import { CreateDepositContext } from '@/context/CreateDepositContext';
@@ -14,17 +18,15 @@ import {
   CREATE_DEPOSIT,
   GALLERY_DEPOSIT,
 } from '@/navigation/ScreenNames';
-import { useDispatch, useSelector } from 'react-redux';
 import { deleteImage } from '@/redux/reducers/cameraReducer';
 import { RootState } from '@/redux/store';
-import moment from 'moment';
 
 export default function FirstStep() {
   const navigation = useNavigation();
   const { values, action } = React.useContext(CreateDepositContext);
   const { stepOne: stateOne } = values;
   const { createDepositPhotoURLs } = useSelector(
-    (state: RootState) => state.camera
+    (state: RootState) => state.camera,
   );
   const [isVisibleCalendar, setVisibleCalendar] = React.useState(false);
 
@@ -38,7 +40,7 @@ export default function FirstStep() {
       type: 'calendar',
       value: stateOne?.deposit?.createdAt,
       placeholder: 'Pilih tanggal bayar',
-      isError: stateOne?.deposit?.createdAt ? false : true,
+      isError: !stateOne?.deposit?.createdAt,
       customerErrorMsg: 'Tanggal bayar harus diisi',
       calendar: {
         onDayPress: (value: any) => {
@@ -57,7 +59,7 @@ export default function FirstStep() {
       type: 'price',
       value: stateOne?.deposit?.nominal,
       placeholder: '0',
-      isError: stateOne?.deposit?.nominal ? false : true,
+      isError: !stateOne?.deposit?.nominal,
       customerErrorMsg: 'Nominal harus diisi',
       onChange: (value: any) => {
         onChange('nominal')(value.split('.').join(''));
@@ -68,23 +70,24 @@ export default function FirstStep() {
   const onChange = (key: string) => (val: any) => {
     let modifyDeposit = {};
     if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
-    if (key === 'createdAt')
+    if (key === 'createdAt') {
       modifyDeposit = {
         ...modifyDeposit,
         createdAt: val,
       };
-    if (key === 'nominal')
+    }
+    if (key === 'nominal') {
       modifyDeposit = {
         ...modifyDeposit,
         nominal: val,
       };
+    }
 
     updateValueOnstep('stepOne', 'deposit', modifyDeposit);
   };
 
   const removeImage = React.useCallback(
     (pos: number) => {
-
       dispatch(deleteImage({ pos, source: CREATE_DEPOSIT }));
       let modifyDeposit = {};
       if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
@@ -95,7 +98,7 @@ export default function FirstStep() {
       updateValueOnstep('stepOne', 'deposit', modifyDeposit);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   useFocusEffect(
@@ -108,7 +111,7 @@ export default function FirstStep() {
       };
       updateValueOnstep('stepOne', 'deposit', modifyDeposit);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [createDepositPhotoURLs])
+    }, [createDepositPhotoURLs]),
   );
 
   return (
@@ -116,17 +119,15 @@ export default function FirstStep() {
       <View style={style.gallery}>
         <BGallery
           picts={stateOne?.deposit?.picts}
-          addMorePict={() =>
-            navigation.dispatch(
-              StackActions.push(CAMERA, {
-                photoTitle: 'Bukti',
-                closeButton: true,
-                navigateTo: GALLERY_DEPOSIT,
-                disabledDocPicker: false,
-                disabledGalleryPicker: false,
-              })
-            )
-          }
+          addMorePict={() => navigation.dispatch(
+            StackActions.push(CAMERA, {
+              photoTitle: 'Bukti',
+              closeButton: true,
+              navigateTo: GALLERY_DEPOSIT,
+              disabledDocPicker: false,
+              disabledGalleryPicker: false,
+            }),
+          )}
           removePict={removeImage}
         />
       </View>

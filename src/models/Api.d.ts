@@ -9,9 +9,9 @@ export namespace Api {
     totalPage?: number;
     totalItems?: number;
     data?:
-      | any
-      | UserModel.DataSuccessLogin
-      | VisitationModel.DataGetAllVisitation;
+    | any
+    | UserModel.DataSuccessLogin
+    | VisitationModel.DataGetAllVisitation;
     error?: {
       code: string;
       message: string;

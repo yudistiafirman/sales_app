@@ -1,9 +1,9 @@
-import { colors, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { resScale } from '@/utils';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RadioButton } from 'react-native-paper';
+import { colors, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { resScale } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
 import BText from '../atoms/BText';
 
@@ -16,38 +16,36 @@ interface IProps {
   projectName?: string;
 }
 
-const BProjectRBtn = ({
+function BProjectRBtn({
   isOption,
   projectId,
   isSelected,
   onSelect,
   idx,
   projectName,
-}: IProps) => {
+}: IProps) {
   const paddingLeft = isOption ? 0 : layout.pad.md + layout.pad.xs;
   return (
-    <>
-      <View style={styles.container}>
-        {isOption && (
-          <RadioButton
-            uncheckedColor={colors.border.altGrey}
-            value={projectId!}
-            color={colors.primary}
-            status={isSelected ? 'checked' : 'unchecked'}
-            onPress={() => {
-              if (onSelect) {
-                onSelect(idx!);
-              }
-            }}
-          />
-        )}
-        <BText style={[styles.radioTitle, { paddingLeft: paddingLeft }]}>
-          {projectName}
-        </BText>
-      </View>
-    </>
+    <View style={styles.container}>
+      {isOption && (
+      <RadioButton
+        uncheckedColor={colors.border.altGrey}
+        value={projectId!}
+        color={colors.primary}
+        status={isSelected ? 'checked' : 'unchecked'}
+        onPress={() => {
+          if (onSelect) {
+            onSelect(idx!);
+          }
+        }}
+      />
+      )}
+      <BText style={[styles.radioTitle, { paddingLeft }]}>
+        {projectName}
+      </BText>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -59,7 +57,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom:layout.pad.lg
+    marginBottom: layout.pad.lg,
   },
   radioTitle: {
     fontFamily: font.family.montserrat[500],

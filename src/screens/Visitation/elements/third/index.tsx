@@ -7,6 +7,10 @@ import {
   DeviceEventEmitter,
   Platform,
 } from 'react-native';
+import { RadioButton, TextInput } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   BDivider,
   BForm,
@@ -23,17 +27,13 @@ import {
   WEEK_LIST,
 } from '@/constants/dropdown';
 import ProductChip from './ProductChip';
-import { RadioButton, TextInput } from 'react-native-paper';
 import { resScale } from '@/utils';
-import { useNavigation } from '@react-navigation/native';
 import {
   ALL_PRODUCT,
   CREATE_VISITATION,
   SEARCH_PRODUCT,
 } from '@/navigation/ScreenNames';
 import { colors, layout } from '@/constants';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
 import ProductDetailModal from './ProductDetailModal';
@@ -41,7 +41,7 @@ import ProductDetailModal from './ProductDetailModal';
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
-const ThirdStep = () => {
+function ThirdStep() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const visitationData = useSelector((state: RootState) => state.visitation);
@@ -53,7 +53,7 @@ const ThirdStep = () => {
       updateDataVisitation({
         type: key,
         value: e,
-      })
+      }),
     );
   };
 
@@ -67,7 +67,7 @@ const ThirdStep = () => {
       updateDataVisitation({
         type: 'currentCompetitor',
         value: current,
-      })
+      }),
     );
   };
 
@@ -81,9 +81,7 @@ const ThirdStep = () => {
       dropdown: {
         items: STAGE_PROJECT,
         placeholder: visitationData.stageProject
-          ? STAGE_PROJECT.find((it) => {
-              return it.value === visitationData.stageProject;
-            })?.label ?? ''
+          ? STAGE_PROJECT.find((it) => it.value === visitationData.stageProject)?.label ?? ''
           : 'Fase Proyek',
         onChange: (value: any) => {
           onChange('stageProject')(value);
@@ -99,9 +97,7 @@ const ThirdStep = () => {
       dropdown: {
         items: TYPE_PROJECT,
         placeholder: visitationData.typeProject
-          ? TYPE_PROJECT.find((it) => {
-              return it.value === visitationData.typeProject;
-            })?.label ?? ''
+          ? TYPE_PROJECT.find((it) => it.value === visitationData.typeProject)?.label ?? ''
           : 'Tipe Proyek',
         onChange: (value: any) => {
           onChange('typeProject')(value);
@@ -131,7 +127,7 @@ const ThirdStep = () => {
             updateDataVisitation({
               type: 'estimationDate',
               value: estimateionDate,
-            })
+            }),
           );
         },
         onChangeTwo: (value: any) => {
@@ -143,7 +139,7 @@ const ThirdStep = () => {
             updateDataVisitation({
               type: 'estimationDate',
               value: estimateionDate,
-            })
+            }),
           );
         },
         placeholderOne: 'Pilih Minggu',
@@ -236,17 +232,17 @@ const ThirdStep = () => {
       setChoosenProduct(data);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isVisible]
+    [isVisible],
   );
 
   const deleteProduct = (index: number) => {
-    const products = visitationData.products;
+    const { products } = visitationData;
     const restProducts = products.filter((o, i) => index !== i);
     dispatch(
       updateDataVisitation({
         type: 'products',
         value: restProducts,
-      })
+      }),
     );
   };
 
@@ -266,15 +262,15 @@ const ThirdStep = () => {
         updateDataVisitation({
           type: 'products',
           value: Object.values(uniqueArray),
-        })
+        }),
       );
       setIsVisible(false);
     },
-    [choosenProduct, isVisible]
+    [choosenProduct, isVisible],
   );
 
   useEffect(() => {
-    crashlytics().log(CREATE_VISITATION + '-Step3');
+    crashlytics().log(`${CREATE_VISITATION}-Step3`);
     DeviceEventEmitter.addListener('event.testEvent', listenerCallback);
     return () => {
       DeviceEventEmitter.removeAllListeners('event.testEvent');
@@ -303,7 +299,7 @@ const ThirdStep = () => {
                 : Number(visitationData.createdLocation?.lat),
           };
           navigation.navigate(ALL_PRODUCT, {
-            coordinate: coordinate,
+            coordinate,
             from: CREATE_VISITATION,
           });
         }}
@@ -331,20 +327,20 @@ const ThirdStep = () => {
               : visitationData.createdLocation?.distance?.value;
             navigation.navigate(SEARCH_PRODUCT, {
               isGobackAfterPress: true,
-              distance: distance,
+              distance,
             });
           }}
         />
         <BTextInput
           placeholder="Cari Produk"
-          left={<TextInput.Icon forceTextInputFocus={false} icon={'magnify'} />}
+          left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
         />
       </View>
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size="extraSmall" />
       {visitationData.products?.length ? (
         <>
           <ScrollView
-            horizontal={true}
+            horizontal
             style={Platform.OS !== 'android' && { zIndex: -1 }}
           >
             {visitationData.products?.map((val, index) => (
@@ -478,7 +474,7 @@ const ThirdStep = () => {
       />
     </ScrollView>
   );
-};
+}
 
 export default ThirdStep;
 

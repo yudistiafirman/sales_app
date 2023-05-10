@@ -1,8 +1,8 @@
+import React from 'react';
+import { TextStyle, View, ViewStyle } from 'react-native';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
-import React from 'react';
-import { TextStyle, View, ViewStyle } from 'react-native';
 import BChip from '../atoms/BChip';
 import BText from '../atoms/BText';
 
@@ -19,7 +19,7 @@ interface BTabLabelsProps {
   minWidth?: number | undefined;
 }
 
-const BTabLabels = ({ route, focused, minWidth }: BTabLabelsProps) => {
+function BTabLabels({ route, focused, minWidth }: BTabLabelsProps) {
   const isHasItems = route?.totalItems > 0;
   const rightChipPosition = route?.chipPosition === 'right';
 
@@ -58,6 +58,6 @@ const BTabLabels = ({ route, focused, minWidth }: BTabLabelsProps) => {
       </BChip>
     </View>
   );
-};
+}
 
 export default BTabLabels;

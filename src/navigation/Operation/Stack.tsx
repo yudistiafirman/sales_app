@@ -1,8 +1,8 @@
+import * as React from 'react';
 import Preview from '@/screens/Camera/Preview';
 import CreateDO from '@/screens/Operation/CreateDO';
 import SubmitForm from '@/screens/Operation/SubmitForm';
 import CameraScreen from '@/screens/Camera';
-import * as React from 'react';
 import {
   CAMERA,
   CAMERA_TITLE,
@@ -17,7 +17,7 @@ import {
 } from '../ScreenNames';
 import Location from '@/screens/Location';
 
-const OperationStack = (Stack: any) => {
+function OperationStack(Stack: any) {
   return (
     <>
       <Stack.Screen
@@ -62,6 +62,6 @@ const OperationStack = (Stack: any) => {
       />
     </>
   );
-};
+}
 
 export default OperationStack;

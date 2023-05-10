@@ -1,13 +1,13 @@
-import { resScale } from '@/utils';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { resScale } from '@/utils';
 import colors from '@/constants/colors';
 import { layout } from '@/constants';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const TransactionListShimmer = () => {
+function TransactionListShimmer() {
   return (
     <View style={styles.parent}>
       <View style={styles.container}>
@@ -19,7 +19,7 @@ const TransactionListShimmer = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   parent: {

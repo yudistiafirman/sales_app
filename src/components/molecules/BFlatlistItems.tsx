@@ -1,13 +1,14 @@
 import { View, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
-import resScale from '@/utils/resScale';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import resScale from '@/utils/resScale';
 import { layout } from '@/constants';
 import BSpacer from '../atoms/BSpacer';
 import BEmptyState from '@/components/organism/BEmptyState';
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type visitationType = {
@@ -21,9 +22,9 @@ type BTabScreenType = {
   isLoading?: boolean;
   searchQuery?: string;
   onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  | ((info: { distanceFromEnd: number }) => void)
+  | null
+  | undefined;
   refreshing?: boolean;
   initialFetch?: () => Promise<visitationType[] | undefined>;
   isError?: boolean;
@@ -48,37 +49,32 @@ export default function BFlatlistItems({
   const [currentPage, setCurrentPage] = useState(1);
   const [_isLoading, _setIsLoading] = useState(isLoading || false);
 
-  const renderLoading = () => {
-    return (
-      <View style={style.flatListLoading}>
-        <ShimmerPlaceHolder style={style.flatListShimmer} />
-      </View>
-    );
-  };
+  const renderLoading = () => (
+    <View style={style.flatListLoading}>
+      <ShimmerPlaceHolder style={style.flatListShimmer} />
+    </View>
+  );
 
-  const renderItemSeparator = () => {
-    return <BSpacer size="middleSmall" />;
-  };
+  const renderItemSeparator = () => <BSpacer size="middleSmall" />;
   const renderFlatListFooter = () => {
     if (!isLoading) {
       return null;
-    } else {
-      return null;
     }
+    return null;
+
     // harusnya nambah state baru buat loading untuk get more list
     // return renderLoading();
   };
   const renderEmptyComponent = () => {
     if (isLoading) {
       return renderLoading();
-    } else {
-      return BEmptyState({
-        emptyText: `${searchQuery} tidak ditemukan!`,
-        isError: isError,
-        errorMessage: errorMessage,
-        onAction: onAction,
-      });
     }
+    return BEmptyState({
+      emptyText: `${searchQuery} tidak ditemukan!`,
+      isError,
+      errorMessage,
+      onAction,
+    });
   };
   return (
     <View style={style.container}>
@@ -91,9 +87,7 @@ export default function BFlatlistItems({
         refreshing={refreshing}
         data={flatListDatas}
         keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => {
-          return renderItem(item);
-        }}
+        renderItem={({ item }) => renderItem(item)}
         ListFooterComponent={() => renderFlatListFooter()}
         ListEmptyComponent={() => renderEmptyComponent()}
       />

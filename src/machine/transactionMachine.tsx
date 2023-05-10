@@ -1,3 +1,5 @@
+import { createMachine } from 'xstate';
+import { assign } from 'xstate/lib/actions';
 import {
   getAllDeliveryOrders,
   getAllDeposits,
@@ -7,8 +9,6 @@ import {
   getTransactionTab,
 } from '@/actions/OrderActions';
 import { uniqueStringGenerator } from '@/utils/generalFunc';
-import { createMachine } from 'xstate';
-import { assign } from 'xstate/lib/actions';
 
 export const transactionMachine =
   /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDAdrdBjZAlgPaYAEAtngBYGZgB0MyAKhtnoSfQDZHoS0orLDnzFMAYggkGtAG5EA1gzQiO4itVoMmw9mK69+gvaM6YE8ornTmA2gAYAuo6eJQAByKwC59yAAPRABmYIA2egB2MIBWMIAmAA4ATniHVMTggBoQAE9EABZEgvpkmOCHMODI0MSqgEZggF8mnNV9c01cGjpGMBY2M3EePgFMIUH1EgkwVFQiVHoPblsAMwXyenahki6enX7TKcwR43GjgwsrG3tnV38vHz8kQJC4qNiElLSM7LzENL1egFZKg2KRAqRNIxMotNqTS57bR9AZqS5bXIeMAAGVGkBRF3MsAAQuhYGAAPKYZiYsBSGT0KzKLYIzqUbrI3Ss4bIWm4-j4rloomk8lUmlYyyYBQ3cSue4vR6+cT+IIIYoReKfArBRIOSI1Ar1HL5BAxeLBehhSLJML1eJQyL1ZL1MJwkDbY5I3pCjo8vl4iAE7kkElkynU2kzOYLJYrZDrVCbT2I9n7YPC-1Y-kQQWHEPYUURiVgKUy2xyu7OB7eZUkVWIeoFIr0Bz6xpai1hEF-U31BzxeL0epQ0IFGIxfthW3ulNsrQ+-OZri87OBlnLzA5yASEgAUUwEAASmBqJAFZ5a89QGrMg5h4lIpP7WE267IibEHbIsPgg7+06upFJEs4Ft6Byon6K4BgKQZzuI24QLumAAMJUFgMAlheIBKterzqhUD5PvUL5vtan4IIB9AxIkNFpHUEI6jEoGbuBGZQScq44uu8EkIhEioGAqyCbAPRQNiBCwMg2G4SqLy3oR9SPs+WpkR+-zqv2ra6skwT9vE-a6sxrQemBaackuHEYmusEbhx-EAEZ4IozBEAA4pZOzYDJV5yTeIQFBE0RxEkqTpEkvYBUOg6xA4dQxJElRxG6Jm8WQ5mLpBXnWdxtmzPMqAecghDnLShLiLAAn9KguRFSVQhlQWsA+U8fn4U2NFWt2+qpDUwRlGEFF2iUDh-k66ROiRmQsRxbG+tl+ULHVJiNZulWCWgtX9PV5Whi1daYA2CDBO8wVfGFvwUfUMT3qCoJ1IkSkASkLQmZgRC5vALxpeBNatfW8mIAAtPEBQUSDI1tg4zp6pUrrWjNXlzZ5xx-QdR2g0NlogmCiSg82Rq2il8KsRlEG7ScRhjBMm5o3hapQld5TDjjT41NdCWxIjXpk+x2VcYhdNtWq5Q-gZI5486oNKfEFE6hEI62qDYSS6E3Opgu5MFjliF88cYZipGWJCwD-nqu8ML9RU0RGgayQUckT70BUunRKEjvxMZJOzbz83HDrPEFoLiq+ab+E0TE9Di5EkupEaeMUTCkdxWEsQWmk440er84cplFMB3lMaFdtK1YhTX2Xv9h2AwgI7mvQtG6WUyS0ROA5DeO1GpK+JG9Uk2caL7KPootxfFaXYDlyb1dm6+Q5-qNL4VC7TPJNRmR6an-UJAUFqvU0QA */
@@ -147,22 +147,16 @@ export const transactionMachine =
     },
     {
       guards: {
-        hasNoDataOnNextLoad: (context, _event) => {
-          return context.page * context.size < context.totalItems
-            ? true
-            : false;
-        },
+        hasNoDataOnNextLoad: (context, _event) => (context.page * context.size < context.totalItems),
       },
       actions: {
         assignTypeToContext: assign((_context, event) => {
-          const newTypeData = event.data.map((item) => {
-            return {
-              key: uniqueStringGenerator(),
-              title: item.name,
-              totalItems: item.totalItems,
-              chipPosition: 'bottom',
-            };
-          });
+          const newTypeData = event.data.map((item) => ({
+            key: uniqueStringGenerator(),
+            title: item.name,
+            totalItems: item.totalItems,
+            chipPosition: 'bottom',
+          }));
           return {
             routes: newTypeData,
             selectedCategories: newTypeData[0].title,
@@ -173,17 +167,15 @@ export const transactionMachine =
         assignTransactionsDataToContext: assign((context, event) => {
           if (event.data.data.length > 0) {
             const transactionsData = [...context.data, ...event.data.data];
-            const newTypeData = context.routes.map((item) => {
-              return {
-                key: item.key,
-                title: item.title,
-                totalItems:
+            const newTypeData = context.routes.map((item) => ({
+              key: item.key,
+              title: item.title,
+              totalItems:
                   context.selectedType === item.title
                     ? event.data.totalItems
                     : item.totalItems,
-                chipPosition: 'bottom',
-              };
-            });
+              chipPosition: 'bottom',
+            }));
             return {
               loadTransaction: false,
               isLoadMore: false,
@@ -193,77 +185,62 @@ export const transactionMachine =
               routes: newTypeData,
               isErrorData: false,
             };
-          } else {
-            return {
-              loadTransaction: false,
-              isLoadMore: false,
-              refreshing: false,
-              isErrorData: false,
-              loadTab: false,
-            };
           }
-        }),
-        assignIndexToContext: assign((_context, event) => {
-          return {
-            selectedType: event.payload,
-            page: 1,
-            loadTransaction: true,
-            data: [],
-          };
-        }),
-        incrementPage: assign((context, _event) => {
-          return {
-            page: context.page + 1,
-            isLoadMore: true,
-          };
-        }),
-        refreshTransactionList: assign((_context, _event) => {
-          return {
-            page: 1,
-            refreshing: true,
-            loadTransaction: true,
-            data: [],
-          };
-        }),
-        enableLoadTransaction: assign((_context, _event) => {
-          return {
-            loadTransaction: true,
-          };
-        }),
-        handleError: assign((_context, event) => {
           return {
             loadTransaction: false,
-            refreshing: false,
             isLoadMore: false,
-            data: [],
+            refreshing: false,
+            isErrorData: false,
             loadTab: false,
-            page: 1,
-            totalItems: 0,
-            errorMessage: event.data.message,
-            isErrorData: true,
           };
         }),
-        resetProduct: assign((context, event) => {
-          return {
-            data: [],
-            page: 1,
-            loadTransaction: true,
-          };
-        }),
-        handleRetryGettingTransactions: assign((context, event) => {
-          return {
-            data: [],
-            page: 1,
-            loadTransaction: true,
-            selectedType: event.payload,
-          };
-        }),
+        assignIndexToContext: assign((_context, event) => ({
+          selectedType: event.payload,
+          page: 1,
+          loadTransaction: true,
+          data: [],
+        })),
+        incrementPage: assign((context, _event) => ({
+          page: context.page + 1,
+          isLoadMore: true,
+        })),
+        refreshTransactionList: assign((_context, _event) => ({
+          page: 1,
+          refreshing: true,
+          loadTransaction: true,
+          data: [],
+        })),
+        enableLoadTransaction: assign((_context, _event) => ({
+          loadTransaction: true,
+        })),
+        handleError: assign((_context, event) => ({
+          loadTransaction: false,
+          refreshing: false,
+          isLoadMore: false,
+          data: [],
+          loadTab: false,
+          page: 1,
+          totalItems: 0,
+          errorMessage: event.data.message,
+          isErrorData: true,
+        })),
+        resetProduct: assign((context, event) => ({
+          data: [],
+          page: 1,
+          loadTransaction: true,
+        })),
+        handleRetryGettingTransactions: assign((context, event) => ({
+          data: [],
+          page: 1,
+          loadTransaction: true,
+          selectedType: event.payload,
+        })),
       },
       services: {
         getTypeTransactions: async (_context, _event) => {
           try {
-            let response = await getTransactionTab();
-            return response.data.data as any;
+            const response = await getTransactionTab();
+            return response.data.data;
           } catch (error) {
             throw new Error(error);
           }
@@ -274,7 +251,7 @@ export const transactionMachine =
             if (_context.selectedType === 'PO') {
               response = await getAllPurchaseOrders(
                 _context.page.toString(),
-                _context.size.toString()
+                _context.size.toString(),
               );
               response = response.data;
             } else if (_context.selectedType === 'SO') {
@@ -282,39 +259,39 @@ export const transactionMachine =
                 _context.page.toString(),
                 _context.size.toString(),
                 undefined,
-                'CONFIRMED'
+                'CONFIRMED',
               );
               response = response.data;
             } else if (_context.selectedType === 'Deposit') {
               response = await getAllDeposits(
                 _context.page.toString(),
-                _context.size.toString()
+                _context.size.toString(),
               );
               response = response.data;
             } else if (_context.selectedType === 'Jadwal') {
               response = await getAllSchedules(
                 _context.page.toString(),
-                _context.size.toString()
+                _context.size.toString(),
               );
               response = response.data;
             } else if (_context.selectedType === 'DO') {
               response = await getAllDeliveryOrders(
                 undefined,
                 _context.size.toString(),
-                _context.page.toString()
+                _context.page.toString(),
               );
               response = response.data;
             } else {
               response = await getAllVisitationOrders(
                 _context.page.toString(),
-                _context.size.toString()
+                _context.size.toString(),
               );
             }
-            return response.data as any;
+            return response.data;
           } catch (error) {
             throw new Error(error);
           }
         },
       },
-    }
+    },
   );

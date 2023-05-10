@@ -1,8 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View, Text, StyleSheet, TouchableOpacity,
+} from 'react-native';
 import * as React from 'react';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { resScale } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
 
@@ -70,39 +72,45 @@ export default function BProductCard({
             <TouchableOpacity onPress={onPressDelete}>
               <MaterialCommunityIcons
                 name="trash-can-outline"
-                color={'#000000'}
+                color="#000000"
                 size={resScale(20)}
               />
             </TouchableOpacity>
           )}
 
-          <BSpacer size={'extraSmall'} />
+          <BSpacer size="extraSmall" />
           {onPressEdit && (
             <TouchableOpacity onPress={onPressEdit}>
               <MaterialCommunityIcons
                 name="pencil"
-                color={'#000000'}
+                color="#000000"
                 size={resScale(20)}
               />
             </TouchableOpacity>
           )}
         </View>
       </View>
-      <BSpacer size={'extraSmall'} />
+      <BSpacer size="extraSmall" />
       <View style={style.detail}>
         {!hideVolume && (
           <Text style={style.detailText}>
-            {volume && volume > 0 ? volume + ` ${getUnit()}` : '-'}
+            {volume && volume > 0 ? `${volume} ${getUnit()}` : '-'}
           </Text>
         )}
         {!hidePricePerVolume && (
           <Text style={style.detailText}>
-            IDR {pricePerVol ? formatCurrency(pricePerVol) : '-'}/{getUnit()}
+            IDR
+            {' '}
+            {pricePerVol ? formatCurrency(pricePerVol) : '-'}
+            /
+            {getUnit()}
           </Text>
         )}
         {!hideTotal && (
           <Text style={style.detailText}>
-            IDR {totalPrice ? formatCurrency(totalPrice) : '-'}
+            IDR
+            {' '}
+            {totalPrice ? formatCurrency(totalPrice) : '-'}
           </Text>
         )}
       </View>

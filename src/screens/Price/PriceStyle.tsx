@@ -1,8 +1,8 @@
+import { StyleSheet } from 'react-native';
 import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
-import { StyleSheet } from 'react-native';
 
 const PriceStyle = StyleSheet.create({
   tabIndicator: {

@@ -3,6 +3,7 @@ import { Camera } from 'react-native-vision-camera';
 import { displayName } from '../../../app.json';
 import { store } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+
 const openSetting = () => {
   Linking.openSettings().catch(() => {
     store.dispatch(
@@ -10,7 +11,7 @@ const openSetting = () => {
         popUpType: 'error',
         popUpText: 'Terjadi error saat membuka Setting',
         outsideClickClosePopUp: true,
-      })
+      }),
     );
   });
 };
@@ -30,7 +31,7 @@ const showAlertCamera = () => {
         }, 100);
         openSetting();
       },
-    })
+    }),
   );
 };
 
@@ -42,41 +43,36 @@ export const hasCameraPermissions = async () => {
         const newCameraPermission = await Camera.requestCameraPermission();
         if (newCameraPermission === 'authorized') {
           return true;
-        } else {
-          showAlertCamera();
         }
+        showAlertCamera();
       } else {
         if (cameraPermission === 'authorized') {
           return true;
-        } else {
-          showAlertCamera();
         }
+        showAlertCamera();
       }
     } else {
       const status = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA
+        PermissionsAndroid.PERMISSIONS.CAMERA,
       );
       if (status === PermissionsAndroid.RESULTS.GRANTED) {
         return true;
+      }
+      if (status === PermissionsAndroid.RESULTS.DENIED) {
+        showAlertCamera();
       } else {
-        if (status === PermissionsAndroid.RESULTS.DENIED) {
-          showAlertCamera();
-        } else {
-          showAlertCamera();
-        }
+        showAlertCamera();
       }
     }
   } catch (err) {
-    const errorMessage =
-      err.message || 'Terjadi error dalam meminta izin untuk mengakses camera';
+    const errorMessage = err.message || 'Terjadi error dalam meminta izin untuk mengakses camera';
     store.dispatch(
       openPopUp({
         popUpType: 'error',
         popUpText: errorMessage,
         outsideClickClosePopUp: true,
-      })
+      }),
     );
-    return;
   }
 };
 

@@ -1,9 +1,9 @@
+import * as React from 'react';
 import {
   CreateDepositFirstStep,
   CreateDepositSecondStep,
   CreateDepositState,
 } from '@/interfaces/CreateDeposit';
-import * as React from 'react';
 
 interface IProvider {
   children: React.ReactNode;
@@ -47,7 +47,7 @@ const CreateDepositContext = React.createContext<context>({
 
 const reducerForm = (
   state: CreateDepositState,
-  action: ActionCreateDepositState
+  action: ActionCreateDepositState,
 ) => {
   switch (action.type) {
     case 'sheetIndex':
@@ -71,19 +71,19 @@ const reducerForm = (
   }
 };
 
-const CreateDepositProvider = (props: IProvider) => {
+function CreateDepositProvider(props: IProvider) {
   const { children } = props;
 
   const [values, dispatchValue] = React.useReducer(reducerForm, initialData);
 
   const updateValue = (key: keyof CreateDepositState, value: any) => {
-    dispatchValue({ type: key, value: value });
+    dispatchValue({ type: key, value });
   };
 
   const updateValueOnstep = (
     step: keyof CreateDepositState,
     key: keyof CreateDepositFirstStep | keyof CreateDepositSecondStep,
-    value: any
+    value: any,
   ) => {
     dispatchValue({
       type: step,
@@ -95,7 +95,7 @@ const CreateDepositProvider = (props: IProvider) => {
   return (
     <CreateDepositContext.Provider
       value={{
-        values: values,
+        values,
         action: {
           updateValue,
           updateValueOnstep,
@@ -105,6 +105,6 @@ const CreateDepositProvider = (props: IProvider) => {
       {children}
     </CreateDepositContext.Provider>
   );
-};
+}
 
 export { CreateDepositContext, CreateDepositProvider };
