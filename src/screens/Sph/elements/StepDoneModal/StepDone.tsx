@@ -1,36 +1,21 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Share,
-  Platform,
-  Linking,
-} from "react-native";
-import React from "react";
-import Modal from "react-native-modal";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Feather from "react-native-vector-icons/Feather";
-import { useNavigation } from "@react-navigation/native";
-import ReactNativeBlobUtil from "react-native-blob-util";
-import RNPrint from "react-native-print";
-import { useDispatch, useSelector } from "react-redux";
-import { FlashList } from "@shopify/flash-list";
-import { colors, fonts, layout } from "@/constants";
-import { resScale } from "@/utils";
-import LabelSuccess from "./elements/LabelSuccess";
-import {
-  BPic,
-  BProductCard,
-  BSpacer,
-  BCompanyMapCard,
-  BProjectDetailCard,
-} from "@/components";
-import { postSphResponseType } from "@/interfaces";
-
-import { openPopUp } from "@/redux/reducers/modalReducer";
-import { RootState } from "@/redux/store";
-import { resetSPHState } from "@/redux/reducers/SphReducer";
+import { useNavigation } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Share, Platform, Linking } from 'react-native';
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import Modal from 'react-native-modal';
+import RNPrint from 'react-native-print';
+import Feather from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import { resScale } from '@/utils';
+import { RootState } from '@/redux/store';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import { resetSPHState } from '@/redux/reducers/SphReducer';
+import { postSphResponseType } from '@/interfaces';
+import { colors, fonts, layout } from '@/constants';
+import { BPic, BProductCard, BSpacer, BCompanyMapCard, BProjectDetailCard } from '@/components';
+import LabelSuccess from './elements/LabelSuccess';
 
 type StepDoneType = {
   isModalVisible: boolean;
@@ -38,13 +23,13 @@ type StepDoneType = {
   sphResponse: postSphResponseType | null;
 };
 const paymentMethod: {
-  CBD: "Cash";
-  CREDIT: "Credit";
-  "": "-";
+  CBD: 'Cash';
+  CREDIT: 'Credit';
+  '': '-';
 } = {
-  CBD: "Cash",
-  CREDIT: "Credit",
-  "": "-",
+  CBD: 'Cash',
+  CREDIT: 'Credit',
+  '': '-',
 };
 
 type downloadType = {
@@ -58,19 +43,12 @@ function Separator() {
   return <BSpacer size="extraSmall" />;
 }
 
-function downloadPdf({
-  url,
-  title,
-  downloadPopup,
-  downloadError,
-}: downloadType) {
+function downloadPdf({ url, title, downloadPopup, downloadError }: downloadType) {
   if (!url) return null;
   const { dirs } = ReactNativeBlobUtil.fs;
-  const downloadTitle = title
-    ? `${title} berhasil di download`
-    : "PDF sph berhasil di download";
+  const downloadTitle = title ? `${title} berhasil di download` : 'PDF sph berhasil di download';
   ReactNativeBlobUtil.config(
-    Platform.OS === "android"
+    Platform.OS === 'android'
       ? {
           // add this option that makes response data to be stored as a file,
           // this is much more performant.
@@ -80,30 +58,27 @@ function downloadPdf({
             useDownloadManager: true,
             notification: true,
             title: downloadTitle,
-            description: "SPH PDF",
+            description: 'SPH PDF',
             mediaScannable: true,
           },
         }
       : { fileCache: true }
   )
-    .fetch("GET", url, {
+    .fetch('GET', url, {
       // some headers ..
     })
-    .then((res) => {
+    .then(res => {
       // the temp file path
       downloadPopup();
     })
-    .catch((err) => {
+    .catch(err => {
       downloadError(err.message);
     });
 }
-async function printRemotePDF(
-  url?: string,
-  printError: (errorMessage: string | unknown) => void
-) {
+async function printRemotePDF(url?: string, printError: (errorMessage: string | unknown) => void) {
   try {
     if (!url) {
-      throw "error url missing";
+      throw 'error url missing';
     }
     await RNPrint.print({
       filePath: url,
@@ -115,8 +90,8 @@ async function printRemotePDF(
 
 const openAddressOnMap = (label, lat, lng) => {
   const scheme = Platform.select({
-    ios: "maps:0,0?q=",
-    android: "geo:0,0?q=",
+    ios: 'maps:0,0?q=',
+    android: 'geo:0,0?q=',
   });
   const latLng = `${lat},${lng}`;
   const url = Platform.select({
@@ -126,11 +101,7 @@ const openAddressOnMap = (label, lat, lng) => {
   Linking.openURL(url);
 };
 
-export default function StepDone({
-  isModalVisible,
-  setIsModalVisible,
-  sphResponse,
-}: StepDoneType) {
+export default function StepDone({ isModalVisible, setIsModalVisible, sphResponse }: StepDoneType) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const sphState = useSelector((state: RootState) => state.sph);
@@ -146,19 +117,16 @@ export default function StepDone({
 
   const shareFunc = async (url?: string) => {
     try {
-      if (!url) throw "no url";
+      if (!url) throw 'no url';
       await Share.share({
-        url: url.replace(/\s/g, "%20"),
-        message: `Link PDF SPH ${stateCompanyName}, ${url.replace(
-          /\s/g,
-          "%20"
-        )}`,
+        url: url.replace(/\s/g, '%20'),
+        message: `Link PDF SPH ${stateCompanyName}, ${url.replace(/\s/g, '%20')}`,
       });
     } catch (error) {
       dispatch(
         openPopUp({
-          popUpType: "error",
-          popUpText: error.message || "Terjadi error saat share Link PDF SPH",
+          popUpType: 'error',
+          popUpText: error.message || 'Terjadi error saat share Link PDF SPH',
           outsideClickClosePopUp: true,
         })
       );
@@ -172,25 +140,16 @@ export default function StepDone({
       hideModalContentWhileAnimating
       coverScreen
       isVisible={isModalVisible}
-      style={[
-        styles.modal,
-        Platform.OS !== "android" && { marginTop: layout.pad.xxl },
-      ]}
-    >
+      style={[styles.modal, Platform.OS !== 'android' && { marginTop: layout.pad.xxl }]}>
       <View style={styles.modalStyle}>
         <View style={styles.modalHeader}>
           <TouchableOpacity
             onPress={() => {
               navigation.goBack();
-              setIsModalVisible((curr) => !curr);
+              setIsModalVisible(curr => !curr);
               dispatch(resetSPHState());
-            }}
-          >
-            <MaterialCommunityIcons
-              name="close"
-              size={resScale(25)}
-              color="#000000"
-            />
+            }}>
+            <MaterialCommunityIcons name="close" size={resScale(25)} color="#000000" />
           </TouchableOpacity>
           <View style={styles.modalTitle}>
             <Text style={styles.headerText} numberOfLines={1}>
@@ -243,7 +202,7 @@ export default function StepDone({
                 />
               )}
               data={sphState?.chosenProducts}
-              keyExtractor={(item) => item.productId}
+              keyExtractor={item => item.productId}
               ItemSeparatorComponent={Separator}
             />
           </View>
@@ -252,31 +211,22 @@ export default function StepDone({
           <TouchableOpacity
             style={styles.footerButton}
             onPress={() =>
-              printRemotePDF(
-                sphResponse?.thermalLink,
-                (errorMessage: string | unknown) => {
-                  dispatch(
-                    openPopUp({
-                      popUpText: errorMessage || "Gagal print SPH",
-                      popUpType: "error",
-                      outsideClickClosePopUp: true,
-                    })
-                  );
-                }
-              )
-            }
-          >
-            <MaterialCommunityIcons
-              name="printer"
-              size={resScale(25)}
-              color={colors.primary}
-            />
+              printRemotePDF(sphResponse?.thermalLink, (errorMessage: string | unknown) => {
+                dispatch(
+                  openPopUp({
+                    popUpText: errorMessage || 'Gagal print SPH',
+                    popUpType: 'error',
+                    outsideClickClosePopUp: true,
+                  })
+                );
+              })
+            }>
+            <MaterialCommunityIcons name="printer" size={resScale(25)} color={colors.primary} />
             <Text style={styles.footerButtonText}>Print</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() => shareFunc(sphResponse?.letterLink)}
-          >
+            onPress={() => shareFunc(sphResponse?.letterLink)}>
             <MaterialCommunityIcons
               name="share-variant-outline"
               size={resScale(25)}
@@ -293,29 +243,24 @@ export default function StepDone({
                 downloadPopup: () => {
                   dispatch(
                     openPopUp({
-                      popUpText: "Berhasil mendownload SPH",
-                      popUpType: "success",
+                      popUpText: 'Berhasil mendownload SPH',
+                      popUpType: 'success',
                       outsideClickClosePopUp: true,
                     })
                   );
                 },
-                downloadError: (err) => {
+                downloadError: err => {
                   dispatch(
                     openPopUp({
-                      popUpText: err || "Gagal mendownload SPH",
-                      popUpType: "error",
+                      popUpText: err || 'Gagal mendownload SPH',
+                      popUpType: 'error',
                       outsideClickClosePopUp: true,
                     })
                   );
                 },
               })
-            }
-          >
-            <Feather
-              name="download"
-              size={resScale(25)}
-              color={colors.primary}
-            />
+            }>
+            <Feather name="download" size={resScale(25)} color={colors.primary} />
             <Text style={styles.footerButtonText}>Download</Text>
           </TouchableOpacity>
         </View>
@@ -328,23 +273,23 @@ const styles = StyleSheet.create({
   modal: { margin: 0 },
   modalStyle: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   modalHeader: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: layout.pad.md,
   },
   modalTitle: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     paddingHorizontal: layout.pad.lg,
     paddingVertical: layout.pad.md,
   },
   modalFooter: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
     paddingVertical: layout.mainPad,
     borderTopColor: colors.border,
     borderTopWidth: resScale(0.5),
@@ -391,12 +336,12 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.sm,
   },
   summaryContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   footerButton: {
     flex: 0.3,
-    alignItems: "center",
+    alignItems: 'center',
   },
   footerButtonText: {
     color: colors.text.darker,

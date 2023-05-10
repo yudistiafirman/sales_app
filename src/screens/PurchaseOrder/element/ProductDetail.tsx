@@ -1,16 +1,16 @@
-import { StackActions, useNavigation } from "@react-navigation/native";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { bStorage } from "@/actions";
-import { BForm } from "@/components";
-import BChoosenProductList from "@/components/templates/BChoosenProductList";
-import { Input } from "@/interfaces";
-import { PO } from "@/navigation/ScreenNames";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import { AppDispatch, RootState } from "@/redux/store";
-import formatCurrency from "@/utils/formatCurrency";
+import { StackActions, useNavigation } from '@react-navigation/native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { bStorage } from '@/actions';
+import { BForm } from '@/components';
+import BChoosenProductList from '@/components/templates/BChoosenProductList';
+import { Input } from '@/interfaces';
+import { PO } from '@/navigation/ScreenNames';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { AppDispatch, RootState } from '@/redux/store';
+import formatCurrency from '@/utils/formatCurrency';
 
-type ModalType = "loading" | "success" | "error";
+type ModalType = 'loading' | 'success' | 'error';
 type ModalText = string;
 
 function ProductDetail() {
@@ -27,26 +27,23 @@ function ProductDetail() {
     lessThanFive,
     customerType,
   } = poState.currentState.context;
-  const isPostingPurchaseOrder =
-    poState.currentState.matches("PostPurchaseOrder");
+  const isPostingPurchaseOrder = poState.currentState.matches('PostPurchaseOrder');
   const successPostPurchaseOrder = poState.currentState.matches(
-    "PostPurchaseOrder.successCreatedPo"
+    'PostPurchaseOrder.successCreatedPo'
   );
-  const failPostPurchaseOrder = poState.currentState.matches(
-    "PostPurchaseOrder.failCreatedPo"
-  );
-  const featureName = customerType === "INDIVIDU" ? "SO" : "PO";
+  const failPostPurchaseOrder = poState.currentState.matches('PostPurchaseOrder.failCreatedPo');
+  const featureName = customerType === 'INDIVIDU' ? 'SO' : 'PO';
   const getGlobalModalType = useCallback((): [ModalType, ModalText] => {
-    let modalType = "" as ModalType;
-    let modalText = "";
+    let modalType = '' as ModalType;
+    let modalText = '';
     if (isLoadingPostPurchaseOrder) {
-      modalType = "loading";
+      modalType = 'loading';
       modalText = `Menyimpan ${featureName} `;
     } else if (successPostPurchaseOrder) {
-      modalType = "success";
+      modalType = 'success';
       modalText = `${featureName} Berhasil Dibuat`;
     } else {
-      modalType = "error";
+      modalType = 'error';
       modalText = `${featureName} Gagal Dibuat`;
     }
     return [modalType, modalText];
@@ -54,8 +51,8 @@ function ProductDetail() {
 
   const calculatedTotalPrice = (): number => {
     const total = selectedProducts
-      .map((v) =>
-        v.quantity.toString()[0] === "0" || v.quantity.length === 0
+      .map(v =>
+        v.quantity.toString()[0] === '0' || v.quantity.length === 0
           ? 0
           : v.offeringPrice * v.quantity
       )
@@ -72,57 +69,57 @@ function ProductDetail() {
       navigation.dispatch(StackActions.popToTop());
     }
 
-    dispatch({ type: "backToInitialState" });
+    dispatch({ type: 'backToInitialState' });
   }, [dispatch, navigation]);
 
   const comboRadioBtnInput: Input[] = [
     {
-      type: "comboRadioButton",
+      type: 'comboRadioButton',
       isRequire: false,
-      label: "Biaya Mobilisasi Spesial",
+      label: 'Biaya Mobilisasi Spesial',
       comboRadioBtn: {
-        firstText: "Ya",
-        secondText: "Tidak",
-        firstValue: "first",
-        secondValue: "second",
-        firstStatus: checked === "first" ? "checked" : "unchecked",
-        secondStatus: checked === "second" ? "checked" : "unchecked",
+        firstText: 'Ya',
+        secondText: 'Tidak',
+        firstValue: 'first',
+        secondValue: 'second',
+        firstStatus: checked === 'first' ? 'checked' : 'unchecked',
+        secondStatus: checked === 'second' ? 'checked' : 'unchecked',
         onSetComboRadioButtonValue: (value: string) =>
-          dispatch({ type: "switchingMobilizationValue", value }),
-        firstChildren: checked === "first" && (
+          dispatch({ type: 'switchingMobilizationValue', value }),
+        firstChildren: checked === 'first' && (
           <BForm
             titleBold="500"
             inputs={[
               {
-                type: "tableInput",
+                type: 'tableInput',
                 isRequire: false,
                 tableInput: {
-                  firstColumnLabel: "Volume",
-                  secondColumnLabel: "Harga Mobilisasi Spesial",
+                  firstColumnLabel: 'Volume',
+                  secondColumnLabel: 'Harga Mobilisasi Spesial',
                   onChangeValue: (value, index) =>
                     dispatch({
-                      type: "onChangeMobilizationPrice",
+                      type: 'onChangeMobilizationPrice',
                       value,
                       index,
                     }),
                   tableInputListItem: [
                     {
-                      firstColumnRangeTitle: "5-6",
-                      tableInputPlaceholder: "0",
-                      tableInputKeyboardType: "numeric",
+                      firstColumnRangeTitle: '5-6',
+                      tableInputPlaceholder: '0',
+                      tableInputKeyboardType: 'numeric',
                       tableInputValue:
-                        fiveToSix[0] !== "0" && fiveToSix.length > 0
+                        fiveToSix[0] !== '0' && fiveToSix.length > 0
                           ? formatCurrency(fiveToSix)
-                          : "",
+                          : '',
                     },
                     {
-                      firstColumnRangeTitle: "<5",
-                      tableInputPlaceholder: "0",
-                      tableInputKeyboardType: "numeric",
+                      firstColumnRangeTitle: '<5',
+                      tableInputPlaceholder: '0',
+                      tableInputKeyboardType: 'numeric',
                       tableInputValue:
-                        lessThanFive[0] !== "0" && lessThanFive.length > 0
+                        lessThanFive[0] !== '0' && lessThanFive.length > 0
                           ? formatCurrency(lessThanFive)
-                          : "",
+                          : '',
                     },
                   ],
                 },
@@ -142,10 +139,10 @@ function ProductDetail() {
           popUpText: modalText,
           isRenderActions: failPostPurchaseOrder && !isLoadingPostPurchaseOrder,
           outsideClickClosePopUp: successPostPurchaseOrder,
-          outlineBtnTitle: "Kembali",
-          primaryBtnTitle: "Coba Lagi",
+          outlineBtnTitle: 'Kembali',
+          primaryBtnTitle: 'Coba Lagi',
           isPrimaryButtonLoading: isLoadingPostPurchaseOrder,
-          primaryBtnAction: () => dispatch({ type: "retryPostPurchaseOrder" }),
+          primaryBtnAction: () => dispatch({ type: 'retryPostPurchaseOrder' }),
           outlineBtnAction: handleReturnToInitialState,
         })
       );
@@ -155,7 +152,7 @@ function ProductDetail() {
         if (navigation.canGoBack()) {
           navigation.dispatch(StackActions.popToTop());
         }
-        dispatch({ type: "backToInitialState" });
+        dispatch({ type: 'backToInitialState' });
       }
     } else {
       dispatch(closePopUp());
@@ -177,13 +174,13 @@ function ProductDetail() {
   return (
     <BChoosenProductList
       data={choosenSphDataFromModal?.QuotationRequests[0]?.products}
-      onChecked={(data) => dispatch({ type: "selectProduct", value: data })}
+      onChecked={data => dispatch({ type: 'selectProduct', value: data })}
       selectedProducts={selectedProducts}
       hasMultipleCheck
       comboRadioBtnInput={comboRadioBtnInput}
       calculatedTotalPrice={calculatedTotalPrice()}
       onChangeQuantity={(index: number, value: string) =>
-        dispatch({ type: "onChangeQuantity", index, value })
+        dispatch({ type: 'onChangeQuantity', index, value })
       }
     />
   );

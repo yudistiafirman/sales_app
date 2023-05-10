@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet } from "react-native";
-import * as React from "react";
-import { colors, fonts, layout } from "@/constants";
-import { getColorStatusTrx, getStatusTrx } from "@/utils/generalFunc";
-import BSpacer from "../atoms/BSpacer";
-import BTouchableText from "../atoms/BTouchableText";
-import formatCurrency from "@/utils/formatCurrency";
+import * as React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import BSpacer from '../atoms/BSpacer';
+import BTouchableText from '../atoms/BTouchableText';
+import { colors, fonts, layout } from '@/constants';
+import formatCurrency from '@/utils/formatCurrency';
+import { getColorStatusTrx, getStatusTrx } from '@/utils/generalFunc';
 
 type BProjectDetailCardType = {
   status?: string;
@@ -49,9 +49,7 @@ export default function BProjectDetailCard({
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>Status</Text>
         <View style={[styles.chip, { backgroundColor: color }]}>
-          <Text style={[styles.summary, styles.fontw400, { color: textColor }]}>
-            {statusFinal}
-          </Text>
+          <Text style={[styles.summary, styles.fontw400, { color: textColor }]}>{statusFinal}</Text>
         </View>
       </View>
       {quotation && (
@@ -72,13 +70,11 @@ export default function BProjectDetailCard({
           <BSpacer size="extraSmall" />
           <View style={styles.summaryContainer}>
             <Text style={styles.summary}>Metode Pembayaran</Text>
-            <Text style={[styles.summary, styles.fontw400]}>
-              {paymentMethod}
-            </Text>
+            <Text style={[styles.summary, styles.fontw400]}>{paymentMethod}</Text>
           </View>
         </>
       )}
-      {expiredDate !== "-" && (
+      {expiredDate !== '-' && (
         <>
           <BSpacer size="extraSmall" />
           <View style={styles.summaryContainer}>
@@ -121,9 +117,7 @@ export default function BProjectDetailCard({
           <BSpacer size="extraSmall" />
           <View style={styles.summaryContainer}>
             <Text style={styles.summary}>Tanggal Pengiriman</Text>
-            <Text style={[styles.summary, styles.fontw400]}>
-              {deliveryDate}
-            </Text>
+            <Text style={[styles.summary, styles.fontw400]}>{deliveryDate}</Text>
           </View>
         </>
       )}
@@ -132,9 +126,7 @@ export default function BProjectDetailCard({
           <BSpacer size="extraSmall" />
           <View style={styles.summaryContainer}>
             <Text style={styles.summary}>Jam Pengiriman</Text>
-            <Text style={[styles.summary, styles.fontw400]}>
-              {deliveryTime}
-            </Text>
+            <Text style={[styles.summary, styles.fontw400]}>{deliveryTime}</Text>
           </View>
         </>
       )}
@@ -143,9 +135,7 @@ export default function BProjectDetailCard({
           <BSpacer size="extraSmall" />
           <View style={styles.summaryContainer}>
             <Text style={styles.summary}>Metode Penuangan</Text>
-            <Text style={[styles.summary, styles.fontw400]}>
-              {scheduleMethod}
-            </Text>
+            <Text style={[styles.summary, styles.fontw400]}>{scheduleMethod}</Text>
           </View>
         </>
       )}
@@ -191,9 +181,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.montserrat[400],
   },
   summaryContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   chip: {
     paddingVertical: layout.pad.xs,

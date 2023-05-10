@@ -1,18 +1,15 @@
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import * as React from "react";
-import { DeviceEventEmitter, SafeAreaView, View } from "react-native";
-import { useMachine } from "@xstate/react";
-import { Region } from "react-native-maps";
-import crashlytics from "@react-native-firebase/crashlytics";
-import LocationStyles from "./styles";
-import CoordinatesDetail from "./elements/CoordinatesDetail";
-import { BButtonPrimary, BLocation, BMarker, BSpacer } from "@/components";
-import { locationMachine } from "@/machine/locationMachine";
-import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { StackActions, useNavigation, useRoute } from '@react-navigation/native';
+import { useMachine } from '@xstate/react';
+import * as React from 'react';
+import { DeviceEventEmitter, SafeAreaView, View } from 'react-native';
+import { Region } from 'react-native-maps';
+import CoordinatesDetail from './elements/CoordinatesDetail';
+import LocationStyles from './styles';
+import { BButtonPrimary, BLocation, BMarker, BSpacer } from '@/components';
+import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+import { locationMachine } from '@/machine/locationMachine';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
   CUSTOMER_DETAIL,
   LOCATION,
@@ -26,20 +23,19 @@ import {
   TAB_PROFILE_TITLE,
   TAB_ROOT,
   TAB_TRANSACTION_TITLE,
-} from "@/navigation/ScreenNames";
-import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
-import { resScale } from "@/utils";
+} from '@/navigation/ScreenNames';
+import { resScale } from '@/utils';
 
 function Location() {
   const navigation = useNavigation();
   const route = useRoute<RootStackScreenProps>();
-  const [searchedAddress, setSearchedAddress] = React.useState("");
+  const [searchedAddress, setSearchedAddress] = React.useState('');
   const [useSearchedAddress, setUseSearchedAddress] = React.useState(false);
   const [state, send] = useMachine(locationMachine);
   const isReadOnly = route?.params.isReadOnly;
 
   useHeaderTitleChanged({
-    title: isReadOnly === true ? "Lihat Area Proyek" : LOCATION_TITLE,
+    title: isReadOnly === true ? 'Lihat Area Proyek' : LOCATION_TITLE,
   });
 
   React.useEffect(() => {
@@ -52,14 +48,14 @@ function Location() {
       }
 
       setUseSearchedAddress(true);
-      send("sendingCoorParams", { value: { latitude, longitude } });
+      send('sendingCoorParams', { value: { latitude, longitude } });
     }
   }, [route?.params]);
 
   const onRegionChangeComplete = (coordinate: Region) => {
     const { latitude, longitude, latitudeDelta, longitudeDelta } = coordinate;
     if (isReadOnly === false) {
-      send("onChangeRegion", {
+      send('onChangeRegion', {
         value: {
           latitude,
           longitude,
@@ -134,8 +130,7 @@ function Location() {
         style={[
           LocationStyles.bottomSheetContainer,
           isReadOnly === true && { minHeight: resScale(80) },
-        ]}
-      >
+        ]}>
         <CoordinatesDetail
           loadingLocation={loadingLocation}
           address={
@@ -143,11 +138,9 @@ function Location() {
               ? searchedAddress
               : locationDetail?.formattedAddress
               ? locationDetail?.formattedAddress
-              : ""
+              : ''
           }
-          onPress={() =>
-            navigation.navigate(SEARCH_AREA, { from: route?.params?.from })
-          }
+          onPress={() => navigation.navigate(SEARCH_AREA, { from: route?.params?.from })}
           disable={isReadOnly === true}
         />
 

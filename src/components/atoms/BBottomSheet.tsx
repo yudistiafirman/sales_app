@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useMemo, forwardRef, Ref } from "react";
-import BottomSheet from "@gorhom/bottom-sheet";
-import { ViewStyle } from "react-native";
+import BottomSheet from '@gorhom/bottom-sheet';
+import React, { useCallback, useMemo, forwardRef, Ref } from 'react';
+import { ViewStyle } from 'react-native';
 
 type BBottomSheetType = {
   children?: JSX.Element | JSX.Element[];
@@ -91,8 +91,7 @@ const BBottomSheet = forwardRef(
         containerHeight={containerHeight}
         contentHeight={contentHeight}
         topInset={topInset}
-        onAnimate={handleSheetChangesOnAnimate}
-      >
+        onAnimate={handleSheetChangesOnAnimate}>
         {children}
       </BottomSheet>
     );

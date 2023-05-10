@@ -1,5 +1,5 @@
-import Geolocation from "react-native-geolocation-service";
-import { getLocationCoordinates } from "../actions/CommonActions";
+import Geolocation from 'react-native-geolocation-service';
+import { getLocationCoordinates } from '../actions/CommonActions';
 
 const getUserCurrentLocationDetail = async () => {
   try {
@@ -41,7 +41,7 @@ const getCoordinateDetail = async ({
       // '',
       longitude,
       latitude,
-      "BP-LEGOK"
+      'BP-LEGOK'
     );
     return data;
   } catch (error) {

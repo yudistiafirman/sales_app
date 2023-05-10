@@ -1,29 +1,22 @@
-import * as React from "react";
-import { TextInput } from "react-native-paper";
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useNavigation } from '@react-navigation/native';
+import * as React from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 import {
   BButtonPrimary,
   BNestedProductCard,
   BSearchBar,
   BSpacer,
   BVisitationCard,
-} from "@/components";
-import { resScale } from "@/utils";
-import { CAMERA, CREATE_DEPOSIT } from "@/navigation/ScreenNames";
-import { CreateScheduleContext } from "@/context/CreateScheduleContext";
-import { colors, fonts, layout } from "@/constants";
-import formatCurrency from "@/utils/formatCurrency";
-import { resetImageURLS } from "@/redux/reducers/cameraReducer";
-import SelectPurchaseOrderData from "@/components/templates/SelectPurchaseOrder";
+} from '@/components';
+import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
+import { colors, fonts, layout } from '@/constants';
+import { CreateScheduleContext } from '@/context/CreateScheduleContext';
+import { CAMERA, CREATE_DEPOSIT } from '@/navigation/ScreenNames';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { resScale } from '@/utils';
+import formatCurrency from '@/utils/formatCurrency';
 
 export default function FirstStep() {
   const navigation = useNavigation();
@@ -35,39 +28,37 @@ export default function FirstStep() {
 
   const listenerSearchCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
-      updateValueOnstep("stepOne", "companyName", parent.companyName);
-      updateValueOnstep("stepOne", "locationName", parent.locationName);
-      updateValue("existingProjectID", parent.projectId);
-      updateValueOnstep("stepOne", "purchaseOrders", data);
+      updateValueOnstep('stepOne', 'companyName', parent.companyName);
+      updateValueOnstep('stepOne', 'locationName', parent.locationName);
+      updateValue('existingProjectID', parent.projectId);
+      updateValueOnstep('stepOne', 'purchaseOrders', data);
       updateValueOnstep(
-        "stepTwo",
-        "availableDeposit",
-        getTotalLastDeposit(
-          data && data.length > 0 && data[0]?.availableDeposit
-        )
+        'stepTwo',
+        'availableDeposit',
+        getTotalLastDeposit(data && data.length > 0 && data[0]?.availableDeposit)
       );
-      updateValueOnstep("stepTwo", "inputtedVolume", 0);
+      updateValueOnstep('stepTwo', 'inputtedVolume', 0);
       updateValueOnstep(
-        "stepTwo",
-        "salesOrder",
+        'stepTwo',
+        'salesOrder',
         data &&
           data.length > 0 &&
           data[0]?.SaleOrders &&
           data[0]?.SaleOrders.length > 0 &&
           data[0]?.SaleOrders[0]
       );
-      updateValue("isSearchingPurchaseOrder", false);
+      updateValue('isSearchingPurchaseOrder', false);
     },
     [updateValueOnstep]
   );
 
   const onExpand = (index: number, data: any) => {
     let newExpandsetExpandData;
-    const isExisted = expandData?.findIndex((val) => val?.id === data?.id);
+    const isExisted = expandData?.findIndex(val => val?.id === data?.id);
     if (isExisted === -1) {
       newExpandsetExpandData = [...expandData, data];
     } else {
-      newExpandsetExpandData = expandData.filter((val) => val?.id !== data?.id);
+      newExpandsetExpandData = expandData.filter(val => val?.id !== data?.id);
     }
     setExpandData(newExpandsetExpandData);
   };
@@ -76,11 +67,8 @@ export default function FirstStep() {
     let total = 0;
     if (totalAmount) {
       total = totalAmount;
-    } else if (
-      stateOne?.purchaseOrders &&
-      stateOne?.purchaseOrders.length > 0
-    ) {
-      stateOne?.purchaseOrders?.forEach((it) => {
+    } else if (stateOne?.purchaseOrders && stateOne?.purchaseOrders.length > 0) {
+      stateOne?.purchaseOrders?.forEach(it => {
         total = it.availableDeposit;
       });
     }
@@ -102,16 +90,15 @@ export default function FirstStep() {
             />
           </View>
           <View style={style.flexFull}>
-            {stateOne?.purchaseOrders &&
-              stateOne?.purchaseOrders.length > 0 && (
-                <BNestedProductCard
-                  withoutHeader={false}
-                  data={stateOne?.purchaseOrders}
-                  onExpand={onExpand}
-                  expandData={expandData}
-                  withoutSeparator
-                />
-              )}
+            {stateOne?.purchaseOrders && stateOne?.purchaseOrders.length > 0 && (
+              <BNestedProductCard
+                withoutHeader={false}
+                data={stateOne?.purchaseOrders}
+                onExpand={onExpand}
+                expandData={expandData}
+                withoutSeparator
+              />
+            )}
           </View>
           <View style={style.summaryContainer}>
             <Text style={style.summary}>Sisa Deposit</Text>
@@ -122,16 +109,13 @@ export default function FirstStep() {
                   fontFamily: fonts.family.montserrat[600],
                   fontSize: fonts.size.lg,
                 },
-              ]}
-            >
+              ]}>
               {formatCurrency(getTotalLastDeposit(undefined))}
             </Text>
           </View>
           <BSpacer size="small" />
           <View style={style.summaryContainer}>
-            <Text style={[style.summary, { color: colors.text.medium }]}>
-              Ada Deposit Baru?
-            </Text>
+            <Text style={[style.summary, { color: colors.text.medium }]}>Ada Deposit Baru?</Text>
             <BButtonPrimary
               titleStyle={[style.fontw400, { fontSize: fonts.size.md }]}
               title="Buat Deposit"
@@ -140,7 +124,7 @@ export default function FirstStep() {
                 dispatch(resetImageURLS({ source: CREATE_DEPOSIT }));
                 navigation.goBack();
                 navigation.navigate(CAMERA, {
-                  photoTitle: "Bukti",
+                  photoTitle: 'Bukti',
                   navigateTo: CREATE_DEPOSIT,
                   closeButton: true,
                   disabledDocPicker: false,
@@ -158,21 +142,19 @@ export default function FirstStep() {
               onSubmitData={({ parentData, data }) =>
                 listenerSearchCallback({ parent: parentData, data })
               }
-              onDismiss={() => updateValue("isSearchingPurchaseOrder", false)}
+              onDismiss={() => updateValue('isSearchingPurchaseOrder', false)}
             />
           ) : (
             <>
               <TouchableOpacity
                 style={style.touchable}
-                onPress={() => updateValue("isSearchingPurchaseOrder", true)}
+                onPress={() => updateValue('isSearchingPurchaseOrder', true)}
               />
               <BSearchBar
                 placeholder="Cari PT / Proyek"
                 disabled
                 activeOutlineColor="gray"
-                left={
-                  <TextInput.Icon forceTextInputFocus={false} icon="magnify" />
-                }
+                left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
               />
             </>
           )}
@@ -187,8 +169,8 @@ const style = StyleSheet.create({
     flex: 1,
   },
   touchable: {
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
@@ -202,8 +184,8 @@ const style = StyleSheet.create({
     fontFamily: fonts.family.montserrat[400],
   },
   summaryContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

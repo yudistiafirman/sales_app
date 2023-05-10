@@ -1,17 +1,17 @@
-import * as React from "react";
-import { View, StyleProp, ViewStyle } from "react-native";
-import { resScale } from "@/utils";
-import { layout } from "@/constants";
+import * as React from 'react';
+import { View, StyleProp, ViewStyle } from 'react-native';
+import { layout } from '@/constants';
+import { resScale } from '@/utils';
 
 interface IProps {
   size:
-    | "verySmall"
-    | "extraSmall"
-    | "middleSmall"
-    | "small"
-    | "medium"
-    | "large"
-    | "extraLarge"
+    | 'verySmall'
+    | 'extraSmall'
+    | 'middleSmall'
+    | 'small'
+    | 'medium'
+    | 'large'
+    | 'extraLarge'
     | number;
 }
 
@@ -20,49 +20,49 @@ const styles: StyleProp<ViewStyle> = {
 };
 
 const makeStyle = ({ size }: IProps): ViewStyle => {
-  if (size === "verySmall") {
+  if (size === 'verySmall') {
     return {
       ...styles,
       margin: layout.pad.xs,
     };
   }
 
-  if (size === "extraSmall") {
+  if (size === 'extraSmall') {
     return {
       ...styles,
       margin: resScale(5),
     };
   }
 
-  if (size === "middleSmall") {
+  if (size === 'middleSmall') {
     return {
       ...styles,
       margin: resScale(7),
     };
   }
 
-  if (size === "small") {
+  if (size === 'small') {
     return {
       ...styles,
       margin: resScale(10),
     };
   }
 
-  if (size === "medium") {
+  if (size === 'medium') {
     return {
       ...styles,
       margin: resScale(15),
     };
   }
 
-  if (size === "large") {
+  if (size === 'large') {
     return {
       ...styles,
       margin: resScale(20),
     };
   }
 
-  if (typeof size === "number") {
+  if (typeof size === 'number') {
     return {
       ...styles,
       margin: resScale(size),
@@ -72,7 +72,7 @@ const makeStyle = ({ size }: IProps): ViewStyle => {
   return styles;
 };
 
-function BSpacer({ size = "small" }: IProps) {
+function BSpacer({ size = 'small' }: IProps) {
   return <View style={makeStyle({ size })} />;
 }
 

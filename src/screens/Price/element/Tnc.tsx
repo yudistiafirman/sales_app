@@ -1,15 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from "react";
-import AutoHeightWebView from "react-native-autoheight-webview";
-import Modal from "react-native-modal";
-import Icon from "react-native-vector-icons/AntDesign";
-import { SafeAreaView, TouchableOpacity, View, ViewStyle } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
-import TncNavBar from "@/screens/Price/element/TncNavBar";
-import resScale from "@/utils/resScale";
-import colors from "@/constants/colors";
-import tncHTML from "./TncHtml";
-import { layout } from "@/constants";
+import React from 'react';
+import { SafeAreaView, TouchableOpacity, View, ViewStyle } from 'react-native';
+import AutoHeightWebView from 'react-native-autoheight-webview';
+import Modal from 'react-native-modal';
+import { ActivityIndicator } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/AntDesign';
+import resScale from '@/utils/resScale';
+import TncNavBar from '@/screens/Price/element/TncNavBar';
+import colors from '@/constants/colors';
+import { layout } from '@/constants';
+import tncHTML from './TncHtml';
 
 interface TncProps {
   isVisible?: boolean | undefined;
@@ -19,7 +19,7 @@ interface TncProps {
 function Tnc({ isVisible, onCloseTnc }: TncProps) {
   const webViewStyle: ViewStyle = {
     backgroundColor: colors.white,
-    width: "100%",
+    width: '100%',
   };
 
   const contentContainer: ViewStyle = {
@@ -28,12 +28,12 @@ function Tnc({ isVisible, onCloseTnc }: TncProps) {
   };
 
   const loadingContainer: ViewStyle = {
-    position: "absolute",
-    height: "100%",
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   };
 
   const htmlStyle = `

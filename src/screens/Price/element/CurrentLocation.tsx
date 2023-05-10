@@ -1,15 +1,10 @@
-import React from "react";
-import {
-  GestureResponderEvent,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-} from "react-native";
-import Icon from "react-native-vector-icons/Feather";
-import colors from "@/constants/colors";
-import font from "@/constants/fonts";
-import { layout } from "@/constants";
-import { BViewMoreText } from "@/components";
+import React from 'react';
+import { GestureResponderEvent, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+import { BViewMoreText } from '@/components';
+import { layout } from '@/constants';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
 
 interface CurrentLocationProps {
   location?: string | undefined;
@@ -19,11 +14,7 @@ interface CurrentLocationProps {
 function CurrentLocation({ location, onPress }: CurrentLocationProps) {
   return (
     <TouchableOpacity style={CurrentLocationStyles.container} onPress={onPress}>
-      <Icon
-        name="map-pin"
-        style={{ marginRight: layout.pad.md }}
-        color={colors.text.darker}
-      />
+      <Icon name="map-pin" style={{ marginRight: layout.pad.md }} color={colors.text.darker} />
       <Text numberOfLines={1} style={CurrentLocationStyles.viewMoreText}>
         {location}
       </Text>
@@ -33,7 +24,7 @@ function CurrentLocation({ location, onPress }: CurrentLocationProps) {
 
 const CurrentLocationStyles = StyleSheet.create({
   container: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginStart: layout.pad.lg,
   },
   viewMoreText: {

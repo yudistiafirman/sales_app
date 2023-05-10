@@ -1,35 +1,32 @@
-import { assign, createMachine } from "xstate";
-import {
-  getConfirmedPurchaseOrder,
-  getSphByProject,
-} from "@/actions/OrderActions";
-import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
-import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
+import { assign, createMachine } from 'xstate';
+import { getConfirmedPurchaseOrder, getSphByProject } from '@/actions/OrderActions';
+import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
+import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO';
 
 export const searchPOMachine = createMachine(
   {
     /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACACgPIB0AlgHYAOArgC60VQDEA9pWOYwLIsSoA2AbQAMAXUShKLWKQYtyEkAA9EAJlUA2YgBYAHNoDMugKwBGXcO2nV2gDQgAnogOrhxUwHYAnBpPaNLjbGBgC+IfYoGDgEJBQ09IxMkVjYjCLiSCBSMnIKmSoI6lp6hibmltZ2johWWgGquqYa2h4Buu1hEWgpMWRUdAzkzJj83QCS-bTpitmypPKKBdqq9k6FBl7EHsIG1uYaHt66Hp0gydFEffGDzCi0ACKotKgAKg7s05mzuYs1xsQGAzGLzabTCYyuQzWVaIUyGYiqYzCZHGRrCCzGYKnc54S44xiPZ4AZUo2CYEHkYD6ADcWABrKk43r4oaE1Ak7AICi0zBPebkdKfSTSOYLfKwna6HTBOHNOEGZoeGEIDy6VTELyBXRecxmYQeULhM7dC4kFlQNkcphgdDoFjoYiUfhPABm9oAtsQmXiTalWU92aSueQeXz5IKxDMRT9xQhTMjtMRdECvI1TMFtF4DcrgQZiMJNPrwc0dgZtNjfb02BweHx+ABhbAsaRgNmscj1-gt2sCIVZaP834IDZaQG57baJFeYxK6qFVR5jyaTGgpHCDQFw1dKK4s2+gBqAmoYAAMixUBBIEwlLBnrQqagXff0AAKNcASiSlZ9O8P-GPZ4XpAfbfIOsZHACuapsYk6uDByqgh4xAQhumamF4qimNYJxGt6e6-kep7npeEDXreTwPk+Npvsin54V6B6EYBJGCKYGTCjkYGgAUEEphsfgQuCVRrGCbgFhuZiYlhBw7BWO69DadroAA4mACRDCepC3kw6BqegDiqepUCabeIEDmK3GILxUECXBwmIL4xTeJ4uwNFh5a4d+JBEr6BIBvg1ApKgKCEOgl7oOSlI0vSjJecQPk7n5zwBUFIVhTawahrkEbsf2nEWcoiA+Iuy4+B4wIeJmGjKo0yHIsiuy+MI6GanJPSXAlKRJagKU4MFYCheF1q2vajrOrQbroJ69GdTg3W9dg-WDRl3IsLy2ViGZ+V5JZCBZqYOj6IYlU6mCjQIdO+aFv4yYGOCt1taaxCKfahk3CZtA6XpBlqe9WlTGxUbbUO1matBsFCTmyzIYWlVGAE-iqI9u5XAMiTyAASmALq6bA2BbaKO2FSqB02JhGHAgW64rHOYJ5hoxgaDYXj3QzBbGMjvRxGjQztgAouQEBY6gODAZGXzmUTPGk8s6GIizrhMzmiL5iYIKVdqmIuGERrkLwcCKHhQOE0OAC01Vzub+b1eC6L+MsFimJzlzc0ZxsxrtGibJi+qHHDugbiYyplgd6ZMxC7TCMVTuefJP5df6xKku7XHE9YmJJsdxwNKmpgGMq5WLqiJg5+izUaM7JDVuQPYNk2LZsinBUFIz9NR-DNh53CwdGPmS4Yc1+i+OhHOx+1+EpH+AHEZATdS4gM5Sq0reahrjPGAhYLuO3ybalYqiVZXz0jSpv2MB9c9Dhoec6BuXgguh5X98qd-EAzmidxs-hwkfs1+ha-lAp9TSuFS+sZ07-H0AYVUS5tSNHzrTEEAJWg7yXDBBmOsQhAA */
-    id: "search PO",
+    id: 'search PO',
     predictableActionArguments: true,
-    tsTypes: {} as import("./searchPOMachine.typegen").Typegen0,
+    tsTypes: {} as import('./searchPOMachine.typegen').Typegen0,
 
     schema: {
       events: {} as
-        | { type: "onChangeTab"; value: number }
-        | { type: "onGettingPOData"; data: any[] }
-        | { type: "getCategoriesData"; data: any[] }
-        | { type: "clearInput" }
-        | { type: "openingModal"; value: any }
-        | { type: "searching"; value: string }
-        | { type: "retryGettingList" }
-        | { type: "onCloseModal" }
+        | { type: 'onChangeTab'; value: number }
+        | { type: 'onGettingPOData'; data: any[] }
+        | { type: 'getCategoriesData'; data: any[] }
+        | { type: 'clearInput' }
+        | { type: 'openingModal'; value: any }
+        | { type: 'searching'; value: string }
+        | { type: 'retryGettingList' }
+        | { type: 'onCloseModal' }
         | {
-            type: "setDataType";
-            value: "SPHDATA" | "DEPOSITDATA" | "SCHEDULEDATA";
-            filterBy: "INDIVIDU" | "COMPANY";
+            type: 'setDataType';
+            value: 'SPHDATA' | 'DEPOSITDATA' | 'SCHEDULEDATA';
+            filterBy: 'INDIVIDU' | 'COMPANY';
           }
-        | { type: "onRefresh" }
-        | { type: "onEndReached" },
+        | { type: 'onRefresh' }
+        | { type: 'onEndReached' },
 
       services: {} as {
         getCategoriesData: {
@@ -64,86 +61,82 @@ export const searchPOMachine = createMachine(
         loadMoreData: boolean;
         isRefreshing: boolean;
         isModalVisible: boolean;
-        dataType: "DEPOSITDATA" | "SPHDATA" | "SCHEDULEDATA" | "";
-        filterSphDataBy: "INDIVIDU" | "COMPANY";
-        choosenDataFromList:
-          | CreatedSPHListResponse
-          | CreatedPurchaseOrderListResponse;
+        dataType: 'DEPOSITDATA' | 'SPHDATA' | 'SCHEDULEDATA' | '';
+        filterSphDataBy: 'INDIVIDU' | 'COMPANY';
+        choosenDataFromList: CreatedSPHListResponse | CreatedPurchaseOrderListResponse;
       },
     },
 
     context: {
-      searchValue: "",
+      searchValue: '',
       routes: [] as any,
-      selectedCategories: "",
+      selectedCategories: '',
       page: 1,
       size: 10,
       totalPage: 1,
       poData: [],
       sphData: [],
-      errorGettingListMessage: "",
+      errorGettingListMessage: '',
       loadData: false,
       loadMoreData: false,
       isRefreshing: false,
       isModalVisible: false,
-      dataType: "",
-      filterSphDataBy: "INDIVIDU",
-      choosenDataFromList: {} as
-        | CreatedPurchaseOrderListResponse
-        | CreatedSPHListResponse,
+      dataType: '',
+      filterSphDataBy: 'INDIVIDU',
+      choosenDataFromList: {} as CreatedPurchaseOrderListResponse | CreatedSPHListResponse,
     },
 
     states: {
       inputting: {
         on: {
           openingModal: {
-            target: "openModalChooseData",
-            actions: "triggerModal",
+            target: 'openModalChooseData',
+            actions: 'triggerModal',
           },
 
           searching: {
-            target: "searchValueLoaded",
-            actions: "assignSearchValue",
-            cond: "searchValueLengthAccepted",
+            target: 'searchValueLoaded',
+            actions: 'assignSearchValue',
+            cond: 'searchValueLengthAccepted',
           },
 
           clearInput: {
-            target: "inputting",
+            target: 'inputting',
             internal: true,
-            actions: "handleClearInput",
+            actions: 'handleClearInput',
           },
 
           setDataType: {
-            target: "inputting",
+            target: 'inputting',
             internal: true,
-            actions: "assignDataType",
+            actions: 'assignDataType',
           },
 
           onRefresh: {
-            target: "searchValueLoaded",
-            actions: "handleRefresh",
+            target: 'searchValueLoaded',
+            actions: 'handleRefresh',
           },
 
           onEndReached: {
-            target: "searchValueLoaded",
-            cond: "isGettingPurchaseOrder",
-            actions: "handleOnEndReached",
+            target: 'searchValueLoaded',
+            cond: 'isGettingPurchaseOrder',
+            actions: 'handleOnEndReached',
           },
         },
       },
 
       searchingDataSph: {
         invoke: {
-          src: "GetSphList",
+          src: 'GetSphList',
 
           onDone: {
-            target: "inputting",
-            actions: "assignSphData",
+            target: 'inputting',
+            actions: 'assignSphData',
           },
 
           onError: {
-            target: "errorGettingList",
-            actions: "handleErrorGettingList",
+            target: 'errorGettingList',
+            actions: 'handleErrorGettingList',
           },
         },
       },
@@ -151,8 +144,8 @@ export const searchPOMachine = createMachine(
       openModalChooseData: {
         on: {
           onCloseModal: {
-            target: "inputting",
-            actions: "closeModal",
+            target: 'inputting',
+            actions: 'closeModal',
           },
         },
       },
@@ -161,12 +154,12 @@ export const searchPOMachine = createMachine(
         after: {
           500: [
             {
-              target: "searchingDataSph",
-              cond: "isDataTypeSph",
+              target: 'searchingDataSph',
+              cond: 'isDataTypeSph',
             },
             {
-              target: "SearchingDataPurchaseOrder",
-              cond: "isDataTypePurchaseOrder",
+              target: 'SearchingDataPurchaseOrder',
+              cond: 'isDataTypePurchaseOrder',
             },
           ],
         },
@@ -176,13 +169,13 @@ export const searchPOMachine = createMachine(
         on: {
           retryGettingList: [
             {
-              target: "searchingDataSph",
-              actions: "handleRetryGettingList",
-              cond: "isDataTypeSph",
+              target: 'searchingDataSph',
+              actions: 'handleRetryGettingList',
+              cond: 'isDataTypeSph',
             },
             {
-              target: "SearchingDataPurchaseOrder",
-              cond: "isDataTypePurchaseOrder",
+              target: 'SearchingDataPurchaseOrder',
+              cond: 'isDataTypePurchaseOrder',
             },
           ],
         },
@@ -190,18 +183,18 @@ export const searchPOMachine = createMachine(
 
       SearchingDataPurchaseOrder: {
         invoke: {
-          src: "GetPurchaseOrderList",
+          src: 'GetPurchaseOrderList',
 
           onDone: {
-            target: "inputting",
-            actions: "assignPurchaseOrderListData",
+            target: 'inputting',
+            actions: 'assignPurchaseOrderListData',
           },
 
-          onError: "errorGettingList",
+          onError: 'errorGettingList',
         },
       },
     },
-    initial: "inputting",
+    initial: 'inputting',
   },
   {
     actions: {
@@ -216,10 +209,10 @@ export const searchPOMachine = createMachine(
       assignSphData: assign((_context, event) => ({
         routes: [
           {
-            key: "first",
-            title: "Perusahaan",
+            key: 'first',
+            title: 'Perusahaan',
             totalItems: event.data.length,
-            chipPosition: "right",
+            chipPosition: 'right',
           },
         ],
         sphData: event.data,
@@ -237,11 +230,11 @@ export const searchPOMachine = createMachine(
         isRefreshing: false,
       })),
       handleRetryGettingList: assign(() => ({
-        errorGettingListMessage: "",
+        errorGettingListMessage: '',
         loadData: true,
       })),
       handleClearInput: assign(() => ({
-        searchValue: "",
+        searchValue: '',
       })),
       assignDataType: assign((context, event) => ({
         dataType: event.value,
@@ -250,10 +243,10 @@ export const searchPOMachine = createMachine(
       assignPurchaseOrderListData: assign((context, event) => ({
         routes: [
           {
-            key: "first",
-            title: "Perusahaan",
+            key: 'first',
+            title: 'Perusahaan',
             totalItems: event.data.totalItems,
-            chipPosition: "right",
+            chipPosition: 'right',
           },
         ],
         totalPage: event.data.totalPages,
@@ -268,38 +261,33 @@ export const searchPOMachine = createMachine(
         poData: [],
         page: 1,
       })),
-      handleOnEndReached: assign((context) => ({
+      handleOnEndReached: assign(context => ({
         page: context.page + 1,
         loadMoreData: true,
       })),
     },
     guards: {
       searchValueLengthAccepted: (_context, event) => event.value.length > 2,
-      isDataTypeSph: (context) => context.dataType === "SPHDATA",
-      isDataTypePurchaseOrder: (context) =>
-        context.dataType === "DEPOSITDATA" ||
-        context.dataType === "SCHEDULEDATA",
-      isGettingPurchaseOrder: (context) =>
-        context.dataType === "DEPOSITDATA" ||
-        (context.dataType === "SCHEDULEDATA" &&
-          context.page <= context.totalPage),
+      isDataTypeSph: context => context.dataType === 'SPHDATA',
+      isDataTypePurchaseOrder: context =>
+        context.dataType === 'DEPOSITDATA' || context.dataType === 'SCHEDULEDATA',
+      isGettingPurchaseOrder: context =>
+        context.dataType === 'DEPOSITDATA' ||
+        (context.dataType === 'SCHEDULEDATA' && context.page <= context.totalPage),
     },
     services: {
-      GetSphList: async (context) => {
+      GetSphList: async context => {
         try {
-          const response = await getSphByProject(
-            context.searchValue,
-            context.filterSphDataBy
-          );
+          const response = await getSphByProject(context.searchValue, context.filterSphDataBy);
           return response.data.data;
         } catch (error) {
           throw new Error(error);
         }
       },
-      GetPurchaseOrderList: async (context) => {
+      GetPurchaseOrderList: async context => {
         try {
           const { page, size, searchValue } = context;
-          const productPo = context.dataType === "DEPOSITDATA" ? "1" : "0";
+          const productPo = context.dataType === 'DEPOSITDATA' ? '1' : '0';
           const response = await getConfirmedPurchaseOrder(
             page.toString(),
             size.toString(),

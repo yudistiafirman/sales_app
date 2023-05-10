@@ -1,16 +1,16 @@
-import { Linking, PermissionsAndroid, Platform } from "react-native";
-import { displayName } from "../../../app.json";
-import { store } from "@/redux/store";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import { Linking, PermissionsAndroid, Platform } from 'react-native';
+import { displayName } from '../../../app.json';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { store } from '@/redux/store';
 
 const checkWritePermissions = async () => {
   try {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
       {
-        title: "Permissions for write access",
-        message: "Give permission to your storage to write a file",
-        buttonPositive: "ok",
+        title: 'Permissions for write access',
+        message: 'Give permission to your storage to write a file',
+        buttonPositive: 'ok',
       }
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -19,11 +19,10 @@ const checkWritePermissions = async () => {
     return false;
   } catch (err) {
     const errorMessage =
-      err.message ||
-      "Terjadi error dalam meminta izin membuat file di external storage permission";
+      err.message || 'Terjadi error dalam meminta izin membuat file di external storage permission';
     store.dispatch(
       openPopUp({
-        popUpType: "error",
+        popUpType: 'error',
         popUpText: errorMessage,
         outsideClickClosePopUp: true,
       })
@@ -35,8 +34,8 @@ const openSetting = () => {
   Linking.openSettings().catch(() => {
     store.dispatch(
       openPopUp({
-        popUpType: "error",
-        popUpText: "Terjadi error saat membuka Setting",
+        popUpType: 'error',
+        popUpText: 'Terjadi error saat membuka Setting',
         outsideClickClosePopUp: true,
       })
     );
@@ -46,12 +45,12 @@ const openSetting = () => {
 const showAlertStorage = () => {
   store.dispatch(
     openPopUp({
-      popUpType: "none",
+      popUpType: 'none',
       popUpText: `Aktifkan Izin Penyimpanan untuk mengizinkan ${displayName} memilih file dan gambar.`,
       isRenderActions: true,
       outsideClickClosePopUp: false,
       unRenderBackButton: true,
-      primaryBtnTitle: "Buka Setting",
+      primaryBtnTitle: 'Buka Setting',
       primaryBtnAction: () => {
         setTimeout(() => {
           store.dispatch(closePopUp());
@@ -64,7 +63,7 @@ const showAlertStorage = () => {
 
 const checkReadPermissions = async () => {
   try {
-    if (Platform.OS === "ios") {
+    if (Platform.OS === 'ios') {
       return true;
     }
     const status = await PermissionsAndroid.request(
@@ -79,11 +78,10 @@ const checkReadPermissions = async () => {
       showAlertStorage();
     }
   } catch (err) {
-    const errorMessage =
-      err.message || "Terjadi error dalam request external storage permission";
+    const errorMessage = err.message || 'Terjadi error dalam request external storage permission';
     store.dispatch(
       openPopUp({
-        popUpType: "error",
+        popUpType: 'error',
         popUpText: errorMessage,
         outsideClickClosePopUp: true,
       })

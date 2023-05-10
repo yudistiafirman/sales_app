@@ -1,42 +1,42 @@
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import * as React from "react";
-import { TextInput } from "react-native-paper";
-import { SafeAreaView, DeviceEventEmitter, Platform } from "react-native";
-import { useMachine } from "@xstate/react";
-import { assign } from "xstate";
-import { useDispatch } from "react-redux";
-import crashlytics from "@react-native-firebase/crashlytics";
-import BHeaderIcon from "@/components/atoms/BHeaderIcon";
-import BSearchBar from "@/components/molecules/BSearchBar";
-import resScale from "@/utils/resScale";
-import SearchAreaStyles from "./styles";
-import CurrentLocation from "./element/SearchAreaCurrentLocation";
-import LocationList from "./element/LocationList";
-import { searchAreaMachine } from "@/machine/searchAreaMachine";
-import { BSpacer } from "@/components";
-import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useMachine } from '@xstate/react';
+import * as React from 'react';
+import { SafeAreaView, DeviceEventEmitter, Platform } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
+import { assign } from 'xstate';
+import LocationList from './element/LocationList';
+import CurrentLocation from './element/SearchAreaCurrentLocation';
+import SearchAreaStyles from './styles';
+import { BSpacer } from '@/components';
+import BHeaderIcon from '@/components/atoms/BHeaderIcon';
+import BSearchBar from '@/components/molecules/BSearchBar';
+import { layout } from '@/constants';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { searchAreaMachine } from '@/machine/searchAreaMachine';
 import {
   CREATE_VISITATION,
   CUSTOMER_DETAIL,
   LOCATION,
   SEARCH_AREA,
   SPH,
-} from "@/navigation/ScreenNames";
-import { updateRegion } from "@/redux/reducers/locationReducer";
-import { hasLocationPermission } from "@/utils/permissions";
-import { layout } from "@/constants";
+} from '@/navigation/ScreenNames';
+import { updateRegion } from '@/redux/reducers/locationReducer';
+import { hasLocationPermission } from '@/utils/permissions';
+import resScale from '@/utils/resScale';
 
 function SearchAreaProject({ route }: { route: any }) {
   const navigation = useNavigation();
-  const [text, setText] = React.useState("");
+  const [text, setText] = React.useState('');
   const dispatch = useDispatch();
   const [state, send] = useMachine(searchAreaMachine, {
     actions: {
       clearInputValue: assign((context, event) => {
-        setText("");
+        setText('');
         return {
           result: [],
-          searchValue: "",
+          searchValue: '',
         };
       }),
       navigateToLocation: (context, event) => {
@@ -51,18 +51,14 @@ function SearchAreaProject({ route }: { route: any }) {
           formattedAddress,
         };
 
-        if (typeof lon === "string") {
+        if (typeof lon === 'string') {
           coordinate.longitude = Number(lon);
         }
 
-        if (typeof lat === "string") {
+        if (typeof lat === 'string') {
           coordinate.latitude = Number(lat);
         }
-        if (
-          from === CREATE_VISITATION ||
-          from === SPH ||
-          from === CUSTOMER_DETAIL
-        ) {
+        if (from === CREATE_VISITATION || from === SPH || from === CUSTOMER_DETAIL) {
           if (eventKey) {
             if (sourceType) {
               DeviceEventEmitter.emit(eventKey, {
@@ -89,11 +85,7 @@ function SearchAreaProject({ route }: { route: any }) {
 
   useCustomHeaderLeft({
     customHeaderLeft: (
-      <BHeaderIcon
-        size={resScale(23)}
-        onBack={() => navigation.goBack()}
-        iconName="x"
-      />
+      <BHeaderIcon size={resScale(23)} onBack={() => navigation.goBack()} iconName="x" />
     ),
   });
 
@@ -110,7 +102,7 @@ function SearchAreaProject({ route }: { route: any }) {
   const { result, loadPlaces, longlat, errorMessage } = state.context;
   const onChangeValue = (event: string) => {
     setText(event);
-    send("searchingLocation", { payload: event });
+    send('searchingLocation', { payload: event });
   };
 
   const onPressCurrentLocation = () => {
@@ -137,37 +129,30 @@ function SearchAreaProject({ route }: { route: any }) {
   };
 
   const onPressListLocations = (item: string) => {
-    send("onGettingPlacesId", { payload: item });
+    send('onGettingPlacesId', { payload: item });
   };
 
   return (
     <SafeAreaView style={SearchAreaStyles.container}>
       <BSpacer size="small" />
       <BSearchBar
-        textInputStyle={
-          Platform.OS !== "android" && { paddingBottom: layout.pad.sm }
-        }
+        textInputStyle={Platform.OS !== 'android' && { paddingBottom: layout.pad.sm }}
         onChangeText={onChangeValue}
         placeholder="Cari alamat Area Proyek"
         value={text}
         left={<TextInput.Icon icon="magnify" />}
-        right={
-          <TextInput.Icon onPress={() => send("clearInput")} icon="close" />
-        }
+        right={<TextInput.Icon onPress={() => send('clearInput')} icon="close" />}
       />
       <BSpacer size="small" />
-      <CurrentLocation
-        disabled={longlat.latitude === undefined}
-        onPress={onPressCurrentLocation}
-      />
+      <CurrentLocation disabled={longlat.latitude === undefined} onPress={onPressCurrentLocation} />
       <BSpacer size="small" />
 
       <LocationList
         isLoading={loadPlaces}
         searchValue={text}
-        isError={state.matches("searchLocation.errorGettingLocationData")}
+        isError={state.matches('searchLocation.errorGettingLocationData')}
         errorMessage={errorMessage}
-        onAction={() => send("retryGettingLocation")}
+        onAction={() => send('retryGettingLocation')}
         onPress={onPressListLocations}
         locationData={result}
       />

@@ -1,10 +1,10 @@
-import { View, StyleSheet, Image, Text } from "react-native";
-import * as React from "react";
-import Pdf from "react-native-pdf";
-import { colors, fonts, layout } from "@/constants";
-import { resScale } from "@/utils";
-import BText from "../atoms/BText";
-import formatCurrency from "@/utils/formatCurrency";
+import * as React from 'react';
+import { View, StyleSheet, Image, Text } from 'react-native';
+import Pdf from 'react-native-pdf';
+import BText from '../atoms/BText';
+import { colors, fonts, layout } from '@/constants';
+import { resScale } from '@/utils';
+import formatCurrency from '@/utils/formatCurrency';
 
 type BGalleryDepositType = {
   picts: any[];
@@ -12,11 +12,7 @@ type BGalleryDepositType = {
   createdAt?: string;
 };
 
-export default function BGalleryDeposit({
-  picts,
-  nominal,
-  createdAt,
-}: BGalleryDepositType) {
+export default function BGalleryDeposit({ picts, nominal, createdAt }: BGalleryDepositType) {
   return (
     <View style={style.summaryContainer}>
       {picts && picts.length > 1 && (
@@ -25,19 +21,13 @@ export default function BGalleryDeposit({
             width: resScale(40),
             height: resScale(40),
             borderRadius: layout.radius.md,
-          }}
-        >
+          }}>
           {picts[1]?.isFromPicker ? (
             <>
-              {picts[1]?.file?.type === "image/jpeg" ||
-              picts[1]?.file?.type === "image/png" ? (
+              {picts[1]?.file?.type === 'image/jpeg' || picts[1]?.file?.type === 'image/png' ? (
                 <Image style={style.flexFull} source={picts[1]?.file} />
               ) : (
-                <Pdf
-                  source={{ uri: picts[1]?.file?.uri }}
-                  style={style.flexFull}
-                  page={1}
-                />
+                <Pdf source={{ uri: picts[1]?.file?.uri }} style={style.flexFull} page={1} />
               )}
             </>
           ) : (
@@ -65,31 +55,31 @@ export default function BGalleryDeposit({
 
 const style = StyleSheet.create({
   overlay: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.black,
     opacity: 0.5,
   },
   textOverlay: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     bottom: 0,
     color: colors.white,
-    justifyContent: "center",
-    alignSelf: "center",
-    textAlignVertical: "center",
+    justifyContent: 'center',
+    alignSelf: 'center',
+    textAlignVertical: 'center',
   },
   rightText: {
-    alignItems: "flex-end",
-    justifyContent: "center",
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
   summaryContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     backgroundColor: colors.tertiary,
     borderRadius: layout.radius.sm,
     borderColor: colors.border.default,

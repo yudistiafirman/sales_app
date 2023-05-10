@@ -1,22 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
-import * as React from "react";
-import { SafeAreaView, View, DeviceEventEmitter, Platform } from "react-native";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { useMachine } from "@xstate/react";
-import crashlytics from "@react-native-firebase/crashlytics";
-import SearchProductNavbar from "./element/SearchProductNavbar";
-import SearchProductStyles from "./styles";
-import {
-  BEmptyState,
-  BHeaderIcon,
-  BSpacer,
-  BTabSections,
-  ProductList,
-} from "@/components";
-import { layout } from "@/constants";
-import { searchProductMachine } from "@/machine/searchProductMachine";
-import useCustomHeaderCenter from "@/hooks/useCustomHeaderCenter";
-import { SEARCH_PRODUCT } from "@/navigation/ScreenNames";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useMachine } from '@xstate/react';
+import * as React from 'react';
+import { SafeAreaView, View, DeviceEventEmitter, Platform } from 'react-native';
+import SearchProductNavbar from './element/SearchProductNavbar';
+import SearchProductStyles from './styles';
+import { BEmptyState, BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
+import { layout } from '@/constants';
+import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
+import { searchProductMachine } from '@/machine/searchProductMachine';
+import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
 
 function SearchProduct() {
   const route = useRoute<RouteProp<Record<string, object>, string>>();
@@ -30,7 +24,7 @@ function SearchProduct() {
   }
 
   const [index, setIndex] = React.useState(0);
-  const [searchValue, setSearchValue] = React.useState<string>("");
+  const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();
   const [state, send] = useMachine(searchProductMachine);
   const disablePressed = route?.params?.disablePressed;
@@ -55,7 +49,7 @@ function SearchProduct() {
 
     if (route?.params) {
       const { distance } = route.params;
-      send("sendingParams", { value: distance });
+      send('sendingParams', { value: distance });
     }
   }, [route?.params]);
 
@@ -70,15 +64,15 @@ function SearchProduct() {
     setSearchValue(text);
 
     if (text.length === 0) {
-      send("clearInput");
+      send('clearInput');
     } else {
-      send("searchingProducts", { value: text });
+      send('searchingProducts', { value: text });
     }
   };
 
   const onClearValue = () => {
-    setSearchValue("");
-    send("clearInput");
+    setSearchValue('');
+    send('clearInput');
   };
 
   useCustomHeaderCenter(
@@ -87,20 +81,19 @@ function SearchProduct() {
         <View
           style={[
             {
-              width: "98%",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
+              width: '98%',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
             },
-            Platform.OS !== "android" && { height: "80%" },
-          ]}
-        >
+            Platform.OS !== 'android' && { height: '80%' },
+          ]}>
           <SearchProductNavbar
             customStyle={[
               {
-                width: "75%",
-                justifyContent: "center",
+                width: '75%',
+                justifyContent: 'center',
               },
-              Platform.OS !== "android" && { height: "80%" },
+              Platform.OS !== 'android' && { height: '80%' },
             ]}
             autoFocus
             value={searchValue}
@@ -116,18 +109,18 @@ function SearchProduct() {
   const onTabPress = ({ route }) => {
     const tabIndex = index === 0 ? 1 : 0;
     if (route.key !== routes[index].key) {
-      send("onChangeTab", { value: tabIndex });
+      send('onChangeTab', { value: tabIndex });
     }
   };
   const { routes, productsData, loadProduct, errorMessage } = state.context;
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />
-      {state.matches("errorGettingCategories") && (
+      {state.matches('errorGettingCategories') && (
         <BEmptyState
           isError
           errorMessage={errorMessage}
-          onAction={() => send("retryGettingCategories")}
+          onAction={() => send('retryGettingCategories')}
         />
       )}
       {routes.length > 0 ? (
@@ -141,11 +134,11 @@ function SearchProduct() {
               products={productsData}
               loadProduct={loadProduct}
               emptyProductName={searchValue}
-              isError={state.matches("errorGettingProductsData")}
+              isError={state.matches('errorGettingProductsData')}
               errorMessage={errorMessage}
-              onAction={() => send("retryGettingProductsData")}
-              onPress={(data) => {
-                DeviceEventEmitter.emit("event.testEvent", { data });
+              onAction={() => send('retryGettingProductsData')}
+              onPress={data => {
+                DeviceEventEmitter.emit('event.testEvent', { data });
                 if (isGoback) {
                   navigation.goBack();
                 }

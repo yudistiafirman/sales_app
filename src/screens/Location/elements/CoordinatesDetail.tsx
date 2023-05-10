@@ -1,11 +1,11 @@
-import React from "react";
-import { TouchableOpacity, View, Text } from "react-native";
-import Icons from "react-native-vector-icons/Feather";
-import LocationStyles from "../styles";
-import colors from "@/constants/colors";
-import resScale from "@/utils/resScale";
-import { BText } from "@/components";
-import LocationListShimmer from "@/screens/SearchAreaProject/element/LocationListShimmer";
+import React from 'react';
+import { TouchableOpacity, View, Text } from 'react-native';
+import Icons from 'react-native-vector-icons/Feather';
+import LocationStyles from '../styles';
+import { BText } from '@/components';
+import colors from '@/constants/colors';
+import LocationListShimmer from '@/screens/SearchAreaProject/element/LocationListShimmer';
+import resScale from '@/utils/resScale';
 
 interface CoordinatesDetailsProps {
   address: string;
@@ -21,10 +21,10 @@ function CoordinatesDetail({
   disable = false,
 }: CoordinatesDetailsProps) {
   const isHasAddress = address.length > 0;
-  const addressTitle = isHasAddress ? address.split(",")[0] : "";
+  const addressTitle = isHasAddress ? address.split(',')[0] : '';
   const addressDetail = isHasAddress
-    ? address.split(",").join("").substring(addressTitle.length)
-    : "";
+    ? address.split(',').join('').substring(addressTitle.length)
+    : '';
   if (loadingLocation) {
     return (
       <View style={LocationStyles.coordinateDetailsInnerContainer}>
@@ -38,8 +38,7 @@ function CoordinatesDetail({
     <TouchableOpacity
       onPress={onPress}
       disabled={disable}
-      style={LocationStyles.coordinateDetailsOuterContainer}
-    >
+      style={LocationStyles.coordinateDetailsOuterContainer}>
       <View style={[LocationStyles.coordinateDetailsInnerContainer]}>
         <View style={LocationStyles.mapIconContainer}>
           <Icons name="map-pin" size={resScale(20)} color={colors.primary} />

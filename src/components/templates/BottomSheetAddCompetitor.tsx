@@ -1,22 +1,21 @@
-import React from "react";
+import React from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Modal from 'react-native-modal';
+import { RadioButton } from 'react-native-paper';
+import BButtonPrimary from '../atoms/BButtonPrimary';
+import BDivider from '../atoms/BDivider';
+import BHeaderIcon from '../atoms/BHeaderIcon';
+import BLabel from '../atoms/BLabel';
+import BSpacer from '../atoms/BSpacer';
+import BText from '../atoms/BText';
+import BForm from '../organism/BForm';
+import { colors, fonts, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { Competitor, Input } from '@/interfaces';
+import { resScale } from '@/utils';
 
-import Modal from "react-native-modal";
-import { Dimensions, StyleSheet, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { RadioButton } from "react-native-paper";
-import { Competitor, Input } from "@/interfaces";
-import { colors, fonts, layout } from "@/constants";
-import font from "@/constants/fonts";
-import BText from "../atoms/BText";
-import BHeaderIcon from "../atoms/BHeaderIcon";
-import BForm from "../organism/BForm";
-import BButtonPrimary from "../atoms/BButtonPrimary";
-import { resScale } from "@/utils";
-import BSpacer from "../atoms/BSpacer";
-import BDivider from "../atoms/BDivider";
-import BLabel from "../atoms/BLabel";
-
-const { height, width } = Dimensions.get("window");
+const { height, width } = Dimensions.get('window');
 interface IProps {
   addCompetitor: any;
   onClose: () => void;
@@ -24,11 +23,11 @@ interface IProps {
 }
 
 const initialState = {
-  name: "",
-  mou: "",
-  exclusive: "",
-  problem: "",
-  hope: "",
+  name: '',
+  mou: '',
+  exclusive: '',
+  problem: '',
+  hope: '',
 };
 
 function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
@@ -43,13 +42,13 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
 
   const inputs: Input[] = [
     {
-      label: "Nama Pesaing / Kompetisi",
+      label: 'Nama Pesaing / Kompetisi',
       isRequire: true,
       isError: false,
-      type: "textInput",
-      placeholder: "Nama pesaing",
-      onChange: (event) => {
-        onChange("name")(event.nativeEvent.text);
+      type: 'textInput',
+      placeholder: 'Nama pesaing',
+      onChange: event => {
+        onChange('name')(event.nativeEvent.text);
       },
       value: state.name,
     },
@@ -57,24 +56,24 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
 
   const inputsTwo: Input[] = [
     {
-      label: "Apakah ada masalah yang ditemukan dari supplier beton sekarang?",
+      label: 'Apakah ada masalah yang ditemukan dari supplier beton sekarang?',
       isRequire: false,
       isError: false,
-      type: "area",
-      placeholder: "Tulis masalah yang Anda temui",
-      onChange: (val) => {
-        onChange("problem")(val);
+      type: 'area',
+      placeholder: 'Tulis masalah yang Anda temui',
+      onChange: val => {
+        onChange('problem')(val);
       },
       value: state.problem,
     },
     {
-      label: "Harapan apa yang diinginkan dari BRIK?",
+      label: 'Harapan apa yang diinginkan dari BRIK?',
       isRequire: false,
       isError: false,
-      type: "area",
-      placeholder: "Tulis harapan Anda",
-      onChange: (val) => {
-        onChange("hope")(val);
+      type: 'area',
+      placeholder: 'Tulis harapan Anda',
+      onChange: val => {
+        onChange('hope')(val);
       },
       value: state.hope,
     },
@@ -87,7 +86,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
   };
 
   const buttonStateDisabled = (): boolean => {
-    if (state.name !== "" && state.mou !== "" && state.exclusive !== "") {
+    if (state.name !== '' && state.mou !== '' && state.exclusive !== '') {
       return false;
     }
     return true;
@@ -99,19 +98,10 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
   };
 
   return (
-    <Modal
-      deviceHeight={height}
-      isVisible={isVisible}
-      style={styles.modalContainer}
-    >
+    <Modal deviceHeight={height} isVisible={isVisible} style={styles.modalContainer}>
       <View style={styles.contentWrapper}>
         <KeyboardAwareScrollView>
-          <View
-            style={[
-              styles.contentOuterContainer,
-              { height: width + resScale(200) },
-            ]}
-          >
+          <View style={[styles.contentOuterContainer, { height: width + resScale(200) }]}>
             <View style={styles.contentInnerContainer}>
               <View style={styles.headerContainer}>
                 <BText style={styles.headerTitle}>Tambah Kompetitor Baru</BText>
@@ -127,99 +117,71 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                 <BDivider />
                 <BSpacer size="small" />
                 <BForm titleBold="500" inputs={inputs} />
-                <BLabel
-                  isRequired
-                  bold="500"
-                  label="Apakah sudah memiliki PKS / MOU?"
-                />
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <BLabel isRequired bold="500" label="Apakah sudah memiliki PKS / MOU?" />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <View
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
                     <RadioButton
                       value="Iya"
-                      status={
-                        state.mou?.toLowerCase() === "iya"
-                          ? "checked"
-                          : "unchecked"
-                      }
+                      status={state.mou?.toLowerCase() === 'iya' ? 'checked' : 'unchecked'}
                       color={colors.primary}
                       uncheckedColor={colors.border.altGrey}
-                      onPress={() => onChange("mou")("Iya")}
+                      onPress={() => onChange('mou')('Iya')}
                     />
                     <BText>Iya</BText>
                   </View>
                   <View
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                       marginStart: layout.pad.xxl,
-                    }}
-                  >
+                    }}>
                     <RadioButton
                       value="Tidak"
-                      status={
-                        state.mou?.toLowerCase() === "tidak"
-                          ? "checked"
-                          : "unchecked"
-                      }
+                      status={state.mou?.toLowerCase() === 'tidak' ? 'checked' : 'unchecked'}
                       color={colors.primary}
                       uncheckedColor={colors.border.altGrey}
-                      onPress={() => onChange("mou")("Tidak")}
+                      onPress={() => onChange('mou')('Tidak')}
                     />
                     <BText>Tidak</BText>
                   </View>
                 </View>
                 <BSpacer size="extraSmall" />
-                <BLabel
-                  isRequired
-                  bold="500"
-                  label="Apakah PKS-nya Ekslusif?"
-                />
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <BLabel isRequired bold="500" label="Apakah PKS-nya Ekslusif?" />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <View
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
                     <RadioButton
                       value="Iya"
-                      status={
-                        state.exclusive?.toLowerCase() === "iya"
-                          ? "checked"
-                          : "unchecked"
-                      }
+                      status={state.exclusive?.toLowerCase() === 'iya' ? 'checked' : 'unchecked'}
                       color={colors.primary}
                       uncheckedColor={colors.border.altGrey}
-                      onPress={() => onChange("exclusive")("Iya")}
+                      onPress={() => onChange('exclusive')('Iya')}
                     />
                     <BText>Iya</BText>
                   </View>
                   <View
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                       marginStart: layout.pad.xxl,
-                    }}
-                  >
+                    }}>
                     <RadioButton
                       value="Tidak"
-                      status={
-                        state.exclusive?.toLowerCase() === "tidak"
-                          ? "checked"
-                          : "unchecked"
-                      }
+                      status={state.exclusive?.toLowerCase() === 'tidak' ? 'checked' : 'unchecked'}
                       color={colors.primary}
                       uncheckedColor={colors.border.altGrey}
-                      onPress={() => onChange("exclusive")("Tidak")}
+                      onPress={() => onChange('exclusive')('Tidak')}
                     />
                     <BText>Tidak</BText>
                   </View>
@@ -243,8 +205,8 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: { margin: 0, justifyContent: "flex-end" },
-  contentWrapper: { justifyContent: "flex-end" },
+  modalContainer: { margin: 0, justifyContent: 'flex-end' },
+  contentWrapper: { justifyContent: 'flex-end' },
   contentOuterContainer: {
     backgroundColor: colors.white,
     borderTopStartRadius: layout.radius.lg,
@@ -252,9 +214,9 @@ const styles = StyleSheet.create({
   },
   contentInnerContainer: { flex: 1, marginHorizontal: layout.pad.lg },
   headerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     height: layout.pad.xl + layout.pad.lg,
   },
   headerTitle: {
@@ -262,8 +224,8 @@ const styles = StyleSheet.create({
     fontSize: font.size.lg,
   },
   buttonWrapper: {
-    width: "100%",
-    position: "absolute",
+    width: '100%',
+    position: 'absolute',
     bottom: 10,
     paddingHorizontal: layout.pad.lg,
   },

@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { View, DeviceEventEmitter, BackHandler } from "react-native";
-import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
-import Entypo from "react-native-vector-icons/Entypo";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import crashlytics from "@react-native-firebase/crashlytics";
+import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { View, DeviceEventEmitter, BackHandler } from 'react-native';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { useDispatch, useSelector } from 'react-redux';
+import Fifth from './elements/fifth';
+import FirstStep from './elements/first';
+import Fourth from './elements/fourth';
+import SecondStep from './elements/second';
+import BSheetAddPic from './elements/second/BottomSheetAddPic';
+import ThirdStep from './elements/third';
 import {
   BBackContinueBtn,
   BContainer,
@@ -16,20 +18,13 @@ import {
   BSpacer,
   PopUpQuestion,
   BStepperIndicator,
-} from "@/components";
-import SecondStep from "./elements/second";
-import ThirdStep from "./elements/third";
-import { PIC, Styles, visitationListResponse } from "@/interfaces";
-import BSheetAddPic from "./elements/second/BottomSheetAddPic";
-import Fifth from "./elements/fifth";
-import { useKeyboardActive } from "@/hooks";
-import FirstStep from "./elements/first";
-import { resScale } from "@/utils";
-import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
-import { updateRegion } from "@/redux/reducers/locationReducer";
-import { layout } from "@/constants";
-import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
-import { CREATE_VISITATION } from "@/navigation/ScreenNames";
+} from '@/components';
+import { layout } from '@/constants';
+import { useKeyboardActive } from '@/hooks';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { PIC, Styles, visitationListResponse } from '@/interfaces';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
+import { CREATE_VISITATION } from '@/navigation/ScreenNames';
 import {
   resetStepperFocused,
   resetVisitationState,
@@ -41,47 +36,33 @@ import {
   updateExistingVisitationID,
   updateShouldScrollView,
   VisitationGlobalState,
-} from "@/redux/reducers/VisitationReducer";
-import { RootState } from "@/redux/store";
-import { resetImageURLS } from "@/redux/reducers/cameraReducer";
-import Fourth from "./elements/fourth";
+} from '@/redux/reducers/VisitationReducer';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { updateRegion } from '@/redux/reducers/locationReducer';
+import { RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 
-const labels = [
-  "Alamat Proyek",
-  "Data Pelanggan",
-  "Data Proyek",
-  "Kompetitor",
-  "Kelengkapan Foto",
-];
+const labels = ['Alamat Proyek', 'Data Pelanggan', 'Data Proyek', 'Kompetitor', 'Kelengkapan Foto'];
 
 function stepHandler(
   state: VisitationGlobalState,
   setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
 ) {
-  if (
-    state?.createdLocation?.formattedAddress &&
-    state?.locationAddress?.formattedAddress
-  ) {
-    setStepsDone((curr) => [...new Set(curr), 0]);
+  if (state?.createdLocation?.formattedAddress && state?.locationAddress?.formattedAddress) {
+    setStepsDone(curr => [...new Set(curr), 0]);
   } else {
-    setStepsDone((curr) => curr.filter((num) => num !== 0));
+    setStepsDone(curr => curr.filter(num => num !== 0));
   }
-  const selectedPic = state?.pics?.find((pic) => {
+  const selectedPic = state?.pics?.find(pic => {
     if (pic.isSelected) {
       return pic;
     }
   });
-  const customerTypeCond =
-    state?.customerType === "COMPANY" ? !!state?.companyName : true;
-  if (
-    state?.customerType &&
-    customerTypeCond &&
-    state?.projectName &&
-    selectedPic
-  ) {
-    setStepsDone((curr) => [...new Set(curr), 1]);
+  const customerTypeCond = state?.customerType === 'COMPANY' ? !!state?.companyName : true;
+  if (state?.customerType && customerTypeCond && state?.projectName && selectedPic) {
+    setStepsDone(curr => [...new Set(curr), 1]);
   } else {
-    setStepsDone((curr) => curr.filter((num) => num !== 1));
+    setStepsDone(curr => curr.filter(num => num !== 1));
   }
 
   if (
@@ -91,22 +72,22 @@ function stepHandler(
     state?.estimationDate?.estimationWeek &&
     state?.paymentType
   ) {
-    setStepsDone((curr) => [...new Set(curr), 2]);
+    setStepsDone(curr => [...new Set(curr), 2]);
   } else {
-    setStepsDone((curr) => curr.filter((num) => num !== 2));
+    setStepsDone(curr => curr.filter(num => num !== 2));
   }
 
   if (state?.competitors?.length > 0) {
-    setStepsDone((curr) => [...new Set(curr), 3]);
+    setStepsDone(curr => [...new Set(curr), 3]);
   } else {
-    setStepsDone((curr) => curr.filter((num) => num !== 3));
+    setStepsDone(curr => curr.filter(num => num !== 3));
   }
 
-  const filteredImages = state?.images?.filter((it) => it?.file !== null);
+  const filteredImages = state?.images?.filter(it => it?.file !== null);
   if (filteredImages?.length > 0) {
-    setStepsDone((curr) => [...new Set(curr), 4]);
+    setStepsDone(curr => [...new Set(curr), 4]);
   } else {
-    setStepsDone((curr) => curr.filter((num) => num !== 4));
+    setStepsDone(curr => curr.filter(num => num !== 4));
   }
 }
 
@@ -120,36 +101,29 @@ function CreateVisitation() {
   const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3]);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
 
-  const existingVisitation: visitationListResponse =
-    route?.params?.existingVisitation;
+  const existingVisitation: visitationListResponse = route?.params?.existingVisitation;
 
   function populateData(existingData: visitationListResponse) {
     const { project } = existingData;
     const { company, Pics: picList, mainPic } = project;
-    dispatch(updateDataVisitation({ type: "projectId", value: project.id }));
-    dispatch(
-      updateDataVisitation({ type: "projectName", value: project.name })
-    );
+    dispatch(updateDataVisitation({ type: 'projectId', value: project.id }));
+    dispatch(updateDataVisitation({ type: 'projectName', value: project.name }));
     if (company) {
-      dispatch(
-        updateDataVisitation({ type: "customerType", value: "COMPANY" })
-      );
+      dispatch(updateDataVisitation({ type: 'customerType', value: 'COMPANY' }));
       dispatch(
         updateDataVisitation({
-          type: "companyName",
+          type: 'companyName',
           value: company.displayName,
         })
       );
     } else {
-      dispatch(
-        updateDataVisitation({ type: "customerType", value: "INDIVIDU" })
-      );
+      dispatch(updateDataVisitation({ type: 'customerType', value: 'INDIVIDU' }));
     }
 
     if (existingData.project?.stage) {
       dispatch(
         updateDataVisitation({
-          type: "stageProject",
+          type: 'stageProject',
           value: existingData.project?.stage,
         })
       );
@@ -158,7 +132,7 @@ function CreateVisitation() {
     if (existingData.project?.type) {
       dispatch(
         updateDataVisitation({
-          type: "typeProject",
+          type: 'typeProject',
           value: existingData.project?.type,
         })
       );
@@ -167,7 +141,7 @@ function CreateVisitation() {
     if (existingData.project?.Competitors?.length > 0) {
       dispatch(
         updateDataVisitation({
-          type: "competitors",
+          type: 'competitors',
           value: existingData.project?.Competitors,
         })
       );
@@ -182,7 +156,7 @@ function CreateVisitation() {
     if (existingData.paymentType) {
       dispatch(
         updateDataVisitation({
-          type: "paymentType",
+          type: 'paymentType',
           value: existingData.paymentType,
         })
       );
@@ -191,7 +165,7 @@ function CreateVisitation() {
     if (existingData.visitNotes) {
       dispatch(
         updateDataVisitation({
-          type: "notes",
+          type: 'notes',
           value: existingData.visitNotes,
         })
       );
@@ -214,7 +188,7 @@ function CreateVisitation() {
     if (estimationDate) {
       dispatch(
         updateDataVisitation({
-          type: "estimationDate",
+          type: 'estimationDate',
           value: estimationDate,
         })
       );
@@ -222,7 +196,7 @@ function CreateVisitation() {
 
     if (existingData.products?.length > 0) {
       const newProductIDList = [];
-      existingData.products.forEach((it) => {
+      existingData.products.forEach(it => {
         const newProduct = {
           id: it.productId,
           name: it.Product?.name,
@@ -242,14 +216,14 @@ function CreateVisitation() {
 
       dispatch(
         updateDataVisitation({
-          type: "products",
+          type: 'products',
           value: newProductIDList,
         })
       );
     }
 
     if (picList) {
-      const list = picList.map((pic) => {
+      const list = picList.map(pic => {
         if (mainPic) {
           if (pic.id === mainPic.id) {
             return {
@@ -263,21 +237,17 @@ function CreateVisitation() {
           isSelected: false,
         };
       });
-      dispatch(updateDataVisitation({ type: "pics", value: list }));
+      dispatch(updateDataVisitation({ type: 'pics', value: list }));
     } else if (project.Pic) {
       const selectedPic = { ...project.Pic };
       selectedPic.isSelected = true;
-      dispatch(updateDataVisitation({ type: "pics", value: [selectedPic] }));
+      dispatch(updateDataVisitation({ type: 'pics', value: [selectedPic] }));
     }
   }
 
   useCustomHeaderLeft({
     customHeaderLeft: (
-      <BHeaderIcon
-        size={resScale(23)}
-        onBack={() => actionBackButton(true)}
-        iconName="x"
-      />
+      <BHeaderIcon size={resScale(23)} onBack={() => actionBackButton(true)} iconName="x" />
     ),
   });
 
@@ -291,7 +261,7 @@ function CreateVisitation() {
       const { LocationAddress } = project;
       dispatch(
         updateDataVisitation({
-          type: "existingLocationId",
+          type: 'existingLocationId',
           value: LocationAddress?.id,
         })
       );
@@ -321,11 +291,8 @@ function CreateVisitation() {
       const backAction = () => {
         if (bottomSheetRef?.current) bottomSheetRef?.current?.close();
         if (visitationData.isSearchProject) {
-          if (
-            visitationData.searchQuery &&
-            visitationData.searchQuery.trim() !== ""
-          ) {
-            dispatch(setSearchQuery(""));
+          if (visitationData.searchQuery && visitationData.searchQuery.trim() !== '') {
+            dispatch(setSearchQuery(''));
           } else {
             dispatch(updateShouldScrollView(true));
             dispatch(setSearchProject(false));
@@ -335,17 +302,10 @@ function CreateVisitation() {
         }
         return true;
       };
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      visitationData.step,
-      visitationData.isSearchProject,
-      visitationData.searchQuery,
-    ])
+    }, [visitationData.step, visitationData.isSearchProject, visitationData.searchQuery])
   );
 
   useEffect(() => {
@@ -356,12 +316,9 @@ function CreateVisitation() {
   const handleStepperFocus = () => {
     // to continue stepper focus when entering visitation page
     if (!visitationData.stepperVisitationShouldNotFocused) {
-      if (visitationData.stepThreeVisitationFinished)
-        dispatch(updateCurrentStep(3));
-      else if (visitationData.stepTwoVisitationFinished)
-        dispatch(updateCurrentStep(2));
-      else if (visitationData.stepOneVisitationFinished)
-        dispatch(updateCurrentStep(1));
+      if (visitationData.stepThreeVisitationFinished) dispatch(updateCurrentStep(3));
+      else if (visitationData.stepTwoVisitationFinished) dispatch(updateCurrentStep(2));
+      else if (visitationData.stepOneVisitationFinished) dispatch(updateCurrentStep(1));
     }
 
     // to reset stepper focus when continuing progress data
@@ -373,22 +330,17 @@ function CreateVisitation() {
     ) {
       dispatch(resetStepperFocused(1));
     }
-    const selectedPic = visitationData.pics?.find((pic) => {
+    const selectedPic = visitationData.pics?.find(pic => {
       if (pic.isSelected) {
         return pic;
       }
     });
     const customerTypeCond =
-      visitationData.customerType === "COMPANY"
-        ? !!visitationData.companyName
-        : true;
+      visitationData.customerType === 'COMPANY' ? !!visitationData.companyName : true;
     if (
       visitationData.stepperVisitationShouldNotFocused &&
       visitationData.step === 1 &&
-      (visitationData.customerType ||
-        customerTypeCond ||
-        visitationData.projectName ||
-        selectedPic)
+      (visitationData.customerType || customerTypeCond || visitationData.projectName || selectedPic)
     ) {
       dispatch(resetStepperFocused(2));
     }
@@ -441,7 +393,7 @@ function CreateVisitation() {
     }
     dispatch(
       updateDataVisitation({
-        type: "pics",
+        type: 'pics',
         value: [...finalPIC, state],
       })
     );
@@ -481,10 +433,7 @@ function CreateVisitation() {
                 const step = visitationData.step + 1;
                 next(step)();
                 dispatch(setStepperFocused(step));
-                DeviceEventEmitter.emit(
-                  "CreateVisitation.continueButton",
-                  true
-                );
+                DeviceEventEmitter.emit('CreateVisitation.continueButton', true);
               }}
               onPressBack={() => actionBackButton(false)}
               disableContinue={!stepsDone.includes(visitationData.step)}
@@ -534,19 +483,19 @@ function CreateVisitation() {
 
 const styles: Styles = {
   footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  button: { flexDirection: "row-reverse" },
+  button: { flexDirection: 'row-reverse' },
   container: {
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     flex: 1,
   },
   conButton: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexDirection: "row",
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
   buttonOne: {
     flex: 1,

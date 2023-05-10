@@ -1,21 +1,21 @@
 /* eslint-disable react-native/no-inline-styles */
-import * as React from "react";
-import { SafeAreaView, View, Platform } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { useMachine } from "@xstate/react";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { useSelector } from "react-redux";
-import { BEmptyState, BHeaderIcon, BSpacer } from "@/components";
-import { layout } from "@/constants";
-import useCustomHeaderCenter from "@/hooks/useCustomHeaderCenter";
-import { CAMERA, FORM_SO, SEARCH_SO } from "@/navigation/ScreenNames";
-import SearchSONavbar from "./element/SearchSONavbar";
-import SOList from "./element/SOList";
-import searchSOMachine from "@/machine/searchSOMachine";
-import { RootState } from "@/redux/store";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useMachine } from '@xstate/react';
+import * as React from 'react';
+import { SafeAreaView, View, Platform } from 'react-native';
+import { useSelector } from 'react-redux';
+import SOList from './element/SOList';
+import SearchSONavbar from './element/SearchSONavbar';
+import { BEmptyState, BHeaderIcon, BSpacer } from '@/components';
+import { layout } from '@/constants';
+import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
+import searchSOMachine from '@/machine/searchSOMachine';
+import { CAMERA, FORM_SO, SEARCH_SO } from '@/navigation/ScreenNames';
+import { RootState } from '@/redux/store';
 
 function SearchSO() {
-  const [searchValue, setSearchValue] = React.useState<string>("");
+  const [searchValue, setSearchValue] = React.useState<string>('');
   const navigation = useNavigation();
   const [state, send] = useMachine(searchSOMachine);
   const soData = useSelector((state: RootState) => state.salesOrder);
@@ -41,7 +41,7 @@ function SearchSO() {
 
   useFocusEffect(
     React.useCallback(() => {
-      send("assignKeyword", { payload: searchValue });
+      send('assignKeyword', { payload: searchValue });
     }, [send])
   );
 
@@ -55,13 +55,13 @@ function SearchSO() {
   const onChangeText = (text: string) => {
     setSearchValue(text);
 
-    if (text.length > 2) send("onRefreshList", { payload: text });
-    else if (text.length < 1) send("onRefreshList", { payload: "" });
+    if (text.length > 2) send('onRefreshList', { payload: text });
+    else if (text.length < 1) send('onRefreshList', { payload: '' });
   };
 
   const onClearValue = () => {
-    setSearchValue("");
-    send("assignKeyword", { payload: "" });
+    setSearchValue('');
+    send('assignKeyword', { payload: '' });
   };
 
   const onPressItem = (item: any) => {
@@ -71,7 +71,7 @@ function SearchSO() {
       navigation.navigate(FORM_SO);
     } else {
       navigation.navigate(CAMERA, {
-        photoTitle: "/ File SO yang telah di TTD",
+        photoTitle: '/ File SO yang telah di TTD',
         navigateTo: FORM_SO,
         closeButton: true,
         disabledDocPicker: false,
@@ -88,20 +88,19 @@ function SearchSO() {
         <View
           style={[
             {
-              width: "98%",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
+              width: '98%',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
             },
-            Platform.OS !== "android" && { height: "80%" },
-          ]}
-        >
+            Platform.OS !== 'android' && { height: '80%' },
+          ]}>
           <SearchSONavbar
             customStyle={[
               {
-                width: "75%",
-                justifyContent: "center",
+                width: '75%',
+                justifyContent: 'center',
               },
-              Platform.OS !== "android" && { height: "80%" },
+              Platform.OS !== 'android' && { height: '80%' },
             ]}
             autoFocus
             value={searchValue}
@@ -114,31 +113,24 @@ function SearchSO() {
     [searchValue]
   );
 
-  const {
-    soListData,
-    isLoading,
-    isLoadMore,
-    errorMessage,
-    isRefreshing,
-    keyword,
-  } = state.context;
+  const { soListData, isLoading, isLoadMore, errorMessage, isRefreshing, keyword } = state.context;
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <BSpacer size="small" />
-      {keyword !== "" && searchValue.length < 3 ? (
+      {keyword !== '' && searchValue.length < 3 ? (
         <BEmptyState emptyText="Minimal 3 huruf!" />
       ) : (
-        <View style={{ flexGrow: 1, flexDirection: "row" }}>
+        <View style={{ flexGrow: 1, flexDirection: 'row' }}>
           <SOList
             data={soListData}
             loadList={isLoading}
             isLoadMore={isLoadMore}
             refreshing={isRefreshing}
-            onEndReached={() => send("onEndReached", { payload: searchValue })}
-            onPressList={(item) => onPressItem(item)}
-            onRefresh={() => send("onRefreshList", { payload: searchValue })}
-            onRetry={() => send("retryGettingList", { payload: searchValue })}
+            onEndReached={() => send('onEndReached', { payload: searchValue })}
+            onPressList={item => onPressItem(item)}
+            onRefresh={() => send('onRefreshList', { payload: searchValue })}
+            onRetry={() => send('retryGettingList', { payload: searchValue })}
             keyword={keyword}
             errorMessage={errorMessage}
           />

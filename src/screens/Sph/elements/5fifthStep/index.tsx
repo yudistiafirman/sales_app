@@ -1,16 +1,12 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  Platform,
-} from "react-native";
-import React, { useContext, useState } from "react";
-import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
-import { useDispatch, useSelector } from "react-redux";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { FlashList } from "@shopify/flash-list";
+import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { FlashList } from '@shopify/flash-list';
+import React, { useContext, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Platform } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import ChoosePicModal from '../ChoosePicModal';
+import StepDone from '../StepDoneModal/StepDone';
+import { SphContext } from '../context/SphContext';
 import {
   BBackContinueBtn,
   BContainer,
@@ -19,9 +15,8 @@ import {
   BSpacer,
   BProductCard,
   BVisitationCard,
-} from "@/components";
-import { resScale } from "@/utils";
-import { colors, fonts, layout } from "@/constants";
+} from '@/components';
+import { colors, fonts, layout } from '@/constants';
 import {
   deliveryAndDistance,
   Input,
@@ -30,22 +25,20 @@ import {
   shippingAddressType,
   sphOrderPayloadType,
   SphStateInterface,
-} from "@/interfaces";
-import ChoosePicModal from "../ChoosePicModal";
-import BSheetAddPic from "@/screens/Visitation/elements/second/BottomSheetAddPic";
-import { SphContext } from "../context/SphContext";
-import StepDone from "../StepDoneModal/StepDone";
-import { postUploadFiles } from "@/redux/async-thunks/commonThunks";
-import { postOrderSph } from "@/redux/async-thunks/orderThunks";
-import { RootState } from "@/redux/store";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import { SPH } from "@/navigation/ScreenNames";
+} from '@/interfaces';
+import { SPH } from '@/navigation/ScreenNames';
+import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
+import { postOrderSph } from '@/redux/async-thunks/orderThunks';
 import {
   updateSelectedCompany,
   updateSelectedPic,
   updateUploadedAndMappedRequiredDocs,
   updateUseHighway,
-} from "@/redux/reducers/SphReducer";
+} from '@/redux/reducers/SphReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { RootState } from '@/redux/store';
+import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
+import { resScale } from '@/utils';
 
 function countNonNullValues(array) {
   let count = 0;
@@ -70,33 +63,28 @@ function payloadMapper(sphState: SphStateInterface) {
 
   if (sphState.chosenProducts.length > 0) {
     // harcode m3
-    payload.requestedProducts = sphState.chosenProducts.map((product) => ({
+    payload.requestedProducts = sphState.chosenProducts.map(product => ({
       productId: product.productId,
       categoryId: product.categoryId,
       offeringPrice: +product.sellPrice,
       quantity: +product.volume,
       pouringMethod: product.pouringMethod,
       productName: product.product.name,
-      productUnit: "m3",
+      productUnit: 'm3',
     }));
 
     payload.distance.id = sphState.chosenProducts[0].additionalData.distance.id;
-    payload.distance.price =
-      sphState.chosenProducts[0].additionalData.distance.price;
+    payload.distance.price = sphState.chosenProducts[0].additionalData.distance.price;
 
     if (sphState.distanceFromLegok) {
-      payload.distance.userDistance = Math.ceil(
-        sphState.distanceFromLegok / 1000
-      );
+      payload.distance.userDistance = Math.ceil(sphState.distanceFromLegok / 1000);
     }
     // find highest delivery
     const deliveries: deliveryAndDistance[] = [];
-    sphState.chosenProducts.forEach((prod) => {
+    sphState.chosenProducts.forEach(prod => {
       deliveries.push(prod.additionalData.delivery);
     });
-    const highestPrice = deliveries.reduce((prev, curr) =>
-      prev.price > curr.price ? prev : curr
-    );
+    const highestPrice = deliveries.reduce((prev, curr) => (prev.price > curr.price ? prev : curr));
     payload.delivery = highestPrice;
   }
 
@@ -135,10 +123,10 @@ function payloadMapper(sphState: SphStateInterface) {
   if (sphState.paymentType) {
     payload.paymentType = sphState.paymentType;
   }
-  if (typeof sphState.useHighway === "boolean") {
+  if (typeof sphState.useHighway === 'boolean') {
     payload.viaTol = sphState.useHighway;
   }
-  if (typeof sphState.isBillingAddressSame === "boolean") {
+  if (typeof sphState.isBillingAddressSame === 'boolean') {
     payload.isUseSameAddress = sphState.isBillingAddressSame;
   }
   if (selectedCompany) {
@@ -150,7 +138,7 @@ function payloadMapper(sphState: SphStateInterface) {
       payload.picArr = newPicArr;
     }
   }
-  if (typeof sphState.paymentBankGuarantee === "boolean") {
+  if (typeof sphState.paymentBankGuarantee === 'boolean') {
     payload.isProvideBankGuarantee = sphState.paymentBankGuarantee;
   }
 
@@ -182,28 +170,22 @@ function payloadMapper(sphState: SphStateInterface) {
         }
       }
       if (sphState.billingAddress.addressAutoComplete.postalId) {
-        payload.billingAddress.postalId =
-          sphState.billingAddress.addressAutoComplete.postalId;
+        payload.billingAddress.postalId = sphState.billingAddress.addressAutoComplete.postalId;
       }
       if (sphState.billingAddress.addressAutoComplete.lat) {
-        payload.billingAddress.lat =
-          sphState.billingAddress.addressAutoComplete.lat;
+        payload.billingAddress.lat = sphState.billingAddress.addressAutoComplete.lat;
       }
       if (sphState.billingAddress.addressAutoComplete.lon) {
-        payload.billingAddress.lon =
-          sphState.billingAddress.addressAutoComplete.lon;
+        payload.billingAddress.lon = sphState.billingAddress.addressAutoComplete.lon;
       }
       if (sphState.billingAddress.addressAutoComplete.rural) {
-        payload.billingAddress.rural =
-          sphState.billingAddress.addressAutoComplete.rural;
+        payload.billingAddress.rural = sphState.billingAddress.addressAutoComplete.rural;
       }
       if (sphState.billingAddress.addressAutoComplete.district) {
-        payload.billingAddress.district =
-          sphState.billingAddress.addressAutoComplete.district;
+        payload.billingAddress.district = sphState.billingAddress.addressAutoComplete.district;
       }
       if (sphState.billingAddress.addressAutoComplete.city) {
-        payload.billingAddress.city =
-          sphState.billingAddress.addressAutoComplete.city;
+        payload.billingAddress.city = sphState.billingAddress.addressAutoComplete.city;
       }
     }
     if (sphState.billingAddress.fullAddress) {
@@ -225,15 +207,13 @@ export default function FifthStep() {
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isStepDoneVisible, setIsStepDoneVisible] = useState(false);
-  const [madeSphData, setMadeSphData] = useState<postSphResponseType | null>(
-    null
-  );
+  const [madeSphData, setMadeSphData] = useState<postSphResponseType | null>(null);
 
   const inputsData: Input[] = [
     {
-      label: "Menggunakan Jalan Tol?",
+      label: 'Menggunakan Jalan Tol?',
       isRequire: false,
-      type: "switch",
+      type: 'switch',
       onChange: (val: boolean) => {
         dispatch(updateUseHighway(val));
       },
@@ -258,42 +238,35 @@ export default function FifthStep() {
     try {
       dispatch(
         openPopUp({
-          popUpType: "loading",
-          popUpText: "Menyimpan SPH",
+          popUpType: 'loading',
+          popUpText: 'Menyimpan SPH',
           outsideClickClosePopUp: false,
         })
       );
       const payload = payloadMapper(sphState);
       const photoFiles = Object.values(sphState.paymentRequiredDocuments);
-      const isNoPhotoToUpload = photoFiles.every((val) => val === null);
+      const isNoPhotoToUpload = photoFiles.every(val => val === null);
       payload.projectDocs = [];
       const validPhotoCount = countNonNullValues(photoFiles);
       if (
-        (sphState.uploadedAndMappedRequiredDocs.length === 0 &&
-          !isNoPhotoToUpload) ||
+        (sphState.uploadedAndMappedRequiredDocs.length === 0 && !isNoPhotoToUpload) ||
         validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
       ) {
         const photoResponse = await dispatch(
-          postUploadFiles({ files: photoFiles, from: "sph" })
+          postUploadFiles({ files: photoFiles, from: 'sph' })
         ).unwrap();
         const files: { documentId: string; fileId: string }[] = [];
-        photoResponse.forEach((photo) => {
+        photoResponse.forEach(photo => {
           const photoName = `${photo.name}.${photo.type}`;
           const photoNamee = `${photo.name}.jpg`;
           let foundPhoto;
           for (const documentId in sphState.paymentRequiredDocuments) {
             if (
-              Object.prototype.hasOwnProperty.call(
-                sphState.paymentRequiredDocuments,
-                documentId
-              )
+              Object.prototype.hasOwnProperty.call(sphState.paymentRequiredDocuments, documentId)
             ) {
               const photoData = sphState.paymentRequiredDocuments[documentId];
               if (photoData) {
-                if (
-                  photoData.name === photoName ||
-                  photoData.name === photoNamee
-                ) {
+                if (photoData.name === photoName || photoData.name === photoNamee) {
                   foundPhoto = documentId;
                 }
               }
@@ -306,14 +279,14 @@ export default function FifthStep() {
             });
           }
         });
-        const isFilePhotoNotNull = files.every((val) => val === null);
+        const isFilePhotoNotNull = files.every(val => val === null);
         if (!isFilePhotoNotNull) {
           payload.projectDocs = files;
         }
         dispatch(updateUploadedAndMappedRequiredDocs(files));
       } else if (!isNoPhotoToUpload) {
         const isFilePhotoNotNull = sphState.uploadedAndMappedRequiredDocs.every(
-          (val) => val === null
+          val => val === null
         );
         if (!isFilePhotoNotNull) {
           payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
@@ -326,17 +299,14 @@ export default function FifthStep() {
       }
       setMadeSphData(sph);
       dispatch(closePopUp());
-      setTimeout(
-        () => setIsStepDoneVisible(true),
-        Platform.OS === "ios" ? 500 : 0
-      );
+      setTimeout(() => setIsStepDoneVisible(true), Platform.OS === 'ios' ? 500 : 0);
     } catch (error) {
       const messageError = error?.message;
       dispatch(closePopUp());
       dispatch(
         openPopUp({
-          popUpType: "error",
-          popUpText: messageError || "Error Menyimpan SPH",
+          popUpType: 'error',
+          popUpText: messageError || 'Error Menyimpan SPH',
           outsideClickClosePopUp: true,
         })
       );
@@ -355,18 +325,16 @@ export default function FifthStep() {
           isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}
           openAddPic={addPicHandler}
-          selectPic={(pic) => {
+          selectPic={pic => {
             dispatch(updateSelectedPic(pic));
-            setIsModalVisible((curr) => !curr);
+            setIsModalVisible(curr => !curr);
           }}
         />
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1, maxHeight: resScale(70) }}>
             <BVisitationCard
               item={{
-                name: sphState?.selectedCompany?.name
-                  ? sphState?.selectedCompany?.name
-                  : "-",
+                name: sphState?.selectedCompany?.name ? sphState?.selectedCompany?.name : '-',
                 location: sphState?.selectedCompany?.LocationAddress.line1,
               }}
               isRenderIcon={false}
@@ -378,9 +346,8 @@ export default function FifthStep() {
               <Text style={style.picText}>PIC</Text>
               <TouchableOpacity
                 onPress={() => {
-                  setIsModalVisible((curr) => !curr);
-                }}
-              >
+                  setIsModalVisible(curr => !curr);
+                }}>
                 <Text style={style.gantiPicText}>Ganti PIC</Text>
               </TouchableOpacity>
             </View>
@@ -401,11 +368,11 @@ export default function FifthStep() {
             </View>
             <BSpacer size="small" />
           </View>
-          <View style={{ flexGrow: 1, flexDirection: "row" }}>
+          <View style={{ flexGrow: 1, flexDirection: 'row' }}>
             <FlashList
               estimatedItemSize={10}
               data={sphState?.chosenProducts}
-              renderItem={(item) => (
+              renderItem={item => (
                 <>
                   <BProductCard
                     name={item.item.product.name}
@@ -418,7 +385,7 @@ export default function FifthStep() {
               )}
             />
           </View>
-          <View style={{ flex: 1, justifyContent: "flex-end" }}>
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <BForm titleBold="500" inputs={inputsData} />
             <BSpacer size="extraSmall" />
           </View>
@@ -436,10 +403,7 @@ export default function FifthStep() {
           initialIndex={-1}
           addPic={(pic: any) => {
             if (sphState.selectedCompany) {
-              const newList = [
-                ...sphState.selectedCompany.Pics,
-                { ...pic, isSelected: false },
-              ];
+              const newList = [...sphState.selectedCompany.Pics, { ...pic, isSelected: false }];
               dispatch(
                 updateSelectedCompany({
                   ...sphState.selectedCompany,
@@ -456,12 +420,12 @@ export default function FifthStep() {
 
 const style = StyleSheet.create({
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   picLable: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   picText: {
     fontFamily: fonts.family.montserrat[600],

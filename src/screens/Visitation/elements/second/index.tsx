@@ -1,27 +1,23 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { SafeAreaView, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import debounce from "lodash.debounce";
-import { useRoute } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { BDivider, BForm, BSpacer, BText } from "@/components";
-import { Input, projectResponseType, Styles } from "@/interfaces";
-import SearchFlow from "./Searching";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useRoute } from '@react-navigation/native';
+import debounce from 'lodash.debounce';
+import React, { useEffect, useMemo, useState } from 'react';
+import { SafeAreaView, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import SearchFlow from './Searching';
+import { BDivider, BForm, BSpacer, BText } from '@/components';
+import { layout } from '@/constants';
+import { Input, projectResponseType, Styles } from '@/interfaces';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
+import { CREATE_VISITATION } from '@/navigation/ScreenNames';
+import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
+import { setSearchProject, updateDataVisitation } from '@/redux/reducers/VisitationReducer';
+import { RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 
-import { resScale } from "@/utils";
-import { layout } from "@/constants";
-import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
-import { getProjectsByUserThunk } from "@/redux/async-thunks/commonThunks";
-import { CREATE_VISITATION } from "@/navigation/ScreenNames";
-import { RootState } from "@/redux/store";
-import {
-  setSearchProject,
-  updateDataVisitation,
-} from "@/redux/reducers/VisitationReducer";
-
-const company = require("@/assets/icon/Visitation/company.png");
-const profile = require("@/assets/icon/Visitation/profile.png");
+const company = require('@/assets/icon/Visitation/company.png');
+const profile = require('@/assets/icon/Visitation/profile.png');
 
 interface IProps {
   openBottomSheet: () => void;
@@ -50,7 +46,7 @@ function SecondStep({ openBottomSheet }: IProps) {
     if (visitationData.companyName) {
       dispatch(
         updateDataVisitation({
-          type: "options",
+          type: 'options',
           value: {
             items: [{ id: 1, title: visitationData.companyName }],
           },
@@ -69,13 +65,13 @@ function SecondStep({ openBottomSheet }: IProps) {
         dispatch(getProjectsByUserThunk({ search: searchQuery }))
           .unwrap()
           .then((response: projectResponseType[]) => {
-            const items = response.map((project) => ({
+            const items = response.map(project => ({
               id: project.id,
               title: project.display_name,
             }));
             dispatch(
               updateDataVisitation({
-                type: "options",
+                type: 'options',
                 value: {
                   items,
                 },
@@ -85,7 +81,7 @@ function SecondStep({ openBottomSheet }: IProps) {
             if (items.length <= 0) {
               dispatch(
                 updateDataVisitation({
-                  type: "companyName",
+                  type: 'companyName',
                   value: searchQuery,
                 })
               );
@@ -98,7 +94,7 @@ function SecondStep({ openBottomSheet }: IProps) {
           .catch(() => {
             dispatch(
               updateDataVisitation({
-                type: "companyName",
+                type: 'companyName',
                 value: searchQuery,
               })
             );
@@ -125,42 +121,39 @@ function SecondStep({ openBottomSheet }: IProps) {
   const inputs: Input[] = React.useMemo(() => {
     const baseInput: Input[] = [
       {
-        label: "Jenis Pelanggan",
+        label: 'Jenis Pelanggan',
         isRequire: true,
         isError: false,
-        type: "cardOption",
-        onChange: onChange("customerType"),
+        type: 'cardOption',
+        onChange: onChange('customerType'),
         value: visitationData.customerType,
         options: [
           {
             icon: company,
-            title: "Perusahaan",
-            value: "COMPANY",
+            title: 'Perusahaan',
+            value: 'COMPANY',
             onChange: () => {
-              onChange("customerType")("COMPANY");
+              onChange('customerType')('COMPANY');
             },
           },
           {
             icon: profile,
-            title: "Individu",
-            value: "INDIVIDU",
+            title: 'Individu',
+            value: 'INDIVIDU',
             onChange: () => {
-              onChange("customerType")("INDIVIDU");
+              onChange('customerType')('INDIVIDU');
             },
           },
         ],
         isInputDisable: !!existingVisitation,
       },
     ];
-    if (
-      visitationData.customerType &&
-      visitationData.customerType?.length > 0
-    ) {
+    if (visitationData.customerType && visitationData.customerType?.length > 0) {
       const companyNameInput: Input = {
-        label: "Nama Perusahaan",
+        label: 'Nama Perusahaan',
         isRequire: true,
         isError: false,
-        type: "autocomplete",
+        type: 'autocomplete',
         onChange: onChangeText,
         value: selectedCompany,
         items: visitationData.options?.items,
@@ -169,14 +162,14 @@ function SecondStep({ openBottomSheet }: IProps) {
           if (item) {
             dispatch(
               updateDataVisitation({
-                type: "companyName",
+                type: 'companyName',
                 value: item.title,
               })
             );
             setSelectedCompany(item);
           }
         },
-        placeholder: "Masukkan Nama Perusahaan",
+        placeholder: 'Masukkan Nama Perusahaan',
         isInputDisable: !!existingVisitation,
         // showChevronAutoCompleted: false,
         showClearAutoCompleted: false,
@@ -184,22 +177,22 @@ function SecondStep({ openBottomSheet }: IProps) {
 
       const aditionalInput: Input[] = [
         {
-          label: "Nama Proyek",
+          label: 'Nama Proyek',
           isRequire: true,
           isError: false,
-          type: "textInput",
+          type: 'textInput',
           onChange: (e: any) => {
-            onChange("projectName")(e.nativeEvent.text);
+            onChange('projectName')(e.nativeEvent.text);
           },
           value: visitationData.projectName,
-          placeholder: "Masukkan Nama Proyek",
+          placeholder: 'Masukkan Nama Proyek',
           isInputDisable: !!existingVisitation,
         },
         {
-          label: "PIC",
+          label: 'PIC',
           isRequire: true,
           isError: false,
-          type: "PIC",
+          type: 'PIC',
           value: visitationData.pics,
           onChange: () => {
             openBottomSheet();
@@ -211,14 +204,14 @@ function SecondStep({ openBottomSheet }: IProps) {
             }));
             dispatch(
               updateDataVisitation({
-                type: "pics",
+                type: 'pics',
                 value: newPicList,
               })
             );
           },
         },
       ];
-      if (visitationData.customerType === "COMPANY") {
+      if (visitationData.customerType === 'COMPANY') {
         aditionalInput.unshift(companyNameInput);
       }
       baseInput.push(...aditionalInput);
@@ -265,8 +258,8 @@ const styles: Styles = {
     flex: 1,
   },
   dividerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   labelShimmer: {
     width: resScale(335),

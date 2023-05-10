@@ -1,49 +1,33 @@
-import React, { useCallback } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { TextInput } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
-import debounce from "lodash.debounce";
-import {
-  BCommonSearchList,
-  BSearchBar,
-  BSpacer,
-  BTextLocation,
-} from "@/components";
-import { AppDispatch, RootState } from "@/redux/store";
-import { getAllProject } from "@/redux/async-thunks/commonThunks";
-import { PIC } from "@/interfaces";
-import { retrying } from "@/redux/reducers/commonReducer";
+import debounce from 'lodash.debounce';
+import React, { useCallback } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { BCommonSearchList, BSearchBar, BSpacer, BTextLocation } from '@/components';
+import { layout } from '@/constants';
+import { PIC } from '@/interfaces';
+import { getAllProject } from '@/redux/async-thunks/commonThunks';
 import {
   setSearchQuery,
   updateDataVisitation,
   updateShouldScrollView,
-} from "@/redux/reducers/VisitationReducer";
-import { resScale } from "@/utils";
-import { layout } from "@/constants";
+} from '@/redux/reducers/VisitationReducer';
+import { retrying } from '@/redux/reducers/commonReducer';
+import { AppDispatch, RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 
 interface IProps {
   onSearch: (search: boolean) => void;
   isSearch: boolean;
   searchingDisable?: boolean;
-  setSelectedCompany: React.Dispatch<
-    React.SetStateAction<{ id: string; title: string }>
-  >;
+  setSelectedCompany: React.Dispatch<React.SetStateAction<{ id: string; title: string }>>;
 }
 
-function SearchFlow({
-  onSearch,
-  isSearch,
-  searchingDisable,
-  setSelectedCompany,
-}: IProps) {
+function SearchFlow({ onSearch, isSearch, searchingDisable, setSelectedCompany }: IProps) {
   const dispatch = useDispatch<AppDispatch>();
   const [index, setIndex] = React.useState(0);
-  const {
-    projects,
-    isProjectLoading,
-    errorGettingProject,
-    errorGettingProjectMessage,
-  } = useSelector((state: RootState) => state.common);
+  const { projects, isProjectLoading, errorGettingProject, errorGettingProjectMessage } =
+    useSelector((state: RootState) => state.common);
   const visitationData = useSelector((state: RootState) => state.visitation);
   const searchDispatch = useCallback(
     (text: string) => {
@@ -71,7 +55,7 @@ function SearchFlow({
   };
 
   const onClear = () => {
-    dispatch(setSearchQuery(""));
+    dispatch(setSearchQuery(''));
   };
 
   const onSelectProject = (item: any) => {
@@ -83,7 +67,7 @@ function SearchFlow({
       setSelectedCompany(company);
       dispatch(
         updateDataVisitation({
-          type: "companyName",
+          type: 'companyName',
           value: company.title,
         })
       );
@@ -91,7 +75,7 @@ function SearchFlow({
       if (visitationData.options?.items) {
         dispatch(
           updateDataVisitation({
-            type: "options",
+            type: 'options',
             value: {
               ...visitationData.options,
               items: [...visitationData.options?.items, company],
@@ -101,7 +85,7 @@ function SearchFlow({
       } else {
         dispatch(
           updateDataVisitation({
-            type: "options",
+            type: 'options',
             value: {
               ...visitationData.options,
               items: [company],
@@ -110,10 +94,10 @@ function SearchFlow({
         );
       }
     }
-    const customerType = item?.Company?.id ? "COMPANY" : "INDIVIDU";
+    const customerType = item?.Company?.id ? 'COMPANY' : 'INDIVIDU';
     dispatch(
       updateDataVisitation({
-        type: "customerType",
+        type: 'customerType',
         value: customerType,
       })
     );
@@ -128,20 +112,20 @@ function SearchFlow({
       }
       dispatch(
         updateDataVisitation({
-          type: "pics",
+          type: 'pics',
           value: picList,
         })
       );
     }
     dispatch(
       updateDataVisitation({
-        type: "projectName",
+        type: 'projectName',
         value: item?.name,
       })
     );
     dispatch(
       updateDataVisitation({
-        type: "projectId",
+        type: 'projectId',
         value: item?.id,
       })
     );
@@ -153,13 +137,13 @@ function SearchFlow({
       }
       dispatch(
         updateDataVisitation({
-          type: "visitationId",
+          type: 'visitationId',
           value: item?.Visitations[0]?.id,
         })
       );
       dispatch(
         updateDataVisitation({
-          type: "existingOrderNum",
+          type: 'existingOrderNum',
           value: order,
         })
       );
@@ -172,10 +156,10 @@ function SearchFlow({
   const routes: { title: string; totalItems: number }[] = React.useMemo(
     () => [
       {
-        key: "first",
-        title: "Proyek",
+        key: 'first',
+        title: 'Proyek',
         totalItems: projects.length,
-        chipPosition: "right",
+        chipPosition: 'right',
       },
     ],
     [projects]
@@ -206,10 +190,7 @@ function SearchFlow({
             autoFocus
             onChangeText={onChangeSearch}
             onClearValue={() => {
-              if (
-                visitationData.searchQuery &&
-                visitationData.searchQuery.trim() !== ""
-              ) {
+              if (visitationData.searchQuery && visitationData.searchQuery.trim() !== '') {
                 onClear();
               } else {
                 onSearch(false);
@@ -227,10 +208,7 @@ function SearchFlow({
         </View>
       ) : (
         <View>
-          <TouchableOpacity
-            style={style.touchable}
-            onPress={() => onSearch(true)}
-          />
+          <TouchableOpacity style={style.touchable} onPress={() => onSearch(true)} />
           <BSearchBar
             disabled
             placeholder="Cari PT / Proyek"
@@ -245,8 +223,8 @@ function SearchFlow({
 
 const style = StyleSheet.create({
   touchable: {
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,

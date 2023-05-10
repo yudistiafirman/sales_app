@@ -1,22 +1,16 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import Modal from "react-native-modal";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Entypo from "react-native-vector-icons/Entypo";
-import { TextInput } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
-import { Input } from "@/interfaces";
-import { resScale } from "@/utils";
-import {
-  BButtonPrimary,
-  BForm,
-  BLabel,
-  BSpacer,
-  BTextInput,
-} from "@/components";
-import { colors, fonts, layout } from "@/constants";
-import { CALENDAR } from "@/navigation/ScreenNames";
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Modal from 'react-native-modal';
+import { TextInput } from 'react-native-paper';
+import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { resScale } from '@/utils';
+import { CALENDAR } from '@/navigation/ScreenNames';
+import { Input } from '@/interfaces';
+import { colors, fonts, layout } from '@/constants';
+import { BButtonPrimary, BForm, BLabel, BSpacer, BTextInput } from '@/components';
 
 type LastStepPopUpType = {
   isVisible: boolean;
@@ -24,14 +18,14 @@ type LastStepPopUpType = {
   selectedDate?: string;
   closedLostValueOnChange: {
     dropdownOnchange: (e: any) => void;
-    dropdownValue?: "FINISHED" | "MOU_COMPETITOR";
+    dropdownValue?: 'FINISHED' | 'MOU_COMPETITOR';
     areaOnChange: (e: any) => void;
     areaValue: string | null;
   };
   onPressSubmit?: (type: lastStepPickedType) => void;
   isLoading?: boolean;
 };
-type lastStepPickedType = "VISIT" | "SPH" | "REJECTED" | "";
+type lastStepPickedType = 'VISIT' | 'SPH' | 'REJECTED' | '';
 
 function chevronRight() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#000000" />;
@@ -47,32 +41,32 @@ export default function LastStepPopUp({
 }: LastStepPopUpType) {
   const navigation = useNavigation();
 
-  const [lastStepPicked, setLastStepPicked] = useState<lastStepPickedType>("");
+  const [lastStepPicked, setLastStepPicked] = useState<lastStepPickedType>('');
 
   const inputs: Input[] = [
     {
-      label: "Kategori Alasan Penolakan",
+      label: 'Kategori Alasan Penolakan',
       isRequire: true,
       isError: false,
       value: closedLostValueOnChange.dropdownValue,
       // onChange: closedLostValueOnChange.dropdownOnchange,
-      type: "dropdown",
+      type: 'dropdown',
       dropdown: {
         items: [
-          { label: "Sudah MOU dengan Kompetitor", value: "MOU_COMPETITOR" },
-          { label: "Proyek sudah selesai dibangun", value: "FINISHED" },
+          { label: 'Sudah MOU dengan Kompetitor', value: 'MOU_COMPETITOR' },
+          { label: 'Proyek sudah selesai dibangun', value: 'FINISHED' },
         ],
-        placeholder: "Pilih Alasan",
+        placeholder: 'Pilih Alasan',
         onChange: (value: any) => {
           closedLostValueOnChange.dropdownOnchange(value);
         },
       },
     },
     {
-      label: "Alasan Penolakan",
+      label: 'Alasan Penolakan',
       isRequire: true,
       isError: false,
-      type: "area",
+      type: 'area',
       onChange: closedLostValueOnChange.areaOnChange,
       value: closedLostValueOnChange.areaValue,
     },
@@ -86,35 +80,27 @@ export default function LastStepPopUp({
       backdropColor="#000000"
       style={styles.modalStyle}
       onSwipeComplete={() => {
-        setIsPopUpVisible((curr) => !curr);
+        setIsPopUpVisible(curr => !curr);
       }}
       onBackdropPress={() => {
-        setIsPopUpVisible((curr) => !curr);
+        setIsPopUpVisible(curr => !curr);
       }}
-      swipeDirection={["down"]}
-    >
+      swipeDirection={['down']}>
       <View style={styles.modalContent}>
         <View style={styles.modalHeader}>
           <Text style={styles.headerText}>
-            {lastStepPicked === "" ? "Tahap Terakhir" : "Tahap Selanjutnya"}
+            {lastStepPicked === '' ? 'Tahap Terakhir' : 'Tahap Selanjutnya'}
           </Text>
         </View>
         <BSpacer size="small" />
-        <View
-          pointerEvents={isLoading ? "none" : "auto"}
-          style={styles.buttonLastStepContainer}
-        >
+        <View pointerEvents={isLoading ? 'none' : 'auto'} style={styles.buttonLastStepContainer}>
           <TouchableOpacity
             onPress={() => {
-              setLastStepPicked("VISIT");
-            }}
-          >
+              setLastStepPicked('VISIT');
+            }}>
             <View style={styles.buttonLastStep}>
               <MaterialIcons
-                style={[
-                  styles.iconStyle,
-                  lastStepPicked === "VISIT" ? styles.iconSelected : null,
-                ]}
+                style={[styles.iconStyle, lastStepPicked === 'VISIT' ? styles.iconSelected : null]}
                 name="add-location-alt"
                 size={resScale(25)}
               />
@@ -122,9 +108,8 @@ export default function LastStepPopUp({
               <Text
                 style={[
                   styles.lastStepText,
-                  lastStepPicked === "VISIT" ? styles.iconSelected : null,
-                ]}
-              >
+                  lastStepPicked === 'VISIT' ? styles.iconSelected : null,
+                ]}>
                 Kunjungi Lagi
               </Text>
             </View>
@@ -132,15 +117,11 @@ export default function LastStepPopUp({
           <View style={styles.spacer} />
           <TouchableOpacity
             onPress={() => {
-              setLastStepPicked("SPH");
-            }}
-          >
+              setLastStepPicked('SPH');
+            }}>
             <View style={styles.buttonLastStep}>
               <MaterialCommunityIcons
-                style={[
-                  styles.iconStyle,
-                  lastStepPicked === "SPH" ? styles.iconSelected : null,
-                ]}
+                style={[styles.iconStyle, lastStepPicked === 'SPH' ? styles.iconSelected : null]}
                 name="file-edit-outline"
                 size={resScale(25)}
               />
@@ -148,9 +129,8 @@ export default function LastStepPopUp({
               <Text
                 style={[
                   styles.lastStepText,
-                  lastStepPicked === "SPH" ? styles.iconSelected : null,
-                ]}
-              >
+                  lastStepPicked === 'SPH' ? styles.iconSelected : null,
+                ]}>
                 Buat SPH
               </Text>
             </View>
@@ -158,14 +138,13 @@ export default function LastStepPopUp({
           <View style={styles.spacer} />
           <TouchableOpacity
             onPress={() => {
-              setLastStepPicked("REJECTED");
-            }}
-          >
+              setLastStepPicked('REJECTED');
+            }}>
             <View style={styles.buttonLastStep}>
               <MaterialCommunityIcons
                 style={[
                   styles.iconStyle,
-                  lastStepPicked === "REJECTED" ? styles.iconSelected : null,
+                  lastStepPicked === 'REJECTED' ? styles.iconSelected : null,
                 ]}
                 name="close-octagon-outline"
                 size={resScale(25)}
@@ -174,16 +153,15 @@ export default function LastStepPopUp({
               <Text
                 style={[
                   styles.lastStepText,
-                  lastStepPicked === "REJECTED" ? styles.iconSelected : null,
-                ]}
-              >
+                  lastStepPicked === 'REJECTED' ? styles.iconSelected : null,
+                ]}>
                 Closed Lost
               </Text>
             </View>
           </TouchableOpacity>
         </View>
         {lastStepPicked && <BSpacer size="extraSmall" />}
-        {lastStepPicked === "VISIT" && (
+        {lastStepPicked === 'VISIT' && (
           <View>
             <BLabel bold="500" label="Tanggal" isRequired />
             <View style={styles.relativPos}>
@@ -193,18 +171,13 @@ export default function LastStepPopUp({
                   navigation.navigate(CALENDAR, {
                     useTodayMinDate: true,
                   });
-                  setIsPopUpVisible((curr) => !curr);
+                  setIsPopUpVisible(curr => !curr);
                 }}
               />
               <BTextInput
                 value={selectedDate}
                 placeholder="Pilih Tanggal"
-                right={
-                  <TextInput.Icon
-                    forceTextInputFocus={false}
-                    icon={chevronRight}
-                  />
-                }
+                right={<TextInput.Icon forceTextInputFocus={false} icon={chevronRight} />}
               />
             </View>
             <BSpacer size="extraSmall" />
@@ -218,7 +191,7 @@ export default function LastStepPopUp({
             />
           </View>
         )}
-        {lastStepPicked === "SPH" && (
+        {lastStepPicked === 'SPH' && (
           <BButtonPrimary
             title="Buat SPH Sekarang"
             isLoading={isLoading}
@@ -227,17 +200,14 @@ export default function LastStepPopUp({
             }}
           />
         )}
-        {lastStepPicked === "REJECTED" && (
+        {lastStepPicked === 'REJECTED' && (
           <>
             <BForm titleBold="500" inputs={inputs} />
             <BButtonPrimary
               title="Submit"
               isLoading={isLoading}
               disable={
-                !(
-                  !!closedLostValueOnChange.areaValue &&
-                  !!closedLostValueOnChange.dropdownValue
-                )
+                !(!!closedLostValueOnChange.areaValue && !!closedLostValueOnChange.dropdownValue)
               }
               onPress={() => {
                 onPressSubmit(lastStepPicked);
@@ -258,7 +228,7 @@ export default function LastStepPopUp({
 }
 
 const styles = StyleSheet.create({
-  modalStyle: { flex: 1, justifyContent: "center" },
+  modalStyle: { flex: 1, justifyContent: 'center' },
   modalContent: {
     // flex: 1,
     backgroundColor: colors.white,
@@ -266,12 +236,12 @@ const styles = StyleSheet.create({
     borderRadius: layout.radius.md,
     padding: layout.mainPad,
   },
-  modalHeader: { justifyContent: "center" },
+  modalHeader: { justifyContent: 'center' },
   headerText: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[700],
     fontSize: fonts.size.lg,
-    textAlign: "center",
+    textAlign: 'center',
   },
   buttonLastStep: {
     height: resScale(84),
@@ -279,18 +249,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.tertiary,
     borderRadius: layout.radius.md,
     padding: layout.pad.md,
-    alignItems: "center",
-    justifyContent: "space-evenly",
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
   lastStepText: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.sm,
-    textAlign: "center",
+    textAlign: 'center',
   },
   buttonLastStepContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
   spacer: {
     margin: layout.pad.sm,
@@ -302,11 +272,11 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
   relativPos: {
-    position: "relative",
+    position: 'relative',
   },
   touchable: {
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,

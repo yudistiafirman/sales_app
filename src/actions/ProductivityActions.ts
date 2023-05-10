@@ -1,6 +1,6 @@
-import BrikApiProductivity from "@/brikApi/BrikApiProductivity";
-import { payloadPostType } from "@/interfaces";
-import { customRequest } from "@/networking/request";
+import BrikApiProductivity from '@/brikApi/BrikApiProductivity';
+import { payloadPostType } from '@/interfaces';
+import { customRequest } from '@/networking/request';
 
 type getVisitationsType = {
   month?: number;
@@ -12,36 +12,19 @@ type visitationPayloadType = {
 };
 
 export const getVisitations = async ({ month, year }: getVisitationsType) =>
-  customRequest(
-    BrikApiProductivity.visitations({ month, year }),
-    "GET",
-    undefined,
-    true
-  );
+  customRequest(BrikApiProductivity.visitations({ month, year }), 'GET', undefined, true);
 export const postVisitations = async ({ payload }: visitationPayloadType) =>
-  customRequest(BrikApiProductivity.visitations(), "POST", payload, true);
+  customRequest(BrikApiProductivity.visitations(), 'POST', payload, true);
 
-export const oneGetVisitation = async ({
-  visitationId,
-}: {
-  visitationId: string;
-}) =>
-  customRequest(
-    BrikApiProductivity.visitationIdPath({ visitationId }),
-    "GET",
-    undefined,
-    true
-  );
+export const oneGetVisitation = async ({ visitationId }: { visitationId: string }) =>
+  customRequest(BrikApiProductivity.visitationIdPath({ visitationId }), 'GET', undefined, true);
 
-export const putVisitation = async ({
-  payload,
-  visitationId,
-}: visitationPayloadType) =>
+export const putVisitation = async ({ payload, visitationId }: visitationPayloadType) =>
   customRequest(
     BrikApiProductivity.visitationIdPath({
       visitationId,
     }),
-    "PUT",
+    'PUT',
     payload,
     true
   );
@@ -54,12 +37,7 @@ interface IGetAll {
   projectId?: string;
 }
 
-export const getAllVisitations = async ({
-  page = 0,
-  date,
-  search = "",
-  projectId,
-}: IGetAll) =>
+export const getAllVisitations = async ({ page = 0, date, search = '', projectId }: IGetAll) =>
   customRequest(
     BrikApiProductivity.getAllVisitations({
       page,
@@ -67,18 +45,13 @@ export const getAllVisitations = async ({
       search,
       projectId,
     }),
-    "GET",
+    'GET',
     undefined,
     true
   );
 
 export const getVisitationTarget = async () =>
-  customRequest(BrikApiProductivity.getTarget(), "GET", undefined, true);
+  customRequest(BrikApiProductivity.getTarget(), 'GET', undefined, true);
 
 export const postBookingAppointment = async ({ payload }) =>
-  customRequest(
-    BrikApiProductivity.bookingAppointment(),
-    "POST",
-    payload,
-    true
-  );
+  customRequest(BrikApiProductivity.bookingAppointment(), 'POST', payload, true);

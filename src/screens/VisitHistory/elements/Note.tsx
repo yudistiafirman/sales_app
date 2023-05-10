@@ -1,8 +1,8 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { BLabel, BSpacer, BText } from "@/components";
-import { colors, layout } from "@/constants";
-import font from "@/constants/fonts";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { BLabel, BSpacer, BText } from '@/components';
+import { colors, layout } from '@/constants';
+import font from '@/constants/fonts';
 
 function Notes({ visitNotes }: { visitNotes: string | null }) {
   if (visitNotes) {

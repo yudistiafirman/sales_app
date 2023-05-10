@@ -1,25 +1,14 @@
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import Octicons from "react-native-vector-icons/Octicons";
-import { colors, fonts, layout } from "@/constants";
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import Octicons from 'react-native-vector-icons/Octicons';
+import { colors, fonts, layout } from '@/constants';
 
-function AddNewAddressWrapper({
-  isBilling,
-  onPress,
-}: {
-  isBilling: boolean;
-  onPress: () => void;
-}) {
+function AddNewAddressWrapper({ isBilling, onPress }: { isBilling: boolean; onPress: () => void }) {
   return (
     <TouchableOpacity style={styles.addBilling} onPress={onPress}>
-      <Octicons
-        name="plus"
-        color={colors.primary}
-        size={fonts.size.xs}
-        style={styles.plusStyle}
-      />
+      <Octicons name="plus" color={colors.primary} size={fonts.size.xs} style={styles.plusStyle} />
       <Text style={styles.seeAllText}>
-        {isBilling ? "Tambah Alamat Penagihan" : "Tambah Alamat Proyek"}
+        {isBilling ? 'Tambah Alamat Penagihan' : 'Tambah Alamat Proyek'}
       </Text>
     </TouchableOpacity>
   );
@@ -27,8 +16,8 @@ function AddNewAddressWrapper({
 
 const styles = StyleSheet.create({
   addBilling: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   plusStyle: {
     marginRight: layout.pad.sm,

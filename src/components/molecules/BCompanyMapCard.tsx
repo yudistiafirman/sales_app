@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
-import * as React from "react";
-import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-import { colors, fonts, layout } from "@/constants";
-import BTouchableText from "../atoms/BTouchableText";
-import BSpacer from "../atoms/BSpacer";
+import * as React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import BSpacer from '../atoms/BSpacer';
+import BTouchableText from '../atoms/BTouchableText';
+import { colors, fonts, layout } from '@/constants';
 
 type BCompanyMapCardType = {
   location?: string;
@@ -23,21 +23,12 @@ export default function BCompanyMapCard({
       <Text style={styles.companyText}>{companyName}</Text>
       <BSpacer size="extraSmall" />
       <View style={styles.locationContainer}>
-        <SimpleLineIcons
-          name="location-pin"
-          size={13}
-          color="#000000"
-          style={styles.iconStyle}
-        />
+        <SimpleLineIcons name="location-pin" size={13} color="#000000" style={styles.iconStyle} />
         <View>
           <Text numberOfLines={2} style={styles.mapLocation}>
             {location}
           </Text>
-          <BTouchableText
-            disabled={disabled}
-            title="Lihat Peta"
-            onPress={onPressLocation}
-          />
+          <BTouchableText disabled={disabled} title="Lihat Peta" onPress={onPressLocation} />
         </View>
       </View>
     </View>
@@ -65,7 +56,7 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.xs,
   },
   locationContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   iconStyle: {
     marginRight: layout.pad.md,

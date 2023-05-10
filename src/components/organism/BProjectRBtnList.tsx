@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
-import { ListRenderItem } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-import BProjectRBtn from "../molecules/BProjectRBtn";
+import { FlashList } from '@shopify/flash-list';
+import React, { useCallback } from 'react';
+import { ListRenderItem } from 'react-native';
+import BProjectRBtn from '../molecules/BProjectRBtn';
 
 type BProjectData = {
   id?: string;

@@ -1,31 +1,25 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import AsyncStorage from "@react-native-community/async-storage";
-import { persistReducer, persistStore } from "redux-persist";
-import autoMergeLevel1 from "redux-persist/es/stateReconciler/autoMergeLevel1";
-import authReducer from "./reducers/authReducer";
-import commonReducer from "./reducers/commonReducer";
-import cameraReducer, { CameraGlobalState } from "./reducers/cameraReducer";
-import locationReducer from "./reducers/locationReducer";
-import modalReducer from "./reducers/modalReducer";
-import productivityFlowReducer from "./reducers/productivityFlowReducer";
-import orderReducer from "./reducers/orderReducer";
-import snackbarReducer from "./reducers/snackbarReducer";
-import { createXStateMiddleware } from "./middleware/createXStateMiddleware";
-import purchaseOrderReducer, {
-  purchaseOrderSlice,
-} from "./reducers/purchaseOrder";
-import SphReducer from "./reducers/SphReducer";
-import VisitationReducer, {
-  VisitationGlobalState,
-} from "./reducers/VisitationReducer";
-import { SphStateInterface } from "@/interfaces";
-import operationReducer, {
-  operationInitState,
-} from "./reducers/operationReducer";
-import salesOrderReducer, { SOGlobalState } from "./reducers/salesOrder";
+import AsyncStorage from '@react-native-community/async-storage';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistReducer, persistStore } from 'redux-persist';
+import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
+import { createXStateMiddleware } from './middleware/createXStateMiddleware';
+import SphReducer from './reducers/SphReducer';
+import VisitationReducer, { VisitationGlobalState } from './reducers/VisitationReducer';
+import authReducer from './reducers/authReducer';
+import cameraReducer, { CameraGlobalState } from './reducers/cameraReducer';
+import commonReducer from './reducers/commonReducer';
+import locationReducer from './reducers/locationReducer';
+import modalReducer from './reducers/modalReducer';
+import operationReducer, { operationInitState } from './reducers/operationReducer';
+import orderReducer from './reducers/orderReducer';
+import productivityFlowReducer from './reducers/productivityFlowReducer';
+import purchaseOrderReducer, { purchaseOrderSlice } from './reducers/purchaseOrder';
+import salesOrderReducer, { SOGlobalState } from './reducers/salesOrder';
+import snackbarReducer from './reducers/snackbarReducer';
+import { SphStateInterface } from '@/interfaces';
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage: AsyncStorage,
   stateReconciler: autoMergeLevel1,
 };
@@ -39,25 +33,16 @@ const rootReducer = combineReducers({
   order: orderReducer,
   snackbar: snackbarReducer,
   purchaseOrder: purchaseOrderReducer,
-  operation: persistReducer<operationInitState, any>(
-    persistConfig,
-    operationReducer
-  ),
-  salesOrder: persistReducer<SOGlobalState, any>(
-    persistConfig,
-    salesOrderReducer
-  ),
+  operation: persistReducer<operationInitState, any>(persistConfig, operationReducer),
+  salesOrder: persistReducer<SOGlobalState, any>(persistConfig, salesOrderReducer),
   sph: persistReducer<SphStateInterface, any>(persistConfig, SphReducer),
-  visitation: persistReducer<VisitationGlobalState, any>(
-    persistConfig,
-    VisitationReducer
-  ),
+  visitation: persistReducer<VisitationGlobalState, any>(persistConfig, VisitationReducer),
   camera: persistReducer<CameraGlobalState, any>(persistConfig, cameraReducer),
 });
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleWare) =>
+  middleware: getDefaultMiddleWare =>
     getDefaultMiddleWare({
       immutableCheck: false,
       serializableCheck: false,

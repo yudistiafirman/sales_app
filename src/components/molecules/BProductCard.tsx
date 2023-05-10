@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import * as React from "react";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { colors, fonts, layout } from "@/constants";
-import formatCurrency from "@/utils/formatCurrency";
-import { resScale } from "@/utils";
-import BSpacer from "../atoms/BSpacer";
+import * as React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import BSpacer from '../atoms/BSpacer';
+import { colors, fonts, layout } from '@/constants';
+import { resScale } from '@/utils';
+import formatCurrency from '@/utils/formatCurrency';
 
 type BProductCardType = {
   name?: string;
@@ -13,7 +13,7 @@ type BProductCardType = {
   totalPrice?: number;
   onPressDelete?: () => void;
   onPressEdit?: () => void;
-  backgroundColor?: "white" | "default";
+  backgroundColor?: 'white' | 'default';
   hideVolume?: boolean;
   hideTotal?: boolean;
   hidePricePerVolume?: boolean;
@@ -29,18 +29,18 @@ export default function BProductCard({
   unit,
   onPressDelete,
   onPressEdit,
-  backgroundColor = "default",
+  backgroundColor = 'default',
   hideVolume = false,
   hideTotal = false,
   hidePricePerVolume = false,
   withoutBorder = false,
 }: BProductCardType) {
   const getUnit = () => {
-    let formattedUnit = "";
-    if (unit === "M3") {
-      formattedUnit = "m³";
+    let formattedUnit = '';
+    if (unit === 'M3') {
+      formattedUnit = 'm³';
     } else {
-      return "m³";
+      return 'm³';
     }
     return formattedUnit;
   };
@@ -48,21 +48,17 @@ export default function BProductCard({
   return (
     <View
       style={[
-        backgroundColor === "default"
-          ? style.containerDefault
-          : style.containerWhite,
+        backgroundColor === 'default' ? style.containerDefault : style.containerWhite,
         withoutBorder && style.noBorder,
-      ]}
-    >
+      ]}>
       <View style={style.nameIcons}>
         <Text
           style={[
             style.productName,
-            backgroundColor === "default" && {
+            backgroundColor === 'default' && {
               fontFamily: fonts.family.montserrat[500],
             },
-          ]}
-        >
+          ]}>
           {name}
         </Text>
         <View style={style.iconsContainer}>
@@ -79,11 +75,7 @@ export default function BProductCard({
           <BSpacer size="extraSmall" />
           {onPressEdit && (
             <TouchableOpacity onPress={onPressEdit}>
-              <MaterialCommunityIcons
-                name="pencil"
-                color="#000000"
-                size={resScale(20)}
-              />
+              <MaterialCommunityIcons name="pencil" color="#000000" size={resScale(20)} />
             </TouchableOpacity>
           )}
         </View>
@@ -92,17 +84,18 @@ export default function BProductCard({
       <View style={style.detail}>
         {!hideVolume && (
           <Text style={style.detailText}>
-            {volume && volume > 0 ? `${volume} ${getUnit()}` : "-"}
+            {volume && volume > 0 ? `${volume} ${getUnit()}` : '-'}
           </Text>
         )}
         {!hidePricePerVolume && (
           <Text style={style.detailText}>
-            IDR {pricePerVol ? formatCurrency(pricePerVol) : "-"}/{getUnit()}
+            IDR {pricePerVol ? formatCurrency(pricePerVol) : '-'}/{getUnit()}
           </Text>
         )}
         {!hideTotal && (
           <Text style={style.detailText}>
-            IDR {totalPrice ? formatCurrency(totalPrice) : "-"}
+            IDR
+            {totalPrice ? formatCurrency(totalPrice) : '-'}
           </Text>
         )}
       </View>
@@ -123,7 +116,7 @@ const style = StyleSheet.create({
     borderWidth: 1,
   },
   containerWhite: {
-    width: "100%",
+    width: '100%',
     padding: layout.pad.md,
     borderRadius: layout.radius.md,
     backgroundColor: colors.white,
@@ -134,8 +127,8 @@ const style = StyleSheet.create({
     color: colors.text.darker,
   },
   detail: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   detailText: {
     fontFamily: fonts.family.montserrat[400],
@@ -143,10 +136,10 @@ const style = StyleSheet.create({
     color: colors.text.darker,
   },
   nameIcons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   iconsContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
 });

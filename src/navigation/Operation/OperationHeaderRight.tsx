@@ -1,12 +1,12 @@
-import * as React from "react";
-import { View, Text } from "react-native";
-import { colors, fonts, layout } from "@/constants";
-import { Styles } from "@/interfaces";
+import * as React from 'react';
+import { View, Text } from 'react-native';
+import { colors, fonts, layout } from '@/constants';
+import { Styles } from '@/interfaces';
 
 const _styles: Styles = {
   chipView: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   chip: {
     paddingHorizontal: layout.pad.ml,
@@ -26,11 +26,10 @@ export default function OperationHeaderRight(badgeName: string) {
     <View
       style={[
         _styles.chipView,
-        (badgeName === "Dispatch" || badgeName === "Return") && {
+        (badgeName === 'Dispatch' || badgeName === 'Return') && {
           marginEnd: layout.pad.lg,
         },
-      ]}
-    >
+      ]}>
       <View style={_styles.chip}>
         <Text style={_styles.chipText}>{badgeName}</Text>
       </View>

@@ -1,13 +1,12 @@
-import { View, StyleSheet } from "react-native";
-import React, { useState } from "react";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
-
-import LinearGradient from "react-native-linear-gradient";
-import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import resScale from "@/utils/resScale";
-import { layout } from "@/constants";
-import BSpacer from "../atoms/BSpacer";
-import BEmptyState from "@/components/organism/BEmptyState";
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import resScale from '@/utils/resScale';
+import { layout } from '@/constants';
+import BEmptyState from '@/components/organism/BEmptyState';
+import BSpacer from '../atoms/BSpacer';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -21,10 +20,7 @@ type BTabScreenType = {
   renderItem: (item: visitationType | any, query?: string) => JSX.Element; // item to render in flatlist
   isLoading?: boolean;
   searchQuery?: string;
-  onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
   refreshing?: boolean;
   initialFetch?: () => Promise<visitationType[] | undefined>;
   isError?: boolean;
@@ -104,8 +100,8 @@ const style = StyleSheet.create({
   },
   flatListLoading: {
     marginTop: layout.pad.lg,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   flatListShimmer: {
     width: resScale(330),

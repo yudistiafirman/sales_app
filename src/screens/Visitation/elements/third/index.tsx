@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   ScrollView,
@@ -6,40 +8,22 @@ import {
   TouchableOpacity,
   DeviceEventEmitter,
   Platform,
-} from "react-native";
-import { RadioButton, TextInput } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  BDivider,
-  BForm,
-  BLabel,
-  BSpacer,
-  BText,
-  BTextInput,
-} from "@/components";
-import { Competitor, Input } from "@/interfaces";
-import {
-  MONTH_LIST,
-  STAGE_PROJECT,
-  TYPE_PROJECT,
-  WEEK_LIST,
-} from "@/constants/dropdown";
-import ProductChip from "./ProductChip";
-import { resScale } from "@/utils";
-import {
-  ALL_PRODUCT,
-  CREATE_VISITATION,
-  SEARCH_PRODUCT,
-} from "@/navigation/ScreenNames";
-import { colors, layout } from "@/constants";
-import { RootState } from "@/redux/store";
-import { updateDataVisitation } from "@/redux/reducers/VisitationReducer";
-import ProductDetailModal from "./ProductDetailModal";
+} from 'react-native';
+import { RadioButton, TextInput } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import ProductChip from './ProductChip';
+import ProductDetailModal from './ProductDetailModal';
+import { BDivider, BForm, BLabel, BSpacer, BText, BTextInput } from '@/components';
+import { colors, layout } from '@/constants';
+import { MONTH_LIST, STAGE_PROJECT, TYPE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
+import { Competitor, Input } from '@/interfaces';
+import { ALL_PRODUCT, CREATE_VISITATION, SEARCH_PRODUCT } from '@/navigation/ScreenNames';
+import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
+import { RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 
-const cbd = require("@/assets/icon/Visitation/cbd.png");
-const credit = require("@/assets/icon/Visitation/credit.png");
+const cbd = require('@/assets/icon/Visitation/cbd.png');
+const credit = require('@/assets/icon/Visitation/credit.png');
 
 function ThirdStep() {
   const navigation = useNavigation();
@@ -65,7 +49,7 @@ function ThirdStep() {
     };
     dispatch(
       updateDataVisitation({
-        type: "currentCompetitor",
+        type: 'currentCompetitor',
         value: current,
       })
     );
@@ -73,36 +57,34 @@ function ThirdStep() {
 
   const inputs: Input[] = [
     {
-      label: "Fase Proyek",
+      label: 'Fase Proyek',
       isRequire: true,
       isError: false,
-      onChange: onChange("stageProject"),
-      type: "dropdown",
+      onChange: onChange('stageProject'),
+      type: 'dropdown',
       dropdown: {
         items: STAGE_PROJECT,
         placeholder: visitationData.stageProject
-          ? STAGE_PROJECT.find((it) => it.value === visitationData.stageProject)
-              ?.label ?? ""
-          : "Fase Proyek",
+          ? STAGE_PROJECT.find(it => it.value === visitationData.stageProject)?.label ?? ''
+          : 'Fase Proyek',
         onChange: (value: any) => {
-          onChange("stageProject")(value);
+          onChange('stageProject')(value);
         },
       },
     },
     {
-      label: "Tipe Proyek",
+      label: 'Tipe Proyek',
       isRequire: false,
       isError: false,
-      onChange: onChange("typeProject"),
-      type: "dropdown",
+      onChange: onChange('typeProject'),
+      type: 'dropdown',
       dropdown: {
         items: TYPE_PROJECT,
         placeholder: visitationData.typeProject
-          ? TYPE_PROJECT.find((it) => it.value === visitationData.typeProject)
-              ?.label ?? ""
-          : "Tipe Proyek",
+          ? TYPE_PROJECT.find(it => it.value === visitationData.typeProject)?.label ?? ''
+          : 'Tipe Proyek',
         onChange: (value: any) => {
-          onChange("typeProject")(value);
+          onChange('typeProject')(value);
         },
       },
     },
@@ -110,9 +92,9 @@ function ThirdStep() {
 
   const inputsTwo: Input[] = [
     {
-      label: "Estimasi Waktu Dibutuhkannya Barang",
+      label: 'Estimasi Waktu Dibutuhkannya Barang',
       isRequire: true,
-      type: "comboDropdown",
+      type: 'comboDropdown',
       // onChange: onChange('estimationDate'),
       value: visitationData.estimationDate,
       comboDropdown: {
@@ -127,7 +109,7 @@ function ThirdStep() {
           estimateionDate.estimationWeek = value;
           dispatch(
             updateDataVisitation({
-              type: "estimationDate",
+              type: 'estimationDate',
               value: estimateionDate,
             })
           );
@@ -139,65 +121,65 @@ function ThirdStep() {
           estimateionDate.estimationMonth = value;
           dispatch(
             updateDataVisitation({
-              type: "estimationDate",
+              type: 'estimationDate',
               value: estimateionDate,
             })
           );
         },
-        placeholderOne: "Pilih Minggu",
-        placeholderTwo: "Pilih Bulan",
-        errorMessageOne: "Pilih minggu",
-        errorMessageTwo: "Pilih bulan",
+        placeholderOne: 'Pilih Minggu',
+        placeholderTwo: 'Pilih Bulan',
+        errorMessageOne: 'Pilih minggu',
+        errorMessageTwo: 'Pilih bulan',
         isErrorOne: false,
         isErrorTwo: false,
       },
     },
     {
-      label: "Tipe Pembayaran",
+      label: 'Tipe Pembayaran',
       isRequire: true,
       isError: false,
-      type: "cardOption",
-      onChange: onChange("paymentType"),
+      type: 'cardOption',
+      onChange: onChange('paymentType'),
       value: visitationData.paymentType,
       options: [
         {
-          title: "Cash Before Delivery",
+          title: 'Cash Before Delivery',
           icon: cbd,
-          value: "CBD",
+          value: 'CBD',
           onChange: () => {
-            onChange("paymentType")("CBD");
+            onChange('paymentType')('CBD');
           },
         },
         {
-          title: "Credit",
+          title: 'Credit',
           icon: credit,
-          value: "CREDIT",
+          value: 'CREDIT',
           onChange: () => {
-            onChange("paymentType")("CREDIT");
+            onChange('paymentType')('CREDIT');
           },
         },
       ],
     },
     {
-      label: "Catatan Sales",
+      label: 'Catatan Sales',
       isRequire: false,
       isError: false,
-      type: "area",
-      placeholder: "Tulis catatan di sini",
-      onChange: onChange("notes"),
+      type: 'area',
+      placeholder: 'Tulis catatan di sini',
+      onChange: onChange('notes'),
       value: visitationData.notes,
     },
   ];
 
   const inputsThree: Input[] = [
     {
-      label: "Nama Pesaing / Kompetisi",
+      label: 'Nama Pesaing / Kompetisi',
       isRequire: true,
       isError: false,
-      type: "textInput",
-      placeholder: "Nama pesaing",
-      onChange: (event) => {
-        onChangeCompetitor("name")(event.nativeEvent.text);
+      type: 'textInput',
+      placeholder: 'Nama pesaing',
+      onChange: event => {
+        onChangeCompetitor('name')(event.nativeEvent.text);
       },
       value: visitationData.currentCompetitor.name,
     },
@@ -205,24 +187,24 @@ function ThirdStep() {
 
   const inputsFour: Input[] = [
     {
-      label: "Apakah ada masalah yang ditemukan dari supplier beton sekarang?",
+      label: 'Apakah ada masalah yang ditemukan dari supplier beton sekarang?',
       isRequire: false,
       isError: false,
-      type: "area",
-      placeholder: "Tulis masalah yang Anda temui",
-      onChange: (val) => {
-        onChangeCompetitor("problem")(val);
+      type: 'area',
+      placeholder: 'Tulis masalah yang Anda temui',
+      onChange: val => {
+        onChangeCompetitor('problem')(val);
       },
       value: visitationData.currentCompetitor.problem,
     },
     {
-      label: "Harapan apa yang diinginkan dari BRIK?",
+      label: 'Harapan apa yang diinginkan dari BRIK?',
       isRequire: false,
       isError: false,
-      type: "area",
-      placeholder: "Tulis harapan Anda",
-      onChange: (val) => {
-        onChangeCompetitor("hope")(val);
+      type: 'area',
+      placeholder: 'Tulis harapan Anda',
+      onChange: val => {
+        onChangeCompetitor('hope')(val);
       },
       value: visitationData.currentCompetitor.hope,
     },
@@ -242,7 +224,7 @@ function ThirdStep() {
     const restProducts = products.filter((o, i) => index !== i);
     dispatch(
       updateDataVisitation({
-        type: "products",
+        type: 'products',
         value: restProducts,
       })
     );
@@ -250,10 +232,7 @@ function ThirdStep() {
 
   const onSelectProduct = useCallback(
     ({ quantity, pouringMethod }) => {
-      const newArray = [
-        ...visitationData.products,
-        { ...choosenProduct, quantity, pouringMethod },
-      ];
+      const newArray = [...visitationData.products, { ...choosenProduct, quantity, pouringMethod }];
       const uniqueArray = newArray.reduce((acc, obj) => {
         if (!acc[obj.id]) {
           acc[obj.id] = obj;
@@ -262,7 +241,7 @@ function ThirdStep() {
       }, {} as { [id: number]: any });
       dispatch(
         updateDataVisitation({
-          type: "products",
+          type: 'products',
           value: Object.values(uniqueArray),
         })
       );
@@ -273,9 +252,9 @@ function ThirdStep() {
 
   useEffect(() => {
     crashlytics().log(`${CREATE_VISITATION}-Step3`);
-    DeviceEventEmitter.addListener("event.testEvent", listenerCallback);
+    DeviceEventEmitter.addListener('event.testEvent', listenerCallback);
     return () => {
-      DeviceEventEmitter.removeAllListeners("event.testEvent");
+      DeviceEventEmitter.removeAllListeners('event.testEvent');
     };
   }, [
     listenerCallback,
@@ -305,22 +284,13 @@ function ThirdStep() {
             from: CREATE_VISITATION,
           });
         }}
-        style={[
-          styles.labelContainer,
-          Platform.OS !== "android" && { zIndex: -1 },
-        ]}
-      >
+        style={[styles.labelContainer, Platform.OS !== 'android' && { zIndex: -1 }]}>
         <BLabel bold="500" label="Produk" isRequired />
         <BText bold="500" color="primary">
           Lihat Semua
         </BText>
       </TouchableOpacity>
-      <View
-        style={[
-          styles.posRelative,
-          Platform.OS !== "android" && { zIndex: -1 },
-        ]}
-      >
+      <View style={[styles.posRelative, Platform.OS !== 'android' && { zIndex: -1 }]}>
         <TouchableOpacity
           style={styles.touchable}
           onPress={() => {
@@ -341,10 +311,7 @@ function ThirdStep() {
       <BSpacer size="extraSmall" />
       {visitationData.products?.length ? (
         <>
-          <ScrollView
-            horizontal
-            style={Platform.OS !== "android" && { zIndex: -1 }}
-          >
+          <ScrollView horizontal style={Platform.OS !== 'android' && { zIndex: -1 }}>
             {visitationData.products?.map((val, index) => (
               <React.Fragment key={index}>
                 <ProductChip
@@ -482,20 +449,20 @@ export default ThirdStep;
 
 const styles = StyleSheet.create({
   posRelative: {
-    position: "relative",
+    position: 'relative',
     // backgroundColor: 'blue',
   },
   touchable: {
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
     // backgroundColor: 'red',
   },
   labelContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

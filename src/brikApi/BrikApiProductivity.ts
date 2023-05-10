@@ -1,9 +1,9 @@
-import { Platform } from "react-native";
-import moment from "moment";
-import Config from "react-native-config";
+import moment from 'moment';
+import { Platform } from 'react-native';
+import Config from 'react-native-config';
 
 const API_URL =
-  Platform.OS === "android"
+  Platform.OS === 'android'
     ? Config.API_URL_PRODUCTIVITY
     : __DEV__
     ? Config.API_URL_PRODUCTIVITY
@@ -32,10 +32,10 @@ export default class BrikApiProductivity {
       const params = url.searchParams;
       const { month, year } = props;
       if (month) {
-        params.append("month", month.toString());
+        params.append('month', month.toString());
       }
       if (year) {
-        params.append("year", year.toString());
+        params.append('year', year.toString());
       }
     }
 
@@ -43,28 +43,23 @@ export default class BrikApiProductivity {
   };
 
   // homescreen
-  static getAllVisitations = ({
-    date,
-    page = 1,
-    search = "",
-    projectId,
-  }: IGetAll) => {
+  static getAllVisitations = ({ date, page = 1, search = '', projectId }: IGetAll) => {
     const url = new URL(`${API_URL}/productivity/m/flow/all-visitation`);
     const params = url.searchParams;
 
     if (date) {
-      params.append("date", date.toString());
+      params.append('date', date.toString());
     }
     if (projectId) {
-      params.append("projectId", projectId);
+      params.append('projectId', projectId);
     }
     if (page) {
-      params.append("page", page.toString());
+      params.append('page', page.toString());
     }
     if (search) {
-      params.append("search", search);
+      params.append('search', search);
     }
-    params.append("size", "10");
+    params.append('size', '10');
 
     return url.toString();
   };
@@ -73,15 +68,13 @@ export default class BrikApiProductivity {
     const url = new URL(`${API_URL}/productivity/m/flow/completed-visitation`);
 
     const params = url.searchParams;
-    params.append("date", moment().valueOf().toString());
+    params.append('date', moment().valueOf().toString());
 
     return url.toString();
   };
 
   static visitationIdPath = ({ visitationId }: getOneVisitationType) => {
-    const url = new URL(
-      `${API_URL}/productivity/m/flow/visitation/${visitationId}`
-    );
+    const url = new URL(`${API_URL}/productivity/m/flow/visitation/${visitationId}`);
 
     return url.toString();
   };

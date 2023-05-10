@@ -1,25 +1,18 @@
-import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import crashlytics from "@react-native-firebase/crashlytics";
-import {
-  BButtonPrimary,
-  BDivider,
-  BForm,
-  BSpacer,
-  BText,
-  BVisitationCard,
-} from "@/components";
-import { colors, layout } from "@/constants";
-import { DRIVER_LIST, VEHICLE_LIST } from "@/constants/dropdown";
-import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
-import { Input } from "@/interfaces";
-import { CREATE_DO } from "@/navigation/ScreenNames";
-import { resScale } from "@/utils";
-import font from "@/constants/fonts";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { BButtonPrimary, BDivider, BForm, BSpacer, BText, BVisitationCard } from '@/components';
+import { colors, layout } from '@/constants';
+import { DRIVER_LIST, VEHICLE_LIST } from '@/constants/dropdown';
+import font from '@/constants/fonts';
+import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+import { Input } from '@/interfaces';
+import { CREATE_DO } from '@/navigation/ScreenNames';
+import { resScale } from '@/utils';
 
 function CreateDO() {
-  useHeaderTitleChanged({ title: "Tugaskan DO" });
+  useHeaderTitleChanged({ title: 'Tugaskan DO' });
   const navigation = useNavigation();
 
   React.useEffect(() => {
@@ -28,47 +21,47 @@ function CreateDO() {
 
   const quantityInputs: Input[] = [
     {
-      label: "Kuantitas",
-      value: "",
+      label: 'Kuantitas',
+      value: '',
       isRequire: true,
       isError: false,
-      type: "quantity",
-      placeholder: "0",
+      type: 'quantity',
+      placeholder: '0',
     },
   ];
 
   const inputs: Input[] = [
     {
-      label: "No. Segel",
-      value: "",
+      label: 'No. Segel',
+      value: '',
       isRequire: true,
       isError: false,
-      type: "textInput",
-      placeholder: "Masukkan no segel",
+      type: 'textInput',
+      placeholder: 'Masukkan no segel',
     },
     {
-      label: "No. Kendaraan",
-      value: "",
+      label: 'No. Kendaraan',
+      value: '',
       isRequire: true,
       isError: false,
-      type: "dropdown",
+      type: 'dropdown',
       dropdown: {
         items: VEHICLE_LIST,
-        placeholder: "Pilih Nomor Plat",
+        placeholder: 'Pilih Nomor Plat',
         onChange: (value: any) => {
           console.log(value);
         },
       },
     },
     {
-      label: "Nama Supir",
-      value: "",
+      label: 'Nama Supir',
+      value: '',
       isRequire: true,
       isError: false,
-      type: "dropdown",
+      type: 'dropdown',
       dropdown: {
         items: DRIVER_LIST,
-        placeholder: "Pilih Nama Driver",
+        placeholder: 'Pilih Nama Driver',
         onChange: (value: any) => {
           console.log(value);
         },
@@ -80,14 +73,14 @@ function CreateDO() {
     <View style={style.parent}>
       <View style={style.top}>
         <BVisitationCard
-          item={{ name: "PT. Guna Karya Mandiri", location: "Jakarta Barat" }}
+          item={{ name: 'PT. Guna Karya Mandiri', location: 'Jakarta Barat' }}
           isRenderIcon={false}
         />
         <BVisitationCard
           item={{
-            name: "DO/BRIK/2022/11/00254",
-            unit: "7 m3",
-            time: "23/11/2022 | 08:10",
+            name: 'DO/BRIK/2022/11/00254',
+            unit: '7 m3',
+            time: '23/11/2022 | 08:10',
           }}
           customStyle={{ backgroundColor: colors.tertiary }}
           isRenderIcon={false}
@@ -98,9 +91,7 @@ function CreateDO() {
       </View>
       <View style={style.container}>
         <BForm noSpaceEnd titleBold="500" inputs={quantityInputs} />
-        <BText style={style.quantity}>
-          {`Maksimum kuantitas adalah ${14}m³`}
-        </BText>
+        <BText style={style.quantity}>{`Maksimum kuantitas adalah ${14}m³`}</BText>
         <BSpacer size="extraSmall" />
         <BForm titleBold="500" inputs={inputs} />
       </View>

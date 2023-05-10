@@ -1,9 +1,9 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   CreateDepositFirstStep,
   CreateDepositSecondStep,
   CreateDepositState,
-} from "@/interfaces/CreateDeposit";
+} from '@/interfaces/CreateDeposit';
 
 interface IProvider {
   children: React.ReactNode;
@@ -45,19 +45,16 @@ const CreateDepositContext = React.createContext<context>({
   },
 });
 
-const reducerForm = (
-  state: CreateDepositState,
-  action: ActionCreateDepositState
-) => {
+const reducerForm = (state: CreateDepositState, action: ActionCreateDepositState) => {
   switch (action.type) {
-    case "sheetIndex":
-    case "step":
-    case "shouldScrollView":
-    case "isSearchingPurchaseOrder":
-    case "existingProjectID":
+    case 'sheetIndex':
+    case 'step':
+    case 'shouldScrollView':
+    case 'isSearchingPurchaseOrder':
+    case 'existingProjectID':
       return { ...state, [action.type]: action.value };
-    case "stepOne":
-    case "stepTwo":
+    case 'stepOne':
+    case 'stepTwo':
       return {
         ...state,
         [action.type]: {
@@ -100,8 +97,7 @@ function CreateDepositProvider(props: IProvider) {
           updateValue,
           updateValueOnstep,
         },
-      }}
-    >
+      }}>
       {children}
     </CreateDepositContext.Provider>
   );

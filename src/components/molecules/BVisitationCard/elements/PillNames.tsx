@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet } from "react-native";
-import React from "react";
-import resScale from "@/utils/resScale";
-import font from "@/constants/fonts";
-import respFS from "@/utils/resFontSize";
-import colors from "@/constants/colors";
-import HighlightText from "../../../atoms/BHighlightText";
-import { fonts, layout } from "@/constants";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import HighlightText from '../../../atoms/BHighlightText';
+import { fonts, layout } from '@/constants';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
+import respFS from '@/utils/resFontSize';
+import resScale from '@/utils/resScale';
 
 type PillNamesType = {
   pilNames?: string[];
@@ -24,9 +24,7 @@ export default function PillNames({
     if (pilNames?.length > 1) {
       return (
         <View style={[style.bluePill]}>
-          <Text style={style.bluePillText}>
-            {`+${pilNames.length - 1} lagi`}
-          </Text>
+          <Text style={style.bluePillText}>{`+${pilNames.length - 1} lagi`}</Text>
         </View>
       );
     }
@@ -34,14 +32,8 @@ export default function PillNames({
   }
   return (
     <View style={style.container}>
-      <View
-        style={[style.bluePill, style.margin, { backgroundColor: pillColor }]}
-      >
-        <HighlightText
-          fontSize={fonts.size.xs}
-          name={pilNames[0]}
-          searchQuery={searchQuery}
-        />
+      <View style={[style.bluePill, style.margin, { backgroundColor: pillColor }]}>
+        <HighlightText fontSize={fonts.size.xs} name={pilNames[0]} searchQuery={searchQuery} />
       </View>
       {nameCount()}
     </View>
@@ -49,7 +41,7 @@ export default function PillNames({
 }
 const style = StyleSheet.create({
   container: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: layout.pad.xs + layout.pad.md,
   },
   bluePill: {

@@ -1,5 +1,5 @@
-import { UserModel } from "./User";
-import { VisitationModel } from "./Visitation";
+import { UserModel } from './User';
+import { VisitationModel } from './Visitation';
 
 export namespace Api {
   export interface Response {
@@ -8,10 +8,7 @@ export namespace Api {
     currentPage?: number;
     totalPage?: number;
     totalItems?: number;
-    data?:
-      | any
-      | UserModel.DataSuccessLogin
-      | VisitationModel.DataGetAllVisitation;
+    data?: any | UserModel.DataSuccessLogin | VisitationModel.DataGetAllVisitation;
     error?: {
       code: string;
       message: string;

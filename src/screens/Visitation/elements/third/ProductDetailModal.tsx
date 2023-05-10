@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { Dimensions, StyleSheet, View, TouchableOpacity } from "react-native";
-import Modal from "react-native-modal";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import { BButtonPrimary, BForm, BSpacer, BText } from "@/components";
-import { colors, layout } from "@/constants";
-import { METHOD_LIST } from "@/constants/dropdown";
-import font from "@/constants/fonts";
-import { Input } from "@/interfaces";
-import { resScale } from "@/utils";
+import React, { useState } from 'react';
+import { Dimensions, StyleSheet, View, TouchableOpacity } from 'react-native';
+import Modal from 'react-native-modal';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import { BButtonPrimary, BForm, BSpacer, BText } from '@/components';
+import { colors, layout } from '@/constants';
+import { METHOD_LIST } from '@/constants/dropdown';
+import font from '@/constants/fonts';
+import { Input } from '@/interfaces';
+import { resScale } from '@/utils';
 
 type IProductDetailModal = {
   isVisible: boolean;
@@ -15,39 +15,35 @@ type IProductDetailModal = {
   onChoose: (data: any) => void;
 };
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
-function ProductDetailModal({
-  isVisible,
-  onClose,
-  onChoose,
-}: IProductDetailModal) {
+function ProductDetailModal({ isVisible, onClose, onChoose }: IProductDetailModal) {
   const [inputsValue, setInputsValue] = useState({
-    volume: "",
-    pouringMethods: "",
+    volume: '',
+    pouringMethods: '',
   });
 
   const volumeInputs: Input = {
-    type: "quantity",
-    label: "Volume",
+    type: 'quantity',
+    label: 'Volume',
     isRequire: true,
     value: inputsValue.volume,
-    onChange: (v) => setInputsValue((prev) => ({ ...prev, volume: v })),
-    placeholder: "0",
-    isError: inputsValue.volume === "",
+    onChange: v => setInputsValue(prev => ({ ...prev, volume: v })),
+    placeholder: '0',
+    isError: inputsValue.volume === '',
   };
 
   const pouringMethod: Input = {
-    type: "dropdown",
-    label: "Metode Penuangan",
+    type: 'dropdown',
+    label: 'Metode Penuangan',
     isRequire: true,
     value: inputsValue.pouringMethods,
-    isError: inputsValue.pouringMethods === "",
+    isError: inputsValue.pouringMethods === '',
     dropdown: {
-      placeholder: "Pilih metode penuangan",
+      placeholder: 'Pilih metode penuangan',
       items: METHOD_LIST,
       onChange: (value: any) => {
-        setInputsValue((prev) => ({ ...prev, pouringMethods: value }));
+        setInputsValue(prev => ({ ...prev, pouringMethods: value }));
       },
     },
   };
@@ -58,10 +54,9 @@ function ProductDetailModal({
           <BText style={styles.headerTitle}>Detil Pemesanan Produk</BText>
           <TouchableOpacity
             onPress={() => {
-              setInputsValue({ pouringMethods: "", volume: "" });
+              setInputsValue({ pouringMethods: '', volume: '' });
               onClose();
-            }}
-          >
+            }}>
             <AntDesign
               name="close"
               size={layout.pad.lg + layout.pad.xs}
@@ -78,15 +73,13 @@ function ProductDetailModal({
 
         <View style={styles.buttonWrapper}>
           <BButtonPrimary
-            disable={
-              inputsValue.volume === "" || inputsValue.pouringMethods === ""
-            }
+            disable={inputsValue.volume === '' || inputsValue.pouringMethods === ''}
             onPress={() => {
               onChoose({
                 quantity: inputsValue.volume,
                 pouringMethod: inputsValue.pouringMethods,
               });
-              setInputsValue({ volume: "", pouringMethods: "" });
+              setInputsValue({ volume: '', pouringMethods: '' });
             }}
             title="Tambah Produk"
           />
@@ -98,7 +91,7 @@ function ProductDetailModal({
 
 const styles = StyleSheet.create({
   modal: {
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     margin: 0,
   },
   container: {
@@ -114,9 +107,9 @@ const styles = StyleSheet.create({
     color: colors.text.darker,
   },
   popUpHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingBottom: layout.pad.lg,
   },
   volumeInput: {
@@ -124,10 +117,10 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     bottom: layout.pad.xl,
-    position: "absolute",
+    position: 'absolute',
     flex: 1,
-    width: "100%",
-    alignSelf: "center",
+    width: '100%',
+    alignSelf: 'center',
   },
 });
 

@@ -1,22 +1,18 @@
-import jwtDecode from "jwt-decode";
-import * as React from "react";
-import { Platform } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
-import remoteConfig from "@react-native-firebase/remote-config";
-import BackgroundFetch from "react-native-background-fetch";
-import { isJsonString } from "@/utils/generalFunc";
-import { AppDispatch, RootState } from "@/redux/store";
-import {
-  setIsLoading,
-  setUserData,
-  toggleHunterScreen,
-} from "@/redux/reducers/authReducer";
-import storageKey from "@/constants/storageKey";
-import bStorage from "@/actions/BStorage";
-import { HUNTER_AND_FARMER } from "@/navigation/ScreenNames";
-import { UserModel } from "@/models/User";
-import { openPopUp } from "@/redux/reducers/modalReducer";
+import remoteConfig from '@react-native-firebase/remote-config';
+import jwtDecode from 'jwt-decode';
+import moment from 'moment';
+import * as React from 'react';
+import { Platform } from 'react-native';
+import BackgroundFetch from 'react-native-background-fetch';
+import { useDispatch, useSelector } from 'react-redux';
+import bStorage from '@/actions/BStorage';
+import storageKey from '@/constants/storageKey';
+import { UserModel } from '@/models/User';
+import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
+import { setIsLoading, setUserData, toggleHunterScreen } from '@/redux/reducers/authReducer';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import { AppDispatch, RootState } from '@/redux/store';
+import { isJsonString } from '@/utils/generalFunc';
 
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -59,9 +55,8 @@ const useAsyncConfigSetup = () => {
         );
         dispatch(
           openPopUp({
-            popUpType: "error",
-            popUpText:
-              error.message || "Terjadi error dalam pengambilan user token",
+            popUpType: 'error',
+            popUpText: error.message || 'Terjadi error dalam pengambilan user token',
             outsideClickClosePopUp: true,
           })
         );
@@ -77,13 +72,10 @@ const useAsyncConfigSetup = () => {
       .then(() => remoteConfig().fetchAndActivate())
       .then(() => {
         let fetchedData = {} as Object;
-        Object.entries(remoteConfig().getAll()).forEach(($) => {
+        Object.entries(remoteConfig().getAll()).forEach($ => {
           const [key, entry] = $;
           let value = remote_config?.[key];
-          if (
-            Object.values(entry).length > 0 &&
-            isJsonString(Object.values(entry)[0])
-          )
+          if (Object.values(entry).length > 0 && isJsonString(Object.values(entry)[0]))
             value = JSON.parse(Object.values(entry)[0]);
           fetchedData = {
             ...fetchedData,
@@ -93,14 +85,13 @@ const useAsyncConfigSetup = () => {
         hunterFarmerSetup();
         userDataSetup(fetchedData);
       })
-      .catch((err) => {
+      .catch(err => {
         hunterFarmerSetup();
         userDataSetup(undefined);
         dispatch(
           openPopUp({
-            popUpType: "error",
-            popUpText:
-              err.message || "Terjadi error dalam pengambilan App Setup",
+            popUpType: 'error',
+            popUpText: err.message || 'Terjadi error dalam pengambilan App Setup',
             outsideClickClosePopUp: true,
           })
         );
@@ -113,26 +104,23 @@ const useAsyncConfigSetup = () => {
         minimumFetchInterval: 60,
         forceAlarmManager: true,
       },
-      async (taskId) => {
+      async taskId => {
         // <-- Event callback
         const date = await bStorage.getItem(HUNTER_AND_FARMER);
         if (date !== undefined && moment().date() !== date) {
-          setTimeout(
-            () => dispatch(toggleHunterScreen(true)),
-            Platform.OS === "ios" ? 500 : 0
-          );
+          setTimeout(() => dispatch(toggleHunterScreen(true)), Platform.OS === 'ios' ? 500 : 0);
         } else {
           await bStorage.setItem(HUNTER_AND_FARMER, moment().date());
         }
         BackgroundFetch.finish(taskId);
       },
-      async (taskId) => {
+      async taskId => {
         BackgroundFetch.finish(taskId);
       }
     );
     // And with with #scheduleTask
     BackgroundFetch.scheduleTask({
-      taskId: "enableHunterFarmers",
+      taskId: 'enableHunterFarmers',
       delay: 0, // milliseconds
       forceAlarmManager: true,
       periodic: false,

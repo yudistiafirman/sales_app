@@ -1,37 +1,35 @@
-import { useNavigation } from "@react-navigation/native";
-import * as React from "react";
-import { Image, SafeAreaView } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import Spinner from "react-native-loading-spinner-overlay";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import jwtDecode from "jwt-decode";
-import crashlytics from "@react-native-firebase/crashlytics";
-import analytics from "@react-native-firebase/analytics";
-import { BHeaderIcon, BSpacer } from "@/components";
-import BErrorText from "@/components/atoms/BErrorText";
-import { colors, layout } from "@/constants";
-import { resScale } from "@/utils";
-import OTPField from "./element/OTPField";
-import OTPFieldLabel from "./element/OTPFieldLabel";
-import ResendOTP from "./element/ResendOTP";
-import VIntstruction from "./element/VInstruction";
-import VerificationStyles from "./styles";
-import { RootState } from "@/redux/store";
-import { setUserData } from "@/redux/reducers/authReducer";
-import bStorage from "@/actions/BStorage";
-import { signIn } from "@/actions/CommonActions";
-import storageKey from "@/constants/storageKey";
-import { VERIFICATION } from "@/navigation/ScreenNames";
-import { UserModel } from "@/models/User";
+import analytics from '@react-native-firebase/analytics';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useNavigation } from '@react-navigation/native';
+import jwtDecode from 'jwt-decode';
+import * as React from 'react';
+import { Image, SafeAreaView } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { useDispatch, useSelector } from 'react-redux';
+import OTPField from './element/OTPField';
+import OTPFieldLabel from './element/OTPFieldLabel';
+import ResendOTP from './element/ResendOTP';
+import VIntstruction from './element/VInstruction';
+import VerificationStyles from './styles';
+import bStorage from '@/actions/BStorage';
+import { signIn } from '@/actions/CommonActions';
+import { BHeaderIcon, BSpacer } from '@/components';
+import BErrorText from '@/components/atoms/BErrorText';
+import { colors, layout } from '@/constants';
+import storageKey from '@/constants/storageKey';
+import { UserModel } from '@/models/User';
+import { VERIFICATION } from '@/navigation/ScreenNames';
+import { setUserData } from '@/redux/reducers/authReducer';
+import { RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 
 function Verification() {
-  const { phoneNumber } = useSelector(
-    (state: RootState) => state.auth.loginCredential
-  );
+  const { phoneNumber } = useSelector((state: RootState) => state.auth.loginCredential);
   const navigation = useNavigation();
   const [verificationState, setVerificationState] = React.useState({
-    otpValue: "",
-    errorOtp: "",
+    otpValue: '',
+    errorOtp: '',
     loading: false,
     countDownOtp: 10,
   });
@@ -41,7 +39,7 @@ function Verification() {
   React.useEffect(() => {
     timer.current = setInterval(() => {
       if (countDownOtp !== 0) {
-        setVerificationState((prevState) => ({
+        setVerificationState(prevState => ({
           ...prevState,
           countDownOtp: countDownOtp - 1,
         }));
@@ -75,8 +73,8 @@ function Verification() {
         dispatch(setUserData({ userData: decoded }));
         setVerificationState({
           ...verificationState,
-          errorOtp: "",
-          otpValue: "",
+          errorOtp: '',
+          otpValue: '',
           loading: false,
         });
         analytics().setUserId(response.data.id);
@@ -98,7 +96,7 @@ function Verification() {
       setVerificationState({
         ...verificationState,
         errorOtp: error.message,
-        otpValue: "",
+        otpValue: '',
         loading: false,
       });
     }
@@ -110,8 +108,8 @@ function Verification() {
       if (response.data.success) {
         setVerificationState({
           ...verificationState,
-          errorOtp: "",
-          otpValue: "",
+          errorOtp: '',
+          otpValue: '',
           countDownOtp: 10,
         });
       } else {
@@ -121,7 +119,7 @@ function Verification() {
       setVerificationState({
         ...verificationState,
         errorOtp: error.message,
-        otpValue: "",
+        otpValue: '',
         countDownOtp: 10,
       });
     }
@@ -130,8 +128,8 @@ function Verification() {
     clearInterval(timer.current);
     setVerificationState({
       ...verificationState,
-      otpValue: "",
-      errorOtp: "",
+      otpValue: '',
+      errorOtp: '',
       countDownOtp: 10,
     });
     navigation.goBack();
@@ -164,7 +162,7 @@ function Verification() {
         <BSpacer size={resScale(40)} />
         <Image
           style={VerificationStyles.otpMessageImage}
-          source={require("@/assets/illustration/ic_otp_message.png")}
+          source={require('@/assets/illustration/ic_otp_message.png')}
         />
         <BSpacer size="large" />
         <VIntstruction onPress={onBack} phoneNumber={phoneNumber} />
@@ -174,9 +172,7 @@ function Verification() {
         <BSpacer size="extraSmall" />
         <OTPField
           value={otpValue}
-          setValue={(code) =>
-            setVerificationState({ ...verificationState, otpValue: code })
-          }
+          setValue={code => setVerificationState({ ...verificationState, otpValue: code })}
         />
         {errorOtp && <BErrorText text={errorOtp} />}
 

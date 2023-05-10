@@ -1,15 +1,15 @@
-import React, { useCallback } from "react";
-import { View, ViewStyle } from "react-native";
-import { BottomSheetFooter, BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { colors, layout } from "@/constants";
-import { Input, Styles } from "@/interfaces";
-import { resScale } from "@/utils";
-import BBottomSheet from "../atoms/BBottomSheet";
-import BButtonPrimary from "../atoms/BButtonPrimary";
-import BForm from "./BForm";
-import BContainer from "../atoms/BContainer";
-import BSpacer from "../atoms/BSpacer";
-import { useKeyboardActive } from "@/hooks";
+import { BottomSheetFooter, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import React, { useCallback } from 'react';
+import { View, ViewStyle } from 'react-native';
+import BBottomSheet from '../atoms/BBottomSheet';
+import BButtonPrimary from '../atoms/BButtonPrimary';
+import BContainer from '../atoms/BContainer';
+import BSpacer from '../atoms/BSpacer';
+import BForm from './BForm';
+import { colors, layout } from '@/constants';
+import { useKeyboardActive } from '@/hooks';
+import { Input, Styles } from '@/interfaces';
+import { resScale } from '@/utils';
 
 type CustomFooterButtonType = {
   disable?: boolean;
@@ -25,11 +25,7 @@ interface IProps {
   children?: JSX.Element;
   enableClose?: boolean;
   isButtonDisable?: boolean;
-  CustomFooterButton?: ({
-    disable,
-    onPress,
-    title,
-  }: CustomFooterButtonType) => JSX.Element;
+  CustomFooterButton?: ({ disable, onPress, title }: CustomFooterButtonType) => JSX.Element;
 }
 
 const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
@@ -49,9 +45,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
   function renderChild() {
     if (!children) {
       return (
-        <BottomSheetScrollView
-          style={{ marginBottom: layout.pad.ml + layout.pad.xs }}
-        >
+        <BottomSheetScrollView style={{ marginBottom: layout.pad.ml + layout.pad.xs }}>
           <BForm spacer="extraSmall" titleBold="500" inputs={inputs} />
         </BottomSheetScrollView>
       );
@@ -61,8 +55,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
         {children}
         <BottomSheetScrollView
           nestedScrollEnabled
-          style={{ marginBottom: layout.pad.ml + layout.pad.xs }}
-        >
+          style={{ marginBottom: layout.pad.ml + layout.pad.xs }}>
           <BForm spacer="extraSmall" titleBold="500" inputs={inputs} />
         </BottomSheetScrollView>
       </>
@@ -79,21 +72,13 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
           {CustomFooterButton ? (
             <BContainer>
               <View style={styles.footerContainer}>
-                <CustomFooterButton
-                  disable={isButtonDisable}
-                  onPress={onAdd}
-                  title={buttonTitle}
-                />
+                <CustomFooterButton disable={isButtonDisable} onPress={onAdd} title={buttonTitle} />
               </View>
             </BContainer>
           ) : (
             <BContainer>
               <View style={styles.footerContainer}>
-                <BButtonPrimary
-                  disable={isButtonDisable}
-                  onPress={onAdd}
-                  title={buttonTitle}
-                />
+                <BButtonPrimary disable={isButtonDisable} onPress={onAdd} title={buttonTitle} />
               </View>
             </BContainer>
           )}
@@ -113,8 +98,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
       style={styles.sheetStyle as ViewStyle}
       // containerHeight={resScale(150)}
       enablePanDownToClose={enableClose}
-      footerComponent={FooterButton}
-    >
+      footerComponent={FooterButton}>
       <BContainer paddingHorizontal={layout.pad.ml}>
         {renderChild()}
         {!keyboardVisible && <BSpacer size="medium" />}
@@ -129,13 +113,13 @@ const styles: Styles = {
     // backgroundColor: 'red',
   },
   footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   footerContainer: {
     backgroundColor: colors.white,
   },
-  button: { flexDirection: "row-reverse" },
+  button: { flexDirection: 'row-reverse' },
 };
 
 export default BBottomSheetForm;

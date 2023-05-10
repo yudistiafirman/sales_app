@@ -1,10 +1,10 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
-import { MarkedDates } from "react-native-calendars/src/types";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { resScale } from "@/utils";
-import { colors } from "@/constants";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
+import { MarkedDates } from 'react-native-calendars/src/types';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { resScale } from '@/utils';
+import { colors } from '@/constants';
 
 interface BCalendarProps {
   onDayPress?: ((date: DateData) => void) | undefined;
@@ -14,8 +14,8 @@ interface BCalendarProps {
   minDate?: string;
 }
 
-function RenderArrow({ direction }: { direction: "left" | "right" }) {
-  if (direction === "right") {
+function RenderArrow({ direction }: { direction: 'left' | 'right' }) {
+  if (direction === 'right') {
     return (
       <View style={styles.arrowStyleRight}>
         <Icon name="chevron-right" size={25} color={colors.black} />
@@ -30,48 +30,42 @@ function RenderArrow({ direction }: { direction: "left" | "right" }) {
   );
 }
 
-function BCalendar({
-  onDayPress,
-  markedDates,
-  onMonthChange,
-  isLoading,
-  minDate,
-}: BCalendarProps) {
+function BCalendar({ onDayPress, markedDates, onMonthChange, isLoading, minDate }: BCalendarProps) {
   LocaleConfig.locales.id = {
     monthNames: [
-      "Januari",
-      "Februari",
-      "Maret",
-      "April",
-      "Mei",
-      "Juni",
-      "Juli",
-      "Agustus",
-      "September",
-      "Oktober",
-      "November",
-      "Desember",
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
     ],
     monthNamesShort: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "April",
-      "Mei",
-      "Jun",
-      "Jul",
-      "Agus",
-      "Sept",
-      "Okt.",
-      "Nov.",
-      "Des.",
+      'Jan',
+      'Feb',
+      'Mar',
+      'April',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agus',
+      'Sept',
+      'Okt.',
+      'Nov.',
+      'Des.',
     ],
-    dayNames: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
-    dayNamesShort: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
-    today: "Hari ini",
+    dayNames: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
+    dayNamesShort: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+    today: 'Hari ini',
   };
 
-  LocaleConfig.defaultLocale = "id";
+  LocaleConfig.defaultLocale = 'id';
 
   return (
     <Calendar
@@ -82,13 +76,13 @@ function BCalendar({
         selectedDayBackgroundColor: colors.primary,
         dotColor: colors.primary,
         dayTextColor: colors.text.darker,
-        textDayFontFamily: "Montserrat-Regular",
-        textMonthFontFamily: "Montserrat-SemiBold",
-        textDayHeaderFontFamily: "Montserrat-Medium",
+        textDayFontFamily: 'Montserrat-Regular',
+        textMonthFontFamily: 'Montserrat-SemiBold',
+        textDayHeaderFontFamily: 'Montserrat-Medium',
       }}
       onDayPress={onDayPress}
       markedDates={markedDates}
-      renderArrow={(direction) => <RenderArrow direction={direction} />}
+      renderArrow={direction => <RenderArrow direction={direction} />}
       onMonthChange={onMonthChange}
       displayLoadingIndicator={isLoading}
       minDate={minDate}
@@ -98,11 +92,11 @@ function BCalendar({
 
 const styles = StyleSheet.create({
   arrowStyleRight: {
-    position: "relative",
+    position: 'relative',
     right: resScale(-20),
   },
   arrowStyleLeft: {
-    position: "relative",
+    position: 'relative',
     left: resScale(-20),
   },
 });

@@ -1,10 +1,8 @@
-import {
-  StackActions,
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import React, { useCallback, useLayoutEffect } from "react";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { StackActions, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import moment from 'moment';
+import React, { useCallback, useLayoutEffect } from 'react';
 import {
   BackHandler,
   DeviceEventEmitter,
@@ -12,11 +10,10 @@ import {
   StyleSheet,
   Text,
   View,
-} from "react-native";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
-import { FlashList } from "@shopify/flash-list";
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { uploadFileImage } from '@/actions/CommonActions';
+import { updateDeliveryOrder, updateDeliveryOrderWeight } from '@/actions/OrderActions';
 import {
   BBackContinueBtn,
   BDivider,
@@ -26,38 +23,33 @@ import {
   BLocationText,
   BSpacer,
   BVisitationCard,
-} from "@/components";
-import { colors, fonts, layout } from "@/constants";
-import { TM_CONDITION } from "@/constants/dropdown";
-import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
-import { Input } from "@/interfaces";
-import { resScale } from "@/utils";
+} from '@/components';
+import { colors, fonts, layout } from '@/constants';
+import { TM_CONDITION } from '@/constants/dropdown';
+import { useKeyboardActive } from '@/hooks';
+import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+import { Input } from '@/interfaces';
+import { OperationFileType } from '@/interfaces/Operation';
+import { ENTRY_TYPE } from '@/models/EnumModel';
+import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
   CAMERA,
   GALLERY_OPERATION,
   SUBMIT_FORM,
   TAB_DISPATCH_TITLE,
   TAB_RETURN_TITLE,
-} from "@/navigation/ScreenNames";
-import { AppDispatch, RootState } from "@/redux/store";
-import { ENTRY_TYPE } from "@/models/EnumModel";
-import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
+} from '@/navigation/ScreenNames';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import {
   onChangeInputValue,
   removeDriverPhoto,
   removeOperationPhoto,
   resetOperationState,
   setAllOperationPhoto,
-} from "@/redux/reducers/operationReducer";
-import { useKeyboardActive } from "@/hooks";
-import { updateDeliverOrder } from "@/models/updateDeliveryOrder";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import { uploadFileImage } from "@/actions/CommonActions";
-import { OperationFileType } from "@/interfaces/Operation";
-import {
-  updateDeliveryOrder,
-  updateDeliveryOrderWeight,
-} from "@/actions/OrderActions";
+} from '@/redux/reducers/operationReducer';
+import { AppDispatch, RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
@@ -83,9 +75,7 @@ function SubmitForm() {
     OperationFileType.DO_DRIVER_FINISH_PROJECT,
   ];
   const wbsFileType = [
-    operationType === ENTRY_TYPE.OUT
-      ? OperationFileType.WB_OUT_DO
-      : OperationFileType.DO_WEIGHT_IN,
+    operationType === ENTRY_TYPE.OUT ? OperationFileType.WB_OUT_DO : OperationFileType.DO_WEIGHT_IN,
     operationType === ENTRY_TYPE.OUT
       ? OperationFileType.WB_OUT_RESULT
       : OperationFileType.WEIGHT_IN,
@@ -104,9 +94,7 @@ function SubmitForm() {
   ];
 
   const securityFileType =
-    operationType === ENTRY_TYPE.DISPATCH
-      ? securityDispatchFileType
-      : securityReturnFileType;
+    operationType === ENTRY_TYPE.DISPATCH ? securityDispatchFileType : securityReturnFileType;
 
   const enableLocationHeader =
     operationType === ENTRY_TYPE.DRIVER &&
@@ -117,24 +105,18 @@ function SubmitForm() {
     switch (userData?.type) {
       case ENTRY_TYPE.WB:
         if (operationData.photoFiles.length > 1) {
-          const tempImages = [
-            ...operationData.photoFiles.filter((it) => it.file !== null),
-          ];
+          const tempImages = [...operationData.photoFiles.filter(it => it.file !== null)];
           dispatch(setAllOperationPhoto({ file: tempImages }));
         }
         return;
       case ENTRY_TYPE.SECURITY:
         if (operationType === ENTRY_TYPE.DISPATCH) {
           if (operationData.photoFiles.length > 4) {
-            const tempImages = [
-              ...operationData.photoFiles.filter((it) => it.file !== null),
-            ];
+            const tempImages = [...operationData.photoFiles.filter(it => it.file !== null)];
             dispatch(setAllOperationPhoto({ file: tempImages }));
           }
         } else if (operationData.photoFiles.length > 1) {
-          const tempImages = [
-            ...operationData.photoFiles.filter((it) => it.file !== null),
-          ];
+          const tempImages = [...operationData.photoFiles.filter(it => it.file !== null)];
           dispatch(setAllOperationPhoto({ file: tempImages }));
         }
     }
@@ -142,35 +124,33 @@ function SubmitForm() {
 
   React.useEffect(() => {
     crashlytics().log(SUBMIT_FORM);
-    DeviceEventEmitter.addListener("Camera.preview", () => {
+    DeviceEventEmitter.addListener('Camera.preview', () => {
       removedAddButtonImage();
     });
 
     return () => {
-      DeviceEventEmitter.removeAllListeners("Camera.preview");
+      DeviceEventEmitter.removeAllListeners('Camera.preview');
     };
   }, [operationData, operationData.photoFiles]);
 
   const getHeaderTitle = () => {
     switch (userData?.type) {
       case ENTRY_TYPE.BATCHER:
-        return "Produksi";
+        return 'Produksi';
       case ENTRY_TYPE.SECURITY:
         if (operationType === ENTRY_TYPE.DISPATCH) return TAB_DISPATCH_TITLE;
         return TAB_RETURN_TITLE;
       case ENTRY_TYPE.DRIVER:
-        return "Penuangan";
+        return 'Penuangan';
       case ENTRY_TYPE.WB:
-        return "Weigh Bridge";
+        return 'Weigh Bridge';
       default:
-        return "";
+        return '';
     }
   };
 
   const handleDisableContinueButton = () => {
-    const photos = [
-      ...operationData.photoFiles.filter((it) => it.file !== null),
-    ];
+    const photos = [...operationData.photoFiles.filter(it => it.file !== null)];
     if (userData?.type === ENTRY_TYPE.DRIVER) {
       return (
         photos.length < 7 ||
@@ -179,15 +159,10 @@ function SubmitForm() {
       );
     }
     if (userData?.type === ENTRY_TYPE.WB) {
-      return (
-        operationData.inputsValue.weightBridge.length === 0 || photos.length < 2
-      );
+      return operationData.inputsValue.weightBridge.length === 0 || photos.length < 2;
     }
     if (operationType === ENTRY_TYPE.RETURN) {
-      return (
-        operationData.inputsValue.truckMixCondition.length === 0 ||
-        photos.length < 2
-      );
+      return operationData.inputsValue.truckMixCondition.length === 0 || photos.length < 2;
     }
     if (operationType === ENTRY_TYPE.DISPATCH) {
       return photos.length !== 5;
@@ -195,7 +170,7 @@ function SubmitForm() {
   };
 
   const handleBack = () => {
-    DeviceEventEmitter.emit("Operation.refreshlist", true);
+    DeviceEventEmitter.emit('Operation.refreshlist', true);
     navigation.dispatch(StackActions.pop());
   };
 
@@ -203,24 +178,21 @@ function SubmitForm() {
     try {
       dispatch(
         openPopUp({
-          popUpType: "loading",
-          popUpTitle: "",
-          popUpText: "Memperbarui Delivery Order",
+          popUpType: 'loading',
+          popUpTitle: '',
+          popUpText: 'Memperbarui Delivery Order',
           outsideClickClosePopUp: false,
         })
       );
       const payload = {} as updateDeliverOrder;
       const photoFilestoUpload = operationData.photoFiles
-        .filter((v) => v.file !== null)
-        .map((photo) => ({
+        .filter(v => v.file !== null)
+        .map(photo => ({
           ...photo.file,
-          uri: photo?.file?.uri?.replace("file:", "file://"),
+          uri: photo?.file?.uri?.replace('file:', 'file://'),
         }));
 
-      const responseFiles = await uploadFileImage(
-        photoFilestoUpload,
-        "Update Delivery Order"
-      );
+      const responseFiles = await uploadFileImage(photoFilestoUpload, 'Update Delivery Order');
       if (responseFiles.data.success) {
         let responseUpdateDeliveryOrder: any;
         if (userData?.type === ENTRY_TYPE.DRIVER) {
@@ -230,9 +202,8 @@ function SubmitForm() {
           }));
           payload.doFiles = newFileData;
           payload.recipientName = operationData.inputsValue.recepientName;
-          payload.recipientNumber =
-            operationData.inputsValue.recepientPhoneNumber;
-          payload.status = "RECEIVED";
+          payload.recipientNumber = operationData.inputsValue.recepientPhoneNumber;
+          payload.status = 'RECEIVED';
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             operationData.projectDetails.deliveryOrderId
@@ -256,8 +227,7 @@ function SubmitForm() {
           payload.doFiles = newFileData;
 
           if (operationType === ENTRY_TYPE.RETURN) {
-            payload.conditionTruck =
-              operationData.inputsValue.truckMixCondition;
+            payload.conditionTruck = operationData.inputsValue.truckMixCondition;
           }
 
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
@@ -270,8 +240,8 @@ function SubmitForm() {
           dispatch(resetOperationState());
           dispatch(
             openPopUp({
-              popUpType: "success",
-              popUpText: "Berhasil Memperbarui Delivery Order",
+              popUpType: 'success',
+              popUpText: 'Berhasil Memperbarui Delivery Order',
               outsideClickClosePopUp: true,
             })
           );
@@ -282,10 +252,8 @@ function SubmitForm() {
           dispatch(closePopUp());
           dispatch(
             openPopUp({
-              popUpType: "error",
-              popUpText:
-                responseFiles.data.message ||
-                "Error Memperbarui Delivery Order",
+              popUpType: 'error',
+              popUpText: responseFiles.data.message || 'Error Memperbarui Delivery Order',
               outsideClickClosePopUp: true,
             })
           );
@@ -294,9 +262,8 @@ function SubmitForm() {
         dispatch(closePopUp());
         dispatch(
           openPopUp({
-            popUpType: "error",
-            popUpText:
-              responseFiles.data.message || "Error Memperbarui Delivery Order",
+            popUpType: 'error',
+            popUpText: responseFiles.data.message || 'Error Memperbarui Delivery Order',
             outsideClickClosePopUp: true,
           })
         );
@@ -305,8 +272,8 @@ function SubmitForm() {
       dispatch(closePopUp());
       dispatch(
         openPopUp({
-          popUpType: "error",
-          popUpText: error.message || "Error Memperbarui Delivery Order",
+          popUpType: 'error',
+          popUpText: error.message || 'Error Memperbarui Delivery Order',
           outsideClickClosePopUp: true,
         })
       );
@@ -342,10 +309,7 @@ function SubmitForm() {
         handleBack();
         return true;
       };
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
       return () => backHandler.remove();
     }, [handleBack, operationData.photoFiles, userData?.type])
   );
@@ -354,74 +318,64 @@ function SubmitForm() {
 
   const weightInputs: Input[] = [
     {
-      label: "Berat",
+      label: 'Berat',
       value: operationData.inputsValue.weightBridge,
-      onChange: (e) => {
+      onChange: e => {
         const result = `${e}`;
         dispatch(
           onChangeInputValue({
-            inputType: "weightBridge",
+            inputType: 'weightBridge',
             value: result,
           })
         );
       },
       isRequire: true,
-      type: "quantity",
-      quantityType: "kg",
-      placeholder: "Masukkan berat",
+      type: 'quantity',
+      quantityType: 'kg',
+      placeholder: 'Masukkan berat',
       isError: !operationData.inputsValue.weightBridge,
-      outlineColor: !operationData.inputsValue.weightBridge
-        ? colors.text.errorText
-        : undefined,
+      outlineColor: !operationData.inputsValue.weightBridge ? colors.text.errorText : undefined,
     },
   ];
 
   const deliveryInputs: Input[] = [
     {
-      label: "Nama Penerima",
+      label: 'Nama Penerima',
       value: operationData.inputsValue.recepientName,
-      onChange: (e) =>
+      onChange: e =>
         dispatch(
           onChangeInputValue({
-            inputType: "recepientName",
+            inputType: 'recepientName',
             value: e.nativeEvent.text,
           })
         ),
       isRequire: true,
-      type: "textInput",
-      placeholder: "Masukkan nama penerima",
+      type: 'textInput',
+      placeholder: 'Masukkan nama penerima',
       isError: !operationData.inputsValue.recepientName,
-      outlineColor: !operationData.inputsValue.recepientName
-        ? colors.text.errorText
-        : undefined,
+      outlineColor: !operationData.inputsValue.recepientName ? colors.text.errorText : undefined,
     },
     {
-      label: "No. Telp Penerima",
+      label: 'No. Telp Penerima',
       value: operationData.inputsValue.recepientPhoneNumber,
-      onChange: (e) => {
+      onChange: e => {
         dispatch(
           onChangeInputValue({
-            inputType: "recepientPhoneNumber",
+            inputType: 'recepientPhoneNumber',
             value: e.nativeEvent.text,
           })
         );
       },
-      isError: !phoneNumberRegex.test(
-        operationData.inputsValue.recepientPhoneNumber
-      ),
-      outlineColor: !phoneNumberRegex.test(
-        operationData.inputsValue.recepientPhoneNumber
-      )
+      isError: !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber),
+      outlineColor: !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber)
         ? colors.text.errorText
         : undefined,
       isRequire: true,
-      keyboardType: "numeric",
-      type: "textInput",
-      placeholder: "Masukkan nomor telp penerima",
-      customerErrorMsg: "No. Telepon harus diisi sesuai format",
-      LeftIcon: operationData.inputsValue.recepientPhoneNumber
-        ? LeftIcon
-        : undefined,
+      keyboardType: 'numeric',
+      type: 'textInput',
+      placeholder: 'Masukkan nomor telp penerima',
+      customerErrorMsg: 'No. Telepon harus diisi sesuai format',
+      LeftIcon: operationData.inputsValue.recepientPhoneNumber ? LeftIcon : undefined,
     },
   ];
 
@@ -441,21 +395,18 @@ function SubmitForm() {
     //   },
     // },
     {
-      label: "Kondisi TM",
+      label: 'Kondisi TM',
       isRequire: true,
       isError: false,
-      type: "dropdown",
+      type: 'dropdown',
       dropdown: {
         items: TM_CONDITION,
         placeholder: operationData.inputsValue.truckMixCondition
-          ? TM_CONDITION.find(
-              (it) => it.value === operationData.inputsValue.truckMixCondition
-            )?.label ?? ""
-          : "Pilih Kondisi TM",
+          ? TM_CONDITION.find(it => it.value === operationData.inputsValue.truckMixCondition)
+              ?.label ?? ''
+          : 'Pilih Kondisi TM',
         onChange: (value: any) => {
-          dispatch(
-            onChangeInputValue({ inputType: "truckMixCondition", value })
-          );
+          dispatch(onChangeInputValue({ inputType: 'truckMixCondition', value }));
         },
       },
     },
@@ -469,12 +420,7 @@ function SubmitForm() {
         dispatch(removeOperationPhoto({ index: i }));
       }
     },
-    [
-      operationData.photoFiles,
-      dispatch,
-      removeOperationPhoto,
-      removeDriverPhoto,
-    ]
+    [operationData.photoFiles, dispatch, removeOperationPhoto, removeDriverPhoto]
   );
 
   const addMoreImages = useCallback(
@@ -494,7 +440,7 @@ function SubmitForm() {
           if (operationType === ENTRY_TYPE.DISPATCH) {
             navigation.dispatch(
               StackActions.push(CAMERA, {
-                photoTitle: "Tambahan",
+                photoTitle: 'Tambahan',
                 closeButton: true,
                 navigateTo: GALLERY_OPERATION,
               })
@@ -502,7 +448,7 @@ function SubmitForm() {
           } else {
             navigation.dispatch(
               StackActions.push(CAMERA, {
-                photoTitle: "Tambahan",
+                photoTitle: 'Tambahan',
                 closeButton: true,
                 navigateTo: GALLERY_OPERATION,
               })
@@ -512,7 +458,7 @@ function SubmitForm() {
         case ENTRY_TYPE.WB:
           navigation.dispatch(
             StackActions.push(CAMERA, {
-              photoTitle: "Tambahan",
+              photoTitle: 'Tambahan',
               closeButton: true,
               navigateTo: GALLERY_OPERATION,
             })
@@ -550,11 +496,9 @@ function SubmitForm() {
                 item={{
                   name: operationData.projectDetails.doNumber,
                   unit: `${operationData.projectDetails.requestedQuantity} m3`,
-                  time: `${moment(
-                    operationData.projectDetails.deliveryTime
-                  ).format("L")} | ${moment(
-                    operationData.projectDetails.deliveryTime
-                  ).format("hh:mm A")}`,
+                  time: `${moment(operationData.projectDetails.deliveryTime).format(
+                    'L'
+                  )} | ${moment(operationData.projectDetails.deliveryTime).format('hh:mm A')}`,
                 }}
                 customStyle={{ backgroundColor: colors.tertiary }}
                 isRenderIcon={false}
@@ -566,7 +510,7 @@ function SubmitForm() {
             </View>
             <View>
               <BGallery
-                addMorePict={(attachType) => addMoreImages(attachType)}
+                addMorePict={attachType => addMoreImages(attachType)}
                 removePict={(pos, attachType) => deleteImages(pos, attachType)}
                 picts={operationData.photoFiles}
               />
@@ -579,17 +523,12 @@ function SubmitForm() {
               {operationType === ENTRY_TYPE.DRIVER && (
                 <BForm titleBold="500" inputs={deliveryInputs} />
               )}
-              {(operationType === ENTRY_TYPE.IN ||
-                operationType === ENTRY_TYPE.OUT) && (
+              {(operationType === ENTRY_TYPE.IN || operationType === ENTRY_TYPE.OUT) && (
                 <BForm titleBold="500" inputs={weightInputs} />
               )}
               {operationType === ENTRY_TYPE.RETURN && (
                 <View style={{ height: resScale(300) }}>
-                  <BForm
-                    titleBold="500"
-                    inputs={returnInputs}
-                    spacer="extraSmall"
-                  />
+                  <BForm titleBold="500" inputs={returnInputs} spacer="extraSmall" />
                 </View>
               )}
             </View>
@@ -602,8 +541,7 @@ function SubmitForm() {
           style={{
             paddingHorizontal: layout.pad.lg,
             paddingBottom: layout.pad.lg,
-          }}
-        >
+          }}>
           <BBackContinueBtn
             onPressContinue={onPressContinue}
             disableContinue={handleDisableContinueButton()}
@@ -628,7 +566,7 @@ const style = StyleSheet.create({
   },
   parent: {
     flex: 1,
-    flexDirection: "column",
+    flexDirection: 'column',
     backgroundColor: colors.white,
   },
   top: {
@@ -639,19 +577,19 @@ const style = StyleSheet.create({
     borderColor: colors.border.default,
   },
   conButton: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexDirection: "row",
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
     marginTop: layout.pad.lg,
     bottom: 0,
   },
   buttonOne: {
-    width: "40%",
+    width: '40%',
     paddingEnd: layout.pad.md,
   },
   buttonTwo: {
-    width: "60%",
+    width: '60%',
     paddingStart: layout.pad.md,
   },
 });

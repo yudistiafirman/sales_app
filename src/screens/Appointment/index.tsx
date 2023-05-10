@@ -1,9 +1,12 @@
-import * as React from "react";
-import { Alert, BackHandler, Dimensions, StyleSheet, View } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import moment from "moment";
-import { useDispatch } from "react-redux";
-import crashlytics from "@react-native-firebase/crashlytics";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import moment from 'moment';
+import * as React from 'react';
+import { Alert, BackHandler, Dimensions, StyleSheet, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import FirstStep from './element/FirstStep';
+import SecondStep from './element/SecondStep';
+import { postBookingAppointment } from '@/actions/ProductivityActions';
 import {
   BBackContinueBtn,
   BContainer,
@@ -11,58 +14,39 @@ import {
   BottomSheetAddPIC,
   BSpacer,
   BStepperIndicator,
-} from "@/components";
-import {
-  AppointmentActionType,
-  AppointmentProvider,
-  StepOne,
-} from "@/context/AppointmentContext";
-import FirstStep from "./element/FirstStep";
-import { resScale } from "@/utils";
-import { useAppointmentData } from "@/hooks";
+} from '@/components';
+import { AppointmentActionType, AppointmentProvider, StepOne } from '@/context/AppointmentContext';
+import { useAppointmentData } from '@/hooks';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import {
   locationPayloadType,
   PIC,
   picPayloadType,
   projectPayloadType,
   visitationPayload,
-} from "@/interfaces";
-import SecondStep from "./element/SecondStep";
-import { postBookingAppointment } from "@/actions/ProductivityActions";
-import { AppDispatch } from "@/redux/store";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import { APPOINTMENT } from "@/navigation/ScreenNames";
-import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
+} from '@/interfaces';
+import { APPOINTMENT } from '@/navigation/ScreenNames';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { AppDispatch } from '@/redux/store';
+import { resScale } from '@/utils';
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 function Appointment() {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const [values, dispatchValue] = useAppointmentData();
-  const {
-    searchQuery,
-    stepOne,
-    isModalPicVisible,
-    step,
-    stepDone,
-    selectedDate,
-    isSearching,
-  } = values;
-  const customerType =
-    stepOne.customerType === "company" ? "company" : "individu";
+  const { searchQuery, stepOne, isModalPicVisible, step, stepDone, selectedDate, isSearching } =
+    values;
+  const customerType = stepOne.customerType === 'company' ? 'company' : 'individu';
   const btnShown = searchQuery.length === 0 && stepOne.customerType.length > 0;
-  const labels = ["Data Pelanggan", "Tanggal Kunjungan"];
+  const labels = ['Data Pelanggan', 'Tanggal Kunjungan'];
   const inCustomerDataStep = step === 0;
   const inVisitationDateStep = step === 1;
   const stepsToRender = [<FirstStep />, <SecondStep />];
 
   useCustomHeaderLeft({
     customHeaderLeft: (
-      <BHeaderIcon
-        size={resScale(23)}
-        onBack={() => navigation.goBack()}
-        iconName="x"
-      />
+      <BHeaderIcon size={resScale(23)} onBack={() => navigation.goBack()} iconName="x" />
     ),
   });
 
@@ -80,10 +64,7 @@ function Appointment() {
         }
         return true;
       };
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.step])
@@ -91,23 +72,23 @@ function Appointment() {
 
   const validateCompanyDetailsForm = React.useCallback(() => {
     const errors: Partial<StepOne> = {};
-    if (stepOne.customerType === "company") {
+    if (stepOne.customerType === 'company') {
       if (!stepOne.company.Company?.title) {
-        errors.errorCompany = "Nama perusahaan harus diisi";
+        errors.errorCompany = 'Nama perusahaan harus diisi';
       }
     }
 
     if (stepOne[customerType].name?.length === 0) {
-      errors.errorProject = "Nama Proyek harus diisi";
+      errors.errorProject = 'Nama Proyek harus diisi';
     } else if (stepOne[customerType].name?.length < 4) {
-      errors.errorProject = "Nama Proyek tidak boleh kurang dari 4 karakter";
+      errors.errorProject = 'Nama Proyek tidak boleh kurang dari 4 karakter';
     }
     if (stepOne[customerType].PIC.length === 0) {
-      errors.errorPics = "Tambahkan minimal 1 PIC";
+      errors.errorPics = 'Tambahkan minimal 1 PIC';
     } else if (stepOne[customerType].PIC.length > 1) {
-      const selectedPic = stepOne[customerType].PIC.filter((v) => v.isSelected);
+      const selectedPic = stepOne[customerType].PIC.filter(v => v.isSelected);
       if (selectedPic.length === 0) {
-        errors.errorPics = "Pilih salah satu PIC";
+        errors.errorPics = 'Pilih salah satu PIC';
       }
     }
     return errors;
@@ -115,8 +96,8 @@ function Appointment() {
 
   const goToVisitationDateStep = React.useCallback(() => {
     const errors = validateCompanyDetailsForm();
-    if (JSON.stringify(errors) !== "{}") {
-      Object.keys(errors).forEach((val) => {
+    if (JSON.stringify(errors) !== '{}') {
+      Object.keys(errors).forEach(val => {
         dispatchValue({
           type: AppointmentActionType.ASSIGN_ERROR,
           key: val as keyof StepOne,
@@ -147,12 +128,10 @@ function Appointment() {
         pic.push({ ...stepOne[customerType].PIC[0], isSelected: true });
         payload.pic = pic;
       } else {
-        const selectedPic = stepOne[customerType].PIC.filter(
-          (v) => v.isSelected
-        );
+        const selectedPic = stepOne[customerType].PIC.filter(v => v.isSelected);
         payload.pic = selectedPic;
       }
-      const typeCustomer = customerType === "individu" ? "INDIVIDU" : "COMPANY";
+      const typeCustomer = customerType === 'individu' ? 'INDIVIDU' : 'COMPANY';
       if (stepOne[customerType].Visitation) {
         payload.visitation.order = stepOne[customerType].Visitation.finishDate
           ? stepOne[customerType].Visitation.order
@@ -160,31 +139,26 @@ function Appointment() {
       } else {
         payload.visitation.order = 0;
       }
-      payload.visitation.status = "VISIT";
+      payload.visitation.status = 'VISIT';
 
       if (stepOne[customerType].locationAddress.line1) {
-        payload.project.location.line1 =
-          stepOne[customerType].locationAddress.line1;
+        payload.project.location.line1 = stepOne[customerType].locationAddress.line1;
       }
       if (stepOne[customerType].locationAddress.line2) {
-        payload.project.location.line2 =
-          stepOne[customerType].locationAddress.line2;
+        payload.project.location.line2 = stepOne[customerType].locationAddress.line2;
       }
       if (stepOne[customerType].locationAddress.postalCode) {
-        payload.project.location.postalId =
-          stepOne[customerType].locationAddress.postalCode;
+        payload.project.location.postalId = stepOne[customerType].locationAddress.postalCode;
       }
       if (stepOne[customerType].locationAddress.formattedAddress) {
         payload.project.location.formattedAddress =
           stepOne[customerType].locationAddress.formattedAddress;
       }
       if (stepOne[customerType].locationAddress.lon) {
-        payload.project.location.lon =
-          stepOne[customerType].locationAddress.lon;
+        payload.project.location.lon = stepOne[customerType].locationAddress.lon;
       }
       if (stepOne[customerType].locationAddress.lat) {
-        payload.project.location.lat =
-          stepOne[customerType].locationAddress.lat;
+        payload.project.location.lat = stepOne[customerType].locationAddress.lat;
       }
       if (stepOne.customerType) {
         payload.visitation.customerType = typeCustomer;
@@ -197,10 +171,9 @@ function Appointment() {
       if (stepOne[customerType].name) {
         payload.project.name = stepOne[customerType].name;
       }
-      if (stepOne.customerType === "company") {
+      if (stepOne.customerType === 'company') {
         if (stepOne[customerType].Company?.title) {
-          payload.project.companyDisplayName =
-            stepOne[customerType].Company?.title;
+          payload.project.companyDisplayName = stepOne[customerType].Company?.title;
         }
       }
       if (stepOne[customerType].Visitation?.id) {
@@ -216,10 +189,10 @@ function Appointment() {
       if (response.data.success) {
         dispatch(
           openPopUp({
-            popUpType: "success",
-            popUpTitle: "Apakah Anda Ingin Membuat Janji Temu Lagi?",
-            popUpText: "Janji Temu Berhasil Dibuat",
-            outlineBtnTitle: "Tidak",
+            popUpType: 'success',
+            popUpTitle: 'Apakah Anda Ingin Membuat Janji Temu Lagi?',
+            popUpText: 'Janji Temu Berhasil Dibuat',
+            outlineBtnTitle: 'Tidak',
             outsideClickClosePopUp: false,
             outlineBtnAction: () => {
               navigation.goBack();
@@ -229,40 +202,33 @@ function Appointment() {
               dispatchValue({ type: AppointmentActionType.RESET_STATE });
               dispatch(closePopUp());
             },
-            primaryBtnTitle: "Buat Janji",
+            primaryBtnTitle: 'Buat Janji',
             isRenderActions: true,
           })
         );
       } else {
         dispatch(
           openPopUp({
-            popUpType: "error",
-            popUpText: "Something went wrong",
-            highlightedText: "error",
+            popUpType: 'error',
+            popUpText: 'Something went wrong',
+            highlightedText: 'error',
             outsideClickClosePopUp: true,
           })
         );
       }
     } catch (error) {
-      console.log(error, "errorcatch");
+      console.log(error, 'errorcatch');
 
       dispatch(
         openPopUp({
-          popUpType: "error",
+          popUpType: 'error',
           popUpText: error.message,
-          highlightedText: "error",
+          highlightedText: 'error',
           outsideClickClosePopUp: true,
         })
       );
     }
-  }, [
-    customerType,
-    dispatch,
-    dispatchValue,
-    navigation,
-    stepOne,
-    values.selectedDate,
-  ]);
+  }, [customerType, dispatch, dispatchValue, navigation, stepOne, values.selectedDate]);
 
   const onNext = React.useCallback(() => {
     if (inCustomerDataStep) {
@@ -301,14 +267,10 @@ function Appointment() {
     const picIndividu = stepOne.individu.PIC ? stepOne.individu.PIC : [];
     const picCompany = stepOne.company.PIC ? stepOne.company.PIC : [];
 
-    if (customerTypeCondition === "company") {
-      return (
-        !!companyNameCondition &&
-        !!projectNameConditionCompany &&
-        picCompany.length > 0
-      );
+    if (customerTypeCondition === 'company') {
+      return !!companyNameCondition && !!projectNameConditionCompany && picCompany.length > 0;
     }
-    if (customerTypeCondition === "individu") {
+    if (customerTypeCondition === 'individu') {
       return !!projectNameConditionIndividu && picIndividu.length > 0;
     }
   }
@@ -345,9 +307,7 @@ function Appointment() {
               continueText="Lanjut"
               unrenderBack={!(values.step > 0)}
               disableContinue={
-                values.step > 0
-                  ? !selectedDate
-                  : !isCanAdvanceToStep2() && !selectedDate
+                values.step > 0 ? !selectedDate : !isCanAdvanceToStep2() && !selectedDate
               }
             />
           )}
@@ -362,10 +322,7 @@ function Appointment() {
                   isSelected: true,
                 };
               }
-              if (
-                values.stepOne[customerType].PIC &&
-                values.stepOne[customerType].PIC.length > 0
-              ) {
+              if (values.stepOne[customerType].PIC && values.stepOne[customerType].PIC.length > 0) {
                 finalPIC.forEach((it, index) => {
                   finalPIC[index] = {
                     ...finalPIC[index],
@@ -379,9 +336,7 @@ function Appointment() {
                 value: [...finalPIC, finalData],
               });
             }}
-            onClose={() =>
-              dispatchValue({ type: AppointmentActionType.TOGGLE_MODAL_PICS })
-            }
+            onClose={() => dispatchValue({ type: AppointmentActionType.TOGGLE_MODAL_PICS })}
           />
         </View>
       </BContainer>
@@ -392,19 +347,19 @@ function Appointment() {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    position: "absolute",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    position: 'absolute',
     top: width + width - resScale(100),
   },
   buttonAction: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
-    width: "100%",
+    width: '100%',
   },
 });
 

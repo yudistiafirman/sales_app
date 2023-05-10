@@ -1,17 +1,17 @@
-import * as React from "react";
-import { ListRenderItem, Platform, StyleSheet, View } from "react-native";
-import { TextInput } from "react-native-paper";
-import { FlashList } from "@shopify/flash-list";
-import BVisitationCard from "@/components/molecules/BVisitationCard";
-import { colors, layout } from "@/constants";
-import BCommonListShimmer from "./BCommonListShimmer";
-import { selectedCompanyInterface, visitationDataType } from "@/interfaces";
-import BSpacer from "@/components/atoms/BSpacer";
-import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
-import BSearchBar from "@/components/molecules/BSearchBar";
-import BTabSections from "@/components/organism/TabSections";
-import BEmptyState from "../organism/BEmptyState";
-import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
+import { FlashList } from '@shopify/flash-list';
+import * as React from 'react';
+import { ListRenderItem, Platform, StyleSheet, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import BEmptyState from '../organism/BEmptyState';
+import BCommonListShimmer from './BCommonListShimmer';
+import BSpacer from '@/components/atoms/BSpacer';
+import BSearchBar from '@/components/molecules/BSearchBar';
+import BVisitationCard from '@/components/molecules/BVisitationCard';
+import BTabSections from '@/components/organism/TabSections';
+import { colors, layout } from '@/constants';
+import { selectedCompanyInterface, visitationDataType } from '@/interfaces';
+import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
+import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO';
 
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
   CreatedSPHListResponse &
@@ -19,10 +19,7 @@ type ListRenderItemData = CreatedPurchaseOrderListResponse &
 
 interface BCommonSearchListProps {
   data: CreatedSPHListResponse[] | CreatedPurchaseOrderListResponse[] | any[];
-  onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
   refreshing?: boolean;
   emptyPOName?: string;
   isLoadMore?: boolean;
@@ -90,9 +87,9 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
           item?.locationAddress?.line1 ||
           item?.address?.line1,
         pilNames:
-          item?.PurchaseOrders?.map((it) => it.brikNumber) ||
-          item?.QuotationRequests?.map((val) => val?.QuotationLetter?.number),
-        picOrCompanyName: !hidePicName ? picOrCompanyName : "",
+          item?.PurchaseOrders?.map(it => it.brikNumber) ||
+          item?.QuotationRequests?.map(val => val?.QuotationLetter?.number),
+        picOrCompanyName: !hidePicName ? picOrCompanyName : '',
         status: item?.status,
         pilStatus: item?.pilStatus,
       };
@@ -115,20 +112,11 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
   return (
     <View style={styles.container}>
       <BSearchBar
-        textInputStyle={
-          Platform.OS !== "android" && { paddingBottom: layout.pad.sm }
-        }
+        textInputStyle={Platform.OS !== 'android' && { paddingBottom: layout.pad.sm }}
         value={searchQuery}
-        onChangeText={(text) => onChangeText(text)}
-        left={
-          <TextInput.Icon
-            onPress={onPressMagnify && onPressMagnify}
-            icon="magnify"
-          />
-        }
-        right={
-          onClearValue && <TextInput.Icon onPress={onClearValue} icon="close" />
-        }
+        onChangeText={text => onChangeText(text)}
+        left={<TextInput.Icon onPress={onPressMagnify && onPressMagnify} icon="magnify" />}
+        right={onClearValue && <TextInput.Icon onPress={onClearValue} icon="close" />}
         autoFocus={autoFocus}
         placeholder={placeholder}
       />

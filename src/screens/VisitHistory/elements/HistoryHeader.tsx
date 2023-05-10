@@ -1,8 +1,8 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { BText } from "@/components";
-import font from "@/constants/fonts";
-import { colors } from "@/constants";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { BText } from '@/components';
+import { colors } from '@/constants';
+import font from '@/constants/fonts';
 
 function HistoryHeader({ projectName }: { projectName: string | undefined }) {
   return (
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     fontFamily: font.family.montserrat[600],
     fontSize: font.size.md,
     color: colors.text.darker,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
 

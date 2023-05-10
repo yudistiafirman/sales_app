@@ -1,12 +1,9 @@
-import * as React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useSelector } from "react-redux";
-import PriceList from "@/screens/Price";
-import CustomTabBar from "../CustomTabBar";
-import Profile from "@/screens/Profile";
-import Home from "@/screens/Home";
-import { colors, fonts } from "@/constants";
-import Transaction from "@/screens/Transaction";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import * as React from 'react';
+import { useSelector } from 'react-redux';
+import CustomTabBar from '../CustomTabBar';
+import { colors, fonts } from '@/constants';
+import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
 import {
   TAB_HOME,
   TAB_HOME_TITLE,
@@ -16,21 +13,25 @@ import {
   TAB_PROFILE_TITLE,
   TAB_TRANSACTION,
   TAB_TRANSACTION_TITLE,
-} from "@/navigation/ScreenNames";
-import { RootState } from "@/redux/store";
-import SalesHeaderRight from "@/navigation/Sales/HeaderRight";
+} from '@/navigation/ScreenNames';
+import { RootState } from '@/redux/store';
+import Home from '@/screens/Home';
+import PriceList from '@/screens/Price';
+import Profile from '@/screens/Profile';
+import Transaction from '@/screens/Transaction';
 
 const Tab = createBottomTabNavigator();
 
 function SalesTabs() {
-  const { enable_transaction_menu, enable_price_menu, enable_profile_menu } =
-    useSelector((state: RootState) => state.auth.remote_config);
+  const { enable_transaction_menu, enable_price_menu, enable_profile_menu } = useSelector(
+    (state: RootState) => state.auth.remote_config
+  );
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: true,
         tabBarHideOnKeyboard: true,
-        headerTitleAlign: "center",
+        headerTitleAlign: 'center',
         headerShadowVisible: false,
         headerTitleStyle: {
           color: colors.text.darker,
@@ -38,8 +39,7 @@ function SalesTabs() {
           fontFamily: fonts.family.montserrat[600],
         },
       }}
-      tabBar={(props) => <CustomTabBar {...props} />}
-    >
+      tabBar={props => <CustomTabBar {...props} />}>
       <Tab.Screen
         key={TAB_HOME}
         name={TAB_HOME_TITLE}

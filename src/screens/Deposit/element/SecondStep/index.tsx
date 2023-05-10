@@ -1,13 +1,6 @@
-import * as React from "react";
-import { TextInput } from "react-native-paper";
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import * as React from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import {
   BDivider,
   BGalleryDeposit,
@@ -16,14 +9,14 @@ import {
   BSpacer,
   BTouchableText,
   BVisitationCard,
-} from "@/components";
-import { resScale } from "@/utils";
-import { CreateDepositContext } from "@/context/CreateDepositContext";
-import { colors, fonts, layout } from "@/constants";
-import font from "@/constants/fonts";
-import formatCurrency from "@/utils/formatCurrency";
-import SelectPurchaseOrderData from "@/components/templates/SelectPurchaseOrder";
-import { PoProductData } from "@/interfaces/SelectConfirmedPO";
+} from '@/components';
+import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
+import { colors, fonts, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { CreateDepositContext } from '@/context/CreateDepositContext';
+import { PoProductData } from '@/interfaces/SelectConfirmedPO';
+import { resScale } from '@/utils';
+import formatCurrency from '@/utils/formatCurrency';
 
 export default function SecondStep() {
   const { values, action } = React.useContext(CreateDepositContext);
@@ -33,11 +26,11 @@ export default function SecondStep() {
 
   const listenerCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
-      updateValueOnstep("stepTwo", "companyName", parent.companyName);
-      updateValueOnstep("stepTwo", "locationName", parent.locationName);
-      updateValue("existingProjectID", parent.projectId);
-      updateValueOnstep("stepTwo", "purchaseOrders", data);
-      updateValue("isSearchingPurchaseOrder", false);
+      updateValueOnstep('stepTwo', 'companyName', parent.companyName);
+      updateValueOnstep('stepTwo', 'locationName', parent.locationName);
+      updateValue('existingProjectID', parent.projectId);
+      updateValueOnstep('stepTwo', 'purchaseOrders', data);
+      updateValue('isSearchingPurchaseOrder', false);
     },
     [updateValueOnstep]
   );
@@ -48,26 +41,25 @@ export default function SecondStep() {
         fontFamily: font.family.montserrat[500],
         color: colors.select.selected,
       }}
-      onPress={() => updateValue("isSearchingPurchaseOrder", true)}
+      onPress={() => updateValue('isSearchingPurchaseOrder', true)}
       title="Ganti"
     />
   );
 
   const calculatedTotal = (): number => {
     let deposit = 0;
-    if (stateOne?.deposit?.nominal)
-      deposit += parseInt(stateOne?.deposit?.nominal, 10);
+    if (stateOne?.deposit?.nominal) deposit += parseInt(stateOne?.deposit?.nominal, 10);
     deposit += getTotalLastDeposit();
     return deposit;
   };
 
   const onExpand = (index: number, data: any) => {
     let newExpandedData;
-    const isExisted = expandData?.findIndex((val) => val?.id === data?.id);
+    const isExisted = expandData?.findIndex(val => val?.id === data?.id);
     if (isExisted === -1) {
       newExpandedData = [...expandData, data];
     } else {
-      newExpandedData = expandData.filter((val) => val?.id !== data?.id);
+      newExpandedData = expandData.filter(val => val?.id !== data?.id);
     }
     setExpandData(newExpandedData);
   };
@@ -75,7 +67,7 @@ export default function SecondStep() {
   const getTotalLastDeposit = () => {
     let total = 0;
     if (stateTwo?.purchaseOrders && stateTwo?.purchaseOrders.length > 0) {
-      stateTwo?.purchaseOrders?.forEach((it) => {
+      stateTwo?.purchaseOrders?.forEach(it => {
         total = it.availableDeposit;
       });
     }
@@ -87,10 +79,8 @@ export default function SecondStep() {
       {values.isSearchingPurchaseOrder === true ? (
         <SelectPurchaseOrderData
           dataToGet="DEPOSITDATA"
-          onSubmitData={({ parentData, data }) =>
-            listenerCallback({ parent: parentData, data })
-          }
-          onDismiss={() => updateValue("isSearchingPurchaseOrder", false)}
+          onSubmitData={({ parentData, data }) => listenerCallback({ parent: parentData, data })}
+          onDismiss={() => updateValue('isSearchingPurchaseOrder', false)}
         />
       ) : (
         <>
@@ -108,12 +98,9 @@ export default function SecondStep() {
               <BSpacer size="extraSmall" />
             </View>
             <View style={style.flexFull}>
-              {stateTwo?.purchaseOrders &&
-              stateTwo?.purchaseOrders.length > 0 ? (
+              {stateTwo?.purchaseOrders && stateTwo?.purchaseOrders.length > 0 ? (
                 <>
-                  <ScrollView
-                    style={[style.flexFull, { marginBottom: layout.pad.xxl }]}
-                  >
+                  <ScrollView style={[style.flexFull, { marginBottom: layout.pad.xxl }]}>
                     <View style={style.flexFull}>
                       <BSpacer size="extraSmall" />
                       <BVisitationCard
@@ -126,17 +113,16 @@ export default function SecondStep() {
                       <BSpacer size="extraSmall" />
                     </View>
                     <View style={style.flexFull}>
-                      {stateTwo?.purchaseOrders &&
-                        stateTwo?.purchaseOrders.length > 0 && (
-                          <BNestedProductCard
-                            withoutHeader={false}
-                            data={stateTwo?.purchaseOrders}
-                            expandData={expandData}
-                            onExpand={onExpand}
-                            isDeposit
-                            withoutSeparator
-                          />
-                        )}
+                      {stateTwo?.purchaseOrders && stateTwo?.purchaseOrders.length > 0 && (
+                        <BNestedProductCard
+                          withoutHeader={false}
+                          data={stateTwo?.purchaseOrders}
+                          expandData={expandData}
+                          onExpand={onExpand}
+                          isDeposit
+                          withoutSeparator
+                        />
+                      )}
                     </View>
                   </ScrollView>
 
@@ -152,20 +138,12 @@ export default function SecondStep() {
                   <BSpacer size="extraSmall" />
                   <TouchableOpacity
                     style={style.touchable}
-                    onPress={() =>
-                      updateValue("isSearchingPurchaseOrder", true)
-                    }
-                  >
+                    onPress={() => updateValue('isSearchingPurchaseOrder', true)}>
                     <BSearchBar
                       placeholder="Cari PT / Proyek"
                       activeOutlineColor="gray"
                       disabled
-                      left={
-                        <TextInput.Icon
-                          forceTextInputFocus={false}
-                          icon="magnify"
-                        />
-                      }
+                      left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
                     />
                   </TouchableOpacity>
                 </>
@@ -183,8 +161,8 @@ const style = StyleSheet.create({
     flex: 1,
   },
   touchable: {
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
@@ -198,14 +176,14 @@ const style = StyleSheet.create({
     fontFamily: fonts.family.montserrat[600],
   },
   summContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     right: 0,
     start: 0,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     paddingTop: layout.pad.lg,
     paddingBottom: layout.pad.xl,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

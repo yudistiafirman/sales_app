@@ -1,4 +1,4 @@
-import { PurchaseOrdersData, SalesOrdersData } from "./SelectConfirmedPO";
+import { PurchaseOrdersData, SalesOrdersData } from './SelectConfirmedPO';
 
 interface CreateScheduleFirstStep {
   companyName: string;
@@ -27,8 +27,4 @@ interface CreateScheduleState {
   isSearchingPurchaseOrder: boolean;
 }
 
-export type {
-  CreateScheduleState,
-  CreateScheduleFirstStep,
-  CreateScheduleSecondStep,
-};
+export type { CreateScheduleState, CreateScheduleFirstStep, CreateScheduleSecondStep };

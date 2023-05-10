@@ -1,31 +1,19 @@
-import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
-import * as React from "react";
-
-import { RadioButton } from "react-native-paper";
-import moment from "moment";
-import { colors, fonts, layout } from "@/constants";
-import { CreateScheduleContext } from "@/context/CreateScheduleContext";
-import {
-  BDepositCard,
-  BDivider,
-  BForm,
-  BProductCard,
-  BSpacer,
-  BText,
-} from "@/components";
-import { Input } from "@/interfaces";
-import {
-  METHOD_LIST,
-  METHOD_LIST_DEPRECATED,
-  PO_METHOD_LIST,
-} from "@/constants/dropdown";
-import { SalesOrdersData } from "@/interfaces/SelectConfirmedPO";
+import moment from 'moment';
+import * as React from 'react';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RadioButton } from 'react-native-paper';
+import { BDepositCard, BDivider, BForm, BProductCard, BSpacer, BText } from '@/components';
+import { colors, fonts, layout } from '@/constants';
+import { METHOD_LIST, METHOD_LIST_DEPRECATED, PO_METHOD_LIST } from '@/constants/dropdown';
+import { CreateScheduleContext } from '@/context/CreateScheduleContext';
+import { Input } from '@/interfaces';
+import { SalesOrdersData } from '@/interfaces/SelectConfirmedPO';
 
 export default function SecondStep() {
   const { values, action } = React.useContext(CreateScheduleContext);
   const { stepOne: stateOne, stepTwo: stateTwo } = values;
   const { updateValueOnstep } = action;
-  const [selectedIndex, setSelectedIndex] = React.useState("0");
+  const [selectedIndex, setSelectedIndex] = React.useState('0');
   const [isVisibleCalendar, setVisibleCalendar] = React.useState(false);
   const [isVisibleTimePicker, setVisibleTimePicker] = React.useState(false);
   const [rawTime, setRawTime] = React.useState(undefined);
@@ -33,11 +21,11 @@ export default function SecondStep() {
   const inputs: Input[] = [
     {
       isRequire: true,
-      type: "calendar-time",
+      type: 'calendar-time',
       calendarTime: {
         onDayPress: (value: any) => {
-          const date = moment(value.dateString).format("DD/MM/yyyy");
-          onChange("deliveryDate")(date);
+          const date = moment(value.dateString).format('DD/MM/yyyy');
+          onChange('deliveryDate')(date);
         },
         isCalendarVisible: isVisibleCalendar,
         setCalendarVisible: (flag: boolean) => {
@@ -46,20 +34,20 @@ export default function SecondStep() {
         onTimeChange: (value: any) => {
           const time = moment(value)
             // .utcOffset(value.getTimezoneOffset() / 60)
-            .format("HH:mm");
+            .format('HH:mm');
           setRawTime(value);
-          onChange("deliveryTime")(time);
+          onChange('deliveryTime')(time);
         },
         isTimeVisible: isVisibleTimePicker,
         setTimeVisible: (flag: boolean) => {
           setVisibleTimePicker(flag);
         },
-        labelOne: "Tanggal Pengiriman",
-        labelTwo: "Jam Pengiriman",
-        placeholderOne: "Pilih tanggal",
-        placeholderTwo: "Pilih jam",
-        errMsgOne: "Tanggal harus dipilih",
-        errMsgTwo: "Jam harus dipilih",
+        labelOne: 'Tanggal Pengiriman',
+        labelTwo: 'Jam Pengiriman',
+        placeholderOne: 'Pilih tanggal',
+        placeholderTwo: 'Pilih jam',
+        errMsgOne: 'Tanggal harus dipilih',
+        errMsgTwo: 'Jam harus dipilih',
         valueOne: stateTwo?.deliveryDate,
         valueTwo: stateTwo?.deliveryTime,
         valueTwoMock: rawTime,
@@ -68,17 +56,17 @@ export default function SecondStep() {
       },
     },
     {
-      label: "Metode penuangan",
+      label: 'Metode penuangan',
       isRequire: true,
-      type: "dropdown",
+      type: 'dropdown',
       value: stateTwo?.method,
       isError: stateTwo?.method === undefined,
-      customerErrorMsg: "Metode penuangan harus dipilih",
+      customerErrorMsg: 'Metode penuangan harus dipilih',
       dropdown: {
         items: METHOD_LIST_DEPRECATED,
-        placeholder: "Pilih metode penuangan",
+        placeholder: 'Pilih metode penuangan',
         onChange: (value: any) => {
-          onChange("method")(value);
+          onChange('method')(value);
         },
       },
     },
@@ -86,15 +74,15 @@ export default function SecondStep() {
 
   const inputsSelection: Input[] = [
     {
-      label: "Volume",
+      label: 'Volume',
       isRequire: true,
-      type: "quantity",
+      type: 'quantity',
       value: stateTwo?.inputtedVolume?.toString(),
       onChange: (value: any) => {
-        if (value && value !== "") {
-          onChange("inputtedVolume")(parseInt(value, 10));
+        if (value && value !== '') {
+          onChange('inputtedVolume')(parseInt(value, 10));
         } else {
-          onChange("inputtedVolume")(0);
+          onChange('inputtedVolume')(0);
         }
       },
       // customerErrorMsg:
@@ -105,13 +93,13 @@ export default function SecondStep() {
 
   const consecutiveInputs: Input[] = [
     {
-      label: "Konsekutif?",
-      type: "checkbox",
+      label: 'Konsekutif?',
+      type: 'checkbox',
       isRequire: false,
       checkbox: {
         value: stateTwo?.isConsecutive,
-        onValueChange: (value) => {
-          onChange("isConsecutive")(value);
+        onValueChange: value => {
+          onChange('isConsecutive')(value);
         },
       },
     },
@@ -119,26 +107,25 @@ export default function SecondStep() {
 
   const technicalInputs: Input[] = [
     {
-      label: "Request Teknisi?",
-      type: "checkbox",
+      label: 'Request Teknisi?',
+      type: 'checkbox',
       isRequire: false,
       checkbox: {
         value: stateTwo?.hasTechnicalRequest,
-        onValueChange: (value) => {
-          onChange("hasTechnicalRequest")(value);
+        onValueChange: value => {
+          onChange('hasTechnicalRequest')(value);
         },
       },
     },
   ];
 
   const onChange = (key: any) => (val: any) => {
-    updateValueOnstep("stepTwo", key, val);
+    updateValueOnstep('stepTwo', key, val);
   };
 
   const getTotalProduct = (): number => {
     const total =
-      stateTwo?.inputtedVolume *
-      stateTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
+      stateTwo?.inputtedVolume * stateTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
     return total;
   };
 
@@ -149,25 +136,12 @@ export default function SecondStep() {
     <View style={style.container}>
       <ScrollView style={style.flexFull}>
         <BForm titleBold="500" inputs={inputs} spacer="extraSmall" />
-        <View
-          style={[
-            style.summaryContainer,
-            Platform.OS !== "android" && { zIndex: -1 },
-          ]}
-        >
+        <View style={[style.summaryContainer, Platform.OS !== 'android' && { zIndex: -1 }]}>
           <View style={style.consecutiveCheck}>
-            <BForm
-              titleBold="500"
-              inputs={consecutiveInputs}
-              spacer="extraSmall"
-            />
+            <BForm titleBold="500" inputs={consecutiveInputs} spacer="extraSmall" />
           </View>
           <View style={style.technicalCheck}>
-            <BForm
-              titleBold="500"
-              inputs={technicalInputs}
-              spacer="extraSmall"
-            />
+            <BForm titleBold="500" inputs={technicalInputs} spacer="extraSmall" />
           </View>
         </View>
         <BSpacer size="extraSmall" />
@@ -185,26 +159,20 @@ export default function SecondStep() {
                       <View style={style.contentProduct}>
                         <RadioButton
                           value={index.toString()}
-                          status={
-                            selectedIndex === index.toString()
-                              ? "checked"
-                              : "unchecked"
-                          }
+                          status={selectedIndex === index.toString() ? 'checked' : 'unchecked'}
                           color={colors.primary}
                           uncheckedColor={colors.border.altGrey}
                           onPress={() => {
                             if (selectedIndex !== index.toString()) {
-                              updateValueOnstep("stepTwo", "inputtedVolume", 0);
-                              updateValueOnstep("stepTwo", "salesOrder", item);
+                              updateValueOnstep('stepTwo', 'inputtedVolume', 0);
+                              updateValueOnstep('stepTwo', 'salesOrder', item);
                             }
                             setSelectedIndex(index.toString());
                           }}
                         />
                         <BProductCard
                           name={getDisplayName(item)}
-                          pricePerVol={
-                            item?.PoProduct?.RequestedProduct?.offeringPrice
-                          }
+                          pricePerVol={item?.PoProduct?.RequestedProduct?.offeringPrice}
                           volume={parseInt(item?.usedQuantity, 10)}
                           totalPrice={
                             item?.PoProduct?.RequestedProduct?.offeringPrice *
@@ -216,11 +184,7 @@ export default function SecondStep() {
                       </View>
                       {selectedIndex === index.toString() && (
                         <View style={style.formInput}>
-                          <BForm
-                            titleBold="500"
-                            inputs={inputsSelection}
-                            spacer="extraSmall"
-                          />
+                          <BForm titleBold="500" inputs={inputsSelection} spacer="extraSmall" />
                           {/* <View style={style.volContent}>
                               <BText>Sisa vol. yang belum dikirim</BText>
                               <BText
@@ -237,12 +201,8 @@ export default function SecondStep() {
                         </View>
                       )}
                     </View>
-                    {stateOne?.purchaseOrders[0]?.SaleOrders.length - 1 !==
-                      index && (
-                      <BDivider
-                        marginVertical={layout.pad.md}
-                        borderColor={colors.white}
-                      />
+                    {stateOne?.purchaseOrders[0]?.SaleOrders.length - 1 !== index && (
+                      <BDivider marginVertical={layout.pad.md} borderColor={colors.white} />
                     )}
                   </View>
                 ))}
@@ -258,17 +218,12 @@ export default function SecondStep() {
         <BDepositCard
           style={{ marginBottom: layout.pad.xl }}
           firstSectionText="Deposit"
-          firstSectionValue={
-            stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0
-          }
-          secondSectionText={
-            stateTwo?.salesOrder ? getDisplayName(stateTwo?.salesOrder) : "-"
-          }
+          firstSectionValue={stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0}
+          secondSectionText={stateTwo?.salesOrder ? getDisplayName(stateTwo?.salesOrder) : '-'}
           secondSectionValue={getTotalProduct()}
           thirdSectionText="Est. Sisa Deposit"
           isError={
-            getTotalProduct() >
-            (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
+            getTotalProduct() > (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
           }
           customErrorMsg="Silakan lakukan penambahan deposit"
         />
@@ -282,28 +237,28 @@ const style = StyleSheet.create({
   },
   formInput: {
     flex: 1,
-    width: "100%",
+    width: '100%',
     padding: layout.pad.md,
   },
   volContent: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   consecutiveCheck: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   technicalCheck: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   selectionProduct: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     borderRadius: layout.radius.md,
     backgroundColor: colors.tertiary,
     borderColor: colors.border.default,
@@ -311,9 +266,9 @@ const style = StyleSheet.create({
   },
   contentProduct: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   container: {
     flex: 1,
@@ -326,9 +281,9 @@ const style = StyleSheet.create({
   },
   summaryContainer: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   partText: {
     color: colors.text.darker,

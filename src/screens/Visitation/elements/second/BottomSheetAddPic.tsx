@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { BBottomSheetForm } from "@/components";
-import { Input, PIC } from "@/interfaces";
-import { colors, fonts } from "@/constants";
+import React, { useMemo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { BBottomSheetForm } from '@/components';
+import { colors, fonts } from '@/constants';
+import { Input, PIC } from '@/interfaces';
 
 interface IProps {
   initialIndex: number;
@@ -10,10 +10,10 @@ interface IProps {
 }
 
 const initialState = {
-  name: "",
-  position: "",
-  phone: "",
-  email: "",
+  name: '',
+  position: '',
+  phone: '',
+  email: '',
 };
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
@@ -22,118 +22,103 @@ const emailRegex =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
-const BSheetAddPic = React.forwardRef(
-  ({ initialIndex, addPic }: IProps, ref: any) => {
-    const [state, setState] = React.useState<PIC>(initialState);
+const BSheetAddPic = React.forwardRef(({ initialIndex, addPic }: IProps, ref: any) => {
+  const [state, setState] = React.useState<PIC>(initialState);
 
-    const onChange = (key: keyof PIC) => (text: string) => {
-      setState({
-        ...state,
-        [key]: text,
-      });
-    };
+  const onChange = (key: keyof PIC) => (text: string) => {
+    setState({
+      ...state,
+      [key]: text,
+    });
+  };
 
-    const inputs: Input[] = useMemo(
-      () => [
-        {
-          label: "Nama",
-          isRequire: true,
-          isError: !state.name,
-          outlineColor: !state.name ? colors.text.errorText : undefined,
-          type: "textInput",
-          onChange: (event) => {
-            onChange("name")(event.nativeEvent.text);
-          },
-          value: state.name,
-          placeholder: "Masukkan nama",
+  const inputs: Input[] = useMemo(
+    () => [
+      {
+        label: 'Nama',
+        isRequire: true,
+        isError: !state.name,
+        outlineColor: !state.name ? colors.text.errorText : undefined,
+        type: 'textInput',
+        onChange: event => {
+          onChange('name')(event.nativeEvent.text);
         },
-        {
-          label: "Jabatan",
-          isRequire: true,
-          isError: !state.position,
-          outlineColor: !state.position ? colors.text.errorText : undefined,
-          type: "textInput",
-          onChange: (event) => {
-            onChange("position")(event.nativeEvent.text);
-          },
-          value: state.position,
-          placeholder: "Masukkan jabatan",
+        value: state.name,
+        placeholder: 'Masukkan nama',
+      },
+      {
+        label: 'Jabatan',
+        isRequire: true,
+        isError: !state.position,
+        outlineColor: !state.position ? colors.text.errorText : undefined,
+        type: 'textInput',
+        onChange: event => {
+          onChange('position')(event.nativeEvent.text);
         },
-        {
-          label: "No. Telepon",
-          isRequire: true,
-          isError: !phoneNumberRegex.test(state.phone),
-          outlineColor: !phoneNumberRegex.test(state.phone)
+        value: state.position,
+        placeholder: 'Masukkan jabatan',
+      },
+      {
+        label: 'No. Telepon',
+        isRequire: true,
+        isError: !phoneNumberRegex.test(state.phone),
+        outlineColor: !phoneNumberRegex.test(state.phone) ? colors.text.errorText : undefined,
+        type: 'textInput',
+        onChange: event => {
+          onChange('phone')(event.nativeEvent.text);
+        },
+        value: state.phone,
+        keyboardType: 'numeric',
+        customerErrorMsg: 'No. Telepon harus diisi sesuai format',
+        LeftIcon: state.phone ? LeftIcon : undefined,
+        placeholder: 'Masukkan nomor telepon',
+      },
+      {
+        label: 'Email',
+        isRequire: false,
+        isError: state.email ? !emailRegex.test(state.email) : false,
+        outlineColor: state.email
+          ? emailRegex.test(state.email)
             ? colors.text.errorText
-            : undefined,
-          type: "textInput",
-          onChange: (event) => {
-            onChange("phone")(event.nativeEvent.text);
-          },
-          value: state.phone,
-          keyboardType: "numeric",
-          customerErrorMsg: "No. Telepon harus diisi sesuai format",
-          LeftIcon: state.phone ? LeftIcon : undefined,
-          placeholder: "Masukkan nomor telepon",
+            : undefined
+          : undefined,
+        keyboardType: 'email-address',
+        type: 'textInput',
+        onChange: event => {
+          onChange('email')(event.nativeEvent.text);
         },
-        {
-          label: "Email",
-          isRequire: false,
-          isError: state.email ? !emailRegex.test(state.email) : false,
-          outlineColor: state.email
-            ? emailRegex.test(state.email)
-              ? colors.text.errorText
-              : undefined
-            : undefined,
-          keyboardType: "email-address",
-          type: "textInput",
-          onChange: (event) => {
-            onChange("email")(event.nativeEvent.text);
-          },
-          value: state.email,
-          customerErrorMsg: "Email harus diisi sesuai format",
-          placeholder: "Masukkan email",
-        },
-      ],
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [state.name, state.email, state.position, state.phone]
-    );
+        value: state.email,
+        customerErrorMsg: 'Email harus diisi sesuai format',
+        placeholder: 'Masukkan email',
+      },
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.name, state.email, state.position, state.phone]
+  );
 
-    const onAdd = () => {
-      if (ref) {
-        ref.current?.close();
-      }
-      const emailCondition = state.email ? emailRegex.test(state.email) : true;
-      if (
-        emailCondition &&
-        !!state.name &&
-        phoneNumberRegex.test(state.phone) &&
-        !!state.position
-      ) {
-        addPic(state);
-        setState(initialState);
-      }
-    };
+  const onAdd = () => {
+    if (ref) {
+      ref.current?.close();
+    }
+    const emailCondition = state.email ? emailRegex.test(state.email) : true;
+    if (emailCondition && !!state.name && phoneNumberRegex.test(state.phone) && !!state.position) {
+      addPic(state);
+      setState(initialState);
+    }
+  };
 
-    return (
-      <BBottomSheetForm
-        ref={ref}
-        initialIndex={initialIndex}
-        onAdd={onAdd}
-        inputs={inputs}
-        buttonTitle="Tambah PIC"
-        snapPoint={["75%"]}
-        isButtonDisable={
-          !(
-            !!state.name &&
-            phoneNumberRegex.test(state.phone) &&
-            !!state.position
-          )
-        }
-      />
-    );
-  }
-);
+  return (
+    <BBottomSheetForm
+      ref={ref}
+      initialIndex={initialIndex}
+      onAdd={onAdd}
+      inputs={inputs}
+      buttonTitle="Tambah PIC"
+      snapPoint={['75%']}
+      isButtonDisable={!(!!state.name && phoneNumberRegex.test(state.phone) && !!state.position)}
+    />
+  );
+});
 
 const style = StyleSheet.create({
   leftIconStyle: {

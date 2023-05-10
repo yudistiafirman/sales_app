@@ -1,11 +1,11 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { RadioButton } from "react-native-paper";
-import { colors, layout } from "@/constants";
-import font from "@/constants/fonts";
-import { resScale } from "@/utils";
-import BSpacer from "../atoms/BSpacer";
-import BText from "../atoms/BText";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { RadioButton } from 'react-native-paper';
+import BSpacer from '../atoms/BSpacer';
+import BText from '../atoms/BText';
+import { colors, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { resScale } from '@/utils';
 
 interface IProps {
   isOption?: boolean;
@@ -16,14 +16,7 @@ interface IProps {
   projectName?: string;
 }
 
-function BProjectRBtn({
-  isOption,
-  projectId,
-  isSelected,
-  onSelect,
-  idx,
-  projectName,
-}: IProps) {
+function BProjectRBtn({ isOption, projectId, isSelected, onSelect, idx, projectName }: IProps) {
   const paddingLeft = isOption ? 0 : layout.pad.md + layout.pad.xs;
   return (
     <View style={styles.container}>
@@ -32,7 +25,7 @@ function BProjectRBtn({
           uncheckedColor={colors.border.altGrey}
           value={projectId!}
           color={colors.primary}
-          status={isSelected ? "checked" : "unchecked"}
+          status={isSelected ? 'checked' : 'unchecked'}
           onPress={() => {
             if (onSelect) {
               onSelect(idx!);
@@ -52,9 +45,9 @@ const styles = StyleSheet.create({
     borderColor: colors.border.default,
     borderRadius: layout.radius.md,
     borderWidth: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    flexDirection: "row",
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
     marginBottom: layout.pad.lg,
   },
   radioTitle: {

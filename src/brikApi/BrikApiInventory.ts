@@ -1,8 +1,8 @@
-import { Platform } from "react-native";
-import Config from "react-native-config";
+import { Platform } from 'react-native';
+import Config from 'react-native-config';
 
 const API_URL =
-  Platform.OS === "android"
+  Platform.OS === 'android'
     ? Config.API_URL_INV
     : __DEV__
     ? Config.API_URL_INV
@@ -20,19 +20,19 @@ export default class BrikApiInventory {
     const params = url.searchParams;
 
     if (page) {
-      params.append("page", `${page}`);
+      params.append('page', `${page}`);
     }
     if (size) {
-      params.append("size", `${size}`);
+      params.append('size', `${size}`);
     }
     if (search) {
-      params.append("search", search);
+      params.append('search', search);
     }
     if (pillar) {
-      params.append("pillar", pillar);
+      params.append('pillar', pillar);
     }
     if (count) {
-      params.append("count", `${count}`);
+      params.append('count', `${count}`);
     }
     return url.toString();
   };
@@ -48,19 +48,19 @@ export default class BrikApiInventory {
     const params = url.searchParams;
 
     if (page) {
-      params.append("page", `${page}`);
+      params.append('page', `${page}`);
     }
     if (size) {
-      params.append("size", `${size}`);
+      params.append('size', `${size}`);
     }
     if (search) {
-      params.append("search", search);
+      params.append('search', search);
     }
     if (category) {
-      params.append("category", category);
+      params.append('category', category);
     }
     if (distance) {
-      params.append("distance", `${distance}`);
+      params.append('distance', `${distance}`);
     }
 
     return url.toString();

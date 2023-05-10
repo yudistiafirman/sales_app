@@ -1,12 +1,12 @@
-import React, { useState, useMemo } from "react";
-import { SceneMap } from "react-native-tab-view";
-import { View, StyleSheet } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
-import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import colors from "@/constants/colors";
-import resScale from "@/utils/resScale";
-import { layout } from "@/constants";
-import BTabSections from "./TabSections";
+import React, { useState, useMemo } from 'react';
+import { View, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { SceneMap } from 'react-native-tab-view';
+import resScale from '@/utils/resScale';
+import colors from '@/constants/colors';
+import { layout } from '@/constants';
+import BTabSections from './TabSections';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -32,18 +32,18 @@ export default function BTabViewScreen({
   const [indexRoute, setIndexRoute] = useState(0);
 
   const [routes] = useMemo(() => {
-    const routesArray = tabToRender.map((key) => ({
+    const routesArray = tabToRender.map(key => ({
       key: key.tabTitle,
       title: key.tabTitle, // uppercase the first letter .charAt(0).toUpperCase() + key.slice(1)
       totalItems: key.totalItems,
-      chipPosition: "right",
+      chipPosition: 'right',
     }));
     return [routesArray];
   }, [tabToRender]);
 
   const sceneData = useMemo(() => {
-    const sceneMapData: { [key: string]: () => JSX.Element | null } =
-      tabToRender.reduce((acc: AccumulatorReduceType, curr) => {
+    const sceneMapData: { [key: string]: () => JSX.Element | null } = tabToRender.reduce(
+      (acc: AccumulatorReduceType, curr) => {
         acc[curr.tabTitle] = () => {
           if (!screenToRender) {
             return null;
@@ -51,7 +51,9 @@ export default function BTabViewScreen({
           return screenToRender(curr.tabTitle);
         };
         return acc;
-      }, {});
+      },
+      {}
+    );
     return sceneMapData;
   }, [screenToRender, tabToRender]);
 
@@ -80,7 +82,7 @@ export default function BTabViewScreen({
 const style = StyleSheet.create({
   loadingContainer: {
     // flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: layout.pad.md,
   },
   tabLoading: {

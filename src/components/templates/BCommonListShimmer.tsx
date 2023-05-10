@@ -1,9 +1,9 @@
-import * as React from "react";
-import { StyleSheet, View } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
-import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import { resScale } from "@/utils";
-import { colors, layout } from "@/constants";
+import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { resScale } from '@/utils';
+import { colors, layout } from '@/constants';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 function POListShimmer() {
@@ -22,7 +22,7 @@ function POListShimmer() {
 
 const styles = StyleSheet.create({
   flexRow: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   container: {
     height: resScale(56),
@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
     marginTop: layout.pad.sm + layout.pad.xs,
   },
   nameAndPriceContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: layout.pad.md,
     marginTop: layout.pad.sm + layout.pad.xs,
   },

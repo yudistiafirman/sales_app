@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Address, Competitor, PIC } from "@/interfaces";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Address, Competitor, PIC } from '@/interfaces';
 
 export interface VisitationGlobalState {
   step: number;
@@ -8,7 +8,7 @@ export interface VisitationGlobalState {
   locationAddress: Address;
   existingLocationId?: string;
   companyName: string;
-  customerType?: "INDIVIDU" | "COMPANY";
+  customerType?: 'INDIVIDU' | 'COMPANY';
   projectName: string;
   projectId?: string;
   location: { [key: string]: any };
@@ -19,13 +19,8 @@ export interface VisitationGlobalState {
   };
   visitationId?: string;
   existingOrderNum?: number;
-  stageProject?: "LAND_PREP" | "FOUNDATION" | "FORMWORK" | "FINISHING";
-  typeProject?:
-    | "INFRASTRUKTUR"
-    | "HIGH-RISE"
-    | "RUMAH"
-    | "KOMERSIAL"
-    | "INDUSTRIAL";
+  stageProject?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+  typeProject?: 'INFRASTRUKTUR' | 'HIGH-RISE' | 'RUMAH' | 'KOMERSIAL' | 'INDUSTRIAL';
   products: any[];
   estimationDate: {
     estimationWeek: number | null;
@@ -33,11 +28,11 @@ export interface VisitationGlobalState {
   };
   competitors: Competitor[];
   currentCompetitor: Competitor;
-  paymentType?: "CBD" | "CREDIT";
+  paymentType?: 'CBD' | 'CREDIT';
   notes: string;
   selectedDate: any;
   images: any[];
-  kategoriAlasan?: "FINISHED" | "MOU_COMPETITOR";
+  kategoriAlasan?: 'FINISHED' | 'MOU_COMPETITOR';
   alasanPenolakan: string;
   existingVisitationId: string | null;
   stepOneVisitationFinished: boolean;
@@ -57,60 +52,60 @@ const initialState: VisitationGlobalState = {
     lat: 0,
     lon: 0,
     postalId: undefined,
-    formattedAddress: "",
+    formattedAddress: '',
   },
   locationAddress: {
     lat: 0,
     lon: 0,
     postalId: undefined,
-    formattedAddress: "",
-    line2: "",
+    formattedAddress: '',
+    line2: '',
   },
   currentCompetitor: {
-    name: "",
-    mou: "",
-    exclusive: "",
-    hope: "",
-    problem: "",
+    name: '',
+    mou: '',
+    exclusive: '',
+    hope: '',
+    problem: '',
   },
-  existingLocationId: "",
-  companyName: "",
+  existingLocationId: '',
+  companyName: '',
   location: {},
   competitors: [],
   pics: [],
-  projectName: "",
+  projectName: '',
   options: {
     items: null,
     loading: false,
   },
-  projectId: "",
+  projectId: '',
   estimationDate: {
     estimationMonth: null,
     estimationWeek: null,
   },
-  notes: "",
+  notes: '',
   products: [],
   selectedDate: null,
   images: [{ file: null }],
   kategoriAlasan: undefined,
-  alasanPenolakan: "",
+  alasanPenolakan: '',
   existingVisitationId: null,
   stepOneVisitationFinished: false,
   stepTwoVisitationFinished: false,
   stepThreeVisitationFinished: false,
   stepperVisitationShouldNotFocused: false,
   isSearchProject: false,
-  searchQuery: "",
+  searchQuery: '',
   useSearchedAddress: false,
-  searchedAddress: "",
+  searchedAddress: '',
 };
 
 export const visitationSlice = createSlice({
-  name: "visitation",
+  name: 'visitation',
   initialState,
   reducers: {
     resetVisitationState: () => initialState,
-    resetFocusedStepperFlag: (state) => {
+    resetFocusedStepperFlag: state => {
       state.stepperVisitationShouldNotFocused = false;
     },
     setStepperFocused: (state, { payload }) => {
@@ -127,7 +122,7 @@ export const visitationSlice = createSlice({
           break;
       }
     },
-    resetAllStepperFocused: (state) => {
+    resetAllStepperFocused: state => {
       state.stepperVisitationShouldNotFocused = true;
       state.stepOneVisitationFinished = false;
       state.stepTwoVisitationFinished = false;
@@ -162,98 +157,87 @@ export const visitationSlice = createSlice({
     setSearchQuery: (state, { payload }) => {
       state.searchQuery = payload;
     },
-    deleteImagesVisitation: (
-      state,
-      actions: PayloadAction<{ value: number }>
-    ) => {
-      const filteredImages = state.images.filter(
-        (v, i) => i !== actions.payload.value
-      );
+    deleteImagesVisitation: (state, actions: PayloadAction<{ value: number }>) => {
+      const filteredImages = state.images.filter((v, i) => i !== actions.payload.value);
       state.images = filteredImages;
     },
-    setUseSearchedAddress: (
-      state,
-      actions: PayloadAction<{ value: boolean }>
-    ) => {
+    setUseSearchedAddress: (state, actions: PayloadAction<{ value: boolean }>) => {
       state.useSearchedAddress = actions.payload.value;
     },
     setSearchedAddress: (state, actions: PayloadAction<{ value: string }>) => {
       state.searchedAddress = actions.payload.value;
     },
-    updateDataVisitation: (
-      state,
-      { payload }: { payload: { type: any; value: any } }
-    ) => {
+    updateDataVisitation: (state, { payload }: { payload: { type: any; value: any } }) => {
       switch (payload.type) {
-        case "createdLocation":
+        case 'createdLocation':
           state.createdLocation = payload.value;
           break;
-        case "locationAddress":
+        case 'locationAddress':
           state.locationAddress = payload.value;
           break;
-        case "existingLocationId":
+        case 'existingLocationId':
           state.existingLocationId = payload.value;
           break;
-        case "companyName":
+        case 'companyName':
           state.companyName = payload.value;
           break;
-        case "customerType":
+        case 'customerType':
           state.customerType = payload.value;
           break;
-        case "projectName":
+        case 'projectName':
           state.projectName = payload.value;
           break;
-        case "projectId":
+        case 'projectId':
           state.projectId = payload.value;
           break;
-        case "location":
+        case 'location':
           state.location = payload.value;
           break;
-        case "pics":
+        case 'pics':
           state.pics = payload.value;
           break;
-        case "competitors":
+        case 'competitors':
           state.competitors = payload.value;
           break;
-        case "currentCompetitor":
+        case 'currentCompetitor':
           state.currentCompetitor = payload.value;
-        case "options":
+        case 'options':
           state.options = payload.value;
           break;
-        case "visitationId":
+        case 'visitationId':
           state.visitationId = payload.value;
           break;
-        case "existingOrderNum":
+        case 'existingOrderNum':
           state.existingOrderNum = payload.value;
           break;
-        case "stageProject":
+        case 'stageProject':
           state.stageProject = payload.value;
           break;
-        case "typeProject":
+        case 'typeProject':
           state.typeProject = payload.value;
           break;
-        case "products":
+        case 'products':
           state.products = payload.value;
           break;
-        case "estimationDate":
+        case 'estimationDate':
           state.estimationDate = payload.value;
           break;
-        case "paymentType":
+        case 'paymentType':
           state.paymentType = payload.value;
           break;
-        case "notes":
+        case 'notes':
           state.notes = payload.value;
           break;
-        case "selectedDate":
+        case 'selectedDate':
           state.selectedDate = payload.value;
           break;
-        case "images":
+        case 'images':
           state.images = payload.value;
           break;
-        case "kategoriAlasan":
+        case 'kategoriAlasan':
           state.kategoriAlasan = payload.value;
           break;
-        case "alasanPenolakan":
+        case 'alasanPenolakan':
           state.alasanPenolakan = payload.value;
           break;
       }

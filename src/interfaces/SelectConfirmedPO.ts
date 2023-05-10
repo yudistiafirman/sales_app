@@ -1,13 +1,13 @@
 export enum PurchaseOrderStatus {
-  SUBMITTED = "SUBMITTED",
-  CONFIRMED = "CONFIRMED",
-  DECLINED = "DECLINED",
+  SUBMITTED = 'SUBMITTED',
+  CONFIRMED = 'CONFIRMED',
+  DECLINED = 'DECLINED',
 }
 
 export enum DepositStatus {
-  SUBMITTED = "SUBMITTED",
-  APPROVED = "APPROVED",
-  DECLINED = "DECLINED",
+  SUBMITTED = 'SUBMITTED',
+  APPROVED = 'APPROVED',
+  DECLINED = 'DECLINED',
 }
 
 export interface DepositPurchaseOrders {

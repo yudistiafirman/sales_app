@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { UserModel } from "@/models/User";
-import { isDevelopment, isProduction } from "@/utils/generalFunc";
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { UserModel } from '@/models/User';
+import { isDevelopment, isProduction } from '@/utils/generalFunc';
 
 interface LoginCredential {
   phoneNumber: string;
@@ -35,7 +35,7 @@ interface AuthState {
 const initialState: AuthState = {
   userData: null,
   loginCredential: {
-    phoneNumber: "",
+    phoneNumber: '',
   },
   isLoading: true,
   isSignout: false,
@@ -55,12 +55,12 @@ const initialState: AuthState = {
     enable_sph: true,
     enable_transaction_menu: true,
     enable_visitation: true,
-    force_update: { min_version: "1.0.0", is_forced: false },
+    force_update: { min_version: '1.0.0', is_forced: false },
   },
 };
 
 export const authSlice = createSlice({
-  name: "authentication",
+  name: 'authentication',
   initialState,
   reducers: {
     setPhoneNumber: (state, action: PayloadAction<string>) => ({
@@ -79,20 +79,15 @@ export const authSlice = createSlice({
             ...state.remote_config,
             enable_signed_so: action.payload.remoteConfig.enable_signed_so,
             enable_appointment: action.payload.remoteConfig.enable_appointment,
-            enable_create_schedule:
-              action.payload.remoteConfig.enable_create_schedule,
-            enable_customer_detail:
-              action.payload.remoteConfig.enable_customer_detail,
+            enable_create_schedule: action.payload.remoteConfig.enable_create_schedule,
+            enable_customer_detail: action.payload.remoteConfig.enable_customer_detail,
             enable_deposit: action.payload.remoteConfig.enable_deposit,
-            enable_hunter_farmer:
-              action.payload.remoteConfig.enable_hunter_farmer,
+            enable_hunter_farmer: action.payload.remoteConfig.enable_hunter_farmer,
             enable_po: action.payload.remoteConfig.enable_po,
             enable_price_menu: action.payload.remoteConfig.enable_price_menu,
-            enable_profile_menu:
-              action.payload.remoteConfig.enable_profile_menu,
+            enable_profile_menu: action.payload.remoteConfig.enable_profile_menu,
             enable_sph: action.payload.remoteConfig.enable_sph,
-            enable_transaction_menu:
-              action.payload.remoteConfig.enable_transaction_menu,
+            enable_transaction_menu: action.payload.remoteConfig.enable_transaction_menu,
             enable_visitation: action.payload.remoteConfig.enable_visitation,
             force_update: action.payload.remoteConfig.force_update,
           },
@@ -115,20 +110,15 @@ export const authSlice = createSlice({
             ...state.remote_config,
             enable_signed_so: action.payload.remoteConfig.enable_signed_so,
             enable_appointment: action.payload.remoteConfig.enable_appointment,
-            enable_create_schedule:
-              action.payload.remoteConfig.enable_create_schedule,
-            enable_customer_detail:
-              action.payload.remoteConfig.enable_customer_detail,
+            enable_create_schedule: action.payload.remoteConfig.enable_create_schedule,
+            enable_customer_detail: action.payload.remoteConfig.enable_customer_detail,
             enable_deposit: action.payload.remoteConfig.enable_deposit,
-            enable_hunter_farmer:
-              action.payload.remoteConfig.enable_hunter_farmer,
+            enable_hunter_farmer: action.payload.remoteConfig.enable_hunter_farmer,
             enable_po: action.payload.remoteConfig.enable_po,
             enable_price_menu: action.payload.remoteConfig.enable_price_menu,
-            enable_profile_menu:
-              action.payload.remoteConfig.enable_profile_menu,
+            enable_profile_menu: action.payload.remoteConfig.enable_profile_menu,
             enable_sph: action.payload.remoteConfig.enable_sph,
-            enable_transaction_menu:
-              action.payload.remoteConfig.enable_transaction_menu,
+            enable_transaction_menu: action.payload.remoteConfig.enable_transaction_menu,
             enable_visitation: action.payload.remoteConfig.enable_visitation,
             force_update: action.payload.remoteConfig.force_update,
           },

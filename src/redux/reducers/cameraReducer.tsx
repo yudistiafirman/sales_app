@@ -1,17 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { postUploadFiles } from "../async-thunks/commonThunks";
-import { requiredDocType } from "@/interfaces";
-import {
-  CREATE_DEPOSIT,
-  CREATE_SCHEDULE,
-  CREATE_VISITATION,
-} from "@/navigation/ScreenNames";
-import { LocalFileType } from "@/interfaces/LocalFileType";
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { postUploadFiles } from '../async-thunks/commonThunks';
+import { requiredDocType } from '@/interfaces';
+import { LocalFileType } from '@/interfaces/LocalFileType';
+import { CREATE_DEPOSIT, CREATE_SCHEDULE, CREATE_VISITATION } from '@/navigation/ScreenNames';
 
 type fileResponse = {
   id: string;
-  type: "COVER" | "GALLERY";
+  type: 'COVER' | 'GALLERY';
 };
 
 export interface CameraGlobalState {
@@ -33,31 +29,19 @@ const initialState: CameraGlobalState = {
 };
 
 export const cameraSlice = createSlice({
-  name: "camera",
+  name: 'camera',
   initialState,
   reducers: {
-    setImageURLS: (
-      state,
-      action: PayloadAction<{ file: LocalFileType; source?: string }>
-    ) => {
+    setImageURLS: (state, action: PayloadAction<{ file: LocalFileType; source?: string }>) => {
       switch (action.payload.source) {
         case CREATE_VISITATION:
-          state.visitationPhotoURLs = [
-            ...state.visitationPhotoURLs,
-            action.payload.file,
-          ];
+          state.visitationPhotoURLs = [...state.visitationPhotoURLs, action.payload.file];
           return;
         case CREATE_DEPOSIT:
-          state.createDepositPhotoURLs = [
-            ...state.createDepositPhotoURLs,
-            action.payload.file,
-          ];
+          state.createDepositPhotoURLs = [...state.createDepositPhotoURLs, action.payload.file];
           return;
         case CREATE_SCHEDULE:
-          state.createSchedulePhotoURLs = [
-            ...state.createSchedulePhotoURLs,
-            action.payload.file,
-          ];
+          state.createSchedulePhotoURLs = [...state.createSchedulePhotoURLs, action.payload.file];
           return;
         default:
           state.localURLs = [...state.localURLs, action.payload.file];
@@ -78,10 +62,7 @@ export const cameraSlice = createSlice({
           state.localURLs = [];
       }
     },
-    deleteImage: (
-      state,
-      action: PayloadAction<{ pos: number; source: string }>
-    ) => {
+    deleteImage: (state, action: PayloadAction<{ pos: number; source: string }>) => {
       let currentImages;
       switch (action.payload.source) {
         case CREATE_VISITATION:
@@ -109,16 +90,12 @@ export const cameraSlice = createSlice({
       state.uploadedRequiredDocsResponse = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {});
   },
 });
 
-export const {
-  setImageURLS,
-  resetImageURLS,
-  deleteImage,
-  setuploadedFilesResponse,
-} = cameraSlice.actions;
+export const { setImageURLS, resetImageURLS, deleteImage, setuploadedFilesResponse } =
+  cameraSlice.actions;
 
 export default cameraSlice.reducer;

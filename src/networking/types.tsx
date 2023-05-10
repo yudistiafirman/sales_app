@@ -5,7 +5,7 @@ interface Header {
 export interface Options {
   body?: string | object;
   headers?: Header;
-  method?: "DELETE" | "GET" | "POST" | "PUT";
+  method?: 'DELETE' | 'GET' | 'POST' | 'PUT';
   timeoutInterval?: number;
 }
 

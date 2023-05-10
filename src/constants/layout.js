@@ -1,4 +1,4 @@
-import { resScale } from "@/utils";
+import { resScale } from '@/utils';
 
 const layout = {
   mainPad: resScale(16),

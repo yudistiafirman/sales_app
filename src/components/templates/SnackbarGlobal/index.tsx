@@ -1,18 +1,16 @@
-import { Text, StyleSheet } from "react-native";
-import React from "react";
-import { Snackbar } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { closeSnackbar } from "@/redux/reducers/snackbarReducer";
-import { resScale } from "@/utils";
-import { colors } from "@/constants";
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
+import { Snackbar } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { colors } from '@/constants';
+import { closeSnackbar } from '@/redux/reducers/snackbarReducer';
+import { RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 
 export default function SnackbarGlobal() {
   //   const [visible, setVisible] = useState(true);
   const dispatch = useDispatch();
-  const { isSnackbarVisible, snackBarOptions } = useSelector(
-    (state: RootState) => state.snackbar
-  );
+  const { isSnackbarVisible, snackBarOptions } = useSelector((state: RootState) => state.snackbar);
   const { isSuccess, snackBarText } = snackBarOptions;
 
   //   const onToggleSnackBar = () => setVisible(!visible);
@@ -27,13 +25,7 @@ export default function SnackbarGlobal() {
       visible={isSnackbarVisible}
       onDismiss={onDismissSnackBar}
       duration={3000}
-      style={[
-        snackBarText
-          ? !isSuccess
-            ? styles.error
-            : styles.success
-          : styles.default,
-      ]}
+      style={[snackBarText ? (!isSuccess ? styles.error : styles.success) : styles.default]}
       wrapperStyle={{ top: resScale(50), zIndex: 10 }}
       //   action={{
       //     label: 'Undo',
@@ -43,9 +35,7 @@ export default function SnackbarGlobal() {
       //     },
       //   }}
     >
-      <Text style={[!isSuccess ? styles.errorText : styles.successText]}>
-        {snackBarText}
-      </Text>
+      <Text style={[!isSuccess ? styles.errorText : styles.successText]}>{snackBarText}</Text>
     </Snackbar>
     // </View>
   );
@@ -59,15 +49,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   error: {
-    backgroundColor: "#F6D7DC",
+    backgroundColor: '#F6D7DC',
   },
   success: {
-    backgroundColor: "#D7F6D8",
+    backgroundColor: '#D7F6D8',
   },
   errorText: {
-    color: "#F43353",
+    color: '#F43353',
   },
   successText: {
-    color: "#4C574C",
+    color: '#4C574C',
   },
 });

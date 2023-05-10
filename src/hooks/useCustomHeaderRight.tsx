@@ -1,13 +1,11 @@
-import { ReactElement, useLayoutEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
+import { ReactElement, useLayoutEffect } from 'react';
 
 type HeaderRightProps = {
   customHeaderRight: ReactElement<Element>;
 };
 
-export default function useCustomHeaderRight({
-  customHeaderRight,
-}: HeaderRightProps) {
+export default function useCustomHeaderRight({ customHeaderRight }: HeaderRightProps) {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {

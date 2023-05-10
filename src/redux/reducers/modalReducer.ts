@@ -1,8 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 type popUpOptions = {
   isRenderActions?: boolean;
-  popUpType?: "success" | "error" | "none" | "loading";
+  popUpType?: 'success' | 'error' | 'none' | 'loading';
   popUpText?: string;
   highlightedText?: string;
   outsideClickClosePopUp?: boolean;
@@ -23,15 +23,15 @@ type initialStateType = {
 
 const initialPopupData: popUpOptions = {
   isRenderActions: false,
-  popUpType: "none",
-  popUpText: "",
-  popUpTitle: "",
+  popUpType: 'none',
+  popUpText: '',
+  popUpTitle: '',
   outlineBtnAction: undefined,
   primaryBtnAction: undefined,
-  outlineBtnTitle: "",
-  primaryBtnTitle: "",
+  outlineBtnTitle: '',
+  primaryBtnTitle: '',
   outsideClickClosePopUp: true,
-  highlightedText: "",
+  highlightedText: '',
   isPrimaryButtonLoading: false,
   isOutlineButtonLoading: false,
   unRenderBackButton: false,
@@ -41,14 +41,14 @@ const initialState: initialStateType = {
   isPopUpVisible: false,
   popUpOptions: {
     isRenderActions: false,
-    popUpType: "none",
-    popUpTitle: "",
-    popUpText: "",
+    popUpType: 'none',
+    popUpTitle: '',
+    popUpText: '',
     outsideClickClosePopUp: true,
     outlineBtnAction: undefined,
     primaryBtnAction: undefined,
-    outlineBtnTitle: "",
-    primaryBtnTitle: "",
+    outlineBtnTitle: '',
+    primaryBtnTitle: '',
     isPrimaryButtonLoading: false,
     isOutlineButtonLoading: false,
     unRenderBackButton: false,
@@ -56,10 +56,10 @@ const initialState: initialStateType = {
 };
 
 export const modalSlice = createSlice({
-  name: "modal",
+  name: 'modal',
   initialState,
   reducers: {
-    setIsPopUpVisible: (state) => {
+    setIsPopUpVisible: state => {
       state.isPopUpVisible = !state.isPopUpVisible;
     },
     openPopUp: (state, { payload }: { payload: popUpOptions }) => {
@@ -79,11 +79,10 @@ export const modalSlice = createSlice({
       if (payload.popUpType) {
         state.popUpOptions.popUpType = payload.popUpType;
       } else {
-        state.popUpOptions.popUpType = "success";
+        state.popUpOptions.popUpType = 'success';
       }
-      if (typeof payload.outsideClickClosePopUp === "boolean") {
-        state.popUpOptions.outsideClickClosePopUp =
-          payload.outsideClickClosePopUp;
+      if (typeof payload.outsideClickClosePopUp === 'boolean') {
+        state.popUpOptions.outsideClickClosePopUp = payload.outsideClickClosePopUp;
       }
       if (payload.outlineBtnTitle) {
         state.popUpOptions.outlineBtnTitle = payload.outlineBtnTitle;
@@ -100,16 +99,14 @@ export const modalSlice = createSlice({
       if (payload.unRenderBackButton) {
         state.popUpOptions.unRenderBackButton = payload.unRenderBackButton;
       }
-      if (typeof payload.isPrimaryButtonLoading === "boolean") {
-        state.popUpOptions.isPrimaryButtonLoading =
-          payload.isPrimaryButtonLoading;
+      if (typeof payload.isPrimaryButtonLoading === 'boolean') {
+        state.popUpOptions.isPrimaryButtonLoading = payload.isPrimaryButtonLoading;
       }
-      if (typeof payload.isOutlineButtonLoading === "boolean") {
-        state.popUpOptions.isOutlineButtonLoading =
-          payload.isOutlineButtonLoading;
+      if (typeof payload.isOutlineButtonLoading === 'boolean') {
+        state.popUpOptions.isOutlineButtonLoading = payload.isOutlineButtonLoading;
       }
     },
-    closePopUp: (state) => {
+    closePopUp: state => {
       state.isPopUpVisible = false;
       state.popUpOptions = initialPopupData;
     },

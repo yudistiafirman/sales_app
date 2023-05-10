@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
-import CalendarStrip from "react-native-calendar-strip";
-import moment from "moment";
-import resScale from "@/utils/resScale";
-import font from "@/constants/fonts";
-import colors from "@/constants/colors";
-import { fonts, layout } from "@/constants";
+import moment from 'moment';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import CalendarStrip from 'react-native-calendar-strip';
+import { fonts, layout } from '@/constants';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
+import resScale from '@/utils/resScale';
 
 type markOption = {
   color: string;
@@ -35,7 +35,7 @@ export default function DateDaily({
   isRender,
   markedDatesArray,
   onDateSelected,
-  calendarColor = "#FFFFFF",
+  calendarColor = '#FFFFFF',
   selectedDate,
 }: DateDailyType) {
   if (!isRender) {
@@ -43,9 +43,9 @@ export default function DateDaily({
   }
 
   const locale = {
-    name: "en",
+    name: 'en',
     config: {
-      months: "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"),
+      months: 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
     },
   };
 
@@ -60,8 +60,7 @@ export default function DateDaily({
               ? colors.primary
               : colors.text.secondary,
         },
-      ]}
-    >
+      ]}>
       <Text
         style={[
           style.todayText,
@@ -71,8 +70,7 @@ export default function DateDaily({
                 ? colors.primary
                 : colors.text.secondary,
           },
-        ]}
-      >
+        ]}>
         Hari ini
       </Text>
     </TouchableOpacity>
@@ -84,7 +82,7 @@ export default function DateDaily({
       <CalendarStrip
         selectedDate={selectedDate}
         onDateSelected={onDateSelected}
-        calendarAnimation={{ type: "parallel", duration: 250 }}
+        calendarAnimation={{ type: 'parallel', duration: 250 }}
         style={style.calendarStyle}
         calendarHeaderStyle={style.calendarHeaderStyle}
         calendarColor={calendarColor}
@@ -108,13 +106,13 @@ export default function DateDaily({
 const style = StyleSheet.create({
   calendarStyle: {
     height: resScale(64),
-    width: "100%",
+    width: '100%',
   },
   calendarHeaderStyle: {
     color: colors.text.secondary,
     fontSize: font.size.sm,
     fontFamily: font.family.montserrat[500],
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     marginRight: layout.pad.lg,
   },
   dateNumberStyle: {
@@ -145,11 +143,11 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderRadius: layout.radius.sm,
     borderColor: colors.primary,
-    position: "absolute",
+    position: 'absolute',
     left: layout.pad.lg,
     zIndex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   todayText: {
     fontFamily: font.family.montserrat[500],

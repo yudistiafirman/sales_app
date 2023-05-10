@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { LocalFileType } from "@/interfaces/LocalFileType";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { LocalFileType } from '@/interfaces/LocalFileType';
 
 export interface SOGlobalState {
   photoFiles: LocalFileType[];
@@ -10,13 +10,13 @@ export interface SOGlobalState {
 
 const initialState: SOGlobalState = {
   photoFiles: [],
-  selectedPONumber: "",
-  selectedID: "",
+  selectedPONumber: '',
+  selectedID: '',
   isLoading: false,
 };
 
 export const salesOrderSlice = createSlice({
-  name: "salesOrderReducer",
+  name: 'salesOrderReducer',
   initialState,
   reducers: {
     resetSOState: () => initialState,
@@ -31,14 +31,11 @@ export const salesOrderSlice = createSlice({
       currentImages.push(actions.payload.file);
       state.photoFiles = [...currentImages];
     },
-    setAllSOPhoto: (
-      state,
-      actions: PayloadAction<{ file: LocalFileType[] }>
-    ) => {
+    setAllSOPhoto: (state, actions: PayloadAction<{ file: LocalFileType[] }>) => {
       state.photoFiles = [...actions.payload.file];
     },
     removeSOPhoto: (state, actions: PayloadAction<{ index: number }>) => {
-      const currentImages = state.photoFiles.filter((it) => it.file !== null);
+      const currentImages = state.photoFiles.filter(it => it.file !== null);
       currentImages.splice(actions.payload.index, 1);
       currentImages.unshift({ file: null });
       state.photoFiles = [...currentImages];

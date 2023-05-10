@@ -1,34 +1,34 @@
-import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import crashlytics from "@react-native-firebase/crashlytics";
-import Icon from "react-native-vector-icons/Feather";
-import analytics from "@react-native-firebase/analytics";
-import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
-import { colors, fonts, layout } from "@/constants";
-import { Styles } from "@/interfaces";
-import { setShowButtonNetwork, signout } from "@/redux/reducers/authReducer";
-import { AppDispatch, RootState } from "@/redux/store";
-import bStorage from "@/actions/BStorage";
-import { signOut } from "@/actions/CommonActions";
-import { getAppVersionName, isProduction } from "@/utils/generalFunc";
-import { openPopUp } from "@/redux/reducers/modalReducer";
+import analytics from '@react-native-firebase/analytics';
+import crashlytics from '@react-native-firebase/crashlytics';
+import * as React from 'react';
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
+import Icon from 'react-native-vector-icons/Feather';
+import { useDispatch, useSelector } from 'react-redux';
+import bStorage from '@/actions/BStorage';
+import { signOut } from '@/actions/CommonActions';
+import { colors, fonts, layout } from '@/constants';
+import { Styles } from '@/interfaces';
+import { setShowButtonNetwork, signout } from '@/redux/reducers/authReducer';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import { AppDispatch, RootState } from '@/redux/store';
+import { getAppVersionName, isProduction } from '@/utils/generalFunc';
 
 const _styles: Styles = {
   chipText: {
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.md,
     color: colors.text.darker,
-    textAlign: "center",
+    textAlign: 'center',
   },
   version: {
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.xs,
     color: colors.text.darker,
-    textAlign: "center",
+    textAlign: 'center',
   },
 };
 
-export default function SalesHeaderRight(iconColor = "") {
+export default function SalesHeaderRight(iconColor = '') {
   const dispatch = useDispatch<AppDispatch>();
   const [visible, setVisible] = React.useState(false);
   const { isShowButtonNetwork } = useSelector((state: RootState) => state.auth);
@@ -43,14 +43,14 @@ export default function SalesHeaderRight(iconColor = "") {
       if (response) {
         bStorage.clearItem();
         dispatch(signout(false));
-        crashlytics().setUserId("");
-        analytics().setUserId("");
+        crashlytics().setUserId('');
+        analytics().setUserId('');
       }
     } catch (error) {
       dispatch(
         openPopUp({
-          popUpType: "error",
-          popUpText: error.message || "Terjadi error saat logout",
+          popUpType: 'error',
+          popUpText: error.message || 'Terjadi error saat logout',
           outsideClickClosePopUp: true,
         })
       );
@@ -76,13 +76,12 @@ export default function SalesHeaderRight(iconColor = "") {
         <Icon
           name="more-vertical"
           size={18}
-          color={iconColor !== "" ? iconColor : colors.white}
+          color={iconColor !== '' ? iconColor : colors.white}
           style={{ padding: layout.pad.lg }}
           onPress={showMenu}
         />
       }
-      onRequestClose={hideMenu}
-    >
+      onRequestClose={hideMenu}>
       <MenuItem textStyle={_styles.chipText} onPress={onLogout}>
         Logout
       </MenuItem>
@@ -90,8 +89,7 @@ export default function SalesHeaderRight(iconColor = "") {
       <MenuItem
         textStyle={_styles.version}
         disabled={!(isProduction() && !__DEV__)}
-        onPress={isProduction() && !__DEV__ ? onVersionClick : undefined}
-      >
+        onPress={isProduction() && !__DEV__ ? onVersionClick : undefined}>
         {`APP Version ${getAppVersionName()}`}
       </MenuItem>
     </Menu>

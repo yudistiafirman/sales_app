@@ -45,7 +45,7 @@ interface CreatedSPHListResponse {
 interface Documents {
   id?: string;
   name?: string;
-  paymentType?: "CREDIT" | "CBD";
+  paymentType?: 'CREDIT' | 'CBD';
   isRequired?: boolean;
   isRequiredPo?: boolean;
 }
@@ -79,7 +79,7 @@ interface DocumentsData {
   id?: string;
   QuotationRequest?: {
     id?: string;
-    paymentType?: "CREDIT" | "CBD";
+    paymentType?: 'CREDIT' | 'CBD';
     ProjectDocs?: ProjectDocs[];
   };
 }

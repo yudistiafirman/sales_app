@@ -1,11 +1,11 @@
-import { FlashList } from "@shopify/flash-list";
-import React, { useCallback } from "react";
-import { StyleSheet, View, Text } from "react-native";
-import { BLabel, BSpacer } from "@/components";
-import { colors, layout } from "@/constants";
-import { STAGE_PROJECT } from "@/constants/dropdown";
-import font from "@/constants/fonts";
-import { resScale } from "@/utils";
+import { FlashList } from '@shopify/flash-list';
+import React, { useCallback } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import { BLabel, BSpacer } from '@/components';
+import { colors, layout } from '@/constants';
+import { STAGE_PROJECT } from '@/constants/dropdown';
+import font from '@/constants/fonts';
+import { resScale } from '@/utils';
 
 function ProjectPhase({ phase }: { phase: string }) {
   const renderItem = useCallback(
@@ -15,20 +15,14 @@ function ProjectPhase({ phase }: { phase: string }) {
           styles.faseContainer,
           {
             borderColor:
-              index === STAGE_PROJECT.length - 1
-                ? colors.white
-                : colors.textInput.inActive,
+              index === STAGE_PROJECT.length - 1 ? colors.white : colors.textInput.inActive,
           },
-        ]}
-      >
+        ]}>
         <View
           style={[
             styles.circle,
             {
-              backgroundColor:
-                item.value === phase
-                  ? colors.primary
-                  : colors.textInput.inActive,
+              backgroundColor: item.value === phase ? colors.primary : colors.textInput.inActive,
             },
           ]}
         />
@@ -38,8 +32,7 @@ function ProjectPhase({ phase }: { phase: string }) {
             {
               color: item.value === phase ? colors.primary : colors.text.darker,
             },
-          ]}
-        >
+          ]}>
           {item.label}
         </Text>
       </View>
@@ -72,7 +65,7 @@ const styles = StyleSheet.create({
     height: resScale(26),
   },
   circle: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: -5,
     width: layout.pad.md,

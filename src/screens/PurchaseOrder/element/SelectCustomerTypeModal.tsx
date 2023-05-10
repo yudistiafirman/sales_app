@@ -1,47 +1,48 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import { BBackContinueBtn, BButtonPrimary, BForm, BText } from "@/components";
-import { colors, layout } from "@/constants";
-import font from "@/constants/fonts";
-import { resScale } from "@/utils";
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import Modal from 'react-native-modal';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import { BBackContinueBtn, BButtonPrimary, BForm, BText } from '@/components';
+import { colors, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { resScale } from '@/utils';
 
-const company = require("@/assets/icon/Visitation/company.png");
-const profile = require("@/assets/icon/Visitation/profile.png");
+const company = require('@/assets/icon/Visitation/company.png');
+const profile = require('@/assets/icon/Visitation/profile.png');
 
 interface IProps {
   isVisible: boolean;
   onClose: () => void;
-  onSelect: (customerType: "COMPANY" | "INDIVIDU") => void;
+  onSelect: (customerType: 'COMPANY' | 'INDIVIDU') => void;
 }
 
 function SelectCustomerTypeModal({ isVisible, onClose, onSelect }: IProps) {
-  const [purchaseOrderCustomerType, setPurchaseOrderCompanytype] =
-    React.useState<"COMPANY" | "INDIVIDU">("COMPANY");
+  const [purchaseOrderCustomerType, setPurchaseOrderCompanytype] = React.useState<
+    'COMPANY' | 'INDIVIDU'
+  >('COMPANY');
 
   const input: Input[] = [
     {
-      label: "Jenis Pelanggan",
+      label: 'Jenis Pelanggan',
       isRequire: true,
       isError: false,
-      type: "cardOption",
+      type: 'cardOption',
       value: purchaseOrderCustomerType,
       options: [
         {
           icon: company,
-          title: "Perusahaan",
-          value: "COMPANY",
+          title: 'Perusahaan',
+          value: 'COMPANY',
           onChange: () => {
-            setPurchaseOrderCompanytype("COMPANY");
+            setPurchaseOrderCompanytype('COMPANY');
           },
         },
         {
           icon: profile,
-          title: "Individu",
-          value: "INDIVIDU",
+          title: 'Individu',
+          value: 'INDIVIDU',
           onChange: () => {
-            setPurchaseOrderCompanytype("INDIVIDU");
+            setPurchaseOrderCompanytype('INDIVIDU');
           },
         },
       ],
@@ -53,8 +54,7 @@ function SelectCustomerTypeModal({ isVisible, onClose, onSelect }: IProps) {
       style={styles.modalStyle}
       isVisible={isVisible}
       hideModalContentWhileAnimating={false}
-      backdropOpacity={0.3}
-    >
+      backdropOpacity={0.3}>
       <View style={styles.modalContent}>
         <View style={styles.popUpHeader}>
           <BText style={styles.headerTitle}>Tipe Pelanggan</BText>
@@ -83,20 +83,20 @@ function SelectCustomerTypeModal({ isVisible, onClose, onSelect }: IProps) {
 
 const styles = StyleSheet.create({
   modalStyle: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   popUpHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     width: resScale(320),
     paddingBottom: layout.pad.lg,
   },
   modalContent: {
     backgroundColor: colors.white,
-    justifyContent: "space-around",
-    alignItems: "center",
+    justifyContent: 'space-around',
+    alignItems: 'center',
     padding: layout.pad.lg,
     borderRadius: layout.radius.md,
     minHeight: resScale(144),

@@ -1,26 +1,21 @@
-import { View, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
-import React from "react";
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { Text } from 'react-native-paper';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import HighlightText from '../../atoms/BHighlightText';
+import PillNames from './elements/PillNames';
+import PillStatus from './elements/PillStatus';
+import Time from './elements/Time';
+import Unit from './elements/Unit';
+import VisitStatus from './elements/VisitStatus';
+import BButtonPrimary from '@/components/atoms/BButtonPrimary';
+import BLocationText from '@/components/atoms/BLocationText';
+import BSpacer from '@/components/atoms/BSpacer';
+import { colors, fonts, layout } from '@/constants';
+import { visitationDataType } from '@/interfaces';
+import resScale from '@/utils/resScale';
 
-import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Text } from "react-native-paper";
-import PillStatus from "./elements/PillStatus";
-import Time from "./elements/Time";
-import VisitStatus from "./elements/VisitStatus";
-
-import resScale from "@/utils/resScale";
-import PillNames from "./elements/PillNames";
-import HighlightText from "../../atoms/BHighlightText";
-import { colors, fonts, layout } from "@/constants";
-import BLocationText from "@/components/atoms/BLocationText";
-import { visitationDataType } from "@/interfaces";
-import BSpacer from "@/components/atoms/BSpacer";
-import Unit from "./elements/Unit";
-import BButtonPrimary from "@/components/atoms/BButtonPrimary";
-
-function iconRender(
-  isRenderIcon: boolean,
-  customIcon: (() => JSX.Element) | undefined
-) {
+function iconRender(isRenderIcon: boolean, customIcon: (() => JSX.Element) | undefined) {
   if (!isRenderIcon) {
     return null;
   }
@@ -58,22 +53,13 @@ export default function BVisitationCard({
         style={style.subContainer}
         onPress={() => {
           onPress(item);
-        }}
-      >
+        }}>
         <View style={style.leftSide}>
           <View style={style.top}>
-            <HighlightText
-              fontSize={fonts.size.md}
-              name={item.name}
-              searchQuery={searchQuery}
-            />
+            <HighlightText fontSize={fonts.size.md} name={item.name} searchQuery={searchQuery} />
             <PillStatus
               pilStatus={item.pilStatus}
-              color={
-                item.pilStatus === "Belum Selesai"
-                  ? colors.lightGray
-                  : undefined
-              }
+              color={item.pilStatus === 'Belum Selesai' ? colors.lightGray : undefined}
             />
           </View>
           {item.picOrCompanyName ? (
@@ -85,25 +71,14 @@ export default function BVisitationCard({
             <BSpacer size="verySmall" />
           )}
           <BLocationText location={item.location} />
-          <PillNames
-            pillColor={pillColor}
-            pilNames={item.pilNames}
-            searchQuery={searchQuery}
-          />
-          <View
-            style={[
-              style.row,
-              item.time || item.unit || item.status ? style.bottom : null,
-            ]}
-          >
+          <PillNames pillColor={pillColor} pilNames={item.pilNames} searchQuery={searchQuery} />
+          <View style={[style.row, item.time || item.unit || item.status ? style.bottom : null]}>
             <Unit unit={item.unit} />
             <Time time={item.time} />
             <VisitStatus status={item.status} />
           </View>
         </View>
-        <View style={style.rightSide}>
-          {iconRender(isRenderIcon, customIcon)}
-        </View>
+        <View style={style.rightSide}>{iconRender(isRenderIcon, customIcon)}</View>
       </TouchableOpacity>
       {item?.lonlat?.latitude && item?.lonlat.longitude && onLocationPress && (
         <View style={style.location}>
@@ -124,37 +99,37 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    borderColor: "#EBEBEB",
+    borderColor: '#EBEBEB',
     borderRadius: layout.radius.md,
     borderWidth: resScale(1),
     padding: layout.pad.md,
   },
   subContainer: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   leftSide: {
     flex: 1,
     paddingStart: layout.pad.md,
-    justifyContent: "space-between",
-    alignSelf: "center",
+    justifyContent: 'space-between',
+    alignSelf: 'center',
   },
   rightSide: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginStart: layout.pad.lg,
   },
   top: {
     // height: resScale(20),
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     // marginBottom: layout.pad.sm,
     // width: resScale(285),
-    alignItems: "center",
+    alignItems: 'center',
   },
   row: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   bottom: {
     marginTop: layout.pad.md,

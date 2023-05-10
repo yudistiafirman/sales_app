@@ -1,6 +1,6 @@
-import { assign, createMachine } from "xstate";
-import { getAllVisitations } from "@/actions/ProductivityActions";
-import { visitationListResponse } from "@/interfaces";
+import { assign, createMachine } from 'xstate';
+import { getAllVisitations } from '@/actions/ProductivityActions';
+import { visitationListResponse } from '@/interfaces';
 
 export interface Products {
   name?: string;
@@ -21,7 +21,7 @@ export interface VisitHistoryPayload extends visitationListResponse {
   rejectCategory: null | string;
   estimationWeek: string;
   estimationMonth: string;
-  paymentType: "CBD" | "CREDIT";
+  paymentType: 'CBD' | 'CREDIT';
   visitNotes: null | string;
 }
 
@@ -29,13 +29,13 @@ const visitHistoryMachine =
   /** @xstate-layout N4IgpgJg5mDOIC5QDcCWtUBcAEALdmA9gE4Ce2AtgIYDG+AdmAHSoQA2YAxFbBlPQAUqxKhVgBtAAwBdRKAAOhDJlSF6ckAA9EARgAsADiYAmAMyS9ANgMB2AKwAaEKV3GbJg3Z12Dku8btTOwBOSwBfMKc0ZTwCEnJqOlRGJhhMADV0LCoVNQAhUgFiQgArMBpMAEkITgg1ZmTkQgBrZmisWNgiMkpaBmY0zOUc1XoCotLyqogERsIaEbUpaWWNRWVRjW0EbyMfY0lTHQCnFwQ9SWCmSRsDY+tJAKDQiKisnHwu+N6klMH3xZjQrFMoVaqcMDEYrEJjyNg5ABmJAoTHaHziPUS-VSYAyANyQImoOms3oTQWBOWqyQIHWWE2NO2AFozFd9JJLCdnIhTHodEwbKYDMYDOZ-IEQuFIiA0Z1ugk+sk2vjRgARHJUAAyhCoEEgnDUAGFcFR6DAhtkCdVNNSFEp6WotrojkxTJZgsYHh69J6DKdENZjEw9MF-CKdGKOcEItL6IQ9fAabLPvKfv01vaCU6ECzbEx2ZzHNydvzJGWyzpfE9JcZXjL3nLvlilSx2GAMxtHYyA5J-Qhgnty5JK48JS9pcmMQrfgNcRbMIDxiCptUOw71N2EJZe8WzKZrkOR9Xx28Yimm4qUmjAeqF9rdZA11nNz6TDobt5gm69G67DY+3YXhMP4boGKKwSPHodh1pOXyYpezAAKJQiQADKC6YO2NJ0s+oDMt47gGMEUFHFyZyVmybo2AcgHHlKERAA */
   createMachine(
     {
-      id: "visit history machine",
+      id: 'visit history machine',
       predictableActionArguments: true,
-      tsTypes: {} as import("./visitHistoryMachine.typegen").Typegen0,
+      tsTypes: {} as import('./visitHistoryMachine.typegen').Typegen0,
       schema: {
         events: {} as
-          | { type: "assignParams"; value: string }
-          | { type: "onChangeVisitationIdx"; value: number },
+          | { type: 'assignParams'; value: string }
+          | { type: 'onChangeVisitationIdx'; value: number },
         context: {} as {
           projectId: string;
           visitationData: VisitHistoryPayload[];
@@ -57,15 +57,15 @@ const visitHistoryMachine =
         },
       },
       context: {
-        projectId: "",
+        projectId: '',
         visitationData: [],
         loading: false,
         routes: [
           {
-            key: "",
-            title: "",
+            key: '',
+            title: '',
             totalItems: 0,
-            chipPosition: "right",
+            chipPosition: 'right',
           },
         ],
         selectedVisitationByIdx: {} as VisitHistoryPayload,
@@ -75,38 +75,38 @@ const visitHistoryMachine =
         idle: {
           on: {
             assignParams: {
-              target: "getVisitationByProjectId",
-              actions: "assignProjectIdToContext",
+              target: 'getVisitationByProjectId',
+              actions: 'assignProjectIdToContext',
             },
           },
         },
 
         getVisitationByProjectId: {
           invoke: {
-            src: "getAllVisitationByProjectId",
+            src: 'getAllVisitationByProjectId',
 
             onDone: {
-              target: "visitationDataLoaded",
-              actions: "assignVisitationDataToContext",
+              target: 'visitationDataLoaded',
+              actions: 'assignVisitationDataToContext',
             },
 
-            onError: "ErrorState",
+            onError: 'ErrorState',
           },
         },
 
         visitationDataLoaded: {
           on: {
             onChangeVisitationIdx: {
-              target: "visitationDataLoaded",
+              target: 'visitationDataLoaded',
               internal: true,
-              actions: "sliceVisitationData",
+              actions: 'sliceVisitationData',
             },
           },
         },
         ErrorState: {},
       },
 
-      initial: "idle",
+      initial: 'idle',
     },
     {
       services: {
@@ -128,12 +128,10 @@ const visitHistoryMachine =
             key: val.id,
             title: `Kunjungan ${idx + 1}`,
             totalItems: 0,
-            chipPosition: "right",
+            chipPosition: 'right',
           }));
 
-          const initialSelectedVisitation = event.data.filter(
-            (v, i) => i === 0
-          );
+          const initialSelectedVisitation = event.data.filter((v, i) => i === 0);
           return {
             visitationData: event.data,
             loading: false,

@@ -7,7 +7,7 @@ interface LocalFileType {
     datetime: string;
   };
   isFromPicker: boolean;
-  type?: "COVER" | "GALLERY";
+  type?: 'COVER' | 'GALLERY';
   attachType?: string;
 }
 

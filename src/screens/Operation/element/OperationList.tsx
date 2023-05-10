@@ -1,18 +1,15 @@
-import { StyleSheet, FlatList } from "react-native";
-import React from "react";
-import { FlashList } from "@shopify/flash-list";
-import { layout } from "@/constants";
-import { BEmptyState, BSpacer, BVisitationCard } from "@/components";
-import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
-import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import { FlashList } from '@shopify/flash-list';
+import React from 'react';
+import { StyleSheet, FlatList } from 'react-native';
+import { BEmptyState, BSpacer, BVisitationCard } from '@/components';
+import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
+import { layout } from '@/constants';
+import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 
 interface OperationListProps {
   data: OperationsDeliveryOrdersListResponse[];
-  onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
   refreshing?: boolean;
   loadList?: boolean;
   isLoadMore?: boolean;
@@ -42,7 +39,7 @@ export default function OperationList({
   const renderItem = (item: OperationsDeliveryOrdersListResponse) => (
     <BVisitationCard
       onPress={() => onPressList(item)}
-      onLocationPress={(lonlat) => onLocationPress(lonlat)}
+      onLocationPress={lonlat => onLocationPress(lonlat)}
       item={{
         name: item?.number,
         picOrCompanyName: item?.project?.projectName,
@@ -71,7 +68,7 @@ export default function OperationList({
       keyExtractor={(item, index) => index.toString()}
       refreshing={refreshing}
       onEndReached={onEndReached}
-      renderItem={(item) => renderItem(item.item)}
+      renderItem={item => renderItem(item.item)}
       ListEmptyComponent={
         loadList || refreshing ? (
           <BCommonListShimmer />

@@ -1,8 +1,8 @@
-import React from "react";
-import { TextStyle, ViewStyle } from "react-native";
-import { TextInput, TextInputProps } from "react-native-paper";
-import { colors, fonts, layout } from "@/constants";
-import { resScale } from "@/utils";
+import React from 'react';
+import { TextStyle, ViewStyle } from 'react-native';
+import { TextInput, TextInputProps } from 'react-native-paper';
+import { resScale } from '@/utils';
+import { colors, fonts, layout } from '@/constants';
 
 interface IProps extends Partial<TextInputProps> {
   rounded?: boolean;
@@ -26,7 +26,7 @@ const baseContainerStyle: TextStyle = {
 };
 
 const defaultProps = {
-  mode: "outlined",
+  mode: 'outlined',
   outlineColor: colors.textInput.inActive,
   activeOutlineColor: colors.primary,
   // placeHolderTextColor: colors.primary,

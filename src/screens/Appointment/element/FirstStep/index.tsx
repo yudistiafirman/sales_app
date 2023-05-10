@@ -1,16 +1,16 @@
-import React from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { TextInput } from "react-native-paper";
-import { BSearchBar, BSpacer } from "@/components";
-import Inputs from "./Input";
-import SearchingCustomer from "./SearchingCustomer";
-import { useAppointmentData } from "@/hooks";
-import { APPOINTMENT } from "@/navigation/ScreenNames";
-import { AppointmentActionType } from "@/context/AppointmentContext";
-import { resScale } from "@/utils";
-import { layout } from "@/constants";
+import crashlytics from '@react-native-firebase/crashlytics';
+import React from 'react';
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { TextInput } from 'react-native-paper';
+import Inputs from './Input';
+import SearchingCustomer from './SearchingCustomer';
+import { BSearchBar, BSpacer } from '@/components';
+import { layout } from '@/constants';
+import { AppointmentActionType } from '@/context/AppointmentContext';
+import { useAppointmentData } from '@/hooks';
+import { APPOINTMENT } from '@/navigation/ScreenNames';
+import { resScale } from '@/utils';
 
 function FirstStep() {
   const [values, dispatchValue] = useAppointmentData();
@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   touchable: {
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,

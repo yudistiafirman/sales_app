@@ -1,14 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
-import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import colors from "@/constants/colors";
-import font from "@/constants/fonts";
-import BChip from "../../atoms/BChip";
-import BText from "../../atoms/BText";
-import resScale from "@/utils/resScale";
-import { layout } from "@/constants";
-import formatCurrency from "@/utils/formatCurrency";
+import * as React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import BChip from '../../atoms/BChip';
+import BText from '../../atoms/BText';
+import { layout } from '@/constants';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
+import formatCurrency from '@/utils/formatCurrency';
+import resScale from '@/utils/resScale';
 
 interface PriceListCardProps {
   productName?: string;
@@ -17,12 +17,7 @@ interface PriceListCardProps {
   slump?: number;
 }
 
-function PriceListCard({
-  productName,
-  productPrice,
-  categories,
-  slump,
-}: PriceListCardProps) {
+function PriceListCard({ productName, productPrice, categories, slump }: PriceListCardProps) {
   return (
     <View style={PriceListCardStyles.container}>
       <View style={PriceListCardStyles.nameAndPriceContainer}>
@@ -31,18 +26,14 @@ function PriceListCard({
           {`IDR ${formatCurrency(productPrice)}`}
         </BText>
       </View>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: 'row' }}>
         <BChip type="default" backgroundColor={colors.chip.green}>
           {categories}
         </BChip>
         {slump && (
           <BChip type="default" backgroundColor={colors.chip.disabled}>
             {`slump ${slump}`}
-            <Icon
-              color={colors.text.darker}
-              size={font.size.xs}
-              name="plus-minus"
-            />
+            <Icon color={colors.text.darker} size={font.size.xs} name="plus-minus" />
             2cm
           </BChip>
         )}
@@ -59,8 +50,8 @@ export const PriceListCardStyles = StyleSheet.create({
     marginTop: layout.pad.xs + layout.pad.sm,
   },
   nameAndPriceContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: layout.pad.md,
     marginTop: layout.pad.xs + layout.pad.sm,
   },

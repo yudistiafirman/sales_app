@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, ViewStyle } from "react-native";
-import React from "react";
-import { Switch } from "react-native-paper";
-import { colors, fonts, layout } from "@/constants";
-import { resFontSize } from "@/utils";
+import React from 'react';
+import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Switch } from 'react-native-paper';
+import { resFontSize } from '@/utils';
+import { colors, fonts, layout } from '@/constants';
 
 type BSwitchType = {
   value: boolean;
@@ -11,12 +11,7 @@ type BSwitchType = {
   labelStyle?: ViewStyle;
 };
 
-export default function BSwitch({
-  value,
-  onChange,
-  label,
-  labelStyle,
-}: BSwitchType) {
+export default function BSwitch({ value, onChange, label, labelStyle }: BSwitchType) {
   return (
     <View style={style.container}>
       <Text numberOfLines={1} style={[style.labelStyle, labelStyle]}>
@@ -24,7 +19,7 @@ export default function BSwitch({
       </Text>
       <Switch
         value={value}
-        onValueChange={(val) => {
+        onValueChange={val => {
           if (onChange) {
             onChange(val);
           }
@@ -36,10 +31,10 @@ export default function BSwitch({
 
 const style = StyleSheet.create({
   container: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   labelStyle: {
     flex: 1,

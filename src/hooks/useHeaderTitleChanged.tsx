@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
+import { useLayoutEffect } from 'react';
 
 type useHeaderTitle = {
   title: string;

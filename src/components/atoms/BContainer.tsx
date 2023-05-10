@@ -1,12 +1,12 @@
-import React from "react";
-import { StyleProp, ViewStyle, View } from "react-native";
-import { resScale } from "@/utils";
-import { colors, layout } from "@/constants";
+import React from 'react';
+import { StyleProp, ViewStyle, View } from 'react-native';
+import { colors, layout } from '@/constants';
+import { resScale } from '@/utils';
 
 interface IProps {
   children: React.ReactNode;
-  bgc?: "grey";
-  radius?: "sm" | "md" | "lg";
+  bgc?: 'grey';
+  radius?: 'sm' | 'md' | 'lg';
   border?: boolean;
   paddingHorizontal?: number;
   paddingVertical?: number;
@@ -25,7 +25,7 @@ const makeStyle = ({
   paddingVertical,
 }: IProps): StyleProp<ViewStyle> => {
   let styles = containerStyle;
-  if (bgc === "grey") {
+  if (bgc === 'grey') {
     styles = {
       ...styles,
       backgroundColor: colors.offWhite,
@@ -50,11 +50,7 @@ const makeStyle = ({
     styles = {
       ...styles,
       borderRadius:
-        radius === "sm"
-          ? layout.radius.sm
-          : radius === "md"
-          ? layout.radius.md
-          : layout.radius.lg,
+        radius === 'sm' ? layout.radius.sm : radius === 'md' ? layout.radius.md : layout.radius.lg,
     };
   }
 

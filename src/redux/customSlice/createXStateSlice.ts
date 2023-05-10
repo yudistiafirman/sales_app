@@ -1,12 +1,5 @@
-import { MiddlewareAPI } from "@reduxjs/toolkit";
-import {
-  AnyEventObject,
-  EventObject,
-  interpret,
-  Interpreter,
-  State,
-  StateMachine,
-} from "xstate";
+import { MiddlewareAPI } from '@reduxjs/toolkit';
+import { AnyEventObject, EventObject, interpret, Interpreter, State, StateMachine } from 'xstate';
 
 /**
  * A 'slice' (to use the Redux Toolkit terminology)
@@ -20,30 +13,21 @@ export type XStateSlice<
 > = {
   _start: (store: MiddlewareAPI) => Interpreter<TContext, any, TEvent>;
   getService: () => Interpreter<TContext, any, TEvent>;
-  reducer: (
-    state: TSelectedState | undefined,
-    action: TEvent
-  ) => TSelectedState;
+  reducer: (state: TSelectedState | undefined, action: TEvent) => TSelectedState;
 };
 
 /**
  * Create a 'slice' which can convert an XState machine
  * into a reducer which can be used in Redux
  */
-export const createXStateSlice = <
-  TContext,
-  TEvent extends EventObject,
-  TSelectedState
->(params: {
+export const createXStateSlice = <TContext, TEvent extends EventObject, TSelectedState>(params: {
   name: string;
   machine: StateMachine<TContext, any, TEvent>;
   getSelectedState: (state: State<TContext, TEvent>) => TSelectedState;
 }): XStateSlice<TContext, TEvent, TSelectedState> => {
   let service: Interpreter<TContext, any, TEvent> | undefined;
 
-  const initialReduxState = params.getSelectedState(
-    params.machine.initialState
-  );
+  const initialReduxState = params.getSelectedState(params.machine.initialState);
 
   const updateEvent = (state: TSelectedState) => ({
     type: `${params.name}.xstate.update`,
@@ -82,7 +66,7 @@ export const createXStateSlice = <
       } as any,
     }).start();
 
-    service.subscribe((state) => {
+    service.subscribe(state => {
       if (!state.changed) return;
       store.dispatch(updateEvent(params.getSelectedState(state)));
     });

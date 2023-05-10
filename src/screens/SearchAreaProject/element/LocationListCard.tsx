@@ -1,11 +1,11 @@
-import React from "react";
-import { TouchableOpacity, View } from "react-native";
-import Icons from "react-native-vector-icons/Feather";
-import colors from "@/constants/colors";
-import resScale from "@/utils/resScale";
-import SearchAreaStyles from "../styles";
-import { BSpacer, BText } from "@/components";
-import { layout } from "@/constants";
+import React from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import Icons from 'react-native-vector-icons/Feather';
+import SearchAreaStyles from '../styles';
+import { BSpacer, BText } from '@/components';
+import { layout } from '@/constants';
+import colors from '@/constants/colors';
+import resScale from '@/utils/resScale';
 
 interface LocationListCardProps {
   onPress: () => void;
@@ -13,16 +13,9 @@ interface LocationListCardProps {
   addressDetail: string;
 }
 
-function LocationListCard({
-  onPress,
-  addressTitle,
-  addressDetail,
-}: LocationListCardProps) {
+function LocationListCard({ onPress, addressTitle, addressDetail }: LocationListCardProps) {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={SearchAreaStyles.locationListCardContainer}
-    >
+    <TouchableOpacity onPress={onPress} style={SearchAreaStyles.locationListCardContainer}>
       <View style={SearchAreaStyles.innerListContainer}>
         <Icons
           name="map-pin"

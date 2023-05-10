@@ -1,4 +1,4 @@
-import { OperationFileType } from "@/interfaces/Operation";
+import { OperationFileType } from '@/interfaces/Operation';
 
 export interface updateDeliverOrder {
   deliveryOrderId: string;

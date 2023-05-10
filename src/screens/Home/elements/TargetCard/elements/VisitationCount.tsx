@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet } from "react-native";
-import React from "react";
-import font from "@/constants/fonts";
-import colors from "@/constants/colors";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
 
 type VisitationCountPropsType = {
   maxVisitation: number;
@@ -12,10 +12,7 @@ export default function VisitationCount({
   maxVisitation,
   currentVisitaion,
 }: VisitationCountPropsType) {
-  if (
-    typeof maxVisitation !== "number" ||
-    typeof currentVisitaion !== "number"
-  ) {
+  if (typeof maxVisitation !== 'number' || typeof currentVisitaion !== 'number') {
     return <Text style={style.countText}> - / - </Text>;
   }
   return (

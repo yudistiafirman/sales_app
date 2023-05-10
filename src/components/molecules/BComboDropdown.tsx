@@ -1,8 +1,7 @@
-import React from "react";
-import { View } from "react-native";
-
-import BDropdown from "../atoms/BDropdown";
-import BSpacer from "../atoms/BSpacer";
+import React from 'react';
+import { View } from 'react-native';
+import BDropdown from '../atoms/BDropdown';
+import BSpacer from '../atoms/BSpacer';
 
 interface IProps {
   itemsOne: {
@@ -13,14 +12,8 @@ interface IProps {
     label: string;
     value: string | number | any;
   }[];
-  onChangeOne:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
-  onChangeTwo:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+  onChangeOne: ((value: any) => void) | ((value: any[] | null) => void) | undefined;
+  onChangeTwo: ((value: any) => void) | ((value: any[] | null) => void) | undefined;
   placeholderOne: string;
   placeholderTwo: string;
   isErrorOne?: boolean;
@@ -47,7 +40,7 @@ function BComboDropdown(props: IProps) {
   } = props;
 
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View style={{ flexDirection: 'row' }}>
       <View style={{ flex: 6 }}>
         <BDropdown
           open={false}

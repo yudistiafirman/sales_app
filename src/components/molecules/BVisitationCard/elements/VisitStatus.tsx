@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
-import React from "react";
-import resScale from "@/utils/resScale";
-import { colors, fonts, layout } from "@/constants";
-import BSvg from "@/components/atoms/BSvg";
-import SvgNames from "@/components/atoms/BSvg/svgName";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import BSvg from '@/components/atoms/BSvg';
+import SvgNames from '@/components/atoms/BSvg/svgName';
+import { colors, fonts, layout } from '@/constants';
+import resScale from '@/utils/resScale';
 
 type visitStatusType = {
   status?: string;
@@ -26,8 +26,8 @@ export default function VisitStatus({ status }: visitStatusType) {
 }
 const style = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   iconStyle: {
     marginRight: resScale(7),

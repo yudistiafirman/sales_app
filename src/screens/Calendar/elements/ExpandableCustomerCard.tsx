@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,28 +7,23 @@ import {
   LayoutAnimation,
   TouchableOpacity,
   ViewStyle,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { BLocationText, BPic, BSpacer, BText } from "@/components";
-import { colors, layout } from "@/constants";
-import { customerDataInterface } from "@/interfaces";
+} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { BLocationText, BPic, BSpacer, BText } from '@/components';
+import { colors, layout } from '@/constants';
+import { customerDataInterface } from '@/interfaces';
 
-export default function ExpandableCustomerCard({
-  item,
-}: {
-  item: customerDataInterface;
-}) {
+export default function ExpandableCustomerCard({ item }: { item: customerDataInterface }) {
   const [expanded, setExpanded] = useState(false);
   useEffect(() => {
-    if (Platform.OS === "android") {
+    if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
   }, []);
 
   function changeLayout() {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setExpanded((curr) => !curr);
+    setExpanded(curr => !curr);
   }
 
   function bottomCardHeight(): ViewStyle | null {
@@ -43,9 +39,8 @@ export default function ExpandableCustomerCard({
         <TouchableOpacity
           onPress={changeLayout}
           style={{
-            transform: [expanded ? { rotate: "180deg" } : { rotate: "0deg" }],
-          }}
-        >
+            transform: [expanded ? { rotate: '180deg' } : { rotate: '0deg' }],
+          }}>
           <Icon name="chevron-down" size={25} color={colors.icon.darkGrey} />
         </TouchableOpacity>
       </View>
@@ -58,7 +53,7 @@ export default function ExpandableCustomerCard({
         <BSpacer size="extraSmall" />
         <BPic
           name={item.picName}
-          email={item.email ? item.email : "-"}
+          email={item.email ? item.email : '-'}
           phone={item.phone}
           position={item.position}
           border={false}
@@ -75,11 +70,11 @@ const styles = StyleSheet.create({
     borderRadius: layout.radius.md,
   },
   topCard: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    alignItems: "center",
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   bottomCard: {
-    overflow: "hidden",
+    overflow: 'hidden',
   },
 });

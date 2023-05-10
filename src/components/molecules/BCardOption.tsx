@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   TouchableOpacity,
   Image,
@@ -7,13 +7,12 @@ import {
   ImageSourcePropType,
   ImageStyle,
   ImageProps,
-} from "react-native";
-
-import BText from "../atoms/BText";
-import { colors, layout } from "@/constants";
-import { resScale } from "@/utils";
-import BSpacer from "../atoms/BSpacer";
-import BSvg from "../atoms/BSvg";
+} from 'react-native';
+import BSpacer from '../atoms/BSpacer';
+import BSvg from '../atoms/BSvg';
+import BText from '../atoms/BText';
+import { colors, layout } from '@/constants';
+import { resScale } from '@/utils';
 
 interface IProps {
   children?: React.ReactNode;
@@ -23,16 +22,16 @@ interface IProps {
   isActive?: boolean;
   isClickable?: boolean;
   onPress?: () => void;
-  flexDirection?: "column" | "row";
+  flexDirection?: 'column' | 'row';
 }
 
 const baseStyle: StyleProp<ViewStyle> = {
   backgroundColor: colors.offWhite,
   borderRadius: layout.radius.md,
   height: resScale(80),
-  justifyContent: "center",
-  alignContent: "center",
-  alignItems: "center",
+  justifyContent: 'center',
+  alignContent: 'center',
+  alignItems: 'center',
 };
 
 const baseStyleImage: StyleProp<ViewStyle> = {
@@ -41,11 +40,7 @@ const baseStyleImage: StyleProp<ViewStyle> = {
 };
 
 const makeStyle = (props: IProps): StyleProp<ViewStyle> => {
-  const {
-    fullWidth = false,
-    isActive = false,
-    flexDirection = "column",
-  } = props;
+  const { fullWidth = false, isActive = false, flexDirection = 'column' } = props;
   let style = { ...baseStyle, flexDirection };
 
   if (fullWidth) {
@@ -66,9 +61,7 @@ const makeStyle = (props: IProps): StyleProp<ViewStyle> => {
   return style;
 };
 
-const makeStyleImage = ({
-  isActive,
-}: Partial<IProps>): StyleProp<ImageStyle> => {
+const makeStyleImage = ({ isActive }: Partial<IProps>): StyleProp<ImageStyle> => {
   if (isActive) {
     return {
       ...baseStyleImage,
@@ -89,9 +82,8 @@ function BCardOption(props: IProps) {
     <TouchableOpacity
       disabled={isClickable !== undefined ? !isClickable : false}
       style={makeStyle(props)}
-      onPress={onPress}
-    >
-      {typeof icon === "string" ? (
+      onPress={onPress}>
+      {typeof icon === 'string' ? (
         <BSvg
           color={isActive ? colors.primary : colors.textInput.input}
           svgName={icon}
@@ -101,7 +93,7 @@ function BCardOption(props: IProps) {
         <Image source={icon} style={makeStyleImage({ isActive })} />
       )}
       <BSpacer size="verySmall" />
-      <BText {...(isActive && { color: "primary" })}>{title}</BText>
+      <BText {...(isActive && { color: 'primary' })}>{title}</BText>
     </TouchableOpacity>
   );
 }

@@ -1,14 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from "react";
-import { View, Image, StyleSheet } from "react-native";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import BButtonPrimary from "@/components/atoms/BButtonPrimary";
-import BSpacer from "@/components/atoms/BSpacer";
-import BText from "@/components/atoms/BText";
-import { layout } from "@/constants";
-import colors from "@/constants/colors";
-import font from "@/constants/fonts";
-import resScale from "@/utils/resScale";
+import React from 'react';
+import { View, Image, StyleSheet } from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import BButtonPrimary from '@/components/atoms/BButtonPrimary';
+import BSpacer from '@/components/atoms/BSpacer';
+import BText from '@/components/atoms/BText';
+import { layout } from '@/constants';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
+import resScale from '@/utils/resScale';
 
 type EmptyStateProps = {
   emptyProductName?: string;
@@ -23,19 +23,14 @@ function EmptyState({
   emptyText,
   isError,
   errorMessage,
-  actionBtnTitle = "Retry",
+  actionBtnTitle = 'Retry',
   onAction,
 }: EmptyStateProps) {
   const renderIcon = () => {
     if (isError) {
       return <AntDesign size={resScale(48)} name="closecircle" color="red" />;
     }
-    return (
-      <Image
-        style={styles.emptyimage}
-        source={require("@/assets/icon/ic_not_found.png")}
-      />
-    );
+    return <Image style={styles.emptyimage} source={require('@/assets/icon/ic_not_found.png')} />;
   };
 
   const renderContent = () => {
@@ -55,11 +50,7 @@ function EmptyState({
         <BSpacer size="small" />
         {isError && (
           <View style={styles.btnWrapper}>
-            <BButtonPrimary
-              isOutline
-              title={actionBtnTitle}
-              onPress={onAction}
-            />
+            <BButtonPrimary isOutline title={actionBtnTitle} onPress={onAction} />
           </View>
         )}
       </View>
@@ -70,7 +61,7 @@ function EmptyState({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
   },
   emptyimage: {
     width: resScale(88),
@@ -80,11 +71,11 @@ const styles = StyleSheet.create({
   emptyText: {
     fontFamily: font.family.montserrat[600],
     fontSize: font.size.md,
-    textAlign: "center",
+    textAlign: 'center',
     color: colors.text.darker,
   },
   btnWrapper: {
-    alignItems: "center",
+    alignItems: 'center',
   },
 });
 

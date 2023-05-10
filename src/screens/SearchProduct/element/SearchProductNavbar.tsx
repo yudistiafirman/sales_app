@@ -1,9 +1,9 @@
-import React from "react";
-import { View, GestureResponderEvent, ViewStyle, Platform } from "react-native";
-import { TextInput } from "react-native-paper";
-import { layout } from "@/constants";
-import { BSearchBar } from "@/components";
-import SearchProductStyles from "../styles";
+import React from 'react';
+import { View, GestureResponderEvent, ViewStyle, Platform } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import SearchProductStyles from '../styles';
+import { BSearchBar } from '@/components';
+import { layout } from '@/constants';
 
 interface SearchProductNavbarProps {
   onChangeText?: (((text: string) => void) & Function) | undefined;
@@ -24,19 +24,12 @@ function SearchProductNavbar({
     <View style={customStyle || SearchProductStyles.searchBarContainer}>
       <BSearchBar
         value={value}
-        textInputStyle={
-          Platform.OS !== "android" && { paddingBottom: layout.pad.sm }
-        }
+        textInputStyle={Platform.OS !== 'android' && { paddingBottom: layout.pad.sm }}
         onChangeText={onChangeText}
         placeholder="Cari Produk"
         autoFocus={autoFocus}
         left={<TextInput.Icon icon="magnify" />}
-        right={
-          value &&
-          value?.length > 0 && (
-            <TextInput.Icon onPress={onClearValue} icon="close" />
-          )
-        }
+        right={value && value?.length > 0 && <TextInput.Icon onPress={onClearValue} icon="close" />}
       />
     </View>
   );

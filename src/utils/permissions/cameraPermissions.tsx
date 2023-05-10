@@ -1,15 +1,15 @@
-import { Linking, PermissionsAndroid, Platform } from "react-native";
-import { Camera } from "react-native-vision-camera";
-import { displayName } from "../../../app.json";
-import { store } from "@/redux/store";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import { Linking, PermissionsAndroid, Platform } from 'react-native';
+import { Camera } from 'react-native-vision-camera';
+import { displayName } from '../../../app.json';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { store } from '@/redux/store';
 
 const openSetting = () => {
   Linking.openSettings().catch(() => {
     store.dispatch(
       openPopUp({
-        popUpType: "error",
-        popUpText: "Terjadi error saat membuka Setting",
+        popUpType: 'error',
+        popUpText: 'Terjadi error saat membuka Setting',
         outsideClickClosePopUp: true,
       })
     );
@@ -19,12 +19,12 @@ const openSetting = () => {
 const showAlertCamera = () => {
   store.dispatch(
     openPopUp({
-      popUpType: "none",
+      popUpType: 'none',
       popUpText: `Aktifkan Izin Kamera untuk mengizinkan ${displayName} mengambil gambar.`,
       isRenderActions: true,
       outsideClickClosePopUp: false,
       unRenderBackButton: true,
-      primaryBtnTitle: "Buka Setting",
+      primaryBtnTitle: 'Buka Setting',
       primaryBtnAction: () => {
         setTimeout(() => {
           store.dispatch(closePopUp());
@@ -37,24 +37,22 @@ const showAlertCamera = () => {
 
 export const hasCameraPermissions = async () => {
   try {
-    if (Platform.OS === "ios") {
+    if (Platform.OS === 'ios') {
       const cameraPermission = await Camera.getCameraPermissionStatus();
-      if (cameraPermission === "not-determined") {
+      if (cameraPermission === 'not-determined') {
         const newCameraPermission = await Camera.requestCameraPermission();
-        if (newCameraPermission === "authorized") {
+        if (newCameraPermission === 'authorized') {
           return true;
         }
         showAlertCamera();
       } else {
-        if (cameraPermission === "authorized") {
+        if (cameraPermission === 'authorized') {
           return true;
         }
         showAlertCamera();
       }
     } else {
-      const status = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA
-      );
+      const status = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
       if (status === PermissionsAndroid.RESULTS.GRANTED) {
         return true;
       }
@@ -65,11 +63,10 @@ export const hasCameraPermissions = async () => {
       }
     }
   } catch (err) {
-    const errorMessage =
-      err.message || "Terjadi error dalam meminta izin untuk mengakses camera";
+    const errorMessage = err.message || 'Terjadi error dalam meminta izin untuk mengakses camera';
     store.dispatch(
       openPopUp({
-        popUpType: "error",
+        popUpType: 'error',
         popUpText: errorMessage,
         outsideClickClosePopUp: true,
       })

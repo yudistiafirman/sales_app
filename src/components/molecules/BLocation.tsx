@@ -1,18 +1,18 @@
-import * as React from "react";
-import { Dimensions, Platform, View, ViewStyle } from "react-native";
-import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from "react-native-maps";
-import resScale from "@/utils/resScale";
-import { BLocationProps } from "@/interfaces";
-import BMarker from "../atoms/BMarker";
+import * as React from 'react';
+import { Dimensions, Platform, View, ViewStyle } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
+import BMarker from '../atoms/BMarker';
+import { BLocationProps } from '@/interfaces';
+import resScale from '@/utils/resScale';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
 const LATITUDE = -6.18897;
 const LONGITUDE = 106.738909;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-const ANDROID = Platform.OS === "android";
+const ANDROID = Platform.OS === 'android';
 const MAPSPROVIDER = ANDROID ? PROVIDER_GOOGLE : PROVIDER_DEFAULT;
 
 const BLocationDefaultStyle = {
@@ -35,8 +35,8 @@ const BLocationDefaultProps = {
 
 const fixedCenterContainer: ViewStyle = {
   flex: 1,
-  justifyContent: "center",
-  alignItems: "center",
+  justifyContent: 'center',
+  alignItems: 'center',
 };
 
 const BLocation = React.forwardRef(

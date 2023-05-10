@@ -1,14 +1,13 @@
-import { View, StyleSheet, Text } from "react-native";
-import React, { useCallback } from "react";
-
-import LinearGradient from "react-native-linear-gradient";
-import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { resScale } from "@/utils";
-import { layout } from "@/constants";
-import { BSpacer, BVisitationCard } from "@/components";
-import { visitationDataType } from "@/interfaces";
-import EmptyState from "@/components/organism/BEmptyState";
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import React, { useCallback } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { BSpacer, BVisitationCard } from '@/components';
+import EmptyState from '@/components/organism/BEmptyState';
+import { layout } from '@/constants';
+import { visitationDataType } from '@/interfaces';
+import { resScale } from '@/utils';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -55,10 +54,7 @@ export default function BottomSheetFlatlist({
   errorMessage,
   onAction,
 }: FooterType & BottomSheetFlatlistType) {
-  const footerComp = useCallback(
-    () => <FooterLoading isLoading={isLoading} />,
-    [isLoading]
-  );
+  const footerComp = useCallback(() => <FooterLoading isLoading={isLoading} />, [isLoading]);
   const separator = useCallback(() => <BSpacer size="extraSmall" />, []);
   const renderEmptyComponent = () => {
     if (isLoading) {
@@ -102,11 +98,11 @@ const style = StyleSheet.create({
   flatListContainer: {},
   flatListLoading: {
     marginTop: layout.pad.md,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   flatListShimmer: {
-    width: "100%",
+    width: '100%',
     height: resScale(60),
     borderRadius: layout.radius.md,
   },

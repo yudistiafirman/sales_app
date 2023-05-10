@@ -1,7 +1,7 @@
-import { assign, createMachine } from "xstate";
-import Geolocation from "react-native-geolocation-service";
-import { hasLocationPermission } from "@/utils/permissions";
-import { getLocationCoordinates } from "../priceMachine";
+import Geolocation from 'react-native-geolocation-service';
+import { assign, createMachine } from 'xstate';
+import { getLocationCoordinates } from '../priceMachine';
+import { hasLocationPermission } from '@/utils/permissions';
 
 interface IContext {
   PostalId: any;
@@ -25,45 +25,45 @@ const deviceLocationMachine =
   /** @xstate-layout N4IgpgJg5mDOIC5QTANwJYGMwBkD2mAhgC7p4B2AdOhADZgDEhsA1uuVAApgBOAtuliwy5ANoAGALqJQABzzDSFGSAAeiAIwA2LZQDMBvQCZxRrXq0B2cQFYALABoQAT0RGjeypZvjfNgJwadnriVpYAvuFOKBjY+ERKVMws3PyCwhQMEBRg1OSoeCy5MVi4BCQilMmpAkIiCOwFCSISkq0q8ooiKuoIAbqm4gAcGpb+RkF2dv5OrgjuNpRGPr5apnajvnqR0Wil8RUUVbS0eADukFk5eQVFlCVx5YnHpxcQDflPLVLtSCCd6ESPUQVjslDsWiGljs9hM4ksE1miBGlBWviMQ38IR0dgiURADzKzSOhBO50uvB4eB4lFktBIADNqXx7ntHsSkmS3h8mocxD8pB0FIDun9ejpdP5bCFLCNxBCNBokQhcUNKPKrP5IRobFDFTsCWyiXzKJTqQBxMDEUgcA6JBgAI0ImBYABU8DR6L85MKgWLEABaWXKuxDIyUfw2bT2GwGZb+SL48h4FDwP6Eu2in1dZT+hABjRmZUBga+Xz+IZTDHDewGjNfI6esBCnPkYEqozKia6bQ6IZ6GyD8SR4x1o2ZkmsGrpLP-X2z3oDyyomwmKyjQK2Gxd3xeFY68wI+GRsexY3PUmvSAtkW50C9aG6IxYvQwkaDkadlyIV9PkYD+VvFhXFT32BsqDNHhLWtdgoAnNs-gBP170QYJ-C8DZ5UVWUBwsZVYQjKMtBjOMAkTcIgA */
   createMachine(
     {
-      id: "deviceLocation",
+      id: 'deviceLocation',
       schema: {
         context: {} as IContext,
         guards: {} as IGuard,
       },
       predictableActionArguments: true,
-      tsTypes: {} as import("./deviceLocation.machine.typegen").Typegen0,
+      tsTypes: {} as import('./deviceLocation.machine.typegen').Typegen0,
       context: {
-        errorMessage: "",
-        formattedAddress: "",
+        errorMessage: '',
+        formattedAddress: '',
         lat: 0,
         lon: 0,
         isGranted: false,
         distance: {
-          text: "",
+          text: '',
           value: null,
         },
       },
-      initial: "idle",
+      initial: 'idle',
       states: {
         idle: {
           on: {
-            askingPermission: "askPermission",
+            askingPermission: 'askPermission',
           },
         },
 
         askPermission: {
           invoke: {
-            src: "askingPermission",
+            src: 'askingPermission',
             onDone: {
-              target: "allowed",
-              cond: "isGranted",
+              target: 'allowed',
+              cond: 'isGranted',
             },
           },
         },
 
         allowed: {
           invoke: {
-            src: "getCurrentLocation",
+            src: 'getCurrentLocation',
 
             // onError: 'errorGettingLocation',
             // onDone: {
@@ -71,19 +71,19 @@ const deviceLocationMachine =
             //   actions: 'assignCurrentLocationToContext',
             // },
             onDone: {
-              actions: ["assignCurrentLocationToContext", "dispatchState"],
+              actions: ['assignCurrentLocationToContext', 'dispatchState'],
             },
 
             onError: {
-              target: "errorGettingLocation",
-              actions: "assignError",
+              target: 'errorGettingLocation',
+              actions: 'assignError',
             },
           },
         },
 
         errorGettingLocation: {
           on: {
-            backToidle: "idle",
+            backToidle: 'idle',
           },
         },
       },
@@ -128,7 +128,7 @@ const deviceLocationMachine =
               // '',
               longitude,
               latitude,
-              "BP-LEGOK"
+              'BP-LEGOK'
             );
             const { result } = data;
             if (!result) {

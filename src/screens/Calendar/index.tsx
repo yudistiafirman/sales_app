@@ -1,47 +1,46 @@
-import { View, Text, StyleSheet, DeviceEventEmitter } from "react-native";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { DateData } from "react-native-calendars";
-import moment, { locale } from "moment";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { FlashList } from "@shopify/flash-list";
-import { colors, fonts, layout } from "@/constants";
-import { BButtonPrimary, BCalendar, BSpacer, BText } from "@/components";
-import ExpandableCustomerCard from "./elements/ExpandableCustomerCard";
-import { getVisitationsList } from "@/redux/async-thunks/productivityFlowThunks";
-import { RootState } from "@/redux/store";
-import { customerDataInterface, visitationListResponse } from "@/interfaces";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import moment, { locale } from 'moment';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { View, Text, StyleSheet, DeviceEventEmitter } from 'react-native';
+import { DateData } from 'react-native-calendars';
+import { useDispatch, useSelector } from 'react-redux';
+import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
+import { BButtonPrimary, BCalendar, BSpacer, BText } from '@/components';
+import { colors, fonts, layout } from '@/constants';
+import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+import { customerDataInterface, visitationListResponse } from '@/interfaces';
+import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
+import { CALENDAR } from '@/navigation/ScreenNames';
+import { getVisitationsList } from '@/redux/async-thunks/productivityFlowThunks';
+import { openPopUp } from '@/redux/reducers/modalReducer';
 import {
   setVisitationMapped,
   resetStates,
   setMarkedData,
-} from "@/redux/reducers/productivityFlowReducer";
-import { openPopUp } from "@/redux/reducers/modalReducer";
-import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
-import { CALENDAR } from "@/navigation/ScreenNames";
-import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
+} from '@/redux/reducers/productivityFlowReducer';
+import { RootState } from '@/redux/store';
 
 export default function CalendarScreen() {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
   const useTodayMinDate = route.params?.useTodayMinDate;
   const dispatch = useDispatch();
-  const { visitationCalendarMapped, markedDate, isVisitationLoading } =
-    useSelector((state: RootState) => state.productivity);
-
-  const [customerDatas, setCustomerDatas] = useState<customerDataInterface[]>(
-    []
+  const { visitationCalendarMapped, markedDate, isVisitationLoading } = useSelector(
+    (state: RootState) => state.productivity
   );
-  useHeaderTitleChanged({ title: "Pilih Tanggal" });
+
+  const [customerDatas, setCustomerDatas] = useState<customerDataInterface[]>([]);
+  useHeaderTitleChanged({ title: 'Pilih Tanggal' });
   useEffect(() => {
     crashlytics().log(CALENDAR);
 
     const today = moment();
     fetchVisitation({
-      month: today.get("month") + 1,
-      year: today.get("year"),
-      fullDate: today.format("yyyy-MM-DD"),
+      month: today.get('month') + 1,
+      year: today.get('year'),
+      fullDate: today.format('yyyy-MM-DD'),
     });
     return () => {
       dispatch(resetStates());
@@ -50,25 +49,14 @@ export default function CalendarScreen() {
   }, []);
 
   const fetchVisitation = useCallback(
-    ({
-      month,
-      year,
-      fullDate,
-    }: {
-      month: number;
-      year: number;
-      fullDate: string;
-    }) => {
+    ({ month, year, fullDate }: { month: number; year: number; fullDate: string }) => {
       dispatch(getVisitationsList({ month, year }))
         .unwrap()
         .then((data: visitationListResponse[]) => {
           const visitationData = data || [];
           const visitMapped = visitationData.reduce(
-            (
-              acc: { [key: string]: customerDataInterface[] },
-              obj: visitationListResponse
-            ) => {
-              const formatedDate = moment(obj.dateVisit).format("yyyy-MM-DD");
+            (acc: { [key: string]: customerDataInterface[] }, obj: visitationListResponse) => {
+              const formatedDate = moment(obj.dateVisit).format('yyyy-MM-DD');
 
               if (!acc[formatedDate]) {
                 acc[formatedDate] = [];
@@ -90,7 +78,7 @@ export default function CalendarScreen() {
           );
           dispatch(setVisitationMapped(visitMapped));
           const newMarkedDate = { ...markedDate };
-          Object.keys(visitMapped).forEach((date) => {
+          Object.keys(visitMapped).forEach(date => {
             newMarkedDate[date] = {
               ...newMarkedDate[date],
               marked: true,
@@ -109,9 +97,9 @@ export default function CalendarScreen() {
         .catch((error: any) => {
           dispatch(
             openPopUp({
-              popUpType: "error",
+              popUpType: 'error',
               popUpText: `Error fetching calendar data${error}`,
-              highlightedText: "calendar data",
+              highlightedText: 'calendar data',
             })
           );
         });
@@ -146,22 +134,21 @@ export default function CalendarScreen() {
   );
 
   const selectedData = useMemo(() => {
-    let date = "-";
+    let date = '-';
     let day = null;
     let selectedDate = null;
-    Object.keys(markedDate).forEach((key) => {
+    Object.keys(markedDate).forEach(key => {
       if (markedDate[key].selected) {
         try {
-          date = `${new Date(key).getDate()} ${new Date(key).toLocaleString(
-            locale(),
-            { month: "short" }
-          )} ${new Date(key).getFullYear()}`;
+          date = `${new Date(key).getDate()} ${new Date(key).toLocaleString(locale(), {
+            month: 'short',
+          })} ${new Date(key).getFullYear()}`;
           const newDate = new Date(key);
-          day = newDate.toLocaleDateString(locale(), { weekday: "long" });
+          day = newDate.toLocaleDateString(locale(), { weekday: 'long' });
         } catch (err) {
-          date = `${new Date(key).getDate()} ${new Date(
+          date = `${new Date(key).getDate()} ${new Date(key).toLocaleString()} ${new Date(
             key
-          ).toLocaleString()} ${new Date(key).getFullYear()}`;
+          ).getFullYear()}`;
           const newDate = new Date(key);
           day = newDate.toLocaleDateString();
         }
@@ -188,7 +175,7 @@ export default function CalendarScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1, flexDirection: "row" }}>
+      <View style={{ flex: 1, flexDirection: 'row' }}>
         <FlashList
           estimatedItemSize={10}
           data={customerDatas}
@@ -203,7 +190,7 @@ export default function CalendarScreen() {
               />
               <BSpacer size="small" />
               <BText bold="300" color="darker">
-                {" Pelanggan yang Dikunjungi "}
+                {' Pelanggan yang Dikunjungi '}
               </BText>
               <BSpacer size="extraSmall" />
             </View>
@@ -217,19 +204,16 @@ export default function CalendarScreen() {
       {selectedData ? (
         <View
           style={{
-            position: "absolute",
+            position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
             backgroundColor: colors.white,
             padding: layout.pad.lg,
             paddingTop: layout.pad.md,
-          }}
-        >
+          }}>
           <View>
-            <Text style={styles.tanggalKunjunganText}>
-              Tanggal Kunjungan Berikutnya
-            </Text>
+            <Text style={styles.tanggalKunjunganText}>Tanggal Kunjungan Berikutnya</Text>
             <Text style={styles.dateText}>
               {selectedData[0] && `${selectedData[0]} ,`} {selectedData[1]}
             </Text>
@@ -238,10 +222,7 @@ export default function CalendarScreen() {
           <BButtonPrimary
             title="Simpan"
             onPress={() => {
-              DeviceEventEmitter.emit(
-                "CalendarScreen.selectedDate",
-                selectedData[2]
-              );
+              DeviceEventEmitter.emit('CalendarScreen.selectedDate', selectedData[2]);
               navigation.goBack();
             }}
             disable={!selectedData[0]}
@@ -258,7 +239,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: layout.pad.lg,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   customerCard: {
     backgroundColor: colors.tertiary,

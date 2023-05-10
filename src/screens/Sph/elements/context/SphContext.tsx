@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { SphContextInterface, SphStateInterface } from "@/interfaces";
+import React, { useState } from 'react';
+import { SphContextInterface, SphStateInterface } from '@/interfaces';
 
 const initialState: SphStateInterface = {
   selectedCompany: null,
@@ -7,13 +7,13 @@ const initialState: SphStateInterface = {
   projectAddress: null,
   isBillingAddressSame: false,
   billingAddress: {
-    name: "",
-    phone: "",
+    name: '',
+    phone: '',
     addressAutoComplete: {},
-    fullAddress: "",
+    fullAddress: '',
   },
   distanceFromLegok: null,
-  paymentType: "",
+  paymentType: '',
   paymentRequiredDocuments: {},
   paymentDocumentsFullfilled: false,
   paymentBankGuarantee: false,
@@ -30,7 +30,7 @@ function initialFunction(key: keyof SphStateInterface) {
 export const SphContext = React.createContext<SphContextInterface>([
   initialState,
   initialFunction,
-  (index) => {
+  index => {
     console.log(index);
   },
   0,
@@ -41,7 +41,7 @@ export function SphProvider({ children }: { children: React.ReactNode }) {
   const [currentPosition, setCurrentPosition] = useState<number>(0);
 
   const stateUpdate = (key: keyof SphStateInterface) => (e: any) => {
-    setSphData((current) => ({
+    setSphData(current => ({
       ...current,
       [key]: e,
     }));
@@ -49,15 +49,7 @@ export function SphProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <SphContext.Provider
-      value={
-        [
-          sphData,
-          stateUpdate,
-          setCurrentPosition,
-          currentPosition,
-        ] as SphContextInterface
-      }
-    >
+      value={[sphData, stateUpdate, setCurrentPosition, currentPosition] as SphContextInterface}>
       {children}
     </SphContext.Provider>
   );

@@ -1,42 +1,22 @@
-import { View, ScrollView, StyleSheet, BackHandler } from "react-native";
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  useContext,
-} from "react";
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
-import { Region } from "react-native-maps";
-import crashlytics from "@react-native-firebase/crashlytics";
-import {
-  BHeaderIcon,
-  BStepperIndicator as StepperIndicator,
-  PopUpQuestion,
-} from "@/components";
-
-import Steps from "./elements/Steps";
-import { SphContext, SphProvider } from "./elements/context/SphContext";
-import { SphStateInterface, PIC } from "@/interfaces";
-
-import FirstStep from "./elements/1firstStep";
-import SecondStep from "./elements/2secondStep";
-import ThirdStep from "./elements/3thirdStep";
-import FourthStep from "./elements/4fourthStep";
-import FifthStep from "./elements/5fifthStep";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import { updateRegion } from "@/redux/reducers/locationReducer";
-import { getOneProjectById } from "@/redux/async-thunks/commonThunks";
-import { getLocationCoordinates } from "@/actions/CommonActions";
-import { SPH } from "@/navigation/ScreenNames";
-import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
-import { resScale } from "@/utils";
-import { RootState } from "@/redux/store";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import React, { useEffect, useState, useRef, useCallback, useContext } from 'react';
+import { View, ScrollView, StyleSheet, BackHandler } from 'react-native';
+import { Region } from 'react-native-maps';
+import { useDispatch, useSelector } from 'react-redux';
+import FirstStep from './elements/1firstStep';
+import SecondStep from './elements/2secondStep';
+import ThirdStep from './elements/3thirdStep';
+import FourthStep from './elements/4fourthStep';
+import FifthStep from './elements/5fifthStep';
+import Steps from './elements/Steps';
+import { SphContext, SphProvider } from './elements/context/SphContext';
+import { getLocationCoordinates } from '@/actions/CommonActions';
+import { BHeaderIcon, BStepperIndicator as StepperIndicator, PopUpQuestion } from '@/components';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { SphStateInterface, PIC } from '@/interfaces';
+import { SPH } from '@/navigation/ScreenNames';
+import { getOneProjectById } from '@/redux/async-thunks/commonThunks';
 import {
   resetSPHState,
   resetStepperFocused,
@@ -44,30 +24,28 @@ import {
   updateDistanceFromLegok,
   updateSelectedCompany,
   updateSelectedPic,
-} from "@/redux/reducers/SphReducer";
+} from '@/redux/reducers/SphReducer';
+import { updateRegion } from '@/redux/reducers/locationReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 
 const labels = [
-  "Cari PT / Proyek",
-  "Konfirmasi Alamat",
-  "Tipe Pembayaran",
-  "Pilih Produk",
-  "Ringkasan",
+  'Cari PT / Proyek',
+  'Konfirmasi Alamat',
+  'Tipe Pembayaran',
+  'Pilih Produk',
+  'Ringkasan',
 ];
 
-const stepsToRender = [
-  <FirstStep />,
-  <SecondStep />,
-  <ThirdStep />,
-  <FourthStep />,
-  <FifthStep />,
-];
+const stepsToRender = [<FirstStep />, <SecondStep />, <ThirdStep />, <FourthStep />, <FifthStep />];
 
 // enum
 function checkSelected(picList: PIC[]) {
   let isSelectedExist = false;
 
   const list = picList || [];
-  list.forEach((pic) => {
+  list.forEach(pic => {
     if (pic.isSelected) {
       isSelectedExist = true;
     }
@@ -84,39 +62,38 @@ function stepHandler(
   if (sphData.selectedCompany) {
     if (checkSelected(sphData.selectedCompany?.Pics)) {
       if (!stepsDone.includes(0)) {
-        setSteps((curr) => [...new Set(curr), 0]);
+        setSteps(curr => [...new Set(curr), 0]);
       }
     }
   } else {
-    setSteps((curr) => curr.filter((num) => num !== 0));
+    setSteps(curr => curr.filter(num => num !== 0));
   }
 
   const billingAddressFilled =
-    !Object.values(sphData.billingAddress).every((val) => !val) &&
+    !Object.values(sphData.billingAddress).every(val => !val) &&
     Object.entries(sphData.billingAddress.addressAutoComplete).length > 1;
 
   if (
     (sphData.isBillingAddressSame || billingAddressFilled) &&
     sphData.distanceFromLegok !== null
   ) {
-    setSteps((curr) => [...new Set(curr), 1]);
+    setSteps(curr => [...new Set(curr), 1]);
   } else {
-    setSteps((curr) => curr.filter((num) => num !== 1));
+    setSteps(curr => curr.filter(num => num !== 1));
   }
 
-  const paymentCondition =
-    sphData.paymentType === "CREDIT" ? sphData.paymentBankGuarantee : true;
+  const paymentCondition = sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
 
   if (sphData.paymentType && paymentCondition) {
-    setSteps((curr) => [...new Set(curr), 2]);
+    setSteps(curr => [...new Set(curr), 2]);
   } else {
-    setSteps((curr) => curr.filter((num) => num !== 2));
+    setSteps(curr => curr.filter(num => num !== 2));
   }
 
   if (sphData.chosenProducts.length) {
-    setSteps((curr) => [...new Set(curr), 3]);
+    setSteps(curr => [...new Set(curr), 3]);
   } else {
-    setSteps((curr) => curr.filter((num) => num !== 3));
+    setSteps(curr => curr.filter(num => num !== 3));
   }
   const max = Math.max(...stepsDone);
 
@@ -130,8 +107,7 @@ function SphContent() {
   const stepRef = useRef<ScrollView>(null);
   // const [currentPosition, setCurrentPosition] = useState<number>(0);
   const [stepsDone, setStepsDone] = useState<number[]>([]);
-  const [, updateState, setCurrentPosition, currentPosition] =
-    useContext(SphContext);
+  const [, updateState, setCurrentPosition, currentPosition] = useContext(SphContext);
   const stepControll = useCallback((step: number) => {}, []);
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
@@ -154,15 +130,11 @@ function SphContent() {
     }
 
     // to reset stepper focus when continuing progress data
-    if (
-      sphData.stepperSPHShouldNotFocused &&
-      currentPosition === 0 &&
-      !sphData.selectedCompany
-    ) {
+    if (sphData.stepperSPHShouldNotFocused && currentPosition === 0 && !sphData.selectedCompany) {
       dispatch(resetStepperFocused(1));
     }
     const billingAddressFilled =
-      !Object.values(sphData.billingAddress).every((val) => !val) &&
+      !Object.values(sphData.billingAddress).every(val => !val) &&
       Object.entries(sphData.billingAddress?.addressAutoComplete).length > 1;
     if (
       sphData.stepperSPHShouldNotFocused &&
@@ -172,8 +144,7 @@ function SphContent() {
     ) {
       dispatch(resetStepperFocused(2));
     }
-    const paymentCondition =
-      sphData.paymentType === "CREDIT" ? sphData.paymentBankGuarantee : true;
+    const paymentCondition = sphData.paymentType === 'CREDIT' ? sphData.paymentBankGuarantee : true;
     if (
       sphData.stepperSPHShouldNotFocused &&
       currentPosition === 2 &&
@@ -196,7 +167,7 @@ function SphContent() {
         // '',
         coordinate.longitude as unknown as number,
         coordinate.latitude as unknown as number,
-        "BP-LEGOK"
+        'BP-LEGOK'
       );
       const { result } = data;
       if (!result) {
@@ -209,12 +180,12 @@ function SphContent() {
         PostalId: result?.PostalId,
       };
 
-      if (typeof result?.lon === "string") {
+      if (typeof result?.lon === 'string') {
         _coordinate.longitude = Number(result.lon);
         _coordinate.lon = Number(result.lon);
       }
 
-      if (typeof result?.lat === "string") {
+      if (typeof result?.lat === 'string') {
         _coordinate.latitude = Number(result.lat);
         _coordinate.lat = Number(result.lat);
       }
@@ -224,9 +195,8 @@ function SphContent() {
     } catch (error) {
       dispatch(
         openPopUp({
-          popUpType: "error",
-          popUpText:
-            error.message || "Terjadi error saat pengambilan data coordinate",
+          popUpType: 'error',
+          popUpText: error.message || 'Terjadi error saat pengambilan data coordinate',
           outsideClickClosePopUp: true,
         })
       );
@@ -238,14 +208,12 @@ function SphContent() {
       dispatch(resetSPHState());
       dispatch(
         openPopUp({
-          popUpType: "loading",
-          popUpText: "loading fetching data",
+          popUpType: 'loading',
+          popUpText: 'loading fetching data',
           outsideClickClosePopUp: false,
         })
       );
-      const response = await dispatch(
-        getOneProjectById({ projectId })
-      ).unwrap();
+      const response = await dispatch(getOneProjectById({ projectId })).unwrap();
       dispatch(closePopUp());
       const project = response.data;
       const { LocationAddress } = project;
@@ -266,9 +234,8 @@ function SphContent() {
       dispatch(closePopUp());
       dispatch(
         openPopUp({
-          popUpType: "error",
-          popUpText:
-            error.message || "Terjadi error saat pengambilan data Proyek",
+          popUpType: 'error',
+          popUpText: error.message || 'Terjadi error saat pengambilan data Proyek',
           outsideClickClosePopUp: true,
         })
       );
@@ -298,10 +265,7 @@ function SphContent() {
         }
         return true;
       };
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
       return () => backHandler.remove();
     }, [currentPosition, navigation, setCurrentPosition, sphData])
   );
@@ -331,7 +295,7 @@ function SphContent() {
     <View style={style.container}>
       <StepperIndicator
         stepsDone={stepsDone}
-        stepOnPress={(num) => {
+        stepOnPress={num => {
           dispatch(setStepperFocused(num));
           setCurrentPosition(num);
         }}

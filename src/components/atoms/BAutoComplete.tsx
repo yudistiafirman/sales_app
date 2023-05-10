@@ -1,10 +1,10 @@
-import React from "react";
-import { Text, View } from "react-native";
-import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
-import { colors, fonts, layout } from "@/constants";
-import { Styles } from "@/interfaces";
-import { resScale } from "@/utils";
-import BText from "./BText";
+import React from 'react';
+import { Text, View } from 'react-native';
+import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import BText from './BText';
+import { colors, fonts, layout } from '@/constants';
+import { Styles } from '@/interfaces';
+import { resScale } from '@/utils';
 
 interface IProps {
   items?: any[];
@@ -43,7 +43,7 @@ function BAutoComplete({
       textInputProps={{
         placeholder,
         autoCorrect: false,
-        autoCapitalize: "none",
+        autoCapitalize: 'none',
         style: styles.text,
       }}
       debounce={500}
@@ -69,7 +69,7 @@ const styles: Styles = {
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.md,
     lineHeight: resScale(14),
-    color: "blue",
+    color: 'blue',
     backgroundColor: colors.white,
     borderRadius: layout.radius.sm,
     borderColor: colors.textInput.inActive,
@@ -85,7 +85,7 @@ const styles: Styles = {
     borderRadius: layout.radius.sm,
     borderColor: colors.textInput.inActive,
     borderWidth: 1,
-    color: "blue",
+    color: 'blue',
   },
   text: {
     color: colors.textInput.input,
@@ -95,8 +95,8 @@ const styles: Styles = {
   separator: {
     backgroundColor: colors.border.default,
     paddingHorizontal: layout.pad.xs + layout.pad.sm,
-    width: "95%",
-    alignSelf: "center",
+    width: '95%',
+    alignSelf: 'center',
   },
   error: {
     borderColor: colors.primary,

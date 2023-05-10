@@ -1,13 +1,13 @@
-import { StyleSheet } from "react-native";
-import { layout } from "@/constants";
-import colors from "@/constants/colors";
-import { resScale } from "@/utils";
+import { StyleSheet } from 'react-native';
+import { layout } from '@/constants';
+import colors from '@/constants/colors';
+import { resScale } from '@/utils';
 
 const TabBarStyle = StyleSheet.create({
   tabBarContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: resScale(56),
     borderTopWidth: 1,
     borderColor: colors.border.grey,

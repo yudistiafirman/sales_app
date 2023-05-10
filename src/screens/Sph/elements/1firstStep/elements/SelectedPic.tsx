@@ -1,19 +1,16 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
-import React, { useContext, useEffect, useMemo } from "react";
-import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
-import Entypo from "react-native-vector-icons/Entypo";
-import { useDispatch, useSelector } from "react-redux";
-import { BButtonPrimary, BForm, BSpacer, BVisitationCard } from "@/components";
-import { colors, fonts, layout } from "@/constants";
-import { resScale } from "@/utils";
-import { Input, PIC } from "@/interfaces";
-import BSheetAddPic from "@/screens/Visitation/elements/second/BottomSheetAddPic";
-import { SphContext } from "../../context/SphContext";
-import { RootState } from "@/redux/store";
-import {
-  updateSelectedCompanyPicList,
-  updateSelectedPic,
-} from "@/redux/reducers/SphReducer";
+import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
+import React, { useContext, useEffect, useMemo } from 'react';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { useDispatch, useSelector } from 'react-redux';
+import { SphContext } from '../../context/SphContext';
+import { BButtonPrimary, BForm, BSpacer, BVisitationCard } from '@/components';
+import { colors, fonts, layout } from '@/constants';
+import { Input, PIC } from '@/interfaces';
+import { updateSelectedCompanyPicList, updateSelectedPic } from '@/redux/reducers/SphReducer';
+import { RootState } from '@/redux/store';
+import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
+import { resScale } from '@/utils';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
@@ -32,24 +29,19 @@ type SelectedPicType = {
   setCurrentPosition?: (num: number) => void;
 };
 
-export default function SelectedPic({
-  onPress,
-  setCurrentPosition,
-}: SelectedPicType) {
+export default function SelectedPic({ onPress, setCurrentPosition }: SelectedPicType) {
   const dispatch = useDispatch();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [, stateUpdate] = useContext(SphContext);
-  const { selectedCompany, selectedPic } = useSelector(
-    (state: RootState) => state.sph
-  );
+  const { selectedCompany, selectedPic } = useSelector((state: RootState) => state.sph);
 
   const inputsData: Input[] = useMemo(
     () => [
       {
-        label: "PIC",
+        label: 'PIC',
         isRequire: true,
         isError: false,
-        type: "PIC",
+        type: 'PIC',
         value: selectedCompany?.Pics ? selectedCompany.Pics : [],
         onChange: () => {
           openBottomSheet();
@@ -76,24 +68,24 @@ export default function SelectedPic({
   function checkSelected() {
     let isSelectedExist = false;
     const list = selectedCompany?.Pics ? selectedCompany?.Pics : [];
-    list.forEach((pic) => {
+    list.forEach(pic => {
       if (pic.isSelected) {
         isSelectedExist = true;
       }
     });
-    return isSelectedExist || JSON.stringify(selectedCompany?.Pic) !== "{}";
+    return isSelectedExist || JSON.stringify(selectedCompany?.Pic) !== '{}';
   }
 
   useEffect(() => {
     if (selectedCompany) {
       if (selectedCompany?.Pic?.id && !selectedPic) {
         const foundMainPic = selectedCompany?.Pics?.find(
-          (pic) => pic.id === selectedCompany?.Pic?.id
+          pic => pic.id === selectedCompany?.Pic?.id
         );
         if (foundMainPic) dispatch(updateSelectedPic(foundMainPic));
       }
       if (selectedCompany?.Pics) {
-        const listPic = selectedCompany?.Pics?.map((pic) => {
+        const listPic = selectedCompany?.Pics?.map(pic => {
           if (selectedPic) {
             if (selectedPic.id) {
               if (pic.id === selectedPic.id) {
@@ -118,7 +110,7 @@ export default function SelectedPic({
     bottomSheetRef.current?.expand();
   };
 
-  let picOrCompanyName = "-";
+  let picOrCompanyName = '-';
   if (selectedCompany?.Company?.name) {
     picOrCompanyName = selectedCompany.Company?.name;
   } else if (selectedCompany?.Pic?.name) {
@@ -131,7 +123,7 @@ export default function SelectedPic({
         <View style={{ minHeight: resScale(75) }}>
           <BVisitationCard
             item={{
-              name: selectedCompany?.name || "-",
+              name: selectedCompany?.name || '-',
               location: selectedCompany?.LocationAddress.line1,
               picOrCompanyName,
             }}
@@ -164,9 +156,7 @@ export default function SelectedPic({
         initialIndex={-1}
         addPic={(pic: PIC) => {
           const newPic = { ...pic };
-          const currentList = selectedCompany?.Pics
-            ? [...selectedCompany.Pics]
-            : [];
+          const currentList = selectedCompany?.Pics ? [...selectedCompany.Pics] : [];
           if (currentList && currentList.length > 0) {
             currentList.forEach((it, index) => {
               currentList[index] = {
@@ -187,7 +177,7 @@ export default function SelectedPic({
 }
 
 const style = StyleSheet.create({
-  container: { flex: 1, justifyContent: "space-between" },
+  container: { flex: 1, justifyContent: 'space-between' },
   gantiText: {
     marginRight: 10,
     color: colors.primary,

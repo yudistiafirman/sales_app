@@ -1,9 +1,9 @@
-import moment, { locale } from "moment";
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { BLabel, BSpacer, BText } from "@/components";
-import { layout } from "@/constants";
-import font from "@/constants/fonts";
+import moment, { locale } from 'moment';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { BLabel, BSpacer, BText } from '@/components';
+import { layout } from '@/constants';
+import font from '@/constants/fonts';
 
 interface Props {
   estimationWeek?: string;
@@ -11,19 +11,15 @@ interface Props {
 }
 
 function Estimation({ estimationWeek, estimationMonth }: Props) {
-  const getMonthName = (monthNumber) => {
+  const getMonthName = monthNumber => {
     const date = new Date();
     date.setMonth(monthNumber - 1);
 
-    return date.toLocaleString(locale(), { month: "long" });
+    return date.toLocaleString(locale(), { month: 'long' });
   };
   return (
     <View style={styles.container}>
-      <BLabel
-        bold="600"
-        sizeInNumber={font.size.md}
-        label="Estimasi waktu dibutuhkannya barang"
-      />
+      <BLabel bold="600" sizeInNumber={font.size.md} label="Estimasi waktu dibutuhkannya barang" />
       <BSpacer size="extraSmall" />
       {estimationWeek && estimationMonth && (
         <BText style={styles.date}>

@@ -1,8 +1,8 @@
-import { Dimensions } from "react-native";
-import { assign, createMachine } from "xstate";
-import { getLocationCoordinates } from "./priceMachine";
+import { Dimensions } from 'react-native';
+import { assign, createMachine } from 'xstate';
+import { getLocationCoordinates } from './priceMachine';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
@@ -12,17 +12,17 @@ export const locationMachine =
   /** @xstate-layout N4IgpgJg5mDOIC5QBsD2BjAhgFwJaoDsA6AJzHTFwDdcCoAFTEzAW1gGJYwCJaoBhVKhKNmbANoAGALqJQAB1SxceQnJAAPRACYAzNqLbtAdgCs2gBznj2gJy3dAFgA0IAJ6JdANi9FHd3VNdCwsARl1JXVCAX2jXNCxVYjIKaj5RVg5CfgALTDowACUwKHwCKVkkEEVlJPUtBD0DIzNLazsHF3cdPSJjSWNHMONw+zsvWPiMHDKiGGw8OgAZaaSAETBsTFxkDghCMCJaKlQAa0OEmcI5zcWoFcSyja2d2ARj1bKKivUalTL6ohBhYiF5bNpTI5wUZIvZXB4EGE-MYvHpvGFQqFTGFJiBLkkiBAwAAjVAAVwIFHYGlgW2wh0wADN6SQABSmSSSACU7HxsyJpIpFB+VT+dSqDWBoPBkOh2lhtnhOiGRFCkgsxgioQskW0YOMsTiIAIqCJ8CqfLUoqU-ytoAaAFosQYvDYhrYvN5bFCvKYlQgHb5OcHwtqvEMzBMjZbkuRKDQ6Bk2L8beL7YgnZJHKC3RYPV6fX7uo1w0RTOXTB7QvZJK7bLiYzcFnwHlcCM9trsU7UARLEGrwqDHMFJKFUZXvcZ-UZfJivFZbDqR0YG59rgLyZSwN3bQRAQghqEiLZQhDtJjQpqPUWEUZdKCxwulzrz1HYkA */
   createMachine(
     {
-      id: "location",
+      id: 'location',
       predictableActionArguments: true,
-      tsTypes: {} as import("./locationMachine.typegen").Typegen0,
+      tsTypes: {} as import('./locationMachine.typegen').Typegen0,
       schema: {
         events: {} as
           | {
-              type: "sendingCoorParams";
+              type: 'sendingCoorParams';
               value: { longitude: number; latitude: number };
             }
           | {
-              type: "onChangeRegion";
+              type: 'onChangeRegion';
               value: {
                 longitude: number;
                 latitude: number;
@@ -55,37 +55,37 @@ export const locationMachine =
         receivingParams: {
           on: {
             sendingCoorParams: {
-              target: "gettingLocationDetails",
-              actions: "assignParamsToContext",
+              target: 'gettingLocationDetails',
+              actions: 'assignParamsToContext',
             },
 
             onChangeRegion: {
-              target: "debounce",
-              actions: "assignOnChangeRegionValue",
+              target: 'debounce',
+              actions: 'assignOnChangeRegionValue',
             },
           },
         },
 
         gettingLocationDetails: {
           invoke: {
-            src: "onGettingLocationDetails",
+            src: 'onGettingLocationDetails',
             onDone: {
-              target: "receivingParams",
-              actions: "assignLocationDetail",
+              target: 'receivingParams',
+              actions: 'assignLocationDetail',
             },
           },
         },
 
         debounce: {
-          entry: "enabledLoadingDetails",
+          entry: 'enabledLoadingDetails',
 
           after: {
-            500: "gettingLocationDetails",
+            500: 'gettingLocationDetails',
           },
         },
       },
 
-      initial: "receivingParams",
+      initial: 'receivingParams',
     },
     {
       actions: {
@@ -99,9 +99,7 @@ export const locationMachine =
         })),
         assignLocationDetail: assign((context, event) => ({
           locationDetail: {
-            formattedAddress: event.data?.formattedAddress
-              ? event.data.formattedAddress
-              : "",
+            formattedAddress: event.data?.formattedAddress ? event.data.formattedAddress : '',
             postalId: event.data?.PostalId,
             lon: event?.data?.lon,
             lat: event?.data?.lat,

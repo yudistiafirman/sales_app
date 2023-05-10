@@ -1,10 +1,10 @@
-import { View, StyleSheet, Animated, Easing } from "react-native";
-import React, { useState, useEffect } from "react";
-import colors from "@/constants/colors";
-import font from "@/constants/fonts";
-import TargetBar from "./elements/TargetBar";
-import TopVisitation from "./elements/TopVisitation";
-import { layout } from "@/constants";
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Animated, Easing } from 'react-native';
+import TargetBar from './elements/TargetBar';
+import TopVisitation from './elements/TopVisitation';
+import { layout } from '@/constants';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
 
 type TargetCardProps = {
   maxVisitation: number;
@@ -40,9 +40,7 @@ export default function TargetCard({
 
   return (
     <View style={style.container}>
-      <Animated.View
-        style={[style.animatedContainer, { height: containerHeight }]}
-      >
+      <Animated.View style={[style.animatedContainer, { height: containerHeight }]}>
         <View style={style.targetContainer}>
           <TopVisitation
             maxVisitation={maxVisitation}
@@ -64,10 +62,10 @@ export default function TargetCard({
 }
 
 const style = StyleSheet.create({
-  container: { position: "relative", zIndex: 0, width: "100%" },
+  container: { position: 'relative', zIndex: 0, width: '100%' },
   animatedContainer: {
-    width: "100%",
-    alignSelf: "flex-start",
+    width: '100%',
+    alignSelf: 'flex-start',
     zIndex: 1,
     paddingHorizontal: layout.pad.lg,
   },
@@ -77,8 +75,8 @@ const style = StyleSheet.create({
   targetContainer: {
     backgroundColor: colors.white,
     borderRadius: layout.radius.md,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   count: {
     fontFamily: font.family.montserrat[700],

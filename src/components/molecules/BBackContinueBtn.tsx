@@ -1,9 +1,9 @@
-import { View, StyleSheet } from "react-native";
-import React from "react";
-import Entypo from "react-native-vector-icons/Entypo";
-import { resScale } from "@/utils";
-import BButtonPrimary from "../atoms/BButtonPrimary";
-import { layout } from "@/constants";
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import Entypo from 'react-native-vector-icons/Entypo';
+import BButtonPrimary from '../atoms/BButtonPrimary';
+import { layout } from '@/constants';
+import { resScale } from '@/utils';
 
 type BackContinueBtnType = {
   onPressBack?: () => void;
@@ -27,8 +27,8 @@ export default function BBackContinueBtn({
   onPressContinue = () => {},
   disableContinue,
   loadingContinue,
-  backText = "Kembali",
-  continueText = "Lanjut",
+  backText = 'Kembali',
+  continueText = 'Lanjut',
   isContinueIcon = true,
   disableBack = false,
   unrenderBack = false,
@@ -62,10 +62,10 @@ export default function BBackContinueBtn({
 
 const style = StyleSheet.create({
   buttonContainer: {
-    width: "100%",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    width: '100%',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   backButtonContainer: {
     flex: 1,

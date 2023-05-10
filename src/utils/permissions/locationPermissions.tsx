@@ -1,21 +1,21 @@
-import { Alert, Linking, PermissionsAndroid, Platform } from "react-native";
-import Geolocation from "react-native-geolocation-service";
-import { displayName } from "../../../app.json";
-import { store } from "@/redux/store";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+import { displayName } from '../../../app.json';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { store } from '@/redux/store';
 
 const hasPermissionIOS = async () => {
-  const status = await Geolocation.requestAuthorization("whenInUse");
+  const status = await Geolocation.requestAuthorization('whenInUse');
 
-  if (status === "granted") {
+  if (status === 'granted') {
     return true;
   }
 
-  if (status === "denied") {
+  if (status === 'denied') {
     showAlertLocation();
   }
 
-  if (status === "disabled") {
+  if (status === 'disabled') {
     showAlertLocation();
   }
 };
@@ -24,8 +24,8 @@ const openSetting = () => {
   Linking.openSettings().catch(() => {
     store.dispatch(
       openPopUp({
-        popUpType: "error",
-        popUpText: "Terjadi error saat membuka Setting",
+        popUpType: 'error',
+        popUpText: 'Terjadi error saat membuka Setting',
         outsideClickClosePopUp: true,
       })
     );
@@ -35,12 +35,12 @@ const openSetting = () => {
 const showAlertLocation = () => {
   store.dispatch(
     openPopUp({
-      popUpType: "none",
+      popUpType: 'none',
       popUpText: `Aktifkan Layanan Lokasi untuk mengizinkan ${displayName} menentukan lokasi Anda.`,
       isRenderActions: true,
       outsideClickClosePopUp: false,
       unRenderBackButton: true,
-      primaryBtnTitle: "Buka Setting",
+      primaryBtnTitle: 'Buka Setting',
       primaryBtnAction: () => {
         setTimeout(() => {
           store.dispatch(closePopUp());
@@ -53,11 +53,11 @@ const showAlertLocation = () => {
 
 const hasLocationPermission = async () => {
   try {
-    if (Platform.OS === "ios") {
+    if (Platform.OS === 'ios') {
       const hasPermission = await hasPermissionIOS();
       return hasPermission;
     }
-    if (Platform.OS === "android" && Platform.Version < 23) {
+    if (Platform.OS === 'android' && Platform.Version < 23) {
       return true;
     }
 
@@ -82,12 +82,10 @@ const hasLocationPermission = async () => {
       showAlertLocation();
     }
   } catch (err) {
-    const errorMessage =
-      err.message ||
-      "Terjadi error dalam meminta izin mengakses layanan lokasi";
+    const errorMessage = err.message || 'Terjadi error dalam meminta izin mengakses layanan lokasi';
     store.dispatch(
       openPopUp({
-        popUpType: "error",
+        popUpType: 'error',
         popUpText: errorMessage,
         outsideClickClosePopUp: true,
       })

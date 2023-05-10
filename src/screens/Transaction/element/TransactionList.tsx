@@ -1,11 +1,11 @@
-import { TouchableOpacity } from "@gorhom/bottom-sheet";
-import React, { useCallback } from "react";
-import { ListRenderItem } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-import { BEmptyState } from "@/components";
-import { layout } from "@/constants";
-import TransactionListCard from "./TransactionListCard";
-import TransactionListShimmer from "./TransactionListShimmer";
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
+import { FlashList } from '@shopify/flash-list';
+import React, { useCallback } from 'react';
+import { ListRenderItem } from 'react-native';
+import TransactionListCard from './TransactionListCard';
+import TransactionListShimmer from './TransactionListShimmer';
+import { BEmptyState } from '@/components';
+import { layout } from '@/constants';
 
 interface TransactionsData {
   id: string;
@@ -20,10 +20,7 @@ interface TransactionsData {
 
 interface TransactionListProps<ArrayOfObject> {
   transactions: ArrayOfObject[];
-  onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
   refreshing?: boolean;
   isLoadMore?: boolean;
   loadTransaction?: boolean;
@@ -53,17 +50,16 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
       <TouchableOpacity
         onPress={() => {
           onPress(item);
-        }}
-      >
+        }}>
         <TransactionListCard
-          number={item.number ? item.number : "-"}
+          number={item.number ? item.number : '-'}
           // TODO: handle from BE, ugly when use mapping in FE side
           projectName={
             item.QuotationRequest?.Project
               ? item.QuotationRequest?.Project.projectName
               : item.project?.projectName
               ? item.project?.projectName
-              : "-"
+              : '-'
           }
           status={item.status}
           // TODO: handle from BE, ugly when use mapping in FE side
@@ -78,15 +74,13 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
           }
           // TODO: handle from BE, ugly when use mapping in FE side
           nominal={
-            (selectedType === "Deposit" ||
-              selectedType === "Jadwal" ||
-              selectedType === "DO") &&
+            (selectedType === 'Deposit' || selectedType === 'Jadwal' || selectedType === 'DO') &&
             item.value
               ? item.value
               : item.totalPrice
           }
           // TODO: handle from BE, ugly when use mapping in FE side
-          useBEStatus={selectedType !== "SPH"}
+          useBEStatus={selectedType !== 'SPH'}
         />
       </TouchableOpacity>
     ),

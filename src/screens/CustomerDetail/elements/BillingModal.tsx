@@ -1,35 +1,18 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
-import React, { useMemo, useState } from "react";
-import Modal from "react-native-modal";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
-import Icons from "react-native-vector-icons/Feather";
-import { resScale } from "@/utils";
-import { colors, fonts, layout } from "@/constants";
-import {
-  BButtonPrimary,
-  BContainer,
-  BForm,
-  BLabel,
-  BSpacer,
-  BText,
-} from "@/components";
-import { Address, Input } from "@/interfaces";
-import { SEARCH_AREA, CUSTOMER_DETAIL } from "@/navigation/ScreenNames";
-import { AppDispatch } from "@/redux/store";
-import {
-  updateBillingAddress,
-  updateLocationAddress,
-} from "@/actions/CommonActions";
-import { openPopUp } from "@/redux/reducers/modalReducer";
+import { useNavigation } from '@react-navigation/native';
+import React, { useMemo, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import Modal from 'react-native-modal';
+import Icons from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useDispatch } from 'react-redux';
+import { updateBillingAddress, updateLocationAddress } from '@/actions/CommonActions';
+import { BButtonPrimary, BContainer, BForm, BLabel, BSpacer, BText } from '@/components';
+import { colors, fonts, layout } from '@/constants';
+import { Address, Input } from '@/interfaces';
+import { SEARCH_AREA, CUSTOMER_DETAIL } from '@/navigation/ScreenNames';
+import { openPopUp } from '@/redux/reducers/modalReducer';
+import { AppDispatch } from '@/redux/store';
+import { resScale } from '@/utils';
 
 type BillingModalType = {
   isModalVisible: boolean;
@@ -42,7 +25,7 @@ type BillingModalType = {
   isBilling?: boolean;
 };
 
-const { height } = Dimensions.get("window");
+const { height } = Dimensions.get('window');
 
 export default function BillingModal({
   isModalVisible,
@@ -54,39 +37,37 @@ export default function BillingModal({
   isUpdate = false,
   isBilling = false,
 }: BillingModalType) {
-  const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
-    undefined
-  );
+  const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(undefined);
   const [billingState, setBillingState] = useState({
-    billingAddress: "",
-    errorBilling: "",
-    kelurahan: "",
-    errorKelurahan: "",
-    kecamatan: "",
-    errorKecamatan: "",
-    kabupaten: "", // kota
+    billingAddress: '',
+    errorBilling: '',
+    kelurahan: '',
+    errorKelurahan: '',
+    kecamatan: '',
+    errorKecamatan: '',
+    kabupaten: '', // kota
   });
 
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const nameAddress = React.useMemo(() => {
-    const idx = region?.formattedAddress?.split(",");
+    const idx = region?.formattedAddress?.split(',');
     if (idx?.length > 1) {
       return idx?.[0];
     }
 
-    return "Nama Alamat";
+    return 'Nama Alamat';
   }, [region?.formattedAddress]);
 
   const inputsData: Input[] = useMemo(
     () => [
       {
-        label: "Kelurahan",
+        label: 'Kelurahan',
         isRequire: false,
-        type: "textInput",
-        placeholder: "Masukkan kelurahan",
+        type: 'textInput',
+        placeholder: 'Masukkan kelurahan',
         onChange: (text: string) => {
-          setBillingState((prevState) => ({
+          setBillingState(prevState => ({
             ...prevState,
             kelurahan: text.nativeEvent.text,
           }));
@@ -94,12 +75,12 @@ export default function BillingModal({
         value: billingState.kelurahan,
       },
       {
-        label: "Kecamatan",
+        label: 'Kecamatan',
         isRequire: false,
-        type: "textInput",
-        placeholder: "Masukkan kecamatan",
+        type: 'textInput',
+        placeholder: 'Masukkan kecamatan',
         onChange: (text: string) => {
-          setBillingState((prevState) => ({
+          setBillingState(prevState => ({
             ...prevState,
             kecamatan: text.nativeEvent.text,
           }));
@@ -107,12 +88,12 @@ export default function BillingModal({
         value: billingState.kecamatan,
       },
       {
-        label: "Kota / Kabupaten",
+        label: 'Kota / Kabupaten',
         isRequire: false,
-        type: "textInput",
-        placeholder: "Masukkan kota",
+        type: 'textInput',
+        placeholder: 'Masukkan kota',
         onChange: (text: string) => {
-          setBillingState((prevState) => ({
+          setBillingState(prevState => ({
             ...prevState,
             kabupaten: text.nativeEvent.text,
           }));
@@ -168,11 +149,11 @@ export default function BillingModal({
       if (response?.data?.success) {
         setFormattedAddress(region.formattedAddress);
         setRegion(region);
-        setIsModalVisible((curr) => !curr);
+        setIsModalVisible(curr => !curr);
         dispatch(
           openPopUp({
-            popUpType: "success",
-            popUpText: "Update alamat berhasil",
+            popUpType: 'success',
+            popUpText: 'Update alamat berhasil',
             outsideClickClosePopUp: true,
           })
         );
@@ -181,12 +162,10 @@ export default function BillingModal({
       setIsModalVisible(false);
       dispatch(
         openPopUp({
-          popUpType: "error",
+          popUpType: 'error',
           popUpText:
             error.message ||
-            `Terjadi error saat update alamat ${
-              isBilling ? "pembayaran" : "proyek"
-            }`,
+            `Terjadi error saat update alamat ${isBilling ? 'pembayaran' : 'proyek'}`,
           outsideClickClosePopUp: true,
         })
       );
@@ -199,35 +178,31 @@ export default function BillingModal({
       backdropOpacity={0.3}
       isVisible={isModalVisible}
       onBackButtonPress={() => {
-        setIsModalVisible((curr) => !curr);
+        setIsModalVisible(curr => !curr);
       }}
       scrollOffset={scrollOffSet}
       scrollOffsetMax={resScale(400) - resScale(190)}
       propagateSwipe
-      style={styles.modal}
-    >
+      style={styles.modal}>
       <View style={styles.modalContent}>
         <BContainer>
           <View style={styles.modalHeader}>
             <Text style={styles.headerText} numberOfLines={1}>
-              {(isUpdate ? "Ubah" : "Tambah") +
-                (isBilling ? " Alamat Penagihan" : " Alamat Proyek")}
+              {(isUpdate ? 'Ubah' : 'Tambah') +
+                (isBilling ? ' Alamat Penagihan' : ' Alamat Proyek')}
             </Text>
-            <TouchableOpacity
-              onPress={() => setIsModalVisible((curr) => !curr)}
-            >
+            <TouchableOpacity onPress={() => setIsModalVisible(curr => !curr)}>
               <MaterialCommunityIcons name="close" size={30} color="#000000" />
             </TouchableOpacity>
           </View>
           <BSpacer size="extraSmall" />
           <ScrollView
-            onScroll={(event) => {
+            onScroll={event => {
               setScrollOffSet(event.nativeEvent.contentOffset.y);
-            }}
-          >
+            }}>
             <BLabel
               bold="500"
-              label={isBilling ? "Alamat Penagihan" : "Alamat Proyek"}
+              label={isBilling ? 'Alamat Penagihan' : 'Alamat Proyek'}
               isRequired
             />
             <BSpacer size="verySmall" />
@@ -237,25 +212,18 @@ export default function BillingModal({
                 setIsModalVisible(false);
                 navigation.navigate(SEARCH_AREA, {
                   from: CUSTOMER_DETAIL,
-                  eventKey: "getCoordinateFromCustomerDetail",
-                  sourceType: isBilling ? "billing" : "project",
+                  eventKey: 'getCoordinateFromCustomerDetail',
+                  sourceType: isBilling ? 'billing' : 'project',
                 });
-              }}
-            >
+              }}>
               <View>
-                <Icons
-                  name="map-pin"
-                  size={resScale(20)}
-                  color={colors.primary}
-                />
+                <Icons name="map-pin" size={resScale(20)} color={colors.primary} />
               </View>
               <View style={styles.selectedAddress}>
                 <>
                   <BLabel bold="500" label={nameAddress} />
                   <BSpacer size="verySmall" />
-                  <BText bold="300">
-                    {region?.formattedAddress || "Detail Alamat"}
-                  </BText>
+                  <BText bold="300">{region?.formattedAddress || 'Detail Alamat'}</BText>
                 </>
               </View>
             </TouchableOpacity>
@@ -265,7 +233,7 @@ export default function BillingModal({
           <BButtonPrimary
             disable={region === null}
             onPress={onPressAddAddress}
-            title={`${isUpdate ? "Ubah" : "Tambah"} Alamat`}
+            title={`${isUpdate ? 'Ubah' : 'Tambah'} Alamat`}
           />
         </BContainer>
       </View>
@@ -275,19 +243,19 @@ export default function BillingModal({
 
 const styles = StyleSheet.create({
   modal: {
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     margin: 0,
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     height: height / 1.6,
     borderTopLeftRadius: layout.radius.lg,
     borderTopRightRadius: layout.radius.lg,
   },
   modalHeader: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    alignItems: "center",
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerText: {
     color: colors.text.darker,
@@ -295,13 +263,13 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.lg,
   },
   searchAddress: {
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingVertical: layout.pad.md,
     backgroundColor: colors.border.disabled,
     borderRadius: layout.radius.sm,
     paddingHorizontal: layout.pad.ml,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   selectedAddress: { paddingStart: layout.pad.ml, flex: 1 },
 });

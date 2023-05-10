@@ -1,14 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import * as React from "react";
-import { BackHandler, View } from "react-native";
-import {
-  useNavigation,
-  StackActions,
-  useFocusEffect,
-} from "@react-navigation/native";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { useDispatch, useSelector } from "react-redux";
-import { FlashList } from "@shopify/flash-list";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useNavigation, StackActions, useFocusEffect } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import * as React from 'react';
+import { BackHandler, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { uploadFileImage } from '@/actions/CommonActions';
+import { uploadSOSignedDocs } from '@/actions/OrderActions';
 import {
   BBackContinueBtn,
   BForm,
@@ -16,18 +14,16 @@ import {
   BHeaderIcon,
   BSpacer,
   PopUpQuestion,
-} from "@/components";
-import { colors, layout } from "@/constants";
-import { CAMERA, FORM_SO, GALLERY_SO } from "@/navigation/ScreenNames";
-import { Input } from "@/interfaces";
-import { AppDispatch, RootState } from "@/redux/store";
-import { removeSOPhoto, resetSOState } from "@/redux/reducers/salesOrder";
-import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
-import { resScale } from "@/utils";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import { uploadFileImage } from "@/actions/CommonActions";
-import { UploadSOSigned } from "@/models/SOSigned";
-import { uploadSOSignedDocs } from "@/actions/OrderActions";
+} from '@/components';
+import { colors, layout } from '@/constants';
+import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
+import { Input } from '@/interfaces';
+import { UploadSOSigned } from '@/models/SOSigned';
+import { CAMERA, FORM_SO, GALLERY_SO } from '@/navigation/ScreenNames';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { removeSOPhoto, resetSOState } from '@/redux/reducers/salesOrder';
+import { AppDispatch, RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 
 function FormSO() {
   const navigation = useNavigation();
@@ -37,10 +33,10 @@ function FormSO() {
 
   const inputs: Input[] = [
     {
-      label: "No. Sales Order",
+      label: 'No. Sales Order',
       isRequire: false,
       isError: false,
-      type: "textInput",
+      type: 'textInput',
       value: soData.selectedPONumber,
       isInputDisable: true,
       disableColor: colors.textInput.disabled,
@@ -62,7 +58,7 @@ function FormSO() {
   const addMorePict = () => {
     navigation.dispatch(
       StackActions.push(CAMERA, {
-        photoTitle: "/ File SO yang telah di TTD",
+        photoTitle: '/ File SO yang telah di TTD',
         navigateTo: GALLERY_SO,
         closeButton: true,
         disabledDocPicker: false,
@@ -75,41 +71,35 @@ function FormSO() {
     try {
       dispatch(
         openPopUp({
-          popUpType: "loading",
-          popUpTitle: "",
-          popUpText: "Mengupload Dokumen SO",
+          popUpType: 'loading',
+          popUpTitle: '',
+          popUpText: 'Mengupload Dokumen SO',
           outsideClickClosePopUp: false,
         })
       );
       const photoFilestoUpload = soData.photoFiles
-        .filter((v) => v.file !== null)
-        .map((photo) => ({
+        .filter(v => v.file !== null)
+        .map(photo => ({
           ...photo.file,
-          uri: photo?.file?.uri?.replace("file:", "file://"),
+          uri: photo?.file?.uri?.replace('file:', 'file://'),
         }));
-      const responseFiles = await uploadFileImage(
-        photoFilestoUpload,
-        "SO Signed"
-      );
+      const responseFiles = await uploadFileImage(photoFilestoUpload, 'SO Signed');
       if (responseFiles.data.success) {
         const payload = {} as UploadSOSigned;
         const newFileData = responseFiles.data.data.map((v, i) => ({
           fileId: v.id,
-          type: "BRIK_SIGNED",
+          type: 'BRIK_SIGNED',
         }));
         payload.poDocs = newFileData;
-        const responseSOSigned = await uploadSOSignedDocs(
-          payload,
-          soData.selectedID
-        );
+        const responseSOSigned = await uploadSOSignedDocs(payload, soData.selectedID);
 
         if (responseSOSigned.data.success) {
           dispatch(resetSOState());
           dispatch(
             openPopUp({
-              popUpType: "success",
-              popUpText: "SO\nBerhasil ditandatangani oleh klien",
-              highlightedText: "SO",
+              popUpType: 'success',
+              popUpText: 'SO\nBerhasil ditandatangani oleh klien',
+              highlightedText: 'SO',
               outsideClickClosePopUp: true,
             })
           );
@@ -120,9 +110,9 @@ function FormSO() {
           dispatch(closePopUp());
           dispatch(
             openPopUp({
-              popUpType: "error",
-              highlightedText: "SO",
-              popUpText: responseFiles.data.message || "SO\nGagal diupload",
+              popUpType: 'error',
+              highlightedText: 'SO',
+              popUpText: responseFiles.data.message || 'SO\nGagal diupload',
               outsideClickClosePopUp: true,
             })
           );
@@ -131,9 +121,9 @@ function FormSO() {
         dispatch(closePopUp());
         dispatch(
           openPopUp({
-            popUpType: "error",
-            highlightedText: "SO",
-            popUpText: responseFiles.data.message || "SO\nGagal diupload",
+            popUpType: 'error',
+            highlightedText: 'SO',
+            popUpText: responseFiles.data.message || 'SO\nGagal diupload',
             outsideClickClosePopUp: true,
           })
         );
@@ -142,9 +132,9 @@ function FormSO() {
       dispatch(closePopUp());
       dispatch(
         openPopUp({
-          popUpType: "error",
-          highlightedText: "SO",
-          popUpText: error.message || "SO\nGagal diupload",
+          popUpType: 'error',
+          highlightedText: 'SO',
+          popUpText: error.message || 'SO\nGagal diupload',
           outsideClickClosePopUp: true,
         })
       );
@@ -178,17 +168,12 @@ function FormSO() {
         actionBackButton(true);
         return true;
       };
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
       return () => backHandler.remove();
     }, [])
   );
 
-  const filteredPhotoFiles = soData.photoFiles?.filter(
-    (it) => it?.file !== null
-  );
+  const filteredPhotoFiles = soData.photoFiles?.filter(it => it?.file !== null);
   return (
     <View style={{ flex: 1, padding: layout.pad.lg }}>
       <FlashList

@@ -1,12 +1,12 @@
-import React from "react";
-import { TextStyle, View, ViewStyle } from "react-native";
-import BText from "./BText";
-import { resScale } from "@/utils";
-import { colors, fonts, layout } from "@/constants";
+import React from 'react';
+import { TextStyle, View, ViewStyle } from 'react-native';
+import BText from './BText';
+import { colors, fonts, layout } from '@/constants';
+import { resScale } from '@/utils';
 
 interface BChipProps {
   children: any;
-  type?: "default" | "header";
+  type?: 'default' | 'header';
   backgroundColor?: string | undefined;
   textColor?: string | undefined;
 }
@@ -25,8 +25,7 @@ function BChip({ children, type, backgroundColor, textColor }: BChipProps) {
     marginRight: layout.pad.md,
   };
 
-  const _style: ViewStyle =
-    type === "header" ? BChipHeaderStyle : BChipDefaultStyle;
+  const _style: ViewStyle = type === 'header' ? BChipHeaderStyle : BChipDefaultStyle;
 
   const _textStyle: TextStyle = {
     color: textColor || colors.text.dark,

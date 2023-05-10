@@ -1,6 +1,6 @@
 // postUploadFiles
-import { createSlice } from "@reduxjs/toolkit";
-import { postUploadFiles, getAllProject } from "../async-thunks/commonThunks";
+import { createSlice } from '@reduxjs/toolkit';
+import { postUploadFiles, getAllProject } from '../async-thunks/commonThunks';
 
 type initialStateType = {
   isUploadLoading: boolean;
@@ -16,33 +16,33 @@ const initialState: initialStateType = {
   isPostVisitationLoading: false,
   isProjectLoading: false,
   errorGettingProject: false,
-  errorGettingProjectMessage: "",
+  errorGettingProjectMessage: '',
   projects: [],
 };
 
 export const commonSlice = createSlice({
-  name: "common",
+  name: 'common',
   initialState,
   reducers: {
     resetStates: () => initialState,
-    retrying: (state) => ({
+    retrying: state => ({
       ...state,
       isProjectLoading: true,
       errorGettingProject: false,
-      errorGettingProjectMessage: "",
+      errorGettingProjectMessage: '',
     }),
   },
-  extraReducers: (builder) => {
-    builder.addCase(postUploadFiles.pending, (state) => {
+  extraReducers: builder => {
+    builder.addCase(postUploadFiles.pending, state => {
       state.isUploadLoading = true;
     });
-    builder.addCase(postUploadFiles.fulfilled, (state) => {
+    builder.addCase(postUploadFiles.fulfilled, state => {
       state.isUploadLoading = false;
     });
-    builder.addCase(postUploadFiles.rejected, (state) => {
+    builder.addCase(postUploadFiles.rejected, state => {
       state.isUploadLoading = false;
     });
-    builder.addCase(getAllProject.pending, (state) => {
+    builder.addCase(getAllProject.pending, state => {
       state.isProjectLoading = true;
     });
     builder.addCase(getAllProject.fulfilled, (state, { payload }) => {

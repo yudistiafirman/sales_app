@@ -1,15 +1,15 @@
-import { assign, createMachine } from "xstate";
-import { getAllDeliveryOrders } from "@/actions/OrderActions";
-import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import { assign, createMachine } from 'xstate';
+import { getAllDeliveryOrders } from '@/actions/OrderActions';
+import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
+import { ENTRY_TYPE } from '@/models/EnumModel';
 
 const displayOperationListMachine = createMachine(
   {
     /** @xstate-layout N4IgpgJg5mDOIC5QHsAOYBOBDALgS2QDsACAGz1h2IFssBjACz0LADoAzMHR5qAGQo4AIriwBiCETbMAbsgDWbNJlwES5SjXpMWHLj0L9BInFgSzkdVUQDaABgC69h4lCpksPPiKuQAD0QARkCAVlYADjtIuwA2UIBOKJCAFmSAGhAAT0QAJhCc1hyY8NS88IB2EOCAZgBfWozlbG91QS0DNk5uHSNKE3FMDGQMVlRSXHZh6lYm61bNWg69bt4BPtFzQjkrFudnX3dPFt8AhABaYPDWGOTqkLuYm-DwwLtqjOyEPIKikuSyyo1eqNdDNNRkNqLHRsDQ4PjILAQSBiIgAJTA7AwcAYaxw+yQIEOXjUJ0Q1XK1WugXilXK4WqgUilQ+uRCdlY5WK-0CMVi1XiIRC4WBIFmLQhC20zBhgnhiORRAAooQIOjtJB8W4PMSfATTkVAhzBYFqnYcoFynzAiyENVzaw7I6csl4oy8skSiKxeDYe1oaxBsMAOJcfCGXFiLE4DCZEM4MO9PGOA7a456xBnHJ2MJ2UIxPI2nJFh155JxZ3JQKV+oNECEZBI+AE71ECVUKHSlNHEnp855Sm5kL5kI24IOx25wH0j00mJe0FzNt+6XLAyJ-pdnWEUkIXk2+JXNlO4IVquBHLzlTi30d3SwuVIiCbtOgU488qsU0u27hIf-eL-Da-xXKa5QWiE5TlAeloxCEl5gq2N5SrogYYHGCa4s+PavhmORXOerzxOSI5ZGSkSsPk1TJEK+apGeNa1EAA */
-    id: "operation list machine",
+    id: 'operation list machine',
 
     predictableActionArguments: true,
-    tsTypes: {} as import("./displayOperationListMachine.typegen").Typegen0,
+    tsTypes: {} as import('./displayOperationListMachine.typegen').Typegen0,
 
     schema: {
       context: {} as {
@@ -22,7 +22,7 @@ const displayOperationListMachine = createMachine(
         size: number;
         totalPage: number;
         userType: string;
-        tabActive: "left" | "right";
+        tabActive: 'left' | 'right';
       },
       services: {} as {
         fetchOperationListData: {
@@ -37,18 +37,18 @@ const displayOperationListMachine = createMachine(
       },
       events: {} as
         | {
-            type: "assignUserData";
+            type: 'assignUserData';
             value: { payload: string; tabActive: string };
           }
         | {
-            type: "retryGettingList";
+            type: 'retryGettingList';
             value: { payload: string; tabActive: string };
           }
         | {
-            type: "onRefreshList";
+            type: 'onRefreshList';
             value: { payload: string; tabActive: string };
           }
-        | { type: "onEndReached" },
+        | { type: 'onEndReached' },
     },
 
     context: {
@@ -56,34 +56,34 @@ const displayOperationListMachine = createMachine(
       isLoading: true,
       isLoadMore: false,
       isRefreshing: false,
-      errorMessage: "",
+      errorMessage: '',
       page: 1,
       size: 10,
       totalPage: 0,
-      userType: "",
-      tabActive: "left",
+      userType: '',
+      tabActive: 'left',
     },
 
     states: {
       idle: {
         on: {
           assignUserData: {
-            target: "fetchingListData",
-            actions: "assignUserDataToContext",
+            target: 'fetchingListData',
+            actions: 'assignUserDataToContext',
           },
         },
       },
 
       fetchingListData: {
         invoke: {
-          src: "fetchOperationListData",
+          src: 'fetchOperationListData',
           onDone: {
-            target: "listLoaded",
-            actions: "assignListData",
+            target: 'listLoaded',
+            actions: 'assignListData',
           },
           onError: {
-            target: "errorGettingList",
-            actions: "assignError",
+            target: 'errorGettingList',
+            actions: 'assignError',
           },
         },
       },
@@ -91,24 +91,24 @@ const displayOperationListMachine = createMachine(
       listLoaded: {
         on: {
           onRefreshList: {
-            target: "fetchingListData",
-            actions: "handleRefresh",
+            target: 'fetchingListData',
+            actions: 'handleRefresh',
           },
           onEndReached: {
-            target: "fetchingListData",
-            actions: "handleEndReached",
-            cond: "isNotLastPage",
+            target: 'fetchingListData',
+            actions: 'handleEndReached',
+            cond: 'isNotLastPage',
           },
         },
       },
       errorGettingList: {
         on: {
-          retryGettingList: "fetchingListData",
+          retryGettingList: 'fetchingListData',
         },
       },
     },
 
-    initial: "idle",
+    initial: 'idle',
   },
   {
     guards: {
@@ -120,47 +120,47 @@ const displayOperationListMachine = createMachine(
           let response: any;
           switch (context?.userType) {
             case ENTRY_TYPE.SECURITY:
-              if (context?.tabActive === "left") {
+              if (context?.tabActive === 'left') {
                 response = await getAllDeliveryOrders(
-                  "WB_OUT",
+                  'WB_OUT',
                   context.size.toString(),
                   context.page.toString()
                 );
-                console.log("SECURITY-DISPATCH");
+                console.log('SECURITY-DISPATCH');
               } else {
                 response = await getAllDeliveryOrders(
-                  "RECEIVED",
+                  'RECEIVED',
                   context.size.toString(),
                   context.page.toString()
                 );
-                console.log("SECURITY-RETURN");
+                console.log('SECURITY-RETURN');
               }
               break;
             case ENTRY_TYPE.WB:
-              if (context?.tabActive === "left") {
+              if (context?.tabActive === 'left') {
                 response = await getAllDeliveryOrders(
-                  "SUBMITTED",
+                  'SUBMITTED',
                   context.size.toString(),
                   context.page.toString()
                 );
-                console.log("WB-OUT");
+                console.log('WB-OUT');
               } else {
                 response = await getAllDeliveryOrders(
-                  "AWAIT_WB_IN",
+                  'AWAIT_WB_IN',
                   context.size.toString(),
                   context.page.toString()
                 );
-                console.log("WB-IN");
+                console.log('WB-IN');
               }
               break;
             case ENTRY_TYPE.DRIVER:
               response = await getAllDeliveryOrders(
-                ["ON_DELIVERY", "ARRIVED"],
+                ['ON_DELIVERY', 'ARRIVED'],
                 // 'ON_DELIVERY',
                 context.size.toString(),
                 context.page.toString()
               );
-              console.log("DRIVER");
+              console.log('DRIVER');
               break;
           }
 
@@ -172,10 +172,7 @@ const displayOperationListMachine = createMachine(
     },
     actions: {
       assignListData: assign((context, event) => {
-        const listData = [
-          ...context.operationListData,
-          ...event.data.data.data,
-        ];
+        const listData = [...context.operationListData, ...event.data.data.data];
         return {
           totalPage: event.data.data.totalPages,
           operationListData: listData,

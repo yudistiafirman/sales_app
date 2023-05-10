@@ -1,6 +1,6 @@
-import React, { createContext, useReducer, Dispatch } from "react";
-import { DateData } from "react-native-calendars";
-import { PIC, selectedCompanyInterface } from "@/interfaces";
+import React, { createContext, useReducer, Dispatch } from 'react';
+import { DateData } from 'react-native-calendars';
+import { PIC, selectedCompanyInterface } from '@/interfaces';
 
 interface IProvider {
   children: React.ReactNode;
@@ -45,29 +45,29 @@ export interface AppointmentState {
 const initialData: AppointmentState = {
   step: 0,
   stepDone: [0],
-  searchQuery: "",
+  searchQuery: '',
   stepOne: {
     routes: [
       {
-        key: "second",
-        title: "Proyek",
+        key: 'second',
+        title: 'Proyek',
         totalItems: 3,
-        chipPosition: "right",
+        chipPosition: 'right',
       },
     ],
-    selectedCategories: "",
-    customerType: "",
+    selectedCategories: '',
+    customerType: '',
     individu: {
-      id: "",
-      name: "",
+      id: '',
+      name: '',
       Company: {
-        id: "",
-        title: "",
+        id: '',
+        title: '',
       },
       PIC: [],
       Visitation: {
         finish_date: null,
-        id: "",
+        id: '',
         order: 1,
         visitation_id: null,
       },
@@ -84,16 +84,16 @@ const initialData: AppointmentState = {
       },
     },
     company: {
-      id: "",
-      name: "",
+      id: '',
+      name: '',
       Company: {
-        id: "",
-        title: "",
+        id: '',
+        title: '',
       },
       PIC: [],
       Visitation: {
         finish_date: null,
-        id: "",
+        id: '',
         order: 1,
         visitation_id: null,
       },
@@ -109,10 +109,10 @@ const initialData: AppointmentState = {
         name: null,
       },
     },
-    errorCompany: "",
-    errorProject: "",
+    errorCompany: '',
+    errorProject: '',
     location: {},
-    errorPics: "",
+    errorPics: '',
     options: {
       items: null,
       loading: false,
@@ -138,26 +138,26 @@ type ActionMap<M extends { [index: string]: any }> = {
 };
 
 export enum AppointmentActionType {
-  SEARCH_QUERY = "SEARCH_QUERY",
-  SET_CUSTOMER_TYPE = "SET_CUSTOMER_TYPE",
-  SET_PROJECT_NAME = "SET_PROJECT_NAME",
-  SET_PICS = "SET_PICS",
-  TOGGLE_MODAL_PICS = "TOGGLE_MODAL_PICS",
-  ASSIGN_ERROR = "ASSIGN_ERROR",
-  ON_PRESS_COMPANY = "ON_PRESS_COMPANY",
-  TOGGLE_MODAL_COMPANY = "TOGGLE_MODAL_COMPANY",
-  SELECT_PROJECT = "SELECT_PROJECT",
-  ON_ADD_PROJECT = "ON_ADD_PROJECT",
-  SET_CATEGORIES = "SET_CATEGORIES",
-  SELECT_COMPANY = "SELECT_COMPANY",
-  ON_PRESS_PROJECT = "ON_PRESS_PROJECT",
-  ADD_COMPANIES = "ADD_COMPANIES",
-  SET_COMPANIES_NAME = "SET_COMPANIES_NAME",
-  SET_DATE = "SET_DATE",
-  INCREASE_STEP = "INCREASE_STEP",
-  DECREASE_STEP = "DECREASE_STEP",
-  RESET_STATE = "RESET_STATE",
-  ENABLE_SEARCHING = "ENABLE_SEARCHING",
+  SEARCH_QUERY = 'SEARCH_QUERY',
+  SET_CUSTOMER_TYPE = 'SET_CUSTOMER_TYPE',
+  SET_PROJECT_NAME = 'SET_PROJECT_NAME',
+  SET_PICS = 'SET_PICS',
+  TOGGLE_MODAL_PICS = 'TOGGLE_MODAL_PICS',
+  ASSIGN_ERROR = 'ASSIGN_ERROR',
+  ON_PRESS_COMPANY = 'ON_PRESS_COMPANY',
+  TOGGLE_MODAL_COMPANY = 'TOGGLE_MODAL_COMPANY',
+  SELECT_PROJECT = 'SELECT_PROJECT',
+  ON_ADD_PROJECT = 'ON_ADD_PROJECT',
+  SET_CATEGORIES = 'SET_CATEGORIES',
+  SELECT_COMPANY = 'SELECT_COMPANY',
+  ON_PRESS_PROJECT = 'ON_PRESS_PROJECT',
+  ADD_COMPANIES = 'ADD_COMPANIES',
+  SET_COMPANIES_NAME = 'SET_COMPANIES_NAME',
+  SET_DATE = 'SET_DATE',
+  INCREASE_STEP = 'INCREASE_STEP',
+  DECREASE_STEP = 'DECREASE_STEP',
+  RESET_STATE = 'RESET_STATE',
+  ENABLE_SEARCHING = 'ENABLE_SEARCHING',
 }
 
 type AppointmentPayload = {
@@ -219,12 +219,12 @@ type AppointmentPayload = {
   };
 };
 
-export type AppointmentAction =
-  ActionMap<AppointmentPayload>[keyof ActionMap<AppointmentPayload>];
+export type AppointmentAction = ActionMap<AppointmentPayload>[keyof ActionMap<AppointmentPayload>];
 
-const AppoinmentContext = createContext<
-  [AppointmentState, Dispatch<AppointmentAction>]
->([initialData, () => {}]);
+const AppoinmentContext = createContext<[AppointmentState, Dispatch<AppointmentAction>]>([
+  initialData,
+  () => {},
+]);
 
 const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
   switch (action.type) {
@@ -235,7 +235,7 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
         ...state,
         stepOne: {
           ...state.stepOne,
-          errorCompany: "",
+          errorCompany: '',
           company: {
             ...state.stepOne.company,
             Company: { ...state.stepOne.company.Company, title: action.value },
@@ -248,9 +248,9 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
         stepOne: {
           ...state.stepOne,
           customerType: action.value,
-          errorCompany: "",
-          errorProject: "",
-          errorPics: "",
+          errorCompany: '',
+          errorProject: '',
+          errorPics: '',
           company: {
             ...state.stepOne.company,
             Company: { ...state.stepOne.company.Company },
@@ -262,7 +262,7 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
         ...state,
         stepOne: {
           ...state.stepOne,
-          errorProject: "",
+          errorProject: '',
           [action.key as keyof StepOne]: {
             ...(state.stepOne[action.key as keyof StepOne] as StepOne),
             name: action.value,
@@ -275,7 +275,7 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
         isModalPicVisible: false,
         stepOne: {
           ...state.stepOne,
-          errorPics: "",
+          errorPics: '',
           [action.key as keyof StepOne]: {
             ...(state.stepOne[action.key as keyof StepOne] as StepOne),
             PIC: action.value,
@@ -321,13 +321,13 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
         ...state,
         isModalCompanyVisible: false,
         isSearching: false,
-        searchQuery: "",
+        searchQuery: '',
         stepOne: {
           ...state.stepOne,
           customerType: action.key,
-          errorPics: "",
-          errorCompany: "",
-          errorProject: "",
+          errorPics: '',
+          errorCompany: '',
+          errorProject: '',
           [action.key as keyof StepOne]: {
             ...(state.stepOne[action.key as keyof StepOne] as StepOne),
             ...action.value,
@@ -359,7 +359,7 @@ const reducerForm = (state: AppointmentState, action: AppointmentAction) => {
     case AppointmentActionType.ON_PRESS_PROJECT: {
       return {
         ...state,
-        searchQuery: "",
+        searchQuery: '',
         stepOne: {
           ...state.stepOne,
           customerType: action.key,

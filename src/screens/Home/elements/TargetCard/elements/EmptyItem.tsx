@@ -1,9 +1,9 @@
-import { View, StyleSheet } from "react-native";
-import React from "react";
-import TargetMarker from "./TargetMarker";
-import colors from "@/constants/colors";
-import resScale from "@/utils/resScale";
-import { layout } from "@/constants";
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import TargetMarker from './TargetMarker';
+import { layout } from '@/constants';
+import colors from '@/constants/colors';
+import resScale from '@/utils/resScale';
 
 type EmptyItemType = {
   isLast: boolean;
@@ -11,19 +11,14 @@ type EmptyItemType = {
   isFirst: boolean;
 };
 
-export default function EmptyItem({
-  isLast,
-  isFirst,
-  isTargetMarker,
-}: EmptyItemType) {
+export default function EmptyItem({ isLast, isFirst, isTargetMarker }: EmptyItemType) {
   return (
     <View
       style={[
         style.emptyProgress,
         isLast ? style.progressEnd : null,
         isFirst ? { borderLeftWidth: 0 } : null,
-      ]}
-    >
+      ]}>
       {isTargetMarker && <TargetMarker />}
     </View>
   );

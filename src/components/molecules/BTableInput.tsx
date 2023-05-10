@@ -1,17 +1,12 @@
-import React from "react";
-import { KeyboardTypeOptions, StyleSheet, Text, View } from "react-native";
-import BLabel from "../atoms/BLabel";
-import BSpacer from "../atoms/BSpacer";
-import BTextInput from "../atoms/BTextInput";
-import { colors, layout } from "@/constants";
-import { resScale } from "@/utils";
-import font from "@/constants/fonts";
-import {
-  ITableInput,
-  ITableInputItem,
-  ITableInputListItem,
-  TitleBold,
-} from "@/interfaces";
+import React from 'react';
+import { KeyboardTypeOptions, StyleSheet, Text, View } from 'react-native';
+import BLabel from '../atoms/BLabel';
+import BSpacer from '../atoms/BSpacer';
+import BTextInput from '../atoms/BTextInput';
+import { colors, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { ITableInput, ITableInputItem, ITableInputListItem, TitleBold } from '@/interfaces';
+import { resScale } from '@/utils';
 
 function BTableInput({
   titleBold,
@@ -26,11 +21,9 @@ function BTableInput({
       <View style={styles.outerCell}>
         <View style={styles.innerCell}>
           <Text style={styles.cellText}>
-            {item?.firstColumnRangeTitle ? item.firstColumnRangeTitle : "0"}
+            {item?.firstColumnRangeTitle ? item.firstColumnRangeTitle : '0'}
           </Text>
-          <Text style={styles.cellText}>
-            {item?.firstColumnUnit ? item.firstColumnUnit : "m³"}
-          </Text>
+          <Text style={styles.cellText}>{item?.firstColumnUnit ? item.firstColumnUnit : 'm³'}</Text>
         </View>
       </View>
     );
@@ -39,31 +32,23 @@ function BTableInput({
       <View style={styles.outerCellSpecialPriceContainer}>
         <View style={[styles.inputLabel, { left: layout.pad.ml }]}>
           <Text style={[styles.cellText]}>
-            {item?.secondColumnNominalInput
-              ? item.secondColumnNominalInput
-              : "IDR"}
+            {item?.secondColumnNominalInput ? item.secondColumnNominalInput : 'IDR'}
           </Text>
         </View>
 
         <View style={{ flex: 1 }}>
           <BTextInput
             contentStyle={styles.cellText}
-            placeholder={
-              item?.tableInputPlaceholder ? item.tableInputPlaceholder : ""
-            }
-            onChangeText={(val) => onChangeValue && onChangeValue(val, index!)}
+            placeholder={item?.tableInputPlaceholder ? item.tableInputPlaceholder : ''}
+            onChangeText={val => onChangeValue && onChangeValue(val, index!)}
             value={item?.tableInputValue ?? item?.tableInputValue}
-            keyboardType={
-              item?.tableInputKeyboardType
-                ? item.tableInputKeyboardType
-                : "numeric"
-            }
+            keyboardType={item?.tableInputKeyboardType ? item.tableInputKeyboardType : 'numeric'}
             style={styles.inputPrice}
           />
         </View>
         <View style={[styles.inputLabel, { right: layout.pad.ml }]}>
           <Text style={styles.cellText}>
-            {item?.secondColumnUnitInput ? item.secondColumnUnitInput : "/m³"}
+            {item?.secondColumnUnitInput ? item.secondColumnUnitInput : '/m³'}
           </Text>
         </View>
       </View>
@@ -79,21 +64,13 @@ function BTableInput({
 
   const renderFirstColumnLabel = () => (
     <View>
-      <BLabel
-        label={firstColumnLabel || ""}
-        bold={titleBold}
-        sizeInNumber={textSize}
-      />
+      <BLabel label={firstColumnLabel || ''} bold={titleBold} sizeInNumber={textSize} />
     </View>
   );
 
   const renderSecondColumnLabel = () => (
     <View style={styles.priceLabelContainer}>
-      <BLabel
-        label={secondColumnLabel || ""}
-        sizeInNumber={textSize}
-        bold={titleBold}
-      />
+      <BLabel label={secondColumnLabel || ''} sizeInNumber={textSize} bold={titleBold} />
     </View>
   );
 
@@ -115,8 +92,8 @@ function BTableInput({
 
 const styles = StyleSheet.create({
   labelContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: layout.pad.md,
   },
   priceLabelContainer: {
@@ -131,9 +108,9 @@ const styles = StyleSheet.create({
   },
   innerCell: {
     padding: layout.pad.md + layout.pad.xs,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   cellText: {
     fontFamily: font.family.montserrat[400],
@@ -142,9 +119,9 @@ const styles = StyleSheet.create({
   },
   outerCellSpecialPriceContainer: {
     flex: 0.5,
-    justifyContent: "space-evenly",
-    flexDirection: "row",
-    alignItems: "center",
+    justifyContent: 'space-evenly',
+    flexDirection: 'row',
+    alignItems: 'center',
     bottom: layout.pad.sm,
   },
   inputPrice: {
@@ -154,13 +131,13 @@ const styles = StyleSheet.create({
     bottom: layout.pad.xs,
   },
   inputLabel: {
-    position: "absolute",
+    position: 'absolute',
     zIndex: 1,
     bottom: layout.pad.ml,
   },
   cellContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingLeft: layout.pad.md,
   },
 });

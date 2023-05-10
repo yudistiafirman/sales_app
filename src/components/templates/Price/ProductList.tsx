@@ -1,13 +1,13 @@
-import { TouchableOpacity } from "@gorhom/bottom-sheet";
-import React, { useCallback } from "react";
-import { ListRenderItem } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-import BEmptyState from "@/components/organism/BEmptyState";
-import PriceListCard from "@/components/templates/Price/PriceListCard";
-import { layout } from "@/constants";
-import PriceListShimmer from "./PriceListShimmer";
-import BDivider from "@/components/atoms/BDivider";
-import BSpacer from "@/components/atoms/BSpacer";
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
+import { FlashList } from '@shopify/flash-list';
+import React, { useCallback } from 'react';
+import { ListRenderItem } from 'react-native';
+import PriceListShimmer from './PriceListShimmer';
+import BDivider from '@/components/atoms/BDivider';
+import BSpacer from '@/components/atoms/BSpacer';
+import BEmptyState from '@/components/organism/BEmptyState';
+import PriceListCard from '@/components/templates/Price/PriceListCard';
+import { layout } from '@/constants';
 
 interface productsData {
   display_name?: string;
@@ -28,10 +28,7 @@ interface productsData {
 
 interface ProductListProps<ArrayOfObject> {
   products: ArrayOfObject[];
-  onEndReached?:
-    | ((info: { distanceFromEnd: number }) => void)
-    | null
-    | undefined;
+  onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
   refreshing?: boolean;
   emptyProductName?: string;
   isLoadMore?: boolean;
@@ -59,15 +56,13 @@ function ProductList<ArrayOfObject extends productsData>({
   disablePressed = false,
 }: ProductListProps<ArrayOfObject>) {
   const renderItem: ListRenderItem<productsData> = useCallback(({ item }) => {
-    const fc =
-      item?.properties?.fc?.length > 0 ? ` / FC${item.properties.fc}` : "";
+    const fc = item?.properties?.fc?.length > 0 ? ` / FC${item.properties.fc}` : '';
     return (
       <TouchableOpacity
         onPress={() => {
           onPress(item);
         }}
-        disabled={disablePressed}
-      >
+        disabled={disablePressed}>
         <PriceListCard
           productName={`${item?.display_name}${fc}`}
           productPrice={item?.calcPrice}

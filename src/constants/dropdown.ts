@@ -1,194 +1,194 @@
 const WEEK_LIST = [
   {
-    label: "Minggu ke 1",
+    label: 'Minggu ke 1',
     value: 1,
   },
   {
-    label: "Minggu ke 2",
+    label: 'Minggu ke 2',
     value: 2,
   },
   {
-    label: "Minggu ke 3",
+    label: 'Minggu ke 3',
     value: 3,
   },
   {
-    label: "Minggu ke 4",
+    label: 'Minggu ke 4',
     value: 4,
   },
 ];
 
 const MONTH_LIST = [
   {
-    label: "Januari",
+    label: 'Januari',
     value: 1,
   },
   {
-    label: "Februari",
+    label: 'Februari',
     value: 2,
   },
   {
-    label: "Maret",
+    label: 'Maret',
     value: 3,
   },
   {
-    label: "April",
+    label: 'April',
     value: 4,
   },
   {
-    label: "Mei",
+    label: 'Mei',
     value: 5,
   },
   {
-    label: "Juni",
+    label: 'Juni',
     value: 6,
   },
   {
-    label: "Juli",
+    label: 'Juli',
     value: 7,
   },
   {
-    label: "Agustus",
+    label: 'Agustus',
     value: 8,
   },
   {
-    label: "September",
+    label: 'September',
     value: 9,
   },
   {
-    label: "Oktober",
+    label: 'Oktober',
     value: 10,
   },
   {
-    label: "November",
+    label: 'November',
     value: 11,
   },
   {
-    label: "Desember",
+    label: 'Desember',
     value: 12,
   },
 ];
 
 const STAGE_PROJECT = [
   {
-    label: "Persiapan Lahan",
-    value: "LAND_PREP",
+    label: 'Persiapan Lahan',
+    value: 'LAND_PREP',
   },
   {
-    label: "Pasang Pondasi",
-    value: "FOUNDATION",
+    label: 'Pasang Pondasi',
+    value: 'FOUNDATION',
   },
   {
-    label: "Struktur",
-    value: "FORMWORK",
+    label: 'Struktur',
+    value: 'FORMWORK',
   },
   {
-    label: "Finishing",
-    value: "FINISHING",
+    label: 'Finishing',
+    value: 'FINISHING',
   },
 ];
 
 const TYPE_PROJECT = [
   {
-    label: "Infrastruktur",
-    value: "INFRASTRUKTUR",
+    label: 'Infrastruktur',
+    value: 'INFRASTRUKTUR',
   },
   {
-    label: "High-rise",
-    value: "HIGH-RISE",
+    label: 'High-rise',
+    value: 'HIGH-RISE',
   },
   {
-    label: "Rumah",
-    value: "RUMAH",
+    label: 'Rumah',
+    value: 'RUMAH',
   },
   {
-    label: "Komersial",
-    value: "KOMERSIAL",
+    label: 'Komersial',
+    value: 'KOMERSIAL',
   },
   {
-    label: "Industrial",
-    value: "INDUSTRIAL",
+    label: 'Industrial',
+    value: 'INDUSTRIAL',
   },
 ];
 
 const VEHICLE_LIST = [
   {
-    label: "B 5236 TOB",
-    value: "B5236TOB",
+    label: 'B 5236 TOB',
+    value: 'B5236TOB',
   },
   {
-    label: "B 6589 TWS",
-    value: "B6589TWS",
+    label: 'B 6589 TWS',
+    value: 'B6589TWS',
   },
   {
-    label: "B 1237 AB",
-    value: "B1237AB",
+    label: 'B 1237 AB',
+    value: 'B1237AB',
   },
 ];
 
 const PO_METHOD_LIST = [
   {
-    label: "Pompa",
-    value: "pompa",
+    label: 'Pompa',
+    value: 'pompa',
   },
   {
-    label: "Non-Pompa",
-    value: "non-pompa",
+    label: 'Non-Pompa',
+    value: 'non-pompa',
   },
 ];
 
 const METHOD_LIST = [
   {
-    label: "Rigid",
-    value: "Rigid",
+    label: 'Rigid',
+    value: 'Rigid',
   },
   {
-    label: "Manual",
-    value: "Manual",
+    label: 'Manual',
+    value: 'Manual',
   },
   {
-    label: "Concrete Pump",
-    value: "Concrete Pump",
+    label: 'Concrete Pump',
+    value: 'Concrete Pump',
   },
 ];
 
 const METHOD_LIST_DEPRECATED = [
   {
-    label: "Pompa",
+    label: 'Pompa',
     value: true,
   },
   {
-    label: "Non-Pompa",
+    label: 'Non-Pompa',
     value: false,
   },
 ];
 
 const DRIVER_LIST = [
   {
-    label: "Bejo",
-    value: "BEJO",
+    label: 'Bejo',
+    value: 'BEJO',
   },
   {
-    label: "Udin",
-    value: "UDIN",
+    label: 'Udin',
+    value: 'UDIN',
   },
   {
-    label: "Samsul",
-    value: "SAMSUL",
+    label: 'Samsul',
+    value: 'SAMSUL',
   },
 ];
 
 const TM_CONDITION = [
   {
-    label: "Terisi Air",
-    value: "WATER",
+    label: 'Terisi Air',
+    value: 'WATER',
   },
   {
-    label: "Kosong Bersih",
-    value: "CLEAN",
+    label: 'Kosong Bersih',
+    value: 'CLEAN',
   },
   {
-    label: "Beton Rusak",
-    value: "BROKEN_CONCRETE",
+    label: 'Beton Rusak',
+    value: 'BROKEN_CONCRETE',
   },
 ];
 

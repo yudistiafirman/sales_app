@@ -1,8 +1,8 @@
-import { Platform } from "react-native";
-import Config from "react-native-config";
+import { Platform } from 'react-native';
+import Config from 'react-native-config';
 
 const API_URL =
-  Platform.OS === "android"
+  Platform.OS === 'android'
     ? Config.API_URL_ORDER
     : __DEV__
     ? Config.API_URL_ORDER
@@ -18,10 +18,10 @@ export default class BrikApiOrder {
     const url = new URL(`${API_URL}/order/m/flow/quotation-letter`);
     const params = url.searchParams;
     if (page) {
-      params.append("page", page);
+      params.append('page', page);
     }
     if (size) {
-      params.append("size", size);
+      params.append('size', size);
     }
     return url.toString();
   };
@@ -66,17 +66,14 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static getSphByProject = (
-    searchQuery: string,
-    customerType: "COMPANY" | "INDIVIDU"
-  ) => {
+  static getSphByProject = (searchQuery: string, customerType: 'COMPANY' | 'INDIVIDU') => {
     const url = new URL(`${API_URL}/order/m/project-sph`);
     const params = url.searchParams;
     if (searchQuery) {
-      params.append("search", searchQuery);
+      params.append('search', searchQuery);
     }
     if (customerType) {
-      params.append("customerType", customerType);
+      params.append('customerType', customerType);
     }
 
     return url.toString();
@@ -86,21 +83,21 @@ export default class BrikApiOrder {
     page?: string,
     size?: string,
     searchQuery?: string,
-    productPo?: "1" | "0"
+    productPo?: '1' | '0'
   ) => {
     const url = new URL(`${API_URL}/order/m/project-po`);
     const params = url.searchParams;
     if (page) {
-      params.append("page", page);
+      params.append('page', page);
     }
     if (size) {
-      params.append("size", size);
+      params.append('size', size);
     }
     if (searchQuery) {
-      params.append("search", searchQuery);
+      params.append('search', searchQuery);
     }
     if (productPo) {
-      params.append("productPo", productPo);
+      params.append('productPo', productPo);
     }
     return url.toString();
   };
@@ -110,25 +107,20 @@ export default class BrikApiOrder {
     return url.toString();
   };
 
-  static purchaseOrder = (
-    page?: string,
-    size?: string,
-    searchQuery?: string,
-    status?: string
-  ) => {
+  static purchaseOrder = (page?: string, size?: string, searchQuery?: string, status?: string) => {
     const url = new URL(`${API_URL}/order/m/purchase-order`);
     const params = url.searchParams;
     if (page) {
-      params.append("page", page);
+      params.append('page', page);
     }
     if (size) {
-      params.append("size", size);
+      params.append('size', size);
     }
     if (searchQuery) {
-      params.append("search", searchQuery);
+      params.append('search', searchQuery);
     }
     if (status) {
-      params.append("status", status);
+      params.append('status', status);
     }
     return url.toString();
   };
@@ -142,10 +134,10 @@ export default class BrikApiOrder {
     const url = new URL(`${API_URL}/order/m/deposit`);
     const params = url.searchParams;
     if (page) {
-      params.append("page", page);
+      params.append('page', page);
     }
     if (size) {
-      params.append("size", size);
+      params.append('size', size);
     }
     return url.toString();
   };
@@ -159,32 +151,27 @@ export default class BrikApiOrder {
     const url = new URL(`${API_URL}/order/m/schedule`);
     const params = url.searchParams;
     if (page) {
-      params.append("page", page);
+      params.append('page', page);
     }
     if (size) {
-      params.append("size", size);
+      params.append('size', size);
     }
     return url.toString();
   };
 
-  static deliveryOrder = (
-    status?: string | string[],
-    page?: string,
-    size?: string
-  ) => {
+  static deliveryOrder = (status?: string | string[], page?: string, size?: string) => {
     const url = new URL(`${API_URL}/order/m/delivery-order`);
     const params = url.searchParams;
     if (status) {
-      const finalStatus =
-        typeof status === "object" ? JSON.stringify(status) : status;
-      console.log("STATUS DELIVERY ORDER=== ", finalStatus);
-      params.append("status", finalStatus);
+      const finalStatus = typeof status === 'object' ? JSON.stringify(status) : status;
+      console.log('STATUS DELIVERY ORDER=== ', finalStatus);
+      params.append('status', finalStatus);
     }
     if (page) {
-      params.append("page", page);
+      params.append('page', page);
     }
     if (size) {
-      params.append("size", size);
+      params.append('size', size);
     }
     return url.toString();
   };

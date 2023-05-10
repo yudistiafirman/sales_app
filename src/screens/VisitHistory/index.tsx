@@ -1,18 +1,18 @@
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { useMachine } from "@xstate/react";
-import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-import { BSpacer, BSpinner, BTabSections } from "@/components";
-import { colors, layout } from "@/constants";
-import useCustomHeaderCenter from "@/hooks/useCustomHeaderCenter";
-import visitHistoryMachine from "@/machine/visitHistoryMachine";
-import { RootStackParamList } from "@/navigation/CustomStateComponent";
-import HistoryDetails from "./elements/HistoryDetails";
-import HistoryHeader from "./elements/HistoryHeader";
-import LocationText from "./elements/LocationText";
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import { useMachine } from '@xstate/react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import HistoryDetails from './elements/HistoryDetails';
+import HistoryHeader from './elements/HistoryHeader';
+import LocationText from './elements/LocationText';
+import { BSpacer, BSpinner, BTabSections } from '@/components';
+import { colors, layout } from '@/constants';
+import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
+import visitHistoryMachine from '@/machine/visitHistoryMachine';
+import { RootStackParamList } from '@/navigation/CustomStateComponent';
 
-type VisitHistoryRoute = RouteProp<RootStackParamList, "VISIT_HISTORY">;
+type VisitHistoryRoute = RouteProp<RootStackParamList, 'VISIT_HISTORY'>;
 
 function VisitHistory() {
   const route = useRoute<VisitHistoryRoute>();
@@ -23,7 +23,7 @@ function VisitHistory() {
   useEffect(() => {
     if (route.params) {
       const { projectId } = route.params;
-      send("assignParams", { value: projectId });
+      send('assignParams', { value: projectId });
     }
   }, [route.params, send]);
 
@@ -32,20 +32,14 @@ function VisitHistory() {
   });
 
   const onTabPress = (tabroute: any) => {
-    const tabIndex = state.context.routes.findIndex(
-      (v) => v.key === tabroute.route.key
-    );
-    send("onChangeVisitationIdx", { value: tabIndex });
+    const tabIndex = state.context.routes.findIndex(v => v.key === tabroute.route.key);
+    send('onChangeVisitationIdx', { value: tabIndex });
   };
 
   const { selectedVisitationByIdx, loading, routes } = state.context;
 
   const renderVisitHistory = useCallback(
-    () => (
-      <HistoryDetails
-        details={selectedVisitationByIdx && selectedVisitationByIdx}
-      />
-    ),
+    () => <HistoryDetails details={selectedVisitationByIdx && selectedVisitationByIdx} />,
     [selectedVisitationByIdx]
   );
 
@@ -59,11 +53,7 @@ function VisitHistory() {
 
   return (
     <View style={styles.container}>
-      <LocationText
-        locationAddress={
-          selectedVisitationByIdx?.project?.ShippingAddress?.line1
-        }
-      />
+      <LocationText locationAddress={selectedVisitationByIdx?.project?.ShippingAddress?.line1} />
       <BTabSections
         swipeEnabled={false}
         navigationState={{ index, routes }}
@@ -91,15 +81,15 @@ const styles = StyleSheet.create({
   },
   loading: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tabIndicator: {
     backgroundColor: colors.primary,
     marginLeft: layout.pad.lg,
   },
   tabStyle: {
-    width: "auto",
+    width: 'auto',
     paddingHorizontal: layout.pad.lg,
   },
   tabBarStyle: {

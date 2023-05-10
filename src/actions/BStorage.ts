@@ -1,10 +1,10 @@
-import EncryptedStorage from "react-native-encrypted-storage";
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 type Dict<T> = Record<string, T>;
 
 class BStorage {
   async getItem(key: string): Promise<Dict> {
-    return EncryptedStorage.getItem(key).then((result) => {
+    return EncryptedStorage.getItem(key).then(result => {
       if (result) {
         return JSON.parse(result);
       }

@@ -1,4 +1,4 @@
-import { PurchaseOrdersData } from "./SelectConfirmedPO";
+import { PurchaseOrdersData } from './SelectConfirmedPO';
 
 interface CreateDepositFirstStep {
   deposit?: {
@@ -24,8 +24,4 @@ interface CreateDepositState {
   isSearchingPurchaseOrder: boolean;
 }
 
-export type {
-  CreateDepositState,
-  CreateDepositFirstStep,
-  CreateDepositSecondStep,
-};
+export type { CreateDepositState, CreateDepositFirstStep, CreateDepositSecondStep };

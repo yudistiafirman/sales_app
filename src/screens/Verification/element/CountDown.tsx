@@ -1,6 +1,6 @@
-import React from "react";
-import { BText } from "@/components";
-import VerificationStyles from "../styles";
+import React from 'react';
+import VerificationStyles from '../styles';
+import { BText } from '@/components';
 
 function CountDown({ count }: { count: number }): JSX.Element {
   let finalCount = count.toString();
@@ -9,7 +9,8 @@ function CountDown({ count }: { count: number }): JSX.Element {
   }
   return (
     <BText style={VerificationStyles.countDownText}>
-      Kirim lagi {`(00:${finalCount})`}
+      Kirim lagi
+      {`(00:${finalCount})`}
     </BText>
   );
 }

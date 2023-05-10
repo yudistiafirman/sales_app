@@ -1,10 +1,10 @@
-import { Text, StyleSheet } from "react-native";
-import React from "react";
-import font from "@/constants/fonts";
-import respFS from "@/utils/resFontSize";
-import colors from "@/constants/colors";
-import { resScale } from "@/utils";
-import { fonts } from "@/constants";
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
+import { fonts } from '@/constants';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
+import { resScale } from '@/utils';
+import respFS from '@/utils/resFontSize';
 
 type higlightTextType = {
   searchQuery?: string;
@@ -12,36 +12,25 @@ type higlightTextType = {
   fontSize?: number;
 };
 
-export default function HighlightText({
-  searchQuery,
-  name,
-  fontSize,
-}: higlightTextType) {
+export default function HighlightText({ searchQuery, name, fontSize }: higlightTextType) {
   function escapeRegExp(text: string) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
   }
   if (!searchQuery) {
     return (
       <Text
         style={[
           style.normalText,
-          fontSize
-            ? { fontSize: respFS(fontSize) }
-            : { fontSize: font.size.md },
+          fontSize ? { fontSize: respFS(fontSize) } : { fontSize: font.size.md },
         ]}
-        numberOfLines={1}
-      >
+        numberOfLines={1}>
         {name}
       </Text>
     );
   }
 
-  const regexStr = `(${searchQuery
-    .trim()
-    .split(/\s+/)
-    .map(escapeRegExp)
-    .join("|")})`;
-  const regex = new RegExp(regexStr, "gi");
+  const regexStr = `(${searchQuery.trim().split(/\s+/).map(escapeRegExp).join('|')})`;
+  const regex = new RegExp(regexStr, 'gi');
   const parts = name.split(regex);
 
   return (
@@ -50,10 +39,9 @@ export default function HighlightText({
         style.normalText,
         fontSize ? { fontSize: respFS(fontSize) } : { fontSize: font.size.md },
       ]}
-      numberOfLines={1}
-    >
+      numberOfLines={1}>
       {parts
-        .filter((part) => part)
+        .filter(part => part)
         .map((part, i) =>
           regex.test(part) ? (
             <Text
@@ -61,11 +49,8 @@ export default function HighlightText({
               style={[
                 style.normalText,
                 style.boldText,
-                fontSize
-                  ? { fontSize: respFS(fontSize) }
-                  : { fontSize: font.size.md },
-              ]}
-            >
+                fontSize ? { fontSize: respFS(fontSize) } : { fontSize: font.size.md },
+              ]}>
               {part}
             </Text>
           ) : (

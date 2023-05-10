@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   billingAddressType,
   chosenProductType,
@@ -6,12 +6,9 @@ import {
   requiredDocType,
   selectedCompanyInterface,
   SphStateInterface,
-} from "@/interfaces";
+} from '@/interfaces';
 
-type updateBillAddressType = Pick<
-  billingAddressType,
-  "name" | "phone" | "fullAddress"
->;
+type updateBillAddressType = Pick<billingAddressType, 'name' | 'phone' | 'fullAddress'>;
 
 const initialState: SphStateInterface = {
   selectedCompany: null,
@@ -19,13 +16,13 @@ const initialState: SphStateInterface = {
   projectAddress: null,
   isBillingAddressSame: false,
   billingAddress: {
-    name: "",
-    phone: "",
+    name: '',
+    phone: '',
     addressAutoComplete: {},
-    fullAddress: "",
+    fullAddress: '',
   },
   distanceFromLegok: null,
-  paymentType: "",
+  paymentType: '',
   paymentRequiredDocuments: {},
   paymentDocumentsFullfilled: false,
   paymentBankGuarantee: false,
@@ -38,37 +35,28 @@ const initialState: SphStateInterface = {
   stepSPHFourFinished: false,
   stepperSPHShouldNotFocused: false,
   useSearchAddress: false,
-  searchedAddress: "",
-  searchedBillingAddress: "",
+  searchedAddress: '',
+  searchedBillingAddress: '',
   useSearchedBillingAddress: false,
 };
 
 export const sphSlice = createSlice({
-  name: "sphstate",
+  name: 'sphstate',
   initialState,
   reducers: {
-    resetFocusedStepperFlag: (state) => {
+    resetFocusedStepperFlag: state => {
       state.stepperSPHShouldNotFocused = false;
     },
-    setUseSearchAddress: (
-      state,
-      actions: PayloadAction<{ value: boolean }>
-    ) => {
+    setUseSearchAddress: (state, actions: PayloadAction<{ value: boolean }>) => {
       state.useSearchAddress = actions.payload.value;
     },
     setSearchAddress: (state, actions: PayloadAction<{ value: string }>) => {
       state.searchedAddress = actions.payload.value;
     },
-    setUseBillingAddress: (
-      state,
-      actions: PayloadAction<{ value: boolean }>
-    ) => {
+    setUseBillingAddress: (state, actions: PayloadAction<{ value: boolean }>) => {
       state.useSearchedBillingAddress = actions.payload.value;
     },
-    setSearchedBillingAddress: (
-      state,
-      actions: PayloadAction<{ value: string }>
-    ) => {
+    setSearchedBillingAddress: (state, actions: PayloadAction<{ value: string }>) => {
       state.searchedBillingAddress = actions.payload.value;
     },
     resetSPHState: () => initialState,
@@ -109,13 +97,10 @@ export const sphSlice = createSlice({
     updateProjectAddress: (state, { payload }) => {
       state.projectAddress = payload;
     },
-    updateSelectedCompany: (
-      state,
-      { payload }: { payload: selectedCompanyInterface }
-    ) => {
+    updateSelectedCompany: (state, { payload }: { payload: selectedCompanyInterface }) => {
       console.log(payload);
-      console.log(payload?.Pic, "c");
-      console.log(payload?.Pics, "cs");
+      console.log(payload?.Pic, 'c');
+      console.log(payload?.Pics, 'cs');
       state.selectedCompany = payload;
     },
     updateSelectedCompanyPicList: (state, { payload }: { payload: PIC[] }) => {
@@ -128,55 +113,41 @@ export const sphSlice = createSlice({
       state.selectedPic = payload;
     },
     updateIsBillingAddressSame: (state, { payload }: { payload: boolean }) => {
-      if (typeof payload === "boolean") {
+      if (typeof payload === 'boolean') {
         state.isBillingAddressSame = payload;
       }
     },
     updateBillingAddressOptions: (
       state,
-      {
-        payload,
-      }: { payload: { value: string; key: keyof updateBillAddressType } }
+      { payload }: { payload: { value: string; key: keyof updateBillAddressType } }
     ) => {
       const { value, key } = payload;
       state.billingAddress[key] = value;
     },
-    updateBillingAddressAutoComplete: (
-      state,
-      { payload }: { payload: { [key: string]: any } }
-    ) => {
+    updateBillingAddressAutoComplete: (state, { payload }: { payload: { [key: string]: any } }) => {
       state.billingAddress.addressAutoComplete = payload;
     },
     updateDistanceFromLegok: (state, { payload }: { payload: number }) => {
       state.distanceFromLegok = payload;
     },
-    updatePaymentType: (state, { payload }: { payload: "CBD" | "CREDIT" }) => {
+    updatePaymentType: (state, { payload }: { payload: 'CBD' | 'CREDIT' }) => {
       state.paymentType = payload;
     },
-    updateRequiredDocuments: (
-      state,
-      { payload }: { payload: { [key: string]: any } }
-    ) => {
+    updateRequiredDocuments: (state, { payload }: { payload: { [key: string]: any } }) => {
       state.paymentRequiredDocuments = payload;
     },
     updatePaymentBankGuarantee: (state, { payload }: { payload: boolean }) => {
-      if (typeof payload === "boolean") {
+      if (typeof payload === 'boolean') {
         state.paymentBankGuarantee = payload;
       }
     },
-    updateChosenProducts: (
-      state,
-      { payload }: { payload: chosenProductType[] }
-    ) => {
+    updateChosenProducts: (state, { payload }: { payload: chosenProductType[] }) => {
       state.chosenProducts = payload;
     },
     updateUseHighway: (state, { payload }: { payload: boolean }) => {
       state.useHighway = payload;
     },
-    updateUploadedAndMappedRequiredDocs: (
-      state,
-      { payload }: { payload: requiredDocType[] }
-    ) => {
+    updateUploadedAndMappedRequiredDocs: (state, { payload }: { payload: requiredDocType[] }) => {
       state.uploadedAndMappedRequiredDocs = payload;
     },
   },

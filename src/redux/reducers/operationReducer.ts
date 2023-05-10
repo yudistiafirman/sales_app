@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { LocalFileType } from "@/interfaces/LocalFileType";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { LocalFileType } from '@/interfaces/LocalFileType';
 
 interface inputsValue {
   recepientName: string;
@@ -29,34 +29,34 @@ export interface operationInitState {
 const initialState: operationInitState = {
   photoFiles: [],
   inputsValue: {
-    recepientName: "",
-    recepientPhoneNumber: "",
-    truckMixCondition: "",
-    weightBridge: "",
+    recepientName: '',
+    recepientPhoneNumber: '',
+    truckMixCondition: '',
+    weightBridge: '',
     truckMixHaveLoad: false,
   },
   projectDetails: {
-    deliveryOrderId: "",
-    projectName: "",
-    doNumber: "",
-    address: "",
+    deliveryOrderId: '',
+    projectName: '',
+    doNumber: '',
+    address: '',
     lonlat: { longitude: 0, latitude: 0 },
     requestedQuantity: 0,
-    deliveryTime: "",
+    deliveryTime: '',
   },
   isLoading: false,
 };
 export const operationSlice = createSlice({
-  name: "operationState",
+  name: 'operationState',
   initialState,
   reducers: {
     resetOperationState: () => initialState,
-    resetInputsValue: (state) => {
+    resetInputsValue: state => {
       state.inputsValue = {
-        recepientName: "",
-        recepientPhoneNumber: "",
-        truckMixCondition: "",
-        weightBridge: "",
+        recepientName: '',
+        recepientPhoneNumber: '',
+        truckMixCondition: '',
+        weightBridge: '',
         truckMixHaveLoad: false,
       };
     },
@@ -77,35 +77,29 @@ export const operationSlice = createSlice({
     },
     setOperationPhoto: (
       state,
-      actions: PayloadAction<{ file: LocalFileType; withoutAddButton: boolean }>
+      actions: PayloadAction<{
+        file: LocalFileType;
+        withoutAddButton: boolean;
+      }>
     ) => {
       let currentImages = [...state.photoFiles];
       if (actions.payload.withoutAddButton)
-        currentImages = currentImages.filter((it) => it.file !== null);
+        currentImages = currentImages.filter(it => it.file !== null);
       currentImages.push(actions.payload.file);
       state.photoFiles = [...currentImages];
     },
-    setAllOperationPhoto: (
-      state,
-      actions: PayloadAction<{ file: LocalFileType[] }>
-    ) => {
+    setAllOperationPhoto: (state, actions: PayloadAction<{ file: LocalFileType[] }>) => {
       state.photoFiles = [...actions.payload.file];
     },
-    removeOperationPhoto: (
-      state,
-      actions: PayloadAction<{ index: number }>
-    ) => {
-      const currentImages = state.photoFiles.filter((it) => it.file !== null);
+    removeOperationPhoto: (state, actions: PayloadAction<{ index: number }>) => {
+      const currentImages = state.photoFiles.filter(it => it.file !== null);
       currentImages.splice(actions.payload.index, 1);
       currentImages.unshift({ file: null });
       state.photoFiles = [...currentImages];
     },
-    removeDriverPhoto: (
-      state,
-      actions: PayloadAction<{ index: number; attachType: string }>
-    ) => {
+    removeDriverPhoto: (state, actions: PayloadAction<{ index: number; attachType: string }>) => {
       const newPhotoFiles: LocalFileType[] = [];
-      state.photoFiles.forEach((item) => {
+      state.photoFiles.forEach(item => {
         let selectedItem: LocalFileType | undefined = { ...item };
         if (selectedItem.attachType === actions.payload.attachType) {
           selectedItem = { file: null, attachType: actions.payload.attachType };

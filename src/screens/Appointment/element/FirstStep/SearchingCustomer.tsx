@@ -1,25 +1,21 @@
-import React, { useCallback, useState } from "react";
-import { View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import debounce from "lodash.debounce";
-import { BCommonSearchList } from "@/components";
-import { AppointmentActionType } from "@/context/AppointmentContext";
-import { useAppointmentData } from "@/hooks";
-import { selectedCompanyInterface } from "@/interfaces/index";
-import { getAllProject } from "@/redux/async-thunks/commonThunks";
-import { retrying } from "@/redux/reducers/commonReducer";
-import { AppDispatch, RootState } from "@/redux/store";
+import debounce from 'lodash.debounce';
+import React, { useCallback, useState } from 'react';
+import { View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { BCommonSearchList } from '@/components';
+import { AppointmentActionType } from '@/context/AppointmentContext';
+import { useAppointmentData } from '@/hooks';
+import { selectedCompanyInterface } from '@/interfaces/index';
+import { getAllProject } from '@/redux/async-thunks/commonThunks';
+import { retrying } from '@/redux/reducers/commonReducer';
+import { AppDispatch, RootState } from '@/redux/store';
 
 function SearchingCustomer() {
   const [values, dispatchValue] = useAppointmentData();
   const [index, setIndex] = useState(0);
   const { searchQuery } = values;
-  const {
-    projects,
-    isProjectLoading,
-    errorGettingProject,
-    errorGettingProjectMessage,
-  } = useSelector((state: RootState) => state.common);
+  const { projects, isProjectLoading, errorGettingProject, errorGettingProjectMessage } =
+    useSelector((state: RootState) => state.common);
   const dispatch = useDispatch<AppDispatch>();
   const searchDispatch = useCallback(
     (text: string) => {
@@ -43,7 +39,7 @@ function SearchingCustomer() {
   const onPressCard = useCallback(
     (item: selectedCompanyInterface) => {
       try {
-        const customerType = item.Company.id ? "company" : "individu";
+        const customerType = item.Company.id ? 'company' : 'individu';
         if (values.stepOne.options.items) {
           dispatchValue({
             type: AppointmentActionType.ADD_COMPANIES,
@@ -79,7 +75,7 @@ function SearchingCustomer() {
           value: companyDataToSave,
         });
       } catch (error) {
-        console.log(error, "errorappointment onPressCard");
+        console.log(error, 'errorappointment onPressCard');
       }
     },
     [dispatchValue, values.stepOne.options.items]
@@ -88,10 +84,10 @@ function SearchingCustomer() {
   const routes: { title: string; totalItems: number }[] = React.useMemo(
     () => [
       {
-        key: "first",
-        title: "Proyek",
+        key: 'first',
+        title: 'Proyek',
         totalItems: projects.length,
-        chipPosition: "right",
+        chipPosition: 'right',
       },
     ],
     [projects]
@@ -105,7 +101,7 @@ function SearchingCustomer() {
   const onClearValue = () => {
     dispatchValue({
       type: AppointmentActionType.SEARCH_QUERY,
-      value: "",
+      value: '',
     });
   };
 
@@ -115,7 +111,7 @@ function SearchingCustomer() {
         searchQuery={searchQuery}
         onChangeText={onChangeSearch}
         onClearValue={() => {
-          if (searchQuery && searchQuery.trim() !== "") {
+          if (searchQuery && searchQuery.trim() !== '') {
             onClearValue();
           } else {
             dispatchValue({
@@ -131,7 +127,7 @@ function SearchingCustomer() {
         autoFocus
         onIndexChange={setIndex}
         loadList={isProjectLoading}
-        onPressList={(item) => {
+        onPressList={item => {
           const handlePicNull = { ...item };
           if (!handlePicNull.PIC) {
             handlePicNull.PIC = [];

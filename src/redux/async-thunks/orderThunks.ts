@@ -1,8 +1,8 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { postDeposit, postSchedule, postSph } from "@/actions/OrderActions";
-import { postSphResponseType, sphOrderPayloadType } from "@/interfaces";
-import { CreateDeposit } from "@/models/CreateDeposit";
-import { CreateSchedule } from "@/models/CreateSchedule";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { postDeposit, postSchedule, postSph } from '@/actions/OrderActions';
+import { postSphResponseType, sphOrderPayloadType } from '@/interfaces';
+import { CreateDeposit } from '@/models/CreateDeposit';
+import { CreateSchedule } from '@/models/CreateSchedule';
 
 type errorType = {
   success: boolean;
@@ -16,7 +16,7 @@ type errorType = {
 export const postOrderSph = createAsyncThunk<
   { sph: postSphResponseType },
   { payload: sphOrderPayloadType }
->("order/postOrderSph", async ({ payload }, { rejectWithValue }) => {
+>('order/postOrderSph', async ({ payload }, { rejectWithValue }) => {
   try {
     const response = await postSph(payload);
     const { data } = response;
@@ -32,7 +32,7 @@ export const postOrderSph = createAsyncThunk<
 export const postOrderDeposit = createAsyncThunk<
   { deposit: CreateDeposit },
   { payload: CreateDeposit }
->("order/postOrderDeposit", async ({ payload }, { rejectWithValue }) => {
+>('order/postOrderDeposit', async ({ payload }, { rejectWithValue }) => {
   try {
     const response = await postDeposit(payload);
     const { data } = response;
@@ -48,7 +48,7 @@ export const postOrderDeposit = createAsyncThunk<
 export const postOrderSchedule = createAsyncThunk<
   { schedule: CreateSchedule },
   { payload: CreateSchedule }
->("order/postOrderSchedule", async ({ payload }, { rejectWithValue }) => {
+>('order/postOrderSchedule', async ({ payload }, { rejectWithValue }) => {
   try {
     const response = await postSchedule(payload);
     const { data } = response;

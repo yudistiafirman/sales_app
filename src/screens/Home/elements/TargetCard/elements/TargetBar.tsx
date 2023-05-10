@@ -1,12 +1,11 @@
-import { View, StyleSheet } from "react-native";
-import React, { useMemo } from "react";
-import LinearGradient from "react-native-linear-gradient";
-import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import colors from "@/constants/colors";
-import EmptyItem from "./EmptyItem";
-import resScale from "@/utils/resScale";
-
-import { layout } from "@/constants";
+import React, { useMemo } from 'react';
+import { View, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import EmptyItem from './EmptyItem';
+import { layout } from '@/constants';
+import colors from '@/constants/colors';
+import resScale from '@/utils/resScale';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -81,32 +80,32 @@ export default function TargetBar({
 const style = StyleSheet.create({
   targetBar: {
     height: resScale(35),
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "flex-end",
-    width: "100%",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    width: '100%',
   },
   emptyProgressCont: {
-    display: "flex",
-    flexDirection: "row",
+    display: 'flex',
+    flexDirection: 'row',
     backgroundColor: colors.lightGray,
     borderRadius: layout.radius.md,
-    position: "relative",
+    position: 'relative',
   },
   progressCont: {
-    position: "absolute",
-    flexDirection: "row",
+    position: 'absolute',
+    flexDirection: 'row',
     zIndex: 2,
     borderRadius: layout.radius.md,
     backgroundColor: colors.primary,
   },
   loadingCont: {
-    position: "absolute",
-    flexDirection: "row",
+    position: 'absolute',
+    flexDirection: 'row',
     zIndex: 5,
     borderRadius: layout.radius.md,
-    width: "100%",
+    width: '100%',
     height: resScale(8),
   },
   progress: {
@@ -115,7 +114,7 @@ const style = StyleSheet.create({
   },
   shimmerStyle: {
     borderRadius: layout.radius.md,
-    width: "100%",
+    width: '100%',
     height: resScale(43),
   },
 });

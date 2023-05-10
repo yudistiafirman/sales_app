@@ -1,20 +1,15 @@
-import React, { useEffect } from "react";
-import {
-  DeviceEventEmitter,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
-import { TextInput } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { BSearchBar } from "@/components";
-import { resScale } from "@/utils";
-import { APPOINTMENT, CALENDAR } from "@/navigation/ScreenNames";
-import { useAppointmentData } from "@/hooks";
-import { AppointmentActionType } from "@/context/AppointmentContext";
-import { selectedDateType } from "@/screens/Visitation/elements/fifth";
-import { colors, layout } from "@/constants";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { DeviceEventEmitter, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { BSearchBar } from '@/components';
+import { colors, layout } from '@/constants';
+import { AppointmentActionType } from '@/context/AppointmentContext';
+import { useAppointmentData } from '@/hooks';
+import { APPOINTMENT, CALENDAR } from '@/navigation/ScreenNames';
+import { selectedDateType } from '@/screens/Visitation/elements/fifth';
+import { resScale } from '@/utils';
 
 function SecondStep() {
   const [values, dispatchValue] = useAppointmentData();
@@ -22,17 +17,14 @@ function SecondStep() {
 
   useEffect(() => {
     crashlytics().log(`${APPOINTMENT}-Step2`);
-    DeviceEventEmitter.addListener(
-      "CalendarScreen.selectedDate",
-      (date: selectedDateType) => {
-        dispatchValue({
-          type: AppointmentActionType.SET_DATE,
-          value: date,
-        });
-      }
-    );
+    DeviceEventEmitter.addListener('CalendarScreen.selectedDate', (date: selectedDateType) => {
+      dispatchValue({
+        type: AppointmentActionType.SET_DATE,
+        value: date,
+      });
+    });
     return () => {
-      DeviceEventEmitter.removeAllListeners("CalendarScreen.selectedDate");
+      DeviceEventEmitter.removeAllListeners('CalendarScreen.selectedDate');
     };
   }, [dispatchValue]);
 
@@ -51,16 +43,10 @@ function SecondStep() {
         <BSearchBar
           disabled
           activeOutlineColor="gray"
-          value={
-            selectedDate
-              ? `${selectedDate.day} , ${selectedDate.prettyDate}`
-              : ""
-          }
+          value={selectedDate ? `${selectedDate.day} , ${selectedDate.prettyDate}` : ''}
           textColor={colors.textInput.input}
           placeholder="Pilih Tanggal"
-          right={
-            <TextInput.Icon forceTextInputFocus={false} icon="chevron-right" />
-          }
+          right={<TextInput.Icon forceTextInputFocus={false} icon="chevron-right" />}
         />
       </>
     </SafeAreaView>
@@ -72,9 +58,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   touchable: {
-    position: "absolute",
-    display: "flex",
-    width: "100%",
+    position: 'absolute',
+    display: 'flex',
+    width: '100%',
     borderRadius: layout.pad.sm,
     height: resScale(45),
     zIndex: 2,

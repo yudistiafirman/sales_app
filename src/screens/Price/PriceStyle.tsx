@@ -1,8 +1,8 @@
-import { StyleSheet } from "react-native";
-import { layout } from "@/constants";
-import colors from "@/constants/colors";
-import font from "@/constants/fonts";
-import resScale from "@/utils/resScale";
+import { StyleSheet } from 'react-native';
+import { layout } from '@/constants';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
+import resScale from '@/utils/resScale';
 
 const PriceStyle = StyleSheet.create({
   tabIndicator: {
@@ -10,7 +10,7 @@ const PriceStyle = StyleSheet.create({
     marginLeft: resScale(15.5),
   },
   tabStyle: {
-    width: "auto",
+    width: 'auto',
     paddingHorizontal: layout.pad.lg,
   },
   tabBarStyle: {

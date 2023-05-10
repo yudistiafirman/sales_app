@@ -1,13 +1,4 @@
-import * as React from "react";
-import Preview from "@/screens/Camera/Preview";
-import CameraScreen from "@/screens/Camera";
-import CalendarScreen from "@/screens/Calendar";
-import SearchAreaProject from "@/screens/SearchAreaProject";
-import Location from "@/screens/Location";
-import SearchProduct from "@/screens/SearchProduct";
-import Sph from "@/screens/Sph";
-import CreateVisitation from "@/screens/Visitation/CreateVisitation";
-import TransactionDetail from "@/screens/Transaction/Detail";
+import * as React from 'react';
 import {
   ALL_PRODUCT,
   ALL_PRODUCT_TITLE,
@@ -45,17 +36,26 @@ import {
   TRANSACTION_DETAIL,
   TRANSACTION_DETAIL_TITLE,
   VISIT_HISTORY,
-} from "../ScreenNames";
-import CustomerDetail from "@/screens/CustomerDetail";
-import PurchaseOrderWithProvider from "@/screens/PurchaseOrder";
-import CreateScheduleScreen from "@/screens/CreateSchedule";
-import PriceList from "@/screens/Price";
-import AppointmentWithProvider from "@/screens/Appointment";
-import RequiredDocuments from "@/screens/RequiredDocuments";
-import VisitHistory from "@/screens/VisitHistory";
-import Deposit from "@/screens/Deposit";
-import SearchSO from "@/screens/SearchSO";
-import FormSO from "@/screens/SearchSO/Form/FormSO";
+} from '../ScreenNames';
+import AppointmentWithProvider from '@/screens/Appointment';
+import CalendarScreen from '@/screens/Calendar';
+import CameraScreen from '@/screens/Camera';
+import Preview from '@/screens/Camera/Preview';
+import CreateScheduleScreen from '@/screens/CreateSchedule';
+import CustomerDetail from '@/screens/CustomerDetail';
+import Deposit from '@/screens/Deposit';
+import Location from '@/screens/Location';
+import PriceList from '@/screens/Price';
+import PurchaseOrderWithProvider from '@/screens/PurchaseOrder';
+import RequiredDocuments from '@/screens/RequiredDocuments';
+import SearchAreaProject from '@/screens/SearchAreaProject';
+import SearchProduct from '@/screens/SearchProduct';
+import SearchSO from '@/screens/SearchSO';
+import FormSO from '@/screens/SearchSO/Form/FormSO';
+import Sph from '@/screens/Sph';
+import TransactionDetail from '@/screens/Transaction/Detail';
+import VisitHistory from '@/screens/VisitHistory';
+import CreateVisitation from '@/screens/Visitation/CreateVisitation';
 
 function SalesStack(Stack: any) {
   return (
@@ -154,7 +154,7 @@ function SalesStack(Stack: any) {
         component={CustomerDetail}
         options={{
           headerTitle: CUSTOMER_DETAIL_TITLE,
-          headerTitleAlign: "center",
+          headerTitleAlign: 'center',
         }}
       />
       <Stack.Screen
@@ -179,7 +179,7 @@ function SalesStack(Stack: any) {
         component={RequiredDocuments}
         options={{
           headerTitle: DOCUMENTS_TITLE,
-          headerTitleAlign: "center",
+          headerTitleAlign: 'center',
         }}
       />
       <Stack.Screen
@@ -188,7 +188,7 @@ function SalesStack(Stack: any) {
         component={VisitHistory}
         options={{
           headerTitle: false,
-          headerTitleAlign: "center",
+          headerTitleAlign: 'center',
         }}
       />
       <Stack.Screen

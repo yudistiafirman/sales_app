@@ -1,3 +1,3 @@
-import { RFValue } from "react-native-responsive-fontsize";
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export default (size: number) => RFValue(size);

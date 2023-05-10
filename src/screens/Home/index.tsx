@@ -1,4 +1,9 @@
-import * as React from "react";
+import BottomSheet from '@gorhom/bottom-sheet';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import debounce from 'lodash.debounce';
+import moment from 'moment';
+import * as React from 'react';
 import {
   View,
   StyleSheet,
@@ -7,22 +12,17 @@ import {
   Linking,
   Text,
   Platform,
-} from "react-native";
-import BottomSheet from "@gorhom/bottom-sheet";
-import moment from "moment";
-import { Button, Dialog, Portal, TextInput } from "react-native-paper";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import Modal from "react-native-modal";
-import debounce from "lodash.debounce";
-import { useDispatch, useSelector } from "react-redux";
-import crashlytics from "@react-native-firebase/crashlytics";
-import colors from "@/constants/colors";
-import TargetCard from "./elements/TargetCard";
-import resScale from "@/utils/resScale";
-import DateDaily from "./elements/DateDaily";
-import BQuickAction from "@/components/organism/BQuickActionMenu";
-import BVisitationCard from "@/components/molecules/BVisitationCard";
-import BuatKunjungan from "./elements/BuatKunjungan";
+} from 'react-native';
+import Modal from 'react-native-modal';
+import { Button, Dialog, Portal, TextInput } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
+import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
+import BuatKunjungan from './elements/BuatKunjungan';
+import DateDaily from './elements/DateDaily';
+import TargetCard from './elements/TargetCard';
+import { bStorage } from '@/actions';
+import { getAllVisitations, getVisitationTarget } from '@/actions/ProductivityActions';
 import {
   BSearchBar,
   BSpacer,
@@ -30,19 +30,16 @@ import {
   PopUpQuestion,
   BCommonSearchList,
   BBottomSheet,
-} from "@/components";
-import { fonts, layout } from "@/constants";
-import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
-import {
-  getAllVisitations,
-  getVisitationTarget,
-} from "@/actions/ProductivityActions";
-import { Api } from "@/models";
-import { visitationDataType } from "@/interfaces";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import { getOneVisitation } from "@/redux/async-thunks/productivityFlowThunks";
-import useHeaderStyleChanged from "@/hooks/useHeaderStyleChanged";
-import { useHeaderShow } from "@/hooks";
+} from '@/components';
+import SvgNames from '@/components/atoms/BSvg/svgName';
+import BVisitationCard from '@/components/molecules/BVisitationCard';
+import BQuickAction from '@/components/organism/BQuickActionMenu';
+import { fonts, layout } from '@/constants';
+import colors from '@/constants/colors';
+import { useHeaderShow } from '@/hooks';
+import useHeaderStyleChanged from '@/hooks/useHeaderStyleChanged';
+import { visitationDataType } from '@/interfaces';
+import { Api } from '@/models';
 import {
   APPOINTMENT,
   CAMERA,
@@ -55,25 +52,22 @@ import {
   SPH,
   TAB_HOME,
   HOME_MENU,
-} from "@/navigation/ScreenNames";
-import SvgNames from "@/components/atoms/BSvg/svgName";
+} from '@/navigation/ScreenNames';
+import { getOneVisitation } from '@/redux/async-thunks/productivityFlowThunks';
+import { resetFocusedStepperFlag, resetSPHState } from '@/redux/reducers/SphReducer';
+import { resetImageURLS } from '@/redux/reducers/cameraReducer';
+import { resetRegion } from '@/redux/reducers/locationReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+import { RootState } from '@/redux/store';
 import {
   getAppVersionName,
   getMinVersionUpdate,
   isDevelopment,
   isForceUpdate,
-} from "@/utils/generalFunc";
-import { RootState } from "@/redux/store";
-import {
-  resetFocusedStepperFlag,
-  resetSPHState,
-} from "@/redux/reducers/SphReducer";
-import { bStorage } from "@/actions";
-import { resetRegion } from "@/redux/reducers/locationReducer";
-import { resetImageURLS } from "@/redux/reducers/cameraReducer";
-import SelectCustomerTypeModal from "../PurchaseOrder/element/SelectCustomerTypeModal";
+} from '@/utils/generalFunc';
+import resScale from '@/utils/resScale';
 
-const { height, width } = Dimensions.get("window");
+const { height, width } = Dimensions.get('window');
 
 function Beranda() {
   const {
@@ -88,8 +82,7 @@ function Beranda() {
     enable_visitation,
   } = useSelector((state: RootState) => state.auth.remote_config);
   const poState = useSelector((state: RootState) => state.purchaseOrder);
-  const { isModalContinuePo, poNumber, currentStep, customerType } =
-    poState.currentState.context;
+  const { isModalContinuePo, poNumber, currentStep, customerType } = poState.currentState.context;
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [currentVisit, setCurrentVisit] = React.useState<{
@@ -103,23 +96,22 @@ function Beranda() {
   const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); // setIsRenderDateDaily
 
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState('');
   const [isError, setIsError] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState('');
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [isUpdateDialogVisible, setUpdateDialogVisible] = React.useState(false);
   const sphData = useSelector((state: RootState) => state.sph);
   const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
-  const [feature, setFeature] = React.useState<"PO" | "SPH">("SPH");
+  const [feature, setFeature] = React.useState<'PO' | 'SPH'>('SPH');
   const [localModalContinuePo, setLocalContinueModalPo] = React.useState(false);
-  const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] =
-    React.useState(false);
+  const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] = React.useState(false);
   const visitationData = useSelector((state: RootState) => state.visitation);
   const initialSnapPoints =
     height > 890
       ? height - width + layout.pad.xxl
       : height - width + layout.pad.xxl + layout.pad.md;
-  const snapPoints = React.useMemo(() => [initialSnapPoints, "100%"], []);
+  const snapPoints = React.useMemo(() => [initialSnapPoints, '100%'], []);
 
   useHeaderShow({
     isHeaderShown: !isModalVisible,
@@ -137,9 +129,7 @@ function Beranda() {
     data: [],
   });
   const [page, setPage] = React.useState<number>(1);
-  const [selectedDate, setSelectedDate] = React.useState<moment.Moment>(
-    moment()
-  );
+  const [selectedDate, setSelectedDate] = React.useState<moment.Moment>(moment());
 
   const toggleModal = (key: string) => () => {
     setData({
@@ -149,8 +139,8 @@ function Beranda() {
       data: [],
     });
     setModalVisible(!isModalVisible);
-    if (key === "close") {
-      setSearchQuery("");
+    if (key === 'close') {
+      setSearchQuery('');
     }
   };
   const bottomSheetOnchange = (index: number) => {
@@ -177,14 +167,12 @@ function Beranda() {
       });
       setIsTargetLoading(false);
     } catch (err) {
-      console.log("error catch 1:: ", err);
+      console.log('error catch 1:: ', err);
       setIsTargetLoading(false);
       dispatch(
         openPopUp({
-          popUpType: "error",
-          popUpText:
-            err.message ||
-            "Terjadi error saat pengambilan data target harian kunjungan",
+          popUpType: 'error',
+          popUpText: err.message || 'Terjadi error saat pengambilan data target harian kunjungan',
           outsideClickClosePopUp: true,
         })
       );
@@ -207,17 +195,14 @@ function Beranda() {
         const { data: _data } = await getAllVisitations(options);
         const displayData =
           _data.data?.data?.map((el: any) => {
-            const status =
-              el.status === "VISIT" ? `Visit ke ${el.order}` : el.status;
-            const pilStatus = el.finishDate ? "Selesai" : "Belum Selesai";
-            const time = el.finishDate
-              ? moment(el.finishDate).format("hh:mm")
-              : null;
+            const status = el.status === 'VISIT' ? `Visit ke ${el.order}` : el.status;
+            const pilStatus = el.finishDate ? 'Selesai' : 'Belum Selesai';
+            const time = el.finishDate ? moment(el.finishDate).format('hh:mm') : null;
             const location = el.project?.LocationAddress?.line1;
             return {
               id: el.id,
-              name: el.project?.displayName || "--",
-              location: location || "-",
+              name: el.project?.displayName || '--',
+              location: location || '-',
               time,
               status,
               pilStatus,
@@ -237,7 +222,7 @@ function Beranda() {
         }
         setIsLoading(false);
       } catch (error) {
-        console.log("error catch 2:: ", error);
+        console.log('error catch 2:: ', error);
         setIsLoading(false);
         setIsError(true);
         setErrorMessage(error.message);
@@ -260,38 +245,29 @@ function Beranda() {
         visible={isUpdateDialogVisible}
         dismissable={!isForceUpdate(force_update)}
         onDismiss={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
-        style={{ backgroundColor: colors.white }}
-      >
+        style={{ backgroundColor: colors.white }}>
         <Dialog.Title
           style={{
             fontFamily: fonts.family.montserrat[500],
             fontSize: fonts.size.lg,
-          }}
-        >
+          }}>
           Update Aplikasi
         </Dialog.Title>
         <Dialog.Content>
-          <BText bold="300">
-            Aplikasi anda telah usang, silakan update sebelum melanjutkan.
-          </BText>
+          <BText bold="300">Aplikasi anda telah usang, silakan update sebelum melanjutkan.</BText>
         </Dialog.Content>
         <Dialog.Actions>
           {!isForceUpdate(force_update) && (
-            <Button
-              onPress={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
-            >
-              Cancel
-            </Button>
+            <Button onPress={() => setUpdateDialogVisible(!isUpdateDialogVisible)}>Cancel</Button>
           )}
           <Button
             onPress={() =>
               Linking.openURL(
-                Platform.OS === "ios"
-                  ? "http://itunes.com/apps/bod"
-                  : "https://play.google.com/store/apps/details?id=bod.app"
+                Platform.OS === 'ios'
+                  ? 'http://itunes.com/apps/bod'
+                  : 'https://play.google.com/store/apps/details?id=bod.app'
               )
-            }
-          >
+            }>
             Update
           </Button>
         </Dialog.Actions>
@@ -303,19 +279,16 @@ function Beranda() {
     <View
       style={[
         style.poNumberWrapper,
-        { alignItems: customerType === "COMPANY" ? "flex-start" : "center" },
-      ]}
-    >
-      <Text style={style.poNumber}>
-        {customerType === "COMPANY" ? poNumber : "-"}
-      </Text>
+        { alignItems: customerType === 'COMPANY' ? 'flex-start' : 'center' },
+      ]}>
+      <Text style={style.poNumber}>{customerType === 'COMPANY' ? poNumber : '-'}</Text>
     </View>
   );
 
   const renderContinueData = () => (
     <>
       <View style={style.popupSPHContent}>
-        {feature === "PO" ? (
+        {feature === 'PO' ? (
           renderPoNumber()
         ) : (
           <BVisitationCard
@@ -338,11 +311,9 @@ function Beranda() {
   React.useEffect(() => {
     crashlytics().log(TAB_HOME);
     let currentVersionName = getAppVersionName();
-    if (isDevelopment())
-      currentVersionName = currentVersionName?.replace("(Dev)", "");
+    if (isDevelopment()) currentVersionName = currentVersionName?.replace('(Dev)', '');
     setUpdateDialogVisible(
-      currentVersionName?.split(".").join("") <
-        getMinVersionUpdate(force_update)
+      currentVersionName?.split('.').join('') < getMinVersionUpdate(force_update)
     );
   }, [force_update]);
 
@@ -360,10 +331,10 @@ function Beranda() {
   const routes: { title: string; totalItems: number }[] = React.useMemo(
     () => [
       {
-        key: "first",
-        title: "Proyek",
+        key: 'first',
+        title: 'Proyek',
         totalItems: data.totalItems || 0,
-        chipPosition: "right",
+        chipPosition: 'right',
       },
     ],
     [data]
@@ -383,7 +354,7 @@ function Beranda() {
         icon: SvgNames.IC_SPH,
         title: HOME_MENU.SPH,
         action: () => {
-          setFeature("SPH");
+          setFeature('SPH');
           if (sphData?.selectedCompany) setPopupSPHVisible(true);
           else navigation.navigate(SPH, {});
         },
@@ -392,7 +363,7 @@ function Beranda() {
         icon: SvgNames.IC_PO,
         title: HOME_MENU.PO,
         action: () => {
-          setFeature("PO");
+          setFeature('PO');
           if (!isModalContinuePo) {
             setIsVisibleSelectCustomerType(true);
             setLocalContinueModalPo(false);
@@ -406,7 +377,7 @@ function Beranda() {
         title: HOME_MENU.DEPOSIT,
         action: () => {
           navigation.navigate(CAMERA, {
-            photoTitle: "Bukti",
+            photoTitle: 'Bukti',
             navigateTo: CREATE_DEPOSIT,
             closeButton: true,
             disabledDocPicker: false,
@@ -438,40 +409,32 @@ function Beranda() {
     ];
 
     if (!enable_sph) {
-      const filtered = buttons.filter((item) => item.title !== HOME_MENU.SPH);
+      const filtered = buttons.filter(item => item.title !== HOME_MENU.SPH);
       buttons = filtered;
     }
 
     if (!enable_po) {
-      const filtered = buttons.filter((item) => item.title !== HOME_MENU.PO);
+      const filtered = buttons.filter(item => item.title !== HOME_MENU.PO);
       buttons = filtered;
     }
 
     if (!enable_deposit) {
-      const filtered = buttons.filter(
-        (item) => item.title !== HOME_MENU.DEPOSIT
-      );
+      const filtered = buttons.filter(item => item.title !== HOME_MENU.DEPOSIT);
       buttons = filtered;
     }
 
     if (!enable_create_schedule) {
-      const filtered = buttons.filter(
-        (item) => item.title !== HOME_MENU.SCHEDULE
-      );
+      const filtered = buttons.filter(item => item.title !== HOME_MENU.SCHEDULE);
       buttons = filtered;
     }
 
     if (!enable_appointment) {
-      const filtered = buttons.filter(
-        (item) => item.title !== HOME_MENU.APPOINTMENT
-      );
+      const filtered = buttons.filter(item => item.title !== HOME_MENU.APPOINTMENT);
       buttons = filtered;
     }
 
     if (!enable_signed_so) {
-      const filtered = buttons.filter(
-        (item) => item.title !== HOME_MENU.SIGN_SO
-      );
+      const filtered = buttons.filter(item => item.title !== HOME_MENU.SIGN_SO);
       buttons = filtered;
     }
     return buttons;
@@ -528,34 +491,30 @@ function Beranda() {
       dispatch(resetImageURLS({ source: CREATE_VISITATION }));
       dispatch(resetRegion());
       navigation.navigate(CAMERA, {
-        photoTitle: "Kunjungan",
+        photoTitle: 'Kunjungan',
         navigateTo: CREATE_VISITATION,
         closeButton: true,
       });
     }
   };
 
-  async function visitationOnPress(
-    dataItem: visitationDataType
-  ): Promise<void> {
+  async function visitationOnPress(dataItem: visitationDataType): Promise<void> {
     try {
       const status = dataItem.pilStatus;
 
       dispatch(
         openPopUp({
-          popUpType: "loading",
-          popUpText: "Loading visitation Data...",
+          popUpType: 'loading',
+          popUpText: 'Loading visitation Data...',
           outsideClickClosePopUp: false,
         })
       );
-      const response = await dispatch(
-        getOneVisitation({ visitationId: dataItem.id })
-      ).unwrap();
+      const response = await dispatch(getOneVisitation({ visitationId: dataItem.id })).unwrap();
 
       dispatch(closePopUp());
-      if (status === "Belum Selesai") {
+      if (status === 'Belum Selesai') {
         navigation.navigate(CAMERA, {
-          photoTitle: "Kunjungan",
+          photoTitle: 'Kunjungan',
           navigateTo: CREATE_VISITATION,
           closeButton: true,
           existingVisitation: response,
@@ -566,12 +525,12 @@ function Beranda() {
         });
       }
     } catch (error) {
-      console.log("error catch 3:: ", error);
+      console.log('error catch 3:: ', error);
       dispatch(
         openPopUp({
-          popUpType: "error",
-          highlightedText: "Error",
-          popUpText: "Error fetching visitation Data",
+          popUpType: 'error',
+          highlightedText: 'Error',
+          popUpText: 'Error fetching visitation Data',
           outsideClickClosePopUp: true,
         })
       );
@@ -579,12 +538,12 @@ function Beranda() {
   }
 
   const continuePopUpAction = () => {
-    if (feature === "PO") {
+    if (feature === 'PO') {
       if (currentStep === 0) {
-        dispatch({ type: "goToSecondStepFromSaved" });
+        dispatch({ type: 'goToSecondStepFromSaved' });
         setLocalContinueModalPo(false);
       } else {
-        dispatch({ type: "goToThirdStepFromSaved" });
+        dispatch({ type: 'goToThirdStepFromSaved' });
         setLocalContinueModalPo(false);
       }
       navigation.navigate(PO);
@@ -603,11 +562,10 @@ function Beranda() {
         backdropColor="white"
         hideModalContentWhileAnimating
         coverScreen={false}
-        onBackButtonPress={toggleModal("close")}
+        onBackButtonPress={toggleModal('close')}
         onModalHide={() => {
           fetchVisitations(selectedDate);
-        }}
-      >
+        }}>
         <View style={style.modalContent}>
           <BSpacer size="extraSmall" />
           <BCommonSearchList
@@ -616,10 +574,10 @@ function Beranda() {
             onIndexChange={setIndex}
             onPressMagnify={kunjunganAction}
             onClearValue={() => {
-              if (searchQuery && searchQuery.trim() !== "") {
-                setSearchQuery("");
+              if (searchQuery && searchQuery.trim() !== '') {
+                setSearchQuery('');
               } else {
-                toggleModal("close")();
+                toggleModal('close')();
               }
             }}
             autoFocus
@@ -629,8 +587,8 @@ function Beranda() {
             loadList={isLoading}
             onPressList={
               enable_customer_detail
-                ? (data) => {
-                    toggleModal("close")();
+                ? data => {
+                    toggleModal('close')();
                     visitationOnPress(data);
                   }
                 : undefined
@@ -668,13 +626,12 @@ function Beranda() {
           }
 
           if (enable_visitation) return BuatKunjungan(props, kunjunganAction);
-        }}
-      >
+        }}>
         <View style={style.posRelative}>
           <TouchableOpacity
             style={style.touchable}
             onPress={() => {
-              toggleModal("open")();
+              toggleModal('open')();
             }}
           />
           <BSearchBar
@@ -704,18 +661,16 @@ function Beranda() {
           onPressItem={enable_customer_detail ? visitationOnPress : undefined}
         />
         <PopUpQuestion
-          isVisible={
-            feature === "SPH" ? isPopupSPHVisible : localModalContinuePo
-          }
+          isVisible={feature === 'SPH' ? isPopupSPHVisible : localModalContinuePo}
           setIsPopupVisible={() => {
-            if (feature === "SPH") {
+            if (feature === 'SPH') {
               setPopupSPHVisible(false);
               dispatch(resetSPHState());
               navigation.navigate(SPH, {});
             } else {
               bStorage.deleteItem(PO);
               setLocalContinueModalPo(false);
-              dispatch({ type: "createNewPo" });
+              dispatch({ type: 'createNewPo' });
               setIsVisibleSelectCustomerType(true);
             }
           }}
@@ -724,15 +679,15 @@ function Beranda() {
           cancelText="Buat Baru"
           actionText="Lanjutkan"
           text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
-            feature === "PO" ? "PO" : "SPH"
+            feature === 'PO' ? 'PO' : 'SPH'
           } Sebelumnya?`}
         />
         <SelectCustomerTypeModal
           isVisible={isVisibleSelectCustomerType}
           onClose={() => setIsVisibleSelectCustomerType(false)}
-          onSelect={(selectedCustomerType) => {
+          onSelect={selectedCustomerType => {
             dispatch({
-              type: "openingCamera",
+              type: 'openingCamera',
               value: selectedCustomerType,
             });
             setIsVisibleSelectCustomerType(false);
@@ -749,28 +704,28 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     // alignItems: 'center',
-    justifyContent: "flex-start",
+    justifyContent: 'flex-start',
     backgroundColor: colors.primary,
   },
   contentContainer: {
     flex: 1,
-    alignItems: "center",
-    width: "100%",
+    alignItems: 'center',
+    width: '100%',
   },
   itemContainer: {
     padding: layout.pad.sm,
     margin: layout.pad.sm,
-    backgroundColor: "#eee",
+    backgroundColor: '#eee',
   },
   BsheetStyle: {
     paddingLeft: layout.pad.lg,
     paddingRight: layout.pad.lg,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   flatListContainer: {},
   flatListLoading: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   flatListShimmer: {
     height: resScale(60),
@@ -780,12 +735,12 @@ const style = StyleSheet.create({
     flex: 1,
   },
   posRelative: {
-    position: "relative",
+    position: 'relative',
     marginBottom: layout.pad.md,
   },
   touchable: {
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
@@ -797,8 +752,8 @@ const style = StyleSheet.create({
   },
   popupSPHContent: { height: resScale(78), paddingHorizontal: layout.pad.lg },
   popupSPHDesc: {
-    alignSelf: "center",
-    textAlign: "center",
+    alignSelf: 'center',
+    textAlign: 'center',
     paddingHorizontal: layout.pad.xl,
   },
   poNumber: {
@@ -810,10 +765,10 @@ const style = StyleSheet.create({
   poNumberWrapper: {
     backgroundColor: colors.tertiary,
     height: resScale(37),
-    alignItems: "flex-start",
-    justifyContent: "center",
+    alignItems: 'flex-start',
+    justifyContent: 'center',
     width: resScale(277),
-    alignSelf: "center",
+    alignSelf: 'center',
     borderRadius: layout.radius.md,
   },
 });

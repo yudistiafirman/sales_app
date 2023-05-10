@@ -1,43 +1,37 @@
-import React, { useContext, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import debounce from "lodash.debounce";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { Alert, StyleSheet, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-paper";
-import { BContainer, BCommonSearchList, BSearchBar } from "@/components";
-
-import SelectedPic from "./elements/SelectedPic";
-
-import { SphContext } from "../context/SphContext";
-import { getAllProject } from "@/redux/async-thunks/commonThunks";
-import { AppDispatch, RootState } from "@/redux/store";
-import { SPH } from "@/navigation/ScreenNames";
-import { retrying } from "@/redux/reducers/commonReducer";
+import crashlytics from '@react-native-firebase/crashlytics';
+import debounce from 'lodash.debounce';
+import React, { useContext, useMemo, useState } from 'react';
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { SphContext } from '../context/SphContext';
+import SelectedPic from './elements/SelectedPic';
+import { BContainer, BCommonSearchList, BSearchBar } from '@/components';
+import { layout } from '@/constants';
+import { SPH } from '@/navigation/ScreenNames';
+import { getAllProject } from '@/redux/async-thunks/commonThunks';
 import {
   setStepperFocused,
   setUseBillingAddress,
   updateSelectedCompany,
   updateSelectedPic,
   setUseSearchAddress,
-} from "@/redux/reducers/SphReducer";
-import { resScale } from "@/utils";
-import { layout } from "@/constants";
+} from '@/redux/reducers/SphReducer';
+import { retrying } from '@/redux/reducers/commonReducer';
+import { AppDispatch, RootState } from '@/redux/store';
+import { resScale } from '@/utils';
 
 export default function FirstStep() {
   const dispatch = useDispatch<AppDispatch>();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [index, setIndex] = useState(0);
   const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const [isSearching, setSearching] = useState(false);
-  const {
-    projects,
-    isProjectLoading,
-    errorGettingProject,
-    errorGettingProjectMessage,
-  } = useSelector((state: RootState) => state.common);
+  const { projects, isProjectLoading, errorGettingProject, errorGettingProjectMessage } =
+    useSelector((state: RootState) => state.common);
   const { selectedCompany } = useSelector((state: RootState) => state.sph);
   function resetSearch() {
-    setSearchQuery("");
+    setSearchQuery('');
   }
 
   React.useEffect(() => {
@@ -47,10 +41,10 @@ export default function FirstStep() {
   const routes: { title: string; totalItems: number }[] = useMemo(
     () => [
       {
-        key: "first",
-        title: "Proyek",
+        key: 'first',
+        title: 'Proyek',
         totalItems: projects.length,
-        chipPosition: "right",
+        chipPosition: 'right',
       },
     ],
     [projects]
@@ -89,9 +83,7 @@ export default function FirstStep() {
                 placeholder="Cari PT / Proyek"
                 activeOutlineColor="gray"
                 disabled
-                left={
-                  <TextInput.Icon forceTextInputFocus={false} icon="magnify" />
-                }
+                left={<TextInput.Icon forceTextInputFocus={false} icon="magnify" />}
               />
             </>
           ) : (
@@ -107,14 +99,14 @@ export default function FirstStep() {
               }}
               autoFocus
               onClearValue={() => {
-                if (searchQuery && searchQuery.trim() !== "") {
+                if (searchQuery && searchQuery.trim() !== '') {
                   resetSearch();
                 } else {
                   setSearching(!isSearching);
                 }
               }}
               data={projects}
-              onPressList={(item) => {
+              onPressList={item => {
                 let finalPIC: any[] = [];
                 let finalItem;
 
@@ -150,7 +142,7 @@ export default function FirstStep() {
             dispatch(setUseSearchAddress({ value: false }));
             dispatch(setUseBillingAddress({ value: false }));
           }}
-          setCurrentPosition={(num) => {
+          setCurrentPosition={num => {
             dispatch(setStepperFocused(1));
             setCurrentPosition(num);
           }}
@@ -162,8 +154,8 @@ export default function FirstStep() {
 
 const styles = StyleSheet.create({
   touchable: {
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,

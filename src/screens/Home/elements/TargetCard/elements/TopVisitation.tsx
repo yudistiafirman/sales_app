@@ -1,12 +1,12 @@
-import { View, Text, StyleSheet } from "react-native";
-import React from "react";
-import LinearGradient from "react-native-linear-gradient";
-import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import VisitationCount from "./VisitationCount";
-import font from "@/constants/fonts";
-import resScale from "@/utils/resScale";
-import colors from "@/constants/colors";
-import { layout } from "@/constants";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import VisitationCount from './VisitationCount';
+import { layout } from '@/constants';
+import colors from '@/constants/colors';
+import font from '@/constants/fonts';
+import resScale from '@/utils/resScale';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -25,11 +25,8 @@ export default function TopVisitation({
     <View style={style.targetCount}>
       <ShimmerPlaceHolder style={style.shimmerStyle} visible={!isLoading}>
         <Text style={style.countText}>
-          Jumlah Kunjungan:{" "}
-          <VisitationCount
-            maxVisitation={maxVisitation}
-            currentVisitaion={currentVisitaion}
-          />
+          Jumlah Kunjungan:{' '}
+          <VisitationCount maxVisitation={maxVisitation} currentVisitaion={currentVisitaion} />
         </Text>
       </ShimmerPlaceHolder>
     </View>
@@ -39,8 +36,8 @@ export default function TopVisitation({
 const style = StyleSheet.create({
   targetCount: {
     height: resScale(40),
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   countText: {

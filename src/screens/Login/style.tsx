@@ -1,36 +1,36 @@
-import { StyleSheet } from "react-native";
-import { colors, fonts, layout } from "@/constants";
-import font from "@/constants/fonts";
-import { resScale } from "@/utils";
+import { StyleSheet } from 'react-native';
+import { colors, fonts, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { resScale } from '@/utils';
 
 const loginStyle = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginHorizontal: layout.pad.lg,
   },
   textInfo: {
     fontFamily: font.family.montserrat[400],
     fontSize: font.size.md,
     color: colors.text.dark,
-    textAlign: "center",
+    textAlign: 'center',
   },
   whatsapp: {
     fontFamily: font.family.montserrat[300],
     fontSize: font.size.md,
     color: colors.primary,
-    textAlign: "left",
+    textAlign: 'left',
   },
   inputLabel: {
     fontFamily: font.family.montserrat[500],
     fontSize: font.size.sm,
     color: colors.text.dark,
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
   },
   phoneNumberInputContainer: {
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'flex-end',
   },
   countryCodeContainer: {
     flex: 0.16,
@@ -40,8 +40,8 @@ const loginStyle = StyleSheet.create({
     borderColor: colors.textInput.inActive,
     borderBottomLeftRadius: layout.pad.sm,
     borderTopLeftRadius: layout.pad.sm,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   counterCodeText: {
     fontFamily: font.family.montserrat[500],
@@ -61,9 +61,9 @@ const loginStyle = StyleSheet.create({
     height: resScale(38),
     borderWidth: 1,
     borderLeftWidth: 0,
-    justifyContent: "center",
+    justifyContent: 'center',
     borderColor: colors.textInput.inActive,
-    overflow: "hidden",
+    overflow: 'hidden',
     flex: 0.85,
   },
   buttonStyle: {

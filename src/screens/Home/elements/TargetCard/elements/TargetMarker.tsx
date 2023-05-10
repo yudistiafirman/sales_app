@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet } from "react-native";
-import React from "react";
-import resScale from "@/utils/resScale";
-import colors from "@/constants/colors";
-import { fonts, layout } from "@/constants";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { fonts, layout } from '@/constants';
+import colors from '@/constants/colors';
+import resScale from '@/utils/resScale';
 
 export default function TargetMarker() {
   return (
@@ -16,20 +16,20 @@ export default function TargetMarker() {
 }
 const style = StyleSheet.create({
   todayTargetContainer: {
-    position: "relative",
-    justifyContent: "center",
-    alignItems: "center",
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   todayTargetText: {
     color: colors.white,
     zIndex: 2,
-    textAlign: "center",
+    textAlign: 'center',
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.xs,
     marginTop: layout.pad.xs,
   },
   targetMarker: {
-    position: "absolute",
+    position: 'absolute',
     backgroundColor: colors.black,
     borderRadius: layout.radius.xs + layout.radius.md,
     top: resScale(-25),
@@ -38,14 +38,14 @@ const style = StyleSheet.create({
     right: resScale(-48),
   },
   markerPointer: {
-    position: "absolute",
+    position: 'absolute',
     zIndex: 1,
     backgroundColor: colors.black,
-    transform: [{ rotate: "45deg" }],
+    transform: [{ rotate: '45deg' }],
     width: resScale(15),
     height: resScale(15),
     bottom: 0,
     top: 5,
-    left: "45%",
+    left: '45%',
   },
 });

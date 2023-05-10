@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { MarkedDates } from "react-native-calendars/src/types";
+import { createSlice } from '@reduxjs/toolkit';
+import { MarkedDates } from 'react-native-calendars/src/types';
 import {
   getVisitationsList,
   postVisitation,
   putVisitationFlow,
-} from "../async-thunks/productivityFlowThunks";
-import { visitationListResponse, customerDataInterface } from "@/interfaces";
+} from '../async-thunks/productivityFlowThunks';
+import { visitationListResponse, customerDataInterface } from '@/interfaces';
 
 type initialStateType = {
   visitationList: visitationListResponse[];
@@ -24,7 +24,7 @@ const initialState: initialStateType = {
 };
 
 export const productivityFlowSlice = createSlice({
-  name: "productivityFlow",
+  name: 'productivityFlow',
   initialState,
   reducers: {
     resetStates: () => initialState,
@@ -35,8 +35,8 @@ export const productivityFlowSlice = createSlice({
       state.markedDate = payload;
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(getVisitationsList.pending, (state) => {
+  extraReducers: builder => {
+    builder.addCase(getVisitationsList.pending, state => {
       state.isVisitationLoading = true;
     });
     builder.addCase(getVisitationsList.fulfilled, (state, { payload }) => {
@@ -46,28 +46,27 @@ export const productivityFlowSlice = createSlice({
       state.isVisitationLoading = false;
       //   state.visitationList = [];
     });
-    builder.addCase(postVisitation.pending, (state) => {
+    builder.addCase(postVisitation.pending, state => {
       state.isPostVisitationLoading = true;
     });
-    builder.addCase(postVisitation.fulfilled, (state) => {
+    builder.addCase(postVisitation.fulfilled, state => {
       state.isPostVisitationLoading = false;
     });
-    builder.addCase(postVisitation.rejected, (state) => {
+    builder.addCase(postVisitation.rejected, state => {
       state.isPostVisitationLoading = false;
     });
-    builder.addCase(putVisitationFlow.pending, (state) => {
+    builder.addCase(putVisitationFlow.pending, state => {
       state.isPostVisitationLoading = true;
     });
-    builder.addCase(putVisitationFlow.fulfilled, (state) => {
+    builder.addCase(putVisitationFlow.fulfilled, state => {
       state.isPostVisitationLoading = false;
     });
-    builder.addCase(putVisitationFlow.rejected, (state) => {
+    builder.addCase(putVisitationFlow.rejected, state => {
       state.isPostVisitationLoading = false;
     });
   },
 });
 
-export const { resetStates, setVisitationMapped, setMarkedData } =
-  productivityFlowSlice.actions;
+export const { resetStates, setVisitationMapped, setMarkedData } = productivityFlowSlice.actions;
 
 export default productivityFlowSlice.reducer;

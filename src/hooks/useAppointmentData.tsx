@@ -1,18 +1,13 @@
-import { useContext, Dispatch } from "react";
+import { useContext, Dispatch } from 'react';
 import {
   AppoinmentContext,
   AppointmentAction,
   AppointmentState,
-} from "@/context/AppointmentContext";
+} from '@/context/AppointmentContext';
 
-const useAppointmentData = (): [
-  AppointmentState,
-  Dispatch<AppointmentAction>
-] => {
+const useAppointmentData = (): [AppointmentState, Dispatch<AppointmentAction>] => {
   const [values, dispatchValue] =
-    useContext<[AppointmentState, Dispatch<AppointmentAction>]>(
-      AppoinmentContext
-    );
+    useContext<[AppointmentState, Dispatch<AppointmentAction>]>(AppoinmentContext);
 
   return [values, dispatchValue];
 };

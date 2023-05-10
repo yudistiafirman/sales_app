@@ -1,26 +1,22 @@
-import {
-  StackActions,
-  useFocusEffect,
-  useNavigation,
-} from "@react-navigation/native";
-import React, { useCallback, useLayoutEffect, useState } from "react";
-import { BackHandler, SafeAreaView, StyleSheet, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
-import { layout } from "@/constants";
+import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/native';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
+import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import CreatePo from './element/CreatePo';
+import UploadFiles from './element/PaymentDetail';
+import DetailProduk from './element/ProductDetail';
+import { bStorage } from '@/actions';
 import {
   BBackContinueBtn,
   BHeaderIcon,
   BSpacer,
   BStepperIndicator,
   PopUpQuestion,
-} from "@/components";
-import CreatePo from "./element/CreatePo";
-import UploadFiles from "./element/PaymentDetail";
-import DetailProduk from "./element/ProductDetail";
-import { useKeyboardActive } from "@/hooks";
-import { bStorage } from "@/actions";
-import { PO, TAB_ROOT } from "@/navigation/ScreenNames";
+} from '@/components';
+import { layout } from '@/constants';
+import { useKeyboardActive } from '@/hooks';
+import { PO, TAB_ROOT } from '@/navigation/ScreenNames';
+import { AppDispatch, RootState } from '@/redux/store';
 
 function PurchaseOrder() {
   const navigation = useNavigation();
@@ -42,15 +38,15 @@ function PurchaseOrder() {
   } = poState.currentState.context;
   const { keyboardVisible } = useKeyboardActive();
   const [isPopupExitVisible, setIsPopupExitVisible] = useState(false);
-  const labels = ["Cari PT / Proyek", "Detil Pembayaran", "Detil Produk"];
-  const isBtnFooterShown = !poState.currentState.matches("firstStep.SearchSph");
+  const labels = ['Cari PT / Proyek', 'Detil Pembayaran', 'Detil Produk'];
+  const isBtnFooterShown = !poState.currentState.matches('firstStep.SearchSph');
 
   const checkHasSpecialMobilizationPrice = () => {
-    if (checked === "first") {
-      if (fiveToSix === "" && lessThanFive === "") {
+    if (checked === 'first') {
+      if (fiveToSix === '' && lessThanFive === '') {
         return true;
       }
-      if (fiveToSix[0] === "0" || lessThanFive[0] === "0") {
+      if (fiveToSix[0] === '0' || lessThanFive[0] === '0') {
         return true;
       }
     } else {
@@ -60,26 +56,22 @@ function PurchaseOrder() {
 
   const handleDisableContinueBtn = () => {
     if (currentStep === 0) {
-      if (customerType === "INDIVIDU") {
-        return JSON.stringify(choosenSphDataFromModal) === "{}";
+      if (customerType === 'INDIVIDU') {
+        return JSON.stringify(choosenSphDataFromModal) === '{}';
       }
       return (
         poNumber.length === 0 ||
-        JSON.stringify(choosenSphDataFromModal) === "{}" ||
+        JSON.stringify(choosenSphDataFromModal) === '{}' ||
         poImages.length <= 1
       );
     }
     if (currentStep === 1) {
-      const isRequiredFileEmpty = files.filter(
-        (v) => v.isRequire && v.value === null
-      );
-      const isFilesValueNull = files.filter((v) => v.value === null);
-      return paymentType === "CBD"
-        ? isRequiredFileEmpty.length > 0
-        : isFilesValueNull.length > 0;
+      const isRequiredFileEmpty = files.filter(v => v.isRequire && v.value === null);
+      const isFilesValueNull = files.filter(v => v.value === null);
+      return paymentType === 'CBD' ? isRequiredFileEmpty.length > 0 : isFilesValueNull.length > 0;
     }
     const hasNoQuantityMultiProducts = selectedProducts.filter(
-      (v) => v.quantity.length === 0 || v.quantity[0] === "0"
+      v => v.quantity.length === 0 || v.quantity[0] === '0'
     );
     return (
       hasNoQuantityMultiProducts.length > 0 ||
@@ -90,31 +82,31 @@ function PurchaseOrder() {
 
   const handleBack = useCallback(() => {
     if (currentStep === 0) {
-      if (poState.currentState.matches("firstStep.SearchSph")) {
-        dispatch({ type: "backToAddPo" });
+      if (poState.currentState.matches('firstStep.SearchSph')) {
+        dispatch({ type: 'backToAddPo' });
       } else {
-        bStorage.getItem(PO).then((value) => {
+        bStorage.getItem(PO).then(value => {
           if (value) {
             setIsPopupExitVisible(true);
           } else {
             dispatch({
-              type: "backToBeginningState",
+              type: 'backToBeginningState',
             });
             navigation.dispatch(StackActions.popToTop());
           }
         });
       }
     } else if (currentStep === 1) {
-      dispatch({ type: "goBackToFirstStep" });
+      dispatch({ type: 'goBackToFirstStep' });
     } else if (currentStep === 2) {
-      dispatch({ type: "goBackToSecondStep" });
+      dispatch({ type: 'goBackToSecondStep' });
     }
   }, [currentStep, dispatch, navigation, poState.currentState]);
 
   const handleNext = useCallback(() => {
     if (currentStep === 0) {
       dispatch({
-        type: "goToSecondStep",
+        type: 'goToSecondStep',
       });
 
       const dataToSaved = {
@@ -126,7 +118,7 @@ function PurchaseOrder() {
         poContext: dataToSaved,
       });
     } else if (currentStep === 1) {
-      dispatch({ type: "goToThirdStep" });
+      dispatch({ type: 'goToThirdStep' });
       const dataToSaved = {
         ...poState.currentState.context,
         currentStep: 1,
@@ -136,18 +128,18 @@ function PurchaseOrder() {
         poContext: dataToSaved,
       });
     } else {
-      dispatch({ type: "goToPostPo" });
+      dispatch({ type: 'goToPostPo' });
     }
   }, [currentStep, dispatch, poState.currentState.context]);
 
   const handleClose = useCallback(() => {
     if (currentStep === 0) {
-      bStorage.getItem(PO).then((value) => {
+      bStorage.getItem(PO).then(value => {
         if (value) {
           setIsPopupExitVisible(true);
         } else {
           dispatch({
-            type: "backToBeginningState",
+            type: 'backToBeginningState',
           });
           navigation.dispatch(StackActions.popToTop());
         }
@@ -170,9 +162,9 @@ function PurchaseOrder() {
   );
 
   const renderTitle = useCallback(() => {
-    let title = customerType === "INDIVIDU" ? "Buat SO" : "Buat PO";
-    if (poState.currentState.matches("firstStep.SearchSph")) {
-      title = "Cari PT / Proyek";
+    let title = customerType === 'INDIVIDU' ? 'Buat SO' : 'Buat PO';
+    if (poState.currentState.matches('firstStep.SearchSph')) {
+      title = 'Cari PT / Proyek';
     }
     return title;
   }, [poState.currentState]);
@@ -183,10 +175,7 @@ function PurchaseOrder() {
         handleBack();
         return true;
       };
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
       return () => backHandler.remove();
     }, [handleBack])
   );
@@ -204,32 +193,32 @@ function PurchaseOrder() {
       if (pressedNum === 1) {
         if (currentStep === 0) {
           dispatch({
-            type: "goToSecondStepFromStepOnePressed",
+            type: 'goToSecondStepFromStepOnePressed',
             value: pressedNum,
           });
         } else {
           dispatch({
-            type: "goToStepTwoFromStepThreePressed",
+            type: 'goToStepTwoFromStepThreePressed',
             value: pressedNum,
           });
         }
       } else if (pressedNum === 2) {
         if (currentStep === 0) {
-          dispatch({ type: "goToThirdFromStepOnePressed", value: pressedNum });
+          dispatch({ type: 'goToThirdFromStepOnePressed', value: pressedNum });
         } else {
           dispatch({
-            type: "goToStepThreeFromStepTwoPressed",
+            type: 'goToStepThreeFromStepTwoPressed',
             value: pressedNum,
           });
         }
       } else if (currentStep === 1) {
         dispatch({
-          type: "goToStepOneFromStepTwoPressed",
+          type: 'goToStepOneFromStepTwoPressed',
           value: pressedNum,
         });
       } else {
         dispatch({
-          type: "goToStepOneFromStepThreePressed",
+          type: 'goToStepOneFromStepThreePressed',
           value: pressedNum,
         });
       }
@@ -238,12 +227,12 @@ function PurchaseOrder() {
 
   const renderContinueText = () => {
     if (currentStep === 2) {
-      if (customerType === "INDIVIDU") {
-        return "Buat SO";
+      if (customerType === 'INDIVIDU') {
+        return 'Buat SO';
       }
-      return "Buat PO";
+      return 'Buat PO';
     }
-    return "Lanjut";
+    return 'Lanjut';
   };
 
   const stepToRender = [<CreatePo />, <UploadFiles />, <DetailProduk />];
@@ -276,17 +265,17 @@ function PurchaseOrder() {
         setIsPopupVisible={() => {
           if (currentStep === 0) {
             dispatch({
-              type: "backToBeginningState",
+              type: 'backToBeginningState',
             });
             navigation.dispatch(StackActions.replace(TAB_ROOT));
           } else if (currentStep === 1) {
             dispatch({
-              type: "backToBeginningStateFromSecondStep",
+              type: 'backToBeginningStateFromSecondStep',
             });
             navigation.dispatch(StackActions.replace(TAB_ROOT));
           } else {
             dispatch({
-              type: "backToBeginningStateFromThirdStep",
+              type: 'backToBeginningStateFromThirdStep',
             });
             navigation.dispatch(StackActions.replace(TAB_ROOT));
           }
@@ -307,11 +296,11 @@ const styles = StyleSheet.create({
     marginHorizontal: layout.pad.lg + layout.pad.xs,
     marginBottom: layout.pad.lg,
   },
-  stepperIndicator: { alignSelf: "center" },
+  stepperIndicator: { alignSelf: 'center' },
   footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    position: "absolute",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    position: 'absolute',
     bottom: 0,
   },
 });

@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet } from "react-native";
-import React from "react";
-import { colors, fonts, layout } from "@/constants";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { colors, fonts, layout } from '@/constants';
 
 type LabelSuccessType = {
   sphId?: string;
