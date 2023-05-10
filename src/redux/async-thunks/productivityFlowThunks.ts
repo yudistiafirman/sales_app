@@ -1,11 +1,11 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getVisitations,
   postVisitations,
   oneGetVisitation,
   putVisitation,
-} from '@/actions/ProductivityActions';
-import { visitationListResponse, payloadPostType } from '@/interfaces';
+} from "@/actions/ProductivityActions";
+import { visitationListResponse, payloadPostType } from "@/interfaces";
 
 type paramType = {
   month: number;
@@ -22,13 +22,13 @@ type errorType = {
 };
 
 export const getVisitationsList = createAsyncThunk<
-visitationListResponse[],
-paramType,
-{
-  rejectValue: errorType | string;
-}
+  visitationListResponse[],
+  paramType,
+  {
+    rejectValue: errorType | string;
+  }
 >(
-  'productivityFlow/getVisitations',
+  "productivityFlow/getVisitations",
   async ({ month, year }, { rejectWithValue }) => {
     try {
       const { data } = await getVisitations({ month, year });
@@ -37,36 +37,36 @@ paramType,
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  },
+  }
 );
 
 export const postVisitation = createAsyncThunk<
-any,
-{ payload: payloadPostType },
-{
-  rejectValue: string;
-}
+  any,
+  { payload: payloadPostType },
+  {
+    rejectValue: string;
+  }
 >(
-  'productivityFlow/postVisitation',
+  "productivityFlow/postVisitation",
   async ({ payload }, { rejectWithValue }) => {
     try {
       const { data } = await postVisitations({ payload });
       if (data.error) throw data as errorType;
       return data.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data || 'error66');
+      return rejectWithValue(error?.response?.data || "error66");
     }
-  },
+  }
 );
 
 export const getOneVisitation = createAsyncThunk<
-any,
-{ visitationId: string },
-{
-  rejectValue: string;
-}
+  any,
+  { visitationId: string },
+  {
+    rejectValue: string;
+  }
 >(
-  'productivityFlow/getOneVisitation',
+  "productivityFlow/getOneVisitation",
   async ({ visitationId }, { rejectWithValue }) => {
     try {
       //
@@ -74,26 +74,26 @@ any,
       if (data.error) throw data as errorType;
       return data.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data || 'error66');
+      return rejectWithValue(error?.response?.data || "error66");
     }
-  },
+  }
 );
 // putVisitation
 export const putVisitationFlow = createAsyncThunk<
-any,
-{ payload: payloadPostType; visitationId: string },
-{
-  rejectValue: string;
-}
+  any,
+  { payload: payloadPostType; visitationId: string },
+  {
+    rejectValue: string;
+  }
 >(
-  'productivityFlow/putVisitationFlow',
+  "productivityFlow/putVisitationFlow",
   async ({ payload, visitationId }, { rejectWithValue }) => {
     try {
       const { data } = await putVisitation({ payload, visitationId });
       if (data.error) throw data as errorType;
       return data.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data || 'error109');
+      return rejectWithValue(error?.response?.data || "error109");
     }
-  },
+  }
 );

@@ -4,37 +4,37 @@ import {
   StyleSheet,
   Text,
   View,
-} from 'react-native';
+} from "react-native";
 import React, {
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
-} from 'react';
-import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
-import { useDispatch, useSelector } from 'react-redux';
-import { Region } from 'react-native-maps';
+} from "react";
+import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
+import { useDispatch, useSelector } from "react-redux";
+import { Region } from "react-native-maps";
 
-import { useNavigation } from '@react-navigation/native';
-import { TextInput } from 'react-native-paper';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { updateRegion } from '@/redux/reducers/locationReducer';
-import { RootState } from '@/redux/store';
+import { useNavigation } from "@react-navigation/native";
+import { TextInput } from "react-native-paper";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { updateRegion } from "@/redux/reducers/locationReducer";
+import { RootState } from "@/redux/store";
 import {
   BBackContinueBtn,
   BBottomSheetForm,
   BLocation,
   BLocationDetail,
   BMarker,
-} from '@/components';
-import { colors, fonts, layout } from '@/constants';
-import { resScale } from '@/utils';
-import { billingAddressType, Input } from '@/interfaces';
-import { SphContext } from '../context/SphContext';
-import { getLocationCoordinates } from '@/actions/CommonActions';
-import { SEARCH_AREA, SPH } from '@/navigation/ScreenNames';
-import { useKeyboardActive } from '@/hooks';
+} from "@/components";
+import { colors, fonts, layout } from "@/constants";
+import { resScale } from "@/utils";
+import { billingAddressType, Input } from "@/interfaces";
+import { SphContext } from "../context/SphContext";
+import { getLocationCoordinates } from "@/actions/CommonActions";
+import { SEARCH_AREA, SPH } from "@/navigation/ScreenNames";
+import { useKeyboardActive } from "@/hooks";
 import {
   setSearchAddress,
   setSearchedBillingAddress,
@@ -46,16 +46,17 @@ import {
   updateDistanceFromLegok,
   updateIsBillingAddressSame,
   updateProjectAddress,
-} from '@/redux/reducers/SphReducer';
-import { openPopUp } from '@/redux/reducers/modalReducer';
+} from "@/redux/reducers/SphReducer";
+import { openPopUp } from "@/redux/reducers/modalReducer";
 
 function checkObj(
   billingAddress: billingAddressType,
   isBillingAddressSame: boolean,
-  distanceFromLegok: number | null,
+  distanceFromLegok: number | null
 ) {
-  const billingAddressFilled = Object.values(billingAddress).every((val) => val)
-    && Object.entries(billingAddress.addressAutoComplete).length > 1;
+  const billingAddressFilled =
+    Object.values(billingAddress).every((val) => val) &&
+    Object.entries(billingAddress.addressAutoComplete).length > 1;
 
   const billingAddressSame = isBillingAddressSame;
   const distanceFilled = distanceFromLegok !== null;
@@ -70,7 +71,7 @@ function SearchIcon() {
   return (
     <TextInput.Icon
       style={[
-        Platform.OS === 'android'
+        Platform.OS === "android"
           ? { marginTop: -layout.pad.ml, marginStart: -layout.pad.sm }
           : { marginTop: -layout.pad.sm, marginStart: -layout.pad.sm },
       ]}
@@ -81,8 +82,8 @@ function SearchIcon() {
 }
 
 const eventKeyObj = {
-  shipp: 'shippingAddress.event',
-  billing: 'billingAddress.event',
+  shipp: "shippingAddress.event",
+  billing: "billingAddress.event",
 };
 
 export default function SecondStep() {
@@ -91,7 +92,7 @@ export default function SecondStep() {
   const { region } = useSelector((state: RootState) => state.location);
   const [sheetIndex] = useState(0); // setSheetIndex
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const [sheetSnapPoints, setSheetSnapPoints] = useState(['60%', '90%']);
+  const [sheetSnapPoints, setSheetSnapPoints] = useState(["60%", "90%"]);
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [isSuggestionLoading, setIsSuggestionLoading] = useState(false);
   const { keyboardVisible } = useKeyboardActive();
@@ -113,7 +114,7 @@ export default function SecondStep() {
   const onChangeRegion = useCallback(
     async (
       coordinate: Region,
-      { isBiilingAddress }: { isBiilingAddress?: boolean },
+      { isBiilingAddress }: { isBiilingAddress?: boolean }
     ) => {
       try {
         setIsMapLoading(() => true);
@@ -121,7 +122,7 @@ export default function SecondStep() {
           // '',
           coordinate.longitude as unknown as number,
           coordinate.latitude as unknown as number,
-          'BP-LEGOK',
+          "BP-LEGOK"
         );
 
         const { result } = data;
@@ -135,12 +136,12 @@ export default function SecondStep() {
           postalId: result?.PostalId,
         };
 
-        if (typeof result?.lon === 'string') {
+        if (typeof result?.lon === "string") {
           _coordinate.longitude = Number(result.lon);
           _coordinate.lon = Number(result.lon);
         }
 
-        if (typeof result?.lat === 'string') {
+        if (typeof result?.lat === "string") {
           _coordinate.latitude = Number(result.lat);
           _coordinate.lat = Number(result.lat);
         }
@@ -158,31 +159,31 @@ export default function SecondStep() {
         setIsMapLoading(() => false);
         dispatch(
           openPopUp({
-            popUpType: 'error',
+            popUpType: "error",
             popUpText:
-              error.message
-              || 'Terjadi error pengambilan data saat perpindahan region',
+              error.message ||
+              "Terjadi error pengambilan data saat perpindahan region",
             outsideClickClosePopUp: true,
-          }),
+          })
         );
       }
     },
-    [],
+    []
   );
 
   const inputsData: Input[] = useMemo(() => {
     const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
     if (isBillingAddressSame) {
-      setSheetSnapPoints(['40%']);
+      setSheetSnapPoints(["40%"]);
       setTimeout(() => {
         bottomSheetRef.current?.collapse();
       }, 50);
       return [
         {
-          label: 'Alamat penagihan sama dengan pengiriman',
+          label: "Alamat penagihan sama dengan pengiriman",
           isRequire: false,
-          type: 'switch',
+          type: "switch",
           onChange: (val: boolean) => {
             dispatch(updateIsBillingAddressSame(val));
           },
@@ -190,58 +191,58 @@ export default function SecondStep() {
         },
       ];
     }
-    setSheetSnapPoints(['60%', '90%']);
+    setSheetSnapPoints(["60%", "90%"]);
 
     return [
       {
-        label: 'Alamat penagihan sama dengan pengiriman',
+        label: "Alamat penagihan sama dengan pengiriman",
         isRequire: false,
-        type: 'switch',
+        type: "switch",
         onChange: (val: boolean) => {
           dispatch(updateIsBillingAddressSame(val));
         },
         value: isBillingAddressSame,
       },
       {
-        label: 'Nama',
+        label: "Nama",
         isRequire: true,
         isError: !billingAddress?.name,
-        type: 'textInput',
+        type: "textInput",
         onChange: (event: any) => {
           const { text } = event.nativeEvent;
-          dispatch(updateBillingAddressOptions({ value: text, key: 'name' }));
+          dispatch(updateBillingAddressOptions({ value: text, key: "name" }));
         },
         value: billingAddress?.name,
-        placeholder: 'Masukkan nama',
+        placeholder: "Masukkan nama",
       },
       {
-        label: 'No. Telepon',
+        label: "No. Telepon",
         isRequire: true,
         isError: !phoneNumberRegex.test(`${billingAddress.phone}`),
-        type: 'textInput',
+        type: "textInput",
         onChange: (event: any) => {
           const { text } = event.nativeEvent;
-          dispatch(updateBillingAddressOptions({ value: text, key: 'phone' }));
+          dispatch(updateBillingAddressOptions({ value: text, key: "phone" }));
         },
         value: billingAddress.phone,
-        keyboardType: 'numeric',
-        placeholder: 'Masukkan nomor telepon',
-        customerErrorMsg: 'No. Telepon harus diisi sesuai format',
+        keyboardType: "numeric",
+        placeholder: "Masukkan nomor telepon",
+        customerErrorMsg: "No. Telepon harus diisi sesuai format",
         LeftIcon: billingAddress.phone ? LeftIcon : undefined,
       },
       {
-        label: 'Cari Alamat',
+        label: "Cari Alamat",
         isRequire: true,
         isError: billingAddress?.addressAutoComplete
           ? !billingAddress?.addressAutoComplete?.formattedAddress
           : true,
-        type: 'area',
+        type: "area",
         value: useSearchedBillingAddress
           ? searchedBillingAddress
           : billingAddress?.addressAutoComplete
-            ? billingAddress?.addressAutoComplete?.formattedAddress
-            : '',
-        placeholder: 'Cari Kelurahan, Kecamatan, Kota',
+          ? billingAddress?.addressAutoComplete?.formattedAddress
+          : "",
+        placeholder: "Cari Kelurahan, Kecamatan, Kota",
         textInputAsButton: true,
         textInputAsButtonOnPress: () => {
           navigation.navigate(SEARCH_AREA, {
@@ -252,17 +253,17 @@ export default function SecondStep() {
         LeftIcon: SearchIcon,
       },
       {
-        label: 'Alamat Lengkap',
+        label: "Alamat Lengkap",
         isRequire: true,
         isError: !billingAddress.fullAddress,
-        type: 'area',
+        type: "area",
         onChange: (text: string) => {
           dispatch(
-            updateBillingAddressOptions({ value: text, key: 'fullAddress' }),
+            updateBillingAddressOptions({ value: text, key: "fullAddress" })
           );
         },
         value: billingAddress?.fullAddress,
-        placeholder: 'Masukkan alamat lengkap',
+        placeholder: "Masukkan alamat lengkap",
       },
     ];
   }, [
@@ -292,7 +293,7 @@ export default function SecondStep() {
       />
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [billingAddress, isBillingAddressSame, distanceFromLegok],
+    [billingAddress, isBillingAddressSame, distanceFromLegok]
   );
 
   useEffect(() => {
@@ -306,7 +307,7 @@ export default function SecondStep() {
     DeviceEventEmitter.addListener(eventKeyObj.billing, (data) => {
       dispatch(setUseBillingAddress({ value: true }));
       dispatch(
-        setSearchedBillingAddress({ value: data.coordinate.formattedAddress }),
+        setSearchedBillingAddress({ value: data.coordinate.formattedAddress })
       );
       onChangeRegion(data.coordinate, { isBiilingAddress: true });
     });
@@ -344,12 +345,12 @@ export default function SecondStep() {
     const address = useSearchAddress
       ? searchedAddress
       : region.formattedAddress;
-    const idx = address?.split(',');
+    const idx = address?.split(",");
     if (idx?.length > 1) {
       return idx?.[0];
     }
 
-    return 'Nama Alamat';
+    return "Nama Alamat";
   }, [region.formattedAddress]);
 
   return (
@@ -371,8 +372,8 @@ export default function SecondStep() {
         buttonTitle="Lanjut"
         onAdd={() => {
           if (
-            setCurrentPosition
-            && checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)
+            setCurrentPosition &&
+            checkObj(billingAddress, isBillingAddressSame, distanceFromLegok)
           ) {
             setCurrentPosition(2);
           }
@@ -421,24 +422,24 @@ const style = StyleSheet.create({
   },
   map: {
     height: resScale(450),
-    width: '100%',
+    width: "100%",
   },
   mapIconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
     flex: 0.1,
   },
   detailCoordContainer: {
     flex: 1,
     backgroundColor: colors.tertiary,
     borderRadius: layout.radius.md,
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: layout.pad.md,
   },
   detailContainer: {
     flex: 0.75,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   leftIconStyle: {
     fontFamily: fonts.family.montserrat[400],

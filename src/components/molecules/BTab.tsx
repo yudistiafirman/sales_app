@@ -1,7 +1,7 @@
-import { TabView } from 'react-native-tab-view';
-import * as React from 'react';
-import { Text, View, ViewStyle } from 'react-native';
-import colors from '@/constants/colors';
+import { TabView } from "react-native-tab-view";
+import * as React from "react";
+import { Text, View, ViewStyle } from "react-native";
+import colors from "@/constants/colors";
 
 interface Btab {
   onIndexChange: (index: number) => void;

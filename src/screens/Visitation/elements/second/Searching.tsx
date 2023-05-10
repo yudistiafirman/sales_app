@@ -1,32 +1,32 @@
-import React, { useCallback } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
-import debounce from 'lodash.debounce';
+import React, { useCallback } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { TextInput } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import debounce from "lodash.debounce";
 import {
   BCommonSearchList,
   BSearchBar,
   BSpacer,
   BTextLocation,
-} from '@/components';
-import { AppDispatch, RootState } from '@/redux/store';
-import { getAllProject } from '@/redux/async-thunks/commonThunks';
-import { PIC } from '@/interfaces';
-import { retrying } from '@/redux/reducers/commonReducer';
+} from "@/components";
+import { AppDispatch, RootState } from "@/redux/store";
+import { getAllProject } from "@/redux/async-thunks/commonThunks";
+import { PIC } from "@/interfaces";
+import { retrying } from "@/redux/reducers/commonReducer";
 import {
   setSearchQuery,
   updateDataVisitation,
   updateShouldScrollView,
-} from '@/redux/reducers/VisitationReducer';
-import { resScale } from '@/utils';
-import { layout } from '@/constants';
+} from "@/redux/reducers/VisitationReducer";
+import { resScale } from "@/utils";
+import { layout } from "@/constants";
 
 interface IProps {
   onSearch: (search: boolean) => void;
   isSearch: boolean;
   searchingDisable?: boolean;
   setSelectedCompany: React.Dispatch<
-  React.SetStateAction<{ id: string; title: string }>
+    React.SetStateAction<{ id: string; title: string }>
   >;
 }
 
@@ -49,11 +49,15 @@ function SearchFlow({
     (text: string) => {
       dispatch(getAllProject({ search: text }));
     },
-    [dispatch],
+    [dispatch]
   );
-  const onChangeWithDebounce = React.useMemo(() => debounce((text: string) => {
-    searchDispatch(text);
-  }, 500), [searchDispatch]);
+  const onChangeWithDebounce = React.useMemo(
+    () =>
+      debounce((text: string) => {
+        searchDispatch(text);
+      }, 500),
+    [searchDispatch]
+  );
 
   const onChangeSearch = (text: string) => {
     if (!isSearch && text) {
@@ -67,7 +71,7 @@ function SearchFlow({
   };
 
   const onClear = () => {
-    dispatch(setSearchQuery(''));
+    dispatch(setSearchQuery(""));
   };
 
   const onSelectProject = (item: any) => {
@@ -79,39 +83,39 @@ function SearchFlow({
       setSelectedCompany(company);
       dispatch(
         updateDataVisitation({
-          type: 'companyName',
+          type: "companyName",
           value: company.title,
-        }),
+        })
       );
 
       if (visitationData.options?.items) {
         dispatch(
           updateDataVisitation({
-            type: 'options',
+            type: "options",
             value: {
               ...visitationData.options,
               items: [...visitationData.options?.items, company],
             },
-          }),
+          })
         );
       } else {
         dispatch(
           updateDataVisitation({
-            type: 'options',
+            type: "options",
             value: {
               ...visitationData.options,
               items: [company],
             },
-          }),
+          })
         );
       }
     }
-    const customerType = item?.Company?.id ? 'COMPANY' : 'INDIVIDU';
+    const customerType = item?.Company?.id ? "COMPANY" : "INDIVIDU";
     dispatch(
       updateDataVisitation({
-        type: 'customerType',
+        type: "customerType",
         value: customerType,
-      }),
+      })
     );
 
     if (item?.Pics) {
@@ -124,22 +128,22 @@ function SearchFlow({
       }
       dispatch(
         updateDataVisitation({
-          type: 'pics',
+          type: "pics",
           value: picList,
-        }),
+        })
       );
     }
     dispatch(
       updateDataVisitation({
-        type: 'projectName',
+        type: "projectName",
         value: item?.name,
-      }),
+      })
     );
     dispatch(
       updateDataVisitation({
-        type: 'projectId',
+        type: "projectId",
         value: item?.id,
-      }),
+      })
     );
 
     if (item?.Visitations) {
@@ -149,15 +153,15 @@ function SearchFlow({
       }
       dispatch(
         updateDataVisitation({
-          type: 'visitationId',
+          type: "visitationId",
           value: item?.Visitations[0]?.id,
-        }),
+        })
       );
       dispatch(
         updateDataVisitation({
-          type: 'existingOrderNum',
+          type: "existingOrderNum",
           value: order,
-        }),
+        })
       );
     }
     onClear();
@@ -165,14 +169,17 @@ function SearchFlow({
     dispatch(updateShouldScrollView(true));
   };
 
-  const routes: { title: string; totalItems: number }[] = React.useMemo(() => [
-    {
-      key: 'first',
-      title: 'Proyek',
-      totalItems: projects.length,
-      chipPosition: 'right',
-    },
-  ], [projects]);
+  const routes: { title: string; totalItems: number }[] = React.useMemo(
+    () => [
+      {
+        key: "first",
+        title: "Proyek",
+        totalItems: projects.length,
+        chipPosition: "right",
+      },
+    ],
+    [projects]
+  );
 
   const onRetryGettingProject = () => {
     dispatch(retrying());
@@ -200,8 +207,8 @@ function SearchFlow({
             onChangeText={onChangeSearch}
             onClearValue={() => {
               if (
-                visitationData.searchQuery
-                && visitationData.searchQuery.trim() !== ''
+                visitationData.searchQuery &&
+                visitationData.searchQuery.trim() !== ""
               ) {
                 onClear();
               } else {
@@ -238,8 +245,8 @@ function SearchFlow({
 
 const style = StyleSheet.create({
   touchable: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,

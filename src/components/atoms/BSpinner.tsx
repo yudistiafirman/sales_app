@@ -1,14 +1,14 @@
-import React from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import colors from '@/constants/colors';
+import React from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import colors from "@/constants/colors";
 
 interface BSpinnerProps {
-  size?: 'large' | 'small';
+  size?: "large" | "small";
   color?: string;
 }
 
 const BSpinnerDefaultProps = {
-  size: 'small',
+  size: "small",
   color: colors.primary,
 };
 
@@ -25,8 +25,8 @@ function BSpinner({
 
 const styles = StyleSheet.create({
   spinnerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

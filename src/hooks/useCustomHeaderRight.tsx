@@ -1,5 +1,5 @@
-import { ReactElement, useLayoutEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { ReactElement, useLayoutEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 type HeaderRightProps = {
   customHeaderRight: ReactElement<Element>;

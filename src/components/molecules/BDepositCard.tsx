@@ -1,11 +1,9 @@
-import {
-  View, Text, StyleSheet, ViewStyle,
-} from 'react-native';
-import * as React from 'react';
-import { colors, fonts, layout } from '@/constants';
-import formatCurrency from '@/utils/formatCurrency';
-import BSpacer from '../atoms/BSpacer';
-import BText from '../atoms/BText';
+import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import * as React from "react";
+import { colors, fonts, layout } from "@/constants";
+import formatCurrency from "@/utils/formatCurrency";
+import BSpacer from "../atoms/BSpacer";
+import BText from "../atoms/BText";
 
 type BDepositCardType = {
   firstSectionValue: number;
@@ -47,18 +45,14 @@ export default function BDepositCard({
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>{firstSectionText}</Text>
         <Text style={[styles.summary, styles.fontw400]}>
-          IDR
-          {' '}
-          {formatCurrency(firstSectionValue)}
+          IDR {formatCurrency(firstSectionValue)}
         </Text>
       </View>
       <BSpacer size="extraSmall" />
       <View style={styles.summaryContainer}>
         <Text style={styles.summary}>{secondSectionText}</Text>
         <Text style={[styles.summary, styles.fontw400]}>
-          {isSum ? '+' : '-'}
-          {' '}
-          IDR
+          {isSum ? "+" : "-"} IDR
           {formatCurrency(secondSectionValue)}
         </Text>
       </View>
@@ -74,14 +68,15 @@ export default function BDepositCard({
             },
           ]}
         >
-          {`IDR ${
-            formatCurrency(isSum ? getTotalSum() : getTotalDifference())}`}
+          {`IDR ${formatCurrency(
+            isSum ? getTotalSum() : getTotalDifference()
+          )}`}
         </Text>
       </View>
       {isError && (
         <BText size="small" color="primary" bold="100">
-          {customErrorMsg
-            || `${firstSectionText} harus lebih besar dari ${secondSectionText}`}
+          {customErrorMsg ||
+            `${firstSectionText} harus lebih besar dari ${secondSectionText}`}
         </BText>
       )}
     </View>
@@ -98,8 +93,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.montserrat[400],
   },
   summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   chip: {
     paddingVertical: layout.pad.xs,

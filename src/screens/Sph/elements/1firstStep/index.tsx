@@ -1,31 +1,31 @@
-import React, { useContext, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import debounce from 'lodash.debounce';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import { BContainer, BCommonSearchList, BSearchBar } from '@/components';
+import React, { useContext, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import debounce from "lodash.debounce";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
+import { TextInput } from "react-native-paper";
+import { BContainer, BCommonSearchList, BSearchBar } from "@/components";
 
-import SelectedPic from './elements/SelectedPic';
+import SelectedPic from "./elements/SelectedPic";
 
-import { SphContext } from '../context/SphContext';
-import { getAllProject } from '@/redux/async-thunks/commonThunks';
-import { AppDispatch, RootState } from '@/redux/store';
-import { SPH } from '@/navigation/ScreenNames';
-import { retrying } from '@/redux/reducers/commonReducer';
+import { SphContext } from "../context/SphContext";
+import { getAllProject } from "@/redux/async-thunks/commonThunks";
+import { AppDispatch, RootState } from "@/redux/store";
+import { SPH } from "@/navigation/ScreenNames";
+import { retrying } from "@/redux/reducers/commonReducer";
 import {
   setStepperFocused,
   setUseBillingAddress,
   updateSelectedCompany,
   updateSelectedPic,
   setUseSearchAddress,
-} from '@/redux/reducers/SphReducer';
-import { resScale } from '@/utils';
-import { layout } from '@/constants';
+} from "@/redux/reducers/SphReducer";
+import { resScale } from "@/utils";
+import { layout } from "@/constants";
 
 export default function FirstStep() {
   const dispatch = useDispatch<AppDispatch>();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [index, setIndex] = useState(0);
   const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const [isSearching, setSearching] = useState(false);
@@ -37,31 +37,38 @@ export default function FirstStep() {
   } = useSelector((state: RootState) => state.common);
   const { selectedCompany } = useSelector((state: RootState) => state.sph);
   function resetSearch() {
-    setSearchQuery('');
+    setSearchQuery("");
   }
 
   React.useEffect(() => {
     crashlytics().log(`${SPH}-Step1`);
   }, [selectedCompany?.Pics, selectedCompany?.Pic]);
 
-  const routes: { title: string; totalItems: number }[] = useMemo(() => [
-    {
-      key: 'first',
-      title: 'Proyek',
-      totalItems: projects.length,
-      chipPosition: 'right',
-    },
-  ], [projects]);
+  const routes: { title: string; totalItems: number }[] = useMemo(
+    () => [
+      {
+        key: "first",
+        title: "Proyek",
+        totalItems: projects.length,
+        chipPosition: "right",
+      },
+    ],
+    [projects]
+  );
 
   const searchDispatch = React.useCallback(
     (text: string) => {
       dispatch(getAllProject({ search: text }));
     },
-    [dispatch],
+    [dispatch]
   );
-  const onChangeWithDebounce = React.useMemo(() => debounce((text: string) => {
-    searchDispatch(text);
-  }, 500), [searchDispatch]);
+  const onChangeWithDebounce = React.useMemo(
+    () =>
+      debounce((text: string) => {
+        searchDispatch(text);
+      }, 500),
+    [searchDispatch]
+  );
 
   const onRetryGettingProject = () => {
     dispatch(retrying());
@@ -100,7 +107,7 @@ export default function FirstStep() {
               }}
               autoFocus
               onClearValue={() => {
-                if (searchQuery && searchQuery.trim() !== '') {
+                if (searchQuery && searchQuery.trim() !== "") {
                   resetSearch();
                 } else {
                   setSearching(!isSearching);
@@ -155,8 +162,8 @@ export default function FirstStep() {
 
 const styles = StyleSheet.create({
   touchable: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,

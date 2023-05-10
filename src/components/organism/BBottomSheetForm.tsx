@@ -1,15 +1,15 @@
-import React, { useCallback } from 'react';
-import { View, ViewStyle } from 'react-native';
-import { BottomSheetFooter, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { colors, layout } from '@/constants';
-import { Input, Styles } from '@/interfaces';
-import { resScale } from '@/utils';
-import BBottomSheet from '../atoms/BBottomSheet';
-import BButtonPrimary from '../atoms/BButtonPrimary';
-import BForm from './BForm';
-import BContainer from '../atoms/BContainer';
-import BSpacer from '../atoms/BSpacer';
-import { useKeyboardActive } from '@/hooks';
+import React, { useCallback } from "react";
+import { View, ViewStyle } from "react-native";
+import { BottomSheetFooter, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { colors, layout } from "@/constants";
+import { Input, Styles } from "@/interfaces";
+import { resScale } from "@/utils";
+import BBottomSheet from "../atoms/BBottomSheet";
+import BButtonPrimary from "../atoms/BButtonPrimary";
+import BForm from "./BForm";
+import BContainer from "../atoms/BContainer";
+import BSpacer from "../atoms/BSpacer";
+import { useKeyboardActive } from "@/hooks";
 
 type CustomFooterButtonType = {
   disable?: boolean;
@@ -100,7 +100,7 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
         </BottomSheetFooter>
       );
     },
-    [buttonTitle, onAdd, isButtonDisable, CustomFooterButton, keyboardVisible],
+    [buttonTitle, onAdd, isButtonDisable, CustomFooterButton, keyboardVisible]
   );
 
   return (
@@ -129,13 +129,13 @@ const styles: Styles = {
     // backgroundColor: 'red',
   },
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   footerContainer: {
     backgroundColor: colors.white,
   },
-  button: { flexDirection: 'row-reverse' },
+  button: { flexDirection: "row-reverse" },
 };
 
 export default BBottomSheetForm;

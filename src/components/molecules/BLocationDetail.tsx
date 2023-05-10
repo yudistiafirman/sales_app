@@ -1,14 +1,14 @@
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import React from 'react';
-import Icons from 'react-native-vector-icons/Feather';
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { colors, layout } from '@/constants';
-import BLabel from '../atoms/BLabel';
-import BText from '../atoms/BText';
+import { View, TouchableOpacity, StyleSheet } from "react-native";
+import React from "react";
+import Icons from "react-native-vector-icons/Feather";
+import LinearGradient from "react-native-linear-gradient";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import { colors, layout } from "@/constants";
+import BLabel from "../atoms/BLabel";
+import BText from "../atoms/BText";
 
-import { resScale } from '@/utils';
-import BSpacer from '../atoms/BSpacer';
+import { resScale } from "@/utils";
+import BSpacer from "../atoms/BSpacer";
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -38,8 +38,8 @@ export default function BLocationDetail({
             </View>
           ) : (
             <View style={styles.textContainer}>
-              <BLabel label={nameAddress || 'Nama Alamat'} />
-              <BText>{formattedAddress || 'Detail Alamat'}</BText>
+              <BLabel label={nameAddress || "Nama Alamat"} />
+              <BText>{formattedAddress || "Detail Alamat"}</BText>
             </View>
           )}
         </View>
@@ -49,7 +49,7 @@ export default function BLocationDetail({
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center' },
+  row: { flexDirection: "row", alignItems: "center" },
   touchContainer: {
     paddingVertical: layout.pad.md,
     paddingHorizontal: layout.pad.md,

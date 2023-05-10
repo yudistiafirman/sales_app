@@ -1,18 +1,16 @@
-import React from 'react';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {
-  SafeAreaView, StyleSheet, TouchableOpacity, View,
-} from 'react-native';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { TextInput } from 'react-native-paper';
-import { BSearchBar, BSpacer } from '@/components';
-import Inputs from './Input';
-import SearchingCustomer from './SearchingCustomer';
-import { useAppointmentData } from '@/hooks';
-import { APPOINTMENT } from '@/navigation/ScreenNames';
-import { AppointmentActionType } from '@/context/AppointmentContext';
-import { resScale } from '@/utils';
-import { layout } from '@/constants';
+import React from "react";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { TextInput } from "react-native-paper";
+import { BSearchBar, BSpacer } from "@/components";
+import Inputs from "./Input";
+import SearchingCustomer from "./SearchingCustomer";
+import { useAppointmentData } from "@/hooks";
+import { APPOINTMENT } from "@/navigation/ScreenNames";
+import { AppointmentActionType } from "@/context/AppointmentContext";
+import { resScale } from "@/utils";
+import { layout } from "@/constants";
 
 function FirstStep() {
   const [values, dispatchValue] = useAppointmentData();
@@ -30,10 +28,12 @@ function FirstStep() {
         <>
           <TouchableOpacity
             style={styles.touchable}
-            onPress={() => dispatchValue({
-              type: AppointmentActionType.ENABLE_SEARCHING,
-              value: true,
-            })}
+            onPress={() =>
+              dispatchValue({
+                type: AppointmentActionType.ENABLE_SEARCHING,
+                value: true,
+              })
+            }
           />
           <BSearchBar
             placeholder="Cari PT / Proyek"
@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   touchable: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,

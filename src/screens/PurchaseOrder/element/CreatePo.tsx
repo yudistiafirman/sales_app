@@ -1,9 +1,9 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useCallback, useEffect } from 'react';
-import { TextInput } from 'react-native-paper';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { FlashList } from '@shopify/flash-list';
+import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useCallback, useEffect } from "react";
+import { TextInput } from "react-native-paper";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import { FlashList } from "@shopify/flash-list";
 import {
   BSearchBar,
   BSpacer,
@@ -12,13 +12,13 @@ import {
   BGallery,
   BVisitationCard,
   BNestedProductCard,
-} from '@/components';
-import { RootState, AppDispatch } from '@/redux/store';
-import { resScale } from '@/utils';
-import { CAMERA, PO } from '@/navigation/ScreenNames';
-import { QuotationRequests } from '@/interfaces/createPurchaseOrder';
-import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
-import { layout } from '@/constants';
+} from "@/components";
+import { RootState, AppDispatch } from "@/redux/store";
+import { resScale } from "@/utils";
+import { CAMERA, PO } from "@/navigation/ScreenNames";
+import { QuotationRequests } from "@/interfaces/createPurchaseOrder";
+import SelectPurchaseOrderData from "@/components/templates/SelectPurchaseOrder";
+import { layout } from "@/constants";
 
 function CreatePo() {
   const navigation = useNavigation();
@@ -32,15 +32,15 @@ function CreatePo() {
     poNumber,
     customerType,
   } = poState.currentState.context;
-  const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== '{}';
+  const isUserChoosedSph = JSON.stringify(choosenSphDataFromModal) !== "{}";
   const [expandData, setExpandData] = React.useState<any[]>([]);
   const addMoreImages = useCallback(() => {
-    dispatch({ type: 'addMoreImages' });
+    dispatch({ type: "addMoreImages" });
   }, [dispatch]);
 
   const goToCamera = useCallback(() => {
     navigation.navigate(CAMERA, {
-      photoTitle: 'File PO',
+      photoTitle: "File PO",
       navigateTo: PO,
       disabledDocPicker: false,
       disabledGalleryPicker: false,
@@ -50,7 +50,7 @@ function CreatePo() {
 
   const deleteImages = (i: number) => {
     dispatch({
-      type: 'deleteImage',
+      type: "deleteImage",
       value: i + 1,
     });
   };
@@ -69,13 +69,13 @@ function CreatePo() {
 
   const inputs: Input[] = [
     {
-      label: 'No. Purchase Order',
+      label: "No. Purchase Order",
       isRequire: true,
       isError: false,
-      type: 'textInput',
+      type: "textInput",
       onChange: (e: any) => {
         dispatch({
-          type: 'inputSph',
+          type: "inputSph",
           value: e.nativeEvent.text,
         });
       },
@@ -101,14 +101,14 @@ function CreatePo() {
     selectedSphFromModal.QuotationRequests = data;
 
     dispatch({
-      type: 'addChoosenSph',
+      type: "addChoosenSph",
       value: selectedSphFromModal,
     });
   };
 
   const renderCustomButton = () => (
     <BTouchableText
-      onPress={() => dispatch({ type: 'searchingSph' })}
+      onPress={() => dispatch({ type: "searchingSph" })}
       title="Ganti"
     />
   );
@@ -116,13 +116,13 @@ function CreatePo() {
   const onExpand = (index: number, data: any) => {
     let newExpandsetExpandData;
     const isExisted = expandData?.findIndex(
-      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id,
+      (val) => val?.QuotationLetter?.id === data?.QuotationLetter?.id
     );
     if (isExisted === -1) {
       newExpandsetExpandData = [...expandData, data];
     } else {
       newExpandsetExpandData = expandData.filter(
-        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id,
+        (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
       );
     }
     setExpandData(newExpandsetExpandData);
@@ -130,31 +130,33 @@ function CreatePo() {
 
   return (
     <View style={styles.firstStepContainer}>
-      {poState.currentState.matches('firstStep.SearchSph') ? (
+      {poState.currentState.matches("firstStep.SearchSph") ? (
         <SelectPurchaseOrderData
           dataToGet="SPHDATA"
           filterSphDataBy={customerType}
-          onDismiss={() => dispatch({ type: 'backToAddPo' })}
-          onSubmitData={({ parentData, data }) => onPressCompleted({ parentData, data })}
+          onDismiss={() => dispatch({ type: "backToAddPo" })}
+          onSubmitData={({ parentData, data }) =>
+            onPressCompleted({ parentData, data })
+          }
         />
       ) : (
-        <View style={{ height: '100%', flexDirection: 'row' }}>
+        <View style={{ height: "100%", flexDirection: "row" }}>
           <FlashList
             estimatedItemSize={1}
             data={[1]}
             renderItem={() => <BSpacer size="verySmall" />}
-            ListHeaderComponent={(
+            ListHeaderComponent={
               <View>
-                {customerType === 'COMPANY' && (
-                <>
-                  <BGallery
-                    addMorePict={addMoreImages}
-                    picts={poImages}
-                    removePict={deleteImages}
-                  />
-                  <BSpacer size="extraSmall" />
-                  <BForm inputs={inputs} />
-                </>
+                {customerType === "COMPANY" && (
+                  <>
+                    <BGallery
+                      addMorePict={addMoreImages}
+                      picts={poImages}
+                      removePict={deleteImages}
+                    />
+                    <BSpacer size="extraSmall" />
+                    <BForm inputs={inputs} />
+                  </>
                 )}
 
                 {isUserChoosedSph ? (
@@ -180,23 +182,23 @@ function CreatePo() {
                   </>
                 ) : (
                   <TouchableOpacity
-                    onPress={() => dispatch({ type: 'searchingSph' })}
+                    onPress={() => dispatch({ type: "searchingSph" })}
                     style={{ height: resScale(50) }}
                   >
                     <BSearchBar
-                      left={(
+                      left={
                         <TextInput.Icon
                           forceTextInputFocus={false}
                           icon="magnify"
                         />
-                        )}
+                      }
                       disabled
                       placeholder="Cari PT / Proyek"
                     />
                   </TouchableOpacity>
                 )}
               </View>
-              )}
+            }
           />
         </View>
       )}

@@ -1,5 +1,5 @@
-import { useLayoutEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useLayoutEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 type HeaderStyleProps = {
   titleColor?: string;

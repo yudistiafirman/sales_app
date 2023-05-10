@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { TextInput } from 'react-native-paper';
+import * as React from "react";
+import { TextInput } from "react-native-paper";
 import {
   SafeAreaView,
   ScrollView,
@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
+} from "react-native";
 import {
   BDivider,
   BGalleryDeposit,
@@ -16,14 +16,14 @@ import {
   BSpacer,
   BTouchableText,
   BVisitationCard,
-} from '@/components';
-import { resScale } from '@/utils';
-import { CreateDepositContext } from '@/context/CreateDepositContext';
-import { colors, fonts, layout } from '@/constants';
-import font from '@/constants/fonts';
-import formatCurrency from '@/utils/formatCurrency';
-import SelectPurchaseOrderData from '@/components/templates/SelectPurchaseOrder';
-import { PoProductData } from '@/interfaces/SelectConfirmedPO';
+} from "@/components";
+import { resScale } from "@/utils";
+import { CreateDepositContext } from "@/context/CreateDepositContext";
+import { colors, fonts, layout } from "@/constants";
+import font from "@/constants/fonts";
+import formatCurrency from "@/utils/formatCurrency";
+import SelectPurchaseOrderData from "@/components/templates/SelectPurchaseOrder";
+import { PoProductData } from "@/interfaces/SelectConfirmedPO";
 
 export default function SecondStep() {
   const { values, action } = React.useContext(CreateDepositContext);
@@ -33,13 +33,13 @@ export default function SecondStep() {
 
   const listenerCallback = React.useCallback(
     ({ parent, data }: { parent: any; data: any }) => {
-      updateValueOnstep('stepTwo', 'companyName', parent.companyName);
-      updateValueOnstep('stepTwo', 'locationName', parent.locationName);
-      updateValue('existingProjectID', parent.projectId);
-      updateValueOnstep('stepTwo', 'purchaseOrders', data);
-      updateValue('isSearchingPurchaseOrder', false);
+      updateValueOnstep("stepTwo", "companyName", parent.companyName);
+      updateValueOnstep("stepTwo", "locationName", parent.locationName);
+      updateValue("existingProjectID", parent.projectId);
+      updateValueOnstep("stepTwo", "purchaseOrders", data);
+      updateValue("isSearchingPurchaseOrder", false);
     },
-    [updateValueOnstep],
+    [updateValueOnstep]
   );
 
   const customAction = () => (
@@ -48,14 +48,15 @@ export default function SecondStep() {
         fontFamily: font.family.montserrat[500],
         color: colors.select.selected,
       }}
-      onPress={() => updateValue('isSearchingPurchaseOrder', true)}
+      onPress={() => updateValue("isSearchingPurchaseOrder", true)}
       title="Ganti"
     />
   );
 
   const calculatedTotal = (): number => {
     let deposit = 0;
-    if (stateOne?.deposit?.nominal) deposit += parseInt(stateOne?.deposit?.nominal, 10);
+    if (stateOne?.deposit?.nominal)
+      deposit += parseInt(stateOne?.deposit?.nominal, 10);
     deposit += getTotalLastDeposit();
     return deposit;
   };
@@ -86,8 +87,10 @@ export default function SecondStep() {
       {values.isSearchingPurchaseOrder === true ? (
         <SelectPurchaseOrderData
           dataToGet="DEPOSITDATA"
-          onSubmitData={({ parentData, data }) => listenerCallback({ parent: parentData, data })}
-          onDismiss={() => updateValue('isSearchingPurchaseOrder', false)}
+          onSubmitData={({ parentData, data }) =>
+            listenerCallback({ parent: parentData, data })
+          }
+          onDismiss={() => updateValue("isSearchingPurchaseOrder", false)}
         />
       ) : (
         <>
@@ -105,8 +108,8 @@ export default function SecondStep() {
               <BSpacer size="extraSmall" />
             </View>
             <View style={style.flexFull}>
-              {stateTwo?.purchaseOrders
-              && stateTwo?.purchaseOrders.length > 0 ? (
+              {stateTwo?.purchaseOrders &&
+              stateTwo?.purchaseOrders.length > 0 ? (
                 <>
                   <ScrollView
                     style={[style.flexFull, { marginBottom: layout.pad.xxl }]}
@@ -123,8 +126,8 @@ export default function SecondStep() {
                       <BSpacer size="extraSmall" />
                     </View>
                     <View style={style.flexFull}>
-                      {stateTwo?.purchaseOrders
-                        && stateTwo?.purchaseOrders.length > 0 && (
+                      {stateTwo?.purchaseOrders &&
+                        stateTwo?.purchaseOrders.length > 0 && (
                           <BNestedProductCard
                             withoutHeader={false}
                             data={stateTwo?.purchaseOrders}
@@ -133,40 +136,40 @@ export default function SecondStep() {
                             isDeposit
                             withoutSeparator
                           />
-                      )}
+                        )}
                     </View>
                   </ScrollView>
 
                   <View style={style.summContainer}>
                     <Text style={style.summary}>Est Deposit Akhir</Text>
                     <Text style={[style.summary, style.fontw600]}>
-                      IDR
-                      {' '}
-                      {formatCurrency(calculatedTotal())}
+                      IDR {formatCurrency(calculatedTotal())}
                     </Text>
                   </View>
                 </>
-                ) : (
-                  <>
-                    <BSpacer size="extraSmall" />
-                    <TouchableOpacity
-                      style={style.touchable}
-                      onPress={() => updateValue('isSearchingPurchaseOrder', true)}
-                    >
-                      <BSearchBar
-                        placeholder="Cari PT / Proyek"
-                        activeOutlineColor="gray"
-                        disabled
-                        left={(
-                          <TextInput.Icon
-                            forceTextInputFocus={false}
-                            icon="magnify"
-                          />
-                      )}
-                      />
-                    </TouchableOpacity>
-                  </>
-                )}
+              ) : (
+                <>
+                  <BSpacer size="extraSmall" />
+                  <TouchableOpacity
+                    style={style.touchable}
+                    onPress={() =>
+                      updateValue("isSearchingPurchaseOrder", true)
+                    }
+                  >
+                    <BSearchBar
+                      placeholder="Cari PT / Proyek"
+                      activeOutlineColor="gray"
+                      disabled
+                      left={
+                        <TextInput.Icon
+                          forceTextInputFocus={false}
+                          icon="magnify"
+                        />
+                      }
+                    />
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </>
         </>
@@ -180,8 +183,8 @@ const style = StyleSheet.create({
     flex: 1,
   },
   touchable: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
@@ -195,14 +198,14 @@ const style = StyleSheet.create({
     fontFamily: fonts.family.montserrat[600],
   },
   summContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     right: 0,
     start: 0,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingTop: layout.pad.lg,
     paddingBottom: layout.pad.xl,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

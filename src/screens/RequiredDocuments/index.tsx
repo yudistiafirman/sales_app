@@ -1,32 +1,28 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React, {
-  useCallback, useEffect, useMemo, useState,
-} from 'react';
-import { ProgressBar } from '@react-native-community/progress-bar-android';
-import { useDispatch } from 'react-redux';
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { useRoute } from '@react-navigation/native';
-import { colors, fonts, layout } from '@/constants';
-import {
-  BContainer, BDivider, BForm, BLabel, BSpacer,
-} from '@/components';
+import { View, Text, StyleSheet } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { ProgressBar } from "@react-native-community/progress-bar-android";
+import { useDispatch } from "react-redux";
+import LinearGradient from "react-native-linear-gradient";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import { useRoute } from "@react-navigation/native";
+import { colors, fonts, layout } from "@/constants";
+import { BContainer, BDivider, BForm, BLabel, BSpacer } from "@/components";
 import {
   fetchSphDocuments,
   postProjectDocByprojectId,
   postUploadFiles,
-} from '@/redux/async-thunks/commonThunks';
-import { Input } from '@/interfaces';
+} from "@/redux/async-thunks/commonThunks";
+import { Input } from "@/interfaces";
 
-import { resScale } from '@/utils';
-import { openPopUp } from '@/redux/reducers/modalReducer';
+import { resScale } from "@/utils";
+import { openPopUp } from "@/redux/reducers/modalReducer";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type documentType = {
   id: string;
   name: string;
-  payment_type: 'CBD' | 'CREDIT';
+  payment_type: "CBD" | "CREDIT";
   is_required: boolean;
 };
 
@@ -70,7 +66,7 @@ export default function RequiredDocuments() {
     try {
       setIsLoading(true);
       const response: docResponse = await dispatch(
-        fetchSphDocuments(),
+        fetchSphDocuments()
       ).unwrap();
 
       setDocState(() => {
@@ -106,14 +102,14 @@ export default function RequiredDocuments() {
           newdocLoadingState[doc.id] = {
             loading: false,
             error: false,
-            errorMessage: '',
+            errorMessage: "",
           };
         });
         response.cbd.forEach((doc) => {
           newdocLoadingState[doc.id] = {
             loading: false,
             error: false,
-            errorMessage: '',
+            errorMessage: "",
           };
         });
 
@@ -126,11 +122,11 @@ export default function RequiredDocuments() {
       setIsLoading(false);
       dispatch(
         openPopUp({
-          popUpType: 'error',
+          popUpType: "error",
           popUpText:
-            error.message || 'Terjadi error saat pengambilan data document',
+            error.message || "Terjadi error saat pengambilan data document",
           outsideClickClosePopUp: true,
-        }),
+        })
       );
     }
   }, []);
@@ -147,11 +143,11 @@ export default function RequiredDocuments() {
           ...curr[documentId],
           loading: true,
           error: false,
-          errorMessage: '',
+          errorMessage: "",
         },
       }));
       const response = await dispatch(
-        postUploadFiles({ files: [file], from: 'customerDetail' }),
+        postUploadFiles({ files: [file], from: "customerDetail" })
       ).unwrap();
       if (!response[0]) {
         throw response;
@@ -165,7 +161,7 @@ export default function RequiredDocuments() {
       };
 
       const projectDocResponse = await dispatch(
-        postProjectDocByprojectId({ payload: payloadProjectDoc }),
+        postProjectDocByprojectId({ payload: payloadProjectDoc })
       ).unwrap();
       setDocLoadingState((curr) => ({
         ...curr,
@@ -173,11 +169,11 @@ export default function RequiredDocuments() {
           ...curr[documentId],
           loading: false,
           error: false,
-          errorMessage: '',
+          errorMessage: "",
         },
       }));
     } catch (error) {
-      let messsage = 'Upload error';
+      let messsage = "Upload error";
       if (error.message) {
         messsage = error.message;
       }
@@ -205,7 +201,7 @@ export default function RequiredDocuments() {
     reqDocuments?.credit?.forEach((doc) => {
       const input = {
         label: doc.name,
-        type: 'fileInput',
+        type: "fileInput",
         isRequire: doc.is_required,
         key: doc.id,
       };
@@ -214,7 +210,7 @@ export default function RequiredDocuments() {
     reqDocuments?.cbd?.forEach((doc) => {
       const input = {
         label: doc.name,
-        type: 'fileInput',
+        type: "fileInput",
         isRequire: doc.is_required,
         key: doc.id,
       };
@@ -282,9 +278,7 @@ export default function RequiredDocuments() {
         <View style={styles.between}>
           <Text style={styles.fontW500}>Kelengkapan Dokumen</Text>
           <Text style={styles.fontW500}>
-            {filledDocsCount}
-            /
-            {totalDocsCount}
+            {filledDocsCount}/{totalDocsCount}
           </Text>
         </View>
         <ProgressBar
@@ -319,7 +313,7 @@ export default function RequiredDocuments() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  between: { flexDirection: 'row', justifyContent: 'space-between' },
+  between: { flexDirection: "row", justifyContent: "space-between" },
   fontW500: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[500],

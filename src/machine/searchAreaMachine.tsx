@@ -1,134 +1,134 @@
-import Geolocation from 'react-native-geolocation-service';
-import { assign, createMachine, send } from 'xstate';
+import Geolocation from "react-native-geolocation-service";
+import { assign, createMachine, send } from "xstate";
 import {
   getLocationCoordinates,
   searchLocation,
   searchLocationById,
-} from '@/actions/CommonActions';
+} from "@/actions/CommonActions";
 
 export const searchAreaMachine = createMachine(
   {
     /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACDaAdDAC4AyA9pqiQJYUB2hqANixQO6QDEEjYhWgwBuFANYCUGHPnRFSlanUbM2nSAiGil9BgG0ADAF1DRxKAAOFWLWUNzIAB6IAzACYAHITcBGDwHYAFgBON0CXf383fwAaEABPRDcAVgNCYP8ANmTA5IzUnzcDQIBfEripLDwCVGIwcioaXVV2LghuMHR0CnRCCxYaADMegFtCSpkauoadFVZWjS1Gu1NTBysbOwdnBGCfQj8XZI8T-xc-D0CPOMSEH1T04Kf-YOLi18D-Moq0Ktl5eqKJoqTAAVy6YAYM2BDEoqAgPD4DAESwk41+kzktQUy2aYIhUKBdjhCIgmhEuMYq2M62stl020Qp0I5zCmUyRQ5uWSNySDwy2Vy+QMhWK3xAE2qWPR0mwROaQgsoJIdAYUG4mBYvwAkgwlSQ1kgQBt6YxGXdAm5CIFcu4coEDCcci5eQh-MlMoQPO5-KLXqEfJlxZL-rVJfKVIrlar1ZKhFAI-oaUaTVsjTsXMEvCkDLnMgZosdMi6Ekyriy8j4XO5gpksllgxipURw5SmFGVfHuHG1Ym9D4zCm6WnQDsoq72WkIhkRdEDKE3EHyhKm6GZVVE4I9dGu4wAOL1GMABQGmDg2oghssw4Z6dcWe8qTzBfdHmLro9aVemUKYXrmQCRtZTXVtZiYfdD3jRNeH4LdRDREMplAmFCAgztezbcltBhalB2vTZb1HRAfBFFwWU8EjCmSTMzhLW5-AMT0qxSDw3BcG0bReIC-iQptNzQmNoM6bpen6IZRnXTEWz4ttUIYA90ITTCljA3DaQIs07zuZI3CtDxv0dViDCOQpXQ8HSK1eAJ3Q4s5uKksMZLAwhhJ6BTBLbAARGhUG4OQSHQeJ3Kgtsr2NG9NKI7TPnSfMTkYjkfDOMyRS9StghcXNa0zHx7ObRzZU3SUADVWFBMASR4RxYBIGgBFQQYSE6AAKEiDAASm7VdeMK2SSrKiqKHhSAwtTQinGI0jyI8SiUho6szKiL0jkyXIXiKS0vmXRDpWQuxpmPU8wAvGDkTg8RJG63anJQ0hDtQM8Lyw0LjFGiL7C0459nYiJAnzH8wh8YJXT+-xrWogsDGSKJCleZI8pAm79ru+MTwe472lc0SBhIYZ0DGHbpN65yUbVNHHrJFScNe5N8NND6ososj3Bm2dqIyBbSwQaH9lrPJ-DfIp52CeHxQYCgEXgI1CdQdT6fNABaMJXSVsiMhCLMsnuK4G22q6AWhEdwo0hmJoQNxga54tCGSQoQlI4JPkdD0EamHFnPmdQIDlo2x1iLmwmCcHMo8edcirEVXeld2UPxORCTbSrvaHE3zTyLw319TJQkzPInldNjPVtQNPBfF4Zqjg3N0GIRbAoH3xp2Hx7jIqJsncXS-p0nwC6WkXzhCZIclCAXK4Kjc2wbyKzeVrnp1inIzj2ZeOLHyS5VkjsYyn02m+ya1q0rfN3RcVi6KZY5vHMqILZI0IobXvbmgEkKwJ380qMCG2Mqz4XzO9My7F0h+BFgYM47wK562Aj1CezksbBQwmBbytV35aSSm+bwtFdKRA5NRc+bpAwL0tKtR00RAi5SgTxa6xMUL9RYOVJOqCorly9IGU+kN9IzXwQEfY3oPQcTAU8chj8kbNFJlAcmGMmFmwFp6dwxlHSHCuDND8MU-r5gLJ8fSewKFlCAA */
-    tsTypes: {} as import('./searchAreaMachine.typegen').Typegen0,
-    id: 'search area',
+    tsTypes: {} as import("./searchAreaMachine.typegen").Typegen0,
+    id: "search area",
     predictableActionArguments: true,
-    type: 'parallel',
+    type: "parallel",
     context: {
       longlat: {} as any,
-      searchValue: '' as string,
+      searchValue: "" as string,
       result: [] as any[],
       loadPlaces: false as boolean,
-      formattedAddress: '',
-      placesId: '' as string,
-      errorMessage: '',
+      formattedAddress: "",
+      placesId: "" as string,
+      errorMessage: "",
     },
     states: {
       getLocation: {
         states: {
           allowed: {
             invoke: {
-              src: 'getCurrentLocation',
+              src: "getCurrentLocation",
 
               onDone: {
-                target: 'currentLocationLoaded',
-                actions: 'assignCurrentLocationToContext',
+                target: "currentLocationLoaded",
+                actions: "assignCurrentLocationToContext",
               },
 
               onError: {
-                actions: 'clearResult',
+                actions: "clearResult",
               },
             },
           },
 
           currentLocationLoaded: {
-            entry: send('sendingLonglatToLocation'),
+            entry: send("sendingLonglatToLocation"),
 
             invoke: {
-              src: 'getLocationByCoordinate',
+              src: "getLocationByCoordinate",
 
               onDone: {
-                actions: 'navigateToLocation',
-                target: 'finito',
+                actions: "navigateToLocation",
+                target: "finito",
               },
             },
           },
 
           finito: {},
         },
-        initial: 'allowed',
+        initial: "allowed",
       },
       searchLocation: {
         states: {
           inputting: {
             on: {
               clearInput: {
-                target: 'inputting',
+                target: "inputting",
                 internal: true,
-                actions: 'clearInputValue',
+                actions: "clearInputValue",
               },
 
               searchingLocation: [
                 {
-                  target: 'searchValueLoaded',
-                  actions: 'assignSearchValue',
-                  cond: 'searchLengthAccepted',
+                  target: "searchValueLoaded",
+                  actions: "assignSearchValue",
+                  cond: "searchLengthAccepted",
                 },
                 {
-                  target: 'inputting',
+                  target: "inputting",
                   internal: true,
-                  actions: 'clearResult',
+                  actions: "clearResult",
                 },
               ],
 
               onGettingPlacesId: {
-                target: 'gettingPlaceId',
-                actions: 'assignPlacesId',
+                target: "gettingPlaceId",
+                actions: "assignPlacesId",
               },
             },
           },
 
           onGettingLocation: {
             invoke: {
-              src: 'getLocationBySearch',
+              src: "getLocationBySearch",
               onError: {
-                target: 'errorGettingLocationData',
-                actions: 'handleErrorGettingLocation',
+                target: "errorGettingLocationData",
+                actions: "handleErrorGettingLocation",
               },
 
               onDone: {
-                target: 'inputting',
-                actions: 'assignResult',
+                target: "inputting",
+                actions: "assignResult",
               },
             },
           },
 
           errorGettingLocationData: {
             on: {
-              retryGettingLocation: 'onGettingLocation',
+              retryGettingLocation: "onGettingLocation",
             },
           },
 
           searchValueLoaded: {
             after: {
-              100: 'onGettingLocation',
+              100: "onGettingLocation",
             },
           },
 
           gettingPlaceId: {
             invoke: {
-              src: 'gettingPlacesId',
+              src: "gettingPlacesId",
 
               onDone: {
-                target: 'inputting',
-                actions: 'navigateToLocation',
+                target: "inputting",
+                actions: "navigateToLocation",
               },
 
-              onError: 'errorGettingLocationData',
+              onError: "errorGettingLocationData",
             },
           },
         },
 
-        initial: 'inputting',
+        initial: "inputting",
       },
     },
   },
@@ -172,7 +172,10 @@ export const searchAreaMachine = createMachine(
           showLocationDialog: true,
           forceRequestLocation: true,
         };
-        const getCurrentPosition = () => new Promise((resolve, error) => Geolocation.getCurrentPosition(resolve, error, opt));
+        const getCurrentPosition = () =>
+          new Promise((resolve, error) =>
+            Geolocation.getCurrentPosition(resolve, error, opt)
+          );
 
         try {
           const response = await getCurrentPosition();
@@ -207,7 +210,7 @@ export const searchAreaMachine = createMachine(
             // '',
             longitude,
             latitude,
-            '',
+            ""
           );
 
           return response.result;
@@ -216,5 +219,5 @@ export const searchAreaMachine = createMachine(
         }
       },
     },
-  },
+  }
 );

@@ -1,8 +1,8 @@
-import React from 'react';
-import { View } from 'react-native';
-import { BText, BTouchableText } from '@/components';
-import VerificationStyles from '../styles';
-import CountDown from './CountDown';
+import React from "react";
+import { View } from "react-native";
+import { BText, BTouchableText } from "@/components";
+import VerificationStyles from "../styles";
+import CountDown from "./CountDown";
 
 function ResendOTP({
   count,
@@ -14,8 +14,7 @@ function ResendOTP({
   return (
     <View style={VerificationStyles.resendContainer}>
       <BText style={VerificationStyles.intrutructionsTextDarkBold}>
-        Tidak menerima OTP?
-        {' '}
+        Tidak menerima OTP?{" "}
       </BText>
       {count === 0 ? (
         <BTouchableText

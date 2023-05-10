@@ -1,14 +1,14 @@
-import Icon from 'react-native-vector-icons/Feather';
-import * as React from 'react';
-import { TouchableOpacity } from 'react-native';
-import resScale from '@/utils/resScale';
-import colors from '@/constants/colors';
-import { layout } from '@/constants';
+import Icon from "react-native-vector-icons/Feather";
+import * as React from "react";
+import { TouchableOpacity } from "react-native";
+import resScale from "@/utils/resScale";
+import colors from "@/constants/colors";
+import { layout } from "@/constants";
 
 interface BHeaderIconProps {
   onBack?: () => void;
   size: number;
-  iconName: 'chevron-left' | 'x' | 'arrow-left';
+  iconName: "chevron-left" | "x" | "arrow-left";
   marginRight?: number;
   marginLeft?: number;
 }

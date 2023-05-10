@@ -5,15 +5,13 @@ import {
   StyleSheet,
   DeviceEventEmitter,
   Dimensions,
-} from 'react-native';
-import React, {
-  useCallback, useContext, useEffect, useState,
-} from 'react';
-import { TextInput } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { useDispatch, useSelector } from 'react-redux';
-import { FlashList } from '@shopify/flash-list';
+} from "react-native";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { TextInput } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { useDispatch, useSelector } from "react-redux";
+import { FlashList } from "@shopify/flash-list";
 import {
   BBackContinueBtn,
   BContainer,
@@ -21,27 +19,27 @@ import {
   BProductCard,
   BSearchBar,
   BSpacer,
-} from '@/components';
-import ProductCartModal from '../ProductOrderDetailModal';
-import { chosenProductType, ProductDataInterface } from '@/interfaces';
-import { resScale } from '@/utils';
-import { colors, fonts, layout } from '@/constants';
-import { SphContext } from '../context/SphContext';
-import { SEARCH_PRODUCT, SPH } from '@/navigation/ScreenNames';
-import { RootState } from '@/redux/store';
+} from "@/components";
+import ProductCartModal from "../ProductOrderDetailModal";
+import { chosenProductType, ProductDataInterface } from "@/interfaces";
+import { resScale } from "@/utils";
+import { colors, fonts, layout } from "@/constants";
+import { SphContext } from "../context/SphContext";
+import { SEARCH_PRODUCT, SPH } from "@/navigation/ScreenNames";
+import { RootState } from "@/redux/store";
 import {
   setStepperFocused,
   updateChosenProducts,
-} from '@/redux/reducers/SphReducer';
+} from "@/redux/reducers/SphReducer";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 interface RenderModalType {
   selectedProduct: ProductDataInterface | null;
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedProduct: React.Dispatch<
-  React.SetStateAction<ProductDataInterface | null>
+    React.SetStateAction<ProductDataInterface | null>
   >;
   setChosenProducts: React.Dispatch<React.SetStateAction<any[]>>;
   chosenProducts: chosenProductType[];
@@ -60,9 +58,9 @@ function RenderModal({
   if (!selectedProduct) {
     return null;
   }
-  const prevData = { volume: '', sellPrice: '', pouringMethod: '' };
+  const prevData = { volume: "", sellPrice: "", pouringMethod: "" };
   const existingDataIndex = chosenProducts.findIndex(
-    (data) => data.product.id === selectedProduct.id,
+    (data) => data.product.id === selectedProduct.id
   );
 
   if (existingDataIndex !== -1) {
@@ -97,10 +95,11 @@ export default function FourthStep() {
   const navigation = useNavigation();
   const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<ProductDataInterface | null>(null);
+  const [selectedProduct, setSelectedProduct] =
+    useState<ProductDataInterface | null>(null);
   const [chosenProducts, setChosenProducts] = useState<chosenProductType[]>([]);
   const { chosenProducts: productsRedux, distanceFromLegok } = useSelector(
-    (state: RootState) => state.sph,
+    (state: RootState) => state.sph
   );
 
   const getProduct = useCallback(({ data }: { data: ProductDataInterface }) => {
@@ -123,9 +122,9 @@ export default function FourthStep() {
     if (productsRedux.length > 0) {
       setChosenProducts(productsRedux);
     }
-    DeviceEventEmitter.addListener('event.testEvent', getProduct);
+    DeviceEventEmitter.addListener("event.testEvent", getProduct);
     return () => {
-      DeviceEventEmitter.removeAllListeners('event.testEvent');
+      DeviceEventEmitter.removeAllListeners("event.testEvent");
     };
   }, []);
 
@@ -174,7 +173,7 @@ export default function FourthStep() {
           </View>
           <BSpacer size="verySmall" />
           {/* <Text>Tidak ada produk yang terpilih</Text> */}
-          <View style={{ flexGrow: 1, flexDirection: 'row' }}>
+          <View style={{ flexGrow: 1, flexDirection: "row" }}>
             <FlashList
               estimatedItemSize={10}
               data={chosenProducts}
@@ -226,12 +225,12 @@ export default function FourthStep() {
 
 const style = StyleSheet.create({
   posRelative: {
-    position: 'relative',
+    position: "relative",
     marginBottom: layout.pad.xs + layout.pad.md,
   },
   touchable: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     borderRadius: layout.radius.sm,
     height: resScale(45),
     zIndex: 2,
@@ -243,12 +242,12 @@ const style = StyleSheet.create({
   },
   searchModeContainer: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   backContinueWrapper: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    alignSelf: 'center',
+    alignSelf: "center",
     width: width - layout.pad.xl,
   },
 });

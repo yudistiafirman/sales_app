@@ -1,10 +1,10 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { resScale } from '@/utils';
-import colors from '@/constants/colors';
-import { layout } from '@/constants';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import { resScale } from "@/utils";
+import colors from "@/constants/colors";
+import { layout } from "@/constants";
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 function TransactionListShimmer() {
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     marginTop: resScale(6),
   },
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   shimmerName: { width: resScale(75), height: resScale(17) },
   shimmerPrice: { width: resScale(91), height: resScale(17) },

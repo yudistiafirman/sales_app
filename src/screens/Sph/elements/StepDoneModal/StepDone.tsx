@@ -6,31 +6,31 @@ import {
   Share,
   Platform,
   Linking,
-} from 'react-native';
-import React from 'react';
-import Modal from 'react-native-modal';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Feather from 'react-native-vector-icons/Feather';
-import { useNavigation } from '@react-navigation/native';
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import RNPrint from 'react-native-print';
-import { useDispatch, useSelector } from 'react-redux';
-import { FlashList } from '@shopify/flash-list';
-import { colors, fonts, layout } from '@/constants';
-import { resScale } from '@/utils';
-import LabelSuccess from './elements/LabelSuccess';
+} from "react-native";
+import React from "react";
+import Modal from "react-native-modal";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Feather from "react-native-vector-icons/Feather";
+import { useNavigation } from "@react-navigation/native";
+import ReactNativeBlobUtil from "react-native-blob-util";
+import RNPrint from "react-native-print";
+import { useDispatch, useSelector } from "react-redux";
+import { FlashList } from "@shopify/flash-list";
+import { colors, fonts, layout } from "@/constants";
+import { resScale } from "@/utils";
+import LabelSuccess from "./elements/LabelSuccess";
 import {
   BPic,
   BProductCard,
   BSpacer,
   BCompanyMapCard,
   BProjectDetailCard,
-} from '@/components';
-import { postSphResponseType } from '@/interfaces';
+} from "@/components";
+import { postSphResponseType } from "@/interfaces";
 
-import { openPopUp } from '@/redux/reducers/modalReducer';
-import { RootState } from '@/redux/store';
-import { resetSPHState } from '@/redux/reducers/SphReducer';
+import { openPopUp } from "@/redux/reducers/modalReducer";
+import { RootState } from "@/redux/store";
+import { resetSPHState } from "@/redux/reducers/SphReducer";
 
 type StepDoneType = {
   isModalVisible: boolean;
@@ -38,13 +38,13 @@ type StepDoneType = {
   sphResponse: postSphResponseType | null;
 };
 const paymentMethod: {
-  CBD: 'Cash';
-  CREDIT: 'Credit';
-  '': '-';
+  CBD: "Cash";
+  CREDIT: "Credit";
+  "": "-";
 } = {
-  CBD: 'Cash',
-  CREDIT: 'Credit',
-  '': '-',
+  CBD: "Cash",
+  CREDIT: "Credit",
+  "": "-",
 };
 
 type downloadType = {
@@ -68,25 +68,25 @@ function downloadPdf({
   const { dirs } = ReactNativeBlobUtil.fs;
   const downloadTitle = title
     ? `${title} berhasil di download`
-    : 'PDF sph berhasil di download';
+    : "PDF sph berhasil di download";
   ReactNativeBlobUtil.config(
-    Platform.OS === 'android'
+    Platform.OS === "android"
       ? {
-        // add this option that makes response data to be stored as a file,
-        // this is much more performant.
-        fileCache: true,
-        path: dirs.DocumentDir,
-        addAndroidDownloads: {
-          useDownloadManager: true,
-          notification: true,
-          title: downloadTitle,
-          description: 'SPH PDF',
-          mediaScannable: true,
-        },
-      }
-      : { fileCache: true },
+          // add this option that makes response data to be stored as a file,
+          // this is much more performant.
+          fileCache: true,
+          path: dirs.DocumentDir,
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            title: downloadTitle,
+            description: "SPH PDF",
+            mediaScannable: true,
+          },
+        }
+      : { fileCache: true }
   )
-    .fetch('GET', url, {
+    .fetch("GET", url, {
       // some headers ..
     })
     .then((res) => {
@@ -99,11 +99,11 @@ function downloadPdf({
 }
 async function printRemotePDF(
   url?: string,
-  printError: (errorMessage: string | unknown) => void,
+  printError: (errorMessage: string | unknown) => void
 ) {
   try {
     if (!url) {
-      throw 'error url missing';
+      throw "error url missing";
     }
     await RNPrint.print({
       filePath: url,
@@ -115,8 +115,8 @@ async function printRemotePDF(
 
 const openAddressOnMap = (label, lat, lng) => {
   const scheme = Platform.select({
-    ios: 'maps:0,0?q=',
-    android: 'geo:0,0?q=',
+    ios: "maps:0,0?q=",
+    android: "geo:0,0?q=",
   });
   const latLng = `${lat},${lng}`;
   const url = Platform.select({
@@ -146,21 +146,21 @@ export default function StepDone({
 
   const shareFunc = async (url?: string) => {
     try {
-      if (!url) throw 'no url';
+      if (!url) throw "no url";
       await Share.share({
-        url: url.replace(/\s/g, '%20'),
+        url: url.replace(/\s/g, "%20"),
         message: `Link PDF SPH ${stateCompanyName}, ${url.replace(
           /\s/g,
-          '%20',
+          "%20"
         )}`,
       });
     } catch (error) {
       dispatch(
         openPopUp({
-          popUpType: 'error',
-          popUpText: error.message || 'Terjadi error saat share Link PDF SPH',
+          popUpType: "error",
+          popUpText: error.message || "Terjadi error saat share Link PDF SPH",
           outsideClickClosePopUp: true,
-        }),
+        })
       );
     }
   };
@@ -174,7 +174,7 @@ export default function StepDone({
       isVisible={isModalVisible}
       style={[
         styles.modal,
-        Platform.OS !== 'android' && { marginTop: layout.pad.xxl },
+        Platform.OS !== "android" && { marginTop: layout.pad.xxl },
       ]}
     >
       <View style={styles.modalStyle}>
@@ -207,12 +207,12 @@ export default function StepDone({
               openAddressOnMap(
                 stateCompanyName,
                 locationObj?.locationAddress?.lat,
-                locationObj?.locationAddress?.lon,
+                locationObj?.locationAddress?.lon
               );
             }}
             disabled={
-              locationObj?.locationAddress?.lat === null
-              || locationObj?.locationAddress?.lon === null
+              locationObj?.locationAddress?.lat === null ||
+              locationObj?.locationAddress?.lon === null
             }
           />
           <View style={styles.contentDetail}>
@@ -251,18 +251,20 @@ export default function StepDone({
         <View style={styles.modalFooter}>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() => printRemotePDF(
-              sphResponse?.thermalLink,
-              (errorMessage: string | unknown) => {
-                dispatch(
-                  openPopUp({
-                    popUpText: errorMessage || 'Gagal print SPH',
-                    popUpType: 'error',
-                    outsideClickClosePopUp: true,
-                  }),
-                );
-              },
-            )}
+            onPress={() =>
+              printRemotePDF(
+                sphResponse?.thermalLink,
+                (errorMessage: string | unknown) => {
+                  dispatch(
+                    openPopUp({
+                      popUpText: errorMessage || "Gagal print SPH",
+                      popUpType: "error",
+                      outsideClickClosePopUp: true,
+                    })
+                  );
+                }
+              )
+            }
           >
             <MaterialCommunityIcons
               name="printer"
@@ -284,28 +286,30 @@ export default function StepDone({
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.footerButton}
-            onPress={() => downloadPdf({
-              url: sphResponse?.letterLink,
-              title: sphResponse?.number,
-              downloadPopup: () => {
-                dispatch(
-                  openPopUp({
-                    popUpText: 'Berhasil mendownload SPH',
-                    popUpType: 'success',
-                    outsideClickClosePopUp: true,
-                  }),
-                );
-              },
-              downloadError: (err) => {
-                dispatch(
-                  openPopUp({
-                    popUpText: err || 'Gagal mendownload SPH',
-                    popUpType: 'error',
-                    outsideClickClosePopUp: true,
-                  }),
-                );
-              },
-            })}
+            onPress={() =>
+              downloadPdf({
+                url: sphResponse?.letterLink,
+                title: sphResponse?.number,
+                downloadPopup: () => {
+                  dispatch(
+                    openPopUp({
+                      popUpText: "Berhasil mendownload SPH",
+                      popUpType: "success",
+                      outsideClickClosePopUp: true,
+                    })
+                  );
+                },
+                downloadError: (err) => {
+                  dispatch(
+                    openPopUp({
+                      popUpText: err || "Gagal mendownload SPH",
+                      popUpType: "error",
+                      outsideClickClosePopUp: true,
+                    })
+                  );
+                },
+              })
+            }
           >
             <Feather
               name="download"
@@ -324,23 +328,23 @@ const styles = StyleSheet.create({
   modal: { margin: 0 },
   modalStyle: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: layout.pad.md,
   },
   modalTitle: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: layout.pad.lg,
     paddingVertical: layout.pad.md,
   },
   modalFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
     paddingVertical: layout.mainPad,
     borderTopColor: colors.border,
     borderTopWidth: resScale(0.5),
@@ -387,12 +391,12 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.sm,
   },
   summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   footerButton: {
     flex: 0.3,
-    alignItems: 'center',
+    alignItems: "center",
   },
   footerButtonText: {
     color: colors.text.darker,

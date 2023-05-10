@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   View,
   StyleProp,
@@ -6,48 +6,48 @@ import {
   TouchableOpacity,
   TextStyle,
   Platform,
-} from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
-import { TextInput } from 'react-native-paper';
-import { TextInputMask } from 'react-native-masked-text';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import DatePicker from 'react-native-date-picker';
-import { Input } from '@/interfaces';
-import BSpacer from '../atoms/BSpacer';
-import BTextInput from '../atoms/BTextInput';
-import BCardOption from '../molecules/BCardOption';
-import BComboDropdown from '../molecules/BComboDropdown';
-import BDropdown from '../atoms/BDropdown';
-import BLabel from '../atoms/BLabel';
-import BText from '../atoms/BText';
-import BDivider from '../atoms/BDivider';
-import BPicList from './BPicList';
-import BAutoComplete from '../atoms/BAutoComplete';
-import { colors, fonts, layout } from '@/constants';
-import { resScale } from '@/utils';
-import BSwitch from '../atoms/BSwitch';
-import BFileInput from '../atoms/BFileInput';
-import BCalendar from './BCalendar';
-import BComboRadioButton from '../molecules/BComboRadioButton';
-import BTableInput from '../molecules/BTableInput';
+} from "react-native";
+import CheckBox from "@react-native-community/checkbox";
+import { TextInput } from "react-native-paper";
+import { TextInputMask } from "react-native-masked-text";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import DatePicker from "react-native-date-picker";
+import { Input } from "@/interfaces";
+import BSpacer from "../atoms/BSpacer";
+import BTextInput from "../atoms/BTextInput";
+import BCardOption from "../molecules/BCardOption";
+import BComboDropdown from "../molecules/BComboDropdown";
+import BDropdown from "../atoms/BDropdown";
+import BLabel from "../atoms/BLabel";
+import BText from "../atoms/BText";
+import BDivider from "../atoms/BDivider";
+import BPicList from "./BPicList";
+import BAutoComplete from "../atoms/BAutoComplete";
+import { colors, fonts, layout } from "@/constants";
+import { resScale } from "@/utils";
+import BSwitch from "../atoms/BSwitch";
+import BFileInput from "../atoms/BFileInput";
+import BCalendar from "./BCalendar";
+import BComboRadioButton from "../molecules/BComboRadioButton";
+import BTableInput from "../molecules/BTableInput";
 
 interface IProps {
   inputs: Input[];
-  spacer?: 'extraSmall' | 'small' | 'medium' | 'large' | 'extraLarge' | number;
+  spacer?: "extraSmall" | "small" | "medium" | "large" | "extraLarge" | number;
   noSpaceEnd?: boolean;
   titleBold?:
-  | 'bold'
-  | '400'
-  | 'normal'
-  | '100'
-  | '200'
-  | '300'
-  | '500'
-  | '600'
-  | '700'
-  | '800'
-  | '900'
-  | undefined;
+    | "bold"
+    | "400"
+    | "normal"
+    | "100"
+    | "200"
+    | "300"
+    | "500"
+    | "600"
+    | "700"
+    | "800"
+    | "900"
+    | undefined;
 }
 
 interface Styles {
@@ -56,34 +56,34 @@ interface Styles {
 
 const styles: Styles = {
   optionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   errorPicContainer: {
     width: resScale(213),
     height: resScale(40),
     borderRadius: layout.radius.xs + layout.radius.sm,
     backgroundColor: colors.status.errorPic,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: layout.pad.sm,
   },
   quantityLayout: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   quantityInput: {
     flex: 1,
   },
   quantityInputPrice: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     borderColor: colors.textInput.placeHolder,
     borderWidth: 1,
     borderRadius: layout.radius.sm,
   },
   quantityInputCalendar: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     borderColor: colors.textInput.placeHolder,
     borderWidth: 1,
     borderRadius: layout.radius.sm,
@@ -91,31 +91,31 @@ const styles: Styles = {
     paddingVertical: layout.pad.ml,
   },
   quantityText: {
-    position: 'absolute',
+    position: "absolute",
     right: 0,
     top: 6,
     bottom: 0,
-    alignSelf: 'center',
-    justifyContent: 'center',
+    alignSelf: "center",
+    justifyContent: "center",
     marginRight: layout.pad.lg,
   },
   priceText: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     top: 0,
     bottom: 0,
     paddingStart: layout.pad.lg,
-    alignSelf: 'center',
-    justifyContent: 'center',
+    alignSelf: "center",
+    justifyContent: "center",
   },
   calendarText: {
-    position: 'absolute',
+    position: "absolute",
     right: 0,
     top: 0,
     bottom: 0,
     paddingEnd: layout.pad.md,
-    alignSelf: 'center',
-    justifyContent: 'center',
+    alignSelf: "center",
+    justifyContent: "center",
   },
   calendar: {
     borderWidth: 1,
@@ -124,29 +124,29 @@ const styles: Styles = {
   },
   checkboxText: {
     // flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   flexRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   relative: {
-    position: 'relative',
+    position: "relative",
   },
   TextinputAbsolute: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     height: resScale(73),
     zIndex: 2,
   },
   TextAreaAbsolute: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     height: resScale(110),
     zIndex: 2,
   },
   calendarTime: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   calendarOne: { flex: 1, marginEnd: layout.pad.sm },
   timeOne: { flex: 1, marginStart: layout.pad.sm },
@@ -161,18 +161,18 @@ const textStyles: TextStyle = {
 const renderInput = (
   input: Input,
   titleBold?:
-  | 'bold'
-  | '400'
-  | 'normal'
-  | '100'
-  | '200'
-  | '300'
-  | '500'
-  | '600'
-  | '700'
-  | '800'
-  | '900'
-  | undefined,
+    | "bold"
+    | "400"
+    | "normal"
+    | "100"
+    | "200"
+    | "300"
+    | "500"
+    | "600"
+    | "700"
+    | "800"
+    | "900"
+    | undefined
 ): React.ReactNode => {
   const {
     type,
@@ -207,7 +207,7 @@ const renderInput = (
     tableInput,
   } = input;
 
-  if (type === 'tableInput') {
+  if (type === "tableInput") {
     return (
       <BTableInput
         titleBold={titleBold}
@@ -220,7 +220,7 @@ const renderInput = (
     );
   }
 
-  if (type === 'comboRadioButton') {
+  if (type === "comboRadioButton") {
     return (
       <BComboRadioButton
         onSetComboRadioButtonValue={comboRadioBtn?.onSetComboRadioButtonValue}
@@ -240,9 +240,9 @@ const renderInput = (
     );
   }
 
-  if (type === 'quantity') {
+  if (type === "quantity") {
     return (
-      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+      <View style={Platform.OS !== "android" && { zIndex: -1 }}>
         <BLabel
           sizeInNumber={input.textSize}
           bold={titleBold}
@@ -256,7 +256,7 @@ const renderInput = (
               { paddingEnd: layout.pad.xl },
               // isError && { borderColor: colors.primary },
             ]}
-            onChangeText={(vl) => onChange(vl.replace(/\D/g, ''))}
+            onChangeText={(vl) => onChange(vl.replace(/\D/g, ""))}
             value={value}
             keyboardType="numeric"
             placeholder={placeholder}
@@ -264,7 +264,7 @@ const renderInput = (
             outlineColor={outlineColor}
           />
           <View style={styles.quantityText}>
-            <BText>{quantityType || 'm³'}</BText>
+            <BText>{quantityType || "m³"}</BText>
           </View>
         </View>
         {isError && (
@@ -276,9 +276,9 @@ const renderInput = (
     );
   }
 
-  if (type === 'price') {
+  if (type === "price") {
     return (
-      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+      <View style={Platform.OS !== "android" && { zIndex: -1 }}>
         <BLabel
           sizeInNumber={input.textSize}
           bold={titleBold}
@@ -297,17 +297,17 @@ const renderInput = (
               type="money"
               options={{
                 precision: 0,
-                separator: ',',
-                delimiter: '.',
-                unit: '',
-                suffixUnit: '',
+                separator: ",",
+                delimiter: ".",
+                unit: "",
+                suffixUnit: "",
               }}
               value={value}
               onChangeText={onChange}
               placeholder={placeholder}
               style={[
                 textStyles,
-                Platform.OS !== 'android' && { minHeight: resScale(40) },
+                Platform.OS !== "android" && { minHeight: resScale(40) },
               ]}
             />
           </View>
@@ -324,9 +324,9 @@ const renderInput = (
     );
   }
 
-  if (type === 'calendar') {
+  if (type === "calendar") {
     return (
-      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+      <View style={Platform.OS !== "android" && { zIndex: -1 }}>
         <BLabel
           sizeInNumber={input.textSize}
           bold={titleBold}
@@ -335,7 +335,9 @@ const renderInput = (
         />
         <TouchableOpacity
           style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
-          onPress={() => calendar?.setCalendarVisible(!calendar?.isCalendarVisible)}
+          onPress={() =>
+            calendar?.setCalendarVisible(!calendar?.isCalendarVisible)
+          }
         >
           <View
             style={[
@@ -372,9 +374,9 @@ const renderInput = (
     );
   }
 
-  if (type === 'calendar-time') {
+  if (type === "calendar-time") {
     return (
-      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+      <View style={Platform.OS !== "android" && { zIndex: -1 }}>
         <View style={styles.calendarTime}>
           <View style={styles.calendarOne}>
             <BLabel
@@ -385,9 +387,11 @@ const renderInput = (
             />
             <TouchableOpacity
               style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
-              onPress={() => calendarTime?.setCalendarVisible(
-                !calendarTime?.isCalendarVisible,
-              )}
+              onPress={() =>
+                calendarTime?.setCalendarVisible(
+                  !calendarTime?.isCalendarVisible
+                )
+              }
             >
               <View
                 style={[
@@ -400,11 +404,11 @@ const renderInput = (
                   style={
                     calendarTime?.valueOne
                       ? {
-                        color: colors.textInput.input,
-                      }
+                          color: colors.textInput.input,
+                        }
                       : {
-                        color: colors.textInput.placeHolder,
-                      }
+                          color: colors.textInput.placeHolder,
+                        }
                   }
                 >
                   {calendarTime?.valueOne
@@ -428,7 +432,9 @@ const renderInput = (
             />
             <TouchableOpacity
               style={[styles.quantityLayout, { marginTop: layout.pad.md }]}
-              onPress={() => calendarTime?.setTimeVisible(!calendarTime?.isTimeVisible)}
+              onPress={() =>
+                calendarTime?.setTimeVisible(!calendarTime?.isTimeVisible)
+              }
             >
               <View
                 style={[
@@ -441,11 +447,11 @@ const renderInput = (
                   style={
                     calendarTime?.valueTwo
                       ? {
-                        color: colors.textInput.input,
-                      }
+                          color: colors.textInput.input,
+                        }
                       : {
-                        color: colors.textInput.placeHolder,
-                      }
+                          color: colors.textInput.placeHolder,
+                        }
                   }
                 >
                   {calendarTime?.valueTwo
@@ -502,13 +508,13 @@ const renderInput = (
     );
   }
 
-  if (type === 'textInput') {
+  if (type === "textInput") {
     const textInputProps = { onChange, value };
     const defaultErrorMsg = `${label} harus diisi`;
     // textInputAsButton
     return (
       <View
-        style={[styles.relative, Platform.OS !== 'android' && { zIndex: -1 }]}
+        style={[styles.relative, Platform.OS !== "android" && { zIndex: -1 }]}
       >
         {textInputAsButton && (
           <TouchableOpacity
@@ -525,7 +531,7 @@ const renderInput = (
         />
         <BTextInput
           {...textInputProps}
-          keyboardType={keyboardType || 'default'}
+          keyboardType={keyboardType || "default"}
           placeholder={placeholder}
           disabled={isInputDisable}
           left={
@@ -562,11 +568,11 @@ const renderInput = (
     );
   }
 
-  if (type === 'area') {
+  if (type === "area") {
     const defaultErrorMsg = `${label} harus diisi`;
     return (
       <View
-        style={[styles.relative, Platform.OS !== 'android' && { zIndex: -1 }]}
+        style={[styles.relative, Platform.OS !== "android" && { zIndex: -1 }]}
       >
         {textInputAsButton && (
           <TouchableOpacity
@@ -585,7 +591,7 @@ const renderInput = (
           value={value}
           multiline
           numberOfLines={4}
-          minHeight={Platform.OS === 'ios' ? 20 * 4 : null}
+          minHeight={Platform.OS === "ios" ? 20 * 4 : null}
           placeholder={placeholder}
           contentStyle={textStyles}
           left={
@@ -609,9 +615,9 @@ const renderInput = (
     );
   }
 
-  if (type === 'cardOption') {
+  if (type === "cardOption") {
     return (
-      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+      <View style={Platform.OS !== "android" && { zIndex: -1 }}>
         <BLabel
           sizeInNumber={input.textSize}
           bold={titleBold}
@@ -620,7 +626,7 @@ const renderInput = (
         />
         <BSpacer size="verySmall" />
         <View
-          pointerEvents={isInputDisable ? 'none' : 'auto'}
+          pointerEvents={isInputDisable ? "none" : "auto"}
           style={[styles.optionContainer]}
         >
           {options?.map((val, index) => (
@@ -645,11 +651,11 @@ const renderInput = (
     );
   }
 
-  if (type === 'autocomplete') {
+  if (type === "autocomplete") {
     const defaultErrorMsg = `${label} harus diisi`;
     return (
       <>
-        <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+        <View style={Platform.OS !== "android" && { zIndex: -1 }}>
           <BLabel
             sizeInNumber={input.textSize}
             bold={titleBold}
@@ -683,11 +689,11 @@ const renderInput = (
     );
   }
 
-  if (type === 'dropdown') {
+  if (type === "dropdown") {
     if (dropdown) {
       return (
         <>
-          <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+          <View style={Platform.OS !== "android" && { zIndex: -1 }}>
             <BLabel
               sizeInNumber={input.textSize}
               bold={titleBold}
@@ -710,11 +716,11 @@ const renderInput = (
     }
   }
 
-  if (type === 'comboDropdown') {
+  if (type === "comboDropdown") {
     if (comboDropdown) {
       return (
         <>
-          <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+          <View style={Platform.OS !== "android" && { zIndex: -1 }}>
             <BLabel
               sizeInNumber={input.textSize}
               bold={titleBold}
@@ -729,9 +735,9 @@ const renderInput = (
     }
   }
 
-  if (type === 'PIC') {
+  if (type === "PIC") {
     return (
-      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+      <View style={Platform.OS !== "android" && { zIndex: -1 }}>
         <BSpacer size="verySmall" />
         {!hidePicLabel && (
           <>
@@ -766,21 +772,21 @@ const renderInput = (
         )}
         <BPicList
           isOption={
-            label?.toLowerCase() === 'kompetitor' ? false : value?.length > 1
+            label?.toLowerCase() === "kompetitor" ? false : value?.length > 1
           }
           data={value}
           onSelect={onSelect!}
-          isCompetitor={label?.toLowerCase() === 'kompetitor'}
+          isCompetitor={label?.toLowerCase() === "kompetitor"}
         />
       </View>
     );
   }
 
-  if (type === 'switch') {
+  if (type === "switch") {
     return (
       <View
         style={
-          Platform.OS !== 'android' && { zIndex: -1, marginTop: layout.pad.md }
+          Platform.OS !== "android" && { zIndex: -1, marginTop: layout.pad.md }
         }
       >
         <BSwitch
@@ -793,9 +799,9 @@ const renderInput = (
     );
   }
 
-  if (type === 'fileInput') {
+  if (type === "fileInput") {
     return (
-      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+      <View style={Platform.OS !== "android" && { zIndex: -1 }}>
         <BFileInput
           isLoading={loading}
           label={label}
@@ -816,9 +822,9 @@ const renderInput = (
     );
   }
 
-  if (type === 'checkbox') {
+  if (type === "checkbox") {
     return (
-      <View style={Platform.OS !== 'android' && { zIndex: -1 }}>
+      <View style={Platform.OS !== "android" && { zIndex: -1 }}>
         <View style={styles.flexRow}>
           <CheckBox
             disabled={checkbox?.disabled}
@@ -838,7 +844,7 @@ const renderInput = (
             onValueChange={checkbox?.onValueChange}
             style={[
               { marginStart: layout.pad.xs },
-              Platform.OS !== 'android' && {
+              Platform.OS !== "android" && {
                 height: resScale(20),
                 width: resScale(20),
               },
@@ -848,7 +854,7 @@ const renderInput = (
             style={[
               styles.checkboxText,
               { paddingEnd: layout.pad.md },
-              Platform.OS !== 'android' && {
+              Platform.OS !== "android" && {
                 marginStart: layout.pad.md,
                 marginEnd: layout.pad.xl,
               },
@@ -866,7 +872,7 @@ const renderInput = (
           <BText
             style={[
               { fontSize: fonts.size.xs, marginStart: layout.pad.xl },
-              Platform.OS !== 'android' && { marginTop: layout.pad.md },
+              Platform.OS !== "android" && { marginTop: layout.pad.md },
             ]}
             color="primary"
             bold="400"
@@ -879,16 +885,14 @@ const renderInput = (
   }
 };
 
-function BForm({
-  inputs, spacer, noSpaceEnd, titleBold,
-}: IProps) {
+function BForm({ inputs, spacer, noSpaceEnd, titleBold }: IProps) {
   return (
     <View>
       {inputs?.map((input, index) => (
         <React.Fragment key={index}>
           {renderInput(input, titleBold)}
           {(index < inputs.length - 1 || !noSpaceEnd) && (
-            <BSpacer size={spacer || 'middleSmall'} />
+            <BSpacer size={spacer || "middleSmall"} />
           )}
         </React.Fragment>
       ))}

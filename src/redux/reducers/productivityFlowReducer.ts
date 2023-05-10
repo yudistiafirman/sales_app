@@ -1,11 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { MarkedDates } from 'react-native-calendars/src/types';
+import { createSlice } from "@reduxjs/toolkit";
+import { MarkedDates } from "react-native-calendars/src/types";
 import {
   getVisitationsList,
   postVisitation,
   putVisitationFlow,
-} from '../async-thunks/productivityFlowThunks';
-import { visitationListResponse, customerDataInterface } from '@/interfaces';
+} from "../async-thunks/productivityFlowThunks";
+import { visitationListResponse, customerDataInterface } from "@/interfaces";
 
 type initialStateType = {
   visitationList: visitationListResponse[];
@@ -24,7 +24,7 @@ const initialState: initialStateType = {
 };
 
 export const productivityFlowSlice = createSlice({
-  name: 'productivityFlow',
+  name: "productivityFlow",
   initialState,
   reducers: {
     resetStates: () => initialState,
@@ -67,6 +67,7 @@ export const productivityFlowSlice = createSlice({
   },
 });
 
-export const { resetStates, setVisitationMapped, setMarkedData } = productivityFlowSlice.actions;
+export const { resetStates, setVisitationMapped, setMarkedData } =
+  productivityFlowSlice.actions;
 
 export default productivityFlowSlice.reducer;

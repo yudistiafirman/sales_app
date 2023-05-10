@@ -1,13 +1,13 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { RadioButton } from 'react-native-paper';
-import { colors, layout } from '@/constants';
-import BSpacer from '../atoms/BSpacer';
-import BLabel from '../atoms/BLabel';
-import BText from '../atoms/BText';
-import font from '@/constants/fonts';
-import { IComboRadioBtn, Input, TitleBold } from '@/interfaces';
-import { resScale } from '@/utils';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { RadioButton } from "react-native-paper";
+import { colors, layout } from "@/constants";
+import BSpacer from "../atoms/BSpacer";
+import BLabel from "../atoms/BLabel";
+import BText from "../atoms/BText";
+import font from "@/constants/fonts";
+import { IComboRadioBtn, Input, TitleBold } from "@/interfaces";
+import { resScale } from "@/utils";
 
 function BComboRadioButton({
   isRequire,
@@ -43,8 +43,10 @@ function BComboRadioButton({
             status={firstStatus}
             color={colors.primary}
             uncheckedColor={colors.border.altGrey}
-            onPress={() => onSetComboRadioButtonValue
-              && onSetComboRadioButtonValue(firstValue!)}
+            onPress={() =>
+              onSetComboRadioButtonValue &&
+              onSetComboRadioButtonValue(firstValue!)
+            }
           />
           <BText style={styles.radioValue}>{firstText}</BText>
         </View>
@@ -55,8 +57,10 @@ function BComboRadioButton({
             status={secondStatus}
             color={colors.primary}
             uncheckedColor={colors.border.altGrey}
-            onPress={() => onSetComboRadioButtonValue
-              && onSetComboRadioButtonValue(secondValue!)}
+            onPress={() =>
+              onSetComboRadioButtonValue &&
+              onSetComboRadioButtonValue(secondValue!)
+            }
           />
           <BText style={styles.radioValue}>{secondText}</BText>
         </View>
@@ -78,8 +82,8 @@ const styles = StyleSheet.create({
     paddingRight: layout.pad.md,
   },
   radio: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   radioValue: {
     fontFamily: font.family.montserrat[400],

@@ -1,19 +1,19 @@
-import Modal from 'react-native-modal';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import { RootState } from '@/redux/store';
-import { setIsPopUpVisible } from '@/redux/reducers/modalReducer';
-import { colors, fonts, layout } from '@/constants';
-import { resScale } from '@/utils';
-import { BBackContinueBtn, BHighlightText, BText } from '@/components';
-import font from '@/constants/fonts';
+import Modal from "react-native-modal";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { RootState } from "@/redux/store";
+import { setIsPopUpVisible } from "@/redux/reducers/modalReducer";
+import { colors, fonts, layout } from "@/constants";
+import { resScale } from "@/utils";
+import { BBackContinueBtn, BHighlightText, BText } from "@/components";
+import font from "@/constants/fonts";
 
 export default function Popup() {
   const dispatch = useDispatch();
   const { isPopUpVisible, popUpOptions } = useSelector(
-    (state: RootState) => state.modal,
+    (state: RootState) => state.modal
   );
 
   return (
@@ -29,21 +29,17 @@ export default function Popup() {
       }}
     >
       <View style={styles.modalContent}>
-        {popUpOptions.popUpType !== 'none' && (
+        {popUpOptions.popUpType !== "none" && (
           <View
             style={{ paddingTop: layout.pad.xl, paddingBottom: layout.pad.ml }}
           >
-            {popUpOptions.popUpType === 'success' && (
-              <AntDesign
-                size={resScale(48)}
-                name="checkcircle"
-                color="green"
-              />
+            {popUpOptions.popUpType === "success" && (
+              <AntDesign size={resScale(48)} name="checkcircle" color="green" />
             )}
-            {popUpOptions.popUpType === 'error' && (
+            {popUpOptions.popUpType === "error" && (
               <AntDesign size={resScale(48)} name="closecircle" color="red" />
             )}
-            {popUpOptions.popUpType === 'loading' && (
+            {popUpOptions.popUpType === "loading" && (
               <ActivityIndicator size={resScale(60)} color={colors.primary} />
             )}
           </View>
@@ -82,13 +78,13 @@ export default function Popup() {
 
 const styles = StyleSheet.create({
   modalStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContent: {
     backgroundColor: colors.white,
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    justifyContent: "space-around",
+    alignItems: "center",
     padding: layout.pad.md,
     borderRadius: layout.radius.md,
     minHeight: resScale(144),
@@ -98,17 +94,17 @@ const styles = StyleSheet.create({
     color: colors.text.darker,
     fontFamily: font.family.montserrat[600],
     fontSize: font.size.md,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: resScale(24),
   },
   popUptext: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[500],
     fontSize: fonts.size.md,
-    textAlign: 'center',
+    textAlign: "center",
   },
   actionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

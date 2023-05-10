@@ -1,9 +1,9 @@
-import React from 'react';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { colors, fonts, layout } from '@/constants';
-import { resScale } from '@/utils';
-import { Styles } from '@/interfaces';
-import BText from './BText';
+import React from "react";
+import DropDownPicker from "react-native-dropdown-picker";
+import { colors, fonts, layout } from "@/constants";
+import { resScale } from "@/utils";
+import { Styles } from "@/interfaces";
+import BText from "./BText";
 
 interface IProps {
   open: boolean;
@@ -23,9 +23,9 @@ interface IProps {
   //   >
   // >;
   onChange:
-  | ((value: any) => void)
-  | ((value: any[] | null) => void)
-  | undefined;
+    | ((value: any) => void)
+    | ((value: any[] | null) => void)
+    | undefined;
   placeholder: string;
   isError?: boolean;
   errorMessage?: string;
@@ -49,7 +49,7 @@ const styles: Styles = {
     borderBottomStartRadius: layout.radius.sm,
   },
   active: {
-    position: 'absolute',
+    position: "absolute",
     top: resScale(50),
     borderRadius: layout.radius.sm,
     borderColor: colors.border.default,
@@ -62,8 +62,8 @@ const styles: Styles = {
   separator: {
     backgroundColor: colors.border.default,
     paddingHorizontal: layout.pad.sm + layout.pad.xs,
-    width: '95%',
-    alignSelf: 'center',
+    width: "95%",
+    alignSelf: "center",
   },
   error: {
     borderColor: colors.primary,
@@ -104,8 +104,8 @@ function BDropdown(props: IProps) {
           open
             ? [styles.activeInput, styles.dropdown]
             : isError
-              ? [styles.error]
-              : {},
+            ? [styles.error]
+            : {},
         ]}
         dropDownContainerStyle={[
           styles.base,

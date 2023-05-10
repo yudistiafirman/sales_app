@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 import {
   GestureResponderEvent,
   StyleSheet,
   TouchableOpacity,
   Text,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import { layout } from '@/constants';
-import { BViewMoreText } from '@/components';
+} from "react-native";
+import Icon from "react-native-vector-icons/Feather";
+import colors from "@/constants/colors";
+import font from "@/constants/fonts";
+import { layout } from "@/constants";
+import { BViewMoreText } from "@/components";
 
 interface CurrentLocationProps {
   location?: string | undefined;
@@ -33,7 +33,7 @@ function CurrentLocation({ location, onPress }: CurrentLocationProps) {
 
 const CurrentLocationStyles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginStart: layout.pad.lg,
   },
   viewMoreText: {

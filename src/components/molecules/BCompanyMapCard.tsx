@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from 'react-native';
-import * as React from 'react';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { colors, fonts, layout } from '@/constants';
-import BTouchableText from '../atoms/BTouchableText';
-import BSpacer from '../atoms/BSpacer';
+import { View, Text, StyleSheet } from "react-native";
+import * as React from "react";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import { colors, fonts, layout } from "@/constants";
+import BTouchableText from "../atoms/BTouchableText";
+import BSpacer from "../atoms/BSpacer";
 
 type BCompanyMapCardType = {
   location?: string;
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.xs,
   },
   locationContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   iconStyle: {
     marginRight: layout.pad.md,

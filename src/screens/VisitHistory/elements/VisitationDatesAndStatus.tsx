@@ -1,19 +1,17 @@
-import { useNavigation } from '@react-navigation/native';
-import moment, { locale } from 'moment';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { getVisitationOrderByID } from '@/actions/OrderActions';
-import {
-  BChip, BSpacer, BText, BTouchableText,
-} from '@/components';
-import { colors, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
-import { openPopUp } from '@/redux/reducers/modalReducer';
-import { AppDispatch } from '@/redux/store';
+import { useNavigation } from "@react-navigation/native";
+import moment, { locale } from "moment";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { useDispatch } from "react-redux";
+import { getVisitationOrderByID } from "@/actions/OrderActions";
+import { BChip, BSpacer, BText, BTouchableText } from "@/components";
+import { colors, layout } from "@/constants";
+import font from "@/constants/fonts";
+import { TRANSACTION_DETAIL } from "@/navigation/ScreenNames";
+import { openPopUp } from "@/redux/reducers/modalReducer";
+import { AppDispatch } from "@/redux/store";
 
-type status = 'VISIT' | 'SPH' | 'REJECTED' | 'PO' | 'SCHEDULING' | 'DO';
+type status = "VISIT" | "SPH" | "REJECTED" | "PO" | "SCHEDULING" | "DO";
 
 interface IProps {
   bookingDate?: string;
@@ -35,10 +33,10 @@ function VisitationDatesAndStatus({
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const getBackgroundColor = () => {
-    let color = '';
-    if (status === 'VISIT') {
+    let color = "";
+    if (status === "VISIT") {
       color = colors.textInput.inActive;
-    } else if (status === 'SPH') {
+    } else if (status === "SPH") {
       color = colors.status.secondaryYellow;
     } else {
       color = colors.primary;
@@ -47,43 +45,44 @@ function VisitationDatesAndStatus({
   };
 
   const getStatus = () => {
-    if (status === 'VISIT') {
-      return 'Kunjungan Lagi';
-    } if (status === 'REJECTED') {
-      return 'Closed Lost';
+    if (status === "VISIT") {
+      return "Kunjungan Lagi";
     }
-    return 'SPH';
+    if (status === "REJECTED") {
+      return "Closed Lost";
+    }
+    return "SPH";
   };
 
   const getLocalBookingDate = () => {
-    let date = '-';
+    let date = "-";
     let day = null;
     date = `${new Date(bookingDate).getDate()} ${new Date(
-      bookingDate,
-    ).toLocaleString(locale(), { month: 'short' })} ${new Date(
-      bookingDate,
+      bookingDate
+    ).toLocaleString(locale(), { month: "short" })} ${new Date(
+      bookingDate
     ).getFullYear()}`;
     const newDate = new Date(bookingDate);
-    day = newDate.toLocaleDateString(locale(), { weekday: 'long' });
+    day = newDate.toLocaleDateString(locale(), { weekday: "long" });
     return `${day}, ${date}`;
   };
 
   const getLocalFinishDate = () => {
-    let date = '-';
+    let date = "-";
     date = `${new Date(finishDate).getDate()} ${new Date(
-      finishDate,
-    ).toLocaleString(locale(), { month: 'short' })} ${new Date(
-      finishDate,
+      finishDate
+    ).toLocaleString(locale(), { month: "short" })} ${new Date(
+      finishDate
     ).getFullYear()}`;
     return date;
   };
 
   const getRejectedCategory = (reason: string) => {
-    let rejectReason = '';
-    if (reason === 'MOU_COMPETITOR') {
-      rejectReason = 'Sudah MOU dengan Kompetitor';
-    } else if (reason === 'FINISHED') {
-      rejectReason = 'Proyek sudah selesai dibangun';
+    let rejectReason = "";
+    if (reason === "MOU_COMPETITOR") {
+      rejectReason = "Sudah MOU dengan Kompetitor";
+    } else if (reason === "FINISHED") {
+      rejectReason = "Proyek sudah selesai dibangun";
     }
     return rejectReason;
   };
@@ -92,30 +91,31 @@ function VisitationDatesAndStatus({
     try {
       const { data } = await getVisitationOrderByID(quatationId);
       navigation.navigate(TRANSACTION_DETAIL, {
-        title: data.data ? data.data.number : 'N/A',
+        title: data.data ? data.data.number : "N/A",
         data: data.data,
-        type: 'SPH',
+        type: "SPH",
       });
     } catch (error) {
       dispatch(
         openPopUp({
-          popUpType: 'error',
+          popUpType: "error",
           popUpText: error.message,
-          highlightedText: 'error',
+          highlightedText: "error",
           outsideClickClosePopUp: true,
-        }),
+        })
       );
     }
   };
 
   const renderCompBaseOnStatus = () => {
-    if (status === 'VISIT') {
+    if (status === "VISIT") {
       return (
         <BText style={[styles.date, { marginRight: layout.pad.md }]}>
-          {finishDate !== null ? getLocalFinishDate() : 'Belum Selesai'}
+          {finishDate !== null ? getLocalFinishDate() : "Belum Selesai"}
         </BText>
       );
-    } if (status === 'SPH' && quatationId !== undefined) {
+    }
+    if (status === "SPH" && quatationId !== undefined) {
       return (
         <BTouchableText
           onPress={getOneOrder}
@@ -140,7 +140,7 @@ function VisitationDatesAndStatus({
               styles.status,
               {
                 color:
-                  status === 'REJECTED' ? colors.white : colors.text.darker,
+                  status === "REJECTED" ? colors.white : colors.text.darker,
               },
             ]}
           >
@@ -152,18 +152,18 @@ function VisitationDatesAndStatus({
       <View style={styles.dateAndStatus}>
         <>
           <BText style={[styles.date, { fontSize: font.size.sm }]}>
-            {moment(bookingDate).format('hh:mm A')}
+            {moment(bookingDate).format("hh:mm A")}
           </BText>
           {renderCompBaseOnStatus()}
         </>
       </View>
-      {status === 'REJECTED' && (
+      {status === "REJECTED" && (
         <>
           <BSpacer size="medium" />
           <BText bold="600" sizeInNumber={font.size.md}>
             Alasan
           </BText>
-          <BText bold="400">{rejectNotes || '-'}</BText>
+          <BText bold="400">{rejectNotes || "-"}</BText>
         </>
       )}
     </View>
@@ -176,8 +176,8 @@ const styles = StyleSheet.create({
     marginRight: layout.pad.md,
   },
   dateAndStatus: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   date: {
     fontFamily: font.family.montserrat[500],

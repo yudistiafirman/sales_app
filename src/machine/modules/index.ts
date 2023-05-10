@@ -1,1 +1,1 @@
-export { deviceLocationMachine } from './deviceLocation.machine';
+export { deviceLocationMachine } from "./deviceLocation.machine";

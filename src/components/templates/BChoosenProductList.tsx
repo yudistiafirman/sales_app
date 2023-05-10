@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback } from "react";
 import {
   FlatList,
   View,
@@ -8,21 +8,21 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   ScrollView,
-} from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import BDivider from '@/components/atoms/BDivider';
-import BLabel from '@/components/atoms/BLabel';
-import BSpacer from '@/components/atoms/BSpacer';
-import BExpandableProductCard from '@/components/molecules/BExpandableProductCard';
-import { colors, fonts, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { Products } from '@/interfaces/CreatePurchaseOrder';
-import formatCurrency from '@/utils/formatCurrency';
-import BForm from '../organism/BForm';
-import { Input } from '@/interfaces';
-import { resScale } from '@/utils';
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import BDivider from "@/components/atoms/BDivider";
+import BLabel from "@/components/atoms/BLabel";
+import BSpacer from "@/components/atoms/BSpacer";
+import BExpandableProductCard from "@/components/molecules/BExpandableProductCard";
+import { colors, fonts, layout } from "@/constants";
+import font from "@/constants/fonts";
+import { Products } from "@/interfaces/CreatePurchaseOrder";
+import formatCurrency from "@/utils/formatCurrency";
+import BForm from "../organism/BForm";
+import { Input } from "@/interfaces";
+import { resScale } from "@/utils";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 type ChoosenProductListProps<ProductData> = {
   data?: ProductData[];
@@ -48,17 +48,19 @@ function ChoosenProductList<ProductData extends Products>({
       const checked = selectedProducts?.findIndex((val) => val.id === item.id);
       const inputsSelection: Input[] = [
         {
-          label: 'Volume',
+          label: "Volume",
           isRequire: true,
-          type: 'quantity',
+          type: "quantity",
           value: item?.quantity.toString(),
           onChange: (value: string) => onChangeQuantity(index, value),
         },
       ];
       const productName = `${item?.Product?.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`;
       const offeringPrice = item?.offeringPrice;
-      const quantity = item?.quantity.toString()[0] === '0' ? 0 : item?.quantity;
-      const totalPrice = item?.quantity && item?.offeringPrice ? offeringPrice * quantity : 0;
+      const quantity =
+        item?.quantity.toString()[0] === "0" ? 0 : item?.quantity;
+      const totalPrice =
+        item?.quantity && item?.offeringPrice ? offeringPrice * quantity : 0;
       return (
         <BExpandableProductCard
           key={index}
@@ -81,7 +83,7 @@ function ChoosenProductList<ProductData extends Products>({
       onChangeQuantity,
       onChecked,
       selectedProducts,
-    ],
+    ]
   );
 
   const renderItemSeparator = () => <BSpacer size="extraSmall" />;
@@ -92,7 +94,9 @@ function ChoosenProductList<ProductData extends Products>({
       <BSpacer size="extraSmall" />
       <BDivider borderBottomWidth={1} flex={0} height={0.1} />
       <BSpacer size="extraSmall" />
-      {data?.map((item: ProductData, index: number) => renderItem({ item, index }))}
+      {data?.map((item: ProductData, index: number) =>
+        renderItem({ item, index })
+      )}
       <BSpacer size="extraSmall" />
 
       {comboRadioBtnInput && (
@@ -102,9 +106,7 @@ function ChoosenProductList<ProductData extends Products>({
       <View style={styles.priceContainer}>
         <Text style={styles.productName}>Total</Text>
         <Text numberOfLines={1} style={styles.boldPrice}>
-          IDR
-          {' '}
-          {formatCurrency(calculatedTotalPrice)}
+          IDR {formatCurrency(calculatedTotalPrice)}
         </Text>
       </View>
     </ScrollView>
@@ -113,8 +115,8 @@ function ChoosenProductList<ProductData extends Products>({
 
 const styles = StyleSheet.create({
   priceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   productName: {
     fontFamily: fonts.family.montserrat[600],
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.lg,
     color: colors.text.darker,
     width: width - 100,
-    textAlign: 'right',
+    textAlign: "right",
   },
 });
 

@@ -6,14 +6,14 @@ import {
   NativeSyntheticEvent,
   TextInputChangeEventData,
   ScrollView,
-} from 'react-native';
-import React, { useEffect, useMemo, useState } from 'react';
-import Modal from 'react-native-modal';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { TextInput } from 'react-native-paper';
-import { Input, ProductDataInterface } from '@/interfaces';
-import { resScale } from '@/utils';
-import { colors, fonts, layout } from '@/constants';
+} from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import Modal from "react-native-modal";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { TextInput } from "react-native-paper";
+import { Input, ProductDataInterface } from "@/interfaces";
+import { resScale } from "@/utils";
+import { colors, fonts, layout } from "@/constants";
 import {
   BSpacer,
   BChip,
@@ -23,10 +23,10 @@ import {
   BText,
   BTextInput,
   BForm,
-} from '@/components';
-import formatCurrency from '@/utils/formatCurrency';
-import calcTrips from '@/utils/calcTrips';
-import { METHOD_LIST, PO_METHOD_LIST } from '@/constants/dropdown';
+} from "@/components";
+import formatCurrency from "@/utils/formatCurrency";
+import calcTrips from "@/utils/calcTrips";
+import { METHOD_LIST, PO_METHOD_LIST } from "@/constants/dropdown";
 
 type ProductCartModalType = {
   productData: ProductDataInterface;
@@ -62,13 +62,17 @@ export default function ProductCartModal({
   }, []);
 
   const [detailOrder, setDetailOrder] = useState({
-    volume: '',
-    sellPrice: '',
-    method: '',
+    volume: "",
+    sellPrice: "",
+    method: "",
   });
 
-  const calcPrice = useMemo(() => calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost, [detailOrder.volume]);
-  const totalPrice = +detailOrder.volume * +detailOrder.sellPrice + (calcPrice || 0);
+  const calcPrice = useMemo(
+    () => calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost,
+    [detailOrder.volume]
+  );
+  const totalPrice =
+    +detailOrder.volume * +detailOrder.sellPrice + (calcPrice || 0);
   const distanceCeil = distance ? Math.ceil(distance / 1000) : 0;
   function getAddPrice(): {
     delivery: distanceDeliverType;
@@ -83,14 +87,14 @@ export default function ProductCartModal({
       delivery: {} as distanceDeliverType,
     };
     for (const price of AdditionalPrices) {
-      if (price.type === 'DISTANCE') {
+      if (price.type === "DISTANCE") {
         if (distanceCeil >= price.min && distanceCeil <= price.max) {
           additionalData.distance.id = price.id;
           additionalData.distance.price = price.price;
         }
       }
 
-      if (price.type === 'TRANSPORT') {
+      if (price.type === "TRANSPORT") {
         if (+detailOrder.volume >= price.min) {
           additionalData.delivery.id = price.id;
           additionalData.delivery.price = price.price;
@@ -105,23 +109,23 @@ export default function ProductCartModal({
       ...curr,
       [key]: val
         .toString()
-        .split('')
+        .split("")
         .filter((char) => /^\d+$/.test(char))
-        .join(''),
+        .join(""),
     }));
   };
 
   const methodInput: Input[] = [
     {
-      label: 'Metode penuangan',
+      label: "Metode penuangan",
       isRequire: true,
-      type: 'dropdown',
+      type: "dropdown",
       value: detailOrder.method,
-      isError: detailOrder.method === '',
-      customerErrorMsg: 'Metode penuangan harus dipilih',
+      isError: detailOrder.method === "",
+      customerErrorMsg: "Metode penuangan harus dipilih",
       dropdown: {
         items: METHOD_LIST,
-        placeholder: 'Pilih metode penuangan',
+        placeholder: "Pilih metode penuangan",
         onChange: (value: any) => {
           setDetailOrder((prev) => ({ ...prev, method: value }));
         },
@@ -158,9 +162,7 @@ export default function ProductCartModal({
               {productData.Category?.Parent?.name}
             </BChip>
             <BChip backgroundColor={colors.chip.disabled}>
-              slump
-              {' '}
-              {productData?.properties?.slump}
+              slump {productData?.properties?.slump}
               ±12 cm
             </BChip>
           </View>
@@ -168,9 +170,7 @@ export default function ProductCartModal({
           <View style={style.priceContainer}>
             <Text style={style.hargaText}>Harga Dasar</Text>
             <Text style={style.hargaText}>
-              IDR
-              {' '}
-              {formatCurrency(productData?.Price?.price)}
+              IDR {formatCurrency(productData?.Price?.price)}
             </Text>
           </View>
           <BSpacer size="extraSmall" />
@@ -184,11 +184,7 @@ export default function ProductCartModal({
               size={resScale(20)}
               color="#000000"
             />
-            <Text style={style.distanceText}>
-              {distanceCeil}
-              {' '}
-              KM
-            </Text>
+            <Text style={style.distanceText}>{distanceCeil} KM</Text>
           </View>
           <BSpacer size="small" />
           <View>
@@ -203,9 +199,7 @@ export default function ProductCartModal({
               </Text>
             </View>
             <Text style={style.hargaJualPrice}>
-              IDR
-              {' '}
-              {formatCurrency(productData.calcPrice)}
+              IDR {formatCurrency(productData.calcPrice)}
             </Text>
           </View>
         </View>
@@ -216,19 +210,19 @@ export default function ProductCartModal({
               <Text style={style.inputLabel}>Volume</Text>
               <BTextInput
                 onChange={(
-                  event: NativeSyntheticEvent<TextInputChangeEventData>,
+                  event: NativeSyntheticEvent<TextInputChangeEventData>
                 ) => {
-                  onChange('volume')(event.nativeEvent.text);
+                  onChange("volume")(event.nativeEvent.text);
                 }}
                 value={detailOrder.volume}
                 keyboardType="numeric"
                 returnKeyType="next"
-                right={(
+                right={
                   <TextInput.Icon
                     forceTextInputFocus={false}
-                    icon={() => TextIcon('m³')}
+                    icon={() => TextIcon("m³")}
                   />
-                )}
+                }
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
               />
@@ -243,24 +237,24 @@ export default function ProductCartModal({
               <Text style={style.inputLabel}>Harga Jual</Text>
               <BTextInput
                 onChange={(
-                  event: NativeSyntheticEvent<TextInputChangeEventData>,
+                  event: NativeSyntheticEvent<TextInputChangeEventData>
                 ) => {
-                  onChange('sellPrice')(event.nativeEvent.text);
+                  onChange("sellPrice")(event.nativeEvent.text);
                 }}
                 value={detailOrder.sellPrice}
                 keyboardType="numeric"
-                left={(
+                left={
                   <TextInput.Icon
                     forceTextInputFocus={false}
-                    icon={() => TextIcon('IDR')}
+                    icon={() => TextIcon("IDR")}
                   />
-                )}
-                right={(
+                }
+                right={
                   <TextInput.Icon
                     forceTextInputFocus={false}
-                    icon={() => TextIcon('/m³')}
+                    icon={() => TextIcon("/m³")}
                   />
-                )}
+                }
                 placeholder="0"
                 placeholderTextColor={colors.textInput.placeHolder}
               />
@@ -279,9 +273,7 @@ export default function ProductCartModal({
           <View style={style.priceContainer}>
             <Text style={style.hargaText}>Biaya Mobilisasi</Text>
             <Text style={style.hargaText}>
-              IDR
-              {' '}
-              {calcPrice ? formatCurrency(calcPrice) : '0'}
+              IDR {calcPrice ? formatCurrency(calcPrice) : "0"}
             </Text>
           </View>
           {/* <BSpacer size="extraSmall" />
@@ -292,9 +284,7 @@ export default function ProductCartModal({
           <View style={style.priceContainer}>
             <Text style={style.productName}>Total Harga</Text>
             <Text style={style.boldPrice}>
-              IDR
-              {' '}
-              {formatCurrency(totalPrice)}
+              IDR {formatCurrency(totalPrice)}
             </Text>
           </View>
           <BSpacer size="large" />
@@ -321,7 +311,7 @@ export default function ProductCartModal({
                   additionalData: getAddPrice(),
                 };
                 const existingDataIndex = currentValue.findIndex(
-                  (data) => data.product.id === productData.id,
+                  (data) => data.product.id === productData.id
                 );
                 if (existingDataIndex !== -1) {
                   currentValue.splice(existingDataIndex, 1, newData);
@@ -343,17 +333,17 @@ export default function ProductCartModal({
 }
 
 const style = StyleSheet.create({
-  modal: { justifyContent: 'flex-end', margin: 0 },
+  modal: { justifyContent: "flex-end", margin: 0 },
   modalContent: {
-    backgroundColor: 'white',
-    height: '95%',
+    backgroundColor: "white",
+    height: "95%",
     borderTopLeftRadius: layout.radius.lg,
     borderTopRightRadius: layout.radius.lg,
   },
   modalHeader: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
     padding: layout.pad.ml,
   },
   headerText: {
@@ -373,7 +363,7 @@ const style = StyleSheet.create({
     color: colors.text.darker,
   },
   chipContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   hargaText: {
     fontFamily: fonts.family.montserrat[400],
@@ -387,8 +377,8 @@ const style = StyleSheet.create({
     marginLeft: layout.pad.md,
   },
   priceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   outerInputContainer: {
     paddingHorizontal: layout.mainPad,
@@ -415,7 +405,7 @@ const style = StyleSheet.create({
     paddingVertical: layout.pad.md,
   },
   inputContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   textIcon: {
     fontFamily: fonts.family.montserrat[400],
@@ -433,9 +423,9 @@ const style = StyleSheet.create({
     color: colors.text.darker,
   },
   volumeContainer: {
-    width: '45%',
+    width: "45%",
   },
   sellPriceContainer: {
-    width: '50%',
+    width: "50%",
   },
 });

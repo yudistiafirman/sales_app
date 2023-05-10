@@ -4,23 +4,21 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
-import React, { useContext, useMemo, useState } from 'react';
-import Modal from 'react-native-modal';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import LinearGradient from 'react-native-linear-gradient';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  BContainer, BForm, BSpacer, BButtonPrimary,
-} from '@/components';
-import { resScale } from '@/utils';
-import { colors, fonts, layout } from '@/constants';
-import { SphContext } from './context/SphContext';
-import { Input, PIC } from '@/interfaces';
+} from "react-native";
+import React, { useContext, useMemo, useState } from "react";
+import Modal from "react-native-modal";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import LinearGradient from "react-native-linear-gradient";
+import { useDispatch, useSelector } from "react-redux";
+import { BContainer, BForm, BSpacer, BButtonPrimary } from "@/components";
+import { resScale } from "@/utils";
+import { colors, fonts, layout } from "@/constants";
+import { SphContext } from "./context/SphContext";
+import { Input, PIC } from "@/interfaces";
 
-import { updateSelectedCompany } from '@/redux/reducers/SphReducer';
-import { RootState } from '@/redux/store';
+import { updateSelectedCompany } from "@/redux/reducers/SphReducer";
+import { RootState } from "@/redux/store";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -33,25 +31,25 @@ type dummyType = {
 };
 const dummyData: dummyType[] = [
   {
-    id: 'kwos0299',
-    name: 'Agus',
-    position: 'Finance',
+    id: "kwos0299",
+    name: "Agus",
+    position: "Finance",
     phone: 81128869884,
-    email: 'agus@gmail.com',
+    email: "agus@gmail.com",
   },
   {
-    id: '1233okjs',
-    name: 'Joko',
-    position: 'Finance',
+    id: "1233okjs",
+    name: "Joko",
+    position: "Finance",
     phone: 81128869884,
-    email: 'Joko@gmail.com',
+    email: "Joko@gmail.com",
   },
   {
-    id: 'jsncijc828',
-    name: 'Johny',
-    position: 'Finance',
+    id: "jsncijc828",
+    name: "Johny",
+    position: "Finance",
     phone: 81128869884,
-    email: 'Johny@gmail.com',
+    email: "Johny@gmail.com",
   },
 ];
 function dummyReq() {
@@ -72,8 +70,8 @@ type ChoosePicModalType = {
 export default function ChoosePicModal({
   isModalVisible,
   setIsModalVisible,
-  openAddPic = () => { },
-  selectPic = () => { },
+  openAddPic = () => {},
+  selectPic = () => {},
 }: ChoosePicModalType) {
   const [isLoading, setIsLoading] = useState(false);
   const [, stateUpdate] = useContext(SphContext);
@@ -81,7 +79,7 @@ export default function ChoosePicModal({
   const dispatch = useDispatch();
 
   const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
-    undefined,
+    undefined
   );
   function selectedPicData() {
     if (sphData.selectedCompany?.Pics.length) {
@@ -94,34 +92,39 @@ export default function ChoosePicModal({
     }
   }
 
-  const inputsData: Input[] = useMemo(() => [
-    {
-      label: 'PIC',
-      isRequire: true,
-      isError: false,
-      type: 'PIC',
-      value: sphData.selectedCompany?.Pics ? sphData.selectedCompany.Pics : [],
-      hidePicLabel: true,
-      onSelect: (index: number) => {
-        const listPic = [];
-        sphData?.selectedCompany?.Pics?.forEach((pic, picIndex) => {
-          const picChanged = { ...pic };
-          if (index === picIndex) {
-            picChanged.isSelected = true;
-          } else {
-            picChanged.isSelected = false;
-          }
-          listPic.push(picChanged);
-        });
-        dispatch(
-          updateSelectedCompany({
-            ...sphData.selectedCompany,
-            Pics: listPic,
-          }),
-        );
+  const inputsData: Input[] = useMemo(
+    () => [
+      {
+        label: "PIC",
+        isRequire: true,
+        isError: false,
+        type: "PIC",
+        value: sphData.selectedCompany?.Pics
+          ? sphData.selectedCompany.Pics
+          : [],
+        hidePicLabel: true,
+        onSelect: (index: number) => {
+          const listPic = [];
+          sphData?.selectedCompany?.Pics?.forEach((pic, picIndex) => {
+            const picChanged = { ...pic };
+            if (index === picIndex) {
+              picChanged.isSelected = true;
+            } else {
+              picChanged.isSelected = false;
+            }
+            listPic.push(picChanged);
+          });
+          dispatch(
+            updateSelectedCompany({
+              ...sphData.selectedCompany,
+              Pics: listPic,
+            })
+          );
+        },
       },
-    },
-  ], [sphData.selectedCompany]);
+    ],
+    [sphData.selectedCompany]
+  );
 
   return (
     <Modal
@@ -129,7 +132,7 @@ export default function ChoosePicModal({
       backdropOpacity={0.3}
       isVisible={isModalVisible}
       onBackButtonPress={() => {
-			  setIsModalVisible((curr) => !curr);
+        setIsModalVisible((curr) => !curr);
       }}
       style={style.modal}
       scrollOffset={scrollOffSet}
@@ -161,24 +164,24 @@ export default function ChoosePicModal({
                 <BSpacer size="extraSmall" />
                 <ScrollView
                   onScroll={(event) => {
-									  setScrollOffSet(event.nativeEvent.contentOffset.y);
+                    setScrollOffSet(event.nativeEvent.contentOffset.y);
                   }}
                 >
                   {!isLoading && <BForm titleBold="500" inputs={inputsData} />}
                   {isLoading && (
-                  <View>
-                    <BSpacer size="extraSmall" />
-                    <ShimmerPlaceHolder style={style.loadingShimmer} />
-                    <BSpacer size="extraSmall" />
-                    <ShimmerPlaceHolder style={style.loadingShimmer} />
-                  </View>
+                    <View>
+                      <BSpacer size="extraSmall" />
+                      <ShimmerPlaceHolder style={style.loadingShimmer} />
+                      <BSpacer size="extraSmall" />
+                      <ShimmerPlaceHolder style={style.loadingShimmer} />
+                    </View>
                   )}
                 </ScrollView>
               </View>
               <BButtonPrimary
                 title="Pilih"
                 onPress={() => {
-								  selectPic(selectedPicData());
+                  selectPic(selectedPicData());
                 }}
               />
             </View>
@@ -190,21 +193,21 @@ export default function ChoosePicModal({
 }
 
 const style = StyleSheet.create({
-  modal: { justifyContent: 'flex-end', margin: 0 },
+  modal: { justifyContent: "flex-end", margin: 0 },
   container: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     height: resScale(300),
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     height: resScale(350),
     borderTopLeftRadius: layout.radius.lg,
     borderTopRightRadius: layout.radius.lg,
   },
   modalHeader: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
   },
   headerText: {
     color: colors.text.darker,
@@ -212,9 +215,9 @@ const style = StyleSheet.create({
     fontSize: fonts.size.lg,
   },
   tambahPicContainer: {
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: "flex-end",
+    flexDirection: "row",
+    alignItems: "center",
   },
   tambahPicText: {
     color: colors.primary,

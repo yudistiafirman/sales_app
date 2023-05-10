@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { View, DeviceEventEmitter, BackHandler } from 'react-native';
+import * as React from "react";
+import { View, DeviceEventEmitter, BackHandler } from "react-native";
 import {
   StackActions,
   useFocusEffect,
   useNavigation,
-} from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-import moment from 'moment';
+} from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import moment from "moment";
 import {
   BBackContinueBtn,
   BContainer,
@@ -14,33 +14,33 @@ import {
   BSpacer,
   PopUpQuestion,
   BStepperIndicator,
-} from '@/components';
-import { Styles } from '@/interfaces';
-import { useKeyboardActive } from '@/hooks';
-import { resScale } from '@/utils';
+} from "@/components";
+import { Styles } from "@/interfaces";
+import { useKeyboardActive } from "@/hooks";
+import { resScale } from "@/utils";
 import {
   CreateScheduleSecondStep,
   CreateScheduleState,
-} from '@/interfaces/CreateSchedule';
+} from "@/interfaces/CreateSchedule";
 import {
   CreateScheduleContext,
   CreateScheduleProvider,
-} from '@/context/CreateScheduleContext';
-import SecondStep from './element/SecondStep';
-import FirstStep from './element/FirstStep';
-import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import { resetImageURLS } from '@/redux/reducers/cameraReducer';
-import { CREATE_SCHEDULE } from '@/navigation/ScreenNames';
-import { CreateSchedule } from '@/models/CreateSchedule';
-import { openPopUp } from '@/redux/reducers/modalReducer';
-import { postOrderSchedule } from '@/redux/async-thunks/orderThunks';
-import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
+} from "@/context/CreateScheduleContext";
+import SecondStep from "./element/SecondStep";
+import FirstStep from "./element/FirstStep";
+import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
+import { resetImageURLS } from "@/redux/reducers/cameraReducer";
+import { CREATE_SCHEDULE } from "@/navigation/ScreenNames";
+import { CreateSchedule } from "@/models/CreateSchedule";
+import { openPopUp } from "@/redux/reducers/modalReducer";
+import { postOrderSchedule } from "@/redux/async-thunks/orderThunks";
+import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 
-const labels = ['Cari PT / Proyek', 'Detil Pengiriman'];
+const labels = ["Cari PT / Proyek", "Detil Pengiriman"];
 
 function stepHandler(
   state: CreateScheduleState,
-  setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void,
+  setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
 ) {
   const { stepOne, stepTwo } = state;
 
@@ -50,12 +50,12 @@ function stepHandler(
     setStepsDone((curr) => curr.filter((num) => num !== 0));
   }
   if (
-    stepTwo?.deliveryDate
-    && stepTwo?.deliveryTime
+    stepTwo?.deliveryDate &&
+    stepTwo?.deliveryTime &&
     // stepTwo?.method &&
-    && stepTwo?.inputtedVolume
-    && stepTwo?.salesOrder
-    && getTotalProduct(stepTwo) <= stepTwo?.availableDeposit
+    stepTwo?.inputtedVolume &&
+    stepTwo?.salesOrder &&
+    getTotalProduct(stepTwo) <= stepTwo?.availableDeposit
   ) {
     setStepsDone((curr) => [...new Set(curr), 1]);
   } else {
@@ -64,8 +64,9 @@ function stepHandler(
 }
 
 const getTotalProduct = (stepTwo: CreateScheduleSecondStep): number => {
-  const total = stepTwo?.inputtedVolume
-    * stepTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
+  const total =
+    stepTwo?.inputtedVolume *
+    stepTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
   return total;
 };
 
@@ -90,8 +91,8 @@ function CreateScheduleScreen() {
   useHeaderTitleChanged({
     title:
       values.isSearchingPurchaseOrder === true
-        ? 'Cari PT / Proyek'
-        : 'Buat Jadwal',
+        ? "Cari PT / Proyek"
+        : "Buat Jadwal",
   });
 
   useFocusEffect(
@@ -101,8 +102,8 @@ function CreateScheduleScreen() {
         return true;
       };
       const backHandler = BackHandler.addEventListener(
-        'hardwareBackPress',
-        backAction,
+        "hardwareBackPress",
+        backAction
       );
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,7 +111,7 @@ function CreateScheduleScreen() {
       values.step,
       values.stepOne?.companyName,
       values.isSearchingPurchaseOrder,
-    ]),
+    ])
   );
 
   React.useEffect(
@@ -118,7 +119,7 @@ function CreateScheduleScreen() {
       dispatch(resetImageURLS({ source: CREATE_SCHEDULE }));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    []
   );
 
   React.useEffect(() => {
@@ -126,9 +127,9 @@ function CreateScheduleScreen() {
 
     if (!values.stepTwo?.deliveryTime) {
       action.updateValueOnstep(
-        'stepTwo',
-        'deliveryTime',
-        moment(new Date()).format('HH:mm'),
+        "stepTwo",
+        "deliveryTime",
+        moment(new Date()).format("HH:mm")
       );
     }
   }, [values]);
@@ -136,16 +137,16 @@ function CreateScheduleScreen() {
   const next = (nextStep: number) => async () => {
     const totalStep = stepRender.length;
     if (nextStep < totalStep && nextStep >= 0) {
-      action.updateValue('step', nextStep);
+      action.updateValue("step", nextStep);
     } else {
       try {
         dispatch(
           openPopUp({
-            popUpType: 'loading',
-            popUpText: 'Membuat Jadwal',
-            highlightedText: 'schedule',
+            popUpType: "loading",
+            popUpText: "Membuat Jadwal",
+            highlightedText: "schedule",
             outsideClickClosePopUp: false,
-          }),
+          })
         );
         const payload: CreateSchedule = {
           saleOrderId: values.stepTwo?.salesOrder?.id,
@@ -156,7 +157,7 @@ function CreateScheduleScreen() {
           quantity: values.stepTwo?.inputtedVolume, // volume inputted
           date: moment(
             `${values.stepTwo?.deliveryDate} ${values.stepTwo?.deliveryTime}`,
-            'DD/MM/yyyy HH:mm',
+            "DD/MM/yyyy HH:mm"
           ).valueOf(), // date + time
           withPump: values.stepTwo?.method,
           consecutive:
@@ -167,27 +168,27 @@ function CreateScheduleScreen() {
             values.stepTwo?.hasTechnicalRequest !== undefined
               ? values.stepTwo?.hasTechnicalRequest
               : false,
-          status: 'SUBMITTED',
+          status: "SUBMITTED",
         };
         await dispatch(postOrderSchedule({ payload })).unwrap();
         navigation.dispatch(StackActions.popToTop());
         dispatch(
           openPopUp({
-            popUpType: 'success',
-            popUpText: 'Pembuatan Jadwal\nBerhasil',
-            highlightedText: 'schedule',
+            popUpType: "success",
+            popUpText: "Pembuatan Jadwal\nBerhasil",
+            highlightedText: "schedule",
             outsideClickClosePopUp: true,
-          }),
+          })
         );
       } catch (error) {
-        const message = error.message || 'Pembuatan Jadwal Gagal';
+        const message = error.message || "Pembuatan Jadwal Gagal";
         dispatch(
           openPopUp({
-            popUpType: 'error',
+            popUpType: "error",
             popUpText: message,
-            highlightedText: 'error',
+            highlightedText: "error",
             outsideClickClosePopUp: true,
-          }),
+          })
         );
       }
     }
@@ -195,7 +196,7 @@ function CreateScheduleScreen() {
 
   const actionBackButton = (directlyClose = false) => {
     if (values.isSearchingPurchaseOrder === true) {
-      action.updateValue('isSearchingPurchaseOrder', false);
+      action.updateValue("isSearchingPurchaseOrder", false);
     } else if (values.step > 0 && !directlyClose) {
       next(values.step - 1)();
     } else if (values.stepOne?.companyName) setPopupVisible(true);
@@ -225,10 +226,10 @@ function CreateScheduleScreen() {
             <BBackContinueBtn
               onPressContinue={() => {
                 next(values.step + 1)();
-                DeviceEventEmitter.emit('CreateSchedule.continueButton', true);
+                DeviceEventEmitter.emit("CreateSchedule.continueButton", true);
               }}
               onPressBack={() => actionBackButton(false)}
-              continueText={values.step > 0 ? 'Buat Jadwal' : 'Lanjut'}
+              continueText={values.step > 0 ? "Buat Jadwal" : "Lanjut"}
               unrenderBack={!(values.step > 0)}
               disableContinue={!stepsDone.includes(values.step)}
               isContinueIcon={values.step < 1}
@@ -256,7 +257,7 @@ function CreateScheduleScreen() {
 
 const styles: Styles = {
   container: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     flex: 1,
   },
 };

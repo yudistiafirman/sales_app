@@ -1,9 +1,10 @@
-import { Platform } from 'react-native';
-import Config from 'react-native-config';
+import { Platform } from "react-native";
+import Config from "react-native-config";
 
-const API_URL = Platform.OS === 'android'
-  ? Config.API_URL_COMMON
-  : __DEV__
+const API_URL =
+  Platform.OS === "android"
+    ? Config.API_URL_COMMON
+    : __DEV__
     ? Config.API_URL_COMMON
     : Config.API_URL_COMMON_PROD;
 
@@ -11,18 +12,18 @@ export default class BrikApiCommon {
   static getLocationCoordinates = (
     longitude: number,
     latitude: number,
-    distance = 'BP-LEGOK',
+    distance = "BP-LEGOK"
   ) => {
     const url = new URL(`${API_URL}/common/map/coordinates`);
     const params = url.searchParams;
     if (longitude) {
-      params.append('lon', `${longitude}`);
+      params.append("lon", `${longitude}`);
     }
     if (latitude) {
-      params.append('lat', `${latitude}`);
+      params.append("lat", `${latitude}`);
     }
     if (distance) {
-      params.append('distance', distance);
+      params.append("distance", distance);
     }
     return url.toString();
   };
@@ -31,7 +32,7 @@ export default class BrikApiCommon {
     const url = new URL(`${API_URL}/common/map/places`);
     const params = url.searchParams;
     if (searchValue) {
-      params.append('search', searchValue);
+      params.append("search", searchValue);
     }
     return url.toString();
   };
@@ -51,7 +52,7 @@ export default class BrikApiCommon {
     const params = url.searchParams;
 
     if (search) {
-      params.append('search', search);
+      params.append("search", search);
     }
 
     return url.toString();
@@ -62,7 +63,7 @@ export default class BrikApiCommon {
     const params = url.searchParams;
 
     if (search) {
-      params.append('search', search);
+      params.append("search", search);
     }
 
     return url.toString();
@@ -83,13 +84,13 @@ export default class BrikApiCommon {
     const url = new URL(`${API_URL}/common/m/flow/address/suggestion`);
     const params = url.searchParams;
     if (search) {
-      params.append('search', search);
+      params.append("search", search);
     }
     if (page) {
-      params.append('page', `${page}`);
+      params.append("page", `${page}`);
     }
     // if (search) {
-    params.append('size', '10');
+    params.append("size", "10");
     // }
 
     return url.toString();
@@ -105,7 +106,7 @@ export default class BrikApiCommon {
     const url = new URL(`${API_URL}/common/m/flow/project`);
     const params = url.searchParams;
     if (companyId) {
-      params.append('companyId', companyId);
+      params.append("companyId", companyId);
     }
 
     return url.toString();
@@ -113,21 +114,21 @@ export default class BrikApiCommon {
 
   static getProjectDetailIndividual = (projectId: string) => {
     const url = new URL(
-      `${API_URL}/common/m/flow/project/${projectId}/individual`,
+      `${API_URL}/common/m/flow/project/${projectId}/individual`
     );
     return url.toString();
   };
 
   static updateBillingAddress = (projectId: string) => {
     const url = new URL(
-      `${API_URL}/common/m/flow/project/${projectId}/billing-address`,
+      `${API_URL}/common/m/flow/project/${projectId}/billing-address`
     );
     return url.toString();
   };
 
   static updateLocationAddress = (projectId: string) => {
     const url = new URL(
-      `${API_URL}/common/m/flow/project/${projectId}/location-address`,
+      `${API_URL}/common/m/flow/project/${projectId}/location-address`
     );
     return url.toString();
   };

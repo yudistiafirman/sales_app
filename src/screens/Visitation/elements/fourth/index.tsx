@@ -1,15 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { RootState } from '@/redux/store';
-import { CREATE_VISITATION } from '@/navigation/ScreenNames';
-import { BForm, BSpacer } from '@/components';
-import { Competitor, Input } from '@/interfaces';
-import BSheetAddCompetitor from '@/components/templates/BottomSheetAddCompetitor';
-import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
-import { colors, fonts, layout } from '@/constants';
-import { resScale } from '@/utils';
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { RootState } from "@/redux/store";
+import { CREATE_VISITATION } from "@/navigation/ScreenNames";
+import { BForm, BSpacer } from "@/components";
+import { Competitor, Input } from "@/interfaces";
+import BSheetAddCompetitor from "@/components/templates/BottomSheetAddCompetitor";
+import { updateDataVisitation } from "@/redux/reducers/VisitationReducer";
+import { colors, fonts, layout } from "@/constants";
+import { resScale } from "@/utils";
 
 export type selectedDateType = {
   date: string;
@@ -22,18 +22,21 @@ function Fourth() {
   const visitationData = useSelector((state: RootState) => state.visitation);
   const [isCompetitorVisible, setIsCompetitorVisible] = useState(false);
 
-  const inputsData: Input[] = useMemo(() => [
-    {
-      label: 'Kompetitor',
-      isRequire: true,
-      isError: false,
-      type: 'PIC',
-      value: visitationData?.competitors ? visitationData.competitors : [],
-      onChange: () => {
-        setIsCompetitorVisible(!isCompetitorVisible);
+  const inputsData: Input[] = useMemo(
+    () => [
+      {
+        label: "Kompetitor",
+        isRequire: true,
+        isError: false,
+        type: "PIC",
+        value: visitationData?.competitors ? visitationData.competitors : [],
+        onChange: () => {
+          setIsCompetitorVisible(!isCompetitorVisible);
+        },
       },
-    },
-  ], [visitationData?.competitors]);
+    ],
+    [visitationData?.competitors]
+  );
 
   useEffect(() => {
     crashlytics().log(`${CREATE_VISITATION}-Step4`);
@@ -57,9 +60,9 @@ function Fourth() {
           currentList.push(comp);
           dispatch(
             updateDataVisitation({
-              type: 'competitors',
+              type: "competitors",
               value: currentList,
-            }),
+            })
           );
         }}
       />
@@ -68,7 +71,7 @@ function Fourth() {
 }
 
 const style = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'space-between' },
+  container: { flex: 1, justifyContent: "space-between" },
   gantiText: {
     marginRight: 10,
     color: colors.primary,

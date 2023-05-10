@@ -1,14 +1,14 @@
-import React, { useCallback, useState } from 'react';
-import { View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import debounce from 'lodash.debounce';
-import { BCommonSearchList } from '@/components';
-import { AppointmentActionType } from '@/context/AppointmentContext';
-import { useAppointmentData } from '@/hooks';
-import { selectedCompanyInterface } from '@/interfaces/index';
-import { getAllProject } from '@/redux/async-thunks/commonThunks';
-import { retrying } from '@/redux/reducers/commonReducer';
-import { AppDispatch, RootState } from '@/redux/store';
+import React, { useCallback, useState } from "react";
+import { View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import debounce from "lodash.debounce";
+import { BCommonSearchList } from "@/components";
+import { AppointmentActionType } from "@/context/AppointmentContext";
+import { useAppointmentData } from "@/hooks";
+import { selectedCompanyInterface } from "@/interfaces/index";
+import { getAllProject } from "@/redux/async-thunks/commonThunks";
+import { retrying } from "@/redux/reducers/commonReducer";
+import { AppDispatch, RootState } from "@/redux/store";
 
 function SearchingCustomer() {
   const [values, dispatchValue] = useAppointmentData();
@@ -25,11 +25,15 @@ function SearchingCustomer() {
     (text: string) => {
       dispatch(getAllProject({ search: text }));
     },
-    [dispatch],
+    [dispatch]
   );
-  const onChangeWithDebounce = React.useMemo(() => debounce((text: string) => {
-    searchDispatch(text);
-  }, 500), [searchDispatch]);
+  const onChangeWithDebounce = React.useMemo(
+    () =>
+      debounce((text: string) => {
+        searchDispatch(text);
+      }, 500),
+    [searchDispatch]
+  );
 
   const onChangeSearch = (text: string) => {
     dispatchValue({ type: AppointmentActionType.SEARCH_QUERY, value: text });
@@ -39,7 +43,7 @@ function SearchingCustomer() {
   const onPressCard = useCallback(
     (item: selectedCompanyInterface) => {
       try {
-        const customerType = item.Company.id ? 'company' : 'individu';
+        const customerType = item.Company.id ? "company" : "individu";
         if (values.stepOne.options.items) {
           dispatchValue({
             type: AppointmentActionType.ADD_COMPANIES,
@@ -75,20 +79,23 @@ function SearchingCustomer() {
           value: companyDataToSave,
         });
       } catch (error) {
-        console.log(error, 'errorappointment onPressCard');
+        console.log(error, "errorappointment onPressCard");
       }
     },
-    [dispatchValue, values.stepOne.options.items],
+    [dispatchValue, values.stepOne.options.items]
   );
 
-  const routes: { title: string; totalItems: number }[] = React.useMemo(() => [
-    {
-      key: 'first',
-      title: 'Proyek',
-      totalItems: projects.length,
-      chipPosition: 'right',
-    },
-  ], [projects]);
+  const routes: { title: string; totalItems: number }[] = React.useMemo(
+    () => [
+      {
+        key: "first",
+        title: "Proyek",
+        totalItems: projects.length,
+        chipPosition: "right",
+      },
+    ],
+    [projects]
+  );
 
   const onRetryGettingProjects = () => {
     dispatch(retrying());
@@ -98,7 +105,7 @@ function SearchingCustomer() {
   const onClearValue = () => {
     dispatchValue({
       type: AppointmentActionType.SEARCH_QUERY,
-      value: '',
+      value: "",
     });
   };
 
@@ -108,7 +115,7 @@ function SearchingCustomer() {
         searchQuery={searchQuery}
         onChangeText={onChangeSearch}
         onClearValue={() => {
-          if (searchQuery && searchQuery.trim() !== '') {
+          if (searchQuery && searchQuery.trim() !== "") {
             onClearValue();
           } else {
             dispatchValue({

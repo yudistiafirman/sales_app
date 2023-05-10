@@ -5,34 +5,34 @@ import {
   KeyboardType,
   KeyboardTypeOptions,
   NativeSyntheticEvent,
-} from 'react-native';
+} from "react-native";
 
-import * as React from 'react';
-import { Details } from 'react-native-maps';
-import { DateData } from 'react-native-calendars';
+import * as React from "react";
+import { Details } from "react-native-maps";
+import { DateData } from "react-native-calendars";
 
 interface Input {
   label?: string;
   isRequire: boolean;
   type:
-  | 'quantity'
-  | 'price'
-  | 'textInput'
-  | 'cardOption'
-  | 'comboDropdown'
-  | 'area'
-  | 'dropdown'
-  | 'PIC'
-  | 'autocomplete'
-  | 'checkbox'
-  | 'switch'
-  | 'fileInput'
-  | 'map'
-  | 'autocomplete'
-  | 'calendar'
-  | 'calendar-time'
-  | 'comboRadioButton'
-  | 'tableInput';
+    | "quantity"
+    | "price"
+    | "textInput"
+    | "cardOption"
+    | "comboDropdown"
+    | "area"
+    | "dropdown"
+    | "PIC"
+    | "autocomplete"
+    | "checkbox"
+    | "switch"
+    | "fileInput"
+    | "map"
+    | "autocomplete"
+    | "calendar"
+    | "calendar-time"
+    | "comboRadioButton"
+    | "tableInput";
   hidePicLabel?: boolean;
   onChange?: (e: any) => void;
   onFocus?: (e: any) => void;
@@ -85,9 +85,9 @@ interface Input {
       value: string | number | any;
     }[];
     onChange:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
     placeholder: string;
   };
   comboDropdown?: {
@@ -100,13 +100,13 @@ interface Input {
       value: string | number | any;
     }[];
     onChangeOne:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
     onChangeTwo:
-    | ((value: any) => void)
-    | ((value: any[] | null) => void)
-    | undefined;
+      | ((value: any) => void)
+      | ((value: any[] | null) => void)
+      | undefined;
     placeholderOne: string;
     placeholderTwo: string;
     isErrorOne?: boolean;
@@ -136,10 +136,10 @@ interface Input {
 interface IComboRadioBtn {
   firstValue?: string;
   firstText?: string;
-  firstStatus?: 'checked' | 'unchecked';
+  firstStatus?: "checked" | "unchecked";
   secondValue?: string;
   secondText?: string;
-  secondStatus?: 'checked' | 'unchecked';
+  secondStatus?: "checked" | "unchecked";
   firstChildren?: React.ReactNode;
   secondChildren?: React.ReactNode;
   onSetComboRadioButtonValue?: (value: string) => void;
@@ -170,18 +170,18 @@ interface ITableInput {
 
 interface TitleBold {
   titleBold?:
-  | 'bold'
-  | '400'
-  | 'normal'
-  | '100'
-  | '200'
-  | '300'
-  | '500'
-  | '600'
-  | '700'
-  | '800'
-  | '900'
-  | undefined;
+    | "bold"
+    | "400"
+    | "normal"
+    | "100"
+    | "200"
+    | "300"
+    | "500"
+    | "600"
+    | "700"
+    | "800"
+    | "900"
+    | undefined;
 }
 
 interface Styles {
@@ -215,7 +215,7 @@ interface CreateVisitationFirstStep {
 }
 interface CreateVisitationSecondStep {
   companyName: string;
-  customerType?: 'INDIVIDU' | 'COMPANY';
+  customerType?: "INDIVIDU" | "COMPANY";
   projectName: string;
   projectId?: string;
   location: { [key: string]: any };
@@ -228,20 +228,20 @@ interface CreateVisitationSecondStep {
   existingOrderNum?: number;
 }
 interface CreateVisitationThirdStep {
-  stageProject?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
+  stageProject?: "LAND_PREP" | "FOUNDATION" | "FORMWORK" | "FINISHING";
   products: any[];
   estimationDate: {
     estimationWeek: number | null;
     estimationMonth: number | null;
   };
-  paymentType?: 'CBD' | 'CREDIT';
+  paymentType?: "CBD" | "CREDIT";
   notes: string;
 }
 
 interface CreateVisitationFifthStep {
   selectedDate: any;
   images: any[];
-  kategoriAlasan?: 'FINISHED' | 'MOU_COMPETITOR';
+  kategoriAlasan?: "FINISHED" | "MOU_COMPETITOR";
   alasanPenolakan: string;
 }
 
@@ -303,14 +303,14 @@ interface BLocationProps {
   mapStyle?: ViewStyle | undefined;
   region?: Region & LatLang;
   onRegionChangeComplete?:
-  | ((region: Region & LatLang, details: Details) => void)
-  | undefined;
+    | ((region: Region & LatLang, details: Details) => void)
+    | undefined;
   onRegionChange?:
-  | ((region: Region & LatLang, details: Details) => void)
-  | undefined;
+    | ((region: Region & LatLang, details: Details) => void)
+    | undefined;
   onMapReady?:
-  | ((event?: NativeSyntheticEvent<{}> | undefined) => void)
-  | undefined;
+    | ((event?: NativeSyntheticEvent<{}> | undefined) => void)
+    | undefined;
   CustomMarker?: React.ReactNode | undefined;
   isUninteractable?: boolean;
   formattedAddress?: string;
@@ -320,14 +320,14 @@ interface selectedCompanyInterface {
   id: string;
   name: string;
   Company:
-  | {
-    id: string | null;
-    name: string | null;
-  }
-  | {
-    id: string | null;
-    title: string | null;
-  };
+    | {
+        id: string | null;
+        name: string | null;
+      }
+    | {
+        id: string | null;
+        title: string | null;
+      };
   Pics: PIC[];
   Visitation: {
     finish_date: string | null;
@@ -391,7 +391,7 @@ interface SphStateInterface {
   isBillingAddressSame: boolean;
   billingAddress: billingAddressType;
   distanceFromLegok: number | null;
-  paymentType: 'CBD' | 'CREDIT' | '';
+  paymentType: "CBD" | "CREDIT" | "";
   paymentRequiredDocuments: { [key: string]: any };
   paymentDocumentsFullfilled: boolean;
   paymentBankGuarantee: boolean;
@@ -413,7 +413,7 @@ type SphContextInterface = [
   SphStateInterface,
   (key: keyof SphStateInterface) => (data: any) => void,
   (index: number) => void,
-  number,
+  number
 ];
 
 interface AdditionalPricesInterface {
@@ -465,15 +465,15 @@ interface visitationListResponse {
   finishDate: string | null;
   isBooking: boolean;
   paymentType: string;
-  status: 'VISIT' | 'SPH' | 'PO' | 'SCHEDULING' | 'DO' | 'REJECTED';
+  status: "VISIT" | "SPH" | "PO" | "SCHEDULING" | "DO" | "REJECTED";
   address: {
     id: string;
   };
   project: {
     id: string;
     name: string;
-    stage: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
-    type: 'INFRASTRUKTUR' | 'HIGH-RISE' | 'RUMAH' | 'KOMERSIAL' | 'INDUSTRIAL';
+    stage: "LAND_PREP" | "FOUNDATION" | "FORMWORK" | "FINISHING";
+    type: "INFRASTRUKTUR" | "HIGH-RISE" | "RUMAH" | "KOMERSIAL" | "INDUSTRIAL";
     Pics: PIC[];
     Pic: requiredPic;
     mainPic: PIC & { type?: string };
@@ -526,8 +526,8 @@ interface visitationPayload {
   visitationId?: string;
   order: number;
   location: locationPayloadType;
-  customerType?: 'INDIVIDU' | 'COMPANY';
-  paymentType?: 'CBD' | 'CREDIT';
+  customerType?: "INDIVIDU" | "COMPANY";
+  paymentType?: "CBD" | "CREDIT";
   estimationWeek?: number;
   estimationMonth?: number;
   visitNotes?: string;
@@ -535,9 +535,9 @@ interface visitationPayload {
   finishDate?: number; // ??
   bookingDate?: number;
   rejectNotes?: string;
-  rejectCategory?: 'FINISHED' | 'MOU_COMPETITOR';
+  rejectCategory?: "FINISHED" | "MOU_COMPETITOR";
   isBooking?: boolean; // ??
-  status?: 'VISIT' | 'SPH' | 'REJECTED' | '';
+  status?: "VISIT" | "SPH" | "REJECTED" | "";
   files: filesType[];
   products?: {
     id?: string;
@@ -547,7 +547,7 @@ interface visitationPayload {
 
 interface filesType {
   id: string;
-  type: 'GALLERY' | 'COVER';
+  type: "GALLERY" | "COVER";
 }
 
 interface PicFormInitialState {
@@ -567,8 +567,8 @@ interface projectPayloadType {
   name?: string;
   companyDisplayName?: string;
   location: locationPayloadType;
-  stage?: 'LAND_PREP' | 'FOUNDATION' | 'FORMWORK' | 'FINISHING';
-  type?: 'INFRASTRUKTUR' | 'HIGH-RISE' | 'RUMAH' | 'KOMERSIAL' | 'INDUSTRIAL';
+  stage?: "LAND_PREP" | "FOUNDATION" | "FORMWORK" | "FINISHING";
+  type?: "INFRASTRUKTUR" | "HIGH-RISE" | "RUMAH" | "KOMERSIAL" | "INDUSTRIAL";
 }
 
 interface picPayloadType {
@@ -576,7 +576,7 @@ interface picPayloadType {
   position?: string;
   phone?: string;
   email?: string;
-  type?: 'PROJECT' | 'RECIPIENT' | 'SUPPLIER';
+  type?: "PROJECT" | "RECIPIENT" | "SUPPLIER";
   isSelected?: boolean;
 }
 interface requiredPic {
@@ -585,7 +585,7 @@ interface requiredPic {
   position: string;
   phone: string;
   email: string;
-  type: 'PROJECT' | 'RECIPIENT' | 'SUPPLIER';
+  type: "PROJECT" | "RECIPIENT" | "SUPPLIER";
   isSelected: boolean;
 }
 
@@ -669,7 +669,7 @@ interface sphOrderPayloadType {
   isUseSameAddress: boolean;
   billingRecipientName: string;
   billingRecipientPhone: string;
-  paymentType: 'CBD' | 'CREDIT';
+  paymentType: "CBD" | "CREDIT";
   viaTol: boolean;
   projectDocs: any[];
   isProvideBankGuarantee: boolean;

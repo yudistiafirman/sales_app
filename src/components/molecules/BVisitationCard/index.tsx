@@ -1,27 +1,25 @@
-import {
-  View, StyleSheet, TouchableOpacity, ViewStyle,
-} from 'react-native';
-import React from 'react';
+import { View, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import React from "react";
 
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Text } from 'react-native-paper';
-import PillStatus from './elements/PillStatus';
-import Time from './elements/Time';
-import VisitStatus from './elements/VisitStatus';
+import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import { Text } from "react-native-paper";
+import PillStatus from "./elements/PillStatus";
+import Time from "./elements/Time";
+import VisitStatus from "./elements/VisitStatus";
 
-import resScale from '@/utils/resScale';
-import PillNames from './elements/PillNames';
-import HighlightText from '../../atoms/BHighlightText';
-import { colors, fonts, layout } from '@/constants';
-import BLocationText from '@/components/atoms/BLocationText';
-import { visitationDataType } from '@/interfaces';
-import BSpacer from '@/components/atoms/BSpacer';
-import Unit from './elements/Unit';
-import BButtonPrimary from '@/components/atoms/BButtonPrimary';
+import resScale from "@/utils/resScale";
+import PillNames from "./elements/PillNames";
+import HighlightText from "../../atoms/BHighlightText";
+import { colors, fonts, layout } from "@/constants";
+import BLocationText from "@/components/atoms/BLocationText";
+import { visitationDataType } from "@/interfaces";
+import BSpacer from "@/components/atoms/BSpacer";
+import Unit from "./elements/Unit";
+import BButtonPrimary from "@/components/atoms/BButtonPrimary";
 
 function iconRender(
   isRenderIcon: boolean,
-  customIcon: (() => JSX.Element) | undefined,
+  customIcon: (() => JSX.Element) | undefined
 ) {
   if (!isRenderIcon) {
     return null;
@@ -72,7 +70,7 @@ export default function BVisitationCard({
             <PillStatus
               pilStatus={item.pilStatus}
               color={
-                item.pilStatus === 'Belum Selesai'
+                item.pilStatus === "Belum Selesai"
                   ? colors.lightGray
                   : undefined
               }
@@ -126,37 +124,37 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    borderColor: '#EBEBEB',
+    borderColor: "#EBEBEB",
     borderRadius: layout.radius.md,
     borderWidth: resScale(1),
     padding: layout.pad.md,
   },
   subContainer: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   leftSide: {
     flex: 1,
     paddingStart: layout.pad.md,
-    justifyContent: 'space-between',
-    alignSelf: 'center',
+    justifyContent: "space-between",
+    alignSelf: "center",
   },
   rightSide: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginStart: layout.pad.lg,
   },
   top: {
     // height: resScale(20),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     // marginBottom: layout.pad.sm,
     // width: resScale(285),
-    alignItems: 'center',
+    alignItems: "center",
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   bottom: {
     marginTop: layout.pad.md,

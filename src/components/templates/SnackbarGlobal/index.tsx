@@ -1,17 +1,17 @@
-import { Text, StyleSheet } from 'react-native';
-import React from 'react';
-import { Snackbar } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
-import { closeSnackbar } from '@/redux/reducers/snackbarReducer';
-import { resScale } from '@/utils';
-import { colors } from '@/constants';
+import { Text, StyleSheet } from "react-native";
+import React from "react";
+import { Snackbar } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { closeSnackbar } from "@/redux/reducers/snackbarReducer";
+import { resScale } from "@/utils";
+import { colors } from "@/constants";
 
 export default function SnackbarGlobal() {
   //   const [visible, setVisible] = useState(true);
   const dispatch = useDispatch();
   const { isSnackbarVisible, snackBarOptions } = useSelector(
-    (state: RootState) => state.snackbar,
+    (state: RootState) => state.snackbar
   );
   const { isSuccess, snackBarText } = snackBarOptions;
 
@@ -59,15 +59,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   error: {
-    backgroundColor: '#F6D7DC',
+    backgroundColor: "#F6D7DC",
   },
   success: {
-    backgroundColor: '#D7F6D8',
+    backgroundColor: "#D7F6D8",
   },
   errorText: {
-    color: '#F43353',
+    color: "#F43353",
   },
   successText: {
-    color: '#4C574C',
+    color: "#4C574C",
   },
 });

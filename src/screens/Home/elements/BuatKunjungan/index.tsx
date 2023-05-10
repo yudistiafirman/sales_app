@@ -1,11 +1,11 @@
-import { StyleSheet } from 'react-native';
-import React from 'react';
-import { BottomSheetFooter } from '@gorhom/bottom-sheet';
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import respFS from '@/utils/resFontSize';
-import BButtonPrimary from '@/components/atoms/BButtonPrimary';
-import { layout } from '@/constants';
+import { StyleSheet } from "react-native";
+import React from "react";
+import { BottomSheetFooter } from "@gorhom/bottom-sheet";
+import colors from "@/constants/colors";
+import font from "@/constants/fonts";
+import respFS from "@/utils/resFontSize";
+import BButtonPrimary from "@/components/atoms/BButtonPrimary";
+import { layout } from "@/constants";
 
 export default function BuatKunjungan(props: any, kunjunganAction: () => void) {
   return (
@@ -23,7 +23,7 @@ const style = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   footerText: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.white,
     fontFamily: font.family.montserrat[600],
     fontSize: respFS(16),

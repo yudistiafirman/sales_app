@@ -1,6 +1,6 @@
 const storageKey = {
-  userToken: 'userToken',
-  phone: 'userPhone',
+  userToken: "userToken",
+  phone: "userPhone",
 };
 
 export default storageKey;

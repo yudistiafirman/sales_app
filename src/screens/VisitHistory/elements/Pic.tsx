@@ -1,9 +1,9 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { BLabel, BPic, BSpacer } from '@/components';
-import { layout } from '@/constants';
-import font from '@/constants/fonts';
-import { picPayloadType } from '@/interfaces';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { BLabel, BPic, BSpacer } from "@/components";
+import { layout } from "@/constants";
+import font from "@/constants/fonts";
+import { picPayloadType } from "@/interfaces";
 
 function Pic({ pic }: { pic: picPayloadType }) {
   return (

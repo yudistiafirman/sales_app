@@ -1,17 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { postUploadFiles } from '../async-thunks/commonThunks';
-import { requiredDocType } from '@/interfaces';
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { postUploadFiles } from "../async-thunks/commonThunks";
+import { requiredDocType } from "@/interfaces";
 import {
   CREATE_DEPOSIT,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
-} from '@/navigation/ScreenNames';
-import { LocalFileType } from '@/interfaces/LocalFileType';
+} from "@/navigation/ScreenNames";
+import { LocalFileType } from "@/interfaces/LocalFileType";
 
 type fileResponse = {
   id: string;
-  type: 'COVER' | 'GALLERY';
+  type: "COVER" | "GALLERY";
 };
 
 export interface CameraGlobalState {
@@ -33,12 +33,12 @@ const initialState: CameraGlobalState = {
 };
 
 export const cameraSlice = createSlice({
-  name: 'camera',
+  name: "camera",
   initialState,
   reducers: {
     setImageURLS: (
       state,
-      action: PayloadAction<{ file: LocalFileType; source?: string }>,
+      action: PayloadAction<{ file: LocalFileType; source?: string }>
     ) => {
       switch (action.payload.source) {
         case CREATE_VISITATION:
@@ -80,7 +80,7 @@ export const cameraSlice = createSlice({
     },
     deleteImage: (
       state,
-      action: PayloadAction<{ pos: number; source: string }>,
+      action: PayloadAction<{ pos: number; source: string }>
     ) => {
       let currentImages;
       switch (action.payload.source) {
@@ -110,7 +110,7 @@ export const cameraSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => { });
+    builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {});
   },
 });
 

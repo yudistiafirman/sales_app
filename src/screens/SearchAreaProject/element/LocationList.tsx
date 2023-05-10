@@ -1,8 +1,8 @@
-import React from 'react';
-import { FlashList } from '@shopify/flash-list';
-import EmptyState from '@/components/organism/BEmptyState';
-import LocationListCard from './LocationListCard';
-import LocationListShimmer from './LocationListShimmer';
+import React from "react";
+import { FlashList } from "@shopify/flash-list";
+import EmptyState from "@/components/organism/BEmptyState";
+import LocationListCard from "./LocationListCard";
+import LocationListShimmer from "./LocationListShimmer";
 
 interface LocationData {
   description?: string;
@@ -40,7 +40,8 @@ function LocationList<ArrayOfObject extends LocationData>({
   const renderEmptyComponent = () => {
     if (isLoading) {
       return <LocationListShimmer />;
-    } if (searchValue?.length > 2) {
+    }
+    if (searchValue?.length > 2) {
       return (
         <EmptyState
           emptyText={`${searchValue} tidak ditemukan!`}

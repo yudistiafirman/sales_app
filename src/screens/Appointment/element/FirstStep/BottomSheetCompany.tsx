@@ -1,18 +1,18 @@
-import React from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import Modal from 'react-native-modal';
+import React from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
+import Modal from "react-native-modal";
 import {
   BText,
   BHeaderIcon,
   BButtonPrimary,
   BVisitationCard,
-} from '@/components';
-import BProjectRBtnList from '@/components/organism/BProjectRBtnList';
-import { colors, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { DataCompany } from '@/context/AppointmentContext';
+} from "@/components";
+import BProjectRBtnList from "@/components/organism/BProjectRBtnList";
+import { colors, layout } from "@/constants";
+import font from "@/constants/fonts";
+import { DataCompany } from "@/context/AppointmentContext";
 
-const { height } = Dimensions.get('window');
+const { height } = Dimensions.get("window");
 
 interface BSheetCompanyProps {
   isVisible: boolean;
@@ -88,7 +88,7 @@ function BottomSheetCompany({
 }
 
 const styles = StyleSheet.create({
-  modalContainer: { margin: 0, justifyContent: 'flex-end' },
+  modalContainer: { margin: 0, justifyContent: "flex-end" },
   contentOuterContainer: {
     backgroundColor: colors.white,
     borderTopStartRadius: layout.radius.lg,
@@ -96,9 +96,9 @@ const styles = StyleSheet.create({
   },
   contentInnerContainer: { flex: 1, marginHorizontal: layout.pad.lg },
   headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     flex: 0.15,
   },
   headerTitle: {
@@ -106,9 +106,9 @@ const styles = StyleSheet.create({
     fontSize: font.size.lg,
   },
   addProjectContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   companyDetailsCardWrapper: { flex: 0.25 },
   projectNameListContainer: { flex: 0.3, paddingTop: layout.pad.lg },
@@ -120,8 +120,8 @@ const styles = StyleSheet.create({
   addProjectButton: { borderRadius: layout.radius.sm },
   addProjectBtnText: { fontFamily: font.family.montserrat[400] },
   chooseBtn: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     top: layout.pad.xl + layout.pad.lg,
   },
 });

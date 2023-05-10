@@ -1,6 +1,6 @@
 // postUploadFiles
-import { createSlice } from '@reduxjs/toolkit';
-import { postUploadFiles, getAllProject } from '../async-thunks/commonThunks';
+import { createSlice } from "@reduxjs/toolkit";
+import { postUploadFiles, getAllProject } from "../async-thunks/commonThunks";
 
 type initialStateType = {
   isUploadLoading: boolean;
@@ -16,12 +16,12 @@ const initialState: initialStateType = {
   isPostVisitationLoading: false,
   isProjectLoading: false,
   errorGettingProject: false,
-  errorGettingProjectMessage: '',
+  errorGettingProjectMessage: "",
   projects: [],
 };
 
 export const commonSlice = createSlice({
-  name: 'common',
+  name: "common",
   initialState,
   reducers: {
     resetStates: () => initialState,
@@ -29,7 +29,7 @@ export const commonSlice = createSlice({
       ...state,
       isProjectLoading: true,
       errorGettingProject: false,
-      errorGettingProjectMessage: '',
+      errorGettingProjectMessage: "",
     }),
   },
   extraReducers: (builder) => {

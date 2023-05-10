@@ -1,8 +1,8 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { BLocationText } from '@/components';
-import { colors, layout } from '@/constants';
-import font from '@/constants/fonts';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { BLocationText } from "@/components";
+import { colors, layout } from "@/constants";
+import font from "@/constants/fonts";
 
 function LocationText({ locationAddress }: { locationAddress?: string }) {
   return (

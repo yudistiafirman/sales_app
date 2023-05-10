@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useDispatch } from 'react-redux';
-import Splash from '@/screens/Splash';
-import Operation from '@/screens/Operation';
-import { ENTRY_TYPE } from '@/models/EnumModel';
-import Login from '@/screens/Login';
-import Verification from '@/screens/Verification';
-import { colors, fonts } from '@/constants';
+import * as React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useDispatch } from "react-redux";
+import Splash from "@/screens/Splash";
+import Operation from "@/screens/Operation";
+import { ENTRY_TYPE } from "@/models/EnumModel";
+import Login from "@/screens/Login";
+import Verification from "@/screens/Verification";
+import { colors, fonts } from "@/constants";
 import {
   LOGIN,
   LOGIN_TITLE,
@@ -20,28 +20,28 @@ import {
   BATCHER_TITLE,
   DRIVER_TITLE,
   BLANK_SCREEN,
-} from './ScreenNames';
-import OperationStack from './Operation/Stack';
-import SalesStack from './Sales/Stack';
-import HunterAndFarmers from '@/screens/HunterAndFarmers';
-import { useAsyncConfigSetup } from '@/hooks';
-import SalesTabs from './tabs/SalesTabs';
-import SecurityTabs from './tabs/SecurityTabs';
-import SalesHeaderRight from './Sales/HeaderRight';
-import { UserModel } from '@/models/User';
-import { AppDispatch } from '@/redux/store';
-import BlankScreen from '@/screens/BlankScreen';
-import { BHttpLogger } from '@/components';
+} from "./ScreenNames";
+import OperationStack from "./Operation/Stack";
+import SalesStack from "./Sales/Stack";
+import HunterAndFarmers from "@/screens/HunterAndFarmers";
+import { useAsyncConfigSetup } from "@/hooks";
+import SalesTabs from "./tabs/SalesTabs";
+import SecurityTabs from "./tabs/SecurityTabs";
+import SalesHeaderRight from "./Sales/HeaderRight";
+import { UserModel } from "@/models/User";
+import { AppDispatch } from "@/redux/store";
+import BlankScreen from "@/screens/BlankScreen";
+import { BHttpLogger } from "@/components";
 import {
   setShowButtonNetwork,
   setVisibleNetworkLogger,
-} from '@/redux/reducers/authReducer';
+} from "@/redux/reducers/authReducer";
 
 const Stack = createNativeStackNavigator();
 
 function RootScreen(
   userData: UserModel.DataSuccessLogin | null,
-  isSignout: boolean,
+  isSignout: boolean
 ) {
   if (userData !== null) {
     switch (userData.type) {
@@ -53,7 +53,7 @@ function RootScreen(
               key={OPSMANAGER}
               component={Operation}
               options={{
-                headerTitleAlign: 'center',
+                headerTitleAlign: "center",
                 headerTitle: OPSMANAGER_TITLE,
                 headerRight: () => SalesHeaderRight(colors.text.darker),
                 headerShown: true,
@@ -70,7 +70,7 @@ function RootScreen(
               key={BATCHER}
               component={Operation}
               options={{
-                headerTitleAlign: 'center',
+                headerTitleAlign: "center",
                 headerTitle: BATCHER_TITLE,
                 headerRight: () => SalesHeaderRight(colors.text.darker),
                 headerShown: true,
@@ -87,7 +87,7 @@ function RootScreen(
               key={DRIVER}
               component={Operation}
               options={{
-                headerTitleAlign: 'center',
+                headerTitleAlign: "center",
                 headerTitle: DRIVER_TITLE,
                 headerRight: () => SalesHeaderRight(colors.text.darker),
                 headerShown: true,
@@ -159,7 +159,7 @@ function RootScreen(
             key={BLANK_SCREEN}
             component={BlankScreen}
             options={{
-              headerTitle: '',
+              headerTitle: "",
             }}
           />
         );
@@ -172,9 +172,9 @@ function RootScreen(
           key={LOGIN}
           component={Login}
           options={{
-            headerTitleAlign: 'center',
+            headerTitleAlign: "center",
             headerTitle: LOGIN_TITLE,
-            animationTypeForReplace: isSignout ? 'pop' : 'push',
+            animationTypeForReplace: isSignout ? "pop" : "push",
           }}
         />
         <Stack.Screen
@@ -183,7 +183,7 @@ function RootScreen(
           component={Verification}
           options={{
             headerTitle: VERIFICATION_TITLE,
-            headerTitleAlign: 'center',
+            headerTitleAlign: "center",
             headerTitleStyle: {
               fontFamily: fonts.family.montserrat[600],
               fontSize: fonts.size.lg,
@@ -213,7 +213,7 @@ function AppNavigator() {
       <HunterAndFarmers />
       <Stack.Navigator
         screenOptions={{
-          headerTitleAlign: 'left',
+          headerTitleAlign: "left",
           headerShadowVisible: false,
           headerShown: true,
           headerTitleStyle: {
@@ -228,8 +228,12 @@ function AppNavigator() {
       <BHttpLogger
         isShowButtonNetwork={isShowButtonNetwork}
         isNetworkLoggerVisible={isNetworkLoggerVisible}
-        setShowButtonNetwork={() => dispatch(setShowButtonNetwork(!isShowButtonNetwork))}
-        setVisibleNetworkLogger={() => dispatch(setVisibleNetworkLogger(!isNetworkLoggerVisible))}
+        setShowButtonNetwork={() =>
+          dispatch(setShowButtonNetwork(!isShowButtonNetwork))
+        }
+        setVisibleNetworkLogger={() =>
+          dispatch(setVisibleNetworkLogger(!isNetworkLoggerVisible))
+        }
       />
     </>
   );

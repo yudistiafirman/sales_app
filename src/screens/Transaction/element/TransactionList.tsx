@@ -1,11 +1,11 @@
-import { TouchableOpacity } from '@gorhom/bottom-sheet';
-import React, { useCallback } from 'react';
-import { ListRenderItem } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
-import { BEmptyState } from '@/components';
-import { layout } from '@/constants';
-import TransactionListCard from './TransactionListCard';
-import TransactionListShimmer from './TransactionListShimmer';
+import { TouchableOpacity } from "@gorhom/bottom-sheet";
+import React, { useCallback } from "react";
+import { ListRenderItem } from "react-native";
+import { FlashList } from "@shopify/flash-list";
+import { BEmptyState } from "@/components";
+import { layout } from "@/constants";
+import TransactionListCard from "./TransactionListCard";
+import TransactionListShimmer from "./TransactionListShimmer";
 
 interface TransactionsData {
   id: string;
@@ -21,9 +21,9 @@ interface TransactionsData {
 interface TransactionListProps<ArrayOfObject> {
   transactions: ArrayOfObject[];
   onEndReached?:
-  | ((info: { distanceFromEnd: number }) => void)
-  | null
-  | undefined;
+    | ((info: { distanceFromEnd: number }) => void)
+    | null
+    | undefined;
   refreshing?: boolean;
   isLoadMore?: boolean;
   loadTransaction?: boolean;
@@ -56,41 +56,41 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
         }}
       >
         <TransactionListCard
-          number={item.number ? item.number : '-'}
-            // TODO: handle from BE, ugly when use mapping in FE side
+          number={item.number ? item.number : "-"}
+          // TODO: handle from BE, ugly when use mapping in FE side
           projectName={
-              item.QuotationRequest?.Project
-                ? item.QuotationRequest?.Project.projectName
-                : item.project?.projectName
-                  ? item.project?.projectName
-                  : '-'
-            }
+            item.QuotationRequest?.Project
+              ? item.QuotationRequest?.Project.projectName
+              : item.project?.projectName
+              ? item.project?.projectName
+              : "-"
+          }
           status={item.status}
-            // TODO: handle from BE, ugly when use mapping in FE side
+          // TODO: handle from BE, ugly when use mapping in FE side
           name={
-              item.SaleOrder
-                ? item.SaleOrder?.number
-                : item.Schedule
-                  ? item.Schedule.number
-                  : item.PurchaseOrder
-                    ? item.PurchaseOrder?.number
-                    : item.QuotationLetter?.number
-            }
-            // TODO: handle from BE, ugly when use mapping in FE side
+            item.SaleOrder
+              ? item.SaleOrder?.number
+              : item.Schedule
+              ? item.Schedule.number
+              : item.PurchaseOrder
+              ? item.PurchaseOrder?.number
+              : item.QuotationLetter?.number
+          }
+          // TODO: handle from BE, ugly when use mapping in FE side
           nominal={
-              (selectedType === 'Deposit'
-                || selectedType === 'Jadwal'
-                || selectedType === 'DO')
-              && item.value
-                ? item.value
-                : item.totalPrice
-            }
-            // TODO: handle from BE, ugly when use mapping in FE side
-          useBEStatus={selectedType !== 'SPH'}
+            (selectedType === "Deposit" ||
+              selectedType === "Jadwal" ||
+              selectedType === "DO") &&
+            item.value
+              ? item.value
+              : item.totalPrice
+          }
+          // TODO: handle from BE, ugly when use mapping in FE side
+          useBEStatus={selectedType !== "SPH"}
         />
       </TouchableOpacity>
     ),
-    [onPress],
+    [onPress]
   );
   return (
     <FlashList

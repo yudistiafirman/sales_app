@@ -1,13 +1,13 @@
-import * as React from 'react';
-import Modal from 'react-native-modal';
-import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import Draggable from 'react-native-draggable';
-import Icon from 'react-native-vector-icons/Feather';
-import NetworkLogger from 'react-native-network-logger';
-import { colors, layout } from '@/constants';
+import * as React from "react";
+import Modal from "react-native-modal";
+import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
+import Draggable from "react-native-draggable";
+import Icon from "react-native-vector-icons/Feather";
+import NetworkLogger from "react-native-network-logger";
+import { colors, layout } from "@/constants";
 
-const { height } = Dimensions.get('window');
-const { width } = Dimensions.get('window');
+const { height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 interface BHttpLoggerProps {
   isShowButtonNetwork: boolean;
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.text.darker,
     borderWidth: 1,
     padding: layout.pad.xs,
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     zIndex: 1,
     marginBottom: -layout.pad.md,
   },
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     padding: layout.pad.md,
   },
   button: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
 });
 

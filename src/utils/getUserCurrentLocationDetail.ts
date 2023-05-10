@@ -1,5 +1,5 @@
-import Geolocation from 'react-native-geolocation-service';
-import { getLocationCoordinates } from '../actions/CommonActions';
+import Geolocation from "react-native-geolocation-service";
+import { getLocationCoordinates } from "../actions/CommonActions";
 
 const getUserCurrentLocationDetail = async () => {
   try {
@@ -21,7 +21,9 @@ const getUserCurrentCoordinate = async () => {
       showLocationDialog: true,
       forceRequestLocation: true,
     };
-    const position = await new Promise((resolve, error) => Geolocation.getCurrentPosition(resolve, error, opt));
+    const position = await new Promise((resolve, error) =>
+      Geolocation.getCurrentPosition(resolve, error, opt)
+    );
     return position;
   } catch (error) {
     throw new Error(error);
@@ -39,7 +41,7 @@ const getCoordinateDetail = async ({
       // '',
       longitude,
       latitude,
-      'BP-LEGOK',
+      "BP-LEGOK"
     );
     return data;
   } catch (error) {

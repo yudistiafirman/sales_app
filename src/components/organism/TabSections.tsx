@@ -1,10 +1,10 @@
-import { ViewStyle } from 'react-native';
-import { TabBar } from 'react-native-tab-view';
-import * as React from 'react';
-import { Scene, Route } from 'react-native-tab-view/lib/typescript/src/types';
-import colors from '@/constants/colors';
-import BTabLabels from '@/components/molecules/BTabLabels';
-import BTab from '@/components/molecules/BTab';
+import { ViewStyle } from "react-native";
+import { TabBar } from "react-native-tab-view";
+import * as React from "react";
+import { Scene, Route } from "react-native-tab-view/lib/typescript/src/types";
+import colors from "@/constants/colors";
+import BTabLabels from "@/components/molecules/BTabLabels";
+import BTab from "@/components/molecules/BTab";
 
 interface BTabSectionProps {
   onIndexChange: (index: number) => void;

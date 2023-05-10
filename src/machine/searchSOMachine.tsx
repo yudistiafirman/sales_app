@@ -1,13 +1,16 @@
-import { assign, createMachine } from 'xstate';
-import { getAllPurchaseOrders, getConfirmedPurchaseOrder } from '@/actions/OrderActions';
+import { assign, createMachine } from "xstate";
+import {
+  getAllPurchaseOrders,
+  getConfirmedPurchaseOrder,
+} from "@/actions/OrderActions";
 
 const searchSOMachine = createMachine(
   {
     /** @xstate-layout N4IgpgJg5mDOIC5QHsAOYBOBDALgS2QDsACAGz1h2IFssBjACz0LADoAzMHR5qAGQo4AIriwBiCETbMAbsgDWbNJlwES5SjXpMWHLj0L9BInFgSzkdVUQDaABgC69h4lCpksPPiKuQAD0QARkCAVlYADjtIuwA2UIBOKJCAFmSAGhAAT0QAJhCc1hyY8NS88IB2EOCAZgBfWozlbG91QS0DNk5uHSNKE3FMDGQMVlRSXHZh6lYm61bNWg69bt4BPtFzQjkrFudnX3dPFt8AhABaYPDWGOTqkLuYm-DwwLtqjOyEPIKikuSyyo1eqNdDNNRkNqLHRsDQ4PjILAQSBiIgAJTA7AwcAYaxw+yQIEOXjUJ0Q1XK1WugXilXK4WqgUilQ+uRCdlY5WK-0CMVi1XiIRC4WBIFmLQhC20zBhgnhiORRAAooQIOjtJB8W4PMSfATTkVAhzBYFqnYcoFynzAiyENVzaw7I6csl4oy8skSiKxeDYe1oaxBsMAOJcfCGXFiLE4DCZEM4MO9PGOA7a456xBnHJ2MJ2UIxPI2nJFh155JxZ3JQKV+oNECEZBI+AE71ECVUKHSlNHEnp855Sm5kL5kI24IOx25wH0j00mJe0FzNt+6XLAyJ-pdnWEUkIXk2+JXNlO4IVquBHLzlTi30d3SwuVIiCbtOgU488qsU0u27hIf-eL-Da-xXKa5QWiE5TlAeloxCEl5gq2N5SrogYYHGCa4s+PavhmORXOerzxOSI5ZGSkSsPk1TJEK+apGeNa1EAA */
-    id: 'search SO',
+    id: "search SO",
 
     predictableActionArguments: true,
-    tsTypes: {} as import('./searchSOMachine.typegen').Typegen0,
+    tsTypes: {} as import("./searchSOMachine.typegen").Typegen0,
 
     schema: {
       context: {} as {
@@ -33,10 +36,10 @@ const searchSOMachine = createMachine(
         };
       },
       events: {} as
-        | { type: 'assignKeyword'; payload: string }
-        | { type: 'retryGettingList'; payload: string }
-        | { type: 'onRefreshList'; payload: string }
-        | { type: 'onEndReached' },
+        | { type: "assignKeyword"; payload: string }
+        | { type: "retryGettingList"; payload: string }
+        | { type: "onRefreshList"; payload: string }
+        | { type: "onEndReached" },
     },
 
     context: {
@@ -44,33 +47,33 @@ const searchSOMachine = createMachine(
       isLoading: true,
       isLoadMore: false,
       isRefreshing: false,
-      errorMessage: '',
+      errorMessage: "",
       page: 1,
       size: 10,
       totalPage: 0,
-      keyword: '',
+      keyword: "",
     },
 
     states: {
       idle: {
         on: {
           assignKeyword: {
-            target: 'fetchingListData',
-            actions: 'assignKeywordToContext',
+            target: "fetchingListData",
+            actions: "assignKeywordToContext",
           },
         },
       },
 
       fetchingListData: {
         invoke: {
-          src: 'fetchSOListData',
+          src: "fetchSOListData",
           onDone: {
-            target: 'listLoaded',
-            actions: 'assignListData',
+            target: "listLoaded",
+            actions: "assignListData",
           },
           onError: {
-            target: 'errorGettingList',
-            actions: 'assignError',
+            target: "errorGettingList",
+            actions: "assignError",
           },
         },
       },
@@ -78,24 +81,24 @@ const searchSOMachine = createMachine(
       listLoaded: {
         on: {
           onRefreshList: {
-            target: 'fetchingListData',
-            actions: 'handleRefresh',
+            target: "fetchingListData",
+            actions: "handleRefresh",
           },
           onEndReached: {
-            target: 'fetchingListData',
-            actions: 'handleEndReached',
-            cond: 'isNotLastPage',
+            target: "fetchingListData",
+            actions: "handleEndReached",
+            cond: "isNotLastPage",
           },
         },
       },
       errorGettingList: {
         on: {
-          retryGettingList: 'fetchingListData',
+          retryGettingList: "fetchingListData",
         },
       },
     },
 
-    initial: 'idle',
+    initial: "idle",
   },
   {
     guards: {
@@ -108,7 +111,7 @@ const searchSOMachine = createMachine(
             context.page.toString(),
             context.size.toString(),
             context.keyword,
-            'CONFIRMED',
+            "CONFIRMED"
           );
           return response.data;
         } catch (error) {
@@ -147,7 +150,7 @@ const searchSOMachine = createMachine(
         keyword: event?.payload,
       })),
     },
-  },
+  }
 );
 
 export default searchSOMachine;

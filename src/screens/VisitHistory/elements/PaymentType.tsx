@@ -1,25 +1,25 @@
-import React, { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { BCardOption, BLabel, BSpacer } from '@/components';
-import { layout } from '@/constants';
-import font from '@/constants/fonts';
+import React, { useMemo } from "react";
+import { StyleSheet, View } from "react-native";
+import { BCardOption, BLabel, BSpacer } from "@/components";
+import { layout } from "@/constants";
+import font from "@/constants/fonts";
 
-const cbd = require('@/assets/icon/Visitation/cbd.png');
-const credit = require('@/assets/icon/Visitation/credit.png');
+const cbd = require("@/assets/icon/Visitation/cbd.png");
+const credit = require("@/assets/icon/Visitation/credit.png");
 
 interface Props {
-  paymentType: 'CBD' | 'CREDIT';
+  paymentType: "CBD" | "CREDIT";
 }
 
 function PaymentType({ paymentType }: Props) {
   const renderPaymentTitleAndIcon = useMemo(() => {
     let title;
     let icon;
-    if (paymentType === 'CBD') {
-      title = 'Cash Before Delivery';
+    if (paymentType === "CBD") {
+      title = "Cash Before Delivery";
       icon = cbd;
     } else {
-      title = 'Credit';
+      title = "Credit";
       icon = credit;
     }
     return [title, icon];

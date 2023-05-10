@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
-import { colors, fonts, layout } from '@/constants';
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import { colors, fonts, layout } from "@/constants";
 
 type LabelSuccessType = {
   sphId?: string;
@@ -9,11 +9,7 @@ type LabelSuccessType = {
 export default function LabelSuccess({ sphId }: LabelSuccessType) {
   return (
     <View style={styles.labelSuccess}>
-      <Text style={styles.labelText}>
-        {sphId}
-        {' '}
-        telah berhasil dibuat
-      </Text>
+      <Text style={styles.labelText}>{sphId} telah berhasil dibuat</Text>
     </View>
   );
 }

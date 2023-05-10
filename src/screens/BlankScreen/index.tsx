@@ -1,14 +1,14 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
-import analytics from '@react-native-firebase/analytics';
-import { bStorage } from '@/actions';
-import { signOut } from '@/actions/CommonActions';
-import EmptyState from '@/components/organism/BEmptyState';
-import { signout } from '@/redux/reducers/authReducer';
-import { AppDispatch } from '@/redux/store';
-import { openPopUp } from '@/redux/reducers/modalReducer';
+import React from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import crashlytics from "@react-native-firebase/crashlytics";
+import analytics from "@react-native-firebase/analytics";
+import { bStorage } from "@/actions";
+import { signOut } from "@/actions/CommonActions";
+import EmptyState from "@/components/organism/BEmptyState";
+import { signout } from "@/redux/reducers/authReducer";
+import { AppDispatch } from "@/redux/store";
+import { openPopUp } from "@/redux/reducers/modalReducer";
 
 function BlankScreen() {
   const { userData } = useSelector((state: RootState) => state.auth);
@@ -20,18 +20,18 @@ function BlankScreen() {
       if (response) {
         bStorage.clearItem();
         dispatch(signout(false));
-        crashlytics().setUserId('');
-        analytics().setUserId('');
+        crashlytics().setUserId("");
+        analytics().setUserId("");
       }
     } catch (error) {
       dispatch(
         openPopUp({
-          popUpType: 'error',
+          popUpType: "error",
           popUpText:
-            error.message
-            || 'Terjadi error saat akan kembali ke halaman Login dari Blank Screen',
+            error.message ||
+            "Terjadi error saat akan kembali ke halaman Login dari Blank Screen",
           outsideClickClosePopUp: true,
-        }),
+        })
       );
     }
   };
@@ -50,8 +50,8 @@ function BlankScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

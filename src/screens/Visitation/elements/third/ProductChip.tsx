@@ -1,11 +1,11 @@
-import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import { BText } from '@/components';
-import { colors, fonts } from '@/constants';
-import layout from '@/constants/layout';
-import { Styles } from '@/interfaces';
-import { resFontSize, resScale } from '@/utils';
+import React from "react";
+import { TouchableOpacity, View } from "react-native";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { BText } from "@/components";
+import { colors, fonts } from "@/constants";
+import layout from "@/constants/layout";
+import { Styles } from "@/interfaces";
+import { resFontSize, resScale } from "@/utils";
 
 interface IProps {
   name?: string;
@@ -17,9 +17,9 @@ interface IProps {
 
 const styles: Styles = {
   container: {
-    position: 'relative',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    position: "relative",
+    flexDirection: "row",
+    justifyContent: "space-between",
     borderWidth: 1,
     borderRadius: layout.radius.sm,
     paddingHorizontal: layout.pad.xs + layout.pad.md,
@@ -42,8 +42,8 @@ const styles: Styles = {
   },
   icon: {
     padding: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginStart: layout.pad.md,
   },
   close: {

@@ -1,10 +1,10 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { resScale } from '@/utils';
-import { layout } from '@/constants';
-import SearchAreaStyles from '../styles';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import { resScale } from "@/utils";
+import { layout } from "@/constants";
+import SearchAreaStyles from "../styles";
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 

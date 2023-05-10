@@ -1,20 +1,20 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
-import * as React from 'react';
-import { Image, SafeAreaView } from 'react-native';
-import { useDispatch } from 'react-redux';
-import Spinner from 'react-native-loading-spinner-overlay';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { BButtonPrimary, BErrorText, BSpacer } from '@/components';
-import { resScale } from '@/utils';
-import PhoneInput from './element/PhoneInput';
-import Instruction from './element/Intstruction';
-import Label from './element/Label';
-import loginStyle from './style';
-import { colors, layout } from '@/constants';
-import { setPhoneNumber } from '@/redux/reducers/authReducer';
-import { signIn } from '@/actions/CommonActions';
-import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import { LOGIN, VERIFICATION } from '@/navigation/ScreenNames';
+import { useNavigation, useRoute } from "@react-navigation/native";
+import * as React from "react";
+import { Image, SafeAreaView } from "react-native";
+import { useDispatch } from "react-redux";
+import Spinner from "react-native-loading-spinner-overlay";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { BButtonPrimary, BErrorText, BSpacer } from "@/components";
+import { resScale } from "@/utils";
+import PhoneInput from "./element/PhoneInput";
+import Instruction from "./element/Intstruction";
+import Label from "./element/Label";
+import loginStyle from "./style";
+import { colors, layout } from "@/constants";
+import { setPhoneNumber } from "@/redux/reducers/authReducer";
+import { signIn } from "@/actions/CommonActions";
+import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
+import { LOGIN, VERIFICATION } from "@/navigation/ScreenNames";
 
 interface LoginState {
   errorMessage: unknown | string;
@@ -26,9 +26,9 @@ function Login() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [loginState, setLoginState] = React.useState<LoginState>({
-    errorMessage: '',
+    errorMessage: "",
     loading: false,
-    phoneNumber: '',
+    phoneNumber: "",
   });
 
   const { errorMessage, loading, phoneNumber } = loginState;
@@ -37,7 +37,7 @@ function Login() {
     customHeaderLeft: (
       <Image
         style={{ width: resScale(70), height: resScale(33) }}
-        source={require('@/assets/logo/brik_logo.png')}
+        source={require("@/assets/logo/brik_logo.png")}
       />
     ),
   });
@@ -55,8 +55,8 @@ function Login() {
         setLoginState({
           ...loginState,
           loading: false,
-          errorMessage: '',
-          phoneNumber: '',
+          errorMessage: "",
+          phoneNumber: "",
         });
         navigation.navigate(VERIFICATION);
       } else {
@@ -66,7 +66,7 @@ function Login() {
       setLoginState({
         ...loginState,
         loading: false,
-        phoneNumber: '',
+        phoneNumber: "",
         errorMessage: error.message,
       });
     }
@@ -80,7 +80,9 @@ function Login() {
       <BSpacer size="extraSmall" />
       <PhoneInput
         value={phoneNumber}
-        onChangeText={(val) => setLoginState({ ...loginState, phoneNumber: val })}
+        onChangeText={(val) =>
+          setLoginState({ ...loginState, phoneNumber: val })
+        }
       />
       <>{errorMessage && <BErrorText text={errorMessage} />}</>
       <BSpacer size={resScale(40)} />

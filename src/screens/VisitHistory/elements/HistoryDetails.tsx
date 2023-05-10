@@ -1,15 +1,15 @@
-import React from 'react';
-import { View } from 'react-native';
-import { BSpacer, BDivider } from '@/components';
-import { layout } from '@/constants';
-import { VisitHistoryPayload } from '@/machine/visitHistoryMachine';
-import Estimation from './Estimation';
-import Notes from './Note';
-import PaymentType from './PaymentType';
-import Pic from './Pic';
-import Product from './Product';
-import ProjectPhase from './ProjectPhase';
-import VisitationDatesAndStatus from './VisitationDatesAndStatus';
+import React from "react";
+import { View } from "react-native";
+import { BSpacer, BDivider } from "@/components";
+import { layout } from "@/constants";
+import { VisitHistoryPayload } from "@/machine/visitHistoryMachine";
+import Estimation from "./Estimation";
+import Notes from "./Note";
+import PaymentType from "./PaymentType";
+import Pic from "./Pic";
+import Product from "./Product";
+import ProjectPhase from "./ProjectPhase";
+import VisitationDatesAndStatus from "./VisitationDatesAndStatus";
 
 function HistoryDetails({ details }: { details: VisitHistoryPayload }) {
   return (
@@ -20,8 +20,11 @@ function HistoryDetails({ details }: { details: VisitHistoryPayload }) {
         bookingDate={details.dateVisit}
         finishDate={details.finishDate}
         rejectCategory={details.rejectCategory}
-        quatationId={details?.QuotationRequests && details?.QuotationRequests.length > 0
-          ? details?.QuotationRequests[0]?.QuotationLetter?.id : undefined}
+        quatationId={
+          details?.QuotationRequests && details?.QuotationRequests.length > 0
+            ? details?.QuotationRequests[0]?.QuotationLetter?.id
+            : undefined
+        }
         rejectNotes={details?.rejectNotes}
       />
       <BSpacer size="small" />

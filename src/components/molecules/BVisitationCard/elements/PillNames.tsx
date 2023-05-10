@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
-import resScale from '@/utils/resScale';
-import font from '@/constants/fonts';
-import respFS from '@/utils/resFontSize';
-import colors from '@/constants/colors';
-import HighlightText from '../../../atoms/BHighlightText';
-import { fonts, layout } from '@/constants';
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import resScale from "@/utils/resScale";
+import font from "@/constants/fonts";
+import respFS from "@/utils/resFontSize";
+import colors from "@/constants/colors";
+import HighlightText from "../../../atoms/BHighlightText";
+import { fonts, layout } from "@/constants";
 
 type PillNamesType = {
   pilNames?: string[];
@@ -25,9 +25,7 @@ export default function PillNames({
       return (
         <View style={[style.bluePill]}>
           <Text style={style.bluePillText}>
-            {`+${
-              pilNames.length - 1
-            } lagi`}
+            {`+${pilNames.length - 1} lagi`}
           </Text>
         </View>
       );
@@ -51,7 +49,7 @@ export default function PillNames({
 }
 const style = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: layout.pad.xs + layout.pad.md,
   },
   bluePill: {

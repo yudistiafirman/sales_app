@@ -1,13 +1,10 @@
-import { View, Text, StyleSheet } from 'react-native';
-import * as React from 'react';
-import { colors, fonts, layout } from '@/constants';
-import {
-  getColorStatusTrx,
-  getStatusTrx,
-} from '@/utils/generalFunc';
-import BSpacer from '../atoms/BSpacer';
-import BTouchableText from '../atoms/BTouchableText';
-import formatCurrency from '@/utils/formatCurrency';
+import { View, Text, StyleSheet } from "react-native";
+import * as React from "react";
+import { colors, fonts, layout } from "@/constants";
+import { getColorStatusTrx, getStatusTrx } from "@/utils/generalFunc";
+import BSpacer from "../atoms/BSpacer";
+import BTouchableText from "../atoms/BTouchableText";
+import formatCurrency from "@/utils/formatCurrency";
 
 type BProjectDetailCardType = {
   status?: string;
@@ -81,7 +78,7 @@ export default function BProjectDetailCard({
           </View>
         </>
       )}
-      {expiredDate !== '-' && (
+      {expiredDate !== "-" && (
         <>
           <BSpacer size="extraSmall" />
           <View style={styles.summaryContainer}>
@@ -157,9 +154,7 @@ export default function BProjectDetailCard({
           <BSpacer size="extraSmall" />
           <View style={styles.summaryContainer}>
             <Text style={styles.summary}>Nomor TM</Text>
-            <Text style={[styles.summary, styles.fontw400]}>
-              {tmNumber}
-            </Text>
+            <Text style={[styles.summary, styles.fontw400]}>{tmNumber}</Text>
           </View>
         </>
       )}
@@ -168,9 +163,7 @@ export default function BProjectDetailCard({
           <BSpacer size="extraSmall" />
           <View style={styles.summaryContainer}>
             <Text style={styles.summary}>Nama Sopir</Text>
-            <Text style={[styles.summary, styles.fontw400]}>
-              {driverName}
-            </Text>
+            <Text style={[styles.summary, styles.fontw400]}>{driverName}</Text>
           </View>
         </>
       )}
@@ -198,9 +191,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.montserrat[400],
   },
   summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   chip: {
     paddingVertical: layout.pad.xs,

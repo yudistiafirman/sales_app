@@ -4,65 +4,66 @@ import {
   StyleSheet,
   ScrollView,
   DeviceEventEmitter,
-} from 'react-native';
-import React, {
-  useCallback, useEffect, useMemo, useState,
-} from 'react';
-import { ProgressBar } from '@react-native-community/progress-bar-android';
-import crashlytics from '@react-native-firebase/crashlytics';
+} from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { ProgressBar } from "@react-native-community/progress-bar-android";
+import crashlytics from "@react-native-firebase/crashlytics";
 import {
   RouteProp,
   useFocusEffect,
   useNavigation,
   useRoute,
-} from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-import { colors, fonts } from '@/constants';
+} from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { colors, fonts } from "@/constants";
 import {
   BContainer,
   BPic,
   BSpacer,
   BSpinner,
   BTouchableText,
-} from '@/components';
-import ProjectBetween from './elements/ProjectBetween';
-import BillingModal from './elements/BillingModal';
+} from "@/components";
+import ProjectBetween from "./elements/ProjectBetween";
+import BillingModal from "./elements/BillingModal";
 import {
   CUSTOMER_DETAIL,
   DOCUMENTS,
   VISIT_HISTORY,
-} from '@/navigation/ScreenNames';
+} from "@/navigation/ScreenNames";
 import {
   getProjectIndivualDetail,
   projectGetOneById,
-} from '@/actions/CommonActions';
-import { AppDispatch } from '@/redux/store';
-import { openPopUp } from '@/redux/reducers/modalReducer';
-import { resetRegion } from '@/redux/reducers/locationReducer';
-import { RootStackParamList } from '@/navigation/CustomStateComponent';
-import { ProjectDetail, visitationListResponse } from '@/interfaces';
-import DocumentWarning from './elements/DocumentWarning';
-import UpdatedAddressWrapper from './elements/UpdatedAddressWrapper';
-import AddNewAddressWrapper from './elements/AddNewAddressWrapper';
-import formatCurrency from '@/utils/formatCurrency';
+} from "@/actions/CommonActions";
+import { AppDispatch } from "@/redux/store";
+import { openPopUp } from "@/redux/reducers/modalReducer";
+import { resetRegion } from "@/redux/reducers/locationReducer";
+import { RootStackParamList } from "@/navigation/CustomStateComponent";
+import { ProjectDetail, visitationListResponse } from "@/interfaces";
+import DocumentWarning from "./elements/DocumentWarning";
+import UpdatedAddressWrapper from "./elements/UpdatedAddressWrapper";
+import AddNewAddressWrapper from "./elements/AddNewAddressWrapper";
+import formatCurrency from "@/utils/formatCurrency";
 
-type CustomerDetailRoute = RouteProp<RootStackParamList['CUSTOMER_DETAIL']>;
+type CustomerDetailRoute = RouteProp<RootStackParamList["CUSTOMER_DETAIL"]>;
 
 export default function CustomerDetail() {
   const route = useRoute<CustomerDetailRoute>();
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
-  const [isBillingLocationVisible, setIsBillingLocationVisible] = useState(false);
-  const [isProjectLocationVisible, setIsProjectLocationVisible] = useState(false);
+  const [isBillingLocationVisible, setIsBillingLocationVisible] =
+    useState(false);
+  const [isProjectLocationVisible, setIsProjectLocationVisible] =
+    useState(false);
   const [customerData, setCustomerData] = useState<ProjectDetail>({});
-  const [billingAddress, setFormattedBillingAddress] = useState('');
-  const [projectAddress, setFormattedProjectAddress] = useState('');
+  const [billingAddress, setFormattedBillingAddress] = useState("");
+  const [projectAddress, setFormattedProjectAddress] = useState("");
   const [region, setRegion] = useState(null);
   const [project, setProject] = useState(null);
   const [regionExisting, setExistingRegion] = useState(null);
   const [projectExisting, setExistingProject] = useState(null);
-  const [existedVisitation, setExistingVisitation] = useState<visitationListResponse>(null);
-  const dataNotLoadedYet = JSON.stringify(customerData) === '{}';
+  const [existedVisitation, setExistingVisitation] =
+    useState<visitationListResponse>(null);
+  const dataNotLoadedYet = JSON.stringify(customerData) === "{}";
   const documentsNotCompleted = customerData?.ProjectDocs?.length !== 8;
   const updatedAddressBilling = billingAddress?.length > 0;
   const updateAddressProject = projectAddress?.length > 0;
@@ -91,15 +92,15 @@ export default function CustomerDetail() {
         console.log(error.message);
         dispatch(
           openPopUp({
-            popUpType: 'error',
-            highlightedText: 'Error',
-            popUpText: 'Error fetching project detail',
+            popUpType: "error",
+            highlightedText: "Error",
+            popUpText: "Error fetching project detail",
             outsideClickClosePopUp: true,
-          }),
+          })
         );
       }
     },
-    [dispatch],
+    [dispatch]
   );
 
   const getProjectIndividual = useCallback(
@@ -126,15 +127,15 @@ export default function CustomerDetail() {
       } catch (error) {
         dispatch(
           openPopUp({
-            popUpType: 'error',
-            highlightedText: 'Error',
-            popUpText: 'Error fetching visitation Data',
+            popUpType: "error",
+            highlightedText: "Error",
+            popUpText: "Error fetching visitation Data",
             outsideClickClosePopUp: true,
-          }),
+          })
         );
       }
     },
-    [dispatch],
+    [dispatch]
   );
   React.useEffect(() => {
     crashlytics().log(CUSTOMER_DETAIL);
@@ -153,21 +154,21 @@ export default function CustomerDetail() {
         const { id } = existedVisitation?.project;
         getProjectDetail(id);
       }
-    }, [existedVisitation, getProjectDetail, getProjectIndividual]),
+    }, [existedVisitation, getProjectDetail, getProjectIndividual])
   );
 
   useEffect(() => {
     DeviceEventEmitter.addListener(
-      'getCoordinateFromCustomerDetail',
+      "getCoordinateFromCustomerDetail",
       (data) => {
-        if (data.sourceType === 'billing') {
+        if (data.sourceType === "billing") {
           setRegion(data.coordinate);
           setIsBillingLocationVisible(true);
         } else {
           setProject(data.coordinate);
           setIsProjectLocationVisible(true);
         }
-      },
+      }
     );
   }, [setIsBillingLocationVisible, setIsProjectLocationVisible]);
 
@@ -204,9 +205,7 @@ export default function CustomerDetail() {
           setIsModalVisible={setIsBillingLocationVisible}
           isModalVisible={isBillingLocationVisible}
           region={region || regionExisting}
-          isUpdate={
-            !!(billingAddress !== undefined && billingAddress !== '')
-          }
+          isUpdate={!!(billingAddress !== undefined && billingAddress !== "")}
           setRegion={setRegion}
           projectId={customerData.id}
         />
@@ -218,9 +217,7 @@ export default function CustomerDetail() {
           setIsModalVisible={setIsProjectLocationVisible}
           isModalVisible={isProjectLocationVisible}
           region={project || projectExisting}
-          isUpdate={
-            !!(projectAddress !== undefined && projectAddress !== '')
-          }
+          isUpdate={!!(projectAddress !== undefined && projectAddress !== "")}
           setRegion={setProject}
           projectId={customerData.id}
         />
@@ -263,7 +260,7 @@ export default function CustomerDetail() {
             <Text style={styles.fontW300}>
               {customerData?.availableDeposit
                 ? formatCurrency(parseInt(customerData.availableDeposit, 10))
-                : '-'}
+                : "-"}
             </Text>
           </View>
           <BSpacer size="extraSmall" />
@@ -318,18 +315,18 @@ export default function CustomerDetail() {
             <BTouchableText
               title="Lihat Semua"
               textStyle={styles.seeAllText}
-              onPress={() => navigation.navigate(DOCUMENTS, {
-                docs: customerData.ProjectDocs,
-                projectId: customerData.id,
-              })}
+              onPress={() =>
+                navigation.navigate(DOCUMENTS, {
+                  docs: customerData.ProjectDocs,
+                  projectId: customerData.id,
+                })
+              }
             />
           </View>
           <BSpacer size="extraSmall" />
           <View style={styles.between}>
             <Text style={styles.fontW300}>Kelengkapan Dokumen</Text>
-            <Text
-              style={styles.fontW300}
-            >
+            <Text style={styles.fontW300}>
               {`${customerData?.ProjectDocs?.length}/8`}
             </Text>
           </View>
@@ -351,8 +348,8 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.md,
   },
   between: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
   fontW300: {
@@ -366,12 +363,12 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.md,
   },
   billingStyle: {
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   loading: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1,
   },
   seeAllText: {

@@ -1,42 +1,42 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { DeviceEventEmitter } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { StackActions, useNavigation } from '@react-navigation/native';
-import moment from 'moment';
-import crashlytics from '@react-native-firebase/crashlytics';
-import LastStepPopUp from '../LastStepPopUp';
+import React, { useCallback, useEffect, useState } from "react";
+import { DeviceEventEmitter } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { StackActions, useNavigation } from "@react-navigation/native";
+import moment from "moment";
+import crashlytics from "@react-native-firebase/crashlytics";
+import LastStepPopUp from "../LastStepPopUp";
 import {
   locationPayloadType,
   payloadPostType,
   picPayloadType,
   projectPayloadType,
   visitationPayload,
-} from '@/interfaces';
-import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
+} from "@/interfaces";
+import { postUploadFiles } from "@/redux/async-thunks/commonThunks";
 import {
   postVisitation,
   putVisitationFlow,
-} from '@/redux/async-thunks/productivityFlowThunks';
-import { RootState } from '@/redux/store';
+} from "@/redux/async-thunks/productivityFlowThunks";
+import { RootState } from "@/redux/store";
 import {
   deleteImage,
   resetImageURLS,
   setuploadedFilesResponse,
-} from '@/redux/reducers/cameraReducer';
-import { openPopUp } from '@/redux/reducers/modalReducer';
+} from "@/redux/reducers/cameraReducer";
+import { openPopUp } from "@/redux/reducers/modalReducer";
 import {
   CAMERA,
   CREATE_VISITATION,
   GALLERY_VISITATION,
   SPH,
-} from '@/navigation/ScreenNames';
-import { BGallery, PopUpQuestion } from '@/components';
+} from "@/navigation/ScreenNames";
+import { BGallery, PopUpQuestion } from "@/components";
 import {
   deleteImagesVisitation,
   resetVisitationState,
   updateDataVisitation,
   VisitationGlobalState,
-} from '@/redux/reducers/VisitationReducer';
+} from "@/redux/reducers/VisitationReducer";
 
 export type selectedDateType = {
   date: string;
@@ -46,7 +46,7 @@ export type selectedDateType = {
 
 function payloadMapper(
   values: VisitationGlobalState,
-  type: 'VISIT' | 'SPH' | 'REJECTED' | '',
+  type: "VISIT" | "SPH" | "REJECTED" | ""
 ): payloadPostType {
   const today = moment();
   const payload = {
@@ -63,10 +63,10 @@ function payloadMapper(
     payload.pic = values.pics;
   }
   payload.visitation.order = 1;
-  if (type === 'REJECTED') {
+  if (type === "REJECTED") {
     payload.visitation.status = type;
   } else {
-    payload.visitation.status = 'VISIT';
+    payload.visitation.status = "VISIT";
   }
 
   if (values.locationAddress?.line2) {
@@ -82,7 +82,8 @@ function payloadMapper(
     payload.project.locationAddressId = values.existingLocationId;
   }
   if (values.locationAddress?.formattedAddress) {
-    payload.project.location.formattedAddress = values.locationAddress?.formattedAddress;
+    payload.project.location.formattedAddress =
+      values.locationAddress?.formattedAddress;
   }
   if (values.locationAddress?.longitude) {
     payload.project.location.lon = values.locationAddress?.longitude;
@@ -91,7 +92,8 @@ function payloadMapper(
     payload.project.location.lat = values.locationAddress?.latitude;
   }
   if (values.createdLocation?.formattedAddress) {
-    payload.visitation.location.formattedAddress = values.createdLocation?.formattedAddress;
+    payload.visitation.location.formattedAddress =
+      values.createdLocation?.formattedAddress;
   }
   if (values.createdLocation?.lon) {
     payload.visitation.location.lon = values.createdLocation?.lon;
@@ -115,7 +117,7 @@ function payloadMapper(
   if (values.notes) {
     payload.visitation.visitNotes = values.notes;
   }
-  if (values.selectedDate && type === 'VISIT') {
+  if (values.selectedDate && type === "VISIT") {
     const selectedDate = moment(values.selectedDate.date);
     payload.visitation.bookingDate = selectedDate.valueOf();
   }
@@ -125,10 +127,10 @@ function payloadMapper(
   payload.visitation.finishDate = today.valueOf();
   // }
 
-  if (values.kategoriAlasan && type === 'REJECTED') {
+  if (values.kategoriAlasan && type === "REJECTED") {
     payload.visitation.rejectCategory = values.kategoriAlasan;
   }
-  if (values.alasanPenolakan && type === 'REJECTED') {
+  if (values.alasanPenolakan && type === "REJECTED") {
     payload.visitation.rejectNotes = values.alasanPenolakan;
   }
   if (values.products && values.products.length > 0) {
@@ -142,7 +144,7 @@ function payloadMapper(
     payload.project.name = values.projectName;
   }
   if (values.companyName) {
-    if (values.customerType === 'COMPANY') {
+    if (values.customerType === "COMPANY") {
       payload.project.companyDisplayName = values.companyName;
     }
   }
@@ -158,12 +160,12 @@ function payloadMapper(
   // if (values.currentCompetitor) {
   //   payload.visitation.competitors = [values.currentCompetitor];
   // }
-  payload.visitation.isBooking = type === 'VISIT';
+  payload.visitation.isBooking = type === "VISIT";
 
   if (values.visitationId) {
     payload.visitation.visitationId = values.visitationId;
   }
-  if (typeof values.existingOrderNum === 'number') {
+  if (typeof values.existingOrderNum === "number") {
     payload.visitation.order = values.existingOrderNum;
   }
 
@@ -182,10 +184,10 @@ function Fifth() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { isUploadLoading, isPostVisitationLoading } = useSelector(
-    (state: RootState) => state.common,
+    (state: RootState) => state.common
   );
   const { uploadedFilesResponse } = useSelector(
-    (state: RootState) => state.camera,
+    (state: RootState) => state.camera
   );
   const visitationData = useSelector((state: RootState) => state.visitation);
 
@@ -194,7 +196,7 @@ function Fifth() {
       updateDataVisitation({
         type: key,
         value: e,
-      }),
+      })
     );
   };
 
@@ -211,31 +213,31 @@ function Fifth() {
   }, [visitationData.images]);
 
   useEffect(() => {
-    DeviceEventEmitter.addListener('CreateVisitation.continueButton', () => {
+    DeviceEventEmitter.addListener("CreateVisitation.continueButton", () => {
       setIsLastStepVisible((curr) => !curr);
     });
-    DeviceEventEmitter.addListener('Camera.preview', () => {
+    DeviceEventEmitter.addListener("Camera.preview", () => {
       // setIsLastStepVisible((curr) => !curr);
       setIsPopUpVisible((curr) => !curr);
     });
     DeviceEventEmitter.addListener(
-      'CalendarScreen.selectedDate',
+      "CalendarScreen.selectedDate",
       (date: selectedDateType) => {
-        onChange('selectedDate')(date);
+        onChange("selectedDate")(date);
         setIsLastStepVisible((curr) => !curr);
-      },
+      }
     );
 
     return () => {
-      DeviceEventEmitter.removeAllListeners('CreateVisitation.continueButton');
-      DeviceEventEmitter.removeAllListeners('CalendarScreen.selectedDate');
-      DeviceEventEmitter.removeAllListeners('Camera.preview');
+      DeviceEventEmitter.removeAllListeners("CreateVisitation.continueButton");
+      DeviceEventEmitter.removeAllListeners("CalendarScreen.selectedDate");
+      DeviceEventEmitter.removeAllListeners("Camera.preview");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onPressSubmit = useCallback(
-    async (type: 'VISIT' | 'SPH' | 'REJECTED' | '') => {
+    async (type: "VISIT" | "SPH" | "REJECTED" | "") => {
       try {
         const payload: payloadPostType = payloadMapper(visitationData, type);
 
@@ -244,24 +246,25 @@ function Fifth() {
           PUT: putVisitationFlow,
         };
         const isDataUpdate = !!payload?.visitation?.id;
-        const methodStr = isDataUpdate ? 'PUT' : 'POST';
+        const methodStr = isDataUpdate ? "PUT" : "POST";
 
         if (uploadedFilesResponse.length === 0) {
           const photoFiles = visitationData.images
             ?.filter((v, i) => v.file !== null)
             .map((photo) => ({
               ...photo.file,
-              uri: photo?.file?.uri?.replace('file:', 'file://'),
+              uri: photo?.file?.uri?.replace("file:", "file://"),
             }));
           const data = await dispatch(
-            postUploadFiles({ files: photoFiles, from: 'visitation' }),
+            postUploadFiles({ files: photoFiles, from: "visitation" })
           ).unwrap();
-          const files: { id: string; type: 'GALLERY' | 'COVER' }[] = [];
+          const files: { id: string; type: "GALLERY" | "COVER" }[] = [];
           data.forEach((photo: any) => {
             const photoName = `${photo.name}.${photo.type}`;
             const photoNamee = `${photo.name}.jpg`;
             const foundObject = visitationData.images?.find(
-              (obj) => obj?.file?.name === photoName || obj?.file?.name === photoNamee,
+              (obj) =>
+                obj?.file?.name === photoName || obj?.file?.name === photoNamee
             );
             if (foundObject) {
               files.push({
@@ -283,14 +286,14 @@ function Fifth() {
           }
 
           const response = await dispatch(
-            visitationMethod[methodStr](payloadData),
+            visitationMethod[methodStr](payloadData)
           ).unwrap();
           setIsLastStepVisible(false);
-          if (type === 'SPH') {
+          if (type === "SPH") {
             navigation.dispatch(
               StackActions.replace(SPH, {
                 projectId: response.projectId,
-              }),
+              })
             );
           } else {
             navigation.goBack();
@@ -307,14 +310,14 @@ function Fifth() {
             payloadData.visitationId = payload?.visitation?.id;
           }
           const response = await dispatch(
-            visitationMethod[methodStr](payloadData),
+            visitationMethod[methodStr](payloadData)
           ).unwrap();
           setIsLastStepVisible(false);
-          if (type === 'SPH') {
+          if (type === "SPH") {
             navigation.dispatch(
               StackActions.replace(SPH, {
                 projectId: response.projectId,
-              }),
+              })
             );
           } else {
             navigation.goBack();
@@ -324,26 +327,26 @@ function Fifth() {
         dispatch(resetVisitationState());
         dispatch(
           openPopUp({
-            popUpType: 'success',
-            popUpText: 'Berhasil membuat jadwal kunjungan',
-            highlightedText: 'visitation',
+            popUpType: "success",
+            popUpText: "Berhasil membuat jadwal kunjungan",
+            highlightedText: "visitation",
             outsideClickClosePopUp: true,
-          }),
+          })
         );
       } catch (error: any) {
-        const message = error.message || 'Error membuat jadwal kunjungan';
+        const message = error.message || "Error membuat jadwal kunjungan";
         dispatch(
           openPopUp({
-            popUpType: 'error',
+            popUpType: "error",
             popUpText: message,
-            highlightedText: 'error',
+            highlightedText: "error",
             outsideClickClosePopUp: true,
-          }),
+          })
         );
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [visitationData],
+    [visitationData]
   );
 
   return (
@@ -355,10 +358,10 @@ function Fifth() {
           setIsPopUpVisible((curr) => !curr);
           navigation.dispatch(
             StackActions.push(CAMERA, {
-              photoTitle: 'Kunjungan',
+              photoTitle: "Kunjungan",
               closeButton: true,
               navigateTo: GALLERY_VISITATION,
-            }),
+            })
           );
         }}
       />
@@ -368,12 +371,12 @@ function Fifth() {
         selectedDate={
           visitationData.selectedDate
             ? `${visitationData.selectedDate?.day}, ${visitationData.selectedDate?.prettyDate}`
-            : ''
+            : ""
         }
         closedLostValueOnChange={{
-          dropdownOnchange: onChange('kategoriAlasan'),
+          dropdownOnchange: onChange("kategoriAlasan"),
           dropdownValue: visitationData.kategoriAlasan,
-          areaOnChange: onChange('alasanPenolakan'),
+          areaOnChange: onChange("alasanPenolakan"),
           areaValue: visitationData.alasanPenolakan,
         }}
         onPressSubmit={onPressSubmit}
@@ -381,13 +384,15 @@ function Fifth() {
       />
       <BGallery
         picts={visitationData.images}
-        addMorePict={() => navigation.dispatch(
-          StackActions.push(CAMERA, {
-            photoTitle: 'Kunjungan',
-            closeButton: true,
-            navigateTo: GALLERY_VISITATION,
-          }),
-        )}
+        addMorePict={() =>
+          navigation.dispatch(
+            StackActions.push(CAMERA, {
+              photoTitle: "Kunjungan",
+              closeButton: true,
+              navigateTo: GALLERY_VISITATION,
+            })
+          )
+        }
         removePict={removeImage}
       />
     </>

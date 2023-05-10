@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { SphContextInterface, SphStateInterface } from '@/interfaces';
+import React, { useState } from "react";
+import { SphContextInterface, SphStateInterface } from "@/interfaces";
 
 const initialState: SphStateInterface = {
   selectedCompany: null,
@@ -7,13 +7,13 @@ const initialState: SphStateInterface = {
   projectAddress: null,
   isBillingAddressSame: false,
   billingAddress: {
-    name: '',
-    phone: '',
+    name: "",
+    phone: "",
     addressAutoComplete: {},
-    fullAddress: '',
+    fullAddress: "",
   },
   distanceFromLegok: null,
-  paymentType: '',
+  paymentType: "",
   paymentRequiredDocuments: {},
   paymentDocumentsFullfilled: false,
   paymentBankGuarantee: false,

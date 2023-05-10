@@ -4,18 +4,18 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-} from 'react-native';
-import * as React from 'react';
-import DocumentPicker from 'react-native-document-picker';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useDispatch } from 'react-redux';
-import { colors, fonts, layout } from '@/constants';
-import { resScale } from '@/utils';
-import BLabel from './BLabel';
-import { openPopUp } from '@/redux/reducers/modalReducer';
-import { AppDispatch } from '@/redux/store';
+} from "react-native";
+import * as React from "react";
+import DocumentPicker from "react-native-document-picker";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import Entypo from "react-native-vector-icons/Entypo";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useDispatch } from "react-redux";
+import { colors, fonts, layout } from "@/constants";
+import { resScale } from "@/utils";
+import BLabel from "./BLabel";
+import { openPopUp } from "@/redux/reducers/modalReducer";
+import { AppDispatch } from "@/redux/store";
 
 // AntDesign
 type BFileInputType = {
@@ -28,18 +28,18 @@ type BFileInputType = {
   isRequire?: boolean;
   sizeInNumber?: number;
   titleBold?:
-  | 'bold'
-  | '400'
-  | 'normal'
-  | '100'
-  | '200'
-  | '300'
-  | '500'
-  | '600'
-  | '700'
-  | '800'
-  | '900'
-  | undefined;
+    | "bold"
+    | "400"
+    | "normal"
+    | "100"
+    | "200"
+    | "300"
+    | "500"
+    | "600"
+    | "700"
+    | "800"
+    | "900"
+    | undefined;
 };
 
 function iconState(value: any, isLoading?: boolean, isError?: boolean) {
@@ -83,9 +83,9 @@ export default function BFileInput({
       const res = await DocumentPicker.pickSingle({
         // Provide which type of file you want user to pick
         type: [
-          'image/png',
-          'image/jpg',
-          'image/jpeg',
+          "image/png",
+          "image/jpg",
+          "image/jpeg",
           DocumentPicker.types.pdf,
         ],
         allowMultiSelection: false,
@@ -108,14 +108,14 @@ export default function BFileInput({
       }
       // Handling any exception (If any)
       if (DocumentPicker.isCancel(err)) {
-        console.log('User Canceled Document Picker');
+        console.log("User Canceled Document Picker");
       } else {
         dispatch(
           openPopUp({
-            popUpType: 'error',
-            popUpText: err.message || 'Terjadi error dalam pengambilan file',
+            popUpType: "error",
+            popUpText: err.message || "Terjadi error dalam pengambilan file",
             outsideClickClosePopUp: true,
-          }),
+          })
         );
       }
     }
@@ -156,8 +156,8 @@ const style = StyleSheet.create({
     height: resScale(40),
     borderRadius: layout.radius.sm,
     padding: layout.pad.md,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
   textStyle: {
     fontFamily: fonts.family.montserrat[500],
@@ -166,27 +166,27 @@ const style = StyleSheet.create({
   },
   dashedBorder: {
     borderWidth: resScale(2),
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
     borderColor: colors.border.altGrey,
   },
   greenDot: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
     width: resScale(16),
     height: resScale(16),
     borderRadius: layout.radius.lg,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   redIcon: {
     backgroundColor: colors.primary,
     width: resScale(16),
     height: resScale(16),
     borderRadius: layout.radius.lg,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

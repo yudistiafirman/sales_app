@@ -1,18 +1,18 @@
-import { StyleSheet, FlatList } from 'react-native';
-import React from 'react';
-import { FlashList } from '@shopify/flash-list';
-import { layout } from '@/constants';
-import { BEmptyState, BSpacer, BVisitationCard } from '@/components';
-import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
-import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
-import { ENTRY_TYPE } from '@/models/EnumModel';
+import { StyleSheet, FlatList } from "react-native";
+import React from "react";
+import { FlashList } from "@shopify/flash-list";
+import { layout } from "@/constants";
+import { BEmptyState, BSpacer, BVisitationCard } from "@/components";
+import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
+import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
+import { ENTRY_TYPE } from "@/models/EnumModel";
 
 interface OperationListProps {
   data: OperationsDeliveryOrdersListResponse[];
   onEndReached?:
-  | ((info: { distanceFromEnd: number }) => void)
-  | null
-  | undefined;
+    | ((info: { distanceFromEnd: number }) => void)
+    | null
+    | undefined;
   refreshing?: boolean;
   loadList?: boolean;
   isLoadMore?: boolean;
@@ -49,12 +49,12 @@ export default function OperationList({
         unit: `${item?.quantity} m³`,
         pilStatus: undefined,
         lonlat:
-            userType === ENTRY_TYPE.DRIVER
-              ? {
+          userType === ENTRY_TYPE.DRIVER
+            ? {
                 longitude: item.project?.ShippingAddress?.lon,
                 latitude: item.project?.ShippingAddress?.lat,
               }
-              : undefined,
+            : undefined,
       }}
     />
   );

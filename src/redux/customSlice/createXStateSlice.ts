@@ -1,4 +1,4 @@
-import { MiddlewareAPI } from '@reduxjs/toolkit';
+import { MiddlewareAPI } from "@reduxjs/toolkit";
 import {
   AnyEventObject,
   EventObject,
@@ -6,7 +6,7 @@ import {
   Interpreter,
   State,
   StateMachine,
-} from 'xstate';
+} from "xstate";
 
 /**
  * A 'slice' (to use the Redux Toolkit terminology)
@@ -16,7 +16,7 @@ import {
 export type XStateSlice<
   TContext = any,
   TEvent extends EventObject = AnyEventObject,
-  TSelectedState = any,
+  TSelectedState = any
 > = {
   _start: (store: MiddlewareAPI) => Interpreter<TContext, any, TEvent>;
   getService: () => Interpreter<TContext, any, TEvent>;
@@ -33,16 +33,16 @@ export type XStateSlice<
 export const createXStateSlice = <
   TContext,
   TEvent extends EventObject,
-  TSelectedState,
+  TSelectedState
 >(params: {
-    name: string;
-    machine: StateMachine<TContext, any, TEvent>;
-    getSelectedState: (state: State<TContext, TEvent>) => TSelectedState;
-  }): XStateSlice<TContext, TEvent, TSelectedState> => {
+  name: string;
+  machine: StateMachine<TContext, any, TEvent>;
+  getSelectedState: (state: State<TContext, TEvent>) => TSelectedState;
+}): XStateSlice<TContext, TEvent, TSelectedState> => {
   let service: Interpreter<TContext, any, TEvent> | undefined;
 
   const initialReduxState = params.getSelectedState(
-    params.machine.initialState,
+    params.machine.initialState
   );
 
   const updateEvent = (state: TSelectedState) => ({
@@ -55,7 +55,7 @@ export const createXStateSlice = <
    */
   const reducer = (
     state: TSelectedState | undefined = initialReduxState,
-    event: any,
+    event: any
   ): TSelectedState => {
     switch (event.type) {
       case `${params.name}.xstate.update`:
@@ -96,7 +96,7 @@ export const createXStateSlice = <
   const getService = () => {
     if (!service) {
       throw new Error(
-        `getService was called on ${params.name} slice before slice.start() was called. slice.start() is usually called by the middleware.`,
+        `getService was called on ${params.name} slice before slice.start() was called. slice.start() is usually called by the middleware.`
       );
     }
     return service;

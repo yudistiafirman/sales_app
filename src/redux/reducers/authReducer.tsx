@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { UserModel } from '@/models/User';
-import { isDevelopment, isProduction } from '@/utils/generalFunc';
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { UserModel } from "@/models/User";
+import { isDevelopment, isProduction } from "@/utils/generalFunc";
 
 interface LoginCredential {
   phoneNumber: string;
@@ -35,7 +35,7 @@ interface AuthState {
 const initialState: AuthState = {
   userData: null,
   loginCredential: {
-    phoneNumber: '',
+    phoneNumber: "",
   },
   isLoading: true,
   isSignout: false,
@@ -55,12 +55,12 @@ const initialState: AuthState = {
     enable_sph: true,
     enable_transaction_menu: true,
     enable_visitation: true,
-    force_update: { min_version: '1.0.0', is_forced: false },
+    force_update: { min_version: "1.0.0", is_forced: false },
   },
 };
 
 export const authSlice = createSlice({
-  name: 'authentication',
+  name: "authentication",
   initialState,
   reducers: {
     setPhoneNumber: (state, action: PayloadAction<string>) => ({

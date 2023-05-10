@@ -1,8 +1,8 @@
-import React from 'react';
-import { GestureResponderEvent, TouchableOpacity } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import PriceStyle from '../PriceStyle';
-import { BSearchBar } from '@/components';
+import React from "react";
+import { GestureResponderEvent, TouchableOpacity } from "react-native";
+import { TextInput } from "react-native-paper";
+import PriceStyle from "../PriceStyle";
+import { BSearchBar } from "@/components";
 
 function PriceSearchBar({
   onPress,

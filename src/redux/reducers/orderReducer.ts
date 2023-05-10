@@ -1,13 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { postOrderSph } from '../async-thunks/orderThunks';
-import { postUploadFiles } from '../async-thunks/commonThunks';
+import { createSlice } from "@reduxjs/toolkit";
+import { postOrderSph } from "../async-thunks/orderThunks";
+import { postUploadFiles } from "../async-thunks/commonThunks";
 
 const initialState = {
   isOrderLoading: false,
 };
 
 export const orderSlice = createSlice({
-  name: 'order',
+  name: "order",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

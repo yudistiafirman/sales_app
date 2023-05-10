@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
-import Icons from 'react-native-vector-icons/Entypo';
-import resScale from '@/utils/resScale';
-import { colors, fonts, layout } from '@/constants';
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import Icons from "react-native-vector-icons/Entypo";
+import resScale from "@/utils/resScale";
+import { colors, fonts, layout } from "@/constants";
 
 type UnitType = {
   unit?: string;
@@ -26,8 +26,8 @@ export default function Unit({ unit }: UnitType) {
 const style = StyleSheet.create({
   container: {
     marginRight: layout.pad.md,
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row",
   },
   iconStyle: {
     marginRight: layout.pad.md,

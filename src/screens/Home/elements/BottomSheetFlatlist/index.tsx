@@ -1,14 +1,14 @@
-import { View, StyleSheet, Text } from 'react-native';
-import React, { useCallback } from 'react';
+import { View, StyleSheet, Text } from "react-native";
+import React, { useCallback } from "react";
 
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import { resScale } from '@/utils';
-import { layout } from '@/constants';
-import { BSpacer, BVisitationCard } from '@/components';
-import { visitationDataType } from '@/interfaces';
-import EmptyState from '@/components/organism/BEmptyState';
+import LinearGradient from "react-native-linear-gradient";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
+import { resScale } from "@/utils";
+import { layout } from "@/constants";
+import { BSpacer, BVisitationCard } from "@/components";
+import { visitationDataType } from "@/interfaces";
+import EmptyState from "@/components/organism/BEmptyState";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -57,7 +57,7 @@ export default function BottomSheetFlatlist({
 }: FooterType & BottomSheetFlatlistType) {
   const footerComp = useCallback(
     () => <FooterLoading isLoading={isLoading} />,
-    [isLoading],
+    [isLoading]
   );
   const separator = useCallback(() => <BSpacer size="extraSmall" />, []);
   const renderEmptyComponent = () => {
@@ -84,9 +84,9 @@ export default function BottomSheetFlatlist({
           item={item}
           searchQuery={searchQuery}
           onPress={() => {
-						  if (onPressItem) {
-						    onPressItem(item);
-						  }
+            if (onPressItem) {
+              onPressItem(item);
+            }
           }}
         />
       )}
@@ -102,11 +102,11 @@ const style = StyleSheet.create({
   flatListContainer: {},
   flatListLoading: {
     marginTop: layout.pad.md,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   flatListShimmer: {
-    width: '100%',
+    width: "100%",
     height: resScale(60),
     borderRadius: layout.radius.md,
   },

@@ -1,14 +1,14 @@
-import { Dimensions, StyleSheet } from 'react-native';
-import { layout } from '@/constants';
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import resScale from '@/utils/resScale';
+import { Dimensions, StyleSheet } from "react-native";
+import { layout } from "@/constants";
+import colors from "@/constants/colors";
+import font from "@/constants/fonts";
+import resScale from "@/utils/resScale";
 
 const LocationStyles = StyleSheet.create({
   bottomSheetContainer: {
     minHeight: resScale(150),
-    width: Dimensions.get('window').width,
-    position: 'absolute',
+    width: Dimensions.get("window").width,
+    position: "absolute",
     bottom: 0,
     backgroundColor: colors.white,
     borderTopStartRadius: layout.pad.lg,
@@ -25,13 +25,13 @@ const LocationStyles = StyleSheet.create({
   coordinateDetailsInnerContainer: {
     marginHorizontal: layout.pad.md,
     marginVertical: layout.pad.md,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   mapIconContainer: {
     flex: 0.1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
   },
   addressTitle: {
     fontFamily: font.family.montserrat[500],
@@ -44,7 +44,7 @@ const LocationStyles = StyleSheet.create({
     fontSize: font.size.sm,
     color: colors.text.darker,
     marginBottom: layout.pad.sm,
-    textAlign: 'left',
+    textAlign: "left",
   },
   buttonStyles: {
     borderRadius: layout.radius.md,

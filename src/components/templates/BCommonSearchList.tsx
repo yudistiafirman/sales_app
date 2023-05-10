@@ -1,33 +1,28 @@
-import * as React from 'react';
-import {
-  ListRenderItem,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
-import { TextInput } from 'react-native-paper';
-import { FlashList } from '@shopify/flash-list';
-import BVisitationCard from '@/components/molecules/BVisitationCard';
-import { colors, layout } from '@/constants';
-import BCommonListShimmer from './BCommonListShimmer';
-import { selectedCompanyInterface, visitationDataType } from '@/interfaces';
-import BSpacer from '@/components/atoms/BSpacer';
-import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
-import BSearchBar from '@/components/molecules/BSearchBar';
-import BTabSections from '@/components/organism/TabSections';
-import BEmptyState from '../organism/BEmptyState';
-import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO';
+import * as React from "react";
+import { ListRenderItem, Platform, StyleSheet, View } from "react-native";
+import { TextInput } from "react-native-paper";
+import { FlashList } from "@shopify/flash-list";
+import BVisitationCard from "@/components/molecules/BVisitationCard";
+import { colors, layout } from "@/constants";
+import BCommonListShimmer from "./BCommonListShimmer";
+import { selectedCompanyInterface, visitationDataType } from "@/interfaces";
+import BSpacer from "@/components/atoms/BSpacer";
+import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
+import BSearchBar from "@/components/molecules/BSearchBar";
+import BTabSections from "@/components/organism/TabSections";
+import BEmptyState from "../organism/BEmptyState";
+import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
 
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
-CreatedSPHListResponse &
-selectedCompanyInterface;
+  CreatedSPHListResponse &
+  selectedCompanyInterface;
 
 interface BCommonSearchListProps {
   data: CreatedSPHListResponse[] | CreatedPurchaseOrderListResponse[] | any[];
   onEndReached?:
-  | ((info: { distanceFromEnd: number }) => void)
-  | null
-  | undefined;
+    | ((info: { distanceFromEnd: number }) => void)
+    | null
+    | undefined;
   refreshing?: boolean;
   emptyPOName?: string;
   isLoadMore?: boolean;
@@ -89,15 +84,15 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
         id: idx,
         name: item?.name,
         location:
-          item.locationName
-          || item?.ShippingAddress?.Postal?.City?.name
-          || item?.location
-          || item?.locationAddress?.line1
-          || item?.address?.line1,
+          item.locationName ||
+          item?.ShippingAddress?.Postal?.City?.name ||
+          item?.location ||
+          item?.locationAddress?.line1 ||
+          item?.address?.line1,
         pilNames:
-          item?.PurchaseOrders?.map((it) => it.brikNumber)
-          || item?.QuotationRequests?.map((val) => val?.QuotationLetter?.number),
-        picOrCompanyName: !hidePicName ? picOrCompanyName : '',
+          item?.PurchaseOrders?.map((it) => it.brikNumber) ||
+          item?.QuotationRequests?.map((val) => val?.QuotationLetter?.number),
+        picOrCompanyName: !hidePicName ? picOrCompanyName : "",
         status: item?.status,
         pilStatus: item?.pilStatus,
       };
@@ -115,22 +110,22 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
         </>
       );
     },
-    [onPressList, searchQuery],
+    [onPressList, searchQuery]
   );
   return (
     <View style={styles.container}>
       <BSearchBar
         textInputStyle={
-          Platform.OS !== 'android' && { paddingBottom: layout.pad.sm }
+          Platform.OS !== "android" && { paddingBottom: layout.pad.sm }
         }
         value={searchQuery}
         onChangeText={(text) => onChangeText(text)}
-        left={(
+        left={
           <TextInput.Icon
             onPress={onPressMagnify && onPressMagnify}
             icon="magnify"
           />
-        )}
+        }
         right={
           onClearValue && <TextInput.Icon onPress={onClearValue} icon="close" />
         }

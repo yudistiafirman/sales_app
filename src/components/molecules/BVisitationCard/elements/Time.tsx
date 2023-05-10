@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import resScale from '@/utils/resScale';
-import { colors, fonts, layout } from '@/constants';
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import resScale from "@/utils/resScale";
+import { colors, fonts, layout } from "@/constants";
 
 type TimeType = {
   time?: string;
@@ -26,8 +26,8 @@ export default function Time({ time }: TimeType) {
 const style = StyleSheet.create({
   container: {
     marginRight: layout.pad.md,
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row",
   },
   iconStyle: {
     marginRight: layout.pad.md,

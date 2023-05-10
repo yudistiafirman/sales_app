@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleProp, View, ViewStyle } from 'react-native';
-import { colors } from '@/constants';
+import React from "react";
+import { StyleProp, View, ViewStyle } from "react-native";
+import { colors } from "@/constants";
 
 const baseStyle = {
   flex: 1,

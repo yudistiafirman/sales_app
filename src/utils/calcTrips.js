@@ -1,4 +1,4 @@
-import algebra from 'algebra.js';
+import algebra from "algebra.js";
 const { Equation } = algebra;
 
 export default (total) => {
@@ -16,7 +16,7 @@ export default (total) => {
   for (let s7 = highest; s7 >= 0; s7--) {
     const x1 = algebra.parse(`-8/7y + ${total}/7`);
     const eq = new Equation(x1, s7);
-    const s8e = eq.solveFor('y');
+    const s8e = eq.solveFor("y");
     const s8r = s8e.numer / s8e.denom;
     const s8 = Math.floor(s8r);
     const r = (s8r - s8) * 8;

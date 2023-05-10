@@ -5,12 +5,12 @@ import {
   StyleSheet,
   SafeAreaView,
   Platform,
-} from 'react-native';
-import React, { useContext, useState } from 'react';
-import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
-import { useDispatch, useSelector } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { FlashList } from '@shopify/flash-list';
+} from "react-native";
+import React, { useContext, useState } from "react";
+import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
+import { useDispatch, useSelector } from "react-redux";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { FlashList } from "@shopify/flash-list";
 import {
   BBackContinueBtn,
   BContainer,
@@ -19,9 +19,9 @@ import {
   BSpacer,
   BProductCard,
   BVisitationCard,
-} from '@/components';
-import { resScale } from '@/utils';
-import { colors, fonts, layout } from '@/constants';
+} from "@/components";
+import { resScale } from "@/utils";
+import { colors, fonts, layout } from "@/constants";
 import {
   deliveryAndDistance,
   Input,
@@ -30,22 +30,22 @@ import {
   shippingAddressType,
   sphOrderPayloadType,
   SphStateInterface,
-} from '@/interfaces';
-import ChoosePicModal from '../ChoosePicModal';
-import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
-import { SphContext } from '../context/SphContext';
-import StepDone from '../StepDoneModal/StepDone';
-import { postUploadFiles } from '@/redux/async-thunks/commonThunks';
-import { postOrderSph } from '@/redux/async-thunks/orderThunks';
-import { RootState } from '@/redux/store';
-import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
-import { SPH } from '@/navigation/ScreenNames';
+} from "@/interfaces";
+import ChoosePicModal from "../ChoosePicModal";
+import BSheetAddPic from "@/screens/Visitation/elements/second/BottomSheetAddPic";
+import { SphContext } from "../context/SphContext";
+import StepDone from "../StepDoneModal/StepDone";
+import { postUploadFiles } from "@/redux/async-thunks/commonThunks";
+import { postOrderSph } from "@/redux/async-thunks/orderThunks";
+import { RootState } from "@/redux/store";
+import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import { SPH } from "@/navigation/ScreenNames";
 import {
   updateSelectedCompany,
   updateSelectedPic,
   updateUploadedAndMappedRequiredDocs,
   updateUseHighway,
-} from '@/redux/reducers/SphReducer';
+} from "@/redux/reducers/SphReducer";
 
 function countNonNullValues(array) {
   let count = 0;
@@ -77,15 +77,16 @@ function payloadMapper(sphState: SphStateInterface) {
       quantity: +product.volume,
       pouringMethod: product.pouringMethod,
       productName: product.product.name,
-      productUnit: 'm3',
+      productUnit: "m3",
     }));
 
     payload.distance.id = sphState.chosenProducts[0].additionalData.distance.id;
-    payload.distance.price = sphState.chosenProducts[0].additionalData.distance.price;
+    payload.distance.price =
+      sphState.chosenProducts[0].additionalData.distance.price;
 
     if (sphState.distanceFromLegok) {
       payload.distance.userDistance = Math.ceil(
-        sphState.distanceFromLegok / 1000,
+        sphState.distanceFromLegok / 1000
       );
     }
     // find highest delivery
@@ -93,7 +94,9 @@ function payloadMapper(sphState: SphStateInterface) {
     sphState.chosenProducts.forEach((prod) => {
       deliveries.push(prod.additionalData.delivery);
     });
-    const highestPrice = deliveries.reduce((prev, curr) => (prev.price > curr.price ? prev : curr));
+    const highestPrice = deliveries.reduce((prev, curr) =>
+      prev.price > curr.price ? prev : curr
+    );
     payload.delivery = highestPrice;
   }
 
@@ -132,10 +135,10 @@ function payloadMapper(sphState: SphStateInterface) {
   if (sphState.paymentType) {
     payload.paymentType = sphState.paymentType;
   }
-  if (typeof sphState.useHighway === 'boolean') {
+  if (typeof sphState.useHighway === "boolean") {
     payload.viaTol = sphState.useHighway;
   }
-  if (typeof sphState.isBillingAddressSame === 'boolean') {
+  if (typeof sphState.isBillingAddressSame === "boolean") {
     payload.isUseSameAddress = sphState.isBillingAddressSame;
   }
   if (selectedCompany) {
@@ -147,7 +150,7 @@ function payloadMapper(sphState: SphStateInterface) {
       payload.picArr = newPicArr;
     }
   }
-  if (typeof sphState.paymentBankGuarantee === 'boolean') {
+  if (typeof sphState.paymentBankGuarantee === "boolean") {
     payload.isProvideBankGuarantee = sphState.paymentBankGuarantee;
   }
 
@@ -174,26 +177,33 @@ function payloadMapper(sphState: SphStateInterface) {
         if (sphState.useSearchedBillingAddress) {
           payload.billingAddress.line1 = sphState.searchedBillingAddress;
         } else {
-          payload.billingAddress.line1 = sphState.billingAddress.addressAutoComplete.formattedAddress;
+          payload.billingAddress.line1 =
+            sphState.billingAddress.addressAutoComplete.formattedAddress;
         }
       }
       if (sphState.billingAddress.addressAutoComplete.postalId) {
-        payload.billingAddress.postalId = sphState.billingAddress.addressAutoComplete.postalId;
+        payload.billingAddress.postalId =
+          sphState.billingAddress.addressAutoComplete.postalId;
       }
       if (sphState.billingAddress.addressAutoComplete.lat) {
-        payload.billingAddress.lat = sphState.billingAddress.addressAutoComplete.lat;
+        payload.billingAddress.lat =
+          sphState.billingAddress.addressAutoComplete.lat;
       }
       if (sphState.billingAddress.addressAutoComplete.lon) {
-        payload.billingAddress.lon = sphState.billingAddress.addressAutoComplete.lon;
+        payload.billingAddress.lon =
+          sphState.billingAddress.addressAutoComplete.lon;
       }
       if (sphState.billingAddress.addressAutoComplete.rural) {
-        payload.billingAddress.rural = sphState.billingAddress.addressAutoComplete.rural;
+        payload.billingAddress.rural =
+          sphState.billingAddress.addressAutoComplete.rural;
       }
       if (sphState.billingAddress.addressAutoComplete.district) {
-        payload.billingAddress.district = sphState.billingAddress.addressAutoComplete.district;
+        payload.billingAddress.district =
+          sphState.billingAddress.addressAutoComplete.district;
       }
       if (sphState.billingAddress.addressAutoComplete.city) {
-        payload.billingAddress.city = sphState.billingAddress.addressAutoComplete.city;
+        payload.billingAddress.city =
+          sphState.billingAddress.addressAutoComplete.city;
       }
     }
     if (sphState.billingAddress.fullAddress) {
@@ -216,14 +226,14 @@ export default function FifthStep() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isStepDoneVisible, setIsStepDoneVisible] = useState(false);
   const [madeSphData, setMadeSphData] = useState<postSphResponseType | null>(
-    null,
+    null
   );
 
   const inputsData: Input[] = [
     {
-      label: 'Menggunakan Jalan Tol?',
+      label: "Menggunakan Jalan Tol?",
       isRequire: false,
-      type: 'switch',
+      type: "switch",
       onChange: (val: boolean) => {
         dispatch(updateUseHighway(val));
       },
@@ -248,10 +258,10 @@ export default function FifthStep() {
     try {
       dispatch(
         openPopUp({
-          popUpType: 'loading',
-          popUpText: 'Menyimpan SPH',
+          popUpType: "loading",
+          popUpText: "Menyimpan SPH",
           outsideClickClosePopUp: false,
-        }),
+        })
       );
       const payload = payloadMapper(sphState);
       const photoFiles = Object.values(sphState.paymentRequiredDocuments);
@@ -259,12 +269,12 @@ export default function FifthStep() {
       payload.projectDocs = [];
       const validPhotoCount = countNonNullValues(photoFiles);
       if (
-        (sphState.uploadedAndMappedRequiredDocs.length === 0
-          && !isNoPhotoToUpload)
-        || validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
+        (sphState.uploadedAndMappedRequiredDocs.length === 0 &&
+          !isNoPhotoToUpload) ||
+        validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
       ) {
         const photoResponse = await dispatch(
-          postUploadFiles({ files: photoFiles, from: 'sph' }),
+          postUploadFiles({ files: photoFiles, from: "sph" })
         ).unwrap();
         const files: { documentId: string; fileId: string }[] = [];
         photoResponse.forEach((photo) => {
@@ -275,14 +285,14 @@ export default function FifthStep() {
             if (
               Object.prototype.hasOwnProperty.call(
                 sphState.paymentRequiredDocuments,
-                documentId,
+                documentId
               )
             ) {
               const photoData = sphState.paymentRequiredDocuments[documentId];
               if (photoData) {
                 if (
-                  photoData.name === photoName
-                  || photoData.name === photoNamee
+                  photoData.name === photoName ||
+                  photoData.name === photoNamee
                 ) {
                   foundPhoto = documentId;
                 }
@@ -303,7 +313,7 @@ export default function FifthStep() {
         dispatch(updateUploadedAndMappedRequiredDocs(files));
       } else if (!isNoPhotoToUpload) {
         const isFilePhotoNotNull = sphState.uploadedAndMappedRequiredDocs.every(
-          (val) => val === null,
+          (val) => val === null
         );
         if (!isFilePhotoNotNull) {
           payload.projectDocs = sphState.uploadedAndMappedRequiredDocs;
@@ -318,17 +328,17 @@ export default function FifthStep() {
       dispatch(closePopUp());
       setTimeout(
         () => setIsStepDoneVisible(true),
-        Platform.OS === 'ios' ? 500 : 0,
+        Platform.OS === "ios" ? 500 : 0
       );
     } catch (error) {
       const messageError = error?.message;
       dispatch(closePopUp());
       dispatch(
         openPopUp({
-          popUpType: 'error',
-          popUpText: messageError || 'Error Menyimpan SPH',
+          popUpType: "error",
+          popUpText: messageError || "Error Menyimpan SPH",
           outsideClickClosePopUp: true,
-        }),
+        })
       );
     }
   }
@@ -356,7 +366,7 @@ export default function FifthStep() {
               item={{
                 name: sphState?.selectedCompany?.name
                   ? sphState?.selectedCompany?.name
-                  : '-',
+                  : "-",
                 location: sphState?.selectedCompany?.LocationAddress.line1,
               }}
               isRenderIcon={false}
@@ -391,7 +401,7 @@ export default function FifthStep() {
             </View>
             <BSpacer size="small" />
           </View>
-          <View style={{ flexGrow: 1, flexDirection: 'row' }}>
+          <View style={{ flexGrow: 1, flexDirection: "row" }}>
             <FlashList
               estimatedItemSize={10}
               data={sphState?.chosenProducts}
@@ -408,7 +418,7 @@ export default function FifthStep() {
               )}
             />
           </View>
-          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+          <View style={{ flex: 1, justifyContent: "flex-end" }}>
             <BForm titleBold="500" inputs={inputsData} />
             <BSpacer size="extraSmall" />
           </View>
@@ -434,7 +444,7 @@ export default function FifthStep() {
                 updateSelectedCompany({
                   ...sphState.selectedCompany,
                   Pics: newList,
-                }),
+                })
               );
             }
           }}
@@ -446,12 +456,12 @@ export default function FifthStep() {
 
 const style = StyleSheet.create({
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   picLable: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   picText: {
     fontFamily: fonts.family.montserrat[600],

@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { LocalFileType } from '@/interfaces/LocalFileType';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { LocalFileType } from "@/interfaces/LocalFileType";
 
 interface inputsValue {
   recepientName: string;
@@ -29,40 +29,40 @@ export interface operationInitState {
 const initialState: operationInitState = {
   photoFiles: [],
   inputsValue: {
-    recepientName: '',
-    recepientPhoneNumber: '',
-    truckMixCondition: '',
-    weightBridge: '',
+    recepientName: "",
+    recepientPhoneNumber: "",
+    truckMixCondition: "",
+    weightBridge: "",
     truckMixHaveLoad: false,
   },
   projectDetails: {
-    deliveryOrderId: '',
-    projectName: '',
-    doNumber: '',
-    address: '',
+    deliveryOrderId: "",
+    projectName: "",
+    doNumber: "",
+    address: "",
     lonlat: { longitude: 0, latitude: 0 },
     requestedQuantity: 0,
-    deliveryTime: '',
+    deliveryTime: "",
   },
   isLoading: false,
 };
 export const operationSlice = createSlice({
-  name: 'operationState',
+  name: "operationState",
   initialState,
   reducers: {
     resetOperationState: () => initialState,
     resetInputsValue: (state) => {
       state.inputsValue = {
-        recepientName: '',
-        recepientPhoneNumber: '',
-        truckMixCondition: '',
-        weightBridge: '',
+        recepientName: "",
+        recepientPhoneNumber: "",
+        truckMixCondition: "",
+        weightBridge: "",
         truckMixHaveLoad: false,
       };
     },
     onChangeInputValue: (
       state,
-      actions: PayloadAction<{ inputType: keyof inputsValue; value: string }>,
+      actions: PayloadAction<{ inputType: keyof inputsValue; value: string }>
     ) => {
       state.inputsValue = {
         ...state.inputsValue,
@@ -71,28 +71,29 @@ export const operationSlice = createSlice({
     },
     onChangeProjectDetails: (
       state,
-      actions: PayloadAction<{ projectDetails: OperationProjectDetails }>,
+      actions: PayloadAction<{ projectDetails: OperationProjectDetails }>
     ) => {
       state.projectDetails = actions.payload.projectDetails;
     },
     setOperationPhoto: (
       state,
-      actions: PayloadAction<{ file: LocalFileType; withoutAddButton: boolean }>,
+      actions: PayloadAction<{ file: LocalFileType; withoutAddButton: boolean }>
     ) => {
       let currentImages = [...state.photoFiles];
-      if (actions.payload.withoutAddButton) currentImages = currentImages.filter((it) => it.file !== null);
+      if (actions.payload.withoutAddButton)
+        currentImages = currentImages.filter((it) => it.file !== null);
       currentImages.push(actions.payload.file);
       state.photoFiles = [...currentImages];
     },
     setAllOperationPhoto: (
       state,
-      actions: PayloadAction<{ file: LocalFileType[] }>,
+      actions: PayloadAction<{ file: LocalFileType[] }>
     ) => {
       state.photoFiles = [...actions.payload.file];
     },
     removeOperationPhoto: (
       state,
-      actions: PayloadAction<{ index: number }>,
+      actions: PayloadAction<{ index: number }>
     ) => {
       const currentImages = state.photoFiles.filter((it) => it.file !== null);
       currentImages.splice(actions.payload.index, 1);
@@ -101,7 +102,7 @@ export const operationSlice = createSlice({
     },
     removeDriverPhoto: (
       state,
-      actions: PayloadAction<{ index: number; attachType: string }>,
+      actions: PayloadAction<{ index: number; attachType: string }>
     ) => {
       const newPhotoFiles: LocalFileType[] = [];
       state.photoFiles.forEach((item) => {

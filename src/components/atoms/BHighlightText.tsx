@@ -1,10 +1,10 @@
-import { Text, StyleSheet } from 'react-native';
-import React from 'react';
-import font from '@/constants/fonts';
-import respFS from '@/utils/resFontSize';
-import colors from '@/constants/colors';
-import { resScale } from '@/utils';
-import { fonts } from '@/constants';
+import { Text, StyleSheet } from "react-native";
+import React from "react";
+import font from "@/constants/fonts";
+import respFS from "@/utils/resFontSize";
+import colors from "@/constants/colors";
+import { resScale } from "@/utils";
+import { fonts } from "@/constants";
 
 type higlightTextType = {
   searchQuery?: string;
@@ -18,7 +18,7 @@ export default function HighlightText({
   fontSize,
 }: higlightTextType) {
   function escapeRegExp(text: string) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
   }
   if (!searchQuery) {
     return (
@@ -36,8 +36,12 @@ export default function HighlightText({
     );
   }
 
-  const regexStr = `(${searchQuery.trim().split(/\s+/).map(escapeRegExp).join('|')})`;
-  const regex = new RegExp(regexStr, 'gi');
+  const regexStr = `(${searchQuery
+    .trim()
+    .split(/\s+/)
+    .map(escapeRegExp)
+    .join("|")})`;
+  const regex = new RegExp(regexStr, "gi");
   const parts = name.split(regex);
 
   return (
@@ -50,22 +54,24 @@ export default function HighlightText({
     >
       {parts
         .filter((part) => part)
-        .map((part, i) => (regex.test(part) ? (
-          <Text
-            key={part + i}
-            style={[
-              style.normalText,
-              style.boldText,
-              fontSize
-                ? { fontSize: respFS(fontSize) }
-                : { fontSize: font.size.md },
-            ]}
-          >
-            {part}
-          </Text>
-        ) : (
-          part
-        )))}
+        .map((part, i) =>
+          regex.test(part) ? (
+            <Text
+              key={part + i}
+              style={[
+                style.normalText,
+                style.boldText,
+                fontSize
+                  ? { fontSize: respFS(fontSize) }
+                  : { fontSize: font.size.md },
+              ]}
+            >
+              {part}
+            </Text>
+          ) : (
+            part
+          )
+        )}
     </Text>
   );
 }

@@ -1,25 +1,25 @@
-import React from 'react';
-import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { useDispatch, useSelector } from 'react-redux';
-import { useMachine } from '@xstate/react';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import OperationList from './element/OperationList';
-import { AppDispatch, RootState } from '@/redux/store';
+import React from "react";
+import { StyleSheet, SafeAreaView, DeviceEventEmitter } from "react-native";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { useDispatch, useSelector } from "react-redux";
+import { useMachine } from "@xstate/react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import OperationList from "./element/OperationList";
+import { AppDispatch, RootState } from "@/redux/store";
 import {
   CAMERA,
   LOCATION,
   OPERATION,
   SUBMIT_FORM,
-} from '@/navigation/ScreenNames';
-import displayOperationListMachine from '@/machine/displayOperationListMachine';
-import { ENTRY_TYPE } from '@/models/EnumModel';
-import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
+} from "@/navigation/ScreenNames";
+import displayOperationListMachine from "@/machine/displayOperationListMachine";
+import { ENTRY_TYPE } from "@/models/EnumModel";
+import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import {
   OperationProjectDetails,
   onChangeProjectDetails,
   setAllOperationPhoto,
-} from '@/redux/reducers/operationReducer';
+} from "@/redux/reducers/operationReducer";
 
 function Operation() {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,27 +27,26 @@ function Operation() {
   const [state, send] = useMachine(displayOperationListMachine);
   const { userData } = useSelector((state: RootState) => state.auth);
   const { projectDetails, photoFiles } = useSelector(
-    (state: RootState) => state.operation,
+    (state: RootState) => state.operation
   );
-  const {
-    operationListData, isLoadMore, isLoading, isRefreshing,
-  } = state.context;
+  const { operationListData, isLoadMore, isLoading, isRefreshing } =
+    state.context;
 
   React.useEffect(() => {
-    crashlytics().log(userData?.type ? userData.type : 'Operation Default');
-    DeviceEventEmitter.addListener('Operation.refreshlist', () => {
-      send('onRefreshList', { payload: userData?.type });
+    crashlytics().log(userData?.type ? userData.type : "Operation Default");
+    DeviceEventEmitter.addListener("Operation.refreshlist", () => {
+      send("onRefreshList", { payload: userData?.type });
     });
 
     return () => {
-      DeviceEventEmitter.removeAllListeners('Operation.refreshlist');
+      DeviceEventEmitter.removeAllListeners("Operation.refreshlist");
     };
   }, [userData?.type, projectDetails, operationListData]);
 
   useFocusEffect(
     React.useCallback(() => {
-      send('assignUserData', { payload: userData?.type });
-    }, [send]),
+      send("assignUserData", { payload: userData?.type });
+    }, [send])
   );
 
   const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
@@ -59,12 +58,12 @@ function Operation() {
       });
     } else {
       const dataToDeliver: OperationProjectDetails = {
-        deliveryOrderId: item?.id ? item.id : '',
-        doNumber: item?.number ? item.number : '',
-        projectName: item.project?.projectName ? item.project.projectName : '',
+        deliveryOrderId: item?.id ? item.id : "",
+        doNumber: item?.number ? item.number : "",
+        projectName: item.project?.projectName ? item.project.projectName : "",
         address: item.project?.ShippingAddress?.line1
           ? item.project.ShippingAddress.line1
-          : '',
+          : "",
         lonlat: {
           longitude: item.project?.ShippingAddress?.lon
             ? Number(item.project.ShippingAddress.lon)
@@ -77,29 +76,29 @@ function Operation() {
           ?.requestedQuantity
           ? item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity
           : 0,
-        deliveryTime: item?.date ? item.date : '',
+        deliveryTime: item?.date ? item.date : "",
       };
 
       dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
       dispatch(
         setAllOperationPhoto({
           file: [
-            { file: null, attachType: 'Tiba di lokasi' },
-            { file: null, attachType: 'Dalam gentong isi' },
-            { file: null, attachType: 'Tuang beton' },
-            { file: null, attachType: 'Cuci gentong' },
-            { file: null, attachType: 'DO' },
-            { file: null, attachType: 'Penerima' },
-            { file: null, attachType: 'Penambahan air' },
-            { file: null, attachType: 'Tambahan' },
+            { file: null, attachType: "Tiba di lokasi" },
+            { file: null, attachType: "Dalam gentong isi" },
+            { file: null, attachType: "Tuang beton" },
+            { file: null, attachType: "Cuci gentong" },
+            { file: null, attachType: "DO" },
+            { file: null, attachType: "Penerima" },
+            { file: null, attachType: "Penambahan air" },
+            { file: null, attachType: "Tambahan" },
           ],
-        }),
+        })
       );
       navigation.navigate(CAMERA, {
-        photoTitle: 'Tiba di lokasi',
+        photoTitle: "Tiba di lokasi",
         closeButton: true,
         navigateTo: ENTRY_TYPE.DRIVER,
-        operationAddedStep: 'Tiba di lokasi',
+        operationAddedStep: "Tiba di lokasi",
       });
     }
   };
@@ -124,13 +123,13 @@ function Operation() {
         data={operationListData}
         loadList={isLoading}
         isLoadMore={isLoadMore}
-        isError={state.matches('errorGettingList')}
+        isError={state.matches("errorGettingList")}
         refreshing={isRefreshing}
-        onEndReached={() => send('onEndReached')}
+        onEndReached={() => send("onEndReached")}
         onPressList={(item) => onPressItem(item)}
         onLocationPress={(lonlat) => onLocationPress(lonlat)}
-        onRefresh={() => send('onRefreshList', { payload: userData?.type })}
-        onRetry={() => send('retryGettingList', { payload: userData?.type })}
+        onRefresh={() => send("onRefreshList", { payload: userData?.type })}
+        onRetry={() => send("retryGettingList", { payload: userData?.type })}
         userType={userData?.type}
       />
     </SafeAreaView>

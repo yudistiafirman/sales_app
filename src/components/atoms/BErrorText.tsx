@@ -1,10 +1,10 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { colors, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { resScale } from '@/utils';
-import BText from './BText';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+import { colors, layout } from "@/constants";
+import font from "@/constants/fonts";
+import { resScale } from "@/utils";
+import BText from "./BText";
 
 function BErrorText({ text }: { text: string | unknown }) {
   return (
@@ -20,8 +20,8 @@ function BErrorText({ text }: { text: string | unknown }) {
   );
 }
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', alignSelf: 'flex-start' },
-  warningIcon: { marginRight: layout.pad.ml, alignSelf: 'center' },
+  container: { flexDirection: "row", alignSelf: "flex-start" },
+  warningIcon: { marginRight: layout.pad.ml, alignSelf: "center" },
   warningText: {
     fontFamily: font.family.montserrat[500],
     fontSize: font.size.md,

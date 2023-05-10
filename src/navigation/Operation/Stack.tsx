@@ -1,8 +1,8 @@
-import * as React from 'react';
-import Preview from '@/screens/Camera/Preview';
-import CreateDO from '@/screens/Operation/CreateDO';
-import SubmitForm from '@/screens/Operation/SubmitForm';
-import CameraScreen from '@/screens/Camera';
+import * as React from "react";
+import Preview from "@/screens/Camera/Preview";
+import CreateDO from "@/screens/Operation/CreateDO";
+import SubmitForm from "@/screens/Operation/SubmitForm";
+import CameraScreen from "@/screens/Camera";
 import {
   CAMERA,
   CAMERA_TITLE,
@@ -14,8 +14,8 @@ import {
   SUBMIT_FORM_TITLE,
   LOCATION,
   LOCATION_TITLE,
-} from '../ScreenNames';
-import Location from '@/screens/Location';
+} from "../ScreenNames";
+import Location from "@/screens/Location";
 
 function OperationStack(Stack: any) {
   return (

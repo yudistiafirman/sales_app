@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,20 +7,20 @@ import {
   TouchableOpacity,
   Platform,
   Share,
-} from 'react-native';
+} from "react-native";
 import {
   StackActions,
   useNavigation,
   useRoute,
-} from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
-import moment from 'moment';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { useDispatch } from 'react-redux';
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import RNPrint from 'react-native-print';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Feather from 'react-native-vector-icons/Feather';
+} from "@react-navigation/native";
+import { ScrollView } from "react-native-gesture-handler";
+import moment from "moment";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { useDispatch } from "react-redux";
+import ReactNativeBlobUtil from "react-native-blob-util";
+import RNPrint from "react-native-print";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Feather from "react-native-vector-icons/Feather";
 import {
   BDivider,
   BPic,
@@ -30,37 +30,37 @@ import {
   BProjectDetailCard,
   BNestedProductCard,
   BDepositCard,
-} from '@/components';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
-import { colors, fonts, layout } from '@/constants';
-import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
-import { beautifyPhoneNumber } from '@/utils/generalFunc';
-import { LOCATION, TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
-import { getVisitationOrderByID } from '@/actions/OrderActions';
-import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
-import { PO_METHOD_LIST } from '@/constants/dropdown';
-import { AppDispatch } from '@/redux/store';
-import { openPopUp } from '@/redux/reducers/modalReducer';
-import { resScale } from '@/utils';
+} from "@/components";
+import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
+import { colors, fonts, layout } from "@/constants";
+import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
+import { beautifyPhoneNumber } from "@/utils/generalFunc";
+import { LOCATION, TRANSACTION_DETAIL } from "@/navigation/ScreenNames";
+import { getVisitationOrderByID } from "@/actions/OrderActions";
+import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
+import { PO_METHOD_LIST } from "@/constants/dropdown";
+import { AppDispatch } from "@/redux/store";
+import { openPopUp } from "@/redux/reducers/modalReducer";
+import { resScale } from "@/utils";
 
 function ListProduct(
   item: any,
   index: number,
   selectedType: string,
   quantity: number | undefined,
-  isPoData: boolean,
+  isPoData: boolean
 ) {
-  let displayName = '';
+  let displayName = "";
   let pricePerlVol;
   if (item.ReqProduct) {
     displayName = `${
       item?.ReqProduct?.product?.category?.parent
         ? `${item?.ReqProduct?.product?.category?.parent?.name} `
-        : ''
+        : ""
     }${item?.ReqProduct?.product?.displayName} ${
       item?.ReqProduct?.product?.category
         ? item?.ReqProduct?.product?.category?.name
-        : ''
+        : ""
     }`;
     pricePerlVol = item.ReqProduct?.offeringPrice;
   } else if (item.Product) {
@@ -68,18 +68,18 @@ function ListProduct(
       item?.Product?.category?.parent?.name
         ? `${item?.Product?.category?.parent?.name} `
         : item?.Product?.category?.parent?.na
-          ? `${item?.Product?.category?.parent?.na} `
-          : ''
+        ? `${item?.Product?.category?.parent?.na} `
+        : ""
     }${item?.Product?.displayName} ${
-      item?.Product?.category ? item?.Product?.category?.name : ''
+      item?.Product?.category ? item?.Product?.category?.name : ""
     }`;
     pricePerlVol = item.offering_price
       ? item.offering_price
       : item.offeringPrice;
   } else {
     displayName = `${
-      item?.category?.parent ? `${item?.category?.parent?.name} ` : ''
-    }${item?.displayName} ${item?.category ? item?.category?.name : ''}`;
+      item?.category?.parent ? `${item?.category?.parent?.name} ` : ""
+    }${item?.displayName} ${item?.category ? item?.category?.name : ""}`;
     pricePerlVol = item.offering_price
       ? item.offering_price
       : item.offeringPrice;
@@ -90,29 +90,28 @@ function ListProduct(
         name={displayName}
         pricePerVol={pricePerlVol}
         volume={
-          quantity || (item.requestedQuantity
+          quantity ||
+          (item.requestedQuantity
             ? item.requestedQuantity
             : item.quantity
-              ? item.quantity
-              : 0)
+            ? item.quantity
+            : 0)
         }
         totalPrice={
           isPoData
             ? item.requestedQuantity * item.ReqProduct.offeringPrice
             : item.ReqProduct
-              ? item.ReqProduct?.totalPrice
-              : item.total_price
-                ? item.total_price
-                : item.totalPrice
+            ? item.ReqProduct?.totalPrice
+            : item.total_price
+            ? item.total_price
+            : item.totalPrice
         }
         unit={
           item.ReqProduct?.product ? item.ReqProduct?.product.unit : item.unit
         }
-        hideTotal={
-          !(selectedType !== 'Jadwal' && selectedType !== 'DO')
-        }
+        hideTotal={!(selectedType !== "Jadwal" && selectedType !== "DO")}
         hidePricePerVolume={
-          !(selectedType !== 'Jadwal' && selectedType !== 'DO')
+          !(selectedType !== "Jadwal" && selectedType !== "DO")
         }
       />
       <BSpacer size="extraSmall" />
@@ -130,7 +129,7 @@ function TransactionDetail() {
   const [downloadFiles, setDownloadFiles] = React.useState<any>(null);
 
   useHeaderTitleChanged({
-    title: route?.params?.title ? route?.params?.title : '-',
+    title: route?.params?.title ? route?.params?.title : "-",
   });
 
   React.useEffect(() => {
@@ -138,26 +137,26 @@ function TransactionDetail() {
   }, []);
 
   React.useEffect(() => {
-    if (selectedType === 'SO') {
+    if (selectedType === "SO") {
       if (data?.PurchaseOrderDocs) {
         setDownloadFiles({
           letter: data?.PurchaseOrderDocs?.find(
-            (v: any) => v?.type == 'BRIK_SIGNED',
+            (v: any) => v?.type == "BRIK_SIGNED"
           ),
         });
       }
-    } else if (selectedType === 'Deposit') {
+    } else if (selectedType === "Deposit") {
       if (data?.DepositFiles) {
         // TODO: need to change the type to download the deposit files
         setDownloadFiles({
-          letter: data?.DepositFiles?.find((v: any) => v?.type == ''),
+          letter: data?.DepositFiles?.find((v: any) => v?.type == ""),
         });
       }
     } else if (data?.QuotationLetterFiles) {
       setDownloadFiles({
-        pos: data?.QuotationLetterFiles?.find((v: any) => v?.type == 'POS'),
+        pos: data?.QuotationLetterFiles?.find((v: any) => v?.type == "POS"),
         letter: data?.QuotationLetterFiles?.find(
-          (v: any) => v?.type == 'LETTER',
+          (v: any) => v?.type == "LETTER"
         ),
       });
     }
@@ -181,20 +180,20 @@ function TransactionDetail() {
       getData = getData.data.data;
       navigation.dispatch(
         StackActions.replace(TRANSACTION_DETAIL, {
-          title: getData ? getData.number : 'N/A',
+          title: getData ? getData.number : "N/A",
           data: getData,
           type: selectedType,
-        }),
+        })
       );
     } catch (error) {
       dispatch(
         openPopUp({
-          popUpType: 'error',
+          popUpType: "error",
           popUpText:
-            error.message
-            || 'Terjadi error saat perpindahan screen menuju ke halaman sph',
+            error.message ||
+            "Terjadi error saat perpindahan screen menuju ke halaman sph",
           outsideClickClosePopUp: true,
-        }),
+        })
       );
     }
   };
@@ -236,25 +235,25 @@ function TransactionDetail() {
     const { dirs } = ReactNativeBlobUtil.fs;
     const downloadTitle = title
       ? `${title} berhasil di download`
-      : 'PDF berhasil di download';
+      : "PDF berhasil di download";
     ReactNativeBlobUtil.config(
-      Platform.OS === 'android'
+      Platform.OS === "android"
         ? {
-          // add this option that makes response data to be stored as a file,
-          // this is much more performant.
-          fileCache: true,
-          path: dirs.DocumentDir,
-          addAndroidDownloads: {
-            useDownloadManager: true,
-            notification: true,
-            title: downloadTitle,
-            description: `${selectedType} PDF`,
-            mediaScannable: true,
-          },
-        }
-        : { fileCache: true },
+            // add this option that makes response data to be stored as a file,
+            // this is much more performant.
+            fileCache: true,
+            path: dirs.DocumentDir,
+            addAndroidDownloads: {
+              useDownloadManager: true,
+              notification: true,
+              title: downloadTitle,
+              description: `${selectedType} PDF`,
+              mediaScannable: true,
+            },
+          }
+        : { fileCache: true }
     )
-      .fetch('GET', url, {
+      .fetch("GET", url, {
         // some headers ..
       })
       .then((res) => {
@@ -267,11 +266,11 @@ function TransactionDetail() {
   }
   async function printRemotePDF(
     url?: string,
-    printError: (errorMessage: string | unknown) => void,
+    printError: (errorMessage: string | unknown) => void
   ) {
     try {
       if (!url) {
-        throw 'error url missing';
+        throw "error url missing";
       }
       await RNPrint.print({
         filePath: url,
@@ -282,22 +281,22 @@ function TransactionDetail() {
   }
   const shareFunc = async (url?: string) => {
     try {
-      if (!url) throw 'no url';
+      if (!url) throw "no url";
       await Share.share({
-        url: url.replace(/\s/g, '%20'),
+        url: url.replace(/\s/g, "%20"),
         message: `Link PDF ${selectedType} ${
           data?.Company?.name ? data?.Company.name : data?.Pic?.name
-        }, ${url.replace(/\s/g, '%20')}`,
+        }, ${url.replace(/\s/g, "%20")}`,
       });
     } catch (error) {
       dispatch(
         openPopUp({
-          popUpType: 'error',
+          popUpType: "error",
           popUpText:
-            error.message
-            || `Terjadi error saat share Link PDF ${selectedType}`,
+            error.message ||
+            `Terjadi error saat share Link PDF ${selectedType}`,
           outsideClickClosePopUp: true,
-        }),
+        })
       );
     }
   };
@@ -306,33 +305,35 @@ function TransactionDetail() {
     const productData = data?.QuotationRequest?.RequestedProducts
       ? data?.QuotationRequest?.RequestedProducts
       : data?.PoProducts
-        ? data?.PoProducts
-        : data?.SaleOrder?.PoProduct?.RequestedProduct
-          ? data?.SaleOrder?.PoProduct?.RequestedProduct
-          : data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct;
+      ? data?.PoProducts
+      : data?.SaleOrder?.PoProduct?.RequestedProduct
+      ? data?.SaleOrder?.PoProduct?.RequestedProduct
+      : data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct;
 
     if (productData?.length > 0) {
-      return productData.map((item, index) => ListProduct(
-        item,
-        index,
-        selectedType,
-        selectedType === 'PO' || selectedType === 'SO'
-          ? data?.requestedQuantity
-          : data?.quantity
+      return productData.map((item, index) =>
+        ListProduct(
+          item,
+          index,
+          selectedType,
+          selectedType === "PO" || selectedType === "SO"
+            ? data?.requestedQuantity
+            : data?.quantity
             ? data?.quantity
             : data?.Schedule?.quantity,
-        data?.PoProducts?.length > 0,
-      ));
+          data?.PoProducts?.length > 0
+        )
+      );
     }
     return ListProduct(productData, 0, selectedType, data?.quantity, false);
   };
 
   const renderProductList = () => {
     if (
-      data?.QuotationRequest?.RequestedProducts
-      || data?.PoProducts
-      || data?.SaleOrder?.PoProduct?.RequestedProduct
-      || data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct
+      data?.QuotationRequest?.RequestedProducts ||
+      data?.PoProducts ||
+      data?.SaleOrder?.PoProduct?.RequestedProduct ||
+      data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct
     ) {
       return (
         <>
@@ -347,8 +348,9 @@ function TransactionDetail() {
   const renderPic = () => {
     let picData = data?.Pic || data?.project?.Pic;
 
-    if (selectedType === 'SPH') {
-      picData = data?.QuotationRequest?.Pic || data?.QuotationRequest?.project?.Pic;
+    if (selectedType === "SPH") {
+      picData =
+        data?.QuotationRequest?.Pic || data?.QuotationRequest?.project?.Pic;
     }
 
     if (picData) {
@@ -371,39 +373,41 @@ function TransactionDetail() {
   return (
     <SafeAreaView style={styles.parent}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        {(data?.project?.LocationAddress
-          || data?.project?.ShippingAddress
-          || data?.QuotationRequest?.project?.LocationAddress
-          || data?.QuotationRequest?.project?.ShippingAddress) && (
+        {(data?.project?.LocationAddress ||
+          data?.project?.ShippingAddress ||
+          data?.QuotationRequest?.project?.LocationAddress ||
+          data?.QuotationRequest?.project?.ShippingAddress) && (
           <BCompanyMapCard
-            onPressLocation={() => onPressLocation(
-              data?.QuotationRequest?.project?.ShippingAddress
-                ? data?.QuotationRequest?.project?.ShippingAddress.lat
-                : data?.project?.ShippingAddress
+            onPressLocation={() =>
+              onPressLocation(
+                data?.QuotationRequest?.project?.ShippingAddress
+                  ? data?.QuotationRequest?.project?.ShippingAddress.lat
+                  : data?.project?.ShippingAddress
                   ? data?.project?.ShippingAddress.lat
                   : null,
-              data?.QuotationRequest?.project?.ShippingAddress.lon
-                ? data?.QuotationRequest?.project?.ShippingAddress.lon
-                : data?.project?.ShippingAddress
+                data?.QuotationRequest?.project?.ShippingAddress.lon
+                  ? data?.QuotationRequest?.project?.ShippingAddress.lon
+                  : data?.project?.ShippingAddress
                   ? data?.project?.ShippingAddress.lon
-                  : null,
-            )}
+                  : null
+              )
+            }
             disabled={
-              data?.project?.ShippingAddress?.lat === null
-              || data?.project?.ShippingAddress?.lon === null
-              || data?.QuotationRequest?.project?.ShippingAddress.lat === null
-              || data?.QuotationRequest?.project?.ShippingAddress.lon === null
+              data?.project?.ShippingAddress?.lat === null ||
+              data?.project?.ShippingAddress?.lon === null ||
+              data?.QuotationRequest?.project?.ShippingAddress.lat === null ||
+              data?.QuotationRequest?.project?.ShippingAddress.lon === null
             }
             companyName={
-              data?.project?.displayName
-              || data?.QuotationRequest?.project?.displayName
+              data?.project?.displayName ||
+              data?.QuotationRequest?.project?.displayName
             }
             location={
               data?.QuotationRequest?.project?.ShippingAddress.line1
                 ? data?.QuotationRequest?.project?.ShippingAddress.line1
                 : data?.project?.ShippingAddress.line1
-                  ? data?.project?.ShippingAddress.line1
-                  : '-'
+                ? data?.project?.ShippingAddress.line1
+                : "-"
             }
           />
         )}
@@ -414,60 +418,60 @@ function TransactionDetail() {
           <BProjectDetailCard
             status={data?.status || data?.QuotationRequest?.status}
             paymentMethod={
-              selectedType === 'SPH'
-              || selectedType === 'PO'
-              || selectedType === 'SO'
+              selectedType === "SPH" ||
+              selectedType === "PO" ||
+              selectedType === "SO"
                 ? !data?.paymentType && !data?.QuotationRequest?.paymentType
-                  ? 'N/A'
-                  : data?.paymentType === 'CBD'
-                    || data?.QuotationRequest?.paymentType === 'CBD'
-                    ? 'Cash'
-                    : 'Debit'
+                  ? "N/A"
+                  : data?.paymentType === "CBD" ||
+                    data?.QuotationRequest?.paymentType === "CBD"
+                  ? "Cash"
+                  : "Debit"
                 : undefined
             }
             expiredDate={
               data?.expiredDate || data?.expiryDate
                 ? moment(data?.expiredDate || data?.expiryDate).format(
-                  'DD MMMM yyyy',
-                )
-                : '-'
+                    "DD MMMM yyyy"
+                  )
+                : "-"
             }
             projectName={
-              selectedType === 'SPH'
-              || selectedType === 'PO'
-              || selectedType === 'SO'
-                ? data?.project?.projectName
-                  || data?.QuotationRequest?.project?.projectName
+              selectedType === "SPH" ||
+              selectedType === "PO" ||
+              selectedType === "SO"
+                ? data?.project?.projectName ||
+                  data?.QuotationRequest?.project?.projectName
                 : undefined
             }
             productionTime={
-              selectedType === 'DO'
+              selectedType === "DO"
                 ? data?.date
-                  ? moment(data?.date).format('DD MMM yyyy HH:mm')
-                  : '-'
+                  ? moment(data?.date).format("DD MMM yyyy HH:mm")
+                  : "-"
                 : data?.createdAt
-                  ? moment(data?.createdAt).format('DD MMM yyyy HH:mm')
-                  : '-'
+                ? moment(data?.createdAt).format("DD MMM yyyy HH:mm")
+                : "-"
             }
             quotation={
-              selectedType === 'PO' || selectedType === 'SO'
+              selectedType === "PO" || selectedType === "SO"
                 ? data?.QuotationLetter
                 : undefined
             }
             nominal={data?.value}
             paymentDate={
               data?.datePayment
-                ? moment(data?.datePayment).format('DD MMM yyyy')
+                ? moment(data?.datePayment).format("DD MMM yyyy")
                 : undefined
             }
             deliveryDate={
-              selectedType === 'Jadwal' && data?.date
-                ? moment(data?.date).format('DD MMM yyyy')
+              selectedType === "Jadwal" && data?.date
+                ? moment(data?.date).format("DD MMM yyyy")
                 : undefined
             }
             deliveryTime={
-              selectedType === 'Jadwal' && data?.date
-                ? moment(data?.date).format('HH:mm')
+              selectedType === "Jadwal" && data?.date
+                ? moment(data?.date).format("HH:mm")
                 : undefined
             }
             scheduleMethod={
@@ -479,23 +483,23 @@ function TransactionDetail() {
             }
             gotoSPHPage={() => gotoSPHPage()}
             tmNumber={
-              selectedType === 'DO'
+              selectedType === "DO"
                 ? data?.tmNumber
                   ? data?.tmNumber
-                  : '-'
+                  : "-"
                 : undefined
             }
             driverName={
-              selectedType === 'DO'
+              selectedType === "DO"
                 ? data?.driverName
                   ? data?.driverName
-                  : '-'
+                  : "-"
                 : undefined
             }
-            useBEStatus={selectedType !== 'SPH'}
+            useBEStatus={selectedType !== "SPH"}
           />
           <BSpacer size="small" />
-          {selectedType === 'Deposit' ? (
+          {selectedType === "Deposit" ? (
             <BNestedProductCard
               withoutHeader={false}
               data={arrayQuotationLetter()}
@@ -507,45 +511,45 @@ function TransactionDetail() {
           ) : (
             <>{renderProductList()}</>
           )}
-          {(selectedType === 'Deposit' || selectedType === 'Jadwal') && (
+          {(selectedType === "Deposit" || selectedType === "Jadwal") && (
             <>
               <BDivider />
               <BSpacer size="small" />
               <BDepositCard
                 firstSectionText={
-                  selectedType === 'Jadwal' ? 'Deposit' : 'Deposit Awal'
+                  selectedType === "Jadwal" ? "Deposit" : "Deposit Awal"
                 }
                 firstSectionValue={
-                  selectedType === 'Jadwal'
+                  selectedType === "Jadwal"
                     ? data.SaleOrder?.availableDeposit
                       ? data.SaleOrder?.availableDeposit
                       : 0
                     : data?.PurchaseOrder?.totalDeposit
-                      ? data?.PurchaseOrder?.totalDeposit
-                      : 0
+                    ? data?.PurchaseOrder?.totalDeposit
+                    : 0
                 }
                 secondSectionText={
-                  selectedType === 'Jadwal'
+                  selectedType === "Jadwal"
                     ? data?.products && data?.products.length > 0
                       ? data?.products[0].displayName
-                      : '-'
-                    : 'Tambahan Deposit'
+                      : "-"
+                    : "Tambahan Deposit"
                 }
                 secondSectionValue={
-                  selectedType === 'Jadwal'
+                  selectedType === "Jadwal"
                     ? data?.products && data?.products.length > 0
                       ? data?.products[0].totalPrice
                       : 0
                     : data?.value
-                      ? data?.value
-                      : 0
+                    ? data?.value
+                    : 0
                 }
                 thirdSectionText={
-                  selectedType === 'Jadwal'
-                    ? 'Est. Sisa Deposit'
-                    : 'Deposit Akhir'
+                  selectedType === "Jadwal"
+                    ? "Est. Sisa Deposit"
+                    : "Deposit Akhir"
                 }
-                isSum={selectedType !== 'Jadwal'}
+                isSum={selectedType !== "Jadwal"}
               />
             </>
           )}
@@ -555,19 +559,21 @@ function TransactionDetail() {
             {downloadFiles?.pos && (
               <TouchableOpacity
                 style={styles.footerButton}
-                onPress={() => printRemotePDF(
-                  downloadFiles.pos?.File?.url,
-                  (errorMessage: string | unknown) => {
-                    dispatch(
-                      openPopUp({
-                        popUpText:
+                onPress={() =>
+                  printRemotePDF(
+                    downloadFiles.pos?.File?.url,
+                    (errorMessage: string | unknown) => {
+                      dispatch(
+                        openPopUp({
+                          popUpText:
                             errorMessage || `Gagal print ${selectedType}`,
-                        popUpType: 'error',
-                        outsideClickClosePopUp: true,
-                      }),
-                    );
-                  },
-                )}
+                          popUpType: "error",
+                          outsideClickClosePopUp: true,
+                        })
+                      );
+                    }
+                  )
+                }
               >
                 <MaterialCommunityIcons
                   name="printer"
@@ -590,28 +596,30 @@ function TransactionDetail() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.footerButton}
-              onPress={() => downloadPdf({
-                url: downloadFiles?.letter?.File?.url,
-                title: data?.number,
-                downloadPopup: () => {
-                  dispatch(
-                    openPopUp({
-                      popUpText: `Berhasil mendownload ${selectedType}`,
-                      popUpType: 'success',
-                      outsideClickClosePopUp: true,
-                    }),
-                  );
-                },
-                downloadError: (err) => {
-                  dispatch(
-                    openPopUp({
-                      popUpText: err || `Gagal mendownload ${selectedType}`,
-                      popUpType: 'error',
-                      outsideClickClosePopUp: true,
-                    }),
-                  );
-                },
-              })}
+              onPress={() =>
+                downloadPdf({
+                  url: downloadFiles?.letter?.File?.url,
+                  title: data?.number,
+                  downloadPopup: () => {
+                    dispatch(
+                      openPopUp({
+                        popUpText: `Berhasil mendownload ${selectedType}`,
+                        popUpType: "success",
+                        outsideClickClosePopUp: true,
+                      })
+                    );
+                  },
+                  downloadError: (err) => {
+                    dispatch(
+                      openPopUp({
+                        popUpText: err || `Gagal mendownload ${selectedType}`,
+                        popUpType: "error",
+                        outsideClickClosePopUp: true,
+                      })
+                    );
+                  },
+                })
+              }
             >
               <Feather
                 name="download"
@@ -629,9 +637,9 @@ function TransactionDetail() {
 
 const styles = StyleSheet.create({
   modalFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
     paddingVertical: layout.mainPad,
     borderTopColor: colors.border,
     borderTopWidth: resScale(0.5),
@@ -640,7 +648,7 @@ const styles = StyleSheet.create({
   },
   footerButton: {
     flex: 0.3,
-    alignItems: 'center',
+    alignItems: "center",
   },
   footerButtonText: {
     color: colors.text.darker,
@@ -651,13 +659,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   flexRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   leftSide: {
     flex: 1,
   },
   icon: {
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   containerLastOrder: {
     padding: layout.pad.lg,

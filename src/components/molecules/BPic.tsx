@@ -1,11 +1,11 @@
-import React from 'react';
-import { ScrollView, TextStyle, View } from 'react-native';
-import { RadioButton } from 'react-native-paper';
-import { colors, fonts, layout } from '@/constants';
-import { PIC, Styles } from '@/interfaces';
-import { resScale } from '@/utils';
-import BSpacer from '../atoms/BSpacer';
-import BText from '../atoms/BText';
+import React from "react";
+import { ScrollView, TextStyle, View } from "react-native";
+import { RadioButton } from "react-native-paper";
+import { colors, fonts, layout } from "@/constants";
+import { PIC, Styles } from "@/interfaces";
+import { resScale } from "@/utils";
+import BSpacer from "../atoms/BSpacer";
+import BText from "../atoms/BText";
 
 interface IProps extends PIC {
   isOption?: boolean;
@@ -17,8 +17,8 @@ interface IProps extends PIC {
 
 const styles: Styles = {
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.offWhite,
     borderRadius: layout.radius.md,
   },
@@ -71,15 +71,21 @@ function BPic({
   isCompetitor = false,
 }: IProps): JSX.Element {
   return (
-    <View style={makeStyle({
-      isOption, index, onSelect, border,
-    }).container}
+    <View
+      style={
+        makeStyle({
+          isOption,
+          index,
+          onSelect,
+          border,
+        }).container
+      }
     >
       {isOption && (
         <>
           <RadioButton
             value={phone!}
-            status={isSelected ? 'checked' : 'unchecked'}
+            status={isSelected ? "checked" : "unchecked"}
             color={colors.primary}
             uncheckedColor={colors.border.altGrey}
             onPress={() => {
@@ -96,18 +102,18 @@ function BPic({
         <View>
           <ScrollView horizontal>
             <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
-              {name || '-'}
+              {name || "-"}
             </BText>
           </ScrollView>
         </View>
         <BSpacer size="extraSmall" />
         <BText style={titleStyles}>
-          {isCompetitor ? 'Apakah PKS-nya ekslusif?' : 'No. Telepon'}
+          {isCompetitor ? "Apakah PKS-nya ekslusif?" : "No. Telepon"}
         </BText>
         <View>
           <ScrollView horizontal>
             <BText sizeInNumber={fonts.size.sm} bold="500">
-              {isCompetitor ? exclusive : phone ? `+62${phone}` : '-'}
+              {isCompetitor ? exclusive : phone ? `+62${phone}` : "-"}
             </BText>
           </ScrollView>
         </View>
@@ -115,21 +121,21 @@ function BPic({
       <BSpacer size="extraSmall" />
       <View style={{ flex: 1, paddingEnd: layout.pad.sm }}>
         <BText style={titleStyles}>
-          {isCompetitor ? 'Apakah memiliki PKS?' : 'Jabatan'}
+          {isCompetitor ? "Apakah memiliki PKS?" : "Jabatan"}
         </BText>
         <View>
           <ScrollView horizontal>
             <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
-              {isCompetitor ? mou : position || '-'}
+              {isCompetitor ? mou : position || "-"}
             </BText>
           </ScrollView>
         </View>
         <BSpacer size="extraSmall" />
-        <BText style={titleStyles}>{isCompetitor ? ' ' : 'Email'}</BText>
+        <BText style={titleStyles}>{isCompetitor ? " " : "Email"}</BText>
         <View>
           <ScrollView horizontal>
             <BText numberOfLines={1} sizeInNumber={fonts.size.sm} bold="500">
-              {isCompetitor ? ' ' : email || '-'}
+              {isCompetitor ? " " : email || "-"}
             </BText>
           </ScrollView>
         </View>

@@ -1,9 +1,9 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { BText } from '@/components';
-import { colors, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { resScale } from '@/utils';
+import React from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { BText } from "@/components";
+import { colors, layout } from "@/constants";
+import font from "@/constants/fonts";
+import { resScale } from "@/utils";
 
 function UpdatedAddressWrapper({
   address,
@@ -16,7 +16,7 @@ function UpdatedAddressWrapper({
     <View style={styles.filledAddressContainer}>
       <View style={styles.filledAddressInnerContainer}>
         <BText numberOfLines={1} style={styles.mainAddress}>
-          {address.split(',')[0]}
+          {address.split(",")[0]}
         </BText>
         <BText numberOfLines={1} style={styles.secondAddress}>
           {address}
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     height: resScale(93),
     backgroundColor: colors.tertiary,
     borderRadius: layout.radius.md,
-    width: '100%',
+    width: "100%",
   },
   filledAddressInnerContainer: {
     flex: 1,
@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
     height: resScale(24),
     borderWidth: 1,
     borderColor: colors.textInput.placeHolder,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: layout.radius.sm,
   },
   changeAddressText: {

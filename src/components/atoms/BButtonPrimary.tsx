@@ -6,12 +6,12 @@ import {
   ViewStyle,
   ActivityIndicator,
   TextStyle,
-} from 'react-native';
-import React from 'react';
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import resScale from '@/utils/resScale';
-import { layout } from '@/constants';
+} from "react-native";
+import React from "react";
+import colors from "@/constants/colors";
+import font from "@/constants/fonts";
+import resScale from "@/utils/resScale";
+import { layout } from "@/constants";
 
 type BButtonPrimaryType = {
   title: string;
@@ -38,7 +38,7 @@ export default function BButtonPrimary({
   isLoading,
 }: BButtonPrimaryType) {
   return (
-    <View pointerEvents={isLoading ? 'none' : 'auto'}>
+    <View pointerEvents={isLoading ? "none" : "auto"}>
       <TouchableOpacity
         style={[
           style.buttonContainer,
@@ -78,11 +78,11 @@ const style = StyleSheet.create({
     padding: layout.pad.md,
     borderRadius: layout.radius.md,
     backgroundColor: colors.primary,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     borderColor: colors.primary,
     borderWidth: resScale(1),
-    alignItems: 'center',
+    alignItems: "center",
   },
   disableStyle: {
     backgroundColor: colors.disabled,
@@ -92,7 +92,7 @@ const style = StyleSheet.create({
     color: colors.tertiary,
   },
   buttonTitle: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.white,
     fontFamily: font.family.montserrat[600],
     fontSize: font.size.lg,

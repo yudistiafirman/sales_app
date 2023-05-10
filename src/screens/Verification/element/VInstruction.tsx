@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import { View } from 'react-native';
-import { BText, BTouchableText } from '@/components';
-import { colors } from '@/constants';
-import { resScale } from '@/utils';
-import VerificationStyles from '../styles';
+import React from "react";
+import { View } from "react-native";
+import { BText, BTouchableText } from "@/components";
+import { colors } from "@/constants";
+import { resScale } from "@/utils";
+import VerificationStyles from "../styles";
 
 function VIntstruction({
   phoneNumber,
@@ -14,20 +14,20 @@ function VIntstruction({
   onPress: () => void;
 }) {
   return (
-    <View style={{ alignItems: 'center' }}>
-      <View style={{ flexDirection: 'row' }}>
+    <View style={{ alignItems: "center" }}>
+      <View style={{ flexDirection: "row" }}>
         <BText style={VerificationStyles.intructionsTextDark}>
           Masukkan OTP yang sudah dikirim ke
         </BText>
       </View>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: "row" }}>
         <BText
           style={[
             VerificationStyles.intructionsTextRed,
             { color: colors.whatsAppGreen },
           ]}
         >
-          {' WhatsApp '}
+          {" WhatsApp "}
         </BText>
         <BText style={VerificationStyles.intrutructionsTextDarkBold}>
           {`+62 ${phoneNumber}.  `}

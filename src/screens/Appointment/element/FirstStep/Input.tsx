@@ -1,39 +1,41 @@
-import debounce from 'lodash.debounce';
-import React, { useMemo } from 'react';
-import { ScrollView, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import {
-  BDivider, BSpacer, BText, BForm,
-} from '@/components';
-import { layout } from '@/constants';
-import { AppointmentActionType, StepOne } from '@/context/AppointmentContext';
-import { useAppointmentData } from '@/hooks';
-import { Input, projectResponseType, Styles } from '@/interfaces';
-import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
-import { AppDispatch } from '@/redux/store';
+import debounce from "lodash.debounce";
+import React, { useMemo } from "react";
+import { ScrollView, View } from "react-native";
+import { useDispatch } from "react-redux";
+import { BDivider, BSpacer, BText, BForm } from "@/components";
+import { layout } from "@/constants";
+import { AppointmentActionType, StepOne } from "@/context/AppointmentContext";
+import { useAppointmentData } from "@/hooks";
+import { Input, projectResponseType, Styles } from "@/interfaces";
+import { getProjectsByUserThunk } from "@/redux/async-thunks/commonThunks";
+import { AppDispatch } from "@/redux/store";
 
-const company = require('@/assets/icon/Visitation/company.png');
-const profile = require('@/assets/icon/Visitation/profile.png');
+const company = require("@/assets/icon/Visitation/company.png");
+const profile = require("@/assets/icon/Visitation/profile.png");
 
 function Inputs() {
   const [values, dispatchValue] = useAppointmentData();
   const { stepOne: state } = values;
   const dispatch = useDispatch<AppDispatch>();
-  const isCompany = state.customerType === 'company';
-  const fetchDebounce = useMemo(() => debounce((searchQuery: string) => {
-    dispatch(getProjectsByUserThunk({ search: searchQuery }))
-      .unwrap()
-      .then((response: projectResponseType[]) => {
-        const items = response.map((project) => ({
-          id: project.id,
-          title: project.display_name,
-        }));
-        dispatchValue({
-          type: AppointmentActionType.ADD_COMPANIES,
-          value: items,
-        });
-      });
-  }, 500), [dispatch, dispatchValue]);
+  const isCompany = state.customerType === "company";
+  const fetchDebounce = useMemo(
+    () =>
+      debounce((searchQuery: string) => {
+        dispatch(getProjectsByUserThunk({ search: searchQuery }))
+          .unwrap()
+          .then((response: projectResponseType[]) => {
+            const items = response.map((project) => ({
+              id: project.id,
+              title: project.display_name,
+            }));
+            dispatchValue({
+              type: AppointmentActionType.ADD_COMPANIES,
+              value: items,
+            });
+          });
+      }, 500),
+    [dispatch, dispatchValue]
+  );
 
   const onChangeText = (searchQuery: string): void => {
     dispatchValue({
@@ -45,31 +47,31 @@ function Inputs() {
   const inputs: Input[] = React.useMemo(() => {
     const baseInput: Input[] = [
       {
-        label: 'Jenis Pelanggan',
+        label: "Jenis Pelanggan",
         isRequire: true,
         isError: false,
-        type: 'cardOption',
+        type: "cardOption",
         value: state.customerType,
         options: [
           {
             icon: company,
-            title: 'Perusahaan',
-            value: 'company',
+            title: "Perusahaan",
+            value: "company",
             onChange: () => {
               dispatchValue({
                 type: AppointmentActionType.SET_CUSTOMER_TYPE,
-                value: 'company',
+                value: "company",
               });
             },
           },
           {
             icon: profile,
-            title: 'Individu',
-            value: 'individu',
+            title: "Individu",
+            value: "individu",
             onChange: () => {
               dispatchValue({
                 type: AppointmentActionType.SET_CUSTOMER_TYPE,
-                value: 'individu',
+                value: "individu",
               });
             },
           },
@@ -79,19 +81,20 @@ function Inputs() {
     if (state.customerType?.length > 0) {
       const aditionalInput: Input[] = [
         {
-          label: 'Nama Perusahaan',
+          label: "Nama Perusahaan",
           isRequire: true,
           isError: state.errorCompany?.length > 0,
           customerErrorMsg: state.errorCompany,
-          type: 'autocomplete',
+          type: "autocomplete",
           onChange: onChangeText,
-          onClear: () => dispatchValue({
-            type: AppointmentActionType.SET_COMPANIES_NAME,
-            value: null,
-          }),
+          onClear: () =>
+            dispatchValue({
+              type: AppointmentActionType.SET_COMPANIES_NAME,
+              value: null,
+            }),
           value: values.stepOne.company.Company,
           items: state.options.items,
-          placeholder: 'Masukan Nama Perusahaan',
+          placeholder: "Masukan Nama Perusahaan",
           loading: state.options.loading,
           onSelect: (item: any) => {
             dispatchValue({
@@ -102,12 +105,12 @@ function Inputs() {
           },
         },
         {
-          label: 'Nama Proyek',
+          label: "Nama Proyek",
           isRequire: true,
           isError: state.errorProject.length > 0,
           customerErrorMsg: state.errorProject,
-          type: 'textInput',
-          placeholder: 'Masukan Nama Proyek',
+          type: "textInput",
+          placeholder: "Masukan Nama Proyek",
           onChange: (e) => {
             dispatchValue({
               type: AppointmentActionType.SET_PROJECT_NAME,
@@ -118,11 +121,11 @@ function Inputs() {
           value: isCompany ? state.company?.name : state.individu?.name,
         },
         {
-          label: 'PIC',
+          label: "PIC",
           isRequire: true,
           isError: state.errorPics.length > 0,
           customerErrorMsg: state.errorPics,
-          type: 'PIC',
+          type: "PIC",
           value: isCompany ? state.company.PIC : state.individu.PIC,
           onChange: () => {
             dispatchValue({ type: AppointmentActionType.TOGGLE_MODAL_PICS });
@@ -143,7 +146,7 @@ function Inputs() {
           },
         },
       ];
-      if (state.customerType === 'individu') {
+      if (state.customerType === "individu") {
         baseInput.push(...aditionalInput.splice(1));
       } else {
         baseInput.push(...aditionalInput);
@@ -174,13 +177,13 @@ function Inputs() {
 
 const styles: Styles = {
   dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   sheetStyle: {
     paddingLeft: layout.pad.md + layout.pad.ml,
     paddingRight: layout.pad.md + layout.pad.ml,
-    backgroundColor: 'red',
+    backgroundColor: "red",
   },
   inputContainerStyle: {
     flex: 1,

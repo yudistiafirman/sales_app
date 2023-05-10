@@ -1,28 +1,26 @@
-import * as React from 'react';
-import {
-  Animated, SafeAreaView, StyleSheet, View,
-} from 'react-native';
+import * as React from "react";
+import { Animated, SafeAreaView, StyleSheet, View } from "react-native";
 import {
   useNavigation,
   useRoute,
   useIsFocused,
   StackActions,
   useFocusEffect,
-} from '@react-navigation/native';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { Camera, useCameraDevices } from 'react-native-vision-camera';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
-import { hasCameraPermissions } from '@/utils/permissions';
-import { CAMERA, PO, IMAGE_PREVIEW } from '@/navigation/ScreenNames';
-import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import { BHeaderIcon } from '@/components';
-import { resScale } from '@/utils';
-import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
-import CameraButton from './elements/CameraButton';
-import { AppDispatch, RootState } from '@/redux/store';
-import { openPopUp } from '@/redux/reducers/modalReducer';
-import HeaderButton from './elements/HeaderButton';
+} from "@react-navigation/native";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { Camera, useCameraDevices } from "react-native-vision-camera";
+import { useDispatch, useSelector } from "react-redux";
+import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
+import { hasCameraPermissions } from "@/utils/permissions";
+import { CAMERA, PO, IMAGE_PREVIEW } from "@/navigation/ScreenNames";
+import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
+import { BHeaderIcon } from "@/components";
+import { resScale } from "@/utils";
+import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
+import CameraButton from "./elements/CameraButton";
+import { AppDispatch, RootState } from "@/redux/store";
+import { openPopUp } from "@/redux/reducers/modalReducer";
+import HeaderButton from "./elements/HeaderButton";
 
 function CameraScreen() {
   const navigation = useNavigation();
@@ -32,7 +30,8 @@ function CameraScreen() {
   const [enableFlashlight, onEnableFlashlight] = React.useState<boolean>(false);
   const [enableHDR, onEnableHDR] = React.useState<boolean>(false);
   const [enableLowBoost, onEnableLowBoost] = React.useState<boolean>(false);
-  const [enableHighQuality, onEnableHighQuality] = React.useState<boolean>(false);
+  const [enableHighQuality, onEnableHighQuality] =
+    React.useState<boolean>(false);
   const { isFirstTimeOpenCamera } = poState.currentState.context;
   const navigateTo = route?.params?.navigateTo;
   const closeButton = route?.params?.closeButton;
@@ -42,23 +41,25 @@ function CameraScreen() {
   const operationTempData = route?.params?.operationTempData;
   const soNumber = route?.params?.soNumber;
   const soID = route?.params?.soID;
-  const disabledDocPicker = route?.params?.disabledDocPicker !== undefined
-    ? route?.params?.disabledDocPicker
-    : true;
-  const disabledGalleryPicker = route?.params?.disabledGalleryPicker !== undefined
-    ? route?.params?.disabledGalleryPicker
-    : true;
+  const disabledDocPicker =
+    route?.params?.disabledDocPicker !== undefined
+      ? route?.params?.disabledDocPicker
+      : true;
+  const disabledGalleryPicker =
+    route?.params?.disabledGalleryPicker !== undefined
+      ? route?.params?.disabledGalleryPicker
+      : true;
   useHeaderTitleChanged({ title: `Foto ${photoTitle}` });
 
   const handleBack = React.useCallback(() => {
     if (navigateTo === PO) {
       if (isFirstTimeOpenCamera) {
         if (navigation.canGoBack()) {
-          dispatch({ type: 'backToSavedPoFromCamera' });
+          dispatch({ type: "backToSavedPoFromCamera" });
           navigation.dispatch(StackActions.popToTop());
         }
       } else {
-        dispatch({ type: 'backFromCamera' });
+        dispatch({ type: "backFromCamera" });
         navigation.goBack();
       }
     } else {
@@ -95,15 +96,15 @@ function CameraScreen() {
     if (camera === undefined || camera.current === undefined) {
       dispatch(
         openPopUp({
-          popUpType: 'error',
-          popUpText: 'No Camera Found',
+          popUpType: "error",
+          popUpText: "No Camera Found",
           outsideClickClosePopUp: true,
-        }),
+        })
       );
     } else {
       try {
         const takenPhoto = await camera?.current?.takeSnapshot({
-          flash: enableFlashlight ? 'on' : 'off',
+          flash: enableFlashlight ? "on" : "off",
           quality: 70,
         });
         animateElement();
@@ -122,10 +123,10 @@ function CameraScreen() {
       } catch (error) {
         dispatch(
           openPopUp({
-            popUpType: 'error',
-            popUpText: 'Camera error',
+            popUpType: "error",
+            popUpText: "Camera error",
             outsideClickClosePopUp: true,
-          }),
+          })
         );
       }
     }
@@ -155,7 +156,7 @@ function CameraScreen() {
   useFocusEffect(
     React.useCallback(() => {
       hasCameraPermissions();
-    }, []),
+    }, [])
   );
 
   return (
@@ -203,7 +204,7 @@ function CameraScreen() {
 const styles = StyleSheet.create({
   parent: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
   container: {
     flex: 1,
@@ -213,9 +214,9 @@ const styles = StyleSheet.create({
   },
   containerCamera: {
     flex: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'green',
+    width: "100%",
+    height: "100%",
+    backgroundColor: "green",
   },
 });
 

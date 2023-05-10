@@ -1,13 +1,13 @@
-import { View, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
+import { View, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import resScale from '@/utils/resScale';
-import { layout } from '@/constants';
-import BSpacer from '../atoms/BSpacer';
-import BEmptyState from '@/components/organism/BEmptyState';
+import LinearGradient from "react-native-linear-gradient";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import resScale from "@/utils/resScale";
+import { layout } from "@/constants";
+import BSpacer from "../atoms/BSpacer";
+import BEmptyState from "@/components/organism/BEmptyState";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -22,9 +22,9 @@ type BTabScreenType = {
   isLoading?: boolean;
   searchQuery?: string;
   onEndReached?:
-  | ((info: { distanceFromEnd: number }) => void)
-  | null
-  | undefined;
+    | ((info: { distanceFromEnd: number }) => void)
+    | null
+    | undefined;
   refreshing?: boolean;
   initialFetch?: () => Promise<visitationType[] | undefined>;
   isError?: boolean;
@@ -104,8 +104,8 @@ const style = StyleSheet.create({
   },
   flatListLoading: {
     marginTop: layout.pad.lg,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   flatListShimmer: {
     width: resScale(330),

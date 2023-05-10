@@ -3,8 +3,8 @@ import {
   useFocusEffect,
   useNavigation,
   useRoute,
-} from '@react-navigation/native';
-import React, { useCallback, useLayoutEffect } from 'react';
+} from "@react-navigation/native";
+import React, { useCallback, useLayoutEffect } from "react";
 import {
   BackHandler,
   DeviceEventEmitter,
@@ -12,11 +12,11 @@ import {
   StyleSheet,
   Text,
   View,
-} from 'react-native';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
-import { FlashList } from '@shopify/flash-list';
+} from "react-native";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
+import { FlashList } from "@shopify/flash-list";
 import {
   BBackContinueBtn,
   BDivider,
@@ -26,38 +26,38 @@ import {
   BLocationText,
   BSpacer,
   BVisitationCard,
-} from '@/components';
-import { colors, fonts, layout } from '@/constants';
-import { TM_CONDITION } from '@/constants/dropdown';
-import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
-import { Input } from '@/interfaces';
-import { resScale } from '@/utils';
+} from "@/components";
+import { colors, fonts, layout } from "@/constants";
+import { TM_CONDITION } from "@/constants/dropdown";
+import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
+import { Input } from "@/interfaces";
+import { resScale } from "@/utils";
 import {
   CAMERA,
   GALLERY_OPERATION,
   SUBMIT_FORM,
   TAB_DISPATCH_TITLE,
   TAB_RETURN_TITLE,
-} from '@/navigation/ScreenNames';
-import { AppDispatch, RootState } from '@/redux/store';
-import { ENTRY_TYPE } from '@/models/EnumModel';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
+} from "@/navigation/ScreenNames";
+import { AppDispatch, RootState } from "@/redux/store";
+import { ENTRY_TYPE } from "@/models/EnumModel";
+import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {
   onChangeInputValue,
   removeDriverPhoto,
   removeOperationPhoto,
   resetOperationState,
   setAllOperationPhoto,
-} from '@/redux/reducers/operationReducer';
-import { useKeyboardActive } from '@/hooks';
-import { updateDeliverOrder } from '@/models/updateDeliveryOrder';
-import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
-import { uploadFileImage } from '@/actions/CommonActions';
-import { OperationFileType } from '@/interfaces/Operation';
+} from "@/redux/reducers/operationReducer";
+import { useKeyboardActive } from "@/hooks";
+import { updateDeliverOrder } from "@/models/updateDeliveryOrder";
+import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import { uploadFileImage } from "@/actions/CommonActions";
+import { OperationFileType } from "@/interfaces/Operation";
 import {
   updateDeliveryOrder,
   updateDeliveryOrderWeight,
-} from '@/actions/OrderActions';
+} from "@/actions/OrderActions";
 
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
@@ -103,13 +103,15 @@ function SubmitForm() {
     OperationFileType.DO_RETURN_TRUCK_CONDITION_SECURITY,
   ];
 
-  const securityFileType = operationType === ENTRY_TYPE.DISPATCH
-    ? securityDispatchFileType
-    : securityReturnFileType;
+  const securityFileType =
+    operationType === ENTRY_TYPE.DISPATCH
+      ? securityDispatchFileType
+      : securityReturnFileType;
 
-  const enableLocationHeader = operationType === ENTRY_TYPE.DRIVER
-    && operationData.projectDetails.address
-    && operationData.projectDetails.address?.length > 0;
+  const enableLocationHeader =
+    operationType === ENTRY_TYPE.DRIVER &&
+    operationData.projectDetails.address &&
+    operationData.projectDetails.address?.length > 0;
 
   const removedAddButtonImage = () => {
     switch (userData?.type) {
@@ -140,55 +142,60 @@ function SubmitForm() {
 
   React.useEffect(() => {
     crashlytics().log(SUBMIT_FORM);
-    DeviceEventEmitter.addListener('Camera.preview', () => {
+    DeviceEventEmitter.addListener("Camera.preview", () => {
       removedAddButtonImage();
     });
 
     return () => {
-      DeviceEventEmitter.removeAllListeners('Camera.preview');
+      DeviceEventEmitter.removeAllListeners("Camera.preview");
     };
   }, [operationData, operationData.photoFiles]);
 
   const getHeaderTitle = () => {
     switch (userData?.type) {
       case ENTRY_TYPE.BATCHER:
-        return 'Produksi';
+        return "Produksi";
       case ENTRY_TYPE.SECURITY:
         if (operationType === ENTRY_TYPE.DISPATCH) return TAB_DISPATCH_TITLE;
         return TAB_RETURN_TITLE;
       case ENTRY_TYPE.DRIVER:
-        return 'Penuangan';
+        return "Penuangan";
       case ENTRY_TYPE.WB:
-        return 'Weigh Bridge';
+        return "Weigh Bridge";
       default:
-        return '';
+        return "";
     }
   };
 
   const handleDisableContinueButton = () => {
-    const photos = [...operationData.photoFiles.filter((it) => it.file !== null)];
+    const photos = [
+      ...operationData.photoFiles.filter((it) => it.file !== null),
+    ];
     if (userData?.type === ENTRY_TYPE.DRIVER) {
       return (
-        photos.length < 7
-        || operationData.inputsValue.recepientName.length === 0
-        || !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber)
+        photos.length < 7 ||
+        operationData.inputsValue.recepientName.length === 0 ||
+        !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber)
       );
-    } if (userData?.type === ENTRY_TYPE.WB) {
+    }
+    if (userData?.type === ENTRY_TYPE.WB) {
       return (
         operationData.inputsValue.weightBridge.length === 0 || photos.length < 2
       );
-    } if (operationType === ENTRY_TYPE.RETURN) {
+    }
+    if (operationType === ENTRY_TYPE.RETURN) {
       return (
-        operationData.inputsValue.truckMixCondition.length === 0
-        || photos.length < 2
+        operationData.inputsValue.truckMixCondition.length === 0 ||
+        photos.length < 2
       );
-    } if (operationType === ENTRY_TYPE.DISPATCH) {
+    }
+    if (operationType === ENTRY_TYPE.DISPATCH) {
       return photos.length !== 5;
     }
   };
 
   const handleBack = () => {
-    DeviceEventEmitter.emit('Operation.refreshlist', true);
+    DeviceEventEmitter.emit("Operation.refreshlist", true);
     navigation.dispatch(StackActions.pop());
   };
 
@@ -196,23 +203,23 @@ function SubmitForm() {
     try {
       dispatch(
         openPopUp({
-          popUpType: 'loading',
-          popUpTitle: '',
-          popUpText: 'Memperbarui Delivery Order',
+          popUpType: "loading",
+          popUpTitle: "",
+          popUpText: "Memperbarui Delivery Order",
           outsideClickClosePopUp: false,
-        }),
+        })
       );
       const payload = {} as updateDeliverOrder;
       const photoFilestoUpload = operationData.photoFiles
         .filter((v) => v.file !== null)
         .map((photo) => ({
           ...photo.file,
-          uri: photo?.file?.uri?.replace('file:', 'file://'),
+          uri: photo?.file?.uri?.replace("file:", "file://"),
         }));
 
       const responseFiles = await uploadFileImage(
         photoFilestoUpload,
-        'Update Delivery Order',
+        "Update Delivery Order"
       );
       if (responseFiles.data.success) {
         let responseUpdateDeliveryOrder: any;
@@ -223,11 +230,12 @@ function SubmitForm() {
           }));
           payload.doFiles = newFileData;
           payload.recipientName = operationData.inputsValue.recepientName;
-          payload.recipientNumber = operationData.inputsValue.recepientPhoneNumber;
-          payload.status = 'RECEIVED';
+          payload.recipientNumber =
+            operationData.inputsValue.recepientPhoneNumber;
+          payload.status = "RECEIVED";
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
-            operationData.projectDetails.deliveryOrderId,
+            operationData.projectDetails.deliveryOrderId
           );
         } else if (userData?.type === ENTRY_TYPE.WB) {
           const newFileData = responseFiles.data.data.map((v, i) => ({
@@ -238,7 +246,7 @@ function SubmitForm() {
           payload.weight = operationData.inputsValue.weightBridge;
           responseUpdateDeliveryOrder = await updateDeliveryOrderWeight(
             payload,
-            operationData.projectDetails.deliveryOrderId,
+            operationData.projectDetails.deliveryOrderId
           );
         } else if (userData?.type === ENTRY_TYPE.SECURITY) {
           const newFileData = responseFiles.data.data.map((v, i) => ({
@@ -248,12 +256,13 @@ function SubmitForm() {
           payload.doFiles = newFileData;
 
           if (operationType === ENTRY_TYPE.RETURN) {
-            payload.conditionTruck = operationData.inputsValue.truckMixCondition;
+            payload.conditionTruck =
+              operationData.inputsValue.truckMixCondition;
           }
 
           responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
-            operationData.projectDetails.deliveryOrderId,
+            operationData.projectDetails.deliveryOrderId
           );
         }
 
@@ -261,10 +270,10 @@ function SubmitForm() {
           dispatch(resetOperationState());
           dispatch(
             openPopUp({
-              popUpType: 'success',
-              popUpText: 'Berhasil Memperbarui Delivery Order',
+              popUpType: "success",
+              popUpText: "Berhasil Memperbarui Delivery Order",
               outsideClickClosePopUp: true,
-            }),
+            })
           );
           if (navigation.canGoBack()) {
             handleBack();
@@ -273,33 +282,33 @@ function SubmitForm() {
           dispatch(closePopUp());
           dispatch(
             openPopUp({
-              popUpType: 'error',
+              popUpType: "error",
               popUpText:
-                responseFiles.data.message
-                || 'Error Memperbarui Delivery Order',
+                responseFiles.data.message ||
+                "Error Memperbarui Delivery Order",
               outsideClickClosePopUp: true,
-            }),
+            })
           );
         }
       } else {
         dispatch(closePopUp());
         dispatch(
           openPopUp({
-            popUpType: 'error',
+            popUpType: "error",
             popUpText:
-              responseFiles.data.message || 'Error Memperbarui Delivery Order',
+              responseFiles.data.message || "Error Memperbarui Delivery Order",
             outsideClickClosePopUp: true,
-          }),
+          })
         );
       }
     } catch (error) {
       dispatch(closePopUp());
       dispatch(
         openPopUp({
-          popUpType: 'error',
-          popUpText: error.message || 'Error Memperbarui Delivery Order',
+          popUpType: "error",
+          popUpText: error.message || "Error Memperbarui Delivery Order",
           outsideClickClosePopUp: true,
-        }),
+        })
       );
     }
   };
@@ -317,7 +326,7 @@ function SubmitForm() {
         onBack={handleBack}
       />
     ),
-    [handleBack],
+    [handleBack]
   );
 
   useLayoutEffect(() => {
@@ -334,32 +343,32 @@ function SubmitForm() {
         return true;
       };
       const backHandler = BackHandler.addEventListener(
-        'hardwareBackPress',
-        backAction,
+        "hardwareBackPress",
+        backAction
       );
       return () => backHandler.remove();
-    }, [handleBack, operationData.photoFiles, userData?.type]),
+    }, [handleBack, operationData.photoFiles, userData?.type])
   );
 
   useHeaderTitleChanged({ title: getHeaderTitle() });
 
   const weightInputs: Input[] = [
     {
-      label: 'Berat',
+      label: "Berat",
       value: operationData.inputsValue.weightBridge,
       onChange: (e) => {
         const result = `${e}`;
         dispatch(
           onChangeInputValue({
-            inputType: 'weightBridge',
+            inputType: "weightBridge",
             value: result,
-          }),
+          })
         );
       },
       isRequire: true,
-      type: 'quantity',
-      quantityType: 'kg',
-      placeholder: 'Masukkan berat',
+      type: "quantity",
+      quantityType: "kg",
+      placeholder: "Masukkan berat",
       isError: !operationData.inputsValue.weightBridge,
       outlineColor: !operationData.inputsValue.weightBridge
         ? colors.text.errorText
@@ -369,46 +378,47 @@ function SubmitForm() {
 
   const deliveryInputs: Input[] = [
     {
-      label: 'Nama Penerima',
+      label: "Nama Penerima",
       value: operationData.inputsValue.recepientName,
-      onChange: (e) => dispatch(
-        onChangeInputValue({
-          inputType: 'recepientName',
-          value: e.nativeEvent.text,
-        }),
-      ),
+      onChange: (e) =>
+        dispatch(
+          onChangeInputValue({
+            inputType: "recepientName",
+            value: e.nativeEvent.text,
+          })
+        ),
       isRequire: true,
-      type: 'textInput',
-      placeholder: 'Masukkan nama penerima',
+      type: "textInput",
+      placeholder: "Masukkan nama penerima",
       isError: !operationData.inputsValue.recepientName,
       outlineColor: !operationData.inputsValue.recepientName
         ? colors.text.errorText
         : undefined,
     },
     {
-      label: 'No. Telp Penerima',
+      label: "No. Telp Penerima",
       value: operationData.inputsValue.recepientPhoneNumber,
       onChange: (e) => {
         dispatch(
           onChangeInputValue({
-            inputType: 'recepientPhoneNumber',
+            inputType: "recepientPhoneNumber",
             value: e.nativeEvent.text,
-          }),
+          })
         );
       },
       isError: !phoneNumberRegex.test(
-        operationData.inputsValue.recepientPhoneNumber,
+        operationData.inputsValue.recepientPhoneNumber
       ),
       outlineColor: !phoneNumberRegex.test(
-        operationData.inputsValue.recepientPhoneNumber,
+        operationData.inputsValue.recepientPhoneNumber
       )
         ? colors.text.errorText
         : undefined,
       isRequire: true,
-      keyboardType: 'numeric',
-      type: 'textInput',
-      placeholder: 'Masukkan nomor telp penerima',
-      customerErrorMsg: 'No. Telepon harus diisi sesuai format',
+      keyboardType: "numeric",
+      type: "textInput",
+      placeholder: "Masukkan nomor telp penerima",
+      customerErrorMsg: "No. Telepon harus diisi sesuai format",
       LeftIcon: operationData.inputsValue.recepientPhoneNumber
         ? LeftIcon
         : undefined,
@@ -431,18 +441,20 @@ function SubmitForm() {
     //   },
     // },
     {
-      label: 'Kondisi TM',
+      label: "Kondisi TM",
       isRequire: true,
       isError: false,
-      type: 'dropdown',
+      type: "dropdown",
       dropdown: {
         items: TM_CONDITION,
         placeholder: operationData.inputsValue.truckMixCondition
-          ? TM_CONDITION.find((it) => it.value === operationData.inputsValue.truckMixCondition)?.label ?? ''
-          : 'Pilih Kondisi TM',
+          ? TM_CONDITION.find(
+              (it) => it.value === operationData.inputsValue.truckMixCondition
+            )?.label ?? ""
+          : "Pilih Kondisi TM",
         onChange: (value: any) => {
           dispatch(
-            onChangeInputValue({ inputType: 'truckMixCondition', value }),
+            onChangeInputValue({ inputType: "truckMixCondition", value })
           );
         },
       },
@@ -462,7 +474,7 @@ function SubmitForm() {
       dispatch,
       removeOperationPhoto,
       removeDriverPhoto,
-    ],
+    ]
   );
 
   const addMoreImages = useCallback(
@@ -475,39 +487,39 @@ function SubmitForm() {
               closeButton: true,
               navigateTo: ENTRY_TYPE.DRIVER,
               operationAddedStep: attachType,
-            }),
+            })
           );
           return;
         case ENTRY_TYPE.SECURITY:
           if (operationType === ENTRY_TYPE.DISPATCH) {
             navigation.dispatch(
               StackActions.push(CAMERA, {
-                photoTitle: 'Tambahan',
+                photoTitle: "Tambahan",
                 closeButton: true,
                 navigateTo: GALLERY_OPERATION,
-              }),
+              })
             );
           } else {
             navigation.dispatch(
               StackActions.push(CAMERA, {
-                photoTitle: 'Tambahan',
+                photoTitle: "Tambahan",
                 closeButton: true,
                 navigateTo: GALLERY_OPERATION,
-              }),
+              })
             );
           }
           return;
         case ENTRY_TYPE.WB:
           navigation.dispatch(
             StackActions.push(CAMERA, {
-              photoTitle: 'Tambahan',
+              photoTitle: "Tambahan",
               closeButton: true,
               navigateTo: GALLERY_OPERATION,
-            }),
+            })
           );
       }
     },
-    [operationData.photoFiles, dispatch],
+    [operationData.photoFiles, dispatch]
   );
 
   return (
@@ -520,7 +532,7 @@ function SubmitForm() {
           paddingBottom: layout.pad.lg,
         }}
         renderItem={() => <BSpacer size="verySmall" />}
-        ListHeaderComponent={(
+        ListHeaderComponent={
           <View style={style.flexFull}>
             {enableLocationHeader && (
               <BLocationText location={operationData.projectDetails.address} />
@@ -539,10 +551,10 @@ function SubmitForm() {
                   name: operationData.projectDetails.doNumber,
                   unit: `${operationData.projectDetails.requestedQuantity} m3`,
                   time: `${moment(
-                    operationData.projectDetails.deliveryTime,
-                  ).format('L')} | ${moment(
-                    operationData.projectDetails.deliveryTime,
-                  ).format('hh:mm A')}`,
+                    operationData.projectDetails.deliveryTime
+                  ).format("L")} | ${moment(
+                    operationData.projectDetails.deliveryTime
+                  ).format("hh:mm A")}`,
                 }}
                 customStyle={{ backgroundColor: colors.tertiary }}
                 isRenderIcon={false}
@@ -560,15 +572,15 @@ function SubmitForm() {
               />
             </View>
             <View style={style.flexFull}>
-              {(operationType === ENTRY_TYPE.DRIVER
-                || operationType === ENTRY_TYPE.RETURN
-                || operationType === ENTRY_TYPE.IN
-                || operationType === ENTRY_TYPE.OUT) && <BSpacer size="small" />}
+              {(operationType === ENTRY_TYPE.DRIVER ||
+                operationType === ENTRY_TYPE.RETURN ||
+                operationType === ENTRY_TYPE.IN ||
+                operationType === ENTRY_TYPE.OUT) && <BSpacer size="small" />}
               {operationType === ENTRY_TYPE.DRIVER && (
                 <BForm titleBold="500" inputs={deliveryInputs} />
               )}
-              {(operationType === ENTRY_TYPE.IN
-                || operationType === ENTRY_TYPE.OUT) && (
+              {(operationType === ENTRY_TYPE.IN ||
+                operationType === ENTRY_TYPE.OUT) && (
                 <BForm titleBold="500" inputs={weightInputs} />
               )}
               {operationType === ENTRY_TYPE.RETURN && (
@@ -582,7 +594,7 @@ function SubmitForm() {
               )}
             </View>
           </View>
-        )}
+        }
       />
 
       {!keyboardVisible && (
@@ -616,7 +628,7 @@ const style = StyleSheet.create({
   },
   parent: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: "column",
     backgroundColor: colors.white,
   },
   top: {
@@ -627,19 +639,19 @@ const style = StyleSheet.create({
     borderColor: colors.border.default,
   },
   conButton: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
     marginTop: layout.pad.lg,
     bottom: 0,
   },
   buttonOne: {
-    width: '40%',
+    width: "40%",
     paddingEnd: layout.pad.md,
   },
   buttonTwo: {
-    width: '60%',
+    width: "60%",
     paddingStart: layout.pad.md,
   },
 });

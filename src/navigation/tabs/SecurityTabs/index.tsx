@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useSelector } from 'react-redux';
-import Dispatch from '@/screens/Operation/Dispatch';
-import CustomTabBar from '../CustomTabBar';
+import * as React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useSelector } from "react-redux";
+import Dispatch from "@/screens/Operation/Dispatch";
+import CustomTabBar from "../CustomTabBar";
 import {
   SECURITY_TAB_TITLE,
   TAB_DISPATCH,
@@ -13,12 +13,12 @@ import {
   TAB_WB_IN_TITLE,
   TAB_WB_OUT,
   TAB_WB_OUT_TITLE,
-} from '@/navigation/ScreenNames';
-import Return from '@/screens/Operation/Return';
-import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
-import { colors } from '@/constants';
-import { RootState } from '@/redux/store';
-import { ENTRY_TYPE } from '@/models/EnumModel';
+} from "@/navigation/ScreenNames";
+import Return from "@/screens/Operation/Return";
+import SalesHeaderRight from "@/navigation/Sales/HeaderRight";
+import { colors } from "@/constants";
+import { RootState } from "@/redux/store";
+import { ENTRY_TYPE } from "@/models/EnumModel";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +28,7 @@ function SecurityTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerTitleAlign: 'center',
+        headerTitleAlign: "center",
         tabBarHideOnKeyboard: true,
         headerShown: false,
       }}

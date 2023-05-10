@@ -1,11 +1,11 @@
-import React from 'react';
-import { TouchableOpacity } from 'react-native';
-import Icons from 'react-native-vector-icons/MaterialIcons';
-import { BText } from '@/components';
-import colors from '@/constants/colors';
-import resScale from '@/utils/resScale';
-import SearchAreaStyles from '../styles';
-import { layout } from '@/constants';
+import React from "react";
+import { TouchableOpacity } from "react-native";
+import Icons from "react-native-vector-icons/MaterialIcons";
+import { BText } from "@/components";
+import colors from "@/constants/colors";
+import resScale from "@/utils/resScale";
+import SearchAreaStyles from "../styles";
+import { layout } from "@/constants";
 
 function SearchAreaCurrentLocation({
   onPress,

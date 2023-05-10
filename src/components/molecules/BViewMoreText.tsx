@@ -1,15 +1,16 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   Text,
   View,
   StyleSheet,
   ViewStyle,
   TouchableOpacity,
-  StyleProp, TextStyle,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
-import resScale from '@/utils/resScale';
-import colors from '@/constants/colors';
+  StyleProp,
+  TextStyle,
+} from "react-native";
+import Icon from "react-native-vector-icons/AntDesign";
+import resScale from "@/utils/resScale";
+import colors from "@/constants/colors";
 
 type ViewMoreTextProps = typeof BViewMoreText.defaultProps &
   ViewStyle & {
@@ -23,19 +24,19 @@ type ViewMoreTextProps = typeof BViewMoreText.defaultProps &
 const styles = StyleSheet.create({
   fullTextWrapper: {
     opacity: 0,
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     top: 0,
   },
   viewMoreText: {
-    color: 'blue',
+    color: "blue",
   },
   transparent: {
     opacity: 0,
   },
   viewMoreTextContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
 
@@ -57,9 +58,9 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
 
   hideFullText = () => {
     if (
-      this.state.isFulltextShown
-      && this.trimmedTextHeight
-      && this.fullTextHeight
+      this.state.isFulltextShown &&
+      this.trimmedTextHeight &&
+      this.fullTextHeight
     ) {
       this.shouldShowMore = this.trimmedTextHeight < this.fullTextHeight;
       this.setState({
@@ -119,11 +120,11 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
     if (this.shouldShowMore === true) {
       if (numberOfLines > 0) {
         return (this.props.renderViewMore || this.renderViewMore)(
-          this.onPressMore,
+          this.onPressMore
         );
       }
       return (this.props.renderViewLess || this.renderViewLess)(
-        this.onPressLess,
+        this.onPressLess
       );
     }
     return null;

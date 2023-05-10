@@ -1,10 +1,10 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { resScale } from '@/utils';
-import { PriceListCardStyles } from './PriceListCard';
-import { layout } from '@/constants';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import { resScale } from "@/utils";
+import { PriceListCardStyles } from "./PriceListCard";
+import { layout } from "@/constants";
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 function PriceListShimmer() {
@@ -14,7 +14,7 @@ function PriceListShimmer() {
         <ShimmerPlaceholder style={styles.shimmerName} />
         <ShimmerPlaceholder style={styles.shimmerPrice} />
       </View>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: "row" }}>
         <ShimmerPlaceholder style={styles.shimmerChip} />
       </View>
     </View>

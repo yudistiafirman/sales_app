@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React, { ReactNode } from 'react';
-import Modal from 'react-native-modal';
-import { colors, fonts, layout } from '@/constants';
-import BBackContinueBtn from './BBackContinueBtn';
-import { resScale } from '@/utils';
+import { View, Text, StyleSheet } from "react-native";
+import React, { ReactNode } from "react";
+import Modal from "react-native-modal";
+import { colors, fonts, layout } from "@/constants";
+import BBackContinueBtn from "./BBackContinueBtn";
+import { resScale } from "@/utils";
 
 type PopUpQuestionType = {
   isVisible: boolean;
@@ -37,7 +37,7 @@ export default function PopUpQuestion({
       <View style={styles.modalContent}>
         <View style={styles.questionContainer}>
           <Text style={styles.questionText}>
-            {text || 'Apakah Anda Ingin Tambah Foto Lagi?'}
+            {text || "Apakah Anda Ingin Tambah Foto Lagi?"}
           </Text>
         </View>
         {descContent && <View>{descContent}</View>}
@@ -58,8 +58,8 @@ export default function PopUpQuestion({
             }}
             onPressContinue={actionButton}
             isContinueIcon={false}
-            continueText={actionText || 'Ya, Tambah'}
-            backText={cancelText || 'Tidak'}
+            continueText={actionText || "Ya, Tambah"}
+            backText={cancelText || "Tidak"}
           />
         </View>
       </View>
@@ -71,24 +71,24 @@ const styles = StyleSheet.create({
   modal: {},
   modalContent: {
     padding: layout.pad.md,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: layout.radius.md,
   },
   questionContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   questionText: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[600],
     fontSize: fonts.size.lg,
-    textAlign: 'center',
+    textAlign: "center",
     padding: layout.pad.lg,
   },
   questionDescText: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[300],
     fontSize: fonts.size.md,
-    textAlign: 'center',
+    textAlign: "center",
     paddingTop: layout.pad.lg,
     paddingHorizontal: layout.pad.lg,
     paddingBottom: layout.pad.xl,

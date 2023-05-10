@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import resScale from '@/utils/resScale';
-import { BChip, BText } from '@/components';
-import { layout } from '@/constants';
-import { getColorStatusTrx, getStatusTrx } from '@/utils/generalFunc';
-import formatCurrency from '@/utils/formatCurrency';
+import * as React from "react";
+import { StyleSheet, View } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import colors from "@/constants/colors";
+import font from "@/constants/fonts";
+import resScale from "@/utils/resScale";
+import { BChip, BText } from "@/components";
+import { layout } from "@/constants";
+import { getColorStatusTrx, getStatusTrx } from "@/utils/generalFunc";
+import formatCurrency from "@/utils/formatCurrency";
 
 interface TransactionListCardProps {
   number: string;
@@ -64,22 +64,22 @@ function TransactionListCard({
 export const styles = StyleSheet.create({
   parent: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     borderWidth: 1,
     borderRadius: layout.pad.md,
     borderColor: colors.border.disabled,
     marginTop: layout.pad.lg,
     padding: layout.pad.md,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   bottomContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: layout.pad.md,
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     flex: 1,
@@ -109,11 +109,11 @@ export const styles = StyleSheet.create({
   },
   leftSide: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   rightSide: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

@@ -1,8 +1,8 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { PhotoFile } from 'react-native-vision-camera';
-import { Docs, visitationListResponse } from '@/interfaces';
-import { ENTRY_TYPE } from '@/models/EnumModel';
-import { OperationProjectDetails } from '@/redux/reducers/operationReducer';
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { PhotoFile } from "react-native-vision-camera";
+import { Docs, visitationListResponse } from "@/interfaces";
+import { ENTRY_TYPE } from "@/models/EnumModel";
+import { OperationProjectDetails } from "@/redux/reducers/operationReducer";
 
 export type RootStackParamList = {
   TAB_ROOT: { screen?: string; params?: any };

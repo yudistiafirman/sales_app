@@ -1,12 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { Children } from 'react';
-import { GestureResponderEvent, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
-import { fonts, layout } from '@/constants';
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import resScale from '@/utils/resScale';
-import BText from '../atoms/BText';
+import React, { Children } from "react";
+import { GestureResponderEvent, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/Feather";
+import { fonts, layout } from "@/constants";
+import colors from "@/constants/colors";
+import font from "@/constants/fonts";
+import resScale from "@/utils/resScale";
+import BText from "../atoms/BText";
 
 type BTextLocationProps = {
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
@@ -24,7 +24,7 @@ function BTextLocation({
   return (
     <TouchableOpacity
       disabled={disabled}
-      style={{ flexDirection: 'row' }}
+      style={{ flexDirection: "row" }}
       onPress={onPress}
     >
       <Icon

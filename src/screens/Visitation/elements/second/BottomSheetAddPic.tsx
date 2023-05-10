@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { BBottomSheetForm } from '@/components';
-import { Input, PIC } from '@/interfaces';
-import { colors, fonts } from '@/constants';
+import React, { useMemo } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { BBottomSheetForm } from "@/components";
+import { Input, PIC } from "@/interfaces";
+import { colors, fonts } from "@/constants";
 
 interface IProps {
   initialIndex: number;
@@ -10,15 +10,16 @@ interface IProps {
 }
 
 const initialState = {
-  name: '',
-  position: '',
-  phone: '',
-  email: '',
+  name: "",
+  position: "",
+  phone: "",
+  email: "",
 };
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
 }
-const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const emailRegex =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
 const BSheetAddPic = React.forwardRef(
@@ -35,48 +36,48 @@ const BSheetAddPic = React.forwardRef(
     const inputs: Input[] = useMemo(
       () => [
         {
-          label: 'Nama',
+          label: "Nama",
           isRequire: true,
           isError: !state.name,
           outlineColor: !state.name ? colors.text.errorText : undefined,
-          type: 'textInput',
+          type: "textInput",
           onChange: (event) => {
-            onChange('name')(event.nativeEvent.text);
+            onChange("name")(event.nativeEvent.text);
           },
           value: state.name,
-          placeholder: 'Masukkan nama',
+          placeholder: "Masukkan nama",
         },
         {
-          label: 'Jabatan',
+          label: "Jabatan",
           isRequire: true,
           isError: !state.position,
           outlineColor: !state.position ? colors.text.errorText : undefined,
-          type: 'textInput',
+          type: "textInput",
           onChange: (event) => {
-            onChange('position')(event.nativeEvent.text);
+            onChange("position")(event.nativeEvent.text);
           },
           value: state.position,
-          placeholder: 'Masukkan jabatan',
+          placeholder: "Masukkan jabatan",
         },
         {
-          label: 'No. Telepon',
+          label: "No. Telepon",
           isRequire: true,
           isError: !phoneNumberRegex.test(state.phone),
           outlineColor: !phoneNumberRegex.test(state.phone)
             ? colors.text.errorText
             : undefined,
-          type: 'textInput',
+          type: "textInput",
           onChange: (event) => {
-            onChange('phone')(event.nativeEvent.text);
+            onChange("phone")(event.nativeEvent.text);
           },
           value: state.phone,
-          keyboardType: 'numeric',
-          customerErrorMsg: 'No. Telepon harus diisi sesuai format',
+          keyboardType: "numeric",
+          customerErrorMsg: "No. Telepon harus diisi sesuai format",
           LeftIcon: state.phone ? LeftIcon : undefined,
-          placeholder: 'Masukkan nomor telepon',
+          placeholder: "Masukkan nomor telepon",
         },
         {
-          label: 'Email',
+          label: "Email",
           isRequire: false,
           isError: state.email ? !emailRegex.test(state.email) : false,
           outlineColor: state.email
@@ -84,18 +85,18 @@ const BSheetAddPic = React.forwardRef(
               ? colors.text.errorText
               : undefined
             : undefined,
-          keyboardType: 'email-address',
-          type: 'textInput',
+          keyboardType: "email-address",
+          type: "textInput",
           onChange: (event) => {
-            onChange('email')(event.nativeEvent.text);
+            onChange("email")(event.nativeEvent.text);
           },
           value: state.email,
-          customerErrorMsg: 'Email harus diisi sesuai format',
-          placeholder: 'Masukkan email',
+          customerErrorMsg: "Email harus diisi sesuai format",
+          placeholder: "Masukkan email",
         },
       ],
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [state.name, state.email, state.position, state.phone],
+      [state.name, state.email, state.position, state.phone]
     );
 
     const onAdd = () => {
@@ -104,10 +105,10 @@ const BSheetAddPic = React.forwardRef(
       }
       const emailCondition = state.email ? emailRegex.test(state.email) : true;
       if (
-        emailCondition
-        && !!state.name
-        && phoneNumberRegex.test(state.phone)
-        && !!state.position
+        emailCondition &&
+        !!state.name &&
+        phoneNumberRegex.test(state.phone) &&
+        !!state.position
       ) {
         addPic(state);
         setState(initialState);
@@ -121,17 +122,17 @@ const BSheetAddPic = React.forwardRef(
         onAdd={onAdd}
         inputs={inputs}
         buttonTitle="Tambah PIC"
-        snapPoint={['75%']}
+        snapPoint={["75%"]}
         isButtonDisable={
           !(
-            !!state.name
-            && phoneNumberRegex.test(state.phone)
-            && !!state.position
+            !!state.name &&
+            phoneNumberRegex.test(state.phone) &&
+            !!state.position
           )
         }
       />
     );
-  },
+  }
 );
 
 const style = StyleSheet.create({

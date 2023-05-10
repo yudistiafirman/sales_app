@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
-import { ListRenderItem } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
-import BProjectRBtn from '../molecules/BProjectRBtn';
+import React, { useCallback } from "react";
+import { ListRenderItem } from "react-native";
+import { FlashList } from "@shopify/flash-list";
+import BProjectRBtn from "../molecules/BProjectRBtn";
 
 type BProjectData = {
   id?: string;
@@ -27,7 +27,7 @@ function BProjectRBtnList({ data, isOption, onSelect }: IProps) {
         isSelected={item?.isSelected}
       />
     ),
-    [isOption, onSelect],
+    [isOption, onSelect]
   );
 
   return (

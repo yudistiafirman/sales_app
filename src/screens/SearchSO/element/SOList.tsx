@@ -1,18 +1,16 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
-import { FlashList } from '@shopify/flash-list';
-import { colors, layout } from '@/constants';
-import {
-  BDivider, BEmptyState, BSpacer, BText,
-} from '@/components';
-import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
+import { StyleSheet, TouchableOpacity } from "react-native";
+import React from "react";
+import { FlashList } from "@shopify/flash-list";
+import { colors, layout } from "@/constants";
+import { BDivider, BEmptyState, BSpacer, BText } from "@/components";
+import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 
 interface SOListProps {
   data: any[];
   onEndReached?:
-  | ((info: { distanceFromEnd: number }) => void)
-  | null
-  | undefined;
+    | ((info: { distanceFromEnd: number }) => void)
+    | null
+    | undefined;
   refreshing?: boolean;
   loadList?: boolean;
   isLoadMore?: boolean;
@@ -44,14 +42,14 @@ export default function SOList({
     }
     return (
       <TouchableOpacity
-        style={{ flexDirection: 'row' }}
+        style={{ flexDirection: "row" }}
         onPress={() => onPressList(item)}
       >
         <BText style={{ flex: 1 }} bold="500" sizeInNumber={14}>
-          {item?.brikNumber ? item?.brikNumber : '-'}
+          {item?.brikNumber ? item?.brikNumber : "-"}
         </BText>
         <BText style={{ flex: 1 }} bold="400" sizeInNumber={14}>
-          {picOrCompanyName || '-'}
+          {picOrCompanyName || "-"}
         </BText>
       </TouchableOpacity>
     );
@@ -79,7 +77,7 @@ export default function SOList({
             emptyText={
               keyword
                 ? `SO ${keyword} tidak ditemukan!`
-                : 'Data SO tidak tersedia. Silakan buat terlebih dahulu.'
+                : "Data SO tidak tersedia. Silakan buat terlebih dahulu."
             }
           />
         )
@@ -103,6 +101,6 @@ export default function SOList({
 const style = StyleSheet.create({
   flatList: {
     flex: 1,
-    width: '100%',
+    width: "100%",
   },
 });

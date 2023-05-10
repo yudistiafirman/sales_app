@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   allVisitationGetAction,
   uploadFileImage,
@@ -7,8 +7,8 @@ import {
   getSphDocuments,
   getAddressSuggestion,
   postProjectDoc,
-} from '@/actions/CommonActions';
-import { projectResponseType } from '@/interfaces';
+} from "@/actions/CommonActions";
+import { projectResponseType } from "@/interfaces";
 
 type errorType = {
   success: boolean;
@@ -20,9 +20,9 @@ type errorType = {
 };
 
 export const postUploadFiles = createAsyncThunk<
-any,
-{ files: any[]; from: string }
->('common/postUploadFiles', async ({ files, from }, { rejectWithValue }) => {
+  any,
+  { files: any[]; from: string }
+>("common/postUploadFiles", async ({ files, from }, { rejectWithValue }) => {
   try {
     const response = await uploadFileImage(files, from);
 
@@ -41,7 +41,7 @@ any,
 });
 
 export const getAllProject = createAsyncThunk<any, { search?: string }>(
-  'common/getAllProject',
+  "common/getAllProject",
   async ({ search }, { rejectWithValue }) => {
     try {
       const response = await allVisitationGetAction(search);
@@ -52,13 +52,13 @@ export const getAllProject = createAsyncThunk<any, { search?: string }>(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  },
+  }
 );
 
 export const getProjectsByUserThunk = createAsyncThunk<
-projectResponseType,
-{ search?: string }
->('common/getProjectsByUserThunk', async ({ search }, { rejectWithValue }) => {
+  projectResponseType,
+  { search?: string }
+>("common/getProjectsByUserThunk", async ({ search }, { rejectWithValue }) => {
   // projectByUserGetAction
   try {
     const response = await projectByUserGetAction(search);
@@ -72,7 +72,7 @@ projectResponseType,
 });
 // projectGetOneById
 export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
-  'common/getOneProjectById',
+  "common/getOneProjectById",
   async ({ projectId }, { rejectWithValue }) => {
     try {
       const response = await projectGetOneById(projectId);
@@ -83,11 +83,11 @@ export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  },
+  }
 );
 
 export const fetchSphDocuments = createAsyncThunk(
-  'common/fetchSphDocuments',
+  "common/fetchSphDocuments",
   async (_, { rejectWithValue }) => {
     try {
       const response = await getSphDocuments();
@@ -97,13 +97,13 @@ export const fetchSphDocuments = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  },
+  }
 );
 export const fetchAddressSuggestion = createAsyncThunk<
-any,
-{ search: string; page: number }
+  any,
+  { search: string; page: number }
 >(
-  'common/fetchAddressSuggestion',
+  "common/fetchAddressSuggestion",
   async ({ search, page }, { rejectWithValue }) => {
     try {
       const response = await getAddressSuggestion(search, page);
@@ -113,19 +113,19 @@ any,
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  },
+  }
 );
 export const postProjectDocByprojectId = createAsyncThunk<
-any,
-{
-  payload: {
-    projectId: string;
-    documentId: string;
-    fileId: string;
-  };
-}
+  any,
+  {
+    payload: {
+      projectId: string;
+      documentId: string;
+      fileId: string;
+    };
+  }
 >(
-  'common/postProjectDocByprojectId',
+  "common/postProjectDocByprojectId",
   async ({ payload }, { rejectWithValue }) => {
     try {
       const response = await postProjectDoc(payload);
@@ -139,5 +139,5 @@ any,
       }
       return rejectWithValue(errorData);
     }
-  },
+  }
 );

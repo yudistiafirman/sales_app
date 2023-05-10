@@ -1,4 +1,4 @@
-import { PurchaseOrdersData } from './SelectConfirmedPO';
+import { PurchaseOrdersData } from "./SelectConfirmedPO";
 
 interface CreateDepositFirstStep {
   deposit?: {

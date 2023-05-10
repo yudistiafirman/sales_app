@@ -1,11 +1,11 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { View, TouchableOpacity, Image } from 'react-native';
-import { useSelector } from 'react-redux';
-import BText from '@/components/atoms/BText';
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import { RootState } from '@/redux/store';
-import TabBarStyle from './TabBarStyle';
+import { View, TouchableOpacity, Image } from "react-native";
+import { useSelector } from "react-redux";
+import BText from "@/components/atoms/BText";
+import colors from "@/constants/colors";
+import font from "@/constants/fonts";
+import { RootState } from "@/redux/store";
+import TabBarStyle from "./TabBarStyle";
 
 interface TabBar {
   state: any;
@@ -14,12 +14,13 @@ interface TabBar {
 }
 
 function CustomTabBar({ state, descriptors, navigation }: TabBar) {
-  const { enable_transaction_menu, enable_price_menu, enable_profile_menu } = useSelector((state: RootState) => state.auth.remote_config);
+  const { enable_transaction_menu, enable_price_menu, enable_profile_menu } =
+    useSelector((state: RootState) => state.auth.remote_config);
 
-  const homeIcon = require('@/assets/icon/TabBarIcon/ic_home.png');
-  const transIcon = require('@/assets/icon/TabBarIcon/ic_dollar-square.png');
-  const profileIcon = require('@/assets/icon/TabBarIcon/ic_profile.png');
-  const priceIcon = require('@/assets/icon/TabBarIcon/ic_price.png');
+  const homeIcon = require("@/assets/icon/TabBarIcon/ic_home.png");
+  const transIcon = require("@/assets/icon/TabBarIcon/ic_dollar-square.png");
+  const profileIcon = require("@/assets/icon/TabBarIcon/ic_profile.png");
+  const priceIcon = require("@/assets/icon/TabBarIcon/ic_price.png");
 
   const icons = [homeIcon];
   if (enable_transaction_menu) icons.push(transIcon);
@@ -30,9 +31,10 @@ function CustomTabBar({ state, descriptors, navigation }: TabBar) {
     <View style={TabBarStyle.tabBarContainer}>
       {state.routes.map((route: any, index: number) => {
         const { options } = descriptors[route.key];
-        const label = options.tabBarLabel !== undefined
-          ? options.tabBarLabel
-          : options.title !== undefined
+        const label =
+          options.tabBarLabel !== undefined
+            ? options.tabBarLabel
+            : options.title !== undefined
             ? options.title
             : route.name;
 
@@ -40,7 +42,7 @@ function CustomTabBar({ state, descriptors, navigation }: TabBar) {
 
         const onPress = () => {
           const event = navigation.emit({
-            type: 'tabPress',
+            type: "tabPress",
             target: route.key,
             canPreventDefault: true,
           });
@@ -54,7 +56,7 @@ function CustomTabBar({ state, descriptors, navigation }: TabBar) {
 
         const onLongPress = () => {
           navigation.emit({
-            type: 'tabLongPress',
+            type: "tabLongPress",
             target: route.key,
           });
         };
@@ -68,7 +70,7 @@ function CustomTabBar({ state, descriptors, navigation }: TabBar) {
             onPress={onPress}
             onLongPress={onLongPress}
             key={index}
-            style={{ flex: 1, alignItems: 'center' }}
+            style={{ flex: 1, alignItems: "center" }}
           >
             <Image
               style={[

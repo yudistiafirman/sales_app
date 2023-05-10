@@ -1,48 +1,49 @@
-import { NativeModules, Platform } from 'react-native';
-import { colors } from '@/constants';
+import { NativeModules, Platform } from "react-native";
+import { colors } from "@/constants";
 
 const { RNCustomConfig } = NativeModules;
 
 const flavor = RNCustomConfig?.flavor;
 const versionName = RNCustomConfig?.versionName;
 
-export const isUndefined = (state: any): boolean => typeof state === 'undefined';
+export const isUndefined = (state: any): boolean =>
+  typeof state === "undefined";
 
 export const getColorStatusTrx = (id: string) => {
   switch (id.toUpperCase()) {
-    case 'DIAJUKAN':
+    case "DIAJUKAN":
       return { color: colors.status.grey, textColor: colors.black };
-    case 'DRAFT':
+    case "DRAFT":
       return { color: colors.status.grey, textColor: colors.black };
-    case 'DALAM PRODUKSI':
+    case "DALAM PRODUKSI":
       return { color: colors.status.grey, textColor: colors.black };
-    case 'SELESAI':
+    case "SELESAI":
       return { color: colors.status.grey, textColor: colors.black };
-    case 'SUBMITTED':
+    case "SUBMITTED":
       return { color: colors.status.grey, textColor: colors.black };
-    case 'CEK BARANG':
+    case "CEK BARANG":
       return { color: colors.status.yellow, textColor: colors.black };
-    case 'PEMERIKSAAN':
+    case "PEMERIKSAAN":
       return { color: colors.status.yellow, textColor: colors.black };
-    case 'DALAM PERJALANAN':
+    case "DALAM PERJALANAN":
       return { color: colors.status.yellow, textColor: colors.black };
-    case 'PERSIAPAN':
+    case "PERSIAPAN":
       return { color: colors.status.orange, textColor: colors.black };
-    case 'BERLANGSUNG':
+    case "BERLANGSUNG":
       return { color: colors.status.orange, textColor: colors.black };
-    case 'BONGKAR':
+    case "BONGKAR":
       return { color: colors.status.orange, textColor: colors.black };
-    case 'KADALUARSA':
+    case "KADALUARSA":
       return { color: colors.status.black, textColor: colors.white };
-    case 'DITOLAK':
+    case "DITOLAK":
       return { color: colors.status.red, textColor: colors.black };
-    case 'DISETUJUI':
+    case "DISETUJUI":
       return { color: colors.chip.green, textColor: colors.black };
-    case 'DITERIMA':
+    case "DITERIMA":
       return { color: colors.chip.green, textColor: colors.black };
-    case 'DITERBITKAN':
+    case "DITERBITKAN":
       return { color: colors.chip.green, textColor: colors.black };
-    case 'DECLINED':
+    case "DECLINED":
       return { color: colors.status.red, textColor: colors.black };
     default:
       return { color: colors.chip.green, textColor: colors.black };
@@ -51,22 +52,22 @@ export const getColorStatusTrx = (id: string) => {
 
 export const getStatusTrx = (id: string) => {
   switch (id.toUpperCase()) {
-    case 'DRAFT':
-      return 'Diterbitkan';
-    case 'SUBMITTED':
-      return 'Diajukan';
-    case 'PARTIALLY_PROCESSED':
-      return 'Persiapan';
-    case 'PARTIALLY_PAID':
-      return 'Disetujui';
-    case 'CONFIRMED':
-      return 'Disetujui';
-    case 'PAID':
-      return 'Diterima';
-    case 'CANCELLED':
-      return 'Ditolak';
-    case 'DECLINED':
-      return 'Ditolak';
+    case "DRAFT":
+      return "Diterbitkan";
+    case "SUBMITTED":
+      return "Diajukan";
+    case "PARTIALLY_PROCESSED":
+      return "Persiapan";
+    case "PARTIALLY_PAID":
+      return "Disetujui";
+    case "CONFIRMED":
+      return "Disetujui";
+    case "PAID":
+      return "Diterima";
+    case "CANCELLED":
+      return "Ditolak";
+    case "DECLINED":
+      return "Ditolak";
     default:
       return id;
   }
@@ -74,27 +75,27 @@ export const getStatusTrx = (id: string) => {
 
 export const beautifyPhoneNumber = (text: string) => {
   let firstChar: string[] = text.match(/.{1,3}/g) ?? [];
-  let result = '';
+  let result = "";
   if (firstChar.length > 0) {
     result += firstChar[0];
     firstChar = firstChar.splice(1, 4);
-    firstChar = firstChar.join('').match(/.{1,4}/g) ?? [];
-    result += ` ${firstChar.join(' ')}`;
+    firstChar = firstChar.join("").match(/.{1,4}/g) ?? [];
+    result += ` ${firstChar.join(" ")}`;
   } else {
-    result += firstChar.join('');
+    result += firstChar.join("");
   }
   return result;
 };
 
 export const isDevelopment = () => {
-  if (flavor === 'development' || (Platform.OS !== 'android' && __DEV__)) {
+  if (flavor === "development" || (Platform.OS !== "android" && __DEV__)) {
     return true;
   }
   return false;
 };
 
 export const isProduction = () => {
-  if (flavor === 'production') {
+  if (flavor === "production") {
     return true;
   }
   return false;
@@ -102,13 +103,14 @@ export const isProduction = () => {
 
 export const getAppVersionName = (): string => {
   let version = versionName;
-  if (isDevelopment()) version += ' (Dev)';
+  if (isDevelopment()) version += " (Dev)";
   return version;
 };
 
 export const isForceUpdate = (text: any): boolean => text?.is_forced;
 
-export const getMinVersionUpdate = (text: any): string => text?.min_version?.split('.').join('');
+export const getMinVersionUpdate = (text: any): string =>
+  text?.min_version?.split(".").join("");
 
 export const isJsonString = (str: any) => {
   try {
@@ -123,23 +125,23 @@ export const getSuccessMsgFromAPI = (
   httpMethod: string,
   domainType: string,
   fullUrl: string,
-  endPoint: string,
+  endPoint: string
 ) => {
   // excluding: /refresh , /suggestion , /places , /verify-auth , /project_sph , all finalText that empty
 
-  let finalText = 'Berhasil ';
+  let finalText = "Berhasil ";
   switch (httpMethod.toLowerCase()) {
-    case 'post':
-      finalText += 'menambahkan ';
+    case "post":
+      finalText += "menambahkan ";
       break;
-    case 'get':
-      finalText += 'mengambil ';
+    case "get":
+      finalText += "mengambil ";
       break;
-    case 'delete':
-      finalText += 'menghapus ';
+    case "delete":
+      finalText += "menghapus ";
       break;
-    case 'put':
-      finalText += 'mengubah ';
+    case "put":
+      finalText += "mengubah ";
       break;
     default:
       finalText += `${httpMethod.toLowerCase()} `;
@@ -147,140 +149,146 @@ export const getSuccessMsgFromAPI = (
   }
 
   if (
-    domainType === 'common-dev.aggre.id'
-    || domainType === 'common.aggre.id'
-    || domainType === 'common.apis.oreo.brik.id'
-    || domainType === 'common.apis.brik.id'
+    domainType === "common-dev.aggre.id" ||
+    domainType === "common.aggre.id" ||
+    domainType === "common.apis.oreo.brik.id" ||
+    domainType === "common.apis.brik.id"
   ) {
     switch (endPoint.toLowerCase()) {
-      case 'projectdoc':
-        finalText += 'dokumen';
+      case "projectdoc":
+        finalText += "dokumen";
         break;
-      case 'coordinates':
-        finalText += 'kordinat lokasi';
+      case "coordinates":
+        finalText += "kordinat lokasi";
         break;
-      case 'upload':
-        finalText = '';
+      case "upload":
+        finalText = "";
         break;
-      case 'project':
-        finalText += 'data proyek';
+      case "project":
+        finalText += "data proyek";
         break;
-      case 'companies-by-user':
-        finalText += 'data proyek berdasarkan user';
+      case "companies-by-user":
+        finalText += "data proyek berdasarkan user";
         break;
-      case 'sph':
-        finalText += 'dokumen SPH';
+      case "sph":
+        finalText += "dokumen SPH";
         break;
-      case 'individual':
-        finalText += 'detail proyek';
+      case "individual":
+        finalText += "detail proyek";
         break;
-      case 'billing-address':
-        finalText += 'alamat penagihan';
+      case "billing-address":
+        finalText += "alamat penagihan";
         break;
-      case 'location-address':
-        finalText += 'alamat proyek';
+      case "location-address":
+        finalText += "alamat proyek";
         break;
-      case 'login':
-        finalText = 'Berhasil login';
+      case "login":
+        finalText = "Berhasil login";
         break;
-      case 'logout':
-        finalText = 'Berhasil logout';
+      case "logout":
+        finalText = "Berhasil logout";
         break;
       default:
-        if (fullUrl.toLowerCase().includes('places/')) finalText = 'Berhasil mendapatkan detail alamat';
-        else if (fullUrl.toLowerCase().includes('project/')) finalText += 'detail proyek';
-        else finalText += 'data';
+        if (fullUrl.toLowerCase().includes("places/"))
+          finalText = "Berhasil mendapatkan detail alamat";
+        else if (fullUrl.toLowerCase().includes("project/"))
+          finalText += "detail proyek";
+        else finalText += "data";
         break;
     }
   } else if (
-    domainType === 'inventory-dev.aggre.id'
-    || domainType === 'inventory.aggre.id'
-    || domainType === 'inventory.apis.oreo.brik.id'
-    || domainType === 'inventory.apis.brik.id'
+    domainType === "inventory-dev.aggre.id" ||
+    domainType === "inventory.aggre.id" ||
+    domainType === "inventory.apis.oreo.brik.id" ||
+    domainType === "inventory.apis.brik.id"
   ) {
     switch (endPoint.toLowerCase()) {
-      case 'category':
-        finalText += 'data semua produk berdasarkan kategori';
+      case "category":
+        finalText += "data semua produk berdasarkan kategori";
         break;
-      case 'product':
-        finalText += 'data semua produk';
+      case "product":
+        finalText += "data semua produk";
         break;
       default:
-        finalText += 'data';
+        finalText += "data";
         break;
     }
   } else if (
-    domainType === 'productivity-dev.aggre.id'
-    || domainType === 'productivity.aggre.id'
-    || domainType === 'productivity.apis.oreo.brik.id'
-    || domainType === 'productivity.apis.brik.id'
+    domainType === "productivity-dev.aggre.id" ||
+    domainType === "productivity.aggre.id" ||
+    domainType === "productivity.apis.oreo.brik.id" ||
+    domainType === "productivity.apis.brik.id"
   ) {
     switch (endPoint.toLowerCase()) {
-      case 'all-visitation':
-        finalText += 'data semua kunjungan';
+      case "all-visitation":
+        finalText += "data semua kunjungan";
         break;
-      case 'completed-visitation':
-        finalText += 'data target kunjungan';
+      case "completed-visitation":
+        finalText += "data target kunjungan";
         break;
-      case 'visitation':
-        finalText = '';
+      case "visitation":
+        finalText = "";
         break;
-      case 'visitation-book':
-        finalText = 'Berhasil buat janji';
+      case "visitation-book":
+        finalText = "Berhasil buat janji";
         break;
       default:
-        if (fullUrl.toLowerCase().includes('visitation/')) finalText = '';
-        else finalText += 'data';
+        if (fullUrl.toLowerCase().includes("visitation/")) finalText = "";
+        else finalText += "data";
         break;
     }
   } else if (
-    domainType === 'order-dev.aggre.id'
-    || domainType === 'order.aggre.id'
-    || domainType === 'order.apis.oreo.brik.id'
-    || domainType === 'order.apis.brik.id'
+    domainType === "order-dev.aggre.id" ||
+    domainType === "order.aggre.id" ||
+    domainType === "order.apis.oreo.brik.id" ||
+    domainType === "order.apis.brik.id"
   ) {
     switch (endPoint.toLowerCase()) {
-      case 'project-sph':
-        finalText += 'data semua SPH berdasarkan proyek';
+      case "project-sph":
+        finalText += "data semua SPH berdasarkan proyek";
         break;
-      case 'project-po':
-        finalText += 'data semua PO berdasarkan proyek';
+      case "project-po":
+        finalText += "data semua PO berdasarkan proyek";
         break;
-      case 'quotation':
-        finalText = '';
+      case "quotation":
+        finalText = "";
         break;
-      case 'purchase-order':
-        finalText = '';
+      case "purchase-order":
+        finalText = "";
         break;
-      case 'quotation-letter':
-        finalText += 'data SPH';
+      case "quotation-letter":
+        finalText += "data SPH";
         break;
-      case 'deposit':
-        finalText = '';
+      case "deposit":
+        finalText = "";
         break;
-      case 'schedule':
-        finalText = '';
+      case "schedule":
+        finalText = "";
         break;
-      case 'delivery-order':
-        finalText = '';
+      case "delivery-order":
+        finalText = "";
         break;
-      case 'transaction':
-        finalText = '';
+      case "transaction":
+        finalText = "";
         break;
       default:
-        if (fullUrl.toLowerCase().includes('sph/')) finalText += 'dokumen SPH';
-        else if (fullUrl.toLowerCase().includes('purchase-order/')) finalText = '';
-        else if (fullUrl.toLowerCase().includes('quotation-letter/')) finalText = '';
-        else if (fullUrl.toLowerCase().includes('deposit/')) finalText = '';
-        else if (fullUrl.toLowerCase().includes('schedule/')) finalText = '';
-        else if (fullUrl.toLowerCase().includes('delivery-order/')) finalText = '';
-        else finalText += 'data';
+        if (fullUrl.toLowerCase().includes("sph/")) finalText += "dokumen SPH";
+        else if (fullUrl.toLowerCase().includes("purchase-order/"))
+          finalText = "";
+        else if (fullUrl.toLowerCase().includes("quotation-letter/"))
+          finalText = "";
+        else if (fullUrl.toLowerCase().includes("deposit/")) finalText = "";
+        else if (fullUrl.toLowerCase().includes("schedule/")) finalText = "";
+        else if (fullUrl.toLowerCase().includes("delivery-order/"))
+          finalText = "";
+        else finalText += "data";
         break;
     }
   } else {
-    finalText += 'data';
+    finalText += "data";
   }
   return finalText;
 };
 
-export const uniqueStringGenerator = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+export const uniqueStringGenerator = () =>
+  Date.now().toString(36) + Math.random().toString(36).substr(2);

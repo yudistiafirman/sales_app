@@ -1,35 +1,31 @@
 /* eslint-disable react-native/no-inline-styles */
-import * as React from 'react';
-import {
-  AppState, DeviceEventEmitter, SafeAreaView, View,
-} from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { useMachine } from '@xstate/react';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import LinearGradient from 'react-native-linear-gradient';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { useDispatch } from 'react-redux';
-import BTabSections from '@/components/organism/TabSections';
-import Tnc from '@/screens/Price/element/Tnc';
-import CurrentLocation from './element/CurrentLocation';
-import PriceStyle from './PriceStyle';
-import PriceSearchBar from './element/PriceSearchBar';
-import ProductList from '@/components/templates/Price/ProductList';
-import {
-  BAlert, BEmptyState, BSpacer, BTouchableText,
-} from '@/components';
-import { priceMachine } from '@/machine/priceMachine';
-import { layout } from '@/constants';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
+import * as React from "react";
+import { AppState, DeviceEventEmitter, SafeAreaView, View } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useMachine } from "@xstate/react";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import LinearGradient from "react-native-linear-gradient";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { useDispatch } from "react-redux";
+import BTabSections from "@/components/organism/TabSections";
+import Tnc from "@/screens/Price/element/Tnc";
+import CurrentLocation from "./element/CurrentLocation";
+import PriceStyle from "./PriceStyle";
+import PriceSearchBar from "./element/PriceSearchBar";
+import ProductList from "@/components/templates/Price/ProductList";
+import { BAlert, BEmptyState, BSpacer, BTouchableText } from "@/components";
+import { priceMachine } from "@/machine/priceMachine";
+import { layout } from "@/constants";
+import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {
   CREATE_VISITATION,
   LOCATION,
   SEARCH_PRODUCT,
   TAB_PRICE_LIST,
   TAB_PRICE_LIST_TITLE,
-} from '@/navigation/ScreenNames';
-import { AppDispatch } from '@/redux/store';
-import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
+} from "@/navigation/ScreenNames";
+import { AppDispatch } from "@/redux/store";
+import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 function PriceList() {
@@ -41,25 +37,26 @@ function PriceList() {
   const appState = React.useRef(AppState.currentState);
   const [state, send] = useMachine(priceMachine);
   const [fromVisitation, setFromVisitation] = React.useState(false);
-  const [searchFormattedAddress, setSearchFormattedAddress] = React.useState('');
+  const [searchFormattedAddress, setSearchFormattedAddress] =
+    React.useState("");
 
   React.useEffect(() => {
     crashlytics().log(TAB_PRICE_LIST);
 
-    if (state.matches('denied')) {
+    if (state.matches("denied")) {
       const subscription = AppState.addEventListener(
-        'change',
+        "change",
         (nextAppState) => {
           if (
-            appState.current.match(/inactive|background/)
-            && nextAppState === 'active'
+            appState.current.match(/inactive|background/) &&
+            nextAppState === "active"
           ) {
-            send('appComeForegroundState');
+            send("appComeForegroundState");
           } else {
-            send('appComeBackgroundState');
+            send("appComeBackgroundState");
           }
           appState.current = nextAppState;
-        },
+        }
       );
       return () => {
         subscription.remove();
@@ -76,50 +73,50 @@ function PriceList() {
       if (from === CREATE_VISITATION) {
         setFromVisitation(true);
       }
-      send('backToIdle');
-      send('sendingParams', { value: { latitude, longitude } });
+      send("backToIdle");
+      send("sendingParams", { value: { latitude, longitude } });
       setIndex(0);
     } else {
-      send('onAskPermission');
+      send("onAskPermission");
     }
   }, [route, route?.params, send]);
 
   React.useEffect(() => {
-    if (state.matches('errorGettingCurrentLocation')) {
+    if (state.matches("errorGettingCurrentLocation")) {
       dispatch(
         openPopUp({
-          popUpType: 'error',
+          popUpType: "error",
           popUpText: state.context.errorMessage,
-          primaryBtnTitle: 'Retry',
-          outlineBtnTitle: 'Back',
+          primaryBtnTitle: "Retry",
+          outlineBtnTitle: "Back",
           isRenderActions: true,
           primaryBtnAction: () => {
             dispatch(closePopUp());
-            send('retryGettingCurrentLocation');
+            send("retryGettingCurrentLocation");
           },
           outlineBtnAction: () => {
             dispatch(closePopUp());
             navigation.goBack();
           },
-        }),
+        })
       );
-    } else if (state.matches('errorFetchLocationDetail')) {
+    } else if (state.matches("errorFetchLocationDetail")) {
       dispatch(
         openPopUp({
-          popUpType: 'error',
+          popUpType: "error",
           popUpText: state.context.errorMessage,
-          primaryBtnTitle: 'Retry',
-          outlineBtnTitle: 'Back',
+          primaryBtnTitle: "Retry",
+          outlineBtnTitle: "Back",
           isRenderActions: true,
           primaryBtnAction: () => {
             dispatch(closePopUp());
-            send('retryFetchLocationDetail');
+            send("retryFetchLocationDetail");
           },
           outlineBtnAction: () => {
             dispatch(closePopUp());
             navigation.goBack();
           },
-        }),
+        })
       );
     }
   }, [dispatch, navigation, send, state]);
@@ -142,13 +139,13 @@ function PriceList() {
   const onTabPress = () => {
     const tabIndex = index === 0 ? 1 : 0;
     if (route.key !== routes[index].key) {
-      send('onChangeCategories', { payload: tabIndex });
+      send("onChangeCategories", { payload: tabIndex });
     }
   };
 
   const onPressProduct = (data) => {
     if (fromVisitation) {
-      DeviceEventEmitter.emit('event.testEvent', { data });
+      DeviceEventEmitter.emit("event.testEvent", { data });
       navigation.goBack();
     }
   };
@@ -171,7 +168,7 @@ function PriceList() {
         longitude: Number(lon),
         latitude: Number(lat),
         formattedAddress:
-          searchFormattedAddress.length > 0 ? searchFormattedAddress : '',
+          searchFormattedAddress.length > 0 ? searchFormattedAddress : "",
       };
 
       navigation.navigate(LOCATION, {
@@ -212,7 +209,7 @@ function PriceList() {
           style={{
             marginHorizontal: layout.pad.lg,
             height: layout.pad.lg,
-            width: '92%',
+            width: "92%",
           }}
         />
       )}
@@ -224,17 +221,17 @@ function PriceList() {
           style={{
             marginHorizontal: layout.pad.lg,
             height: layout.pad.xl,
-            width: '92%',
+            width: "92%",
           }}
         />
       )}
 
       <BSpacer size="extraSmall" />
-      {state.matches('getProduct.errorGettingCategories') && (
+      {state.matches("getProduct.errorGettingCategories") && (
         <BEmptyState
           isError
           errorMessage={errorMessage}
-          onAction={() => send('retryGettingCategories')}
+          onAction={() => send("retryGettingCategories")}
         />
       )}
       {routes.length > 0 && (
@@ -244,7 +241,7 @@ function PriceList() {
           renderScene={() => (
             <ProductList
               onEndReached={() => {
-                page !== totalPage && send('onEndReached');
+                page !== totalPage && send("onEndReached");
               }}
               products={productsData}
               onPress={onPressProduct}
@@ -252,11 +249,11 @@ function PriceList() {
               loadProduct={loadProduct}
               refreshing={refreshing}
               isError={state.matches(
-                'getProduct.categoriesLoaded.errorGettingProducts',
+                "getProduct.categoriesLoaded.errorGettingProducts"
               )}
-              onAction={() => send('retryGettingProducts')}
+              onAction={() => send("retryGettingProducts")}
               errorMessage={errorMessage}
-              onRefresh={() => send('refreshingList')}
+              onRefresh={() => send("refreshingList")}
               disablePressed={!fromVisitation}
             />
           )}

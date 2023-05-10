@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View, DeviceEventEmitter, BackHandler } from 'react-native';
-import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
-import Entypo from 'react-native-vector-icons/Entypo';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { View, DeviceEventEmitter, BackHandler } from "react-native";
+import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
+import Entypo from "react-native-vector-icons/Entypo";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useFocusEffect,
   useNavigation,
   useRoute,
-} from '@react-navigation/native';
-import crashlytics from '@react-native-firebase/crashlytics';
+} from "@react-navigation/native";
+import crashlytics from "@react-native-firebase/crashlytics";
 import {
   BBackContinueBtn,
   BContainer,
@@ -16,20 +16,20 @@ import {
   BSpacer,
   PopUpQuestion,
   BStepperIndicator,
-} from '@/components';
-import SecondStep from './elements/second';
-import ThirdStep from './elements/third';
-import { PIC, Styles, visitationListResponse } from '@/interfaces';
-import BSheetAddPic from './elements/second/BottomSheetAddPic';
-import Fifth from './elements/fifth';
-import { useKeyboardActive } from '@/hooks';
-import FirstStep from './elements/first';
-import { resScale } from '@/utils';
-import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
-import { updateRegion } from '@/redux/reducers/locationReducer';
-import { layout } from '@/constants';
-import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
-import { CREATE_VISITATION } from '@/navigation/ScreenNames';
+} from "@/components";
+import SecondStep from "./elements/second";
+import ThirdStep from "./elements/third";
+import { PIC, Styles, visitationListResponse } from "@/interfaces";
+import BSheetAddPic from "./elements/second/BottomSheetAddPic";
+import Fifth from "./elements/fifth";
+import { useKeyboardActive } from "@/hooks";
+import FirstStep from "./elements/first";
+import { resScale } from "@/utils";
+import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
+import { updateRegion } from "@/redux/reducers/locationReducer";
+import { layout } from "@/constants";
+import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
+import { CREATE_VISITATION } from "@/navigation/ScreenNames";
 import {
   resetStepperFocused,
   resetVisitationState,
@@ -41,26 +41,26 @@ import {
   updateExistingVisitationID,
   updateShouldScrollView,
   VisitationGlobalState,
-} from '@/redux/reducers/VisitationReducer';
-import { RootState } from '@/redux/store';
-import { resetImageURLS } from '@/redux/reducers/cameraReducer';
-import Fourth from './elements/fourth';
+} from "@/redux/reducers/VisitationReducer";
+import { RootState } from "@/redux/store";
+import { resetImageURLS } from "@/redux/reducers/cameraReducer";
+import Fourth from "./elements/fourth";
 
 const labels = [
-  'Alamat Proyek',
-  'Data Pelanggan',
-  'Data Proyek',
-  'Kompetitor',
-  'Kelengkapan Foto',
+  "Alamat Proyek",
+  "Data Pelanggan",
+  "Data Proyek",
+  "Kompetitor",
+  "Kelengkapan Foto",
 ];
 
 function stepHandler(
   state: VisitationGlobalState,
-  setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void,
+  setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
 ) {
   if (
-    state?.createdLocation?.formattedAddress
-    && state?.locationAddress?.formattedAddress
+    state?.createdLocation?.formattedAddress &&
+    state?.locationAddress?.formattedAddress
   ) {
     setStepsDone((curr) => [...new Set(curr), 0]);
   } else {
@@ -71,12 +71,13 @@ function stepHandler(
       return pic;
     }
   });
-  const customerTypeCond = state?.customerType === 'COMPANY' ? !!state?.companyName : true;
+  const customerTypeCond =
+    state?.customerType === "COMPANY" ? !!state?.companyName : true;
   if (
-    state?.customerType
-    && customerTypeCond
-    && state?.projectName
-    && selectedPic
+    state?.customerType &&
+    customerTypeCond &&
+    state?.projectName &&
+    selectedPic
   ) {
     setStepsDone((curr) => [...new Set(curr), 1]);
   } else {
@@ -84,11 +85,11 @@ function stepHandler(
   }
 
   if (
-    state?.stageProject
-    && state?.products?.length > 0
-    && state?.estimationDate?.estimationMonth
-    && state?.estimationDate?.estimationWeek
-    && state?.paymentType
+    state?.stageProject &&
+    state?.products?.length > 0 &&
+    state?.estimationDate?.estimationMonth &&
+    state?.estimationDate?.estimationWeek &&
+    state?.paymentType
   ) {
     setStepsDone((curr) => [...new Set(curr), 2]);
   } else {
@@ -119,55 +120,56 @@ function CreateVisitation() {
   const [stepsDone, setStepsDone] = useState<number[]>([0, 1, 2, 3]);
   const [isPopupVisible, setPopupVisible] = React.useState(false);
 
-  const existingVisitation: visitationListResponse = route?.params?.existingVisitation;
+  const existingVisitation: visitationListResponse =
+    route?.params?.existingVisitation;
 
   function populateData(existingData: visitationListResponse) {
     const { project } = existingData;
     const { company, Pics: picList, mainPic } = project;
-    dispatch(updateDataVisitation({ type: 'projectId', value: project.id }));
+    dispatch(updateDataVisitation({ type: "projectId", value: project.id }));
     dispatch(
-      updateDataVisitation({ type: 'projectName', value: project.name }),
+      updateDataVisitation({ type: "projectName", value: project.name })
     );
     if (company) {
       dispatch(
-        updateDataVisitation({ type: 'customerType', value: 'COMPANY' }),
+        updateDataVisitation({ type: "customerType", value: "COMPANY" })
       );
       dispatch(
         updateDataVisitation({
-          type: 'companyName',
+          type: "companyName",
           value: company.displayName,
-        }),
+        })
       );
     } else {
       dispatch(
-        updateDataVisitation({ type: 'customerType', value: 'INDIVIDU' }),
+        updateDataVisitation({ type: "customerType", value: "INDIVIDU" })
       );
     }
 
     if (existingData.project?.stage) {
       dispatch(
         updateDataVisitation({
-          type: 'stageProject',
+          type: "stageProject",
           value: existingData.project?.stage,
-        }),
+        })
       );
     }
 
     if (existingData.project?.type) {
       dispatch(
         updateDataVisitation({
-          type: 'typeProject',
+          type: "typeProject",
           value: existingData.project?.type,
-        }),
+        })
       );
     }
 
     if (existingData.project?.Competitors?.length > 0) {
       dispatch(
         updateDataVisitation({
-          type: 'competitors',
+          type: "competitors",
           value: existingData.project?.Competitors,
-        }),
+        })
       );
       // dispatch(
       //   updateDataVisitation({
@@ -180,18 +182,18 @@ function CreateVisitation() {
     if (existingData.paymentType) {
       dispatch(
         updateDataVisitation({
-          type: 'paymentType',
+          type: "paymentType",
           value: existingData.paymentType,
-        }),
+        })
       );
     }
 
     if (existingData.visitNotes) {
       dispatch(
         updateDataVisitation({
-          type: 'notes',
+          type: "notes",
           value: existingData.visitNotes,
-        }),
+        })
       );
     }
 
@@ -212,9 +214,9 @@ function CreateVisitation() {
     if (estimationDate) {
       dispatch(
         updateDataVisitation({
-          type: 'estimationDate',
+          type: "estimationDate",
           value: estimationDate,
-        }),
+        })
       );
     }
 
@@ -240,9 +242,9 @@ function CreateVisitation() {
 
       dispatch(
         updateDataVisitation({
-          type: 'products',
+          type: "products",
           value: newProductIDList,
-        }),
+        })
       );
     }
 
@@ -261,11 +263,11 @@ function CreateVisitation() {
           isSelected: false,
         };
       });
-      dispatch(updateDataVisitation({ type: 'pics', value: list }));
+      dispatch(updateDataVisitation({ type: "pics", value: list }));
     } else if (project.Pic) {
       const selectedPic = { ...project.Pic };
       selectedPic.isSelected = true;
-      dispatch(updateDataVisitation({ type: 'pics', value: [selectedPic] }));
+      dispatch(updateDataVisitation({ type: "pics", value: [selectedPic] }));
     }
   }
 
@@ -289,9 +291,9 @@ function CreateVisitation() {
       const { LocationAddress } = project;
       dispatch(
         updateDataVisitation({
-          type: 'existingLocationId',
+          type: "existingLocationId",
           value: LocationAddress?.id,
-        }),
+        })
       );
       if (LocationAddress) {
         if (LocationAddress?.lon && LocationAddress?.lat) {
@@ -306,7 +308,7 @@ function CreateVisitation() {
               long: latitude,
               PostalId: undefined,
               line2: LocationAddress?.line2,
-            }),
+            })
           );
         }
       }
@@ -320,10 +322,10 @@ function CreateVisitation() {
         if (bottomSheetRef?.current) bottomSheetRef?.current?.close();
         if (visitationData.isSearchProject) {
           if (
-            visitationData.searchQuery
-            && visitationData.searchQuery.trim() !== ''
+            visitationData.searchQuery &&
+            visitationData.searchQuery.trim() !== ""
           ) {
-            dispatch(setSearchQuery(''));
+            dispatch(setSearchQuery(""));
           } else {
             dispatch(updateShouldScrollView(true));
             dispatch(setSearchProject(false));
@@ -334,8 +336,8 @@ function CreateVisitation() {
         return true;
       };
       const backHandler = BackHandler.addEventListener(
-        'hardwareBackPress',
-        backAction,
+        "hardwareBackPress",
+        backAction
       );
       return () => backHandler.remove();
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -343,7 +345,7 @@ function CreateVisitation() {
       visitationData.step,
       visitationData.isSearchProject,
       visitationData.searchQuery,
-    ]),
+    ])
   );
 
   useEffect(() => {
@@ -354,17 +356,20 @@ function CreateVisitation() {
   const handleStepperFocus = () => {
     // to continue stepper focus when entering visitation page
     if (!visitationData.stepperVisitationShouldNotFocused) {
-      if (visitationData.stepThreeVisitationFinished) dispatch(updateCurrentStep(3));
-      else if (visitationData.stepTwoVisitationFinished) dispatch(updateCurrentStep(2));
-      else if (visitationData.stepOneVisitationFinished) dispatch(updateCurrentStep(1));
+      if (visitationData.stepThreeVisitationFinished)
+        dispatch(updateCurrentStep(3));
+      else if (visitationData.stepTwoVisitationFinished)
+        dispatch(updateCurrentStep(2));
+      else if (visitationData.stepOneVisitationFinished)
+        dispatch(updateCurrentStep(1));
     }
 
     // to reset stepper focus when continuing progress data
     if (
-      visitationData.stepperVisitationShouldNotFocused
-      && visitationData.step === 0
-      && (!visitationData.createdLocation?.formattedAddress
-        || !visitationData.locationAddress?.formattedAddress)
+      visitationData.stepperVisitationShouldNotFocused &&
+      visitationData.step === 0 &&
+      (!visitationData.createdLocation?.formattedAddress ||
+        !visitationData.locationAddress?.formattedAddress)
     ) {
       dispatch(resetStepperFocused(1));
     }
@@ -373,35 +378,36 @@ function CreateVisitation() {
         return pic;
       }
     });
-    const customerTypeCond = visitationData.customerType === 'COMPANY'
-      ? !!visitationData.companyName
-      : true;
+    const customerTypeCond =
+      visitationData.customerType === "COMPANY"
+        ? !!visitationData.companyName
+        : true;
     if (
-      visitationData.stepperVisitationShouldNotFocused
-      && visitationData.step === 1
-      && (visitationData.customerType
-        || customerTypeCond
-        || visitationData.projectName
-        || selectedPic)
+      visitationData.stepperVisitationShouldNotFocused &&
+      visitationData.step === 1 &&
+      (visitationData.customerType ||
+        customerTypeCond ||
+        visitationData.projectName ||
+        selectedPic)
     ) {
       dispatch(resetStepperFocused(2));
     }
     if (
-      visitationData.stepperVisitationShouldNotFocused
-      && visitationData.step === 2
-      && (visitationData.stageProject
-        || visitationData.products?.length <= 0
-        || visitationData.estimationDate?.estimationMonth
-        || visitationData.estimationDate?.estimationWeek
-        || visitationData.paymentType)
+      visitationData.stepperVisitationShouldNotFocused &&
+      visitationData.step === 2 &&
+      (visitationData.stageProject ||
+        visitationData.products?.length <= 0 ||
+        visitationData.estimationDate?.estimationMonth ||
+        visitationData.estimationDate?.estimationWeek ||
+        visitationData.paymentType)
     ) {
       dispatch(resetStepperFocused(3));
     }
 
     if (
-      visitationData.stepperVisitationShouldNotFocused
-      && visitationData.step === 3
-      && visitationData.competitors?.length <= 0
+      visitationData.stepperVisitationShouldNotFocused &&
+      visitationData.step === 3 &&
+      visitationData.competitors?.length <= 0
     ) {
       dispatch(resetStepperFocused(4));
     }
@@ -435,9 +441,9 @@ function CreateVisitation() {
     }
     dispatch(
       updateDataVisitation({
-        type: 'pics',
+        type: "pics",
         value: [...finalPIC, state],
-      }),
+      })
     );
   };
 
@@ -476,8 +482,8 @@ function CreateVisitation() {
                 next(step)();
                 dispatch(setStepperFocused(step));
                 DeviceEventEmitter.emit(
-                  'CreateVisitation.continueButton',
-                  true,
+                  "CreateVisitation.continueButton",
+                  true
                 );
               }}
               onPressBack={() => actionBackButton(false)}
@@ -528,19 +534,19 @@ function CreateVisitation() {
 
 const styles: Styles = {
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  button: { flexDirection: 'row-reverse' },
+  button: { flexDirection: "row-reverse" },
   container: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     flex: 1,
   },
   conButton: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
   buttonOne: {
     flex: 1,

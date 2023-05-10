@@ -1,9 +1,7 @@
-import {
-  View, Text, StyleSheet, TouchableOpacity,
-} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import React from 'react';
-import { colors, fonts, layout } from '@/constants';
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import React from "react";
+import { colors, fonts, layout } from "@/constants";
 
 type projectType = {
   id?: string;
@@ -60,8 +58,8 @@ export default function ProjectBetween({
 const styles = StyleSheet.create({
   container: {},
   between: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingVertical: layout.pad.md,
   },
   divider: {
@@ -69,8 +67,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border.disabled,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   buttonText: {
     fontFamily: fonts.family.montserrat[500],

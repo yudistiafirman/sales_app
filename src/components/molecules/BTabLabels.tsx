@@ -1,16 +1,16 @@
-import React from 'react';
-import { TextStyle, View, ViewStyle } from 'react-native';
-import colors from '@/constants/colors';
-import font from '@/constants/fonts';
-import resScale from '@/utils/resScale';
-import BChip from '../atoms/BChip';
-import BText from '../atoms/BText';
+import React from "react";
+import { TextStyle, View, ViewStyle } from "react-native";
+import colors from "@/constants/colors";
+import font from "@/constants/fonts";
+import resScale from "@/utils/resScale";
+import BChip from "../atoms/BChip";
+import BText from "../atoms/BText";
 
 type Route = {
   key: string;
   title: string;
   totalItems?: number;
-  chipPosition?: 'right' | 'bottom' | undefined;
+  chipPosition?: "right" | "bottom" | undefined;
 };
 
 interface BTabLabelsProps {
@@ -21,13 +21,13 @@ interface BTabLabelsProps {
 
 function BTabLabels({ route, focused, minWidth }: BTabLabelsProps) {
   const isHasItems = route?.totalItems > 0;
-  const rightChipPosition = route?.chipPosition === 'right';
+  const rightChipPosition = route?.chipPosition === "right";
 
-  const chipBackgroundColor = rightChipPosition ? colors.chip.disabled : '';
+  const chipBackgroundColor = rightChipPosition ? colors.chip.disabled : "";
   const BTabLabelsContainer: ViewStyle = {
-    flexDirection: rightChipPosition ? 'row' : 'column',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: rightChipPosition ? "row" : "column",
+    alignItems: "center",
+    justifyContent: "space-between",
   };
 
   const BTabLabelsTextStyle: TextStyle = {
@@ -37,8 +37,8 @@ function BTabLabels({ route, focused, minWidth }: BTabLabelsProps) {
       : font.family.montserrat[400],
     fontSize: font.size.md,
     minWidth: minWidth && minWidth,
-    alignSelf: 'center',
-    textAlign: 'center',
+    alignSelf: "center",
+    textAlign: "center",
   };
 
   const BChipStyle: ViewStyle = {

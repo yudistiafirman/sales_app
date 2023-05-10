@@ -1,11 +1,9 @@
-import { TouchableOpacity } from '@gorhom/bottom-sheet';
-import React, { forwardRef, Ref, useMemo } from 'react';
-import {
-  View, StyleSheet, Text, ScrollView,
-} from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo';
-import { resScale } from '@/utils';
-import { fonts, colors, layout } from '@/constants';
+import { TouchableOpacity } from "@gorhom/bottom-sheet";
+import React, { forwardRef, Ref, useMemo } from "react";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
+import Entypo from "react-native-vector-icons/Entypo";
+import { resScale } from "@/utils";
+import { fonts, colors, layout } from "@/constants";
 
 interface StepperIndicatorProps {
   currentStep: number;
@@ -22,49 +20,50 @@ const StepperIndicator = forwardRef(
       stepOnPress = () => {},
       stepsDone,
     }: StepperIndicatorProps,
-    ref: Ref<ScrollView>,
+    ref: Ref<ScrollView>
   ) => {
     const dots = useMemo(
-      () => labels.map((label, index) => {
-        const steps = labels.length;
-        const maxNumber = Math.max(...stepsDone);
-        const isStepDone = stepsDone.includes(index);
-        const isStepClickable = index <= maxNumber || index === maxNumber + 1;
-        const dotStyle = [
-          styles.dot,
-          isStepDone ? styles.greenDot : styles.blackDot,
-          currentStep === index ? styles.redDot : null,
-        ];
-        const lineStyle = [
-          styles.separatorLine,
-          isStepDone ? styles.greenLine : styles.grayLine,
-        ];
-        return (
-          <TouchableOpacity
-            onPress={() => {
-              if (isStepClickable) {
-                stepOnPress(index);
-              }
-            }}
-            key={index.toString() + label}
-          >
-            <View style={styles.dotContainer}>
-              <View style={dotStyle}>
-                {isStepDone && currentStep !== index ? (
-                  <Entypo size={13} name="check" color="#FFFFFF" />
-                ) : (
-                  <Text style={styles.dotNumber}>{index + 1}</Text>
-                )}
-                {/* <Text style={styles.dotNumber}>{index + 1}</Text> */}
+      () =>
+        labels.map((label, index) => {
+          const steps = labels.length;
+          const maxNumber = Math.max(...stepsDone);
+          const isStepDone = stepsDone.includes(index);
+          const isStepClickable = index <= maxNumber || index === maxNumber + 1;
+          const dotStyle = [
+            styles.dot,
+            isStepDone ? styles.greenDot : styles.blackDot,
+            currentStep === index ? styles.redDot : null,
+          ];
+          const lineStyle = [
+            styles.separatorLine,
+            isStepDone ? styles.greenLine : styles.grayLine,
+          ];
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                if (isStepClickable) {
+                  stepOnPress(index);
+                }
+              }}
+              key={index.toString() + label}
+            >
+              <View style={styles.dotContainer}>
+                <View style={dotStyle}>
+                  {isStepDone && currentStep !== index ? (
+                    <Entypo size={13} name="check" color="#FFFFFF" />
+                  ) : (
+                    <Text style={styles.dotNumber}>{index + 1}</Text>
+                  )}
+                  {/* <Text style={styles.dotNumber}>{index + 1}</Text> */}
+                </View>
+                <Text style={styles.labelStyle}>{label}</Text>
+                {index !== steps - 1 && <View style={lineStyle} />}
               </View>
-              <Text style={styles.labelStyle}>{label}</Text>
-              {index !== steps - 1 && <View style={lineStyle} />}
-            </View>
-          </TouchableOpacity>
-        );
-      }),
+            </TouchableOpacity>
+          );
+        }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [stepsDone, labels, currentStep],
+      [stepsDone, labels, currentStep]
     );
 
     return (
@@ -79,7 +78,7 @@ const StepperIndicator = forwardRef(
         </ScrollView>
       </View>
     );
-  },
+  }
 );
 
 const styles = StyleSheet.create({
@@ -87,17 +86,17 @@ const styles = StyleSheet.create({
     height: resScale(25),
     paddingHorizontal: layout.pad.md,
     zIndex: 2,
-    alignItems: 'center',
-    backgroundColor: 'white',
+    alignItems: "center",
+    backgroundColor: "white",
   },
   scrollContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: layout.pad.md,
   },
   dot: {
@@ -105,8 +104,8 @@ const styles = StyleSheet.create({
     height: resScale(16),
     borderRadius: layout.radius.lg,
     marginHorizontal: layout.pad.sm,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   dotNumber: {
     color: colors.white,
@@ -117,10 +116,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   blackDot: {
-    backgroundColor: '#C7C7C7',
+    backgroundColor: "#C7C7C7",
   },
   greenDot: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
   },
   separatorLine: {
     width: resScale(12),
@@ -128,14 +127,14 @@ const styles = StyleSheet.create({
     marginHorizontal: layout.pad.sm,
   },
   greenLine: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
   },
   grayLine: {
-    backgroundColor: 'gray',
+    backgroundColor: "gray",
   },
   dotContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   labelStyle: {
     fontFamily: fonts.family.montserrat[500],
