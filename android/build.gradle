@@ -2,6 +2,13 @@
 
 buildscript {
     ext {
+        /**
+        * Please change if you wanna increase the version app
+        */
+        MAJOR_VERSION = 1
+        MINOR_VERSION = 1
+        PATCH_VERSION = 24
+
         compileSdkVersion = 31
         minSdkVersion = 21
         targetSdkVersion = 31
