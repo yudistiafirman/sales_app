@@ -9,10 +9,9 @@ import {
   BForm,
   BProductCard,
   BSpacer,
-  BText,
 } from '@/components';
 import { Input } from '@/interfaces';
-import { METHOD_LIST, METHOD_LIST_DEPRECATED, PO_METHOD_LIST } from '@/constants/dropdown';
+import { METHOD_LIST } from '@/constants/dropdown';
 import { RadioButton } from 'react-native-paper';
 import moment from 'moment';
 import { SalesOrdersData } from '@/interfaces/SelectConfirmedPO';
@@ -67,7 +66,7 @@ export default function SecondStep() {
       label: 'Metode penuangan',
       isRequire: true,
       type: 'dropdown',
-      value: stateTwo?.method, 
+      value: stateTwo?.method,
       isError: stateTwo?.method ? false : true,
       customerErrorMsg: 'Metode penuangan harus dipilih',
       dropdown: {

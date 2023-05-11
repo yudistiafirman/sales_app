@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   NativeSyntheticEvent,
   TextInputChangeEventData,
-  ScrollView,
 } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import Modal from 'react-native-modal';
@@ -17,7 +16,6 @@ import {
   BSpacer,
   BChip,
   BDivider,
-  BContainer,
   BButtonPrimary,
   BText,
   BTextInput,
@@ -26,7 +24,7 @@ import {
 import formatCurrency from '@/utils/formatCurrency';
 import { TextInput } from 'react-native-paper';
 import calcTrips from '@/utils/calcTrips';
-import { METHOD_LIST, PO_METHOD_LIST } from '@/constants/dropdown';
+import { METHOD_LIST } from '@/constants/dropdown';
 
 type ProductCartModalType = {
   productData: ProductDataInterface;
