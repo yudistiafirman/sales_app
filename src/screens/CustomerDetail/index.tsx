@@ -351,7 +351,7 @@ export default function CustomerDetail() {
             <RemainingAmountBox title="Sisa Deposit" firstAmount={24000200} />
             <BSpacer size={'extraSmall'} />
             <RemainingAmountBox
-              title="Sisa Deposit"
+              title="Sisa Credit"
               firstAmount={32800200}
               secondAmount={150000000}
             />
@@ -362,7 +362,7 @@ export default function CustomerDetail() {
             <Text style={styles.fontW400}>Proyek</Text>
             <BSpacer size="extraSmall" />
             <BVisitationCard
-              nameSize={fonts.size.sm}
+              nameSize={fonts.size.xs}
               locationTextColor={colors.text.lightGray}
               item={{
                 name: 'Project Firman',
@@ -371,7 +371,11 @@ export default function CustomerDetail() {
             />
             <BSpacer size="extraSmall" />
             <BVisitationCard
-              nameSize={fonts.size.sm}
+              nameSize={fonts.size.xs}
+              customStyle={{
+                borderColor: colors.border.default,
+                borderWidth: 2,
+              }}
               locationTextColor={colors.text.lightGray}
               item={{
                 name: 'Project Firman',
@@ -397,11 +401,11 @@ const styles = StyleSheet.create({
   touchableText: {
     color: colors.danger,
     fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.xs,
+    fontSize: fonts.size.vs,
     margin: 0,
   },
   chipText: {
-    fontSize: fonts.size.xs,
+    fontSize: fonts.size.vs,
     color: colors.offWhite,
     fontFamily: fonts.family.montserrat[400],
   },
@@ -414,12 +418,12 @@ const styles = StyleSheet.create({
   fontW400: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.sm,
+    fontSize: fonts.size.xs,
   },
   fontW500: {
     color: colors.text.darker,
     fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
+    fontSize: fonts.size.xs,
   },
   billingStyle: {
     alignItems: 'center',

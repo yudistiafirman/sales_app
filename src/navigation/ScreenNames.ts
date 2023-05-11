@@ -9,7 +9,8 @@ export const TAB_DISPATCH = 'TAB.DISPATCH';
 export const TAB_WB_IN = 'TAB.WB_IN';
 export const TAB_HOME = 'TAB.HOME';
 export const TAB_TRANSACTION = 'TAB.TRANSACTION';
-export const TAB_PROFILE = 'TAB.CUSTOMER';
+export const TAB_PROFILE = 'TAB.PROFILE';
+export const TAB_CUSTOMER = 'TAB.CUSTOMER';
 export const TAB_PRICE_LIST = 'TAB.PRICE_LIST';
 
 export const SPLASH = 'SPLASH';
@@ -53,12 +54,13 @@ export const GALLERY_OPERATION = 'GALLERY_OPERATION';
 */
 export const TAB_HOME_TITLE = 'Beranda';
 export const TAB_TRANSACTION_TITLE = 'Transaksi';
-export const TAB_PROFILE_TITLE = 'Customer';
+export const TAB_PROFILE_TITLE = 'Profil';
 export const TAB_PRICE_LIST_TITLE = 'Harga';
 export const TAB_WB_OUT_TITLE = 'Keberangkatan';
 export const TAB_WB_IN_TITLE = 'Kedatangan';
 export const TAB_DISPATCH_TITLE = 'Keberangkatan';
 export const TAB_RETURN_TITLE = 'Kedatangan';
+export const TAB_CUSTOMER_TITLE = 'Pelanggan';
 
 export const SALES_TAB_TITLE = 'Beranda';
 export const SECURITY_TAB_TITLE = 'Beranda';

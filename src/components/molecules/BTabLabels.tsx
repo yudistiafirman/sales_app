@@ -16,10 +16,16 @@ type Route = {
 interface BTabLabelsProps {
   route: Route;
   focused: boolean;
+  tabTextfocusedColor?: string;
   minWidth?: number | undefined;
 }
 
-const BTabLabels = ({ route, focused, minWidth }: BTabLabelsProps) => {
+const BTabLabels = ({
+  route,
+  focused,
+  minWidth,
+  tabTextfocusedColor = colors.primary,
+}: BTabLabelsProps) => {
   const isHasItems = route?.totalItems > 0;
   const rightChipPosition = route?.chipPosition === 'right';
 
@@ -31,7 +37,7 @@ const BTabLabels = ({ route, focused, minWidth }: BTabLabelsProps) => {
   };
 
   const BTabLabelsTextStyle: TextStyle = {
-    color: focused ? colors.primary : colors.text.dark,
+    color: focused ? tabTextfocusedColor : colors.text.dark,
     fontFamily: focused
       ? font.family.montserrat[600]
       : font.family.montserrat[400],

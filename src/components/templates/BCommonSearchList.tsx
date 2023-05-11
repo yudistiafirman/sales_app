@@ -1,12 +1,7 @@
 import BVisitationCard from '@/components/molecules/BVisitationCard';
 import { colors, layout } from '@/constants';
 import * as React from 'react';
-import {
-  ListRenderItem,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { ListRenderItem, Platform, StyleSheet, View } from 'react-native';
 import BCommonListShimmer from './BCommonListShimmer';
 import { selectedCompanyInterface, visitationDataType } from '@/interfaces';
 import BSpacer from '@/components/atoms/BSpacer';
@@ -17,10 +12,13 @@ import BTabSections from '@/components/organism/TabSections';
 import BEmptyState from '../organism/BEmptyState';
 import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO';
 import { FlashList } from '@shopify/flash-list';
+import BCard from '../molecules/BCard';
+import { ICustomerListData } from '@/models/Customer';
 
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
   CreatedSPHListResponse &
-  selectedCompanyInterface;
+  selectedCompanyInterface &
+  ICustomerListData;
 
 interface BCommonSearchListProps {
   data: CreatedSPHListResponse[] | CreatedPurchaseOrderListResponse[] | any[];
@@ -50,6 +48,7 @@ interface BCommonSearchListProps {
   emptyText: string;
   hidePicName?: boolean;
   autoFocus?: boolean;
+  listType?: 'default' | 'customer';
 }
 
 const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
@@ -75,6 +74,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
   onPressMagnify,
   hidePicName,
   autoFocus,
+  listType = 'default',
 }: BCommonSearchListProps) => {
   const isSearching = searchQuery.length > 2;
   const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
@@ -101,19 +101,36 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
         status: item?.status,
         pilStatus: item?.pilStatus,
       };
-      return (
-        <>
-          <BSpacer size={'small'} />
-          <BVisitationCard
-            item={constructVisitationData}
-            key={item.id}
-            onPress={onPressList ? () => onPressList(item) : undefined}
-            isRenderIcon
-            pillColor={colors.status.orange}
-            searchQuery={searchQuery}
+      if (listType === 'default') {
+        return (
+          <>
+            <BSpacer size={'small'} />
+            <BVisitationCard
+              item={constructVisitationData}
+              key={item.id}
+              onPress={onPressList ? () => onPressList(item) : undefined}
+              isRenderIcon
+              pillColor={colors.status.orange}
+              searchQuery={searchQuery}
+            />
+          </>
+        );
+      } else if (listType === 'customer') {
+        const listTextData = [`KTP: ${item?.ktp}`, `NPWP: ${item?.npwp}`];
+        const title = item?.displayName;
+        const avatarText = item?.name[0];
+        const chipTitle = item?.type;
+
+        return (
+          <BCard
+            avatarText={avatarText}
+            chipTitle={item.type}
+            listTextData={listTextData}
+            chipTitle={chipTitle}
+            title={title}
           />
-        </>
-      );
+        );
+      }
     },
     [onPressList, searchQuery]
   );
@@ -149,7 +166,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
               <BSpacer size="extraSmall" />
               <FlashList
                 estimatedItemSize={10}
-				onEndReachedThreshold={0.5}
+                onEndReachedThreshold={0.5}
                 data={data}
                 removeClippedSubviews={false}
                 initialNumToRender={10}

@@ -16,6 +16,7 @@ interface BTabSectionProps {
   onTabPress?: ((scene: Scene<Route> & Event) => void) | undefined;
   swipeEnabled?: boolean;
   minTabHeaderWidth?: number | undefined;
+  tabTextFocusedColor?: string;
 }
 
 const BTabSections = ({
@@ -28,6 +29,7 @@ const BTabSections = ({
   onTabPress,
   swipeEnabled,
   minTabHeaderWidth,
+  tabTextFocusedColor,
 }: BTabSectionProps) => {
   return (
     <BTab
@@ -45,6 +47,7 @@ const BTabSections = ({
           renderLabel={({ route, focused }) => (
             <BTabLabels
               route={route}
+              tabTextfocusedColor={tabTextFocusedColor}
               focused={focused}
               minWidth={minTabHeaderWidth}
             />

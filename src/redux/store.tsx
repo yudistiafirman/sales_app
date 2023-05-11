@@ -9,6 +9,7 @@ import modalReducer from './reducers/modalReducer';
 import productivityFlowReducer from './reducers/productivityFlowReducer';
 import orderReducer from './reducers/orderReducer';
 import snackbarReducer from './reducers/snackbarReducer';
+import customerReducer from './reducers/customerReducer';
 import { createXStateMiddleware } from './middleware/createXStateMiddleware';
 import purchaseOrderReducer, {
   purchaseOrderSlice,
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   common: commonReducer,
   order: orderReducer,
   snackbar: snackbarReducer,
+  customer: customerReducer,
   purchaseOrder: purchaseOrderReducer,
   operation: persistReducer<operationInitState, any>(
     persistConfig,

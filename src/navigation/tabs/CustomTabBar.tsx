@@ -14,17 +14,23 @@ interface TabBar {
 }
 
 const CustomTabBar = ({ state, descriptors, navigation }: TabBar) => {
-  const { enable_transaction_menu, enable_price_menu, enable_profile_menu } =
-    useSelector((state: RootState) => state.auth.remote_config);
+  const {
+    enable_transaction_menu,
+    enable_price_menu,
+    enable_profile_menu,
+    enable_customer_menu,
+  } = useSelector((state: RootState) => state.auth.remote_config);
 
   const homeIcon = require('@/assets/icon/TabBarIcon/ic_home.png');
   const transIcon = require('@/assets/icon/TabBarIcon/ic_dollar-square.png');
   const profileIcon = require('@/assets/icon/TabBarIcon/ic_profile.png');
   const priceIcon = require('@/assets/icon/TabBarIcon/ic_price.png');
+  const customerIcon = require('@/assets/icon/TabBarIcon/ic_customer.png');
 
   const icons = [homeIcon];
   if (enable_transaction_menu) icons.push(transIcon);
   if (enable_profile_menu) icons.push(profileIcon);
+  if (enable_customer_menu) icons.push(customerIcon);
   if (enable_price_menu) icons.push(priceIcon);
 
   return (
@@ -73,6 +79,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: TabBar) => {
             style={{ flex: 1, alignItems: 'center' }}
           >
             <Image
+              resizeMode="contain"
               style={[
                 TabBarStyle.icon,
                 {
