@@ -68,10 +68,10 @@ export default function SecondStep() {
       isRequire: true,
       type: 'dropdown',
       value: stateTwo?.method, 
-      isError: stateTwo?.method === undefined ? true : false,
+      isError: stateTwo?.method ? false : true,
       customerErrorMsg: 'Metode penuangan harus dipilih',
       dropdown: {
-        items: METHOD_LIST_DEPRECATED,
+        items: METHOD_LIST,
         placeholder: 'Pilih metode penuangan',
         onChange: (value: any) => {
           onChange('method')(value);
