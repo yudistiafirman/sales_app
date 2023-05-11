@@ -6,6 +6,29 @@ import font from '@/constants/fonts';
 import TopVisitation from './elements/TopVisitation';
 import TargetBar from './elements/TargetBar';
 
+const style = StyleSheet.create({
+  container: { position: 'relative', zIndex: 0, width: '100%' },
+  animatedContainer: {
+    width: '100%',
+    alignSelf: 'flex-start',
+    zIndex: 1,
+    paddingHorizontal: layout.pad.lg,
+  },
+  barContainer: {
+    paddingHorizontal: layout.pad.lg,
+  },
+  targetContainer: {
+    backgroundColor: colors.white,
+    borderRadius: layout.radius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  count: {
+    fontFamily: font.family.montserrat[700],
+    colors: colors.black,
+  },
+});
+
 type TargetCardProps = {
   maxVisitation: number;
   currentVisitaion: number;
@@ -60,26 +83,3 @@ export default function TargetCard({
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  container: { position: 'relative', zIndex: 0, width: '100%' },
-  animatedContainer: {
-    width: '100%',
-    alignSelf: 'flex-start',
-    zIndex: 1,
-    paddingHorizontal: layout.pad.lg,
-  },
-  barContainer: {
-    paddingHorizontal: layout.pad.lg,
-  },
-  targetContainer: {
-    backgroundColor: colors.white,
-    borderRadius: layout.radius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  count: {
-    fontFamily: font.family.montserrat[700],
-    colors: colors.black,
-  },
-});

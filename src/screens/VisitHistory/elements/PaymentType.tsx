@@ -7,6 +7,13 @@ import font from '@/constants/fonts';
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: layout.pad.lg,
+  },
+});
+
 interface Props {
   paymentType: 'CBD' | 'CREDIT';
 }
@@ -35,12 +42,5 @@ function PaymentType({ paymentType }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: layout.pad.lg,
-  },
-});
 
 export default PaymentType;

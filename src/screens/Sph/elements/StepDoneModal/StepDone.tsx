@@ -17,6 +17,87 @@ import { colors, fonts, layout } from '@/constants';
 import { BPic, BProductCard, BSpacer, BCompanyMapCard, BProjectDetailCard } from '@/components';
 import LabelSuccess from './elements/LabelSuccess';
 
+const styles = StyleSheet.create({
+  modal: { margin: 0 },
+  modalStyle: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: layout.pad.md,
+  },
+  modalTitle: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: layout.pad.lg,
+    paddingVertical: layout.pad.md,
+  },
+  modalFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingVertical: layout.mainPad,
+    borderTopColor: colors.border,
+    borderTopWidth: resScale(0.5),
+  },
+  headerText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[700],
+    fontSize: fonts.size.lg,
+  },
+  modalContent: {
+    flex: 1,
+  },
+  labelSuccess: {
+    backgroundColor: colors.chip.green,
+    paddingHorizontal: layout.pad.lg,
+    paddingVertical: layout.pad.md,
+  },
+  labelText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.xs,
+  },
+  company: {
+    backgroundColor: colors.tertiary,
+    padding: layout.mainPad,
+  },
+  companyText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.md,
+  },
+  partText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.md,
+  },
+  contentDetail: {
+    padding: layout.mainPad,
+    flex: 1,
+  },
+  summary: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.sm,
+  },
+  summaryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  footerButton: {
+    flex: 0.3,
+    alignItems: 'center',
+  },
+  footerButtonText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
+  },
+});
+
 type StepDoneType = {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,7 +113,7 @@ const paymentMethod: {
   '': '-',
 };
 
-type downloadType = {
+type DownloadType = {
   url?: string;
   title?: string;
   downloadPopup: () => void;
@@ -43,7 +124,7 @@ function Separator() {
   return <BSpacer size="extraSmall" />;
 }
 
-function downloadPdf({ url, title, downloadPopup, downloadError }: downloadType) {
+function downloadPdf({ url, title, downloadPopup, downloadError }: DownloadType) {
   if (!url) return null;
   const { dirs } = ReactNativeBlobUtil.fs;
   const downloadTitle = title ? `${title} berhasil di download` : 'PDF sph berhasil di download';
@@ -268,84 +349,3 @@ export default function StepDone({ isModalVisible, setIsModalVisible, sphRespons
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modal: { margin: 0 },
-  modalStyle: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: layout.pad.md,
-  },
-  modalTitle: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: layout.pad.lg,
-    paddingVertical: layout.pad.md,
-  },
-  modalFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingVertical: layout.mainPad,
-    borderTopColor: colors.border,
-    borderTopWidth: resScale(0.5),
-  },
-  headerText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[700],
-    fontSize: fonts.size.lg,
-  },
-  modalContent: {
-    flex: 1,
-  },
-  labelSuccess: {
-    backgroundColor: colors.chip.green,
-    paddingHorizontal: layout.pad.lg,
-    paddingVertical: layout.pad.md,
-  },
-  labelText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.xs,
-  },
-  company: {
-    backgroundColor: colors.tertiary,
-    padding: layout.mainPad,
-  },
-  companyText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.md,
-  },
-  partText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.md,
-  },
-  contentDetail: {
-    padding: layout.mainPad,
-    flex: 1,
-  },
-  summary: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.sm,
-  },
-  summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  footerButton: {
-    flex: 0.3,
-    alignItems: 'center',
-  },
-  footerButtonText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.sm,
-  },
-});

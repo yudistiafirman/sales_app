@@ -11,7 +11,29 @@ import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 
-export type selectedDateType = {
+const style = StyleSheet.create({
+  container: { flex: 1, justifyContent: 'space-between' },
+  gantiText: {
+    marginRight: 10,
+    color: colors.primary,
+    fontFamily: fonts.family.montserrat[500],
+  },
+  loadingShimmer: {
+    width: resScale(335),
+    height: resScale(100),
+    borderRadius: layout.radius.md,
+  },
+  labelShimmer: {
+    width: resScale(335),
+    height: resScale(50),
+    borderRadius: layout.radius.md,
+  },
+  scrollViewStyle: {
+    flex: 1,
+  },
+});
+
+export type SelectedDateType = {
   date: string;
   prettyDate: string;
   day: string;
@@ -67,27 +89,5 @@ function Fourth() {
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'space-between' },
-  gantiText: {
-    marginRight: 10,
-    color: colors.primary,
-    fontFamily: fonts.family.montserrat[500],
-  },
-  loadingShimmer: {
-    width: resScale(335),
-    height: resScale(100),
-    borderRadius: layout.radius.md,
-  },
-  labelShimmer: {
-    width: resScale(335),
-    height: resScale(50),
-    borderRadius: layout.radius.md,
-  },
-  scrollViewStyle: {
-    flex: 1,
-  },
-});
 
 export default Fourth;

@@ -4,6 +4,18 @@ import { BLabel, BSpacer, BText } from '@/components';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: layout.pad.lg,
+  },
+  textNotes: {
+    fontFamily: font.family.montserrat[400],
+    fontSize: font.size.md,
+    color: colors.text.darker,
+  },
+});
+
 function Notes({ visitNotes }: { visitNotes: string | null }) {
   if (visitNotes) {
     return (
@@ -18,16 +30,5 @@ function Notes({ visitNotes }: { visitNotes: string | null }) {
   }
   return null;
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: layout.pad.lg,
-  },
-  textNotes: {
-    fontFamily: font.family.montserrat[400],
-    fontSize: font.size.md,
-    color: colors.text.darker,
-  },
-});
 
 export default Notes;

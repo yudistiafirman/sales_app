@@ -6,6 +6,28 @@ import NetworkLogger from 'react-native-network-logger';
 import Icon from 'react-native-vector-icons/Feather';
 import { colors, layout } from '@/constants';
 
+const styles = StyleSheet.create({
+  close: {
+    borderRadius: layout.radius.xl,
+    backgroundColor: colors.text.darker,
+    borderWidth: 1,
+    padding: layout.pad.xs,
+    alignSelf: 'flex-end',
+    zIndex: 1,
+    marginBottom: -layout.pad.md,
+  },
+  container: {
+    borderRadius: layout.radius.xl,
+    backgroundColor: colors.white,
+    borderColor: colors.primary,
+    borderWidth: 1,
+    padding: layout.pad.md,
+  },
+  button: {
+    alignItems: 'flex-end',
+  },
+});
+
 const { height } = Dimensions.get('window');
 const { width } = Dimensions.get('window');
 
@@ -53,27 +75,5 @@ function BHttpLogger({
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  close: {
-    borderRadius: layout.radius.xl,
-    backgroundColor: colors.text.darker,
-    borderWidth: 1,
-    padding: layout.pad.xs,
-    alignSelf: 'flex-end',
-    zIndex: 1,
-    marginBottom: -layout.pad.md,
-  },
-  container: {
-    borderRadius: layout.radius.xl,
-    backgroundColor: colors.white,
-    borderColor: colors.primary,
-    borderWidth: 1,
-    padding: layout.pad.md,
-  },
-  button: {
-    alignItems: 'flex-end',
-  },
-});
 
 export default BHttpLogger;

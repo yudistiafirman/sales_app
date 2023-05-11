@@ -5,6 +5,17 @@ import { BLabel, BSpacer, BText } from '@/components';
 import { layout } from '@/constants';
 import font from '@/constants/fonts';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: layout.pad.lg,
+  },
+  date: {
+    fontFamily: font.family.montserrat[400],
+    fontSize: font.size.md,
+  },
+});
+
 interface Props {
   estimationWeek?: string;
   estimationMonth?: string;
@@ -29,16 +40,5 @@ function Estimation({ estimationWeek, estimationMonth }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: layout.pad.lg,
-  },
-  date: {
-    fontFamily: font.family.montserrat[400],
-    fontSize: font.size.md,
-  },
-});
 
 export default Estimation;

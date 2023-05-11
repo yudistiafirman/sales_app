@@ -11,6 +11,19 @@ import { CAMERA, CREATE_DEPOSIT, GALLERY_DEPOSIT } from '@/navigation/ScreenName
 import { deleteImage } from '@/redux/reducers/cameraReducer';
 import { RootState } from '@/redux/store';
 
+const style = StyleSheet.create({
+  flexFull: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    paddingTop: layout.pad.md,
+  },
+  gallery: {
+    height: '25%',
+  },
+});
+
 export default function FirstStep() {
   const navigation = useNavigation();
   const { values, action } = React.useContext(CreateDepositContext);
@@ -127,16 +140,3 @@ export default function FirstStep() {
     </SafeAreaView>
   );
 }
-
-const style = StyleSheet.create({
-  flexFull: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingTop: layout.pad.md,
-  },
-  gallery: {
-    height: '25%',
-  },
-});

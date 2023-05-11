@@ -8,7 +8,7 @@ import {
   SphStateInterface,
 } from '@/interfaces';
 
-type updateBillAddressType = Pick<billingAddressType, 'name' | 'phone' | 'fullAddress'>;
+type UpdateBillAddressType = Pick<billingAddressType, 'name' | 'phone' | 'fullAddress'>;
 
 const initialState: SphStateInterface = {
   selectedCompany: null,
@@ -119,7 +119,7 @@ export const sphSlice = createSlice({
     },
     updateBillingAddressOptions: (
       state,
-      { payload }: { payload: { value: string; key: keyof updateBillAddressType } }
+      { payload }: { payload: { value: string; key: keyof UpdateBillAddressType } }
     ) => {
       const { value, key } = payload;
       state.billingAddress[key] = value;

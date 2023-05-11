@@ -1,11 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { useLayoutEffect } from 'react';
 
-type useHeaderShowType = {
+type UseHeaderShowType = {
   isHeaderShown: boolean;
 };
 
-export default function useHeaderShow({ isHeaderShown }: useHeaderShowType) {
+export default function useHeaderShow({ isHeaderShown }: UseHeaderShowType) {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {

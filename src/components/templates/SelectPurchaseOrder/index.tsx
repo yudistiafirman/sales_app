@@ -7,6 +7,12 @@ import { PurchaseOrdersData } from '@/interfaces/SelectConfirmedPO';
 import { searchPOMachine } from '@/machine/searchPOMachine';
 import SelectedPOModal from './element/SelectedPOModal';
 
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+});
+
 interface IProps {
   dataToGet: 'SPHDATA' | 'DEPOSITDATA' | 'SCHEDULEDATA';
   filterSphDataBy?: 'INDIVIDU' | 'COMPANY';
@@ -123,11 +129,5 @@ function SelectPurchaseOrderData({ dataToGet, onSubmitData, onDismiss, filterSph
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-});
 
 export default SelectPurchaseOrderData;

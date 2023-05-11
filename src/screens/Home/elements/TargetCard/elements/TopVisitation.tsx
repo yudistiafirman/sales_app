@@ -8,6 +8,24 @@ import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
 import VisitationCount from './VisitationCount';
 
+const style = StyleSheet.create({
+  targetCount: {
+    height: resScale(40),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  countText: {
+    fontFamily: font.family.montserrat[300],
+    fontSize: font.size.md,
+    color: colors.black,
+  },
+
+  shimmerStyle: {
+    borderRadius: layout.radius.md,
+  },
+});
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type TopVisitationType = {
@@ -32,21 +50,3 @@ export default function TopVisitation({
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  targetCount: {
-    height: resScale(40),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  countText: {
-    fontFamily: font.family.montserrat[300],
-    fontSize: font.size.md,
-    color: colors.black,
-  },
-
-  shimmerStyle: {
-    borderRadius: layout.radius.md,
-  },
-});

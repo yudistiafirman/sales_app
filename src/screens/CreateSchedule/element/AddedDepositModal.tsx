@@ -12,6 +12,30 @@ import { Input } from '@/interfaces';
 import { colors, fonts, layout } from '@/constants';
 import { BContainer, BForm, BGallery, BSpacer, BButtonPrimary } from '@/components';
 
+const style = StyleSheet.create({
+  modal: { justifyContent: 'flex-end', margin: 0 },
+  container: {
+    justifyContent: 'space-between',
+    height: resScale(400),
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    height: resScale(450),
+    borderTopLeftRadius: layout.radius.lg,
+    borderTopRightRadius: layout.radius.lg,
+  },
+  modalHeader: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[700],
+    fontSize: fonts.size.lg,
+  },
+});
+
 type AddedDepositModalType = {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -144,27 +168,3 @@ export default function AddedDepositModal({
     </Modal>
   );
 }
-
-const style = StyleSheet.create({
-  modal: { justifyContent: 'flex-end', margin: 0 },
-  container: {
-    justifyContent: 'space-between',
-    height: resScale(400),
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    height: resScale(450),
-    borderTopLeftRadius: layout.radius.lg,
-    borderTopRightRadius: layout.radius.lg,
-  },
-  modalHeader: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[700],
-    fontSize: fonts.size.lg,
-  },
-});

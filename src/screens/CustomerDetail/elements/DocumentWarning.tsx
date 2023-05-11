@@ -5,25 +5,6 @@ import { colors, fonts, layout } from '@/constants';
 import { DOCUMENTS } from '@/navigation/ScreenNames';
 import { resScale } from '@/utils';
 
-function DocumentWarning({ docs, projectId }: { docs?: Docs[]; projectId?: string }) {
-  const navigation = useNavigation();
-  return (
-    <View style={styles.labelWarning}>
-      <Text style={styles.labelText}>Ada dokumen pelanggan yang belum dilengkapi.</Text>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate(DOCUMENTS, {
-            docs,
-            projectId,
-          })
-        }
-        style={styles.outlineButton}>
-        <Text style={styles.buttonText}>Lengkapi Dokumen</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   labelWarning: {
     backgroundColor: colors.status.offYellow,
@@ -52,5 +33,24 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.xs,
   },
 });
+
+function DocumentWarning({ docs, projectId }: { docs?: Docs[]; projectId?: string }) {
+  const navigation = useNavigation();
+  return (
+    <View style={styles.labelWarning}>
+      <Text style={styles.labelText}>Ada dokumen pelanggan yang belum dilengkapi.</Text>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate(DOCUMENTS, {
+            docs,
+            projectId,
+          })
+        }
+        style={styles.outlineButton}>
+        <Text style={styles.buttonText}>Lengkapi Dokumen</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 export default DocumentWarning;

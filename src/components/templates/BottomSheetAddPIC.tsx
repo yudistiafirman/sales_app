@@ -12,6 +12,39 @@ import BText from '../atoms/BText';
 import BForm from '../organism/BForm';
 
 const { height, width } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  modalContainer: { margin: 0, justifyContent: 'flex-end' },
+  contentWrapper: { justifyContent: 'flex-end' },
+  contentOuterContainer: {
+    backgroundColor: colors.white,
+    borderTopStartRadius: layout.radius.lg,
+    borderTopEndRadius: layout.radius.lg,
+  },
+  contentInnerContainer: { flex: 1, marginHorizontal: layout.pad.lg },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: layout.pad.xl + layout.pad.lg,
+  },
+  headerTitle: {
+    fontFamily: font.family.montserrat[700],
+    fontSize: font.size.lg,
+  },
+  buttonWrapper: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 10,
+    paddingHorizontal: layout.pad.lg,
+  },
+  leftIconStyle: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+    color: colors.textInput.input,
+  },
+});
+
 interface IProps {
   addPic: any;
   onClose: () => void;
@@ -154,37 +187,5 @@ function BSheetAddPic({ addPic, isVisible, onClose }: IProps) {
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modalContainer: { margin: 0, justifyContent: 'flex-end' },
-  contentWrapper: { justifyContent: 'flex-end' },
-  contentOuterContainer: {
-    backgroundColor: colors.white,
-    borderTopStartRadius: layout.radius.lg,
-    borderTopEndRadius: layout.radius.lg,
-  },
-  contentInnerContainer: { flex: 1, marginHorizontal: layout.pad.lg },
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: layout.pad.xl + layout.pad.lg,
-  },
-  headerTitle: {
-    fontFamily: font.family.montserrat[700],
-    fontSize: font.size.lg,
-  },
-  buttonWrapper: {
-    width: '100%',
-    position: 'absolute',
-    bottom: 10,
-    paddingHorizontal: layout.pad.lg,
-  },
-  leftIconStyle: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.md,
-    color: colors.textInput.input,
-  },
-});
 
 export default BSheetAddPic;

@@ -10,7 +10,7 @@ import {
 } from '@/actions/CommonActions';
 import { projectResponseType } from '@/interfaces';
 
-type errorType = {
+type ErrorType = {
   success: boolean;
   error: {
     status: number;
@@ -27,7 +27,7 @@ export const postUploadFiles = createAsyncThunk<any, { files: any[]; from: strin
 
       const { data } = response;
 
-      if (data.error) throw data as errorType;
+      if (data.error) throw data as ErrorType;
 
       return data.data;
     } catch (error) {
@@ -46,7 +46,7 @@ export const getAllProject = createAsyncThunk<any, { search?: string }>(
     try {
       const response = await allVisitationGetAction(search);
       const { data } = response.data.data;
-      if (data.error) throw data as errorType;
+      if (data.error) throw data as ErrorType;
 
       return data;
     } catch (error) {
@@ -62,7 +62,7 @@ export const getProjectsByUserThunk = createAsyncThunk<projectResponseType, { se
     try {
       const response = await projectByUserGetAction(search);
       const { data } = response;
-      if (data.error) throw data as errorType;
+      if (data.error) throw data as ErrorType;
 
       return data;
     } catch (error) {
@@ -77,7 +77,7 @@ export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
     try {
       const response = await projectGetOneById(projectId);
       const { data } = response;
-      if (data.error) throw data as errorType;
+      if (data.error) throw data as ErrorType;
 
       return data;
     } catch (error) {
@@ -92,7 +92,7 @@ export const fetchSphDocuments = createAsyncThunk(
     try {
       const response = await getSphDocuments();
       const { data } = response;
-      if (data.error) throw data as errorType;
+      if (data.error) throw data as ErrorType;
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -105,7 +105,7 @@ export const fetchAddressSuggestion = createAsyncThunk<any, { search: string; pa
     try {
       const response = await getAddressSuggestion(search, page);
       const { data } = response;
-      if (data.error) throw data as errorType;
+      if (data.error) throw data as ErrorType;
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -125,7 +125,7 @@ export const postProjectDocByprojectId = createAsyncThunk<
   try {
     const response = await postProjectDoc(payload);
     const { data } = response;
-    if (data.error) throw data as errorType;
+    if (data.error) throw data as ErrorType;
     return data;
   } catch (error) {
     let errorData = error.message;

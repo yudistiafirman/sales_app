@@ -6,13 +6,24 @@ import font from '@/constants/fonts';
 import { resScale } from '@/utils';
 import respFS from '@/utils/resFontSize';
 
-type higlightTextType = {
+const style = StyleSheet.create({
+  normalText: {
+    fontFamily: font.family.montserrat[500],
+    color: colors.textInput.input,
+    maxWidth: resScale(200),
+  },
+  boldText: {
+    fontFamily: fonts.family.montserrat[800],
+  },
+});
+
+type HiglightTextType = {
   searchQuery?: string;
   name: string;
   fontSize?: number;
 };
 
-export default function HighlightText({ searchQuery, name, fontSize }: higlightTextType) {
+export default function HighlightText({ searchQuery, name, fontSize }: HiglightTextType) {
   function escapeRegExp(text: string) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
   }
@@ -60,13 +71,3 @@ export default function HighlightText({ searchQuery, name, fontSize }: higlightT
     </Text>
   );
 }
-const style = StyleSheet.create({
-  normalText: {
-    fontFamily: font.family.montserrat[500],
-    color: colors.textInput.input,
-    maxWidth: resScale(200),
-  },
-  boldText: {
-    fontFamily: fonts.family.montserrat[800],
-  },
-});

@@ -10,6 +10,28 @@ import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
 
+const styles = StyleSheet.create({
+  root: { flex: 1, padding: layout.pad.md + layout.pad.ml },
+  title: { textAlign: 'center', fontSize: fonts.size.vs + fonts.size.sm },
+  codeFieldRoot: { marginTop: 0 },
+  cell: {
+    width: resScale(46),
+    height: resScale(54),
+    fontSize: fonts.size.vs + fonts.size.sm,
+    borderRadius: layout.radius.sm,
+    fontFamily: font.family.montserrat[500],
+    color: colors.text.dark,
+    borderColor: colors.border.otpField,
+    textAlign: 'center',
+    paddingTop: layout.pad.lg,
+    borderWidth: 1,
+  },
+  focusCell: {
+    borderColor: colors.primary,
+    backgroundColor: colors.chip.disabled,
+  },
+});
+
 const CELL_COUNT = 6;
 
 interface OTPFieldProps {
@@ -44,25 +66,4 @@ function OTPField({ value = '', setValue }: OTPFieldProps) {
     />
   );
 }
-const styles = StyleSheet.create({
-  root: { flex: 1, padding: layout.pad.md + layout.pad.ml },
-  title: { textAlign: 'center', fontSize: fonts.size.vs + fonts.size.sm },
-  codeFieldRoot: { marginTop: 0 },
-  cell: {
-    width: resScale(46),
-    height: resScale(54),
-    fontSize: fonts.size.vs + fonts.size.sm,
-    borderRadius: layout.radius.sm,
-    fontFamily: font.family.montserrat[500],
-    color: colors.text.dark,
-    borderColor: colors.border.otpField,
-    textAlign: 'center',
-    paddingTop: layout.pad.lg,
-    borderWidth: 1,
-  },
-  focusCell: {
-    borderColor: colors.primary,
-    backgroundColor: colors.chip.disabled,
-  },
-});
 export default OTPField;

@@ -22,6 +22,29 @@ import {
 import { RootState } from '@/redux/store';
 import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: layout.pad.lg,
+    justifyContent: 'space-between',
+  },
+  customerCard: {
+    backgroundColor: colors.tertiary,
+    padding: layout.pad.md,
+    borderRadius: layout.radius.md,
+  },
+  tanggalKunjunganText: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+    color: colors.text.darker,
+  },
+  dateText: {
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.xl,
+    color: colors.text.darker,
+  },
+});
+
 export default function CalendarScreen() {
   const route = useRoute<RootStackScreenProps>();
   const navigation = useNavigation();
@@ -234,26 +257,3 @@ export default function CalendarScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: layout.pad.lg,
-    justifyContent: 'space-between',
-  },
-  customerCard: {
-    backgroundColor: colors.tertiary,
-    padding: layout.pad.md,
-    borderRadius: layout.radius.md,
-  },
-  tanggalKunjunganText: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.md,
-    color: colors.text.darker,
-  },
-  dateText: {
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.xl,
-    color: colors.text.darker,
-  },
-});

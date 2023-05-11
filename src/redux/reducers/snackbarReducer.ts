@@ -1,20 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-type snackbarOptionsType = {
+type SnackbarOptionsType = {
   isRenderAction?: boolean;
   snackBarText?: string;
   isSuccess?: boolean;
 };
 
-type initialStateType = {
+type InitialStateType = {
   isSnackbarVisible: boolean;
-  snackBarOptions: snackbarOptionsType;
+  snackBarOptions: SnackbarOptionsType;
 };
 
-const initialSnackbarOptions: snackbarOptionsType = {
+const initialSnackbarOptions: SnackbarOptionsType = {
   isRenderAction: false,
 };
-const initialState: initialStateType = {
+const initialState: InitialStateType = {
   isSnackbarVisible: false,
   snackBarOptions: {
     isRenderAction: false,
@@ -27,7 +27,7 @@ export const snackbarSlice = createSlice({
   name: 'snackbar',
   initialState,
   reducers: {
-    openSnackbar: (state, { payload }: { payload: snackbarOptionsType }) => {
+    openSnackbar: (state, { payload }: { payload: SnackbarOptionsType }) => {
       state.isSnackbarVisible = true;
       if (typeof payload.isRenderAction === 'boolean') {
         state.snackBarOptions.isRenderAction = payload.isRenderAction;

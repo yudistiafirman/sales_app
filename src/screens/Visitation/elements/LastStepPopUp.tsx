@@ -12,6 +12,62 @@ import { Input } from '@/interfaces';
 import { colors, fonts, layout } from '@/constants';
 import { BButtonPrimary, BForm, BLabel, BSpacer, BTextInput } from '@/components';
 
+const styles = StyleSheet.create({
+  modalStyle: { flex: 1, justifyContent: 'center' },
+  modalContent: {
+    // flex: 1,
+    backgroundColor: colors.white,
+    // height: resScale(200),
+    borderRadius: layout.radius.md,
+    padding: layout.mainPad,
+  },
+  modalHeader: { justifyContent: 'center' },
+  headerText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[700],
+    fontSize: fonts.size.lg,
+    textAlign: 'center',
+  },
+  buttonLastStep: {
+    height: resScale(84),
+    width: resScale(93),
+    backgroundColor: colors.tertiary,
+    borderRadius: layout.radius.md,
+    padding: layout.pad.md,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  lastStepText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.sm,
+    textAlign: 'center',
+  },
+  buttonLastStepContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  spacer: {
+    margin: layout.pad.sm,
+  },
+  iconStyle: {
+    color: colors.black,
+  },
+  iconSelected: {
+    color: colors.primary,
+  },
+  relativPos: {
+    position: 'relative',
+  },
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: layout.radius.sm,
+    height: resScale(45),
+    zIndex: 2,
+  },
+});
+
 type LastStepPopUpType = {
   isVisible: boolean;
   setIsPopUpVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,10 +78,10 @@ type LastStepPopUpType = {
     areaOnChange: (e: any) => void;
     areaValue: string | null;
   };
-  onPressSubmit?: (type: lastStepPickedType) => void;
+  onPressSubmit?: (type: LastStepPickedType) => void;
   isLoading?: boolean;
 };
-type lastStepPickedType = 'VISIT' | 'SPH' | 'REJECTED' | '';
+type LastStepPickedType = 'VISIT' | 'SPH' | 'REJECTED' | '';
 
 function chevronRight() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#000000" />;
@@ -41,7 +97,7 @@ export default function LastStepPopUp({
 }: LastStepPopUpType) {
   const navigation = useNavigation();
 
-  const [lastStepPicked, setLastStepPicked] = useState<lastStepPickedType>('');
+  const [lastStepPicked, setLastStepPicked] = useState<LastStepPickedType>('');
 
   const inputs: Input[] = [
     {
@@ -226,59 +282,3 @@ export default function LastStepPopUp({
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modalStyle: { flex: 1, justifyContent: 'center' },
-  modalContent: {
-    // flex: 1,
-    backgroundColor: colors.white,
-    // height: resScale(200),
-    borderRadius: layout.radius.md,
-    padding: layout.mainPad,
-  },
-  modalHeader: { justifyContent: 'center' },
-  headerText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[700],
-    fontSize: fonts.size.lg,
-    textAlign: 'center',
-  },
-  buttonLastStep: {
-    height: resScale(84),
-    width: resScale(93),
-    backgroundColor: colors.tertiary,
-    borderRadius: layout.radius.md,
-    padding: layout.pad.md,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  lastStepText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
-    textAlign: 'center',
-  },
-  buttonLastStepContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-  spacer: {
-    margin: layout.pad.sm,
-  },
-  iconStyle: {
-    color: colors.black,
-  },
-  iconSelected: {
-    color: colors.primary,
-  },
-  relativPos: {
-    position: 'relative',
-  },
-  touchable: {
-    position: 'absolute',
-    width: '100%',
-    borderRadius: layout.radius.sm,
-    height: resScale(45),
-    zIndex: 2,
-  },
-});

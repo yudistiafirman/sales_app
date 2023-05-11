@@ -11,6 +11,21 @@ import BContainer from '../atoms/BContainer';
 import BSpacer from '../atoms/BSpacer';
 import BForm from './BForm';
 
+const styles: Styles = {
+  sheetStyle: {
+    // padding: layout.pad.lg,
+    // backgroundColor: 'red',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  footerContainer: {
+    backgroundColor: colors.white,
+  },
+  button: { flexDirection: 'row-reverse' },
+};
+
 type CustomFooterButtonType = {
   disable?: boolean;
   onPress?: () => void;
@@ -106,20 +121,5 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
     </BBottomSheet>
   );
 });
-
-const styles: Styles = {
-  sheetStyle: {
-    // padding: layout.pad.lg,
-    // backgroundColor: 'red',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  footerContainer: {
-    backgroundColor: colors.white,
-  },
-  button: { flexDirection: 'row-reverse' },
-};
 
 export default BBottomSheetForm;

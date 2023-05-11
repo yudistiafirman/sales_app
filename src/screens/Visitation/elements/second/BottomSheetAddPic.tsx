@@ -4,6 +4,14 @@ import { BBottomSheetForm } from '@/components';
 import { colors, fonts } from '@/constants';
 import { Input, PIC } from '@/interfaces';
 
+const style = StyleSheet.create({
+  leftIconStyle: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+    color: colors.textInput.input,
+  },
+});
+
 interface IProps {
   initialIndex: number;
   addPic: any;
@@ -118,14 +126,6 @@ const BSheetAddPic = React.forwardRef(({ initialIndex, addPic }: IProps, ref: an
       isButtonDisable={!(!!state.name && phoneNumberRegex.test(state.phone) && !!state.position)}
     />
   );
-});
-
-const style = StyleSheet.create({
-  leftIconStyle: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.md,
-    color: colors.textInput.input,
-  },
 });
 
 export default BSheetAddPic;

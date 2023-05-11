@@ -9,6 +9,76 @@ import formatCurrency from '@/utils/formatCurrency';
 import BForm from '../organism/BForm';
 import BText from '../atoms/BText';
 
+const { width } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  customerCard: {
+    backgroundColor: colors.tertiary,
+    borderRadius: layout.radius.md,
+    padding: layout.pad.md,
+  },
+  parentContainer: { flexDirection: 'row' },
+  checkBoxContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: layout.pad.ml,
+    paddingTop: layout.pad.lg,
+  },
+  expandableContainer: { flex: 1, minHeight: resScale(56) },
+  textContentContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  topCard: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  parentPrice: {
+    fontFamily: font.family.montserrat[300],
+    fontSize: font.size.xs,
+    color: colors.text.darker,
+  },
+  totalParentPrice: {
+    fontFamily: font.family.montserrat[500],
+    fontSize: font.size.sm,
+    color: colors.text.darker,
+    textAlign: 'right',
+    width: width - 170,
+  },
+  bottomCard: {
+    marginTop: layout.pad.sm,
+    overflow: 'hidden',
+  },
+  productCardContainer: {
+    borderRadius: 0,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  inputLabel: {
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.sm,
+    color: colors.text.darker,
+  },
+  volumeContainer: {
+    width: '100%',
+  },
+  textIcon: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
+    color: colors.text.darker,
+  },
+  volContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+});
+
 interface Props<TItem> {
   item?: TItem;
   onChecked?: (index: number) => void;
@@ -23,8 +93,6 @@ interface Props<TItem> {
   isOptions?: boolean;
   onPressRadioButton?: (index: string) => void;
 }
-
-const { width } = Dimensions.get('window');
 
 function BExpandableProductCard({
   item,
@@ -103,73 +171,5 @@ function BExpandableProductCard({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  customerCard: {
-    backgroundColor: colors.tertiary,
-    borderRadius: layout.radius.md,
-    padding: layout.pad.md,
-  },
-  parentContainer: { flexDirection: 'row' },
-  checkBoxContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: layout.pad.ml,
-    paddingTop: layout.pad.lg,
-  },
-  expandableContainer: { flex: 1, minHeight: resScale(56) },
-  textContentContainer: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  topCard: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  parentPrice: {
-    fontFamily: font.family.montserrat[300],
-    fontSize: font.size.xs,
-    color: colors.text.darker,
-  },
-  totalParentPrice: {
-    fontFamily: font.family.montserrat[500],
-    fontSize: font.size.sm,
-    color: colors.text.darker,
-    textAlign: 'right',
-    width: width - 170,
-  },
-  bottomCard: {
-    marginTop: layout.pad.sm,
-    overflow: 'hidden',
-  },
-  productCardContainer: {
-    borderRadius: 0,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    flex: 1,
-  },
-  inputLabel: {
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
-    color: colors.text.darker,
-  },
-  volumeContainer: {
-    width: '100%',
-  },
-  textIcon: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.sm,
-    color: colors.text.darker,
-  },
-  volContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});
 
 export default BExpandableProductCard;

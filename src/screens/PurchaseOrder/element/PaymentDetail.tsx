@@ -12,6 +12,22 @@ import { AppDispatch, RootState } from '@/redux/store';
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginBottom: layout.pad.xxl,
+  },
+  paymentType: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
 function PaymentDetail() {
   const poState = useSelector((state: RootState) => state.purchaseOrder);
   const dispatch = useDispatch<AppDispatch>();
@@ -72,21 +88,5 @@ function PaymentDetail() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginBottom: layout.pad.xxl,
-  },
-  paymentType: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default PaymentDetail;

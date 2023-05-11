@@ -21,6 +21,16 @@ import { resScale } from '@/utils';
 import SelectedPic from './elements/SelectedPic';
 import { SphContext } from '../context/SphContext';
 
+const styles = StyleSheet.create({
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: layout.radius.sm,
+    height: resScale(45),
+    zIndex: 2,
+  },
+});
+
 export default function FirstStep() {
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = useState('');
@@ -151,13 +161,3 @@ export default function FirstStep() {
     </BContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  touchable: {
-    position: 'absolute',
-    width: '100%',
-    borderRadius: layout.radius.sm,
-    height: resScale(45),
-    zIndex: 2,
-  },
-});

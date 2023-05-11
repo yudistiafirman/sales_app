@@ -4,15 +4,6 @@ import { BText } from '@/components';
 import { colors } from '@/constants';
 import font from '@/constants/fonts';
 
-function HistoryHeader({ projectName }: { projectName: string | undefined }) {
-  return (
-    <View>
-      <BText style={styles.header}>Riwayat Kunjungan</BText>
-      <BText style={styles.projectName}>{projectName}</BText>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   header: {
     fontFamily: font.family.montserrat[400],
@@ -26,5 +17,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+function HistoryHeader({ projectName }: { projectName: string | undefined }) {
+  return (
+    <View>
+      <BText style={styles.header}>Riwayat Kunjungan</BText>
+      <BText style={styles.projectName}>{projectName}</BText>
+    </View>
+  );
+}
 
 export default HistoryHeader;

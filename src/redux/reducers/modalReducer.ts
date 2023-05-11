@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-type popUpOptions = {
+type PopUpOptions = {
   isRenderActions?: boolean;
   popUpType?: 'success' | 'error' | 'none' | 'loading';
   popUpText?: string;
@@ -16,12 +16,12 @@ type popUpOptions = {
   unRenderBackButton?: boolean;
 };
 
-type initialStateType = {
+type InitialStateType = {
   isPopUpVisible: boolean;
-  popUpOptions: popUpOptions;
+  popUpOptions: PopUpOptions;
 };
 
-const initialPopupData: popUpOptions = {
+const initialPopupData: PopUpOptions = {
   isRenderActions: false,
   popUpType: 'none',
   popUpText: '',
@@ -37,7 +37,7 @@ const initialPopupData: popUpOptions = {
   unRenderBackButton: false,
 };
 
-const initialState: initialStateType = {
+const initialState: InitialStateType = {
   isPopUpVisible: false,
   popUpOptions: {
     isRenderActions: false,
@@ -62,7 +62,7 @@ export const modalSlice = createSlice({
     setIsPopUpVisible: state => {
       state.isPopUpVisible = !state.isPopUpVisible;
     },
-    openPopUp: (state, { payload }: { payload: popUpOptions }) => {
+    openPopUp: (state, { payload }: { payload: PopUpOptions }) => {
       state.isPopUpVisible = true;
       if (payload.isRenderActions) {
         state.popUpOptions.isRenderActions = payload.isRenderActions;

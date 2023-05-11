@@ -4,6 +4,22 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import resScale from '@/utils/resScale';
 import { colors, fonts, layout } from '@/constants';
 
+const style = StyleSheet.create({
+  container: {
+    marginRight: layout.pad.md,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  iconStyle: {
+    marginRight: layout.pad.md,
+  },
+  textStyle: {
+    fontFamily: fonts.family.montserrat[300],
+    color: colors.text.darker,
+    fontSize: fonts.size.xs,
+  },
+});
+
 type TimeType = {
   time?: string;
 };
@@ -23,18 +39,3 @@ export default function Time({ time }: TimeType) {
     </View>
   );
 }
-const style = StyleSheet.create({
-  container: {
-    marginRight: layout.pad.md,
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  iconStyle: {
-    marginRight: layout.pad.md,
-  },
-  textStyle: {
-    fontFamily: fonts.family.montserrat[300],
-    color: colors.text.darker,
-    fontSize: fonts.size.xs,
-  },
-});

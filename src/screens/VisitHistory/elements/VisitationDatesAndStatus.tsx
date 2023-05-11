@@ -11,12 +11,38 @@ import { TRANSACTION_DETAIL } from '@/navigation/ScreenNames';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { AppDispatch } from '@/redux/store';
 
-type status = 'VISIT' | 'SPH' | 'REJECTED' | 'PO' | 'SCHEDULING' | 'DO';
+const styles = StyleSheet.create({
+  container: {
+    marginLeft: layout.pad.lg,
+    marginRight: layout.pad.md,
+  },
+  dateAndStatus: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  date: {
+    fontFamily: font.family.montserrat[500],
+    fontSize: font.size.md,
+    color: colors.text.darker,
+  },
+  status: {
+    fontFamily: font.family.montserrat[500],
+    fontSize: font.size.md,
+  },
+  touchableText: {
+    marginRight: layout.pad.md,
+    fontFamily: font.family.montserrat[500],
+    fontSize: font.size.md,
+    color: colors.primary,
+  },
+});
+
+type Status = 'VISIT' | 'SPH' | 'REJECTED' | 'PO' | 'SCHEDULING' | 'DO';
 
 interface IProps {
   bookingDate?: string;
   finishDate: string | null;
-  status?: status;
+  status?: Status;
   rejectCategory: string | null;
   quatationId?: string | null;
   rejectNotes?: string;
@@ -159,31 +185,5 @@ function VisitationDatesAndStatus({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginLeft: layout.pad.lg,
-    marginRight: layout.pad.md,
-  },
-  dateAndStatus: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  date: {
-    fontFamily: font.family.montserrat[500],
-    fontSize: font.size.md,
-    color: colors.text.darker,
-  },
-  status: {
-    fontFamily: font.family.montserrat[500],
-    fontSize: font.size.md,
-  },
-  touchableText: {
-    marginRight: layout.pad.md,
-    fontFamily: font.family.montserrat[500],
-    fontSize: font.size.md,
-    color: colors.primary,
-  },
-});
 
 export default VisitationDatesAndStatus;

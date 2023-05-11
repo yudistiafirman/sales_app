@@ -18,6 +18,38 @@ import { PoProductData } from '@/interfaces/SelectConfirmedPO';
 import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
 
+const style = StyleSheet.create({
+  flexFull: {
+    flex: 1,
+  },
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: layout.radius.sm,
+    height: resScale(45),
+    zIndex: 2,
+  },
+  summary: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.sm,
+  },
+  fontw600: {
+    fontFamily: fonts.family.montserrat[600],
+  },
+  summContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    start: 0,
+    backgroundColor: 'white',
+    paddingTop: layout.pad.lg,
+    paddingBottom: layout.pad.xl,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+});
+
 export default function SecondStep() {
   const { values, action } = React.useContext(CreateDepositContext);
   const { stepTwo: stateTwo, stepOne: stateOne } = values;
@@ -155,35 +187,3 @@ export default function SecondStep() {
     </SafeAreaView>
   );
 }
-
-const style = StyleSheet.create({
-  flexFull: {
-    flex: 1,
-  },
-  touchable: {
-    position: 'absolute',
-    width: '100%',
-    borderRadius: layout.radius.sm,
-    height: resScale(45),
-    zIndex: 2,
-  },
-  summary: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.sm,
-  },
-  fontw600: {
-    fontFamily: fonts.family.montserrat[600],
-  },
-  summContainer: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    start: 0,
-    backgroundColor: 'white',
-    paddingTop: layout.pad.lg,
-    paddingBottom: layout.pad.xl,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});

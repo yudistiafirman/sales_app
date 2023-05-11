@@ -10,6 +10,37 @@ import { resScale } from '@/utils';
 const company = require('@/assets/icon/Visitation/company.png');
 const profile = require('@/assets/icon/Visitation/profile.png');
 
+const styles = StyleSheet.create({
+  modalStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  popUpHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: resScale(320),
+    paddingBottom: layout.pad.lg,
+  },
+  modalContent: {
+    backgroundColor: colors.white,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    padding: layout.pad.lg,
+    borderRadius: layout.radius.md,
+    minHeight: resScale(144),
+    minWidth: resScale(327),
+  },
+  headerTitle: {
+    fontFamily: font.family.montserrat[700],
+    fontSize: font.size.lg,
+    color: colors.text.darker,
+  },
+  inputContainer: {
+    width: resScale(320),
+  },
+});
+
 interface IProps {
   isVisible: boolean;
   onClose: () => void;
@@ -80,36 +111,5 @@ function SelectCustomerTypeModal({ isVisible, onClose, onSelect }: IProps) {
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modalStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  popUpHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: resScale(320),
-    paddingBottom: layout.pad.lg,
-  },
-  modalContent: {
-    backgroundColor: colors.white,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    padding: layout.pad.lg,
-    borderRadius: layout.radius.md,
-    minHeight: resScale(144),
-    minWidth: resScale(327),
-  },
-  headerTitle: {
-    fontFamily: font.family.montserrat[700],
-    fontSize: font.size.lg,
-    color: colors.text.darker,
-  },
-  inputContainer: {
-    width: resScale(320),
-  },
-});
 
 export default SelectCustomerTypeModal;

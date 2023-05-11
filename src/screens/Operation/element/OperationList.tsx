@@ -7,6 +7,13 @@ import { layout } from '@/constants';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 
+const style = StyleSheet.create({
+  flatList: {
+    paddingBottom: layout.pad.lg,
+    paddingHorizontal: layout.pad.lg,
+  },
+});
+
 interface OperationListProps {
   data: OperationsDeliveryOrdersListResponse[];
   onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
@@ -87,10 +94,3 @@ export default function OperationList({
     />
   );
 }
-
-const style = StyleSheet.create({
-  flatList: {
-    paddingBottom: layout.pad.lg,
-    paddingHorizontal: layout.pad.lg,
-  },
-});

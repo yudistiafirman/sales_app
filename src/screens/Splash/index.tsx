@@ -7,6 +7,16 @@ import { SPLASH } from '@/navigation/ScreenNames';
 import { AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+  },
+  logo: { width: resScale(184), height: resScale(87) },
+});
+
 function Splash() {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -20,13 +30,4 @@ function Splash() {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.white,
-  },
-  logo: { width: resScale(184), height: resScale(87) },
-});
 export default Splash;

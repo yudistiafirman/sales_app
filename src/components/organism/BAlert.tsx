@@ -8,6 +8,31 @@ import resScale from '@/utils/resScale';
 import BText from '../atoms/BText';
 import BButtonPrimary from '../atoms/BButtonPrimary';
 
+const styles = StyleSheet.create({
+  modalContainer: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  alertOuterContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  alertContainer: {
+    paddingVertical: layout.pad.sm + layout.pad.lg,
+    paddingHorizontal: layout.pad.lg,
+    alignItems: 'center',
+    minHeight: resScale(160),
+    borderRadius: layout.radius.md,
+    backgroundColor: colors.white,
+  },
+  image: {
+    width: resScale(66),
+    height: resScale(66),
+    marginBottom: layout.pad.xl,
+  },
+  content: {},
+});
+
 interface BAlertProps {
   isVisible: boolean;
   content: string;
@@ -63,30 +88,5 @@ function BAlert({
 }
 
 BAlert.defaultProps = BalertDefaultProps;
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  alertOuterContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  alertContainer: {
-    paddingVertical: layout.pad.sm + layout.pad.lg,
-    paddingHorizontal: layout.pad.lg,
-    alignItems: 'center',
-    minHeight: resScale(160),
-    borderRadius: layout.radius.md,
-    backgroundColor: colors.white,
-  },
-  image: {
-    width: resScale(66),
-    height: resScale(66),
-    marginBottom: layout.pad.xl,
-  },
-  content: {},
-});
 
 export default BAlert;

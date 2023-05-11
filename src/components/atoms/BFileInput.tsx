@@ -11,6 +11,47 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 import { colors, fonts, layout } from '@/constants';
 import BLabel from './BLabel';
 
+const style = StyleSheet.create({
+  container: {
+    backgroundColor: colors.offWhite,
+    height: resScale(40),
+    borderRadius: layout.radius.sm,
+    padding: layout.pad.md,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  textStyle: {
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.md,
+    color: colors.textInput.input,
+  },
+  dashedBorder: {
+    borderWidth: resScale(2),
+    borderStyle: 'dashed',
+    borderColor: colors.border.altGrey,
+  },
+  greenDot: {
+    backgroundColor: 'green',
+    width: resScale(16),
+    height: resScale(16),
+    borderRadius: layout.radius.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  redIcon: {
+    backgroundColor: colors.primary,
+    width: resScale(16),
+    height: resScale(16),
+    borderRadius: layout.radius.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+});
+
 // AntDesign
 type BFileInputType = {
   onChange?: (e: any) => void;
@@ -134,43 +175,3 @@ export default function BFileInput({
     </TouchableOpacity>
   );
 }
-const style = StyleSheet.create({
-  container: {
-    backgroundColor: colors.offWhite,
-    height: resScale(40),
-    borderRadius: layout.radius.sm,
-    padding: layout.pad.md,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
-  textStyle: {
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.md,
-    color: colors.textInput.input,
-  },
-  dashedBorder: {
-    borderWidth: resScale(2),
-    borderStyle: 'dashed',
-    borderColor: colors.border.altGrey,
-  },
-  greenDot: {
-    backgroundColor: 'green',
-    width: resScale(16),
-    height: resScale(16),
-    borderRadius: layout.radius.lg,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  redIcon: {
-    backgroundColor: colors.primary,
-    width: resScale(16),
-    height: resScale(16),
-    borderRadius: layout.radius.lg,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});

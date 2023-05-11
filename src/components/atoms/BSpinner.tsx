@@ -2,6 +2,13 @@ import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import colors from '@/constants/colors';
 
+const styles = StyleSheet.create({
+  spinnerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
 interface BSpinnerProps {
   size?: 'large' | 'small';
   color?: string;
@@ -19,13 +26,6 @@ function BSpinner({ size, color }: BSpinnerProps & typeof BSpinnerDefaultProps) 
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  spinnerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 BSpinner.defaultProps = BSpinnerDefaultProps;
 

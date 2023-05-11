@@ -19,7 +19,8 @@ const checkWritePermissions = async () => {
     return false;
   } catch (err) {
     const errorMessage =
-      err.message || 'Terjadi error dalam meminta izin membuat file di external storage permission';
+      err?.message ||
+      'Terjadi error dalam meminta izin membuat file di external storage permission';
     store.dispatch(
       openPopUp({
         popUpType: 'error',
@@ -27,6 +28,7 @@ const checkWritePermissions = async () => {
         outsideClickClosePopUp: true,
       })
     );
+    return false;
   }
 };
 
@@ -77,8 +79,9 @@ const checkReadPermissions = async () => {
     } else {
       showAlertStorage();
     }
+    return false;
   } catch (err) {
-    const errorMessage = err.message || 'Terjadi error dalam request external storage permission';
+    const errorMessage = err?.message || 'Terjadi error dalam request external storage permission';
     store.dispatch(
       openPopUp({
         popUpType: 'error',
@@ -86,6 +89,7 @@ const checkReadPermissions = async () => {
         outsideClickClosePopUp: true,
       })
     );
+    return false;
   }
 };
 

@@ -6,6 +6,17 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { resScale } from '@/utils';
 import { colors } from '@/constants';
 
+const styles = StyleSheet.create({
+  arrowStyleRight: {
+    position: 'relative',
+    right: resScale(-20),
+  },
+  arrowStyleLeft: {
+    position: 'relative',
+    left: resScale(-20),
+  },
+});
+
 interface BCalendarProps {
   onDayPress?: ((date: DateData) => void) | undefined;
   markedDates?: MarkedDates | undefined;
@@ -89,16 +100,5 @@ function BCalendar({ onDayPress, markedDates, onMonthChange, isLoading, minDate 
     />
   );
 }
-
-const styles = StyleSheet.create({
-  arrowStyleRight: {
-    position: 'relative',
-    right: resScale(-20),
-  },
-  arrowStyleLeft: {
-    position: 'relative',
-    left: resScale(-20),
-  },
-});
 
 export default BCalendar;

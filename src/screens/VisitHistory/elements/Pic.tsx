@@ -5,6 +5,13 @@ import { layout } from '@/constants';
 import font from '@/constants/fonts';
 import { picPayloadType } from '@/interfaces';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: layout.pad.lg,
+  },
+});
+
 function Pic({ pic }: { pic: picPayloadType }) {
   return (
     <View style={styles.container}>
@@ -14,12 +21,5 @@ function Pic({ pic }: { pic: picPayloadType }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: layout.pad.lg,
-  },
-});
 
 export default Pic;

@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useMachine } from '@xstate/react';

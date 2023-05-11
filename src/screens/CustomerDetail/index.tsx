@@ -20,6 +20,43 @@ import DocumentWarning from './elements/DocumentWarning';
 import BillingModal from './elements/BillingModal';
 import AddNewAddressWrapper from './elements/AddNewAddressWrapper';
 
+const styles = StyleSheet.create({
+  partText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.md,
+  },
+  between: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  fontW300: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.md,
+  },
+  fontW400: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+  },
+  billingStyle: {
+    alignItems: 'center',
+  },
+
+  loading: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  seeAllText: {
+    color: colors.primary,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.sm,
+  },
+});
+
 type CustomerDetailRoute = RouteProp<RootStackParamList['CUSTOMER_DETAIL']>;
 
 export default function CustomerDetail() {
@@ -303,39 +340,3 @@ export default function CustomerDetail() {
     </>
   );
 }
-const styles = StyleSheet.create({
-  partText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.md,
-  },
-  between: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-
-  fontW300: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.md,
-  },
-  fontW400: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.md,
-  },
-  billingStyle: {
-    alignItems: 'center',
-  },
-
-  loading: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  seeAllText: {
-    color: colors.primary,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
-  },
-});

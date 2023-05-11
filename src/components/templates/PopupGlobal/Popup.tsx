@@ -10,6 +10,39 @@ import { setIsPopUpVisible } from '@/redux/reducers/modalReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 
+const styles = StyleSheet.create({
+  modalStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: colors.white,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    padding: layout.pad.md,
+    borderRadius: layout.radius.md,
+    minHeight: resScale(144),
+    minWidth: resScale(327),
+  },
+  popUpTitle: {
+    color: colors.text.darker,
+    fontFamily: font.family.montserrat[600],
+    fontSize: font.size.md,
+    textAlign: 'center',
+    lineHeight: resScale(24),
+  },
+  popUptext: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.md,
+    textAlign: 'center',
+  },
+  actionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+});
+
 export default function Popup() {
   const dispatch = useDispatch();
   const { isPopUpVisible, popUpOptions } = useSelector((state: RootState) => state.modal);
@@ -70,36 +103,3 @@ export default function Popup() {
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modalStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: colors.white,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    padding: layout.pad.md,
-    borderRadius: layout.radius.md,
-    minHeight: resScale(144),
-    minWidth: resScale(327),
-  },
-  popUpTitle: {
-    color: colors.text.darker,
-    fontFamily: font.family.montserrat[600],
-    fontSize: font.size.md,
-    textAlign: 'center',
-    lineHeight: resScale(24),
-  },
-  popUptext: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.md,
-    textAlign: 'center',
-  },
-  actionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});

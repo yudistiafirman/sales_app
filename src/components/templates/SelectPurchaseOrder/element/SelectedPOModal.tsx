@@ -15,6 +15,30 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 import { AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
 
+const style = StyleSheet.create({
+  modal: { justifyContent: 'flex-end', margin: 0 },
+  container: {
+    justifyContent: 'space-between',
+    height: resScale(300),
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    height: resScale(350),
+    borderTopLeftRadius: layout.radius.lg,
+    borderTopRightRadius: layout.radius.lg,
+  },
+  modalHeader: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[700],
+    fontSize: fonts.size.lg,
+  },
+});
+
 type PoModalData = {
   companyName: string;
   locationName?: string;
@@ -160,27 +184,3 @@ export default function SelectedPOModal({
     </Modal>
   );
 }
-
-const style = StyleSheet.create({
-  modal: { justifyContent: 'flex-end', margin: 0 },
-  container: {
-    justifyContent: 'space-between',
-    height: resScale(300),
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    height: resScale(350),
-    borderTopLeftRadius: layout.radius.lg,
-    borderTopRightRadius: layout.radius.lg,
-  },
-  modalHeader: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[700],
-    fontSize: fonts.size.lg,
-  },
-});

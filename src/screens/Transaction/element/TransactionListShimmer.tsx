@@ -6,21 +6,6 @@ import { resScale } from '@/utils';
 import colors from '@/constants/colors';
 import { layout } from '@/constants';
 
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-function TransactionListShimmer() {
-  return (
-    <View style={styles.parent}>
-      <View style={styles.container}>
-        <ShimmerPlaceholder style={styles.shimmerName} />
-        <ShimmerPlaceholder style={styles.shimmerPrice} />
-      </View>
-      <View style={styles.container}>
-        <ShimmerPlaceholder style={styles.shimmerChip} />
-      </View>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   parent: {
     height: resScale(56),
@@ -39,5 +24,20 @@ const styles = StyleSheet.create({
     borderRadius: layout.radius.xl,
   },
 });
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+function TransactionListShimmer() {
+  return (
+    <View style={styles.parent}>
+      <View style={styles.container}>
+        <ShimmerPlaceholder style={styles.shimmerName} />
+        <ShimmerPlaceholder style={styles.shimmerPrice} />
+      </View>
+      <View style={styles.container}>
+        <ShimmerPlaceholder style={styles.shimmerChip} />
+      </View>
+    </View>
+  );
+}
 
 export default TransactionListShimmer;

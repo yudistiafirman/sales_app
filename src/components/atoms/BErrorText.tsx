@@ -6,14 +6,6 @@ import font from '@/constants/fonts';
 import { resScale } from '@/utils';
 import BText from './BText';
 
-function BErrorText({ text }: { text: string | unknown }) {
-  return (
-    <View style={styles.container}>
-      <Icon style={styles.warningIcon} name="warning" color={colors.primary} size={resScale(14)} />
-      <BText style={styles.warningText}>{text}</BText>
-    </View>
-  );
-}
 const styles = StyleSheet.create({
   container: { flexDirection: 'row', alignSelf: 'flex-start' },
   warningIcon: { marginRight: layout.pad.ml, alignSelf: 'center' },
@@ -23,4 +15,13 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
 });
+
+function BErrorText({ text }: { text: string | unknown }) {
+  return (
+    <View style={styles.container}>
+      <Icon style={styles.warningIcon} name="warning" color={colors.primary} size={resScale(14)} />
+      <BText style={styles.warningText}>{text}</BText>
+    </View>
+  );
+}
 export default BErrorText;

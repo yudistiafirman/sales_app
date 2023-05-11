@@ -6,6 +6,47 @@ import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
 import BSpacer from '../atoms/BSpacer';
 
+const style = StyleSheet.create({
+  noBorder: {
+    borderWidth: 0,
+  },
+  containerDefault: {
+    flex: 1,
+    padding: layout.pad.md,
+    borderRadius: layout.radius.md,
+    backgroundColor: colors.tertiary,
+    borderColor: colors.border.default,
+    borderWidth: 1,
+  },
+  containerWhite: {
+    width: '100%',
+    padding: layout.pad.md,
+    borderRadius: layout.radius.md,
+    backgroundColor: colors.white,
+  },
+  productName: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+    color: colors.text.darker,
+  },
+  detail: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  detailText: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
+    color: colors.text.darker,
+  },
+  nameIcons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  iconsContainer: {
+    flexDirection: 'row',
+  },
+});
+
 type BProductCardType = {
   name?: string;
   volume?: number;
@@ -102,44 +143,3 @@ export default function BProductCard({
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  noBorder: {
-    borderWidth: 0,
-  },
-  containerDefault: {
-    flex: 1,
-    padding: layout.pad.md,
-    borderRadius: layout.radius.md,
-    backgroundColor: colors.tertiary,
-    borderColor: colors.border.default,
-    borderWidth: 1,
-  },
-  containerWhite: {
-    width: '100%',
-    padding: layout.pad.md,
-    borderRadius: layout.radius.md,
-    backgroundColor: colors.white,
-  },
-  productName: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.md,
-    color: colors.text.darker,
-  },
-  detail: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  detailText: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.sm,
-    color: colors.text.darker,
-  },
-  nameIcons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  iconsContainer: {
-    flexDirection: 'row',
-  },
-});

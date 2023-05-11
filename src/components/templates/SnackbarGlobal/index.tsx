@@ -7,6 +7,28 @@ import { closeSnackbar } from '@/redux/reducers/snackbarReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 
+const styles = StyleSheet.create({
+  container: {
+    // flex: 1,
+    // justifyContent: 'space-between',
+  },
+  default: {
+    backgroundColor: colors.white,
+  },
+  error: {
+    backgroundColor: '#F6D7DC',
+  },
+  success: {
+    backgroundColor: '#D7F6D8',
+  },
+  errorText: {
+    color: '#F43353',
+  },
+  successText: {
+    color: '#4C574C',
+  },
+});
+
 export default function SnackbarGlobal() {
   //   const [visible, setVisible] = useState(true);
   const dispatch = useDispatch();
@@ -40,24 +62,3 @@ export default function SnackbarGlobal() {
     // </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    // justifyContent: 'space-between',
-  },
-  default: {
-    backgroundColor: colors.white,
-  },
-  error: {
-    backgroundColor: '#F6D7DC',
-  },
-  success: {
-    backgroundColor: '#D7F6D8',
-  },
-  errorText: {
-    color: '#F43353',
-  },
-  successText: {
-    color: '#4C574C',
-  },
-});

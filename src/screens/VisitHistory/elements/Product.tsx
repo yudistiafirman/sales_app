@@ -8,6 +8,13 @@ import { Products } from '@/machine/visitHistoryMachine';
 import ProductChip from '@/screens/Visitation/elements/third/ProductChip';
 import { resScale } from '@/utils';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: layout.pad.lg,
+  },
+});
+
 function Product({ products }: { products: Products }) {
   const renderItem: ListRenderItem<Products> = useCallback(
     ({ item }) => (
@@ -34,12 +41,5 @@ function Product({ products }: { products: Products }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: layout.pad.lg,
-  },
-});
 
 export default Product;

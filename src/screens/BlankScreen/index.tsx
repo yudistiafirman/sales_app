@@ -10,6 +10,14 @@ import { signout } from '@/redux/reducers/authReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { AppDispatch } from '@/redux/store';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
 function BlankScreen() {
   const { userData } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
@@ -45,13 +53,5 @@ function BlankScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default BlankScreen;

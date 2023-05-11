@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,6 +8,31 @@ import formatCurrency from '@/utils/formatCurrency';
 import resScale from '@/utils/resScale';
 import BText from '../../atoms/BText';
 import BChip from '../../atoms/BChip';
+
+export const PriceListCardStyles = StyleSheet.create({
+  container: {
+    height: resScale(56),
+    // borderBottomWidth: 1,
+    // borderColor: colors.border.disabled,
+    marginTop: layout.pad.xs + layout.pad.sm,
+  },
+  nameAndPriceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: layout.pad.md,
+    marginTop: layout.pad.xs + layout.pad.sm,
+  },
+  productName: {
+    fontFamily: font.family.montserrat[500],
+    color: colors.text.darker,
+    fontSize: font.size.md,
+  },
+  productPrice: {
+    fontFamily: font.family.montserrat[400],
+    color: colors.text.darker,
+    fontSize: font.size.md,
+  },
+});
 
 interface PriceListCardProps {
   productName?: string;
@@ -41,30 +65,5 @@ function PriceListCard({ productName, productPrice, categories, slump }: PriceLi
     </View>
   );
 }
-
-export const PriceListCardStyles = StyleSheet.create({
-  container: {
-    height: resScale(56),
-    // borderBottomWidth: 1,
-    // borderColor: colors.border.disabled,
-    marginTop: layout.pad.xs + layout.pad.sm,
-  },
-  nameAndPriceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: layout.pad.md,
-    marginTop: layout.pad.xs + layout.pad.sm,
-  },
-  productName: {
-    fontFamily: font.family.montserrat[500],
-    color: colors.text.darker,
-    fontSize: font.size.md,
-  },
-  productPrice: {
-    fontFamily: font.family.montserrat[400],
-    color: colors.text.darker,
-    fontSize: font.size.md,
-  },
-});
 
 export default PriceListCard;

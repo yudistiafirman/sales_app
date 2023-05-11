@@ -5,6 +5,19 @@ import colors from '@/constants/colors';
 import resScale from '@/utils/resScale';
 import TargetMarker from './TargetMarker';
 
+const style = StyleSheet.create({
+  emptyProgress: {
+    height: resScale(8),
+    width: resScale(25),
+    borderLeftWidth: resScale(1),
+    borderLeftColor: colors.border.altGrey,
+  },
+  progressEnd: {
+    borderTopEndRadius: layout.radius.sm,
+    borderBottomEndRadius: layout.radius.sm,
+  },
+});
+
 type EmptyItemType = {
   isLast: boolean;
   isTargetMarker: boolean;
@@ -23,16 +36,3 @@ export default function EmptyItem({ isLast, isFirst, isTargetMarker }: EmptyItem
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  emptyProgress: {
-    height: resScale(8),
-    width: resScale(25),
-    borderLeftWidth: resScale(1),
-    borderLeftColor: colors.border.altGrey,
-  },
-  progressEnd: {
-    borderTopEndRadius: layout.radius.sm,
-    borderBottomEndRadius: layout.radius.sm,
-  },
-});

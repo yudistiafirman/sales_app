@@ -9,6 +9,26 @@ import BLabel from '../atoms/BLabel';
 import BSpacer from '../atoms/BSpacer';
 import BText from '../atoms/BText';
 
+const styles = StyleSheet.create({
+  row: { flexDirection: 'row', alignItems: 'center' },
+  touchContainer: {
+    paddingVertical: layout.pad.md,
+    paddingHorizontal: layout.pad.md,
+    backgroundColor: colors.border.disabled,
+    borderRadius: layout.radius.sm,
+  },
+  titleShimmer: {
+    width: resScale(108),
+    height: resScale(17),
+    marginBottom: layout.pad.sm,
+  },
+  secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
+  textContainer: {
+    // backgroundColor: 'red',
+    paddingHorizontal: layout.pad.md,
+  },
+});
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 type BLocationDetailType = {
@@ -46,23 +66,3 @@ export default function BLocationDetail({
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center' },
-  touchContainer: {
-    paddingVertical: layout.pad.md,
-    paddingHorizontal: layout.pad.md,
-    backgroundColor: colors.border.disabled,
-    borderRadius: layout.radius.sm,
-  },
-  titleShimmer: {
-    width: resScale(108),
-    height: resScale(17),
-    marginBottom: layout.pad.sm,
-  },
-  secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
-  textContainer: {
-    // backgroundColor: 'red',
-    paddingHorizontal: layout.pad.md,
-  },
-});

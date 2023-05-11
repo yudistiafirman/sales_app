@@ -5,6 +5,12 @@ import { BSearchBar } from '@/components';
 import { layout } from '@/constants';
 import { resScale } from '@/utils';
 
+const styles = StyleSheet.create({
+  searchBarContainer: {
+    width: resScale(293),
+  },
+});
+
 interface SearchSONavbarProps {
   onChangeText?: (((text: string) => void) & Function) | undefined;
   value?: string;
@@ -34,11 +40,5 @@ function SearchSONavbar({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  searchBarContainer: {
-    width: resScale(293),
-  },
-});
 
 export default SearchSONavbar;

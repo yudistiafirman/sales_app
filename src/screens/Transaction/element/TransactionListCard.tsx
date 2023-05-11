@@ -9,53 +9,6 @@ import formatCurrency from '@/utils/formatCurrency';
 import { getColorStatusTrx, getStatusTrx } from '@/utils/generalFunc';
 import resScale from '@/utils/resScale';
 
-interface TransactionListCardProps {
-  number: string;
-  projectName: string;
-  status: string;
-  name?: string;
-  nominal?: number;
-  useBEStatus?: boolean;
-}
-
-function TransactionListCard({
-  number,
-  projectName,
-  status,
-  name,
-  nominal,
-  useBEStatus,
-}: TransactionListCardProps) {
-  const statusFinal = useBEStatus ? status : getStatusTrx(status);
-  const { color, textColor } = getColorStatusTrx(statusFinal);
-  return (
-    <View style={[styles.parent, name ? { height: resScale(88) } : { height: resScale(68) }]}>
-      <View style={styles.leftSide}>
-        <View style={styles.container}>
-          <BText style={styles.title}>{number}</BText>
-          <BChip type="default" backgroundColor={color} textColor={textColor}>
-            {statusFinal}
-          </BChip>
-        </View>
-        {name && <BText style={styles.name}>{name}</BText>}
-        <View style={styles.bottomContainer}>
-          <BText numberOfLines={1} style={styles.desc}>
-            {projectName}
-          </BText>
-          {nominal !== undefined && (
-            <BText sizeInNumber={14} bold="500">
-              {`IDR ${formatCurrency(nominal || 0)}`}
-            </BText>
-          )}
-        </View>
-      </View>
-      <View style={styles.rightSide}>
-        <Icon name="chevron-right" size={20} color={colors.textInput.input} />
-      </View>
-    </View>
-  );
-}
-
 export const styles = StyleSheet.create({
   parent: {
     flex: 1,
@@ -111,5 +64,52 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+interface TransactionListCardProps {
+  number: string;
+  projectName: string;
+  status: string;
+  name?: string;
+  nominal?: number;
+  useBEStatus?: boolean;
+}
+
+function TransactionListCard({
+  number,
+  projectName,
+  status,
+  name,
+  nominal,
+  useBEStatus,
+}: TransactionListCardProps) {
+  const statusFinal = useBEStatus ? status : getStatusTrx(status);
+  const { color, textColor } = getColorStatusTrx(statusFinal);
+  return (
+    <View style={[styles.parent, name ? { height: resScale(88) } : { height: resScale(68) }]}>
+      <View style={styles.leftSide}>
+        <View style={styles.container}>
+          <BText style={styles.title}>{number}</BText>
+          <BChip type="default" backgroundColor={color} textColor={textColor}>
+            {statusFinal}
+          </BChip>
+        </View>
+        {name && <BText style={styles.name}>{name}</BText>}
+        <View style={styles.bottomContainer}>
+          <BText numberOfLines={1} style={styles.desc}>
+            {projectName}
+          </BText>
+          {nominal !== undefined && (
+            <BText sizeInNumber={14} bold="500">
+              {`IDR ${formatCurrency(nominal || 0)}`}
+            </BText>
+          )}
+        </View>
+      </View>
+      <View style={styles.rightSide}>
+        <Icon name="chevron-right" size={20} color={colors.textInput.input} />
+      </View>
+    </View>
+  );
+}
 
 export default TransactionListCard;

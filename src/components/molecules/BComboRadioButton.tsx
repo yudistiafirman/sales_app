@@ -9,6 +9,28 @@ import BText from '../atoms/BText';
 import BSpacer from '../atoms/BSpacer';
 import BLabel from '../atoms/BLabel';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.tertiary,
+    borderRadius: layout.radius.md,
+    minHeight: resScale(93),
+  },
+  innerContainer: {
+    paddingVertical: layout.pad.md + layout.pad.xs,
+    paddingRight: layout.pad.md,
+  },
+  radio: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  radioValue: {
+    fontFamily: font.family.montserrat[400],
+    fontSize: font.size.sm,
+    color: colors.text.darker,
+  },
+});
+
 function BComboRadioButton({
   isRequire,
   textSize,
@@ -58,27 +80,5 @@ function BComboRadioButton({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.tertiary,
-    borderRadius: layout.radius.md,
-    minHeight: resScale(93),
-  },
-  innerContainer: {
-    paddingVertical: layout.pad.md + layout.pad.xs,
-    paddingRight: layout.pad.md,
-  },
-  radio: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  radioValue: {
-    fontFamily: font.family.montserrat[400],
-    fontSize: font.size.sm,
-    color: colors.text.darker,
-  },
-});
 
 export default BComboRadioButton;

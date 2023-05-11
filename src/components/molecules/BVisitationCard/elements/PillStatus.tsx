@@ -5,20 +5,6 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
 
-type pillStatusType = {
-  pilStatus?: string;
-  color?: string;
-};
-export default function PillStatus({ pilStatus, color }: pillStatusType) {
-  if (!pilStatus) {
-    return null;
-  }
-  return (
-    <View style={[pilStatus ? style.greenPill : null, color ? { backgroundColor: color } : null]}>
-      <Text style={style.greenPillText}>{pilStatus}</Text>
-    </View>
-  );
-}
 const style = StyleSheet.create({
   greenPill: {
     padding: layout.pad.xs,
@@ -36,3 +22,18 @@ const style = StyleSheet.create({
     color: colors.textInput.input,
   },
 });
+
+type PillStatusType = {
+  pilStatus?: string;
+  color?: string;
+};
+export default function PillStatus({ pilStatus, color }: PillStatusType) {
+  if (!pilStatus) {
+    return null;
+  }
+  return (
+    <View style={[pilStatus ? style.greenPill : null, color ? { backgroundColor: color } : null]}>
+      <Text style={style.greenPillText}>{pilStatus}</Text>
+    </View>
+  );
+}

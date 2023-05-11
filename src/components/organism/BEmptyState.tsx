@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -9,6 +8,27 @@ import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  emptyimage: {
+    width: resScale(88),
+    height: resScale(88),
+    marginBottom: layout.pad.md,
+  },
+  emptyText: {
+    fontFamily: font.family.montserrat[600],
+    fontSize: font.size.md,
+    textAlign: 'center',
+    color: colors.text.darker,
+  },
+  btnWrapper: {
+    alignItems: 'center',
+  },
+});
 
 type EmptyStateProps = {
   emptyProductName?: string;
@@ -57,26 +77,5 @@ function EmptyState({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  emptyimage: {
-    width: resScale(88),
-    height: resScale(88),
-    marginBottom: layout.pad.md,
-  },
-  emptyText: {
-    fontFamily: font.family.montserrat[600],
-    fontSize: font.size.md,
-    textAlign: 'center',
-    color: colors.text.darker,
-  },
-  btnWrapper: {
-    alignItems: 'center',
-  },
-});
 
 export default EmptyState;

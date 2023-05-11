@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { postUploadFiles, getAllProject } from '../async-thunks/commonThunks';
 
-type initialStateType = {
+type InitialStateType = {
   isUploadLoading: boolean;
   isPostVisitationLoading: boolean;
   isProjectLoading: boolean;
@@ -11,7 +11,7 @@ type initialStateType = {
   projects: any[];
 };
 
-const initialState: initialStateType = {
+const initialState: InitialStateType = {
   isUploadLoading: false,
   isPostVisitationLoading: false,
   isProjectLoading: false,

@@ -9,6 +9,45 @@ import { DataCompany } from '@/context/AppointmentContext';
 
 const { height } = Dimensions.get('window');
 
+const styles = StyleSheet.create({
+  modalContainer: { margin: 0, justifyContent: 'flex-end' },
+  contentOuterContainer: {
+    backgroundColor: colors.white,
+    borderTopStartRadius: layout.radius.lg,
+    borderTopEndRadius: layout.radius.lg,
+  },
+  contentInnerContainer: { flex: 1, marginHorizontal: layout.pad.lg },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 0.15,
+  },
+  headerTitle: {
+    fontFamily: font.family.montserrat[700],
+    fontSize: font.size.lg,
+  },
+  addProjectContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  companyDetailsCardWrapper: { flex: 0.25 },
+  projectNameListContainer: { flex: 0.3, paddingTop: layout.pad.lg },
+  notFoundProjectText: {
+    fontFamily: font.family.montserrat[400],
+    fontSize: font.size.md,
+    color: colors.text.medium,
+  },
+  addProjectButton: { borderRadius: layout.radius.sm },
+  addProjectBtnText: { fontFamily: font.family.montserrat[400] },
+  chooseBtn: {
+    position: 'absolute',
+    width: '100%',
+    top: layout.pad.xl + layout.pad.lg,
+  },
+});
+
 interface BSheetCompanyProps {
   isVisible: boolean;
   dataCompany: DataCompany | null;
@@ -66,44 +105,5 @@ function BottomSheetCompany({
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modalContainer: { margin: 0, justifyContent: 'flex-end' },
-  contentOuterContainer: {
-    backgroundColor: colors.white,
-    borderTopStartRadius: layout.radius.lg,
-    borderTopEndRadius: layout.radius.lg,
-  },
-  contentInnerContainer: { flex: 1, marginHorizontal: layout.pad.lg },
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flex: 0.15,
-  },
-  headerTitle: {
-    fontFamily: font.family.montserrat[700],
-    fontSize: font.size.lg,
-  },
-  addProjectContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  companyDetailsCardWrapper: { flex: 0.25 },
-  projectNameListContainer: { flex: 0.3, paddingTop: layout.pad.lg },
-  notFoundProjectText: {
-    fontFamily: font.family.montserrat[400],
-    fontSize: font.size.md,
-    color: colors.text.medium,
-  },
-  addProjectButton: { borderRadius: layout.radius.sm },
-  addProjectBtnText: { fontFamily: font.family.montserrat[400] },
-  chooseBtn: {
-    position: 'absolute',
-    width: '100%',
-    top: layout.pad.xl + layout.pad.lg,
-  },
-});
 
 export default BottomSheetCompany;

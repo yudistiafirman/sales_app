@@ -9,6 +9,20 @@ import { layout } from '@/constants';
 import { visitationDataType } from '@/interfaces';
 import { resScale } from '@/utils';
 
+const style = StyleSheet.create({
+  flatListContainer: {},
+  flatListLoading: {
+    marginTop: layout.pad.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flatListShimmer: {
+    width: '100%',
+    height: resScale(60),
+    borderRadius: layout.radius.md,
+  },
+});
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type FooterType = {
@@ -93,17 +107,3 @@ export default function BottomSheetFlatlist({
     />
   );
 }
-
-const style = StyleSheet.create({
-  flatListContainer: {},
-  flatListLoading: {
-    marginTop: layout.pad.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  flatListShimmer: {
-    width: '100%',
-    height: resScale(60),
-    borderRadius: layout.radius.md,
-  },
-});

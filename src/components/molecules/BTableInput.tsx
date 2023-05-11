@@ -8,6 +8,58 @@ import BTextInput from '../atoms/BTextInput';
 import BSpacer from '../atoms/BSpacer';
 import BLabel from '../atoms/BLabel';
 
+const styles = StyleSheet.create({
+  labelContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: layout.pad.md,
+  },
+  priceLabelContainer: {
+    flex: 0.6,
+    paddingLeft: layout.pad.lg + layout.pad.md,
+  },
+  outerCell: {
+    borderRadius: layout.radius.sm,
+    flex: 0.5,
+    backgroundColor: colors.lightRed,
+    height: resScale(40),
+  },
+  innerCell: {
+    padding: layout.pad.md + layout.pad.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  cellText: {
+    fontFamily: font.family.montserrat[400],
+    fontSize: font.size.md,
+    color: colors.text.darker,
+  },
+  outerCellSpecialPriceContainer: {
+    flex: 0.5,
+    justifyContent: 'space-evenly',
+    flexDirection: 'row',
+    alignItems: 'center',
+    bottom: layout.pad.sm,
+  },
+  inputPrice: {
+    flex: 1,
+    paddingHorizontal: layout.pad.lg + layout.pad.ml,
+
+    bottom: layout.pad.xs,
+  },
+  inputLabel: {
+    position: 'absolute',
+    zIndex: 1,
+    bottom: layout.pad.ml,
+  },
+  cellContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: layout.pad.md,
+  },
+});
+
 function BTableInput({
   titleBold,
   textSize,
@@ -89,57 +141,5 @@ function BTableInput({
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  labelContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: layout.pad.md,
-  },
-  priceLabelContainer: {
-    flex: 0.6,
-    paddingLeft: layout.pad.lg + layout.pad.md,
-  },
-  outerCell: {
-    borderRadius: layout.radius.sm,
-    flex: 0.5,
-    backgroundColor: colors.lightRed,
-    height: resScale(40),
-  },
-  innerCell: {
-    padding: layout.pad.md + layout.pad.xs,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  cellText: {
-    fontFamily: font.family.montserrat[400],
-    fontSize: font.size.md,
-    color: colors.text.darker,
-  },
-  outerCellSpecialPriceContainer: {
-    flex: 0.5,
-    justifyContent: 'space-evenly',
-    flexDirection: 'row',
-    alignItems: 'center',
-    bottom: layout.pad.sm,
-  },
-  inputPrice: {
-    flex: 1,
-    paddingHorizontal: layout.pad.lg + layout.pad.ml,
-
-    bottom: layout.pad.xs,
-  },
-  inputLabel: {
-    position: 'absolute',
-    zIndex: 1,
-    bottom: layout.pad.ml,
-  },
-  cellContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: layout.pad.md,
-  },
-});
 
 export default BTableInput;

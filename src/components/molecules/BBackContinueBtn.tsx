@@ -5,6 +5,23 @@ import { layout } from '@/constants';
 import { resScale } from '@/utils';
 import BButtonPrimary from '../atoms/BButtonPrimary';
 
+const style = StyleSheet.create({
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  backButtonContainer: {
+    flex: 1,
+    paddingEnd: layout.pad.md,
+  },
+  continueButtonContainer: {
+    flex: 1.5,
+    paddingStart: layout.pad.md,
+  },
+});
+
 type BackContinueBtnType = {
   onPressBack?: () => void;
   onPressContinue?: () => void;
@@ -59,20 +76,3 @@ export default function BBackContinueBtn({
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  buttonContainer: {
-    width: '100%',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  backButtonContainer: {
-    flex: 1,
-    paddingEnd: layout.pad.md,
-  },
-  continueButtonContainer: {
-    flex: 1.5,
-    paddingStart: layout.pad.md,
-  },
-});

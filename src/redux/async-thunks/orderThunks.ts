@@ -4,7 +4,7 @@ import { postSphResponseType, sphOrderPayloadType } from '@/interfaces';
 import { CreateDeposit } from '@/models/CreateDeposit';
 import { CreateSchedule } from '@/models/CreateSchedule';
 
-type errorType = {
+type ErrorType = {
   success: boolean;
   error: {
     status: number;
@@ -21,7 +21,7 @@ export const postOrderSph = createAsyncThunk<
     const response = await postSph(payload);
     const { data } = response;
 
-    if (data.error) throw data as errorType;
+    if (data.error) throw data as ErrorType;
 
     return data.data;
   } catch (error) {
@@ -37,7 +37,7 @@ export const postOrderDeposit = createAsyncThunk<
     const response = await postDeposit(payload);
     const { data } = response;
 
-    if (data.error) throw data as errorType;
+    if (data.error) throw data as ErrorType;
 
     return data.data;
   } catch (error) {
@@ -53,7 +53,7 @@ export const postOrderSchedule = createAsyncThunk<
     const response = await postSchedule(payload);
     const { data } = response;
 
-    if (data.error) throw data as errorType;
+    if (data.error) throw data as ErrorType;
 
     return data.data;
   } catch (error) {

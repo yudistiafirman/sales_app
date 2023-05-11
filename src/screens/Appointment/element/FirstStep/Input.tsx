@@ -13,6 +13,21 @@ import { AppDispatch } from '@/redux/store';
 const company = require('@/assets/icon/Visitation/company.png');
 const profile = require('@/assets/icon/Visitation/profile.png');
 
+const styles: Styles = {
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sheetStyle: {
+    paddingLeft: layout.pad.md + layout.pad.ml,
+    paddingRight: layout.pad.md + layout.pad.ml,
+    backgroundColor: 'red',
+  },
+  inputContainerStyle: {
+    flex: 1,
+  },
+};
+
 function Inputs() {
   const [values, dispatchValue] = useAppointmentData();
   const { stepOne: state } = values;
@@ -169,20 +184,5 @@ function Inputs() {
     </>
   );
 }
-
-const styles: Styles = {
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  sheetStyle: {
-    paddingLeft: layout.pad.md + layout.pad.ml,
-    paddingRight: layout.pad.md + layout.pad.ml,
-    backgroundColor: 'red',
-  },
-  inputContainerStyle: {
-    flex: 1,
-  },
-};
 
 export default Inputs;

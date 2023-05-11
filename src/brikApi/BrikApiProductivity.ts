@@ -9,7 +9,7 @@ const API_URL =
     ? Config.API_URL_PRODUCTIVITY
     : Config.API_URL_PRODUCTIVITY_PROD;
 
-type getVisitationsType = {
+type GetVisitationsType = {
   month?: number;
   year?: number;
 };
@@ -21,12 +21,12 @@ interface IGetAll {
   projectId?: string;
 }
 
-type getOneVisitationType = {
+type GetOneVisitationType = {
   visitationId: string;
 };
 
 export default class BrikApiProductivity {
-  static visitations = (props?: getVisitationsType) => {
+  static visitations = (props?: GetVisitationsType) => {
     const url = new URL(`${API_URL}/productivity/m/flow/visitation`);
     if (props) {
       const params = url.searchParams;
@@ -73,7 +73,7 @@ export default class BrikApiProductivity {
     return url.toString();
   };
 
-  static visitationIdPath = ({ visitationId }: getOneVisitationType) => {
+  static visitationIdPath = ({ visitationId }: GetOneVisitationType) => {
     const url = new URL(`${API_URL}/productivity/m/flow/visitation/${visitationId}`);
 
     return url.toString();

@@ -7,6 +7,48 @@ import colors from '@/constants/colors';
 import resScale from '@/utils/resScale';
 import EmptyItem from './EmptyItem';
 
+const style = StyleSheet.create({
+  targetBar: {
+    height: resScale(35),
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    width: '100%',
+  },
+  emptyProgressCont: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: colors.lightGray,
+    borderRadius: layout.radius.md,
+    position: 'relative',
+  },
+  progressCont: {
+    position: 'absolute',
+    flexDirection: 'row',
+    zIndex: 2,
+    borderRadius: layout.radius.md,
+    backgroundColor: colors.primary,
+  },
+  loadingCont: {
+    position: 'absolute',
+    flexDirection: 'row',
+    zIndex: 5,
+    borderRadius: layout.radius.md,
+    width: '100%',
+    height: resScale(8),
+  },
+  progress: {
+    height: resScale(8),
+    width: resScale(25),
+  },
+  shimmerStyle: {
+    borderRadius: layout.radius.md,
+    width: '100%',
+    height: resScale(43),
+  },
+});
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type TargetBarType = {
@@ -76,45 +118,3 @@ export default function TargetBar({
     </ShimmerPlaceHolder>
   );
 }
-
-const style = StyleSheet.create({
-  targetBar: {
-    height: resScale(35),
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    width: '100%',
-  },
-  emptyProgressCont: {
-    display: 'flex',
-    flexDirection: 'row',
-    backgroundColor: colors.lightGray,
-    borderRadius: layout.radius.md,
-    position: 'relative',
-  },
-  progressCont: {
-    position: 'absolute',
-    flexDirection: 'row',
-    zIndex: 2,
-    borderRadius: layout.radius.md,
-    backgroundColor: colors.primary,
-  },
-  loadingCont: {
-    position: 'absolute',
-    flexDirection: 'row',
-    zIndex: 5,
-    borderRadius: layout.radius.md,
-    width: '100%',
-    height: resScale(8),
-  },
-  progress: {
-    height: resScale(8),
-    width: resScale(25),
-  },
-  shimmerStyle: {
-    borderRadius: layout.radius.md,
-    width: '100%',
-    height: resScale(43),
-  },
-});

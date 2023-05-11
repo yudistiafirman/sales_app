@@ -3,11 +3,30 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { fonts, layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
-import { buttonDataType } from '@/interfaces/QuickActionButton.type';
+import { ButtonDataType } from '@/interfaces/QuickActionButton.type';
 import resScale from '@/utils/resScale';
 import BSvg from '../atoms/BSvg';
 
-export default function BQuickActionButton({ item }: { item: buttonDataType }) {
+const style = StyleSheet.create({
+  buttonContainer: {
+    backgroundColor: colors.white,
+    width: resScale(82),
+    height: resScale(98),
+    borderRadius: layout.radius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: layout.pad.lg,
+  },
+  buttonTitle: {
+    fontFamily: font.family.montserrat[400],
+    color: colors.black,
+    fontSize: fonts.size.sm,
+    textAlign: 'center',
+    lineHeight: layout.pad.lg,
+  },
+});
+
+export default function BQuickActionButton({ item }: { item: ButtonDataType }) {
   const title = item.title.split(' ');
   return (
     <TouchableOpacity onPress={item.action}>
@@ -31,21 +50,3 @@ export default function BQuickActionButton({ item }: { item: buttonDataType }) {
     </TouchableOpacity>
   );
 }
-const style = StyleSheet.create({
-  buttonContainer: {
-    backgroundColor: colors.white,
-    width: resScale(82),
-    height: resScale(98),
-    borderRadius: layout.radius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: layout.pad.lg,
-  },
-  buttonTitle: {
-    fontFamily: font.family.montserrat[400],
-    color: colors.black,
-    fontSize: fonts.size.sm,
-    textAlign: 'center',
-    lineHeight: layout.pad.lg,
-  },
-});

@@ -7,6 +7,24 @@ import { resScale } from '@/utils';
 import BText from '../atoms/BText';
 import BSpacer from '../atoms/BSpacer';
 
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.offWhite,
+    height: layout.pad.xl + layout.pad.sm,
+    borderColor: colors.border.default,
+    borderRadius: layout.radius.md,
+    borderWidth: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: layout.pad.lg,
+  },
+  radioTitle: {
+    fontFamily: font.family.montserrat[500],
+    fontSize: font.size.md,
+  },
+});
+
 interface IProps {
   isOption?: boolean;
   projectId?: string;
@@ -37,23 +55,5 @@ function BProjectRBtn({ isOption, projectId, isSelected, onSelect, idx, projectN
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.offWhite,
-    height: layout.pad.xl + layout.pad.sm,
-    borderColor: colors.border.default,
-    borderRadius: layout.radius.md,
-    borderWidth: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginBottom: layout.pad.lg,
-  },
-  radioTitle: {
-    fontFamily: font.family.montserrat[500],
-    fontSize: font.size.md,
-  },
-});
 
 export default BProjectRBtn;

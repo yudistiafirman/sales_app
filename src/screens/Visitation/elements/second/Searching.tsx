@@ -16,6 +16,16 @@ import { retrying } from '@/redux/reducers/commonReducer';
 import { AppDispatch, RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 
+const style = StyleSheet.create({
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: layout.radius.sm,
+    height: resScale(45),
+    zIndex: 2,
+  },
+});
+
 interface IProps {
   onSearch: (search: boolean) => void;
   isSearch: boolean;
@@ -220,15 +230,5 @@ function SearchFlow({ onSearch, isSearch, searchingDisable, setSelectedCompany }
     </>
   );
 }
-
-const style = StyleSheet.create({
-  touchable: {
-    position: 'absolute',
-    width: '100%',
-    borderRadius: layout.radius.sm,
-    height: resScale(45),
-    zIndex: 2,
-  },
-});
 
 export default SearchFlow;

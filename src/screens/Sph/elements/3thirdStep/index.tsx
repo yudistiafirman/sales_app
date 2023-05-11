@@ -22,9 +22,44 @@ import { resScale } from '@/utils';
 import { SphContext } from '../context/SphContext';
 import BBackContinueBtn from '../../../../components/molecules/BBackContinueBtn';
 
+const style = StyleSheet.create({
+  fileInputShimmer: {
+    width: resScale(330),
+    height: resScale(30),
+    borderRadius: layout.radius.md,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  backButtonContainer: {
+    width: '30%',
+  },
+  continueButtonContainer: {
+    width: '40%',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  redStar: {
+    color: colors.primary,
+  },
+  checkboxLabel: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: font.size.md,
+    color: colors.textInput.input,
+  },
+});
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-type documentType = {
+type DocumentType = {
   id: string;
   name: string;
   payment_type: 'CBD' | 'CREDIT';
@@ -33,9 +68,9 @@ type documentType = {
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
-type docResponse = {
-  cbd: documentType[];
-  credit: documentType[];
+type DocResponse = {
+  cbd: DocumentType[];
+  credit: DocumentType[];
 };
 
 export default function ThirdStep() {
@@ -45,7 +80,7 @@ export default function ThirdStep() {
     []
   );
   const [documents, setDocuments] = useState<{ [key: string]: any }>({});
-  const [sphDocuments, setSphDocuments] = useState<docResponse>({
+  const [sphDocuments, setSphDocuments] = useState<DocResponse>({
     cbd: [],
     credit: [],
   });
@@ -113,7 +148,7 @@ export default function ThirdStep() {
   async function getDocument() {
     try {
       setIsLoading(true);
-      const response: docResponse = await dispatch(fetchSphDocuments()).unwrap();
+      const response: DocResponse = await dispatch(fetchSphDocuments()).unwrap();
 
       if (paymentType) {
         const objKey: {
@@ -263,37 +298,3 @@ export default function ThirdStep() {
     </BContainer>
   );
 }
-const style = StyleSheet.create({
-  fileInputShimmer: {
-    width: resScale(330),
-    height: resScale(30),
-    borderRadius: layout.radius.md,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    flexDirection: 'column',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  backButtonContainer: {
-    width: '30%',
-  },
-  continueButtonContainer: {
-    width: '40%',
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  redStar: {
-    color: colors.primary,
-  },
-  checkboxLabel: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: font.size.md,
-    color: colors.textInput.input,
-  },
-});

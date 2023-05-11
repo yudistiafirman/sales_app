@@ -30,7 +30,7 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 import { RootState } from '@/redux/store';
 import LastStepPopUp from '../LastStepPopUp';
 
-export type selectedDateType = {
+export type SelectedDateType = {
   date: string;
   prettyDate: string;
   day: string;
@@ -208,7 +208,7 @@ function Fifth() {
       // setIsLastStepVisible((curr) => !curr);
       setIsPopUpVisible(curr => !curr);
     });
-    DeviceEventEmitter.addListener('CalendarScreen.selectedDate', (date: selectedDateType) => {
+    DeviceEventEmitter.addListener('CalendarScreen.selectedDate', (date: SelectedDateType) => {
       onChange('selectedDate')(date);
       setIsLastStepVisible(curr => !curr);
     });

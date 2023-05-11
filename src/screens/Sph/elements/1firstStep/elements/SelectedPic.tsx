@@ -12,6 +12,28 @@ import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic
 import { resScale } from '@/utils';
 import { SphContext } from '../../context/SphContext';
 
+const style = StyleSheet.create({
+  container: { flex: 1, justifyContent: 'space-between' },
+  gantiText: {
+    marginRight: 10,
+    color: colors.primary,
+    fontFamily: fonts.family.montserrat[500],
+  },
+  loadingShimmer: {
+    width: resScale(335),
+    height: resScale(100),
+    borderRadius: layout.radius.md,
+  },
+  labelShimmer: {
+    width: resScale(335),
+    height: resScale(50),
+    borderRadius: layout.radius.md,
+  },
+  scrollViewStyle: {
+    flex: 1,
+  },
+});
+
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
 }
@@ -175,25 +197,3 @@ export default function SelectedPic({ onPress, setCurrentPosition }: SelectedPic
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'space-between' },
-  gantiText: {
-    marginRight: 10,
-    color: colors.primary,
-    fontFamily: fonts.family.montserrat[500],
-  },
-  loadingShimmer: {
-    width: resScale(335),
-    height: resScale(100),
-    borderRadius: layout.radius.md,
-  },
-  labelShimmer: {
-    width: resScale(335),
-    height: resScale(50),
-    borderRadius: layout.radius.md,
-  },
-  scrollViewStyle: {
-    flex: 1,
-  },
-});

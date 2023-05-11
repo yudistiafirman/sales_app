@@ -13,6 +13,22 @@ import { BLocationText, BPic, BSpacer, BText } from '@/components';
 import { colors, layout } from '@/constants';
 import { customerDataInterface } from '@/interfaces';
 
+const styles = StyleSheet.create({
+  customerCard: {
+    backgroundColor: colors.tertiary,
+    padding: layout.pad.md,
+    borderRadius: layout.radius.md,
+  },
+  topCard: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  bottomCard: {
+    overflow: 'hidden',
+  },
+});
+
 export default function ExpandableCustomerCard({ item }: { item: customerDataInterface }) {
   const [expanded, setExpanded] = useState(false);
   useEffect(() => {
@@ -62,19 +78,3 @@ export default function ExpandableCustomerCard({ item }: { item: customerDataInt
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  customerCard: {
-    backgroundColor: colors.tertiary,
-    padding: layout.pad.md,
-    borderRadius: layout.radius.md,
-  },
-  topCard: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  bottomCard: {
-    overflow: 'hidden',
-  },
-});

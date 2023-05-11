@@ -18,6 +18,21 @@ import DetailProduk from './element/ProductDetail';
 import UploadFiles from './element/PaymentDetail';
 import CreatePo from './element/CreatePo';
 
+const styles = StyleSheet.create({
+  poContainer: {
+    flex: 1,
+    marginHorizontal: layout.pad.lg + layout.pad.xs,
+    marginBottom: layout.pad.lg,
+  },
+  stepperIndicator: { alignSelf: 'center' },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: 0,
+  },
+});
+
 function PurchaseOrder() {
   const navigation = useNavigation();
   const poState = useSelector((state: RootState) => state.purchaseOrder);
@@ -289,20 +304,5 @@ function PurchaseOrder() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  poContainer: {
-    flex: 1,
-    marginHorizontal: layout.pad.lg + layout.pad.xs,
-    marginBottom: layout.pad.lg,
-  },
-  stepperIndicator: { alignSelf: 'center' },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    position: 'absolute',
-    bottom: 0,
-  },
-});
 
 export default PurchaseOrder;

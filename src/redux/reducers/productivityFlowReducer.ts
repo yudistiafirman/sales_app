@@ -7,7 +7,7 @@ import {
   putVisitationFlow,
 } from '../async-thunks/productivityFlowThunks';
 
-type initialStateType = {
+type InitialStateType = {
   visitationList: visitationListResponse[];
   isVisitationLoading: boolean;
   visitationCalendarMapped: { [key: string]: customerDataInterface[] };
@@ -15,7 +15,7 @@ type initialStateType = {
   markedDate: MarkedDates;
 };
 
-const initialState: initialStateType = {
+const initialState: InitialStateType = {
   visitationList: [],
   isVisitationLoading: false,
   visitationCalendarMapped: {},

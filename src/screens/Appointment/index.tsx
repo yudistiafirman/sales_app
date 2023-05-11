@@ -31,6 +31,26 @@ import SecondStep from './element/SecondStep';
 import FirstStep from './element/FirstStep';
 
 const { width } = Dimensions.get('window');
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    position: 'absolute',
+    top: width + width - resScale(100),
+  },
+  buttonAction: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+});
+
 function Appointment() {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
@@ -343,25 +363,6 @@ function Appointment() {
     </>
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    position: 'absolute',
-    top: width + width - resScale(100),
-  },
-  buttonAction: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-  },
-});
 
 function AppointmentWithProvider() {
   return (

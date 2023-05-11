@@ -13,16 +13,55 @@ import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 import { SphContext } from './context/SphContext';
 
+const style = StyleSheet.create({
+  modal: { justifyContent: 'flex-end', margin: 0 },
+  container: {
+    justifyContent: 'space-between',
+    height: resScale(300),
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    height: resScale(350),
+    borderTopLeftRadius: layout.radius.lg,
+    borderTopRightRadius: layout.radius.lg,
+  },
+  modalHeader: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[700],
+    fontSize: fonts.size.lg,
+  },
+  tambahPicContainer: {
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  tambahPicText: {
+    color: colors.primary,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.sm,
+  },
+  loadingShimmer: {
+    width: resScale(335),
+    height: resScale(100),
+    borderRadius: layout.radius.md,
+  },
+});
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-type dummyType = {
+type DummyType = {
   id: string;
   name: string;
   position: string;
   phone: number;
   email: string;
 };
-const dummyData: dummyType[] = [
+const dummyData: DummyType[] = [
   {
     id: 'kwos0299',
     name: 'Agus',
@@ -46,7 +85,7 @@ const dummyData: dummyType[] = [
   },
 ];
 function dummyReq() {
-  return new Promise<dummyType[]>(resolve => {
+  return new Promise<DummyType[]>(resolve => {
     setTimeout(() => {
       resolve(dummyData);
     }, 5000);
@@ -172,42 +211,3 @@ export default function ChoosePicModal({
     </Modal>
   );
 }
-
-const style = StyleSheet.create({
-  modal: { justifyContent: 'flex-end', margin: 0 },
-  container: {
-    justifyContent: 'space-between',
-    height: resScale(300),
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    height: resScale(350),
-    borderTopLeftRadius: layout.radius.lg,
-    borderTopRightRadius: layout.radius.lg,
-  },
-  modalHeader: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[700],
-    fontSize: fonts.size.lg,
-  },
-  tambahPicContainer: {
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  tambahPicText: {
-    color: colors.primary,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
-  },
-  loadingShimmer: {
-    width: resScale(335),
-    height: resScale(100),
-    borderRadius: layout.radius.md,
-  },
-});

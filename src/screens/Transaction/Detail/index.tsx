@@ -39,6 +39,67 @@ import { AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
 import { beautifyPhoneNumber } from '@/utils/generalFunc';
 
+const styles = StyleSheet.create({
+  modalFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingVertical: layout.mainPad,
+    borderTopColor: colors.border,
+    borderTopWidth: resScale(0.5),
+    // flex: 1,
+    // backgroundColor: "blue"
+  },
+  footerButton: {
+    flex: 0.3,
+    alignItems: 'center',
+  },
+  footerButtonText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
+  },
+  parent: {
+    flex: 1,
+  },
+  flexRow: {
+    flexDirection: 'row',
+  },
+  leftSide: {
+    flex: 1,
+  },
+  icon: {
+    alignSelf: 'center',
+  },
+  containerLastOrder: {
+    padding: layout.pad.lg,
+    borderRadius: layout.radius.md,
+    backgroundColor: colors.tertiary,
+    borderColor: colors.border.default,
+    borderWidth: 1,
+  },
+  titleLastOrder: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
+    color: colors.text.darker,
+  },
+  valueLastOrder: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.sm,
+    marginLeft: layout.pad.xl,
+  },
+  contentDetail: {
+    padding: layout.mainPad,
+    flex: 1,
+  },
+  partText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.md,
+  },
+});
+
 function ListProduct(
   item: any,
   index: number,
@@ -189,14 +250,14 @@ function TransactionDetail() {
     setExpandData(newExpandedData);
   };
 
-  type downloadType = {
+  type DownloadType = {
     url?: string;
     title?: string;
     downloadPopup: () => void;
     downloadError: (errorMessage: string | unknown) => void;
   };
 
-  function downloadPdf({ url, title, downloadPopup, downloadError }: downloadType) {
+  function downloadPdf({ url, title, downloadPopup, downloadError }: DownloadType) {
     if (!url) {
       downloadError(undefined);
       return null;
@@ -552,66 +613,5 @@ function TransactionDetail() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  modalFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingVertical: layout.mainPad,
-    borderTopColor: colors.border,
-    borderTopWidth: resScale(0.5),
-    // flex: 1,
-    // backgroundColor: "blue"
-  },
-  footerButton: {
-    flex: 0.3,
-    alignItems: 'center',
-  },
-  footerButtonText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.sm,
-  },
-  parent: {
-    flex: 1,
-  },
-  flexRow: {
-    flexDirection: 'row',
-  },
-  leftSide: {
-    flex: 1,
-  },
-  icon: {
-    alignSelf: 'center',
-  },
-  containerLastOrder: {
-    padding: layout.pad.lg,
-    borderRadius: layout.radius.md,
-    backgroundColor: colors.tertiary,
-    borderColor: colors.border.default,
-    borderWidth: 1,
-  },
-  titleLastOrder: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.sm,
-    color: colors.text.darker,
-  },
-  valueLastOrder: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.sm,
-    marginLeft: layout.pad.xl,
-  },
-  contentDetail: {
-    padding: layout.mainPad,
-    flex: 1,
-  },
-  partText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.md,
-  },
-});
 
 export default TransactionDetail;

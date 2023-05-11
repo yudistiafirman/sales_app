@@ -4,16 +4,6 @@ import { fonts, layout } from '@/constants';
 import colors from '@/constants/colors';
 import resScale from '@/utils/resScale';
 
-export default function TargetMarker() {
-  return (
-    <View style={style.targetMarker}>
-      <View style={style.todayTargetContainer}>
-        <Text style={style.todayTargetText}>Target hari ini</Text>
-        <View style={style.markerPointer} />
-      </View>
-    </View>
-  );
-}
 const style = StyleSheet.create({
   todayTargetContainer: {
     position: 'relative',
@@ -49,3 +39,14 @@ const style = StyleSheet.create({
     left: '45%',
   },
 });
+
+export default function TargetMarker() {
+  return (
+    <View style={style.targetMarker}>
+      <View style={style.todayTargetContainer}>
+        <Text style={style.todayTargetText}>Target hari ini</Text>
+        <View style={style.markerPointer} />
+      </View>
+    </View>
+  );
+}

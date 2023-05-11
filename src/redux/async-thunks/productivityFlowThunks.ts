@@ -7,12 +7,12 @@ import {
 } from '@/actions/ProductivityActions';
 import { visitationListResponse, payloadPostType } from '@/interfaces';
 
-type paramType = {
+type ParamType = {
   month: number;
   year: number;
 };
 
-type errorType = {
+type ErrorType = {
   success: boolean;
   error: {
     status: number;
@@ -23,14 +23,14 @@ type errorType = {
 
 export const getVisitationsList = createAsyncThunk<
   visitationListResponse[],
-  paramType,
+  ParamType,
   {
-    rejectValue: errorType | string;
+    rejectValue: ErrorType | string;
   }
 >('productivityFlow/getVisitations', async ({ month, year }, { rejectWithValue }) => {
   try {
     const { data } = await getVisitations({ month, year });
-    if (data.error) throw data as errorType;
+    if (data.error) throw data as ErrorType;
     return data.data as visitationListResponse[];
   } catch (error) {
     return rejectWithValue(error.message);
@@ -46,7 +46,7 @@ export const postVisitation = createAsyncThunk<
 >('productivityFlow/postVisitation', async ({ payload }, { rejectWithValue }) => {
   try {
     const { data } = await postVisitations({ payload });
-    if (data.error) throw data as errorType;
+    if (data.error) throw data as ErrorType;
     return data.data;
   } catch (error) {
     return rejectWithValue(error?.response?.data || 'error66');
@@ -63,7 +63,7 @@ export const getOneVisitation = createAsyncThunk<
   try {
     //
     const { data } = await oneGetVisitation({ visitationId });
-    if (data.error) throw data as errorType;
+    if (data.error) throw data as ErrorType;
     return data.data;
   } catch (error) {
     return rejectWithValue(error?.response?.data || 'error66');
@@ -79,7 +79,7 @@ export const putVisitationFlow = createAsyncThunk<
 >('productivityFlow/putVisitationFlow', async ({ payload, visitationId }, { rejectWithValue }) => {
   try {
     const { data } = await putVisitation({ payload, visitationId });
-    if (data.error) throw data as errorType;
+    if (data.error) throw data as ErrorType;
     return data.data;
   } catch (error) {
     return rejectWithValue(error?.response?.data || 'error109');

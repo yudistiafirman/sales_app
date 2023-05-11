@@ -13,6 +13,40 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
 
+const style = StyleSheet.create({
+  buttonContainer: {
+    padding: layout.pad.md,
+    borderRadius: layout.radius.md,
+    backgroundColor: colors.primary,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderColor: colors.primary,
+    borderWidth: resScale(1),
+    alignItems: 'center',
+  },
+  disableStyle: {
+    backgroundColor: colors.disabled,
+    borderColor: colors.disabled,
+  },
+  disableText: {
+    color: colors.tertiary,
+  },
+  buttonTitle: {
+    textAlign: 'center',
+    color: colors.white,
+    fontFamily: font.family.montserrat[600],
+    fontSize: font.size.lg,
+  },
+  outlineTitle: {
+    color: colors.primary,
+  },
+  outlineButton: {
+    backgroundColor: colors.white,
+    borderColor: colors.primary,
+    borderWidth: resScale(1),
+  },
+});
+
 type BButtonPrimaryType = {
   title: string;
   onPress?: () => void;
@@ -70,37 +104,3 @@ export default function BButtonPrimary({
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  buttonContainer: {
-    padding: layout.pad.md,
-    borderRadius: layout.radius.md,
-    backgroundColor: colors.primary,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderColor: colors.primary,
-    borderWidth: resScale(1),
-    alignItems: 'center',
-  },
-  disableStyle: {
-    backgroundColor: colors.disabled,
-    borderColor: colors.disabled,
-  },
-  disableText: {
-    color: colors.tertiary,
-  },
-  buttonTitle: {
-    textAlign: 'center',
-    color: colors.white,
-    fontFamily: font.family.montserrat[600],
-    fontSize: font.size.lg,
-  },
-  outlineTitle: {
-    color: colors.primary,
-  },
-  outlineButton: {
-    backgroundColor: colors.white,
-    borderColor: colors.primary,
-    borderWidth: resScale(1),
-  },
-});

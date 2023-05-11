@@ -30,6 +30,12 @@ import ThirdStep from './elements/3thirdStep';
 import SecondStep from './elements/2secondStep';
 import FirstStep from './elements/1firstStep';
 
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
 const labels = [
   'Cari PT / Proyek',
   'Konfirmasi Alamat',
@@ -326,9 +332,3 @@ export default function Sph() {
     </SphProvider>
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

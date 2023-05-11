@@ -11,6 +11,32 @@ import { Input } from '@/interfaces';
 import { CREATE_DO } from '@/navigation/ScreenNames';
 import { resScale } from '@/utils';
 
+const style = StyleSheet.create({
+  parent: {
+    flex: 1,
+    backgroundColor: colors.white,
+    paddingHorizontal: layout.pad.lg,
+    paddingBottom: layout.pad.lg,
+  },
+  quantity: {
+    color: colors.text.medium,
+    fontSize: font.size.xs,
+    fontFamily: font.family.montserrat[300],
+    marginTop: layout.pad.sm,
+  },
+  top: {
+    height: resScale(120),
+    marginBottom: layout.pad.lg,
+  },
+  headerTwo: {
+    borderColor: colors.border.default,
+  },
+  container: {
+    flex: 1,
+    marginTop: layout.pad.ml,
+  },
+});
+
 function CreateDO() {
   useHeaderTitleChanged({ title: 'Tugaskan DO' });
   const navigation = useNavigation();
@@ -100,29 +126,4 @@ function CreateDO() {
   );
 }
 
-const style = StyleSheet.create({
-  parent: {
-    flex: 1,
-    backgroundColor: colors.white,
-    paddingHorizontal: layout.pad.lg,
-    paddingBottom: layout.pad.lg,
-  },
-  quantity: {
-    color: colors.text.medium,
-    fontSize: font.size.xs,
-    fontFamily: font.family.montserrat[300],
-    marginTop: layout.pad.sm,
-  },
-  top: {
-    height: resScale(120),
-    marginBottom: layout.pad.lg,
-  },
-  headerTwo: {
-    borderColor: colors.border.default,
-  },
-  container: {
-    flex: 1,
-    marginTop: layout.pad.ml,
-  },
-});
 export default CreateDO;

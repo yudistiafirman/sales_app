@@ -9,13 +9,48 @@ import font from '@/constants/fonts';
 import { Input } from '@/interfaces';
 import { resScale } from '@/utils';
 
+const { width, height } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  container: {
+    height: width / 1.05,
+    backgroundColor: colors.white,
+    borderTopLeftRadius: layout.radius.md,
+    borderTopRightRadius: layout.radius.md,
+    padding: layout.pad.lg,
+  },
+  headerTitle: {
+    fontFamily: font.family.montserrat[700],
+    fontSize: font.size.lg,
+    color: colors.text.darker,
+  },
+  popUpHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: layout.pad.lg,
+  },
+  volumeInput: {
+    width: width / 2,
+  },
+  buttonWrapper: {
+    bottom: layout.pad.xl,
+    position: 'absolute',
+    flex: 1,
+    width: '100%',
+    alignSelf: 'center',
+  },
+});
+
 type IProductDetailModal = {
   isVisible: boolean;
   onClose: () => void;
   onChoose: (data: any) => void;
 };
-
-const { width, height } = Dimensions.get('window');
 
 function ProductDetailModal({ isVisible, onClose, onChoose }: IProductDetailModal) {
   const [inputsValue, setInputsValue] = useState({
@@ -88,40 +123,5 @@ function ProductDetailModal({ isVisible, onClose, onChoose }: IProductDetailModa
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modal: {
-    justifyContent: 'flex-end',
-    margin: 0,
-  },
-  container: {
-    height: width / 1.05,
-    backgroundColor: colors.white,
-    borderTopLeftRadius: layout.radius.md,
-    borderTopRightRadius: layout.radius.md,
-    padding: layout.pad.lg,
-  },
-  headerTitle: {
-    fontFamily: font.family.montserrat[700],
-    fontSize: font.size.lg,
-    color: colors.text.darker,
-  },
-  popUpHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: layout.pad.lg,
-  },
-  volumeInput: {
-    width: width / 2,
-  },
-  buttonWrapper: {
-    bottom: layout.pad.xl,
-    position: 'absolute',
-    flex: 1,
-    width: '100%',
-    alignSelf: 'center',
-  },
-});
 
 export default ProductDetailModal;

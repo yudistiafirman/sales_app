@@ -6,6 +6,32 @@ import { getColorStatusTrx, getStatusTrx } from '@/utils/generalFunc';
 import BTouchableText from '../atoms/BTouchableText';
 import BSpacer from '../atoms/BSpacer';
 
+const styles = StyleSheet.create({
+  summary: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.sm,
+  },
+  summaryBtn: {
+    color: colors.primary,
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.sm,
+  },
+  fontw400: {
+    fontFamily: fonts.family.montserrat[400],
+  },
+  summaryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  chip: {
+    paddingVertical: layout.pad.xs,
+    paddingHorizontal: layout.pad.md,
+    borderRadius: layout.radius.xl,
+  },
+});
+
 type BProjectDetailCardType = {
   status?: string;
   paymentMethod?: string;
@@ -165,29 +191,3 @@ export default function BProjectDetailCard({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  summary: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.sm,
-  },
-  summaryBtn: {
-    color: colors.primary,
-    fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.sm,
-  },
-  fontw400: {
-    fontFamily: fonts.family.montserrat[400],
-  },
-  summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  chip: {
-    paddingVertical: layout.pad.xs,
-    paddingHorizontal: layout.pad.md,
-    borderRadius: layout.radius.xl,
-  },
-});

@@ -7,6 +7,27 @@ import respFS from '@/utils/resFontSize';
 import resScale from '@/utils/resScale';
 import HighlightText from '../../../atoms/BHighlightText';
 
+const style = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    marginTop: layout.pad.xs + layout.pad.md,
+  },
+  bluePill: {
+    padding: layout.pad.xs,
+    paddingVertical: layout.pad.xs,
+    paddingHorizontal: layout.pad.xs + layout.pad.md,
+    borderRadius: layout.radius.xl,
+  },
+  bluePillText: {
+    fontFamily: font.family.montserrat[400],
+    fontSize: fonts.size.xs,
+    color: colors.textInput.input,
+  },
+  margin: {
+    marginRight: layout.pad.md + layout.pad.xs,
+  },
+});
+
 type PillNamesType = {
   pilNames?: string[];
   searchQuery?: string;
@@ -39,23 +60,3 @@ export default function PillNames({
     </View>
   );
 }
-const style = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    marginTop: layout.pad.xs + layout.pad.md,
-  },
-  bluePill: {
-    padding: layout.pad.xs,
-    paddingVertical: layout.pad.xs,
-    paddingHorizontal: layout.pad.xs + layout.pad.md,
-    borderRadius: layout.radius.xl,
-  },
-  bluePillText: {
-    fontFamily: font.family.montserrat[400],
-    fontSize: fonts.size.xs,
-    color: colors.textInput.input,
-  },
-  margin: {
-    marginRight: layout.pad.md + layout.pad.xs,
-  },
-});

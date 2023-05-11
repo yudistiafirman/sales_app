@@ -24,6 +24,25 @@ import BForm from '../organism/BForm';
 
 const { width, height } = Dimensions.get('window');
 
+const styles = StyleSheet.create({
+  priceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  productName: {
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.lg,
+    color: colors.text.darker,
+  },
+  boldPrice: {
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.lg,
+    color: colors.text.darker,
+    width: width - 100,
+    textAlign: 'right',
+  },
+});
+
 type ChoosenProductListProps<ProductData> = {
   data?: ProductData[];
   onChecked?: (data: ProductData) => void;
@@ -100,24 +119,5 @@ function ChoosenProductList<ProductData extends Products>({
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  priceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  productName: {
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.lg,
-    color: colors.text.darker,
-  },
-  boldPrice: {
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.lg,
-    color: colors.text.darker,
-    width: width - 100,
-    textAlign: 'right',
-  },
-});
 
 export default ChoosenProductList;

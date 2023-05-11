@@ -5,6 +5,13 @@ import { BDivider, BEmptyState, BSpacer, BText } from '@/components';
 import BCommonListShimmer from '@/components/templates/BCommonListShimmer';
 import { colors, layout } from '@/constants';
 
+const style = StyleSheet.create({
+  flatList: {
+    flex: 1,
+    width: '100%',
+  },
+});
+
 interface SOListProps {
   data: any[];
   onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
@@ -91,10 +98,3 @@ export default function SOList({
     />
   );
 }
-
-const style = StyleSheet.create({
-  flatList: {
-    flex: 1,
-    width: '100%',
-  },
-});

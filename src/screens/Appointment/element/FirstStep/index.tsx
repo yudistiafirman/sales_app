@@ -12,6 +12,19 @@ import { resScale } from '@/utils';
 import SearchingCustomer from './SearchingCustomer';
 import Inputs from './Input';
 
+const styles = StyleSheet.create({
+  flexFull: {
+    flex: 1,
+  },
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: layout.radius.sm,
+    height: resScale(45),
+    zIndex: 2,
+  },
+});
+
 function FirstStep() {
   const [values, dispatchValue] = useAppointmentData();
   const { searchQuery, isSearching } = values;
@@ -52,18 +65,5 @@ function FirstStep() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  flexFull: {
-    flex: 1,
-  },
-  touchable: {
-    position: 'absolute',
-    width: '100%',
-    borderRadius: layout.radius.sm,
-    height: resScale(45),
-    zIndex: 2,
-  },
-});
 
 export default FirstStep;

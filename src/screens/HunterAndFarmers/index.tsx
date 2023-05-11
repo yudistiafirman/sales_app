@@ -16,6 +16,43 @@ import { AppDispatch, RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 
 const { height } = Dimensions.get('screen');
+
+const styles = StyleSheet.create({
+  modalContainer: { margin: 0, backgroundColor: colors.white },
+  imageLogo: {
+    width: resScale(70),
+    height: resScale(33),
+    position: 'absolute',
+    top: layout.pad.lg,
+  },
+  title: {
+    fontFamily: font.family.montserrat[700],
+    fontSize: font.size.md,
+    color: '#000000',
+  },
+  container: {
+    marginHorizontal: layout.pad.xl,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontFamily: font.family.montserrat[400],
+    fontSize: font.size.md,
+    color: '#000000',
+  },
+  svgGroup: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+  image: { width: resScale(120), height: resScale(120) },
+  imageWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
 function HunterAndFarmers() {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
@@ -67,41 +104,5 @@ function HunterAndFarmers() {
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modalContainer: { margin: 0, backgroundColor: colors.white },
-  imageLogo: {
-    width: resScale(70),
-    height: resScale(33),
-    position: 'absolute',
-    top: layout.pad.lg,
-  },
-  title: {
-    fontFamily: font.family.montserrat[700],
-    fontSize: font.size.md,
-    color: '#000000',
-  },
-  container: {
-    marginHorizontal: layout.pad.xl,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontFamily: font.family.montserrat[400],
-    fontSize: font.size.md,
-    color: '#000000',
-  },
-  svgGroup: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-  },
-  image: { width: resScale(120), height: resScale(120) },
-  imageWrapper: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default HunterAndFarmers;

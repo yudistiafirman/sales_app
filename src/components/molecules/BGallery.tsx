@@ -10,6 +10,42 @@ import { colors, layout } from '@/constants';
 import BText from '../atoms/BText';
 import BSpacer from '../atoms/BSpacer';
 
+const style = StyleSheet.create({
+  container: {
+    width: resScale(104),
+    height: resScale(120),
+    margin: resScale(5),
+    borderRadius: layout.radius.md,
+  },
+  addImage: {
+    backgroundColor: colors.tertiary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    borderRadius: layout.radius.md,
+  },
+  scrollViewContentStyle: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  closeIcon: {
+    position: 'absolute',
+    right: resScale(-3),
+    top: resScale(-5),
+    backgroundColor: colors.text.medium,
+    borderRadius: layout.radius.lg,
+  },
+  imageStyle: {
+    borderRadius: layout.radius.md,
+    flex: 1,
+  },
+  attachType: {
+    position: 'absolute',
+    bottom: 0,
+    marginBottom: -layout.pad.lg,
+  },
+});
+
 type BGalleryType = {
   picts: any[];
   addMorePict?: (attachType?: string) => void;
@@ -67,39 +103,3 @@ export default function BGallery({ picts, addMorePict, removePict }: BGalleryTyp
     />
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    width: resScale(104),
-    height: resScale(120),
-    margin: resScale(5),
-    borderRadius: layout.radius.md,
-  },
-  addImage: {
-    backgroundColor: colors.tertiary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    borderRadius: layout.radius.md,
-  },
-  scrollViewContentStyle: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  closeIcon: {
-    position: 'absolute',
-    right: resScale(-3),
-    top: resScale(-5),
-    backgroundColor: colors.text.medium,
-    borderRadius: layout.radius.lg,
-  },
-  imageStyle: {
-    borderRadius: layout.radius.md,
-    flex: 1,
-  },
-  attachType: {
-    position: 'absolute',
-    bottom: 0,
-    marginBottom: -layout.pad.lg,
-  },
-});

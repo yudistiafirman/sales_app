@@ -13,6 +13,21 @@ import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO
 import BCommonListShimmer from './BCommonListShimmer';
 import BEmptyState from '../organism/BEmptyState';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  tabIndicator: {
+    backgroundColor: colors.primary,
+  },
+  tabStyle: {
+    flex: 1,
+  },
+  tabBarStyle: {
+    backgroundColor: colors.white,
+  },
+});
+
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
   CreatedSPHListResponse &
   selectedCompanyInterface;
@@ -168,20 +183,5 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  tabIndicator: {
-    backgroundColor: colors.primary,
-  },
-  tabStyle: {
-    flex: 1,
-  },
-  tabBarStyle: {
-    backgroundColor: colors.white,
-  },
-});
 
 export default BCommonSearchList;

@@ -12,15 +12,6 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import resScale from '@/utils/resScale';
 import colors from '@/constants/colors';
 
-type ViewMoreTextProps = typeof BViewMoreText.defaultProps &
-  ViewStyle & {
-    numberOfLines: number;
-    renderViewMore?: (handlePress: () => void) => React.ReactNode;
-    renderViewLess?: (handlePress: () => void) => React.ReactNode;
-    onTextLayout?: () => void;
-    textStyle?: StyleProp<TextStyle>;
-    children?: any;
-  };
 const styles = StyleSheet.create({
   fullTextWrapper: {
     opacity: 0,
@@ -39,6 +30,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 });
+
+type ViewMoreTextProps = typeof BViewMoreText.defaultProps &
+  ViewStyle & {
+    numberOfLines: number;
+    renderViewMore?: (handlePress: () => void) => React.ReactNode;
+    renderViewLess?: (handlePress: () => void) => React.ReactNode;
+    onTextLayout?: () => void;
+    textStyle?: StyleProp<TextStyle>;
+    children?: any;
+  };
 
 class BViewMoreText extends React.Component<ViewMoreTextProps> {
   trimmedTextHeight = null;

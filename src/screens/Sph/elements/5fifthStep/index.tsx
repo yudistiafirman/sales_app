@@ -40,6 +40,32 @@ import { SphContext } from '../context/SphContext';
 import StepDone from '../StepDoneModal/StepDone';
 import ChoosePicModal from '../ChoosePicModal';
 
+const style = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  picLable: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  picText: {
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.md,
+    color: colors.text.darker,
+  },
+  gantiPicText: {
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.sm,
+    color: colors.primary,
+  },
+  produkLabel: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border.altGrey,
+    paddingBottom: layout.pad.sm,
+  },
+});
+
 function countNonNullValues(array) {
   let count = 0;
   for (let i = 0; i < array.length; i++) {
@@ -417,29 +443,3 @@ export default function FifthStep() {
     </SafeAreaView>
   );
 }
-
-const style = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  picLable: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  picText: {
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.md,
-    color: colors.text.darker,
-  },
-  gantiPicText: {
-    fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.sm,
-    color: colors.primary,
-  },
-  produkLabel: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border.altGrey,
-    paddingBottom: layout.pad.sm,
-  },
-});

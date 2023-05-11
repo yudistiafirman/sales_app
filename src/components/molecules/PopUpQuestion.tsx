@@ -5,6 +5,34 @@ import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import BBackContinueBtn from './BBackContinueBtn';
 
+const styles = StyleSheet.create({
+  modal: {},
+  modalContent: {
+    padding: layout.pad.md,
+    backgroundColor: 'white',
+    borderRadius: layout.radius.md,
+  },
+  questionContainer: {
+    alignItems: 'center',
+  },
+  questionText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.lg,
+    textAlign: 'center',
+    padding: layout.pad.lg,
+  },
+  questionDescText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.md,
+    textAlign: 'center',
+    paddingTop: layout.pad.lg,
+    paddingHorizontal: layout.pad.lg,
+    paddingBottom: layout.pad.xl,
+  },
+});
+
 type PopUpQuestionType = {
   isVisible: boolean;
   setIsPopupVisible?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -62,31 +90,3 @@ export default function PopUpQuestion({
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modal: {},
-  modalContent: {
-    padding: layout.pad.md,
-    backgroundColor: 'white',
-    borderRadius: layout.radius.md,
-  },
-  questionContainer: {
-    alignItems: 'center',
-  },
-  questionText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.lg,
-    textAlign: 'center',
-    padding: layout.pad.lg,
-  },
-  questionDescText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.md,
-    textAlign: 'center',
-    paddingTop: layout.pad.lg,
-    paddingHorizontal: layout.pad.lg,
-    paddingBottom: layout.pad.xl,
-  },
-});

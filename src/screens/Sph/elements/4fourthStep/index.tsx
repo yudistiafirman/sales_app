@@ -31,6 +31,35 @@ import ProductCartModal from '../ProductOrderDetailModal';
 
 const { width } = Dimensions.get('window');
 
+const style = StyleSheet.create({
+  posRelative: {
+    position: 'relative',
+    marginBottom: layout.pad.xs + layout.pad.md,
+  },
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: layout.radius.sm,
+    height: resScale(45),
+    zIndex: 2,
+  },
+  productText: {
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.md,
+    color: colors.text.darker,
+  },
+  searchModeContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  backContinueWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    alignSelf: 'center',
+    width: width - layout.pad.xl,
+  },
+});
+
 interface RenderModalType {
   selectedProduct: ProductDataInterface | null;
   isModalVisible: boolean;
@@ -212,32 +241,3 @@ export default function FourthStep() {
     </BContainer>
   );
 }
-
-const style = StyleSheet.create({
-  posRelative: {
-    position: 'relative',
-    marginBottom: layout.pad.xs + layout.pad.md,
-  },
-  touchable: {
-    position: 'absolute',
-    width: '100%',
-    borderRadius: layout.radius.sm,
-    height: resScale(45),
-    zIndex: 2,
-  },
-  productText: {
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.md,
-    color: colors.text.darker,
-  },
-  searchModeContainer: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  backContinueWrapper: {
-    position: 'absolute',
-    bottom: 0,
-    alignSelf: 'center',
-    width: width - layout.pad.xl,
-  },
-});

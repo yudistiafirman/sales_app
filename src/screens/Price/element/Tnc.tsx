@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { SafeAreaView, TouchableOpacity, View, ViewStyle } from 'react-native';
 import AutoHeightWebView from 'react-native-autoheight-webview';

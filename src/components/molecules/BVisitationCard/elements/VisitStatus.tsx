@@ -5,25 +5,6 @@ import SvgNames from '@/components/atoms/BSvg/svgName';
 import { colors, fonts, layout } from '@/constants';
 import resScale from '@/utils/resScale';
 
-type visitStatusType = {
-  status?: string;
-};
-export default function VisitStatus({ status }: visitStatusType) {
-  if (!status) {
-    return null;
-  }
-  return (
-    <View style={style.container}>
-      <BSvg
-        widthHeight={resScale(13)}
-        color={colors.text.darker}
-        svgName={SvgNames.IC_LIST}
-        type="fill"
-      />
-      <Text style={style.textStyle}>{status}</Text>
-    </View>
-  );
-}
 const style = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -39,3 +20,23 @@ const style = StyleSheet.create({
     marginLeft: layout.pad.sm,
   },
 });
+
+type VisitStatusType = {
+  status?: string;
+};
+export default function VisitStatus({ status }: VisitStatusType) {
+  if (!status) {
+    return null;
+  }
+  return (
+    <View style={style.container}>
+      <BSvg
+        widthHeight={resScale(13)}
+        color={colors.text.darker}
+        svgName={SvgNames.IC_LIST}
+        type="fill"
+      />
+      <Text style={style.textStyle}>{status}</Text>
+    </View>
+  );
+}

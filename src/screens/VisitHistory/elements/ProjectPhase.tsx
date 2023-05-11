@@ -7,6 +7,34 @@ import { STAGE_PROJECT } from '@/constants/dropdown';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: layout.pad.lg,
+  },
+  faseContainer: {
+    borderLeftWidth: 1,
+    borderColor: colors.textInput.inActive,
+    height: resScale(26),
+  },
+  circle: {
+    position: 'absolute',
+    top: 0,
+    left: -5,
+    width: layout.pad.md,
+    height: layout.pad.md,
+    borderRadius: layout.radius.md,
+    backgroundColor: colors.textInput.inActive,
+  },
+  textFase: {
+    marginLeft: (layout.pad.xs + layout.pad.sm) * 2,
+    fontFamily: font.family.montserrat[300],
+    fontSize: font.size.md,
+    color: colors.textInput.inActive,
+    marginTop: -layout.pad.sm,
+  },
+});
+
 function ProjectPhase({ phase }: { phase: string }) {
   const renderItem = useCallback(
     ({ item, index }) => (
@@ -53,33 +81,5 @@ function ProjectPhase({ phase }: { phase: string }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: layout.pad.lg,
-  },
-  faseContainer: {
-    borderLeftWidth: 1,
-    borderColor: colors.textInput.inActive,
-    height: resScale(26),
-  },
-  circle: {
-    position: 'absolute',
-    top: 0,
-    left: -5,
-    width: layout.pad.md,
-    height: layout.pad.md,
-    borderRadius: layout.radius.md,
-    backgroundColor: colors.textInput.inActive,
-  },
-  textFase: {
-    marginLeft: (layout.pad.xs + layout.pad.sm) * 2,
-    fontFamily: font.family.montserrat[300],
-    fontSize: font.size.md,
-    color: colors.textInput.inActive,
-    marginTop: -layout.pad.sm,
-  },
-});
 
 export default ProjectPhase;

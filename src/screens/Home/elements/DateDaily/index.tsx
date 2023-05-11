@@ -7,24 +7,79 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
 
-type markOption = {
+const style = StyleSheet.create({
+  calendarStyle: {
+    height: resScale(64),
+    width: '100%',
+  },
+  calendarHeaderStyle: {
+    color: colors.text.secondary,
+    fontSize: font.size.sm,
+    fontFamily: font.family.montserrat[500],
+    alignSelf: 'flex-end',
+    marginRight: layout.pad.lg,
+  },
+  dateNumberStyle: {
+    color: colors.textInput.input,
+    fontSize: fonts.size.lg,
+    fontFamily: font.family.montserrat[500],
+  },
+  dateNameStyle: {
+    fontFamily: font.family.montserrat[300],
+    color: colors.textInput.input,
+    fontSize: fonts.size.xs,
+  },
+  highlightDateNumberStyle: {
+    color: colors.white,
+    backgroundColor: colors.primary,
+    borderRadius: resScale(100),
+    paddingHorizontal: layout.pad.md,
+    fontSize: font.size.lg,
+    fontFamily: font.family.montserrat[500],
+  },
+  icon: {
+    width: resScale(12),
+    marginBottom: layout.pad.lg + layout.pad.md,
+  },
+  today: {
+    width: resScale(52),
+    height: resScale(20),
+    borderWidth: 1,
+    borderRadius: layout.radius.sm,
+    borderColor: colors.primary,
+    position: 'absolute',
+    left: layout.pad.lg,
+    zIndex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  todayText: {
+    fontFamily: font.family.montserrat[500],
+    fontSize: font.size.sm,
+    color: colors.primary,
+  },
+  disabledDateNameStyle: { color: colors.border.grey },
+  disabledDateNumberStyle: { color: colors.border.grey },
+});
+
+type MarkOption = {
   color: string;
   selectedColor?: string;
 };
 
-type lineDates = {
+type LineDates = {
   date: string | moment.Moment;
-  lines: markOption[];
+  lines: MarkOption[];
 };
-type dotsDates = {
+type DotsDates = {
   date: string | moment.Moment;
-  dots: markOption[];
+  dots: MarkOption[];
 };
-type markedDates = lineDates | dotsDates;
+type MarkedDates = LineDates | DotsDates;
 type DateDailyType = {
   numDaysInWeek?: number;
   isRender?: boolean;
-  markedDatesArray?: markedDates[];
+  markedDatesArray?: MarkedDates[];
   onDateSelected: (date: moment.Moment) => void;
   calendarColor?: string;
   selectedDate?: moment.Moment | Date | undefined;
@@ -102,58 +157,3 @@ export default function DateDaily({
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  calendarStyle: {
-    height: resScale(64),
-    width: '100%',
-  },
-  calendarHeaderStyle: {
-    color: colors.text.secondary,
-    fontSize: font.size.sm,
-    fontFamily: font.family.montserrat[500],
-    alignSelf: 'flex-end',
-    marginRight: layout.pad.lg,
-  },
-  dateNumberStyle: {
-    color: colors.textInput.input,
-    fontSize: fonts.size.lg,
-    fontFamily: font.family.montserrat[500],
-  },
-  dateNameStyle: {
-    fontFamily: font.family.montserrat[300],
-    color: colors.textInput.input,
-    fontSize: fonts.size.xs,
-  },
-  highlightDateNumberStyle: {
-    color: colors.white,
-    backgroundColor: colors.primary,
-    borderRadius: resScale(100),
-    paddingHorizontal: layout.pad.md,
-    fontSize: font.size.lg,
-    fontFamily: font.family.montserrat[500],
-  },
-  icon: {
-    width: resScale(12),
-    marginBottom: layout.pad.lg + layout.pad.md,
-  },
-  today: {
-    width: resScale(52),
-    height: resScale(20),
-    borderWidth: 1,
-    borderRadius: layout.radius.sm,
-    borderColor: colors.primary,
-    position: 'absolute',
-    left: layout.pad.lg,
-    zIndex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  todayText: {
-    fontFamily: font.family.montserrat[500],
-    fontSize: font.size.sm,
-    color: colors.primary,
-  },
-  disabledDateNameStyle: { color: colors.border.grey },
-  disabledDateNumberStyle: { color: colors.border.grey },
-});

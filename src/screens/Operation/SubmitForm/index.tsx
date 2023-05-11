@@ -51,6 +51,45 @@ import {
 import { AppDispatch, RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 
+const style = StyleSheet.create({
+  flexFull: {
+    flex: 1,
+  },
+  leftIconStyle: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+    color: colors.textInput.input,
+  },
+  parent: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: colors.white,
+  },
+  top: {
+    height: resScale(120),
+    marginBottom: layout.pad.lg,
+  },
+  headerTwo: {
+    borderColor: colors.border.default,
+  },
+  conButton: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    marginTop: layout.pad.lg,
+    bottom: 0,
+  },
+  buttonOne: {
+    width: '40%',
+    paddingEnd: layout.pad.md,
+  },
+  buttonTwo: {
+    width: '60%',
+    paddingStart: layout.pad.md,
+  },
+});
+
 function LeftIcon() {
   return <Text style={style.leftIconStyle}>+62</Text>;
 }
@@ -555,42 +594,4 @@ function SubmitForm() {
   );
 }
 
-const style = StyleSheet.create({
-  flexFull: {
-    flex: 1,
-  },
-  leftIconStyle: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.md,
-    color: colors.textInput.input,
-  },
-  parent: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: colors.white,
-  },
-  top: {
-    height: resScale(120),
-    marginBottom: layout.pad.lg,
-  },
-  headerTwo: {
-    borderColor: colors.border.default,
-  },
-  conButton: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    marginTop: layout.pad.lg,
-    bottom: 0,
-  },
-  buttonOne: {
-    width: '40%',
-    paddingEnd: layout.pad.md,
-  },
-  buttonTwo: {
-    width: '60%',
-    paddingStart: layout.pad.md,
-  },
-});
 export default SubmitForm;

@@ -4,22 +4,6 @@ import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { store } from '@/redux/store';
 import { displayName } from '../../../app.json';
 
-const hasPermissionIOS = async () => {
-  const status = await Geolocation.requestAuthorization('whenInUse');
-
-  if (status === 'granted') {
-    return true;
-  }
-
-  if (status === 'denied') {
-    showAlertLocation();
-  }
-
-  if (status === 'disabled') {
-    showAlertLocation();
-  }
-};
-
 const openSetting = () => {
   Linking.openSettings().catch(() => {
     store.dispatch(
@@ -49,6 +33,24 @@ const showAlertLocation = () => {
       },
     })
   );
+};
+
+const hasPermissionIOS = async () => {
+  const status = await Geolocation.requestAuthorization('whenInUse');
+
+  if (status === 'granted') {
+    return true;
+  }
+
+  if (status === 'denied') {
+    showAlertLocation();
+    return false;
+  }
+
+  if (status === 'disabled') {
+    showAlertLocation();
+    return false;
+  }
 };
 
 const hasLocationPermission = async () => {
@@ -81,6 +83,7 @@ const hasLocationPermission = async () => {
     } else {
       showAlertLocation();
     }
+    return false;
   } catch (err) {
     const errorMessage = err.message || 'Terjadi error dalam meminta izin mengakses layanan lokasi';
     store.dispatch(
@@ -90,6 +93,7 @@ const hasLocationPermission = async () => {
         outsideClickClosePopUp: true,
       })
     );
+    return false;
   }
 };
 

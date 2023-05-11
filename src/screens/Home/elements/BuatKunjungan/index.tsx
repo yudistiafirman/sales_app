@@ -7,13 +7,6 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import respFS from '@/utils/resFontSize';
 
-export default function BuatKunjungan(props: any, kunjunganAction: () => void) {
-  return (
-    <BottomSheetFooter {...props} style={style.container} bottomInset={10}>
-      <BButtonPrimary onPress={kunjunganAction} title="Buat Kunjungan" />
-    </BottomSheetFooter>
-  );
-}
 const style = StyleSheet.create({
   container: {},
   footerContainer: {
@@ -29,3 +22,11 @@ const style = StyleSheet.create({
     fontSize: respFS(16),
   },
 });
+
+export default function BuatKunjungan(props: any, kunjunganAction: () => void) {
+  return (
+    <BottomSheetFooter {...props} style={style.container} bottomInset={10}>
+      <BButtonPrimary onPress={kunjunganAction} title="Buat Kunjungan" />
+    </BottomSheetFooter>
+  );
+}

@@ -2,18 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, fonts, layout } from '@/constants';
 
-type LabelSuccessType = {
-  sphId?: string;
-};
-
-export default function LabelSuccess({ sphId }: LabelSuccessType) {
-  return (
-    <View style={styles.labelSuccess}>
-      <Text style={styles.labelText}>{sphId} telah berhasil dibuat</Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   labelSuccess: {
     backgroundColor: colors.chip.green,
@@ -26,3 +14,15 @@ const styles = StyleSheet.create({
     fontSize: fonts.size.xs,
   },
 });
+
+type LabelSuccessType = {
+  sphId?: string;
+};
+
+export default function LabelSuccess({ sphId }: LabelSuccessType) {
+  return (
+    <View style={styles.labelSuccess}>
+      <Text style={styles.labelText}>{sphId} telah berhasil dibuat</Text>
+    </View>
+  );
+}

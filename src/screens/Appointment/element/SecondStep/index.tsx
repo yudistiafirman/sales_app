@@ -8,8 +8,22 @@ import { colors, layout } from '@/constants';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
 import { APPOINTMENT, CALENDAR } from '@/navigation/ScreenNames';
-import { selectedDateType } from '@/screens/Visitation/elements/fifth';
+import { SelectedDateType } from '@/screens/Visitation/elements/fifth';
 import { resScale } from '@/utils';
+
+const styles = StyleSheet.create({
+  flexFull: {
+    flex: 1,
+  },
+  touchable: {
+    position: 'absolute',
+    display: 'flex',
+    width: '100%',
+    borderRadius: layout.pad.sm,
+    height: resScale(45),
+    zIndex: 2,
+  },
+});
 
 function SecondStep() {
   const [values, dispatchValue] = useAppointmentData();
@@ -17,7 +31,7 @@ function SecondStep() {
 
   useEffect(() => {
     crashlytics().log(`${APPOINTMENT}-Step2`);
-    DeviceEventEmitter.addListener('CalendarScreen.selectedDate', (date: selectedDateType) => {
+    DeviceEventEmitter.addListener('CalendarScreen.selectedDate', (date: SelectedDateType) => {
       dispatchValue({
         type: AppointmentActionType.SET_DATE,
         value: date,
@@ -52,19 +66,5 @@ function SecondStep() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  flexFull: {
-    flex: 1,
-  },
-  touchable: {
-    position: 'absolute',
-    display: 'flex',
-    width: '100%',
-    borderRadius: layout.pad.sm,
-    height: resScale(45),
-    zIndex: 2,
-  },
-});
 
 export default SecondStep;

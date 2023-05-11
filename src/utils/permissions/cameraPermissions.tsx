@@ -61,6 +61,7 @@ export const hasCameraPermissions = async () => {
       } else {
         showAlertCamera();
       }
+      return false;
     }
   } catch (err) {
     const errorMessage = err.message || 'Terjadi error dalam meminta izin untuk mengakses camera';
@@ -71,6 +72,7 @@ export const hasCameraPermissions = async () => {
         outsideClickClosePopUp: true,
       })
     );
+    return false;
   }
 };
 

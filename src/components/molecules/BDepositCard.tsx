@@ -5,6 +5,26 @@ import formatCurrency from '@/utils/formatCurrency';
 import BSpacer from '../atoms/BSpacer';
 import BText from '../atoms/BText';
 
+const styles = StyleSheet.create({
+  summary: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[300],
+    fontSize: fonts.size.sm,
+  },
+  fontw400: {
+    fontFamily: fonts.family.montserrat[400],
+  },
+  summaryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  chip: {
+    paddingVertical: layout.pad.xs,
+    paddingHorizontal: layout.pad.md,
+    borderRadius: layout.radius.xl,
+  },
+});
+
 type BDepositCardType = {
   firstSectionValue: number;
   firstSectionText: string;
@@ -78,23 +98,3 @@ export default function BDepositCard({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  summary: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[300],
-    fontSize: fonts.size.sm,
-  },
-  fontw400: {
-    fontFamily: fonts.family.montserrat[400],
-  },
-  summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  chip: {
-    paddingVertical: layout.pad.xs,
-    paddingHorizontal: layout.pad.md,
-    borderRadius: layout.radius.xl,
-  },
-});

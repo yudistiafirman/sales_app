@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import { TextStyle, View, ViewStyle } from 'react-native';
 import { BText } from '@/components';

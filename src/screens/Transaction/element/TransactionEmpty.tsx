@@ -6,25 +6,6 @@ import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
 
-function TransactionEmpty({
-  emptyTransactionName,
-  errorName,
-}: {
-  emptyTransactionName?: string;
-  errorName?: string;
-}) {
-  return (
-    <View style={styles.container}>
-      <Image style={styles.emptyimage} source={require('@/assets/icon/ic_not_found.png')} />
-      <View style={styles.parent}>
-        <BText style={styles.emptyText}>
-          {errorName || `${emptyTransactionName} tidak ditemukan!`}
-        </BText>
-      </View>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   parent: {
     flex: 1,
@@ -45,5 +26,24 @@ const styles = StyleSheet.create({
     color: colors.text.darker,
   },
 });
+
+function TransactionEmpty({
+  emptyTransactionName,
+  errorName,
+}: {
+  emptyTransactionName?: string;
+  errorName?: string;
+}) {
+  return (
+    <View style={styles.container}>
+      <Image style={styles.emptyimage} source={require('@/assets/icon/ic_not_found.png')} />
+      <View style={styles.parent}>
+        <BText style={styles.emptyText}>
+          {errorName || `${emptyTransactionName} tidak ditemukan!`}
+        </BText>
+      </View>
+    </View>
+  );
+}
 
 export default TransactionEmpty;

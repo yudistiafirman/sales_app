@@ -6,6 +6,20 @@ import { resScale } from '@/utils';
 import { layout } from '@/constants';
 import SearchAreaStyles from '../styles';
 
+const styles = StyleSheet.create({
+  iconShimmer: {
+    width: resScale(18),
+    height: resScale(20),
+    marginRight: layout.pad.ml,
+  },
+  titleShimmer: {
+    width: resScale(108),
+    height: resScale(17),
+    marginBottom: layout.pad.sm,
+  },
+  secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
+});
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 function LocationListShimmer() {
@@ -22,19 +36,5 @@ function LocationListShimmer() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  iconShimmer: {
-    width: resScale(18),
-    height: resScale(20),
-    marginRight: layout.pad.ml,
-  },
-  titleShimmer: {
-    width: resScale(108),
-    height: resScale(17),
-    marginBottom: layout.pad.sm,
-  },
-  secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
-});
 
 export default LocationListShimmer;

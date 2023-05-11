@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { Children } from 'react';
 import { GestureResponderEvent, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';

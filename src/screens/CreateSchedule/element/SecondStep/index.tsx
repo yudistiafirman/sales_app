@@ -9,6 +9,67 @@ import { CreateScheduleContext } from '@/context/CreateScheduleContext';
 import { Input } from '@/interfaces';
 import { SalesOrdersData } from '@/interfaces/SelectConfirmedPO';
 
+const style = StyleSheet.create({
+  flexFull: {
+    flex: 1,
+  },
+  formInput: {
+    flex: 1,
+    width: '100%',
+    padding: layout.pad.md,
+  },
+  volContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  consecutiveCheck: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  technicalCheck: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  selectionProduct: {
+    flex: 1,
+    alignItems: 'center',
+    borderRadius: layout.radius.md,
+    backgroundColor: colors.tertiary,
+    borderColor: colors.border.default,
+    borderWidth: 1,
+  },
+  contentProduct: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  container: {
+    flex: 1,
+    marginTop: layout.pad.md,
+  },
+  summary: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
+  },
+  summaryContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  partText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[600],
+    fontSize: fonts.size.md,
+  },
+});
+
 export default function SecondStep() {
   const { values, action } = React.useContext(CreateScheduleContext);
   const { stepOne: stateOne, stepTwo: stateTwo } = values;
@@ -231,63 +292,3 @@ export default function SecondStep() {
     </View>
   );
 }
-const style = StyleSheet.create({
-  flexFull: {
-    flex: 1,
-  },
-  formInput: {
-    flex: 1,
-    width: '100%',
-    padding: layout.pad.md,
-  },
-  volContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  consecutiveCheck: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  technicalCheck: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  selectionProduct: {
-    flex: 1,
-    alignItems: 'center',
-    borderRadius: layout.radius.md,
-    backgroundColor: colors.tertiary,
-    borderColor: colors.border.default,
-    borderWidth: 1,
-  },
-  contentProduct: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  container: {
-    flex: 1,
-    marginTop: layout.pad.md,
-  },
-  summary: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.sm,
-  },
-  summaryContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  partText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[600],
-    fontSize: fonts.size.md,
-  },
-});

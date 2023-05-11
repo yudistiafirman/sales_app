@@ -5,24 +5,6 @@ import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { resScale } from '@/utils';
 
-function UpdatedAddressWrapper({ address, onPress }: { address: string; onPress: () => void }) {
-  return (
-    <View style={styles.filledAddressContainer}>
-      <View style={styles.filledAddressInnerContainer}>
-        <BText numberOfLines={1} style={styles.mainAddress}>
-          {address.split(',')[0]}
-        </BText>
-        <BText numberOfLines={1} style={styles.secondAddress}>
-          {address}
-        </BText>
-        <TouchableOpacity onPress={onPress} style={styles.changeAddressBtn}>
-          <BText style={styles.changeAddressText}>Ubah Alamat</BText>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   filledAddressContainer: {
     height: resScale(93),
@@ -62,5 +44,23 @@ const styles = StyleSheet.create({
     color: colors.text.medium,
   },
 });
+
+function UpdatedAddressWrapper({ address, onPress }: { address: string; onPress: () => void }) {
+  return (
+    <View style={styles.filledAddressContainer}>
+      <View style={styles.filledAddressInnerContainer}>
+        <BText numberOfLines={1} style={styles.mainAddress}>
+          {address.split(',')[0]}
+        </BText>
+        <BText numberOfLines={1} style={styles.secondAddress}>
+          {address}
+        </BText>
+        <TouchableOpacity onPress={onPress} style={styles.changeAddressBtn}>
+          <BText style={styles.changeAddressText}>Ubah Alamat</BText>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
 
 export default UpdatedAddressWrapper;

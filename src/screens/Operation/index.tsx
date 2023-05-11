@@ -16,6 +16,12 @@ import {
 import { AppDispatch, RootState } from '@/redux/store';
 import OperationList from './element/OperationList';
 
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
 function Operation() {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation();
@@ -122,9 +128,4 @@ function Operation() {
   );
 }
 
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 export default Operation;

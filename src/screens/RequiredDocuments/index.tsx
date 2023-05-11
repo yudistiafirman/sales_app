@@ -16,18 +16,34 @@ import { Input } from '@/interfaces';
 import { colors, fonts, layout } from '@/constants';
 import { BContainer, BDivider, BForm, BLabel, BSpacer } from '@/components';
 
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  between: { flexDirection: 'row', justifyContent: 'space-between' },
+  fontW500: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.md,
+  },
+  documentProggress: {},
+  fileInputShimmer: {
+    width: resScale(330),
+    height: resScale(30),
+    borderRadius: layout.radius.md,
+  },
+});
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-type documentType = {
+type DocumentType = {
   id: string;
   name: string;
   payment_type: 'CBD' | 'CREDIT';
   is_required: boolean;
 };
 
-type docResponse = {
-  cbd: documentType[];
-  credit: documentType[];
+type DocResponse = {
+  cbd: DocumentType[];
+  credit: DocumentType[];
 };
 
 export default function RequiredDocuments() {
@@ -36,7 +52,7 @@ export default function RequiredDocuments() {
 
   const { docs, projectId } = route.params;
   const [isLoading, setIsLoading] = useState(false);
-  const [reqDocuments, setReqDocuments] = useState<docResponse>({});
+  const [reqDocuments, setReqDocuments] = useState<DocResponse>({});
   const [docState, setDocState] = useState<{ [key: string]: any }>({});
   const [docLoadingState, setDocLoadingState] = useState<{
     [key: string]: {
@@ -64,7 +80,7 @@ export default function RequiredDocuments() {
   const getDocument = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response: docResponse = await dispatch(fetchSphDocuments()).unwrap();
+      const response: DocResponse = await dispatch(fetchSphDocuments()).unwrap();
 
       setDocState(() => {
         const newDocState: { [key: string]: any } = {};
@@ -186,14 +202,14 @@ export default function RequiredDocuments() {
   }, []);
 
   const files = useMemo(() => {
-    type fileInputType = {
+    type FileInputType = {
       label: string;
       type: string;
       isRequire: boolean;
       key: string;
     };
-    const fileInputCredit: fileInputType[] = [];
-    const fileInputCbd: fileInputType[] = [];
+    const fileInputCredit: FileInputType[] = [];
+    const fileInputCbd: FileInputType[] = [];
     reqDocuments?.credit?.forEach(doc => {
       const input = {
         label: doc.name,
@@ -302,19 +318,3 @@ export default function RequiredDocuments() {
     </BContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  between: { flexDirection: 'row', justifyContent: 'space-between' },
-  fontW500: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.md,
-  },
-  documentProggress: {},
-  fileInputShimmer: {
-    width: resScale(330),
-    height: resScale(30),
-    borderRadius: layout.radius.md,
-  },
-});

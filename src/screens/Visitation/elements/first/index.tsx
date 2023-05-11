@@ -34,6 +34,20 @@ import { resScale } from '@/utils';
 import getUserCurrentLocationDetail from '@/utils/getUserCurrentLocationDetail';
 import { hasLocationPermission } from '@/utils/permissions';
 
+const styles = StyleSheet.create({
+  container: { flex: 1, marginHorizontal: -(layout.pad.md + layout.pad.ml) },
+  map: {
+    flex: 1,
+    width: '100%',
+  },
+  titleShimmer: {
+    width: resScale(108),
+    height: resScale(17),
+    marginBottom: layout.pad.sm,
+  },
+  secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
+});
+
 function FirstStep() {
   const { region } = useSelector((state: RootState) => state.location);
   const [isMapLoading, setIsMapLoading] = React.useState(false);
@@ -252,19 +266,5 @@ function FirstStep() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, marginHorizontal: -(layout.pad.md + layout.pad.ml) },
-  map: {
-    flex: 1,
-    width: '100%',
-  },
-  titleShimmer: {
-    width: resScale(108),
-    height: resScale(17),
-    marginBottom: layout.pad.sm,
-  },
-  secondaryTextShimmer: { width: resScale(296), height: resScale(15) },
-});
 
 export default FirstStep;

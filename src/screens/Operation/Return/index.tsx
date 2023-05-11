@@ -13,6 +13,14 @@ import { OperationProjectDetails, setAllOperationPhoto } from '@/redux/reducers/
 import { AppDispatch, RootState } from '@/redux/store';
 import OperationList from '../element/OperationList';
 
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.white,
+    paddingBottom: layout.pad.lg,
+  },
+});
+
 function Return() {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation();
@@ -101,13 +109,5 @@ function Return() {
     </SafeAreaView>
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-    paddingBottom: layout.pad.lg,
-  },
-});
 
 export default Return;

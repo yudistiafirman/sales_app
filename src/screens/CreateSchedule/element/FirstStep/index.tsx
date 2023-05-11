@@ -18,6 +18,32 @@ import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
 
+const style = StyleSheet.create({
+  flexFull: {
+    flex: 1,
+  },
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: layout.radius.sm,
+    height: resScale(45),
+    zIndex: 2,
+  },
+  summary: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+  },
+  fontw400: {
+    fontFamily: fonts.family.montserrat[400],
+  },
+  summaryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+});
+
 export default function FirstStep() {
   const navigation = useNavigation();
   const { values, action } = React.useContext(CreateScheduleContext);
@@ -163,29 +189,3 @@ export default function FirstStep() {
     </SafeAreaView>
   );
 }
-
-const style = StyleSheet.create({
-  flexFull: {
-    flex: 1,
-  },
-  touchable: {
-    position: 'absolute',
-    width: '100%',
-    borderRadius: layout.radius.sm,
-    height: resScale(45),
-    zIndex: 2,
-  },
-  summary: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.md,
-  },
-  fontw400: {
-    fontFamily: fonts.family.montserrat[400],
-  },
-  summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-});

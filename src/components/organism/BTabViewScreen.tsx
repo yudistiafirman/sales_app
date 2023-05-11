@@ -8,6 +8,26 @@ import colors from '@/constants/colors';
 import { layout } from '@/constants';
 import BTabSections from './TabSections';
 
+const style = StyleSheet.create({
+  loadingContainer: {
+    // flex: 1,
+    alignItems: 'center',
+    marginTop: layout.pad.md,
+  },
+  tabLoading: {
+    marginTop: layout.pad.xs,
+    width: resScale(325),
+    height: resScale(30),
+    borderRadius: layout.radius.md,
+  },
+  listLoading: {
+    marginTop: layout.pad.lg,
+    width: resScale(325),
+    height: resScale(60),
+    borderRadius: layout.radius.md,
+  },
+});
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 type BTabViewScreenType = {
@@ -78,23 +98,3 @@ export default function BTabViewScreen({
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  loadingContainer: {
-    // flex: 1,
-    alignItems: 'center',
-    marginTop: layout.pad.md,
-  },
-  tabLoading: {
-    marginTop: layout.pad.xs,
-    width: resScale(325),
-    height: resScale(30),
-    borderRadius: layout.radius.md,
-  },
-  listLoading: {
-    marginTop: layout.pad.lg,
-    width: resScale(325),
-    height: resScale(60),
-    borderRadius: layout.radius.md,
-  },
-});

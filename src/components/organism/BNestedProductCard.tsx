@@ -11,6 +11,42 @@ import BProductCard from '../molecules/BProductCard';
 import BSpacer from '../atoms/BSpacer';
 import BDivider from '../atoms/BDivider';
 
+const styles = StyleSheet.create({
+  flexRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  leftSide: {
+    flex: 1,
+  },
+  containerLastOrder: {
+    padding: layout.pad.lg,
+    borderRadius: layout.radius.md,
+    backgroundColor: colors.tertiary,
+    borderColor: colors.border.default,
+    borderWidth: 1,
+  },
+  titleLastOrder: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.sm,
+    color: colors.text.darker,
+    marginStart: layout.pad.md,
+  },
+  valueLastOrder: {
+    flex: 1,
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.sm,
+  },
+  valueView: { flex: 1, alignItems: 'flex-end', marginEnd: layout.pad.xxl },
+  partText: {
+    color: colors.text.darker,
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.md,
+    marginStart: layout.pad.md,
+  },
+});
+
 type BNestedProductCardType = {
   withoutHeader?: boolean;
   withoutBottomSpace?: boolean;
@@ -250,39 +286,3 @@ export default function BNestedProductCard({
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  flexRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  leftSide: {
-    flex: 1,
-  },
-  containerLastOrder: {
-    padding: layout.pad.lg,
-    borderRadius: layout.radius.md,
-    backgroundColor: colors.tertiary,
-    borderColor: colors.border.default,
-    borderWidth: 1,
-  },
-  titleLastOrder: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.sm,
-    color: colors.text.darker,
-    marginStart: layout.pad.md,
-  },
-  valueLastOrder: {
-    flex: 1,
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
-  },
-  valueView: { flex: 1, alignItems: 'flex-end', marginEnd: layout.pad.xxl },
-  partText: {
-    color: colors.text.darker,
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.md,
-    marginStart: layout.pad.md,
-  },
-});

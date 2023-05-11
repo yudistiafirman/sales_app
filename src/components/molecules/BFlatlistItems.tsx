@@ -8,21 +8,40 @@ import { layout } from '@/constants';
 import BEmptyState from '@/components/organism/BEmptyState';
 import BSpacer from '../atoms/BSpacer';
 
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  flatlistContent: {
+    marginTop: layout.pad.lg,
+  },
+  flatListLoading: {
+    marginTop: layout.pad.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flatListShimmer: {
+    width: resScale(330),
+    height: resScale(60),
+    borderRadius: layout.radius.lg,
+  },
+});
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-type visitationType = {
+type VisitationType = {
   [key: string]: any;
   name: string;
 };
 
 type BTabScreenType = {
   data?: any[]; // array of data to render, must have name props for now
-  renderItem: (item: visitationType | any, query?: string) => JSX.Element; // item to render in flatlist
+  renderItem: (item: VisitationType | any, query?: string) => JSX.Element; // item to render in flatlist
   isLoading?: boolean;
   searchQuery?: string;
   onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
   refreshing?: boolean;
-  initialFetch?: () => Promise<visitationType[] | undefined>;
+  initialFetch?: () => Promise<VisitationType[] | undefined>;
   isError?: boolean;
   errorMessage?: string;
   onAction?: () => void;
@@ -90,22 +109,3 @@ export default function BFlatlistItems({
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  flatlistContent: {
-    marginTop: layout.pad.lg,
-  },
-  flatListLoading: {
-    marginTop: layout.pad.lg,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  flatListShimmer: {
-    width: resScale(330),
-    height: resScale(60),
-    borderRadius: layout.radius.lg,
-  },
-});

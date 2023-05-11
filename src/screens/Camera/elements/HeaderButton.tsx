@@ -7,7 +7,29 @@ import { resScale } from '@/utils';
 import { colors, layout } from '@/constants';
 import { BSpacer } from '@/components';
 
-type configType = {
+const styles = StyleSheet.create({
+  cameraBtn: {
+    top: 0,
+    bottom: 0,
+    position: 'absolute',
+    right: 0,
+    alignItems: 'flex-end',
+    marginRight: layout.pad.md,
+    left: 0,
+  },
+  photoIconContainer: {
+    width: layout.pad.xl,
+    height: layout.pad.xl,
+    borderWidth: 1,
+    borderColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    backgroundColor: `${colors.disabled}50`,
+  },
+});
+
+type ConfigType = {
   style?: StyleProp<ViewStyle>;
   onPressFlashlight: () => void;
   onPressHDR: () => void;
@@ -29,7 +51,7 @@ function HeaderButton({
   enableHighQuality,
   onPressLowBoost,
   enableLowBoost,
-}: configType) {
+}: ConfigType) {
   const cameraHeaderButtonValue = [
     {
       onPress: onPressFlashlight,
@@ -75,27 +97,5 @@ function HeaderButton({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  cameraBtn: {
-    top: 0,
-    bottom: 0,
-    position: 'absolute',
-    right: 0,
-    alignItems: 'flex-end',
-    marginRight: layout.pad.md,
-    left: 0,
-  },
-  photoIconContainer: {
-    width: layout.pad.xl,
-    height: layout.pad.xl,
-    borderWidth: 1,
-    borderColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    backgroundColor: `${colors.disabled}50`,
-  },
-});
 
 export default HeaderButton;

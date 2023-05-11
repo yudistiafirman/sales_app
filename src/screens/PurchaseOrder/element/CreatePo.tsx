@@ -20,6 +20,13 @@ import { CAMERA, PO } from '@/navigation/ScreenNames';
 import { RootState, AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
 
+const styles = StyleSheet.create({
+  firstStepContainer: {
+    flex: 1,
+    paddingBottom: layout.pad.xxl,
+  },
+});
+
 function CreatePo() {
   const navigation = useNavigation();
   const poState = useSelector((state: RootState) => state.purchaseOrder);
@@ -183,12 +190,5 @@ function CreatePo() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  firstStepContainer: {
-    flex: 1,
-    paddingBottom: layout.pad.xxl,
-  },
-});
 
 export default CreatePo;

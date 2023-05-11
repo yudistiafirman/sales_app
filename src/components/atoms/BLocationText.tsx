@@ -5,23 +5,6 @@ import { fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
 
-type locationType = {
-  location?: string;
-};
-export default function BLocationText({ location }: locationType) {
-  if (!location) {
-    return null;
-  }
-  return (
-    <View style={style.location}>
-      <SimpleLineIcons name="location-pin" size={13} color="#0080FF" style={style.iconStyle} />
-      <Text numberOfLines={1} style={style.locationText}>
-        {location}
-      </Text>
-    </View>
-  );
-}
-
 const style = StyleSheet.create({
   location: {
     flexDirection: 'row',
@@ -37,3 +20,20 @@ const style = StyleSheet.create({
     marginRight: layout.pad.md,
   },
 });
+
+type LocationType = {
+  location?: string;
+};
+export default function BLocationText({ location }: LocationType) {
+  if (!location) {
+    return null;
+  }
+  return (
+    <View style={style.location}>
+      <SimpleLineIcons name="location-pin" size={13} color="#0080FF" style={style.iconStyle} />
+      <Text numberOfLines={1} style={style.locationText}>
+        {location}
+      </Text>
+    </View>
+  );
+}

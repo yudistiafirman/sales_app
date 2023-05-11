@@ -6,6 +6,16 @@ import { resScale } from '@/utils';
 import { layout } from '@/constants';
 import { PriceListCardStyles } from './PriceListCard';
 
+const styles = StyleSheet.create({
+  shimmerName: { width: resScale(75), height: resScale(17) },
+  shimmerPrice: { width: resScale(91), height: resScale(17) },
+  shimmerChip: {
+    width: resScale(51),
+    height: resScale(16),
+    borderRadius: layout.radius.lg,
+  },
+});
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 function PriceListShimmer() {
   return (
@@ -20,15 +30,5 @@ function PriceListShimmer() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  shimmerName: { width: resScale(75), height: resScale(17) },
-  shimmerPrice: { width: resScale(91), height: resScale(17) },
-  shimmerChip: {
-    width: resScale(51),
-    height: resScale(16),
-    borderRadius: layout.radius.lg,
-  },
-});
 
 export default PriceListShimmer;

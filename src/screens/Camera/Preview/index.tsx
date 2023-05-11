@@ -47,6 +47,39 @@ import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 import { hasLocationPermission } from '@/utils/permissions';
 
+const styles = StyleSheet.create({
+  parent: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+    width: '100%',
+  },
+  image: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+  },
+  conButton: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    padding: layout.pad.lg,
+  },
+  buttonOne: {
+    flex: 1,
+    paddingEnd: layout.pad.md,
+  },
+  buttonTwo: {
+    flex: 1.5,
+    paddingStart: layout.pad.md,
+  },
+});
+
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;
 }
@@ -414,38 +447,5 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  parent: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-    width: '100%',
-  },
-  image: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    left: 0,
-    bottom: 0,
-  },
-  conButton: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    padding: layout.pad.lg,
-  },
-  buttonOne: {
-    flex: 1,
-    paddingEnd: layout.pad.md,
-  },
-  buttonTwo: {
-    flex: 1.5,
-    paddingStart: layout.pad.md,
-  },
-});
 
 export default Preview;

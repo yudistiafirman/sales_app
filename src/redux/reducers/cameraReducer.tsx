@@ -5,7 +5,7 @@ import { LocalFileType } from '@/interfaces/LocalFileType';
 import { CREATE_DEPOSIT, CREATE_SCHEDULE, CREATE_VISITATION } from '@/navigation/ScreenNames';
 import { postUploadFiles } from '../async-thunks/commonThunks';
 
-type fileResponse = {
+type FileResponse = {
   id: string;
   type: 'COVER' | 'GALLERY';
 };
@@ -15,7 +15,7 @@ export interface CameraGlobalState {
   visitationPhotoURLs: LocalFileType[];
   createDepositPhotoURLs: LocalFileType[];
   createSchedulePhotoURLs: LocalFileType[];
-  uploadedFilesResponse: fileResponse[];
+  uploadedFilesResponse: FileResponse[];
   uploadedRequiredDocsResponse: requiredDocType[];
 }
 

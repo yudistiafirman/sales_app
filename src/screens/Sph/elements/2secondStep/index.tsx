@@ -36,6 +36,50 @@ import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 import { SphContext } from '../context/SphContext';
 
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: layout.pad.md,
+  },
+  titleText: {
+    fontFamily: fonts.family.montserrat[500],
+    fontSize: fonts.size.sm,
+    color: colors.text.darker,
+  },
+  customPadding: {
+    padding: layout.pad.xs,
+  },
+  map: {
+    height: resScale(450),
+    width: '100%',
+  },
+  mapIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    flex: 0.1,
+  },
+  detailCoordContainer: {
+    flex: 1,
+    backgroundColor: colors.tertiary,
+    borderRadius: layout.radius.md,
+    flexDirection: 'row',
+    padding: layout.pad.md,
+  },
+  detailContainer: {
+    flex: 0.75,
+    justifyContent: 'center',
+  },
+  leftIconStyle: {
+    fontFamily: fonts.family.montserrat[400],
+    fontSize: fonts.size.md,
+    color: colors.textInput.input,
+  },
+  blocationcontainer: {
+    flex: 0.5,
+  },
+});
+
 function checkObj(
   billingAddress: billingAddressType,
   isBillingAddressSame: boolean,
@@ -371,46 +415,3 @@ export default function SecondStep() {
     </View>
   );
 }
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: layout.pad.md,
-  },
-  titleText: {
-    fontFamily: fonts.family.montserrat[500],
-    fontSize: fonts.size.sm,
-    color: colors.text.darker,
-  },
-  customPadding: {
-    padding: layout.pad.xs,
-  },
-  map: {
-    height: resScale(450),
-    width: '100%',
-  },
-  mapIconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    flex: 0.1,
-  },
-  detailCoordContainer: {
-    flex: 1,
-    backgroundColor: colors.tertiary,
-    borderRadius: layout.radius.md,
-    flexDirection: 'row',
-    padding: layout.pad.md,
-  },
-  detailContainer: {
-    flex: 0.75,
-    justifyContent: 'center',
-  },
-  leftIconStyle: {
-    fontFamily: fonts.family.montserrat[400],
-    fontSize: fonts.size.md,
-    color: colors.textInput.input,
-  },
-  blocationcontainer: {
-    flex: 0.5,
-  },
-});

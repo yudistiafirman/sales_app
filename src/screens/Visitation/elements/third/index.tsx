@@ -25,6 +25,26 @@ import ProductChip from './ProductChip';
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');
 
+const styles = StyleSheet.create({
+  posRelative: {
+    position: 'relative',
+    // backgroundColor: 'blue',
+  },
+  touchable: {
+    position: 'absolute',
+    width: '100%',
+    borderRadius: layout.radius.sm,
+    height: resScale(45),
+    zIndex: 2,
+    // backgroundColor: 'red',
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+});
+
 function ThirdStep() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -446,23 +466,3 @@ function ThirdStep() {
 }
 
 export default ThirdStep;
-
-const styles = StyleSheet.create({
-  posRelative: {
-    position: 'relative',
-    // backgroundColor: 'blue',
-  },
-  touchable: {
-    position: 'absolute',
-    width: '100%',
-    borderRadius: layout.radius.sm,
-    height: resScale(45),
-    zIndex: 2,
-    // backgroundColor: 'red',
-  },
-  labelContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-});

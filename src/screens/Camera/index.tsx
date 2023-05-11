@@ -22,6 +22,25 @@ import { hasCameraPermissions } from '@/utils/permissions';
 import HeaderButton from './elements/HeaderButton';
 import CameraButton from './elements/CameraButton';
 
+const styles = StyleSheet.create({
+  parent: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  container: {
+    flex: 1,
+  },
+  camera: {
+    flex: 1,
+  },
+  containerCamera: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'green',
+  },
+});
+
 function CameraScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
@@ -195,24 +214,5 @@ function CameraScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  parent: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
-  container: {
-    flex: 1,
-  },
-  camera: {
-    flex: 1,
-  },
-  containerCamera: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'green',
-  },
-});
 
 export default CameraScreen;

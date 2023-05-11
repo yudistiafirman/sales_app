@@ -5,21 +5,6 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { resScale } from '@/utils';
 import { colors, layout } from '@/constants';
 
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-function POListShimmer() {
-  return (
-    <View style={[styles.container]}>
-      <View style={styles.nameAndPriceContainer}>
-        <ShimmerPlaceholder style={styles.shimmerName} />
-        <ShimmerPlaceholder style={styles.shimmerPrice} />
-      </View>
-      <View style={styles.flexRow}>
-        <ShimmerPlaceholder style={styles.shimmerChip} />
-      </View>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   flexRow: {
     flexDirection: 'row',
@@ -44,5 +29,20 @@ const styles = StyleSheet.create({
     borderRadius: layout.radius.xl,
   },
 });
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+function POListShimmer() {
+  return (
+    <View style={[styles.container]}>
+      <View style={styles.nameAndPriceContainer}>
+        <ShimmerPlaceholder style={styles.shimmerName} />
+        <ShimmerPlaceholder style={styles.shimmerPrice} />
+      </View>
+      <View style={styles.flexRow}>
+        <ShimmerPlaceholder style={styles.shimmerChip} />
+      </View>
+    </View>
+  );
+}
 
 export default POListShimmer;

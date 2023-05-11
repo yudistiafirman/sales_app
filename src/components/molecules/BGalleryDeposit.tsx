@@ -6,6 +6,44 @@ import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
 import BText from '../atoms/BText';
 
+const style = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.black,
+    opacity: 0.5,
+  },
+  textOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    color: colors.white,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    textAlignVertical: 'center',
+  },
+  rightText: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  summaryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: colors.tertiary,
+    borderRadius: layout.radius.sm,
+    borderColor: colors.border.default,
+    borderWidth: 1,
+    padding: layout.pad.md,
+  },
+  flexFull: {
+    flex: 1,
+  },
+});
+
 type BGalleryDepositType = {
   picts: any[];
   nominal: number;
@@ -52,41 +90,3 @@ export default function BGalleryDeposit({ picts, nominal, createdAt }: BGalleryD
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  overlay: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.black,
-    opacity: 0.5,
-  },
-  textOverlay: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    color: colors.white,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    textAlignVertical: 'center',
-  },
-  rightText: {
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-  },
-  summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: colors.tertiary,
-    borderRadius: layout.radius.sm,
-    borderColor: colors.border.default,
-    borderWidth: 1,
-    padding: layout.pad.md,
-  },
-  flexFull: {
-    flex: 1,
-  },
-});
