@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { RadioButton } from 'react-native-paper';
-import BText from '../atoms/BText';
-import BForm from '../organism/BForm';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { Input } from '@/interfaces';
 import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
+import BForm from '../organism/BForm';
+import BText from '../atoms/BText';
 
 interface Props<TItem> {
   item?: TItem;

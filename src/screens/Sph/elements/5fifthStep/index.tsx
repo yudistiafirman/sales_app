@@ -4,9 +4,6 @@ import { FlashList } from '@shopify/flash-list';
 import React, { useContext, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import ChoosePicModal from '../ChoosePicModal';
-import StepDone from '../StepDoneModal/StepDone';
-import { SphContext } from '../context/SphContext';
 import {
   BBackContinueBtn,
   BContainer,
@@ -39,6 +36,9 @@ import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { RootState } from '@/redux/store';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import { resScale } from '@/utils';
+import { SphContext } from '../context/SphContext';
+import StepDone from '../StepDoneModal/StepDone';
+import ChoosePicModal from '../ChoosePicModal';
 
 function countNonNullValues(array) {
   let count = 0;

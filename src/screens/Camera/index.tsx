@@ -10,8 +10,6 @@ import * as React from 'react';
 import { Animated, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { useDispatch, useSelector } from 'react-redux';
-import CameraButton from './elements/CameraButton';
-import HeaderButton from './elements/HeaderButton';
 import { BHeaderIcon } from '@/components';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
@@ -21,6 +19,8 @@ import { openPopUp } from '@/redux/reducers/modalReducer';
 import { AppDispatch, RootState } from '@/redux/store';
 import { resScale } from '@/utils';
 import { hasCameraPermissions } from '@/utils/permissions';
+import HeaderButton from './elements/HeaderButton';
+import CameraButton from './elements/CameraButton';
 
 function CameraScreen() {
   const navigation = useNavigation();

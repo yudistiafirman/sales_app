@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { RadioButton } from 'react-native-paper';
-import BLabel from '../atoms/BLabel';
-import BSpacer from '../atoms/BSpacer';
-import BText from '../atoms/BText';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { IComboRadioBtn, Input, TitleBold } from '@/interfaces';
 import { resScale } from '@/utils';
+import BText from '../atoms/BText';
+import BSpacer from '../atoms/BSpacer';
+import BLabel from '../atoms/BLabel';
 
 function BComboRadioButton({
   isRequire,

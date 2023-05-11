@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { useDispatch, useSelector } from 'react-redux';
-import { SphContext } from '../../context/SphContext';
 import { BButtonPrimary, BForm, BSpacer, BVisitationCard } from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import { Input, PIC } from '@/interfaces';
@@ -11,6 +10,7 @@ import { updateSelectedCompanyPicList, updateSelectedPic } from '@/redux/reducer
 import { RootState } from '@/redux/store';
 import BSheetAddPic from '@/screens/Visitation/elements/second/BottomSheetAddPic';
 import { resScale } from '@/utils';
+import { SphContext } from '../../context/SphContext';
 
 function ContinueIcon() {
   return <Entypo name="chevron-right" size={resScale(24)} color="#FFFFFF" />;

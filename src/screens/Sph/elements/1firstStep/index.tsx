@@ -4,8 +4,6 @@ import React, { useContext, useMemo, useState } from 'react';
 import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { SphContext } from '../context/SphContext';
-import SelectedPic from './elements/SelectedPic';
 import { BContainer, BCommonSearchList, BSearchBar } from '@/components';
 import { layout } from '@/constants';
 import { SPH } from '@/navigation/ScreenNames';
@@ -20,6 +18,8 @@ import {
 import { retrying } from '@/redux/reducers/commonReducer';
 import { AppDispatch, RootState } from '@/redux/store';
 import { resScale } from '@/utils';
+import SelectedPic from './elements/SelectedPic';
+import { SphContext } from '../context/SphContext';
 
 export default function FirstStep() {
   const dispatch = useDispatch<AppDispatch>();

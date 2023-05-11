@@ -7,9 +7,6 @@ import { AppState, DeviceEventEmitter, SafeAreaView, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { useDispatch } from 'react-redux';
-import PriceStyle from './PriceStyle';
-import CurrentLocation from './element/CurrentLocation';
-import PriceSearchBar from './element/PriceSearchBar';
 import { BAlert, BEmptyState, BSpacer, BTouchableText } from '@/components';
 import BTabSections from '@/components/organism/TabSections';
 import ProductList from '@/components/templates/Price/ProductList';
@@ -26,6 +23,9 @@ import {
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { AppDispatch } from '@/redux/store';
 import Tnc from '@/screens/Price/element/Tnc';
+import PriceSearchBar from './element/PriceSearchBar';
+import CurrentLocation from './element/CurrentLocation';
+import PriceStyle from './PriceStyle';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 function PriceList() {

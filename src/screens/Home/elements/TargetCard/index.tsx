@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
-import TargetBar from './elements/TargetBar';
-import TopVisitation from './elements/TopVisitation';
 import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
+import TopVisitation from './elements/TopVisitation';
+import TargetBar from './elements/TargetBar';
 
 type TargetCardProps = {
   maxVisitation: number;

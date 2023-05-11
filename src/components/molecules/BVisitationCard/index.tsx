@@ -2,18 +2,18 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { Text } from 'react-native-paper';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import HighlightText from '../../atoms/BHighlightText';
-import PillNames from './elements/PillNames';
-import PillStatus from './elements/PillStatus';
-import Time from './elements/Time';
-import Unit from './elements/Unit';
-import VisitStatus from './elements/VisitStatus';
 import BButtonPrimary from '@/components/atoms/BButtonPrimary';
 import BLocationText from '@/components/atoms/BLocationText';
 import BSpacer from '@/components/atoms/BSpacer';
 import { colors, fonts, layout } from '@/constants';
 import { visitationDataType } from '@/interfaces';
 import resScale from '@/utils/resScale';
+import HighlightText from '../../atoms/BHighlightText';
+import PillNames from './elements/PillNames';
+import PillStatus from './elements/PillStatus';
+import Time from './elements/Time';
+import Unit from './elements/Unit';
+import VisitStatus from './elements/VisitStatus';
 
 function iconRender(isRenderIcon: boolean, customIcon: (() => JSX.Element) | undefined) {
   if (!isRenderIcon) {

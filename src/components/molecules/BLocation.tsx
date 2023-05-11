@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Dimensions, Platform, View, ViewStyle } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
-import BMarker from '../atoms/BMarker';
 import { BLocationProps } from '@/interfaces';
 import resScale from '@/utils/resScale';
+import BMarker from '../atoms/BMarker';
 
 const { width, height } = Dimensions.get('window');
 

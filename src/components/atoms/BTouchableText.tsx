@@ -1,10 +1,10 @@
 import React from 'react';
 import { GestureResponderEvent, TextStyle, TouchableOpacity } from 'react-native';
-import BText from './BText';
 import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
+import BText from './BText';
 
 interface BTouchableTextProps {
   onPress?: ((event: GestureResponderEvent) => void) | undefined;

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { colors, fonts, layout } from '@/constants';
 import BSpacer from '../atoms/BSpacer';
 import BTouchableText from '../atoms/BTouchableText';
-import { colors, fonts, layout } from '@/constants';
 
 type BCompanyMapCardType = {
   location?: string;

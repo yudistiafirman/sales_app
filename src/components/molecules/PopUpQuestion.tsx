@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
-import BBackContinueBtn from './BBackContinueBtn';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
+import BBackContinueBtn from './BBackContinueBtn';
 
 type PopUpQuestionType = {
   isVisible: boolean;

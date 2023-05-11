@@ -1,15 +1,15 @@
 import { BottomSheetFooter, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import React, { useCallback } from 'react';
 import { View, ViewStyle } from 'react-native';
+import { colors, layout } from '@/constants';
+import { useKeyboardActive } from '@/hooks';
+import { Input, Styles } from '@/interfaces';
+import { resScale } from '@/utils';
 import BBottomSheet from '../atoms/BBottomSheet';
 import BButtonPrimary from '../atoms/BButtonPrimary';
 import BContainer from '../atoms/BContainer';
 import BSpacer from '../atoms/BSpacer';
 import BForm from './BForm';
-import { colors, layout } from '@/constants';
-import { useKeyboardActive } from '@/hooks';
-import { Input, Styles } from '@/interfaces';
-import { resScale } from '@/utils';
 
 type CustomFooterButtonType = {
   disable?: boolean;

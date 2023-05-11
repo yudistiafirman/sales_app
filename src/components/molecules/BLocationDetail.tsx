@@ -3,11 +3,11 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import Icons from 'react-native-vector-icons/Feather';
+import { colors, layout } from '@/constants';
+import { resScale } from '@/utils';
 import BLabel from '../atoms/BLabel';
 import BSpacer from '../atoms/BSpacer';
 import BText from '../atoms/BText';
-import { colors, layout } from '@/constants';
-import { resScale } from '@/utils';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 

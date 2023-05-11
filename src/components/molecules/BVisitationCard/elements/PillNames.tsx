@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import HighlightText from '../../../atoms/BHighlightText';
 import { fonts, layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import respFS from '@/utils/resFontSize';
 import resScale from '@/utils/resScale';
+import HighlightText from '../../../atoms/BHighlightText';
 
 type PillNamesType = {
   pilNames?: string[];

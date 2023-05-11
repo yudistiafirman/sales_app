@@ -1,11 +1,11 @@
 import React from 'react';
 import { TouchableOpacity, View, Text } from 'react-native';
 import Icons from 'react-native-vector-icons/Feather';
-import LocationStyles from '../styles';
 import { BText } from '@/components';
 import colors from '@/constants/colors';
 import LocationListShimmer from '@/screens/SearchAreaProject/element/LocationListShimmer';
 import resScale from '@/utils/resScale';
+import LocationStyles from '../styles';
 
 interface CoordinatesDetailsProps {
   address: string;

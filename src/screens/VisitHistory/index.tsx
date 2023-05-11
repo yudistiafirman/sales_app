@@ -3,14 +3,14 @@ import { FlashList } from '@shopify/flash-list';
 import { useMachine } from '@xstate/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import HistoryDetails from './elements/HistoryDetails';
-import HistoryHeader from './elements/HistoryHeader';
-import LocationText from './elements/LocationText';
 import { BSpacer, BSpinner, BTabSections } from '@/components';
 import { colors, layout } from '@/constants';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 import visitHistoryMachine from '@/machine/visitHistoryMachine';
 import { RootStackParamList } from '@/navigation/CustomStateComponent';
+import LocationText from './elements/LocationText';
+import HistoryHeader from './elements/HistoryHeader';
+import HistoryDetails from './elements/HistoryDetails';
 
 type VisitHistoryRoute = RouteProp<RootStackParamList, 'VISIT_HISTORY'>;
 

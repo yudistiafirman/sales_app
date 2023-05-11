@@ -4,7 +4,6 @@ import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import LastStepPopUp from '../LastStepPopUp';
 import { BGallery, PopUpQuestion } from '@/components';
 import {
   locationPayloadType,
@@ -29,6 +28,7 @@ import {
 } from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { RootState } from '@/redux/store';
+import LastStepPopUp from '../LastStepPopUp';
 
 export type selectedDateType = {
   date: string;

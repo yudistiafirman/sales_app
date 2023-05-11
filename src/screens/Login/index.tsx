@@ -4,10 +4,6 @@ import * as React from 'react';
 import { Image, SafeAreaView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useDispatch } from 'react-redux';
-import Instruction from './element/Intstruction';
-import Label from './element/Label';
-import PhoneInput from './element/PhoneInput';
-import loginStyle from './style';
 import { signIn } from '@/actions/CommonActions';
 import { BButtonPrimary, BErrorText, BSpacer } from '@/components';
 import { colors, layout } from '@/constants';
@@ -15,6 +11,10 @@ import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { LOGIN, VERIFICATION } from '@/navigation/ScreenNames';
 import { setPhoneNumber } from '@/redux/reducers/authReducer';
 import { resScale } from '@/utils';
+import loginStyle from './style';
+import PhoneInput from './element/PhoneInput';
+import Label from './element/Label';
+import Instruction from './element/Intstruction';
 
 interface LoginState {
   errorMessage: unknown | string;

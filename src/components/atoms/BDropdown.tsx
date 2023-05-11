@@ -1,9 +1,9 @@
 import React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import BText from './BText';
 import { colors, fonts, layout } from '@/constants';
 import { Styles } from '@/interfaces';
 import { resScale } from '@/utils';
+import BText from './BText';
 
 interface IProps {
   open: boolean;

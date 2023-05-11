@@ -1,7 +1,7 @@
 import { Linking, PermissionsAndroid, Platform } from 'react-native';
-import { displayName } from '../../../app.json';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { store } from '@/redux/store';
+import { displayName } from '../../../app.json';
 
 const checkWritePermissions = async () => {
   try {

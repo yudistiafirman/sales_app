@@ -2,14 +2,14 @@ import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Modal from 'react-native-modal';
-import BButtonPrimary from '../atoms/BButtonPrimary';
-import BHeaderIcon from '../atoms/BHeaderIcon';
-import BText from '../atoms/BText';
-import BForm from '../organism/BForm';
 import { colors, fonts, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { Input, PIC, PicFormInitialState } from '@/interfaces';
 import { resScale } from '@/utils';
+import BButtonPrimary from '../atoms/BButtonPrimary';
+import BHeaderIcon from '../atoms/BHeaderIcon';
+import BText from '../atoms/BText';
+import BForm from '../organism/BForm';
 
 const { height, width } = Dimensions.get('window');
 interface IProps {

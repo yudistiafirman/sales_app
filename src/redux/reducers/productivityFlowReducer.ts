@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { MarkedDates } from 'react-native-calendars/src/types';
+import { visitationListResponse, customerDataInterface } from '@/interfaces';
 import {
   getVisitationsList,
   postVisitation,
   putVisitationFlow,
 } from '../async-thunks/productivityFlowThunks';
-import { visitationListResponse, customerDataInterface } from '@/interfaces';
 
 type initialStateType = {
   visitationList: visitationListResponse[];

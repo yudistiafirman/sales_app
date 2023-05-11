@@ -8,11 +8,11 @@ import {
   ImageStyle,
   ImageProps,
 } from 'react-native';
+import { colors, layout } from '@/constants';
+import { resScale } from '@/utils';
 import BSpacer from '../atoms/BSpacer';
 import BSvg from '../atoms/BSvg';
 import BText from '../atoms/BText';
-import { colors, layout } from '@/constants';
-import { resScale } from '@/utils';
 
 interface IProps {
   children?: React.ReactNode;

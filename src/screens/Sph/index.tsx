@@ -4,13 +4,6 @@ import React, { useEffect, useState, useRef, useCallback, useContext } from 'rea
 import { View, ScrollView, StyleSheet, BackHandler } from 'react-native';
 import { Region } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
-import FirstStep from './elements/1firstStep';
-import SecondStep from './elements/2secondStep';
-import ThirdStep from './elements/3thirdStep';
-import FourthStep from './elements/4fourthStep';
-import FifthStep from './elements/5fifthStep';
-import Steps from './elements/Steps';
-import { SphContext, SphProvider } from './elements/context/SphContext';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import { BHeaderIcon, BStepperIndicator as StepperIndicator, PopUpQuestion } from '@/components';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
@@ -29,6 +22,13 @@ import { updateRegion } from '@/redux/reducers/locationReducer';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
+import { SphContext, SphProvider } from './elements/context/SphContext';
+import Steps from './elements/Steps';
+import FifthStep from './elements/5fifthStep';
+import FourthStep from './elements/4fourthStep';
+import ThirdStep from './elements/3thirdStep';
+import SecondStep from './elements/2secondStep';
+import FirstStep from './elements/1firstStep';
 
 const labels = [
   'Cari PT / Proyek',

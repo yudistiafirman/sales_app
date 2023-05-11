@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
-import BSpacer from '../atoms/BSpacer';
-import BText from '../atoms/BText';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
+import BSpacer from '../atoms/BSpacer';
+import BText from '../atoms/BText';
 
 type BDepositCardType = {
   firstSectionValue: number;

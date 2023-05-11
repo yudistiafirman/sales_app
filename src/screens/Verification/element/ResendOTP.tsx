@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
+import { BText, BTouchableText } from '@/components';
 import VerificationStyles from '../styles';
 import CountDown from './CountDown';
-import { BText, BTouchableText } from '@/components';
 
 function ResendOTP({ count, onPress }: { count: number; onPress?: () => void }) {
   return (

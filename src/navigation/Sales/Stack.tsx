@@ -1,4 +1,23 @@
 import * as React from 'react';
+import AppointmentWithProvider from '@/screens/Appointment';
+import CalendarScreen from '@/screens/Calendar';
+import CameraScreen from '@/screens/Camera';
+import Preview from '@/screens/Camera/Preview';
+import CreateScheduleScreen from '@/screens/CreateSchedule';
+import CustomerDetail from '@/screens/CustomerDetail';
+import Deposit from '@/screens/Deposit';
+import Location from '@/screens/Location';
+import PriceList from '@/screens/Price';
+import PurchaseOrderWithProvider from '@/screens/PurchaseOrder';
+import RequiredDocuments from '@/screens/RequiredDocuments';
+import SearchAreaProject from '@/screens/SearchAreaProject';
+import SearchProduct from '@/screens/SearchProduct';
+import SearchSO from '@/screens/SearchSO';
+import FormSO from '@/screens/SearchSO/Form/FormSO';
+import Sph from '@/screens/Sph';
+import TransactionDetail from '@/screens/Transaction/Detail';
+import VisitHistory from '@/screens/VisitHistory';
+import CreateVisitation from '@/screens/Visitation/CreateVisitation';
 import {
   ALL_PRODUCT,
   ALL_PRODUCT_TITLE,
@@ -37,25 +56,6 @@ import {
   TRANSACTION_DETAIL_TITLE,
   VISIT_HISTORY,
 } from '../ScreenNames';
-import AppointmentWithProvider from '@/screens/Appointment';
-import CalendarScreen from '@/screens/Calendar';
-import CameraScreen from '@/screens/Camera';
-import Preview from '@/screens/Camera/Preview';
-import CreateScheduleScreen from '@/screens/CreateSchedule';
-import CustomerDetail from '@/screens/CustomerDetail';
-import Deposit from '@/screens/Deposit';
-import Location from '@/screens/Location';
-import PriceList from '@/screens/Price';
-import PurchaseOrderWithProvider from '@/screens/PurchaseOrder';
-import RequiredDocuments from '@/screens/RequiredDocuments';
-import SearchAreaProject from '@/screens/SearchAreaProject';
-import SearchProduct from '@/screens/SearchProduct';
-import SearchSO from '@/screens/SearchSO';
-import FormSO from '@/screens/SearchSO/Form/FormSO';
-import Sph from '@/screens/Sph';
-import TransactionDetail from '@/screens/Transaction/Detail';
-import VisitHistory from '@/screens/VisitHistory';
-import CreateVisitation from '@/screens/Visitation/CreateVisitation';
 
 function SalesStack(Stack: any) {
   return (

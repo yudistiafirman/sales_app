@@ -1,8 +1,8 @@
 import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import { Camera } from 'react-native-vision-camera';
-import { displayName } from '../../../app.json';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { store } from '@/redux/store';
+import { displayName } from '../../../app.json';
 
 const openSetting = () => {
   Linking.openSettings().catch(() => {

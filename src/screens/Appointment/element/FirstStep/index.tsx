@@ -3,14 +3,14 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { TextInput } from 'react-native-paper';
-import Inputs from './Input';
-import SearchingCustomer from './SearchingCustomer';
 import { BSearchBar, BSpacer } from '@/components';
 import { layout } from '@/constants';
 import { AppointmentActionType } from '@/context/AppointmentContext';
 import { useAppointmentData } from '@/hooks';
 import { APPOINTMENT } from '@/navigation/ScreenNames';
 import { resScale } from '@/utils';
+import SearchingCustomer from './SearchingCustomer';
+import Inputs from './Input';
 
 function FirstStep() {
   const [values, dispatchValue] = useAppointmentData();

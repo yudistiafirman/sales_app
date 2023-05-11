@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
 import Pdf from 'react-native-pdf';
-import BText from '../atoms/BText';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
+import BText from '../atoms/BText';
 
 type BGalleryDepositType = {
   picts: any[];

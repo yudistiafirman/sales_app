@@ -1,11 +1,11 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { View, TouchableOpacity, Image } from 'react-native';
 import { useSelector } from 'react-redux';
-import TabBarStyle from './TabBarStyle';
 import BText from '@/components/atoms/BText';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import { RootState } from '@/redux/store';
+import TabBarStyle from './TabBarStyle';
 
 interface TabBar {
   state: any;

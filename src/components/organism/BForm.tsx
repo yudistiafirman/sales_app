@@ -5,6 +5,9 @@ import DatePicker from 'react-native-date-picker';
 import { TextInputMask } from 'react-native-masked-text';
 import { TextInput } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { colors, fonts, layout } from '@/constants';
+import { Input } from '@/interfaces';
+import { resScale } from '@/utils';
 import BAutoComplete from '../atoms/BAutoComplete';
 import BDivider from '../atoms/BDivider';
 import BDropdown from '../atoms/BDropdown';
@@ -20,9 +23,6 @@ import BComboRadioButton from '../molecules/BComboRadioButton';
 import BTableInput from '../molecules/BTableInput';
 import BCalendar from './BCalendar';
 import BPicList from './BPicList';
-import { colors, fonts, layout } from '@/constants';
-import { Input } from '@/interfaces';
-import { resScale } from '@/utils';
 
 interface IProps {
   inputs: Input[];

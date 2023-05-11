@@ -1,6 +1,6 @@
 import React from 'react';
-import loginStyle from '../style';
 import { BText } from '@/components';
+import loginStyle from '../style';
 
 function Instruction() {
   return (

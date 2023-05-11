@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import BSpacer from '../atoms/BSpacer';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
+import BSpacer from '../atoms/BSpacer';
 
 type BProductCardType = {
   name?: string;

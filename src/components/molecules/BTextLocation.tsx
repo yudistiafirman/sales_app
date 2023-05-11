@@ -2,11 +2,11 @@
 import React, { Children } from 'react';
 import { GestureResponderEvent, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import BText from '../atoms/BText';
 import { fonts, layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
+import BText from '../atoms/BText';
 
 type BTextLocationProps = {
   onPress?: ((event: GestureResponderEvent) => void) | undefined;

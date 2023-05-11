@@ -2,9 +2,6 @@ import { StackActions, useFocusEffect, useNavigation } from '@react-navigation/n
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import CreatePo from './element/CreatePo';
-import UploadFiles from './element/PaymentDetail';
-import DetailProduk from './element/ProductDetail';
 import { bStorage } from '@/actions';
 import {
   BBackContinueBtn,
@@ -17,6 +14,9 @@ import { layout } from '@/constants';
 import { useKeyboardActive } from '@/hooks';
 import { PO, TAB_ROOT } from '@/navigation/ScreenNames';
 import { AppDispatch, RootState } from '@/redux/store';
+import DetailProduk from './element/ProductDetail';
+import UploadFiles from './element/PaymentDetail';
+import CreatePo from './element/CreatePo';
 
 function PurchaseOrder() {
   const navigation = useNavigation();

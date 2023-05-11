@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import CustomTabBar from '../CustomTabBar';
 import { colors } from '@/constants';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import SalesHeaderRight from '@/navigation/Sales/HeaderRight';
@@ -19,6 +18,7 @@ import {
 import { RootState } from '@/redux/store';
 import Dispatch from '@/screens/Operation/Dispatch';
 import Return from '@/screens/Operation/Return';
+import CustomTabBar from '../CustomTabBar';
 
 const Tab = createBottomTabNavigator();
 

@@ -5,12 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { View, DeviceEventEmitter, BackHandler } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { useDispatch, useSelector } from 'react-redux';
-import Fifth from './elements/fifth';
-import FirstStep from './elements/first';
-import Fourth from './elements/fourth';
-import SecondStep from './elements/second';
-import BSheetAddPic from './elements/second/BottomSheetAddPic';
-import ThirdStep from './elements/third';
 import {
   BBackContinueBtn,
   BContainer,
@@ -41,6 +35,12 @@ import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
+import ThirdStep from './elements/third';
+import BSheetAddPic from './elements/second/BottomSheetAddPic';
+import SecondStep from './elements/second';
+import Fourth from './elements/fourth';
+import FirstStep from './elements/first';
+import Fifth from './elements/fifth';
 
 const labels = ['Alamat Proyek', 'Data Pelanggan', 'Data Proyek', 'Kompetitor', 'Kelengkapan Foto'];
 

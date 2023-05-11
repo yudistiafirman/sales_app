@@ -1,7 +1,7 @@
 import Geolocation from 'react-native-geolocation-service';
 import { assign, createMachine } from 'xstate';
-import { getLocationCoordinates } from '../priceMachine';
 import { hasLocationPermission } from '@/utils/permissions';
+import { getLocationCoordinates } from '../priceMachine';
 
 interface IContext {
   PostalId: any;

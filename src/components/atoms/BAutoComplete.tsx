@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
-import BText from './BText';
 import { colors, fonts, layout } from '@/constants';
 import { Styles } from '@/interfaces';
 import { resScale } from '@/utils';
+import BText from './BText';
 
 interface IProps {
   items?: any[];

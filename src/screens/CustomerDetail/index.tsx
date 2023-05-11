@@ -4,11 +4,6 @@ import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navig
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, DeviceEventEmitter } from 'react-native';
 import { useDispatch } from 'react-redux';
-import AddNewAddressWrapper from './elements/AddNewAddressWrapper';
-import BillingModal from './elements/BillingModal';
-import DocumentWarning from './elements/DocumentWarning';
-import ProjectBetween from './elements/ProjectBetween';
-import UpdatedAddressWrapper from './elements/UpdatedAddressWrapper';
 import { getProjectIndivualDetail, projectGetOneById } from '@/actions/CommonActions';
 import { BContainer, BPic, BSpacer, BSpinner, BTouchableText } from '@/components';
 import { colors, fonts } from '@/constants';
@@ -19,6 +14,11 @@ import { resetRegion } from '@/redux/reducers/locationReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { AppDispatch } from '@/redux/store';
 import formatCurrency from '@/utils/formatCurrency';
+import UpdatedAddressWrapper from './elements/UpdatedAddressWrapper';
+import ProjectBetween from './elements/ProjectBetween';
+import DocumentWarning from './elements/DocumentWarning';
+import BillingModal from './elements/BillingModal';
+import AddNewAddressWrapper from './elements/AddNewAddressWrapper';
 
 type CustomerDetailRoute = RouteProp<RootStackParamList['CUSTOMER_DETAIL']>;
 

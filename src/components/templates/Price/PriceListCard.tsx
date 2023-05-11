@@ -2,13 +2,13 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import BChip from '../../atoms/BChip';
-import BText from '../../atoms/BText';
 import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import formatCurrency from '@/utils/formatCurrency';
 import resScale from '@/utils/resScale';
+import BText from '../../atoms/BText';
+import BChip from '../../atoms/BChip';
 
 interface PriceListCardProps {
   productName?: string;

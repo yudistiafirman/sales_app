@@ -11,8 +11,6 @@ import {
 } from 'react-native';
 import { RadioButton, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import ProductChip from './ProductChip';
-import ProductDetailModal from './ProductDetailModal';
 import { BDivider, BForm, BLabel, BSpacer, BText, BTextInput } from '@/components';
 import { colors, layout } from '@/constants';
 import { MONTH_LIST, STAGE_PROJECT, TYPE_PROJECT, WEEK_LIST } from '@/constants/dropdown';
@@ -21,6 +19,8 @@ import { ALL_PRODUCT, CREATE_VISITATION, SEARCH_PRODUCT } from '@/navigation/Scr
 import { updateDataVisitation } from '@/redux/reducers/VisitationReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
+import ProductDetailModal from './ProductDetailModal';
+import ProductChip from './ProductChip';
 
 const cbd = require('@/assets/icon/Visitation/cbd.png');
 const credit = require('@/assets/icon/Visitation/credit.png');

@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { View } from 'react-native';
-import VerificationStyles from '../styles';
 import { BText, BTouchableText } from '@/components';
 import { colors } from '@/constants';
 import { resScale } from '@/utils';
+import VerificationStyles from '../styles';
 
 function VIntstruction({ phoneNumber, onPress }: { phoneNumber: string; onPress: () => void }) {
   return (

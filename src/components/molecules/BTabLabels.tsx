@@ -1,10 +1,10 @@
 import React from 'react';
 import { TextStyle, View, ViewStyle } from 'react-native';
-import BChip from '../atoms/BChip';
-import BText from '../atoms/BText';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
+import BText from '../atoms/BText';
+import BChip from '../atoms/BChip';
 
 type Route = {
   key: string;

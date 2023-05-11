@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-import loginStyle from '../style';
 import { BText } from '@/components';
 import { colors } from '@/constants';
+import loginStyle from '../style';
 
 function Label() {
   return (

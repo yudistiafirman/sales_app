@@ -1,8 +1,8 @@
 import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import { displayName } from '../../../app.json';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { store } from '@/redux/store';
+import { displayName } from '../../../app.json';
 
 const hasPermissionIOS = async () => {
   const status = await Geolocation.requestAuthorization('whenInUse');

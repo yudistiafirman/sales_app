@@ -4,7 +4,6 @@ import { useMachine } from '@xstate/react';
 import React from 'react';
 import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import OperationList from './element/OperationList';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
 import displayOperationListMachine from '@/machine/displayOperationListMachine';
 import { ENTRY_TYPE } from '@/models/EnumModel';
@@ -15,6 +14,7 @@ import {
   setAllOperationPhoto,
 } from '@/redux/reducers/operationReducer';
 import { AppDispatch, RootState } from '@/redux/store';
+import OperationList from './element/OperationList';
 
 function Operation() {
   const dispatch = useDispatch<AppDispatch>();

@@ -3,6 +3,10 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Modal from 'react-native-modal';
 import { RadioButton } from 'react-native-paper';
+import { colors, fonts, layout } from '@/constants';
+import font from '@/constants/fonts';
+import { Competitor, Input } from '@/interfaces';
+import { resScale } from '@/utils';
 import BButtonPrimary from '../atoms/BButtonPrimary';
 import BDivider from '../atoms/BDivider';
 import BHeaderIcon from '../atoms/BHeaderIcon';
@@ -10,10 +14,6 @@ import BLabel from '../atoms/BLabel';
 import BSpacer from '../atoms/BSpacer';
 import BText from '../atoms/BText';
 import BForm from '../organism/BForm';
-import { colors, fonts, layout } from '@/constants';
-import font from '@/constants/fonts';
-import { Competitor, Input } from '@/interfaces';
-import { resScale } from '@/utils';
 
 const { height, width } = Dimensions.get('window');
 interface IProps {

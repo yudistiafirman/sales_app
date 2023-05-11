@@ -16,11 +16,6 @@ import {
 import Modal from 'react-native-modal';
 import { Button, Dialog, Portal, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
-import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
-import BuatKunjungan from './elements/BuatKunjungan';
-import DateDaily from './elements/DateDaily';
-import TargetCard from './elements/TargetCard';
 import { bStorage } from '@/actions';
 import { getAllVisitations, getVisitationTarget } from '@/actions/ProductivityActions';
 import {
@@ -66,6 +61,11 @@ import {
   isForceUpdate,
 } from '@/utils/generalFunc';
 import resScale from '@/utils/resScale';
+import TargetCard from './elements/TargetCard';
+import DateDaily from './elements/DateDaily';
+import BuatKunjungan from './elements/BuatKunjungan';
+import BottomSheetFlatlist from './elements/BottomSheetFlatlist';
+import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
 
 const { height, width } = Dimensions.get('window');
 

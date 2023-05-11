@@ -1,8 +1,8 @@
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
+import EmptyState from '@/components/organism/BEmptyState';
 import LocationListCard from './LocationListCard';
 import LocationListShimmer from './LocationListShimmer';
-import EmptyState from '@/components/organism/BEmptyState';
 
 interface LocationData {
   description?: string;

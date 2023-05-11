@@ -5,7 +5,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-import SearchFlow from './Searching';
 import { BDivider, BForm, BSpacer, BText } from '@/components';
 import { layout } from '@/constants';
 import { Input, projectResponseType, Styles } from '@/interfaces';
@@ -15,6 +14,7 @@ import { getProjectsByUserThunk } from '@/redux/async-thunks/commonThunks';
 import { setSearchProject, updateDataVisitation } from '@/redux/reducers/VisitationReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
+import SearchFlow from './Searching';
 
 const company = require('@/assets/icon/Visitation/company.png');
 const profile = require('@/assets/icon/Visitation/profile.png');

@@ -10,7 +10,6 @@ import {
   ScrollView,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import BForm from '../organism/BForm';
 import BDivider from '@/components/atoms/BDivider';
 import BLabel from '@/components/atoms/BLabel';
 import BSpacer from '@/components/atoms/BSpacer';
@@ -21,6 +20,7 @@ import { Input } from '@/interfaces';
 import { Products } from '@/interfaces/CreatePurchaseOrder';
 import { resScale } from '@/utils';
 import formatCurrency from '@/utils/formatCurrency';
+import BForm from '../organism/BForm';
 
 const { width, height } = Dimensions.get('window');
 

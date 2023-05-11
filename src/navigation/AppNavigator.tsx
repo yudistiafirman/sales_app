@@ -1,9 +1,21 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import OperationStack from './Operation/Stack';
-import SalesHeaderRight from './Sales/HeaderRight';
-import SalesStack from './Sales/Stack';
+import { BHttpLogger } from '@/components';
+import { colors, fonts } from '@/constants';
+import { useAsyncConfigSetup } from '@/hooks';
+import { ENTRY_TYPE } from '@/models/EnumModel';
+import { UserModel } from '@/models/User';
+import { setShowButtonNetwork, setVisibleNetworkLogger } from '@/redux/reducers/authReducer';
+import { AppDispatch } from '@/redux/store';
+import BlankScreen from '@/screens/BlankScreen';
+import HunterAndFarmers from '@/screens/HunterAndFarmers';
+import Login from '@/screens/Login';
+import Operation from '@/screens/Operation';
+import Splash from '@/screens/Splash';
+import Verification from '@/screens/Verification';
+import SecurityTabs from './tabs/SecurityTabs';
+import SalesTabs from './tabs/SalesTabs';
 import {
   LOGIN,
   LOGIN_TITLE,
@@ -18,21 +30,9 @@ import {
   DRIVER_TITLE,
   BLANK_SCREEN,
 } from './ScreenNames';
-import SalesTabs from './tabs/SalesTabs';
-import SecurityTabs from './tabs/SecurityTabs';
-import { BHttpLogger } from '@/components';
-import { colors, fonts } from '@/constants';
-import { useAsyncConfigSetup } from '@/hooks';
-import { ENTRY_TYPE } from '@/models/EnumModel';
-import { UserModel } from '@/models/User';
-import { setShowButtonNetwork, setVisibleNetworkLogger } from '@/redux/reducers/authReducer';
-import { AppDispatch } from '@/redux/store';
-import BlankScreen from '@/screens/BlankScreen';
-import HunterAndFarmers from '@/screens/HunterAndFarmers';
-import Login from '@/screens/Login';
-import Operation from '@/screens/Operation';
-import Splash from '@/screens/Splash';
-import Verification from '@/screens/Verification';
+import SalesStack from './Sales/Stack';
+import SalesHeaderRight from './Sales/HeaderRight';
+import OperationStack from './Operation/Stack';
 
 const Stack = createNativeStackNavigator();
 

@@ -2,12 +2,12 @@ import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
 import React, { useCallback } from 'react';
 import { ListRenderItem } from 'react-native';
-import PriceListShimmer from './PriceListShimmer';
 import BDivider from '@/components/atoms/BDivider';
 import BSpacer from '@/components/atoms/BSpacer';
 import BEmptyState from '@/components/organism/BEmptyState';
 import PriceListCard from '@/components/templates/Price/PriceListCard';
 import { layout } from '@/constants';
+import PriceListShimmer from './PriceListShimmer';
 
 interface productsData {
   display_name?: string;

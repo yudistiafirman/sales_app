@@ -1,11 +1,11 @@
 import React from 'react';
 import { ScrollView, TextStyle, View } from 'react-native';
 import { RadioButton } from 'react-native-paper';
-import BSpacer from '../atoms/BSpacer';
-import BText from '../atoms/BText';
 import { colors, fonts, layout } from '@/constants';
 import { PIC, Styles } from '@/interfaces';
 import { resScale } from '@/utils';
+import BText from '../atoms/BText';
+import BSpacer from '../atoms/BSpacer';
 
 interface IProps extends PIC {
   isOption?: boolean;

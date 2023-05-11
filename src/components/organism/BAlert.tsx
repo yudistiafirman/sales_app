@@ -1,12 +1,12 @@
 import React from 'react';
 import { Image, StyleSheet, TextStyle, View } from 'react-native';
 import Modal from 'react-native-modal';
-import BButtonPrimary from '../atoms/BButtonPrimary';
-import BText from '../atoms/BText';
 import { fonts, layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
+import BText from '../atoms/BText';
+import BButtonPrimary from '../atoms/BButtonPrimary';
 
 interface BAlertProps {
   isVisible: boolean;

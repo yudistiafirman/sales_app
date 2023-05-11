@@ -6,7 +6,6 @@ import { DeviceEventEmitter, Platform, StyleSheet, Text, View } from 'react-nati
 import { Region } from 'react-native-maps';
 import { TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { SphContext } from '../context/SphContext';
 import { getLocationCoordinates } from '@/actions/CommonActions';
 import {
   BBackContinueBtn,
@@ -35,6 +34,7 @@ import { updateRegion } from '@/redux/reducers/locationReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
+import { SphContext } from '../context/SphContext';
 
 function checkObj(
   billingAddress: billingAddressType,

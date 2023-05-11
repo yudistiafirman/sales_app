@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
+import { PIC } from '@/interfaces';
 import BSpacer from '../atoms/BSpacer';
 import BPic from '../molecules/BPic';
-import { PIC } from '@/interfaces';
 
 interface IProps {
   data: PIC[];

@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
+import { SphStateInterface } from '@/interfaces';
 import { createXStateMiddleware } from './middleware/createXStateMiddleware';
 import SphReducer from './reducers/SphReducer';
 import VisitationReducer, { VisitationGlobalState } from './reducers/VisitationReducer';
@@ -16,7 +17,6 @@ import productivityFlowReducer from './reducers/productivityFlowReducer';
 import purchaseOrderReducer, { purchaseOrderSlice } from './reducers/purchaseOrder';
 import salesOrderReducer, { SOGlobalState } from './reducers/salesOrder';
 import snackbarReducer from './reducers/snackbarReducer';
-import { SphStateInterface } from '@/interfaces';
 
 const persistConfig = {
   key: 'root',

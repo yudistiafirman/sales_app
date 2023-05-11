@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import BSpacer from '../atoms/BSpacer';
-import BTouchableText from '../atoms/BTouchableText';
 import { colors, fonts, layout } from '@/constants';
 import formatCurrency from '@/utils/formatCurrency';
 import { getColorStatusTrx, getStatusTrx } from '@/utils/generalFunc';
+import BTouchableText from '../atoms/BTouchableText';
+import BSpacer from '../atoms/BSpacer';
 
 type BProjectDetailCardType = {
   status?: string;

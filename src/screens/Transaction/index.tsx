@@ -6,8 +6,6 @@ import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
-import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
-import TransactionList from './element/TransactionList';
 import { bStorage } from '@/actions';
 import {
   getDeliveryOrderByID,
@@ -41,6 +39,8 @@ import { resetFocusedStepperFlag, resetSPHState } from '@/redux/reducers/SphRedu
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
+import TransactionList from './element/TransactionList';
+import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 function Transaction() {

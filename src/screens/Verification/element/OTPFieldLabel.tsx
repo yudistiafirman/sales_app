@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-import VerificationStyles from '../styles';
 import { BText } from '@/components';
 import { colors } from '@/constants';
+import VerificationStyles from '../styles';
 
 function OTPFieldLabel() {
   return (

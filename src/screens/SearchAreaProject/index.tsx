@@ -6,9 +6,6 @@ import { SafeAreaView, DeviceEventEmitter, Platform } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { assign } from 'xstate';
-import LocationList from './element/LocationList';
-import CurrentLocation from './element/SearchAreaCurrentLocation';
-import SearchAreaStyles from './styles';
 import { BSpacer } from '@/components';
 import BHeaderIcon from '@/components/atoms/BHeaderIcon';
 import BSearchBar from '@/components/molecules/BSearchBar';
@@ -25,6 +22,9 @@ import {
 import { updateRegion } from '@/redux/reducers/locationReducer';
 import { hasLocationPermission } from '@/utils/permissions';
 import resScale from '@/utils/resScale';
+import SearchAreaStyles from './styles';
+import CurrentLocation from './element/SearchAreaCurrentLocation';
+import LocationList from './element/LocationList';
 
 function SearchAreaProject({ route }: { route: any }) {
   const navigation = useNavigation();

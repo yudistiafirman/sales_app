@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import ProductCartModal from '../ProductOrderDetailModal';
-import { SphContext } from '../context/SphContext';
 import {
   BBackContinueBtn,
   BContainer,
@@ -28,6 +26,8 @@ import { SEARCH_PRODUCT, SPH } from '@/navigation/ScreenNames';
 import { setStepperFocused, updateChosenProducts } from '@/redux/reducers/SphReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
+import { SphContext } from '../context/SphContext';
+import ProductCartModal from '../ProductOrderDetailModal';
 
 const { width } = Dimensions.get('window');
 

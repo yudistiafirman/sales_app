@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import BSvg from '../atoms/BSvg';
 import { fonts, layout } from '@/constants';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import { buttonDataType } from '@/interfaces/QuickActionButton.type';
 import resScale from '@/utils/resScale';
+import BSvg from '../atoms/BSvg';
 
 export default function BQuickActionButton({ item }: { item: buttonDataType }) {
   const title = item.title.split(' ');

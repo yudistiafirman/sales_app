@@ -2,10 +2,10 @@ import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
 import React, { useCallback } from 'react';
 import { ListRenderItem } from 'react-native';
-import TransactionListCard from './TransactionListCard';
-import TransactionListShimmer from './TransactionListShimmer';
 import { BEmptyState } from '@/components';
 import { layout } from '@/constants';
+import TransactionListCard from './TransactionListCard';
+import TransactionListShimmer from './TransactionListShimmer';
 
 interface TransactionsData {
   id: string;

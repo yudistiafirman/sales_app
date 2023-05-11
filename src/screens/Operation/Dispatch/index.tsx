@@ -4,7 +4,6 @@ import { useMachine } from '@xstate/react';
 import React from 'react';
 import { StyleSheet, SafeAreaView, DeviceEventEmitter } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import OperationList from '../element/OperationList';
 import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import { OperationsDeliveryOrdersListResponse } from '@/interfaces/Operation';
@@ -13,6 +12,7 @@ import { ENTRY_TYPE } from '@/models/EnumModel';
 import { CAMERA, SUBMIT_FORM, TAB_DISPATCH, TAB_WB_OUT } from '@/navigation/ScreenNames';
 import { OperationProjectDetails, setAllOperationPhoto } from '@/redux/reducers/operationReducer';
 import { AppDispatch, RootState } from '@/redux/store';
+import OperationList from '../element/OperationList';
 
 function Dispatch() {
   const dispatch = useDispatch<AppDispatch>();

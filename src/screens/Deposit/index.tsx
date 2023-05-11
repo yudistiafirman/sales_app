@@ -3,8 +3,6 @@ import moment from 'moment';
 import * as React from 'react';
 import { View, DeviceEventEmitter, BackHandler } from 'react-native';
 import { useDispatch } from 'react-redux';
-import FirstStep from './element/FirstStep';
-import SecondStep from './element/SecondStep';
 import {
   BBackContinueBtn,
   BContainer,
@@ -27,6 +25,8 @@ import { postOrderDeposit } from '@/redux/async-thunks/orderThunks';
 import { resetImageURLS } from '@/redux/reducers/cameraReducer';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { resScale } from '@/utils';
+import SecondStep from './element/SecondStep';
+import FirstStep from './element/FirstStep';
 
 const labels = ['Data Pelanggan', 'Cari PT / Proyek'];
 

@@ -2,8 +2,6 @@ import { FlashList } from '@shopify/flash-list';
 import * as React from 'react';
 import { ListRenderItem, Platform, StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import BEmptyState from '../organism/BEmptyState';
-import BCommonListShimmer from './BCommonListShimmer';
 import BSpacer from '@/components/atoms/BSpacer';
 import BSearchBar from '@/components/molecules/BSearchBar';
 import BVisitationCard from '@/components/molecules/BVisitationCard';
@@ -12,6 +10,8 @@ import { colors, layout } from '@/constants';
 import { selectedCompanyInterface, visitationDataType } from '@/interfaces';
 import { CreatedSPHListResponse } from '@/interfaces/CreatePurchaseOrder';
 import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO';
+import BCommonListShimmer from './BCommonListShimmer';
+import BEmptyState from '../organism/BEmptyState';
 
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
   CreatedSPHListResponse &

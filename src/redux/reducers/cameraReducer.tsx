@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { postUploadFiles } from '../async-thunks/commonThunks';
 import { requiredDocType } from '@/interfaces';
 import { LocalFileType } from '@/interfaces/LocalFileType';
 import { CREATE_DEPOSIT, CREATE_SCHEDULE, CREATE_VISITATION } from '@/navigation/ScreenNames';
+import { postUploadFiles } from '../async-thunks/commonThunks';
 
 type fileResponse = {
   id: string;

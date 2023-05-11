@@ -7,11 +7,6 @@ import { Image, SafeAreaView } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useDispatch, useSelector } from 'react-redux';
-import OTPField from './element/OTPField';
-import OTPFieldLabel from './element/OTPFieldLabel';
-import ResendOTP from './element/ResendOTP';
-import VIntstruction from './element/VInstruction';
-import VerificationStyles from './styles';
 import bStorage from '@/actions/BStorage';
 import { signIn } from '@/actions/CommonActions';
 import { BHeaderIcon, BSpacer } from '@/components';
@@ -23,6 +18,11 @@ import { VERIFICATION } from '@/navigation/ScreenNames';
 import { setUserData } from '@/redux/reducers/authReducer';
 import { RootState } from '@/redux/store';
 import { resScale } from '@/utils';
+import VerificationStyles from './styles';
+import VIntstruction from './element/VInstruction';
+import ResendOTP from './element/ResendOTP';
+import OTPFieldLabel from './element/OTPFieldLabel';
+import OTPField from './element/OTPField';
 
 function Verification() {
   const { phoneNumber } = useSelector((state: RootState) => state.auth.loginCredential);

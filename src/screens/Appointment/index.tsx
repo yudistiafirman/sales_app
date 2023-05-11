@@ -4,8 +4,6 @@ import moment from 'moment';
 import * as React from 'react';
 import { Alert, BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import FirstStep from './element/FirstStep';
-import SecondStep from './element/SecondStep';
 import { postBookingAppointment } from '@/actions/ProductivityActions';
 import {
   BBackContinueBtn,
@@ -29,6 +27,8 @@ import { APPOINTMENT } from '@/navigation/ScreenNames';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { AppDispatch } from '@/redux/store';
 import { resScale } from '@/utils';
+import SecondStep from './element/SecondStep';
+import FirstStep from './element/FirstStep';
 
 const { width } = Dimensions.get('window');
 function Appointment() {

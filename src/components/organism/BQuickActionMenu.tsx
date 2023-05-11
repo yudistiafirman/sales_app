@@ -1,9 +1,9 @@
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
 import { View } from 'react-native';
-import BQuickActionButton from '../molecules/BQuickAction';
 import { layout } from '@/constants';
 import { QuickActionProps } from '@/interfaces/QuickActionButton.type';
+import BQuickActionButton from '../molecules/BQuickAction';
 
 export default function BQuickAction({
   buttonProps,

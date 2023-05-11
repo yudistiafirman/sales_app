@@ -1,8 +1,8 @@
 import React from 'react';
 import { TextStyle, View, ViewStyle } from 'react-native';
-import BText from './BText';
 import { colors, fonts, layout } from '@/constants';
 import { resScale } from '@/utils';
+import BText from './BText';
 
 interface BChipProps {
   children: any;

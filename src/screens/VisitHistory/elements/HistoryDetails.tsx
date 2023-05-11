@@ -1,5 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
+import { BSpacer, BDivider } from '@/components';
+import { layout } from '@/constants';
+import { VisitHistoryPayload } from '@/machine/visitHistoryMachine';
 import Estimation from './Estimation';
 import Notes from './Note';
 import PaymentType from './PaymentType';
@@ -7,9 +10,6 @@ import Pic from './Pic';
 import Product from './Product';
 import ProjectPhase from './ProjectPhase';
 import VisitationDatesAndStatus from './VisitationDatesAndStatus';
-import { BSpacer, BDivider } from '@/components';
-import { layout } from '@/constants';
-import { VisitHistoryPayload } from '@/machine/visitHistoryMachine';
 
 function HistoryDetails({ details }: { details: VisitHistoryPayload }) {
   return (

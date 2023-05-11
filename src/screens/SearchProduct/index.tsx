@@ -4,13 +4,13 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { useMachine } from '@xstate/react';
 import * as React from 'react';
 import { SafeAreaView, View, DeviceEventEmitter, Platform } from 'react-native';
-import SearchProductNavbar from './element/SearchProductNavbar';
-import SearchProductStyles from './styles';
 import { BEmptyState, BHeaderIcon, BSpacer, BTabSections, ProductList } from '@/components';
 import { layout } from '@/constants';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 import { searchProductMachine } from '@/machine/searchProductMachine';
 import { SEARCH_PRODUCT } from '@/navigation/ScreenNames';
+import SearchProductStyles from './styles';
+import SearchProductNavbar from './element/SearchProductNavbar';
 
 function SearchProduct() {
   const route = useRoute<RouteProp<Record<string, object>, string>>();

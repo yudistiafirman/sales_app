@@ -1,6 +1,6 @@
 import React from 'react';
-import VerificationStyles from '../styles';
 import { BText } from '@/components';
+import VerificationStyles from '../styles';
 
 function CountDown({ count }: { count: number }): JSX.Element {
   let finalCount = count.toString();

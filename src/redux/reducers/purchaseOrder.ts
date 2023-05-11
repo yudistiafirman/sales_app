@@ -1,5 +1,5 @@
-import { createXStateSlice } from '../customSlice/createXStateSlice';
 import POMachine from '@/machine/PoMachine';
+import { createXStateSlice } from '../customSlice/createXStateSlice';
 
 export const purchaseOrderSlice = createXStateSlice({
   // Pass in a unique, descriptive name for the slice

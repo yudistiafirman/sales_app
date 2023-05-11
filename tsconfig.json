@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["src/*"]
     },
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
@@ -17,5 +17,11 @@
     "target": "esnext",
     "skipLibCheck": true
   },
-  "exclude": ["__tests__/**/*-test.ts", "node_modules", "babel.config.js", "metro.config.js", "react-native.config.js"]
+  "exclude": [
+    "__tests__/**/*-test.ts",
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "react-native.config.js"
+  ]
 }

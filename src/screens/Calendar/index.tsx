@@ -6,7 +6,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, DeviceEventEmitter } from 'react-native';
 import { DateData } from 'react-native-calendars';
 import { useDispatch, useSelector } from 'react-redux';
-import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
 import { BButtonPrimary, BCalendar, BSpacer, BText } from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
@@ -21,6 +20,7 @@ import {
   setMarkedData,
 } from '@/redux/reducers/productivityFlowReducer';
 import { RootState } from '@/redux/store';
+import ExpandableCustomerCard from './elements/ExpandableCustomerCard';
 
 export default function CalendarScreen() {
   const route = useRoute<RootStackScreenProps>();

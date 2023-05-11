@@ -1,12 +1,12 @@
 import React from 'react';
 import { KeyboardTypeOptions, StyleSheet, Text, View } from 'react-native';
-import BLabel from '../atoms/BLabel';
-import BSpacer from '../atoms/BSpacer';
-import BTextInput from '../atoms/BTextInput';
 import { colors, layout } from '@/constants';
 import font from '@/constants/fonts';
 import { ITableInput, ITableInputItem, ITableInputListItem, TitleBold } from '@/interfaces';
 import { resScale } from '@/utils';
+import BTextInput from '../atoms/BTextInput';
+import BSpacer from '../atoms/BSpacer';
+import BLabel from '../atoms/BLabel';
 
 function BTableInput({
   titleBold,

@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, GestureResponderEvent, ViewStyle, Platform } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import SearchProductStyles from '../styles';
 import { BSearchBar } from '@/components';
 import { layout } from '@/constants';
+import SearchProductStyles from '../styles';
 
 interface SearchProductNavbarProps {
   onChangeText?: (((text: string) => void) & Function) | undefined;

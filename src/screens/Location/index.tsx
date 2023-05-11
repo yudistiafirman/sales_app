@@ -4,8 +4,6 @@ import { useMachine } from '@xstate/react';
 import * as React from 'react';
 import { DeviceEventEmitter, SafeAreaView, View } from 'react-native';
 import { Region } from 'react-native-maps';
-import CoordinatesDetail from './elements/CoordinatesDetail';
-import LocationStyles from './styles';
 import { BButtonPrimary, BLocation, BMarker, BSpacer } from '@/components';
 import useHeaderTitleChanged from '@/hooks/useHeaderTitleChanged';
 import { locationMachine } from '@/machine/locationMachine';
@@ -25,6 +23,8 @@ import {
   TAB_TRANSACTION_TITLE,
 } from '@/navigation/ScreenNames';
 import { resScale } from '@/utils';
+import LocationStyles from './styles';
+import CoordinatesDetail from './elements/CoordinatesDetail';
 
 function Location() {
   const navigation = useNavigation();

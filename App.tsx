@@ -63,12 +63,8 @@ function App() {
         theme={navTheme}
         ref={navigationRef}
         onReady={() => {
-          if (
-            navigationRef?.current &&
-            navigationRef?.current?.getCurrentRoute()
-          )
-            routeNameRef.current =
-              navigationRef?.current.getCurrentRoute().name;
+          if (navigationRef?.current && navigationRef?.current?.getCurrentRoute())
+            routeNameRef.current = navigationRef?.current.getCurrentRoute().name;
         }}
         onStateChange={async () => {
           const previousRouteName = routeNameRef.current;
@@ -84,13 +80,8 @@ function App() {
             });
           }
           routeNameRef.current = currentRouteName;
-        }}
-      >
-        <StatusBar
-          barStyle={'dark-content'}
-          backgroundColor={'transparent'}
-          translucent={true}
-        />
+        }}>
+        <StatusBar barStyle={'dark-content'} backgroundColor={'transparent'} translucent={true} />
         <PaperProvider theme={paperTheme}>
           <ReduxProvider store={store}>
             <PersistGate loading={null} persistor={persistor}>

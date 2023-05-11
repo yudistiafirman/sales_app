@@ -1,11 +1,11 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import SearchAreaStyles from '../styles';
 import { BText } from '@/components';
 import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import resScale from '@/utils/resScale';
+import SearchAreaStyles from '../styles';
 
 function SearchAreaCurrentLocation({
   onPress,

@@ -5,14 +5,14 @@ import { useMachine } from '@xstate/react';
 import * as React from 'react';
 import { SafeAreaView, View, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
-import SOList from './element/SOList';
-import SearchSONavbar from './element/SearchSONavbar';
 import { BEmptyState, BHeaderIcon, BSpacer } from '@/components';
 import { layout } from '@/constants';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 import searchSOMachine from '@/machine/searchSOMachine';
 import { CAMERA, FORM_SO, SEARCH_SO } from '@/navigation/ScreenNames';
 import { RootState } from '@/redux/store';
+import SearchSONavbar from './element/SearchSONavbar';
+import SOList from './element/SOList';
 
 function SearchSO() {
   const [searchValue, setSearchValue] = React.useState<string>('');

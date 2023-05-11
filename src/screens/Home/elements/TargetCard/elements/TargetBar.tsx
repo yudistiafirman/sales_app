@@ -2,10 +2,10 @@ import React, { useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import EmptyItem from './EmptyItem';
 import { layout } from '@/constants';
 import colors from '@/constants/colors';
 import resScale from '@/utils/resScale';
+import EmptyItem from './EmptyItem';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
