@@ -250,6 +250,16 @@ const Fifth = () => {
         const isDataUpdate = !!payload?.visitation?.id;
         const methodStr = isDataUpdate ? 'PUT' : 'POST';
 
+        setIsLastStepVisible(false);
+        dispatch(
+          openPopUp({
+            popUpType: 'loading',
+            popUpText: 'Menambahkan Jadwal Kunjungan',
+            highlightedText: 'Jadwal Kunjungan',
+            outsideClickClosePopUp: false,
+          })
+        );
+
         if (uploadedFilesResponse.length === 0) {
           const photoFiles = visitationData.images
             ?.filter((v, i) => v.file !== null)
@@ -292,7 +302,6 @@ const Fifth = () => {
           const response = await dispatch(
             visitationMethod[methodStr](payloadData)
           ).unwrap();
-          setIsLastStepVisible(false);
           if (type === 'SPH') {
             navigation.dispatch(
               StackActions.replace(SPH, {
@@ -316,7 +325,6 @@ const Fifth = () => {
           const response = await dispatch(
             visitationMethod[methodStr](payloadData)
           ).unwrap();
-          setIsLastStepVisible(false);
           if (type === 'SPH') {
             navigation.dispatch(
               StackActions.replace(SPH, {
@@ -332,8 +340,8 @@ const Fifth = () => {
         dispatch(
           openPopUp({
             popUpType: 'success',
-            popUpText: 'Berhasil membuat jadwal kunjungan',
-            highlightedText: 'visitation',
+            popUpText: 'Penambahan Jadwal Kunjungan\nBerhasil',
+            highlightedText: 'Jadwal Kunjungan',
             outsideClickClosePopUp: true,
           })
         );
