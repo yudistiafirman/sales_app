@@ -176,7 +176,7 @@ instance.interceptors.response.use(
         return Promise.resolve(finalResponse);
       }
 
-      if (data.error === undefined || data.error?.code === undefined) {
+      if ((data.error === undefined || data.error?.code === undefined) && data.success === false) {
         bStorage.clearItem();
         store.dispatch(signout(false));
         crashlytics().setUserId('');
