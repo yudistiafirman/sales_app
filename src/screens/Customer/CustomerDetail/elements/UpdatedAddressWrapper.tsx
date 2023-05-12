@@ -5,13 +5,7 @@ import { resScale } from '@/utils';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-const UpdatedAddressWrapper = ({
-  address,
-  onPress,
-}: {
-  address: string;
-  onPress: () => void;
-}) => {
+const UpdatedAddressWrapper = ({ address }: { address: string }) => {
   return (
     <View style={styles.filledAddressContainer}>
       <View style={styles.filledAddressInnerContainer}>
@@ -21,9 +15,6 @@ const UpdatedAddressWrapper = ({
         <BText numberOfLines={1} style={styles.secondAddress}>
           {address}
         </BText>
-        <TouchableOpacity onPress={onPress} style={styles.changeAddressBtn}>
-          <BText style={styles.changeAddressText}>Ubah Alamat</BText>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -31,10 +22,11 @@ const UpdatedAddressWrapper = ({
 
 const styles = StyleSheet.create({
   filledAddressContainer: {
-    height: resScale(93),
     backgroundColor: colors.tertiary,
     borderRadius: layout.radius.md,
     width: '100%',
+    borderWidth: 2,
+    borderColor: colors.border.default,
   },
   filledAddressInnerContainer: {
     flex: 1,
@@ -43,15 +35,15 @@ const styles = StyleSheet.create({
   },
   mainAddress: {
     fontFamily: font.family.montserrat[500],
-    fontSize: font.size.md,
+    fontSize: font.size.sm,
     color: colors.text.darker,
-    marginBottom: layout.pad.sm,
+    marginBottom: layout.pad.xs,
   },
   secondAddress: {
-    fontFamily: font.family.montserrat[300],
+    fontFamily: font.family.montserrat[400],
     fontSize: font.size.xs,
-    color: colors.text.darker,
-    marginBottom: layout.pad.md,
+    color: `${colors.pitchBlack}50`,
+    marginBottom: layout.pad.sm,
   },
   changeAddressBtn: {
     width: resScale(104),

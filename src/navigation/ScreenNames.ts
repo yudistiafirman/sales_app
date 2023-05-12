@@ -70,6 +70,7 @@ export const DRIVER_TITLE = 'Beranda';
 
 export const LOGIN_TITLE = 'Log in';
 export const VERIFICATION_TITLE = 'Kode Verifikasi';
+export const LIST_CUSTOMER = 'List Pelanggan';
 export const CAMERA_TITLE = 'Camera';
 export const IMAGE_PREVIEW_TITLE = 'Image Preview';
 export const SCHEDULE_TITLE = 'Schedule';

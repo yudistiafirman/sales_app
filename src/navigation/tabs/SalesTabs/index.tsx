@@ -7,6 +7,7 @@ import Home from '@/screens/Home';
 import { colors, fonts } from '@/constants';
 import Transaction from '@/screens/Transaction';
 import {
+  LIST_CUSTOMER,
   TAB_CUSTOMER,
   TAB_CUSTOMER_TITLE,
   TAB_HOME,
@@ -76,7 +77,7 @@ function SalesTabs() {
         <Tab.Screen
           key={TAB_CUSTOMER}
           name={TAB_CUSTOMER_TITLE}
-          options={{ headerTitle: 'List ' + TAB_CUSTOMER_TITLE }}
+          options={{ headerTitle: LIST_CUSTOMER }}
           component={Customer}
         />
       )}
