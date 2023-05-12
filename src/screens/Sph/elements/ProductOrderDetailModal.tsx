@@ -398,6 +398,8 @@ const style = StyleSheet.create({
     color: colors.text.darker,
   },
   buttonContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
     paddingHorizontal: layout.mainPad,
     paddingVertical: layout.pad.md,
   },
