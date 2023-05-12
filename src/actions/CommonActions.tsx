@@ -12,6 +12,28 @@ export const getLocationCoordinates = async (
   );
 };
 
+export const getAllCustomers = async (
+  type: string,
+  search: string,
+  page: number
+) => {
+  return customRequest(
+    BrikApiCommon.getAllCustomers(type, search, page),
+    'GET',
+    undefined,
+    true
+  );
+};
+
+export const getOneCustomer = async (id: string) => {
+  return customRequest(
+    BrikApiCommon.getOneCustomer(id),
+    'GET',
+    undefined,
+    true
+  );
+};
+
 export const searchLocation = async (searchValue: string) => {
   return customRequest(BrikApiCommon.searchPlaces(searchValue), 'GET');
 };
@@ -119,7 +141,10 @@ export const updateBillingAddress = async (projectId: string, payload: any) => {
   );
 };
 
-export const updateLocationAddress = async (projectId: string, payload: any) => {
+export const updateLocationAddress = async (
+  projectId: string,
+  payload: any
+) => {
   return customRequest(
     BrikApiCommon.updateLocationAddress(projectId),
     'PUT',

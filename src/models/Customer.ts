@@ -2,9 +2,9 @@ export interface ICustomerListData {
   id?: string;
   name: string;
   displayName?: string;
-  type: 'INDIVIDUAL' | 'COMPANY';
+  type: 'INDIVIDU' | 'COMPANY';
   npwp?: string;
-  ktp?: string;
+  nik?: string;
 }
 
 export interface ICustomerState {
@@ -12,4 +12,5 @@ export interface ICustomerState {
   isLoading: boolean;
   isRefreshing?: boolean;
   isLoadMore?: boolean;
+  searchQuery?: string;
 }

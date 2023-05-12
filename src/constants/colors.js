@@ -18,6 +18,7 @@ const colors = {
   lightCyanBlue: '#F4F6F9',
   graySevenEight: '#C5C7CD',
   blueSail: '#2F4A95',
+  veryLightShadeGray: '#FAFAFA',
   text: {
     dark: '#191919',
     darker: '#202020',

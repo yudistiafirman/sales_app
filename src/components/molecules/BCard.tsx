@@ -1,5 +1,6 @@
 import { BChip, BHighlightText, BSpacer, BText } from '@/components';
-import { colors, layout } from '@/constants';
+import colors from '../../constants/colors';
+import layout from '../../constants/layout';
 import font from '@/constants/fonts';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -10,8 +11,10 @@ interface IBCard {
   title?: string;
   chipTitle?: string;
   chipBgColor?: string;
+  cardBgColor?: string;
   searchQuery?: string;
   listTextData?: string[];
+  onPressCard?: () => void;
 }
 
 const BCard = ({
@@ -19,11 +22,16 @@ const BCard = ({
   title,
   chipTitle,
   chipBgColor,
+  cardBgColor,
   listTextData,
   searchQuery,
+  onPressCard,
 }: IBCard) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      onPress={onPressCard}
+      style={{ ...styles.container, backgroundColor: cardBgColor }}
+    >
       <View style={styles.avatar}>
         <BText style={styles.textAvatar}>{avatarText}</BText>
       </View>
@@ -39,7 +47,11 @@ const BCard = ({
         <View style={styles.credContainer}>
           {listTextData &&
             listTextData.map((v, i) => {
-              return <BText style={styles.credText}>{v}</BText>;
+              return (
+                <BText key={i} style={styles.credText}>
+                  {v}
+                </BText>
+              );
             })}
         </View>
       </View>
@@ -52,6 +64,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-start',
+    paddingVertical: layout.pad.md,
+    paddingHorizontal: layout.pad.lg,
   },
   avatar: {
     borderRadius: layout.pad.xl + layout.pad.md,
@@ -75,12 +89,12 @@ const styles = StyleSheet.create({
   credContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   credText: {
     fontFamily: font.family.montserrat[300],
     fontSize: font.size.xs,
     color: colors.text.darker,
+    marginRight: layout.pad.lg,
   },
 });
 

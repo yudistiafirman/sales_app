@@ -31,7 +31,7 @@ const initialState: ICustomerState = {
       id: '1',
       name: 'K',
       displayName: 'PT Kramat djati',
-      type: 'Perusahaan',
+      type: 'PERUSAHAAN',
       ktp: '2022123456789',
       npwp: '0023.2345.34566.23456',
     },
@@ -39,7 +39,7 @@ const initialState: ICustomerState = {
       id: '1',
       name: 'P',
       displayName: 'PO Haryono',
-      type: 'Perusahaan',
+      type: 'PERUSAHAAN',
       ktp: '2022123456789',
       npwp: '0023.2345.34566.23456',
     },
@@ -47,6 +47,7 @@ const initialState: ICustomerState = {
   isLoading: false,
   isRefreshing: false,
   isLoadMore: false,
+  searchQuery: '',
 };
 
 export const customerSlice = createSlice({
