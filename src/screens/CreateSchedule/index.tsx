@@ -56,8 +56,8 @@ function stepHandler(
     stepTwo?.deliveryTime &&
     stepTwo?.method &&
     stepTwo?.inputtedVolume &&
-    stepTwo?.salesOrder &&
-    getTotalProduct(stepTwo) <= stepTwo?.availableDeposit
+    stepTwo?.salesOrder
+    // getTotalProduct(stepTwo) <= stepTwo?.availableDeposit
   ) {
     setStepsDone((curr) => {
       return [...new Set(curr), 1];

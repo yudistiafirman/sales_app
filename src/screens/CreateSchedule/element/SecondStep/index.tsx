@@ -273,10 +273,10 @@ export default function SecondStep() {
           }
           secondSectionValue={getTotalProduct()}
           thirdSectionText={'Est. Sisa Deposit'}
-          isError={
-            getTotalProduct() >
-            (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
-          }
+          // isError={
+          //   getTotalProduct() >
+          //   (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
+          // }
           customErrorMsg={'Silakan lakukan penambahan deposit'}
         />
       </View>
