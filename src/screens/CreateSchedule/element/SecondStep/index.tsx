@@ -278,7 +278,6 @@ export default function SecondStep() {
           //   (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
           // }
           customErrorMsg={'Silakan lakukan penambahan deposit'}
-          isConsistentCalc={true}
         />
       </View>
     </View>
