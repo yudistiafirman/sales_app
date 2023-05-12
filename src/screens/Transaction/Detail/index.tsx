@@ -480,13 +480,8 @@ const TransactionDetail = () => {
                 ? moment(data?.date).format('HH:mm')
                 : undefined
             }
-            scheduleMethod={
-              data?.withPump !== undefined
-                ? data?.withPump === true
-                  ? PO_METHOD_LIST[0].label
-                  : PO_METHOD_LIST[1].label
-                : undefined
-            }
+            deliveredQty={data?.deliveredQuantity}
+            scheduleMethod={data?.pouringMethod}
             gotoSPHPage={() => gotoSPHPage()}
             tmNumber={
               selectedType === 'DO'

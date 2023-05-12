@@ -24,6 +24,7 @@ type BProjectDetailCardType = {
   useBEStatus?: boolean;
   tmNumber?: string;
   driverName?: string;
+  deliveredQty?: string;
   gotoSPHPage?: () => void;
 };
 
@@ -41,6 +42,7 @@ export default function BProjectDetailCard({
   scheduleMethod,
   tmNumber,
   driverName,
+  deliveredQty,
   useBEStatus = false,
   gotoSPHPage,
 }: BProjectDetailCardType) {
@@ -126,6 +128,17 @@ export default function BProjectDetailCard({
             <Text style={styles.summary}>Tanggal Pengiriman</Text>
             <Text style={[styles.summary, styles.fontw400]}>
               {deliveryDate}
+            </Text>
+          </View>
+        </>
+      )}
+      {deliveredQty && (
+        <>
+          <BSpacer size={'extraSmall'} />
+          <View style={styles.summaryContainer}>
+            <Text style={styles.summary}>DO Yang Telah Dikirim</Text>
+            <Text style={[styles.summary, styles.fontw400]}>
+              {deliveredQty}
             </Text>
           </View>
         </>
