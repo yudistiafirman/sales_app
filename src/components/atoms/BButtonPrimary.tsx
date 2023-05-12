@@ -37,12 +37,15 @@ export default function BButtonPrimary({
   emptyIconEnable = false,
   isLoading,
 }: BButtonPrimaryType) {
-  const [showSpinner, setShowSpinner] = useState(false);
+  // const [showSpinner, setShowSpinner] = useState(false);
+  let clicked = '0';
 
   const handlePress = async () => {
-    setShowSpinner(true);
+    clicked = '1';
+    // setShowSpinner(true);
     await onPress();
-    setShowSpinner(false);
+    clicked = '0';
+    // setShowSpinner(false);
   };
 
   return (
@@ -54,8 +57,8 @@ export default function BButtonPrimary({
           isOutline && style.outlineButton,
           disable && style.disableStyle,
         ]}
-        onPress={handlePress}
-        disabled={showSpinner ? false : disable}
+        onPress={clicked === '1' ? undefined : handlePress}
+        disabled={disable}
       >
         <View>{leftIcon && leftIcon()}</View>
         <>{emptyIconEnable && <View style={{ height: resScale(24) }} />}</>

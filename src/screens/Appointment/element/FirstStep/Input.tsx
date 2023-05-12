@@ -44,7 +44,6 @@ const Inputs = () => {
     fetchDebounce(searchQuery);
   };
   const inputs: Input[] = React.useMemo(() => {
-    console.log('wkwk"::: ', state.customerType)
     const baseInput: Input[] = [
       {
         label: 'Jenis Pelanggan',
