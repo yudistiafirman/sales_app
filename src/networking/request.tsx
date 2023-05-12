@@ -175,6 +175,14 @@ instance.interceptors.response.use(
         const finalResponse = await instance(config);
         return Promise.resolve(finalResponse);
       }
+
+      if (data.error === undefined || data.error?.code === undefined) {
+        bStorage.clearItem();
+        store.dispatch(signout(false));
+        crashlytics().setUserId('');
+        analytics().setUserId('');
+        return Promise.resolve(res);
+      }
     } else if (config.method !== 'get' && config.method !== 'put') {
       let url = config.url;
       if (url) {
