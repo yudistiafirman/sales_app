@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   TextStyle,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import colors from '@/constants/colors';
 import font from '@/constants/fonts';
 import resScale from '@/utils/resScale';
@@ -37,6 +37,14 @@ export default function BButtonPrimary({
   emptyIconEnable = false,
   isLoading,
 }: BButtonPrimaryType) {
+  const [showSpinner, setShowSpinner] = useState(false);
+
+  const handlePress = async () => {
+    setShowSpinner(true);
+    await onPress();
+    setShowSpinner(false);
+  };
+
   return (
     <View pointerEvents={isLoading ? 'none' : 'auto'}>
       <TouchableOpacity
@@ -46,8 +54,8 @@ export default function BButtonPrimary({
           isOutline && style.outlineButton,
           disable && style.disableStyle,
         ]}
-        onPress={onPress}
-        disabled={disable}
+        onPress={handlePress}
+        disabled={showSpinner ? false : disable}
       >
         <View>{leftIcon && leftIcon()}</View>
         <>{emptyIconEnable && <View style={{ height: resScale(24) }} />}</>
