@@ -15,7 +15,6 @@ type BDepositCardType = {
   customErrorMsg?: string;
   style?: ViewStyle;
   isSum?: boolean;
-  isConsistentCalc?: boolean;
 };
 
 export default function BDepositCard({
@@ -28,7 +27,6 @@ export default function BDepositCard({
   customErrorMsg,
   style,
   isSum = false,
-  isConsistentCalc = false,
 }: BDepositCardType) {
   const getTotalDifference = () => {
     let result = 0;
@@ -69,7 +67,7 @@ export default function BDepositCard({
             },
           ]}
         >
-          {isConsistentCalc && firstSectionValue - secondSectionValue < 0
+          {firstSectionValue - secondSectionValue < 0
             ? '- IDR ' +
               formatCurrency(isSum ? getTotalSum() : getTotalDifference())
             : 'IDR ' +
