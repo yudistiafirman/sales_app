@@ -510,6 +510,7 @@ interface customerDataInterface {
   phone: string;
   position: string;
   picName?: string;
+  location?: string;
 }
 
 interface locationPayloadType {

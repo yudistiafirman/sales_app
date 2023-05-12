@@ -41,19 +41,25 @@ const SearchingCustomer = () => {
   const onPressCard = useCallback(
     (item: selectedCompanyInterface) => {
       try {
-        const customerType = item.Company.id ? 'company' : 'individu';
+        const customerType = item.Company?.id ? 'company' : 'individu';
+        let userID = item.Pic?.id;
+        let userName = item.Pic?.name;
+        if (customerType === 'company') {
+          userID = item.Company?.id;
+          userName = item.Company?.name;
+        }
         if (values.stepOne.options.items) {
           dispatchValue({
             type: AppointmentActionType.ADD_COMPANIES,
             value: [
               ...values.stepOne.options.items,
-              { id: item.Company.id, title: item.Company.name },
+              { id: userID, title: userName },
             ],
           });
         } else {
           dispatchValue({
             type: AppointmentActionType.ADD_COMPANIES,
-            value: [{ id: item.Company.id, title: item.Company.name }],
+            value: [{ id: userID, title: userName }],
           });
         }
         const picList = item.Pics;
@@ -62,7 +68,7 @@ const SearchingCustomer = () => {
         }
 
         const companyDataToSave = {
-          Company: { id: item.Company.id, title: item.Company.name },
+          Company: { id: userID, title: userName },
           PIC: picList,
           Visitation: item.Visitations[0],
           locationAddress: item.LocationAddress,
