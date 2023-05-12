@@ -15,6 +15,7 @@ type BDepositCardType = {
   customErrorMsg?: string;
   style?: ViewStyle;
   isSum?: boolean;
+  isConsistentCalc?: boolean;
 };
 
 export default function BDepositCard({
@@ -27,6 +28,7 @@ export default function BDepositCard({
   customErrorMsg,
   style,
   isSum = false,
+  isConsistentCalc = false,
 }: BDepositCardType) {
   const getTotalDifference = () => {
     let result = 0;
@@ -67,8 +69,11 @@ export default function BDepositCard({
             },
           ]}
         >
-          {'IDR ' +
-            formatCurrency(isSum ? getTotalSum() : getTotalDifference())}
+          {isConsistentCalc && firstSectionValue - secondSectionValue < 0
+            ? '- IDR ' +
+              formatCurrency(isSum ? getTotalSum() : getTotalDifference())
+            : 'IDR ' +
+              formatCurrency(isSum ? getTotalSum() : getTotalDifference())}
         </Text>
       </View>
       {isError && (
@@ -93,10 +98,6 @@ const styles = StyleSheet.create({
   summaryContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  chip: {
-    paddingVertical: layout.pad.xs,
-    paddingHorizontal: layout.pad.md,
-    borderRadius: layout.radius.xl,
+    alignItems: 'center',
   },
 });
