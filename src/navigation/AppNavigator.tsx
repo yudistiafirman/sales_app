@@ -5,7 +5,7 @@ import Operation from '@/screens/Operation';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import Login from '@/screens/Login';
 import Verification from '@/screens/Verification';
-import { colors, fonts, storageKey } from '@/constants';
+import { colors, fonts } from '@/constants';
 import {
   LOGIN,
   LOGIN_TITLE,
@@ -31,12 +31,17 @@ import { UserModel } from '@/models/User';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import BlankScreen from '@/screens/BlankScreen';
+import { BHttpLogger } from '@/components';
+import {
+  setShowButtonNetwork,
+  setVisibleNetworkLogger,
+} from '@/redux/reducers/authReducer';
+
 const Stack = createNativeStackNavigator();
 
 const RootScreen = (
   userData: UserModel.DataSuccessLogin | null,
-  isSignout: boolean,
-  dispatch: AppDispatch
+  isSignout: boolean
 ) => {
   if (userData !== null) {
     switch (userData.type) {
@@ -192,7 +197,13 @@ const RootScreen = (
 };
 
 function AppNavigator() {
-  const { isLoading, userData, isSignout } = useAsyncConfigSetup();
+  const {
+    isLoading,
+    userData,
+    isSignout,
+    isNetworkLoggerVisible,
+    isShowButtonNetwork,
+  } = useAsyncConfigSetup();
   const dispatch = useDispatch<AppDispatch>();
   if (isLoading) {
     return <Splash />;
@@ -212,8 +223,18 @@ function AppNavigator() {
             },
           }}
         >
-          {RootScreen(userData, isSignout, dispatch)}
+          {RootScreen(userData, isSignout)}
         </Stack.Navigator>
+        <BHttpLogger
+          isShowButtonNetwork={isShowButtonNetwork}
+          isNetworkLoggerVisible={isNetworkLoggerVisible}
+          setShowButtonNetwork={() =>
+            dispatch(setShowButtonNetwork(!isShowButtonNetwork))
+          }
+          setVisibleNetworkLogger={() =>
+            dispatch(setVisibleNetworkLogger(!isNetworkLoggerVisible))
+          }
+        />
       </>
     );
   }

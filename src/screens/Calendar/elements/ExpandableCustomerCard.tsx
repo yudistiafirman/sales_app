@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { BPic, BSpacer, BText } from '@/components';
+import { BLocationText, BPic, BSpacer, BText } from '@/components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors, layout } from '@/constants';
 import { customerDataInterface } from '@/interfaces';
@@ -37,7 +37,7 @@ export default function ExpandableCustomerCard({
   return (
     <View style={styles.customerCard}>
       <View style={styles.topCard}>
-        <BText type="title">
+        <BText bold="500" color="darker">
           {item.display_name ? item.display_name : item.picName}
         </BText>
         <TouchableOpacity
@@ -50,11 +50,15 @@ export default function ExpandableCustomerCard({
         </TouchableOpacity>
       </View>
       <View style={[bottomCardHeight(), styles.bottomCard]}>
-        <BText>{item.type}</BText>
-        <BSpacer size="medium" />
+        <BText bold="300" color="darker">
+          {item.name}
+        </BText>
+        <BSpacer size="verySmall" />
+        <BLocationText location={item.location} />
+        <BSpacer size="extraSmall" />
         <BPic
-          name={item.name}
-          email={item.email ? item.email : undefined}
+          name={item.picName}
+          email={item.email ? item.email : '-'}
           phone={item.phone}
           position={item.position}
           border={false}

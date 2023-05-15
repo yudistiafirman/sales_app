@@ -6,7 +6,7 @@ import { resFontSize } from '@/utils';
 interface IProps {
   children: React.ReactNode;
   type?: 'default' | 'header' | 'title';
-  color?: 'primary' | 'divider' | 'error';
+  color?: 'primary' | 'divider' | 'error' | 'darker';
   bold?:
     | 'bold'
     | '400'
@@ -63,6 +63,12 @@ const BText = ({
     _style = {
       ..._style,
       color: colors.primary,
+    };
+  }
+  if (color === 'darker') {
+    _style = {
+      ..._style,
+      color: colors.text.darker,
     };
   }
   if (color === 'error') {

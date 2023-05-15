@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { colors, fonts, layout } from '@/constants';
 import { Styles } from '@/interfaces';
-import { useDispatch } from 'react-redux';
-import { signout } from '@/redux/reducers/authReducer';
-import { AppDispatch } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { setShowButtonNetwork, signout } from '@/redux/reducers/authReducer';
+import { AppDispatch, RootState } from '@/redux/store';
 import bStorage from '@/actions/BStorage';
 import { signOut } from '@/actions/CommonActions';
 import crashlytics from '@react-native-firebase/crashlytics';
 import Icon from 'react-native-vector-icons/Feather';
 import analytics from '@react-native-firebase/analytics';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
-import { getAppVersionName } from '@/utils/generalFunc';
+import { getAppVersionName, isProduction } from '@/utils/generalFunc';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 
 const _styles: Styles = {
@@ -31,9 +31,11 @@ const _styles: Styles = {
 export default function SalesHeaderRight(iconColor: string = '') {
   const dispatch = useDispatch<AppDispatch>();
   const [visible, setVisible] = React.useState(false);
+  const { isShowButtonNetwork } = useSelector((state: RootState) => state.auth);
 
   const hideMenu = () => setVisible(false);
   const showMenu = () => setVisible(true);
+  let buttonCount = 0;
 
   const onLogout = async () => {
     try {
@@ -55,27 +57,45 @@ export default function SalesHeaderRight(iconColor: string = '') {
     }
   };
 
+  const onVersionClick = () => {
+    buttonCount += 1;
+    if (buttonCount > 2) {
+      dispatch(setShowButtonNetwork(!isShowButtonNetwork));
+      buttonCount = 0;
+    } else {
+      setTimeout(() => {
+        buttonCount = 0;
+      }, 500);
+    }
+  };
+
   return (
-    <Menu
-      visible={visible}
-      anchor={
-        <Icon
-          name="more-vertical"
-          size={18}
-          color={iconColor !== '' ? iconColor : colors.white}
-          style={{ padding: layout.pad.lg }}
-          onPress={showMenu}
-        />
-      }
-      onRequestClose={hideMenu}
-    >
-      <MenuItem textStyle={_styles.chipText} onPress={onLogout}>
-        Logout
-      </MenuItem>
-      <MenuDivider />
-      <MenuItem textStyle={_styles.version} disabled>
-        {'APP Version ' + getAppVersionName()}
-      </MenuItem>
-    </Menu>
+    <>
+      <Menu
+        visible={visible}
+        anchor={
+          <Icon
+            name="more-vertical"
+            size={18}
+            color={iconColor !== '' ? iconColor : colors.white}
+            style={{ padding: layout.pad.lg }}
+            onPress={showMenu}
+          />
+        }
+        onRequestClose={hideMenu}
+      >
+        <MenuItem textStyle={_styles.chipText} onPress={onLogout}>
+          Logout
+        </MenuItem>
+        <MenuDivider />
+        <MenuItem
+          textStyle={_styles.version}
+          disabled={!(isProduction() && !__DEV__)}
+          onPress={isProduction() && !__DEV__ ? onVersionClick : undefined}
+        >
+          {'APP Version ' + getAppVersionName()}
+        </MenuItem>
+      </Menu>
+    </>
   );
 }

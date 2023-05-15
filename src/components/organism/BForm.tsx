@@ -33,7 +33,14 @@ import BTableInput from '../molecules/BTableInput';
 
 interface IProps {
   inputs: Input[];
-  spacer?: 'extraSmall' | 'small' | 'medium' | 'large' | 'extraLarge' | number;
+  spacer?:
+    | 'extraSmall'
+    | 'small'
+    | 'medium'
+    | 'large'
+    | 'extraLarge'
+    | 'none'
+    | number;
   noSpaceEnd?: boolean;
   titleBold?:
     | 'bold'
@@ -852,7 +859,7 @@ const renderInput = (
           <View
             style={[
               styles.checkboxText,
-              { paddingEnd: layout.pad.md },
+              label !== '' && { paddingEnd: layout.pad.md },
               Platform.OS !== 'android' && {
                 marginStart: layout.pad.md,
                 marginEnd: layout.pad.xl,
@@ -890,7 +897,7 @@ const BForm = ({ inputs, spacer, noSpaceEnd, titleBold }: IProps) => {
       {inputs?.map((input, index) => (
         <React.Fragment key={index}>
           {renderInput(input, titleBold)}
-          {(index < inputs.length - 1 || !noSpaceEnd) && (
+          {(index < inputs.length - 1 || !noSpaceEnd) && spacer !== 'none' && (
             <BSpacer size={spacer ? spacer : 'middleSmall'} />
           )}
         </React.Fragment>

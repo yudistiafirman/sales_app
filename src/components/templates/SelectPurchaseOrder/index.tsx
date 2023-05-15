@@ -64,9 +64,9 @@ const SelectPurchaseOrderData = ({
 
   const getDataToDisplay = () => {
     if (dataToGet === 'DEPOSITDATA' || dataToGet === 'SCHEDULEDATA') {
-      return poData;
+      return poData.filter((it) => it.PurchaseOrders?.length > 0);
     } else {
-      return sphData;
+      return sphData.filter((it) => it.QuotationRequests?.length > 0);
     }
   };
   const { companyName, locationName, listData, projectId } =

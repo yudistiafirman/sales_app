@@ -42,7 +42,11 @@ export type RootStackParamList = {
   CREATE_VISITATION: { existingVisitation?: visitationListResponse };
   SPH: { projectId?: string };
   APPOINTMENT: undefined;
-  SEARCH_PRODUCT: { isGobackAfterPress?: boolean; distance: number };
+  SEARCH_PRODUCT: {
+    isGobackAfterPress?: boolean;
+    distance: number;
+    disablePressed?: boolean;
+  };
   LOCATION: {
     coordinate: { longitude: number; latitude: number };
     isReadOnly: boolean;
@@ -52,7 +56,13 @@ export type RootStackParamList = {
   };
   SEARCH_AREA: { from?: string; eventKey?: string; sourceType?: string };
   CALENDAR: { useTodayMinDate: boolean };
-  TRANSACTION_DETAIL: { title: string; data: any; type: string };
+  TRANSACTION_DETAIL: {
+    title: string;
+    data: any;
+    type: string;
+    driverName?: string;
+    vehicleName?: string;
+  };
   CREATE_SCHEDULE: undefined;
   CUSTOMER_DETAIL: { existingVisitation?: any };
   DOCUMENTS: { projectId?: string; docs?: Docs[] };
