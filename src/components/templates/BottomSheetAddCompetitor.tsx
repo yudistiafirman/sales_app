@@ -109,7 +109,7 @@ const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
           <View
             style={[
               styles.contentOuterContainer,
-              { height: width + resScale(200) },
+              { height: width + resScale(220) },
             ]}
           >
             <View style={styles.contentInnerContainer}>

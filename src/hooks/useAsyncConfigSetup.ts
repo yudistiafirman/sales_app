@@ -17,14 +17,17 @@ import BackgroundFetch from 'react-native-background-fetch';
 import { HUNTER_AND_FARMER } from '@/navigation/ScreenNames';
 import { UserModel } from '@/models/User';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import { ENTRY_TYPE } from '@/models/EnumModel';
+
 const useAsyncConfigSetup = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, userData, isSignout, hunterScreen, remote_config } =
-    useSelector((state: RootState) => state.auth);
-  const { enable_hunter_farmer } = useSelector(
-    (state: RootState) => state.auth.remote_config
-  );
+  const {
+    isLoading,
+    userData,
+    isSignout,
+    remote_config,
+    isNetworkLoggerVisible,
+    isShowButtonNetwork,
+  } = useSelector((state: RootState) => state.auth);
 
   const userDataSetup = React.useCallback(
     async (fetchedRemoteConfig: any) => {
@@ -59,7 +62,7 @@ const useAsyncConfigSetup = () => {
           openPopUp({
             popUpType: 'error',
             popUpText:
-              error.message || 'Terjadi error dalam pengambilan user token',
+              error?.message || 'Terjadi error dalam pengambilan user token',
             outsideClickClosePopUp: true,
           })
         );
@@ -145,8 +148,8 @@ const useAsyncConfigSetup = () => {
     isLoading,
     userData,
     isSignout,
-    hunterScreen,
-    enable_hunter_farmer,
+    isNetworkLoggerVisible,
+    isShowButtonNetwork,
   };
 };
 

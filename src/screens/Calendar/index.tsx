@@ -87,6 +87,7 @@ export default function CalendarScreen() {
                 position: obj.project?.Pic?.position,
                 type: obj.project?.Pic?.type,
                 picName: obj.project?.Pic?.name,
+                location: obj.project?.LocationAddress?.line1,
               });
               return acc;
             },
@@ -201,7 +202,10 @@ export default function CalendarScreen() {
           minDate={useTodayMinDate ? new Date().toString() : undefined}
         />
         <BSpacer size="small" />
-        <BText color="divider"> Pelanggan yang Dikunjungi </BText>
+        <BText bold="300" color="darker">
+          {' '}
+          Pelanggan yang Dikunjungi{' '}
+        </BText>
         <BSpacer size="extraSmall" />
       </View>
       <FlatList

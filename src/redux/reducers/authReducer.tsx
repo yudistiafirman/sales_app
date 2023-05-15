@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { UserModel } from '@/models/User';
+import { isDevelopment, isProduction } from '@/utils/generalFunc';
 
 interface LoginCredential {
   phoneNumber: string;
@@ -12,6 +13,8 @@ interface AuthState {
   isLoading: boolean;
   isSignout: boolean;
   hunterScreen: boolean;
+  isShowButtonNetwork: boolean;
+  isNetworkLoggerVisible: boolean;
   remote_config: {
     enable_signed_so: boolean;
     enable_appointment: boolean;
@@ -37,6 +40,8 @@ const initialState: AuthState = {
   isLoading: true,
   isSignout: false,
   hunterScreen: false,
+  isShowButtonNetwork: isDevelopment() || (isProduction() && __DEV__),
+  isNetworkLoggerVisible: false,
   remote_config: {
     enable_signed_so: true,
     enable_appointment: true,
@@ -153,6 +158,18 @@ export const authSlice = createSlice({
         hunterScreen: action.payload,
       };
     },
+    setShowButtonNetwork: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        isShowButtonNetwork: action.payload,
+      };
+    },
+    setVisibleNetworkLogger: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        isNetworkLoggerVisible: action.payload,
+      };
+    },
   },
 });
 
@@ -162,6 +179,8 @@ export const {
   setIsLoading,
   signout,
   toggleHunterScreen,
+  setShowButtonNetwork,
+  setVisibleNetworkLogger,
 } = authSlice.actions;
 
 export default authSlice.reducer;

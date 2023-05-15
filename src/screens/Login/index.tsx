@@ -1,20 +1,25 @@
 import { BButtonPrimary, BErrorText, BSpacer } from '@/components';
 import { resScale } from '@/utils';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { Image, SafeAreaView } from 'react-native';
+import { Image, SafeAreaView, TouchableOpacity } from 'react-native';
 import PhoneInput from './element/PhoneInput';
 import Instruction from './element/Intstruction';
 import Label from './element/Label';
 import loginStyle from './style';
 import { colors, layout } from '@/constants';
-import { setPhoneNumber } from '@/redux/reducers/authReducer';
-import { useDispatch } from 'react-redux';
+import {
+  setPhoneNumber,
+  setShowButtonNetwork,
+} from '@/redux/reducers/authReducer';
+import { useDispatch, useSelector } from 'react-redux';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { signIn } from '@/actions/CommonActions';
 import useCustomHeaderLeft from '@/hooks/useCustomHeaderLeft';
 import { LOGIN, VERIFICATION } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { RootState } from '@/redux/store';
+import { isProduction } from '@/utils/generalFunc';
 
 interface LoginState {
   errorMessage: unknown | string;
@@ -25,6 +30,7 @@ interface LoginState {
 const Login = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { isShowButtonNetwork } = useSelector((state: RootState) => state.auth);
   const [loginState, setLoginState] = React.useState<LoginState>({
     errorMessage: '',
     loading: false,
@@ -33,12 +39,39 @@ const Login = () => {
 
   const { errorMessage, loading, phoneNumber } = loginState;
   const disableBtn = phoneNumber.length < 6;
+  let buttonCount = 0;
+
+  const onVersionClick = () => {
+    buttonCount += 1;
+    if (buttonCount > 2) {
+      dispatch(setShowButtonNetwork(!isShowButtonNetwork));
+      buttonCount = 0;
+    } else {
+      setTimeout(() => {
+        buttonCount = 0;
+      }, 500);
+    }
+  };
+
   useCustomHeaderLeft({
     customHeaderLeft: (
-      <Image
-        style={{ width: resScale(70), height: resScale(33) }}
-        source={require('@/assets/logo/brik_logo.png')}
-      />
+      <>
+        {isProduction() && !__DEV__ ? (
+          <TouchableOpacity
+            onPress={isProduction() && !__DEV__ ? onVersionClick : undefined}
+          >
+            <Image
+              style={{ width: resScale(70), height: resScale(33) }}
+              source={require('@/assets/logo/brik_logo.png')}
+            />
+          </TouchableOpacity>
+        ) : (
+          <Image
+            style={{ width: resScale(70), height: resScale(33) }}
+            source={require('@/assets/logo/brik_logo.png')}
+          />
+        )}
+      </>
     ),
   });
 

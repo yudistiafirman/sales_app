@@ -44,6 +44,7 @@ import {
 import { bStorage } from '@/actions';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import SelectCustomerTypeModal from '../PurchaseOrder/element/SelectCustomerTypeModal';
+import { getDrivers, getVehicles } from '@/actions/InventoryActions';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Transaction = () => {
@@ -126,6 +127,16 @@ const Transaction = () => {
   const getOneOrder = async (id: string) => {
     try {
       let data;
+      let driverName = undefined;
+      let vehicleName = undefined;
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: `Mendapatkan data ${selectedType}`,
+          highlightedText: 'detail',
+          outsideClickClosePopUp: false,
+        })
+      );
       if (selectedType === 'SPH') {
         data = await getVisitationOrderByID(id);
         data = data.data.data;
@@ -193,7 +204,23 @@ const Transaction = () => {
           };
         } else if (selectedType === 'DO') {
           data = await getDeliveryOrderByID(id);
+          driverName = '-';
+          vehicleName = '-';
           data = data.data.data;
+
+          let dataDrivers = await getDrivers();
+          let dataVehicles = await getVehicles();
+
+          dataDrivers?.data?.data.forEach((it) => {
+            if (it.id === data?.driverId) driverName = it?.name;
+          });
+          dataVehicles?.data?.data.forEach((it) => {
+            if (it.id === data?.vehicleId)
+              vehicleName =
+                (it?.internal_id ? it?.internal_id : '-') +
+                ' / ' +
+                (it?.plate_number ? it?.plate_number : '-');
+          });
 
           // TODO: handle from BE, ugly when use mapping in FE side
           let products: any[] = [];
@@ -214,11 +241,13 @@ const Transaction = () => {
           };
         }
       }
-
+      dispatch(closePopUp());
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data ? data.number : 'N/A',
         data: data,
         type: selectedType,
+        driverName: driverName,
+        vehicleName: vehicleName,
       });
     } catch (error) {
       dispatch(

@@ -29,10 +29,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {
-  getProjectIndivualDetail,
-  projectGetOneById,
-} from '@/actions/CommonActions';
+import { projectGetOneById } from '@/actions/CommonActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
@@ -67,6 +64,7 @@ export default function CustomerDetail() {
   const documentsNotCompleted = customerData?.ProjectDocs?.length !== 8;
   const updatedAddressBilling = billingAddress?.length > 0;
   const updateAddressProject = projectAddress?.length > 0;
+
   const getProjectDetail = useCallback(
     async (projectId: string) => {
       try {
@@ -103,40 +101,6 @@ export default function CustomerDetail() {
     [dispatch]
   );
 
-  const getProjectIndividual = useCallback(
-    async (projectId: string) => {
-      try {
-        const response = await getProjectIndivualDetail(projectId);
-        setCustomerData(response.data);
-        if (response.data) {
-          let regionBilling: any = {
-            formattedAddress: response.data.BillingAddress?.line1,
-            latitude: response.data.BillingAddress?.lat,
-            longitude: response.data.BillingAddress?.lon,
-          };
-          let regionProject: any = {
-            formattedAddress: response.data.LocationAddress?.line1,
-            latitude: response.data.LocationAddress?.lat,
-            longitude: response.data.LocationAddress?.lon,
-          };
-          setExistingRegion(regionBilling);
-          setExistingProject(regionProject);
-          setFormattedBillingAddress(response.data.data.BillingAddress?.line1);
-          setFormattedProjectAddress(response.data.data.LocationAddress?.line1);
-        }
-      } catch (error) {
-        dispatch(
-          openPopUp({
-            popUpType: 'error',
-            highlightedText: 'Error',
-            popUpText: 'Error fetching visitation Data',
-            outsideClickClosePopUp: true,
-          })
-        );
-      }
-    },
-    [dispatch]
-  );
   React.useEffect(() => {
     crashlytics().log(CUSTOMER_DETAIL);
     dispatch(resetRegion());
@@ -146,7 +110,7 @@ export default function CustomerDetail() {
       const { id } = existingVisitation.project;
       getProjectDetail(id);
     }
-  }, [dispatch, getProjectDetail, getProjectIndividual, route.params]);
+  }, [dispatch, getProjectDetail, route.params]);
 
   useFocusEffect(
     useCallback(() => {
@@ -154,7 +118,7 @@ export default function CustomerDetail() {
         const { id } = existedVisitation?.project;
         getProjectDetail(id);
       }
-    }, [existedVisitation, getProjectDetail, getProjectIndividual])
+    }, [existedVisitation, getProjectDetail])
   );
 
   useEffect(() => {
@@ -262,8 +226,13 @@ export default function CustomerDetail() {
           <BSpacer size={'extraSmall'} />
           <View style={styles.between}>
             <Text style={styles.fontW300}>
-              {customerData?.availableDeposit
-                ? formatCurrency(parseInt(customerData.availableDeposit, 10))
+              {customerData?.Customer?.CustomerDeposit?.availableDeposit
+                ? formatCurrency(
+                    parseInt(
+                      customerData?.Customer?.CustomerDeposit?.availableDeposit,
+                      10
+                    )
+                  )
                 : '-'}
             </Text>
           </View>

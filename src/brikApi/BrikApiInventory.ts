@@ -8,6 +8,38 @@ const API_URL =
     : Config.API_URL_INV_PROD;
 
 export default class BrikApiInventory {
+  static getDrivers = (page?: number, size?: number, search?: string) => {
+    const url = new URL(`${API_URL}/inventory/b/driver`);
+    const params = url.searchParams;
+
+    if (page) {
+      params.append('page', `${page}`);
+    }
+    if (size) {
+      params.append('size', `${size}`);
+    }
+    if (search) {
+      params.append('search', search);
+    }
+    return url.toString();
+  };
+
+  static getVehicles = (page?: number, size?: number, search?: string) => {
+    const url = new URL(`${API_URL}/inventory/b/vehicle`);
+    const params = url.searchParams;
+
+    if (page) {
+      params.append('page', `${page}`);
+    }
+    if (size) {
+      params.append('size', `${size}`);
+    }
+    if (search) {
+      params.append('search', search);
+    }
+    return url.toString();
+  };
+
   static getProductCategories = (
     page?: number,
     size?: number,

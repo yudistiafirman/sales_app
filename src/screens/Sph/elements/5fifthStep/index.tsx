@@ -403,28 +403,24 @@ export default function FifthStep() {
             </View>
             <BSpacer size={'small'} />
           </View>
-          <View>
-            <FlatList
-              data={sphState?.chosenProducts}
-              renderItem={(item) => {
-                return (
-                  <>
-                    <BProductCard
-                      name={item.item.product.name}
-                      pricePerVol={+item.item.sellPrice}
-                      volume={+item.item.volume}
-                      totalPrice={+item.item.totalPrice}
-                    />
-                    <BSpacer size={'small'} />
-                  </>
-                );
-              }}
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <BSpacer size={'extraSmall'} />
-            <BForm titleBold="500" inputs={inputsData} />
-          </View>
+          <FlatList
+            data={sphState?.chosenProducts}
+            renderItem={(item) => {
+              return (
+                <>
+                  <BProductCard
+                    name={item.item.product.name}
+                    pricePerVol={+item.item.sellPrice}
+                    volume={+item.item.volume}
+                    totalPrice={+item.item.totalPrice}
+                  />
+                  <BSpacer size={'small'} />
+                </>
+              );
+            }}
+          />
+          <BSpacer size={'extraSmall'} />
+          <BForm titleBold="500" inputs={inputsData} />
         </View>
         <BBackContinueBtn
           isContinueIcon={false}
