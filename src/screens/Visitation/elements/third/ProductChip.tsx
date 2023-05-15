@@ -29,6 +29,8 @@ const styles: Styles = {
     borderTopColor: colors.border.grey,
     borderRightColor: colors.border.grey,
     borderLeftWidth: resScale(5),
+    marginEnd: layout.pad.md,
+    marginBottom: layout.pad.md,
   },
   category: {
     marginLeft: layout.pad.sm + layout.pad.md,

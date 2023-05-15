@@ -67,7 +67,7 @@ export default function BDepositCard({
             },
           ]}
         >
-          {firstSectionValue - secondSectionValue < 0
+          {firstSectionValue - secondSectionValue < 0 && !isSum
             ? '- IDR ' +
               formatCurrency(isSum ? getTotalSum() : getTotalDifference())
             : 'IDR ' +

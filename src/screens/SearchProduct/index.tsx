@@ -33,6 +33,7 @@ const SearchProduct = () => {
 	const [searchValue, setSearchValue] = React.useState<string>('');
 	const navigation = useNavigation();
 	const [state, send] = useMachine(searchProductMachine);
+	const disablePressed = route?.params?.disablePressed;
 
 	const renderHeaderLeft = React.useCallback(
 		() => (
@@ -149,6 +150,7 @@ const SearchProduct = () => {
 									navigation.goBack();
 								}
 							}}
+							disablePressed={disablePressed ? disablePressed : false}
 						/>
 					)}
 					onIndexChange={setIndex}

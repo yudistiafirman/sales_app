@@ -195,7 +195,7 @@ const TransactionDetail = () => {
         openPopUp({
           popUpType: 'error',
           popUpText:
-            error.message ||
+            error?.message ||
             'Terjadi error saat perpindahan screen menuju ke halaman sph',
           outsideClickClosePopUp: true,
         })
@@ -281,7 +281,7 @@ const TransactionDetail = () => {
         filePath: url,
       });
     } catch (error) {
-      printError(error.message);
+      printError(error?.message);
     }
   }
   const shareFunc = async (url?: string) => {
@@ -483,19 +483,13 @@ const TransactionDetail = () => {
             deliveredQty={data?.deliveredQuantity}
             scheduleMethod={data?.pouringMethod}
             gotoSPHPage={() => gotoSPHPage()}
-            tmNumber={
-              selectedType === 'DO'
-                ? data?.tmNumber
-                  ? data?.tmNumber
-                  : '-'
-                : undefined
+            tmNumber={route?.params?.vehicleName}
+            driverName={route?.params?.driverName}
+            consecutive={
+              selectedType === 'Jadwal' ? data?.consecutive : undefined
             }
-            driverName={
-              selectedType === 'DO'
-                ? data?.driverName
-                  ? data?.driverName
-                  : '-'
-                : undefined
+            technical={
+              selectedType === 'Jadwal' ? data?.withTechnician : undefined
             }
             useBEStatus={selectedType === 'SPH' ? false : true}
           />
