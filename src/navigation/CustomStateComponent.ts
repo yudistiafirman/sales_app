@@ -59,6 +59,7 @@ export type RootStackParamList = {
   TRANSACTION_DETAIL: { title: string; data: any; type: string };
   CREATE_SCHEDULE: undefined;
   CUSTOMER_DETAIL: { existingVisitation?: any };
+  CUSTOMER_CUSTOMER_DETAIL: { id: string };
   DOCUMENTS: { projectId?: string; docs?: Docs[] };
   VISIT_HISTORY: { projectId?: string; projectName?: string };
   CREATE_DEPOSIT: undefined;

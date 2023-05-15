@@ -92,7 +92,7 @@ const BList = ({
           : colors.status.lightBlue;
       return (
         <BCard
-          avatarText={avatarText}
+          avatarText={avatarText.toUpperCase()}
           title={title}
           cardBgColor={index % 2 ? colors.veryLightShadeGray : ''}
           onPressCard={() => onPressCard && onPressCard(item)}

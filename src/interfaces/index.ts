@@ -723,6 +723,7 @@ interface ProjectDetail {
   availableDeposit?: string;
   locationAddress?: Address;
   BillingAddress?: Address;
+  ShippingAddress?: Address;
   name?: string;
   companyName?: string;
   displayName?: string;

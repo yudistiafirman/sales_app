@@ -9,12 +9,20 @@ const UpdatedAddressWrapper = ({ address }: { address: string }) => {
   return (
     <View style={styles.filledAddressContainer}>
       <View style={styles.filledAddressInnerContainer}>
-        <BText numberOfLines={1} style={styles.mainAddress}>
-          {address.split(',')[0]}
-        </BText>
-        <BText numberOfLines={1} style={styles.secondAddress}>
-          {address}
-        </BText>
+        {address ? (
+          <>
+            <BText numberOfLines={1} style={styles.mainAddress}>
+              {address.split(',')[0]}
+            </BText>
+            <BText numberOfLines={1} style={styles.secondAddress}>
+              {address}
+            </BText>
+          </>
+        ) : (
+          <BText numberOfLines={1} style={styles.mainAddress}>
+            -
+          </BText>
+        )}
       </View>
     </View>
   );

@@ -87,7 +87,6 @@ export default function CustomerDetail() {
           setFormattedProjectAddress(response.data.data.LocationAddress?.line1);
         }
       } catch (error) {
-        console.log(error.message);
         dispatch(
           openPopUp({
             popUpType: 'error',

@@ -6,6 +6,8 @@ import { resScale } from '@/utils';
 import BList from '@/components/templates/BList';
 import { useMachine } from '@xstate/react';
 import customerListMachine from '@/machine/customerListMachine';
+import { CUSTOMER_CUSTOMER_DETAIL } from '@/navigation/ScreenNames';
+import { ICustomerListData } from '@/models/Customer';
 
 const Customer = () => {
   const [state, send] = useMachine(customerListMachine);
@@ -19,8 +21,8 @@ const Customer = () => {
     send('fetchData');
   }, []);
 
-  const goToCustomerDetail = (id) => {
-    navigation.navigate('CUSTOMER_DETAIL');
+  const goToCustomerDetail = (item: ICustomerListData) => {
+    navigation.navigate(CUSTOMER_CUSTOMER_DETAIL, { id: item.id });
   };
 
   const onTabPress = (event: any) => {
@@ -58,6 +60,7 @@ const Customer = () => {
         onIndexChange={setIndex}
         refreshing={refreshing}
         loadList={isLoading}
+        onPressCard={goToCustomerDetail}
         searchQuery={searchValue}
         onEndReached={() => send('onEndReached')}
         onRefresh={() => send('onRefresh')}

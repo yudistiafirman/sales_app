@@ -22,10 +22,16 @@ export default class BrikApiCommon {
     }
     return url.toString();
   };
-  static getOneCustomer = (id: string) => {
-    const url = new URL(`${API_URL}/common/m/customer${id}`);
+  static oneCustomer = (id: string) => {
+    const url = new URL(`${API_URL}/common/m/customer/${id}`);
     return url.toString();
   };
+
+  static updateCustomerBillingAddress = (id: string) => {
+    const url = new URL(`${API_URL}/common/m/customer/${id}/billing-address`);
+    return url.toString();
+  };
+
   static getLocationCoordinates = (
     longitude: number,
     latitude: number,

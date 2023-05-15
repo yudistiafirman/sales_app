@@ -8,6 +8,7 @@ import SearchProduct from '@/screens/SearchProduct';
 import Sph from '@/screens/Sph';
 import CreateVisitation from '@/screens/Visitation/CreateVisitation';
 import TransactionDetail from '@/screens/Transaction/Detail';
+import CustomerDetailListCustomer from '@/screens/Customer/CustomerDetail';
 import {
   ALL_PRODUCT,
   ALL_PRODUCT_TITLE,
@@ -23,6 +24,7 @@ import {
   CREATE_SCHEDULE_TITLE,
   CREATE_VISITATION,
   CREATE_VISITATION_TITLE,
+  CUSTOMER_CUSTOMER_DETAIL,
   CUSTOMER_DETAIL,
   CUSTOMER_DETAIL_TITLE,
   DOCUMENTS,
@@ -157,6 +159,17 @@ const SalesStack = (Stack: any) => {
           headerTitleAlign: 'center',
         }}
       />
+      {/* CUSTOMER DETAIL FROM LIST CUSTOMER */}
+      <Stack.Screen
+        name={CUSTOMER_CUSTOMER_DETAIL}
+        key={CUSTOMER_CUSTOMER_DETAIL}
+        component={CustomerDetailListCustomer}
+        options={{
+          headerTitle: CUSTOMER_DETAIL_TITLE,
+          headerTitleAlign: 'center',
+        }}
+      />
+      {/* CUSTOMER DETAIL FROM LIST CUSTOMER */}
       <Stack.Screen
         name={ALL_PRODUCT}
         key={ALL_PRODUCT}

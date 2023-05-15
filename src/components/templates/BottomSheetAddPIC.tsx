@@ -16,6 +16,8 @@ interface IProps {
   addPic: any;
   onClose: () => void;
   isVisible: boolean;
+  modalTitle?: string;
+  buttonTitle?: string;
 }
 
 const initialState = {
@@ -32,7 +34,13 @@ const emailRegex =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
-const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
+const BSheetAddPic = ({
+  addPic,
+  isVisible,
+  onClose,
+  modalTitle = 'Tambah PIC',
+  buttonTitle = 'Tambah PIC',
+}: IProps) => {
   const [state, setState] = React.useState<PicFormInitialState>(initialState);
 
   const inputs: Input[] = [
@@ -145,7 +153,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
           >
             <View style={styles.contentInnerContainer}>
               <View style={styles.headerContainer}>
-                <BText style={styles.headerTitle}>Tambah PIC</BText>
+                <BText style={styles.headerTitle}>{modalTitle}</BText>
                 <BHeaderIcon
                   onBack={onCloseModal}
                   size={layout.pad.lg}
@@ -169,7 +177,7 @@ const BSheetAddPic = ({ addPic, isVisible, onClose }: IProps) => {
               )
             }
             onPress={onAdd}
-            title="Tambah PIC"
+            title={buttonTitle}
           />
         </View>
       </View>

@@ -27,6 +27,7 @@ import { useDispatch } from 'react-redux';
 import Icons from 'react-native-vector-icons/Feather';
 import {
   updateBillingAddress,
+  updateCustomerBillingAddress,
   updateLocationAddress,
 } from '@/actions/CommonActions';
 import { openPopUp } from '@/redux/reducers/modalReducer';
@@ -37,9 +38,8 @@ type BillingModalType = {
   setFormattedAddress: React.Dispatch<React.SetStateAction<any>>;
   setRegion: React.Dispatch<React.SetStateAction<any>>;
   region: any;
-  projectId: string | undefined;
+  customerId: string | undefined;
   isUpdate?: boolean;
-  isBilling?: boolean;
 };
 
 const { height } = Dimensions.get('window');
@@ -48,11 +48,10 @@ export default function BillingModal({
   isModalVisible,
   setIsModalVisible,
   setFormattedAddress,
-  projectId,
+  customerId,
   region,
   setRegion,
   isUpdate = false,
-  isBilling = false,
 }: BillingModalType) {
   const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
     undefined
@@ -70,13 +69,16 @@ export default function BillingModal({
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const nameAddress = React.useMemo(() => {
-    const idx = region?.formattedAddress?.split(',');
-    if (idx?.length > 1) {
+    const address = region?.formattedAddress
+      ? region?.formattedAddress
+      : region?.line1;
+    const idx = address && address.split(',');
+    if (idx?.length >= 1) {
       return idx?.[0];
     }
 
     return 'Nama Alamat';
-  }, [region?.formattedAddress]);
+  }, [region?.line1]);
 
   const inputsData: Input[] = useMemo(() => {
     return [
@@ -126,16 +128,24 @@ export default function BillingModal({
     let body: Address = {};
 
     if (region?.postalId) {
-      body.postalid = region.postalId;
+      body.postalId = region.postalId;
+    } else {
+      body.postalId = region.Postal;
     }
     if (region?.longitude) {
       body.lon = region.longitude;
+    } else {
+      body.lon = region.lon;
     }
     if (region?.latitude) {
       body.lat = region.latitude;
+    } else {
+      body.lat = region.lat;
     }
     if (region?.formattedAddress) {
       body.line1 = region?.formattedAddress;
+    } else {
+      body.line1 = region?.line1;
     }
 
     if (billingState.kelurahan) {
@@ -158,12 +168,7 @@ export default function BillingModal({
           : billingState.kabupaten;
     }
     try {
-      let response = undefined;
-      if (isBilling) {
-        response = await updateBillingAddress(projectId, body);
-      } else {
-        response = await updateLocationAddress(projectId, body);
-      }
+      const response = await updateCustomerBillingAddress(customerId, body);
       if (response?.data?.success) {
         setFormattedAddress(region.formattedAddress);
         setRegion(region);
@@ -171,7 +176,7 @@ export default function BillingModal({
         dispatch(
           openPopUp({
             popUpType: 'success',
-            popUpText: 'Update alamat berhasil',
+            popUpText: 'Update alamat penagihan berhasil',
             outsideClickClosePopUp: true,
           })
         );
@@ -182,9 +187,7 @@ export default function BillingModal({
         openPopUp({
           popUpType: 'error',
           popUpText:
-            error.message ||
-            'Terjadi error saat update alamat ' +
-              (isBilling ? 'pembayaran' : 'proyek'),
+            error.message || 'Terjadi error saat update alamat ' + 'Pembayaran',
           outsideClickClosePopUp: true,
         })
       );
@@ -208,8 +211,7 @@ export default function BillingModal({
         <BContainer>
           <View style={styles.modalHeader}>
             <Text style={styles.headerText} numberOfLines={1}>
-              {(isUpdate ? 'Ubah' : 'Tambah') +
-                (isBilling ? ' Alamat Penagihan' : ' Alamat Proyek')}
+              {(isUpdate ? 'Ubah' : 'Tambah') + ' Alamat Penagihan'}
             </Text>
             <TouchableOpacity
               onPress={() => setIsModalVisible((curr) => !curr)}
@@ -223,11 +225,7 @@ export default function BillingModal({
               setScrollOffSet(event.nativeEvent.contentOffset.y);
             }}
           >
-            <BLabel
-              bold="500"
-              label={isBilling ? 'Alamat Penagihan' : 'Alamat Proyek'}
-              isRequired
-            />
+            <BLabel bold="500" label="Alamat Penagihan" isRequired />
             <BSpacer size="verySmall" />
             <TouchableOpacity
               style={styles.searchAddress}
@@ -236,7 +234,7 @@ export default function BillingModal({
                 navigation.navigate(SEARCH_AREA, {
                   from: CUSTOMER_DETAIL,
                   eventKey: 'getCoordinateFromCustomerDetail',
-                  sourceType: isBilling ? 'billing' : 'project',
+                  sourceType: 'billing',
                 });
               }}
             >
@@ -252,7 +250,11 @@ export default function BillingModal({
                   <BLabel bold="500" label={nameAddress!} />
                   <BSpacer size="verySmall" />
                   <BText bold="300">
-                    {region?.formattedAddress || 'Detail Alamat'}
+                    {region?.line1
+                      ? region?.line1
+                      : region?.formattedAddress
+                      ? region?.formattedAddress
+                      : 'Detail Alamat'}
                   </BText>
                 </>
               </View>
@@ -261,7 +263,7 @@ export default function BillingModal({
             <BForm titleBold="500" inputs={inputsData} />
           </ScrollView>
           <BButtonPrimary
-            disable={region === null}
+            disable={!isUpdate && region?.longitude === null}
             onPress={onPressAddAddress}
             title={(isUpdate ? 'Ubah' : 'Tambah') + ' Alamat'}
           />

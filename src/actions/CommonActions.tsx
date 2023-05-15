@@ -26,10 +26,18 @@ export const getAllCustomers = async (
 };
 
 export const getOneCustomer = async (id: string) => {
+  return customRequest(BrikApiCommon.oneCustomer(id), 'GET', undefined, true);
+};
+
+export const updateCustomer = async (id: string, data: any) => {
+  return customRequest(BrikApiCommon.oneCustomer(id), 'PUT', data, true);
+};
+
+export const updateCustomerBillingAddress = async (id: string, data: any) => {
   return customRequest(
-    BrikApiCommon.getOneCustomer(id),
-    'GET',
-    undefined,
+    BrikApiCommon.updateCustomerBillingAddress(id),
+    'PUT',
+    data,
     true
   );
 };

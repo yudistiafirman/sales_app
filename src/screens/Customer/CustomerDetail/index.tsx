@@ -16,32 +16,26 @@ import {
   BSvg,
   BTouchableText,
   BVisitationCard,
+  BottomSheetAddPIC,
 } from '@/components';
 import ProjectBetween from './elements/ProjectBetween';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
 import BillingModal from './elements/BillingModal';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {
-  CUSTOMER_DETAIL,
-  DOCUMENTS,
-  VISIT_HISTORY,
-} from '@/navigation/ScreenNames';
+
 import {
   RouteProp,
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {
-  getProjectIndivualDetail,
-  projectGetOneById,
-} from '@/actions/CommonActions';
+import { getOneCustomer, updateCustomer } from '@/actions/CommonActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 import { resetRegion } from '@/redux/reducers/locationReducer';
 import { RootStackParamList } from '@/navigation/CustomStateComponent';
-import { ProjectDetail, visitationListResponse } from '@/interfaces';
+import { PIC, ProjectDetail, visitationListResponse } from '@/interfaces';
 import DocumentWarning from './elements/DocumentWarning';
 import UpdatedAddressWrapper from './elements/UpdatedAddressWrapper';
 import AddNewAddressWrapper from './elements/AddNewAddressWrapper';
@@ -50,150 +44,101 @@ import FeatIcon from 'react-native-vector-icons/Feather';
 import CustomerDetailLoader from './elements/CustomerDetailLoader';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 import RemainingAmountBox from './elements/RemainAmountBox';
+import { ICustomerDetail } from '@/models/Customer';
 
-type CustomerDetailRoute = RouteProp<RootStackParamList['CUSTOMER_DETAIL']>;
+type CustomerDetailRoute = RouteProp<
+  RootStackParamList['CUSTOMER_CUSTOMER_DETAIL']
+>;
 
 export default function CustomerDetail() {
   const route = useRoute<CustomerDetailRoute>();
+  const { id } = route.params;
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const [isBillingLocationVisible, setIsBillingLocationVisible] =
     useState(false);
   const [isProjectLocationVisible, setIsProjectLocationVisible] =
     useState(false);
-  const [customerData, setCustomerData] = useState<ProjectDetail>({});
+  const [customerData, setCustomerData] = useState<ICustomerDetail>({});
+  const [isVisibleModalPic, setIsVisibleModalPic] = useState(false);
   const [billingAddress, setFormattedBillingAddress] = useState('');
   const [projectAddress, setFormattedProjectAddress] = useState('');
   const [region, setRegion] = useState(null);
-  const [project, setProject] = useState(null);
+  const [updatedBilling, setUpdatedBilling] = useState(null);
   const [regionExisting, setExistingRegion] = useState(null);
-  const [projectExisting, setExistingProject] = useState(null);
-  const [existedVisitation, setExistingVisitation] =
-    useState<visitationListResponse>(null);
+
   const dataNotLoadedYet = JSON.stringify(customerData) === '{}';
-  const documentsNotCompleted = customerData?.ProjectDocs?.length !== 8;
   const updatedAddressBilling = billingAddress?.length > 0;
-  const updateAddressProject = projectAddress?.length > 0;
-  const getProjectDetail = useCallback(
-    async (projectId: string) => {
-      try {
-        const response = await projectGetOneById(projectId);
-        setCustomerData(response.data.data);
-        if (response.data.data) {
-          let regionBilling: any = {
-            formattedAddress: response.data.data.BillingAddress?.line1,
-            latitude: response.data.data.BillingAddress?.lat,
-            longitude: response.data.data.BillingAddress?.lon,
-          };
-          let regionProject: any = {
-            formattedAddress: response.data.data.LocationAddress?.line1,
-            latitude: response.data.data.LocationAddress?.lat,
-            longitude: response.data.data.LocationAddress?.lon,
-          };
-          setExistingRegion(regionBilling);
-          setExistingProject(regionProject);
-          setFormattedBillingAddress(response.data.data.BillingAddress?.line1);
-          setFormattedProjectAddress(response.data.data.LocationAddress?.line1);
-        }
-      } catch (error) {
-        console.log(error.message);
-        dispatch(
-          openPopUp({
-            popUpType: 'error',
-            highlightedText: 'Error',
-            popUpText: 'Error fetching project detail',
-            outsideClickClosePopUp: true,
-          })
-        );
-      }
-    },
-    [dispatch]
-  );
 
-  const getProjectIndividual = useCallback(
-    async (projectId: string) => {
-      try {
-        const response = await getProjectIndivualDetail(projectId);
-        setCustomerData(response.data);
-        if (response.data) {
-          let regionBilling: any = {
-            formattedAddress: response.data.BillingAddress?.line1,
-            latitude: response.data.BillingAddress?.lat,
-            longitude: response.data.BillingAddress?.lon,
-          };
-          let regionProject: any = {
-            formattedAddress: response.data.LocationAddress?.line1,
-            latitude: response.data.LocationAddress?.lat,
-            longitude: response.data.LocationAddress?.lon,
-          };
-          setExistingRegion(regionBilling);
-          setExistingProject(regionProject);
-          setFormattedBillingAddress(response.data.data.BillingAddress?.line1);
-          setFormattedProjectAddress(response.data.data.LocationAddress?.line1);
-        }
-      } catch (error) {
-        dispatch(
-          openPopUp({
-            popUpType: 'error',
-            highlightedText: 'Error',
-            popUpText: 'Error fetching visitation Data',
-            outsideClickClosePopUp: true,
-          })
-        );
-      }
-    },
-    [dispatch]
-  );
-  React.useEffect(() => {
-    crashlytics().log(CUSTOMER_DETAIL);
-    dispatch(resetRegion());
-    if (route?.params) {
-      const { existingVisitation } = route.params;
-      setExistingVisitation(existingVisitation);
-      const { id } = existingVisitation.project;
-      getProjectDetail(id);
+  const getCustomerDetail = useCallback(async () => {
+    try {
+      const response = await getOneCustomer(id);
+      setCustomerData(response.data.data);
+    } catch (error) {
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          highlightedText: 'Error',
+          popUpText: error.message
+            ? error.message
+            : 'Error Saat Mengambil Data Customer detail',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
-  }, [dispatch, getProjectDetail, getProjectIndividual, route.params]);
+  }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (existedVisitation !== null) {
-        const { id } = existedVisitation?.project;
-        getProjectDetail(id);
-      }
-    }, [existedVisitation, getProjectDetail, getProjectIndividual])
-  );
+  useEffect(() => {
+    getCustomerDetail();
+  }, []);
 
   useEffect(() => {
     DeviceEventEmitter.addListener(
       'getCoordinateFromCustomerDetail',
       (data) => {
-        if (data.sourceType === 'billing') {
-          setRegion(data.coordinate);
-          setIsBillingLocationVisible(true);
-        } else {
-          setProject(data.coordinate);
-          setIsProjectLocationVisible(true);
-        }
+        setUpdatedBilling(data.coordinate);
+        setIsBillingLocationVisible(true);
       }
     );
   }, [setIsBillingLocationVisible, setIsProjectLocationVisible]);
 
-  const [filledDocsCount] = useMemo((): number[] => {
-    let count = 0;
-    let totalProperties = 8;
+  const onChangePic = async (data: PIC) => {
+    try {
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: 'Update PIC',
+          outsideClickClosePopUp: false,
+        })
+      );
 
-    for (const key in customerData?.ProjectDocs) {
-      totalProperties++;
-      if (Object.prototype.hasOwnProperty.call(customerData.ProjectDocs, key)) {
-        if (customerData?.ProjectDocs[key]) {
-          count++;
-        }
+      const payload = {};
+      payload.pic = data;
+      const response = await updateCustomer(id, payload);
+      if (response.data.success) {
+        dispatch(
+          openPopUp({
+            popUpType: 'success',
+            popUpText: 'Berhasil Update PIC',
+            outsideClickClosePopUp: true,
+          })
+        );
+        setIsVisibleModalPic(false);
+        getCustomerDetail();
       }
+    } catch (error) {
+      dispatch(
+        openPopUp({
+          popUpType: 'error',
+          highlightedText: 'Error',
+          popUpText: error.message
+            ? error.message
+            : 'Error Saat Update Customer PIC',
+          outsideClickClosePopUp: true,
+        })
+      );
     }
-
-    return [count, totalProperties];
-  }, [customerData.ProjectDocs]);
+  };
 
   if (dataNotLoadedYet) {
     return <CustomerDetailLoader />;
@@ -201,34 +146,22 @@ export default function CustomerDetail() {
 
   return (
     <>
-      {isBillingLocationVisible && (
-        <BillingModal
-          isBilling
-          setFormattedAddress={setFormattedBillingAddress}
-          setIsModalVisible={setIsBillingLocationVisible}
-          isModalVisible={isBillingLocationVisible}
-          region={region || regionExisting}
-          isUpdate={
-            billingAddress !== undefined && billingAddress !== '' ? true : false
-          }
-          setRegion={setRegion}
-          projectId={customerData.id}
-        />
-      )}
-      {isProjectLocationVisible && (
-        <BillingModal
-          isBilling={false}
-          setFormattedAddress={setFormattedProjectAddress}
-          setIsModalVisible={setIsProjectLocationVisible}
-          isModalVisible={isProjectLocationVisible}
-          region={project || projectExisting}
-          isUpdate={
-            projectAddress !== undefined && projectAddress !== '' ? true : false
-          }
-          setRegion={setProject}
-          projectId={customerData.id}
-        />
-      )}
+      <BillingModal
+        setFormattedAddress={setFormattedBillingAddress}
+        setIsModalVisible={setIsBillingLocationVisible}
+        isModalVisible={isBillingLocationVisible}
+        region={updatedBilling || customerData?.BillingAddress}
+        isUpdate={customerData?.BillingAddress?.line1 !== null}
+        setRegion={setUpdatedBilling}
+        customerId={id}
+      />
+      <BottomSheetAddPIC
+        isVisible={isVisibleModalPic}
+        onClose={() => setIsVisibleModalPic(false)}
+        addPic={onChangePic}
+        modalTitle="Ubah PIC"
+        buttonTitle="Ubah PIC"
+      />
 
       <DocumentWarning docs={[]} projectId="123456" />
 
@@ -236,17 +169,17 @@ export default function CustomerDetail() {
         <BContainer>
           <View style={styles.between}>
             <Text style={styles.fontW400}>Nama</Text>
-            <Text style={styles.fontW500}>Pt.Coba</Text>
+            <Text style={styles.fontW500}>{customerData?.displayName}</Text>
           </View>
           <BSpacer size={'middleSmall'} />
           <View style={styles.between}>
             <Text style={styles.fontW400}>No. NPWP</Text>
-            <Text style={styles.fontW500}>09.223.828-3.119.000</Text>
+            <Text style={styles.fontW500}>{customerData?.npwp}</Text>
           </View>
           <BSpacer size={'middleSmall'} />
           <View style={styles.between}>
             <Text style={styles.fontW400}>No. KTP</Text>
-            <Text style={styles.fontW500}>09.223.828-3.119.000</Text>
+            <Text style={styles.fontW500}>{customerData?.nik}</Text>
           </View>
           <BSpacer size={'middleSmall'} />
           <View style={styles.between}>
@@ -303,6 +236,7 @@ export default function CustomerDetail() {
           <View style={styles.between}>
             <Text style={styles.fontW400}>PIC Penagihan</Text>
             <BTouchableText
+              onPress={() => setIsVisibleModalPic(true)}
               startIcon={
                 <FeatIcon
                   name="edit"
@@ -317,10 +251,10 @@ export default function CustomerDetail() {
 
           <BSpacer size={'extraSmall'} />
           <BPic
-            name="Ada"
-            email="Jajang@gmail.com"
-            phone="08122089655"
-            position="Supervisor"
+            name={customerData?.Pic?.name}
+            email={customerData?.Pic?.email}
+            phone={customerData?.Pic?.phone}
+            position={customerData?.Pic?.position}
           />
           <BSpacer size={'middleSmall'} />
           <View style={styles.between}>
@@ -328,19 +262,21 @@ export default function CustomerDetail() {
             <BTouchableText
               startIcon={
                 <FeatIcon
-                  name="edit"
+                  name={customerData?.BillingAddress?.line1 ? 'edit' : 'plus'}
                   style={{ marginRight: layout.pad.xs }}
                   color={colors.danger}
                 />
               }
               onPress={() => setIsBillingLocationVisible(true)}
               textStyle={styles.touchableText}
-              title="Ubah"
+              title={customerData?.BillingAddress?.line1 ? 'Ubah' : 'Tambah'}
             />
           </View>
           <BSpacer size={'extraSmall'} />
           <View style={styles.billingStyle}>
-            <UpdatedAddressWrapper address="Jalan Bendi Besar No.36" />
+            <UpdatedAddressWrapper
+              address={customerData?.BillingAddress?.line1}
+            />
           </View>
           <BSpacer size={'middleSmall'} />
           <View style={styles.between}>
@@ -348,42 +284,40 @@ export default function CustomerDetail() {
           </View>
           <BSpacer size={'extraSmall'} />
           <View style={{ flexDirection: 'row', width: '100%' }}>
-            <RemainingAmountBox title="Sisa Deposit" firstAmount={24000200} />
-            <BSpacer size={'extraSmall'} />
             <RemainingAmountBox
-              title="Sisa Credit"
-              firstAmount={32800200}
-              secondAmount={150000000}
+              title="Sisa Deposit"
+              firstAmount={customerData?.CustomerDeposit?.availableDeposit}
             />
           </View>
         </BContainer>
-        <View style={styles.projectListContainer}>
-          <BContainer>
-            <Text style={styles.fontW400}>Proyek</Text>
-            <BSpacer size="extraSmall" />
-            <BVisitationCard
-              nameSize={fonts.size.xs}
-              locationTextColor={colors.text.lightGray}
-              item={{
-                name: 'Project Firman',
-                location: 'jalan bendi besar no 36 A',
-              }}
-            />
-            <BSpacer size="extraSmall" />
-            <BVisitationCard
-              nameSize={fonts.size.xs}
-              customStyle={{
-                borderColor: colors.border.default,
-                borderWidth: 2,
-              }}
-              locationTextColor={colors.text.lightGray}
-              item={{
-                name: 'Project Firman',
-                location: 'jalan bendi besar no 36 A',
-              }}
-            />
-          </BContainer>
-        </View>
+        {customerData?.Projects.length > 0 && (
+          <View style={styles.projectListContainer}>
+            <BContainer>
+              <Text style={styles.fontW400}>Proyek</Text>
+              <BSpacer size="extraSmall" />
+              {customerData?.Projects.map((v, i) => {
+                const name = v.displayName;
+                const location = v.locationAddress?.line1;
+                return (
+                  <React.Fragment key={v.id}>
+                    <BVisitationCard
+                      isRenderIcon={false}
+                      nameSize={fonts.size.xs}
+                      locationTextColor={colors.text.lightGray}
+                      item={{
+                        name: v.name ? v.name : '',
+                        location: v?.ShippingAddress?.line1
+                          ? v?.ShippingAddress?.line1
+                          : v?.ShippingAddress?.line2,
+                      }}
+                    />
+                    <BSpacer size="extraSmall" />
+                  </React.Fragment>
+                );
+              })}
+            </BContainer>
+          </View>
+        )}
       </ScrollView>
     </>
   );
