@@ -129,6 +129,14 @@ const Transaction = () => {
       let data;
       let driverName = undefined;
       let vehicleName = undefined;
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: `Mendapatkan data ${selectedType}`,
+          highlightedText: 'detail',
+          outsideClickClosePopUp: false,
+        })
+      );
       if (selectedType === 'SPH') {
         data = await getVisitationOrderByID(id);
         data = data.data.data;
@@ -233,7 +241,7 @@ const Transaction = () => {
           };
         }
       }
-
+      dispatch(closePopUp());
       navigation.navigate(TRANSACTION_DETAIL, {
         title: data ? data.number : 'N/A',
         data: data,
