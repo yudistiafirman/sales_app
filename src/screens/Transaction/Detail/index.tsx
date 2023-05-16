@@ -36,7 +36,7 @@ import { QuotationRequests } from '@/interfaces/CreatePurchaseOrder';
 import { PO_METHOD_LIST } from '@/constants/dropdown';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { openPopUp } from '@/redux/reducers/modalReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import RNPrint from 'react-native-print';
 import { resScale } from '@/utils';
@@ -181,8 +181,17 @@ const TransactionDetail = () => {
   const gotoSPHPage = async () => {
     try {
       let getData;
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: 'Mendapatkan data SPH',
+          highlightedText: 'detail',
+          outsideClickClosePopUp: false,
+        })
+      );
       getData = await getVisitationOrderByID(data.QuotationLetter.id);
       getData = getData.data.data;
+      dispatch(closePopUp());
       navigation.dispatch(
         StackActions.replace(TRANSACTION_DETAIL, {
           title: getData ? getData.number : 'N/A',
@@ -195,8 +204,7 @@ const TransactionDetail = () => {
         openPopUp({
           popUpType: 'error',
           popUpText:
-            error.message ||
-            'Terjadi error saat perpindahan screen menuju ke halaman sph',
+            error?.message || 'Terjadi error saat pengambilan SPH data',
           outsideClickClosePopUp: true,
         })
       );
@@ -281,7 +289,7 @@ const TransactionDetail = () => {
         filePath: url,
       });
     } catch (error) {
-      printError(error.message);
+      printError(error?.message);
     }
   }
   const shareFunc = async (url?: string) => {
@@ -480,27 +488,16 @@ const TransactionDetail = () => {
                 ? moment(data?.date).format('HH:mm')
                 : undefined
             }
-            scheduleMethod={
-              data?.withPump !== undefined
-                ? data?.withPump === true
-                  ? PO_METHOD_LIST[0].label
-                  : PO_METHOD_LIST[1].label
-                : undefined
-            }
+            deliveredQty={data?.deliveredQuantity}
+            scheduleMethod={data?.pouringMethod}
             gotoSPHPage={() => gotoSPHPage()}
-            tmNumber={
-              selectedType === 'DO'
-                ? data?.tmNumber
-                  ? data?.tmNumber
-                  : '-'
-                : undefined
+            tmNumber={route?.params?.vehicleName}
+            driverName={route?.params?.driverName}
+            consecutive={
+              selectedType === 'Jadwal' ? data?.consecutive : undefined
             }
-            driverName={
-              selectedType === 'DO'
-                ? data?.driverName
-                  ? data?.driverName
-                  : '-'
-                : undefined
+            technical={
+              selectedType === 'Jadwal' ? data?.withTechnician : undefined
             }
             useBEStatus={selectedType === 'SPH' ? false : true}
           />

@@ -54,10 +54,10 @@ function stepHandler(
   if (
     stepTwo?.deliveryDate &&
     stepTwo?.deliveryTime &&
-    // stepTwo?.method &&
+    stepTwo?.method &&
     stepTwo?.inputtedVolume &&
-    stepTwo?.salesOrder &&
-    getTotalProduct(stepTwo) <= stepTwo?.availableDeposit
+    stepTwo?.salesOrder
+    // getTotalProduct(stepTwo) <= stepTwo?.availableDeposit
   ) {
     setStepsDone((curr) => {
       return [...new Set(curr), 1];
@@ -162,7 +162,7 @@ const CreateScheduleScreen = () => {
             values.stepTwo?.deliveryDate + ' ' + values.stepTwo?.deliveryTime,
             'DD/MM/yyyy HH:mm'
           ).valueOf(), // date + time
-          withPump: values.stepTwo?.method,
+          pouringMethod: values.stepTwo?.method,
           consecutive:
             values.stepTwo?.isConsecutive !== undefined
               ? values.stepTwo?.isConsecutive

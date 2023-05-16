@@ -29,11 +29,11 @@ const SearchProduct = () => {
     isGoback = isGobackAfterPress;
   }
 
-  const [index, setIndex] = React.useState(0);
-  const [searchValue, setSearchValue] = React.useState<string>('');
-  const navigation = useNavigation();
-  const [state, send] = useMachine(searchProductMachine);
-  const disablePressed = route?.params?.disablePressed;
+	const [index, setIndex] = React.useState(0);
+	const [searchValue, setSearchValue] = React.useState<string>('');
+	const navigation = useNavigation();
+	const [state, send] = useMachine(searchProductMachine);
+	const disablePressed = route?.params?.disablePressed;
 
   const renderHeaderLeft = React.useCallback(
     () => (

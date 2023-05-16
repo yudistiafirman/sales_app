@@ -9,10 +9,9 @@ import {
   BForm,
   BProductCard,
   BSpacer,
-  BText,
 } from '@/components';
 import { Input } from '@/interfaces';
-import { METHOD_LIST, METHOD_LIST_DEPRECATED, PO_METHOD_LIST } from '@/constants/dropdown';
+import { METHOD_LIST } from '@/constants/dropdown';
 import { RadioButton } from 'react-native-paper';
 import moment from 'moment';
 import { SalesOrdersData } from '@/interfaces/SelectConfirmedPO';
@@ -67,11 +66,11 @@ export default function SecondStep() {
       label: 'Metode penuangan',
       isRequire: true,
       type: 'dropdown',
-      value: stateTwo?.method, 
-      isError: stateTwo?.method === undefined ? true : false,
+      value: stateTwo?.method,
+      isError: stateTwo?.method ? false : true,
       customerErrorMsg: 'Metode penuangan harus dipilih',
       dropdown: {
-        items: METHOD_LIST_DEPRECATED,
+        items: METHOD_LIST,
         placeholder: 'Pilih metode penuangan',
         onChange: (value: any) => {
           onChange('method')(value);
@@ -274,10 +273,10 @@ export default function SecondStep() {
           }
           secondSectionValue={getTotalProduct()}
           thirdSectionText={'Est. Sisa Deposit'}
-          isError={
-            getTotalProduct() >
-            (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
-          }
+          // isError={
+          //   getTotalProduct() >
+          //   (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
+          // }
           customErrorMsg={'Silakan lakukan penambahan deposit'}
         />
       </View>

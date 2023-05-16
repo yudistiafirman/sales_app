@@ -61,7 +61,7 @@ const useAsyncConfigSetup = () => {
           openPopUp({
             popUpType: 'error',
             popUpText:
-              error.message || 'Terjadi error dalam pengambilan user token',
+              error?.message || 'Terjadi error dalam pengambilan user token',
             outsideClickClosePopUp: true,
           })
         );

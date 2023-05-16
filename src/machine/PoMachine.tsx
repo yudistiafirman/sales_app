@@ -539,7 +539,6 @@ const POMachine =
         postPo: async (context) => {
           try {
             const finalPayload = context.postPoPayload;
-            console.log('ini final payload', finalPayload);
             if (context.checked === 'first') {
               if (context.fiveToSix !== '')
                 finalPayload.fiveToSix = Number(context.fiveToSix);
@@ -626,32 +625,11 @@ const POMachine =
           };
         }),
         assignFilesToPayload: assign((context, event) => {
-          const files: { documentId: string; fileId: string }[] = [];
-          event.data.forEach((photo) => {
-            const photoName = `${photo.name}.${photo.type}`;
-            const photoNamee = `${photo.name}.jpg`;
-            let foundPhoto;
-            for (const documentId in context.files) {
-              if (
-                Object.prototype.hasOwnProperty.call(context.files, documentId)
-              ) {
-                const photoData = context.files[documentId].value;
-                if (photoData) {
-                  if (
-                    photoData.name === photoName ||
-                    photoData.name === photoNamee
-                  ) {
-                    foundPhoto = context.files[documentId].documentId;
-                  }
-                }
-              }
-            }
-            if (foundPhoto) {
-              files.push({
-                documentId: foundPhoto,
-                fileId: photo.id,
-              });
-            }
+          const files = context.files.map((v, i) => {
+            return {
+              documentId: v.documentId,
+              fileId: event.data[i].id,
+            };
           });
           return {
             postPoPayload: { ...context.postPoPayload, projectDocs: files },

@@ -6,8 +6,8 @@ import React, { useCallback } from 'react';
 import { ListRenderItem } from 'react-native';
 import PriceListShimmer from './PriceListShimmer';
 import { FlashList } from '@shopify/flash-list';
-import BDivider from '@/components/atoms/BDivider';
 import BSpacer from '@/components/atoms/BSpacer';
+import BDivider from '@/components/atoms/BDivider';
 
 interface productsData {
   display_name?: string;
