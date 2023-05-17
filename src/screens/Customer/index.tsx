@@ -6,8 +6,11 @@ import { resScale } from '@/utils';
 import BList from '@/components/templates/BList';
 import { useMachine } from '@xstate/react';
 import customerListMachine from '@/machine/customerListMachine';
-import { CUSTOMER_CUSTOMER_DETAIL } from '@/navigation/ScreenNames';
-import { ICustomerListData } from '@/models/Customer';
+import {
+  CUSTOMER_CUSTOMER_DETAIL,
+  TAB_CUSTOMER,
+} from '@/navigation/ScreenNames';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const Customer = () => {
   const [state, send] = useMachine(customerListMachine);
@@ -18,6 +21,7 @@ const Customer = () => {
   const { data, refreshing, routes, isLoading, errorMessage } = state.context;
 
   React.useEffect(() => {
+    crashlytics().log(TAB_CUSTOMER);
     send('fetchData');
   }, []);
 
@@ -73,18 +77,6 @@ const Customer = () => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: layout.pad.lg,
-  },
-  tabIndicator: {
-    backgroundColor: colors.blueSail,
-    marginLeft: resScale(15.5),
-  },
-  tabStyle: {
-    width: 'auto',
-    paddingRight: layout.pad.md,
-  },
-  tabBarStyle: {
-    backgroundColor: colors.white,
-    paddingHorizontal: layout.pad.md,
   },
   outlineSearchBar: {
     borderWidth: 0,

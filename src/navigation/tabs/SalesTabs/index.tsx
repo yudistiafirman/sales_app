@@ -73,20 +73,21 @@ function SalesTabs() {
           component={Profile}
         />
       )}
-      {enable_customer_menu && (
-        <Tab.Screen
-          key={TAB_CUSTOMER}
-          name={TAB_CUSTOMER_TITLE}
-          options={{ headerTitle: LIST_CUSTOMER }}
-          component={Customer}
-        />
-      )}
+
       {enable_price_menu && (
         <Tab.Screen
           key={TAB_PRICE_LIST}
           name={TAB_PRICE_LIST_TITLE}
           options={{ headerTitle: TAB_PRICE_LIST_TITLE }}
           component={PriceList}
+        />
+      )}
+      {enable_customer_menu && (
+        <Tab.Screen
+          key={TAB_CUSTOMER}
+          name={TAB_CUSTOMER_TITLE}
+          options={{ headerTitle: LIST_CUSTOMER }}
+          component={Customer}
         />
       )}
     </Tab.Navigator>

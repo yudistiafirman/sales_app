@@ -5,6 +5,7 @@ import React from 'react';
 import { TextStyle, View, ViewStyle } from 'react-native';
 import BChip from '../atoms/BChip';
 import BText from '../atoms/BText';
+import BSpacer from '../atoms/BSpacer';
 
 type Route = {
   key: string;
@@ -54,9 +55,11 @@ const BTabLabels = ({
   return (
     <View style={BTabLabelsContainer}>
       <BText style={BTabLabelsTextStyle}>{route.title}</BText>
-
+      <BSpacer size="extraSmall" />
       <BChip
         type="header"
+        titleWeight={focused ? '700' : 'normal'}
+        textColor={focused && tabTextfocusedColor}
         backgroundColor={isHasItems ? chipBackgroundColor : null}
         style={BChipStyle}
       >

@@ -27,6 +27,7 @@ import {
   CUSTOMER_CUSTOMER_DETAIL,
   CUSTOMER_DETAIL,
   CUSTOMER_DETAIL_TITLE,
+  CUSTOMER_DOCUMENT,
   DOCUMENTS,
   DOCUMENTS_TITLE,
   FORM_SO,
@@ -58,6 +59,7 @@ import VisitHistory from '@/screens/VisitHistory';
 import Deposit from '@/screens/Deposit';
 import SearchSO from '@/screens/SearchSO';
 import FormSO from '@/screens/SearchSO/Form/FormSO';
+import Document from '@/screens/Customer/Document';
 
 const SalesStack = (Stack: any) => {
   return (
@@ -170,6 +172,17 @@ const SalesStack = (Stack: any) => {
         }}
       />
       {/* CUSTOMER DETAIL FROM LIST CUSTOMER */}
+      {/* DOCUMENT FROM LIST CUSTOMER */}
+      <Stack.Screen
+        name={CUSTOMER_DOCUMENT}
+        key={CUSTOMER_DOCUMENT}
+        component={Document}
+        options={{
+          headerTitle: DOCUMENTS_TITLE,
+          headerTitleAlign: 'center',
+        }}
+      />
+      {/* DOCUMENT FROM LIST CUSTOMER */}
       <Stack.Screen
         name={ALL_PRODUCT}
         key={ALL_PRODUCT}

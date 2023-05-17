@@ -1,5 +1,9 @@
 import { colors, fonts, layout } from '@/constants';
-import { DOCUMENTS } from '@/navigation/ScreenNames';
+import {
+  CUSTOMER_DETAIL_TITLE,
+  CUSTOMER_DOCUMENT,
+  DOCUMENTS,
+} from '@/navigation/ScreenNames';
 import { resScale } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
@@ -7,10 +11,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const DocumentWarning = ({
   docs,
-  projectId,
+  customerId,
 }: {
   docs?: Docs[];
-  projectId?: string;
+  customerId?: string;
 }) => {
   const navigation = useNavigation();
   return (
@@ -20,9 +24,9 @@ const DocumentWarning = ({
       </Text>
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate(DOCUMENTS, {
+          navigation.navigate(CUSTOMER_DOCUMENT, {
             docs: docs,
-            projectId: projectId,
+            customerId: customerId,
           })
         }
         style={styles.outlineButton}

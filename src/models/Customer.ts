@@ -1,4 +1,4 @@
-import { Address, ProjectDetail } from '@/interfaces';
+import { Address, Docs, ProjectDetail } from '@/interfaces';
 import { PIC } from '@/interfaces';
 
 export interface ICustomerListData {
@@ -10,11 +10,36 @@ export interface ICustomerListData {
   nik?: string;
 }
 
+export interface IDocument {
+  id?: string;
+  name?: string;
+  paymentType?: 'CBD' | 'CREDIT';
+  isRequired?: boolean;
+}
+
 export interface ICustomerDeposit {
   availableDeposit?: number;
   totalDeposit?: number;
   scheduleDeposit?: number;
   usedDeposit?: number;
+}
+
+export interface CustomerFile {
+  id?: string;
+  type?: string;
+  name?: string;
+  url?: string;
+}
+
+export interface CustomerDocsPayType {
+  customerDocId?: string;
+  File?: CustomerFile;
+  Document?: IDocument;
+}
+
+export interface CustomerDocs {
+  cbd?: CustomerDocsPayType[];
+  credit?: CustomerDocsPayType[];
 }
 
 export interface ICustomerDetail {
@@ -27,6 +52,7 @@ export interface ICustomerDetail {
   CustomerDeposit?: ICustomerDeposit;
   BillingAddress?: Address;
   Projects: ProjectDetail[];
+  CustomerDocs?: CustomerDocs;
 }
 
 export interface ICustomerState {

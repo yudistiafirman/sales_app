@@ -5,7 +5,7 @@ import {
   ScrollView,
   DeviceEventEmitter,
 } from 'react-native';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { colors, fonts, layout } from '@/constants';
 import {
   BChip,
@@ -18,8 +18,6 @@ import {
   BVisitationCard,
   BottomSheetAddPIC,
 } from '@/components';
-import ProjectBetween from './elements/ProjectBetween';
-import { ProgressBar } from '@react-native-community/progress-bar-android';
 import BillingModal from './elements/BillingModal';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -33,18 +31,20 @@ import { getOneCustomer, updateCustomer } from '@/actions/CommonActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { openPopUp } from '@/redux/reducers/modalReducer';
-import { resetRegion } from '@/redux/reducers/locationReducer';
 import { RootStackParamList } from '@/navigation/CustomStateComponent';
-import { PIC, ProjectDetail, visitationListResponse } from '@/interfaces';
+import { PIC } from '@/interfaces';
 import DocumentWarning from './elements/DocumentWarning';
 import UpdatedAddressWrapper from './elements/UpdatedAddressWrapper';
-import AddNewAddressWrapper from './elements/AddNewAddressWrapper';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FeatIcon from 'react-native-vector-icons/Feather';
 import CustomerDetailLoader from './elements/CustomerDetailLoader';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 import RemainingAmountBox from './elements/RemainAmountBox';
 import { ICustomerDetail } from '@/models/Customer';
+import {
+  CUSTOMER_CUSTOMER_DETAIL,
+  CUSTOMER_DOCUMENT,
+} from '@/navigation/ScreenNames';
 
 type CustomerDetailRoute = RouteProp<
   RootStackParamList['CUSTOMER_CUSTOMER_DETAIL']
@@ -57,18 +57,12 @@ export default function CustomerDetail() {
   const dispatch = useDispatch<AppDispatch>();
   const [isBillingLocationVisible, setIsBillingLocationVisible] =
     useState(false);
-  const [isProjectLocationVisible, setIsProjectLocationVisible] =
-    useState(false);
   const [customerData, setCustomerData] = useState<ICustomerDetail>({});
   const [isVisibleModalPic, setIsVisibleModalPic] = useState(false);
   const [billingAddress, setFormattedBillingAddress] = useState('');
-  const [projectAddress, setFormattedProjectAddress] = useState('');
-  const [region, setRegion] = useState(null);
   const [updatedBilling, setUpdatedBilling] = useState(null);
-  const [regionExisting, setExistingRegion] = useState(null);
 
   const dataNotLoadedYet = JSON.stringify(customerData) === '{}';
-  const updatedAddressBilling = billingAddress?.length > 0;
 
   const getCustomerDetail = useCallback(async () => {
     try {
@@ -79,8 +73,8 @@ export default function CustomerDetail() {
         openPopUp({
           popUpType: 'error',
           highlightedText: 'Error',
-          popUpText: error.message
-            ? error.message
+          popUpText: error?.message
+            ? error?.message
             : 'Error Saat Mengambil Data Customer detail',
           outsideClickClosePopUp: true,
         })
@@ -89,8 +83,15 @@ export default function CustomerDetail() {
   }, []);
 
   useEffect(() => {
+    crashlytics().log(CUSTOMER_CUSTOMER_DETAIL);
     getCustomerDetail();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getCustomerDetail();
+    }, [])
+  );
 
   useEffect(() => {
     DeviceEventEmitter.addListener(
@@ -100,7 +101,7 @@ export default function CustomerDetail() {
         setIsBillingLocationVisible(true);
       }
     );
-  }, [setIsBillingLocationVisible, setIsProjectLocationVisible]);
+  }, [setIsBillingLocationVisible]);
 
   const onChangePic = async (data: PIC) => {
     try {
@@ -140,6 +141,67 @@ export default function CustomerDetail() {
     }
   };
 
+  const showWarningDocument = () => {
+    const documents = customerData?.CustomerDocs?.cbd?.filter(
+      (v) => v.customerDocId !== null
+    );
+    if (customerData?.type === 'INDIVIDU') {
+      if (documents && documents?.length > 0) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      if (
+        documents &&
+        documents?.length > 0 &&
+        documents[0]?.Document?.name === 'Foto NPWP'
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  };
+
+  const renderDocumentWarning = () => {
+    return (
+      showWarningDocument() && (
+        <DocumentWarning docs={customerData?.CustomerDocs} customerId={id} />
+      )
+    );
+  };
+
+  const renderDocumentChip = () => {
+    const totalUploadedDocument = customerData?.CustomerDocs?.cbd?.filter(
+      (v) => v.customerDocId !== null
+    );
+
+    return (
+      <BChip
+        endIcon={
+          <BSvg
+            svgName={
+              showWarningDocument()
+                ? SvgNames.IC_EXCLA_CERT
+                : SvgNames.IC_CHECK_CERT
+            }
+            width={layout.pad.ml}
+            style={{ marginLeft: layout.pad.sm }}
+            height={layout.pad.ml}
+            type="fill"
+            color={colors.white}
+          />
+        }
+        backgroundColor={
+          showWarningDocument() ? colors.danger : colors.greenLantern
+        }
+      >
+        <Text style={styles.chipText}>{totalUploadedDocument?.length}/1</Text>
+      </BChip>
+    );
+  };
+
   if (dataNotLoadedYet) {
     return <CustomerDetailLoader />;
   }
@@ -159,12 +221,10 @@ export default function CustomerDetail() {
         isVisible={isVisibleModalPic}
         onClose={() => setIsVisibleModalPic(false)}
         addPic={onChangePic}
-        modalTitle="Ubah PIC"
-        buttonTitle="Ubah PIC"
+        modalTitle="Edit PIC"
+        buttonTitle="Edit PIC"
       />
-
-      <DocumentWarning docs={[]} projectId="123456" />
-
+      {renderDocumentWarning()}
       <ScrollView showsVerticalScrollIndicator={false}>
         <BContainer>
           <View style={styles.between}>
@@ -187,39 +247,16 @@ export default function CustomerDetail() {
               <Text style={{ ...styles.fontW400, marginRight: layout.pad.md }}>
                 Dokumen Legalitas
               </Text>
-              <BChip
-                endIcon={
-                  <BSvg
-                    svgName={SvgNames.IC_EXCLA_CERT}
-                    width={layout.pad.ml}
-                    height={layout.pad.ml}
-                    style={{ marginLeft: layout.pad.sm }}
-                    type="fill"
-                    color={colors.white}
-                  />
-                }
-                backgroundColor={colors.danger}
-              >
-                <Text style={styles.chipText}>0/1</Text>
-              </BChip>
-              <BChip
-                endIcon={
-                  <BSvg
-                    svgName={SvgNames.IC_CHECK_CERT}
-                    width={layout.pad.ml}
-                    style={{ marginLeft: layout.pad.sm }}
-                    height={layout.pad.ml}
-                    type="fill"
-                    color={colors.white}
-                  />
-                }
-                backgroundColor={colors.greenLantern}
-              >
-                <Text style={styles.chipText}>0/1</Text>
-              </BChip>
+              {renderDocumentChip()}
             </View>
 
             <BTouchableText
+              onPress={() =>
+                navigation.navigate(CUSTOMER_DOCUMENT, {
+                  docs: customerData?.CustomerDocs,
+                  customerId: id,
+                })
+              }
               startIcon={
                 <AntIcon
                   name="search1"
@@ -269,13 +306,16 @@ export default function CustomerDetail() {
               }
               onPress={() => setIsBillingLocationVisible(true)}
               textStyle={styles.touchableText}
-              title={customerData?.BillingAddress?.line1 ? 'Ubah' : 'Tambah'}
+              title={customerData?.BillingAddress?.line1 ? 'Edit' : 'Tambah'}
             />
           </View>
           <BSpacer size={'extraSmall'} />
           <View style={styles.billingStyle}>
             <UpdatedAddressWrapper
-              address={customerData?.BillingAddress?.line1}
+              address={
+                updatedBilling?.formattedAddress ||
+                customerData?.BillingAddress?.line1
+              }
             />
           </View>
           <BSpacer size={'middleSmall'} />
@@ -303,6 +343,7 @@ export default function CustomerDetail() {
                     <BVisitationCard
                       isRenderIcon={false}
                       nameSize={fonts.size.xs}
+                      disabled
                       locationTextColor={colors.text.lightGray}
                       item={{
                         name: v.name ? v.name : '',

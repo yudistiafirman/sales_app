@@ -30,8 +30,8 @@ const CustomTabBar = ({ state, descriptors, navigation }: TabBar) => {
   const icons = [homeIcon];
   if (enable_transaction_menu) icons.push(transIcon);
   if (enable_profile_menu) icons.push(profileIcon);
-  if (enable_customer_menu) icons.push(customerIcon);
   if (enable_price_menu) icons.push(priceIcon);
+  if (enable_customer_menu) icons.push(customerIcon);
 
   return (
     <View style={TabBarStyle.tabBarContainer}>

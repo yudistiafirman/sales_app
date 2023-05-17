@@ -32,6 +32,11 @@ export default class BrikApiCommon {
     return url.toString();
   };
 
+  static getCustomerCount = () => {
+    const url = new URL(`${API_URL}/common/m/customer/count`);
+    return url.toString();
+  };
+
   static getLocationCoordinates = (
     longitude: number,
     latitude: number,

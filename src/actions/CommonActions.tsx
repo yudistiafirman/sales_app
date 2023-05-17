@@ -33,6 +33,15 @@ export const updateCustomer = async (id: string, data: any) => {
   return customRequest(BrikApiCommon.oneCustomer(id), 'PUT', data, true);
 };
 
+export const getCustomerCount = async () => {
+  return customRequest(
+    BrikApiCommon.getCustomerCount(),
+    'GET',
+    undefined,
+    true
+  );
+};
+
 export const updateCustomerBillingAddress = async (id: string, data: any) => {
   return customRequest(
     BrikApiCommon.updateCustomerBillingAddress(id),

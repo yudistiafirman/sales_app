@@ -25,11 +25,7 @@ import { useNavigation } from '@react-navigation/native';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
 import Icons from 'react-native-vector-icons/Feather';
-import {
-  updateBillingAddress,
-  updateCustomerBillingAddress,
-  updateLocationAddress,
-} from '@/actions/CommonActions';
+import { updateCustomerBillingAddress } from '@/actions/CommonActions';
 import { openPopUp } from '@/redux/reducers/modalReducer';
 
 type BillingModalType = {
@@ -194,6 +190,11 @@ export default function BillingModal({
     }
   };
 
+  const onCloseModal = () => {
+    setRegion(null);
+    setIsModalVisible(false);
+  };
+
   return (
     <Modal
       hideModalContentWhileAnimating={true}
@@ -211,11 +212,9 @@ export default function BillingModal({
         <BContainer>
           <View style={styles.modalHeader}>
             <Text style={styles.headerText} numberOfLines={1}>
-              {(isUpdate ? 'Ubah' : 'Tambah') + ' Alamat Penagihan'}
+              {(isUpdate ? 'Edit' : 'Tambah') + ' Alamat Penagihan'}
             </Text>
-            <TouchableOpacity
-              onPress={() => setIsModalVisible((curr) => !curr)}
-            >
+            <TouchableOpacity onPress={onCloseModal}>
               <MaterialCommunityIcons name="close" size={30} color="#000000" />
             </TouchableOpacity>
           </View>
@@ -265,7 +264,7 @@ export default function BillingModal({
           <BButtonPrimary
             disable={!isUpdate && region?.longitude === null}
             onPress={onPressAddAddress}
-            title={(isUpdate ? 'Ubah' : 'Tambah') + ' Alamat'}
+            title={(isUpdate ? 'Edit' : 'Tambah') + ' Alamat'}
           />
         </BContainer>
       </View>

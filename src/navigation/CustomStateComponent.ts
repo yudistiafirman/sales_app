@@ -1,4 +1,5 @@
 import { Docs, visitationListResponse } from '@/interfaces';
+import { CustomerDocs } from '@/models/Customer';
 import { ENTRY_TYPE } from '@/models/EnumModel';
 import { OperationProjectDetails } from '@/redux/reducers/operationReducer';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -60,6 +61,7 @@ export type RootStackParamList = {
   CREATE_SCHEDULE: undefined;
   CUSTOMER_DETAIL: { existingVisitation?: any };
   CUSTOMER_CUSTOMER_DETAIL: { id: string };
+  CUSTOMER_DOCUMENT: { docs: CustomerDocs; customerId: string };
   DOCUMENTS: { projectId?: string; docs?: Docs[] };
   VISIT_HISTORY: { projectId?: string; projectName?: string };
   CREATE_DEPOSIT: undefined;

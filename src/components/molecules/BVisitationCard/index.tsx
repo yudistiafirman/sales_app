@@ -48,6 +48,7 @@ type VisitationCardType = {
   customStyle?: ViewStyle;
   locationTextColor?: string;
   onLocationPress?: (lonlat: { longitude: string; latitude: string }) => void;
+  disabled?: boolean;
 };
 
 export default function BVisitationCard({
@@ -61,10 +62,12 @@ export default function BVisitationCard({
   nameSize = fonts.size.md,
   onLocationPress,
   locationTextColor,
+  disabled = false,
 }: VisitationCardType) {
   return (
     <View style={[style.container, customStyle]}>
       <TouchableOpacity
+        disabled={disabled}
         style={style.subContainer}
         onPress={() => {
           onPress(item);

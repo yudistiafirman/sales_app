@@ -10,6 +10,8 @@ interface BChipProps {
   backgroundColor?: string | undefined;
   textColor?: string | undefined;
   endIcon?: React.ReactNode;
+  startIcon?: React.ReactNode;
+  titleWeight?: string;
 }
 
 const BChip = ({
@@ -18,11 +20,16 @@ const BChip = ({
   backgroundColor,
   textColor,
   endIcon,
+  startIcon,
+  titleWeight,
 }: BChipProps) => {
   let BChipHeaderStyle: ViewStyle = {
     paddingHorizontal: layout.pad.md,
     paddingVertical: layout.pad.xs,
     borderRadius: layout.radius.sm,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   };
 
   let BChipDefaultStyle: ViewStyle = {
@@ -45,7 +52,10 @@ const BChip = ({
 
   return (
     <View style={[_style, { backgroundColor: backgroundColor }]}>
-      <BText style={[_textStyle]}>{children}</BText>
+      {startIcon}
+      <BText style={[_textStyle, { fontWeight: titleWeight }]}>
+        {children}
+      </BText>
       {endIcon}
     </View>
   );

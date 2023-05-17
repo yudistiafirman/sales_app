@@ -1,11 +1,11 @@
-import { getAllCustomers } from '@/actions/CommonActions';
+import { getAllCustomers, getCustomerCount } from '@/actions/CommonActions';
 import { ICustomerListData } from '@/models/Customer';
 import { event } from 'react-native-reanimated';
 import { assign, createMachine } from 'xstate';
 
 const customerListMachine = createMachine(
   {
-    /** @xstate-layout N4IgpgJg5mDOIC5QGMCusAuB7AtmATgAQA2AlpoTgIbIAWpAdmAHQBmYGdjUAxBFk2aMAblgDWLNJlwES5DJRr1B7TsqgIRWZFQykBAbQAMAXWMnEoAA5ZYpPQMsgAHogCsAZgBMzAIxujIy8ADjcvABY3AE4PNwAaEABPRGDfZgA2AHYAozdMqMyPINyAXxKEqWw8IjIKai4VDgbeAnwsfGYrYl1WdpxmSpka+UUGllVmzQZRHQcGc3MnGzs5p1cEQqjmfPTgzPTfYPSjcMyE5IQAWg9mDw9fKILPKN908N9wqLKK9CrZWoU9WULAguioABksFQIJAeAIAMK0KgMGAAFSoACNFkgQMt7PoGGtEF5fJlmO8vG4PuEPAc3h5zsSvDdTqlYnsqfdad8QINqnI6kpGCCwZDobDYGAqPhmtjrLZ8Y4cesSWSKVTwjS6TTGQg3AdtqlKfkjiSjJkeXz-iMgcLmKCMBCoTCIHCGABRBgQABKUrokDluIVq2ViHebj84S8JPuXnSccKutJEejUV2qSCHkypIt5V5vyGAsBQsEDqd4tdAl9rHwcFogbxIdAKtJ5N8lOptNeOqSiFpWzc4SMbxpJLTvktBf5ANGwKEEGIYB4E1oABEwQ3gwSiXrvH4ciEwpEYvFewhPkZmJSYplguFQpl9hO81bhoKxsxJdL-a7nJhdCwVCsBgBAABQ5AAlDwr5FrOdpfjKtABqYSxbkqzbuHu-iBIeETRLEupuKEzDBHeHh3l4mRxgUwSTtI042iWLCtO0ADiHB6Ci66OjwtYYPgiSbis26hggRTBCRDy+IERjticByEWSBz3sEXgxO2HhRMEpQ8gwWAwvAOIwTOtpMKhwnoS4iCXOkuqXFEPieJyhxSeRdF-G+xYfiu3DmYqhKiVREZ5AEvi+N4jxGKEupFBGEVGN46RuAE3IvlO1rvnOZZii6flNlZ55eEmHy3FpabBOR3iapq7mFiZTHzoueUiRh56nNs8ZUlEnztkcDJnpytweDSt5RAleTxrVDGZfBUqIZAzWWes7yXgcezpOR6QvPeUSEXeJH6pSd4nLJUVTRlXlzix+DsRgnFQNxVCLQFrWURJ1JRdGuTYeEdnhCRxztreCWZJE8a5mUQA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QGMCusAuB7AtmATgAQA2AlpoTgIbIAWpAdmAHQBmYGdjUAxBFk2aMAblgDWLNJlwES5DJRr1B7TsqgIRWZFQykBAbQAMAXWMnEoAA5ZYpPQMsgAHogDsAFgAczLwDYAJgBWAEYggE5I8IBmN2iAGhAAT0QvEOZvNyCjAIC3N3CQryC3AF9SxKlsPCIyCmouFQ5G3gJ8LHxmK2JdVg6cZiqZWvlFRpZVFs0GUR0HBnNzJxs7eadXBBCQjwDfNIDAo3y-I3DElIQPEN2Q8NOgj2joiKC88sr0atk6hQblFgguioABksFQIJAeAIAMK0KgMGAAFSoACMlkgQCt7PoGOtEAEQm4MgSvIVYjEgn5wh5zviAtFmH4PH4vF5ogEvB4ck8yhUQEManJ6kpGACgaDwZDYGAqPgWujrLZsY4MRsCUSdkUyQVnlSaclEEFon5mEbrpy7kFORz3vzPsMhb8RYJARgQWCIRAoQwAKIMCAAJRldEgCsxSrWqvxhOJWpC5N11NpCGit2Y4T8lI8QVCmqttoF31Gf1FzFd7slXoEQdY+DgtDDWMjoDVMc1pPjOspSYNlxCJo5Hi5+SHXLSBftgp+Y3+QggxDAPEmtAAIkDGxGcXiEOrYx2E939Rc-OzfNkjB43PGTs9ohPpFPi86WNLZSGvc5MLoWFRWBgCAAFOeACUPCFiMwrjMwr5yrQoamMsm4qi27gHKaXieBhTz0kaXjJpSRjpmaJ5WvkRz3l8EFOlBbQdAA4hwegImubo8HWGD4EkG6rFuUabNsuystchzHKcyapkEvhuAS4QEkYJQnB4FEOtOJZNGoLFUNCWCoAwGB8AILBaBIgyTkWkGzsumnabpGDTLMug4osCEYk2vEoQgXgEsw0RGEy0RstEGahGcvZ+FkzBXq8njhcEsnlHyDBYBC8AYuBjozqKiE8chLiIAAtH4yb5ZJURRLEBQ5vSSl8ulqnPmwzTqNlyq4nx1K7NEjyeOytwBUYITiQE4TMAEF7eIEhQHG8tVmVRmUuuKHqQC1zZ5ZcATJlsHimkyERGKSLJuJyfjKY+FmlqQ85gKt7nreEPgno8nLZpS+yDWFlKjYEOYhAdGYZryHwPuZ1GzjB763blGw5jtVynNNbhGEckT4RE6bdayxThNkjxnaDC0sLR+AMRgTFQJpUNtR58ZjYymZ+Iz3gZkcQTiZePmMw9L0M+F+PzWpExNdZOl6VT27ZD4I5RFshJFE8yYnrsbgsl48nBDJhIJaUQA */
     id: 'customer list machine',
 
     predictableActionArguments: true,
@@ -45,26 +45,7 @@ const customerListMachine = createMachine(
       page: 1,
       selectedTab: '',
       totalPage: 10,
-      routes: [
-        {
-          key: '',
-          title: 'Semua',
-          totalItems: 0,
-          chipPosition: 'right',
-        },
-        {
-          key: 'COMPANY',
-          title: 'Perusahaan',
-          totalItems: 0,
-          chipPosition: 'right',
-        },
-        {
-          key: 'INDIVIDU',
-          title: 'Individu',
-          totalItems: 0,
-          chipPosition: 'right',
-        },
-      ],
+      routes: [],
       searchQuery: '',
       errorMessage: '',
     },
@@ -111,7 +92,7 @@ const customerListMachine = createMachine(
       idle: {
         on: {
           fetchData: {
-            target: 'fetching',
+            target: 'fetchDataCount',
             actions: 'enableLoading',
           },
         },
@@ -131,6 +112,16 @@ const customerListMachine = createMachine(
           },
         },
       },
+
+      fetchDataCount: {
+        invoke: {
+          src: 'getDataCount',
+          onDone: {
+            target: 'fetching',
+            actions: 'assignTotalCount',
+          },
+        },
+      },
     },
 
     initial: 'idle',
@@ -145,7 +136,6 @@ const customerListMachine = createMachine(
       getAllData: async (context, event) => {
         try {
           const { selectedTab, searchQuery, page } = context;
-          console.log('ini page', page);
           const response = await getAllCustomers(
             selectedTab,
             searchQuery,
@@ -157,8 +147,43 @@ const customerListMachine = createMachine(
           throw new Error(error);
         }
       },
+      getDataCount: async () => {
+        try {
+          const response = await getCustomerCount();
+          return response.data;
+        } catch (error) {
+          throw new Error(error);
+        }
+      },
     },
     actions: {
+      assignTotalCount: assign((context, event) => {
+        const { companyCount, individuCount, totalCount } = event.data.data;
+        const routes = [
+          {
+            key: '',
+            title: 'Semua',
+            totalItems: totalCount,
+            chipPosition: 'right',
+          },
+          {
+            key: 'COMPANY',
+            title: 'Perusahaan',
+            totalItems: companyCount,
+            chipPosition: 'right',
+          },
+          {
+            key: 'INDIVIDU',
+            title: 'Individu',
+            totalItems: individuCount,
+            chipPosition: 'right',
+          },
+        ];
+
+        return {
+          routes: routes,
+        };
+      }),
       refreshPage: assign(() => {
         return {
           refreshing: true,
