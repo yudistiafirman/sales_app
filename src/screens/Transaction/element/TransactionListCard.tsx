@@ -24,7 +24,7 @@ const TransactionListCard = ({
   status,
   name,
   nominal,
-  useBEStatus
+  useBEStatus,
 }: TransactionListCardProps) => {
   const statusFinal = useBEStatus ? status : getStatusTrx(status);
   const { color, textColor } = getColorStatusTrx(statusFinal);
@@ -32,15 +32,17 @@ const TransactionListCard = ({
     <View
       style={[
         styles.parent,
-        name ? { height: resScale(88) } : { height: resScale(68) },
+        name ? { height: resScale(98) } : { height: resScale(68) },
       ]}
     >
       <View style={styles.leftSide}>
-        <View style={styles.container}>
+        <View style={{ flexDirection: 'row' }}>
           <BText style={styles.title}>{number}</BText>
-          <BChip type="default" backgroundColor={color} textColor={textColor}>
-            {statusFinal}
-          </BChip>
+          <View style={styles.container}>
+            <BChip type="default" backgroundColor={color} textColor={textColor}>
+              {statusFinal}
+            </BChip>
+          </View>
         </View>
         {name && <BText style={styles.name}>{name}</BText>}
         <View style={styles.bottomContainer}>
@@ -73,7 +75,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
   },
   bottomContainer: {
     flexDirection: 'row',

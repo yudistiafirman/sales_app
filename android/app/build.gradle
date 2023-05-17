@@ -145,14 +145,14 @@ def reactNativeArchitectures() {
  * Refer https://developer.android.com/google/play/publishing/multiple-apks.html#using-a-version-code-scheme
 */
 private Integer generateVersionCode() {
-  return rootProject.ext.minSdkVersion * 10000000 + rootProject.ext.MAJOR_VERSION * 10000 + rootProject.ext.MINOR_VERSION * 100 + rootProject.ext.PATCH_VERSION
+    return rootProject.ext.minSdkVersion * 10000000 + rootProject.ext.MAJOR_VERSION * 10000 + rootProject.ext.MINOR_VERSION * 100 + rootProject.ext.PATCH_VERSION
 }
 
 /**
  * Internal version name generator
 */
 private String generateVersionName() {
-   return "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}"
+    return "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}"
 }
 
 private String generateCodePushKey() {

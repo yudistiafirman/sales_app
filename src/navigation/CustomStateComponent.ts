@@ -57,7 +57,13 @@ export type RootStackParamList = {
   };
   SEARCH_AREA: { from?: string; eventKey?: string; sourceType?: string };
   CALENDAR: { useTodayMinDate: boolean };
-  TRANSACTION_DETAIL: { title: string; data: any; type: string };
+  TRANSACTION_DETAIL: {
+    title: string;
+    data: any;
+    type: string;
+    driverName?: string;
+    vehicleName?: string;
+  };
   CREATE_SCHEDULE: undefined;
   CUSTOMER_DETAIL: { existingVisitation?: any };
   CUSTOMER_CUSTOMER_DETAIL: { id: string };

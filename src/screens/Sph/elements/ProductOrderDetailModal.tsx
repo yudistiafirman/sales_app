@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   NativeSyntheticEvent,
   TextInputChangeEventData,
-  ScrollView,
 } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import Modal from 'react-native-modal';
@@ -17,7 +16,6 @@ import {
   BSpacer,
   BChip,
   BDivider,
-  BContainer,
   BButtonPrimary,
   BText,
   BTextInput,
@@ -26,7 +24,7 @@ import {
 import formatCurrency from '@/utils/formatCurrency';
 import { TextInput } from 'react-native-paper';
 import calcTrips from '@/utils/calcTrips';
-import { METHOD_LIST, PO_METHOD_LIST } from '@/constants/dropdown';
+import { METHOD_LIST } from '@/constants/dropdown';
 
 type ProductCartModalType = {
   productData: ProductDataInterface;
@@ -276,10 +274,10 @@ export default function ProductCartModal({
               IDR {calcPrice ? formatCurrency(calcPrice) : '0'}
             </Text>
           </View>
-          {/* <BSpacer size="extraSmall" />
+          <BSpacer size="extraSmall" />
           <View>
             <BForm titleBold="500" inputs={methodInput} />
-          </View> */}
+          </View>
           <BSpacer size="extraSmall" />
           <View style={style.priceContainer}>
             <Text style={style.productName}>Total Harga</Text>
@@ -294,8 +292,7 @@ export default function ProductCartModal({
             title="Tambah Produk"
             disable={
               // +detailOrder.sellPrice < productData.calcPrice ||
-              // !detailOrder.volume || !detailOrder.method
-              !detailOrder.volume
+              !detailOrder.volume || !detailOrder.method
             }
             onPress={() => {
               choseProduct((curr) => {
@@ -401,6 +398,8 @@ const style = StyleSheet.create({
     color: colors.text.darker,
   },
   buttonContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
     paddingHorizontal: layout.mainPad,
     paddingVertical: layout.pad.md,
   },
