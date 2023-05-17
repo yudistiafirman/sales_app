@@ -12,6 +12,9 @@ import { TextInput } from 'react-native-paper';
 import BEmptyState from '../organism/BEmptyState';
 import BShimmerAvatarList from './BShimmerAvatarList';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 interface IBList {
   data?: ICustomerListData[];
@@ -45,6 +48,7 @@ interface IBList {
   tabBarStyle?: ViewStyle;
   tabTextFocusedColor?: string;
   tabIndicatorStyle?: ViewStyle;
+  isLoadingSearchBar?: boolean;
 }
 
 const BList = ({
@@ -76,6 +80,7 @@ const BList = ({
   tabBarStyle,
   tabTextFocusedColor = colors.blueSail,
   tabIndicatorStyle,
+  isLoadingSearchBar,
 }: IBList) => {
   const renderItem: ListRenderItem<ICustomerListData> = React.useCallback(
     ({ item, index }) => {
@@ -118,25 +123,37 @@ const BList = ({
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <BSearchBar
-          outlineStyle={searchBarOutlineStyle}
-          placeholder={placeholder}
-          value={searchQuery}
-          onChangeText={onChangeText}
-          bgColor={searchBarBgColor}
-          textInputStyle={searchBarInputStyle}
-          left={<TextInput.Icon size={layout.pad.xl} disabled icon="magnify" />}
-          right={
-            searchQuery &&
-            searchQuery.length > 2 && (
-              <TextInput.Icon
-                onPress={onClearValue}
-                size={layout.pad.lg}
-                icon="close-circle"
-              />
-            )
-          }
-        />
+        {isLoadingSearchBar ? (
+          <ShimmerPlaceholder
+            style={{
+              marginHorizontal: layout.pad.lg,
+              height: layout.pad.xl,
+              width: '92%',
+            }}
+          />
+        ) : (
+          <BSearchBar
+            outlineStyle={searchBarOutlineStyle}
+            placeholder={placeholder}
+            value={searchQuery}
+            onChangeText={onChangeText}
+            bgColor={searchBarBgColor}
+            textInputStyle={searchBarInputStyle}
+            left={
+              <TextInput.Icon size={layout.pad.xl} disabled icon="magnify" />
+            }
+            right={
+              searchQuery &&
+              searchQuery.length > 2 && (
+                <TextInput.Icon
+                  onPress={onClearValue}
+                  size={layout.pad.lg}
+                  icon="close-circle"
+                />
+              )
+            }
+          />
+        )}
       </View>
 
       <BSpacer size="extraSmall" />
@@ -173,10 +190,10 @@ const BList = ({
           )}
           onTabPress={onTabPress}
           onIndexChange={onIndexChange}
-          tabStyle={[styles.tabStyle, { tabStyle }]}
-          tabBarStyle={[styles.tabBarStyle, { tabBarStyle }]}
+          tabStyle={[styles.tabStyle, { ...tabStyle }]}
+          tabBarStyle={[styles.tabBarStyle, { ...tabBarStyle }]}
           tabTextFocusedColor={tabTextFocusedColor}
-          indicatorStyle={[styles.tabIndicator, { tabIndicatorStyle }]}
+          indicatorStyle={[styles.tabIndicator, { ...tabIndicatorStyle }]}
         />
       )}
     </View>

@@ -123,7 +123,7 @@ const Document = () => {
           value: v.File,
           titleBold: '500',
           onChange: (newValue) => onChangeFileValue(newValue, i, 'cbd'),
-          loading: false,
+          isRequire: v.Document?.isRequired,
         };
       }
     );
@@ -142,6 +142,7 @@ const Document = () => {
           value: v.File,
           onChange: (newValue) => onChangeFileValue(newValue, i, 'credit'),
           titleBold: '500',
+          isRequire: v.Document?.isRequired,
         };
       }
     );
@@ -164,10 +165,10 @@ const Document = () => {
       <BSpacer size={'small'} />
       <BSpacer size="extraSmall" />
       <BForm titleBold="500" inputs={cbdFileInput} />
-      {customerType === 'INDIVIDU' && <View style={styles.divider} />}
+      {customerType === 'COMPANY' && <View style={styles.divider} />}
 
       <BSpacer size="middleSmall" />
-      {customerType === 'INDIVIDU' && (
+      {customerType === 'COMPANY' && (
         <BForm titleBold="500" inputs={creditFileInput} />
       )}
     </BContainer>

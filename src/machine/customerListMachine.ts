@@ -5,7 +5,7 @@ import { assign, createMachine } from 'xstate';
 
 const customerListMachine = createMachine(
   {
-    /** @xstate-layout N4IgpgJg5mDOIC5QGMCusAuB7AtmATgAQA2AlpoTgIbIAWpAdmAHQBmYGdjUAxBFk2aMAblgDWLNJlwES5DJRr1B7TsqgIRWZFQykBAbQAMAXWMnEoAA5ZYpPQMsgAHogDsAFgAczLwDYAJgBWAEYggE5I8IBmN2iAGhAAT0QvEOZvNyCjAIC3N3CQryC3AF9SxKlsPCIyCmouFQ5G3gJ8LHxmK2JdVg6cZiqZWvlFRpZVFs0GUR0HBnNzJxs7eadXBBCQjwDfNIDAo3y-I3DElIQPEN2Q8NOgj2joiKC88sr0atk6hQblFgguioABksFQIJAeAIAMK0KgMGAAFSoACMlkgQCt7PoGOtEAEQm4MgSvIVYjEgn5wh5zviAtFmH4PH4vF5ogEvB4ck8yhUQEManJ6kpGACgaDwZDYGAqPgWujrLZsY4MRsCUSdkUyQVnlSaclEEFon5mEbrpy7kFORz3vzPsMhb8RYJARgQWCIRAoQwAKIMCAAJRldEgCsxSrWqvxhOJWpC5N11NpCGit2Y4T8lI8QVCmqttoF31Gf1FzFd7slXoEQdY+DgtDDWMjoDVMc1pPjOspSYNlxCJo5Hi5+SHXLSBftgp+Y3+QggxDAPEmtAAIkDGxGcXiEOrYx2E939Rc-OzfNkjB43PGTs9ohPpFPi86WNLZSGvc5MLoWFRWBgCAAFOeACUPCFiMwrjMwr5yrQoamMsm4qi27gHKaXieBhTz0kaXjJpSRjpmaJ5WvkRz3l8EFOlBbQdAA4hwegImubo8HWGD4EkG6rFuUabNsuystchzHKcyapkEvhuAS4QEkYJQnB4FEOtOJZNGoLFUNCWCoAwGB8AILBaBIgyTkWkGzsumnabpGDTLMug4osCEYk2vEoQgXgEsw0RGEy0RstEGahGcvZ+FkzBXq8njhcEsnlHyDBYBC8AYuBjozqKiE8chLiIAAtH4yb5ZJURRLEBQ5vSSl8ulqnPmwzTqNlyq4nx1K7NEjyeOytwBUYITiQE4TMAEF7eIEhQHG8tVmVRmUuuKHqQC1zZ5ZcATJlsHimkyERGKSLJuJyfjKY+FmlqQ85gKt7nreEPgno8nLZpS+yDWFlKjYEOYhAdGYZryHwPuZ1GzjB763blGw5jtVynNNbhGEckT4RE6bdayxThNkjxnaDC0sLR+AMRgTFQJpUNtR58ZjYymZ+Iz3gZkcQTiZePmMw9L0M+F+PzWpExNdZOl6VT27ZD4I5RFshJFE8yYnrsbgsl48nBDJhIJaUQA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QGMCusAuB7AtmATgAQA2AlpoTgIbIAWpAdmAHQBmYGdjUAxBFk2aMAblgDWLNJlwES5DJRr1B7TsqgIRWZFQykBAbQAMAXWMnEoAA5ZYpPQMsgAHogDsAFgAczLwDYAJgBWAEYggE5I8IBmN2iAGhAAT0QvEOZvNyCjAIC3N3CQryC3AF9SxKlsPCIyCmouFQ5G3gJ8LHxmK2JdVg6cZiqZWvlFRpZVFs0GUR0HBnNzJxs7eadXBBCQjwDfNIDAo3y-I3DElIQPEN2Q8NOgj2joiKC88sr0atk6hQblFgguioABksFQIJAeAIAMK0KgMGAAFSoACMlkgQCt7PoGOtEAEQm4MgSvIVYjEgn5wh5zviAtFmH4PH4vF5ogEvB4ck8yhUQEManJ6kpGACgaDwZDYGAqPgWujrLZsY4MRsCUSdkUyQVnlSaclEEFon5mEbrpy7kFORz3vzPsMhb8RYJARgQWCIRAoQwAKIMCAAJRldEgCsxSrWqvxhOJWpC5N11NpCGit2Y4T8lI8QVCmqttoF31Gf1FzFd7slXoEQdY+DgtDDWMjoDVMc1pPjOspSYNlxCJo5Hi5+SHXLSBftgp+Y3+QggxDAPEmtAAIkDGxGcXiEOrYx2E939Rc-OzfNkjB43PGTs9ohPpFPi86WNLZSGvc5MLoWFRWBgCAAFOeACUPCFiMwrjMwr5yrQoamMsm4qi27gHKaXieBhTz0kaXjJpSRjpmaJ5WvkRz3l8EFOlBbQdAA4hwegImubo8HWGD4EkG6rFuUabNsuystchzHKcyapkEvhuAS4QEkYJQnB4FEOtOJZNGoLFUNCWCoAwGB8AILBaBIgyTkWkGzsumnabpGDTLMug4osCEYk2vEoQgXgEsw0RGEy0RstEGahGcvZ+FkzBXq8njhcEsnKY+FmllZQI2XpPC0Z03S9P0pkPuZ1GWc0q6pTpen2dojmGKY3HKrifFeEYhHGkU9JcnkxpBMm+SSbJ1KNcUDxZAlBUzqWmUMRgTFQGlGCaWxHCcZN02zZptXNi4iDPB46YBMyZLZk1DxHu4DyMjsTWFCcLKeOUfIMFgELwBi4GOmNTCITxyGbQgAC0fjJv9zBNU11zGkyVLhX4I1Ue9EzFdwn11du1K7NEjyeOytwBUYITiQE4TMAEF7eIEhQHG8fKvapz5luKHqQEjG0bDsyZbDtWYREYpI3Zy0NU2ZsNqUZ85gEz7k-eEPgno8nLZpS+x42FlJE4EOYhNzGYZryHz5ULtMwe+4vfRsOY7VcpwU24TUFKFFw5oT1KxKyxThNkjww29wvMBNjHcJpxv1R58bE4ymZ+BH3gZkcXW9ujRLg1Lcvh+Fns01BKVurNgfbtkPgjlEWyEkUTzJieuxuCyjWvK8tyEmnT40fg7T4Mt3CrUCOd8TmPhstz0WEn4twA72-hEtJnj5OyJSUiEd2lEAA */
     id: 'customer list machine',
 
     predictableActionArguments: true,
@@ -16,10 +16,12 @@ const customerListMachine = createMachine(
         isLoading: boolean;
         refreshing: boolean;
         isLoadMore: boolean;
+        isLoadDataCount: boolean;
         page: number;
         routes: any;
         selectedTab: '' | 'INDIVIDU' | 'COMPANY';
         totalPage: number;
+
         searchQuery: string;
         errorMessage: unknown;
       },
@@ -34,7 +36,8 @@ const customerListMachine = createMachine(
         | { type: 'onEndReached' }
         | { type: 'onRefresh' }
         | { type: 'fetchData' }
-        | { type: 'retry' },
+        | { type: 'retry' }
+        | { type: 'retryGettingCountData' },
     },
 
     context: {
@@ -48,6 +51,7 @@ const customerListMachine = createMachine(
       routes: [],
       searchQuery: '',
       errorMessage: '',
+      isLoadDataCount: false,
     },
 
     states: {
@@ -116,9 +120,24 @@ const customerListMachine = createMachine(
       fetchDataCount: {
         invoke: {
           src: 'getDataCount',
+
           onDone: {
             target: 'fetching',
             actions: 'assignTotalCount',
+          },
+
+          onError: {
+            target: 'errorGettingCountData',
+            actions: 'assignError',
+          },
+        },
+      },
+
+      errorGettingCountData: {
+        on: {
+          retryGettingCountData: {
+            target: 'fetchDataCount',
+            actions: 'enableLoading',
           },
         },
       },
@@ -182,6 +201,7 @@ const customerListMachine = createMachine(
 
         return {
           routes: routes,
+          isLoadDataCount: false,
         };
       }),
       refreshPage: assign(() => {
@@ -195,6 +215,7 @@ const customerListMachine = createMachine(
       enableLoading: assign(() => {
         return {
           isLoading: true,
+          isLoadDataCount: true,
         };
       }),
       assignData: assign((context, event) => {
