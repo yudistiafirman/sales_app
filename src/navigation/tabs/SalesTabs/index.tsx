@@ -86,7 +86,10 @@ function SalesTabs() {
         <Tab.Screen
           key={TAB_CUSTOMER}
           name={TAB_CUSTOMER_TITLE}
-          options={{ headerTitle: LIST_CUSTOMER }}
+          options={{
+            headerTitle: LIST_CUSTOMER,
+            headerRight: () => SalesHeaderRight(colors.text.darker),
+          }}
           component={Customer}
         />
       )}

@@ -12,9 +12,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 const DocumentWarning = ({
   docs,
   customerId,
+  customerType,
 }: {
   docs?: Docs[];
   customerId?: string;
+  customerType: 'INDIVIDU' | 'COMPANY';
 }) => {
   const navigation = useNavigation();
   return (
@@ -27,6 +29,7 @@ const DocumentWarning = ({
           navigation.navigate(CUSTOMER_DOCUMENT, {
             docs: docs,
             customerId: customerId,
+            customerType: customerType,
           })
         }
         style={styles.outlineButton}

@@ -69,8 +69,8 @@ const BCard = ({
           </View>
         </View>
       </View>
+      {availableDebit || availableCredit ? <BSpacer size="extraSmall" /> : null}
 
-      <BSpacer size="extraSmall" />
       <View style={styles.paymentContainer}>
         {availableDebit && (
           <View style={styles.remainingAmount}>

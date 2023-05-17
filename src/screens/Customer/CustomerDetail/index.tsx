@@ -45,6 +45,8 @@ import {
   CUSTOMER_CUSTOMER_DETAIL,
   CUSTOMER_DOCUMENT,
 } from '@/navigation/ScreenNames';
+import { showWarningDocument } from '@/utils/generalFunc';
+import TotalDocumentChip from '../elements/TotalDocumentChip';
 
 type CustomerDetailRoute = RouteProp<
   RootStackParamList['CUSTOMER_CUSTOMER_DETAIL']
@@ -141,64 +143,18 @@ export default function CustomerDetail() {
     }
   };
 
-  const showWarningDocument = () => {
-    const documents = customerData?.CustomerDocs?.cbd?.filter(
-      (v) => v.customerDocId !== null
-    );
-    if (customerData?.type === 'INDIVIDU') {
-      if (documents && documents?.length > 0) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      if (
-        documents &&
-        documents?.length > 0 &&
-        documents[0]?.Document?.name === 'Foto NPWP'
-      ) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  };
-
   const renderDocumentWarning = () => {
     return (
-      showWarningDocument() && (
-        <DocumentWarning docs={customerData?.CustomerDocs} customerId={id} />
+      showWarningDocument(
+        customerData?.CustomerDocs?.cbd,
+        customerData?.type
+      ) && (
+        <DocumentWarning
+          customerType={customerData?.type}
+          docs={customerData?.CustomerDocs}
+          customerId={id}
+        />
       )
-    );
-  };
-
-  const renderDocumentChip = () => {
-    const totalUploadedDocument = customerData?.CustomerDocs?.cbd?.filter(
-      (v) => v.customerDocId !== null
-    );
-
-    return (
-      <BChip
-        endIcon={
-          <BSvg
-            svgName={
-              showWarningDocument()
-                ? SvgNames.IC_EXCLA_CERT
-                : SvgNames.IC_CHECK_CERT
-            }
-            width={layout.pad.ml}
-            style={{ marginLeft: layout.pad.sm }}
-            height={layout.pad.ml}
-            type="fill"
-            color={colors.white}
-          />
-        }
-        backgroundColor={
-          showWarningDocument() ? colors.danger : colors.greenLantern
-        }
-      >
-        <Text style={styles.chipText}>{totalUploadedDocument?.length}/1</Text>
-      </BChip>
     );
   };
 
@@ -219,6 +175,7 @@ export default function CustomerDetail() {
       />
       <BottomSheetAddPIC
         isVisible={isVisibleModalPic}
+        defaultState={customerData?.Pic}
         onClose={() => setIsVisibleModalPic(false)}
         addPic={onChangePic}
         modalTitle="Edit PIC"
@@ -247,13 +204,17 @@ export default function CustomerDetail() {
               <Text style={{ ...styles.fontW400, marginRight: layout.pad.md }}>
                 Dokumen Legalitas
               </Text>
-              {renderDocumentChip()}
+              <TotalDocumentChip
+                documents={customerData?.CustomerDocs}
+                customerType={customerData?.type}
+              />
             </View>
 
             <BTouchableText
               onPress={() =>
                 navigation.navigate(CUSTOMER_DOCUMENT, {
                   docs: customerData?.CustomerDocs,
+                  customerType: customerData?.type,
                   customerId: id,
                 })
               }
@@ -282,7 +243,7 @@ export default function CustomerDetail() {
                 />
               }
               textStyle={styles.touchableText}
-              title="Ubah"
+              title="Edit"
             />
           </View>
 
@@ -378,11 +339,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.vs,
     margin: 0,
-  },
-  chipText: {
-    fontSize: fonts.size.vs,
-    color: colors.offWhite,
-    fontFamily: fonts.family.montserrat[400],
   },
 
   fontW300: {

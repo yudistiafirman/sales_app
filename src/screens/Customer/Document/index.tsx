@@ -1,5 +1,13 @@
 import { updateCustomer, uploadFileImage } from '@/actions/CommonActions';
-import { BContainer, BDivider, BForm, BLabel, BSpacer } from '@/components';
+import {
+  BChip,
+  BContainer,
+  BDivider,
+  BForm,
+  BLabel,
+  BSpacer,
+  BSvg,
+} from '@/components';
 import { colors, fonts, layout } from '@/constants';
 import { CustomerDocsPayType } from '@/models/Customer';
 import { CUSTOMER_DOCUMENT } from '@/navigation/ScreenNames';
@@ -8,18 +16,18 @@ import { resScale } from '@/utils';
 import { uniqueStringGenerator } from '@/utils/generalFunc';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
 import { useRoute } from '@react-navigation/native';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
+import SvgNames from '@/components/atoms/BSvg/svgName';
+import TotalDocumentChip from '../elements/TotalDocumentChip';
 
 const Document = () => {
   const route = useRoute();
-  const { docs, customerId } = route.params;
+  const { docs, customerId, customerType } = route.params;
   const dispatch = useDispatch();
   const [customerDocs, setCustomerDocs] = useState<ICustomerDocs>(docs);
-
-  const totalDocuments = docs.cbd.length + docs.credit.length;
 
   useEffect(() => {
     crashlytics().log(CUSTOMER_DOCUMENT);
@@ -27,6 +35,7 @@ const Document = () => {
 
   const onChangeFileValue = async (value, docsIndex, paymentType) => {
     try {
+      if (!value) return;
       dispatch(
         openPopUp({
           popUpType: 'loading',
@@ -103,18 +112,6 @@ const Document = () => {
     }
   };
 
-  const completedDocumentCount = useMemo(() => {
-    const totalCompletedDocumentCbd = customerDocs.cbd.filter(
-      (v) => v.File !== null
-    );
-    const totalCompletedDocumentCredit = customerDocs.credit.filter(
-      (v) => v.File !== null
-    );
-    return (
-      totalCompletedDocumentCbd.length + totalCompletedDocumentCredit.length
-    );
-  }, [docs, customerDocs]);
-
   const cbdFileInput: Input[] = useMemo(() => {
     const cbdDocs = customerDocs?.cbd?.map(
       (v: CustomerDocsPayType, i: number) => {
@@ -157,27 +154,22 @@ const Document = () => {
       <View style={styles.documentProggress}>
         <View style={styles.between}>
           <Text style={styles.fontW500}>Kelengkapan Dokumen</Text>
-          <Text style={styles.fontW500}>
-            {completedDocumentCount}/{totalDocuments}
-          </Text>
+          <TotalDocumentChip
+            customerType={customerType}
+            documents={customerDocs}
+            chipText={styles.chipText}
+          />
         </View>
-        <ProgressBar
-          styleAttr="Horizontal"
-          indeterminate={false}
-          progress={
-            completedDocumentCount / totalDocuments
-              ? completedDocumentCount / totalDocuments
-              : 0
-          }
-          color={colors.primary}
-        />
       </View>
       <BSpacer size={'small'} />
       <BSpacer size="extraSmall" />
       <BForm titleBold="500" inputs={cbdFileInput} />
-      <View style={styles.divider} />
+      {customerType === 'INDIVIDU' && <View style={styles.divider} />}
+
       <BSpacer size="middleSmall" />
-      <BForm titleBold="500" inputs={creditFileInput} />
+      {customerType === 'INDIVIDU' && (
+        <BForm titleBold="500" inputs={creditFileInput} />
+      )}
     </BContainer>
   );
 };
@@ -193,6 +185,11 @@ const styles = StyleSheet.create({
   divider: {
     borderBottomWidth: 1,
     borderColor: colors.textInput.inActive,
+  },
+  chipText: {
+    fontSize: fonts.size.sm,
+    color: colors.offWhite,
+    fontFamily: fonts.family.montserrat[400],
   },
   documentProggress: {},
   fileInputShimmer: {

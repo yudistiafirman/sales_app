@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Input, PIC, PicFormInitialState } from '@/interfaces';
 import Modal from 'react-native-modal';
@@ -18,6 +18,7 @@ interface IProps {
   isVisible: boolean;
   modalTitle?: string;
   buttonTitle?: string;
+  defaultState?: PIC;
 }
 
 const initialState = {
@@ -40,8 +41,17 @@ const BSheetAddPic = ({
   onClose,
   modalTitle = 'Tambah PIC',
   buttonTitle = 'Tambah PIC',
+  defaultState,
 }: IProps) => {
-  const [state, setState] = React.useState<PicFormInitialState>(initialState);
+  const [state, setState] = React.useState<PIC | PicFormInitialState>(
+    initialState
+  );
+
+  useEffect(() => {
+    if (defaultState) {
+      setState(defaultState);
+    }
+  }, [defaultState]);
 
   const inputs: Input[] = [
     {
@@ -52,7 +62,7 @@ const BSheetAddPic = ({
       placeholder: 'Masukkan Nama',
       type: 'textInput',
       onChange: (e) =>
-        setState((prevState: PicFormInitialState) => ({
+        setState((prevState: PicFormInitialState | PIC) => ({
           ...prevState,
           name: e.nativeEvent.text,
         })),
@@ -134,7 +144,6 @@ const BSheetAddPic = ({
   };
 
   const onCloseModal = () => {
-    setState(initialState);
     onClose();
   };
   return (

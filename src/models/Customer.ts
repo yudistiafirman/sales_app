@@ -46,6 +46,7 @@ export interface ICustomerDetail {
   id: string;
   displayName?: string;
   type: 'COMPANY' | 'INDIVIDU';
+  paymentType: 'Cash Before Delivery' | 'Credit';
   npwp?: string;
   nik?: string;
   Pic?: PIC;

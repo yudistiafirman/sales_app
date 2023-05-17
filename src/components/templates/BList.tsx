@@ -77,18 +77,15 @@ const BList = ({
   tabTextFocusedColor = colors.blueSail,
   tabIndicatorStyle,
 }: IBList) => {
-  const renderItemSeparator = () => {
-    return <BSpacer size="extraSmall" />;
-  };
-
   const renderItem: ListRenderItem<ICustomerListData> = React.useCallback(
     ({ item, index }) => {
       const avatarText = item?.name[0];
       const title = item?.displayName;
       const chipTitle = item?.type === 'COMPANY' ? 'PERUSAHAAN' : item?.type;
-      const listTextData = [`Payment Type: -`, `-`];
-      const availableDebit = '-';
-      const availableCredit = '-';
+      const paymnetType = item?.paymentType ? item?.paymentType : '-';
+      const listTextData = [`Payment Type: ${paymnetType}`];
+      const availableDebit = null;
+      const availableCredit = null;
       const chipBgColor =
         item?.type === 'INDIVIDU'
           ? colors.status.lightYellow
@@ -150,14 +147,12 @@ const BList = ({
           renderScene={() => (
             <FlashList
               data={data}
-              contentContainerStyle={{
-                paddingTop: layout.pad.lg,
-              }}
               renderItem={renderItem}
               estimatedItemSize={200}
               initialNumToRender={10}
               onEndReachedThreshold={0.5}
               refreshing={refreshing}
+              contentContainerStyle={{ paddingTop: layout.pad.lg }}
               onRefresh={onRefresh}
               keyExtractor={(item, index) => index.toString()}
               onEndReached={onEndReached}

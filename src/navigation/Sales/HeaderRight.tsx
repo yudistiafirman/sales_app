@@ -75,7 +75,7 @@ export default function SalesHeaderRight(iconColor: string = '') {
         visible={visible}
         anchor={
           <Icon
-            name="more-vertical"
+            name="menu"
             size={18}
             color={iconColor !== '' ? iconColor : colors.white}
             style={{ padding: layout.pad.lg }}
