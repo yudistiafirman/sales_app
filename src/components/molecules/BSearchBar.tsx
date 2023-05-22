@@ -25,6 +25,7 @@ interface BSearchBarProp {
   outlineStyle?: ViewStyle | undefined;
   placeHolderTextColor?: string | undefined;
   textColor?: string | undefined;
+  bgColor?: string;
   dense?: boolean | undefined;
   autoFocus?: boolean;
   onFocus?: () => void;
@@ -73,6 +74,7 @@ const BSearchBar = ({
   placeHolderTextColor,
   textColor,
   dense,
+  bgColor,
   autoFocus,
   onFocus,
 }: BSearchBarProp & typeof BSearchBarDefaultProps) => {
@@ -93,7 +95,7 @@ const BSearchBar = ({
       secureTextEntry={secureTextEntry}
       activeOutlineColor={activeOutlineColor}
       outlineColor={outlineColor}
-      style={[textInputStyle, { backgroundColor: colors.white }]}
+      style={[textInputStyle, { backgroundColor: bgColor }]}
       editable={editable}
       outlineStyle={outlineStyle}
       textColor={textColor}

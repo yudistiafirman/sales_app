@@ -13,7 +13,7 @@ import { locationMachine } from '@/machine/locationMachine';
 import { Region } from 'react-native-maps';
 import { RootStackScreenProps } from '@/navigation/CustomStateComponent';
 import {
-  CUSTOMER_DETAIL,
+  CUSTOMER_DETAIL_V1,
   LOCATION,
   LOCATION_TITLE,
   SEARCH_AREA,
@@ -86,7 +86,7 @@ const Location = () => {
       from === TAB_RETURN_TITLE ||
       from === TAB_DISPATCH_TITLE ||
       from === SPH ||
-      from === CUSTOMER_DETAIL
+      from === CUSTOMER_DETAIL_V1
     ) {
       if (eventKey) {
         if (sourceType) {

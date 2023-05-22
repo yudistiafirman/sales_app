@@ -9,13 +9,27 @@ interface BChipProps {
   type?: 'default' | 'header';
   backgroundColor?: string | undefined;
   textColor?: string | undefined;
+  endIcon?: React.ReactNode;
+  startIcon?: React.ReactNode;
+  titleWeight?: string;
 }
 
-const BChip = ({ children, type, backgroundColor, textColor }: BChipProps) => {
+const BChip = ({
+  children,
+  type,
+  backgroundColor,
+  textColor,
+  endIcon,
+  startIcon,
+  titleWeight,
+}: BChipProps) => {
   let BChipHeaderStyle: ViewStyle = {
     paddingHorizontal: layout.pad.md,
     paddingVertical: layout.pad.xs,
     borderRadius: layout.radius.sm,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   };
 
   let BChipDefaultStyle: ViewStyle = {
@@ -23,6 +37,8 @@ const BChip = ({ children, type, backgroundColor, textColor }: BChipProps) => {
     paddingHorizontal: layout.pad.md + layout.pad.xs,
     borderRadius: layout.radius.xl,
     marginRight: layout.pad.md,
+    flexDirection: 'row',
+    alignItems: 'center',
   };
 
   let _style: ViewStyle =
@@ -36,7 +52,11 @@ const BChip = ({ children, type, backgroundColor, textColor }: BChipProps) => {
 
   return (
     <View style={[_style, { backgroundColor: backgroundColor }]}>
-      <BText style={[_textStyle]}>{children}</BText>
+      {startIcon}
+      <BText style={[_textStyle, { fontWeight: titleWeight }]}>
+        {children}
+      </BText>
+      {endIcon}
     </View>
   );
 };

@@ -2,6 +2,7 @@ import BVisitationCard from '@/components/molecules/BVisitationCard';
 import { colors, layout } from '@/constants';
 import * as React from 'react';
 import {
+  FlatList,
   ListRenderItem,
   Platform,
   StyleSheet,
@@ -148,9 +149,9 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
             <>
               <BSpacer size="extraSmall" />
               <FlashList
-                estimatedItemSize={10}
-				onEndReachedThreshold={0.5}
                 data={data}
+                estimatedItemSize={10}
+                onEndReachedThreshold={0.5}
                 removeClippedSubviews={false}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}

@@ -35,10 +35,6 @@ const Profile = () => {
     }
   };
 
-  useCustomHeaderRight({
-    customHeaderRight: <BTouchableText onPress={onLogout} title="Logout" />,
-  });
-
   React.useEffect(() => {
     crashlytics().log(TAB_PROFILE);
   }, []);

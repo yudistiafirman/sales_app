@@ -5,6 +5,7 @@ import React from 'react';
 import { TextStyle, View, ViewStyle } from 'react-native';
 import BChip from '../atoms/BChip';
 import BText from '../atoms/BText';
+import BSpacer from '../atoms/BSpacer';
 
 type Route = {
   key: string;
@@ -16,10 +17,16 @@ type Route = {
 interface BTabLabelsProps {
   route: Route;
   focused: boolean;
+  tabTextfocusedColor?: string;
   minWidth?: number | undefined;
 }
 
-const BTabLabels = ({ route, focused, minWidth }: BTabLabelsProps) => {
+const BTabLabels = ({
+  route,
+  focused,
+  minWidth,
+  tabTextfocusedColor = colors.primary,
+}: BTabLabelsProps) => {
   const isHasItems = route?.totalItems > 0;
   const rightChipPosition = route?.chipPosition === 'right';
 
@@ -31,7 +38,7 @@ const BTabLabels = ({ route, focused, minWidth }: BTabLabelsProps) => {
   };
 
   const BTabLabelsTextStyle: TextStyle = {
-    color: focused ? colors.primary : colors.text.dark,
+    color: focused ? tabTextfocusedColor : colors.text.dark,
     fontFamily: focused
       ? font.family.montserrat[600]
       : font.family.montserrat[400],
@@ -43,19 +50,25 @@ const BTabLabels = ({ route, focused, minWidth }: BTabLabelsProps) => {
 
   const BChipStyle: ViewStyle = {
     flex: 1,
-    width: resScale(20),
   };
   return (
     <View style={BTabLabelsContainer}>
       <BText style={BTabLabelsTextStyle}>{route.title}</BText>
+      {isHasItems && (
+        <>
+          {rightChipPosition && <BSpacer size="extraSmall" />}
 
-      <BChip
-        type="header"
-        backgroundColor={isHasItems ? chipBackgroundColor : null}
-        style={BChipStyle}
-      >
-        {isHasItems && route?.totalItems}
-      </BChip>
+          <BChip
+            type="header"
+            titleWeight={focused ? '700' : 'normal'}
+            textColor={focused && tabTextfocusedColor}
+            backgroundColor={isHasItems ? chipBackgroundColor : null}
+            style={BChipStyle}
+          >
+            {route?.totalItems}
+          </BChip>
+        </>
+      )}
     </View>
   );
 };

@@ -12,6 +12,13 @@ const colors = {
   pitchBlack: '#000000',
   blueSky: '#B0D8FF',
   lightRed: '#ECECEC',
+  danger: '#ED2730',
+  greenLantern: '#44A85A',
+  avatar: '#F6D7DC',
+  lightCyanBlue: '#F4F6F9',
+  graySevenEight: '#C5C7CD',
+  blueSail: '#2F4A95',
+  veryLightShadeGray: '#FAFAFA',
   text: {
     dark: '#191919',
     darker: '#202020',
@@ -23,6 +30,8 @@ const colors = {
     secondary: '#636363',
     secYellow: '#FF7B00',
     errorText: '#B00020',
+    lightGray: '#7B97BC',
+    pinkRed: '#D85F62',
   },
   status: {
     grey: '#D7D7D7',
@@ -34,6 +43,8 @@ const colors = {
     white: '#FFFFFF',
     errorPic: '#F6D7DC',
     offYellow: '#FFFFE5',
+    lightYellow: '#FFD49A',
+    lightBlue: '#BFDBFA',
   },
   select: {
     selected: '#E52525',

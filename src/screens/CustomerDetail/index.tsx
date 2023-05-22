@@ -19,7 +19,7 @@ import { ProgressBar } from '@react-native-community/progress-bar-android';
 import BillingModal from './elements/BillingModal';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
-  CUSTOMER_DETAIL,
+  CUSTOMER_DETAIL_V1,
   DOCUMENTS,
   VISIT_HISTORY,
 } from '@/navigation/ScreenNames';
@@ -87,7 +87,6 @@ export default function CustomerDetail() {
           setFormattedProjectAddress(response.data.data.LocationAddress?.line1);
         }
       } catch (error) {
-        console.log(error.message);
         dispatch(
           openPopUp({
             popUpType: 'error',
@@ -102,7 +101,7 @@ export default function CustomerDetail() {
   );
 
   React.useEffect(() => {
-    crashlytics().log(CUSTOMER_DETAIL);
+    crashlytics().log(CUSTOMER_DETAIL_V1);
     dispatch(resetRegion());
     if (route?.params) {
       const { existingVisitation } = route.params;
@@ -240,8 +239,8 @@ export default function CustomerDetail() {
           <View style={styles.between}>
             <Text style={styles.partText}>PIC</Text>
             {/* <TouchableOpacity>
-              <Text style={styles.seeAllText}>Lihat Semua</Text>
-            </TouchableOpacity> */}
+                <Text style={styles.seeAllText}>Lihat Semua</Text>
+              </TouchableOpacity> */}
           </View>
           <BSpacer size={'extraSmall'} />
           <BPic

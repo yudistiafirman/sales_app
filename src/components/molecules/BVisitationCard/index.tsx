@@ -1,4 +1,10 @@
-import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 import React from 'react';
 
 import PillStatus from './elements/PillStatus';
@@ -37,9 +43,12 @@ type VisitationCardType = {
   onPress?: (data: visitationDataType) => void;
   isRenderIcon?: boolean;
   pillColor?: string;
+  nameSize?: number;
   customIcon?: () => JSX.Element;
   customStyle?: ViewStyle;
+  locationTextColor?: string;
   onLocationPress?: (lonlat: { longitude: string; latitude: string }) => void;
+  disabled?: boolean;
 };
 
 export default function BVisitationCard({
@@ -50,11 +59,15 @@ export default function BVisitationCard({
   customIcon,
   pillColor,
   customStyle,
+  nameSize = fonts.size.md,
   onLocationPress,
+  locationTextColor,
+  disabled = false,
 }: VisitationCardType) {
   return (
     <View style={[style.container, customStyle]}>
       <TouchableOpacity
+        disabled={disabled}
         style={style.subContainer}
         onPress={() => {
           onPress(item);
@@ -63,7 +76,7 @@ export default function BVisitationCard({
         <View style={style.leftSide}>
           <View style={style.top}>
             <HighlightText
-              fontSize={fonts.size.md}
+              fontSize={nameSize}
               name={item.name}
               searchQuery={searchQuery}
             />
@@ -84,7 +97,7 @@ export default function BVisitationCard({
           ) : (
             <BSpacer size={'verySmall'} />
           )}
-          <BLocationText location={item.location} />
+          <BLocationText color={locationTextColor} location={item.location} />
           <PillNames
             pillColor={pillColor}
             pilNames={item.pilNames}
