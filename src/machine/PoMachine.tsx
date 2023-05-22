@@ -628,7 +628,7 @@ const POMachine =
           const files = context.files.map((v, i) => {
             return {
               documentId: v.documentId,
-              fileId: event.data[i].id,
+              fileId: event.data[i]?.id,
             };
           });
           return {
@@ -833,7 +833,7 @@ const POMachine =
           };
         }),
         assignNewQuantity: assign((context, event) => {
-          const filteredValue = event.value.replace(/[^0-9]/g, '');
+          const filteredValue = event.value;
           const newQuotationRequest = [
             ...context.choosenSphDataFromModal.QuotationRequests,
           ][0];
