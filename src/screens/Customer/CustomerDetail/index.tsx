@@ -31,7 +31,10 @@ import { getOneCustomer, updateCustomer } from '@/actions/CommonActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
-import { RootStackParamList } from '@/navigation/CustomStateComponent';
+import {
+  RootStackParamList,
+  RootStackScreenProps,
+} from '@/navigation/CustomStateComponent';
 import { PIC } from '@/interfaces';
 import DocumentWarning from './elements/DocumentWarning';
 import UpdatedAddressWrapper from './elements/UpdatedAddressWrapper';
@@ -48,10 +51,8 @@ import {
 import { showWarningDocument } from '@/utils/generalFunc';
 import TotalDocumentChip from '../elements/TotalDocumentChip';
 
-type CustomerDetailRoute = RouteProp<RootStackParamList['CUSTOMER_DETAIL_V2']>;
-
 export default function CustomerDetail() {
-  const route = useRoute<CustomerDetailRoute>();
+  const route = useRoute<RootStackScreenProps>();
   const { id } = route.params;
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
@@ -77,6 +78,15 @@ export default function CustomerDetail() {
       if (response.data.success) {
         dispatch(closePopUp());
         setCustomerData(response.data.data);
+      } else {
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            highlightedText: 'Error',
+            popUpText: 'Error Saat Mengambil Data Customer detail',
+            outsideClickClosePopUp: true,
+          })
+        );
       }
     } catch (error) {
       dispatch(
