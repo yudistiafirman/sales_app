@@ -1,4 +1,5 @@
 import { colors } from '@/constants';
+import { INDIVIDU } from '@/constants/const';
 import { CustomerDocsPayType } from '@/models/Customer';
 import { NativeModules, Platform } from 'react-native';
 const { RNCustomConfig } = NativeModules;
@@ -302,7 +303,7 @@ export const showWarningDocument = (
   if (!cbdDocs || !customerType) return false;
 
   const documents = cbdDocs.filter((v) => v.File !== null);
-  if (customerType === 'INDIVIDU') {
+  if (customerType === INDIVIDU) {
     if (documents && documents?.length > 0) {
       return false;
     } else {

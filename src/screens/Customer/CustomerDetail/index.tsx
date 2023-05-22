@@ -30,7 +30,7 @@ import {
 import { getOneCustomer, updateCustomer } from '@/actions/CommonActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { openPopUp } from '@/redux/reducers/modalReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 import { RootStackParamList } from '@/navigation/CustomStateComponent';
 import { PIC } from '@/interfaces';
 import DocumentWarning from './elements/DocumentWarning';
@@ -42,15 +42,13 @@ import SvgNames from '@/components/atoms/BSvg/svgName';
 import RemainingAmountBox from './elements/RemainAmountBox';
 import { ICustomerDetail } from '@/models/Customer';
 import {
-  CUSTOMER_CUSTOMER_DETAIL,
+  CUSTOMER_DETAIL_V2,
   CUSTOMER_DOCUMENT,
 } from '@/navigation/ScreenNames';
 import { showWarningDocument } from '@/utils/generalFunc';
 import TotalDocumentChip from '../elements/TotalDocumentChip';
 
-type CustomerDetailRoute = RouteProp<
-  RootStackParamList['CUSTOMER_CUSTOMER_DETAIL']
->;
+type CustomerDetailRoute = RouteProp<RootStackParamList['CUSTOMER_DETAIL_V2']>;
 
 export default function CustomerDetail() {
   const route = useRoute<CustomerDetailRoute>();
@@ -68,8 +66,18 @@ export default function CustomerDetail() {
 
   const getCustomerDetail = useCallback(async () => {
     try {
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          outsideClickClosePopUp: false,
+        })
+      );
+
       const response = await getOneCustomer(id);
-      setCustomerData(response.data.data);
+      if (response.data.success) {
+        dispatch(closePopUp());
+        setCustomerData(response.data.data);
+      }
     } catch (error) {
       dispatch(
         openPopUp({
@@ -84,13 +92,9 @@ export default function CustomerDetail() {
     }
   }, []);
 
-  useEffect(() => {
-    crashlytics().log(CUSTOMER_CUSTOMER_DETAIL);
-    getCustomerDetail();
-  }, []);
-
   useFocusEffect(
     React.useCallback(() => {
+      crashlytics().log(CUSTOMER_DETAIL_V2);
       getCustomerDetail();
     }, [])
   );

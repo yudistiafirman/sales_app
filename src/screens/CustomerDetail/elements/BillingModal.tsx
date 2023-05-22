@@ -20,7 +20,7 @@ import {
 } from '@/components';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Address, Input } from '@/interfaces';
-import { SEARCH_AREA, CUSTOMER_DETAIL } from '@/navigation/ScreenNames';
+import { SEARCH_AREA, CUSTOMER_DETAIL_V1 } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
@@ -234,7 +234,7 @@ export default function BillingModal({
               onPress={() => {
                 setIsModalVisible(false);
                 navigation.navigate(SEARCH_AREA, {
-                  from: CUSTOMER_DETAIL,
+                  from: CUSTOMER_DETAIL_V1,
                   eventKey: 'getCoordinateFromCustomerDetail',
                   sourceType: isBilling ? 'billing' : 'project',
                 });

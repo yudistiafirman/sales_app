@@ -22,6 +22,7 @@ import { useDispatch } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
 import SvgNames from '@/components/atoms/BSvg/svgName';
 import TotalDocumentChip from '../elements/TotalDocumentChip';
+import { COMPANY } from '@/constants/const';
 
 const Document = () => {
   const route = useRoute();
@@ -96,7 +97,27 @@ const Document = () => {
                 customerDocs[paymentType][docsIndex].Document.name,
             })
           );
+        } else {
+          dispatch(
+            openPopUp({
+              popUpType: 'error',
+              popUpText:
+                'Error Upload Dokumen ' +
+                customerDocs[paymentType][docsIndex].Document.name,
+              outsideClickClosePopUp: true,
+            })
+          );
         }
+      } else {
+        dispatch(
+          openPopUp({
+            popUpType: 'error',
+            popUpText:
+              'Error Upload Dokumen ' +
+              customerDocs[paymentType][docsIndex].Document.name,
+            outsideClickClosePopUp: true,
+          })
+        );
       }
     } catch (error) {
       dispatch(
@@ -165,10 +186,10 @@ const Document = () => {
       <BSpacer size={'small'} />
       <BSpacer size="extraSmall" />
       <BForm titleBold="500" inputs={cbdFileInput} />
-      {customerType === 'COMPANY' && <View style={styles.divider} />}
+      {customerType === COMPANY && <View style={styles.divider} />}
 
       <BSpacer size="middleSmall" />
-      {customerType === 'COMPANY' && (
+      {customerType === COMPANY && (
         <BForm titleBold="500" inputs={creditFileInput} />
       )}
     </BContainer>

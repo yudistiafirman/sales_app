@@ -14,6 +14,7 @@ import BShimmerAvatarList from './BShimmerAvatarList';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import { COMPANY, INDIVIDU, PERUSAHAAN } from '@/constants/const';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 interface IBList {
@@ -86,13 +87,13 @@ const BList = ({
     ({ item, index }) => {
       const avatarText = item?.name[0];
       const title = item?.displayName;
-      const chipTitle = item?.type === 'COMPANY' ? 'PERUSAHAAN' : item?.type;
+      const chipTitle = item?.type === COMPANY ? PERUSAHAAN : item?.type;
       const paymnetType = item?.paymentType ? item?.paymentType : '-';
       const listTextData = [`Payment Type: ${paymnetType}`];
       const availableDebit = null;
       const availableCredit = null;
       const chipBgColor =
-        item?.type === 'INDIVIDU'
+        item?.type === INDIVIDU
           ? colors.status.lightYellow
           : colors.status.lightBlue;
       return (
@@ -101,7 +102,7 @@ const BList = ({
           title={title}
           chipStartIcon={
             <Icon
-              name={item?.type === 'COMPANY' ? 'building' : 'user'}
+              name={item?.type === COMPANY ? 'building' : 'user'}
               style={{ fontWeight: '600', marginRight: layout.pad.sm }}
               size={layout.pad.md}
             />
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
   },
   tabIndicator: {
     backgroundColor: colors.blueSail,
-    marginLeft: layout.pad.lg - 4,
+    marginLeft: layout.pad.lg - layout.pad.sm,
   },
   tabStyle: {
     width: 'auto',

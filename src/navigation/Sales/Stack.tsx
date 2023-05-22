@@ -24,8 +24,8 @@ import {
   CREATE_SCHEDULE_TITLE,
   CREATE_VISITATION,
   CREATE_VISITATION_TITLE,
-  CUSTOMER_CUSTOMER_DETAIL,
-  CUSTOMER_DETAIL,
+  CUSTOMER_DETAIL_V2,
+  CUSTOMER_DETAIL_V1,
   CUSTOMER_DETAIL_TITLE,
   CUSTOMER_DOCUMENT,
   DOCUMENTS,
@@ -153,8 +153,8 @@ const SalesStack = (Stack: any) => {
         }}
       />
       <Stack.Screen
-        name={CUSTOMER_DETAIL}
-        key={CUSTOMER_DETAIL}
+        name={CUSTOMER_DETAIL_V1}
+        key={CUSTOMER_DETAIL_V1}
         component={CustomerDetail}
         options={{
           headerTitle: CUSTOMER_DETAIL_TITLE,
@@ -163,8 +163,8 @@ const SalesStack = (Stack: any) => {
       />
       {/* CUSTOMER DETAIL FROM LIST CUSTOMER */}
       <Stack.Screen
-        name={CUSTOMER_CUSTOMER_DETAIL}
-        key={CUSTOMER_CUSTOMER_DETAIL}
+        name={CUSTOMER_DETAIL_V2}
+        key={CUSTOMER_DETAIL_V2}
         component={CustomerDetailListCustomer}
         options={{
           headerTitle: CUSTOMER_DETAIL_TITLE,

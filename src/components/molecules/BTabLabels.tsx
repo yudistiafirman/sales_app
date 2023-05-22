@@ -50,21 +50,25 @@ const BTabLabels = ({
 
   const BChipStyle: ViewStyle = {
     flex: 1,
-    width: resScale(20),
   };
   return (
     <View style={BTabLabelsContainer}>
       <BText style={BTabLabelsTextStyle}>{route.title}</BText>
-      <BSpacer size="extraSmall" />
-      <BChip
-        type="header"
-        titleWeight={focused ? '700' : 'normal'}
-        textColor={focused && tabTextfocusedColor}
-        backgroundColor={isHasItems ? chipBackgroundColor : null}
-        style={BChipStyle}
-      >
-        {isHasItems && route?.totalItems}
-      </BChip>
+      {isHasItems && (
+        <>
+          {rightChipPosition && <BSpacer size="extraSmall" />}
+
+          <BChip
+            type="header"
+            titleWeight={focused ? '700' : 'normal'}
+            textColor={focused && tabTextfocusedColor}
+            backgroundColor={isHasItems ? chipBackgroundColor : null}
+            style={BChipStyle}
+          >
+            {route?.totalItems}
+          </BChip>
+        </>
+      )}
     </View>
   );
 };

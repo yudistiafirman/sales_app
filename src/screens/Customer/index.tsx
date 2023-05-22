@@ -6,10 +6,7 @@ import { resScale } from '@/utils';
 import BList from '@/components/templates/BList';
 import { useMachine } from '@xstate/react';
 import customerListMachine from '@/machine/customerListMachine';
-import {
-  CUSTOMER_CUSTOMER_DETAIL,
-  TAB_CUSTOMER,
-} from '@/navigation/ScreenNames';
+import { CUSTOMER_DETAIL_V2, TAB_CUSTOMER } from '@/navigation/ScreenNames';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useDispatch } from 'react-redux';
 import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
@@ -55,7 +52,7 @@ const Customer = () => {
   }, [state, send]);
 
   const goToCustomerDetail = (item: ICustomerListData) => {
-    navigation.navigate(CUSTOMER_CUSTOMER_DETAIL, { id: item.id });
+    navigation.navigate(CUSTOMER_DETAIL_V2, { id: item.id });
   };
 
   const onTabPress = (event: any) => {

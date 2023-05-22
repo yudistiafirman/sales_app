@@ -48,7 +48,7 @@ import {
   CREATE_DEPOSIT,
   CREATE_SCHEDULE,
   CREATE_VISITATION,
-  CUSTOMER_DETAIL,
+  CUSTOMER_DETAIL_V1,
   PO,
   SEARCH_SO,
   SPH,
@@ -558,7 +558,7 @@ const Beranda = () => {
           existingVisitation: response,
         });
       } else {
-        navigation.navigate(CUSTOMER_DETAIL, {
+        navigation.navigate(CUSTOMER_DETAIL_V1, {
           existingVisitation: response,
         });
       }

@@ -17,6 +17,7 @@ import { TextInput } from 'react-native-paper';
 import BTabSections from '@/components/organism/TabSections';
 import BEmptyState from '../organism/BEmptyState';
 import { CreatedPurchaseOrderListResponse } from '@/interfaces/SelectConfirmedPO';
+import { FlashList } from '@shopify/flash-list';
 
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
   CreatedSPHListResponse &
@@ -147,8 +148,10 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
           renderScene={() => (
             <>
               <BSpacer size="extraSmall" />
-              <FlatList
+              <FlashList
                 data={data}
+                estimatedItemSize={10}
+                onEndReachedThreshold={0.5}
                 removeClippedSubviews={false}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}

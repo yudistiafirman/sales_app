@@ -20,13 +20,13 @@ import {
 } from '@/components';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Address, Input } from '@/interfaces';
-import { SEARCH_AREA, CUSTOMER_DETAIL } from '@/navigation/ScreenNames';
+import { SEARCH_AREA, CUSTOMER_DETAIL_V1 } from '@/navigation/ScreenNames';
 import { useNavigation } from '@react-navigation/native';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
 import Icons from 'react-native-vector-icons/Feather';
 import { updateCustomerBillingAddress } from '@/actions/CommonActions';
-import { openPopUp } from '@/redux/reducers/modalReducer';
+import { closePopUp, openPopUp } from '@/redux/reducers/modalReducer';
 
 type BillingModalType = {
   isModalVisible: boolean;
@@ -121,54 +121,65 @@ export default function BillingModal({
   }, [billingState]);
 
   const onPressAddAddress = async () => {
-    let body: Address = {};
-
-    if (region?.postalId) {
-      body.postalId = region.postalId;
-    } else {
-      body.postalId = region.Postal;
-    }
-    if (region?.longitude) {
-      body.lon = region.longitude;
-    } else {
-      body.lon = region.lon;
-    }
-    if (region?.latitude) {
-      body.lat = region.latitude;
-    } else {
-      body.lat = region.lat;
-    }
-    if (region?.formattedAddress) {
-      body.line1 = region?.formattedAddress;
-    } else {
-      body.line1 = region?.line1;
-    }
-
-    if (billingState.kelurahan) {
-      body.line2 =
-        body.line2 !== undefined
-          ? body.line2 + ' ' + billingState.kelurahan
-          : billingState.kelurahan;
-    }
-
-    if (billingState.kecamatan) {
-      body.line2 =
-        body.line2 !== undefined
-          ? body.line2 + ' ' + billingState.kecamatan
-          : billingState.kecamatan;
-    }
-    if (billingState.kabupaten) {
-      body.line2 =
-        body.line2 !== undefined
-          ? body.line2 + ' ' + billingState.kabupaten
-          : billingState.kabupaten;
-    }
     try {
+      let body: Address = {};
+      let popUpLoadingText = isUpdate
+        ? 'Mengubah Alamat'
+        : 'Menambahkan Alamat';
+      dispatch(
+        openPopUp({
+          popUpType: 'loading',
+          popUpText: popUpLoadingText,
+          outsideClickClosePopUp: false,
+        })
+      );
+
+      if (region?.postalId) {
+        body.postalId = region.postalId;
+      } else {
+        body.postalId = region.Postal;
+      }
+      if (region?.longitude) {
+        body.lon = region.longitude;
+      } else {
+        body.lon = region.lon;
+      }
+      if (region?.latitude) {
+        body.lat = region.latitude;
+      } else {
+        body.lat = region.lat;
+      }
+      if (region?.formattedAddress) {
+        body.line1 = region?.formattedAddress;
+      } else {
+        body.line1 = region?.line1;
+      }
+
+      if (billingState.kelurahan) {
+        body.line2 =
+          body.line2 !== undefined
+            ? body.line2 + ' ' + billingState.kelurahan
+            : billingState.kelurahan;
+      }
+
+      if (billingState.kecamatan) {
+        body.line2 =
+          body.line2 !== undefined
+            ? body.line2 + ' ' + billingState.kecamatan
+            : billingState.kecamatan;
+      }
+      if (billingState.kabupaten) {
+        body.line2 =
+          body.line2 !== undefined
+            ? body.line2 + ' ' + billingState.kabupaten
+            : billingState.kabupaten;
+      }
       const response = await updateCustomerBillingAddress(customerId, body);
       if (response?.data?.success) {
         setFormattedAddress(region.formattedAddress);
         setRegion(region);
         setIsModalVisible((curr) => !curr);
+        dispatch(closePopUp());
         dispatch(
           openPopUp({
             popUpType: 'success',
@@ -179,6 +190,7 @@ export default function BillingModal({
       }
     } catch (error) {
       setIsModalVisible(false);
+      dispatch(closePopUp());
       dispatch(
         openPopUp({
           popUpType: 'error',
@@ -231,7 +243,7 @@ export default function BillingModal({
               onPress={() => {
                 setIsModalVisible(false);
                 navigation.navigate(SEARCH_AREA, {
-                  from: CUSTOMER_DETAIL,
+                  from: CUSTOMER_DETAIL_V1,
                   eventKey: 'getCoordinateFromCustomerDetail',
                   sourceType: 'billing',
                 });

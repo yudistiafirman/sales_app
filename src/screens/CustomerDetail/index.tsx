@@ -19,7 +19,7 @@ import { ProgressBar } from '@react-native-community/progress-bar-android';
 import BillingModal from './elements/BillingModal';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
-  CUSTOMER_DETAIL,
+  CUSTOMER_DETAIL_V1,
   DOCUMENTS,
   VISIT_HISTORY,
 } from '@/navigation/ScreenNames';
@@ -101,7 +101,7 @@ export default function CustomerDetail() {
   );
 
   React.useEffect(() => {
-    crashlytics().log(CUSTOMER_DETAIL);
+    crashlytics().log(CUSTOMER_DETAIL_V1);
     dispatch(resetRegion());
     if (route?.params) {
       const { existingVisitation } = route.params;

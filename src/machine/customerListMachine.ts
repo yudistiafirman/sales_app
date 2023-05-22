@@ -1,4 +1,5 @@
 import { getAllCustomers, getCustomerCount } from '@/actions/CommonActions';
+import { COMPANY, INDIVIDU } from '@/constants/const';
 import { ICustomerListData } from '@/models/Customer';
 import { event } from 'react-native-reanimated';
 import { assign, createMachine } from 'xstate';
@@ -186,13 +187,13 @@ const customerListMachine = createMachine(
             chipPosition: 'right',
           },
           {
-            key: 'COMPANY',
+            key: COMPANY,
             title: 'Perusahaan',
             totalItems: companyCount,
             chipPosition: 'right',
           },
           {
-            key: 'INDIVIDU',
+            key: INDIVIDU,
             title: 'Individu',
             totalItems: individuCount,
             chipPosition: 'right',
