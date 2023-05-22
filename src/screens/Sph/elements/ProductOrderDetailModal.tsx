@@ -25,6 +25,7 @@ import formatCurrency from '@/utils/formatCurrency';
 import { TextInput } from 'react-native-paper';
 import calcTrips from '@/utils/calcTrips';
 import { METHOD_LIST } from '@/constants/dropdown';
+import { replaceDot } from '@/utils/generalFunc';
 
 type ProductCartModalType = {
   productData: ProductDataInterface;
@@ -210,7 +211,12 @@ export default function ProductCartModal({
                 onChange={(
                   event: NativeSyntheticEvent<TextInputChangeEventData>
                 ) => {
-                  onChange('volume')(event.nativeEvent.text);
+                  setDetailOrder((prev) => ({
+                    ...prev,
+                    volume: replaceDot(
+                      event.nativeEvent.text.replace(/[^0-9.]/g, '')
+                    ),
+                  }));
                 }}
                 value={detailOrder.volume}
                 keyboardType="numeric"

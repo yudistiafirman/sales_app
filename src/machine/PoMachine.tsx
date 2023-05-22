@@ -833,7 +833,7 @@ const POMachine =
           };
         }),
         assignNewQuantity: assign((context, event) => {
-          const filteredValue = event.value.replace(/[^0-9]/g, '');
+          const filteredValue = event.value;
           const newQuotationRequest = [
             ...context.choosenSphDataFromModal.QuotationRequests,
           ][0];

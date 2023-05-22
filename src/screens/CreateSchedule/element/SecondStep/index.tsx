@@ -84,13 +84,10 @@ export default function SecondStep() {
       label: 'Volume',
       isRequire: true,
       type: 'quantity',
+      placeholder: '0',
       value: stateTwo?.inputtedVolume?.toString(),
       onChange: (value: any) => {
-        if (value && value !== '') {
-          onChange('inputtedVolume')(parseInt(value, 10));
-        } else {
-          onChange('inputtedVolume')(0);
-        }
+        onChange('inputtedVolume')(value);
       },
       // customerErrorMsg:
       //   'Volume tidak boleh lebih besar dari sisa yang belum dikirim',
