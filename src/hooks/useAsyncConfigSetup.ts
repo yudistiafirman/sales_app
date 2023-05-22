@@ -72,10 +72,16 @@ const useAsyncConfigSetup = () => {
   );
 
   const appStateSetup = React.useCallback(async () => {
-    remoteConfig().fetch(300);
+    remoteConfig().fetch(300); // in secs
+    remoteConfig().setConfigSettings({
+      fetchTimeMillis: 10000, // in millies
+    });
     remoteConfig()
       .setDefaults(remote_config as any)
       .then(() => remoteConfig().fetchAndActivate())
+      .catch((err) => {
+        console.log('fetch remote config timeout', err);
+      })
       .then(() => {
         let fetchedData = {} as Object;
         Object.entries(remoteConfig().getAll()).forEach(($) => {

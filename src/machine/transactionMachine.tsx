@@ -155,7 +155,7 @@ export const transactionMachine =
       },
       actions: {
         assignTypeToContext: assign((_context, event) => {
-          const newTypeData = event.data.map((item) => {
+          const newTypeData = event.data?.map((item) => {
             return {
               key: uniqueStringGenerator(),
               title: item.name,
@@ -165,7 +165,8 @@ export const transactionMachine =
           });
           return {
             routes: newTypeData,
-            selectedCategories: newTypeData[0].title,
+            selectedCategories:
+              newTypeData?.length > 0 ? newTypeData[0]?.title : undefined,
             loadTab: false,
             isErrorData: false,
           };
@@ -173,7 +174,7 @@ export const transactionMachine =
         assignTransactionsDataToContext: assign((context, event) => {
           if (event.data.data.length > 0) {
             const transactionsData = [...context.data, ...event.data.data];
-            const newTypeData = context.routes.map((item) => {
+            const newTypeData = context.routes?.map((item) => {
               return {
                 key: item.key,
                 title: item.title,

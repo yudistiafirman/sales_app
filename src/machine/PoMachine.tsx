@@ -628,7 +628,7 @@ const POMachine =
           const files = context.files.map((v, i) => {
             return {
               documentId: v.documentId,
-              fileId: event.data[i].id,
+              fileId: event.data[i]?.id,
             };
           });
           return {
