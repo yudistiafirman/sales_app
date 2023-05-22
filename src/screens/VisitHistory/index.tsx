@@ -1,4 +1,4 @@
-import { BSpinner, BTabSections } from '@/components';
+import { BEmptyState, BSpinner, BTabSections } from '@/components';
 import { colors, layout } from '@/constants';
 import useCustomHeaderCenter from '@/hooks/useCustomHeaderCenter';
 import visitHistoryMachine from '@/machine/visitHistoryMachine';
@@ -39,7 +39,13 @@ const VisitHistory = () => {
     send('onChangeVisitationIdx', { value: tabIndex });
   };
 
-  const { selectedVisitationByIdx, loading, routes } = state.context;
+  const {
+    selectedVisitationByIdx,
+    loading,
+    routes,
+    errorMessage,
+    visitationData,
+  } = state.context;
 
   const renderVisitHistory = useCallback(() => {
     return (
@@ -59,27 +65,38 @@ const VisitHistory = () => {
 
   return (
     <View style={styles.container}>
-      <LocationText
-        locationAddress={
-          selectedVisitationByIdx?.project?.ShippingAddress?.line1
-        }
-      />
-      <BTabSections
-        swipeEnabled={false}
-        navigationState={{ index, routes }}
-        renderScene={() => (
-          <FlatList
-            data={null}
-            renderItem={null}
-            ListHeaderComponent={renderVisitHistory}
+      {visitationData.length === 0 ? (
+        <BEmptyState
+          isError={state.matches('errorGettingData')}
+          errorMessage={errorMessage}
+          onAction={() => send('retryGettingData')}
+          emptyText="Data Riwayat Kunjungan Tidak Ditemukan"
+        />
+      ) : (
+        <>
+          <LocationText
+            locationAddress={
+              selectedVisitationByIdx?.project?.ShippingAddress?.line1
+            }
           />
-        )}
-        onTabPress={onTabPress}
-        onIndexChange={setIndex}
-        tabStyle={styles.tabStyle}
-        tabBarStyle={styles.tabBarStyle}
-        indicatorStyle={styles.tabIndicator}
-      />
+          <BTabSections
+            swipeEnabled={false}
+            navigationState={{ index, routes }}
+            renderScene={() => (
+              <FlatList
+                data={null}
+                renderItem={null}
+                ListHeaderComponent={renderVisitHistory}
+              />
+            )}
+            onTabPress={onTabPress}
+            onIndexChange={setIndex}
+            tabStyle={styles.tabStyle}
+            tabBarStyle={styles.tabBarStyle}
+            indicatorStyle={styles.tabIndicator}
+          />
+        </>
+      )}
     </View>
   );
 };
