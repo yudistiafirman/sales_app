@@ -128,7 +128,7 @@ const visitHistoryMachine =
             const response = await getAllVisitations({
               projectId: context.projectId,
             });
-            return response.data.data.data;
+            return response?.data?.data?.data;
           } catch (error) {
             throw new Error(error);
           }
@@ -144,18 +144,18 @@ const visitHistoryMachine =
         assignError: assign((context, event) => {
           return {
             loading: false,
-            errorMessage: event.data.message,
+            errorMessage: event?.data?.message,
           };
         }),
         assignProjectIdToContext: assign((_context, event) => {
           return {
-            projectId: event.value,
+            projectId: event?.value,
             loading: true,
           };
         }),
         assignVisitationDataToContext: assign((_context, event) => {
-          const sortedData = event.data.reverse();
-          const newRoutes = sortedData.map((val, idx) => {
+          const sortedData = event?.data?.reverse();
+          const newRoutes = sortedData?.map((val, idx) => {
             return {
               key: val.id,
               title: `Kunjungan ${idx + 1}`,
@@ -164,19 +164,19 @@ const visitHistoryMachine =
             };
           });
 
-          const initialSelectedVisitation = event.data.filter(
+          const initialSelectedVisitation = event?.data?.filter(
             (v, i) => i === 0
           );
           return {
-            visitationData: event.data,
+            visitationData: event?.data,
             loading: false,
             routes: newRoutes,
             selectedVisitationByIdx: initialSelectedVisitation[0],
           };
         }),
         sliceVisitationData: assign((context, event) => {
-          let newSelectedVisitationData = context.visitationData.filter(
-            (v, i) => i === event.value
+          let newSelectedVisitationData = context?.visitationData?.filter(
+            (v, i) => i === event?.value
           );
 
           return {
