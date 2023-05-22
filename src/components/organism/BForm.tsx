@@ -30,6 +30,7 @@ import BCalendar from './BCalendar';
 import DatePicker from 'react-native-date-picker';
 import BComboRadioButton from '../molecules/BComboRadioButton';
 import BTableInput from '../molecules/BTableInput';
+import { replaceDot } from '@/utils/generalFunc';
 
 interface IProps {
   inputs: Input[];
@@ -263,7 +264,9 @@ const renderInput = (
               { paddingEnd: layout.pad.xl },
               isError && { borderColor: colors.primary },
             ]}
-            onChangeText={(vl) => onChange(vl.replace(/\D/g, ''))}
+            onChangeText={(vl) =>
+              onChange(replaceDot(vl.replace(/[^0-9.]/g, '')))
+            }
             value={value}
             keyboardType={'numeric'}
             placeholder={placeholder}
