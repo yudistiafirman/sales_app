@@ -1,1 +1,1 @@
-export { default as bStorage } from './BStorage';
+export { default as bStorage } from "./BStorage";

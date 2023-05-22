@@ -1,44 +1,59 @@
-import React from 'react';
-import { View, GestureResponderEvent, ViewStyle, Platform, StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import { BSearchBar } from '@/components';
-import { layout } from '@/constants';
-import { resScale } from '@/utils';
+import React from "react";
+import {
+    View,
+    GestureResponderEvent,
+    ViewStyle,
+    Platform,
+    StyleSheet
+} from "react-native";
+import { TextInput } from "react-native-paper";
+import { BSearchBar } from "@/components";
+import { layout } from "@/constants";
+import { resScale } from "@/utils";
 
 const styles = StyleSheet.create({
-  searchBarContainer: {
-    width: resScale(293),
-  },
+    searchBarContainer: {
+        width: resScale(293)
+    }
 });
 
 interface SearchSONavbarProps {
-  onChangeText?: (((text: string) => void) & Function) | undefined;
-  value?: string;
-  onClearValue?: (event: GestureResponderEvent) => void;
-  customStyle?: ViewStyle;
-  autoFocus?: boolean;
+    onChangeText?: (((text: string) => void) & Function) | undefined;
+    value?: string;
+    onClearValue?: (event: GestureResponderEvent) => void;
+    customStyle?: ViewStyle;
+    autoFocus?: boolean;
 }
 
 function SearchSONavbar({
-  onChangeText,
-  value,
-  onClearValue,
-  customStyle,
-  autoFocus,
+    onChangeText,
+    value,
+    onClearValue,
+    customStyle,
+    autoFocus
 }: SearchSONavbarProps) {
-  return (
-    <View style={customStyle || styles.searchBarContainer}>
-      <BSearchBar
-        value={value}
-        textInputStyle={Platform.OS !== 'android' && { paddingBottom: layout.pad.sm }}
-        onChangeText={onChangeText}
-        placeholder="Cari File SO"
-        autoFocus={autoFocus}
-        left={<TextInput.Icon icon="magnify" />}
-        right={value && value?.length > 0 && <TextInput.Icon onPress={onClearValue} icon="close" />}
-      />
-    </View>
-  );
+    return (
+        <View style={customStyle || styles.searchBarContainer}>
+            <BSearchBar
+                value={value}
+                textInputStyle={
+                    Platform.OS !== "android" && {
+                        paddingBottom: layout.pad.sm
+                    }
+                }
+                onChangeText={onChangeText}
+                placeholder="Cari File SO"
+                autoFocus={autoFocus}
+                left={<TextInput.Icon icon="magnify" />}
+                right={
+                    value &&
+                    value?.length > 0 && (
+                        <TextInput.Icon onPress={onClearValue} icon="close" />
+                    )
+                }
+            />
+        </View>
+    );
 }
 
 export default SearchSONavbar;

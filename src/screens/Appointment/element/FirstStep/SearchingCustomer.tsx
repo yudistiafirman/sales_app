@@ -1,157 +1,166 @@
-import debounce from 'lodash.debounce';
-import React, { useCallback, useState } from 'react';
-import { View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { BCommonSearchList } from '@/components';
-import { AppointmentActionType } from '@/context/AppointmentContext';
-import { useAppointmentData } from '@/hooks';
-import { selectedCompanyInterface } from '@/interfaces/index';
-import { getAllProject } from '@/redux/async-thunks/commonThunks';
-import { retrying } from '@/redux/reducers/commonReducer';
-import { AppDispatch, RootState } from '@/redux/store';
+import debounce from "lodash.debounce";
+import React, { useCallback, useState } from "react";
+import { View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { BCommonSearchList } from "@/components";
+import { AppointmentActionType } from "@/context/AppointmentContext";
+import { useAppointmentData } from "@/hooks";
+import { selectedCompanyInterface } from "@/interfaces/index";
+import { getAllProject } from "@/redux/async-thunks/commonThunks";
+import { retrying } from "@/redux/reducers/commonReducer";
+import { AppDispatch, RootState } from "@/redux/store";
 
 function SearchingCustomer() {
-  const [values, dispatchValue] = useAppointmentData();
-  const [index, setIndex] = useState(0);
-  const { searchQuery } = values;
-  const { projects, isProjectLoading, errorGettingProject, errorGettingProjectMessage } =
-    useSelector((state: RootState) => state.common);
-  const dispatch = useDispatch<AppDispatch>();
-  const searchDispatch = useCallback(
-    (text: string) => {
-      dispatch(getAllProject({ search: text }));
-    },
-    [dispatch]
-  );
-  const onChangeWithDebounce = React.useMemo(
-    () =>
-      debounce((text: string) => {
-        searchDispatch(text);
-      }, 500),
-    [searchDispatch]
-  );
+    const [values, dispatchValue] = useAppointmentData();
+    const [index, setIndex] = useState(0);
+    const { searchQuery } = values;
+    const {
+        projects,
+        isProjectLoading,
+        errorGettingProject,
+        errorGettingProjectMessage
+    } = useSelector((state: RootState) => state.common);
+    const dispatch = useDispatch<AppDispatch>();
+    const searchDispatch = useCallback(
+        (text: string) => {
+            dispatch(getAllProject({ search: text }));
+        },
+        [dispatch]
+    );
+    const onChangeWithDebounce = React.useMemo(
+        () =>
+            debounce((text: string) => {
+                searchDispatch(text);
+            }, 500),
+        [searchDispatch]
+    );
 
-  const onChangeSearch = (text: string) => {
-    dispatchValue({ type: AppointmentActionType.SEARCH_QUERY, value: text });
-    onChangeWithDebounce(text);
-  };
-
-  const onPressCard = useCallback(
-    (item: selectedCompanyInterface) => {
-      try {
-        const customerType = item.Company.id ? 'company' : 'individu';
-        if (values.stepOne.options.items) {
-          dispatchValue({
-            type: AppointmentActionType.ADD_COMPANIES,
-            value: [
-              ...values.stepOne.options.items,
-              { id: item.Company.id, title: item.Company.name },
-            ],
-          });
-        } else {
-          dispatchValue({
-            type: AppointmentActionType.ADD_COMPANIES,
-            value: [{ id: item.Company.id, title: item.Company.name }],
-          });
-        }
-        const picList = item.Pics;
-        if (picList.length === 1) {
-          picList[0].isSelected = true;
-        }
-
-        const companyDataToSave = {
-          Company: { id: item.Company.id, title: item.Company.name },
-          PIC: picList,
-          Visitation: item.Visitations[0],
-          locationAddress: item.LocationAddress,
-          mainPic: item.Pic,
-          id: item.id,
-          name: item.name,
-        };
-
+    const onChangeSearch = (text: string) => {
         dispatchValue({
-          type: AppointmentActionType.ON_ADD_PROJECT,
-          key: customerType,
-          value: companyDataToSave,
+            type: AppointmentActionType.SEARCH_QUERY,
+            value: text
         });
-      } catch (error) {
-        console.log(error, 'errorappointment onPressCard');
-      }
-    },
-    [dispatchValue, values.stepOne.options.items]
-  );
+        onChangeWithDebounce(text);
+    };
 
-  const routes: { title: string; totalItems: number }[] = React.useMemo(
-    () => [
-      {
-        key: 'first',
-        title: 'Proyek',
-        totalItems: projects.length,
-        chipPosition: 'right',
-      },
-    ],
-    [projects]
-  );
+    const onPressCard = useCallback(
+        (item: selectedCompanyInterface) => {
+            try {
+                const customerType = item.Company.id ? "company" : "individu";
+                if (values.stepOne.options.items) {
+                    dispatchValue({
+                        type: AppointmentActionType.ADD_COMPANIES,
+                        value: [
+                            ...values.stepOne.options.items,
+                            { id: item.Company.id, title: item.Company.name }
+                        ]
+                    });
+                } else {
+                    dispatchValue({
+                        type: AppointmentActionType.ADD_COMPANIES,
+                        value: [
+                            { id: item.Company.id, title: item.Company.name }
+                        ]
+                    });
+                }
+                const picList = item.Pics;
+                if (picList.length === 1) {
+                    picList[0].isSelected = true;
+                }
 
-  const onRetryGettingProjects = () => {
-    dispatch(retrying());
-    onChangeWithDebounce(searchQuery);
-  };
+                const companyDataToSave = {
+                    Company: { id: item.Company.id, title: item.Company.name },
+                    PIC: picList,
+                    Visitation: item.Visitations[0],
+                    locationAddress: item.LocationAddress,
+                    mainPic: item.Pic,
+                    id: item.id,
+                    name: item.name
+                };
 
-  const onClearValue = () => {
-    dispatchValue({
-      type: AppointmentActionType.SEARCH_QUERY,
-      value: '',
-    });
-  };
+                dispatchValue({
+                    type: AppointmentActionType.ON_ADD_PROJECT,
+                    key: customerType,
+                    value: companyDataToSave
+                });
+            } catch (error) {
+                console.log(error, "errorappointment onPressCard");
+            }
+        },
+        [dispatchValue, values.stepOne.options.items]
+    );
 
-  return (
-    <View style={{ flex: 1 }}>
-      <BCommonSearchList
-        searchQuery={searchQuery}
-        onChangeText={onChangeSearch}
-        onClearValue={() => {
-          if (searchQuery && searchQuery.trim() !== '') {
-            onClearValue();
-          } else {
-            dispatchValue({
-              type: AppointmentActionType.ENABLE_SEARCHING,
-              value: false,
-            });
-          }
-        }}
-        placeholder="Cari PT / Proyek"
-        index={index}
-        emptyText={`${searchQuery} tidak ditemukan!`}
-        routes={routes}
-        autoFocus
-        onIndexChange={setIndex}
-        loadList={isProjectLoading}
-        onPressList={item => {
-          const handlePicNull = { ...item };
-          if (!handlePicNull.PIC) {
-            handlePicNull.PIC = [];
-          }
+    const routes: { title: string; totalItems: number }[] = React.useMemo(
+        () => [
+            {
+                key: "first",
+                title: "Proyek",
+                totalItems: projects.length,
+                chipPosition: "right"
+            }
+        ],
+        [projects]
+    );
 
-          if (item.PIC && item.PIC.length > 0) {
-            const finalPIC = [...item.PIC];
-            finalPIC.forEach((it, index) => {
-              finalPIC[index] = {
-                ...finalPIC[index],
-                isSelected: index === 0,
-              };
-            });
-            if (handlePicNull.PIC) handlePicNull.PIC = finalPIC;
-          }
-          onPressCard(handlePicNull);
-        }}
-        data={projects}
-        isError={errorGettingProject}
-        errorMessage={errorGettingProjectMessage}
-        onRetry={onRetryGettingProjects}
-      />
-    </View>
-  );
+    const onRetryGettingProjects = () => {
+        dispatch(retrying());
+        onChangeWithDebounce(searchQuery);
+    };
+
+    const onClearValue = () => {
+        dispatchValue({
+            type: AppointmentActionType.SEARCH_QUERY,
+            value: ""
+        });
+    };
+
+    return (
+        <View style={{ flex: 1 }}>
+            <BCommonSearchList
+                searchQuery={searchQuery}
+                onChangeText={onChangeSearch}
+                onClearValue={() => {
+                    if (searchQuery && searchQuery.trim() !== "") {
+                        onClearValue();
+                    } else {
+                        dispatchValue({
+                            type: AppointmentActionType.ENABLE_SEARCHING,
+                            value: false
+                        });
+                    }
+                }}
+                placeholder="Cari PT / Proyek"
+                index={index}
+                emptyText={`${searchQuery} tidak ditemukan!`}
+                routes={routes}
+                autoFocus
+                onIndexChange={setIndex}
+                loadList={isProjectLoading}
+                onPressList={(item) => {
+                    const handlePicNull = { ...item };
+                    if (!handlePicNull.PIC) {
+                        handlePicNull.PIC = [];
+                    }
+
+                    if (item.PIC && item.PIC.length > 0) {
+                        const finalPIC = [...item.PIC];
+                        finalPIC.forEach((it, index) => {
+                            finalPIC[index] = {
+                                ...finalPIC[index],
+                                isSelected: index === 0
+                            };
+                        });
+                        if (handlePicNull.PIC) handlePicNull.PIC = finalPIC;
+                    }
+                    onPressCard(handlePicNull);
+                }}
+                data={projects}
+                isError={errorGettingProject}
+                errorMessage={errorGettingProjectMessage}
+                onRetry={onRetryGettingProjects}
+            />
+        </View>
+    );
 }
 
 export default SearchingCustomer;
