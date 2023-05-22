@@ -123,16 +123,18 @@ const searchSOMachine = createMachine(
     },
     actions: {
       assignListData: assign((context, event) => {
-        const listData = [...context.soListData, ...event.data.data.data];
+        const listData = [...context.soListData];
         if (event?.data?.data?.data !== undefined) {
-          return {
-            totalPage: event.data.data.totalPages,
-            soListData: listData,
-            isLoading: false,
-            isLoadMore: false,
-            isRefreshing: false,
-          };
+          listData.push(...event?.data?.data?.data);
         }
+
+        return {
+          totalPage: event.data.data.totalPages,
+          soListData: listData,
+          isLoading: false,
+          isLoadMore: false,
+          isRefreshing: false,
+        };
       }),
       assignError: assign((context, event) => {
         return {

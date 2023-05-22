@@ -174,19 +174,19 @@ const displayOperationListMachine = createMachine(
     },
     actions: {
       assignListData: assign((context, event) => {
-        const listData = [
-          ...context.operationListData,
-          ...event.data.data.data,
-        ];
+        const listData = [...context.operationListData];
+
         if (event?.data?.data?.data !== undefined) {
-          return {
-            totalPage: event.data.data.totalPages,
-            operationListData: listData,
-            isLoading: false,
-            isLoadMore: false,
-            isRefreshing: false,
-          };
+          listData.push(...event?.data?.data?.data);
         }
+
+        return {
+          totalPage: event.data.data.totalPages,
+          operationListData: listData,
+          isLoading: false,
+          isLoadMore: false,
+          isRefreshing: false,
+        };
       }),
       assignError: assign((context, event) => {
         return {
