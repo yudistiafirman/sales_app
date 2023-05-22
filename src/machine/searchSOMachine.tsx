@@ -1,9 +1,12 @@
-import { getAllPurchaseOrders, getConfirmedPurchaseOrder } from '@/actions/OrderActions';
+import {
+  getAllPurchaseOrders,
+  getConfirmedPurchaseOrder,
+} from '@/actions/OrderActions';
 import { assign, createMachine } from 'xstate';
 
 const searchSOMachine = createMachine(
   {
-    /** @xstate-layout N4IgpgJg5mDOIC5QHsAOYBOBDALgS2QDsACAGz1h2IFssBjACz0LADoAzMHR5qAGQo4AIriwBiCETbMAbsgDWbNJlwES5SjXpMWHLj0L9BInFgSzkdVUQDaABgC69h4lCpksPPiKuQAD0QARkCAVlYADjtIuwA2UIBOKJCAFmSAGhAAT0QAJhCc1hyY8NS88IB2EOCAZgBfWozlbG91QS0DNk5uHSNKE3FMDGQMVlRSXHZh6lYm61bNWg69bt4BPtFzQjkrFudnX3dPFt8AhABaYPDWGOTqkLuYm-DwwLtqjOyEPIKikuSyyo1eqNdDNNRkNqLHRsDQ4PjILAQSBiIgAJTA7AwcAYaxw+yQIEOXjUJ0Q1XK1WugXilXK4WqgUilQ+uRCdlY5WK-0CMVi1XiIRC4WBIFmLQhC20zBhgnhiORRAAooQIOjtJB8W4PMSfATTkVAhzBYFqnYcoFynzAiyENVzaw7I6csl4oy8skSiKxeDYe1oaxBsMAOJcfCGXFiLE4DCZEM4MO9PGOA7a456xBnHJ2MJ2UIxPI2nJFh155JxZ3JQKV+oNECEZBI+AE71ECVUKHSlNHEnp855Sm5kL5kI24IOx25wH0j00mJe0FzNt+6XLAyJ-pdnWEUkIXk2+JXNlO4IVquBHLzlTi30d3SwuVIiCbtOgU488qsU0u27hIf-eL-Da-xXKa5QWiE5TlAeloxCEl5gq2N5SrogYYHGCa4s+PavhmORXOerzxOSI5ZGSkSsPk1TJEK+apGeNa1EAA */
+    /** @xstate-layout N4IgpgJg5mDOIC5SzAQwE4GMAWACAygPIB0AlhADZgDEqsspUAdgNJgCeA7gPboQDaABgC6iUAAduDAC6luTMSAAeiAIwAOAMzEA7Op0BWQQCZj68xs0A2ADQh2iACxbiATkODBV1YM0HVBlYAvkF2KBg4BCQAZmDSOKRMUAAypLDSACKo0qjUEPJgZEwAbtwA1oXhWHhExLHx2IkpaZnZqAiJpZjZckxCwv2KkjK9iioImpqqxH6eXj5+Abb2iAauxsSOS5pbBgbGOjshYWjVUXVxCUmp6Vk51GDo6LzE4hTZ0bwAtsRVkbX1K7NW5tDolbjdWTyfqDJAgYakKEKOHjRxrNw6VzqfaqVR6HyuOwOCY6KzEAweUyeAzORyuY4gP41EgUFrJbioCCQajyABKYGi6Dg2Bu0lhEikiNGKMQpnUm18qmMrgppOsOmMRNW602212+0OjgZTPOrPS7M53PkAFEmBB+agcJBxfDJUixrLXIJdMYdlYjK5XJo9FZHFqEKYdLqrK4fHpjLi6cbTv8SI9nugAOJxWTXFrUIXSdDsbPSXPAsUiIZu6WgcbGKzy9YaQzhnSeYjYqwNqntqbGEKhEBMbhc+Bwk1EasjeQehAAWiVjhmmnM7lX6kbgfDqk0rjcyscgg06kcxhMBmTEWZZEoYGnUtnMoQgnDxiPV7OAMujTzIJyD7us+r4rCSy50sG-j7AY+jqPSQ6TiybIclyECAbWyiICBxJ7AYGJGPMvhQcECEpje6a8KW5aiuhT51og86kiua6HOYW6EqB-reqeph+I4hjNjog5BEAA */
     id: 'search SO',
 
     predictableActionArguments: true,
@@ -121,13 +124,15 @@ const searchSOMachine = createMachine(
     actions: {
       assignListData: assign((context, event) => {
         const listData = [...context.soListData, ...event.data.data.data];
-        return {
-          totalPage: event.data.data.totalPages,
-          soListData: listData,
-          isLoading: false,
-          isLoadMore: false,
-          isRefreshing: false,
-        };
+        if (event?.data?.data?.data !== undefined) {
+          return {
+            totalPage: event.data.data.totalPages,
+            soListData: listData,
+            isLoading: false,
+            isLoadMore: false,
+            isRefreshing: false,
+          };
+        }
       }),
       assignError: assign((context, event) => {
         return {

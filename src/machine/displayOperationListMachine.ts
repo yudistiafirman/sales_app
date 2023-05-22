@@ -178,13 +178,15 @@ const displayOperationListMachine = createMachine(
           ...context.operationListData,
           ...event.data.data.data,
         ];
-        return {
-          totalPage: event.data.data.totalPages,
-          operationListData: listData,
-          isLoading: false,
-          isLoadMore: false,
-          isRefreshing: false,
-        };
+        if (event?.data?.data?.data !== undefined) {
+          return {
+            totalPage: event.data.data.totalPages,
+            operationListData: listData,
+            isLoading: false,
+            isLoadMore: false,
+            isRefreshing: false,
+          };
+        }
       }),
       assignError: assign((context, event) => {
         return {
