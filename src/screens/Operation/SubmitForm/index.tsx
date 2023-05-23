@@ -154,7 +154,7 @@ function SubmitForm() {
 
     const removedAddButtonImage = () => {
         switch (userData?.type) {
-            case EntryType.WB:
+            case EntryType.WB: {
                 if (operationData.photoFiles.length > 1) {
                     const tempImages = [
                         ...operationData.photoFiles.filter(
@@ -163,8 +163,9 @@ function SubmitForm() {
                     ];
                     dispatch(setAllOperationPhoto({ file: tempImages }));
                 }
-                return;
-            case EntryType.SECURITY:
+                break;
+            }
+            case EntryType.SECURITY: {
                 if (operationType === EntryType.DISPATCH) {
                     if (operationData.photoFiles.length > 4) {
                         const tempImages = [
@@ -182,9 +183,11 @@ function SubmitForm() {
                     ];
                     dispatch(setAllOperationPhoto({ file: tempImages }));
                 }
-                return;
-            default:
-                return;
+                break;
+            }
+            default: {
+                break;
+            }
         }
     };
 
@@ -201,18 +204,23 @@ function SubmitForm() {
 
     const getHeaderTitle = () => {
         switch (userData?.type) {
-            case EntryType.BATCHER:
+            case EntryType.BATCHER: {
                 return "Produksi";
-            case EntryType.SECURITY:
+            }
+            case EntryType.SECURITY: {
                 if (operationType === EntryType.DISPATCH)
                     return TAB_DISPATCH_TITLE;
                 return TAB_RETURN_TITLE;
-            case EntryType.DRIVER:
+            }
+            case EntryType.DRIVER: {
                 return "Penuangan";
-            case EntryType.WB:
+            }
+            case EntryType.WB: {
                 return "Weigh Bridge";
-            default:
+            }
+            default: {
                 return "";
+            }
         }
     };
 
@@ -551,7 +559,7 @@ function SubmitForm() {
     const addMoreImages = useCallback(
         (attachType?: string) => {
             switch (userData?.type) {
-                case EntryType.DRIVER:
+                case EntryType.DRIVER: {
                     navigation.dispatch(
                         StackActions.push(CAMERA, {
                             photoTitle: attachType,
@@ -560,8 +568,9 @@ function SubmitForm() {
                             operationAddedStep: attachType
                         })
                     );
-                    return;
-                case EntryType.SECURITY:
+                    break;
+                }
+                case EntryType.SECURITY: {
                     if (operationType === EntryType.DISPATCH) {
                         navigation.dispatch(
                             StackActions.push(CAMERA, {
@@ -579,8 +588,9 @@ function SubmitForm() {
                             })
                         );
                     }
-                    return;
-                case EntryType.WB:
+                    break;
+                }
+                case EntryType.WB: {
                     navigation.dispatch(
                         StackActions.push(CAMERA, {
                             photoTitle: "Tambahan",
@@ -588,9 +598,11 @@ function SubmitForm() {
                             navigateTo: GALLERY_OPERATION
                         })
                     );
-                    return;
-                default:
-                    return;
+                    break;
+                }
+                default: {
+                    break;
+                }
             }
         },
         [operationData.photoFiles, dispatch]
