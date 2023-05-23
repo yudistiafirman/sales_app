@@ -172,7 +172,7 @@ export default function SecondStep() {
                 if (!result) {
                     throw data;
                 }
-                const _coordinate = {
+                const coordinateToSet = {
                     latitude: result?.lat,
                     longitude: result?.lon,
                     formattedAddress: result?.formattedAddress,
@@ -180,24 +180,24 @@ export default function SecondStep() {
                 };
 
                 if (typeof result?.lon === "string") {
-                    _coordinate.longitude = Number(result.lon);
-                    _coordinate.lon = Number(result.lon);
+                    coordinateToSet.longitude = Number(result.lon);
+                    coordinateToSet.lon = Number(result.lon);
                 }
 
                 if (typeof result?.lat === "string") {
-                    _coordinate.latitude = Number(result.lat);
-                    _coordinate.lat = Number(result.lat);
+                    coordinateToSet.latitude = Number(result.lat);
+                    coordinateToSet.lat = Number(result.lat);
                 }
 
                 if (isBiilingAddress) {
-                    dispatch(updateBillingAddressAutoComplete(_coordinate));
+                    dispatch(updateBillingAddressAutoComplete(coordinateToSet));
                 } else {
                     if (result.distance) {
                         dispatch(
                             updateDistanceFromLegok(result.distance.value)
                         );
                     }
-                    dispatch(updateRegion(_coordinate));
+                    dispatch(updateRegion(coordinateToSet));
                 }
                 setIsMapLoading(() => false);
             } catch (error) {
