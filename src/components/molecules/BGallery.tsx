@@ -85,7 +85,7 @@ export default function BGallery({
                     </TouchableOpacity>
                 )}
                 {item?.isFromPicker ? (
-                    <>
+                    <View>
                         {item?.file?.type === "image/jpeg" ||
                         item?.file?.type === "image/png" ? (
                             <Image
@@ -99,7 +99,7 @@ export default function BGallery({
                                 page={1}
                             />
                         )}
-                    </>
+                    </View>
                 ) : (
                     <Image source={item?.file} style={style.imageStyle} />
                 )}

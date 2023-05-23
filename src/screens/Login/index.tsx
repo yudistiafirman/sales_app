@@ -2,7 +2,7 @@ import { BButtonPrimary, BErrorText, BSpacer } from "@/components";
 import { resScale } from "@/utils";
 import { useNavigation } from "@react-navigation/native";
 import * as React from "react";
-import { Image, SafeAreaView, TouchableOpacity } from "react-native";
+import { Image, SafeAreaView, TouchableOpacity, View } from "react-native";
 import { colors, layout } from "@/constants";
 import {
     setPhoneNumber,
@@ -22,7 +22,7 @@ import Instruction from "./element/Intstruction";
 import PhoneInput from "./element/PhoneInput";
 
 interface LoginState {
-    errorMessage: unknown | string;
+    errorMessage: string | any;
     loading: boolean;
     phoneNumber: string;
 }
@@ -57,7 +57,7 @@ function Login() {
 
     useCustomHeaderLeft({
         customHeaderLeft: (
-            <>
+            <View>
                 {isProduction() && !__DEV__ ? (
                     <TouchableOpacity
                         onPress={
@@ -80,7 +80,7 @@ function Login() {
                         source={require("@/assets/logo/brik_logo.png")}
                     />
                 )}
-            </>
+            </View>
         )
     });
 
@@ -109,7 +109,7 @@ function Login() {
                 ...loginState,
                 loading: false,
                 phoneNumber: "",
-                errorMessage: error.message
+                errorMessage: error?.message
             });
         }
     };
@@ -126,7 +126,7 @@ function Login() {
                     setLoginState({ ...loginState, phoneNumber: val })
                 }
             />
-            <>{errorMessage && <BErrorText text={errorMessage} />}</>
+            {errorMessage && <BErrorText text={errorMessage} />}
             <BSpacer size={resScale(40)} />
             <BButtonPrimary
                 disable={disableBtn}

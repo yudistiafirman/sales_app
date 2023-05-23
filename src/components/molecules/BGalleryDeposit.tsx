@@ -66,7 +66,7 @@ export default function BGalleryDeposit({
                     }}
                 >
                     {picts[1]?.isFromPicker ? (
-                        <>
+                        <View>
                             {picts[1]?.file?.type === "image/jpeg" ||
                             picts[1]?.file?.type === "image/png" ? (
                                 <Image
@@ -80,7 +80,7 @@ export default function BGalleryDeposit({
                                     page={1}
                                 />
                             )}
-                        </>
+                        </View>
                     ) : (
                         <Image style={style.flexFull} source={picts[1]?.file} />
                     )}

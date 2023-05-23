@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     }
 });
 
-function BErrorText({ text }: { text: string | unknown }) {
+function BErrorText({ text }: { text: string | any }) {
     return (
         <View style={styles.container}>
             <Icon

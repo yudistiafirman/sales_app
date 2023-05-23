@@ -282,9 +282,7 @@ export default function CalendarScreen() {
                         disable={!selectedData[0]}
                     />
                 </View>
-            ) : (
-                <></>
-            )}
+            ) : undefined}
         </View>
     );
 }

@@ -1,7 +1,7 @@
 import crashlytics from "@react-native-firebase/crashlytics";
 import debounce from "lodash.debounce";
 import React, { useContext, useMemo, useState } from "react";
-import { Alert, StyleSheet, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { BContainer, BCommonSearchList, BSearchBar } from "@/components";
@@ -86,7 +86,7 @@ export default function FirstStep() {
     return (
         <BContainer>
             {!selectedCompany ? (
-                <>
+                <View>
                     {!isSearching ? (
                         <>
                             <TouchableOpacity
@@ -157,7 +157,7 @@ export default function FirstStep() {
                             onRetry={onRetryGettingProject}
                         />
                     )}
-                </>
+                </View>
             ) : (
                 <SelectedPic
                     onPress={() => {

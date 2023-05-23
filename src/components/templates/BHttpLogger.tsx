@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
+import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import Draggable from "react-native-draggable";
 import Modal from "react-native-modal";
 import NetworkLogger from "react-native-network-logger";
@@ -45,7 +45,7 @@ function BHttpLogger({
     setVisibleNetworkLogger
 }: BHttpLoggerProps) {
     return (
-        <>
+        <View>
             {isShowButtonNetwork && (
                 <>
                     <Draggable
@@ -56,24 +56,22 @@ function BHttpLogger({
                         minY={20}
                         maxY={height}
                     >
-                        <>
-                            <TouchableOpacity
-                                style={styles.close}
-                                onPress={setShowButtonNetwork}
-                            >
-                                <Icon name="x" size={10} color={colors.white} />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={setVisibleNetworkLogger}
-                                style={styles.container}
-                            >
-                                <Icon
-                                    name="cloud"
-                                    size={30}
-                                    color={colors.primary}
-                                />
-                            </TouchableOpacity>
-                        </>
+                        <TouchableOpacity
+                            style={styles.close}
+                            onPress={setShowButtonNetwork}
+                        >
+                            <Icon name="x" size={10} color={colors.white} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={setVisibleNetworkLogger}
+                            style={styles.container}
+                        >
+                            <Icon
+                                name="cloud"
+                                size={30}
+                                color={colors.primary}
+                            />
+                        </TouchableOpacity>
                     </Draggable>
                     <Modal
                         backdropOpacity={0.5}
@@ -93,7 +91,7 @@ function BHttpLogger({
                     </Modal>
                 </>
             )}
-        </>
+        </View>
     );
 }
 
