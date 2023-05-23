@@ -97,7 +97,7 @@ function Customer() {
                 searchBarInputStyle={{ minHeight: resScale(42) }}
                 data={data}
                 onClearValue={onClearValue}
-                index={index}
+                itemIndex={index}
                 isError={state.matches("errorGettingData")}
                 routes={routes}
                 onRetry={() => send("retry")}

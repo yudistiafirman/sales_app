@@ -64,7 +64,7 @@ import {
     resetFocusedStepperFlag,
     resetSPHState
 } from "@/redux/reducers/SphReducer";
-import { bStorage } from "@/actions";
+import bStorage from "@/actions";
 import { resetRegion } from "@/redux/reducers/locationReducer";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";

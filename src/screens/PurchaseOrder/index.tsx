@@ -6,7 +6,7 @@ import {
 import React, { useCallback, useLayoutEffect, useState } from "react";
 import { BackHandler, SafeAreaView, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { bStorage } from "@/actions";
+import bStorage from "@/actions";
 import {
     BBackContinueBtn,
     BHeaderIcon,

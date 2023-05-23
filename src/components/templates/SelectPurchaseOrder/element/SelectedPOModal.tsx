@@ -54,7 +54,7 @@ type PoModalData = {
 type SelectedPOModalType = {
     isModalVisible: boolean;
     onCloseModal: () => void;
-    data: PoModalData;
+    poData: PoModalData;
     onPressCompleted: (data: any) => void;
     modalTitle: string;
     isDeposit?: boolean;
@@ -64,7 +64,7 @@ type SelectedPOModalType = {
 export default function SelectedPOModal({
     isModalVisible,
     onCloseModal,
-    data,
+    poData,
     onPressCompleted,
     modalTitle,
     isDeposit,
@@ -79,11 +79,11 @@ export default function SelectedPOModal({
 
     React.useEffect(() => {
         const listData =
-            data?.listData && dataToGet === "SCHEDULEDATA"
-                ? data?.listData.filter((v) => v.SaleOrders.length > 0)
-                : data?.listData;
+            poData?.listData && dataToGet === "SCHEDULEDATA"
+                ? poData?.listData.filter((v) => v.SaleOrders.length > 0)
+                : poData?.listData;
         setSphData(listData);
-    }, [data?.listData]);
+    }, [poData?.listData]);
 
     const onSelectButton = (idx: number) => {
         const newSphData = [...sphData];
@@ -182,17 +182,17 @@ export default function SelectedPOModal({
                                 >
                                     <BVisitationCard
                                         item={{
-                                            name: data?.companyName,
-                                            location: data?.locationName
+                                            name: poData?.companyName,
+                                            location: poData?.locationName
                                         }}
                                         isRenderIcon={false}
                                     />
                                     <BSpacer size="extraSmall" />
-                                    {data?.listData &&
-                                        data?.listData.length > 0 && (
+                                    {poData?.listData &&
+                                        poData?.listData.length > 0 && (
                                             <BNestedProductCard
                                                 isOption={
-                                                    data?.listData.length > 1
+                                                    poData?.listData.length > 1
                                                 }
                                                 withoutHeader={false}
                                                 data={sphData}

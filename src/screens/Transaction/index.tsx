@@ -40,11 +40,11 @@ import {
     resetFocusedStepperFlag,
     resetSPHState
 } from "@/redux/reducers/SphReducer";
-import { bStorage } from "@/actions";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import { getDrivers, getVehicles } from "@/actions/InventoryActions";
 import SelectCustomerTypeModal from "../PurchaseOrder/element/SelectCustomerTypeModal";
 import TransactionList from "./element/TransactionList";
+import bStorage from "@/actions";
 
 const styles = StyleSheet.create({
     parent: {
@@ -94,7 +94,7 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 function Transaction() {
     const navigation = useNavigation();
     const [index, setIndex] = React.useState(0);
-    const [state, send] = useMachine(transactionMachine);
+    const [trxState, send] = useMachine(transactionMachine);
     const [isPopupSPHVisible, setPopupSPHVisible] = React.useState(false);
     const sphData = useSelector((rootState: RootState) => rootState.sph);
     const dispatch = useDispatch();
@@ -116,7 +116,7 @@ function Transaction() {
         selectedType,
         errorMessage,
         isErrorData: isError
-    } = state.context;
+    } = trxState.context;
 
     const onTabPress = (title: string) => {
         if (isError) send("retryGettingTransactions", { payload: title });
@@ -364,7 +364,9 @@ function Transaction() {
         <SafeAreaView style={styles.parent}>
             {loadTab && <ShimmerPlaceholder style={styles.shimmer} />}
             <BSpacer size="extraSmall" />
-            {state.matches("getTransaction.errorGettingTypeTransactions") && (
+            {trxState.matches(
+                "getTransaction.errorGettingTypeTransactions"
+            ) && (
                 <BEmptyState
                     onAction={() => send("retryGettingTypeTransactions")}
                     isError
@@ -382,7 +384,7 @@ function Transaction() {
                             isLoadMore={isLoadMore}
                             loadTransaction={loadTransaction}
                             refreshing={refreshing}
-                            isError={state.matches(
+                            isError={trxState.matches(
                                 "getTransaction.typeLoaded.errorGettingTransactions"
                             )}
                             errorMessage={errorMessage}

@@ -1,4 +1,4 @@
-import { bStorage } from "@/actions";
+import bStorage from "@/actions";
 import { uploadFileImage } from "@/actions/CommonActions";
 import {
     getCreatedSphDocuments,

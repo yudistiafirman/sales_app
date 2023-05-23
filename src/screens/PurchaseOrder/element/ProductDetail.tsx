@@ -1,4 +1,4 @@
-import { bStorage } from "@/actions";
+import bStorage from "@/actions";
 import { BForm } from "@/components";
 import BChoosenProductList from "@/components/templates/BChoosenProductList";
 import { Input } from "@/interfaces";

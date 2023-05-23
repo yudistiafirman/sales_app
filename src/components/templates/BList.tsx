@@ -54,7 +54,7 @@ interface IBList {
     searchQuery?: string;
     onTabPress?: (tabroutes: any) => any;
     onIndexChange: (index: number) => void;
-    index: number;
+    itemIndex: number;
     routes: any[];
     errorMessage?: any;
     isError?: boolean;
@@ -86,7 +86,7 @@ function BList({
     searchQuery,
     onTabPress,
     onIndexChange,
-    index,
+    itemIndex,
     routes,
     errorMessage,
     isError,

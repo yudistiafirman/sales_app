@@ -3,7 +3,7 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import React from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { bStorage } from "@/actions";
+import bStorage from "@/actions";
 import { signOut } from "@/actions/CommonActions";
 import EmptyState from "@/components/organism/BEmptyState";
 import { signout } from "@/redux/reducers/authReducer";

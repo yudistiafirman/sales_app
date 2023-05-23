@@ -48,9 +48,9 @@ function SelectPurchaseOrderData({
 
     const getDataToDisplayInsideModal = () => {
         const companyName = choosenDataFromList?.name;
+        const projectId = choosenDataFromList?.id;
         let locationName;
         let listData;
-        let projectId;
         if (dataToGet === "SPHDATA") {
             locationName =
                 choosenDataFromList?.ShippingAddress !== null
@@ -64,7 +64,6 @@ function SelectPurchaseOrderData({
                     : "";
             listData = choosenDataFromList?.PurchaseOrders;
         }
-        projectId = choosenDataFromList?.id;
         return { companyName, locationName, listData, projectId };
     };
 
@@ -104,7 +103,7 @@ function SelectPurchaseOrderData({
             <SelectedPOModal
                 isModalVisible={isModalVisible}
                 onCloseModal={() => send("onCloseModal")}
-                data={{ companyName, locationName, listData }}
+                poData={{ companyName, locationName, listData }}
                 onPressCompleted={(data) => onCloseModal(data)}
                 modalTitle={dataToGet === "SPHDATA" ? "Pilih SPH" : "Pilih PO"}
                 isDeposit={dataToGet === "DEPOSITDATA"}

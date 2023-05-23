@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 import { useDispatch, useSelector } from "react-redux";
-import { bStorage } from "@/actions";
+import bStorage from "@/actions";
 import { BSpacer, BText } from "@/components";
 import { colors, layout } from "@/constants";
 import font from "@/constants/fonts";
