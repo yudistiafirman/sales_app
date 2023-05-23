@@ -5,7 +5,7 @@ import { BEmptyState, BSpacer, BVisitationCard } from "@/components";
 import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { layout } from "@/constants";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
-import ENTRY_TYPE from "@/models/EnumModel";
+import EntryType from "@/models/EnumModel";
 
 const style = StyleSheet.create({
     flatList: {
@@ -29,7 +29,7 @@ interface OperationListProps {
     isError?: boolean;
     onRetry?: () => void;
     onLocationPress?: (lonlat: { longitude: string; latitude: string }) => void;
-    userType?: ENTRY_TYPE;
+    userType?: EntryType;
 }
 
 export default function OperationList({
@@ -56,7 +56,7 @@ export default function OperationList({
                 unit: `${item?.quantity} m³`,
                 pilStatus: undefined,
                 lonlat:
-                    userType === ENTRY_TYPE.DRIVER
+                    userType === EntryType.DRIVER
                         ? {
                               longitude: item.project?.ShippingAddress?.lon,
                               latitude: item.project?.ShippingAddress?.lat

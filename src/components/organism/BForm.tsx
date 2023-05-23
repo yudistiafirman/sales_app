@@ -896,9 +896,6 @@ const renderInput = (
                             false: colors.offCheckbox
                         }}
                         tintColor={colors.offCheckbox}
-                        onCheckColor={colors.white}
-                        onFillColor={colors.primary}
-                        onTintColor={colors.primary}
                         boxType="square"
                         onValueChange={checkbox?.onValueChange}
                         style={[

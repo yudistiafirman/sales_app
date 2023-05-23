@@ -13,7 +13,7 @@ import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import { getAppVersionName, isProduction } from "@/utils/generalFunc";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 
-const _styles: Styles = {
+const styles: Styles = {
     chipText: {
         fontFamily: fonts.family.montserrat[500],
         fontSize: fonts.size.md,
@@ -85,12 +85,12 @@ export default function SalesHeaderRight(iconColor = "") {
             }
             onRequestClose={hideMenu}
         >
-            <MenuItem textStyle={_styles.chipText} onPress={onLogout}>
+            <MenuItem textStyle={styles.chipText} onPress={onLogout}>
                 Logout
             </MenuItem>
             <MenuDivider />
             <MenuItem
-                textStyle={_styles.version}
+                textStyle={styles.version}
                 disabled={!(isProduction() && !__DEV__)}
                 onPress={
                     isProduction() && !__DEV__ ? onVersionClick : undefined

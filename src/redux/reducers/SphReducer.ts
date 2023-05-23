@@ -90,6 +90,8 @@ export const sphSlice = createSlice({
                 case 4:
                     state.stepSPHFourFinished = true;
                     break;
+                default:
+                    break;
             }
         },
         resetStepperFocused: (state, { payload }) => {
@@ -106,6 +108,8 @@ export const sphSlice = createSlice({
                     break;
                 case 4:
                     state.stepSPHFourFinished = false;
+                    break;
+                default:
                     break;
             }
         },

@@ -150,14 +150,15 @@ const style = StyleSheet.create({
 
 function Beranda() {
     const {
-        force_update,
-        enable_appointment,
-        enable_signed_so,
-        enable_create_schedule,
-        enable_customer_detail,
-        enable_deposit,
-        enable_po,
-        enable_sph,
+        /* eslint-disable @typescript-eslint/naming-convention */
+        force_update /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_appointment /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_signed_so /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_create_schedule /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_customer_detail /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_deposit /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_po /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_sph /* eslint-disable @typescript-eslint/naming-convention */,
         enable_visitation
     } = useSelector((state: RootState) => state.auth.remoteConfigData);
     const poState = useSelector((state: RootState) => state.purchaseOrder);
@@ -240,10 +241,10 @@ function Beranda() {
     const fetchTarget = React.useCallback(async () => {
         try {
             setIsTargetLoading(true);
-            const { data: _data } = await getVisitationTarget();
+            const { data: assignData } = await getVisitationTarget();
             setCurrentVisit({
-                current: _data.data.totalCompleted,
-                target: _data.data.visitationTarget
+                current: assignData.data.totalCompleted,
+                target: assignData.data.visitationTarget
             });
             setIsTargetLoading(false);
         } catch (err) {
@@ -274,9 +275,9 @@ function Beranda() {
                             date: date.valueOf()
                         })
                 };
-                const { data: _data } = await getAllVisitations(options);
+                const { data: assignData } = await getAllVisitations(options);
                 const displayData =
-                    _data.data?.data?.map((el: any) => {
+                    assignData.data?.data?.map((el: any) => {
                         const status =
                             el.status === "VISIT"
                                 ? `Visit ke ${el.order}`
@@ -300,12 +301,12 @@ function Beranda() {
 
                 if (page > 1) {
                     setVisitData({
-                        ..._data.data,
+                        ...assignData.data,
                         data: visitData.data.concat(displayData)
                     });
                 } else {
                     setVisitData({
-                        ..._data.data,
+                        ...assignData.data,
                         data: displayData
                     });
                 }

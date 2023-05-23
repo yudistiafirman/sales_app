@@ -28,9 +28,10 @@ const Tab = createBottomTabNavigator();
 
 function SalesTabs() {
     const {
-        enable_transaction_menu,
-        enable_price_menu,
-        enable_profile_menu,
+        /* eslint-disable @typescript-eslint/naming-convention */
+        enable_transaction_menu /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_price_menu /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_profile_menu /* eslint-disable @typescript-eslint/naming-convention */,
         enable_customer_menu
     } = useSelector((state: RootState) => state.auth.remoteConfigData);
     return (

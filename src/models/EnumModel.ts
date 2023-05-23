@@ -1,4 +1,4 @@
-enum ENTRY_TYPE {
+enum EntryType {
     OPSMANAGER = "OPSMANAGER",
     SALES = "SALES",
     BATCHER = "BATCHER",
@@ -12,4 +12,4 @@ enum ENTRY_TYPE {
     ADMIN = "ADMIN"
 }
 
-export default ENTRY_TYPE;
+export default EntryType;

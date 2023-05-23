@@ -20,9 +20,10 @@ const customerIcon = require("@/assets/icon/TabBarIcon/ic_customer.png");
 
 function CustomTabBar({ state, descriptors, navigation }: TabBar) {
     const {
-        enable_transaction_menu,
-        enable_price_menu,
-        enable_profile_menu,
+        /* eslint-disable @typescript-eslint/naming-convention */
+        enable_transaction_menu /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_price_menu /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_profile_menu /* eslint-disable @typescript-eslint/naming-convention */,
         enable_customer_menu
     } = useSelector(
         (remoteConfigState: RootState) =>
@@ -30,9 +31,19 @@ function CustomTabBar({ state, descriptors, navigation }: TabBar) {
     );
 
     const icons = [homeIcon];
-    if (enable_transaction_menu) icons.push(transIcon);
-    if (enable_profile_menu) icons.push(profileIcon);
-    if (enable_price_menu) icons.push(priceIcon);
+    /* eslint-disable @typescript-eslint/naming-convention */
+    if (enable_transaction_menu)
+        icons.push(
+            transIcon
+        ); /* eslint-disable @typescript-eslint/naming-convention */
+    if (enable_profile_menu)
+        icons.push(
+            profileIcon
+        ); /* eslint-disable @typescript-eslint/naming-convention */
+    if (enable_price_menu)
+        icons.push(
+            priceIcon
+        ); /* eslint-disable @typescript-eslint/naming-convention */
     if (enable_customer_menu) icons.push(customerIcon);
 
     return (

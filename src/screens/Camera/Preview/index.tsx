@@ -25,7 +25,7 @@ import { layout } from "@/constants";
 import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import LocalFileType from "@/interfaces/LocalFileType";
-import ENTRY_TYPE from "@/models/EnumModel";
+import EntryType from "@/models/EnumModel";
 import { UpdateDeliverOrder } from "@/models/updateDeliveryOrder";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {
@@ -106,7 +106,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     useHeaderTitleChanged({
         title: `Foto ${route?.params?.photoTitle}`
     });
-    const _style = React.useMemo(() => style, [style]);
+    const assignStyle = React.useMemo(() => style, [style]);
     const photo = route?.params?.photo?.path;
     const picker = route?.params?.picker;
     const navigateTo = route?.params?.navigateTo;
@@ -181,11 +181,11 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 navigateTo !== GALLERY_VISITATION &&
                 navigateTo !== GALLERY_DEPOSIT &&
                 navigateTo !== PO &&
-                navigateTo !== ENTRY_TYPE.DRIVER &&
-                navigateTo !== ENTRY_TYPE.DISPATCH &&
-                navigateTo !== ENTRY_TYPE.RETURN &&
-                navigateTo !== ENTRY_TYPE.IN &&
-                navigateTo !== ENTRY_TYPE.OUT &&
+                navigateTo !== EntryType.DRIVER &&
+                navigateTo !== EntryType.DISPATCH &&
+                navigateTo !== EntryType.RETURN &&
+                navigateTo !== EntryType.IN &&
+                navigateTo !== EntryType.OUT &&
                 navigateTo !== GALLERY_OPERATION &&
                 navigateTo !== FORM_SO &&
                 navigateTo !== GALLERY_SO
@@ -247,7 +247,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 isFromPicker: false,
                 type: imagePayloadType,
                 attachType:
-                    navigateTo === ENTRY_TYPE.DRIVER
+                    navigateTo === EntryType.DRIVER
                         ? operationAddedStep
                         : undefined
             };
@@ -263,18 +263,18 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 isFromPicker: true,
                 type: imagePayloadType,
                 attachType:
-                    navigateTo === ENTRY_TYPE.DRIVER
+                    navigateTo === EntryType.DRIVER
                         ? operationAddedStep
                         : undefined
             };
         }
 
         if (
-            navigateTo === ENTRY_TYPE.DRIVER ||
-            navigateTo === ENTRY_TYPE.DISPATCH ||
-            navigateTo === ENTRY_TYPE.RETURN ||
-            navigateTo === ENTRY_TYPE.IN ||
-            navigateTo === ENTRY_TYPE.OUT
+            navigateTo === EntryType.DRIVER ||
+            navigateTo === EntryType.DISPATCH ||
+            navigateTo === EntryType.RETURN ||
+            navigateTo === EntryType.IN ||
+            navigateTo === EntryType.OUT
         ) {
             if (operationTempData) {
                 dispatch(resetInputsValue());
@@ -319,7 +319,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 });
                 navigation.dispatch(StackActions.replace(navigateTo));
                 return;
-            case ENTRY_TYPE.DISPATCH:
+            case EntryType.DISPATCH:
                 dispatch(
                     setOperationPhoto({
                         file: localFile,
@@ -357,11 +357,11 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     });
                 } else if (operationAddedStep === "finished") {
                     navigation.navigate(SUBMIT_FORM, {
-                        operationType: ENTRY_TYPE.DISPATCH
+                        operationType: EntryType.DISPATCH
                     });
                 }
                 return;
-            case ENTRY_TYPE.DRIVER:
+            case EntryType.DRIVER:
                 const newPhotoFiles: LocalFileType[] = [];
                 operationData.photoFiles.forEach((item) => {
                     let selectedItem: LocalFileType | undefined = { ...item };
@@ -377,11 +377,11 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 if (operationAddedStep === "Tiba di lokasi") {
                     onArrivedDriver();
                     navigation.navigate(SUBMIT_FORM, {
-                        operationType: ENTRY_TYPE.DRIVER
+                        operationType: EntryType.DRIVER
                     });
                 }
                 return;
-            case ENTRY_TYPE.IN:
+            case EntryType.IN:
                 dispatch(
                     setOperationPhoto({
                         file: localFile,
@@ -398,11 +398,11 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     });
                 } else if (operationAddedStep === "finished") {
                     navigation.navigate(SUBMIT_FORM, {
-                        operationType: ENTRY_TYPE.IN
+                        operationType: EntryType.IN
                     });
                 }
                 return;
-            case ENTRY_TYPE.OUT:
+            case EntryType.OUT:
                 dispatch(
                     setOperationPhoto({
                         file: localFile,
@@ -419,11 +419,11 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     });
                 } else if (operationAddedStep === "finished") {
                     navigation.navigate(SUBMIT_FORM, {
-                        operationType: ENTRY_TYPE.OUT
+                        operationType: EntryType.OUT
                     });
                 }
                 return;
-            case ENTRY_TYPE.RETURN:
+            case EntryType.RETURN:
                 dispatch(
                     setOperationPhoto({
                         file: localFile,
@@ -440,7 +440,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     });
                 } else if (operationAddedStep === "finished") {
                     navigation.navigate(SUBMIT_FORM, {
-                        operationType: ENTRY_TYPE.RETURN
+                        operationType: EntryType.RETURN
                     });
                 }
                 return;
@@ -495,7 +495,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     };
 
     return (
-        <View style={[_style, styles.parent]}>
+        <View style={[assignStyle, styles.parent]}>
             <View style={styles.container}>
                 {photo && (
                     <Image

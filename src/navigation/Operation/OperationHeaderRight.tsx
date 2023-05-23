@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { colors, fonts, layout } from "@/constants";
 import { Styles } from "@/interfaces";
 
-const _styles: Styles = {
+const styles: Styles = {
     chipView: {
         justifyContent: "center",
         alignItems: "center"
@@ -25,14 +25,14 @@ export default function OperationHeaderRight(badgeName: string) {
     return (
         <View
             style={[
-                _styles.chipView,
+                styles.chipView,
                 (badgeName === "Dispatch" || badgeName === "Return") && {
                     marginEnd: layout.pad.lg
                 }
             ]}
         >
-            <View style={_styles.chip}>
-                <Text style={_styles.chipText}>{badgeName}</Text>
+            <View style={styles.chip}>
+                <Text style={styles.chipText}>{badgeName}</Text>
             </View>
         </View>
     );

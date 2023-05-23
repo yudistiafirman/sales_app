@@ -38,7 +38,7 @@ import {
 } from "@/navigation/ScreenNames";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import ENTRY_TYPE from "@/models/EnumModel";
+import EntryType from "@/models/EnumModel";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {
     onChangeInputValue,
@@ -122,10 +122,10 @@ function SubmitForm() {
         OperationFileType.DO_DRIVER_FINISH_PROJECT
     ];
     const wbsFileType = [
-        operationType === ENTRY_TYPE.OUT
+        operationType === EntryType.OUT
             ? OperationFileType.WB_OUT_DO
             : OperationFileType.DO_WEIGHT_IN,
-        operationType === ENTRY_TYPE.OUT
+        operationType === EntryType.OUT
             ? OperationFileType.WB_OUT_RESULT
             : OperationFileType.WEIGHT_IN
     ];
@@ -143,18 +143,18 @@ function SubmitForm() {
     ];
 
     const securityFileType =
-        operationType === ENTRY_TYPE.DISPATCH
+        operationType === EntryType.DISPATCH
             ? securityDispatchFileType
             : securityReturnFileType;
 
     const enableLocationHeader =
-        operationType === ENTRY_TYPE.DRIVER &&
+        operationType === EntryType.DRIVER &&
         operationData.projectDetails.address &&
         operationData.projectDetails.address?.length > 0;
 
     const removedAddButtonImage = () => {
         switch (userData?.type) {
-            case ENTRY_TYPE.WB:
+            case EntryType.WB:
                 if (operationData.photoFiles.length > 1) {
                     const tempImages = [
                         ...operationData.photoFiles.filter(
@@ -164,8 +164,8 @@ function SubmitForm() {
                     dispatch(setAllOperationPhoto({ file: tempImages }));
                 }
                 return;
-            case ENTRY_TYPE.SECURITY:
-                if (operationType === ENTRY_TYPE.DISPATCH) {
+            case EntryType.SECURITY:
+                if (operationType === EntryType.DISPATCH) {
                     if (operationData.photoFiles.length > 4) {
                         const tempImages = [
                             ...operationData.photoFiles.filter(
@@ -182,6 +182,8 @@ function SubmitForm() {
                     ];
                     dispatch(setAllOperationPhoto({ file: tempImages }));
                 }
+
+            default:
         }
     };
 
@@ -198,15 +200,15 @@ function SubmitForm() {
 
     const getHeaderTitle = () => {
         switch (userData?.type) {
-            case ENTRY_TYPE.BATCHER:
+            case EntryType.BATCHER:
                 return "Produksi";
-            case ENTRY_TYPE.SECURITY:
-                if (operationType === ENTRY_TYPE.DISPATCH)
+            case EntryType.SECURITY:
+                if (operationType === EntryType.DISPATCH)
                     return TAB_DISPATCH_TITLE;
                 return TAB_RETURN_TITLE;
-            case ENTRY_TYPE.DRIVER:
+            case EntryType.DRIVER:
                 return "Penuangan";
-            case ENTRY_TYPE.WB:
+            case EntryType.WB:
                 return "Weigh Bridge";
             default:
                 return "";
@@ -219,7 +221,7 @@ function SubmitForm() {
         );
         let photos;
         if (filteredPhoto) photos = [...filteredPhoto];
-        if (userData?.type === ENTRY_TYPE.DRIVER) {
+        if (userData?.type === EntryType.DRIVER) {
             return (
                 (photos && photos.length < 7) ||
                 operationData.inputsValue.recepientName.length === 0 ||
@@ -228,19 +230,19 @@ function SubmitForm() {
                 )
             );
         }
-        if (userData?.type === ENTRY_TYPE.WB) {
+        if (userData?.type === EntryType.WB) {
             return (
                 operationData.inputsValue.weightBridge.length === 0 ||
                 (photos && photos.length < 2)
             );
         }
-        if (operationType === ENTRY_TYPE.RETURN) {
+        if (operationType === EntryType.RETURN) {
             return (
                 operationData.inputsValue.truckMixCondition.length === 0 ||
                 (photos && photos.length < 2)
             );
         }
-        if (operationType === ENTRY_TYPE.DISPATCH) {
+        if (operationType === EntryType.DISPATCH) {
             return photos && photos.length !== 5;
         }
 
@@ -276,7 +278,7 @@ function SubmitForm() {
             );
             if (responseFiles.data.success) {
                 let responseUpdateDeliveryOrder: any;
-                if (userData?.type === ENTRY_TYPE.DRIVER) {
+                if (userData?.type === EntryType.DRIVER) {
                     const newFileData = responseFiles?.data?.data?.map(
                         (v, i) => ({
                             fileId: v?.id,
@@ -293,7 +295,7 @@ function SubmitForm() {
                         payload,
                         operationData.projectDetails.deliveryOrderId
                     );
-                } else if (userData?.type === ENTRY_TYPE.WB) {
+                } else if (userData?.type === EntryType.WB) {
                     const newFileData = responseFiles?.data?.data?.map(
                         (v, i) => ({
                             fileId: v?.id,
@@ -307,7 +309,7 @@ function SubmitForm() {
                             payload,
                             operationData.projectDetails.deliveryOrderId
                         );
-                } else if (userData?.type === ENTRY_TYPE.SECURITY) {
+                } else if (userData?.type === EntryType.SECURITY) {
                     const newFileData = responseFiles?.data?.data?.map(
                         (v, i) => ({
                             fileId: v?.id,
@@ -316,7 +318,7 @@ function SubmitForm() {
                     );
                     payload.doFiles = newFileData;
 
-                    if (operationType === ENTRY_TYPE.RETURN) {
+                    if (operationType === EntryType.RETURN) {
                         payload.conditionTruck =
                             operationData.inputsValue.truckMixCondition;
                     }
@@ -531,7 +533,7 @@ function SubmitForm() {
 
     const deleteImages = useCallback(
         (i: number, attachType?: string) => {
-            if (userData?.type === ENTRY_TYPE.DRIVER) {
+            if (userData?.type === EntryType.DRIVER) {
                 dispatch(removeDriverPhoto({ index: i, attachType }));
             } else {
                 dispatch(removeOperationPhoto({ index: i }));
@@ -548,18 +550,18 @@ function SubmitForm() {
     const addMoreImages = useCallback(
         (attachType?: string) => {
             switch (userData?.type) {
-                case ENTRY_TYPE.DRIVER:
+                case EntryType.DRIVER:
                     navigation.dispatch(
                         StackActions.push(CAMERA, {
                             photoTitle: attachType,
                             closeButton: true,
-                            navigateTo: ENTRY_TYPE.DRIVER,
+                            navigateTo: EntryType.DRIVER,
                             operationAddedStep: attachType
                         })
                     );
                     return;
-                case ENTRY_TYPE.SECURITY:
-                    if (operationType === ENTRY_TYPE.DISPATCH) {
+                case EntryType.SECURITY:
+                    if (operationType === EntryType.DISPATCH) {
                         navigation.dispatch(
                             StackActions.push(CAMERA, {
                                 photoTitle: "Tambahan",
@@ -577,7 +579,7 @@ function SubmitForm() {
                         );
                     }
                     return;
-                case ENTRY_TYPE.WB:
+                case EntryType.WB:
                     navigation.dispatch(
                         StackActions.push(CAMERA, {
                             photoTitle: "Tambahan",
@@ -585,6 +587,8 @@ function SubmitForm() {
                             navigateTo: GALLERY_OPERATION
                         })
                     );
+
+                default:
             }
         },
         [operationData.photoFiles, dispatch]
@@ -652,23 +656,23 @@ function SubmitForm() {
                             />
                         </View>
                         <View style={style.flexFull}>
-                            {(operationType === ENTRY_TYPE.DRIVER ||
-                                operationType === ENTRY_TYPE.RETURN ||
-                                operationType === ENTRY_TYPE.IN ||
-                                operationType === ENTRY_TYPE.OUT) && (
+                            {(operationType === EntryType.DRIVER ||
+                                operationType === EntryType.RETURN ||
+                                operationType === EntryType.IN ||
+                                operationType === EntryType.OUT) && (
                                 <BSpacer size="small" />
                             )}
-                            {operationType === ENTRY_TYPE.DRIVER && (
+                            {operationType === EntryType.DRIVER && (
                                 <BForm
                                     titleBold="500"
                                     inputs={deliveryInputs}
                                 />
                             )}
-                            {(operationType === ENTRY_TYPE.IN ||
-                                operationType === ENTRY_TYPE.OUT) && (
+                            {(operationType === EntryType.IN ||
+                                operationType === EntryType.OUT) && (
                                 <BForm titleBold="500" inputs={weightInputs} />
                             )}
-                            {operationType === ENTRY_TYPE.RETURN && (
+                            {operationType === EntryType.RETURN && (
                                 <View style={{ height: resScale(300) }}>
                                     <BForm
                                         titleBold="500"

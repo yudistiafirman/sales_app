@@ -125,6 +125,8 @@ export const visitationSlice = createSlice({
                 case 3:
                     state.stepThreeVisitationFinished = true;
                     break;
+                default:
+                    break;
             }
         },
         resetAllStepperFocused: (state) => {
@@ -144,6 +146,8 @@ export const visitationSlice = createSlice({
                     break;
                 case 3:
                     state.stepThreeVisitationFinished = false;
+                    break;
+                default:
                     break;
             }
         },
@@ -261,6 +265,8 @@ export const visitationSlice = createSlice({
                     break;
                 case "alasanPenolakan":
                     state.alasanPenolakan = payload.value;
+                    break;
+                default:
                     break;
             }
         }
