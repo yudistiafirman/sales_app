@@ -19,21 +19,6 @@ import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import SearchFlow from "./Searching";
 
-const styles: Styles = {
-    flexFull: {
-        flex: 1
-    },
-    dividerContainer: {
-        flexDirection: "row",
-        alignItems: "center"
-    },
-    labelShimmer: {
-        width: resScale(335),
-        height: resScale(100),
-        borderRadius: layout.radius.md
-    }
-};
-
 const company = require("@/assets/icon/Visitation/company.png");
 const profile = require("@/assets/icon/Visitation/profile.png");
 
