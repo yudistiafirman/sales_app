@@ -92,6 +92,7 @@ export const getOptions = async (
         return options;
     } catch (error) {
         console.log(error, "error/getOptions");
+        return undefined;
     }
 };
 

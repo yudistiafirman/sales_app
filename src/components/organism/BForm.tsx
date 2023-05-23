@@ -947,6 +947,8 @@ const renderInput = (
             </View>
         );
     }
+
+    return undefined;
 };
 
 function BForm({ inputs, spacer, noSpaceEnd, titleBold }: IProps) {

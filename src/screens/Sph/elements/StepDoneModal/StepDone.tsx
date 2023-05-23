@@ -144,7 +144,6 @@ function downloadPdf({
     downloadPopup,
     downloadError
 }: DownloadType) {
-    if (!url) return null;
     const { dirs } = ReactNativeBlobUtil.fs;
     const downloadTitle = title
         ? `${title} berhasil di download`
@@ -177,6 +176,7 @@ function downloadPdf({
             downloadError(err.message);
         });
 }
+
 async function printRemotePDF(
     url?: string,
     printError: (errorMessage: string | unknown) => void

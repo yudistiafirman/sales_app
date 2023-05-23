@@ -70,6 +70,7 @@ function PurchaseOrder() {
             if (fiveToSix[0] === "0" || lessThanFive[0] === "0") {
                 return true;
             }
+            return false;
         } else {
             return false;
         }

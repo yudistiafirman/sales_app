@@ -749,6 +749,8 @@ function Beranda() {
 
                     if (enable_visitation)
                         return BuatKunjungan(props, kunjunganAction);
+
+                    return undefined;
                 }}
             >
                 <View style={style.posRelative}>

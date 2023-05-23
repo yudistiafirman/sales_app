@@ -243,6 +243,8 @@ function SubmitForm() {
         if (operationType === ENTRY_TYPE.DISPATCH) {
             return photos && photos.length !== 5;
         }
+
+        return undefined;
     };
 
     const handleBack = () => {

@@ -73,6 +73,8 @@ function PriceList() {
                 subscription.remove();
             };
         }
+
+        return undefined;
     }, [send, state]);
 
     React.useEffect(() => {

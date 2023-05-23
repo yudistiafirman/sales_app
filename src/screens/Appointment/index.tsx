@@ -341,6 +341,8 @@ function Appointment() {
         if (customerTypeCondition === "individu") {
             return !!projectNameConditionIndividu && picIndividu.length > 0;
         }
+
+        return undefined;
     }
 
     const onTabPress = (nextStep: number) => () => {

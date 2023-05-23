@@ -51,6 +51,7 @@ function LocationList<ArrayOfObject extends LocationData>({
                 />
             );
         }
+        return undefined;
     };
     return (
         <FlashList
