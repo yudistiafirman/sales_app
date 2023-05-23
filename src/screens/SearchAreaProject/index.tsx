@@ -6,7 +6,7 @@ import * as React from "react";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView, DeviceEventEmitter, Platform } from "react-native";
 import { useMachine } from "@xstate/react";
-import { searchAreaMachine } from "@/machine/searchAreaMachine";
+import searchAreaMachine from "@/machine/searchAreaMachine";
 import { assign } from "xstate";
 import { BSpacer } from "@/components";
 import { useDispatch } from "react-redux";

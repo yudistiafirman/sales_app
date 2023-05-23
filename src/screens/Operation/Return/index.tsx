@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { colors, layout } from "@/constants";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import displayOperationListMachine from "@/machine/displayOperationListMachine";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import ENTRY_TYPE from "@/models/EnumModel";
 import {
     CAMERA,
     SUBMIT_FORM,

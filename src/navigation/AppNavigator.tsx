@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { BHttpLogger } from "@/components";
 import { colors, fonts } from "@/constants";
 import { useAsyncConfigSetup } from "@/hooks";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import ENTRY_TYPE from "@/models/EnumModel";
 import { UserModel } from "@/models/User";
 import {
     setShowButtonNetwork,

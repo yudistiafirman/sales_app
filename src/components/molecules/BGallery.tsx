@@ -11,7 +11,7 @@ import Pdf from "react-native-pdf";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Feather from "react-native-vector-icons/Feather";
 import { resScale } from "@/utils";
-import { LocalFileType } from "@/interfaces/LocalFileType";
+import LocalFileType from "@/interfaces/LocalFileType";
 import { colors, layout } from "@/constants";
 import BText from "../atoms/BText";
 import BSpacer from "../atoms/BSpacer";

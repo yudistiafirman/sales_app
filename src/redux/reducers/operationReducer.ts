@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { LocalFileType } from "@/interfaces/LocalFileType";
+import LocalFileType from "@/interfaces/LocalFileType";
 
 interface InputsValue {
     recepientName: string;

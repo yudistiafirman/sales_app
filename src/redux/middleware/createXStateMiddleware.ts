@@ -5,7 +5,7 @@ import { XStateSlice } from "../customSlice/createXStateSlice";
  * Creates a middleware which can interface between
  * XState and Redux
  */
-export const createXStateMiddleware = (...slices: XStateSlice[]): Middleware =>
+const createXStateMiddleware = (...slices: XStateSlice[]): Middleware =>
     function exampleMiddleware(storeAPI) {
         const services = slices.map((slice) => slice._start(storeAPI));
 
@@ -19,3 +19,5 @@ export const createXStateMiddleware = (...slices: XStateSlice[]): Middleware =>
             };
         };
     };
+
+export default createXStateMiddleware;

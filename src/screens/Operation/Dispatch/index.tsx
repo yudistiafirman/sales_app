@@ -8,7 +8,7 @@ import { layout } from "@/constants";
 import colors from "@/constants/colors";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import displayOperationListMachine from "@/machine/displayOperationListMachine";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import ENTRY_TYPE from "@/models/EnumModel";
 import {
     CAMERA,
     SUBMIT_FORM,

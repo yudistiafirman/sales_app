@@ -38,7 +38,7 @@ import {
 } from "@/navigation/ScreenNames";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import ENTRY_TYPE from "@/models/EnumModel";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {
     onChangeInputValue,

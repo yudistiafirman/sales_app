@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { requiredDocType } from "@/interfaces";
-import { LocalFileType } from "@/interfaces/LocalFileType";
+import LocalFileType from "@/interfaces/LocalFileType";
 import {
     CREATE_DEPOSIT,
     CREATE_SCHEDULE,

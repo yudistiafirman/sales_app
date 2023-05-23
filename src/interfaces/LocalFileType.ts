@@ -11,4 +11,4 @@ interface LocalFileType {
     attachType?: string;
 }
 
-export type { LocalFileType };
+export default LocalFileType;
