@@ -15,7 +15,7 @@ interface ActionCreateScheduleState {
     key?: keyof CreateScheduleFirstStep | keyof CreateScheduleSecondStep;
 }
 
-interface context {
+interface Context {
     values: CreateScheduleState;
     action: {
         updateValue: (key: keyof CreateScheduleState, value: any) => void;
@@ -37,7 +37,7 @@ const initialData: CreateScheduleState = {
     isSearchingPurchaseOrder: false
 };
 
-const CreateScheduleContext = React.createContext<context>({
+const CreateScheduleContext = React.createContext<Context>({
     values: initialData,
     action: {
         updateValue: () => undefined,

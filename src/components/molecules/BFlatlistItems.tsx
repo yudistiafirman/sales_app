@@ -65,7 +65,7 @@ export default function BFlatlistItems({
 }: BTabScreenType) {
     const [flatListDatas, setFlatListDatas] = useState<any[]>(data!);
     const [currentPage, setCurrentPage] = useState(1);
-    const [_isLoading, _setIsLoading] = useState(isLoading || false);
+    const [assignIsLoading, setAssignIsLoading] = useState(isLoading || false);
 
     const renderLoading = () => (
         <View style={style.flatListLoading}>

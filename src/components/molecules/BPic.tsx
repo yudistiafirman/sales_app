@@ -31,12 +31,12 @@ const titleStyles: TextStyle = {
 };
 
 const makeStyle = ({ isOption, border }: IProps) => {
-    let _style: Styles = styles;
+    let style: Styles = styles;
 
     if (border) {
-        _style = {
+        style = {
             container: {
-                ...(_style.container as Object),
+                ...(style.container as Object),
                 borderWidth: resScale(2),
                 borderColor: colors.border.default,
                 paddingHorizontal: layout.pad.md + layout.pad.ml,
@@ -45,15 +45,15 @@ const makeStyle = ({ isOption, border }: IProps) => {
         };
     }
     if (isOption) {
-        _style = {
+        style = {
             container: {
-                ...(_style.container as Object),
+                ...(style.container as Object),
                 paddingHorizontal: resScale(10)
             }
         };
     }
 
-    return _style;
+    return style;
 };
 
 function BPic({

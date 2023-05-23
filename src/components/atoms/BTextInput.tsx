@@ -4,20 +4,20 @@ import { TextInput, TextInputProps } from "react-native-paper";
 import { resScale } from "@/utils";
 import { colors, fonts, layout } from "@/constants";
 
-interface IProps extends Partial<TextInputProps> {
-    rounded?: boolean;
-    disabled?: boolean;
-    contentStyle?: ViewStyle;
-}
-
 const baseStyle: TextStyle = {
     fontFamily: fonts.family.montserrat[400],
     fontSize: fonts.size.md,
     lineHeight: resScale(14),
     backgroundColor: colors.white,
     color: colors.textInput.input
-    // placeho
 };
+
+interface IProps extends Partial<TextInputProps> {
+    rounded?: boolean;
+    disabled?: boolean;
+    contentStyle?: ViewStyle;
+    textInputStyle: TextStyle;
+}
 
 const baseContainerStyle: TextStyle = {
     borderRadius: layout.radius.sm,
@@ -25,12 +25,10 @@ const baseContainerStyle: TextStyle = {
     backgroundColor: colors.white
 };
 
-const defaultProps = {
+const defaultProps: TextInputProps = {
     mode: "outlined",
     outlineColor: colors.textInput.inActive,
     activeOutlineColor: colors.primary,
-    // placeHolderTextColor: colors.primary,
-    textInputStyle: baseStyle,
     outlineStyle: baseContainerStyle,
     dense: true
 };

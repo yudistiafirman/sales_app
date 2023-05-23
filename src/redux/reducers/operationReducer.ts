@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LocalFileType } from "@/interfaces/LocalFileType";
 
-interface inputsValue {
+interface InputsValue {
     recepientName: string;
     recepientPhoneNumber: string;
     truckMixCondition: string;
@@ -19,14 +19,14 @@ export interface OperationProjectDetails {
     doNumber: string;
 }
 
-export interface operationInitState {
+export interface OperationInitState {
     photoFiles: LocalFileType[];
-    inputsValue: inputsValue;
+    inputsValue: InputsValue;
     projectDetails: OperationProjectDetails;
     isLoading: boolean;
 }
 
-const initialState: operationInitState = {
+const initialState: OperationInitState = {
     photoFiles: [],
     inputsValue: {
         recepientName: "",
@@ -63,7 +63,7 @@ export const operationSlice = createSlice({
         onChangeInputValue: (
             state,
             actions: PayloadAction<{
-                inputType: keyof inputsValue;
+                inputType: keyof InputsValue;
                 value: string;
             }>
         ) => {

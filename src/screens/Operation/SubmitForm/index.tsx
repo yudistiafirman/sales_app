@@ -49,7 +49,7 @@ import {
 } from "@/redux/reducers/operationReducer";
 import { useKeyboardActive } from "@/hooks";
 import moment from "moment";
-import { updateDeliverOrder } from "@/models/updateDeliveryOrder";
+import { UpdateDeliverOrder } from "@/models/updateDeliveryOrder";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import { uploadFileImage } from "@/actions/CommonActions";
 import { OperationFileType } from "@/interfaces/Operation";
@@ -260,7 +260,7 @@ function SubmitForm() {
                     outsideClickClosePopUp: false
                 })
             );
-            const payload = {} as updateDeliverOrder;
+            const payload = {} as UpdateDeliverOrder;
             const photoFilestoUpload = operationData.photoFiles
                 ?.filter((v) => v.file !== null)
                 ?.map((photo) => ({

@@ -9,7 +9,7 @@ import BSpacer from "@/components/atoms/BSpacer";
 import BDivider from "@/components/atoms/BDivider";
 import PriceListShimmer from "./PriceListShimmer";
 
-interface productsData {
+interface ProductsData {
     display_name?: string;
     calcPrice: number;
     properties: {
@@ -44,7 +44,7 @@ interface ProductListProps<ArrayOfObject> {
     disablePressed?: boolean;
 }
 
-function ProductList<ArrayOfObject extends productsData>({
+function ProductList<ArrayOfObject extends ProductsData>({
     products,
     onEndReached,
     refreshing,
@@ -58,7 +58,7 @@ function ProductList<ArrayOfObject extends productsData>({
     onAction,
     disablePressed = false
 }: ProductListProps<ArrayOfObject>) {
-    const renderItem: ListRenderItem<productsData> = useCallback(({ item }) => {
+    const renderItem: ListRenderItem<ProductsData> = useCallback(({ item }) => {
         const fc =
             item?.properties?.fc?.length > 0
                 ? ` / FC${item.properties.fc}`

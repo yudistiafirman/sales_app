@@ -14,7 +14,7 @@ import commonReducer from "./reducers/commonReducer";
 import locationReducer from "./reducers/locationReducer";
 import modalReducer from "./reducers/modalReducer";
 import operationReducer, {
-    operationInitState
+    OperationInitState
 } from "./reducers/operationReducer";
 import orderReducer from "./reducers/orderReducer";
 import productivityFlowReducer from "./reducers/productivityFlowReducer";
@@ -39,7 +39,7 @@ const rootReducer = combineReducers({
     order: orderReducer,
     snackbar: snackbarReducer,
     purchaseOrder: purchaseOrderReducer,
-    operation: persistReducer<operationInitState, any>(
+    operation: persistReducer<OperationInitState, any>(
         persistConfig,
         operationReducer
     ),

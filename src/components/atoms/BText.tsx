@@ -91,7 +91,7 @@ function BText({
             fontWeight: bold,
             fontFamily:
                 bold !== "normal" && bold !== "bold"
-                    ? fonts.family.montserrat[parseInt(bold)]
+                    ? fonts.family.montserrat[parseInt(bold, 10)]
                     : undefined
         };
 
@@ -104,7 +104,7 @@ function BText({
         ) {
             assignStyle = {
                 ...assignStyle,
-                fontFamily: fonts.family.montserrat[parseInt(bold)]
+                fontFamily: fonts.family.montserrat[parseInt(bold, 10)]
             };
         }
     }
