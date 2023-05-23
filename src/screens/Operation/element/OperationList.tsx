@@ -5,7 +5,7 @@ import { BEmptyState, BSpacer, BVisitationCard } from "@/components";
 import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { layout } from "@/constants";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import ENTRY_TYPE from "@/models/EnumModel";
 
 const style = StyleSheet.create({
     flatList: {

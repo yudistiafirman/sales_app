@@ -31,7 +31,7 @@ import {
     getVisitationTarget
 } from "@/actions/ProductivityActions";
 import debounce from "lodash.debounce";
-import { Api } from "@/models";
+import Api from "@/models";
 import { visitationDataType } from "@/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";

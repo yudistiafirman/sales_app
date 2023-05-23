@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import BrikApiCommon from "@/brikApi/BrikApiCommon";
-import { Api } from "@/models";
+import Api from "@/models";
 import { UserModel } from "@/models/User";
 import bStorage from "@/actions";
 import { storageKey } from "@/constants";

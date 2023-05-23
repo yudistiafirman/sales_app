@@ -24,8 +24,8 @@ import { BButtonPrimary, BHeaderIcon } from "@/components";
 import { layout } from "@/constants";
 import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
-import { LocalFileType } from "@/interfaces/LocalFileType";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import LocalFileType from "@/interfaces/LocalFileType";
+import ENTRY_TYPE from "@/models/EnumModel";
 import { UpdateDeliverOrder } from "@/models/updateDeliveryOrder";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {

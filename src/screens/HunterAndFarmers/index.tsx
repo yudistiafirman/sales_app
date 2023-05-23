@@ -16,7 +16,7 @@ import bStorage from "@/actions";
 import { BSpacer, BText } from "@/components";
 import { colors, layout } from "@/constants";
 import font from "@/constants/fonts";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import ENTRY_TYPE from "@/models/EnumModel";
 import {
     APPOINTMENT,
     HUNTER_AND_FARMER,

@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { colors } from "@/constants";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import ENTRY_TYPE from "@/models/EnumModel";
 import SalesHeaderRight from "@/navigation/Sales/HeaderRight";
 import {
     SECURITY_TAB_TITLE,

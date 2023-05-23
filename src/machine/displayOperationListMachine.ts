@@ -1,7 +1,7 @@
 import { assign, createMachine } from "xstate";
 import { getAllDeliveryOrders } from "@/actions/OrderActions";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import ENTRY_TYPE from "@/models/EnumModel";
 
 const displayOperationListMachine = createMachine(
     {
