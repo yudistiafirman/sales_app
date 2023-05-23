@@ -8,10 +8,10 @@ import {
     ActivityIndicator,
     TextStyle
 } from "react-native";
-import { layout } from "@/constants";
 import colors from "@/constants/colors";
 import font from "@/constants/fonts";
 import resScale from "@/utils/resScale";
+import { layout } from "@/constants";
 
 const style = StyleSheet.create({
     buttonContainer: {
@@ -71,6 +71,17 @@ export default function BButtonPrimary({
     emptyIconEnable = false,
     isLoading
 }: BButtonPrimaryType) {
+    // const [showSpinner, setShowSpinner] = useState(false);
+    let clicked = "0";
+
+    const handlePress = async () => {
+        clicked = "1";
+        // setShowSpinner(true);
+        await onPress();
+        clicked = "0";
+        // setShowSpinner(false);
+    };
+
     return (
         <View pointerEvents={isLoading ? "none" : "auto"}>
             <TouchableOpacity
@@ -80,7 +91,7 @@ export default function BButtonPrimary({
                     isOutline && style.outlineButton,
                     disable && style.disableStyle
                 ]}
-                onPress={onPress}
+                onPress={clicked === "1" ? undefined : handlePress}
                 disabled={disable}
             >
                 <View>{leftIcon && leftIcon()}</View>
@@ -90,7 +101,7 @@ export default function BButtonPrimary({
                     )}
                 </>
                 {isLoading ? (
-                    <ActivityIndicator size={resScale(24)} color="white" />
+                    <ActivityIndicator size={resScale(24)} color={"white"} />
                 ) : (
                     <Text
                         style={[

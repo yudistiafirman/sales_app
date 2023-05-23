@@ -10,6 +10,7 @@ export const TAB_WB_IN = "TAB.WB_IN";
 export const TAB_HOME = "TAB.HOME";
 export const TAB_TRANSACTION = "TAB.TRANSACTION";
 export const TAB_PROFILE = "TAB.PROFILE";
+export const TAB_CUSTOMER = "TAB.CUSTOMER";
 export const TAB_PRICE_LIST = "TAB.PRICE_LIST";
 
 export const SPLASH = "SPLASH";
@@ -32,7 +33,9 @@ export const LOCATION = "LOCATION";
 export const SEARCH_AREA = "SEARCH_AREA";
 export const CALENDAR = "CALENDAR";
 export const TRANSACTION_DETAIL = "TRANSACTION_DETAIL";
-export const CUSTOMER_DETAIL = "CUSTOMER_DETAIL";
+export const CUSTOMER_DETAIL_V1 = "CUSTOMER_DETAIL_V1";
+export const CUSTOMER_DETAIL_V2 = "CUSTOMER_CUSTOMER_V2";
+export const CUSTOMER_DOCUMENT = "CUSTOMER_DOCUMENT";
 export const CREATE_SCHEDULE = "CREATE_SCHEDULE";
 export const CREATE_DEPOSIT = "CREATE_DEPOSIT";
 export const GALLERY_DEPOSIT = "GALLERY_DEPOSIT";
@@ -59,6 +62,7 @@ export const TAB_WB_OUT_TITLE = "Keberangkatan";
 export const TAB_WB_IN_TITLE = "Kedatangan";
 export const TAB_DISPATCH_TITLE = "Keberangkatan";
 export const TAB_RETURN_TITLE = "Kedatangan";
+export const TAB_CUSTOMER_TITLE = "Pelanggan";
 
 export const SALES_TAB_TITLE = "Beranda";
 export const SECURITY_TAB_TITLE = "Beranda";
@@ -68,6 +72,7 @@ export const DRIVER_TITLE = "Beranda";
 
 export const LOGIN_TITLE = "Log in";
 export const VERIFICATION_TITLE = "Kode Verifikasi";
+export const LIST_CUSTOMER = "List Pelanggan";
 export const CAMERA_TITLE = "Camera";
 export const IMAGE_PREVIEW_TITLE = "Image Preview";
 export const SCHEDULE_TITLE = "Schedule";

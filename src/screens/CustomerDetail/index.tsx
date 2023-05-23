@@ -1,12 +1,3 @@
-import { ProgressBar } from "@react-native-community/progress-bar-android";
-import crashlytics from "@react-native-firebase/crashlytics";
-import {
-    RouteProp,
-    useFocusEffect,
-    useNavigation,
-    useRoute
-} from "@react-navigation/native";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
     View,
     Text,
@@ -14,11 +5,8 @@ import {
     ScrollView,
     DeviceEventEmitter
 } from "react-native";
-import { useDispatch } from "react-redux";
-import {
-    getProjectIndivualDetail,
-    projectGetOneById
-} from "@/actions/CommonActions";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { colors, fonts } from "@/constants";
 import {
     BContainer,
     BPic,
@@ -26,60 +14,32 @@ import {
     BSpinner,
     BTouchableText
 } from "@/components";
-import { colors, fonts } from "@/constants";
-import { ProjectDetail, visitationListResponse } from "@/interfaces";
-import { RootStackParamList } from "@/navigation/CustomStateComponent";
+import ProjectBetween from "./elements/ProjectBetween";
+import { ProgressBar } from "@react-native-community/progress-bar-android";
+import BillingModal from "./elements/BillingModal";
+import crashlytics from "@react-native-firebase/crashlytics";
 import {
-    CUSTOMER_DETAIL,
+    CUSTOMER_DETAIL_V1,
     DOCUMENTS,
     VISIT_HISTORY
 } from "@/navigation/ScreenNames";
-import { resetRegion } from "@/redux/reducers/locationReducer";
-import { openPopUp } from "@/redux/reducers/modalReducer";
+import {
+    RouteProp,
+    useFocusEffect,
+    useNavigation,
+    useRoute
+} from "@react-navigation/native";
+import { projectGetOneById } from "@/actions/CommonActions";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import formatCurrency from "@/utils/formatCurrency";
-import UpdatedAddressWrapper from "./elements/UpdatedAddressWrapper";
-import ProjectBetween from "./elements/ProjectBetween";
+import { openPopUp } from "@/redux/reducers/modalReducer";
+import { resetRegion } from "@/redux/reducers/locationReducer";
+import { RootStackParamList } from "@/navigation/CustomStateComponent";
+import { ProjectDetail, visitationListResponse } from "@/interfaces";
 import DocumentWarning from "./elements/DocumentWarning";
-import BillingModal from "./elements/BillingModal";
+import UpdatedAddressWrapper from "./elements/UpdatedAddressWrapper";
 import AddNewAddressWrapper from "./elements/AddNewAddressWrapper";
-
-const styles = StyleSheet.create({
-    partText: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[600],
-        fontSize: fonts.size.md
-    },
-    between: {
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-
-    fontW300: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[300],
-        fontSize: fonts.size.md
-    },
-    fontW400: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.md
-    },
-    billingStyle: {
-        alignItems: "center"
-    },
-
-    loading: {
-        justifyContent: "center",
-        alignItems: "center",
-        flex: 1
-    },
-    seeAllText: {
-        color: colors.primary,
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.sm
-    }
-});
+import formatCurrency from "@/utils/formatCurrency";
 
 type CustomerDetailRoute = RouteProp<RootStackParamList["CUSTOMER_DETAIL"]>;
 
@@ -104,19 +64,20 @@ export default function CustomerDetail() {
     const documentsNotCompleted = customerData?.ProjectDocs?.length !== 8;
     const updatedAddressBilling = billingAddress?.length > 0;
     const updateAddressProject = projectAddress?.length > 0;
+
     const getProjectDetail = useCallback(
         async (projectId: string) => {
             try {
                 const response = await projectGetOneById(projectId);
                 setCustomerData(response.data.data);
                 if (response.data.data) {
-                    const regionBilling: any = {
+                    let regionBilling: any = {
                         formattedAddress:
                             response.data.data.BillingAddress?.line1,
                         latitude: response.data.data.BillingAddress?.lat,
                         longitude: response.data.data.BillingAddress?.lon
                     };
-                    const regionProject: any = {
+                    let regionProject: any = {
                         formattedAddress:
                             response.data.data.LocationAddress?.line1,
                         latitude: response.data.data.LocationAddress?.lat,
@@ -132,7 +93,6 @@ export default function CustomerDetail() {
                     );
                 }
             } catch (error) {
-                console.log(error.message);
                 dispatch(
                     openPopUp({
                         popUpType: "error",
@@ -146,46 +106,8 @@ export default function CustomerDetail() {
         [dispatch]
     );
 
-    const getProjectIndividual = useCallback(
-        async (projectId: string) => {
-            try {
-                const response = await getProjectIndivualDetail(projectId);
-                setCustomerData(response.data);
-                if (response.data) {
-                    const regionBilling: any = {
-                        formattedAddress: response.data.BillingAddress?.line1,
-                        latitude: response.data.BillingAddress?.lat,
-                        longitude: response.data.BillingAddress?.lon
-                    };
-                    const regionProject: any = {
-                        formattedAddress: response.data.LocationAddress?.line1,
-                        latitude: response.data.LocationAddress?.lat,
-                        longitude: response.data.LocationAddress?.lon
-                    };
-                    setExistingRegion(regionBilling);
-                    setExistingProject(regionProject);
-                    setFormattedBillingAddress(
-                        response.data.data.BillingAddress?.line1
-                    );
-                    setFormattedProjectAddress(
-                        response.data.data.LocationAddress?.line1
-                    );
-                }
-            } catch (error) {
-                dispatch(
-                    openPopUp({
-                        popUpType: "error",
-                        highlightedText: "Error",
-                        popUpText: "Error fetching visitation Data",
-                        outsideClickClosePopUp: true
-                    })
-                );
-            }
-        },
-        [dispatch]
-    );
     React.useEffect(() => {
-        crashlytics().log(CUSTOMER_DETAIL);
+        crashlytics().log(CUSTOMER_DETAIL_V1);
         dispatch(resetRegion());
         if (route?.params) {
             const { existingVisitation } = route.params;
@@ -193,7 +115,7 @@ export default function CustomerDetail() {
             const { id } = existingVisitation.project;
             getProjectDetail(id);
         }
-    }, [dispatch, getProjectDetail, getProjectIndividual, route.params]);
+    }, [dispatch, getProjectDetail, route.params]);
 
     useFocusEffect(
         useCallback(() => {
@@ -201,7 +123,7 @@ export default function CustomerDetail() {
                 const { id } = existedVisitation?.project;
                 getProjectDetail(id);
             }
-        }, [existedVisitation, getProjectDetail, getProjectIndividual])
+        }, [existedVisitation, getProjectDetail])
     );
 
     useEffect(() => {
@@ -258,10 +180,9 @@ export default function CustomerDetail() {
                     isModalVisible={isBillingLocationVisible}
                     region={region || regionExisting}
                     isUpdate={
-                        !!(
-                            billingAddress !== undefined &&
-                            billingAddress !== ""
-                        )
+                        billingAddress !== undefined && billingAddress !== ""
+                            ? true
+                            : false
                     }
                     setRegion={setRegion}
                     projectId={customerData.id}
@@ -275,10 +196,9 @@ export default function CustomerDetail() {
                     isModalVisible={isProjectLocationVisible}
                     region={project || projectExisting}
                     isUpdate={
-                        !!(
-                            projectAddress !== undefined &&
-                            projectAddress !== ""
-                        )
+                        projectAddress !== undefined && projectAddress !== ""
+                            ? true
+                            : false
                     }
                     setRegion={setProject}
                     projectId={customerData.id}
@@ -295,16 +215,16 @@ export default function CustomerDetail() {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <BContainer>
                     <Text style={styles.partText}>Pelanggan</Text>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <View style={styles.between}>
                         <Text style={styles.fontW300}>Nama</Text>
                         <Text style={styles.fontW400}>
                             {customerData?.displayName}
                         </Text>
                     </View>
-                    <BSpacer size="small" />
+                    <BSpacer size={"small"} />
                     <Text style={styles.partText}>Proyek</Text>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <ProjectBetween
                         onPress={() => {
                             navigation.navigate(VISIT_HISTORY, {
@@ -317,38 +237,41 @@ export default function CustomerDetail() {
                             name: customerData?.name
                         }}
                     />
-                    <BSpacer size="small" />
+                    <BSpacer size={"small"} />
                     <Text style={styles.partText}>Sisa Deposit</Text>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <View style={styles.between}>
                         <Text style={styles.fontW300}>
-                            {customerData?.availableDeposit
+                            {customerData?.Customer?.CustomerDeposit
+                                ?.availableDeposit
                                 ? formatCurrency(
                                       parseInt(
-                                          customerData.availableDeposit,
+                                          customerData?.Customer
+                                              ?.CustomerDeposit
+                                              ?.availableDeposit,
                                           10
                                       )
                                   )
                                 : "-"}
                         </Text>
                     </View>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <View style={styles.between}>
                         <Text style={styles.partText}>PIC</Text>
                         {/* <TouchableOpacity>
-              <Text style={styles.seeAllText}>Lihat Semua</Text>
-            </TouchableOpacity> */}
+                <Text style={styles.seeAllText}>Lihat Semua</Text>
+              </TouchableOpacity> */}
                     </View>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <BPic
                         name={customerData?.Pic?.name}
                         email={customerData?.Pic?.email}
                         phone={customerData?.Pic?.phone}
                         position={customerData?.Pic?.position}
                     />
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <Text style={styles.partText}>Alamat Penagihan</Text>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <View style={styles.billingStyle}>
                         {updatedAddressBilling ? (
                             <UpdatedAddressWrapper
@@ -366,9 +289,9 @@ export default function CustomerDetail() {
                             />
                         )}
                     </View>
-                    <BSpacer size="small" />
+                    <BSpacer size={"small"} />
                     <Text style={styles.partText}>Alamat Proyek</Text>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <View style={styles.billingStyle}>
                         {updateAddressProject ? (
                             <UpdatedAddressWrapper
@@ -386,7 +309,7 @@ export default function CustomerDetail() {
                             />
                         )}
                     </View>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <View style={styles.between}>
                         <Text style={styles.partText}>Dokumen</Text>
                         <BTouchableText
@@ -400,7 +323,7 @@ export default function CustomerDetail() {
                             }
                         />
                     </View>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <View style={styles.between}>
                         <Text style={styles.fontW300}>Kelengkapan Dokumen</Text>
                         <Text
@@ -418,3 +341,39 @@ export default function CustomerDetail() {
         </>
     );
 }
+const styles = StyleSheet.create({
+    partText: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[600],
+        fontSize: fonts.size.md
+    },
+    between: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+
+    fontW300: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[300],
+        fontSize: fonts.size.md
+    },
+    fontW400: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.md
+    },
+    billingStyle: {
+        alignItems: "center"
+    },
+
+    loading: {
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1
+    },
+    seeAllText: {
+        color: colors.primary,
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.sm
+    }
+});

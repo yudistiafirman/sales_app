@@ -1,10 +1,3 @@
-import crashlytics from "@react-native-firebase/crashlytics";
-import {
-    StackActions,
-    useNavigation,
-    useRoute
-} from "@react-navigation/native";
-import moment from "moment";
 import * as React from "react";
 import {
     SafeAreaView,
@@ -15,13 +8,11 @@ import {
     Platform,
     Share
 } from "react-native";
-import ReactNativeBlobUtil from "react-native-blob-util";
-import { ScrollView } from "react-native-gesture-handler";
-import RNPrint from "react-native-print";
-import Feather from "react-native-vector-icons/Feather";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useDispatch } from "react-redux";
-import { getVisitationOrderByID } from "@/actions/OrderActions";
+import {
+    StackActions,
+    useNavigation,
+    useRoute
+} from "@react-navigation/native";
 import {
     BDivider,
     BPic,
@@ -32,77 +23,25 @@ import {
     BNestedProductCard,
     BDepositCard
 } from "@/components";
-import { colors, fonts, layout } from "@/constants";
-import { PO_METHOD_LIST } from "@/constants/dropdown";
-import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
-import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
-import { LOCATION, TRANSACTION_DETAIL } from "@/navigation/ScreenNames";
-import { openPopUp } from "@/redux/reducers/modalReducer";
-import { AppDispatch } from "@/redux/store";
-import { resScale } from "@/utils";
+import { colors, fonts, layout } from "@/constants";
+import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
+import { ScrollView } from "react-native-gesture-handler";
 import { beautifyPhoneNumber } from "@/utils/generalFunc";
-
-const styles = StyleSheet.create({
-    modalFooter: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-around",
-        paddingVertical: layout.mainPad,
-        borderTopColor: colors.border,
-        borderTopWidth: resScale(0.5)
-        // flex: 1,
-        // backgroundColor: "blue"
-    },
-    footerButton: {
-        flex: 0.3,
-        alignItems: "center"
-    },
-    footerButtonText: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.sm
-    },
-    parent: {
-        flex: 1
-    },
-    flexRow: {
-        flexDirection: "row"
-    },
-    leftSide: {
-        flex: 1
-    },
-    icon: {
-        alignSelf: "center"
-    },
-    containerLastOrder: {
-        padding: layout.pad.lg,
-        borderRadius: layout.radius.md,
-        backgroundColor: colors.tertiary,
-        borderColor: colors.border.default,
-        borderWidth: 1
-    },
-    titleLastOrder: {
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.sm,
-        color: colors.text.darker
-    },
-    valueLastOrder: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[600],
-        fontSize: fonts.size.sm,
-        marginLeft: layout.pad.xl
-    },
-    contentDetail: {
-        padding: layout.mainPad,
-        flex: 1
-    },
-    partText: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[600],
-        fontSize: fonts.size.md
-    }
-});
+import moment from "moment";
+import { LOCATION, TRANSACTION_DETAIL } from "@/navigation/ScreenNames";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { getVisitationOrderByID } from "@/actions/OrderActions";
+import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
+import { PO_METHOD_LIST } from "@/constants/dropdown";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import ReactNativeBlobUtil from "react-native-blob-util";
+import RNPrint from "react-native-print";
+import { resScale } from "@/utils";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Feather from "react-native-vector-icons/Feather";
 
 function ListProduct(
     item: any,
@@ -116,7 +55,7 @@ function ListProduct(
     if (item.ReqProduct) {
         displayName = `${
             item?.ReqProduct?.product?.category?.parent
-                ? `${item?.ReqProduct?.product?.category?.parent?.name} `
+                ? item?.ReqProduct?.product?.category?.parent?.name + " "
                 : ""
         }${item?.ReqProduct?.product?.displayName} ${
             item?.ReqProduct?.product?.category
@@ -127,9 +66,9 @@ function ListProduct(
     } else if (item.Product) {
         displayName = `${
             item?.Product?.category?.parent?.name
-                ? `${item?.Product?.category?.parent?.name} `
+                ? item?.Product?.category?.parent?.name + " "
                 : item?.Product?.category?.parent?.na
-                ? `${item?.Product?.category?.parent?.na} `
+                ? item?.Product?.category?.parent?.na + " "
                 : ""
         }${item?.Product?.displayName} ${
             item?.Product?.category ? item?.Product?.category?.name : ""
@@ -139,7 +78,7 @@ function ListProduct(
             : item.offeringPrice;
     } else {
         displayName = `${
-            item?.category?.parent ? `${item?.category?.parent?.name} ` : ""
+            item?.category?.parent ? item?.category?.parent?.name + " " : ""
         }${item?.displayName} ${item?.category ? item?.category?.name : ""}`;
         pricePerlVol = item.offering_price
             ? item.offering_price
@@ -151,12 +90,13 @@ function ListProduct(
                 name={displayName}
                 pricePerVol={pricePerlVol}
                 volume={
-                    quantity ||
-                    (item.requestedQuantity
+                    quantity
+                        ? quantity
+                        : item.requestedQuantity
                         ? item.requestedQuantity
                         : item.quantity
                         ? item.quantity
-                        : 0)
+                        : 0
                 }
                 totalPrice={
                     isPoData
@@ -173,18 +113,22 @@ function ListProduct(
                         : item.unit
                 }
                 hideTotal={
-                    !(selectedType !== "Jadwal" && selectedType !== "DO")
+                    selectedType !== "Jadwal" && selectedType !== "DO"
+                        ? false
+                        : true
                 }
                 hidePricePerVolume={
-                    !(selectedType !== "Jadwal" && selectedType !== "DO")
+                    selectedType !== "Jadwal" && selectedType !== "DO"
+                        ? false
+                        : true
                 }
             />
-            <BSpacer size="extraSmall" />
+            <BSpacer size={"extraSmall"} />
         </View>
     );
 }
 
-function TransactionDetail() {
+const TransactionDetail = () => {
     const navigation = useNavigation();
     const route = useRoute<RootStackScreenProps>();
     const data = route?.params?.data;
@@ -217,15 +161,17 @@ function TransactionDetail() {
                     letter: data?.DepositFiles?.find((v: any) => v?.type == "")
                 });
             }
-        } else if (data?.QuotationLetterFiles) {
-            setDownloadFiles({
-                pos: data?.QuotationLetterFiles?.find(
-                    (v: any) => v?.type == "POS"
-                ),
-                letter: data?.QuotationLetterFiles?.find(
-                    (v: any) => v?.type == "LETTER"
-                )
-            });
+        } else {
+            if (data?.QuotationLetterFiles) {
+                setDownloadFiles({
+                    pos: data?.QuotationLetterFiles?.find(
+                        (v: any) => v?.type == "POS"
+                    ),
+                    letter: data?.QuotationLetterFiles?.find(
+                        (v: any) => v?.type == "LETTER"
+                    )
+                });
+            }
         }
     }, [data]);
 
@@ -243,8 +189,17 @@ function TransactionDetail() {
     const gotoSPHPage = async () => {
         try {
             let getData;
+            dispatch(
+                openPopUp({
+                    popUpType: "loading",
+                    popUpText: "Mendapatkan data SPH",
+                    highlightedText: "detail",
+                    outsideClickClosePopUp: false
+                })
+            );
             getData = await getVisitationOrderByID(data.QuotationLetter.id);
             getData = getData.data.data;
+            dispatch(closePopUp());
             navigation.dispatch(
                 StackActions.replace(TRANSACTION_DETAIL, {
                     title: getData ? getData.number : "N/A",
@@ -257,8 +212,8 @@ function TransactionDetail() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
-                        "Terjadi error saat perpindahan screen menuju ke halaman sph",
+                        error?.message ||
+                        "Terjadi error saat pengambilan SPH data",
                     outsideClickClosePopUp: true
                 })
             );
@@ -266,7 +221,7 @@ function TransactionDetail() {
     };
 
     const arrayQuotationLetter = () => {
-        const arrayQuote: QuotationRequests[] = [];
+        let arrayQuote: QuotationRequests[] = [];
         arrayQuote.push(data?.QuotationLetter?.QuotationRequest);
         return arrayQuote;
     };
@@ -282,7 +237,7 @@ function TransactionDetail() {
         setExpandData(newExpandedData);
     };
 
-    type DownloadType = {
+    type downloadType = {
         url?: string;
         title?: string;
         downloadPopup: () => void;
@@ -294,12 +249,12 @@ function TransactionDetail() {
         title,
         downloadPopup,
         downloadError
-    }: DownloadType) {
+    }: downloadType) {
         if (!url) {
             downloadError(undefined);
             return null;
         }
-        const { dirs } = ReactNativeBlobUtil.fs;
+        let dirs = ReactNativeBlobUtil.fs.dirs;
         const downloadTitle = title
             ? `${title} berhasil di download`
             : "PDF berhasil di download";
@@ -321,7 +276,7 @@ function TransactionDetail() {
                 : { fileCache: true }
         )
             .fetch("GET", url, {
-                // some headers ..
+                //some headers ..
             })
             .then((res) => {
                 // the temp file path
@@ -343,7 +298,7 @@ function TransactionDetail() {
                 filePath: url
             });
         } catch (error) {
-            printError(error.message);
+            printError(error?.message);
         }
     }
     const shareFunc = async (url?: string) => {
@@ -391,8 +346,15 @@ function TransactionDetail() {
                     data?.PoProducts?.length > 0
                 )
             );
+        } else {
+            return ListProduct(
+                productData,
+                0,
+                selectedType,
+                data?.quantity,
+                false
+            );
         }
-        return ListProduct(productData, 0, selectedType, data?.quantity, false);
     };
 
     const renderProductList = () => {
@@ -405,9 +367,9 @@ function TransactionDetail() {
             return (
                 <>
                     <Text style={styles.partText}>Produk</Text>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     {renderRequestedProducts()}
-                    <BSpacer size="small" />
+                    <BSpacer size={"small"} />
                 </>
             );
         }
@@ -425,14 +387,14 @@ function TransactionDetail() {
             return (
                 <>
                     <Text style={styles.partText}>PIC</Text>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <BPic
                         name={picData?.name}
                         position={picData?.position}
                         phone={beautifyPhoneNumber(picData?.phone)}
                         email={picData?.email}
                     />
-                    <BSpacer size="small" />
+                    <BSpacer size={"small"} />
                 </>
             );
         }
@@ -489,7 +451,7 @@ function TransactionDetail() {
                 <View style={styles.contentDetail}>
                     {renderPic()}
                     <Text style={styles.partText}>Rincian</Text>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <BProjectDetailCard
                         status={data?.status || data?.QuotationRequest?.status}
                         paymentMethod={
@@ -557,31 +519,24 @@ function TransactionDetail() {
                                 ? moment(data?.date).format("HH:mm")
                                 : undefined
                         }
-                        scheduleMethod={
-                            data?.withPump !== undefined
-                                ? data?.withPump === true
-                                    ? PO_METHOD_LIST[0].label
-                                    : PO_METHOD_LIST[1].label
-                                : undefined
-                        }
+                        deliveredQty={data?.deliveredQuantity}
+                        scheduleMethod={data?.pouringMethod}
                         gotoSPHPage={() => gotoSPHPage()}
-                        tmNumber={
-                            selectedType === "DO"
-                                ? data?.tmNumber
-                                    ? data?.tmNumber
-                                    : "-"
+                        tmNumber={route?.params?.vehicleName}
+                        driverName={route?.params?.driverName}
+                        consecutive={
+                            selectedType === "Jadwal"
+                                ? data?.consecutive
                                 : undefined
                         }
-                        driverName={
-                            selectedType === "DO"
-                                ? data?.driverName
-                                    ? data?.driverName
-                                    : "-"
+                        technical={
+                            selectedType === "Jadwal"
+                                ? data?.withTechnician
                                 : undefined
                         }
-                        useBEStatus={selectedType !== "SPH"}
+                        useBEStatus={selectedType === "SPH" ? false : true}
                     />
-                    <BSpacer size="small" />
+                    <BSpacer size={"small"} />
                     {selectedType === "Deposit" ? (
                         <BNestedProductCard
                             withoutHeader={false}
@@ -598,7 +553,7 @@ function TransactionDetail() {
                         selectedType === "Jadwal") && (
                         <>
                             <BDivider />
-                            <BSpacer size="small" />
+                            <BSpacer size={"small"} />
                             <BDepositCard
                                 firstSectionText={
                                     selectedType === "Jadwal"
@@ -637,7 +592,7 @@ function TransactionDetail() {
                                         ? "Est. Sisa Deposit"
                                         : "Deposit Akhir"
                                 }
-                                isSum={selectedType !== "Jadwal"}
+                                isSum={selectedType === "Jadwal" ? false : true}
                             />
                         </>
                     )}
@@ -730,6 +685,67 @@ function TransactionDetail() {
             </ScrollView>
         </SafeAreaView>
     );
-}
+};
+
+const styles = StyleSheet.create({
+    modalFooter: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-around",
+        paddingVertical: layout.mainPad,
+        borderTopColor: colors.border,
+        borderTopWidth: resScale(0.5)
+        // flex: 1,
+        // backgroundColor: "blue"
+    },
+    footerButton: {
+        flex: 0.3,
+        alignItems: "center"
+    },
+    footerButtonText: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.sm
+    },
+    parent: {
+        flex: 1
+    },
+    flexRow: {
+        flexDirection: "row"
+    },
+    leftSide: {
+        flex: 1
+    },
+    icon: {
+        alignSelf: "center"
+    },
+    containerLastOrder: {
+        padding: layout.pad.lg,
+        borderRadius: layout.radius.md,
+        backgroundColor: colors.tertiary,
+        borderColor: colors.border.default,
+        borderWidth: 1
+    },
+    titleLastOrder: {
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.sm,
+        color: colors.text.darker
+    },
+    valueLastOrder: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[600],
+        fontSize: fonts.size.sm,
+        marginLeft: layout.pad.xl
+    },
+    contentDetail: {
+        padding: layout.mainPad,
+        flex: 1
+    },
+    partText: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[600],
+        fontSize: fonts.size.md
+    }
+});
 
 export default TransactionDetail;

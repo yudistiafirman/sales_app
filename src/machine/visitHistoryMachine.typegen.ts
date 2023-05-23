@@ -8,6 +8,10 @@ export interface Typegen0 {
             data: unknown;
             __tip: "See the XState TS docs to learn how to strongly type this.";
         };
+        "error.platform.visit history machine.getVisitationByProjectId:invocation[0]": {
+            type: "error.platform.visit history machine.getVisitationByProjectId:invocation[0]";
+            data: unknown;
+        };
         "xstate.init": { type: "xstate.init" };
     };
     invokeSrcNameMap: {
@@ -20,17 +24,19 @@ export interface Typegen0 {
         services: never;
     };
     eventsCausingActions: {
+        assignError: "error.platform.visit history machine.getVisitationByProjectId:invocation[0]";
         assignProjectIdToContext: "assignParams";
         assignVisitationDataToContext: "done.invoke.visit history machine.getVisitationByProjectId:invocation[0]";
+        onRetryGettingData: "retryGettingData";
         sliceVisitationData: "onChangeVisitationIdx";
     };
     eventsCausingDelays: {};
     eventsCausingGuards: {};
     eventsCausingServices: {
-        getAllVisitationByProjectId: "assignParams";
+        getAllVisitationByProjectId: "assignParams" | "retryGettingData";
     };
     matchesStates:
-        | "ErrorState"
+        | "errorGettingData"
         | "getVisitationByProjectId"
         | "idle"
         | "visitationDataLoaded";

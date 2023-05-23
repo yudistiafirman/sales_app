@@ -1,17 +1,11 @@
-import { useMachine } from "@xstate/react";
 import * as React from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import { BCommonSearchList } from "@/components";
-import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
-import { PurchaseOrdersData } from "@/interfaces/SelectConfirmedPO";
+import { useMachine } from "@xstate/react";
 import { searchPOMachine } from "@/machine/searchPOMachine";
 import SelectedPOModal from "./element/SelectedPOModal";
-
-const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1
-    }
-});
+import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
+import { PurchaseOrdersData } from "@/interfaces/SelectConfirmedPO";
 
 interface IProps {
     dataToGet: "SPHDATA" | "DEPOSITDATA" | "SCHEDULEDATA";
@@ -20,12 +14,12 @@ interface IProps {
     onDismiss?: () => void;
 }
 
-function SelectPurchaseOrderData({
+const SelectPurchaseOrderData = ({
     dataToGet,
     onSubmitData,
     onDismiss,
     filterSphDataBy
-}: IProps) {
+}: IProps) => {
     const [index, setIndex] = React.useState(0);
     const [state, send] = useMachine(searchPOMachine);
     const [searchQuery, setSearchQuery] = React.useState("");
@@ -47,7 +41,7 @@ function SelectPurchaseOrderData({
     }, [dataToGet]);
 
     const getDataToDisplayInsideModal = () => {
-        const companyName = choosenDataFromList?.name;
+        let companyName = choosenDataFromList?.name;
         let locationName;
         let listData;
         let projectId;
@@ -65,19 +59,15 @@ function SelectPurchaseOrderData({
             listData = choosenDataFromList?.PurchaseOrders;
         }
         projectId = choosenDataFromList?.id;
-        return {
-            companyName,
-            locationName,
-            listData,
-            projectId
-        };
+        return { companyName, locationName, listData, projectId };
     };
 
     const getDataToDisplay = () => {
         if (dataToGet === "DEPOSITDATA" || dataToGet === "SCHEDULEDATA") {
-            return poData;
+            return poData.filter((it) => it.PurchaseOrders?.length > 0);
+        } else {
+            return sphData.filter((it) => it.QuotationRequests?.length > 0);
         }
-        return sphData;
     };
     const { companyName, locationName, listData, projectId } =
         getDataToDisplayInsideModal();
@@ -118,11 +108,11 @@ function SelectPurchaseOrderData({
             <BCommonSearchList
                 searchQuery={searchQuery}
                 onChangeText={onChangeText}
-                placeholder="Cari PT / Proyek"
+                placeholder={"Cari PT / Proyek"}
                 onClearValue={onClearValue}
                 index={index}
                 routes={routes}
-                autoFocus
+                autoFocus={true}
                 emptyText={`${searchQuery} tidak ditemukan!`}
                 onIndexChange={setIndex}
                 data={getDataToDisplay()}
@@ -140,6 +130,12 @@ function SelectPurchaseOrderData({
             />
         </SafeAreaView>
     );
-}
+};
+
+const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1
+    }
+});
 
 export default SelectPurchaseOrderData;

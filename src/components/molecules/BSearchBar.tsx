@@ -1,10 +1,10 @@
-import * as React from "react";
-import { TextStyle, ViewStyle } from "react-native";
-import { TextInput } from "react-native-paper";
 import { layout } from "@/constants";
 import colors from "@/constants/colors";
 import font from "@/constants/fonts";
 import { resScale } from "@/utils";
+import * as React from "react";
+import { TextStyle, ViewStyle } from "react-native";
+import { TextInput } from "react-native-paper";
 
 interface BSearchBarProp {
     mode?: "flat" | "outlined" | undefined;
@@ -25,6 +25,7 @@ interface BSearchBarProp {
     outlineStyle?: ViewStyle | undefined;
     placeHolderTextColor?: string | undefined;
     textColor?: string | undefined;
+    bgColor?: string;
     dense?: boolean | undefined;
     autoFocus?: boolean;
     onFocus?: () => void;
@@ -53,7 +54,7 @@ const BSearchBarDefaultProps = {
     dense: true
 };
 
-function BSearchBar({
+const BSearchBar = ({
     mode,
     left,
     right,
@@ -73,9 +74,10 @@ function BSearchBar({
     placeHolderTextColor,
     textColor,
     dense,
+    bgColor,
     autoFocus,
     onFocus
-}: BSearchBarProp & typeof BSearchBarDefaultProps) {
+}: BSearchBarProp & typeof BSearchBarDefaultProps) => {
     return (
         <TextInput
             onFocus={onFocus}
@@ -93,7 +95,7 @@ function BSearchBar({
             secureTextEntry={secureTextEntry}
             activeOutlineColor={activeOutlineColor}
             outlineColor={outlineColor}
-            style={[textInputStyle, { backgroundColor: colors.white }]}
+            style={[textInputStyle, { backgroundColor: bgColor }]}
             editable={editable}
             outlineStyle={outlineStyle}
             textColor={textColor}
@@ -101,7 +103,7 @@ function BSearchBar({
             dense={dense}
         />
     );
-}
+};
 
 BSearchBar.defaultProps = BSearchBarDefaultProps;
 

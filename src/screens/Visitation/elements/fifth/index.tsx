@@ -1,10 +1,6 @@
-import crashlytics from "@react-native-firebase/crashlytics";
-import { StackActions, useNavigation } from "@react-navigation/native";
-import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 import { DeviceEventEmitter } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { BGallery, PopUpQuestion } from "@/components";
+import LastStepPopUp from "../LastStepPopUp";
 import {
     locationPayloadType,
     payloadPostType,
@@ -12,33 +8,37 @@ import {
     projectPayloadType,
     visitationPayload
 } from "@/interfaces";
-import {
-    CAMERA,
-    CREATE_VISITATION,
-    GALLERY_VISITATION,
-    SPH
-} from "@/navigation/ScreenNames";
+import { useDispatch, useSelector } from "react-redux";
 import { postUploadFiles } from "@/redux/async-thunks/commonThunks";
 import {
     postVisitation,
     putVisitationFlow
 } from "@/redux/async-thunks/productivityFlowThunks";
-import {
-    deleteImagesVisitation,
-    resetVisitationState,
-    updateDataVisitation,
-    VisitationGlobalState
-} from "@/redux/reducers/VisitationReducer";
+import { RootState } from "@/redux/store";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import {
     deleteImage,
     resetImageURLS,
     setuploadedFilesResponse
 } from "@/redux/reducers/cameraReducer";
 import { openPopUp } from "@/redux/reducers/modalReducer";
-import { RootState } from "@/redux/store";
-import LastStepPopUp from "../LastStepPopUp";
+import moment from "moment";
+import {
+    CAMERA,
+    CREATE_VISITATION,
+    GALLERY_VISITATION,
+    SPH
+} from "@/navigation/ScreenNames";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { BGallery, PopUpQuestion } from "@/components";
+import {
+    deleteImagesVisitation,
+    resetVisitationState,
+    updateDataVisitation,
+    VisitationGlobalState
+} from "@/redux/reducers/VisitationReducer";
 
-export type SelectedDateType = {
+export type selectedDateType = {
     date: string;
     prettyDate: string;
     day: string;
@@ -136,11 +136,13 @@ function payloadMapper(
         payload.visitation.rejectNotes = values.alasanPenolakan;
     }
     if (values.products && values.products.length > 0) {
-        payload.visitation.products = values.products?.map((product) => ({
-            id: product.id,
-            quantity: product.quantity,
-            pouringMethod: product.pouringMethod
-        }));
+        payload.visitation.products = values.products?.map((product) => {
+            return {
+                id: product.id,
+                quantity: product.quantity,
+                pouringMethod: product.pouringMethod
+            };
+        });
     }
     if (values.projectName) {
         payload.project.name = values.projectName;
@@ -162,7 +164,7 @@ function payloadMapper(
     // if (values.currentCompetitor) {
     //   payload.visitation.competitors = [values.currentCompetitor];
     // }
-    payload.visitation.isBooking = type === "VISIT";
+    payload.visitation.isBooking = type === "VISIT" ? true : false;
 
     if (values.visitationId) {
         payload.visitation.visitationId = values.visitationId;
@@ -182,7 +184,8 @@ function payloadMapper(
     return payload;
 }
 
-function Fifth() {
+const Fifth = () => {
+    let clicked = "0";
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { isUploadLoading, isPostVisitationLoading } = useSelector(
@@ -211,7 +214,7 @@ function Fifth() {
     };
 
     useEffect(() => {
-        crashlytics().log(`${CREATE_VISITATION}-Step5`);
+        crashlytics().log(CREATE_VISITATION + "-Step5");
     }, [visitationData.images]);
 
     useEffect(() => {
@@ -227,7 +230,7 @@ function Fifth() {
         });
         DeviceEventEmitter.addListener(
             "CalendarScreen.selectedDate",
-            (date: SelectedDateType) => {
+            (date: selectedDateType) => {
                 onChange("selectedDate")(date);
                 setIsLastStepVisible((curr) => !curr);
             }
@@ -247,109 +250,139 @@ function Fifth() {
 
     const onPressSubmit = useCallback(
         async (type: "VISIT" | "SPH" | "REJECTED" | "") => {
+            setIsLastStepVisible(false);
+            dispatch(
+                openPopUp({
+                    popUpType: "loading",
+                    popUpText: "Menambahkan Jadwal Kunjungan",
+                    highlightedText: "Jadwal Kunjungan",
+                    outsideClickClosePopUp: false
+                })
+            );
+
+            let payload: payloadPostType = payloadMapper(visitationData, type);
+
+            const visitationMethod = {
+                POST: postVisitation,
+                PUT: putVisitationFlow
+            };
+            const isDataUpdate = !!payload?.visitation?.id;
+            const methodStr = isDataUpdate ? "PUT" : "POST";
+
             try {
-                const payload: payloadPostType = payloadMapper(
-                    visitationData,
-                    type
-                );
-
-                const visitationMethod = {
-                    POST: postVisitation,
-                    PUT: putVisitationFlow
-                };
-                const isDataUpdate = !!payload?.visitation?.id;
-                const methodStr = isDataUpdate ? "PUT" : "POST";
-
-                if (uploadedFilesResponse.length === 0) {
-                    const photoFiles = visitationData.images
-                        ?.filter((v, i) => v.file !== null)
-                        .map((photo) => ({
-                            ...photo.file,
-                            uri: photo?.file?.uri?.replace("file:", "file://")
-                        }));
-                    const data = await dispatch(
-                        postUploadFiles({
-                            files: photoFiles,
-                            from: "visitation"
-                        })
-                    ).unwrap();
-                    const files: { id: string; type: "GALLERY" | "COVER" }[] =
-                        [];
-                    data.forEach((photo: any) => {
-                        const photoName = `${photo.name}.${photo.type}`;
-                        const photoNamee = `${photo.name}.jpg`;
-                        const foundObject = visitationData.images?.find(
-                            (obj) =>
-                                obj?.file?.name === photoName ||
-                                obj?.file?.name === photoNamee
-                        );
-                        if (foundObject) {
-                            files.push({
-                                id: photo.id,
-                                type: foundObject.type
+                setTimeout(async () => {
+                    if (clicked === "0") {
+                        clicked = "1";
+                        if (uploadedFilesResponse.length === 0) {
+                            const photoFiles = visitationData.images
+                                ?.filter((v, i) => v.file !== null)
+                                .map((photo) => {
+                                    return {
+                                        ...photo.file,
+                                        uri: photo?.file?.uri?.replace(
+                                            "file:",
+                                            "file://"
+                                        )
+                                    };
+                                });
+                            console.log("kennaaaa");
+                            const data = await dispatch(
+                                postUploadFiles({
+                                    files: photoFiles,
+                                    from: "visitation"
+                                })
+                            ).unwrap();
+                            const files: {
+                                id: string;
+                                type: "GALLERY" | "COVER";
+                            }[] = [];
+                            data.forEach((photo: any) => {
+                                const photoName = `${photo.name}.${photo.type}`;
+                                const photoNamee = `${photo.name}.jpg`;
+                                const foundObject = visitationData.images?.find(
+                                    (obj) =>
+                                        obj?.file?.name === photoName ||
+                                        obj?.file?.name === photoNamee
+                                );
+                                if (foundObject) {
+                                    files.push({
+                                        id: photo.id,
+                                        type: foundObject.type
+                                    });
+                                }
                             });
-                        }
-                    });
-                    dispatch(setuploadedFilesResponse(files));
-                    payload.files = files;
-                    const payloadData: {
-                        payload: payloadPostType;
-                        visitationId?: string;
-                    } = {
-                        payload
-                    };
-                    if (payload?.visitation?.id) {
-                        payloadData.visitationId = payload?.visitation?.id;
-                    }
+                            dispatch(setuploadedFilesResponse(files));
+                            payload.files = files;
+                            const payloadData: {
+                                payload: payloadPostType;
+                                visitationId?: string;
+                            } = {
+                                payload
+                            };
+                            if (payload?.visitation?.id) {
+                                payloadData.visitationId =
+                                    payload?.visitation?.id;
+                            }
 
-                    const response = await dispatch(
-                        visitationMethod[methodStr](payloadData)
-                    ).unwrap();
-                    setIsLastStepVisible(false);
-                    if (type === "SPH") {
-                        navigation.dispatch(
-                            StackActions.replace(SPH, {
-                                projectId: response.projectId
+                            const response = await dispatch(
+                                visitationMethod[methodStr](payloadData)
+                            ).unwrap();
+                            if (type === "SPH") {
+                                navigation.dispatch(
+                                    StackActions.replace(SPH, {
+                                        projectId: response.projectId
+                                    })
+                                );
+                            } else {
+                                if (navigation.canGoBack()) {
+                                    navigation.dispatch(
+                                        StackActions.popToTop()
+                                    );
+                                }
+                            }
+                        } else {
+                            payload.files = uploadedFilesResponse;
+                            const payloadData: {
+                                payload: payloadPostType;
+                                visitationId?: string;
+                            } = {
+                                payload
+                            };
+                            if (payload?.visitation?.id) {
+                                payloadData.visitationId =
+                                    payload?.visitation?.id;
+                            }
+                            const response = await dispatch(
+                                visitationMethod[methodStr](payloadData)
+                            ).unwrap();
+                            if (type === "SPH") {
+                                navigation.dispatch(
+                                    StackActions.replace(SPH, {
+                                        projectId: response.projectId
+                                    })
+                                );
+                            } else {
+                                if (navigation.canGoBack()) {
+                                    navigation.dispatch(
+                                        StackActions.popToTop()
+                                    );
+                                }
+                            }
+                        }
+                        dispatch(resetImageURLS({ source: CREATE_VISITATION }));
+                        dispatch(resetVisitationState());
+                        dispatch(
+                            openPopUp({
+                                popUpType: "success",
+                                popUpText:
+                                    "Penambahan Jadwal Kunjungan\nBerhasil",
+                                highlightedText: "Jadwal Kunjungan",
+                                outsideClickClosePopUp: true
                             })
                         );
-                    } else {
-                        navigation.goBack();
+                        clicked = "0";
                     }
-                } else {
-                    payload.files = uploadedFilesResponse;
-                    const payloadData: {
-                        payload: payloadPostType;
-                        visitationId?: string;
-                    } = {
-                        payload
-                    };
-                    if (payload?.visitation?.id) {
-                        payloadData.visitationId = payload?.visitation?.id;
-                    }
-                    const response = await dispatch(
-                        visitationMethod[methodStr](payloadData)
-                    ).unwrap();
-                    setIsLastStepVisible(false);
-                    if (type === "SPH") {
-                        navigation.dispatch(
-                            StackActions.replace(SPH, {
-                                projectId: response.projectId
-                            })
-                        );
-                    } else {
-                        navigation.goBack();
-                    }
-                }
-                dispatch(resetImageURLS({ source: CREATE_VISITATION }));
-                dispatch(resetVisitationState());
-                dispatch(
-                    openPopUp({
-                        popUpType: "success",
-                        popUpText: "Berhasil membuat jadwal kunjungan",
-                        highlightedText: "visitation",
-                        outsideClickClosePopUp: true
-                    })
-                );
+                }, 500);
             } catch (error: any) {
                 const message =
                     error.message || "Error membuat jadwal kunjungan";
@@ -361,10 +394,11 @@ function Fifth() {
                         outsideClickClosePopUp: true
                     })
                 );
+                clicked = "0";
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [visitationData]
+        []
     );
 
     return (
@@ -397,7 +431,7 @@ function Fifth() {
                     areaOnChange: onChange("alasanPenolakan"),
                     areaValue: visitationData.alasanPenolakan
                 }}
-                onPressSubmit={onPressSubmit}
+                onPressSubmit={clicked === "0" ? onPressSubmit : undefined}
                 isLoading={isPostVisitationLoading || isUploadLoading}
             />
             <BGallery
@@ -415,6 +449,6 @@ function Fifth() {
             />
         </>
     );
-}
+};
 
 export default Fifth;

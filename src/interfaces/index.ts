@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
     StyleProp,
     ViewStyle,
@@ -7,8 +6,10 @@ import {
     KeyboardTypeOptions,
     NativeSyntheticEvent
 } from "react-native";
-import { DateData } from "react-native-calendars";
+
+import * as React from "react";
 import { Details } from "react-native-maps";
+import { DateData } from "react-native-calendars";
 
 interface Input {
     label?: string;
@@ -120,7 +121,7 @@ interface Input {
         value: any;
         onValueChange: (value: any) => void;
     };
-    onSelect?: (index: number | any) => void; // eg for pic radio
+    onSelect?: (index: number | any) => void; //eg for pic radio
     isInputDisable?: boolean;
     disableColor?: string;
     onClear?: () => void;
@@ -315,7 +316,7 @@ interface BLocationProps {
     formattedAddress?: string;
 }
 
-interface SelectedCompanyInterface {
+interface selectedCompanyInterface {
     id: string;
     name: string;
     Company:
@@ -347,7 +348,7 @@ interface SelectedCompanyInterface {
     Pic: PIC;
 }
 
-interface ChosenProductType {
+interface chosenProductType {
     product: ProductDataInterface;
     productId: string;
     categoryId: string;
@@ -367,7 +368,7 @@ interface ChosenProductType {
     };
 }
 
-type SelectedPicType = {
+type selectedPicType = {
     id?: string;
     name: string;
     phone: string;
@@ -376,7 +377,7 @@ type SelectedPicType = {
     isSelected?: boolean;
 } | null;
 
-type BillingAddressType = {
+type billingAddressType = {
     name: string;
     phone: string | number;
     addressAutoComplete: { [key: string]: any };
@@ -384,19 +385,19 @@ type BillingAddressType = {
 };
 
 interface SphStateInterface {
-    selectedCompany: SelectedCompanyInterface | null;
+    selectedCompany: selectedCompanyInterface | null;
     projectAddress: Address | null;
-    selectedPic: SelectedPicType;
+    selectedPic: selectedPicType;
     isBillingAddressSame: boolean;
-    billingAddress: BillingAddressType;
+    billingAddress: billingAddressType;
     distanceFromLegok: number | null;
     paymentType: "CBD" | "CREDIT" | "";
     paymentRequiredDocuments: { [key: string]: any };
     paymentDocumentsFullfilled: boolean;
     paymentBankGuarantee: boolean;
-    chosenProducts: ChosenProductType[];
+    chosenProducts: chosenProductType[];
     useHighway: boolean;
-    uploadedAndMappedRequiredDocs: RequiredDocType[];
+    uploadedAndMappedRequiredDocs: requiredDocType[];
     stepSPHOneFinished: boolean;
     stepSPHTwoFinished: boolean;
     stepSPHThreeFinished: boolean;
@@ -428,7 +429,7 @@ interface AdditionalPricesInterface {
     updatedAt: Date;
 }
 
-interface ProductParentInterface {
+interface productParentInterface {
     id: string;
     name: string;
     AdditionalPrices: AdditionalPricesInterface[];
@@ -451,12 +452,12 @@ interface ProductDataInterface {
         id: string;
         name: string;
         parent_id: string;
-        Parent: ProductParentInterface;
+        Parent: productParentInterface;
     };
     calcPrice: number;
 }
 
-interface VisitationListResponse {
+interface visitationListResponse {
     id: string;
     visitationId: string | null;
     order: number;
@@ -479,7 +480,7 @@ interface VisitationListResponse {
             | "KOMERSIAL"
             | "INDUSTRIAL";
         Pics: PIC[];
-        Pic: RequiredPic;
+        Pic: requiredPic;
         mainPic: PIC & { type?: string };
         company: {
             id: string;
@@ -506,7 +507,7 @@ interface VisitationListResponse {
     products: any[];
 }
 
-interface CustomerDataInterface {
+interface customerDataInterface {
     display_name: string;
     type: string;
     name: string;
@@ -517,7 +518,7 @@ interface CustomerDataInterface {
     location?: string;
 }
 
-interface LocationPayloadType {
+interface locationPayloadType {
     formattedAddress: string;
     postalId: number;
     lon: number;
@@ -525,11 +526,11 @@ interface LocationPayloadType {
     line2?: string;
 }
 
-interface VisitationPayload {
+interface visitationPayload {
     id?: string;
     visitationId?: string;
     order: number;
-    location: LocationPayloadType;
+    location: locationPayloadType;
     customerType?: "INDIVIDU" | "COMPANY";
     paymentType?: "CBD" | "CREDIT";
     estimationWeek?: number;
@@ -542,14 +543,14 @@ interface VisitationPayload {
     rejectCategory?: "FINISHED" | "MOU_COMPETITOR";
     isBooking?: boolean; // ??
     status?: "VISIT" | "SPH" | "REJECTED" | "";
-    files: FilesType[];
+    files: filesType[];
     products?: {
         id?: string;
     }[];
     competitors?: Competitor[];
 }
 
-interface FilesType {
+interface filesType {
     id: string;
     type: "GALLERY" | "COVER";
 }
@@ -565,17 +566,17 @@ interface PicFormInitialState {
     errorEmail: string;
 }
 
-interface ProjectPayloadType {
+interface projectPayloadType {
     id?: string;
     locationAddressId?: string;
     name?: string;
     companyDisplayName?: string;
-    location: LocationPayloadType;
+    location: locationPayloadType;
     stage?: "LAND_PREP" | "FOUNDATION" | "FORMWORK" | "FINISHING";
     type?: "INFRASTRUKTUR" | "HIGH-RISE" | "RUMAH" | "KOMERSIAL" | "INDUSTRIAL";
 }
 
-interface PicPayloadType {
+interface picPayloadType {
     name?: string;
     position?: string;
     phone?: string;
@@ -583,7 +584,7 @@ interface PicPayloadType {
     type?: "PROJECT" | "RECIPIENT" | "SUPPLIER";
     isSelected?: boolean;
 }
-interface RequiredPic {
+interface requiredPic {
     id: string;
     name: string;
     position: string;
@@ -593,14 +594,14 @@ interface RequiredPic {
     isSelected: boolean;
 }
 
-interface PayloadPostType {
-    visitation: VisitationPayload;
-    project: ProjectPayloadType;
-    pic: PicPayloadType[];
-    files: FilesType[];
+interface payloadPostType {
+    visitation: visitationPayload;
+    project: projectPayloadType;
+    pic: picPayloadType[];
+    files: filesType[];
 }
 
-type VisitationDataType = {
+type visitationDataType = {
     id?: number;
     name: string;
     location?: string;
@@ -615,7 +616,7 @@ type VisitationDataType = {
     lonlat?: { longitude: string | null; latitude: string | null };
 };
 
-interface ProjectResponseType {
+interface projectResponseType {
     id: string;
     name: string;
     display_name: string;
@@ -631,7 +632,7 @@ interface ProjectResponseType {
     project_count: string;
 }
 
-interface ShippingAddressType {
+interface shippingAddressType {
     id: string;
     lat: string;
     lon: string;
@@ -643,7 +644,7 @@ interface ShippingAddressType {
     city: string | null;
 }
 
-interface RequestedProductsType {
+interface requestedProductsType {
     productId: string;
     categoryId: string;
     offeringPrice: number;
@@ -652,7 +653,7 @@ interface RequestedProductsType {
     productName: string;
     productUnit: string;
 }
-interface DeliveryAndDistance {
+interface deliveryAndDistance {
     id: string;
     categoryId?: string;
     createdById?: string | null;
@@ -666,7 +667,7 @@ interface DeliveryAndDistance {
     category_id?: string;
     userDistance?: string | number;
 }
-interface SphOrderPayloadType {
+interface sphOrderPayloadType {
     projectId: string;
     // picId: string;
     picArr: PIC[];
@@ -677,10 +678,10 @@ interface SphOrderPayloadType {
     viaTol: boolean;
     projectDocs: any[];
     isProvideBankGuarantee: boolean;
-    shippingAddress: ShippingAddressType;
-    requestedProducts: RequestedProductsType[];
-    delivery: DeliveryAndDistance;
-    distance: DeliveryAndDistance;
+    shippingAddress: shippingAddressType;
+    requestedProducts: requestedProductsType[];
+    delivery: deliveryAndDistance;
+    distance: deliveryAndDistance;
     billingAddress: {
         postalId: string;
         line1: string;
@@ -688,7 +689,7 @@ interface SphOrderPayloadType {
     };
 }
 
-type RequiredDocType = {
+type requiredDocType = {
     documentId: string;
     fileId: string;
 };
@@ -703,21 +704,21 @@ type Docs = {
     url?: string;
 };
 
-interface PdfDataType {
+interface pdfDataType {
     type: string;
     name: string;
     url: string;
     pdfType: string;
 }
 
-interface PostSphResponseType {
+interface postSphResponseType {
     number: string;
     createdTime: string;
     expiryTime: string;
     thermalLink: string;
     letterLink: string;
-    letter: PdfDataType[];
-    pos: PdfDataType[];
+    letter: pdfDataType[];
+    pos: pdfDataType[];
 }
 
 interface ProjectDetail {
@@ -727,6 +728,7 @@ interface ProjectDetail {
     availableDeposit?: string;
     locationAddress?: Address;
     BillingAddress?: Address;
+    ShippingAddress?: Address;
     name?: string;
     companyName?: string;
     displayName?: string;
@@ -749,33 +751,33 @@ export type {
     SphStateInterface,
     SphContextInterface,
     AdditionalPricesInterface,
-    ProductParentInterface as productParentInterface,
+    productParentInterface,
     ProductDataInterface,
     CreateVisitationFifthStep,
-    VisitationListResponse as visitationListResponse,
-    CustomerDataInterface as customerDataInterface,
-    LocationPayloadType as locationPayloadType,
-    VisitationPayload as visitationPayload,
-    ProjectPayloadType as projectPayloadType,
-    PicPayloadType as picPayloadType,
-    PayloadPostType as payloadPostType,
-    VisitationDataType as visitationDataType,
-    ProjectResponseType as projectResponseType,
-    SelectedCompanyInterface as selectedCompanyInterface,
-    SphOrderPayloadType as sphOrderPayloadType,
+    visitationListResponse,
+    customerDataInterface,
+    locationPayloadType,
+    visitationPayload,
+    projectPayloadType,
+    picPayloadType,
+    payloadPostType,
+    visitationDataType,
+    projectResponseType,
+    selectedCompanyInterface,
+    sphOrderPayloadType,
     PicFormInitialState,
-    ShippingAddressType as shippingAddressType,
-    RequestedProductsType as requestedProductsType,
-    DeliveryAndDistance as deliveryAndDistance,
+    shippingAddressType,
+    requestedProductsType,
+    deliveryAndDistance,
     Address,
-    RequiredDocType as requiredDocType,
-    PostSphResponseType as postSphResponseType,
+    requiredDocType,
+    postSphResponseType,
     Docs,
     ProjectDetail,
-    RequiredPic as requiredPic,
-    SelectedPicType as selectedPicType,
-    BillingAddressType as billingAddressType,
-    ChosenProductType as chosenProductType,
+    requiredPic,
+    selectedPicType,
+    billingAddressType,
+    chosenProductType,
     TitleBold,
     IComboRadioBtn,
     ITableInput,

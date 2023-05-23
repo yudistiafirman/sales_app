@@ -1,27 +1,3 @@
-import crashlytics from "@react-native-firebase/crashlytics";
-import {
-    StackActions,
-    useFocusEffect,
-    useNavigation,
-    useRoute
-} from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
-import moment from "moment";
-import React, { useCallback, useLayoutEffect } from "react";
-import {
-    BackHandler,
-    DeviceEventEmitter,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    View
-} from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { uploadFileImage } from "@/actions/CommonActions";
-import {
-    updateDeliveryOrder,
-    updateDeliveryOrderWeight
-} from "@/actions/OrderActions";
 import {
     BBackContinueBtn,
     BDivider,
@@ -34,13 +10,25 @@ import {
 } from "@/components";
 import { colors, fonts, layout } from "@/constants";
 import { TM_CONDITION } from "@/constants/dropdown";
-import { useKeyboardActive } from "@/hooks";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { Input } from "@/interfaces";
-import { OperationFileType } from "@/interfaces/Operation";
-import { ENTRY_TYPE } from "@/models/EnumModel";
-import { updateDeliverOrder } from "@/models/updateDeliveryOrder";
-import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
+import { resScale } from "@/utils";
+import {
+    StackActions,
+    useFocusEffect,
+    useNavigation,
+    useRoute
+} from "@react-navigation/native";
+import React, { useCallback, useLayoutEffect } from "react";
+import {
+    BackHandler,
+    DeviceEventEmitter,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    View
+} from "react-native";
+import crashlytics from "@react-native-firebase/crashlytics";
 import {
     CAMERA,
     GALLERY_OPERATION,
@@ -48,7 +36,10 @@ import {
     TAB_DISPATCH_TITLE,
     TAB_RETURN_TITLE
 } from "@/navigation/ScreenNames";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { ENTRY_TYPE } from "@/models/EnumModel";
+import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {
     onChangeInputValue,
     removeDriverPhoto,
@@ -56,54 +47,24 @@ import {
     resetOperationState,
     setAllOperationPhoto
 } from "@/redux/reducers/operationReducer";
-import { AppDispatch, RootState } from "@/redux/store";
-import { resScale } from "@/utils";
-
-const style = StyleSheet.create({
-    flexFull: {
-        flex: 1
-    },
-    leftIconStyle: {
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.md,
-        color: colors.textInput.input
-    },
-    parent: {
-        flex: 1,
-        flexDirection: "column",
-        backgroundColor: colors.white
-    },
-    top: {
-        height: resScale(120),
-        marginBottom: layout.pad.lg
-    },
-    headerTwo: {
-        borderColor: colors.border.default
-    },
-    conButton: {
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexDirection: "row",
-        marginTop: layout.pad.lg,
-        bottom: 0
-    },
-    buttonOne: {
-        width: "40%",
-        paddingEnd: layout.pad.md
-    },
-    buttonTwo: {
-        width: "60%",
-        paddingStart: layout.pad.md
-    }
-});
+import { useKeyboardActive } from "@/hooks";
+import moment from "moment";
+import { updateDeliverOrder } from "@/models/updateDeliveryOrder";
+import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import { uploadFileImage } from "@/actions/CommonActions";
+import { OperationFileType } from "@/interfaces/Operation";
+import {
+    updateDeliveryOrder,
+    updateDeliveryOrderWeight
+} from "@/actions/OrderActions";
+import { FlashList } from "@shopify/flash-list";
 
 function LeftIcon() {
     return <Text style={style.leftIconStyle}>+62</Text>;
 }
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
-function SubmitForm() {
+const SubmitForm = () => {
     const route = useRoute<RootStackScreenProps>();
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
@@ -156,7 +117,7 @@ function SubmitForm() {
         switch (userData?.type) {
             case ENTRY_TYPE.WB:
                 if (operationData.photoFiles.length > 1) {
-                    const tempImages = [
+                    let tempImages = [
                         ...operationData.photoFiles.filter(
                             (it) => it.file !== null
                         )
@@ -167,21 +128,24 @@ function SubmitForm() {
             case ENTRY_TYPE.SECURITY:
                 if (operationType === ENTRY_TYPE.DISPATCH) {
                     if (operationData.photoFiles.length > 4) {
-                        const tempImages = [
+                        let tempImages = [
                             ...operationData.photoFiles.filter(
                                 (it) => it.file !== null
                             )
                         ];
                         dispatch(setAllOperationPhoto({ file: tempImages }));
                     }
-                } else if (operationData.photoFiles.length > 1) {
-                    const tempImages = [
-                        ...operationData.photoFiles.filter(
-                            (it) => it.file !== null
-                        )
-                    ];
-                    dispatch(setAllOperationPhoto({ file: tempImages }));
+                } else {
+                    if (operationData.photoFiles.length > 1) {
+                        let tempImages = [
+                            ...operationData.photoFiles.filter(
+                                (it) => it.file !== null
+                            )
+                        ];
+                        dispatch(setAllOperationPhoto({ file: tempImages }));
+                    }
                 }
+                return;
         }
     };
 
@@ -194,7 +158,7 @@ function SubmitForm() {
         return () => {
             DeviceEventEmitter.removeAllListeners("Camera.preview");
         };
-    }, [operationData, operationData.photoFiles]);
+    }, [operationData]);
 
     const getHeaderTitle = () => {
         switch (userData?.type) {
@@ -203,7 +167,7 @@ function SubmitForm() {
             case ENTRY_TYPE.SECURITY:
                 if (operationType === ENTRY_TYPE.DISPATCH)
                     return TAB_DISPATCH_TITLE;
-                return TAB_RETURN_TITLE;
+                else return TAB_RETURN_TITLE;
             case ENTRY_TYPE.DRIVER:
                 return "Penuangan";
             case ENTRY_TYPE.WB:
@@ -214,32 +178,31 @@ function SubmitForm() {
     };
 
     const handleDisableContinueButton = () => {
-        const photos = [
-            ...operationData.photoFiles.filter((it) => it.file !== null)
-        ];
+        const filteredPhoto = operationData.photoFiles?.filter(
+            (it) => it.file !== null
+        );
+        let photos;
+        if (filteredPhoto) photos = [...filteredPhoto];
         if (userData?.type === ENTRY_TYPE.DRIVER) {
             return (
-                photos.length < 7 ||
+                (photos && photos.length < 7) ||
                 operationData.inputsValue.recepientName.length === 0 ||
                 !phoneNumberRegex.test(
                     operationData.inputsValue.recepientPhoneNumber
                 )
             );
-        }
-        if (userData?.type === ENTRY_TYPE.WB) {
+        } else if (userData?.type === ENTRY_TYPE.WB) {
             return (
                 operationData.inputsValue.weightBridge.length === 0 ||
-                photos.length < 2
+                (photos && photos.length < 2)
             );
-        }
-        if (operationType === ENTRY_TYPE.RETURN) {
+        } else if (operationType === ENTRY_TYPE.RETURN) {
             return (
                 operationData.inputsValue.truckMixCondition.length === 0 ||
-                photos.length < 2
+                (photos && photos.length < 2)
             );
-        }
-        if (operationType === ENTRY_TYPE.DISPATCH) {
-            return photos.length !== 5;
+        } else if (operationType === ENTRY_TYPE.DISPATCH) {
+            return photos && photos.length !== 5;
         }
     };
 
@@ -260,11 +223,13 @@ function SubmitForm() {
             );
             const payload = {} as updateDeliverOrder;
             const photoFilestoUpload = operationData.photoFiles
-                .filter((v) => v.file !== null)
-                .map((photo) => ({
-                    ...photo.file,
-                    uri: photo?.file?.uri?.replace("file:", "file://")
-                }));
+                ?.filter((v) => v.file !== null)
+                ?.map((photo) => {
+                    return {
+                        ...photo.file,
+                        uri: photo?.file?.uri?.replace("file:", "file://")
+                    };
+                });
 
             const responseFiles = await uploadFileImage(
                 photoFilestoUpload,
@@ -273,10 +238,14 @@ function SubmitForm() {
             if (responseFiles.data.success) {
                 let responseUpdateDeliveryOrder: any;
                 if (userData?.type === ENTRY_TYPE.DRIVER) {
-                    const newFileData = responseFiles.data.data.map((v, i) => ({
-                        fileId: v.id,
-                        type: driversFileType[i]
-                    }));
+                    const newFileData = responseFiles?.data?.data?.map(
+                        (v, i) => {
+                            return {
+                                fileId: v?.id,
+                                type: driversFileType[i]
+                            };
+                        }
+                    );
                     payload.doFiles = newFileData;
                     payload.recipientName =
                         operationData.inputsValue.recepientName;
@@ -288,10 +257,14 @@ function SubmitForm() {
                         operationData.projectDetails.deliveryOrderId
                     );
                 } else if (userData?.type === ENTRY_TYPE.WB) {
-                    const newFileData = responseFiles.data.data.map((v, i) => ({
-                        fileId: v.id,
-                        type: wbsFileType[i]
-                    }));
+                    const newFileData = responseFiles?.data?.data?.map(
+                        (v, i) => {
+                            return {
+                                fileId: v?.id,
+                                type: wbsFileType[i]
+                            };
+                        }
+                    );
                     payload.doFiles = newFileData;
                     payload.weight = operationData.inputsValue.weightBridge;
                     responseUpdateDeliveryOrder =
@@ -300,10 +273,14 @@ function SubmitForm() {
                             operationData.projectDetails.deliveryOrderId
                         );
                 } else if (userData?.type === ENTRY_TYPE.SECURITY) {
-                    const newFileData = responseFiles.data.data.map((v, i) => ({
-                        fileId: v.id,
-                        type: securityFileType[i]
-                    }));
+                    const newFileData = responseFiles?.data?.data?.map(
+                        (v, i) => {
+                            return {
+                                fileId: v?.id,
+                                type: securityFileType[i]
+                            };
+                        }
+                    );
                     payload.doFiles = newFileData;
 
                     if (operationType === ENTRY_TYPE.RETURN) {
@@ -317,7 +294,7 @@ function SubmitForm() {
                     );
                 }
 
-                if (responseUpdateDeliveryOrder.data.success) {
+                if (responseUpdateDeliveryOrder?.data?.success) {
                     dispatch(resetOperationState());
                     dispatch(
                         openPopUp({
@@ -335,7 +312,7 @@ function SubmitForm() {
                         openPopUp({
                             popUpType: "error",
                             popUpText:
-                                responseFiles.data.message ||
+                                responseFiles?.data?.message ||
                                 "Error Memperbarui Delivery Order",
                             outsideClickClosePopUp: true
                         })
@@ -347,7 +324,7 @@ function SubmitForm() {
                     openPopUp({
                         popUpType: "error",
                         popUpText:
-                            responseFiles.data.message ||
+                            responseFiles?.data?.message ||
                             "Error Memperbarui Delivery Order",
                         outsideClickClosePopUp: true
                     })
@@ -359,7 +336,7 @@ function SubmitForm() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message || "Error Memperbarui Delivery Order",
+                        error?.message || "Error Memperbarui Delivery Order",
                     outsideClickClosePopUp: true
                 })
             );
@@ -410,7 +387,7 @@ function SubmitForm() {
             label: "Berat",
             value: operationData.inputsValue.weightBridge,
             onChange: (e) => {
-                const result = `${e}`;
+                let result: string = "" + e;
                 dispatch(
                     onChangeInputValue({
                         inputType: "weightBridge",
@@ -501,17 +478,18 @@ function SubmitForm() {
             dropdown: {
                 items: TM_CONDITION,
                 placeholder: operationData.inputsValue.truckMixCondition
-                    ? TM_CONDITION.find(
-                          (it) =>
+                    ? TM_CONDITION.find((it) => {
+                          return (
                               it.value ===
                               operationData.inputsValue.truckMixCondition
-                      )?.label ?? ""
+                          );
+                      })?.label ?? ""
                     : "Pilih Kondisi TM",
                 onChange: (value: any) => {
                     dispatch(
                         onChangeInputValue({
                             inputType: "truckMixCondition",
-                            value
+                            value: value
                         })
                     );
                 }
@@ -522,7 +500,9 @@ function SubmitForm() {
     const deleteImages = useCallback(
         (i: number, attachType?: string) => {
             if (userData?.type === ENTRY_TYPE.DRIVER) {
-                dispatch(removeDriverPhoto({ index: i, attachType }));
+                dispatch(
+                    removeDriverPhoto({ index: i, attachType: attachType })
+                );
             } else {
                 dispatch(removeOperationPhoto({ index: i }));
             }
@@ -575,6 +555,7 @@ function SubmitForm() {
                             navigateTo: GALLERY_OPERATION
                         })
                     );
+                    return;
             }
         },
         [operationData.photoFiles, dispatch]
@@ -589,7 +570,9 @@ function SubmitForm() {
                     paddingHorizontal: layout.pad.lg,
                     paddingBottom: layout.pad.lg
                 }}
-                renderItem={() => <BSpacer size="verySmall" />}
+                renderItem={() => {
+                    return <BSpacer size={"verySmall"} />;
+                }}
                 ListHeaderComponent={
                     <View style={style.flexFull}>
                         {enableLocationHeader && (
@@ -597,7 +580,7 @@ function SubmitForm() {
                                 location={operationData.projectDetails.address}
                             />
                         )}
-                        <BSpacer size="extraSmall" />
+                        <BSpacer size={"extraSmall"} />
                         <View style={style.top}>
                             <BVisitationCard
                                 item={{
@@ -628,7 +611,7 @@ function SubmitForm() {
                         </View>
                         <View>
                             <BDivider />
-                            <BSpacer size="extraSmall" />
+                            <BSpacer size={"extraSmall"} />
                         </View>
                         <View>
                             <BGallery
@@ -646,7 +629,7 @@ function SubmitForm() {
                                 operationType === ENTRY_TYPE.RETURN ||
                                 operationType === ENTRY_TYPE.IN ||
                                 operationType === ENTRY_TYPE.OUT) && (
-                                <BSpacer size="small" />
+                                <BSpacer size={"small"} />
                             )}
                             {operationType === ENTRY_TYPE.DRIVER && (
                                 <BForm
@@ -683,13 +666,51 @@ function SubmitForm() {
                         onPressContinue={onPressContinue}
                         disableContinue={handleDisableContinueButton()}
                         onPressBack={handleBack}
-                        continueText="Simpan"
+                        continueText={"Simpan"}
                         isContinueIcon={false}
                     />
                 </View>
             )}
         </SafeAreaView>
     );
-}
+};
 
+const style = StyleSheet.create({
+    flexFull: {
+        flex: 1
+    },
+    leftIconStyle: {
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.md,
+        color: colors.textInput.input
+    },
+    parent: {
+        flex: 1,
+        flexDirection: "column",
+        backgroundColor: colors.white
+    },
+    top: {
+        height: resScale(120),
+        marginBottom: layout.pad.lg
+    },
+    headerTwo: {
+        borderColor: colors.border.default
+    },
+    conButton: {
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: "row",
+        marginTop: layout.pad.lg,
+        bottom: 0
+    },
+    buttonOne: {
+        width: "40%",
+        paddingEnd: layout.pad.md
+    },
+    buttonTwo: {
+        width: "60%",
+        paddingStart: layout.pad.md
+    }
+});
 export default SubmitForm;

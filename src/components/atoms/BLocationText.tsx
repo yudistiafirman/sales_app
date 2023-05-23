@@ -1,9 +1,38 @@
-import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-import { fonts, layout } from "@/constants";
+import React from "react";
 import font from "@/constants/fonts";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import resScale from "@/utils/resScale";
+import { colors, fonts, layout } from "@/constants";
+
+type locationType = {
+    location?: string;
+    color?: string;
+};
+export default function BLocationText({
+    location,
+    color = colors.text.blue
+}: locationType) {
+    if (!location) {
+        return null;
+    }
+    return (
+        <View style={style.location}>
+            <SimpleLineIcons
+                name="location-pin"
+                size={13}
+                color={color}
+                style={style.iconStyle}
+            />
+            <Text
+                numberOfLines={1}
+                style={[style.locationText, { color: color }]}
+            >
+                {location}
+            </Text>
+        </View>
+    );
+}
 
 const style = StyleSheet.create({
     location: {
@@ -20,25 +49,3 @@ const style = StyleSheet.create({
         marginRight: layout.pad.md
     }
 });
-
-type LocationType = {
-    location?: string;
-};
-export default function BLocationText({ location }: LocationType) {
-    if (!location) {
-        return null;
-    }
-    return (
-        <View style={style.location}>
-            <SimpleLineIcons
-                name="location-pin"
-                size={13}
-                color="#0080FF"
-                style={style.iconStyle}
-            />
-            <Text numberOfLines={1} style={style.locationText}>
-                {location}
-            </Text>
-        </View>
-    );
-}

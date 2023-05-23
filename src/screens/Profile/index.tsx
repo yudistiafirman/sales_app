@@ -5,8 +5,6 @@ import { Text, View } from "react-native";
 import { useDispatch } from "react-redux";
 import bStorage from "@/actions/BStorage";
 import { signOut } from "@/actions/CommonActions";
-import { BTouchableText } from "@/components";
-import useCustomHeaderRight from "@/hooks/useCustomHeaderRight";
 import { TAB_PROFILE } from "@/navigation/ScreenNames";
 import { signout } from "@/redux/reducers/authReducer";
 import { openPopUp } from "@/redux/reducers/modalReducer";
@@ -28,16 +26,12 @@ function Profile() {
             dispatch(
                 openPopUp({
                     popUpType: "error",
-                    popUpText: error.message || "Terjadi error saat logout",
+                    popUpText: error?.message || "Terjadi error saat logout",
                     outsideClickClosePopUp: true
                 })
             );
         }
     };
-
-    useCustomHeaderRight({
-        customHeaderRight: <BTouchableText onPress={onLogout} title="Logout" />
-    });
 
     React.useEffect(() => {
         crashlytics().log(TAB_PROFILE);

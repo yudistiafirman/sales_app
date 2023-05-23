@@ -1,43 +1,20 @@
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
-import { useMachine } from "@xstate/react";
-import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { BSpacer, BSpinner, BTabSections } from "@/components";
+import { BSpacer, BEmptyState, BSpinner, BTabSections } from "@/components";
 import { colors, layout } from "@/constants";
 import useCustomHeaderCenter from "@/hooks/useCustomHeaderCenter";
 import visitHistoryMachine from "@/machine/visitHistoryMachine";
 import { RootStackParamList } from "@/navigation/CustomStateComponent";
-import LocationText from "./elements/LocationText";
-import HistoryHeader from "./elements/HistoryHeader";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { useMachine } from "@xstate/react";
+import React, { useCallback, useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import HistoryDetails from "./elements/HistoryDetails";
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    loading: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    tabIndicator: {
-        backgroundColor: colors.primary,
-        marginLeft: layout.pad.lg
-    },
-    tabStyle: {
-        width: "auto",
-        paddingHorizontal: layout.pad.lg
-    },
-    tabBarStyle: {
-        backgroundColor: colors.white,
-        paddingHorizontal: layout.pad.lg
-    }
-});
+import HistoryHeader from "./elements/HistoryHeader";
+import LocationText from "./elements/LocationText";
+import { FlashList } from "@shopify/flash-list";
 
 type VisitHistoryRoute = RouteProp<RootStackParamList, "VISIT_HISTORY">;
 
-function VisitHistory() {
+const VisitHistory = () => {
     const route = useRoute<VisitHistoryRoute>();
     const { projectName } = route.params;
     const [state, send] = useMachine(visitHistoryMachine);
@@ -61,16 +38,21 @@ function VisitHistory() {
         send("onChangeVisitationIdx", { value: tabIndex });
     };
 
-    const { selectedVisitationByIdx, loading, routes } = state.context;
+    const {
+        selectedVisitationByIdx,
+        loading,
+        routes,
+        errorMessage,
+        visitationData
+    } = state.context;
 
-    const renderVisitHistory = useCallback(
-        () => (
+    const renderVisitHistory = useCallback(() => {
+        return (
             <HistoryDetails
                 details={selectedVisitationByIdx && selectedVisitationByIdx}
             />
-        ),
-        [selectedVisitationByIdx]
-    );
+        );
+    }, [selectedVisitationByIdx]);
 
     if (loading) {
         return (
@@ -82,30 +64,67 @@ function VisitHistory() {
 
     return (
         <View style={styles.container}>
-            <LocationText
-                locationAddress={
-                    selectedVisitationByIdx?.project?.ShippingAddress?.line1
-                }
-            />
-            <BTabSections
-                swipeEnabled={false}
-                navigationState={{ index, routes }}
-                renderScene={() => (
-                    <FlashList
-                        estimatedItemSize={1}
-                        data={[1]}
-                        renderItem={() => <BSpacer size="verySmall" />}
-                        ListHeaderComponent={renderVisitHistory}
+            {visitationData.length === 0 ? (
+                <BEmptyState
+                    isError={state.matches("errorGettingData")}
+                    errorMessage={errorMessage}
+                    onAction={() => send("retryGettingData")}
+                    emptyText="Data Riwayat Kunjungan Tidak Ditemukan"
+                />
+            ) : (
+                <>
+                    <LocationText
+                        locationAddress={
+                            selectedVisitationByIdx?.project?.ShippingAddress
+                                ?.line1
+                        }
                     />
-                )}
-                onTabPress={onTabPress}
-                onIndexChange={setIndex}
-                tabStyle={styles.tabStyle}
-                tabBarStyle={styles.tabBarStyle}
-                indicatorStyle={styles.tabIndicator}
-            />
+                    <BTabSections
+                        swipeEnabled={false}
+                        navigationState={{ index, routes }}
+                        renderScene={() => (
+                            <FlashList
+                                estimatedItemSize={1}
+                                data={[1]}
+                                renderItem={() => {
+                                    return <BSpacer size={"verySmall"} />;
+                                }}
+                                ListHeaderComponent={renderVisitHistory}
+                            />
+                        )}
+                        onTabPress={onTabPress}
+                        onIndexChange={setIndex}
+                        tabStyle={styles.tabStyle}
+                        tabBarStyle={styles.tabBarStyle}
+                        indicatorStyle={styles.tabIndicator}
+                    />
+                </>
+            )}
         </View>
     );
-}
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    loading: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    tabIndicator: {
+        backgroundColor: colors.primary,
+        marginLeft: layout.pad.lg
+    },
+    tabStyle: {
+        width: "auto",
+        paddingHorizontal: layout.pad.lg
+    },
+    tabBarStyle: {
+        backgroundColor: colors.white,
+        paddingHorizontal: layout.pad.lg
+    }
+});
 
 export default VisitHistory;

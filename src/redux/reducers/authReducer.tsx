@@ -27,6 +27,7 @@ interface AuthState {
         enable_profile_menu: boolean;
         enable_sph: boolean;
         enable_transaction_menu: boolean;
+        enable_customer_menu: boolean;
         enable_visitation: boolean;
         force_update: { min_version: string; is_forced: boolean };
     };
@@ -52,6 +53,7 @@ const initialState: AuthState = {
         enable_po: true,
         enable_price_menu: true,
         enable_profile_menu: true,
+        enable_customer_menu: true,
         enable_sph: true,
         enable_transaction_menu: true,
         enable_visitation: true,
@@ -63,13 +65,15 @@ export const authSlice = createSlice({
     name: "authentication",
     initialState,
     reducers: {
-        setPhoneNumber: (state, action: PayloadAction<string>) => ({
-            ...state,
-            loginCredential: {
-                ...state.loginCredential,
-                phoneNumber: action.payload
-            }
-        }),
+        setPhoneNumber: (state, action: PayloadAction<string>) => {
+            return {
+                ...state,
+                loginCredential: {
+                    ...state.loginCredential,
+                    phoneNumber: action.payload
+                }
+            };
+        },
         setUserData: (state, action: PayloadAction<any>) => {
             if (action.payload.remoteConfig) {
                 return {
@@ -104,13 +108,14 @@ export const authSlice = createSlice({
                     isSignout: false,
                     isLoading: false
                 };
+            } else {
+                return {
+                    ...state,
+                    userData: action.payload.userData,
+                    isSignout: false,
+                    isLoading: false
+                };
             }
-            return {
-                ...state,
-                userData: action.payload.userData,
-                isSignout: false,
-                isLoading: false
-            };
         },
         setIsLoading: (state, action: PayloadAction<any>) => {
             if (action.payload.remoteConfig) {
@@ -135,6 +140,8 @@ export const authSlice = createSlice({
                             action.payload.remoteConfig.enable_price_menu,
                         enable_profile_menu:
                             action.payload.remoteConfig.enable_profile_menu,
+                        enable_customer_menu:
+                            action.payload.remoteConfig.enable_customer_menu,
                         enable_sph: action.payload.remoteConfig.enable_sph,
                         enable_transaction_menu:
                             action.payload.remoteConfig.enable_transaction_menu,
@@ -144,30 +151,39 @@ export const authSlice = createSlice({
                     },
                     isLoading: action.payload.loading
                 };
+            } else {
+                return {
+                    ...state,
+                    isLoading: action.payload.loading
+                };
             }
+        },
+        signout: (state, action: PayloadAction<boolean>) => {
             return {
                 ...state,
-                isLoading: action.payload.loading
+                userData: null,
+                isLoading: action.payload,
+                isSignout: true
             };
         },
-        signout: (state, action: PayloadAction<boolean>) => ({
-            ...state,
-            userData: null,
-            isLoading: action.payload,
-            isSignout: true
-        }),
-        toggleHunterScreen: (state, action: PayloadAction<boolean>) => ({
-            ...state,
-            hunterScreen: action.payload
-        }),
-        setShowButtonNetwork: (state, action: PayloadAction<boolean>) => ({
-            ...state,
-            isShowButtonNetwork: action.payload
-        }),
-        setVisibleNetworkLogger: (state, action: PayloadAction<boolean>) => ({
-            ...state,
-            isNetworkLoggerVisible: action.payload
-        })
+        toggleHunterScreen: (state, action: PayloadAction<boolean>) => {
+            return {
+                ...state,
+                hunterScreen: action.payload
+            };
+        },
+        setShowButtonNetwork: (state, action: PayloadAction<boolean>) => {
+            return {
+                ...state,
+                isShowButtonNetwork: action.payload
+            };
+        },
+        setVisibleNetworkLogger: (state, action: PayloadAction<boolean>) => {
+            return {
+                ...state,
+                isNetworkLoggerVisible: action.payload
+            };
+        }
     }
 });
 

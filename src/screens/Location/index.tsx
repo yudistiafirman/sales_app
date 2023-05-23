@@ -1,19 +1,19 @@
-import crashlytics from "@react-native-firebase/crashlytics";
 import {
     StackActions,
     useNavigation,
     useRoute
 } from "@react-navigation/native";
-import { useMachine } from "@xstate/react";
 import * as React from "react";
 import { DeviceEventEmitter, SafeAreaView, View } from "react-native";
-import { Region } from "react-native-maps";
+import LocationStyles from "./styles";
+import CoordinatesDetail from "./elements/CoordinatesDetail";
 import { BButtonPrimary, BLocation, BMarker, BSpacer } from "@/components";
-import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
+import { useMachine } from "@xstate/react";
 import { locationMachine } from "@/machine/locationMachine";
+import { Region } from "react-native-maps";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {
-    CUSTOMER_DETAIL,
+    CUSTOMER_DETAIL_V1,
     LOCATION,
     LOCATION_TITLE,
     SEARCH_AREA,
@@ -26,11 +26,11 @@ import {
     TAB_ROOT,
     TAB_TRANSACTION_TITLE
 } from "@/navigation/ScreenNames";
+import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { resScale } from "@/utils";
-import LocationStyles from "./styles";
-import CoordinatesDetail from "./elements/CoordinatesDetail";
+import crashlytics from "@react-native-firebase/crashlytics";
 
-function Location() {
+const Location = () => {
     const navigation = useNavigation();
     const route = useRoute<RootStackScreenProps>();
     const [searchedAddress, setSearchedAddress] = React.useState("");
@@ -61,12 +61,7 @@ function Location() {
             coordinate;
         if (isReadOnly === false) {
             send("onChangeRegion", {
-                value: {
-                    latitude,
-                    longitude,
-                    latitudeDelta,
-                    longitudeDelta
-                }
+                value: { latitude, longitude, latitudeDelta, longitudeDelta }
             });
         }
     };
@@ -81,7 +76,7 @@ function Location() {
             formattedAddress: route?.params?.coordinate?.formattedAddress
                 ? route?.params?.coordinate?.formattedAddress
                 : formattedAddress,
-            postalId
+            postalId: postalId
         };
 
         if (
@@ -92,29 +87,31 @@ function Location() {
             from === TAB_RETURN_TITLE ||
             from === TAB_DISPATCH_TITLE ||
             from === SPH ||
-            from === CUSTOMER_DETAIL
+            from === CUSTOMER_DETAIL_V1
         ) {
             if (eventKey) {
                 if (sourceType) {
                     DeviceEventEmitter.emit(eventKey, {
-                        coordinate,
-                        sourceType
+                        coordinate: coordinate,
+                        sourceType: sourceType
                     });
                 } else {
-                    DeviceEventEmitter.emit(eventKey, { coordinate });
+                    DeviceEventEmitter.emit(eventKey, {
+                        coordinate: coordinate
+                    });
                 }
                 navigation.dispatch(StackActions.pop(2));
             } else {
                 navigation.navigate(TAB_ROOT, {
                     screen: from,
-                    params: { coordinate }
+                    params: { coordinate: coordinate }
                 });
             }
         } else {
             navigation?.setParams({
-                coordinate,
+                coordinate: coordinate,
                 isReadOnly: route?.params?.isReadOnly,
-                from
+                from: from
             });
             navigation.goBack();
         }
@@ -128,7 +125,7 @@ function Location() {
                 onRegionChangeComplete={onRegionChangeComplete}
                 onRegionChange={() => setUseSearchedAddress(false)}
                 region={region}
-                scrollEnabled={isReadOnly !== true}
+                scrollEnabled={isReadOnly === true ? false : true}
                 CustomMarker={<BMarker />}
             />
             <View
@@ -167,6 +164,6 @@ function Location() {
             </View>
         </SafeAreaView>
     );
-}
+};
 
 export default Location;

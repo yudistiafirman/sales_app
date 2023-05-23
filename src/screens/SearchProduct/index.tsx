@@ -1,8 +1,9 @@
-import crashlytics from "@react-native-firebase/crashlytics";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { useMachine } from "@xstate/react";
+/* eslint-disable react-native/no-inline-styles */
 import * as React from "react";
 import { SafeAreaView, View, DeviceEventEmitter, Platform } from "react-native";
+import SearchProductNavbar from "./element/SearchProductNavbar";
+import SearchProductStyles from "./styles";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import {
     BEmptyState,
     BHeaderIcon,
@@ -11,15 +12,15 @@ import {
     ProductList
 } from "@/components";
 import { layout } from "@/constants";
-import useCustomHeaderCenter from "@/hooks/useCustomHeaderCenter";
+import { useMachine } from "@xstate/react";
 import { searchProductMachine } from "@/machine/searchProductMachine";
+import useCustomHeaderCenter from "@/hooks/useCustomHeaderCenter";
+import crashlytics from "@react-native-firebase/crashlytics";
 import { SEARCH_PRODUCT } from "@/navigation/ScreenNames";
-import SearchProductStyles from "./styles";
-import SearchProductNavbar from "./element/SearchProductNavbar";
 
-function SearchProduct() {
+const SearchProduct = () => {
     const route = useRoute<RouteProp<Record<string, object>, string>>();
-    let isGoback = false;
+    let isGoback: boolean = false;
     if (route.params) {
         const { isGobackAfterPress } = route.params as {
             isGobackAfterPress: boolean;
@@ -101,7 +102,7 @@ function SearchProduct() {
                             },
                             Platform.OS !== "android" && { height: "80%" }
                         ]}
-                        autoFocus
+                        autoFocus={true}
                         value={searchValue}
                         onChangeText={onChangeText}
                         onClearValue={onClearValue}
@@ -151,17 +152,19 @@ function SearchProduct() {
                                     navigation.goBack();
                                 }
                             }}
-                            disablePressed={disablePressed || false}
+                            disablePressed={
+                                disablePressed ? disablePressed : false
+                            }
                         />
                     )}
                     onIndexChange={setIndex}
                     tabBarStyle={SearchProductStyles.tabBarStyle}
                 />
             ) : (
-                <BEmptyState emptyText="Minimal 3 huruf!" />
+                <BEmptyState emptyText={"Minimal 3 huruf!"} />
             )}
         </SafeAreaView>
     );
-}
+};
 
 export default SearchProduct;

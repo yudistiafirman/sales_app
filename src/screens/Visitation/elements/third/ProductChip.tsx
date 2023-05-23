@@ -1,11 +1,11 @@
-import React from "react";
-import { TouchableOpacity, View } from "react-native";
-import AntDesign from "react-native-vector-icons/AntDesign";
 import { BText } from "@/components";
 import { colors, fonts } from "@/constants";
 import layout from "@/constants/layout";
 import { Styles } from "@/interfaces";
 import { resFontSize, resScale } from "@/utils";
+import React from "react";
+import { TouchableOpacity, View } from "react-native";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 interface IProps {
     name?: string;
@@ -28,7 +28,9 @@ const styles: Styles = {
         borderBottomColor: colors.border.grey,
         borderTopColor: colors.border.grey,
         borderRightColor: colors.border.grey,
-        borderLeftWidth: resScale(5)
+        borderLeftWidth: resScale(5),
+        marginEnd: layout.pad.md,
+        marginBottom: layout.pad.md
     },
     category: {
         marginLeft: layout.pad.sm + layout.pad.md,
@@ -54,7 +56,7 @@ const styles: Styles = {
     }
 };
 
-function ProductChip({ name, category, onDelete }: IProps) {
+const ProductChip = ({ name, category, onDelete }: IProps) => {
     return (
         <View style={styles.container}>
             <BText bold="bold">{name}</BText>
@@ -72,6 +74,6 @@ function ProductChip({ name, category, onDelete }: IProps) {
             )}
         </View>
     );
-}
+};
 
 export default ProductChip;

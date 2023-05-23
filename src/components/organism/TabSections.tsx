@@ -1,10 +1,10 @@
-import * as React from "react";
+import BTab from "@/components/molecules/BTab";
 import { ViewStyle } from "react-native";
 import { TabBar } from "react-native-tab-view";
-import { Scene, Route } from "react-native-tab-view/lib/typescript/src/types";
+import * as React from "react";
 import colors from "@/constants/colors";
 import BTabLabels from "@/components/molecules/BTabLabels";
-import BTab from "@/components/molecules/BTab";
+import { Scene, Route } from "react-native-tab-view/lib/typescript/src/types";
 
 interface BTabSectionProps {
     onIndexChange: (index: number) => void;
@@ -16,9 +16,10 @@ interface BTabSectionProps {
     onTabPress?: ((scene: Scene<Route> & Event) => void) | undefined;
     swipeEnabled?: boolean;
     minTabHeaderWidth?: number | undefined;
+    tabTextFocusedColor?: string;
 }
 
-function BTabSections({
+const BTabSections = ({
     onIndexChange,
     navigationState,
     renderScene,
@@ -27,8 +28,9 @@ function BTabSections({
     tabBarStyle,
     onTabPress,
     swipeEnabled,
-    minTabHeaderWidth
-}: BTabSectionProps) {
+    minTabHeaderWidth,
+    tabTextFocusedColor
+}: BTabSectionProps) => {
     return (
         <BTab
             onIndexChange={onIndexChange}
@@ -45,15 +47,16 @@ function BTabSections({
                     renderLabel={({ route, focused }) => (
                         <BTabLabels
                             route={route}
+                            tabTextfocusedColor={tabTextFocusedColor}
                             focused={focused}
                             minWidth={minTabHeaderWidth}
                         />
                     )}
-                    scrollEnabled
+                    scrollEnabled={true}
                 />
             )}
         />
     );
-}
+};
 
 export default BTabSections;

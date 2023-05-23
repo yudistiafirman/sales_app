@@ -1,7 +1,6 @@
 import React from "react";
 import { TextStyle, View, ViewStyle } from "react-native";
 import { colors, fonts, layout } from "@/constants";
-import { resScale } from "@/utils";
 import BText from "./BText";
 
 interface BChipProps {
@@ -9,20 +8,36 @@ interface BChipProps {
     type?: "default" | "header";
     backgroundColor?: string | undefined;
     textColor?: string | undefined;
+    endIcon?: React.ReactNode;
+    startIcon?: React.ReactNode;
+    titleWeight?: string;
 }
 
-function BChip({ children, type, backgroundColor, textColor }: BChipProps) {
+function BChip({
+    children,
+    type,
+    backgroundColor,
+    textColor,
+    endIcon,
+    startIcon,
+    titleWeight
+}: BChipProps) {
     const BChipHeaderStyle: ViewStyle = {
         paddingHorizontal: layout.pad.md,
         paddingVertical: layout.pad.xs,
-        borderRadius: layout.radius.sm
+        borderRadius: layout.radius.sm,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
     };
 
     const BChipDefaultStyle: ViewStyle = {
         paddingVertical: layout.pad.xs,
         paddingHorizontal: layout.pad.md + layout.pad.xs,
         borderRadius: layout.radius.xl,
-        marginRight: layout.pad.md
+        marginRight: layout.pad.md,
+        flexDirection: "row",
+        alignItems: "center"
     };
 
     const _style: ViewStyle =
@@ -35,8 +50,12 @@ function BChip({ children, type, backgroundColor, textColor }: BChipProps) {
     };
 
     return (
-        <View style={[_style, { backgroundColor }]}>
-            <BText style={[_textStyle]}>{children}</BText>
+        <View style={[_style, { backgroundColor: backgroundColor }]}>
+            {startIcon}
+            <BText style={[_textStyle, { fontWeight: titleWeight }]}>
+                {children}
+            </BText>
+            {endIcon}
         </View>
     );
 }

@@ -1,54 +1,21 @@
 import React from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+import { Competitor, Input } from "@/interfaces";
 import Modal from "react-native-modal";
-import { RadioButton } from "react-native-paper";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { colors, fonts, layout } from "@/constants";
 import font from "@/constants/fonts";
-import { Competitor, Input } from "@/interfaces";
-import { resScale } from "@/utils";
-import BButtonPrimary from "../atoms/BButtonPrimary";
-import BDivider from "../atoms/BDivider";
-import BHeaderIcon from "../atoms/BHeaderIcon";
-import BLabel from "../atoms/BLabel";
-import BSpacer from "../atoms/BSpacer";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import BText from "../atoms/BText";
+import BHeaderIcon from "../atoms/BHeaderIcon";
 import BForm from "../organism/BForm";
-
+import BButtonPrimary from "../atoms/BButtonPrimary";
+import { resScale } from "@/utils";
+import BSpacer from "../atoms/BSpacer";
+import BDivider from "../atoms/BDivider";
+import BLabel from "../atoms/BLabel";
+import { RadioButton } from "react-native-paper";
 const { height, width } = Dimensions.get("window");
-
-const styles = StyleSheet.create({
-    modalContainer: { margin: 0, justifyContent: "flex-end" },
-    contentWrapper: { justifyContent: "flex-end" },
-    contentOuterContainer: {
-        backgroundColor: colors.white,
-        borderTopStartRadius: layout.radius.lg,
-        borderTopEndRadius: layout.radius.lg
-    },
-    contentInnerContainer: { flex: 1, marginHorizontal: layout.pad.lg },
-    headerContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        height: layout.pad.xl + layout.pad.lg
-    },
-    headerTitle: {
-        fontFamily: font.family.montserrat[700],
-        fontSize: font.size.lg
-    },
-    buttonWrapper: {
-        width: "100%",
-        position: "absolute",
-        bottom: 10,
-        paddingHorizontal: layout.pad.lg
-    },
-    leftIconStyle: {
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.md,
-        color: colors.textInput.input
-    }
-});
-
 interface IProps {
     addCompetitor: any;
     onClose: () => void;
@@ -63,7 +30,7 @@ const initialState = {
     hope: ""
 };
 
-function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
+const BSheetAddCompetitor = ({ addCompetitor, isVisible, onClose }: IProps) => {
     const [state, setState] = React.useState<Competitor>(initialState);
 
     const onChange = (key: keyof Competitor) => (text: string) => {
@@ -121,8 +88,9 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
     const buttonStateDisabled = (): boolean => {
         if (state.name !== "" && state.mou !== "" && state.exclusive !== "") {
             return false;
+        } else {
+            return true;
         }
-        return true;
     };
 
     const onCloseModal = () => {
@@ -141,7 +109,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                     <View
                         style={[
                             styles.contentOuterContainer,
-                            { height: width + resScale(200) }
+                            { height: width + resScale(220) }
                         ]}
                     >
                         <View style={styles.contentInnerContainer}>
@@ -157,14 +125,14 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                 />
                             </View>
                             <View>
-                                <BSpacer size="verySmall" />
+                                <BSpacer size={"verySmall"} />
                                 <BDivider />
-                                <BSpacer size="small" />
+                                <BSpacer size={"small"} />
                                 <BForm titleBold="500" inputs={inputs} />
                                 <BLabel
                                     isRequired
-                                    bold="500"
-                                    label="Apakah sudah memiliki PKS / MOU?"
+                                    bold={"500"}
+                                    label={"Apakah sudah memiliki PKS / MOU?"}
                                 />
                                 <View
                                     style={{
@@ -180,7 +148,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                         }}
                                     >
                                         <RadioButton
-                                            value="Iya"
+                                            value={"Iya"}
                                             status={
                                                 state.mou?.toLowerCase() ===
                                                 "iya"
@@ -195,7 +163,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                                 onChange("mou")("Iya")
                                             }
                                         />
-                                        <BText>Iya</BText>
+                                        <BText>{"Iya"}</BText>
                                     </View>
                                     <View
                                         style={{
@@ -206,7 +174,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                         }}
                                     >
                                         <RadioButton
-                                            value="Tidak"
+                                            value={"Tidak"}
                                             status={
                                                 state.mou?.toLowerCase() ===
                                                 "tidak"
@@ -221,14 +189,14 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                                 onChange("mou")("Tidak")
                                             }
                                         />
-                                        <BText>Tidak</BText>
+                                        <BText>{"Tidak"}</BText>
                                     </View>
                                 </View>
-                                <BSpacer size="extraSmall" />
+                                <BSpacer size={"extraSmall"} />
                                 <BLabel
                                     isRequired
-                                    bold="500"
-                                    label="Apakah PKS-nya Ekslusif?"
+                                    bold={"500"}
+                                    label={"Apakah PKS-nya Ekslusif?"}
                                 />
                                 <View
                                     style={{
@@ -244,7 +212,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                         }}
                                     >
                                         <RadioButton
-                                            value="Iya"
+                                            value={"Iya"}
                                             status={
                                                 state.exclusive?.toLowerCase() ===
                                                 "iya"
@@ -259,7 +227,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                                 onChange("exclusive")("Iya")
                                             }
                                         />
-                                        <BText>Iya</BText>
+                                        <BText>{"Iya"}</BText>
                                     </View>
                                     <View
                                         style={{
@@ -270,7 +238,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                         }}
                                     >
                                         <RadioButton
-                                            value="Tidak"
+                                            value={"Tidak"}
                                             status={
                                                 state.exclusive?.toLowerCase() ===
                                                 "tidak"
@@ -285,10 +253,10 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                                 onChange("exclusive")("Tidak")
                                             }
                                         />
-                                        <BText>Tidak</BText>
+                                        <BText>{"Tidak"}</BText>
                                     </View>
                                 </View>
-                                <BSpacer size="extraSmall" />
+                                <BSpacer size={"extraSmall"} />
                                 <BForm titleBold="500" inputs={inputsTwo} />
                             </View>
                         </View>
@@ -304,6 +272,38 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
             </View>
         </Modal>
     );
-}
+};
+
+const styles = StyleSheet.create({
+    modalContainer: { margin: 0, justifyContent: "flex-end" },
+    contentWrapper: { justifyContent: "flex-end" },
+    contentOuterContainer: {
+        backgroundColor: colors.white,
+        borderTopStartRadius: layout.radius.lg,
+        borderTopEndRadius: layout.radius.lg
+    },
+    contentInnerContainer: { flex: 1, marginHorizontal: layout.pad.lg },
+    headerContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        height: layout.pad.xl + layout.pad.lg
+    },
+    headerTitle: {
+        fontFamily: font.family.montserrat[700],
+        fontSize: font.size.lg
+    },
+    buttonWrapper: {
+        width: "100%",
+        position: "absolute",
+        bottom: 10,
+        paddingHorizontal: layout.pad.lg
+    },
+    leftIconStyle: {
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.md,
+        color: colors.textInput.input
+    }
+});
 
 export default BSheetAddCompetitor;

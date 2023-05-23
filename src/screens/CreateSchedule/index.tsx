@@ -1,40 +1,40 @@
-import {
-    StackActions,
-    useFocusEffect,
-    useNavigation
-} from "@react-navigation/native";
-import moment from "moment";
 import * as React from "react";
 import { View, DeviceEventEmitter, BackHandler } from "react-native";
-import { useDispatch } from "react-redux";
 import {
     BBackContinueBtn,
     BContainer,
     BHeaderIcon,
     BSpacer,
-    PopUpQuestion,
-    BStepperIndicator
+    PopUpQuestion
 } from "@/components";
-import {
-    CreateScheduleContext,
-    CreateScheduleProvider
-} from "@/context/CreateScheduleContext";
-import { useKeyboardActive } from "@/hooks";
-import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
-import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { Styles } from "@/interfaces";
+import { useKeyboardActive } from "@/hooks";
+import { BStepperIndicator } from "@/components";
+import { resScale } from "@/utils";
+import {
+    StackActions,
+    useFocusEffect,
+    useNavigation
+} from "@react-navigation/native";
 import {
     CreateScheduleSecondStep,
     CreateScheduleState
 } from "@/interfaces/CreateSchedule";
-import { CreateSchedule } from "@/models/CreateSchedule";
-import { CREATE_SCHEDULE } from "@/navigation/ScreenNames";
-import { postOrderSchedule } from "@/redux/async-thunks/orderThunks";
-import { resetImageURLS } from "@/redux/reducers/cameraReducer";
-import { openPopUp } from "@/redux/reducers/modalReducer";
-import { resScale } from "@/utils";
+import {
+    CreateScheduleContext,
+    CreateScheduleProvider
+} from "@/context/CreateScheduleContext";
 import SecondStep from "./element/SecondStep";
 import FirstStep from "./element/FirstStep";
+import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
+import { resetImageURLS } from "@/redux/reducers/cameraReducer";
+import { useDispatch } from "react-redux";
+import { CREATE_SCHEDULE } from "@/navigation/ScreenNames";
+import { CreateSchedule } from "@/models/CreateSchedule";
+import { openPopUp } from "@/redux/reducers/modalReducer";
+import { postOrderSchedule } from "@/redux/async-thunks/orderThunks";
+import moment from "moment";
+import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 
 const labels = ["Cari PT / Proyek", "Detil Pengiriman"];
 
@@ -45,32 +45,36 @@ function stepHandler(
     const { stepOne, stepTwo } = state;
 
     if (stepOne?.purchaseOrders && stepOne?.purchaseOrders.length > 0) {
-        setStepsDone((curr) => [...new Set(curr), 0]);
+        setStepsDone((curr) => {
+            return [...new Set(curr), 0];
+        });
     } else {
         setStepsDone((curr) => curr.filter((num) => num !== 0));
     }
     if (
         stepTwo?.deliveryDate &&
         stepTwo?.deliveryTime &&
-        // stepTwo?.method &&
+        stepTwo?.method &&
         stepTwo?.inputtedVolume &&
-        stepTwo?.salesOrder &&
-        getTotalProduct(stepTwo) <= stepTwo?.availableDeposit
+        stepTwo?.salesOrder
+        // getTotalProduct(stepTwo) <= stepTwo?.availableDeposit
     ) {
-        setStepsDone((curr) => [...new Set(curr), 1]);
+        setStepsDone((curr) => {
+            return [...new Set(curr), 1];
+        });
     } else {
         setStepsDone((curr) => curr.filter((num) => num !== 1));
     }
 }
 
 const getTotalProduct = (stepTwo: CreateScheduleSecondStep): number => {
-    const total =
+    let total =
         stepTwo?.inputtedVolume *
         stepTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
     return total;
 };
 
-function CreateScheduleScreen() {
+const CreateScheduleScreen = () => {
     const navigation = useNavigation();
     const { values, action } = React.useContext(CreateScheduleContext);
     const { keyboardVisible } = useKeyboardActive();
@@ -114,13 +118,12 @@ function CreateScheduleScreen() {
         ])
     );
 
-    React.useEffect(
-        () => () => {
+    React.useEffect(() => {
+        return () => {
             dispatch(resetImageURLS({ source: CREATE_SCHEDULE }));
-        },
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
-    );
+    }, []);
 
     React.useEffect(() => {
         stepHandler(values, setStepsDone);
@@ -148,7 +151,7 @@ function CreateScheduleScreen() {
                         outsideClickClosePopUp: false
                     })
                 );
-                const payload: CreateSchedule = {
+                let payload: CreateSchedule = {
                     saleOrderId: values.stepTwo?.salesOrder?.id,
                     projectId: values.existingProjectID,
                     purchaseOrderId: values.stepOne?.purchaseOrders[0].id,
@@ -156,10 +159,12 @@ function CreateScheduleScreen() {
                         values.stepOne?.purchaseOrders[0].quotationLetterId,
                     quantity: values.stepTwo?.inputtedVolume, // volume inputted
                     date: moment(
-                        `${values.stepTwo?.deliveryDate} ${values.stepTwo?.deliveryTime}`,
+                        values.stepTwo?.deliveryDate +
+                            " " +
+                            values.stepTwo?.deliveryTime,
                         "DD/MM/yyyy HH:mm"
                     ).valueOf(), // date + time
-                    withPump: values.stepTwo?.method,
+                    pouringMethod: values.stepTwo?.method,
                     consecutive:
                         values.stepTwo?.isConsecutive !== undefined
                             ? values.stepTwo?.isConsecutive
@@ -194,13 +199,17 @@ function CreateScheduleScreen() {
         }
     };
 
-    const actionBackButton = (directlyClose = false) => {
+    const actionBackButton = (directlyClose: boolean = false) => {
         if (values.isSearchingPurchaseOrder === true) {
             action.updateValue("isSearchingPurchaseOrder", false);
-        } else if (values.step > 0 && !directlyClose) {
-            next(values.step - 1)();
-        } else if (values.stepOne?.companyName) setPopupVisible(true);
-        else navigation.goBack();
+        } else {
+            if (values.step > 0 && !directlyClose) {
+                next(values.step - 1)();
+            } else {
+                if (values.stepOne?.companyName) setPopupVisible(true);
+                else navigation.goBack();
+            }
+        }
     };
 
     const stepRender = [<FirstStep />, <SecondStep />];
@@ -221,7 +230,7 @@ function CreateScheduleScreen() {
             <BContainer>
                 <View style={styles.container}>
                     {stepRender[values.step]}
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     {!keyboardVisible &&
                         values.shouldScrollView &&
                         values.step > -1 && (
@@ -237,11 +246,11 @@ function CreateScheduleScreen() {
                                 continueText={
                                     values.step > 0 ? "Buat Jadwal" : "Lanjut"
                                 }
-                                unrenderBack={!(values.step > 0)}
+                                unrenderBack={values.step > 0 ? false : true}
                                 disableContinue={
                                     !stepsDone.includes(values.step)
                                 }
-                                isContinueIcon={values.step < 1}
+                                isContinueIcon={values.step < 1 ? true : false}
                             />
                         )}
                     <PopUpQuestion
@@ -253,16 +262,16 @@ function CreateScheduleScreen() {
                         actionButton={() => {
                             setPopupVisible(false);
                         }}
-                        cancelText="Keluar"
-                        actionText="Lanjutkan"
-                        text="Apakah Anda yakin ingin keluar?"
-                        desc="Progres pembuatan Jadwal anda akan hilang"
+                        cancelText={"Keluar"}
+                        actionText={"Lanjutkan"}
+                        text={"Apakah Anda yakin ingin keluar?"}
+                        desc={"Progres pembuatan Jadwal anda akan hilang"}
                     />
                 </View>
             </BContainer>
         </>
     );
-}
+};
 
 const styles: Styles = {
     container: {
@@ -271,12 +280,12 @@ const styles: Styles = {
     }
 };
 
-function CreateScheduleWithProvider(props: any) {
+const CreateScheduleWithProvider = (props: any) => {
     return (
         <CreateScheduleProvider>
             <CreateScheduleScreen {...props} />
         </CreateScheduleProvider>
     );
-}
+};
 
 export default CreateScheduleWithProvider;

@@ -1,8 +1,9 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { PhotoFile } from "react-native-vision-camera";
 import { Docs, visitationListResponse } from "@/interfaces";
+import { CustomerDocs } from "@/models/Customer";
 import { ENTRY_TYPE } from "@/models/EnumModel";
 import { OperationProjectDetails } from "@/redux/reducers/operationReducer";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { PhotoFile } from "react-native-vision-camera";
 
 export type RootStackParamList = {
     TAB_ROOT: { screen?: string; params?: any };
@@ -56,9 +57,21 @@ export type RootStackParamList = {
     };
     SEARCH_AREA: { from?: string; eventKey?: string; sourceType?: string };
     CALENDAR: { useTodayMinDate: boolean };
-    TRANSACTION_DETAIL: { title: string; data: any; type: string };
+    TRANSACTION_DETAIL: {
+        title: string;
+        data: any;
+        type: string;
+        driverName?: string;
+        vehicleName?: string;
+    };
     CREATE_SCHEDULE: undefined;
-    CUSTOMER_DETAIL: { existingVisitation?: any };
+    CUSTOMER_DETAIL_V1: { existingVisitation?: any };
+    CUSTOMER_DETAIL_V2: { id?: string };
+    CUSTOMER_DOCUMENT: {
+        docs: CustomerDocs;
+        customerId: string;
+        customerType: "COMPANY" | "INDIVIDU";
+    };
     DOCUMENTS: { projectId?: string; docs?: Docs[] };
     VISIT_HISTORY: { projectId?: string; projectName?: string };
     CREATE_DEPOSIT: undefined;
@@ -71,6 +84,6 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> =
 
 declare global {
     namespace ReactNavigation {
-        type RootParamList = RootStackParamList;
+        interface RootParamList extends RootStackParamList {}
     }
 }

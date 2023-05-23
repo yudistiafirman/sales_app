@@ -9,6 +9,37 @@ const API_URL =
         : Config.API_URL_COMMON_PROD;
 
 export default class BrikApiCommon {
+    static getAllCustomers = (type: string, search: string, page: number) => {
+        const url = new URL(`${API_URL}/common/m/customer`);
+        const params = url.searchParams;
+        if (type) {
+            params.append("type", `${type}`);
+        }
+        if (search) {
+            params.append("search", `${search}`);
+        }
+        if (page) {
+            params.append("page", `${page}`);
+        }
+        return url.toString();
+    };
+    static oneCustomer = (id: string) => {
+        const url = new URL(`${API_URL}/common/m/customer/${id}`);
+        return url.toString();
+    };
+
+    static updateCustomerBillingAddress = (id: string) => {
+        const url = new URL(
+            `${API_URL}/common/m/customer/${id}/billing-address`
+        );
+        return url.toString();
+    };
+
+    static getCustomerCount = () => {
+        const url = new URL(`${API_URL}/common/m/customer/count`);
+        return url.toString();
+    };
+
     static getLocationCoordinates = (
         longitude: number,
         latitude: number,
@@ -27,7 +58,6 @@ export default class BrikApiCommon {
         }
         return url.toString();
     };
-
     static searchPlaces = (searchValue: string) => {
         const url = new URL(`${API_URL}/common/map/places`);
         const params = url.searchParams;

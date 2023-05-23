@@ -1,20 +1,23 @@
+import colors from "@/constants/colors";
+import font from "@/constants/fonts";
+import resScale from "@/utils/resScale";
 import React from "react";
 import {
     GestureResponderEvent,
     TextStyle,
-    TouchableOpacity
+    TouchableOpacity,
+    ViewStyle
 } from "react-native";
-import { layout } from "@/constants";
-import colors from "@/constants/colors";
-import font from "@/constants/fonts";
-import resScale from "@/utils/resScale";
 import BText from "./BText";
+import { layout } from "@/constants";
 
 interface BTouchableTextProps {
     onPress?: ((event: GestureResponderEvent) => void) | undefined;
     textStyle?: TextStyle | undefined;
+    viewStyle?: ViewStyle | undefined;
     title?: string | undefined;
     disabled?: boolean;
+    startIcon?: React.ReactNode;
 }
 
 const BTouchableTextDefaultStyle: TextStyle = {
@@ -24,18 +27,31 @@ const BTouchableTextDefaultStyle: TextStyle = {
     marginRight: layout.pad.ml + layout.pad.xs
 };
 
-const BTouchableTextDefaultProps = {
-    textStyle: BTouchableTextDefaultStyle
+const BTouchableViewStyle: ViewStyle = {
+    flexDirection: "row",
+    alignItems: "center"
 };
 
-function BTouchableText({
+const BTouchableDefaultProps = {
+    textStyle: BTouchableTextDefaultStyle,
+    viewStyle: BTouchableViewStyle
+};
+
+const BTouchableText = ({
     onPress,
     textStyle,
+    viewStyle,
     title,
-    disabled = false
-}: BTouchableTextProps & typeof BTouchableTextDefaultProps) {
+    disabled = false,
+    startIcon
+}: BTouchableTextProps & typeof BTouchableDefaultProps) => {
     return (
-        <TouchableOpacity disabled={disabled} onPress={onPress}>
+        <TouchableOpacity
+            style={viewStyle}
+            disabled={disabled}
+            onPress={onPress}
+        >
+            {startIcon}
             <BText
                 style={[textStyle, disabled && { color: colors.text.inactive }]}
             >
@@ -43,8 +59,8 @@ function BTouchableText({
             </BText>
         </TouchableOpacity>
     );
-}
+};
 
-BTouchableText.defaultProps = BTouchableTextDefaultProps;
+BTouchableText.defaultProps = BTouchableDefaultProps;
 
 export default BTouchableText;

@@ -1,16 +1,19 @@
-import crashlytics from "@react-native-firebase/crashlytics";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { useMachine } from "@xstate/react";
+/* eslint-disable react-native/no-inline-styles */
 import * as React from "react";
 import { AppState, DeviceEventEmitter, SafeAreaView, View } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
-import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import { useDispatch } from "react-redux";
-import { BAlert, BEmptyState, BSpacer, BTouchableText } from "@/components";
 import BTabSections from "@/components/organism/TabSections";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import Tnc from "@/screens/Price/element/Tnc";
+import CurrentLocation from "./element/CurrentLocation";
+import PriceStyle from "./PriceStyle";
+import PriceSearchBar from "./element/PriceSearchBar";
 import ProductList from "@/components/templates/Price/ProductList";
-import { layout } from "@/constants";
+import { BAlert, BEmptyState, BSpacer, BTouchableText } from "@/components";
+import { useMachine } from "@xstate/react";
 import { priceMachine } from "@/machine/priceMachine";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import LinearGradient from "react-native-linear-gradient";
+import { layout } from "@/constants";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {
     CREATE_VISITATION,
@@ -19,15 +22,13 @@ import {
     TAB_PRICE_LIST,
     TAB_PRICE_LIST_TITLE
 } from "@/navigation/ScreenNames";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import Tnc from "@/screens/Price/element/Tnc";
-import PriceSearchBar from "./element/PriceSearchBar";
-import CurrentLocation from "./element/CurrentLocation";
-import PriceStyle from "./PriceStyle";
+import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-function PriceList() {
+const PriceList = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
     const route = useRoute<RootStackScreenProps>();
@@ -123,13 +124,14 @@ function PriceList() {
     const renderHeaderRight = React.useCallback(() => {
         if (fromVisitation) {
             return <View />;
+        } else {
+            return (
+                <BTouchableText
+                    onPress={() => setVisibleTnc(true)}
+                    title="Ketentuan"
+                />
+            );
         }
-        return (
-            <BTouchableText
-                onPress={() => setVisibleTnc(true)}
-                title="Ketentuan"
-            />
-        );
     }, [fromVisitation]);
 
     React.useLayoutEffect(() => {
@@ -156,7 +158,7 @@ function PriceList() {
         if (!fromVisitation) {
             navigation.navigate(SEARCH_PRODUCT, {
                 distance: locationDetail?.distance?.value,
-                disablePressed: !fromVisitation
+                disablePressed: fromVisitation ? false : true
             });
         } else {
             navigation.goBack();
@@ -176,7 +178,7 @@ function PriceList() {
             };
 
             navigation.navigate(LOCATION, {
-                coordinate,
+                coordinate: coordinate,
                 isReadOnly: false,
                 from: TAB_PRICE_LIST_TITLE
             });
@@ -242,6 +244,7 @@ function PriceList() {
                 <BTabSections
                     swipeEnabled={false}
                     navigationState={{ index, routes }}
+                    minTabHeaderWidth={layout.pad.xl}
                     renderScene={() => (
                         <ProductList
                             onEndReached={() => {
@@ -258,7 +261,7 @@ function PriceList() {
                             onAction={() => send("retryGettingProducts")}
                             errorMessage={errorMessage}
                             onRefresh={() => send("refreshingList")}
-                            disablePressed={!fromVisitation}
+                            disablePressed={fromVisitation ? false : true}
                         />
                     )}
                     onTabPress={onTabPress}
@@ -280,6 +283,6 @@ function PriceList() {
       /> */}
         </SafeAreaView>
     );
-}
+};
 
 export default PriceList;

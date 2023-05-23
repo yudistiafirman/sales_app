@@ -1,8 +1,3 @@
-import BottomSheet from "@gorhom/bottom-sheet";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import debounce from "lodash.debounce";
-import moment from "moment";
 import * as React from "react";
 import {
     View,
@@ -13,14 +8,16 @@ import {
     Text,
     Platform
 } from "react-native";
-import Modal from "react-native-modal";
+import colors from "@/constants/colors";
+import TargetCard from "./elements/TargetCard";
+import resScale from "@/utils/resScale";
+import DateDaily from "./elements/DateDaily";
+import BQuickAction from "@/components/organism/BQuickActionMenu";
+import BottomSheet from "@gorhom/bottom-sheet";
+import BVisitationCard from "@/components/molecules/BVisitationCard";
+import moment from "moment";
 import { Button, Dialog, Portal, TextInput } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
-import { bStorage } from "@/actions";
-import {
-    getAllVisitations,
-    getVisitationTarget
-} from "@/actions/ProductivityActions";
+import BuatKunjungan from "./elements/BuatKunjungan";
 import {
     BSearchBar,
     BSpacer,
@@ -29,126 +26,55 @@ import {
     BCommonSearchList,
     BBottomSheet
 } from "@/components";
-import SvgNames from "@/components/atoms/BSvg/svgName";
-import BVisitationCard from "@/components/molecules/BVisitationCard";
-import BQuickAction from "@/components/organism/BQuickActionMenu";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import Modal from "react-native-modal";
 import { fonts, layout } from "@/constants";
-import colors from "@/constants/colors";
-import { useHeaderShow } from "@/hooks";
-import useHeaderStyleChanged from "@/hooks/useHeaderStyleChanged";
-import { visitationDataType } from "@/interfaces";
+import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
+import {
+    getAllVisitations,
+    getVisitationTarget
+} from "@/actions/ProductivityActions";
+import debounce from "lodash.debounce";
 import { Api } from "@/models";
+import { visitationDataType } from "@/interfaces";
+import { useDispatch, useSelector } from "react-redux";
+import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import { getOneVisitation } from "@/redux/async-thunks/productivityFlowThunks";
+import useHeaderStyleChanged from "@/hooks/useHeaderStyleChanged";
+import { useHeaderShow } from "@/hooks";
 import {
     APPOINTMENT,
     CAMERA,
     CREATE_DEPOSIT,
     CREATE_SCHEDULE,
     CREATE_VISITATION,
-    CUSTOMER_DETAIL,
+    CUSTOMER_DETAIL_V1,
     PO,
     SEARCH_SO,
     SPH,
     TAB_HOME,
     HOME_MENU
 } from "@/navigation/ScreenNames";
-import { getOneVisitation } from "@/redux/async-thunks/productivityFlowThunks";
-import {
-    resetFocusedStepperFlag,
-    resetSPHState
-} from "@/redux/reducers/SphReducer";
-import { resetImageURLS } from "@/redux/reducers/cameraReducer";
-import { resetRegion } from "@/redux/reducers/locationReducer";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import { RootState } from "@/redux/store";
+import SvgNames from "@/components/atoms/BSvg/svgName";
+import crashlytics from "@react-native-firebase/crashlytics";
 import {
     getAppVersionName,
     getMinVersionUpdate,
     isDevelopment,
     isForceUpdate
 } from "@/utils/generalFunc";
-import resScale from "@/utils/resScale";
-import TargetCard from "./elements/TargetCard";
-import DateDaily from "./elements/DateDaily";
-import BuatKunjungan from "./elements/BuatKunjungan";
-import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
+import { RootState } from "@/redux/store";
+import {
+    resetFocusedStepperFlag,
+    resetSPHState
+} from "@/redux/reducers/SphReducer";
+import { bStorage } from "@/actions";
+import { resetRegion } from "@/redux/reducers/locationReducer";
+import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import SelectCustomerTypeModal from "../PurchaseOrder/element/SelectCustomerTypeModal";
-
 const { height, width } = Dimensions.get("window");
 
-const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        // alignItems: 'center',
-        justifyContent: "flex-start",
-        backgroundColor: colors.primary
-    },
-    contentContainer: {
-        flex: 1,
-        alignItems: "center",
-        width: "100%"
-    },
-    itemContainer: {
-        padding: layout.pad.sm,
-        margin: layout.pad.sm,
-        backgroundColor: "#eee"
-    },
-    BsheetStyle: {
-        paddingLeft: layout.pad.lg,
-        paddingRight: layout.pad.lg,
-        justifyContent: "center"
-    },
-    flatListContainer: {},
-    flatListLoading: {
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    flatListShimmer: {
-        height: resScale(60),
-        borderRadius: layout.radius.md
-    },
-    modalContent: {
-        flex: 1
-    },
-    posRelative: {
-        position: "relative",
-        marginBottom: layout.pad.md
-    },
-    touchable: {
-        position: "absolute",
-        width: "100%",
-        borderRadius: layout.radius.sm,
-        height: resScale(45),
-        zIndex: 2
-    },
-    handleIndicator: {
-        height: resScale(3),
-        width: resScale(40),
-        backgroundColor: colors.disabled
-    },
-    popupSPHContent: { height: resScale(78), paddingHorizontal: layout.pad.lg },
-    popupSPHDesc: {
-        alignSelf: "center",
-        textAlign: "center",
-        paddingHorizontal: layout.pad.xl
-    },
-    poNumber: {
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.md,
-        color: colors.text.darker,
-        padding: layout.pad.xs + layout.pad.md
-    },
-    poNumberWrapper: {
-        backgroundColor: colors.tertiary,
-        height: resScale(37),
-        alignItems: "flex-start",
-        justifyContent: "center",
-        width: resScale(277),
-        alignSelf: "center",
-        borderRadius: layout.radius.md
-    }
-});
-
-function Beranda() {
+const Beranda = () => {
     const {
         force_update,
         enable_appointment,
@@ -168,12 +94,12 @@ function Beranda() {
     const [currentVisit, setCurrentVisit] = React.useState<{
         current: number;
         target: number;
-    }>({ current: 0, target: 10 }); // temporary setCurrentVisit
+    }>({ current: 0, target: 10 }); //temporary setCurrentVisit
     const [isExpanded, setIsExpanded] = React.useState(true);
     const [index, setIndex] = React.useState(0);
     const [isTargetLoading, setIsTargetLoading] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
-    const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); // setIsRenderDateDaily
+    const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
 
     const bottomSheetRef = React.useRef<BottomSheet>(null);
     const [searchQuery, setSearchQuery] = React.useState("");
@@ -217,12 +143,7 @@ function Beranda() {
     );
 
     const toggleModal = (key: string) => () => {
-        setData({
-            totalItems: 0,
-            currentPage: 0,
-            totalPage: 0,
-            data: []
-        });
+        setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
         setModalVisible(!isModalVisible);
         if (key === "close") {
             setSearchQuery("");
@@ -296,7 +217,7 @@ function Beranda() {
                         return {
                             id: el.id,
                             name: el.project?.displayName || "--",
-                            location: location || "-",
+                            location: location ? location : "-",
                             time,
                             status,
                             pilStatus
@@ -333,93 +254,104 @@ function Beranda() {
         }, [fetchTarget, selectedDate, isModalVisible])
     );
 
-    const renderUpdateDialog = () => (
-        <Portal>
-            <Dialog
-                visible={isUpdateDialogVisible}
-                dismissable={!isForceUpdate(force_update)}
-                onDismiss={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
-                style={{ backgroundColor: colors.white }}
-            >
-                <Dialog.Title
-                    style={{
-                        fontFamily: fonts.family.montserrat[500],
-                        fontSize: fonts.size.lg
-                    }}
+    const renderUpdateDialog = () => {
+        return (
+            <Portal>
+                <Dialog
+                    visible={isUpdateDialogVisible}
+                    dismissable={!isForceUpdate(force_update)}
+                    onDismiss={() =>
+                        setUpdateDialogVisible(!isUpdateDialogVisible)
+                    }
+                    style={{ backgroundColor: colors.white }}
                 >
-                    Update Aplikasi
-                </Dialog.Title>
-                <Dialog.Content>
-                    <BText bold="300">
-                        Aplikasi anda telah usang, silakan update sebelum
-                        melanjutkan.
-                    </BText>
-                </Dialog.Content>
-                <Dialog.Actions>
-                    {!isForceUpdate(force_update) && (
+                    <Dialog.Title
+                        style={{
+                            fontFamily: fonts.family.montserrat[500],
+                            fontSize: fonts.size.lg
+                        }}
+                    >
+                        Update Aplikasi
+                    </Dialog.Title>
+                    <Dialog.Content>
+                        <BText bold="300">
+                            Aplikasi anda telah usang, silakan update sebelum
+                            melanjutkan.
+                        </BText>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        {!isForceUpdate(force_update) && (
+                            <Button
+                                onPress={() =>
+                                    setUpdateDialogVisible(
+                                        !isUpdateDialogVisible
+                                    )
+                                }
+                            >
+                                Cancel
+                            </Button>
+                        )}
                         <Button
                             onPress={() =>
-                                setUpdateDialogVisible(!isUpdateDialogVisible)
+                                Linking.openURL(
+                                    Platform.OS === "ios"
+                                        ? "http://itunes.com/apps/bod"
+                                        : "https://play.google.com/store/apps/details?id=bod.app"
+                                )
                             }
                         >
-                            Cancel
+                            Update
                         </Button>
-                    )}
-                    <Button
-                        onPress={() =>
-                            Linking.openURL(
-                                Platform.OS === "ios"
-                                    ? "http://itunes.com/apps/bod"
-                                    : "https://play.google.com/store/apps/details?id=bod.app"
-                            )
-                        }
-                    >
-                        Update
-                    </Button>
-                </Dialog.Actions>
-            </Dialog>
-        </Portal>
-    );
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+        );
+    };
 
-    const renderPoNumber = () => (
-        <View
-            style={[
-                style.poNumberWrapper,
-                {
-                    alignItems:
-                        customerType === "COMPANY" ? "flex-start" : "center"
-                }
-            ]}
-        >
-            <Text style={style.poNumber}>
-                {customerType === "COMPANY" ? poNumber : "-"}
-            </Text>
-        </View>
-    );
-
-    const renderContinueData = () => (
-        <>
-            <View style={style.popupSPHContent}>
-                {feature === "PO" ? (
-                    renderPoNumber()
-                ) : (
-                    <BVisitationCard
-                        item={{
-                            name: sphData?.selectedCompany?.name,
-                            location:
-                                sphData?.selectedCompany?.locationAddress?.line1
-                        }}
-                        isRenderIcon={false}
-                    />
-                )}
+    const renderPoNumber = () => {
+        return (
+            <View
+                style={[
+                    style.poNumberWrapper,
+                    {
+                        alignItems:
+                            customerType === "COMPANY" ? "flex-start" : "center"
+                    }
+                ]}
+            >
+                <Text style={style.poNumber}>
+                    {customerType === "COMPANY" ? poNumber : "-"}
+                </Text>
             </View>
-            <BSpacer size="medium" />
-            <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
-                {`${feature} yang lama akan hilang kalau Anda buat ${feature} yang baru`}
-            </BText>
-            <BSpacer size="small" />
-        </>
-    );
+        );
+    };
+
+    const renderContinueData = () => {
+        return (
+            <>
+                <View style={style.popupSPHContent}>
+                    {feature === "PO" ? (
+                        renderPoNumber()
+                    ) : (
+                        <BVisitationCard
+                            item={{
+                                name: sphData?.selectedCompany?.name,
+                                location:
+                                    sphData?.selectedCompany?.locationAddress
+                                        ?.line1
+                            }}
+                            isRenderIcon={false}
+                        />
+                    )}
+                </View>
+                <BSpacer size={"medium"} />
+                <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
+                    {`${feature} yang lama akan hilang kalau Anda buat ${feature} yang baru`}
+                </BText>
+                <BSpacer size={"small"} />
+            </>
+        );
+    };
 
     React.useEffect(() => {
         crashlytics().log(TAB_HOME);
@@ -434,26 +366,21 @@ function Beranda() {
 
     const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
         setPage(1);
-        setData({
-            totalItems: 0,
-            currentPage: 0,
-            totalPage: 0,
-            data: []
-        });
+        setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
         setSelectedDate(dateTime);
     }, []);
 
-    const routes: { title: string; totalItems: number }[] = React.useMemo(
-        () => [
-            {
-                key: "first",
-                title: "Proyek",
-                totalItems: data.totalItems || 0,
-                chipPosition: "right"
-            }
-        ],
-        [data]
-    );
+    const routes: { title: string; totalItems: number }[] =
+        React.useMemo(() => {
+            return [
+                {
+                    key: "first",
+                    title: "Proyek",
+                    totalItems: data.totalItems || 0,
+                    chipPosition: "right"
+                }
+            ];
+        }, [data]);
 
     const onEndReached = React.useCallback(() => {
         if (data.totalPage) {
@@ -524,51 +451,51 @@ function Beranda() {
         ];
 
         if (!enable_sph) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.SPH
-            );
+            const filtered = buttons.filter((item) => {
+                return item.title !== HOME_MENU.SPH;
+            });
             buttons = filtered;
         }
 
         if (!enable_po) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.PO
-            );
+            const filtered = buttons.filter((item) => {
+                return item.title !== HOME_MENU.PO;
+            });
             buttons = filtered;
         }
 
         if (!enable_deposit) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.DEPOSIT
-            );
+            const filtered = buttons.filter((item) => {
+                return item.title !== HOME_MENU.DEPOSIT;
+            });
             buttons = filtered;
         }
 
         if (!enable_create_schedule) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.SCHEDULE
-            );
+            const filtered = buttons.filter((item) => {
+                return item.title !== HOME_MENU.SCHEDULE;
+            });
             buttons = filtered;
         }
 
         if (!enable_appointment) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.APPOINTMENT
-            );
+            const filtered = buttons.filter((item) => {
+                return item.title !== HOME_MENU.APPOINTMENT;
+            });
             buttons = filtered;
         }
 
         if (!enable_signed_so) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.SIGN_SO
-            );
+            const filtered = buttons.filter((item) => {
+                return item.title !== HOME_MENU.SIGN_SO;
+            });
             buttons = filtered;
         }
         return buttons;
     };
 
-    const todayMark = React.useMemo(
-        () => [
+    const todayMark = React.useMemo(() => {
+        return [
             {
                 date: moment(),
                 lines: [
@@ -577,9 +504,8 @@ function Beranda() {
                     }
                 ]
             }
-        ],
-        []
-    );
+        ];
+    }, []);
 
     const onChangeSearch = (text: string) => {
         setSearchQuery(text);
@@ -651,7 +577,7 @@ function Beranda() {
                     existingVisitation: response
                 });
             } else {
-                navigation.navigate(CUSTOMER_DETAIL, {
+                navigation.navigate(CUSTOMER_DETAIL_V1, {
                     existingVisitation: response
                 });
             }
@@ -691,7 +617,7 @@ function Beranda() {
                 isVisible={isModalVisible}
                 backdropOpacity={1}
                 backdropColor="white"
-                hideModalContentWhileAnimating
+                hideModalContentWhileAnimating={true}
                 coverScreen={false}
                 onBackButtonPress={toggleModal("close")}
                 onModalHide={() => {
@@ -699,7 +625,7 @@ function Beranda() {
                 }}
             >
                 <View style={style.modalContent}>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size={"extraSmall"} />
                     <BCommonSearchList
                         placeholder="Cari PT / Proyek"
                         index={index}
@@ -712,7 +638,7 @@ function Beranda() {
                                 toggleModal("close")();
                             }
                         }}
-                        autoFocus
+                        autoFocus={true}
                         searchQuery={searchQuery}
                         onChangeText={onChangeSearch}
                         routes={routes}
@@ -749,7 +675,7 @@ function Beranda() {
                 onChange={bottomSheetOnchange}
                 percentSnapPoints={snapPoints}
                 ref={bottomSheetRef}
-                enableContentPanningGesture
+                enableContentPanningGesture={true}
                 handleIndicatorStyle={style.handleIndicator}
                 style={style.BsheetStyle}
                 footerComponent={(props: any) => {
@@ -781,14 +707,14 @@ function Beranda() {
                         value={searchQuery}
                     />
                 </View>
-                <BSpacer size="verySmall" />
+                <BSpacer size={"verySmall"} />
                 <DateDaily
                     markedDatesArray={todayMark}
                     isRender={isRenderDateDaily}
                     onDateSelected={onDateSelected}
                     selectedDate={selectedDate}
                 />
-                <BSpacer size="extraSmall" />
+                <BSpacer size={"extraSmall"} />
                 <BottomSheetFlatlist
                     isLoading={isLoading}
                     data={data.data}
@@ -821,8 +747,8 @@ function Beranda() {
                     }}
                     actionButton={continuePopUpAction}
                     descContent={renderContinueData()}
-                    cancelText="Buat Baru"
-                    actionText="Lanjutkan"
+                    cancelText={"Buat Baru"}
+                    actionText={"Lanjutkan"}
                     text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
                         feature === "PO" ? "PO" : "SPH"
                     } Sebelumnya?`}
@@ -843,5 +769,78 @@ function Beranda() {
             {renderUpdateDialog()}
         </View>
     );
-}
+};
+
+const style = StyleSheet.create({
+    container: {
+        flex: 1,
+        // alignItems: 'center',
+        justifyContent: "flex-start",
+        backgroundColor: colors.primary
+    },
+    contentContainer: {
+        flex: 1,
+        alignItems: "center",
+        width: "100%"
+    },
+    itemContainer: {
+        padding: layout.pad.sm,
+        margin: layout.pad.sm,
+        backgroundColor: "#eee"
+    },
+    BsheetStyle: {
+        paddingLeft: layout.pad.lg,
+        paddingRight: layout.pad.lg,
+        justifyContent: "center"
+    },
+    flatListContainer: {},
+    flatListLoading: {
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    flatListShimmer: {
+        height: resScale(60),
+        borderRadius: layout.radius.md
+    },
+    modalContent: {
+        flex: 1
+    },
+    posRelative: {
+        position: "relative",
+        marginBottom: layout.pad.md
+    },
+    touchable: {
+        position: "absolute",
+        width: "100%",
+        borderRadius: layout.radius.sm,
+        height: resScale(45),
+        zIndex: 2
+    },
+    handleIndicator: {
+        height: resScale(3),
+        width: resScale(40),
+        backgroundColor: colors.disabled
+    },
+    popupSPHContent: { height: resScale(78), paddingHorizontal: layout.pad.lg },
+    popupSPHDesc: {
+        alignSelf: "center",
+        textAlign: "center",
+        paddingHorizontal: layout.pad.xl
+    },
+    poNumber: {
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.md,
+        color: colors.text.darker,
+        padding: layout.pad.xs + layout.pad.md
+    },
+    poNumberWrapper: {
+        backgroundColor: colors.tertiary,
+        height: resScale(37),
+        alignItems: "flex-start",
+        justifyContent: "center",
+        width: resScale(277),
+        alignSelf: "center",
+        borderRadius: layout.radius.md
+    }
+});
 export default Beranda;

@@ -1,54 +1,24 @@
-import React from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import React, { useEffect } from "react";
+
+import { Input, PIC, PicFormInitialState } from "@/interfaces";
 import Modal from "react-native-modal";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { colors, fonts, layout } from "@/constants";
 import font from "@/constants/fonts";
-import { Input, PIC, PicFormInitialState } from "@/interfaces";
-import { resScale } from "@/utils";
-import BButtonPrimary from "../atoms/BButtonPrimary";
-import BHeaderIcon from "../atoms/BHeaderIcon";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import BText from "../atoms/BText";
+import BHeaderIcon from "../atoms/BHeaderIcon";
 import BForm from "../organism/BForm";
-
+import BButtonPrimary from "../atoms/BButtonPrimary";
+import { resScale } from "@/utils";
 const { height, width } = Dimensions.get("window");
-
-const styles = StyleSheet.create({
-    modalContainer: { margin: 0, justifyContent: "flex-end" },
-    contentWrapper: { justifyContent: "flex-end" },
-    contentOuterContainer: {
-        backgroundColor: colors.white,
-        borderTopStartRadius: layout.radius.lg,
-        borderTopEndRadius: layout.radius.lg
-    },
-    contentInnerContainer: { flex: 1, marginHorizontal: layout.pad.lg },
-    headerContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        height: layout.pad.xl + layout.pad.lg
-    },
-    headerTitle: {
-        fontFamily: font.family.montserrat[700],
-        fontSize: font.size.lg
-    },
-    buttonWrapper: {
-        width: "100%",
-        position: "absolute",
-        bottom: 10,
-        paddingHorizontal: layout.pad.lg
-    },
-    leftIconStyle: {
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.md,
-        color: colors.textInput.input
-    }
-});
-
 interface IProps {
     addPic: any;
     onClose: () => void;
     isVisible: boolean;
+    modalTitle?: string;
+    buttonTitle?: string;
+    defaultState?: PIC;
 }
 
 const initialState = {
@@ -65,8 +35,23 @@ const emailRegex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
-function BSheetAddPic({ addPic, isVisible, onClose }: IProps) {
-    const [state, setState] = React.useState<PicFormInitialState>(initialState);
+const BSheetAddPic = ({
+    addPic,
+    isVisible,
+    onClose,
+    modalTitle = "Tambah PIC",
+    buttonTitle = "Tambah PIC",
+    defaultState
+}: IProps) => {
+    const [state, setState] = React.useState<PIC | PicFormInitialState>(
+        initialState
+    );
+
+    useEffect(() => {
+        if (defaultState) {
+            setState(defaultState);
+        }
+    }, [defaultState]);
 
     const inputs: Input[] = [
         {
@@ -77,7 +62,7 @@ function BSheetAddPic({ addPic, isVisible, onClose }: IProps) {
             placeholder: "Masukkan Nama",
             type: "textInput",
             onChange: (e) =>
-                setState((prevState: PicFormInitialState) => ({
+                setState((prevState: PicFormInitialState | PIC) => ({
                     ...prevState,
                     name: e.nativeEvent.text
                 })),
@@ -161,7 +146,6 @@ function BSheetAddPic({ addPic, isVisible, onClose }: IProps) {
     };
 
     const onCloseModal = () => {
-        setState(initialState);
         onClose();
     };
     return (
@@ -181,7 +165,7 @@ function BSheetAddPic({ addPic, isVisible, onClose }: IProps) {
                         <View style={styles.contentInnerContainer}>
                             <View style={styles.headerContainer}>
                                 <BText style={styles.headerTitle}>
-                                    Tambah PIC
+                                    {modalTitle}
                                 </BText>
                                 <BHeaderIcon
                                     onBack={onCloseModal}
@@ -206,12 +190,44 @@ function BSheetAddPic({ addPic, isVisible, onClose }: IProps) {
                             )
                         }
                         onPress={onAdd}
-                        title="Tambah PIC"
+                        title={buttonTitle}
                     />
                 </View>
             </View>
         </Modal>
     );
-}
+};
+
+const styles = StyleSheet.create({
+    modalContainer: { margin: 0, justifyContent: "flex-end" },
+    contentWrapper: { justifyContent: "flex-end" },
+    contentOuterContainer: {
+        backgroundColor: colors.white,
+        borderTopStartRadius: layout.radius.lg,
+        borderTopEndRadius: layout.radius.lg
+    },
+    contentInnerContainer: { flex: 1, marginHorizontal: layout.pad.lg },
+    headerContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        height: layout.pad.xl + layout.pad.lg
+    },
+    headerTitle: {
+        fontFamily: font.family.montserrat[700],
+        fontSize: font.size.lg
+    },
+    buttonWrapper: {
+        width: "100%",
+        position: "absolute",
+        bottom: 10,
+        paddingHorizontal: layout.pad.lg
+    },
+    leftIconStyle: {
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.md,
+        color: colors.textInput.input
+    }
+});
 
 export default BSheetAddPic;

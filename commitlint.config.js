@@ -17,7 +17,9 @@ module.exports = {
                 "style",
                 "test",
                 "add",
-                "change"
+                "change",
+                "merge",
+                "remove"
             ]
         ]
     }

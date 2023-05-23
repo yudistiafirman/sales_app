@@ -1,6 +1,7 @@
-import { NativeModules, Platform } from "react-native";
 import { colors } from "@/constants";
-
+import { INDIVIDU } from "@/constants/const";
+import { CustomerDocsPayType } from "@/models/Customer";
+import { NativeModules, Platform } from "react-native";
 const { RNCustomConfig } = NativeModules;
 
 const flavor = RNCustomConfig?.flavor;
@@ -294,5 +295,46 @@ export const getSuccessMsgFromAPI = (
     return finalText;
 };
 
-export const uniqueStringGenerator = () =>
-    Date.now().toString(36) + Math.random().toString(36).substr(2);
+export const showWarningDocument = (
+    cbdDocs: CustomerDocsPayType[],
+    customerType: "INDIVIDU" | "COMPANY"
+) => {
+    if (!cbdDocs || !customerType) return false;
+
+    const documents = cbdDocs.filter((v) => v.File !== null);
+    if (customerType === INDIVIDU) {
+        if (documents && documents?.length > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        if (
+            documents &&
+            documents?.length > 0 &&
+            documents[0]?.Document?.name === "Foto NPWP"
+        ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+};
+
+export const uniqueStringGenerator = () => {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+};
+
+export const replaceDot = (value: string) => {
+    let count = 0;
+    let output = "";
+    for (let i = 0; i < value.length; i++) {
+        if (value[i] === ".") {
+            count++;
+        }
+        if (count <= 1 && value[0] !== ".") {
+            output += value[i];
+        }
+    }
+    return output;
+};

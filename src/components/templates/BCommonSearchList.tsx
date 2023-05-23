@@ -1,32 +1,23 @@
-import { FlashList } from "@shopify/flash-list";
-import * as React from "react";
-import { ListRenderItem, Platform, StyleSheet, View } from "react-native";
-import { TextInput } from "react-native-paper";
-import BSpacer from "@/components/atoms/BSpacer";
-import BSearchBar from "@/components/molecules/BSearchBar";
 import BVisitationCard from "@/components/molecules/BVisitationCard";
-import BTabSections from "@/components/organism/TabSections";
 import { colors, layout } from "@/constants";
-import { selectedCompanyInterface, visitationDataType } from "@/interfaces";
-import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
-import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
+import * as React from "react";
+import {
+    FlatList,
+    ListRenderItem,
+    Platform,
+    StyleSheet,
+    View
+} from "react-native";
 import BCommonListShimmer from "./BCommonListShimmer";
+import { selectedCompanyInterface, visitationDataType } from "@/interfaces";
+import BSpacer from "@/components/atoms/BSpacer";
+import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
+import BSearchBar from "@/components/molecules/BSearchBar";
+import { TextInput } from "react-native-paper";
+import BTabSections from "@/components/organism/TabSections";
 import BEmptyState from "../organism/BEmptyState";
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    tabIndicator: {
-        backgroundColor: colors.primary
-    },
-    tabStyle: {
-        flex: 1
-    },
-    tabBarStyle: {
-        backgroundColor: colors.white
-    }
-});
+import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
+import { FlashList } from "@shopify/flash-list";
 
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
     CreatedSPHListResponse &
@@ -62,7 +53,7 @@ interface BCommonSearchListProps {
     autoFocus?: boolean;
 }
 
-function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
+const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
     data,
     onEndReached,
     refreshing,
@@ -85,7 +76,7 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
     onPressMagnify,
     hidePicName,
     autoFocus
-}: BCommonSearchListProps) {
+}: BCommonSearchListProps) => {
     const isSearching = searchQuery.length > 2;
     const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
         ({ item, idx }) => {
@@ -115,7 +106,7 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
             };
             return (
                 <>
-                    <BSpacer size="small" />
+                    <BSpacer size={"small"} />
                     <BVisitationCard
                         item={constructVisitationData}
                         key={item.id}
@@ -166,9 +157,9 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                         <>
                             <BSpacer size="extraSmall" />
                             <FlashList
+                                data={data}
                                 estimatedItemSize={10}
                                 onEndReachedThreshold={0.5}
-                                data={data}
                                 removeClippedSubviews={false}
                                 initialNumToRender={10}
                                 maxToRenderPerBatch={10}
@@ -200,10 +191,25 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                     indicatorStyle={styles.tabIndicator}
                 />
             ) : (
-                <BEmptyState emptyText="Minimal 3 huruf!" />
+                <BEmptyState emptyText={`Minimal 3 huruf!`} />
             )}
         </View>
     );
-}
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    tabIndicator: {
+        backgroundColor: colors.primary
+    },
+    tabStyle: {
+        flex: 1
+    },
+    tabBarStyle: {
+        backgroundColor: colors.white
+    }
+});
 
 export default BCommonSearchList;

@@ -1,6 +1,3 @@
-import { StackActions, useNavigation } from "@react-navigation/native";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { bStorage } from "@/actions";
 import { BForm } from "@/components";
 import BChoosenProductList from "@/components/templates/BChoosenProductList";
@@ -9,11 +6,14 @@ import { PO } from "@/navigation/ScreenNames";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import formatCurrency from "@/utils/formatCurrency";
+import { StackActions, useNavigation } from "@react-navigation/native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 type ModalType = "loading" | "success" | "error";
 type ModalText = string;
 
-function ProductDetail() {
+const ProductDetail = () => {
     const poState = useSelector((state: RootState) => state.purchaseOrder);
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
@@ -54,11 +54,12 @@ function ProductDetail() {
 
     const calculatedTotalPrice = (): number => {
         const total = selectedProducts
-            .map((v) =>
-                v.quantity.toString()[0] === "0" || v.quantity.length === 0
+            .map((v) => {
+                return v.quantity.toString()[0] === "0" ||
+                    v.quantity.length === 0
                     ? 0
-                    : v.offeringPrice * v.quantity
-            )
+                    : v.offeringPrice * v.quantity;
+            })
             .reduce((a, b) => a + b, 0);
         return total;
     };
@@ -88,7 +89,10 @@ function ProductDetail() {
                 firstStatus: checked === "first" ? "checked" : "unchecked",
                 secondStatus: checked === "second" ? "checked" : "unchecked",
                 onSetComboRadioButtonValue: (value: string) =>
-                    dispatch({ type: "switchingMobilizationValue", value }),
+                    dispatch({
+                        type: "switchingMobilizationValue",
+                        value: value
+                    }),
                 firstChildren: checked === "first" && (
                     <BForm
                         titleBold="500"
@@ -103,13 +107,14 @@ function ProductDetail() {
                                     onChangeValue: (value, index) =>
                                         dispatch({
                                             type: "onChangeMobilizationPrice",
-                                            value,
-                                            index
+                                            value: value,
+                                            index: index
                                         }),
                                     tableInputListItem: [
                                         {
                                             firstColumnRangeTitle: "5-6",
                                             tableInputPlaceholder: "0",
+                                            secondColumnUnitInput: "rit",
                                             tableInputKeyboardType: "numeric",
                                             tableInputValue:
                                                 fiveToSix[0] !== "0" &&
@@ -120,6 +125,7 @@ function ProductDetail() {
                                         {
                                             firstColumnRangeTitle: "<5",
                                             tableInputPlaceholder: "0",
+                                            secondColumnUnitInput: "rit",
                                             tableInputKeyboardType: "numeric",
                                             tableInputValue:
                                                 lessThanFive[0] !== "0" &&
@@ -196,6 +202,6 @@ function ProductDetail() {
             }
         />
     );
-}
+};
 
 export default ProductDetail;

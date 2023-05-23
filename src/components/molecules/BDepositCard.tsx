@@ -1,29 +1,9 @@
-import * as React from "react";
 import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import * as React from "react";
 import { colors, fonts, layout } from "@/constants";
 import formatCurrency from "@/utils/formatCurrency";
 import BSpacer from "../atoms/BSpacer";
 import BText from "../atoms/BText";
-
-const styles = StyleSheet.create({
-    summary: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[300],
-        fontSize: fonts.size.sm
-    },
-    fontw400: {
-        fontFamily: fonts.family.montserrat[400]
-    },
-    summaryContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-    chip: {
-        paddingVertical: layout.pad.xs,
-        paddingHorizontal: layout.pad.md,
-        borderRadius: layout.radius.xl
-    }
-});
 
 type BDepositCardType = {
     firstSectionValue: number;
@@ -68,15 +48,14 @@ export default function BDepositCard({
                     IDR {formatCurrency(firstSectionValue)}
                 </Text>
             </View>
-            <BSpacer size="extraSmall" />
+            <BSpacer size={"extraSmall"} />
             <View style={styles.summaryContainer}>
                 <Text style={styles.summary}>{secondSectionText}</Text>
                 <Text style={[styles.summary, styles.fontw400]}>
-                    {isSum ? "+" : "-"} IDR
-                    {formatCurrency(secondSectionValue)}
+                    {isSum ? "+" : "-"} IDR {formatCurrency(secondSectionValue)}
                 </Text>
             </View>
-            <BSpacer size="extraSmall" />
+            <BSpacer size={"extraSmall"} />
             <View style={styles.summaryContainer}>
                 <Text style={styles.summary}>{thirdSectionText}</Text>
                 <Text
@@ -88,9 +67,15 @@ export default function BDepositCard({
                         }
                     ]}
                 >
-                    {`IDR ${formatCurrency(
-                        isSum ? getTotalSum() : getTotalDifference()
-                    )}`}
+                    {firstSectionValue - secondSectionValue < 0 && !isSum
+                        ? "- IDR " +
+                          formatCurrency(
+                              isSum ? getTotalSum() : getTotalDifference()
+                          )
+                        : "IDR " +
+                          formatCurrency(
+                              isSum ? getTotalSum() : getTotalDifference()
+                          )}
                 </Text>
             </View>
             {isError && (
@@ -102,3 +87,19 @@ export default function BDepositCard({
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    summary: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[300],
+        fontSize: fonts.size.sm
+    },
+    fontw400: {
+        fontFamily: fonts.family.montserrat[400]
+    },
+    summaryContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    }
+});
