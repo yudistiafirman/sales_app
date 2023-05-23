@@ -368,7 +368,7 @@ interface chosenProductType {
     };
 }
 
-type selectedPicType = {
+type SelectedPicType = {
     id?: string;
     name: string;
     phone: string;
@@ -377,7 +377,7 @@ type selectedPicType = {
     isSelected?: boolean;
 } | null;
 
-type billingAddressType = {
+type BillingAddressType = {
     name: string;
     phone: string | number;
     addressAutoComplete: { [key: string]: any };
@@ -387,9 +387,9 @@ type billingAddressType = {
 interface SphStateInterface {
     selectedCompany: selectedCompanyInterface | null;
     projectAddress: Address | null;
-    selectedPic: selectedPicType;
+    selectedPic: SelectedPicType;
     isBillingAddressSame: boolean;
-    billingAddress: billingAddressType;
+    billingAddress: BillingAddressType;
     distanceFromLegok: number | null;
     paymentType: "CBD" | "CREDIT" | "";
     paymentRequiredDocuments: { [key: string]: any };
@@ -397,7 +397,7 @@ interface SphStateInterface {
     paymentBankGuarantee: boolean;
     chosenProducts: chosenProductType[];
     useHighway: boolean;
-    uploadedAndMappedRequiredDocs: requiredDocType[];
+    uploadedAndMappedRequiredDocs: RequiredDocType[];
     stepSPHOneFinished: boolean;
     stepSPHTwoFinished: boolean;
     stepSPHThreeFinished: boolean;
@@ -601,7 +601,7 @@ interface payloadPostType {
     files: filesType[];
 }
 
-type visitationDataType = {
+type VisitationDataType = {
     id?: number;
     name: string;
     location?: string;
@@ -689,7 +689,7 @@ interface sphOrderPayloadType {
     };
 }
 
-type requiredDocType = {
+type RequiredDocType = {
     documentId: string;
     fileId: string;
 };
@@ -761,7 +761,7 @@ export type {
     projectPayloadType,
     picPayloadType,
     payloadPostType,
-    visitationDataType,
+    VisitationDataType as visitationDataType,
     projectResponseType,
     selectedCompanyInterface,
     sphOrderPayloadType,
@@ -770,13 +770,13 @@ export type {
     requestedProductsType,
     deliveryAndDistance,
     Address,
-    requiredDocType,
+    RequiredDocType as requiredDocType,
     postSphResponseType,
     Docs,
     ProjectDetail,
     requiredPic,
-    selectedPicType,
-    billingAddressType,
+    SelectedPicType as selectedPicType,
+    BillingAddressType as billingAddressType,
     chosenProductType,
     TitleBold,
     IComboRadioBtn,

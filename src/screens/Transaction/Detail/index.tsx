@@ -291,7 +291,7 @@ function TransactionDetail() {
         setExpandData(newExpandedData);
     };
 
-    type downloadType = {
+    type DownloadType = {
         url?: string;
         title?: string;
         downloadPopup: () => void;
@@ -303,7 +303,7 @@ function TransactionDetail() {
         title,
         downloadPopup,
         downloadError
-    }: downloadType) {
+    }: DownloadType) {
         if (!url) {
             downloadError(undefined);
             return null;
