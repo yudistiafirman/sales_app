@@ -183,7 +183,7 @@ async function printRemotePDF(
 ) {
     try {
         if (!url) {
-            throw "error url missing";
+            throw new Error("error url missing");
         }
         await RNPrint.print({
             filePath: url
@@ -226,7 +226,7 @@ export default function StepDone({
 
     const shareFunc = async (url?: string) => {
         try {
-            if (!url) throw "no url";
+            if (!url) throw new Error("no url");
             await Share.share({
                 url: url.replace(/\s/g, "%20"),
                 message: `Link PDF SPH ${stateCompanyName}, ${url.replace(

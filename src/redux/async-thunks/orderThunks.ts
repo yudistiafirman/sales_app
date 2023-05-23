@@ -20,9 +20,7 @@ export const postOrderSph = createAsyncThunk<
     try {
         const response = await postSph(payload);
         const { data } = response;
-
-        if (data.error) throw data as ErrorType;
-
+        if (data.error) throw new Error(data);
         return data.data;
     } catch (error) {
         return rejectWithValue(error.message);
@@ -36,9 +34,7 @@ export const postOrderDeposit = createAsyncThunk<
     try {
         const response = await postDeposit(payload);
         const { data } = response;
-
-        if (data.error) throw data as ErrorType;
-
+        if (data.error) throw new Error(data);
         return data.data;
     } catch (error) {
         return rejectWithValue(error.message);
@@ -52,9 +48,7 @@ export const postOrderSchedule = createAsyncThunk<
     try {
         const response = await postSchedule(payload);
         const { data } = response;
-
-        if (data.error) throw data as ErrorType;
-
+        if (data.error) throw new Error(data);
         return data.data;
     } catch (error) {
         return rejectWithValue(error.message);
