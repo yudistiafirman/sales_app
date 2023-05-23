@@ -71,9 +71,8 @@ function PurchaseOrder() {
                 return true;
             }
             return false;
-        } else {
-            return false;
         }
+        return false;
     };
 
     const handleDisableContinueBtn = () => {
