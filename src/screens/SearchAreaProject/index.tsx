@@ -40,48 +40,50 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         };
       }),
       navigateToLocation: (context, event) => {
-        const { lon, lat } = event.data;
-        const { formattedAddress } = context;
-        const from = route?.params?.from;
-        const eventKey = route?.params?.eventKey;
-        const sourceType = route?.params?.sourceType;
-        let coordinate = {
-          longitude: lon,
-          latitude: lat,
-          formattedAddress: formattedAddress,
-        };
+        if (event.data) {
+          const data = event.data;
+          const { formattedAddress } = context;
+          const from = route?.params?.from;
+          const eventKey = route?.params?.eventKey;
+          const sourceType = route?.params?.sourceType;
+          let coordinate = {
+            longitude: data?.lon,
+            latitude: data?.lat,
+            formattedAddress: formattedAddress,
+          };
 
-        if (typeof lon === 'string') {
-          coordinate.longitude = Number(lon);
-        }
-
-        if (typeof lat === 'string') {
-          coordinate.latitude = Number(lat);
-        }
-        if (
-          from === CREATE_VISITATION ||
-          from === SPH ||
-          from === CUSTOMER_DETAIL_V1
-        ) {
-          if (eventKey) {
-            if (sourceType) {
-              DeviceEventEmitter.emit(eventKey, {
-                coordinate: coordinate,
-                sourceType: sourceType,
-              });
-            } else {
-              DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
-            }
-          } else {
-            dispatch(updateRegion(coordinate));
+          if (typeof data?.lon === 'string') {
+            coordinate.longitude = Number(data?.lon);
           }
-          navigation.goBack();
-        } else {
-          navigation.navigate(LOCATION, {
-            coordinate: coordinate,
-            isReadOnly: false,
-            from: route?.params?.from,
-          });
+
+          if (typeof data?.lat === 'string') {
+            coordinate.latitude = Number(data?.lat);
+          }
+          if (
+            from === CREATE_VISITATION ||
+            from === SPH ||
+            from === CUSTOMER_DETAIL_V1
+          ) {
+            if (eventKey) {
+              if (sourceType) {
+                DeviceEventEmitter.emit(eventKey, {
+                  coordinate: coordinate,
+                  sourceType: sourceType,
+                });
+              } else {
+                DeviceEventEmitter.emit(eventKey, { coordinate: coordinate });
+              }
+            } else {
+              dispatch(updateRegion(coordinate));
+            }
+            navigation.goBack();
+          } else {
+            navigation.navigate(LOCATION, {
+              coordinate: coordinate,
+              isReadOnly: false,
+              from: route?.params?.from,
+            });
+          }
         }
       },
     },

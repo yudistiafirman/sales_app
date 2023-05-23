@@ -325,3 +325,17 @@ export const showWarningDocument = (
 export const uniqueStringGenerator = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
+
+export const replaceDot = (value: string) => {
+  let count = 0;
+  let output = '';
+  for (let i = 0; i < value.length; i++) {
+    if (value[i] === '.') {
+      count++;
+    }
+    if (count <= 1 && value[0] !== '.') {
+      output += value[i];
+    }
+  }
+  return output;
+};

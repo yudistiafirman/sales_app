@@ -109,6 +109,7 @@ const ProductDetail = () => {
                     {
                       firstColumnRangeTitle: '5-6',
                       tableInputPlaceholder: '0',
+                      secondColumnUnitInput: 'rit',
                       tableInputKeyboardType: 'numeric',
                       tableInputValue:
                         fiveToSix[0] !== '0' && fiveToSix.length > 0
@@ -118,6 +119,7 @@ const ProductDetail = () => {
                     {
                       firstColumnRangeTitle: '<5',
                       tableInputPlaceholder: '0',
+                      secondColumnUnitInput: 'rit',
                       tableInputKeyboardType: 'numeric',
                       tableInputValue:
                         lessThanFive[0] !== '0' && lessThanFive.length > 0

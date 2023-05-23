@@ -26,7 +26,7 @@ export interface VisitHistoryPayload extends visitationListResponse {
 }
 
 const visitHistoryMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QDcCWtUBcAEALdmA9gE4Ce2AtgIYDG+AdmAHSoQA2YAxFbBlPQAUqxKhVgBtAAwBdRKAAOhDJlSF6ckAA9EARgAsADiYAmAMyS9ANgMB2AKwAaEKV3GbJg3Z12Dku8btTOwBOSwBfMKc0ZTwCEnJqOlRGJhhMADV0LCoVNQAhUgFiQgArMBpMAEkITgg1ZmTkQgBrZmisWNgiMkpaBmY0zOUc1XoCotLyqogERsIaEbUpaWWNRWVRjW0EbyMfY0lTHQCnFwQ9SWCmSRsDY+tJAKDQiKisnHwu+N6klMH3xZjQrFMoVaqcMDEYrEJjyNg5ABmJAoTHaHziPUS-VSYAyANyQImoOms3oTQWBOWqyQIHWWE2NO2AFozFd9JJLCdnIhTHodEwbKYDMYDOZ-IEQuFIiA0Z1ugk+sk2vjRgARHJUAAyhCoEEgnDUAGFcFR6DAhtkCdVNNSFEp6WotrojkxTJZgsYHh69J6DKdENZjEw9MF-CKdGKOcEItL6IQ9fAabLPvKfv01vaCU6ECzbEx2ZzHNydvzJGWyzpfE9JcZXjL3nLvlilSx2GAMxtHYyA5J-Qhgnty5JK48JS9pcmMQrfgNcRbMIDxiCptUOw71N2EJZe8WzKZrkOR9Xx28Yimm4qUmjAeqF9rdZA11nNz6TDobt5gm69G67DY+3YXhMP4boGKKwSPHodh1pOXyYpezAAKJQiQADKC6YO2NJ0s+oDMt47gGMEUFHFyZyVmybo2AcgHHlKERAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QDcCWtUBcAEALdmA9gE4Ce2AtgIYDG+AdmAHSoQA2YAxFbBlPQAUqxKhVgBtAAwBdRKAAOhDJlSF6ckAA9EARgAsADiYAmAMyS9ANgMB2AKwAaEKV3GbJg3Z12Dku8btTOwBOSwBfMKc0ZTwCEnJqOlRGJhhMADV0LCoVNQAhUgFiQgArMBpMAEkITgg1ZmTkQgBrZmisWNgiMkpaBmY0zOUc1XoCotLyqogERsIaEbUpaWWNRWVRjW0EbyMfY0lTHQCnFwQ9SWCmSRsDY+tJAKDQiKisnHwu+N6klMH3xZjQrFMoVaqcMDEYrEJjyNg5ABmJAoTHaHziPUS-VSYAyANyQImoOms3oTQWBOWqyQIHWWE2NO2AFozFd9JJLCdnIhTHodEwbKYDMYDOZ-IEQuFIiA0Z1ugk+sk2vjRgARHJUAAyhCoEEgnDUAGFcFR6DAhtkCdVNNSFEp6WotrojkxTJZgsYHh69J6DKdENZjEw9MF-CKdGKOcFXjL3nLvlilUxIdCAOK4lRm9WYKicYi4sjpzCZqDZqi22n2glOhBMiPBmwhwWGTyhyxef07QXXSS9yQ6XxPSURaX0Qh6+A02WfeU-fprKsM0DMkXudmcxzcnb8-vGEOWA-eELBGzGGPTjEK34NdhgBcbR2MgOSTvBPZ9-uDiUvaUXr6YxU-lxC0cwJcYQSmap7wddQnwQSwXy3MxTB7PsB0eb8pTeGIZwTQDlWGAky21XVIGg6s4J9EwdBubxgjdPQ3TsGxOzsLwmH8N0DFFYJHj0OxzzjXCAOvZMoRIIsSzLcily0RA62CPQmFFRibEkAx6JuE8-S3HRTyYdlgiM7ijICewRzCIA */
   createMachine(
     {
       id: 'visit history machine',
@@ -35,7 +35,8 @@ const visitHistoryMachine =
       schema: {
         events: {} as
           | { type: 'assignParams'; value: string }
-          | { type: 'onChangeVisitationIdx'; value: number },
+          | { type: 'onChangeVisitationIdx'; value: number }
+          | { type: 'retryGettingData' },
         context: {} as {
           projectId: string;
           visitationData: VisitHistoryPayload[];
@@ -49,6 +50,7 @@ const visitHistoryMachine =
             }
           ];
           selectedVisitationByIdx: VisitHistoryPayload;
+          errorMessage: string | unknown;
         },
         services: {} as {
           getAllVisitationByProjectId: {
@@ -69,6 +71,7 @@ const visitHistoryMachine =
           },
         ],
         selectedVisitationByIdx: {} as VisitHistoryPayload,
+        errorMessage: '',
       },
 
       states: {
@@ -90,7 +93,10 @@ const visitHistoryMachine =
               actions: 'assignVisitationDataToContext',
             },
 
-            onError: 'ErrorState',
+            onError: {
+              target: 'errorGettingData',
+              actions: 'assignError',
+            },
           },
         },
 
@@ -103,7 +109,14 @@ const visitHistoryMachine =
             },
           },
         },
-        ErrorState: {},
+        errorGettingData: {
+          on: {
+            retryGettingData: {
+              target: 'getVisitationByProjectId',
+              actions: 'onRetryGettingData',
+            },
+          },
+        },
       },
 
       initial: 'idle',
@@ -111,22 +124,38 @@ const visitHistoryMachine =
     {
       services: {
         getAllVisitationByProjectId: async (context, _event) => {
-          const response = await getAllVisitations({
-            projectId: context.projectId,
-          });
-          return response.data.data.data;
+          try {
+            const response = await getAllVisitations({
+              projectId: context.projectId,
+            });
+            return response?.data?.data?.data;
+          } catch (error) {
+            throw new Error(error);
+          }
         },
       },
       actions: {
+        onRetryGettingData: assign((context, event) => {
+          return {
+            loading: true,
+            errorMessage: '',
+          };
+        }),
+        assignError: assign((context, event) => {
+          return {
+            loading: false,
+            errorMessage: event?.data?.message,
+          };
+        }),
         assignProjectIdToContext: assign((_context, event) => {
           return {
-            projectId: event.value,
+            projectId: event?.value,
             loading: true,
           };
         }),
         assignVisitationDataToContext: assign((_context, event) => {
-          const sortedData = event.data.reverse();
-          const newRoutes = sortedData.map((val, idx) => {
+          const sortedData = event?.data?.reverse();
+          const newRoutes = sortedData?.map((val, idx) => {
             return {
               key: val.id,
               title: `Kunjungan ${idx + 1}`,
@@ -135,19 +164,19 @@ const visitHistoryMachine =
             };
           });
 
-          const initialSelectedVisitation = event.data.filter(
+          const initialSelectedVisitation = event?.data?.filter(
             (v, i) => i === 0
           );
           return {
-            visitationData: event.data,
+            visitationData: event?.data,
             loading: false,
             routes: newRoutes,
             selectedVisitationByIdx: initialSelectedVisitation[0],
           };
         }),
         sliceVisitationData: assign((context, event) => {
-          let newSelectedVisitationData = context.visitationData.filter(
-            (v, i) => i === event.value
+          let newSelectedVisitationData = context?.visitationData?.filter(
+            (v, i) => i === event?.value
           );
 
           return {
