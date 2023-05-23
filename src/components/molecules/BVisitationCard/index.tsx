@@ -7,21 +7,20 @@ import {
 } from "react-native";
 import React from "react";
 
-import PillStatus from "./elements/PillStatus";
-import Time from "./elements/Time";
-import VisitStatus from "./elements/VisitStatus";
-
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import resScale from "@/utils/resScale";
-import PillNames from "./elements/PillNames";
-import HighlightText from "../../atoms/BHighlightText";
 import { colors, fonts, layout } from "@/constants";
 import BLocationText from "@/components/atoms/BLocationText";
 import { visitationDataType } from "@/interfaces";
 import { Text } from "react-native-paper";
 import BSpacer from "@/components/atoms/BSpacer";
-import Unit from "./elements/Unit";
 import BButtonPrimary from "@/components/atoms/BButtonPrimary";
+import Unit from "./elements/Unit";
+import HighlightText from "../../atoms/BHighlightText";
+import PillNames from "./elements/PillNames";
+import VisitStatus from "./elements/VisitStatus";
+import Time from "./elements/Time";
+import PillStatus from "./elements/PillStatus";
 
 function iconRender(
     isRenderIcon: boolean,
@@ -33,7 +32,7 @@ function iconRender(
     if (customIcon) {
         return customIcon();
     }
-    return <MaterialIcon size={24} name="chevron-right" color={"#000000"} />;
+    return <MaterialIcon size={24} name="chevron-right" color="#000000" />;
 }
 
 type VisitationCardType = {
@@ -92,10 +91,10 @@ export default function BVisitationCard({
                     {item.picOrCompanyName ? (
                         <>
                             <Text>{item.picOrCompanyName}</Text>
-                            <BSpacer size={"verySmall"} />
+                            <BSpacer size="verySmall" />
                         </>
                     ) : (
-                        <BSpacer size={"verySmall"} />
+                        <BSpacer size="verySmall" />
                     )}
                     <BLocationText
                         color={locationTextColor}
@@ -130,7 +129,7 @@ export default function BVisitationCard({
                         <BButtonPrimary
                             buttonStyle={style.locationButton}
                             titleStyle={style.locationTextButton}
-                            title={"Lihat Peta"}
+                            title="Lihat Peta"
                             isOutline
                             onPress={() => onLocationPress(item.lonlat)}
                         />

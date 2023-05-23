@@ -101,7 +101,7 @@ export default function BButtonPrimary({
                     )}
                 </>
                 {isLoading ? (
-                    <ActivityIndicator size={resScale(24)} color={"white"} />
+                    <ActivityIndicator size={resScale(24)} color="white" />
                 ) : (
                     <Text
                         style={[

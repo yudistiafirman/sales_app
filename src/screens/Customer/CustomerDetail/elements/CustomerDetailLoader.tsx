@@ -4,9 +4,10 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
-const CustomerDetailLoader = () => {
+function CustomerDetailLoader() {
     return (
         <View>
             <ShimmerPlaceholder style={styles.completeDocument} />
@@ -81,7 +82,7 @@ const CustomerDetailLoader = () => {
             </BContainer>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     completeDocument: {

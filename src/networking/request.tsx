@@ -123,11 +123,11 @@ instance.interceptors.response.use(
         if (config.url) {
             if (res?.status) metric?.setHttpResponseCode(res?.status);
             try {
-                let authorization = config?.headers?.get("Authorization");
+                const authorization = config?.headers?.get("Authorization");
                 if (authorization && authorization !== null) {
                     metric?.setResponseContentType(authorization);
                 }
-                let contentType = config?.headers?.get("Content-Type");
+                const contentType = config?.headers?.get("Content-Type");
                 if (contentType && contentType !== null) {
                     metric?.setResponseContentType(contentType);
                 }
@@ -190,7 +190,7 @@ instance.interceptors.response.use(
                 return Promise.resolve(res);
             }
         } else if (config.method !== "get" && config.method !== "put") {
-            let url = config.url;
+            let { url } = config;
             if (url) {
                 if (url[url?.length - 1] === "/") {
                     url = setCharAt(url, url?.length - 1, "");
@@ -231,7 +231,7 @@ instance.interceptors.response.use(
     (error: AxiosError<Api.Response, any>) => {
         let errorMessage = `There's something wrong`;
         let errorStatus = 500;
-        let errorMethod = error.config?.method;
+        const errorMethod = error.config?.method;
 
         if (errorMethod !== "get") {
             if (error.response) {
@@ -239,10 +239,8 @@ instance.interceptors.response.use(
                     if (error.response.data.message) {
                         errorMessage = error.response.data.message;
                     }
-                } else {
-                    if (error.message) {
-                        errorMessage = error.message;
-                    }
+                } else if (error.message) {
+                    errorMessage = error.message;
                 }
                 errorStatus = error.response.status;
             } else if (error.request) {
@@ -263,22 +261,20 @@ instance.interceptors.response.use(
                 store.dispatch(signout(false));
                 crashlytics().setUserId("");
                 analytics().setUserId("");
-            } else {
-                if (
-                    error?.config?.url !== postVisitationUrl &&
-                    error?.config?.url !== postVisitationBookUrl &&
-                    error?.config?.url !== postDepositUrl &&
-                    error?.config?.url !== postScheduleUrl &&
-                    error?.config?.url !== postPO &&
-                    error?.config?.url !== postSOSigned
-                ) {
-                    store.dispatch(
-                        openSnackbar({
-                            snackBarText: `${errorMessage} code: ${errorStatus}`,
-                            isSuccess: false
-                        })
-                    );
-                }
+            } else if (
+                error?.config?.url !== postVisitationUrl &&
+                error?.config?.url !== postVisitationBookUrl &&
+                error?.config?.url !== postDepositUrl &&
+                error?.config?.url !== postScheduleUrl &&
+                error?.config?.url !== postPO &&
+                error?.config?.url !== postSOSigned
+            ) {
+                store.dispatch(
+                    openSnackbar({
+                        snackBarText: `${errorMessage} code: ${errorStatus}`,
+                        isSuccess: false
+                    })
+                );
             }
         }
         return Promise.reject(error);

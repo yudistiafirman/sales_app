@@ -5,11 +5,11 @@ import {
     BContainer,
     BHeaderIcon,
     BSpacer,
-    PopUpQuestion
+    PopUpQuestion,
+    BStepperIndicator
 } from "@/components";
 import { Styles } from "@/interfaces";
 import { useKeyboardActive } from "@/hooks";
-import { BStepperIndicator } from "@/components";
 import { resScale } from "@/utils";
 import {
     StackActions,
@@ -24,8 +24,6 @@ import {
     CreateScheduleContext,
     CreateScheduleProvider
 } from "@/context/CreateScheduleContext";
-import SecondStep from "./element/SecondStep";
-import FirstStep from "./element/FirstStep";
 import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { useDispatch } from "react-redux";
@@ -35,6 +33,8 @@ import { openPopUp } from "@/redux/reducers/modalReducer";
 import { postOrderSchedule } from "@/redux/async-thunks/orderThunks";
 import moment from "moment";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
+import FirstStep from "./element/FirstStep";
+import SecondStep from "./element/SecondStep";
 
 const labels = ["Cari PT / Proyek", "Detil Pengiriman"];
 
@@ -45,9 +45,7 @@ function stepHandler(
     const { stepOne, stepTwo } = state;
 
     if (stepOne?.purchaseOrders && stepOne?.purchaseOrders.length > 0) {
-        setStepsDone((curr) => {
-            return [...new Set(curr), 0];
-        });
+        setStepsDone((curr) => [...new Set(curr), 0]);
     } else {
         setStepsDone((curr) => curr.filter((num) => num !== 0));
     }
@@ -59,22 +57,20 @@ function stepHandler(
         stepTwo?.salesOrder
         // getTotalProduct(stepTwo) <= stepTwo?.availableDeposit
     ) {
-        setStepsDone((curr) => {
-            return [...new Set(curr), 1];
-        });
+        setStepsDone((curr) => [...new Set(curr), 1]);
     } else {
         setStepsDone((curr) => curr.filter((num) => num !== 1));
     }
 }
 
 const getTotalProduct = (stepTwo: CreateScheduleSecondStep): number => {
-    let total =
+    const total =
         stepTwo?.inputtedVolume *
         stepTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
     return total;
 };
 
-const CreateScheduleScreen = () => {
+function CreateScheduleScreen() {
     const navigation = useNavigation();
     const { values, action } = React.useContext(CreateScheduleContext);
     const { keyboardVisible } = useKeyboardActive();
@@ -118,12 +114,13 @@ const CreateScheduleScreen = () => {
         ])
     );
 
-    React.useEffect(() => {
-        return () => {
+    React.useEffect(
+        () => () => {
             dispatch(resetImageURLS({ source: CREATE_SCHEDULE }));
-        };
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        []
+    );
 
     React.useEffect(() => {
         stepHandler(values, setStepsDone);
@@ -151,7 +148,7 @@ const CreateScheduleScreen = () => {
                         outsideClickClosePopUp: false
                     })
                 );
-                let payload: CreateSchedule = {
+                const payload: CreateSchedule = {
                     saleOrderId: values.stepTwo?.salesOrder?.id,
                     projectId: values.existingProjectID,
                     purchaseOrderId: values.stepOne?.purchaseOrders[0].id,
@@ -159,9 +156,7 @@ const CreateScheduleScreen = () => {
                         values.stepOne?.purchaseOrders[0].quotationLetterId,
                     quantity: values.stepTwo?.inputtedVolume, // volume inputted
                     date: moment(
-                        values.stepTwo?.deliveryDate +
-                            " " +
-                            values.stepTwo?.deliveryTime,
+                        `${values.stepTwo?.deliveryDate} ${values.stepTwo?.deliveryTime}`,
                         "DD/MM/yyyy HH:mm"
                     ).valueOf(), // date + time
                     pouringMethod: values.stepTwo?.method,
@@ -199,17 +194,13 @@ const CreateScheduleScreen = () => {
         }
     };
 
-    const actionBackButton = (directlyClose: boolean = false) => {
+    const actionBackButton = (directlyClose = false) => {
         if (values.isSearchingPurchaseOrder === true) {
             action.updateValue("isSearchingPurchaseOrder", false);
-        } else {
-            if (values.step > 0 && !directlyClose) {
-                next(values.step - 1)();
-            } else {
-                if (values.stepOne?.companyName) setPopupVisible(true);
-                else navigation.goBack();
-            }
-        }
+        } else if (values.step > 0 && !directlyClose) {
+            next(values.step - 1)();
+        } else if (values.stepOne?.companyName) setPopupVisible(true);
+        else navigation.goBack();
     };
 
     const stepRender = [<FirstStep />, <SecondStep />];
@@ -230,7 +221,7 @@ const CreateScheduleScreen = () => {
             <BContainer>
                 <View style={styles.container}>
                     {stepRender[values.step]}
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     {!keyboardVisible &&
                         values.shouldScrollView &&
                         values.step > -1 && (
@@ -246,11 +237,11 @@ const CreateScheduleScreen = () => {
                                 continueText={
                                     values.step > 0 ? "Buat Jadwal" : "Lanjut"
                                 }
-                                unrenderBack={values.step > 0 ? false : true}
+                                unrenderBack={!(values.step > 0)}
                                 disableContinue={
                                     !stepsDone.includes(values.step)
                                 }
-                                isContinueIcon={values.step < 1 ? true : false}
+                                isContinueIcon={values.step < 1}
                             />
                         )}
                     <PopUpQuestion
@@ -262,16 +253,16 @@ const CreateScheduleScreen = () => {
                         actionButton={() => {
                             setPopupVisible(false);
                         }}
-                        cancelText={"Keluar"}
-                        actionText={"Lanjutkan"}
-                        text={"Apakah Anda yakin ingin keluar?"}
-                        desc={"Progres pembuatan Jadwal anda akan hilang"}
+                        cancelText="Keluar"
+                        actionText="Lanjutkan"
+                        text="Apakah Anda yakin ingin keluar?"
+                        desc="Progres pembuatan Jadwal anda akan hilang"
                     />
                 </View>
             </BContainer>
         </>
     );
-};
+}
 
 const styles: Styles = {
     container: {
@@ -280,12 +271,12 @@ const styles: Styles = {
     }
 };
 
-const CreateScheduleWithProvider = (props: any) => {
+function CreateScheduleWithProvider(props: any) {
     return (
         <CreateScheduleProvider>
             <CreateScheduleScreen {...props} />
         </CreateScheduleProvider>
     );
-};
+}
 
 export default CreateScheduleWithProvider;

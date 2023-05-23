@@ -18,14 +18,14 @@ interface TransactionListCardProps {
     useBEStatus?: boolean;
 }
 
-const TransactionListCard = ({
+function TransactionListCard({
     number,
     projectName,
     status,
     name,
     nominal,
     useBEStatus
-}: TransactionListCardProps) => {
+}: TransactionListCardProps) {
     const statusFinal = useBEStatus ? status : getStatusTrx(status);
     const { color, textColor } = getColorStatusTrx(statusFinal);
     return (
@@ -54,8 +54,8 @@ const TransactionListCard = ({
                         {projectName}
                     </BText>
                     {nominal !== undefined && (
-                        <BText sizeInNumber={14} bold={"500"}>
-                            {"IDR " + formatCurrency(nominal ? nominal : 0)}
+                        <BText sizeInNumber={14} bold="500">
+                            {`IDR ${formatCurrency(nominal || 0)}`}
                         </BText>
                     )}
                 </View>
@@ -69,7 +69,7 @@ const TransactionListCard = ({
             </View>
         </View>
     );
-};
+}
 
 export const styles = StyleSheet.create({
     parent: {

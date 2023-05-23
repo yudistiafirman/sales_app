@@ -9,15 +9,12 @@ import {
     Platform
 } from "react-native";
 import colors from "@/constants/colors";
-import TargetCard from "./elements/TargetCard";
 import resScale from "@/utils/resScale";
-import DateDaily from "./elements/DateDaily";
 import BQuickAction from "@/components/organism/BQuickActionMenu";
 import BottomSheet from "@gorhom/bottom-sheet";
 import BVisitationCard from "@/components/molecules/BVisitationCard";
 import moment from "moment";
 import { Button, Dialog, Portal, TextInput } from "react-native-paper";
-import BuatKunjungan from "./elements/BuatKunjungan";
 import {
     BSearchBar,
     BSpacer,
@@ -29,7 +26,6 @@ import {
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
 import { fonts, layout } from "@/constants";
-import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
 import {
     getAllVisitations,
     getVisitationTarget
@@ -71,10 +67,15 @@ import {
 import { bStorage } from "@/actions";
 import { resetRegion } from "@/redux/reducers/locationReducer";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
+import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
+import BuatKunjungan from "./elements/BuatKunjungan";
+import DateDaily from "./elements/DateDaily";
+import TargetCard from "./elements/TargetCard";
 import SelectCustomerTypeModal from "../PurchaseOrder/element/SelectCustomerTypeModal";
+
 const { height, width } = Dimensions.get("window");
 
-const Beranda = () => {
+function Beranda() {
     const {
         force_update,
         enable_appointment,
@@ -94,12 +95,12 @@ const Beranda = () => {
     const [currentVisit, setCurrentVisit] = React.useState<{
         current: number;
         target: number;
-    }>({ current: 0, target: 10 }); //temporary setCurrentVisit
+    }>({ current: 0, target: 10 }); // temporary setCurrentVisit
     const [isExpanded, setIsExpanded] = React.useState(true);
     const [index, setIndex] = React.useState(0);
     const [isTargetLoading, setIsTargetLoading] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
-    const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); //setIsRenderDateDaily
+    const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); // setIsRenderDateDaily
 
     const bottomSheetRef = React.useRef<BottomSheet>(null);
     const [searchQuery, setSearchQuery] = React.useState("");
@@ -217,7 +218,7 @@ const Beranda = () => {
                         return {
                             id: el.id,
                             name: el.project?.displayName || "--",
-                            location: location ? location : "-",
+                            location: location || "-",
                             time,
                             status,
                             pilStatus
@@ -254,104 +255,93 @@ const Beranda = () => {
         }, [fetchTarget, selectedDate, isModalVisible])
     );
 
-    const renderUpdateDialog = () => {
-        return (
-            <Portal>
-                <Dialog
-                    visible={isUpdateDialogVisible}
-                    dismissable={!isForceUpdate(force_update)}
-                    onDismiss={() =>
-                        setUpdateDialogVisible(!isUpdateDialogVisible)
-                    }
-                    style={{ backgroundColor: colors.white }}
+    const renderUpdateDialog = () => (
+        <Portal>
+            <Dialog
+                visible={isUpdateDialogVisible}
+                dismissable={!isForceUpdate(force_update)}
+                onDismiss={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
+                style={{ backgroundColor: colors.white }}
+            >
+                <Dialog.Title
+                    style={{
+                        fontFamily: fonts.family.montserrat[500],
+                        fontSize: fonts.size.lg
+                    }}
                 >
-                    <Dialog.Title
-                        style={{
-                            fontFamily: fonts.family.montserrat[500],
-                            fontSize: fonts.size.lg
-                        }}
-                    >
-                        Update Aplikasi
-                    </Dialog.Title>
-                    <Dialog.Content>
-                        <BText bold="300">
-                            Aplikasi anda telah usang, silakan update sebelum
-                            melanjutkan.
-                        </BText>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                        {!isForceUpdate(force_update) && (
-                            <Button
-                                onPress={() =>
-                                    setUpdateDialogVisible(
-                                        !isUpdateDialogVisible
-                                    )
-                                }
-                            >
-                                Cancel
-                            </Button>
-                        )}
+                    Update Aplikasi
+                </Dialog.Title>
+                <Dialog.Content>
+                    <BText bold="300">
+                        Aplikasi anda telah usang, silakan update sebelum
+                        melanjutkan.
+                    </BText>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    {!isForceUpdate(force_update) && (
                         <Button
                             onPress={() =>
-                                Linking.openURL(
-                                    Platform.OS === "ios"
-                                        ? "http://itunes.com/apps/bod"
-                                        : "https://play.google.com/store/apps/details?id=bod.app"
-                                )
+                                setUpdateDialogVisible(!isUpdateDialogVisible)
                             }
                         >
-                            Update
+                            Cancel
                         </Button>
-                    </Dialog.Actions>
-                </Dialog>
-            </Portal>
-        );
-    };
-
-    const renderPoNumber = () => {
-        return (
-            <View
-                style={[
-                    style.poNumberWrapper,
-                    {
-                        alignItems:
-                            customerType === "COMPANY" ? "flex-start" : "center"
-                    }
-                ]}
-            >
-                <Text style={style.poNumber}>
-                    {customerType === "COMPANY" ? poNumber : "-"}
-                </Text>
-            </View>
-        );
-    };
-
-    const renderContinueData = () => {
-        return (
-            <>
-                <View style={style.popupSPHContent}>
-                    {feature === "PO" ? (
-                        renderPoNumber()
-                    ) : (
-                        <BVisitationCard
-                            item={{
-                                name: sphData?.selectedCompany?.name,
-                                location:
-                                    sphData?.selectedCompany?.locationAddress
-                                        ?.line1
-                            }}
-                            isRenderIcon={false}
-                        />
                     )}
-                </View>
-                <BSpacer size={"medium"} />
-                <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
-                    {`${feature} yang lama akan hilang kalau Anda buat ${feature} yang baru`}
-                </BText>
-                <BSpacer size={"small"} />
-            </>
-        );
-    };
+                    <Button
+                        onPress={() =>
+                            Linking.openURL(
+                                Platform.OS === "ios"
+                                    ? "http://itunes.com/apps/bod"
+                                    : "https://play.google.com/store/apps/details?id=bod.app"
+                            )
+                        }
+                    >
+                        Update
+                    </Button>
+                </Dialog.Actions>
+            </Dialog>
+        </Portal>
+    );
+
+    const renderPoNumber = () => (
+        <View
+            style={[
+                style.poNumberWrapper,
+                {
+                    alignItems:
+                        customerType === "COMPANY" ? "flex-start" : "center"
+                }
+            ]}
+        >
+            <Text style={style.poNumber}>
+                {customerType === "COMPANY" ? poNumber : "-"}
+            </Text>
+        </View>
+    );
+
+    const renderContinueData = () => (
+        <>
+            <View style={style.popupSPHContent}>
+                {feature === "PO" ? (
+                    renderPoNumber()
+                ) : (
+                    <BVisitationCard
+                        item={{
+                            name: sphData?.selectedCompany?.name,
+                            location:
+                                sphData?.selectedCompany?.locationAddress?.line1
+                        }}
+                        isRenderIcon={false}
+                    />
+                )}
+            </View>
+            <BSpacer size="medium" />
+            <BText bold="300" sizeInNumber={14} style={style.popupSPHDesc}>
+                {`${feature} yang lama akan hilang kalau Anda buat ${feature} yang baru`}
+            </BText>
+            <BSpacer size="small" />
+        </>
+    );
 
     React.useEffect(() => {
         crashlytics().log(TAB_HOME);
@@ -370,17 +360,17 @@ const Beranda = () => {
         setSelectedDate(dateTime);
     }, []);
 
-    const routes: { title: string; totalItems: number }[] =
-        React.useMemo(() => {
-            return [
-                {
-                    key: "first",
-                    title: "Proyek",
-                    totalItems: data.totalItems || 0,
-                    chipPosition: "right"
-                }
-            ];
-        }, [data]);
+    const routes: { title: string; totalItems: number }[] = React.useMemo(
+        () => [
+            {
+                key: "first",
+                title: "Proyek",
+                totalItems: data.totalItems || 0,
+                chipPosition: "right"
+            }
+        ],
+        [data]
+    );
 
     const onEndReached = React.useCallback(() => {
         if (data.totalPage) {
@@ -451,51 +441,51 @@ const Beranda = () => {
         ];
 
         if (!enable_sph) {
-            const filtered = buttons.filter((item) => {
-                return item.title !== HOME_MENU.SPH;
-            });
+            const filtered = buttons.filter(
+                (item) => item.title !== HOME_MENU.SPH
+            );
             buttons = filtered;
         }
 
         if (!enable_po) {
-            const filtered = buttons.filter((item) => {
-                return item.title !== HOME_MENU.PO;
-            });
+            const filtered = buttons.filter(
+                (item) => item.title !== HOME_MENU.PO
+            );
             buttons = filtered;
         }
 
         if (!enable_deposit) {
-            const filtered = buttons.filter((item) => {
-                return item.title !== HOME_MENU.DEPOSIT;
-            });
+            const filtered = buttons.filter(
+                (item) => item.title !== HOME_MENU.DEPOSIT
+            );
             buttons = filtered;
         }
 
         if (!enable_create_schedule) {
-            const filtered = buttons.filter((item) => {
-                return item.title !== HOME_MENU.SCHEDULE;
-            });
+            const filtered = buttons.filter(
+                (item) => item.title !== HOME_MENU.SCHEDULE
+            );
             buttons = filtered;
         }
 
         if (!enable_appointment) {
-            const filtered = buttons.filter((item) => {
-                return item.title !== HOME_MENU.APPOINTMENT;
-            });
+            const filtered = buttons.filter(
+                (item) => item.title !== HOME_MENU.APPOINTMENT
+            );
             buttons = filtered;
         }
 
         if (!enable_signed_so) {
-            const filtered = buttons.filter((item) => {
-                return item.title !== HOME_MENU.SIGN_SO;
-            });
+            const filtered = buttons.filter(
+                (item) => item.title !== HOME_MENU.SIGN_SO
+            );
             buttons = filtered;
         }
         return buttons;
     };
 
-    const todayMark = React.useMemo(() => {
-        return [
+    const todayMark = React.useMemo(
+        () => [
             {
                 date: moment(),
                 lines: [
@@ -504,8 +494,9 @@ const Beranda = () => {
                     }
                 ]
             }
-        ];
-    }, []);
+        ],
+        []
+    );
 
     const onChangeSearch = (text: string) => {
         setSearchQuery(text);
@@ -617,7 +608,7 @@ const Beranda = () => {
                 isVisible={isModalVisible}
                 backdropOpacity={1}
                 backdropColor="white"
-                hideModalContentWhileAnimating={true}
+                hideModalContentWhileAnimating
                 coverScreen={false}
                 onBackButtonPress={toggleModal("close")}
                 onModalHide={() => {
@@ -625,7 +616,7 @@ const Beranda = () => {
                 }}
             >
                 <View style={style.modalContent}>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <BCommonSearchList
                         placeholder="Cari PT / Proyek"
                         index={index}
@@ -638,7 +629,7 @@ const Beranda = () => {
                                 toggleModal("close")();
                             }
                         }}
-                        autoFocus={true}
+                        autoFocus
                         searchQuery={searchQuery}
                         onChangeText={onChangeSearch}
                         routes={routes}
@@ -675,7 +666,7 @@ const Beranda = () => {
                 onChange={bottomSheetOnchange}
                 percentSnapPoints={snapPoints}
                 ref={bottomSheetRef}
-                enableContentPanningGesture={true}
+                enableContentPanningGesture
                 handleIndicatorStyle={style.handleIndicator}
                 style={style.BsheetStyle}
                 footerComponent={(props: any) => {
@@ -707,14 +698,14 @@ const Beranda = () => {
                         value={searchQuery}
                     />
                 </View>
-                <BSpacer size={"verySmall"} />
+                <BSpacer size="verySmall" />
                 <DateDaily
                     markedDatesArray={todayMark}
                     isRender={isRenderDateDaily}
                     onDateSelected={onDateSelected}
                     selectedDate={selectedDate}
                 />
-                <BSpacer size={"extraSmall"} />
+                <BSpacer size="extraSmall" />
                 <BottomSheetFlatlist
                     isLoading={isLoading}
                     data={data.data}
@@ -747,8 +738,8 @@ const Beranda = () => {
                     }}
                     actionButton={continuePopUpAction}
                     descContent={renderContinueData()}
-                    cancelText={"Buat Baru"}
-                    actionText={"Lanjutkan"}
+                    cancelText="Buat Baru"
+                    actionText="Lanjutkan"
                     text={`Apakah Anda Ingin Melanjutkan Pembuatan ${
                         feature === "PO" ? "PO" : "SPH"
                     } Sebelumnya?`}
@@ -769,7 +760,7 @@ const Beranda = () => {
             {renderUpdateDialog()}
         </View>
     );
-};
+}
 
 const style = StyleSheet.create({
     container: {

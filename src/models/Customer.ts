@@ -1,5 +1,4 @@
-import { Address, Docs, ProjectDetail } from "@/interfaces";
-import { PIC } from "@/interfaces";
+import { Address, Docs, ProjectDetail, PIC } from "@/interfaces";
 
 export interface ICustomerListData {
     id: string;

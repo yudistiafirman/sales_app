@@ -66,13 +66,12 @@ export default function ProductCartModal({
         method: ""
     });
 
-    const calcPrice = useMemo(() => {
-        return calcTrips(detailOrder.volume ? +detailOrder.volume : 0)
-            ?.calcCost;
-    }, [detailOrder.volume]);
+    const calcPrice = useMemo(
+        () => calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost,
+        [detailOrder.volume]
+    );
     const totalPrice =
-        +detailOrder.volume * +detailOrder.sellPrice +
-        (calcPrice ? calcPrice : 0);
+        +detailOrder.volume * +detailOrder.sellPrice + (calcPrice || 0);
     const distanceCeil = distance ? Math.ceil(distance / 1000) : 0;
     function getAddPrice(): {
         delivery: distanceDeliverType;
@@ -105,16 +104,14 @@ export default function ProductCartModal({
     }
 
     const onChange = (key: string) => (val: string) => {
-        setDetailOrder((curr) => {
-            return {
-                ...curr,
-                [key]: val
-                    .toString()
-                    .split("")
-                    .filter((char) => /^\d+$/.test(char))
-                    .join("")
-            };
-        });
+        setDetailOrder((curr) => ({
+            ...curr,
+            [key]: val
+                .toString()
+                .split("")
+                .filter((char) => /^\d+$/.test(char))
+                .join("")
+        }));
     };
 
     const methodInput: Input[] = [
@@ -155,10 +152,10 @@ export default function ProductCartModal({
                         />
                     </TouchableOpacity>
                 </View>
-                <BSpacer size={"extraSmall"} />
+                <BSpacer size="extraSmall" />
                 <View style={style.grayContent}>
                     <Text style={style.productName}>{productData.name}</Text>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={style.chipContainer}>
                         <BChip backgroundColor={colors.chip.green}>
                             {productData.Category?.Parent?.name}
@@ -167,18 +164,18 @@ export default function ProductCartModal({
                             slump {productData?.properties?.slump}±12 cm
                         </BChip>
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={style.priceContainer}>
                         <Text style={style.hargaText}>Harga Dasar</Text>
                         <Text style={style.hargaText}>
                             IDR {formatCurrency(productData?.Price?.price)}
                         </Text>
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View>
                         <BDivider />
                     </View>
-                    <BSpacer size={"small"} />
+                    <BSpacer size="small" />
                     <View style={style.chipContainer}>
                         <MaterialCommunityIcons
                             name="map-marker-distance"
@@ -189,11 +186,11 @@ export default function ProductCartModal({
                             {distanceCeil} KM
                         </Text>
                     </View>
-                    <BSpacer size={"small"} />
+                    <BSpacer size="small" />
                     <View>
                         <BDivider />
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={style.priceContainer}>
                         <View style={{ maxWidth: resScale(200) }}>
                             <Text style={style.hargaJualText}>
@@ -248,7 +245,7 @@ export default function ProductCartModal({
                                 </BText>
                             )}
                         </View>
-                        <BSpacer size={"extraSmall"} />
+                        <BSpacer size="extraSmall" />
                         <View style={style.sellPriceContainer}>
                             <Text style={style.inputLabel}>Harga Jual</Text>
                             <BTextInput
@@ -326,7 +323,7 @@ export default function ProductCartModal({
                                     sellPrice: detailOrder.sellPrice,
                                     volume: detailOrder.volume,
                                     pouringMethod: detailOrder.method,
-                                    totalPrice: totalPrice,
+                                    totalPrice,
                                     additionalData: getAddPrice()
                                 };
                                 const existingDataIndex =

@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 type ModalType = "loading" | "success" | "error";
 type ModalText = string;
 
-const ProductDetail = () => {
+function ProductDetail() {
     const poState = useSelector((state: RootState) => state.purchaseOrder);
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
@@ -54,12 +54,11 @@ const ProductDetail = () => {
 
     const calculatedTotalPrice = (): number => {
         const total = selectedProducts
-            .map((v) => {
-                return v.quantity.toString()[0] === "0" ||
-                    v.quantity.length === 0
+            .map((v) =>
+                v.quantity.toString()[0] === "0" || v.quantity.length === 0
                     ? 0
-                    : v.offeringPrice * v.quantity;
-            })
+                    : v.offeringPrice * v.quantity
+            )
             .reduce((a, b) => a + b, 0);
         return total;
     };
@@ -91,7 +90,7 @@ const ProductDetail = () => {
                 onSetComboRadioButtonValue: (value: string) =>
                     dispatch({
                         type: "switchingMobilizationValue",
-                        value: value
+                        value
                     }),
                 firstChildren: checked === "first" && (
                     <BForm
@@ -107,8 +106,8 @@ const ProductDetail = () => {
                                     onChangeValue: (value, index) =>
                                         dispatch({
                                             type: "onChangeMobilizationPrice",
-                                            value: value,
-                                            index: index
+                                            value,
+                                            index
                                         }),
                                     tableInputListItem: [
                                         {
@@ -202,6 +201,6 @@ const ProductDetail = () => {
             }
         />
     );
-};
+}
 
 export default ProductDetail;

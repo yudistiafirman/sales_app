@@ -1,7 +1,6 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import PriceList from "@/screens/Price";
-import CustomTabBar from "../CustomTabBar";
 import Profile from "@/screens/Customer";
 import Home from "@/screens/Home";
 import { colors, fonts } from "@/constants";
@@ -23,6 +22,7 @@ import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import SalesHeaderRight from "@/navigation/Sales/HeaderRight";
 import Customer from "@/screens/Customer";
+import CustomTabBar from "../CustomTabBar";
 
 const Tab = createBottomTabNavigator();
 

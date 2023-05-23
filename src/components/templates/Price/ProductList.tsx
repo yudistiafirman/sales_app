@@ -4,10 +4,10 @@ import { layout } from "@/constants";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import React, { useCallback } from "react";
 import { ListRenderItem } from "react-native";
-import PriceListShimmer from "./PriceListShimmer";
 import { FlashList } from "@shopify/flash-list";
 import BSpacer from "@/components/atoms/BSpacer";
 import BDivider from "@/components/atoms/BDivider";
+import PriceListShimmer from "./PriceListShimmer";
 
 interface productsData {
     display_name?: string;
@@ -44,7 +44,7 @@ interface ProductListProps<ArrayOfObject> {
     disablePressed?: boolean;
 }
 
-const ProductList = <ArrayOfObject extends productsData>({
+function ProductList<ArrayOfObject extends productsData>({
     products,
     onEndReached,
     refreshing,
@@ -57,7 +57,7 @@ const ProductList = <ArrayOfObject extends productsData>({
     onPress,
     onAction,
     disablePressed = false
-}: ProductListProps<ArrayOfObject>) => {
+}: ProductListProps<ArrayOfObject>) {
     const renderItem: ListRenderItem<productsData> = useCallback(({ item }) => {
         const fc =
             item?.properties?.fc?.length > 0
@@ -76,7 +76,7 @@ const ProductList = <ArrayOfObject extends productsData>({
                     categories={item?.Category?.Parent?.name}
                     slump={item?.properties?.slump}
                 />
-                <BSpacer size={"extraSmall"} />
+                <BSpacer size="extraSmall" />
                 <BDivider />
             </TouchableOpacity>
         );
@@ -110,6 +110,6 @@ const ProductList = <ArrayOfObject extends productsData>({
             renderItem={renderItem}
         />
     );
-};
+}
 
 export default ProductList;

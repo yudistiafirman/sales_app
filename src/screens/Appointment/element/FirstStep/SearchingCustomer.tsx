@@ -10,7 +10,7 @@ import { getAllProject } from "@/redux/async-thunks/commonThunks";
 import { retrying } from "@/redux/reducers/commonReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 
-const SearchingCustomer = () => {
+function SearchingCustomer() {
     const [values, dispatchValue] = useAppointmentData();
     const [index, setIndex] = useState(0);
     const { searchQuery } = values;
@@ -27,11 +27,13 @@ const SearchingCustomer = () => {
         },
         [dispatch]
     );
-    const onChangeWithDebounce = React.useMemo(() => {
-        return debounce((text: string) => {
-            searchDispatch(text);
-        }, 500);
-    }, [searchDispatch]);
+    const onChangeWithDebounce = React.useMemo(
+        () =>
+            debounce((text: string) => {
+                searchDispatch(text);
+            }, 500),
+        [searchDispatch]
+    );
 
     const onChangeSearch = (text: string) => {
         dispatchValue({
@@ -92,17 +94,17 @@ const SearchingCustomer = () => {
         [dispatchValue, values.stepOne.options.items]
     );
 
-    const routes: { title: string; totalItems: number }[] =
-        React.useMemo(() => {
-            return [
-                {
-                    key: "first",
-                    title: "Proyek",
-                    totalItems: projects.length,
-                    chipPosition: "right"
-                }
-            ];
-        }, [projects]);
+    const routes: { title: string; totalItems: number }[] = React.useMemo(
+        () => [
+            {
+                key: "first",
+                title: "Proyek",
+                totalItems: projects.length,
+                chipPosition: "right"
+            }
+        ],
+        [projects]
+    );
 
     const onRetryGettingProjects = () => {
         dispatch(retrying());
@@ -135,21 +137,21 @@ const SearchingCustomer = () => {
                 index={index}
                 emptyText={`${searchQuery} tidak ditemukan!`}
                 routes={routes}
-                autoFocus={true}
+                autoFocus
                 onIndexChange={setIndex}
                 loadList={isProjectLoading}
                 onPressList={(item) => {
-                    let handlePicNull = { ...item };
+                    const handlePicNull = { ...item };
                     if (!handlePicNull.PIC) {
                         handlePicNull.PIC = [];
                     }
 
                     if (item.PIC && item.PIC.length > 0) {
-                        let finalPIC = [...item.PIC];
+                        const finalPIC = [...item.PIC];
                         finalPIC.forEach((it, index) => {
                             finalPIC[index] = {
                                 ...finalPIC[index],
-                                isSelected: index === 0 ? true : false
+                                isSelected: index === 0
                             };
                         });
                         if (handlePicNull.PIC) handlePicNull.PIC = finalPIC;
@@ -163,6 +165,6 @@ const SearchingCustomer = () => {
             />
         </View>
     );
-};
+}
 
 export default SearchingCustomer;

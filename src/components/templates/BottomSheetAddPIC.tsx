@@ -6,11 +6,12 @@ import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { colors, fonts, layout } from "@/constants";
 import font from "@/constants/fonts";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { resScale } from "@/utils";
 import BText from "../atoms/BText";
 import BHeaderIcon from "../atoms/BHeaderIcon";
 import BForm from "../organism/BForm";
 import BButtonPrimary from "../atoms/BButtonPrimary";
-import { resScale } from "@/utils";
+
 const { height, width } = Dimensions.get("window");
 interface IProps {
     addPic: any;
@@ -35,14 +36,14 @@ const emailRegex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
-const BSheetAddPic = ({
+function BSheetAddPic({
     addPic,
     isVisible,
     onClose,
     modalTitle = "Tambah PIC",
     buttonTitle = "Tambah PIC",
     defaultState
-}: IProps) => {
+}: IProps) {
     const [state, setState] = React.useState<PIC | PicFormInitialState>(
         initialState
     );
@@ -196,7 +197,7 @@ const BSheetAddPic = ({
             </View>
         </Modal>
     );
-};
+}
 
 const styles = StyleSheet.create({
     modalContainer: { margin: 0, justifyContent: "flex-end" },

@@ -56,7 +56,7 @@ const styles: Styles = {
     }
 };
 
-const ProductChip = ({ name, category, onDelete }: IProps) => {
+function ProductChip({ name, category, onDelete }: IProps) {
     return (
         <View style={styles.container}>
             <BText bold="bold">{name}</BText>
@@ -74,6 +74,6 @@ const ProductChip = ({ name, category, onDelete }: IProps) => {
             )}
         </View>
     );
-};
+}
 
 export default ProductChip;

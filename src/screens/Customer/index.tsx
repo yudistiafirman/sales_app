@@ -11,7 +11,7 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import { useDispatch } from "react-redux";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 
-const Customer = () => {
+function Customer() {
     const [state, send] = useMachine(customerListMachine);
     const navigation = useNavigation();
     const [searchValue, setSearchValue] = React.useState("");
@@ -37,9 +37,8 @@ const Customer = () => {
             dispatch(
                 openPopUp({
                     popUpType: "error",
-                    popUpText: errorMessage
-                        ? errorMessage
-                        : "Gagal Mendapatkan Data List Pelanggan",
+                    popUpText:
+                        errorMessage || "Gagal Mendapatkan Data List Pelanggan",
                     outsideClickClosePopUp: false,
                     primaryBtnTitle: "Coba Lagi",
                     outlineBtnTitle: "Kembali",
@@ -105,7 +104,7 @@ const Customer = () => {
             />
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {

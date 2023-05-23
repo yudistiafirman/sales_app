@@ -58,8 +58,8 @@ export default function SecondStep() {
                 valueOne: stateTwo?.deliveryDate,
                 valueTwo: stateTwo?.deliveryTime,
                 valueTwoMock: rawTime,
-                isErrorOne: stateTwo?.deliveryDate ? false : true,
-                isErrorTwo: stateTwo?.deliveryTime ? false : true
+                isErrorOne: !stateTwo?.deliveryDate,
+                isErrorTwo: !stateTwo?.deliveryTime
             }
         },
         {
@@ -67,7 +67,7 @@ export default function SecondStep() {
             isRequire: true,
             type: "dropdown",
             value: stateTwo?.method,
-            isError: stateTwo?.method ? false : true,
+            isError: !stateTwo?.method,
             customerErrorMsg: "Metode penuangan harus dipilih",
             dropdown: {
                 items: METHOD_LIST,
@@ -128,17 +128,15 @@ export default function SecondStep() {
     };
 
     const getTotalProduct = (): number => {
-        let total =
+        const total =
             stateTwo?.inputtedVolume *
             stateTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
         return total;
     };
 
-    const getDisplayName = (salesOrder: SalesOrdersData) => {
+    const getDisplayName = (salesOrder: SalesOrdersData) =>
         // BE bugs -> response category.`parent` should be `Parent`
-        return `${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name} ${salesOrder.PoProduct?.RequestedProduct?.displayName} ${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.name}`;
-    };
-
+        `${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name} ${salesOrder.PoProduct?.RequestedProduct?.displayName} ${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.name}`;
     return (
         <View style={style.container}>
             <ScrollView style={style.flexFull}>
@@ -164,108 +162,99 @@ export default function SecondStep() {
                         />
                     </View>
                 </View>
-                <BSpacer size={"extraSmall"} />
+                <BSpacer size="extraSmall" />
                 {stateOne?.purchaseOrders[0]?.SaleOrders &&
                     stateOne?.purchaseOrders[0]?.SaleOrders.length > 0 && (
                         <>
                             <Text style={style.partText}>Produk</Text>
-                            <BSpacer size={"verySmall"} />
+                            <BSpacer size="verySmall" />
                             <View style={style.flexFull}>
                                 <BDivider />
-                                <BSpacer size={"extraSmall"} />
+                                <BSpacer size="extraSmall" />
                                 {stateOne?.purchaseOrders[0]?.SaleOrders.map(
-                                    (item, index) => {
-                                        return (
+                                    (item, index) => (
+                                        <View
+                                            key={index.toString()}
+                                            style={style.flexFull}
+                                        >
                                             <View
-                                                key={index.toString()}
-                                                style={style.flexFull}
+                                                style={style.selectionProduct}
                                             >
                                                 <View
-                                                    style={
-                                                        style.selectionProduct
-                                                    }
+                                                    style={style.contentProduct}
                                                 >
-                                                    <View
-                                                        style={
-                                                            style.contentProduct
+                                                    <RadioButton
+                                                        value={index.toString()}
+                                                        status={
+                                                            selectedIndex ===
+                                                            index.toString()
+                                                                ? "checked"
+                                                                : "unchecked"
                                                         }
-                                                    >
-                                                        <RadioButton
-                                                            value={index.toString()}
-                                                            status={
-                                                                selectedIndex ===
+                                                        color={colors.primary}
+                                                        uncheckedColor={
+                                                            colors.border
+                                                                .altGrey
+                                                        }
+                                                        onPress={() => {
+                                                            if (
+                                                                selectedIndex !==
                                                                 index.toString()
-                                                                    ? "checked"
-                                                                    : "unchecked"
-                                                            }
-                                                            color={
-                                                                colors.primary
-                                                            }
-                                                            uncheckedColor={
-                                                                colors.border
-                                                                    .altGrey
-                                                            }
-                                                            onPress={() => {
-                                                                if (
-                                                                    selectedIndex !==
-                                                                    index.toString()
-                                                                ) {
-                                                                    updateValueOnstep(
-                                                                        "stepTwo",
-                                                                        "inputtedVolume",
-                                                                        0
-                                                                    );
-                                                                    updateValueOnstep(
-                                                                        "stepTwo",
-                                                                        "salesOrder",
-                                                                        item
-                                                                    );
-                                                                }
-                                                                setSelectedIndex(
-                                                                    index.toString()
+                                                            ) {
+                                                                updateValueOnstep(
+                                                                    "stepTwo",
+                                                                    "inputtedVolume",
+                                                                    0
                                                                 );
-                                                            }}
+                                                                updateValueOnstep(
+                                                                    "stepTwo",
+                                                                    "salesOrder",
+                                                                    item
+                                                                );
+                                                            }
+                                                            setSelectedIndex(
+                                                                index.toString()
+                                                            );
+                                                        }}
+                                                    />
+                                                    <BProductCard
+                                                        name={getDisplayName(
+                                                            item
+                                                        )}
+                                                        pricePerVol={
+                                                            item?.PoProduct
+                                                                ?.RequestedProduct
+                                                                ?.offeringPrice
+                                                        }
+                                                        volume={parseInt(
+                                                            item?.usedQuantity,
+                                                            10
+                                                        )}
+                                                        totalPrice={
+                                                            item?.PoProduct
+                                                                ?.RequestedProduct
+                                                                ?.offeringPrice *
+                                                            (item?.usedQuantity
+                                                                ? item?.usedQuantity
+                                                                : 0)
+                                                        }
+                                                        hideVolume
+                                                        withoutBorder
+                                                    />
+                                                </View>
+                                                {selectedIndex ===
+                                                    index.toString() && (
+                                                    <View
+                                                        style={style.formInput}
+                                                    >
+                                                        <BForm
+                                                            titleBold="500"
+                                                            inputs={
+                                                                inputsSelection
+                                                            }
+                                                            spacer="extraSmall"
                                                         />
-                                                        <BProductCard
-                                                            name={getDisplayName(
-                                                                item
-                                                            )}
-                                                            pricePerVol={
-                                                                item?.PoProduct
-                                                                    ?.RequestedProduct
-                                                                    ?.offeringPrice
-                                                            }
-                                                            volume={parseInt(
-                                                                item?.usedQuantity,
-                                                                10
-                                                            )}
-                                                            totalPrice={
-                                                                item?.PoProduct
-                                                                    ?.RequestedProduct
-                                                                    ?.offeringPrice *
-                                                                (item?.usedQuantity
-                                                                    ? item?.usedQuantity
-                                                                    : 0)
-                                                            }
-                                                            hideVolume
-                                                            withoutBorder
-                                                        />
-                                                    </View>
-                                                    {selectedIndex ===
-                                                        index.toString() && (
-                                                        <View
-                                                            style={
-                                                                style.formInput
-                                                            }
-                                                        >
-                                                            <BForm
-                                                                titleBold="500"
-                                                                inputs={
-                                                                    inputsSelection
-                                                                }
-                                                                spacer="extraSmall"
-                                                            />
-                                                            {/* <View style={style.volContent}>
+                                                        {/* <View style={style.volContent}>
                               <BText>Sisa vol. yang belum dikirim</BText>
                               <BText
                                 style={{
@@ -278,25 +267,22 @@ export default function SecondStep() {
                                   : 0 + ' m³'}
                               </BText>
                             </View> */}
-                                                        </View>
-                                                    )}
-                                                </View>
-                                                {stateOne?.purchaseOrders[0]
-                                                    ?.SaleOrders.length -
-                                                    1 !==
-                                                    index && (
-                                                    <BDivider
-                                                        marginVertical={
-                                                            layout.pad.md
-                                                        }
-                                                        borderColor={
-                                                            colors.white
-                                                        }
-                                                    />
+                                                    </View>
                                                 )}
                                             </View>
-                                        );
-                                    }
+                                            {stateOne?.purchaseOrders[0]
+                                                ?.SaleOrders.length -
+                                                1 !==
+                                                index && (
+                                                <BDivider
+                                                    marginVertical={
+                                                        layout.pad.md
+                                                    }
+                                                    borderColor={colors.white}
+                                                />
+                                            )}
+                                        </View>
+                                    )
                                 )}
                             </View>
                         </>
@@ -304,12 +290,12 @@ export default function SecondStep() {
             </ScrollView>
 
             <View>
-                <BSpacer size={"extraSmall"} />
+                <BSpacer size="extraSmall" />
                 <BDivider />
-                <BSpacer size={"verySmall"} />
+                <BSpacer size="verySmall" />
                 <BDepositCard
                     style={{ marginBottom: layout.pad.xl }}
-                    firstSectionText={"Deposit"}
+                    firstSectionText="Deposit"
                     firstSectionValue={
                         stateTwo?.availableDeposit
                             ? stateTwo?.availableDeposit
@@ -321,12 +307,12 @@ export default function SecondStep() {
                             : "-"
                     }
                     secondSectionValue={getTotalProduct()}
-                    thirdSectionText={"Est. Sisa Deposit"}
+                    thirdSectionText="Est. Sisa Deposit"
                     // isError={
                     //   getTotalProduct() >
                     //   (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
                     // }
-                    customErrorMsg={"Silakan lakukan penambahan deposit"}
+                    customErrorMsg="Silakan lakukan penambahan deposit"
                 />
             </View>
         </View>

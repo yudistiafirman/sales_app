@@ -36,15 +36,12 @@ export default function HighlightText({
         );
     }
 
-    const regexStr =
-        "(" +
-        searchQuery
-            .trim()
-            .toLowerCase()
-            .split(/\s+/)
-            .map(escapeRegExp)
-            .join("|") +
-        ")";
+    const regexStr = `(${searchQuery
+        .trim()
+        .toLowerCase()
+        .split(/\s+/)
+        .map(escapeRegExp)
+        .join("|")})`;
     const regex = new RegExp(regexStr, "gi");
     const parts = name.split(regex);
 

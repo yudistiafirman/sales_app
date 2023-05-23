@@ -1,11 +1,11 @@
 import { BChip, BHighlightText, BSpacer, BText } from "@/components";
-import colors from "../../constants/colors";
-import layout from "../../constants/layout";
 import font from "@/constants/fonts";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import formatCurrency from "@/utils/formatCurrency";
+import layout from "../../constants/layout";
+import colors from "../../constants/colors";
 
 interface IBCard {
     avatarText?: string;
@@ -21,7 +21,7 @@ interface IBCard {
     chipStartIcon: React.ReactNode;
 }
 
-const BCard = ({
+function BCard({
     avatarText,
     title,
     chipTitle,
@@ -33,7 +33,7 @@ const BCard = ({
     availableCredit,
     onPressCard,
     chipStartIcon
-}: IBCard) => {
+}: IBCard) {
     return (
         <TouchableOpacity
             onPress={onPressCard}
@@ -62,13 +62,11 @@ const BCard = ({
                     <BSpacer size="extraSmall" />
                     <View style={styles.credContainer}>
                         {listTextData &&
-                            listTextData.map((v, i) => {
-                                return (
-                                    <Text key={i} style={styles.credText}>
-                                        {v}
-                                    </Text>
-                                );
-                            })}
+                            listTextData.map((v, i) => (
+                                <Text key={i} style={styles.credText}>
+                                    {v}
+                                </Text>
+                            ))}
                     </View>
                 </View>
             </View>
@@ -106,7 +104,7 @@ const BCard = ({
             </View>
         </TouchableOpacity>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {

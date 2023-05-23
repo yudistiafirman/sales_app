@@ -9,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const DocumentWarning = ({
+function DocumentWarning({
     docs,
     customerId,
     customerType
@@ -17,7 +17,7 @@ const DocumentWarning = ({
     docs?: Docs[];
     customerId?: string;
     customerType: "INDIVIDU" | "COMPANY";
-}) => {
+}) {
     const navigation = useNavigation();
     return (
         <View style={styles.labelWarning}>
@@ -27,9 +27,9 @@ const DocumentWarning = ({
             <TouchableOpacity
                 onPress={() =>
                     navigation.navigate(CUSTOMER_DOCUMENT, {
-                        docs: docs,
-                        customerId: customerId,
-                        customerType: customerType
+                        docs,
+                        customerId,
+                        customerType
                     })
                 }
                 style={styles.outlineButton}
@@ -38,7 +38,7 @@ const DocumentWarning = ({
             </TouchableOpacity>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     labelWarning: {

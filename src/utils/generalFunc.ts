@@ -2,6 +2,7 @@ import { colors } from "@/constants";
 import { INDIVIDU } from "@/constants/const";
 import { CustomerDocsPayType } from "@/models/Customer";
 import { NativeModules, Platform } from "react-native";
+
 const { RNCustomConfig } = NativeModules;
 
 const flavor = RNCustomConfig?.flavor;
@@ -305,25 +306,21 @@ export const showWarningDocument = (
     if (customerType === INDIVIDU) {
         if (documents && documents?.length > 0) {
             return false;
-        } else {
-            return true;
         }
-    } else {
-        if (
-            documents &&
-            documents?.length > 0 &&
-            documents[0]?.Document?.name === "Foto NPWP"
-        ) {
-            return false;
-        } else {
-            return true;
-        }
+        return true;
     }
+    if (
+        documents &&
+        documents?.length > 0 &&
+        documents[0]?.Document?.name === "Foto NPWP"
+    ) {
+        return false;
+    }
+    return true;
 };
 
-export const uniqueStringGenerator = () => {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
-};
+export const uniqueStringGenerator = () =>
+    Date.now().toString(36) + Math.random().toString(36).substr(2);
 
 export const replaceDot = (value: string) => {
     let count = 0;

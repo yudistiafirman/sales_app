@@ -54,7 +54,7 @@ const BSearchBarDefaultProps = {
     dense: true
 };
 
-const BSearchBar = ({
+function BSearchBar({
     mode,
     left,
     right,
@@ -77,7 +77,7 @@ const BSearchBar = ({
     bgColor,
     autoFocus,
     onFocus
-}: BSearchBarProp & typeof BSearchBarDefaultProps) => {
+}: BSearchBarProp & typeof BSearchBarDefaultProps) {
     return (
         <TextInput
             onFocus={onFocus}
@@ -103,7 +103,7 @@ const BSearchBar = ({
             dense={dense}
         />
     );
-};
+}
 
 BSearchBar.defaultProps = BSearchBarDefaultProps;
 

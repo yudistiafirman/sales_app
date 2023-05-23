@@ -50,7 +50,7 @@ function BChip({
     };
 
     return (
-        <View style={[_style, { backgroundColor: backgroundColor }]}>
+        <View style={[_style, { backgroundColor }]}>
             {startIcon}
             <BText style={[_textStyle, { fontWeight: titleWeight }]}>
                 {children}

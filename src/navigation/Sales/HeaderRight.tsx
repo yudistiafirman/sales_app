@@ -28,7 +28,7 @@ const _styles: Styles = {
     }
 };
 
-export default function SalesHeaderRight(iconColor: string = "") {
+export default function SalesHeaderRight(iconColor = "") {
     const dispatch = useDispatch<AppDispatch>();
     const [visible, setVisible] = React.useState(false);
     const { isShowButtonNetwork } = useSelector(
@@ -72,34 +72,32 @@ export default function SalesHeaderRight(iconColor: string = "") {
     };
 
     return (
-        <>
-            <Menu
-                visible={visible}
-                anchor={
-                    <Icon
-                        name="menu"
-                        size={18}
-                        color={iconColor !== "" ? iconColor : colors.white}
-                        style={{ padding: layout.pad.lg }}
-                        onPress={showMenu}
-                    />
+        <Menu
+            visible={visible}
+            anchor={
+                <Icon
+                    name="menu"
+                    size={18}
+                    color={iconColor !== "" ? iconColor : colors.white}
+                    style={{ padding: layout.pad.lg }}
+                    onPress={showMenu}
+                />
+            }
+            onRequestClose={hideMenu}
+        >
+            <MenuItem textStyle={_styles.chipText} onPress={onLogout}>
+                Logout
+            </MenuItem>
+            <MenuDivider />
+            <MenuItem
+                textStyle={_styles.version}
+                disabled={!(isProduction() && !__DEV__)}
+                onPress={
+                    isProduction() && !__DEV__ ? onVersionClick : undefined
                 }
-                onRequestClose={hideMenu}
             >
-                <MenuItem textStyle={_styles.chipText} onPress={onLogout}>
-                    Logout
-                </MenuItem>
-                <MenuDivider />
-                <MenuItem
-                    textStyle={_styles.version}
-                    disabled={!(isProduction() && !__DEV__)}
-                    onPress={
-                        isProduction() && !__DEV__ ? onVersionClick : undefined
-                    }
-                >
-                    {"APP Version " + getAppVersionName()}
-                </MenuItem>
-            </Menu>
-        </>
+                {`APP Version ${getAppVersionName()}`}
+            </MenuItem>
+        </Menu>
     );
 }

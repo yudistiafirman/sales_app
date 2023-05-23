@@ -5,8 +5,6 @@ import {
 } from "@react-navigation/native";
 import * as React from "react";
 import { DeviceEventEmitter, SafeAreaView, View } from "react-native";
-import LocationStyles from "./styles";
-import CoordinatesDetail from "./elements/CoordinatesDetail";
 import { BButtonPrimary, BLocation, BMarker, BSpacer } from "@/components";
 import { useMachine } from "@xstate/react";
 import { locationMachine } from "@/machine/locationMachine";
@@ -29,8 +27,10 @@ import {
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { resScale } from "@/utils";
 import crashlytics from "@react-native-firebase/crashlytics";
+import CoordinatesDetail from "./elements/CoordinatesDetail";
+import LocationStyles from "./styles";
 
-const Location = () => {
+function Location() {
     const navigation = useNavigation();
     const route = useRoute<RootStackScreenProps>();
     const [searchedAddress, setSearchedAddress] = React.useState("");
@@ -76,7 +76,7 @@ const Location = () => {
             formattedAddress: route?.params?.coordinate?.formattedAddress
                 ? route?.params?.coordinate?.formattedAddress
                 : formattedAddress,
-            postalId: postalId
+            postalId
         };
 
         if (
@@ -92,26 +92,26 @@ const Location = () => {
             if (eventKey) {
                 if (sourceType) {
                     DeviceEventEmitter.emit(eventKey, {
-                        coordinate: coordinate,
-                        sourceType: sourceType
+                        coordinate,
+                        sourceType
                     });
                 } else {
                     DeviceEventEmitter.emit(eventKey, {
-                        coordinate: coordinate
+                        coordinate
                     });
                 }
                 navigation.dispatch(StackActions.pop(2));
             } else {
                 navigation.navigate(TAB_ROOT, {
                     screen: from,
-                    params: { coordinate: coordinate }
+                    params: { coordinate }
                 });
             }
         } else {
             navigation?.setParams({
-                coordinate: coordinate,
+                coordinate,
                 isReadOnly: route?.params?.isReadOnly,
-                from: from
+                from
             });
             navigation.goBack();
         }
@@ -125,7 +125,7 @@ const Location = () => {
                 onRegionChangeComplete={onRegionChangeComplete}
                 onRegionChange={() => setUseSearchedAddress(false)}
                 region={region}
-                scrollEnabled={isReadOnly === true ? false : true}
+                scrollEnabled={isReadOnly !== true}
                 CustomMarker={<BMarker />}
             />
             <View
@@ -164,6 +164,6 @@ const Location = () => {
             </View>
         </SafeAreaView>
     );
-};
+}
 
 export default Location;

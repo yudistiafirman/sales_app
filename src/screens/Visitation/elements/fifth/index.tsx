@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { DeviceEventEmitter } from "react-native";
-import LastStepPopUp from "../LastStepPopUp";
 import {
     locationPayloadType,
     payloadPostType,
@@ -37,6 +36,7 @@ import {
     updateDataVisitation,
     VisitationGlobalState
 } from "@/redux/reducers/VisitationReducer";
+import LastStepPopUp from "../LastStepPopUp";
 
 export type selectedDateType = {
     date: string;
@@ -136,13 +136,11 @@ function payloadMapper(
         payload.visitation.rejectNotes = values.alasanPenolakan;
     }
     if (values.products && values.products.length > 0) {
-        payload.visitation.products = values.products?.map((product) => {
-            return {
-                id: product.id,
-                quantity: product.quantity,
-                pouringMethod: product.pouringMethod
-            };
-        });
+        payload.visitation.products = values.products?.map((product) => ({
+            id: product.id,
+            quantity: product.quantity,
+            pouringMethod: product.pouringMethod
+        }));
     }
     if (values.projectName) {
         payload.project.name = values.projectName;
@@ -164,7 +162,7 @@ function payloadMapper(
     // if (values.currentCompetitor) {
     //   payload.visitation.competitors = [values.currentCompetitor];
     // }
-    payload.visitation.isBooking = type === "VISIT" ? true : false;
+    payload.visitation.isBooking = type === "VISIT";
 
     if (values.visitationId) {
         payload.visitation.visitationId = values.visitationId;
@@ -184,7 +182,7 @@ function payloadMapper(
     return payload;
 }
 
-const Fifth = () => {
+function Fifth() {
     let clicked = "0";
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -214,7 +212,7 @@ const Fifth = () => {
     };
 
     useEffect(() => {
-        crashlytics().log(CREATE_VISITATION + "-Step5");
+        crashlytics().log(`${CREATE_VISITATION}-Step5`);
     }, [visitationData.images]);
 
     useEffect(() => {
@@ -260,7 +258,10 @@ const Fifth = () => {
                 })
             );
 
-            let payload: payloadPostType = payloadMapper(visitationData, type);
+            const payload: payloadPostType = payloadMapper(
+                visitationData,
+                type
+            );
 
             const visitationMethod = {
                 POST: postVisitation,
@@ -276,15 +277,13 @@ const Fifth = () => {
                         if (uploadedFilesResponse.length === 0) {
                             const photoFiles = visitationData.images
                                 ?.filter((v, i) => v.file !== null)
-                                .map((photo) => {
-                                    return {
-                                        ...photo.file,
-                                        uri: photo?.file?.uri?.replace(
-                                            "file:",
-                                            "file://"
-                                        )
-                                    };
-                                });
+                                .map((photo) => ({
+                                    ...photo.file,
+                                    uri: photo?.file?.uri?.replace(
+                                        "file:",
+                                        "file://"
+                                    )
+                                }));
                             console.log("kennaaaa");
                             const data = await dispatch(
                                 postUploadFiles({
@@ -333,12 +332,8 @@ const Fifth = () => {
                                         projectId: response.projectId
                                     })
                                 );
-                            } else {
-                                if (navigation.canGoBack()) {
-                                    navigation.dispatch(
-                                        StackActions.popToTop()
-                                    );
-                                }
+                            } else if (navigation.canGoBack()) {
+                                navigation.dispatch(StackActions.popToTop());
                             }
                         } else {
                             payload.files = uploadedFilesResponse;
@@ -361,12 +356,8 @@ const Fifth = () => {
                                         projectId: response.projectId
                                     })
                                 );
-                            } else {
-                                if (navigation.canGoBack()) {
-                                    navigation.dispatch(
-                                        StackActions.popToTop()
-                                    );
-                                }
+                            } else if (navigation.canGoBack()) {
+                                navigation.dispatch(StackActions.popToTop());
                             }
                         }
                         dispatch(resetImageURLS({ source: CREATE_VISITATION }));
@@ -449,6 +440,6 @@ const Fifth = () => {
             />
         </>
     );
-};
+}
 
 export default Fifth;

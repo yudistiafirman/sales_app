@@ -48,14 +48,14 @@ export default function BDepositCard({
                     IDR {formatCurrency(firstSectionValue)}
                 </Text>
             </View>
-            <BSpacer size={"extraSmall"} />
+            <BSpacer size="extraSmall" />
             <View style={styles.summaryContainer}>
                 <Text style={styles.summary}>{secondSectionText}</Text>
                 <Text style={[styles.summary, styles.fontw400]}>
                     {isSum ? "+" : "-"} IDR {formatCurrency(secondSectionValue)}
                 </Text>
             </View>
-            <BSpacer size={"extraSmall"} />
+            <BSpacer size="extraSmall" />
             <View style={styles.summaryContainer}>
                 <Text style={styles.summary}>{thirdSectionText}</Text>
                 <Text
@@ -68,14 +68,12 @@ export default function BDepositCard({
                     ]}
                 >
                     {firstSectionValue - secondSectionValue < 0 && !isSum
-                        ? "- IDR " +
-                          formatCurrency(
+                        ? `- IDR ${formatCurrency(
                               isSum ? getTotalSum() : getTotalDifference()
-                          )
-                        : "IDR " +
-                          formatCurrency(
+                          )}`
+                        : `IDR ${formatCurrency(
                               isSum ? getTotalSum() : getTotalDifference()
-                          )}
+                          )}`}
                 </Text>
             </View>
             {isError && (

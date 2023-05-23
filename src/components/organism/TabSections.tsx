@@ -19,7 +19,7 @@ interface BTabSectionProps {
     tabTextFocusedColor?: string;
 }
 
-const BTabSections = ({
+function BTabSections({
     onIndexChange,
     navigationState,
     renderScene,
@@ -30,7 +30,7 @@ const BTabSections = ({
     swipeEnabled,
     minTabHeaderWidth,
     tabTextFocusedColor
-}: BTabSectionProps) => {
+}: BTabSectionProps) {
     return (
         <BTab
             onIndexChange={onIndexChange}
@@ -52,11 +52,11 @@ const BTabSections = ({
                             minWidth={minTabHeaderWidth}
                         />
                     )}
-                    scrollEnabled={true}
+                    scrollEnabled
                 />
             )}
         />
     );
-};
+}
 
 export default BTabSections;

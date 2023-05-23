@@ -5,7 +5,7 @@ import { resScale } from "@/utils";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
-const UpdatedAddressWrapper = ({ address }: { address: string }) => {
+function UpdatedAddressWrapper({ address }: { address: string }) {
     return (
         <View style={styles.filledAddressContainer}>
             <View style={styles.filledAddressInnerContainer}>
@@ -26,7 +26,7 @@ const UpdatedAddressWrapper = ({ address }: { address: string }) => {
             </View>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     filledAddressContainer: {

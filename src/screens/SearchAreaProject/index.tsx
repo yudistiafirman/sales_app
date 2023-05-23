@@ -5,9 +5,6 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as React from "react";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView, DeviceEventEmitter, Platform } from "react-native";
-import SearchAreaStyles from "./styles";
-import CurrentLocation from "./element/SearchAreaCurrentLocation";
-import LocationList from "./element/LocationList";
 import { useMachine } from "@xstate/react";
 import { searchAreaMachine } from "@/machine/searchAreaMachine";
 import { assign } from "xstate";
@@ -25,8 +22,11 @@ import { updateRegion } from "@/redux/reducers/locationReducer";
 import crashlytics from "@react-native-firebase/crashlytics";
 import { hasLocationPermission } from "@/utils/permissions";
 import { layout } from "@/constants";
+import LocationList from "./element/LocationList";
+import CurrentLocation from "./element/SearchAreaCurrentLocation";
+import SearchAreaStyles from "./styles";
 
-const SearchAreaProject = ({ route }: { route: any }) => {
+function SearchAreaProject({ route }: { route: any }) {
     const navigation = useNavigation();
     const [text, setText] = React.useState("");
     const dispatch = useDispatch();
@@ -41,15 +41,15 @@ const SearchAreaProject = ({ route }: { route: any }) => {
             }),
             navigateToLocation: (context, event) => {
                 if (event.data) {
-                    const data = event.data;
+                    const { data } = event;
                     const { formattedAddress } = context;
                     const from = route?.params?.from;
                     const eventKey = route?.params?.eventKey;
                     const sourceType = route?.params?.sourceType;
-                    let coordinate = {
+                    const coordinate = {
                         longitude: data?.lon,
                         latitude: data?.lat,
-                        formattedAddress: formattedAddress
+                        formattedAddress
                     };
 
                     if (typeof data?.lon === "string") {
@@ -67,12 +67,12 @@ const SearchAreaProject = ({ route }: { route: any }) => {
                         if (eventKey) {
                             if (sourceType) {
                                 DeviceEventEmitter.emit(eventKey, {
-                                    coordinate: coordinate,
-                                    sourceType: sourceType
+                                    coordinate,
+                                    sourceType
                                 });
                             } else {
                                 DeviceEventEmitter.emit(eventKey, {
-                                    coordinate: coordinate
+                                    coordinate
                                 });
                             }
                         } else {
@@ -81,7 +81,7 @@ const SearchAreaProject = ({ route }: { route: any }) => {
                         navigation.goBack();
                     } else {
                         navigation.navigate(LOCATION, {
-                            coordinate: coordinate,
+                            coordinate,
                             isReadOnly: false,
                             from: route?.params?.from
                         });
@@ -123,19 +123,19 @@ const SearchAreaProject = ({ route }: { route: any }) => {
         const sourceType = route?.params?.sourceType;
 
         const coordinate = {
-            longitude: longitude,
-            latitude: latitude
+            longitude,
+            latitude
         };
         if (route?.params?.from === CREATE_VISITATION) {
             dispatch(updateRegion(coordinate));
             navigation.goBack();
         } else {
             navigation.navigate(LOCATION, {
-                coordinate: coordinate,
+                coordinate,
                 from: route?.params?.from,
                 isReadOnly: false,
-                eventKey: eventKey,
-                sourceType: sourceType
+                eventKey,
+                sourceType
             });
         }
     };
@@ -184,6 +184,6 @@ const SearchAreaProject = ({ route }: { route: any }) => {
             />
         </SafeAreaView>
     );
-};
+}
 
 export default SearchAreaProject;

@@ -13,9 +13,9 @@ import {
     BForm,
     BPic,
     BSpacer,
-    BProductCard
+    BProductCard,
+    BVisitationCard
 } from "@/components";
-import { BVisitationCard } from "@/components";
 import { resScale } from "@/utils";
 import { colors, fonts, layout } from "@/constants";
 import {
@@ -27,11 +27,8 @@ import {
     sphOrderPayloadType,
     SphStateInterface
 } from "@/interfaces";
-import ChoosePicModal from "../ChoosePicModal";
 import BSheetAddPic from "@/screens/Visitation/elements/second/BottomSheetAddPic";
 import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
-import { SphContext } from "../context/SphContext";
-import StepDone from "../StepDoneModal/StepDone";
 import { postUploadFiles } from "@/redux/async-thunks/commonThunks";
 import { useDispatch, useSelector } from "react-redux";
 import { postOrderSph } from "@/redux/async-thunks/orderThunks";
@@ -46,6 +43,9 @@ import {
     updateUseHighway
 } from "@/redux/reducers/SphReducer";
 import { FlashList } from "@shopify/flash-list";
+import StepDone from "../StepDoneModal/StepDone";
+import { SphContext } from "../context/SphContext";
+import ChoosePicModal from "../ChoosePicModal";
 
 function countNonNullValues(array) {
     let count = 0;
@@ -69,18 +69,16 @@ function payloadMapper(sphState: SphStateInterface) {
     const LocationAddress = selectedCompany?.LocationAddress;
 
     if (sphState.chosenProducts.length > 0) {
-        //harcode m3
-        payload.requestedProducts = sphState.chosenProducts.map((product) => {
-            return {
-                productId: product.productId,
-                categoryId: product.categoryId,
-                offeringPrice: +product.sellPrice,
-                quantity: +product.volume,
-                pouringMethod: product.pouringMethod,
-                productName: product.product.name,
-                productUnit: "m3"
-            };
-        });
+        // harcode m3
+        payload.requestedProducts = sphState.chosenProducts.map((product) => ({
+            productId: product.productId,
+            categoryId: product.categoryId,
+            offeringPrice: +product.sellPrice,
+            quantity: +product.volume,
+            pouringMethod: product.pouringMethod,
+            productName: product.product.name,
+            productUnit: "m3"
+        }));
 
         payload.distance.id =
             sphState.chosenProducts[0].additionalData.distance.id;
@@ -97,9 +95,9 @@ function payloadMapper(sphState: SphStateInterface) {
         sphState.chosenProducts.forEach((prod) => {
             deliveries.push(prod.additionalData.delivery);
         });
-        const highestPrice = deliveries.reduce(function (prev, curr) {
-            return prev.price > curr.price ? prev : curr;
-        });
+        const highestPrice = deliveries.reduce((prev, curr) =>
+            prev.price > curr.price ? prev : curr
+        );
         payload.delivery = highestPrice;
     }
 
@@ -251,7 +249,7 @@ export default function FifthStep() {
     ];
 
     React.useEffect(() => {
-        crashlytics().log(SPH + "-Step5");
+        crashlytics().log(`${SPH}-Step5`);
     }, []);
 
     function addPicHandler() {
@@ -385,7 +383,7 @@ export default function FifthStep() {
                         />
                     </View>
                     <View>
-                        <BSpacer size={"extraSmall"} />
+                        <BSpacer size="extraSmall" />
                         <View style={style.picLable}>
                             <Text style={style.picText}>PIC</Text>
                             <TouchableOpacity
@@ -400,7 +398,7 @@ export default function FifthStep() {
                         </View>
                     </View>
                     <View>
-                        <BSpacer size={"verySmall"} />
+                        <BSpacer size="verySmall" />
                         <BPic
                             name={sphState?.selectedPic?.name}
                             position={sphState?.selectedPic?.position}
@@ -409,35 +407,33 @@ export default function FifthStep() {
                         />
                     </View>
                     <View>
-                        <BSpacer size={"extraSmall"} />
+                        <BSpacer size="extraSmall" />
                         <View style={style.produkLabel}>
                             <Text style={style.picText}>Produk</Text>
                         </View>
-                        <BSpacer size={"small"} />
+                        <BSpacer size="small" />
                     </View>
                     <FlashList
                         estimatedItemSize={10}
                         data={sphState?.chosenProducts}
-                        renderItem={(item) => {
-                            return (
-                                <>
-                                    <BProductCard
-                                        name={item.item.product.name}
-                                        pricePerVol={+item.item.sellPrice}
-                                        volume={+item.item.volume}
-                                        totalPrice={+item.item.totalPrice}
-                                    />
-                                    <BSpacer size={"small"} />
-                                </>
-                            );
-                        }}
+                        renderItem={(item) => (
+                            <>
+                                <BProductCard
+                                    name={item.item.product.name}
+                                    pricePerVol={+item.item.sellPrice}
+                                    volume={+item.item.volume}
+                                    totalPrice={+item.item.totalPrice}
+                                />
+                                <BSpacer size="small" />
+                            </>
+                        )}
                     />
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <BForm titleBold="500" inputs={inputsData} />
                 </View>
                 <BBackContinueBtn
                     isContinueIcon={false}
-                    continueText={"Buat SPH"}
+                    continueText="Buat SPH"
                     onPressContinue={buatSph}
                     onPressBack={() => {
                         setCurrentPosition(3);

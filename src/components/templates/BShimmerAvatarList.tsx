@@ -4,11 +4,11 @@ import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import BSpacer from "../atoms/BSpacer";
 import font from "@/constants/fonts";
+import BSpacer from "../atoms/BSpacer";
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const BShimmerAvatarList = () => {
+function BShimmerAvatarList() {
     return (
         <View style={styles.container}>
             <ShimmerPlaceholder style={styles.avatar} />
@@ -26,7 +26,7 @@ const BShimmerAvatarList = () => {
             </View>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {

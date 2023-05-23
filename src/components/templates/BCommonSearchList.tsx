@@ -8,16 +8,16 @@ import {
     StyleSheet,
     View
 } from "react-native";
-import BCommonListShimmer from "./BCommonListShimmer";
 import { selectedCompanyInterface, visitationDataType } from "@/interfaces";
 import BSpacer from "@/components/atoms/BSpacer";
 import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
 import BSearchBar from "@/components/molecules/BSearchBar";
 import { TextInput } from "react-native-paper";
 import BTabSections from "@/components/organism/TabSections";
-import BEmptyState from "../organism/BEmptyState";
 import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
 import { FlashList } from "@shopify/flash-list";
+import BEmptyState from "../organism/BEmptyState";
+import BCommonListShimmer from "./BCommonListShimmer";
 
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
     CreatedSPHListResponse &
@@ -53,7 +53,7 @@ interface BCommonSearchListProps {
     autoFocus?: boolean;
 }
 
-const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
+function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
     data,
     onEndReached,
     refreshing,
@@ -76,7 +76,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
     onPressMagnify,
     hidePicName,
     autoFocus
-}: BCommonSearchListProps) => {
+}: BCommonSearchListProps) {
     const isSearching = searchQuery.length > 2;
     const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
         ({ item, idx }) => {
@@ -106,7 +106,7 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
             };
             return (
                 <>
-                    <BSpacer size={"small"} />
+                    <BSpacer size="small" />
                     <BVisitationCard
                         item={constructVisitationData}
                         key={item.id}
@@ -191,11 +191,11 @@ const BCommonSearchList = <ArrayOfObject extends ListRenderItemData>({
                     indicatorStyle={styles.tabIndicator}
                 />
             ) : (
-                <BEmptyState emptyText={`Minimal 3 huruf!`} />
+                <BEmptyState emptyText="Minimal 3 huruf!" />
             )}
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {

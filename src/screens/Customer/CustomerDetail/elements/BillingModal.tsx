@@ -76,8 +76,8 @@ export default function BillingModal({
         return "Nama Alamat";
     }, [region?.line1]);
 
-    const inputsData: Input[] = useMemo(() => {
-        return [
+    const inputsData: Input[] = useMemo(
+        () => [
             {
                 label: "Kelurahan",
                 isRequire: false,
@@ -117,13 +117,14 @@ export default function BillingModal({
                 },
                 value: billingState.kabupaten
             }
-        ];
-    }, [billingState]);
+        ],
+        [billingState]
+    );
 
     const onPressAddAddress = async () => {
         try {
-            let body: Address = {};
-            let popUpLoadingText = isUpdate
+            const body: Address = {};
+            const popUpLoadingText = isUpdate
                 ? "Mengubah Alamat"
                 : "Menambahkan Alamat";
             dispatch(
@@ -158,20 +159,20 @@ export default function BillingModal({
             if (billingState.kelurahan) {
                 body.line2 =
                     body.line2 !== undefined
-                        ? body.line2 + " " + billingState.kelurahan
+                        ? `${body.line2} ${billingState.kelurahan}`
                         : billingState.kelurahan;
             }
 
             if (billingState.kecamatan) {
                 body.line2 =
                     body.line2 !== undefined
-                        ? body.line2 + " " + billingState.kecamatan
+                        ? `${body.line2} ${billingState.kecamatan}`
                         : billingState.kecamatan;
             }
             if (billingState.kabupaten) {
                 body.line2 =
                     body.line2 !== undefined
-                        ? body.line2 + " " + billingState.kabupaten
+                        ? `${body.line2} ${billingState.kabupaten}`
                         : billingState.kabupaten;
             }
             const response = await updateCustomerBillingAddress(
@@ -213,7 +214,7 @@ export default function BillingModal({
 
     return (
         <Modal
-            hideModalContentWhileAnimating={true}
+            hideModalContentWhileAnimating
             backdropOpacity={0.3}
             isVisible={isModalVisible}
             onBackButtonPress={() => {
@@ -221,15 +222,14 @@ export default function BillingModal({
             }}
             scrollOffset={scrollOffSet}
             scrollOffsetMax={resScale(400) - resScale(190)}
-            propagateSwipe={true}
+            propagateSwipe
             style={styles.modal}
         >
             <View style={styles.modalContent}>
                 <BContainer>
                     <View style={styles.modalHeader}>
                         <Text style={styles.headerText} numberOfLines={1}>
-                            {(isUpdate ? "Edit" : "Tambah") +
-                                " Alamat Penagihan"}
+                            {`${isUpdate ? "Edit" : "Tambah"} Alamat Penagihan`}
                         </Text>
                         <TouchableOpacity onPress={onCloseModal}>
                             <MaterialCommunityIcons
@@ -239,7 +239,7 @@ export default function BillingModal({
                             />
                         </TouchableOpacity>
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <ScrollView
                         onScroll={(event) => {
                             setScrollOffSet(event.nativeEvent.contentOffset.y);
@@ -289,7 +289,7 @@ export default function BillingModal({
                     <BButtonPrimary
                         disable={!isUpdate && region?.longitude === null}
                         onPress={onPressAddAddress}
-                        title={(isUpdate ? "Edit" : "Tambah") + " Alamat"}
+                        title={`${isUpdate ? "Edit" : "Tambah"} Alamat`}
                     />
                 </BContainer>
             </View>

@@ -135,34 +135,26 @@ const visitHistoryMachine =
                 }
             },
             actions: {
-                onRetryGettingData: assign((context, event) => {
-                    return {
-                        loading: true,
-                        errorMessage: ""
-                    };
-                }),
-                assignError: assign((context, event) => {
-                    return {
-                        loading: false,
-                        errorMessage: event?.data?.message
-                    };
-                }),
-                assignProjectIdToContext: assign((_context, event) => {
-                    return {
-                        projectId: event?.value,
-                        loading: true
-                    };
-                }),
+                onRetryGettingData: assign((context, event) => ({
+                    loading: true,
+                    errorMessage: ""
+                })),
+                assignError: assign((context, event) => ({
+                    loading: false,
+                    errorMessage: event?.data?.message
+                })),
+                assignProjectIdToContext: assign((_context, event) => ({
+                    projectId: event?.value,
+                    loading: true
+                })),
                 assignVisitationDataToContext: assign((_context, event) => {
                     const sortedData = event?.data?.reverse();
-                    const newRoutes = sortedData?.map((val, idx) => {
-                        return {
-                            key: val.id,
-                            title: `Kunjungan ${idx + 1}`,
-                            totalItems: 0,
-                            chipPosition: "right"
-                        };
-                    });
+                    const newRoutes = sortedData?.map((val, idx) => ({
+                        key: val.id,
+                        title: `Kunjungan ${idx + 1}`,
+                        totalItems: 0,
+                        chipPosition: "right"
+                    }));
 
                     const initialSelectedVisitation = event?.data?.filter(
                         (v, i) => i === 0
@@ -175,7 +167,7 @@ const visitHistoryMachine =
                     };
                 }),
                 sliceVisitationData: assign((context, event) => {
-                    let newSelectedVisitationData =
+                    const newSelectedVisitationData =
                         context?.visitationData?.filter(
                             (v, i) => i === event?.value
                         );

@@ -13,12 +13,12 @@ type ITotalDocumentChip = {
     iconSize?: number;
 };
 
-const TotalDocumentChip = ({
+function TotalDocumentChip({
     documents,
     customerType,
     chipText,
     iconSize
-}: ITotalDocumentChip) => {
+}: ITotalDocumentChip) {
     const totalDocuments = useMemo(() => {
         if (!documents || !customerType) return 0;
         const totalUploadedDocument = [
@@ -58,7 +58,7 @@ const TotalDocumentChip = ({
             </Text>
         </BChip>
     );
-};
+}
 
 const styles = StyleSheet.create({
     chipText: {

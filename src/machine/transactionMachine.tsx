@@ -151,22 +151,17 @@ export const transactionMachine =
         },
         {
             guards: {
-                hasNoDataOnNextLoad: (context, _event) => {
-                    return context.page * context.size < context.totalItems
-                        ? true
-                        : false;
-                }
+                hasNoDataOnNextLoad: (context, _event) =>
+                    context.page * context.size < context.totalItems
             },
             actions: {
                 assignTypeToContext: assign((_context, event) => {
-                    const newTypeData = event.data?.map((item) => {
-                        return {
-                            key: uniqueStringGenerator(),
-                            title: item.name,
-                            totalItems: item.totalItems,
-                            chipPosition: "bottom"
-                        };
-                    });
+                    const newTypeData = event.data?.map((item) => ({
+                        key: uniqueStringGenerator(),
+                        title: item.name,
+                        totalItems: item.totalItems,
+                        chipPosition: "bottom"
+                    }));
                     return {
                         routes: newTypeData,
                         selectedCategories:
@@ -183,17 +178,15 @@ export const transactionMachine =
                             ...context.data,
                             ...event.data.data
                         ];
-                        const newTypeData = context.routes?.map((item) => {
-                            return {
-                                key: item.key,
-                                title: item.title,
-                                totalItems:
-                                    context.selectedType === item.title
-                                        ? event.data.totalItems
-                                        : item.totalItems,
-                                chipPosition: "bottom"
-                            };
-                        });
+                        const newTypeData = context.routes?.map((item) => ({
+                            key: item.key,
+                            title: item.title,
+                            totalItems:
+                                context.selectedType === item.title
+                                    ? event.data.totalItems
+                                    : item.totalItems,
+                            chipPosition: "bottom"
+                        }));
                         return {
                             loadTransaction: false,
                             isLoadMore: false,
@@ -203,76 +196,61 @@ export const transactionMachine =
                             routes: newTypeData,
                             isErrorData: false
                         };
-                    } else {
-                        return {
-                            loadTransaction: false,
-                            isLoadMore: false,
-                            refreshing: false,
-                            isErrorData: false,
-                            loadTab: false
-                        };
                     }
-                }),
-                assignIndexToContext: assign((_context, event) => {
-                    return {
-                        selectedType: event.payload,
-                        page: 1,
-                        loadTransaction: true,
-                        data: []
-                    };
-                }),
-                incrementPage: assign((context, _event) => {
-                    return {
-                        page: context.page + 1,
-                        isLoadMore: true
-                    };
-                }),
-                refreshTransactionList: assign((_context, _event) => {
-                    return {
-                        page: 1,
-                        refreshing: true,
-                        loadTransaction: true,
-                        data: []
-                    };
-                }),
-                enableLoadTransaction: assign((_context, _event) => {
-                    return {
-                        loadTransaction: true
-                    };
-                }),
-                handleError: assign((_context, event) => {
                     return {
                         loadTransaction: false,
-                        refreshing: false,
                         isLoadMore: false,
-                        data: [],
-                        loadTab: false,
-                        page: 1,
-                        totalItems: 0,
-                        errorMessage: event.data.message,
-                        isErrorData: true
+                        refreshing: false,
+                        isErrorData: false,
+                        loadTab: false
                     };
                 }),
-                resetProduct: assign((context, event) => {
-                    return {
-                        data: [],
-                        page: 1,
-                        loadTransaction: true
-                    };
-                }),
-                handleRetryGettingTransactions: assign((context, event) => {
-                    return {
-                        data: [],
-                        page: 1,
-                        loadTransaction: true,
-                        selectedType: event.payload
-                    };
-                })
+                assignIndexToContext: assign((_context, event) => ({
+                    selectedType: event.payload,
+                    page: 1,
+                    loadTransaction: true,
+                    data: []
+                })),
+                incrementPage: assign((context, _event) => ({
+                    page: context.page + 1,
+                    isLoadMore: true
+                })),
+                refreshTransactionList: assign((_context, _event) => ({
+                    page: 1,
+                    refreshing: true,
+                    loadTransaction: true,
+                    data: []
+                })),
+                enableLoadTransaction: assign((_context, _event) => ({
+                    loadTransaction: true
+                })),
+                handleError: assign((_context, event) => ({
+                    loadTransaction: false,
+                    refreshing: false,
+                    isLoadMore: false,
+                    data: [],
+                    loadTab: false,
+                    page: 1,
+                    totalItems: 0,
+                    errorMessage: event.data.message,
+                    isErrorData: true
+                })),
+                resetProduct: assign((context, event) => ({
+                    data: [],
+                    page: 1,
+                    loadTransaction: true
+                })),
+                handleRetryGettingTransactions: assign((context, event) => ({
+                    data: [],
+                    page: 1,
+                    loadTransaction: true,
+                    selectedType: event.payload
+                }))
             },
             services: {
                 getTypeTransactions: async (_context, _event) => {
                     try {
-                        let response = await getTransactionTab();
+                        const response = await getTransactionTab();
                         return response.data.data as any;
                     } catch (error) {
                         throw new Error(error);

@@ -23,6 +23,7 @@ export default class BrikApiCommon {
         }
         return url.toString();
     };
+
     static oneCustomer = (id: string) => {
         const url = new URL(`${API_URL}/common/m/customer/${id}`);
         return url.toString();
@@ -58,6 +59,7 @@ export default class BrikApiCommon {
         }
         return url.toString();
     };
+
     static searchPlaces = (searchValue: string) => {
         const url = new URL(`${API_URL}/common/map/places`);
         const params = url.searchParams;

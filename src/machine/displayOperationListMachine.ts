@@ -186,37 +186,29 @@ const displayOperationListMachine = createMachine(
                     isRefreshing: false
                 };
             }),
-            assignError: assign((context, event) => {
-                return {
-                    errorMessage: event?.data.message,
-                    isLoading: false,
-                    isLoadMore: false,
-                    isRefreshing: false
-                };
-            }),
-            handleRefresh: assign((context, event) => {
-                return {
-                    page: 1,
-                    isRefreshing: true,
-                    operationListData: [],
-                    userType: event?.payload,
-                    tabActive: event?.tabActive
-                };
-            }),
-            handleEndReached: assign((context, event) => {
-                return {
-                    page: context.page + 1,
-                    isLoadMore: true
-                };
-            }),
-            assignUserDataToContext: assign((context, event) => {
-                return {
-                    userType: event?.payload,
-                    tabActive: event?.tabActive,
-                    isRefreshing: true,
-                    isLoading: true
-                };
-            })
+            assignError: assign((context, event) => ({
+                errorMessage: event?.data.message,
+                isLoading: false,
+                isLoadMore: false,
+                isRefreshing: false
+            })),
+            handleRefresh: assign((context, event) => ({
+                page: 1,
+                isRefreshing: true,
+                operationListData: [],
+                userType: event?.payload,
+                tabActive: event?.tabActive
+            })),
+            handleEndReached: assign((context, event) => ({
+                page: context.page + 1,
+                isLoadMore: true
+            })),
+            assignUserDataToContext: assign((context, event) => ({
+                userType: event?.payload,
+                tabActive: event?.tabActive,
+                isRefreshing: true,
+                isLoading: true
+            }))
         }
     }
 );

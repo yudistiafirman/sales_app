@@ -21,12 +21,12 @@ interface BTabLabelsProps {
     minWidth?: number | undefined;
 }
 
-const BTabLabels = ({
+function BTabLabels({
     route,
     focused,
     minWidth,
     tabTextfocusedColor = colors.primary
-}: BTabLabelsProps) => {
+}: BTabLabelsProps) {
     const isHasItems = route?.totalItems > 0;
     const rightChipPosition = route?.chipPosition === "right";
 
@@ -73,6 +73,6 @@ const BTabLabels = ({
             )}
         </View>
     );
-};
+}
 
 export default BTabLabels;

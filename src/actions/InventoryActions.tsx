@@ -19,8 +19,8 @@ export const getProductsCategories = async (
     search?: string,
     pillar?: string,
     count?: boolean
-) => {
-    return customRequest(
+) =>
+    customRequest(
         BrikApiInventory.getProductCategories(
             page,
             size,
@@ -30,26 +30,15 @@ export const getProductsCategories = async (
         ),
         "GET"
     );
-};
 
 export const getDrivers = async (
     page?: number,
     size?: number,
     search?: string
-) => {
-    return customRequest(
-        BrikApiInventory.getDrivers(page, size, search),
-        "GET"
-    );
-};
+) => customRequest(BrikApiInventory.getDrivers(page, size, search), "GET");
 
 export const getVehicles = async (
     page?: number,
     size?: number,
     search?: string
-) => {
-    return customRequest(
-        BrikApiInventory.getVehicles(page, size, search),
-        "GET"
-    );
-};
+) => customRequest(BrikApiInventory.getVehicles(page, size, search), "GET");

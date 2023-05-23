@@ -4,9 +4,6 @@ import { AppState, DeviceEventEmitter, SafeAreaView, View } from "react-native";
 import BTabSections from "@/components/organism/TabSections";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Tnc from "@/screens/Price/element/Tnc";
-import CurrentLocation from "./element/CurrentLocation";
-import PriceStyle from "./PriceStyle";
-import PriceSearchBar from "./element/PriceSearchBar";
 import ProductList from "@/components/templates/Price/ProductList";
 import { BAlert, BEmptyState, BSpacer, BTouchableText } from "@/components";
 import { useMachine } from "@xstate/react";
@@ -26,9 +23,12 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import PriceSearchBar from "./element/PriceSearchBar";
+import PriceStyle from "./PriceStyle";
+import CurrentLocation from "./element/CurrentLocation";
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const PriceList = () => {
+function PriceList() {
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
     const route = useRoute<RootStackScreenProps>();
@@ -124,14 +124,13 @@ const PriceList = () => {
     const renderHeaderRight = React.useCallback(() => {
         if (fromVisitation) {
             return <View />;
-        } else {
-            return (
-                <BTouchableText
-                    onPress={() => setVisibleTnc(true)}
-                    title="Ketentuan"
-                />
-            );
         }
+        return (
+            <BTouchableText
+                onPress={() => setVisibleTnc(true)}
+                title="Ketentuan"
+            />
+        );
     }, [fromVisitation]);
 
     React.useLayoutEffect(() => {
@@ -158,7 +157,7 @@ const PriceList = () => {
         if (!fromVisitation) {
             navigation.navigate(SEARCH_PRODUCT, {
                 distance: locationDetail?.distance?.value,
-                disablePressed: fromVisitation ? false : true
+                disablePressed: !fromVisitation
             });
         } else {
             navigation.goBack();
@@ -178,7 +177,7 @@ const PriceList = () => {
             };
 
             navigation.navigate(LOCATION, {
-                coordinate: coordinate,
+                coordinate,
                 isReadOnly: false,
                 from: TAB_PRICE_LIST_TITLE
             });
@@ -261,7 +260,7 @@ const PriceList = () => {
                             onAction={() => send("retryGettingProducts")}
                             errorMessage={errorMessage}
                             onRefresh={() => send("refreshingList")}
-                            disablePressed={fromVisitation ? false : true}
+                            disablePressed={!fromVisitation}
                         />
                     )}
                     onTabPress={onTabPress}
@@ -283,6 +282,6 @@ const PriceList = () => {
       /> */}
         </SafeAreaView>
     );
-};
+}
 
 export default PriceList;

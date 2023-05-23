@@ -21,10 +21,10 @@ import { StyleSheet, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
 import crashlytics from "@react-native-firebase/crashlytics";
 import SvgNames from "@/components/atoms/BSvg/svgName";
-import TotalDocumentChip from "../elements/TotalDocumentChip";
 import { COMPANY } from "@/constants/const";
+import TotalDocumentChip from "../elements/TotalDocumentChip";
 
-const Document = () => {
+function Document() {
     const route = useRoute();
     const { docs, customerId, customerType } = route.params;
     const dispatch = useDispatch();
@@ -40,9 +40,7 @@ const Document = () => {
             dispatch(
                 openPopUp({
                     popUpType: "loading",
-                    popUpText:
-                        "Mengupload Dokumen " +
-                        customerDocs[paymentType][docsIndex].Document.name,
+                    popUpText: `Mengupload Dokumen ${customerDocs[paymentType][docsIndex].Document.name}`,
                     outsideClickClosePopUp: true
                 })
             );
@@ -57,7 +55,7 @@ const Document = () => {
                 payload.customerDocs = [
                     {
                         File: {
-                            id: id
+                            id
                         },
                         Document: {
                             id: customerDocs[paymentType][docsIndex].Document.id
@@ -65,8 +63,7 @@ const Document = () => {
                     }
                 ];
 
-                const customerDocId =
-                    customerDocs[paymentType][docsIndex].customerDocId;
+                const { customerDocId } = customerDocs[paymentType][docsIndex];
 
                 if (customerDocId) {
                     payload.customerDocs[0].customerDocId = customerDocId;
@@ -80,9 +77,8 @@ const Document = () => {
                                 ...v,
                                 File: valueToUpload
                             };
-                        } else {
-                            return { ...v };
                         }
+                        return { ...v };
                     });
 
                     setCustomerDocs((prev) => ({
@@ -92,20 +88,14 @@ const Document = () => {
                     dispatch(
                         openPopUp({
                             popUpType: "success",
-                            popUpText:
-                                "Berhasil Upload Dokumen " +
-                                customerDocs[paymentType][docsIndex].Document
-                                    .name
+                            popUpText: `Berhasil Upload Dokumen ${customerDocs[paymentType][docsIndex].Document.name}`
                         })
                     );
                 } else {
                     dispatch(
                         openPopUp({
                             popUpType: "error",
-                            popUpText:
-                                "Error Upload Dokumen " +
-                                customerDocs[paymentType][docsIndex].Document
-                                    .name,
+                            popUpText: `Error Upload Dokumen ${customerDocs[paymentType][docsIndex].Document.name}`,
                             outsideClickClosePopUp: true
                         })
                     );
@@ -114,9 +104,7 @@ const Document = () => {
                 dispatch(
                     openPopUp({
                         popUpType: "error",
-                        popUpText:
-                            "Error Upload Dokumen " +
-                            customerDocs[paymentType][docsIndex].Document.name,
+                        popUpText: `Error Upload Dokumen ${customerDocs[paymentType][docsIndex].Document.name}`,
                         outsideClickClosePopUp: true
                     })
                 );
@@ -127,8 +115,7 @@ const Document = () => {
                     popUpType: "error",
                     popUpText: error?.message
                         ? error?.message
-                        : "Error Upload Dokumen " +
-                          customerDocs[paymentType][docsIndex].Document.name,
+                        : `Error Upload Dokumen ${customerDocs[paymentType][docsIndex].Document.name}`,
                     outsideClickClosePopUp: true
                 })
             );
@@ -137,19 +124,16 @@ const Document = () => {
 
     const cbdFileInput: Input[] = useMemo(() => {
         const cbdDocs = customerDocs?.cbd?.map(
-            (v: CustomerDocsPayType, i: number) => {
-                return {
-                    customerDocId: v.customerDocId,
-                    documentId: v.Document?.id,
-                    label: v.Document?.name,
-                    type: "fileInput",
-                    value: v.File,
-                    titleBold: "500",
-                    onChange: (newValue) =>
-                        onChangeFileValue(newValue, i, "cbd"),
-                    isRequire: v.Document?.isRequired
-                };
-            }
+            (v: CustomerDocsPayType, i: number) => ({
+                customerDocId: v.customerDocId,
+                documentId: v.Document?.id,
+                label: v.Document?.name,
+                type: "fileInput",
+                value: v.File,
+                titleBold: "500",
+                onChange: (newValue) => onChangeFileValue(newValue, i, "cbd"),
+                isRequire: v.Document?.isRequired
+            })
         );
 
         return cbdDocs;
@@ -157,19 +141,17 @@ const Document = () => {
 
     const creditFileInput: Input[] = useMemo(() => {
         const creditDocs = customerDocs?.credit?.map(
-            (v: CustomerDocsPayType, i: number) => {
-                return {
-                    customerDocId: v.customerDocId,
-                    documentId: v.Document?.id,
-                    label: v.Document?.name,
-                    type: "fileInput",
-                    value: v.File,
-                    onChange: (newValue) =>
-                        onChangeFileValue(newValue, i, "credit"),
-                    titleBold: "500",
-                    isRequire: v.Document?.isRequired
-                };
-            }
+            (v: CustomerDocsPayType, i: number) => ({
+                customerDocId: v.customerDocId,
+                documentId: v.Document?.id,
+                label: v.Document?.name,
+                type: "fileInput",
+                value: v.File,
+                onChange: (newValue) =>
+                    onChangeFileValue(newValue, i, "credit"),
+                titleBold: "500",
+                isRequire: v.Document?.isRequired
+            })
         );
 
         return creditDocs;
@@ -187,7 +169,7 @@ const Document = () => {
                     />
                 </View>
             </View>
-            <BSpacer size={"small"} />
+            <BSpacer size="small" />
             <BSpacer size="extraSmall" />
             <BForm titleBold="500" inputs={cbdFileInput} />
             {customerType === COMPANY && <View style={styles.divider} />}
@@ -198,7 +180,7 @@ const Document = () => {
             )}
         </BContainer>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: { flex: 1 },

@@ -8,8 +8,8 @@ import {
     TouchableOpacity,
     ViewStyle
 } from "react-native";
-import BText from "./BText";
 import { layout } from "@/constants";
+import BText from "./BText";
 
 interface BTouchableTextProps {
     onPress?: ((event: GestureResponderEvent) => void) | undefined;
@@ -37,14 +37,14 @@ const BTouchableDefaultProps = {
     viewStyle: BTouchableViewStyle
 };
 
-const BTouchableText = ({
+function BTouchableText({
     onPress,
     textStyle,
     viewStyle,
     title,
     disabled = false,
     startIcon
-}: BTouchableTextProps & typeof BTouchableDefaultProps) => {
+}: BTouchableTextProps & typeof BTouchableDefaultProps) {
     return (
         <TouchableOpacity
             style={viewStyle}
@@ -59,7 +59,7 @@ const BTouchableText = ({
             </BText>
         </TouchableOpacity>
     );
-};
+}
 
 BTouchableText.defaultProps = BTouchableDefaultProps;
 

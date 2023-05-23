@@ -55,7 +55,7 @@ function ListProduct(
     if (item.ReqProduct) {
         displayName = `${
             item?.ReqProduct?.product?.category?.parent
-                ? item?.ReqProduct?.product?.category?.parent?.name + " "
+                ? `${item?.ReqProduct?.product?.category?.parent?.name} `
                 : ""
         }${item?.ReqProduct?.product?.displayName} ${
             item?.ReqProduct?.product?.category
@@ -66,9 +66,9 @@ function ListProduct(
     } else if (item.Product) {
         displayName = `${
             item?.Product?.category?.parent?.name
-                ? item?.Product?.category?.parent?.name + " "
+                ? `${item?.Product?.category?.parent?.name} `
                 : item?.Product?.category?.parent?.na
-                ? item?.Product?.category?.parent?.na + " "
+                ? `${item?.Product?.category?.parent?.na} `
                 : ""
         }${item?.Product?.displayName} ${
             item?.Product?.category ? item?.Product?.category?.name : ""
@@ -78,7 +78,7 @@ function ListProduct(
             : item.offeringPrice;
     } else {
         displayName = `${
-            item?.category?.parent ? item?.category?.parent?.name + " " : ""
+            item?.category?.parent ? `${item?.category?.parent?.name} ` : ""
         }${item?.displayName} ${item?.category ? item?.category?.name : ""}`;
         pricePerlVol = item.offering_price
             ? item.offering_price
@@ -90,13 +90,12 @@ function ListProduct(
                 name={displayName}
                 pricePerVol={pricePerlVol}
                 volume={
-                    quantity
-                        ? quantity
-                        : item.requestedQuantity
+                    quantity ||
+                    (item.requestedQuantity
                         ? item.requestedQuantity
                         : item.quantity
                         ? item.quantity
-                        : 0
+                        : 0)
                 }
                 totalPrice={
                     isPoData
@@ -113,22 +112,18 @@ function ListProduct(
                         : item.unit
                 }
                 hideTotal={
-                    selectedType !== "Jadwal" && selectedType !== "DO"
-                        ? false
-                        : true
+                    !(selectedType !== "Jadwal" && selectedType !== "DO")
                 }
                 hidePricePerVolume={
-                    selectedType !== "Jadwal" && selectedType !== "DO"
-                        ? false
-                        : true
+                    !(selectedType !== "Jadwal" && selectedType !== "DO")
                 }
             />
-            <BSpacer size={"extraSmall"} />
+            <BSpacer size="extraSmall" />
         </View>
     );
 }
 
-const TransactionDetail = () => {
+function TransactionDetail() {
     const navigation = useNavigation();
     const route = useRoute<RootStackScreenProps>();
     const data = route?.params?.data;
@@ -161,17 +156,15 @@ const TransactionDetail = () => {
                     letter: data?.DepositFiles?.find((v: any) => v?.type == "")
                 });
             }
-        } else {
-            if (data?.QuotationLetterFiles) {
-                setDownloadFiles({
-                    pos: data?.QuotationLetterFiles?.find(
-                        (v: any) => v?.type == "POS"
-                    ),
-                    letter: data?.QuotationLetterFiles?.find(
-                        (v: any) => v?.type == "LETTER"
-                    )
-                });
-            }
+        } else if (data?.QuotationLetterFiles) {
+            setDownloadFiles({
+                pos: data?.QuotationLetterFiles?.find(
+                    (v: any) => v?.type == "POS"
+                ),
+                letter: data?.QuotationLetterFiles?.find(
+                    (v: any) => v?.type == "LETTER"
+                )
+            });
         }
     }, [data]);
 
@@ -221,7 +214,7 @@ const TransactionDetail = () => {
     };
 
     const arrayQuotationLetter = () => {
-        let arrayQuote: QuotationRequests[] = [];
+        const arrayQuote: QuotationRequests[] = [];
         arrayQuote.push(data?.QuotationLetter?.QuotationRequest);
         return arrayQuote;
     };
@@ -254,7 +247,7 @@ const TransactionDetail = () => {
             downloadError(undefined);
             return null;
         }
-        let dirs = ReactNativeBlobUtil.fs.dirs;
+        const { dirs } = ReactNativeBlobUtil.fs;
         const downloadTitle = title
             ? `${title} berhasil di download`
             : "PDF berhasil di download";
@@ -276,7 +269,7 @@ const TransactionDetail = () => {
                 : { fileCache: true }
         )
             .fetch("GET", url, {
-                //some headers ..
+                // some headers ..
             })
             .then((res) => {
                 // the temp file path
@@ -346,15 +339,8 @@ const TransactionDetail = () => {
                     data?.PoProducts?.length > 0
                 )
             );
-        } else {
-            return ListProduct(
-                productData,
-                0,
-                selectedType,
-                data?.quantity,
-                false
-            );
         }
+        return ListProduct(productData, 0, selectedType, data?.quantity, false);
     };
 
     const renderProductList = () => {
@@ -367,9 +353,9 @@ const TransactionDetail = () => {
             return (
                 <>
                     <Text style={styles.partText}>Produk</Text>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     {renderRequestedProducts()}
-                    <BSpacer size={"small"} />
+                    <BSpacer size="small" />
                 </>
             );
         }
@@ -387,14 +373,14 @@ const TransactionDetail = () => {
             return (
                 <>
                     <Text style={styles.partText}>PIC</Text>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <BPic
                         name={picData?.name}
                         position={picData?.position}
                         phone={beautifyPhoneNumber(picData?.phone)}
                         email={picData?.email}
                     />
-                    <BSpacer size={"small"} />
+                    <BSpacer size="small" />
                 </>
             );
         }
@@ -451,7 +437,7 @@ const TransactionDetail = () => {
                 <View style={styles.contentDetail}>
                     {renderPic()}
                     <Text style={styles.partText}>Rincian</Text>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <BProjectDetailCard
                         status={data?.status || data?.QuotationRequest?.status}
                         paymentMethod={
@@ -534,9 +520,9 @@ const TransactionDetail = () => {
                                 ? data?.withTechnician
                                 : undefined
                         }
-                        useBEStatus={selectedType === "SPH" ? false : true}
+                        useBEStatus={selectedType !== "SPH"}
                     />
-                    <BSpacer size={"small"} />
+                    <BSpacer size="small" />
                     {selectedType === "Deposit" ? (
                         <BNestedProductCard
                             withoutHeader={false}
@@ -553,7 +539,7 @@ const TransactionDetail = () => {
                         selectedType === "Jadwal") && (
                         <>
                             <BDivider />
-                            <BSpacer size={"small"} />
+                            <BSpacer size="small" />
                             <BDepositCard
                                 firstSectionText={
                                     selectedType === "Jadwal"
@@ -592,7 +578,7 @@ const TransactionDetail = () => {
                                         ? "Est. Sisa Deposit"
                                         : "Deposit Akhir"
                                 }
-                                isSum={selectedType === "Jadwal" ? false : true}
+                                isSum={selectedType !== "Jadwal"}
                             />
                         </>
                     )}
@@ -685,7 +671,7 @@ const TransactionDetail = () => {
             </ScrollView>
         </SafeAreaView>
     );
-};
+}
 
 const styles = StyleSheet.create({
     modalFooter: {

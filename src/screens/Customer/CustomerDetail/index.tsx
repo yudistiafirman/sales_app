@@ -18,7 +18,6 @@ import {
     BVisitationCard,
     BottomSheetAddPIC
 } from "@/components";
-import BillingModal from "./elements/BillingModal";
 import crashlytics from "@react-native-firebase/crashlytics";
 
 import {
@@ -36,19 +35,20 @@ import {
     RootStackScreenProps
 } from "@/navigation/CustomStateComponent";
 import { PIC } from "@/interfaces";
-import DocumentWarning from "./elements/DocumentWarning";
-import UpdatedAddressWrapper from "./elements/UpdatedAddressWrapper";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import FeatIcon from "react-native-vector-icons/Feather";
-import CustomerDetailLoader from "./elements/CustomerDetailLoader";
 import SvgNames from "@/components/atoms/BSvg/svgName";
-import RemainingAmountBox from "./elements/RemainAmountBox";
 import { ICustomerDetail } from "@/models/Customer";
 import {
     CUSTOMER_DETAIL_V2,
     CUSTOMER_DOCUMENT
 } from "@/navigation/ScreenNames";
 import { showWarningDocument } from "@/utils/generalFunc";
+import RemainingAmountBox from "./elements/RemainAmountBox";
+import CustomerDetailLoader from "./elements/CustomerDetailLoader";
+import UpdatedAddressWrapper from "./elements/UpdatedAddressWrapper";
+import DocumentWarning from "./elements/DocumentWarning";
+import BillingModal from "./elements/BillingModal";
 import TotalDocumentChip from "../elements/TotalDocumentChip";
 
 export default function CustomerDetail() {
@@ -157,20 +157,17 @@ export default function CustomerDetail() {
         }
     };
 
-    const renderDocumentWarning = () => {
-        return (
-            showWarningDocument(
-                customerData?.CustomerDocs?.cbd,
-                customerData?.type
-            ) && (
-                <DocumentWarning
-                    customerType={customerData?.type}
-                    docs={customerData?.CustomerDocs}
-                    customerId={id}
-                />
-            )
+    const renderDocumentWarning = () =>
+        showWarningDocument(
+            customerData?.CustomerDocs?.cbd,
+            customerData?.type
+        ) && (
+            <DocumentWarning
+                customerType={customerData?.type}
+                docs={customerData?.CustomerDocs}
+                customerId={id}
+            />
         );
-    };
 
     if (dataNotLoadedYet) {
         return <CustomerDetailLoader />;
@@ -204,19 +201,19 @@ export default function CustomerDetail() {
                             {customerData?.displayName}
                         </Text>
                     </View>
-                    <BSpacer size={"middleSmall"} />
+                    <BSpacer size="middleSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW400}>No. NPWP</Text>
                         <Text style={styles.fontW500}>
                             {customerData?.npwp}
                         </Text>
                     </View>
-                    <BSpacer size={"middleSmall"} />
+                    <BSpacer size="middleSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW400}>No. KTP</Text>
                         <Text style={styles.fontW500}>{customerData?.nik}</Text>
                     </View>
-                    <BSpacer size={"middleSmall"} />
+                    <BSpacer size="middleSmall" />
                     <View style={styles.between}>
                         <View style={{ flexDirection: "row" }}>
                             <Text
@@ -253,7 +250,7 @@ export default function CustomerDetail() {
                         />
                     </View>
 
-                    <BSpacer size={"middleSmall"} />
+                    <BSpacer size="middleSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW400}>PIC Penagihan</Text>
                         <BTouchableText
@@ -270,14 +267,14 @@ export default function CustomerDetail() {
                         />
                     </View>
 
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <BPic
                         name={customerData?.Pic?.name}
                         email={customerData?.Pic?.email}
                         phone={customerData?.Pic?.phone}
                         position={customerData?.Pic?.position}
                     />
-                    <BSpacer size={"middleSmall"} />
+                    <BSpacer size="middleSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW400}>Alamat Penagihan</Text>
                         <BTouchableText
@@ -301,7 +298,7 @@ export default function CustomerDetail() {
                             }
                         />
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.billingStyle}>
                         <UpdatedAddressWrapper
                             address={
@@ -310,11 +307,11 @@ export default function CustomerDetail() {
                             }
                         />
                     </View>
-                    <BSpacer size={"middleSmall"} />
+                    <BSpacer size="middleSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW400}>Dompet</Text>
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={{ flexDirection: "row", width: "100%" }}>
                         <RemainingAmountBox
                             title="Sisa Deposit"

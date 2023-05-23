@@ -24,10 +24,7 @@ export default function BLocationText({
                 color={color}
                 style={style.iconStyle}
             />
-            <Text
-                numberOfLines={1}
-                style={[style.locationText, { color: color }]}
-            >
+            <Text numberOfLines={1} style={[style.locationText, { color }]}>
                 {location}
             </Text>
         </View>

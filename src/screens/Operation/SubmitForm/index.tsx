@@ -64,7 +64,7 @@ function LeftIcon() {
 }
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
-const SubmitForm = () => {
+function SubmitForm() {
     const route = useRoute<RootStackScreenProps>();
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
@@ -117,7 +117,7 @@ const SubmitForm = () => {
         switch (userData?.type) {
             case ENTRY_TYPE.WB:
                 if (operationData.photoFiles.length > 1) {
-                    let tempImages = [
+                    const tempImages = [
                         ...operationData.photoFiles.filter(
                             (it) => it.file !== null
                         )
@@ -128,24 +128,21 @@ const SubmitForm = () => {
             case ENTRY_TYPE.SECURITY:
                 if (operationType === ENTRY_TYPE.DISPATCH) {
                     if (operationData.photoFiles.length > 4) {
-                        let tempImages = [
+                        const tempImages = [
                             ...operationData.photoFiles.filter(
                                 (it) => it.file !== null
                             )
                         ];
                         dispatch(setAllOperationPhoto({ file: tempImages }));
                     }
-                } else {
-                    if (operationData.photoFiles.length > 1) {
-                        let tempImages = [
-                            ...operationData.photoFiles.filter(
-                                (it) => it.file !== null
-                            )
-                        ];
-                        dispatch(setAllOperationPhoto({ file: tempImages }));
-                    }
+                } else if (operationData.photoFiles.length > 1) {
+                    const tempImages = [
+                        ...operationData.photoFiles.filter(
+                            (it) => it.file !== null
+                        )
+                    ];
+                    dispatch(setAllOperationPhoto({ file: tempImages }));
                 }
-                return;
         }
     };
 
@@ -167,7 +164,7 @@ const SubmitForm = () => {
             case ENTRY_TYPE.SECURITY:
                 if (operationType === ENTRY_TYPE.DISPATCH)
                     return TAB_DISPATCH_TITLE;
-                else return TAB_RETURN_TITLE;
+                return TAB_RETURN_TITLE;
             case ENTRY_TYPE.DRIVER:
                 return "Penuangan";
             case ENTRY_TYPE.WB:
@@ -191,17 +188,20 @@ const SubmitForm = () => {
                     operationData.inputsValue.recepientPhoneNumber
                 )
             );
-        } else if (userData?.type === ENTRY_TYPE.WB) {
+        }
+        if (userData?.type === ENTRY_TYPE.WB) {
             return (
                 operationData.inputsValue.weightBridge.length === 0 ||
                 (photos && photos.length < 2)
             );
-        } else if (operationType === ENTRY_TYPE.RETURN) {
+        }
+        if (operationType === ENTRY_TYPE.RETURN) {
             return (
                 operationData.inputsValue.truckMixCondition.length === 0 ||
                 (photos && photos.length < 2)
             );
-        } else if (operationType === ENTRY_TYPE.DISPATCH) {
+        }
+        if (operationType === ENTRY_TYPE.DISPATCH) {
             return photos && photos.length !== 5;
         }
     };
@@ -224,12 +224,10 @@ const SubmitForm = () => {
             const payload = {} as updateDeliverOrder;
             const photoFilestoUpload = operationData.photoFiles
                 ?.filter((v) => v.file !== null)
-                ?.map((photo) => {
-                    return {
-                        ...photo.file,
-                        uri: photo?.file?.uri?.replace("file:", "file://")
-                    };
-                });
+                ?.map((photo) => ({
+                    ...photo.file,
+                    uri: photo?.file?.uri?.replace("file:", "file://")
+                }));
 
             const responseFiles = await uploadFileImage(
                 photoFilestoUpload,
@@ -239,12 +237,10 @@ const SubmitForm = () => {
                 let responseUpdateDeliveryOrder: any;
                 if (userData?.type === ENTRY_TYPE.DRIVER) {
                     const newFileData = responseFiles?.data?.data?.map(
-                        (v, i) => {
-                            return {
-                                fileId: v?.id,
-                                type: driversFileType[i]
-                            };
-                        }
+                        (v, i) => ({
+                            fileId: v?.id,
+                            type: driversFileType[i]
+                        })
                     );
                     payload.doFiles = newFileData;
                     payload.recipientName =
@@ -258,12 +254,10 @@ const SubmitForm = () => {
                     );
                 } else if (userData?.type === ENTRY_TYPE.WB) {
                     const newFileData = responseFiles?.data?.data?.map(
-                        (v, i) => {
-                            return {
-                                fileId: v?.id,
-                                type: wbsFileType[i]
-                            };
-                        }
+                        (v, i) => ({
+                            fileId: v?.id,
+                            type: wbsFileType[i]
+                        })
                     );
                     payload.doFiles = newFileData;
                     payload.weight = operationData.inputsValue.weightBridge;
@@ -274,12 +268,10 @@ const SubmitForm = () => {
                         );
                 } else if (userData?.type === ENTRY_TYPE.SECURITY) {
                     const newFileData = responseFiles?.data?.data?.map(
-                        (v, i) => {
-                            return {
-                                fileId: v?.id,
-                                type: securityFileType[i]
-                            };
-                        }
+                        (v, i) => ({
+                            fileId: v?.id,
+                            type: securityFileType[i]
+                        })
                     );
                     payload.doFiles = newFileData;
 
@@ -387,7 +379,7 @@ const SubmitForm = () => {
             label: "Berat",
             value: operationData.inputsValue.weightBridge,
             onChange: (e) => {
-                let result: string = "" + e;
+                const result = `${e}`;
                 dispatch(
                     onChangeInputValue({
                         inputType: "weightBridge",
@@ -478,18 +470,17 @@ const SubmitForm = () => {
             dropdown: {
                 items: TM_CONDITION,
                 placeholder: operationData.inputsValue.truckMixCondition
-                    ? TM_CONDITION.find((it) => {
-                          return (
+                    ? TM_CONDITION.find(
+                          (it) =>
                               it.value ===
                               operationData.inputsValue.truckMixCondition
-                          );
-                      })?.label ?? ""
+                      )?.label ?? ""
                     : "Pilih Kondisi TM",
                 onChange: (value: any) => {
                     dispatch(
                         onChangeInputValue({
                             inputType: "truckMixCondition",
-                            value: value
+                            value
                         })
                     );
                 }
@@ -500,9 +491,7 @@ const SubmitForm = () => {
     const deleteImages = useCallback(
         (i: number, attachType?: string) => {
             if (userData?.type === ENTRY_TYPE.DRIVER) {
-                dispatch(
-                    removeDriverPhoto({ index: i, attachType: attachType })
-                );
+                dispatch(removeDriverPhoto({ index: i, attachType }));
             } else {
                 dispatch(removeOperationPhoto({ index: i }));
             }
@@ -555,7 +544,6 @@ const SubmitForm = () => {
                             navigateTo: GALLERY_OPERATION
                         })
                     );
-                    return;
             }
         },
         [operationData.photoFiles, dispatch]
@@ -570,9 +558,7 @@ const SubmitForm = () => {
                     paddingHorizontal: layout.pad.lg,
                     paddingBottom: layout.pad.lg
                 }}
-                renderItem={() => {
-                    return <BSpacer size={"verySmall"} />;
-                }}
+                renderItem={() => <BSpacer size="verySmall" />}
                 ListHeaderComponent={
                     <View style={style.flexFull}>
                         {enableLocationHeader && (
@@ -580,7 +566,7 @@ const SubmitForm = () => {
                                 location={operationData.projectDetails.address}
                             />
                         )}
-                        <BSpacer size={"extraSmall"} />
+                        <BSpacer size="extraSmall" />
                         <View style={style.top}>
                             <BVisitationCard
                                 item={{
@@ -611,7 +597,7 @@ const SubmitForm = () => {
                         </View>
                         <View>
                             <BDivider />
-                            <BSpacer size={"extraSmall"} />
+                            <BSpacer size="extraSmall" />
                         </View>
                         <View>
                             <BGallery
@@ -629,7 +615,7 @@ const SubmitForm = () => {
                                 operationType === ENTRY_TYPE.RETURN ||
                                 operationType === ENTRY_TYPE.IN ||
                                 operationType === ENTRY_TYPE.OUT) && (
-                                <BSpacer size={"small"} />
+                                <BSpacer size="small" />
                             )}
                             {operationType === ENTRY_TYPE.DRIVER && (
                                 <BForm
@@ -666,14 +652,14 @@ const SubmitForm = () => {
                         onPressContinue={onPressContinue}
                         disableContinue={handleDisableContinueButton()}
                         onPressBack={handleBack}
-                        continueText={"Simpan"}
+                        continueText="Simpan"
                         isContinueIcon={false}
                     />
                 </View>
             )}
         </SafeAreaView>
     );
-};
+}
 
 const style = StyleSheet.create({
     flexFull: {

@@ -148,9 +148,7 @@ const customerListMachine = createMachine(
     },
     {
         guards: {
-            isNotLastPage: (context, event) => {
-                return context.page <= context.totalPage;
-            }
+            isNotLastPage: (context, event) => context.page <= context.totalPage
         },
         services: {
             getAllData: async (context, event) => {
@@ -202,75 +200,59 @@ const customerListMachine = createMachine(
                 ];
 
                 return {
-                    routes: routes,
+                    routes,
                     isLoadDataCount: false
                 };
             }),
-            refreshPage: assign(() => {
-                return {
-                    refreshing: true,
-                    data: [],
-                    page: 1,
-                    isLoading: true
-                };
-            }),
-            enableLoading: assign(() => {
-                return {
-                    isLoading: true,
-                    isLoadDataCount: true
-                };
-            }),
-            assignData: assign((context, event) => {
-                return {
-                    data: [...context.data, ...event.data.data.data],
-                    totalPage: event.data.data.totalPages,
-                    isLoading: false,
-                    refreshing: false,
-                    isLoadMore: false,
-                    errorMessage: ""
-                };
-            }),
-            assignSearchQuery: assign((context, event) => {
-                return {
-                    searchQuery: event.value,
-                    data: [],
-                    isLoading: true,
-                    page: 1
-                };
-            }),
-            assignSelectedTab: assign((context, event) => {
-                return {
-                    data: [],
-                    isLoading: true,
-                    isLoadMore: false,
-                    refreshing: false,
-                    page: 1,
-                    searchQuery: "",
-                    selectedTab: event.value
-                };
-            }),
-            incrementPage: assign((context, event) => {
-                return {
-                    page: context.page + 1,
-                    isLoadMore: true
-                };
-            }),
-            retryGettingData: assign(() => {
-                return {
-                    isLoading: true,
-                    data: [],
-                    errorMessage: ""
-                };
-            }),
-            assignError: assign((context, event) => {
-                return {
-                    errorMessage: event.data.message,
-                    data: [],
-                    refreshing: false,
-                    isLoading: false,
-                    isLoadMore: false
-                };
-            })
+            refreshPage: assign(() => ({
+                refreshing: true,
+                data: [],
+                page: 1,
+                isLoading: true
+            })),
+            enableLoading: assign(() => ({
+                isLoading: true,
+                isLoadDataCount: true
+            })),
+            assignData: assign((context, event) => ({
+                data: [...context.data, ...event.data.data.data],
+                totalPage: event.data.data.totalPages,
+                isLoading: false,
+                refreshing: false,
+                isLoadMore: false,
+                errorMessage: ""
+            })),
+            assignSearchQuery: assign((context, event) => ({
+                searchQuery: event.value,
+                data: [],
+                isLoading: true,
+                page: 1
+            })),
+            assignSelectedTab: assign((context, event) => ({
+                data: [],
+                isLoading: true,
+                isLoadMore: false,
+                refreshing: false,
+                page: 1,
+                searchQuery: "",
+                selectedTab: event.value
+            })),
+            incrementPage: assign((context, event) => ({
+                page: context.page + 1,
+                isLoadMore: true
+            })),
+            retryGettingData: assign(() => ({
+                isLoading: true,
+                data: [],
+                errorMessage: ""
+            })),
+            assignError: assign((context, event) => ({
+                errorMessage: event.data.message,
+                data: [],
+                refreshing: false,
+                isLoading: false,
+                isLoadMore: false
+            }))
         }
     }
 );

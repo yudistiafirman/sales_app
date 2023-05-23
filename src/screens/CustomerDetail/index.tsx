@@ -14,9 +14,7 @@ import {
     BSpinner,
     BTouchableText
 } from "@/components";
-import ProjectBetween from "./elements/ProjectBetween";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
-import BillingModal from "./elements/BillingModal";
 import crashlytics from "@react-native-firebase/crashlytics";
 import {
     CUSTOMER_DETAIL_V1,
@@ -36,10 +34,12 @@ import { openPopUp } from "@/redux/reducers/modalReducer";
 import { resetRegion } from "@/redux/reducers/locationReducer";
 import { RootStackParamList } from "@/navigation/CustomStateComponent";
 import { ProjectDetail, visitationListResponse } from "@/interfaces";
+import formatCurrency from "@/utils/formatCurrency";
 import DocumentWarning from "./elements/DocumentWarning";
 import UpdatedAddressWrapper from "./elements/UpdatedAddressWrapper";
 import AddNewAddressWrapper from "./elements/AddNewAddressWrapper";
-import formatCurrency from "@/utils/formatCurrency";
+import BillingModal from "./elements/BillingModal";
+import ProjectBetween from "./elements/ProjectBetween";
 
 type CustomerDetailRoute = RouteProp<RootStackParamList["CUSTOMER_DETAIL"]>;
 
@@ -71,13 +71,13 @@ export default function CustomerDetail() {
                 const response = await projectGetOneById(projectId);
                 setCustomerData(response.data.data);
                 if (response.data.data) {
-                    let regionBilling: any = {
+                    const regionBilling: any = {
                         formattedAddress:
                             response.data.data.BillingAddress?.line1,
                         latitude: response.data.data.BillingAddress?.lat,
                         longitude: response.data.data.BillingAddress?.lon
                     };
-                    let regionProject: any = {
+                    const regionProject: any = {
                         formattedAddress:
                             response.data.data.LocationAddress?.line1,
                         latitude: response.data.data.LocationAddress?.lat,
@@ -180,9 +180,10 @@ export default function CustomerDetail() {
                     isModalVisible={isBillingLocationVisible}
                     region={region || regionExisting}
                     isUpdate={
-                        billingAddress !== undefined && billingAddress !== ""
-                            ? true
-                            : false
+                        !!(
+                            billingAddress !== undefined &&
+                            billingAddress !== ""
+                        )
                     }
                     setRegion={setRegion}
                     projectId={customerData.id}
@@ -196,9 +197,10 @@ export default function CustomerDetail() {
                     isModalVisible={isProjectLocationVisible}
                     region={project || projectExisting}
                     isUpdate={
-                        projectAddress !== undefined && projectAddress !== ""
-                            ? true
-                            : false
+                        !!(
+                            projectAddress !== undefined &&
+                            projectAddress !== ""
+                        )
                     }
                     setRegion={setProject}
                     projectId={customerData.id}
@@ -215,16 +217,16 @@ export default function CustomerDetail() {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <BContainer>
                     <Text style={styles.partText}>Pelanggan</Text>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW300}>Nama</Text>
                         <Text style={styles.fontW400}>
                             {customerData?.displayName}
                         </Text>
                     </View>
-                    <BSpacer size={"small"} />
+                    <BSpacer size="small" />
                     <Text style={styles.partText}>Proyek</Text>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <ProjectBetween
                         onPress={() => {
                             navigation.navigate(VISIT_HISTORY, {
@@ -237,9 +239,9 @@ export default function CustomerDetail() {
                             name: customerData?.name
                         }}
                     />
-                    <BSpacer size={"small"} />
+                    <BSpacer size="small" />
                     <Text style={styles.partText}>Sisa Deposit</Text>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW300}>
                             {customerData?.Customer?.CustomerDeposit
@@ -255,23 +257,23 @@ export default function CustomerDetail() {
                                 : "-"}
                         </Text>
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.between}>
                         <Text style={styles.partText}>PIC</Text>
                         {/* <TouchableOpacity>
                 <Text style={styles.seeAllText}>Lihat Semua</Text>
               </TouchableOpacity> */}
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <BPic
                         name={customerData?.Pic?.name}
                         email={customerData?.Pic?.email}
                         phone={customerData?.Pic?.phone}
                         position={customerData?.Pic?.position}
                     />
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <Text style={styles.partText}>Alamat Penagihan</Text>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.billingStyle}>
                         {updatedAddressBilling ? (
                             <UpdatedAddressWrapper
@@ -289,9 +291,9 @@ export default function CustomerDetail() {
                             />
                         )}
                     </View>
-                    <BSpacer size={"small"} />
+                    <BSpacer size="small" />
                     <Text style={styles.partText}>Alamat Proyek</Text>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.billingStyle}>
                         {updateAddressProject ? (
                             <UpdatedAddressWrapper
@@ -309,7 +311,7 @@ export default function CustomerDetail() {
                             />
                         )}
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.between}>
                         <Text style={styles.partText}>Dokumen</Text>
                         <BTouchableText
@@ -323,7 +325,7 @@ export default function CustomerDetail() {
                             }
                         />
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW300}>Kelengkapan Dokumen</Text>
                         <Text

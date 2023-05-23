@@ -1,20 +1,21 @@
 import { ICustomerListData } from "@/models/Customer";
 import React from "react";
 import { FlatList, StyleSheet, View, ViewStyle } from "react-native";
-import BSearchBar from "../molecules/BSearchBar";
 import { colors, layout } from "@/constants";
-import BSpacer from "../atoms/BSpacer";
-import BTabSections from "../organism/TabSections";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { resScale } from "@/utils";
-import BCard from "../molecules/BCard";
 import { TextInput } from "react-native-paper";
-import BEmptyState from "../organism/BEmptyState";
-import BShimmerAvatarList from "./BShimmerAvatarList";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import LinearGradient from "react-native-linear-gradient";
 import { COMPANY, INDIVIDU, PERUSAHAAN } from "@/constants/const";
+import BShimmerAvatarList from "./BShimmerAvatarList";
+import BEmptyState from "../organism/BEmptyState";
+import BCard from "../molecules/BCard";
+import BTabSections from "../organism/TabSections";
+import BSpacer from "../atoms/BSpacer";
+import BSearchBar from "../molecules/BSearchBar";
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 interface IBList {
@@ -52,7 +53,7 @@ interface IBList {
     isLoadingSearchBar?: boolean;
 }
 
-const BList = ({
+function BList({
     data,
     onEndReached,
     refreshing,
@@ -82,7 +83,7 @@ const BList = ({
     tabTextFocusedColor = colors.blueSail,
     tabIndicatorStyle,
     isLoadingSearchBar
-}: IBList) => {
+}: IBList) {
     const renderItem: ListRenderItem<ICustomerListData> = React.useCallback(
         ({ item, index }) => {
             const avatarText = item?.name[0];
@@ -213,7 +214,7 @@ const BList = ({
             )}
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {

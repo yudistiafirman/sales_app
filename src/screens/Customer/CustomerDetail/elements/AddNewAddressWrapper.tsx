@@ -2,13 +2,14 @@ import { colors, fonts, layout } from "@/constants";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import Octicons from "react-native-vector-icons/Octicons";
-const AddNewAddressWrapper = ({
+
+function AddNewAddressWrapper({
     isBilling,
     onPress
 }: {
     isBilling: boolean;
     onPress: () => void;
-}) => {
+}) {
     return (
         <TouchableOpacity style={styles.addBilling} onPress={onPress}>
             <Octicons
@@ -22,7 +23,7 @@ const AddNewAddressWrapper = ({
             </Text>
         </TouchableOpacity>
     );
-};
+}
 
 const styles = StyleSheet.create({
     addBilling: {

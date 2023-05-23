@@ -78,8 +78,8 @@ export default function BillingModal({
         return "Nama Alamat";
     }, [region?.formattedAddress]);
 
-    const inputsData: Input[] = useMemo(() => {
-        return [
+    const inputsData: Input[] = useMemo(
+        () => [
             {
                 label: "Kelurahan",
                 isRequire: false,
@@ -119,11 +119,12 @@ export default function BillingModal({
                 },
                 value: billingState.kabupaten
             }
-        ];
-    }, [billingState]);
+        ],
+        [billingState]
+    );
 
     const onPressAddAddress = async () => {
-        let body: Address = {};
+        const body: Address = {};
 
         if (region?.postalId) {
             body.postalid = region.postalId;
@@ -141,24 +142,24 @@ export default function BillingModal({
         if (billingState.kelurahan) {
             body.line2 =
                 body.line2 !== undefined
-                    ? body.line2 + " " + billingState.kelurahan
+                    ? `${body.line2} ${billingState.kelurahan}`
                     : billingState.kelurahan;
         }
 
         if (billingState.kecamatan) {
             body.line2 =
                 body.line2 !== undefined
-                    ? body.line2 + " " + billingState.kecamatan
+                    ? `${body.line2} ${billingState.kecamatan}`
                     : billingState.kecamatan;
         }
         if (billingState.kabupaten) {
             body.line2 =
                 body.line2 !== undefined
-                    ? body.line2 + " " + billingState.kabupaten
+                    ? `${body.line2} ${billingState.kabupaten}`
                     : billingState.kabupaten;
         }
         try {
-            let response = undefined;
+            let response;
             if (isBilling) {
                 response = await updateBillingAddress(projectId, body);
             } else {
@@ -183,8 +184,9 @@ export default function BillingModal({
                     popUpType: "error",
                     popUpText:
                         error.message ||
-                        "Terjadi error saat update alamat " +
-                            (isBilling ? "pembayaran" : "proyek"),
+                        `Terjadi error saat update alamat ${
+                            isBilling ? "pembayaran" : "proyek"
+                        }`,
                     outsideClickClosePopUp: true
                 })
             );
@@ -193,7 +195,7 @@ export default function BillingModal({
 
     return (
         <Modal
-            hideModalContentWhileAnimating={true}
+            hideModalContentWhileAnimating
             backdropOpacity={0.3}
             isVisible={isModalVisible}
             onBackButtonPress={() => {
@@ -201,7 +203,7 @@ export default function BillingModal({
             }}
             scrollOffset={scrollOffSet}
             scrollOffsetMax={resScale(400) - resScale(190)}
-            propagateSwipe={true}
+            propagateSwipe
             style={styles.modal}
         >
             <View style={styles.modalContent}>
@@ -223,7 +225,7 @@ export default function BillingModal({
                             />
                         </TouchableOpacity>
                     </View>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <ScrollView
                         onScroll={(event) => {
                             setScrollOffSet(event.nativeEvent.contentOffset.y);
@@ -274,7 +276,7 @@ export default function BillingModal({
                     <BButtonPrimary
                         disable={region === null}
                         onPress={onPressAddAddress}
-                        title={(isUpdate ? "Ubah" : "Tambah") + " Alamat"}
+                        title={`${isUpdate ? "Ubah" : "Tambah"} Alamat`}
                     />
                 </BContainer>
             </View>

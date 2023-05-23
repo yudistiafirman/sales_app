@@ -2,10 +2,10 @@ import { View, Text, StyleSheet } from "react-native";
 import * as React from "react";
 import { colors, fonts, layout } from "@/constants";
 import { getColorStatusTrx, getStatusTrx } from "@/utils/generalFunc";
-import BSpacer from "../atoms/BSpacer";
-import BTouchableText from "../atoms/BTouchableText";
 import formatCurrency from "@/utils/formatCurrency";
 import { Input } from "@/interfaces";
+import BSpacer from "../atoms/BSpacer";
+import BTouchableText from "../atoms/BTouchableText";
 import BForm from "../organism/BForm";
 
 type BProjectDetailCardType = {
@@ -96,7 +96,7 @@ export default function BProjectDetailCard({
             </View>
             {quotation && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>SPH</Text>
                         <BTouchableText
@@ -109,7 +109,7 @@ export default function BProjectDetailCard({
             )}
             {paymentMethod && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Metode Pembayaran</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
@@ -120,7 +120,7 @@ export default function BProjectDetailCard({
             )}
             {expiredDate !== "-" && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Expired</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
@@ -131,7 +131,7 @@ export default function BProjectDetailCard({
             )}
             {projectName && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Nama Proyek</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
@@ -142,7 +142,7 @@ export default function BProjectDetailCard({
             )}
             {paymentDate && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Tanggal Bayar</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
@@ -153,18 +153,18 @@ export default function BProjectDetailCard({
             )}
             {nominal && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Nominal</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
-                            {"IDR " + formatCurrency(nominal)}
+                            {`IDR ${formatCurrency(nominal)}`}
                         </Text>
                     </View>
                 </>
             )}
             {deliveryDate && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Tanggal Pengiriman</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
@@ -175,18 +175,18 @@ export default function BProjectDetailCard({
             )}
             {deliveredQty !== undefined && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Quantity Terkirim</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
-                            {deliveredQty + " m³"}
+                            {`${deliveredQty} m³`}
                         </Text>
                     </View>
                 </>
             )}
             {deliveryTime && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Jam Pengiriman</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
@@ -197,7 +197,7 @@ export default function BProjectDetailCard({
             )}
             {scheduleMethod && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Metode Penuangan</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
@@ -208,7 +208,7 @@ export default function BProjectDetailCard({
             )}
             {tmNumber && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Nomor TM</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
@@ -219,7 +219,7 @@ export default function BProjectDetailCard({
             )}
             {driverName && (
                 <>
-                    <BSpacer size={"extraSmall"} />
+                    <BSpacer size="extraSmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Nama Sopir</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
@@ -230,7 +230,7 @@ export default function BProjectDetailCard({
             )}
             {consecutive !== undefined && (
                 <>
-                    <BSpacer size={"verySmall"} />
+                    <BSpacer size="verySmall" />
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Konsekutif</Text>
                         <BForm
@@ -254,7 +254,7 @@ export default function BProjectDetailCard({
                     </View>
                 </>
             )}
-            <BSpacer size={"extraSmall"} />
+            <BSpacer size="extraSmall" />
             <View style={styles.summaryContainer}>
                 <Text style={styles.summary}>Waktu Pembuatan</Text>
                 <Text style={[styles.summary, styles.fontw400]}>

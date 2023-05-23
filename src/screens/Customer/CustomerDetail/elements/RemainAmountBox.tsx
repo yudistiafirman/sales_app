@@ -11,11 +11,11 @@ interface IRemainingAmountBox {
     secondAmount?: number;
 }
 
-const RemainingAmountBox = ({
+function RemainingAmountBox({
     title,
     firstAmount,
     secondAmount
-}: IRemainingAmountBox) => {
+}: IRemainingAmountBox) {
     return (
         <View style={styles.container}>
             <View style={styles.innerContainer}>
@@ -35,7 +35,7 @@ const RemainingAmountBox = ({
             </View>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {

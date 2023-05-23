@@ -9,6 +9,17 @@ import Sph from "@/screens/Sph";
 import CreateVisitation from "@/screens/Visitation/CreateVisitation";
 import TransactionDetail from "@/screens/Transaction/Detail";
 import CustomerDetailListCustomer from "@/screens/Customer/CustomerDetail";
+import CustomerDetail from "@/screens/CustomerDetail";
+import PurchaseOrderWithProvider from "@/screens/PurchaseOrder";
+import CreateScheduleScreen from "@/screens/CreateSchedule";
+import PriceList from "@/screens/Price";
+import AppointmentWithProvider from "@/screens/Appointment";
+import RequiredDocuments from "@/screens/RequiredDocuments";
+import VisitHistory from "@/screens/VisitHistory";
+import Deposit from "@/screens/Deposit";
+import SearchSO from "@/screens/SearchSO";
+import FormSO from "@/screens/SearchSO/Form/FormSO";
+import Document from "@/screens/Customer/Document";
 import {
     ALL_PRODUCT,
     ALL_PRODUCT_TITLE,
@@ -49,19 +60,8 @@ import {
     TRANSACTION_DETAIL_TITLE,
     VISIT_HISTORY
 } from "../ScreenNames";
-import CustomerDetail from "@/screens/CustomerDetail";
-import PurchaseOrderWithProvider from "@/screens/PurchaseOrder";
-import CreateScheduleScreen from "@/screens/CreateSchedule";
-import PriceList from "@/screens/Price";
-import AppointmentWithProvider from "@/screens/Appointment";
-import RequiredDocuments from "@/screens/RequiredDocuments";
-import VisitHistory from "@/screens/VisitHistory";
-import Deposit from "@/screens/Deposit";
-import SearchSO from "@/screens/SearchSO";
-import FormSO from "@/screens/SearchSO/Form/FormSO";
-import Document from "@/screens/Customer/Document";
 
-const SalesStack = (Stack: any) => {
+function SalesStack(Stack: any) {
     return (
         <>
             <Stack.Screen
@@ -243,6 +243,6 @@ const SalesStack = (Stack: any) => {
             />
         </>
     );
-};
+}
 
 export default SalesStack;

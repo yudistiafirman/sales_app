@@ -7,14 +7,14 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import { useMachine } from "@xstate/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { FlashList } from "@shopify/flash-list";
 import HistoryDetails from "./elements/HistoryDetails";
 import HistoryHeader from "./elements/HistoryHeader";
 import LocationText from "./elements/LocationText";
-import { FlashList } from "@shopify/flash-list";
 
 type VisitHistoryRoute = RouteProp<RootStackParamList, "VISIT_HISTORY">;
 
-const VisitHistory = () => {
+function VisitHistory() {
     const route = useRoute<VisitHistoryRoute>();
     const { projectName } = route.params;
     const [state, send] = useMachine(visitHistoryMachine);
@@ -46,13 +46,14 @@ const VisitHistory = () => {
         visitationData
     } = state.context;
 
-    const renderVisitHistory = useCallback(() => {
-        return (
+    const renderVisitHistory = useCallback(
+        () => (
             <HistoryDetails
                 details={selectedVisitationByIdx && selectedVisitationByIdx}
             />
-        );
-    }, [selectedVisitationByIdx]);
+        ),
+        [selectedVisitationByIdx]
+    );
 
     if (loading) {
         return (
@@ -86,9 +87,7 @@ const VisitHistory = () => {
                             <FlashList
                                 estimatedItemSize={1}
                                 data={[1]}
-                                renderItem={() => {
-                                    return <BSpacer size={"verySmall"} />;
-                                }}
+                                renderItem={() => <BSpacer size="verySmall" />}
                                 ListHeaderComponent={renderVisitHistory}
                             />
                         )}
@@ -102,7 +101,7 @@ const VisitHistory = () => {
             )}
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {

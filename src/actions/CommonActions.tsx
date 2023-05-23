@@ -15,44 +15,33 @@ export const getAllCustomers = async (
     type: string,
     search: string,
     page: number
-) => {
-    return customRequest(
+) =>
+    customRequest(
         BrikApiCommon.getAllCustomers(type, search, page),
         "GET",
         undefined,
         true
     );
-};
 
-export const getOneCustomer = async (id: string) => {
-    return customRequest(BrikApiCommon.oneCustomer(id), "GET", undefined, true);
-};
+export const getOneCustomer = async (id: string) =>
+    customRequest(BrikApiCommon.oneCustomer(id), "GET", undefined, true);
 
-export const updateCustomer = async (id: string, data: any) => {
-    return customRequest(BrikApiCommon.oneCustomer(id), "PUT", data, true);
-};
+export const updateCustomer = async (id: string, data: any) =>
+    customRequest(BrikApiCommon.oneCustomer(id), "PUT", data, true);
 
-export const getCustomerCount = async () => {
-    return customRequest(
-        BrikApiCommon.getCustomerCount(),
-        "GET",
-        undefined,
-        true
-    );
-};
+export const getCustomerCount = async () =>
+    customRequest(BrikApiCommon.getCustomerCount(), "GET", undefined, true);
 
-export const updateCustomerBillingAddress = async (id: string, data: any) => {
-    return customRequest(
+export const updateCustomerBillingAddress = async (id: string, data: any) =>
+    customRequest(
         BrikApiCommon.updateCustomerBillingAddress(id),
         "PUT",
         data,
         true
     );
-};
 
-export const searchLocation = async (searchValue: string) => {
-    return customRequest(BrikApiCommon.searchPlaces(searchValue), "GET");
-};
+export const searchLocation = async (searchValue: string) =>
+    customRequest(BrikApiCommon.searchPlaces(searchValue), "GET");
 
 export const searchLocationById = async (id: string) =>
     customRequest(BrikApiCommon.searchPlacesById(id), "GET");
@@ -140,14 +129,10 @@ export const updateBillingAddress = async (projectId: string, payload: any) =>
         true
     );
 
-export const updateLocationAddress = async (
-    projectId: string,
-    payload: any
-) => {
-    return customRequest(
+export const updateLocationAddress = async (projectId: string, payload: any) =>
+    customRequest(
         BrikApiCommon.updateLocationAddress(projectId),
         "PUT",
         payload,
         true
     );
-};

@@ -3,10 +3,6 @@ import { resScale } from "@/utils";
 import { useNavigation } from "@react-navigation/native";
 import * as React from "react";
 import { Image, SafeAreaView, TouchableOpacity } from "react-native";
-import PhoneInput from "./element/PhoneInput";
-import Instruction from "./element/Intstruction";
-import Label from "./element/Label";
-import loginStyle from "./style";
 import { colors, layout } from "@/constants";
 import {
     setPhoneNumber,
@@ -20,6 +16,10 @@ import { LOGIN, VERIFICATION } from "@/navigation/ScreenNames";
 import crashlytics from "@react-native-firebase/crashlytics";
 import { RootState } from "@/redux/store";
 import { isProduction } from "@/utils/generalFunc";
+import loginStyle from "./style";
+import Label from "./element/Label";
+import Instruction from "./element/Intstruction";
+import PhoneInput from "./element/PhoneInput";
 
 interface LoginState {
     errorMessage: unknown | string;
@@ -27,7 +27,7 @@ interface LoginState {
     phoneNumber: string;
 }
 
-const Login = () => {
+function Login() {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const { isShowButtonNetwork } = useSelector(
@@ -119,7 +119,7 @@ const Login = () => {
             <Instruction />
             <BSpacer size={layout.pad.lg} />
             <Label />
-            <BSpacer size={"extraSmall"} />
+            <BSpacer size="extraSmall" />
             <PhoneInput
                 value={phoneNumber}
                 onChangeText={(val) =>
@@ -149,5 +149,5 @@ const Login = () => {
             />
         </SafeAreaView>
     );
-};
+}
 export default Login;

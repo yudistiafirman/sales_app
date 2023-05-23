@@ -3,9 +3,9 @@ import { SafeAreaView, StyleSheet, View } from "react-native";
 import { BCommonSearchList } from "@/components";
 import { useMachine } from "@xstate/react";
 import { searchPOMachine } from "@/machine/searchPOMachine";
-import SelectedPOModal from "./element/SelectedPOModal";
 import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
 import { PurchaseOrdersData } from "@/interfaces/SelectConfirmedPO";
+import SelectedPOModal from "./element/SelectedPOModal";
 
 interface IProps {
     dataToGet: "SPHDATA" | "DEPOSITDATA" | "SCHEDULEDATA";
@@ -14,12 +14,12 @@ interface IProps {
     onDismiss?: () => void;
 }
 
-const SelectPurchaseOrderData = ({
+function SelectPurchaseOrderData({
     dataToGet,
     onSubmitData,
     onDismiss,
     filterSphDataBy
-}: IProps) => {
+}: IProps) {
     const [index, setIndex] = React.useState(0);
     const [state, send] = useMachine(searchPOMachine);
     const [searchQuery, setSearchQuery] = React.useState("");
@@ -41,7 +41,7 @@ const SelectPurchaseOrderData = ({
     }, [dataToGet]);
 
     const getDataToDisplayInsideModal = () => {
-        let companyName = choosenDataFromList?.name;
+        const companyName = choosenDataFromList?.name;
         let locationName;
         let listData;
         let projectId;
@@ -65,9 +65,8 @@ const SelectPurchaseOrderData = ({
     const getDataToDisplay = () => {
         if (dataToGet === "DEPOSITDATA" || dataToGet === "SCHEDULEDATA") {
             return poData.filter((it) => it.PurchaseOrders?.length > 0);
-        } else {
-            return sphData.filter((it) => it.QuotationRequests?.length > 0);
         }
+        return sphData.filter((it) => it.QuotationRequests?.length > 0);
     };
     const { companyName, locationName, listData, projectId } =
         getDataToDisplayInsideModal();
@@ -108,11 +107,11 @@ const SelectPurchaseOrderData = ({
             <BCommonSearchList
                 searchQuery={searchQuery}
                 onChangeText={onChangeText}
-                placeholder={"Cari PT / Proyek"}
+                placeholder="Cari PT / Proyek"
                 onClearValue={onClearValue}
                 index={index}
                 routes={routes}
-                autoFocus={true}
+                autoFocus
                 emptyText={`${searchQuery} tidak ditemukan!`}
                 onIndexChange={setIndex}
                 data={getDataToDisplay()}
@@ -130,7 +129,7 @@ const SelectPurchaseOrderData = ({
             />
         </SafeAreaView>
     );
-};
+}
 
 const styles = StyleSheet.create({
     safeArea: {

@@ -8,6 +8,14 @@ import {
     Platform
 } from "react-native";
 import { Input } from "@/interfaces";
+import { colors, fonts, layout } from "@/constants";
+import { resScale } from "@/utils";
+import CheckBox from "@react-native-community/checkbox";
+import { TextInput } from "react-native-paper";
+import { TextInputMask } from "react-native-masked-text";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import DatePicker from "react-native-date-picker";
+import { replaceDot } from "@/utils/generalFunc";
 import BSpacer from "../atoms/BSpacer";
 import BTextInput from "../atoms/BTextInput";
 import BCardOption from "../molecules/BCardOption";
@@ -18,19 +26,11 @@ import BText from "../atoms/BText";
 import BDivider from "../atoms/BDivider";
 import BPicList from "./BPicList";
 import BAutoComplete from "../atoms/BAutoComplete";
-import { colors, fonts, layout } from "@/constants";
-import { resScale } from "@/utils";
-import CheckBox from "@react-native-community/checkbox";
-import { TextInput } from "react-native-paper";
 import BSwitch from "../atoms/BSwitch";
 import BFileInput from "../atoms/BFileInput";
-import { TextInputMask } from "react-native-masked-text";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import BCalendar from "./BCalendar";
-import DatePicker from "react-native-date-picker";
 import BComboRadioButton from "../molecules/BComboRadioButton";
 import BTableInput from "../molecules/BTableInput";
-import { replaceDot } from "@/utils/generalFunc";
 
 interface IProps {
     inputs: Input[];
@@ -270,13 +270,13 @@ const renderInput = (
                             onChange(replaceDot(vl.replace(/[^0-9.]/g, "")))
                         }
                         value={value}
-                        keyboardType={"numeric"}
+                        keyboardType="numeric"
                         placeholder={placeholder}
                         contentStyle={textStyles}
                         outlineColor={outlineColor}
                     />
                     <View style={styles.quantityText}>
-                        <BText>{quantityType ? quantityType : "m³"}</BText>
+                        <BText>{quantityType || "m³"}</BText>
                     </View>
                 </View>
                 {isError && (
@@ -311,7 +311,7 @@ const renderInput = (
                         ]}
                     >
                         <TextInputMask
-                            type={"money"}
+                            type="money"
                             options={{
                                 precision: 0,
                                 separator: ",",
@@ -331,7 +331,7 @@ const renderInput = (
                         />
                     </View>
                     <View style={styles.priceText}>
-                        <BText>{"IDR"}</BText>
+                        <BText>IDR</BText>
                     </View>
                 </View>
                 {isError && (
@@ -370,7 +370,7 @@ const renderInput = (
                             isError && { borderColor: colors.primary }
                         ]}
                     >
-                        <BText>{value ? value : placeholder}</BText>
+                        <BText>{value || placeholder}</BText>
                     </View>
                     <View style={styles.calendarText}>
                         <Icon
@@ -387,7 +387,7 @@ const renderInput = (
                 )}
                 {calendar?.isCalendarVisible && (
                     <>
-                        <BSpacer size={"extraSmall"} />
+                        <BSpacer size="extraSmall" />
                         <View style={styles.calendar}>
                             <BCalendar
                                 onDayPress={(date) => {
@@ -511,7 +511,7 @@ const renderInput = (
                 </View>
                 {calendarTime?.isCalendarVisible && (
                     <>
-                        <BSpacer size={"extraSmall"} />
+                        <BSpacer size="extraSmall" />
                         <View style={styles.calendar}>
                             <BCalendar
                                 onDayPress={(date) => {
@@ -524,7 +524,7 @@ const renderInput = (
                 )}
                 {calendarTime?.isTimeVisible && (
                     <>
-                        <BSpacer size={"extraSmall"} />
+                        <BSpacer size="extraSmall" />
                         <View style={styles.calendar}>
                             <DatePicker
                                 textColor={colors.text.darker}
@@ -537,10 +537,10 @@ const renderInput = (
                                     calendarTime?.setTimeVisible(false);
                                     calendarTime?.onTimeChange(time);
                                 }}
-                                mode={"time"}
-                                is24hourSource={"locale"}
+                                mode="time"
+                                is24hourSource="locale"
                                 minuteInterval={1}
-                                locale={"id"}
+                                locale="id"
                                 // timeZoneOffsetInMinutes={new Date().getTimezoneOffset()}
                             />
                         </View>
@@ -553,7 +553,7 @@ const renderInput = (
     if (type === "textInput") {
         const textInputProps = { onChange, value };
         const defaultErrorMsg = `${label} harus diisi`;
-        //textInputAsButton
+        // textInputAsButton
         return (
             <View
                 style={[
@@ -576,7 +576,7 @@ const renderInput = (
                 />
                 <BTextInput
                     {...textInputProps}
-                    keyboardType={keyboardType ? keyboardType : "default"}
+                    keyboardType={keyboardType || "default"}
                     placeholder={placeholder}
                     disabled={isInputDisable}
                     left={
@@ -603,7 +603,7 @@ const renderInput = (
                 />
                 {isError && (
                     <>
-                        <BSpacer size={"verySmall"} />
+                        <BSpacer size="verySmall" />
                         <BText size="small" color="error" bold="300">
                             {customerErrorMsg || defaultErrorMsg}
                         </BText>
@@ -637,7 +637,7 @@ const renderInput = (
                 <BTextInput
                     onChangeText={onChange}
                     value={value}
-                    multiline={true}
+                    multiline
                     numberOfLines={4}
                     minHeight={Platform.OS === "ios" ? 20 * 4 : null}
                     placeholder={placeholder}
@@ -704,7 +704,7 @@ const renderInput = (
     if (type === "autocomplete") {
         const defaultErrorMsg = `${label} harus diisi`;
         return (
-            <React.Fragment>
+            <>
                 <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                     <BLabel
                         sizeInNumber={input.textSize}
@@ -735,14 +735,14 @@ const renderInput = (
                         {customerErrorMsg || defaultErrorMsg}
                     </BText>
                 )}
-            </React.Fragment>
+            </>
         );
     }
 
     if (type === "dropdown") {
         if (dropdown) {
             return (
-                <React.Fragment>
+                <>
                     <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                         <BLabel
                             sizeInNumber={input.textSize}
@@ -761,7 +761,7 @@ const renderInput = (
                         isError={isError}
                         errorMessage={`${label} harus dipilih`}
                     />
-                </React.Fragment>
+                </>
             );
         }
     }
@@ -769,7 +769,7 @@ const renderInput = (
     if (type === "comboDropdown") {
         if (comboDropdown) {
             return (
-                <React.Fragment>
+                <>
                     <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                         <BLabel
                             sizeInNumber={input.textSize}
@@ -780,7 +780,7 @@ const renderInput = (
                         <BSpacer size="verySmall" />
                     </View>
                     <BComboDropdown {...comboDropdown} />
-                </React.Fragment>
+                </>
             );
         }
     }
@@ -801,7 +801,7 @@ const renderInput = (
                                 color="primary"
                                 onPress={onChange}
                             >
-                                {"+ Tambah " + label}
+                                {`+ Tambah ${label}`}
                             </BText>
                         </View>
                         <BSpacer size="verySmall" />
@@ -828,9 +828,7 @@ const renderInput = (
                     }
                     data={value}
                     onSelect={onSelect!}
-                    isCompetitor={
-                        label?.toLowerCase() === "kompetitor" ? true : false
-                    }
+                    isCompetitor={label?.toLowerCase() === "kompetitor"}
                 />
             </View>
         );
@@ -901,7 +899,7 @@ const renderInput = (
                         onCheckColor={colors.white}
                         onFillColor={colors.primary}
                         onTintColor={colors.primary}
-                        boxType={"square"}
+                        boxType="square"
                         onValueChange={checkbox?.onValueChange}
                         style={[
                             { marginStart: layout.pad.xs },
@@ -951,7 +949,7 @@ const renderInput = (
     }
 };
 
-const BForm = ({ inputs, spacer, noSpaceEnd, titleBold }: IProps) => {
+function BForm({ inputs, spacer, noSpaceEnd, titleBold }: IProps) {
     return (
         <View>
             {inputs?.map((input, index) => (
@@ -959,12 +957,12 @@ const BForm = ({ inputs, spacer, noSpaceEnd, titleBold }: IProps) => {
                     {renderInput(input, titleBold)}
                     {(index < inputs.length - 1 || !noSpaceEnd) &&
                         spacer !== "none" && (
-                            <BSpacer size={spacer ? spacer : "middleSmall"} />
+                            <BSpacer size={spacer || "middleSmall"} />
                         )}
                 </React.Fragment>
             ))}
         </View>
     );
-};
+}
 
 export default BForm;

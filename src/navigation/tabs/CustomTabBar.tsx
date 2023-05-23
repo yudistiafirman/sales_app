@@ -13,7 +13,7 @@ interface TabBar {
     navigation: any;
 }
 
-const CustomTabBar = ({ state, descriptors, navigation }: TabBar) => {
+function CustomTabBar({ state, descriptors, navigation }: TabBar) {
     const {
         enable_transaction_menu,
         enable_price_menu,
@@ -108,6 +108,6 @@ const CustomTabBar = ({ state, descriptors, navigation }: TabBar) => {
             })}
         </View>
     );
-};
+}
 
 export default CustomTabBar;
