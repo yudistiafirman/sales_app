@@ -32,7 +32,6 @@ export const getVisitationsList = createAsyncThunk<
     async ({ month, year }, { rejectWithValue }) => {
         try {
             const { data } = await getVisitations({ month, year });
-            if (data.error) throw data as ErrorType;
             return data.data as visitationListResponse[];
         } catch (error) {
             return rejectWithValue(error.message);
@@ -51,7 +50,6 @@ export const postVisitation = createAsyncThunk<
     async ({ payload }, { rejectWithValue }) => {
         try {
             const { data } = await postVisitations({ payload });
-            if (data.error) throw data as ErrorType;
             return data.data;
         } catch (error) {
             return rejectWithValue(error?.response?.data || "error66");
@@ -71,7 +69,6 @@ export const getOneVisitation = createAsyncThunk<
         try {
             //
             const { data } = await oneGetVisitation({ visitationId });
-            if (data.error) throw data as ErrorType;
             return data.data;
         } catch (error) {
             return rejectWithValue(error?.response?.data || "error66");
@@ -90,7 +87,6 @@ export const putVisitationFlow = createAsyncThunk<
     async ({ payload, visitationId }, { rejectWithValue }) => {
         try {
             const { data } = await putVisitation({ payload, visitationId });
-            if (data.error) throw data as ErrorType;
             return data.data;
         } catch (error) {
             return rejectWithValue(error?.response?.data || "error109");

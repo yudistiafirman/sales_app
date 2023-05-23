@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import * as React from "react";
 import { SafeAreaView, View, DeviceEventEmitter, Platform } from "react-native";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
