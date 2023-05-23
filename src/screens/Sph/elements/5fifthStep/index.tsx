@@ -81,6 +81,7 @@ function countNonNullValues(array) {
             count += 1;
         }
     }
+    /* eslint-enable no-plusplus */
     return count;
 }
 

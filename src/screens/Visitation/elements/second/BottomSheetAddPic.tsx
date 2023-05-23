@@ -108,7 +108,6 @@ const BSheetAddPic = React.forwardRef(
                     placeholder: "Masukkan email"
                 }
             ],
-            // eslint-disable-next-line react-hooks/exhaustive-deps
             [state.name, state.email, state.position, state.phone]
         );
 

@@ -149,18 +149,20 @@ const style = StyleSheet.create({
 });
 
 function Beranda() {
+    /* eslint-disable @typescript-eslint/naming-convention */
     const {
-        /* eslint-disable @typescript-eslint/naming-convention */
-        force_update /* eslint-disable @typescript-eslint/naming-convention */,
-        enable_appointment /* eslint-disable @typescript-eslint/naming-convention */,
-        enable_signed_so /* eslint-disable @typescript-eslint/naming-convention */,
-        enable_create_schedule /* eslint-disable @typescript-eslint/naming-convention */,
-        enable_customer_detail /* eslint-disable @typescript-eslint/naming-convention */,
-        enable_deposit /* eslint-disable @typescript-eslint/naming-convention */,
-        enable_po /* eslint-disable @typescript-eslint/naming-convention */,
-        enable_sph /* eslint-disable @typescript-eslint/naming-convention */,
+        force_update,
+        enable_appointment,
+        enable_signed_so,
+        enable_create_schedule,
+        enable_customer_detail,
+        enable_deposit,
+        enable_po,
+        enable_sph,
         enable_visitation
     } = useSelector((state: RootState) => state.auth.remoteConfigData);
+    /* eslint-enable @typescript-eslint/naming-convention */
+
     const poState = useSelector((state: RootState) => state.purchaseOrder);
     const { isModalContinuePo, poNumber, currentStep, customerType } =
         poState.currentState.context;
@@ -325,7 +327,6 @@ function Beranda() {
         React.useCallback(() => {
             fetchTarget();
             fetchVisitations(selectedDate);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [fetchTarget, selectedDate, isModalVisible])
     );
 

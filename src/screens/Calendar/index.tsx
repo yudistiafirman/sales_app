@@ -143,7 +143,6 @@ export default function CalendarScreen() {
         return () => {
             dispatch(resetStates());
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onDayPress = useCallback(

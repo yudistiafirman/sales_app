@@ -27,13 +27,14 @@ import CustomTabBar from "../CustomTabBar";
 const Tab = createBottomTabNavigator();
 
 function SalesTabs() {
+    /* eslint-disable @typescript-eslint/naming-convention */
     const {
-        /* eslint-disable @typescript-eslint/naming-convention */
-        enable_transaction_menu /* eslint-disable @typescript-eslint/naming-convention */,
-        enable_price_menu /* eslint-disable @typescript-eslint/naming-convention */,
-        enable_profile_menu /* eslint-disable @typescript-eslint/naming-convention */,
+        enable_transaction_menu,
+        enable_price_menu,
+        enable_profile_menu,
         enable_customer_menu
     } = useSelector((state: RootState) => state.auth.remoteConfigData);
+    /* eslint-enable @typescript-eslint/naming-convention */
     return (
         <Tab.Navigator
             screenOptions={{

@@ -127,7 +127,6 @@ function Appointment() {
                 backAction
             );
             return () => backHandler.remove();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [values.step])
     );
 

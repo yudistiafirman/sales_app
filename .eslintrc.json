@@ -23,14 +23,13 @@
     },
     "plugins": ["simple-import-sort", "react"],
     "rules": {
-        "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": "off",
         "react/jsx-props-no-spreading": "off",
-        "no-promise-executor-return": "off", // priority 8
-        "@typescript-eslint/no-var-requires": "off", // priority 7
-        "react/no-array-index-key": "off", // priority 6
-        "react/require-default-props": "off", // priority 5
-        "react-hooks/exhaustive-deps": "off", // priority 4
+        "react-hooks/exhaustive-deps": "off",
+        "no-promise-executor-return": "off", // priority 7
+        "@typescript-eslint/no-var-requires": "off", // priority 6
+        "react/no-array-index-key": "off", // priority 5
+        "react/require-default-props": "off", // priority 4
         "no-nested-ternary": "off", // priority 3
         "react/destructuring-assignment": "off", // priority 2
         "class-methods-use-this": "off", // priority 1

@@ -181,7 +181,6 @@ function Deposit() {
                 backAction
             );
             return () => backHandler.remove();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [values.step, values.isSearchingPurchaseOrder])
     );
 
@@ -189,7 +188,6 @@ function Deposit() {
         () => () => {
             dispatch(resetImageURLS({ source: CREATE_DEPOSIT }));
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 

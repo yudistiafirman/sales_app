@@ -194,7 +194,6 @@ function SphContent() {
 
         stepHandler(sphData, stepsDone, setStepsDone, stepControll);
         handleStepperFocus();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sphData]);
 
     const getLocationCoord = async (coordinate: Region) => {
@@ -333,7 +332,6 @@ function SphContent() {
         if (projectId) {
             getProjectById(projectId);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

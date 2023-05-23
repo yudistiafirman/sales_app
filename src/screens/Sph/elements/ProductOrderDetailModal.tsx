@@ -163,7 +163,6 @@ export default function ProductCartModal({
 
     useEffect(() => {
         setDetailOrder(prevData);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const calcPrice = useMemo(

@@ -123,7 +123,6 @@ export default function AddedDepositModal({
                 ...addedDeposit,
                 picts: createSchedulePhotoURLs
             });
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [createSchedulePhotoURLs])
     );
 

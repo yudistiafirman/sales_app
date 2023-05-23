@@ -354,7 +354,6 @@ export default function SecondStep() {
                 }
             />
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [billingAddress, isBillingAddressSame, distanceFromLegok]
     );
 

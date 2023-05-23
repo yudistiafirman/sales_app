@@ -218,7 +218,6 @@ export default function ThirdStep() {
 
     useEffect(() => {
         dispatch(updateRequiredDocuments(documents));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [documents]);
     const inputsData2: Input[] = useMemo(() => {
         const inputs: Input[] = [

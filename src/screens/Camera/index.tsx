@@ -87,7 +87,6 @@ function CameraScreen() {
         }
     }, [dispatch, navigateTo, navigation, isFirstTimeOpenCamera]);
     if (closeButton) {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
         useCustomHeaderLeft({
             customHeaderLeft: (
                 <BHeaderIcon

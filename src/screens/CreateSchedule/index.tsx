@@ -174,7 +174,6 @@ function CreateScheduleScreen() {
                 backAction
             );
             return () => backHandler.remove();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [
             values.step,
             values.stepOne?.companyName,
@@ -186,7 +185,6 @@ function CreateScheduleScreen() {
         () => () => {
             dispatch(resetImageURLS({ source: CREATE_SCHEDULE }));
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 

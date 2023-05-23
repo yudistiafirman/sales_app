@@ -121,7 +121,6 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     let latlongResult = "";
 
     if (closeButton) {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
         useCustomHeaderLeft({
             customHeaderLeft: (
                 <BHeaderIcon
