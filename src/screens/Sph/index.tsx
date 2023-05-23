@@ -140,14 +140,6 @@ function SphContent() {
     const sphData = useSelector((state: RootState) => state.sph);
     const [isPopupVisible, setPopupVisible] = React.useState(false);
 
-    useEffect(() => {
-        crashlytics().log(SPH);
-
-        stepHandler(sphData, stepsDone, setStepsDone, stepControll);
-        handleStepperFocus();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sphData]);
-
     const handleStepperFocus = () => {
         // to continue stepper focus when entering sph page
         if (!sphData.stepperSPHShouldNotFocused) {
@@ -196,6 +188,14 @@ function SphContent() {
             dispatch(resetStepperFocused(4));
         }
     };
+
+    useEffect(() => {
+        crashlytics().log(SPH);
+
+        stepHandler(sphData, stepsDone, setStepsDone, stepControll);
+        handleStepperFocus();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sphData]);
 
     const getLocationCoord = async (coordinate: Region) => {
         try {
@@ -284,6 +284,19 @@ function SphContent() {
         }
     }
 
+    const actionBackButton = (popupVisible = false) => {
+        if (popupVisible) {
+            if (sphData.selectedCompany) {
+                setPopupVisible(true);
+            } else {
+                navigation.goBack();
+            }
+        } else {
+            setPopupVisible(false);
+            navigation.goBack();
+        }
+    };
+
     useCustomHeaderLeft({
         customHeaderLeft: (
             <BHeaderIcon
@@ -322,19 +335,6 @@ function SphContent() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const actionBackButton = (popupVisible = false) => {
-        if (popupVisible) {
-            if (sphData.selectedCompany) {
-                setPopupVisible(true);
-            } else {
-                navigation.goBack();
-            }
-        } else {
-            setPopupVisible(false);
-            navigation.goBack();
-        }
-    };
 
     return (
         <View style={style.container}>

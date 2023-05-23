@@ -155,16 +155,16 @@ export default function ProductCartModal({
     prevData,
     distance
 }: ProductCartModalType) {
-    useEffect(() => {
-        setDetailOrder(prevData);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const [detailOrder, setDetailOrder] = useState({
         volume: "",
         sellPrice: "",
         method: ""
     });
+
+    useEffect(() => {
+        setDetailOrder(prevData);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const calcPrice = useMemo(
         () => calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost,

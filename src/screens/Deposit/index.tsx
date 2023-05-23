@@ -77,6 +77,16 @@ function Deposit() {
     const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
     const [isPopupVisible, setPopupVisible] = React.useState(false);
 
+    const actionBackButton = (directlyClose = false) => {
+        if (values.isSearchingPurchaseOrder === true) {
+            action.updateValue("isSearchingPurchaseOrder", false);
+        } else if (values.step > 0 && !directlyClose) {
+            next(values.step - 1)();
+        } else {
+            setPopupVisible(true);
+        }
+    };
+
     useCustomHeaderLeft({
         customHeaderLeft: (
             <BHeaderIcon
@@ -120,6 +130,8 @@ function Deposit() {
     React.useEffect(() => {
         stepHandler(values, setStepsDone);
     }, [values]);
+
+    const stepRender = [<FirstStep />, <SecondStep />];
 
     const next = (nextStep: number) => async () => {
         const totalStep = stepRender.length;
@@ -184,18 +196,6 @@ function Deposit() {
             }
         }
     };
-
-    const actionBackButton = (directlyClose = false) => {
-        if (values.isSearchingPurchaseOrder === true) {
-            action.updateValue("isSearchingPurchaseOrder", false);
-        } else if (values.step > 0 && !directlyClose) {
-            next(values.step - 1)();
-        } else {
-            setPopupVisible(true);
-        }
-    };
-
-    const stepRender = [<FirstStep />, <SecondStep />];
 
     return (
         <>

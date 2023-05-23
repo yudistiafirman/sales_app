@@ -11,6 +11,20 @@ import { layout } from "@/constants";
 import colors from "@/constants/colors";
 import font from "@/constants/fonts";
 
+const CurrentLocationStyles = StyleSheet.create({
+    container: {
+        flexDirection: "row",
+        marginStart: layout.pad.lg
+    },
+    viewMoreText: {
+        flex: 1,
+        fontFamily: font.family.montserrat[300],
+        fontSize: font.size.xs,
+        color: colors.text.blue,
+        marginEnd: layout.pad.lg
+    }
+});
+
 interface CurrentLocationProps {
     location?: string | undefined;
     onPress?: ((event: GestureResponderEvent) => void) | undefined;
@@ -33,19 +47,5 @@ function CurrentLocation({ location, onPress }: CurrentLocationProps) {
         </TouchableOpacity>
     );
 }
-
-const CurrentLocationStyles = StyleSheet.create({
-    container: {
-        flexDirection: "row",
-        marginStart: layout.pad.lg
-    },
-    viewMoreText: {
-        flex: 1,
-        fontFamily: font.family.montserrat[300],
-        fontSize: font.size.xs,
-        color: colors.text.blue,
-        marginEnd: layout.pad.lg
-    }
-});
 
 export default CurrentLocation;

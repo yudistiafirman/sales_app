@@ -59,6 +59,21 @@ export default function FirstStep() {
     const [expandData, setExpandData] = React.useState<any[]>([]);
     const dispatch = useDispatch();
 
+    const getTotalLastDeposit = (totalAmount: number | undefined) => {
+        let total = 0;
+        if (totalAmount) {
+            total = totalAmount;
+        } else if (
+            stateOne?.purchaseOrders &&
+            stateOne?.purchaseOrders.length > 0
+        ) {
+            stateOne?.purchaseOrders?.forEach((it) => {
+                total = it.availableDeposit;
+            });
+        }
+        return total;
+    };
+
     const listenerSearchCallback = React.useCallback(
         ({ parent, data }: { parent: any; data: any }) => {
             updateValueOnstep("stepOne", "companyName", parent.companyName);
@@ -98,21 +113,6 @@ export default function FirstStep() {
             );
         }
         setExpandData(newExpandsetExpandData);
-    };
-
-    const getTotalLastDeposit = (totalAmount: number | undefined) => {
-        let total = 0;
-        if (totalAmount) {
-            total = totalAmount;
-        } else if (
-            stateOne?.purchaseOrders &&
-            stateOne?.purchaseOrders.length > 0
-        ) {
-            stateOne?.purchaseOrders?.forEach((it) => {
-                total = it.availableDeposit;
-            });
-        }
-        return total;
     };
 
     return (

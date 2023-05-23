@@ -46,6 +46,19 @@ function FormSO() {
         }
     ];
 
+    const actionBackButton = (popupVisible = false) => {
+        if (popupVisible) {
+            if (soData.photoFiles) {
+                setPopupVisible(true);
+            } else {
+                navigation.goBack();
+            }
+        } else {
+            setPopupVisible(false);
+            navigation.goBack();
+        }
+    };
+
     useCustomHeaderLeft({
         customHeaderLeft: (
             <BHeaderIcon
@@ -160,19 +173,6 @@ function FormSO() {
     React.useEffect(() => {
         crashlytics().log(FORM_SO);
     }, []);
-
-    const actionBackButton = (popupVisible = false) => {
-        if (popupVisible) {
-            if (soData.photoFiles) {
-                setPopupVisible(true);
-            } else {
-                navigation.goBack();
-            }
-        } else {
-            setPopupVisible(false);
-            navigation.goBack();
-        }
-    };
 
     useFocusEffect(
         React.useCallback(() => {

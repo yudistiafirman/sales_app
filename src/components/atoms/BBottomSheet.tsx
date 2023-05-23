@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import BottomSheet from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo, forwardRef, Ref } from "react";
 import { ViewStyle } from "react-native";

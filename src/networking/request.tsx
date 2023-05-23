@@ -66,19 +66,6 @@ function getContentType<T>(dataToReceived: T) {
     return contentType;
 }
 
-export const customRequest = async (
-    request: any,
-    method: "GET" | "POST" | "DELETE" | "PUT",
-    data?: Record<string, string> | FormDataValue,
-    withToken?: boolean
-) => {
-    // performance API log
-    metric = await perf().newHttpMetric(request, method);
-    await metric.start();
-
-    return instance(request, await getOptions(method, data, withToken));
-};
-
 export const getOptions = async (
     method: "GET" | "POST" | "DELETE" | "PUT",
     data?: Record<string, string> | FormDataValue,
@@ -111,6 +98,20 @@ export const getOptions = async (
 const instance = axios.create({
     withCredentials: true
 });
+
+export const customRequest = async (
+    request: any,
+    method: "GET" | "POST" | "DELETE" | "PUT",
+    data?: Record<string, string> | FormDataValue,
+    withToken?: boolean
+) => {
+    // performance API log
+    metric = await perf().newHttpMetric(request, method);
+    await metric.start();
+
+    return instance(request, await getOptions(method, data, withToken));
+};
+
 export const injectStore = (_store: any) => {
     store = _store;
 };

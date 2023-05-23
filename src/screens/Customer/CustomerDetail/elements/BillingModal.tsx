@@ -28,6 +28,8 @@ import Icons from "react-native-vector-icons/Feather";
 import { updateCustomerBillingAddress } from "@/actions/CommonActions";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 
+const { height } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
     modal: {
         justifyContent: "flex-end",
@@ -70,8 +72,6 @@ type BillingModalType = {
     customerId: string | undefined;
     isUpdate?: boolean;
 };
-
-const { height } = Dimensions.get("window");
 
 export default function BillingModal({
     isModalVisible,
@@ -232,7 +232,7 @@ export default function BillingModal({
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error saat update alamat " + "Pembayaran",
                     outsideClickClosePopUp: true
                 })

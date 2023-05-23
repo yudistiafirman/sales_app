@@ -571,11 +571,6 @@ function Beranda() {
         []
     );
 
-    const onChangeSearch = (text: string) => {
-        setSearchQuery(text);
-        onChangeWithDebounce(text);
-    };
-
     const reset = (text: string) => {
         setVisitData({
             totalItems: 0,
@@ -588,6 +583,11 @@ function Beranda() {
     };
 
     const onChangeWithDebounce = React.useCallback(debounce(reset, 500), []);
+
+    const onChangeSearch = (text: string) => {
+        setSearchQuery(text);
+        onChangeWithDebounce(text);
+    };
 
     const onRetryFetchVisitation = () => {
         setPage(1);

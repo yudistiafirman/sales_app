@@ -44,6 +44,25 @@ export default function FirstStep() {
     const { updateValueOnstep } = action;
     const dispatch = useDispatch();
 
+    const onChange = (key: string) => (val: any) => {
+        let modifyDeposit = {};
+        if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
+        if (key === "createdAt") {
+            modifyDeposit = {
+                ...modifyDeposit,
+                createdAt: val
+            };
+        }
+        if (key === "nominal") {
+            modifyDeposit = {
+                ...modifyDeposit,
+                nominal: val
+            };
+        }
+
+        updateValueOnstep("stepOne", "deposit", modifyDeposit);
+    };
+
     const inputs: Input[] = [
         {
             label: "Tanggal Bayar",
@@ -77,25 +96,6 @@ export default function FirstStep() {
             }
         }
     ];
-
-    const onChange = (key: string) => (val: any) => {
-        let modifyDeposit = {};
-        if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
-        if (key === "createdAt") {
-            modifyDeposit = {
-                ...modifyDeposit,
-                createdAt: val
-            };
-        }
-        if (key === "nominal") {
-            modifyDeposit = {
-                ...modifyDeposit,
-                nominal: val
-            };
-        }
-
-        updateValueOnstep("stepOne", "deposit", modifyDeposit);
-    };
 
     const removeImage = React.useCallback(
         (pos: number) => {
