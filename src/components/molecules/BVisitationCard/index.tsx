@@ -22,6 +22,59 @@ import VisitStatus from "./elements/VisitStatus";
 import Time from "./elements/Time";
 import PillStatus from "./elements/PillStatus";
 
+const style = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: colors.white,
+        borderColor: "#EBEBEB",
+        borderRadius: layout.radius.md,
+        borderWidth: resScale(1),
+        padding: layout.pad.md
+    },
+    subContainer: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    leftSide: {
+        flex: 1,
+        paddingStart: layout.pad.md,
+        justifyContent: "space-between",
+        alignSelf: "center"
+    },
+    rightSide: {
+        justifyContent: "center",
+        alignItems: "center",
+        marginStart: layout.pad.lg
+    },
+    top: {
+        // height: resScale(20),
+        flexDirection: "row",
+        justifyContent: "space-between",
+        // marginBottom: layout.pad.sm,
+        // width: resScale(285),
+        alignItems: "center"
+    },
+    row: {
+        flexDirection: "row"
+    },
+    bottom: {
+        marginTop: layout.pad.md
+    },
+    location: {
+        marginTop: layout.pad.lg,
+        marginHorizontal: layout.pad.md,
+        marginBottom: layout.pad.md
+    },
+    locationButton: {
+        borderRadius: layout.radius.md
+    },
+    locationTextButton: {
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.sm
+    }
+});
+
 function iconRender(
     isRenderIcon: boolean,
     customIcon: (() => JSX.Element) | undefined
@@ -138,56 +191,3 @@ export default function BVisitationCard({
         </View>
     );
 }
-
-const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.white,
-        borderColor: "#EBEBEB",
-        borderRadius: layout.radius.md,
-        borderWidth: resScale(1),
-        padding: layout.pad.md
-    },
-    subContainer: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-    leftSide: {
-        flex: 1,
-        paddingStart: layout.pad.md,
-        justifyContent: "space-between",
-        alignSelf: "center"
-    },
-    rightSide: {
-        justifyContent: "center",
-        alignItems: "center",
-        marginStart: layout.pad.lg
-    },
-    top: {
-        // height: resScale(20),
-        flexDirection: "row",
-        justifyContent: "space-between",
-        // marginBottom: layout.pad.sm,
-        // width: resScale(285),
-        alignItems: "center"
-    },
-    row: {
-        flexDirection: "row"
-    },
-    bottom: {
-        marginTop: layout.pad.md
-    },
-    location: {
-        marginTop: layout.pad.lg,
-        marginHorizontal: layout.pad.md,
-        marginBottom: layout.pad.md
-    },
-    locationButton: {
-        borderRadius: layout.radius.md
-    },
-    locationTextButton: {
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.sm
-    }
-});

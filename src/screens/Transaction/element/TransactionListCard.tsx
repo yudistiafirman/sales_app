@@ -9,6 +9,64 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { getColorStatusTrx, getStatusTrx } from "@/utils/generalFunc";
 import formatCurrency from "@/utils/formatCurrency";
 
+export const styles = StyleSheet.create({
+    parent: {
+        flex: 1,
+        flexDirection: "row",
+        borderWidth: 1,
+        borderRadius: layout.pad.md,
+        borderColor: colors.border.disabled,
+        marginTop: layout.pad.lg,
+        padding: layout.pad.md,
+        justifyContent: "center"
+    },
+    container: {
+        justifyContent: "flex-end",
+        alignItems: "center",
+        alignSelf: "flex-start"
+    },
+    bottomContainer: {
+        flexDirection: "row",
+        marginTop: layout.pad.md,
+        flex: 1,
+        alignItems: "center"
+    },
+    title: {
+        flex: 1,
+        fontFamily: font.family.montserrat[500],
+        color: colors.text.darker,
+        fontSize: font.size.md
+    },
+    name: {
+        flex: 1,
+        marginTop: layout.pad.xs,
+        fontFamily: font.family.montserrat[300],
+        color: colors.text.secondary,
+        fontSize: font.size.xs
+    },
+    desc: {
+        flex: 1,
+        fontFamily: font.family.montserrat[400],
+        color: colors.text.darker,
+        fontSize: font.size.sm,
+        marginEnd: layout.pad.sm
+    },
+    nominal: {
+        flex: 1,
+        fontFamily: font.family.montserrat[500],
+        color: colors.text.darker,
+        fontSize: font.size.md
+    },
+    leftSide: {
+        flex: 1,
+        justifyContent: "space-between"
+    },
+    rightSide: {
+        justifyContent: "center",
+        alignItems: "center"
+    }
+});
+
 interface TransactionListCardProps {
     number: string;
     projectName: string;
@@ -70,63 +128,5 @@ function TransactionListCard({
         </View>
     );
 }
-
-export const styles = StyleSheet.create({
-    parent: {
-        flex: 1,
-        flexDirection: "row",
-        borderWidth: 1,
-        borderRadius: layout.pad.md,
-        borderColor: colors.border.disabled,
-        marginTop: layout.pad.lg,
-        padding: layout.pad.md,
-        justifyContent: "center"
-    },
-    container: {
-        justifyContent: "flex-end",
-        alignItems: "center",
-        alignSelf: "flex-start"
-    },
-    bottomContainer: {
-        flexDirection: "row",
-        marginTop: layout.pad.md,
-        flex: 1,
-        alignItems: "center"
-    },
-    title: {
-        flex: 1,
-        fontFamily: font.family.montserrat[500],
-        color: colors.text.darker,
-        fontSize: font.size.md
-    },
-    name: {
-        flex: 1,
-        marginTop: layout.pad.xs,
-        fontFamily: font.family.montserrat[300],
-        color: colors.text.secondary,
-        fontSize: font.size.xs
-    },
-    desc: {
-        flex: 1,
-        fontFamily: font.family.montserrat[400],
-        color: colors.text.darker,
-        fontSize: font.size.sm,
-        marginEnd: layout.pad.sm
-    },
-    nominal: {
-        flex: 1,
-        fontFamily: font.family.montserrat[500],
-        color: colors.text.darker,
-        fontSize: font.size.md
-    },
-    leftSide: {
-        flex: 1,
-        justifyContent: "space-between"
-    },
-    rightSide: {
-        justifyContent: "center",
-        alignItems: "center"
-    }
-});
 
 export default TransactionListCard;

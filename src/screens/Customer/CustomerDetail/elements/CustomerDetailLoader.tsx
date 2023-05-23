@@ -5,6 +5,35 @@ import { StyleSheet, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 
+const styles = StyleSheet.create({
+    completeDocument: {
+        height: layout.pad.xxl,
+        width: "100%"
+    },
+    justifyBetween: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    name: {
+        width: layout.pad.xxl,
+        height: layout.pad.lg
+    },
+    npwp: {
+        width: layout.pad.xxl * 2,
+        height: layout.pad.lg
+    },
+    pic: {
+        width: "100%",
+        height: layout.pad.xxl * 2,
+        borderRadius: layout.radius.md
+    },
+    billingAddress: {
+        height: layout.pad.xl,
+        width: "100%",
+        borderRadius: layout.radius.md
+    }
+});
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 function CustomerDetailLoader() {
@@ -83,34 +112,5 @@ function CustomerDetailLoader() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    completeDocument: {
-        height: layout.pad.xxl,
-        width: "100%"
-    },
-    justifyBetween: {
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-    name: {
-        width: layout.pad.xxl,
-        height: layout.pad.lg
-    },
-    npwp: {
-        width: layout.pad.xxl * 2,
-        height: layout.pad.lg
-    },
-    pic: {
-        width: "100%",
-        height: layout.pad.xxl * 2,
-        borderRadius: layout.radius.md
-    },
-    billingAddress: {
-        height: layout.pad.xl,
-        width: "100%",
-        borderRadius: layout.radius.md
-    }
-});
 
 export default CustomerDetailLoader;

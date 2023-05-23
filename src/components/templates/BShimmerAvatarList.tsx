@@ -7,27 +7,6 @@ import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import font from "@/constants/fonts";
 import BSpacer from "../atoms/BSpacer";
 
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-function BShimmerAvatarList() {
-    return (
-        <View style={styles.container}>
-            <ShimmerPlaceholder style={styles.avatar} />
-            <BSpacer size="extraSmall" />
-            <View style={{ flex: 1 }}>
-                <View style={styles.infoContainer}>
-                    <ShimmerPlaceholder />
-                    <ShimmerPlaceholder style={{ width: layout.pad.xxl }} />
-                </View>
-                <BSpacer size="extraSmall" />
-                <View style={styles.credContainer}>
-                    <ShimmerPlaceholder style={{ flex: 0.45 }} />
-                    <ShimmerPlaceholder style={{ flex: 0.45 }} />
-                </View>
-            </View>
-        </View>
-    );
-}
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -65,5 +44,26 @@ const styles = StyleSheet.create({
         color: colors.text.darker
     }
 });
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+function BShimmerAvatarList() {
+    return (
+        <View style={styles.container}>
+            <ShimmerPlaceholder style={styles.avatar} />
+            <BSpacer size="extraSmall" />
+            <View style={{ flex: 1 }}>
+                <View style={styles.infoContainer}>
+                    <ShimmerPlaceholder />
+                    <ShimmerPlaceholder style={{ width: layout.pad.xxl }} />
+                </View>
+                <BSpacer size="extraSmall" />
+                <View style={styles.credContainer}>
+                    <ShimmerPlaceholder style={{ flex: 0.45 }} />
+                    <ShimmerPlaceholder style={{ flex: 0.45 }} />
+                </View>
+            </View>
+        </View>
+    );
+}
 
 export default BShimmerAvatarList;

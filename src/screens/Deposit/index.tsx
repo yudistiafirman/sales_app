@@ -35,6 +35,13 @@ import { resScale } from "@/utils";
 import SecondStep from "./element/SecondStep";
 import FirstStep from "./element/FirstStep";
 
+const styles: Styles = {
+    container: {
+        justifyContent: "space-between",
+        flex: 1
+    }
+};
+
 const labels = ["Data Pelanggan", "Cari PT / Proyek"];
 
 function stepHandler(
@@ -247,13 +254,6 @@ function Deposit() {
         </>
     );
 }
-
-const styles: Styles = {
-    container: {
-        justifyContent: "space-between",
-        flex: 1
-    }
-};
 
 function DepositWithProvider(props: any) {
     return (

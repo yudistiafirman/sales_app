@@ -6,6 +6,14 @@ import { showWarningDocument } from "@/utils/generalFunc";
 import React, { useMemo } from "react";
 import { StyleSheet, Text, TextStyle } from "react-native";
 
+const styles = StyleSheet.create({
+    chipText: {
+        fontSize: fonts.size.vs,
+        color: colors.offWhite,
+        fontFamily: fonts.family.montserrat[400]
+    }
+});
+
 type ITotalDocumentChip = {
     documents?: CustomerDocs;
     customerType: "INDIVIDU" | "COMPANY";
@@ -59,13 +67,5 @@ function TotalDocumentChip({
         </BChip>
     );
 }
-
-const styles = StyleSheet.create({
-    chipText: {
-        fontSize: fonts.size.vs,
-        color: colors.offWhite,
-        fontFamily: fonts.family.montserrat[400]
-    }
-});
 
 export default TotalDocumentChip;

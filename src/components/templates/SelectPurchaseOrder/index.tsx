@@ -7,6 +7,12 @@ import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
 import { PurchaseOrdersData } from "@/interfaces/SelectConfirmedPO";
 import SelectedPOModal from "./element/SelectedPOModal";
 
+const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1
+    }
+});
+
 interface IProps {
     dataToGet: "SPHDATA" | "DEPOSITDATA" | "SCHEDULEDATA";
     filterSphDataBy?: "INDIVIDU" | "COMPANY";
@@ -130,11 +136,5 @@ function SelectPurchaseOrderData({
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1
-    }
-});
 
 export default SelectPurchaseOrderData;

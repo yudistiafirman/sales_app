@@ -11,6 +11,16 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import { useDispatch } from "react-redux";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 
+const styles = StyleSheet.create({
+    container: {
+        marginHorizontal: layout.pad.lg
+    },
+    outlineSearchBar: {
+        borderWidth: 0,
+        borderRadius: layout.radius.md
+    }
+});
+
 function Customer() {
     const [state, send] = useMachine(customerListMachine);
     const navigation = useNavigation();
@@ -105,15 +115,5 @@ function Customer() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        marginHorizontal: layout.pad.lg
-    },
-    outlineSearchBar: {
-        borderWidth: 0,
-        borderRadius: layout.radius.md
-    }
-});
 
 export default Customer;

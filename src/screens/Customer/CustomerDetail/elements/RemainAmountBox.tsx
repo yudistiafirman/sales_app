@@ -5,6 +5,36 @@ import formatCurrency from "@/utils/formatCurrency";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
+const styles = StyleSheet.create({
+    container: {
+        borderWidth: 2,
+        borderColor: colors.border.default,
+        borderRadius: layout.radius.md,
+        backgroundColor: colors.tertiary,
+        flex: 1
+    },
+    innerContainer: {
+        paddingVertical: layout.pad.xs + layout.pad.md,
+        alignItems: "center"
+    },
+    divider: {
+        borderColor: colors.border.default,
+        borderBottomWidth: 1,
+        width: "85%",
+        marginHorizontal: layout.pad.lg
+    },
+    title: {
+        fontFamily: font.family.montserrat[400],
+        fontSize: font.size.sm,
+        color: `${colors.pitchBlack}50`
+    },
+    firstAmount: {
+        fontFamily: font.family.montserrat[600],
+        fontSize: font.size.md,
+        color: colors.text.darker
+    }
+});
+
 interface IRemainingAmountBox {
     title: string;
     firstAmount: number;
@@ -36,35 +66,5 @@ function RemainingAmountBox({
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        borderWidth: 2,
-        borderColor: colors.border.default,
-        borderRadius: layout.radius.md,
-        backgroundColor: colors.tertiary,
-        flex: 1
-    },
-    innerContainer: {
-        paddingVertical: layout.pad.xs + layout.pad.md,
-        alignItems: "center"
-    },
-    divider: {
-        borderColor: colors.border.default,
-        borderBottomWidth: 1,
-        width: "85%",
-        marginHorizontal: layout.pad.lg
-    },
-    title: {
-        fontFamily: font.family.montserrat[400],
-        fontSize: font.size.sm,
-        color: `${colors.pitchBlack}50`
-    },
-    firstAmount: {
-        fontFamily: font.family.montserrat[600],
-        fontSize: font.size.md,
-        color: colors.text.darker
-    }
-});
 
 export default RemainingAmountBox;

@@ -19,6 +19,21 @@ import { FlashList } from "@shopify/flash-list";
 import BEmptyState from "../organism/BEmptyState";
 import BCommonListShimmer from "./BCommonListShimmer";
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    tabIndicator: {
+        backgroundColor: colors.primary
+    },
+    tabStyle: {
+        flex: 1
+    },
+    tabBarStyle: {
+        backgroundColor: colors.white
+    }
+});
+
 type ListRenderItemData = CreatedPurchaseOrderListResponse &
     CreatedSPHListResponse &
     selectedCompanyInterface;
@@ -196,20 +211,5 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    tabIndicator: {
-        backgroundColor: colors.primary
-    },
-    tabStyle: {
-        flex: 1
-    },
-    tabBarStyle: {
-        backgroundColor: colors.white
-    }
-});
 
 export default BCommonSearchList;

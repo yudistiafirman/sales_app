@@ -75,6 +75,79 @@ import SelectCustomerTypeModal from "../PurchaseOrder/element/SelectCustomerType
 
 const { height, width } = Dimensions.get("window");
 
+const style = StyleSheet.create({
+    container: {
+        flex: 1,
+        // alignItems: 'center',
+        justifyContent: "flex-start",
+        backgroundColor: colors.primary
+    },
+    contentContainer: {
+        flex: 1,
+        alignItems: "center",
+        width: "100%"
+    },
+    itemContainer: {
+        padding: layout.pad.sm,
+        margin: layout.pad.sm,
+        backgroundColor: "#eee"
+    },
+    BsheetStyle: {
+        paddingLeft: layout.pad.lg,
+        paddingRight: layout.pad.lg,
+        justifyContent: "center"
+    },
+    flatListContainer: {},
+    flatListLoading: {
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    flatListShimmer: {
+        height: resScale(60),
+        borderRadius: layout.radius.md
+    },
+    modalContent: {
+        flex: 1
+    },
+    posRelative: {
+        position: "relative",
+        marginBottom: layout.pad.md
+    },
+    touchable: {
+        position: "absolute",
+        width: "100%",
+        borderRadius: layout.radius.sm,
+        height: resScale(45),
+        zIndex: 2
+    },
+    handleIndicator: {
+        height: resScale(3),
+        width: resScale(40),
+        backgroundColor: colors.disabled
+    },
+    popupSPHContent: { height: resScale(78), paddingHorizontal: layout.pad.lg },
+    popupSPHDesc: {
+        alignSelf: "center",
+        textAlign: "center",
+        paddingHorizontal: layout.pad.xl
+    },
+    poNumber: {
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.md,
+        color: colors.text.darker,
+        padding: layout.pad.xs + layout.pad.md
+    },
+    poNumberWrapper: {
+        backgroundColor: colors.tertiary,
+        height: resScale(37),
+        alignItems: "flex-start",
+        justifyContent: "center",
+        width: resScale(277),
+        alignSelf: "center",
+        borderRadius: layout.radius.md
+    }
+});
+
 function Beranda() {
     const {
         force_update,
@@ -762,76 +835,4 @@ function Beranda() {
     );
 }
 
-const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        // alignItems: 'center',
-        justifyContent: "flex-start",
-        backgroundColor: colors.primary
-    },
-    contentContainer: {
-        flex: 1,
-        alignItems: "center",
-        width: "100%"
-    },
-    itemContainer: {
-        padding: layout.pad.sm,
-        margin: layout.pad.sm,
-        backgroundColor: "#eee"
-    },
-    BsheetStyle: {
-        paddingLeft: layout.pad.lg,
-        paddingRight: layout.pad.lg,
-        justifyContent: "center"
-    },
-    flatListContainer: {},
-    flatListLoading: {
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    flatListShimmer: {
-        height: resScale(60),
-        borderRadius: layout.radius.md
-    },
-    modalContent: {
-        flex: 1
-    },
-    posRelative: {
-        position: "relative",
-        marginBottom: layout.pad.md
-    },
-    touchable: {
-        position: "absolute",
-        width: "100%",
-        borderRadius: layout.radius.sm,
-        height: resScale(45),
-        zIndex: 2
-    },
-    handleIndicator: {
-        height: resScale(3),
-        width: resScale(40),
-        backgroundColor: colors.disabled
-    },
-    popupSPHContent: { height: resScale(78), paddingHorizontal: layout.pad.lg },
-    popupSPHDesc: {
-        alignSelf: "center",
-        textAlign: "center",
-        paddingHorizontal: layout.pad.xl
-    },
-    poNumber: {
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.md,
-        color: colors.text.darker,
-        padding: layout.pad.xs + layout.pad.md
-    },
-    poNumberWrapper: {
-        backgroundColor: colors.tertiary,
-        height: resScale(37),
-        alignItems: "flex-start",
-        justifyContent: "center",
-        width: resScale(277),
-        alignSelf: "center",
-        borderRadius: layout.radius.md
-    }
-});
 export default Beranda;

@@ -16,6 +16,24 @@ import BTabSections from "../organism/TabSections";
 import BSpacer from "../atoms/BSpacer";
 import BSearchBar from "../molecules/BSearchBar";
 
+const styles = StyleSheet.create({
+    container: {
+        marginHorizontal: layout.pad.lg
+    },
+    tabIndicator: {
+        backgroundColor: colors.blueSail,
+        marginLeft: layout.pad.lg - layout.pad.sm
+    },
+    tabStyle: {
+        width: "auto",
+        paddingRight: layout.pad.md
+    },
+    tabBarStyle: {
+        backgroundColor: colors.white,
+        paddingHorizontal: layout.pad.ml
+    }
+});
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 interface IBList {
@@ -215,23 +233,5 @@ function BList({
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        marginHorizontal: layout.pad.lg
-    },
-    tabIndicator: {
-        backgroundColor: colors.blueSail,
-        marginLeft: layout.pad.lg - layout.pad.sm
-    },
-    tabStyle: {
-        width: "auto",
-        paddingRight: layout.pad.md
-    },
-    tabBarStyle: {
-        backgroundColor: colors.white,
-        paddingHorizontal: layout.pad.ml
-    }
-});
 
 export default BList;

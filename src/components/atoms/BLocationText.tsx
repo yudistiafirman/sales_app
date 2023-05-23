@@ -5,10 +5,27 @@ import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import resScale from "@/utils/resScale";
 import { colors, fonts, layout } from "@/constants";
 
+const style = StyleSheet.create({
+    location: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    locationText: {
+        flex: 1,
+        color: "#0080FF",
+        fontFamily: font.family.montserrat[300],
+        fontSize: fonts.size.xs
+    },
+    iconStyle: {
+        marginRight: layout.pad.md
+    }
+});
+
 type locationType = {
     location?: string;
     color?: string;
 };
+
 export default function BLocationText({
     location,
     color = colors.text.blue
@@ -30,19 +47,3 @@ export default function BLocationText({
         </View>
     );
 }
-
-const style = StyleSheet.create({
-    location: {
-        flexDirection: "row",
-        alignItems: "center"
-    },
-    locationText: {
-        flex: 1,
-        color: "#0080FF",
-        fontFamily: font.family.montserrat[300],
-        fontSize: fonts.size.xs
-    },
-    iconStyle: {
-        marginRight: layout.pad.md
-    }
-});

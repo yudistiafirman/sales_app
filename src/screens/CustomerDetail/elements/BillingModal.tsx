@@ -31,6 +31,41 @@ import {
 } from "@/actions/CommonActions";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 
+const { height } = Dimensions.get("window");
+
+const styles = StyleSheet.create({
+    modal: {
+        justifyContent: "flex-end",
+        margin: 0
+    },
+    modalContent: {
+        backgroundColor: "white",
+        height: height / 1.6,
+        borderTopLeftRadius: layout.radius.lg,
+        borderTopRightRadius: layout.radius.lg
+    },
+    modalHeader: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    headerText: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[700],
+        fontSize: fonts.size.lg
+    },
+    searchAddress: {
+        flexDirection: "row",
+        paddingVertical: layout.pad.md,
+        backgroundColor: colors.border.disabled,
+        borderRadius: layout.radius.sm,
+        paddingHorizontal: layout.pad.ml,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    selectedAddress: { paddingStart: layout.pad.ml, flex: 1 }
+});
+
 type BillingModalType = {
     isModalVisible: boolean;
     setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -41,8 +76,6 @@ type BillingModalType = {
     isUpdate?: boolean;
     isBilling?: boolean;
 };
-
-const { height } = Dimensions.get("window");
 
 export default function BillingModal({
     isModalVisible,
@@ -283,36 +316,3 @@ export default function BillingModal({
         </Modal>
     );
 }
-
-const styles = StyleSheet.create({
-    modal: {
-        justifyContent: "flex-end",
-        margin: 0
-    },
-    modalContent: {
-        backgroundColor: "white",
-        height: height / 1.6,
-        borderTopLeftRadius: layout.radius.lg,
-        borderTopRightRadius: layout.radius.lg
-    },
-    modalHeader: {
-        justifyContent: "space-between",
-        flexDirection: "row",
-        alignItems: "center"
-    },
-    headerText: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[700],
-        fontSize: fonts.size.lg
-    },
-    searchAddress: {
-        flexDirection: "row",
-        paddingVertical: layout.pad.md,
-        backgroundColor: colors.border.disabled,
-        borderRadius: layout.radius.sm,
-        paddingHorizontal: layout.pad.ml,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    selectedAddress: { paddingStart: layout.pad.ml, flex: 1 }
-});

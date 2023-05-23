@@ -46,6 +46,32 @@ import Fourth from "./elements/fourth";
 import FirstStep from "./elements/first";
 import Fifth from "./elements/fifth";
 
+const styles: Styles = {
+    footer: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    button: { flexDirection: "row-reverse" },
+    container: {
+        justifyContent: "space-between",
+        flex: 1
+    },
+    conButton: {
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: "row"
+    },
+    buttonOne: {
+        flex: 1,
+        paddingEnd: layout.pad.md
+    },
+    buttonTwo: {
+        flex: 1.5,
+        paddingStart: layout.pad.md
+    }
+};
+
 const labels = [
     "Alamat Proyek",
     "Data Pelanggan",
@@ -544,31 +570,5 @@ function CreateVisitation() {
         </>
     );
 }
-
-const styles: Styles = {
-    footer: {
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-    button: { flexDirection: "row-reverse" },
-    container: {
-        justifyContent: "space-between",
-        flex: 1
-    },
-    conButton: {
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexDirection: "row"
-    },
-    buttonOne: {
-        flex: 1,
-        paddingEnd: layout.pad.md
-    },
-    buttonTwo: {
-        flex: 1.5,
-        paddingStart: layout.pad.md
-    }
-};
 
 export default CreateVisitation;

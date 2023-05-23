@@ -46,6 +46,50 @@ import { getDrivers, getVehicles } from "@/actions/InventoryActions";
 import SelectCustomerTypeModal from "../PurchaseOrder/element/SelectCustomerTypeModal";
 import TransactionList from "./element/TransactionList";
 
+const styles = StyleSheet.create({
+    parent: {
+        flex: 1
+    },
+    shimmer: {
+        marginHorizontal: layout.pad.lg,
+        height: layout.pad.lg,
+        width: "92%"
+    },
+    tabIndicator: {
+        backgroundColor: colors.primary,
+        marginLeft: layout.pad.lg
+    },
+    tabStyle: {
+        width: "auto",
+        paddingHorizontal: layout.pad.lg
+    },
+    tabBarStyle: {
+        backgroundColor: colors.white,
+        paddingHorizontal: layout.pad.lg
+    },
+    popupSPHContent: { height: resScale(78), paddingHorizontal: layout.pad.lg },
+    popupSPHDesc: {
+        alignSelf: "center",
+        textAlign: "center",
+        paddingHorizontal: layout.pad.xl
+    },
+    poNumber: {
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.md,
+        color: colors.text.darker,
+        padding: layout.pad.xs + layout.pad.md
+    },
+    poNumberWrapper: {
+        backgroundColor: colors.tertiary,
+        height: resScale(37),
+        alignItems: "flex-start",
+        justifyContent: "center",
+        width: resScale(277),
+        alignSelf: "center",
+        borderRadius: layout.radius.md
+    }
+});
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 function Transaction() {
     const navigation = useNavigation();
@@ -401,49 +445,5 @@ function Transaction() {
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    parent: {
-        flex: 1
-    },
-    shimmer: {
-        marginHorizontal: layout.pad.lg,
-        height: layout.pad.lg,
-        width: "92%"
-    },
-    tabIndicator: {
-        backgroundColor: colors.primary,
-        marginLeft: layout.pad.lg
-    },
-    tabStyle: {
-        width: "auto",
-        paddingHorizontal: layout.pad.lg
-    },
-    tabBarStyle: {
-        backgroundColor: colors.white,
-        paddingHorizontal: layout.pad.lg
-    },
-    popupSPHContent: { height: resScale(78), paddingHorizontal: layout.pad.lg },
-    popupSPHDesc: {
-        alignSelf: "center",
-        textAlign: "center",
-        paddingHorizontal: layout.pad.xl
-    },
-    poNumber: {
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.md,
-        color: colors.text.darker,
-        padding: layout.pad.xs + layout.pad.md
-    },
-    poNumberWrapper: {
-        backgroundColor: colors.tertiary,
-        height: resScale(37),
-        alignItems: "flex-start",
-        justifyContent: "center",
-        width: resScale(277),
-        alignSelf: "center",
-        borderRadius: layout.radius.md
-    }
-});
 
 export default Transaction;

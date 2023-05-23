@@ -5,29 +5,6 @@ import { resScale } from "@/utils";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
-function UpdatedAddressWrapper({ address }: { address: string }) {
-    return (
-        <View style={styles.filledAddressContainer}>
-            <View style={styles.filledAddressInnerContainer}>
-                {address ? (
-                    <>
-                        <BText numberOfLines={1} style={styles.mainAddress}>
-                            {address.split(",")[0]}
-                        </BText>
-                        <BText numberOfLines={1} style={styles.secondAddress}>
-                            {address}
-                        </BText>
-                    </>
-                ) : (
-                    <BText numberOfLines={1} style={styles.mainAddress}>
-                        -
-                    </BText>
-                )}
-            </View>
-        </View>
-    );
-}
-
 const styles = StyleSheet.create({
     filledAddressContainer: {
         backgroundColor: colors.tertiary,
@@ -68,5 +45,28 @@ const styles = StyleSheet.create({
         color: colors.text.medium
     }
 });
+
+function UpdatedAddressWrapper({ address }: { address: string }) {
+    return (
+        <View style={styles.filledAddressContainer}>
+            <View style={styles.filledAddressInnerContainer}>
+                {address ? (
+                    <>
+                        <BText numberOfLines={1} style={styles.mainAddress}>
+                            {address.split(",")[0]}
+                        </BText>
+                        <BText numberOfLines={1} style={styles.secondAddress}>
+                            {address}
+                        </BText>
+                    </>
+                ) : (
+                    <BText numberOfLines={1} style={styles.mainAddress}>
+                        -
+                    </BText>
+                )}
+            </View>
+        </View>
+    );
+}
 
 export default UpdatedAddressWrapper;

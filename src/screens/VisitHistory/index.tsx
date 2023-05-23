@@ -12,6 +12,29 @@ import HistoryDetails from "./elements/HistoryDetails";
 import HistoryHeader from "./elements/HistoryHeader";
 import LocationText from "./elements/LocationText";
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    loading: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    tabIndicator: {
+        backgroundColor: colors.primary,
+        marginLeft: layout.pad.lg
+    },
+    tabStyle: {
+        width: "auto",
+        paddingHorizontal: layout.pad.lg
+    },
+    tabBarStyle: {
+        backgroundColor: colors.white,
+        paddingHorizontal: layout.pad.lg
+    }
+});
+
 type VisitHistoryRoute = RouteProp<RootStackParamList, "VISIT_HISTORY">;
 
 function VisitHistory() {
@@ -102,28 +125,5 @@ function VisitHistory() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    loading: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    tabIndicator: {
-        backgroundColor: colors.primary,
-        marginLeft: layout.pad.lg
-    },
-    tabStyle: {
-        width: "auto",
-        paddingHorizontal: layout.pad.lg
-    },
-    tabBarStyle: {
-        backgroundColor: colors.white,
-        paddingHorizontal: layout.pad.lg
-    }
-});
 
 export default VisitHistory;

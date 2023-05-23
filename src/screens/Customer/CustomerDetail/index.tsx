@@ -51,6 +51,59 @@ import DocumentWarning from "./elements/DocumentWarning";
 import BillingModal from "./elements/BillingModal";
 import TotalDocumentChip from "../elements/TotalDocumentChip";
 
+const styles = StyleSheet.create({
+    partText: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[600],
+        fontSize: fonts.size.md
+    },
+    between: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    touchableText: {
+        color: colors.danger,
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.vs,
+        margin: 0
+    },
+
+    fontW300: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[300],
+        fontSize: fonts.size.xs
+    },
+    fontW400: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.xs
+    },
+    fontW500: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.xs
+    },
+    billingStyle: {
+        alignItems: "center"
+    },
+
+    loading: {
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1
+    },
+    seeAllText: {
+        color: colors.primary,
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.sm
+    },
+    projectListContainer: {
+        backgroundColor: colors.tertiary,
+        borderTopStartRadius: layout.radius.lg,
+        borderTopEndRadius: layout.radius.lg
+    }
+});
+
 export default function CustomerDetail() {
     const route = useRoute<RootStackScreenProps>();
     const { id } = route.params;
@@ -357,55 +410,3 @@ export default function CustomerDetail() {
         </>
     );
 }
-const styles = StyleSheet.create({
-    partText: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[600],
-        fontSize: fonts.size.md
-    },
-    between: {
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-    touchableText: {
-        color: colors.danger,
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.vs,
-        margin: 0
-    },
-
-    fontW300: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[300],
-        fontSize: fonts.size.xs
-    },
-    fontW400: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.xs
-    },
-    fontW500: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.xs
-    },
-    billingStyle: {
-        alignItems: "center"
-    },
-
-    loading: {
-        justifyContent: "center",
-        alignItems: "center",
-        flex: 1
-    },
-    seeAllText: {
-        color: colors.primary,
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.sm
-    },
-    projectListContainer: {
-        backgroundColor: colors.tertiary,
-        borderTopStartRadius: layout.radius.lg,
-        borderTopEndRadius: layout.radius.lg
-    }
-});

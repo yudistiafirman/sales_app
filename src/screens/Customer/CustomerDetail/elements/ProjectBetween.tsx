@@ -3,6 +3,36 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import React from "react";
 import { colors, fonts, layout } from "@/constants";
 
+const styles = StyleSheet.create({
+    container: {},
+    between: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingVertical: layout.pad.md
+    },
+    divider: {
+        borderBottomWidth: 1,
+        borderColor: colors.border.disabled
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    buttonText: {
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.xs,
+        color: colors.primary
+    },
+    projectName: {
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.md,
+        color: colors.text.darker
+    },
+    iconStyle: {
+        marginRight: layout.pad.sm
+    }
+});
+
 type projectType = {
     id?: string;
     name?: string;
@@ -57,33 +87,3 @@ export default function ProjectBetween({
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {},
-    between: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingVertical: layout.pad.md
-    },
-    divider: {
-        borderBottomWidth: 1,
-        borderColor: colors.border.disabled
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        alignItems: "center"
-    },
-    buttonText: {
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.xs,
-        color: colors.primary
-    },
-    projectName: {
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.md,
-        color: colors.text.darker
-    },
-    iconStyle: {
-        marginRight: layout.pad.sm
-    }
-});

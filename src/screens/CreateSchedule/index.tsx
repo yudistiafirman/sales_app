@@ -36,6 +36,13 @@ import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import FirstStep from "./element/FirstStep";
 import SecondStep from "./element/SecondStep";
 
+const styles: Styles = {
+    container: {
+        justifyContent: "space-between",
+        flex: 1
+    }
+};
+
 const labels = ["Cari PT / Proyek", "Detil Pengiriman"];
 
 function stepHandler(
@@ -263,13 +270,6 @@ function CreateScheduleScreen() {
         </>
     );
 }
-
-const styles: Styles = {
-    container: {
-        justifyContent: "space-between",
-        flex: 1
-    }
-};
 
 function CreateScheduleWithProvider(props: any) {
     return (

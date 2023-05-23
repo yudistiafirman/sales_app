@@ -6,6 +6,17 @@ import colors from "@/constants/colors";
 import { resScale } from "@/utils";
 import { fonts } from "@/constants";
 
+const style = StyleSheet.create({
+    normalText: {
+        fontFamily: font.family.montserrat[500],
+        color: colors.textInput.input,
+        maxWidth: resScale(200)
+    },
+    boldText: {
+        fontFamily: fonts.family.montserrat[800]
+    }
+});
+
 type higlightTextType = {
     searchQuery?: string;
     name: string;
@@ -78,13 +89,3 @@ export default function HighlightText({
         </Text>
     );
 }
-const style = StyleSheet.create({
-    normalText: {
-        fontFamily: font.family.montserrat[500],
-        color: colors.textInput.input,
-        maxWidth: resScale(200)
-    },
-    boldText: {
-        fontFamily: fonts.family.montserrat[800]
-    }
-});

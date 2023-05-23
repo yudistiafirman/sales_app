@@ -24,6 +24,31 @@ import SvgNames from "@/components/atoms/BSvg/svgName";
 import { COMPANY } from "@/constants/const";
 import TotalDocumentChip from "../elements/TotalDocumentChip";
 
+const styles = StyleSheet.create({
+    container: { flex: 1 },
+    between: { flexDirection: "row", justifyContent: "space-between" },
+    fontW500: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.md
+    },
+    divider: {
+        borderBottomWidth: 1,
+        borderColor: colors.textInput.inActive
+    },
+    chipText: {
+        fontSize: fonts.size.sm,
+        color: colors.offWhite,
+        fontFamily: fonts.family.montserrat[400]
+    },
+    documentProggress: {},
+    fileInputShimmer: {
+        width: resScale(330),
+        height: resScale(30),
+        borderRadius: layout.radius.md
+    }
+});
+
 function Document() {
     const route = useRoute();
     const { docs, customerId, customerType } = route.params;
@@ -181,30 +206,5 @@ function Document() {
         </BContainer>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1 },
-    between: { flexDirection: "row", justifyContent: "space-between" },
-    fontW500: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.md
-    },
-    divider: {
-        borderBottomWidth: 1,
-        borderColor: colors.textInput.inActive
-    },
-    chipText: {
-        fontSize: fonts.size.sm,
-        color: colors.offWhite,
-        fontFamily: fonts.family.montserrat[400]
-    },
-    documentProggress: {},
-    fileInputShimmer: {
-        width: resScale(330),
-        height: resScale(30),
-        borderRadius: layout.radius.md
-    }
-});
 
 export default Document;

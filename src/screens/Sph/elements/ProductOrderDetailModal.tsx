@@ -27,6 +27,106 @@ import calcTrips from "@/utils/calcTrips";
 import { METHOD_LIST } from "@/constants/dropdown";
 import { replaceDot } from "@/utils/generalFunc";
 
+const style = StyleSheet.create({
+    modal: { justifyContent: "flex-end", margin: 0 },
+    modalContent: {
+        backgroundColor: "white",
+        height: "95%",
+        borderTopLeftRadius: layout.radius.lg,
+        borderTopRightRadius: layout.radius.lg
+    },
+    modalHeader: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+        alignItems: "center",
+        padding: layout.pad.ml
+    },
+    headerText: {
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[700],
+        fontSize: fonts.size.lg
+    },
+    grayContent: {
+        backgroundColor: colors.tertiary,
+        height: resScale(250),
+        paddingHorizontal: layout.mainPad,
+        paddingTop: layout.mainPad
+    },
+    productName: {
+        fontFamily: fonts.family.montserrat[600],
+        fontSize: fonts.size.lg,
+        color: colors.text.darker
+    },
+    chipContainer: {
+        flexDirection: "row"
+    },
+    hargaText: {
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.md,
+        color: colors.text.darker
+    },
+    distanceText: {
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.md,
+        color: colors.text.darker,
+        marginLeft: layout.pad.md
+    },
+    priceContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    outerInputContainer: {
+        paddingHorizontal: layout.mainPad,
+        paddingTop: layout.pad.xs
+    },
+    hargaJualText: {
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.md,
+        color: colors.text.darker
+    },
+    hargaJualPrice: {
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.md,
+        color: colors.text.darker
+    },
+    detailText: {
+        marginTop: layout.pad.sm,
+        fontFamily: fonts.family.montserrat[300],
+        fontSize: fonts.size.xs,
+        color: colors.text.darker
+    },
+    buttonContainer: {
+        flex: 1,
+        justifyContent: "flex-end",
+        paddingHorizontal: layout.mainPad,
+        paddingVertical: layout.pad.md
+    },
+    inputContainer: {
+        flexDirection: "row"
+    },
+    textIcon: {
+        fontFamily: fonts.family.montserrat[400],
+        fontSize: fonts.size.sm,
+        color: colors.text.darker
+    },
+    boldPrice: {
+        fontFamily: fonts.family.montserrat[600],
+        fontSize: fonts.size.lg,
+        color: colors.text.darker
+    },
+    inputLabel: {
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.sm,
+        color: colors.text.darker
+    },
+    volumeContainer: {
+        width: "45%"
+    },
+    sellPriceContainer: {
+        width: "50%"
+    }
+});
+
 type ProductCartModalType = {
     productData: ProductDataInterface;
     isVisible: boolean;
@@ -353,103 +453,3 @@ export default function ProductCartModal({
         </Modal>
     );
 }
-
-const style = StyleSheet.create({
-    modal: { justifyContent: "flex-end", margin: 0 },
-    modalContent: {
-        backgroundColor: "white",
-        height: "95%",
-        borderTopLeftRadius: layout.radius.lg,
-        borderTopRightRadius: layout.radius.lg
-    },
-    modalHeader: {
-        justifyContent: "space-between",
-        flexDirection: "row",
-        alignItems: "center",
-        padding: layout.pad.ml
-    },
-    headerText: {
-        color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[700],
-        fontSize: fonts.size.lg
-    },
-    grayContent: {
-        backgroundColor: colors.tertiary,
-        height: resScale(250),
-        paddingHorizontal: layout.mainPad,
-        paddingTop: layout.mainPad
-    },
-    productName: {
-        fontFamily: fonts.family.montserrat[600],
-        fontSize: fonts.size.lg,
-        color: colors.text.darker
-    },
-    chipContainer: {
-        flexDirection: "row"
-    },
-    hargaText: {
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.md,
-        color: colors.text.darker
-    },
-    distanceText: {
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.md,
-        color: colors.text.darker,
-        marginLeft: layout.pad.md
-    },
-    priceContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-    outerInputContainer: {
-        paddingHorizontal: layout.mainPad,
-        paddingTop: layout.pad.xs
-    },
-    hargaJualText: {
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.md,
-        color: colors.text.darker
-    },
-    hargaJualPrice: {
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.md,
-        color: colors.text.darker
-    },
-    detailText: {
-        marginTop: layout.pad.sm,
-        fontFamily: fonts.family.montserrat[300],
-        fontSize: fonts.size.xs,
-        color: colors.text.darker
-    },
-    buttonContainer: {
-        flex: 1,
-        justifyContent: "flex-end",
-        paddingHorizontal: layout.mainPad,
-        paddingVertical: layout.pad.md
-    },
-    inputContainer: {
-        flexDirection: "row"
-    },
-    textIcon: {
-        fontFamily: fonts.family.montserrat[400],
-        fontSize: fonts.size.sm,
-        color: colors.text.darker
-    },
-    boldPrice: {
-        fontFamily: fonts.family.montserrat[600],
-        fontSize: fonts.size.lg,
-        color: colors.text.darker
-    },
-    inputLabel: {
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.sm,
-        color: colors.text.darker
-    },
-    volumeContainer: {
-        width: "45%"
-    },
-    sellPriceContainer: {
-        width: "50%"
-    }
-});
