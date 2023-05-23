@@ -65,6 +65,10 @@ export default function SelectedPic({
         (state: RootState) => state.sph
     );
 
+    const openBottomSheet = () => {
+        bottomSheetRef.current?.expand();
+    };
+
     const inputsData: Input[] = useMemo(
         () => [
             {
@@ -135,10 +139,6 @@ export default function SelectedPic({
             }
         }
     }, []);
-
-    const openBottomSheet = () => {
-        bottomSheetRef.current?.expand();
-    };
 
     let picOrCompanyName = "-";
     if (selectedCompany?.Company?.name) {

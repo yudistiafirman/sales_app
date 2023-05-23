@@ -72,6 +72,38 @@ const useAsyncConfigSetup = () => {
         [dispatch]
     );
 
+    const hunterFarmerSetup = React.useCallback(async () => {
+        await BackgroundFetch.configure(
+            {
+                minimumFetchInterval: 60,
+                forceAlarmManager: true
+            },
+            async (taskId) => {
+                // <-- Event callback
+                const date = await bStorage.getItem(HUNTER_AND_FARMER);
+                if (date !== undefined && moment().date() !== date) {
+                    setTimeout(
+                        () => dispatch(toggleHunterScreen(true)),
+                        Platform.OS === "ios" ? 500 : 0
+                    );
+                } else {
+                    await bStorage.setItem(HUNTER_AND_FARMER, moment().date());
+                }
+                BackgroundFetch.finish(taskId);
+            },
+            async (taskId) => {
+                BackgroundFetch.finish(taskId);
+            }
+        );
+        // And with with #scheduleTask
+        BackgroundFetch.scheduleTask({
+            taskId: "enableHunterFarmers",
+            delay: 0, // milliseconds
+            forceAlarmManager: true,
+            periodic: false
+        });
+    }, [dispatch]);
+
     const appStateSetup = React.useCallback(async () => {
         remoteConfig().fetch(300); // in secs
         remoteConfig().setConfigSettings({
@@ -115,38 +147,6 @@ const useAsyncConfigSetup = () => {
                 );
             });
     }, [dispatch, userDataSetup]);
-
-    const hunterFarmerSetup = React.useCallback(async () => {
-        await BackgroundFetch.configure(
-            {
-                minimumFetchInterval: 60,
-                forceAlarmManager: true
-            },
-            async (taskId) => {
-                // <-- Event callback
-                const date = await bStorage.getItem(HUNTER_AND_FARMER);
-                if (date !== undefined && moment().date() !== date) {
-                    setTimeout(
-                        () => dispatch(toggleHunterScreen(true)),
-                        Platform.OS === "ios" ? 500 : 0
-                    );
-                } else {
-                    await bStorage.setItem(HUNTER_AND_FARMER, moment().date());
-                }
-                BackgroundFetch.finish(taskId);
-            },
-            async (taskId) => {
-                BackgroundFetch.finish(taskId);
-            }
-        );
-        // And with with #scheduleTask
-        BackgroundFetch.scheduleTask({
-            taskId: "enableHunterFarmers",
-            delay: 0, // milliseconds
-            forceAlarmManager: true,
-            periodic: false
-        });
-    }, [dispatch]);
 
     React.useEffect(() => {
         appStateSetup();

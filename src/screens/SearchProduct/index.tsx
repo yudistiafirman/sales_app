@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import * as React from "react";
 import { SafeAreaView, View, DeviceEventEmitter, Platform } from "react-native";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
@@ -34,6 +33,7 @@ function SearchProduct() {
     const navigation = useNavigation();
     const [state, send] = useMachine(searchProductMachine);
     const disablePressed = routePage?.params?.disablePressed;
+    const { routes, productsData, loadProduct, errorMessage } = state.context;
 
     const renderHeaderLeft = React.useCallback(
         () => (
@@ -119,7 +119,6 @@ function SearchProduct() {
             send("onChangeTab", { value: tabIndex });
         }
     };
-    const { routes, productsData, loadProduct, errorMessage } = state.context;
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <BSpacer size="small" />

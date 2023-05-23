@@ -1,4 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
 import BText from "@/components/atoms/BText";
 import colors from "@/constants/colors";
 import font from "@/constants/fonts";
