@@ -11,7 +11,7 @@ interface BSearchBarProp {
     left?: React.ReactNode;
     right?: React.ReactNode;
     placeholder?: string | undefined;
-    onChangeText?: (((text: string) => void) & Function) | undefined;
+    onChangeText?: (text: string) => void;
     value?: string | undefined;
     multiline?: boolean | undefined;
     numberOfLines?: number | undefined;

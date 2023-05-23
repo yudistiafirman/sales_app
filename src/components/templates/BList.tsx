@@ -187,7 +187,7 @@ function BList({
             {routes.length > 0 && (
                 <BTabSections
                     swipeEnabled={false}
-                    navigationState={{ index, routes }}
+                    navigationState={{ index: itemIndex, routes }}
                     renderScene={() => (
                         <FlashList
                             data={data}

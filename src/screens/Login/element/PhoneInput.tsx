@@ -6,7 +6,7 @@ import { BText } from "@/components";
 
 interface PhoneInputProps {
     value: string;
-    onChangeText: ((text: string) => void) & Function;
+    onChangeText: (text: string) => void;
 }
 function PhoneInput({ value, onChangeText }: PhoneInputProps) {
     const phonenumberMask = [

@@ -70,13 +70,6 @@ function stepHandler(
     }
 }
 
-const getTotalProduct = (stepTwo: CreateScheduleSecondStep): number => {
-    const total =
-        stepTwo?.inputtedVolume *
-        stepTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
-    return total;
-};
-
 function CreateScheduleScreen() {
     const navigation = useNavigation();
     const { values, action } = React.useContext(CreateScheduleContext);

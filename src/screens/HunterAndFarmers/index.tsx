@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
 
 const BrikLogo = require("@/assets/logo/brik_logo.png");
 const IcFarmer = require("@/assets/icon/ic_farmer.png");
-const IcHunter = require("@/assets/logo/ic_hunter.png");
+const IcHunter = require("@/assets/icon/ic_hunter.png");
 
 function HunterAndFarmers() {
     const navigation = useNavigation();

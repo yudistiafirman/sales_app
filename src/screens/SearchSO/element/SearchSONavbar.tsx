@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 });
 
 interface SearchSONavbarProps {
-    onChangeText?: (((text: string) => void) & Function) | undefined;
+    onChangeText?: (text: string) => void;
     value?: string;
     onClearValue?: (event: GestureResponderEvent) => void;
     customStyle?: ViewStyle;

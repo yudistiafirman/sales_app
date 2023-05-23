@@ -157,8 +157,8 @@ export default function CustomerDetail() {
     useFocusEffect(
         useCallback(() => {
             if (existedVisitation !== null) {
-                const { id } = existedVisitation?.project;
-                getProjectDetail(id);
+                if (existedVisitation?.project?.id)
+                    getProjectDetail(existedVisitation?.project?.id);
             }
         }, [existedVisitation, getProjectDetail])
     );
