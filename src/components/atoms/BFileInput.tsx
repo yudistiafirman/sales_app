@@ -104,7 +104,7 @@ function iconState(value: any, isLoading?: boolean, isError?: boolean) {
             </View>
         );
     }
-    return <></>;
+    return undefined;
 }
 
 export default function BFileInput({

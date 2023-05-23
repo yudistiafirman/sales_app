@@ -24,20 +24,20 @@ function BSvg({
 }: SvgProps) {
     if (!svgName) return <View />;
     const I = SvgFiles[svgName as keyof typeof SvgFiles];
-    const _type: string = svgName.startsWith("Ic")
+    const assignType: string = svgName.startsWith("Ic")
         ? String(type || "stroke")
         : "img";
-    const _color = String(color || "#010206");
-    const _width: string | number = widthHeight || width || resScale(25);
-    const _height: string | number = widthHeight || height || resScale(25);
+    const assignColor = String(color || "#010206");
+    const assignWidth: string | number = widthHeight || width || resScale(25);
+    const assignHeight: string | number = widthHeight || height || resScale(25);
     return (
-        <View style={[{ width: _width, height: _height }, style]}>
+        <View style={[{ width: assignWidth, height: assignHeight }, style]}>
             <I
-                width={_width}
-                height={_height}
-                fill={_type === "fill" ? _color : undefined}
-                stroke={_type === "stroke" ? _color : undefined}
-                color={_type === "color" ? _color : undefined}
+                width={assignWidth}
+                height={assignHeight}
+                fill={assignType === "fill" ? assignColor : undefined}
+                stroke={assignType === "stroke" ? assignColor : undefined}
+                color={assignType === "color" ? assignColor : undefined}
             />
         </View>
     );
