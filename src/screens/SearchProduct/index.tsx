@@ -19,10 +19,10 @@ import SearchProductStyles from "./styles";
 import SearchProductNavbar from "./element/SearchProductNavbar";
 
 function SearchProduct() {
-    const route = useRoute<RouteProp<Record<string, object>, string>>();
+    const routePage = useRoute<RouteProp<Record<string, object>, string>>();
     let isGoback = false;
-    if (route.params) {
-        const { isGobackAfterPress } = route.params as {
+    if (routePage.params) {
+        const { isGobackAfterPress } = routePage.params as {
             isGobackAfterPress: boolean;
             distance: number;
         };
@@ -33,7 +33,7 @@ function SearchProduct() {
     const [searchValue, setSearchValue] = React.useState<string>("");
     const navigation = useNavigation();
     const [state, send] = useMachine(searchProductMachine);
-    const disablePressed = route?.params?.disablePressed;
+    const disablePressed = routePage?.params?.disablePressed;
 
     const renderHeaderLeft = React.useCallback(
         () => (
@@ -53,11 +53,11 @@ function SearchProduct() {
     React.useEffect(() => {
         crashlytics().log(SEARCH_PRODUCT);
 
-        if (route?.params) {
-            const { distance } = route.params;
+        if (routePage?.params) {
+            const { distance } = routePage.params;
             send("sendingParams", { value: distance });
         }
-    }, [route?.params]);
+    }, [routePage?.params]);
 
     React.useLayoutEffect(() => {
         navigation.setOptions({

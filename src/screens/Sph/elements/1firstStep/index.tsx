@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 export default function FirstStep() {
     const dispatch = useDispatch<AppDispatch>();
     const [searchQuery, setSearchQuery] = useState("");
-    const [index, setIndex] = useState(0);
+    const [pageIndex, setPageIndex] = useState(0);
     const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
     const [isSearching, setSearching] = useState(false);
     const {
@@ -107,8 +107,8 @@ export default function FirstStep() {
                         </>
                     ) : (
                         <BCommonSearchList
-                            index={index}
-                            onIndexChange={setIndex}
+                            index={pageIndex}
+                            onIndexChange={setPageIndex}
                             routes={routes}
                             placeholder="Cari PT / Proyek"
                             searchQuery={searchQuery}

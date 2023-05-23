@@ -25,7 +25,10 @@ function CustomTabBar({ state, descriptors, navigation }: TabBar) {
         enable_price_menu,
         enable_profile_menu,
         enable_customer_menu
-    } = useSelector((state: RootState) => state.auth.remote_config);
+    } = useSelector(
+        (remoteConfigState: RootState) =>
+            remoteConfigState.auth.remoteConfigData
+    );
 
     const icons = [homeIcon];
     if (enable_transaction_menu) icons.push(transIcon);

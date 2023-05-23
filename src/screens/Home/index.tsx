@@ -159,7 +159,7 @@ function Beranda() {
         enable_po,
         enable_sph,
         enable_visitation
-    } = useSelector((state: RootState) => state.auth.remote_config);
+    } = useSelector((state: RootState) => state.auth.remoteConfigData);
     const poState = useSelector((state: RootState) => state.purchaseOrder);
     const { isModalContinuePo, poNumber, currentStep, customerType } =
         poState.currentState.context;
@@ -170,7 +170,7 @@ function Beranda() {
         target: number;
     }>({ current: 0, target: 10 }); // temporary setCurrentVisit
     const [isExpanded, setIsExpanded] = React.useState(true);
-    const [index, setIndex] = React.useState(0);
+    const [searchIndex, setSearchIndex] = React.useState(0);
     const [isTargetLoading, setIsTargetLoading] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false); // setIsLoading temporary  setIsLoading
     const [isRenderDateDaily, setIsRenderDateDaily] = React.useState(true); // setIsRenderDateDaily
@@ -205,7 +205,7 @@ function Beranda() {
     });
 
     // fetching data
-    const [data, setData] = React.useState<Api.Response>({
+    const [visitData, setVisitData] = React.useState<Api.Response>({
         totalItems: 0,
         currentPage: 0,
         totalPage: 0,
@@ -217,7 +217,7 @@ function Beranda() {
     );
 
     const toggleModal = (key: string) => () => {
-        setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
+        setVisitData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
         setModalVisible(!isModalVisible);
         if (key === "close") {
             setSearchQuery("");
@@ -299,12 +299,12 @@ function Beranda() {
                     }) || [];
 
                 if (page > 1) {
-                    setData({
+                    setVisitData({
                         ..._data.data,
-                        data: data.data.concat(displayData)
+                        data: visitData.data.concat(displayData)
                     });
                 } else {
-                    setData({
+                    setVisitData({
                         ..._data.data,
                         data: displayData
                     });
@@ -317,7 +317,7 @@ function Beranda() {
                 setErrorMessage(error.message);
             }
         },
-        [data.data, page, searchQuery]
+        [visitData.data, page, searchQuery]
     );
 
     useFocusEffect(
@@ -429,7 +429,7 @@ function Beranda() {
 
     const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
         setPage(1);
-        setData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
+        setVisitData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
         setSelectedDate(dateTime);
     }, []);
 
@@ -438,20 +438,20 @@ function Beranda() {
             {
                 key: "first",
                 title: "Proyek",
-                totalItems: data.totalItems || 0,
+                totalItems: visitData.totalItems || 0,
                 chipPosition: "right"
             }
         ],
-        [data]
+        [visitData]
     );
 
     const onEndReached = React.useCallback(() => {
-        if (data.totalPage) {
-            if (data.totalPage > 0 && page < data.totalPage) {
+        if (visitData.totalPage) {
+            if (visitData.totalPage > 0 && page < visitData.totalPage) {
                 setPage(page + 1);
             }
         }
-    }, [data.totalPage, page]);
+    }, [visitData.totalPage, page]);
 
     const getButtonsMenu = () => {
         let buttons = [
@@ -577,7 +577,7 @@ function Beranda() {
     };
 
     const reset = (text: string) => {
-        setData({
+        setVisitData({
             totalItems: 0,
             currentPage: 0,
             totalPage: 0,
@@ -591,7 +591,7 @@ function Beranda() {
 
     const onRetryFetchVisitation = () => {
         setPage(1);
-        setData({
+        setVisitData({
             totalItems: 0,
             currentPage: 0,
             totalPage: 0,
@@ -692,8 +692,8 @@ function Beranda() {
                     <BSpacer size="extraSmall" />
                     <BCommonSearchList
                         placeholder="Cari PT / Proyek"
-                        index={index}
-                        onIndexChange={setIndex}
+                        index={searchIndex}
+                        onIndexChange={setSearchIndex}
                         onPressMagnify={kunjunganAction}
                         onClearValue={() => {
                             if (searchQuery && searchQuery.trim() !== "") {
@@ -715,7 +715,7 @@ function Beranda() {
                                   }
                                 : undefined
                         }
-                        data={data.data}
+                        data={visitData.data}
                         onEndReached={onEndReached}
                         isError={isError}
                         errorMessage={errorMessage}
@@ -781,7 +781,7 @@ function Beranda() {
                 <BSpacer size="extraSmall" />
                 <BottomSheetFlatlist
                     isLoading={isLoading}
-                    data={data.data}
+                    data={visitData.data}
                     onAction={onRetryFetchVisitation}
                     isError={isError}
                     errorMessage={errorMessage}

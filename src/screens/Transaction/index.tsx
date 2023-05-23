@@ -42,9 +42,9 @@ import {
 } from "@/redux/reducers/SphReducer";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import { getDrivers, getVehicles } from "@/actions/InventoryActions";
+import bStorage from "@/actions";
 import SelectCustomerTypeModal from "../PurchaseOrder/element/SelectCustomerTypeModal";
 import TransactionList from "./element/TransactionList";
-import bStorage from "@/actions";
 
 const styles = StyleSheet.create({
     parent: {

@@ -24,7 +24,7 @@ const useAsyncConfigSetup = () => {
         isLoading,
         userData,
         isSignout,
-        remote_config,
+        remoteConfigData,
         isNetworkLoggerVisible,
         isShowButtonNetwork
     } = useSelector((state: RootState) => state.auth);
@@ -39,14 +39,14 @@ const useAsyncConfigSetup = () => {
                     dispatch(
                         setUserData({
                             userData: decoded,
-                            remoteConfig: fetchedRemoteConfig
+                            remoteConfigData: fetchedRemoteConfig
                         })
                     );
                 } else {
                     dispatch(
                         setIsLoading({
                             loading: false,
-                            remoteConfig: fetchedRemoteConfig
+                            remoteConfigData: fetchedRemoteConfig
                         })
                     );
                 }
@@ -55,7 +55,7 @@ const useAsyncConfigSetup = () => {
                 dispatch(
                     setIsLoading({
                         loading: false,
-                        remoteConfig: fetchedRemoteConfig
+                        remoteConfigData: fetchedRemoteConfig
                     })
                 );
                 dispatch(
@@ -78,7 +78,7 @@ const useAsyncConfigSetup = () => {
             fetchTimeMillis: 10000 // in millies
         });
         remoteConfig()
-            .setDefaults(remote_config as any)
+            .setDefaults(remoteConfigData as any)
             .then(() => remoteConfig().fetchAndActivate())
             .catch((err) => {
                 console.log("fetch remote config timeout", err);
@@ -87,7 +87,7 @@ const useAsyncConfigSetup = () => {
                 let fetchedData = {} as Object;
                 Object.entries(remoteConfig().getAll()).forEach(($) => {
                     const [key, entry] = $;
-                    let value = remote_config?.[key];
+                    let value = remoteConfigData?.[key];
                     if (
                         Object.values(entry).length > 0 &&
                         isJsonString(Object.values(entry)[0])
