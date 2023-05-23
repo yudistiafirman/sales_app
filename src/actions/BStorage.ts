@@ -4,11 +4,16 @@ type Dict<T> = Record<string, T>;
 
 class BStorage {
     async getItem(key: string): Promise<Dict> {
-        return EncryptedStorage.getItem(key).then((result) => {
-            if (result) {
-                return JSON.parse(result);
-            }
-        });
+        return EncryptedStorage.getItem(key)
+            .then((result) => {
+                if (result) {
+                    return JSON.parse(result);
+                }
+                return undefined;
+            })
+            .catch((err) => {
+                throw new Error(err);
+            });
     }
 
     async setItem(key: string, item: Dict): Promise<void> {

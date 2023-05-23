@@ -52,20 +52,20 @@ export const hasCameraPermissions = async () => {
                 }
                 showAlertCamera();
             }
-        } else {
-            const status = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.CAMERA
-            );
-            if (status === PermissionsAndroid.RESULTS.GRANTED) {
-                return true;
-            }
-            if (status === PermissionsAndroid.RESULTS.DENIED) {
-                showAlertCamera();
-            } else {
-                showAlertCamera();
-            }
             return false;
         }
+        const status = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA
+        );
+        if (status === PermissionsAndroid.RESULTS.GRANTED) {
+            return true;
+        }
+        if (status === PermissionsAndroid.RESULTS.DENIED) {
+            showAlertCamera();
+        } else {
+            showAlertCamera();
+        }
+        return false;
     } catch (err) {
         const errorMessage =
             err.message ||

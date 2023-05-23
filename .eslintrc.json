@@ -15,18 +15,24 @@
         "plugin:import/recommended",
         "plugin:@typescript-eslint/recommended",
         "prettier"
-        // "plugin:@typescript-eslint/recommended-requiring-type-checking"
     ],
     "overrides": [],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "project": "tsconfig.json"
     },
-    "rules": {},
-    "plugins": ["simple-import-sort", "react"]
-    // "plugins": [
-    //   "react",
-    //   "jsx-a11y",
-    //   "import"
-    // ]
+    "plugins": ["simple-import-sort", "react"],
+    "rules": {
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "no-promise-executor-return": "off", // priority 8
+        "@typescript-eslint/no-var-requires": "off", // priority 7
+        "react/no-array-index-key": "off", // priority 6
+        "react/require-default-props": "off", // priority 5
+        "react-hooks/exhaustive-deps": "off", // priority 4
+        "no-nested-ternary": "off", // priority 3
+        "react/destructuring-assignment": "off", // priority 2
+        "class-methods-use-this": "off", // priority 1
+        "react/no-unused-prop-types": "off" // priority 0
+    }
 }

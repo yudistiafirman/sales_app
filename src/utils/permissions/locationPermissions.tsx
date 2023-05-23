@@ -44,13 +44,12 @@ const hasPermissionIOS = async () => {
 
     if (status === "denied") {
         showAlertLocation();
-        return false;
     }
 
     if (status === "disabled") {
         showAlertLocation();
-        return false;
     }
+    return false;
 };
 
 const hasLocationPermission = async () => {
