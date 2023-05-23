@@ -209,7 +209,7 @@ function SphContent() {
             if (!result) {
                 throw data;
             }
-            const _coordinate = {
+            const coordinateToSet = {
                 latitude: result?.lat,
                 longitude: result?.lon,
                 formattedAddress: result?.formattedAddress,
@@ -217,17 +217,17 @@ function SphContent() {
             };
 
             if (typeof result?.lon === "string") {
-                _coordinate.longitude = Number(result.lon);
-                _coordinate.lon = Number(result.lon);
+                coordinateToSet.longitude = Number(result.lon);
+                coordinateToSet.lon = Number(result.lon);
             }
 
             if (typeof result?.lat === "string") {
-                _coordinate.latitude = Number(result.lat);
-                _coordinate.lat = Number(result.lat);
+                coordinateToSet.latitude = Number(result.lat);
+                coordinateToSet.lat = Number(result.lat);
             }
 
             dispatch(updateDistanceFromLegok(result.distance.value));
-            dispatch(updateRegion(_coordinate));
+            dispatch(updateRegion(coordinateToSet));
         } catch (error) {
             dispatch(
                 openPopUp({
