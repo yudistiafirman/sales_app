@@ -174,10 +174,12 @@ const displayOperationListMachine = createMachine(
     },
     actions: {
       assignListData: assign((context, event) => {
-        const listData = [
-          ...context.operationListData,
-          ...event.data.data.data,
-        ];
+        const listData = [...context.operationListData];
+
+        if (event?.data?.data?.data !== undefined) {
+          listData.push(...event?.data?.data?.data);
+        }
+
         return {
           totalPage: event.data.data.totalPages,
           operationListData: listData,

@@ -153,7 +153,7 @@ const SubmitForm = () => {
     return () => {
       DeviceEventEmitter.removeAllListeners('Camera.preview');
     };
-  }, [operationData, operationData.photoFiles]);
+  }, [operationData]);
 
   const getHeaderTitle = () => {
     switch (userData?.type) {
@@ -172,24 +172,28 @@ const SubmitForm = () => {
   };
 
   const handleDisableContinueButton = () => {
-    let photos = [...operationData.photoFiles.filter((it) => it.file !== null)];
+    const filteredPhoto = operationData.photoFiles?.filter(
+      (it) => it.file !== null
+    );
+    let photos;
+    if (filteredPhoto) photos = [...filteredPhoto];
     if (userData?.type === ENTRY_TYPE.DRIVER) {
       return (
-        photos.length < 7 ||
+        (photos && photos.length < 7) ||
         operationData.inputsValue.recepientName.length === 0 ||
         !phoneNumberRegex.test(operationData.inputsValue.recepientPhoneNumber)
       );
     } else if (userData?.type === ENTRY_TYPE.WB) {
       return (
-        operationData.inputsValue.weightBridge.length === 0 || photos.length < 2
+        operationData.inputsValue.weightBridge.length === 0 || (photos && photos.length < 2)
       );
     } else if (operationType === ENTRY_TYPE.RETURN) {
       return (
         operationData.inputsValue.truckMixCondition.length === 0 ||
-        photos.length < 2
+        (photos && photos.length < 2)
       );
     } else if (operationType === ENTRY_TYPE.DISPATCH) {
-      return photos.length !== 5;
+      return (photos && photos.length !== 5);
     }
   };
 
@@ -210,8 +214,8 @@ const SubmitForm = () => {
       );
       const payload = {} as updateDeliverOrder;
       const photoFilestoUpload = operationData.photoFiles
-        .filter((v) => v.file !== null)
-        .map((photo) => {
+        ?.filter((v) => v.file !== null)
+        ?.map((photo) => {
           return {
             ...photo.file,
             uri: photo?.file?.uri?.replace('file:', 'file://'),
@@ -225,9 +229,9 @@ const SubmitForm = () => {
       if (responseFiles.data.success) {
         let responseUpdateDeliveryOrder: any;
         if (userData?.type === ENTRY_TYPE.DRIVER) {
-          const newFileData = responseFiles.data.data.map((v, i) => {
+          const newFileData = responseFiles?.data?.data?.map((v, i) => {
             return {
-              fileId: v.id,
+              fileId: v?.id,
               type: driversFileType[i],
             };
           });
@@ -241,9 +245,9 @@ const SubmitForm = () => {
             operationData.projectDetails.deliveryOrderId
           );
         } else if (userData?.type === ENTRY_TYPE.WB) {
-          const newFileData = responseFiles.data.data.map((v, i) => {
+          const newFileData = responseFiles?.data?.data?.map((v, i) => {
             return {
-              fileId: v.id,
+              fileId: v?.id,
               type: wbsFileType[i],
             };
           });
@@ -254,9 +258,9 @@ const SubmitForm = () => {
             operationData.projectDetails.deliveryOrderId
           );
         } else if (userData?.type === ENTRY_TYPE.SECURITY) {
-          const newFileData = responseFiles.data.data.map((v, i) => {
+          const newFileData = responseFiles?.data?.data?.map((v, i) => {
             return {
-              fileId: v.id,
+              fileId: v?.id,
               type: securityFileType[i],
             };
           });
@@ -273,7 +277,7 @@ const SubmitForm = () => {
           );
         }
 
-        if (responseUpdateDeliveryOrder.data.success) {
+        if (responseUpdateDeliveryOrder?.data?.success) {
           dispatch(resetOperationState());
           dispatch(
             openPopUp({
@@ -291,7 +295,7 @@ const SubmitForm = () => {
             openPopUp({
               popUpType: 'error',
               popUpText:
-                responseFiles.data.message ||
+                responseFiles?.data?.message ||
                 'Error Memperbarui Delivery Order',
               outsideClickClosePopUp: true,
             })
@@ -303,7 +307,7 @@ const SubmitForm = () => {
           openPopUp({
             popUpType: 'error',
             popUpText:
-              responseFiles.data.message || 'Error Memperbarui Delivery Order',
+              responseFiles?.data?.message || 'Error Memperbarui Delivery Order',
             outsideClickClosePopUp: true,
           })
         );
@@ -313,7 +317,7 @@ const SubmitForm = () => {
       dispatch(
         openPopUp({
           popUpType: 'error',
-          popUpText: error.message || 'Error Memperbarui Delivery Order',
+          popUpText: error?.message || 'Error Memperbarui Delivery Order',
           outsideClickClosePopUp: true,
         })
       );
