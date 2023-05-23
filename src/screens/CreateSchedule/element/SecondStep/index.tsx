@@ -86,6 +86,10 @@ export default function SecondStep() {
     const [isVisibleTimePicker, setVisibleTimePicker] = React.useState(false);
     const [rawTime, setRawTime] = React.useState(undefined);
 
+    const onChange = (key: any) => (val: any) => {
+        updateValueOnstep("stepTwo", key, val);
+    };
+
     const inputs: Input[] = [
         {
             isRequire: true,
@@ -183,10 +187,6 @@ export default function SecondStep() {
             }
         }
     ];
-
-    const onChange = (key: any) => (val: any) => {
-        updateValueOnstep("stepTwo", key, val);
-    };
 
     const getTotalProduct = (): number => {
         const total =

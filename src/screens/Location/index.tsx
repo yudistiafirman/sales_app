@@ -65,6 +65,7 @@ function Location() {
             });
         }
     };
+    const { region, locationDetail, loadingLocation } = state.context;
     const onSaveLocation = () => {
         const { lon, lat, formattedAddress, postalId } = locationDetail;
         const from = route?.params?.from;
@@ -116,9 +117,6 @@ function Location() {
             navigation.goBack();
         }
     };
-    const { region, locationDetail, loadingLocation } = state.context;
-    const { params } = route;
-    const { coordinate } = params;
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <BLocation

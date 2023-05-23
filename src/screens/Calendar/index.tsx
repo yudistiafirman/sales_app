@@ -56,21 +56,8 @@ export default function CalendarScreen() {
     const [customerDatas, setCustomerDatas] = useState<customerDataInterface[]>(
         []
     );
-    useHeaderTitleChanged({ title: "Pilih Tanggal" });
-    useEffect(() => {
-        crashlytics().log(CALENDAR);
 
-        const today = moment();
-        fetchVisitation({
-            month: today.get("month") + 1,
-            year: today.get("year"),
-            fullDate: today.format("yyyy-MM-DD")
-        });
-        return () => {
-            dispatch(resetStates());
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    useHeaderTitleChanged({ title: "Pilih Tanggal" });
 
     const fetchVisitation = useCallback(
         ({
@@ -143,6 +130,21 @@ export default function CalendarScreen() {
         },
         [markedDate, dispatch]
     );
+
+    useEffect(() => {
+        crashlytics().log(CALENDAR);
+
+        const today = moment();
+        fetchVisitation({
+            month: today.get("month") + 1,
+            year: today.get("year"),
+            fullDate: today.format("yyyy-MM-DD")
+        });
+        return () => {
+            dispatch(resetStates());
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const onDayPress = useCallback(
         (day: DateData) => {

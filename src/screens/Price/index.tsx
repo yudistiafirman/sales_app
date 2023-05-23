@@ -38,6 +38,18 @@ function PriceList() {
     const [fromVisitation, setFromVisitation] = React.useState(false);
     const [searchFormattedAddress, setSearchFormattedAddress] =
         React.useState("");
+    const {
+        locationDetail,
+        routes,
+        productsData,
+        loadProduct,
+        isLoadMore,
+        refreshing,
+        loadLocation,
+        errorMessage,
+        page,
+        totalPage
+    } = state.context;
 
     React.useEffect(() => {
         crashlytics().log(TAB_PRICE_LIST);
@@ -182,19 +194,6 @@ function PriceList() {
             });
         }
     };
-
-    const {
-        locationDetail,
-        routes,
-        productsData,
-        loadProduct,
-        isLoadMore,
-        refreshing,
-        loadLocation,
-        errorMessage,
-        page,
-        totalPage
-    } = state.context;
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <BSpacer size="small" />

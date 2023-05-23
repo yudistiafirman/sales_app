@@ -91,6 +91,27 @@ function Appointment() {
         crashlytics().log(APPOINTMENT);
     }, []);
 
+    const onBackPress = React.useCallback(() => {
+        if (inVisitationDateStep) {
+            if (selectedDate) {
+                dispatchValue({
+                    type: AppointmentActionType.SET_DATE,
+                    value: null
+                });
+            }
+            dispatchValue({
+                type: AppointmentActionType.DECREASE_STEP
+            });
+        } else if (isSearching) {
+            dispatchValue({
+                type: AppointmentActionType.ENABLE_SEARCHING,
+                value: false
+            });
+        } else {
+            navigation.goBack();
+        }
+    }, [dispatchValue, inVisitationDateStep, navigation, selectedDate]);
+
     useFocusEffect(
         React.useCallback(() => {
             const backAction = () => {
@@ -301,27 +322,6 @@ function Appointment() {
             submitAppoinmentData();
         }
     }, [goToVisitationDateStep, inCustomerDataStep, submitAppoinmentData]);
-
-    const onBackPress = React.useCallback(() => {
-        if (inVisitationDateStep) {
-            if (selectedDate) {
-                dispatchValue({
-                    type: AppointmentActionType.SET_DATE,
-                    value: null
-                });
-            }
-            dispatchValue({
-                type: AppointmentActionType.DECREASE_STEP
-            });
-        } else if (isSearching) {
-            dispatchValue({
-                type: AppointmentActionType.ENABLE_SEARCHING,
-                value: false
-            });
-        } else {
-            navigation.goBack();
-        }
-    }, [dispatchValue, inVisitationDateStep, navigation, selectedDate]);
 
     function isCanAdvanceToStep2() {
         const customerTypeCondition = stepOne.customerType;

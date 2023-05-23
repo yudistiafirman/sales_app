@@ -85,6 +85,15 @@ function CreateScheduleScreen() {
     const [isPopupVisible, setPopupVisible] = React.useState(false);
     const dispatch = useDispatch();
 
+    const actionBackButton = (directlyClose = false) => {
+        if (values.isSearchingPurchaseOrder === true) {
+            action.updateValue("isSearchingPurchaseOrder", false);
+        } else if (values.step > 0 && !directlyClose) {
+            next(values.step - 1)();
+        } else if (values.stepOne?.companyName) setPopupVisible(true);
+        else navigation.goBack();
+    };
+
     useCustomHeaderLeft({
         customHeaderLeft: (
             <BHeaderIcon
@@ -140,6 +149,8 @@ function CreateScheduleScreen() {
             );
         }
     }, [values]);
+
+    const stepRender = [<FirstStep />, <SecondStep />];
 
     const next = (nextStep: number) => async () => {
         const totalStep = stepRender.length;
@@ -200,17 +211,6 @@ function CreateScheduleScreen() {
             }
         }
     };
-
-    const actionBackButton = (directlyClose = false) => {
-        if (values.isSearchingPurchaseOrder === true) {
-            action.updateValue("isSearchingPurchaseOrder", false);
-        } else if (values.step > 0 && !directlyClose) {
-            next(values.step - 1)();
-        } else if (values.stepOne?.companyName) setPopupVisible(true);
-        else navigation.goBack();
-    };
-
-    const stepRender = [<FirstStep />, <SecondStep />];
 
     return (
         <>

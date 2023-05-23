@@ -33,6 +33,7 @@ function SearchProduct() {
     const navigation = useNavigation();
     const [state, send] = useMachine(searchProductMachine);
     const disablePressed = routePage?.params?.disablePressed;
+    const { routes, productsData, loadProduct, errorMessage } = state.context;
 
     const renderHeaderLeft = React.useCallback(
         () => (
@@ -118,7 +119,6 @@ function SearchProduct() {
             send("onChangeTab", { value: tabIndex });
         }
     };
-    const { routes, productsData, loadProduct, errorMessage } = state.context;
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <BSpacer size="small" />

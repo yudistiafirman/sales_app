@@ -137,6 +137,31 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         crashlytics().log(IMAGE_PREVIEW);
     }, []);
 
+    const getCurrentLocation = async () => {
+        const opt = {
+            showLocationDialog: true,
+            forceRequestLocation: true
+            // timeout:INFINITY,
+            // maximumAge:INFINITY,
+            // accuracy: { ios: "hundredMeters", android: "balanced" },
+            // enableHighAccuracy: false,
+            // distanceFilter:0,
+        };
+        const getCurrentPosition = () =>
+            new Promise((resolve, error) =>
+                Geolocation.getCurrentPosition(resolve, error, opt)
+            );
+
+        try {
+            const response = await getCurrentPosition();
+            const { coords } = response;
+            const { longitude, latitude } = coords;
+            return { longitude, latitude };
+        } catch (error) {
+            throw new Error(error);
+        }
+    };
+
     useFocusEffect(
         React.useCallback(() => {
             hasLocationPermission().then((result) => {
@@ -192,31 +217,6 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         } catch (error) {
             // do nothing
             console.log("FAILED ARRIVED, ", error);
-        }
-    };
-
-    const getCurrentLocation = async () => {
-        const opt = {
-            showLocationDialog: true,
-            forceRequestLocation: true
-            // timeout:INFINITY,
-            // maximumAge:INFINITY,
-            // accuracy: { ios: "hundredMeters", android: "balanced" },
-            // enableHighAccuracy: false,
-            // distanceFilter:0,
-        };
-        const getCurrentPosition = () =>
-            new Promise((resolve, error) =>
-                Geolocation.getCurrentPosition(resolve, error, opt)
-            );
-
-        try {
-            const response = await getCurrentPosition();
-            const { coords } = response;
-            const { longitude, latitude } = coords;
-            return { longitude, latitude };
-        } catch (error) {
-            throw new Error(error);
         }
     };
 

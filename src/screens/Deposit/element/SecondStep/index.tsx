@@ -85,6 +85,16 @@ export default function SecondStep() {
         />
     );
 
+    const getTotalLastDeposit = () => {
+        let total = 0;
+        if (stateTwo?.purchaseOrders && stateTwo?.purchaseOrders.length > 0) {
+            stateTwo?.purchaseOrders?.forEach((it) => {
+                total = it.availableDeposit;
+            });
+        }
+        return total;
+    };
+
     const calculatedTotal = (): number => {
         let deposit = 0;
         if (stateOne?.deposit?.nominal)
@@ -102,16 +112,6 @@ export default function SecondStep() {
             newExpandedData = expandData.filter((val) => val?.id !== data?.id);
         }
         setExpandData(newExpandedData);
-    };
-
-    const getTotalLastDeposit = () => {
-        let total = 0;
-        if (stateTwo?.purchaseOrders && stateTwo?.purchaseOrders.length > 0) {
-            stateTwo?.purchaseOrders?.forEach((it) => {
-                total = it.availableDeposit;
-            });
-        }
-        return total;
     };
 
     return (
