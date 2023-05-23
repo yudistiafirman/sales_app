@@ -16,7 +16,7 @@ import SOList from "./element/SOList";
 function SearchSO() {
     const [searchValue, setSearchValue] = React.useState<string>("");
     const navigation = useNavigation();
-    const [state, send] = useMachine(searchSOMachine);
+    const [searchSOstate, send] = useMachine(searchSOMachine);
     const soData = useSelector((state: RootState) => state.salesOrder);
 
     const renderHeaderLeft = React.useCallback(
@@ -120,7 +120,7 @@ function SearchSO() {
         errorMessage,
         isRefreshing,
         keyword
-    } = state.context;
+    } = searchSOstate.context;
 
     return (
         <SafeAreaView style={{ flex: 1 }}>

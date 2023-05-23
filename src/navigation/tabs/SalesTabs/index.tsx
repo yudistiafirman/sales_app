@@ -32,7 +32,7 @@ function SalesTabs() {
         enable_price_menu,
         enable_profile_menu,
         enable_customer_menu
-    } = useSelector((state: RootState) => state.auth.remote_config);
+    } = useSelector((state: RootState) => state.auth.remoteConfigData);
     return (
         <Tab.Navigator
             screenOptions={{

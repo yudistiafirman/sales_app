@@ -33,13 +33,13 @@ const style = StyleSheet.create({
 function Dispatch() {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
-    const [state, send] = useMachine(displayOperationListMachine);
+    const [doListState, send] = useMachine(displayOperationListMachine);
     const { userData } = useSelector((state: RootState) => state.auth);
     const { projectDetails, photoFiles } = useSelector(
         (state: RootState) => state.operation
     );
     const { operationListData, isLoadMore, isLoading, isRefreshing } =
-        state.context;
+        doListState.context;
 
     useFocusEffect(
         React.useCallback(() => {
@@ -125,7 +125,7 @@ function Dispatch() {
                 data={operationListData}
                 loadList={isLoading}
                 isLoadMore={isLoadMore}
-                isError={state.matches("errorGettingList")}
+                isError={doListState.matches("errorGettingList")}
                 refreshing={isRefreshing}
                 onEndReached={() => send("onEndReached")}
                 onPressList={(item) => onPressItem(item)}

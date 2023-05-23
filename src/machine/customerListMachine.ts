@@ -1,7 +1,6 @@
 import { getAllCustomers, getCustomerCount } from "@/actions/CommonActions";
 import { COMPANY, INDIVIDU } from "@/constants/const";
 import { ICustomerListData } from "@/models/Customer";
-import { event } from "react-native-reanimated";
 import { assign, createMachine } from "xstate";
 
 const customerListMachine = createMachine(

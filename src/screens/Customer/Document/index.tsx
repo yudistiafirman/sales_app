@@ -73,9 +73,9 @@ function Document() {
                 ...value,
                 name: `CD-${uniqueStringGenerator()}-${value.name}}`
             };
-            const response = await uploadFileImage([valueToUpload]);
-            const { id } = response.data.data[0];
-            if (response.data.success) {
+            const responseFile = await uploadFileImage([valueToUpload]);
+            const { id } = responseFile.data.data[0];
+            if (responseFile.data.success) {
                 const payload = {};
                 payload.customerDocs = [
                     {
@@ -93,8 +93,11 @@ function Document() {
                 if (customerDocId) {
                     payload.customerDocs[0].customerDocId = customerDocId;
                 }
-                const response = await updateCustomer(customerId, payload);
-                if (response.data.success) {
+                const responseCustomer = await updateCustomer(
+                    customerId,
+                    payload
+                );
+                if (responseCustomer.data.success) {
                     const newFilesData = [...customerDocs[paymentType]];
                     const newFilesDataValue = newFilesData.map((v, i) => {
                         if (i === docsIndex) {

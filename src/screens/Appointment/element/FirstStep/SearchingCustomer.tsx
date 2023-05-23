@@ -12,7 +12,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 
 function SearchingCustomer() {
     const [values, dispatchValue] = useAppointmentData();
-    const [index, setIndex] = useState(0);
+    const [searchIndex, setSearchIndex] = useState(0);
     const { searchQuery } = values;
     const {
         projects,
@@ -134,11 +134,11 @@ function SearchingCustomer() {
                     }
                 }}
                 placeholder="Cari PT / Proyek"
-                index={index}
+                index={searchIndex}
                 emptyText={`${searchQuery} tidak ditemukan!`}
                 routes={routes}
                 autoFocus
-                onIndexChange={setIndex}
+                onIndexChange={setSearchIndex}
                 loadList={isProjectLoading}
                 onPressList={(item) => {
                     const handlePicNull = { ...item };
