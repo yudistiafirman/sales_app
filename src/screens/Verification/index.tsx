@@ -18,6 +18,7 @@ import { VERIFICATION } from "@/navigation/ScreenNames";
 import { setUserData } from "@/redux/reducers/authReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import otpMessageImage from "@/assets/illustration/ic_otp_message.png";
 import VerificationStyles from "./styles";
 import VIntstruction from "./element/VInstruction";
 import ResendOTP from "./element/ResendOTP";
@@ -51,14 +52,6 @@ function Verification() {
             clearInterval(timer.current);
         };
     }, [countDownOtp]);
-
-    React.useEffect(() => {
-        crashlytics().log(VERIFICATION);
-
-        if (otpValue.length === 6) {
-            onLogin();
-        }
-    }, [otpValue]);
 
     const onLogin = async () => {
         const params = { phone: phoneNumber, otp: otpValue };
@@ -104,6 +97,15 @@ function Verification() {
             });
         }
     };
+
+    React.useEffect(() => {
+        crashlytics().log(VERIFICATION);
+
+        if (otpValue.length === 6) {
+            onLogin();
+        }
+    }, [otpValue]);
+
     const onResendOtp = async () => {
         const params = { phone: phoneNumber };
         try {
@@ -165,7 +167,7 @@ function Verification() {
                 <BSpacer size={resScale(40)} />
                 <Image
                     style={VerificationStyles.otpMessageImage}
-                    source={require("@/assets/illustration/ic_otp_message.png")}
+                    source={otpMessageImage}
                 />
                 <BSpacer size="large" />
                 <VIntstruction onPress={onBack} phoneNumber={phoneNumber} />

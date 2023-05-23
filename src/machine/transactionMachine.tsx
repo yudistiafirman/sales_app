@@ -41,7 +41,7 @@ export const transactionMachine =
                 size: 10,
                 page: 1,
                 selectedType: "SPH",
-                data: [] as any[],
+                transactionData: [] as any[],
                 loadTab: true,
                 loadTransaction: false,
                 isLoadMore: false,
@@ -175,7 +175,7 @@ export const transactionMachine =
                 assignTransactionsDataToContext: assign((context, event) => {
                     if (event.data.data.length > 0) {
                         const transactionsData = [
-                            ...context.data,
+                            ...context.transactionData,
                             ...event.data.data
                         ];
                         const newTypeData = context.routes?.map((item) => ({
@@ -192,7 +192,7 @@ export const transactionMachine =
                             isLoadMore: false,
                             refreshing: false,
                             totalItems: event.data.totalItems,
-                            data: transactionsData,
+                            transactionData: transactionsData,
                             routes: newTypeData,
                             isErrorData: false
                         };
@@ -209,7 +209,7 @@ export const transactionMachine =
                     selectedType: event.payload,
                     page: 1,
                     loadTransaction: true,
-                    data: []
+                    transactionData: []
                 })),
                 incrementPage: assign((context, _event) => ({
                     page: context.page + 1,
@@ -219,7 +219,7 @@ export const transactionMachine =
                     page: 1,
                     refreshing: true,
                     loadTransaction: true,
-                    data: []
+                    transactionData: []
                 })),
                 enableLoadTransaction: assign((_context, _event) => ({
                     loadTransaction: true
@@ -228,7 +228,7 @@ export const transactionMachine =
                     loadTransaction: false,
                     refreshing: false,
                     isLoadMore: false,
-                    data: [],
+                    transactionData: [],
                     loadTab: false,
                     page: 1,
                     totalItems: 0,
@@ -236,12 +236,12 @@ export const transactionMachine =
                     isErrorData: true
                 })),
                 resetProduct: assign((context, event) => ({
-                    data: [],
+                    transactionData: [],
                     page: 1,
                     loadTransaction: true
                 })),
                 handleRetryGettingTransactions: assign((context, event) => ({
-                    data: [],
+                    transactionData: [],
                     page: 1,
                     loadTransaction: true,
                     selectedType: event.payload

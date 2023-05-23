@@ -18,9 +18,9 @@ import {
     ScrollView
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import BForm from "../organism/BForm";
 import { Input } from "@/interfaces";
 import { resScale } from "@/utils";
+import BForm from "../organism/BForm";
 
 const { width, height } = Dimensions.get("window");
 
@@ -54,7 +54,7 @@ type ChoosenProductListProps<ProductData> = {
     comboRadioBtnInput?: Input[];
 };
 
-const ChoosenProductList = <ProductData extends Products>({
+function ChoosenProductList<ProductData extends Products>({
     data,
     onChecked,
     selectedProducts,
@@ -62,7 +62,7 @@ const ChoosenProductList = <ProductData extends Products>({
     onChangeQuantity,
     calculatedTotalPrice,
     comboRadioBtnInput
-}: ChoosenProductListProps<ProductData>) => {
+}: ChoosenProductListProps<ProductData>) {
     const renderItem = useCallback(
         ({ item, index }) => {
             const checked = selectedProducts?.findIndex(
@@ -112,9 +112,7 @@ const ChoosenProductList = <ProductData extends Products>({
         ]
     );
 
-    const renderItemSeparator = () => {
-        return <BSpacer size="extraSmall" />;
-    };
+    const renderItemSeparator = () => <BSpacer size="extraSmall" />;
 
     return (
         <ScrollView style={{ flex: 1, marginBottom: resScale(56) }}>
@@ -141,6 +139,6 @@ const ChoosenProductList = <ProductData extends Products>({
             </View>
         </ScrollView>
     );
-};
+}
 
 export default ChoosenProductList;
