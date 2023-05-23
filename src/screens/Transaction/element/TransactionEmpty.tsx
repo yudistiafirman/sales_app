@@ -5,6 +5,7 @@ import { layout } from "@/constants";
 import colors from "@/constants/colors";
 import font from "@/constants/fonts";
 import resScale from "@/utils/resScale";
+import NotFoundIcon from "@/assets/icon/ic_not_found.png";
 
 const styles = StyleSheet.create({
     parent: {
@@ -36,10 +37,7 @@ function TransactionEmpty({
 }) {
     return (
         <View style={styles.container}>
-            <Image
-                style={styles.emptyimage}
-                source={require("@/assets/icon/ic_not_found.png")}
-            />
+            <Image style={styles.emptyimage} source={NotFoundIcon} />
             <View style={styles.parent}>
                 <BText style={styles.emptyText}>
                     {errorName || `${emptyTransactionName} tidak ditemukan!`}

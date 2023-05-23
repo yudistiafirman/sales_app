@@ -110,7 +110,7 @@ function Transaction() {
         routes,
         isLoadMore,
         refreshing,
-        data,
+        transactionData,
         loadTransaction,
         loadTab,
         selectedType,
@@ -378,7 +378,7 @@ function Transaction() {
                     renderScene={() => (
                         <TransactionList
                             onEndReached={() => send("onEndReached")}
-                            transactions={data}
+                            transactions={transactionData}
                             isLoadMore={isLoadMore}
                             loadTransaction={loadTransaction}
                             refreshing={refreshing}

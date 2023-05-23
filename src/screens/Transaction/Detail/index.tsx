@@ -206,7 +206,7 @@ function TransactionDetail() {
             if (data?.PurchaseOrderDocs) {
                 setDownloadFiles({
                     letter: data?.PurchaseOrderDocs?.find(
-                        (v: any) => v?.type == "BRIK_SIGNED"
+                        (v: any) => v?.type === "BRIK_SIGNED"
                     )
                 });
             }
@@ -214,16 +214,16 @@ function TransactionDetail() {
             if (data?.DepositFiles) {
                 // TODO: need to change the type to download the deposit files
                 setDownloadFiles({
-                    letter: data?.DepositFiles?.find((v: any) => v?.type == "")
+                    letter: data?.DepositFiles?.find((v: any) => v?.type === "")
                 });
             }
         } else if (data?.QuotationLetterFiles) {
             setDownloadFiles({
                 pos: data?.QuotationLetterFiles?.find(
-                    (v: any) => v?.type == "POS"
+                    (v: any) => v?.type === "POS"
                 ),
                 letter: data?.QuotationLetterFiles?.find(
-                    (v: any) => v?.type == "LETTER"
+                    (v: any) => v?.type === "LETTER"
                 )
             });
         }
@@ -280,13 +280,17 @@ function TransactionDetail() {
         return arrayQuote;
     };
 
-    const onExpand = (index: number, data: any) => {
+    const onExpand = (index: number, productData: any) => {
         let newExpandedData;
-        const isExisted = expandData?.findIndex((val) => val?.id === data?.id);
+        const isExisted = expandData?.findIndex(
+            (val) => val?.id === productData?.id
+        );
         if (isExisted === -1) {
-            newExpandedData = [...expandData, data];
+            newExpandedData = [...expandData, productData];
         } else {
-            newExpandedData = expandData.filter((val) => val?.id !== data?.id);
+            newExpandedData = expandData.filter(
+                (val) => val?.id !== productData?.id
+            );
         }
         setExpandData(newExpandedData);
     };
@@ -298,12 +302,12 @@ function TransactionDetail() {
         downloadError: (errorMessage: string | unknown) => void;
     };
 
-    function downloadPdf({
+    const downloadPdf = ({
         url,
         title,
         downloadPopup,
         downloadError
-    }: DownloadType) {
+    }: DownloadType) => {
         if (!url) {
             downloadError(undefined);
             return null;
@@ -339,14 +343,16 @@ function TransactionDetail() {
             .catch((err) => {
                 downloadError(err.message);
             });
-    }
+
+        return null;
+    };
     async function printRemotePDF(
         url?: string,
-        printError: (errorMessage: string | unknown) => void
+        printError?: (errorMessage: string | unknown) => void
     ) {
         try {
             if (!url) {
-                throw "error url missing";
+                throw new Error("error url missing");
             }
             await RNPrint.print({
                 filePath: url
@@ -357,7 +363,7 @@ function TransactionDetail() {
     }
     const shareFunc = async (url?: string) => {
         try {
-            if (!url) throw "no url";
+            if (!url) throw new Error("no url");
             await Share.share({
                 url: url.replace(/\s/g, "%20"),
                 message: `Link PDF ${selectedType} ${
@@ -420,6 +426,7 @@ function TransactionDetail() {
                 </>
             );
         }
+        return null;
     };
     const renderPic = () => {
         let picData = data?.Pic || data?.project?.Pic;
@@ -445,6 +452,7 @@ function TransactionDetail() {
                 </>
             );
         }
+        return null;
     };
 
     return (
