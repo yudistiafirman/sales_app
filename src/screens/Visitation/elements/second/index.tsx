@@ -41,18 +41,30 @@ interface IProps {
     openBottomSheet: () => void;
 }
 
+const styles: Styles = {
+    flexFull: {
+        flex: 1
+    },
+    dividerContainer: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    labelShimmer: {
+        width: resScale(335),
+        height: resScale(100),
+        borderRadius: layout.radius.md
+    }
+};
+
 function SecondStep({ openBottomSheet }: IProps) {
     const dispatch = useDispatch();
     const route = useRoute<RootStackScreenProps>();
     const existingVisitation = route?.params?.existingVisitation;
     const visitationData = useSelector((state: RootState) => state.visitation);
-    const [selectedCompany, setSelectedCompany] = useState<
-        | {
-              id: number;
-              title: string;
-          }
-        | {}
-    >({ id: 1, title: visitationData.companyName });
+    const [selectedCompany, setSelectedCompany] = useState<{
+        id: number;
+        title: string;
+    }>({ id: 1, title: visitationData.companyName });
 
     const onChange = (key: any) => (e: any) => {
         dispatch(updateDataVisitation({ type: key, value: e }));

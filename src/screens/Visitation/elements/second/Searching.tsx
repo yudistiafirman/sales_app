@@ -97,14 +97,19 @@ function SearchFlow({
                     value: company.title
                 })
             );
-
             if (visitationData.options?.items) {
+                const newOptionsValue = [
+                    ...(visitationData.options?.items || [
+                        { id: "", title: "" }
+                    ])
+                ];
+                newOptionsValue.push(company);
                 dispatch(
                     updateDataVisitation({
                         type: "options",
                         value: {
                             ...visitationData.options,
-                            items: [...visitationData.options?.items, company]
+                            items: newOptionsValue
                         }
                     })
                 );
@@ -129,9 +134,9 @@ function SearchFlow({
         );
 
         if (item?.Pics) {
-            const picList = item?.Pics?.map((pic: PIC, index: number) => ({
+            const picList = item?.Pics?.map((pic: PIC, i: number) => ({
                 ...pic,
-                isSelected: index === 0
+                isSelected: i === 0
             }));
             if (picList.length === 1) {
                 picList[0].isSelected = true;
@@ -157,7 +162,7 @@ function SearchFlow({
         );
 
         if (item?.Visitations) {
-            let order = +item?.Visitations[0]?.order;
+            let order = item?.Visitations[0]?.order;
             if (!item?.Visitations[0]?.finishDate) {
                 order -= 1;
             }
@@ -200,7 +205,9 @@ function SearchFlow({
         <>
             <View>
                 <BTextLocation
-                    location={visitationData.locationAddress?.formattedAddress!}
+                    location={
+                        visitationData.locationAddress?.formattedAddress ?? ""
+                    }
                     numberOfLines={1}
                 />
                 <BSpacer size="extraSmall" />

@@ -325,9 +325,9 @@ export const uniqueStringGenerator = () =>
 export const replaceDot = (value: string) => {
     let count = 0;
     let output = "";
-    for (let i = 0; i < value.length; i++) {
+    for (let i = 0; i < value.length; i += 1) {
         if (value[i] === ".") {
-            count++;
+            count += 1;
         }
         if (count <= 1 && value[0] !== ".") {
             output += value[i];
