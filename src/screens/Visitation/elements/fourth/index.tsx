@@ -78,9 +78,9 @@ function Fourth() {
                 onClose={() => setIsCompetitorVisible(!isCompetitorVisible)}
                 isVisible={isCompetitorVisible}
                 addCompetitor={(comp: Competitor) => {
-                    const currentList = visitationData?.competitors
-                        ? [...visitationData?.competitors]
-                        : [];
+                    const currentList = [
+                        ...(visitationData?.competitors || [])
+                    ];
                     currentList.push(comp);
                     dispatch(
                         updateDataVisitation({
