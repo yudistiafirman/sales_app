@@ -91,19 +91,21 @@ const ChoosenProductList = <ProductData extends Products>({
   };
 
   return (
-    <ScrollView>
-      <BLabel bold="600" sizeInNumber={font.size.md} label="Produk" />
-      <BSpacer size="extraSmall" />
-      <BDivider borderBottomWidth={1} flex={0} height={0.1} />
-      <BSpacer size="extraSmall" />
-      {data?.map((item: ProductData, index: number) =>
-        renderItem({ item, index })
-      )}
-      <BSpacer size="extraSmall" />
+    <ScrollView style={{ flex: 1, marginBottom: resScale(56) }}>
+      <View style={{ flex: 1 }}>
+        <BLabel bold="600" sizeInNumber={font.size.md} label="Produk" />
+        <BSpacer size="extraSmall" />
+        <BDivider borderBottomWidth={1} flex={0} height={0.1} />
+        <BSpacer size="extraSmall" />
+        {data?.map((item: ProductData, index: number) =>
+          renderItem({ item, index })
+        )}
+        <BSpacer size="extraSmall" />
 
-      {comboRadioBtnInput && (
-        <BForm titleBold="500" inputs={comboRadioBtnInput} />
-      )}
+        {comboRadioBtnInput && (
+          <BForm titleBold="500" inputs={comboRadioBtnInput} />
+        )}
+      </View>
 
       <View style={styles.priceContainer}>
         <Text style={styles.productName}>Total</Text>
@@ -119,6 +121,7 @@ const styles = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    flex: 1,
   },
   productName: {
     fontFamily: fonts.family.montserrat[600],
