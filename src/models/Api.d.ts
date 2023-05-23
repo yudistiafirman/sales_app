@@ -1,5 +1,5 @@
 import { UserModel } from "./User";
-import { VisitationModel } from "./Visitation";
+import * as Visitation from "./Visitation";
 
 export namespace Api {
     export interface Response {
@@ -11,7 +11,7 @@ export namespace Api {
         data?:
             | any
             | UserModel.DataSuccessLogin
-            | VisitationModel.DataGetAllVisitation;
+            | Visitation.DataGetAllVisitation;
         error?: {
             code: string;
             message: string;

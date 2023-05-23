@@ -15,10 +15,11 @@ import {
 } from "@/components";
 import SelectPurchaseOrderData from "@/components/templates/SelectPurchaseOrder";
 import { layout } from "@/constants";
-import { QuotationRequests } from "@/interfaces/createPurchaseOrder";
 import { CAMERA, PO } from "@/navigation/ScreenNames";
 import { RootState, AppDispatch } from "@/redux/store";
 import { resScale } from "@/utils";
+import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
+import { Input } from "@/interfaces";
 
 const styles = StyleSheet.create({
     firstStepContainer: {

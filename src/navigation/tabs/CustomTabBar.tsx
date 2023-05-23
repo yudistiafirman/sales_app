@@ -4,6 +4,7 @@ import font from "@/constants/fonts";
 import { RootState } from "@/redux/store";
 import { View, TouchableOpacity, Image } from "react-native";
 import { useSelector } from "react-redux";
+import * as React from "react";
 import TabBarStyle from "./TabBarStyle";
 
 interface TabBar {

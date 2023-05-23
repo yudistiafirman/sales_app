@@ -227,6 +227,7 @@ export const visitationSlice = createSlice({
                     break;
                 case "currentCompetitor":
                     state.currentCompetitor = payload.value;
+                    break;
                 case "options":
                     state.options = payload.value;
                     break;

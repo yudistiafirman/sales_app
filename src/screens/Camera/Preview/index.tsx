@@ -296,7 +296,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         else DeviceEventEmitter.emit("Camera.preview", picker);
         let images: any[] = [];
         switch (navigateTo) {
-            case CREATE_VISITATION:
+            case CREATE_VISITATION: {
                 dispatch(
                     setImageURLS({ file: localFile, source: CREATE_VISITATION })
                 );
@@ -312,14 +312,16 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     StackActions.replace(navigateTo, { existingVisitation })
                 );
                 return;
-            case PO:
+            }
+            case PO: {
                 dispatch({
                     type: "addImages",
                     value: localFile
                 });
                 navigation.dispatch(StackActions.replace(navigateTo));
                 return;
-            case EntryType.DISPATCH:
+            }
+            case EntryType.DISPATCH: {
                 dispatch(
                     setOperationPhoto({
                         file: localFile,
@@ -361,7 +363,8 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     });
                 }
                 return;
-            case EntryType.DRIVER:
+            }
+            case EntryType.DRIVER: {
                 const newPhotoFiles: LocalFileType[] = [];
                 operationData.photoFiles.forEach((item) => {
                     let selectedItem: LocalFileType | undefined = { ...item };
@@ -381,7 +384,8 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     });
                 }
                 return;
-            case EntryType.IN:
+            }
+            case EntryType.IN: {
                 dispatch(
                     setOperationPhoto({
                         file: localFile,
@@ -402,7 +406,8 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     });
                 }
                 return;
-            case EntryType.OUT:
+            }
+            case EntryType.OUT: {
                 dispatch(
                     setOperationPhoto({
                         file: localFile,
@@ -423,7 +428,8 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     });
                 }
                 return;
-            case EntryType.RETURN:
+            }
+            case EntryType.RETURN: {
                 dispatch(
                     setOperationPhoto({
                         file: localFile,
@@ -444,23 +450,27 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     });
                 }
                 return;
-            case FORM_SO:
+            }
+            case FORM_SO: {
                 dispatch(setSOPhoto({ file: localFile }));
                 navigation.dispatch(StackActions.pop(2));
                 navigation.navigate(navigateTo);
                 return;
-            case GALLERY_SO:
+            }
+            case GALLERY_SO: {
                 dispatch(setSOPhoto({ file: localFile }));
                 navigation.dispatch(StackActions.pop(2));
                 return;
-            case CREATE_DEPOSIT:
+            }
+            case CREATE_DEPOSIT: {
                 dispatch(
                     setImageURLS({ file: localFile, source: CREATE_DEPOSIT })
                 );
                 navigation.goBack();
                 navigation.dispatch(StackActions.replace(navigateTo));
                 return;
-            case GALLERY_VISITATION:
+            }
+            case GALLERY_VISITATION: {
                 dispatch(
                     setImageURLS({ file: localFile, source: CREATE_VISITATION })
                 );
@@ -472,13 +482,15 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 );
                 navigation.dispatch(StackActions.pop(2));
                 return;
-            case GALLERY_DEPOSIT:
+            }
+            case GALLERY_DEPOSIT: {
                 dispatch(
                     setImageURLS({ file: localFile, source: CREATE_DEPOSIT })
                 );
                 navigation.dispatch(StackActions.pop(2));
                 return;
-            case GALLERY_OPERATION:
+            }
+            case GALLERY_OPERATION: {
                 dispatch(
                     setOperationPhoto({
                         file: localFile,
@@ -487,10 +499,12 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 );
                 navigation.dispatch(StackActions.pop(2));
                 return;
-            default:
+            }
+            default: {
                 dispatch(setImageURLS({ file: localFile }));
                 navigation.goBack();
                 navigation.dispatch(StackActions.replace(navigateTo));
+            }
         }
     };
 

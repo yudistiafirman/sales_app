@@ -81,9 +81,3 @@ export type RootStackParamList = {
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
     NativeStackScreenProps<RootStackParamList, T>;
-
-declare global {
-    namespace ReactNavigation {
-        type RootParamList = RootStackParamList;
-    }
-}

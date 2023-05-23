@@ -77,60 +77,6 @@ function Deposit() {
     const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
     const [isPopupVisible, setPopupVisible] = React.useState(false);
 
-    const actionBackButton = (directlyClose = false) => {
-        if (values.isSearchingPurchaseOrder === true) {
-            action.updateValue("isSearchingPurchaseOrder", false);
-        } else if (values.step > 0 && !directlyClose) {
-            next(values.step - 1)();
-        } else {
-            setPopupVisible(true);
-        }
-    };
-
-    useCustomHeaderLeft({
-        customHeaderLeft: (
-            <BHeaderIcon
-                size={resScale(23)}
-                onBack={() => actionBackButton(true)}
-                iconName="x"
-            />
-        )
-    });
-
-    useHeaderTitleChanged({
-        title:
-            values.isSearchingPurchaseOrder === true
-                ? "Cari PT / Proyek"
-                : "Buat Deposit"
-    });
-
-    useFocusEffect(
-        React.useCallback(() => {
-            const backAction = () => {
-                actionBackButton(false);
-                return true;
-            };
-            const backHandler = BackHandler.addEventListener(
-                "hardwareBackPress",
-                backAction
-            );
-            return () => backHandler.remove();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [values.step, values.isSearchingPurchaseOrder])
-    );
-
-    React.useEffect(
-        () => () => {
-            dispatch(resetImageURLS({ source: CREATE_DEPOSIT }));
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
-    );
-
-    React.useEffect(() => {
-        stepHandler(values, setStepsDone);
-    }, [values]);
-
     const stepRender = [<FirstStep />, <SecondStep />];
 
     const next = (nextStep: number) => async () => {
@@ -196,6 +142,60 @@ function Deposit() {
             }
         }
     };
+
+    const actionBackButton = (directlyClose = false) => {
+        if (values.isSearchingPurchaseOrder === true) {
+            action.updateValue("isSearchingPurchaseOrder", false);
+        } else if (values.step > 0 && !directlyClose) {
+            next(values.step - 1)();
+        } else {
+            setPopupVisible(true);
+        }
+    };
+
+    useCustomHeaderLeft({
+        customHeaderLeft: (
+            <BHeaderIcon
+                size={resScale(23)}
+                onBack={() => actionBackButton(true)}
+                iconName="x"
+            />
+        )
+    });
+
+    useHeaderTitleChanged({
+        title:
+            values.isSearchingPurchaseOrder === true
+                ? "Cari PT / Proyek"
+                : "Buat Deposit"
+    });
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const backAction = () => {
+                actionBackButton(false);
+                return true;
+            };
+            const backHandler = BackHandler.addEventListener(
+                "hardwareBackPress",
+                backAction
+            );
+            return () => backHandler.remove();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [values.step, values.isSearchingPurchaseOrder])
+    );
+
+    React.useEffect(
+        () => () => {
+            dispatch(resetImageURLS({ source: CREATE_DEPOSIT }));
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+    React.useEffect(() => {
+        stepHandler(values, setStepsDone);
+    }, [values]);
 
     return (
         <>

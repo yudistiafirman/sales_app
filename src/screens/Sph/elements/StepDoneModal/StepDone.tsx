@@ -178,8 +178,8 @@ function downloadPdf({
 }
 
 async function printRemotePDF(
-    url?: string,
-    printError: (errorMessage: string | unknown) => void
+    printError: (errorMessage: string | unknown) => void,
+    url?: string
 ) {
     try {
         if (!url) {
@@ -334,20 +334,16 @@ export default function StepDone({
                     <TouchableOpacity
                         style={styles.footerButton}
                         onPress={() =>
-                            printRemotePDF(
-                                sphResponse?.thermalLink,
-                                (errorMessage: string | unknown) => {
-                                    dispatch(
-                                        openPopUp({
-                                            popUpText:
-                                                errorMessage ||
-                                                "Gagal print SPH",
-                                            popUpType: "error",
-                                            outsideClickClosePopUp: true
-                                        })
-                                    );
-                                }
-                            )
+                            printRemotePDF((errorMessage: string | unknown) => {
+                                dispatch(
+                                    openPopUp({
+                                        popUpText:
+                                            errorMessage || "Gagal print SPH",
+                                        popUpType: "error",
+                                        outsideClickClosePopUp: true
+                                    })
+                                );
+                            }, sphResponse?.thermalLink)
                         }
                     >
                         <MaterialCommunityIcons

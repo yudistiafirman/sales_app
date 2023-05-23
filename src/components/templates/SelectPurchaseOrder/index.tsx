@@ -85,9 +85,7 @@ function SelectPurchaseOrderData({
         if (searchValue && searchValue.trim() !== "") {
             setSearchQuery("");
             send("clearInput");
-        } else {
-            onDismiss && onDismiss();
-        }
+        } else onDismiss && onDismiss();
     };
 
     const onCloseModal = (

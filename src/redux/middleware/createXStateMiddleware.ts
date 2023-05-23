@@ -7,7 +7,7 @@ import { XStateSlice } from "../customSlice/createXStateSlice";
  */
 const createXStateMiddleware = (...slices: XStateSlice[]): Middleware =>
     function exampleMiddleware(storeAPI) {
-        const services = slices.map((slice) => slice._start(storeAPI));
+        const services = slices.map((slice) => slice.start(storeAPI));
 
         return function wrapDispatch(next) {
             return function handleAction(action) {

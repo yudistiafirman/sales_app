@@ -81,10 +81,10 @@ export default function PopUpQuestion({
                     }}
                 >
                     <BBackContinueBtn
-                        onPressBack={() => {
+                        onPressBack={() =>
                             setIsPopupVisible &&
-                                setIsPopupVisible((curr) => !curr);
-                        }}
+                            setIsPopupVisible((curr) => !curr)
+                        }
                         onPressContinue={actionButton}
                         isContinueIcon={false}
                         continueText={actionText || "Ya, Tambah"}

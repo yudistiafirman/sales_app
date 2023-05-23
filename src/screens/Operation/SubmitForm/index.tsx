@@ -182,8 +182,9 @@ function SubmitForm() {
                     ];
                     dispatch(setAllOperationPhoto({ file: tempImages }));
                 }
-
+                return;
             default:
+                return;
         }
     };
 
@@ -587,8 +588,9 @@ function SubmitForm() {
                             navigateTo: GALLERY_OPERATION
                         })
                     );
-
+                    return;
                 default:
+                    return;
             }
         },
         [operationData.photoFiles, dispatch]

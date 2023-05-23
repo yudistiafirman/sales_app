@@ -16,10 +16,7 @@ import {
     useFocusEffect,
     useNavigation
 } from "@react-navigation/native";
-import {
-    CreateScheduleSecondStep,
-    CreateScheduleState
-} from "@/interfaces/CreateSchedule";
+import { CreateScheduleState } from "@/interfaces/CreateSchedule";
 import {
     CreateScheduleContext,
     CreateScheduleProvider
@@ -70,13 +67,6 @@ function stepHandler(
     }
 }
 
-const getTotalProduct = (stepTwo: CreateScheduleSecondStep): number => {
-    const total =
-        stepTwo?.inputtedVolume *
-        stepTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
-    return total;
-};
-
 function CreateScheduleScreen() {
     const navigation = useNavigation();
     const { values, action } = React.useContext(CreateScheduleContext);
@@ -84,6 +74,68 @@ function CreateScheduleScreen() {
     const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
     const [isPopupVisible, setPopupVisible] = React.useState(false);
     const dispatch = useDispatch();
+
+    const stepRender = [<FirstStep />, <SecondStep />];
+
+    const next = (nextStep: number) => async () => {
+        const totalStep = stepRender.length;
+        if (nextStep < totalStep && nextStep >= 0) {
+            action.updateValue("step", nextStep);
+        } else {
+            try {
+                dispatch(
+                    openPopUp({
+                        popUpType: "loading",
+                        popUpText: "Membuat Jadwal",
+                        highlightedText: "schedule",
+                        outsideClickClosePopUp: false
+                    })
+                );
+                const payload: CreateSchedule = {
+                    saleOrderId: values.stepTwo?.salesOrder?.id,
+                    projectId: values.existingProjectID,
+                    purchaseOrderId: values.stepOne?.purchaseOrders[0].id,
+                    quotationLetterId:
+                        values.stepOne?.purchaseOrders[0].quotationLetterId,
+                    quantity: values.stepTwo?.inputtedVolume, // volume inputted
+                    date: moment(
+                        `${values.stepTwo?.deliveryDate} ${values.stepTwo?.deliveryTime}`,
+                        "DD/MM/yyyy HH:mm"
+                    ).valueOf(), // date + time
+                    pouringMethod: values.stepTwo?.method,
+                    consecutive:
+                        values.stepTwo?.isConsecutive !== undefined
+                            ? values.stepTwo?.isConsecutive
+                            : false,
+                    withTechnician:
+                        values.stepTwo?.hasTechnicalRequest !== undefined
+                            ? values.stepTwo?.hasTechnicalRequest
+                            : false,
+                    status: "SUBMITTED"
+                };
+                await dispatch(postOrderSchedule({ payload })).unwrap();
+                navigation.dispatch(StackActions.popToTop());
+                dispatch(
+                    openPopUp({
+                        popUpType: "success",
+                        popUpText: "Pembuatan Jadwal\nBerhasil",
+                        highlightedText: "schedule",
+                        outsideClickClosePopUp: true
+                    })
+                );
+            } catch (error) {
+                const message = error.message || "Pembuatan Jadwal Gagal";
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText: message,
+                        highlightedText: "error",
+                        outsideClickClosePopUp: true
+                    })
+                );
+            }
+        }
+    };
 
     const actionBackButton = (directlyClose = false) => {
         if (values.isSearchingPurchaseOrder === true) {
@@ -149,68 +201,6 @@ function CreateScheduleScreen() {
             );
         }
     }, [values]);
-
-    const stepRender = [<FirstStep />, <SecondStep />];
-
-    const next = (nextStep: number) => async () => {
-        const totalStep = stepRender.length;
-        if (nextStep < totalStep && nextStep >= 0) {
-            action.updateValue("step", nextStep);
-        } else {
-            try {
-                dispatch(
-                    openPopUp({
-                        popUpType: "loading",
-                        popUpText: "Membuat Jadwal",
-                        highlightedText: "schedule",
-                        outsideClickClosePopUp: false
-                    })
-                );
-                const payload: CreateSchedule = {
-                    saleOrderId: values.stepTwo?.salesOrder?.id,
-                    projectId: values.existingProjectID,
-                    purchaseOrderId: values.stepOne?.purchaseOrders[0].id,
-                    quotationLetterId:
-                        values.stepOne?.purchaseOrders[0].quotationLetterId,
-                    quantity: values.stepTwo?.inputtedVolume, // volume inputted
-                    date: moment(
-                        `${values.stepTwo?.deliveryDate} ${values.stepTwo?.deliveryTime}`,
-                        "DD/MM/yyyy HH:mm"
-                    ).valueOf(), // date + time
-                    pouringMethod: values.stepTwo?.method,
-                    consecutive:
-                        values.stepTwo?.isConsecutive !== undefined
-                            ? values.stepTwo?.isConsecutive
-                            : false,
-                    withTechnician:
-                        values.stepTwo?.hasTechnicalRequest !== undefined
-                            ? values.stepTwo?.hasTechnicalRequest
-                            : false,
-                    status: "SUBMITTED"
-                };
-                await dispatch(postOrderSchedule({ payload })).unwrap();
-                navigation.dispatch(StackActions.popToTop());
-                dispatch(
-                    openPopUp({
-                        popUpType: "success",
-                        popUpText: "Pembuatan Jadwal\nBerhasil",
-                        highlightedText: "schedule",
-                        outsideClickClosePopUp: true
-                    })
-                );
-            } catch (error) {
-                const message = error.message || "Pembuatan Jadwal Gagal";
-                dispatch(
-                    openPopUp({
-                        popUpType: "error",
-                        popUpText: message,
-                        highlightedText: "error",
-                        outsideClickClosePopUp: true
-                    })
-                );
-            }
-        }
-    };
 
     return (
         <>

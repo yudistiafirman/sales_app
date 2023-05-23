@@ -233,7 +233,7 @@ export default function BillingModal({
                     popUpType: "error",
                     popUpText:
                         error?.message ||
-                        "Terjadi error saat update alamat " + "Pembayaran",
+                        "Terjadi error saat update alamat Pembayaran",
                     outsideClickClosePopUp: true
                 })
             );

@@ -114,8 +114,7 @@ function CameraButton({
                 if (typeDocument === "IMAGE") onGalleryPress(res);
                 else onDocPress(res);
             } catch (err) {
-                if (DocumentPicker.isCancel(err)) {
-                } else {
+                if (!DocumentPicker.isCancel(err)) {
                     throw err;
                 }
             }

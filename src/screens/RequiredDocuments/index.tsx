@@ -66,10 +66,10 @@ export default function RequiredDocuments() {
         let totalProperties = 0;
 
         for (const key in docState) {
-            totalProperties++;
+            totalProperties += 1;
             if (Object.prototype.hasOwnProperty.call(docState, key)) {
                 if (docState[key]) {
-                    count++;
+                    count += 1;
                 }
             }
         }

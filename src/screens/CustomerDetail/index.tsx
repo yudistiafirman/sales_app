@@ -22,7 +22,6 @@ import {
     VISIT_HISTORY
 } from "@/navigation/ScreenNames";
 import {
-    RouteProp,
     useFocusEffect,
     useNavigation,
     useRoute
@@ -32,7 +31,6 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import { resetRegion } from "@/redux/reducers/locationReducer";
-import { RootStackParamList } from "@/navigation/CustomStateComponent";
 import { ProjectDetail, visitationListResponse } from "@/interfaces";
 import formatCurrency from "@/utils/formatCurrency";
 import DocumentWarning from "./elements/DocumentWarning";
@@ -78,10 +76,8 @@ const styles = StyleSheet.create({
     }
 });
 
-type CustomerDetailRoute = RouteProp<RootStackParamList["CUSTOMER_DETAIL"]>;
-
 export default function CustomerDetail() {
-    const route = useRoute<CustomerDetailRoute>();
+    const route = useRoute();
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
     const [isBillingLocationVisible, setIsBillingLocationVisible] =
@@ -183,7 +179,7 @@ export default function CustomerDetail() {
         let totalProperties = 8;
 
         for (const key in customerData?.ProjectDocs) {
-            totalProperties++;
+            totalProperties += 1;
             if (
                 Object.prototype.hasOwnProperty.call(
                     customerData.ProjectDocs,
@@ -191,7 +187,7 @@ export default function CustomerDetail() {
                 )
             ) {
                 if (customerData?.ProjectDocs[key]) {
-                    count++;
+                    count += 1;
                 }
             }
         }
