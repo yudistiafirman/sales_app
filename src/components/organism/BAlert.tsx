@@ -55,6 +55,9 @@ const BalertDefaultProps = {
     contentStyle: BAlertDefaultContentStyle
 };
 
+const warningIcon = require("@/assets/icon/ic_warning.png");
+const successIcon = require("@/assets/icon/ic_success.png");
+
 function BAlert({
     isVisible,
     content,
@@ -62,9 +65,6 @@ function BAlert({
     contentStyle,
     onClose
 }: BAlertProps & typeof BalertDefaultProps) {
-    const warningIcon = require("@/assets/icon/ic_warning.png");
-    const successIcon = require("@/assets/icon/ic_success.png");
-
     return (
         <Modal isVisible={isVisible}>
             <View style={styles.modalContainer}>

@@ -13,6 +13,12 @@ interface TabBar {
     navigation: any;
 }
 
+const homeIcon = require("@/assets/icon/TabBarIcon/ic_home.png");
+const transIcon = require("@/assets/icon/TabBarIcon/ic_dollar-square.png");
+const profileIcon = require("@/assets/icon/TabBarIcon/ic_profile.png");
+const priceIcon = require("@/assets/icon/TabBarIcon/ic_price.png");
+const customerIcon = require("@/assets/icon/TabBarIcon/ic_customer.png");
+
 function CustomTabBar({ state, descriptors, navigation }: TabBar) {
     const {
         enable_transaction_menu,
@@ -20,12 +26,6 @@ function CustomTabBar({ state, descriptors, navigation }: TabBar) {
         enable_profile_menu,
         enable_customer_menu
     } = useSelector((state: RootState) => state.auth.remote_config);
-
-    const homeIcon = require("@/assets/icon/TabBarIcon/ic_home.png");
-    const transIcon = require("@/assets/icon/TabBarIcon/ic_dollar-square.png");
-    const profileIcon = require("@/assets/icon/TabBarIcon/ic_profile.png");
-    const priceIcon = require("@/assets/icon/TabBarIcon/ic_price.png");
-    const customerIcon = require("@/assets/icon/TabBarIcon/ic_customer.png");
 
     const icons = [homeIcon];
     if (enable_transaction_menu) icons.push(transIcon);

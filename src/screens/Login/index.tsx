@@ -27,6 +27,8 @@ interface LoginState {
     phoneNumber: string;
 }
 
+const BrikLogo = require("@/assets/logo/brik_logo.png");
+
 function Login() {
     const navigation = useNavigation();
     const dispatch = useDispatch();
@@ -71,13 +73,13 @@ function Login() {
                                 width: resScale(70),
                                 height: resScale(33)
                             }}
-                            source={require("@/assets/logo/brik_logo.png")}
+                            source={BrikLogo}
                         />
                     </TouchableOpacity>
                 ) : (
                     <Image
                         style={{ width: resScale(70), height: resScale(33) }}
-                        source={require("@/assets/logo/brik_logo.png")}
+                        source={BrikLogo}
                     />
                 )}
             </View>

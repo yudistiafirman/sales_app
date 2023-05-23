@@ -39,6 +39,8 @@ type EmptyStateProps = {
     onAction?: () => void;
 };
 
+const IconNotFound = require("@/assets/icon/ic_not_found.png");
+
 function EmptyState({
     emptyText,
     isError,
@@ -52,12 +54,7 @@ function EmptyState({
                 <AntDesign size={resScale(48)} name="closecircle" color="red" />
             );
         }
-        return (
-            <Image
-                style={styles.emptyimage}
-                source={require("@/assets/icon/ic_not_found.png")}
-            />
-        );
+        return <Image style={styles.emptyimage} source={IconNotFound} />;
     };
 
     const renderContent = () => {

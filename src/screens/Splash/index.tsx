@@ -17,6 +17,8 @@ const styles = StyleSheet.create({
     logo: { width: resScale(184), height: resScale(87) }
 });
 
+const BrikLogo = require("@/assets/logo/brik_logo.png");
+
 function Splash() {
     const dispatch = useDispatch<AppDispatch>();
 
@@ -26,10 +28,7 @@ function Splash() {
 
     return (
         <View style={styles.container}>
-            <Image
-                source={require("@/assets/logo/brik_logo.png")}
-                style={styles.logo}
-            />
+            <Image source={BrikLogo} style={styles.logo} />
         </View>
     );
 }

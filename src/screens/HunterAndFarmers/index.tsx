@@ -64,6 +64,10 @@ const styles = StyleSheet.create({
     }
 });
 
+const BrikLogo = require("@/assets/logo/brik_logo.png");
+const IcFarmer = require("@/assets/icon/ic_farmer.png");
+const IcHunter = require("@/assets/logo/ic_hunter.png");
+
 function HunterAndFarmers() {
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
@@ -99,10 +103,7 @@ function HunterAndFarmers() {
             deviceHeight={height}
         >
             <SafeAreaView style={styles.container}>
-                <Image
-                    style={styles.imageLogo}
-                    source={require("@/assets/logo/brik_logo.png")}
-                />
+                <Image style={styles.imageLogo} source={BrikLogo} />
                 <View>
                     <BText style={styles.title}>
                         Bagaimana Anda ingin memulai
@@ -118,20 +119,14 @@ function HunterAndFarmers() {
                         onPress={goToHome}
                         style={styles.imageWrapper}
                     >
-                        <Image
-                            style={styles.image}
-                            source={require("@/assets/icon/ic_farmer.png")}
-                        />
+                        <Image style={styles.image} source={IcFarmer} />
                         <BText style={styles.text}>Hunter</BText>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={goToAppointment}
                         style={styles.imageWrapper}
                     >
-                        <Image
-                            style={styles.image}
-                            source={require("@/assets/icon/ic_hunter.png")}
-                        />
+                        <Image style={styles.image} source={IcHunter} />
                         <BText style={styles.text}>Farmer</BText>
                     </TouchableOpacity>
                 </View>
