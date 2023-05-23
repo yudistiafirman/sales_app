@@ -46,6 +46,14 @@ import Fourth from "./elements/fourth";
 import FirstStep from "./elements/first";
 import Fifth from "./elements/fifth";
 
+const labels = [
+    "Alamat Proyek",
+    "Data Pelanggan",
+    "Data Proyek",
+    "Kompetitor",
+    "Kelengkapan Foto"
+];
+
 const styles: Styles = {
     footer: {
         flexDirection: "row",
@@ -72,14 +80,6 @@ const styles: Styles = {
     }
 };
 
-const labels = [
-    "Alamat Proyek",
-    "Data Pelanggan",
-    "Data Proyek",
-    "Kompetitor",
-    "Kelengkapan Foto"
-];
-
 function stepHandler(
     state: VisitationGlobalState,
     setStepsDone: (e: number[] | ((curr: number[]) => number[])) => void
@@ -92,11 +92,7 @@ function stepHandler(
     } else {
         setStepsDone((curr) => curr.filter((num) => num !== 0));
     }
-    const selectedPic = state?.pics?.find((pic) => {
-        if (pic.isSelected) {
-            return pic;
-        }
-    });
+    const selectedPic = state?.pics?.filter((v) => v.isSelected);
     const customerTypeCond =
         state?.customerType === "COMPANY" ? !!state?.companyName : true;
     if (
@@ -148,6 +144,18 @@ function CreateVisitation() {
 
     const existingVisitation: visitationListResponse =
         route?.params?.existingVisitation;
+
+    const openBottomSheet = () => {
+        bottomSheetRef.current?.expand();
+    };
+
+    const stepRender = [
+        <FirstStep />,
+        <SecondStep openBottomSheet={openBottomSheet} />,
+        <ThirdStep />,
+        <Fourth />,
+        <Fifth />
+    ];
 
     function populateData(existingData: visitationListResponse) {
         const { project } = existingData;
@@ -304,6 +312,21 @@ function CreateVisitation() {
         }
     }
 
+    const next = (nextStep: number) => () => {
+        const totalStep = stepRender.length;
+        if (nextStep < totalStep && nextStep >= 0) {
+            dispatch(updateCurrentStep(nextStep));
+        }
+    };
+
+    const actionBackButton = (directlyClose = false) => {
+        if (visitationData.step > 0 && !directlyClose) {
+            next(visitationData.step - 1)();
+        } else {
+            setPopupVisible(true);
+        }
+    };
+
     useCustomHeaderLeft({
         customHeaderLeft: (
             <BHeaderIcon
@@ -330,8 +353,8 @@ function CreateVisitation() {
             );
             if (LocationAddress) {
                 if (LocationAddress?.lon && LocationAddress?.lat) {
-                    const longitude = +LocationAddress?.lon;
-                    const latitude = +LocationAddress?.lat;
+                    const longitude = Number(LocationAddress?.lon);
+                    const latitude = Number(LocationAddress?.lat);
                     dispatch(
                         updateRegion({
                             formattedAddress: LocationAddress?.line1,
@@ -381,11 +404,6 @@ function CreateVisitation() {
         ])
     );
 
-    useEffect(() => {
-        stepHandler(visitationData, setStepsDone);
-        handleStepperFocus();
-    }, [visitationData]);
-
     const handleStepperFocus = () => {
         // to continue stepper focus when entering visitation page
         if (!visitationData.stepperVisitationShouldNotFocused) {
@@ -406,11 +424,7 @@ function CreateVisitation() {
         ) {
             dispatch(resetStepperFocused(1));
         }
-        const selectedPic = visitationData.pics?.find((pic) => {
-            if (pic.isSelected) {
-                return pic;
-            }
-        });
+        const selectedPic = visitationData.pics?.filter((v) => v.isSelected);
         const customerTypeCond =
             visitationData.customerType === "COMPANY"
                 ? !!visitationData.companyName
@@ -446,23 +460,14 @@ function CreateVisitation() {
         }
     };
 
-    const next = (nextStep: number) => () => {
-        const totalStep = stepRender.length;
-        if (nextStep < totalStep && nextStep >= 0) {
-            dispatch(updateCurrentStep(nextStep));
-        }
-    };
-
-    const actionBackButton = (directlyClose = false) => {
-        if (visitationData.step > 0 && !directlyClose) {
-            next(visitationData.step - 1)();
-        } else {
-            setPopupVisible(true);
-        }
-    };
+    useEffect(() => {
+        stepHandler(visitationData, setStepsDone);
+        handleStepperFocus();
+    }, [visitationData]);
 
     const addPic = (state: PIC) => {
-        state.isSelected = true;
+        const pic = state;
+        pic.isSelected = true;
         const finalPIC = [...visitationData.pics];
         if (visitationData.pics && visitationData.pics.length > 0) {
             finalPIC.forEach((it, index) => {
@@ -475,22 +480,10 @@ function CreateVisitation() {
         dispatch(
             updateDataVisitation({
                 type: "pics",
-                value: [...finalPIC, state]
+                value: [...finalPIC, pic]
             })
         );
     };
-
-    const openBottomSheet = () => {
-        bottomSheetRef.current?.expand();
-    };
-
-    const stepRender = [
-        <FirstStep />,
-        <SecondStep openBottomSheet={openBottomSheet} />,
-        <ThirdStep />,
-        <Fourth />,
-        <Fifth />
-    ];
 
     return (
         <>

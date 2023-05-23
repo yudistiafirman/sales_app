@@ -38,7 +38,7 @@ import {
 } from "@/redux/reducers/VisitationReducer";
 import LastStepPopUp from "../LastStepPopUp";
 
-export type selectedDateType = {
+export type SelectedDateType = {
     date: string;
     prettyDate: string;
     day: string;
@@ -228,7 +228,7 @@ function Fifth() {
         });
         DeviceEventEmitter.addListener(
             "CalendarScreen.selectedDate",
-            (date: selectedDateType) => {
+            (date: SelectedDateType) => {
                 onChange("selectedDate")(date);
                 setIsLastStepVisible((curr) => !curr);
             }

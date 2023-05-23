@@ -80,6 +80,51 @@ function FirstStep() {
 
     // map function
     const mapRef = React.useRef<MapView>(null);
+
+    const askingPermission = async () => {
+        const granted = await hasLocationPermission();
+        if (granted) {
+            setGrantedLocationPermission(granted);
+        }
+    };
+
+    const onMapReady = async () => {
+        try {
+            if (grantedLocationPermission) {
+                setIsMapLoading(() => true);
+                const { result } = await getUserCurrentLocationDetail();
+                const coordinate = {
+                    longitude: Number(result?.lon),
+                    latitude: Number(result?.lat),
+                    formattedAddress: result?.formattedAddress,
+                    PostalId: result?.PostalId
+                };
+                dispatch(
+                    updateDataVisitation({
+                        type: "createdLocation",
+                        value: result
+                    })
+                );
+                if (region.latitude === 0) {
+                    dispatch(updateRegion(coordinate));
+                }
+
+                setIsMapLoading(() => false);
+            } else {
+                askingPermission();
+            }
+        } catch (error) {
+            setIsMapLoading(() => false);
+            dispatch(
+                openPopUp({
+                    popUpType: "error",
+                    popUpText: error.message,
+                    outsideClickClosePopUp: true
+                })
+            );
+        }
+    };
+
     const onChangeRegion = async (coordinate: Region) => {
         try {
             setIsMapLoading(() => true);
@@ -94,7 +139,7 @@ function FirstStep() {
                 throw data;
             }
 
-            const _coordinate = {
+            const coordinateToSet = {
                 latitude: result?.lat,
                 longitude: result?.lon,
                 lat: 0,
@@ -104,15 +149,15 @@ function FirstStep() {
             };
 
             if (typeof result?.lon === "string") {
-                _coordinate.longitude = Number(result.lon);
-                _coordinate.lon = Number(result.lon);
+                coordinateToSet.longitude = Number(result.lon);
+                coordinateToSet.lon = Number(result.lon);
             }
 
             if (typeof result?.lat === "string") {
-                _coordinate.latitude = Number(result.lat);
-                _coordinate.lat = Number(result.lat);
+                coordinateToSet.latitude = Number(result.lat);
+                coordinateToSet.lat = Number(result.lat);
             }
-            dispatch(updateRegion(_coordinate));
+            dispatch(updateRegion(coordinateToSet));
             setIsMapLoading(() => false);
         } catch (error) {
             setIsMapLoading(() => false);
@@ -161,53 +206,9 @@ function FirstStep() {
         visitationData.createdLocation?.formattedAddress
     ]);
 
-    const askingPermission = async () => {
-        const granted = await hasLocationPermission();
-        if (granted) {
-            setGrantedLocationPermission(granted);
-        }
-    };
-
     React.useEffect(() => {
         onMapReady();
     }, [region, grantedLocationPermission]);
-
-    const onMapReady = async () => {
-        try {
-            if (grantedLocationPermission) {
-                setIsMapLoading(() => true);
-                const { result } = await getUserCurrentLocationDetail();
-                const coordinate = {
-                    longitude: Number(result?.lon),
-                    latitude: Number(result?.lat),
-                    formattedAddress: result?.formattedAddress,
-                    PostalId: result?.PostalId
-                };
-                dispatch(
-                    updateDataVisitation({
-                        type: "createdLocation",
-                        value: result
-                    })
-                );
-                if (region.latitude === 0) {
-                    dispatch(updateRegion(coordinate));
-                }
-
-                setIsMapLoading(() => false);
-            } else {
-                askingPermission();
-            }
-        } catch (error) {
-            setIsMapLoading(() => false);
-            dispatch(
-                openPopUp({
-                    popUpType: "error",
-                    popUpText: error.message,
-                    outsideClickClosePopUp: true
-                })
-            );
-        }
-    };
 
     React.useEffect(() => {
         DeviceEventEmitter.addListener("visitationSearchCoordinate", (data) => {
