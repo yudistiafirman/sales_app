@@ -29,15 +29,7 @@ type FooterType = {
     isLoading?: boolean;
     onEndReached?: any;
 };
-// type visitationDataType = {
-//   id?: number;
-//   name: string;
-//   location?: string;
-//   time?: string;
-//   status?: string;
-//   pilNames?: string[];
-//   pilStatus?: string;
-// };
+
 type BottomSheetFlatlistType = {
     data: visitationDataType[];
     searchQuery?: string;

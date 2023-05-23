@@ -40,19 +40,19 @@ function BChip({
         alignItems: "center"
     };
 
-    const _style: ViewStyle =
+    const Styles: ViewStyle =
         type === "header" ? BChipHeaderStyle : BChipDefaultStyle;
 
-    const _textStyle: TextStyle = {
+    const TextStyles: TextStyle = {
         color: textColor || colors.text.dark,
         fontFamily: fonts.family.montserrat[400],
         fontSize: fonts.size.xs
     };
 
     return (
-        <View style={[_style, { backgroundColor }]}>
+        <View style={[Styles, { backgroundColor }]}>
             {startIcon}
-            <BText style={[_textStyle, { fontWeight: titleWeight }]}>
+            <BText style={[TextStyles, { fontWeight: titleWeight }]}>
                 {children}
             </BText>
             {endIcon}

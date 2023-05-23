@@ -15,7 +15,7 @@ interface ActionCreateDepositState {
     key?: keyof CreateDepositFirstStep | keyof CreateDepositSecondStep;
 }
 
-interface context {
+interface Context {
     values: CreateDepositState;
     action: {
         updateValue: (key: keyof CreateDepositState, value: any) => void;
@@ -37,7 +37,7 @@ const initialData: CreateDepositState = {
     isSearchingPurchaseOrder: false
 };
 
-const CreateDepositContext = React.createContext<context>({
+const CreateDepositContext = React.createContext<Context>({
     values: initialData,
     action: {
         updateValue: () => undefined,

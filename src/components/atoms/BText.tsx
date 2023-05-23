@@ -36,62 +36,62 @@ function BText({
     sizeInNumber,
     ...props
 }: IProps & TextProps) {
-    const _defaultStyle: TextStyle = {
+    const defaultStyle: TextStyle = {
         color: colors.text.dark,
         fontFamily: fonts.family.montserrat[400],
         fontSize: fonts.size.sm
     };
-    let _style: TextStyle = {
-        ..._defaultStyle
+    let assignStyle: TextStyle = {
+        ...defaultStyle
     };
     if (type === "header") {
-        _style = {
-            ..._style,
+        assignStyle = {
+            ...assignStyle,
             fontFamily: fonts.family.montserrat[600],
             fontSize: fonts.size.xl
         };
     }
     if (type === "title") {
-        _style = {
-            ..._style,
+        assignStyle = {
+            ...assignStyle,
             fontFamily: fonts.family.montserrat[600],
             fontSize: fonts.size.md
         };
     }
 
     if (color === "primary") {
-        _style = {
-            ..._style,
+        assignStyle = {
+            ...assignStyle,
             color: colors.primary
         };
     }
     if (color === "darker") {
-        _style = {
-            ..._style,
+        assignStyle = {
+            ...assignStyle,
             color: colors.text.darker
         };
     }
     if (color === "error") {
-        _style = {
-            ..._style,
+        assignStyle = {
+            ...assignStyle,
             color: colors.text.errorText
         };
     }
 
     if (color === "divider") {
-        _style = {
-            ..._style,
+        assignStyle = {
+            ...assignStyle,
             color: colors.text.divider
         };
     }
 
     if (bold) {
-        _style = {
-            ..._style,
+        assignStyle = {
+            ...assignStyle,
             fontWeight: bold,
             fontFamily:
                 bold !== "normal" && bold !== "bold"
-                    ? fonts.family.montserrat[parseInt(bold)]
+                    ? fonts.family.montserrat[parseInt(bold, 10)]
                     : undefined
         };
 
@@ -102,29 +102,33 @@ function BText({
             bold !== "200" &&
             bold !== "900"
         ) {
-            _style = {
-                ..._style,
-                fontFamily: fonts.family.montserrat[parseInt(bold)]
+            assignStyle = {
+                ...assignStyle,
+                fontFamily: fonts.family.montserrat[parseInt(bold, 10)]
             };
         }
     }
 
     if (size) {
-        _style = {
-            ..._style,
+        assignStyle = {
+            ...assignStyle,
             fontSize: fonts.size.xs
         };
     }
 
     if (sizeInNumber) {
-        _style = {
-            ..._style,
+        assignStyle = {
+            ...assignStyle,
             fontSize: sizeInNumber
         };
     }
 
     return (
-        <Text numberOfLines={numberOfLines} style={[_style, style]} {...props}>
+        <Text
+            numberOfLines={numberOfLines}
+            style={[assignStyle, style]}
+            {...props}
+        >
             {children}
         </Text>
     );

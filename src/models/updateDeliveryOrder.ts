@@ -1,6 +1,6 @@
 import { OperationFileType } from "@/interfaces/Operation";
 
-export interface updateDeliverOrder {
+export interface UpdateDeliverOrder {
     deliveryOrderId: string;
     doFiles: { fileId: string; type: OperationFileType }[];
     recipientName: string;

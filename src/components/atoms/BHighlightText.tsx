@@ -17,7 +17,7 @@ const style = StyleSheet.create({
     }
 });
 
-type higlightTextType = {
+type HiglightTextType = {
     searchQuery?: string;
     name: string;
     fontSize?: number;
@@ -27,7 +27,7 @@ export default function HighlightText({
     searchQuery,
     name,
     fontSize
-}: higlightTextType) {
+}: HiglightTextType) {
     function escapeRegExp(text: string) {
         return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
     }

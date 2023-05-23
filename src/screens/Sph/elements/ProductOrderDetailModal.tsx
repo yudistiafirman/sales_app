@@ -137,7 +137,7 @@ type ProductCartModalType = {
     distance: number | null;
 };
 
-type distanceDeliverType = {
+type DistanceDeliverType = {
     id: string;
     price: number;
 };
@@ -174,16 +174,16 @@ export default function ProductCartModal({
         +detailOrder.volume * +detailOrder.sellPrice + (calcPrice || 0);
     const distanceCeil = distance ? Math.ceil(distance / 1000) : 0;
     function getAddPrice(): {
-        delivery: distanceDeliverType;
-        distance: distanceDeliverType;
+        delivery: DistanceDeliverType;
+        distance: DistanceDeliverType;
     } {
         const { Category } = productData;
         const { Parent } = Category;
         const { AdditionalPrices } = Parent;
 
         const additionalData = {
-            distance: {} as distanceDeliverType,
-            delivery: {} as distanceDeliverType
+            distance: {} as DistanceDeliverType,
+            delivery: {} as DistanceDeliverType
         };
         for (const price of AdditionalPrices) {
             if (price.type === "DISTANCE") {

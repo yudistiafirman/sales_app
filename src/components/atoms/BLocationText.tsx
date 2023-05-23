@@ -21,7 +21,7 @@ const style = StyleSheet.create({
     }
 });
 
-type locationType = {
+type LocationType = {
     location?: string;
     color?: string;
 };
@@ -29,7 +29,7 @@ type locationType = {
 export default function BLocationText({
     location,
     color = colors.text.blue
-}: locationType) {
+}: LocationType) {
     if (!location) {
         return null;
     }

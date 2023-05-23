@@ -95,11 +95,7 @@ export default function BButtonPrimary({
                 disabled={disable}
             >
                 <View>{leftIcon && leftIcon()}</View>
-                <>
-                    {emptyIconEnable && (
-                        <View style={{ height: resScale(24) }} />
-                    )}
-                </>
+                {emptyIconEnable && <View style={{ height: resScale(24) }} />}
                 {isLoading ? (
                     <ActivityIndicator size={resScale(24)} color="white" />
                 ) : (
@@ -116,11 +112,7 @@ export default function BButtonPrimary({
                 )}
 
                 <View>{rightIcon && rightIcon()}</View>
-                <>
-                    {emptyIconEnable && (
-                        <View style={{ height: resScale(24) }} />
-                    )}
-                </>
+                {emptyIconEnable && <View style={{ height: resScale(24) }} />}
             </TouchableOpacity>
         </View>
     );

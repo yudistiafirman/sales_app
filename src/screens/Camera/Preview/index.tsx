@@ -26,7 +26,7 @@ import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { LocalFileType } from "@/interfaces/LocalFileType";
 import { ENTRY_TYPE } from "@/models/EnumModel";
-import { updateDeliverOrder } from "@/models/updateDeliveryOrder";
+import { UpdateDeliverOrder } from "@/models/updateDeliveryOrder";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {
     CAMERA,
@@ -174,7 +174,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
 
     const onArrivedDriver = async () => {
         try {
-            const payload = {} as updateDeliverOrder;
+            const payload = {} as UpdateDeliverOrder;
             payload.status = "ARRIVED";
             const responseUpdateDeliveryOrder = await updateDeliveryOrder(
                 payload,

@@ -1,7 +1,7 @@
 import BrikApiOrder from "@/brikApi/BrikApiOrder";
 import { sphOrderPayloadType } from "@/interfaces";
 import { UploadSOSigned } from "@/models/SOSigned";
-import { updateDeliverOrder } from "@/models/updateDeliveryOrder";
+import { UpdateDeliverOrder } from "@/models/updateDeliveryOrder";
 import { customRequest } from "@/networking/request";
 
 export const getTransactionTab = async () =>
@@ -116,7 +116,7 @@ export const getConfirmedPurchaseOrder = async (
     );
 
 export const updateDeliveryOrder = async (
-    payload: updateDeliverOrder,
+    payload: UpdateDeliverOrder,
     deliveryOrderId: string
 ) =>
     customRequest(
@@ -130,7 +130,7 @@ export const uploadSOSignedDocs = async (payload: UploadSOSigned, id: string) =>
     customRequest(BrikApiOrder.uploadSOSignedDocs(id), "PUT", payload, true);
 
 export const updateDeliveryOrderWeight = async (
-    payload: updateDeliverOrder,
+    payload: UpdateDeliverOrder,
     deliveryOrderId: string
 ) =>
     customRequest(

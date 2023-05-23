@@ -15,6 +15,8 @@ const styles = StyleSheet.create({
     }
 });
 
+const icMarker = require("@/assets/icon/ic_marker.png");
+
 function BMarker() {
     return (
         <View style={styles.markerFixed}>
@@ -23,7 +25,7 @@ function BMarker() {
                     width: resScale(40),
                     height: resScale(40)
                 }}
-                source={require("@/assets/icon/ic_marker.png")}
+                source={icMarker}
             />
         </View>
     );

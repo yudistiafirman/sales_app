@@ -33,13 +33,13 @@ const styles = StyleSheet.create({
     }
 });
 
-type projectType = {
+type ProjectType = {
     id?: string;
     name?: string;
 };
 
 type ProjectBetweenType = {
-    projects: projectType;
+    projects: ProjectType;
     onPress: () => void;
 };
 
