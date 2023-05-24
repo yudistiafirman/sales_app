@@ -60,7 +60,7 @@ interface IBList {
     isError?: boolean;
     placeholder?: string;
     onRetry?: () => void;
-    emptyText: string;
+    emptyText?: string;
     searchBarOutlineStyle?: ViewStyle;
     searchBarInputStyle?: ViewStyle;
     searchBarBgColor?: string;
