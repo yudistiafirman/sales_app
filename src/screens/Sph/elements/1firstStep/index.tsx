@@ -22,6 +22,9 @@ import SelectedPic from "./elements/SelectedPic";
 import { SphContext } from "../context/SphContext";
 
 const styles = StyleSheet.create({
+    top: {
+        flex: 1
+    },
     touchable: {
         position: "absolute",
         width: "100%",
@@ -86,7 +89,7 @@ export default function FirstStep() {
     return (
         <BContainer>
             {!selectedCompany ? (
-                <View>
+                <View style={styles.top}>
                     {!isSearching ? (
                         <>
                             <TouchableOpacity
