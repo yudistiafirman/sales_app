@@ -301,9 +301,7 @@ export default function ThirdStep() {
                     )}
                     <BSpacer size="small" />
                     <BBackContinueBtn
-                        onPressBack={() => {
-                            setCurrentPosition(1);
-                        }}
+                        onPressBack={() => setCurrentPosition(1)}
                         onPressContinue={() => {
                             if (setCurrentPosition) {
                                 dispatch(setStepperFocused(3));

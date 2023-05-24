@@ -758,9 +758,7 @@ function Beranda() {
                 <View style={style.posRelative}>
                     <TouchableOpacity
                         style={style.touchable}
-                        onPress={() => {
-                            toggleModal("open")();
-                        }}
+                        onPress={() => toggleModal("open")()}
                     />
                     <BSearchBar
                         placeholder="Cari PT / Proyek"
@@ -791,8 +789,10 @@ function Beranda() {
                     errorMessage={errorMessage}
                     searchQuery={searchQuery}
                     onEndReached={onEndReached}
-                    onPressItem={
-                        enable_customer_detail ? visitationOnPress : undefined
+                    onPressItem={(data) =>
+                        enable_customer_detail
+                            ? visitationOnPress(data)
+                            : undefined
                     }
                 />
                 <PopUpQuestion

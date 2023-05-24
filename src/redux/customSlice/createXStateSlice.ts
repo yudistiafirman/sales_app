@@ -50,6 +50,8 @@ export const createXStateSlice = <
     /**
      * A reducer which you should pass to redux
      */
+
+    /* eslint-disable @typescript-eslint/default-param-last */
     const reducer = (
         state: TSelectedState = initialReduxState,
         event: any
@@ -61,6 +63,7 @@ export const createXStateSlice = <
                 return state;
         }
     };
+    /* eslint-enable @typescript-eslint/default-param-last */
 
     /**
      * A function designed to be called by the middleware,

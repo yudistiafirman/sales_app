@@ -147,6 +147,8 @@ export default function SelectedPic({
         picOrCompanyName = selectedCompany?.Pic?.name;
     }
 
+    const onPressCheck = onPress || null;
+    const setCurrentPositionCheck = setCurrentPosition || null;
     return (
         <View style={style.container}>
             <View style={{ flex: 1 }}>
@@ -158,11 +160,7 @@ export default function SelectedPic({
                             picOrCompanyName
                         }}
                         customIcon={GantiIcon}
-                        onPress={() => {
-                            if (onPress) {
-                                onPress();
-                            }
-                        }}
+                        onPress={() => onPressCheck !== null && onPressCheck()}
                     />
                 </View>
                 <BSpacer size="extraSmall" />
@@ -174,11 +172,10 @@ export default function SelectedPic({
             <BButtonPrimary
                 disable={!checkSelected()}
                 title="Lanjut"
-                onPress={() => {
-                    if (setCurrentPosition) {
-                        setCurrentPosition(1);
-                    }
-                }}
+                onPress={() =>
+                    setCurrentPositionCheck !== null &&
+                    setCurrentPositionCheck(1)
+                }
                 rightIcon={ContinueIcon}
             />
             <BSheetAddPic

@@ -46,10 +46,13 @@ export default function OperationList({
     onLocationPress,
     userType
 }: OperationListProps) {
+    const onLocationPressCheck = onLocationPress || null;
     const renderItem = (item: OperationsDeliveryOrdersListResponse) => (
         <BVisitationCard
             onPress={() => onPressList(item)}
-            onLocationPress={(lonlat) => onLocationPress(lonlat)}
+            onLocationPress={(lonlat) =>
+                onLocationPressCheck !== null && onLocationPressCheck(lonlat)
+            }
             item={{
                 name: item?.number,
                 picOrCompanyName: item?.project?.projectName,

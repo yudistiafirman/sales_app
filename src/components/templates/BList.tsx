@@ -115,6 +115,7 @@ function BList({
                 item?.type === INDIVIDU
                     ? colors.status.lightYellow
                     : colors.status.lightBlue;
+            const onPressCardCheck = onPressCard || null;
             return (
                 <BCard
                     avatarText={avatarText.toUpperCase()}
@@ -130,7 +131,9 @@ function BList({
                         />
                     }
                     cardBgColor={index % 2 ? colors.veryLightShadeGray : ""}
-                    onPressCard={() => onPressCard && onPressCard(item)}
+                    onPressCard={() =>
+                        onPressCardCheck !== null && onPressCardCheck(item)
+                    }
                     searchQuery={searchQuery}
                     chipTitle={chipTitle}
                     availableDebit={availableDebit}

@@ -50,11 +50,7 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
 }: TransactionListProps<ArrayOfObject>) {
     const renderItem: ListRenderItem<TransactionsData> = useCallback(
         ({ item }) => (
-            <TouchableOpacity
-                onPress={() => {
-                    onPress(item);
-                }}
-            >
+            <TouchableOpacity onPress={() => onPress(item)}>
                 <TransactionListCard
                     number={item.number ? item.number : "-"}
                     // TODO: handle from BE, ugly when use mapping in FE side

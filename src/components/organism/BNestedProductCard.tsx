@@ -236,6 +236,7 @@ export default function BNestedProductCard({
                     : expandData?.findIndex((val) => val?.id === item?.id);
                 const isExpand = expandItems === -1;
 
+                const onSelectCheck = onSelect || null;
                 return (
                     <View key={index}>
                         <View style={styles.containerLastOrder}>
@@ -250,11 +251,10 @@ export default function BNestedProductCard({
                                                 ? "checked"
                                                 : "unchecked"
                                         }
-                                        onPress={() => {
-                                            if (onSelect) {
-                                                onSelect(index);
-                                            }
-                                        }}
+                                        onPress={() =>
+                                            onSelectCheck !== null &&
+                                            onSelectCheck(index)
+                                        }
                                     />
                                 )}
                                 <View style={styles.leftSide}>

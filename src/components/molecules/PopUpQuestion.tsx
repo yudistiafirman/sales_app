@@ -54,6 +54,7 @@ export default function PopUpQuestion({
     actionText,
     cancelText
 }: PopUpQuestionType) {
+    const actionButtonPopup = setIsPopupVisible || null;
     return (
         <Modal
             isVisible={isVisible}
@@ -82,8 +83,8 @@ export default function PopUpQuestion({
                 >
                     <BBackContinueBtn
                         onPressBack={() =>
-                            setIsPopupVisible &&
-                            setIsPopupVisible((curr) => !curr)
+                            actionButtonPopup !== null &&
+                            actionButtonPopup((curr) => !curr)
                         }
                         onPressContinue={actionButton}
                         isContinueIcon={false}

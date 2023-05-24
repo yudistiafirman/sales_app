@@ -86,6 +86,8 @@ export default function BProductCard({
         return formattedUnit;
     };
 
+    const checkButtonAction1 = onPressDelete || null;
+    const checkButtonAction2 = onPressEdit || null;
     return (
         <View
             style={[
@@ -107,8 +109,8 @@ export default function BProductCard({
                     {name}
                 </Text>
                 <View style={style.iconsContainer}>
-                    {onPressDelete && (
-                        <TouchableOpacity onPress={onPressDelete}>
+                    {checkButtonAction1 !== null && (
+                        <TouchableOpacity onPress={checkButtonAction1}>
                             <MaterialCommunityIcons
                                 name="trash-can-outline"
                                 color="#000000"
@@ -118,8 +120,8 @@ export default function BProductCard({
                     )}
 
                     <BSpacer size="extraSmall" />
-                    {onPressEdit && (
-                        <TouchableOpacity onPress={onPressEdit}>
+                    {checkButtonAction2 !== null && (
+                        <TouchableOpacity onPress={checkButtonAction2}>
                             <MaterialCommunityIcons
                                 name="pencil"
                                 color="#000000"

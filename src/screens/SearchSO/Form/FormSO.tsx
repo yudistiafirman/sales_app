@@ -211,9 +211,7 @@ function FormSO() {
             />
             <BBackContinueBtn
                 onPressContinue={onSubmit}
-                onPressBack={() => {
-                    actionBackButton(true);
-                }}
+                onPressBack={() => actionBackButton(true)}
                 isContinueIcon={false}
                 continueText="Upload"
                 backText="Kembali"

@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
 interface BSheetCompanyProps {
     isVisible: boolean;
     dataCompany: DataCompany | null;
-    onChoose: (data: DataCompany) => void;
-    onChooseProject: (data: DataCompany) => void;
+    onChoose: (data?: DataCompany) => void;
+    onChooseProject: (data?: DataCompany) => void;
     onCloseModal: () => void;
     onSelect: (index: number) => void;
 }
@@ -70,6 +70,8 @@ function BottomSheetCompany({
     onCloseModal,
     onSelect
 }: BSheetCompanyProps) {
+    const onChooseProjectCheck = onChooseProject || null;
+    const onChooseCheck = onChoose || null;
     return (
         <Modal
             deviceHeight={height}
@@ -110,7 +112,10 @@ function BottomSheetCompany({
                             Tidak Menemukan Proyek?
                         </BText>
                         <BButtonPrimary
-                            onPress={onChooseProject}
+                            onPress={() =>
+                                onChooseProjectCheck !== null &&
+                                onChooseProjectCheck()
+                            }
                             buttonStyle={styles.addProjectButton}
                             titleStyle={styles.addProjectBtnText}
                             isOutline
@@ -119,7 +124,9 @@ function BottomSheetCompany({
                     </View>
                     <BButtonPrimary
                         buttonStyle={styles.chooseBtn}
-                        onPress={onChoose}
+                        onPress={() =>
+                            onChooseCheck !== null && onChooseCheck()
+                        }
                         title="Pilih"
                     />
                 </View>

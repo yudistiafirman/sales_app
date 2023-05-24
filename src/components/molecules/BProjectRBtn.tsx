@@ -43,6 +43,7 @@ function BProjectRBtn({
     projectName
 }: IProps) {
     const paddingLeft = isOption ? 0 : layout.pad.md + layout.pad.xs;
+    const actionButton = onSelect || null;
     return (
         <View style={styles.container}>
             {isOption && (
@@ -52,8 +53,8 @@ function BProjectRBtn({
                     color={colors.primary}
                     status={isSelected ? "checked" : "unchecked"}
                     onPress={() => {
-                        if (onSelect) {
-                            onSelect(idx!);
+                        if (actionButton !== null) {
+                            actionButton(idx!);
                         }
                     }}
                 />

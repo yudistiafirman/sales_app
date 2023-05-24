@@ -233,9 +233,9 @@ export default function FourthStep() {
                                         setSelectedProduct(item.product);
                                         setIsModalVisible(true);
                                     }}
-                                    onPressDelete={() => {
-                                        deleteSelectedProduct(index);
-                                    }}
+                                    onPressDelete={() =>
+                                        deleteSelectedProduct(index)
+                                    }
                                 />
                             )}
                             ItemSeparatorComponent={renderSeparator}

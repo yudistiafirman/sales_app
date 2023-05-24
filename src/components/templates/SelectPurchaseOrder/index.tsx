@@ -82,10 +82,11 @@ function SelectPurchaseOrderData({
     };
 
     const onClearValue = () => {
+        const checkDismiss = onDismiss || null;
         if (searchValue && searchValue.trim() !== "") {
             setSearchQuery("");
             send("clearInput");
-        } else onDismiss && onDismiss();
+        } else if (checkDismiss !== null) checkDismiss();
     };
 
     const onCloseModal = (

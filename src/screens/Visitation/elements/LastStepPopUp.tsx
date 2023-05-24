@@ -170,9 +170,7 @@ export default function LastStepPopUp({
                     style={styles.buttonLastStepContainer}
                 >
                     <TouchableOpacity
-                        onPress={() => {
-                            setLastStepPicked("VISIT");
-                        }}
+                        onPress={() => setLastStepPicked("VISIT")}
                     >
                         <View style={styles.buttonLastStep}>
                             <MaterialIcons
@@ -199,11 +197,7 @@ export default function LastStepPopUp({
                         </View>
                     </TouchableOpacity>
                     <View style={styles.spacer} />
-                    <TouchableOpacity
-                        onPress={() => {
-                            setLastStepPicked("SPH");
-                        }}
-                    >
+                    <TouchableOpacity onPress={() => setLastStepPicked("SPH")}>
                         <View style={styles.buttonLastStep}>
                             <MaterialCommunityIcons
                                 style={[
@@ -230,9 +224,7 @@ export default function LastStepPopUp({
                     </TouchableOpacity>
                     <View style={styles.spacer} />
                     <TouchableOpacity
-                        onPress={() => {
-                            setLastStepPicked("REJECTED");
-                        }}
+                        onPress={() => setLastStepPicked("REJECTED")}
                     >
                         <View style={styles.buttonLastStep}>
                             <MaterialCommunityIcons
@@ -289,9 +281,7 @@ export default function LastStepPopUp({
                             title="Submit"
                             isLoading={isLoading}
                             disable={!selectedDate}
-                            onPress={() => {
-                                onPressSubmit(lastStepPicked);
-                            }}
+                            onPress={() => onPressSubmit(lastStepPicked)}
                         />
                     </View>
                 )}
@@ -299,9 +289,7 @@ export default function LastStepPopUp({
                     <BButtonPrimary
                         title="Buat SPH Sekarang"
                         isLoading={isLoading}
-                        onPress={() => {
-                            onPressSubmit(lastStepPicked);
-                        }}
+                        onPress={() => onPressSubmit(lastStepPicked)}
                     />
                 )}
                 {lastStepPicked === "REJECTED" && (
@@ -316,9 +304,7 @@ export default function LastStepPopUp({
                                     !!closedLostValueOnChange.dropdownValue
                                 )
                             }
-                            onPress={() => {
-                                onPressSubmit(lastStepPicked);
-                            }}
+                            onPress={() => onPressSubmit(lastStepPicked)}
                         />
                     </>
                 )}

@@ -63,11 +63,10 @@ function ProductList<ArrayOfObject extends ProductsData>({
             item?.properties?.fc?.length > 0
                 ? ` / FC${item.properties.fc}`
                 : "";
+        const onPressCheck = onPress || null;
         return (
             <TouchableOpacity
-                onPress={() => {
-                    onPress(item);
-                }}
+                onPress={() => onPressCheck !== null && onPressCheck(item)}
                 disabled={disablePressed}
             >
                 <PriceListCard

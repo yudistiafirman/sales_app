@@ -415,9 +415,9 @@ export default function FifthStep() {
                         <View style={style.picLable}>
                             <Text style={style.picText}>PIC</Text>
                             <TouchableOpacity
-                                onPress={() => {
-                                    setIsModalVisible((curr) => !curr);
-                                }}
+                                onPress={() =>
+                                    setIsModalVisible((curr) => !curr)
+                                }
                             >
                                 <Text style={style.gantiPicText}>
                                     Ganti PIC
@@ -463,9 +463,7 @@ export default function FifthStep() {
                     isContinueIcon={false}
                     continueText="Buat SPH"
                     onPressContinue={() => buatSph()}
-                    onPressBack={() => {
-                        setCurrentPosition(3);
-                    }}
+                    onPressBack={() => setCurrentPosition(3)}
                 />
                 <BSheetAddPic
                     ref={bottomSheetRef}

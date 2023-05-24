@@ -387,10 +387,6 @@ function SubmitForm() {
         }
     };
 
-    const onPressContinue = () => {
-        onSubmitData();
-    };
-
     const renderHeaderLeft = useCallback(
         () => (
             <BHeaderIcon
@@ -708,7 +704,7 @@ function SubmitForm() {
                     }}
                 >
                     <BBackContinueBtn
-                        onPressContinue={onPressContinue}
+                        onPressContinue={onSubmitData}
                         disableContinue={handleDisableContinueButton()}
                         onPressBack={handleBack}
                         continueText="Simpan"

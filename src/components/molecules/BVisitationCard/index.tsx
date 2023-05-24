@@ -116,6 +116,7 @@ export default function BVisitationCard({
     locationTextColor,
     disabled = false
 }: VisitationCardType) {
+    const actionButton = onLocationPress || null;
     return (
         <View style={[style.container, customStyle]}>
             <TouchableOpacity
@@ -177,14 +178,14 @@ export default function BVisitationCard({
             </TouchableOpacity>
             {item?.lonlat?.latitude &&
                 item?.lonlat.longitude &&
-                onLocationPress && (
+                actionButton !== null && (
                     <View style={style.location}>
                         <BButtonPrimary
                             buttonStyle={style.locationButton}
                             titleStyle={style.locationTextButton}
                             title="Lihat Peta"
                             isOutline
-                            onPress={() => onLocationPress(item.lonlat)}
+                            onPress={() => actionButton(item.lonlat)}
                         />
                     </View>
                 )}

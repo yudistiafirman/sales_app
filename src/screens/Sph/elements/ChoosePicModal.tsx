@@ -170,9 +170,7 @@ export default function ChoosePicModal({
             hideModalContentWhileAnimating
             backdropOpacity={0.3}
             isVisible={isModalVisible}
-            onBackButtonPress={() => {
-                setIsModalVisible((curr) => !curr);
-            }}
+            onBackButtonPress={() => setIsModalVisible((curr) => !curr)}
             style={style.modal}
             scrollOffset={scrollOffSet}
             scrollOffsetMax={resScale(350) - resScale(190)}

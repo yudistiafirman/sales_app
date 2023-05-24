@@ -119,14 +119,15 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                 status: item?.status,
                 pilStatus: item?.pilStatus
             };
+            const onPressListCheck = onPressList || null;
             return (
                 <>
                     <BSpacer size="small" />
                     <BVisitationCard
                         item={constructVisitationData}
                         key={item.id}
-                        onPress={
-                            onPressList ? () => onPressList(item) : undefined
+                        onPress={() =>
+                            onPressListCheck !== null && onPressListCheck(item)
                         }
                         isRenderIcon
                         pillColor={colors.status.orange}
@@ -137,6 +138,7 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
         },
         [onPressList, searchQuery]
     );
+    const onPressMagnifyCheck = onPressMagnify || null;
     return (
         <View style={styles.container}>
             <BSearchBar
@@ -149,7 +151,9 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                 onChangeText={(text) => onChangeText(text)}
                 left={
                     <TextInput.Icon
-                        onPress={onPressMagnify && onPressMagnify}
+                        onPress={() =>
+                            onPressMagnifyCheck !== null && onPressMagnify
+                        }
                         icon="magnify"
                     />
                 }

@@ -46,6 +46,7 @@ function BComboRadioButton({
     secondChildren,
     onSetComboRadioButtonValue
 }: Partial<Input> & IComboRadioBtn & TitleBold) {
+    const checkbuttonAction = onSetComboRadioButtonValue || null;
     return (
         <View style={styles.container}>
             <View style={styles.innerContainer}>
@@ -66,8 +67,8 @@ function BComboRadioButton({
                         color={colors.primary}
                         uncheckedColor={colors.border.altGrey}
                         onPress={() =>
-                            onSetComboRadioButtonValue &&
-                            onSetComboRadioButtonValue(firstValue!)
+                            checkbuttonAction !== null &&
+                            checkbuttonAction(firstValue!)
                         }
                     />
                     <BText style={styles.radioValue}>{firstText}</BText>
@@ -80,8 +81,8 @@ function BComboRadioButton({
                         color={colors.primary}
                         uncheckedColor={colors.border.altGrey}
                         onPress={() =>
-                            onSetComboRadioButtonValue &&
-                            onSetComboRadioButtonValue(secondValue!)
+                            checkbuttonAction !== null &&
+                            checkbuttonAction(secondValue!)
                         }
                     />
                     <BText style={styles.radioValue}>{secondText}</BText>

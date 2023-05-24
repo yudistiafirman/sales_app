@@ -231,9 +231,7 @@ export default function BillingModal({
             hideModalContentWhileAnimating
             backdropOpacity={0.3}
             isVisible={isModalVisible}
-            onBackButtonPress={() => {
-                setIsModalVisible((curr) => !curr);
-            }}
+            onBackButtonPress={() => setIsModalVisible((curr) => !curr)}
             scrollOffset={scrollOffSet}
             scrollOffsetMax={resScale(400) - resScale(190)}
             propagateSwipe

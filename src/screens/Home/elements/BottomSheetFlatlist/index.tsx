@@ -79,6 +79,7 @@ export default function BottomSheetFlatlist({
         );
     };
 
+    const onPressItemCheck = onPressItem || null;
     return (
         <BottomSheetFlatList
             style={style.flatListContainer}
@@ -88,11 +89,9 @@ export default function BottomSheetFlatlist({
                 <BVisitationCard
                     item={item}
                     searchQuery={searchQuery}
-                    onPress={() => {
-                        if (onPressItem) {
-                            onPressItem(item);
-                        }
-                    }}
+                    onPress={() =>
+                        onPressItemCheck !== null && onPressItemCheck(item)
+                    }
                 />
             )}
             ListFooterComponent={footerComp}

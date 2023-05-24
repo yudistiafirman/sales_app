@@ -70,6 +70,7 @@ function BPic({
     border = true,
     isCompetitor = false
 }: IProps): JSX.Element {
+    const checkActionButton = onSelect || null;
     return (
         <View
             style={
@@ -88,11 +89,10 @@ function BPic({
                         status={isSelected ? "checked" : "unchecked"}
                         color={colors.primary}
                         uncheckedColor={colors.border.altGrey}
-                        onPress={() => {
-                            if (onSelect) {
-                                onSelect(index!);
-                            }
-                        }}
+                        onPress={() =>
+                            checkActionButton !== null &&
+                            checkActionButton(index!)
+                        }
                     />
                     <BSpacer size="extraSmall" />
                 </>

@@ -131,9 +131,7 @@ export default function AddedDepositModal({
             hideModalContentWhileAnimating
             backdropOpacity={0.3}
             isVisible={isModalVisible}
-            onBackButtonPress={() => {
-                setIsModalVisible((curr) => !curr);
-            }}
+            onBackButtonPress={() => setIsModalVisible((curr) => !curr)}
             style={style.modal}
             scrollOffset={scrollOffSet}
             scrollOffsetMax={resScale(350) - resScale(190)}
@@ -148,9 +146,9 @@ export default function AddedDepositModal({
                                     Buat Deposit
                                 </Text>
                                 <TouchableOpacity
-                                    onPress={() => {
-                                        setIsModalVisible((curr) => !curr);
-                                    }}
+                                    onPress={() =>
+                                        setIsModalVisible((curr) => !curr)
+                                    }
                                 >
                                     <MaterialCommunityIcons
                                         name="close"
