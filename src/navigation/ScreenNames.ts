@@ -50,6 +50,7 @@ export const SEARCH_SO = "SEARCH_SO";
 export const FORM_SO = "FORM_SO";
 export const GALLERY_SO = "GALLERY_SO";
 export const GALLERY_OPERATION = "GALLERY_OPERATION";
+export const INVOICE_LIST = "INVOICE_LIST";
 
 /*
     Screen Title
@@ -93,6 +94,7 @@ export const HUNTER_AND_FARMER_TITLE = "Hunter & Farmer";
 export const DOCUMENTS_TITLE = "Dokumen";
 export const SEARCH_SO_TITLE = "Cari File SO";
 export const FORM_SO_TITLE = "Sign SO";
+export const INVOICE_LIST_TITLE = "List Tagihan";
 
 export const HOME_MENU = {
     SPH: "Buat SPH",
@@ -100,5 +102,6 @@ export const HOME_MENU = {
     DEPOSIT: "Buat Deposit",
     SCHEDULE: "Buat Jadwal",
     APPOINTMENT: "Buat Janji Temu",
-    SIGN_SO: "Upload Signed SO"
+    SIGN_SO: "Upload Signed SO",
+    INVOICE: "Dokumen Tagihan"
 };

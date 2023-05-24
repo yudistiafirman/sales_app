@@ -29,6 +29,7 @@ interface AuthState {
         enable_transaction_menu: boolean;
         enable_customer_menu: boolean;
         enable_visitation: boolean;
+        enable_invoice: boolean;
         force_update: { min_version: string; is_forced: boolean };
     };
 }
@@ -57,6 +58,7 @@ const initialState: AuthState = {
         enable_sph: true,
         enable_transaction_menu: true,
         enable_visitation: true,
+        enable_invoice: true,
         force_update: { min_version: "1.0.0", is_forced: false }
     }
 };
@@ -105,6 +107,8 @@ export const authSlice = createSlice({
                                 .enable_transaction_menu,
                         enable_visitation:
                             action.payload.remoteConfigData.enable_visitation,
+                        enable_invoice:
+                            action.payload.remoteConfigData.enable_invoice,
                         force_update:
                             action.payload.remoteConfigData.force_update
                     },
@@ -154,6 +158,8 @@ export const authSlice = createSlice({
                                 .enable_transaction_menu,
                         enable_visitation:
                             action.payload.remoteConfigData.enable_visitation,
+                        enable_invoice:
+                            action.payload.remoteConfigData.enable_invoice,
                         force_update:
                             action.payload.remoteConfigData.force_update
                     },

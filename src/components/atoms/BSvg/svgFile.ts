@@ -48,6 +48,7 @@ import IcDocPicker from "@/assets/svg/ic_doc_picker.svg";
 import IcSignSO from "@/assets/svg/ic_sign_so.svg";
 import IcExclaCert from "@/assets/svg/ic_excla_cert.svg";
 import IcCheckCert from "@/assets/svg/ic_check_cert.svg";
+import IcInvoice from "@/assets/svg/ic_invoice.svg";
 
 // IMG
 import ImgOtpMessege from "@/assets/svg/img_otp_messege.svg";
@@ -103,7 +104,8 @@ const SvgFiles = {
     IcDocPicker,
     IcSignSO,
     IcExclaCert,
-    IcCheckCert
+    IcCheckCert,
+    IcInvoice
 };
 
 export default SvgFiles;
