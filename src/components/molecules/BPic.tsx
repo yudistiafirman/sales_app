@@ -36,7 +36,7 @@ const makeStyle = ({ isOption, border }: IProps) => {
     if (border) {
         style = {
             container: {
-                ...(style.container as Object),
+                ...(style.container as Record<string, never>),
                 borderWidth: resScale(2),
                 borderColor: colors.border.default,
                 paddingHorizontal: layout.pad.md + layout.pad.ml,
@@ -47,7 +47,7 @@ const makeStyle = ({ isOption, border }: IProps) => {
     if (isOption) {
         style = {
             container: {
-                ...(style.container as Object),
+                ...(style.container as Record<string, never>),
                 paddingHorizontal: resScale(10)
             }
         };

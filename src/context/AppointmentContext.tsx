@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, Dispatch } from "react";
 import { DateData } from "react-native-calendars";
-import { PIC, selectedCompanyInterface } from "@/interfaces";
+import { Address, PIC, selectedCompanyInterface } from "@/interfaces";
 
 interface IProvider {
     children: React.ReactNode;
@@ -20,7 +20,7 @@ export interface StepOne {
     customerType: string;
     individu: selectedCompanyInterface;
     company: selectedCompanyInterface;
-    location: {};
+    location: NonNullable<unknown>;
     errorProject: string;
     errorPics: string;
     errorCompany: string;
@@ -175,7 +175,7 @@ type AppointmentPayload = {
         key: keyof StepOne;
         value: string;
     };
-    [AppointmentActionType.TOGGLE_MODAL_PICS]: {};
+    [AppointmentActionType.TOGGLE_MODAL_PICS]: Record<string, never>;
     [AppointmentActionType.ASSIGN_ERROR]: {
         key: keyof StepOne;
         value: string;
@@ -183,24 +183,24 @@ type AppointmentPayload = {
     [AppointmentActionType.ON_PRESS_COMPANY]: {
         value: [];
     };
-    [AppointmentActionType.TOGGLE_MODAL_COMPANY]: {};
+    [AppointmentActionType.TOGGLE_MODAL_COMPANY]: Record<string, never>;
     [AppointmentActionType.SELECT_PROJECT]: {
         value: [];
     };
     [AppointmentActionType.ON_ADD_PROJECT]: {
         key: string;
-        value: {};
+        value: Record<string, never>;
     };
     [AppointmentActionType.SET_CATEGORIES]: {
         value: number;
     };
     [AppointmentActionType.SELECT_COMPANY]: {
         key: keyof StepOne;
-        value: {};
+        value: Record<string, never>;
     };
     [AppointmentActionType.ON_PRESS_PROJECT]: {
         key: string;
-        value: {};
+        value: Record<string, never>;
     };
     [AppointmentActionType.ADD_COMPANIES]: {
         value: [];
@@ -211,9 +211,9 @@ type AppointmentPayload = {
     [AppointmentActionType.SET_DATE]: {
         value: DateData;
     };
-    [AppointmentActionType.INCREASE_STEP]: {};
-    [AppointmentActionType.DECREASE_STEP]: {};
-    [AppointmentActionType.RESET_STATE]: {};
+    [AppointmentActionType.INCREASE_STEP]: Record<string, never>;
+    [AppointmentActionType.DECREASE_STEP]: Record<string, never>;
+    [AppointmentActionType.RESET_STATE]: Record<string, never>;
     [AppointmentActionType.ENABLE_SEARCHING]: {
         value: boolean;
     };

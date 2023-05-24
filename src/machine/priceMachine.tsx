@@ -27,7 +27,7 @@ export const priceMachine =
                         data: { latitude: number; longitude: number };
                     };
                     fetchLocationDetail: {
-                        data: { result: {} };
+                        data: { result: Record<string, never> };
                     };
                     getProducts: {
                         data: { products: [] };
@@ -434,7 +434,9 @@ export const priceMachine =
                 getProducts: async (context, _event) => {
                     const { page, size, selectedCategories, locationDetail } =
                         context;
-                    const distance = locationDetail?.distance?.value / 1000;
+                    const distance = locationDetail?.distance?.value
+                        ? locationDetail.distance.value / 1000
+                        : 0;
                     try {
                         const response = await getAllBrikProducts(
                             page,

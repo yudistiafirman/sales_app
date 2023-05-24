@@ -116,7 +116,7 @@ const useAsyncConfigSetup = () => {
                 console.log("fetch remote config timeout", err);
             })
             .then(() => {
-                let fetchedData = {} as Object;
+                let fetchedData = {};
                 Object.entries(remoteConfig().getAll()).forEach(($) => {
                     const [key, entry] = $;
                     let value = remoteConfigData?.[key];

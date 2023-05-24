@@ -123,7 +123,7 @@ const searchSOMachine = createMachine(
             assignListData: assign((context, event) => {
                 const listData = [...context.soListData];
                 if (event?.data?.data?.data !== undefined) {
-                    listData.push(...event?.data?.data?.data);
+                    listData.push(...event.data.data.data);
                 }
 
                 return {
