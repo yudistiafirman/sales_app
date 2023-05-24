@@ -6,7 +6,7 @@ import { layout } from "@/constants";
 import SearchProductStyles from "../styles";
 
 interface SearchProductNavbarProps {
-    onChangeText?: (((text: string) => void) & Function) | undefined;
+    onChangeText?: (text: string) => void;
     value?: string;
     onClearValue?: (event: GestureResponderEvent) => void;
     customStyle?: ViewStyle;

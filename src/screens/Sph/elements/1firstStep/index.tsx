@@ -1,6 +1,6 @@
 import crashlytics from "@react-native-firebase/crashlytics";
 import debounce from "lodash.debounce";
-import React, { useContext, useMemo, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
@@ -67,12 +67,13 @@ export default function FirstStep() {
         [projects]
     );
 
-    const searchDispatch = React.useCallback(
+    const searchDispatch = useCallback(
         (text: string) => {
             dispatch(getAllProject({ search: text }));
         },
         [dispatch]
     );
+
     const onChangeWithDebounce = React.useMemo(
         () =>
             debounce((text: string) => {

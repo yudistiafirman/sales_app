@@ -30,8 +30,8 @@ function TotalDocumentChip({
     const totalDocuments = useMemo(() => {
         if (!documents || !customerType) return 0;
         const totalUploadedDocument = [
-            ...documents?.cbd,
-            ...documents?.credit
+            ...(documents?.cbd || []),
+            ...(documents?.credit || [])
         ].filter((v) => v.File !== null);
         return totalUploadedDocument.length;
     }, [documents]);

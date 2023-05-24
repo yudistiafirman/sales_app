@@ -189,9 +189,27 @@ export default function SecondStep() {
     ];
 
     const getTotalProduct = (): number => {
-        const total =
-            stateTwo?.inputtedVolume *
-            stateTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice;
+        let total = 0;
+
+        if (
+            stateTwo?.inputtedVolume &&
+            stateTwo?.salesOrder?.PoProduct?.RequestedProduct?.offeringPrice
+        ) {
+            total =
+                stateTwo.inputtedVolume *
+                stateTwo.salesOrder.PoProduct.RequestedProduct.offeringPrice;
+        }
+
+        return total;
+    };
+
+    const getTotalPrice = (offeringPrice?: number, usedQuantity?: number) => {
+        let total = 0;
+
+        if (offeringPrice && usedQuantity) {
+            total = offeringPrice * usedQuantity;
+        }
+
         return total;
     };
 
@@ -291,14 +309,12 @@ export default function SecondStep() {
                                                             item?.usedQuantity,
                                                             10
                                                         )}
-                                                        totalPrice={
+                                                        totalPrice={getTotalPrice(
                                                             item?.PoProduct
                                                                 ?.RequestedProduct
-                                                                ?.offeringPrice *
-                                                            (item?.usedQuantity
-                                                                ? item?.usedQuantity
-                                                                : 0)
-                                                        }
+                                                                ?.offeringPrice,
+                                                            item?.usedQuantity
+                                                        )}
                                                         hideVolume
                                                         withoutBorder
                                                     />
@@ -332,16 +348,17 @@ export default function SecondStep() {
                                                 )}
                                             </View>
                                             {stateOne?.purchaseOrders[0]
-                                                ?.SaleOrders.length -
-                                                1 !==
-                                                index && (
-                                                <BDivider
-                                                    marginVertical={
-                                                        layout.pad.md
-                                                    }
-                                                    borderColor={colors.white}
-                                                />
-                                            )}
+                                                ?.SaleOrders.length ||
+                                                (0 - 1 !== index && (
+                                                    <BDivider
+                                                        marginVertical={
+                                                            layout.pad.md
+                                                        }
+                                                        borderColor={
+                                                            colors.white
+                                                        }
+                                                    />
+                                                ))}
                                         </View>
                                     )
                                 )}
