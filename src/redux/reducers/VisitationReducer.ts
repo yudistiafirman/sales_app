@@ -135,7 +135,9 @@ export const visitationSlice = createSlice({
                         stepThreeVisitationFinished: true
                     };
                 default:
-                    break;
+                    return {
+                        ...state
+                    };
             }
         },
         resetAllStepperFocused: (state) => ({
@@ -166,7 +168,9 @@ export const visitationSlice = createSlice({
                         stepThreeVisitationFinished: true
                     };
                 default:
-                    break;
+                    return {
+                        ...state
+                    };
             }
         },
         updateShouldScrollView: (state, { payload }: { payload: boolean }) => ({
@@ -344,7 +348,9 @@ export const visitationSlice = createSlice({
                         alasanPenolakan: payload.value
                     };
                 default:
-                    break;
+                    return {
+                        ...state
+                    };
             }
         }
     }
