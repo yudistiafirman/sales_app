@@ -215,9 +215,7 @@ export default function CalendarScreen() {
         });
     };
 
-    const separatorRender = () => {
-        return <BSpacer size="extraSmall" />;
-    };
+    const separatorRender = () => <BSpacer size="extraSmall" />;
 
     return (
         <View style={styles.container}>

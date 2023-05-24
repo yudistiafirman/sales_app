@@ -69,9 +69,7 @@ export default function OperationList({
         />
     );
 
-    const separatorRender = () => {
-        return <BSpacer size="small" />;
-    };
+    const separatorRender = () => <BSpacer size="small" />;
 
     return (
         <FlashList

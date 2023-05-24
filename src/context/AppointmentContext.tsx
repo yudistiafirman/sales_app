@@ -432,11 +432,14 @@ function AppointmentProvider(props: IProvider) {
     const { children } = props;
 
     const [values, dispatchValue] = useReducer(reducerForm, initialData);
-    return (
+
+    const renderView = () => (
         <AppoinmentContext.Provider value={[values, dispatchValue]}>
             {children}
         </AppoinmentContext.Provider>
     );
+
+    return renderView;
 }
 
 export { AppoinmentContext, AppointmentProvider };

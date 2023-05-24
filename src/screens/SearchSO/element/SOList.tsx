@@ -62,15 +62,13 @@ export default function SOList({
         );
     };
 
-    const separatorRender = () => {
-        return (
-            <>
-                <BSpacer size="verySmall" />
-                <BDivider borderColor={colors.border.disabled} />
-                <BSpacer size="verySmall" />
-            </>
-        );
-    };
+    const separatorRender = () => (
+        <>
+            <BSpacer size="verySmall" />
+            <BDivider borderColor={colors.border.disabled} />
+            <BSpacer size="verySmall" />
+        </>
+    );
 
     const isSearch = !(keyword && keyword.length > 2);
     return (
