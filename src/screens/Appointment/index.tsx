@@ -159,7 +159,7 @@ function Appointment() {
 
     const goToVisitationDateStep = React.useCallback(() => {
         const errors = validateCompanyDetailsForm();
-        if (JSON.stringify(errors) !== "{}") {
+        if (JSON.stringify(errors) !== "{}" && errors) {
             Object.keys(errors).forEach((val) => {
                 dispatchValue({
                     type: AppointmentActionType.ASSIGN_ERROR,

@@ -178,19 +178,20 @@ export default function CustomerDetail() {
         let count = 0;
         let totalProperties = 8;
 
-        Object.keys(customerData?.ProjectDocs).forEach((key) => {
-            totalProperties += 1;
-            if (
-                Object.prototype.hasOwnProperty.call(
-                    customerData.ProjectDocs,
-                    key
-                )
-            ) {
-                if (customerData?.ProjectDocs[key]) {
-                    count += 1;
+        if (customerData?.ProjectDocs)
+            Object.keys(customerData?.ProjectDocs).forEach((key) => {
+                totalProperties += 1;
+                if (
+                    Object.prototype.hasOwnProperty.call(
+                        customerData.ProjectDocs,
+                        key
+                    )
+                ) {
+                    if (customerData?.ProjectDocs[key]) {
+                        count += 1;
+                    }
                 }
-            }
-        });
+            });
 
         return [count, totalProperties];
     }, [customerData.ProjectDocs]);

@@ -48,7 +48,7 @@ export const searchLocationById = async (id: string) =>
 
 export const signIn = async (body: Record<string, string>) => {
     const params = new URLSearchParams();
-    const dataToSend = Object.keys(body);
+    const dataToSend = body && Object.keys(body);
     dataToSend.forEach((val) => {
         params.append(val, body[val]);
     });

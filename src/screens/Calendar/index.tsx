@@ -102,12 +102,13 @@ export default function CalendarScreen() {
                     );
                     dispatch(setVisitationMapped(visitMapped));
                     const newMarkedDate = { ...markedDate };
-                    Object.keys(visitMapped).forEach((date) => {
-                        newMarkedDate[date] = {
-                            ...newMarkedDate[date],
-                            marked: true
-                        };
-                    });
+                    if (visitMapped)
+                        Object.keys(visitMapped).forEach((date) => {
+                            newMarkedDate[date] = {
+                                ...newMarkedDate[date],
+                                marked: true
+                            };
+                        });
 
                     newMarkedDate[fullDate] = {
                         ...newMarkedDate[fullDate],
@@ -150,14 +151,15 @@ export default function CalendarScreen() {
             const custData = visitationCalendarMapped[day.dateString] || [];
             setCustomerDatas(custData);
             const newMarkedDate = { ...markedDate };
-            Object.keys(newMarkedDate).forEach((date) => {
-                if (newMarkedDate[date].selected) {
-                    newMarkedDate[date] = {
-                        ...newMarkedDate[date],
-                        selected: false
-                    };
-                }
-            });
+            if (newMarkedDate)
+                Object.keys(newMarkedDate).forEach((date) => {
+                    if (newMarkedDate[date].selected) {
+                        newMarkedDate[date] = {
+                            ...newMarkedDate[date],
+                            selected: false
+                        };
+                    }
+                });
             newMarkedDate[day.dateString] = {
                 ...newMarkedDate[day.dateString],
                 selected: true
@@ -171,33 +173,34 @@ export default function CalendarScreen() {
         let date = "-";
         let day = null;
         let selectedDate = null;
-        Object.keys(markedDate).forEach((key) => {
-            if (markedDate[key].selected) {
-                try {
-                    date = `${new Date(key).getDate()} ${new Date(
-                        key
-                    ).toLocaleString(locale(), {
-                        month: "short"
-                    })} ${new Date(key).getFullYear()}`;
-                    const newDate = new Date(key);
-                    day = newDate.toLocaleDateString(locale(), {
-                        weekday: "long"
-                    });
-                } catch (err) {
-                    date = `${new Date(key).getDate()} ${new Date(
-                        key
-                    ).toLocaleString()} ${new Date(key).getFullYear()}`;
-                    const newDate = new Date(key);
-                    day = newDate.toLocaleDateString();
-                }
+        if (markedDate)
+            Object.keys(markedDate).forEach((key) => {
+                if (markedDate[key].selected) {
+                    try {
+                        date = `${new Date(key).getDate()} ${new Date(
+                            key
+                        ).toLocaleString(locale(), {
+                            month: "short"
+                        })} ${new Date(key).getFullYear()}`;
+                        const newDate = new Date(key);
+                        day = newDate.toLocaleDateString(locale(), {
+                            weekday: "long"
+                        });
+                    } catch (err) {
+                        date = `${new Date(key).getDate()} ${new Date(
+                            key
+                        ).toLocaleString()} ${new Date(key).getFullYear()}`;
+                        const newDate = new Date(key);
+                        day = newDate.toLocaleDateString();
+                    }
 
-                selectedDate = {
-                    date: key,
-                    prettyDate: date,
-                    day
-                };
-            }
-        });
+                    selectedDate = {
+                        date: key,
+                        prettyDate: date,
+                        day
+                    };
+                }
+            });
 
         return [day, date, selectedDate];
     }, [markedDate]);

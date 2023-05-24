@@ -65,14 +65,15 @@ export default function RequiredDocuments() {
         let count = 0;
         let totalProperties = 0;
 
-        Object.keys(docState).forEach((key) => {
-            totalProperties += 1;
-            if (Object.prototype.hasOwnProperty.call(docState, key)) {
-                if (docState[key]) {
-                    count += 1;
+        if (docState)
+            Object.keys(docState).forEach((key) => {
+                totalProperties += 1;
+                if (Object.prototype.hasOwnProperty.call(docState, key)) {
+                    if (docState[key]) {
+                        count += 1;
+                    }
                 }
-            }
-        });
+            });
         return [count, totalProperties];
     }, [docState]);
 

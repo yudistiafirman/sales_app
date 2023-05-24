@@ -128,10 +128,11 @@ export default function ThirdStep() {
                     sphDocuments[key].forEach((doc) => {
                         documentObj[doc.id] = null;
                     });
-                    const parentReqDocKeys = Object.keys(
-                        paymentRequiredDocuments
-                    );
-                    const localReqDocKeys = Object.keys(documentObj);
+                    const parentReqDocKeys =
+                        paymentRequiredDocuments &&
+                        Object.keys(paymentRequiredDocuments);
+                    const localReqDocKeys =
+                        documentObj && Object.keys(documentObj);
                     const parentDocString = JSON.stringify(parentReqDocKeys);
                     const localDocString = JSON.stringify(localReqDocKeys);
 
@@ -176,10 +177,11 @@ export default function ThirdStep() {
                         response[key].forEach((doc) => {
                             documentObj[doc.id] = null;
                         });
-                        const parentReqDocKeys = Object.keys(
-                            paymentRequiredDocuments
-                        );
-                        const localReqDocKeys = Object.keys(documentObj);
+                        const parentReqDocKeys =
+                            paymentRequiredDocuments &&
+                            Object.keys(paymentRequiredDocuments);
+                        const localReqDocKeys =
+                            documentObj && Object.keys(documentObj);
                         const parentDocString =
                             JSON.stringify(parentReqDocKeys);
                         const localDocString = JSON.stringify(localReqDocKeys);

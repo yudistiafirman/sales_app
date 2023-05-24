@@ -310,29 +310,30 @@ export default function FifthStep() {
                     const photoName = `${photo.name}.${photo.type}`;
                     const photoNamee = `${photo.name}.jpg`;
                     let foundPhoto;
-                    Object.keys(sphState.paymentRequiredDocuments).forEach(
-                        (documentId) => {
-                            if (
-                                Object.prototype.hasOwnProperty.call(
-                                    sphState.paymentRequiredDocuments,
-                                    documentId
-                                )
-                            ) {
-                                const photoData =
-                                    sphState.paymentRequiredDocuments[
+                    if (sphState.paymentRequiredDocuments)
+                        Object.keys(sphState.paymentRequiredDocuments).forEach(
+                            (documentId) => {
+                                if (
+                                    Object.prototype.hasOwnProperty.call(
+                                        sphState.paymentRequiredDocuments,
                                         documentId
-                                    ];
-                                if (photoData) {
-                                    if (
-                                        photoData.name === photoName ||
-                                        photoData.name === photoNamee
-                                    ) {
-                                        foundPhoto = documentId;
+                                    )
+                                ) {
+                                    const photoData =
+                                        sphState.paymentRequiredDocuments[
+                                            documentId
+                                        ];
+                                    if (photoData) {
+                                        if (
+                                            photoData.name === photoName ||
+                                            photoData.name === photoNamee
+                                        ) {
+                                            foundPhoto = documentId;
+                                        }
                                     }
                                 }
                             }
-                        }
-                    );
+                        );
                     if (foundPhoto) {
                         files.push({
                             documentId: foundPhoto,
