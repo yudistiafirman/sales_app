@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
 
 interface BAlertProps {
     isVisible: boolean;
-    content: string;
-    type: "warning" | "success";
+    content?: string;
+    type?: "warning" | "success";
     contentStyle?: TextStyle;
     onClose?: () => void;
 }
