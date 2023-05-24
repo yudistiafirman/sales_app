@@ -26,13 +26,14 @@ export const locationSlice = createSlice({
     name: "location",
     initialState,
     reducers: {
-        updateRegion: (state, action: PayloadAction<Location>) => ({
+        updateRegion: (state, action: PayloadAction<any>) => ({
             ...state,
             region: { ...state.region, ...action.payload }
         }),
-        resetRegion: (state) => {
-            state.region = initialState.region;
-        }
+        resetRegion: (state) => ({
+            ...state,
+            region: initialState.region
+        })
     }
 });
 

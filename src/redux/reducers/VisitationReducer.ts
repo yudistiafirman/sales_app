@@ -110,65 +110,88 @@ export const visitationSlice = createSlice({
     initialState,
     reducers: {
         resetVisitationState: () => initialState,
-        resetFocusedStepperFlag: (state) => {
-            state.stepperVisitationShouldNotFocused = false;
-        },
+        resetFocusedStepperFlag: (state) => ({
+            ...state,
+            stepperVisitationShouldNotFocused: false
+        }),
         setStepperFocused: (state, { payload }) => {
-            state.stepperVisitationShouldNotFocused = true;
             switch (payload) {
                 case 1:
-                    state.stepOneVisitationFinished = true;
-                    break;
+                    return {
+                        ...state,
+                        stepperVisitationShouldNotFocused: true,
+                        stepOneVisitationFinished: true
+                    };
                 case 2:
-                    state.stepTwoVisitationFinished = true;
-                    break;
+                    return {
+                        ...state,
+                        stepperVisitationShouldNotFocused: true,
+                        stepTwoVisitationFinished: true
+                    };
                 case 3:
-                    state.stepThreeVisitationFinished = true;
-                    break;
+                    return {
+                        ...state,
+                        stepperVisitationShouldNotFocused: true,
+                        stepThreeVisitationFinished: true
+                    };
                 default:
                     break;
             }
         },
-        resetAllStepperFocused: (state) => {
-            state.stepperVisitationShouldNotFocused = true;
-            state.stepOneVisitationFinished = false;
-            state.stepTwoVisitationFinished = false;
-            state.stepThreeVisitationFinished = false;
-        },
+        resetAllStepperFocused: (state) => ({
+            ...state,
+            stepperVisitationShouldNotFocused: true,
+            stepOneVisitationFinished: false,
+            stepTwoVisitationFinished: false,
+            stepThreeVisitationFinished: false
+        }),
         resetStepperFocused: (state, { payload }) => {
-            state.stepperVisitationShouldNotFocused = true;
             switch (payload) {
                 case 1:
-                    state.stepOneVisitationFinished = false;
-                    break;
+                    return {
+                        ...state,
+                        stepperVisitationShouldNotFocused: true,
+                        stepOneVisitationFinished: true
+                    };
                 case 2:
-                    state.stepTwoVisitationFinished = false;
-                    break;
+                    return {
+                        ...state,
+                        stepperVisitationShouldNotFocused: true,
+                        stepTwoVisitationFinished: true
+                    };
                 case 3:
-                    state.stepThreeVisitationFinished = false;
-                    break;
+                    return {
+                        ...state,
+                        stepperVisitationShouldNotFocused: true,
+                        stepThreeVisitationFinished: true
+                    };
                 default:
                     break;
             }
         },
-        updateShouldScrollView: (state, { payload }: { payload: boolean }) => {
-            state.shouldScrollView = payload;
-        },
+        updateShouldScrollView: (state, { payload }: { payload: boolean }) => ({
+            ...state,
+            shouldScrollView: payload
+        }),
         updateExistingVisitationID: (
             state,
             { payload }: { payload: string }
-        ) => {
-            state.existingVisitationId = payload;
-        },
-        updateCurrentStep: (state, { payload }) => {
-            state.step = payload;
-        },
-        setSearchProject: (state, { payload }) => {
-            state.isSearchProject = payload;
-        },
-        setSearchQuery: (state, { payload }) => {
-            state.searchQuery = payload;
-        },
+        ) => ({
+            ...state,
+            existingVisitationId: payload
+        }),
+        updateCurrentStep: (state, { payload }) => ({
+            ...state,
+            step: payload
+        }),
+        setSearchProject: (state, { payload }) => ({
+            ...state,
+            isSearchProject: payload
+        }),
+        setSearchQuery: (state, { payload }) => ({
+            ...state,
+            searchQuery: payload
+        }),
         deleteImagesVisitation: (
             state,
             actions: PayloadAction<{ value: number }>
@@ -176,97 +199,150 @@ export const visitationSlice = createSlice({
             const filteredImages = state.images.filter(
                 (v, i) => i !== actions.payload.value
             );
-            state.images = filteredImages;
+            return {
+                ...state,
+                images: filteredImages
+            };
         },
         setUseSearchedAddress: (
             state,
             actions: PayloadAction<{ value: boolean }>
-        ) => {
-            state.useSearchedAddress = actions.payload.value;
-        },
+        ) => ({
+            ...state,
+            useSearchedAddress: actions.payload.value
+        }),
         setSearchedAddress: (
             state,
             actions: PayloadAction<{ value: string }>
-        ) => {
-            state.searchedAddress = actions.payload.value;
-        },
+        ) => ({
+            ...state,
+            searchedAddress: actions.payload.value
+        }),
         updateDataVisitation: (
             state,
             { payload }: { payload: { type: any; value: any } }
         ) => {
             switch (payload.type) {
                 case "createdLocation":
-                    state.createdLocation = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        createdLocation: payload.value
+                    };
                 case "locationAddress":
-                    state.locationAddress = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        locationAddress: payload.value
+                    };
                 case "existingLocationId":
-                    state.existingLocationId = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        existingLocationId: payload.value
+                    };
                 case "companyName":
-                    state.companyName = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        companyName: payload.value
+                    };
                 case "customerType":
-                    state.customerType = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        customerType: payload.value
+                    };
                 case "projectName":
-                    state.projectName = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        projectName: payload.value
+                    };
                 case "projectId":
-                    state.projectId = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        projectId: payload.value
+                    };
                 case "location":
-                    state.location = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        location: payload.value
+                    };
                 case "pics":
-                    state.pics = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        pics: payload.value
+                    };
                 case "competitors":
-                    state.competitors = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        competitors: payload.value
+                    };
                 case "currentCompetitor":
-                    state.currentCompetitor = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        currentCompetitor: payload.value
+                    };
                 case "options":
-                    state.options = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        options: payload.value
+                    };
                 case "visitationId":
-                    state.visitationId = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        visitationId: payload.value
+                    };
                 case "existingOrderNum":
-                    state.existingOrderNum = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        existingOrderNum: payload.value
+                    };
                 case "stageProject":
-                    state.stageProject = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        stageProject: payload.value
+                    };
                 case "typeProject":
-                    state.typeProject = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        typeProject: payload.value
+                    };
                 case "products":
-                    state.products = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        products: payload.value
+                    };
                 case "estimationDate":
-                    state.estimationDate = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        estimationDate: payload.value
+                    };
                 case "paymentType":
-                    state.paymentType = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        paymentType: payload.value
+                    };
                 case "notes":
-                    state.notes = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        notes: payload.value
+                    };
                 case "selectedDate":
-                    state.selectedDate = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        selectedDate: payload.value
+                    };
                 case "images":
-                    state.images = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        images: payload.value
+                    };
                 case "kategoriAlasan":
-                    state.kategoriAlasan = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        kategoriAlasan: payload.value
+                    };
                 case "alasanPenolakan":
-                    state.alasanPenolakan = payload.value;
-                    break;
+                    return {
+                        ...state,
+                        alasanPenolakan: payload.value
+                    };
                 default:
                     break;
             }

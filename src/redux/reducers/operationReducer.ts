@@ -51,33 +51,36 @@ export const operationSlice = createSlice({
     initialState,
     reducers: {
         resetOperationState: () => initialState,
-        resetInputsValue: (state) => {
-            state.inputsValue = {
+        resetInputsValue: (state) => ({
+            ...state,
+            inputsValue: {
                 recepientName: "",
                 recepientPhoneNumber: "",
                 truckMixCondition: "",
                 weightBridge: "",
                 truckMixHaveLoad: false
-            };
-        },
+            }
+        }),
         onChangeInputValue: (
             state,
             actions: PayloadAction<{
                 inputType: keyof InputsValue;
                 value: string;
             }>
-        ) => {
-            state.inputsValue = {
+        ) => ({
+            ...state,
+            inputsValue: {
                 ...state.inputsValue,
                 [actions.payload.inputType]: actions.payload.value
-            };
-        },
+            }
+        }),
         onChangeProjectDetails: (
             state,
             actions: PayloadAction<{ projectDetails: OperationProjectDetails }>
-        ) => {
-            state.projectDetails = actions.payload.projectDetails;
-        },
+        ) => ({
+            ...state,
+            projectDetails: actions.payload.projectDetails
+        }),
         setOperationPhoto: (
             state,
             actions: PayloadAction<{
@@ -89,14 +92,18 @@ export const operationSlice = createSlice({
             if (actions.payload.withoutAddButton)
                 currentImages = currentImages.filter((it) => it.file !== null);
             currentImages.push(actions.payload.file);
-            state.photoFiles = [...currentImages];
+            return {
+                ...state,
+                photoFiles: [...currentImages]
+            };
         },
         setAllOperationPhoto: (
             state,
             actions: PayloadAction<{ file: LocalFileType[] }>
-        ) => {
-            state.photoFiles = [...actions.payload.file];
-        },
+        ) => ({
+            ...state,
+            photoFiles: [...actions.payload.file]
+        }),
         removeOperationPhoto: (
             state,
             actions: PayloadAction<{ index: number }>
@@ -106,7 +113,10 @@ export const operationSlice = createSlice({
             );
             currentImages.splice(actions.payload.index, 1);
             currentImages.unshift({ file: null });
-            state.photoFiles = [...currentImages];
+            return {
+                ...state,
+                photoFiles: [...currentImages]
+            };
         },
         removeDriverPhoto: (
             state,
@@ -124,7 +134,10 @@ export const operationSlice = createSlice({
 
                 if (selectedItem) newPhotoFiles.push(selectedItem);
             });
-            state.photoFiles = [...newPhotoFiles];
+            return {
+                ...state,
+                photoFiles: [...newPhotoFiles]
+            };
         }
     }
 });

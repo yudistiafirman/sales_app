@@ -31,24 +31,34 @@ export const snackbarSlice = createSlice({
             state,
             { payload }: { payload: SnackbarOptionsType }
         ) => {
-            state.isSnackbarVisible = true;
+            let { isRenderAction } = state.snackBarOptions;
+            let { isSuccess } = state.snackBarOptions;
+            let { snackBarText } = state.snackBarOptions;
             if (typeof payload.isRenderAction === "boolean") {
-                state.snackBarOptions.isRenderAction = payload.isRenderAction;
+                isRenderAction = payload.isRenderAction;
             }
             if (typeof payload.isSuccess === "boolean") {
-                state.snackBarOptions.isSuccess = payload.isSuccess;
+                isSuccess = payload.isSuccess;
             }
             if (typeof payload.snackBarText === "string") {
-                state.snackBarOptions.snackBarText = payload.snackBarText;
+                snackBarText = payload.snackBarText;
             }
-            //   setTimeout(() => {
-            //     state.isSnackbarVisible = false;
-            //   }, 3000);
+            return {
+                ...state,
+                isSnackbarVisible: true,
+                snackBarOptions: {
+                    ...state.snackBarOptions,
+                    isRenderAction,
+                    isSuccess,
+                    snackBarText
+                }
+            };
         },
-        closeSnackbar: (state) => {
-            state.isSnackbarVisible = false;
-            state.snackBarOptions = initialSnackbarOptions;
-        }
+        closeSnackbar: (state) => ({
+            ...state,
+            isSnackbarVisible: false,
+            snackBarOptions: initialSnackbarOptions
+        })
     }
 });
 

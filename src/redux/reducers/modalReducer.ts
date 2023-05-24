@@ -59,61 +59,92 @@ export const modalSlice = createSlice({
     name: "modal",
     initialState,
     reducers: {
-        setIsPopUpVisible: (state) => {
-            state.isPopUpVisible = !state.isPopUpVisible;
-        },
+        setIsPopUpVisible: (state) => ({
+            ...state,
+            isPopUpVisible: !state.isPopUpVisible
+        }),
         openPopUp: (state, { payload }: { payload: PopUpOptions }) => {
-            state.isPopUpVisible = true;
+            let { isRenderActions } = state.popUpOptions;
+            let { popUpTitle } = state.popUpOptions;
+            let { popUpText } = state.popUpOptions;
+            let { highlightedText } = state.popUpOptions;
+            let { popUpType } = state.popUpOptions;
+            let { outsideClickClosePopUp } = state.popUpOptions;
+            let { outlineBtnTitle } = state.popUpOptions;
+            let { primaryBtnTitle } = state.popUpOptions;
+            let { outlineBtnAction } = state.popUpOptions;
+            let { primaryBtnAction } = state.popUpOptions;
+            let { unRenderBackButton } = state.popUpOptions;
+            let { isPrimaryButtonLoading } = state.popUpOptions;
+            let { isOutlineButtonLoading } = state.popUpOptions;
             if (payload.isRenderActions) {
-                state.popUpOptions.isRenderActions = payload.isRenderActions;
+                isRenderActions = payload.isRenderActions;
             }
             if (payload.popUpTitle) {
-                state.popUpOptions.popUpTitle = payload.popUpTitle;
+                popUpTitle = payload.popUpTitle;
             }
             if (payload.popUpText) {
-                state.popUpOptions.popUpText = payload.popUpText;
+                popUpText = payload.popUpText;
             }
             if (payload.highlightedText) {
-                state.popUpOptions.highlightedText = payload.highlightedText;
+                highlightedText = payload.highlightedText;
             }
             if (payload.popUpType) {
-                state.popUpOptions.popUpType = payload.popUpType;
+                popUpType = payload.popUpType;
             } else {
-                state.popUpOptions.popUpType = "success";
+                popUpType = "success";
             }
             if (typeof payload.outsideClickClosePopUp === "boolean") {
-                state.popUpOptions.outsideClickClosePopUp =
-                    payload.outsideClickClosePopUp;
+                outsideClickClosePopUp = payload.outsideClickClosePopUp;
             }
             if (payload.outlineBtnTitle) {
-                state.popUpOptions.outlineBtnTitle = payload.outlineBtnTitle;
+                outlineBtnTitle = payload.outlineBtnTitle;
             }
             if (payload.primaryBtnTitle) {
-                state.popUpOptions.primaryBtnTitle = payload.primaryBtnTitle;
+                primaryBtnTitle = payload.primaryBtnTitle;
             }
             if (payload.outlineBtnAction) {
-                state.popUpOptions.outlineBtnAction = payload.outlineBtnAction;
+                outlineBtnAction = payload.outlineBtnAction;
             }
             if (payload.primaryBtnAction) {
-                state.popUpOptions.primaryBtnAction = payload.primaryBtnAction;
+                primaryBtnAction = payload.primaryBtnAction;
             }
             if (payload.unRenderBackButton) {
-                state.popUpOptions.unRenderBackButton =
-                    payload.unRenderBackButton;
+                unRenderBackButton = payload.unRenderBackButton;
             }
             if (typeof payload.isPrimaryButtonLoading === "boolean") {
-                state.popUpOptions.isPrimaryButtonLoading =
-                    payload.isPrimaryButtonLoading;
+                isPrimaryButtonLoading = payload.isPrimaryButtonLoading;
             }
             if (typeof payload.isOutlineButtonLoading === "boolean") {
-                state.popUpOptions.isOutlineButtonLoading =
-                    payload.isOutlineButtonLoading;
+                isOutlineButtonLoading = payload.isOutlineButtonLoading;
             }
+
+            return {
+                ...state,
+                isPopUpVisible: true,
+                popUpOptions: {
+                    ...state.popUpOptions,
+                    isRenderActions,
+                    popUpTitle,
+                    popUpText,
+                    highlightedText,
+                    popUpType,
+                    outsideClickClosePopUp,
+                    outlineBtnTitle,
+                    primaryBtnTitle,
+                    outlineBtnAction,
+                    primaryBtnAction,
+                    unRenderBackButton,
+                    isPrimaryButtonLoading,
+                    isOutlineButtonLoading
+                }
+            };
         },
-        closePopUp: (state) => {
-            state.isPopUpVisible = false;
-            state.popUpOptions = initialPopupData;
-        }
+        closePopUp: (state) => ({
+            ...state,
+            isPopUpVisible: false,
+            popUpOptions: initialPopupData
+        })
     }
     // extraReducers: (builder) => {
     //   builder.addCase(getAllProject.rejected, (state) => {

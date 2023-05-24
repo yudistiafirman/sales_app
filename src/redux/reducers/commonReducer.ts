@@ -33,25 +33,28 @@ export const commonSlice = createSlice({
         })
     },
     extraReducers: (builder) => {
-        builder.addCase(postUploadFiles.pending, (state) => {
-            state.isUploadLoading = true;
-        });
-        builder.addCase(postUploadFiles.fulfilled, (state) => {
-            state.isUploadLoading = false;
-        });
-        builder.addCase(postUploadFiles.rejected, (state) => {
-            state.isUploadLoading = false;
-        });
-        builder.addCase(getAllProject.pending, (state) => {
-            state.isProjectLoading = true;
-        });
-        builder.addCase(getAllProject.fulfilled, (state, { payload }) => {
-            state.errorGettingProject = false;
-            if (payload) {
-                state.projects = payload;
-            }
-            state.isProjectLoading = false;
-        });
+        builder.addCase(postUploadFiles.pending, (state) => ({
+            ...state,
+            isUploadLoading: true
+        }));
+        builder.addCase(postUploadFiles.fulfilled, (state) => ({
+            ...state,
+            isUploadLoading: false
+        }));
+        builder.addCase(postUploadFiles.rejected, (state) => ({
+            ...state,
+            isUploadLoading: false
+        }));
+        builder.addCase(getAllProject.pending, (state) => ({
+            ...state,
+            isProjectLoading: true
+        }));
+        builder.addCase(getAllProject.fulfilled, (state, { payload }) => ({
+            ...state,
+            errorGettingProject: false,
+            projects: payload || state.projects,
+            isProjectLoading: false
+        }));
         builder.addCase(getAllProject.rejected, (state, { payload }) => ({
             ...state,
             isProjectLoading: false,
