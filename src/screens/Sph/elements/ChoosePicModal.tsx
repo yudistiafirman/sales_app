@@ -122,11 +122,11 @@ export default function ChoosePicModal({
     function selectedPicData() {
         if (sphData.selectedCompany?.Pics.length) {
             const listPic = sphData.selectedCompany?.Pics;
-            for (const pic of listPic) {
+            listPic.forEach((pic) => {
                 if (pic.isSelected) {
                     return pic;
                 }
-            }
+            });
         }
         return undefined;
     }

@@ -312,25 +312,29 @@ export default function FifthStep() {
                     const photoName = `${photo.name}.${photo.type}`;
                     const photoNamee = `${photo.name}.jpg`;
                     let foundPhoto;
-                    for (const documentId in sphState.paymentRequiredDocuments) {
-                        if (
-                            Object.prototype.hasOwnProperty.call(
-                                sphState.paymentRequiredDocuments,
-                                documentId
-                            )
-                        ) {
-                            const photoData =
-                                sphState.paymentRequiredDocuments[documentId];
-                            if (photoData) {
-                                if (
-                                    photoData.name === photoName ||
-                                    photoData.name === photoNamee
-                                ) {
-                                    foundPhoto = documentId;
+                    Object.keys(sphState.paymentRequiredDocuments).forEach(
+                        (documentId) => {
+                            if (
+                                Object.prototype.hasOwnProperty.call(
+                                    sphState.paymentRequiredDocuments,
+                                    documentId
+                                )
+                            ) {
+                                const photoData =
+                                    sphState.paymentRequiredDocuments[
+                                        documentId
+                                    ];
+                                if (photoData) {
+                                    if (
+                                        photoData.name === photoName ||
+                                        photoData.name === photoNamee
+                                    ) {
+                                        foundPhoto = documentId;
+                                    }
                                 }
                             }
                         }
-                    }
+                    );
                     if (foundPhoto) {
                         files.push({
                             documentId: foundPhoto,

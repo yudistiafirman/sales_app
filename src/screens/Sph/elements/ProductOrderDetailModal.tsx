@@ -184,7 +184,7 @@ export default function ProductCartModal({
             distance: {} as DistanceDeliverType,
             delivery: {} as DistanceDeliverType
         };
-        for (const price of AdditionalPrices) {
+        AdditionalPrices.forEach((price) => {
             if (price.type === "DISTANCE") {
                 if (distanceCeil >= price.min && distanceCeil <= price.max) {
                     additionalData.distance.id = price.id;
@@ -198,7 +198,7 @@ export default function ProductCartModal({
                     additionalData.delivery.price = price.price;
                 }
             }
-        }
+        });
         return additionalData;
     }
 

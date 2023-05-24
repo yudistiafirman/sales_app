@@ -178,7 +178,7 @@ export default function CustomerDetail() {
         let count = 0;
         let totalProperties = 8;
 
-        for (const key in customerData?.ProjectDocs) {
+        Object.keys(customerData?.ProjectDocs).forEach((key) => {
             totalProperties += 1;
             if (
                 Object.prototype.hasOwnProperty.call(
@@ -190,7 +190,7 @@ export default function CustomerDetail() {
                     count += 1;
                 }
             }
-        }
+        });
 
         return [count, totalProperties];
     }, [customerData.ProjectDocs]);

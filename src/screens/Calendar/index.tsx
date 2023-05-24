@@ -150,18 +150,14 @@ export default function CalendarScreen() {
             const custData = visitationCalendarMapped[day.dateString] || [];
             setCustomerDatas(custData);
             const newMarkedDate = { ...markedDate };
-            for (const date of Object.keys(newMarkedDate)) {
-                // if (newMarkedDate[date].selected && newMarkedDate[date].marked) {
-                //   newMarkedDate[date].selected = false;
-                // }
-
+            Object.keys(newMarkedDate).forEach((date) => {
                 if (newMarkedDate[date].selected) {
                     newMarkedDate[date] = {
                         ...newMarkedDate[date],
                         selected: false
                     };
                 }
-            }
+            });
             newMarkedDate[day.dateString] = {
                 ...newMarkedDate[day.dateString],
                 selected: true
