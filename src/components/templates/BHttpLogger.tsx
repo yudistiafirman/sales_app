@@ -7,6 +7,9 @@ import Icon from "react-native-vector-icons/Feather";
 import { colors, layout } from "@/constants";
 
 const styles = StyleSheet.create({
+    top: {
+        position: "absolute"
+    },
     close: {
         borderRadius: layout.radius.xl,
         backgroundColor: colors.text.darker,
@@ -45,7 +48,7 @@ function BHttpLogger({
     setVisibleNetworkLogger
 }: BHttpLoggerProps) {
     return (
-        <View style={{ position: "absolute" }}>
+        <View style={styles.top}>
             {isShowButtonNetwork && (
                 <>
                     <Draggable
