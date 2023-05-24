@@ -110,8 +110,6 @@ export default function CustomerDetail() {
 
     const dataNotLoadedYet = JSON.stringify(customerData) === "{}";
 
-    console.log("ini customer data", customerData);
-
     const getCustomerDetail = useCallback(async () => {
         try {
             dispatch(
