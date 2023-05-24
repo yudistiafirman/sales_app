@@ -25,6 +25,10 @@ const Tab = createBottomTabNavigator();
 function SecurityTabs() {
     const userData = useSelector((state: RootState) => state.auth.userData);
 
+    const tabBarRender = (props: any) => {
+        return <CustomTabBar {...props} />;
+    };
+
     return (
         <Tab.Navigator
             screenOptions={{
@@ -32,7 +36,7 @@ function SecurityTabs() {
                 tabBarHideOnKeyboard: true,
                 headerShown: false
             }}
-            tabBar={(props) => <CustomTabBar {...props} />}
+            tabBar={tabBarRender}
         >
             <Tab.Screen
                 key={

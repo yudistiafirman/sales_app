@@ -35,6 +35,11 @@ function SalesTabs() {
         enable_customer_menu
     } = useSelector((state: RootState) => state.auth.remoteConfigData);
     /* eslint-enable @typescript-eslint/naming-convention */
+
+    const tabBarRender = (props: any) => {
+        return <CustomTabBar {...props} />;
+    };
+
     return (
         <Tab.Navigator
             screenOptions={{
@@ -48,7 +53,7 @@ function SalesTabs() {
                     fontFamily: fonts.family.montserrat[600]
                 }
             }}
-            tabBar={(props) => <CustomTabBar {...props} />}
+            tabBar={tabBarRender}
         >
             <Tab.Screen
                 key={TAB_HOME}
