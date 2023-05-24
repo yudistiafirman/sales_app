@@ -21,6 +21,19 @@ import { resScale } from "@/utils";
 import SelectedPic from "./elements/SelectedPic";
 import { SphContext } from "../context/SphContext";
 
+const styles = StyleSheet.create({
+    top: {
+        flex: 1
+    },
+    touchable: {
+        position: "absolute",
+        width: "100%",
+        borderRadius: layout.radius.sm,
+        height: resScale(45),
+        zIndex: 2
+    }
+});
+
 export default function FirstStep() {
     const dispatch = useDispatch<AppDispatch>();
     const [searchQuery, setSearchQuery] = useState("");
@@ -73,7 +86,7 @@ export default function FirstStep() {
     return (
         <View style={{ flex: 1, borderWidth: 1 }}>
             {!selectedCompany ? (
-                <View>
+                <View style={styles.top}>
                     {!isSearching ? (
                         <>
                             <TouchableOpacity

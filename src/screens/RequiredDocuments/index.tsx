@@ -189,7 +189,7 @@ export default function RequiredDocuments() {
                 }
             }));
         } catch (error) {
-            let messsage = error?.message || "Upload error";
+            const messsage = error?.message || "Upload error";
             setDocLoadingState((curr) => ({
                 ...curr,
                 [documentId]: {
