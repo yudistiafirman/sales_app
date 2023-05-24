@@ -120,17 +120,15 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     const operationData = useSelector((state: RootState) => state.operation);
     let latlongResult = "";
 
-    if (closeButton) {
-        useCustomHeaderLeft({
-            customHeaderLeft: (
-                <BHeaderIcon
-                    size={resScale(23)}
-                    onBack={() => navigation.goBack()}
-                    iconName="x"
-                />
-            )
-        });
-    }
+    useCustomHeaderLeft({
+        customHeaderLeft: closeButton ? (
+            <BHeaderIcon
+                size={resScale(23)}
+                onBack={() => navigation.goBack()}
+                iconName="x"
+            />
+        ) : undefined
+    });
 
     React.useEffect(() => {
         crashlytics().log(IMAGE_PREVIEW);

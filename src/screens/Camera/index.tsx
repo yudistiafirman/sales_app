@@ -86,17 +86,12 @@ function CameraScreen() {
             navigation.goBack();
         }
     }, [dispatch, navigateTo, navigation, isFirstTimeOpenCamera]);
-    if (closeButton) {
-        useCustomHeaderLeft({
-            customHeaderLeft: (
-                <BHeaderIcon
-                    size={resScale(23)}
-                    onBack={handleBack}
-                    iconName="x"
-                />
-            )
-        });
-    }
+
+    useCustomHeaderLeft({
+        customHeaderLeft: closeButton ? (
+            <BHeaderIcon size={resScale(23)} onBack={handleBack} iconName="x" />
+        ) : undefined
+    });
 
     const device = useCameraDevices().back;
     const camera = React.useRef<Camera>(null);

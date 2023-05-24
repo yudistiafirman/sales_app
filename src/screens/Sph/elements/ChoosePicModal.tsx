@@ -102,7 +102,7 @@ type ChoosePicModalType = {
     isModalVisible: boolean;
     setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
     openAddPic: () => void;
-    selectPic?: (pic: PIC) => void;
+    selectPic?: (pic?: PIC) => void;
 };
 
 export default function ChoosePicModal({
@@ -119,14 +119,15 @@ export default function ChoosePicModal({
     const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
         undefined
     );
+
     function selectedPicData() {
         if (sphData.selectedCompany?.Pics.length) {
             const listPic = sphData.selectedCompany?.Pics;
-            listPic.forEach((pic) => {
-                if (pic.isSelected) {
-                    return pic;
+            for (let i = 0; i < listPic.length; i += 1) {
+                if (listPic[i].isSelected) {
+                    return listPic[i];
                 }
-            });
+            }
         }
         return undefined;
     }
@@ -143,7 +144,7 @@ export default function ChoosePicModal({
                     : [],
                 hidePicLabel: true,
                 onSelect: (index: number) => {
-                    const listPic = [];
+                    const listPic: any[] = [];
                     sphData?.selectedCompany?.Pics?.forEach((pic, picIndex) => {
                         const picChanged = { ...pic };
                         if (index === picIndex) {

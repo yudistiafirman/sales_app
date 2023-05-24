@@ -75,13 +75,11 @@ const style = StyleSheet.create({
 
 function countNonNullValues(array) {
     let count = 0;
-    /* eslint-disable no-plusplus */
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 0; i < array.length; i += 1) {
         if (array[i] !== null) {
             count += 1;
         }
     }
-    /* eslint-enable no-plusplus */
     return count;
 }
 

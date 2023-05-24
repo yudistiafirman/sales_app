@@ -193,7 +193,16 @@ export const sphSlice = createSlice({
             }: { payload: { value: string; key: keyof UpdateBillAddressType } }
         ) => {
             const { value, key } = payload;
-            state.billingAddress[key] = value;
+            const newBillingAddress = {
+                [key]: value
+            };
+            return {
+                ...state,
+                billingAddress: {
+                    ...state.billingAddress,
+                    ...newBillingAddress
+                }
+            };
         },
         updateBillingAddressAutoComplete: (
             state,
