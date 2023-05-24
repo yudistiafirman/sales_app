@@ -10,6 +10,8 @@ interface Btab {
     renderTabBar?: (props: any) => React.ReactNode;
     sceneContainerStyle?: ViewStyle | undefined;
     swipeEnabled?: boolean;
+    borderTopWidth?: number;
+    borderTopColor?: string;
 }
 
 const defaultSceneContainerStyle: ViewStyle = {

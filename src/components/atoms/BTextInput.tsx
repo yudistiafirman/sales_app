@@ -17,6 +17,11 @@ interface IProps extends Partial<TextInputProps> {
     disabled?: boolean;
     contentStyle?: ViewStyle;
     textInputStyle: TextStyle;
+    mode?: "flat" | "outlined" | undefined;
+    outlineColor?: string;
+    activeOutlineColor?: string;
+    outlineStyle?: ViewStyle;
+    dense?: boolean;
 }
 
 const baseContainerStyle: TextStyle = {
@@ -25,7 +30,7 @@ const baseContainerStyle: TextStyle = {
     backgroundColor: colors.white
 };
 
-const defaultProps: TextInputProps = {
+const BTextInputdefaultProps = {
     mode: "outlined",
     outlineColor: colors.textInput.inActive,
     activeOutlineColor: colors.primary,
@@ -33,7 +38,7 @@ const defaultProps: TextInputProps = {
     dense: true
 };
 
-function BTextInput({ ...props }: IProps & typeof defaultProps) {
+function BTextInput({ ...props }: IProps & typeof BTextInputdefaultProps) {
     return (
         <TextInput
             {...props}
@@ -43,6 +48,6 @@ function BTextInput({ ...props }: IProps & typeof defaultProps) {
     );
 }
 
-BTextInput.defaultProps = defaultProps;
+BTextInput.defaultProps = BTextInputdefaultProps;
 
 export default BTextInput;
