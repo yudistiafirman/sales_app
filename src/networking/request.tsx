@@ -194,13 +194,13 @@ instance.interceptors.response.use(
         } else if (config.method !== "get" && config.method !== "put") {
             let { url } = config;
             if (url) {
-                if (url[url?.length - 1] === "/") {
-                    url = setCharAt(url, url?.length - 1, "");
+                if (url[url?.length || 0 - 1] === "/") {
+                    url = setCharAt(url, url?.length || 0 - 1, "");
                 }
             }
             const urlArray: string[] = url?.split("/");
             const respMethod = config.method;
-            const endpoint = urlArray[urlArray?.length - 1] || "";
+            const endpoint = urlArray[urlArray?.length || 0 - 1] || "";
             const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
             const postSphUrl = `${URL_ORDER}/order/m/flow/quotation/`;
             if (
