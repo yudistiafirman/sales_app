@@ -62,6 +62,14 @@ export default function SOList({
         );
     };
 
+    const separatorRender = () => (
+        <>
+            <BSpacer size="verySmall" />
+            <BDivider borderColor={colors.border.disabled} />
+            <BSpacer size="verySmall" />
+        </>
+    );
+
     const isSearch = !(keyword && keyword.length > 2);
     return (
         <FlashList
@@ -90,13 +98,7 @@ export default function SOList({
                 )
             }
             ListFooterComponent={isLoadMore ? <BCommonListShimmer /> : null}
-            ItemSeparatorComponent={() => (
-                <>
-                    <BSpacer size="verySmall" />
-                    <BDivider borderColor={colors.border.disabled} />
-                    <BSpacer size="verySmall" />
-                </>
-            )}
+            ItemSeparatorComponent={separatorRender}
             contentContainerStyle={{
                 paddingBottom: layout.pad.md,
                 paddingHorizontal: layout.pad.lg

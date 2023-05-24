@@ -215,6 +215,8 @@ export default function CalendarScreen() {
         });
     };
 
+    const separatorRender = () => <BSpacer size="extraSmall" />;
+
     return (
         <View style={styles.container}>
             <View style={{ flex: 1, flexDirection: "row" }}>
@@ -242,7 +244,7 @@ export default function CalendarScreen() {
                         </View>
                     }
                     contentContainerStyle={{ paddingBottom: layout.pad.md }}
-                    ItemSeparatorComponent={() => <BSpacer size="extraSmall" />}
+                    ItemSeparatorComponent={separatorRender}
                     renderItem={({ item }) => (
                         <ExpandableCustomerCard item={item} />
                     )}

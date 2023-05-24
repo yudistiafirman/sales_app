@@ -92,7 +92,7 @@ function CreateScheduleProvider(props: IProvider) {
         });
     };
 
-    return (
+    const renderView = () => (
         <CreateScheduleContext.Provider
             value={{
                 values,
@@ -105,6 +105,8 @@ function CreateScheduleProvider(props: IProvider) {
             {children}
         </CreateScheduleContext.Provider>
     );
+
+    return renderView;
 }
 
 export { CreateScheduleContext, CreateScheduleProvider };

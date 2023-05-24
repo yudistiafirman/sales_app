@@ -47,7 +47,7 @@ export function SphProvider({ children }: { children: React.ReactNode }) {
         }));
     };
 
-    return (
+    const renderView = () => (
         <SphContext.Provider
             value={
                 [
@@ -61,4 +61,6 @@ export function SphProvider({ children }: { children: React.ReactNode }) {
             {children}
         </SphContext.Provider>
     );
+
+    return renderView;
 }

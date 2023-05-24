@@ -107,6 +107,9 @@ export const sphSlice = createSlice({
                         stepSPHFourFinished: true
                     };
                 default:
+                    return {
+                        ...state
+                    };
                     break;
             }
         },
@@ -137,6 +140,9 @@ export const sphSlice = createSlice({
                         stepSPHFourFinished: true
                     };
                 default:
+                    return {
+                        ...state
+                    };
                     break;
             }
         },

@@ -92,7 +92,7 @@ function CreateDepositProvider(props: IProvider) {
         });
     };
 
-    return (
+    const renderView = () => (
         <CreateDepositContext.Provider
             value={{
                 values,
@@ -105,6 +105,8 @@ function CreateDepositProvider(props: IProvider) {
             {children}
         </CreateDepositContext.Provider>
     );
+
+    return renderView;
 }
 
 export { CreateDepositContext, CreateDepositProvider };

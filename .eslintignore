@@ -4,3 +4,5 @@ yarn.lock
 README.md
 android/
 ios/
+src/machine/*.typegen.ts
+src/machine/modules/*.typegen.ts
