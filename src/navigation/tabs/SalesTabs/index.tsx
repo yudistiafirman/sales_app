@@ -36,9 +36,7 @@ function SalesTabs() {
     } = useSelector((state: RootState) => state.auth.remoteConfigData);
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    const tabBarRender = (props: any) => {
-        return <CustomTabBar {...props} />;
-    };
+    const tabBarRender = (props: any) => <CustomTabBar {...props} />;
 
     return (
         <Tab.Navigator

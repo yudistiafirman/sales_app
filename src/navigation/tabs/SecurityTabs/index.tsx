@@ -25,9 +25,7 @@ const Tab = createBottomTabNavigator();
 function SecurityTabs() {
     const userData = useSelector((state: RootState) => state.auth.userData);
 
-    const tabBarRender = (props: any) => {
-        return <CustomTabBar {...props} />;
-    };
+    const tabBarRender = (props: any) => <CustomTabBar {...props} />;
 
     return (
         <Tab.Navigator

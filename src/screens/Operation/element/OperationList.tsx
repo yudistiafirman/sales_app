@@ -69,6 +69,10 @@ export default function OperationList({
         />
     );
 
+    const separatorRender = () => {
+        return <BSpacer size="small" />;
+    };
+
     return (
         <FlashList
             estimatedItemSize={10}
@@ -95,7 +99,7 @@ export default function OperationList({
                 )
             }
             ListFooterComponent={isLoadMore ? <BCommonListShimmer /> : null}
-            ItemSeparatorComponent={() => <BSpacer size="small" />}
+            ItemSeparatorComponent={separatorRender}
             contentContainerStyle={style.flatList}
         />
     );
