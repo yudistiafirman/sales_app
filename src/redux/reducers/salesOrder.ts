@@ -23,33 +23,42 @@ export const salesOrderSlice = createSlice({
         onUpdateSONumber: (
             state,
             actions: PayloadAction<{ number: string }>
-        ) => {
-            state.selectedPONumber = actions.payload.number;
-        },
-        onUpdateSOID: (state, actions: PayloadAction<{ id: string }>) => {
-            state.selectedID = actions.payload.id;
-        },
+        ) => ({
+            ...state,
+            selectedPONumber: actions.payload.number
+        }),
+        onUpdateSOID: (state, actions: PayloadAction<{ id: string }>) => ({
+            ...state,
+            selectedID: actions.payload.id
+        }),
         setSOPhoto: (
             state,
             actions: PayloadAction<{ file: LocalFileType }>
         ) => {
             const currentImages = [...state.photoFiles];
             currentImages.push(actions.payload.file);
-            state.photoFiles = [...currentImages];
+            return {
+                ...state,
+                photoFiles: [...currentImages]
+            };
         },
         setAllSOPhoto: (
             state,
             actions: PayloadAction<{ file: LocalFileType[] }>
-        ) => {
-            state.photoFiles = [...actions.payload.file];
-        },
+        ) => ({
+            ...state,
+            photoFiles: [...actions.payload.file]
+        }),
         removeSOPhoto: (state, actions: PayloadAction<{ index: number }>) => {
             const currentImages = state.photoFiles.filter(
                 (it) => it.file !== null
             );
             currentImages.splice(actions.payload.index, 1);
             currentImages.unshift({ file: null });
-            state.photoFiles = [...currentImages];
+            return {
+                ...state,
+                photoFiles: [...currentImages]
+            };
         }
     }
 });

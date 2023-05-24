@@ -47,75 +47,103 @@ export const sphSlice = createSlice({
     name: "sphstate",
     initialState,
     reducers: {
-        resetFocusedStepperFlag: (state) => {
-            state.stepperSPHShouldNotFocused = false;
-        },
+        resetFocusedStepperFlag: (state) => ({
+            ...state,
+            stepperSPHShouldNotFocused: false
+        }),
         setUseSearchAddress: (
             state,
             actions: PayloadAction<{ value: boolean }>
-        ) => {
-            state.useSearchAddress = actions.payload.value;
-        },
+        ) => ({
+            ...state,
+            useSearchAddress: actions.payload.value
+        }),
         setSearchAddress: (
             state,
             actions: PayloadAction<{ value: string }>
-        ) => {
-            state.searchedAddress = actions.payload.value;
-        },
+        ) => ({
+            ...state,
+            searchedAddress: actions.payload.value
+        }),
         setUseBillingAddress: (
             state,
             actions: PayloadAction<{ value: boolean }>
-        ) => {
-            state.useSearchedBillingAddress = actions.payload.value;
-        },
+        ) => ({
+            ...state,
+            useSearchedBillingAddress: actions.payload.value
+        }),
         setSearchedBillingAddress: (
             state,
             actions: PayloadAction<{ value: string }>
-        ) => {
-            state.searchedBillingAddress = actions.payload.value;
-        },
+        ) => ({
+            ...state,
+            searchedBillingAddress: actions.payload.value
+        }),
         resetSPHState: () => initialState,
         setStepperFocused: (state, { payload }) => {
-            state.stepperSPHShouldNotFocused = true;
             switch (payload) {
                 case 1:
-                    state.stepSPHOneFinished = true;
-                    break;
+                    return {
+                        ...state,
+                        stepperSPHShouldNotFocused: true,
+                        stepSPHOneFinished: true
+                    };
                 case 2:
-                    state.stepSPHTwoFinished = true;
-                    break;
+                    return {
+                        ...state,
+                        stepperSPHShouldNotFocused: true,
+                        stepSPHTwoFinished: true
+                    };
                 case 3:
-                    state.stepSPHThreeFinished = true;
-                    break;
+                    return {
+                        ...state,
+                        stepperSPHShouldNotFocused: true,
+                        stepSPHThreeFinished: true
+                    };
                 case 4:
-                    state.stepSPHFourFinished = true;
-                    break;
+                    return {
+                        ...state,
+                        stepperSPHShouldNotFocused: true,
+                        stepSPHFourFinished: true
+                    };
                 default:
                     break;
             }
         },
         resetStepperFocused: (state, { payload }) => {
-            state.stepperSPHShouldNotFocused = true;
             switch (payload) {
                 case 1:
-                    state.stepSPHOneFinished = false;
-                    break;
+                    return {
+                        ...state,
+                        stepperSPHShouldNotFocused: true,
+                        stepSPHOneFinished: true
+                    };
                 case 2:
-                    state.stepSPHTwoFinished = false;
-                    break;
+                    return {
+                        ...state,
+                        stepperSPHShouldNotFocused: true,
+                        stepSPHTwoFinished: true
+                    };
                 case 3:
-                    state.stepSPHThreeFinished = false;
-                    break;
+                    return {
+                        ...state,
+                        stepperSPHShouldNotFocused: true,
+                        stepSPHThreeFinished: true
+                    };
                 case 4:
-                    state.stepSPHFourFinished = false;
-                    break;
+                    return {
+                        ...state,
+                        stepperSPHShouldNotFocused: true,
+                        stepSPHFourFinished: true
+                    };
                 default:
                     break;
             }
         },
-        updateProjectAddress: (state, { payload }) => {
-            state.projectAddress = payload;
-        },
+        updateProjectAddress: (state, { payload }) => ({
+            ...state,
+            projectAddress: payload
+        }),
         updateSelectedCompany: (
             state,
             { payload }: { payload: selectedCompanyInterface }
@@ -123,28 +151,35 @@ export const sphSlice = createSlice({
             console.log(payload);
             console.log(payload?.Pic, "c");
             console.log(payload?.Pics, "cs");
-            state.selectedCompany = payload;
+            return {
+                ...state,
+                selectedCompany: payload
+            };
         },
         updateSelectedCompanyPicList: (
             state,
             { payload }: { payload: PIC[] }
-        ) => {
-            state.selectedCompany = {
+        ) => ({
+            ...state,
+            selectedCompany: {
                 ...state.selectedCompany,
                 Pics: payload
-            };
-        },
-        updateSelectedPic: (state, { payload }: { payload: PIC }) => {
-            state.selectedPic = payload;
-        },
+            }
+        }),
+        updateSelectedPic: (state, { payload }: { payload: PIC }) => ({
+            ...state,
+            selectedPic: payload
+        }),
         updateIsBillingAddressSame: (
             state,
             { payload }: { payload: boolean }
-        ) => {
-            if (typeof payload === "boolean") {
-                state.isBillingAddressSame = payload;
-            }
-        },
+        ) => ({
+            ...state,
+            isBillingAddressSame:
+                typeof payload === "boolean"
+                    ? payload
+                    : state.isBillingAddressSame
+        }),
         updateBillingAddressOptions: (
             state,
             {
@@ -157,47 +192,59 @@ export const sphSlice = createSlice({
         updateBillingAddressAutoComplete: (
             state,
             { payload }: { payload: { [key: string]: any } }
-        ) => {
-            state.billingAddress.addressAutoComplete = payload;
-        },
-        updateDistanceFromLegok: (state, { payload }: { payload: number }) => {
-            state.distanceFromLegok = payload;
-        },
+        ) => ({
+            ...state,
+            billingAddress: {
+                ...state.billingAddress,
+                addressAutoComplete: payload
+            }
+        }),
+        updateDistanceFromLegok: (state, { payload }: { payload: number }) => ({
+            ...state,
+            distanceFromLegok: payload
+        }),
         updatePaymentType: (
             state,
             { payload }: { payload: "CBD" | "CREDIT" }
-        ) => {
-            state.paymentType = payload;
-        },
+        ) => ({
+            ...state,
+            paymentType: payload
+        }),
         updateRequiredDocuments: (
             state,
             { payload }: { payload: { [key: string]: any } }
-        ) => {
-            state.paymentRequiredDocuments = payload;
-        },
+        ) => ({
+            ...state,
+            paymentRequiredDocuments: payload
+        }),
         updatePaymentBankGuarantee: (
             state,
             { payload }: { payload: boolean }
-        ) => {
-            if (typeof payload === "boolean") {
-                state.paymentBankGuarantee = payload;
-            }
-        },
+        ) => ({
+            ...state,
+            paymentBankGuarantee:
+                typeof payload === "boolean"
+                    ? payload
+                    : state.paymentBankGuarantee
+        }),
         updateChosenProducts: (
             state,
             { payload }: { payload: chosenProductType[] }
-        ) => {
-            state.chosenProducts = payload;
-        },
-        updateUseHighway: (state, { payload }: { payload: boolean }) => {
-            state.useHighway = payload;
-        },
+        ) => ({
+            ...state,
+            chosenProducts: payload
+        }),
+        updateUseHighway: (state, { payload }: { payload: boolean }) => ({
+            ...state,
+            useHighway: payload
+        }),
         updateUploadedAndMappedRequiredDocs: (
             state,
             { payload }: { payload: requiredDocType[] }
-        ) => {
-            state.uploadedAndMappedRequiredDocs = payload;
-        }
+        ) => ({
+            ...state,
+            uploadedAndMappedRequiredDocs: payload
+        })
     }
 });
 

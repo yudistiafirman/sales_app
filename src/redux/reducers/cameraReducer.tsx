@@ -42,40 +42,58 @@ export const cameraSlice = createSlice({
         ) => {
             switch (action.payload.source) {
                 case CREATE_VISITATION:
-                    state.visitationPhotoURLs = [
-                        ...state.visitationPhotoURLs,
-                        action.payload.file
-                    ];
-                    return;
+                    return {
+                        ...state,
+                        visitationPhotoURLs: [
+                            ...state.visitationPhotoURLs,
+                            action.payload.file
+                        ]
+                    };
                 case CREATE_DEPOSIT:
-                    state.createDepositPhotoURLs = [
-                        ...state.createDepositPhotoURLs,
-                        action.payload.file
-                    ];
-                    return;
+                    return {
+                        ...state,
+                        createDepositPhotoURLs: [
+                            ...state.createDepositPhotoURLs,
+                            action.payload.file
+                        ]
+                    };
                 case CREATE_SCHEDULE:
-                    state.createSchedulePhotoURLs = [
-                        ...state.createSchedulePhotoURLs,
-                        action.payload.file
-                    ];
-                    return;
+                    return {
+                        ...state,
+                        createSchedulePhotoURLs: [
+                            ...state.createSchedulePhotoURLs,
+                            action.payload.file
+                        ]
+                    };
                 default:
-                    state.localURLs = [...state.localURLs, action.payload.file];
+                    return {
+                        ...state,
+                        localURLs: [...state.localURLs, action.payload.file]
+                    };
             }
         },
         resetImageURLS: (state, action: PayloadAction<{ source: string }>) => {
             switch (action.payload.source) {
                 case CREATE_VISITATION:
-                    state.visitationPhotoURLs = [];
-                    return;
+                    return {
+                        ...state,
+                        visitationPhotoURLs: []
+                    };
                 case CREATE_DEPOSIT:
-                    state.createDepositPhotoURLs = [];
-                    return;
+                    return {
+                        ...state,
+                        createDepositPhotoURLs: []
+                    };
                 case CREATE_SCHEDULE:
-                    state.createSchedulePhotoURLs = [];
-                    return;
+                    return {
+                        ...state,
+                        createSchedulePhotoURLs: []
+                    };
                 default:
-                    state.localURLs = [];
+                    return {
+                        ...state,
+                        localURLs: []
+                    };
             }
         },
         deleteImage: (
@@ -87,27 +105,37 @@ export const cameraSlice = createSlice({
                 case CREATE_VISITATION:
                     currentImages = state.visitationPhotoURLs;
                     currentImages.splice(action.payload.pos, 1);
-                    state.visitationPhotoURLs = [...currentImages];
-                    return;
+                    return {
+                        ...state,
+                        visitationPhotoURLs: [...currentImages]
+                    };
                 case CREATE_DEPOSIT:
                     currentImages = state.createDepositPhotoURLs;
                     currentImages.splice(action.payload.pos, 1);
-                    state.createDepositPhotoURLs = [...currentImages];
-                    return;
+                    return {
+                        ...state,
+                        createDepositPhotoURLs: [...currentImages]
+                    };
                 case CREATE_SCHEDULE:
                     currentImages = state.createSchedulePhotoURLs;
                     currentImages.splice(action.payload.pos, 1);
-                    state.createSchedulePhotoURLs = [...currentImages];
-                    return;
+                    return {
+                        ...state,
+                        createSchedulePhotoURLs: [...currentImages]
+                    };
                 default:
                     currentImages = state.localURLs;
                     currentImages.splice(action.payload.pos, 1);
-                    state.localURLs = [...currentImages];
+                    return {
+                        ...state,
+                        localURLs: [...currentImages]
+                    };
             }
         },
-        setuploadedFilesResponse: (state, action) => {
-            state.uploadedRequiredDocsResponse = action.payload;
-        }
+        setuploadedFilesResponse: (state, action) => ({
+            ...state,
+            uploadedRequiredDocsResponse: action.payload
+        })
     },
     extraReducers: (builder) => {
         builder.addCase(postUploadFiles.fulfilled, (state, { payload }) => {});
