@@ -189,7 +189,7 @@ async function printRemotePDF(
             filePath: url
         });
     } catch (error) {
-        printError(error.message);
+        printError(error?.message);
     }
 }
 
@@ -239,7 +239,7 @@ export default function StepDone({
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error saat share Link PDF SPH",
                     outsideClickClosePopUp: true
                 })

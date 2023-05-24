@@ -298,7 +298,7 @@ function Transaction() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         `Terjadi error saat pengambilan ${selectedType} data  `,
                     outsideClickClosePopUp: true
                 })

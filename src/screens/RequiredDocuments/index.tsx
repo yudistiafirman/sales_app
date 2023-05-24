@@ -139,7 +139,7 @@ export default function RequiredDocuments() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error saat pengambilan data document",
                     outsideClickClosePopUp: true
                 })
@@ -189,10 +189,7 @@ export default function RequiredDocuments() {
                 }
             }));
         } catch (error) {
-            let messsage = "Upload error";
-            if (error.message) {
-                messsage = error.message;
-            }
+            let messsage = error?.message || "Upload error";
             setDocLoadingState((curr) => ({
                 ...curr,
                 [documentId]: {

@@ -375,7 +375,7 @@ function Fifth() {
                 }, 500);
             } catch (error: any) {
                 const message =
-                    error.message || "Error membuat jadwal kunjungan";
+                    error?.message || "Error membuat jadwal kunjungan";
                 dispatch(
                     openPopUp({
                         popUpType: "error",

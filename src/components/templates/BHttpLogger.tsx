@@ -45,7 +45,7 @@ function BHttpLogger({
     setVisibleNetworkLogger
 }: BHttpLoggerProps) {
     return (
-        <View>
+        <View style={{ position: "absolute" }}>
             {isShowButtonNetwork && (
                 <>
                     <Draggable

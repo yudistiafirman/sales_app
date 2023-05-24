@@ -232,7 +232,7 @@ function SphContent() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error saat pengambilan data coordinate",
                     outsideClickClosePopUp: true
                 })
@@ -275,7 +275,7 @@ function SphContent() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error saat pengambilan data Proyek",
                     outsideClickClosePopUp: true
                 })

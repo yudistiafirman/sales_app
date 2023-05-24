@@ -36,7 +36,7 @@ function BlankScreen() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error saat akan kembali ke halaman Login dari Blank Screen",
                     outsideClickClosePopUp: true
                 })

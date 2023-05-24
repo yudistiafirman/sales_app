@@ -299,7 +299,7 @@ function Appointment() {
             dispatch(
                 openPopUp({
                     popUpType: "error",
-                    popUpText: error.message,
+                    popUpText: error?.message,
                     highlightedText: "error",
                     outsideClickClosePopUp: true
                 })

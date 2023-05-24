@@ -130,7 +130,7 @@ function Deposit() {
                     })
                 );
             } catch (error) {
-                const message = error.message || "Penambahan Deposit Gagal";
+                const message = error?.message || "Penambahan Deposit Gagal";
                 dispatch(
                     openPopUp({
                         popUpType: "error",

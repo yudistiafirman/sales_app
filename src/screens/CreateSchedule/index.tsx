@@ -124,7 +124,7 @@ function CreateScheduleScreen() {
                     })
                 );
             } catch (error) {
-                const message = error.message || "Pembuatan Jadwal Gagal";
+                const message = error?.message || "Pembuatan Jadwal Gagal";
                 dispatch(
                     openPopUp({
                         popUpType: "error",

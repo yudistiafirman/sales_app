@@ -245,8 +245,8 @@ function Beranda() {
             setIsTargetLoading(true);
             const { data: assignData } = await getVisitationTarget();
             setCurrentVisit({
-                current: assignData.data.totalCompleted,
-                target: assignData.data.visitationTarget
+                current: assignData?.data?.totalCompleted,
+                target: assignData?.data?.visitationTarget
             });
             setIsTargetLoading(false);
         } catch (err) {
@@ -279,7 +279,7 @@ function Beranda() {
                 };
                 const { data: assignData } = await getAllVisitations(options);
                 const displayData =
-                    assignData.data?.data?.map((el: any) => {
+                    assignData?.data?.data?.map((el: any) => {
                         const status =
                             el.status === "VISIT"
                                 ? `Visit ke ${el.order}`
@@ -303,12 +303,12 @@ function Beranda() {
 
                 if (page > 1) {
                     setVisitData({
-                        ...assignData.data,
+                        ...assignData?.data,
                         data: visitData.data.concat(displayData)
                     });
                 } else {
                     setVisitData({
-                        ...assignData.data,
+                        ...assignData?.data,
                         data: displayData
                     });
                 }
@@ -317,7 +317,7 @@ function Beranda() {
                 console.log("error catch 2:: ", error);
                 setIsLoading(false);
                 setIsError(true);
-                setErrorMessage(error.message);
+                setErrorMessage(error?.message);
             }
         },
         [visitData.data, page, searchQuery]

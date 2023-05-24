@@ -204,7 +204,7 @@ export default function ThirdStep() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error saat pengambilan data SPH Documents",
                     outsideClickClosePopUp: true
                 })

@@ -193,8 +193,8 @@ export default function CustomerDetail() {
                 openPopUp({
                     popUpType: "error",
                     highlightedText: "Error",
-                    popUpText: error.message
-                        ? error.message
+                    popUpText: error?.message
+                        ? error?.message
                         : "Error Saat Update Customer PIC",
                     outsideClickClosePopUp: true
                 })

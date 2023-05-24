@@ -52,7 +52,7 @@ export default function SalesHeaderRight(iconColor = "") {
             dispatch(
                 openPopUp({
                     popUpType: "error",
-                    popUpText: error.message || "Terjadi error saat logout",
+                    popUpText: error?.message || "Terjadi error saat logout",
                     outsideClickClosePopUp: true
                 })
             );

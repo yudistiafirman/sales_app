@@ -206,7 +206,7 @@ export default function SecondStep() {
                     openPopUp({
                         popUpType: "error",
                         popUpText:
-                            error.message ||
+                            error?.message ||
                             "Terjadi error pengambilan data saat perpindahan region",
                         outsideClickClosePopUp: true
                     })
