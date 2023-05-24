@@ -1,143 +1,138 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  allVisitationGetAction,
-  uploadFileImage,
-  projectByUserGetAction,
-  projectGetOneById,
-  getSphDocuments,
-  getAddressSuggestion,
-  postProjectDoc,
-} from '@/actions/CommonActions';
-import { projectResponseType } from '@/interfaces';
+    allVisitationGetAction,
+    uploadFileImage,
+    projectByUserGetAction,
+    projectGetOneById,
+    getSphDocuments,
+    getAddressSuggestion,
+    postProjectDoc
+} from "@/actions/CommonActions";
+import { projectResponseType } from "@/interfaces";
 
-type errorType = {
-  success: boolean;
-  error: {
-    status: number;
-    code: string;
-    message: string;
-  };
+type ErrorType = {
+    success: boolean;
+    error: {
+        status: number;
+        code: string;
+        message: string;
+    };
 };
 
 export const postUploadFiles = createAsyncThunk<
-  any,
-  { files: any[]; from: string }
->('common/postUploadFiles', async ({ files, from }, { rejectWithValue }) => {
-  try {
-    const response = await uploadFileImage(files, from);
+    any,
+    { files: any[]; from: string }
+>("common/postUploadFiles", async ({ files, from }, { rejectWithValue }) => {
+    try {
+        const response = await uploadFileImage(files, from);
 
-    const { data } = response;
-
-    if (data.error) throw data as errorType;
-
-    return data.data;
-  } catch (error) {
-    let errorData = error.message;
-    if (error?.response?.data) {
-      errorData = error?.response?.data;
+        const { data } = response;
+        if (data.error) throw new Error(data);
+        return data.data;
+    } catch (error) {
+        let errorData = error?.message;
+        if (error?.response?.data) {
+            errorData = error?.response?.data;
+        }
+        return rejectWithValue(errorData);
     }
-    return rejectWithValue(errorData);
-  }
 });
 
 export const getAllProject = createAsyncThunk<any, { search?: string }>(
-  'common/getAllProject',
-  async ({ search }, { rejectWithValue }) => {
-    try {
-      const response = await allVisitationGetAction(search);
-      const { data } = response.data.data;
-      if (data.error) throw data as errorType;
-
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
+    "common/getAllProject",
+    async ({ search }, { rejectWithValue }) => {
+        try {
+            const response = await allVisitationGetAction(search);
+            const { data } = response.data.data;
+            if (data.error) throw new Error(data);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error?.message);
+        }
     }
-  }
 );
 
 export const getProjectsByUserThunk = createAsyncThunk<
-  projectResponseType,
-  { search?: string }
->('common/getProjectsByUserThunk', async ({ search }, { rejectWithValue }) => {
-  // projectByUserGetAction
-  try {
-    const response = await projectByUserGetAction(search);
-    const { data } = response;
-    if (data.error) throw data as errorType;
-
-    return data;
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
-});
-//projectGetOneById
-export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
-  'common/getOneProjectById',
-  async ({ projectId }, { rejectWithValue }) => {
+    projectResponseType,
+    { search?: string }
+>("common/getProjectsByUserThunk", async ({ search }, { rejectWithValue }) => {
+    // projectByUserGetAction
     try {
-      const response = await projectGetOneById(projectId);
-      const { data } = response;
-      if (data.error) throw data as errorType;
-
-      return data;
+        const response = await projectByUserGetAction(search);
+        const { data } = response;
+        if (data.error) throw new Error(data);
+        return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+        return rejectWithValue(error?.message);
     }
-  }
+});
+// projectGetOneById
+export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
+    "common/getOneProjectById",
+    async ({ projectId }, { rejectWithValue }) => {
+        try {
+            const response = await projectGetOneById(projectId);
+            const { data } = response;
+            if (data.error) throw new Error(data);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error?.message);
+        }
+    }
 );
 
 export const fetchSphDocuments = createAsyncThunk(
-  'common/fetchSphDocuments',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await getSphDocuments();
-      const { data } = response;
-      if (data.error) throw data as errorType;
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
+    "common/fetchSphDocuments",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await getSphDocuments();
+            const { data } = response;
+            if (data.error) throw new Error(data);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error?.message);
+        }
     }
-  }
 );
 export const fetchAddressSuggestion = createAsyncThunk<
-  any,
-  { search: string; page: number }
+    any,
+    { search: string; page: number }
 >(
-  'common/fetchAddressSuggestion',
-  async ({ search, page }, { rejectWithValue }) => {
-    try {
-      const response = await getAddressSuggestion(search, page);
-      const { data } = response;
-      if (data.error) throw data as errorType;
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
+    "common/fetchAddressSuggestion",
+    async ({ search, page }, { rejectWithValue }) => {
+        try {
+            const response = await getAddressSuggestion(search, page);
+            const { data } = response;
+            if (data.error) throw new Error(data);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error?.message);
+        }
     }
-  }
 );
 export const postProjectDocByprojectId = createAsyncThunk<
-  any,
-  {
-    payload: {
-      projectId: string;
-      documentId: string;
-      fileId: string;
-    };
-  }
->(
-  'common/postProjectDocByprojectId',
-  async ({ payload }, { rejectWithValue }) => {
-    try {
-      const response = await postProjectDoc(payload);
-      const { data } = response;
-      if (data.error) throw data as errorType;
-      return data;
-    } catch (error) {
-      let errorData = error.message;
-      if (error?.response?.data) {
-        errorData = error?.response?.data;
-      }
-      return rejectWithValue(errorData);
+    any,
+    {
+        payload: {
+            projectId: string;
+            documentId: string;
+            fileId: string;
+        };
     }
-  }
+>(
+    "common/postProjectDocByprojectId",
+    async ({ payload }, { rejectWithValue }) => {
+        try {
+            const response = await postProjectDoc(payload);
+            const { data } = response;
+            if (data.error) throw new Error(data);
+            return data;
+        } catch (error) {
+            let errorData = error?.message;
+            if (error?.response?.data) {
+                errorData = error?.response?.data;
+            }
+            return rejectWithValue(errorData);
+        }
+    }
 );

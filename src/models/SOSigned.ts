@@ -1,3 +1,3 @@
 export interface UploadSOSigned {
-  poDocs: { fileId: string; type: string }[];
+    poDocs: { fileId: string; type: string }[];
 }

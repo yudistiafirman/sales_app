@@ -1,1 +1,3 @@
-export { deviceLocationMachine } from './deviceLocation.machine';
+import deviceLocationMachine from "./deviceLocation.machine";
+
+export default deviceLocationMachine;

@@ -1,49 +1,49 @@
 {
-  "project_info": {
-    "project_number": "81324684184",
-    "firebase_url": "https://brik-522cd-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "brik-522cd",
-    "storage_bucket": "brik-522cd.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:81324684184:android:316a19f78c8e0394ccf1ed",
-        "android_client_info": {
-          "package_name": "bod.app"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBzbsntxoQ48VxR9h2Nf4NYL9g5EEjYD7A"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
+    "project_info": {
+        "project_number": "81324684184",
+        "firebase_url": "https://brik-522cd-default-rtdb.asia-southeast1.firebasedatabase.app",
+        "project_id": "brik-522cd",
+        "storage_bucket": "brik-522cd.appspot.com"
     },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:81324684184:android:2d5f70cd829f9d23ccf1ed",
-        "android_client_info": {
-          "package_name": "bod.app.dev"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
+    "client": [
         {
-          "current_key": "AIzaSyBzbsntxoQ48VxR9h2Nf4NYL9g5EEjYD7A"
+            "client_info": {
+                "mobilesdk_app_id": "1:81324684184:android:316a19f78c8e0394ccf1ed",
+                "android_client_info": {
+                    "package_name": "bod.app"
+                }
+            },
+            "oauth_client": [],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyBzbsntxoQ48VxR9h2Nf4NYL9g5EEjYD7A"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": []
+                }
+            }
+        },
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:81324684184:android:2d5f70cd829f9d23ccf1ed",
+                "android_client_info": {
+                    "package_name": "bod.app.dev"
+                }
+            },
+            "oauth_client": [],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyBzbsntxoQ48VxR9h2Nf4NYL9g5EEjYD7A"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": []
+                }
+            }
         }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    }
-  ],
-  "configuration_version": "1"
+    ],
+    "configuration_version": "1"
 }

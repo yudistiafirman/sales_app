@@ -1,1 +1,3 @@
-export { default as bStorage } from './BStorage';
+import bStorage from "./BStorage";
+
+export default bStorage;

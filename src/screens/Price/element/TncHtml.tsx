@@ -99,5 +99,4 @@ const tncHTML = `<!DOCTYPE html>
 </body>
 </html>`;
 
-
-export default tncHTML
+export default tncHTML;

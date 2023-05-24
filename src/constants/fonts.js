@@ -1,24 +1,24 @@
-import respFS from '@/utils/resFontSize';
+import respFS from "@/utils/resFontSize";
 
 const font = {
-  family: {
-    montserrat: {
-      300: 'Montserrat-Light',
-      400: 'Montserrat-Regular',
-      500: 'Montserrat-Medium',
-      600: 'Montserrat-SemiBold',
-      700: 'Montserrat-Bold',
-      800: 'Montserrat-ExtraBold',
+    family: {
+        montserrat: {
+            300: "Montserrat-Light",
+            400: "Montserrat-Regular",
+            500: "Montserrat-Medium",
+            600: "Montserrat-SemiBold",
+            700: "Montserrat-Bold",
+            800: "Montserrat-ExtraBold"
+        }
     },
-  },
-  size: {
-    vs: respFS(8),
-    xs: respFS(10),
-    sm: respFS(12),
-    md: respFS(14),
-    lg: respFS(16),
-    xl: respFS(18),
-  },
+    size: {
+        vs: respFS(8),
+        xs: respFS(10),
+        sm: respFS(12),
+        md: respFS(14),
+        lg: respFS(16),
+        xl: respFS(18)
+    }
 };
 
 export default font;

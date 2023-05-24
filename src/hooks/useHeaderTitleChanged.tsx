@@ -1,16 +1,16 @@
-import { useLayoutEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import { useLayoutEffect } from "react";
 
-type useHeaderTitle = {
-  title: string;
+type UseHeaderTitle = {
+    title: string;
 };
 
-export default function useHeaderTitleChanged({ title }: useHeaderTitle) {
-  const navigation = useNavigation();
+export default function useHeaderTitleChanged({ title }: UseHeaderTitle) {
+    const navigation = useNavigation();
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: title,
-    });
-  }, [navigation, title]);
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: title
+        });
+    }, [navigation, title]);
 }

@@ -1,34 +1,34 @@
-import { PurchaseOrdersData, SalesOrdersData } from './SelectConfirmedPO';
+import { PurchaseOrdersData, SalesOrdersData } from "./SelectConfirmedPO";
 
 interface CreateScheduleFirstStep {
-  companyName: string;
-  locationName?: string;
-  purchaseOrders: PurchaseOrdersData[];
+    companyName: string;
+    locationName?: string;
+    purchaseOrders: PurchaseOrdersData[];
 }
 
 interface CreateScheduleSecondStep {
-  deliveryDate?: string;
-  deliveryTime?: string;
-  method?: string;
-  isConsecutive?: boolean;
-  hasTechnicalRequest?: boolean;
-  availableDeposit?: number;
-  inputtedVolume?: number;
-  salesOrder?: SalesOrdersData;
+    deliveryDate?: string;
+    deliveryTime?: string;
+    method?: string;
+    isConsecutive?: boolean;
+    hasTechnicalRequest?: boolean;
+    availableDeposit?: number;
+    inputtedVolume?: number;
+    salesOrder?: SalesOrdersData;
 }
 
 interface CreateScheduleState {
-  step: number;
-  stepOne: CreateScheduleFirstStep;
-  stepTwo: CreateScheduleSecondStep;
-  sheetIndex: number;
-  shouldScrollView: boolean;
-  existingProjectID: string | undefined;
-  isSearchingPurchaseOrder: boolean;
+    step: number;
+    stepOne: CreateScheduleFirstStep;
+    stepTwo: CreateScheduleSecondStep;
+    sheetIndex: number;
+    shouldScrollView: boolean;
+    existingProjectID: string | undefined;
+    isSearchingPurchaseOrder: boolean;
 }
 
 export type {
-  CreateScheduleState,
-  CreateScheduleFirstStep,
-  CreateScheduleSecondStep,
+    CreateScheduleState,
+    CreateScheduleFirstStep,
+    CreateScheduleSecondStep
 };

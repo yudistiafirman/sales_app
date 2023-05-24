@@ -1,19 +1,20 @@
-import { ReactElement, useLayoutEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import { ReactElement, useLayoutEffect } from "react";
 
 type HeaderLeftProps = {
-  customHeaderLeft: ReactElement<Element>;
+    customHeaderLeft?: ReactElement<Element>;
 };
 
 export default function useCustomHeaderLeft({
-  customHeaderLeft,
+    customHeaderLeft
 }: HeaderLeftProps) {
-  const navigation = useNavigation();
+    const navigation = useNavigation();
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackVisible: false,
-      headerLeft: () => customHeaderLeft,
-    });
-  }, [navigation, customHeaderLeft]);
+    useLayoutEffect(() => {
+        if (customHeaderLeft)
+            navigation.setOptions({
+                headerBackVisible: false,
+                headerLeft: () => customHeaderLeft
+            });
+    }, [navigation, customHeaderLeft]);
 }

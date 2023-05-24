@@ -1,12 +1,14 @@
-export type buttonDataType = {
-  icon: string | any;
-  title: string;
-  action: () => void;
+import { ViewStyle } from "react-native";
+
+export type ButtonDataType = {
+    icon: string | any;
+    title: string;
+    action: () => void;
 };
 export type QuickActionProps = {
-  buttonProps: buttonDataType[];
-  showsHorizontalScrollIndicator?: boolean;
-  isHorizontal?: boolean;
-  showsVerticalScrollIndicator?: boolean;
-  containerStyle?: {};
+    buttonProps: ButtonDataType[];
+    showsHorizontalScrollIndicator?: boolean;
+    isHorizontal?: boolean;
+    showsVerticalScrollIndicator?: boolean;
+    containerStyle?: ViewStyle;
 };

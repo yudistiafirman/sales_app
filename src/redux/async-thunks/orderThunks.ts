@@ -1,62 +1,56 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { postDeposit, postSchedule, postSph } from '@/actions/OrderActions';
-import { postSphResponseType, sphOrderPayloadType } from '@/interfaces';
-import { CreateDeposit } from '@/models/CreateDeposit';
-import { CreateSchedule } from '@/models/CreateSchedule';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { postDeposit, postSchedule, postSph } from "@/actions/OrderActions";
+import { postSphResponseType, sphOrderPayloadType } from "@/interfaces";
+import { CreateDeposit } from "@/models/CreateDeposit";
+import { CreateSchedule } from "@/models/CreateSchedule";
 
-type errorType = {
-  success: boolean;
-  error: {
-    status: number;
-    code: string;
-    message: string;
-  };
+type ErrorType = {
+    success: boolean;
+    error: {
+        status: number;
+        code: string;
+        message: string;
+    };
 };
 
 export const postOrderSph = createAsyncThunk<
-  { sph: postSphResponseType },
-  { payload: sphOrderPayloadType }
->('order/postOrderSph', async ({ payload }, { rejectWithValue }) => {
-  try {
-    const response = await postSph(payload);
-    const { data } = response;
-
-    if (data.error) throw data as errorType;
-
-    return data.data;
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
+    { sph: postSphResponseType },
+    { payload: sphOrderPayloadType }
+>("order/postOrderSph", async ({ payload }, { rejectWithValue }) => {
+    try {
+        const response = await postSph(payload);
+        const { data } = response;
+        if (data.error) throw new Error(data);
+        return data.data;
+    } catch (error) {
+        return rejectWithValue(error?.message);
+    }
 });
 
 export const postOrderDeposit = createAsyncThunk<
-  { deposit: CreateDeposit },
-  { payload: CreateDeposit }
->('order/postOrderDeposit', async ({ payload }, { rejectWithValue }) => {
-  try {
-    const response = await postDeposit(payload);
-    const { data } = response;
-
-    if (data.error) throw data as errorType;
-
-    return data.data;
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
+    { deposit: CreateDeposit },
+    { payload: CreateDeposit }
+>("order/postOrderDeposit", async ({ payload }, { rejectWithValue }) => {
+    try {
+        const response = await postDeposit(payload);
+        const { data } = response;
+        if (data.error) throw new Error(data);
+        return data.data;
+    } catch (error) {
+        return rejectWithValue(error?.message);
+    }
 });
 
 export const postOrderSchedule = createAsyncThunk<
-  { schedule: CreateSchedule },
-  { payload: CreateSchedule }
->('order/postOrderSchedule', async ({ payload }, { rejectWithValue }) => {
-  try {
-    const response = await postSchedule(payload);
-    const { data } = response;
-
-    if (data.error) throw data as errorType;
-
-    return data.data;
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
+    { schedule: CreateSchedule },
+    { payload: CreateSchedule }
+>("order/postOrderSchedule", async ({ payload }, { rejectWithValue }) => {
+    try {
+        const response = await postSchedule(payload);
+        const { data } = response;
+        if (data.error) throw new Error(data);
+        return data.data;
+    } catch (error) {
+        return rejectWithValue(error?.message);
+    }
 });

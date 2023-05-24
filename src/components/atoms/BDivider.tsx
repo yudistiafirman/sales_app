@@ -1,15 +1,15 @@
-import { colors } from '@/constants';
-import React from 'react';
-import { StyleProp, View, ViewStyle } from 'react-native';
+import React from "react";
+import { StyleProp, View, ViewStyle } from "react-native";
+import { colors } from "@/constants";
 
 const baseStyle = {
-  flex: 1,
-  borderBottomWidth: 1,
-  borderColor: colors.textInput.inActive,
+    flex: 1,
+    borderBottomWidth: 1,
+    borderColor: colors.textInput.inActive
 };
 
-const BDivider = (styles: StyleProp<ViewStyle>) => (
-  <View style={[baseStyle, styles]} />
-);
+function BDivider(styles: StyleProp<ViewStyle>) {
+    return <View style={[baseStyle, styles]} />;
+}
 
 export default BDivider;

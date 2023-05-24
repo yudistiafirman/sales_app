@@ -1,21 +1,21 @@
-import { UserModel } from './User';
-import { VisitationModel } from './Visitation';
+import { UserModel } from "./User";
+import * as Visitation from "./Visitation";
 
 export namespace Api {
-  export interface Response {
-    success?: boolean;
-    message?: string;
-    currentPage?: number;
-    totalPage?: number;
-    totalItems?: number;
-    data?:
-      | any
-      | UserModel.DataSuccessLogin
-      | VisitationModel.DataGetAllVisitation;
-    error?: {
-      code: string;
-      message: string;
-      status: number;
-    };
-  }
+    export interface Response {
+        success?: boolean;
+        message?: string;
+        currentPage?: number;
+        totalPage?: number;
+        totalItems?: number;
+        data?:
+            | any
+            | UserModel.DataSuccessLogin
+            | Visitation.DataGetAllVisitation;
+        error?: {
+            code: string;
+            message: string;
+            status: number;
+        };
+    }
 }
