@@ -255,7 +255,6 @@ function ThirdStep() {
             setIsVisible(true);
             setChoosenProduct(data);
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [isVisible]
     );
 

@@ -194,7 +194,6 @@ function SphContent() {
 
         stepHandler(sphData, stepsDone, setStepsDone, stepControll);
         handleStepperFocus();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sphData]);
 
     const getLocationCoord = async (coordinate: Region) => {
@@ -233,7 +232,7 @@ function SphContent() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error saat pengambilan data coordinate",
                     outsideClickClosePopUp: true
                 })
@@ -276,7 +275,7 @@ function SphContent() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error saat pengambilan data Proyek",
                     outsideClickClosePopUp: true
                 })
@@ -333,7 +332,6 @@ function SphContent() {
         if (projectId) {
             getProjectById(projectId);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

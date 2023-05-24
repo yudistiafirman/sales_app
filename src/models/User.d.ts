@@ -1,4 +1,4 @@
-import { ENTRY_TYPE } from "./EnumModel";
+import EntryType from "./EnumModel";
 
 export namespace UserModel {
     export interface Login {
@@ -11,6 +11,6 @@ export namespace UserModel {
         phone: string;
         id: string;
         email: string;
-        type: ENTRY_TYPE;
+        type: EntryType;
     }
 }

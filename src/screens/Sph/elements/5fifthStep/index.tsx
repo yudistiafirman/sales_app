@@ -75,11 +75,13 @@ const style = StyleSheet.create({
 
 function countNonNullValues(array) {
     let count = 0;
+    /* eslint-disable no-plusplus */
     for (let i = 0; i < array.length; i++) {
         if (array[i] !== null) {
-            count++;
+            count += 1;
         }
     }
+    /* eslint-enable no-plusplus */
     return count;
 }
 
@@ -388,7 +390,7 @@ export default function FifthStep() {
                 <ChoosePicModal
                     isModalVisible={isModalVisible}
                     setIsModalVisible={setIsModalVisible}
-                    openAddPic={addPicHandler}
+                    openAddPic={() => addPicHandler()}
                     selectPic={(pic) => {
                         dispatch(updateSelectedPic(pic));
                         setIsModalVisible((curr) => !curr);
@@ -460,7 +462,7 @@ export default function FifthStep() {
                 <BBackContinueBtn
                     isContinueIcon={false}
                     continueText="Buat SPH"
-                    onPressContinue={buatSph}
+                    onPressContinue={() => buatSph()}
                     onPressBack={() => {
                         setCurrentPosition(3);
                     }}

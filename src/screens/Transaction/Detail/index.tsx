@@ -375,7 +375,7 @@ function TransactionDetail() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         `Terjadi error saat share Link PDF ${selectedType}`,
                     outsideClickClosePopUp: true
                 })

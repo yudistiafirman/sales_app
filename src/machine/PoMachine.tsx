@@ -12,7 +12,7 @@ import {
     ProjectDocs,
     UploadFilesResponsePayload
 } from "@/interfaces/CreatePurchaseOrder";
-import { LocalFileType } from "@/interfaces/LocalFileType";
+import LocalFileType from "@/interfaces/LocalFileType";
 import { PO } from "@/navigation/ScreenNames";
 import { uniqueStringGenerator } from "@/utils/generalFunc";
 import { assign, createMachine } from "xstate";

@@ -1,6 +1,6 @@
 import { Docs, visitationListResponse } from "@/interfaces";
 import { CustomerDocs } from "@/models/Customer";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import EntryType from "@/models/EnumModel";
 import { OperationProjectDetails } from "@/redux/reducers/operationReducer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { PhotoFile } from "react-native-vision-camera";
@@ -39,7 +39,7 @@ export type RootStackParamList = {
     };
     PO: undefined;
     CREATE_DO: { id: string };
-    SUBMIT_FORM: { operationType?: ENTRY_TYPE };
+    SUBMIT_FORM: { operationType?: EntryType };
     CREATE_VISITATION: { existingVisitation?: visitationListResponse };
     SPH: { projectId?: string };
     APPOINTMENT: undefined;
@@ -81,9 +81,3 @@ export type RootStackParamList = {
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
     NativeStackScreenProps<RootStackParamList, T>;
-
-declare global {
-    namespace ReactNavigation {
-        type RootParamList = RootStackParamList;
-    }
-}

@@ -45,7 +45,7 @@ function BHttpLogger({
     setVisibleNetworkLogger
 }: BHttpLoggerProps) {
     return (
-        <View>
+        <View style={{ position: "absolute" }}>
             {isShowButtonNetwork && (
                 <>
                     <Draggable
@@ -56,22 +56,24 @@ function BHttpLogger({
                         minY={20}
                         maxY={height}
                     >
-                        <TouchableOpacity
-                            style={styles.close}
-                            onPress={setShowButtonNetwork}
-                        >
-                            <Icon name="x" size={10} color={colors.white} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={setVisibleNetworkLogger}
-                            style={styles.container}
-                        >
-                            <Icon
-                                name="cloud"
-                                size={30}
-                                color={colors.primary}
-                            />
-                        </TouchableOpacity>
+                        <>
+                            <TouchableOpacity
+                                style={styles.close}
+                                onPress={setShowButtonNetwork}
+                            >
+                                <Icon name="x" size={10} color={colors.white} />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={setVisibleNetworkLogger}
+                                style={styles.container}
+                            >
+                                <Icon
+                                    name="cloud"
+                                    size={30}
+                                    color={colors.primary}
+                                />
+                            </TouchableOpacity>
+                        </>
                     </Draggable>
                     <Modal
                         backdropOpacity={0.5}

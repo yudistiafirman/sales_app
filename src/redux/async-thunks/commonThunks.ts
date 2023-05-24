@@ -30,7 +30,7 @@ export const postUploadFiles = createAsyncThunk<
         if (data.error) throw new Error(data);
         return data.data;
     } catch (error) {
-        let errorData = error.message;
+        let errorData = error?.message;
         if (error?.response?.data) {
             errorData = error?.response?.data;
         }
@@ -47,7 +47,7 @@ export const getAllProject = createAsyncThunk<any, { search?: string }>(
             if (data.error) throw new Error(data);
             return data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            return rejectWithValue(error?.message);
         }
     }
 );
@@ -63,7 +63,7 @@ export const getProjectsByUserThunk = createAsyncThunk<
         if (data.error) throw new Error(data);
         return data;
     } catch (error) {
-        return rejectWithValue(error.message);
+        return rejectWithValue(error?.message);
     }
 });
 // projectGetOneById
@@ -76,7 +76,7 @@ export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
             if (data.error) throw new Error(data);
             return data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            return rejectWithValue(error?.message);
         }
     }
 );
@@ -90,7 +90,7 @@ export const fetchSphDocuments = createAsyncThunk(
             if (data.error) throw new Error(data);
             return data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            return rejectWithValue(error?.message);
         }
     }
 );
@@ -106,7 +106,7 @@ export const fetchAddressSuggestion = createAsyncThunk<
             if (data.error) throw new Error(data);
             return data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            return rejectWithValue(error?.message);
         }
     }
 );
@@ -128,7 +128,7 @@ export const postProjectDocByprojectId = createAsyncThunk<
             if (data.error) throw new Error(data);
             return data;
         } catch (error) {
-            let errorData = error.message;
+            let errorData = error?.message;
             if (error?.response?.data) {
                 errorData = error?.response?.data;
             }

@@ -369,7 +369,6 @@ function CreateVisitation() {
                 }
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useFocusEffect(
@@ -396,7 +395,6 @@ function CreateVisitation() {
                 backAction
             );
             return () => backHandler.remove();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [
             visitationData.step,
             visitationData.isSearchProject,

@@ -70,9 +70,9 @@ function PurchaseOrder() {
             if (fiveToSix[0] === "0" || lessThanFive[0] === "0") {
                 return true;
             }
-        } else {
             return false;
         }
+        return false;
     };
 
     const handleDisableContinueBtn = () => {

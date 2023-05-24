@@ -133,7 +133,6 @@ const StepperIndicator = forwardRef(
                         </TouchableOpacity>
                     );
                 }),
-            // eslint-disable-next-line react-hooks/exhaustive-deps
             [stepsDone, labels, currentStep]
         );
 

@@ -15,7 +15,7 @@ import LinearGradient from "react-native-linear-gradient";
 import { useMachine } from "@xstate/react";
 import { colors, fonts, layout } from "@/constants";
 import { resScale } from "@/utils";
-import { transactionMachine } from "@/machine/transactionMachine";
+import transactionMachine from "@/machine/transactionMachine";
 import useCustomHeaderRight from "@/hooks/useCustomHeaderRight";
 import {
     CAMERA,
@@ -298,7 +298,7 @@ function Transaction() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         `Terjadi error saat pengambilan ${selectedType} data  `,
                     outsideClickClosePopUp: true
                 })

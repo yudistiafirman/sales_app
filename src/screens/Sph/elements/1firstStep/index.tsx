@@ -21,16 +21,6 @@ import { resScale } from "@/utils";
 import SelectedPic from "./elements/SelectedPic";
 import { SphContext } from "../context/SphContext";
 
-const styles = StyleSheet.create({
-    touchable: {
-        position: "absolute",
-        width: "100%",
-        borderRadius: layout.radius.sm,
-        height: resScale(45),
-        zIndex: 2
-    }
-});
-
 export default function FirstStep() {
     const dispatch = useDispatch<AppDispatch>();
     const [searchQuery, setSearchQuery] = useState("");
@@ -64,19 +54,16 @@ export default function FirstStep() {
         [projects]
     );
 
-    const searchDispatch = React.useCallback(
-        (text: string) => {
-            dispatch(getAllProject({ search: text }));
-        },
-        [dispatch]
-    );
-    const onChangeWithDebounce = React.useMemo(
-        () =>
-            debounce((text: string) => {
-                searchDispatch(text);
-            }, 500),
-        [searchDispatch]
-    );
+    const searchDispatch = (text: string) => {
+        dispatch(getAllProject({ search: text }));
+    };
+    // const onChangeWithDebounce = React.useMemo(
+    //     () =>
+    //         debounce((text: string) => {
+    //             searchDispatch(text);
+    //         }, 500),
+    //     [searchDispatch]
+    // );
 
     const onRetryGettingProject = () => {
         dispatch(retrying());
@@ -84,7 +71,7 @@ export default function FirstStep() {
     };
 
     return (
-        <BContainer>
+        <View style={{ flex: 1, borderWidth: 1 }}>
             {!selectedCompany ? (
                 <View>
                     {!isSearching ? (
@@ -172,6 +159,16 @@ export default function FirstStep() {
                     }}
                 />
             )}
-        </BContainer>
+        </View>
     );
 }
+
+const styles = StyleSheet.create({
+    touchable: {
+        position: "absolute",
+        width: "100%",
+        borderRadius: layout.radius.sm,
+        height: resScale(45),
+        zIndex: 2
+    }
+});

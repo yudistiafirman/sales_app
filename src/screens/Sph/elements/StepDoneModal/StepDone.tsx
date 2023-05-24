@@ -144,7 +144,6 @@ function downloadPdf({
     downloadPopup,
     downloadError
 }: DownloadType) {
-    if (!url) return null;
     const { dirs } = ReactNativeBlobUtil.fs;
     const downloadTitle = title
         ? `${title} berhasil di download`
@@ -177,9 +176,10 @@ function downloadPdf({
             downloadError(err.message);
         });
 }
+
 async function printRemotePDF(
-    url?: string,
-    printError: (errorMessage: string | unknown) => void
+    printError: (errorMessage: string | unknown) => void,
+    url?: string
 ) {
     try {
         if (!url) {
@@ -189,7 +189,7 @@ async function printRemotePDF(
             filePath: url
         });
     } catch (error) {
-        printError(error.message);
+        printError(error?.message);
     }
 }
 
@@ -239,7 +239,7 @@ export default function StepDone({
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error saat share Link PDF SPH",
                     outsideClickClosePopUp: true
                 })
@@ -334,20 +334,16 @@ export default function StepDone({
                     <TouchableOpacity
                         style={styles.footerButton}
                         onPress={() =>
-                            printRemotePDF(
-                                sphResponse?.thermalLink,
-                                (errorMessage: string | unknown) => {
-                                    dispatch(
-                                        openPopUp({
-                                            popUpText:
-                                                errorMessage ||
-                                                "Gagal print SPH",
-                                            popUpType: "error",
-                                            outsideClickClosePopUp: true
-                                        })
-                                    );
-                                }
-                            )
+                            printRemotePDF((errorMessage: string | unknown) => {
+                                dispatch(
+                                    openPopUp({
+                                        popUpText:
+                                            errorMessage || "Gagal print SPH",
+                                        popUpType: "error",
+                                        outsideClickClosePopUp: true
+                                    })
+                                );
+                            }, sphResponse?.thermalLink)
                         }
                     >
                         <MaterialCommunityIcons

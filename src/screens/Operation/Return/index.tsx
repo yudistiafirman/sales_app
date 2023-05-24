@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { colors, layout } from "@/constants";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import displayOperationListMachine from "@/machine/displayOperationListMachine";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import EntryType from "@/models/EnumModel";
 import {
     CAMERA,
     SUBMIT_FORM,
@@ -50,7 +50,7 @@ function Return() {
     );
 
     React.useEffect(() => {
-        crashlytics().log(ENTRY_TYPE.SECURITY ? TAB_RETURN : TAB_WB_IN);
+        crashlytics().log(EntryType.SECURITY ? TAB_RETURN : TAB_WB_IN);
 
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
             send("onRefreshList", {
@@ -69,17 +69,17 @@ function Return() {
             if (photoFiles.length > 1) {
                 navigation.navigate(SUBMIT_FORM, {
                     operationType:
-                        userData?.type === ENTRY_TYPE.SECURITY
-                            ? ENTRY_TYPE.RETURN
-                            : ENTRY_TYPE.IN
+                        userData?.type === EntryType.SECURITY
+                            ? EntryType.RETURN
+                            : EntryType.IN
                 });
             } else {
                 navigation.navigate(CAMERA, {
                     photoTitle: "DO",
                     navigateTo:
-                        userData?.type === ENTRY_TYPE.SECURITY
-                            ? ENTRY_TYPE.RETURN
-                            : ENTRY_TYPE.IN
+                        userData?.type === EntryType.SECURITY
+                            ? EntryType.RETURN
+                            : EntryType.IN
                 });
             }
         } else {
@@ -110,9 +110,9 @@ function Return() {
             navigation.navigate(CAMERA, {
                 photoTitle: "DO",
                 navigateTo:
-                    userData?.type === ENTRY_TYPE.SECURITY
-                        ? ENTRY_TYPE.RETURN
-                        : ENTRY_TYPE.IN,
+                    userData?.type === EntryType.SECURITY
+                        ? EntryType.RETURN
+                        : EntryType.IN,
                 operationTempData: dataToDeliver
             });
         }

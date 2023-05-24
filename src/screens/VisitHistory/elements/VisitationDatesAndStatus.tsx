@@ -125,7 +125,7 @@ function VisitationDatesAndStatus({
             dispatch(
                 openPopUp({
                     popUpType: "error",
-                    popUpText: error.message,
+                    popUpText: error?.message,
                     highlightedText: "error",
                     outsideClickClosePopUp: true
                 })

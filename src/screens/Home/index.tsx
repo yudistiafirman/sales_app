@@ -31,7 +31,7 @@ import {
     getVisitationTarget
 } from "@/actions/ProductivityActions";
 import debounce from "lodash.debounce";
-import { Api } from "@/models";
+import Api from "@/models";
 import { visitationDataType } from "@/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
@@ -149,6 +149,7 @@ const style = StyleSheet.create({
 });
 
 function Beranda() {
+    /* eslint-disable @typescript-eslint/naming-convention */
     const {
         force_update,
         enable_appointment,
@@ -160,6 +161,8 @@ function Beranda() {
         enable_sph,
         enable_visitation
     } = useSelector((state: RootState) => state.auth.remoteConfigData);
+    /* eslint-enable @typescript-eslint/naming-convention */
+
     const poState = useSelector((state: RootState) => state.purchaseOrder);
     const { isModalContinuePo, poNumber, currentStep, customerType } =
         poState.currentState.context;
@@ -240,10 +243,10 @@ function Beranda() {
     const fetchTarget = React.useCallback(async () => {
         try {
             setIsTargetLoading(true);
-            const { data: _data } = await getVisitationTarget();
+            const { data: assignData } = await getVisitationTarget();
             setCurrentVisit({
-                current: _data.data.totalCompleted,
-                target: _data.data.visitationTarget
+                current: assignData?.data?.totalCompleted,
+                target: assignData?.data?.visitationTarget
             });
             setIsTargetLoading(false);
         } catch (err) {
@@ -274,9 +277,9 @@ function Beranda() {
                             date: date.valueOf()
                         })
                 };
-                const { data: _data } = await getAllVisitations(options);
+                const { data: assignData } = await getAllVisitations(options);
                 const displayData =
-                    _data.data?.data?.map((el: any) => {
+                    assignData?.data?.data?.map((el: any) => {
                         const status =
                             el.status === "VISIT"
                                 ? `Visit ke ${el.order}`
@@ -300,12 +303,12 @@ function Beranda() {
 
                 if (page > 1) {
                     setVisitData({
-                        ..._data.data,
+                        ...assignData?.data,
                         data: visitData.data.concat(displayData)
                     });
                 } else {
                     setVisitData({
-                        ..._data.data,
+                        ...assignData?.data,
                         data: displayData
                     });
                 }
@@ -314,7 +317,7 @@ function Beranda() {
                 console.log("error catch 2:: ", error);
                 setIsLoading(false);
                 setIsError(true);
-                setErrorMessage(error.message);
+                setErrorMessage(error?.message);
             }
         },
         [visitData.data, page, searchQuery]
@@ -324,7 +327,6 @@ function Beranda() {
         React.useCallback(() => {
             fetchTarget();
             fetchVisitations(selectedDate);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [fetchTarget, selectedDate, isModalVisible])
     );
 
@@ -749,6 +751,8 @@ function Beranda() {
 
                     if (enable_visitation)
                         return BuatKunjungan(props, kunjunganAction);
+
+                    return undefined;
                 }}
             >
                 <View style={style.posRelative}>

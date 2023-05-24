@@ -91,7 +91,7 @@ function Verification() {
         } catch (error) {
             setVerificationState({
                 ...verificationState,
-                errorOtp: error.message,
+                errorOtp: error?.message,
                 otpValue: "",
                 loading: false
             });
@@ -123,7 +123,7 @@ function Verification() {
         } catch (error) {
             setVerificationState({
                 ...verificationState,
-                errorOtp: error.message,
+                errorOtp: error?.message,
                 otpValue: "",
                 countDownOtp: 10
             });

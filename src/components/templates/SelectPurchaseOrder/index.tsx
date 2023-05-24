@@ -2,7 +2,7 @@ import * as React from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import { BCommonSearchList } from "@/components";
 import { useMachine } from "@xstate/react";
-import { searchPOMachine } from "@/machine/searchPOMachine";
+import searchPOMachine from "@/machine/searchPOMachine";
 import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
 import { PurchaseOrdersData } from "@/interfaces/SelectConfirmedPO";
 import SelectedPOModal from "./element/SelectedPOModal";
@@ -85,9 +85,7 @@ function SelectPurchaseOrderData({
         if (searchValue && searchValue.trim() !== "") {
             setSearchQuery("");
             send("clearInput");
-        } else {
-            onDismiss && onDismiss();
-        }
+        } else onDismiss && onDismiss();
     };
 
     const onCloseModal = (

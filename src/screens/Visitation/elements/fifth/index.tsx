@@ -243,7 +243,6 @@ function Fifth() {
             );
             DeviceEventEmitter.removeAllListeners("Camera.preview");
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onPressSubmit = useCallback(
@@ -376,7 +375,7 @@ function Fifth() {
                 }, 500);
             } catch (error: any) {
                 const message =
-                    error.message || "Error membuat jadwal kunjungan";
+                    error?.message || "Error membuat jadwal kunjungan";
                 dispatch(
                     openPopUp({
                         popUpType: "error",
@@ -388,7 +387,6 @@ function Fifth() {
                 clicked = "0";
             }
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 

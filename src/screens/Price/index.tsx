@@ -73,6 +73,8 @@ function PriceList() {
                 subscription.remove();
             };
         }
+
+        return undefined;
     }, [send, state]);
 
     React.useEffect(() => {
@@ -244,9 +246,9 @@ function PriceList() {
                     minTabHeaderWidth={layout.pad.xl}
                     renderScene={() => (
                         <ProductList
-                            onEndReached={() => {
-                                page !== totalPage && send("onEndReached");
-                            }}
+                            onEndReached={() =>
+                                page !== totalPage && send("onEndReached")
+                            }
                             products={productsData}
                             onPress={onPressProduct}
                             isLoadMore={isLoadMore}

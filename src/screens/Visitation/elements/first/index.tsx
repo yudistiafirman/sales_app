@@ -118,7 +118,7 @@ function FirstStep() {
             dispatch(
                 openPopUp({
                     popUpType: "error",
-                    popUpText: error.message,
+                    popUpText: error?.message,
                     outsideClickClosePopUp: true
                 })
             );
@@ -165,7 +165,7 @@ function FirstStep() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        error.message ||
+                        error?.message ||
                         "Terjadi error pengambilan data saat perpindahan region",
                     outsideClickClosePopUp: true
                 })

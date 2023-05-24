@@ -18,12 +18,9 @@ export type XStateSlice<
     TEvent extends EventObject = AnyEventObject,
     TSelectedState = any
 > = {
-    _start: (store: MiddlewareAPI) => Interpreter<TContext, any, TEvent>;
+    start: (store: MiddlewareAPI) => Interpreter<TContext, any, TEvent>;
     getService: () => Interpreter<TContext, any, TEvent>;
-    reducer: (
-        state: TSelectedState | undefined,
-        action: TEvent
-    ) => TSelectedState;
+    reducer: (state: TSelectedState, action: TEvent) => TSelectedState;
 };
 
 /**
@@ -54,10 +51,10 @@ export const createXStateSlice = <
      * A reducer which you should pass to redux
      */
     const reducer = (
-        state: TSelectedState | undefined = initialReduxState,
+        state: TSelectedState = initialReduxState,
         event: any
     ): TSelectedState => {
-        switch (event.type) {
+        switch (event?.type) {
             case `${params.name}.xstate.update`:
                 return event.state;
             default:
@@ -103,7 +100,7 @@ export const createXStateSlice = <
     };
 
     return {
-        _start: start,
+        start,
         reducer,
         getService
     };

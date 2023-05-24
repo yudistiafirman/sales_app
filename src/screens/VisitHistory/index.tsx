@@ -2,8 +2,7 @@ import { BSpacer, BEmptyState, BSpinner, BTabSections } from "@/components";
 import { colors, layout } from "@/constants";
 import useCustomHeaderCenter from "@/hooks/useCustomHeaderCenter";
 import visitHistoryMachine from "@/machine/visitHistoryMachine";
-import { RootStackParamList } from "@/navigation/CustomStateComponent";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { useMachine } from "@xstate/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -35,10 +34,8 @@ const styles = StyleSheet.create({
     }
 });
 
-type VisitHistoryRoute = RouteProp<RootStackParamList, "VISIT_HISTORY">;
-
 function VisitHistory() {
-    const route = useRoute<VisitHistoryRoute>();
+    const route = useRoute();
     const { projectName } = route.params;
     const [state, send] = useMachine(visitHistoryMachine);
     const [index, setIndex] = useState(0);

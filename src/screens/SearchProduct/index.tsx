@@ -10,7 +10,7 @@ import {
 } from "@/components";
 import { layout } from "@/constants";
 import { useMachine } from "@xstate/react";
-import { searchProductMachine } from "@/machine/searchProductMachine";
+import searchProductMachine from "@/machine/searchProductMachine";
 import useCustomHeaderCenter from "@/hooks/useCustomHeaderCenter";
 import crashlytics from "@react-native-firebase/crashlytics";
 import { SEARCH_PRODUCT } from "@/navigation/ScreenNames";

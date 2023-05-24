@@ -27,12 +27,14 @@ import CustomTabBar from "../CustomTabBar";
 const Tab = createBottomTabNavigator();
 
 function SalesTabs() {
+    /* eslint-disable @typescript-eslint/naming-convention */
     const {
         enable_transaction_menu,
         enable_price_menu,
         enable_profile_menu,
         enable_customer_menu
     } = useSelector((state: RootState) => state.auth.remoteConfigData);
+    /* eslint-enable @typescript-eslint/naming-convention */
     return (
         <Tab.Navigator
             screenOptions={{

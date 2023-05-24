@@ -31,7 +31,11 @@ const styles = StyleSheet.create({
     }
 });
 
-type ViewMoreTextProps = typeof BViewMoreText.defaultProps &
+const defaultProps = {
+    textStyle: {}
+};
+
+type ViewMoreTextProps = typeof defaultProps &
     ViewStyle & {
         numberOfLines: number;
         renderViewMore?: (handlePress: () => void) => React.ReactNode;
@@ -48,14 +52,13 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
 
     shouldShowMore = false;
 
-    state = {
-        isFulltextShown: true,
-        numberOfLines: this.props.numberOfLines
-    };
-
-    static defaultProps = {
-        textStyle: {}
-    };
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            isFulltextShown: true,
+            numberOfLines: this.props.numberOfLines
+        };
+    }
 
     hideFullText = () => {
         if (

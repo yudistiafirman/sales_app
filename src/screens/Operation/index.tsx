@@ -6,7 +6,7 @@ import { StyleSheet, SafeAreaView, DeviceEventEmitter } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import displayOperationListMachine from "@/machine/displayOperationListMachine";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import EntryType from "@/models/EnumModel";
 import {
     CAMERA,
     LOCATION,
@@ -105,7 +105,7 @@ function Operation() {
             navigation.navigate(CAMERA, {
                 photoTitle: "Tiba di lokasi",
                 closeButton: true,
-                navigateTo: ENTRY_TYPE.DRIVER,
+                navigateTo: EntryType.DRIVER,
                 operationAddedStep: "Tiba di lokasi"
             });
         }

@@ -57,7 +57,7 @@ export default function ExpandableCustomerCard({
                     {item.display_name ? item.display_name : item.picName}
                 </BText>
                 <TouchableOpacity
-                    onPress={changeLayout}
+                    onPress={() => changeLayout()}
                     style={{
                         transform: [
                             expanded ? { rotate: "180deg" } : { rotate: "0deg" }

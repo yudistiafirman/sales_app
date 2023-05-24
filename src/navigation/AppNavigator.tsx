@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { BHttpLogger } from "@/components";
 import { colors, fonts } from "@/constants";
 import { useAsyncConfigSetup } from "@/hooks";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import EntryType from "@/models/EnumModel";
 import { UserModel } from "@/models/User";
 import {
     setShowButtonNetwork,
@@ -45,7 +45,7 @@ function RootScreen(
 ) {
     if (userData !== null) {
         switch (userData.type) {
-            case ENTRY_TYPE.OPSMANAGER:
+            case EntryType.OPSMANAGER:
                 return (
                     <>
                         <Stack.Screen
@@ -63,7 +63,7 @@ function RootScreen(
                         {OperationStack(Stack)}
                     </>
                 );
-            case ENTRY_TYPE.BATCHER:
+            case EntryType.BATCHER:
                 return (
                     <>
                         <Stack.Screen
@@ -81,7 +81,7 @@ function RootScreen(
                         {OperationStack(Stack)}
                     </>
                 );
-            case ENTRY_TYPE.DRIVER:
+            case EntryType.DRIVER:
                 return (
                     <>
                         <Stack.Screen
@@ -99,7 +99,7 @@ function RootScreen(
                         {OperationStack(Stack)}
                     </>
                 );
-            case ENTRY_TYPE.SECURITY:
+            case EntryType.SECURITY:
                 return (
                     <>
                         <Stack.Screen
@@ -113,7 +113,7 @@ function RootScreen(
                         {OperationStack(Stack)}
                     </>
                 );
-            case ENTRY_TYPE.WB:
+            case EntryType.WB:
                 return (
                     <>
                         <Stack.Screen
@@ -127,7 +127,7 @@ function RootScreen(
                         {OperationStack(Stack)}
                     </>
                 );
-            case ENTRY_TYPE.SALES:
+            case EntryType.SALES:
                 return (
                     <>
                         <Stack.Screen
@@ -141,7 +141,7 @@ function RootScreen(
                         {SalesStack(Stack)}
                     </>
                 );
-            case ENTRY_TYPE.ADMIN:
+            case EntryType.ADMIN:
                 return (
                     <>
                         <Stack.Screen

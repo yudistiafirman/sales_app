@@ -127,7 +127,6 @@ function Appointment() {
                 backAction
             );
             return () => backHandler.remove();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [values.step])
     );
 
@@ -300,7 +299,7 @@ function Appointment() {
             dispatch(
                 openPopUp({
                     popUpType: "error",
-                    popUpText: error.message,
+                    popUpText: error?.message,
                     highlightedText: "error",
                     outsideClickClosePopUp: true
                 })
@@ -341,6 +340,8 @@ function Appointment() {
         if (customerTypeCondition === "individu") {
             return !!projectNameConditionIndividu && picIndividu.length > 0;
         }
+
+        return undefined;
     }
 
     const onTabPress = (nextStep: number) => () => {

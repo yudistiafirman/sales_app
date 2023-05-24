@@ -16,10 +16,7 @@ import {
     useFocusEffect,
     useNavigation
 } from "@react-navigation/native";
-import {
-    CreateScheduleSecondStep,
-    CreateScheduleState
-} from "@/interfaces/CreateSchedule";
+import { CreateScheduleState } from "@/interfaces/CreateSchedule";
 import {
     CreateScheduleContext,
     CreateScheduleProvider
@@ -78,71 +75,6 @@ function CreateScheduleScreen() {
     const [isPopupVisible, setPopupVisible] = React.useState(false);
     const dispatch = useDispatch();
 
-    const actionBackButton = (directlyClose = false) => {
-        if (values.isSearchingPurchaseOrder === true) {
-            action.updateValue("isSearchingPurchaseOrder", false);
-        } else if (values.step > 0 && !directlyClose) {
-            next(values.step - 1)();
-        } else if (values.stepOne?.companyName) setPopupVisible(true);
-        else navigation.goBack();
-    };
-
-    useCustomHeaderLeft({
-        customHeaderLeft: (
-            <BHeaderIcon
-                size={resScale(23)}
-                onBack={() => actionBackButton(true)}
-                iconName="x"
-            />
-        )
-    });
-
-    useHeaderTitleChanged({
-        title:
-            values.isSearchingPurchaseOrder === true
-                ? "Cari PT / Proyek"
-                : "Buat Jadwal"
-    });
-
-    useFocusEffect(
-        React.useCallback(() => {
-            const backAction = () => {
-                actionBackButton(false);
-                return true;
-            };
-            const backHandler = BackHandler.addEventListener(
-                "hardwareBackPress",
-                backAction
-            );
-            return () => backHandler.remove();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [
-            values.step,
-            values.stepOne?.companyName,
-            values.isSearchingPurchaseOrder
-        ])
-    );
-
-    React.useEffect(
-        () => () => {
-            dispatch(resetImageURLS({ source: CREATE_SCHEDULE }));
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
-    );
-
-    React.useEffect(() => {
-        stepHandler(values, setStepsDone);
-
-        if (!values.stepTwo?.deliveryTime) {
-            action.updateValueOnstep(
-                "stepTwo",
-                "deliveryTime",
-                moment(new Date()).format("HH:mm")
-            );
-        }
-    }, [values]);
-
     const stepRender = [<FirstStep />, <SecondStep />];
 
     const next = (nextStep: number) => async () => {
@@ -192,7 +124,7 @@ function CreateScheduleScreen() {
                     })
                 );
             } catch (error) {
-                const message = error.message || "Pembuatan Jadwal Gagal";
+                const message = error?.message || "Pembuatan Jadwal Gagal";
                 dispatch(
                     openPopUp({
                         popUpType: "error",
@@ -204,6 +136,69 @@ function CreateScheduleScreen() {
             }
         }
     };
+
+    const actionBackButton = (directlyClose = false) => {
+        if (values.isSearchingPurchaseOrder === true) {
+            action.updateValue("isSearchingPurchaseOrder", false);
+        } else if (values.step > 0 && !directlyClose) {
+            next(values.step - 1)();
+        } else if (values.stepOne?.companyName) setPopupVisible(true);
+        else navigation.goBack();
+    };
+
+    useCustomHeaderLeft({
+        customHeaderLeft: (
+            <BHeaderIcon
+                size={resScale(23)}
+                onBack={() => actionBackButton(true)}
+                iconName="x"
+            />
+        )
+    });
+
+    useHeaderTitleChanged({
+        title:
+            values.isSearchingPurchaseOrder === true
+                ? "Cari PT / Proyek"
+                : "Buat Jadwal"
+    });
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const backAction = () => {
+                actionBackButton(false);
+                return true;
+            };
+            const backHandler = BackHandler.addEventListener(
+                "hardwareBackPress",
+                backAction
+            );
+            return () => backHandler.remove();
+        }, [
+            values.step,
+            values.stepOne?.companyName,
+            values.isSearchingPurchaseOrder
+        ])
+    );
+
+    React.useEffect(
+        () => () => {
+            dispatch(resetImageURLS({ source: CREATE_SCHEDULE }));
+        },
+        []
+    );
+
+    React.useEffect(() => {
+        stepHandler(values, setStepsDone);
+
+        if (!values.stepTwo?.deliveryTime) {
+            action.updateValueOnstep(
+                "stepTwo",
+                "deliveryTime",
+                moment(new Date()).format("HH:mm")
+            );
+        }
+    }, [values]);
 
     return (
         <>

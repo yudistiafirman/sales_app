@@ -206,7 +206,7 @@ export default function SecondStep() {
                     openPopUp({
                         popUpType: "error",
                         popUpText:
-                            error.message ||
+                            error?.message ||
                             "Terjadi error pengambilan data saat perpindahan region",
                         outsideClickClosePopUp: true
                     })
@@ -354,7 +354,6 @@ export default function SecondStep() {
                 }
             />
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [billingAddress, isBillingAddressSame, distanceFromLegok]
     );
 

@@ -896,9 +896,6 @@ const renderInput = (
                             false: colors.offCheckbox
                         }}
                         tintColor={colors.offCheckbox}
-                        onCheckColor={colors.white}
-                        onFillColor={colors.primary}
-                        onTintColor={colors.primary}
                         boxType="square"
                         onValueChange={checkbox?.onValueChange}
                         style={[
@@ -947,6 +944,8 @@ const renderInput = (
             </View>
         );
     }
+
+    return undefined;
 };
 
 function BForm({ inputs, spacer, noSpaceEnd, titleBold }: IProps) {

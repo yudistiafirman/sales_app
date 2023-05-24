@@ -159,7 +159,7 @@ function FormSO() {
                 openPopUp({
                     popUpType: "error",
                     highlightedText: "SO",
-                    popUpText: error.message || "SO\nGagal diupload",
+                    popUpText: error?.message || "SO\nGagal diupload",
                     outsideClickClosePopUp: true
                 })
             );

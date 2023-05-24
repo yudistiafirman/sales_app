@@ -128,6 +128,7 @@ export default function ChoosePicModal({
                 }
             }
         }
+        return undefined;
     }
 
     const inputsData: Input[] = useMemo(

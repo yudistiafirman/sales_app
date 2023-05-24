@@ -158,4 +158,4 @@ const deviceLocationMachine =
         }
     );
 
-export { deviceLocationMachine };
+export default deviceLocationMachine;

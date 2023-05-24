@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { colors } from "@/constants";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import EntryType from "@/models/EnumModel";
 import SalesHeaderRight from "@/navigation/Sales/HeaderRight";
 import {
     SECURITY_TAB_TITLE,
@@ -36,12 +36,12 @@ function SecurityTabs() {
         >
             <Tab.Screen
                 key={
-                    userData?.type === ENTRY_TYPE.SECURITY
+                    userData?.type === EntryType.SECURITY
                         ? TAB_DISPATCH
                         : TAB_WB_OUT
                 }
                 name={
-                    userData?.type === ENTRY_TYPE.SECURITY
+                    userData?.type === EntryType.SECURITY
                         ? TAB_DISPATCH_TITLE
                         : TAB_WB_OUT_TITLE
                 }
@@ -54,12 +54,12 @@ function SecurityTabs() {
             />
             <Tab.Screen
                 key={
-                    userData?.type === ENTRY_TYPE.SECURITY
+                    userData?.type === EntryType.SECURITY
                         ? TAB_RETURN
                         : TAB_WB_IN
                 }
                 name={
-                    userData?.type === ENTRY_TYPE.SECURITY
+                    userData?.type === EntryType.SECURITY
                         ? TAB_RETURN_TITLE
                         : TAB_WB_IN_TITLE
                 }

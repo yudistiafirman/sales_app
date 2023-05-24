@@ -165,7 +165,6 @@ export default function FourthStep() {
 
     useEffect(() => {
         dispatch(updateChosenProducts(chosenProducts));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chosenProducts]);
 
     return (

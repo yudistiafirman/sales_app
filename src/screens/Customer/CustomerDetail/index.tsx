@@ -8,12 +8,9 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { colors, fonts, layout } from "@/constants";
 import {
-    BChip,
     BContainer,
     BPic,
     BSpacer,
-    BSpinner,
-    BSvg,
     BTouchableText,
     BVisitationCard,
     BottomSheetAddPIC
@@ -21,7 +18,6 @@ import {
 import crashlytics from "@react-native-firebase/crashlytics";
 
 import {
-    RouteProp,
     useFocusEffect,
     useNavigation,
     useRoute
@@ -30,14 +26,10 @@ import { getOneCustomer, updateCustomer } from "@/actions/CommonActions";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import {
-    RootStackParamList,
-    RootStackScreenProps
-} from "@/navigation/CustomStateComponent";
+import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import { PIC } from "@/interfaces";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import FeatIcon from "react-native-vector-icons/Feather";
-import SvgNames from "@/components/atoms/BSvg/svgName";
 import { ICustomerDetail } from "@/models/Customer";
 import {
     CUSTOMER_DETAIL_V2,
@@ -201,8 +193,8 @@ export default function CustomerDetail() {
                 openPopUp({
                     popUpType: "error",
                     highlightedText: "Error",
-                    popUpText: error.message
-                        ? error.message
+                    popUpText: error?.message
+                        ? error?.message
                         : "Error Saat Update Customer PIC",
                     outsideClickClosePopUp: true
                 })

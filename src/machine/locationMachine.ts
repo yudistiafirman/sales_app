@@ -8,7 +8,7 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const LATITUDE = -6.18897;
 const LONGITUDE = 106.738909;
-export const locationMachine =
+const locationMachine =
     /** @xstate-layout N4IgpgJg5mDOIC5QBsD2BjAhgFwJaoDsA6AJzHTFwDdcCoAFTEzAW1gGJYwCJaoBhVKhKNmbANoAGALqJQAB1SxceQnJAAPRACYAzNqLbtAdgCs2gBznj2gJy3dAFgA0IAJ6JdANi9FHd3VNdCwsARl1JXVCAX2jXNCxVYjIKaj5RVg5CfgALTDowACUwKHwCKVkkEEVlJPUtBD0DIzNLazsHF3cdPSJjSWNHMONw+zsvWPiMHDKiGGw8OgAZaaSAETBsTFxkDghCMCJaKlQAa0OEmcI5zcWoFcSyja2d2ARj1bKKivUalTL6ohBhYiF5bNpTI5wUZIvZXB4EGE-MYvHpvGFQqFTGFJiBLkkiBAwAAjVAAVwIFHYGlgW2wh0wADN6SQABSmSSSACU7HxsyJpIpFB+VT+dSqDWBoPBkOh2lhtnhOiGRFCkgsxgioQskW0YOMsTiIAIqCJ8CqfLUoqU-ytoAaAFosQYvDYhrYvN5bFCvKYlQgHb5OcHwtqvEMzBMjZbkuRKDQ6Bk2L8beL7YgnZJHKC3RYPV6fX7uo1w0RTOXTB7QvZJK7bLiYzcFnwHlcCM9trsU7UARLEGrwqDHMFJKFUZXvcZ-UZfJivFZbDqR0YG59rgLyZSwN3bQRAQghqEiLZQhDtJjQpqPUWEUZdKCxwulzrz1HYkA */
     createMachine(
         {
@@ -132,3 +132,5 @@ export const locationMachine =
             }
         }
     );
+
+export default locationMachine;

@@ -35,7 +35,7 @@ export const getVisitationsList = createAsyncThunk<
             if (data.error) throw new Error(data);
             return data.data as visitationListResponse[];
         } catch (error) {
-            return rejectWithValue(error.message);
+            return rejectWithValue(error?.message);
         }
     }
 );

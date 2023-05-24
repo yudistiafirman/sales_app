@@ -8,7 +8,7 @@ import { layout } from "@/constants";
 import colors from "@/constants/colors";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import displayOperationListMachine from "@/machine/displayOperationListMachine";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import EntryType from "@/models/EnumModel";
 import {
     CAMERA,
     SUBMIT_FORM,
@@ -51,7 +51,7 @@ function Dispatch() {
     );
 
     React.useEffect(() => {
-        crashlytics().log(ENTRY_TYPE.SECURITY ? TAB_DISPATCH : TAB_WB_OUT);
+        crashlytics().log(EntryType.SECURITY ? TAB_DISPATCH : TAB_WB_OUT);
 
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
             send("onRefreshList", {
@@ -70,17 +70,17 @@ function Dispatch() {
             if (photoFiles.length > 1) {
                 navigation.navigate(SUBMIT_FORM, {
                     operationType:
-                        userData?.type === ENTRY_TYPE.SECURITY
-                            ? ENTRY_TYPE.DISPATCH
-                            : ENTRY_TYPE.OUT
+                        userData?.type === EntryType.SECURITY
+                            ? EntryType.DISPATCH
+                            : EntryType.OUT
                 });
             } else {
                 navigation.navigate(CAMERA, {
                     photoTitle: "DO",
                     navigateTo:
-                        userData?.type === ENTRY_TYPE.SECURITY
-                            ? ENTRY_TYPE.DISPATCH
-                            : ENTRY_TYPE.OUT
+                        userData?.type === EntryType.SECURITY
+                            ? EntryType.DISPATCH
+                            : EntryType.OUT
                 });
             }
         } else {
@@ -111,9 +111,9 @@ function Dispatch() {
             navigation.navigate(CAMERA, {
                 photoTitle: "DO",
                 navigateTo:
-                    userData?.type === ENTRY_TYPE.SECURITY
-                        ? ENTRY_TYPE.DISPATCH
-                        : ENTRY_TYPE.OUT,
+                    userData?.type === EntryType.SECURITY
+                        ? EntryType.DISPATCH
+                        : EntryType.OUT,
                 operationTempData: dataToDeliver
             });
         }

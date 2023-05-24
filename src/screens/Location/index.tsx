@@ -7,7 +7,7 @@ import * as React from "react";
 import { DeviceEventEmitter, SafeAreaView, View } from "react-native";
 import { BButtonPrimary, BLocation, BMarker, BSpacer } from "@/components";
 import { useMachine } from "@xstate/react";
-import { locationMachine } from "@/machine/locationMachine";
+import locationMachine from "@/machine/locationMachine";
 import { Region } from "react-native-maps";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {

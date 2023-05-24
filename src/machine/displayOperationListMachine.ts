@@ -1,7 +1,7 @@
 import { assign, createMachine } from "xstate";
 import { getAllDeliveryOrders } from "@/actions/OrderActions";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
-import { ENTRY_TYPE } from "@/models/EnumModel";
+import EntryType from "@/models/EnumModel";
 
 const displayOperationListMachine = createMachine(
     {
@@ -119,7 +119,7 @@ const displayOperationListMachine = createMachine(
                 try {
                     let response: any;
                     switch (context?.userType) {
-                        case ENTRY_TYPE.SECURITY:
+                        case EntryType.SECURITY:
                             if (context?.tabActive === "left") {
                                 response = await getAllDeliveryOrders(
                                     "WB_OUT",
@@ -136,7 +136,7 @@ const displayOperationListMachine = createMachine(
                                 console.log("SECURITY-RETURN");
                             }
                             break;
-                        case ENTRY_TYPE.WB:
+                        case EntryType.WB:
                             if (context?.tabActive === "left") {
                                 response = await getAllDeliveryOrders(
                                     "SUBMITTED",
@@ -153,7 +153,7 @@ const displayOperationListMachine = createMachine(
                                 console.log("WB-IN");
                             }
                             break;
-                        case ENTRY_TYPE.DRIVER:
+                        case EntryType.DRIVER:
                             response = await getAllDeliveryOrders(
                                 ["ON_DELIVERY", "ARRIVED"],
                                 // 'ON_DELIVERY',
@@ -161,6 +161,8 @@ const displayOperationListMachine = createMachine(
                                 context.page.toString()
                             );
                             console.log("DRIVER");
+                            break;
+                        default:
                             break;
                     }
 

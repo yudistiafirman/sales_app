@@ -23,7 +23,7 @@ export const postOrderSph = createAsyncThunk<
         if (data.error) throw new Error(data);
         return data.data;
     } catch (error) {
-        return rejectWithValue(error.message);
+        return rejectWithValue(error?.message);
     }
 });
 
@@ -37,7 +37,7 @@ export const postOrderDeposit = createAsyncThunk<
         if (data.error) throw new Error(data);
         return data.data;
     } catch (error) {
-        return rejectWithValue(error.message);
+        return rejectWithValue(error?.message);
     }
 });
 
@@ -51,6 +51,6 @@ export const postOrderSchedule = createAsyncThunk<
         if (data.error) throw new Error(data);
         return data.data;
     } catch (error) {
-        return rejectWithValue(error.message);
+        return rejectWithValue(error?.message);
     }
 });
