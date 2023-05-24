@@ -177,7 +177,7 @@ const displayOperationListMachine = createMachine(
                 const listData = [...context.operationListData];
 
                 if (event?.data?.data?.data !== undefined) {
-                    listData.push(...event?.data?.data?.data);
+                    listData.push(...event.data.data.data);
                 }
 
                 return {

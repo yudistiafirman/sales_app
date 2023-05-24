@@ -98,7 +98,10 @@ function ListChildProduct(
                 }`;
             }
             offeringPrice = item?.offeringPrice;
-            totalPrice = item?.quantity * item?.offeringPrice;
+            totalPrice =
+                item?.quantity && item?.offeringPrice
+                    ? item.quantity * item.offeringPrice
+                    : 0;
             quantity = item?.quantity;
             unit = item?.Product?.unit;
         } else if (item?.RequestedProduct) {
@@ -114,8 +117,8 @@ function ListChildProduct(
             offeringPrice = item?.RequestedProduct?.offeringPrice;
             totalPrice =
                 item?.requestedQuantity && item?.RequestedProduct?.offeringPrice
-                    ? item?.requestedQuantity *
-                      item?.RequestedProduct?.offeringPrice
+                    ? item.requestedQuantity *
+                      item.RequestedProduct.offeringPrice
                     : 0;
             quantity = item?.requestedQuantity;
             unit = item?.RequestedProduct?.Product?.unit;
@@ -133,8 +136,8 @@ function ListChildProduct(
             totalPrice =
                 item?.PoProduct?.requestedQuantity &&
                 item?.PoProduct?.RequestedProduct?.offeringPrice
-                    ? item?.PoProduct?.requestedQuantity *
-                      item?.PoProduct?.RequestedProduct?.offeringPrice
+                    ? item.PoProduct.requestedQuantity *
+                      item.PoProduct.RequestedProduct.offeringPrice
                     : 0;
             quantity = item?.PoProduct?.requestedQuantity;
             unit = item?.PoProduct?.RequestedProduct?.Product?.unit;
@@ -152,8 +155,8 @@ function ListChildProduct(
             totalPrice =
                 item?.PoProduct?.requestedQuantity &&
                 item?.PoProduct?.RequestedProduct?.offeringPrice
-                    ? item?.PoProduct?.requestedQuantity *
-                      item?.PoProduct?.RequestedProduct?.offeringPrice
+                    ? item.PoProduct.requestedQuantity *
+                      item.PoProduct.RequestedProduct.offeringPrice
                     : 0;
             quantity = item?.PoProduct?.requestedQuantity;
             unit = item?.PoProduct?.RequestedProduct?.Product?.unit;

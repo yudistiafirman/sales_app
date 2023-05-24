@@ -1,3 +1,5 @@
+import { ViewStyle } from "react-native";
+
 export type ButtonDataType = {
     icon: string | any;
     title: string;
@@ -8,5 +10,5 @@ export type QuickActionProps = {
     showsHorizontalScrollIndicator?: boolean;
     isHorizontal?: boolean;
     showsVerticalScrollIndicator?: boolean;
-    containerStyle?: {};
+    containerStyle?: ViewStyle;
 };

@@ -309,7 +309,9 @@ interface BLocationProps {
         | ((region: Region & LatLang, details: Details) => void)
         | undefined;
     onMapReady?:
-        | ((event?: NativeSyntheticEvent<{}> | undefined) => void)
+        | ((
+              event?: NativeSyntheticEvent<Record<string, never>> | undefined
+          ) => void)
         | undefined;
     CustomMarker?: React.ReactNode | undefined;
     isUninteractable?: boolean;
