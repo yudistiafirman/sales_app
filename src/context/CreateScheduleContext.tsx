@@ -92,21 +92,23 @@ function CreateScheduleProvider(props: IProvider) {
         });
     };
 
-    const renderView = () => (
-        <CreateScheduleContext.Provider
-            value={{
-                values,
-                action: {
-                    updateValue,
-                    updateValueOnstep
-                }
-            }}
-        >
-            {children}
-        </CreateScheduleContext.Provider>
-    );
+    function renderView() {
+        return (
+            <CreateScheduleContext.Provider
+                value={{
+                    values,
+                    action: {
+                        updateValue,
+                        updateValueOnstep
+                    }
+                }}
+            >
+                {children}
+            </CreateScheduleContext.Provider>
+        );
+    }
 
-    return renderView;
+    return renderView();
 }
 
 export { CreateScheduleContext, CreateScheduleProvider };

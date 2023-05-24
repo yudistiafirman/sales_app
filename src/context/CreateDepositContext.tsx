@@ -92,21 +92,23 @@ function CreateDepositProvider(props: IProvider) {
         });
     };
 
-    const renderView = () => (
-        <CreateDepositContext.Provider
-            value={{
-                values,
-                action: {
-                    updateValue,
-                    updateValueOnstep
-                }
-            }}
-        >
-            {children}
-        </CreateDepositContext.Provider>
-    );
+    function renderView() {
+        return (
+            <CreateDepositContext.Provider
+                value={{
+                    values,
+                    action: {
+                        updateValue,
+                        updateValueOnstep
+                    }
+                }}
+            >
+                {children}
+            </CreateDepositContext.Provider>
+        );
+    }
 
-    return renderView;
+    return renderView();
 }
 
 export { CreateDepositContext, CreateDepositProvider };

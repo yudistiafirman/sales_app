@@ -433,13 +433,15 @@ function AppointmentProvider(props: IProvider) {
 
     const [values, dispatchValue] = useReducer(reducerForm, initialData);
 
-    const renderView = () => (
-        <AppoinmentContext.Provider value={[values, dispatchValue]}>
-            {children}
-        </AppoinmentContext.Provider>
-    );
+    function renderView() {
+        return (
+            <AppoinmentContext.Provider value={[values, dispatchValue]}>
+                {children}
+            </AppoinmentContext.Provider>
+        );
+    }
 
-    return renderView;
+    return renderView();
 }
 
 export { AppoinmentContext, AppointmentProvider };

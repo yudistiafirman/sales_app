@@ -47,20 +47,22 @@ export function SphProvider({ children }: { children: React.ReactNode }) {
         }));
     };
 
-    const renderView = () => (
-        <SphContext.Provider
-            value={
-                [
-                    sphData,
-                    stateUpdate,
-                    setCurrentPosition,
-                    currentPosition
-                ] as SphContextInterface
-            }
-        >
-            {children}
-        </SphContext.Provider>
-    );
+    function renderView() {
+        return (
+            <SphContext.Provider
+                value={
+                    [
+                        sphData,
+                        stateUpdate,
+                        setCurrentPosition,
+                        currentPosition
+                    ] as SphContextInterface
+                }
+            >
+                {children}
+            </SphContext.Provider>
+        );
+    }
 
-    return renderView;
+    return renderView();
 }
