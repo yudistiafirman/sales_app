@@ -2,7 +2,6 @@
     "name": "bod-app",
     "version": "1.0.0",
     "private": true,
-    "license": "UNLICENSED",
     "scripts": {
         "ios": "react-native run-ios",
         "start": "react-native start --reset-cache",

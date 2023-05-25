@@ -16,6 +16,7 @@ import { LOGIN, VERIFICATION } from "@/navigation/ScreenNames";
 import crashlytics from "@react-native-firebase/crashlytics";
 import { RootState } from "@/redux/store";
 import { isProduction } from "@/utils/generalFunc";
+import BrikLogo from "@/assets/logo/brik_logo.png";
 import loginStyle from "./style";
 import Label from "./element/Label";
 import Instruction from "./element/Intstruction";
@@ -26,8 +27,6 @@ interface LoginState {
     loading: boolean;
     phoneNumber: string;
 }
-
-const BrikLogo = require("@/assets/logo/brik_logo.png");
 
 function Login() {
     const navigation = useNavigation();

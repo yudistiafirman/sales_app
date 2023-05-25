@@ -2,6 +2,7 @@ import React from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { colors } from "@/constants";
 import resScale from "@/utils/resScale";
+import icMarker from "@/assets/icon/ic_marker.png";
 
 const styles = StyleSheet.create({
     markerFixed: {
@@ -14,8 +15,6 @@ const styles = StyleSheet.create({
         alignItems: "center"
     }
 });
-
-const icMarker = require("@/assets/icon/ic_marker.png");
 
 function BMarker() {
     return (

@@ -29,8 +29,7 @@
         "react-hooks/exhaustive-deps": "off", // depends on usage, cannot be strict to use
         "react/no-array-index-key": "off", // cannot be implemented since array of object from API not always have an id
         "no-nested-ternary": "off", // hard to implement since so many redundant field + we don't know which one is mandatory/optional field from API
-        "no-promise-executor-return": "off", // priority 3
-        "@typescript-eslint/no-var-requires": "off", // priority 2
+        "no-promise-executor-return": "off", // priority 2
         "react/require-default-props": "off" // priority 1
     }
 }
