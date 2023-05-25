@@ -31,6 +31,7 @@ const colors = {
         secYellow: "#FF7B00",
         errorText: "#B00020",
         lightGray: "#7B97BC",
+        shadowGray: "#7F7F7F",
         pinkRed: "#D85F62"
     },
     status: {
@@ -63,7 +64,8 @@ const colors = {
         tab: "#C7C7C7",
         altGrey: "#C7C7C7",
         otpField: "#EBEBEB",
-        commonCard: "#EBEBEB"
+        commonCard: "#EBEBEB",
+        lightGrayishBlue: "#E5E6EA"
     },
     chip: {
         green: "#C2FCC8",
