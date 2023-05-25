@@ -25,13 +25,13 @@ import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { Styles } from "@/interfaces";
 import { CreateDepositState } from "@/interfaces/CreateDeposit";
-import { CreateDeposit } from "@/models/CreateDeposit";
 import { CREATE_DEPOSIT } from "@/navigation/ScreenNames";
 import { postUploadFiles } from "@/redux/async-thunks/commonThunks";
-import { postOrderDeposit } from "@/redux/async-thunks/orderThunks";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import { resScale } from "@/utils";
+import postFinancePayment from "@/redux/async-thunks/financeThunks";
+import { CreatePayment } from "@/models/CreatePayment";
 import SecondStep from "./element/SecondStep";
 import FirstStep from "./element/FirstStep";
 
@@ -103,23 +103,21 @@ function Deposit() {
                     postUploadFiles({ files: photoFiles, from: "deposit" })
                 ).unwrap();
 
-                const payload: CreateDeposit = {
+                const payload: CreatePayment = {
                     projectId: values.existingProjectID,
-                    quotationLetterId:
-                        values.stepTwo?.purchaseOrders[0]?.quotationLetterId,
-                    purchaseOrderId: values.stepTwo?.purchaseOrders[0]?.id,
-                    value: values.stepOne?.deposit?.nominal,
+                    amount: values.stepOne?.deposit?.nominal,
                     paymentDate: moment(
                         values.stepOne?.deposit?.createdAt,
                         "DD/MM/yyyy"
                     ).valueOf(),
                     status: "SUBMITTED",
+                    type: "DEPOSIT",
                     files: []
                 };
                 uploadedImage.forEach((item) => {
                     payload.files?.push({ fileId: item?.id });
                 });
-                await dispatch(postOrderDeposit({ payload })).unwrap();
+                await dispatch(postFinancePayment({ payload })).unwrap();
                 navigation.dispatch(StackActions.popToTop());
                 dispatch(
                     openPopUp({

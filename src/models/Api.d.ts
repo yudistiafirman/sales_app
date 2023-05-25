@@ -1,7 +1,7 @@
 import UserModel from "./User";
 import * as Visitation from "./Visitation";
 
-interface Response {
+export interface Response {
     success?: boolean;
     message?: string;
     currentPage?: number;
@@ -13,8 +13,4 @@ interface Response {
         message: string;
         status: number;
     };
-}
-
-export default class Api {
-    Response;
 }
