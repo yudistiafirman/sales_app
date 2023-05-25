@@ -142,6 +142,7 @@ interface IComboRadioBtn {
     secondStatus?: "checked" | "unchecked";
     firstChildren?: React.ReactNode;
     secondChildren?: React.ReactNode;
+    isHorizontal?: boolean;
     onSetComboRadioButtonValue?: (value: string) => void;
 }
 

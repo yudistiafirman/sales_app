@@ -44,13 +44,23 @@ function BComboRadioButton({
     secondStatus,
     firstChildren,
     secondChildren,
+    isHorizontal = false,
     onSetComboRadioButtonValue
 }: Partial<Input> & IComboRadioBtn & TitleBold) {
     const checkbuttonAction = onSetComboRadioButtonValue || null;
     return (
-        <View style={styles.container}>
+        <View
+            style={[
+                styles.container,
+                isHorizontal && {
+                    minHeight: resScale(63),
+                    backgroundColor: colors.white,
+                    borderRadius: undefined
+                }
+            ]}
+        >
             <View style={styles.innerContainer}>
-                <View style={{ paddingLeft: layout.pad.md }}>
+                <View style={{ paddingStart: layout.pad.md }}>
                     <BLabel
                         sizeInNumber={textSize}
                         bold={titleBold}
@@ -60,34 +70,45 @@ function BComboRadioButton({
                 </View>
 
                 <BSpacer size="extraLarge" />
-                <View style={styles.radio}>
-                    <RadioButton
-                        value={firstValue}
-                        status={firstStatus}
-                        color={colors.primary}
-                        uncheckedColor={colors.border.altGrey}
-                        onPress={() =>
-                            checkbuttonAction !== null &&
-                            checkbuttonAction(firstValue!)
+
+                <View
+                    style={[
+                        isHorizontal && {
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            paddingEnd: layout.pad.md
                         }
-                    />
-                    <BText style={styles.radioValue}>{firstText}</BText>
+                    ]}
+                >
+                    <View style={styles.radio}>
+                        <RadioButton
+                            value={firstValue}
+                            status={firstStatus}
+                            color={colors.primary}
+                            uncheckedColor={colors.border.altGrey}
+                            onPress={() =>
+                                checkbuttonAction !== null &&
+                                checkbuttonAction(firstValue!)
+                            }
+                        />
+                        <BText style={styles.radioValue}>{firstText}</BText>
+                    </View>
+                    {firstChildren}
+                    <View style={styles.radio}>
+                        <RadioButton
+                            value={secondValue}
+                            status={secondStatus}
+                            color={colors.primary}
+                            uncheckedColor={colors.border.altGrey}
+                            onPress={() =>
+                                checkbuttonAction !== null &&
+                                checkbuttonAction(secondValue!)
+                            }
+                        />
+                        <BText style={styles.radioValue}>{secondText}</BText>
+                    </View>
+                    {secondChildren}
                 </View>
-                {firstChildren}
-                <View style={styles.radio}>
-                    <RadioButton
-                        value={secondValue}
-                        status={secondStatus}
-                        color={colors.primary}
-                        uncheckedColor={colors.border.altGrey}
-                        onPress={() =>
-                            checkbuttonAction !== null &&
-                            checkbuttonAction(secondValue!)
-                        }
-                    />
-                    <BText style={styles.radioValue}>{secondText}</BText>
-                </View>
-                {secondChildren}
             </View>
         </View>
     );

@@ -20,6 +20,7 @@ import Deposit from "@/screens/Deposit";
 import SearchSO from "@/screens/SearchSO";
 import FormSO from "@/screens/SearchSO/Form/FormSO";
 import Document from "@/screens/Customer/Document";
+import InvoiceFilter from "@/screens/Invoice/Filter";
 import {
     ALL_PRODUCT,
     ALL_PRODUCT_TITLE,
@@ -58,7 +59,8 @@ import {
     SPH_TITLE,
     TRANSACTION_DETAIL,
     TRANSACTION_DETAIL_TITLE,
-    VISIT_HISTORY
+    VISIT_HISTORY,
+    INVOICE_FILTER
 } from "../ScreenNames";
 
 function SalesStack(Stack: any) {
@@ -239,6 +241,14 @@ function SalesStack(Stack: any) {
                 component={FormSO}
                 options={{
                     headerTitle: FORM_SO_TITLE
+                }}
+            />
+            <Stack.Screen
+                name={INVOICE_FILTER}
+                key={INVOICE_FILTER}
+                component={InvoiceFilter}
+                options={{
+                    headerTitle: ""
                 }}
             />
         </>

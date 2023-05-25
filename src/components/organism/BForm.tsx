@@ -238,6 +238,7 @@ const renderInput = (
                 sizeInNumber={input.textSize}
                 label={label}
                 titleBold={titleBold}
+                isHorizontal={comboRadioBtn?.isHorizontal}
                 firstStatus={comboRadioBtn?.firstStatus}
                 firstText={comboRadioBtn?.firstText}
                 firstValue={comboRadioBtn?.firstValue}
