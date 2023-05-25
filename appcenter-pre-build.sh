@@ -10,6 +10,7 @@ if ["$APPCENTER_ANDROID_VARIANT" == "productionRelease"]; then
     echo API_URL_INV=$API_URL_INV >> .env.production
     echo API_URL_PRODUCTIVITY=$API_URL_PRODUCTIVITY >> .env.production
     echo API_URL_ORDER=$API_URL_ORDER >> .env.production
+    echo API_URL_FINANCE=$API_URL_FINANCE >> .env.production
     cat .env.production
 else
     echo JAVA_HOME=$JAVA_HOME > .env
@@ -19,5 +20,6 @@ else
     echo API_URL_INV=$API_URL_INV >> .env
     echo API_URL_PRODUCTIVITY=$API_URL_PRODUCTIVITY >> .env
     echo API_URL_ORDER=$API_URL_ORDER >> .env
+    echo API_URL_FINANCE=$API_URL_FINANCE >> .env
     cat .env
 fi
