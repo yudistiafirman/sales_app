@@ -24,15 +24,12 @@
     "plugins": ["simple-import-sort", "react"],
     "rules": {
         "@typescript-eslint/no-unused-vars": "off",
+        "react/no-unused-prop-types": "off",
         "react/jsx-props-no-spreading": "off",
-        "react-hooks/exhaustive-deps": "off",
-        "no-promise-executor-return": "off", // priority 7
-        "@typescript-eslint/no-var-requires": "off", // priority 6
-        "react/no-array-index-key": "off", // priority 5
-        "react/require-default-props": "off", // priority 4
-        "no-nested-ternary": "off", // priority 3
-        "react/destructuring-assignment": "off", // priority 2
-        "class-methods-use-this": "off", // priority 1
-        "react/no-unused-prop-types": "off" // priority 0
+        "react-hooks/exhaustive-deps": "off", // note: depends on usage, cannot be strict to use
+        "react/no-array-index-key": "off", // note: cannot be implemented since array of object from API not always have an id
+        "no-nested-ternary": "off", // note: hard to implement since so many redundant field + we don't know which one is mandatory/optional field from API
+        "react/require-default-props": "off", // todo: priority 2
+        "no-promise-executor-return": "off" // todo: priority 1
     }
 }

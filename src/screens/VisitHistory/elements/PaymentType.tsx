@@ -3,9 +3,8 @@ import { StyleSheet, View } from "react-native";
 import { BCardOption, BLabel, BSpacer } from "@/components";
 import { layout } from "@/constants";
 import font from "@/constants/fonts";
-
-const cbd = require("@/assets/icon/Visitation/cbd.png");
-const credit = require("@/assets/icon/Visitation/credit.png");
+import cbd from "@/assets/icon/Visitation/cbd.png";
+import credit from "@/assets/icon/Visitation/credit.png";
 
 const styles = StyleSheet.create({
     container: {

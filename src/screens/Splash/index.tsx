@@ -6,6 +6,7 @@ import { colors } from "@/constants";
 import { SPLASH } from "@/navigation/ScreenNames";
 import { AppDispatch } from "@/redux/store";
 import { resScale } from "@/utils";
+import BrikLogo from "@/assets/logo/brik_logo.png";
 
 const styles = StyleSheet.create({
     container: {
@@ -16,8 +17,6 @@ const styles = StyleSheet.create({
     },
     logo: { width: resScale(184), height: resScale(87) }
 });
-
-const BrikLogo = require("@/assets/logo/brik_logo.png");
 
 function Splash() {
     const dispatch = useDispatch<AppDispatch>();

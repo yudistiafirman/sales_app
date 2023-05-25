@@ -5,7 +5,7 @@ import { BHttpLogger } from "@/components";
 import { colors, fonts } from "@/constants";
 import { useAsyncConfigSetup } from "@/hooks";
 import EntryType from "@/models/EnumModel";
-import { UserModel } from "@/models/User";
+import UserModel from "@/models/User";
 import {
     setShowButtonNetwork,
     setVisibleNetworkLogger
@@ -44,7 +44,8 @@ function RootScreen(
     isSignout: boolean
 ) {
     if (userData !== null) {
-        switch (userData.type) {
+        const { type } = userData;
+        switch (type) {
             case EntryType.OPSMANAGER:
                 return (
                     <>

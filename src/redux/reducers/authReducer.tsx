@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { UserModel } from "@/models/User";
+import UserModel from "@/models/User";
 import { isDevelopment, isProduction } from "@/utils/generalFunc";
 
 interface LoginCredential {

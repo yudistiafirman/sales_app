@@ -347,18 +347,17 @@ export default function SecondStep() {
                                                     </View>
                                                 )}
                                             </View>
-                                            {stateOne?.purchaseOrders[0]
-                                                ?.SaleOrders.length ||
-                                                (0 - 1 !== index && (
-                                                    <BDivider
-                                                        marginVertical={
-                                                            layout.pad.md
-                                                        }
-                                                        borderColor={
-                                                            colors.white
-                                                        }
-                                                    />
-                                                ))}
+                                            {(stateOne?.purchaseOrders[0]
+                                                ?.SaleOrders?.length || 0) -
+                                                1 !==
+                                                index && (
+                                                <BDivider
+                                                    marginVertical={
+                                                        layout.pad.md
+                                                    }
+                                                    borderColor={colors.white}
+                                                />
+                                            )}
                                         </View>
                                     )
                                 )}

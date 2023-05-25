@@ -17,10 +17,9 @@ import {
 } from "@/redux/reducers/VisitationReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import company from "@/assets/icon/Visitation/company.png";
+import profile from "@/assets/icon/Visitation/profile.png";
 import SearchFlow from "./Searching";
-
-const company = require("@/assets/icon/Visitation/company.png");
-const profile = require("@/assets/icon/Visitation/profile.png");
 
 interface IProps {
     openBottomSheet: () => void;

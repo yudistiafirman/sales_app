@@ -6,9 +6,8 @@ import { BBackContinueBtn, BButtonPrimary, BForm, BText } from "@/components";
 import { colors, layout } from "@/constants";
 import font from "@/constants/fonts";
 import { resScale } from "@/utils";
-
-const company = require("@/assets/icon/Visitation/company.png");
-const profile = require("@/assets/icon/Visitation/profile.png");
+import company from "@/assets/icon/Visitation/company.png";
+import profile from "@/assets/icon/Visitation/profile.png";
 
 const styles = StyleSheet.create({
     modalStyle: {

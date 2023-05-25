@@ -9,9 +9,8 @@ import { useAppointmentData } from "@/hooks";
 import { Input, projectResponseType, Styles } from "@/interfaces";
 import { getProjectsByUserThunk } from "@/redux/async-thunks/commonThunks";
 import { AppDispatch } from "@/redux/store";
-
-const company = require("@/assets/icon/Visitation/company.png");
-const profile = require("@/assets/icon/Visitation/profile.png");
+import company from "@/assets/icon/Visitation/company.png";
+import profile from "@/assets/icon/Visitation/profile.png";
 
 const styles: Styles = {
     dividerContainer: {

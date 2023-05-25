@@ -5,6 +5,11 @@ import { RootState } from "@/redux/store";
 import { View, TouchableOpacity, Image } from "react-native";
 import { useSelector } from "react-redux";
 import * as React from "react";
+import homeIcon from "@/assets/icon/TabBarIcon/ic_home.png";
+import transIcon from "@/assets/icon/TabBarIcon/ic_dollar-square.png";
+import profileIcon from "@/assets/icon/TabBarIcon/ic_profile.png";
+import priceIcon from "@/assets/icon/TabBarIcon/ic_price.png";
+import customerIcon from "@/assets/icon/TabBarIcon/ic_customer.png";
 import TabBarStyle from "./TabBarStyle";
 
 interface TabBar {
@@ -12,12 +17,6 @@ interface TabBar {
     descriptors: any;
     navigation: any;
 }
-
-const homeIcon = require("@/assets/icon/TabBarIcon/ic_home.png");
-const transIcon = require("@/assets/icon/TabBarIcon/ic_dollar-square.png");
-const profileIcon = require("@/assets/icon/TabBarIcon/ic_profile.png");
-const priceIcon = require("@/assets/icon/TabBarIcon/ic_price.png");
-const customerIcon = require("@/assets/icon/TabBarIcon/ic_customer.png");
 
 function CustomTabBar({ state, descriptors, navigation }: TabBar) {
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -82,7 +81,7 @@ function CustomTabBar({ state, descriptors, navigation }: TabBar) {
                         testID={options.tabBarTestID}
                         onPress={onPress}
                         onLongPress={onLongPress}
-                        key={index}
+                        key={route?.key}
                         style={{ flex: 1, alignItems: "center" }}
                     >
                         <Image

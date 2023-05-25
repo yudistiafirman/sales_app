@@ -8,6 +8,7 @@ import { layout } from "@/constants";
 import colors from "@/constants/colors";
 import font from "@/constants/fonts";
 import resScale from "@/utils/resScale";
+import IconNotFound from "@/assets/icon/ic_not_found.png";
 
 const styles = StyleSheet.create({
     container: {
@@ -38,8 +39,6 @@ type EmptyStateProps = {
     actionBtnTitle?: string;
     onAction?: () => void;
 };
-
-const IconNotFound = require("@/assets/icon/ic_not_found.png");
 
 function EmptyState({
     emptyText,

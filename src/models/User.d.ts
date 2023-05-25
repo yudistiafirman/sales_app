@@ -1,16 +1,20 @@
 import EntryType from "./EnumModel";
 
-export namespace UserModel {
-    export interface Login {
-        phone: string;
-        otp?: string;
-    }
+interface Login {
+    phone: string;
+    otp?: string;
+}
 
-    export interface DataSuccessLogin {
-        accessToken: string;
-        phone: string;
-        id: string;
-        email: string;
-        type: EntryType;
-    }
+interface DataSuccessLogin {
+    accessToken: string;
+    phone: string;
+    id: string;
+    email: string;
+    type: EntryType;
+}
+
+export default class UserModel {
+    Login;
+
+    DataSuccessLogin;
 }

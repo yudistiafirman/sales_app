@@ -3,7 +3,7 @@ import EncryptedStorage from "react-native-encrypted-storage";
 type Dict<T> = Record<string, T>;
 
 class BStorage {
-    async getItem(key: string): Promise<Dict> {
+    static async getItem(key: string): Promise<Dict<any>> {
         return EncryptedStorage.getItem(key)
             .then((result) => {
                 if (result) {
@@ -16,19 +16,17 @@ class BStorage {
             });
     }
 
-    async setItem(key: string, item: Dict): Promise<void> {
+    static async setItem(key: string, item: Dict<any>): Promise<void> {
         return EncryptedStorage.setItem(key, JSON.stringify(item));
     }
 
-    async deleteItem(key: string): Promise<void> {
+    static async deleteItem(key: string): Promise<void> {
         return EncryptedStorage.removeItem(key);
     }
 
-    async clearItem(): Promise<void> {
+    static async clearItem(): Promise<void> {
         return EncryptedStorage.clear();
     }
 }
 
-const bStorage = new BStorage();
-
-export default bStorage;
+export default BStorage;

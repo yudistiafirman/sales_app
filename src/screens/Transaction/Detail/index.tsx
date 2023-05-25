@@ -111,67 +111,64 @@ function ListProduct(
     quantity: number | undefined,
     isPoData: boolean
 ) {
+    /* eslint-disable @typescript-eslint/naming-convention */
+    const {
+        ReqProduct,
+        Product,
+        offering_price,
+        offeringPrice,
+        unit,
+        total_price,
+        totalPrice,
+        requestedQuantity,
+        category
+    } = item;
+    /* eslint-enable @typescript-eslint/naming-convention */
     let displayName = "";
     let pricePerlVol;
-    if (item.ReqProduct) {
+    if (ReqProduct) {
         displayName = `${
-            item?.ReqProduct?.product?.category?.parent
-                ? `${item?.ReqProduct?.product?.category?.parent?.name} `
+            ReqProduct?.product?.category?.parent
+                ? `${ReqProduct?.product?.category?.parent?.name} `
                 : ""
-        }${item?.ReqProduct?.product?.displayName} ${
-            item?.ReqProduct?.product?.category
-                ? item?.ReqProduct?.product?.category?.name
+        }${ReqProduct?.product?.displayName} ${
+            ReqProduct?.product?.category
+                ? ReqProduct?.product?.category?.name
                 : ""
         }`;
-        pricePerlVol = item.ReqProduct?.offeringPrice;
-    } else if (item.Product) {
+        pricePerlVol = ReqProduct?.offeringPrice;
+    } else if (Product) {
         displayName = `${
-            item?.Product?.category?.parent?.name
-                ? `${item?.Product?.category?.parent?.name} `
-                : item?.Product?.category?.parent?.na
-                ? `${item?.Product?.category?.parent?.na} `
+            Product?.category?.parent?.name
+                ? `${Product?.category?.parent?.name} `
+                : Product?.category?.parent?.na
+                ? `${Product?.category?.parent?.na} `
                 : ""
-        }${item?.Product?.displayName} ${
-            item?.Product?.category ? item?.Product?.category?.name : ""
+        }${Product?.displayName} ${
+            Product?.category ? Product?.category?.name : ""
         }`;
-        pricePerlVol = item.offering_price
-            ? item.offering_price
-            : item.offeringPrice;
+        pricePerlVol = offering_price || offeringPrice;
     } else {
         displayName = `${
-            item?.category?.parent ? `${item?.category?.parent?.name} ` : ""
-        }${item?.displayName} ${item?.category ? item?.category?.name : ""}`;
-        pricePerlVol = item.offering_price
-            ? item.offering_price
-            : item.offeringPrice;
+            category?.parent ? `${category?.parent?.name} ` : ""
+        }${displayName} ${category ? category?.name : ""}`;
+        pricePerlVol = offering_price || offeringPrice;
     }
+
     return (
         <View key={index}>
             <BProductCard
                 name={displayName}
                 pricePerVol={pricePerlVol}
-                volume={
-                    quantity ||
-                    (item.requestedQuantity
-                        ? item.requestedQuantity
-                        : item.quantity
-                        ? item.quantity
-                        : 0)
-                }
+                volume={quantity || requestedQuantity || quantity || 0}
                 totalPrice={
                     isPoData
-                        ? item.requestedQuantity * item.ReqProduct.offeringPrice
-                        : item.ReqProduct
-                        ? item.ReqProduct?.totalPrice
-                        : item.total_price
-                        ? item.total_price
-                        : item.totalPrice
+                        ? requestedQuantity * (ReqProduct?.offeringPrice || 0)
+                        : ReqProduct
+                        ? ReqProduct?.totalPrice
+                        : total_price || totalPrice
                 }
-                unit={
-                    item.ReqProduct?.product
-                        ? item.ReqProduct?.product.unit
-                        : item.unit
-                }
+                unit={ReqProduct?.product ? ReqProduct?.product?.unit : unit}
                 hideTotal={
                     !(selectedType !== "Jadwal" && selectedType !== "DO")
                 }
