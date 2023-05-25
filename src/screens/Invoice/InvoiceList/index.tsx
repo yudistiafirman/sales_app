@@ -1,9 +1,10 @@
 import { BContainer, BSearchBar, BSpacer } from "@/components";
 import BFilterSort from "@/components/molecules/BFilterSort";
+import BInvoiceCard from "@/components/molecules/BInvoiceCard";
 import { colors, layout } from "@/constants";
 import { resScale } from "@/utils";
 import { FlashList } from "@shopify/flash-list";
-import React from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-paper";
 
@@ -20,8 +21,7 @@ const styles = StyleSheet.create({
     },
     headerComponent: {
         padding: layout.pad.lg,
-        borderColor: colors.border.lightGrayishBlue,
-        borderBottomWidth: 1
+        borderColor: colors.border.lightGrayishBlue
     }
 });
 
@@ -48,11 +48,16 @@ function InvoiceList() {
             <BSpacer size="verySmall" />
         </>
     );
+
+    const renderInvoiceCard = useCallback(
+        ({ item, index }) => <BInvoiceCard />,
+        []
+    );
     return (
         <View style={styles.container}>
             <FlashList
-                data={[]}
-                renderItem={() => <View />}
+                data={[1]}
+                renderItem={renderInvoiceCard}
                 estimatedItemSize={200}
                 onEndReachedThreshold={0.5}
                 ListHeaderComponent={renderInvoiceListHeader}

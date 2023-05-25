@@ -35,11 +35,10 @@ import {
 import { updateDataVisitation } from "@/redux/reducers/VisitationReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import cbd from "@/assets/icon/Visitation/cbd.png";
+import credit from "@/assets/icon/Visitation/cbd.png";
 import ProductDetailModal from "./ProductDetailModal";
 import ProductChip from "./ProductChip";
-
-const cbd = require("@/assets/icon/Visitation/cbd.png");
-const credit = require("@/assets/icon/Visitation/credit.png");
 
 const styles = StyleSheet.create({
     posRelative: {

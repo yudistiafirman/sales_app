@@ -13,7 +13,7 @@ import { BHeaderIcon, BSpacer } from "@/components";
 import BErrorText from "@/components/atoms/BErrorText";
 import { colors, layout } from "@/constants";
 import storageKey from "@/constants/storageKey";
-import { UserModel } from "@/models/User";
+import UserModel from "@/models/User";
 import { VERIFICATION } from "@/navigation/ScreenNames";
 import { setUserData } from "@/redux/reducers/authReducer";
 import { RootState } from "@/redux/store";

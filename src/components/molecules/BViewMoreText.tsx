@@ -9,7 +9,6 @@ import {
     TextStyle
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
-import resScale from "@/utils/resScale";
 import colors from "@/constants/colors";
 
 const styles = StyleSheet.create({
@@ -54,18 +53,16 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
 
     constructor(props: any) {
         super(props);
+        const { numberOfLines } = this.props;
         this.state = {
             isFulltextShown: true,
-            numberOfLines: this.props.numberOfLines
+            numberOfLines
         };
     }
 
     hideFullText = () => {
-        if (
-            this.state.isFulltextShown &&
-            this.trimmedTextHeight &&
-            this.fullTextHeight
-        ) {
+        const { isFulltextShown } = this.state;
+        if (isFulltextShown && this.trimmedTextHeight && this.fullTextHeight) {
             this.shouldShowMore = this.trimmedTextHeight < this.fullTextHeight;
             this.setState({
                 isFulltextShown: false
@@ -94,13 +91,15 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
     };
 
     onPressLess = () => {
+        const { numberOfLines } = this.props;
         this.setState({
-            numberOfLines: this.props.numberOfLines
+            numberOfLines
         });
     };
 
     getWrapperStyle = () => {
-        if (this.state.isFulltextShown) {
+        const { isFulltextShown } = this.state;
+        if (isFulltextShown) {
             return styles.transparent;
         }
         return {};
@@ -120,30 +119,29 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
 
     renderFooter = () => {
         const { numberOfLines } = this.state;
+        const { renderViewMore, renderViewLess } = this.props;
 
         if (this.shouldShowMore === true) {
             if (numberOfLines > 0) {
-                return (this.props.renderViewMore || this.renderViewMore)(
+                return (renderViewMore || this.renderViewMore)(
                     this.onPressMore
                 );
             }
-            return (this.props.renderViewLess || this.renderViewLess)(
-                this.onPressLess
-            );
+            return (renderViewLess || this.renderViewLess)(this.onPressLess);
         }
         return null;
     };
 
     renderFullText = () => {
-        if (this.state.isFulltextShown) {
+        const { isFulltextShown } = this.state;
+        if (isFulltextShown) {
+            const { children, textStyle } = this.props;
             return (
                 <View
                     onLayout={this.onLayoutFullText}
                     style={styles.fullTextWrapper}
                 >
-                    <Text style={this.props.textStyle}>
-                        {this.props.children}
-                    </Text>
+                    <Text style={textStyle}>{children}</Text>
                 </View>
             );
         }
@@ -151,6 +149,8 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
     };
 
     render() {
+        const { children, textStyle, numberOfLines, onTextLayout } = this.props;
+        const { numberOfLines: numberOfLinesState } = this.state;
         return (
             <View style={this.getWrapperStyle()}>
                 <View
@@ -158,11 +158,11 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
                     onLayout={this.onLayoutTrimmedText}
                 >
                     <Text
-                        style={this.props.textStyle}
-                        onTextLayout={this.props.onTextLayout}
-                        numberOfLines={this.state.numberOfLines}
+                        style={textStyle}
+                        onTextLayout={onTextLayout}
+                        numberOfLines={numberOfLinesState}
                     >
-                        {this.props.children}
+                        {children}
                     </Text>
                     {this.renderFooter()}
                 </View>

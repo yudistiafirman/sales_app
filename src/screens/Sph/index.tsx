@@ -189,13 +189,6 @@ function SphContent() {
         }
     };
 
-    useEffect(() => {
-        crashlytics().log(SPH);
-
-        stepHandler(sphData, stepsDone, setStepsDone, stepControll);
-        handleStepperFocus();
-    }, [sphData]);
-
     const getLocationCoord = async (coordinate: Region) => {
         try {
             const { data } = await getLocationCoordinates(
@@ -283,6 +276,18 @@ function SphContent() {
         }
     }
 
+    useEffect(() => {
+        crashlytics().log(SPH);
+
+        const projectId = route.params?.projectId;
+        if (projectId) {
+            getProjectById(projectId);
+        }
+
+        stepHandler(sphData, stepsDone, setStepsDone, stepControll);
+        handleStepperFocus();
+    }, [sphData.projectAddress, sphData.billingAddress]);
+
     const actionBackButton = (popupVisible = false) => {
         if (popupVisible) {
             if (sphData.selectedCompany) {
@@ -326,13 +331,6 @@ function SphContent() {
             return () => backHandler.remove();
         }, [currentPosition, navigation, setCurrentPosition, sphData])
     );
-
-    useEffect(() => {
-        const projectId = route.params?.projectId;
-        if (projectId) {
-            getProjectById(projectId);
-        }
-    }, []);
 
     return (
         <View style={style.container}>

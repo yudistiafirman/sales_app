@@ -1,7 +1,7 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse, Method } from "axios";
 import BrikApiCommon from "@/brikApi/BrikApiCommon";
 import Api from "@/models";
-import { UserModel } from "@/models/User";
+import UserModel from "@/models/User";
 import bStorage from "@/actions";
 import { storageKey } from "@/constants";
 import { signout } from "@/redux/reducers/authReducer";
@@ -50,7 +50,7 @@ interface RequestInfo {
     timeoutInterval?: number;
 }
 
-function setCharAt(str, index, chr) {
+function setCharAt(str: string, index: number, chr: string) {
     if (index > str.length - 1) return str;
     return str.substring(0, index) + chr + str.substring(index + 1);
 }
@@ -194,13 +194,18 @@ instance.interceptors.response.use(
         } else if (config.method !== "get" && config.method !== "put") {
             let { url } = config;
             if (url) {
-                if (url[url?.length || 0 - 1] === "/") {
-                    url = setCharAt(url, url?.length || 0 - 1, "");
+                if (url?.length > 0 && url[url.length - 1] === "/") {
+                    url = setCharAt(url, url.length - 1, "");
                 }
             }
-            const urlArray: string[] = url?.split("/");
-            const respMethod = config.method;
-            const endpoint = urlArray[urlArray?.length || 0 - 1] || "";
+            const urlArray: string[] | undefined = url?.split("/");
+            const respMethod: string | undefined = config.method;
+            const endpoint =
+                (url &&
+                    url?.length > 0 &&
+                    urlArray &&
+                    urlArray[urlArray.length - 1]) ||
+                "";
             const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
             const postSphUrl = `${URL_ORDER}/order/m/flow/quotation/`;
             if (
