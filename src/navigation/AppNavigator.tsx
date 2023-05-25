@@ -5,7 +5,7 @@ import { BHttpLogger } from "@/components";
 import { colors, fonts } from "@/constants";
 import { useAsyncConfigSetup } from "@/hooks";
 import EntryType from "@/models/EnumModel";
-import { UserModel } from "@/models/User";
+import UserModel from "@/models/User";
 import {
     setShowButtonNetwork,
     setVisibleNetworkLogger
