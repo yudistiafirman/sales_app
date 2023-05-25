@@ -1,7 +1,7 @@
 import crashlytics from "@react-native-firebase/crashlytics";
 import React from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
-import { BForm, BHeaderIcon } from "@/components";
+import { SafeAreaView, StyleSheet, View } from "react-native";
+import { BBackContinueBtn, BForm, BHeaderIcon, BSpacer } from "@/components";
 import { layout } from "@/constants";
 import { INVOICE_FILTER } from "@/navigation/ScreenNames";
 import { resScale } from "@/utils";
@@ -11,6 +11,9 @@ import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
     flexFull: {
+        flex: 1
+    },
+    main: {
         flex: 1,
         paddingHorizontal: layout.pad.lg
     },
@@ -20,6 +23,9 @@ const styles = StyleSheet.create({
         borderRadius: layout.radius.sm,
         height: resScale(45),
         zIndex: 2
+    },
+    button: {
+        paddingBottom: layout.pad.lg
     }
 });
 
@@ -90,8 +96,21 @@ function InvoiceFilter() {
     }, []);
 
     return (
-        <SafeAreaView style={styles.flexFull}>
-            <BForm titleBold="500" inputs={inputs} />
+        <SafeAreaView style={styles.main}>
+            <View style={styles.flexFull}>
+                <BForm titleBold="500" inputs={inputs} />
+                <BSpacer size="medium" />
+            </View>
+            <View style={styles.button}>
+                <BBackContinueBtn
+                    onPressContinue={() => navigation.goBack()}
+                    onPressBack={() => setChecked("")}
+                    continueText="Terapkan"
+                    backText="Hapus"
+                    isContinueIcon={false}
+                    unrenderBack={checked === ""}
+                />
+            </View>
         </SafeAreaView>
     );
 }
