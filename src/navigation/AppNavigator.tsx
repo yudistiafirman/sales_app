@@ -44,7 +44,8 @@ function RootScreen(
     isSignout: boolean
 ) {
     if (userData !== null) {
-        switch (userData.type) {
+        const { type } = userData;
+        switch (type) {
             case EntryType.OPSMANAGER:
                 return (
                     <>

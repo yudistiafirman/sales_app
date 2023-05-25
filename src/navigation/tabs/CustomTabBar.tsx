@@ -82,7 +82,7 @@ function CustomTabBar({ state, descriptors, navigation }: TabBar) {
                         testID={options.tabBarTestID}
                         onPress={onPress}
                         onLongPress={onLongPress}
-                        key={index}
+                        key={route?.key}
                         style={{ flex: 1, alignItems: "center" }}
                     >
                         <Image
