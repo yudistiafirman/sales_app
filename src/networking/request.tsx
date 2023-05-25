@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosResponse, Method } from "axios";
 import BrikApiCommon from "@/brikApi/BrikApiCommon";
-import Api from "@/models";
 import UserModel from "@/models/User";
 import bStorage from "@/actions";
 import { storageKey } from "@/constants";
@@ -12,6 +11,7 @@ import { Platform } from "react-native";
 import crashlytics from "@react-native-firebase/crashlytics";
 import analytics from "@react-native-firebase/analytics";
 import perf from "@react-native-firebase/perf";
+import Api from "@/models";
 
 const URL_PRODUCTIVITY =
     Platform.OS === "android"
@@ -31,6 +31,12 @@ const URL_COMMON =
         : __DEV__
         ? Config.API_URL_COMMON
         : Config.API_URL_COMMON_PROD;
+const URL_FINANCE =
+    Platform.OS === "android"
+        ? Config.API_URL_FINANCE
+        : __DEV__
+        ? Config.API_URL_FINANCE
+        : Config.API_URL_FINANCE_PROD;
 
 let store: any;
 let metric: any;
@@ -258,6 +264,7 @@ instance.interceptors.response.use(
             const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
             const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
             const postDepositUrl = `${URL_ORDER}/order/m/deposit/`;
+            const postPaymentUrl = `${URL_FINANCE}/finance/m/payment/`;
             const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
             const postPO = `${URL_ORDER}/order/m/purchase-order/`;
             const postSOSigned = `${URL_ORDER}/order/m/purchase-order/docs/`;
@@ -272,6 +279,7 @@ instance.interceptors.response.use(
                 error?.config?.url !== postVisitationUrl &&
                 error?.config?.url !== postVisitationBookUrl &&
                 error?.config?.url !== postDepositUrl &&
+                error?.config?.url !== postPaymentUrl &&
                 error?.config?.url !== postScheduleUrl &&
                 error?.config?.url !== postPO &&
                 error?.config?.url !== postSOSigned
