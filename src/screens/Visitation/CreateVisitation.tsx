@@ -396,9 +396,9 @@ function CreateVisitation() {
             );
             return () => backHandler.remove();
         }, [
-            visitationData.step,
             visitationData.isSearchProject,
-            visitationData.searchQuery
+            visitationData.searchQuery,
+            dispatch
         ])
     );
 
@@ -461,7 +461,7 @@ function CreateVisitation() {
     useEffect(() => {
         stepHandler(visitationData, setStepsDone);
         handleStepperFocus();
-    }, [visitationData]);
+    }, [visitationData.createdLocation, visitationData.locationAddress]);
 
     const addPic = (state: PIC) => {
         const pic = state;
