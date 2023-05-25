@@ -1,20 +1,14 @@
 import EntryType from "./EnumModel";
 
-interface Login {
+export interface Login {
     phone: string;
     otp?: string;
 }
 
-interface DataSuccessLogin {
+export interface DataSuccessLogin {
     accessToken: string;
     phone: string;
     id: string;
     email: string;
     type: EntryType;
-}
-
-export default class UserModel {
-    Login;
-
-    DataSuccessLogin;
 }
