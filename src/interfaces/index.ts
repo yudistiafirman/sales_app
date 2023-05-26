@@ -32,7 +32,8 @@ interface Input {
         | "calendar"
         | "calendar-time"
         | "comboRadioButton"
-        | "tableInput";
+        | "tableInput"
+        | "durationButton";
     hidePicLabel?: boolean;
     onChange?: (e: any) => void;
     onFocus?: (e: any) => void;
@@ -78,6 +79,11 @@ interface Input {
         valueTwoMock: Date;
         isErrorOne?: boolean;
         isErrorTwo?: boolean;
+    };
+    durationButton?: {
+        data: IDurationButton[];
+        onClick: (value: string | number) => void;
+        value: string | number;
     };
     dropdown?: {
         items: {
@@ -131,6 +137,12 @@ interface Input {
     outlineColor?: string;
     comboRadioBtn?: IComboRadioBtn;
     tableInput?: ITableInput;
+}
+
+interface IDurationButton {
+    id: string;
+    name: string;
+    value: string | number;
 }
 
 interface IComboRadioBtn {
@@ -785,5 +797,6 @@ export type {
     IComboRadioBtn,
     ITableInput,
     ITableInputItem,
-    ITableInputListItem
+    ITableInputListItem,
+    IDurationButton
 };

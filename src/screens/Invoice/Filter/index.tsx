@@ -32,6 +32,12 @@ const styles = StyleSheet.create({
 function InvoiceFilter() {
     const navigation = useNavigation();
     const [checked, setChecked] = React.useState<string>("");
+    const [selectedPaymentDuration, setSelectedPaymentDuration] =
+        React.useState<string | number>("");
+    const [selectedPaymentCondition, setSelectedPaymentCondition] =
+        React.useState<string | number>("");
+    const [selectedDueDateDifference, setSelectedDueDateDifference] =
+        React.useState<string | number>("");
 
     const inputs: Input[] = [
         {
@@ -55,15 +61,42 @@ function InvoiceFilter() {
             label: "Jatuh Tempo (Hari)",
             isRequire: false,
             isError: false,
-            type: "textInput",
-            onChange: (val) => {}
+            type: "durationButton",
+            durationButton: {
+                data: [
+                    { id: "1", name: "3 Hari", value: 3 },
+                    { id: "2", name: "7 Hari", value: 7 },
+                    { id: "3", name: "14 Hari", value: 14 },
+                    { id: "4", name: "30 Hari", value: 30 },
+                    { id: "5", name: "45 Hari", value: 45 },
+                    { id: "6", name: "60 Hari", value: 60 },
+                    { id: "7", name: "90 Hari", value: 90 }
+                ],
+                onClick: (value) => {
+                    setSelectedPaymentDuration(value);
+                },
+                value: selectedPaymentDuration
+            }
         },
         {
             label: "Syarat Pembayaran",
             isRequire: false,
             isError: false,
-            type: "textInput",
-            onChange: (val) => {}
+            type: "durationButton",
+            durationButton: {
+                data: [
+                    {
+                        id: "1",
+                        name: "Tagihan Diterima",
+                        value: "AFTER_INVOICE"
+                    },
+                    { id: "2", name: "Pengiriman Selesai", value: "AFTER_DO" }
+                ],
+                onClick: (value) => {
+                    setSelectedPaymentCondition(value);
+                },
+                value: selectedPaymentCondition
+            }
         },
         {
             label: "Tanggal Tagih",
@@ -76,8 +109,22 @@ function InvoiceFilter() {
             label: "Lewat Jatuh Tempo (Hari)",
             isRequire: false,
             isError: false,
-            type: "textInput",
-            onChange: (val) => {}
+            type: "durationButton",
+            durationButton: {
+                data: [
+                    { id: "1", name: "3 Hari", value: 3 },
+                    { id: "2", name: "7 Hari", value: 7 },
+                    { id: "3", name: "14 Hari", value: 14 },
+                    { id: "4", name: "30 Hari", value: 30 },
+                    { id: "5", name: "45 Hari", value: 45 },
+                    { id: "6", name: "60 Hari", value: 60 },
+                    { id: "7", name: "90 Hari", value: 90 }
+                ],
+                onClick: (value) => {
+                    setSelectedDueDateDifference(value);
+                },
+                value: selectedDueDateDifference
+            }
         }
     ];
 

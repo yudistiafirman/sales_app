@@ -5,9 +5,10 @@ import {
     ViewStyle,
     TouchableOpacity,
     TextStyle,
-    Platform
+    Platform,
+    ListRenderItem
 } from "react-native";
-import { Input } from "@/interfaces";
+import { IDurationButton, Input } from "@/interfaces";
 import { colors, fonts, layout } from "@/constants";
 import { resScale } from "@/utils";
 import CheckBox from "@react-native-community/checkbox";
@@ -16,6 +17,8 @@ import { TextInputMask } from "react-native-masked-text";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import DatePicker from "react-native-date-picker";
 import { replaceDot } from "@/utils/generalFunc";
+import { FlashList } from "@shopify/flash-list";
+import font from "@/constants/fonts";
 import BSpacer from "../atoms/BSpacer";
 import BTextInput from "../atoms/BTextInput";
 import BCardOption from "../molecules/BCardOption";
@@ -31,6 +34,7 @@ import BFileInput from "../atoms/BFileInput";
 import BCalendar from "./BCalendar";
 import BComboRadioButton from "../molecules/BComboRadioButton";
 import BTableInput from "../molecules/BTableInput";
+import BButtonPrimary from "../atoms/BButtonPrimary";
 
 interface IProps {
     inputs: Input[];
@@ -940,6 +944,64 @@ const renderInput = (
                         bold="400"
                     >
                         {customerErrorMsg}
+                    </BText>
+                )}
+            </View>
+        );
+    }
+
+    const renderItemDurationButton: ListRenderItem<IDurationButton> = ({
+        item,
+        index
+    }) => (
+        <BButtonPrimary
+            onPress={() => input.durationButton?.onClick(item.value)}
+            title={item.name}
+            isOutline
+            outlineBtnStyle={
+                item.value === input.durationButton?.value
+                    ? {
+                          borderColor: colors.primary
+                      }
+                    : {
+                          borderColor: colors.border.default
+                      }
+            }
+            outlineTitleStyle={
+                item.value === input.durationButton?.value
+                    ? {
+                          color: colors.primary,
+                          fontSize: font.size.xs
+                      }
+                    : {
+                          color: colors.text.darker,
+                          fontSize: font.size.xs
+                      }
+            }
+        />
+    );
+
+    if (type === "durationButton") {
+        const defaultErrorMsg = `${label} harus diisi`;
+        return (
+            <View style={Platform.OS !== "android" && { zIndex: -1 }}>
+                <BLabel
+                    sizeInNumber={input.textSize}
+                    bold={titleBold}
+                    label={label}
+                    isRequired={isRequire}
+                />
+                <BSpacer size="verySmall" />
+                <FlashList
+                    data={input.durationButton?.data}
+                    estimatedItemSize={10}
+                    horizontal
+                    keyExtractor={(item, index) => item.id}
+                    renderItem={renderItemDurationButton}
+                />
+                {isError && (
+                    <BText size="small" color="primary" bold="100">
+                        {customerErrorMsg || defaultErrorMsg}
                     </BText>
                 )}
             </View>
