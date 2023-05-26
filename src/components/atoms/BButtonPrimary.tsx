@@ -58,6 +58,8 @@ type BButtonPrimaryType = {
     emptyIconEnable?: boolean;
     isLoading?: boolean;
     disable?: boolean;
+    outlineTitleStyle?: TextStyle;
+    outlineBtnStyle?: ViewStyle;
 };
 export default function BButtonPrimary({
     title,
@@ -69,7 +71,9 @@ export default function BButtonPrimary({
     rightIcon,
     leftIcon,
     emptyIconEnable = false,
-    isLoading
+    isLoading,
+    outlineTitleStyle,
+    outlineBtnStyle
 }: BButtonPrimaryType) {
     // const [showSpinner, setShowSpinner] = useState(false);
     let clicked = "0";
@@ -88,7 +92,7 @@ export default function BButtonPrimary({
                 style={[
                     style.buttonContainer,
                     buttonStyle,
-                    isOutline && style.outlineButton,
+                    isOutline && [style.outlineButton, outlineBtnStyle],
                     disable && style.disableStyle
                 ]}
                 onPress={clicked === "1" ? undefined : handlePress}
@@ -103,7 +107,9 @@ export default function BButtonPrimary({
                         style={[
                             style.buttonTitle,
                             titleStyle,
-                            isOutline ? style.outlineTitle : null,
+                            isOutline
+                                ? [style.outlineTitle, outlineTitleStyle]
+                                : null,
                             disable && style.disableText
                         ]}
                     >
