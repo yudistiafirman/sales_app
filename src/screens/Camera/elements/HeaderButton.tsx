@@ -16,12 +16,10 @@ import { BSpacer } from "@/components";
 const styles = StyleSheet.create({
     cameraBtn: {
         top: 0,
-        bottom: 0,
         position: "absolute",
         right: 0,
-        alignItems: "flex-end",
-        marginRight: layout.pad.md,
-        left: 0
+        bottom: 0,
+        alignItems: "flex-end"
     },
     photoIconContainer: {
         width: layout.pad.xl,
@@ -32,6 +30,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 20,
         backgroundColor: `${colors.disabled}50`
+    },
+    container: {
+        width: layout.pad.xl + layout.pad.md,
+        height: "50%"
     }
 });
 
@@ -105,7 +107,7 @@ function HeaderButton({
 
     return (
         <View style={[styles.cameraBtn, style]}>
-            <View>
+            <View style={styles.container}>
                 <FlashList
                     estimatedItemSize={4}
                     renderItem={renderItem}
