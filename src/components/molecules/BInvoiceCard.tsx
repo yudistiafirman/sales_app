@@ -2,6 +2,7 @@ import { colors, layout } from "@/constants";
 import font from "@/constants/fonts";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import formatCurrency from "@/utils/formatCurrency";
 import BSpacer from "../atoms/BSpacer";
 import BChip from "../atoms/BChip";
 
@@ -66,18 +67,40 @@ const styles = StyleSheet.create({
     }
 });
 
-function BInvoiceCard() {
+type IBInvoiceCard = {
+    invoiceNo: string;
+    companyName: string;
+    amount: number;
+    paymentStatus: string;
+    paymentMethod: string;
+    dueDateDays: string;
+    billingDate: string;
+    pastDueDateDays: string;
+    dueDate: string;
+};
+
+function BInvoiceCard({
+    invoiceNo,
+    companyName,
+    amount,
+    paymentStatus,
+    paymentMethod,
+    dueDateDays,
+    billingDate,
+    pastDueDateDays,
+    dueDate
+}: IBInvoiceCard) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>INV/202332394</Text>
-                    <Text style={styles.title}>Rp. 14.391.328 </Text>
+                    <Text style={styles.title}>{invoiceNo}</Text>
+                    <Text style={styles.title}>
+                        Rp. {formatCurrency(amount)}{" "}
+                    </Text>
                 </View>
                 <BSpacer size="verySmall" />
-                <Text style={styles.company}>
-                    PD Prakasa Wibowo (Persero) Tbk
-                </Text>
+                <Text style={styles.company}>{companyName}</Text>
             </View>
             <BSpacer size="extraSmall" />
             <View style={styles.divider} />
@@ -90,7 +113,7 @@ function BInvoiceCard() {
                         </Text>
                         <BSpacer size="verySmall" />
                         <Text style={styles.paymentItemValue}>
-                            Tagihan Diterima
+                            {paymentStatus}
                         </Text>
                     </View>
                     <View style={styles.paymentItem}>
@@ -102,7 +125,7 @@ function BInvoiceCard() {
                             textColor={colors.text.blue}
                             titleWeight="800"
                         >
-                            Pembayaran Kredit
+                            {paymentMethod}
                         </BChip>
                     </View>
                 </View>
@@ -114,7 +137,7 @@ function BInvoiceCard() {
                         <Text
                             style={[styles.title, { fontSize: font.size.xs }]}
                         >
-                            45 hari
+                            {dueDateDays} hari
                         </Text>
                     </View>
                     <View style={styles.dateItem}>
@@ -125,7 +148,7 @@ function BInvoiceCard() {
                         <Text
                             style={[styles.title, { fontSize: font.size.xs }]}
                         >
-                            1 Jan 2023
+                            {billingDate}
                         </Text>
                     </View>
                     <View style={styles.dateItem}>
@@ -136,7 +159,7 @@ function BInvoiceCard() {
                         <Text
                             style={[styles.title, { fontSize: font.size.xs }]}
                         >
-                            45 hari
+                            {pastDueDateDays} hari
                         </Text>
                     </View>
                     <View style={styles.dateItem}>
@@ -147,7 +170,7 @@ function BInvoiceCard() {
                         <Text
                             style={[styles.title, { fontSize: font.size.xs }]}
                         >
-                            45 hari
+                            {dueDate}
                         </Text>
                     </View>
                 </View>

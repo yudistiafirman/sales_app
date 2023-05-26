@@ -1,4 +1,4 @@
-import { BContainer, BSearchBar, BSpacer } from "@/components";
+import { BSearchBar, BSpacer } from "@/components";
 import BFilterSort from "@/components/molecules/BFilterSort";
 import BInvoiceCard from "@/components/molecules/BInvoiceCard";
 import { colors, layout } from "@/constants";
@@ -49,10 +49,30 @@ function InvoiceList() {
         </>
     );
 
-    const renderInvoiceCard = useCallback(
-        ({ item, index }) => <BInvoiceCard />,
-        []
-    );
+    const renderInvoiceCard = useCallback(({ item, index }) => {
+        const invoiceNo = "INV/202332394";
+        const companyName = "PD Prakasa Wibowo (Persero) Tbk";
+        const amount = 14391328;
+        const paymentStatus = "Tagihan diterima";
+        const paymentMethod = "Pembayaran Credit";
+        const dueDateDays = "45";
+        const billingDate = "1 Jan 2023";
+        const pastDueDateDays = "45";
+        const dueDate = "1 Jan 2023";
+        return (
+            <BInvoiceCard
+                invoiceNo={invoiceNo}
+                companyName={companyName}
+                amount={amount}
+                paymentStatus={paymentStatus}
+                paymentMethod={paymentMethod}
+                dueDateDays={dueDateDays}
+                billingDate={billingDate}
+                pastDueDateDays={pastDueDateDays}
+                dueDate={dueDate}
+            />
+        );
+    }, []);
     return (
         <View style={styles.container}>
             <FlashList
