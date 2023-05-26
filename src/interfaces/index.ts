@@ -10,6 +10,7 @@ import {
 import * as React from "react";
 import { Details } from "react-native-maps";
 import { DateData } from "react-native-calendars";
+import { MarkedDates } from "react-native-calendars/src/types";
 
 interface Input {
     label?: string;
@@ -31,6 +32,7 @@ interface Input {
         | "autocomplete"
         | "calendar"
         | "calendar-time"
+        | "calendar-range"
         | "comboRadioButton"
         | "tableInput"
         | "durationButton";
@@ -57,6 +59,7 @@ interface Input {
         icon?: string;
     }>;
     calendar?: {
+        markedDates?: MarkedDates | undefined;
         onDayPress: (day: DateData) => void;
         isCalendarVisible: boolean;
         setCalendarVisible: (flag: boolean) => void;

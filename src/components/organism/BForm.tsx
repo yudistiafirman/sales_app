@@ -35,6 +35,7 @@ import BCalendar from "./BCalendar";
 import BComboRadioButton from "../molecules/BComboRadioButton";
 import BTableInput from "../molecules/BTableInput";
 import BButtonPrimary from "../atoms/BButtonPrimary";
+import BCalendarRange from "./BCalendarRange";
 
 interface IProps {
     inputs: Input[];
@@ -399,6 +400,75 @@ const renderInput = (
                                     calendar?.setCalendarVisible(false);
                                     calendar?.onDayPress(date);
                                 }}
+                            />
+                        </View>
+                    </>
+                )}
+            </View>
+        );
+    }
+
+    if (type === "calendar-range") {
+        return (
+            <View style={Platform.OS !== "android" && { zIndex: -1 }}>
+                <BLabel
+                    sizeInNumber={input.textSize}
+                    bold={titleBold}
+                    label={label}
+                    isRequired={isRequire}
+                />
+                <TouchableOpacity
+                    style={[
+                        styles.quantityLayout,
+                        { marginTop: layout.pad.md }
+                    ]}
+                    onPress={() =>
+                        calendar?.setCalendarVisible(
+                            !calendar?.isCalendarVisible
+                        )
+                    }
+                >
+                    <View
+                        style={[
+                            styles.quantityInputCalendar,
+                            { paddingEnd: layout.pad.xl },
+                            isError && { borderColor: colors.primary }
+                        ]}
+                    >
+                        <BText>{value || placeholder}</BText>
+                    </View>
+                    <View style={styles.calendarText}>
+                        <Icon
+                            name="chevron-right"
+                            size={25}
+                            color={colors.black}
+                        />
+                    </View>
+                </TouchableOpacity>
+                {isError && (
+                    <BText size="small" color="primary" bold="100">
+                        {`${label} harus diisi`}
+                    </BText>
+                )}
+                {calendar?.isCalendarVisible && (
+                    <>
+                        <BSpacer size="extraSmall" />
+                        <View style={styles.calendar}>
+                            <BCalendarRange
+                                onDayPress={(date) => {
+                                    if (calendar?.isCalendarVisible === false) {
+                                        calendar?.setCalendarVisible(true);
+                                    }
+                                    if (
+                                        calendar?.markedDates &&
+                                        Object.keys(calendar?.markedDates)
+                                            .length > 2
+                                    ) {
+                                        calendar?.setCalendarVisible(false);
+                                    }
+                                    calendar?.onDayPress(date);
+                                }}
+                                markedDates={calendar?.markedDates}
                             />
                         </View>
                     </>
