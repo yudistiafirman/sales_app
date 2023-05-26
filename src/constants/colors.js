@@ -31,6 +31,7 @@ const colors = {
         secYellow: "#FF7B00",
         errorText: "#B00020",
         lightGray: "#7B97BC",
+        shadowGray: "#7F7F7F",
         pinkRed: "#D85F62"
     },
     status: {

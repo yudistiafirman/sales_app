@@ -50,7 +50,9 @@ const SvgNames = {
     IC_SIGN_SO: "IcSignSO",
     IC_EXCLA_CERT: "IcExclaCert",
     IC_CHECK_CERT: "IcCheckCert",
-    IC_INVOICE: "IcInvoice"
+    IC_INVOICE: "IcInvoice",
+    IC_FILTER: "IcFilter",
+    IC_SORT: "IcSort"
 };
 
 export default SvgNames;
