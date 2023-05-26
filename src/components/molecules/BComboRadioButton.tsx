@@ -60,7 +60,12 @@ function BComboRadioButton({
             ]}
         >
             <View style={styles.innerContainer}>
-                <View style={{ paddingStart: layout.pad.md }}>
+                <View
+                    style={[
+                        { paddingStart: layout.pad.md },
+                        isHorizontal && { paddingStart: 0 }
+                    ]}
+                >
                     <BLabel
                         sizeInNumber={textSize}
                         bold={titleBold}

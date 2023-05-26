@@ -79,7 +79,7 @@ function InvoiceFilter() {
             }
         },
         {
-            label: "Syarat Pembayaran",
+            label: "Status Pembayaran",
             isRequire: false,
             isError: false,
             type: "durationButton",
@@ -87,10 +87,17 @@ function InvoiceFilter() {
                 data: [
                     {
                         id: "1",
-                        name: "Tagihan Diterima",
-                        value: "AFTER_INVOICE"
+                        name: "Invoice Dibuat",
+                        value: "SUBMITTED"
                     },
-                    { id: "2", name: "Pengiriman Selesai", value: "AFTER_DO" }
+                    { id: "2", name: "Invoice Dikirim", value: "DELIVERED" },
+                    {
+                        id: "3",
+                        name: "Dibayar Sebagian",
+                        value: "PARTIALLY PAID"
+                    },
+                    { id: "4", name: "Lunas", value: "PAID" },
+                    { id: "5", name: "Batal", value: "CANCELLED" }
                 ],
                 onClick: (value) => {
                     setSelectedPaymentCondition(value);
