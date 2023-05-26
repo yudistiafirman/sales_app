@@ -4,7 +4,6 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import formatCurrency from "@/utils/formatCurrency";
 import BSpacer from "../atoms/BSpacer";
-import BChip from "../atoms/BChip";
 
 const styles = StyleSheet.create({
     container: {
@@ -51,6 +50,11 @@ const styles = StyleSheet.create({
         fontFamily: font.family.montserrat[500],
         fontSize: font.size.xs,
         color: colors.text.shadowGray
+    },
+    paymentMethodTitle: {
+        fontFamily: font.family.montserrat[800],
+        fontSize: font.size.xs,
+        color: colors.primary
     },
     paymentItemValue: {
         fontFamily: font.family.montserrat[600],
@@ -119,13 +123,9 @@ function BInvoiceCard({
                     <View style={styles.paymentItem}>
                         <Text style={styles.paymentItemTitle}>Metode :</Text>
                         <BSpacer size="verySmall" />
-                        <BChip
-                            type="header"
-                            textColor={colors.primary}
-                            titleWeight="800"
-                        >
+                        <Text style={styles.paymentMethodTitle}>
                             {paymentMethod}
-                        </BChip>
+                        </Text>
                     </View>
                 </View>
                 <BSpacer size="small" />

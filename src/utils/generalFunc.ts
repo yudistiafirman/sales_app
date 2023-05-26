@@ -1,7 +1,9 @@
 import { colors } from "@/constants";
 import { INDIVIDU } from "@/constants/const";
 import { CustomerDocsPayType } from "@/models/Customer";
+import moment from "moment";
 import { NativeModules, Platform } from "react-native";
+import "moment/locale/id";
 
 const { RNCustomConfig } = NativeModules;
 
@@ -334,4 +336,12 @@ export const replaceDot = (value: string) => {
         }
     }
     return output;
+};
+
+export const formatRawDateToMonthDateYear = (date?: Date) => {
+    let formattedDate = "";
+    if (date) {
+        formattedDate = moment(date).locale("id").format("LL").replace(",", "");
+    }
+    return formattedDate;
 };
