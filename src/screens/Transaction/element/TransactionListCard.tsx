@@ -16,9 +16,9 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: layout.pad.md,
         borderColor: colors.border.disabled,
-        marginTop: layout.pad.lg,
         padding: layout.pad.md,
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor: colors.white
     },
     container: {
         justifyContent: "flex-end",
