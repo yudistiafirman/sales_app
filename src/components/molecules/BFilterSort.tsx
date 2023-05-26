@@ -5,7 +5,6 @@ import { colors, layout } from "@/constants";
 import BButtonPrimary from "../atoms/BButtonPrimary";
 import BSpacer from "../atoms/BSpacer";
 import BSvg from "../atoms/BSvg";
-import { SVGName } from "..";
 import SvgNames from "../atoms/BSvg/svgName";
 
 const styles = StyleSheet.create({
@@ -19,7 +18,7 @@ const styles = StyleSheet.create({
     },
     btnStyle: {
         borderRadius: layout.radius.md,
-        borderColor: colors.border.lightGrayishBlue
+        borderColor: colors.border.default
     }
 });
 

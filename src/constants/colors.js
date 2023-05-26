@@ -64,8 +64,7 @@ const colors = {
         tab: "#C7C7C7",
         altGrey: "#C7C7C7",
         otpField: "#EBEBEB",
-        commonCard: "#EBEBEB",
-        lightGrayishBlue: "#E5E6EA"
+        commonCard: "#EBEBEB"
     },
     chip: {
         green: "#C2FCC8",

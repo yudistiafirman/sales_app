@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
         padding: layout.pad.lg,
         borderTopWidth: 1,
         borderBottomWidth: 1,
-        borderColor: colors.border.lightGrayishBlue
+        borderColor: colors.border.default
     },
     header: {
         flex: 0.5
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     },
     divider: {
         height: 1,
-        backgroundColor: colors.border.lightGrayishBlue
+        backgroundColor: colors.border.default
     },
     paymentContainer: {
         flexDirection: "row",
@@ -96,7 +96,7 @@ function BInvoiceCard({
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>{invoiceNo}</Text>
                     <Text style={styles.title}>
-                        Rp. {formatCurrency(amount)}{" "}
+                        {`Rp. ${formatCurrency(amount)}`}
                     </Text>
                 </View>
                 <BSpacer size="verySmall" />
@@ -121,8 +121,7 @@ function BInvoiceCard({
                         <BSpacer size="verySmall" />
                         <BChip
                             type="header"
-                            backgroundColor={colors.status.lightBlue}
-                            textColor={colors.text.blue}
+                            textColor={colors.primary}
                             titleWeight="800"
                         >
                             {paymentMethod}

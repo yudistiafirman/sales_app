@@ -11,17 +11,17 @@ import { TextInput } from "react-native-paper";
 const styles = StyleSheet.create({
     container: {
         borderTopWidth: 1,
-        borderColor: colors.border.lightGrayishBlue,
+        borderColor: colors.border.default,
         flex: 1
     },
     outlineSearchBar: {
         borderWidth: 1,
         borderRadius: layout.radius.md,
-        borderColor: colors.border.lightGrayishBlue
+        borderColor: colors.border.default
     },
     headerComponent: {
         padding: layout.pad.lg,
-        borderColor: colors.border.lightGrayishBlue
+        borderColor: colors.border.default
     }
 });
 
@@ -78,7 +78,7 @@ function InvoiceList() {
             <FlashList
                 data={[1]}
                 renderItem={renderInvoiceCard}
-                estimatedItemSize={200}
+                estimatedItemSize={10}
                 onEndReachedThreshold={0.5}
                 ListHeaderComponent={renderInvoiceListHeader}
                 ListHeaderComponentStyle={styles.headerComponent}
