@@ -5,6 +5,8 @@ import { fonts, layout } from "@/constants";
 import colors from "@/constants/colors";
 import font from "@/constants/fonts";
 import resScale from "@/utils/resScale";
+import warningIcon from "@/assets/icon/ic_warning.png";
+import successIcon from "@/assets/icon/ic_success.png";
 import BText from "../atoms/BText";
 import BButtonPrimary from "../atoms/BButtonPrimary";
 
@@ -54,9 +56,6 @@ const BalertDefaultProps = {
         "Pengiriman tidak dapat dilakukan karena jarak Batching Plant dengan lokasi Anda lebih dari 40km.",
     contentStyle: BAlertDefaultContentStyle
 };
-
-const warningIcon = require("@/assets/icon/ic_warning.png");
-const successIcon = require("@/assets/icon/ic_success.png");
 
 function BAlert({
     isVisible,

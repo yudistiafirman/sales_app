@@ -8,8 +8,7 @@ import SearchProduct from "@/screens/SearchProduct";
 import Sph from "@/screens/Sph";
 import CreateVisitation from "@/screens/Visitation/CreateVisitation";
 import TransactionDetail from "@/screens/Transaction/Detail";
-import CustomerDetailListCustomer from "@/screens/Customer/CustomerDetail";
-import CustomerDetail from "@/screens/CustomerDetail";
+import ProjectDetailPage from "@/screens/ProjectDetail";
 import PurchaseOrderWithProvider from "@/screens/PurchaseOrder";
 import CreateScheduleScreen from "@/screens/CreateSchedule";
 import PriceList from "@/screens/Price";
@@ -20,6 +19,7 @@ import Deposit from "@/screens/Deposit";
 import SearchSO from "@/screens/SearchSO";
 import FormSO from "@/screens/SearchSO/Form/FormSO";
 import Document from "@/screens/Customer/Document";
+import CustomerDetail from "@/screens/Customer/Detail";
 import {
     ALL_PRODUCT,
     ALL_PRODUCT_TITLE,
@@ -35,8 +35,8 @@ import {
     CREATE_SCHEDULE_TITLE,
     CREATE_VISITATION,
     CREATE_VISITATION_TITLE,
-    CUSTOMER_DETAIL_V2,
-    CUSTOMER_DETAIL_V1,
+    CUSTOMER_DETAIL,
+    PROJECT_DETAIL,
     CUSTOMER_DETAIL_TITLE,
     CUSTOMER_DOCUMENT,
     DOCUMENTS,
@@ -58,7 +58,8 @@ import {
     SPH_TITLE,
     TRANSACTION_DETAIL,
     TRANSACTION_DETAIL_TITLE,
-    VISIT_HISTORY
+    VISIT_HISTORY,
+    PROJECT_DETAIL_TITLE
 } from "../ScreenNames";
 
 function SalesStack(Stack: any) {
@@ -153,26 +154,23 @@ function SalesStack(Stack: any) {
                 }}
             />
             <Stack.Screen
-                name={CUSTOMER_DETAIL_V1}
-                key={CUSTOMER_DETAIL_V1}
+                name={PROJECT_DETAIL}
+                key={PROJECT_DETAIL}
+                component={ProjectDetailPage}
+                options={{
+                    headerTitle: PROJECT_DETAIL_TITLE,
+                    headerTitleAlign: "center"
+                }}
+            />
+            <Stack.Screen
+                name={CUSTOMER_DETAIL}
+                key={CUSTOMER_DETAIL}
                 component={CustomerDetail}
                 options={{
                     headerTitle: CUSTOMER_DETAIL_TITLE,
                     headerTitleAlign: "center"
                 }}
             />
-            {/* CUSTOMER DETAIL FROM LIST CUSTOMER */}
-            <Stack.Screen
-                name={CUSTOMER_DETAIL_V2}
-                key={CUSTOMER_DETAIL_V2}
-                component={CustomerDetailListCustomer}
-                options={{
-                    headerTitle: CUSTOMER_DETAIL_TITLE,
-                    headerTitleAlign: "center"
-                }}
-            />
-            {/* CUSTOMER DETAIL FROM LIST CUSTOMER */}
-            {/* DOCUMENT FROM LIST CUSTOMER */}
             <Stack.Screen
                 name={CUSTOMER_DOCUMENT}
                 key={CUSTOMER_DOCUMENT}
@@ -182,7 +180,6 @@ function SalesStack(Stack: any) {
                     headerTitleAlign: "center"
                 }}
             />
-            {/* DOCUMENT FROM LIST CUSTOMER */}
             <Stack.Screen
                 name={ALL_PRODUCT}
                 key={ALL_PRODUCT}

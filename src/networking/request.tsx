@@ -1,7 +1,6 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse, Method } from "axios";
 import BrikApiCommon from "@/brikApi/BrikApiCommon";
-import Api from "@/models";
-import { UserModel } from "@/models/User";
+import UserModel from "@/models/User";
 import bStorage from "@/actions";
 import { storageKey } from "@/constants";
 import { signout } from "@/redux/reducers/authReducer";
@@ -12,6 +11,7 @@ import { Platform } from "react-native";
 import crashlytics from "@react-native-firebase/crashlytics";
 import analytics from "@react-native-firebase/analytics";
 import perf from "@react-native-firebase/perf";
+import Api from "@/models";
 
 const URL_PRODUCTIVITY =
     Platform.OS === "android"
@@ -31,6 +31,12 @@ const URL_COMMON =
         : __DEV__
         ? Config.API_URL_COMMON
         : Config.API_URL_COMMON_PROD;
+const URL_FINANCE =
+    Platform.OS === "android"
+        ? Config.API_URL_FINANCE
+        : __DEV__
+        ? Config.API_URL_FINANCE
+        : Config.API_URL_FINANCE_PROD;
 
 let store: any;
 let metric: any;
@@ -50,7 +56,7 @@ interface RequestInfo {
     timeoutInterval?: number;
 }
 
-function setCharAt(str, index, chr) {
+function setCharAt(str: string, index: number, chr: string) {
     if (index > str.length - 1) return str;
     return str.substring(0, index) + chr + str.substring(index + 1);
 }
@@ -194,13 +200,18 @@ instance.interceptors.response.use(
         } else if (config.method !== "get" && config.method !== "put") {
             let { url } = config;
             if (url) {
-                if (url[url?.length || 0 - 1] === "/") {
-                    url = setCharAt(url, url?.length || 0 - 1, "");
+                if (url?.length > 0 && url[url.length - 1] === "/") {
+                    url = setCharAt(url, url.length - 1, "");
                 }
             }
-            const urlArray: string[] = url?.split("/");
-            const respMethod = config.method;
-            const endpoint = urlArray[urlArray?.length || 0 - 1] || "";
+            const urlArray: string[] | undefined = url?.split("/");
+            const respMethod: string | undefined = config.method;
+            const endpoint =
+                (url &&
+                    url?.length > 0 &&
+                    urlArray &&
+                    urlArray[urlArray.length - 1]) ||
+                "";
             const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
             const postSphUrl = `${URL_ORDER}/order/m/flow/quotation/`;
             if (
@@ -253,6 +264,7 @@ instance.interceptors.response.use(
             const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
             const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
             const postDepositUrl = `${URL_ORDER}/order/m/deposit/`;
+            const postPaymentUrl = `${URL_FINANCE}/finance/m/payment/`;
             const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
             const postPO = `${URL_ORDER}/order/m/purchase-order/`;
             const postSOSigned = `${URL_ORDER}/order/m/purchase-order/docs/`;
@@ -267,6 +279,7 @@ instance.interceptors.response.use(
                 error?.config?.url !== postVisitationUrl &&
                 error?.config?.url !== postVisitationBookUrl &&
                 error?.config?.url !== postDepositUrl &&
+                error?.config?.url !== postPaymentUrl &&
                 error?.config?.url !== postScheduleUrl &&
                 error?.config?.url !== postPO &&
                 error?.config?.url !== postSOSigned

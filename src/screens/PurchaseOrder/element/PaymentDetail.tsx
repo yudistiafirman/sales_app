@@ -8,9 +8,8 @@ import font from "@/constants/fonts";
 import { Input } from "@/interfaces";
 import { ProjectDocs } from "@/interfaces/CreatePurchaseOrder";
 import { AppDispatch, RootState } from "@/redux/store";
-
-const cbd = require("@/assets/icon/Visitation/cbd.png");
-const credit = require("@/assets/icon/Visitation/credit.png");
+import cbd from "@/assets/icon/Visitation/cbd.png";
+import credit from "@/assets/icon/Visitation/credit.png";
 
 const styles = StyleSheet.create({
     container: {

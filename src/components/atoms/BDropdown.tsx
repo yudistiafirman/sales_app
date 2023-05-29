@@ -71,10 +71,18 @@ const styles: Styles = {
 };
 
 function BDropdown(props: IProps) {
-    const { isError, errorMessage } = props;
-    const [open, setOpen] = React.useState(props.open);
-    const [value, setValue] = React.useState(props.value);
-    const [items, setItems] = React.useState(props.items);
+    const {
+        isError,
+        errorMessage,
+        placeholder,
+        onChange,
+        open: openProps,
+        value: valueProps,
+        items: itemsProps
+    } = props;
+    const [open, setOpen] = React.useState(openProps);
+    const [value, setValue] = React.useState(valueProps);
+    const [items, setItems] = React.useState(itemsProps);
 
     return (
         <>
@@ -86,8 +94,8 @@ function BDropdown(props: IProps) {
                 setOpen={setOpen}
                 setValue={setValue}
                 setItems={setItems}
-                onChangeValue={props.onChange}
-                placeholder={props.placeholder}
+                onChangeValue={onChange}
+                placeholder={placeholder}
                 dropDownDirection="BOTTOM"
                 placeholderStyle={{
                     color: colors.textInput.placeHolder

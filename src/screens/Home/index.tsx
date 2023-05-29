@@ -44,12 +44,13 @@ import {
     CREATE_DEPOSIT,
     CREATE_SCHEDULE,
     CREATE_VISITATION,
-    CUSTOMER_DETAIL_V1,
+    PROJECT_DETAIL,
     PO,
     SEARCH_SO,
     SPH,
     TAB_HOME,
-    HOME_MENU
+    HOME_MENU,
+    INVOICE_LIST
 } from "@/navigation/ScreenNames";
 import SvgNames from "@/components/atoms/BSvg/svgName";
 import crashlytics from "@react-native-firebase/crashlytics";
@@ -159,7 +160,8 @@ function Beranda() {
         enable_deposit,
         enable_po,
         enable_sph,
-        enable_visitation
+        enable_visitation,
+        enable_invoice
     } = useSelector((state: RootState) => state.auth.remoteConfigData);
     /* eslint-enable @typescript-eslint/naming-convention */
 
@@ -512,6 +514,13 @@ function Beranda() {
                 action: () => {
                     navigation.navigate(SEARCH_SO);
                 }
+            },
+            {
+                icon: SvgNames.IC_INVOICE,
+                title: HOME_MENU.INVOICE,
+                action: () => {
+                    navigation.navigate(INVOICE_LIST);
+                }
             }
         ];
 
@@ -553,6 +562,13 @@ function Beranda() {
         if (!enable_signed_so) {
             const filtered = buttons.filter(
                 (item) => item.title !== HOME_MENU.SIGN_SO
+            );
+            buttons = filtered;
+        }
+
+        if (!enable_invoice) {
+            const filtered = buttons.filter(
+                (item) => item.title !== HOME_MENU.INVOICE
             );
             buttons = filtered;
         }
@@ -643,8 +659,9 @@ function Beranda() {
                     existingVisitation: response
                 });
             } else {
-                navigation.navigate(CUSTOMER_DETAIL_V1, {
-                    existingVisitation: response
+                navigation.navigate(PROJECT_DETAIL, {
+                    projectId: response?.project?.id,
+                    isFromCustomerPage: false
                 });
             }
         } catch (error) {

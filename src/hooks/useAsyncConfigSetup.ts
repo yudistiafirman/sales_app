@@ -15,7 +15,7 @@ import { isJsonString } from "@/utils/generalFunc";
 import remoteConfig from "@react-native-firebase/remote-config";
 import BackgroundFetch from "react-native-background-fetch";
 import { HUNTER_AND_FARMER } from "@/navigation/ScreenNames";
-import { UserModel } from "@/models/User";
+import UserModel from "@/models/User";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 
 const useAsyncConfigSetup = () => {

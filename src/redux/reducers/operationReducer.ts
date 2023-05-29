@@ -54,6 +54,7 @@ export const operationSlice = createSlice({
         resetInputsValue: (state) => ({
             ...state,
             inputsValue: {
+                ...state.inputsValue,
                 recepientName: "",
                 recepientPhoneNumber: "",
                 truckMixCondition: "",

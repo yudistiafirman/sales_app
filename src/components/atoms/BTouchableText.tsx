@@ -18,6 +18,7 @@ interface BTouchableTextProps {
     title?: string | undefined;
     disabled?: boolean;
     startIcon?: React.ReactNode;
+    textSize?: number;
 }
 
 const BTouchableTextDefaultStyle: TextStyle = {
@@ -42,6 +43,7 @@ function BTouchableText({
     textStyle,
     viewStyle,
     title,
+    textSize = undefined,
     disabled = false,
     startIcon
 }: BTouchableTextProps & typeof BTouchableDefaultProps) {
@@ -54,6 +56,7 @@ function BTouchableText({
             {startIcon}
             <BText
                 style={[textStyle, disabled && { color: colors.text.inactive }]}
+                sizeInNumber={textSize}
             >
                 {title}
             </BText>

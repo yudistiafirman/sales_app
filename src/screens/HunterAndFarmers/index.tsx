@@ -25,6 +25,9 @@ import {
 import { toggleHunterScreen } from "@/redux/reducers/authReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import BrikLogo from "@/assets/logo/brik_logo.png";
+import IcFarmer from "@/assets/icon/ic_farmer.png";
+import IcHunter from "@/assets/icon/ic_hunter.png";
 
 const { height } = Dimensions.get("screen");
 
@@ -63,10 +66,6 @@ const styles = StyleSheet.create({
         alignItems: "center"
     }
 });
-
-const BrikLogo = require("@/assets/logo/brik_logo.png");
-const IcFarmer = require("@/assets/icon/ic_farmer.png");
-const IcHunter = require("@/assets/icon/ic_hunter.png");
 
 function HunterAndFarmers() {
     const navigation = useNavigation();

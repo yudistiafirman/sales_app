@@ -124,15 +124,15 @@ export const isJsonString = (str: any) => {
 };
 
 export const getSuccessMsgFromAPI = (
-    httpMethod: string,
+    httpMethod: string | undefined,
     domainType: string,
-    fullUrl: string,
+    fullUrl: string | undefined,
     endPoint: string
 ) => {
     // excluding: /refresh , /suggestion , /places , /verify-auth , /project_sph , all finalText that empty
 
     let finalText = "Berhasil ";
-    switch (httpMethod.toLowerCase()) {
+    switch (httpMethod?.toLowerCase()) {
         case "post":
             finalText += "menambahkan ";
             break;
@@ -146,7 +146,7 @@ export const getSuccessMsgFromAPI = (
             finalText += "mengubah ";
             break;
         default:
-            finalText += `${httpMethod.toLowerCase()} `;
+            finalText += `${httpMethod?.toLowerCase()} `;
             break;
     }
 
@@ -191,9 +191,9 @@ export const getSuccessMsgFromAPI = (
                 finalText = "Berhasil logout";
                 break;
             default:
-                if (fullUrl.toLowerCase().includes("places/"))
+                if (fullUrl?.toLowerCase().includes("places/"))
                     finalText = "Berhasil mendapatkan detail alamat";
-                else if (fullUrl.toLowerCase().includes("project/"))
+                else if (fullUrl?.toLowerCase().includes("project/"))
                     finalText += "detail proyek";
                 else finalText += "data";
                 break;
@@ -235,7 +235,7 @@ export const getSuccessMsgFromAPI = (
                 finalText = "Berhasil buat janji";
                 break;
             default:
-                if (fullUrl.toLowerCase().includes("visitation/"))
+                if (fullUrl?.toLowerCase().includes("visitation/"))
                     finalText = "";
                 else finalText += "data";
                 break;
@@ -275,17 +275,17 @@ export const getSuccessMsgFromAPI = (
                 finalText = "";
                 break;
             default:
-                if (fullUrl.toLowerCase().includes("sph/"))
+                if (fullUrl?.toLowerCase().includes("sph/"))
                     finalText += "dokumen SPH";
-                else if (fullUrl.toLowerCase().includes("purchase-order/"))
+                else if (fullUrl?.toLowerCase().includes("purchase-order/"))
                     finalText = "";
-                else if (fullUrl.toLowerCase().includes("quotation-letter/"))
+                else if (fullUrl?.toLowerCase().includes("quotation-letter/"))
                     finalText = "";
-                else if (fullUrl.toLowerCase().includes("deposit/"))
+                else if (fullUrl?.toLowerCase().includes("deposit/"))
                     finalText = "";
-                else if (fullUrl.toLowerCase().includes("schedule/"))
+                else if (fullUrl?.toLowerCase().includes("schedule/"))
                     finalText = "";
-                else if (fullUrl.toLowerCase().includes("delivery-order/"))
+                else if (fullUrl?.toLowerCase().includes("delivery-order/"))
                     finalText = "";
                 else finalText += "data";
                 break;
