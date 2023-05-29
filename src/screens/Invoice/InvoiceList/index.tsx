@@ -5,6 +5,7 @@ import BInvoiceCard from "@/components/molecules/BInvoiceCard";
 import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { colors, layout } from "@/constants";
 import { InvoiceListData } from "@/models/Invoice";
+
 import {
     setErrorMessage,
     setInvoceData,
@@ -17,9 +18,12 @@ import {
 } from "@/redux/reducers/invoiceReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
-import { formatRawDateToMonthDateYear } from "@/utils/generalFunc";
+import {
+    formatRawDateToMonthDateYear,
+    translatePaymentStatus
+} from "@/utils/generalFunc";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
@@ -121,16 +125,24 @@ function InvoiceList() {
     );
 
     const onChangeText = (e: string) => {
-        dispatch(setInvoiceSearchQuery({ queryValue: e }));
+        if (invoiceData.searchQuery.length > 2) {
+            dispatch(setLoading({ isLoading: true }));
+            dispatch(setInvoceData({ data: [] }));
+            dispatch(setPage({ page: 1 }));
+            dispatch(setInvoiceSearchQuery({ queryValue: e }));
+        } else {
+            dispatch(setInvoiceSearchQuery({ queryValue: e }));
+        }
     };
 
     const renderInvoiceListHeader = () => (
-        <>
+        <View style={styles.headerComponent}>
             <BSearchBar
                 outlineStyle={styles.outlineSearchBar}
                 placeholder="Cari Invoice"
                 onChangeText={onChangeText}
                 value={invoiceData.searchQuery}
+                autoFocus={false}
                 textInputStyle={{ minHeight: resScale(42) }}
                 left={
                     <TextInput.Icon
@@ -146,7 +158,7 @@ function InvoiceList() {
                 onPressFilter={() => console.log("filter pressed")}
             />
             <BSpacer size="verySmall" />
-        </>
+        </View>
     );
 
     const renderInvoiceCard: ListRenderItem<InvoiceListData> = useCallback(
@@ -156,26 +168,59 @@ function InvoiceList() {
                 ? item?.Project?.Customer?.displayName
                 : "-";
             const amount = item?.total ? item?.total : 0;
-            const paymentStatus = item?.status ? item?.status : "-";
-            const paymentMethod = item?.Project?.Customer?.paymentType
-                ? `Pembayaran ${item?.Project?.Customer?.paymentType}`
+            const paymentStatus = item?.status
+                ? translatePaymentStatus(item?.status)
                 : "-";
-            const dueDateDays = "45";
+            const paymentMethod = item?.Project?.Customer?.paymentType
+                ? "Credit"
+                : "Cash";
+            const dueDateDays = item?.Project?.Customer?.paymentDuration
+                ? `${item?.Project?.Customer?.paymentDuration} hari`
+                : "-";
             const billingDate = item?.issuedDate
                 ? formatRawDateToMonthDateYear(item?.issuedDate)
                 : "-";
-            const pastDueDateDays = "45";
-            const dueDate = "1 Jan 2023";
+            const pastDueDateDays = () => {
+                let defaultTextDays = "-";
+                if (item?.dueDateDifference && item?.status !== "PAID") {
+                    defaultTextDays = item?.dueDateDifference.toString();
+                    defaultTextDays += " hari";
+                }
+                return defaultTextDays;
+            };
+
+            const renderPastDueDateDaysColor = () => {
+                let color = colors.text.darker;
+                if (item?.dueDateDifference && item?.status !== "PAID") {
+                    if (item?.dueDateDifference < 0) {
+                        color = colors.primary;
+                    } else if (
+                        item?.dueDateDifference >= 0 &&
+                        item?.dueDateDifference < 7
+                    ) {
+                        color = colors.text.secYellow;
+                    } else {
+                        color = colors.greenLantern;
+                    }
+                }
+                return color;
+            };
+            const dueDate = item?.dueDate
+                ? formatRawDateToMonthDateYear(item?.dueDate)
+                : "-";
+
             return (
                 <BInvoiceCard
                     invoiceNo={invoiceNo}
                     companyName={companyName}
                     amount={amount}
+                    bgColor={index % 2 ? colors.veryLightShadeGray : ""}
                     paymentStatus={paymentStatus}
                     paymentMethod={paymentMethod}
                     dueDateDays={dueDateDays}
                     billingDate={billingDate}
-                    pastDueDateDays={pastDueDateDays}
+                    pastDueDateDaysColor={renderPastDueDateDaysColor()}
+                    pastDueDateDays={pastDueDateDays()}
                     dueDate={dueDate}
                 />
             );
@@ -185,16 +230,17 @@ function InvoiceList() {
 
     return (
         <View style={styles.container}>
+            {renderInvoiceListHeader()}
             <FlashList
                 data={invoiceData.invoiceData}
                 refreshing={invoiceData.isRefreshing}
                 renderItem={renderInvoiceCard}
-                estimatedItemSize={200}
+                estimatedItemSize={10}
                 onRefresh={onRefresh}
                 onEndReachedThreshold={0.5}
                 onEndReached={onEndReached}
-                ListHeaderComponent={renderInvoiceListHeader}
-                ListHeaderComponentStyle={styles.headerComponent}
+                // ListHeaderComponent={renderInvoiceListHeader}
+                // ListHeaderComponentStyle={styles.headerComponent}
                 ListFooterComponent={
                     invoiceData.isLoadMore ? renderShimmerInvoiceList() : null
                 }

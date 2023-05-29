@@ -2,7 +2,7 @@ export interface InvoiceCustomer {
     id: string;
     name?: string;
     displayName?: string;
-    paymentType?: string;
+    paymentType?: "cbd" | "credit";
     paymentCondition?: string;
     paymentDuration?: string;
 }
@@ -20,7 +20,7 @@ export interface InvoiceListData {
     number?: string;
     total?: number;
     status?:
-        | "PARTIALLY_PAID"
+        | "PARTIALLY PAID"
         | "DELIVERED"
         | "CANCELLED"
         | "PAID"

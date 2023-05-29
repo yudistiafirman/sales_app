@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: layout.pad.lg,
         borderTopWidth: 1,
-        borderBottomWidth: 1,
+
         borderColor: colors.border.default
     },
     header: {
@@ -76,11 +76,13 @@ type IBInvoiceCard = {
     companyName: string;
     amount: number;
     paymentStatus: string;
-    paymentMethod: string;
+    paymentMethod: "Credit" | "Cash";
     dueDateDays: string;
     billingDate: string;
     pastDueDateDays: string;
+    pastDueDateDaysColor: string;
     dueDate: string;
+    bgColor: string;
 };
 
 function BInvoiceCard({
@@ -92,10 +94,60 @@ function BInvoiceCard({
     dueDateDays,
     billingDate,
     pastDueDateDays,
-    dueDate
+    pastDueDateDaysColor,
+    dueDate,
+    bgColor
 }: IBInvoiceCard) {
+    const renderInvoiceCardFooter = () => (
+        <>
+            <BSpacer size="small" />
+
+            <View style={[styles.dateContainer]}>
+                <View style={styles.dateItem}>
+                    <Text style={styles.paymentItemTitle}>Jatuh Tempo</Text>
+                    <BSpacer size="extraSmall" />
+                    <Text style={[styles.title, { fontSize: font.size.xs }]}>
+                        {dueDateDays}
+                    </Text>
+                </View>
+                <View style={styles.dateItem}>
+                    <Text style={styles.paymentItemTitle}>Tanggal Tagih</Text>
+                    <BSpacer size="extraSmall" />
+                    <Text style={[styles.title, { fontSize: font.size.xs }]}>
+                        {billingDate}
+                    </Text>
+                </View>
+                <View style={styles.dateItem}>
+                    <Text style={styles.paymentItemTitle}>
+                        Lewat Jatuh Tempo
+                    </Text>
+                    <BSpacer size="extraSmall" />
+                    <Text
+                        style={[
+                            styles.title,
+                            {
+                                fontSize: font.size.xs,
+                                color: pastDueDateDaysColor
+                            }
+                        ]}
+                    >
+                        {pastDueDateDays}
+                    </Text>
+                </View>
+                <View style={styles.dateItem}>
+                    <Text style={styles.paymentItemTitle}>
+                        Tanggal Jatuh Tempo
+                    </Text>
+                    <BSpacer size="extraSmall" />
+                    <Text style={[styles.title, { fontSize: font.size.xs }]}>
+                        {dueDate}
+                    </Text>
+                </View>
+            </View>
+        </>
+    );
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: bgColor }]}>
             <View style={styles.header}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>{invoiceNo}</Text>
@@ -124,55 +176,11 @@ function BInvoiceCard({
                         <Text style={styles.paymentItemTitle}>Metode :</Text>
                         <BSpacer size="verySmall" />
                         <Text style={styles.paymentMethodTitle}>
-                            {paymentMethod}
+                            Pembayaran {paymentMethod}
                         </Text>
                     </View>
                 </View>
-                <BSpacer size="small" />
-                <View style={styles.dateContainer}>
-                    <View style={styles.dateItem}>
-                        <Text style={styles.paymentItemTitle}>Jatuh Tempo</Text>
-                        <BSpacer size="extraSmall" />
-                        <Text
-                            style={[styles.title, { fontSize: font.size.xs }]}
-                        >
-                            {dueDateDays} hari
-                        </Text>
-                    </View>
-                    <View style={styles.dateItem}>
-                        <Text style={styles.paymentItemTitle}>
-                            Tanggal Tagih
-                        </Text>
-                        <BSpacer size="extraSmall" />
-                        <Text
-                            style={[styles.title, { fontSize: font.size.xs }]}
-                        >
-                            {billingDate}
-                        </Text>
-                    </View>
-                    <View style={styles.dateItem}>
-                        <Text style={styles.paymentItemTitle}>
-                            Lewat Jatuh Tempo
-                        </Text>
-                        <BSpacer size="extraSmall" />
-                        <Text
-                            style={[styles.title, { fontSize: font.size.xs }]}
-                        >
-                            {pastDueDateDays} hari
-                        </Text>
-                    </View>
-                    <View style={styles.dateItem}>
-                        <Text style={styles.paymentItemTitle}>
-                            Tanggal Jatuh Tempo
-                        </Text>
-                        <BSpacer size="extraSmall" />
-                        <Text
-                            style={[styles.title, { fontSize: font.size.xs }]}
-                        >
-                            {dueDate}
-                        </Text>
-                    </View>
-                </View>
+                {paymentMethod === "Credit" ? renderInvoiceCardFooter() : null}
             </View>
         </View>
     );
