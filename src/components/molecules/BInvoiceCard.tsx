@@ -76,7 +76,7 @@ type IBInvoiceCard = {
     companyName: string;
     amount: number;
     paymentStatus: string;
-    paymentMethod: "Credit" | "Cash";
+    paymentMethod: "Credit" | "Cash" | string | number;
     dueDateDays: string;
     billingDate: string;
     pastDueDateDays: string;

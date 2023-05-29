@@ -4,6 +4,7 @@ import BFilterSort from "@/components/molecules/BFilterSort";
 import BInvoiceCard from "@/components/molecules/BInvoiceCard";
 import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { colors, layout } from "@/constants";
+import { DEBOUNCE_SEARCH } from "@/constants/const";
 import { InvoiceListData } from "@/models/Invoice";
 
 import {
@@ -23,6 +24,7 @@ import {
     translatePaymentStatus
 } from "@/utils/generalFunc";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import debounce from "lodash.debounce";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-paper";
@@ -52,14 +54,14 @@ function InvoiceList() {
     const invoiceData = useSelector((state: RootState) => state.invoice);
     const dispatch = useDispatch();
 
-    const getAllInvoiceData = async () => {
+    const getAllInvoiceData = debounce(async () => {
         try {
             dispatch(setLoading({ isLoading: true }));
-            const { page, size, searchQuery } = invoiceData;
+            const { page, size, searchQuery, isRefreshing } = invoiceData;
 
             const response = await getAllInvoice(
                 size.toString(),
-                page.toString(),
+                page === 0 ? "1" : page.toString(),
                 searchQuery
             );
             if (response?.data?.data?.data) {
@@ -93,9 +95,11 @@ function InvoiceList() {
                 : "Gagal Mengambil data List Invoice";
             dispatch(setErrorMessage({ message: errorMesage }));
         }
-    };
+    }, DEBOUNCE_SEARCH);
 
     const onRefresh = () => {
+        const { page } = invoiceData;
+        dispatch(setErrorMessage({ message: "" }));
         dispatch(setRefreshing({ refreshing: true }));
         dispatch(setPage({ page: 0 }));
         dispatch(setInvoceData({ data: [] }));
@@ -112,10 +116,10 @@ function InvoiceList() {
     useEffect(() => {
         getAllInvoiceData();
     }, [
-        invoiceData.isRefreshing,
         invoiceData.isLoadMore,
         invoiceData.page,
-        invoiceData.searchQuery
+        invoiceData.searchQuery,
+        invoiceData.isRefreshing
     ]);
 
     const renderShimmerInvoiceList = () => (
@@ -133,6 +137,14 @@ function InvoiceList() {
         } else {
             dispatch(setInvoiceSearchQuery({ queryValue: e }));
         }
+    };
+
+    const onRetry = () => {
+        dispatch(setLoading({ isLoading: true }));
+        dispatch(setInvoceData({ data: [] }));
+        dispatch(setPage({ page: 1 }));
+        dispatch(setInvoiceSearchQuery({ queryValue: "" }));
+        getAllInvoiceData();
     };
 
     const renderInvoiceListHeader = () => (
@@ -239,8 +251,6 @@ function InvoiceList() {
                 onRefresh={onRefresh}
                 onEndReachedThreshold={0.5}
                 onEndReached={onEndReached}
-                // ListHeaderComponent={renderInvoiceListHeader}
-                // ListHeaderComponentStyle={styles.headerComponent}
                 ListFooterComponent={
                     invoiceData.isLoadMore ? renderShimmerInvoiceList() : null
                 }
@@ -250,8 +260,8 @@ function InvoiceList() {
                     ) : (
                         <BEmptyState
                             errorMessage={invoiceData.errorMessage}
-                            isError={invoiceData.length > 0}
-                            // onAction={onRetry}
+                            isError={invoiceData?.errorMessage?.length > 0}
+                            onAction={onRetry}
                             emptyText="Data Tidak Ditemukan"
                         />
                     )
