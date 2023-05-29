@@ -44,7 +44,7 @@ import {
     CREATE_DEPOSIT,
     CREATE_SCHEDULE,
     CREATE_VISITATION,
-    CUSTOMER_DETAIL_V1,
+    PROJECT_DETAIL,
     PO,
     SEARCH_SO,
     SPH,
@@ -659,8 +659,9 @@ function Beranda() {
                     existingVisitation: response
                 });
             } else {
-                navigation.navigate(CUSTOMER_DETAIL_V1, {
-                    existingVisitation: response
+                navigation.navigate(PROJECT_DETAIL, {
+                    projectId: response?.project?.id,
+                    isFromCustomerPage: false
                 });
             }
         } catch (error) {

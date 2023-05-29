@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import {
     CREATE_VISITATION,
-    CUSTOMER_DETAIL_V1,
+    PROJECT_DETAIL,
     LOCATION,
     SEARCH_AREA,
     SPH
@@ -62,7 +62,7 @@ function SearchAreaProject({ route }: { route: any }) {
                     if (
                         from === CREATE_VISITATION ||
                         from === SPH ||
-                        from === CUSTOMER_DETAIL_V1
+                        from === PROJECT_DETAIL
                     ) {
                         if (eventKey) {
                             if (sourceType) {
