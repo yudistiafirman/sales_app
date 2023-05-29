@@ -162,7 +162,10 @@ export default function ProjectDetailPage() {
                     <BSpacer size="extraSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW500}>
-                            {customerData?.displayName}
+                            {customerData.Customer?.name &&
+                            customerData.Customer?.name !== null
+                                ? customerData.Customer?.name
+                                : "-"}
                         </Text>
                         <Text
                             style={[
@@ -175,17 +178,15 @@ export default function ProjectDetailPage() {
                                 textSize={fonts.size.xs}
                                 disabled={
                                     !(
-                                        customerData.Account?.customerId &&
-                                        customerData.Account?.customerId !==
-                                            null
+                                        customerData.Customer?.id &&
+                                        customerData.Customer?.id !== null
                                     )
                                 }
                                 onPress={() =>
                                     isFromCustomerPage
                                         ? navigation.goBack()
                                         : navigation.navigate(CUSTOMER_DETAIL, {
-                                              id: customerData.Account
-                                                  ?.customerId
+                                              id: customerData.Customer?.id
                                           })
                                 }
                             />

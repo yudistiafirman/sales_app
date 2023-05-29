@@ -52,16 +52,16 @@ export const operationSlice = createSlice({
     reducers: {
         resetOperationState: () => initialState,
         resetInputsValue: (state) => ({
-                ...state,
-                inputsValue: {
-                    ...state.inputsValue,
-                    recepientName: "",
-                    recepientPhoneNumber: "",
-                    truckMixCondition: "",
-                    weightBridge: "",
-                    truckMixHaveLoad: false
-                }
-            }),
+            ...state,
+            inputsValue: {
+                ...state.inputsValue,
+                recepientName: "",
+                recepientPhoneNumber: "",
+                truckMixCondition: "",
+                weightBridge: "",
+                truckMixHaveLoad: false
+            }
+        }),
         onChangeInputValue: (
             state,
             actions: PayloadAction<{
@@ -69,19 +69,19 @@ export const operationSlice = createSlice({
                 value: string;
             }>
         ) => ({
-                ...state,
-                inputsValue: {
-                    ...state.inputsValue,
-                    [actions.payload.inputType]: actions.payload.value
-                }
-            }),
+            ...state,
+            inputsValue: {
+                ...state.inputsValue,
+                [actions.payload.inputType]: actions.payload.value
+            }
+        }),
         onChangeProjectDetails: (
             state,
             actions: PayloadAction<{ projectDetails: OperationProjectDetails }>
         ) => ({
-                ...state,
-                projectDetails: actions.payload.projectDetails
-            }),
+            ...state,
+            projectDetails: actions.payload.projectDetails
+        }),
         setOperationPhoto: (
             state,
             actions: PayloadAction<{
@@ -102,9 +102,9 @@ export const operationSlice = createSlice({
             state,
             actions: PayloadAction<{ file: LocalFileType[] }>
         ) => ({
-                ...state,
-                photoFiles: [...actions.payload.file]
-            }),
+            ...state,
+            photoFiles: [...actions.payload.file]
+        }),
         removeOperationPhoto: (
             state,
             actions: PayloadAction<{ index: number }>

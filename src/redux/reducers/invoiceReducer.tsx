@@ -34,66 +34,69 @@ export const invoiceSlice = createSlice({
     reducers: {
         resetInvoiceState: () => initialState,
         setInvoceData: (state, actions: PayloadAction<{ data: any[] }>) => ({
-                ...state,
-                invoiceData: actions.payload.data
-            }),
+            ...state,
+            invoiceData: actions.payload.data
+        }),
         setPaymentFiltered: (
             state,
             actions: PayloadAction<{ paymentFiltered: string }>
         ) => ({
-                ...state,
-                paymentFiltered: actions.payload.paymentFiltered
-            }),
+            ...state,
+            paymentFiltered: actions.payload.paymentFiltered
+        }),
         setPaymentDuration: (
             state,
             actions: PayloadAction<{ paymentDuration: number }>
         ) => ({
-                ...state,
-                paymentDuration: actions.payload.paymentDuration
-            }),
+            ...state,
+            paymentDuration: actions.payload.paymentDuration
+        }),
         setPaymentCondition: (
             state,
             actions: PayloadAction<{ paymentCondition: string }>
         ) => ({
-                ...state,
-                paymentCondition: actions.payload.paymentCondition
-            }),
+            ...state,
+            paymentCondition: actions.payload.paymentCondition
+        }),
         setIssueDate: (
             state,
             actions: PayloadAction<{ issueDate: string }>
         ) => ({
-                ...state,
-                issueDate: actions.payload.issueDate
-            }),
+            ...state,
+            issueDate: actions.payload.issueDate
+        }),
         setAfterDueDate: (
             state,
             actions: PayloadAction<{ afterDueDate: string }>
         ) => ({
-                ...state,
-                afterDueDate: actions.payload.afterDueDate
-            }),
-        setLoading: (state, actions: PayloadAction<{ isLoading: boolean }>) => ({
-                ...state,
-                isLoading: actions.payload.isLoading
-            }),
+            ...state,
+            afterDueDate: actions.payload.afterDueDate
+        }),
+        setLoading: (
+            state,
+            actions: PayloadAction<{ isLoading: boolean }>
+        ) => ({
+            ...state,
+            isLoading: actions.payload.isLoading
+        }),
         setLoadMore: (
             state,
             actions: PayloadAction<{ isLoadMore: boolean }>
         ) => ({
-                ...state,
-                isLoadMore: actions.payload.isLoadMore
-            }),
+            ...state,
+            isLoadMore: actions.payload.isLoadMore
+        }),
         setPage: (state, actions: PayloadAction<{ page: number }>) => ({
-                ...state,
-                page: actions.payload.page
-            }),
+            ...state,
+            page: actions.payload.page
+        }),
         setTotalItems: (
             state,
             actions: PayloadAction<{ totalItems: number }>
         ) => ({
-                ...state,
-                totalItems: actions.payload.totalItems
-            })
+            ...state,
+            totalItems: actions.payload.totalItems
+        })
     }
 });
 
