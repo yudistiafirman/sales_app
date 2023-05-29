@@ -46,12 +46,14 @@ const styles = StyleSheet.create({
     fontW300: {
         color: colors.text.darker,
         fontFamily: fonts.family.montserrat[300],
-        fontSize: fonts.size.md
+        fontSize: fonts.size.md,
+        flex: 1
     },
     fontW500: {
         fontFamily: fonts.family.montserrat[500],
         fontSize: fonts.size.md,
-        color: colors.text.darker
+        color: colors.text.darker,
+        flex: 1
     },
     fontW400: {
         color: colors.text.darker,
@@ -232,7 +234,7 @@ export default function ProjectDetailPage() {
                         phone={customerData?.Pic?.phone}
                         position={customerData?.Pic?.position}
                     />
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size="small" />
                     <Text style={styles.partText}>Alamat Proyek</Text>
                     <BSpacer size="extraSmall" />
                     <View style={styles.billingStyle}>
