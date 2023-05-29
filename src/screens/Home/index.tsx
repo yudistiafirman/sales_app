@@ -660,7 +660,7 @@ function Beranda() {
                 });
             } else {
                 navigation.navigate(PROJECT_DETAIL, {
-                    existingVisitation: response
+                    projectId: response?.project?.id
                 });
             }
         } catch (error) {

@@ -5,35 +5,19 @@ import {
     ScrollView,
     DeviceEventEmitter
 } from "react-native";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { colors, fonts } from "@/constants";
-import {
-    BContainer,
-    BPic,
-    BSpacer,
-    BSpinner,
-    BTouchableText
-} from "@/components";
-import { ProgressBar } from "@react-native-community/progress-bar-android";
+import { BContainer, BPic, BSpacer, BSpinner } from "@/components";
 import crashlytics from "@react-native-firebase/crashlytics";
-import {
-    PROJECT_DETAIL,
-    DOCUMENTS,
-    VISIT_HISTORY
-} from "@/navigation/ScreenNames";
-import {
-    useFocusEffect,
-    useNavigation,
-    useRoute
-} from "@react-navigation/native";
+import { PROJECT_DETAIL, VISIT_HISTORY } from "@/navigation/ScreenNames";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { projectGetOneById } from "@/actions/CommonActions";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import { resetRegion } from "@/redux/reducers/locationReducer";
-import { ProjectDetail, visitationListResponse } from "@/interfaces";
+import { ProjectDetail } from "@/interfaces";
 import formatCurrency from "@/utils/formatCurrency";
-import DocumentWarning from "./elements/DocumentWarning";
 import UpdatedAddressWrapper from "./elements/UpdatedAddressWrapper";
 import AddNewAddressWrapper from "./elements/AddNewAddressWrapper";
 import BillingModal from "./elements/BillingModal";
@@ -49,7 +33,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between"
     },
-
     fontW300: {
         color: colors.text.darker,
         fontFamily: fonts.family.montserrat[300],
@@ -63,16 +46,10 @@ const styles = StyleSheet.create({
     billingStyle: {
         alignItems: "center"
     },
-
     loading: {
         justifyContent: "center",
         alignItems: "center",
         flex: 1
-    },
-    seeAllText: {
-        color: colors.primary,
-        fontFamily: fonts.family.montserrat[500],
-        fontSize: fonts.size.sm
     }
 });
 
@@ -80,22 +57,13 @@ export default function ProjectDetailPage() {
     const route = useRoute();
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
-    const [isBillingLocationVisible, setIsBillingLocationVisible] =
-        useState(false);
     const [isProjectLocationVisible, setIsProjectLocationVisible] =
         useState(false);
     const [customerData, setCustomerData] = useState<ProjectDetail>({});
-    const [billingAddress, setFormattedBillingAddress] = useState("");
     const [projectAddress, setFormattedProjectAddress] = useState("");
-    const [region, setRegion] = useState(null);
     const [project, setProject] = useState(null);
-    const [regionExisting, setExistingRegion] = useState(null);
     const [projectExisting, setExistingProject] = useState(null);
-    const [existedVisitation, setExistingVisitation] =
-        useState<visitationListResponse>(null);
     const dataNotLoadedYet = JSON.stringify(customerData) === "{}";
-    const documentsNotCompleted = customerData?.ProjectDocs?.length !== 8;
-    const updatedAddressBilling = billingAddress?.length > 0;
     const updateAddressProject = projectAddress?.length > 0;
 
     const getProjectDetail = useCallback(
@@ -104,23 +72,13 @@ export default function ProjectDetailPage() {
                 const response = await projectGetOneById(projectId);
                 setCustomerData(response.data.data);
                 if (response.data.data) {
-                    const regionBilling: any = {
-                        formattedAddress:
-                            response.data.data.BillingAddress?.line1,
-                        latitude: response.data.data.BillingAddress?.lat,
-                        longitude: response.data.data.BillingAddress?.lon
-                    };
                     const regionProject: any = {
                         formattedAddress:
                             response.data.data.LocationAddress?.line1,
                         latitude: response.data.data.LocationAddress?.lat,
                         longitude: response.data.data.LocationAddress?.lon
                     };
-                    setExistingRegion(regionBilling);
                     setExistingProject(regionProject);
-                    setFormattedBillingAddress(
-                        response.data.data.BillingAddress?.line1
-                    );
                     setFormattedProjectAddress(
                         response.data.data.LocationAddress?.line1
                     );
@@ -143,58 +101,20 @@ export default function ProjectDetailPage() {
         crashlytics().log(PROJECT_DETAIL);
         dispatch(resetRegion());
         if (route?.params) {
-            const { existingVisitation } = route.params;
-            setExistingVisitation(existingVisitation);
-            const { id } = existingVisitation.project;
-            getProjectDetail(id);
+            const { projectId } = route.params;
+            getProjectDetail(projectId);
         }
     }, [dispatch, getProjectDetail, route.params]);
-
-    useFocusEffect(
-        useCallback(() => {
-            if (existedVisitation !== null) {
-                if (existedVisitation?.project?.id)
-                    getProjectDetail(existedVisitation?.project?.id);
-            }
-        }, [existedVisitation, getProjectDetail])
-    );
 
     useEffect(() => {
         DeviceEventEmitter.addListener(
             "getCoordinateFromCustomerDetail",
             (data) => {
-                if (data.sourceType === "billing") {
-                    setRegion(data.coordinate);
-                    setIsBillingLocationVisible(true);
-                } else {
-                    setProject(data.coordinate);
-                    setIsProjectLocationVisible(true);
-                }
+                setProject(data.coordinate);
+                setIsProjectLocationVisible(true);
             }
         );
-    }, [setIsBillingLocationVisible, setIsProjectLocationVisible]);
-
-    const [filledDocsCount] = useMemo((): number[] => {
-        let count = 0;
-        let totalProperties = 8;
-
-        if (customerData?.ProjectDocs)
-            Object.keys(customerData?.ProjectDocs).forEach((key) => {
-                totalProperties += 1;
-                if (
-                    Object.prototype.hasOwnProperty.call(
-                        customerData.ProjectDocs,
-                        key
-                    )
-                ) {
-                    if (customerData?.ProjectDocs[key]) {
-                        count += 1;
-                    }
-                }
-            });
-
-        return [count, totalProperties];
-    }, [customerData.ProjectDocs]);
+    }, [setIsProjectLocationVisible]);
 
     if (dataNotLoadedYet) {
         return (
@@ -206,23 +126,6 @@ export default function ProjectDetailPage() {
 
     return (
         <>
-            {isBillingLocationVisible && (
-                <BillingModal
-                    isBilling
-                    setFormattedAddress={setFormattedBillingAddress}
-                    setIsModalVisible={setIsBillingLocationVisible}
-                    isModalVisible={isBillingLocationVisible}
-                    region={region || regionExisting}
-                    isUpdate={
-                        !!(
-                            billingAddress !== undefined &&
-                            billingAddress !== ""
-                        )
-                    }
-                    setRegion={setRegion}
-                    projectId={customerData.id}
-                />
-            )}
             {isProjectLocationVisible && (
                 <BillingModal
                     isBilling={false}
@@ -240,14 +143,6 @@ export default function ProjectDetailPage() {
                     projectId={customerData.id}
                 />
             )}
-
-            {documentsNotCompleted && (
-                <DocumentWarning
-                    docs={customerData.ProjectDocs}
-                    projectId={customerData.id}
-                />
-            )}
-
             <ScrollView showsVerticalScrollIndicator={false}>
                 <BContainer>
                     <Text style={styles.partText}>Pelanggan</Text>
@@ -279,12 +174,11 @@ export default function ProjectDetailPage() {
                     <View style={styles.between}>
                         <Text style={styles.fontW300}>
                             {customerData?.Customer?.CustomerDeposit
-                                ?.availableDeposit
+                                ?.pendingBalance
                                 ? formatCurrency(
                                       parseInt(
                                           customerData?.Customer
-                                              ?.CustomerDeposit
-                                              ?.availableDeposit,
+                                              ?.CustomerDeposit?.pendingBalance,
                                           10
                                       )
                                   )
@@ -294,9 +188,6 @@ export default function ProjectDetailPage() {
                     <BSpacer size="extraSmall" />
                     <View style={styles.between}>
                         <Text style={styles.partText}>PIC</Text>
-                        {/* <TouchableOpacity>
-                <Text style={styles.seeAllText}>Lihat Semua</Text>
-              </TouchableOpacity> */}
                     </View>
                     <BSpacer size="extraSmall" />
                     <BPic
@@ -306,26 +197,6 @@ export default function ProjectDetailPage() {
                         position={customerData?.Pic?.position}
                     />
                     <BSpacer size="extraSmall" />
-                    <Text style={styles.partText}>Alamat Penagihan</Text>
-                    <BSpacer size="extraSmall" />
-                    <View style={styles.billingStyle}>
-                        {updatedAddressBilling ? (
-                            <UpdatedAddressWrapper
-                                onPress={() =>
-                                    setIsBillingLocationVisible(true)
-                                }
-                                address={billingAddress}
-                            />
-                        ) : (
-                            <AddNewAddressWrapper
-                                isBilling
-                                onPress={() =>
-                                    setIsBillingLocationVisible(true)
-                                }
-                            />
-                        )}
-                    </View>
-                    <BSpacer size="small" />
                     <Text style={styles.partText}>Alamat Proyek</Text>
                     <BSpacer size="extraSmall" />
                     <View style={styles.billingStyle}>
@@ -345,33 +216,6 @@ export default function ProjectDetailPage() {
                             />
                         )}
                     </View>
-                    <BSpacer size="extraSmall" />
-                    <View style={styles.between}>
-                        <Text style={styles.partText}>Dokumen</Text>
-                        <BTouchableText
-                            title="Lihat Semua"
-                            textStyle={styles.seeAllText}
-                            onPress={() =>
-                                navigation.navigate(DOCUMENTS, {
-                                    docs: customerData.ProjectDocs,
-                                    projectId: customerData.id
-                                })
-                            }
-                        />
-                    </View>
-                    <BSpacer size="extraSmall" />
-                    <View style={styles.between}>
-                        <Text style={styles.fontW300}>Kelengkapan Dokumen</Text>
-                        <Text
-                            style={styles.fontW300}
-                        >{`${customerData?.ProjectDocs?.length}/8`}</Text>
-                    </View>
-                    <ProgressBar
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                        progress={filledDocsCount / 8 ? filledDocsCount / 8 : 0}
-                        color={colors.primary}
-                    />
                 </BContainer>
             </ScrollView>
         </>

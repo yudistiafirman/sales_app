@@ -737,6 +737,7 @@ interface ProjectDetail {
     Pic: PIC;
     pics: PIC[];
     ProjectDocs: Docs[];
+    Customer: any;
 }
 
 export type {

@@ -31,7 +31,11 @@ import { PIC } from "@/interfaces";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import FeatIcon from "react-native-vector-icons/Feather";
 import { ICustomerDetail } from "@/models/Customer";
-import { CUSTOMER_DETAIL, CUSTOMER_DOCUMENT } from "@/navigation/ScreenNames";
+import {
+    CUSTOMER_DETAIL,
+    CUSTOMER_DOCUMENT,
+    PROJECT_DETAIL
+} from "@/navigation/ScreenNames";
 import { showWarningDocument } from "@/utils/generalFunc";
 import RemainingAmountBox from "./elements/RemainAmountBox";
 import CustomerDetailLoader from "./elements/CustomerDetailLoader";
@@ -357,9 +361,7 @@ export default function CustomerDetail() {
                     <View style={{ flexDirection: "row", width: "100%" }}>
                         <RemainingAmountBox
                             title="Sisa Deposit"
-                            firstAmount={
-                                customerData?.CustomerDeposit?.availableDeposit
-                            }
+                            firstAmount={customerData?.pendingBalance}
                         />
                     </View>
                 </BContainer>
@@ -376,7 +378,6 @@ export default function CustomerDetail() {
                                         <BVisitationCard
                                             isRenderIcon={false}
                                             nameSize={fonts.size.xs}
-                                            disabled
                                             locationTextColor={
                                                 colors.text.lightGray
                                             }
@@ -387,6 +388,14 @@ export default function CustomerDetail() {
                                                     ? v?.ShippingAddress?.line1
                                                     : v?.ShippingAddress?.line2
                                             }}
+                                            onPress={() =>
+                                                navigation.navigate(
+                                                    PROJECT_DETAIL,
+                                                    {
+                                                        projectId: v.id
+                                                    }
+                                                )
+                                            }
                                         />
                                         <BSpacer size="extraSmall" />
                                     </React.Fragment>

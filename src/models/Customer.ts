@@ -53,6 +53,7 @@ export interface ICustomerDetail {
     BillingAddress?: Address;
     Projects: ProjectDetail[];
     CustomerDocs?: CustomerDocs;
+    pendingBalance?: string;
 }
 
 export interface ICustomerState {
