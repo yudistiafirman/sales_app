@@ -3,6 +3,7 @@ import font from "@/constants/fonts";
 import resScale from "@/utils/resScale";
 import React from "react";
 import { TextStyle, View, ViewStyle } from "react-native";
+import { layout } from "@/constants";
 import BChip from "../atoms/BChip";
 import BText from "../atoms/BText";
 import BSpacer from "../atoms/BSpacer";
@@ -45,6 +46,7 @@ function BTabLabels({
         fontSize: font.size.md,
         minWidth: minWidth && minWidth,
         alignSelf: "center",
+        paddingRight: rightChipPosition ? layout.pad.sm : 0,
         textAlign: "center"
     };
 
@@ -55,21 +57,15 @@ function BTabLabels({
         <View style={BTabLabelsContainer}>
             <BText style={BTabLabelsTextStyle}>{route.title}</BText>
             {isHasItems && (
-                <>
-                    {rightChipPosition && <BSpacer size="extraSmall" />}
-
-                    <BChip
-                        type="header"
-                        titleWeight={focused ? "700" : "normal"}
-                        textColor={focused && tabTextfocusedColor}
-                        backgroundColor={
-                            isHasItems ? chipBackgroundColor : null
-                        }
-                        style={BChipStyle}
-                    >
-                        {route?.totalItems}
-                    </BChip>
-                </>
+                <BChip
+                    type="header"
+                    titleWeight={focused ? "700" : "normal"}
+                    textColor={focused && tabTextfocusedColor}
+                    backgroundColor={isHasItems ? chipBackgroundColor : null}
+                    style={BChipStyle}
+                >
+                    {route?.totalItems}
+                </BChip>
             )}
         </View>
     );
