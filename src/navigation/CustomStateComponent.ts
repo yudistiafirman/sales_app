@@ -77,6 +77,7 @@ export type RootStackParamList = {
     CREATE_DEPOSIT: undefined;
     SEARCH_SO: undefined;
     FORM_SO: undefined;
+    INVOICE_DETAIL: { invoiceId: string; invoiceNo: string };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

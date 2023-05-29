@@ -6,6 +6,7 @@ import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { colors, layout } from "@/constants";
 import { DEBOUNCE_SEARCH } from "@/constants/const";
 import { InvoiceListData } from "@/models/Invoice";
+import { INVOICE_DETAIL } from "@/navigation/ScreenNames";
 
 import {
     setErrorMessage,
@@ -23,6 +24,7 @@ import {
     formatRawDateToMonthDateYear,
     translatePaymentStatus
 } from "@/utils/generalFunc";
+import { useNavigation } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import debounce from "lodash.debounce";
 import React, { useCallback, useEffect, useState } from "react";
@@ -53,6 +55,7 @@ const styles = StyleSheet.create({
 function InvoiceList() {
     const invoiceData = useSelector((state: RootState) => state.invoice);
     const dispatch = useDispatch();
+    const navigation = useNavigation();
 
     const getAllInvoiceData = debounce(async () => {
         try {
@@ -226,6 +229,7 @@ function InvoiceList() {
                     invoiceNo={invoiceNo}
                     companyName={companyName}
                     amount={amount}
+                    onPressCard={() => navigation.navigate(INVOICE_DETAIL)}
                     bgColor={index % 2 ? colors.veryLightShadeGray : ""}
                     paymentStatus={paymentStatus}
                     paymentMethod={paymentMethod}

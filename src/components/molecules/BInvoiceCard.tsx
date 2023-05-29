@@ -3,6 +3,7 @@ import font from "@/constants/fonts";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import formatCurrency from "@/utils/formatCurrency";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import BSpacer from "../atoms/BSpacer";
 
 const styles = StyleSheet.create({
@@ -83,6 +84,7 @@ type IBInvoiceCard = {
     pastDueDateDaysColor: string;
     dueDate: string;
     bgColor: string;
+    onPressCard: () => void;
 };
 
 function BInvoiceCard({
@@ -96,7 +98,8 @@ function BInvoiceCard({
     pastDueDateDays,
     pastDueDateDaysColor,
     dueDate,
-    bgColor
+    bgColor,
+    onPressCard
 }: IBInvoiceCard) {
     const renderInvoiceCardFooter = () => (
         <>
@@ -147,7 +150,10 @@ function BInvoiceCard({
         </>
     );
     return (
-        <View style={[styles.container, { backgroundColor: bgColor }]}>
+        <TouchableOpacity
+            onPress={onPressCard}
+            style={[styles.container, { backgroundColor: bgColor }]}
+        >
             <View style={styles.header}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>{invoiceNo}</Text>
@@ -182,7 +188,7 @@ function BInvoiceCard({
                 </View>
                 {paymentMethod === "Credit" ? renderInvoiceCardFooter() : null}
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }
 
