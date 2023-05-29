@@ -65,7 +65,7 @@ export type RootStackParamList = {
         vehicleName?: string;
     };
     CREATE_SCHEDULE: undefined;
-    PROJECT_DETAIL: { projectId?: string };
+    PROJECT_DETAIL: { projectId?: string; isFromCustomerPage?: boolean };
     CUSTOMER_DETAIL: { id?: string };
     CUSTOMER_DOCUMENT: {
         docs: CustomerDocs;

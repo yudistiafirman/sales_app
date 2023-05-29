@@ -6,10 +6,20 @@ import {
     DeviceEventEmitter
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { colors, fonts } from "@/constants";
-import { BContainer, BPic, BSpacer, BSpinner } from "@/components";
+import { colors, fonts, layout } from "@/constants";
+import {
+    BContainer,
+    BPic,
+    BSpacer,
+    BSpinner,
+    BTouchableText
+} from "@/components";
 import crashlytics from "@react-native-firebase/crashlytics";
-import { PROJECT_DETAIL, VISIT_HISTORY } from "@/navigation/ScreenNames";
+import {
+    CUSTOMER_DETAIL,
+    PROJECT_DETAIL,
+    VISIT_HISTORY
+} from "@/navigation/ScreenNames";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { projectGetOneById } from "@/actions/CommonActions";
 import { useDispatch } from "react-redux";
@@ -38,6 +48,11 @@ const styles = StyleSheet.create({
         fontFamily: fonts.family.montserrat[300],
         fontSize: fonts.size.md
     },
+    fontW500: {
+        fontFamily: fonts.family.montserrat[500],
+        fontSize: fonts.size.md,
+        color: colors.text.darker
+    },
     fontW400: {
         color: colors.text.darker,
         fontFamily: fonts.family.montserrat[400],
@@ -65,11 +80,12 @@ export default function ProjectDetailPage() {
     const [projectExisting, setExistingProject] = useState(null);
     const dataNotLoadedYet = JSON.stringify(customerData) === "{}";
     const updateAddressProject = projectAddress?.length > 0;
+    const { isFromCustomerPage, projectId } = route.params;
 
     const getProjectDetail = useCallback(
-        async (projectId: string) => {
+        async (projectIdData: string) => {
             try {
-                const response = await projectGetOneById(projectId);
+                const response = await projectGetOneById(projectIdData);
                 setCustomerData(response.data.data);
                 if (response.data.data) {
                     const regionProject: any = {
@@ -100,10 +116,7 @@ export default function ProjectDetailPage() {
     React.useEffect(() => {
         crashlytics().log(PROJECT_DETAIL);
         dispatch(resetRegion());
-        if (route?.params) {
-            const { projectId } = route.params;
-            getProjectDetail(projectId);
-        }
+        getProjectDetail(projectId);
     }, [dispatch, getProjectDetail, route.params]);
 
     useEffect(() => {
@@ -148,14 +161,39 @@ export default function ProjectDetailPage() {
                     <Text style={styles.partText}>Pelanggan</Text>
                     <BSpacer size="extraSmall" />
                     <View style={styles.between}>
-                        <Text style={styles.fontW300}>Nama</Text>
-                        <Text style={styles.fontW400}>
+                        <Text style={styles.fontW500}>
                             {customerData?.displayName}
+                        </Text>
+                        <Text
+                            style={[
+                                styles.fontW400,
+                                { marginEnd: -layout.pad.lg + 1 }
+                            ]}
+                        >
+                            <BTouchableText
+                                title="Lihat Pelanggan"
+                                textSize={fonts.size.xs}
+                                disabled={
+                                    !(
+                                        customerData.Account?.customerId &&
+                                        customerData.Account?.customerId !==
+                                            null
+                                    )
+                                }
+                                onPress={() =>
+                                    isFromCustomerPage
+                                        ? navigation.goBack()
+                                        : navigation.navigate(CUSTOMER_DETAIL, {
+                                              id: customerData.Account
+                                                  ?.customerId
+                                          })
+                                }
+                            />
                         </Text>
                     </View>
                     <BSpacer size="small" />
                     <Text style={styles.partText}>Proyek</Text>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size="verySmall" />
                     <ProjectBetween
                         onPress={() => {
                             navigation.navigate(VISIT_HISTORY, {
@@ -168,24 +206,21 @@ export default function ProjectDetailPage() {
                             name: customerData?.name
                         }}
                     />
-                    <BSpacer size="small" />
-                    <Text style={styles.partText}>Sisa Deposit</Text>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size="middleSmall" />
                     <View style={styles.between}>
-                        <Text style={styles.fontW300}>
-                            {customerData?.Customer?.CustomerDeposit
-                                ?.pendingBalance
-                                ? formatCurrency(
+                        <Text style={styles.partText}>Sisa Deposit</Text>
+                        <Text style={styles.fontW400}>
+                            {customerData?.Account?.pendingBalance
+                                ? `IDR ${formatCurrency(
                                       parseInt(
-                                          customerData?.Customer
-                                              ?.CustomerDeposit?.pendingBalance,
+                                          customerData?.Account?.pendingBalance,
                                           10
                                       )
-                                  )
-                                : "-"}
+                                  )}`
+                                : "IDR 0"}
                         </Text>
                     </View>
-                    <BSpacer size="extraSmall" />
+                    <BSpacer size="small" />
                     <View style={styles.between}>
                         <Text style={styles.partText}>PIC</Text>
                     </View>

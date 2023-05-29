@@ -73,7 +73,7 @@ export const DRIVER_TITLE = "Beranda";
 
 export const LOGIN_TITLE = "Log in";
 export const VERIFICATION_TITLE = "Kode Verifikasi";
-export const LIST_CUSTOMER = "List Pelanggan";
+export const LIST_CUSTOMER_TITLE = "Pelanggan";
 export const CAMERA_TITLE = "Camera";
 export const IMAGE_PREVIEW_TITLE = "Image Preview";
 export const SCHEDULE_TITLE = "Schedule";
@@ -104,5 +104,5 @@ export const HOME_MENU = {
     SCHEDULE: "Buat Jadwal",
     APPOINTMENT: "Buat Janji Temu",
     SIGN_SO: "Upload Signed SO",
-    INVOICE: "Dokumen Tagihan"
+    INVOICE: "List Tagihan"
 };

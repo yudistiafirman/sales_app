@@ -660,7 +660,8 @@ function Beranda() {
                 });
             } else {
                 navigation.navigate(PROJECT_DETAIL, {
-                    projectId: response?.project?.id
+                    projectId: response?.project?.id,
+                    isFromCustomerPage: false
                 });
             }
         } catch (error) {

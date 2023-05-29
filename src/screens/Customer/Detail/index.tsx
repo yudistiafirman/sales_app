@@ -392,7 +392,8 @@ export default function CustomerDetail() {
                                                 navigation.navigate(
                                                     PROJECT_DETAIL,
                                                     {
-                                                        projectId: v.id
+                                                        projectId: v.id,
+                                                        isFromCustomerPage: true
                                                     }
                                                 )
                                             }
