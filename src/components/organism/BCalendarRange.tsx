@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { resScale } from "@/utils";
 import { colors } from "@/constants";
+import moment from "moment";
+import { daysInMonth } from "@/utils/generalFunc";
 
 const styles = StyleSheet.create({
     arrowStyleRight: {
@@ -17,8 +19,14 @@ const styles = StyleSheet.create({
     }
 });
 
+interface ICalendarRangeProps {
+    day: number;
+    month: number;
+    year: number;
+}
+
 interface BCalendarRangeProps {
-    onDayPress?: ((date: DateData) => void) | undefined;
+    onDayPress?: ((date: MarkedDates) => void) | undefined;
     markedDates?: MarkedDates | undefined;
     onMonthChange?: ((date: DateData) => void) | undefined;
     isLoading?: boolean;
@@ -48,9 +56,10 @@ function BCalendarRange({
     isLoading,
     minDate
 }: BCalendarRangeProps) {
-    const [selectedMarkedDates, setSelectedMarkedDates] = React.useState<
-        MarkedDates | undefined
-    >({});
+    const [selectedMarkedDates, setSelectedMarkedDates] =
+        React.useState<MarkedDates>({});
+    const [selectedCalendarRangeProps, setSelectedCalendarRangeProps] =
+        React.useState<ICalendarRangeProps>({ day: 0, month: 0, year: 0 });
     LocaleConfig.locales.id = {
         monthNames: [
             "Januari",
@@ -95,6 +104,7 @@ function BCalendarRange({
 
     LocaleConfig.defaultLocale = "id";
 
+    const onDayPressCheck = onDayPress || null;
     return (
         <Calendar
             theme={{
@@ -109,25 +119,90 @@ function BCalendarRange({
                 textDayHeaderFontFamily: "Montserrat-Medium"
             }}
             onDayPress={(value) => {
-                if (
-                    selectedMarkedDates &&
-                    Object.keys(selectedMarkedDates).length > 0
-                ) {
-                    selectedMarkedDates[value.dateString] = {
-                        selected: true,
-                        endingDay: true,
-                        color: colors.primary,
-                        selectedColor: colors.primary
-                    };
-                } else {
+                if (Object.keys(selectedMarkedDates).length === 0) {
                     selectedMarkedDates[value.dateString] = {
                         selected: true,
                         startingDay: true,
                         color: colors.primary,
                         selectedColor: colors.primary
                     };
+                    setSelectedCalendarRangeProps({
+                        day: value.day,
+                        month: value.month,
+                        year: value.year
+                    });
+                } else {
+                    Object.keys(selectedMarkedDates).forEach((it) => {
+                        if (selectedMarkedDates[it].startingDay === true) {
+                            selectedMarkedDates[it] = {
+                                ...selectedMarkedDates[it],
+                                selected: true,
+                                startingDay: true,
+                                color: colors.primary,
+                                selectedColor: colors.primary
+                            };
+                        } else {
+                            selectedMarkedDates[value.dateString] = {
+                                ...selectedMarkedDates[value.dateString],
+                                selected: true,
+                                startingDay: true,
+                                color: colors.primary,
+                                selectedColor: colors.primary
+                            };
+                        }
+
+                        const diffMonths =
+                            value.month - selectedCalendarRangeProps.month;
+                        let diffDays = 0;
+                        if (value.month > selectedCalendarRangeProps.month) {
+                            let restDay = daysInMonth(
+                                selectedCalendarRangeProps.month,
+                                selectedCalendarRangeProps.year
+                            );
+                            restDay *= diffMonths;
+                            const restDayInMonth =
+                                restDay - selectedCalendarRangeProps.day;
+                            diffDays = value.day + restDayInMonth;
+                        } else {
+                            diffDays =
+                                value.day - selectedCalendarRangeProps.day;
+                        }
+
+                        for (let i = 1; i < diffDays; i += 1) {
+                            const nextDay = moment(it)
+                                .add(i, "days")
+                                .format("YYYY-MM-DD");
+                            selectedMarkedDates[nextDay] = {
+                                ...selectedMarkedDates[nextDay],
+                                selected: true,
+                                color: colors.primary,
+                                selectedColor: colors.primary
+                            };
+                        }
+
+                        if (selectedMarkedDates[it].endingDay === true) {
+                            selectedMarkedDates[it] = {
+                                ...selectedMarkedDates[it],
+                                selected: true,
+                                endingDay: true,
+                                color: colors.primary,
+                                selectedColor: colors.primary
+                            };
+                        } else {
+                            selectedMarkedDates[value.dateString] = {
+                                ...selectedMarkedDates[value.dateString],
+                                selected: true,
+                                endingDay: true,
+                                color: colors.primary,
+                                selectedColor: colors.primary
+                            };
+                        }
+                    });
                 }
-                onDayPress(selectedMarkedDates);
+                return (
+                    onDayPressCheck !== null &&
+                    onDayPressCheck(selectedMarkedDates)
+                );
             }}
             markedDates={markedDates || selectedMarkedDates}
             renderArrow={(direction) => <RenderArrow direction={direction} />}

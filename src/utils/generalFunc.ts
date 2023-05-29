@@ -335,3 +335,8 @@ export const replaceDot = (value: string) => {
     }
     return output;
 };
+
+export const daysInMonth = (month: number, year: number) => {
+    const result = new Date(year, month, 0).getDate();
+    return result;
+};

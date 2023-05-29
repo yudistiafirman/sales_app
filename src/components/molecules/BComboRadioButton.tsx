@@ -53,13 +53,18 @@ function BComboRadioButton({
             style={[
                 styles.container,
                 isHorizontal && {
-                    minHeight: resScale(63),
+                    minHeight: resScale(0),
                     backgroundColor: colors.white,
                     borderRadius: undefined
                 }
             ]}
         >
-            <View style={styles.innerContainer}>
+            <View
+                style={[
+                    styles.innerContainer,
+                    isHorizontal && { paddingVertical: resScale(0) }
+                ]}
+            >
                 <View
                     style={[
                         { paddingStart: layout.pad.md },

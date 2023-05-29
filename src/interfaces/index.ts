@@ -59,8 +59,8 @@ interface Input {
         icon?: string;
     }>;
     calendar?: {
-        markedDates?: MarkedDates | undefined;
-        onDayPress: (day: DateData) => void;
+        markedDates?: MarkedDates;
+        onDayPress: (day: any) => void;
         isCalendarVisible: boolean;
         setCalendarVisible: (flag: boolean) => void;
     };

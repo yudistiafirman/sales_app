@@ -19,6 +19,8 @@ import DatePicker from "react-native-date-picker";
 import { replaceDot } from "@/utils/generalFunc";
 import { FlashList } from "@shopify/flash-list";
 import font from "@/constants/fonts";
+import moment from "moment";
+import { MarkedDates } from "react-native-calendars/src/types";
 import BSpacer from "../atoms/BSpacer";
 import BTextInput from "../atoms/BTextInput";
 import BCardOption from "../molecules/BCardOption";
@@ -219,6 +221,42 @@ const renderInput = (
         comboRadioBtn,
         tableInput
     } = input;
+
+    function getSelectedValueCalendarRange(
+        markedDates: MarkedDates | undefined
+    ) {
+        let startingDate;
+        let endingDate;
+        if (markedDates)
+            Object.keys(markedDates).forEach((it) => {
+                if (markedDates[it].startingDay === true) {
+                    startingDate = moment(it).format("MMMM DD, YYYY");
+                }
+                if (markedDates[it].endingDay === true) {
+                    endingDate = moment(it).format("MMMM DD, YYYY");
+                }
+            });
+
+        if (startingDate && endingDate) {
+            return `${startingDate} - ${endingDate}`;
+        }
+        return undefined;
+    }
+
+    function getMinDateCalendarRange(markedDates: MarkedDates | undefined) {
+        let minDate;
+        let haveEndingDate = false;
+        if (markedDates)
+            Object.keys(markedDates).forEach((it) => {
+                if (markedDates[it].startingDay === true) {
+                    minDate = it;
+                }
+                if (markedDates[it].endingDay === true) {
+                    haveEndingDate = true;
+                }
+            });
+        return haveEndingDate ? undefined : minDate;
+    }
 
     if (type === "tableInput") {
         return (
@@ -435,7 +473,11 @@ const renderInput = (
                             isError && { borderColor: colors.primary }
                         ]}
                     >
-                        <BText>{value || placeholder}</BText>
+                        <BText>
+                            {getSelectedValueCalendarRange(
+                                calendar?.markedDates
+                            ) || placeholder}
+                        </BText>
                     </View>
                     <View style={styles.calendarText}>
                         <Icon
@@ -456,18 +498,30 @@ const renderInput = (
                         <View style={styles.calendar}>
                             <BCalendarRange
                                 onDayPress={(date) => {
-                                    if (calendar?.isCalendarVisible === false) {
-                                        calendar?.setCalendarVisible(true);
+                                    let hasEndingDay: boolean | undefined =
+                                        false;
+                                    if (date && Object.keys(date).length > 0) {
+                                        Object.keys(date).forEach((it) => {
+                                            if (date[it]?.endingDay === true) {
+                                                hasEndingDay =
+                                                    date[it].endingDay;
+                                            }
+                                        });
+                                        if (hasEndingDay) {
+                                            calendar?.setCalendarVisible(false);
+                                        } else {
+                                            calendar?.setCalendarVisible(true);
+                                        }
+                                        calendar?.onDayPress(date);
+                                    } else {
+                                        calendar?.setCalendarVisible(
+                                            calendar?.isCalendarVisible
+                                        );
                                     }
-                                    if (
-                                        calendar?.markedDates &&
-                                        Object.keys(calendar?.markedDates)
-                                            .length > 2
-                                    ) {
-                                        calendar?.setCalendarVisible(false);
-                                    }
-                                    calendar?.onDayPress(date);
                                 }}
+                                minDate={getMinDateCalendarRange(
+                                    calendar?.markedDates
+                                )}
                                 markedDates={calendar?.markedDates}
                             />
                         </View>
@@ -1066,6 +1120,7 @@ const renderInput = (
                     data={input.durationButton?.data}
                     estimatedItemSize={10}
                     horizontal
+                    showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => item.id}
                     renderItem={renderItemDurationButton}
                 />
