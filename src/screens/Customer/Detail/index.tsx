@@ -31,10 +31,7 @@ import { PIC } from "@/interfaces";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import FeatIcon from "react-native-vector-icons/Feather";
 import { ICustomerDetail } from "@/models/Customer";
-import {
-    CUSTOMER_DETAIL_V2,
-    CUSTOMER_DOCUMENT
-} from "@/navigation/ScreenNames";
+import { CUSTOMER_DETAIL, CUSTOMER_DOCUMENT } from "@/navigation/ScreenNames";
 import { showWarningDocument } from "@/utils/generalFunc";
 import RemainingAmountBox from "./elements/RemainAmountBox";
 import CustomerDetailLoader from "./elements/CustomerDetailLoader";
@@ -149,7 +146,7 @@ export default function CustomerDetail() {
 
     useFocusEffect(
         React.useCallback(() => {
-            crashlytics().log(CUSTOMER_DETAIL_V2);
+            crashlytics().log(CUSTOMER_DETAIL);
             getCustomerDetail();
         }, [])
     );

@@ -17,7 +17,7 @@ import {
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import crashlytics from "@react-native-firebase/crashlytics";
 import {
-    CUSTOMER_DETAIL_V1,
+    PROJECT_DETAIL,
     DOCUMENTS,
     VISIT_HISTORY
 } from "@/navigation/ScreenNames";
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     }
 });
 
-export default function CustomerDetail() {
+export default function ProjectDetailPage() {
     const route = useRoute();
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
@@ -140,7 +140,7 @@ export default function CustomerDetail() {
     );
 
     React.useEffect(() => {
-        crashlytics().log(CUSTOMER_DETAIL_V1);
+        crashlytics().log(PROJECT_DETAIL);
         dispatch(resetRegion());
         if (route?.params) {
             const { existingVisitation } = route.params;

@@ -20,13 +20,16 @@ import {
 } from "@/components";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Address, Input } from "@/interfaces";
-import { SEARCH_AREA, CUSTOMER_DETAIL_V1 } from "@/navigation/ScreenNames";
+import { SEARCH_AREA, PROJECT_DETAIL } from "@/navigation/ScreenNames";
 import { useNavigation } from "@react-navigation/native";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import Icons from "react-native-vector-icons/Feather";
-import { updateCustomerBillingAddress } from "@/actions/CommonActions";
-import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import {
+    updateBillingAddress,
+    updateLocationAddress
+} from "@/actions/CommonActions";
+import { openPopUp } from "@/redux/reducers/modalReducer";
 
 const { height } = Dimensions.get("window");
 
@@ -69,18 +72,20 @@ type BillingModalType = {
     setFormattedAddress: React.Dispatch<React.SetStateAction<any>>;
     setRegion: React.Dispatch<React.SetStateAction<any>>;
     region: any;
-    customerId: string | undefined;
+    projectId: string | undefined;
     isUpdate?: boolean;
+    isBilling?: boolean;
 };
 
 export default function BillingModal({
     isModalVisible,
     setIsModalVisible,
     setFormattedAddress,
-    customerId,
+    projectId,
     region,
     setRegion,
-    isUpdate = false
+    isUpdate = false,
+    isBilling = false
 }: BillingModalType) {
     const [scrollOffSet, setScrollOffSet] = useState<number | undefined>(
         undefined
@@ -98,16 +103,13 @@ export default function BillingModal({
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
     const nameAddress = React.useMemo(() => {
-        const address = region?.formattedAddress
-            ? region?.formattedAddress
-            : region?.line1;
-        const idx = address && address.split(",");
-        if (idx?.length >= 1) {
+        const idx = region?.formattedAddress?.split(",");
+        if (idx?.length > 1) {
             return idx?.[0];
         }
 
         return "Nama Alamat";
-    }, [region?.line1]);
+    }, [region?.formattedAddress]);
 
     const inputsData: Input[] = useMemo(
         () => [
@@ -155,94 +157,73 @@ export default function BillingModal({
     );
 
     const onPressAddAddress = async () => {
+        const body: Address = {};
+
+        if (region?.postalId) {
+            body.postalid = region.postalId;
+        }
+        if (region?.longitude) {
+            body.lon = region.longitude;
+        }
+        if (region?.latitude) {
+            body.lat = region.latitude;
+        }
+        if (region?.formattedAddress) {
+            body.line1 = region?.formattedAddress;
+        }
+
+        if (billingState.kelurahan) {
+            body.line2 =
+                body.line2 !== undefined
+                    ? `${body.line2} ${billingState.kelurahan}`
+                    : billingState.kelurahan;
+        }
+
+        if (billingState.kecamatan) {
+            body.line2 =
+                body.line2 !== undefined
+                    ? `${body.line2} ${billingState.kecamatan}`
+                    : billingState.kecamatan;
+        }
+        if (billingState.kabupaten) {
+            body.line2 =
+                body.line2 !== undefined
+                    ? `${body.line2} ${billingState.kabupaten}`
+                    : billingState.kabupaten;
+        }
         try {
-            const body: Address = {};
-            const popUpLoadingText = isUpdate
-                ? "Mengubah Alamat"
-                : "Menambahkan Alamat";
-            dispatch(
-                openPopUp({
-                    popUpType: "loading",
-                    popUpText: popUpLoadingText,
-                    outsideClickClosePopUp: false
-                })
-            );
-
-            if (region?.postalId) {
-                body.postalId = region.postalId;
+            let response;
+            if (isBilling) {
+                response = await updateBillingAddress(projectId, body);
             } else {
-                body.postalId = region.Postal;
+                response = await updateLocationAddress(projectId, body);
             }
-            if (region?.longitude) {
-                body.lon = region.longitude;
-            } else {
-                body.lon = region.lon;
-            }
-            if (region?.latitude) {
-                body.lat = region.latitude;
-            } else {
-                body.lat = region.lat;
-            }
-            if (region?.formattedAddress) {
-                body.line1 = region?.formattedAddress;
-            } else {
-                body.line1 = region?.line1;
-            }
-
-            if (billingState.kelurahan) {
-                body.line2 =
-                    body.line2 !== undefined
-                        ? `${body.line2} ${billingState.kelurahan}`
-                        : billingState.kelurahan;
-            }
-
-            if (billingState.kecamatan) {
-                body.line2 =
-                    body.line2 !== undefined
-                        ? `${body.line2} ${billingState.kecamatan}`
-                        : billingState.kecamatan;
-            }
-            if (billingState.kabupaten) {
-                body.line2 =
-                    body.line2 !== undefined
-                        ? `${body.line2} ${billingState.kabupaten}`
-                        : billingState.kabupaten;
-            }
-            const response = await updateCustomerBillingAddress(
-                customerId,
-                body
-            );
             if (response?.data?.success) {
                 setFormattedAddress(region.formattedAddress);
                 setRegion(region);
                 setIsModalVisible((curr) => !curr);
-                dispatch(closePopUp());
                 dispatch(
                     openPopUp({
                         popUpType: "success",
-                        popUpText: "Update alamat penagihan berhasil",
+                        popUpText: "Update alamat berhasil",
                         outsideClickClosePopUp: true
                     })
                 );
             }
         } catch (error) {
             setIsModalVisible(false);
-            dispatch(closePopUp());
             dispatch(
                 openPopUp({
                     popUpType: "error",
                     popUpText:
                         error?.message ||
-                        "Terjadi error saat update alamat Pembayaran",
+                        `Terjadi error saat update alamat ${
+                            isBilling ? "pembayaran" : "proyek"
+                        }`,
                     outsideClickClosePopUp: true
                 })
             );
         }
-    };
-
-    const onCloseModal = () => {
-        setRegion(null);
-        setIsModalVisible(false);
     };
 
     return (
@@ -260,9 +241,14 @@ export default function BillingModal({
                 <BContainer>
                     <View style={styles.modalHeader}>
                         <Text style={styles.headerText} numberOfLines={1}>
-                            {`${isUpdate ? "Edit" : "Tambah"} Alamat Penagihan`}
+                            {(isUpdate ? "Ubah" : "Tambah") +
+                                (isBilling
+                                    ? " Alamat Penagihan"
+                                    : " Alamat Proyek")}
                         </Text>
-                        <TouchableOpacity onPress={onCloseModal}>
+                        <TouchableOpacity
+                            onPress={() => setIsModalVisible((curr) => !curr)}
+                        >
                             <MaterialCommunityIcons
                                 name="close"
                                 size={30}
@@ -278,7 +264,9 @@ export default function BillingModal({
                     >
                         <BLabel
                             bold="500"
-                            label="Alamat Penagihan"
+                            label={
+                                isBilling ? "Alamat Penagihan" : "Alamat Proyek"
+                            }
                             isRequired
                         />
                         <BSpacer size="verySmall" />
@@ -287,9 +275,11 @@ export default function BillingModal({
                             onPress={() => {
                                 setIsModalVisible(false);
                                 navigation.navigate(SEARCH_AREA, {
-                                    from: CUSTOMER_DETAIL_V1,
+                                    from: PROJECT_DETAIL,
                                     eventKey: "getCoordinateFromCustomerDetail",
-                                    sourceType: "billing"
+                                    sourceType: isBilling
+                                        ? "billing"
+                                        : "project"
                                 });
                             }}
                         >
@@ -305,11 +295,8 @@ export default function BillingModal({
                                     <BLabel bold="500" label={nameAddress!} />
                                     <BSpacer size="verySmall" />
                                     <BText bold="300">
-                                        {region?.line1
-                                            ? region?.line1
-                                            : region?.formattedAddress
-                                            ? region?.formattedAddress
-                                            : "Detail Alamat"}
+                                        {region?.formattedAddress ||
+                                            "Detail Alamat"}
                                     </BText>
                                 </>
                             </View>
@@ -318,9 +305,9 @@ export default function BillingModal({
                         <BForm titleBold="500" inputs={inputsData} />
                     </ScrollView>
                     <BButtonPrimary
-                        disable={!isUpdate && region?.longitude === null}
+                        disable={region === null}
                         onPress={onPressAddAddress}
-                        title={`${isUpdate ? "Edit" : "Tambah"} Alamat`}
+                        title={`${isUpdate ? "Ubah" : "Tambah"} Alamat`}
                     />
                 </BContainer>
             </View>
