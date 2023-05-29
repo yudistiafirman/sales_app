@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
         color: colors.primary
     },
     projectName: {
+        flex: 1,
         fontFamily: fonts.family.montserrat[500],
         fontSize: fonts.size.md,
         color: colors.text.darker
