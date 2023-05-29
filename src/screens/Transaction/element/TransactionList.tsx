@@ -1,9 +1,9 @@
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import React, { useCallback } from "react";
-import { ListRenderItem } from "react-native";
-import { BEmptyState } from "@/components";
-import { layout } from "@/constants";
+import { ListRenderItem, View } from "react-native";
+import { BEmptyState, BSpacer } from "@/components";
+import { colors, layout } from "@/constants";
 import TransactionListCard from "./TransactionListCard";
 import TransactionListShimmer from "./TransactionListShimmer";
 
@@ -88,23 +88,26 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
         ),
         [onPress]
     );
+
+    const renderSeparator = () => <BSpacer size={layout.pad.md} />;
+
     return (
         <FlashList
             estimatedItemSize={10}
             onEndReachedThreshold={0.5}
             data={transactions}
-            removeClippedSubviews={false}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
             onRefresh={onRefresh}
             contentContainerStyle={{
-                paddingHorizontal: layout.pad.lg,
-                paddingBottom: layout.pad.lg
+                paddingTop: layout.pad.lg,
+                paddingHorizontal: layout.pad.lg
             }}
             keyExtractor={(item, index) => index.toString()}
             onEndReached={onEndReached}
             refreshing={refreshing}
             ListFooterComponent={isLoadMore ? <TransactionListShimmer /> : null}
+            ItemSeparatorComponent={renderSeparator}
             ListEmptyComponent={
                 loadTransaction ? (
                     <TransactionListShimmer />
