@@ -520,7 +520,7 @@ function Beranda() {
                 icon: SvgNames.IC_INVOICE,
                 title: HOME_MENU.INVOICE,
                 action: () => {
-                    navigation.navigate(INVOICE_FILTER);
+                    navigation.navigate(INVOICE_LIST);
                 }
             }
         ];
