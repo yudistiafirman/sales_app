@@ -2,11 +2,13 @@ import { InvoiceListData } from "@/models/Invoice";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface InvoiceGlobalState {
+    paymentMethod: string;
+    paymentDuration: string | number;
+    paymentStatus: string | number;
+    startDateIssued: string;
+    endDateIssued: string;
+    dueDateDifference: string | number;
     invoiceData: InvoiceListData[];
-    paymentDuration: number;
-    paymentStatus: string;
-    issueDate: string;
-    dueDateDifference: string;
     isLoading: boolean;
     isLoadMore: boolean;
     isRefreshing: boolean;
@@ -18,12 +20,19 @@ export interface InvoiceGlobalState {
     errorMessage: string | unknown;
 }
 
+interface IssueDate {
+    startDateIssued: string;
+    endDateIssued: string;
+}
+
 const initialState: InvoiceGlobalState = {
     searchQuery: "",
     invoiceData: [],
+    paymentMethod: "",
+    startDateIssued: "",
+    endDateIssued: "",
     paymentDuration: 0,
     paymentStatus: "",
-    issueDate: "",
     dueDateDifference: "",
     isLoading: false,
     isLoadMore: false,
@@ -44,19 +53,30 @@ export const invoiceSlice = createSlice({
             ...state,
             invoiceData: actions.payload.data
         }),
-        setPaymentDuration: (state, actions: PayloadAction<number>) => ({
+        setPaymentMethod: (state, actions: PayloadAction<string>) => ({
+            ...state,
+            paymentMethod: actions.payload
+        }),
+        setPaymentDuration: (
+            state,
+            actions: PayloadAction<string | number>
+        ) => ({
             ...state,
             paymentDuration: actions.payload
         }),
-        setPaymentStatus: (state, actions: PayloadAction<string>) => ({
+        setPaymentStatus: (state, actions: PayloadAction<string | number>) => ({
             ...state,
             paymentStatus: actions.payload
         }),
-        setIssueDate: (state, actions: PayloadAction<string>) => ({
+        setIssueDate: (state, actions: PayloadAction<IssueDate>) => ({
             ...state,
-            issueDate: actions.payload
+            startDateIssued: actions.payload.startDateIssued,
+            endDateIssued: actions.payload.endDateIssued
         }),
-        setAfterDueDate: (state, actions: PayloadAction<string>) => ({
+        setDueDateDifference: (
+            state,
+            actions: PayloadAction<string | number>
+        ) => ({
             ...state,
             dueDateDifference: actions.payload
         }),
@@ -116,10 +136,11 @@ export const invoiceSlice = createSlice({
 export const {
     resetInvoiceState,
     setInvoceData,
+    setPaymentMethod,
     setPaymentDuration,
     setPaymentStatus,
     setIssueDate,
-    setAfterDueDate,
+    setDueDateDifference,
     setLoading,
     setLoadMore,
     setPage,
