@@ -229,7 +229,12 @@ function InvoiceList() {
                     invoiceNo={invoiceNo}
                     companyName={companyName}
                     amount={amount}
-                    onPressCard={() => navigation.navigate(INVOICE_DETAIL)}
+                    onPressCard={() =>
+                        navigation.navigate(INVOICE_DETAIL, {
+                            invoiceNo: item?.number,
+                            invoiceId: item?.id
+                        })
+                    }
                     bgColor={index % 2 ? colors.veryLightShadeGray : ""}
                     paymentStatus={paymentStatus}
                     paymentMethod={paymentMethod}

@@ -18,6 +18,7 @@ interface BTouchableTextProps {
     title?: string | undefined;
     disabled?: boolean;
     startIcon?: React.ReactNode;
+    endIcon?: React.ReactNode;
 }
 
 const BTouchableTextDefaultStyle: TextStyle = {
@@ -43,7 +44,8 @@ function BTouchableText({
     viewStyle,
     title,
     disabled = false,
-    startIcon
+    startIcon,
+    endIcon
 }: BTouchableTextProps & typeof BTouchableDefaultProps) {
     return (
         <TouchableOpacity
@@ -57,6 +59,7 @@ function BTouchableText({
             >
                 {title}
             </BText>
+            {endIcon}
         </TouchableOpacity>
     );
 }
