@@ -753,6 +753,8 @@ interface ProjectDetail {
     Pic: PIC;
     pics: PIC[];
     ProjectDocs: Docs[];
+    Customer: any;
+    Account: any;
 }
 
 export type {
