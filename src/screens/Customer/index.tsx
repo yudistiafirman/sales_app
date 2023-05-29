@@ -1,15 +1,16 @@
 import { colors, layout } from "@/constants";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { resScale } from "@/utils";
 import BList from "@/components/templates/BList";
 import { useMachine } from "@xstate/react";
 import customerListMachine from "@/machine/customerListMachine";
-import { CUSTOMER_DETAIL_V2, TAB_CUSTOMER } from "@/navigation/ScreenNames";
+import { CUSTOMER_DETAIL, TAB_CUSTOMER } from "@/navigation/ScreenNames";
 import crashlytics from "@react-native-firebase/crashlytics";
 import { useDispatch } from "react-redux";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import { ICustomerListData } from "@/models/Customer";
 
 const styles = StyleSheet.create({
     container: {
@@ -67,7 +68,7 @@ function Customer() {
     }, [state, send]);
 
     const goToCustomerDetail = (item: ICustomerListData) => {
-        navigation.navigate(CUSTOMER_DETAIL_V2, { id: item.id });
+        navigation.navigate(CUSTOMER_DETAIL, { id: item.id });
     };
 
     const onTabPress = (event: any) => {

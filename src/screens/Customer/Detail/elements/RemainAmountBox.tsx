@@ -53,13 +53,13 @@ function RemainingAmountBox({
                 {!secondAmount && <BSpacer size="extraSmall" />}
 
                 <BText style={styles.firstAmount}>
-                    Rp. {formatCurrency(firstAmount)}
+                    IDR {formatCurrency(firstAmount)}
                 </BText>
                 {secondAmount && <View style={styles.divider} />}
 
                 {secondAmount && (
                     <BText style={styles.title}>
-                        Rp. {formatCurrency(secondAmount)}
+                        IDR {formatCurrency(secondAmount)}
                     </BText>
                 )}
             </View>
