@@ -1,7 +1,10 @@
 import { colors } from "@/constants";
 import { INDIVIDU } from "@/constants/const";
 import { CustomerDocsPayType } from "@/models/Customer";
+import moment from "moment";
 import { NativeModules, Platform } from "react-native";
+import "moment/locale/id";
+import { InvoiceListData } from "@/models/Invoice";
 
 const { RNCustomConfig } = NativeModules;
 
@@ -339,4 +342,35 @@ export const replaceDot = (value: string) => {
 export const daysInMonth = (month: number, year: number) => {
     const result = new Date(year, month, 0).getDate();
     return result;
+};
+
+export const formatRawDateToMonthDateYear = (date?: Date) => {
+    let formattedDate = "";
+    if (date) {
+        formattedDate = moment(date).locale("id").format("LL").replace(",", "");
+    }
+    return formattedDate;
+};
+
+export const translatePaymentStatus = (
+    paymentStatus:
+        | "PARTIALLY PAID"
+        | "DELIVERED"
+        | "CANCELLED"
+        | "PAID"
+        | "SUBMITTED"
+) => {
+    let paymentType = "";
+    if (paymentStatus === "PARTIALLY PAID") {
+        paymentType = "Dibayar Sebagian ";
+    } else if (paymentStatus === "SUBMITTED") {
+        paymentType = "Invoice Dibuat";
+    } else if (paymentStatus === "PAID") {
+        paymentType = "Lunas";
+    } else if (paymentStatus === "DELIVERED") {
+        paymentType = "Invoice Dikirim";
+    } else {
+        paymentType = "Batal";
+    }
+    return paymentType;
 };

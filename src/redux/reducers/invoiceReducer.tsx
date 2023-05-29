@@ -1,18 +1,23 @@
+import { InvoiceListData } from "@/models/Invoice";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface InvoiceGlobalState {
-    invoiceData: any[];
     paymentMethod: string;
     paymentDuration: string | number;
     paymentStatus: string | number;
     startDateIssued: string;
     endDateIssued: string;
     dueDateDifference: string | number;
+    invoiceData: InvoiceListData[];
     isLoading: boolean;
     isLoadMore: boolean;
+    isRefreshing: boolean;
+    searchQuery: string;
     size: number;
     page: number;
+    totalPages: number;
     totalItems: number;
+    errorMessage: string | unknown;
 }
 
 interface IssueDate {
@@ -21,6 +26,7 @@ interface IssueDate {
 }
 
 const initialState: InvoiceGlobalState = {
+    searchQuery: "",
     invoiceData: [],
     paymentMethod: "",
     startDateIssued: "",
@@ -30,9 +36,12 @@ const initialState: InvoiceGlobalState = {
     dueDateDifference: "",
     isLoading: false,
     isLoadMore: false,
+    isRefreshing: false,
     size: 10,
     page: 1,
-    totalItems: 0
+    totalPages: 0,
+    totalItems: 0,
+    errorMessage: ""
 };
 
 export const invoiceSlice = createSlice({
@@ -85,6 +94,10 @@ export const invoiceSlice = createSlice({
             ...state,
             isLoadMore: actions.payload.isLoadMore
         }),
+        setRefreshing: (
+            state,
+            actions: PayloadAction<{ refreshing: boolean }>
+        ) => ({ ...state, isRefreshing: actions.payload.refreshing }),
         setPage: (state, actions: PayloadAction<{ page: number }>) => ({
             ...state,
             page: actions.payload.page
@@ -95,6 +108,27 @@ export const invoiceSlice = createSlice({
         ) => ({
             ...state,
             totalItems: actions.payload.totalItems
+        }),
+        setInvoiceSearchQuery: (
+            state,
+            actions: PayloadAction<{ queryValue: string }>
+        ) => ({
+            ...state,
+            searchQuery: actions.payload.queryValue
+        }),
+        setErrorMessage: (
+            state,
+            actions: PayloadAction<{ message: string | unknown }>
+        ) => ({
+            ...state,
+            errorMessage: actions.payload.message
+        }),
+        setTotalPage: (
+            state,
+            actions: PayloadAction<{ totalPage: number }>
+        ) => ({
+            ...state,
+            totalPages: actions.payload.totalPage
         })
     }
 });
@@ -110,7 +144,11 @@ export const {
     setLoading,
     setLoadMore,
     setPage,
-    setTotalItems
+    setTotalItems,
+    setInvoiceSearchQuery,
+    setErrorMessage,
+    setRefreshing,
+    setTotalPage
 } = invoiceSlice.actions;
 
 export default invoiceSlice.reducer;
