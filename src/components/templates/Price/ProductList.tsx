@@ -85,9 +85,9 @@ function ProductList<ArrayOfObject extends ProductsData>({
             estimatedItemSize={10}
             onEndReachedThreshold={0.5}
             data={products}
-            removeClippedSubviews={false}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
+            // removeClippedSubviews={false}
+            // initialNumToRender={10}
+            // maxToRenderPerBatch={10}
             onRefresh={onRefresh}
             contentContainerStyle={{ paddingHorizontal: layout.pad.lg }}
             keyExtractor={(item, index) => index.toString()}

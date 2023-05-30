@@ -6,6 +6,7 @@ import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { colors, layout } from "@/constants";
 import { DEBOUNCE_SEARCH } from "@/constants/const";
 import { InvoiceListData } from "@/models/Invoice";
+import { INVOICE_FILTER } from "@/navigation/ScreenNames";
 
 import {
     setErrorMessage,
@@ -23,9 +24,10 @@ import {
     formatRawDateToMonthDateYear,
     translatePaymentStatus
 } from "@/utils/generalFunc";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import debounce from "lodash.debounce";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,16 +55,29 @@ const styles = StyleSheet.create({
 function InvoiceList() {
     const invoiceData = useSelector((state: RootState) => state.invoice);
     const dispatch = useDispatch();
+    const navigation = useNavigation();
 
     const getAllInvoiceData = debounce(async () => {
         try {
             dispatch(setLoading({ isLoading: true }));
-            const { page, size, searchQuery, isRefreshing } = invoiceData;
+            const { search, size, filter } = invoiceData;
+
+            const paymentDurationCheck = filter?.paymentDuration
+                ? parseInt(filter?.paymentDuration.toString(), 10)
+                : undefined;
 
             const response = await getAllInvoice(
                 size.toString(),
-                page === 0 ? "1" : page.toString(),
-                searchQuery
+                search?.page === 0 ? "1" : search?.page.toString(),
+                search?.searchQuery,
+                filter?.paymentMethod,
+                paymentDurationCheck
+                    ? paymentDurationCheck?.toString()
+                    : undefined,
+                filter?.paymentStatus.toString(),
+                filter?.startDateIssued,
+                filter?.endDateIssued,
+                filter?.dueDateDifference.toString()
             );
             if (response?.data?.data?.data) {
                 dispatch(setLoading({ isLoading: false }));
@@ -92,35 +107,40 @@ function InvoiceList() {
             dispatch(setLoadMore({ isLoadMore: false }));
             const errorMesage = error?.message
                 ? error?.message
-                : "Gagal Mengambil data List Invoice";
+                : "Gagal Mengambil data Tagihan";
             dispatch(setErrorMessage({ message: errorMesage }));
         }
     }, DEBOUNCE_SEARCH);
 
     const onRefresh = () => {
-        const { page } = invoiceData;
         dispatch(setErrorMessage({ message: "" }));
         dispatch(setRefreshing({ refreshing: true }));
-        dispatch(setPage({ page: 0 }));
+        dispatch(setPage({ page: 1 }));
+        dispatch(setInvoiceSearchQuery({ queryValue: "" }));
         dispatch(setInvoceData({ data: [] }));
     };
 
     const onEndReached = () => {
-        const { page, totalPages } = invoiceData;
-        if (page <= totalPages) {
+        const { search, totalPages } = invoiceData;
+        if (search?.page <= totalPages) {
             dispatch(setLoadMore({ isLoadMore: true }));
-            dispatch(setPage({ page: page + 1 }));
+            dispatch(setPage({ page: search.page + 1 }));
         }
     };
 
-    useEffect(() => {
-        getAllInvoiceData();
-    }, [
-        invoiceData.isLoadMore,
-        invoiceData.page,
-        invoiceData.searchQuery,
-        invoiceData.isRefreshing
-    ]);
+    useFocusEffect(
+        React.useCallback(() => {
+            if (invoiceData?.search?.searchQuery.length > 2) {
+                dispatch(setLoading({ isLoading: true }));
+                dispatch(setInvoceData({ data: [] }));
+                getAllInvoiceData();
+            }
+
+            if (invoiceData?.search?.searchQuery.length === 0) {
+                getAllInvoiceData();
+            }
+        }, [invoiceData.search, invoiceData.filter])
+    );
 
     const renderShimmerInvoiceList = () => (
         <View style={styles.shimmer}>
@@ -129,31 +149,45 @@ function InvoiceList() {
     );
 
     const onChangeText = (e: string) => {
-        if (invoiceData.searchQuery.length > 2) {
-            dispatch(setLoading({ isLoading: true }));
-            dispatch(setInvoceData({ data: [] }));
-            dispatch(setPage({ page: 1 }));
-            dispatch(setInvoiceSearchQuery({ queryValue: e }));
-        } else {
-            dispatch(setInvoiceSearchQuery({ queryValue: e }));
-        }
+        dispatch(setPage({ page: 1 }));
+        dispatch(setInvoiceSearchQuery({ queryValue: e }));
     };
 
     const onRetry = () => {
-        dispatch(setLoading({ isLoading: true }));
-        dispatch(setInvoceData({ data: [] }));
         dispatch(setPage({ page: 1 }));
         dispatch(setInvoiceSearchQuery({ queryValue: "" }));
-        getAllInvoiceData();
+    };
+
+    const selectedFilterButton = () => {
+        let hide = false;
+        if (invoiceData?.filter?.paymentMethod !== "") hide = true;
+        if (
+            invoiceData?.filter?.paymentDuration &&
+            parseInt(invoiceData?.filter?.paymentDuration.toString(), 10) > 0
+        )
+            hide = true;
+        if (invoiceData?.filter?.paymentStatus !== "") hide = true;
+        if (
+            invoiceData?.filter?.startDateIssued !== "" &&
+            invoiceData?.filter?.endDateIssued !== ""
+        )
+            hide = true;
+        if (
+            invoiceData?.filter?.dueDateDifference &&
+            parseInt(invoiceData?.filter?.dueDateDifference.toString(), 10) > 0
+        )
+            hide = true;
+
+        return hide;
     };
 
     const renderInvoiceListHeader = () => (
         <View style={styles.headerComponent}>
             <BSearchBar
                 outlineStyle={styles.outlineSearchBar}
-                placeholder="Cari Invoice"
+                placeholder="Cari Tagihan"
                 onChangeText={onChangeText}
-                value={invoiceData.searchQuery}
+                value={invoiceData?.search?.searchQuery}
                 autoFocus={false}
                 textInputStyle={{ minHeight: resScale(42) }}
                 left={
@@ -166,8 +200,10 @@ function InvoiceList() {
             />
             <BSpacer size="small" />
             <BFilterSort
+                isSortHidden
+                isSelectedFilter={selectedFilterButton()}
                 onPressSort={() => console.log("sort pressed")}
-                onPressFilter={() => console.log("filter pressed")}
+                onPressFilter={() => navigation.navigate(INVOICE_FILTER)}
             />
             <BSpacer size="verySmall" />
         </View>
@@ -176,6 +212,9 @@ function InvoiceList() {
     const renderInvoiceCard: ListRenderItem<InvoiceListData> = useCallback(
         ({ item, index }) => {
             const invoiceNo = item?.number ? item?.number : "-";
+            const projectName = item?.Project?.displayName
+                ? item?.Project?.displayName
+                : "-";
             const companyName = item?.Project?.Customer?.displayName
                 ? item?.Project?.Customer?.displayName
                 : "-";
@@ -225,6 +264,7 @@ function InvoiceList() {
                 <BInvoiceCard
                     invoiceNo={invoiceNo}
                     companyName={companyName}
+                    projectName={projectName}
                     amount={amount}
                     bgColor={index % 2 ? colors.veryLightShadeGray : ""}
                     paymentStatus={paymentStatus}

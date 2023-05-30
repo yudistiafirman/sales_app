@@ -195,8 +195,8 @@ function BList({
                         <FlashList
                             data={data}
                             renderItem={renderItem}
-                            estimatedItemSize={200}
-                            initialNumToRender={10}
+                            estimatedItemSize={10}
+                            // initialNumToRender={10}
                             onEndReachedThreshold={0.5}
                             refreshing={refreshing}
                             contentContainerStyle={{

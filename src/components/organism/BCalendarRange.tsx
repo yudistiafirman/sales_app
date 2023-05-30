@@ -119,8 +119,10 @@ function BCalendarRange({
                 textDayHeaderFontFamily: "Montserrat-Medium"
             }}
             onDayPress={(value) => {
+                let newMap: MarkedDates = {};
+                newMap = { ...selectedMarkedDates };
                 if (Object.keys(selectedMarkedDates).length === 0) {
-                    selectedMarkedDates[value.dateString] = {
+                    newMap[value.dateString] = {
                         selected: true,
                         startingDay: true,
                         color: colors.primary,
@@ -134,7 +136,7 @@ function BCalendarRange({
                 } else {
                     Object.keys(selectedMarkedDates).forEach((it) => {
                         if (selectedMarkedDates[it].startingDay === true) {
-                            selectedMarkedDates[it] = {
+                            newMap[it] = {
                                 ...selectedMarkedDates[it],
                                 selected: true,
                                 startingDay: true,
@@ -142,7 +144,7 @@ function BCalendarRange({
                                 selectedColor: colors.primary
                             };
                         } else {
-                            selectedMarkedDates[value.dateString] = {
+                            newMap[value.dateString] = {
                                 ...selectedMarkedDates[value.dateString],
                                 selected: true,
                                 startingDay: true,
@@ -172,7 +174,7 @@ function BCalendarRange({
                             const nextDay = moment(it)
                                 .add(i, "days")
                                 .format("YYYY-MM-DD");
-                            selectedMarkedDates[nextDay] = {
+                            newMap[nextDay] = {
                                 ...selectedMarkedDates[nextDay],
                                 selected: true,
                                 color: colors.primary,
@@ -181,7 +183,7 @@ function BCalendarRange({
                         }
 
                         if (selectedMarkedDates[it].endingDay === true) {
-                            selectedMarkedDates[it] = {
+                            newMap[it] = {
                                 ...selectedMarkedDates[it],
                                 selected: true,
                                 endingDay: true,
@@ -189,7 +191,7 @@ function BCalendarRange({
                                 selectedColor: colors.primary
                             };
                         } else {
-                            selectedMarkedDates[value.dateString] = {
+                            newMap[value.dateString] = {
                                 ...selectedMarkedDates[value.dateString],
                                 selected: true,
                                 endingDay: true,
@@ -199,10 +201,8 @@ function BCalendarRange({
                         }
                     });
                 }
-                return (
-                    onDayPressCheck !== null &&
-                    onDayPressCheck(selectedMarkedDates)
-                );
+                setSelectedMarkedDates(newMap);
+                return onDayPressCheck !== null && onDayPressCheck(newMap);
             }}
             markedDates={markedDates || selectedMarkedDates}
             renderArrow={(direction) => <RenderArrow direction={direction} />}

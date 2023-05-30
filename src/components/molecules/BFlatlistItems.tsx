@@ -99,7 +99,7 @@ export default function BFlatlistItems({
             <KeyboardAwareFlatList
                 contentContainerStyle={style.flatlistContent}
                 onEndReached={onEndReached}
-                onEndReachedThreshold={0.1}
+                onEndReachedThreshold={0.5}
                 // maintainVisibleContentPosition
                 ItemSeparatorComponent={renderItemSeparator}
                 refreshing={refreshing}
