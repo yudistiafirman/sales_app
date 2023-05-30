@@ -11,6 +11,7 @@ interface BChipProps {
     endIcon?: React.ReactNode;
     startIcon?: React.ReactNode;
     titleWeight?: string;
+    marginRight?: number;
 }
 
 function BChip({
@@ -20,7 +21,8 @@ function BChip({
     textColor,
     endIcon,
     startIcon,
-    titleWeight
+    titleWeight,
+    marginRight
 }: BChipProps) {
     const BChipHeaderStyle: ViewStyle = {
         paddingHorizontal: layout.pad.md,
@@ -50,7 +52,7 @@ function BChip({
     };
 
     return (
-        <View style={[Styles, { backgroundColor }]}>
+        <View style={[Styles, { backgroundColor, marginRight }]}>
             {startIcon}
             <BText style={[TextStyles, { fontWeight: titleWeight }]}>
                 {children}
