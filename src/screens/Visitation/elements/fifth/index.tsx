@@ -283,7 +283,6 @@ function Fifth() {
                                         "file://"
                                     )
                                 }));
-                            console.log("kennaaaa");
                             const data = await dispatch(
                                 postUploadFiles({
                                     files: photoFiles,

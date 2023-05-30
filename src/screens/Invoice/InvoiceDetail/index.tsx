@@ -68,11 +68,20 @@ const styles = StyleSheet.create({
     listDoContainer: {
         paddingLeft: layout.pad.lg,
         paddingRight: layout.pad.md,
-        borderTopEndRadius: layout.radius.md,
-        borderTopStartRadius: layout.radius.md,
+        borderTopEndRadius: layout.radius.lg,
+        borderTopStartRadius: layout.radius.lg,
         backgroundColor: colors.tertiary,
         borderColor: colors.border.default,
-        borderWidth: 1
+        borderWidth: 1,
+        flex: 0.6
+    },
+    cardContainer: {
+        borderColor: colors.border.default,
+        borderWidth: 2,
+        borderRadius: layout.radius.md,
+        paddingVertical: layout.pad.ml,
+        paddingHorizontal: layout.pad.lg,
+        backgroundColor: colors.white
     }
 });
 
@@ -93,8 +102,6 @@ function InvoiceDetail() {
     useHeaderTitleChanged({
         title: route?.params?.invoiceNo ? route?.params?.invoiceNo : "-"
     });
-
-    const renderDoCard = () => {};
 
     const renderInvoiceCardFooter = () => (
         <>
@@ -150,7 +157,7 @@ function InvoiceDetail() {
                     </Text>
                 </View>
                 <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>
+                    <Text style={[styles.paymentItemTitle]}>
                         Tanggal Jatuh Tempo
                     </Text>
                     <BSpacer size="extraSmall" />
@@ -169,6 +176,112 @@ function InvoiceDetail() {
             </View>
         </>
     );
+
+    const renderDoCard = () => (
+        <View style={{ ...styles.cardContainer }}>
+            <View style={styles.textContainer}>
+                <Text style={[styles.title]}>Pelanggan</Text>
+                <Text style={[styles.text, { fontSize: font.size.xs }]}>
+                    01/04/2023
+                </Text>
+            </View>
+            <BSpacer size="extraSmall" />
+
+            <View style={[styles.dateContainer]}>
+                <View style={styles.dateItem}>
+                    <Text
+                        style={[
+                            styles.paymentItemTitle,
+                            { alignSelf: "flex-start" }
+                        ]}
+                    >
+                        Produk
+                    </Text>
+                    <BSpacer size="extraSmall" />
+                    <Text
+                        style={[
+                            styles.title,
+                            {
+                                fontSize: font.size.xs,
+                                fontFamily: font.family.montserrat[600]
+                            }
+                        ]}
+                    >
+                        SC 3.5 NFA
+                    </Text>
+                </View>
+                <View style={styles.dateItem}>
+                    <Text style={styles.paymentItemTitle}>Volume</Text>
+                    <BSpacer size="extraSmall" />
+                    <Text
+                        style={[
+                            styles.title,
+                            {
+                                fontSize: font.size.xs,
+                                fontFamily: font.family.montserrat[600]
+                            }
+                        ]}
+                    >
+                        8 m3
+                    </Text>
+                </View>
+                <View style={styles.dateItem}>
+                    <Text style={styles.paymentItemTitle}>Harga Unit</Text>
+                    <BSpacer size="extraSmall" />
+                    <Text
+                        style={[
+                            styles.title,
+                            {
+                                fontSize: font.size.xs,
+                                color: colors.primary,
+                                fontFamily: font.family.montserrat[600]
+                            }
+                        ]}
+                    >
+                        Rp 780.000
+                    </Text>
+                </View>
+                <View style={styles.dateItem}>
+                    <Text style={styles.paymentItemTitle}>Ekstra</Text>
+                    <BSpacer size="extraSmall" />
+                    <Text
+                        style={[
+                            styles.title,
+                            {
+                                fontSize: font.size.xs,
+                                fontFamily: font.family.montserrat[600]
+                            }
+                        ]}
+                    >
+                        Rp 0
+                    </Text>
+                </View>
+                <View style={styles.dateItem}>
+                    <Text
+                        style={[
+                            styles.paymentItemTitle,
+                            { alignSelf: "flex-end" }
+                        ]}
+                    >
+                        Total
+                    </Text>
+                    <BSpacer size="extraSmall" />
+                    <Text
+                        style={[
+                            styles.title,
+                            {
+                                fontSize: font.size.xs,
+                                fontFamily: font.family.montserrat[600]
+                            }
+                        ]}
+                    >
+                        Rp 6.240.000
+                    </Text>
+                </View>
+            </View>
+        </View>
+    );
+
     return (
         <View style={{ flex: 1 }}>
             <View style={styles.container}>
@@ -243,7 +356,7 @@ function InvoiceDetail() {
                 <View style={styles.divider} />
                 {renderInvoiceCardFooter()}
             </View>
-            <View style={styles.listDoContainer}>
+            <View style={[styles.listDoContainer]}>
                 <View style={[styles.textContainer]}>
                     <Text style={styles.text}>DO </Text>
                     <TouchableWithoutFeedback
@@ -256,6 +369,7 @@ function InvoiceDetail() {
                         />
                     </TouchableWithoutFeedback>
                 </View>
+                {expand && renderDoCard()}
             </View>
         </View>
     );

@@ -33,8 +33,8 @@ export const LOCATION = "LOCATION";
 export const SEARCH_AREA = "SEARCH_AREA";
 export const CALENDAR = "CALENDAR";
 export const TRANSACTION_DETAIL = "TRANSACTION_DETAIL";
-export const CUSTOMER_DETAIL_V1 = "CUSTOMER_DETAIL_V1";
-export const CUSTOMER_DETAIL_V2 = "CUSTOMER_CUSTOMER_V2";
+export const PROJECT_DETAIL = "PROJECT_DETAIL";
+export const CUSTOMER_DETAIL = "CUSTOMER_DETAIL";
 export const CUSTOMER_DOCUMENT = "CUSTOMER_DOCUMENT";
 export const CREATE_SCHEDULE = "CREATE_SCHEDULE";
 export const CREATE_DEPOSIT = "CREATE_DEPOSIT";
@@ -52,6 +52,7 @@ export const GALLERY_SO = "GALLERY_SO";
 export const GALLERY_OPERATION = "GALLERY_OPERATION";
 export const INVOICE_LIST = "INVOICE_LIST";
 export const INVOICE_DETAIL = "INVOICE_DETAIL";
+export const INVOICE_FILTER = "INVOICE_FILTER";
 
 /*
     Screen Title
@@ -74,7 +75,7 @@ export const DRIVER_TITLE = "Beranda";
 
 export const LOGIN_TITLE = "Log in";
 export const VERIFICATION_TITLE = "Kode Verifikasi";
-export const LIST_CUSTOMER = "List Pelanggan";
+export const LIST_CUSTOMER_TITLE = "Pelanggan";
 export const CAMERA_TITLE = "Camera";
 export const IMAGE_PREVIEW_TITLE = "Image Preview";
 export const SCHEDULE_TITLE = "Schedule";
@@ -86,6 +87,7 @@ export const LOCATION_TITLE = "Pilih Area Proyek";
 export const SEARCH_AREA_TITLE = "Pilih Area Proyek";
 export const CALENDAR_TITLE = "Pilih Tanggal";
 export const TRANSACTION_DETAIL_TITLE = "Detail Transaksi";
+export const PROJECT_DETAIL_TITLE = "Detil Proyek";
 export const CUSTOMER_DETAIL_TITLE = "Detil Pelanggan";
 export const CREATE_SCHEDULE_TITLE = "Buat Jadwal";
 export const CREATE_DEPOSIT_TITLE = "Buat Deposit";
@@ -104,5 +106,5 @@ export const HOME_MENU = {
     SCHEDULE: "Buat Jadwal",
     APPOINTMENT: "Buat Janji Temu",
     SIGN_SO: "Upload Signed SO",
-    INVOICE: "Dokumen Tagihan"
+    INVOICE: "List Tagihan"
 };

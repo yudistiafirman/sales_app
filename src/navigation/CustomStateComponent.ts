@@ -65,8 +65,8 @@ export type RootStackParamList = {
         vehicleName?: string;
     };
     CREATE_SCHEDULE: undefined;
-    CUSTOMER_DETAIL_V1: { existingVisitation?: any };
-    CUSTOMER_DETAIL_V2: { id?: string };
+    PROJECT_DETAIL: { projectId?: string; isFromCustomerPage?: boolean };
+    CUSTOMER_DETAIL: { id?: string };
     CUSTOMER_DOCUMENT: {
         docs: CustomerDocs;
         customerId: string;
@@ -78,6 +78,8 @@ export type RootStackParamList = {
     SEARCH_SO: undefined;
     FORM_SO: undefined;
     INVOICE_DETAIL: { invoiceId: string; invoiceNo: string };
+    INVOICE_FILTER: undefined;
+    INVOICE_LIST: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

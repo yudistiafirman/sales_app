@@ -10,6 +10,7 @@ import {
 import * as React from "react";
 import { Details } from "react-native-maps";
 import { DateData } from "react-native-calendars";
+import { MarkedDates } from "react-native-calendars/src/types";
 
 interface Input {
     label?: string;
@@ -31,8 +32,10 @@ interface Input {
         | "autocomplete"
         | "calendar"
         | "calendar-time"
+        | "calendar-range"
         | "comboRadioButton"
-        | "tableInput";
+        | "tableInput"
+        | "durationButton";
     hidePicLabel?: boolean;
     onChange?: (e: any) => void;
     onFocus?: (e: any) => void;
@@ -56,7 +59,8 @@ interface Input {
         icon?: string;
     }>;
     calendar?: {
-        onDayPress: (day: DateData) => void;
+        markedDates?: MarkedDates;
+        onDayPress: (day: any) => void;
         isCalendarVisible: boolean;
         setCalendarVisible: (flag: boolean) => void;
     };
@@ -78,6 +82,11 @@ interface Input {
         valueTwoMock: Date;
         isErrorOne?: boolean;
         isErrorTwo?: boolean;
+    };
+    durationButton?: {
+        data: IDurationButton[];
+        onClick: (value: string | number) => void;
+        value: string | number;
     };
     dropdown?: {
         items: {
@@ -133,6 +142,12 @@ interface Input {
     tableInput?: ITableInput;
 }
 
+interface IDurationButton {
+    id: string;
+    name: string;
+    value: string | number;
+}
+
 interface IComboRadioBtn {
     firstValue?: string;
     firstText?: string;
@@ -142,6 +157,7 @@ interface IComboRadioBtn {
     secondStatus?: "checked" | "unchecked";
     firstChildren?: React.ReactNode;
     secondChildren?: React.ReactNode;
+    isHorizontal?: boolean;
     onSetComboRadioButtonValue?: (value: string) => void;
 }
 
@@ -737,6 +753,8 @@ interface ProjectDetail {
     Pic: PIC;
     pics: PIC[];
     ProjectDocs: Docs[];
+    Customer: any;
+    Account: any;
 }
 
 export type {
@@ -784,5 +802,6 @@ export type {
     IComboRadioBtn,
     ITableInput,
     ITableInputItem,
-    ITableInputListItem
+    ITableInputListItem,
+    IDurationButton
 };

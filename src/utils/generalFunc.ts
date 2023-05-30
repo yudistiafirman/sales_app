@@ -306,19 +306,22 @@ export const showWarningDocument = (
     if (!cbdDocs || !customerType) return false;
 
     const documents = cbdDocs.filter((v) => v.File !== null);
+
     if (customerType === INDIVIDU) {
         if (documents && documents?.length > 0) {
             return false;
         }
         return true;
     }
-    if (
-        documents &&
-        documents?.length > 0 &&
-        documents[0]?.Document?.name === "Foto NPWP"
-    ) {
+    const hasUploadedNpwp = cbdDocs.findIndex(
+        (v) => v.Document?.name === "Foto NPWP"
+    );
+
+    if (documents && documents?.length > 0 && hasUploadedNpwp === 1) {
         return false;
     }
+    return true;
+
     return true;
 };
 
@@ -337,6 +340,11 @@ export const replaceDot = (value: string) => {
         }
     }
     return output;
+};
+
+export const daysInMonth = (month: number, year: number) => {
+    const result = new Date(year, month, 0).getDate();
+    return result;
 };
 
 export const formatRawDateToMonthDateYear = (date?: Date) => {
