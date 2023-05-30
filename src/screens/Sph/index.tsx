@@ -286,7 +286,7 @@ function SphContent() {
 
         stepHandler(sphData, stepsDone, setStepsDone, stepControll);
         handleStepperFocus();
-    }, [sphData.projectAddress, sphData.billingAddress]);
+    }, []);
 
     const actionBackButton = (popupVisible = false) => {
         if (popupVisible) {
