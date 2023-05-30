@@ -93,13 +93,14 @@ function stepHandler(
         setStepsDone((curr) => curr.filter((num) => num !== 0));
     }
     const selectedPic = state?.pics?.filter((v) => v.isSelected);
+    console.log(selectedPic);
     const customerTypeCond =
         state?.customerType === "COMPANY" ? !!state?.companyName : true;
     if (
         state?.customerType &&
         customerTypeCond &&
         state?.projectName &&
-        selectedPic
+        selectedPic.length > 0
     ) {
         setStepsDone((curr) => [...new Set(curr), 1]);
     } else {
@@ -461,7 +462,21 @@ function CreateVisitation() {
     useEffect(() => {
         stepHandler(visitationData, setStepsDone);
         handleStepperFocus();
-    }, [visitationData.createdLocation, visitationData.locationAddress]);
+    }, [
+        visitationData.createdLocation,
+        visitationData.locationAddress,
+        visitationData.pics,
+        visitationData.stageProject,
+        visitationData.products,
+        visitationData.customerType,
+        visitationData.companyName,
+        visitationData.typeProject,
+        visitationData.estimationDate.estimationMonth,
+        visitationData.estimationDate.estimationWeek,
+        visitationData.paymentType,
+        visitationData.competitors,
+        visitationData.images
+    ]);
 
     const addPic = (state: PIC) => {
         const pic = state;
