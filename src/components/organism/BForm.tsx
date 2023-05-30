@@ -5,9 +5,10 @@ import {
     ViewStyle,
     TouchableOpacity,
     TextStyle,
-    Platform
+    Platform,
+    ListRenderItem
 } from "react-native";
-import { Input } from "@/interfaces";
+import { IDurationButton, Input } from "@/interfaces";
 import { colors, fonts, layout } from "@/constants";
 import { resScale } from "@/utils";
 import CheckBox from "@react-native-community/checkbox";
@@ -16,6 +17,10 @@ import { TextInputMask } from "react-native-masked-text";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import DatePicker from "react-native-date-picker";
 import { replaceDot } from "@/utils/generalFunc";
+import { FlashList } from "@shopify/flash-list";
+import font from "@/constants/fonts";
+import moment from "moment";
+import { MarkedDates } from "react-native-calendars/src/types";
 import BSpacer from "../atoms/BSpacer";
 import BTextInput from "../atoms/BTextInput";
 import BCardOption from "../molecules/BCardOption";
@@ -31,6 +36,8 @@ import BFileInput from "../atoms/BFileInput";
 import BCalendar from "./BCalendar";
 import BComboRadioButton from "../molecules/BComboRadioButton";
 import BTableInput from "../molecules/BTableInput";
+import BButtonPrimary from "../atoms/BButtonPrimary";
+import BCalendarRange from "./BCalendarRange";
 
 interface IProps {
     inputs: Input[];
@@ -215,6 +222,42 @@ const renderInput = (
         tableInput
     } = input;
 
+    function getSelectedValueCalendarRange(
+        markedDates: MarkedDates | undefined
+    ) {
+        let startingDate;
+        let endingDate;
+        if (markedDates)
+            Object.keys(markedDates).forEach((it) => {
+                if (markedDates[it].startingDay === true) {
+                    startingDate = moment(it).format("MMMM DD, YYYY");
+                }
+                if (markedDates[it].endingDay === true) {
+                    endingDate = moment(it).format("MMMM DD, YYYY");
+                }
+            });
+
+        if (startingDate && endingDate) {
+            return `${startingDate} - ${endingDate}`;
+        }
+        return undefined;
+    }
+
+    function getMinDateCalendarRange(markedDates: MarkedDates | undefined) {
+        let minDate;
+        let haveEndingDate = false;
+        if (markedDates)
+            Object.keys(markedDates).forEach((it) => {
+                if (markedDates[it].startingDay === true) {
+                    minDate = it;
+                }
+                if (markedDates[it].endingDay === true) {
+                    haveEndingDate = true;
+                }
+            });
+        return haveEndingDate ? undefined : minDate;
+    }
+
     if (type === "tableInput") {
         return (
             <BTableInput
@@ -238,6 +281,7 @@ const renderInput = (
                 sizeInNumber={input.textSize}
                 label={label}
                 titleBold={titleBold}
+                isHorizontal={comboRadioBtn?.isHorizontal}
                 firstStatus={comboRadioBtn?.firstStatus}
                 firstText={comboRadioBtn?.firstText}
                 firstValue={comboRadioBtn?.firstValue}
@@ -394,6 +438,91 @@ const renderInput = (
                                     calendar?.setCalendarVisible(false);
                                     calendar?.onDayPress(date);
                                 }}
+                            />
+                        </View>
+                    </>
+                )}
+            </View>
+        );
+    }
+
+    if (type === "calendar-range") {
+        return (
+            <View style={Platform.OS !== "android" && { zIndex: -1 }}>
+                <BLabel
+                    sizeInNumber={input.textSize}
+                    bold={titleBold}
+                    label={label}
+                    isRequired={isRequire}
+                />
+                <TouchableOpacity
+                    style={[
+                        styles.quantityLayout,
+                        { marginTop: layout.pad.md }
+                    ]}
+                    onPress={() =>
+                        calendar?.setCalendarVisible(
+                            !calendar?.isCalendarVisible
+                        )
+                    }
+                >
+                    <View
+                        style={[
+                            styles.quantityInputCalendar,
+                            { paddingEnd: layout.pad.xl },
+                            isError && { borderColor: colors.primary }
+                        ]}
+                    >
+                        <BText>
+                            {getSelectedValueCalendarRange(
+                                calendar?.markedDates
+                            ) || placeholder}
+                        </BText>
+                    </View>
+                    <View style={styles.calendarText}>
+                        <Icon
+                            name="chevron-right"
+                            size={25}
+                            color={colors.black}
+                        />
+                    </View>
+                </TouchableOpacity>
+                {isError && (
+                    <BText size="small" color="primary" bold="100">
+                        {`${label} harus diisi`}
+                    </BText>
+                )}
+                {calendar?.isCalendarVisible && (
+                    <>
+                        <BSpacer size="extraSmall" />
+                        <View style={styles.calendar}>
+                            <BCalendarRange
+                                onDayPress={(date) => {
+                                    let hasEndingDay: boolean | undefined =
+                                        false;
+                                    if (date && Object.keys(date).length > 0) {
+                                        Object.keys(date).forEach((it) => {
+                                            if (date[it]?.endingDay === true) {
+                                                hasEndingDay =
+                                                    date[it].endingDay;
+                                            }
+                                        });
+                                        if (hasEndingDay) {
+                                            calendar?.setCalendarVisible(false);
+                                        } else {
+                                            calendar?.setCalendarVisible(true);
+                                        }
+                                        calendar?.onDayPress(date);
+                                    } else {
+                                        calendar?.setCalendarVisible(
+                                            calendar?.isCalendarVisible
+                                        );
+                                    }
+                                }}
+                                minDate={getMinDateCalendarRange(
+                                    calendar?.markedDates
+                                )}
+                                markedDates={calendar?.markedDates}
                             />
                         </View>
                     </>
@@ -939,6 +1068,65 @@ const renderInput = (
                         bold="400"
                     >
                         {customerErrorMsg}
+                    </BText>
+                )}
+            </View>
+        );
+    }
+
+    const renderItemDurationButton: ListRenderItem<IDurationButton> = ({
+        item,
+        index
+    }) => (
+        <BButtonPrimary
+            onPress={() => input.durationButton?.onClick(item.value)}
+            title={item.name}
+            isOutline
+            outlineBtnStyle={
+                item.value === input.durationButton?.value
+                    ? {
+                          borderColor: colors.primary
+                      }
+                    : {
+                          borderColor: colors.border.default
+                      }
+            }
+            outlineTitleStyle={
+                item.value === input.durationButton?.value
+                    ? {
+                          color: colors.primary,
+                          fontSize: font.size.xs
+                      }
+                    : {
+                          color: colors.text.darker,
+                          fontSize: font.size.xs
+                      }
+            }
+        />
+    );
+
+    if (type === "durationButton") {
+        const defaultErrorMsg = `${label} harus diisi`;
+        return (
+            <View style={Platform.OS !== "android" && { zIndex: -1 }}>
+                <BLabel
+                    sizeInNumber={input.textSize}
+                    bold={titleBold}
+                    label={label}
+                    isRequired={isRequire}
+                />
+                <BSpacer size="verySmall" />
+                <FlashList
+                    data={input.durationButton?.data}
+                    estimatedItemSize={10}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item, index) => item.id}
+                    renderItem={renderItemDurationButton}
+                />
+                {isError && (
+                    <BText size="small" color="primary" bold="100">
+                        {customerErrorMsg || defaultErrorMsg}
                     </BText>
                 )}
             </View>
