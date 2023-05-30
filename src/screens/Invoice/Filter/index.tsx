@@ -60,15 +60,15 @@ function InvoiceFilter() {
             comboRadioBtn: {
                 firstText: "Pembayaran Credit",
                 secondText: "Pembayaran Cash",
-                firstValue: "credit",
-                secondValue: "cbd",
+                firstValue: "CREDIT",
+                secondValue: "CBD",
                 isHorizontal: true,
                 firstStatus:
-                    invoiceData?.filter?.paymentMethod === "credit"
+                    invoiceData?.filter?.paymentMethod === "CREDIT"
                         ? "checked"
                         : "unchecked",
                 secondStatus:
-                    invoiceData?.filter?.paymentMethod === "cbd"
+                    invoiceData?.filter?.paymentMethod === "CBD"
                         ? "checked"
                         : "unchecked",
                 onSetComboRadioButtonValue: (value) => {

@@ -18,7 +18,7 @@ export default class BrikApiFinance {
         page?: string,
         size?: string,
         searchQuery?: string,
-        paymentMethod?: string,
+        paymentType?: string,
         paymentDuration?: string,
         status?: string,
         startDateIssued?: string,
@@ -36,8 +36,8 @@ export default class BrikApiFinance {
         if (searchQuery) {
             params.append("search", searchQuery);
         }
-        if (paymentMethod) {
-            params.append("paymentMethod", paymentMethod);
+        if (paymentType) {
+            params.append("paymentType", paymentType);
         }
         if (paymentDuration) {
             params.append("paymentDuration", paymentDuration);

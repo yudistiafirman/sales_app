@@ -60,7 +60,7 @@ function InvoiceList() {
     const getAllInvoiceData = debounce(async () => {
         try {
             dispatch(setLoading({ isLoading: true }));
-            const { page, size, searchQuery, filter } = invoiceData;
+            const { search, size, filter } = invoiceData;
 
             const paymentDurationCheck = filter?.paymentDuration
                 ? parseInt(filter?.paymentDuration.toString(), 10)
@@ -68,8 +68,8 @@ function InvoiceList() {
 
             const response = await getAllInvoice(
                 size.toString(),
-                page === 0 ? "1" : page.toString(),
-                searchQuery,
+                search?.page === 0 ? "1" : search?.page.toString(),
+                search?.searchQuery,
                 filter?.paymentMethod,
                 paymentDurationCheck
                     ? paymentDurationCheck?.toString()
@@ -107,36 +107,39 @@ function InvoiceList() {
             dispatch(setLoadMore({ isLoadMore: false }));
             const errorMesage = error?.message
                 ? error?.message
-                : "Gagal Mengambil data List Invoice";
+                : "Gagal Mengambil data Tagihan";
             dispatch(setErrorMessage({ message: errorMesage }));
         }
     }, DEBOUNCE_SEARCH);
 
     const onRefresh = () => {
-        const { page } = invoiceData;
         dispatch(setErrorMessage({ message: "" }));
         dispatch(setRefreshing({ refreshing: true }));
-        dispatch(setPage({ page: 0 }));
+        dispatch(setPage({ page: 1 }));
+        dispatch(setInvoiceSearchQuery({ queryValue: "" }));
         dispatch(setInvoceData({ data: [] }));
     };
 
     const onEndReached = () => {
-        const { page, totalPages } = invoiceData;
-        if (page <= totalPages) {
+        const { search, totalPages } = invoiceData;
+        if (search?.page <= totalPages) {
             dispatch(setLoadMore({ isLoadMore: true }));
-            dispatch(setPage({ page: page + 1 }));
+            dispatch(setPage({ page: search.page + 1 }));
         }
     };
 
     useFocusEffect(
         React.useCallback(() => {
-            getAllInvoiceData();
-        }, [
-            invoiceData.isLoadMore,
-            invoiceData.page,
-            invoiceData.searchQuery,
-            invoiceData.filter
-        ])
+            if (invoiceData?.search?.searchQuery.length > 2) {
+                dispatch(setLoading({ isLoading: true }));
+                dispatch(setInvoceData({ data: [] }));
+                getAllInvoiceData();
+            }
+
+            if (invoiceData?.search?.searchQuery.length === 0) {
+                getAllInvoiceData();
+            }
+        }, [invoiceData.search, invoiceData.filter])
     );
 
     const renderShimmerInvoiceList = () => (
@@ -146,22 +149,13 @@ function InvoiceList() {
     );
 
     const onChangeText = (e: string) => {
-        if (invoiceData.searchQuery.length > 2) {
-            dispatch(setLoading({ isLoading: true }));
-            dispatch(setInvoceData({ data: [] }));
-            dispatch(setPage({ page: 1 }));
-            dispatch(setInvoiceSearchQuery({ queryValue: e }));
-        } else {
-            dispatch(setInvoiceSearchQuery({ queryValue: e }));
-        }
+        dispatch(setPage({ page: 1 }));
+        dispatch(setInvoiceSearchQuery({ queryValue: e }));
     };
 
     const onRetry = () => {
-        dispatch(setLoading({ isLoading: true }));
-        dispatch(setInvoceData({ data: [] }));
         dispatch(setPage({ page: 1 }));
         dispatch(setInvoiceSearchQuery({ queryValue: "" }));
-        getAllInvoiceData();
     };
 
     const selectedFilterButton = () => {
@@ -191,9 +185,9 @@ function InvoiceList() {
         <View style={styles.headerComponent}>
             <BSearchBar
                 outlineStyle={styles.outlineSearchBar}
-                placeholder="Cari Invoice"
+                placeholder="Cari Tagihan"
                 onChangeText={onChangeText}
-                value={invoiceData.searchQuery}
+                value={invoiceData?.search?.searchQuery}
                 autoFocus={false}
                 textInputStyle={{ minHeight: resScale(42) }}
                 left={
@@ -206,6 +200,7 @@ function InvoiceList() {
             />
             <BSpacer size="small" />
             <BFilterSort
+                isSortHidden
                 isSelectedFilter={selectedFilterButton()}
                 onPressSort={() => console.log("sort pressed")}
                 onPressFilter={() => navigation.navigate(INVOICE_FILTER)}
@@ -217,6 +212,9 @@ function InvoiceList() {
     const renderInvoiceCard: ListRenderItem<InvoiceListData> = useCallback(
         ({ item, index }) => {
             const invoiceNo = item?.number ? item?.number : "-";
+            const projectName = item?.Project?.displayName
+                ? item?.Project?.displayName
+                : "-";
             const companyName = item?.Project?.Customer?.displayName
                 ? item?.Project?.Customer?.displayName
                 : "-";
@@ -266,6 +264,7 @@ function InvoiceList() {
                 <BInvoiceCard
                     invoiceNo={invoiceNo}
                     companyName={companyName}
+                    projectName={projectName}
                     amount={amount}
                     bgColor={index % 2 ? colors.veryLightShadeGray : ""}
                     paymentStatus={paymentStatus}

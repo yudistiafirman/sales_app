@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
 type IBInvoiceCard = {
     invoiceNo: string;
     companyName: string;
+    projectName: string;
     amount: number;
     paymentStatus: string;
     paymentMethod: "Credit" | "Cash" | string | number;
@@ -88,6 +89,7 @@ type IBInvoiceCard = {
 function BInvoiceCard({
     invoiceNo,
     companyName,
+    projectName,
     amount,
     paymentStatus,
     paymentMethod,
@@ -152,11 +154,13 @@ function BInvoiceCard({
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>{invoiceNo}</Text>
                     <Text style={styles.title}>
-                        {`Rp. ${formatCurrency(amount)}`}
+                        {`IDR ${formatCurrency(amount)}`}
                     </Text>
                 </View>
                 <BSpacer size="verySmall" />
                 <Text style={styles.company}>{companyName}</Text>
+                <BSpacer size="verySmall" />
+                <Text style={styles.company}>{projectName}</Text>
             </View>
             <BSpacer size="extraSmall" />
             <View style={styles.divider} />
@@ -164,9 +168,7 @@ function BInvoiceCard({
             <View style={styles.footer}>
                 <View style={styles.paymentContainer}>
                     <View style={styles.paymentItem}>
-                        <Text style={styles.paymentItemTitle}>
-                            Pembayaran :
-                        </Text>
+                        <Text style={styles.paymentItemTitle}>Status :</Text>
                         <BSpacer size="verySmall" />
                         <Text style={styles.paymentItemValue}>
                             {paymentStatus}

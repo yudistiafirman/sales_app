@@ -8,11 +8,10 @@ export interface InvoiceGlobalState {
     isLoading: boolean;
     isLoadMore: boolean;
     isRefreshing: boolean;
-    searchQuery: string;
     size: number;
-    page: number;
     totalPages: number;
     totalItems: number;
+    search: SearchInvoice;
     errorMessage: string | unknown;
 }
 
@@ -31,6 +30,11 @@ interface IssueDate {
     endDateIssued: string;
 }
 
+interface SearchInvoice {
+    page: number;
+    searchQuery: string;
+}
+
 const initialState: InvoiceGlobalState = {
     filter: {
         paymentMethod: "",
@@ -41,13 +45,15 @@ const initialState: InvoiceGlobalState = {
         dueDateDifference: "",
         markedDates: {}
     },
-    searchQuery: "",
+    search: {
+        page: 1,
+        searchQuery: ""
+    },
     invoiceData: [],
     isLoading: false,
     isLoadMore: false,
     isRefreshing: false,
     size: 10,
-    page: 1,
     totalPages: 0,
     totalItems: 0,
     errorMessage: ""
@@ -116,7 +122,7 @@ export const invoiceSlice = createSlice({
         ) => ({ ...state, isRefreshing: actions.payload.refreshing }),
         setPage: (state, actions: PayloadAction<{ page: number }>) => ({
             ...state,
-            page: actions.payload.page
+            search: { ...state.search, page: actions.payload.page }
         }),
         setTotalItems: (
             state,
@@ -130,7 +136,15 @@ export const invoiceSlice = createSlice({
             actions: PayloadAction<{ queryValue: string }>
         ) => ({
             ...state,
-            searchQuery: actions.payload.queryValue
+            search: { ...state.search, searchQuery: actions.payload.queryValue }
+        }),
+        setSearch: (state, actions: PayloadAction<SearchInvoice>) => ({
+            ...state,
+            search: {
+                ...state.search,
+                searchQuery: actions.payload.searchQuery,
+                page: actions.payload.page
+            }
         }),
         setErrorMessage: (
             state,
@@ -165,7 +179,8 @@ export const {
     setInvoiceSearchQuery,
     setErrorMessage,
     setRefreshing,
-    setTotalPage
+    setTotalPage,
+    setSearch
 } = invoiceSlice.actions;
 
 export default invoiceSlice.reducer;
