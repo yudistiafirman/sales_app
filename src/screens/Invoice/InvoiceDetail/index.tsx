@@ -7,6 +7,7 @@ import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import { useRoute } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
 import React, { useState } from "react";
 import { Text, StyleSheet, View, TouchableWithoutFeedback } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     },
     listDoContainer: {
         paddingLeft: layout.pad.lg,
-        paddingRight: layout.pad.md,
+        paddingRight: layout.pad.lg,
         borderTopEndRadius: layout.radius.lg,
         borderTopStartRadius: layout.radius.lg,
         backgroundColor: colors.tertiary,
@@ -88,6 +89,7 @@ const styles = StyleSheet.create({
 function InvoiceDetail() {
     const route = useRoute<RootStackScreenProps>();
     const [expand, setExpand] = useState(true);
+    const doData = [1, 2, 3, 4, 5];
 
     useCustomHeaderRight({
         customHeaderRight: (
@@ -282,6 +284,68 @@ function InvoiceDetail() {
         </View>
     );
 
+    const renderInvoiceDetailFooter = () => (
+        <View style={{ flex: 1, paddingBottom: layout.pad.ml }}>
+            <BSpacer size="small" />
+            <View style={styles.divider} />
+            <BSpacer size="extraSmall" />
+            <View style={[styles.textContainer]}>
+                <Text style={styles.text}>SC 3.5 NFA 16 m3</Text>
+                <Text style={[styles.title, { fontSize: font.size.md }]}>
+                    Rp 12.480.000
+                </Text>
+            </View>
+            <BSpacer size="extraSmall" />
+            <View style={[styles.textContainer]}>
+                <Text style={styles.text}>K-500 FA 19 m3</Text>
+                <Text style={[styles.title, { fontSize: font.size.md }]}>
+                    Rp 15.680.000
+                </Text>
+            </View>
+            <BSpacer size="extraSmall" />
+            <View style={[styles.textContainer]}>
+                <Text style={[styles.title, { fontSize: font.size.md }]}>
+                    Jumlah Tagihan
+                </Text>
+                <Text
+                    style={[
+                        styles.title,
+                        {
+                            fontSize: font.size.md,
+                            fontFamily: font.family.montserrat[600]
+                        }
+                    ]}
+                >
+                    Rp 15.680.000
+                </Text>
+            </View>
+            <BSpacer size="extraSmall" />
+            <View style={[styles.textContainer]}>
+                <Text style={styles.text}>Jumlah Terbayar</Text>
+                <Text style={[styles.title, { fontSize: font.size.md }]}>
+                    - Rp 28.160.000
+                </Text>
+            </View>
+            <BSpacer size="extraSmall" />
+            <View style={[styles.textContainer]}>
+                <Text style={[styles.title, { fontSize: font.size.md }]}>
+                    Jumlah Terhutang
+                </Text>
+                <Text
+                    style={[
+                        styles.title,
+                        {
+                            fontSize: font.size.md,
+                            fontFamily: font.family.montserrat[600]
+                        }
+                    ]}
+                >
+                    Rp 0
+                </Text>
+            </View>
+        </View>
+    );
+
     return (
         <View style={{ flex: 1 }}>
             <View style={styles.container}>
@@ -359,6 +423,7 @@ function InvoiceDetail() {
             <View style={[styles.listDoContainer]}>
                 <View style={[styles.textContainer]}>
                     <Text style={styles.text}>DO </Text>
+                    <BSpacer size="extraSmall" />
                     <TouchableWithoutFeedback
                         onPress={() => setExpand(!expand)}
                     >
@@ -369,7 +434,13 @@ function InvoiceDetail() {
                         />
                     </TouchableWithoutFeedback>
                 </View>
-                {expand && renderDoCard()}
+
+                <FlashList
+                    data={[1, 2, 3, 4]}
+                    renderItem={() => (expand ? renderDoCard() : null)}
+                    estimatedItemSize={20}
+                    ListFooterComponent={renderInvoiceDetailFooter()}
+                />
             </View>
         </View>
     );
