@@ -10,11 +10,12 @@ import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import { useNavigation } from "@react-navigation/native";
 import { MarkedDates } from "react-native-calendars/src/types";
 import moment from "moment";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import {
     setDueDateDifference,
     setIssueDate,
+    setMarkedDates,
     setPaymentDuration,
     setPaymentMethod,
     setPaymentStatus
@@ -41,25 +42,13 @@ const styles = StyleSheet.create({
 });
 
 function InvoiceFilter() {
+    const invoiceData = useSelector((state: RootState) => state.invoice);
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
-    const [paymentMethodChecked, setPaymentMethodChecked] =
-        React.useState<string>("");
-    const [selectedPaymentDuration, setSelectedPaymentDuration] =
-        React.useState<string | number>("");
-    const [selectedPaymentStatus, setSelectedPaymentStatus] = React.useState<
-        string | number
-    >("");
-    const [selectedDueDateDifference, setSelectedDueDateDifference] =
-        React.useState<string | number>("");
     const [isVisibleCalendar, setVisibleCalendar] =
         React.useState<boolean>(false);
     const [selectedMarkedDates, setSelectedMarkedDates] =
         React.useState<MarkedDates>({});
-    const [selectedStartDateIssued, setSelectedStartDateIssued] =
-        React.useState<string>("");
-    const [selectedEndDateIssued, setSelectedEndDateIssued] =
-        React.useState<string>("");
 
     const inputs: Input[] = [
         {
@@ -69,15 +58,19 @@ function InvoiceFilter() {
             comboRadioBtn: {
                 firstText: "Pembayaran Credit",
                 secondText: "Pembayaran Cash",
-                firstValue: "first",
-                secondValue: "second",
+                firstValue: "credit",
+                secondValue: "cbd",
                 isHorizontal: true,
                 firstStatus:
-                    paymentMethodChecked === "first" ? "checked" : "unchecked",
+                    invoiceData?.paymentMethod === "credit"
+                        ? "checked"
+                        : "unchecked",
                 secondStatus:
-                    paymentMethodChecked === "second" ? "checked" : "unchecked",
+                    invoiceData?.paymentMethod === "cbd"
+                        ? "checked"
+                        : "unchecked",
                 onSetComboRadioButtonValue: (value) => {
-                    setPaymentMethodChecked(value);
+                    dispatch(setPaymentMethod(value));
                 }
             }
         },
@@ -97,9 +90,9 @@ function InvoiceFilter() {
                     { id: "7", name: "90 Hari", value: 90 }
                 ],
                 onClick: (value) => {
-                    setSelectedPaymentDuration(value);
+                    dispatch(setPaymentDuration(value));
                 },
-                value: selectedPaymentDuration
+                value: invoiceData?.paymentDuration
             }
         },
         {
@@ -128,9 +121,9 @@ function InvoiceFilter() {
                     { id: "5", name: "Batal", value: "CANCELLED" }
                 ],
                 onClick: (value) => {
-                    setSelectedPaymentStatus(value);
+                    dispatch(setPaymentStatus(value));
                 },
-                value: selectedPaymentStatus
+                value: invoiceData?.paymentStatus
             }
         },
         {
@@ -141,21 +134,26 @@ function InvoiceFilter() {
             placeholder: "Pilih tanggal",
             customerErrorMsg: "Tanggal Tagih harus diisi",
             calendar: {
-                markedDates: selectedMarkedDates,
+                markedDates: invoiceData?.markedDates,
                 onDayPress: (value: MarkedDates) => {
-                    setSelectedMarkedDates(value);
+                    dispatch(setMarkedDates(value));
+                    let startingDay;
+                    let endingDay;
                     Object.keys(value).forEach((it) => {
                         if (value[it].startingDay === true) {
-                            setSelectedStartDateIssued(
-                                moment(it).valueOf().toString()
-                            );
+                            startingDay = moment(it).valueOf().toString();
                         }
                         if (value[it].endingDay === true) {
-                            setSelectedEndDateIssued(
-                                moment(it).valueOf().toString()
-                            );
+                            endingDay = moment(it).valueOf().toString();
                         }
                     });
+                    if (startingDay && endingDay)
+                        dispatch(
+                            setIssueDate({
+                                startDateIssued: startingDay,
+                                endDateIssued: endingDay
+                            })
+                        );
                 },
                 isCalendarVisible: isVisibleCalendar,
                 setCalendarVisible: (flag: boolean) => {
@@ -179,18 +177,35 @@ function InvoiceFilter() {
                     { id: "7", name: "90 Hari", value: 90 }
                 ],
                 onClick: (value) => {
-                    setSelectedDueDateDifference(value);
+                    dispatch(setDueDateDifference(value));
                 },
-                value: selectedDueDateDifference
+                value: invoiceData?.dueDateDifference
             }
         }
     ];
+
+    const onClear = () => {
+        dispatch(setPaymentMethod(""));
+        dispatch(setPaymentDuration(0));
+        dispatch(setPaymentStatus(""));
+        dispatch(
+            setIssueDate({
+                startDateIssued: "",
+                endDateIssued: ""
+            })
+        );
+        dispatch(setDueDateDifference(""));
+        dispatch(setMarkedDates({}));
+    };
 
     useCustomHeaderLeft({
         customHeaderLeft: (
             <BHeaderIcon
                 size={resScale(23)}
-                onBack={() => navigation.goBack()}
+                onBack={() => {
+                    onClear();
+                    navigation.goBack();
+                }}
                 iconName="x"
             />
         )
@@ -198,30 +213,42 @@ function InvoiceFilter() {
 
     React.useEffect(() => {
         crashlytics().log(INVOICE_FILTER);
+
+        console.log(
+            "kenaa ini: ",
+            invoiceData?.paymentMethod,
+            invoiceData?.paymentDuration,
+            invoiceData?.paymentStatus,
+            invoiceData?.startDateIssued,
+            invoiceData?.endDateIssued,
+            invoiceData?.dueDateDifference
+        );
     }, []);
 
     const getButtonState = () => {
         let hide = true;
-        if (paymentMethodChecked !== "") hide = false;
-        if (selectedPaymentDuration !== "") hide = false;
-        if (selectedStartDateIssued !== "" && selectedEndDateIssued !== "")
+        if (invoiceData?.paymentMethod !== "") hide = false;
+        if (
+            invoiceData?.paymentDuration &&
+            parseInt(invoiceData?.paymentDuration.toString(), 10) > 0
+        )
             hide = false;
-        if (selectedDueDateDifference !== "") hide = false;
+        if (invoiceData?.paymentStatus !== "") hide = false;
+        if (
+            invoiceData?.startDateIssued !== "" &&
+            invoiceData?.endDateIssued !== ""
+        )
+            hide = false;
+        if (
+            invoiceData?.dueDateDifference &&
+            parseInt(invoiceData?.dueDateDifference.toString(), 10) > 0
+        )
+            hide = false;
 
         return hide;
     };
 
     const onSubmit = () => {
-        dispatch(setPaymentMethod(paymentMethodChecked));
-        dispatch(setPaymentDuration(selectedPaymentDuration));
-        dispatch(setPaymentStatus(selectedPaymentStatus));
-        dispatch(
-            setIssueDate({
-                startDateIssued: selectedStartDateIssued,
-                endDateIssued: selectedEndDateIssued
-            })
-        );
-        dispatch(setDueDateDifference(selectedDueDateDifference));
         navigation.goBack();
     };
 
@@ -235,8 +262,8 @@ function InvoiceFilter() {
             </ScrollView>
             <View style={styles.button}>
                 <BBackContinueBtn
-                    onPressContinue={() => navigation.goBack()}
-                    onPressBack={() => onSubmit()}
+                    onPressContinue={() => onSubmit()}
+                    onPressBack={() => onClear()}
                     continueText="Terapkan"
                     backText="Hapus"
                     isContinueIcon={false}

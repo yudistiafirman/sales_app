@@ -6,6 +6,7 @@ import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { colors, layout } from "@/constants";
 import { DEBOUNCE_SEARCH } from "@/constants/const";
 import { InvoiceListData } from "@/models/Invoice";
+import { INVOICE_FILTER } from "@/navigation/ScreenNames";
 
 import {
     setErrorMessage,
@@ -23,9 +24,10 @@ import {
     formatRawDateToMonthDateYear,
     translatePaymentStatus
 } from "@/utils/generalFunc";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import debounce from "lodash.debounce";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,16 +55,39 @@ const styles = StyleSheet.create({
 function InvoiceList() {
     const invoiceData = useSelector((state: RootState) => state.invoice);
     const dispatch = useDispatch();
+    const navigation = useNavigation();
 
     const getAllInvoiceData = debounce(async () => {
         try {
             dispatch(setLoading({ isLoading: true }));
-            const { page, size, searchQuery, isRefreshing } = invoiceData;
+            const {
+                page,
+                size,
+                searchQuery,
+                paymentMethod,
+                paymentStatus,
+                paymentDuration,
+                startDateIssued,
+                endDateIssued,
+                dueDateDifference
+            } = invoiceData;
+
+            const paymentDurationCheck = paymentDuration
+                ? parseInt(paymentDuration.toString(), 10)
+                : undefined;
 
             const response = await getAllInvoice(
                 size.toString(),
                 page === 0 ? "1" : page.toString(),
-                searchQuery
+                searchQuery,
+                paymentMethod,
+                paymentDurationCheck
+                    ? paymentDurationCheck?.toString()
+                    : undefined,
+                paymentStatus.toString(),
+                startDateIssued,
+                endDateIssued,
+                dueDateDifference.toString()
             );
             if (response?.data?.data?.data) {
                 dispatch(setLoading({ isLoading: false }));
@@ -113,14 +138,21 @@ function InvoiceList() {
         }
     };
 
-    useEffect(() => {
-        getAllInvoiceData();
-    }, [
-        invoiceData.isLoadMore,
-        invoiceData.page,
-        invoiceData.searchQuery,
-        invoiceData.isRefreshing
-    ]);
+    useFocusEffect(
+        React.useCallback(() => {
+            getAllInvoiceData();
+        }, [
+            invoiceData.isLoadMore,
+            invoiceData.page,
+            invoiceData.searchQuery,
+            invoiceData.paymentMethod,
+            invoiceData.paymentDuration,
+            invoiceData.paymentStatus,
+            invoiceData.startDateIssued,
+            invoiceData.endDateIssued,
+            invoiceData.dueDateDifference
+        ])
+    );
 
     const renderShimmerInvoiceList = () => (
         <View style={styles.shimmer}>
@@ -167,7 +199,7 @@ function InvoiceList() {
             <BSpacer size="small" />
             <BFilterSort
                 onPressSort={() => console.log("sort pressed")}
-                onPressFilter={() => console.log("filter pressed")}
+                onPressFilter={() => navigation.navigate(INVOICE_FILTER)}
             />
             <BSpacer size="verySmall" />
         </View>

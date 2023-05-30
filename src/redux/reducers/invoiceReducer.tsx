@@ -1,5 +1,6 @@
 import { InvoiceListData } from "@/models/Invoice";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { MarkedDates } from "react-native-calendars/src/types";
 
 export interface InvoiceGlobalState {
     paymentMethod: string;
@@ -18,6 +19,7 @@ export interface InvoiceGlobalState {
     totalPages: number;
     totalItems: number;
     errorMessage: string | unknown;
+    markedDates: MarkedDates;
 }
 
 interface IssueDate {
@@ -41,7 +43,8 @@ const initialState: InvoiceGlobalState = {
     page: 1,
     totalPages: 0,
     totalItems: 0,
-    errorMessage: ""
+    errorMessage: "",
+    markedDates: {}
 };
 
 export const invoiceSlice = createSlice({
@@ -79,6 +82,10 @@ export const invoiceSlice = createSlice({
         ) => ({
             ...state,
             dueDateDifference: actions.payload
+        }),
+        setMarkedDates: (state, actions: PayloadAction<MarkedDates>) => ({
+            ...state,
+            markedDates: actions.payload
         }),
         setLoading: (
             state,
@@ -141,6 +148,7 @@ export const {
     setPaymentStatus,
     setIssueDate,
     setDueDateDifference,
+    setMarkedDates,
     setLoading,
     setLoadMore,
     setPage,
