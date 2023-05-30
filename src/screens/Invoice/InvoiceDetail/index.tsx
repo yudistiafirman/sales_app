@@ -94,6 +94,8 @@ function InvoiceDetail() {
         title: route?.params?.invoiceNo ? route?.params?.invoiceNo : "-"
     });
 
+    const renderDoCard = () => {};
+
     const renderInvoiceCardFooter = () => (
         <>
             <BSpacer size="extraSmall" />
