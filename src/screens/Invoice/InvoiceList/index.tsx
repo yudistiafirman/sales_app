@@ -60,34 +60,24 @@ function InvoiceList() {
     const getAllInvoiceData = debounce(async () => {
         try {
             dispatch(setLoading({ isLoading: true }));
-            const {
-                page,
-                size,
-                searchQuery,
-                paymentMethod,
-                paymentStatus,
-                paymentDuration,
-                startDateIssued,
-                endDateIssued,
-                dueDateDifference
-            } = invoiceData;
+            const { page, size, searchQuery, filter } = invoiceData;
 
-            const paymentDurationCheck = paymentDuration
-                ? parseInt(paymentDuration.toString(), 10)
+            const paymentDurationCheck = filter?.paymentDuration
+                ? parseInt(filter?.paymentDuration.toString(), 10)
                 : undefined;
 
             const response = await getAllInvoice(
                 size.toString(),
                 page === 0 ? "1" : page.toString(),
                 searchQuery,
-                paymentMethod,
+                filter?.paymentMethod,
                 paymentDurationCheck
                     ? paymentDurationCheck?.toString()
                     : undefined,
-                paymentStatus.toString(),
-                startDateIssued,
-                endDateIssued,
-                dueDateDifference.toString()
+                filter?.paymentStatus.toString(),
+                filter?.startDateIssued,
+                filter?.endDateIssued,
+                filter?.dueDateDifference.toString()
             );
             if (response?.data?.data?.data) {
                 dispatch(setLoading({ isLoading: false }));
@@ -145,12 +135,7 @@ function InvoiceList() {
             invoiceData.isLoadMore,
             invoiceData.page,
             invoiceData.searchQuery,
-            invoiceData.paymentMethod,
-            invoiceData.paymentDuration,
-            invoiceData.paymentStatus,
-            invoiceData.startDateIssued,
-            invoiceData.endDateIssued,
-            invoiceData.dueDateDifference
+            invoiceData.filter
         ])
     );
 
@@ -179,6 +164,29 @@ function InvoiceList() {
         getAllInvoiceData();
     };
 
+    const selectedFilterButton = () => {
+        let hide = false;
+        if (invoiceData?.filter?.paymentMethod !== "") hide = true;
+        if (
+            invoiceData?.filter?.paymentDuration &&
+            parseInt(invoiceData?.filter?.paymentDuration.toString(), 10) > 0
+        )
+            hide = true;
+        if (invoiceData?.filter?.paymentStatus !== "") hide = true;
+        if (
+            invoiceData?.filter?.startDateIssued !== "" &&
+            invoiceData?.filter?.endDateIssued !== ""
+        )
+            hide = true;
+        if (
+            invoiceData?.filter?.dueDateDifference &&
+            parseInt(invoiceData?.filter?.dueDateDifference.toString(), 10) > 0
+        )
+            hide = true;
+
+        return hide;
+    };
+
     const renderInvoiceListHeader = () => (
         <View style={styles.headerComponent}>
             <BSearchBar
@@ -198,6 +206,7 @@ function InvoiceList() {
             />
             <BSpacer size="small" />
             <BFilterSort
+                isSelectedFilter={selectedFilterButton()}
                 onPressSort={() => console.log("sort pressed")}
                 onPressFilter={() => navigation.navigate(INVOICE_FILTER)}
             />

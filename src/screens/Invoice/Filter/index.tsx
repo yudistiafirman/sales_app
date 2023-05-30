@@ -14,8 +14,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import {
     setDueDateDifference,
+    setInvoceData,
+    setInvoiceSearchQuery,
     setIssueDate,
+    setLoading,
     setMarkedDates,
+    setPage,
     setPaymentDuration,
     setPaymentMethod,
     setPaymentStatus
@@ -47,8 +51,6 @@ function InvoiceFilter() {
     const dispatch = useDispatch<AppDispatch>();
     const [isVisibleCalendar, setVisibleCalendar] =
         React.useState<boolean>(false);
-    const [selectedMarkedDates, setSelectedMarkedDates] =
-        React.useState<MarkedDates>({});
 
     const inputs: Input[] = [
         {
@@ -62,11 +64,11 @@ function InvoiceFilter() {
                 secondValue: "cbd",
                 isHorizontal: true,
                 firstStatus:
-                    invoiceData?.paymentMethod === "credit"
+                    invoiceData?.filter?.paymentMethod === "credit"
                         ? "checked"
                         : "unchecked",
                 secondStatus:
-                    invoiceData?.paymentMethod === "cbd"
+                    invoiceData?.filter?.paymentMethod === "cbd"
                         ? "checked"
                         : "unchecked",
                 onSetComboRadioButtonValue: (value) => {
@@ -92,7 +94,7 @@ function InvoiceFilter() {
                 onClick: (value) => {
                     dispatch(setPaymentDuration(value));
                 },
-                value: invoiceData?.paymentDuration
+                value: invoiceData?.filter?.paymentDuration
             }
         },
         {
@@ -123,7 +125,7 @@ function InvoiceFilter() {
                 onClick: (value) => {
                     dispatch(setPaymentStatus(value));
                 },
-                value: invoiceData?.paymentStatus
+                value: invoiceData?.filter?.paymentStatus
             }
         },
         {
@@ -134,7 +136,7 @@ function InvoiceFilter() {
             placeholder: "Pilih tanggal",
             customerErrorMsg: "Tanggal Tagih harus diisi",
             calendar: {
-                markedDates: invoiceData?.markedDates,
+                markedDates: invoiceData?.filter?.markedDates,
                 onDayPress: (value: MarkedDates) => {
                     dispatch(setMarkedDates(value));
                     let startingDay;
@@ -179,7 +181,7 @@ function InvoiceFilter() {
                 onClick: (value) => {
                     dispatch(setDueDateDifference(value));
                 },
-                value: invoiceData?.dueDateDifference
+                value: invoiceData?.filter?.dueDateDifference
             }
         }
     ];
@@ -202,10 +204,7 @@ function InvoiceFilter() {
         customHeaderLeft: (
             <BHeaderIcon
                 size={resScale(23)}
-                onBack={() => {
-                    onClear();
-                    navigation.goBack();
-                }}
+                onBack={() => navigation.goBack()}
                 iconName="x"
             />
         )
@@ -213,35 +212,25 @@ function InvoiceFilter() {
 
     React.useEffect(() => {
         crashlytics().log(INVOICE_FILTER);
-
-        console.log(
-            "kenaa ini: ",
-            invoiceData?.paymentMethod,
-            invoiceData?.paymentDuration,
-            invoiceData?.paymentStatus,
-            invoiceData?.startDateIssued,
-            invoiceData?.endDateIssued,
-            invoiceData?.dueDateDifference
-        );
     }, []);
 
     const getButtonState = () => {
         let hide = true;
-        if (invoiceData?.paymentMethod !== "") hide = false;
+        if (invoiceData?.filter?.paymentMethod !== "") hide = false;
         if (
-            invoiceData?.paymentDuration &&
-            parseInt(invoiceData?.paymentDuration.toString(), 10) > 0
+            invoiceData?.filter?.paymentDuration &&
+            parseInt(invoiceData?.filter?.paymentDuration.toString(), 10) > 0
         )
             hide = false;
-        if (invoiceData?.paymentStatus !== "") hide = false;
+        if (invoiceData?.filter?.paymentStatus !== "") hide = false;
         if (
-            invoiceData?.startDateIssued !== "" &&
-            invoiceData?.endDateIssued !== ""
+            invoiceData?.filter?.startDateIssued !== "" &&
+            invoiceData?.filter?.endDateIssued !== ""
         )
             hide = false;
         if (
-            invoiceData?.dueDateDifference &&
-            parseInt(invoiceData?.dueDateDifference.toString(), 10) > 0
+            invoiceData?.filter?.dueDateDifference &&
+            parseInt(invoiceData?.filter?.dueDateDifference.toString(), 10) > 0
         )
             hide = false;
 
@@ -249,6 +238,10 @@ function InvoiceFilter() {
     };
 
     const onSubmit = () => {
+        dispatch(setLoading({ isLoading: true }));
+        dispatch(setInvoceData({ data: [] }));
+        dispatch(setPage({ page: 1 }));
+        dispatch(setInvoiceSearchQuery({ queryValue: "" }));
         navigation.goBack();
     };
 

@@ -3,12 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { MarkedDates } from "react-native-calendars/src/types";
 
 export interface InvoiceGlobalState {
-    paymentMethod: string;
-    paymentDuration: string | number;
-    paymentStatus: string | number;
-    startDateIssued: string;
-    endDateIssued: string;
-    dueDateDifference: string | number;
+    filter: InvoiceFilter;
     invoiceData: InvoiceListData[];
     isLoading: boolean;
     isLoadMore: boolean;
@@ -19,6 +14,15 @@ export interface InvoiceGlobalState {
     totalPages: number;
     totalItems: number;
     errorMessage: string | unknown;
+}
+
+interface InvoiceFilter {
+    paymentMethod: string;
+    paymentDuration: string | number;
+    paymentStatus: string | number;
+    startDateIssued: string;
+    endDateIssued: string;
+    dueDateDifference: string | number;
     markedDates: MarkedDates;
 }
 
@@ -28,14 +32,17 @@ interface IssueDate {
 }
 
 const initialState: InvoiceGlobalState = {
+    filter: {
+        paymentMethod: "",
+        startDateIssued: "",
+        endDateIssued: "",
+        paymentDuration: 0,
+        paymentStatus: "",
+        dueDateDifference: "",
+        markedDates: {}
+    },
     searchQuery: "",
     invoiceData: [],
-    paymentMethod: "",
-    startDateIssued: "",
-    endDateIssued: "",
-    paymentDuration: 0,
-    paymentStatus: "",
-    dueDateDifference: "",
     isLoading: false,
     isLoadMore: false,
     isRefreshing: false,
@@ -43,8 +50,7 @@ const initialState: InvoiceGlobalState = {
     page: 1,
     totalPages: 0,
     totalItems: 0,
-    errorMessage: "",
-    markedDates: {}
+    errorMessage: ""
 };
 
 export const invoiceSlice = createSlice({
@@ -58,34 +64,37 @@ export const invoiceSlice = createSlice({
         }),
         setPaymentMethod: (state, actions: PayloadAction<string>) => ({
             ...state,
-            paymentMethod: actions.payload
+            filter: { ...state.filter, paymentMethod: actions.payload }
         }),
         setPaymentDuration: (
             state,
             actions: PayloadAction<string | number>
         ) => ({
             ...state,
-            paymentDuration: actions.payload
+            filter: { ...state.filter, paymentDuration: actions.payload }
         }),
         setPaymentStatus: (state, actions: PayloadAction<string | number>) => ({
             ...state,
-            paymentStatus: actions.payload
+            filter: { ...state.filter, paymentStatus: actions.payload }
         }),
         setIssueDate: (state, actions: PayloadAction<IssueDate>) => ({
             ...state,
-            startDateIssued: actions.payload.startDateIssued,
-            endDateIssued: actions.payload.endDateIssued
+            filter: {
+                ...state.filter,
+                startDateIssued: actions.payload.startDateIssued,
+                endDateIssued: actions.payload.endDateIssued
+            }
         }),
         setDueDateDifference: (
             state,
             actions: PayloadAction<string | number>
         ) => ({
             ...state,
-            dueDateDifference: actions.payload
+            filter: { ...state.filter, dueDateDifference: actions.payload }
         }),
         setMarkedDates: (state, actions: PayloadAction<MarkedDates>) => ({
             ...state,
-            markedDates: actions.payload
+            filter: { ...state.filter, markedDates: actions.payload }
         }),
         setLoading: (
             state,
