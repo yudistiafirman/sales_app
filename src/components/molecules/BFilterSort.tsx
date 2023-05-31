@@ -25,37 +25,85 @@ const styles = StyleSheet.create({
 type IBFilterSort = {
     onPressFilter: () => void;
     onPressSort: () => void;
+    isSelectedFilter?: boolean;
+    isSelectedSort?: boolean;
+    isFilterHidden?: boolean;
+    isSortHidden?: boolean;
 };
 
-function BFilterSort({ onPressFilter, onPressSort }: IBFilterSort) {
+function BFilterSort({
+    onPressFilter,
+    onPressSort,
+    isSelectedFilter = false,
+    isSelectedSort = false,
+    isFilterHidden = false,
+    isSortHidden = false
+}: IBFilterSort) {
+    const getIconColor = (type: string): string => {
+        if (type === "filter" && isSelectedFilter) {
+            return colors.primary;
+        }
+        if (type === "sort" && isSelectedSort) {
+            return colors.primary;
+        }
+        return colors.white;
+    };
+
     const renderIcon = (type: "filter" | "sort") => (
         <BSvg
             svgName={type === "filter" ? SvgNames.IC_FILTER : SvgNames.IC_SORT}
             width={layout.pad.lg}
             height={layout.pad.lg}
             type="fill"
-            color={colors.white}
+            color={getIconColor(type)}
         />
     );
+
     return (
         <View style={styles.container}>
-            <BButtonPrimary
-                onPress={onPressFilter}
-                outlineBtnStyle={styles.btnStyle}
-                outlineTitleStyle={styles.binTitle}
-                isOutline
-                leftIcon={() => renderIcon("filter")}
-                title="Filter"
-            />
-            <BSpacer size="extraSmall" />
-            <BButtonPrimary
-                onPress={onPressSort}
-                outlineBtnStyle={styles.btnStyle}
-                outlineTitleStyle={styles.binTitle}
-                isOutline
-                rightIcon={() => renderIcon("sort")}
-                title="Urutkan"
-            />
+            {!isFilterHidden && (
+                <>
+                    <BButtonPrimary
+                        onPress={onPressFilter}
+                        outlineBtnStyle={[
+                            styles.btnStyle,
+                            isSelectedFilter === true
+                                ? { borderColor: colors.primary }
+                                : { borderColor: colors.border.default }
+                        ]}
+                        outlineTitleStyle={[
+                            styles.binTitle,
+                            isSelectedFilter === true
+                                ? { color: colors.primary }
+                                : { color: colors.text.shadowGray }
+                        ]}
+                        isOutline
+                        leftIcon={() => renderIcon("filter")}
+                        title="Filter"
+                    />
+                    <BSpacer size="extraSmall" />
+                </>
+            )}
+            {!isSortHidden && (
+                <BButtonPrimary
+                    onPress={onPressSort}
+                    outlineBtnStyle={[
+                        styles.btnStyle,
+                        isSelectedSort === true
+                            ? { borderColor: colors.primary }
+                            : { borderColor: colors.border.default }
+                    ]}
+                    outlineTitleStyle={[
+                        styles.binTitle,
+                        isSelectedSort === true
+                            ? { color: colors.primary }
+                            : { color: colors.text.shadowGray }
+                    ]}
+                    isOutline
+                    rightIcon={() => renderIcon("sort")}
+                    title="Urutkan"
+                />
+            )}
         </View>
     );
 }

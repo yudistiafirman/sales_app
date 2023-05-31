@@ -179,9 +179,9 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                                 data={data}
                                 estimatedItemSize={10}
                                 onEndReachedThreshold={0.5}
-                                removeClippedSubviews={false}
-                                initialNumToRender={10}
-                                maxToRenderPerBatch={10}
+                                // removeClippedSubviews={false}
+                                // initialNumToRender={10}
+                                // maxToRenderPerBatch={10}
                                 onRefresh={onRefresh}
                                 keyExtractor={(item, indx) => indx.toString()}
                                 onEndReached={onEndReached}

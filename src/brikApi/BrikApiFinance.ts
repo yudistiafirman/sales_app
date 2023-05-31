@@ -17,7 +17,13 @@ export default class BrikApiFinance {
     static getAllInvoice = (
         page?: string,
         size?: string,
-        searchQuery?: string
+        searchQuery?: string,
+        paymentType?: string,
+        paymentDuration?: string,
+        status?: string,
+        startDateIssued?: string,
+        endDateIssued?: string,
+        dueDateDifference?: string
     ) => {
         const url = new URL(`${API_URL}/finance/m/invoice`);
         const params = url.searchParams;
@@ -29,6 +35,24 @@ export default class BrikApiFinance {
         }
         if (searchQuery) {
             params.append("search", searchQuery);
+        }
+        if (paymentType) {
+            params.append("paymentType", paymentType);
+        }
+        if (paymentDuration) {
+            params.append("paymentDuration", paymentDuration);
+        }
+        if (status) {
+            params.append("status", status);
+        }
+        if (startDateIssued) {
+            params.append("startDateIssued", startDateIssued);
+        }
+        if (endDateIssued) {
+            params.append("endDateIssued", endDateIssued);
+        }
+        if (dueDateDifference) {
+            params.append("dueDateDifference", dueDateDifference);
         }
         return url.toString();
     };
