@@ -28,6 +28,8 @@ export const getAllInvoice = async (
         undefined,
         true
     );
+export const getOneInvoice = async (id: string) =>
+    customRequest(BrikApiFinance.getOneInvoice(id), "GET", undefined, true);
 
 export const postPayment = async (payload: any) =>
     customRequest(BrikApiFinance.postPayment(), "POST", payload, true);

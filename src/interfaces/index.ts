@@ -456,6 +456,7 @@ interface ProductParentInterface {
 interface ProductDataInterface {
     id: string;
     name: string;
+    displayName: string;
     Price: {
         id: string;
         price: number;

@@ -56,4 +56,9 @@ export default class BrikApiFinance {
         }
         return url.toString();
     };
+
+    static getOneInvoice = (id: string) => {
+        const url = new URL(`${API_URL}/finance/m/invoice/${id}`);
+        return url.toString();
+    };
 }

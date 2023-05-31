@@ -1,3 +1,5 @@
+import { ProductDataInterface } from "@/interfaces";
+
 export interface InvoiceCustomer {
     id: string;
     name?: string;
@@ -28,4 +30,37 @@ export interface InvoiceListData {
     issuedDate?: Date;
     dueDate?: Date;
     Project?: InvoiceProject;
+}
+
+export interface DeliverOrders {
+    totalAdditionalPrice?: number;
+    date?: Date;
+    quantity?: number;
+    SO?: {
+        PoProd?: {
+            ReqProd?: {
+                offeringPrice?: number;
+                Product?: ProductDataInterface;
+            };
+        };
+    };
+}
+
+export interface InvoiceDetailTypeData {
+    total?: number;
+    dueDate?: Date;
+    issuedDate?: Date;
+    dueDateDifference?: number;
+    paymentDuration?: number;
+    amountPaid?: number;
+    amountDue?: number;
+    status?:
+        | "PARTIALLY PAID"
+        | "DELIVERED"
+        | "CANCELLED"
+        | "PAID"
+        | "SUBMITTED";
+    Project?: InvoiceProject;
+    paymentType?: string;
+    DeliveryOrders?: DeliverOrders[];
 }
