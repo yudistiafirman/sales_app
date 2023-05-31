@@ -286,7 +286,15 @@ function SphContent() {
 
         stepHandler(sphData, stepsDone, setStepsDone, stepControll);
         handleStepperFocus();
-    }, []);
+    }, [
+        sphData.selectedCompany,
+        sphData.isBillingAddressSame,
+        sphData.billingAddress,
+        sphData.distanceFromLegok,
+        sphData.paymentType,
+        sphData.paymentBankGuarantee,
+        sphData.chosenProducts
+    ]);
 
     const actionBackButton = (popupVisible = false) => {
         if (popupVisible) {

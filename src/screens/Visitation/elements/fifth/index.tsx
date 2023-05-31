@@ -36,6 +36,8 @@ import {
     updateDataVisitation,
     VisitationGlobalState
 } from "@/redux/reducers/VisitationReducer";
+import { postVisitations, putVisitation } from "@/actions/ProductivityActions";
+import { uploadFileImage } from "@/actions/CommonActions";
 import LastStepPopUp from "../LastStepPopUp";
 
 export type SelectedDateType = {
@@ -245,149 +247,193 @@ function Fifth() {
         };
     }, []);
 
-    const onPressSubmit = useCallback(
-        async (type: "VISIT" | "SPH" | "REJECTED" | "") => {
-            setIsLastStepVisible(false);
+    const onPressSubmit = async (type: "VISIT" | "SPH" | "REJECTED" | "") => {
+        setIsLastStepVisible(false);
+        dispatch(
+            openPopUp({
+                popUpType: "loading",
+                popUpText: "Menambahkan Jadwal Kunjungan",
+                highlightedText: "Jadwal Kunjungan",
+                outsideClickClosePopUp: false
+            })
+        );
+        const payload: payloadPostType = payloadMapper(visitationData, type);
+        const isDataUpdate = !!payload?.visitation?.id;
+        const methodStr = isDataUpdate ? "PUT" : "POST";
+        payload.files = [];
+        try {
+            setTimeout(async () => {
+                if (clicked === "0") {
+                    clicked = "1";
+                    let response;
+                    if (uploadedFilesResponse.length === 0) {
+                        const photoFiles = visitationData.images
+                            ?.filter((v, i) => v.file !== null)
+                            .map((photo) => ({
+                                ...photo.file,
+                                uri: photo?.file?.uri?.replace(
+                                    "file:",
+                                    "file://"
+                                )
+                            }));
+                        const data = await uploadFileImage(
+                            photoFiles,
+                            "visitation"
+                        ).catch((err) => Error(err));
+                        const files: {
+                            id: string;
+                            type: "GALLERY" | "COVER";
+                        }[] = [];
+                        data?.data?.data?.forEach((photo: any) => {
+                            const photoName = `${photo.name}.${photo.type}`;
+                            const photoNamee = `${photo.name}.jpg`;
+                            const foundObject = visitationData.images?.find(
+                                (obj) =>
+                                    obj?.file?.name === photoName ||
+                                    obj?.file?.name === photoNamee
+                            );
+                            if (foundObject) {
+                                files.push({
+                                    id: photo.id,
+                                    type: foundObject.type
+                                });
+                            }
+                        });
+                        dispatch(setuploadedFilesResponse(files));
+                        if (files && files.length > 0) payload.files = files;
+                        const payloadData: {
+                            payload: payloadPostType;
+                            visitationId?: string;
+                        } = {
+                            payload
+                        };
+                        if (payload?.visitation?.id) {
+                            payloadData.visitationId = payload?.visitation?.id;
+                        }
+
+                        if (methodStr === "POST") {
+                            response = await postVisitations(payloadData).catch(
+                                (err) => Error(err)
+                            );
+                        } else {
+                            response = await putVisitation(
+                                payloadData,
+                                payloadData.visitationId
+                            ).catch((err) => Error(err));
+                        }
+                        if (
+                            response?.data?.data?.success &&
+                            response?.data?.data?.success !== false
+                        ) {
+                            if (type === "SPH") {
+                                navigation.dispatch(
+                                    StackActions.replace(SPH, {
+                                        projectId:
+                                            response?.data?.data?.projectId
+                                    })
+                                );
+                            } else if (navigation.canGoBack()) {
+                                navigation.dispatch(StackActions.popToTop());
+                            }
+                            dispatch(
+                                resetImageURLS({ source: CREATE_VISITATION })
+                            );
+                            dispatch(resetVisitationState());
+                            dispatch(
+                                openPopUp({
+                                    popUpType: "success",
+                                    popUpText:
+                                        "Penambahan Jadwal Kunjungan\nBerhasil",
+                                    highlightedText: "Jadwal Kunjungan",
+                                    outsideClickClosePopUp: true
+                                })
+                            );
+                            return;
+                        }
+                    } else {
+                        if (
+                            uploadedFilesResponse &&
+                            uploadedFilesResponse.length > 0
+                        )
+                            payload.files = uploadedFilesResponse;
+                        const payloadData: {
+                            payload: payloadPostType;
+                            visitationId?: string;
+                        } = {
+                            payload
+                        };
+
+                        if (payload?.visitation?.id) {
+                            payloadData.visitationId = payload?.visitation?.id;
+                        }
+
+                        if (methodStr === "POST") {
+                            response = await postVisitations(payloadData).catch(
+                                (err) => Error(err)
+                            );
+                        } else {
+                            response = await putVisitation(
+                                payloadData,
+                                payloadData.visitationId
+                            ).catch((err) => Error(err));
+                        }
+
+                        if (
+                            response?.data?.data?.success &&
+                            response?.data?.data?.success !== false
+                        ) {
+                            if (type === "SPH") {
+                                navigation.dispatch(
+                                    StackActions.replace(SPH, {
+                                        projectId:
+                                            response?.data?.data?.projectId
+                                    })
+                                );
+                            } else if (navigation.canGoBack()) {
+                                navigation.dispatch(StackActions.popToTop());
+                            }
+                            dispatch(
+                                resetImageURLS({ source: CREATE_VISITATION })
+                            );
+                            dispatch(resetVisitationState());
+                            dispatch(
+                                openPopUp({
+                                    popUpType: "success",
+                                    popUpText:
+                                        "Penambahan Jadwal Kunjungan\nBerhasil",
+                                    highlightedText: "Jadwal Kunjungan",
+                                    outsideClickClosePopUp: true
+                                })
+                            );
+                            return;
+                        }
+                    }
+                    dispatch(
+                        openPopUp({
+                            popUpType: "error",
+                            popUpText:
+                                response?.data?.data?.message ||
+                                "Error membuat jadwal kunjungan",
+                            highlightedText: "error",
+                            outsideClickClosePopUp: true
+                        })
+                    );
+                    clicked = "0";
+                }
+            }, 500);
+        } catch (error) {
+            const message = error?.message || "Error membuat jadwal kunjungan";
             dispatch(
                 openPopUp({
-                    popUpType: "loading",
-                    popUpText: "Menambahkan Jadwal Kunjungan",
-                    highlightedText: "Jadwal Kunjungan",
-                    outsideClickClosePopUp: false
+                    popUpType: "error",
+                    popUpText: message,
+                    highlightedText: "error",
+                    outsideClickClosePopUp: true
                 })
             );
-
-            const payload: payloadPostType = payloadMapper(
-                visitationData,
-                type
-            );
-
-            const visitationMethod = {
-                POST: postVisitation,
-                PUT: putVisitationFlow
-            };
-            const isDataUpdate = !!payload?.visitation?.id;
-            const methodStr = isDataUpdate ? "PUT" : "POST";
-
-            try {
-                setTimeout(async () => {
-                    if (clicked === "0") {
-                        clicked = "1";
-                        if (uploadedFilesResponse.length === 0) {
-                            const photoFiles = visitationData.images
-                                ?.filter((v, i) => v.file !== null)
-                                .map((photo) => ({
-                                    ...photo.file,
-                                    uri: photo?.file?.uri?.replace(
-                                        "file:",
-                                        "file://"
-                                    )
-                                }));
-                            const data = await dispatch(
-                                postUploadFiles({
-                                    files: photoFiles,
-                                    from: "visitation"
-                                })
-                            ).unwrap();
-                            const files: {
-                                id: string;
-                                type: "GALLERY" | "COVER";
-                            }[] = [];
-                            data.forEach((photo: any) => {
-                                const photoName = `${photo.name}.${photo.type}`;
-                                const photoNamee = `${photo.name}.jpg`;
-                                const foundObject = visitationData.images?.find(
-                                    (obj) =>
-                                        obj?.file?.name === photoName ||
-                                        obj?.file?.name === photoNamee
-                                );
-                                if (foundObject) {
-                                    files.push({
-                                        id: photo.id,
-                                        type: foundObject.type
-                                    });
-                                }
-                            });
-                            dispatch(setuploadedFilesResponse(files));
-                            payload.files = files;
-                            const payloadData: {
-                                payload: payloadPostType;
-                                visitationId?: string;
-                            } = {
-                                payload
-                            };
-                            if (payload?.visitation?.id) {
-                                payloadData.visitationId =
-                                    payload?.visitation?.id;
-                            }
-
-                            const response = await dispatch(
-                                visitationMethod[methodStr](payloadData)
-                            ).unwrap();
-                            if (type === "SPH") {
-                                navigation.dispatch(
-                                    StackActions.replace(SPH, {
-                                        projectId: response.projectId
-                                    })
-                                );
-                            } else if (navigation.canGoBack()) {
-                                navigation.dispatch(StackActions.popToTop());
-                            }
-                        } else {
-                            payload.files = uploadedFilesResponse;
-                            const payloadData: {
-                                payload: payloadPostType;
-                                visitationId?: string;
-                            } = {
-                                payload
-                            };
-                            if (payload?.visitation?.id) {
-                                payloadData.visitationId =
-                                    payload?.visitation?.id;
-                            }
-                            const response = await dispatch(
-                                visitationMethod[methodStr](payloadData)
-                            ).unwrap();
-                            if (type === "SPH") {
-                                navigation.dispatch(
-                                    StackActions.replace(SPH, {
-                                        projectId: response.projectId
-                                    })
-                                );
-                            } else if (navigation.canGoBack()) {
-                                navigation.dispatch(StackActions.popToTop());
-                            }
-                        }
-                        dispatch(resetImageURLS({ source: CREATE_VISITATION }));
-                        dispatch(resetVisitationState());
-                        dispatch(
-                            openPopUp({
-                                popUpType: "success",
-                                popUpText:
-                                    "Penambahan Jadwal Kunjungan\nBerhasil",
-                                highlightedText: "Jadwal Kunjungan",
-                                outsideClickClosePopUp: true
-                            })
-                        );
-                        clicked = "0";
-                    }
-                }, 500);
-            } catch (error: any) {
-                const message =
-                    error?.message || "Error membuat jadwal kunjungan";
-                dispatch(
-                    openPopUp({
-                        popUpType: "error",
-                        popUpText: message,
-                        highlightedText: "error",
-                        outsideClickClosePopUp: true
-                    })
-                );
-                clicked = "0";
-            }
-        },
-        []
-    );
+            clicked = "0";
+        }
+    };
 
     return (
         <>

@@ -256,10 +256,6 @@ instance.interceptors.response.use(
                     errorMessage = error?.message;
                 }
                 errorStatus = error.response.status;
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log("Error", error?.message);
             }
             const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
             const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
