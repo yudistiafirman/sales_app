@@ -1,5 +1,6 @@
 import { BChip, BSpacer, BSvg, BTouchableText } from "@/components";
 import SvgNames from "@/components/atoms/BSvg/svgName";
+import BInvoiceCommonFooter from "@/components/molecules/BInvoiceCommonFooter";
 import { colors, layout } from "@/constants";
 import font from "@/constants/fonts";
 import useCustomHeaderRight from "@/hooks/useCustomHeaderRight";
@@ -53,19 +54,7 @@ const styles = StyleSheet.create({
         fontSize: font.size.xs,
         color: colors.primary
     },
-    paymentItemValue: {
-        fontFamily: font.family.montserrat[600],
-        fontSize: font.size.xs,
-        color: colors.text.blue
-    },
-    dateContainer: {
-        flexDirection: "row",
 
-        justifyContent: "space-between"
-    },
-    dateItem: {
-        alignItems: "center"
-    },
     listDoContainer: {
         paddingLeft: layout.pad.lg,
         paddingRight: layout.pad.lg,
@@ -105,79 +94,75 @@ function InvoiceDetail() {
         title: route?.params?.invoiceNo ? route?.params?.invoiceNo : "-"
     });
 
-    const renderInvoiceCardFooter = () => (
-        <>
-            <BSpacer size="extraSmall" />
+    const renderListHorizontalDate = () => {
+        const footerItems = [
+            {
+                itemTitle: "Jatuh Tempo",
+                itemValue: "45 hari",
+                itemTextStyles: {
+                    fontSize: font.size.sm
+                }
+            },
+            {
+                itemTitle: "Tanggal Tagih",
+                itemValue: "01/04/2023",
+                itemTextStyle: {
+                    fontSize: font.size.sm
+                }
+            },
+            {
+                itemTitle: "Lewat Jatuh Tempo",
+                itemValue: "14 Hari",
+                itemTextStyles: {
+                    fontSize: font.size.sm,
+                    color: colors.primary
+                }
+            },
+            {
+                itemTitle: "Tanggal Jatuh Tempo",
+                itemValue: "05/05/2023",
+                itemTextStyles: {
+                    fontSize: font.size.sm
+                }
+            }
+        ];
 
-            <View style={[styles.dateContainer]}>
-                <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>Jatuh Tempo</Text>
-                    <BSpacer size="extraSmall" />
-                    <Text
-                        style={[
-                            styles.title,
-                            {
-                                fontSize: font.size.sm,
-                                fontFamily: font.family.montserrat[600]
-                            }
-                        ]}
-                    >
-                        45 hari
-                    </Text>
-                </View>
-                <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>Tanggal Tagih</Text>
-                    <BSpacer size="extraSmall" />
-                    <Text
-                        style={[
-                            styles.title,
-                            {
-                                fontSize: font.size.sm,
-                                fontFamily: font.family.montserrat[600]
-                            }
-                        ]}
-                    >
-                        01/04/2023
-                    </Text>
-                </View>
-                <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>
-                        Lewat Jatuh Tempo
-                    </Text>
-                    <BSpacer size="extraSmall" />
-                    <Text
-                        style={[
-                            styles.title,
-                            {
-                                fontSize: font.size.sm,
-                                color: colors.primary,
-                                fontFamily: font.family.montserrat[600]
-                            }
-                        ]}
-                    >
-                        14 hari
-                    </Text>
-                </View>
-                <View style={styles.dateItem}>
-                    <Text style={[styles.paymentItemTitle]}>
-                        Tanggal Jatuh Tempo
-                    </Text>
-                    <BSpacer size="extraSmall" />
-                    <Text
-                        style={[
-                            styles.title,
-                            {
-                                fontSize: font.size.sm,
-                                fontFamily: font.family.montserrat[600]
-                            }
-                        ]}
-                    >
-                        15/05/2023
-                    </Text>
-                </View>
-            </View>
-        </>
-    );
+        return <BInvoiceCommonFooter footerItems={footerItems} />;
+    };
+
+    const renderDoCardFooter = () => {
+        const footerItems = [
+            {
+                itemTitle: "Produk",
+                itemValue: "SC 3.5 NFA",
+                itemTitleStyles: {
+                    alignSelf: "flex-start"
+                }
+            },
+            {
+                itemTitle: "Volume",
+                itemValue: "8 m3"
+            },
+            {
+                itemTitle: "Harga Unit",
+                itemValue: "14 Hari",
+                itemTextStyles: {
+                    color: colors.primary
+                }
+            },
+            {
+                itemTitle: "Ekstra",
+                itemValue: "Rp. 0"
+            },
+            {
+                itemTitle: "Total",
+                itemValue: "Rp. 6.240.000",
+                itemTitleStyles: { alignSelf: "flex-end" }
+            }
+        ];
+
+        return <BInvoiceCommonFooter footerItems={footerItems} />;
+    };
 
     const renderDoCard = () => (
         <View style={{ ...styles.cardContainer }}>
@@ -187,100 +172,8 @@ function InvoiceDetail() {
                     01/04/2023
                 </Text>
             </View>
-            <BSpacer size="extraSmall" />
 
-            <View style={[styles.dateContainer]}>
-                <View style={styles.dateItem}>
-                    <Text
-                        style={[
-                            styles.paymentItemTitle,
-                            { alignSelf: "flex-start" }
-                        ]}
-                    >
-                        Produk
-                    </Text>
-                    <BSpacer size="extraSmall" />
-                    <Text
-                        style={[
-                            styles.title,
-                            {
-                                fontSize: font.size.xs,
-                                fontFamily: font.family.montserrat[600]
-                            }
-                        ]}
-                    >
-                        SC 3.5 NFA
-                    </Text>
-                </View>
-                <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>Volume</Text>
-                    <BSpacer size="extraSmall" />
-                    <Text
-                        style={[
-                            styles.title,
-                            {
-                                fontSize: font.size.xs,
-                                fontFamily: font.family.montserrat[600]
-                            }
-                        ]}
-                    >
-                        8 m3
-                    </Text>
-                </View>
-                <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>Harga Unit</Text>
-                    <BSpacer size="extraSmall" />
-                    <Text
-                        style={[
-                            styles.title,
-                            {
-                                fontSize: font.size.xs,
-                                color: colors.primary,
-                                fontFamily: font.family.montserrat[600]
-                            }
-                        ]}
-                    >
-                        Rp 780.000
-                    </Text>
-                </View>
-                <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>Ekstra</Text>
-                    <BSpacer size="extraSmall" />
-                    <Text
-                        style={[
-                            styles.title,
-                            {
-                                fontSize: font.size.xs,
-                                fontFamily: font.family.montserrat[600]
-                            }
-                        ]}
-                    >
-                        Rp 0
-                    </Text>
-                </View>
-                <View style={styles.dateItem}>
-                    <Text
-                        style={[
-                            styles.paymentItemTitle,
-                            { alignSelf: "flex-end" }
-                        ]}
-                    >
-                        Total
-                    </Text>
-                    <BSpacer size="extraSmall" />
-                    <Text
-                        style={[
-                            styles.title,
-                            {
-                                fontSize: font.size.xs,
-                                fontFamily: font.family.montserrat[600]
-                            }
-                        ]}
-                    >
-                        Rp 6.240.000
-                    </Text>
-                </View>
-            </View>
+            {renderDoCardFooter()}
         </View>
     );
 
@@ -418,7 +311,7 @@ function InvoiceDetail() {
                 </View>
                 <BSpacer size="extraSmall" />
                 <View style={styles.divider} />
-                {renderInvoiceCardFooter()}
+                {renderListHorizontalDate()}
             </View>
             <View style={[styles.listDoContainer]}>
                 <View style={[styles.textContainer]}>
