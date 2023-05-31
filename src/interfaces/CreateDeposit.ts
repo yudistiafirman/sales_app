@@ -17,8 +17,8 @@ interface CreateDepositSecondStep {
 
 interface CreateDepositState {
     step: number;
-    stepOne: CreateDepositFirstStep;
-    stepTwo: CreateDepositSecondStep;
+    stepOne?: CreateDepositFirstStep;
+    stepTwo?: CreateDepositSecondStep;
     sheetIndex: number;
     shouldScrollView: boolean;
     existingProjectID: string | undefined;

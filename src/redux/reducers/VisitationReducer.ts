@@ -200,7 +200,8 @@ export const visitationSlice = createSlice({
             state,
             actions: PayloadAction<{ value: number }>
         ) => {
-            const filteredImages = state.images.filter(
+            let filteredImages = [...state.images];
+            filteredImages = filteredImages.filter(
                 (v, i) => i !== actions.payload.value
             );
             return {

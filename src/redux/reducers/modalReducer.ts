@@ -64,19 +64,21 @@ export const modalSlice = createSlice({
             isPopUpVisible: !state.isPopUpVisible
         }),
         openPopUp: (state, { payload }: { payload: PopUpOptions }) => {
-            let { isRenderActions } = state.popUpOptions;
-            let { popUpTitle } = state.popUpOptions;
-            let { popUpText } = state.popUpOptions;
-            let { highlightedText } = state.popUpOptions;
-            let { popUpType } = state.popUpOptions;
-            let { outsideClickClosePopUp } = state.popUpOptions;
-            let { outlineBtnTitle } = state.popUpOptions;
-            let { primaryBtnTitle } = state.popUpOptions;
-            let { outlineBtnAction } = state.popUpOptions;
-            let { primaryBtnAction } = state.popUpOptions;
-            let { unRenderBackButton } = state.popUpOptions;
-            let { isPrimaryButtonLoading } = state.popUpOptions;
-            let { isOutlineButtonLoading } = state.popUpOptions;
+            let {
+                isRenderActions,
+                popUpTitle,
+                popUpText,
+                highlightedText,
+                popUpType,
+                outsideClickClosePopUp,
+                outlineBtnTitle,
+                primaryBtnTitle,
+                outlineBtnAction,
+                primaryBtnAction,
+                unRenderBackButton,
+                isPrimaryButtonLoading,
+                isOutlineButtonLoading
+            } = state.popUpOptions;
             if (payload.isRenderActions) {
                 isRenderActions = payload.isRenderActions;
             }

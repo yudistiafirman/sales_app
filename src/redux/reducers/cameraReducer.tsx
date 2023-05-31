@@ -103,28 +103,28 @@ export const cameraSlice = createSlice({
             let currentImages;
             switch (action.payload.source) {
                 case CREATE_VISITATION:
-                    currentImages = state.visitationPhotoURLs;
+                    currentImages = [...state.visitationPhotoURLs];
                     currentImages.splice(action.payload.pos, 1);
                     return {
                         ...state,
                         visitationPhotoURLs: [...currentImages]
                     };
                 case CREATE_DEPOSIT:
-                    currentImages = state.createDepositPhotoURLs;
+                    currentImages = [...state.createDepositPhotoURLs];
                     currentImages.splice(action.payload.pos, 1);
                     return {
                         ...state,
                         createDepositPhotoURLs: [...currentImages]
                     };
                 case CREATE_SCHEDULE:
-                    currentImages = state.createSchedulePhotoURLs;
+                    currentImages = [...state.createSchedulePhotoURLs];
                     currentImages.splice(action.payload.pos, 1);
                     return {
                         ...state,
                         createSchedulePhotoURLs: [...currentImages]
                     };
                 default:
-                    currentImages = state.localURLs;
+                    currentImages = [...state.localURLs];
                     currentImages.splice(action.payload.pos, 1);
                     return {
                         ...state,

@@ -46,16 +46,15 @@ export default function FirstStep() {
 
     const onChange = (key: string) => (val: any) => {
         let modifyDeposit = {};
-        if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
         if (key === "createdAt") {
             modifyDeposit = {
-                ...modifyDeposit,
+                ...stateOne?.deposit,
                 createdAt: val
             };
         }
         if (key === "nominal") {
             modifyDeposit = {
-                ...modifyDeposit,
+                ...stateOne?.deposit,
                 nominal: val
             };
         }
@@ -97,27 +96,27 @@ export default function FirstStep() {
         }
     ];
 
-    const removeImage = React.useCallback((pos: number) => {
+    const removeImage = (pos: number) => {
         dispatch(deleteImage({ pos, source: CREATE_DEPOSIT }));
-        let modifyDeposit = {};
-        if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
-        modifyDeposit = {
-            ...modifyDeposit,
+        const modifyDeposit = {
+            ...stateOne?.deposit,
             picts: createDepositPhotoURLs
         };
         updateValueOnstep("stepOne", "deposit", modifyDeposit);
-    }, []);
+    };
 
     useFocusEffect(
         React.useCallback(() => {
-            let modifyDeposit = {};
-            if (stateOne?.deposit) modifyDeposit = stateOne?.deposit;
-            modifyDeposit = {
-                ...modifyDeposit,
+            const modifyDeposit = {
+                ...stateOne?.deposit,
                 picts: [{ file: null }, ...createDepositPhotoURLs]
             };
             updateValueOnstep("stepOne", "deposit", modifyDeposit);
-        }, [createDepositPhotoURLs])
+        }, [
+            createDepositPhotoURLs,
+            stateOne?.deposit?.nominal,
+            stateOne?.deposit?.createdAt
+        ])
     );
 
     return (
