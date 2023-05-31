@@ -28,7 +28,6 @@ import {
 } from "@/navigation/ScreenNames";
 import {
     getDeliveryOrderByID,
-    getDepositByID,
     getPurchaseOrderByID,
     getScheduleByID,
     getVisitationOrderByID
@@ -43,6 +42,7 @@ import {
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import { getDrivers, getVehicles } from "@/actions/InventoryActions";
 import bStorage from "@/actions";
+import { getPaymentByID } from "@/actions/FinanceActions";
 import SelectCustomerTypeModal from "../PurchaseOrder/element/SelectCustomerTypeModal";
 import TransactionList from "./element/TransactionList";
 
@@ -215,17 +215,17 @@ function Transaction() {
                     }
                 };
             } else if (selectedType === "Deposit") {
-                data = await getDepositByID(id);
+                data = await getPaymentByID(id);
                 data = data.data.data;
 
                 // TODO: handle from BE, ugly when use mapping in FE side
                 data = {
                     ...data,
-                    mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
-                    QuotationLetter: {
-                        ...data.QuotationLetter,
-                        QuotationRequest: {
-                            ...data.QuotationLetter.QuotationRequest,
+                    mainPic: data.Account?.Project?.mainPic,
+                    Account: {
+                        ...data.Account,
+                        Project: {
+                            ...data.Account.Project,
                             mainPic: undefined
                         }
                     }

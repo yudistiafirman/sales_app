@@ -43,6 +43,7 @@ import {
     updateUseHighway
 } from "@/redux/reducers/SphReducer";
 import { FlashList } from "@shopify/flash-list";
+import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
 import StepDone from "../StepDoneModal/StepDone";
 import { SphContext } from "../context/SphContext";
 import ChoosePicModal from "../ChoosePicModal";
@@ -445,7 +446,7 @@ export default function FifthStep() {
                         <BSpacer size="small" />
                     </View>
                     <FlashList
-                        estimatedItemSize={10}
+                        estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                         data={sphState?.chosenProducts}
                         renderItem={(item) => (
                             <>

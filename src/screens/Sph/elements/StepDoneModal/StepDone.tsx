@@ -29,6 +29,7 @@ import {
     BCompanyMapCard,
     BProjectDetailCard
 } from "@/components";
+import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
 import LabelSuccess from "./elements/LabelSuccess";
 
 const styles = StyleSheet.create({
@@ -315,7 +316,7 @@ export default function StepDone({
                         <Text style={styles.partText}>Produk</Text>
                         <BSpacer size="extraSmall" />
                         <FlashList
-                            estimatedItemSize={10}
+                            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                             renderItem={({ item }) => (
                                 <BProductCard
                                     name={item.product.name}

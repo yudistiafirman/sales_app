@@ -69,6 +69,13 @@ export default function SecondStep() {
             updateValueOnstep("stepTwo", "locationName", parent.locationName);
             updateValue("existingProjectID", parent.projectId);
             updateValueOnstep("stepTwo", "purchaseOrders", data);
+            updateValueOnstep(
+                "stepTwo",
+                "selectedSaleOrder",
+                data?.length > 0 && data[0].SaleOrders?.length > 0
+                    ? data[0].SaleOrders[0]
+                    : undefined
+            );
             updateValue("isSearchingPurchaseOrder", false);
         },
         [updateValueOnstep]

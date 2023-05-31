@@ -6,6 +6,7 @@ import { colors, layout } from "@/constants";
 import { STAGE_PROJECT } from "@/constants/dropdown";
 import font from "@/constants/fonts";
 import { resScale } from "@/utils";
+import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
 
 const styles = StyleSheet.create({
     container: {
@@ -86,7 +87,7 @@ function ProjectPhase({ phase }: { phase: string }) {
             />
             <BSpacer size="extraSmall" />
             <FlashList
-                estimatedItemSize={10}
+                estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                 data={STAGE_PROJECT}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}

@@ -90,7 +90,9 @@ function TransactionListCard({
         <View
             style={[
                 styles.parent,
-                name ? { height: resScale(98) } : { height: resScale(68) }
+                projectName && name
+                    ? { height: resScale(98) }
+                    : { height: resScale(68) }
             ]}
         >
             <View style={styles.leftSide}>
