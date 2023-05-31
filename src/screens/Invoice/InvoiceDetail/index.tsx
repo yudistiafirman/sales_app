@@ -331,7 +331,7 @@ function InvoiceDetail() {
                 <FlashList
                     data={[1, 2, 3, 4]}
                     renderItem={() => (expand ? renderDoCard() : null)}
-                    estimatedItemSize={20}
+                    estimatedItemSize={10}
                     ListFooterComponent={renderInvoiceDetailFooter()}
                 />
             </View>
