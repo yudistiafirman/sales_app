@@ -217,7 +217,10 @@ const searchPOMachine = createMachine(
                 routes: [
                     {
                         key: "first",
-                        title: "Perusahaan",
+                        title:
+                            _context.filterSphDataBy === "INDIVIDU"
+                                ? "Individu"
+                                : "Perusahaan",
                         totalItems: event.data.length,
                         chipPosition: "right"
                     }
@@ -251,7 +254,10 @@ const searchPOMachine = createMachine(
                 routes: [
                     {
                         key: "first",
-                        title: "Perusahaan",
+                        title:
+                            context.filterSphDataBy === "INDIVIDU"
+                                ? "Individu"
+                                : "Perusahaan",
                         totalItems: event.data.totalItems,
                         chipPosition: "right"
                     }

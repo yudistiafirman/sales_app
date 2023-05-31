@@ -243,7 +243,7 @@ function PriceList() {
                 <BTabSections
                     swipeEnabled={false}
                     navigationState={{ index, routes }}
-                    minTabHeaderWidth={layout.pad.xl}
+                    // minTabHeaderWidth={layout.pad.xl}
                     renderScene={() => (
                         <ProductList
                             onEndReached={() =>

@@ -35,7 +35,9 @@ function BTabLabels({
     const BTabLabelsContainer: ViewStyle = {
         flexDirection: rightChipPosition ? "row" : "column",
         alignItems: "center",
-        justifyContent: "space-between"
+        width: "100%",
+        justifyContent: "center",
+        minWidth: layout.pad.xxl * (route.title?.length > 9 ? 4 : 2)
     };
 
     const BTabLabelsTextStyle: TextStyle = {
@@ -44,7 +46,6 @@ function BTabLabels({
             ? font.family.montserrat[600]
             : font.family.montserrat[400],
         fontSize: font.size.md,
-        minWidth: minWidth && minWidth,
         alignSelf: "center",
         paddingRight: rightChipPosition ? layout.pad.sm : 0,
         textAlign: "center"

@@ -26,16 +26,17 @@ const styles = StyleSheet.create({
         marginHorizontal: layout.pad.lg
     },
     tabIndicator: {
-        backgroundColor: colors.blueSail,
-        marginLeft: layout.pad.lg - layout.pad.sm
+        backgroundColor: colors.primary
+        // marginLeft: layout.pad.lg - layout.pad.sm
     },
     tabStyle: {
-        width: "auto",
-        paddingRight: layout.pad.md
+        // width: "auto",
+        flex: 1
+        // paddingRight: layout.pad.md
     },
     tabBarStyle: {
-        backgroundColor: colors.white,
-        paddingHorizontal: layout.pad.ml
+        backgroundColor: colors.white
+        // paddingHorizontal: layout.pad.ml
     }
 });
 
@@ -232,7 +233,7 @@ function BList({
                     onIndexChange={onIndexChange}
                     tabStyle={[styles.tabStyle, { ...tabStyle }]}
                     tabBarStyle={[styles.tabBarStyle, { ...tabBarStyle }]}
-                    tabTextFocusedColor={tabTextFocusedColor}
+                    // tabTextFocusedColor={tabTextFocusedColor}
                     indicatorStyle={[
                         styles.tabIndicator,
                         { ...tabIndicatorStyle }
