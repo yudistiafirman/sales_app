@@ -1,31 +1,62 @@
+import { InvoiceListData } from "@/models/Invoice";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { MarkedDates } from "react-native-calendars/src/types";
 
 export interface InvoiceGlobalState {
-    invoiceData: any[];
-    paymentFiltered: string;
-    paymentDuration: number;
-    paymentCondition: string;
-    issueDate: string;
-    afterDueDate: string;
+    filter: InvoiceFilter;
+    invoiceData: InvoiceListData[];
     isLoading: boolean;
     isLoadMore: boolean;
+    isRefreshing: boolean;
     size: number;
-    page: number;
+    totalPages: number;
     totalItems: number;
+    search: SearchInvoice;
+    errorMessage: string | unknown;
+}
+
+interface InvoiceFilter {
+    paymentMethod: string;
+    paymentDuration: string | number;
+    paymentStatus: string | number;
+    startDateIssued: string;
+    endDateIssued: string;
+    dueDateDifference: string | number;
+    markedDates: MarkedDates;
+}
+
+interface IssueDate {
+    startDateIssued: string;
+    endDateIssued: string;
+}
+
+interface SearchInvoice {
+    page: number;
+    searchQuery: string;
 }
 
 const initialState: InvoiceGlobalState = {
+    filter: {
+        paymentMethod: "",
+        startDateIssued: "",
+        endDateIssued: "",
+        paymentDuration: 0,
+        paymentStatus: "",
+        dueDateDifference: "",
+        markedDates: {}
+    },
+    search: {
+        page: 1,
+        searchQuery: ""
+    },
     invoiceData: [],
-    paymentFiltered: "",
-    paymentDuration: 0,
-    paymentCondition: "",
-    issueDate: "",
-    afterDueDate: "",
     isLoading: false,
     isLoadMore: false,
+    isRefreshing: false,
     size: 10,
-    page: 1,
-    totalItems: 0
+    totalPages: 0,
+    totalItems: 0,
+    errorMessage: ""
 };
 
 export const invoiceSlice = createSlice({
@@ -37,40 +68,39 @@ export const invoiceSlice = createSlice({
             ...state,
             invoiceData: actions.payload.data
         }),
-        setPaymentFiltered: (
-            state,
-            actions: PayloadAction<{ paymentFiltered: string }>
-        ) => ({
+        setPaymentMethod: (state, actions: PayloadAction<string>) => ({
             ...state,
-            paymentFiltered: actions.payload.paymentFiltered
+            filter: { ...state.filter, paymentMethod: actions.payload }
         }),
         setPaymentDuration: (
             state,
-            actions: PayloadAction<{ paymentDuration: number }>
+            actions: PayloadAction<string | number>
         ) => ({
             ...state,
-            paymentDuration: actions.payload.paymentDuration
+            filter: { ...state.filter, paymentDuration: actions.payload }
         }),
-        setPaymentCondition: (
-            state,
-            actions: PayloadAction<{ paymentCondition: string }>
-        ) => ({
+        setPaymentStatus: (state, actions: PayloadAction<string | number>) => ({
             ...state,
-            paymentCondition: actions.payload.paymentCondition
+            filter: { ...state.filter, paymentStatus: actions.payload }
         }),
-        setIssueDate: (
-            state,
-            actions: PayloadAction<{ issueDate: string }>
-        ) => ({
+        setIssueDate: (state, actions: PayloadAction<IssueDate>) => ({
             ...state,
-            issueDate: actions.payload.issueDate
+            filter: {
+                ...state.filter,
+                startDateIssued: actions.payload.startDateIssued,
+                endDateIssued: actions.payload.endDateIssued
+            }
         }),
-        setAfterDueDate: (
+        setDueDateDifference: (
             state,
-            actions: PayloadAction<{ afterDueDate: string }>
+            actions: PayloadAction<string | number>
         ) => ({
             ...state,
-            afterDueDate: actions.payload.afterDueDate
+            filter: { ...state.filter, dueDateDifference: actions.payload }
+        }),
+        setMarkedDates: (state, actions: PayloadAction<MarkedDates>) => ({
+            ...state,
+            filter: { ...state.filter, markedDates: actions.payload }
         }),
         setLoading: (
             state,
@@ -86,9 +116,13 @@ export const invoiceSlice = createSlice({
             ...state,
             isLoadMore: actions.payload.isLoadMore
         }),
+        setRefreshing: (
+            state,
+            actions: PayloadAction<{ refreshing: boolean }>
+        ) => ({ ...state, isRefreshing: actions.payload.refreshing }),
         setPage: (state, actions: PayloadAction<{ page: number }>) => ({
             ...state,
-            page: actions.payload.page
+            search: { ...state.search, page: actions.payload.page }
         }),
         setTotalItems: (
             state,
@@ -96,6 +130,35 @@ export const invoiceSlice = createSlice({
         ) => ({
             ...state,
             totalItems: actions.payload.totalItems
+        }),
+        setInvoiceSearchQuery: (
+            state,
+            actions: PayloadAction<{ queryValue: string }>
+        ) => ({
+            ...state,
+            search: { ...state.search, searchQuery: actions.payload.queryValue }
+        }),
+        setSearch: (state, actions: PayloadAction<SearchInvoice>) => ({
+            ...state,
+            search: {
+                ...state.search,
+                searchQuery: actions.payload.searchQuery,
+                page: actions.payload.page
+            }
+        }),
+        setErrorMessage: (
+            state,
+            actions: PayloadAction<{ message: string | unknown }>
+        ) => ({
+            ...state,
+            errorMessage: actions.payload.message
+        }),
+        setTotalPage: (
+            state,
+            actions: PayloadAction<{ totalPage: number }>
+        ) => ({
+            ...state,
+            totalPages: actions.payload.totalPage
         })
     }
 });
@@ -103,15 +166,21 @@ export const invoiceSlice = createSlice({
 export const {
     resetInvoiceState,
     setInvoceData,
-    setPaymentFiltered,
+    setPaymentMethod,
     setPaymentDuration,
-    setPaymentCondition,
+    setPaymentStatus,
     setIssueDate,
-    setAfterDueDate,
+    setDueDateDifference,
+    setMarkedDates,
     setLoading,
     setLoadMore,
     setPage,
-    setTotalItems
+    setTotalItems,
+    setInvoiceSearchQuery,
+    setErrorMessage,
+    setRefreshing,
+    setTotalPage,
+    setSearch
 } = invoiceSlice.actions;
 
 export default invoiceSlice.reducer;

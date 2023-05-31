@@ -19,7 +19,8 @@ module.exports = {
                 "add",
                 "change",
                 "merge",
-                "remove"
+                "remove",
+                "bump"
             ]
         ]
     }

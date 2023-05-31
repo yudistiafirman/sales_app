@@ -96,8 +96,8 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
             estimatedItemSize={10}
             onEndReachedThreshold={0.5}
             data={transactions}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
+            // initialNumToRender={10}
+            // maxToRenderPerBatch={10}
             onRefresh={onRefresh}
             contentContainerStyle={{
                 paddingTop: layout.pad.lg,

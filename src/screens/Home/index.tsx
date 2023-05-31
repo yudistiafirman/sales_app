@@ -50,7 +50,8 @@ import {
     SPH,
     TAB_HOME,
     HOME_MENU,
-    INVOICE_LIST
+    INVOICE_LIST,
+    INVOICE_FILTER
 } from "@/navigation/ScreenNames";
 import SvgNames from "@/components/atoms/BSvg/svgName";
 import crashlytics from "@react-native-firebase/crashlytics";
@@ -68,6 +69,7 @@ import {
 import bStorage from "@/actions";
 import { resetRegion } from "@/redux/reducers/locationReducer";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
+import { resetInvoiceState } from "@/redux/reducers/invoiceReducer";
 import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
 import BuatKunjungan from "./elements/BuatKunjungan";
 import DateDaily from "./elements/DateDaily";
@@ -519,6 +521,7 @@ function Beranda() {
                 icon: SvgNames.IC_INVOICE,
                 title: HOME_MENU.INVOICE,
                 action: () => {
+                    dispatch(resetInvoiceState());
                     navigation.navigate(INVOICE_LIST);
                 }
             }
