@@ -7,6 +7,7 @@ import font from "@/constants/fonts";
 import { Products } from "@/machine/visitHistoryMachine";
 import ProductChip from "@/screens/Visitation/elements/third/ProductChip";
 import { resScale } from "@/utils";
+import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
 
 const styles = StyleSheet.create({
     container: {
@@ -32,7 +33,7 @@ function Product({ products }: { products: Products }) {
             <BLabel bold="600" sizeInNumber={font.size.md} label="Produk" />
             <BSpacer size="extraSmall" />
             <FlashList
-                estimatedItemSize={10}
+                estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                 data={products}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={renderItem}

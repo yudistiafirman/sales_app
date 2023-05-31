@@ -4,6 +4,10 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { BDivider, BEmptyState, BSpacer, BText } from "@/components";
 import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { colors, layout } from "@/constants";
+import {
+    DEFAULT_ESTIMATED_LIST_SIZE,
+    DEFAULT_ON_END_REACHED_THREHOLD
+} from "@/constants/general";
 
 const style = StyleSheet.create({
     flatList: {
@@ -73,8 +77,8 @@ export default function SOList({
     const isSearch = !(keyword && keyword.length > 2);
     return (
         <FlashList
-            estimatedItemSize={10}
-            onEndReachedThreshold={0.5}
+            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+            onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
             data={data}
             onRefresh={onRefresh}
             keyExtractor={(item, index) => index.toString()}
