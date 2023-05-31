@@ -21,7 +21,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
 import crashlytics from "@react-native-firebase/crashlytics";
 import SvgNames from "@/components/atoms/BSvg/svgName";
-import { COMPANY } from "@/constants/const";
+import { COMPANY } from "@/constants/general";
 import TotalDocumentChip from "../elements/TotalDocumentChip";
 
 const styles = StyleSheet.create({

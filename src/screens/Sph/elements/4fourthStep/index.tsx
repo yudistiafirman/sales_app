@@ -29,6 +29,7 @@ import {
 } from "@/redux/reducers/SphReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
 import { SphContext } from "../context/SphContext";
 import ProductCartModal from "../ProductOrderDetailModal";
 
@@ -212,7 +213,7 @@ export default function FourthStep() {
                     {/* <Text>Tidak ada produk yang terpilih</Text> */}
                     <View style={{ flexGrow: 1, flexDirection: "row" }}>
                         <FlashList
-                            estimatedItemSize={10}
+                            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                             data={chosenProducts}
                             keyExtractor={(item) => item.product.id}
                             ListFooterComponent={

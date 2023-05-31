@@ -7,6 +7,10 @@ import { ListRenderItem } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import BSpacer from "@/components/atoms/BSpacer";
 import BDivider from "@/components/atoms/BDivider";
+import {
+    DEFAULT_ESTIMATED_LIST_SIZE,
+    DEFAULT_ON_END_REACHED_THREHOLD
+} from "@/constants/general";
 import PriceListShimmer from "./PriceListShimmer";
 
 interface ProductsData {
@@ -82,12 +86,9 @@ function ProductList<ArrayOfObject extends ProductsData>({
     }, []);
     return (
         <FlashList
-            estimatedItemSize={10}
-            onEndReachedThreshold={0.5}
+            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+            onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
             data={products}
-            // removeClippedSubviews={false}
-            // initialNumToRender={10}
-            // maxToRenderPerBatch={10}
             onRefresh={onRefresh}
             contentContainerStyle={{ paddingHorizontal: layout.pad.lg }}
             keyExtractor={(item, index) => index.toString()}

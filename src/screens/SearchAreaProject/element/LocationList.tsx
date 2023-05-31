@@ -1,6 +1,7 @@
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
 import EmptyState from "@/components/organism/BEmptyState";
+import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
 import LocationListCard from "./LocationListCard";
 import LocationListShimmer from "./LocationListShimmer";
 
@@ -55,11 +56,11 @@ function LocationList<ArrayOfObject extends LocationData>({
     };
     return (
         <FlashList
-            estimatedItemSize={10}
+            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
             data={locationData}
             render
             keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={renderEmptyComponent}
+            ListEmptyComponent={renderEmptyComponent()}
             renderItem={({ item }) => (
                 <LocationListCard
                     addressDetail={item.structured_formatting.secondary_text}

@@ -3,6 +3,7 @@ import React from "react";
 import { View } from "react-native";
 import { layout } from "@/constants";
 import { QuickActionProps } from "@/interfaces/QuickActionButton.type";
+import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
 import BQuickActionButton from "../molecules/BQuickAction";
 
 export default function BQuickAction({
@@ -15,7 +16,7 @@ export default function BQuickAction({
     return (
         <View style={containerStyle}>
             <FlashList
-                estimatedItemSize={6}
+                estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                 contentContainerStyle={{ paddingLeft: layout.pad.lg }}
                 showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
                 showsVerticalScrollIndicator={showsVerticalScrollIndicator}

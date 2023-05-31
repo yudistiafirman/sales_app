@@ -1,9 +1,13 @@
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import React, { useCallback } from "react";
-import { ListRenderItem, View } from "react-native";
+import { ListRenderItem } from "react-native";
 import { BEmptyState, BSpacer } from "@/components";
-import { colors, layout } from "@/constants";
+import { layout } from "@/constants";
+import {
+    DEFAULT_ESTIMATED_LIST_SIZE,
+    DEFAULT_ON_END_REACHED_THREHOLD
+} from "@/constants/general";
 import TransactionListCard from "./TransactionListCard";
 import TransactionListShimmer from "./TransactionListShimmer";
 
@@ -103,11 +107,9 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
 
     return (
         <FlashList
-            estimatedItemSize={10}
-            onEndReachedThreshold={0.5}
+            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+            onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
             data={transactions}
-            // initialNumToRender={10}
-            // maxToRenderPerBatch={10}
             onRefresh={onRefresh}
             contentContainerStyle={{
                 paddingTop: layout.pad.lg,

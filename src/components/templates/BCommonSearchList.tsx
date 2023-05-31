@@ -1,13 +1,7 @@
 import BVisitationCard from "@/components/molecules/BVisitationCard";
 import { colors, layout } from "@/constants";
 import * as React from "react";
-import {
-    FlatList,
-    ListRenderItem,
-    Platform,
-    StyleSheet,
-    View
-} from "react-native";
+import { ListRenderItem, Platform, StyleSheet, View } from "react-native";
 import { selectedCompanyInterface, visitationDataType } from "@/interfaces";
 import BSpacer from "@/components/atoms/BSpacer";
 import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
@@ -16,6 +10,10 @@ import { TextInput } from "react-native-paper";
 import BTabSections from "@/components/organism/TabSections";
 import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
 import { FlashList } from "@shopify/flash-list";
+import {
+    DEFAULT_ESTIMATED_LIST_SIZE,
+    DEFAULT_ON_END_REACHED_THREHOLD
+} from "@/constants/general";
 import BEmptyState from "../organism/BEmptyState";
 import BCommonListShimmer from "./BCommonListShimmer";
 
@@ -177,11 +175,10 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                             <BSpacer size="extraSmall" />
                             <FlashList
                                 data={data}
-                                estimatedItemSize={10}
-                                onEndReachedThreshold={0.5}
-                                // removeClippedSubviews={false}
-                                // initialNumToRender={10}
-                                // maxToRenderPerBatch={10}
+                                estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+                                onEndReachedThreshold={
+                                    DEFAULT_ON_END_REACHED_THREHOLD
+                                }
                                 onRefresh={onRefresh}
                                 keyExtractor={(item, indx) => indx.toString()}
                                 onEndReached={onEndReached}
