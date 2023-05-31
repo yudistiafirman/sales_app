@@ -3,6 +3,7 @@ export interface CreatePayment {
     amount: number;
     paymentDate: string;
     status: string;
+    saleOrderId: string;
     type: string; // DEPOSIT | INVOICE
     files?: FilePayment[];
 }

@@ -112,7 +112,8 @@ function Deposit() {
                     ).valueOf(),
                     status: "SUBMITTED",
                     type: "DEPOSIT",
-                    files: []
+                    files: [],
+                    saleOrderId: values.stepTwo?.selectedSaleOrder?.id
                 };
                 uploadedImage.forEach((item) => {
                     payload.files?.push({ fileId: item?.id });

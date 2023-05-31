@@ -293,6 +293,26 @@ export const getSuccessMsgFromAPI = (
                 else finalText += "data";
                 break;
         }
+    } else if (
+        domainType === "finance-dev.aggre.id" ||
+        domainType === "finance.aggre.id" ||
+        domainType === "finance.apis.oreo.brik.id" ||
+        domainType === "finance.apis.brik.id"
+    ) {
+        switch (endPoint.toLowerCase()) {
+            case "payment":
+                finalText = "";
+                break;
+            case "invoice":
+                finalText = "";
+                break;
+            default:
+                if (fullUrl?.toLowerCase().includes("invoice/")) finalText = "";
+                else if (fullUrl?.toLowerCase().includes("payment/"))
+                    finalText = "";
+                else finalText += "data";
+                break;
+        }
     } else {
         finalText += "data";
     }
