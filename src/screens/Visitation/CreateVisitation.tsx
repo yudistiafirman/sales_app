@@ -503,8 +503,93 @@ function CreateVisitation() {
             <BStepperIndicator
                 stepsDone={stepsDone}
                 stepOnPress={(pos: number) => {
-                    dispatch(setStepperFocused(pos));
-                    next(pos)();
+                    let stepOneCompleted = false;
+                    let stepTwoCompleted = false;
+                    let stepThreeCompleted = false;
+                    let stepFourCompleted = false;
+                    let stepFifthCompleted = false;
+                    if (
+                        visitationData?.createdLocation?.formattedAddress &&
+                        visitationData?.locationAddress?.formattedAddress
+                    ) {
+                        stepOneCompleted = true;
+                    }
+                    const selectedPic = visitationData?.pics?.filter(
+                        (v) => v.isSelected
+                    );
+                    const customerTypeCond =
+                        visitationData?.customerType === "COMPANY"
+                            ? !!visitationData?.companyName
+                            : true;
+                    if (
+                        visitationData?.customerType &&
+                        customerTypeCond &&
+                        visitationData?.projectName &&
+                        selectedPic.length > 0
+                    ) {
+                        stepTwoCompleted = true;
+                    }
+                    if (
+                        visitationData?.stageProject &&
+                        visitationData?.products?.length > 0 &&
+                        visitationData?.estimationDate?.estimationMonth &&
+                        visitationData?.estimationDate?.estimationWeek &&
+                        visitationData?.paymentType
+                    ) {
+                        stepThreeCompleted = true;
+                    }
+                    if (visitationData?.competitors?.length > 0) {
+                        stepFourCompleted = true;
+                    }
+                    const filteredImages = visitationData?.images?.filter(
+                        (it) => it?.file !== null
+                    );
+                    if (filteredImages?.length > 0) {
+                        stepFifthCompleted = true;
+                    }
+
+                    if (pos === 0) {
+                        dispatch(setStepperFocused(pos));
+                        next(pos)();
+                    }
+                    if (pos === 1 && stepOneCompleted) {
+                        dispatch(setStepperFocused(pos));
+                        next(pos)();
+                    }
+                    if (pos === 2 && stepOneCompleted && stepTwoCompleted) {
+                        dispatch(setStepperFocused(pos));
+                        next(pos)();
+                    }
+                    if (
+                        pos === 3 &&
+                        stepOneCompleted &&
+                        stepTwoCompleted &&
+                        stepThreeCompleted
+                    ) {
+                        dispatch(setStepperFocused(pos));
+                        next(pos)();
+                    }
+                    if (
+                        pos === 4 &&
+                        stepOneCompleted &&
+                        stepTwoCompleted &&
+                        stepThreeCompleted &&
+                        stepFourCompleted
+                    ) {
+                        dispatch(setStepperFocused(pos));
+                        next(pos)();
+                    }
+                    if (
+                        pos === 5 &&
+                        stepOneCompleted &&
+                        stepTwoCompleted &&
+                        stepThreeCompleted &&
+                        stepFourCompleted &&
+                        stepFifthCompleted
+                    ) {
+                        dispatch(setStepperFocused(pos));
+                        next(pos)();
+                    }
                 }}
                 currentStep={visitationData.step}
                 labels={labels}
