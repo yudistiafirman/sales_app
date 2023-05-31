@@ -14,6 +14,24 @@ export default class BrikApiFinance {
         return url.toString();
     };
 
+    static getPaymentByID = (id: string) => {
+        const url = new URL(`${API_URL}/finance/m/payment/${id}`);
+        return url.toString();
+    };
+
+    static payment = (page?: string, size?: string) => {
+        const url = new URL(`${API_URL}/finance/m/payment`);
+        const params = url.searchParams;
+        params.append("type", "DEPOSIT");
+        if (page) {
+            params.append("page", page);
+        }
+        if (size) {
+            params.append("size", size);
+        }
+        return url.toString();
+    };
+
     static getAllInvoice = (
         page?: string,
         size?: string,

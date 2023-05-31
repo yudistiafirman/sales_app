@@ -59,6 +59,8 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
                             ? item.QuotationRequest?.Project.projectName
                             : item.project?.projectName
                             ? item.project?.projectName
+                            : item.Account?.Project?.name
+                            ? item.Account?.Project?.name
                             : "-"
                     }
                     status={item.status}
@@ -71,6 +73,12 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
                             : item.PurchaseOrder
                             ? item.PurchaseOrder?.number
                             : item.QuotationLetter?.number
+                            ? item.QuotationLetter?.number
+                            : item.Payment?.SaleOrder?.number
+                            ? item.Payment?.SaleOrder?.number
+                            : selectedType !== "SPH"
+                            ? "-"
+                            : undefined
                     }
                     // TODO: handle from BE, ugly when use mapping in FE side
                     nominal={
@@ -80,6 +88,8 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
                         item.value
                             ? item.value
                             : item.totalPrice
+                            ? item.totalPrice
+                            : item.amount
                     }
                     // TODO: handle from BE, ugly when use mapping in FE side
                     useBEStatus={selectedType !== "SPH"}
