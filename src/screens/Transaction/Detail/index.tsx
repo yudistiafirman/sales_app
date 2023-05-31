@@ -208,10 +208,12 @@ function TransactionDetail() {
                 });
             }
         } else if (selectedType === "Deposit") {
-            if (data?.DepositFiles) {
+            if (data?.Payment?.PaymentFiles) {
                 // TODO: need to change the type to download the deposit files
                 setDownloadFiles({
-                    letter: data?.DepositFiles?.find((v: any) => v?.type === "")
+                    letter: data?.Payment?.PaymentFiles?.find(
+                        (v: any) => v?.type === ""
+                    )
                 });
             }
         } else if (data?.QuotationLetterFiles) {
@@ -426,7 +428,8 @@ function TransactionDetail() {
         return null;
     };
     const renderPic = () => {
-        let picData = data?.Pic || data?.project?.Pic;
+        let picData =
+            data?.Pic || data?.project?.Pic || data?.Account?.Project?.mainPic;
 
         if (selectedType === "SPH") {
             picData =
@@ -458,7 +461,8 @@ function TransactionDetail() {
                 {(data?.project?.LocationAddress ||
                     data?.project?.ShippingAddress ||
                     data?.QuotationRequest?.project?.LocationAddress ||
-                    data?.QuotationRequest?.project?.ShippingAddress) && (
+                    data?.QuotationRequest?.project?.ShippingAddress ||
+                    data?.Account?.Project?.ShippingAddress) && (
                     <BCompanyMapCard
                         onPressLocation={() =>
                             onPressLocation(
@@ -467,6 +471,10 @@ function TransactionDetail() {
                                           ?.ShippingAddress.lat
                                     : data?.project?.ShippingAddress
                                     ? data?.project?.ShippingAddress.lat
+                                    : data?.Account?.Project?.ShippingAddress
+                                          .lat
+                                    ? data?.Account?.Project?.ShippingAddress
+                                          .lat
                                     : null,
                                 data?.QuotationRequest?.project?.ShippingAddress
                                     .lon
@@ -474,6 +482,10 @@ function TransactionDetail() {
                                           ?.ShippingAddress.lon
                                     : data?.project?.ShippingAddress
                                     ? data?.project?.ShippingAddress.lon
+                                    : data?.Account?.Project?.ShippingAddress
+                                          .lon
+                                    ? data?.Account?.Project?.ShippingAddress
+                                          .lon
                                     : null
                             )
                         }
@@ -483,11 +495,13 @@ function TransactionDetail() {
                             data?.QuotationRequest?.project?.ShippingAddress
                                 .lat === null ||
                             data?.QuotationRequest?.project?.ShippingAddress
-                                .lon === null
+                                .lon === null ||
+                            data?.Account?.Project?.ShippingAddress.lon === null
                         }
                         companyName={
                             data?.project?.displayName ||
-                            data?.QuotationRequest?.project?.displayName
+                            data?.QuotationRequest?.project?.displayName ||
+                            data?.Account?.Customer?.displayName
                         }
                         location={
                             data?.QuotationRequest?.project?.ShippingAddress
@@ -496,6 +510,8 @@ function TransactionDetail() {
                                       ?.ShippingAddress.line1
                                 : data?.project?.ShippingAddress.line1
                                 ? data?.project?.ShippingAddress.line1
+                                : data?.Account?.Project?.ShippingAddress.line1
+                                ? data?.Account?.Project?.ShippingAddress.line1
                                 : "-"
                         }
                     />
@@ -532,7 +548,9 @@ function TransactionDetail() {
                             selectedType === "PO" ||
                             selectedType === "SO"
                                 ? data?.project?.projectName ||
-                                  data?.QuotationRequest?.project?.projectName
+                                  data?.QuotationRequest?.project
+                                      ?.projectName ||
+                                  data?.Account?.Project?.name
                                 : undefined
                         }
                         productionTime={
@@ -553,10 +571,14 @@ function TransactionDetail() {
                                 ? data?.QuotationLetter
                                 : undefined
                         }
-                        nominal={data?.value}
+                        nominal={data?.value ? data?.value : data?.amount}
                         paymentDate={
                             data?.datePayment
                                 ? moment(data?.datePayment).format(
+                                      "DD MMM yyyy"
+                                  )
+                                : data?.paymentDate
+                                ? moment(data?.paymentDate).format(
                                       "DD MMM yyyy"
                                   )
                                 : undefined
@@ -589,7 +611,7 @@ function TransactionDetail() {
                         useBEStatus={selectedType !== "SPH"}
                     />
                     <BSpacer size="small" />
-                    {selectedType === "Deposit" ? (
+                    {selectedType === "Deposit" && data?.PurchaseOrder ? (
                         <BNestedProductCard
                             withoutHeader={false}
                             data={arrayQuotationLetter()}
@@ -601,7 +623,7 @@ function TransactionDetail() {
                     ) : (
                         <>{renderProductList()}</>
                     )}
-                    {(selectedType === "Deposit" ||
+                    {((selectedType === "Deposit" && data?.PurchaseOrder) ||
                         selectedType === "Jadwal") && (
                         <>
                             <BDivider />
