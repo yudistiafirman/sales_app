@@ -51,6 +51,7 @@ export const FORM_SO = "FORM_SO";
 export const GALLERY_SO = "GALLERY_SO";
 export const GALLERY_OPERATION = "GALLERY_OPERATION";
 export const INVOICE_LIST = "INVOICE_LIST";
+export const INVOICE_DETAIL = "INVOICE_DETAIL";
 export const INVOICE_FILTER = "INVOICE_FILTER";
 
 /*

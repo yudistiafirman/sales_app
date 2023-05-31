@@ -3,7 +3,9 @@ import font from "@/constants/fonts";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import formatCurrency from "@/utils/formatCurrency";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import BSpacer from "../atoms/BSpacer";
+import BInvoiceCommonFooter, { IFooterItems } from "./BInvoiceCommonFooter";
 
 const styles = StyleSheet.create({
     container: {
@@ -60,14 +62,6 @@ const styles = StyleSheet.create({
         fontFamily: font.family.montserrat[600],
         fontSize: font.size.xs,
         color: colors.text.blue
-    },
-    dateContainer: {
-        flexDirection: "row",
-        flex: 1,
-        justifyContent: "space-between"
-    },
-    dateItem: {
-        alignItems: "center"
     }
 });
 
@@ -84,6 +78,7 @@ type IBInvoiceCard = {
     pastDueDateDaysColor: string;
     dueDate: string;
     bgColor: string;
+    onPressCard: () => void;
 };
 
 function BInvoiceCard({
@@ -98,58 +93,42 @@ function BInvoiceCard({
     pastDueDateDays,
     pastDueDateDaysColor,
     dueDate,
-    bgColor
+    bgColor,
+    onPressCard
 }: IBInvoiceCard) {
-    const renderInvoiceCardFooter = () => (
-        <>
-            <BSpacer size="small" />
+    const renderInvoiceCardFooter = () => {
+        const footerItems = [
+            {
+                itemTitle: "Jatuh Tempo",
+                itemValue: dueDateDays
+            },
+            {
+                itemTitle: "Tanggal Tagih",
+                itemValue: billingDate
+            },
+            {
+                itemTitle: "Lewat Jatuh Tempo",
+                itemValue: pastDueDateDays,
+                itemTextStyles: {
+                    ...styles.title,
+                    color: pastDueDateDaysColor,
+                    fontSize: font.size.xs
+                }
+            },
+            {
+                itemTitle: "Tanggal Jatuh Tempo",
+                itemValue: dueDate
+            }
+        ];
 
-            <View style={[styles.dateContainer]}>
-                <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>Jatuh Tempo</Text>
-                    <BSpacer size="extraSmall" />
-                    <Text style={[styles.title, { fontSize: font.size.xs }]}>
-                        {dueDateDays}
-                    </Text>
-                </View>
-                <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>Tanggal Tagih</Text>
-                    <BSpacer size="extraSmall" />
-                    <Text style={[styles.title, { fontSize: font.size.xs }]}>
-                        {billingDate}
-                    </Text>
-                </View>
-                <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>
-                        Lewat Jatuh Tempo
-                    </Text>
-                    <BSpacer size="extraSmall" />
-                    <Text
-                        style={[
-                            styles.title,
-                            {
-                                fontSize: font.size.xs,
-                                color: pastDueDateDaysColor
-                            }
-                        ]}
-                    >
-                        {pastDueDateDays}
-                    </Text>
-                </View>
-                <View style={styles.dateItem}>
-                    <Text style={styles.paymentItemTitle}>
-                        Tanggal Jatuh Tempo
-                    </Text>
-                    <BSpacer size="extraSmall" />
-                    <Text style={[styles.title, { fontSize: font.size.xs }]}>
-                        {dueDate}
-                    </Text>
-                </View>
-            </View>
-        </>
-    );
+        return <BInvoiceCommonFooter footerItems={footerItems} />;
+    };
+
     return (
-        <View style={[styles.container, { backgroundColor: bgColor }]}>
+        <TouchableOpacity
+            onPress={onPressCard}
+            style={[styles.container, { backgroundColor: bgColor }]}
+        >
             <View style={styles.header}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>{invoiceNo}</Text>
@@ -184,7 +163,7 @@ function BInvoiceCard({
                 </View>
                 {paymentMethod === "Credit" ? renderInvoiceCardFooter() : null}
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }
 

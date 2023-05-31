@@ -6,7 +6,7 @@ import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { colors, layout } from "@/constants";
 import { DEBOUNCE_SEARCH } from "@/constants/const";
 import { InvoiceListData } from "@/models/Invoice";
-import { INVOICE_FILTER } from "@/navigation/ScreenNames";
+import { INVOICE_DETAIL, INVOICE_FILTER } from "@/navigation/ScreenNames";
 
 import {
     setErrorMessage,
@@ -266,6 +266,12 @@ function InvoiceList() {
                     companyName={companyName}
                     projectName={projectName}
                     amount={amount}
+                    onPressCard={() =>
+                        navigation.navigate(INVOICE_DETAIL, {
+                            invoiceNo: item?.number,
+                            invoiceId: item?.id
+                        })
+                    }
                     bgColor={index % 2 ? colors.veryLightShadeGray : ""}
                     paymentStatus={paymentStatus}
                     paymentMethod={paymentMethod}
