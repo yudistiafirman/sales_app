@@ -125,7 +125,7 @@ export default function FirstStep() {
                             )}
                     </View>
                     <View style={style.summaryContainer}>
-                        <Text style={style.summary}>Sisa Deposit</Text>
+                        <Text style={style.summary}>Balance</Text>
                         <Text
                             style={[
                                 style.summary,
