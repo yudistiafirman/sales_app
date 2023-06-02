@@ -144,14 +144,14 @@ function Deposit() {
                     dispatch(
                         openPopUp({
                             popUpType: "error",
-                            popUpText: "Penambahan Deposit\nBerhasil",
+                            popUpText: "Penambahan Deposit\nGagal",
                             highlightedText: "Deposit",
                             outsideClickClosePopUp: true
                         })
                     );
                 }
             } catch (error) {
-                const message = error?.message || "Penambahan Deposit Gagal";
+                const message = error?.message || "Penambahan Deposit\nGagal";
                 dispatch(
                     openPopUp({
                         popUpType: "error",

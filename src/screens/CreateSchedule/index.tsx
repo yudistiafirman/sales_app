@@ -134,14 +134,14 @@ function CreateScheduleScreen() {
                     dispatch(
                         openPopUp({
                             popUpType: "error",
-                            popUpText: "Pembuatan Jadwal Gagal",
+                            popUpText: "Pembuatan Jadwal\nGagal",
                             highlightedText: "error",
                             outsideClickClosePopUp: true
                         })
                     );
                 }
             } catch (error) {
-                const message = error?.message || "Pembuatan Jadwal Gagal";
+                const message = error?.message || "Pembuatan Jadwal\nGagal";
                 dispatch(
                     openPopUp({
                         popUpType: "error",

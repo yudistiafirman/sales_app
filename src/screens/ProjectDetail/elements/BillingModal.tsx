@@ -198,7 +198,7 @@ export default function BillingModal({
             } else {
                 response = await updateLocationAddress(projectId, body);
             }
-            if (response?.data?.success) {
+            if (response?.data?.success && response?.data?.success !== false) {
                 setFormattedAddress(region.formattedAddress);
                 setRegion(region);
                 setIsModalVisible((curr) => !curr);
@@ -206,6 +206,17 @@ export default function BillingModal({
                     openPopUp({
                         popUpType: "success",
                         popUpText: "Update alamat berhasil",
+                        outsideClickClosePopUp: true
+                    })
+                );
+            } else {
+                setIsModalVisible(false);
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText: `Terjadi error saat update alamat ${
+                            isBilling ? "pembayaran" : "proyek"
+                        }`,
                         outsideClickClosePopUp: true
                     })
                 );

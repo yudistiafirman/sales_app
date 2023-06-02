@@ -115,7 +115,10 @@ function FormSO() {
                     soData.selectedID
                 );
 
-                if (responseSOSigned.data.success) {
+                if (
+                    responseSOSigned.data.success &&
+                    responseSOSigned.data.success !== false
+                ) {
                     dispatch(resetSOState());
                     dispatch(
                         openPopUp({

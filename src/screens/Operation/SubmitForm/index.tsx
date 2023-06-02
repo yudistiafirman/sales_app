@@ -338,7 +338,10 @@ function SubmitForm() {
                     );
                 }
 
-                if (responseUpdateDeliveryOrder?.data?.success) {
+                if (
+                    responseUpdateDeliveryOrder?.data?.success &&
+                    responseUpdateDeliveryOrder?.data?.success !== false
+                ) {
                     dispatch(resetOperationState());
                     dispatch(
                         openPopUp({

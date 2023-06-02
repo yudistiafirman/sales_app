@@ -178,7 +178,7 @@ export default function CustomerDetail() {
             const payload = {};
             payload.pic = data;
             const response = await updateCustomer(id, payload);
-            if (response.data.success) {
+            if (response?.data?.success && response?.data?.success !== false) {
                 dispatch(
                     openPopUp({
                         popUpType: "success",
@@ -188,15 +188,23 @@ export default function CustomerDetail() {
                 );
                 setIsVisibleModalPic(false);
                 getCustomerDetail();
+            } else {
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        highlightedText: "Error",
+                        popUpText: "Error Saat Update Customer PIC",
+                        outsideClickClosePopUp: true
+                    })
+                );
             }
         } catch (error) {
             dispatch(
                 openPopUp({
                     popUpType: "error",
                     highlightedText: "Error",
-                    popUpText: error?.message
-                        ? error?.message
-                        : "Error Saat Update Customer PIC",
+                    popUpText:
+                        error?.message || "Error Saat Update Customer PIC",
                     outsideClickClosePopUp: true
                 })
             );

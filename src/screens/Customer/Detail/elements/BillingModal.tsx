@@ -212,7 +212,7 @@ export default function BillingModal({
                 customerId,
                 body
             );
-            if (response?.data?.success) {
+            if (response?.data?.success && response?.data?.success !== false) {
                 setFormattedAddress(region.formattedAddress);
                 setRegion(region);
                 setIsModalVisible((curr) => !curr);
@@ -221,6 +221,17 @@ export default function BillingModal({
                     openPopUp({
                         popUpType: "success",
                         popUpText: "Update alamat penagihan berhasil",
+                        outsideClickClosePopUp: true
+                    })
+                );
+            } else {
+                setIsModalVisible(false);
+                dispatch(closePopUp());
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText:
+                            "Terjadi error saat update alamat Pembayaran",
                         outsideClickClosePopUp: true
                     })
                 );
