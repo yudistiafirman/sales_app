@@ -40,7 +40,8 @@ const initialState: SphStateInterface = {
     useSearchAddress: false,
     searchedAddress: "",
     searchedBillingAddress: "",
-    useSearchedBillingAddress: false
+    useSearchedBillingAddress: false,
+    alreadyCalledProjectOnce: false
 };
 
 export const sphSlice = createSlice({
@@ -153,7 +154,8 @@ export const sphSlice = createSlice({
             { payload }: { payload: selectedCompanyInterface }
         ) => ({
             ...state,
-            selectedCompany: payload
+            selectedCompany: payload,
+            alreadyCalledProjectOnce: true
         }),
         updateSelectedCompanyPicList: (
             state,

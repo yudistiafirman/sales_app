@@ -36,6 +36,10 @@ import { updateRegion } from "@/redux/reducers/locationReducer";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import {
+    checkSelectedSPHPic,
+    shouldAllowSPHStateToContinue
+} from "@/utils/generalFunc";
 import { SphContext, SphProvider } from "./elements/context/SphContext";
 import Steps from "./elements/Steps";
 import FifthStep from "./elements/5fifthStep";
@@ -66,19 +70,6 @@ const stepsToRender = [
     <FifthStep />
 ];
 
-// enum
-function checkSelected(picList: PIC[]) {
-    let isSelectedExist = false;
-
-    const list = picList || [];
-    list.forEach((pic) => {
-        if (pic.isSelected) {
-            isSelectedExist = true;
-        }
-    });
-    return isSelectedExist;
-}
-
 function stepHandler(
     sphData: SphStateInterface,
     stepsDone: number[],
@@ -86,7 +77,7 @@ function stepHandler(
     stepController: (step: number) => void
 ) {
     if (sphData.selectedCompany) {
-        if (checkSelected(sphData.selectedCompany?.Pics)) {
+        if (checkSelectedSPHPic(sphData.selectedCompany?.Pics)) {
             if (!stepsDone.includes(0)) {
                 setSteps((curr) => [...new Set(curr), 0]);
             }
@@ -139,14 +130,10 @@ function SphContent() {
     const stepControll = useCallback((step: number) => {}, []);
     const sphData = useSelector((state: RootState) => state.sph);
     const [isPopupVisible, setPopupVisible] = React.useState(false);
+    const projectId = route.params?.projectId;
 
     const handleStepperFocus = () => {
         // to continue stepper focus when entering sph page
-
-        if (currentPosition === 0) {
-            return;
-        }
-
         if (!sphData.stepperSPHShouldNotFocused) {
             if (sphData.stepSPHFourFinished) setCurrentPosition(4);
             else if (sphData.stepSPHThreeFinished) setCurrentPosition(3);
@@ -223,7 +210,7 @@ function SphContent() {
                 coordinateToSet.lat = Number(result.lat);
             }
 
-            dispatch(updateDistanceFromLegok(result.distance.value));
+            dispatch(updateDistanceFromLegok(result.distance?.value));
             dispatch(updateRegion(coordinateToSet));
         } catch (error) {
             dispatch(
@@ -238,7 +225,7 @@ function SphContent() {
         }
     };
 
-    async function getProjectById(projectId: string) {
+    async function getProjectById() {
         try {
             dispatch(resetSPHState());
             dispatch(
@@ -284,12 +271,12 @@ function SphContent() {
     useEffect(() => {
         crashlytics().log(SPH);
 
-        const projectId = route.params?.projectId;
-        if (projectId) {
-            getProjectById(projectId);
+        if (projectId && !sphData?.alreadyCalledProjectOnce) {
+            getProjectById();
         }
 
         stepHandler(sphData, stepsDone, setStepsDone, stepControll);
+        console.log("inii:: ", stepsDone);
         handleStepperFocus();
     }, [
         sphData.selectedCompany,
@@ -350,70 +337,7 @@ function SphContent() {
             <StepperIndicator
                 stepsDone={stepsDone}
                 stepOnPress={(pos) => {
-                    let stepOneCompleted = false;
-                    let stepTwoCompleted = false;
-                    let stepThreeCompleted = false;
-                    let stepFourCompleted = false;
-
-                    if (
-                        sphData.selectedCompany &&
-                        checkSelected(sphData.selectedCompany?.Pics)
-                    ) {
-                        stepOneCompleted = true;
-                    }
-                    const billingAddressFilled =
-                        !Object.values(sphData.billingAddress).every(
-                            (val) => !val
-                        ) &&
-                        Object.entries(
-                            sphData.billingAddress.addressAutoComplete
-                        ).length > 1;
-                    if (
-                        (sphData.isBillingAddressSame ||
-                            billingAddressFilled) &&
-                        sphData.distanceFromLegok !== null
-                    ) {
-                        stepTwoCompleted = true;
-                    }
-                    const paymentCondition =
-                        sphData.paymentType === "CREDIT"
-                            ? sphData.paymentBankGuarantee
-                            : true;
-                    if (sphData.paymentType && paymentCondition) {
-                        stepThreeCompleted = true;
-                    }
-                    if (sphData.chosenProducts.length) {
-                        stepFourCompleted = true;
-                    }
-
-                    if (pos === 0) {
-                        dispatch(setStepperFocused(pos));
-                        setCurrentPosition(pos);
-                    }
-                    if (pos === 1 && stepOneCompleted) {
-                        dispatch(setStepperFocused(pos));
-                        setCurrentPosition(pos);
-                    }
-                    if (pos === 2 && stepOneCompleted && stepTwoCompleted) {
-                        dispatch(setStepperFocused(pos));
-                        setCurrentPosition(pos);
-                    }
-                    if (
-                        pos === 3 &&
-                        stepOneCompleted &&
-                        stepTwoCompleted &&
-                        stepThreeCompleted
-                    ) {
-                        dispatch(setStepperFocused(pos));
-                        setCurrentPosition(pos);
-                    }
-                    if (
-                        (pos === 4 || pos === 5) &&
-                        stepOneCompleted &&
-                        stepTwoCompleted &&
-                        stepThreeCompleted &&
-                        stepFourCompleted
-                    ) {
+                    if (shouldAllowSPHStateToContinue(pos, sphData)) {
                         dispatch(setStepperFocused(pos));
                         setCurrentPosition(pos);
                     }

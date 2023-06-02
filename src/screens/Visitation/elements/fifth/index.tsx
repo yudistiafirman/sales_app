@@ -321,10 +321,9 @@ function Fifth() {
                                 payloadData.visitationId
                             ).catch((err) => Error(err));
                         }
-                        console.log("iniiii:: ", response?.data?.data);
                         if (
-                            response?.data?.data?.success &&
-                            response?.data?.data?.success !== false
+                            response?.data?.success &&
+                            response?.data?.success !== false
                         ) {
                             if (type === "SPH") {
                                 navigation.dispatch(
@@ -379,10 +378,9 @@ function Fifth() {
                             ).catch((err) => Error(err));
                         }
 
-                        console.log("iniiii:: ", response?.data?.data);
                         if (
-                            response?.data?.data?.success &&
-                            response?.data?.data?.success !== false
+                            response?.data?.success &&
+                            response?.data?.success !== false
                         ) {
                             if (type === "SPH") {
                                 navigation.dispatch(
@@ -414,7 +412,7 @@ function Fifth() {
                         openPopUp({
                             popUpType: "error",
                             popUpText:
-                                response?.data?.data?.message ||
+                                response?.data?.message ||
                                 "Error membuat jadwal kunjungan",
                             highlightedText: "error",
                             outsideClickClosePopUp: true

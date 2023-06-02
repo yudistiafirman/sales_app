@@ -425,6 +425,7 @@ interface SphStateInterface {
     searchedAddress: string;
     searchedBillingAddress: string;
     useSearchedBillingAddress: boolean;
+    alreadyCalledProjectOnce: boolean;
 }
 
 type SphContextInterface = [
