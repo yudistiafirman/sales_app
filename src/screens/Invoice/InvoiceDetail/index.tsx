@@ -199,9 +199,9 @@ function InvoiceDetail() {
             const { invoiceId } = route.params;
 
             const response = await getOneInvoice(invoiceId);
-            if (response.data.success) {
+            if (response?.data?.success) {
                 setLoading(false);
-                setInvoiceDetailData(response.data.data);
+                setInvoiceDetailData(response?.data?.data);
             } else {
                 setLoading(false);
                 dispatch(
@@ -234,13 +234,10 @@ function InvoiceDetail() {
             invoiceDetailData?.DeliveryOrders &&
             invoiceDetailData?.paymentType
         ) {
-            if (
-                invoiceDetailData.paymentType === "CREDIT" &&
-                invoiceDetailData.DeliveryOrders.length > 0
-            ) {
-                flex = 0.6;
-            } else if (invoiceDetailData.paymentType === "CREDIT") {
-                flex = 0.6;
+            if (invoiceDetailData.paymentType === "CREDIT") {
+                if (invoiceDetailData?.DeliveryOrders.length > 0) {
+                    flex = 6;
+                }
             } else {
                 flex = 0;
             }
