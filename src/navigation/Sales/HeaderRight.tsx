@@ -11,7 +11,6 @@ import Icon from "react-native-vector-icons/Feather";
 import analytics from "@react-native-firebase/analytics";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import { getAppVersionName, isProduction } from "@/utils/generalFunc";
-import { openPopUp } from "@/redux/reducers/modalReducer";
 
 const styles: Styles = {
     chipText: {
@@ -40,23 +39,11 @@ export default function SalesHeaderRight(iconColor = "") {
     let buttonCount = 0;
 
     const onLogout = async () => {
-        try {
-            const response = await signOut();
-            if (response) {
-                bStorage.clearItem();
-                dispatch(signout(false));
-                crashlytics().setUserId("");
-                analytics().setUserId("");
-            }
-        } catch (error) {
-            dispatch(
-                openPopUp({
-                    popUpType: "error",
-                    popUpText: error?.message || "Terjadi error saat logout",
-                    outsideClickClosePopUp: true
-                })
-            );
-        }
+        await signOut().catch((err) => undefined);
+        bStorage.clearItem();
+        dispatch(signout(false));
+        crashlytics().setUserId("");
+        analytics().setUserId("");
     };
 
     const onVersionClick = () => {
