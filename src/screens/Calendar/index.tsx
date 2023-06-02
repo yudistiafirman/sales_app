@@ -12,7 +12,6 @@ import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { customerDataInterface, visitationListResponse } from "@/interfaces";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import { CALENDAR } from "@/navigation/ScreenNames";
-import { getVisitationsList } from "@/redux/async-thunks/productivityFlowThunks";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import {
     setVisitationMapped,
@@ -21,6 +20,7 @@ import {
 } from "@/redux/reducers/productivityFlowReducer";
 import { RootState } from "@/redux/store";
 import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
+import { getVisitations } from "@/actions/ProductivityActions";
 import ExpandableCustomerCard from "./elements/ExpandableCustomerCard";
 
 const styles = StyleSheet.create({
@@ -70,10 +70,9 @@ export default function CalendarScreen() {
             year: number;
             fullDate: string;
         }) => {
-            dispatch(getVisitationsList({ month, year }))
-                .unwrap()
-                .then((data: visitationListResponse[]) => {
-                    const visitationData = data || [];
+            getVisitations({ month, year })
+                .then((response) => {
+                    const visitationData = response?.data?.data || [];
                     const visitMapped = visitationData.reduce(
                         (
                             acc: { [key: string]: customerDataInterface[] },

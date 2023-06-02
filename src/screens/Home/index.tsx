@@ -28,14 +28,14 @@ import Modal from "react-native-modal";
 import { fonts, layout } from "@/constants";
 import {
     getAllVisitations,
-    getVisitationTarget
+    getVisitationTarget,
+    oneGetVisitation
 } from "@/actions/ProductivityActions";
 import debounce from "lodash.debounce";
 import Api from "@/models";
 import { visitationDataType } from "@/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import { getOneVisitation } from "@/redux/async-thunks/productivityFlowThunks";
 import useHeaderStyleChanged from "@/hooks/useHeaderStyleChanged";
 import { useHeaderShow } from "@/hooks";
 import {
@@ -50,8 +50,7 @@ import {
     SPH,
     TAB_HOME,
     HOME_MENU,
-    INVOICE_LIST,
-    INVOICE_FILTER
+    INVOICE_LIST
 } from "@/navigation/ScreenNames";
 import SvgNames from "@/components/atoms/BSvg/svgName";
 import crashlytics from "@react-native-firebase/crashlytics";
@@ -649,26 +648,35 @@ function Beranda() {
                     outsideClickClosePopUp: false
                 })
             );
-            const response = await dispatch(
-                getOneVisitation({ visitationId: dataItem.id })
-            ).unwrap();
-
-            dispatch(closePopUp());
-            if (status === "Belum Selesai") {
-                navigation.navigate(CAMERA, {
-                    photoTitle: "Kunjungan",
-                    navigateTo: CREATE_VISITATION,
-                    closeButton: true,
-                    existingVisitation: response
-                });
+            const response = await oneGetVisitation(dataItem.id).catch((err) =>
+                Error(err)
+            );
+            if (response?.data?.success && response?.data?.success !== false) {
+                dispatch(closePopUp());
+                if (status === "Belum Selesai") {
+                    navigation.navigate(CAMERA, {
+                        photoTitle: "Kunjungan",
+                        navigateTo: CREATE_VISITATION,
+                        closeButton: true,
+                        existingVisitation: response?.data?.data
+                    });
+                } else {
+                    navigation.navigate(PROJECT_DETAIL, {
+                        projectId: response?.data?.data.project?.id,
+                        isFromCustomerPage: false
+                    });
+                }
             } else {
-                navigation.navigate(PROJECT_DETAIL, {
-                    projectId: response?.project?.id,
-                    isFromCustomerPage: false
-                });
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        highlightedText: "Error",
+                        popUpText: "Error fetching visitation Data",
+                        outsideClickClosePopUp: true
+                    })
+                );
             }
         } catch (error) {
-            console.log("error catch 3:: ", error);
             dispatch(
                 openPopUp({
                     popUpType: "error",

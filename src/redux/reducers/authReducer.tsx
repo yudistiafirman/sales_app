@@ -53,7 +53,7 @@ const initialState: AuthState = {
         enable_hunter_farmer: true,
         enable_po: true,
         enable_price_menu: true,
-        enable_profile_menu: true,
+        enable_profile_menu: false,
         enable_customer_menu: true,
         enable_sph: true,
         enable_transaction_menu: true,

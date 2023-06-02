@@ -7,14 +7,14 @@ import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import { useDispatch } from "react-redux";
 import { resScale } from "@/utils";
 import { openPopUp } from "@/redux/reducers/modalReducer";
-import {
-    fetchSphDocuments,
-    postProjectDocByprojectId,
-    postUploadFiles
-} from "@/redux/async-thunks/commonThunks";
 import { Input } from "@/interfaces";
 import { colors, fonts, layout } from "@/constants";
-import { BContainer, BDivider, BForm, BLabel, BSpacer } from "@/components";
+import { BContainer, BForm, BLabel, BSpacer } from "@/components";
+import {
+    getSphDocuments,
+    postProjectDoc,
+    uploadFileImage
+} from "@/actions/CommonActions";
 
 const styles = StyleSheet.create({
     container: { flex: 1 },
@@ -80,59 +80,69 @@ export default function RequiredDocuments() {
     const getDocument = useCallback(async () => {
         try {
             setIsLoading(true);
-            const response: DocResponse = await dispatch(
-                fetchSphDocuments()
-            ).unwrap();
+            const response = await getSphDocuments().catch((err) => Error(err));
 
-            setDocState(() => {
-                const newDocState: { [key: string]: any } = {};
+            if (response?.data?.success && response?.data?.success !== false) {
+                setDocState(() => {
+                    const newDocState: { [key: string]: any } = {};
 
-                response.credit.forEach((doc) => {
-                    newDocState[doc.id] = null;
-                });
-                response.cbd.forEach((doc) => {
-                    newDocState[doc.id] = null;
-                });
-
-                if (docs && Array.isArray(docs)) {
-                    docs.forEach((doc) => {
-                        if (doc.documentId in newDocState) {
-                            newDocState[doc.documentId] = doc;
-                        }
+                    response?.data?.data.credit.forEach((doc) => {
+                        newDocState[doc.id] = null;
                     });
-                }
+                    response?.data?.data.cbd.forEach((doc) => {
+                        newDocState[doc.id] = null;
+                    });
 
-                return newDocState;
-            });
-            setDocLoadingState(() => {
-                const newdocLoadingState: {
-                    [key: string]: {
-                        loading: boolean;
-                        error: boolean;
-                        errorMessage: string;
-                    };
-                } = {};
+                    if (docs && Array.isArray(docs)) {
+                        docs.forEach((doc) => {
+                            if (doc.documentId in newDocState) {
+                                newDocState[doc.documentId] = doc;
+                            }
+                        });
+                    }
 
-                response.credit.forEach((doc) => {
-                    newdocLoadingState[doc.id] = {
-                        loading: false,
-                        error: false,
-                        errorMessage: ""
-                    };
+                    return newDocState;
                 });
-                response.cbd.forEach((doc) => {
-                    newdocLoadingState[doc.id] = {
-                        loading: false,
-                        error: false,
-                        errorMessage: ""
-                    };
+                setDocLoadingState(() => {
+                    const newdocLoadingState: {
+                        [key: string]: {
+                            loading: boolean;
+                            error: boolean;
+                            errorMessage: string;
+                        };
+                    } = {};
+
+                    response?.data?.data.credit.forEach((doc) => {
+                        newdocLoadingState[doc.id] = {
+                            loading: false,
+                            error: false,
+                            errorMessage: ""
+                        };
+                    });
+                    response?.data?.data.cbd.forEach((doc) => {
+                        newdocLoadingState[doc.id] = {
+                            loading: false,
+                            error: false,
+                            errorMessage: ""
+                        };
+                    });
+
+                    return newdocLoadingState;
                 });
 
-                return newdocLoadingState;
-            });
-
-            setReqDocuments(response);
-            setIsLoading(false);
+                setReqDocuments(response?.data?.data);
+                setIsLoading(false);
+            } else {
+                setIsLoading(false);
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText:
+                            "Terjadi error saat pengambilan data document",
+                        outsideClickClosePopUp: true
+                    })
+                );
+            }
         } catch (error) {
             setIsLoading(false);
             dispatch(
@@ -162,30 +172,39 @@ export default function RequiredDocuments() {
                     errorMessage: ""
                 }
             }));
-            const response = await dispatch(
-                postUploadFiles({ files: [file], from: "customerDetail" })
-            ).unwrap();
-            if (!response[0]) {
-                throw response;
-            }
+            let photoResponse;
+            if (file && file.length > 0)
+                photoResponse = await uploadFileImage(
+                    [file],
+                    "customerDetail"
+                ).catch((err) => Error(err));
 
-            const photoResponse = response[0];
             const payloadProjectDoc = {
                 documentId,
-                fileId: photoResponse.id,
+                fileId:
+                    photoResponse && photoResponse?.data?.data?.length > 0
+                        ? photoResponse?.data?.data[0].id
+                        : "",
                 projectId // hardcode di atas,
             };
 
-            const projectDocResponse = await dispatch(
-                postProjectDocByprojectId({ payload: payloadProjectDoc })
-            ).unwrap();
+            const response = await postProjectDoc(payloadProjectDoc).catch(
+                (err) => Error(err)
+            );
             setDocLoadingState((curr) => ({
                 ...curr,
                 [documentId]: {
                     ...curr[documentId],
                     loading: false,
-                    error: false,
-                    errorMessage: ""
+                    error: !(
+                        response?.data?.success &&
+                        response?.data?.success !== false
+                    ),
+                    errorMessage:
+                        response?.data?.success &&
+                        response?.data?.success !== false
+                            ? ""
+                            : "Upload error"
                 }
             }));
         } catch (error) {
