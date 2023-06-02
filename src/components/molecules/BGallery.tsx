@@ -43,7 +43,8 @@ const style = StyleSheet.create({
     },
     imageStyle: {
         borderRadius: layout.radius.md,
-        flex: 1
+        width: "100%",
+        height: "100%"
     },
     attachType: {
         position: "absolute",
@@ -90,7 +91,12 @@ export default function BGallery({
                         item?.file?.type === "image/png" ? (
                             <Image
                                 source={item?.file}
-                                style={style.imageStyle}
+                                style={[
+                                    style.imageStyle,
+                                    {
+                                        resizeMode: "cover"
+                                    }
+                                ]}
                             />
                         ) : (
                             <Pdf
@@ -101,7 +107,15 @@ export default function BGallery({
                         )}
                     </View>
                 ) : (
-                    <Image source={item?.file} style={style.imageStyle} />
+                    <Image
+                        source={item?.file}
+                        style={[
+                            style.imageStyle,
+                            {
+                                resizeMode: "cover"
+                            }
+                        ]}
+                    />
                 )}
                 {item?.type === "GALLERY" && removePict && (
                     <TouchableOpacity

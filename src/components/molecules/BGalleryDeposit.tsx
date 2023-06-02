@@ -40,7 +40,8 @@ const style = StyleSheet.create({
         padding: layout.pad.md
     },
     flexFull: {
-        flex: 1
+        width: "100%",
+        height: "100%"
     }
 });
 
@@ -70,7 +71,12 @@ export default function BGalleryDeposit({
                             {picts[1]?.file?.type === "image/jpeg" ||
                             picts[1]?.file?.type === "image/png" ? (
                                 <Image
-                                    style={style.flexFull}
+                                    style={[
+                                        style.flexFull,
+                                        {
+                                            resizeMode: "cover"
+                                        }
+                                    ]}
                                     source={picts[1]?.file}
                                 />
                             ) : (
@@ -82,7 +88,15 @@ export default function BGalleryDeposit({
                             )}
                         </View>
                     ) : (
-                        <Image style={style.flexFull} source={picts[1]?.file} />
+                        <Image
+                            style={[
+                                style.flexFull,
+                                {
+                                    resizeMode: "cover"
+                                }
+                            ]}
+                            source={picts[1]?.file}
+                        />
                     )}
                     {picts.length > 2 && (
                         <>
