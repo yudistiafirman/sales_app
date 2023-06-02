@@ -112,8 +112,21 @@ function BList({
             const avatarText = item?.name[0];
             const title = item?.displayName;
             const chipTitle = item?.type === COMPANY ? PERUSAHAAN : item?.type;
-            const paymnetType = item?.paymentType ? item?.paymentType : "-";
-            const listTextData = [`Payment Type: ${paymnetType}`];
+            const paymentType = () => {
+                let defaultText = "-";
+                if (item?.paymentType !== undefined) {
+                    if (
+                        item?.paymentType === "CBD" ||
+                        item?.paymentType === null
+                    ) {
+                        defaultText = "Cash";
+                    } else {
+                        defaultText = "Credit";
+                    }
+                }
+                return defaultText;
+            };
+            const listTextData = [`Payment Type: ${paymentType()}`];
             const availableDebit = null;
             const availableCredit = null;
             const chipBgColor =
