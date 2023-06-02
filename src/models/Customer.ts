@@ -7,6 +7,7 @@ export interface ICustomerListData {
     type: "INDIVIDU" | "COMPANY";
     npwp?: string;
     nik?: string;
+    paymentType?: null | "CBD" | "CREDIT";
 }
 
 export interface IDocument {

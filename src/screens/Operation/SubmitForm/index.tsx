@@ -285,7 +285,7 @@ function SubmitForm() {
                 photoFilestoUpload,
                 "Update Delivery Order"
             );
-            if (responseFiles.data.success) {
+            if (responseFiles?.data?.success) {
                 let responseUpdateDeliveryOrder: any;
                 if (userData?.type === EntryType.DRIVER) {
                     const newFileData = responseFiles?.data?.data?.map(
