@@ -446,21 +446,34 @@ function InvoiceDetail() {
             <View style={[styles.listDoContainer]}>
                 <View style={[styles.textContainer]}>
                     <Text style={styles.text}>DO </Text>
-                    <BSpacer size="extraSmall" />
-                    <TouchableWithoutFeedback
-                        onPress={() => setExpand(!expand)}
-                    >
-                        <Icon
-                            name={expand ? "chevron-up" : "chevron-down"}
-                            size={25}
-                            color={colors.icon.darkGrey}
-                        />
-                    </TouchableWithoutFeedback>
+                    <BSpacer size="medium" />
+                    {invoiceDetailData?.DeliveryOrders &&
+                    invoiceDetailData?.DeliveryOrders.length > 0 ? (
+                        <TouchableWithoutFeedback
+                            onPress={() => setExpand(!expand)}
+                        >
+                            <Icon
+                                name={expand ? "chevron-up" : "chevron-down"}
+                                size={25}
+                                color={colors.icon.darkGrey}
+                            />
+                        </TouchableWithoutFeedback>
+                    ) : (
+                        <Text>-</Text>
+                    )}
                 </View>
                 {invoiceDetailData?.DeliveryOrders &&
                     invoiceDetailData?.DeliveryOrders.length > 0 &&
                     expand && (
-                        <View style={{ flex: 0.6 }}>
+                        <View
+                            style={{
+                                flex:
+                                    invoiceDetailData?.DeliveryOrders.length ===
+                                    1
+                                        ? 0.3
+                                        : 0.6
+                            }}
+                        >
                             <FlashList
                                 data={
                                     invoiceDetailData?.DeliveryOrders &&
