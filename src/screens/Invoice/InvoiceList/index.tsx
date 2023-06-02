@@ -4,7 +4,11 @@ import BFilterSort from "@/components/molecules/BFilterSort";
 import BInvoiceCard from "@/components/molecules/BInvoiceCard";
 import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { colors, layout } from "@/constants";
-import { DEBOUNCE_SEARCH } from "@/constants/const";
+import {
+    DEBOUNCE_SEARCH,
+    DEFAULT_ESTIMATED_LIST_SIZE,
+    DEFAULT_ON_END_REACHED_THREHOLD
+} from "@/constants/general";
 import { InvoiceListData } from "@/models/Invoice";
 import { INVOICE_DETAIL, INVOICE_FILTER } from "@/navigation/ScreenNames";
 
@@ -293,9 +297,9 @@ function InvoiceList() {
                 data={invoiceData.invoiceData}
                 refreshing={invoiceData.isRefreshing}
                 renderItem={renderInvoiceCard}
-                estimatedItemSize={10}
+                estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                 onRefresh={onRefresh}
-                onEndReachedThreshold={0.5}
+                onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
                 onEndReached={onEndReached}
                 ListFooterComponent={
                     invoiceData.isLoadMore ? renderShimmerInvoiceList() : null

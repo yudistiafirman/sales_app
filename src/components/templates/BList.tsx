@@ -1,14 +1,19 @@
 import { ICustomerListData } from "@/models/Customer";
 import React from "react";
-import { FlatList, StyleSheet, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import { colors, layout } from "@/constants";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
-import { resScale } from "@/utils";
 import { TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import LinearGradient from "react-native-linear-gradient";
-import { COMPANY, INDIVIDU, PERUSAHAAN } from "@/constants/const";
+import {
+    COMPANY,
+    DEFAULT_ESTIMATED_LIST_SIZE,
+    DEFAULT_ON_END_REACHED_THREHOLD,
+    INDIVIDU,
+    PERUSAHAAN
+} from "@/constants/general";
 import BShimmerAvatarList from "./BShimmerAvatarList";
 import BEmptyState from "../organism/BEmptyState";
 import BCard from "../molecules/BCard";
@@ -195,9 +200,10 @@ function BList({
                         <FlashList
                             data={data}
                             renderItem={renderItem}
-                            estimatedItemSize={10}
-                            // initialNumToRender={10}
-                            onEndReachedThreshold={0.5}
+                            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+                            onEndReachedThreshold={
+                                DEFAULT_ON_END_REACHED_THREHOLD
+                            }
                             refreshing={refreshing}
                             contentContainerStyle={{
                                 paddingTop: layout.pad.lg

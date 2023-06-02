@@ -1,5 +1,5 @@
 import { getAllCustomers, getCustomerCount } from "@/actions/CommonActions";
-import { COMPANY, INDIVIDU } from "@/constants/const";
+import { COMPANY, INDIVIDU } from "@/constants/general";
 import { ICustomerListData } from "@/models/Customer";
 import { assign, createMachine } from "xstate";
 

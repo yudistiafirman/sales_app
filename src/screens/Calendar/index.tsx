@@ -20,6 +20,7 @@ import {
     setMarkedData
 } from "@/redux/reducers/productivityFlowReducer";
 import { RootState } from "@/redux/store";
+import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
 import ExpandableCustomerCard from "./elements/ExpandableCustomerCard";
 
 const styles = StyleSheet.create({
@@ -220,7 +221,7 @@ export default function CalendarScreen() {
         <View style={styles.container}>
             <View style={{ flex: 1, flexDirection: "row" }}>
                 <FlashList
-                    estimatedItemSize={10}
+                    estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                     data={customerDatas}
                     ListHeaderComponent={
                         <View>

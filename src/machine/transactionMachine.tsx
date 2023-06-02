@@ -1,6 +1,6 @@
+import { getAllPayment } from "@/actions/FinanceActions";
 import {
     getAllDeliveryOrders,
-    getAllDeposits,
     getAllPurchaseOrders,
     getAllSchedules,
     getAllVisitationOrders,
@@ -274,7 +274,7 @@ const transactionMachine =
                             );
                             response = response.data;
                         } else if (_context.selectedType === "Deposit") {
-                            response = await getAllDeposits(
+                            response = await getAllPayment(
                                 _context.page.toString(),
                                 _context.size.toString()
                             );

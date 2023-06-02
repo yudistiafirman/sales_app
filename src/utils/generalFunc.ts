@@ -1,10 +1,16 @@
 import { colors } from "@/constants";
-import { INDIVIDU } from "@/constants/const";
+import {
+    COMMON_API_SERVER,
+    FINANCE_API_SERVER,
+    INDIVIDU,
+    INVENTORY_API_SERVER,
+    ORDER_API_SERVER,
+    PRODUCTIVITY_API_SERVER
+} from "@/constants/general";
 import { CustomerDocsPayType } from "@/models/Customer";
 import moment from "moment";
 import { NativeModules, Platform } from "react-native";
 import "moment/locale/id";
-import { InvoiceListData } from "@/models/Invoice";
 
 const { RNCustomConfig } = NativeModules;
 
@@ -153,12 +159,7 @@ export const getSuccessMsgFromAPI = (
             break;
     }
 
-    if (
-        domainType === "common-dev.aggre.id" ||
-        domainType === "common.aggre.id" ||
-        domainType === "common.apis.oreo.brik.id" ||
-        domainType === "common.apis.brik.id"
-    ) {
+    if (domainType === COMMON_API_SERVER) {
         switch (endPoint.toLowerCase()) {
             case "projectdoc":
                 finalText += "dokumen";
@@ -201,12 +202,7 @@ export const getSuccessMsgFromAPI = (
                 else finalText += "data";
                 break;
         }
-    } else if (
-        domainType === "inventory-dev.aggre.id" ||
-        domainType === "inventory.aggre.id" ||
-        domainType === "inventory.apis.oreo.brik.id" ||
-        domainType === "inventory.apis.brik.id"
-    ) {
+    } else if (domainType === INVENTORY_API_SERVER) {
         switch (endPoint.toLowerCase()) {
             case "category":
                 finalText += "data semua produk berdasarkan kategori";
@@ -218,12 +214,7 @@ export const getSuccessMsgFromAPI = (
                 finalText += "data";
                 break;
         }
-    } else if (
-        domainType === "productivity-dev.aggre.id" ||
-        domainType === "productivity.aggre.id" ||
-        domainType === "productivity.apis.oreo.brik.id" ||
-        domainType === "productivity.apis.brik.id"
-    ) {
+    } else if (domainType === PRODUCTIVITY_API_SERVER) {
         switch (endPoint.toLowerCase()) {
             case "all-visitation":
                 finalText += "data semua kunjungan";
@@ -243,12 +234,7 @@ export const getSuccessMsgFromAPI = (
                 else finalText += "data";
                 break;
         }
-    } else if (
-        domainType === "order-dev.aggre.id" ||
-        domainType === "order.aggre.id" ||
-        domainType === "order.apis.oreo.brik.id" ||
-        domainType === "order.apis.brik.id"
-    ) {
+    } else if (domainType === ORDER_API_SERVER) {
         switch (endPoint.toLowerCase()) {
             case "project-sph":
                 finalText += "data semua SPH berdasarkan proyek";
@@ -289,6 +275,21 @@ export const getSuccessMsgFromAPI = (
                 else if (fullUrl?.toLowerCase().includes("schedule/"))
                     finalText = "";
                 else if (fullUrl?.toLowerCase().includes("delivery-order/"))
+                    finalText = "";
+                else finalText += "data";
+                break;
+        }
+    } else if (domainType === FINANCE_API_SERVER) {
+        switch (endPoint.toLowerCase()) {
+            case "payment":
+                finalText = "";
+                break;
+            case "invoice":
+                finalText = "";
+                break;
+            default:
+                if (fullUrl?.toLowerCase().includes("invoice/")) finalText = "";
+                else if (fullUrl?.toLowerCase().includes("payment/"))
                     finalText = "";
                 else finalText += "data";
                 break;

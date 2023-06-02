@@ -1,11 +1,15 @@
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet } from "react-native";
 import { BEmptyState, BSpacer, BVisitationCard } from "@/components";
 import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { layout } from "@/constants";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import EntryType from "@/models/EnumModel";
+import {
+    DEFAULT_ESTIMATED_LIST_SIZE,
+    DEFAULT_ON_END_REACHED_THREHOLD
+} from "@/constants/general";
 
 const style = StyleSheet.create({
     flatList: {
@@ -73,12 +77,9 @@ export default function OperationList({
 
     return (
         <FlashList
-            estimatedItemSize={10}
-            onEndReachedThreshold={0.5}
+            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+            onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
             data={data}
-            // removeClippedSubviews={false}
-            // initialNumToRender={10}
-            // maxToRenderPerBatch={10}
             onRefresh={onRefresh}
             keyExtractor={(item, index) => index.toString()}
             refreshing={refreshing}
