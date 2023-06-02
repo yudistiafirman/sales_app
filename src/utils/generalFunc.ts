@@ -305,7 +305,7 @@ export const showWarningDocument = (
     cbdDocs: CustomerDocsPayType[],
     customerType: "INDIVIDU" | "COMPANY"
 ) => {
-    if (!cbdDocs || !customerType) return false;
+    if (!cbdDocs || !customerType || cbdDocs.length === 0) return true;
 
     const documents = cbdDocs.filter((v) => v.File !== null);
 
