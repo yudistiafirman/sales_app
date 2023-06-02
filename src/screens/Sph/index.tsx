@@ -142,6 +142,11 @@ function SphContent() {
 
     const handleStepperFocus = () => {
         // to continue stepper focus when entering sph page
+
+        if (currentPosition === 0) {
+            return;
+        }
+
         if (!sphData.stepperSPHShouldNotFocused) {
             if (sphData.stepSPHFourFinished) setCurrentPosition(4);
             else if (sphData.stepSPHThreeFinished) setCurrentPosition(3);
@@ -344,9 +349,74 @@ function SphContent() {
         <View style={style.container}>
             <StepperIndicator
                 stepsDone={stepsDone}
-                stepOnPress={(num) => {
-                    dispatch(setStepperFocused(num));
-                    setCurrentPosition(num);
+                stepOnPress={(pos) => {
+                    let stepOneCompleted = false;
+                    let stepTwoCompleted = false;
+                    let stepThreeCompleted = false;
+                    let stepFourCompleted = false;
+
+                    if (
+                        sphData.selectedCompany &&
+                        checkSelected(sphData.selectedCompany?.Pics)
+                    ) {
+                        stepOneCompleted = true;
+                    }
+                    const billingAddressFilled =
+                        !Object.values(sphData.billingAddress).every(
+                            (val) => !val
+                        ) &&
+                        Object.entries(
+                            sphData.billingAddress.addressAutoComplete
+                        ).length > 1;
+                    if (
+                        (sphData.isBillingAddressSame ||
+                            billingAddressFilled) &&
+                        sphData.distanceFromLegok !== null
+                    ) {
+                        stepTwoCompleted = true;
+                    }
+                    const paymentCondition =
+                        sphData.paymentType === "CREDIT"
+                            ? sphData.paymentBankGuarantee
+                            : true;
+                    if (sphData.paymentType && paymentCondition) {
+                        stepThreeCompleted = true;
+                    }
+                    if (sphData.chosenProducts.length) {
+                        stepFourCompleted = true;
+                    }
+
+                    if (pos === 0) {
+                        dispatch(setStepperFocused(pos));
+                        setCurrentPosition(pos);
+                    }
+                    if (pos === 1 && stepOneCompleted) {
+                        dispatch(setStepperFocused(pos));
+                        setCurrentPosition(pos);
+                    }
+                    if (pos === 2 && stepOneCompleted && stepTwoCompleted) {
+                        dispatch(setStepperFocused(pos));
+                        setCurrentPosition(pos);
+                    }
+                    if (
+                        pos === 3 &&
+                        stepOneCompleted &&
+                        stepTwoCompleted &&
+                        stepThreeCompleted
+                    ) {
+                        dispatch(setStepperFocused(pos));
+                        setCurrentPosition(pos);
+                    }
+                    if (
+                        (pos === 4 || pos === 5) &&
+                        stepOneCompleted &&
+                        stepTwoCompleted &&
+                        stepThreeCompleted &&
+                        stepFourCompleted
+                    ) {
+                        dispatch(setStepperFocused(pos));
+                        setCurrentPosition(pos);
+                    }
                 }}
                 currentStep={currentPosition}
                 labels={labels}

@@ -321,6 +321,7 @@ function Fifth() {
                                 payloadData.visitationId
                             ).catch((err) => Error(err));
                         }
+                        console.log("iniiii:: ", response?.data?.data);
                         if (
                             response?.data?.data?.success &&
                             response?.data?.data?.success !== false
@@ -378,6 +379,7 @@ function Fifth() {
                             ).catch((err) => Error(err));
                         }
 
+                        console.log("iniiii:: ", response?.data?.data);
                         if (
                             response?.data?.data?.success &&
                             response?.data?.data?.success !== false
