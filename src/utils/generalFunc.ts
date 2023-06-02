@@ -11,6 +11,7 @@ import { CustomerDocsPayType } from "@/models/Customer";
 import moment from "moment";
 import { NativeModules, Platform } from "react-native";
 import "moment/locale/id";
+import { PIC } from "@/interfaces";
 
 const { RNCustomConfig } = NativeModules;
 
@@ -378,3 +379,177 @@ export const translatePaymentStatus = (
     }
     return paymentType;
 };
+
+export function checkSelectedSPHPic(picList: PIC[]) {
+    let isSelectedExist = false;
+
+    const list = picList || [];
+    list.forEach((pic) => {
+        if (pic.isSelected) {
+            isSelectedExist = true;
+        }
+    });
+    return isSelectedExist;
+}
+
+export function shouldAllowSPHStateToContinue(
+    pos: number,
+    sphState: any
+): boolean {
+    let stepOneCompleted = false;
+    let stepTwoCompleted = false;
+    let stepThreeCompleted = false;
+    let stepFourCompleted = false;
+
+    if (
+        sphState.selectedCompany &&
+        checkSelectedSPHPic(sphState.selectedCompany?.Pics)
+    ) {
+        stepOneCompleted = true;
+    }
+    const billingAddressFilled =
+        !Object.values(sphState.billingAddress).every((val) => !val) &&
+        Object.entries(sphState.billingAddress.addressAutoComplete).length > 1;
+    if (
+        (sphState.isBillingAddressSame || billingAddressFilled) &&
+        sphState.distanceFromLegok !== null
+    ) {
+        stepTwoCompleted = true;
+    }
+    const paymentCondition =
+        sphState.paymentType === "CREDIT"
+            ? sphState.paymentBankGuarantee
+            : true;
+    if (sphState.paymentType && paymentCondition) {
+        stepThreeCompleted = true;
+    }
+    if (sphState.chosenProducts.length) {
+        stepFourCompleted = true;
+    }
+    if (pos === 0) {
+        return true;
+    }
+    if (pos === 1 && stepOneCompleted) {
+        return true;
+    }
+    if (pos === 2 && stepOneCompleted && stepTwoCompleted) {
+        return true;
+    }
+    if (
+        pos === 3 &&
+        stepOneCompleted &&
+        stepTwoCompleted &&
+        stepThreeCompleted
+    ) {
+        return true;
+    }
+    if (
+        (pos === 4 || pos === 5) &&
+        stepOneCompleted &&
+        stepTwoCompleted &&
+        stepThreeCompleted &&
+        stepFourCompleted
+    ) {
+        return true;
+    }
+    return false;
+}
+
+export function shouldAllowVisitationStateToContinue(
+    pos: number,
+    visitationState: any
+): boolean {
+    let stepOneCompleted = false;
+    let stepTwoCompleted = false;
+    let stepThreeCompleted = false;
+    let stepFourCompleted = false;
+    let stepFifthCompleted = false;
+    if (
+        visitationState?.createdLocation?.formattedAddress &&
+        visitationState?.locationAddress?.formattedAddress
+    ) {
+        stepOneCompleted = true;
+    }
+    const selectedPic = visitationState?.pics?.filter((v) => v.isSelected);
+    const customerTypeCond =
+        visitationState?.customerType === "COMPANY"
+            ? !!visitationState?.companyName
+            : true;
+    if (
+        visitationState?.customerType &&
+        customerTypeCond &&
+        visitationState?.projectName &&
+        selectedPic.length > 0
+    ) {
+        stepTwoCompleted = true;
+    }
+    if (
+        visitationState?.stageProject &&
+        visitationState?.products?.length > 0 &&
+        visitationState?.estimationDate?.estimationMonth &&
+        visitationState?.estimationDate?.estimationWeek &&
+        visitationState?.paymentType
+    ) {
+        stepThreeCompleted = true;
+    }
+    if (visitationState?.competitors?.length > 0) {
+        stepFourCompleted = true;
+    }
+    const filteredImages = visitationState?.images?.filter(
+        (it) => it?.file !== null
+    );
+    if (filteredImages?.length > 0) {
+        stepFifthCompleted = true;
+    }
+
+    if (pos === 0) {
+        return true;
+    }
+    if (pos === 1 && stepOneCompleted) {
+        return true;
+    }
+    if (pos === 2 && stepOneCompleted && stepTwoCompleted) {
+        return true;
+    }
+    if (
+        pos === 3 &&
+        stepOneCompleted &&
+        stepTwoCompleted &&
+        stepThreeCompleted
+    ) {
+        return true;
+    }
+    if (
+        pos === 4 &&
+        stepOneCompleted &&
+        stepTwoCompleted &&
+        stepThreeCompleted &&
+        stepFourCompleted
+    ) {
+        return true;
+    }
+    if (
+        pos === 5 &&
+        stepOneCompleted &&
+        stepTwoCompleted &&
+        stepThreeCompleted &&
+        stepFourCompleted &&
+        stepFifthCompleted
+    ) {
+        return true;
+    }
+    return false;
+}
+
+export function getAvailableDepositProject(data: any): number {
+    let availableDeposit;
+    if (data?.Customer?.paymentType === "CREDIT") {
+        availableDeposit =
+            data?.Customer?.Accounts?.length > 0
+                ? data?.Customer?.Accounts[0].pendingBalance
+                : 0;
+    } else {
+        availableDeposit = data?.Account?.pendingBalance || 0;
+    }
+    return availableDeposit;
+}

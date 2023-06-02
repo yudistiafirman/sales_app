@@ -40,7 +40,8 @@ const initialState: SphStateInterface = {
     useSearchAddress: false,
     searchedAddress: "",
     searchedBillingAddress: "",
-    useSearchedBillingAddress: false
+    useSearchedBillingAddress: false,
+    alreadyCalledProjectOnce: false
 };
 
 export const sphSlice = createSlice({
@@ -110,7 +111,6 @@ export const sphSlice = createSlice({
                     return {
                         ...state
                     };
-                    break;
             }
         },
         resetStepperFocused: (state, { payload }) => {
@@ -143,7 +143,6 @@ export const sphSlice = createSlice({
                     return {
                         ...state
                     };
-                    break;
             }
         },
         updateProjectAddress: (state, { payload }) => ({
@@ -153,15 +152,11 @@ export const sphSlice = createSlice({
         updateSelectedCompany: (
             state,
             { payload }: { payload: selectedCompanyInterface }
-        ) => {
-            console.log(payload);
-            console.log(payload?.Pic, "c");
-            console.log(payload?.Pics, "cs");
-            return {
-                ...state,
-                selectedCompany: payload
-            };
-        },
+        ) => ({
+            ...state,
+            selectedCompany: payload,
+            alreadyCalledProjectOnce: true
+        }),
         updateSelectedCompanyPicList: (
             state,
             { payload }: { payload: PIC[] }

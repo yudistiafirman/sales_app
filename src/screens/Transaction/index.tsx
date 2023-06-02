@@ -405,7 +405,7 @@ function Transaction() {
                     tabStyle={styles.tabStyle}
                     tabBarStyle={styles.tabBarStyle}
                     indicatorStyle={styles.tabIndicator}
-                    minTabHeaderWidth={80}
+                    // minTabHeaderWidth={80}
                 />
             )}
             <PopUpQuestion

@@ -31,9 +31,8 @@ export const snackbarSlice = createSlice({
             state,
             { payload }: { payload: SnackbarOptionsType }
         ) => {
-            let { isRenderAction } = state.snackBarOptions;
-            let { isSuccess } = state.snackBarOptions;
-            let { snackBarText } = state.snackBarOptions;
+            let { isRenderAction, isSuccess, snackBarText } =
+                state.snackBarOptions;
             if (typeof payload.isRenderAction === "boolean") {
                 isRenderAction = payload.isRenderAction;
             }

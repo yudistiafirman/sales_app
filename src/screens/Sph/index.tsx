@@ -36,6 +36,10 @@ import { updateRegion } from "@/redux/reducers/locationReducer";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import {
+    checkSelectedSPHPic,
+    shouldAllowSPHStateToContinue
+} from "@/utils/generalFunc";
 import { SphContext, SphProvider } from "./elements/context/SphContext";
 import Steps from "./elements/Steps";
 import FifthStep from "./elements/5fifthStep";
@@ -66,19 +70,6 @@ const stepsToRender = [
     <FifthStep />
 ];
 
-// enum
-function checkSelected(picList: PIC[]) {
-    let isSelectedExist = false;
-
-    const list = picList || [];
-    list.forEach((pic) => {
-        if (pic.isSelected) {
-            isSelectedExist = true;
-        }
-    });
-    return isSelectedExist;
-}
-
 function stepHandler(
     sphData: SphStateInterface,
     stepsDone: number[],
@@ -86,7 +77,7 @@ function stepHandler(
     stepController: (step: number) => void
 ) {
     if (sphData.selectedCompany) {
-        if (checkSelected(sphData.selectedCompany?.Pics)) {
+        if (checkSelectedSPHPic(sphData.selectedCompany?.Pics)) {
             if (!stepsDone.includes(0)) {
                 setSteps((curr) => [...new Set(curr), 0]);
             }
@@ -139,6 +130,7 @@ function SphContent() {
     const stepControll = useCallback((step: number) => {}, []);
     const sphData = useSelector((state: RootState) => state.sph);
     const [isPopupVisible, setPopupVisible] = React.useState(false);
+    const projectId = route.params?.projectId;
 
     const handleStepperFocus = () => {
         // to continue stepper focus when entering sph page
@@ -218,7 +210,7 @@ function SphContent() {
                 coordinateToSet.lat = Number(result.lat);
             }
 
-            dispatch(updateDistanceFromLegok(result.distance.value));
+            dispatch(updateDistanceFromLegok(result.distance?.value));
             dispatch(updateRegion(coordinateToSet));
         } catch (error) {
             dispatch(
@@ -233,7 +225,7 @@ function SphContent() {
         }
     };
 
-    async function getProjectById(projectId: string) {
+    async function getProjectById() {
         try {
             dispatch(resetSPHState());
             dispatch(
@@ -279,14 +271,21 @@ function SphContent() {
     useEffect(() => {
         crashlytics().log(SPH);
 
-        const projectId = route.params?.projectId;
-        if (projectId) {
-            getProjectById(projectId);
+        if (projectId && !sphData?.alreadyCalledProjectOnce) {
+            getProjectById();
         }
 
         stepHandler(sphData, stepsDone, setStepsDone, stepControll);
         handleStepperFocus();
-    }, []);
+    }, [
+        sphData.selectedCompany,
+        sphData.isBillingAddressSame,
+        sphData.billingAddress,
+        sphData.distanceFromLegok,
+        sphData.paymentType,
+        sphData.paymentBankGuarantee,
+        sphData.chosenProducts
+    ]);
 
     const actionBackButton = (popupVisible = false) => {
         if (popupVisible) {
@@ -336,9 +335,11 @@ function SphContent() {
         <View style={style.container}>
             <StepperIndicator
                 stepsDone={stepsDone}
-                stepOnPress={(num) => {
-                    dispatch(setStepperFocused(num));
-                    setCurrentPosition(num);
+                stepOnPress={(pos) => {
+                    if (shouldAllowSPHStateToContinue(pos, sphData)) {
+                        dispatch(setStepperFocused(pos));
+                        setCurrentPosition(pos);
+                    }
                 }}
                 currentStep={currentPosition}
                 labels={labels}

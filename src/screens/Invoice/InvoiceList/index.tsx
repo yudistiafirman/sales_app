@@ -72,7 +72,7 @@ function InvoiceList() {
 
             const response = await getAllInvoice(
                 size.toString(),
-                search?.page === 0 ? "1" : search?.page.toString(),
+                search?.page.toString(),
                 search?.searchQuery,
                 filter?.paymentMethod,
                 paymentDurationCheck
@@ -128,6 +128,7 @@ function InvoiceList() {
         const { search, totalPages } = invoiceData;
         if (search?.page <= totalPages) {
             dispatch(setLoadMore({ isLoadMore: true }));
+            getAllInvoiceData();
             dispatch(setPage({ page: search.page + 1 }));
         }
     };
@@ -140,10 +141,13 @@ function InvoiceList() {
                 getAllInvoiceData();
             }
 
-            if (invoiceData?.search?.searchQuery.length === 0) {
+            if (invoiceData?.invoiceData?.length <= 0) {
                 getAllInvoiceData();
             }
-        }, [invoiceData.search, invoiceData.filter])
+        }, [
+            invoiceData.search?.searchQuery || invoiceData?.invoiceData,
+            invoiceData.filter
+        ])
     );
 
     const renderShimmerInvoiceList = () => (

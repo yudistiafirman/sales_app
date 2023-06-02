@@ -54,25 +54,10 @@ const style = StyleSheet.create({
 export default function FirstStep() {
     const navigation = useNavigation();
     const { values, action } = React.useContext(CreateScheduleContext);
-    const { stepOne: stateOne } = values;
+    const { stepOne: stateOne, stepTwo: stateTwo } = values;
     const { updateValueOnstep, updateValue } = action;
     const [expandData, setExpandData] = React.useState<any[]>([]);
     const dispatch = useDispatch();
-
-    const getTotalLastDeposit = (totalAmount: number | undefined) => {
-        let total = 0;
-        if (totalAmount) {
-            total = totalAmount;
-        } else if (
-            stateOne?.purchaseOrders &&
-            stateOne?.purchaseOrders.length > 0
-        ) {
-            stateOne?.purchaseOrders?.forEach((it) => {
-                total = it.availableDeposit;
-            });
-        }
-        return total;
-    };
 
     const listenerSearchCallback = React.useCallback(
         ({ parent, data }: { parent: any; data: any }) => {
@@ -83,9 +68,7 @@ export default function FirstStep() {
             updateValueOnstep(
                 "stepTwo",
                 "availableDeposit",
-                getTotalLastDeposit(
-                    data && data.length > 0 && data[0]?.availableDeposit
-                )
+                parent.availableDeposit
             );
             updateValueOnstep("stepTwo", "inputtedVolume", 0);
             updateValueOnstep(
@@ -152,7 +135,12 @@ export default function FirstStep() {
                                 }
                             ]}
                         >
-                            {formatCurrency(getTotalLastDeposit(undefined))}
+                            {stateTwo?.availableDeposit
+                                ? (stateTwo?.availableDeposit < 0
+                                      ? "- IDR "
+                                      : "IDR ") +
+                                  formatCurrency(stateTwo?.availableDeposit)
+                                : formatCurrency(0)}
                         </Text>
                     </View>
                     <BSpacer size="small" />

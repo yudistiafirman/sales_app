@@ -21,7 +21,6 @@ import SelectPurchaseOrderData from "@/components/templates/SelectPurchaseOrder"
 import { colors, fonts, layout } from "@/constants";
 import font from "@/constants/fonts";
 import { CreateDepositContext } from "@/context/CreateDepositContext";
-import { PoProductData } from "@/interfaces/SelectConfirmedPO";
 import { resScale } from "@/utils";
 import formatCurrency from "@/utils/formatCurrency";
 
@@ -68,6 +67,11 @@ export default function SecondStep() {
             updateValueOnstep("stepTwo", "companyName", parent.companyName);
             updateValueOnstep("stepTwo", "locationName", parent.locationName);
             updateValue("existingProjectID", parent.projectId);
+            updateValueOnstep(
+                "stepTwo",
+                "availableDeposit",
+                parent.availableDeposit
+            );
             updateValueOnstep("stepTwo", "purchaseOrders", data);
             updateValueOnstep(
                 "stepTwo",
@@ -92,21 +96,14 @@ export default function SecondStep() {
         />
     );
 
-    const getTotalLastDeposit = () => {
-        let total = 0;
-        if (stateTwo?.purchaseOrders && stateTwo?.purchaseOrders.length > 0) {
-            stateTwo?.purchaseOrders?.forEach((it) => {
-                total = it.availableDeposit;
-            });
-        }
-        return total;
-    };
-
     const calculatedTotal = (): number => {
         let deposit = 0;
+        let availableDeposit = 0;
+        if (stateTwo?.availableDeposit)
+            availableDeposit = stateTwo?.availableDeposit;
         if (stateOne?.deposit?.nominal)
-            deposit += parseInt(stateOne?.deposit?.nominal, 10);
-        deposit += getTotalLastDeposit();
+            deposit += parseInt(stateOne?.deposit?.nominal?.toString(), 10);
+        deposit += availableDeposit;
         return deposit;
     };
 
@@ -179,6 +176,9 @@ export default function SecondStep() {
                                                         data={
                                                             stateTwo?.purchaseOrders
                                                         }
+                                                        availableDeposit={
+                                                            stateTwo.availableDeposit
+                                                        }
                                                         expandData={expandData}
                                                         onExpand={onExpand}
                                                         isDeposit
@@ -198,8 +198,12 @@ export default function SecondStep() {
                                                 style.fontw600
                                             ]}
                                         >
-                                            IDR{" "}
-                                            {formatCurrency(calculatedTotal())}
+                                            {(calculatedTotal() < 0
+                                                ? "- IDR "
+                                                : "IDR ") +
+                                                formatCurrency(
+                                                    calculatedTotal()
+                                                )}
                                         </Text>
                                     </View>
                                 </>

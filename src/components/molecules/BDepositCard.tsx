@@ -61,7 +61,8 @@ export default function BDepositCard({
             <View style={styles.summaryContainer}>
                 <Text style={styles.summary}>{firstSectionText}</Text>
                 <Text style={[styles.summary, styles.fontw400]}>
-                    IDR {formatCurrency(firstSectionValue)}
+                    {(firstSectionValue < 0 ? "- IDR " : "IDR ") +
+                        formatCurrency(firstSectionValue)}
                 </Text>
             </View>
             <BSpacer size="extraSmall" />

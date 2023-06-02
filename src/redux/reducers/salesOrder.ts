@@ -50,9 +50,8 @@ export const salesOrderSlice = createSlice({
             photoFiles: [...actions.payload.file]
         }),
         removeSOPhoto: (state, actions: PayloadAction<{ index: number }>) => {
-            const currentImages = state.photoFiles.filter(
-                (it) => it.file !== null
-            );
+            let currentImages = [...state.photoFiles];
+            currentImages = currentImages.filter((it) => it.file !== null);
             currentImages.splice(actions.payload.index, 1);
             currentImages.unshift({ file: null });
             return {

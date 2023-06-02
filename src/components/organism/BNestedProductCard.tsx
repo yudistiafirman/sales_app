@@ -64,6 +64,7 @@ type BNestedProductCardType = {
     expandData: any[];
     isDeposit?: boolean;
     poNumber?: string;
+    availableDeposit?: number;
 };
 
 function ListChildProduct(
@@ -204,7 +205,8 @@ export default function BNestedProductCard({
     onExpand,
     expandData,
     isDeposit,
-    poNumber
+    poNumber,
+    availableDeposit = 0
 }: BNestedProductCardType) {
     return (
         <>
@@ -229,7 +231,7 @@ export default function BNestedProductCard({
                     : 0;
                 const products =
                     item?.products || item?.PoProducts || item?.SaleOrders;
-                const deposit = item?.availableDeposit;
+                const deposit = availableDeposit;
                 const expandItems = item?.products
                     ? expandData?.findIndex(
                           (val) =>
@@ -269,8 +271,9 @@ export default function BNestedProductCard({
                                         </Text>
                                         <View style={styles.valueView}>
                                             <Text style={styles.valueLastOrder}>
-                                                IDR
-                                                {formatCurrency(totalPrice)}
+                                                {`IDR ${formatCurrency(
+                                                    totalPrice
+                                                )}`}
                                             </Text>
                                         </View>
                                     </View>
@@ -292,10 +295,12 @@ export default function BNestedProductCard({
                                                         }
                                                     ]}
                                                 >
-                                                    IDR{" "}
-                                                    {formatCurrency(
-                                                        deposit || 0
-                                                    )}
+                                                    {(deposit < 0
+                                                        ? "- IDR "
+                                                        : "IDR ") +
+                                                        formatCurrency(
+                                                            deposit || 0
+                                                        )}
                                                 </Text>
                                             </View>
                                         </View>

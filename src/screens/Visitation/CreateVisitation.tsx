@@ -39,6 +39,7 @@ import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { updateRegion } from "@/redux/reducers/locationReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import { shouldAllowVisitationStateToContinue } from "@/utils/generalFunc";
 import ThirdStep from "./elements/third";
 import BSheetAddPic from "./elements/second/BottomSheetAddPic";
 import SecondStep from "./elements/second";
@@ -503,8 +504,15 @@ function CreateVisitation() {
             <BStepperIndicator
                 stepsDone={stepsDone}
                 stepOnPress={(pos: number) => {
-                    dispatch(setStepperFocused(pos));
-                    next(pos)();
+                    if (
+                        shouldAllowVisitationStateToContinue(
+                            pos,
+                            visitationData
+                        )
+                    ) {
+                        dispatch(setStepperFocused(pos));
+                        next(pos)();
+                    }
                 }}
                 currentStep={visitationData.step}
                 labels={labels}

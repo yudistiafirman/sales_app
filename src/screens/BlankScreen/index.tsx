@@ -7,7 +7,6 @@ import bStorage from "@/actions";
 import { signOut } from "@/actions/CommonActions";
 import EmptyState from "@/components/organism/BEmptyState";
 import { signout } from "@/redux/reducers/authReducer";
-import { openPopUp } from "@/redux/reducers/modalReducer";
 import { AppDispatch } from "@/redux/store";
 
 const styles = StyleSheet.create({
@@ -23,25 +22,11 @@ function BlankScreen() {
     const dispatch = useDispatch<AppDispatch>();
 
     const onLogout = async () => {
-        try {
-            const response = await signOut();
-            if (response) {
-                bStorage.clearItem();
-                dispatch(signout(false));
-                crashlytics().setUserId("");
-                analytics().setUserId("");
-            }
-        } catch (error) {
-            dispatch(
-                openPopUp({
-                    popUpType: "error",
-                    popUpText:
-                        error?.message ||
-                        "Terjadi error saat akan kembali ke halaman Login dari Blank Screen",
-                    outsideClickClosePopUp: true
-                })
-            );
-        }
+        await signOut().catch((err) => undefined);
+        bStorage.clearItem();
+        dispatch(signout(false));
+        crashlytics().setUserId("");
+        analytics().setUserId("");
     };
     return (
         <SafeAreaView style={styles.container}>

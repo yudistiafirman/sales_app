@@ -749,8 +749,10 @@ function Beranda() {
 
             <TargetCard
                 isExpanded={isExpanded}
-                maxVisitation={currentVisit.target}
-                currentVisitaion={currentVisit.current}
+                maxVisitation={currentVisit.target ? currentVisit.target : 0}
+                currentVisitaion={
+                    currentVisit.current ? currentVisit.current : 0
+                }
                 isLoading={isTargetLoading}
             />
 

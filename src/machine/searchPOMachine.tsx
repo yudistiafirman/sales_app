@@ -5,6 +5,7 @@ import {
 } from "@/actions/OrderActions";
 import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
 import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
+import { getAvailableDepositProject } from "@/utils/generalFunc";
 
 const searchPOMachine = createMachine(
     {
@@ -64,6 +65,7 @@ const searchPOMachine = createMachine(
                 loadMoreData: boolean;
                 isRefreshing: boolean;
                 isModalVisible: boolean;
+                availableDeposit: number;
                 dataType: "DEPOSITDATA" | "SPHDATA" | "SCHEDULEDATA" | "";
                 filterSphDataBy: "INDIVIDU" | "COMPANY";
                 choosenDataFromList:
@@ -87,6 +89,7 @@ const searchPOMachine = createMachine(
             isRefreshing: false,
             isModalVisible: false,
             dataType: "",
+            availableDeposit: 0,
             filterSphDataBy: "INDIVIDU",
             choosenDataFromList: {} as
                 | CreatedPurchaseOrderListResponse
@@ -207,7 +210,8 @@ const searchPOMachine = createMachine(
         actions: {
             triggerModal: assign((context, event) => ({
                 isModalVisible: true,
-                choosenDataFromList: event.value
+                choosenDataFromList: event.value,
+                availableDeposit: getAvailableDepositProject(event.value)
             })),
             assignSearchValue: assign((context, event) => ({
                 searchValue: event.value,
@@ -217,7 +221,10 @@ const searchPOMachine = createMachine(
                 routes: [
                     {
                         key: "first",
-                        title: "Perusahaan",
+                        title:
+                            _context.filterSphDataBy === "INDIVIDU"
+                                ? "Individu"
+                                : "Perusahaan",
                         totalItems: event.data.length,
                         chipPosition: "right"
                     }
@@ -251,7 +258,10 @@ const searchPOMachine = createMachine(
                 routes: [
                     {
                         key: "first",
-                        title: "Perusahaan",
+                        title:
+                            context.filterSphDataBy === "INDIVIDU"
+                                ? "Individu"
+                                : "Perusahaan",
                         totalItems: event.data.totalItems,
                         chipPosition: "right"
                     }

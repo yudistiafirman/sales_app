@@ -58,6 +58,7 @@ type SelectedPOModalType = {
     onPressCompleted: (data: any) => void;
     modalTitle: string;
     isDeposit?: boolean;
+    availableDeposit?: number;
     dataToGet?: "SPHDATA" | "DEPOSITDATA" | "SCHEDULEDATA";
 };
 
@@ -68,6 +69,7 @@ export default function SelectedPOModal({
     onPressCompleted,
     modalTitle,
     isDeposit,
+    availableDeposit,
     dataToGet
 }: SelectedPOModalType) {
     const [sphData, setSphData] = React.useState<any[]>([]);
@@ -196,6 +198,9 @@ export default function SelectedPOModal({
                                                 }
                                                 withoutHeader={false}
                                                 data={sphData}
+                                                availableDeposit={
+                                                    availableDeposit
+                                                }
                                                 isDeposit={isDeposit}
                                                 expandData={expandData}
                                                 onSelect={onSelectButton}
