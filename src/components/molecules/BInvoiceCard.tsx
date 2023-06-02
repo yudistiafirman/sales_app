@@ -4,6 +4,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import formatCurrency from "@/utils/formatCurrency";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { resScale } from "@/utils";
 import BSpacer from "../atoms/BSpacer";
 import BInvoiceCommonFooter, { IFooterItems } from "./BInvoiceCommonFooter";
 
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: font.family.montserrat[600],
         color: colors.text.darker,
-        fontSize: font.size.lg
+        fontSize: font.size.md
     },
     company: {
         fontFamily: font.family.montserrat[400],
@@ -131,8 +132,16 @@ function BInvoiceCard({
         >
             <View style={styles.header}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>{invoiceNo}</Text>
-                    <Text style={styles.title}>
+                    <Text
+                        numberOfLines={1}
+                        style={[styles.title, { maxWidth: layout.pad.xxl * 4 }]}
+                    >
+                        {invoiceNo}
+                    </Text>
+                    <Text
+                        numberOfLines={1}
+                        style={[styles.title, { maxWidth: resScale(160) }]}
+                    >
                         {`IDR ${formatCurrency(amount)}`}
                     </Text>
                 </View>
@@ -161,7 +170,9 @@ function BInvoiceCard({
                         </Text>
                     </View>
                 </View>
-                {paymentMethod === "Credit" ? renderInvoiceCardFooter() : null}
+                {paymentMethod.toUpperCase() === "CREDIT"
+                    ? renderInvoiceCardFooter()
+                    : null}
             </View>
         </TouchableOpacity>
     );

@@ -1,7 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import font from "@/constants/fonts";
-import { colors } from "@/constants";
+import { colors, layout } from "@/constants";
+import { resScale } from "@/utils";
 import BSpacer from "../atoms/BSpacer";
 
 export interface IFooterItems {
@@ -21,12 +22,12 @@ function BInvoiceCommonFooter({ footerItems }: IBInvoiceCommonFooter) {
         title: {
             fontFamily: font.family.montserrat[600],
             color: colors.text.darker,
-            fontSize: font.size.lg
+            fontSize: font.size.md
         },
 
         itemTitle: {
             fontFamily: font.family.montserrat[500],
-            fontSize: font.size.xs,
+            fontSize: font.size.vs,
             color: colors.text.shadowGray
         },
         container: {
@@ -60,9 +61,11 @@ function BInvoiceCommonFooter({ footerItems }: IBInvoiceCommonFooter) {
                             </Text>
                             <BSpacer size="extraSmall" />
                             <Text
+                                numberOfLines={1}
                                 style={[
                                     styles.title,
                                     {
+                                        maxWidth: resScale(70),
                                         fontSize: font.size.xs,
                                         ...v.itemTextStyles
                                     }
