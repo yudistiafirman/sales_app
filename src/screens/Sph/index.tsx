@@ -240,6 +240,7 @@ function SphContent() {
             const response = await projectGetOneById(projectId).catch((err) =>
                 Error(err)
             );
+
             if (response?.data?.success && response?.data?.success !== false) {
                 dispatch(closePopUp());
                 const project = response?.data?.data;

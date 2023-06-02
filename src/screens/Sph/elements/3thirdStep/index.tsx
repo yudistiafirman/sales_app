@@ -155,7 +155,7 @@ export default function ThirdStep() {
             setIsLoading(true);
             const response = await getSphDocuments().catch((err) => Error(err));
 
-            if (response?.data?.success && response?.data?.success !== false) {
+            if (response?.data) {
                 if (paymentType) {
                     const objKey: {
                         CREDIT: "credit";
@@ -165,9 +165,9 @@ export default function ThirdStep() {
                         CBD: "cbd"
                     };
                     const key: "cbd" | "credit" = objKey[paymentType];
-                    if (response?.data?.data[key]) {
-                        if (response?.data?.data[key].length) {
-                            const newFileKeys = response?.data?.data[key].map(
+                    if (response?.data[key]) {
+                        if (response?.data[key].length) {
+                            const newFileKeys = response?.data[key].map(
                                 (doc) => ({
                                     key: doc.id,
                                     label: doc.name,
@@ -175,7 +175,7 @@ export default function ThirdStep() {
                                 })
                             );
                             const documentObj: { [key: string]: any } = {};
-                            response?.data?.data[key].forEach((doc) => {
+                            response?.data[key].forEach((doc) => {
                                 documentObj[doc.id] = null;
                             });
                             const parentReqDocKeys =
@@ -200,7 +200,7 @@ export default function ThirdStep() {
                         }
                     }
                 }
-                setSphDocuments(response?.data?.data);
+                setSphDocuments(response?.data);
                 setIsLoading(false);
             } else {
                 setIsLoading(false);

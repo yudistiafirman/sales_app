@@ -82,14 +82,14 @@ export default function RequiredDocuments() {
             setIsLoading(true);
             const response = await getSphDocuments().catch((err) => Error(err));
 
-            if (response?.data?.success && response?.data?.success !== false) {
+            if (response?.data) {
                 setDocState(() => {
                     const newDocState: { [key: string]: any } = {};
 
-                    response?.data?.data.credit.forEach((doc) => {
+                    response?.data?.credit.forEach((doc) => {
                         newDocState[doc.id] = null;
                     });
-                    response?.data?.data.cbd.forEach((doc) => {
+                    response?.data?.cbd.forEach((doc) => {
                         newDocState[doc.id] = null;
                     });
 
@@ -112,14 +112,14 @@ export default function RequiredDocuments() {
                         };
                     } = {};
 
-                    response?.data?.data.credit.forEach((doc) => {
+                    response?.data?.credit?.forEach((doc: any) => {
                         newdocLoadingState[doc.id] = {
                             loading: false,
                             error: false,
                             errorMessage: ""
                         };
                     });
-                    response?.data?.data.cbd.forEach((doc) => {
+                    response?.data?.cbd?.forEach((doc: any) => {
                         newdocLoadingState[doc.id] = {
                             loading: false,
                             error: false,
@@ -130,7 +130,7 @@ export default function RequiredDocuments() {
                     return newdocLoadingState;
                 });
 
-                setReqDocuments(response?.data?.data);
+                setReqDocuments(response?.data);
                 setIsLoading(false);
             } else {
                 setIsLoading(false);
