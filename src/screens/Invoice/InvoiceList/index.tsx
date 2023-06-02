@@ -230,9 +230,8 @@ function InvoiceList() {
             const paymentStatus = item?.status
                 ? translatePaymentStatus(item?.status)
                 : "-";
-            const paymentMethod = item?.Project?.Customer?.paymentType
-                ? "Credit"
-                : "Cash";
+            const paymentMethod =
+                item?.paymentType === "CREDIT" ? "Credit" : "Cash";
             const dueDateDays = item?.Project?.Customer?.paymentDuration
                 ? `${item?.Project?.Customer?.paymentDuration} hari`
                 : "-";

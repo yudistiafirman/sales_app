@@ -1,24 +1,45 @@
 import { BChip, BSpacer, BSvg, BTouchableText } from "@/components";
 import SvgNames from "@/components/atoms/BSvg/svgName";
-import BInvoiceCommonFooter from "@/components/molecules/BInvoiceCommonFooter";
+import BInvoiceCommonFooter, {
+    IFooterItems
+} from "@/components/molecules/BInvoiceCommonFooter";
 import { colors, layout } from "@/constants";
 import font from "@/constants/fonts";
 import useCustomHeaderRight from "@/hooks/useCustomHeaderRight";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
-import { TouchableOpacity } from "@gorhom/bottom-sheet";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import React, { useState } from "react";
-import { Text, StyleSheet, View, TouchableWithoutFeedback } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+    Text,
+    StyleSheet,
+    View,
+    TouchableWithoutFeedback,
+    Platform
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { getOneInvoice } from "@/actions/FinanceActions";
+import { useDispatch } from "react-redux";
+import { openPopUp } from "@/redux/reducers/modalReducer";
+import {
+    formatRawDateToMonthDateYear,
+    formatRawDateToMonthDateYearWithSlashed,
+    translatePaymentStatus
+} from "@/utils/generalFunc";
+
+import formatCurrency from "@/utils/formatCurrency";
+import { InvoiceDetailTypeData } from "@/models/Invoice";
+import { CUSTOMER_DETAIL } from "@/navigation/ScreenNames";
+import { resScale } from "@/utils";
+import ReactNativeBlobUtil from "react-native-blob-util";
+import InvoiceDetailLoader from "./InvoiceDetailLoader";
 
 const styles = StyleSheet.create({
     container: {
         padding: layout.pad.lg,
         borderTopWidth: 1,
-        borderColor: colors.border.default,
-        flex: 0.4
+        borderColor: colors.border.default
     },
     touchableText: {
         fontFamily: font.family.montserrat[700],
@@ -63,7 +84,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.tertiary,
         borderColor: colors.border.default,
         borderWidth: 1,
-        flex: 0.6
+        flex: 1
     },
     cardContainer: {
         borderColor: colors.border.default,
@@ -78,12 +99,90 @@ const styles = StyleSheet.create({
 function InvoiceDetail() {
     const route = useRoute<RootStackScreenProps>();
     const [expand, setExpand] = useState(true);
-    const doData = [1, 2, 3, 4, 5];
+    const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
+    const [invoiceDetailData, setInvoiceDetailData] =
+        useState<InvoiceDetailTypeData | null>(null);
 
+    type DownloadType = {
+        url?: string;
+        title?: string;
+        downloadPopup: () => void;
+        downloadError: (errorMessage: string | unknown) => void;
+    };
+
+    const downloadPdf = ({
+        url,
+        title,
+        downloadPopup,
+        downloadError
+    }: DownloadType) => {
+        if (!url) {
+            downloadError(undefined);
+            return null;
+        }
+        const { dirs } = ReactNativeBlobUtil.fs;
+        const downloadTitle = title
+            ? `${title} berhasil di download`
+            : "PDF berhasil di download";
+        ReactNativeBlobUtil.config(
+            Platform.OS === "android"
+                ? {
+                      // add this option that makes response data to be stored as a file,
+                      // this is much more performant.
+                      fileCache: true,
+                      path: dirs.DocumentDir,
+                      addAndroidDownloads: {
+                          useDownloadManager: true,
+                          notification: true,
+                          title: downloadTitle,
+                          description: `${selectedType} PDF`,
+                          mediaScannable: true
+                      }
+                  }
+                : { fileCache: true }
+        )
+            .fetch("GET", url, {
+                // some headers ..
+            })
+            .then((res) => {
+                // the temp file path
+                downloadPopup();
+            })
+            .catch((err) => {
+                downloadError(err.message);
+            });
+
+        return null;
+    };
     useCustomHeaderRight({
         customHeaderRight: (
             <BTouchableText
-                onPress={() => console.log("unduh pressed")}
+                onPress={() =>
+                    downloadPdf({
+                        url: invoiceDetailData?.File?.url,
+                        title: route.params.invoiceNo,
+                        downloadPopup: () => {
+                            dispatch(
+                                openPopUp({
+                                    popUpText: `Berhasil mendownload`,
+                                    popUpType: "success",
+                                    outsideClickClosePopUp: true
+                                })
+                            );
+                        },
+                        downloadError: (err) => {
+                            dispatch(
+                                openPopUp({
+                                    popUpText: err || `Gagal mendownload`,
+                                    popUpType: "error",
+                                    outsideClickClosePopUp: true
+                                })
+                            );
+                        }
+                    })
+                }
                 title="Unduh Tagihan"
                 textStyle={styles.touchableText}
             />
@@ -94,154 +193,290 @@ function InvoiceDetail() {
         title: route?.params?.invoiceNo ? route?.params?.invoiceNo : "-"
     });
 
+    const getOneInvoiceData = async () => {
+        try {
+            setLoading(true);
+            const { invoiceId } = route.params;
+
+            const response = await getOneInvoice(invoiceId);
+            if (response?.data?.success) {
+                setLoading(false);
+                setInvoiceDetailData(response?.data?.data);
+            } else {
+                setLoading(false);
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        highlightedText: "Error",
+                        popUpText: "Error Saat Mengambil Data Customer detail",
+                        outsideClickClosePopUp: true
+                    })
+                );
+            }
+        } catch (error) {
+            setLoading(false);
+            dispatch(
+                openPopUp({
+                    popUpType: "error",
+                    highlightedText: "Error",
+                    popUpText: error?.message
+                        ? error?.message
+                        : "Error Saat Mengambil Data Customer detail",
+                    outsideClickClosePopUp: true
+                })
+            );
+        }
+    };
+
+    const defineFlexGrowth = () => {
+        let flex = 0;
+        if (
+            invoiceDetailData?.DeliveryOrders &&
+            invoiceDetailData?.paymentType
+        ) {
+            if (
+                invoiceDetailData.paymentType === "CREDIT" &&
+                invoiceDetailData.DeliveryOrders.length > 0
+            ) {
+                flex = 0.6;
+            } else if (invoiceDetailData.paymentType === "CREDIT") {
+                flex = 0.6;
+            } else {
+                flex = 0;
+            }
+        }
+        return flex;
+    };
+
+    useEffect(() => {
+        getOneInvoiceData();
+    }, []);
+
     const renderListHorizontalDate = () => {
+        const paymentDuration = invoiceDetailData?.paymentDuration
+            ? `${invoiceDetailData?.paymentDuration} hari`
+            : "-";
+        const issuedDate = invoiceDetailData?.issuedDate
+            ? formatRawDateToMonthDateYear(invoiceDetailData?.issuedDate)
+            : "-";
+
+        const dueDateDiffer = () => {
+            let defaultTextDays = "-";
+            if (
+                invoiceDetailData?.dueDateDifference &&
+                invoiceDetailData?.status !== "PAID"
+            ) {
+                defaultTextDays =
+                    invoiceDetailData?.dueDateDifference.toString();
+                defaultTextDays += " hari";
+            }
+            return defaultTextDays;
+        };
+
+        const dueDateDifferColor = () => {
+            let color = colors.text.darker;
+            if (
+                invoiceDetailData?.dueDateDifference &&
+                invoiceDetailData?.status !== "PAID"
+            ) {
+                if (invoiceDetailData?.dueDateDifference < 0) {
+                    color = colors.primary;
+                } else if (
+                    invoiceDetailData?.dueDateDifference >= 0 &&
+                    invoiceDetailData?.dueDateDifference < 7
+                ) {
+                    color = colors.text.secYellow;
+                } else {
+                    color = colors.greenLantern;
+                }
+            }
+            return color;
+        };
+
         const footerItems = [
             {
                 itemTitle: "Jatuh Tempo",
-                itemValue: "45 hari",
-                itemTextStyles: {
-                    fontSize: font.size.sm
-                }
+                itemValue: paymentDuration
             },
             {
                 itemTitle: "Tanggal Tagih",
-                itemValue: "01/04/2023",
+                itemValue: issuedDate,
                 itemTextStyle: {
                     fontSize: font.size.sm
                 }
             },
             {
                 itemTitle: "Lewat Jatuh Tempo",
-                itemValue: "14 Hari",
+                itemValue: dueDateDiffer(),
                 itemTextStyles: {
-                    fontSize: font.size.sm,
-                    color: colors.primary
+                    color: dueDateDifferColor()
                 }
             },
             {
                 itemTitle: "Tanggal Jatuh Tempo",
-                itemValue: "05/05/2023",
-                itemTextStyles: {
-                    fontSize: font.size.sm
-                }
+                itemValue: invoiceDetailData?.dueDate
+                    ? formatRawDateToMonthDateYear(invoiceDetailData?.dueDate)
+                    : "-"
             }
         ];
 
         return <BInvoiceCommonFooter footerItems={footerItems} />;
     };
 
-    const renderDoCardFooter = () => {
+    const renderDoCardFooter = (footerItems: IFooterItems[]) => (
+        <BInvoiceCommonFooter footerItems={footerItems} />
+    );
+
+    const renderDoCard = useCallback((item) => {
+        const doNumber = item?.number ? item?.number : "-";
+        const doDate = item?.date
+            ? formatRawDateToMonthDateYearWithSlashed(item?.date)
+            : "-";
+        const additionalPrice = item?.additionalPrice
+            ? item?.additionalPrice
+            : 0;
+
         const footerItems = [
             {
                 itemTitle: "Produk",
-                itemValue: "SC 3.5 NFA",
+                itemValue: item?.SO?.PoProd?.ReqProd?.Product?.displayName
+                    ? item?.SO?.PoProd?.ReqProd?.Product?.displayName
+                    : "-",
                 itemTitleStyles: {
                     alignSelf: "flex-start"
                 }
             },
             {
                 itemTitle: "Volume",
-                itemValue: "8 m3"
+                itemValue:
+                    item?.quantity && item?.SO?.PoProd?.ReqProd?.Product?.unit
+                        ? `${
+                              item?.quantity
+                          } ${item?.SO?.PoProd?.ReqProd?.Product?.unit.toLowerCase()}`
+                        : "-"
             },
             {
                 itemTitle: "Harga Unit",
-                itemValue: "14 Hari",
-                itemTextStyles: {
-                    color: colors.primary
-                }
+                itemValue: item?.SO?.PoProd?.ReqProd?.offeringPrice
+                    ? `Rp. ${formatCurrency(
+                          item?.SO?.PoProd?.ReqProd?.offeringPrice
+                      )}`
+                    : 0
             },
             {
                 itemTitle: "Ekstra",
-                itemValue: "Rp. 0"
+                itemValue: `Rp. ${formatCurrency(additionalPrice)}`
             },
             {
                 itemTitle: "Total",
-                itemValue: "Rp. 6.240.000",
+                itemValue:
+                    item?.SO?.PoProd?.ReqProd?.offeringPrice &&
+                    item?.quantity &&
+                    item?.additionalPrice !== undefined
+                        ? formatCurrency(
+                              item.quantity *
+                                  item.SO.PoProd.ReqProd.offeringPrice +
+                                  item.additionalPrice
+                          )
+                        : 0,
                 itemTitleStyles: { alignSelf: "flex-end" }
             }
         ];
+        return (
+            <View style={{ ...styles.cardContainer }}>
+                <View style={styles.textContainer}>
+                    <Text style={[styles.title]}>{doNumber}</Text>
+                    <Text style={[styles.text, { fontSize: font.size.xs }]}>
+                        {doDate}
+                    </Text>
+                </View>
 
-        return <BInvoiceCommonFooter footerItems={footerItems} />;
+                {renderDoCardFooter(footerItems)}
+            </View>
+        );
+    }, []);
+
+    const renderInvoiceDetailFooter = () => {
+        const totalAmount = invoiceDetailData?.total
+            ? formatCurrency(invoiceDetailData?.total)
+            : 0;
+        const amountPaid = invoiceDetailData?.amountPaid
+            ? formatCurrency(invoiceDetailData?.amountPaid)
+            : 0;
+        const amountDue = invoiceDetailData?.amountDue
+            ? formatCurrency(invoiceDetailData?.amountDue)
+            : 0;
+
+        return (
+            <View style={{ flex: 0.4 }}>
+                <View style={[styles.textContainer]}>
+                    <Text style={[styles.title, { fontSize: font.size.md }]}>
+                        Jumlah Tagihan
+                    </Text>
+                    <Text
+                        numberOfLines={1}
+                        style={[
+                            styles.title,
+                            {
+                                fontSize: font.size.md,
+                                fontFamily: font.family.montserrat[600],
+                                maxWidth: resScale(160)
+                            }
+                        ]}
+                    >
+                        Rp. {totalAmount}
+                    </Text>
+                </View>
+                <BSpacer size="extraSmall" />
+                <View style={[styles.textContainer]}>
+                    <Text style={styles.text}>Jumlah Terbayar</Text>
+                    <Text
+                        numberOfLines={1}
+                        style={[
+                            styles.title,
+                            { fontSize: font.size.md, maxWidth: resScale(160) }
+                        ]}
+                    >
+                        Rp. {amountPaid}
+                    </Text>
+                </View>
+                <BSpacer size="extraSmall" />
+                <View style={[styles.textContainer]}>
+                    <Text style={[styles.title, { fontSize: font.size.md }]}>
+                        Jumlah Terhutang
+                    </Text>
+                    <Text
+                        numberOfLines={1}
+                        style={[
+                            styles.title,
+                            {
+                                fontSize: font.size.md,
+                                fontFamily: font.family.montserrat[600],
+                                maxWidth: resScale(160)
+                            }
+                        ]}
+                    >
+                        Rp {amountDue}
+                    </Text>
+                </View>
+            </View>
+        );
     };
 
-    const renderDoCard = () => (
-        <View style={{ ...styles.cardContainer }}>
-            <View style={styles.textContainer}>
-                <Text style={[styles.title]}>Pelanggan</Text>
-                <Text style={[styles.text, { fontSize: font.size.xs }]}>
-                    01/04/2023
-                </Text>
-            </View>
-
-            {renderDoCardFooter()}
-        </View>
-    );
-
-    const renderInvoiceDetailFooter = () => (
-        <View style={{ flex: 1, paddingBottom: layout.pad.ml }}>
-            <BSpacer size="small" />
-            <View style={styles.divider} />
-            <BSpacer size="extraSmall" />
-            <View style={[styles.textContainer]}>
-                <Text style={styles.text}>SC 3.5 NFA 16 m3</Text>
-                <Text style={[styles.title, { fontSize: font.size.md }]}>
-                    Rp 12.480.000
-                </Text>
-            </View>
-            <BSpacer size="extraSmall" />
-            <View style={[styles.textContainer]}>
-                <Text style={styles.text}>K-500 FA 19 m3</Text>
-                <Text style={[styles.title, { fontSize: font.size.md }]}>
-                    Rp 15.680.000
-                </Text>
-            </View>
-            <BSpacer size="extraSmall" />
-            <View style={[styles.textContainer]}>
-                <Text style={[styles.title, { fontSize: font.size.md }]}>
-                    Jumlah Tagihan
-                </Text>
-                <Text
-                    style={[
-                        styles.title,
-                        {
-                            fontSize: font.size.md,
-                            fontFamily: font.family.montserrat[600]
-                        }
-                    ]}
-                >
-                    Rp 15.680.000
-                </Text>
-            </View>
-            <BSpacer size="extraSmall" />
-            <View style={[styles.textContainer]}>
-                <Text style={styles.text}>Jumlah Terbayar</Text>
-                <Text style={[styles.title, { fontSize: font.size.md }]}>
-                    - Rp 28.160.000
-                </Text>
-            </View>
-            <BSpacer size="extraSmall" />
-            <View style={[styles.textContainer]}>
-                <Text style={[styles.title, { fontSize: font.size.md }]}>
-                    Jumlah Terhutang
-                </Text>
-                <Text
-                    style={[
-                        styles.title,
-                        {
-                            fontSize: font.size.md,
-                            fontFamily: font.family.montserrat[600]
-                        }
-                    ]}
-                >
-                    Rp 0
-                </Text>
-            </View>
-        </View>
-    );
+    if (loading) {
+        return <InvoiceDetailLoader />;
+    }
 
     return (
         <View style={{ flex: 1 }}>
-            <View style={styles.container}>
+            <View
+                style={[
+                    styles.container,
+                    {
+                        flex: defineFlexGrowth()
+                    }
+                ]}
+            >
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>Status</Text>
                     <BChip
@@ -251,15 +486,26 @@ function InvoiceDetail() {
                         marginRight={0}
                         backgroundColor={colors.status.lightBlue}
                     >
-                        Lunas
+                        {invoiceDetailData?.status
+                            ? translatePaymentStatus(invoiceDetailData?.status)
+                            : "-"}
                     </BChip>
                 </View>
                 <BSpacer size="extraSmall" />
                 <View style={[styles.textContainer]}>
                     <Text style={styles.text}>Pelanggan</Text>
                     <BTouchableText
-                        onPress={() => console.log("unduh pressed")}
-                        title="PT. Coba"
+                        onPress={() =>
+                            navigation.navigate(CUSTOMER_DETAIL, {
+                                id: invoiceDetailData?.Project?.Customer?.id
+                            })
+                        }
+                        title={
+                            invoiceDetailData?.Project?.Customer?.displayName
+                                ? invoiceDetailData?.Project?.Customer
+                                      ?.displayName
+                                : "-"
+                        }
                         endIcon={
                             <BSvg
                                 svgName={SvgNames.IC_EXPORT}
@@ -285,55 +531,85 @@ function InvoiceDetail() {
                         marginRight={0}
                         backgroundColor={colors.status.lightBlue}
                     >
-                        Tunai
+                        {invoiceDetailData?.paymentType === "CREDIT"
+                            ? "Credit"
+                            : "Cash"}
                     </BChip>
                 </View>
                 <BSpacer size="extraSmall" />
                 <View style={[styles.textContainer]}>
                     <Text style={styles.text}>No. SPH </Text>
                     <Text style={[styles.title, { fontSize: font.size.md }]}>
-                        SPH/BRIK/2023/05/00064
+                        -
                     </Text>
                 </View>
                 <BSpacer size="extraSmall" />
                 <View style={[styles.textContainer]}>
                     <Text style={styles.text}>No. Purchase Order (PO) </Text>
                     <Text style={[styles.title, { fontSize: font.size.md }]}>
-                        PO/BRIK/2023/05/00064
+                        -
                     </Text>
                 </View>
                 <BSpacer size="extraSmall" />
                 <View style={[styles.textContainer]}>
                     <Text style={styles.text}>No. Sales Order (SO) </Text>
                     <Text style={[styles.title, { fontSize: font.size.md }]}>
-                        SO/BRIK/2023/05/00064
+                        -
                     </Text>
                 </View>
                 <BSpacer size="extraSmall" />
                 <View style={styles.divider} />
-                {renderListHorizontalDate()}
+                {invoiceDetailData?.paymentType === "CREDIT"
+                    ? renderListHorizontalDate()
+                    : null}
             </View>
             <View style={[styles.listDoContainer]}>
                 <View style={[styles.textContainer]}>
                     <Text style={styles.text}>DO </Text>
-                    <BSpacer size="extraSmall" />
-                    <TouchableWithoutFeedback
-                        onPress={() => setExpand(!expand)}
-                    >
-                        <Icon
-                            name={expand ? "chevron-up" : "chevron-down"}
-                            size={25}
-                            color={colors.icon.darkGrey}
-                        />
-                    </TouchableWithoutFeedback>
+                    <BSpacer size="medium" />
+                    {invoiceDetailData?.DeliveryOrders &&
+                    invoiceDetailData?.DeliveryOrders.length > 0 ? (
+                        <TouchableWithoutFeedback
+                            onPress={() => setExpand(!expand)}
+                        >
+                            <Icon
+                                name={expand ? "chevron-up" : "chevron-down"}
+                                size={25}
+                                color={colors.icon.darkGrey}
+                            />
+                        </TouchableWithoutFeedback>
+                    ) : (
+                        <Text>-</Text>
+                    )}
                 </View>
+                {invoiceDetailData?.DeliveryOrders &&
+                    invoiceDetailData?.DeliveryOrders.length > 0 &&
+                    expand && (
+                        <View
+                            style={{
+                                flex:
+                                    invoiceDetailData?.DeliveryOrders.length ===
+                                    1
+                                        ? 0.3
+                                        : 0.6
+                            }}
+                        >
+                            <FlashList
+                                data={
+                                    invoiceDetailData?.DeliveryOrders &&
+                                    invoiceDetailData?.DeliveryOrders.length > 0
+                                        ? invoiceDetailData?.DeliveryOrders
+                                        : []
+                                }
+                                renderItem={({ item, index }) =>
+                                    expand ? renderDoCard(item, index) : null
+                                }
+                                estimatedItemSize={10}
+                            />
+                        </View>
+                    )}
 
-                <FlashList
-                    data={[1, 2, 3, 4]}
-                    renderItem={() => (expand ? renderDoCard() : null)}
-                    estimatedItemSize={10}
-                    ListFooterComponent={renderInvoiceDetailFooter()}
-                />
+                {renderInvoiceDetailFooter()}
             </View>
         </View>
     );

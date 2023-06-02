@@ -357,6 +357,14 @@ export const formatRawDateToMonthDateYear = (date?: Date) => {
     return formattedDate;
 };
 
+export const formatRawDateToMonthDateYearWithSlashed = (date?: Date) => {
+    let formattedDate = "";
+    if (date) {
+        formattedDate = moment(date).locale("id").format("L");
+    }
+    return formattedDate;
+};
+
 export const translatePaymentStatus = (
     paymentStatus:
         | "PARTIALLY PAID"
