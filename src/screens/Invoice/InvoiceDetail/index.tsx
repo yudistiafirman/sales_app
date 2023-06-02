@@ -25,6 +25,7 @@ import {
 import formatCurrency from "@/utils/formatCurrency";
 import { InvoiceDetailTypeData } from "@/models/Invoice";
 import { CUSTOMER_DETAIL } from "@/navigation/ScreenNames";
+import { resScale } from "@/utils";
 import InvoiceDetailLoader from "./InvoiceDetailLoader";
 
 const styles = StyleSheet.create({
@@ -144,6 +145,26 @@ function InvoiceDetail() {
                 })
             );
         }
+    };
+
+    const defineFlexGrowth = () => {
+        let flex = 0;
+        if (
+            invoiceDetailData?.DeliveryOrders &&
+            invoiceDetailData?.paymentType
+        ) {
+            if (
+                invoiceDetailData.paymentType === "CREDIT" &&
+                invoiceDetailData.DeliveryOrders.length > 0
+            ) {
+                flex = 0.6;
+            } else if (invoiceDetailData.paymentType === "CREDIT") {
+                flex = 0.6;
+            } else {
+                flex = 0;
+            }
+        }
+        return flex;
     };
 
     useEffect(() => {
@@ -312,11 +333,13 @@ function InvoiceDetail() {
                         Jumlah Tagihan
                     </Text>
                     <Text
+                        numberOfLines={1}
                         style={[
                             styles.title,
                             {
                                 fontSize: font.size.md,
-                                fontFamily: font.family.montserrat[600]
+                                fontFamily: font.family.montserrat[600],
+                                maxWidth: resScale(160)
                             }
                         ]}
                     >
@@ -326,7 +349,13 @@ function InvoiceDetail() {
                 <BSpacer size="extraSmall" />
                 <View style={[styles.textContainer]}>
                     <Text style={styles.text}>Jumlah Terbayar</Text>
-                    <Text style={[styles.title, { fontSize: font.size.md }]}>
+                    <Text
+                        numberOfLines={1}
+                        style={[
+                            styles.title,
+                            { fontSize: font.size.md, maxWidth: resScale(160) }
+                        ]}
+                    >
                         Rp. {amountPaid}
                     </Text>
                 </View>
@@ -336,11 +365,13 @@ function InvoiceDetail() {
                         Jumlah Terhutang
                     </Text>
                     <Text
+                        numberOfLines={1}
                         style={[
                             styles.title,
                             {
                                 fontSize: font.size.md,
-                                fontFamily: font.family.montserrat[600]
+                                fontFamily: font.family.montserrat[600],
+                                maxWidth: resScale(160)
                             }
                         ]}
                     >
@@ -357,7 +388,14 @@ function InvoiceDetail() {
 
     return (
         <View style={{ flex: 1 }}>
-            <View style={styles.container}>
+            <View
+                style={[
+                    styles.container,
+                    {
+                        flex: defineFlexGrowth()
+                    }
+                ]}
+            >
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>Status</Text>
                     <BChip
@@ -412,7 +450,9 @@ function InvoiceDetail() {
                         marginRight={0}
                         backgroundColor={colors.status.lightBlue}
                     >
-                        {invoiceDetailData?.paymentType ? "Credit" : "Cash"}
+                        {invoiceDetailData?.paymentType === "CREDIT"
+                            ? "Credit"
+                            : "Cash"}
                     </BChip>
                 </View>
                 <BSpacer size="extraSmall" />
@@ -438,8 +478,7 @@ function InvoiceDetail() {
                 </View>
                 <BSpacer size="extraSmall" />
                 <View style={styles.divider} />
-                {invoiceDetailData?.paymentType &&
-                invoiceDetailData?.paymentType === "CREDIT"
+                {invoiceDetailData?.paymentType === "CREDIT"
                     ? renderListHorizontalDate()
                     : null}
             </View>

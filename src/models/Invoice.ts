@@ -4,7 +4,7 @@ export interface InvoiceCustomer {
     id: string;
     name?: string;
     displayName?: string;
-    paymentType?: "cbd" | "credit";
+    paymentType?: "CBD" | "CREDIT";
     paymentCondition?: string;
     paymentDuration?: string;
 }
@@ -30,6 +30,7 @@ export interface InvoiceListData {
     issuedDate?: Date;
     dueDate?: Date;
     Project?: InvoiceProject;
+    paymentType?: "CBD" | "CREDIT";
 }
 
 export interface DeliverOrders {
