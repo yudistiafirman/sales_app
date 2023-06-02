@@ -11,7 +11,13 @@ import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import React, { useCallback, useEffect, useState } from "react";
-import { Text, StyleSheet, View, TouchableWithoutFeedback } from "react-native";
+import {
+    Text,
+    StyleSheet,
+    View,
+    TouchableWithoutFeedback,
+    Platform
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { getOneInvoice } from "@/actions/FinanceActions";
 import { useDispatch } from "react-redux";
@@ -26,6 +32,7 @@ import formatCurrency from "@/utils/formatCurrency";
 import { InvoiceDetailTypeData } from "@/models/Invoice";
 import { CUSTOMER_DETAIL } from "@/navigation/ScreenNames";
 import { resScale } from "@/utils";
+import ReactNativeBlobUtil from "react-native-blob-util";
 import InvoiceDetailLoader from "./InvoiceDetailLoader";
 
 const styles = StyleSheet.create({
@@ -98,10 +105,84 @@ function InvoiceDetail() {
     const [invoiceDetailData, setInvoiceDetailData] =
         useState<InvoiceDetailTypeData | null>(null);
 
+    type DownloadType = {
+        url?: string;
+        title?: string;
+        downloadPopup: () => void;
+        downloadError: (errorMessage: string | unknown) => void;
+    };
+
+    const downloadPdf = ({
+        url,
+        title,
+        downloadPopup,
+        downloadError
+    }: DownloadType) => {
+        if (!url) {
+            downloadError(undefined);
+            return null;
+        }
+        const { dirs } = ReactNativeBlobUtil.fs;
+        const downloadTitle = title
+            ? `${title} berhasil di download`
+            : "PDF berhasil di download";
+        ReactNativeBlobUtil.config(
+            Platform.OS === "android"
+                ? {
+                      // add this option that makes response data to be stored as a file,
+                      // this is much more performant.
+                      fileCache: true,
+                      path: dirs.DocumentDir,
+                      addAndroidDownloads: {
+                          useDownloadManager: true,
+                          notification: true,
+                          title: downloadTitle,
+                          description: `${selectedType} PDF`,
+                          mediaScannable: true
+                      }
+                  }
+                : { fileCache: true }
+        )
+            .fetch("GET", url, {
+                // some headers ..
+            })
+            .then((res) => {
+                // the temp file path
+                downloadPopup();
+            })
+            .catch((err) => {
+                downloadError(err.message);
+            });
+
+        return null;
+    };
     useCustomHeaderRight({
         customHeaderRight: (
             <BTouchableText
-                onPress={() => console.log("unduh pressed")}
+                onPress={() =>
+                    downloadPdf({
+                        url: invoiceDetailData?.File?.url,
+                        title: route.params.invoiceNo,
+                        downloadPopup: () => {
+                            dispatch(
+                                openPopUp({
+                                    popUpText: `Berhasil mendownload`,
+                                    popUpType: "success",
+                                    outsideClickClosePopUp: true
+                                })
+                            );
+                        },
+                        downloadError: (err) => {
+                            dispatch(
+                                openPopUp({
+                                    popUpText: err || `Gagal mendownload`,
+                                    popUpType: "error",
+                                    outsideClickClosePopUp: true
+                                })
+                            );
+                        }
+                    })
+                }
                 title="Unduh Tagihan"
                 textStyle={styles.touchableText}
             />
