@@ -747,9 +747,9 @@ const POMachine =
                             return {
                                 ...v,
                                 value: {
-                                    ...event.value,
+                                    ...event?.value,
                                     name: `PO-${uniqueStringGenerator()}-${
-                                        event.value.name
+                                        event?.value?.name
                                     }`
                                 }
                             };
