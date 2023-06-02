@@ -9,7 +9,6 @@ import { colors, fonts, layout } from "@/constants";
 import font from "@/constants/fonts";
 import { Input } from "@/interfaces";
 import { SPH } from "@/navigation/ScreenNames";
-import { fetchSphDocuments } from "@/redux/async-thunks/commonThunks";
 import {
     setStepperFocused,
     updatePaymentBankGuarantee,
@@ -21,6 +20,7 @@ import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import cbd from "@/assets/icon/Visitation/cbd.png";
 import credit from "@/assets/icon/Visitation/credit.png";
+import { getSphDocuments } from "@/actions/CommonActions";
 import { SphContext } from "../context/SphContext";
 import BBackContinueBtn from "../../../../components/molecules/BBackContinueBtn";
 
@@ -153,53 +153,66 @@ export default function ThirdStep() {
     async function getDocument() {
         try {
             setIsLoading(true);
-            const response: DocResponse = await dispatch(
-                fetchSphDocuments()
-            ).unwrap();
+            const response = await getSphDocuments().catch((err) => Error(err));
 
-            if (paymentType) {
-                const objKey: {
-                    CREDIT: "credit";
-                    CBD: "cbd";
-                } = {
-                    CREDIT: "credit",
-                    CBD: "cbd"
-                };
-                const key: "cbd" | "credit" = objKey[paymentType];
-                if (response[key]) {
-                    if (response[key].length) {
-                        const newFileKeys = response[key].map((doc) => ({
-                            key: doc.id,
-                            label: doc.name,
-                            isRequired: doc.is_required
-                        }));
-                        const documentObj: { [key: string]: any } = {};
-                        response[key].forEach((doc) => {
-                            documentObj[doc.id] = null;
-                        });
-                        const parentReqDocKeys =
-                            paymentRequiredDocuments &&
-                            Object.keys(paymentRequiredDocuments);
-                        const localReqDocKeys =
-                            documentObj && Object.keys(documentObj);
-                        const parentDocString =
-                            JSON.stringify(parentReqDocKeys);
-                        const localDocString = JSON.stringify(localReqDocKeys);
+            if (response?.data) {
+                if (paymentType) {
+                    const objKey: {
+                        CREDIT: "credit";
+                        CBD: "cbd";
+                    } = {
+                        CREDIT: "credit",
+                        CBD: "cbd"
+                    };
+                    const key: "cbd" | "credit" = objKey[paymentType];
+                    if (response?.data[key]) {
+                        if (response?.data[key].length) {
+                            const newFileKeys = response?.data[key].map(
+                                (doc) => ({
+                                    key: doc.id,
+                                    label: doc.name,
+                                    isRequired: doc.is_required
+                                })
+                            );
+                            const documentObj: { [key: string]: any } = {};
+                            response?.data[key].forEach((doc) => {
+                                documentObj[doc.id] = null;
+                            });
+                            const parentReqDocKeys =
+                                paymentRequiredDocuments &&
+                                Object.keys(paymentRequiredDocuments);
+                            const localReqDocKeys =
+                                documentObj && Object.keys(documentObj);
+                            const parentDocString =
+                                JSON.stringify(parentReqDocKeys);
+                            const localDocString =
+                                JSON.stringify(localReqDocKeys);
 
-                        if (
-                            parentDocString === localDocString &&
-                            parentReqDocKeys.length > 0
-                        ) {
-                            setDocuments(paymentRequiredDocuments);
-                        } else {
-                            setDocuments(documentObj);
+                            if (
+                                parentDocString === localDocString &&
+                                parentReqDocKeys.length > 0
+                            ) {
+                                setDocuments(paymentRequiredDocuments);
+                            } else {
+                                setDocuments(documentObj);
+                            }
+                            setFileKeys(newFileKeys);
                         }
-                        setFileKeys(newFileKeys);
                     }
                 }
+                setSphDocuments(response?.data);
+                setIsLoading(false);
+            } else {
+                setIsLoading(false);
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText:
+                            "Terjadi error saat pengambilan data SPH Documents",
+                        outsideClickClosePopUp: true
+                    })
+                );
             }
-            setSphDocuments(response);
-            setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
             dispatch(

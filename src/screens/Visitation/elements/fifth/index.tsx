@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DeviceEventEmitter } from "react-native";
 import {
     locationPayloadType,
@@ -8,11 +8,6 @@ import {
     visitationPayload
 } from "@/interfaces";
 import { useDispatch, useSelector } from "react-redux";
-import { postUploadFiles } from "@/redux/async-thunks/commonThunks";
-import {
-    postVisitation,
-    putVisitationFlow
-} from "@/redux/async-thunks/productivityFlowThunks";
 import { RootState } from "@/redux/store";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import {

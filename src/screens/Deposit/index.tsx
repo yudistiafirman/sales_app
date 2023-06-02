@@ -26,12 +26,12 @@ import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { Styles } from "@/interfaces";
 import { CreateDepositState } from "@/interfaces/CreateDeposit";
 import { CREATE_DEPOSIT } from "@/navigation/ScreenNames";
-import { postUploadFiles } from "@/redux/async-thunks/commonThunks";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import { resScale } from "@/utils";
-import postFinancePayment from "@/redux/async-thunks/financeThunks";
 import { CreatePayment } from "@/models/CreatePayment";
+import { uploadFileImage } from "@/actions/CommonActions";
+import { postPayment } from "@/actions/FinanceActions";
 import SecondStep from "./element/SecondStep";
 import FirstStep from "./element/FirstStep";
 
@@ -99,9 +99,12 @@ function Deposit() {
                         ...photo?.file,
                         uri: photo?.file?.uri?.replace("file:", "file://")
                     }));
-                const uploadedImage = await dispatch(
-                    postUploadFiles({ files: photoFiles, from: "deposit" })
-                ).unwrap();
+                let uploadedImage;
+                if (photoFiles && photoFiles.length > 0)
+                    uploadedImage = await uploadFileImage(
+                        photoFiles,
+                        "deposit"
+                    ).catch((err) => Error(err));
 
                 const payload: CreatePayment = {
                     projectId: values.existingProjectID,
@@ -115,21 +118,40 @@ function Deposit() {
                     files: [],
                     saleOrderId: values.stepTwo?.selectedSaleOrder?.id
                 };
-                uploadedImage.forEach((item) => {
-                    payload.files?.push({ fileId: item?.id });
-                });
-                await dispatch(postFinancePayment({ payload })).unwrap();
-                navigation.dispatch(StackActions.popToTop());
-                dispatch(
-                    openPopUp({
-                        popUpType: "success",
-                        popUpText: "Penambahan Deposit\nBerhasil",
-                        highlightedText: "Deposit",
-                        outsideClickClosePopUp: true
-                    })
+
+                if (uploadedImage)
+                    uploadedImage.data?.data.forEach((item: any) => {
+                        payload.files?.push({ fileId: item?.id });
+                    });
+                const response = await postPayment({ payload }).catch((err) =>
+                    Error(err)
                 );
+
+                if (
+                    response?.data?.success &&
+                    response?.data?.success !== false
+                ) {
+                    navigation.dispatch(StackActions.popToTop());
+                    dispatch(
+                        openPopUp({
+                            popUpType: "success",
+                            popUpText: "Penambahan Deposit\nBerhasil",
+                            highlightedText: "Deposit",
+                            outsideClickClosePopUp: true
+                        })
+                    );
+                } else {
+                    dispatch(
+                        openPopUp({
+                            popUpType: "error",
+                            popUpText: "Penambahan Deposit\nGagal",
+                            highlightedText: "Deposit",
+                            outsideClickClosePopUp: true
+                        })
+                    );
+                }
             } catch (error) {
-                const message = error?.message || "Penambahan Deposit Gagal";
+                const message = error?.message || "Penambahan Deposit\nGagal";
                 dispatch(
                     openPopUp({
                         popUpType: "error",

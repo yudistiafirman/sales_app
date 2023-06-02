@@ -7,10 +7,9 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { BDivider, BForm, BSpacer, BText } from "@/components";
 import { layout } from "@/constants";
-import { Input, projectResponseType, Styles } from "@/interfaces";
+import { Input, Styles } from "@/interfaces";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import { CREATE_VISITATION } from "@/navigation/ScreenNames";
-import { getProjectsByUserThunk } from "@/redux/async-thunks/commonThunks";
 import {
     setSearchProject,
     updateDataVisitation
@@ -19,6 +18,7 @@ import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import company from "@/assets/icon/Visitation/company.png";
 import profile from "@/assets/icon/Visitation/profile.png";
+import { projectByUserGetAction } from "@/actions/CommonActions";
 import SearchFlow from "./Searching";
 
 interface IProps {
@@ -76,13 +76,14 @@ function SecondStep({ openBottomSheet }: IProps) {
     const fetchDebounce = useMemo(
         () =>
             debounce((searchQuery: string) => {
-                dispatch(getProjectsByUserThunk({ search: searchQuery }))
-                    .unwrap()
-                    .then((response: projectResponseType[]) => {
-                        const items = response.map((project) => ({
-                            id: project.id,
-                            title: project.display_name
-                        }));
+                projectByUserGetAction(searchQuery)
+                    .then((response) => {
+                        const items = response?.data?.data?.map(
+                            (project: any) => ({
+                                id: project.id,
+                                title: project.display_name
+                            })
+                        );
                         dispatch(
                             updateDataVisitation({
                                 type: "options",

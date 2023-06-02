@@ -29,9 +29,7 @@ import {
 } from "@/interfaces";
 import BSheetAddPic from "@/screens/Visitation/elements/second/BottomSheetAddPic";
 import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
-import { postUploadFiles } from "@/redux/async-thunks/commonThunks";
 import { useDispatch, useSelector } from "react-redux";
-import { postOrderSph } from "@/redux/async-thunks/orderThunks";
 import { RootState } from "@/redux/store";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import crashlytics from "@react-native-firebase/crashlytics";
@@ -45,6 +43,8 @@ import {
 import { FlashList } from "@shopify/flash-list";
 import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
 import { shouldAllowSPHStateToContinue } from "@/utils/generalFunc";
+import { uploadFileImage } from "@/actions/CommonActions";
+import { postSph } from "@/actions/OrderActions";
 import StepDone from "../StepDoneModal/StepDone";
 import { SphContext } from "../context/SphContext";
 import ChoosePicModal from "../ChoosePicModal";
@@ -101,7 +101,9 @@ function payloadMapper(sphState: SphStateInterface) {
         payload.requestedProducts = sphState.chosenProducts.map((product) => ({
             productId: product.productId,
             categoryId: product.categoryId,
-            offeringPrice: +product.sellPrice,
+            offeringPrice: product.sellPrice
+                ? +product.sellPrice
+                : product.additionalData.delivery.price,
             quantity: +product.volume,
             pouringMethod: product.pouringMethod,
             productName: product.product.name,
@@ -304,17 +306,28 @@ export default function FifthStep() {
                     !isNoPhotoToUpload) ||
                 validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
             ) {
-                const photoResponse = await dispatch(
-                    postUploadFiles({ files: photoFiles, from: "sph" })
-                ).unwrap();
+                let photoResponse;
+                if (photoFiles && photoFiles.length > 0) {
+                    photoResponse = await uploadFileImage(
+                        photoFiles,
+                        "sph"
+                    ).catch((err) => Error(err));
+                }
+
                 const files: { documentId: string; fileId: string }[] = [];
-                photoResponse.forEach((photo) => {
-                    const photoName = `${photo.name}.${photo.type}`;
-                    const photoNamee = `${photo.name}.jpg`;
-                    let foundPhoto;
-                    if (sphState.paymentRequiredDocuments)
-                        Object.keys(sphState.paymentRequiredDocuments).forEach(
-                            (documentId) => {
+
+                if (
+                    photoResponse?.data?.success &&
+                    photoResponse?.data?.success !== false
+                ) {
+                    photoResponse?.data?.data?.forEach((photo: any) => {
+                        const photoName = `${photo.name}.${photo.type}`;
+                        const photoNamee = `${photo.name}.jpg`;
+                        let foundPhoto;
+                        if (sphState.paymentRequiredDocuments)
+                            Object.keys(
+                                sphState.paymentRequiredDocuments
+                            ).forEach((documentId) => {
                                 if (
                                     Object.prototype.hasOwnProperty.call(
                                         sphState.paymentRequiredDocuments,
@@ -334,15 +347,15 @@ export default function FifthStep() {
                                         }
                                     }
                                 }
-                            }
-                        );
-                    if (foundPhoto) {
-                        files.push({
-                            documentId: foundPhoto,
-                            fileId: photo.id
-                        });
-                    }
-                });
+                            });
+                        if (foundPhoto) {
+                            files.push({
+                                documentId: foundPhoto,
+                                fileId: photo.id
+                            });
+                        }
+                    });
+                }
                 const isFilePhotoNotNull = files.every((val) => val === null);
                 if (!isFilePhotoNotNull) {
                     payload.projectDocs = files;
@@ -358,19 +371,29 @@ export default function FifthStep() {
                         sphState.uploadedAndMappedRequiredDocs;
                 }
             }
-            const sphResponse = await dispatch(
-                postOrderSph({ payload })
-            ).unwrap();
-            const { sph } = sphResponse;
-            if (!sph) {
-                throw sphResponse;
-            }
-            setMadeSphData(sph);
-            dispatch(closePopUp());
-            setTimeout(
-                () => setIsStepDoneVisible(true),
-                Platform.OS === "ios" ? 500 : 0
+            const sphResponse = await postSph(payload).catch((err) =>
+                Error(err)
             );
+            if (
+                sphResponse?.data?.success &&
+                sphResponse?.data?.success !== false
+            ) {
+                setMadeSphData(sphResponse.data?.data?.sph);
+                dispatch(closePopUp());
+                setTimeout(
+                    () => setIsStepDoneVisible(true),
+                    Platform.OS === "ios" ? 500 : 0
+                );
+            } else {
+                dispatch(closePopUp());
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText: "Error Menyimpan SPH",
+                        outsideClickClosePopUp: true
+                    })
+                );
+            }
         } catch (error) {
             const messageError = error?.message;
             dispatch(closePopUp());

@@ -27,9 +27,9 @@ import { useDispatch } from "react-redux";
 import { CREATE_SCHEDULE } from "@/navigation/ScreenNames";
 import { CreateSchedule } from "@/models/CreateSchedule";
 import { openPopUp } from "@/redux/reducers/modalReducer";
-import { postOrderSchedule } from "@/redux/async-thunks/orderThunks";
 import moment from "moment";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
+import { postSchedule } from "@/actions/OrderActions";
 import FirstStep from "./element/FirstStep";
 import SecondStep from "./element/SecondStep";
 
@@ -113,18 +113,35 @@ function CreateScheduleScreen() {
                             : false,
                     status: "SUBMITTED"
                 };
-                await dispatch(postOrderSchedule({ payload })).unwrap();
-                navigation.dispatch(StackActions.popToTop());
-                dispatch(
-                    openPopUp({
-                        popUpType: "success",
-                        popUpText: "Pembuatan Jadwal\nBerhasil",
-                        highlightedText: "schedule",
-                        outsideClickClosePopUp: true
-                    })
+                const response = await postSchedule({ payload }).catch((err) =>
+                    Error(err)
                 );
+
+                if (
+                    response?.data?.success &&
+                    response?.data?.success !== false
+                ) {
+                    navigation.dispatch(StackActions.popToTop());
+                    dispatch(
+                        openPopUp({
+                            popUpType: "success",
+                            popUpText: "Pembuatan Jadwal\nBerhasil",
+                            highlightedText: "schedule",
+                            outsideClickClosePopUp: true
+                        })
+                    );
+                } else {
+                    dispatch(
+                        openPopUp({
+                            popUpType: "error",
+                            popUpText: "Pembuatan Jadwal\nGagal",
+                            highlightedText: "error",
+                            outsideClickClosePopUp: true
+                        })
+                    );
+                }
             } catch (error) {
-                const message = error?.message || "Pembuatan Jadwal Gagal";
+                const message = error?.message || "Pembuatan Jadwal\nGagal";
                 dispatch(
                     openPopUp({
                         popUpType: "error",

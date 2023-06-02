@@ -287,19 +287,17 @@ function Appointment() {
                 dispatch(
                     openPopUp({
                         popUpType: "error",
-                        popUpText: "Something went wrong",
+                        popUpText: "Gagal Membuat Janji Temu",
                         highlightedText: "error",
                         outsideClickClosePopUp: true
                     })
                 );
             }
         } catch (error) {
-            console.log(error, "errorcatch");
-
             dispatch(
                 openPopUp({
                     popUpType: "error",
-                    popUpText: error?.message,
+                    popUpText: error?.message || "Gagal Membuat Janji Temu",
                     highlightedText: "error",
                     outsideClickClosePopUp: true
                 })

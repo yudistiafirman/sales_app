@@ -14,16 +14,18 @@ import React, {
 import { View, ScrollView, StyleSheet, BackHandler } from "react-native";
 import { Region } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
-import { getLocationCoordinates } from "@/actions/CommonActions";
+import {
+    getLocationCoordinates,
+    projectGetOneById
+} from "@/actions/CommonActions";
 import {
     BHeaderIcon,
     BStepperIndicator as StepperIndicator,
     PopUpQuestion
 } from "@/components";
 import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
-import { SphStateInterface, PIC } from "@/interfaces";
+import { SphStateInterface } from "@/interfaces";
 import { SPH } from "@/navigation/ScreenNames";
-import { getOneProjectById } from "@/redux/async-thunks/commonThunks";
 import {
     resetSPHState,
     resetStepperFocused,
@@ -235,24 +237,36 @@ function SphContent() {
                     outsideClickClosePopUp: false
                 })
             );
-            const response = await dispatch(
-                getOneProjectById({ projectId })
-            ).unwrap();
-            dispatch(closePopUp());
-            const project = response.data;
-            const { LocationAddress } = project;
-            if (project.Pic) {
-                dispatch(updateSelectedPic(project.Pic));
-            }
+            const response = await projectGetOneById(projectId).catch((err) =>
+                Error(err)
+            );
 
-            dispatch(updateSelectedCompany(project));
-
-            if (LocationAddress) {
-                if (LocationAddress.lon && LocationAddress.lat) {
-                    const longitude = +LocationAddress.lon;
-                    const latitude = +LocationAddress.lat;
-                    getLocationCoord({ longitude, latitude });
+            if (response?.data?.success && response?.data?.success !== false) {
+                dispatch(closePopUp());
+                const project = response?.data?.data;
+                const { LocationAddress } = project;
+                if (project.Pic) {
+                    dispatch(updateSelectedPic(project.Pic));
                 }
+
+                dispatch(updateSelectedCompany(project));
+
+                if (LocationAddress) {
+                    if (LocationAddress.lon && LocationAddress.lat) {
+                        const longitude = +LocationAddress.lon;
+                        const latitude = +LocationAddress.lat;
+                        getLocationCoord({ longitude, latitude });
+                    }
+                }
+            } else {
+                dispatch(closePopUp());
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText: "Terjadi error saat pengambilan data Proyek",
+                        outsideClickClosePopUp: true
+                    })
+                );
             }
         } catch (error) {
             dispatch(closePopUp());

@@ -6,11 +6,11 @@ import { BDivider, BSpacer, BText, BForm } from "@/components";
 import { layout } from "@/constants";
 import { AppointmentActionType, StepOne } from "@/context/AppointmentContext";
 import { useAppointmentData } from "@/hooks";
-import { Input, projectResponseType, Styles } from "@/interfaces";
-import { getProjectsByUserThunk } from "@/redux/async-thunks/commonThunks";
+import { Input, Styles } from "@/interfaces";
 import { AppDispatch } from "@/redux/store";
 import company from "@/assets/icon/Visitation/company.png";
 import profile from "@/assets/icon/Visitation/profile.png";
+import { projectByUserGetAction } from "@/actions/CommonActions";
 
 const styles: Styles = {
     dividerContainer: {
@@ -35,18 +35,16 @@ function Inputs() {
     const fetchDebounce = useMemo(
         () =>
             debounce((searchQuery: string) => {
-                dispatch(getProjectsByUserThunk({ search: searchQuery }))
-                    .unwrap()
-                    .then((response: projectResponseType[]) => {
-                        const items = response.map((project) => ({
-                            id: project.id,
-                            title: project.display_name
-                        }));
-                        dispatchValue({
-                            type: AppointmentActionType.ADD_COMPANIES,
-                            value: items
-                        });
+                projectByUserGetAction(searchQuery).then((response) => {
+                    const items = response?.data?.data?.map((project: any) => ({
+                        id: project.id,
+                        title: project.display_name
+                    }));
+                    dispatchValue({
+                        type: AppointmentActionType.ADD_COMPANIES,
+                        value: items
                     });
+                });
             }, 500),
         [dispatch, dispatchValue]
     );
