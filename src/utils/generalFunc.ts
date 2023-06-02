@@ -315,15 +315,17 @@ export const showWarningDocument = (
         }
         return true;
     }
-    const hasUploadedNpwp = cbdDocs.findIndex(
+    const hasUploadedNpwp = cbdDocs.filter(
         (v) => v.Document?.name === "Foto NPWP"
     );
 
-    if (documents && documents?.length > 0 && hasUploadedNpwp === 1) {
+    if (
+        documents &&
+        documents?.length > 0 &&
+        hasUploadedNpwp[0].File !== null
+    ) {
         return false;
     }
-    return true;
-
     return true;
 };
 
