@@ -234,10 +234,13 @@ function InvoiceDetail() {
             invoiceDetailData?.DeliveryOrders &&
             invoiceDetailData?.paymentType
         ) {
-            if (invoiceDetailData.paymentType === "CREDIT") {
-                if (invoiceDetailData?.DeliveryOrders.length > 0) {
-                    flex = 6;
-                }
+            if (
+                invoiceDetailData.paymentType === "CREDIT" &&
+                invoiceDetailData.DeliveryOrders.length > 0
+            ) {
+                flex = 0.6;
+            } else if (invoiceDetailData.paymentType === "CREDIT") {
+                flex = 0.6;
             } else {
                 flex = 0;
             }
