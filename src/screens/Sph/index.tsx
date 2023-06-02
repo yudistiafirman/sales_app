@@ -276,7 +276,6 @@ function SphContent() {
         }
 
         stepHandler(sphData, stepsDone, setStepsDone, stepControll);
-        console.log("inii:: ", stepsDone);
         handleStepperFocus();
     }, [
         sphData.selectedCompany,

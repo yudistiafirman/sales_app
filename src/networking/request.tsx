@@ -123,6 +123,13 @@ export const injectStore = (_store: any) => {
     store = _store;
 };
 
+export const doLogout = () => {
+    bStorage.clearItem();
+    store.dispatch(signout(false));
+    crashlytics().setUserId("");
+    analytics().setUserId("");
+};
+
 instance.interceptors.response.use(
     async (res: AxiosResponse<Api.Response, any>) => {
         const { data, config } = res;
@@ -159,10 +166,7 @@ instance.interceptors.response.use(
                 data.error?.code === "TKN001" ||
                 data.error?.code === "TKN003"
             ) {
-                bStorage.clearItem();
-                store.dispatch(signout(false));
-                crashlytics().setUserId("");
-                analytics().setUserId("");
+                doLogout();
                 return Promise.resolve(res);
             }
 
@@ -191,10 +195,7 @@ instance.interceptors.response.use(
                 (data.error === undefined || data.error?.code === undefined) &&
                 data.success === false
             ) {
-                bStorage.clearItem();
-                store.dispatch(signout(false));
-                crashlytics().setUserId("");
-                analytics().setUserId("");
+                doLogout();
                 return Promise.resolve(res);
             }
         } else if (config.method !== "get" && config.method !== "put") {
@@ -246,17 +247,17 @@ instance.interceptors.response.use(
         let errorStatus = 500;
         const errorMethod = error.config?.method;
 
+        if (error.response?.status) {
+            errorStatus = error.response?.status;
+        }
+
+        if (error.response?.data?.message) {
+            errorMessage = error.response.data.message;
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+
         if (errorMethod !== "get") {
-            if (error.response) {
-                if (error.response.data) {
-                    if (error.response.data.message) {
-                        errorMessage = error.response.data.message;
-                    }
-                } else if (error?.message) {
-                    errorMessage = error?.message;
-                }
-                errorStatus = error.response.status;
-            }
             const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
             const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
             const postDepositUrl = `${URL_ORDER}/order/m/deposit/`;
@@ -267,10 +268,7 @@ instance.interceptors.response.use(
             const refreshToken = `${URL_COMMON}/common/m/auth/refresh/`;
 
             if (error?.config?.url === refreshToken && errorStatus === 500) {
-                bStorage.clearItem();
-                store.dispatch(signout(false));
-                crashlytics().setUserId("");
-                analytics().setUserId("");
+                doLogout();
             } else if (
                 error?.config?.url !== postVisitationUrl &&
                 error?.config?.url !== postVisitationBookUrl &&
@@ -287,6 +285,13 @@ instance.interceptors.response.use(
                     })
                 );
             }
+        } else if (
+            errorStatus === 403 ||
+            error.response?.data?.code === "TKN001" ||
+            error.response?.data?.code === "TKN003" ||
+            error.response?.data?.code === "TKN008"
+        ) {
+            doLogout();
         }
         return Promise.reject(error);
     }

@@ -13,6 +13,7 @@ interface CreateDepositSecondStep {
     locationName?: string;
     purchaseOrders: PurchaseOrdersData[];
     selectedSaleOrder: any;
+    availableDeposit: number;
 }
 
 interface CreateDepositState {

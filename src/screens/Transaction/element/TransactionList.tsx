@@ -8,6 +8,7 @@ import {
     DEFAULT_ESTIMATED_LIST_SIZE,
     DEFAULT_ON_END_REACHED_THREHOLD
 } from "@/constants/general";
+import { getAvailableDepositProject } from "@/utils/generalFunc";
 import TransactionListCard from "./TransactionListCard";
 import TransactionListShimmer from "./TransactionListShimmer";
 
@@ -52,6 +53,16 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
     onPress = () => {},
     selectedType
 }: TransactionListProps<ArrayOfObject>) {
+    const getNominal = (item: any) => {
+        if (selectedType === "Deposit" || selectedType === "DO") {
+            return item.value ? item.value : item.totalPrice;
+        }
+        if (selectedType === "Jadwal") {
+            return getAvailableDepositProject(item.project);
+        }
+        return item.totalPrice ? item.totalPrice : item.amount;
+    };
+
     const renderItem: ListRenderItem<TransactionsData> = useCallback(
         ({ item }) => (
             <TouchableOpacity onPress={() => onPress(item)}>
@@ -85,16 +96,7 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
                             : undefined
                     }
                     // TODO: handle from BE, ugly when use mapping in FE side
-                    nominal={
-                        (selectedType === "Deposit" ||
-                            selectedType === "Jadwal" ||
-                            selectedType === "DO") &&
-                        item.value
-                            ? item.value
-                            : item.totalPrice
-                            ? item.totalPrice
-                            : item.amount
-                    }
+                    nominal={getNominal(item)}
                     // TODO: handle from BE, ugly when use mapping in FE side
                     useBEStatus={selectedType !== "SPH"}
                 />

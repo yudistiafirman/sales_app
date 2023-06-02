@@ -27,7 +27,10 @@ import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import { colors, fonts, layout } from "@/constants";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { ScrollView } from "react-native-gesture-handler";
-import { beautifyPhoneNumber } from "@/utils/generalFunc";
+import {
+    beautifyPhoneNumber,
+    getAvailableDepositProject
+} from "@/utils/generalFunc";
 import moment from "moment";
 import { LOCATION, TRANSACTION_DETAIL } from "@/navigation/ScreenNames";
 import crashlytics from "@react-native-firebase/crashlytics";
@@ -636,9 +639,9 @@ function TransactionDetail() {
                                 }
                                 firstSectionValue={
                                     selectedType === "Jadwal"
-                                        ? data.SaleOrder?.availableDeposit
-                                            ? data.SaleOrder?.availableDeposit
-                                            : 0
+                                        ? getAvailableDepositProject(
+                                              data.project
+                                          )
                                         : data?.PurchaseOrder?.totalDeposit
                                         ? data?.PurchaseOrder?.totalDeposit
                                         : 0

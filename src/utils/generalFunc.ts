@@ -540,3 +540,16 @@ export function shouldAllowVisitationStateToContinue(
     }
     return false;
 }
+
+export function getAvailableDepositProject(data: any): number {
+    let availableDeposit;
+    if (data?.Customer?.paymentType === "CREDIT") {
+        availableDeposit =
+            data?.Customer?.Accounts?.length > 0
+                ? data?.Customer?.Accounts[0].pendingBalance
+                : 0;
+    } else {
+        availableDeposit = data?.Account?.pendingBalance || 0;
+    }
+    return availableDeposit;
+}

@@ -39,7 +39,8 @@ function SelectPurchaseOrderData({
         isRefreshing,
         loadMoreData,
         errorGettingListMessage,
-        searchValue
+        searchValue,
+        availableDeposit
     } = state.context;
 
     React.useEffect(() => {
@@ -92,7 +93,12 @@ function SelectPurchaseOrderData({
     const onCloseModal = (
         productData: PurchaseOrdersData | QuotationRequests
     ) => {
-        const parentData = { companyName, locationName, projectId };
+        const parentData = {
+            companyName,
+            locationName,
+            projectId,
+            availableDeposit
+        };
         onSubmitData({ parentData, data: productData });
         send("onCloseModal");
     };
@@ -107,6 +113,7 @@ function SelectPurchaseOrderData({
                 modalTitle={dataToGet === "SPHDATA" ? "Pilih SPH" : "Pilih PO"}
                 isDeposit={dataToGet === "DEPOSITDATA"}
                 dataToGet={dataToGet}
+                availableDeposit={availableDeposit}
             />
             <BCommonSearchList
                 searchQuery={searchQuery}
