@@ -205,7 +205,7 @@ export default function BillingModal({
                 dispatch(
                     openPopUp({
                         popUpType: "success",
-                        popUpText: "Update alamat berhasil",
+                        popUpText: "Update alamat proyek berhasil",
                         outsideClickClosePopUp: true
                     })
                 );
@@ -214,9 +214,7 @@ export default function BillingModal({
                 dispatch(
                     openPopUp({
                         popUpType: "error",
-                        popUpText: `Terjadi error saat update alamat ${
-                            isBilling ? "pembayaran" : "proyek"
-                        }`,
+                        popUpText: `Terjadi error saat update alamat proyek`,
                         outsideClickClosePopUp: true
                     })
                 );
@@ -228,9 +226,7 @@ export default function BillingModal({
                     popUpType: "error",
                     popUpText:
                         error?.message ||
-                        `Terjadi error saat update alamat ${
-                            isBilling ? "pembayaran" : "proyek"
-                        }`,
+                        `Terjadi error saat update alamat proyek`,
                     outsideClickClosePopUp: true
                 })
             );
@@ -287,7 +283,7 @@ export default function BillingModal({
                                 setIsModalVisible(false);
                                 navigation.navigate(SEARCH_AREA, {
                                     from: PROJECT_DETAIL,
-                                    eventKey: "getCoordinateFromCustomerDetail",
+                                    eventKey: "getCoordinateFromProjectDetail",
                                     sourceType: isBilling
                                         ? "billing"
                                         : "project"

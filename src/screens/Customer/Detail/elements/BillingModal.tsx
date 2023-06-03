@@ -230,8 +230,7 @@ export default function BillingModal({
                 dispatch(
                     openPopUp({
                         popUpType: "error",
-                        popUpText:
-                            "Terjadi error saat update alamat Pembayaran",
+                        popUpText: "Terjadi error saat update alamat penagihan",
                         outsideClickClosePopUp: true
                     })
                 );
@@ -244,7 +243,7 @@ export default function BillingModal({
                     popUpType: "error",
                     popUpText:
                         error?.message ||
-                        "Terjadi error saat update alamat Pembayaran",
+                        "Terjadi error saat update alamat penagihan",
                     outsideClickClosePopUp: true
                 })
             );

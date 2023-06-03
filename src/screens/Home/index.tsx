@@ -648,9 +648,9 @@ function Beranda() {
                     outsideClickClosePopUp: false
                 })
             );
-            const response = await oneGetVisitation(dataItem.id).catch((err) =>
-                Error(err)
-            );
+            const response = await oneGetVisitation({
+                visitationId: dataItem.id
+            }).catch((err) => Error(err));
             if (response?.data?.success && response?.data?.success !== false) {
                 dispatch(closePopUp());
                 if (status === "Belum Selesai") {

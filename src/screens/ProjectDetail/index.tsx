@@ -123,7 +123,7 @@ export default function ProjectDetailPage() {
 
     useEffect(() => {
         DeviceEventEmitter.addListener(
-            "getCoordinateFromCustomerDetail",
+            "getCoordinateFromProjectDetail",
             (data) => {
                 setProject(data.coordinate);
                 setIsProjectLocationVisible(true);
