@@ -279,21 +279,23 @@ function Fifth() {
                             id: string;
                             type: "GALLERY" | "COVER";
                         }[] = [];
-                        data?.data?.data?.forEach((photo: any) => {
-                            const photoName = `${photo.name}.${photo.type}`;
-                            const photoNamee = `${photo.name}.jpg`;
-                            const foundObject = visitationData.images?.find(
-                                (obj) =>
-                                    obj?.file?.name === photoName ||
-                                    obj?.file?.name === photoNamee
-                            );
-                            if (foundObject) {
-                                files.push({
-                                    id: photo.id,
-                                    type: foundObject.type
-                                });
-                            }
-                        });
+                        if (
+                            data?.data?.success &&
+                            data?.data?.success !== false
+                        ) {
+                            data?.data?.data?.forEach((photo: any) => {
+                                const photoName = photo.name;
+                                const foundObject = visitationData.images?.find(
+                                    (obj) => obj?.file?.name.includes(photoName)
+                                );
+                                if (foundObject) {
+                                    files.push({
+                                        id: photo.id,
+                                        type: foundObject.type
+                                    });
+                                }
+                            });
+                        }
                         dispatch(setuploadedFilesResponse(files));
                         if (files && files.length > 0) payload.files = files;
                         const payloadData: {

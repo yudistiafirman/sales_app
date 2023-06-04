@@ -75,7 +75,10 @@ function Document() {
             };
             const responseFile = await uploadFileImage([valueToUpload]);
             const { id } = responseFile.data.data[0];
-            if (responseFile.data.success) {
+            if (
+                responseFile.data.success &&
+                responseFile.data.success !== false
+            ) {
                 const payload = {};
                 payload.customerDocs = [
                     {

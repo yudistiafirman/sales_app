@@ -101,9 +101,9 @@ function payloadMapper(sphState: SphStateInterface) {
         payload.requestedProducts = sphState.chosenProducts.map((product) => ({
             productId: product.productId,
             categoryId: product.categoryId,
-            offeringPrice: product.sellPrice
-                ? +product.sellPrice
-                : product.additionalData.delivery.price,
+            // offeringPrice: product.sellPrice
+            //     ? +product.sellPrice
+            //     : product.additionalData.delivery.price,
             quantity: +product.volume,
             pouringMethod: product.pouringMethod,
             productName: product.product.name,
@@ -315,14 +315,12 @@ export default function FifthStep() {
                 }
 
                 const files: { documentId: string; fileId: string }[] = [];
-
                 if (
                     photoResponse?.data?.success &&
                     photoResponse?.data?.success !== false
                 ) {
                     photoResponse?.data?.data?.forEach((photo: any) => {
-                        const photoName = `${photo.name}.${photo.type}`;
-                        const photoNamee = `${photo.name}.jpg`;
+                        const photoName = photo.name;
                         let foundPhoto;
                         if (sphState.paymentRequiredDocuments)
                             Object.keys(
@@ -340,8 +338,7 @@ export default function FifthStep() {
                                         ];
                                     if (photoData) {
                                         if (
-                                            photoData.name === photoName ||
-                                            photoData.name === photoNamee
+                                            photoData.name.includes(photoName)
                                         ) {
                                             foundPhoto = documentId;
                                         }

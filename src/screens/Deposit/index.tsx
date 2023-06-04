@@ -119,7 +119,10 @@ function Deposit() {
                     saleOrderId: values.stepTwo?.selectedSaleOrder?.id
                 };
 
-                if (uploadedImage)
+                if (
+                    uploadedImage?.data?.success &&
+                    uploadedImage?.data?.success !== false
+                )
                     uploadedImage.data?.data.forEach((item: any) => {
                         payload.files?.push({ fileId: item?.id });
                     });

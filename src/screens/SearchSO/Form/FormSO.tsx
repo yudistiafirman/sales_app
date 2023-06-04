@@ -103,7 +103,10 @@ function FormSO() {
                 photoFilestoUpload,
                 "SO Signed"
             );
-            if (responseFiles.data.success) {
+            if (
+                responseFiles.data.success &&
+                responseFiles.data.success !== false
+            ) {
                 const payload = {} as UploadSOSigned;
                 const newFileData = responseFiles.data.data.map((v, i) => ({
                     fileId: v.id,
