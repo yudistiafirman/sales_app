@@ -257,41 +257,40 @@ instance.interceptors.response.use(
             errorMessage = error.message;
         }
 
-        if (errorMethod !== "get") {
-            const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
-            const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
-            const postDepositUrl = `${URL_ORDER}/order/m/deposit/`;
-            const postPaymentUrl = `${URL_FINANCE}/finance/m/payment/`;
-            const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
-            const postPO = `${URL_ORDER}/order/m/purchase-order/`;
-            const postSOSigned = `${URL_ORDER}/order/m/purchase-order/docs/`;
-            const refreshToken = `${URL_COMMON}/common/m/auth/refresh/`;
+        const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
+        const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
+        const postDepositUrl = `${URL_ORDER}/order/m/deposit/`;
+        const postPaymentUrl = `${URL_FINANCE}/finance/m/payment/`;
+        const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
+        const postPO = `${URL_ORDER}/order/m/purchase-order/`;
+        const postSOSigned = `${URL_ORDER}/order/m/purchase-order/docs/`;
+        const refreshToken = `${URL_COMMON}/common/m/auth/refresh/`;
 
-            if (error?.config?.url === refreshToken && errorStatus === 500) {
-                doLogout();
-            } else if (
-                error?.config?.url !== postVisitationUrl &&
-                error?.config?.url !== postVisitationBookUrl &&
-                error?.config?.url !== postDepositUrl &&
-                error?.config?.url !== postPaymentUrl &&
-                error?.config?.url !== postScheduleUrl &&
-                error?.config?.url !== postPO &&
-                error?.config?.url !== postSOSigned
-            ) {
-                store.dispatch(
-                    openSnackbar({
-                        snackBarText: `${errorMessage} code: ${errorStatus}`,
-                        isSuccess: false
-                    })
-                );
-            }
-        } else if (
+        if (
+            error?.config?.url === refreshToken ||
             errorStatus === 403 ||
             error.response?.data?.code === "TKN001" ||
             error.response?.data?.code === "TKN003" ||
             error.response?.data?.code === "TKN008"
         ) {
             doLogout();
+        }
+
+        if (
+            error?.config?.url !== postVisitationUrl &&
+            error?.config?.url !== postVisitationBookUrl &&
+            error?.config?.url !== postDepositUrl &&
+            error?.config?.url !== postPaymentUrl &&
+            error?.config?.url !== postScheduleUrl &&
+            error?.config?.url !== postPO &&
+            error?.config?.url !== postSOSigned
+        ) {
+            store.dispatch(
+                openSnackbar({
+                    snackBarText: `${errorMessage} code: ${errorStatus}`,
+                    isSuccess: false
+                })
+            );
         }
         return Promise.reject(error);
     }
