@@ -96,14 +96,12 @@ export default function FirstStep() {
         }
     ];
 
-    const removeImage = (pos: number) => {
-        dispatch(deleteImage({ pos, source: CREATE_DEPOSIT }));
-        const modifyDeposit = {
-            ...stateOne?.deposit,
-            picts: createDepositPhotoURLs
-        };
-        updateValueOnstep("stepOne", "deposit", modifyDeposit);
-    };
+    const removeImage = React.useCallback(
+        (pos: number) => {
+            dispatch(deleteImage({ pos, source: CREATE_DEPOSIT }));
+        },
+        [createDepositPhotoURLs]
+    );
 
     useFocusEffect(
         React.useCallback(() => {
