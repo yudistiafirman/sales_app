@@ -433,7 +433,7 @@ export function shouldAllowSPHStateToContinue(
     if (sphState.paymentType && paymentCondition) {
         stepThreeCompleted = true;
     }
-    if (sphState.chosenProducts.length) {
+    if (sphState.chosenProducts.length && sphState.selectedCompany) {
         stepFourCompleted = true;
     }
     if (pos === 0) {
