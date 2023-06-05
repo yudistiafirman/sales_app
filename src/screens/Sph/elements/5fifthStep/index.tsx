@@ -101,9 +101,9 @@ function payloadMapper(sphState: SphStateInterface) {
         payload.requestedProducts = sphState.chosenProducts.map((product) => ({
             productId: product.productId,
             categoryId: product.categoryId,
-            // offeringPrice: product.sellPrice
-            //     ? +product.sellPrice
-            //     : product.additionalData.delivery.price,
+            offeringPrice: product.sellPrice
+                ? +product.sellPrice
+                : product.additionalData.delivery.price,
             quantity: +product.volume,
             pouringMethod: product.pouringMethod,
             productName: product.product.name,

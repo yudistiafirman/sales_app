@@ -297,7 +297,7 @@ export const priceMachine =
                     const newCategoriesData = event.data.map((item) => ({
                         key: item.id,
                         title: item.name,
-                        totalItems: 0,
+                        totalItems: -1,
                         chipPosition: "right"
                     }));
                     return {

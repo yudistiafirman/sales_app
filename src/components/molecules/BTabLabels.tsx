@@ -28,7 +28,7 @@ function BTabLabels({
     minWidth,
     tabTextfocusedColor = colors.primary
 }: BTabLabelsProps) {
-    const isHasItems = route?.totalItems > 0;
+    const isHasItems = route?.totalItems > -1;
     const rightChipPosition = route?.chipPosition === "right";
 
     const chipBackgroundColor = rightChipPosition ? colors.chip.disabled : "";

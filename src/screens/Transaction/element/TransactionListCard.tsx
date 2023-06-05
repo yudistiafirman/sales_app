@@ -100,7 +100,7 @@ function TransactionListCard({
                           name &&
                           number.length + statusFinal.length > 33)
                     ? { height: resScale(97) }
-                    : { height: resScale(77) }
+                    : { height: resScale(82) }
             ]}
         >
             <View style={styles.leftSide}>

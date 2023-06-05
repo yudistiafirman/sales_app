@@ -211,12 +211,10 @@ function TransactionDetail() {
                 });
             }
         } else if (selectedType === "Deposit") {
-            if (data?.Payment?.PaymentFiles) {
+            if (data?.PaymentFiles) {
                 // TODO: need to change the type to download the deposit files
                 setDownloadFiles({
-                    letter: data?.Payment?.PaymentFiles?.find(
-                        (v: any) => v?.type === ""
-                    )
+                    letter: data?.PaymentFiles?.find((v: any) => v?.type === "")
                 });
             }
         } else if (data?.QuotationLetterFiles) {

@@ -89,8 +89,8 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
                             ? item.PurchaseOrder?.number
                             : item.QuotationLetter?.number
                             ? item.QuotationLetter?.number
-                            : item.Payment?.SaleOrder?.number
-                            ? item.Payment?.SaleOrder?.number
+                            : item.SaleOrder?.number
+                            ? item.SaleOrder?.number
                             : selectedType !== "SPH"
                             ? "-"
                             : undefined

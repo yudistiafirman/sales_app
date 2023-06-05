@@ -258,10 +258,7 @@ const searchPOMachine = createMachine(
                 routes: [
                     {
                         key: "first",
-                        title:
-                            context.filterSphDataBy === "INDIVIDU"
-                                ? "Individu"
-                                : "Perusahaan",
+                        title: "Proyek",
                         totalItems: event.data.totalItems,
                         chipPosition: "right"
                     }

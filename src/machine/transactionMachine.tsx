@@ -159,7 +159,7 @@ const transactionMachine =
                     const newTypeData = event.data?.map((item) => ({
                         key: uniqueStringGenerator(),
                         title: item.name,
-                        totalItems: item.totalItems,
+                        totalItems: item.totalItems ? item.totalItems : 0,
                         chipPosition: "bottom"
                     }));
                     return {
@@ -184,14 +184,20 @@ const transactionMachine =
                             totalItems:
                                 context.selectedType === item.title
                                     ? event.data.totalItems
-                                    : item.totalItems,
+                                        ? event.data.totalItems
+                                        : 0
+                                    : item.totalItems
+                                    ? item.totalItems
+                                    : 0,
                             chipPosition: "bottom"
                         }));
                         return {
                             loadTransaction: false,
                             isLoadMore: false,
                             refreshing: false,
-                            totalItems: event.data.totalItems,
+                            totalItems: event.data.totalItems
+                                ? event.data.totalItems
+                                : 0,
                             transactionData: transactionsData,
                             routes: newTypeData,
                             isErrorData: false

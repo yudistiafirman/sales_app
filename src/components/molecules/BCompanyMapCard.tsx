@@ -48,7 +48,7 @@ export default function BCompanyMapCard({
 }: BCompanyMapCardType) {
     return (
         <View style={styles.company}>
-            <Text style={styles.companyText}>{companyName}</Text>
+            <Text style={styles.companyText}>{companyName || "-"}</Text>
             <BSpacer size="extraSmall" />
             <View style={styles.locationContainer}>
                 <SimpleLineIcons
