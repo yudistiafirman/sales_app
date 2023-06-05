@@ -127,9 +127,11 @@ function InvoiceList() {
     const onEndReached = () => {
         const { search, totalPages } = invoiceData;
         if (search?.page <= totalPages) {
-            dispatch(setLoadMore({ isLoadMore: true }));
-            getAllInvoiceData();
             dispatch(setPage({ page: search.page + 1 }));
+            if (search?.page > 1) {
+                dispatch(setLoadMore({ isLoadMore: true }));
+                getAllInvoiceData();
+            }
         }
     };
 
@@ -144,10 +146,7 @@ function InvoiceList() {
             if (invoiceData?.invoiceData?.length <= 0) {
                 getAllInvoiceData();
             }
-        }, [
-            invoiceData.search?.searchQuery || invoiceData?.invoiceData,
-            invoiceData.filter
-        ])
+        }, [invoiceData.search, invoiceData.filter])
     );
 
     const renderShimmerInvoiceList = () => (

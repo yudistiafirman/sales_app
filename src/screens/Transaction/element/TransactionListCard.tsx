@@ -95,11 +95,11 @@ function TransactionListCard({
                 selectedType === "SPH"
                     ? { height: resScale(87) }
                     : (projectName &&
-                          number.length + statusFinal.length > 33) ||
+                          number.length + statusFinal.length >= 33) ||
                       (projectName &&
                           name &&
-                          number.length + statusFinal.length > 33)
-                    ? { height: resScale(97) }
+                          number.length + statusFinal.length >= 33)
+                    ? { height: resScale(102) }
                     : { height: resScale(82) }
             ]}
         >
