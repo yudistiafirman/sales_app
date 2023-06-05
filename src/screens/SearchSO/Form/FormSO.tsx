@@ -99,13 +99,16 @@ function FormSO() {
                     ...photo.file,
                     uri: photo?.file?.uri?.replace("file:", "file://")
                 }));
-            const responseFiles = await uploadFileImage(
-                photoFilestoUpload,
-                "SO Signed"
-            );
+
+            let responseFiles;
+            if (photoFilestoUpload && photoFilestoUpload.length > 0)
+                responseFiles = await uploadFileImage(
+                    photoFilestoUpload,
+                    "SO Signed"
+                );
             if (
-                responseFiles.data.success &&
-                responseFiles.data.success !== false
+                responseFiles?.data?.success &&
+                responseFiles?.data?.success !== false
             ) {
                 const payload = {} as UploadSOSigned;
                 const newFileData = responseFiles.data.data.map((v, i) => ({
@@ -154,7 +157,8 @@ function FormSO() {
                         popUpType: "error",
                         highlightedText: "SO",
                         popUpText:
-                            responseFiles.data.message || "SO\nGagal diupload",
+                            responseFiles?.data?.message ||
+                            "SO\nGagal diupload",
                         outsideClickClosePopUp: true
                     })
                 );

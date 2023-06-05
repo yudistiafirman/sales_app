@@ -126,7 +126,7 @@ function Deposit() {
                     uploadedImage.data?.data.forEach((item: any) => {
                         payload.files?.push({ fileId: item?.id });
                     });
-                const response = await postPayment({ payload }).catch((err) =>
+                const response = await postPayment(payload).catch((err) =>
                     Error(err)
                 );
 

@@ -271,19 +271,23 @@ function Fifth() {
                                     "file://"
                                 )
                             }));
-                        const data = await uploadFileImage(
-                            photoFiles,
-                            "visitation"
-                        ).catch((err) => Error(err));
+
+                        let photoResponse;
+                        if (photoFiles && photoFiles.length > 0) {
+                            photoResponse = await uploadFileImage(
+                                photoFiles,
+                                "visitation"
+                            ).catch((err) => Error(err));
+                        }
                         const files: {
                             id: string;
                             type: "GALLERY" | "COVER";
                         }[] = [];
                         if (
-                            data?.data?.success &&
-                            data?.data?.success !== false
+                            photoResponse?.data?.success &&
+                            photoResponse?.data?.success !== false
                         ) {
-                            data?.data?.data?.forEach((photo: any) => {
+                            photoResponse?.data?.data?.forEach((photo: any) => {
                                 const photoName = photo.name;
                                 const foundObject = visitationData.images?.find(
                                     (obj) => obj?.file?.name.includes(photoName)

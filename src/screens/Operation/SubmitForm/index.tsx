@@ -281,10 +281,13 @@ function SubmitForm() {
                     uri: photo?.file?.uri?.replace("file:", "file://")
                 }));
 
-            const responseFiles = await uploadFileImage(
-                photoFilestoUpload,
-                "Update Delivery Order"
-            );
+            let responseFiles;
+            if (photoFilestoUpload && photoFilestoUpload.length > 0) {
+                responseFiles = await uploadFileImage(
+                    photoFilestoUpload,
+                    "Update Delivery Order"
+                );
+            }
             if (
                 responseFiles?.data?.success &&
                 responseFiles?.data?.success !== false

@@ -113,7 +113,7 @@ function CreateScheduleScreen() {
                             : false,
                     status: "SUBMITTED"
                 };
-                const response = await postSchedule({ payload }).catch((err) =>
+                const response = await postSchedule(payload).catch((err) =>
                     Error(err)
                 );
 
