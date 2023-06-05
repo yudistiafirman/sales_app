@@ -357,15 +357,13 @@ function InvoiceDetail() {
             },
             {
                 itemTitle: "Harga Unit",
-                itemValue: item?.SO?.PoProd?.ReqProd?.offeringPrice
-                    ? `Rp. ${formatCurrency(
-                          item?.SO?.PoProd?.ReqProd?.offeringPrice
-                      )}`
-                    : 0
+                itemValue: formatCurrency(
+                    item?.SO?.PoProd?.ReqProd?.offeringPrice || 0
+                )
             },
             {
                 itemTitle: "Ekstra",
-                itemValue: `Rp. ${formatCurrency(additionalPrice)}`
+                itemValue: formatCurrency(additionalPrice)
             },
             {
                 itemTitle: "Total",
@@ -399,13 +397,13 @@ function InvoiceDetail() {
     const renderInvoiceDetailFooter = () => {
         const totalAmount = invoiceDetailData?.total
             ? formatCurrency(invoiceDetailData?.total)
-            : 0;
+            : "IDR 0";
         const amountPaid = invoiceDetailData?.amountPaid
             ? formatCurrency(invoiceDetailData?.amountPaid)
-            : 0;
+            : "IDR 0";
         const amountDue = invoiceDetailData?.amountDue
             ? formatCurrency(invoiceDetailData?.amountDue)
-            : 0;
+            : "IDR 0";
 
         return (
             <View style={{ flex: 0.4 }}>
@@ -424,7 +422,7 @@ function InvoiceDetail() {
                             }
                         ]}
                     >
-                        Rp. {totalAmount}
+                        {totalAmount}
                     </Text>
                 </View>
                 <BSpacer size="extraSmall" />
@@ -437,7 +435,7 @@ function InvoiceDetail() {
                             { fontSize: font.size.md, maxWidth: resScale(160) }
                         ]}
                     >
-                        Rp. {amountPaid}
+                        {amountPaid}
                     </Text>
                 </View>
                 <BSpacer size="extraSmall" />
@@ -456,7 +454,7 @@ function InvoiceDetail() {
                             }
                         ]}
                     >
-                        Rp {amountDue}
+                        {amountDue}
                     </Text>
                 </View>
             </View>

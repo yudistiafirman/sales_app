@@ -119,6 +119,7 @@ function Transaction() {
     } = trxState.context;
 
     const onTabPress = (title: string) => {
+        console.log("wwkwwkwkwk:: ", title, isError);
         if (isError) send("retryGettingTransactions", { payload: title });
         else send("onChangeType", { payload: title });
     };

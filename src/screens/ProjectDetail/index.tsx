@@ -213,14 +213,12 @@ export default function ProjectDetailPage() {
                     <View style={styles.between}>
                         <Text style={styles.partText}>Sisa Deposit</Text>
                         <Text style={styles.fontW400}>
-                            {customerData?.Account?.pendingBalance
-                                ? `IDR ${formatCurrency(
-                                      parseInt(
-                                          customerData?.Account?.pendingBalance,
-                                          10
-                                      )
-                                  )}`
-                                : "IDR 0"}
+                            {formatCurrency(
+                                parseInt(
+                                    customerData?.Account?.pendingBalance || 0,
+                                    10
+                                )
+                            )}
                         </Text>
                     </View>
                     <BSpacer size="small" />

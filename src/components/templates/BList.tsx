@@ -128,8 +128,8 @@ function BList({
                 return defaultText;
             };
             const listTextData = [`Payment Type: ${paymentType()}`];
-            const availableDebit = null;
-            const availableCredit = null;
+            const availableDebit = item.pendingBalance;
+            const availableCredit = item.creditPendingBalance;
             const chipBgColor =
                 item?.type === INDIVIDU
                     ? colors.status.lightYellow

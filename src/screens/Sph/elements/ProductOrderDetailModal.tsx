@@ -267,7 +267,7 @@ export default function ProductCartModal({
                     <View style={style.priceContainer}>
                         <Text style={style.hargaText}>Harga Dasar</Text>
                         <Text style={style.hargaText}>
-                            IDR {formatCurrency(productData?.Price?.price)}
+                            {formatCurrency(productData?.Price?.price)}
                         </Text>
                     </View>
                     <BSpacer size="extraSmall" />
@@ -301,7 +301,7 @@ export default function ProductCartModal({
                             </Text>
                         </View>
                         <Text style={style.hargaJualPrice}>
-                            IDR {formatCurrency(productData.calcPrice)}
+                            {formatCurrency(productData.calcPrice)}
                         </Text>
                     </View>
                 </View>
@@ -389,7 +389,7 @@ export default function ProductCartModal({
                     <View style={style.priceContainer}>
                         <Text style={style.hargaText}>Biaya Mobilisasi</Text>
                         <Text style={style.hargaText}>
-                            IDR {calcPrice ? formatCurrency(calcPrice) : "0"}
+                            {formatCurrency(calcPrice || 0)}
                         </Text>
                     </View>
                     <BSpacer size="extraSmall" />
@@ -400,7 +400,7 @@ export default function ProductCartModal({
                     <View style={style.priceContainer}>
                         <Text style={style.productName}>Total Harga</Text>
                         <Text style={style.boldPrice}>
-                            IDR {formatCurrency(totalPrice)}
+                            {formatCurrency(totalPrice)}
                         </Text>
                     </View>
                     <BSpacer size="large" />

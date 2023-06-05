@@ -140,14 +140,14 @@ export default function BProductCard({
                 )}
                 {!hidePricePerVolume && (
                     <Text style={style.detailText}>
-                        {`IDR ${`${
+                        {`${
                             pricePerVol ? formatCurrency(pricePerVol) : "-"
-                        }/${getUnit()}`}`}
+                        }/${getUnit()}`}
                     </Text>
                 )}
                 {!hideTotal && (
                     <Text style={style.detailText}>
-                        {`IDR ${totalPrice ? formatCurrency(totalPrice) : "-"}`}
+                        {totalPrice ? formatCurrency(totalPrice) : "-"}
                     </Text>
                 )}
             </View>

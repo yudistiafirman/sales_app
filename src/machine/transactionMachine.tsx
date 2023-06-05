@@ -211,12 +211,16 @@ const transactionMachine =
                         loadTab: false
                     };
                 }),
-                assignIndexToContext: assign((_context, event) => ({
-                    selectedType: event.payload,
-                    page: 1,
-                    loadTransaction: true,
-                    transactionData: []
-                })),
+                assignIndexToContext: assign((_context, event) => {
+                    console.log("lolo 1:: ", event.payload);
+                    console.log("lolo 2:: ", _context.selectedType);
+                    return {
+                        selectedType: event.payload,
+                        page: 1,
+                        loadTransaction: true,
+                        transactionData: []
+                    };
+                }),
                 incrementPage: assign((context, _event) => ({
                     page: context.page + 1,
                     isLoadMore: true
@@ -263,6 +267,8 @@ const transactionMachine =
                     }
                 },
                 getTransactions: async (_context, _event) => {
+                    console.log("test 1:: ", _context.selectedType);
+                    console.log("test 2:: ", _event.type);
                     try {
                         let response;
                         if (_context.selectedType === "PO") {

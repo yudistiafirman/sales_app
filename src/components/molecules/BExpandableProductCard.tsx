@@ -151,7 +151,7 @@ function BExpandableProductCard({
                             numberOfLines={1}
                             style={styles.totalParentPrice}
                         >
-                            {`IDR ${formatCurrency(totalPrice)}`}
+                            {formatCurrency(totalPrice)}
                         </BText>
                     </View>
                 </View>

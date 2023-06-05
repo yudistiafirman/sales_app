@@ -271,9 +271,7 @@ export default function BNestedProductCard({
                                         </Text>
                                         <View style={styles.valueView}>
                                             <Text style={styles.valueLastOrder}>
-                                                {`IDR ${formatCurrency(
-                                                    totalPrice
-                                                )}`}
+                                                {formatCurrency(totalPrice)}
                                             </Text>
                                         </View>
                                     </View>
@@ -295,12 +293,9 @@ export default function BNestedProductCard({
                                                         }
                                                     ]}
                                                 >
-                                                    {(deposit < 0
-                                                        ? "- IDR "
-                                                        : "IDR ") +
-                                                        formatCurrency(
-                                                            deposit || 0
-                                                        )}
+                                                    {formatCurrency(
+                                                        deposit || 0
+                                                    )}
                                                 </Text>
                                             </View>
                                         </View>
