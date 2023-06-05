@@ -72,6 +72,7 @@ export default function SecondStep() {
                 "availableDeposit",
                 parent.availableDeposit
             );
+            updateValueOnstep("stepTwo", "paymentType", parent.paymentType);
             updateValueOnstep("stepTwo", "purchaseOrders", data);
             updateValueOnstep(
                 "stepTwo",
@@ -179,6 +180,9 @@ export default function SecondStep() {
                                                         availableDeposit={
                                                             stateTwo.availableDeposit
                                                         }
+                                                        // paymentType={
+                                                        //     stateTwo.paymentType
+                                                        // }
                                                         expandData={expandData}
                                                         onExpand={onExpand}
                                                         isDeposit

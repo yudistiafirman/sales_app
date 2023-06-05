@@ -372,7 +372,13 @@ export default function SecondStep() {
                 <BSpacer size="verySmall" />
                 <BDepositCard
                     style={{ marginBottom: layout.pad.xl }}
-                    firstSectionText="Deposit"
+                    firstSectionText={
+                        stateTwo?.paymentType === "CBD" ||
+                        stateTwo?.paymentType === null ||
+                        stateTwo?.paymentType === undefined
+                            ? "Deposit"
+                            : "Kredit"
+                    }
                     firstSectionValue={
                         stateTwo?.availableDeposit
                             ? stateTwo?.availableDeposit
@@ -384,12 +390,24 @@ export default function SecondStep() {
                             : "-"
                     }
                     secondSectionValue={getTotalProduct()}
-                    thirdSectionText="Est. Sisa Deposit"
+                    thirdSectionText={
+                        stateTwo?.paymentType === "CBD" ||
+                        stateTwo?.paymentType === null ||
+                        stateTwo?.paymentType === undefined
+                            ? "Est. Sisa Deposit"
+                            : "Est. Sisa Kredit"
+                    }
                     // isError={
                     //   getTotalProduct() >
                     //   (stateTwo?.availableDeposit ? stateTwo?.availableDeposit : 0)
                     // }
-                    customErrorMsg="Silakan lakukan penambahan deposit"
+                    customErrorMsg={
+                        stateTwo?.paymentType === "CBD" ||
+                        stateTwo?.paymentType === null ||
+                        stateTwo?.paymentType === undefined
+                            ? "Silakan lakukan penambahan deposit"
+                            : "Silakan lakukan penambahan kredit"
+                    }
                 />
             </View>
         </View>

@@ -551,9 +551,12 @@ export function shouldAllowVisitationStateToContinue(
     return false;
 }
 
-export function getAvailableDepositProject(data: any): number {
+export function getAvailableDepositProject(
+    data: any,
+    includeCredit: boolean
+): number {
     let availableDeposit;
-    if (data?.Customer?.paymentType === "CREDIT") {
+    if (includeCredit && data?.Customer?.paymentType === "CREDIT") {
         availableDeposit =
             data?.Customer?.Accounts?.length > 0
                 ? data?.Customer?.Accounts[0].pendingBalance

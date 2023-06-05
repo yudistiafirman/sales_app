@@ -140,7 +140,7 @@ function BCard({
                 )}
                 {availableCredit !== undefined && (
                     <View style={styles.remainingAmount}>
-                        <Text style={styles.credText}>Sisa Credit : </Text>
+                        <Text style={styles.credText}>Sisa Kredit : </Text>
                         <Text
                             style={{
                                 ...styles.credText,

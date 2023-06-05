@@ -70,6 +70,7 @@ export default function FirstStep() {
                 "availableDeposit",
                 parent.availableDeposit
             );
+            updateValueOnstep("stepTwo", "paymentType", parent.paymentType);
             updateValueOnstep("stepTwo", "inputtedVolume", 0);
             updateValueOnstep(
                 "stepTwo",

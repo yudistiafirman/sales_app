@@ -14,6 +14,7 @@ interface CreateScheduleSecondStep {
     hasTechnicalRequest?: boolean;
     availableDeposit?: number;
     inputtedVolume?: number;
+    paymentType: string | null;
     salesOrder?: SalesOrdersData;
 }
 

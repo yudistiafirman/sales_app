@@ -69,12 +69,12 @@ export default function BGallery({
             <View
                 style={[
                     style.container,
-                    item.attachType ? { marginBottom: layout.pad.ml * 2 } : {}
+                    item?.attachType ? { marginBottom: layout.pad.ml * 2 } : {}
                 ]}
             >
                 {item.file === null && addMorePict && (
                     <TouchableOpacity
-                        onPress={() => addMorePict(item.attachType)}
+                        onPress={() => addMorePict(item?.attachType)}
                     >
                         <View style={[style.addImage]}>
                             <Feather
@@ -120,7 +120,7 @@ export default function BGallery({
                 {item?.type === "GALLERY" && removePict && (
                     <TouchableOpacity
                         style={style.closeIcon}
-                        onPress={() => removePict(index - 1, item.attachType)}
+                        onPress={() => removePict(index - 1, item?.attachType)}
                     >
                         <AntDesign
                             name="close"
@@ -129,11 +129,11 @@ export default function BGallery({
                         />
                     </TouchableOpacity>
                 )}
-                {item.attachType && (
+                {item?.attachType && (
                     <View style={style.attachType}>
                         <BSpacer size="verySmall" />
                         <BText bold="300" sizeInNumber={10}>
-                            {item.attachType}
+                            {item?.attachType}
                         </BText>
                     </View>
                 )}
