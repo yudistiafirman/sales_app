@@ -54,7 +54,7 @@ function PriceListCard({
                     {productName}
                 </BText>
                 <BText style={PriceListCardStyles.productPrice}>
-                    {`IDR ${formatCurrency(productPrice)}`}
+                    {formatCurrency(productPrice)}
                 </BText>
             </View>
             <View style={{ flexDirection: "row" }}>

@@ -110,7 +110,7 @@ export default function BGalleryDeposit({
             )}
             <View style={style.rightText}>
                 <BText bold="500" sizeInNumber={fonts.size.lg}>
-                    {`IDR ${formatCurrency(nominal)}`}
+                    {formatCurrency(nominal)}
                 </BText>
                 <BText bold="400" sizeInNumber={fonts.size.md}>
                     {createdAt}

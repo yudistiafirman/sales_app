@@ -253,7 +253,6 @@ function Beranda() {
             });
             setIsTargetLoading(false);
         } catch (err) {
-            console.log("error catch 1:: ", err);
             setIsTargetLoading(false);
             dispatch(
                 openPopUp({
@@ -317,7 +316,6 @@ function Beranda() {
                 }
                 setIsLoading(false);
             } catch (error) {
-                console.log("error catch 2:: ", error);
                 setIsLoading(false);
                 setIsError(true);
                 setErrorMessage(error?.message);

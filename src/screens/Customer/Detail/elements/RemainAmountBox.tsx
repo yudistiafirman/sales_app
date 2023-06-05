@@ -50,16 +50,16 @@ function RemainingAmountBox({
         <View style={styles.container}>
             <View style={styles.innerContainer}>
                 <BText style={styles.title}>{title}</BText>
-                {!secondAmount && <BSpacer size="extraSmall" />}
+                {secondAmount === undefined && <BSpacer size="extraSmall" />}
 
                 <BText style={styles.firstAmount}>
-                    IDR {formatCurrency(firstAmount)}
+                    {formatCurrency(firstAmount)}
                 </BText>
-                {secondAmount && <View style={styles.divider} />}
+                {secondAmount !== undefined && <View style={styles.divider} />}
 
-                {secondAmount && (
+                {secondAmount !== undefined && (
                     <BText style={styles.title}>
-                        IDR {formatCurrency(secondAmount)}
+                        {formatCurrency(secondAmount)}
                     </BText>
                 )}
             </View>

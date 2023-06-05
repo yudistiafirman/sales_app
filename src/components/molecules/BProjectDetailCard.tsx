@@ -195,7 +195,7 @@ export default function BProjectDetailCard({
                     <View style={styles.summaryContainer}>
                         <Text style={styles.summary}>Nominal</Text>
                         <Text style={[styles.summary, styles.fontw400]}>
-                            {`IDR ${formatCurrency(nominal)}`}
+                            {formatCurrency(nominal)}
                         </Text>
                     </View>
                 </>

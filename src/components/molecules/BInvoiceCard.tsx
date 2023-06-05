@@ -142,7 +142,7 @@ function BInvoiceCard({
                         numberOfLines={1}
                         style={[styles.title, { maxWidth: resScale(160) }]}
                     >
-                        {`IDR ${formatCurrency(amount)}`}
+                        {formatCurrency(amount)}
                     </Text>
                 </View>
                 <BSpacer size="verySmall" />

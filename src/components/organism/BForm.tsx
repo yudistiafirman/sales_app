@@ -375,7 +375,7 @@ const renderInput = (
                         />
                     </View>
                     <View style={styles.priceText}>
-                        <BText>IDR</BText>
+                        <BText>Rp</BText>
                     </View>
                 </View>
                 {isError && (

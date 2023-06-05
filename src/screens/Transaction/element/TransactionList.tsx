@@ -54,7 +54,10 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
     selectedType
 }: TransactionListProps<ArrayOfObject>) {
     const getNominal = (item: any) => {
-        if (selectedType === "Deposit" || selectedType === "DO") {
+        if (selectedType === "Deposit") {
+            return item.amount;
+        }
+        if (selectedType === "DO") {
             return item.value ? item.value : item.totalPrice;
         }
         if (selectedType === "Jadwal") {

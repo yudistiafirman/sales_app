@@ -123,8 +123,7 @@ function TransactionListCard({
                     </BText>
                     {nominal !== undefined && (
                         <BText sizeInNumber={14} bold="500">
-                            {(nominal < 0 ? "- IDR " : "IDR ") +
-                                formatCurrency(nominal || 0)}
+                            {formatCurrency(nominal || 0)}
                         </BText>
                     )}
                 </View>

@@ -135,11 +135,8 @@ export default function FirstStep() {
                                 }
                             ]}
                         >
-                            {stateTwo?.availableDeposit
-                                ? (stateTwo?.availableDeposit < 0
-                                      ? "- IDR "
-                                      : "IDR ") +
-                                  formatCurrency(stateTwo?.availableDeposit)
+                            {stateTwo?.availableDeposit !== undefined
+                                ? formatCurrency(stateTwo?.availableDeposit)
                                 : formatCurrency(0)}
                         </Text>
                     </View>

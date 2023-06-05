@@ -369,7 +369,20 @@ export default function CustomerDetail() {
                     <View style={{ flexDirection: "row", width: "100%" }}>
                         <RemainingAmountBox
                             title="Sisa Deposit"
-                            firstAmount={customerData?.pendingBalance}
+                            firstAmount={
+                                customerData?.pendingBalance !== undefined
+                                    ? customerData?.pendingBalance
+                                    : 0
+                            }
+                        />
+                        <BSpacer size="extraSmall" />
+                        <RemainingAmountBox
+                            title="Sisa Credit"
+                            firstAmount={
+                                customerData?.creditPendingBalance !== undefined
+                                    ? customerData?.creditPendingBalance
+                                    : 0
+                            }
                         />
                     </View>
                 </BContainer>

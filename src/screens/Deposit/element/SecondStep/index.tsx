@@ -198,12 +198,7 @@ export default function SecondStep() {
                                                 style.fontw600
                                             ]}
                                         >
-                                            {(calculatedTotal() < 0
-                                                ? "- IDR "
-                                                : "IDR ") +
-                                                formatCurrency(
-                                                    calculatedTotal()
-                                                )}
+                                            {formatCurrency(calculatedTotal())}
                                         </Text>
                                     </View>
                                 </>

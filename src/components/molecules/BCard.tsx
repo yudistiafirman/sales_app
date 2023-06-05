@@ -120,25 +120,25 @@ function BCard({
                     </View>
                 </View>
             </View>
-            {availableDebit || availableCredit ? (
+            {availableDebit !== undefined || availableCredit !== undefined ? (
                 <BSpacer size="extraSmall" />
             ) : null}
 
             <View style={styles.paymentContainer}>
-                {availableDebit && (
+                {availableDebit !== undefined && (
                     <View style={styles.remainingAmount}>
-                        <Text style={styles.credText}>Sisa Debit : </Text>
+                        <Text style={styles.credText}>Sisa Deposit : </Text>
                         <Text
                             style={{
                                 ...styles.credText,
                                 fontFamily: font.family.montserrat[500]
                             }}
                         >
-                            -
+                            {formatCurrency(availableDebit)}
                         </Text>
                     </View>
                 )}
-                {availableCredit && (
+                {availableCredit !== undefined && (
                     <View style={styles.remainingAmount}>
                         <Text style={styles.credText}>Sisa Credit : </Text>
                         <Text
@@ -147,7 +147,7 @@ function BCard({
                                 fontFamily: font.family.montserrat[500]
                             }}
                         >
-                            -
+                            {formatCurrency(availableCredit)}
                         </Text>
                     </View>
                 )}

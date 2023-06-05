@@ -177,7 +177,6 @@ export default class BrikApiOrder {
         if (status) {
             const finalStatus =
                 typeof status === "object" ? JSON.stringify(status) : status;
-            console.log("STATUS DELIVERY ORDER=== ", finalStatus);
             params.append("status", finalStatus);
         }
         if (page) {

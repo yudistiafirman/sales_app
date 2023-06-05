@@ -134,7 +134,7 @@ function ChoosenProductList<ProductData extends Products>({
             <View style={styles.priceContainer}>
                 <Text style={styles.productName}>Total</Text>
                 <Text numberOfLines={1} style={styles.boldPrice}>
-                    IDR {formatCurrency(calculatedTotalPrice)}
+                    {formatCurrency(calculatedTotalPrice)}
                 </Text>
             </View>
         </ScrollView>
