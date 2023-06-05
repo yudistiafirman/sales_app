@@ -377,7 +377,7 @@ export default function CustomerDetail() {
                         />
                         <BSpacer size="extraSmall" />
                         <RemainingAmountBox
-                            title="Sisa Credit"
+                            title="Sisa Kredit"
                             firstAmount={
                                 customerData?.creditPendingBalance !== undefined
                                     ? customerData?.creditPendingBalance

@@ -64,6 +64,7 @@ type BNestedProductCardType = {
     expandData: any[];
     isDeposit?: boolean;
     poNumber?: string;
+    paymentType?: string | null;
     availableDeposit?: number;
 };
 
@@ -206,6 +207,7 @@ export default function BNestedProductCard({
     expandData,
     isDeposit,
     poNumber,
+    paymentType,
     availableDeposit = 0
 }: BNestedProductCardType) {
     return (
@@ -278,7 +280,11 @@ export default function BNestedProductCard({
                                     {isDeposit && (
                                         <View style={styles.flexRow}>
                                             <Text style={styles.titleLastOrder}>
-                                                Deposit
+                                                {paymentType === "CBD" ||
+                                                paymentType === null ||
+                                                paymentType === undefined
+                                                    ? "Deposit"
+                                                    : "Kredit"}
                                             </Text>
                                             <View style={styles.valueView}>
                                                 <Text

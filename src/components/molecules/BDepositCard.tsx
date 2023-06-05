@@ -70,7 +70,7 @@ export default function BDepositCard({
                 <Text style={[styles.summary, styles.fontw400]}>
                     {isSum
                         ? formatCurrency(secondSectionValue)
-                        : formatCurrency(secondSectionValue).replace("-", "")}
+                        : `- ${formatCurrency(secondSectionValue)}`}
                 </Text>
             </View>
             <BSpacer size="extraSmall" />
@@ -86,9 +86,9 @@ export default function BDepositCard({
                     ]}
                 >
                     {firstSectionValue - secondSectionValue < 0 && !isSum
-                        ? formatCurrency(
+                        ? `- ${formatCurrency(
                               isSum ? getTotalSum() : getTotalDifference()
-                          )
+                          )}`
                         : formatCurrency(
                               isSum ? getTotalSum() : getTotalDifference()
                           ).replace("-", "")}

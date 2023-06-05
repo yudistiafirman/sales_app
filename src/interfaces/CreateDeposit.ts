@@ -14,6 +14,7 @@ interface CreateDepositSecondStep {
     purchaseOrders: PurchaseOrdersData[];
     selectedSaleOrder: any;
     availableDeposit: number;
+    paymentType: string | null;
 }
 
 interface CreateDepositState {

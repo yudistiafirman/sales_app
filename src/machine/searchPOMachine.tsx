@@ -66,6 +66,7 @@ const searchPOMachine = createMachine(
                 isRefreshing: boolean;
                 isModalVisible: boolean;
                 availableDeposit: number;
+                paymentType: string | null;
                 dataType: "DEPOSITDATA" | "SPHDATA" | "SCHEDULEDATA" | "";
                 filterSphDataBy: "INDIVIDU" | "COMPANY";
                 choosenDataFromList:
@@ -89,6 +90,7 @@ const searchPOMachine = createMachine(
             isRefreshing: false,
             isModalVisible: false,
             dataType: "",
+            paymentType: null,
             availableDeposit: 0,
             filterSphDataBy: "INDIVIDU",
             choosenDataFromList: {} as
@@ -211,7 +213,11 @@ const searchPOMachine = createMachine(
             triggerModal: assign((context, event) => ({
                 isModalVisible: true,
                 choosenDataFromList: event.value,
-                availableDeposit: getAvailableDepositProject(event.value)
+                availableDeposit: getAvailableDepositProject(
+                    event.value,
+                    context.dataType !== "DEPOSITDATA"
+                ),
+                paymentType: event.value?.Customer?.paymentType
             })),
             assignSearchValue: assign((context, event) => ({
                 searchValue: event.value,

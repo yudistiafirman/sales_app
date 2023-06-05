@@ -58,7 +58,7 @@ function InvoiceFilter() {
             isRequire: false,
             type: "comboRadioButton",
             comboRadioBtn: {
-                firstText: "Pembayaran Credit",
+                firstText: "Pembayaran Kredit",
                 secondText: "Pembayaran Cash",
                 firstValue: "CREDIT",
                 secondValue: "CBD",

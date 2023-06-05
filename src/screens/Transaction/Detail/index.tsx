@@ -632,13 +632,28 @@ function TransactionDetail() {
                             <BDepositCard
                                 firstSectionText={
                                     selectedType === "Jadwal"
-                                        ? "Deposit"
-                                        : "Deposit Awal"
+                                        ? data?.project?.Customer
+                                              ?.paymentType === "CBD" ||
+                                          data?.project?.Customer
+                                              ?.paymentType === null ||
+                                          data?.project?.Customer
+                                              ?.paymentType === undefined
+                                            ? "Deposit"
+                                            : "Kredit"
+                                        : data?.project?.Customer
+                                              ?.paymentType === "CBD" ||
+                                          data?.project?.Customer
+                                              ?.paymentType === null ||
+                                          data?.project?.Customer
+                                              ?.paymentType === undefined
+                                        ? "Deposit Awal"
+                                        : "Kredit Awal"
                                 }
                                 firstSectionValue={
                                     selectedType === "Jadwal"
                                         ? getAvailableDepositProject(
-                                              data.project
+                                              data.project,
+                                              true
                                           )
                                         : data?.PurchaseOrder?.totalDeposit
                                         ? data?.PurchaseOrder?.totalDeposit
@@ -650,7 +665,14 @@ function TransactionDetail() {
                                           data?.products.length > 0
                                             ? data?.products[0].displayName
                                             : "-"
-                                        : "Tambahan Deposit"
+                                        : data?.project?.Customer
+                                              ?.paymentType === "CBD" ||
+                                          data?.project?.Customer
+                                              ?.paymentType === null ||
+                                          data?.project?.Customer
+                                              ?.paymentType === undefined
+                                        ? "Tambahan Deposit"
+                                        : "Tambahan Kredit"
                                 }
                                 secondSectionValue={
                                     selectedType === "Jadwal"
@@ -664,8 +686,22 @@ function TransactionDetail() {
                                 }
                                 thirdSectionText={
                                     selectedType === "Jadwal"
-                                        ? "Est. Sisa Deposit"
-                                        : "Deposit Akhir"
+                                        ? data?.project?.Customer
+                                              ?.paymentType === "CBD" ||
+                                          data?.project?.Customer
+                                              ?.paymentType === null ||
+                                          data?.project?.Customer
+                                              ?.paymentType === undefined
+                                            ? "Est. Sisa Deposit"
+                                            : "Est. Sisa Kredit"
+                                        : data?.project?.Customer
+                                              ?.paymentType === "CBD" ||
+                                          data?.project?.Customer
+                                              ?.paymentType === null ||
+                                          data?.project?.Customer
+                                              ?.paymentType === undefined
+                                        ? "Deposit Akhir"
+                                        : "Kredit Akhir"
                                 }
                                 isSum={selectedType !== "Jadwal"}
                             />

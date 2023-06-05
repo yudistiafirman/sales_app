@@ -40,7 +40,8 @@ function SelectPurchaseOrderData({
         loadMoreData,
         errorGettingListMessage,
         searchValue,
-        availableDeposit
+        availableDeposit,
+        paymentType
     } = state.context;
 
     React.useEffect(() => {
@@ -97,7 +98,8 @@ function SelectPurchaseOrderData({
             companyName,
             locationName,
             projectId,
-            availableDeposit
+            availableDeposit,
+            paymentType
         };
         onSubmitData({ parentData, data: productData });
         send("onCloseModal");
@@ -114,6 +116,7 @@ function SelectPurchaseOrderData({
                 isDeposit={dataToGet === "DEPOSITDATA"}
                 dataToGet={dataToGet}
                 availableDeposit={availableDeposit}
+                paymentType={paymentType}
             />
             <BCommonSearchList
                 searchQuery={searchQuery}

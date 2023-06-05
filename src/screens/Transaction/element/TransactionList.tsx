@@ -61,7 +61,7 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
             return item.value ? item.value : item.totalPrice;
         }
         if (selectedType === "Jadwal") {
-            return getAvailableDepositProject(item.project);
+            return getAvailableDepositProject(item.project, true);
         }
         return item.totalPrice ? item.totalPrice : item.amount;
     };
