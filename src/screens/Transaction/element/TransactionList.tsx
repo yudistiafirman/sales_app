@@ -99,6 +99,7 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
                     nominal={getNominal(item)}
                     // TODO: handle from BE, ugly when use mapping in FE side
                     useBEStatus={selectedType !== "SPH"}
+                    selectedType={selectedType}
                 />
             </TouchableOpacity>
         ),

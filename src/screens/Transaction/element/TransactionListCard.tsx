@@ -74,6 +74,7 @@ interface TransactionListCardProps {
     name?: string;
     nominal?: number;
     useBEStatus?: boolean;
+    selectedType?: string;
 }
 
 function TransactionListCard({
@@ -82,7 +83,8 @@ function TransactionListCard({
     status,
     name,
     nominal,
-    useBEStatus
+    useBEStatus,
+    selectedType
 }: TransactionListCardProps) {
     const statusFinal = useBEStatus ? status : getStatusTrx(status);
     const { color, textColor } = getColorStatusTrx(statusFinal);
@@ -90,9 +92,15 @@ function TransactionListCard({
         <View
             style={[
                 styles.parent,
-                projectName && name
-                    ? { height: resScale(98) }
-                    : { height: resScale(68) }
+                selectedType === "SPH"
+                    ? { height: resScale(87) }
+                    : (projectName &&
+                          number.length + statusFinal.length > 33) ||
+                      (projectName &&
+                          name &&
+                          number.length + statusFinal.length > 33)
+                    ? { height: resScale(97) }
+                    : { height: resScale(77) }
             ]}
         >
             <View style={styles.leftSide}>
