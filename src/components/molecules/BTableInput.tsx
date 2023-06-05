@@ -95,7 +95,7 @@ function BTableInput({
                     <Text style={[styles.cellText]}>
                         {item?.secondColumnNominalInput
                             ? item.secondColumnNominalInput
-                            : "IDR"}
+                            : "Rp"}
                     </Text>
                 </View>
 

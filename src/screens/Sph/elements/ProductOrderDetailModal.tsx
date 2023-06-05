@@ -360,7 +360,7 @@ export default function ProductCartModal({
                                 left={
                                     <TextInput.Icon
                                         forceTextInputFocus={false}
-                                        icon={() => TextIcon("IDR")}
+                                        icon={() => TextIcon("Rp")}
                                     />
                                 }
                                 right={

@@ -395,15 +395,9 @@ function InvoiceDetail() {
     }, []);
 
     const renderInvoiceDetailFooter = () => {
-        const totalAmount = invoiceDetailData?.total
-            ? formatCurrency(invoiceDetailData?.total)
-            : "IDR 0";
-        const amountPaid = invoiceDetailData?.amountPaid
-            ? formatCurrency(invoiceDetailData?.amountPaid)
-            : "IDR 0";
-        const amountDue = invoiceDetailData?.amountDue
-            ? formatCurrency(invoiceDetailData?.amountDue)
-            : "IDR 0";
+        const totalAmount = formatCurrency(invoiceDetailData?.total || 0);
+        const amountPaid = formatCurrency(invoiceDetailData?.amountPaid || 0);
+        const amountDue = formatCurrency(invoiceDetailData?.amountDue || 0);
 
         return (
             <View style={{ flex: 0.4 }}>

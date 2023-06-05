@@ -16,11 +16,11 @@ const trimCurrencyFormat = (input: string, originAmount: number): string => {
         result = result.replace("Rp ", "").replace("Rp", "");
     }
 
-    if (!result.includes("Rp.")) {
+    if (!result.includes("Rp")) {
         if (originAmount < 0) {
-            result = `- Rp. ${result}`;
+            result = `- Rp ${result}`;
         } else {
-            result = `Rp. ${result}`;
+            result = `Rp ${result}`;
         }
     }
     return result;

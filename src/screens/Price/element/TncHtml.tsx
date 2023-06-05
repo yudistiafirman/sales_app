@@ -36,7 +36,7 @@ const tncHTML = `<!DOCTYPE html>
     </br>
     <ol type="a">
     <!-- a -->
-    <li>Pembongkaran lebih dari <b>2 jam</b> dikenakan biaya sebesar <b>IDR 150.000,- per jam</b>.</li>
+    <li>Pembongkaran lebih dari <b>2 jam</b> dikenakan biaya sebesar <b>Rp 150.000,- per jam</b>.</li>
     </br>
     <!-- b -->
     <li>Pengiriman <b>kurang dari 7m<sup>3</sup></b>.</li>
@@ -45,7 +45,7 @@ const tncHTML = `<!DOCTYPE html>
     <div className=".tableContainer">
       <div style="background-color:${colors.primary};height:38px;display:flex;flex-direction:row;">
           <div style="flex:1.1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.white}"><b>Muatan Truk Mixer</b></div>
-          <div style="flex:1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.white}"><b>Biaya (IDR/m<sup>3</sup>)</b></div>
+          <div style="flex:1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.white}"><b>Biaya (Rp/m<sup>3</sup>)</b></div>
       </div>
       <div style="background-color:${colors.white};height:38px;display:flex;flex-direction:row;">
          <div style="flex:1.1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.text.darker};border-right:1px solid ${colors.border.tab}">7 m<sup>3</sup></div>
@@ -70,7 +70,7 @@ const tncHTML = `<!DOCTYPE html>
     <div className=".tableContainer">
     <div style="background-color:${colors.primary};height:38px;display:flex;flex-direction:row;">
         <div style="flex:1.1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.white}"><b>Jarak</b></div>
-        <div style="flex:1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.white}"><b>Biaya (IDR/m<sup>3</sup>)</b></div>
+        <div style="flex:1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.white}"><b>Biaya (Rp/m<sup>3</sup>)</b></div>
     </div>
     <div style="background-color:${colors.white};height:38px;display:flex;flex-direction:row;">
        <div style="flex:1.1;justify-content:center;display:flex;align-items:center;font-family:'Montserrat',sans-serif;font-size: 14px;color:${colors.text.darker};border-right:1px solid ${colors.border.tab}">0 - 20 KM</div>
