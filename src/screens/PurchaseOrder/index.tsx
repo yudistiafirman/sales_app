@@ -87,13 +87,7 @@ function PurchaseOrder() {
             );
         }
         if (currentStep === 1) {
-            const isRequiredFileEmpty = files.filter(
-                (v) => v.isRequire && v.value === null
-            );
-            const isFilesValueNull = files.filter((v) => v.value === null);
-            return paymentType === "CBD"
-                ? isRequiredFileEmpty.length > 0
-                : isFilesValueNull.length > 0;
+            return false;
         }
         const hasNoQuantityMultiProducts = selectedProducts.filter(
             (v) => v.quantity.length === 0 || v.quantity[0] === "0"
