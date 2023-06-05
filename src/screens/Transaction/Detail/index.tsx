@@ -206,7 +206,8 @@ function TransactionDetail() {
             if (data?.PurchaseOrderDocs) {
                 setDownloadFiles({
                     letter: data?.PurchaseOrderDocs?.find(
-                        (v: any) => v?.type === "BRIK_SIGNED"
+                        (v: any) =>
+                            v?.type === "BRIK_SIGNED" || v?.type === "BRIK"
                     )
                 });
             }
