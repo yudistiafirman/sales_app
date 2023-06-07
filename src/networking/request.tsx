@@ -1,9 +1,13 @@
-import axios, { AxiosError, AxiosResponse, Method } from "axios";
+import axios, {
+    AxiosError,
+    AxiosResponse,
+    InternalAxiosRequestConfig
+} from "axios";
 import BrikApiCommon from "@/brikApi/BrikApiCommon";
 import UserModel from "@/models/User";
 import bStorage from "@/actions";
 import { storageKey } from "@/constants";
-import { signout } from "@/redux/reducers/authReducer";
+import { setUserData, signout } from "@/redux/reducers/authReducer";
 import { getSuccessMsgFromAPI } from "@/utils/generalFunc";
 import { openSnackbar } from "@/redux/reducers/snackbarReducer";
 import Config from "react-native-config";
@@ -12,6 +16,7 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import analytics from "@react-native-firebase/analytics";
 import perf from "@react-native-firebase/perf";
 import Api from "@/models";
+import jwtDecode from "jwt-decode";
 
 const URL_PRODUCTIVITY =
     Platform.OS === "android"
@@ -125,9 +130,28 @@ export const injectStore = (_store: any) => {
 
 export const doLogout = () => {
     bStorage.clearItem();
-    store.dispatch(signout(false));
     crashlytics().setUserId("");
     analytics().setUserId("");
+    store.dispatch(signout(false));
+};
+
+export const doRefreshToken = async (
+    configs: InternalAxiosRequestConfig<any>
+): Promise<AxiosResponse<any, any>> => {
+    const config = configs;
+    const responseRefreshToken = await customRequest(
+        BrikApiCommon.getRefreshToken(),
+        "POST"
+    );
+
+    const newAccToken = responseRefreshToken?.data?.data?.accessToken;
+    const decoded = jwtDecode<UserModel.DataSuccessLogin>(newAccToken);
+    await bStorage.setItem(storageKey.userToken, newAccToken);
+    store.dispatch(setUserData({ userData: decoded }));
+
+    config.headers.Authorization = `Bearer ${newAccToken}`;
+    const finalResponse = await instance(config);
+    return finalResponse;
 };
 
 instance.interceptors.response.use(
@@ -171,23 +195,7 @@ instance.interceptors.response.use(
             }
 
             if (data.error?.code === "TKN008") {
-                const responseRefreshToken = await instance.post<
-                    any,
-                    AxiosResponse<Api.Response, any>
-                >(BrikApiCommon.getRefreshToken(), {});
-
-                const { data: dataRefreshToken } = responseRefreshToken;
-                const resultRefreshToken =
-                    dataRefreshToken.data as UserModel.DataSuccessLogin;
-
-                const newAccToken = resultRefreshToken?.accessToken;
-                bStorage.setItem(storageKey.userToken, newAccToken);
-                // const decoded = jwtDecode<JwtPayload>(newAccToken);
-
-                // store.dispatch(setUserData({ userData: decoded }));
-
-                config.headers.Authorization = `Bearer ${newAccToken}`;
-                const finalResponse = await instance(config);
+                const finalResponse = doRefreshToken(config);
                 return Promise.resolve(finalResponse);
             }
 
@@ -264,16 +272,18 @@ instance.interceptors.response.use(
         const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
         const postPO = `${URL_ORDER}/order/m/purchase-order/`;
         const postSOSigned = `${URL_ORDER}/order/m/purchase-order/docs/`;
-        const refreshToken = `${URL_COMMON}/common/m/auth/refresh/`;
 
         if (
-            error?.config?.url === refreshToken ||
-            errorStatus === 403 ||
             error.response?.data?.code === "TKN001" ||
-            error.response?.data?.code === "TKN003" ||
-            error.response?.data?.code === "TKN008"
+            error.response?.data?.code === "TKN002" ||
+            error.response?.data?.code === "TKN003"
         ) {
             doLogout();
+        } else if (error.response?.data?.code === "TKN008") {
+            if (error.config) {
+                const finalResponse = doRefreshToken(error.config);
+                return Promise.resolve(finalResponse);
+            }
         }
 
         if (
