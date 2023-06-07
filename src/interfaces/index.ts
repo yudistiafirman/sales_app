@@ -341,14 +341,15 @@ interface SelectedCompanyInterface {
         | {
               id: string | null;
               name: string | null;
+              title?: string;
           }
         | {
               id: string | null;
-              title: string | null;
+              title?: string;
           };
     Pics: PIC[];
     Visitation: {
-        finish_date: string | null;
+        finishDate: string | null;
         id: string;
         order: number;
         visitation_id: string | null;
@@ -357,11 +358,13 @@ interface SelectedCompanyInterface {
         city?: string;
         district?: string;
         line1?: string;
+        line2?: string;
         postalCode?: number;
         rural?: string;
-        lat: string;
-        lon: string;
+        lat?: number;
+        lon?: number;
         id?: string;
+        formattedAddress?: string;
     };
     Pic: PIC;
 }
@@ -539,10 +542,11 @@ interface CustomerDataInterface {
 }
 
 interface LocationPayloadType {
-    formattedAddress: string;
-    postalId: number;
-    lon: number;
-    lat: number;
+    formattedAddress?: string;
+    postalId?: number;
+    lon?: number;
+    lat?: number;
+    line1?: string;
     line2?: string;
 }
 
