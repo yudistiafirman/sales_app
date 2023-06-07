@@ -183,7 +183,7 @@ export default class BrikApiCommon {
     };
 
     static verifyAuth = () => {
-        const url = new URL(`${API_URL} /common/m/auth/verify-auth`);
+        const url = new URL(`${API_URL}/common/m/auth/verify-auth`);
         return url.toString();
     };
 }
