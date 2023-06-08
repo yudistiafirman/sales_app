@@ -1,6 +1,4 @@
 import { BCommonSearchList } from "@/components";
-import { AppointmentActionType } from "@/context/AppointmentContext";
-import { useAppointmentData } from "@/hooks";
 import React, { useCallback, useState } from "react";
 import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,11 +7,16 @@ import debounce from "lodash.debounce";
 import { getAllProject } from "@/redux/async-thunks/commonThunks";
 import { retrying } from "@/redux/reducers/commonReducer";
 import { AppDispatch, RootState } from "@/redux/store";
+import {
+    addCompanies,
+    enableSearching,
+    onAddProject,
+    setSearchQuery
+} from "@/redux/reducers/appointmentReducer";
 
 function SearchingCustomer() {
-    const [values, dispatchValue] = useAppointmentData();
     const [searchIndex, setSearchIndex] = useState(0);
-    const { searchQuery } = values;
+    const appoinmentState = useSelector((state: RootState) => state.appoinment);
     const {
         projects,
         isProjectLoading,
@@ -36,10 +39,7 @@ function SearchingCustomer() {
     );
 
     const onChangeSearch = (text: string) => {
-        dispatchValue({
-            type: AppointmentActionType.SEARCH_QUERY,
-            value: text
-        });
+        dispatch(setSearchQuery({ value: text }));
         onChangeWithDebounce(text);
     };
 
@@ -53,19 +53,21 @@ function SearchingCustomer() {
                     userID = item.Company?.id;
                     userName = item.Company?.name;
                 }
-                if (values.stepOne.options.items) {
-                    dispatchValue({
-                        type: AppointmentActionType.ADD_COMPANIES,
-                        value: [
-                            ...values.stepOne.options.items,
-                            { id: userID, title: userName }
-                        ]
-                    });
+                if (appoinmentState.stepOne.options.items) {
+                    dispatch(
+                        addCompanies({
+                            value: [
+                                ...appoinmentState.stepOne.options.items,
+                                { id: userID, title: userName }
+                            ]
+                        })
+                    );
                 } else {
-                    dispatchValue({
-                        type: AppointmentActionType.ADD_COMPANIES,
-                        value: [{ id: userID, title: userName }]
-                    });
+                    dispatch(
+                        addCompanies({
+                            value: [{ id: userID, title: userName }]
+                        })
+                    );
                 }
                 const picList = item.Pics;
                 if (picList.length === 1) {
@@ -74,24 +76,25 @@ function SearchingCustomer() {
 
                 const companyDataToSave = {
                     Company: { id: userID, title: userName },
-                    PIC: picList,
+                    Pics: picList,
                     Visitation: item.Visitations[0],
                     locationAddress: item.LocationAddress,
-                    mainPic: item.Pic,
+                    Pic: item.Pic,
                     id: item.id,
                     name: item.name
                 };
 
-                dispatchValue({
-                    type: AppointmentActionType.ON_ADD_PROJECT,
-                    key: customerType,
-                    value: companyDataToSave
-                });
+                dispatch(
+                    onAddProject({
+                        key: customerType,
+                        value: companyDataToSave
+                    })
+                );
             } catch (error) {
                 console.log(error, "errorappointment onPressCard");
             }
         },
-        [dispatchValue, values.stepOne.options.items]
+        [dispatch, appoinmentState.stepOne.options.items]
     );
 
     const routes: { title: string; totalItems: number }[] = React.useMemo(
@@ -108,34 +111,31 @@ function SearchingCustomer() {
 
     const onRetryGettingProjects = () => {
         dispatch(retrying());
-        onChangeWithDebounce(searchQuery);
+        onChangeWithDebounce(appoinmentState.searchQuery);
     };
 
     const onClearValue = () => {
-        dispatchValue({
-            type: AppointmentActionType.SEARCH_QUERY,
-            value: ""
-        });
+        dispatch(setSearchQuery({ value: "" }));
     };
 
     return (
         <View style={{ flex: 1 }}>
             <BCommonSearchList
-                searchQuery={searchQuery}
+                searchQuery={appoinmentState.searchQuery}
                 onChangeText={onChangeSearch}
                 onClearValue={() => {
-                    if (searchQuery && searchQuery.trim() !== "") {
+                    if (
+                        appoinmentState.searchQuery &&
+                        appoinmentState.searchQuery.trim() !== ""
+                    ) {
                         onClearValue();
                     } else {
-                        dispatchValue({
-                            type: AppointmentActionType.ENABLE_SEARCHING,
-                            value: false
-                        });
+                        dispatch(enableSearching({ value: false }));
                     }
                 }}
                 placeholder="Cari PT / Proyek"
                 index={searchIndex}
-                emptyText={`${searchQuery} tidak ditemukan!`}
+                emptyText={`${appoinmentState.searchQuery} tidak ditemukan!`}
                 routes={routes}
                 autoFocus
                 onIndexChange={setSearchIndex}

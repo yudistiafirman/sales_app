@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import autoMergeLevel1 from "redux-persist/es/stateReconciler/autoMergeLevel1";
 import { SphStateInterface } from "@/interfaces";
+import Api from "@/models";
 import createXStateMiddleware from "./middleware/createXStateMiddleware";
 import SphReducer from "./reducers/SphReducer";
 import VisitationReducer, {
@@ -24,6 +25,7 @@ import purchaseOrderReducer, {
 import salesOrderReducer, { SOGlobalState } from "./reducers/salesOrder";
 import snackbarReducer from "./reducers/snackbarReducer";
 import invoiceReducer from "./reducers/invoiceReducer";
+import appointmentReducer from "./reducers/appointmentReducer";
 
 const persistConfig = {
     key: "root",
@@ -41,6 +43,7 @@ const rootReducer = combineReducers({
     snackbar: snackbarReducer,
     purchaseOrder: purchaseOrderReducer,
     invoice: invoiceReducer,
+    appoinment: appointmentReducer,
     operation: persistReducer<OperationInitState, any>(
         persistConfig,
         operationReducer
