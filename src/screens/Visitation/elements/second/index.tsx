@@ -2,7 +2,7 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import { useRoute } from "@react-navigation/native";
 import debounce from "lodash.debounce";
 import React, { useEffect, useMemo, useState } from "react";
-import { SafeAreaView, View } from "react-native";
+import { KeyboardAvoidingView, SafeAreaView, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { BDivider, BForm, BSpacer, BText } from "@/components";
@@ -161,14 +161,9 @@ function SecondStep({ openBottomSheet }: IProps) {
                     }
                 ],
                 isInputDisable: !!existingVisitation
-            }
-        ];
-        if (
-            visitationData.customerType &&
-            visitationData.customerType?.length > 0
-        ) {
-            const companyNameInput: Input = {
-                label: "Nama Perusahaan",
+            },
+            {
+                label: "Nama Pelanggan",
                 isRequire: true,
                 isError: false,
                 type: "autocomplete",
@@ -187,55 +182,49 @@ function SecondStep({ openBottomSheet }: IProps) {
                         setSelectedCompany(item);
                     }
                 },
-                placeholder: "Masukkan Nama Perusahaan",
+                placeholder: "Masukkan Nama Pelanggan",
                 isInputDisable: !!existingVisitation,
                 // showChevronAutoCompleted: false,
                 showClearAutoCompleted: false
-            };
-
-            const aditionalInput: Input[] = [
-                {
-                    label: "Nama Proyek",
-                    isRequire: true,
-                    isError: false,
-                    type: "textInput",
-                    onChange: (e: any) => {
-                        onChange("projectName")(e.nativeEvent.text);
-                    },
-                    value: visitationData.projectName,
-                    placeholder: "Masukkan Nama Proyek",
-                    isInputDisable: !!existingVisitation
+            },
+            {
+                label: "Nama Proyek",
+                isRequire: true,
+                isError: false,
+                type: "textInput",
+                onChange: (e: any) => {
+                    onChange("projectName")(e.nativeEvent.text);
                 },
-                {
-                    label: "PIC",
-                    isRequire: true,
-                    isError: false,
-                    type: "PIC",
-                    value: visitationData.pics,
-                    onChange: () => {
-                        openBottomSheet();
-                    },
-                    onSelect: (index: number) => {
-                        const newPicList = visitationData.pics.map(
-                            (el, _index) => ({
-                                ...el,
-                                isSelected: _index === index
-                            })
-                        );
-                        dispatch(
-                            updateDataVisitation({
-                                type: "pics",
-                                value: newPicList
-                            })
-                        );
-                    }
+                value: visitationData.projectName,
+                placeholder: "Masukkan Nama Proyek",
+                isInputDisable: !!existingVisitation
+            },
+            {
+                label: "PIC",
+                isRequire: true,
+                isError: false,
+                type: "PIC",
+                value: visitationData.pics,
+                onChange: () => {
+                    openBottomSheet();
+                },
+                onSelect: (index: number) => {
+                    const newPicList = visitationData.pics.map(
+                        (el, _index) => ({
+                            ...el,
+                            isSelected: _index === index
+                        })
+                    );
+                    dispatch(
+                        updateDataVisitation({
+                            type: "pics",
+                            value: newPicList
+                        })
+                    );
                 }
-            ];
-            if (visitationData.customerType === "COMPANY") {
-                aditionalInput.unshift(companyNameInput);
             }
-            baseInput.push(...aditionalInput);
-        }
+        ];
+
         return baseInput;
     }, [visitationData, selectedCompany]);
 
@@ -252,25 +241,31 @@ function SecondStep({ openBottomSheet }: IProps) {
                 setSelectedCompany={setSelectedCompany}
             />
             {!visitationData.isSearchProject && (
-                <ScrollView
-                    style={{ flex: 1 }}
-                    showsVerticalScrollIndicator={false}
-                >
-                    <BSpacer size={6} />
-                    <View style={styles.dividerContainer}>
-                        <BDivider />
-                        <BSpacer size="verySmall" />
-                        <BText bold="500" color="divider">
-                            Atau Buat Baru Dibawah
-                        </BText>
-                        <BSpacer size="verySmall" />
-                        <BDivider />
-                    </View>
-                    <BSpacer size={8} />
-                    <View>
-                        <BForm titleBold="500" inputs={inputs} />
-                    </View>
-                </ScrollView>
+                <KeyboardAvoidingView style={{ flex: 1 }} enabled>
+                    <ScrollView
+                        nestedScrollEnabled
+                        keyboardDismissMode="on-drag"
+                        keyboardShouldPersistTaps="handled"
+                        contentInsetAdjustmentBehavior="automatic"
+                        contentContainerStyle={{ paddingBottom: 0 }}
+                        style={{ flex: 1 }}
+                    >
+                        <BSpacer size={6} />
+                        <View style={styles.dividerContainer}>
+                            <BDivider />
+                            <BSpacer size="verySmall" />
+                            <BText bold="500" color="divider">
+                                Atau Buat Baru Dibawah
+                            </BText>
+                            <BSpacer size="verySmall" />
+                            <BDivider />
+                        </View>
+                        <BSpacer size={8} />
+                        <View>
+                            <BForm titleBold="500" inputs={inputs} />
+                        </View>
+                    </ScrollView>
+                </KeyboardAvoidingView>
             )}
         </SafeAreaView>
     );

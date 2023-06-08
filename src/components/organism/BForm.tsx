@@ -219,7 +219,8 @@ const renderInput = (
         quantityType,
         disableColor,
         comboRadioBtn,
-        tableInput
+        tableInput,
+        textInputStyle
     } = input;
 
     function getSelectedValueCalendarRange(
@@ -857,6 +858,7 @@ const renderInput = (
                         placeholder={placeholder}
                         disabled={isInputDisable}
                         contentStyle={textStyles}
+                        textInputStyle={textInputStyle}
                     />
                 )}
                 {isError && (

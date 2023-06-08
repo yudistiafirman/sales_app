@@ -11,6 +11,7 @@ import * as React from "react";
 import { Details } from "react-native-maps";
 import { DateData } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
+import { TAutocompleteDropdownItem } from "react-native-autocomplete-dropdown";
 
 interface Input {
     label?: string;
@@ -47,7 +48,7 @@ interface Input {
     disabledFileInput?: boolean;
     LeftIcon?: () => JSX.Element;
     keyboardType?: KeyboardType | KeyboardTypeOptions;
-    items?: any;
+    itemSet?: ItemSet[];
     showChevronAutoCompleted?: boolean;
     showClearAutoCompleted?: boolean;
     textSize?: number;
@@ -130,7 +131,7 @@ interface Input {
         value: any;
         onValueChange: (value: any) => void;
     };
-    onSelect?: (index: number | any) => void; // eg for pic radio
+    onSelect?: (index: TAutocompleteDropdownItem) => void; // eg for pic radio
     isInputDisable?: boolean;
     disableColor?: string;
     onClear?: () => void;
@@ -140,6 +141,15 @@ interface Input {
     outlineColor?: string;
     comboRadioBtn?: IComboRadioBtn;
     tableInput?: ITableInput;
+    textInputStyle?: TextStyle;
+}
+
+interface ItemSet {
+    id: string;
+    title: string;
+    subtitle?: string;
+    chipTitle?: string;
+    chipBgColor?: string;
 }
 
 interface IDurationButton {
@@ -805,5 +815,6 @@ export type {
     ITableInput,
     ITableInputItem,
     ITableInputListItem,
-    IDurationButton
+    IDurationButton,
+    ItemSet
 };
