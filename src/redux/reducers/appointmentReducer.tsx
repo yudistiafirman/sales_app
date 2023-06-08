@@ -14,7 +14,7 @@ export type DataCompany = {
 };
 
 export interface StepOne {
-    routes: Iroutes[];
+    routes: IRoutes[];
     selectedCategories: string;
     customerType: string;
     individu: selectedCompanyInterface;
@@ -29,7 +29,7 @@ export interface StepOne {
     };
 }
 
-interface Iroutes {
+interface IRoutes {
     key: string;
     title: string;
     totalItems: number;
@@ -56,7 +56,6 @@ interface AppointmentState {
 
 const initialState: AppointmentState = {
     step: 0,
-
     stepDone: [0],
     searchQuery: "",
     stepOne: {
@@ -315,7 +314,7 @@ export const appointmentSlice = createSlice({
             ...state,
             step: state.step + 1
         }),
-        decreateStep: (state) => ({
+        decreaseStep: (state) => ({
             ...state,
             step: state.step - 1
         }),
@@ -349,6 +348,8 @@ export const {
     addCompanies,
     setDate,
     increaseStep,
-    decreateStep,
+    decreaseStep,
     enableSearching
 } = appointmentSlice.actions;
+
+export default appointmentSlice.reducer;

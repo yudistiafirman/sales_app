@@ -25,9 +25,7 @@ import purchaseOrderReducer, {
 import salesOrderReducer, { SOGlobalState } from "./reducers/salesOrder";
 import snackbarReducer from "./reducers/snackbarReducer";
 import invoiceReducer from "./reducers/invoiceReducer";
-import appointmentReducer, {
-    appointmentSlice
-} from "./reducers/appointmentReducer";
+import appointmentReducer from "./reducers/appointmentReducer";
 
 const persistConfig = {
     key: "root",
@@ -45,7 +43,7 @@ const rootReducer = combineReducers({
     snackbar: snackbarReducer,
     purchaseOrder: purchaseOrderReducer,
     invoice: invoiceReducer,
-    appoinment: appointmentSlice.reducer,
+    appoinment: appointmentReducer,
     operation: persistReducer<OperationInitState, any>(
         persistConfig,
         operationReducer

@@ -27,7 +27,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import {
     assignError,
-    decreateStep,
+    decreaseStep,
     enableSearching,
     increaseStep,
     resetAppointmentState,
@@ -103,7 +103,7 @@ export default function Appointment() {
             if (selectedDate) {
                 dispatch(setDate({ value: null }));
             }
-            dispatch(decreateStep());
+            dispatch(decreaseStep());
         } else if (isSearching) {
             dispatch(enableSearching({ value: false }));
         } else {
