@@ -12,7 +12,6 @@ import ProjectDetailPage from "@/screens/ProjectDetail";
 import PurchaseOrderWithProvider from "@/screens/PurchaseOrder";
 import CreateScheduleScreen from "@/screens/CreateSchedule";
 import PriceList from "@/screens/Price";
-import AppointmentWithProvider from "@/screens/Appointment";
 import RequiredDocuments from "@/screens/RequiredDocuments";
 import VisitHistory from "@/screens/VisitHistory";
 import Deposit from "@/screens/Deposit";
@@ -23,6 +22,7 @@ import InvoiceFilter from "@/screens/Invoice/Filter";
 import InvoiceList from "@/screens/Invoice/InvoiceList";
 import InvoiceDetail from "@/screens/Invoice/InvoiceDetail";
 import CustomerDetail from "@/screens/Customer/Detail";
+import Appointment from "@/screens/Appointment";
 import {
     ALL_PRODUCT,
     ALL_PRODUCT_TITLE,
@@ -99,7 +99,7 @@ function SalesStack(Stack: any) {
             <Stack.Screen
                 name={APPOINTMENT}
                 key={APPOINTMENT}
-                component={AppointmentWithProvider}
+                component={Appointment}
                 options={{
                     headerTitle: APPOINTMENT_TITLE
                 }}

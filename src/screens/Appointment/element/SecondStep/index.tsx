@@ -10,11 +10,12 @@ import {
 import { TextInput } from "react-native-paper";
 import { BSearchBar } from "@/components";
 import { colors, layout } from "@/constants";
-import { AppointmentActionType } from "@/context/AppointmentContext";
-import { useAppointmentData } from "@/hooks";
 import { APPOINTMENT, CALENDAR } from "@/navigation/ScreenNames";
 import { SelectedDateType } from "@/screens/Visitation/elements/fifth";
 import { resScale } from "@/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { setDate } from "@/redux/reducers/appointmentReducer";
 
 const styles = StyleSheet.create({
     flexFull: {
@@ -31,18 +32,18 @@ const styles = StyleSheet.create({
 });
 
 function SecondStep() {
-    const [values, dispatchValue] = useAppointmentData();
-    const { selectedDate } = values;
+    const appointmentState = useSelector(
+        (state: RootState) => state.appoinment
+    );
+    const dispatch = useDispatch<AppDispatch>();
+    const { selectedDate } = appointmentState;
 
     useEffect(() => {
         crashlytics().log(`${APPOINTMENT}-Step2`);
         DeviceEventEmitter.addListener(
             "CalendarScreen.selectedDate",
             (date: SelectedDateType) => {
-                dispatchValue({
-                    type: AppointmentActionType.SET_DATE,
-                    value: date
-                });
+                dispatch(setDate({ value: date }));
             }
         );
         return () => {
@@ -50,7 +51,7 @@ function SecondStep() {
                 "CalendarScreen.selectedDate"
             );
         };
-    }, [dispatchValue]);
+    }, [dispatch]);
 
     const navigation = useNavigation();
     return (

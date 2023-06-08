@@ -10,7 +10,7 @@ import {
 import BProjectRBtnList from "@/components/organism/BProjectRBtnList";
 import { colors, layout } from "@/constants";
 import font from "@/constants/fonts";
-import { DataCompany } from "@/context/AppointmentContext";
+import { DataCompany } from "@/redux/reducers/appointmentReducer";
 
 const { height } = Dimensions.get("window");
 
