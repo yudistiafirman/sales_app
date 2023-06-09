@@ -58,6 +58,7 @@ function stepHandler(
         stepTwo?.deliveryTime &&
         stepTwo?.method &&
         stepTwo?.inputtedVolume &&
+        stepTwo?.inputtedVolume > 0 &&
         stepTwo?.salesOrder
         // getTotalProduct(stepTwo) <= stepTwo?.availableDeposit
     ) {

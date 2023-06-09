@@ -150,7 +150,10 @@ export default function SecondStep() {
             isRequire: true,
             type: "quantity",
             placeholder: "0",
-            value: stateTwo?.inputtedVolume?.toString(),
+            value:
+                stateTwo?.inputtedVolume && stateTwo?.inputtedVolume > 0
+                    ? stateTwo?.inputtedVolume?.toString()
+                    : "",
             onChange: (value: any) => {
                 onChange("inputtedVolume")(value);
             }
