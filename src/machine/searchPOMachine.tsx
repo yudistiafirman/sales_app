@@ -223,23 +223,28 @@ const searchPOMachine = createMachine(
                 searchValue: event.value,
                 loadData: true
             })),
-            assignSphData: assign((_context, event) => ({
-                routes: [
-                    {
-                        key: "first",
-                        title:
-                            _context.filterSphDataBy === "INDIVIDU"
-                                ? "Individu"
-                                : "Perusahaan",
-                        totalItems: event.data.length,
-                        chipPosition: "right"
-                    }
-                ],
-                sphData: event.data,
-                loadData: false,
-                isRefreshing: false,
-                loadMoreData: false
-            })),
+            assignSphData: assign((_context, event) => {
+                const newData = event.data.filter(
+                    (it) => it.QuotationRequests?.length > 0
+                );
+                return {
+                    routes: [
+                        {
+                            key: "first",
+                            title:
+                                _context.filterSphDataBy === "INDIVIDU"
+                                    ? "Individu"
+                                    : "Perusahaan",
+                            totalItems: newData.length,
+                            chipPosition: "right"
+                        }
+                    ],
+                    sphData: newData,
+                    loadData: false,
+                    isRefreshing: false,
+                    loadMoreData: false
+                };
+            }),
             closeModal: assign(() => ({
                 isModalVisible: false
             })),
@@ -260,21 +265,26 @@ const searchPOMachine = createMachine(
                 dataType: event.value,
                 filterSphDataBy: event.filterBy
             })),
-            assignPurchaseOrderListData: assign((context, event) => ({
-                routes: [
-                    {
-                        key: "first",
-                        title: "Proyek",
-                        totalItems: event.data.totalItems,
-                        chipPosition: "right"
-                    }
-                ],
-                totalPage: event.data.totalPages,
-                poData: event.data.data,
-                loadData: false,
-                isRefreshing: false,
-                loadMoreData: false
-            })),
+            assignPurchaseOrderListData: assign((context, event) => {
+                const newData = event.data.data.filter(
+                    (it) => it.PurchaseOrders?.length > 0
+                );
+                return {
+                    routes: [
+                        {
+                            key: "first",
+                            title: "Proyek",
+                            totalItems: newData.length,
+                            chipPosition: "right"
+                        }
+                    ],
+                    totalPage: event.data.totalPages,
+                    poData: newData,
+                    loadData: false,
+                    isRefreshing: false,
+                    loadMoreData: false
+                };
+            }),
             handleRefresh: assign(() => ({
                 isRefreshing: true,
                 sphData: [],

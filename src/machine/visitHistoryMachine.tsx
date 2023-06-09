@@ -45,7 +45,7 @@ const visitHistoryMachine =
                         {
                             key: string;
                             title: string;
-                            totalItems: 0;
+                            totalItems: -1;
                             chipPosition: string;
                         }
                     ];
@@ -66,7 +66,7 @@ const visitHistoryMachine =
                     {
                         key: "",
                         title: "",
-                        totalItems: 0,
+                        totalItems: -1,
                         chipPosition: "right"
                     }
                 ],
@@ -152,7 +152,7 @@ const visitHistoryMachine =
                     const newRoutes = sortedData?.map((val, idx) => ({
                         key: val.id,
                         title: `Kunjungan ${idx + 1}`,
-                        totalItems: 0,
+                        totalItems: -1,
                         chipPosition: "right"
                     }));
 

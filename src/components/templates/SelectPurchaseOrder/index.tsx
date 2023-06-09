@@ -71,10 +71,11 @@ function SelectPurchaseOrderData({
 
     const getDataToDisplay = () => {
         if (dataToGet === "DEPOSITDATA" || dataToGet === "SCHEDULEDATA") {
-            return poData.filter((it) => it.PurchaseOrders?.length > 0);
+            return poData;
         }
-        return sphData.filter((it) => it.QuotationRequests?.length > 0);
+        return sphData;
     };
+
     const { companyName, locationName, listData, projectId } =
         getDataToDisplayInsideModal();
 
