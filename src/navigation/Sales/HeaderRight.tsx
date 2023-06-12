@@ -11,6 +11,7 @@ import Icon from "react-native-vector-icons/Feather";
 import analytics from "@react-native-firebase/analytics";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import { getAppVersionName, isProduction } from "@/utils/generalFunc";
+import { Alert } from "react-native";
 
 const styles: Styles = {
     chipText: {
@@ -58,6 +59,10 @@ export default function SalesHeaderRight(iconColor = "") {
         }
     };
 
+    const onBatchingPlant = () => {
+        Alert.alert("Batching Plant LEGOK applied");
+    };
+
     return (
         <Menu
             visible={visible}
@@ -74,6 +79,9 @@ export default function SalesHeaderRight(iconColor = "") {
         >
             <MenuItem textStyle={styles.chipText} onPress={onLogout}>
                 Logout
+            </MenuItem>
+            <MenuItem textStyle={styles.chipText} onPress={onBatchingPlant}>
+                BP - LEGOK
             </MenuItem>
             <MenuDivider />
             <MenuItem
