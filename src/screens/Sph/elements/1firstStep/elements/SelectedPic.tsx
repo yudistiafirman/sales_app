@@ -13,6 +13,7 @@ import {
 import { RootState } from "@/redux/store";
 import BSheetAddPic from "@/screens/Visitation/elements/second/BottomSheetAddPic";
 import { resScale } from "@/utils";
+import { checkSelectedSPHPic } from "@/utils/generalFunc";
 import { SphContext } from "../../context/SphContext";
 
 const style = StyleSheet.create({
@@ -100,14 +101,11 @@ export default function SelectedPic({
     );
 
     function checkSelected() {
-        let isSelectedExist = false;
-        const list = selectedCompany?.Pics ? selectedCompany?.Pics : [];
-        list.forEach((pic) => {
-            if (pic.isSelected) {
-                isSelectedExist = true;
-            }
-        });
-        return isSelectedExist || JSON.stringify(selectedCompany?.Pic) !== "{}";
+        return (
+            (selectedCompany?.Pics &&
+                checkSelectedSPHPic(selectedCompany?.Pics)) ||
+            JSON.stringify(selectedCompany?.Pic) !== "{}"
+        );
     }
 
     useEffect(() => {

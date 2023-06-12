@@ -215,7 +215,7 @@ instance.interceptors.response.use(
         await metric?.stop();
         metric = undefined;
 
-        if (!data.success) {
+        if (data.success && data.success !== true) {
             // automatic logout
             let errorMessage = `There's something wrong`;
             let errorStatus = 500;

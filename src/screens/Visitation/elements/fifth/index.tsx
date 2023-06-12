@@ -33,6 +33,7 @@ import {
 } from "@/redux/reducers/VisitationReducer";
 import { postVisitations, putVisitation } from "@/actions/ProductivityActions";
 import { uploadFileImage } from "@/actions/CommonActions";
+import { resetSPHState } from "@/redux/reducers/SphReducer";
 import LastStepPopUp from "../LastStepPopUp";
 
 export type SelectedDateType = {
@@ -327,6 +328,7 @@ function Fifth() {
                             response?.data?.success !== false
                         ) {
                             if (type === "SPH") {
+                                dispatch(resetSPHState());
                                 navigation.dispatch(
                                     StackActions.replace(SPH, {
                                         projectId:
@@ -384,6 +386,7 @@ function Fifth() {
                             response?.data?.success !== false
                         ) {
                             if (type === "SPH") {
+                                dispatch(resetSPHState());
                                 navigation.dispatch(
                                     StackActions.replace(SPH, {
                                         projectId:

@@ -148,9 +148,11 @@ export default function FirstStep() {
                                     finalItem = { ...item };
                                     if (finalItem.Pics)
                                         finalItem.Pics = finalPIC;
+                                    console.log("kenaaa 1");
                                     dispatch(updateSelectedPic(finalPIC[0]));
                                     dispatch(updateSelectedCompany(finalItem));
                                 } else {
+                                    console.log("kenaaa 2");
                                     dispatch(updateSelectedCompany(item));
                                 }
                             }}
