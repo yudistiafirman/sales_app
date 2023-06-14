@@ -46,11 +46,11 @@ const formatCurrency = (number: number, withoutRp?: boolean) => {
             .join("")
             .split(",00")
             .join("");
-        return trimCurrencyFormat(result, finalNumber, withoutRp || false);
+        return trimCurrencyFormat(result, number, withoutRp || false);
     }
 
     const result = finalNumber?.toLocaleString("id-ID");
-    return trimCurrencyFormat(result, finalNumber, withoutRp || false);
+    return trimCurrencyFormat(result, number, withoutRp || false);
 };
 
 export default formatCurrency;
