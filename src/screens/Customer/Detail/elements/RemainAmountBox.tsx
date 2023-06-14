@@ -52,13 +52,23 @@ function RemainingAmountBox({
                 <BText style={styles.title}>{title}</BText>
                 {secondAmount === undefined && <BSpacer size="extraSmall" />}
 
-                <BText style={styles.firstAmount}>
+                <BText
+                    style={[
+                        styles.firstAmount,
+                        firstAmount < 0 && { color: colors.primary }
+                    ]}
+                >
                     {formatCurrency(firstAmount)}
                 </BText>
                 {secondAmount !== undefined && <View style={styles.divider} />}
 
                 {secondAmount !== undefined && (
-                    <BText style={styles.title}>
+                    <BText
+                        style={[
+                            styles.title,
+                            secondAmount < 0 && { color: colors.primary }
+                        ]}
+                    >
                         {formatCurrency(secondAmount)}
                     </BText>
                 )}
