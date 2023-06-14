@@ -5,7 +5,6 @@ import * as React from "react";
 import { DeviceEventEmitter, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import MapView from "react-native-maps";
-import Icons from "react-native-vector-icons/Feather";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocationCoordinates } from "@/actions/CommonActions";
 import {
@@ -16,8 +15,7 @@ import {
     BLocation,
     BLocationDetail,
     BMarker,
-    BSpacer,
-    BText
+    BSpacer
 } from "@/components";
 import { layout } from "@/constants";
 import { Region, Input } from "@/interfaces";
@@ -56,6 +54,9 @@ function FirstStep() {
     const visitationData = useSelector((state: RootState) => state.visitation);
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
+    const abortControllerRef = React.useRef<AbortController>(
+        new AbortController()
+    );
 
     const inputs: Input[] = [
         {
@@ -92,7 +93,12 @@ function FirstStep() {
         try {
             if (grantedLocationPermission) {
                 setIsMapLoading(() => true);
-                const { result } = await getUserCurrentLocationDetail();
+                abortControllerRef.current.abort();
+                if (abortControllerRef.current.signal.aborted)
+                    abortControllerRef.current = new AbortController();
+                const { result } = await getUserCurrentLocationDetail(
+                    abortControllerRef.current.signal
+                );
                 const coordinate = {
                     longitude: Number(result?.lon),
                     latitude: Number(result?.lat),
@@ -115,24 +121,29 @@ function FirstStep() {
             }
         } catch (error) {
             setIsMapLoading(() => false);
-            dispatch(
-                openPopUp({
-                    popUpType: "error",
-                    popUpText: error?.message,
-                    outsideClickClosePopUp: true
-                })
-            );
+            if (error?.message !== "canceled")
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText: error?.message,
+                        outsideClickClosePopUp: true
+                    })
+                );
         }
     };
 
     const onChangeRegion = async (coordinate: Region) => {
         try {
             setIsMapLoading(() => true);
+            abortControllerRef.current.abort();
+            if (abortControllerRef.current.signal.aborted)
+                abortControllerRef.current = new AbortController();
             const { data } = await getLocationCoordinates(
                 // '',
                 coordinate.longitude as unknown as number,
                 coordinate.latitude as unknown as number,
-                ""
+                "",
+                abortControllerRef.current.signal
             );
             const { result } = data;
             if (!result) {
@@ -161,15 +172,16 @@ function FirstStep() {
             setIsMapLoading(() => false);
         } catch (error) {
             setIsMapLoading(() => false);
-            dispatch(
-                openPopUp({
-                    popUpType: "error",
-                    popUpText:
-                        error?.message ||
-                        "Terjadi error pengambilan data saat perpindahan region",
-                    outsideClickClosePopUp: true
-                })
-            );
+            if (error?.message !== "canceled")
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText:
+                            error?.message ||
+                            "Terjadi error pengambilan data saat perpindahan region",
+                        outsideClickClosePopUp: true
+                    })
+                );
         }
     };
 
@@ -181,6 +193,7 @@ function FirstStep() {
         askingPermission();
         return () => {
             debounceResult.cancel();
+            abortControllerRef.current.abort();
         };
     }, []);
 

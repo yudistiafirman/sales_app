@@ -1,5 +1,6 @@
 import { Dimensions } from "react-native";
 import { assign, createMachine } from "xstate";
+import { GenericAbortSignal } from "axios";
 import { getLocationCoordinates } from "./priceMachine";
 
 const { width, height } = Dimensions.get("window");
@@ -28,6 +29,7 @@ const locationMachine =
                               latitude: number;
                               latitudeDelta: number;
                               longitudeDelta: number;
+                              signal: GenericAbortSignal;
                           };
                       },
                 services: {} as {
@@ -49,7 +51,8 @@ const locationMachine =
                     longitudeDelta: LONGITUDE_DELTA
                 },
                 locationDetail: {},
-                loadingLocation: false
+                loadingLocation: false,
+                signal: undefined
             },
             states: {
                 receivingParams: {
@@ -125,7 +128,9 @@ const locationMachine =
                     const { latitude, longitude } = context.region;
                     const response = await getLocationCoordinates(
                         longitude,
-                        latitude
+                        latitude,
+                        undefined,
+                        context.signal
                     );
                     return response.data.result;
                 }

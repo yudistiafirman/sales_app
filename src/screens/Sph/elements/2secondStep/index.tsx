@@ -150,6 +150,9 @@ export default function SecondStep() {
         searchedBillingAddress,
         useSearchedBillingAddress
     } = useSelector((state: RootState) => state.sph);
+    const abortControllerRef = React.useRef<AbortController>(
+        new AbortController()
+    );
 
     const [isMapLoading, setIsMapLoading] = useState(false);
 
@@ -161,11 +164,15 @@ export default function SecondStep() {
         ) => {
             try {
                 setIsMapLoading(() => true);
+                abortControllerRef.current.abort();
+                if (abortControllerRef.current.signal.aborted)
+                    abortControllerRef.current = new AbortController();
                 const { data } = await getLocationCoordinates(
                     // '',
                     coordinate.longitude as unknown as number,
                     coordinate.latitude as unknown as number,
-                    "BP-LEGOK"
+                    "BP-LEGOK",
+                    abortControllerRef.current.signal
                 );
 
                 const { result } = data;
@@ -202,15 +209,16 @@ export default function SecondStep() {
                 setIsMapLoading(() => false);
             } catch (error) {
                 setIsMapLoading(() => false);
-                dispatch(
-                    openPopUp({
-                        popUpType: "error",
-                        popUpText:
-                            error?.message ||
-                            "Terjadi error pengambilan data saat perpindahan region",
-                        outsideClickClosePopUp: true
-                    })
-                );
+                if (error?.message !== "canceled")
+                    dispatch(
+                        openPopUp({
+                            popUpType: "error",
+                            popUpText:
+                                error?.message ||
+                                "Terjadi error pengambilan data saat perpindahan region",
+                            outsideClickClosePopUp: true
+                        })
+                    );
             }
         },
         []
@@ -379,6 +387,7 @@ export default function SecondStep() {
         return () => {
             DeviceEventEmitter.removeAllListeners(eventKeyObj.shipp);
             DeviceEventEmitter.removeAllListeners(eventKeyObj.billing);
+            abortControllerRef.current.abort();
         };
     }, [onChangeRegion]);
 

@@ -37,6 +37,9 @@ function Location() {
     const [useSearchedAddress, setUseSearchedAddress] = React.useState(false);
     const [state, send] = useMachine(locationMachine);
     const isReadOnly = route?.params.isReadOnly;
+    const abortControllerRef = React.useRef<AbortController>(
+        new AbortController()
+    );
 
     useHeaderTitleChanged({
         title: isReadOnly === true ? "Lihat Area Proyek" : LOCATION_TITLE
@@ -60,8 +63,18 @@ function Location() {
         const { latitude, longitude, latitudeDelta, longitudeDelta } =
             coordinate;
         if (isReadOnly === false) {
+            abortControllerRef.current.abort();
+            if (abortControllerRef.current.signal.aborted)
+                abortControllerRef.current = new AbortController();
+            const { signal } = abortControllerRef.current;
             send("onChangeRegion", {
-                value: { latitude, longitude, latitudeDelta, longitudeDelta }
+                value: {
+                    latitude,
+                    longitude,
+                    latitudeDelta,
+                    longitudeDelta,
+                    signal
+                }
             });
         }
     };

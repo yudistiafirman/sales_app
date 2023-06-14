@@ -1,14 +1,19 @@
 import BrikApiCommon from "@/brikApi/BrikApiCommon";
 import { customRequest } from "@/networking/request";
+import { GenericAbortSignal } from "axios";
 
 export const getLocationCoordinates = async (
     longitude: number,
     latitude: number,
-    distance?: string
+    distance?: string,
+    signal?: GenericAbortSignal
 ) =>
     customRequest(
         BrikApiCommon.getLocationCoordinates(longitude, latitude, distance),
-        "GET"
+        "GET",
+        undefined,
+        undefined,
+        signal
     );
 
 export const getAllCustomers = async (

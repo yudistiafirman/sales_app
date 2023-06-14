@@ -1,6 +1,7 @@
 import axios, {
     AxiosError,
     AxiosResponse,
+    GenericAbortSignal,
     InternalAxiosRequestConfig
 } from "axios";
 import BrikApiCommon from "@/brikApi/BrikApiCommon";
@@ -59,6 +60,7 @@ interface RequestInfo {
     headers: Record<string, string>;
     data?: Record<string, string> | FormDataValue;
     timeoutInterval?: number;
+    signal?: GenericAbortSignal;
 }
 
 function setCharAt(str: string, index: number, chr: string) {
@@ -81,6 +83,7 @@ export const getOptions = async (
     method: "GET" | "POST" | "DELETE" | "PUT",
     data?: Record<string, string> | FormDataValue,
     withToken?: boolean,
+    signal?: GenericAbortSignal,
     timeout = 10000
 ) => {
     try {
@@ -99,6 +102,8 @@ export const getOptions = async (
             options.data = data;
         }
 
+        if (signal) options.signal = signal;
+
         options.timeoutInterval = timeout;
         return options;
     } catch (error) {
@@ -115,13 +120,14 @@ export const customRequest = async (
     request: any,
     method: "GET" | "POST" | "DELETE" | "PUT",
     data?: Record<string, string> | FormDataValue,
-    withToken?: boolean
+    withToken?: boolean,
+    signal?: GenericAbortSignal
 ) => {
     // performance API log
     metric = await perf().newHttpMetric(request, method);
     await metric.start();
 
-    return instance(request, await getOptions(method, data, withToken));
+    return instance(request, await getOptions(method, data, withToken, signal));
 };
 
 export const injectStore = (_store: any) => {
@@ -174,7 +180,8 @@ export const showErrorMsg = (
         url !== postPaymentUrl &&
         url !== postScheduleUrl &&
         url !== postPO &&
-        url !== postSOSigned
+        url !== postSOSigned &&
+        errMsg !== "canceled"
     ) {
         store.dispatch(
             openSnackbar({
