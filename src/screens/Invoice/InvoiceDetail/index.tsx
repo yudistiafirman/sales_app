@@ -600,7 +600,8 @@ function InvoiceDetail() {
                             />
                         </View>
                     )}
-
+                <View style={styles.divider} />
+                <BSpacer size="extraSmall" />
                 {renderInvoiceDetailFooter()}
             </View>
         </View>
