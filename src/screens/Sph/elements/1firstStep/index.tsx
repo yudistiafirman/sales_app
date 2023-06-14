@@ -132,7 +132,6 @@ export default function FirstStep() {
                             onPressList={(item) => {
                                 let finalPIC: any[] = [];
                                 let finalItem;
-
                                 if (
                                     item.Pics &&
                                     item.Pics.length > 0 &&
@@ -148,12 +147,22 @@ export default function FirstStep() {
                                     finalItem = { ...item };
                                     if (finalItem.Pics)
                                         finalItem.Pics = finalPIC;
-                                    console.log("kenaaa 1");
                                     dispatch(updateSelectedPic(finalPIC[0]));
                                     dispatch(updateSelectedCompany(finalItem));
                                 } else {
-                                    console.log("kenaaa 2");
-                                    dispatch(updateSelectedCompany(item));
+                                    if (item.Pic) finalPIC.push(item.Pic);
+                                    finalPIC.forEach((it, index) => {
+                                        finalPIC[index] = {
+                                            ...finalPIC[index],
+                                            isSelected: index === 0
+                                        };
+                                    });
+                                    finalItem = { ...item };
+                                    if (finalItem.Pics)
+                                        finalItem.Pics = finalPIC;
+
+                                    dispatch(updateSelectedPic(finalPIC[0]));
+                                    dispatch(updateSelectedCompany(finalItem));
                                 }
                             }}
                             isError={errorGettingProject}
