@@ -299,7 +299,7 @@ function SphContent() {
 
         stepHandler(sphData, stepsDone, setStepsDone, stepControll);
         handleStepperFocus();
-        
+
         return () => {
             abortControllerRef.current.abort();
         };
