@@ -23,13 +23,14 @@ import {
 } from "@/context/CreateScheduleContext";
 import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CREATE_SCHEDULE } from "@/navigation/ScreenNames";
 import { CreateSchedule } from "@/models/CreateSchedule";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import moment from "moment";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { postSchedule } from "@/actions/OrderActions";
+import { RootState } from "@/redux/store";
 import FirstStep from "./element/FirstStep";
 import SecondStep from "./element/SecondStep";
 
@@ -71,6 +72,7 @@ function stepHandler(
 function CreateScheduleScreen() {
     const navigation = useNavigation();
     const { values, action } = React.useContext(CreateScheduleContext);
+    const authState = useSelector((state: RootState) => state.auth);
     const { keyboardVisible } = useKeyboardActive();
     const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
     const [isPopupVisible, setPopupVisible] = React.useState(false);
@@ -178,7 +180,8 @@ function CreateScheduleScreen() {
         title:
             values.isSearchingPurchaseOrder === true
                 ? "Cari PT / Proyek"
-                : "Buat Jadwal"
+                : "Buat Jadwal",
+        selectedBP: authState.selectedBP
     });
 
     useFocusEffect(

@@ -27,6 +27,8 @@ import {
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { resScale } from "@/utils";
 import crashlytics from "@react-native-firebase/crashlytics";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 import CoordinatesDetail from "./elements/CoordinatesDetail";
 import LocationStyles from "./styles";
 
@@ -36,13 +38,16 @@ function Location() {
     const [searchedAddress, setSearchedAddress] = React.useState("");
     const [useSearchedAddress, setUseSearchedAddress] = React.useState(false);
     const [state, send] = useMachine(locationMachine);
+    const authState = useSelector((rootState: RootState) => rootState.auth);
     const isReadOnly = route?.params.isReadOnly;
     const abortControllerRef = React.useRef<AbortController>(
         new AbortController()
     );
 
     useHeaderTitleChanged({
-        title: isReadOnly === true ? "Lihat Area Proyek" : LOCATION_TITLE
+        title: isReadOnly === true ? "Lihat Area Proyek" : LOCATION_TITLE,
+        selectedBP: authState.selectedBP,
+        hideBPBadges: true
     });
 
     React.useEffect(() => {

@@ -5,9 +5,15 @@ import { useLayoutEffect } from "react";
 
 type UseHeaderTitle = {
     title: string;
+    selectedBP: string;
+    hideBPBadges?: boolean;
 };
 
-export default function useHeaderTitleChanged({ title }: UseHeaderTitle) {
+export default function useHeaderTitleChanged({
+    title,
+    selectedBP,
+    hideBPBadges = false
+}: UseHeaderTitle) {
     const navigation = useNavigation();
 
     const selectedBPBadges = (bpName: string, titlePage: string) => (
@@ -15,8 +21,14 @@ export default function useHeaderTitleChanged({ title }: UseHeaderTitle) {
     );
 
     useLayoutEffect(() => {
-        navigation.setOptions({
-            headerTitle: () => selectedBPBadges("BP-LEGOK", title)
-        });
+        if (hideBPBadges) {
+            navigation.setOptions({
+                headerTitle: title
+            });
+        } else {
+            navigation.setOptions({
+                headerTitle: () => selectedBPBadges(selectedBP, title)
+            });
+        }
     }, [navigation, title]);
 }

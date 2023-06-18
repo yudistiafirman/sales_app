@@ -2,7 +2,6 @@ import * as React from "react";
 import CameraScreen from "@/screens/Camera";
 import Preview from "@/screens/Camera/Preview";
 import Location from "@/screens/Location";
-import CreateDO from "@/screens/Operation/CreateDO";
 import SubmitForm from "@/screens/Operation/SubmitForm";
 import { BSelectedBPBadges } from "@/components";
 import {
@@ -10,19 +9,17 @@ import {
     CAMERA_TITLE,
     IMAGE_PREVIEW,
     IMAGE_PREVIEW_TITLE,
-    CREATE_DO,
-    SCHEDULE_TITLE,
     SUBMIT_FORM,
     SUBMIT_FORM_TITLE,
     LOCATION,
     LOCATION_TITLE
 } from "../ScreenNames";
 
-function OperationStack(Stack: any) {
-    const selectedBPBadges = (bpName: string, title: string) => (
-        <BSelectedBPBadges bpName={bpName} title={title} />
-    );
+const selectedBPBadges = (bpName: string, title: string) => (
+    <BSelectedBPBadges bpName={bpName} title={title} />
+);
 
+function OperationStack(selectedBP: string, Stack: any) {
     return (
         <>
             <Stack.Screen
@@ -31,7 +28,7 @@ function OperationStack(Stack: any) {
                 component={CameraScreen}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", CAMERA_TITLE)
+                        selectedBPBadges(selectedBP, CAMERA_TITLE)
                 }}
             />
             <Stack.Screen
@@ -40,16 +37,7 @@ function OperationStack(Stack: any) {
                 component={Preview}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", IMAGE_PREVIEW_TITLE)
-                }}
-            />
-            <Stack.Screen
-                name={CREATE_DO}
-                key={CREATE_DO}
-                component={CreateDO}
-                options={{
-                    headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", SCHEDULE_TITLE)
+                        selectedBPBadges(selectedBP, IMAGE_PREVIEW_TITLE)
                 }}
             />
             <Stack.Screen
@@ -58,7 +46,7 @@ function OperationStack(Stack: any) {
                 component={SubmitForm}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", SUBMIT_FORM_TITLE)
+                        selectedBPBadges(selectedBP, SUBMIT_FORM_TITLE)
                 }}
             />
             <Stack.Screen
@@ -67,7 +55,7 @@ function OperationStack(Stack: any) {
                 component={Location}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", LOCATION_TITLE)
+                        selectedBPBadges(selectedBP, LOCATION_TITLE)
                 }}
             />
         </>

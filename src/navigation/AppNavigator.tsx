@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { useDispatch } from "react-redux";
-import { BHttpLogger } from "@/components";
+import { BHttpLogger, BSelectedBPBadges } from "@/components";
 import { colors, fonts } from "@/constants";
 import { useAsyncConfigSetup } from "@/hooks";
 import EntryType from "@/models/EnumModel";
@@ -41,8 +41,21 @@ const Stack = createNativeStackNavigator();
 
 function RootScreen(
     userData: UserModel.DataSuccessLogin | null,
-    isSignout: boolean
+    isSignout: boolean,
+    selectedBP: string
 ) {
+    const selectedBPBadges = (
+        bpName: string,
+        title: string,
+        alignLeft?: boolean
+    ) => (
+        <BSelectedBPBadges
+            bpName={bpName}
+            title={title}
+            alignLeft={alignLeft !== undefined ? alignLeft : true}
+        />
+    );
+
     if (userData !== null) {
         const { type } = userData;
         switch (type) {
@@ -55,13 +68,17 @@ function RootScreen(
                             component={Operation}
                             options={{
                                 headerTitleAlign: "center",
-                                headerTitle: OPSMANAGER_TITLE,
+                                headerTitle: () =>
+                                    selectedBPBadges(
+                                        selectedBP,
+                                        OPSMANAGER_TITLE
+                                    ),
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
                             }}
                         />
-                        {OperationStack(Stack)}
+                        {OperationStack(selectedBP, Stack)}
                     </>
                 );
             case EntryType.BATCHER:
@@ -73,13 +90,14 @@ function RootScreen(
                             component={Operation}
                             options={{
                                 headerTitleAlign: "center",
-                                headerTitle: BATCHER_TITLE,
+                                headerTitle: () =>
+                                    selectedBPBadges(selectedBP, BATCHER_TITLE),
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
                             }}
                         />
-                        {OperationStack(Stack)}
+                        {OperationStack(selectedBP, Stack)}
                     </>
                 );
             case EntryType.DRIVER:
@@ -91,13 +109,14 @@ function RootScreen(
                             component={Operation}
                             options={{
                                 headerTitleAlign: "center",
-                                headerTitle: DRIVER_TITLE,
+                                headerTitle: () =>
+                                    selectedBPBadges(selectedBP, DRIVER_TITLE),
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
                             }}
                         />
-                        {OperationStack(Stack)}
+                        {OperationStack(selectedBP, Stack)}
                     </>
                 );
             case EntryType.SECURITY:
@@ -111,7 +130,7 @@ function RootScreen(
                                 headerShown: false
                             }}
                         />
-                        {OperationStack(Stack)}
+                        {OperationStack(selectedBP, Stack)}
                     </>
                 );
             case EntryType.WB:
@@ -125,7 +144,7 @@ function RootScreen(
                                 headerShown: false
                             }}
                         />
-                        {OperationStack(Stack)}
+                        {OperationStack(selectedBP, Stack)}
                     </>
                 );
             case EntryType.SALES:
@@ -139,7 +158,7 @@ function RootScreen(
                                 headerShown: false
                             }}
                         />
-                        {SalesStack(Stack)}
+                        {SalesStack(selectedBP, Stack)}
                     </>
                 );
             case EntryType.ADMIN:
@@ -153,7 +172,7 @@ function RootScreen(
                                 headerShown: false
                             }}
                         />
-                        {SalesStack(Stack)}
+                        {SalesStack(selectedBP, Stack)}
                     </>
                 );
             default:
@@ -206,7 +225,8 @@ function AppNavigator() {
         userData,
         isSignout,
         isNetworkLoggerVisible,
-        isShowButtonNetwork
+        isShowButtonNetwork,
+        selectedBP
     } = useAsyncConfigSetup();
     const dispatch = useDispatch<AppDispatch>();
     if (isLoading) {
@@ -227,7 +247,7 @@ function AppNavigator() {
                     }
                 }}
             >
-                {RootScreen(userData, isSignout)}
+                {RootScreen(userData, isSignout, selectedBP)}
             </Stack.Navigator>
             <BHttpLogger
                 isShowButtonNetwork={isShowButtonNetwork}

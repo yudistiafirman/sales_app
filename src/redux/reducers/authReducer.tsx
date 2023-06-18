@@ -15,6 +15,7 @@ interface AuthState {
     hunterScreen: boolean;
     isShowButtonNetwork: boolean;
     isNetworkLoggerVisible: boolean;
+    selectedBP: string;
     remoteConfigData: {
         enable_signed_so: boolean;
         enable_appointment: boolean;
@@ -39,6 +40,7 @@ const initialState: AuthState = {
     loginCredential: {
         phoneNumber: ""
     },
+    selectedBP: "BP-Legok",
     isLoading: true,
     isSignout: false,
     hunterScreen: false,
@@ -73,6 +75,10 @@ export const authSlice = createSlice({
                 ...state.loginCredential,
                 phoneNumber: action.payload
             }
+        }),
+        setSelectedBP: (state, action: PayloadAction<string>) => ({
+            ...state,
+            selectedBP: action.payload
         }),
         setUserData: (state, action: PayloadAction<any>) => {
             if (action.payload.remoteConfigData) {
@@ -195,6 +201,7 @@ export const authSlice = createSlice({
 export const {
     setPhoneNumber,
     setUserData,
+    setSelectedBP,
     setIsLoading,
     signout,
     toggleHunterScreen,

@@ -46,6 +46,7 @@ function CameraScreen() {
     const dispatch = useDispatch<AppDispatch>();
     const route = useRoute<RootStackScreenProps>();
     const poState = useSelector((state: RootState) => state.purchaseOrder);
+    const authState = useSelector((state: RootState) => state.auth);
     const [enableFlashlight, onEnableFlashlight] =
         React.useState<boolean>(false);
     const [enableHDR, onEnableHDR] = React.useState<boolean>(false);
@@ -69,7 +70,11 @@ function CameraScreen() {
         route?.params?.disabledGalleryPicker !== undefined
             ? route?.params?.disabledGalleryPicker
             : true;
-    useHeaderTitleChanged({ title: `Foto ${photoTitle}` });
+    useHeaderTitleChanged({
+        title: `Foto ${photoTitle}`,
+        selectedBP: authState.selectedBP,
+        hideBPBadges: true
+    });
 
     const handleBack = React.useCallback(() => {
         if (navigateTo === PO) {

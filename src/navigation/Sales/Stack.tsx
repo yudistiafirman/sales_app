@@ -69,19 +69,19 @@ import {
     PROJECT_DETAIL_TITLE
 } from "../ScreenNames";
 
-function SalesStack(Stack: any) {
-    const selectedBPBadges = (
-        bpName: string,
-        title: string,
-        alignLeft?: boolean
-    ) => (
-        <BSelectedBPBadges
-            bpName={bpName}
-            title={title}
-            alignLeft={alignLeft !== undefined ? alignLeft : true}
-        />
-    );
+const selectedBPBadges = (
+    bpName: string,
+    title: string,
+    alignLeft?: boolean
+) => (
+    <BSelectedBPBadges
+        bpName={bpName}
+        title={title}
+        alignLeft={alignLeft !== undefined ? alignLeft : true}
+    />
+);
 
+function SalesStack(selectedBP: string, Stack: any) {
     return (
         <>
             <Stack.Screen
@@ -90,7 +90,7 @@ function SalesStack(Stack: any) {
                 component={CreateVisitation}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", CREATE_VISITATION_TITLE)
+                        selectedBPBadges(selectedBP, CREATE_VISITATION_TITLE)
                 }}
             />
             <Stack.Screen
@@ -99,7 +99,7 @@ function SalesStack(Stack: any) {
                 component={Sph}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", CREATE_VISITATION_TITLE)
+                        selectedBPBadges(selectedBP, CREATE_VISITATION_TITLE)
                 }}
             />
             <Stack.Screen
@@ -116,7 +116,7 @@ function SalesStack(Stack: any) {
                 component={Appointment}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", APPOINTMENT_TITLE)
+                        selectedBPBadges(selectedBP, APPOINTMENT_TITLE)
                 }}
             />
             <Stack.Screen
@@ -125,7 +125,7 @@ function SalesStack(Stack: any) {
                 component={SearchProduct}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", SEARCH_PRODUCT_TITLE)
+                        selectedBPBadges(selectedBP, SEARCH_PRODUCT_TITLE)
                 }}
             />
             <Stack.Screen
@@ -134,7 +134,7 @@ function SalesStack(Stack: any) {
                 component={Location}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", LOCATION_TITLE)
+                        selectedBPBadges(selectedBP, LOCATION_TITLE)
                 }}
             />
             <Stack.Screen
@@ -143,7 +143,7 @@ function SalesStack(Stack: any) {
                 component={SearchAreaProject}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", SEARCH_AREA_TITLE)
+                        selectedBPBadges(selectedBP, SEARCH_AREA_TITLE)
                 }}
             />
             <Stack.Screen
@@ -152,7 +152,7 @@ function SalesStack(Stack: any) {
                 component={CalendarScreen}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", CALENDAR_TITLE)
+                        selectedBPBadges(selectedBP, CALENDAR_TITLE)
                 }}
             />
             <Stack.Screen
@@ -161,7 +161,7 @@ function SalesStack(Stack: any) {
                 component={CameraScreen}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", CAMERA_TITLE)
+                        selectedBPBadges(selectedBP, CAMERA_TITLE)
                 }}
             />
             <Stack.Screen
@@ -170,7 +170,7 @@ function SalesStack(Stack: any) {
                 component={Preview}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", IMAGE_PREVIEW_TITLE)
+                        selectedBPBadges(selectedBP, IMAGE_PREVIEW_TITLE)
                 }}
             />
             <Stack.Screen
@@ -179,7 +179,7 @@ function SalesStack(Stack: any) {
                 component={TransactionDetail}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", TRANSACTION_DETAIL_TITLE)
+                        selectedBPBadges(selectedBP, TRANSACTION_DETAIL_TITLE)
                 }}
             />
             <Stack.Screen
@@ -190,7 +190,7 @@ function SalesStack(Stack: any) {
                     headerTitleAlign: "center",
                     headerTitle: () =>
                         selectedBPBadges(
-                            "BP-LEGOK",
+                            selectedBP,
                             PROJECT_DETAIL_TITLE,
                             false
                         )
@@ -220,7 +220,7 @@ function SalesStack(Stack: any) {
                 component={PriceList}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", ALL_PRODUCT_TITLE)
+                        selectedBPBadges(selectedBP, ALL_PRODUCT_TITLE)
                 }}
             />
             <Stack.Screen
@@ -229,7 +229,7 @@ function SalesStack(Stack: any) {
                 component={CreateScheduleScreen}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", CREATE_SCHEDULE_TITLE)
+                        selectedBPBadges(selectedBP, CREATE_SCHEDULE_TITLE)
                 }}
             />
             <Stack.Screen
@@ -239,7 +239,7 @@ function SalesStack(Stack: any) {
                 options={{
                     headerTitleAlign: "center",
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", DOCUMENTS_TITLE, false)
+                        selectedBPBadges(selectedBP, DOCUMENTS_TITLE, false)
                 }}
             />
             <Stack.Screen
@@ -257,7 +257,7 @@ function SalesStack(Stack: any) {
                 component={Deposit}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", CREATE_DEPOSIT_TITLE)
+                        selectedBPBadges(selectedBP, CREATE_DEPOSIT_TITLE)
                 }}
             />
             <Stack.Screen
@@ -266,7 +266,7 @@ function SalesStack(Stack: any) {
                 component={SearchSO}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", SEARCH_SO_TITLE)
+                        selectedBPBadges(selectedBP, SEARCH_SO_TITLE)
                 }}
             />
             <Stack.Screen
@@ -275,7 +275,7 @@ function SalesStack(Stack: any) {
                 component={FormSO}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", FORM_SO_TITLE)
+                        selectedBPBadges(selectedBP, FORM_SO_TITLE)
                 }}
             />
             <Stack.Screen
@@ -284,7 +284,7 @@ function SalesStack(Stack: any) {
                 component={InvoiceList}
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", INVOICE_LIST_TITLE)
+                        selectedBPBadges(selectedBP, INVOICE_LIST_TITLE)
                 }}
             />
             <Stack.Screen

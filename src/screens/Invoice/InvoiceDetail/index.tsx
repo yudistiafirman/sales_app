@@ -5,7 +5,6 @@ import BInvoiceCommonFooter, {
 } from "@/components/molecules/BInvoiceCommonFooter";
 import { colors, layout } from "@/constants";
 import font from "@/constants/fonts";
-import useCustomHeaderRight from "@/hooks/useCustomHeaderRight";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -20,7 +19,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { getOneInvoice } from "@/actions/FinanceActions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import {
     formatRawDateToMonthDateYear,
@@ -33,6 +32,7 @@ import { InvoiceDetailTypeData } from "@/models/Invoice";
 import { CUSTOMER_DETAIL } from "@/navigation/ScreenNames";
 import { resScale } from "@/utils";
 import ReactNativeBlobUtil from "react-native-blob-util";
+import { RootState } from "@/redux/store";
 import InvoiceDetailLoader from "./InvoiceDetailLoader";
 
 const styles = StyleSheet.create({
@@ -104,6 +104,7 @@ function InvoiceDetail() {
     const navigation = useNavigation();
     const [invoiceDetailData, setInvoiceDetailData] =
         useState<InvoiceDetailTypeData | null>(null);
+    const authState = useSelector((state: RootState) => state.auth);
 
     type DownloadType = {
         url?: string;
@@ -190,7 +191,8 @@ function InvoiceDetail() {
     // });
 
     useHeaderTitleChanged({
-        title: route?.params?.invoiceNo ? route?.params?.invoiceNo : "-"
+        title: route?.params?.invoiceNo ? route?.params?.invoiceNo : "-",
+        selectedBP: authState.selectedBP
     });
 
     const getOneInvoiceData = async () => {

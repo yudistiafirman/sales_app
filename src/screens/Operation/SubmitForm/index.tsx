@@ -107,7 +107,9 @@ function SubmitForm() {
     const route = useRoute<RootStackScreenProps>();
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
-    const { userData } = useSelector((state: RootState) => state.auth);
+    const { userData, selectedBP } = useSelector(
+        (state: RootState) => state.auth
+    );
     const operationData = useSelector((state: RootState) => state.operation);
     const { keyboardVisible } = useKeyboardActive();
     const operationType = route?.params?.operationType;
@@ -429,7 +431,7 @@ function SubmitForm() {
         }, [handleBack, operationData.photoFiles, userData?.type])
     );
 
-    useHeaderTitleChanged({ title: getHeaderTitle() });
+    useHeaderTitleChanged({ title: getHeaderTitle(), selectedBP });
 
     const weightInputs: Input[] = [
         {

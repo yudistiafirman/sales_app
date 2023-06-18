@@ -103,9 +103,6 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const route = useRoute<RootStackScreenProps>();
-    useHeaderTitleChanged({
-        title: `Foto ${route?.params?.photoTitle}`
-    });
     const assignStyle = React.useMemo(() => style, [style]);
     const photo = route?.params?.photo?.path;
     const picker = route?.params?.picker;
@@ -118,7 +115,13 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     const soID = route?.params?.soID;
     const visitationData = useSelector((state: RootState) => state.visitation);
     const operationData = useSelector((state: RootState) => state.operation);
+    const authState = useSelector((state: RootState) => state.auth);
     let latlongResult = "";
+    useHeaderTitleChanged({
+        title: `Foto ${route?.params?.photoTitle}`,
+        selectedBP: authState.selectedBP,
+        hideBPBadges: true
+    });
 
     useCustomHeaderLeft({
         customHeaderLeft: closeButton ? (

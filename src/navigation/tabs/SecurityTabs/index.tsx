@@ -23,14 +23,13 @@ import CustomTabBar from "../CustomTabBar";
 
 const Tab = createBottomTabNavigator();
 
+const selectedBPBadges = (bpName: string, title: string) => (
+    <BSelectedBPBadges bpName={bpName} title={title} />
+);
+
 function SecurityTabs() {
-    const userData = useSelector((state: RootState) => state.auth.userData);
-
+    const authState = useSelector((state: RootState) => state.auth);
     const tabBarRender = (props: any) => <CustomTabBar {...props} />;
-
-    const selectedBPBadges = (bpName: string, title: string) => (
-        <BSelectedBPBadges bpName={bpName} title={title} />
-    );
 
     return (
         <Tab.Navigator
@@ -43,18 +42,21 @@ function SecurityTabs() {
         >
             <Tab.Screen
                 key={
-                    userData?.type === EntryType.SECURITY
+                    authState.userData?.type === EntryType.SECURITY
                         ? TAB_DISPATCH
                         : TAB_WB_OUT
                 }
                 name={
-                    userData?.type === EntryType.SECURITY
+                    authState.userData?.type === EntryType.SECURITY
                         ? TAB_DISPATCH_TITLE
                         : TAB_WB_OUT_TITLE
                 }
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", SECURITY_TAB_TITLE),
+                        selectedBPBadges(
+                            authState.selectedBP,
+                            SECURITY_TAB_TITLE
+                        ),
                     headerRight: () => SalesHeaderRight(colors.text.darker),
                     headerShown: true
                 }}
@@ -62,18 +64,21 @@ function SecurityTabs() {
             />
             <Tab.Screen
                 key={
-                    userData?.type === EntryType.SECURITY
+                    authState.userData?.type === EntryType.SECURITY
                         ? TAB_RETURN
                         : TAB_WB_IN
                 }
                 name={
-                    userData?.type === EntryType.SECURITY
+                    authState.userData?.type === EntryType.SECURITY
                         ? TAB_RETURN_TITLE
                         : TAB_WB_IN_TITLE
                 }
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges("BP-LEGOK", SECURITY_TAB_TITLE),
+                        selectedBPBadges(
+                            authState.selectedBP,
+                            SECURITY_TAB_TITLE
+                        ),
                     headerRight: () => SalesHeaderRight(colors.text.darker),
                     headerShown: true
                 }}

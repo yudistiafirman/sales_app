@@ -53,12 +53,17 @@ export default function CalendarScreen() {
     const dispatch = useDispatch();
     const { visitationCalendarMapped, markedDate, isVisitationLoading } =
         useSelector((state: RootState) => state.productivity);
+    const { selectedBP } = useSelector((state: RootState) => state.auth);
 
     const [customerDatas, setCustomerDatas] = useState<customerDataInterface[]>(
         []
     );
 
-    useHeaderTitleChanged({ title: "Pilih Tanggal" });
+    useHeaderTitleChanged({
+        title: "Pilih Tanggal",
+        selectedBP,
+        hideBPBadges: true
+    });
 
     const fetchVisitation = useCallback(
         ({

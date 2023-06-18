@@ -154,6 +154,9 @@ const style = StyleSheet.create({
 });
 
 function Beranda() {
+    const { remoteConfigData, selectedBP } = useSelector(
+        (state: RootState) => state.auth
+    );
     /* eslint-disable @typescript-eslint/naming-convention */
     const {
         force_update,
@@ -166,7 +169,7 @@ function Beranda() {
         enable_sph,
         enable_visitation,
         enable_invoice
-    } = useSelector((state: RootState) => state.auth.remoteConfigData);
+    } = remoteConfigData;
     /* eslint-enable @typescript-eslint/naming-convention */
 
     const poState = useSelector((state: RootState) => state.purchaseOrder);
@@ -226,7 +229,7 @@ function Beranda() {
                     textStyle={{
                         color: colors.white
                     }}
-                    title="BP-Legok"
+                    title={selectedBP}
                     endIcon={
                         <MaterialIcons
                             name="arrow-drop-down"

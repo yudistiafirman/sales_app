@@ -27,22 +27,23 @@ import CustomTabBar from "../CustomTabBar";
 
 const Tab = createBottomTabNavigator();
 
+const selectedBPBadges = (bpName: string, title: string) => (
+    <BSelectedBPBadges bpName={bpName} title={title} />
+);
+
 function SalesTabs() {
+    const { remoteConfigData, selectedBP } = useSelector(
+        (state: RootState) => state.auth
+    );
     /* eslint-disable @typescript-eslint/naming-convention */
     const {
         enable_transaction_menu,
         enable_price_menu,
         enable_profile_menu,
         enable_customer_menu
-    } = useSelector((state: RootState) => state.auth.remoteConfigData);
+    } = remoteConfigData;
     /* eslint-enable @typescript-eslint/naming-convention */
-
     const tabBarRender = (props: any) => <CustomTabBar {...props} />;
-
-    const selectedBPBadges = (bpName: string, title: string) => (
-        <BSelectedBPBadges bpName={bpName} title={title} />
-    );
-
     return (
         <Tab.Navigator
             screenOptions={{
@@ -73,7 +74,7 @@ function SalesTabs() {
                     name={TAB_TRANSACTION_TITLE}
                     options={{
                         headerTitle: () =>
-                            selectedBPBadges("BP-LEGOK", TAB_TRANSACTION_TITLE)
+                            selectedBPBadges(selectedBP, TAB_TRANSACTION_TITLE)
                     }}
                     component={Transaction}
                 />
@@ -84,7 +85,7 @@ function SalesTabs() {
                     name={TAB_PROFILE_TITLE}
                     options={{
                         headerTitle: () =>
-                            selectedBPBadges("BP-LEGOK", TAB_PROFILE_TITLE)
+                            selectedBPBadges(selectedBP, TAB_PROFILE_TITLE)
                     }}
                     component={Profile}
                 />
@@ -96,7 +97,7 @@ function SalesTabs() {
                     name={TAB_PRICE_LIST_TITLE}
                     options={{
                         headerTitle: () =>
-                            selectedBPBadges("BP-LEGOK", TAB_PRICE_LIST_TITLE)
+                            selectedBPBadges(selectedBP, TAB_PRICE_LIST_TITLE)
                     }}
                     component={PriceList}
                 />

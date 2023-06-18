@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
 function PurchaseOrder() {
     const navigation = useNavigation();
     const poState = useSelector((state: RootState) => state.purchaseOrder);
+    const authState = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch<AppDispatch>();
     const {
         currentStep,
@@ -211,7 +212,8 @@ function PurchaseOrder() {
         navigation.setOptions({
             headerBackVisible: false,
             headerLeft: () => renderHeaderLeft(),
-            headerTitle: () => selectedBPBadges("BP-LEGOK", renderTitle())
+            headerTitle: () =>
+                selectedBPBadges(authState.selectedBP, renderTitle())
         });
     }, [navigation, renderHeaderLeft, renderTitle]);
 
