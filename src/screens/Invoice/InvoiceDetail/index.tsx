@@ -156,38 +156,38 @@ function InvoiceDetail() {
 
         return null;
     };
-    useCustomHeaderRight({
-        customHeaderRight: (
-            <BTouchableText
-                onPress={() =>
-                    downloadPdf({
-                        url: invoiceDetailData?.File?.url,
-                        title: route.params.invoiceNo,
-                        downloadPopup: () => {
-                            dispatch(
-                                openPopUp({
-                                    popUpText: `Berhasil mendownload`,
-                                    popUpType: "success",
-                                    outsideClickClosePopUp: true
-                                })
-                            );
-                        },
-                        downloadError: (err) => {
-                            dispatch(
-                                openPopUp({
-                                    popUpText: err || `Gagal mendownload`,
-                                    popUpType: "error",
-                                    outsideClickClosePopUp: true
-                                })
-                            );
-                        }
-                    })
-                }
-                title="Unduh Tagihan"
-                textStyle={styles.touchableText}
-            />
-        )
-    });
+    // useCustomHeaderRight({
+    //     customHeaderRight: (
+    //         <BTouchableText
+    //             onPress={() =>
+    //                 downloadPdf({
+    //                     url: invoiceDetailData?.File?.url,
+    //                     title: route.params.invoiceNo,
+    //                     downloadPopup: () => {
+    //                         dispatch(
+    //                             openPopUp({
+    //                                 popUpText: `Berhasil mendownload`,
+    //                                 popUpType: "success",
+    //                                 outsideClickClosePopUp: true
+    //                             })
+    //                         );
+    //                     },
+    //                     downloadError: (err) => {
+    //                         dispatch(
+    //                             openPopUp({
+    //                                 popUpText: err || `Gagal mendownload`,
+    //                                 popUpType: "error",
+    //                                 outsideClickClosePopUp: true
+    //                             })
+    //                         );
+    //                     }
+    //                 })
+    //             }
+    //             title="Unduh Tagihan"
+    //             textStyle={styles.touchableText}
+    //         />
+    //     )
+    // });
 
     useHeaderTitleChanged({
         title: route?.params?.invoiceNo ? route?.params?.invoiceNo : "-"

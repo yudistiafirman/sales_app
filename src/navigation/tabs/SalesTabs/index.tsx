@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import PriceList from "@/screens/Price";
-import Profile from "@/screens/Customer";
+import Profile from "@/screens/Profile";
 import Home from "@/screens/Home";
 import { colors, fonts } from "@/constants";
 import Transaction from "@/screens/Transaction";
@@ -22,6 +22,7 @@ import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import SalesHeaderRight from "@/navigation/Sales/HeaderRight";
 import Customer from "@/screens/Customer";
+import { BSelectedBPBadges } from "@/components";
 import CustomTabBar from "../CustomTabBar";
 
 const Tab = createBottomTabNavigator();
@@ -37,6 +38,10 @@ function SalesTabs() {
     /* eslint-enable @typescript-eslint/naming-convention */
 
     const tabBarRender = (props: any) => <CustomTabBar {...props} />;
+
+    const selectedBPBadges = (bpName: string, title: string) => (
+        <BSelectedBPBadges bpName={bpName} title={title} />
+    );
 
     return (
         <Tab.Navigator
@@ -66,7 +71,10 @@ function SalesTabs() {
                 <Tab.Screen
                     key={TAB_TRANSACTION}
                     name={TAB_TRANSACTION_TITLE}
-                    options={{ headerTitle: TAB_TRANSACTION_TITLE }}
+                    options={{
+                        headerTitle: () =>
+                            selectedBPBadges("BP-LEGOK", TAB_TRANSACTION_TITLE)
+                    }}
                     component={Transaction}
                 />
             )}
@@ -74,7 +82,10 @@ function SalesTabs() {
                 <Tab.Screen
                     key={TAB_PROFILE}
                     name={TAB_PROFILE_TITLE}
-                    options={{ headerTitle: TAB_PROFILE_TITLE }}
+                    options={{
+                        headerTitle: () =>
+                            selectedBPBadges("BP-LEGOK", TAB_PROFILE_TITLE)
+                    }}
                     component={Profile}
                 />
             )}
@@ -83,7 +94,10 @@ function SalesTabs() {
                 <Tab.Screen
                     key={TAB_PRICE_LIST}
                     name={TAB_PRICE_LIST_TITLE}
-                    options={{ headerTitle: TAB_PRICE_LIST_TITLE }}
+                    options={{
+                        headerTitle: () =>
+                            selectedBPBadges("BP-LEGOK", TAB_PRICE_LIST_TITLE)
+                    }}
                     component={PriceList}
                 />
             )}

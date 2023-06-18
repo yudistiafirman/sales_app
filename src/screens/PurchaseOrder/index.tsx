@@ -10,6 +10,7 @@ import bStorage from "@/actions";
 import {
     BBackContinueBtn,
     BHeaderIcon,
+    BSelectedBPBadges,
     BSpacer,
     BStepperIndicator,
     PopUpQuestion
@@ -188,6 +189,10 @@ function PurchaseOrder() {
         return title;
     }, [poState.currentState]);
 
+    const selectedBPBadges = (bpName: string, title: string) => (
+        <BSelectedBPBadges bpName={bpName} title={title} alignLeft />
+    );
+
     useFocusEffect(
         React.useCallback(() => {
             const backAction = () => {
@@ -206,7 +211,7 @@ function PurchaseOrder() {
         navigation.setOptions({
             headerBackVisible: false,
             headerLeft: () => renderHeaderLeft(),
-            headerTitle: renderTitle()
+            headerTitle: () => selectedBPBadges("BP-LEGOK", renderTitle())
         });
     }, [navigation, renderHeaderLeft, renderTitle]);
 

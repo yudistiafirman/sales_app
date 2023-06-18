@@ -18,6 +18,7 @@ import {
 import { RootState } from "@/redux/store";
 import Dispatch from "@/screens/Operation/Dispatch";
 import Return from "@/screens/Operation/Return";
+import { BSelectedBPBadges } from "@/components";
 import CustomTabBar from "../CustomTabBar";
 
 const Tab = createBottomTabNavigator();
@@ -26,6 +27,10 @@ function SecurityTabs() {
     const userData = useSelector((state: RootState) => state.auth.userData);
 
     const tabBarRender = (props: any) => <CustomTabBar {...props} />;
+
+    const selectedBPBadges = (bpName: string, title: string) => (
+        <BSelectedBPBadges bpName={bpName} title={title} />
+    );
 
     return (
         <Tab.Navigator
@@ -48,7 +53,8 @@ function SecurityTabs() {
                         : TAB_WB_OUT_TITLE
                 }
                 options={{
-                    headerTitle: SECURITY_TAB_TITLE,
+                    headerTitle: () =>
+                        selectedBPBadges("BP-LEGOK", SECURITY_TAB_TITLE),
                     headerRight: () => SalesHeaderRight(colors.text.darker),
                     headerShown: true
                 }}
@@ -66,7 +72,8 @@ function SecurityTabs() {
                         : TAB_WB_IN_TITLE
                 }
                 options={{
-                    headerTitle: SECURITY_TAB_TITLE,
+                    headerTitle: () =>
+                        selectedBPBadges("BP-LEGOK", SECURITY_TAB_TITLE),
                     headerRight: () => SalesHeaderRight(colors.text.darker),
                     headerShown: true
                 }}

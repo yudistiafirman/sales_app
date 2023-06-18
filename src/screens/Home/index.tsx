@@ -21,7 +21,9 @@ import {
     BText,
     PopUpQuestion,
     BCommonSearchList,
-    BBottomSheet
+    BBottomSheet,
+    BTouchableText,
+    BSvg
 } from "@/components";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
@@ -69,6 +71,7 @@ import bStorage from "@/actions";
 import { resetRegion } from "@/redux/reducers/locationReducer";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { resetInvoiceState } from "@/redux/reducers/invoiceReducer";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
 import BuatKunjungan from "./elements/BuatKunjungan";
 import DateDaily from "./elements/DateDaily";
@@ -202,12 +205,47 @@ function Beranda() {
             : height - width + layout.pad.xxl + layout.pad.md;
     const snapPoints = React.useMemo(() => [initialSnapPoints, "100%"], []);
 
+    function customHomeHeader() {
+        return (
+            <View style={{ flex: 1 }}>
+                <Text
+                    style={{
+                        color: colors.white,
+                        fontSize: fonts.size.lg,
+                        fontFamily: fonts.family.montserrat[600]
+                    }}
+                >
+                    Beranda
+                </Text>
+                <BTouchableText
+                    viewStyle={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        marginTop: -layout.pad.md
+                    }}
+                    textStyle={{
+                        color: colors.white
+                    }}
+                    title="BP-Legok"
+                    endIcon={
+                        <MaterialIcons
+                            name="arrow-drop-down"
+                            color={colors.white}
+                            size={layout.pad.xl - 6}
+                        />
+                    }
+                />
+            </View>
+        );
+    }
+
     useHeaderShow({
         isHeaderShown: !isModalVisible
     });
     useHeaderStyleChanged({
         titleColor: colors.text.light,
-        bgColor: colors.primary
+        bgColor: colors.primary,
+        customHeader: customHomeHeader()
     });
 
     // fetching data
