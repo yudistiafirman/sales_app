@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { colors } from "@/constants";
 import EntryType from "@/models/EnumModel";
 import SalesHeaderRight from "@/navigation/Sales/HeaderRight";
@@ -15,21 +15,37 @@ import {
     TAB_WB_OUT,
     TAB_WB_OUT_TITLE
 } from "@/navigation/ScreenNames";
-import { RootState } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import Dispatch from "@/screens/Operation/Dispatch";
 import Return from "@/screens/Operation/Return";
-import { BSelectedBPBadges } from "@/components";
+import { BSelectedBPOptionMenu } from "@/components";
+import { setSelectedBP } from "@/redux/reducers/authReducer";
 import CustomTabBar from "../CustomTabBar";
 
 const Tab = createBottomTabNavigator();
 
-const selectedBPBadges = (bpName: string, title: string) => (
-    <BSelectedBPBadges bpName={bpName} title={title} />
+const selectedBPOption = (
+    bpName: string,
+    title: string,
+    onSelectBPOption1: () => void,
+    onSelectBPOption2: () => void
+) => (
+    <BSelectedBPOptionMenu
+        pageTitle={title}
+        selectedBP={bpName}
+        color={colors.text.darker}
+        onPressOption1={onSelectBPOption1}
+        onPressOption2={onSelectBPOption2}
+    />
 );
 
 function SecurityTabs() {
     const authState = useSelector((state: RootState) => state.auth);
+    const dispatch = useDispatch<AppDispatch>();
     const tabBarRender = (props: any) => <CustomTabBar {...props} />;
+
+    const selectBPOption1 = () => dispatch(setSelectedBP("BP-Legok"));
+    const selectBPOption2 = () => dispatch(setSelectedBP("BP-Balaraja"));
 
     return (
         <Tab.Navigator
@@ -53,9 +69,11 @@ function SecurityTabs() {
                 }
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges(
+                        selectedBPOption(
                             authState.selectedBP,
-                            SECURITY_TAB_TITLE
+                            SECURITY_TAB_TITLE,
+                            selectBPOption1,
+                            selectBPOption2
                         ),
                     headerRight: () => SalesHeaderRight(colors.text.darker),
                     headerShown: true
@@ -75,9 +93,11 @@ function SecurityTabs() {
                 }
                 options={{
                     headerTitle: () =>
-                        selectedBPBadges(
+                        selectedBPOption(
                             authState.selectedBP,
-                            SECURITY_TAB_TITLE
+                            SECURITY_TAB_TITLE,
+                            selectBPOption1,
+                            selectBPOption2
                         ),
                     headerRight: () => SalesHeaderRight(colors.text.darker),
                     headerShown: true

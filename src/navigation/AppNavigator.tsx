@@ -1,12 +1,13 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { useDispatch } from "react-redux";
-import { BHttpLogger, BSelectedBPBadges } from "@/components";
+import { BHttpLogger, BSelectedBPOptionMenu } from "@/components";
 import { colors, fonts } from "@/constants";
 import { useAsyncConfigSetup } from "@/hooks";
 import EntryType from "@/models/EnumModel";
 import UserModel from "@/models/User";
 import {
+    setSelectedBP,
     setShowButtonNetwork,
     setVisibleNetworkLogger
 } from "@/redux/reducers/authReducer";
@@ -42,17 +43,17 @@ const Stack = createNativeStackNavigator();
 function RootScreen(
     userData: UserModel.DataSuccessLogin | null,
     isSignout: boolean,
-    selectedBP: string
+    selectedBP: string,
+    onSelectBPOption1: () => void,
+    onSelectBPOption2: () => void
 ) {
-    const selectedBPBadges = (
-        bpName: string,
-        title: string,
-        alignLeft?: boolean
-    ) => (
-        <BSelectedBPBadges
-            bpName={bpName}
-            title={title}
-            alignLeft={alignLeft !== undefined ? alignLeft : true}
+    const selectedBPOption = (bpName: string, title: string) => (
+        <BSelectedBPOptionMenu
+            pageTitle={title}
+            selectedBP={bpName}
+            color={colors.text.darker}
+            onPressOption1={onSelectBPOption1}
+            onPressOption2={onSelectBPOption2}
         />
     );
 
@@ -69,7 +70,7 @@ function RootScreen(
                             options={{
                                 headerTitleAlign: "center",
                                 headerTitle: () =>
-                                    selectedBPBadges(
+                                    selectedBPOption(
                                         selectedBP,
                                         OPSMANAGER_TITLE
                                     ),
@@ -91,7 +92,7 @@ function RootScreen(
                             options={{
                                 headerTitleAlign: "center",
                                 headerTitle: () =>
-                                    selectedBPBadges(selectedBP, BATCHER_TITLE),
+                                    selectedBPOption(selectedBP, BATCHER_TITLE),
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
@@ -110,7 +111,7 @@ function RootScreen(
                             options={{
                                 headerTitleAlign: "center",
                                 headerTitle: () =>
-                                    selectedBPBadges(selectedBP, DRIVER_TITLE),
+                                    selectedBPOption(selectedBP, DRIVER_TITLE),
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
@@ -247,7 +248,13 @@ function AppNavigator() {
                     }
                 }}
             >
-                {RootScreen(userData, isSignout, selectedBP)}
+                {RootScreen(
+                    userData,
+                    isSignout,
+                    selectedBP,
+                    () => dispatch(setSelectedBP("BP-Legok")),
+                    () => dispatch(setSelectedBP("BP-Balaraja"))
+                )}
             </Stack.Navigator>
             <BHttpLogger
                 isShowButtonNetwork={isShowButtonNetwork}

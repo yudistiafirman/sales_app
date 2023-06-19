@@ -1,8 +1,8 @@
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { colors, fonts, layout } from "@/constants";
+import { Badge } from "react-native-paper";
 import BSpacer from "../atoms/BSpacer";
-import PillStatus from "../molecules/BVisitationCard/elements/PillStatus";
 
 const styles = StyleSheet.create({
     text: {
@@ -13,6 +13,16 @@ const styles = StyleSheet.create({
     view: {
         justifyContent: "center",
         alignItems: "center"
+    },
+    badges: {
+        alignItems: "center",
+        justifyContent: "center",
+        alignSelf: "center",
+        backgroundColor: colors.status.orange,
+        fontSize: fonts.size.xs,
+        paddingHorizontal: layout.pad.md,
+        color: colors.text.darker,
+        fontFamily: fonts.family.montserrat[400]
     }
 });
 
@@ -31,7 +41,17 @@ function BSelectedBPBadges({
         <View style={[styles.view, alignLeft && { alignItems: "flex-start" }]}>
             <Text style={styles.text}>{title}</Text>
             <BSpacer size="verySmall" />
-            <PillStatus pilStatus={bpName} color={colors.tertiary} />
+            <Badge
+                style={[
+                    styles.badges,
+                    alignLeft && { alignSelf: "flex-start" },
+                    bpName.toLowerCase().includes("legok") && {
+                        backgroundColor: colors.status.lightBlue
+                    }
+                ]}
+            >
+                {bpName}
+            </Badge>
         </View>
     );
 }
