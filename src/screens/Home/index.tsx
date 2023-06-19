@@ -210,20 +210,6 @@ function Beranda() {
     useHeaderShow({
         isHeaderShown: !isModalVisible
     });
-    useHeaderStyleChanged({
-        titleColor: colors.text.light,
-        bgColor: colors.primary,
-        customHeader: (
-            <BSelectedBPOptionMenu
-                pageTitle="Beranda"
-                selectedBatchingPlant={selectedBatchingPlant}
-                batchingPlants={batchingPlants}
-                onPressOption={(item: BatchingPlant) =>
-                    dispatch(setSelectedBatchingPlant(item))
-                }
-            />
-        )
-    });
 
     // fetching data
     const [visitData, setVisitData] = React.useState<Api.Response>({
@@ -258,31 +244,40 @@ function Beranda() {
         }
     };
 
-    const fetchTarget = React.useCallback(async () => {
-        try {
-            setIsTargetLoading(true);
-            const { data: assignData } = await getVisitationTarget();
-            setCurrentVisit({
-                current: assignData?.data?.totalCompleted,
-                target: assignData?.data?.visitationTarget
-            });
-            setIsTargetLoading(false);
-        } catch (err) {
-            setIsTargetLoading(false);
-            dispatch(
-                openPopUp({
-                    popUpType: "error",
-                    popUpText:
-                        err.message ||
-                        "Terjadi error saat pengambilan data target harian kunjungan",
-                    outsideClickClosePopUp: true
-                })
-            );
-        }
-    }, []);
+    const fetchTarget = React.useCallback(
+        async (selectedBP?: BatchingPlant) => {
+            try {
+                setIsTargetLoading(true);
+                const { data: assignData } = await getVisitationTarget(
+                    selectedBP?.id || selectedBatchingPlant?.id
+                );
+                setCurrentVisit({
+                    current: assignData?.data?.totalCompleted,
+                    target: assignData?.data?.visitationTarget
+                });
+                setIsTargetLoading(false);
+            } catch (err) {
+                setIsTargetLoading(false);
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText:
+                            err.message ||
+                            "Terjadi error saat pengambilan data target harian kunjungan",
+                        outsideClickClosePopUp: true
+                    })
+                );
+            }
+        },
+        []
+    );
 
     const fetchVisitations = React.useCallback(
-        async (date: moment.Moment, search?: string) => {
+        async (
+            date: moment.Moment,
+            selectedBP?: BatchingPlant,
+            search?: string
+        ) => {
             setIsLoading(true);
             setIsError(false);
             try {
@@ -292,7 +287,8 @@ function Beranda() {
                     ...(!search &&
                         !searchQuery && {
                             date: date.valueOf()
-                        })
+                        }),
+                    batchingPlantId: selectedBP?.id || selectedBatchingPlant?.id
                 };
                 const { data: assignData } = await getAllVisitations(options);
                 const displayData =
@@ -338,6 +334,23 @@ function Beranda() {
         },
         [visitData.data, page, searchQuery]
     );
+
+    useHeaderStyleChanged({
+        titleColor: colors.text.light,
+        bgColor: colors.primary,
+        customHeader: (
+            <BSelectedBPOptionMenu
+                pageTitle="Beranda"
+                selectedBatchingPlant={selectedBatchingPlant}
+                batchingPlants={batchingPlants}
+                onPressOption={(item: BatchingPlant) => {
+                    dispatch(setSelectedBatchingPlant(item));
+                    fetchTarget(item);
+                    fetchVisitations(selectedDate, item);
+                }}
+            />
+        )
+    });
 
     useFocusEffect(
         React.useCallback(() => {
@@ -612,7 +625,7 @@ function Beranda() {
             data: []
         });
         setPage(1);
-        fetchVisitations(selectedDate, text);
+        fetchVisitations(selectedDate, undefined, text);
     };
 
     const onChangeWithDebounce = React.useCallback(debounce(reset, 500), []);

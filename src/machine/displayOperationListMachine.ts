@@ -215,7 +215,7 @@ const displayOperationListMachine = createMachine(
                 operationListData: [],
                 userType: event?.payload,
                 tabActive: event?.tabActive,
-                batchingPlantId: event.value.selectedBP?.id
+                batchingPlantId: event.value?.selectedBP?.id
             })),
             handleEndReached: assign((context, event) => ({
                 page: context.page + 1,
@@ -226,7 +226,7 @@ const displayOperationListMachine = createMachine(
                 tabActive: event?.tabActive,
                 isRefreshing: true,
                 isLoading: true,
-                batchingPlantId: event.value.selectedBP?.id
+                batchingPlantId: event.value?.selectedBP?.id
             }))
         }
     }

@@ -12,6 +12,7 @@ const API_URL =
 type GetVisitationsType = {
     month?: number;
     year?: number;
+    batchingPlantId?: string;
 };
 
 interface IGetAll {
@@ -19,6 +20,7 @@ interface IGetAll {
     page: number;
     search?: string;
     projectId?: string;
+    batchingPlantId?: string;
 }
 
 type GetOneVisitationType = {
@@ -30,12 +32,15 @@ export default class BrikApiProductivity {
         const url = new URL(`${API_URL}/productivity/m/flow/visitation`);
         if (props) {
             const params = url.searchParams;
-            const { month, year } = props;
+            const { month, year, batchingPlantId } = props;
             if (month) {
                 params.append("month", month.toString());
             }
             if (year) {
                 params.append("year", year.toString());
+            }
+            if (batchingPlantId) {
+                params.append("batchingPlantId", batchingPlantId.toString());
             }
         }
 
@@ -47,7 +52,8 @@ export default class BrikApiProductivity {
         date,
         page = 1,
         search = "",
-        projectId
+        projectId,
+        batchingPlantId
     }: IGetAll) => {
         const url = new URL(`${API_URL}/productivity/m/flow/all-visitation`);
         const params = url.searchParams;
@@ -64,17 +70,23 @@ export default class BrikApiProductivity {
         if (search) {
             params.append("search", search);
         }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
+        }
         params.append("size", "10");
 
         return url.toString();
     };
 
-    static getTarget = () => {
+    static getTarget = (batchingPlantId?: string) => {
         const url = new URL(
             `${API_URL}/productivity/m/flow/completed-visitation`
         );
 
         const params = url.searchParams;
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId.toString());
+        }
         params.append("date", moment().valueOf().toString());
 
         return url.toString();

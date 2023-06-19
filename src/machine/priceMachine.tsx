@@ -328,7 +328,7 @@ export const priceMachine =
                     page: 1,
                     loadProduct: true,
                     productsData: [],
-                    batchingPlantId: event.selectedBP?.id
+                    batchingPlantId: event?.selectedBP?.id
                 })),
                 incrementPage: assign((context, _event) => ({
                     page: context.page + 1,
@@ -350,7 +350,7 @@ export const priceMachine =
                     productsData: [],
                     selectedCategories: [],
                     page: 1,
-                    batchingPlantId: event.selectedBP?.id
+                    batchingPlantId: event?.selectedBP?.id
                 })),
                 assignStopLoadMore: assign((context, event) => ({
                     isLoadMore: false

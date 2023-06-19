@@ -177,7 +177,7 @@ const searchProductMachine =
                 assignIndex: assign((context, event) => ({
                     selectedCategories: context.routes[event.value].title,
                     loadProduct: true,
-                    batchingPlantId: event.selectedBP?.id
+                    batchingPlantId: event?.selectedBP?.id
                 })),
                 clearData: assign((_context, _event) => ({
                     productsData: [],
@@ -188,7 +188,7 @@ const searchProductMachine =
                 })),
                 assignParams: assign((context, event) => ({
                     distance: event.value / 1000,
-                    batchingPlantId: event.selectedBP?.id
+                    batchingPlantId: event?.selectedBP?.id
                 })),
                 handleError: assign((context, event) => ({
                     loadProduct: false,

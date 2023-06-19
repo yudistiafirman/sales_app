@@ -229,7 +229,7 @@ const searchPOMachine = createMachine(
             })),
             assignSearchValue: assign((context, event) => ({
                 searchValue: event.value,
-                batchingPlantId: event.selectedBP?.id,
+                batchingPlantId: event?.selectedBP?.id,
                 loadData: true
             })),
             assignSphData: assign((_context, event) => {

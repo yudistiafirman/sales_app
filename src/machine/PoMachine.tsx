@@ -719,7 +719,7 @@ const POMachine =
                 })),
                 closeModalSph: assign((_context, event) => ({
                     choosenSphDataFromModal: event.value,
-                    selectedBP: event.selectedBP,
+                    selectedBP: event?.selectedBP,
                     isUseExistingFiles: false,
                     selectedProducts: []
                 })),

@@ -1,5 +1,6 @@
 import { getAllVisitations } from "@/actions/ProductivityActions";
 import { visitationListResponse } from "@/interfaces";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import { assign, createMachine } from "xstate";
 
 export interface Products {
@@ -34,11 +35,20 @@ const visitHistoryMachine =
             tsTypes: {} as import("./visitHistoryMachine.typegen").Typegen0,
             schema: {
                 events: {} as
-                    | { type: "assignParams"; value: string }
-                    | { type: "onChangeVisitationIdx"; value: number }
+                    | {
+                          type: "assignParams";
+                          value: string;
+                          selectedBP: BatchingPlant;
+                      }
+                    | {
+                          type: "onChangeVisitationIdx";
+                          value: number;
+                          selectedBP: BatchingPlant;
+                      }
                     | { type: "retryGettingData" },
                 context: {} as {
                     projectId: string;
+                    batchingPlantId?: string;
                     visitationData: VisitHistoryPayload[];
                     loading: boolean;
                     routes: [
@@ -60,6 +70,7 @@ const visitHistoryMachine =
             },
             context: {
                 projectId: "",
+                batchingPlantId: undefined,
                 visitationData: [],
                 loading: false,
                 routes: [
@@ -126,7 +137,8 @@ const visitHistoryMachine =
                 getAllVisitationByProjectId: async (context, _event) => {
                     try {
                         const response = await getAllVisitations({
-                            projectId: context.projectId
+                            projectId: context.projectId,
+                            batchingPlantId: context.batchingPlantId
                         });
                         return response?.data?.data?.data;
                     } catch (error) {
@@ -145,7 +157,8 @@ const visitHistoryMachine =
                 })),
                 assignProjectIdToContext: assign((_context, event) => ({
                     projectId: event?.value,
-                    loading: true
+                    loading: true,
+                    batchingPlantId: event?.selectedBP?.id
                 })),
                 assignVisitationDataToContext: assign((_context, event) => {
                     const sortedData = event?.data?.reverse();
@@ -173,7 +186,8 @@ const visitHistoryMachine =
                         );
 
                     return {
-                        selectedVisitationByIdx: newSelectedVisitationData[0]
+                        selectedVisitationByIdx: newSelectedVisitationData[0],
+                        batchingPlantId: event?.selectedBP?.id
                     };
                 })
             }

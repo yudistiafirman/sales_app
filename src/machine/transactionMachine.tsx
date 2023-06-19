@@ -220,7 +220,7 @@ const transactionMachine =
                 assignIndexToContext: assign((_context, event) => ({
                     selectedType: event.payload,
                     page: 1,
-                    batchingPlantId: event.selectedBP?.id,
+                    batchingPlantId: event?.selectedBP?.id,
                     loadTransaction: true,
                     transactionData: []
                 })),

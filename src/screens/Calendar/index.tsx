@@ -77,7 +77,11 @@ export default function CalendarScreen() {
             year: number;
             fullDate: string;
         }) => {
-            getVisitations({ month, year })
+            getVisitations({
+                month,
+                year,
+                batchingPlantId: selectedBatchingPlant?.id
+            })
                 .then((response) => {
                     const visitationData = response?.data?.data || [];
                     const visitMapped = visitationData.reduce(

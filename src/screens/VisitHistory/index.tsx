@@ -7,6 +7,8 @@ import { useMachine } from "@xstate/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 import HistoryDetails from "./elements/HistoryDetails";
 import HistoryHeader from "./elements/HistoryHeader";
 import LocationText from "./elements/LocationText";
@@ -39,11 +41,17 @@ function VisitHistory() {
     const { projectName } = route.params;
     const [state, send] = useMachine(visitHistoryMachine);
     const [index, setIndex] = useState(0);
+    const { selectedBatchingPlant } = useSelector(
+        (globalState: RootState) => globalState.auth
+    );
 
     useEffect(() => {
         if (route.params) {
             const { projectId } = route.params;
-            send("assignParams", { value: projectId });
+            send("assignParams", {
+                value: projectId,
+                selectedBP: selectedBatchingPlant
+            });
         }
     }, [route.params, send]);
 
@@ -55,7 +63,10 @@ function VisitHistory() {
         const tabIndex = state.context.routes.findIndex(
             (v) => v.key === tabroute.route.key
         );
-        send("onChangeVisitationIdx", { value: tabIndex });
+        send("onChangeVisitationIdx", {
+            value: tabIndex,
+            selectedBP: selectedBatchingPlant
+        });
     };
 
     const {
