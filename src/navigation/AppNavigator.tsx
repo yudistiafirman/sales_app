@@ -58,9 +58,14 @@ function RootScreen(
     );
 
     if (userData !== null) {
-        const { type } = userData;
-        switch (type) {
-            case EntryType.OPSMANAGER:
+        const { type, roles } = userData;
+        const mappingRoles: string[] = [];
+        roles.forEach((item) => {
+            mappingRoles.push(item.toLowerCase());
+        });
+        switch (type.toLowerCase()) {
+            case EntryType.OPSMANAGER.toLowerCase() ||
+                mappingRoles.includes(EntryType.OPSMANAGER.toLowerCase()):
                 return (
                     <>
                         <Stack.Screen
@@ -82,7 +87,8 @@ function RootScreen(
                         {OperationStack(selectedBP, Stack)}
                     </>
                 );
-            case EntryType.BATCHER:
+            case EntryType.BATCHER.toLowerCase() ||
+                mappingRoles.includes(EntryType.BATCHER.toLowerCase()):
                 return (
                     <>
                         <Stack.Screen
@@ -101,7 +107,8 @@ function RootScreen(
                         {OperationStack(selectedBP, Stack)}
                     </>
                 );
-            case EntryType.DRIVER:
+            case EntryType.DRIVER.toLowerCase() ||
+                mappingRoles.includes(EntryType.DRIVER.toLowerCase()):
                 return (
                     <>
                         <Stack.Screen
@@ -120,7 +127,8 @@ function RootScreen(
                         {OperationStack(selectedBP, Stack)}
                     </>
                 );
-            case EntryType.SECURITY:
+            case EntryType.SECURITY.toLowerCase() ||
+                mappingRoles.includes(EntryType.SECURITY.toLowerCase()):
                 return (
                     <>
                         <Stack.Screen
@@ -134,7 +142,8 @@ function RootScreen(
                         {OperationStack(selectedBP, Stack)}
                     </>
                 );
-            case EntryType.WB:
+            case EntryType.WB.toLowerCase() ||
+                mappingRoles.includes(EntryType.WB.toLowerCase()):
                 return (
                     <>
                         <Stack.Screen
@@ -148,7 +157,8 @@ function RootScreen(
                         {OperationStack(selectedBP, Stack)}
                     </>
                 );
-            case EntryType.SALES:
+            case EntryType.SALES.toLowerCase() ||
+                mappingRoles.includes(EntryType.SALES.toLowerCase()):
                 return (
                     <>
                         <Stack.Screen
@@ -162,7 +172,8 @@ function RootScreen(
                         {SalesStack(selectedBP, Stack)}
                     </>
                 );
-            case EntryType.ADMIN:
+            case EntryType.ADMIN.toLowerCase() ||
+                mappingRoles.includes(EntryType.ADMIN.toLowerCase()):
                 return (
                     <>
                         <Stack.Screen

@@ -22,7 +22,6 @@ import {
     PopUpQuestion,
     BCommonSearchList,
     BBottomSheet,
-    BTouchableText,
     BSelectedBPOptionMenu
 } from "@/components";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -71,9 +70,7 @@ import bStorage from "@/actions";
 import { resetRegion } from "@/redux/reducers/locationReducer";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { resetInvoiceState } from "@/redux/reducers/invoiceReducer";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { setSelectedBP } from "@/redux/reducers/authReducer";
-import { Menu, MenuItem } from "react-native-material-menu";
 import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
 import BuatKunjungan from "./elements/BuatKunjungan";
 import DateDaily from "./elements/DateDaily";
