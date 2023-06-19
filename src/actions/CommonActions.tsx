@@ -51,6 +51,9 @@ export const searchLocation = async (searchValue: string) =>
 export const searchLocationById = async (id: string) =>
     customRequest(BrikApiCommon.searchPlacesById(id), "GET");
 
+export const getBatchingPlants = async () =>
+    customRequest(BrikApiCommon.getBatchingPlants(), "GET", undefined, true);
+
 export const signIn = async (body: Record<string, string>) => {
     const params = new URLSearchParams();
     const dataToSend = body && Object.keys(body);
@@ -75,12 +78,23 @@ export const uploadFileImage = async (files: any[], from: string) => {
     return customRequest(BrikApiCommon.filesUpload(), "POST", formData, true);
 };
 
-export const allVisitationGetAction = async (search?: string) =>
-    customRequest(BrikApiCommon.allVisitation(search), "GET", undefined, true);
-
-export const projectByUserGetAction = async (search?: string) =>
+export const allVisitationGetAction = async (
+    search?: string,
+    batchingPlantId?: string
+) =>
     customRequest(
-        BrikApiCommon.getProjectByUser(search),
+        BrikApiCommon.allVisitation(search, batchingPlantId),
+        "GET",
+        undefined,
+        true
+    );
+
+export const projectByUserGetAction = async (
+    search?: string,
+    batchingPlantId?: string
+) =>
+    customRequest(
+        BrikApiCommon.getProjectByUser(search, batchingPlantId),
         "GET",
         undefined,
         true

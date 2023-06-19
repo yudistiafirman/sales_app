@@ -6,6 +6,7 @@ import {
 import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
 import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
 import { getAvailableDepositProject } from "@/utils/generalFunc";
+import { BatchingPlant } from "@/models/BatchingPlant";
 
 const searchPOMachine = createMachine(
     {
@@ -21,13 +22,18 @@ const searchPOMachine = createMachine(
                 | { type: "getCategoriesData"; data: any[] }
                 | { type: "clearInput" }
                 | { type: "openingModal"; value: any }
-                | { type: "searching"; value: string }
+                | {
+                      type: "searching";
+                      value: string;
+                      selectedBP: BatchingPlant;
+                  }
                 | { type: "retryGettingList" }
                 | { type: "onCloseModal" }
                 | {
                       type: "setDataType";
                       value: "SPHDATA" | "DEPOSITDATA" | "SCHEDULEDATA";
                       filterBy: "INDIVIDU" | "COMPANY";
+                      selectedBP: BatchingPlant;
                   }
                 | { type: "onRefresh" }
                 | { type: "onEndReached" },
@@ -66,6 +72,7 @@ const searchPOMachine = createMachine(
                 isRefreshing: boolean;
                 isModalVisible: boolean;
                 availableDeposit: number;
+                batchingPlantId?: string;
                 paymentType: string | null;
                 dataType: "DEPOSITDATA" | "SPHDATA" | "SCHEDULEDATA" | "";
                 filterSphDataBy: "INDIVIDU" | "COMPANY";
@@ -89,6 +96,7 @@ const searchPOMachine = createMachine(
             loadMoreData: false,
             isRefreshing: false,
             isModalVisible: false,
+            batchingPlantId: undefined,
             dataType: "",
             paymentType: null,
             availableDeposit: 0,
@@ -221,6 +229,7 @@ const searchPOMachine = createMachine(
             })),
             assignSearchValue: assign((context, event) => ({
                 searchValue: event.value,
+                batchingPlantId: event.selectedBP?.id,
                 loadData: true
             })),
             assignSphData: assign((_context, event) => {
@@ -313,7 +322,8 @@ const searchPOMachine = createMachine(
                 try {
                     const response = await getSphByProject(
                         context.searchValue,
-                        context.filterSphDataBy
+                        context.filterSphDataBy,
+                        context.batchingPlantId
                     );
                     return response.data.data;
                 } catch (error) {
@@ -329,7 +339,8 @@ const searchPOMachine = createMachine(
                         page.toString(),
                         size.toString(),
                         searchValue,
-                        productPo
+                        productPo,
+                        context.batchingPlantId
                     );
                     return response.data.data;
                 } catch (error) {

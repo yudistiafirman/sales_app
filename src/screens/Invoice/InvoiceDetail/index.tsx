@@ -192,7 +192,7 @@ function InvoiceDetail() {
 
     useHeaderTitleChanged({
         title: route?.params?.invoiceNo ? route?.params?.invoiceNo : "-",
-        selectedBP: authState.selectedBP
+        selectedBP: authState.selectedBatchingPlant
     });
 
     const getOneInvoiceData = async () => {

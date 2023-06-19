@@ -24,6 +24,7 @@ import InvoiceDetail from "@/screens/Invoice/InvoiceDetail";
 import CustomerDetail from "@/screens/Customer/Detail";
 import Appointment from "@/screens/Appointment";
 import { BSelectedBPBadges } from "@/components";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import {
     ALL_PRODUCT,
     ALL_PRODUCT_TITLE,
@@ -70,18 +71,18 @@ import {
 } from "../ScreenNames";
 
 const selectedBPBadges = (
-    bpName: string,
+    selectedBP: BatchingPlant,
     title: string,
     alignLeft?: boolean
 ) => (
     <BSelectedBPBadges
-        bpName={bpName}
+        selectedBP={selectedBP}
         title={title}
         alignLeft={alignLeft !== undefined ? alignLeft : true}
     />
 );
 
-function SalesStack(selectedBP: string, Stack: any) {
+function SalesStack(selectedBP: BatchingPlant, Stack: any) {
     return (
         <>
             <Stack.Screen

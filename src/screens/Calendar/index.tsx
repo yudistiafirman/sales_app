@@ -53,7 +53,9 @@ export default function CalendarScreen() {
     const dispatch = useDispatch();
     const { visitationCalendarMapped, markedDate, isVisitationLoading } =
         useSelector((state: RootState) => state.productivity);
-    const { selectedBP } = useSelector((state: RootState) => state.auth);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
 
     const [customerDatas, setCustomerDatas] = useState<customerDataInterface[]>(
         []
@@ -61,7 +63,7 @@ export default function CalendarScreen() {
 
     useHeaderTitleChanged({
         title: "Pilih Tanggal",
-        selectedBP,
+        selectedBP: selectedBatchingPlant,
         hideBPBadges: true
     });
 

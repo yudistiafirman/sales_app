@@ -2,6 +2,7 @@ import { assign, createMachine } from "xstate";
 import { getAllDeliveryOrders } from "@/actions/OrderActions";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import EntryType from "@/models/EnumModel";
+import { BatchingPlant } from "@/models/BatchingPlant";
 
 const displayOperationListMachine = createMachine(
     {
@@ -18,6 +19,7 @@ const displayOperationListMachine = createMachine(
                 isLoadMore: boolean;
                 isRefreshing: boolean;
                 errorMessage: unknown;
+                batchingPlantId?: string;
                 page: number;
                 size: number;
                 totalPage: number;
@@ -38,15 +40,27 @@ const displayOperationListMachine = createMachine(
             events: {} as
                 | {
                       type: "assignUserData";
-                      value: { payload: string; tabActive: string };
+                      value: {
+                          payload: string;
+                          tabActive: string;
+                          selectedBP: BatchingPlant;
+                      };
                   }
                 | {
                       type: "retryGettingList";
-                      value: { payload: string; tabActive: string };
+                      value: {
+                          payload: string;
+                          tabActive: string;
+                          selectedBP: BatchingPlant;
+                      };
                   }
                 | {
                       type: "onRefreshList";
-                      value: { payload: string; tabActive: string };
+                      value: {
+                          payload: string;
+                          tabActive: string;
+                          selectedBP: BatchingPlant;
+                      };
                   }
                 | { type: "onEndReached" }
         },
@@ -57,6 +71,7 @@ const displayOperationListMachine = createMachine(
             isLoadMore: false,
             isRefreshing: false,
             errorMessage: "",
+            batchingPlantId: undefined,
             page: 1,
             size: 10,
             totalPage: 0,
@@ -199,7 +214,8 @@ const displayOperationListMachine = createMachine(
                 isRefreshing: true,
                 operationListData: [],
                 userType: event?.payload,
-                tabActive: event?.tabActive
+                tabActive: event?.tabActive,
+                batchingPlantId: event.value.selectedBP?.id
             })),
             handleEndReached: assign((context, event) => ({
                 page: context.page + 1,
@@ -209,7 +225,8 @@ const displayOperationListMachine = createMachine(
                 userType: event?.payload,
                 tabActive: event?.tabActive,
                 isRefreshing: true,
-                isLoading: true
+                isLoading: true,
+                batchingPlantId: event.value.selectedBP?.id
             }))
         }
     }

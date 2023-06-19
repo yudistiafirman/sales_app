@@ -2,6 +2,7 @@ import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { colors, fonts, layout } from "@/constants";
 import { Badge } from "react-native-paper";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import BSpacer from "../atoms/BSpacer";
 
 const styles = StyleSheet.create({
@@ -28,13 +29,13 @@ const styles = StyleSheet.create({
 
 interface BSelectedBPBadgesProps {
     title: string;
-    bpName: string;
+    selectedBP: BatchingPlant;
     alignLeft?: boolean;
 }
 
 function BSelectedBPBadges({
     title,
-    bpName,
+    selectedBP,
     alignLeft = false
 }: BSelectedBPBadgesProps) {
     return (
@@ -45,12 +46,12 @@ function BSelectedBPBadges({
                 style={[
                     styles.badges,
                     alignLeft && { alignSelf: "flex-start" },
-                    bpName.toLowerCase().includes("legok") && {
+                    selectedBP?.name?.toLowerCase().includes("legok") && {
                         backgroundColor: colors.status.lightBlue
                     }
                 ]}
             >
-                {bpName}
+                {selectedBP?.name}
             </Badge>
         </View>
     );

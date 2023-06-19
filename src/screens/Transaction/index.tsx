@@ -102,6 +102,9 @@ function Transaction() {
     const [localModalContinuePo, setLocalContinueModalPo] =
         React.useState(false);
     const poState = useSelector((state: RootState) => state.purchaseOrder);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const { isModalContinuePo, poNumber, currentStep, customerType } =
         poState.currentState.context;
     const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] =
@@ -120,7 +123,11 @@ function Transaction() {
 
     const onTabPress = (title: string) => {
         if (isError) send("retryGettingTransactions", { payload: title });
-        else send("onChangeType", { payload: title });
+        else
+            send("onChangeType", {
+                payload: title,
+                selectedBP: selectedBatchingPlant
+            });
     };
 
     useCustomHeaderRight({

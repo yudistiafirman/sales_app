@@ -6,6 +6,7 @@ import {
     getAllVisitationOrders,
     getTransactionTab
 } from "@/actions/OrderActions";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import { uniqueStringGenerator } from "@/utils/generalFunc";
 import { createMachine } from "xstate";
 import { assign } from "xstate/lib/actions";
@@ -28,7 +29,11 @@ const transactionMachine =
                     };
                 },
                 events: {} as
-                    | { type: "onChangeType"; payload: string }
+                    | {
+                          type: "onChangeType";
+                          payload: string;
+                          selectedBP: BatchingPlant;
+                      }
                     | { type: "onEndReached" }
                     | { type: "refreshingList" }
                     | { type: "backToGetTransactions" }
@@ -48,6 +53,7 @@ const transactionMachine =
                 refreshing: false,
                 errorMessage: "" as string | unknown,
                 totalItems: 0,
+                batchingPlantId: undefined as string | undefined,
                 isErrorType: false,
                 isErrorData: false
             },
@@ -214,6 +220,7 @@ const transactionMachine =
                 assignIndexToContext: assign((_context, event) => ({
                     selectedType: event.payload,
                     page: 1,
+                    batchingPlantId: event.selectedBP?.id,
                     loadTransaction: true,
                     transactionData: []
                 })),
@@ -268,7 +275,9 @@ const transactionMachine =
                         if (_context.selectedType === "PO") {
                             response = await getAllPurchaseOrders(
                                 _context.page.toString(),
-                                _context.size.toString()
+                                _context.size.toString(),
+                                undefined,
+                                _context.batchingPlantId
                             );
                             response = response.data;
                         } else if (_context.selectedType === "SO") {
@@ -276,32 +285,37 @@ const transactionMachine =
                                 _context.page.toString(),
                                 _context.size.toString(),
                                 undefined,
-                                "CONFIRMED"
+                                "CONFIRMED",
+                                _context.batchingPlantId
                             );
                             response = response.data;
                         } else if (_context.selectedType === "Deposit") {
                             response = await getAllPayment(
                                 _context.page.toString(),
-                                _context.size.toString()
+                                _context.size.toString(),
+                                _context.batchingPlantId
                             );
                             response = response.data;
                         } else if (_context.selectedType === "Jadwal") {
                             response = await getAllSchedules(
                                 _context.page.toString(),
-                                _context.size.toString()
+                                _context.size.toString(),
+                                _context.batchingPlantId
                             );
                             response = response.data;
                         } else if (_context.selectedType === "DO") {
                             response = await getAllDeliveryOrders(
                                 undefined,
                                 _context.size.toString(),
-                                _context.page.toString()
+                                _context.page.toString(),
+                                _context.batchingPlantId
                             );
                             response = response.data;
                         } else {
                             response = await getAllVisitationOrders(
                                 _context.page.toString(),
-                                _context.size.toString()
+                                _context.size.toString(),
+                                _context.batchingPlantId
                             );
                         }
                         return response.data as any;

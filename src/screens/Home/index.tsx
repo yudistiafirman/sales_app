@@ -70,7 +70,8 @@ import bStorage from "@/actions";
 import { resetRegion } from "@/redux/reducers/locationReducer";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { resetInvoiceState } from "@/redux/reducers/invoiceReducer";
-import { setSelectedBP } from "@/redux/reducers/authReducer";
+import { setSelectedBatchingPlant } from "@/redux/reducers/authReducer";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
 import BuatKunjungan from "./elements/BuatKunjungan";
 import DateDaily from "./elements/DateDaily";
@@ -153,9 +154,8 @@ const style = StyleSheet.create({
 });
 
 function Beranda() {
-    const { remoteConfigData, selectedBP } = useSelector(
-        (state: RootState) => state.auth
-    );
+    const { remoteConfigData, selectedBatchingPlant, batchingPlants } =
+        useSelector((state: RootState) => state.auth);
     /* eslint-disable @typescript-eslint/naming-convention */
     const {
         force_update,
@@ -216,9 +216,11 @@ function Beranda() {
         customHeader: (
             <BSelectedBPOptionMenu
                 pageTitle="Beranda"
-                selectedBP={selectedBP}
-                onPressOption1={() => dispatch(setSelectedBP("BP-Legok"))}
-                onPressOption2={() => dispatch(setSelectedBP("BP-Balaraja"))}
+                selectedBatchingPlant={selectedBatchingPlant}
+                batchingPlants={batchingPlants}
+                onPressOption={(item: BatchingPlant) =>
+                    dispatch(setSelectedBatchingPlant(item))
+                }
             />
         )
     });

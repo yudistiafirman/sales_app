@@ -117,9 +117,10 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     const operationData = useSelector((state: RootState) => state.operation);
     const authState = useSelector((state: RootState) => state.auth);
     let latlongResult = "";
+
     useHeaderTitleChanged({
         title: `Foto ${route?.params?.photoTitle}`,
-        selectedBP: authState.selectedBP,
+        selectedBP: authState.selectedBatchingPlant,
         hideBPBadges: true
     });
 

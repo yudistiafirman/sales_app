@@ -19,23 +19,24 @@ import { AppDispatch, RootState } from "@/redux/store";
 import Dispatch from "@/screens/Operation/Dispatch";
 import Return from "@/screens/Operation/Return";
 import { BSelectedBPOptionMenu } from "@/components";
-import { setSelectedBP } from "@/redux/reducers/authReducer";
+import { setSelectedBatchingPlant } from "@/redux/reducers/authReducer";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import CustomTabBar from "../CustomTabBar";
 
 const Tab = createBottomTabNavigator();
 
 const selectedBPOption = (
-    bpName: string,
     title: string,
-    onSelectBPOption1: () => void,
-    onSelectBPOption2: () => void
+    selectedBP: BatchingPlant,
+    batchingPlants: BatchingPlant[],
+    onSelectBPOption: (item: BatchingPlant) => void
 ) => (
     <BSelectedBPOptionMenu
         pageTitle={title}
-        selectedBP={bpName}
+        selectedBatchingPlant={selectedBP}
+        batchingPlants={batchingPlants}
         color={colors.text.darker}
-        onPressOption1={onSelectBPOption1}
-        onPressOption2={onSelectBPOption2}
+        onPressOption={onSelectBPOption}
     />
 );
 
@@ -44,8 +45,8 @@ function SecurityTabs() {
     const dispatch = useDispatch<AppDispatch>();
     const tabBarRender = (props: any) => <CustomTabBar {...props} />;
 
-    const selectBPOption1 = () => dispatch(setSelectedBP("BP-Legok"));
-    const selectBPOption2 = () => dispatch(setSelectedBP("BP-Balaraja"));
+    const selectBPOption = (item: BatchingPlant) =>
+        dispatch(setSelectedBatchingPlant(item));
 
     return (
         <Tab.Navigator
@@ -70,10 +71,10 @@ function SecurityTabs() {
                 options={{
                     headerTitle: () =>
                         selectedBPOption(
-                            authState.selectedBP,
                             SECURITY_TAB_TITLE,
-                            selectBPOption1,
-                            selectBPOption2
+                            authState.selectedBatchingPlant,
+                            authState.batchingPlants,
+                            selectBPOption
                         ),
                     headerRight: () => SalesHeaderRight(colors.text.darker),
                     headerShown: true
@@ -94,10 +95,10 @@ function SecurityTabs() {
                 options={{
                     headerTitle: () =>
                         selectedBPOption(
-                            authState.selectedBP,
                             SECURITY_TAB_TITLE,
-                            selectBPOption1,
-                            selectBPOption2
+                            authState.selectedBatchingPlant,
+                            authState.batchingPlants,
+                            selectBPOption
                         ),
                     headerRight: () => SalesHeaderRight(colors.text.darker),
                     headerShown: true

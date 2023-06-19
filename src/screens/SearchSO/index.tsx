@@ -18,6 +18,9 @@ function SearchSO() {
     const navigation = useNavigation();
     const [searchSOstate, send] = useMachine(searchSOMachine);
     const soData = useSelector((state: RootState) => state.salesOrder);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
 
     const renderHeaderLeft = React.useCallback(
         () => (
@@ -40,7 +43,10 @@ function SearchSO() {
 
     useFocusEffect(
         React.useCallback(() => {
-            send("assignKeyword", { payload: searchValue });
+            send("assignKeyword", {
+                payload: searchValue,
+                selectedBP: selectedBatchingPlant
+            });
         }, [send])
     );
 
@@ -60,7 +66,10 @@ function SearchSO() {
 
     const onClearValue = () => {
         setSearchValue("");
-        send("assignKeyword", { payload: "" });
+        send("assignKeyword", {
+            payload: "",
+            selectedBP: selectedBatchingPlant
+        });
     };
 
     const onPressItem = (item: any) => {

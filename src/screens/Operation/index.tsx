@@ -31,7 +31,9 @@ function Operation() {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const [doListState, send] = useMachine(displayOperationListMachine);
-    const { userData } = useSelector((state: RootState) => state.auth);
+    const { userData, selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const { projectDetails, photoFiles } = useSelector(
         (state: RootState) => state.operation
     );
@@ -41,7 +43,10 @@ function Operation() {
     React.useEffect(() => {
         crashlytics().log(userData?.type ? userData.type : "Operation Default");
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
-            send("onRefreshList", { payload: userData?.type });
+            send("onRefreshList", {
+                payload: userData?.type,
+                selectedBP: selectedBatchingPlant
+            });
         });
 
         return () => {
@@ -51,7 +56,10 @@ function Operation() {
 
     useFocusEffect(
         React.useCallback(() => {
-            send("assignUserData", { payload: userData?.type });
+            send("assignUserData", {
+                payload: userData?.type,
+                selectedBP: selectedBatchingPlant
+            });
         }, [send])
     );
 
@@ -137,10 +145,16 @@ function Operation() {
                 onPressList={(item) => onPressItem(item)}
                 onLocationPress={(lonlat) => onLocationPress(lonlat)}
                 onRefresh={() =>
-                    send("onRefreshList", { payload: userData?.type })
+                    send("onRefreshList", {
+                        payload: userData?.type,
+                        selectedBP: selectedBatchingPlant
+                    })
                 }
                 onRetry={() =>
-                    send("retryGettingList", { payload: userData?.type })
+                    send("retryGettingList", {
+                        payload: userData?.type,
+                        selectedBP: selectedBatchingPlant
+                    })
                 }
                 userType={userData?.type}
             />

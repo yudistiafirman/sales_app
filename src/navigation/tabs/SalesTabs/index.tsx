@@ -23,16 +23,17 @@ import { useSelector } from "react-redux";
 import SalesHeaderRight from "@/navigation/Sales/HeaderRight";
 import Customer from "@/screens/Customer";
 import { BSelectedBPBadges } from "@/components";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import CustomTabBar from "../CustomTabBar";
 
 const Tab = createBottomTabNavigator();
 
-const selectedBPBadges = (bpName: string, title: string) => (
-    <BSelectedBPBadges bpName={bpName} title={title} />
+const selectedBPBadges = (selectedBP: BatchingPlant, title: string) => (
+    <BSelectedBPBadges selectedBP={selectedBP} title={title} />
 );
 
 function SalesTabs() {
-    const { remoteConfigData, selectedBP } = useSelector(
+    const { remoteConfigData, selectedBatchingPlant } = useSelector(
         (state: RootState) => state.auth
     );
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -74,7 +75,10 @@ function SalesTabs() {
                     name={TAB_TRANSACTION_TITLE}
                     options={{
                         headerTitle: () =>
-                            selectedBPBadges(selectedBP, TAB_TRANSACTION_TITLE)
+                            selectedBPBadges(
+                                selectedBatchingPlant,
+                                TAB_TRANSACTION_TITLE
+                            )
                     }}
                     component={Transaction}
                 />
@@ -85,7 +89,10 @@ function SalesTabs() {
                     name={TAB_PROFILE_TITLE}
                     options={{
                         headerTitle: () =>
-                            selectedBPBadges(selectedBP, TAB_PROFILE_TITLE)
+                            selectedBPBadges(
+                                selectedBatchingPlant,
+                                TAB_PROFILE_TITLE
+                            )
                     }}
                     component={Profile}
                 />
@@ -97,7 +104,10 @@ function SalesTabs() {
                     name={TAB_PRICE_LIST_TITLE}
                     options={{
                         headerTitle: () =>
-                            selectedBPBadges(selectedBP, TAB_PRICE_LIST_TITLE)
+                            selectedBPBadges(
+                                selectedBatchingPlant,
+                                TAB_PRICE_LIST_TITLE
+                            )
                     }}
                     component={PriceList}
                 />

@@ -187,6 +187,9 @@ function Fifth() {
     const { isUploadLoading, isPostVisitationLoading } = useSelector(
         (state: RootState) => state.common
     );
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const { uploadedFilesResponse } = useSelector(
         (state: RootState) => state.camera
     );
@@ -254,6 +257,7 @@ function Fifth() {
             })
         );
         const payload: payloadPostType = payloadMapper(visitationData, type);
+        payload.batchingPlantId = selectedBatchingPlant?.id;
         const isDataUpdate = !!payload?.visitation?.id;
         const methodStr = isDataUpdate ? "PUT" : "POST";
         payload.files = [];

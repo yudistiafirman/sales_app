@@ -118,7 +118,8 @@ function Deposit() {
                     status: "SUBMITTED",
                     type: "DEPOSIT",
                     files: [],
-                    saleOrderId: values.stepTwo?.selectedSaleOrder?.id
+                    saleOrderId: values.stepTwo?.selectedSaleOrder?.id,
+                    batchingPlantId: authState.selectedBatchingPlant?.id
                 };
 
                 if (
@@ -194,7 +195,7 @@ function Deposit() {
             values.isSearchingPurchaseOrder === true
                 ? "Cari PT / Proyek"
                 : "Buat Deposit",
-        selectedBP: authState.selectedBP
+        selectedBP: authState.selectedBatchingPlant
     });
 
     useFocusEffect(

@@ -70,9 +70,10 @@ function CameraScreen() {
         route?.params?.disabledGalleryPicker !== undefined
             ? route?.params?.disabledGalleryPicker
             : true;
+
     useHeaderTitleChanged({
         title: `Foto ${photoTitle}`,
-        selectedBP: authState.selectedBP,
+        selectedBP: authState.selectedBatchingPlant,
         hideBPBadges: true
     });
 

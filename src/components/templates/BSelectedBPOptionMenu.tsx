@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { colors, fonts, layout } from "@/constants";
 import { Menu, MenuItem } from "react-native-material-menu";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import BTouchableText from "../atoms/BTouchableText";
 
 const styles = StyleSheet.create({
@@ -27,22 +28,22 @@ const styles = StyleSheet.create({
 });
 
 interface BSelectedBPOptionMenuProps {
+    batchingPlants: BatchingPlant[];
     pageTitle: string;
-    selectedBP: string;
+    selectedBatchingPlant: BatchingPlant;
     color?: string;
-    onPressOption1: () => void;
-    onPressOption2: () => void;
+    onPressOption: (item: BatchingPlant) => void;
 }
 
 function BSelectedBPOptionMenu({
+    batchingPlants,
     pageTitle,
-    selectedBP,
+    selectedBatchingPlant,
     color = colors.white,
-    onPressOption1,
-    onPressOption2
+    onPressOption
 }: BSelectedBPOptionMenuProps) {
     const [isVisible, setVisible] = React.useState(false);
-    const [bpSelected, setBPSelected] = React.useState(selectedBP);
+    const [bpSelected, setBPSelected] = React.useState(selectedBatchingPlant);
 
     return (
         <View style={styles.parent}>
@@ -56,7 +57,7 @@ function BSelectedBPOptionMenu({
                         textStyle={{
                             color
                         }}
-                        title={bpSelected}
+                        title={bpSelected.name}
                         endIcon={
                             <MaterialIcons
                                 name="arrow-drop-down"
@@ -68,24 +69,18 @@ function BSelectedBPOptionMenu({
                     />
                 }
             >
-                <MenuItem
-                    onPress={() => {
-                        onPressOption1();
-                        setVisible(false);
-                        setBPSelected("BP-Legok");
-                    }}
-                >
-                    BP-Legok
-                </MenuItem>
-                <MenuItem
-                    onPress={() => {
-                        onPressOption2();
-                        setVisible(false);
-                        setBPSelected("BP-Balaraja");
-                    }}
-                >
-                    BP-Balaraja
-                </MenuItem>
+                {batchingPlants?.map((el, key) => (
+                    <MenuItem
+                        key={key}
+                        onPress={() => {
+                            onPressOption(el);
+                            setBPSelected(el);
+                            setVisible(false);
+                        }}
+                    >
+                        {el.name}
+                    </MenuItem>
+                ))}
             </Menu>
         </View>
     );

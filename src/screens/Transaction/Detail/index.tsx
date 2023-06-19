@@ -196,7 +196,7 @@ function TransactionDetail() {
 
     useHeaderTitleChanged({
         title: route?.params?.title ? route?.params?.title : "-",
-        selectedBP: authState.selectedBP
+        selectedBP: authState.selectedBatchingPlant
     });
 
     React.useEffect(() => {

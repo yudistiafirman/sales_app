@@ -33,7 +33,9 @@ function Return() {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const [doListState, send] = useMachine(displayOperationListMachine);
-    const { userData } = useSelector((state: RootState) => state.auth);
+    const { userData, selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const { projectDetails, photoFiles } = useSelector(
         (state: RootState) => state.operation
     );
@@ -44,7 +46,8 @@ function Return() {
         React.useCallback(() => {
             send("assignUserData", {
                 payload: userData?.type,
-                tabActive: "right"
+                tabActive: "right",
+                selectedBP: selectedBatchingPlant
             });
         }, [send, userData?.type])
     );
@@ -55,7 +58,8 @@ function Return() {
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
             send("onRefreshList", {
                 payload: userData?.type,
-                tabActive: "right"
+                tabActive: "right",
+                selectedBP: selectedBatchingPlant
             });
         });
 
@@ -131,13 +135,15 @@ function Return() {
                 onRefresh={() =>
                     send("onRefreshList", {
                         payload: userData?.type,
-                        tabActive: "right"
+                        tabActive: "right",
+                        selectedBP: selectedBatchingPlant
                     })
                 }
                 onRetry={() =>
                     send("retryGettingList", {
                         payload: userData?.type,
-                        tabActive: "right"
+                        tabActive: "right",
+                        selectedBP: selectedBatchingPlant
                     })
                 }
                 userType={userData?.type}

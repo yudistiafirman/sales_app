@@ -107,7 +107,7 @@ function SubmitForm() {
     const route = useRoute<RootStackScreenProps>();
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
-    const { userData, selectedBP } = useSelector(
+    const { userData, selectedBatchingPlant } = useSelector(
         (state: RootState) => state.auth
     );
     const operationData = useSelector((state: RootState) => state.operation);
@@ -276,6 +276,7 @@ function SubmitForm() {
                 })
             );
             const payload = {} as UpdateDeliverOrder;
+            payload.batchingPlantId = selectedBatchingPlant?.id;
             const photoFilestoUpload = operationData.photoFiles
                 ?.filter((v) => v.file !== null)
                 ?.map((photo) => ({
@@ -431,7 +432,10 @@ function SubmitForm() {
         }, [handleBack, operationData.photoFiles, userData?.type])
     );
 
-    useHeaderTitleChanged({ title: getHeaderTitle(), selectedBP });
+    useHeaderTitleChanged({
+        title: getHeaderTitle(),
+        selectedBP: selectedBatchingPlant
+    });
 
     const weightInputs: Input[] = [
         {

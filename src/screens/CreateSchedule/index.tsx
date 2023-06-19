@@ -114,7 +114,8 @@ function CreateScheduleScreen() {
                         values.stepTwo?.hasTechnicalRequest !== undefined
                             ? values.stepTwo?.hasTechnicalRequest
                             : false,
-                    status: "SUBMITTED"
+                    status: "SUBMITTED",
+                    batchingPlantId: authState.selectedBatchingPlant?.id
                 };
                 const response = await postSchedule(payload).catch((err) =>
                     Error(err)
@@ -181,7 +182,7 @@ function CreateScheduleScreen() {
             values.isSearchingPurchaseOrder === true
                 ? "Cari PT / Proyek"
                 : "Buat Jadwal",
-        selectedBP: authState.selectedBP
+        selectedBP: authState.selectedBatchingPlant
     });
 
     useFocusEffect(

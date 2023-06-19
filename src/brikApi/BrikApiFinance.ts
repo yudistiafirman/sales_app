@@ -19,7 +19,11 @@ export default class BrikApiFinance {
         return url.toString();
     };
 
-    static payment = (page?: string, size?: string) => {
+    static payment = (
+        page?: string,
+        size?: string,
+        batchingPlantId?: string
+    ) => {
         const url = new URL(`${API_URL}/finance/m/payment`);
         const params = url.searchParams;
         params.append("type", "DEPOSIT");
@@ -28,6 +32,9 @@ export default class BrikApiFinance {
         }
         if (size) {
             params.append("size", size);
+        }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
         }
         return url.toString();
     };
@@ -41,7 +48,8 @@ export default class BrikApiFinance {
         status?: string,
         startDateIssued?: string,
         endDateIssued?: string,
-        dueDateDifference?: string
+        dueDateDifference?: string,
+        batchingPlantId?: string
     ) => {
         const url = new URL(`${API_URL}/finance/m/invoice`);
         const params = url.searchParams;
@@ -71,6 +79,9 @@ export default class BrikApiFinance {
         }
         if (dueDateDifference) {
             params.append("dueDateDifference", dueDateDifference);
+        }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
         }
         return url.toString();
     };

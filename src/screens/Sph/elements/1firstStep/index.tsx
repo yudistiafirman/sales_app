@@ -47,6 +47,7 @@ export default function FirstStep() {
         errorGettingProjectMessage
     } = useSelector((state: RootState) => state.common);
     const { selectedCompany } = useSelector((state: RootState) => state.sph);
+    const authState = useSelector((state: RootState) => state.auth);
     function resetSearch() {
         setSearchQuery("");
     }
@@ -69,7 +70,12 @@ export default function FirstStep() {
 
     const searchDispatch = useCallback(
         (text: string) => {
-            dispatch(getAllProject({ search: text }));
+            dispatch(
+                getAllProject({
+                    search: text,
+                    selectedBPId: authState.selectedBatchingPlant?.id
+                })
+            );
         },
         [dispatch]
     );

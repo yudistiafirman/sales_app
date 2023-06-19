@@ -17,6 +17,7 @@ import BackgroundFetch from "react-native-background-fetch";
 import { HUNTER_AND_FARMER } from "@/navigation/ScreenNames";
 import UserModel from "@/models/User";
 import { openPopUp } from "@/redux/reducers/modalReducer";
+import { getBatchingPlants } from "@/actions/CommonActions";
 
 const useAsyncConfigSetup = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -27,12 +28,15 @@ const useAsyncConfigSetup = () => {
         remoteConfigData,
         isNetworkLoggerVisible,
         isShowButtonNetwork,
-        selectedBP
+        selectedBatchingPlant,
+        batchingPlants
     } = useSelector((state: RootState) => state.auth);
     const userDataSetup = React.useCallback(
         async (fetchedRemoteConfig: any) => {
+            let userToken;
             try {
-                const userToken = await bStorage.getItem(storageKey.userToken);
+                userToken = await bStorage.getItem(storageKey.userToken);
+                const batchingPlantsResponse = await getBatchingPlants();
                 if (userToken) {
                     const decoded =
                         jwtDecode<UserModel.DataSuccessLogin>(userToken);
@@ -40,7 +44,9 @@ const useAsyncConfigSetup = () => {
                     dispatch(
                         setUserData({
                             userData: decoded,
-                            remoteConfigData: fetchedRemoteConfig
+                            remoteConfigData: fetchedRemoteConfig,
+                            batchingPlants:
+                                batchingPlantsResponse?.data?.data?.data
                         })
                     );
                 } else {
@@ -52,22 +58,33 @@ const useAsyncConfigSetup = () => {
                     );
                 }
             } catch (error) {
-                bStorage.deleteItem(storageKey.userToken);
-                dispatch(
-                    setIsLoading({
-                        loading: false,
-                        remoteConfigData: fetchedRemoteConfig
-                    })
-                );
-                dispatch(
-                    openPopUp({
-                        popUpType: "error",
-                        popUpText:
-                            error?.message ||
-                            "Terjadi error dalam pengambilan user token",
-                        outsideClickClosePopUp: true
-                    })
-                );
+                if (userToken) {
+                    const decoded =
+                        jwtDecode<UserModel.DataSuccessLogin>(userToken);
+                    dispatch(
+                        setUserData({
+                            userData: decoded,
+                            remoteConfigData: fetchedRemoteConfig
+                        })
+                    );
+                } else {
+                    bStorage.deleteItem(storageKey.userToken);
+                    dispatch(
+                        setIsLoading({
+                            loading: false,
+                            remoteConfigData: fetchedRemoteConfig
+                        })
+                    );
+                    dispatch(
+                        openPopUp({
+                            popUpType: "error",
+                            popUpText:
+                                error?.message ||
+                                "Terjadi error dalam pengambilan user token",
+                            outsideClickClosePopUp: true
+                        })
+                    );
+                }
             }
         },
         [dispatch]
@@ -159,7 +176,8 @@ const useAsyncConfigSetup = () => {
         isSignout,
         isNetworkLoggerVisible,
         isShowButtonNetwork,
-        selectedBP
+        selectedBatchingPlant,
+        batchingPlants
     };
 };
 

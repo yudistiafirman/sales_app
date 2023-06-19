@@ -7,6 +7,7 @@ import {
     getProductsCategories
 } from "@/actions/InventoryActions";
 import { hasLocationPermission } from "@/utils/permissions";
+import { BatchingPlant } from "@/models/BatchingPlant";
 
 export { getLocationCoordinates } from "@/actions/CommonActions";
 
@@ -40,10 +41,12 @@ export const priceMachine =
                     | {
                           type: "sendingParams";
                           value: { latitude: number; longitude: number };
+                          selectedBP: BatchingPlant;
                       }
                     | {
                           type: "onChangeCategories";
                           payload: number;
+                          selectedBP: BatchingPlant;
                       }
                     | { type: "backToIdle" }
                     | { type: "onEndReached" }
@@ -64,6 +67,7 @@ export const priceMachine =
                 routes: [] as any[],
                 size: 10,
                 page: 1,
+                batchingPlantId: undefined as string | undefined,
                 selectedCategories: "",
                 productsData: [] as any[],
                 index: 0,
@@ -323,7 +327,8 @@ export const priceMachine =
                     selectedCategories: context.routes[event.payload].title,
                     page: 1,
                     loadProduct: true,
-                    productsData: []
+                    productsData: [],
+                    batchingPlantId: event.selectedBP?.id
                 })),
                 incrementPage: assign((context, _event) => ({
                     page: context.page + 1,
@@ -344,7 +349,8 @@ export const priceMachine =
                     loadProduct: true,
                     productsData: [],
                     selectedCategories: [],
-                    page: 1
+                    page: 1,
+                    batchingPlantId: event.selectedBP?.id
                 })),
                 assignStopLoadMore: assign((context, event) => ({
                     isLoadMore: false
@@ -432,8 +438,13 @@ export const priceMachine =
                     }
                 },
                 getProducts: async (context, _event) => {
-                    const { page, size, selectedCategories, locationDetail } =
-                        context;
+                    const {
+                        page,
+                        size,
+                        selectedCategories,
+                        locationDetail,
+                        batchingPlantId
+                    } = context;
                     const distance = locationDetail?.distance?.value
                         ? locationDetail.distance.value / 1000
                         : 0;
@@ -443,7 +454,8 @@ export const priceMachine =
                             size,
                             undefined,
                             selectedCategories,
-                            distance
+                            distance,
+                            batchingPlantId
                         );
                         return response.data;
                     } catch (error) {

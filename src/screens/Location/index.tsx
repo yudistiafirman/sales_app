@@ -46,7 +46,7 @@ function Location() {
 
     useHeaderTitleChanged({
         title: isReadOnly === true ? "Lihat Area Proyek" : LOCATION_TITLE,
-        selectedBP: authState.selectedBP,
+        selectedBP: authState.selectedBatchingPlant,
         hideBPBadges: true
     });
 

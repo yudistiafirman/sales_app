@@ -4,6 +4,7 @@ import Preview from "@/screens/Camera/Preview";
 import Location from "@/screens/Location";
 import SubmitForm from "@/screens/Operation/SubmitForm";
 import { BSelectedBPBadges } from "@/components";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import {
     CAMERA,
     CAMERA_TITLE,
@@ -15,11 +16,11 @@ import {
     LOCATION_TITLE
 } from "../ScreenNames";
 
-const selectedBPBadges = (bpName: string, title: string) => (
-    <BSelectedBPBadges bpName={bpName} title={title} />
+const selectedBPBadges = (selectedBP: BatchingPlant, title: string) => (
+    <BSelectedBPBadges selectedBP={selectedBP} title={title} />
 );
 
-function OperationStack(selectedBP: string, Stack: any) {
+function OperationStack(selectedBP: BatchingPlant, Stack: any) {
     return (
         <>
             <Stack.Screen

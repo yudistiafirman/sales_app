@@ -7,7 +7,7 @@ import { useAsyncConfigSetup } from "@/hooks";
 import EntryType from "@/models/EnumModel";
 import UserModel from "@/models/User";
 import {
-    setSelectedBP,
+    setSelectedBatchingPlant,
     setShowButtonNetwork,
     setVisibleNetworkLogger
 } from "@/redux/reducers/authReducer";
@@ -18,6 +18,7 @@ import Login from "@/screens/Login";
 import Operation from "@/screens/Operation";
 import Splash from "@/screens/Splash";
 import Verification from "@/screens/Verification";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import SecurityTabs from "./tabs/SecurityTabs";
 import SalesTabs from "./tabs/SalesTabs";
 import {
@@ -43,17 +44,17 @@ const Stack = createNativeStackNavigator();
 function RootScreen(
     userData: UserModel.DataSuccessLogin | null,
     isSignout: boolean,
-    selectedBP: string,
-    onSelectBPOption1: () => void,
-    onSelectBPOption2: () => void
+    selectedBP: BatchingPlant,
+    batchingPlants: BatchingPlant[],
+    onSelectBPOption: (item: BatchingPlant) => void
 ) {
-    const selectedBPOption = (bpName: string, title: string) => (
+    const selectedBPOption = (title: string) => (
         <BSelectedBPOptionMenu
             pageTitle={title}
-            selectedBP={bpName}
+            selectedBatchingPlant={selectedBP}
+            batchingPlants={batchingPlants}
             color={colors.text.darker}
-            onPressOption1={onSelectBPOption1}
-            onPressOption2={onSelectBPOption2}
+            onPressOption={onSelectBPOption}
         />
     );
 
@@ -75,10 +76,7 @@ function RootScreen(
                             options={{
                                 headerTitleAlign: "center",
                                 headerTitle: () =>
-                                    selectedBPOption(
-                                        selectedBP,
-                                        OPSMANAGER_TITLE
-                                    ),
+                                    selectedBPOption(OPSMANAGER_TITLE),
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
@@ -98,7 +96,7 @@ function RootScreen(
                             options={{
                                 headerTitleAlign: "center",
                                 headerTitle: () =>
-                                    selectedBPOption(selectedBP, BATCHER_TITLE),
+                                    selectedBPOption(BATCHER_TITLE),
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
@@ -118,7 +116,7 @@ function RootScreen(
                             options={{
                                 headerTitleAlign: "center",
                                 headerTitle: () =>
-                                    selectedBPOption(selectedBP, DRIVER_TITLE),
+                                    selectedBPOption(DRIVER_TITLE),
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
@@ -238,7 +236,8 @@ function AppNavigator() {
         isSignout,
         isNetworkLoggerVisible,
         isShowButtonNetwork,
-        selectedBP
+        selectedBatchingPlant,
+        batchingPlants
     } = useAsyncConfigSetup();
     const dispatch = useDispatch<AppDispatch>();
     if (isLoading) {
@@ -262,9 +261,10 @@ function AppNavigator() {
                 {RootScreen(
                     userData,
                     isSignout,
-                    selectedBP,
-                    () => dispatch(setSelectedBP("BP-Legok")),
-                    () => dispatch(setSelectedBP("BP-Balaraja"))
+                    selectedBatchingPlant,
+                    batchingPlants,
+                    (item: BatchingPlant) =>
+                        dispatch(setSelectedBatchingPlant(item))
                 )}
             </Stack.Navigator>
             <BHttpLogger

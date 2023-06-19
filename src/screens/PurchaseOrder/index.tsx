@@ -19,6 +19,7 @@ import { layout } from "@/constants";
 import { useKeyboardActive } from "@/hooks";
 import { PO, TAB_ROOT } from "@/navigation/ScreenNames";
 import { AppDispatch, RootState } from "@/redux/store";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import DetailProduk from "./element/ProductDetail";
 import UploadFiles from "./element/PaymentDetail";
 import CreatePo from "./element/CreatePo";
@@ -190,8 +191,8 @@ function PurchaseOrder() {
         return title;
     }, [poState.currentState]);
 
-    const selectedBPBadges = (bpName: string, title: string) => (
-        <BSelectedBPBadges bpName={bpName} title={title} alignLeft />
+    const selectedBPBadges = (selectedBP: BatchingPlant, title: string) => (
+        <BSelectedBPBadges selectedBP={selectedBP} title={title} alignLeft />
     );
 
     useFocusEffect(
@@ -213,7 +214,7 @@ function PurchaseOrder() {
             headerBackVisible: false,
             headerLeft: () => renderHeaderLeft(),
             headerTitle: () =>
-                selectedBPBadges(authState.selectedBP, renderTitle())
+                selectedBPBadges(authState.selectedBatchingPlant, renderTitle())
         });
     }, [navigation, renderHeaderLeft, renderTitle]);
 

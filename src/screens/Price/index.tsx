@@ -4,7 +4,7 @@ import BTabSections from "@/components/organism/TabSections";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Tnc from "@/screens/Price/element/Tnc";
 import ProductList from "@/components/templates/Price/ProductList";
-import { BAlert, BEmptyState, BSpacer, BTouchableText } from "@/components";
+import { BEmptyState, BSpacer, BTouchableText } from "@/components";
 import { useMachine } from "@xstate/react";
 import { priceMachine } from "@/machine/priceMachine";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
@@ -19,8 +19,8 @@ import {
     TAB_PRICE_LIST_TITLE
 } from "@/navigation/ScreenNames";
 import crashlytics from "@react-native-firebase/crashlytics";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import PriceSearchBar from "./element/PriceSearchBar";
 import PriceStyle from "./PriceStyle";
@@ -38,6 +38,9 @@ function PriceList() {
     const [fromVisitation, setFromVisitation] = React.useState(false);
     const [searchFormattedAddress, setSearchFormattedAddress] =
         React.useState("");
+    const { selectedBatchingPlant } = useSelector(
+        (globalState: RootState) => globalState.auth
+    );
     const {
         locationDetail,
         routes,
@@ -87,7 +90,13 @@ function PriceList() {
                 setFromVisitation(true);
             }
             send("backToIdle");
-            send("sendingParams", { value: { latitude, longitude } });
+            send("sendingParams", {
+                value: {
+                    latitude,
+                    longitude,
+                    selectedBP: selectedBatchingPlant
+                }
+            });
             setIndex(0);
         } else {
             send("onAskPermission");
@@ -155,7 +164,10 @@ function PriceList() {
     const onTabPress = () => {
         const tabIndex = index === 0 ? 1 : 0;
         if (route.key !== routes[index].key) {
-            send("onChangeCategories", { payload: tabIndex });
+            send("onChangeCategories", {
+                payload: tabIndex,
+                selectedBP: selectedBatchingPlant
+            });
         }
     };
 

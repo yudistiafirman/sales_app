@@ -2,10 +2,11 @@ import * as React from "react";
 import { BSelectedBPBadges } from "@/components";
 import { useNavigation } from "@react-navigation/native";
 import { useLayoutEffect } from "react";
+import { BatchingPlant } from "@/models/BatchingPlant";
 
 type UseHeaderTitle = {
     title: string;
-    selectedBP: string;
+    selectedBP: BatchingPlant;
     hideBPBadges?: boolean;
 };
 
@@ -16,8 +17,15 @@ export default function useHeaderTitleChanged({
 }: UseHeaderTitle) {
     const navigation = useNavigation();
 
-    const selectedBPBadges = (bpName: string, titlePage: string) => (
-        <BSelectedBPBadges bpName={bpName} title={titlePage} alignLeft />
+    const selectedBPBadges = (
+        selectedBatchingPlant: BatchingPlant,
+        titlePage: string
+    ) => (
+        <BSelectedBPBadges
+            selectedBP={selectedBatchingPlant}
+            title={titlePage}
+            alignLeft
+        />
     );
 
     useLayoutEffect(() => {

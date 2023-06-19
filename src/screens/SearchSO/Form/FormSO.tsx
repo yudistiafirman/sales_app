@@ -32,6 +32,7 @@ function FormSO() {
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
     const soData = useSelector((state: RootState) => state.salesOrder);
+    const authState = useSelector((state: RootState) => state.auth);
     const [isPopupVisible, setPopupVisible] = React.useState(false);
 
     const inputs: Input[] = [
@@ -115,6 +116,7 @@ function FormSO() {
                     fileId: v.id,
                     type: "BRIK_SIGNED"
                 }));
+                payload.batchingPlantId = authState.selectedBatchingPlant?.id;
                 payload.poDocs = newFileData;
                 const responseSOSigned = await uploadSOSignedDocs(
                     payload,
