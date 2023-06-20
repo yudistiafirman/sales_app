@@ -44,6 +44,10 @@ export const priceMachine =
                           selectedBP: BatchingPlant;
                       }
                     | {
+                          type: "assignSelectedBatchingPlant";
+                          selectedBP: BatchingPlant;
+                      }
+                    | {
                           type: "onChangeCategories";
                           payload: number;
                           selectedBP: BatchingPlant;
@@ -51,7 +55,7 @@ export const priceMachine =
                     | { type: "backToIdle" }
                     | { type: "onEndReached" }
                     | { type: "onAskPermission" }
-                    | { type: "refreshingList" }
+                    | { type: "refreshingList"; selectedBP: BatchingPlant }
                     | { type: "hideWarning" }
                     | { type: "appComeForegroundState" }
                     | { type: "appComeBackgroundState" }
@@ -174,6 +178,15 @@ export const priceMachine =
                     initial: "loadingProduct"
                 },
 
+                getSelectedBatchingPlant: {
+                    on: {
+                        assignSelectedBatchingPlant: {
+                            actions: "assignSelectedBP",
+                            target: "idle"
+                        }
+                    }
+                },
+
                 askPermission: {
                     entry: "enableLoadLocation",
 
@@ -280,7 +293,7 @@ export const priceMachine =
                 }
             },
 
-            initial: "idle"
+            initial: "getSelectedBatchingPlant"
         },
         {
             guards: {
@@ -311,10 +324,13 @@ export const priceMachine =
                     };
                 }),
                 assignProductsDataToContext: assign((context, event) => {
-                    const productsData = [
-                        ...context.productsData,
-                        ...event.data.products
-                    ];
+                    let productsData: any[] = [];
+                    if (event.data.products && event.data.products.length > 0) {
+                        productsData = [
+                            ...context.productsData,
+                            ...event.data.products
+                        ];
+                    }
                     return {
                         totalPage: event.data.totalPage,
                         loadProduct: false,
@@ -340,7 +356,9 @@ export const priceMachine =
                     page: 1,
                     refreshing: true,
                     loadProduct: true,
-                    productsData: []
+                    productsData: [],
+                    batchingPlantId: _event?.selectedBP?.id,
+                    batchingPlantName: _event?.selectedBP?.name
                 })),
                 enableLoadProducts: assign((_context, _event) => ({
                     loadProduct: true
@@ -378,6 +396,10 @@ export const priceMachine =
                 })),
                 enableLoadLocation: assign((_context, _event) => ({
                     loadLocation: true
+                })),
+                assignSelectedBP: assign((_context, _event) => ({
+                    batchingPlantId: _event?.selectedBP?.id,
+                    batchingPlantName: _event?.selectedBP?.name
                 }))
             },
             services: {

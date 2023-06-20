@@ -4,8 +4,13 @@ import { UploadSOSigned } from "@/models/SOSigned";
 import { UpdateDeliverOrder } from "@/models/updateDeliveryOrder";
 import { customRequest } from "@/networking/request";
 
-export const getTransactionTab = async () =>
-    customRequest(BrikApiOrder.transactionTab(), "GET", undefined, true);
+export const getTransactionTab = async (batchingPlantId?: string) =>
+    customRequest(
+        BrikApiOrder.transactionTab(batchingPlantId),
+        "GET",
+        undefined,
+        true
+    );
 
 export const getAllVisitationOrders = async (
     page?: string,
@@ -51,7 +56,13 @@ export const getAllDeposits = async (
     page?: string,
     size?: string,
     batchingPlantId?: string
-) => customRequest(BrikApiOrder.deposit(page, size), "GET", undefined, true);
+) =>
+    customRequest(
+        BrikApiOrder.deposit(page, size, batchingPlantId),
+        "GET",
+        undefined,
+        true
+    );
 
 export const getDepositByID = async (id: string) =>
     customRequest(BrikApiOrder.getDepositByID(id), "GET", undefined, true);
@@ -60,7 +71,13 @@ export const getAllSchedules = async (
     page?: string,
     size?: string,
     batchingPlantId?: string
-) => customRequest(BrikApiOrder.schedule(page, size), "GET", undefined, true);
+) =>
+    customRequest(
+        BrikApiOrder.schedule(page, size, batchingPlantId),
+        "GET",
+        undefined,
+        true
+    );
 
 export const getScheduleByID = async (id: string) =>
     customRequest(BrikApiOrder.getScheduleByID(id), "GET", undefined, true);

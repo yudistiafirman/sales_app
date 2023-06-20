@@ -56,47 +56,41 @@ function Dispatch() {
                 batchingPlants={batchingPlants}
                 onPressOption={(item: BatchingPlant) => {
                     dispatch(setSelectedBatchingPlant(item));
-                    send("assignSelectedBatchingPlant", {
-                        selectedBP: item
-                    });
-                    send("assignUserData", {
+                    send("onRefreshList", {
                         payload: userData?.type,
-                        tabActive: "left"
+                        tabActive: "left",
+                        selectedBP: item
                     });
                 }}
             />
         )
     });
 
-    useFocusEffect(
-        React.useCallback(() => {
-            send("assignSelectedBatchingPlant", {
-                selectedBP: selectedBatchingPlant
-            });
-            send("assignUserData", {
-                payload: userData?.type,
-                tabActive: "left"
-            });
-        }, [send, userData?.type])
-    );
-
     React.useEffect(() => {
         crashlytics().log(EntryType.SECURITY ? TAB_DISPATCH : TAB_WB_OUT);
-
+        send("assignUserData", {
+            payload: userData?.type,
+            tabActive: "left",
+            selectedBP: selectedBatchingPlant
+        });
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
-            send("assignSelectedBatchingPlant", {
-                selectedBP: selectedBatchingPlant
-            });
             send("onRefreshList", {
                 payload: userData?.type,
-                tabActive: "left"
+                tabActive: "left",
+                selectedBP: selectedBatchingPlant
             });
         });
 
         return () => {
             DeviceEventEmitter.removeAllListeners("Operation.refreshlist");
         };
-    }, [send, projectDetails, operationListData]);
+    }, [
+        send,
+        userData?.type,
+        projectDetails,
+        operationListData,
+        selectedBatchingPlant
+    ]);
 
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
         if (projectDetails && projectDetails.deliveryOrderId === item.id) {
@@ -165,7 +159,8 @@ function Dispatch() {
                 onRefresh={() => {
                     send("onRefreshList", {
                         payload: userData?.type,
-                        tabActive: "left"
+                        tabActive: "left",
+                        selectedBP: selectedBatchingPlant
                     });
                 }}
                 onRetry={() =>

@@ -81,6 +81,9 @@ function PriceList() {
     }, [send, state]);
 
     React.useEffect(() => {
+        send("assignSelectedBatchingPlant", {
+            selectedBP: selectedBatchingPlant
+        });
         if (route?.params) {
             const { params } = route;
             const { latitude, longitude, formattedAddress } = params.coordinate;
@@ -101,7 +104,7 @@ function PriceList() {
         } else {
             send("onAskPermission", { selectedBP: selectedBatchingPlant });
         }
-    }, [route, route?.params, send]);
+    }, [route, route?.params, send, selectedBatchingPlant]);
 
     React.useEffect(() => {
         if (state.matches("errorGettingCurrentLocation")) {
@@ -271,7 +274,11 @@ function PriceList() {
                             )}
                             onAction={() => send("retryGettingProducts")}
                             errorMessage={errorMessage}
-                            onRefresh={() => send("refreshingList")}
+                            onRefresh={() =>
+                                send("refreshingList", {
+                                    selectedBP: selectedBatchingPlant
+                                })
+                            }
                             disablePressed={!fromVisitation}
                         />
                     )}

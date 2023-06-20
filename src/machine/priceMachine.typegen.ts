@@ -66,6 +66,7 @@ export interface Typegen0 {
         assignLocationDetailToContext: "done.invoke.price machine.currentLocationLoaded:invocation[0]";
         assignParams: "sendingParams";
         assignProductsDataToContext: "done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]";
+        assignSelectedBP: "assignSelectedBatchingPlant";
         assignStopLoadMore: "done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]";
         enableLoadLocation: "appComeForegroundState" | "onAskPermission";
         enableLoadProducts:
@@ -125,6 +126,7 @@ export interface Typegen0 {
         | "getProduct.categoriesLoaded.productLoaded"
         | "getProduct.errorGettingCategories"
         | "getProduct.loadingProduct"
+        | "getSelectedBatchingPlant"
         | "idle"
         | "locationDetailLoaded"
         | "unreachable"

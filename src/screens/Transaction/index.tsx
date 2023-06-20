@@ -171,15 +171,13 @@ function Transaction() {
             )
     });
 
-    useFocusEffect(
-        React.useCallback(() => {
-            send("backToGetTransactions");
-        }, [send])
-    );
-
     React.useEffect(() => {
         crashlytics().log(TAB_TRANSACTION);
-    }, []);
+        send("assignSelectedBatchingPlant", {
+            selectedBP: selectedBatchingPlant
+        });
+        send("backToGetTransactions");
+    }, [send, selectedBatchingPlant]);
 
     const getOneOrder = async (id: string) => {
         try {
@@ -405,7 +403,11 @@ function Transaction() {
                                     selectedBP: selectedBatchingPlant
                                 })
                             }
-                            onRefresh={() => send("refreshingList")}
+                            onRefresh={() =>
+                                send("refreshingList", {
+                                    selectedBP: selectedBatchingPlant
+                                })
+                            }
                             onPress={(data: any) => getOneOrder(data.id)}
                             selectedType={selectedType}
                         />

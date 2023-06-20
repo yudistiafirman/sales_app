@@ -44,6 +44,7 @@ const displayOperationListMachine = createMachine(
                           payload: string;
                           tabActive: string;
                       };
+                      selectedBP: BatchingPlant;
                   }
                 | {
                       type: "assignSelectedBatchingPlant";
@@ -62,6 +63,7 @@ const displayOperationListMachine = createMachine(
                           payload: string;
                           tabActive: string;
                       };
+                      selectedBP: BatchingPlant;
                   }
                 | { type: "onEndReached" }
         },
@@ -132,7 +134,7 @@ const displayOperationListMachine = createMachine(
             }
         },
 
-        initial: "getSelectedBatchingPlant"
+        initial: "idle"
     },
     {
         guards: {
@@ -222,7 +224,8 @@ const displayOperationListMachine = createMachine(
                 isRefreshing: true,
                 operationListData: [],
                 userType: event?.payload,
-                tabActive: event?.tabActive
+                tabActive: event?.tabActive,
+                batchingPlantId: event?.selectedBP?.id
             })),
             handleEndReached: assign((context, event) => ({
                 page: context.page + 1,
@@ -232,7 +235,8 @@ const displayOperationListMachine = createMachine(
                 userType: event?.payload,
                 tabActive: event?.tabActive,
                 isRefreshing: true,
-                isLoading: true
+                isLoading: true,
+                batchingPlantId: event?.selectedBP?.id
             })),
             assignSelectedBP: assign((context, event) => ({
                 batchingPlantId: event?.selectedBP?.id

@@ -34,8 +34,12 @@ const transactionMachine =
                           payload: string;
                           selectedBP: BatchingPlant;
                       }
+                    | {
+                          type: "assignSelectedBatchingPlant";
+                          selectedBP: BatchingPlant;
+                      }
                     | { type: "onEndReached" }
-                    | { type: "refreshingList" }
+                    | { type: "refreshingList"; selectedBP: BatchingPlant }
                     | { type: "backToGetTransactions" }
                     | {
                           type: "retryGettingTransactions";
@@ -65,6 +69,14 @@ const transactionMachine =
             states: {
                 getTransaction: {
                     states: {
+                        getSelectedBatchingPlant: {
+                            on: {
+                                assignSelectedBatchingPlant: {
+                                    actions: "assignSelectedBP",
+                                    target: "loadingTransaction"
+                                }
+                            }
+                        },
                         loadingTransaction: {
                             invoke: {
                                 src: "getTypeTransactions",
@@ -153,7 +165,7 @@ const transactionMachine =
                             initial: "getTransactionsBaseOnType"
                         }
                     },
-                    initial: "loadingTransaction"
+                    initial: "getSelectedBatchingPlant"
                 }
             },
 
@@ -236,7 +248,8 @@ const transactionMachine =
                     page: 1,
                     refreshing: true,
                     loadTransaction: true,
-                    transactionData: []
+                    transactionData: [],
+                    batchingPlantId: _event?.selectedBP?.id
                 })),
                 enableLoadTransaction: assign((_context, _event) => ({
                     loadTransaction: true
@@ -263,12 +276,17 @@ const transactionMachine =
                     loadTransaction: true,
                     selectedType: event.payload,
                     batchingPlantId: event?.selectedBP?.id
+                })),
+                assignSelectedBP: assign((context, event) => ({
+                    batchingPlantId: event?.selectedBP?.id
                 }))
             },
             services: {
                 getTypeTransactions: async (_context, _event) => {
                     try {
-                        const response = await getTransactionTab();
+                        const response = await getTransactionTab(
+                            _context.batchingPlantId
+                        );
                         return response.data.data as any;
                     } catch (error) {
                         throw new Error(error);
@@ -281,6 +299,7 @@ const transactionMachine =
                             response = await getAllPurchaseOrders(
                                 _context.page.toString(),
                                 _context.size.toString(),
+                                undefined,
                                 undefined,
                                 _context.batchingPlantId
                             );

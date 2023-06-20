@@ -9,8 +9,12 @@ const API_URL =
         : Config.API_URL_ORDER_PROD;
 
 export default class BrikApiOrder {
-    static transactionTab = () => {
+    static transactionTab = (batchingPlantId?: string) => {
         const url = new URL(`${API_URL}/order/m/tab/transaction`);
+        const params = url.searchParams;
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
+        }
         return url.toString();
     };
 

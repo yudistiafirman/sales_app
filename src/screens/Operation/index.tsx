@@ -53,12 +53,9 @@ function Operation() {
                 batchingPlants={batchingPlants}
                 onPressOption={(item: BatchingPlant) => {
                     dispatch(setSelectedBatchingPlant(item));
-                    send("assignSelectedBatchingPlant", {
-                        selectedBP: item
-                    });
-                    send("assignUserData", {
+                    send("onRefreshList", {
                         payload: userData?.type,
-                        tabActive: "left"
+                        selectedBP: item
                     });
                 }}
             />
@@ -67,30 +64,29 @@ function Operation() {
 
     React.useEffect(() => {
         crashlytics().log(userData?.type ? userData.type : "Operation Default");
+        // send("assignSelectedBatchingPlant", {
+        //     selectedBP: selectedBatchingPlant
+        // });
+        send("assignUserData", {
+            payload: userData?.type,
+            selectedBP: selectedBatchingPlant
+        });
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
-            send("assignSelectedBatchingPlant", {
+            send("onRefreshList", {
+                payload: userData?.type,
                 selectedBP: selectedBatchingPlant
             });
-            send("onRefreshList", {
-                payload: userData?.type
-            });
         });
-
         return () => {
             DeviceEventEmitter.removeAllListeners("Operation.refreshlist");
         };
-    }, [userData?.type, projectDetails, operationListData]);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            send("assignSelectedBatchingPlant", {
-                selectedBP: selectedBatchingPlant
-            });
-            send("assignUserData", {
-                payload: userData?.type
-            });
-        }, [send])
-    );
+    }, [
+        send,
+        userData?.type,
+        projectDetails,
+        operationListData,
+        selectedBatchingPlant
+    ]);
 
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
         // NOTE: currently driver only
@@ -175,7 +171,8 @@ function Operation() {
                 onLocationPress={(lonlat) => onLocationPress(lonlat)}
                 onRefresh={() =>
                     send("onRefreshList", {
-                        payload: userData?.type
+                        payload: userData?.type,
+                        selectedBP: selectedBatchingPlant
                     })
                 }
                 onRetry={() =>
