@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
 function CreatePo() {
     const navigation = useNavigation();
     const poState = useSelector((state: RootState) => state.purchaseOrder);
+    const authState = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch<AppDispatch>();
     const navRoutes = useRoute();
     const {
@@ -110,7 +111,8 @@ function CreatePo() {
 
         dispatch({
             type: "addChoosenSph",
-            value: selectedSphFromModal
+            value: selectedSphFromModal,
+            selectedBP: authState.selectedBatchingPlant
         });
     };
 

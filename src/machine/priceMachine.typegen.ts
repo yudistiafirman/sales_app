@@ -66,9 +66,11 @@ export interface Typegen0 {
         assignLocationDetailToContext: "done.invoke.price machine.currentLocationLoaded:invocation[0]";
         assignParams: "sendingParams";
         assignProductsDataToContext: "done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]";
+        assignSelectedBP: "assignSelectedBatchingPlant";
         assignStopLoadMore: "done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]";
         enableLoadLocation: "appComeForegroundState" | "onAskPermission";
         enableLoadProducts:
+            | "backToGetProducts"
             | "done.invoke.price machine.getProduct.loadingProduct:invocation[0]"
             | "onChangeCategories"
             | "onEndReached"
@@ -82,11 +84,11 @@ export interface Typegen0 {
         handleRetryGettingProducts: "retryGettingProducts";
         incrementPage: "onEndReached";
         refreshPriceList: "refreshingList";
+        resetProduct: "backToGetProducts";
     };
     eventsCausingDelays: {};
     eventsCausingGuards: {
         isLocationReachable: "distanceReachable";
-        isNotLastPage: "done.invoke.price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories:invocation[0]";
         permissionGranted: "done.invoke.price machine.askPermission:invocation[0]";
     };
     eventsCausingServices: {
@@ -103,6 +105,7 @@ export interface Typegen0 {
             | "done.invoke.price machine.askPermission:invocation[0]"
             | "retryGettingCurrentLocation";
         getProducts:
+            | "backToGetProducts"
             | "done.invoke.price machine.getProduct.loadingProduct:invocation[0]"
             | "onChangeCategories"
             | "onEndReached"
@@ -125,6 +128,7 @@ export interface Typegen0 {
         | "getProduct.categoriesLoaded.productLoaded"
         | "getProduct.errorGettingCategories"
         | "getProduct.loadingProduct"
+        | "getSelectedBatchingPlant"
         | "idle"
         | "locationDetailLoaded"
         | "unreachable"

@@ -251,6 +251,9 @@ function payloadMapper(sphState: SphStateInterface) {
 export default function FifthStep() {
     const dispatch = useDispatch();
     const { isOrderLoading } = useSelector((state: RootState) => state.order);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
     const sphState = useSelector((state: RootState) => state.sph);
 
@@ -300,6 +303,7 @@ export default function FifthStep() {
             const photoFiles = Object.values(sphState.paymentRequiredDocuments);
             const isNoPhotoToUpload = photoFiles.every((val) => val === null);
             payload.projectDocs = [];
+            payload.batchingPlantId = selectedBatchingPlant?.id;
             const validPhotoCount = countNonNullValues(photoFiles);
             if (
                 (sphState.uploadedAndMappedRequiredDocs.length === 0 &&

@@ -55,9 +55,15 @@ function SearchFlow({
         errorGettingProjectMessage
     } = useSelector((state: RootState) => state.common);
     const visitationData = useSelector((state: RootState) => state.visitation);
+    const authState = useSelector((state: RootState) => state.auth);
     const searchDispatch = useCallback(
         (text: string) => {
-            dispatch(getAllProject({ search: text }));
+            dispatch(
+                getAllProject({
+                    search: text,
+                    selectedBPId: authState.selectedBatchingPlant?.id
+                })
+            );
         },
         [dispatch]
     );

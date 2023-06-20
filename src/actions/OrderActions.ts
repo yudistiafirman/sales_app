@@ -4,12 +4,21 @@ import { UploadSOSigned } from "@/models/SOSigned";
 import { UpdateDeliverOrder } from "@/models/updateDeliveryOrder";
 import { customRequest } from "@/networking/request";
 
-export const getTransactionTab = async () =>
-    customRequest(BrikApiOrder.transactionTab(), "GET", undefined, true);
-
-export const getAllVisitationOrders = async (page?: string, size?: string) =>
+export const getTransactionTab = async (batchingPlantId?: string) =>
     customRequest(
-        BrikApiOrder.getAllVisitationOrders(page, size),
+        BrikApiOrder.transactionTab(batchingPlantId),
+        "GET",
+        undefined,
+        true
+    );
+
+export const getAllVisitationOrders = async (
+    page?: string,
+    size?: string,
+    batchingPlantId?: string
+) =>
+    customRequest(
+        BrikApiOrder.getAllVisitationOrders(page, size, batchingPlantId),
         "GET",
         undefined,
         true
@@ -19,10 +28,17 @@ export const getAllPurchaseOrders = async (
     page?: string,
     size?: string,
     searchQuery?: string,
-    status?: string
+    status?: string,
+    batchingPlantId?: string
 ) =>
     customRequest(
-        BrikApiOrder.purchaseOrder(page, size, searchQuery, status),
+        BrikApiOrder.purchaseOrder(
+            page,
+            size,
+            searchQuery,
+            status,
+            batchingPlantId
+        ),
         "GET",
         undefined,
         true
@@ -36,14 +52,32 @@ export const getPurchaseOrderByID = async (id: string) =>
         true
     );
 
-export const getAllDeposits = async (page?: string, size?: string) =>
-    customRequest(BrikApiOrder.deposit(page, size), "GET", undefined, true);
+export const getAllDeposits = async (
+    page?: string,
+    size?: string,
+    batchingPlantId?: string
+) =>
+    customRequest(
+        BrikApiOrder.deposit(page, size, batchingPlantId),
+        "GET",
+        undefined,
+        true
+    );
 
 export const getDepositByID = async (id: string) =>
     customRequest(BrikApiOrder.getDepositByID(id), "GET", undefined, true);
 
-export const getAllSchedules = async (page?: string, size?: string) =>
-    customRequest(BrikApiOrder.schedule(page, size), "GET", undefined, true);
+export const getAllSchedules = async (
+    page?: string,
+    size?: string,
+    batchingPlantId?: string
+) =>
+    customRequest(
+        BrikApiOrder.schedule(page, size, batchingPlantId),
+        "GET",
+        undefined,
+        true
+    );
 
 export const getScheduleByID = async (id: string) =>
     customRequest(BrikApiOrder.getScheduleByID(id), "GET", undefined, true);
@@ -51,10 +85,11 @@ export const getScheduleByID = async (id: string) =>
 export const getAllDeliveryOrders = async (
     status?: string | string[],
     size?: string,
-    page?: string
+    page?: string,
+    batchingPlantId?: string
 ) =>
     customRequest(
-        BrikApiOrder.deliveryOrder(status, page, size),
+        BrikApiOrder.deliveryOrder(status, page, size, batchingPlantId),
         "GET",
         undefined,
         true
@@ -76,10 +111,15 @@ export const postSph = async (payload: sphOrderPayloadType) =>
 
 export const getSphByProject = async (
     searchQuery: string,
-    customerType: "INDIVIDU" | "COMPANY"
+    customerType: "INDIVIDU" | "COMPANY",
+    batchingPlantId?: string
 ) =>
     customRequest(
-        BrikApiOrder.getSphByProject(searchQuery, customerType),
+        BrikApiOrder.getSphByProject(
+            searchQuery,
+            customerType,
+            batchingPlantId
+        ),
         "GET",
         undefined,
         true
@@ -101,14 +141,16 @@ export const getConfirmedPurchaseOrder = async (
     page: string,
     size: string,
     searchQuery: string,
-    productPo = "1"
+    productPo = "1",
+    batchingPlantId?: string
 ) =>
     customRequest(
         BrikApiOrder.getConfirmedPurchaseOrder(
             page,
             size,
             searchQuery,
-            productPo
+            productPo,
+            batchingPlantId
         ),
         "GET",
         undefined,

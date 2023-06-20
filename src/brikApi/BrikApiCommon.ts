@@ -44,7 +44,7 @@ export default class BrikApiCommon {
     static getLocationCoordinates = (
         longitude: number,
         latitude: number,
-        distance = "BP-LEGOK"
+        distance?: string
     ) => {
         const url = new URL(`${API_URL}/common/map/coordinates`);
         const params = url.searchParams;
@@ -60,11 +60,14 @@ export default class BrikApiCommon {
         return url.toString();
     };
 
-    static searchPlaces = (searchValue: string) => {
+    static searchPlaces = (searchValue: string, distance?: string) => {
         const url = new URL(`${API_URL}/common/map/places`);
         const params = url.searchParams;
         if (searchValue) {
             params.append("search", searchValue);
+        }
+        if (distance) {
+            params.append("distance", distance);
         }
         return url.toString();
     };
@@ -79,23 +82,29 @@ export default class BrikApiCommon {
         return url.toString();
     };
 
-    static allVisitation = (search?: string) => {
+    static allVisitation = (search?: string, batchingPlantId?: string) => {
         const url = new URL(`${API_URL}/common/m/flow/project`);
         const params = url.searchParams;
 
         if (search) {
             params.append("search", search);
         }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
+        }
 
         return url.toString();
     };
 
-    static getProjectByUser = (search?: string) => {
+    static getProjectByUser = (search?: string, batchingPlantId?: string) => {
         const url = new URL(`${API_URL}/common/m/flow/companies-by-user`);
         const params = url.searchParams;
 
         if (search) {
             params.append("search", search);
+        }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
         }
 
         return url.toString();
@@ -162,6 +171,11 @@ export default class BrikApiCommon {
         const url = new URL(
             `${API_URL}/common/m/flow/project/${projectId}/location-address`
         );
+        return url.toString();
+    };
+
+    static getBatchingPlants = () => {
+        const url = new URL(`${API_URL}/common/batching-plant`);
         return url.toString();
     };
 

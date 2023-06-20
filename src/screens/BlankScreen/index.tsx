@@ -7,7 +7,7 @@ import bStorage from "@/actions";
 import { signOut } from "@/actions/CommonActions";
 import EmptyState from "@/components/organism/BEmptyState";
 import { signout } from "@/redux/reducers/authReducer";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 
 const styles = StyleSheet.create({
     container: {
@@ -32,7 +32,9 @@ function BlankScreen() {
         <SafeAreaView style={styles.container}>
             <EmptyState
                 isError
-                errorMessage={`Tipe user ${userData.type} tidak memiliki akses ke BOD APP`}
+                errorMessage={`Tipe user ${
+                    userData?.type || userData?.roles?.join(", ")
+                } tidak memiliki akses ke BOD APP`}
                 actionBtnTitle="Kembali"
                 onAction={onLogout}
             />

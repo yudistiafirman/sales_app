@@ -131,6 +131,9 @@ function SphContent() {
         useContext(SphContext);
     const stepControll = useCallback((step: number) => {}, []);
     const sphData = useSelector((state: RootState) => state.sph);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const [isPopupVisible, setPopupVisible] = React.useState(false);
     const projectId = route.params?.projectId;
     const abortControllerRef = React.useRef<AbortController>(
@@ -195,7 +198,7 @@ function SphContent() {
                 // '',
                 coordinate.longitude as unknown as number,
                 coordinate.latitude as unknown as number,
-                "BP-LEGOK",
+                selectedBatchingPlant?.name,
                 abortControllerRef.current.signal
             );
             const { result } = data;

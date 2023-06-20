@@ -17,6 +17,7 @@ import {
 function SearchingCustomer() {
     const [searchIndex, setSearchIndex] = useState(0);
     const appoinmentState = useSelector((state: RootState) => state.appoinment);
+    const authState = useSelector((state: RootState) => state.auth);
     const {
         projects,
         isProjectLoading,
@@ -26,7 +27,12 @@ function SearchingCustomer() {
     const dispatch = useDispatch<AppDispatch>();
     const searchDispatch = useCallback(
         (text: string) => {
-            dispatch(getAllProject({ search: text }));
+            dispatch(
+                getAllProject({
+                    search: text,
+                    selectedBPId: authState.selectedBatchingPlant?.id
+                })
+            );
         },
         [dispatch]
     );

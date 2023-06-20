@@ -11,4 +11,5 @@ export interface DataSuccessLogin {
     id: string;
     email: string;
     type: EntryType;
+    roles: string[];
 }

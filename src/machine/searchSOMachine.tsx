@@ -1,7 +1,5 @@
-import {
-    getAllPurchaseOrders,
-    getConfirmedPurchaseOrder
-} from "@/actions/OrderActions";
+import { getAllPurchaseOrders } from "@/actions/OrderActions";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import { assign, createMachine } from "xstate";
 
 const searchSOMachine = createMachine(
@@ -22,6 +20,7 @@ const searchSOMachine = createMachine(
                 page: number;
                 size: number;
                 totalPage: number;
+                batchingPlantId?: string;
                 keyword: string;
             },
             services: {} as {
@@ -36,7 +35,11 @@ const searchSOMachine = createMachine(
                 };
             },
             events: {} as
-                | { type: "assignKeyword"; payload: string }
+                | {
+                      type: "assignKeyword";
+                      payload: string;
+                      selectedBP: BatchingPlant;
+                  }
                 | { type: "retryGettingList"; payload: string }
                 | { type: "onRefreshList"; payload: string }
                 | { type: "onEndReached" }
@@ -50,6 +53,7 @@ const searchSOMachine = createMachine(
             errorMessage: "",
             page: 1,
             size: 10,
+            batchingPlantId: undefined,
             totalPage: 0,
             keyword: ""
         },
@@ -111,7 +115,8 @@ const searchSOMachine = createMachine(
                         context.page.toString(),
                         context.size.toString(),
                         context.keyword,
-                        "CONFIRMED"
+                        "CONFIRMED",
+                        context.batchingPlantId
                     );
                     return response.data;
                 } catch (error) {
@@ -151,7 +156,8 @@ const searchSOMachine = createMachine(
                 isLoadMore: true
             })),
             assignKeywordToContext: assign((context, event) => ({
-                keyword: event?.payload
+                keyword: event?.payload,
+                batchingPlantId: event?.selectedBP?.id
             }))
         }
     }

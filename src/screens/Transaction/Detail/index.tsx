@@ -37,8 +37,8 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import { getVisitationOrderByID } from "@/actions/OrderActions";
 import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
 import { PO_METHOD_LIST } from "@/constants/dropdown";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import RNPrint from "react-native-print";
@@ -192,9 +192,11 @@ function TransactionDetail() {
     const dispatch = useDispatch<AppDispatch>();
     const [expandData, setExpandData] = React.useState<any[]>([]);
     const [downloadFiles, setDownloadFiles] = React.useState<any>(null);
+    const authState = useSelector((state: RootState) => state.auth);
 
     useHeaderTitleChanged({
-        title: route?.params?.title ? route?.params?.title : "-"
+        title: route?.params?.title ? route?.params?.title : "-",
+        selectedBP: authState.selectedBatchingPlant
     });
 
     React.useEffect(() => {

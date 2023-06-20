@@ -36,7 +36,6 @@ import Api from "@/models";
 import { visitationDataType } from "@/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import useHeaderStyleChanged from "@/hooks/useHeaderStyleChanged";
 import { useHeaderShow } from "@/hooks";
 import {
     APPOINTMENT,
@@ -69,6 +68,7 @@ import bStorage from "@/actions";
 import { resetRegion } from "@/redux/reducers/locationReducer";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { resetInvoiceState } from "@/redux/reducers/invoiceReducer";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
 import BuatKunjungan from "./elements/BuatKunjungan";
 import DateDaily from "./elements/DateDaily";
@@ -151,6 +151,8 @@ const style = StyleSheet.create({
 });
 
 function Beranda() {
+    const { remoteConfigData, selectedBatchingPlant, batchingPlants } =
+        useSelector((state: RootState) => state.auth);
     /* eslint-disable @typescript-eslint/naming-convention */
     const {
         force_update,
@@ -163,7 +165,7 @@ function Beranda() {
         enable_sph,
         enable_visitation,
         enable_invoice
-    } = useSelector((state: RootState) => state.auth.remoteConfigData);
+    } = remoteConfigData;
     /* eslint-enable @typescript-eslint/naming-convention */
 
     const poState = useSelector((state: RootState) => state.purchaseOrder);
@@ -205,10 +207,6 @@ function Beranda() {
     useHeaderShow({
         isHeaderShown: !isModalVisible
     });
-    useHeaderStyleChanged({
-        titleColor: colors.text.light,
-        bgColor: colors.primary
-    });
 
     // fetching data
     const [visitData, setVisitData] = React.useState<Api.Response>({
@@ -246,7 +244,9 @@ function Beranda() {
     const fetchTarget = React.useCallback(async () => {
         try {
             setIsTargetLoading(true);
-            const { data: assignData } = await getVisitationTarget();
+            const { data: assignData } = await getVisitationTarget(
+                selectedBatchingPlant?.id
+            );
             setCurrentVisit({
                 current: assignData?.data?.totalCompleted,
                 target: assignData?.data?.visitationTarget
@@ -264,7 +264,7 @@ function Beranda() {
                 })
             );
         }
-    }, []);
+    }, [selectedBatchingPlant]);
 
     const fetchVisitations = React.useCallback(
         async (date: moment.Moment, search?: string) => {
@@ -277,7 +277,8 @@ function Beranda() {
                     ...(!search &&
                         !searchQuery && {
                             date: date.valueOf()
-                        })
+                        }),
+                    batchingPlantId: selectedBatchingPlant?.id
                 };
                 const { data: assignData } = await getAllVisitations(options);
                 const displayData =
@@ -321,7 +322,7 @@ function Beranda() {
                 setErrorMessage(error?.message);
             }
         },
-        [visitData.data, page, searchQuery]
+        [visitData.data, page, searchQuery, selectedBatchingPlant]
     );
 
     useFocusEffect(
@@ -430,11 +431,19 @@ function Beranda() {
         );
     }, [force_update]);
 
-    const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
-        setPage(1);
-        setVisitData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
-        setSelectedDate(dateTime);
-    }, []);
+    const onDateSelected = React.useCallback(
+        (dateTime: moment.Moment) => {
+            setPage(1);
+            setVisitData({
+                totalItems: 0,
+                currentPage: 0,
+                totalPage: 0,
+                data: []
+            });
+            setSelectedDate(dateTime);
+        },
+        [selectedBatchingPlant]
+    );
 
     const routes: { title: string; totalItems: number }[] = React.useMemo(
         () => [
@@ -454,7 +463,7 @@ function Beranda() {
                 setPage(page + 1);
             }
         }
-    }, [visitData.totalPage, page]);
+    }, [visitData.totalPage, page, selectedBatchingPlant]);
 
     const getButtonsMenu = () => {
         let buttons = [
@@ -597,10 +606,12 @@ function Beranda() {
             data: []
         });
         setPage(1);
-        fetchVisitations(selectedDate, text);
+        fetchVisitations(selectedDate, undefined, text);
     };
 
-    const onChangeWithDebounce = React.useCallback(debounce(reset, 500), []);
+    const onChangeWithDebounce = React.useCallback(debounce(reset, 500), [
+        selectedBatchingPlant
+    ]);
 
     const onChangeSearch = (text: string) => {
         setSearchQuery(text);

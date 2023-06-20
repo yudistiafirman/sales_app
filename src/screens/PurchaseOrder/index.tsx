@@ -10,6 +10,7 @@ import bStorage from "@/actions";
 import {
     BBackContinueBtn,
     BHeaderIcon,
+    BSelectedBPBadges,
     BSpacer,
     BStepperIndicator,
     PopUpQuestion
@@ -18,6 +19,7 @@ import { layout } from "@/constants";
 import { useKeyboardActive } from "@/hooks";
 import { PO, TAB_ROOT } from "@/navigation/ScreenNames";
 import { AppDispatch, RootState } from "@/redux/store";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import DetailProduk from "./element/ProductDetail";
 import UploadFiles from "./element/PaymentDetail";
 import CreatePo from "./element/CreatePo";
@@ -40,6 +42,7 @@ const styles = StyleSheet.create({
 function PurchaseOrder() {
     const navigation = useNavigation();
     const poState = useSelector((state: RootState) => state.purchaseOrder);
+    const authState = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch<AppDispatch>();
     const {
         currentStep,
@@ -188,6 +191,10 @@ function PurchaseOrder() {
         return title;
     }, [poState.currentState]);
 
+    const selectedBPBadges = (selectedBP: BatchingPlant, title: string) => (
+        <BSelectedBPBadges selectedBP={selectedBP} title={title} alignLeft />
+    );
+
     useFocusEffect(
         React.useCallback(() => {
             const backAction = () => {
@@ -206,7 +213,8 @@ function PurchaseOrder() {
         navigation.setOptions({
             headerBackVisible: false,
             headerLeft: () => renderHeaderLeft(),
-            headerTitle: renderTitle()
+            headerTitle: () =>
+                selectedBPBadges(authState.selectedBatchingPlant, renderTitle())
         });
     }, [navigation, renderHeaderLeft, renderTitle]);
 

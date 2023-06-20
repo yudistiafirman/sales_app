@@ -33,7 +33,9 @@ function Return() {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const [doListState, send] = useMachine(displayOperationListMachine);
-    const { userData } = useSelector((state: RootState) => state.auth);
+    const { userData, selectedBatchingPlant, batchingPlants } = useSelector(
+        (state: RootState) => state.auth
+    );
     const { projectDetails, photoFiles } = useSelector(
         (state: RootState) => state.operation
     );
@@ -44,25 +46,37 @@ function Return() {
         React.useCallback(() => {
             send("assignUserData", {
                 payload: userData?.type,
-                tabActive: "right"
+                tabActive: "right",
+                selectedBP: selectedBatchingPlant
             });
-        }, [send, userData?.type])
+            send("backToGetDO", {
+                userType: userData?.type,
+                tabActive: "right",
+                selectedBP: selectedBatchingPlant
+            });
+        }, [send, userData?.type, selectedBatchingPlant])
     );
 
     React.useEffect(() => {
         crashlytics().log(EntryType.SECURITY ? TAB_RETURN : TAB_WB_IN);
-
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
             send("onRefreshList", {
                 payload: userData?.type,
-                tabActive: "right"
+                tabActive: "right",
+                selectedBP: selectedBatchingPlant
             });
         });
 
         return () => {
             DeviceEventEmitter.removeAllListeners("Operation.refreshlist");
         };
-    }, [projectDetails, operationListData]);
+    }, [
+        send,
+        userData?.type,
+        projectDetails,
+        operationListData,
+        selectedBatchingPlant
+    ]);
 
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
         if (projectDetails && projectDetails.deliveryOrderId === item.id) {
@@ -131,7 +145,8 @@ function Return() {
                 onRefresh={() =>
                     send("onRefreshList", {
                         payload: userData?.type,
-                        tabActive: "right"
+                        tabActive: "right",
+                        selectedBP: selectedBatchingPlant
                     })
                 }
                 onRetry={() =>

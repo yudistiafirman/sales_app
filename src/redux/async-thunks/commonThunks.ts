@@ -38,11 +38,14 @@ export const postUploadFiles = createAsyncThunk<
     }
 });
 
-export const getAllProject = createAsyncThunk<any, { search?: string }>(
+export const getAllProject = createAsyncThunk<
+    any,
+    { search?: string; selectedBPId?: string }
+>(
     "common/getAllProject",
-    async ({ search }, { rejectWithValue }) => {
+    async ({ search, selectedBPId }, { rejectWithValue }) => {
         try {
-            const response = await allVisitationGetAction(search);
+            const response = await allVisitationGetAction(search, selectedBPId);
             const { data } = response.data.data;
             if (data.error) throw new Error(data);
             return data;
@@ -52,20 +55,20 @@ export const getAllProject = createAsyncThunk<any, { search?: string }>(
     }
 );
 
-export const getProjectsByUserThunk = createAsyncThunk<
-    projectResponseType,
-    { search?: string }
->("common/getProjectsByUserThunk", async ({ search }, { rejectWithValue }) => {
-    // projectByUserGetAction
-    try {
-        const response = await projectByUserGetAction(search);
-        const { data } = response;
-        if (data.error) throw new Error(data);
-        return data;
-    } catch (error) {
-        return rejectWithValue(error?.message);
-    }
-});
+// export const getProjectsByUserThunk = createAsyncThunk<
+//     projectResponseType,
+//     { search?: string }
+// >("common/getProjectsByUserThunk", async ({ search }, { rejectWithValue }) => {
+//     // projectByUserGetAction
+//     try {
+//         const response = await projectByUserGetAction(search);
+//         const { data } = response;
+//         if (data.error) throw new Error(data);
+//         return data;
+//     } catch (error) {
+//         return rejectWithValue(error?.message);
+//     }
+// });
 // projectGetOneById
 export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
     "common/getOneProjectById",

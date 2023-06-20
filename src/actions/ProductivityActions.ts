@@ -5,15 +5,20 @@ import { customRequest } from "@/networking/request";
 type GetVisitationsType = {
     month?: number;
     year?: number;
+    batchingPlantId?: string;
 };
 type VisitationPayloadType = {
     payload: payloadPostType;
     visitationId: string;
 };
 
-export const getVisitations = async ({ month, year }: GetVisitationsType) =>
+export const getVisitations = async ({
+    month,
+    year,
+    batchingPlantId
+}: GetVisitationsType) =>
     customRequest(
-        BrikApiProductivity.visitations({ month, year }),
+        BrikApiProductivity.visitations({ month, year, batchingPlantId }),
         "GET",
         undefined,
         true
@@ -52,28 +57,36 @@ interface IGetAll {
     page?: number;
     search?: string;
     projectId?: string;
+    batchingPlantId?: string;
 }
 
 export const getAllVisitations = async ({
     page = 0,
     date,
     search = "",
-    projectId
+    projectId,
+    batchingPlantId
 }: IGetAll) =>
     customRequest(
         BrikApiProductivity.getAllVisitations({
             page,
             date,
             search,
-            projectId
+            projectId,
+            batchingPlantId
         }),
         "GET",
         undefined,
         true
     );
 
-export const getVisitationTarget = async () =>
-    customRequest(BrikApiProductivity.getTarget(), "GET", undefined, true);
+export const getVisitationTarget = async (batchingPlantId?: string) =>
+    customRequest(
+        BrikApiProductivity.getTarget(batchingPlantId),
+        "GET",
+        undefined,
+        true
+    );
 
 export const postBookingAppointment = async ({ payload }) =>
     customRequest(

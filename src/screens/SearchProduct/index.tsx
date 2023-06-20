@@ -14,6 +14,8 @@ import searchProductMachine from "@/machine/searchProductMachine";
 import useCustomHeaderCenter from "@/hooks/useCustomHeaderCenter";
 import crashlytics from "@react-native-firebase/crashlytics";
 import { SEARCH_PRODUCT } from "@/navigation/ScreenNames";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 import SearchProductStyles from "./styles";
 import SearchProductNavbar from "./element/SearchProductNavbar";
 
@@ -34,6 +36,9 @@ function SearchProduct() {
     const [state, send] = useMachine(searchProductMachine);
     const disablePressed = routePage?.params?.disablePressed;
     const { routes, productsData, loadProduct, errorMessage } = state.context;
+    const { selectedBatchingPlant } = useSelector(
+        (globalState: RootState) => globalState.auth
+    );
 
     const renderHeaderLeft = React.useCallback(
         () => (
@@ -55,7 +60,10 @@ function SearchProduct() {
 
         if (routePage?.params) {
             const { distance } = routePage.params;
-            send("sendingParams", { value: distance });
+            send("sendingParams", {
+                value: distance,
+                selectedBP: selectedBatchingPlant
+            });
         }
     }, [routePage?.params]);
 
@@ -116,7 +124,10 @@ function SearchProduct() {
     const onTabPress = ({ route }) => {
         const tabIndex = index === 0 ? 1 : 0;
         if (route.key !== routes[index].key) {
-            send("onChangeTab", { value: tabIndex });
+            send("onChangeTab", {
+                value: tabIndex,
+                selectedBP: selectedBatchingPlant
+            });
         }
     };
     return (
