@@ -1,7 +1,11 @@
 import * as React from "react";
 import { AppState, DeviceEventEmitter, SafeAreaView, View } from "react-native";
 import BTabSections from "@/components/organism/TabSections";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+    useFocusEffect,
+    useNavigation,
+    useRoute
+} from "@react-navigation/native";
 import Tnc from "@/screens/Price/element/Tnc";
 import ProductList from "@/components/templates/Price/ProductList";
 import { BEmptyState, BSpacer, BTouchableText } from "@/components";
@@ -51,39 +55,23 @@ function PriceList() {
         loadLocation,
         errorMessage,
         page,
-        totalPage
+        totalPage,
+        selectedCategories
     } = state.context;
+
+    useFocusEffect(
+        React.useCallback(() => {
+            send("assignSelectedBatchingPlant", {
+                selectedBP: selectedBatchingPlant
+            });
+            send("backToGetProducts", {
+                selectedBP: selectedBatchingPlant
+            });
+        }, [send, selectedBatchingPlant])
+    );
 
     React.useEffect(() => {
         crashlytics().log(TAB_PRICE_LIST);
-
-        if (state.matches("denied")) {
-            const subscription = AppState.addEventListener(
-                "change",
-                (nextAppState) => {
-                    if (
-                        appState.current.match(/inactive|background/) &&
-                        nextAppState === "active"
-                    ) {
-                        send("appComeForegroundState");
-                    } else {
-                        send("appComeBackgroundState");
-                    }
-                    appState.current = nextAppState;
-                }
-            );
-            return () => {
-                subscription.remove();
-            };
-        }
-
-        return undefined;
-    }, [send, state]);
-
-    React.useEffect(() => {
-        send("assignSelectedBatchingPlant", {
-            selectedBP: selectedBatchingPlant
-        });
         if (route?.params) {
             const { params } = route;
             const { latitude, longitude, formattedAddress } = params.coordinate;
@@ -104,9 +92,26 @@ function PriceList() {
         } else {
             send("onAskPermission", { selectedBP: selectedBatchingPlant });
         }
-    }, [route, route?.params, send, selectedBatchingPlant]);
 
-    React.useEffect(() => {
+        if (state.matches("denied")) {
+            const subscription = AppState.addEventListener(
+                "change",
+                (nextAppState) => {
+                    if (
+                        appState.current.match(/inactive|background/) &&
+                        nextAppState === "active"
+                    ) {
+                        send("appComeForegroundState");
+                    } else {
+                        send("appComeBackgroundState");
+                    }
+                    appState.current = nextAppState;
+                }
+            );
+            return () => {
+                subscription.remove();
+            };
+        }
         if (state.matches("errorGettingCurrentLocation")) {
             dispatch(
                 openPopUp({
@@ -144,7 +149,9 @@ function PriceList() {
                 })
             );
         }
-    }, [dispatch, navigation, send, state]);
+
+        return undefined;
+    }, [route, route?.params, dispatch, navigation, send, state]);
 
     const renderHeaderRight = React.useCallback(() => {
         if (fromVisitation) {

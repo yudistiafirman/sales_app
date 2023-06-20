@@ -184,7 +184,7 @@ function Transaction() {
 
     React.useEffect(() => {
         crashlytics().log(TAB_TRANSACTION);
-    }, [send, selectedBatchingPlant]);
+    }, []);
 
     const getOneOrder = async (id: string) => {
         try {

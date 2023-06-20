@@ -52,6 +52,10 @@ export const priceMachine =
                           payload: number;
                           selectedBP: BatchingPlant;
                       }
+                    | {
+                          type: "backToGetProducts";
+                          selectedBP: BatchingPlant;
+                      }
                     | { type: "backToIdle" }
                     | { type: "onEndReached" }
                     | { type: "onAskPermission" }
@@ -116,8 +120,7 @@ export const priceMachine =
                                             {
                                                 target: "productLoaded",
                                                 actions:
-                                                    "assignProductsDataToContext",
-                                                cond: "isNotLastPage"
+                                                    "assignProductsDataToContext"
                                             },
                                             {
                                                 target: "productLoaded",
@@ -149,6 +152,11 @@ export const priceMachine =
                                                 actions: "refreshPriceList"
                                             }
                                         ],
+
+                                        backToGetProducts: {
+                                            target: "#price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories",
+                                            actions: "resetProduct"
+                                        },
 
                                         backToIdle: "#price machine.idle"
                                     }
@@ -398,6 +406,16 @@ export const priceMachine =
                     loadLocation: true
                 })),
                 assignSelectedBP: assign((_context, _event) => ({
+                    batchingPlantId: _event?.selectedBP?.id,
+                    batchingPlantName: _event?.selectedBP?.name
+                })),
+                resetProduct: assign((_context, _event) => ({
+                    totalPage: 1,
+                    loadProduct: false,
+                    isLoadMore: false,
+                    refreshing: false,
+                    page: 1,
+                    index: 0,
                     batchingPlantId: _event?.selectedBP?.id,
                     batchingPlantName: _event?.selectedBP?.name
                 }))
