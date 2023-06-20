@@ -45,8 +45,8 @@ export const updateCustomerBillingAddress = async (id: string, data: any) =>
         true
     );
 
-export const searchLocation = async (searchValue: string) =>
-    customRequest(BrikApiCommon.searchPlaces(searchValue), "GET");
+export const searchLocation = async (searchValue: string, distance?: string) =>
+    customRequest(BrikApiCommon.searchPlaces(searchValue, distance), "GET");
 
 export const searchLocationById = async (id: string) =>
     customRequest(BrikApiCommon.searchPlacesById(id), "GET");

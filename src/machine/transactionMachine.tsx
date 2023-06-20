@@ -37,7 +37,11 @@ const transactionMachine =
                     | { type: "onEndReached" }
                     | { type: "refreshingList" }
                     | { type: "backToGetTransactions" }
-                    | { type: "retryGettingTransactions"; payload: string }
+                    | {
+                          type: "retryGettingTransactions";
+                          payload: string;
+                          selectedBP: BatchingPlant;
+                      }
                     | { type: "retryGettingTypeTransactions" }
             },
 
@@ -257,7 +261,8 @@ const transactionMachine =
                     transactionData: [],
                     page: 1,
                     loadTransaction: true,
-                    selectedType: event.payload
+                    selectedType: event.payload,
+                    batchingPlantId: event?.selectedBP?.id
                 }))
             },
             services: {

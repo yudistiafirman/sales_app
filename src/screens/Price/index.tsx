@@ -93,13 +93,13 @@ function PriceList() {
             send("sendingParams", {
                 value: {
                     latitude,
-                    longitude,
-                    selectedBP: selectedBatchingPlant
-                }
+                    longitude
+                },
+                selectedBP: selectedBatchingPlant
             });
             setIndex(0);
         } else {
-            send("onAskPermission");
+            send("onAskPermission", { selectedBP: selectedBatchingPlant });
         }
     }, [route, route?.params, send]);
 

@@ -68,6 +68,7 @@ export const priceMachine =
                 size: 10,
                 page: 1,
                 batchingPlantId: undefined as string | undefined,
+                batchingPlantName: undefined as string | undefined,
                 selectedCategories: "",
                 productsData: [] as any[],
                 index: 0,
@@ -328,7 +329,8 @@ export const priceMachine =
                     page: 1,
                     loadProduct: true,
                     productsData: [],
-                    batchingPlantId: event?.selectedBP?.id
+                    batchingPlantId: event?.selectedBP?.id,
+                    batchingPlantName: event?.selectedBP?.name
                 })),
                 incrementPage: assign((context, _event) => ({
                     page: context.page + 1,
@@ -350,7 +352,8 @@ export const priceMachine =
                     productsData: [],
                     selectedCategories: [],
                     page: 1,
-                    batchingPlantId: event?.selectedBP?.id
+                    batchingPlantId: event?.selectedBP?.id,
+                    batchingPlantName: event?.selectedBP?.name
                 })),
                 assignStopLoadMore: assign((context, event) => ({
                     isLoadMore: false
@@ -413,10 +416,14 @@ export const priceMachine =
                 fetchLocationDetail: async (context, _event) => {
                     try {
                         const { longitude, latitude } = context.longlat;
+                        console.log(
+                            "inii diaa 2:: ",
+                            context.batchingPlantName
+                        );
                         const response = await getLocationCoordinates(
                             longitude,
                             latitude,
-                            "BP-LEGOK"
+                            context.batchingPlantName
                         );
                         return response.data;
                     } catch (error) {

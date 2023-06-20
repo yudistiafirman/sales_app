@@ -122,7 +122,11 @@ function Transaction() {
     } = trxState.context;
 
     const onTabPress = (title: string) => {
-        if (isError) send("retryGettingTransactions", { payload: title });
+        if (isError)
+            send("retryGettingTransactions", {
+                payload: title,
+                selectedBP: selectedBatchingPlant
+            });
         else
             send("onChangeType", {
                 payload: title,
@@ -397,7 +401,8 @@ function Transaction() {
                             errorMessage={errorMessage}
                             onAction={() =>
                                 send("retryGettingTransactions", {
-                                    payload: selectedType
+                                    payload: selectedType,
+                                    selectedBP: selectedBatchingPlant
                                 })
                             }
                             onRefresh={() => send("refreshingList")}

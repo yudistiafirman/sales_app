@@ -20,7 +20,8 @@ const searchAreaMachine = createMachine(
             loadPlaces: false as boolean,
             formattedAddress: "",
             placesId: "" as string,
-            errorMessage: ""
+            errorMessage: "",
+            batchingPlantName: undefined as string | undefined
         },
         states: {
             getLocation: {
@@ -142,6 +143,7 @@ const searchAreaMachine = createMachine(
             })),
             assignSearchValue: assign((context, event) => ({
                 searchValue: event.payload,
+                batchingPlantName: event?.selectedBP?.name,
                 loadPlaces: true
             })),
             assignResult: assign((context, event) => ({
@@ -153,6 +155,7 @@ const searchAreaMachine = createMachine(
             })),
             assignPlacesId: assign((context, event) => ({
                 placesId: event.payload.place_id,
+                batchingPlantName: event?.selectedBP?.name,
                 formattedAddress: event.payload.description
             })),
             handleErrorGettingLocation: assign((context, event) => ({
@@ -188,7 +191,10 @@ const searchAreaMachine = createMachine(
             },
             getLocationBySearch: async (context, event) => {
                 try {
-                    const response = await searchLocation(context.searchValue);
+                    const response = await searchLocation(
+                        context.searchValue,
+                        context.batchingPlantName
+                    );
                     return response.data.result;
                 } catch (error) {
                     throw new Error(error);
@@ -206,11 +212,12 @@ const searchAreaMachine = createMachine(
             getLocationByCoordinate: async (context, e) => {
                 try {
                     const { longitude, latitude } = context.longlat;
+                    console.log("inii diaa 3:: ", context.batchingPlantName);
                     const response = await getLocationCoordinates(
                         // '',
                         longitude,
                         latitude,
-                        ""
+                        context.batchingPlantName
                     );
 
                     return response.result;

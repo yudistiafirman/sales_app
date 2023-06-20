@@ -1,6 +1,7 @@
 import { Dimensions } from "react-native";
 import { assign, createMachine } from "xstate";
 import { GenericAbortSignal } from "axios";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import { getLocationCoordinates } from "./priceMachine";
 
 const { width, height } = Dimensions.get("window");
@@ -21,6 +22,7 @@ const locationMachine =
                     | {
                           type: "sendingCoorParams";
                           value: { longitude: number; latitude: number };
+                          selectedBP: BatchingPlant;
                       }
                     | {
                           type: "onChangeRegion";
@@ -31,6 +33,7 @@ const locationMachine =
                               longitudeDelta: number;
                               signal: GenericAbortSignal;
                           };
+                          selectedBP: BatchingPlant;
                       },
                 services: {} as {
                     onGettingLocationDetails: {
@@ -52,7 +55,8 @@ const locationMachine =
                 },
                 locationDetail: {},
                 loadingLocation: false,
-                signal: undefined
+                signal: undefined,
+                batchingPlantName: undefined as string | undefined
             },
             states: {
                 receivingParams: {
@@ -98,7 +102,9 @@ const locationMachine =
                         longitude: event.value.longitude,
                         latitudeDelta: LATITUDE_DELTA,
                         longitudeDelta: LONGITUDE_DELTA
-                    }
+                    },
+                    batchingPlantName:
+                        event?.selectedBP?.name && event?.selectedBP?.name
                 })),
                 assignLocationDetail: assign((context, event) => ({
                     locationDetail: {
@@ -117,7 +123,9 @@ const locationMachine =
                         longitude: event.value.longitude,
                         latitudeDelta: event.value.latitudeDelta,
                         longitudeDelta: event.value.longitudeDelta
-                    }
+                    },
+                    batchingPlantName:
+                        event?.selectedBP?.name && event?.selectedBP?.name
                 })),
                 enabledLoadingDetails: assign((context, event) => ({
                     loadingLocation: true
@@ -126,10 +134,11 @@ const locationMachine =
             services: {
                 onGettingLocationDetails: async (context, event) => {
                     const { latitude, longitude } = context.region;
+                    console.log("inii diaa 1:: ", context.batchingPlantName);
                     const response = await getLocationCoordinates(
                         longitude,
                         latitude,
-                        undefined,
+                        context.batchingPlantName,
                         context.signal
                     );
                     return response.data.result;
