@@ -6,9 +6,11 @@ import {
     projectGetOneById,
     getSphDocuments,
     getAddressSuggestion,
-    postProjectDoc
+    postProjectDoc,
+    getLocationCoordinates
 } from "@/actions/CommonActions";
-import { projectResponseType } from "@/interfaces";
+import { Region, projectResponseType } from "@/interfaces";
+import axios from "axios";
 
 type ErrorType = {
     success: boolean;
@@ -127,6 +129,47 @@ export const postProjectDocByprojectId = createAsyncThunk<
             const { data } = response;
             if (data.error) throw new Error(data);
             return data;
+        } catch (error) {
+            let errorData = error?.message;
+            if (error?.response?.data) {
+                errorData = error?.response?.data;
+            }
+            return rejectWithValue(errorData);
+        }
+    }
+);
+
+export const getCoordinateDetails = createAsyncThunk(
+    "common/getLocationCoordinates",
+    async (coordinate: Region, { signal, rejectWithValue }) => {
+        try {
+            const response = await getLocationCoordinates(
+                coordinate.longitude as unknown as number,
+                coordinate.latitude as unknown as number,
+                "",
+                signal
+            );
+
+            const { result } = response.data;
+            const coordinateToSet = {
+                latitude: result?.lat,
+                longitude: result?.lon,
+                lat: 0,
+                lon: 0,
+                formattedAddress: result?.formattedAddress,
+                PostalId: result?.PostalId
+            };
+
+            if (typeof result?.lon === "string") {
+                coordinateToSet.longitude = Number(result.lon);
+                coordinateToSet.lon = Number(result.lon);
+            }
+
+            if (typeof result?.lat === "string") {
+                coordinateToSet.latitude = Number(result.lat);
+                coordinateToSet.lat = Number(result.lat);
+            }
+            return coordinateToSet;
         } catch (error) {
             let errorData = error?.message;
             if (error?.response?.data) {

@@ -31,6 +31,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import getUserCurrentLocationDetail from "@/utils/getUserCurrentLocationDetail";
 import { hasLocationPermission } from "@/utils/permissions";
+import { getCoordinateDetails } from "@/redux/async-thunks/commonThunks";
 
 const styles = StyleSheet.create({
     container: { flex: 1, marginHorizontal: -(layout.pad.md + layout.pad.ml) },
@@ -134,42 +135,7 @@ function FirstStep() {
 
     const onChangeRegion = async (coordinate: Region) => {
         try {
-            setIsMapLoading(() => true);
-            abortControllerRef.current.abort();
-            if (abortControllerRef.current.signal.aborted)
-                abortControllerRef.current = new AbortController();
-            const { data } = await getLocationCoordinates(
-                // '',
-                coordinate.longitude as unknown as number,
-                coordinate.latitude as unknown as number,
-                "",
-                abortControllerRef.current.signal
-            );
-            const { result } = data;
-            if (!result) {
-                throw data;
-            }
-
-            const coordinateToSet = {
-                latitude: result?.lat,
-                longitude: result?.lon,
-                lat: 0,
-                lon: 0,
-                formattedAddress: result?.formattedAddress,
-                PostalId: result?.PostalId
-            };
-
-            if (typeof result?.lon === "string") {
-                coordinateToSet.longitude = Number(result.lon);
-                coordinateToSet.lon = Number(result.lon);
-            }
-
-            if (typeof result?.lat === "string") {
-                coordinateToSet.latitude = Number(result.lat);
-                coordinateToSet.lat = Number(result.lat);
-            }
-            dispatch(updateRegion(coordinateToSet));
-            setIsMapLoading(() => false);
+            dispatch(getCoordinateDetails(coordinate));
         } catch (error) {
             setIsMapLoading(() => false);
             if (error?.message !== "canceled")
@@ -265,9 +231,6 @@ function FirstStep() {
                     ref={mapRef}
                     region={region}
                     onMapReady={onMapReady}
-                    onRegionChange={() =>
-                        dispatch(setUseSearchedAddress({ value: false }))
-                    }
                     onRegionChangeComplete={debounceResult}
                     CustomMarker={<BMarker />}
                     mapStyle={styles.map}
