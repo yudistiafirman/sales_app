@@ -52,6 +52,9 @@ function Location() {
 
     React.useEffect(() => {
         crashlytics().log(LOCATION);
+        send("assignSelectedBatchingPlant", {
+            selectedBP: authState.selectedBatchingPlant
+        });
         if (route?.params) {
             const { params } = route;
             const { latitude, longitude, formattedAddress } = params.coordinate;

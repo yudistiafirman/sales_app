@@ -25,6 +25,10 @@ const locationMachine =
                           selectedBP: BatchingPlant;
                       }
                     | {
+                          type: "assignSelectedBatchingPlant";
+                          selectedBP: BatchingPlant;
+                      }
+                    | {
                           type: "onChangeRegion";
                           value: {
                               longitude: number;
@@ -59,6 +63,14 @@ const locationMachine =
                 batchingPlantName: undefined as string | undefined
             },
             states: {
+                getSelectedBatchingPlant: {
+                    on: {
+                        assignSelectedBatchingPlant: {
+                            actions: "assignSelectedBP",
+                            target: "receivingParams"
+                        }
+                    }
+                },
                 receivingParams: {
                     on: {
                         sendingCoorParams: {
@@ -92,7 +104,7 @@ const locationMachine =
                 }
             },
 
-            initial: "receivingParams"
+            initial: "getSelectedBatchingPlant"
         },
         {
             actions: {
@@ -102,9 +114,7 @@ const locationMachine =
                         longitude: event.value.longitude,
                         latitudeDelta: LATITUDE_DELTA,
                         longitudeDelta: LONGITUDE_DELTA
-                    },
-                    batchingPlantName:
-                        event?.selectedBP?.name && event?.selectedBP?.name
+                    }
                 })),
                 assignLocationDetail: assign((context, event) => ({
                     locationDetail: {
@@ -123,12 +133,14 @@ const locationMachine =
                         longitude: event.value.longitude,
                         latitudeDelta: event.value.latitudeDelta,
                         longitudeDelta: event.value.longitudeDelta
-                    },
-                    batchingPlantName:
-                        event?.selectedBP?.name && event?.selectedBP?.name
+                    }
                 })),
                 enabledLoadingDetails: assign((context, event) => ({
                     loadingLocation: true
+                })),
+                assignSelectedBP: assign((context, event) => ({
+                    loadingLocation: true,
+                    batchingPlantName: event?.selectedBP?.name
                 }))
             },
             services: {
