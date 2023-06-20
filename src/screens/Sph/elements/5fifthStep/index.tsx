@@ -491,9 +491,6 @@ export default function FifthStep() {
                 <BBackContinueBtn
                     isContinueIcon={false}
                     continueText="Buat SPH"
-                    disableContinue={
-                        !shouldAllowSPHStateToContinue(5, sphState)
-                    }
                     onPressContinue={() => buatSph()}
                     onPressBack={() => setCurrentPosition(3)}
                 />
