@@ -1,3 +1,4 @@
+import { colors } from "@/constants";
 import { useNavigation } from "@react-navigation/native";
 import { useLayoutEffect } from "react";
 
@@ -8,8 +9,8 @@ type HeaderStyleProps = {
 };
 
 export default function useHeaderStyleChanged({
-    titleColor,
-    bgColor,
+    titleColor = colors.text.darker,
+    bgColor = colors.white,
     customHeader
 }: HeaderStyleProps) {
     const navigation = useNavigation();

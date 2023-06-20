@@ -22,7 +22,6 @@ const locationMachine =
                     | {
                           type: "sendingCoorParams";
                           value: { longitude: number; latitude: number };
-                          selectedBP: BatchingPlant;
                       }
                     | {
                           type: "assignSelectedBatchingPlant";
@@ -37,7 +36,6 @@ const locationMachine =
                               longitudeDelta: number;
                               signal: GenericAbortSignal;
                           };
-                          selectedBP: BatchingPlant;
                       },
                 services: {} as {
                     onGettingLocationDetails: {

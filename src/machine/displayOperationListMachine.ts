@@ -43,15 +43,17 @@ const displayOperationListMachine = createMachine(
                       value: {
                           payload: string;
                           tabActive: string;
-                          selectedBP: BatchingPlant;
                       };
+                  }
+                | {
+                      type: "assignSelectedBatchingPlant";
+                      selectedBP: BatchingPlant;
                   }
                 | {
                       type: "retryGettingList";
                       value: {
                           payload: string;
                           tabActive: string;
-                          selectedBP: BatchingPlant;
                       };
                   }
                 | {
@@ -59,7 +61,6 @@ const displayOperationListMachine = createMachine(
                       value: {
                           payload: string;
                           tabActive: string;
-                          selectedBP: BatchingPlant;
                       };
                   }
                 | { type: "onEndReached" }
@@ -80,6 +81,14 @@ const displayOperationListMachine = createMachine(
         },
 
         states: {
+            getSelectedBatchingPlant: {
+                on: {
+                    assignSelectedBatchingPlant: {
+                        actions: "assignSelectedBP",
+                        target: "idle"
+                    }
+                }
+            },
             idle: {
                 on: {
                     assignUserData: {
@@ -123,7 +132,7 @@ const displayOperationListMachine = createMachine(
             }
         },
 
-        initial: "idle"
+        initial: "getSelectedBatchingPlant"
     },
     {
         guards: {
@@ -139,16 +148,16 @@ const displayOperationListMachine = createMachine(
                                 response = await getAllDeliveryOrders(
                                     "WB_OUT",
                                     context.size.toString(),
-                                    context.page.toString()
+                                    context.page.toString(),
+                                    context.batchingPlantId
                                 );
-                                console.log("SECURITY-DISPATCH");
                             } else {
                                 response = await getAllDeliveryOrders(
                                     "RECEIVED",
                                     context.size.toString(),
-                                    context.page.toString()
+                                    context.page.toString(),
+                                    context.batchingPlantId
                                 );
-                                console.log("SECURITY-RETURN");
                             }
                             break;
                         case EntryType.WB:
@@ -156,26 +165,25 @@ const displayOperationListMachine = createMachine(
                                 response = await getAllDeliveryOrders(
                                     "SUBMITTED",
                                     context.size.toString(),
-                                    context.page.toString()
+                                    context.page.toString(),
+                                    context.batchingPlantId
                                 );
-                                console.log("WB-OUT");
                             } else {
                                 response = await getAllDeliveryOrders(
                                     "AWAIT_WB_IN",
                                     context.size.toString(),
-                                    context.page.toString()
+                                    context.page.toString(),
+                                    context.batchingPlantId
                                 );
-                                console.log("WB-IN");
                             }
                             break;
                         case EntryType.DRIVER:
                             response = await getAllDeliveryOrders(
                                 ["ON_DELIVERY", "ARRIVED"],
-                                // 'ON_DELIVERY',
                                 context.size.toString(),
-                                context.page.toString()
+                                context.page.toString(),
+                                context.batchingPlantId
                             );
-                            console.log("DRIVER");
                             break;
                         default:
                             break;
@@ -214,8 +222,7 @@ const displayOperationListMachine = createMachine(
                 isRefreshing: true,
                 operationListData: [],
                 userType: event?.payload,
-                tabActive: event?.tabActive,
-                batchingPlantId: event.value?.selectedBP?.id
+                tabActive: event?.tabActive
             })),
             handleEndReached: assign((context, event) => ({
                 page: context.page + 1,
@@ -225,8 +232,10 @@ const displayOperationListMachine = createMachine(
                 userType: event?.payload,
                 tabActive: event?.tabActive,
                 isRefreshing: true,
-                isLoading: true,
-                batchingPlantId: event.value?.selectedBP?.id
+                isLoading: true
+            })),
+            assignSelectedBP: assign((context, event) => ({
+                batchingPlantId: event?.selectedBP?.id
             }))
         }
     }

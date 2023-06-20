@@ -51,7 +51,8 @@ import {
     SPH,
     TAB_HOME,
     HOME_MENU,
-    INVOICE_LIST
+    INVOICE_LIST,
+    TAB_HOME_TITLE
 } from "@/navigation/ScreenNames";
 import SvgNames from "@/components/atoms/BSvg/svgName";
 import crashlytics from "@react-native-firebase/crashlytics";
@@ -340,7 +341,8 @@ function Beranda() {
         bgColor: colors.primary,
         customHeader: (
             <BSelectedBPOptionMenu
-                pageTitle="Beranda"
+                pageTitle={TAB_HOME_TITLE}
+                color={colors.white}
                 selectedBatchingPlant={selectedBatchingPlant}
                 batchingPlants={batchingPlants}
                 onPressOption={(item: BatchingPlant) => {

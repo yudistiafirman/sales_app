@@ -64,8 +64,7 @@ function Location() {
 
             setUseSearchedAddress(true);
             send("sendingCoorParams", {
-                value: { latitude, longitude },
-                selectedBP: authState.selectedBatchingPlant
+                value: { latitude, longitude }
             });
         }
     }, [route?.params]);
@@ -85,8 +84,7 @@ function Location() {
                     latitudeDelta,
                     longitudeDelta,
                     signal
-                },
-                selectedBP: authState.selectedBatchingPlant
+                }
             });
         }
     };

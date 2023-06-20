@@ -39,7 +39,7 @@ function BSelectedBPOptionMenu({
     batchingPlants,
     pageTitle,
     selectedBatchingPlant,
-    color = colors.white,
+    color = colors.text.darker,
     onPressOption
 }: BSelectedBPOptionMenuProps) {
     const [isVisible, setVisible] = React.useState(false);

@@ -1,13 +1,12 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { useDispatch } from "react-redux";
-import { BHttpLogger, BSelectedBPOptionMenu } from "@/components";
+import { BHttpLogger } from "@/components";
 import { colors, fonts } from "@/constants";
 import { useAsyncConfigSetup } from "@/hooks";
 import EntryType from "@/models/EnumModel";
 import UserModel from "@/models/User";
 import {
-    setSelectedBatchingPlant,
     setShowButtonNetwork,
     setVisibleNetworkLogger
 } from "@/redux/reducers/authReducer";
@@ -44,20 +43,8 @@ const Stack = createNativeStackNavigator();
 function RootScreen(
     userData: UserModel.DataSuccessLogin | null,
     isSignout: boolean,
-    selectedBP: BatchingPlant,
-    batchingPlants: BatchingPlant[],
-    onSelectBPOption: (item: BatchingPlant) => void
+    selectedBP: BatchingPlant
 ) {
-    const selectedBPOption = (title: string) => (
-        <BSelectedBPOptionMenu
-            pageTitle={title}
-            selectedBatchingPlant={selectedBP}
-            batchingPlants={batchingPlants}
-            color={colors.text.darker}
-            onPressOption={onSelectBPOption}
-        />
-    );
-
     if (userData !== null) {
         const { type, roles } = userData;
         const mappingRoles: string[] = [];
@@ -75,8 +62,7 @@ function RootScreen(
                             component={Operation}
                             options={{
                                 headerTitleAlign: "center",
-                                headerTitle: () =>
-                                    selectedBPOption(OPSMANAGER_TITLE),
+                                headerTitle: OPSMANAGER_TITLE,
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
@@ -95,8 +81,7 @@ function RootScreen(
                             component={Operation}
                             options={{
                                 headerTitleAlign: "center",
-                                headerTitle: () =>
-                                    selectedBPOption(BATCHER_TITLE),
+                                headerTitle: BATCHER_TITLE,
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
@@ -115,8 +100,7 @@ function RootScreen(
                             component={Operation}
                             options={{
                                 headerTitleAlign: "center",
-                                headerTitle: () =>
-                                    selectedBPOption(DRIVER_TITLE),
+                                headerTitle: DRIVER_TITLE,
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
@@ -236,8 +220,7 @@ function AppNavigator() {
         isSignout,
         isNetworkLoggerVisible,
         isShowButtonNetwork,
-        selectedBatchingPlant,
-        batchingPlants
+        selectedBatchingPlant
     } = useAsyncConfigSetup();
     const dispatch = useDispatch<AppDispatch>();
     if (isLoading) {
@@ -258,14 +241,7 @@ function AppNavigator() {
                     }
                 }}
             >
-                {RootScreen(
-                    userData,
-                    isSignout,
-                    selectedBatchingPlant,
-                    batchingPlants,
-                    (item: BatchingPlant) =>
-                        dispatch(setSelectedBatchingPlant(item))
-                )}
+                {RootScreen(userData, isSignout, selectedBatchingPlant)}
             </Stack.Navigator>
             <BHttpLogger
                 isShowButtonNetwork={isShowButtonNetwork}

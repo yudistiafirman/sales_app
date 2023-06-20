@@ -28,8 +28,7 @@ const useAsyncConfigSetup = () => {
         remoteConfigData,
         isNetworkLoggerVisible,
         isShowButtonNetwork,
-        selectedBatchingPlant,
-        batchingPlants
+        selectedBatchingPlant
     } = useSelector((state: RootState) => state.auth);
     const userDataSetup = React.useCallback(
         async (fetchedRemoteConfig: any) => {
@@ -176,8 +175,7 @@ const useAsyncConfigSetup = () => {
         isSignout,
         isNetworkLoggerVisible,
         isShowButtonNetwork,
-        selectedBatchingPlant,
-        batchingPlants
+        selectedBatchingPlant
     };
 };
 

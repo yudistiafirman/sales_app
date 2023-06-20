@@ -11,6 +11,7 @@ import {
     CAMERA,
     LOCATION,
     OPERATION,
+    SECURITY_TAB_TITLE,
     SUBMIT_FORM
 } from "@/navigation/ScreenNames";
 import {
@@ -19,6 +20,10 @@ import {
     setAllOperationPhoto
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
+import useHeaderStyleChanged from "@/hooks/useHeaderStyleChanged";
+import { BSelectedBPOptionMenu } from "@/components";
+import { BatchingPlant } from "@/models/BatchingPlant";
+import { setSelectedBatchingPlant } from "@/redux/reducers/authReducer";
 import OperationList from "./element/OperationList";
 
 const style = StyleSheet.create({
@@ -31,7 +36,7 @@ function Operation() {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const [doListState, send] = useMachine(displayOperationListMachine);
-    const { userData, selectedBatchingPlant } = useSelector(
+    const { userData, selectedBatchingPlant, batchingPlants } = useSelector(
         (state: RootState) => state.auth
     );
     const { projectDetails, photoFiles } = useSelector(
@@ -40,12 +45,34 @@ function Operation() {
     const { operationListData, isLoadMore, isLoading, isRefreshing } =
         doListState.context;
 
+    useHeaderStyleChanged({
+        customHeader: (
+            <BSelectedBPOptionMenu
+                pageTitle={SECURITY_TAB_TITLE}
+                selectedBatchingPlant={selectedBatchingPlant}
+                batchingPlants={batchingPlants}
+                onPressOption={(item: BatchingPlant) => {
+                    dispatch(setSelectedBatchingPlant(item));
+                    send("assignSelectedBatchingPlant", {
+                        selectedBP: item
+                    });
+                    send("assignUserData", {
+                        payload: userData?.type,
+                        tabActive: "left"
+                    });
+                }}
+            />
+        )
+    });
+
     React.useEffect(() => {
         crashlytics().log(userData?.type ? userData.type : "Operation Default");
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
-            send("onRefreshList", {
-                payload: userData?.type,
+            send("assignSelectedBatchingPlant", {
                 selectedBP: selectedBatchingPlant
+            });
+            send("onRefreshList", {
+                payload: userData?.type
             });
         });
 
@@ -56,9 +83,11 @@ function Operation() {
 
     useFocusEffect(
         React.useCallback(() => {
-            send("assignUserData", {
-                payload: userData?.type,
+            send("assignSelectedBatchingPlant", {
                 selectedBP: selectedBatchingPlant
+            });
+            send("assignUserData", {
+                payload: userData?.type
             });
         }, [send])
     );
@@ -146,14 +175,12 @@ function Operation() {
                 onLocationPress={(lonlat) => onLocationPress(lonlat)}
                 onRefresh={() =>
                     send("onRefreshList", {
-                        payload: userData?.type,
-                        selectedBP: selectedBatchingPlant
+                        payload: userData?.type
                     })
                 }
                 onRetry={() =>
                     send("retryGettingList", {
-                        payload: userData?.type,
-                        selectedBP: selectedBatchingPlant
+                        payload: userData?.type
                     })
                 }
                 userType={userData?.type}
