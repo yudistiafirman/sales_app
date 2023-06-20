@@ -10,7 +10,7 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import Icon from "react-native-vector-icons/Feather";
 import analytics from "@react-native-firebase/analytics";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
-import { getAppVersionName, isProduction } from "@/utils/generalFunc";
+import { getAppVersionName } from "@/utils/generalFunc";
 
 const styles: Styles = {
     chipText: {
@@ -76,13 +76,7 @@ export default function SalesHeaderRight(iconColor = "") {
                 Logout
             </MenuItem>
             <MenuDivider />
-            <MenuItem
-                textStyle={styles.version}
-                disabled={!(isProduction() && !__DEV__)}
-                onPress={
-                    isProduction() && !__DEV__ ? onVersionClick : undefined
-                }
-            >
+            <MenuItem textStyle={styles.version} onPress={onVersionClick}>
                 {`APP Version ${getAppVersionName()}`}
             </MenuItem>
         </Menu>

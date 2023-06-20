@@ -8,7 +8,7 @@ interface LoginCredential {
     phoneNumber: string;
 }
 
-interface AuthState {
+export interface AuthState {
     userData: UserModel.DataSuccessLogin | null;
     loginCredential: LoginCredential;
     isLoading: boolean;
