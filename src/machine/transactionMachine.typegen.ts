@@ -39,7 +39,6 @@ export interface Typegen0 {
         assignTransactionsDataToContext: "done.invoke.transaction machine.getTransaction.typeLoaded.getTransactionsBaseOnType:invocation[0]";
         assignTypeToContext: "done.invoke.transaction machine.getTransaction.loadingTransaction:invocation[0]";
         enableLoadTransaction:
-            | "backToGetTransactions"
             | "done.invoke.transaction machine.getTransaction.loadingTransaction:invocation[0]"
             | "onChangeType"
             | "onEndReached"
@@ -59,7 +58,6 @@ export interface Typegen0 {
     };
     eventsCausingServices: {
         getTransactions:
-            | "backToGetTransactions"
             | "done.invoke.transaction machine.getTransaction.loadingTransaction:invocation[0]"
             | "onChangeType"
             | "onEndReached"
@@ -67,12 +65,13 @@ export interface Typegen0 {
             | "retryGettingTransactions";
         getTypeTransactions:
             | "assignSelectedBatchingPlant"
+            | "backToGetTransactions"
             | "retryGettingTypeTransactions";
     };
     matchesStates:
+        | "getSelectedBatchingPlant"
         | "getTransaction"
         | "getTransaction.errorGettingTypeTransactions"
-        | "getTransaction.getSelectedBatchingPlant"
         | "getTransaction.loadingTransaction"
         | "getTransaction.typeLoaded"
         | "getTransaction.typeLoaded.errorGettingTransactions"
@@ -81,7 +80,6 @@ export interface Typegen0 {
         | {
               getTransaction?:
                   | "errorGettingTypeTransactions"
-                  | "getSelectedBatchingPlant"
                   | "loadingTransaction"
                   | "typeLoaded"
                   | {

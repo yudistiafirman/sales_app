@@ -171,12 +171,19 @@ function Transaction() {
             )
     });
 
+    useFocusEffect(
+        React.useCallback(() => {
+            send("assignSelectedBatchingPlant", {
+                selectedBP: selectedBatchingPlant
+            });
+            send("backToGetTransactions", {
+                selectedBP: selectedBatchingPlant
+            });
+        }, [send, selectedBatchingPlant])
+    );
+
     React.useEffect(() => {
         crashlytics().log(TAB_TRANSACTION);
-        send("assignSelectedBatchingPlant", {
-            selectedBP: selectedBatchingPlant
-        });
-        send("backToGetTransactions");
     }, [send, selectedBatchingPlant]);
 
     const getOneOrder = async (id: string) => {

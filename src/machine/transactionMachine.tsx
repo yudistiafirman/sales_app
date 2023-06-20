@@ -40,7 +40,10 @@ const transactionMachine =
                       }
                     | { type: "onEndReached" }
                     | { type: "refreshingList"; selectedBP: BatchingPlant }
-                    | { type: "backToGetTransactions" }
+                    | {
+                          type: "backToGetTransactions";
+                          selectedBP: BatchingPlant;
+                      }
                     | {
                           type: "retryGettingTransactions";
                           payload: string;
@@ -67,16 +70,16 @@ const transactionMachine =
             },
 
             states: {
+                getSelectedBatchingPlant: {
+                    on: {
+                        assignSelectedBatchingPlant: {
+                            actions: "assignSelectedBP",
+                            target: "getTransaction"
+                        }
+                    }
+                },
                 getTransaction: {
                     states: {
-                        getSelectedBatchingPlant: {
-                            on: {
-                                assignSelectedBatchingPlant: {
-                                    actions: "assignSelectedBP",
-                                    target: "loadingTransaction"
-                                }
-                            }
-                        },
                         loadingTransaction: {
                             invoke: {
                                 src: "getTypeTransactions",
@@ -145,7 +148,7 @@ const transactionMachine =
                                         ],
 
                                         backToGetTransactions: {
-                                            target: "getTransactionsBaseOnType",
+                                            target: "#transaction machine.getTransaction.loadingTransaction",
                                             actions: "resetProduct"
                                         }
                                     }
@@ -165,11 +168,11 @@ const transactionMachine =
                             initial: "getTransactionsBaseOnType"
                         }
                     },
-                    initial: "getSelectedBatchingPlant"
+                    initial: "loadingTransaction"
                 }
             },
 
-            initial: "getTransaction"
+            initial: "getSelectedBatchingPlant"
         },
         {
             guards: {
@@ -225,12 +228,25 @@ const transactionMachine =
                             isErrorData: false
                         };
                     }
+                    const newTypeData = context.routes?.map((item) => ({
+                        key: item.key,
+                        title: item.title,
+                        totalItems:
+                            context.selectedType === item.title
+                                ? 0
+                                : item.totalItems
+                                ? item.totalItems
+                                : 0,
+                        chipPosition: "bottom"
+                    }));
                     return {
                         loadTransaction: false,
                         isLoadMore: false,
                         refreshing: false,
                         isErrorData: false,
-                        loadTab: false
+                        loadTab: false,
+                        routes: newTypeData,
+                        totalItems: 0
                     };
                 }),
                 assignIndexToContext: assign((_context, event) => ({
@@ -268,7 +284,9 @@ const transactionMachine =
                 resetProduct: assign((context, event) => ({
                     transactionData: [],
                     page: 1,
-                    loadTransaction: true
+                    totalItems: 0,
+                    loadTransaction: true,
+                    batchingPlantId: event?.selectedBP?.id
                 })),
                 handleRetryGettingTransactions: assign((context, event) => ({
                     transactionData: [],

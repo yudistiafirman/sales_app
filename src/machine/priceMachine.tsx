@@ -438,10 +438,6 @@ export const priceMachine =
                 fetchLocationDetail: async (context, _event) => {
                     try {
                         const { longitude, latitude } = context.longlat;
-                        console.log(
-                            "inii diaa 2:: ",
-                            context.batchingPlantName
-                        );
                         const response = await getLocationCoordinates(
                             longitude,
                             latitude,
