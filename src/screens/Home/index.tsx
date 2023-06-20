@@ -21,8 +21,7 @@ import {
     BText,
     PopUpQuestion,
     BCommonSearchList,
-    BBottomSheet,
-    BSelectedBPOptionMenu
+    BBottomSheet
 } from "@/components";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
@@ -37,7 +36,6 @@ import Api from "@/models";
 import { visitationDataType } from "@/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import useHeaderStyleChanged from "@/hooks/useHeaderStyleChanged";
 import { useHeaderShow } from "@/hooks";
 import {
     APPOINTMENT,
@@ -51,8 +49,7 @@ import {
     SPH,
     TAB_HOME,
     HOME_MENU,
-    INVOICE_LIST,
-    TAB_HOME_TITLE
+    INVOICE_LIST
 } from "@/navigation/ScreenNames";
 import SvgNames from "@/components/atoms/BSvg/svgName";
 import crashlytics from "@react-native-firebase/crashlytics";
@@ -71,7 +68,6 @@ import bStorage from "@/actions";
 import { resetRegion } from "@/redux/reducers/locationReducer";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { resetInvoiceState } from "@/redux/reducers/invoiceReducer";
-import { setSelectedBatchingPlant } from "@/redux/reducers/authReducer";
 import { BatchingPlant } from "@/models/BatchingPlant";
 import BottomSheetFlatlist from "./elements/BottomSheetFlatlist";
 import BuatKunjungan from "./elements/BuatKunjungan";
@@ -245,40 +241,33 @@ function Beranda() {
         }
     };
 
-    const fetchTarget = React.useCallback(
-        async (selectedBP?: BatchingPlant) => {
-            try {
-                setIsTargetLoading(true);
-                const { data: assignData } = await getVisitationTarget(
-                    selectedBP?.id || selectedBatchingPlant?.id
-                );
-                setCurrentVisit({
-                    current: assignData?.data?.totalCompleted,
-                    target: assignData?.data?.visitationTarget
-                });
-                setIsTargetLoading(false);
-            } catch (err) {
-                setIsTargetLoading(false);
-                dispatch(
-                    openPopUp({
-                        popUpType: "error",
-                        popUpText:
-                            err.message ||
-                            "Terjadi error saat pengambilan data target harian kunjungan",
-                        outsideClickClosePopUp: true
-                    })
-                );
-            }
-        },
-        []
-    );
+    const fetchTarget = React.useCallback(async () => {
+        try {
+            setIsTargetLoading(true);
+            const { data: assignData } = await getVisitationTarget(
+                selectedBatchingPlant?.id
+            );
+            setCurrentVisit({
+                current: assignData?.data?.totalCompleted,
+                target: assignData?.data?.visitationTarget
+            });
+            setIsTargetLoading(false);
+        } catch (err) {
+            setIsTargetLoading(false);
+            dispatch(
+                openPopUp({
+                    popUpType: "error",
+                    popUpText:
+                        err.message ||
+                        "Terjadi error saat pengambilan data target harian kunjungan",
+                    outsideClickClosePopUp: true
+                })
+            );
+        }
+    }, [selectedBatchingPlant]);
 
     const fetchVisitations = React.useCallback(
-        async (
-            date: moment.Moment,
-            selectedBP?: BatchingPlant,
-            search?: string
-        ) => {
+        async (date: moment.Moment, search?: string) => {
             setIsLoading(true);
             setIsError(false);
             try {
@@ -289,7 +278,7 @@ function Beranda() {
                         !searchQuery && {
                             date: date.valueOf()
                         }),
-                    batchingPlantId: selectedBP?.id || selectedBatchingPlant?.id
+                    batchingPlantId: selectedBatchingPlant?.id
                 };
                 const { data: assignData } = await getAllVisitations(options);
                 const displayData =
@@ -333,26 +322,8 @@ function Beranda() {
                 setErrorMessage(error?.message);
             }
         },
-        [visitData.data, page, searchQuery]
+        [visitData.data, page, searchQuery, selectedBatchingPlant]
     );
-
-    useHeaderStyleChanged({
-        titleColor: colors.text.light,
-        bgColor: colors.primary,
-        customHeader: (
-            <BSelectedBPOptionMenu
-                pageTitle={TAB_HOME_TITLE}
-                color={colors.white}
-                selectedBatchingPlant={selectedBatchingPlant}
-                batchingPlants={batchingPlants}
-                onPressOption={(item: BatchingPlant) => {
-                    dispatch(setSelectedBatchingPlant(item));
-                    fetchTarget(item);
-                    fetchVisitations(selectedDate, item);
-                }}
-            />
-        )
-    });
 
     useFocusEffect(
         React.useCallback(() => {
@@ -460,11 +431,19 @@ function Beranda() {
         );
     }, [force_update]);
 
-    const onDateSelected = React.useCallback((dateTime: moment.Moment) => {
-        setPage(1);
-        setVisitData({ totalItems: 0, currentPage: 0, totalPage: 0, data: [] });
-        setSelectedDate(dateTime);
-    }, []);
+    const onDateSelected = React.useCallback(
+        (dateTime: moment.Moment) => {
+            setPage(1);
+            setVisitData({
+                totalItems: 0,
+                currentPage: 0,
+                totalPage: 0,
+                data: []
+            });
+            setSelectedDate(dateTime);
+        },
+        [selectedBatchingPlant]
+    );
 
     const routes: { title: string; totalItems: number }[] = React.useMemo(
         () => [
@@ -484,7 +463,7 @@ function Beranda() {
                 setPage(page + 1);
             }
         }
-    }, [visitData.totalPage, page]);
+    }, [visitData.totalPage, page, selectedBatchingPlant]);
 
     const getButtonsMenu = () => {
         let buttons = [
@@ -630,7 +609,9 @@ function Beranda() {
         fetchVisitations(selectedDate, undefined, text);
     };
 
-    const onChangeWithDebounce = React.useCallback(debounce(reset, 500), []);
+    const onChangeWithDebounce = React.useCallback(debounce(reset, 500), [
+        selectedBatchingPlant
+    ]);
 
     const onChangeSearch = (text: string) => {
         setSearchQuery(text);

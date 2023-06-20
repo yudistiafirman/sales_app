@@ -30,6 +30,7 @@ export interface Typegen0 {
         assignUserDataToContext: "assignUserData";
         handleEndReached: "onEndReached";
         handleRefresh: "onRefreshList";
+        resetProduct: "backToGetDO";
     };
     eventsCausingDelays: {};
     eventsCausingGuards: {
@@ -38,6 +39,7 @@ export interface Typegen0 {
     eventsCausingServices: {
         fetchOperationListData:
             | "assignUserData"
+            | "backToGetDO"
             | "onEndReached"
             | "onRefreshList"
             | "retryGettingList";

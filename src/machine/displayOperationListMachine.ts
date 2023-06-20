@@ -51,6 +51,12 @@ const displayOperationListMachine = createMachine(
                       selectedBP: BatchingPlant;
                   }
                 | {
+                      type: "backToGetDO";
+                      userType: string;
+                      tabActive: string;
+                      selectedBP: BatchingPlant;
+                  }
+                | {
                       type: "retryGettingList";
                       value: {
                           payload: string;
@@ -124,6 +130,10 @@ const displayOperationListMachine = createMachine(
                         target: "fetchingListData",
                         actions: "handleEndReached",
                         cond: "isNotLastPage"
+                    },
+                    backToGetDO: {
+                        target: "#operation list machine.fetchingListData",
+                        actions: "resetProduct"
                     }
                 }
             },
@@ -191,7 +201,7 @@ const displayOperationListMachine = createMachine(
                             break;
                     }
 
-                    return response.data;
+                    return response?.data;
                 } catch (error) {
                     throw new Error(error);
                 }
@@ -199,9 +209,11 @@ const displayOperationListMachine = createMachine(
         },
         actions: {
             assignListData: assign((context, event) => {
-                const listData = [...context.operationListData];
+                let listData: any[] = [];
+                if (context.operationListData)
+                    listData = [...context.operationListData];
 
-                if (event?.data?.data?.data !== undefined) {
+                if (event?.data?.data?.data) {
                     listData.push(...event.data.data.data);
                 }
 
@@ -214,7 +226,7 @@ const displayOperationListMachine = createMachine(
                 };
             }),
             assignError: assign((context, event) => ({
-                errorMessage: event?.data.message,
+                errorMessage: event?.data?.message,
                 isLoading: false,
                 isLoadMore: false,
                 isRefreshing: false
@@ -239,6 +251,17 @@ const displayOperationListMachine = createMachine(
                 batchingPlantId: event?.selectedBP?.id
             })),
             assignSelectedBP: assign((context, event) => ({
+                batchingPlantId: event?.selectedBP?.id
+            })),
+            resetProduct: assign((context, event) => ({
+                userType: event?.userType,
+                tabActive: event?.tabActive,
+                page: 1,
+                totalPage: 0,
+                isRefreshing: false,
+                isLoading: false,
+                isLoadMore: false,
+                operationListData: [],
                 batchingPlantId: event?.selectedBP?.id
             }))
         }

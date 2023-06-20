@@ -11,7 +11,6 @@ import displayOperationListMachine from "@/machine/displayOperationListMachine";
 import EntryType from "@/models/EnumModel";
 import {
     CAMERA,
-    SECURITY_TAB_TITLE,
     SUBMIT_FORM,
     TAB_DISPATCH,
     TAB_WB_OUT
@@ -21,10 +20,6 @@ import {
     setAllOperationPhoto
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
-import useHeaderStyleChanged from "@/hooks/useHeaderStyleChanged";
-import { BSelectedBPOptionMenu } from "@/components";
-import { BatchingPlant } from "@/models/BatchingPlant";
-import { setSelectedBatchingPlant } from "@/redux/reducers/authReducer";
 import OperationList from "../element/OperationList";
 
 const style = StyleSheet.create({
@@ -48,31 +43,23 @@ function Dispatch() {
     const { operationListData, isLoadMore, isLoading, isRefreshing } =
         doListState.context;
 
-    useHeaderStyleChanged({
-        customHeader: (
-            <BSelectedBPOptionMenu
-                pageTitle={SECURITY_TAB_TITLE}
-                selectedBatchingPlant={selectedBatchingPlant}
-                batchingPlants={batchingPlants}
-                onPressOption={(item: BatchingPlant) => {
-                    dispatch(setSelectedBatchingPlant(item));
-                    send("onRefreshList", {
-                        payload: userData?.type,
-                        tabActive: "left",
-                        selectedBP: item
-                    });
-                }}
-            />
-        )
-    });
+    useFocusEffect(
+        React.useCallback(() => {
+            send("assignUserData", {
+                payload: userData?.type,
+                tabActive: "left",
+                selectedBP: selectedBatchingPlant
+            });
+            send("backToGetDO", {
+                userType: userData?.type,
+                tabActive: "left",
+                selectedBP: selectedBatchingPlant
+            });
+        }, [send, userData?.type, selectedBatchingPlant])
+    );
 
     React.useEffect(() => {
         crashlytics().log(EntryType.SECURITY ? TAB_DISPATCH : TAB_WB_OUT);
-        send("assignUserData", {
-            payload: userData?.type,
-            tabActive: "left",
-            selectedBP: selectedBatchingPlant
-        });
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
             send("onRefreshList", {
                 payload: userData?.type,

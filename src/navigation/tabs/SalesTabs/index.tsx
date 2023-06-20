@@ -18,12 +18,13 @@ import {
     TAB_TRANSACTION,
     TAB_TRANSACTION_TITLE
 } from "@/navigation/ScreenNames";
-import { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
 import SalesHeaderRight from "@/navigation/Sales/HeaderRight";
 import Customer from "@/screens/Customer";
-import { BSelectedBPBadges } from "@/components";
+import { BSelectedBPBadges, BSelectedBPOptionMenu } from "@/components";
 import { BatchingPlant } from "@/models/BatchingPlant";
+import { setSelectedBatchingPlant } from "@/redux/reducers/authReducer";
 import CustomTabBar from "../CustomTabBar";
 
 const Tab = createBottomTabNavigator();
@@ -32,10 +33,25 @@ const selectedBPBadges = (selectedBP: BatchingPlant, title: string) => (
     <BSelectedBPBadges selectedBP={selectedBP} title={title} />
 );
 
+const selectedBPOption = (
+    title: string,
+    selectedBP: BatchingPlant,
+    batchingPlants: BatchingPlant[],
+    onSelectBPOption: (item: BatchingPlant) => void
+) => (
+    <BSelectedBPOptionMenu
+        pageTitle={title}
+        selectedBatchingPlant={selectedBP}
+        batchingPlants={batchingPlants}
+        color={colors.white}
+        onPressOption={onSelectBPOption}
+    />
+);
+
 function SalesTabs() {
-    const { remoteConfigData, selectedBatchingPlant } = useSelector(
-        (state: RootState) => state.auth
-    );
+    const { remoteConfigData, batchingPlants, selectedBatchingPlant } =
+        useSelector((state: RootState) => state.auth);
+    const dispatch = useDispatch<AppDispatch>();
     /* eslint-disable @typescript-eslint/naming-convention */
     const {
         enable_transaction_menu,
@@ -45,6 +61,8 @@ function SalesTabs() {
     } = remoteConfigData;
     /* eslint-enable @typescript-eslint/naming-convention */
     const tabBarRender = (props: any) => <CustomTabBar {...props} />;
+    const selectBPOption = (item: BatchingPlant) =>
+        dispatch(setSelectedBatchingPlant(item));
     return (
         <Tab.Navigator
             screenOptions={{
@@ -64,7 +82,16 @@ function SalesTabs() {
                 key={TAB_HOME}
                 name={TAB_HOME_TITLE}
                 options={{
-                    headerTitle: TAB_HOME_TITLE,
+                    headerStyle: {
+                        backgroundColor: colors.primary
+                    },
+                    headerTitle: () =>
+                        selectedBPOption(
+                            TAB_HOME_TITLE,
+                            selectedBatchingPlant,
+                            batchingPlants,
+                            selectBPOption
+                        ),
                     headerRight: () => SalesHeaderRight()
                 }}
                 component={Home}

@@ -11,7 +11,6 @@ import {
     CAMERA,
     LOCATION,
     OPERATION,
-    SECURITY_TAB_TITLE,
     SUBMIT_FORM
 } from "@/navigation/ScreenNames";
 import {
@@ -20,10 +19,6 @@ import {
     setAllOperationPhoto
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
-import useHeaderStyleChanged from "@/hooks/useHeaderStyleChanged";
-import { BSelectedBPOptionMenu } from "@/components";
-import { BatchingPlant } from "@/models/BatchingPlant";
-import { setSelectedBatchingPlant } from "@/redux/reducers/authReducer";
 import OperationList from "./element/OperationList";
 
 const style = StyleSheet.create({
@@ -45,32 +40,21 @@ function Operation() {
     const { operationListData, isLoadMore, isLoading, isRefreshing } =
         doListState.context;
 
-    useHeaderStyleChanged({
-        customHeader: (
-            <BSelectedBPOptionMenu
-                pageTitle={SECURITY_TAB_TITLE}
-                selectedBatchingPlant={selectedBatchingPlant}
-                batchingPlants={batchingPlants}
-                onPressOption={(item: BatchingPlant) => {
-                    dispatch(setSelectedBatchingPlant(item));
-                    send("onRefreshList", {
-                        payload: userData?.type,
-                        selectedBP: item
-                    });
-                }}
-            />
-        )
-    });
+    useFocusEffect(
+        React.useCallback(() => {
+            send("assignUserData", {
+                payload: userData?.type,
+                selectedBP: selectedBatchingPlant
+            });
+            send("backToGetDO", {
+                userType: userData?.type,
+                selectedBP: selectedBatchingPlant
+            });
+        }, [send, selectedBatchingPlant])
+    );
 
     React.useEffect(() => {
         crashlytics().log(userData?.type ? userData.type : "Operation Default");
-        // send("assignSelectedBatchingPlant", {
-        //     selectedBP: selectedBatchingPlant
-        // });
-        send("assignUserData", {
-            payload: userData?.type,
-            selectedBP: selectedBatchingPlant
-        });
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
             send("onRefreshList", {
                 payload: userData?.type,

@@ -43,7 +43,6 @@ function BSelectedBPOptionMenu({
     onPressOption
 }: BSelectedBPOptionMenuProps) {
     const [isVisible, setVisible] = React.useState(false);
-    const [bpSelected, setBPSelected] = React.useState(selectedBatchingPlant);
 
     return (
         <View style={styles.parent}>
@@ -57,15 +56,21 @@ function BSelectedBPOptionMenu({
                         textStyle={{
                             color
                         }}
-                        title={bpSelected.name}
+                        title={selectedBatchingPlant?.name}
                         endIcon={
-                            <MaterialIcons
-                                name="arrow-drop-down"
-                                color={color}
-                                size={layout.pad.xl - 6}
-                            />
+                            batchingPlants && batchingPlants.length > 0 ? (
+                                <MaterialIcons
+                                    name="arrow-drop-down"
+                                    color={color}
+                                    size={layout.pad.xl - 6}
+                                />
+                            ) : undefined
                         }
-                        onPress={() => setVisible(true)}
+                        onPress={
+                            batchingPlants && batchingPlants.length > 0
+                                ? () => setVisible(true)
+                                : undefined
+                        }
                     />
                 }
             >
@@ -74,7 +79,6 @@ function BSelectedBPOptionMenu({
                         key={key}
                         onPress={() => {
                             onPressOption(el);
-                            setBPSelected(el);
                             setVisible(false);
                         }}
                     >
