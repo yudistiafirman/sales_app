@@ -107,6 +107,9 @@ function SearchAreaProject({ route }: { route: any }) {
 
     React.useEffect(() => {
         crashlytics().log(SEARCH_AREA);
+        send("assignSelectedBatchingPlant", {
+            selectedBP: selectedBatchingPlant
+        });
     }, []);
 
     useFocusEffect(
@@ -118,10 +121,8 @@ function SearchAreaProject({ route }: { route: any }) {
     const { result, loadPlaces, longlat, errorMessage } = state.context;
     const onChangeValue = (event: string) => {
         setText(event);
-        console.log("kekekeke 1");
         send("searchingLocation", {
-            payload: event,
-            selectedBP: selectedBatchingPlant
+            payload: event
         });
     };
 
@@ -149,10 +150,8 @@ function SearchAreaProject({ route }: { route: any }) {
     };
 
     const onPressListLocations = (item: string) => {
-        console.log("kekekeke 2");
         send("onGettingPlacesId", {
-            payload: item,
-            selectedBP: selectedBatchingPlant
+            payload: item
         });
     };
 

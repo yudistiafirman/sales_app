@@ -60,6 +60,14 @@ const searchAreaMachine = createMachine(
             },
             searchLocation: {
                 states: {
+                    getSelectedBatchingPlant: {
+                        on: {
+                            assignSelectedBatchingPlant: {
+                                actions: "assignSelectedBP",
+                                target: "inputting"
+                            }
+                        }
+                    },
                     inputting: {
                         on: {
                             clearInput: {
@@ -129,7 +137,7 @@ const searchAreaMachine = createMachine(
                     }
                 },
 
-                initial: "inputting"
+                initial: "getSelectedBatchingPlant"
             }
         }
     },
@@ -143,7 +151,6 @@ const searchAreaMachine = createMachine(
             })),
             assignSearchValue: assign((context, event) => ({
                 searchValue: event.payload,
-                batchingPlantName: event?.selectedBP?.name,
                 loadPlaces: true
             })),
             assignResult: assign((context, event) => ({
@@ -155,13 +162,15 @@ const searchAreaMachine = createMachine(
             })),
             assignPlacesId: assign((context, event) => ({
                 placesId: event.payload.place_id,
-                batchingPlantName: event?.selectedBP?.name,
                 formattedAddress: event.payload.description
             })),
             handleErrorGettingLocation: assign((context, event) => ({
                 errorMessage: event.data.message,
                 loadPlaces: false,
                 result: []
+            })),
+            assignSelectedBP: assign((context, event) => ({
+                batchingPlantName: event?.selectedBP?.name
             }))
         },
         services: {
@@ -212,7 +221,6 @@ const searchAreaMachine = createMachine(
             getLocationByCoordinate: async (context, e) => {
                 try {
                     const { longitude, latitude } = context.longlat;
-                    console.log("inii diaa 3:: ", context.batchingPlantName);
                     const response = await getLocationCoordinates(
                         // '',
                         longitude,

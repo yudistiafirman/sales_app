@@ -134,7 +134,6 @@ const locationMachine =
             services: {
                 onGettingLocationDetails: async (context, event) => {
                     const { latitude, longitude } = context.region;
-                    console.log("inii diaa 1:: ", context.batchingPlantName);
                     const response = await getLocationCoordinates(
                         longitude,
                         latitude,
