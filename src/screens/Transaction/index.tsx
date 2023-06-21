@@ -177,6 +177,7 @@ function Transaction() {
                 selectedBP: selectedBatchingPlant
             });
             send("backToGetTransactions", {
+                payload: selectedType,
                 selectedBP: selectedBatchingPlant
             });
         }, [send, selectedBatchingPlant])

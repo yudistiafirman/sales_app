@@ -416,6 +416,7 @@ export const priceMachine =
                     refreshing: false,
                     page: 1,
                     index: 0,
+                    productsData: [],
                     batchingPlantId: _event?.selectedBP?.id,
                     batchingPlantName: _event?.selectedBP?.name
                 }))
