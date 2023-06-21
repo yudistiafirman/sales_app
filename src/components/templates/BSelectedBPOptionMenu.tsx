@@ -5,6 +5,7 @@ import { Menu, MenuDivider, MenuItem } from "react-native-material-menu";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { BatchingPlant } from "@/models/BatchingPlant";
 import BTouchableText from "../atoms/BTouchableText";
+import BSpacer from "../atoms/BSpacer";
 
 const styles = StyleSheet.create({
     text: {
@@ -52,6 +53,8 @@ function BSelectedBPOptionMenu({
     return (
         <View style={styles.parent}>
             <Text style={[styles.text, { color }]}>{pageTitle}</Text>
+            {!batchingPlants ||
+                (batchingPlants.length <= 0 && <BSpacer size="extraSmall" />)}
             <Menu
                 visible={isVisible}
                 onRequestClose={() => setVisible(false)}

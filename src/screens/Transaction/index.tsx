@@ -180,7 +180,7 @@ function Transaction() {
                 payload: selectedType,
                 selectedBP: selectedBatchingPlant
             });
-        }, [send, selectedBatchingPlant])
+        }, [send, selectedBatchingPlant, selectedType])
     );
 
     React.useEffect(() => {
@@ -271,18 +271,30 @@ function Transaction() {
                 vehicleName = "-";
                 data = data.data.data;
 
-                const dataDrivers = await getDrivers();
-                const dataVehicles = await getVehicles();
+                // const dataDrivers = await getDrivers();
+                // const dataVehicles = await getVehicles();
 
-                dataDrivers?.data?.data.forEach((it) => {
-                    if (it.id === data?.driverId) driverName = it?.name;
-                });
-                dataVehicles?.data?.data.forEach((it) => {
-                    if (it.id === data?.vehicleId)
-                        vehicleName = `${
-                            it?.internal_id ? it?.internal_id : "-"
-                        } / ${it?.plate_number ? it?.plate_number : "-"}`;
-                });
+                // dataDrivers?.data?.data.forEach((it) => {
+                //     if (it.id === data?.driverId) driverName = it?.name;
+                // });
+                // dataVehicles?.data?.data.forEach((it) => {
+                //     if (it.id === data?.vehicleId)
+                //         vehicleName = `${
+                //             it?.internal_id ? it?.internal_id : "-"
+                //         } / ${it?.plate_number ? it?.plate_number : "-"}`;
+                // });
+                driverName = data?.Driver && data?.Driver?.fullName;
+                vehicleName =
+                    data?.Vehicle &&
+                    `${
+                        data?.Vehicle?.internalId
+                            ? data?.Vehicle?.internalId
+                            : "-"
+                    } / ${
+                        data?.Vehicle?.plateNumber
+                            ? data?.Vehicle?.plateNumber
+                            : "-"
+                    }`;
 
                 // TODO: handle from BE, ugly when use mapping in FE side
                 const products: any[] = [];
