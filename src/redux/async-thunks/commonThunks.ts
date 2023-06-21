@@ -6,9 +6,11 @@ import {
     projectGetOneById,
     getSphDocuments,
     getAddressSuggestion,
-    postProjectDoc
+    postProjectDoc,
+    getLocationCoordinates
 } from "@/actions/CommonActions";
-import { projectResponseType } from "@/interfaces";
+import { Region, projectResponseType } from "@/interfaces";
+import Geolocation from "react-native-geolocation-service";
 
 type ErrorType = {
     success: boolean;
@@ -18,7 +20,15 @@ type ErrorType = {
         message: string;
     };
 };
-
+interface CoordinateDetails {
+    latitude: number | undefined;
+    longitude: number | undefined;
+    lat: number;
+    lon: number;
+    formattedAddress: string | undefined;
+    PostalId: string | undefined;
+    distance: number | undefined;
+}
 export const postUploadFiles = createAsyncThunk<
     any,
     { files: any[]; from: string }
@@ -130,6 +140,93 @@ export const postProjectDocByprojectId = createAsyncThunk<
             const { data } = response;
             if (data.error) throw new Error(data);
             return data;
+        } catch (error) {
+            let errorData = error?.message;
+            if (error?.response?.data) {
+                errorData = error?.response?.data;
+            }
+            return rejectWithValue(errorData);
+        }
+    }
+);
+
+export const getCoordinateDetails = createAsyncThunk<
+    CoordinateDetails,
+    { coordinate: Region; selectedBatchingPlant: string }
+>(
+    "common/getLocationCoordinates",
+    async (
+        { coordinate, selectedBatchingPlant },
+        { signal, rejectWithValue }
+    ) => {
+        try {
+            const response = await getLocationCoordinates(
+                coordinate.longitude as unknown as number,
+                coordinate.latitude as unknown as number,
+                selectedBatchingPlant,
+                signal
+            );
+
+            const { result } = response.data;
+
+            const coordinateToSet = {
+                latitude: result?.lat,
+                longitude: result?.lon,
+                lat: 0,
+                lon: 0,
+                formattedAddress: result?.formattedAddress,
+                PostalId: result?.PostalId,
+                distance: result?.distance?.value
+            };
+
+            if (typeof result?.lon === "string") {
+                coordinateToSet.longitude = Number(result.lon);
+                coordinateToSet.lon = Number(result.lon);
+            }
+
+            if (typeof result?.lat === "string") {
+                coordinateToSet.latitude = Number(result.lat);
+                coordinateToSet.lat = Number(result.lat);
+            }
+            return coordinateToSet;
+        } catch (error) {
+            let errorData = error?.message;
+            if (error?.response?.data) {
+                errorData = error?.response?.data;
+            }
+            return rejectWithValue(errorData);
+        }
+    }
+);
+
+export const getUserCurrentLocation = createAsyncThunk(
+    "common/getUserCurrentLocation",
+    async (selectedBatchingPlant: string, { signal, rejectWithValue }) => {
+        try {
+            const opt = {
+                showLocationDialog: true,
+                forceRequestLocation: true
+            };
+            const position = await new Promise((resolve, error) =>
+                Geolocation.getCurrentPosition(resolve, error, opt)
+            );
+            const { coords } = position;
+            const { latitude, longitude } = coords;
+            const response = await getLocationCoordinates(
+                longitude,
+                latitude,
+                selectedBatchingPlant,
+                signal
+            );
+            const { result } = response.data;
+            const coordinate = {
+                longitude: Number(result?.lon),
+                latitude: Number(result?.lat),
+                formattedAddress: result?.formattedAddress,
+                PostalId: result?.PostalId
+            };
+
+            return coordinate;
         } catch (error) {
             let errorData = error?.message;
             if (error?.response?.data) {

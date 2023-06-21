@@ -6,7 +6,6 @@ import { DeviceEventEmitter, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import MapView from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
-import { getLocationCoordinates } from "@/actions/CommonActions";
 import {
     BBottomSheet,
     BContainer,
@@ -29,8 +28,11 @@ import { updateRegion } from "@/redux/reducers/locationReducer";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
-import getUserCurrentLocationDetail from "@/utils/getUserCurrentLocationDetail";
 import { hasLocationPermission } from "@/utils/permissions";
+import {
+    getCoordinateDetails,
+    getUserCurrentLocation
+} from "@/redux/async-thunks/commonThunks";
 
 const styles = StyleSheet.create({
     container: { flex: 1, marginHorizontal: -(layout.pad.md + layout.pad.ml) },
@@ -47,8 +49,10 @@ const styles = StyleSheet.create({
 });
 
 function FirstStep() {
-    const { region } = useSelector((state: RootState) => state.location);
-    const [isMapLoading, setIsMapLoading] = React.useState(false);
+    const { region, loading } = useSelector(
+        (state: RootState) => state.location
+    );
+
     const [grantedLocationPermission, setGrantedLocationPermission] =
         React.useState(false);
     const visitationData = useSelector((state: RootState) => state.visitation);
@@ -57,9 +61,6 @@ function FirstStep() {
     );
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
-    const abortControllerRef = React.useRef<AbortController>(
-        new AbortController()
-    );
 
     const inputs: Input[] = [
         {
@@ -95,36 +96,11 @@ function FirstStep() {
     const onMapReady = async () => {
         try {
             if (grantedLocationPermission) {
-                setIsMapLoading(() => true);
-                abortControllerRef.current.abort();
-                if (abortControllerRef.current.signal.aborted)
-                    abortControllerRef.current = new AbortController();
-                const { result } = await getUserCurrentLocationDetail(
-                    abortControllerRef.current.signal,
-                    selectedBatchingPlant
-                );
-                const coordinate = {
-                    longitude: Number(result?.lon),
-                    latitude: Number(result?.lat),
-                    formattedAddress: result?.formattedAddress,
-                    PostalId: result?.PostalId
-                };
-                dispatch(
-                    updateDataVisitation({
-                        type: "createdLocation",
-                        value: result
-                    })
-                );
-                if (region.latitude === 0) {
-                    dispatch(updateRegion(coordinate));
-                }
-
-                setIsMapLoading(() => false);
+                dispatch(getUserCurrentLocation(selectedBatchingPlant.name));
             } else {
                 askingPermission();
             }
         } catch (error) {
-            setIsMapLoading(() => false);
             if (error?.message !== "canceled")
                 dispatch(
                     openPopUp({
@@ -138,44 +114,14 @@ function FirstStep() {
 
     const onChangeRegion = async (coordinate: Region) => {
         try {
-            setIsMapLoading(() => true);
-            abortControllerRef.current.abort();
-            if (abortControllerRef.current.signal.aborted)
-                abortControllerRef.current = new AbortController();
-            const { data } = await getLocationCoordinates(
-                // '',
-                coordinate.longitude as unknown as number,
-                coordinate.latitude as unknown as number,
-                selectedBatchingPlant?.name,
-                abortControllerRef.current.signal
+            dispatch(setUseSearchedAddress({ value: false }));
+            dispatch(
+                getCoordinateDetails({
+                    coordinate,
+                    selectedBatchingPlant: selectedBatchingPlant.name
+                })
             );
-            const { result } = data;
-            if (!result) {
-                throw data;
-            }
-
-            const coordinateToSet = {
-                latitude: result?.lat,
-                longitude: result?.lon,
-                lat: 0,
-                lon: 0,
-                formattedAddress: result?.formattedAddress,
-                PostalId: result?.PostalId
-            };
-
-            if (typeof result?.lon === "string") {
-                coordinateToSet.longitude = Number(result.lon);
-                coordinateToSet.lon = Number(result.lon);
-            }
-
-            if (typeof result?.lat === "string") {
-                coordinateToSet.latitude = Number(result.lat);
-                coordinateToSet.lat = Number(result.lat);
-            }
-            dispatch(updateRegion(coordinateToSet));
-            setIsMapLoading(() => false);
         } catch (error) {
-            setIsMapLoading(() => false);
             if (error?.message !== "canceled")
                 dispatch(
                     openPopUp({
@@ -197,7 +143,6 @@ function FirstStep() {
         askingPermission();
         return () => {
             debounceResult.cancel();
-            abortControllerRef.current.abort();
         };
     }, []);
 
@@ -225,7 +170,7 @@ function FirstStep() {
 
     React.useEffect(() => {
         onMapReady();
-    }, [region, grantedLocationPermission]);
+    }, [grantedLocationPermission]);
 
     React.useEffect(() => {
         DeviceEventEmitter.addListener("visitationSearchCoordinate", (data) => {
@@ -269,9 +214,6 @@ function FirstStep() {
                     ref={mapRef}
                     region={region}
                     onMapReady={onMapReady}
-                    onRegionChange={() =>
-                        dispatch(setUseSearchedAddress({ value: false }))
-                    }
                     onRegionChangeComplete={debounceResult}
                     CustomMarker={<BMarker />}
                     mapStyle={styles.map}
@@ -299,7 +241,7 @@ function FirstStep() {
                             <BSpacer size="verySmall" />
                             <BLocationDetail
                                 nameAddress={nameAddress}
-                                isLoading={isMapLoading}
+                                isLoading={loading === "pending"}
                                 formattedAddress={
                                     visitationData.useSearchedAddress
                                         ? visitationData.searchedAddress

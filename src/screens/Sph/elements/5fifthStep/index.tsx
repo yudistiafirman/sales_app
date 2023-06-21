@@ -159,8 +159,8 @@ function payloadMapper(sphState: SphStateInterface) {
         if (projectAddress.rural) {
             payload.shippingAddress.rural = projectAddress.rural;
         }
-        if (projectAddress.postalId) {
-            payload.shippingAddress.postalId = projectAddress.postalId;
+        if (projectAddress.PostalId) {
+            payload.shippingAddress.postalId = projectAddress.PostalId;
         }
     }
     if (sphState.paymentType) {
@@ -214,9 +214,9 @@ function payloadMapper(sphState: SphStateInterface) {
                         sphState.billingAddress.addressAutoComplete.formattedAddress;
                 }
             }
-            if (sphState.billingAddress.addressAutoComplete.postalId) {
+            if (sphState.billingAddress.addressAutoComplete.PostalId) {
                 payload.billingAddress.postalId =
-                    sphState.billingAddress.addressAutoComplete.postalId;
+                    sphState.billingAddress.addressAutoComplete.PostalId;
             }
             if (sphState.billingAddress.addressAutoComplete.lat) {
                 payload.billingAddress.lat =

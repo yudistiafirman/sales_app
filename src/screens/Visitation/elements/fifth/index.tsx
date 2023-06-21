@@ -70,11 +70,11 @@ function payloadMapper(
     if (values.locationAddress?.line2) {
         payload.project.location.line2 = values.locationAddress?.line2;
     }
-    if (values.locationAddress?.postalId) {
-        payload.project.location.postalId = values.locationAddress?.postalId;
+    if (values.locationAddress?.PostalId) {
+        payload.project.location.PostalId = values.locationAddress?.PostalId;
     }
-    if (values.createdLocation?.postalId) {
-        payload.project.location.postalId = values.createdLocation?.postalId;
+    if (values.createdLocation?.PostalId) {
+        payload.project.location.PostalId = values.createdLocation?.PostalId;
     }
     if (values.existingLocationId) {
         payload.project.locationAddressId = values.existingLocationId;
