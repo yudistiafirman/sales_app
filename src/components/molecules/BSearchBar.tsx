@@ -99,7 +99,9 @@ function BSearchBar({
             editable={editable}
             outlineStyle={outlineStyle}
             textColor={textColor}
-            placeholderTextColor={placeHolderTextColor}
+            placeholderTextColor={
+                placeHolderTextColor || colors.textInput.placeHolder
+            }
             dense={dense}
         />
     );

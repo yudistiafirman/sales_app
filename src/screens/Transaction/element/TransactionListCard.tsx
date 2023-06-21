@@ -91,16 +91,16 @@ function TransactionListCard({
     return (
         <View
             style={[
-                styles.parent,
-                selectedType === "SPH"
-                    ? { height: resScale(87) }
-                    : (projectName &&
-                          number.length + statusFinal.length >= 33) ||
-                      (projectName &&
-                          name &&
-                          number.length + statusFinal.length >= 33)
-                    ? { height: resScale(102) }
-                    : { height: resScale(82) }
+                styles.parent
+                // selectedType === "SPH"
+                //     ? { height: resScale(91) }
+                //     : (projectName &&
+                //           number.length + statusFinal.length >= 33) ||
+                //       (projectName &&
+                //           name &&
+                //           number.length + statusFinal.length >= 33)
+                //     ? { height: resScale(106) }
+                //     : { height: resScale(86) }
             ]}
         >
             <View style={styles.leftSide}>

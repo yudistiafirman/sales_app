@@ -171,17 +171,15 @@ function CreatePo() {
 
                                 {isUserChoosedSph ? (
                                     <>
-                                        <View style={{ height: resScale(57) }}>
-                                            <BVisitationCard
-                                                item={{
-                                                    name: choosenSphDataFromModal.name,
-                                                    location:
-                                                        choosenSphDataFromModal.locationName
-                                                }}
-                                                isRenderIcon
-                                                customIcon={renderCustomButton}
-                                            />
-                                        </View>
+                                        <BVisitationCard
+                                            item={{
+                                                name: choosenSphDataFromModal.name,
+                                                location:
+                                                    choosenSphDataFromModal.locationName
+                                            }}
+                                            isRenderIcon
+                                            customIcon={renderCustomButton}
+                                        />
 
                                         <BSpacer size="extraSmall" />
                                         <BNestedProductCard
