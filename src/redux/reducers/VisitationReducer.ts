@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Address, Competitor, PIC } from "@/interfaces";
+import { getUserCurrentLocation } from "../async-thunks/commonThunks";
 
 export interface VisitationGlobalState {
     step: number;
@@ -354,6 +355,15 @@ export const visitationSlice = createSlice({
                     };
             }
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(
+            getUserCurrentLocation.fulfilled,
+            (state, { payload }) => ({
+                ...state,
+                createdLocation: payload
+            })
+        );
     }
 });
 

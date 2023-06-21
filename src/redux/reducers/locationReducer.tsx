@@ -2,7 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Dimensions } from "react-native";
 import { Address } from "@/interfaces";
-import { getCoordinateDetails } from "../async-thunks/commonThunks";
+import {
+    getCoordinateDetails,
+    getUserCurrentLocation
+} from "../async-thunks/commonThunks";
 
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
@@ -10,7 +13,14 @@ export const LATITUDE_DELTA = 0.0922;
 export const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 interface LocationState {
-    region: Address;
+    region: {
+        latitude: number;
+        longitude: number;
+        latitudeDelta: number;
+        longitudeDelta: number;
+        PostalId: number;
+        formattedAddress: string;
+    };
     loading: "idle" | "pending";
     currentRequestId?: string;
     error: null | string;
@@ -22,7 +32,8 @@ const initialState: LocationState = {
         longitude: 0,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LATITUDE_DELTA,
-        postalId: 0
+        PostalId: 0,
+        formattedAddress: ""
     },
     loading: "idle",
     currentRequestId: undefined,
@@ -49,6 +60,18 @@ export const locationSlice = createSlice({
         }));
         builder.addCase(
             getCoordinateDetails.fulfilled,
+            (state, { payload }) => ({
+                ...state,
+                loading: "idle",
+                region: { ...state.region, ...payload }
+            })
+        );
+        builder.addCase(getUserCurrentLocation.pending, (state) => ({
+            ...state,
+            loading: "pending"
+        }));
+        builder.addCase(
+            getUserCurrentLocation.fulfilled,
             (state, { payload }) => ({
                 ...state,
                 loading: "idle",
