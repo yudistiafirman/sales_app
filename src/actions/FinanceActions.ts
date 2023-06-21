@@ -10,7 +10,8 @@ export const getAllInvoice = async (
     status?: string,
     startDateIssued?: string,
     endDateIssued?: string,
-    dueDateDifference?: string
+    dueDateDifference?: string,
+    batchingPlantId?: string
 ) =>
     customRequest(
         BrikApiFinance.getAllInvoice(
@@ -22,7 +23,8 @@ export const getAllInvoice = async (
             status,
             startDateIssued,
             endDateIssued,
-            dueDateDifference
+            dueDateDifference,
+            batchingPlantId
         ),
         "GET",
         undefined,
@@ -31,8 +33,17 @@ export const getAllInvoice = async (
 export const getOneInvoice = async (id: string) =>
     customRequest(BrikApiFinance.getOneInvoice(id), "GET", undefined, true);
 
-export const getAllPayment = async (page?: string, size?: string) =>
-    customRequest(BrikApiFinance.payment(page, size), "GET", undefined, true);
+export const getAllPayment = async (
+    page?: string,
+    size?: string,
+    batchingPlantId?: string
+) =>
+    customRequest(
+        BrikApiFinance.payment(page, size, batchingPlantId),
+        "GET",
+        undefined,
+        true
+    );
 
 export const getPaymentByID = async (id: string) =>
     customRequest(BrikApiFinance.getPaymentByID(id), "GET", undefined, true);

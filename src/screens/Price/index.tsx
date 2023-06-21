@@ -1,10 +1,14 @@
 import * as React from "react";
 import { AppState, DeviceEventEmitter, SafeAreaView, View } from "react-native";
 import BTabSections from "@/components/organism/TabSections";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+    useFocusEffect,
+    useNavigation,
+    useRoute
+} from "@react-navigation/native";
 import Tnc from "@/screens/Price/element/Tnc";
 import ProductList from "@/components/templates/Price/ProductList";
-import { BAlert, BEmptyState, BSpacer, BTouchableText } from "@/components";
+import { BEmptyState, BSpacer, BTouchableText } from "@/components";
 import { useMachine } from "@xstate/react";
 import { priceMachine } from "@/machine/priceMachine";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
@@ -19,8 +23,8 @@ import {
     TAB_PRICE_LIST_TITLE
 } from "@/navigation/ScreenNames";
 import crashlytics from "@react-native-firebase/crashlytics";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import PriceSearchBar from "./element/PriceSearchBar";
 import PriceStyle from "./PriceStyle";
@@ -38,6 +42,9 @@ function PriceList() {
     const [fromVisitation, setFromVisitation] = React.useState(false);
     const [searchFormattedAddress, setSearchFormattedAddress] =
         React.useState("");
+    const { selectedBatchingPlant } = useSelector(
+        (globalState: RootState) => globalState.auth
+    );
     const {
         locationDetail,
         routes,
@@ -48,11 +55,43 @@ function PriceList() {
         loadLocation,
         errorMessage,
         page,
-        totalPage
+        totalPage,
+        selectedCategories
     } = state.context;
+
+    useFocusEffect(
+        React.useCallback(() => {
+            send("assignSelectedBatchingPlant", {
+                selectedBP: selectedBatchingPlant
+            });
+            send("backToGetProducts", {
+                selectedBP: selectedBatchingPlant
+            });
+        }, [send, selectedBatchingPlant])
+    );
 
     React.useEffect(() => {
         crashlytics().log(TAB_PRICE_LIST);
+        if (route?.params) {
+            const { params } = route;
+            const { latitude, longitude, formattedAddress } = params.coordinate;
+            setSearchFormattedAddress(formattedAddress);
+            const { from } = params;
+            if (from === CREATE_VISITATION) {
+                setFromVisitation(true);
+            }
+            send("backToIdle");
+            send("sendingParams", {
+                value: {
+                    latitude,
+                    longitude
+                },
+                selectedBP: selectedBatchingPlant
+            });
+            setIndex(0);
+        } else {
+            send("onAskPermission", { selectedBP: selectedBatchingPlant });
+        }
 
         if (state.matches("denied")) {
             const subscription = AppState.addEventListener(
@@ -73,28 +112,6 @@ function PriceList() {
                 subscription.remove();
             };
         }
-
-        return undefined;
-    }, [send, state]);
-
-    React.useEffect(() => {
-        if (route?.params) {
-            const { params } = route;
-            const { latitude, longitude, formattedAddress } = params.coordinate;
-            setSearchFormattedAddress(formattedAddress);
-            const { from } = params;
-            if (from === CREATE_VISITATION) {
-                setFromVisitation(true);
-            }
-            send("backToIdle");
-            send("sendingParams", { value: { latitude, longitude } });
-            setIndex(0);
-        } else {
-            send("onAskPermission");
-        }
-    }, [route, route?.params, send]);
-
-    React.useEffect(() => {
         if (state.matches("errorGettingCurrentLocation")) {
             dispatch(
                 openPopUp({
@@ -132,7 +149,9 @@ function PriceList() {
                 })
             );
         }
-    }, [dispatch, navigation, send, state]);
+
+        return undefined;
+    }, [route, route?.params, dispatch, navigation, send, state]);
 
     const renderHeaderRight = React.useCallback(() => {
         if (fromVisitation) {
@@ -155,7 +174,10 @@ function PriceList() {
     const onTabPress = () => {
         const tabIndex = index === 0 ? 1 : 0;
         if (route.key !== routes[index].key) {
-            send("onChangeCategories", { payload: tabIndex });
+            send("onChangeCategories", {
+                payload: tabIndex,
+                selectedBP: selectedBatchingPlant
+            });
         }
     };
 
@@ -259,7 +281,11 @@ function PriceList() {
                             )}
                             onAction={() => send("retryGettingProducts")}
                             errorMessage={errorMessage}
-                            onRefresh={() => send("refreshingList")}
+                            onRefresh={() =>
+                                send("refreshingList", {
+                                    selectedBP: selectedBatchingPlant
+                                })
+                            }
                             disablePressed={!fromVisitation}
                         />
                     )}

@@ -9,12 +9,20 @@ const API_URL =
         : Config.API_URL_ORDER_PROD;
 
 export default class BrikApiOrder {
-    static transactionTab = () => {
+    static transactionTab = (batchingPlantId?: string) => {
         const url = new URL(`${API_URL}/order/m/tab/transaction`);
+        const params = url.searchParams;
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
+        }
         return url.toString();
     };
 
-    static getAllVisitationOrders = (page?: string, size?: string) => {
+    static getAllVisitationOrders = (
+        page?: string,
+        size?: string,
+        batchingPlantId?: string
+    ) => {
         const url = new URL(`${API_URL}/order/m/flow/quotation-letter`);
         const params = url.searchParams;
         if (page) {
@@ -22,6 +30,9 @@ export default class BrikApiOrder {
         }
         if (size) {
             params.append("size", size);
+        }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
         }
         return url.toString();
     };
@@ -68,7 +79,8 @@ export default class BrikApiOrder {
 
     static getSphByProject = (
         searchQuery: string,
-        customerType: "COMPANY" | "INDIVIDU"
+        customerType: "COMPANY" | "INDIVIDU",
+        batchingPlantId?: string
     ) => {
         const url = new URL(`${API_URL}/order/m/project-sph`);
         const params = url.searchParams;
@@ -78,7 +90,9 @@ export default class BrikApiOrder {
         if (customerType) {
             params.append("customerType", customerType);
         }
-
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
+        }
         return url.toString();
     };
 
@@ -86,7 +100,8 @@ export default class BrikApiOrder {
         page?: string,
         size?: string,
         searchQuery?: string,
-        productPo?: "1" | "0"
+        productPo?: "1" | "0",
+        batchingPlantId?: string
     ) => {
         const url = new URL(`${API_URL}/order/m/project-po`);
         const params = url.searchParams;
@@ -102,6 +117,9 @@ export default class BrikApiOrder {
         if (productPo) {
             params.append("productPo", productPo);
         }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
+        }
         return url.toString();
     };
 
@@ -114,7 +132,8 @@ export default class BrikApiOrder {
         page?: string,
         size?: string,
         searchQuery?: string,
-        status?: string
+        status?: string,
+        batchingPlantId?: string
     ) => {
         const url = new URL(`${API_URL}/order/m/purchase-order`);
         const params = url.searchParams;
@@ -130,6 +149,9 @@ export default class BrikApiOrder {
         if (status) {
             params.append("status", status);
         }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
+        }
         return url.toString();
     };
 
@@ -138,7 +160,11 @@ export default class BrikApiOrder {
         return url.toString();
     };
 
-    static deposit = (page?: string, size?: string) => {
+    static deposit = (
+        page?: string,
+        size?: string,
+        batchingPlantId?: string
+    ) => {
         const url = new URL(`${API_URL}/order/m/deposit`);
         const params = url.searchParams;
         if (page) {
@@ -146,6 +172,9 @@ export default class BrikApiOrder {
         }
         if (size) {
             params.append("size", size);
+        }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
         }
         return url.toString();
     };
@@ -155,7 +184,11 @@ export default class BrikApiOrder {
         return url.toString();
     };
 
-    static schedule = (page?: string, size?: string) => {
+    static schedule = (
+        page?: string,
+        size?: string,
+        batchingPlantId?: string
+    ) => {
         const url = new URL(`${API_URL}/order/m/schedule`);
         const params = url.searchParams;
         if (page) {
@@ -164,13 +197,17 @@ export default class BrikApiOrder {
         if (size) {
             params.append("size", size);
         }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
+        }
         return url.toString();
     };
 
     static deliveryOrder = (
         status?: string | string[],
         page?: string,
-        size?: string
+        size?: string,
+        batchingPlantId?: string
     ) => {
         const url = new URL(`${API_URL}/order/m/delivery-order`);
         const params = url.searchParams;
@@ -184,6 +221,9 @@ export default class BrikApiOrder {
         }
         if (size) {
             params.append("size", size);
+        }
+        if (batchingPlantId) {
+            params.append("batchingPlantId", batchingPlantId);
         }
         return url.toString();
     };

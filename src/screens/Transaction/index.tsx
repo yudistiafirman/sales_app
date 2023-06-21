@@ -102,6 +102,9 @@ function Transaction() {
     const [localModalContinuePo, setLocalContinueModalPo] =
         React.useState(false);
     const poState = useSelector((state: RootState) => state.purchaseOrder);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const { isModalContinuePo, poNumber, currentStep, customerType } =
         poState.currentState.context;
     const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] =
@@ -119,8 +122,16 @@ function Transaction() {
     } = trxState.context;
 
     const onTabPress = (title: string) => {
-        if (isError) send("retryGettingTransactions", { payload: title });
-        else send("onChangeType", { payload: title });
+        if (isError)
+            send("retryGettingTransactions", {
+                payload: title,
+                selectedBP: selectedBatchingPlant
+            });
+        else
+            send("onChangeType", {
+                payload: title,
+                selectedBP: selectedBatchingPlant
+            });
     };
 
     useCustomHeaderRight({
@@ -162,8 +173,13 @@ function Transaction() {
 
     useFocusEffect(
         React.useCallback(() => {
-            send("backToGetTransactions");
-        }, [send])
+            send("assignSelectedBatchingPlant", {
+                selectedBP: selectedBatchingPlant
+            });
+            send("backToGetTransactions", {
+                selectedBP: selectedBatchingPlant
+            });
+        }, [send, selectedBatchingPlant])
     );
 
     React.useEffect(() => {
@@ -390,10 +406,15 @@ function Transaction() {
                             errorMessage={errorMessage}
                             onAction={() =>
                                 send("retryGettingTransactions", {
-                                    payload: selectedType
+                                    payload: selectedType,
+                                    selectedBP: selectedBatchingPlant
                                 })
                             }
-                            onRefresh={() => send("refreshingList")}
+                            onRefresh={() =>
+                                send("refreshingList", {
+                                    selectedBP: selectedBatchingPlant
+                                })
+                            }
                             onPress={(data: any) => getOneOrder(data.id)}
                             selectedType={selectedType}
                         />

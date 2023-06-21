@@ -6,6 +6,7 @@ import {
     getAllVisitationOrders,
     getTransactionTab
 } from "@/actions/OrderActions";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import { uniqueStringGenerator } from "@/utils/generalFunc";
 import { createMachine } from "xstate";
 import { assign } from "xstate/lib/actions";
@@ -28,11 +29,26 @@ const transactionMachine =
                     };
                 },
                 events: {} as
-                    | { type: "onChangeType"; payload: string }
+                    | {
+                          type: "onChangeType";
+                          payload: string;
+                          selectedBP: BatchingPlant;
+                      }
+                    | {
+                          type: "assignSelectedBatchingPlant";
+                          selectedBP: BatchingPlant;
+                      }
                     | { type: "onEndReached" }
-                    | { type: "refreshingList" }
-                    | { type: "backToGetTransactions" }
-                    | { type: "retryGettingTransactions"; payload: string }
+                    | { type: "refreshingList"; selectedBP: BatchingPlant }
+                    | {
+                          type: "backToGetTransactions";
+                          selectedBP: BatchingPlant;
+                      }
+                    | {
+                          type: "retryGettingTransactions";
+                          payload: string;
+                          selectedBP: BatchingPlant;
+                      }
                     | { type: "retryGettingTypeTransactions" }
             },
 
@@ -48,11 +64,20 @@ const transactionMachine =
                 refreshing: false,
                 errorMessage: "" as string | unknown,
                 totalItems: 0,
+                batchingPlantId: undefined as string | undefined,
                 isErrorType: false,
                 isErrorData: false
             },
 
             states: {
+                getSelectedBatchingPlant: {
+                    on: {
+                        assignSelectedBatchingPlant: {
+                            actions: "assignSelectedBP",
+                            target: "getTransaction"
+                        }
+                    }
+                },
                 getTransaction: {
                     states: {
                         loadingTransaction: {
@@ -123,7 +148,7 @@ const transactionMachine =
                                         ],
 
                                         backToGetTransactions: {
-                                            target: "getTransactionsBaseOnType",
+                                            target: "#transaction machine.getTransaction.loadingTransaction",
                                             actions: "resetProduct"
                                         }
                                     }
@@ -147,7 +172,7 @@ const transactionMachine =
                 }
             },
 
-            initial: "getTransaction"
+            initial: "getSelectedBatchingPlant"
         },
         {
             guards: {
@@ -203,17 +228,31 @@ const transactionMachine =
                             isErrorData: false
                         };
                     }
+                    const newTypeData = context.routes?.map((item) => ({
+                        key: item.key,
+                        title: item.title,
+                        totalItems:
+                            context.selectedType === item.title
+                                ? 0
+                                : item.totalItems
+                                ? item.totalItems
+                                : 0,
+                        chipPosition: "bottom"
+                    }));
                     return {
                         loadTransaction: false,
                         isLoadMore: false,
                         refreshing: false,
                         isErrorData: false,
-                        loadTab: false
+                        loadTab: false,
+                        routes: newTypeData,
+                        totalItems: 0
                     };
                 }),
                 assignIndexToContext: assign((_context, event) => ({
                     selectedType: event.payload,
                     page: 1,
+                    batchingPlantId: event?.selectedBP?.id,
                     loadTransaction: true,
                     transactionData: []
                 })),
@@ -225,7 +264,8 @@ const transactionMachine =
                     page: 1,
                     refreshing: true,
                     loadTransaction: true,
-                    transactionData: []
+                    transactionData: [],
+                    batchingPlantId: _event?.selectedBP?.id
                 })),
                 enableLoadTransaction: assign((_context, _event) => ({
                     loadTransaction: true
@@ -244,19 +284,27 @@ const transactionMachine =
                 resetProduct: assign((context, event) => ({
                     transactionData: [],
                     page: 1,
-                    loadTransaction: true
+                    totalItems: 0,
+                    loadTransaction: true,
+                    batchingPlantId: event?.selectedBP?.id
                 })),
                 handleRetryGettingTransactions: assign((context, event) => ({
                     transactionData: [],
                     page: 1,
                     loadTransaction: true,
-                    selectedType: event.payload
+                    selectedType: event.payload,
+                    batchingPlantId: event?.selectedBP?.id
+                })),
+                assignSelectedBP: assign((context, event) => ({
+                    batchingPlantId: event?.selectedBP?.id
                 }))
             },
             services: {
                 getTypeTransactions: async (_context, _event) => {
                     try {
-                        const response = await getTransactionTab();
+                        const response = await getTransactionTab(
+                            _context.batchingPlantId
+                        );
                         return response.data.data as any;
                     } catch (error) {
                         throw new Error(error);
@@ -268,7 +316,10 @@ const transactionMachine =
                         if (_context.selectedType === "PO") {
                             response = await getAllPurchaseOrders(
                                 _context.page.toString(),
-                                _context.size.toString()
+                                _context.size.toString(),
+                                undefined,
+                                undefined,
+                                _context.batchingPlantId
                             );
                             response = response.data;
                         } else if (_context.selectedType === "SO") {
@@ -276,32 +327,37 @@ const transactionMachine =
                                 _context.page.toString(),
                                 _context.size.toString(),
                                 undefined,
-                                "CONFIRMED"
+                                "CONFIRMED",
+                                _context.batchingPlantId
                             );
                             response = response.data;
                         } else if (_context.selectedType === "Deposit") {
                             response = await getAllPayment(
                                 _context.page.toString(),
-                                _context.size.toString()
+                                _context.size.toString(),
+                                _context.batchingPlantId
                             );
                             response = response.data;
                         } else if (_context.selectedType === "Jadwal") {
                             response = await getAllSchedules(
                                 _context.page.toString(),
-                                _context.size.toString()
+                                _context.size.toString(),
+                                _context.batchingPlantId
                             );
                             response = response.data;
                         } else if (_context.selectedType === "DO") {
                             response = await getAllDeliveryOrders(
                                 undefined,
                                 _context.size.toString(),
-                                _context.page.toString()
+                                _context.page.toString(),
+                                _context.batchingPlantId
                             );
                             response = response.data;
                         } else {
                             response = await getAllVisitationOrders(
                                 _context.page.toString(),
-                                _context.size.toString()
+                                _context.size.toString(),
+                                _context.batchingPlantId
                             );
                         }
                         return response.data as any;

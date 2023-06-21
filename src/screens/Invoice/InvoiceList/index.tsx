@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
 
 function InvoiceList() {
     const invoiceData = useSelector((state: RootState) => state.invoice);
+    const authState = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
@@ -81,7 +82,8 @@ function InvoiceList() {
                 filter?.paymentStatus.toString(),
                 filter?.startDateIssued,
                 filter?.endDateIssued,
-                filter?.dueDateDifference.toString()
+                filter?.dueDateDifference.toString(),
+                authState.selectedBatchingPlant?.id
             );
             if (response?.data?.data?.data) {
                 dispatch(setLoading({ isLoading: false }));

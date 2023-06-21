@@ -103,7 +103,11 @@ function ProductList<ArrayOfObject extends ProductsData>({
                         isError={isError}
                         errorMessage={errorMessage}
                         onAction={onAction}
-                        emptyText={`${emptyProductName} tidak ditemukan!`}
+                        emptyText={
+                            emptyProductName
+                                ? `${emptyProductName} tidak ditemukan!`
+                                : "Data produk tidak tersedia"
+                        }
                     />
                 )
             }

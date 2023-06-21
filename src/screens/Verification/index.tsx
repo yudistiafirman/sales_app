@@ -8,7 +8,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import Spinner from "react-native-loading-spinner-overlay";
 import { useDispatch, useSelector } from "react-redux";
 import bStorage from "@/actions/BStorage";
-import { signIn } from "@/actions/CommonActions";
+import { getBatchingPlants, signIn } from "@/actions/CommonActions";
 import { BHeaderIcon, BSpacer } from "@/components";
 import BErrorText from "@/components/atoms/BErrorText";
 import { colors, layout } from "@/constants";
@@ -66,7 +66,21 @@ function Verification() {
                 const decoded =
                     jwtDecode<UserModel.DataSuccessLogin>(accessToken);
                 await bStorage.setItem(storageKey.userToken, accessToken);
-                dispatch(setUserData({ userData: decoded }));
+                const batchingPlantsResponse = await getBatchingPlants();
+                if (batchingPlantsResponse?.data?.data?.data)
+                    dispatch(
+                        setUserData({
+                            userData: decoded,
+                            batchingPlants:
+                                batchingPlantsResponse?.data?.data?.data
+                        })
+                    );
+                else
+                    dispatch(
+                        setUserData({
+                            userData: decoded
+                        })
+                    );
                 setVerificationState({
                     ...verificationState,
                     errorOtp: "",

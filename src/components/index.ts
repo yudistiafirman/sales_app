@@ -69,3 +69,5 @@ export { default as ProductList } from "./templates/Price/ProductList";
 export { default as BCommonSearchList } from "./templates/BCommonSearchList";
 export { default as BottomSheetAddPIC } from "./templates/BottomSheetAddPIC";
 export { default as BHttpLogger } from "./templates/BHttpLogger";
+export { default as BSelectedBPBadges } from "./templates/BSelectedBPBadges";
+export { default as BSelectedBPOptionMenu } from "./templates/BSelectedBPOptionMenu";

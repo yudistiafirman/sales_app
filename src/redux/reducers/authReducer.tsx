@@ -2,12 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import UserModel from "@/models/User";
 import { isDevelopment, isProduction } from "@/utils/generalFunc";
+import { BatchingPlant } from "@/models/BatchingPlant";
 
 interface LoginCredential {
     phoneNumber: string;
 }
 
-interface AuthState {
+export interface AuthState {
     userData: UserModel.DataSuccessLogin | null;
     loginCredential: LoginCredential;
     isLoading: boolean;
@@ -15,6 +16,8 @@ interface AuthState {
     hunterScreen: boolean;
     isShowButtonNetwork: boolean;
     isNetworkLoggerVisible: boolean;
+    selectedBatchingPlant: BatchingPlant;
+    batchingPlants: BatchingPlant[];
     remoteConfigData: {
         enable_signed_so: boolean;
         enable_appointment: boolean;
@@ -38,6 +41,12 @@ const initialState: AuthState = {
     userData: null,
     loginCredential: {
         phoneNumber: ""
+    },
+    batchingPlants: [],
+    selectedBatchingPlant: {
+        id: "86c236bf-3388-4c93-969c-168f093381e5",
+        code: "LGK",
+        name: "BP-LEGOK"
     },
     isLoading: true,
     isSignout: false,
@@ -73,6 +82,13 @@ export const authSlice = createSlice({
                 ...state.loginCredential,
                 phoneNumber: action.payload
             }
+        }),
+        setSelectedBatchingPlant: (
+            state,
+            action: PayloadAction<BatchingPlant>
+        ) => ({
+            ...state,
+            selectedBatchingPlant: action.payload
         }),
         setUserData: (state, action: PayloadAction<any>) => {
             if (action.payload.remoteConfigData) {
@@ -113,14 +129,16 @@ export const authSlice = createSlice({
                             action.payload.remoteConfigData.force_update
                     },
                     isSignout: false,
-                    isLoading: false
+                    isLoading: false,
+                    batchingPlants: action.payload.batchingPlants
                 };
             }
             return {
                 ...state,
                 userData: action.payload.userData,
                 isSignout: false,
-                isLoading: false
+                isLoading: false,
+                batchingPlants: action.payload.batchingPlants
             };
         },
         setIsLoading: (state, action: PayloadAction<any>) => {
@@ -195,6 +213,7 @@ export const authSlice = createSlice({
 export const {
     setPhoneNumber,
     setUserData,
+    setSelectedBatchingPlant,
     setIsLoading,
     signout,
     toggleHunterScreen,

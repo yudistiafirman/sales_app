@@ -53,6 +53,7 @@ export interface Typegen0 {
         assignPlacesId: "onGettingPlacesId";
         assignResult: "done.invoke.search area.searchLocation.onGettingLocation:invocation[0]";
         assignSearchValue: "searchingLocation";
+        assignSelectedBP: "assignSelectedBatchingPlant";
         clearInputValue: "clearInput";
         clearResult:
             | "error.platform.search area.getLocation.allowed:invocation[0]"
@@ -81,6 +82,7 @@ export interface Typegen0 {
         | "getLocation.finito"
         | "searchLocation"
         | "searchLocation.errorGettingLocationData"
+        | "searchLocation.getSelectedBatchingPlant"
         | "searchLocation.gettingPlaceId"
         | "searchLocation.inputting"
         | "searchLocation.onGettingLocation"
@@ -89,6 +91,7 @@ export interface Typegen0 {
               getLocation?: "allowed" | "currentLocationLoaded" | "finito";
               searchLocation?:
                   | "errorGettingLocationData"
+                  | "getSelectedBatchingPlant"
                   | "gettingPlaceId"
                   | "inputting"
                   | "onGettingLocation"

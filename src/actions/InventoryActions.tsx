@@ -6,10 +6,18 @@ export const getAllBrikProducts = async (
     size?: number,
     search?: string,
     category?: string,
-    distance?: number
+    distance?: number,
+    batchingPlantId?: string
 ) =>
     customRequest(
-        BrikApiInventory.getProducts(page, size, search, category, distance),
+        BrikApiInventory.getProducts(
+            page,
+            size,
+            search,
+            category,
+            distance,
+            batchingPlantId
+        ),
         "GET"
     );
 

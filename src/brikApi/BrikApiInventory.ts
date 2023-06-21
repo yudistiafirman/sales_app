@@ -74,7 +74,8 @@ export default class BrikApiInventory {
         size?: number,
         search?: string,
         category?: string,
-        distance?: number
+        distance?: number,
+        batchingPlantId?: string
     ) => {
         const url = new URL(`${API_URL}/inventory/m/product`);
         const params = url.searchParams;
@@ -94,7 +95,9 @@ export default class BrikApiInventory {
         if (distance) {
             params.append("distance", `${distance}`);
         }
-
+        if (batchingPlantId) {
+            params.append("batchingPlantId", `${batchingPlantId}`);
+        }
         return url.toString();
     };
 }

@@ -53,12 +53,19 @@ export default function CalendarScreen() {
     const dispatch = useDispatch();
     const { visitationCalendarMapped, markedDate, isVisitationLoading } =
         useSelector((state: RootState) => state.productivity);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
 
     const [customerDatas, setCustomerDatas] = useState<customerDataInterface[]>(
         []
     );
 
-    useHeaderTitleChanged({ title: "Pilih Tanggal" });
+    useHeaderTitleChanged({
+        title: "Pilih Tanggal",
+        selectedBP: selectedBatchingPlant,
+        hideBPBadges: true
+    });
 
     const fetchVisitation = useCallback(
         ({
@@ -70,7 +77,11 @@ export default function CalendarScreen() {
             year: number;
             fullDate: string;
         }) => {
-            getVisitations({ month, year })
+            getVisitations({
+                month,
+                year,
+                batchingPlantId: selectedBatchingPlant?.id
+            })
                 .then((response) => {
                     const visitationData = response?.data?.data || [];
                     const visitMapped = visitationData.reduce(

@@ -5,6 +5,8 @@ import { useMachine } from "@xstate/react";
 import searchPOMachine from "@/machine/searchPOMachine";
 import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
 import { PurchaseOrdersData } from "@/interfaces/SelectConfirmedPO";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 import SelectedPOModal from "./element/SelectedPOModal";
 
 const styles = StyleSheet.create({
@@ -43,9 +45,16 @@ function SelectPurchaseOrderData({
         availableDeposit,
         paymentType
     } = state.context;
+    const { selectedBatchingPlant } = useSelector(
+        (globalState: RootState) => globalState.auth
+    );
 
     React.useEffect(() => {
-        send("setDataType", { value: dataToGet, filterBy: filterSphDataBy });
+        send("setDataType", {
+            value: dataToGet,
+            filterBy: filterSphDataBy,
+            selectedBP: selectedBatchingPlant
+        });
     }, [dataToGet]);
 
     const getDataToDisplayInsideModal = () => {
@@ -81,7 +90,7 @@ function SelectPurchaseOrderData({
 
     const onChangeText = (text: string) => {
         setSearchQuery(text);
-        send("searching", { value: text });
+        send("searching", { value: text, selectedBP: selectedBatchingPlant });
     };
 
     const onClearValue = () => {

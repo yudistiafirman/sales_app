@@ -37,6 +37,7 @@ function BTab({
             lazy
             onIndexChange={onIndexChange}
             keyboardDismissMode="none"
+            offscreenPageLimit={0}
         />
     );
 }

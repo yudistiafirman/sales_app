@@ -53,6 +53,9 @@ function FirstStep() {
     const [grantedLocationPermission, setGrantedLocationPermission] =
         React.useState(false);
     const visitationData = useSelector((state: RootState) => state.visitation);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
     const abortControllerRef = React.useRef<AbortController>(
@@ -98,7 +101,8 @@ function FirstStep() {
                 if (abortControllerRef.current.signal.aborted)
                     abortControllerRef.current = new AbortController();
                 const { result } = await getUserCurrentLocationDetail(
-                    abortControllerRef.current.signal
+                    abortControllerRef.current.signal,
+                    selectedBatchingPlant
                 );
                 const coordinate = {
                     longitude: Number(result?.lon),

@@ -38,12 +38,16 @@ function Inputs() {
     const appointmentState = useSelector(
         (state: RootState) => state.appoinment
     );
+    const authState = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch<AppDispatch>();
     const isCompany = appointmentState.stepOne.customerType === "company";
     const fetchDebounce = useMemo(
         () =>
             debounce((searchQuery: string) => {
-                projectByUserGetAction(searchQuery).then((response) => {
+                projectByUserGetAction(
+                    searchQuery,
+                    authState.selectedBatchingPlant?.id
+                ).then((response) => {
                     const items = response?.data?.data?.map((project: any) => ({
                         id: project.id,
                         title: project.display_name

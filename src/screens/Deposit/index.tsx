@@ -6,7 +6,7 @@ import {
 import moment from "moment";
 import * as React from "react";
 import { View, DeviceEventEmitter, BackHandler } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     BBackContinueBtn,
     BContainer,
@@ -32,6 +32,7 @@ import { resScale } from "@/utils";
 import { CreatePayment } from "@/models/CreatePayment";
 import { uploadFileImage } from "@/actions/CommonActions";
 import { postPayment } from "@/actions/FinanceActions";
+import { RootState } from "@/redux/store";
 import SecondStep from "./element/SecondStep";
 import FirstStep from "./element/FirstStep";
 
@@ -76,6 +77,7 @@ function Deposit() {
     const { keyboardVisible } = useKeyboardActive();
     const [stepsDone, setStepsDone] = React.useState<number[]>([0, 1]);
     const [isPopupVisible, setPopupVisible] = React.useState(false);
+    const authState = useSelector((state: RootState) => state.auth);
 
     const stepRender = [<FirstStep />, <SecondStep />];
 
@@ -116,7 +118,8 @@ function Deposit() {
                     status: "SUBMITTED",
                     type: "DEPOSIT",
                     files: [],
-                    saleOrderId: values.stepTwo?.selectedSaleOrder?.id
+                    saleOrderId: values.stepTwo?.selectedSaleOrder?.id,
+                    batchingPlantId: authState.selectedBatchingPlant?.id
                 };
 
                 if (
@@ -191,7 +194,8 @@ function Deposit() {
         title:
             values.isSearchingPurchaseOrder === true
                 ? "Cari PT / Proyek"
-                : "Buat Deposit"
+                : "Buat Deposit",
+        selectedBP: authState.selectedBatchingPlant
     });
 
     useFocusEffect(

@@ -133,6 +133,9 @@ export default function SecondStep() {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const { region } = useSelector((state: RootState) => state.location);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const [sheetIndex] = useState(0); // setSheetIndex
     const bottomSheetRef = React.useRef<BottomSheet>(null);
     const [sheetSnapPoints, setSheetSnapPoints] = useState(["60%", "90%"]);
@@ -171,7 +174,7 @@ export default function SecondStep() {
                     // '',
                     coordinate.longitude as unknown as number,
                     coordinate.latitude as unknown as number,
-                    "BP-LEGOK",
+                    selectedBatchingPlant?.name,
                     abortControllerRef.current.signal
                 );
 

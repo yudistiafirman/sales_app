@@ -26,9 +26,11 @@ export interface Typegen0 {
     eventsCausingActions: {
         assignError: "error.platform.operation list machine.fetchingListData:invocation[0]";
         assignListData: "done.invoke.operation list machine.fetchingListData:invocation[0]";
+        assignSelectedBP: "assignSelectedBatchingPlant";
         assignUserDataToContext: "assignUserData";
         handleEndReached: "onEndReached";
         handleRefresh: "onRefreshList";
+        resetProduct: "backToGetDO";
     };
     eventsCausingDelays: {};
     eventsCausingGuards: {
@@ -37,6 +39,7 @@ export interface Typegen0 {
     eventsCausingServices: {
         fetchOperationListData:
             | "assignUserData"
+            | "backToGetDO"
             | "onEndReached"
             | "onRefreshList"
             | "retryGettingList";
@@ -44,6 +47,7 @@ export interface Typegen0 {
     matchesStates:
         | "errorGettingList"
         | "fetchingListData"
+        | "getSelectedBatchingPlant"
         | "idle"
         | "listLoaded";
     tags: never;

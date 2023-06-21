@@ -73,6 +73,7 @@ interface PostPoPayload {
     }[];
     fiveToSix: number;
     lessThanFive: number;
+    batchingPlantId?: string;
 }
 
 interface DocumentsData {
