@@ -163,6 +163,8 @@ export default function SecondStep() {
             { isBiilingAddress }: { isBiilingAddress?: boolean }
         ) => {
             try {
+                dispatch(setUseSearchAddress({ value: false }));
+                dispatch(setUseBillingAddress({ value: false }));
                 const coordinateToSet = await dispatch(
                     getCoordinateDetails({
                         coordinate,
@@ -369,6 +371,7 @@ export default function SecondStep() {
 
     useEffect(() => {
         if (projectAddress) {
+            console.log("ini selected company", selectedCompany);
             const latitude = +projectAddress.latitude;
             const longitude = +projectAddress.longitude;
             onChangeRegion({ latitude, longitude }, {});
@@ -379,7 +382,7 @@ export default function SecondStep() {
                 onChangeRegion({ latitude, longitude }, {});
             }
         }
-    }, []);
+    }, [selectedCompany]);
 
     const nameAddress = React.useMemo(() => {
         const address = useSearchAddress
@@ -397,10 +400,6 @@ export default function SecondStep() {
         <View style={style.container}>
             <BLocation
                 region={region}
-                onRegionChange={() => {
-                    dispatch(setUseSearchAddress({ value: false }));
-                    dispatch(setUseBillingAddress({ value: false }));
-                }}
                 onRegionChangeComplete={onChangeRegion}
                 CustomMarker={<BMarker />}
                 mapStyle={style.map}
