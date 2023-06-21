@@ -134,22 +134,33 @@ export default function BProductCard({
             <BSpacer size="extraSmall" />
             <View style={style.detail}>
                 {!hideVolume && (
-                    <Text style={style.detailText}>
+                    <Text
+                        style={[style.detailText, { marginEnd: layout.pad.md }]}
+                    >
                         {volume && volume > 0 ? `${volume} ${getUnit()}` : "-"}
                     </Text>
                 )}
                 {!hidePricePerVolume && (
-                    <Text style={style.detailText}>
+                    <Text style={[style.detailText]}>
                         {`${
                             pricePerVol ? formatCurrency(pricePerVol) : "-"
                         }/${getUnit()}`}
                     </Text>
                 )}
-                {!hideTotal && (
-                    <Text style={style.detailText}>
-                        {totalPrice ? formatCurrency(totalPrice) : "-"}
-                    </Text>
-                )}
+                <View style={{ flex: 1 }}>
+                    {!hideTotal && (
+                        <Text
+                            style={[
+                                style.detailText,
+                                !hideVolume && !hidePricePerVolume
+                                    ? { textAlign: "right" }
+                                    : { textAlign: "left" }
+                            ]}
+                        >
+                            {totalPrice ? formatCurrency(totalPrice) : "-"}
+                        </Text>
+                    )}
+                </View>
             </View>
         </View>
     );

@@ -9,11 +9,16 @@ const styles = StyleSheet.create({
     text: {
         color: colors.text.darker,
         fontSize: fonts.size.lg,
-        fontFamily: fonts.family.montserrat[600]
+        fontFamily: fonts.family.montserrat[600],
+        flex: 1,
+        textAlign: "center",
+        alignSelf: "center"
     },
     view: {
+        flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        alignSelf: "center"
     },
     badges: {
         alignItems: "center",
@@ -23,7 +28,7 @@ const styles = StyleSheet.create({
         fontSize: fonts.size.xs,
         paddingHorizontal: layout.pad.md,
         color: colors.text.darker,
-        fontFamily: fonts.family.montserrat[400]
+        fontFamily: fonts.family.montserrat[500]
     }
 });
 
@@ -40,7 +45,18 @@ function BSelectedBPBadges({
 }: BSelectedBPBadgesProps) {
     return (
         <View style={[styles.view, alignLeft && { alignItems: "flex-start" }]}>
-            <Text style={styles.text}>{title}</Text>
+            <Text
+                numberOfLines={2}
+                style={[
+                    styles.text,
+                    alignLeft && {
+                        textAlign: "left",
+                        alignSelf: "flex-start"
+                    }
+                ]}
+            >
+                {title}
+            </Text>
             <BSpacer size="verySmall" />
             <Badge
                 style={[

@@ -152,7 +152,7 @@ function Location() {
             <View
                 style={[
                     LocationStyles.bottomSheetContainer,
-                    isReadOnly === true && { minHeight: resScale(80) }
+                    isReadOnly === true && { minHeight: resScale(110) }
                 ]}
             >
                 <CoordinatesDetail

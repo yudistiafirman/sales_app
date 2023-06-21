@@ -74,7 +74,7 @@ const style = StyleSheet.create({
         backgroundColor: colors.white
     },
     top: {
-        height: resScale(120),
+        // height: resScale(120),
         marginBottom: layout.pad.lg
     },
     headerTwo: {

@@ -35,7 +35,7 @@ const loginStyle = StyleSheet.create({
     countryCodeContainer: {
         flex: 0.16,
         borderWidth: 1,
-        height: resScale(38),
+        height: resScale(40),
         width: resScale(45),
         borderColor: colors.textInput.inActive,
         borderBottomLeftRadius: layout.pad.sm,
@@ -58,7 +58,7 @@ const loginStyle = StyleSheet.create({
     maskInputContainer: {
         borderTopRightRadius: layout.pad.sm,
         borderBottomEndRadius: layout.pad.sm,
-        height: resScale(38),
+        height: resScale(40),
         borderWidth: 1,
         borderLeftWidth: 0,
         justifyContent: "center",

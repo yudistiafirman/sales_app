@@ -59,7 +59,11 @@ export default function SOList({
                 <BText style={{ flex: 1 }} bold="500" sizeInNumber={14}>
                     {item?.brikNumber ? item?.brikNumber : "-"}
                 </BText>
-                <BText style={{ flex: 1 }} bold="400" sizeInNumber={14}>
+                <BText
+                    style={{ textAlign: "right" }}
+                    bold="400"
+                    sizeInNumber={14}
+                >
                     {picOrCompanyName || "-"}
                 </BText>
             </TouchableOpacity>

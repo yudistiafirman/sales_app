@@ -144,7 +144,8 @@ function BList({
                             name={item?.type === COMPANY ? "building" : "user"}
                             style={{
                                 fontWeight: "600",
-                                marginRight: layout.pad.sm
+                                marginRight: layout.pad.sm,
+                                color: colors.text.darker
                             }}
                             size={layout.pad.md}
                         />

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { colors, fonts, layout } from "@/constants";
-import { Menu, MenuItem } from "react-native-material-menu";
+import { Menu, MenuDivider, MenuItem } from "react-native-material-menu";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { BatchingPlant } from "@/models/BatchingPlant";
 import BTouchableText from "../atoms/BTouchableText";
@@ -11,6 +11,11 @@ const styles = StyleSheet.create({
         fontSize: fonts.size.lg,
         textAlign: "center",
         fontFamily: fonts.family.montserrat[600]
+    },
+    textMenu: {
+        fontSize: fonts.size.sm,
+        textAlign: "center",
+        fontFamily: fonts.family.montserrat[500]
     },
     view: {
         flexDirection: "row",
@@ -53,9 +58,12 @@ function BSelectedBPOptionMenu({
                 anchor={
                     <BTouchableText
                         viewStyle={styles.view}
-                        textStyle={{
-                            color
-                        }}
+                        textStyle={[
+                            styles.textMenu,
+                            {
+                                color
+                            }
+                        ]}
                         title={selectedBatchingPlant?.name}
                         endIcon={
                             batchingPlants && batchingPlants.length > 0 ? (
@@ -75,15 +83,21 @@ function BSelectedBPOptionMenu({
                 }
             >
                 {batchingPlants?.map((el, key) => (
-                    <MenuItem
-                        key={key}
-                        onPress={() => {
-                            onPressOption(el);
-                            setVisible(false);
-                        }}
-                    >
-                        {el.name}
-                    </MenuItem>
+                    <React.Fragment key={key}>
+                        <MenuItem
+                            textStyle={[
+                                styles.textMenu,
+                                { color: colors.text.darker }
+                            ]}
+                            onPress={() => {
+                                onPressOption(el);
+                                setVisible(false);
+                            }}
+                        >
+                            {el.name}
+                        </MenuItem>
+                        <MenuDivider />
+                    </React.Fragment>
                 ))}
             </Menu>
         </View>
