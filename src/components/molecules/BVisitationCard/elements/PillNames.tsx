@@ -3,14 +3,13 @@ import { View, Text, StyleSheet } from "react-native";
 import { fonts, layout } from "@/constants";
 import colors from "@/constants/colors";
 import font from "@/constants/fonts";
-import respFS from "@/utils/resFontSize";
-import resScale from "@/utils/resScale";
 import HighlightText from "../../../atoms/BHighlightText";
 
 const style = StyleSheet.create({
     container: {
         flexDirection: "row",
-        marginTop: layout.pad.xs + layout.pad.md
+        marginTop: layout.pad.xs + layout.pad.md,
+        alignItems: "center"
     },
     bluePill: {
         padding: layout.pad.xs,
@@ -53,6 +52,7 @@ export default function PillNames({
         }
         return null;
     }
+    const filteredPilNames = pilNames.filter((it) => it);
     return (
         <View style={style.container}>
             <View
@@ -62,11 +62,14 @@ export default function PillNames({
                     { backgroundColor: pillColor }
                 ]}
             >
-                <HighlightText
-                    fontSize={fonts.size.xs}
-                    name={pilNames[0]}
-                    searchQuery={searchQuery}
-                />
+                <View style={{ flex: 0.5 }}>
+                    <HighlightText
+                        fontSize={fonts.size.xs}
+                        name={filteredPilNames[0]}
+                        searchQuery={searchQuery}
+                        // numberOfLines={2}
+                    />
+                </View>
             </View>
             {nameCount()}
         </View>

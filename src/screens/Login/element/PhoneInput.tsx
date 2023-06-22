@@ -3,6 +3,7 @@ import { View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import loginStyle from "@/screens/Login/style";
 import { BText } from "@/components";
+import { colors } from "@/constants";
 
 interface PhoneInputProps {
     value: string;
@@ -36,6 +37,7 @@ function PhoneInput({ value, onChangeText }: PhoneInputProps) {
                     style={loginStyle.maskInputStyle}
                     showObfuscatedValue={false}
                     placeholderFillCharacter=""
+                    placeholderTextColor={colors.textInput.placeHolder}
                     placeholder="Masukkan nomor whatsapp"
                     keyboardType="number-pad"
                     onChangeText={(masked, unmasked) => {

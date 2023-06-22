@@ -51,7 +51,6 @@ const selectedBPOption = (
         pageTitle={title}
         selectedBatchingPlant={selectedBP}
         batchingPlants={batchingPlants}
-        color={colors.text.darker}
         onPressOption={onSelectBPOption}
     />
 );

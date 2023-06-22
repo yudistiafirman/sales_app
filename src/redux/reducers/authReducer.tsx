@@ -130,7 +130,9 @@ export const authSlice = createSlice({
                     },
                     isSignout: false,
                     isLoading: false,
-                    batchingPlants: action.payload.batchingPlants
+                    batchingPlants:
+                        action.payload.batchingPlants &&
+                        action.payload.batchingPlants
                 };
             }
             return {
@@ -138,7 +140,9 @@ export const authSlice = createSlice({
                 userData: action.payload.userData,
                 isSignout: false,
                 isLoading: false,
-                batchingPlants: action.payload.batchingPlants
+                batchingPlants:
+                    action.payload.batchingPlants &&
+                    action.payload.batchingPlants
             };
         },
         setIsLoading: (state, action: PayloadAction<any>) => {

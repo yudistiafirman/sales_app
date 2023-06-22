@@ -1,12 +1,5 @@
-import {
-    View,
-    StyleSheet,
-    TouchableOpacity,
-    ViewStyle,
-    TextStyle
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import React from "react";
-
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import resScale from "@/utils/resScale";
 import { colors, fonts, layout } from "@/constants";
@@ -48,9 +41,9 @@ const style = StyleSheet.create({
         marginStart: layout.pad.lg
     },
     top: {
+        flex: 1,
         // height: resScale(20),
         flexDirection: "row",
-        justifyContent: "space-between",
         // marginBottom: layout.pad.sm,
         // width: resScale(285),
         alignItems: "center"
@@ -128,11 +121,14 @@ export default function BVisitationCard({
             >
                 <View style={style.leftSide}>
                     <View style={style.top}>
-                        <HighlightText
-                            fontSize={nameSize}
-                            name={item.name}
-                            searchQuery={searchQuery}
-                        />
+                        <View style={{ flex: 1 }}>
+                            <HighlightText
+                                fontSize={nameSize}
+                                name={item.name}
+                                searchQuery={searchQuery}
+                                numberOfLines={2}
+                            />
+                        </View>
                         <PillStatus
                             pilStatus={item.pilStatus}
                             color={
@@ -154,11 +150,13 @@ export default function BVisitationCard({
                         color={locationTextColor}
                         location={item.location}
                     />
-                    <PillNames
-                        pillColor={pillColor}
-                        pilNames={item.pilNames}
-                        searchQuery={searchQuery}
-                    />
+                    {item.pilNames && (
+                        <PillNames
+                            pillColor={pillColor}
+                            pilNames={item.pilNames}
+                            searchQuery={searchQuery}
+                        />
+                    )}
                     <View
                         style={[
                             style.row,

@@ -43,6 +43,7 @@ const transactionMachine =
                     | {
                           type: "backToGetTransactions";
                           selectedBP: BatchingPlant;
+                          payload: string;
                       }
                     | {
                           type: "retryGettingTransactions";
@@ -286,6 +287,7 @@ const transactionMachine =
                     page: 1,
                     totalItems: 0,
                     loadTransaction: true,
+                    selectedType: event.payload,
                     batchingPlantId: event?.selectedBP?.id
                 })),
                 handleRetryGettingTransactions: assign((context, event) => ({

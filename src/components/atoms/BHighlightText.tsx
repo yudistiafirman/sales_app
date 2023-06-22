@@ -10,7 +10,10 @@ const style = StyleSheet.create({
     normalText: {
         fontFamily: font.family.montserrat[500],
         color: colors.textInput.input,
-        maxWidth: resScale(200)
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "center"
+        // maxWidth: resScale(200)
     },
     boldText: {
         fontFamily: fonts.family.montserrat[800]
@@ -21,12 +24,14 @@ type HiglightTextType = {
     searchQuery?: string;
     name: string;
     fontSize?: number;
+    numberOfLines?: number;
 };
 
 export default function HighlightText({
     searchQuery,
     name,
-    fontSize
+    fontSize,
+    numberOfLines = 1
 }: HiglightTextType) {
     function escapeRegExp(text: string) {
         return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -40,7 +45,7 @@ export default function HighlightText({
                         ? { fontSize: respFS(fontSize) }
                         : { fontSize: font.size.md }
                 ]}
-                numberOfLines={1}
+                numberOfLines={numberOfLines}
             >
                 {name}
             </Text>
@@ -64,7 +69,7 @@ export default function HighlightText({
                     ? { fontSize: respFS(fontSize) }
                     : { fontSize: font.size.md }
             ]}
-            numberOfLines={1}
+            numberOfLines={numberOfLines}
         >
             {parts
                 .filter((part) => part)

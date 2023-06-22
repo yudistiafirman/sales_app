@@ -42,7 +42,6 @@ const style = StyleSheet.create({
         marginBottom: layout.pad.lg + layout.pad.md
     },
     today: {
-        width: resScale(52),
         height: resScale(20),
         borderWidth: 1,
         borderRadius: layout.radius.sm,
@@ -155,6 +154,9 @@ export default function DateDaily({
                 markedDates={markedDatesArray}
                 scrollable
                 locale={locale}
+                highlightDateNameStyle={{
+                    color: colors.primary
+                }}
             />
         </View>
     );
