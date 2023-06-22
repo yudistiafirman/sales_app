@@ -4,8 +4,13 @@ import { colors, fonts, layout } from "@/constants";
 import { Menu, MenuDivider, MenuItem } from "react-native-material-menu";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { BatchingPlant } from "@/models/BatchingPlant";
-import BTouchableText from "../atoms/BTouchableText";
+import { getBatchingPlants } from "@/actions/CommonActions";
+import { setSelectedBatchingPlant } from "@/redux/reducers/authReducer";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { openPopUp } from "@/redux/reducers/modalReducer";
 import BSpacer from "../atoms/BSpacer";
+import BTouchableText from "../atoms/BTouchableText";
 
 const styles = StyleSheet.create({
     text: {
@@ -47,13 +52,37 @@ function BSelectedBPOptionMenu({
     color = colors.text.darker,
     onPressOption
 }: BSelectedBPOptionMenuProps) {
+    const dispatch = useDispatch<AppDispatch>();
     const [isVisible, setVisible] = React.useState(false);
+    const [updatedBatchingPlants, setUpdatedBatchingPlants] =
+        React.useState(batchingPlants);
+
+    async function checkUndefinedBatchingPlants() {
+        const batchingPlantsResponse = await getBatchingPlants();
+        if (batchingPlantsResponse?.data?.data?.data) {
+            const newData = batchingPlantsResponse?.data?.data?.data;
+            setSelectedBatchingPlant(newData);
+            setUpdatedBatchingPlants(newData);
+            setVisible(true);
+        } else {
+            dispatch(
+                openPopUp({
+                    popUpType: "error",
+                    popUpText:
+                        "Terjadi error dalam pengambilan data batching plant",
+                    outsideClickClosePopUp: true
+                })
+            );
+        }
+    }
 
     return (
         <View style={styles.parent}>
             <Text style={[styles.text, { color }]}>{pageTitle}</Text>
-            {!batchingPlants ||
-                (batchingPlants.length <= 0 && <BSpacer size="extraSmall" />)}
+            {!updatedBatchingPlants ||
+                (updatedBatchingPlants.length <= 0 && (
+                    <BSpacer size="extraSmall" />
+                ))}
             <Menu
                 visible={isVisible}
                 onRequestClose={() => setVisible(false)}
@@ -68,23 +97,22 @@ function BSelectedBPOptionMenu({
                         ]}
                         title={selectedBatchingPlant?.name}
                         endIcon={
-                            batchingPlants && batchingPlants.length > 0 ? (
-                                <MaterialIcons
-                                    name="arrow-drop-down"
-                                    color={color}
-                                    size={layout.pad.xl - 6}
-                                />
-                            ) : undefined
+                            <MaterialIcons
+                                name="arrow-drop-down"
+                                color={color}
+                                size={layout.pad.xl - 6}
+                            />
                         }
                         onPress={
-                            batchingPlants && batchingPlants.length > 0
+                            updatedBatchingPlants &&
+                            updatedBatchingPlants.length > 0
                                 ? () => setVisible(true)
-                                : undefined
+                                : () => checkUndefinedBatchingPlants()
                         }
                     />
                 }
             >
-                {batchingPlants?.map((el, key) => (
+                {updatedBatchingPlants?.map((el, key) => (
                     <React.Fragment key={key}>
                         <MenuItem
                             textStyle={[

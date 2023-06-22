@@ -53,6 +53,7 @@ const style = StyleSheet.create({
         alignItems: "center"
     },
     todayText: {
+        paddingHorizontal: layout.pad.xs,
         fontFamily: font.family.montserrat[500],
         fontSize: font.size.sm,
         color: colors.primary

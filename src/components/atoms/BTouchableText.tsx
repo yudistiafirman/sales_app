@@ -26,7 +26,7 @@ const BTouchableTextDefaultStyle: TextStyle = {
     color: colors.primary,
     fontSize: font.size.sm,
     marginLeft: layout.pad.xs,
-    marginRight: layout.pad.ml + layout.pad.xs
+    marginRight: layout.pad.xs
 };
 
 const BTouchableViewStyle: ViewStyle = {
@@ -60,8 +60,7 @@ function BTouchableText({
                 style={[
                     BTouchableTextDefaultStyle,
                     textStyle,
-                    disabled && { color: colors.text.inactive },
-                    !endIcon && { marginRight: layout.pad.xs }
+                    disabled && { color: colors.text.inactive }
                 ]}
                 sizeInNumber={textSize}
             >
