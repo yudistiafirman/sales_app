@@ -157,41 +157,38 @@ export default function SecondStep() {
     } = useSelector((state: RootState) => state.sph);
 
     const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
-    const onChangeRegion = useCallback(
-        async (
-            coordinate: Region,
-            { isBiilingAddress }: { isBiilingAddress?: boolean }
-        ) => {
-            try {
-                dispatch(setUseSearchAddress({ value: false }));
-                dispatch(setUseBillingAddress({ value: false }));
-                const coordinateToSet = await dispatch(
-                    getCoordinateDetails({
-                        coordinate,
-                        selectedBatchingPlant: selectedBatchingPlant.name
-                    })
-                ).unwrap();
+    const onChangeRegion = async (
+        coordinate: Region,
+        { isBiilingAddress }: { isBiilingAddress?: boolean }
+    ) => {
+        try {
+            dispatch(setUseSearchAddress({ value: false }));
+            dispatch(setUseBillingAddress({ value: false }));
+            const coordinateToSet = await dispatch(
+                getCoordinateDetails({
+                    coordinate,
+                    selectedBatchingPlant: selectedBatchingPlant.name
+                })
+            ).unwrap();
 
-                if (isBiilingAddress) {
-                    dispatch(updateBillingAddressAutoComplete(coordinateToSet));
-                } else if (coordinateToSet.distance) {
-                    dispatch(updateDistanceFromLegok(coordinateToSet.distance));
-                }
-            } catch (error) {
-                if (error?.message !== "canceled")
-                    dispatch(
-                        openPopUp({
-                            popUpType: "error",
-                            popUpText:
-                                error?.message ||
-                                "Terjadi error pengambilan data saat perpindahan region",
-                            outsideClickClosePopUp: true
-                        })
-                    );
+            if (isBiilingAddress) {
+                dispatch(updateBillingAddressAutoComplete(coordinateToSet));
+            } else if (coordinateToSet.distance) {
+                dispatch(updateDistanceFromLegok(coordinateToSet.distance));
             }
-        },
-        []
-    );
+        } catch (error) {
+            if (error?.message !== "canceled")
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText:
+                            error?.message ||
+                            "Terjadi error pengambilan data saat perpindahan region",
+                        outsideClickClosePopUp: true
+                    })
+                );
+        }
+    };
 
     const inputsData: Input[] = useMemo(() => {
         const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
@@ -360,10 +357,6 @@ export default function SecondStep() {
     }, [onChangeRegion]);
 
     useEffect(() => {
-        dispatch(updateProjectAddress(region));
-    }, [region]);
-
-    useEffect(() => {
         if (keyboardVisible) {
             bottomSheetRef.current?.expand();
         }
@@ -371,7 +364,6 @@ export default function SecondStep() {
 
     useEffect(() => {
         if (projectAddress) {
-            console.log("ini selected company", selectedCompany);
             const latitude = +projectAddress.latitude;
             const longitude = +projectAddress.longitude;
             onChangeRegion({ latitude, longitude }, {});
@@ -382,7 +374,7 @@ export default function SecondStep() {
                 onChangeRegion({ latitude, longitude }, {});
             }
         }
-    }, [selectedCompany]);
+    }, []);
 
     const nameAddress = React.useMemo(() => {
         const address = useSearchAddress
