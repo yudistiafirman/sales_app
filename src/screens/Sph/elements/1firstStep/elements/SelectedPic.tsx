@@ -150,7 +150,7 @@ export default function SelectedPic({
     return (
         <View style={style.container}>
             <View style={{ flex: 1 }}>
-                <View style={{ minHeight: resScale(75) }}>
+                <View style={{ minHeight: resScale(82) }}>
                     <BVisitationCard
                         item={{
                             name: selectedCompany?.name || "-",

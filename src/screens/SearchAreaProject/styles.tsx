@@ -16,10 +16,11 @@ const SearchAreaStyles = StyleSheet.create({
         color: colors.text.darker
     },
     locationListCardContainer: {
-        height: resScale(56),
+        flex: 1,
         borderBottomWidth: 1,
         borderColor: colors.border.disabled,
-        marginBottom: layout.pad.md
+        marginBottom: layout.pad.md,
+        paddingBottom: layout.pad.md
     },
     innerListContainer: {
         flexDirection: "row",

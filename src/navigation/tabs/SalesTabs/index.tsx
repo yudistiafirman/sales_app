@@ -30,7 +30,11 @@ import CustomTabBar from "../CustomTabBar";
 const Tab = createBottomTabNavigator();
 
 const selectedBPBadges = (selectedBP: BatchingPlant, title: string) => (
-    <BSelectedBPBadges selectedBP={selectedBP} title={title} />
+    <BSelectedBPBadges
+        selectedBP={selectedBP}
+        title={title}
+        alignLeft={false}
+    />
 );
 
 const selectedBPOption = (

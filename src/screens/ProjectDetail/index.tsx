@@ -18,16 +18,18 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import {
     CUSTOMER_DETAIL,
     PROJECT_DETAIL,
+    PROJECT_DETAIL_TITLE,
     VISIT_HISTORY
 } from "@/navigation/ScreenNames";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { projectGetOneById } from "@/actions/CommonActions";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import { resetRegion } from "@/redux/reducers/locationReducer";
 import { ProjectDetail } from "@/interfaces";
 import formatCurrency from "@/utils/formatCurrency";
+import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import UpdatedAddressWrapper from "./elements/UpdatedAddressWrapper";
 import AddNewAddressWrapper from "./elements/AddNewAddressWrapper";
 import BillingModal from "./elements/BillingModal";
@@ -79,6 +81,9 @@ export default function ProjectDetailPage() {
     const [customerData, setCustomerData] = useState<ProjectDetail>({});
     const [projectAddress, setFormattedProjectAddress] = useState("");
     const [project, setProject] = useState(null);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const [projectExisting, setExistingProject] = useState(null);
     const dataNotLoadedYet = JSON.stringify(customerData) === "{}";
     const updateAddressProject = projectAddress?.length > 0;
@@ -120,6 +125,12 @@ export default function ProjectDetailPage() {
         dispatch(resetRegion());
         getProjectDetail(projectId);
     }, [dispatch, getProjectDetail, route.params]);
+
+    useHeaderTitleChanged({
+        title: PROJECT_DETAIL_TITLE,
+        selectedBP: selectedBatchingPlant,
+        alignLeft: false
+    });
 
     useEffect(() => {
         DeviceEventEmitter.addListener(
@@ -169,12 +180,7 @@ export default function ProjectDetailPage() {
                                 ? customerData.Customer?.name
                                 : "-"}
                         </Text>
-                        <Text
-                            style={[
-                                styles.fontW400,
-                                { marginEnd: -layout.pad.lg + 1 }
-                            ]}
-                        >
+                        <Text style={styles.fontW400}>
                             <BTouchableText
                                 title="Lihat Pelanggan"
                                 textSize={fonts.size.xs}

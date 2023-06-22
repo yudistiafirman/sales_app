@@ -132,6 +132,7 @@ export const authSlice = createSlice({
                     isLoading: false,
                     batchingPlants:
                         action.payload.batchingPlants &&
+                        action.payload.batchingPlants.length > 0 &&
                         action.payload.batchingPlants
                 };
             }
@@ -142,6 +143,7 @@ export const authSlice = createSlice({
                 isLoading: false,
                 batchingPlants:
                     action.payload.batchingPlants &&
+                    action.payload.batchingPlants.length > 0 &&
                     action.payload.batchingPlants
             };
         },

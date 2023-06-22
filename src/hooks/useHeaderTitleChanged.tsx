@@ -8,12 +8,14 @@ type UseHeaderTitle = {
     title: string;
     selectedBP: BatchingPlant;
     hideBPBadges?: boolean;
+    alignLeft?: boolean;
 };
 
 export default function useHeaderTitleChanged({
     title,
     selectedBP,
-    hideBPBadges = false
+    hideBPBadges = false,
+    alignLeft = true
 }: UseHeaderTitle) {
     const navigation = useNavigation();
 
@@ -24,7 +26,7 @@ export default function useHeaderTitleChanged({
         <BSelectedBPBadges
             selectedBP={selectedBatchingPlant}
             title={titlePage}
-            alignLeft
+            alignLeft={alignLeft}
         />
     );
 

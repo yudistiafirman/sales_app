@@ -139,35 +139,45 @@ function Transaction() {
             selectedType === "DO" ||
             selectedType === "SO" ||
             (selectedType === "SPH" && loadTab) ? undefined : (
-                <BTouchableText
-                    onPress={() => {
-                        if (selectedType === "PO") {
-                            setFeature("PO");
-                            if (!isModalContinuePo) {
-                                setIsVisibleSelectCustomerType(true);
-                                setLocalContinueModalPo(false);
-                            } else {
-                                setLocalContinueModalPo(true);
-                            }
-                        } else if (selectedType === "Deposit") {
-                            navigation.navigate(CAMERA, {
-                                photoTitle: "Bukti",
-                                navigateTo: CREATE_DEPOSIT,
-                                closeButton: true,
-                                disabledDocPicker: false,
-                                disabledGalleryPicker: false
-                            });
-                        } else if (selectedType === "Jadwal") {
-                            navigation.navigate(CREATE_SCHEDULE);
-                        } else {
-                            setFeature("SPH");
-                            if (sphData?.selectedCompany)
-                                setPopupSPHVisible(true);
-                            else navigation.navigate(SPH, {});
-                        }
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        marginEnd: layout.pad.md
                     }}
-                    title={`Buat ${selectedType}`}
-                />
+                >
+                    <BTouchableText
+                        viewStyle={{ width: "100%" }}
+                        textStyle={{ width: "100%" }}
+                        onPress={() => {
+                            if (selectedType === "PO") {
+                                setFeature("PO");
+                                if (!isModalContinuePo) {
+                                    setIsVisibleSelectCustomerType(true);
+                                    setLocalContinueModalPo(false);
+                                } else {
+                                    setLocalContinueModalPo(true);
+                                }
+                            } else if (selectedType === "Deposit") {
+                                navigation.navigate(CAMERA, {
+                                    photoTitle: "Bukti",
+                                    navigateTo: CREATE_DEPOSIT,
+                                    closeButton: true,
+                                    disabledDocPicker: false,
+                                    disabledGalleryPicker: false
+                                });
+                            } else if (selectedType === "Jadwal") {
+                                navigation.navigate(CREATE_SCHEDULE);
+                            } else {
+                                setFeature("SPH");
+                                if (sphData?.selectedCompany)
+                                    setPopupSPHVisible(true);
+                                else navigation.navigate(SPH, {});
+                            }
+                        }}
+                        title={`Buat ${selectedType}`}
+                    />
+                </View>
             )
     });
 

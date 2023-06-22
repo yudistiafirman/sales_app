@@ -12,7 +12,6 @@ import ProjectDetailPage from "@/screens/ProjectDetail";
 import PurchaseOrderWithProvider from "@/screens/PurchaseOrder";
 import CreateScheduleScreen from "@/screens/CreateSchedule";
 import PriceList from "@/screens/Price";
-import RequiredDocuments from "@/screens/RequiredDocuments";
 import VisitHistory from "@/screens/VisitHistory";
 import Deposit from "@/screens/Deposit";
 import SearchSO from "@/screens/SearchSO";
@@ -189,12 +188,7 @@ function SalesStack(selectedBP: BatchingPlant, Stack: any) {
                 component={ProjectDetailPage}
                 options={{
                     headerTitleAlign: "center",
-                    headerTitle: () =>
-                        selectedBPBadges(
-                            selectedBP,
-                            PROJECT_DETAIL_TITLE,
-                            false
-                        )
+                    headerTitle: PROJECT_DETAIL_TITLE
                 }}
             />
             <Stack.Screen
@@ -231,16 +225,6 @@ function SalesStack(selectedBP: BatchingPlant, Stack: any) {
                 options={{
                     headerTitle: () =>
                         selectedBPBadges(selectedBP, CREATE_SCHEDULE_TITLE)
-                }}
-            />
-            <Stack.Screen
-                name={DOCUMENTS}
-                key={DOCUMENTS}
-                component={RequiredDocuments}
-                options={{
-                    headerTitleAlign: "center",
-                    headerTitle: () =>
-                        selectedBPBadges(selectedBP, DOCUMENTS_TITLE, false)
                 }}
             />
             <Stack.Screen

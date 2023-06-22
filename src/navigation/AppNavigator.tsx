@@ -24,14 +24,10 @@ import SalesTabs from "./tabs/SalesTabs";
 import {
     LOGIN,
     LOGIN_TITLE,
-    OPSMANAGER,
-    OPSMANAGER_TITLE,
     TAB_ROOT,
     VERIFICATION,
     VERIFICATION_TITLE,
-    BATCHER,
     DRIVER,
-    BATCHER_TITLE,
     DRIVER_TITLE,
     BLANK_SCREEN
 } from "./ScreenNames";
@@ -65,50 +61,22 @@ function RootScreen(
     if (userData !== null) {
         const { type, roles } = userData;
         const mappingRoles: string[] = [];
+        let safetyType = type;
         roles.forEach((item) => {
             mappingRoles.push(item.toLowerCase());
         });
-        switch (type.toLowerCase()) {
-            case EntryType.OPSMANAGER.toLowerCase() ||
-                mappingRoles.includes(EntryType.OPSMANAGER.toLowerCase()):
-                return (
-                    <>
-                        <Stack.Screen
-                            name={OPSMANAGER}
-                            key={OPSMANAGER}
-                            component={Operation}
-                            options={{
-                                headerTitleAlign: "center",
-                                headerTitle: OPSMANAGER_TITLE,
-                                headerRight: () =>
-                                    SalesHeaderRight(colors.text.darker),
-                                headerShown: true
-                            }}
-                        />
-                        {OperationStack(selectedBatchingPlant, Stack)}
-                    </>
-                );
-            case EntryType.BATCHER.toLowerCase() ||
-                mappingRoles.includes(EntryType.BATCHER.toLowerCase()):
-                return (
-                    <>
-                        <Stack.Screen
-                            name={BATCHER}
-                            key={BATCHER}
-                            component={Operation}
-                            options={{
-                                headerTitleAlign: "center",
-                                headerTitle: BATCHER_TITLE,
-                                headerRight: () =>
-                                    SalesHeaderRight(colors.text.darker),
-                                headerShown: true
-                            }}
-                        />
-                        {OperationStack(selectedBatchingPlant, Stack)}
-                    </>
-                );
-            case EntryType.DRIVER.toLowerCase() ||
-                mappingRoles.includes(EntryType.DRIVER.toLowerCase()):
+        if (mappingRoles.includes(EntryType.DRIVER.toLowerCase()))
+            safetyType = EntryType.DRIVER;
+        else if (mappingRoles.includes(EntryType.SECURITY.toLowerCase()))
+            safetyType = EntryType.SECURITY;
+        else if (mappingRoles.includes(EntryType.WB.toLowerCase()))
+            safetyType = EntryType.WB;
+        else if (mappingRoles.includes(EntryType.SALES.toLowerCase()))
+            safetyType = EntryType.SALES;
+        else if (mappingRoles.includes(EntryType.ADMIN.toLowerCase()))
+            safetyType = EntryType.ADMIN;
+        switch (safetyType?.toLowerCase()) {
+            case EntryType.DRIVER.toLowerCase():
                 return (
                     <>
                         <Stack.Screen
@@ -132,8 +100,7 @@ function RootScreen(
                         {OperationStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            case EntryType.SECURITY.toLowerCase() ||
-                mappingRoles.includes(EntryType.SECURITY.toLowerCase()):
+            case EntryType.SECURITY.toLowerCase(): {
                 return (
                     <>
                         <Stack.Screen
@@ -147,8 +114,8 @@ function RootScreen(
                         {OperationStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            case EntryType.WB.toLowerCase() ||
-                mappingRoles.includes(EntryType.WB.toLowerCase()):
+            }
+            case EntryType.WB.toLowerCase():
                 return (
                     <>
                         <Stack.Screen
@@ -162,8 +129,7 @@ function RootScreen(
                         {OperationStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            case EntryType.SALES.toLowerCase() ||
-                mappingRoles.includes(EntryType.SALES.toLowerCase()):
+            case EntryType.SALES.toLowerCase():
                 return (
                     <>
                         <Stack.Screen
@@ -177,8 +143,7 @@ function RootScreen(
                         {SalesStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            case EntryType.ADMIN.toLowerCase() ||
-                mappingRoles.includes(EntryType.ADMIN.toLowerCase()):
+            case EntryType.ADMIN.toLowerCase():
                 return (
                     <>
                         <Stack.Screen

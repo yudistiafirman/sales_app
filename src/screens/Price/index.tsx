@@ -158,10 +158,20 @@ function PriceList() {
             return <View />;
         }
         return (
-            <BTouchableText
-                onPress={() => setVisibleTnc(true)}
-                title="Ketentuan"
-            />
+            <View
+                style={{
+                    flex: 1,
+                    marginEnd: layout.pad.md,
+                    justifyContent: "center"
+                }}
+            >
+                <BTouchableText
+                    viewStyle={{ width: "100%" }}
+                    textStyle={{ width: "100%" }}
+                    onPress={() => setVisibleTnc(true)}
+                    title="Ketentuan"
+                />
+            </View>
         );
     }, [fromVisitation]);
 

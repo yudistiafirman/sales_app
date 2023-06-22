@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { colors, fonts, layout } from "@/constants";
 import { Badge } from "react-native-paper";
 import { BatchingPlant } from "@/models/BatchingPlant";
@@ -10,15 +10,11 @@ const styles = StyleSheet.create({
         color: colors.text.darker,
         fontSize: fonts.size.lg,
         fontFamily: fonts.family.montserrat[600],
-        flex: 1,
         textAlign: "center",
         alignSelf: "center"
     },
     view: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        alignSelf: "center"
+        flex: 1
     },
     badges: {
         alignItems: "center",
@@ -44,31 +40,41 @@ function BSelectedBPBadges({
     alignLeft = false
 }: BSelectedBPBadgesProps) {
     return (
-        <View style={[styles.view, alignLeft && { alignItems: "flex-start" }]}>
-            <Text
-                numberOfLines={2}
+        <View style={[styles.view]}>
+            <View
                 style={[
-                    styles.text,
-                    alignLeft && {
-                        textAlign: "left",
-                        alignSelf: "flex-start"
+                    {
+                        width: Dimensions.get("window").width - 140
                     }
                 ]}
             >
-                {title}
-            </Text>
+                <Text
+                    numberOfLines={2}
+                    style={[
+                        styles.text,
+                        alignLeft && {
+                            textAlign: "left",
+                            alignSelf: "flex-start"
+                        }
+                    ]}
+                >
+                    {title}
+                </Text>
+            </View>
             <BSpacer size="verySmall" />
-            <Badge
-                style={[
-                    styles.badges,
-                    alignLeft && { alignSelf: "flex-start" },
-                    selectedBP?.name?.toLowerCase().includes("legok") && {
-                        backgroundColor: colors.status.lightBlue
-                    }
-                ]}
-            >
-                {selectedBP?.name}
-            </Badge>
+            <View style={[{ width: Dimensions.get("window").width - 140 }]}>
+                <Badge
+                    style={[
+                        styles.badges,
+                        alignLeft && { alignSelf: "flex-start" },
+                        selectedBP?.name?.toLowerCase().includes("legok") && {
+                            backgroundColor: colors.status.lightBlue
+                        }
+                    ]}
+                >
+                    {selectedBP?.name}
+                </Badge>
+            </View>
         </View>
     );
 }

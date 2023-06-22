@@ -99,27 +99,29 @@ const BBottomSheetForm = React.forwardRef((props: IProps, ref: any) => {
             }
             return (
                 <BottomSheetFooter {...propsFooter}>
-                    {CustomFooterButton ? (
-                        <BContainer>
-                            <View style={styles.footerContainer}>
-                                <CustomFooterButton
-                                    disable={isButtonDisable}
-                                    onPress={onAdd}
-                                    title={buttonTitle}
-                                />
-                            </View>
-                        </BContainer>
-                    ) : (
-                        <BContainer>
-                            <View style={styles.footerContainer}>
-                                <BButtonPrimary
-                                    disable={isButtonDisable}
-                                    onPress={onAdd}
-                                    title={buttonTitle}
-                                />
-                            </View>
-                        </BContainer>
-                    )}
+                    <View style={{ backgroundColor: colors.white }}>
+                        {CustomFooterButton ? (
+                            <BContainer>
+                                <View style={styles.footerContainer}>
+                                    <CustomFooterButton
+                                        disable={isButtonDisable}
+                                        onPress={onAdd}
+                                        title={buttonTitle}
+                                    />
+                                </View>
+                            </BContainer>
+                        ) : (
+                            <BContainer>
+                                <View style={styles.footerContainer}>
+                                    <BButtonPrimary
+                                        disable={isButtonDisable}
+                                        onPress={onAdd}
+                                        title={buttonTitle}
+                                    />
+                                </View>
+                            </BContainer>
+                        )}
+                    </View>
                 </BottomSheetFooter>
             );
         },
