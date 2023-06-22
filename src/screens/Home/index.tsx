@@ -296,7 +296,7 @@ function Beranda() {
                         const location = el.project?.LocationAddress?.line1;
                         return {
                             id: el.id,
-                            name: el.project?.displayName || "--",
+                            name: el.project?.name || "--",
                             location: location || "-",
                             time,
                             status,

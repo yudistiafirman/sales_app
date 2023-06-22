@@ -164,9 +164,9 @@ export default function ProjectDetailPage() {
                     <BSpacer size="extraSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW500}>
-                            {customerData.Customer?.name &&
-                            customerData.Customer?.name !== null
-                                ? customerData.Customer?.name
+                            {customerData.Customer?.displayName &&
+                            customerData.Customer?.displayName !== null
+                                ? customerData.Customer?.displayName
                                 : "-"}
                         </Text>
                         <Text
