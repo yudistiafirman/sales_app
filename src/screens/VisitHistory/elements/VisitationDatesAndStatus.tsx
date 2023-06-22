@@ -186,7 +186,7 @@ function VisitationDatesAndStatus({
             <View style={styles.dateAndStatus}>
                 <>
                     <BText style={[styles.date, { fontSize: font.size.sm }]}>
-                        {moment(bookingDate).format("hh:mm A")}
+                        {moment(bookingDate).format("HH:mm")}
                     </BText>
                     {renderCompBaseOnStatus()}
                 </>

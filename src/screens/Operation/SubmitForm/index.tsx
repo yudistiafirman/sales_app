@@ -657,7 +657,7 @@ function SubmitForm() {
                                     ).format("L")} | ${moment(
                                         operationData.projectDetails
                                             .deliveryTime
-                                    ).format("hh:mm A")}`
+                                    ).format("HH:mm")}`
                                 }}
                                 customStyle={{
                                     backgroundColor: colors.tertiary

@@ -291,7 +291,7 @@ function Beranda() {
                             ? "Selesai"
                             : "Belum Selesai";
                         const time = el.finishDate
-                            ? moment(el.finishDate).format("hh:mm")
+                            ? moment(el.finishDate).format("HH:mm")
                             : null;
                         const location = el.project?.LocationAddress?.line1;
                         return {
