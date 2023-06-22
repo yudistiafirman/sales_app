@@ -67,7 +67,8 @@ import {
     INVOICE_LIST,
     INVOICE_LIST_TITLE,
     INVOICE_DETAIL,
-    PROJECT_DETAIL_TITLE
+    PROJECT_DETAIL_TITLE,
+    SPH_TITLE
 } from "../ScreenNames";
 
 const selectedBPBadges = (
@@ -99,8 +100,7 @@ function SalesStack(selectedBP: BatchingPlant, Stack: any) {
                 key={SPH}
                 component={Sph}
                 options={{
-                    headerTitle: () =>
-                        selectedBPBadges(selectedBP, CREATE_VISITATION_TITLE)
+                    headerTitle: () => selectedBPBadges(selectedBP, SPH_TITLE)
                 }}
             />
             <Stack.Screen
