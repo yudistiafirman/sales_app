@@ -295,7 +295,9 @@ export default function StepDone({
                         }}
                         disabled={
                             locationObj?.locationAddress?.lat === null ||
-                            locationObj?.locationAddress?.lon === null
+                            locationObj?.locationAddress?.lon === null ||
+                            !locationObj?.locationAddress?.lat ||
+                            !locationObj?.locationAddress?.lon
                         }
                     />
                     <View style={styles.contentDetail}>
