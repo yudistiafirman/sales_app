@@ -129,6 +129,7 @@ export default function ProjectDetailPage() {
     useHeaderTitleChanged({
         title: PROJECT_DETAIL_TITLE,
         selectedBP: selectedBatchingPlant,
+        hideBPBadges: true,
         alignLeft: false
     });
 
