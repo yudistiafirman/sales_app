@@ -80,15 +80,15 @@ function PriceList() {
             if (from === CREATE_VISITATION) {
                 setFromVisitation(true);
             }
-            send("backToIdle");
-            send("sendingParams", {
+            // send("backToIdle");
+            send("onAskPermission", {
                 value: {
                     latitude,
                     longitude
                 },
                 selectedBP: selectedBatchingPlant
             });
-            setIndex(0);
+            // setIndex(0);
         } else {
             send("onAskPermission", { selectedBP: selectedBatchingPlant });
         }

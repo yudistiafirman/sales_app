@@ -58,7 +58,11 @@ export const priceMachine =
                       }
                     | { type: "backToIdle" }
                     | { type: "onEndReached" }
-                    | { type: "onAskPermission" }
+                    | {
+                          type: "onAskPermission";
+                          value: { latitude: number; longitude: number };
+                          selectedBP: BatchingPlant;
+                      }
                     | { type: "refreshingList"; selectedBP: BatchingPlant }
                     | { type: "hideWarning" }
                     | { type: "appComeForegroundState" }
@@ -332,7 +336,7 @@ export const priceMachine =
                     };
                 }),
                 assignProductsDataToContext: assign((context, event) => {
-                    let productsData: any[] = [];
+                    let productsData: any[] = [...context.productsData];
                     if (event.data.products && event.data.products.length > 0) {
                         productsData = [
                             ...context.productsData,
