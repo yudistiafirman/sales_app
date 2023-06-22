@@ -163,7 +163,11 @@ function ListProduct(
             <BProductCard
                 name={displayName}
                 pricePerVol={pricePerlVol}
-                volume={quantity || requestedQuantity || quantity || 0}
+                volume={
+                    selectedType === "SPH"
+                        ? item.quantity
+                        : quantity || requestedQuantity || quantity || 0
+                }
                 totalPrice={
                     isPoData
                         ? requestedQuantity * (ReqProduct?.offeringPrice || 0)
@@ -466,6 +470,7 @@ function TransactionDetail() {
                     data?.project?.ShippingAddress ||
                     data?.QuotationRequest?.project?.LocationAddress ||
                     data?.QuotationRequest?.project?.ShippingAddress ||
+                    data?.QuotationRequest?.project?.BillingAddress ||
                     data?.Account?.Project?.ShippingAddress) && (
                     <BCompanyMapCard
                         onPressLocation={() =>
@@ -512,6 +517,14 @@ function TransactionDetail() {
                                 .line1
                                 ? data?.QuotationRequest?.project
                                       ?.ShippingAddress.line1
+                                : data?.QuotationRequest?.project
+                                      ?.LocationAddress?.line1
+                                ? data?.QuotationRequest?.project
+                                      ?.LocationAddress?.line1
+                                : data?.QuotationRequest?.project
+                                      ?.BillingAddress?.line1
+                                ? data?.QuotationRequest?.project
+                                      ?.BillingAddress?.line1
                                 : data?.project?.ShippingAddress.line1
                                 ? data?.project?.ShippingAddress.line1
                                 : data?.Account?.Project?.ShippingAddress.line1
