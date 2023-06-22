@@ -248,11 +248,6 @@ export default function StepDone({
         }
     };
 
-    console.log(
-        "ini location address last step",
-        locationObj?.locationAddress?.lat
-    );
-
     return (
         <Modal
             backdropOpacity={1}
