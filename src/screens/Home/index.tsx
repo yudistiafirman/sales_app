@@ -873,7 +873,7 @@ function Beranda() {
                     }}
                 />
             </BBottomSheet>
-            {renderUpdateDialog()}
+            {/* {renderUpdateDialog()} */}
         </View>
     );
 }

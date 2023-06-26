@@ -46,6 +46,7 @@ import { openPopUp } from "@/redux/reducers/modalReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { getCoordinateDetails } from "@/redux/async-thunks/commonThunks";
+import { getLocationCoordinates } from "@/actions/CommonActions";
 import { SphContext } from "../context/SphContext";
 
 const style = StyleSheet.create({
@@ -164,17 +165,37 @@ export default function SecondStep() {
         try {
             dispatch(setUseSearchAddress({ value: false }));
             dispatch(setUseBillingAddress({ value: false }));
-            const coordinateToSet = await dispatch(
-                getCoordinateDetails({
-                    coordinate,
-                    selectedBatchingPlant: selectedBatchingPlant.name
-                })
-            ).unwrap();
-
             if (isBiilingAddress) {
+                const response = await getLocationCoordinates(
+                    coordinate.longitude as unknown as number,
+                    coordinate.latitude as unknown as number,
+                    selectedBatchingPlant.name,
+                    undefined
+                );
+
+                const { result } = response.data;
+
+                const coordinateToSet = {
+                    latitude: result?.lat,
+                    longitude: result?.lon,
+                    lat: 0,
+                    lon: 0,
+                    formattedAddress: result?.formattedAddress,
+                    PostalId: result?.PostalId,
+                    distance: result?.distance?.value
+                };
                 dispatch(updateBillingAddressAutoComplete(coordinateToSet));
-            } else if (coordinateToSet.distance) {
-                dispatch(updateDistanceFromLegok(coordinateToSet.distance));
+            } else {
+                const coordinateToSet = await dispatch(
+                    getCoordinateDetails({
+                        coordinate,
+                        selectedBatchingPlant: selectedBatchingPlant.name
+                    })
+                ).unwrap();
+                if (coordinateToSet.distance) {
+                    dispatch(updateDistanceFromLegok(coordinateToSet.distance));
+                }
+                dispatch(updateProjectAddress(coordinateToSet));
             }
         } catch (error) {
             if (error?.message !== "canceled")
