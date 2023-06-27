@@ -114,10 +114,7 @@ function Return() {
                         ? Number(item.project.ShippingAddress.lat)
                         : 0
                 },
-                requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct
-                    ?.requestedQuantity
-                    ? item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity
-                    : 0,
+                requestedQuantity: item?.quantity ? item?.quantity : 0,
                 deliveryTime: item?.date ? item.date : ""
             };
             dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
