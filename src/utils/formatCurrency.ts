@@ -8,19 +8,19 @@ const trimCurrencyFormat = (
     withoutRp: boolean
 ): string => {
     let result = input;
-    if (result.includes("IDR")) {
-        result = result.replace("IDR ", "").replace("IDR", "");
+    if (result?.includes("IDR")) {
+        result = result?.replace("IDR ", "")?.replace("IDR", "");
     }
 
-    if (result.includes("Rp.")) {
-        result = result.replace("Rp. ", "").replace("Rp.", "");
+    if (result?.includes("Rp.")) {
+        result = result?.replace("Rp. ", "")?.replace("Rp.", "");
     }
 
-    if (result.includes("Rp")) {
-        result = result.replace("Rp ", "").replace("Rp", "");
+    if (result?.includes("Rp")) {
+        result = result?.replace("Rp ", "")?.replace("Rp", "");
     }
 
-    if (!result.includes("Rp")) {
+    if (!result?.includes("Rp")) {
         if (originAmount < 0) {
             result = withoutRp ? `- ${result}` : `- Rp ${result}`;
         } else {

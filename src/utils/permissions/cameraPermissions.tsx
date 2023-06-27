@@ -68,7 +68,7 @@ export const hasCameraPermissions = async () => {
         return false;
     } catch (err) {
         const errorMessage =
-            err.message ||
+            err?.message ||
             "Terjadi error dalam meminta izin untuk mengakses camera";
         store.dispatch(
             openPopUp({

@@ -84,20 +84,21 @@ function PurchaseOrder() {
                 return JSON.stringify(choosenSphDataFromModal) === "{}";
             }
             return (
-                poNumber.length === 0 ||
+                poNumber?.length === 0 ||
                 JSON.stringify(choosenSphDataFromModal) === "{}" ||
-                poImages.length <= 1
+                poImages?.length <= 1
             );
         }
         if (currentStep === 1) {
             return false;
         }
-        const hasNoQuantityMultiProducts = selectedProducts.filter(
-            (v) => v.quantity.length === 0 || v.quantity[0] === "0"
+        const hasNoQuantityMultiProducts = selectedProducts?.filter(
+            (v) => v?.quantity?.length === 0 || v?.quantity[0] === "0"
         );
         return (
-            hasNoQuantityMultiProducts.length > 0 ||
-            selectedProducts.length === 0 ||
+            (hasNoQuantityMultiProducts &&
+                hasNoQuantityMultiProducts?.length > 0) ||
+            (selectedProducts && selectedProducts?.length === 0) ||
             checkHasSpecialMobilizationPrice()
         );
     };

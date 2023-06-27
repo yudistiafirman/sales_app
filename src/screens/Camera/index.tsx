@@ -99,9 +99,9 @@ function CameraScreen() {
         ) : undefined
     });
 
-    const device = useCameraDevices().back;
+    const device = useCameraDevices()?.back;
     const camera = React.useRef<Camera>(null);
-    const opacityAnimation = React.useRef(new Animated.Value(0)).current;
+    const opacityAnimation = React.useRef(new Animated.Value(0))?.current;
     const animateElement = () => {
         Animated.timing(opacityAnimation, {
             toValue: 1,
@@ -117,7 +117,7 @@ function CameraScreen() {
     };
 
     const takePhoto = async () => {
-        if (camera === undefined || camera.current === undefined) {
+        if (camera === undefined || camera?.current === undefined) {
             dispatch(
                 openPopUp({
                     popUpType: "error",

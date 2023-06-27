@@ -37,8 +37,8 @@ export const postUploadFiles = createAsyncThunk<
         const response = await uploadFileImage(files, from);
 
         const { data } = response;
-        if (data.error) throw new Error(data);
-        return data.data;
+        if (data?.error) throw new Error(data);
+        return data?.data;
     } catch (error) {
         let errorData = error?.message;
         if (error?.response?.data) {
@@ -56,8 +56,8 @@ export const getAllProject = createAsyncThunk<
     async ({ search, selectedBPId }, { rejectWithValue }) => {
         try {
             const response = await allVisitationGetAction(search, selectedBPId);
-            const { data } = response.data.data;
-            if (data.error) throw new Error(data);
+            const data = response?.data?.data?.data;
+            if (data?.error) throw new Error(data);
             return data;
         } catch (error) {
             return rejectWithValue(error?.message);
@@ -65,28 +65,13 @@ export const getAllProject = createAsyncThunk<
     }
 );
 
-// export const getProjectsByUserThunk = createAsyncThunk<
-//     projectResponseType,
-//     { search?: string }
-// >("common/getProjectsByUserThunk", async ({ search }, { rejectWithValue }) => {
-//     // projectByUserGetAction
-//     try {
-//         const response = await projectByUserGetAction(search);
-//         const { data } = response;
-//         if (data.error) throw new Error(data);
-//         return data;
-//     } catch (error) {
-//         return rejectWithValue(error?.message);
-//     }
-// });
-// projectGetOneById
 export const getOneProjectById = createAsyncThunk<any, { projectId: string }>(
     "common/getOneProjectById",
     async ({ projectId }, { rejectWithValue }) => {
         try {
             const response = await projectGetOneById(projectId);
             const { data } = response;
-            if (data.error) throw new Error(data);
+            if (data?.error) throw new Error(data);
             return data;
         } catch (error) {
             return rejectWithValue(error?.message);
@@ -100,7 +85,7 @@ export const fetchSphDocuments = createAsyncThunk(
         try {
             const response = await getSphDocuments();
             const { data } = response;
-            if (data.error) throw new Error(data);
+            if (data?.error) throw new Error(data);
             return data;
         } catch (error) {
             return rejectWithValue(error?.message);
@@ -116,7 +101,7 @@ export const fetchAddressSuggestion = createAsyncThunk<
         try {
             const response = await getAddressSuggestion(search, page);
             const { data } = response;
-            if (data.error) throw new Error(data);
+            if (data?.error) throw new Error(data);
             return data;
         } catch (error) {
             return rejectWithValue(error?.message);
@@ -138,7 +123,7 @@ export const postProjectDocByprojectId = createAsyncThunk<
         try {
             const response = await postProjectDoc(payload);
             const { data } = response;
-            if (data.error) throw new Error(data);
+            if (data?.error) throw new Error(data);
             return data;
         } catch (error) {
             let errorData = error?.message;
@@ -161,13 +146,13 @@ export const getCoordinateDetails = createAsyncThunk<
     ) => {
         try {
             const response = await getLocationCoordinates(
-                coordinate.longitude as unknown as number,
-                coordinate.latitude as unknown as number,
+                coordinate?.longitude as unknown as number,
+                coordinate?.latitude as unknown as number,
                 selectedBatchingPlant,
                 signal
             );
 
-            const { result } = response.data;
+            const result = response?.data?.result;
 
             const coordinateToSet = {
                 latitude: result?.lat,
@@ -210,15 +195,16 @@ export const getUserCurrentLocation = createAsyncThunk(
             const position = await new Promise((resolve, error) =>
                 Geolocation.getCurrentPosition(resolve, error, opt)
             );
-            const { coords } = position;
-            const { latitude, longitude } = coords;
+            const coords = position?.coords;
+            const latitude = coords?.latitude;
+            const longitude = coords?.longitude;
             const response = await getLocationCoordinates(
                 longitude,
                 latitude,
                 selectedBatchingPlant,
                 signal
             );
-            const { result } = response.data;
+            const result = response?.data?.result;
             const coordinate = {
                 longitude: Number(result?.lon),
                 latitude: Number(result?.lat),

@@ -66,18 +66,18 @@ function ProductDetailModal({
         type: "quantity",
         label: "Volume",
         isRequire: true,
-        value: inputsValue.volume,
+        value: inputsValue?.volume,
         onChange: (v) => setInputsValue((prev) => ({ ...prev, volume: v })),
         placeholder: "0",
-        isError: inputsValue.volume === ""
+        isError: inputsValue?.volume === ""
     };
 
     const pouringMethod: Input = {
         type: "dropdown",
         label: "Metode Penuangan",
         isRequire: true,
-        value: inputsValue.pouringMethods,
-        isError: inputsValue.pouringMethods === "",
+        value: inputsValue?.pouringMethods,
+        isError: inputsValue?.pouringMethods === "",
         dropdown: {
             placeholder: "Pilih metode penuangan",
             items: METHOD_LIST,
@@ -116,13 +116,13 @@ function ProductDetailModal({
                 <View style={styles.buttonWrapper}>
                     <BButtonPrimary
                         disable={
-                            inputsValue.volume === "" ||
-                            inputsValue.pouringMethods === ""
+                            inputsValue?.volume === "" ||
+                            inputsValue?.pouringMethods === ""
                         }
                         onPress={() => {
                             onChoose({
-                                quantity: inputsValue.volume,
-                                pouringMethod: inputsValue.pouringMethods
+                                quantity: inputsValue?.volume,
+                                pouringMethod: inputsValue?.pouringMethods
                             });
                             setInputsValue({ volume: "", pouringMethods: "" });
                         }}

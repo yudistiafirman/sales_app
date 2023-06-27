@@ -23,7 +23,7 @@ export default function BQuickAction({
                 horizontal={isHorizontal}
                 data={buttonProps}
                 renderItem={BQuickActionButton}
-                keyExtractor={(_, index) => index.toString()}
+                keyExtractor={(_, index) => index?.toString()}
             />
         </View>
     );

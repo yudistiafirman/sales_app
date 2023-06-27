@@ -220,31 +220,31 @@ const searchPOMachine = createMachine(
         actions: {
             triggerModal: assign((context, event) => ({
                 isModalVisible: true,
-                choosenDataFromList: event.value,
+                choosenDataFromList: event?.value,
                 availableDeposit: getAvailableDepositProject(
-                    event.value,
-                    context.dataType !== "DEPOSITDATA"
+                    event?.value,
+                    context?.dataType !== "DEPOSITDATA"
                 ),
-                paymentType: event.value?.Customer?.paymentType
+                paymentType: event?.value?.Customer?.paymentType
             })),
             assignSearchValue: assign((context, event) => ({
-                searchValue: event.value,
+                searchValue: event?.value,
                 batchingPlantId: event?.selectedBP?.id,
                 loadData: true
             })),
             assignSphData: assign((_context, event) => {
-                const newData = event.data.filter(
-                    (it) => it.QuotationRequests?.length > 0
+                const newData = event?.data?.filter(
+                    (it) => it?.QuotationRequests?.length > 0
                 );
                 return {
                     routes: [
                         {
                             key: "first",
                             title:
-                                _context.filterSphDataBy === "INDIVIDU"
+                                _context?.filterSphDataBy === "INDIVIDU"
                                     ? "Individu"
                                     : "Perusahaan",
-                            totalItems: newData.length,
+                            totalItems: newData?.length,
                             chipPosition: "right"
                         }
                     ],
@@ -258,7 +258,7 @@ const searchPOMachine = createMachine(
                 isModalVisible: false
             })),
             handleErrorGettingList: assign((context, event) => ({
-                errorGettingListMessage: event.data.message,
+                errorGettingListMessage: event?.data?.message,
                 loadData: false,
                 loadMoreData: false,
                 isRefreshing: false
@@ -271,23 +271,23 @@ const searchPOMachine = createMachine(
                 searchValue: ""
             })),
             assignDataType: assign((context, event) => ({
-                dataType: event.value,
-                filterSphDataBy: event.filterBy
+                dataType: event?.value,
+                filterSphDataBy: event?.filterBy
             })),
             assignPurchaseOrderListData: assign((context, event) => {
-                const newData = event.data.data.filter(
-                    (it) => it.PurchaseOrders?.length > 0
+                const newData = event?.data?.data?.filter(
+                    (it) => it?.PurchaseOrders && it?.PurchaseOrders?.length > 0
                 );
                 return {
                     routes: [
                         {
                             key: "first",
                             title: "Proyek",
-                            totalItems: newData.length,
+                            totalItems: newData?.length,
                             chipPosition: "right"
                         }
                     ],
-                    totalPage: event.data.totalPages,
+                    totalPage: event?.data?.totalPages,
                     poData: newData,
                     loadData: false,
                     isRefreshing: false,
@@ -301,31 +301,31 @@ const searchPOMachine = createMachine(
                 page: 1
             })),
             handleOnEndReached: assign((context) => ({
-                page: context.page + 1,
+                page: (context?.page || 0) + 1,
                 loadMoreData: true
             }))
         },
         guards: {
             searchValueLengthAccepted: (_context, event) =>
-                event.value.length > 2,
-            isDataTypeSph: (context) => context.dataType === "SPHDATA",
+                event?.value?.length > 2,
+            isDataTypeSph: (context) => context?.dataType === "SPHDATA",
             isDataTypePurchaseOrder: (context) =>
-                context.dataType === "DEPOSITDATA" ||
-                context.dataType === "SCHEDULEDATA",
+                context?.dataType === "DEPOSITDATA" ||
+                context?.dataType === "SCHEDULEDATA",
             isGettingPurchaseOrder: (context) =>
-                context.dataType === "DEPOSITDATA" ||
-                (context.dataType === "SCHEDULEDATA" &&
-                    context.page <= context.totalPage)
+                context?.dataType === "DEPOSITDATA" ||
+                (context?.dataType === "SCHEDULEDATA" &&
+                    context?.page <= context?.totalPage)
         },
         services: {
             GetSphList: async (context) => {
                 try {
                     const response = await getSphByProject(
-                        context.searchValue,
-                        context.filterSphDataBy,
-                        context.batchingPlantId
+                        context?.searchValue,
+                        context?.filterSphDataBy,
+                        context?.batchingPlantId
                     );
-                    return response.data.data;
+                    return response?.data?.data;
                 } catch (error) {
                     throw new Error(error);
                 }
@@ -334,15 +334,15 @@ const searchPOMachine = createMachine(
                 try {
                     const { page, size, searchValue } = context;
                     const productPo =
-                        context.dataType === "DEPOSITDATA" ? "1" : "0";
+                        context?.dataType === "DEPOSITDATA" ? "1" : "0";
                     const response = await getConfirmedPurchaseOrder(
-                        page.toString(),
-                        size.toString(),
+                        page?.toString(),
+                        size?.toString(),
                         searchValue,
                         productPo,
-                        context.batchingPlantId
+                        context?.batchingPlantId
                     );
-                    return response.data.data;
+                    return response?.data?.data;
                 } catch (error) {
                     throw new Error(error);
                 }

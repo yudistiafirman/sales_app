@@ -44,7 +44,7 @@ function SearchAreaProject({ route }: { route: any }) {
                 };
             }),
             navigateToLocation: (context, event) => {
-                if (event.data) {
+                if (event?.data) {
                     const { data } = event;
                     const { formattedAddress } = context;
                     const from = route?.params?.from;
@@ -57,11 +57,11 @@ function SearchAreaProject({ route }: { route: any }) {
                     };
 
                     if (typeof data?.lon === "string") {
-                        coordinate.longitude = Number(data?.lon);
+                        coordinate.longitude = Number(data?.lon || "0");
                     }
 
                     if (typeof data?.lat === "string") {
-                        coordinate.latitude = Number(data?.lat);
+                        coordinate.latitude = Number(data?.lat || "0");
                     }
                     if (
                         from === CREATE_VISITATION ||
@@ -177,7 +177,7 @@ function SearchAreaProject({ route }: { route: any }) {
             />
             <BSpacer size="small" />
             <CurrentLocation
-                disabled={longlat.latitude === undefined}
+                disabled={longlat?.latitude === undefined}
                 onPress={onPressCurrentLocation}
             />
             <BSpacer size="small" />

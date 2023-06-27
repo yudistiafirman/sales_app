@@ -85,7 +85,7 @@ const hasLocationPermission = async () => {
         return false;
     } catch (err) {
         const errorMessage =
-            err.message ||
+            err?.message ||
             "Terjadi error dalam meminta izin mengakses layanan lokasi";
         store.dispatch(
             openPopUp({

@@ -135,7 +135,7 @@ export const appointmentSlice = createSlice({
     reducers: {
         setSearchQuery: (state, actions: PayloadAction<{ value: string }>) => ({
             ...state,
-            searchQuery: actions.payload.value
+            searchQuery: actions.payload?.value
         }),
         setCompanyName: (state, actions: PayloadAction<{ value: string }>) => ({
             ...state,
@@ -146,7 +146,7 @@ export const appointmentSlice = createSlice({
                     ...state.stepOne.company,
                     Company: {
                         ...state.stepOne.company.Company,
-                        title: actions.payload.value
+                        title: actions.payload?.value
                     }
                 }
             }
@@ -158,7 +158,7 @@ export const appointmentSlice = createSlice({
             ...state,
             stepOne: {
                 ...state.stepOne,
-                customerType: actions.payload.value,
+                customerType: actions.payload?.value,
                 errorCompany: "",
                 errorProject: "",
                 errorPics: "",
@@ -171,109 +171,179 @@ export const appointmentSlice = createSlice({
         setProjectName: (
             state,
             actions: PayloadAction<{ key: keyof StepOne; value: string }>
-        ) => ({
-            ...state,
-            stepOne: {
-                ...state.stepOne,
-                errorProject: "",
-                [actions.payload.key]: {
-                    ...(state.stepOne[actions.payload.key] as StepOne),
-                    name: actions.payload.value
-                }
+        ) => {
+            if (actions.payload?.key) {
+                return {
+                    ...state,
+                    stepOne: {
+                        ...state.stepOne,
+                        errorProject: "",
+                        [actions.payload.key]: {
+                            ...(state.stepOne[actions.payload.key] as StepOne),
+                            name: actions.payload?.value
+                        }
+                    }
+                };
             }
-        }),
+            return {
+                ...state,
+                stepOne: {
+                    ...state.stepOne,
+                    errorProject: ""
+                }
+            };
+        },
         setPics: (
             state,
             actions: PayloadAction<{ key: keyof StepOne; value: PIC }>
-        ) => ({
-            ...state,
-            isModalPicVisible: false,
-            stepOne: {
-                ...state.stepOne,
-                errorPics: "",
-                [actions.payload.key]: {
-                    ...(state.stepOne[actions.payload.key] as StepOne),
-                    Pics: actions.payload.value
-                }
+        ) => {
+            if (actions.payload?.key) {
+                return {
+                    ...state,
+                    isModalPicVisible: false,
+                    stepOne: {
+                        ...state.stepOne,
+                        errorPics: "",
+                        [actions.payload.key]: {
+                            ...(state.stepOne[actions.payload.key] as StepOne),
+                            Pics: actions.payload?.value
+                        }
+                    }
+                };
             }
-        }),
+            return {
+                ...state,
+                isModalPicVisible: false,
+                stepOne: {
+                    ...state.stepOne,
+                    errorPics: ""
+                }
+            };
+        },
         toggleModalPics: (
             state,
             actions: PayloadAction<{ value: boolean }>
         ) => ({
             ...state,
-            isModalPicVisible: actions.payload.value
+            isModalPicVisible: actions.payload?.value
         }),
         assignError: (
             state,
             actions: PayloadAction<{ key: keyof StepOne; value: string }>
-        ) => ({
-            ...state,
-            stepOne: {
-                ...state.stepOne,
-                [actions.payload.key]: actions.payload.value
+        ) => {
+            if (actions.payload?.key) {
+                return {
+                    ...state,
+                    stepOne: {
+                        ...state.stepOne,
+                        [actions.payload.key]: actions.payload?.value
+                    }
+                };
             }
-        }),
+            return {
+                ...state,
+                stepOne: {
+                    ...state.stepOne
+                }
+            };
+        },
         onPressCompany: (
             state,
             actions: PayloadAction<{ value: selectedCompanyInterface }>
         ) => ({
             ...state,
             isModalCompanyVisible: true,
-            selectedCustomerData: actions.payload.value
+            selectedCustomerData: actions.payload?.value
         }),
         toggleModalCompany: (state) => ({
             ...state,
-            isModalCompanyVisible: !state.isModalCompanyVisible
+            isModalCompanyVisible: !state?.isModalCompanyVisible
         }),
         selectProject: (state, actions: PayloadAction<{ value: any }>) => ({
             ...state,
             selectedCustomerData: {
                 ...state.selectedCustomerData,
-                project: actions.payload.value
+                project: actions.payload?.value
             }
         }),
         onAddProject: (
             state,
             actions: PayloadAction<{ key: keyof StepOne; value: DataCompany }>
-        ) => ({
-            ...state,
-            isModalCompanyVisible: false,
-            isSearching: false,
-            searchQuery: "",
-            stepOne: {
-                ...state.stepOne,
-                customerType: actions.payload.key,
-                errorPics: "",
-                errorCompany: "",
-                errorProject: "",
-                [actions.payload.key as keyof StepOne]: {
-                    ...(state.stepOne[actions.payload.key] as StepOne),
-                    ...actions.payload.value
+        ) => {
+            if (actions.payload?.key) {
+                return {
+                    ...state,
+                    isModalCompanyVisible: false,
+                    isSearching: false,
+                    searchQuery: "",
+                    stepOne: {
+                        ...state.stepOne,
+                        customerType: actions.payload?.key,
+                        errorPics: "",
+                        errorCompany: "",
+                        errorProject: "",
+                        [actions.payload.key as keyof StepOne]: {
+                            ...(state.stepOne[actions.payload.key] as StepOne),
+                            ...actions.payload?.value
+                        }
+                    }
+                };
+            }
+            return {
+                ...state,
+                isModalCompanyVisible: false,
+                isSearching: false,
+                searchQuery: "",
+                stepOne: {
+                    ...state.stepOne,
+                    errorPics: "",
+                    errorCompany: "",
+                    errorProject: ""
                 }
+            };
+        },
+        setCategories: (state, actions: PayloadAction<{ value: number }>) => {
+            if (actions.payload?.value) {
+                return {
+                    ...state,
+                    stepOne: {
+                        ...state.stepOne,
+                        selectedCategories:
+                            state?.stepOne?.routes[actions?.payload?.value]
+                                ?.title
+                    }
+                };
             }
-        }),
-        setCategories: (state, actions: PayloadAction<{ value: number }>) => ({
-            ...state,
-            stepOne: {
-                ...state.stepOne,
-                selectedCategories:
-                    state.stepOne.routes[actions.payload.value].title
-            }
-        }),
+            return {
+                ...state,
+                stepOne: {
+                    ...state.stepOne
+                }
+            };
+        },
         selectCompany: (
             state,
             actions: PayloadAction<{ key: keyof StepOne; value: DataCompany }>
-        ) => ({
-            ...state,
-            stepOne: {
-                ...state.stepOne,
-                [actions.payload.key]: {
-                    ...(state.stepOne[actions.payload.key] as StepOne),
-                    Company: actions.payload.value
-                }
+        ) => {
+            if (actions.payload?.key) {
+                return {
+                    ...state,
+                    stepOne: {
+                        ...state.stepOne,
+                        [actions.payload.key]: {
+                            ...(state.stepOne[actions.payload.key] as StepOne),
+                            Company: actions.payload?.value
+                        }
+                    }
+                };
             }
-        }),
+            return {
+                ...state,
+                stepOne: {
+                    ...state.stepOne
+                }
+            };
+        },
         onPressProject: (
             state,
             actions: PayloadAction<{
@@ -281,49 +351,60 @@ export const appointmentSlice = createSlice({
                 projectName: string;
                 pics: PIC;
             }>
-        ) => ({
-            ...state,
-            searchQuery: "",
-            stepOne: {
-                ...state.stepOne,
-                customerType: actions.payload.key,
-                [actions.payload.key as keyof StepOne]: {
-                    ...(state.stepOne[
-                        actions.payload.key as keyof StepOne
-                    ] as StepOne),
-                    Pics: actions.payload.pics,
-                    projectName: actions.payload.projectName
-                }
+        ) => {
+            if (actions.payload?.key) {
+                return {
+                    ...state,
+                    searchQuery: "",
+                    stepOne: {
+                        ...state.stepOne,
+                        customerType: actions.payload.key,
+                        [actions.payload.key as keyof StepOne]: {
+                            ...(state.stepOne[
+                                actions.payload.key as keyof StepOne
+                            ] as StepOne),
+                            Pics: actions.payload?.pics,
+                            projectName: actions.payload?.projectName
+                        }
+                    }
+                };
             }
-        }),
+            return {
+                ...state,
+                searchQuery: "",
+                stepOne: {
+                    ...state.stepOne
+                }
+            };
+        },
         addCompanies: (state, actions) => ({
             ...state,
             stepOne: {
                 ...state.stepOne,
                 options: {
                     ...state.stepOne.options.items,
-                    items: actions.payload.value
+                    items: actions.payload?.value
                 }
             }
         }),
         setDate: (state, actions: PayloadAction<{ value: SelectedDate }>) => ({
             ...state,
-            selectedDate: actions.payload.value
+            selectedDate: actions.payload?.value
         }),
         increaseStep: (state) => ({
             ...state,
-            step: state.step + 1
+            step: (state?.step || 0) + 1
         }),
         decreaseStep: (state) => ({
             ...state,
-            step: state.step - 1
+            step: (state?.step || 0) - 1
         }),
         enableSearching: (
             state,
             actions: PayloadAction<{ value: boolean }>
         ) => ({
             ...state,
-            isSearching: actions.payload.value
+            isSearching: actions.payload?.value
         }),
         resetAppointmentState: () => initialState
     }

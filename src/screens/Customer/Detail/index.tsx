@@ -121,9 +121,9 @@ export default function CustomerDetail() {
             );
 
             const response = await getOneCustomer(id);
-            if (response.data.success) {
+            if (response?.data?.success) {
                 dispatch(closePopUp());
-                setCustomerData(response.data.data);
+                setCustomerData(response?.data?.data);
             } else {
                 dispatch(
                     openPopUp({
@@ -159,7 +159,7 @@ export default function CustomerDetail() {
         DeviceEventEmitter.addListener(
             "getCoordinateFromCustomerDetail",
             (data) => {
-                setUpdatedBilling(data.coordinate);
+                setUpdatedBilling(data?.coordinate);
                 setIsBillingLocationVisible(true);
             }
         );
@@ -386,16 +386,14 @@ export default function CustomerDetail() {
                         />
                     </View>
                 </BContainer>
-                {customerData?.Projects.length > 0 && (
-                    <View style={styles.projectListContainer}>
-                        <BContainer>
-                            <Text style={styles.fontW400}>Proyek</Text>
-                            <BSpacer size="extraSmall" />
-                            {customerData?.Projects.map((v, i) => {
-                                const name = v.displayName;
-                                const location = v.locationAddress?.line1;
-                                return (
-                                    <React.Fragment key={v.id}>
+                {customerData?.Projects &&
+                    customerData?.Projects?.length > 0 && (
+                        <View style={styles.projectListContainer}>
+                            <BContainer>
+                                <Text style={styles.fontW400}>Proyek</Text>
+                                <BSpacer size="extraSmall" />
+                                {customerData?.Projects?.map((v, i) => (
+                                    <React.Fragment key={v?.id}>
                                         <BVisitationCard
                                             isRenderIcon={false}
                                             nameSize={fonts.size.xs}
@@ -403,7 +401,7 @@ export default function CustomerDetail() {
                                                 colors.text.lightGray
                                             }
                                             item={{
-                                                name: v.name ? v.name : "",
+                                                name: v?.name ? v?.name : "",
                                                 location: v?.ShippingAddress
                                                     ?.line1
                                                     ? v?.ShippingAddress?.line1
@@ -413,7 +411,7 @@ export default function CustomerDetail() {
                                                 navigation.navigate(
                                                     PROJECT_DETAIL,
                                                     {
-                                                        projectId: v.id,
+                                                        projectId: v?.id,
                                                         isFromCustomerPage: true
                                                     }
                                                 )
@@ -421,11 +419,10 @@ export default function CustomerDetail() {
                                         />
                                         <BSpacer size="extraSmall" />
                                     </React.Fragment>
-                                );
-                            })}
-                        </BContainer>
-                    </View>
-                )}
+                                ))}
+                            </BContainer>
+                        </View>
+                    )}
             </ScrollView>
         </>
     );

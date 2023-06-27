@@ -77,9 +77,9 @@ export default function Appointment() {
         isSearching
     } = appointmentState;
     const customerType =
-        stepOne.customerType === "company" ? "company" : "individu";
+        stepOne?.customerType === "company" ? "company" : "individu";
     const btnShown =
-        searchQuery.length === 0 && stepOne.customerType.length > 0;
+        searchQuery?.length === 0 && stepOne?.customerType?.length > 0;
     const labels = ["Data Pelanggan", "Tanggal Kunjungan"];
     const inCustomerDataStep = step === 0;
     const inVisitationDateStep = step === 1;
@@ -132,25 +132,25 @@ export default function Appointment() {
 
     const validateCompanyDetailsForm = React.useCallback(() => {
         const errors: Partial<StepOne> = {};
-        if (stepOne.customerType === "company") {
-            if (!stepOne.company.Company?.title) {
+        if (stepOne?.customerType === "company") {
+            if (!stepOne?.company?.Company?.title) {
                 errors.errorCompany = "Nama perusahaan harus diisi";
             }
         }
 
-        if (stepOne[customerType].name?.length === 0) {
+        if (stepOne[customerType]?.name?.length === 0) {
             errors.errorProject = "Nama Proyek harus diisi";
-        } else if (stepOne[customerType].name?.length < 4) {
+        } else if (stepOne[customerType]?.name?.length < 4) {
             errors.errorProject =
                 "Nama Proyek tidak boleh kurang dari 4 karakter";
         }
-        if (stepOne[customerType].Pics.length === 0) {
+        if (stepOne[customerType]?.Pics?.length === 0) {
             errors.errorPics = "Tambahkan minimal 1 PIC";
-        } else if (stepOne[customerType].Pics.length > 1) {
-            const selectedPic = stepOne[customerType].Pics.filter(
-                (v) => v.isSelected
+        } else if (stepOne[customerType]?.Pics?.length > 1) {
+            const selectedPic = stepOne[customerType]?.Pics?.filter(
+                (v) => v?.isSelected
             );
-            if (selectedPic.length === 0) {
+            if (selectedPic && selectedPic?.length === 0) {
                 errors.errorPics = "Pilih salah satu PIC";
             }
         }
@@ -160,7 +160,7 @@ export default function Appointment() {
     const goToVisitationDateStep = React.useCallback(() => {
         const errors = validateCompanyDetailsForm();
         if (JSON.stringify(errors) !== "{}" && errors) {
-            Object.keys(errors).forEach((val) => {
+            Object?.keys(errors)?.forEach((val) => {
                 dispatch(assignError({ key: val, value: errors }));
             });
         } else {
@@ -179,86 +179,89 @@ export default function Appointment() {
                     location: {} as Address
                 } as projectPayloadType,
                 pic: [] as PIC[],
-                batchingPlantId: authState.selectedBatchingPlant?.id
+                batchingPlantId: authState?.selectedBatchingPlant?.id
             };
-            if (stepOne[customerType].Pics.length === 1) {
+            if (
+                stepOne[customerType]?.Pics &&
+                stepOne[customerType]?.Pics?.length === 1
+            ) {
                 const pic = [];
-                pic.push({
-                    ...stepOne[customerType].Pics[0],
+                pic?.push({
+                    ...stepOne[customerType]?.Pics[0],
                     isSelected: true
                 });
                 payload.pic = pic;
             } else {
-                const selectedPic = stepOne[customerType].Pics.filter(
-                    (v) => v.isSelected
+                const selectedPic = stepOne[customerType]?.Pics?.filter(
+                    (v) => v?.isSelected
                 );
                 payload.pic = selectedPic;
             }
             const typeCustomer =
                 customerType === "individu" ? "INDIVIDU" : "COMPANY";
-            if (stepOne[customerType].Visitation) {
-                payload.visitation.order = stepOne[customerType].Visitation
-                    .finishDate
-                    ? stepOne[customerType].Visitation.order
+            if (stepOne[customerType]?.Visitation) {
+                payload.visitation.order = stepOne[customerType]?.Visitation
+                    ?.finishDate
+                    ? stepOne[customerType]?.Visitation?.order
                     : stepOne[customerType].Visitation.order - 1;
             } else {
                 payload.visitation.order = 0;
             }
             payload.visitation.status = "VISIT";
 
-            if (stepOne[customerType].locationAddress.line1) {
+            if (stepOne[customerType]?.locationAddress?.line1) {
                 payload.project.location.line1 =
-                    stepOne[customerType].locationAddress.line1;
+                    stepOne[customerType]?.locationAddress?.line1;
             }
-            if (stepOne[customerType].locationAddress.line2) {
+            if (stepOne[customerType]?.locationAddress?.line2) {
                 payload.project.location.line2 =
-                    stepOne[customerType].locationAddress.line2;
+                    stepOne[customerType]?.locationAddress?.line2;
             }
-            if (stepOne[customerType].locationAddress.postalCode) {
+            if (stepOne[customerType]?.locationAddress?.postalCode) {
                 payload.project.location.postalId =
-                    stepOne[customerType].locationAddress.postalCode;
+                    stepOne[customerType]?.locationAddress?.postalCode;
             }
-            if (stepOne[customerType].locationAddress.formattedAddress) {
+            if (stepOne[customerType]?.locationAddress?.formattedAddress) {
                 payload.project.location.formattedAddress =
-                    stepOne[customerType].locationAddress.formattedAddress;
+                    stepOne[customerType]?.locationAddress?.formattedAddress;
             }
-            if (stepOne[customerType].locationAddress.lon) {
+            if (stepOne[customerType]?.locationAddress?.lon !== undefined) {
                 payload.project.location.lon =
-                    stepOne[customerType].locationAddress.lon;
+                    stepOne[customerType]?.locationAddress?.lon;
             }
-            if (stepOne[customerType].locationAddress.lat) {
+            if (stepOne[customerType]?.locationAddress?.lat !== undefined) {
                 payload.project.location.lat =
-                    stepOne[customerType].locationAddress.lat;
+                    stepOne[customerType]?.locationAddress?.lat;
             }
-            if (stepOne.customerType) {
+            if (stepOne?.customerType) {
                 payload.visitation.customerType = typeCustomer;
             }
-            if (appointmentState.selectedDate) {
-                const selectDate = moment(appointmentState.selectedDate.date);
-                payload.visitation.bookingDate = selectDate.valueOf();
+            if (appointmentState?.selectedDate) {
+                const selectDate = moment(appointmentState?.selectedDate?.date);
+                payload.visitation.bookingDate = selectDate?.valueOf();
             }
-            payload.visitation.dateVisit = today.valueOf();
-            if (stepOne[customerType].name) {
-                payload.project.name = stepOne[customerType].name;
+            payload.visitation.dateVisit = today?.valueOf();
+            if (stepOne[customerType]?.name) {
+                payload.project.name = stepOne[customerType]?.name;
             }
-            if (stepOne.customerType === "company") {
-                if (stepOne[customerType].Company?.title) {
+            if (stepOne?.customerType === "company") {
+                if (stepOne[customerType]?.Company?.title) {
                     payload.project.companyDisplayName =
-                        stepOne[customerType].Company?.title;
+                        stepOne[customerType]?.Company?.title;
                 }
             }
-            if (stepOne[customerType].Visitation?.id) {
+            if (stepOne[customerType]?.Visitation?.id) {
                 payload.visitation.visitationId =
-                    stepOne[customerType].Visitation.id;
+                    stepOne[customerType]?.Visitation?.id;
             }
-            if (stepOne[customerType].id) {
-                payload.project.id = stepOne[customerType].id;
+            if (stepOne[customerType]?.id) {
+                payload.project.id = stepOne[customerType]?.id;
             }
 
             payload.visitation.isBooking = true;
 
             const response = await postBookingAppointment({ payload });
-            if (response.data.success) {
+            if (response?.data?.success) {
                 dispatch(
                     openPopUp({
                         popUpType: "success",
@@ -316,18 +319,21 @@ export default function Appointment() {
     }, [goToVisitationDateStep, inCustomerDataStep, submitAppoinmentData]);
 
     function isCanAdvanceToStep2() {
-        const customerTypeCondition = stepOne.customerType;
-        const companyNameCondition = stepOne.company.Company;
-        const projectNameConditionIndividu = stepOne.individu.name;
-        const projectNameConditionCompany = stepOne.company.name;
-        const picIndividu = stepOne.individu.Pics ? stepOne.individu.Pics : [];
-        const picCompany = stepOne.company.Pics ? stepOne.company.Pics : [];
+        const customerTypeCondition = stepOne?.customerType;
+        const companyNameCondition = stepOne?.company?.Company;
+        const projectNameConditionIndividu = stepOne?.individu?.name;
+        const projectNameConditionCompany = stepOne?.company?.name;
+        const picIndividu = stepOne?.individu?.Pics
+            ? stepOne?.individu?.Pics
+            : [];
+        const picCompany = stepOne?.company?.Pics ? stepOne?.company?.Pics : [];
 
         if (customerTypeCondition === "company") {
             return (
                 !!companyNameCondition &&
                 !!projectNameConditionCompany &&
-                picCompany.length > 0
+                picCompany &&
+                picCompany?.length > 0
             );
         }
         if (customerTypeCondition === "individu") {
@@ -389,10 +395,10 @@ export default function Appointment() {
                                 };
                             }
                             if (
-                                stepOne[customerType].Pics &&
-                                stepOne[customerType].Pics.length > 0
+                                stepOne[customerType]?.Pics &&
+                                stepOne[customerType]?.Pics?.length > 0
                             ) {
-                                finalPIC.forEach((it, index) => {
+                                finalPIC?.forEach((it, index) => {
                                     finalPIC[index] = {
                                         ...finalPIC[index],
                                         isSelected: false

@@ -197,7 +197,7 @@ instance.interceptors.response.use(
         const { data, config } = res;
 
         // performance API logs
-        if (config.url) {
+        if (config?.url) {
             if (res?.status) metric?.setHttpResponseCode(res?.status);
             try {
                 const authorization = config?.headers?.get("Authorization");
@@ -222,41 +222,41 @@ instance.interceptors.response.use(
         await metric?.stop();
         metric = undefined;
 
-        if (data.success && data.success !== true) {
+        if (data?.success && data?.success !== true) {
             // automatic logout
             let errorMessage = `There's something wrong`;
             let errorStatus = 500;
 
-            if (data.error?.status) {
-                errorStatus = data.error?.status;
+            if (data?.error?.status) {
+                errorStatus = data?.error?.status;
             }
 
-            if (data.error?.message) {
-                errorMessage = data.error.message;
+            if (data?.error?.message) {
+                errorMessage = data?.error?.message;
             } else if (data?.message) {
-                errorMessage = data.message;
+                errorMessage = data?.message;
             }
 
             if (
-                data.error?.code === "TKN001" ||
-                data.error?.code === "TKN002" ||
-                data.error?.code === "TKN005"
+                data?.error?.code === "TKN001" ||
+                data?.error?.code === "TKN002" ||
+                data?.error?.code === "TKN005"
             ) {
                 doLogout();
                 return Promise.resolve(res);
             }
 
             if (
-                data.error?.code === "TKN003" ||
-                data.error?.code === "TKN004" ||
-                data.error?.code === "TKN008"
+                data?.error?.code === "TKN003" ||
+                data?.error?.code === "TKN004" ||
+                data?.error?.code === "TKN008"
             ) {
                 const finalResponse = doRefreshToken(config);
                 return Promise.resolve(finalResponse);
             }
 
             showErrorMsg(config?.url, errorMessage, errorStatus);
-        } else if (config.method !== "get" && config.method !== "put") {
+        } else if (config?.method !== "get" && config?.method !== "put") {
             let { url } = config;
             if (url) {
                 if (url?.length > 0 && url[url.length - 1] === "/") {
@@ -264,12 +264,12 @@ instance.interceptors.response.use(
                 }
             }
             const urlArray: string[] | undefined = url?.split("/");
-            const respMethod: string | undefined = config.method;
+            const respMethod: string | undefined = config?.method;
             const endpoint =
                 (url &&
                     url?.length > 0 &&
                     urlArray &&
-                    urlArray[urlArray.length - 1]) ||
+                    urlArray[(urlArray?.length || 0) - 1]) ||
                 "";
             const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
             const postSphUrl = `${URL_ORDER}/order/m/flow/quotation/`;
@@ -284,8 +284,8 @@ instance.interceptors.response.use(
             ) {
                 const successMsg = getSuccessMsgFromAPI(
                     respMethod,
-                    urlArray && urlArray.length > 1 ? urlArray[2] : "",
-                    config.url,
+                    urlArray && urlArray?.length > 1 ? urlArray[2] : "",
+                    config?.url,
                     endpoint
                 );
 
@@ -304,36 +304,36 @@ instance.interceptors.response.use(
         let errorMessage = `There's something wrong`;
         let errorStatus = 500;
 
-        if (error.response?.status) {
-            errorStatus = error.response?.status;
+        if (error?.response?.status) {
+            errorStatus = error?.response?.status;
         }
 
-        if (error.response?.data?.message) {
-            errorMessage = error.response.data.message;
-        } else if (error.response?.data?.error) {
-            errorMessage = error.response?.data?.error?.message;
-        } else if (error.message) {
-            errorMessage = error.message;
+        if (error?.response?.data?.message) {
+            errorMessage = error?.response?.data?.message;
+        } else if (error?.response?.data?.error) {
+            errorMessage = error?.response?.data?.error?.message;
+        } else if (error?.message) {
+            errorMessage = error?.message;
         }
 
         if (
-            error.response?.data?.code === "TKN001" ||
-            error.response?.data?.code === "TKN002" ||
-            error.response?.data?.code === "TKN005"
+            error?.response?.data?.code === "TKN001" ||
+            error?.response?.data?.code === "TKN002" ||
+            error?.response?.data?.code === "TKN005"
         ) {
             doLogout();
         } else if (
-            error.response?.data?.code === "TKN003" ||
-            error.response?.data?.code === "TKN004" ||
-            error.response?.data?.code === "TKN008"
+            error?.response?.data?.code === "TKN003" ||
+            error?.response?.data?.code === "TKN004" ||
+            error?.response?.data?.code === "TKN008"
         ) {
-            if (error.config) {
-                const finalResponse = doRefreshToken(error.config);
+            if (error?.config) {
+                const finalResponse = doRefreshToken(error?.config);
                 return Promise.resolve(finalResponse);
             }
         }
 
-        showErrorMsg(error.config?.url, errorMessage, errorStatus);
+        showErrorMsg(error?.config?.url, errorMessage, errorStatus);
         return Promise.reject(error);
     }
 );

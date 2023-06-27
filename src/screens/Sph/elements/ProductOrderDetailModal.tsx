@@ -167,7 +167,7 @@ export default function ProductCartModal({
 
     const calcPrice = useMemo(
         () => calcTrips(detailOrder.volume ? +detailOrder.volume : 0)?.calcCost,
-        [detailOrder.volume]
+        [detailOrder?.volume]
     );
     const totalPrice =
         +detailOrder.volume * +detailOrder.sellPrice + (calcPrice || 0);
@@ -184,18 +184,18 @@ export default function ProductCartModal({
             distance: {} as DistanceDeliverType,
             delivery: {} as DistanceDeliverType
         };
-        AdditionalPrices.forEach((price) => {
-            if (price.type === "DISTANCE") {
-                if (distanceCeil >= price.min && distanceCeil <= price.max) {
-                    additionalData.distance.id = price.id;
-                    additionalData.distance.price = price.price;
+        AdditionalPrices?.forEach((price) => {
+            if (price?.type === "DISTANCE") {
+                if (distanceCeil >= price?.min && distanceCeil <= price?.max) {
+                    additionalData.distance.id = price?.id;
+                    additionalData.distance.price = price?.price;
                 }
             }
 
-            if (price.type === "TRANSPORT") {
-                if (+detailOrder.volume >= price.min) {
-                    additionalData.delivery.id = price.id;
-                    additionalData.delivery.price = price.price;
+            if (price?.type === "TRANSPORT") {
+                if (+detailOrder.volume >= price?.min) {
+                    additionalData.delivery.id = price?.id;
+                    additionalData.delivery.price = price?.price;
                 }
             }
         });
@@ -218,8 +218,8 @@ export default function ProductCartModal({
             label: "Metode penuangan",
             isRequire: true,
             type: "dropdown",
-            value: detailOrder.method,
-            isError: detailOrder.method === "",
+            value: detailOrder?.method,
+            isError: detailOrder?.method === "",
             customerErrorMsg: "Metode penuangan harus dipilih",
             dropdown: {
                 items: METHOD_LIST,
@@ -253,11 +253,11 @@ export default function ProductCartModal({
                 </View>
                 <BSpacer size="extraSmall" />
                 <View style={style.grayContent}>
-                    <Text style={style.productName}>{productData.name}</Text>
+                    <Text style={style.productName}>{productData?.name}</Text>
                     <BSpacer size="extraSmall" />
                     <View style={style.chipContainer}>
                         <BChip backgroundColor={colors.chip.green}>
-                            {productData.Category?.Parent?.name}
+                            {productData?.Category?.Parent?.name}
                         </BChip>
                         <BChip backgroundColor={colors.chip.disabled}>
                             slump {productData?.properties?.slump}±12 cm
@@ -301,7 +301,7 @@ export default function ProductCartModal({
                             </Text>
                         </View>
                         <Text style={style.hargaJualPrice}>
-                            {formatCurrency(productData.calcPrice)}
+                            {formatCurrency(productData?.calcPrice)}
                         </Text>
                     </View>
                 </View>
@@ -317,14 +317,14 @@ export default function ProductCartModal({
                                     setDetailOrder((prev) => ({
                                         ...prev,
                                         volume: replaceDot(
-                                            event.nativeEvent.text.replace(
+                                            event?.nativeEvent?.text?.replace(
                                                 /[^0-9.]/g,
                                                 ""
                                             )
                                         )
                                     }));
                                 }}
-                                value={detailOrder.volume}
+                                value={detailOrder?.volume}
                                 keyboardType="numeric"
                                 returnKeyType="next"
                                 right={
@@ -338,7 +338,7 @@ export default function ProductCartModal({
                                     colors.textInput.placeHolder
                                 }
                             />
-                            {!detailOrder.volume && (
+                            {!detailOrder?.volume && (
                                 <BText size="small" color="primary" bold="100">
                                     Volume harus diisi
                                 </BText>
@@ -352,10 +352,10 @@ export default function ProductCartModal({
                                     event: NativeSyntheticEvent<TextInputChangeEventData>
                                 ) => {
                                     onChange("sellPrice")(
-                                        event.nativeEvent.text
+                                        event?.nativeEvent?.text
                                     );
                                 }}
-                                value={detailOrder.sellPrice}
+                                value={detailOrder?.sellPrice}
                                 keyboardType="numeric"
                                 left={
                                     <TextInput.Icon
@@ -410,34 +410,35 @@ export default function ProductCartModal({
                         title="Tambah Produk"
                         disable={
                             // +detailOrder.sellPrice < productData.calcPrice ||
-                            !detailOrder.volume || !detailOrder.method
+                            !detailOrder?.volume || !detailOrder?.method
                         }
                         onPress={() => {
                             choseProduct((curr) => {
                                 const currentValue = [...curr];
                                 const newData = {
                                     product: productData,
-                                    productId: productData.id,
-                                    categoryId: productData.Category.id,
-                                    sellPrice: detailOrder.sellPrice,
-                                    volume: detailOrder.volume,
-                                    pouringMethod: detailOrder.method,
+                                    productId: productData?.id,
+                                    categoryId: productData?.Category?.id,
+                                    sellPrice: detailOrder?.sellPrice,
+                                    volume: detailOrder?.volume,
+                                    pouringMethod: detailOrder?.method,
                                     totalPrice,
                                     additionalData: getAddPrice()
                                 };
                                 const existingDataIndex =
-                                    currentValue.findIndex(
+                                    currentValue?.findIndex(
                                         (data) =>
-                                            data.product.id === productData.id
+                                            data?.product?.id ===
+                                            productData?.id
                                     );
                                 if (existingDataIndex !== -1) {
-                                    currentValue.splice(
+                                    currentValue?.splice(
                                         existingDataIndex,
                                         1,
                                         newData
                                     );
                                 } else {
-                                    currentValue.push(newData);
+                                    currentValue?.push(newData);
                                 }
                                 return currentValue;
                             });

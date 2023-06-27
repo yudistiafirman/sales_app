@@ -165,7 +165,7 @@ function ListProduct(
                 pricePerVol={pricePerlVol}
                 volume={
                     selectedType === "SPH"
-                        ? item.quantity
+                        ? item?.quantity
                         : quantity || requestedQuantity || quantity || 0
                 }
                 totalPrice={
@@ -258,12 +258,12 @@ function TransactionDetail() {
                     outsideClickClosePopUp: false
                 })
             );
-            getData = await getVisitationOrderByID(data.QuotationLetter.id);
-            getData = getData.data.data;
+            getData = await getVisitationOrderByID(data?.QuotationLetter?.id);
+            getData = getData?.data?.data;
             dispatch(closePopUp());
             navigation.dispatch(
                 StackActions.replace(TRANSACTION_DETAIL, {
-                    title: getData ? getData.number : "N/A",
+                    title: getData ? getData?.number : "N/A",
                     data: getData,
                     type: selectedType
                 })
@@ -295,7 +295,7 @@ function TransactionDetail() {
         if (isExisted === -1) {
             newExpandedData = [...expandData, productData];
         } else {
-            newExpandedData = expandData.filter(
+            newExpandedData = expandData?.filter(
                 (val) => val?.id !== productData?.id
             );
         }
@@ -374,7 +374,7 @@ function TransactionDetail() {
             await Share.share({
                 url: url.replace(/\s/g, "%20"),
                 message: `Link PDF ${selectedType} ${
-                    data?.Company?.name ? data?.Company.name : data?.Pic?.name
+                    data?.Company?.name ? data?.Company?.name : data?.Pic?.name
                 }, ${url.replace(/\s/g, "%20")}`
             });
         } catch (error) {
@@ -400,7 +400,7 @@ function TransactionDetail() {
             : data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct;
 
         if (productData?.length > 0) {
-            return productData.map((item, index) =>
+            return productData?.map((item, index) =>
                 ListProduct(
                     item,
                     index,
@@ -477,24 +477,24 @@ function TransactionDetail() {
                             onPressLocation(
                                 data?.QuotationRequest?.project?.ShippingAddress
                                     ? data?.QuotationRequest?.project
-                                          ?.ShippingAddress.lat
+                                          ?.ShippingAddress?.lat
                                     : data?.project?.ShippingAddress
-                                    ? data?.project?.ShippingAddress.lat
+                                    ? data?.project?.ShippingAddress?.lat
                                     : data?.Account?.Project?.ShippingAddress
-                                          .lat
+                                          ?.lat
                                     ? data?.Account?.Project?.ShippingAddress
-                                          .lat
+                                          ?.lat
                                     : null,
                                 data?.QuotationRequest?.project?.ShippingAddress
                                     .lon
                                     ? data?.QuotationRequest?.project
-                                          ?.ShippingAddress.lon
+                                          ?.ShippingAddress?.lon
                                     : data?.project?.ShippingAddress
-                                    ? data?.project?.ShippingAddress.lon
+                                    ? data?.project?.ShippingAddress?.lon
                                     : data?.Account?.Project?.ShippingAddress
-                                          .lon
+                                          ?.lon
                                     ? data?.Account?.Project?.ShippingAddress
-                                          .lon
+                                          ?.lon
                                     : null
                             )
                         }
@@ -502,10 +502,11 @@ function TransactionDetail() {
                             data?.project?.ShippingAddress?.lat === null ||
                             data?.project?.ShippingAddress?.lon === null ||
                             data?.QuotationRequest?.project?.ShippingAddress
-                                .lat === null ||
+                                ?.lat === null ||
                             data?.QuotationRequest?.project?.ShippingAddress
-                                .lon === null ||
-                            data?.Account?.Project?.ShippingAddress.lon === null
+                                ?.lon === null ||
+                            data?.Account?.Project?.ShippingAddress?.lon ===
+                                null
                         }
                         companyName={
                             data?.project?.displayName ||
@@ -514,9 +515,9 @@ function TransactionDetail() {
                         }
                         location={
                             data?.QuotationRequest?.project?.ShippingAddress
-                                .line1
+                                ?.line1
                                 ? data?.QuotationRequest?.project
-                                      ?.ShippingAddress.line1
+                                      ?.ShippingAddress?.line1
                                 : data?.QuotationRequest?.project
                                       ?.LocationAddress?.line1
                                 ? data?.QuotationRequest?.project
@@ -525,10 +526,10 @@ function TransactionDetail() {
                                       ?.BillingAddress?.line1
                                 ? data?.QuotationRequest?.project
                                       ?.BillingAddress?.line1
-                                : data?.project?.ShippingAddress.line1
-                                ? data?.project?.ShippingAddress.line1
-                                : data?.Account?.Project?.ShippingAddress.line1
-                                ? data?.Account?.Project?.ShippingAddress.line1
+                                : data?.project?.ShippingAddress?.line1
+                                ? data?.project?.ShippingAddress?.line1
+                                : data?.Account?.Project?.ShippingAddress?.line1
+                                ? data?.Account?.Project?.ShippingAddress?.line1
                                 : "-"
                         }
                     />
@@ -668,7 +669,7 @@ function TransactionDetail() {
                                 firstSectionValue={
                                     selectedType === "Jadwal"
                                         ? getAvailableDepositProject(
-                                              data.project,
+                                              data?.project,
                                               true
                                           )
                                         : data?.PurchaseOrder?.totalDeposit
@@ -678,8 +679,8 @@ function TransactionDetail() {
                                 secondSectionText={
                                     selectedType === "Jadwal"
                                         ? data?.products &&
-                                          data?.products.length > 0
-                                            ? data?.products[0].displayName
+                                          data?.products?.length > 0
+                                            ? data?.products[0]?.displayName
                                             : "-"
                                         : data?.project?.Customer
                                               ?.paymentType === "CBD" ||
@@ -693,8 +694,8 @@ function TransactionDetail() {
                                 secondSectionValue={
                                     selectedType === "Jadwal"
                                         ? data?.products &&
-                                          data?.products.length > 0
-                                            ? data?.products[0].totalPrice
+                                          data?.products?.length > 0
+                                            ? data?.products[0]?.totalPrice
                                             : 0
                                         : data?.value
                                         ? data?.value

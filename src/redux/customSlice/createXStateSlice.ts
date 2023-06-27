@@ -38,12 +38,12 @@ export const createXStateSlice = <
 }): XStateSlice<TContext, TEvent, TSelectedState> => {
     let service: Interpreter<TContext, any, TEvent> | undefined;
 
-    const initialReduxState = params.getSelectedState(
-        params.machine.initialState
+    const initialReduxState = params?.getSelectedState(
+        params?.machine?.initialState
     );
 
     const updateEvent = (state: TSelectedState) => ({
-        type: `${params.name}.xstate.update`,
+        type: `${params?.name}.xstate.update`,
         state
     });
 
@@ -57,7 +57,7 @@ export const createXStateSlice = <
         event: any
     ): TSelectedState => {
         switch (event?.type) {
-            case `${params.name}.xstate.update`:
+            case `${params?.name}.xstate.update`:
                 return event.state;
             default:
                 return state;
@@ -73,7 +73,7 @@ export const createXStateSlice = <
      * will call it when the slice is passed in
      */
     const start = (store: MiddlewareAPI) => {
-        service = interpret(params.machine, {
+        service = interpret(params?.machine, {
             parent: {
                 send: (event: any) => {
                     store.dispatch(event);
@@ -84,7 +84,7 @@ export const createXStateSlice = <
 
         service.subscribe((state) => {
             if (!state.changed) return;
-            store.dispatch(updateEvent(params.getSelectedState(state)));
+            store.dispatch(updateEvent(params?.getSelectedState(state)));
         });
 
         return service;
@@ -96,7 +96,7 @@ export const createXStateSlice = <
     const getService = () => {
         if (!service) {
             throw new Error(
-                `getService was called on ${params.name} slice before slice.start() was called. slice.start() is usually called by the middleware.`
+                `getService was called on ${params?.name} slice before slice.start() was called. slice.start() is usually called by the middleware.`
             );
         }
         return service;

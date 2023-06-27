@@ -228,11 +228,11 @@ const renderInput = (
         let startingDate;
         let endingDate;
         if (markedDates)
-            Object.keys(markedDates).forEach((it) => {
-                if (markedDates[it].startingDay === true) {
+            Object?.keys(markedDates)?.forEach((it) => {
+                if (markedDates[it]?.startingDay === true) {
                     startingDate = moment(it).format("MMMM DD, YYYY");
                 }
-                if (markedDates[it].endingDay === true) {
+                if (markedDates[it]?.endingDay === true) {
                     endingDate = moment(it).format("MMMM DD, YYYY");
                 }
             });
@@ -247,11 +247,11 @@ const renderInput = (
         let minDate;
         let haveEndingDate = false;
         if (markedDates)
-            Object.keys(markedDates).forEach((it) => {
-                if (markedDates[it].startingDay === true) {
+            Object?.keys(markedDates)?.forEach((it) => {
+                if (markedDates[it]?.startingDay === true) {
                     minDate = it;
                 }
-                if (markedDates[it].endingDay === true) {
+                if (markedDates[it]?.endingDay === true) {
                     haveEndingDate = true;
                 }
             });
@@ -262,7 +262,7 @@ const renderInput = (
         return (
             <BTableInput
                 titleBold={titleBold}
-                textSize={input.textSize}
+                textSize={input?.textSize}
                 onChangeValue={tableInput?.onChangeValue}
                 firstColumnLabel={tableInput?.firstColumnLabel}
                 secondColumnLabel={tableInput?.secondColumnLabel}
@@ -278,7 +278,7 @@ const renderInput = (
                     comboRadioBtn?.onSetComboRadioButtonValue
                 }
                 isRequire={isRequire}
-                sizeInNumber={input.textSize}
+                sizeInNumber={input?.textSize}
                 label={label}
                 titleBold={titleBold}
                 isHorizontal={comboRadioBtn?.isHorizontal}
@@ -298,7 +298,7 @@ const renderInput = (
         return (
             <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                 <BLabel
-                    sizeInNumber={input.textSize}
+                    sizeInNumber={input?.textSize}
                     bold={titleBold}
                     label={label}
                     isRequired={isRequire}
@@ -311,7 +311,7 @@ const renderInput = (
                             // isError && { borderColor: colors.primary },
                         ]}
                         onChangeText={(vl) =>
-                            onChange(replaceDot(vl.replace(/[^0-9.]/g, "")))
+                            onChange(replaceDot(vl?.replace(/[^0-9.]/g, "")))
                         }
                         value={value}
                         keyboardType="numeric"
@@ -336,7 +336,7 @@ const renderInput = (
         return (
             <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                 <BLabel
-                    sizeInNumber={input.textSize}
+                    sizeInNumber={input?.textSize}
                     bold={titleBold}
                     label={label}
                     isRequired={isRequire}
@@ -392,7 +392,7 @@ const renderInput = (
         return (
             <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                 <BLabel
-                    sizeInNumber={input.textSize}
+                    sizeInNumber={input?.textSize}
                     bold={titleBold}
                     label={label}
                     isRequired={isRequire}
@@ -451,7 +451,7 @@ const renderInput = (
         return (
             <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                 <BLabel
-                    sizeInNumber={input.textSize}
+                    sizeInNumber={input?.textSize}
                     bold={titleBold}
                     label={label}
                     isRequired={isRequire}
@@ -501,11 +501,15 @@ const renderInput = (
                                 onDayPress={(date) => {
                                     let hasEndingDay: boolean | undefined =
                                         false;
-                                    if (date && Object.keys(date).length > 0) {
-                                        Object.keys(date).forEach((it) => {
+                                    if (
+                                        date &&
+                                        Object?.keys(date) &&
+                                        Object?.keys(date)?.length > 0
+                                    ) {
+                                        Object?.keys(date)?.forEach((it) => {
                                             if (date[it]?.endingDay === true) {
                                                 hasEndingDay =
-                                                    date[it].endingDay;
+                                                    date[it]?.endingDay;
                                             }
                                         });
                                         if (hasEndingDay) {
@@ -538,7 +542,7 @@ const renderInput = (
                 <View style={styles.calendarTime}>
                     <View style={styles.calendarOne}>
                         <BLabel
-                            sizeInNumber={input.textSize}
+                            sizeInNumber={input?.textSize}
                             bold={titleBold}
                             label={calendarTime?.labelOne}
                             isRequired={isRequire}
@@ -589,7 +593,7 @@ const renderInput = (
                     </View>
                     <View style={styles.timeOne}>
                         <BLabel
-                            sizeInNumber={input.textSize}
+                            sizeInNumber={input?.textSize}
                             bold={titleBold}
                             label={calendarTime?.labelTwo}
                             isRequired={isRequire}
@@ -759,7 +763,7 @@ const renderInput = (
                     />
                 )}
                 <BLabel
-                    sizeInNumber={input.textSize}
+                    sizeInNumber={input?.textSize}
                     bold={titleBold}
                     label={label}
                     isRequired={isRequire}
@@ -797,7 +801,7 @@ const renderInput = (
         return (
             <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                 <BLabel
-                    sizeInNumber={input.textSize}
+                    sizeInNumber={input?.textSize}
                     bold={titleBold}
                     label={label}
                     isRequired={isRequire}
@@ -810,11 +814,11 @@ const renderInput = (
                     {options?.map((val, index) => (
                         <React.Fragment key={index}>
                             <BCardOption
-                                icon={val.icon}
-                                title={val.title}
+                                icon={val?.icon}
+                                title={val?.title}
                                 fullWidth
-                                isActive={value === val.value}
-                                onPress={val.onChange}
+                                isActive={value === val?.value}
+                                onPress={val?.onChange}
                             />
                             {index !== options.length - 1 && (
                                 <BSpacer size={6} />
@@ -837,7 +841,7 @@ const renderInput = (
             <>
                 <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                     <BLabel
-                        sizeInNumber={input.textSize}
+                        sizeInNumber={input?.textSize}
                         bold={titleBold}
                         label={label}
                         isRequired={isRequire}
@@ -849,8 +853,8 @@ const renderInput = (
                     <BAutoComplete
                         {...input}
                         onClear={onClear}
-                        showClear={input.showClearAutoCompleted}
-                        showChevron={input.showChevronAutoCompleted}
+                        showClear={input?.showClearAutoCompleted}
+                        showChevron={input?.showChevronAutoCompleted}
                     />
                 ) : (
                     <BTextInput
@@ -875,7 +879,7 @@ const renderInput = (
                 <>
                     <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                         <BLabel
-                            sizeInNumber={input.textSize}
+                            sizeInNumber={input?.textSize}
                             bold={titleBold}
                             label={label}
                             isRequired={isRequire}
@@ -902,7 +906,7 @@ const renderInput = (
                 <>
                     <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                         <BLabel
-                            sizeInNumber={input.textSize}
+                            sizeInNumber={input?.textSize}
                             bold={titleBold}
                             label={label}
                             isRequired={isRequire}
@@ -990,7 +994,7 @@ const renderInput = (
                 <BFileInput
                     isLoading={loading}
                     label={label}
-                    sizeInNumber={input.textSize}
+                    sizeInNumber={input?.textSize}
                     bold={titleBold}
                     isRequire={isRequire}
                     value={value}
@@ -1080,11 +1084,11 @@ const renderInput = (
         index
     }) => (
         <BButtonPrimary
-            onPress={() => input.durationButton?.onClick(item.value)}
-            title={item.name}
+            onPress={() => input?.durationButton?.onClick(item?.value)}
+            title={item?.name}
             isOutline
             outlineBtnStyle={
-                item.value === input.durationButton?.value
+                item?.value === input?.durationButton?.value
                     ? {
                           borderColor: colors.primary
                       }
@@ -1093,7 +1097,7 @@ const renderInput = (
                       }
             }
             outlineTitleStyle={
-                item.value === input.durationButton?.value
+                item?.value === input?.durationButton?.value
                     ? {
                           color: colors.primary,
                           fontSize: font.size.xs
@@ -1111,18 +1115,18 @@ const renderInput = (
         return (
             <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                 <BLabel
-                    sizeInNumber={input.textSize}
+                    sizeInNumber={input?.textSize}
                     bold={titleBold}
                     label={label}
                     isRequired={isRequire}
                 />
                 <BSpacer size="verySmall" />
                 <FlashList
-                    data={input.durationButton?.data}
+                    data={input?.durationButton?.data}
                     estimatedItemSize={10}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item, index) => item.id}
+                    keyExtractor={(item, index) => item?.id}
                     renderItem={renderItemDurationButton}
                 />
                 {isError && (
@@ -1143,7 +1147,7 @@ function BForm({ inputs, spacer, noSpaceEnd, titleBold }: IProps) {
             {inputs?.map((input, index) => (
                 <React.Fragment key={index}>
                     {renderInput(input, titleBold)}
-                    {(index < inputs.length - 1 || !noSpaceEnd) &&
+                    {(index < (inputs?.length || 0) - 1 || !noSpaceEnd) &&
                         spacer !== "none" && (
                             <BSpacer size={spacer || "middleSmall"} />
                         )}

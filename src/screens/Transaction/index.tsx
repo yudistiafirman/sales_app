@@ -212,29 +212,29 @@ function Transaction() {
             );
             if (selectedType === "SPH") {
                 data = await getVisitationOrderByID(id);
-                data = data.data.data;
+                data = data?.data?.data;
             } else if (selectedType === "PO" || selectedType === "SO") {
                 data = await getPurchaseOrderByID(id);
-                data = data.data.data;
+                data = data?.data?.data;
 
                 // TODO: handle from BE, ugly when use mapping in FE side
                 data = {
                     ...data,
-                    mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
+                    mainPic: data?.QuotationLetter?.QuotationRequest?.mainPic,
                     paymentType:
-                        data.QuotationLetter?.QuotationRequest?.paymentType,
-                    deposit: data.DepositPurchaseOrders,
+                        data?.QuotationLetter?.QuotationRequest?.paymentType,
+                    deposit: data?.DepositPurchaseOrders,
                     DepositPurchaseOrders: undefined,
-                    address: data.project.Address,
-                    products: data.PoProducts,
+                    address: data?.project?.Address,
+                    products: data?.PoProducts,
                     project: {
-                        ...data.project,
+                        ...data?.project,
                         Address: undefined
                     },
                     QuotationLetter: {
-                        ...data.QuotationLetter,
+                        ...data?.QuotationLetter,
                         QuotationRequest: {
-                            ...data.QuotationLetter.QuotationRequest,
+                            ...data?.QuotationLetter?.QuotationRequest,
                             mainPic: undefined,
                             paymentType: undefined,
                             products: undefined
@@ -243,33 +243,33 @@ function Transaction() {
                 };
             } else if (selectedType === "Deposit") {
                 data = await getPaymentByID(id);
-                data = data.data.data;
+                data = data?.data?.data;
 
                 // TODO: handle from BE, ugly when use mapping in FE side
                 data = {
                     ...data,
-                    mainPic: data.Account?.Project?.mainPic,
+                    mainPic: data?.Account?.Project?.mainPic,
                     Account: {
-                        ...data.Account,
+                        ...data?.Account,
                         Project: {
-                            ...data.Account.Project,
+                            ...data?.Account?.Project,
                             mainPic: undefined
                         }
                     }
                 };
             } else if (selectedType === "Jadwal") {
                 data = await getScheduleByID(id);
-                data = data.data.data;
+                data = data?.data?.data;
 
                 // TODO: handle from BE, ugly when use mapping in FE side
                 data = {
                     ...data,
-                    mainPic: data.QuotationLetter?.QuotationRequest?.mainPic,
-                    products: data.QuotationLetter?.QuotationRequest?.products,
+                    mainPic: data?.QuotationLetter?.QuotationRequest?.mainPic,
+                    products: data?.QuotationLetter?.QuotationRequest?.products,
                     QuotationLetter: {
-                        ...data.QuotationLetter,
+                        ...data?.QuotationLetter,
                         QuotationRequest: {
-                            ...data.QuotationLetter.QuotationRequest,
+                            ...data?.QuotationLetter?.QuotationRequest,
                             mainPic: undefined,
                             products: undefined
                         }
@@ -279,7 +279,7 @@ function Transaction() {
                 data = await getDeliveryOrderByID(id);
                 driverName = "-";
                 vehicleName = "-";
-                data = data.data.data;
+                data = data?.data?.data;
 
                 // const dataDrivers = await getDrivers();
                 // const dataVehicles = await getVehicles();
@@ -308,25 +308,25 @@ function Transaction() {
 
                 // TODO: handle from BE, ugly when use mapping in FE side
                 const products: any[] = [];
-                products.push(data.Schedule?.SaleOrder?.PoProduct);
+                products?.push(data?.Schedule?.SaleOrder?.PoProduct);
                 data = {
                     ...data,
-                    mainPic: data.project?.mainPic,
-                    address: data.project.Address,
+                    mainPic: data?.project?.mainPic,
+                    address: data?.project?.Address,
                     products,
                     project: {
-                        ...data.project,
+                        ...data?.project,
                         mainPic: undefined,
                         Address: undefined
                     },
                     Schedule: {
-                        ...data.Schedule
+                        ...data?.Schedule
                     }
                 };
             }
             dispatch(closePopUp());
             navigation.navigate(TRANSACTION_DETAIL, {
-                title: data ? data.number : "N/A",
+                title: data ? data?.number : "N/A",
                 data,
                 type: selectedType,
                 driverName,
@@ -412,7 +412,7 @@ function Transaction() {
                     errorMessage={errorMessage}
                 />
             )}
-            {routes.length > 0 && (
+            {routes && routes?.length > 0 && (
                 <BTabSections
                     swipeEnabled={false}
                     navigationState={{ index, routes }}
@@ -438,7 +438,7 @@ function Transaction() {
                                     selectedBP: selectedBatchingPlant
                                 })
                             }
-                            onPress={(data: any) => getOneOrder(data.id)}
+                            onPress={(data: any) => getOneOrder(data?.id)}
                             selectedType={selectedType}
                         />
                     )}

@@ -178,14 +178,15 @@ const transactionMachine =
         {
             guards: {
                 hasNoDataOnNextLoad: (context, _event) =>
-                    context.page * context.size < context.totalItems
+                    (context?.page || 1) * (context?.size || 10) <
+                    context?.totalItems
             },
             actions: {
                 assignTypeToContext: assign((_context, event) => {
-                    const newTypeData = event.data?.map((item) => ({
+                    const newTypeData = event?.data?.map((item) => ({
                         key: uniqueStringGenerator(),
-                        title: item.name,
-                        totalItems: item.totalItems ? item.totalItems : 0,
+                        title: item?.name,
+                        totalItems: item?.totalItems ? item?.totalItems : 0,
                         chipPosition: "bottom"
                     }));
                     return {
@@ -199,21 +200,22 @@ const transactionMachine =
                     };
                 }),
                 assignTransactionsDataToContext: assign((context, event) => {
-                    if (event.data.data.length > 0) {
-                        const transactionsData = [
-                            ...context.transactionData,
-                            ...event.data.data
-                        ];
-                        const newTypeData = context.routes?.map((item) => ({
-                            key: item.key,
-                            title: item.title,
+                    if (event?.data?.data?.length > 0) {
+                        let transactionsData;
+                        if (context?.transactionData)
+                            transactionsData = [...context.transactionData];
+                        if (event?.data?.data)
+                            transactionsData = [...event.data.data];
+                        const newTypeData = context?.routes?.map((item) => ({
+                            key: item?.key,
+                            title: item?.title,
                             totalItems:
-                                context.selectedType === item.title
-                                    ? event.data.totalItems
-                                        ? event.data.totalItems
+                                context?.selectedType === item?.title
+                                    ? event?.data?.totalItems
+                                        ? event?.data?.totalItems
                                         : 0
-                                    : item.totalItems
-                                    ? item.totalItems
+                                    : item?.totalItems
+                                    ? item?.totalItems
                                     : 0,
                             chipPosition: "bottom"
                         }));
@@ -221,22 +223,22 @@ const transactionMachine =
                             loadTransaction: false,
                             isLoadMore: false,
                             refreshing: false,
-                            totalItems: event.data.totalItems
-                                ? event.data.totalItems
+                            totalItems: event?.data?.totalItems
+                                ? event?.data?.totalItems
                                 : 0,
                             transactionData: transactionsData,
                             routes: newTypeData,
                             isErrorData: false
                         };
                     }
-                    const newTypeData = context.routes?.map((item) => ({
-                        key: item.key,
-                        title: item.title,
+                    const newTypeData = context?.routes?.map((item) => ({
+                        key: item?.key,
+                        title: item?.title,
                         totalItems:
-                            context.selectedType === item.title
+                            context?.selectedType === item?.title
                                 ? 0
-                                : item.totalItems
-                                ? item.totalItems
+                                : item?.totalItems
+                                ? item?.totalItems
                                 : 0,
                         chipPosition: "bottom"
                     }));
@@ -251,14 +253,14 @@ const transactionMachine =
                     };
                 }),
                 assignIndexToContext: assign((_context, event) => ({
-                    selectedType: event.payload,
+                    selectedType: event?.payload,
                     page: 1,
                     batchingPlantId: event?.selectedBP?.id,
                     loadTransaction: true,
                     transactionData: []
                 })),
                 incrementPage: assign((context, _event) => ({
-                    page: context.page + 1,
+                    page: (context?.page || 0) + 1,
                     isLoadMore: true
                 })),
                 refreshTransactionList: assign((_context, _event) => ({
@@ -279,7 +281,7 @@ const transactionMachine =
                     loadTab: false,
                     page: 1,
                     totalItems: 0,
-                    errorMessage: event.data.message,
+                    errorMessage: event?.data?.message,
                     isErrorData: true
                 })),
                 resetProduct: assign((context, event) => ({
@@ -287,14 +289,14 @@ const transactionMachine =
                     page: 1,
                     totalItems: 0,
                     loadTransaction: true,
-                    selectedType: event.payload,
+                    selectedType: event?.payload,
                     batchingPlantId: event?.selectedBP?.id
                 })),
                 handleRetryGettingTransactions: assign((context, event) => ({
                     transactionData: [],
                     page: 1,
                     loadTransaction: true,
-                    selectedType: event.payload,
+                    selectedType: event?.payload,
                     batchingPlantId: event?.selectedBP?.id
                 })),
                 assignSelectedBP: assign((context, event) => ({
@@ -305,9 +307,9 @@ const transactionMachine =
                 getTypeTransactions: async (_context, _event) => {
                     try {
                         const response = await getTransactionTab(
-                            _context.batchingPlantId
+                            _context?.batchingPlantId
                         );
-                        return response.data.data as any;
+                        return response?.data?.data as any;
                     } catch (error) {
                         throw new Error(error);
                     }
@@ -315,54 +317,54 @@ const transactionMachine =
                 getTransactions: async (_context, _event) => {
                     try {
                         let response;
-                        if (_context.selectedType === "PO") {
+                        if (_context?.selectedType === "PO") {
                             response = await getAllPurchaseOrders(
-                                _context.page.toString(),
-                                _context.size.toString(),
+                                _context?.page?.toString(),
+                                _context?.size?.toString(),
                                 undefined,
                                 undefined,
-                                _context.batchingPlantId
+                                _context?.batchingPlantId
                             );
-                            response = response.data;
-                        } else if (_context.selectedType === "SO") {
+                            response = response?.data;
+                        } else if (_context?.selectedType === "SO") {
                             response = await getAllPurchaseOrders(
-                                _context.page.toString(),
-                                _context.size.toString(),
+                                _context?.page?.toString(),
+                                _context?.size?.toString(),
                                 undefined,
                                 "CONFIRMED",
-                                _context.batchingPlantId
+                                _context?.batchingPlantId
                             );
-                            response = response.data;
-                        } else if (_context.selectedType === "Deposit") {
+                            response = response?.data;
+                        } else if (_context?.selectedType === "Deposit") {
                             response = await getAllPayment(
-                                _context.page.toString(),
-                                _context.size.toString(),
-                                _context.batchingPlantId
+                                _context?.page?.toString(),
+                                _context?.size?.toString(),
+                                _context?.batchingPlantId
                             );
-                            response = response.data;
-                        } else if (_context.selectedType === "Jadwal") {
+                            response = response?.data;
+                        } else if (_context?.selectedType === "Jadwal") {
                             response = await getAllSchedules(
-                                _context.page.toString(),
-                                _context.size.toString(),
-                                _context.batchingPlantId
+                                _context?.page?.toString(),
+                                _context?.size?.toString(),
+                                _context?.batchingPlantId
                             );
-                            response = response.data;
-                        } else if (_context.selectedType === "DO") {
+                            response = response?.data;
+                        } else if (_context?.selectedType === "DO") {
                             response = await getAllDeliveryOrders(
                                 undefined,
-                                _context.size.toString(),
-                                _context.page.toString(),
-                                _context.batchingPlantId
+                                _context?.size?.toString(),
+                                _context?.page?.toString(),
+                                _context?.batchingPlantId
                             );
-                            response = response.data;
+                            response = response?.data;
                         } else {
                             response = await getAllVisitationOrders(
-                                _context.page.toString(),
-                                _context.size.toString(),
-                                _context.batchingPlantId
+                                _context?.page?.toString(),
+                                _context?.size?.toString(),
+                                _context?.batchingPlantId
                             );
                         }
-                        return response.data as any;
+                        return response?.data as any;
                     } catch (error) {
                         throw new Error(error);
                     }

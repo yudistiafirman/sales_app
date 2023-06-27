@@ -93,17 +93,17 @@ export default function ProjectDetailPage() {
         async (projectIdData: string) => {
             try {
                 const response = await projectGetOneById(projectIdData);
-                setCustomerData(response.data.data);
-                if (response.data.data) {
+                setCustomerData(response?.data?.data);
+                if (response?.data?.data) {
                     const regionProject: any = {
                         formattedAddress:
-                            response.data.data.LocationAddress?.line1,
-                        latitude: response.data.data.LocationAddress?.lat,
-                        longitude: response.data.data.LocationAddress?.lon
+                            response?.data?.data?.LocationAddress?.line1,
+                        latitude: response?.data?.data?.LocationAddress?.lat,
+                        longitude: response?.data?.data?.LocationAddress?.lon
                     };
                     setExistingProject(regionProject);
                     setFormattedProjectAddress(
-                        response.data.data.LocationAddress?.line1
+                        response?.data?.data?.LocationAddress?.line1
                     );
                 }
             } catch (error) {
@@ -137,7 +137,7 @@ export default function ProjectDetailPage() {
         DeviceEventEmitter.addListener(
             "getCoordinateFromProjectDetail",
             (data) => {
-                setProject(data.coordinate);
+                setProject(data?.coordinate);
                 setIsProjectLocationVisible(true);
             }
         );
@@ -167,7 +167,7 @@ export default function ProjectDetailPage() {
                         )
                     }
                     setRegion={setProject}
-                    projectId={customerData.id}
+                    projectId={customerData?.id}
                 />
             )}
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -176,9 +176,9 @@ export default function ProjectDetailPage() {
                     <BSpacer size="extraSmall" />
                     <View style={styles.between}>
                         <Text style={styles.fontW500}>
-                            {customerData.Customer?.displayName &&
-                            customerData.Customer?.displayName !== null
-                                ? customerData.Customer?.displayName
+                            {customerData?.Customer?.displayName &&
+                            customerData?.Customer?.displayName !== null
+                                ? customerData?.Customer?.displayName
                                 : "-"}
                         </Text>
                         <Text style={styles.fontW400}>
@@ -187,15 +187,15 @@ export default function ProjectDetailPage() {
                                 textSize={fonts.size.xs}
                                 disabled={
                                     !(
-                                        customerData.Customer?.id &&
-                                        customerData.Customer?.id !== null
+                                        customerData?.Customer?.id &&
+                                        customerData?.Customer?.id !== null
                                     )
                                 }
                                 onPress={() =>
                                     isFromCustomerPage
                                         ? navigation.goBack()
                                         : navigation.navigate(CUSTOMER_DETAIL, {
-                                              id: customerData.Customer?.id
+                                              id: customerData?.Customer?.id
                                           })
                                 }
                             />

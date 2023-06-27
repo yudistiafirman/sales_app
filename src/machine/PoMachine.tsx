@@ -507,19 +507,19 @@ const POMachine =
                 getSphDocument: async (context) => {
                     try {
                         const sphId =
-                            context.choosenSphDataFromModal.QuotationRequests[0]
-                                .QuotationLetter.id;
+                            context?.choosenSphDataFromModal
+                                ?.QuotationRequests[0]?.QuotationLetter?.id;
                         const response = await getCreatedSphDocuments(sphId);
-                        return response.data.data;
+                        return response?.data?.data;
                     } catch (error) {
                         throw new Error(error);
                     }
                 },
                 uploadPhoto: async (context) => {
                     try {
-                        const photoFiles = context.poImages
-                            .filter((v) => v.file !== null)
-                            .map((photo) => ({
+                        const photoFiles = context?.poImages
+                            ?.filter((v) => v?.file !== null)
+                            ?.map((photo) => ({
                                 ...photo.file,
                                 uri: photo?.file?.uri?.replace(
                                     "file:",
@@ -531,75 +531,79 @@ const POMachine =
                             "Purchase Order"
                         );
 
-                        return response.data.data;
+                        return response?.data?.data;
                     } catch (error) {
                         throw new Error(error);
                     }
                 },
                 uploadFiles: async (context) => {
                     try {
-                        const docsToUpload = context.files
-                            .filter((v) => v.projectDocId === null)
-                            .filter((v) => v.value !== null)
-                            .map((v) => v.value);
+                        const docsToUpload = context?.files
+                            .filter((v) => v?.projectDocId === null)
+                            .filter((v) => v?.value !== null)
+                            .map((v) => v?.value);
                         const response = await uploadFileImage(
                             docsToUpload,
                             "Purchase Order"
                         );
-                        return response.data.data;
+                        return response?.data?.data;
                     } catch (error) {
                         throw new Error(error);
                     }
                 },
                 postPo: async (context) => {
                     try {
-                        const finalPayload = context.postPoPayload;
-                        if (context.checked === "first") {
-                            if (context.fiveToSix !== "")
+                        const finalPayload = context?.postPoPayload;
+                        if (context?.checked === "first") {
+                            if (context?.fiveToSix !== "")
                                 finalPayload.fiveToSix = Number(
-                                    context.fiveToSix
+                                    context?.fiveToSix || 0
                                 );
-                            if (context.lessThanFive !== "")
+                            if (context?.lessThanFive !== "")
                                 finalPayload.lessThanFive = Number(
-                                    context.lessThanFive
+                                    context?.lessThanFive || 0
                                 );
                         }
-                        if (!finalPayload.poFiles) {
+                        if (!finalPayload?.poFiles) {
                             finalPayload.poFiles = [];
                         }
-                        if (!finalPayload.projectDocs) {
+                        if (!finalPayload?.projectDocs) {
                             finalPayload.projectDocs = [];
                         }
-                        finalPayload.batchingPlantId = context.selectedBP?.id;
+                        finalPayload.batchingPlantId = context?.selectedBP?.id;
                         const response = await postPurchaseOrder(finalPayload);
-                        return response.data;
+                        return response?.data;
                     } catch (error) {
                         throw new Error(error);
                     }
                 }
             },
             guards: {
-                isCompany: (context, event) => event.value === "COMPANY",
+                isCompany: (context, event) => event?.value === "COMPANY",
                 isChoosenCustomerCompany: (context, event) =>
-                    context.customerType === "COMPANY",
-                hasSavedPo: (_context, event) => event.data !== undefined,
+                    context?.customerType === "COMPANY",
+                hasSavedPo: (_context, event) => event?.data !== undefined,
                 useExistingFiles: (context) =>
-                    context.isUseExistingFiles === true &&
-                    context.files.length > 0,
+                    context?.isUseExistingFiles === true &&
+                    context?.files &&
+                    context?.files?.length > 0,
                 needUploadFiles: (context) => {
-                    const hasFileNotUploadedBefore = context.files.filter(
-                        (v) => v.value !== null && v.projectDocId === null
+                    const hasFileNotUploadedBefore = context?.files?.filter(
+                        (v) => v?.value !== null && v?.projectDocId === null
                     );
 
-                    return hasFileNotUploadedBefore.length > 0;
+                    return (
+                        hasFileNotUploadedBefore &&
+                        hasFileNotUploadedBefore?.length > 0
+                    );
                 }
             },
             actions: {
                 assignMobilizationValue: assign((context, event) => ({
-                    checked: event.value
+                    checked: event?.value
                 })),
                 assignCustomerType: assign((_context, event) => ({
-                    customerType: event.value
+                    customerType: event?.value
                 })),
                 resetPoState: assign(() => purchaseOrderInitialState),
                 assignSecondTimeUsingCamera: assign(() => ({
@@ -607,20 +611,20 @@ const POMachine =
                 })),
                 assignPhotoToPayload: assign((context, event) => ({
                     postPoPayload: {
-                        ...context.postPoPayload,
-                        poFiles: event.data.map((v) => ({
-                            fileId: v.id
+                        ...context?.postPoPayload,
+                        poFiles: event?.data?.map((v) => ({
+                            fileId: v?.id
                         }))
                     }
                 })),
                 assignFilesToPayload: assign((context, event) => {
-                    const files = context.files
-                        .filter(
-                            (v) => v.value !== null && v.projectDocId === null
+                    const files = context?.files
+                        ?.filter(
+                            (v) => v?.value !== null && v?.projectDocId === null
                         )
-                        .map((v, i) => ({
-                            documentId: v.documentId,
-                            fileId: event.data[i]?.id
+                        ?.map((v, i) => ({
+                            documentId: v?.documentId,
+                            fileId: event?.data[i]?.id
                         }));
 
                     return {
@@ -638,7 +642,7 @@ const POMachine =
                 })),
                 enableModalContinuePo: assign((_context, event) => {
                     const newPoContext = {
-                        ...event.data.poContext,
+                        ...event?.data?.poContext,
                         isModalContinuePo: true
                     };
                     return newPoContext;
@@ -647,21 +651,21 @@ const POMachine =
                     loadingDocument: true
                 })),
                 increaseStep: assign((context, _event) => ({
-                    currentStep: context.currentStep + 1,
-                    stepsDone: [...context.stepsDone, context.currentStep]
+                    currentStep: (context?.currentStep || 0) + 1,
+                    stepsDone: [...context.stepsDone, context?.currentStep]
                 })),
                 decreaseStep: assign((context, _event) => ({
-                    currentStep: context.currentStep - 1
+                    currentStep: (context?.currentStep || 0) - 1
                 })),
                 decreaseStepFromThirdStep: assign((context) => ({
-                    currentStep: context.currentStep - 1,
+                    currentStep: (context?.currentStep || 0) - 1,
                     isUseExistingFiles: true
                 })),
                 assignPressedStep: assign((context, event) => ({
-                    currentStep: event.value
+                    currentStep: event?.value
                 })),
                 setNewStep: assign((context) => {
-                    const newStep = context.currentStep === 0 ? 1 : 2;
+                    const newStep = context?.currentStep === 0 ? 1 : 2;
                     return {
                         isModalContinuePo: false,
                         currentStep: newStep,
@@ -676,22 +680,22 @@ const POMachine =
                 })),
                 assignImages: assign((context, event) => ({
                     openCamera: false,
-                    poImages: [...context.poImages, event.value]
+                    poImages: [...context.poImages, event?.value]
                 })),
                 assignDeleteImageByIndex: assign((context, event) => {
-                    const newPoImages = context.poImages.filter(
-                        (_val: any, idx: number) => idx !== event.value
+                    const newPoImages = context?.poImages?.filter(
+                        (_val: any, idx: number) => idx !== event?.value
                     );
                     return {
                         poImages: newPoImages
                     };
                 }),
                 assignValue: assign((_context, event) => ({
-                    poNumber: event.value
+                    poNumber: event?.value
                 })),
                 assignDocument: assign((_context, event) => {
                     const requiredFileInput =
-                        event.data?.QuotationRequest?.ProjectDocs?.map(
+                        event?.data?.QuotationRequest?.ProjectDocs?.map(
                             (val: ProjectDocs) => ({
                                 projectDocId: val?.projectDocId,
                                 documentId: val?.Document?.id,
@@ -705,37 +709,36 @@ const POMachine =
                         );
                     return {
                         files: requiredFileInput,
-                        paymentType: event.data.QuotationRequest?.paymentType,
+                        paymentType: event?.data?.QuotationRequest?.paymentType,
                         loadingDocument: false
                     };
                 }),
                 handleErrorGettingDocument: assign((_context, event) => ({
                     loadingDocument: false,
-                    errorGettingSphMessage: event.data.message
+                    errorGettingSphMessage: event?.data?.message
                 })),
                 handleRetryDocument: assign((context, event) => ({
                     loadingDocument: true,
                     files: []
                 })),
                 closeModalSph: assign((_context, event) => ({
-                    choosenSphDataFromModal: event.value,
+                    choosenSphDataFromModal: event?.value,
                     selectedBP: event?.selectedBP,
                     isUseExistingFiles: false,
                     selectedProducts: []
                 })),
                 setSelectedChoosenProduct: assign((context, event) => {
                     let newSelectedProduct;
-                    const isExisted = context.selectedProducts.findIndex(
-                        (val) => val.id === event.value.id
+                    const isExisted = context?.selectedProducts?.findIndex(
+                        (val) => val?.id === event?.value?.id
                     );
                     if (isExisted === -1) {
-                        newSelectedProduct = [
-                            ...context.selectedProducts,
-                            event.value
-                        ];
+                        if (context?.selectedProducts)
+                            newSelectedProduct = [...context.selectedProducts];
+                        newSelectedProduct = [event?.value];
                     } else {
-                        newSelectedProduct = context.selectedProducts.filter(
-                            (val) => val.id !== event.value.id
+                        newSelectedProduct = context?.selectedProducts?.filter(
+                            (val) => val?.id !== event?.value?.id
                         );
                     }
                     return {
@@ -743,9 +746,10 @@ const POMachine =
                     };
                 }),
                 assignFiles: assign((context, event) => {
-                    const newFilesData = [...context.files];
-                    const newFilesDataValue = newFilesData.map((v, i) => {
-                        if (i === event.idx) {
+                    let newFilesData;
+                    if (context?.files) newFilesData = [...context.files];
+                    const newFilesDataValue = newFilesData?.map((v, i) => {
+                        if (i === event?.idx) {
                             return {
                                 ...v,
                                 value: {
@@ -763,25 +767,29 @@ const POMachine =
                     };
                 }),
                 assignPoPayload: assign((context) => {
-                    const { QuotationLetter } =
-                        context.choosenSphDataFromModal.QuotationRequests[0];
-                    const totalPrice = context.selectedProducts
-                        .map((v) => v.offeringPrice * v.quantity)
-                        .reduce((a, b) => a + b, 0);
+                    const QuotationLetter =
+                        context?.choosenSphDataFromModal?.QuotationRequests[0]
+                            ?.QuotationLetter;
+                    const totalPrice = context?.selectedProducts
+                        ?.map(
+                            (v) => (v?.offeringPrice || 0) * (v?.quantity || 0)
+                        )
+                        ?.reduce((a, b) => a + b, 0);
                     return {
                         isLoadingPostPurchaseOrder: true,
                         postPoPayload: {
-                            quotationLetterId: QuotationLetter.id,
-                            projectId: context.choosenSphDataFromModal.id,
+                            quotationLetterId: QuotationLetter?.id,
+                            projectId: context?.choosenSphDataFromModal?.id,
                             poNumber:
-                                context.customerType === "INDIVIDU"
+                                context?.customerType === "INDIVIDU"
                                     ? ""
-                                    : context.poNumber,
+                                    : context?.poNumber,
                             poProducts:
-                                context.selectedProducts.length > 0
-                                    ? context.selectedProducts?.map((val) => ({
-                                          requestedProductId: val.id,
-                                          requestedQuantity: val.quantity
+                                context?.selectedProducts &&
+                                context?.selectedProducts?.length > 0
+                                    ? context?.selectedProducts?.map((val) => ({
+                                          requestedProductId: val?.id,
+                                          requestedQuantity: val?.quantity
                                       }))
                                     : [],
                             totalPrice
@@ -789,35 +797,40 @@ const POMachine =
                     };
                 }),
                 assignSelectedProducts: assign((context) => {
-                    const productsData = [
-                        ...context.choosenSphDataFromModal.QuotationRequests[0]
-                            .products
-                    ];
+                    let productsData: any[] = [];
+                    if (
+                        context?.choosenSphDataFromModal?.QuotationRequests[0]
+                            ?.products
+                    )
+                        productsData = [
+                            ...context.choosenSphDataFromModal
+                                .QuotationRequests[0].products
+                        ];
 
                     const newSelectedProducts =
-                        productsData.length === 1 ? productsData : [];
+                        productsData?.length === 1 ? productsData : [];
 
                     return {
                         selectedProducts: newSelectedProducts
                     };
                 }),
                 assignNewQuantity: assign((context, event) => {
-                    const filteredValue = event.value;
+                    const filteredValue = event?.value;
                     const newQuotationRequest = [
                         ...context.choosenSphDataFromModal.QuotationRequests
                     ][0];
-                    const newproducts = newQuotationRequest.products.map(
+                    const newproducts = newQuotationRequest?.products?.map(
                         (v, i) => {
-                            if (i === event.index) {
+                            if (i === event?.index) {
                                 return { ...v, quantity: filteredValue };
                             }
                             return { ...v };
                         }
                     );
                     const newSelectedProduct = [...context.selectedProducts];
-                    const newQuantitySelectedProducts = newSelectedProduct.map(
+                    const newQuantitySelectedProducts = newSelectedProduct?.map(
                         (v, i) => {
-                            if (i === event.index) {
+                            if (i === event?.index) {
                                 return { ...v, quantity: filteredValue };
                             }
                             return { ...v };
@@ -837,8 +850,8 @@ const POMachine =
                     };
                 }),
                 assignMobilizationPrice: assign((context, event) => {
-                    const filteredValue = event.value.replace(/[^0-9]/g, "");
-                    if (event.index === 0) {
+                    const filteredValue = event?.value?.replace(/[^0-9]/g, "");
+                    if (event?.index === 0) {
                         return {
                             fiveToSix: filteredValue
                         };

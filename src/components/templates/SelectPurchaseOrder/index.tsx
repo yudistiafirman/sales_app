@@ -95,7 +95,7 @@ function SelectPurchaseOrderData({
 
     const onClearValue = () => {
         const checkDismiss = onDismiss || null;
-        if (searchValue && searchValue.trim() !== "") {
+        if (searchValue && searchValue?.trim() !== "") {
             setSearchQuery("");
             send("clearInput");
         } else if (checkDismiss !== null) checkDismiss();

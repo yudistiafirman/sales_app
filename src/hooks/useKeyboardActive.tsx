@@ -8,7 +8,7 @@ const useKeyboardActive = () => {
     React.useEffect(() => {
         Keyboard.addListener("keyboardDidShow", (e: KeyboardEvent) => {
             setKeyboardVisible(true);
-            setKeyboardHeight(e.endCoordinates.height);
+            setKeyboardHeight(e.endCoordinates?.height);
         });
         Keyboard.addListener("keyboardDidHide", () => {
             setKeyboardVisible(false);

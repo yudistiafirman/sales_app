@@ -141,12 +141,12 @@ function InvoiceFilter() {
                     dispatch(setMarkedDates(value));
                     let startingDay;
                     let endingDay;
-                    Object.keys(value).forEach((it) => {
-                        if (value[it].startingDay === true) {
-                            startingDay = moment(it).valueOf().toString();
+                    Object?.keys(value)?.forEach((it) => {
+                        if (value[it]?.startingDay === true) {
+                            startingDay = moment(it)?.valueOf()?.toString();
                         }
-                        if (value[it].endingDay === true) {
-                            endingDay = moment(it).valueOf().toString();
+                        if (value[it]?.endingDay === true) {
+                            endingDay = moment(it)?.valueOf()?.toString();
                         }
                     });
                     if (startingDay && endingDay)
@@ -219,7 +219,7 @@ function InvoiceFilter() {
         if (invoiceData?.filter?.paymentMethod !== "") hide = false;
         if (
             invoiceData?.filter?.paymentDuration &&
-            parseInt(invoiceData?.filter?.paymentDuration.toString(), 10) > 0
+            parseInt(invoiceData?.filter?.paymentDuration?.toString(), 10) > 0
         )
             hide = false;
         if (invoiceData?.filter?.paymentStatus !== "") hide = false;
@@ -230,7 +230,7 @@ function InvoiceFilter() {
             hide = false;
         if (
             invoiceData?.filter?.dueDateDifference &&
-            parseInt(invoiceData?.filter?.dueDateDifference.toString(), 10) > 0
+            parseInt(invoiceData?.filter?.dueDateDifference?.toString(), 10) > 0
         )
             hide = false;
 

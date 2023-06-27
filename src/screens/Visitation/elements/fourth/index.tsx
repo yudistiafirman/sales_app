@@ -52,7 +52,7 @@ function Fourth() {
                 isError: false,
                 type: "PIC",
                 value: visitationData?.competitors
-                    ? visitationData.competitors
+                    ? visitationData?.competitors
                     : [],
                 onChange: () => {
                     setIsCompetitorVisible(!isCompetitorVisible);
@@ -64,7 +64,7 @@ function Fourth() {
 
     useEffect(() => {
         crashlytics().log(`${CREATE_VISITATION}-Step4`);
-    }, [visitationData.images]);
+    }, [visitationData?.images]);
 
     return (
         <View style={style.container}>
@@ -81,7 +81,7 @@ function Fourth() {
                     const currentList = [
                         ...(visitationData?.competitors || [])
                     ];
-                    currentList.push(comp);
+                    currentList?.push(comp);
                     dispatch(
                         updateDataVisitation({
                             type: "competitors",

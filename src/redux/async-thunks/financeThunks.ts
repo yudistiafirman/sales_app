@@ -9,8 +9,8 @@ const postFinancePayment = createAsyncThunk<
     try {
         const response = await postPayment(payload);
         const { data } = response;
-        if (data.error) throw new Error(data);
-        return data.data;
+        if (data?.error) throw new Error(data);
+        return data?.data;
     } catch (error) {
         return rejectWithValue(error?.message);
     }

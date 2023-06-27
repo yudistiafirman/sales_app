@@ -310,41 +310,43 @@ export const priceMachine =
         {
             guards: {
                 isLocationReachable: (context, _event) =>
-                    context.locationDetail?.distance?.value < 40000,
-                permissionGranted: (_context, event) => event.data === true,
+                    context?.locationDetail?.distance?.value < 40000,
+                permissionGranted: (_context, event) => event?.data === true,
                 isNotLastPage: (context, event) =>
-                    context.page <= event.data.totalPage
+                    context?.page <= event?.data?.totalPage
             },
             actions: {
                 assignCurrentLocationToContext: assign((_context, event) => ({
-                    longlat: event.data
+                    longlat: event?.data
                 })),
                 assignLocationDetailToContext: assign((_context, event) => ({
-                    locationDetail: event.data.result,
+                    locationDetail: event?.data?.result,
                     loadLocation: false
                 })),
                 assignCategoriesToContext: assign((_context, event) => {
-                    const newCategoriesData = event.data.map((item) => ({
-                        key: item.id,
-                        title: item.name,
+                    const newCategoriesData = event?.data?.map((item) => ({
+                        key: item?.id,
+                        title: item?.name,
                         totalItems: -1,
                         chipPosition: "right"
                     }));
                     return {
                         routes: newCategoriesData,
-                        selectedCategories: newCategoriesData[0].title
+                        selectedCategories: newCategoriesData[0]?.title
                     };
                 }),
                 assignProductsDataToContext: assign((context, event) => {
-                    let productsData: any[] = [...context.productsData];
-                    if (event.data.products && event.data.products.length > 0) {
-                        productsData = [
-                            ...context.productsData,
-                            ...event.data.products
-                        ];
+                    let productsData: any[] = [];
+                    if (context?.productsData)
+                        productsData = [...context.productsData];
+                    if (
+                        event?.data?.products &&
+                        event?.data?.products?.length > 0
+                    ) {
+                        productsData = [...event.data.products];
                     }
                     return {
-                        totalPage: event.data.totalPage,
+                        totalPage: event?.data?.totalPage,
                         loadProduct: false,
                         isLoadMore: false,
                         refreshing: false,
@@ -352,8 +354,8 @@ export const priceMachine =
                     };
                 }),
                 assignIndexToContext: assign((context, event) => ({
-                    index: event.payload,
-                    selectedCategories: context.routes[event.payload].title,
+                    index: event?.payload,
+                    selectedCategories: context?.routes[event?.payload]?.title,
                     page: 1,
                     loadProduct: true,
                     productsData: [],
@@ -361,7 +363,7 @@ export const priceMachine =
                     batchingPlantName: event?.selectedBP?.name
                 })),
                 incrementPage: assign((context, _event) => ({
-                    page: context.page + 1,
+                    page: (context?.page || 0) + 1,
                     isLoadMore: true
                 })),
                 refreshPriceList: assign((_context, _event) => ({
@@ -376,7 +378,7 @@ export const priceMachine =
                     loadProduct: true
                 })),
                 assignParams: assign((_context, event) => ({
-                    longlat: event.value,
+                    longlat: event?.value,
                     loadLocation: true,
                     loadProduct: true,
                     productsData: [],
@@ -393,7 +395,7 @@ export const priceMachine =
                     refreshing: false,
                     isLoadMore: false,
                     loadLocation: false,
-                    errorMessage: event.data.message
+                    errorMessage: event?.data?.message
                 })),
                 handleRetryGettingProducts: assign((context, event) => ({
                     productsData: [],
@@ -401,10 +403,10 @@ export const priceMachine =
                     loadProduct: true
                 })),
                 handleErrorCurrentLocation: assign((context, event) => ({
-                    errorMessage: event.data.message
+                    errorMessage: event?.data?.message
                 })),
                 handleErrorFetchLocationDetail: assign((context, event) => ({
-                    errorMessage: event.data.message
+                    errorMessage: event?.data?.message
                 })),
                 enableLoadLocation: assign((_context, _event) => ({
                     loadLocation: true
@@ -451,8 +453,9 @@ export const priceMachine =
 
                     try {
                         const response = await getCurrentPosition();
-                        const { coords } = response;
-                        const { longitude, latitude } = coords;
+                        const coords = response?.coords;
+                        const longitude = coords?.longitude;
+                        const latitude = coords?.latitude;
                         return { longitude, latitude };
                     } catch (error) {
                         throw new Error(error);
@@ -460,13 +463,14 @@ export const priceMachine =
                 },
                 fetchLocationDetail: async (context, _event) => {
                     try {
-                        const { longitude, latitude } = context.longlat;
+                        const longitude = context?.longlat?.longitude;
+                        const latitude = context?.longlat?.latitude;
                         const response = await getLocationCoordinates(
                             longitude,
                             latitude,
-                            context.batchingPlantName
+                            context?.batchingPlantName
                         );
-                        return response.data;
+                        return response?.data;
                     } catch (error) {
                         throw new Error(error);
                     }
@@ -480,7 +484,7 @@ export const priceMachine =
                             "BRIK_MIX",
                             false
                         );
-                        return response.data.result;
+                        return response?.data?.result;
                     } catch (error) {
                         throw new Error(error);
                     }
@@ -505,7 +509,7 @@ export const priceMachine =
                             distance,
                             batchingPlantId
                         );
-                        return response.data;
+                        return response?.data;
                     } catch (error) {
                         throw new Error(error);
                     }

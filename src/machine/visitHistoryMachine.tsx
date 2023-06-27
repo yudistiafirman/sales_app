@@ -137,8 +137,8 @@ const visitHistoryMachine =
                 getAllVisitationByProjectId: async (context, _event) => {
                     try {
                         const response = await getAllVisitations({
-                            projectId: context.projectId,
-                            batchingPlantId: context.batchingPlantId
+                            projectId: context?.projectId,
+                            batchingPlantId: context?.batchingPlantId
                         });
                         return response?.data?.data?.data;
                     } catch (error) {
@@ -163,7 +163,7 @@ const visitHistoryMachine =
                 assignVisitationDataToContext: assign((_context, event) => {
                     const sortedData = event?.data?.reverse();
                     const newRoutes = sortedData?.map((val, idx) => ({
-                        key: val.id,
+                        key: val?.id,
                         title: `Kunjungan ${idx + 1}`,
                         totalItems: -1,
                         chipPosition: "right"

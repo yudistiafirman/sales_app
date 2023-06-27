@@ -47,7 +47,7 @@ export default function SOList({
     const renderItem = (item: any) => {
         let picOrCompanyName;
         if (item?.project?.Company?.displayName) {
-            picOrCompanyName = item.project?.Company?.displayName;
+            picOrCompanyName = item?.project?.Company?.displayName;
         } else if (item?.project?.Pic?.name) {
             picOrCompanyName = item?.project?.Pic?.name;
         }
@@ -85,10 +85,10 @@ export default function SOList({
             onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
             data={data}
             onRefresh={onRefresh}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => index?.toString()}
             refreshing={refreshing}
             onEndReached={onEndReached}
-            renderItem={(item) => renderItem(item.item)}
+            renderItem={(item) => renderItem(item?.item)}
             ListEmptyComponent={
                 loadList || refreshing ? (
                     <BCommonListShimmer />

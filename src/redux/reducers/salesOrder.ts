@@ -25,18 +25,18 @@ export const salesOrderSlice = createSlice({
             actions: PayloadAction<{ number: string }>
         ) => ({
             ...state,
-            selectedPONumber: actions.payload.number
+            selectedPONumber: actions.payload?.number
         }),
         onUpdateSOID: (state, actions: PayloadAction<{ id: string }>) => ({
             ...state,
-            selectedID: actions.payload.id
+            selectedID: actions.payload?.id
         }),
         setSOPhoto: (
             state,
             actions: PayloadAction<{ file: LocalFileType }>
         ) => {
             const currentImages = [...state.photoFiles];
-            currentImages.push(actions.payload.file);
+            currentImages?.push(actions.payload?.file);
             return {
                 ...state,
                 photoFiles: [...currentImages]
@@ -45,15 +45,22 @@ export const salesOrderSlice = createSlice({
         setAllSOPhoto: (
             state,
             actions: PayloadAction<{ file: LocalFileType[] }>
-        ) => ({
-            ...state,
-            photoFiles: [...actions.payload.file]
-        }),
+        ) => {
+            if (actions.payload?.file) {
+                return {
+                    ...state,
+                    photoFiles: [...actions.payload.file]
+                };
+            }
+            return {
+                ...state
+            };
+        },
         removeSOPhoto: (state, actions: PayloadAction<{ index: number }>) => {
             let currentImages = [...state.photoFiles];
-            currentImages = currentImages.filter((it) => it.file !== null);
-            currentImages.splice(actions.payload.index, 1);
-            currentImages.unshift({ file: null });
+            currentImages = currentImages?.filter((it) => it?.file !== null);
+            currentImages?.splice(actions.payload?.index, 1);
+            currentImages?.unshift({ file: null });
             return {
                 ...state,
                 photoFiles: [...currentImages]

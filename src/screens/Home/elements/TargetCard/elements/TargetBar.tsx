@@ -99,7 +99,7 @@ export default function TargetBar({
             <View style={style.targetBar}>
                 <View style={style.emptyProgressCont}>
                     <View style={style.progressCont}>
-                        {currentProgress.map((_, i) => (
+                        {currentProgress?.map((_, i) => (
                             <View
                                 key={`${i}current`}
                                 style={[style.progress]}
@@ -111,10 +111,10 @@ export default function TargetBar({
                         visible={!isLoading}
                     />
 
-                    {emptyProgress.map((_, i) => (
+                    {emptyProgress?.map((_, i) => (
                         <EmptyItem
-                            key={i.toString()}
-                            isLast={i === emptyProgress.length - 1}
+                            key={i?.toString()}
+                            isLast={i === (emptyProgress?.length || 0) - 1}
                             isFirst={i === 0}
                             isTargetMarker={i === maxVisitation - 1}
                         />

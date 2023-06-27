@@ -49,7 +49,7 @@ function Verification() {
             }
         }, 1000);
         return () => {
-            clearInterval(timer.current);
+            clearInterval(timer?.current);
         };
     }, [countDownOtp]);
 
@@ -61,8 +61,8 @@ function Verification() {
         });
         try {
             const response = await signIn(params);
-            if (response.data.success) {
-                const { accessToken } = response.data.data;
+            if (response?.data?.success) {
+                const accessToken = response?.data?.data?.accessToken;
                 const decoded =
                     jwtDecode<UserModel.DataSuccessLogin>(accessToken);
                 await bStorage.setItem(storageKey.userToken, accessToken);
@@ -87,20 +87,20 @@ function Verification() {
                     otpValue: "",
                     loading: false
                 });
-                analytics().setUserId(response.data.id);
+                analytics().setUserId(response?.data?.id);
                 analytics().setUserProperties({
-                    role: response.data.type,
-                    email: response.data.email,
-                    username: response.data.phone
+                    role: response?.data?.type,
+                    email: response?.data?.email,
+                    username: response?.data?.phone
                 });
-                crashlytics().setUserId(response.data.id);
+                crashlytics().setUserId(response?.data?.id);
                 crashlytics().setAttributes({
-                    role: response.data.type,
-                    email: response.data.email,
-                    username: response.data.phone
+                    role: response?.data?.type,
+                    email: response?.data?.email,
+                    username: response?.data?.phone
                 });
             } else {
-                throw new Error(response.data.message);
+                throw new Error(response?.data?.message);
             }
         } catch (error) {
             setVerificationState({
@@ -115,7 +115,7 @@ function Verification() {
     React.useEffect(() => {
         crashlytics().log(VERIFICATION);
 
-        if (otpValue.length === 6) {
+        if (otpValue?.length === 6) {
             onLogin();
         }
     }, [otpValue]);
@@ -124,7 +124,7 @@ function Verification() {
         const params = { phone: phoneNumber };
         try {
             const response = await signIn(params);
-            if (response.data.success) {
+            if (response?.data?.success) {
                 setVerificationState({
                     ...verificationState,
                     errorOtp: "",
@@ -132,7 +132,7 @@ function Verification() {
                     countDownOtp: 10
                 });
             } else {
-                throw new Error(response.data.message);
+                throw new Error(response?.data?.message);
             }
         } catch (error) {
             setVerificationState({
@@ -144,7 +144,7 @@ function Verification() {
         }
     };
     const onBack = () => {
-        clearInterval(timer.current);
+        clearInterval(timer?.current);
         setVerificationState({
             ...verificationState,
             otpValue: "",

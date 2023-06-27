@@ -54,7 +54,9 @@ function Operation() {
     );
 
     React.useEffect(() => {
-        crashlytics().log(userData?.type ? userData.type : "Operation Default");
+        crashlytics().log(
+            userData?.type ? userData?.type : "Operation Default"
+        );
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
             send("onRefreshList", {
                 payload: userData?.type,
@@ -75,33 +77,35 @@ function Operation() {
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
         // NOTE: currently driver only
 
-        if (projectDetails && projectDetails.deliveryOrderId === item.id) {
+        if (projectDetails && projectDetails?.deliveryOrderId === item?.id) {
             navigation.navigate(SUBMIT_FORM, {
-                operationType: userData.type
+                operationType: userData?.type
             });
         } else {
             const dataToDeliver: OperationProjectDetails = {
-                deliveryOrderId: item?.id ? item.id : "",
-                doNumber: item?.number ? item.number : "",
-                projectName: item.project?.projectName
+                deliveryOrderId: item?.id ? item?.id : "",
+                doNumber: item?.number ? item?.number : "",
+                projectName: item?.project?.projectName
                     ? item.project.projectName
                     : "",
-                address: item.project?.ShippingAddress?.line1
+                address: item?.project?.ShippingAddress?.line1
                     ? item.project.ShippingAddress.line1
                     : "",
                 lonlat: {
-                    longitude: item.project?.ShippingAddress?.lon
-                        ? Number(item.project.ShippingAddress.lon)
-                        : 0,
-                    latitude: item.project?.ShippingAddress?.lat
-                        ? Number(item.project.ShippingAddress.lat)
-                        : 0
+                    longitude:
+                        item?.project?.ShippingAddress?.lon !== undefined
+                            ? Number(item.project.ShippingAddress.lon)
+                            : 0,
+                    latitude:
+                        item?.project?.ShippingAddress?.lat !== undefined
+                            ? Number(item.project.ShippingAddress.lat)
+                            : 0
                 },
                 requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct
                     ?.requestedQuantity
                     ? item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity
                     : 0,
-                deliveryTime: item?.date ? item.date : ""
+                deliveryTime: item?.date ? item?.date : ""
             };
 
             dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
@@ -134,8 +138,8 @@ function Operation() {
     }) => {
         navigation.navigate(LOCATION, {
             coordinate: {
-                longitude: Number(lonlat.longitude),
-                latitude: Number(lonlat.latitude)
+                longitude: Number(lonlat?.longitude || 0),
+                latitude: Number(lonlat?.latitude || 0)
             },
             isReadOnly: true,
             from: OPERATION

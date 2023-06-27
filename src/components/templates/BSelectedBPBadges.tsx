@@ -44,7 +44,7 @@ function BSelectedBPBadges({
             <View
                 style={[
                     {
-                        width: Dimensions.get("window").width - 140
+                        width: (Dimensions.get("window")?.width || 0) - 140
                     }
                 ]}
             >
@@ -62,12 +62,16 @@ function BSelectedBPBadges({
                 </Text>
             </View>
             <BSpacer size="verySmall" />
-            <View style={[{ width: Dimensions.get("window").width - 140 }]}>
+            <View
+                style={[
+                    { width: (Dimensions.get("window")?.width || 0) - 140 }
+                ]}
+            >
                 <Badge
                     style={[
                         styles.badges,
                         alignLeft && { alignSelf: "flex-start" },
-                        selectedBP?.name?.toLowerCase().includes("legok") && {
+                        selectedBP?.name?.toLowerCase()?.includes("legok") && {
                             backgroundColor: colors.status.lightBlue
                         }
                     ]}

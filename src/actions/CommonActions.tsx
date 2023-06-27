@@ -57,8 +57,8 @@ export const getBatchingPlants = async () =>
 export const signIn = async (body: Record<string, string>) => {
     const params = new URLSearchParams();
     const dataToSend = body && Object.keys(body);
-    dataToSend.forEach((val) => {
-        params.append(val, body[val]);
+    dataToSend?.forEach((val) => {
+        params?.append(val, body[val]);
     });
     return customRequest(BrikApiCommon.login(), "POST", params.toString());
 };
@@ -68,10 +68,10 @@ export const signOut = async () =>
 
 export const uploadFileImage = async (files: any[], from: string) => {
     const formData = new FormData();
-    files.forEach((file) => {
-        formData.append("photos", file);
+    files?.forEach((file) => {
+        formData?.append("photos", file);
     });
-    formData.append("name", from);
+    formData?.append("name", from);
 
     // http://192.168.18.23:3000/common/file/upload
     // BrikApiCommon.filesUpload(),

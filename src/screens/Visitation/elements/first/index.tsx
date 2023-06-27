@@ -68,7 +68,7 @@ function FirstStep() {
             type: "area",
             isRequire: false,
             onChange: (e: string) => {
-                const newLocation = { ...visitationData.locationAddress };
+                const newLocation = { ...visitationData?.locationAddress };
                 newLocation.line2 = e;
                 dispatch(
                     updateDataVisitation({
@@ -78,7 +78,7 @@ function FirstStep() {
                 );
                 dispatch(updateRegion({ ...region, line1: e }));
             },
-            value: visitationData.locationAddress?.line2,
+            value: visitationData?.locationAddress?.line2,
             placeholder: "contoh: Jalan Kusumadinata no 5"
         }
     ];
@@ -96,7 +96,7 @@ function FirstStep() {
     const onMapReady = async () => {
         try {
             if (grantedLocationPermission) {
-                dispatch(getUserCurrentLocation(selectedBatchingPlant.name));
+                dispatch(getUserCurrentLocation(selectedBatchingPlant?.name));
             } else {
                 askingPermission();
             }
@@ -118,7 +118,7 @@ function FirstStep() {
             dispatch(
                 getCoordinateDetails({
                     coordinate,
-                    selectedBatchingPlant: selectedBatchingPlant.name
+                    selectedBatchingPlant: selectedBatchingPlant?.name
                 })
             );
         } catch (error) {
@@ -142,7 +142,7 @@ function FirstStep() {
     React.useEffect(() => {
         askingPermission();
         return () => {
-            debounceResult.cancel();
+            debounceResult?.cancel();
         };
     }, []);
 
@@ -150,12 +150,12 @@ function FirstStep() {
         crashlytics().log(`${CREATE_VISITATION}-Step1`);
 
         const locationAddress = {
-            ...visitationData.locationAddress,
+            ...visitationData?.locationAddress,
             ...region
         };
 
-        if (visitationData.useSearchedAddress) {
-            locationAddress.formattedAddress = visitationData.searchedAddress;
+        if (visitationData?.useSearchedAddress) {
+            locationAddress.formattedAddress = visitationData?.searchedAddress;
         }
         dispatch(
             updateDataVisitation({
@@ -164,8 +164,8 @@ function FirstStep() {
             })
         );
     }, [
-        region.formattedAddress,
-        visitationData.createdLocation?.formattedAddress
+        region?.formattedAddress,
+        visitationData?.createdLocation?.formattedAddress
     ]);
 
     React.useEffect(() => {
@@ -176,9 +176,11 @@ function FirstStep() {
         DeviceEventEmitter.addListener("visitationSearchCoordinate", (data) => {
             dispatch(setUseSearchedAddress({ value: true }));
             dispatch(
-                setSearchedAddress({ value: data.coordinate.formattedAddress })
+                setSearchedAddress({
+                    value: data?.coordinate?.formattedAddress
+                })
             );
-            onChangeRegion(data.coordinate);
+            onChangeRegion(data?.coordinate);
         });
         return () => {
             DeviceEventEmitter.removeAllListeners("visitationSearchCoordinate");
@@ -186,21 +188,21 @@ function FirstStep() {
     }, [onChangeRegion]);
 
     const nameAddress = React.useMemo(() => {
-        const address = visitationData.useSearchedAddress
-            ? visitationData.searchedAddress
-            : region.formattedAddress;
+        const address = visitationData?.useSearchedAddress
+            ? visitationData?.searchedAddress
+            : region?.formattedAddress;
         const idx = address?.split(",");
         if (idx && idx?.length > 1) {
             return idx?.[0];
         }
 
         return "Nama Alamat";
-    }, [region.formattedAddress]);
+    }, [region?.formattedAddress]);
 
     React.useEffect(() => {
         const isExist =
-            !visitationData.createdLocation?.lat ||
-            visitationData.createdLocation?.lon === 0;
+            !visitationData?.createdLocation?.lat ||
+            visitationData?.createdLocation?.lon === 0;
 
         if (isExist) {
             onMapReady();
@@ -243,9 +245,9 @@ function FirstStep() {
                                 nameAddress={nameAddress}
                                 isLoading={loading === "pending"}
                                 formattedAddress={
-                                    visitationData.useSearchedAddress
-                                        ? visitationData.searchedAddress
-                                        : region.formattedAddress
+                                    visitationData?.useSearchedAddress
+                                        ? visitationData?.searchedAddress
+                                        : region?.formattedAddress
                                 }
                                 onPress={() =>
                                     navigation.navigate(SEARCH_AREA, {

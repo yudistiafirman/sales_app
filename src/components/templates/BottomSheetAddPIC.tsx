@@ -91,56 +91,56 @@ function BSheetAddPic({
         {
             label: "Nama",
             isRequire: true,
-            isError: !state.name,
-            outlineColor: !state.name ? colors.text.errorText : undefined,
+            isError: !state?.name,
+            outlineColor: !state?.name ? colors.text.errorText : undefined,
             placeholder: "Masukkan Nama",
             type: "textInput",
             onChange: (e) =>
                 setState((prevState: PicFormInitialState | PIC) => ({
                     ...prevState,
-                    name: e.nativeEvent.text
+                    name: e?.nativeEvent?.text
                 })),
-            value: state.name
+            value: state?.name
         },
         {
             label: "Jabatan",
             isRequire: true,
-            isError: !state.position,
-            outlineColor: !state.position ? colors.text.errorText : undefined,
+            isError: !state?.position,
+            outlineColor: !state?.position ? colors.text.errorText : undefined,
             placeholder: "Masukkan jabatan",
             type: "textInput",
             onChange: (e) =>
                 setState((prevState) => ({
                     ...prevState,
-                    position: e.nativeEvent.text
+                    position: e?.nativeEvent?.text
                 })),
-            value: state.position
+            value: state?.position
         },
         {
             label: "No. Telepon",
             isRequire: true,
-            isError: !phoneNumberRegex.test(state.phone),
-            outlineColor: !phoneNumberRegex.test(state.phone)
+            isError: !phoneNumberRegex.test(state?.phone),
+            outlineColor: !phoneNumberRegex.test(state?.phone)
                 ? colors.text.errorText
                 : undefined,
             placeholder: "Masukkan nomor telepon",
             type: "textInput",
             keyboardType: "numeric",
             customerErrorMsg: "No. Telepon harus diisi sesuai format",
-            LeftIcon: state.phone ? LeftIcon : undefined,
+            LeftIcon: state?.phone ? LeftIcon : undefined,
             onChange: (e) =>
                 setState((prevState) => ({
                     ...prevState,
-                    phone: e.nativeEvent.text
+                    phone: e?.nativeEvent?.text
                 })),
-            value: state.phone
+            value: state?.phone
         },
         {
             label: "Email",
             isRequire: false,
-            isError: state.email ? !emailRegex.test(state.email) : false,
-            outlineColor: state.email
-                ? emailRegex.test(state.email)
+            isError: state?.email ? !emailRegex.test(state?.email) : false,
+            outlineColor: state?.email
+                ? emailRegex.test(state?.email)
                     ? colors.text.errorText
                     : undefined
                 : undefined,
@@ -151,28 +151,28 @@ function BSheetAddPic({
             onChange: (e) =>
                 setState((prevState) => ({
                     ...prevState,
-                    email: e.nativeEvent.text
+                    email: e?.nativeEvent?.text
                 })),
-            value: state.email
+            value: state?.email
         }
     ];
 
     const onAdd = () => {
         const { name, position, email, phone } = state;
-        const emailCondition = state.email
-            ? emailRegex.test(state.email)
+        const emailCondition = state?.email
+            ? emailRegex.test(state?.email)
             : true;
         if (
             emailCondition &&
-            !!state.name &&
-            phoneNumberRegex.test(state.phone) &&
-            !!state.position
+            !!state?.name &&
+            phoneNumberRegex.test(state?.phone) &&
+            !!state?.position
         ) {
             const dataPIC: PIC = {
-                name: state.name,
-                position: state.position,
-                phone: state.phone.split("+62").join(""),
-                email: state.email
+                name: state?.name,
+                position: state?.position,
+                phone: state?.phone?.split("+62")?.join(""),
+                email: state?.email
             };
             addPic(dataPIC);
             setState(initialState);
@@ -218,9 +218,9 @@ function BSheetAddPic({
                     <BButtonPrimary
                         disable={
                             !(
-                                !!state.name &&
-                                phoneNumberRegex.test(state.phone) &&
-                                !!state.position
+                                !!state?.name &&
+                                phoneNumberRegex.test(state?.phone) &&
+                                !!state?.position
                             )
                         }
                         onPress={onAdd}

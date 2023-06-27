@@ -28,19 +28,19 @@ const style = StyleSheet.create({
 });
 
 export default function BQuickActionButton({ item }: { item: ButtonDataType }) {
-    const title = item.title.split(" ");
+    const title = item?.title?.split(" ");
     return (
-        <TouchableOpacity onPress={item.action}>
+        <TouchableOpacity onPress={item?.action}>
             <View style={style.buttonContainer}>
                 <BSvg
-                    svgName={item.icon}
+                    svgName={item?.icon}
                     width={resScale(48)}
                     height={resScale(48)}
                     type="fill"
                     color={colors.white}
                 />
-                {title.length > 2 ? (
-                    <Text style={style.buttonTitle}>{item.title}</Text>
+                {title && title?.length > 2 ? (
+                    <Text style={style.buttonTitle}>{item?.title}</Text>
                 ) : (
                     <>
                         <Text style={style.buttonTitle}>{title[0]}</Text>

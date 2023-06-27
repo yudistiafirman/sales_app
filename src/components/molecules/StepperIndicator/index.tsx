@@ -86,10 +86,10 @@ const StepperIndicator = forwardRef(
     ) => {
         const dots = useMemo(
             () =>
-                labels.map((label, index) => {
-                    const steps = labels.length;
+                labels?.map((label, index) => {
+                    const steps = labels?.length;
                     const maxNumber = Math.max(...stepsDone);
-                    const isStepDone = stepsDone.includes(index);
+                    const isStepDone = stepsDone?.includes(index);
                     const isStepClickable =
                         index <= maxNumber || index === maxNumber + 1;
                     const dotStyle = [
@@ -108,7 +108,7 @@ const StepperIndicator = forwardRef(
                                     stepOnPress(index);
                                 }
                             }}
-                            key={index.toString() + label}
+                            key={index ? index.toString() + label : label}
                         >
                             <View style={styles.dotContainer}>
                                 <View style={dotStyle}>

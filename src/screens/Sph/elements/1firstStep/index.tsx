@@ -61,7 +61,7 @@ export default function FirstStep() {
             {
                 key: "first",
                 title: "Proyek",
-                totalItems: projects.length,
+                totalItems: projects?.length,
                 chipPosition: "right"
             }
         ],
@@ -128,7 +128,7 @@ export default function FirstStep() {
                             }}
                             autoFocus
                             onClearValue={() => {
-                                if (searchQuery && searchQuery.trim() !== "") {
+                                if (searchQuery && searchQuery?.trim() !== "") {
                                     resetSearch();
                                 } else {
                                     setSearching(!isSearching);
@@ -139,32 +139,32 @@ export default function FirstStep() {
                                 let finalPIC: any[] = [];
                                 let finalItem;
                                 if (
-                                    item.Pics &&
-                                    item.Pics.length > 0 &&
+                                    item?.Pics &&
+                                    item?.Pics?.length > 0 &&
                                     !selectedCompany
                                 ) {
                                     finalPIC = [...item.Pics];
-                                    finalPIC.forEach((it, index) => {
+                                    finalPIC?.forEach((it, index) => {
                                         finalPIC[index] = {
                                             ...finalPIC[index],
                                             isSelected: index === 0
                                         };
                                     });
                                     finalItem = { ...item };
-                                    if (finalItem.Pics)
+                                    if (finalItem?.Pics)
                                         finalItem.Pics = finalPIC;
                                     dispatch(updateSelectedPic(finalPIC[0]));
                                     dispatch(updateSelectedCompany(finalItem));
                                 } else {
-                                    if (item.Pic) finalPIC.push(item.Pic);
-                                    finalPIC.forEach((it, index) => {
+                                    if (item?.Pic) finalPIC?.push(item?.Pic);
+                                    finalPIC?.forEach((it, index) => {
                                         finalPIC[index] = {
                                             ...finalPIC[index],
                                             isSelected: index === 0
                                         };
                                     });
                                     finalItem = { ...item };
-                                    if (finalItem.Pics)
+                                    if (finalItem?.Pics)
                                         finalItem.Pics = finalPIC;
 
                                     dispatch(updateSelectedPic(finalPIC[0]));

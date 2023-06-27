@@ -52,10 +52,10 @@ export default function BTabViewScreen({
     const [indexRoute, setIndexRoute] = useState(0);
 
     const [routes] = useMemo(() => {
-        const routesArray = tabToRender.map((key) => ({
-            key: key.tabTitle,
-            title: key.tabTitle, // uppercase the first letter .charAt(0).toUpperCase() + key.slice(1)
-            totalItems: key.totalItems,
+        const routesArray = tabToRender?.map((key) => ({
+            key: key?.tabTitle,
+            title: key?.tabTitle, // uppercase the first letter .charAt(0).toUpperCase() + key.slice(1)
+            totalItems: key?.totalItems,
             chipPosition: "right"
         }));
         return [routesArray];
@@ -63,12 +63,12 @@ export default function BTabViewScreen({
 
     const sceneData = useMemo(() => {
         const sceneMapData: { [key: string]: () => JSX.Element | null } =
-            tabToRender.reduce((acc: AccumulatorReduceType, curr) => {
-                acc[curr.tabTitle] = () => {
+            tabToRender?.reduce((acc: AccumulatorReduceType, curr) => {
+                acc[curr?.tabTitle] = () => {
                     if (!screenToRender) {
                         return null;
                     }
-                    return screenToRender(curr.tabTitle);
+                    return screenToRender(curr?.tabTitle);
                 };
                 return acc;
             }, {});

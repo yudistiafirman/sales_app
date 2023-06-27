@@ -96,7 +96,7 @@ function HunterAndFarmers() {
             isVisible={
                 hunterScreen &&
                 userData !== null &&
-                whiteListUserType.includes(userData.type)
+                whiteListUserType?.includes(userData?.type)
             }
             style={styles.modalContainer}
             deviceHeight={height}

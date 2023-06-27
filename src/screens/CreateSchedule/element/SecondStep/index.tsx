@@ -96,7 +96,7 @@ export default function SecondStep() {
             type: "calendar-time",
             calendarTime: {
                 onDayPress: (value: any) => {
-                    const date = moment(value.dateString).format("DD/MM/yyyy");
+                    const date = moment(value?.dateString).format("DD/MM/yyyy");
                     onChange("deliveryDate")(date);
                 },
                 isCalendarVisible: isVisibleCalendar,
@@ -218,7 +218,7 @@ export default function SecondStep() {
 
     const getDisplayName = (salesOrder: SalesOrdersData) =>
         // BE bugs -> response category.`parent` should be `Parent`
-        `${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name} ${salesOrder.PoProduct?.RequestedProduct?.displayName} ${salesOrder.PoProduct?.RequestedProduct?.Product?.category?.name}`;
+        `${salesOrder?.PoProduct?.RequestedProduct?.Product?.category?.Parent?.name} ${salesOrder?.PoProduct?.RequestedProduct?.displayName} ${salesOrder?.PoProduct?.RequestedProduct?.Product?.category?.name}`;
     return (
         <View style={style.container}>
             <ScrollView style={style.flexFull}>
@@ -246,17 +246,17 @@ export default function SecondStep() {
                 </View>
                 <BSpacer size="extraSmall" />
                 {stateOne?.purchaseOrders[0]?.SaleOrders &&
-                    stateOne?.purchaseOrders[0]?.SaleOrders.length > 0 && (
+                    stateOne?.purchaseOrders[0]?.SaleOrders?.length > 0 && (
                         <>
                             <Text style={style.partText}>Produk</Text>
                             <BSpacer size="verySmall" />
                             <View style={style.flexFull}>
                                 <BDivider />
                                 <BSpacer size="extraSmall" />
-                                {stateOne?.purchaseOrders[0]?.SaleOrders.map(
+                                {stateOne?.purchaseOrders[0]?.SaleOrders?.map(
                                     (item, index) => (
                                         <View
-                                            key={index.toString()}
+                                            key={index?.toString()}
                                             style={style.flexFull}
                                         >
                                             <View
@@ -266,10 +266,10 @@ export default function SecondStep() {
                                                     style={style.contentProduct}
                                                 >
                                                     <RadioButton
-                                                        value={index.toString()}
+                                                        value={index?.toString()}
                                                         status={
                                                             selectedIndex ===
-                                                            index.toString()
+                                                            index?.toString()
                                                                 ? "checked"
                                                                 : "unchecked"
                                                         }
@@ -281,7 +281,7 @@ export default function SecondStep() {
                                                         onPress={() => {
                                                             if (
                                                                 selectedIndex !==
-                                                                index.toString()
+                                                                index?.toString()
                                                             ) {
                                                                 updateValueOnstep(
                                                                     "stepTwo",
@@ -295,7 +295,7 @@ export default function SecondStep() {
                                                                 );
                                                             }
                                                             setSelectedIndex(
-                                                                index.toString()
+                                                                index?.toString()
                                                             );
                                                         }}
                                                     />
@@ -323,7 +323,7 @@ export default function SecondStep() {
                                                     />
                                                 </View>
                                                 {selectedIndex ===
-                                                    index.toString() && (
+                                                    index?.toString() && (
                                                     <View
                                                         style={style.formInput}
                                                     >

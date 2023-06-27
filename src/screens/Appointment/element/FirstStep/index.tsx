@@ -36,7 +36,7 @@ function FirstStep() {
 
     return (
         <SafeAreaView style={styles.flexFull}>
-            {appoinmentState.isSearching ? (
+            {appoinmentState?.isSearching ? (
                 <SearchingCustomer />
             ) : (
                 <>

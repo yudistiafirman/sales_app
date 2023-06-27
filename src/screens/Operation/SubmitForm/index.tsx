@@ -151,38 +151,44 @@ function SubmitForm() {
 
     const enableLocationHeader =
         operationType === EntryType.DRIVER &&
-        operationData.projectDetails.address &&
-        operationData.projectDetails.address?.length > 0;
+        operationData?.projectDetails?.address &&
+        operationData?.projectDetails?.address?.length > 0;
 
     const removedAddButtonImage = () => {
         switch (userData?.type) {
             case EntryType.WB: {
-                if (operationData.photoFiles.length > 1) {
-                    const tempImages = [
-                        ...operationData.photoFiles.filter(
-                            (it) => it.file !== null
-                        )
-                    ];
+                if (operationData?.photoFiles?.length > 1) {
+                    let tempImages;
+                    if (operationData?.photoFiles)
+                        tempImages = [
+                            ...operationData.photoFiles.filter(
+                                (it) => it?.file !== null
+                            )
+                        ];
                     dispatch(setAllOperationPhoto({ file: tempImages }));
                 }
                 break;
             }
             case EntryType.SECURITY: {
                 if (operationType === EntryType.DISPATCH) {
-                    if (operationData.photoFiles.length > 4) {
-                        const tempImages = [
-                            ...operationData.photoFiles.filter(
-                                (it) => it.file !== null
-                            )
-                        ];
+                    if (operationData?.photoFiles?.length > 4) {
+                        let tempImages;
+                        if (operationData?.photoFiles)
+                            tempImages = [
+                                ...operationData.photoFiles.filter(
+                                    (it) => it?.file !== null
+                                )
+                            ];
                         dispatch(setAllOperationPhoto({ file: tempImages }));
                     }
-                } else if (operationData.photoFiles.length > 1) {
-                    const tempImages = [
-                        ...operationData.photoFiles.filter(
-                            (it) => it.file !== null
-                        )
-                    ];
+                } else if (operationData?.photoFiles?.length > 1) {
+                    let tempImages;
+                    if (operationData?.photoFiles)
+                        tempImages = [
+                            ...operationData.photoFiles.filter(
+                                (it) => it?.file !== null
+                            )
+                        ];
                     dispatch(setAllOperationPhoto({ file: tempImages }));
                 }
                 break;
@@ -227,34 +233,34 @@ function SubmitForm() {
     };
 
     const handleDisableContinueButton = () => {
-        const filteredPhoto = operationData.photoFiles?.filter(
-            (it) => it.file !== null
+        const filteredPhoto = operationData?.photoFiles?.filter(
+            (it) => it?.file !== null
         );
         let photos;
         if (filteredPhoto) photos = [...filteredPhoto];
         if (userData?.type === EntryType.DRIVER) {
             return (
-                (photos && photos.length < 7) ||
-                operationData.inputsValue.recepientName.length === 0 ||
-                !phoneNumberRegex.test(
-                    operationData.inputsValue.recepientPhoneNumber
+                (photos && photos?.length < 7) ||
+                operationData?.inputsValue?.recepientName?.length === 0 ||
+                !phoneNumberRegex?.test(
+                    operationData?.inputsValue?.recepientPhoneNumber
                 )
             );
         }
         if (userData?.type === EntryType.WB) {
             return (
-                operationData.inputsValue.weightBridge.length === 0 ||
-                (photos && photos.length < 2)
+                operationData?.inputsValue?.weightBridge?.length === 0 ||
+                (photos && photos?.length < 2)
             );
         }
         if (operationType === EntryType.RETURN) {
             return (
-                operationData.inputsValue.truckMixCondition.length === 0 ||
-                (photos && photos.length < 2)
+                operationData?.inputsValue?.truckMixCondition?.length === 0 ||
+                (photos && photos?.length < 2)
             );
         }
         if (operationType === EntryType.DISPATCH) {
-            return photos && photos.length !== 5;
+            return photos && photos?.length !== 5;
         }
 
         return undefined;
@@ -277,15 +283,15 @@ function SubmitForm() {
             );
             const payload = {} as UpdateDeliverOrder;
             payload.batchingPlantId = selectedBatchingPlant?.id;
-            const photoFilestoUpload = operationData.photoFiles
-                ?.filter((v) => v.file !== null)
+            const photoFilestoUpload = operationData?.photoFiles
+                ?.filter((v) => v?.file !== null)
                 ?.map((photo) => ({
-                    ...photo.file,
+                    ...photo?.file,
                     uri: photo?.file?.uri?.replace("file:", "file://")
                 }));
 
             let responseFiles;
-            if (photoFilestoUpload && photoFilestoUpload.length > 0) {
+            if (photoFilestoUpload && photoFilestoUpload?.length > 0) {
                 responseFiles = await uploadFileImage(
                     photoFilestoUpload,
                     "Update Delivery Order"
@@ -305,13 +311,13 @@ function SubmitForm() {
                     );
                     payload.doFiles = newFileData;
                     payload.recipientName =
-                        operationData.inputsValue.recepientName;
+                        operationData?.inputsValue?.recepientName;
                     payload.recipientNumber =
-                        operationData.inputsValue.recepientPhoneNumber;
+                        operationData?.inputsValue?.recepientPhoneNumber;
                     payload.status = "RECEIVED";
                     responseUpdateDeliveryOrder = await updateDeliveryOrder(
                         payload,
-                        operationData.projectDetails.deliveryOrderId
+                        operationData?.projectDetails?.deliveryOrderId
                     );
                 } else if (userData?.type === EntryType.WB) {
                     const newFileData = responseFiles?.data?.data?.map(
@@ -321,11 +327,11 @@ function SubmitForm() {
                         })
                     );
                     payload.doFiles = newFileData;
-                    payload.weight = operationData.inputsValue.weightBridge;
+                    payload.weight = operationData?.inputsValue?.weightBridge;
                     responseUpdateDeliveryOrder =
                         await updateDeliveryOrderWeight(
                             payload,
-                            operationData.projectDetails.deliveryOrderId
+                            operationData?.projectDetails?.deliveryOrderId
                         );
                 } else if (userData?.type === EntryType.SECURITY) {
                     const newFileData = responseFiles?.data?.data?.map(
@@ -338,12 +344,12 @@ function SubmitForm() {
 
                     if (operationType === EntryType.RETURN) {
                         payload.conditionTruck =
-                            operationData.inputsValue.truckMixCondition;
+                            operationData?.inputsValue?.truckMixCondition;
                     }
 
                     responseUpdateDeliveryOrder = await updateDeliveryOrder(
                         payload,
-                        operationData.projectDetails.deliveryOrderId
+                        operationData?.projectDetails?.deliveryOrderId
                     );
                 }
 
@@ -429,7 +435,7 @@ function SubmitForm() {
                 backAction
             );
             return () => backHandler.remove();
-        }, [handleBack, operationData.photoFiles, userData?.type])
+        }, [handleBack, operationData?.photoFiles, userData?.type])
     );
 
     useHeaderTitleChanged({
@@ -440,7 +446,7 @@ function SubmitForm() {
     const weightInputs: Input[] = [
         {
             label: "Berat",
-            value: operationData.inputsValue.weightBridge,
+            value: operationData?.inputsValue?.weightBridge,
             onChange: (e) => {
                 const result = `${e}`;
                 dispatch(
@@ -454,8 +460,8 @@ function SubmitForm() {
             type: "quantity",
             quantityType: "kg",
             placeholder: "Masukkan berat",
-            isError: !operationData.inputsValue.weightBridge,
-            outlineColor: !operationData.inputsValue.weightBridge
+            isError: !operationData?.inputsValue?.weightBridge,
+            outlineColor: !operationData?.inputsValue?.weightBridge
                 ? colors.text.errorText
                 : undefined
         }
@@ -464,38 +470,38 @@ function SubmitForm() {
     const deliveryInputs: Input[] = [
         {
             label: "Nama Penerima",
-            value: operationData.inputsValue.recepientName,
+            value: operationData?.inputsValue?.recepientName,
             onChange: (e) =>
                 dispatch(
                     onChangeInputValue({
                         inputType: "recepientName",
-                        value: e.nativeEvent.text
+                        value: e?.nativeEvent?.text
                     })
                 ),
             isRequire: true,
             type: "textInput",
             placeholder: "Masukkan nama penerima",
-            isError: !operationData.inputsValue.recepientName,
-            outlineColor: !operationData.inputsValue.recepientName
+            isError: !operationData?.inputsValue?.recepientName,
+            outlineColor: !operationData?.inputsValue?.recepientName
                 ? colors.text.errorText
                 : undefined
         },
         {
             label: "No. Telp Penerima",
-            value: operationData.inputsValue.recepientPhoneNumber,
+            value: operationData?.inputsValue?.recepientPhoneNumber,
             onChange: (e) => {
                 dispatch(
                     onChangeInputValue({
                         inputType: "recepientPhoneNumber",
-                        value: e.nativeEvent.text
+                        value: e?.nativeEvent?.text
                     })
                 );
             },
-            isError: !phoneNumberRegex.test(
-                operationData.inputsValue.recepientPhoneNumber
+            isError: !phoneNumberRegex?.test(
+                operationData?.inputsValue?.recepientPhoneNumber
             ),
-            outlineColor: !phoneNumberRegex.test(
-                operationData.inputsValue.recepientPhoneNumber
+            outlineColor: !phoneNumberRegex?.test(
+                operationData?.inputsValue?.recepientPhoneNumber
             )
                 ? colors.text.errorText
                 : undefined,
@@ -504,27 +510,13 @@ function SubmitForm() {
             type: "textInput",
             placeholder: "Masukkan nomor telp penerima",
             customerErrorMsg: "No. Telepon harus diisi sesuai format",
-            LeftIcon: operationData.inputsValue.recepientPhoneNumber
+            LeftIcon: operationData?.inputsValue?.recepientPhoneNumber
                 ? LeftIcon
                 : undefined
         }
     ];
 
     const returnInputs: Input[] = [
-        // {
-        //   label: 'Ada Muatan Tersisa di Dalam TM?',
-        //   value: '',
-        //   type: 'checkbox',
-        //   isRequire: false,
-        //   checkbox: {
-        //     value: operationData.inputsValue.truckMixHaveLoad,
-        //     onValueChange: (e) => {
-        //       dispatch(
-        //         onChangeInputValue({ inputType: 'truckMixHaveLoad', value: e })
-        //       );
-        //     },
-        //   },
-        // },
         {
             label: "Kondisi TM",
             isRequire: true,
@@ -532,11 +524,11 @@ function SubmitForm() {
             type: "dropdown",
             dropdown: {
                 items: TM_CONDITION,
-                placeholder: operationData.inputsValue.truckMixCondition
+                placeholder: operationData?.inputsValue?.truckMixCondition
                     ? TM_CONDITION.find(
                           (it) =>
-                              it.value ===
-                              operationData.inputsValue.truckMixCondition
+                              it?.value ===
+                              operationData?.inputsValue?.truckMixCondition
                       )?.label ?? ""
                     : "Pilih Kondisi TM",
                 onChange: (value: any) => {
@@ -560,7 +552,7 @@ function SubmitForm() {
             }
         },
         [
-            operationData.photoFiles,
+            operationData?.photoFiles,
             dispatch,
             removeOperationPhoto,
             removeDriverPhoto
@@ -616,7 +608,7 @@ function SubmitForm() {
                 }
             }
         },
-        [operationData.photoFiles, dispatch]
+        [operationData?.photoFiles, dispatch]
     );
 
     return (
@@ -633,30 +625,33 @@ function SubmitForm() {
                     <View style={style.flexFull}>
                         {enableLocationHeader && (
                             <BLocationText
-                                location={operationData.projectDetails.address}
+                                location={
+                                    operationData?.projectDetails?.address
+                                }
                             />
                         )}
                         <BSpacer size="extraSmall" />
                         <View style={style.top}>
                             <BVisitationCard
                                 item={{
-                                    name: operationData.projectDetails
+                                    name: operationData?.projectDetails
                                         .projectName,
                                     location:
-                                        operationData.projectDetails.address
+                                        operationData?.projectDetails?.address
                                 }}
                                 isRenderIcon={false}
                             />
                             <BVisitationCard
                                 item={{
-                                    name: operationData.projectDetails.doNumber,
-                                    unit: `${operationData.projectDetails.requestedQuantity} m3`,
+                                    name: operationData?.projectDetails
+                                        ?.doNumber,
+                                    unit: `${operationData?.projectDetails?.requestedQuantity} m3`,
                                     time: `${moment(
-                                        operationData.projectDetails
-                                            .deliveryTime
+                                        operationData?.projectDetails
+                                            ?.deliveryTime
                                     ).format("L")} | ${moment(
-                                        operationData.projectDetails
-                                            .deliveryTime
+                                        operationData?.projectDetails
+                                            ?.deliveryTime
                                     ).format("HH:mm")}`
                                 }}
                                 customStyle={{
@@ -677,7 +672,7 @@ function SubmitForm() {
                                 removePict={(pos, attachType) =>
                                     deleteImages(pos, attachType)
                                 }
-                                picts={operationData.photoFiles}
+                                picts={operationData?.photoFiles}
                             />
                         </View>
                         <View style={style.flexFull}>

@@ -92,10 +92,10 @@ function HeaderButton({
                 <BSpacer size="small" />
                 <TouchableOpacity
                     style={styles.photoIconContainer}
-                    onPress={item.onPress}
+                    onPress={item?.onPress}
                 >
                     <MaterialCommunityIcons
-                        name={item.iconName}
+                        name={item?.iconName}
                         color={colors.white}
                         size={resScale(20)}
                     />
@@ -112,7 +112,7 @@ function HeaderButton({
                     estimatedItemSize={4}
                     renderItem={renderItem}
                     data={cameraHeaderButtonValue}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={(item, index) => index?.toString()}
                 />
                 <BSpacer size="medium" />
             </View>

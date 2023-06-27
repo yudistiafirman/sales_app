@@ -59,7 +59,7 @@ export default function HighlightText({
         .map(escapeRegExp)
         .join("|")})`;
     const regex = new RegExp(regexStr, "gi");
-    const parts = name.split(regex);
+    const parts = name?.split(regex);
 
     return (
         <Text

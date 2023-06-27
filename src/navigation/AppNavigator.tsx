@@ -62,18 +62,18 @@ function RootScreen(
         const { type, roles } = userData;
         const mappingRoles: string[] = [];
         let safetyType = type;
-        roles.forEach((item) => {
-            mappingRoles.push(item.toLowerCase());
+        roles?.forEach((item) => {
+            mappingRoles?.push(item?.toLowerCase());
         });
-        if (mappingRoles.includes(EntryType.DRIVER.toLowerCase()))
+        if (mappingRoles?.includes(EntryType.DRIVER.toLowerCase()))
             safetyType = EntryType.DRIVER;
-        else if (mappingRoles.includes(EntryType.SECURITY.toLowerCase()))
+        else if (mappingRoles?.includes(EntryType.SECURITY.toLowerCase()))
             safetyType = EntryType.SECURITY;
-        else if (mappingRoles.includes(EntryType.WB.toLowerCase()))
+        else if (mappingRoles?.includes(EntryType.WB.toLowerCase()))
             safetyType = EntryType.WB;
-        else if (mappingRoles.includes(EntryType.SALES.toLowerCase()))
+        else if (mappingRoles?.includes(EntryType.SALES.toLowerCase()))
             safetyType = EntryType.SALES;
-        else if (mappingRoles.includes(EntryType.ADMIN.toLowerCase()))
+        else if (mappingRoles?.includes(EntryType.ADMIN.toLowerCase()))
             safetyType = EntryType.ADMIN;
         switch (safetyType?.toLowerCase()) {
             case EntryType.DRIVER.toLowerCase():

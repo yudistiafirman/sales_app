@@ -56,34 +56,34 @@ export default function Popup() {
             hideModalContentWhileAnimating={false}
             backdropOpacity={0.3}
             onBackdropPress={() => {
-                if (popUpOptions.outsideClickClosePopUp) {
+                if (popUpOptions?.outsideClickClosePopUp) {
                     dispatch(setIsPopUpVisible());
                 }
             }}
         >
             <View style={styles.modalContent}>
-                {popUpOptions.popUpType !== "none" && (
+                {popUpOptions?.popUpType !== "none" && (
                     <View
                         style={{
                             paddingTop: layout.pad.xl,
                             paddingBottom: layout.pad.ml
                         }}
                     >
-                        {popUpOptions.popUpType === "success" && (
+                        {popUpOptions?.popUpType === "success" && (
                             <AntDesign
                                 size={resScale(48)}
                                 name="checkcircle"
                                 color="green"
                             />
                         )}
-                        {popUpOptions.popUpType === "error" && (
+                        {popUpOptions?.popUpType === "error" && (
                             <AntDesign
                                 size={resScale(48)}
                                 name="closecircle"
                                 color="red"
                             />
                         )}
-                        {popUpOptions.popUpType === "loading" && (
+                        {popUpOptions?.popUpType === "loading" && (
                             <ActivityIndicator
                                 size={resScale(60)}
                                 color={colors.primary}
@@ -92,33 +92,33 @@ export default function Popup() {
                     </View>
                 )}
 
-                {popUpOptions.popUpTitle && (
+                {popUpOptions?.popUpTitle && (
                     <View style={{ paddingBottom: layout.pad.lg }}>
                         <BHighlightText
-                            searchQuery={popUpOptions.highlightedText}
-                            name={popUpOptions.popUpTitle}
+                            searchQuery={popUpOptions?.highlightedText}
+                            name={popUpOptions?.popUpTitle}
                             numberOfLines={2}
                         />
                     </View>
                 )}
-                {popUpOptions.popUpText && (
+                {popUpOptions?.popUpText && (
                     <View style={{ paddingBottom: layout.pad.lg }}>
                         <BText style={styles.popUpTitle}>
-                            {popUpOptions.popUpText}
+                            {popUpOptions?.popUpText}
                         </BText>
                     </View>
                 )}
                 {/* <Text style={styles.popUptext}>{popUpOptions.popUpText}</Text> */}
-                {popUpOptions.isRenderActions && (
+                {popUpOptions?.isRenderActions && (
                     <BBackContinueBtn
                         isContinueIcon={false}
-                        continueText={popUpOptions.primaryBtnTitle}
-                        backText={popUpOptions.outlineBtnTitle}
-                        unrenderBack={popUpOptions.unRenderBackButton}
-                        loadingContinue={popUpOptions.isPrimaryButtonLoading}
-                        onPressBack={popUpOptions.outlineBtnAction}
-                        onPressContinue={popUpOptions.primaryBtnAction}
-                        disableBack={popUpOptions.isPrimaryButtonLoading}
+                        continueText={popUpOptions?.primaryBtnTitle}
+                        backText={popUpOptions?.outlineBtnTitle}
+                        unrenderBack={popUpOptions?.unRenderBackButton}
+                        loadingContinue={popUpOptions?.isPrimaryButtonLoading}
+                        onPressBack={popUpOptions?.outlineBtnAction}
+                        onPressContinue={popUpOptions?.primaryBtnAction}
+                        disableBack={popUpOptions?.isPrimaryButtonLoading}
                     />
                 )}
             </View>

@@ -79,7 +79,7 @@ function SearchFlow({
         if (!isSearch && text) {
             onSearch(true);
         }
-        if (visitationData.shouldScrollView) {
+        if (visitationData?.shouldScrollView) {
             dispatch(updateShouldScrollView(false));
         }
         dispatch(setSearchQuery(text));
@@ -100,21 +100,21 @@ function SearchFlow({
             dispatch(
                 updateDataVisitation({
                     type: "companyName",
-                    value: company.title
+                    value: company?.title
                 })
             );
-            if (visitationData.options?.items) {
+            if (visitationData?.options?.items) {
                 const newOptionsValue = [
-                    ...(visitationData.options?.items || [
+                    ...(visitationData?.options?.items || [
                         { id: "", title: "" }
                     ])
                 ];
-                newOptionsValue.push(company);
+                newOptionsValue?.push(company);
                 dispatch(
                     updateDataVisitation({
                         type: "options",
                         value: {
-                            ...visitationData.options,
+                            ...visitationData?.options,
                             items: newOptionsValue
                         }
                     })
@@ -124,7 +124,7 @@ function SearchFlow({
                     updateDataVisitation({
                         type: "options",
                         value: {
-                            ...visitationData.options,
+                            ...visitationData?.options,
                             items: [company]
                         }
                     })
@@ -144,7 +144,7 @@ function SearchFlow({
                 ...pic,
                 isSelected: i === 0
             }));
-            if (picList.length === 1) {
+            if (picList && picList?.length === 1) {
                 picList[0].isSelected = true;
             }
             dispatch(
@@ -195,7 +195,7 @@ function SearchFlow({
             {
                 key: "first",
                 title: "Proyek",
-                totalItems: projects.length,
+                totalItems: projects?.length,
                 chipPosition: "right"
             }
         ],
@@ -204,7 +204,7 @@ function SearchFlow({
 
     const onRetryGettingProject = () => {
         dispatch(retrying());
-        onChangeWithDebounce(visitationData.searchQuery);
+        onChangeWithDebounce(visitationData?.searchQuery);
     };
 
     return (
@@ -212,7 +212,7 @@ function SearchFlow({
             <View>
                 <BTextLocation
                     location={
-                        visitationData.locationAddress?.formattedAddress ?? ""
+                        visitationData?.locationAddress?.formattedAddress ?? ""
                     }
                     numberOfLines={1}
                 />
@@ -225,13 +225,13 @@ function SearchFlow({
                         onIndexChange={setIndex}
                         routes={routes}
                         placeholder="Cari PT / Proyek"
-                        searchQuery={visitationData.searchQuery}
+                        searchQuery={visitationData?.searchQuery}
                         autoFocus
                         onChangeText={onChangeSearch}
                         onClearValue={() => {
                             if (
-                                visitationData.searchQuery &&
-                                visitationData.searchQuery.trim() !== ""
+                                visitationData?.searchQuery &&
+                                visitationData?.searchQuery?.trim() !== ""
                             ) {
                                 onClear();
                             } else {
@@ -245,7 +245,7 @@ function SearchFlow({
                         loadList={isProjectLoading}
                         errorMessage={errorGettingProjectMessage}
                         onRetry={onRetryGettingProject}
-                        emptyText={`${visitationData.searchQuery} tidak ditemukan!`}
+                        emptyText={`${visitationData?.searchQuery} tidak ditemukan!`}
                     />
                 </View>
             ) : (

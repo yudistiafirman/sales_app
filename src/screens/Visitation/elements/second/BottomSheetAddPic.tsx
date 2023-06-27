@@ -45,84 +45,84 @@ const BSheetAddPic = React.forwardRef(
                 {
                     label: "Nama",
                     isRequire: true,
-                    isError: !state.name,
-                    outlineColor: !state.name
+                    isError: !state?.name,
+                    outlineColor: !state?.name
                         ? colors.text.errorText
                         : undefined,
                     type: "textInput",
                     onChange: (event) => {
-                        onChange("name")(event.nativeEvent.text);
+                        onChange("name")(event?.nativeEvent?.text);
                     },
-                    value: state.name,
+                    value: state?.name,
                     placeholder: "Masukkan nama"
                 },
                 {
                     label: "Jabatan",
                     isRequire: true,
-                    isError: !state.position,
-                    outlineColor: !state.position
+                    isError: !state?.position,
+                    outlineColor: !state?.position
                         ? colors.text.errorText
                         : undefined,
                     type: "textInput",
                     onChange: (event) => {
-                        onChange("position")(event.nativeEvent.text);
+                        onChange("position")(event?.nativeEvent?.text);
                     },
-                    value: state.position,
+                    value: state?.position,
                     placeholder: "Masukkan jabatan"
                 },
                 {
                     label: "No. Telepon",
                     isRequire: true,
-                    isError: !phoneNumberRegex.test(state.phone),
-                    outlineColor: !phoneNumberRegex.test(state.phone)
+                    isError: !phoneNumberRegex.test(state?.phone),
+                    outlineColor: !phoneNumberRegex.test(state?.phone)
                         ? colors.text.errorText
                         : undefined,
                     type: "textInput",
                     onChange: (event) => {
-                        onChange("phone")(event.nativeEvent.text);
+                        onChange("phone")(event?.nativeEvent?.text);
                     },
-                    value: state.phone,
+                    value: state?.phone,
                     keyboardType: "numeric",
                     customerErrorMsg: "No. Telepon harus diisi sesuai format",
-                    LeftIcon: state.phone ? LeftIcon : undefined,
+                    LeftIcon: state?.phone ? LeftIcon : undefined,
                     placeholder: "Masukkan nomor telepon"
                 },
                 {
                     label: "Email",
                     isRequire: false,
-                    isError: state.email
-                        ? !emailRegex.test(state.email)
+                    isError: state?.email
+                        ? !emailRegex.test(state?.email)
                         : false,
-                    outlineColor: state.email
-                        ? emailRegex.test(state.email)
+                    outlineColor: state?.email
+                        ? emailRegex.test(state?.email)
                             ? colors.text.errorText
                             : undefined
                         : undefined,
                     keyboardType: "email-address",
                     type: "textInput",
                     onChange: (event) => {
-                        onChange("email")(event.nativeEvent.text);
+                        onChange("email")(event?.nativeEvent?.text);
                     },
-                    value: state.email,
+                    value: state?.email,
                     customerErrorMsg: "Email harus diisi sesuai format",
                     placeholder: "Masukkan email"
                 }
             ],
-            [state.name, state.email, state.position, state.phone]
+            [state?.name, state?.email, state?.position, state?.phone]
         );
 
         const onAdd = () => {
             if (ref) {
-                ref.current?.close();
+                ref?.current?.close();
             }
-            const emailCondition = state.email
-                ? emailRegex.test(state.email)
+            const emailCondition = state?.email
+                ? emailRegex.test(state?.email)
                 : true;
             if (
                 emailCondition &&
-                !!state.name &&
-                phoneNumberRegex.test(state.phone) &&
-                !!state.position
+                !!state?.name &&
+                phoneNumberRegex.test(state?.phone) &&
+                !!state?.position
             ) {
                 addPic(state);
                 setState(initialState);
@@ -139,9 +139,9 @@ const BSheetAddPic = React.forwardRef(
                 snapPoint={["75%"]}
                 isButtonDisable={
                     !(
-                        !!state.name &&
-                        phoneNumberRegex.test(state.phone) &&
-                        !!state.position
+                        !!state?.name &&
+                        phoneNumberRegex.test(state?.phone) &&
+                        !!state?.position
                     )
                 }
             />

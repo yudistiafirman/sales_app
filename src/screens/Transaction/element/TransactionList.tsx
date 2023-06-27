@@ -55,45 +55,45 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
 }: TransactionListProps<ArrayOfObject>) {
     const getNominal = (item: any) => {
         if (selectedType === "Deposit") {
-            return item.amount;
+            return item?.amount;
         }
         if (selectedType === "DO") {
-            return item.value ? item.value : item.totalPrice;
+            return item?.value ? item?.value : item?.totalPrice;
         }
         if (selectedType === "Jadwal") {
-            return getAvailableDepositProject(item.project, true);
+            return getAvailableDepositProject(item?.project, true);
         }
-        return item.totalPrice ? item.totalPrice : item.amount;
+        return item?.totalPrice ? item?.totalPrice : item?.amount;
     };
 
     const renderItem: ListRenderItem<TransactionsData> = useCallback(
         ({ item }) => (
             <TouchableOpacity onPress={() => onPress(item)}>
                 <TransactionListCard
-                    number={item.number ? item.number : "-"}
+                    number={item?.number ? item?.number : "-"}
                     // TODO: handle from BE, ugly when use mapping in FE side
                     projectName={
-                        item.QuotationRequest?.Project
-                            ? item.QuotationRequest?.Project.projectName
-                            : item.project?.projectName
-                            ? item.project?.projectName
-                            : item.Account?.Project?.name
-                            ? item.Account?.Project?.name
+                        item?.QuotationRequest?.Project
+                            ? item?.QuotationRequest?.Project?.projectName
+                            : item?.project?.projectName
+                            ? item?.project?.projectName
+                            : item?.Account?.Project?.name
+                            ? item?.Account?.Project?.name
                             : "-"
                     }
-                    status={item.status}
+                    status={item?.status}
                     // TODO: handle from BE, ugly when use mapping in FE side
                     name={
-                        item.SaleOrder
-                            ? item.SaleOrder?.number
-                            : item.Schedule
-                            ? item.Schedule.number
-                            : item.PurchaseOrder
-                            ? item.PurchaseOrder?.number
-                            : item.QuotationLetter?.number
-                            ? item.QuotationLetter?.number
-                            : item.SaleOrder?.number
-                            ? item.SaleOrder?.number
+                        item?.SaleOrder
+                            ? item?.SaleOrder?.number
+                            : item?.Schedule
+                            ? item?.Schedule?.number
+                            : item?.PurchaseOrder
+                            ? item?.PurchaseOrder?.number
+                            : item?.QuotationLetter?.number
+                            ? item?.QuotationLetter?.number
+                            : item?.SaleOrder?.number
+                            ? item?.SaleOrder?.number
                             : selectedType !== "SPH"
                             ? "-"
                             : undefined
@@ -121,7 +121,7 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
                 paddingTop: layout.pad.lg,
                 paddingHorizontal: layout.pad.lg
             }}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => index?.toString()}
             onEndReached={onEndReached}
             refreshing={refreshing}
             ListFooterComponent={isLoadMore ? <TransactionListShimmer /> : null}

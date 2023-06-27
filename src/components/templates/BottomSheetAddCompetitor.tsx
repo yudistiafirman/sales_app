@@ -82,9 +82,9 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
             type: "textInput",
             placeholder: "Nama pesaing",
             onChange: (event) => {
-                onChange("name")(event.nativeEvent.text);
+                onChange("name")(event?.nativeEvent?.text);
             },
-            value: state.name
+            value: state?.name
         }
     ];
 
@@ -98,7 +98,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
             onChange: (val) => {
                 onChange("problem")(val);
             },
-            value: state.problem
+            value: state?.problem
         },
         {
             label: "Harapan apa yang diinginkan dari BRIK?",
@@ -109,7 +109,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
             onChange: (val) => {
                 onChange("hope")(val);
             },
-            value: state.hope
+            value: state?.hope
         }
     ];
 
@@ -120,7 +120,11 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
     };
 
     const buttonStateDisabled = (): boolean => {
-        if (state.name !== "" && state.mou !== "" && state.exclusive !== "") {
+        if (
+            state?.name !== "" &&
+            state?.mou !== "" &&
+            state?.exclusive !== ""
+        ) {
             return false;
         }
         return true;
@@ -183,7 +187,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                         <RadioButton
                                             value="Iya"
                                             status={
-                                                state.mou?.toLowerCase() ===
+                                                state?.mou?.toLowerCase() ===
                                                 "iya"
                                                     ? "checked"
                                                     : "unchecked"
@@ -209,7 +213,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                         <RadioButton
                                             value="Tidak"
                                             status={
-                                                state.mou?.toLowerCase() ===
+                                                state?.mou?.toLowerCase() ===
                                                 "tidak"
                                                     ? "checked"
                                                     : "unchecked"
@@ -247,7 +251,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                         <RadioButton
                                             value="Iya"
                                             status={
-                                                state.exclusive?.toLowerCase() ===
+                                                state?.exclusive?.toLowerCase() ===
                                                 "iya"
                                                     ? "checked"
                                                     : "unchecked"
@@ -273,7 +277,7 @@ function BSheetAddCompetitor({ addCompetitor, isVisible, onClose }: IProps) {
                                         <RadioButton
                                             value="Tidak"
                                             status={
-                                                state.exclusive?.toLowerCase() ===
+                                                state?.exclusive?.toLowerCase() ===
                                                 "tidak"
                                                     ? "checked"
                                                     : "unchecked"
