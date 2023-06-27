@@ -7,7 +7,6 @@ import {
 } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { View, DeviceEventEmitter, BackHandler } from "react-native";
-import Entypo from "react-native-vector-icons/Entypo";
 import { useDispatch, useSelector } from "react-redux";
 import {
     BBackContinueBtn,

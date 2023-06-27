@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         flexDirection: "row",
-        justifyContent: "space-between",
         alignItems: "flex-start",
         flex: 1
     },
@@ -96,10 +95,13 @@ function BCard({
                 <BSpacer size="extraSmall" />
                 <View style={{ flex: 1 }}>
                     <View style={styles.infoContainer}>
-                        <BHighlightText
-                            name={title}
-                            searchQuery={searchQuery}
-                        />
+                        <View style={{ flex: 1 }}>
+                            <BHighlightText
+                                name={title}
+                                searchQuery={searchQuery}
+                                numberOfLines={2}
+                            />
+                        </View>
                         <BChip
                             titleWeight="700"
                             type="header"

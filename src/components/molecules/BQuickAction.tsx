@@ -19,6 +19,7 @@ const style = StyleSheet.create({
     },
     buttonTitle: {
         fontFamily: font.family.montserrat[400],
+        paddingHorizontal: layout.pad.sm,
         color: colors.black,
         fontSize: fonts.size.sm,
         textAlign: "center",

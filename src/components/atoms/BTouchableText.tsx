@@ -1,6 +1,5 @@
 import colors from "@/constants/colors";
 import font from "@/constants/fonts";
-import resScale from "@/utils/resScale";
 import React from "react";
 import {
     GestureResponderEvent,
@@ -26,7 +25,8 @@ const BTouchableTextDefaultStyle: TextStyle = {
     fontFamily: font.family.montserrat[400],
     color: colors.primary,
     fontSize: font.size.sm,
-    marginRight: layout.pad.ml + layout.pad.xs
+    marginLeft: layout.pad.xs,
+    marginRight: layout.pad.xs
 };
 
 const BTouchableViewStyle: ViewStyle = {
@@ -51,13 +51,17 @@ function BTouchableText({
 }: BTouchableTextProps & typeof BTouchableDefaultProps) {
     return (
         <TouchableOpacity
-            style={viewStyle}
+            style={[viewStyle]}
             disabled={disabled}
             onPress={onPress}
         >
             {startIcon}
             <BText
-                style={[textStyle, disabled && { color: colors.text.inactive }]}
+                style={[
+                    BTouchableTextDefaultStyle,
+                    textStyle,
+                    disabled && { color: colors.text.inactive }
+                ]}
                 sizeInNumber={textSize}
             >
                 {title}

@@ -45,6 +45,7 @@ function SecondStep({ openBottomSheet }: IProps) {
     const route = useRoute<RootStackScreenProps>();
     const existingVisitation = route?.params?.existingVisitation;
     const visitationData = useSelector((state: RootState) => state.visitation);
+    const authState = useSelector((state: RootState) => state.auth);
     const [selectedCompany, setSelectedCompany] = useState<{
         id: number;
         title: string;
@@ -76,7 +77,10 @@ function SecondStep({ openBottomSheet }: IProps) {
     const fetchDebounce = useMemo(
         () =>
             debounce((searchQuery: string) => {
-                projectByUserGetAction(searchQuery)
+                projectByUserGetAction(
+                    searchQuery,
+                    authState.selectedBatchingPlant?.id
+                )
                     .then((response) => {
                         const items = response?.data?.data?.map(
                             (project: any) => ({

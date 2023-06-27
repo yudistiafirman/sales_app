@@ -7,6 +7,7 @@ import BText from "../atoms/BText";
 
 const styles = StyleSheet.create({
     summary: {
+        flex: 1,
         color: colors.text.darker,
         fontFamily: fonts.family.montserrat[300],
         fontSize: fonts.size.sm
@@ -60,14 +61,30 @@ export default function BDepositCard({
         <View style={style}>
             <View style={styles.summaryContainer}>
                 <Text style={styles.summary}>{firstSectionText}</Text>
-                <Text style={[styles.summary, styles.fontw400]}>
+                <Text
+                    style={[
+                        styles.summary,
+                        styles.fontw400,
+                        {
+                            textAlign: "right"
+                        }
+                    ]}
+                >
                     {formatCurrency(firstSectionValue)}
                 </Text>
             </View>
             <BSpacer size="extraSmall" />
             <View style={styles.summaryContainer}>
                 <Text style={styles.summary}>{secondSectionText}</Text>
-                <Text style={[styles.summary, styles.fontw400]}>
+                <Text
+                    style={[
+                        styles.summary,
+                        styles.fontw400,
+                        {
+                            textAlign: "right"
+                        }
+                    ]}
+                >
                     {isSum
                         ? formatCurrency(secondSectionValue)
                         : `- ${formatCurrency(secondSectionValue)}`}
@@ -81,7 +98,8 @@ export default function BDepositCard({
                         styles.summary,
                         {
                             fontFamily: fonts.family.montserrat[600],
-                            fontSize: fonts.size.md
+                            fontSize: fonts.size.md,
+                            textAlign: "right"
                         }
                     ]}
                 >

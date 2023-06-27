@@ -15,10 +15,9 @@ import {
     Text,
     View
 } from "react-native";
-import { Region } from "react-native-maps";
+
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { getLocationCoordinates } from "@/actions/CommonActions";
 import {
     BBackContinueBtn,
     BBottomSheetForm,
@@ -28,7 +27,7 @@ import {
 } from "@/components";
 import { colors, fonts, layout } from "@/constants";
 import { useKeyboardActive } from "@/hooks";
-import { billingAddressType, Input } from "@/interfaces";
+import { billingAddressType, Input, Region } from "@/interfaces";
 import { SEARCH_AREA, SPH } from "@/navigation/ScreenNames";
 import {
     setSearchAddress,
@@ -42,10 +41,11 @@ import {
     updateIsBillingAddressSame,
     updateProjectAddress
 } from "@/redux/reducers/SphReducer";
-import { updateRegion } from "@/redux/reducers/locationReducer";
+
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import { getCoordinateDetails } from "@/redux/async-thunks/commonThunks";
 import { SphContext } from "../context/SphContext";
 
 const style = StyleSheet.create({
@@ -132,7 +132,12 @@ const eventKeyObj = {
 export default function SecondStep() {
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    const { region } = useSelector((state: RootState) => state.location);
+    const { region, loading } = useSelector(
+        (state: RootState) => state.location
+    );
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const [sheetIndex] = useState(0); // setSheetIndex
     const bottomSheetRef = React.useRef<BottomSheet>(null);
     const [sheetSnapPoints, setSheetSnapPoints] = useState(["60%", "90%"]);
@@ -151,57 +156,28 @@ export default function SecondStep() {
         useSearchedBillingAddress
     } = useSelector((state: RootState) => state.sph);
 
-    const [isMapLoading, setIsMapLoading] = useState(false);
-
     const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
-    const onChangeRegion = useCallback(
-        async (
-            coordinate: Region,
-            { isBiilingAddress }: { isBiilingAddress?: boolean }
-        ) => {
-            try {
-                setIsMapLoading(() => true);
-                const { data } = await getLocationCoordinates(
-                    // '',
-                    coordinate.longitude as unknown as number,
-                    coordinate.latitude as unknown as number,
-                    "BP-LEGOK"
-                );
+    const onChangeRegion = async (
+        coordinate: Region,
+        { isBiilingAddress }: { isBiilingAddress?: boolean }
+    ) => {
+        try {
+            dispatch(setUseSearchAddress({ value: false }));
+            dispatch(setUseBillingAddress({ value: false }));
+            const coordinateToSet = await dispatch(
+                getCoordinateDetails({
+                    coordinate,
+                    selectedBatchingPlant: selectedBatchingPlant.name
+                })
+            ).unwrap();
 
-                const { result } = data;
-                if (!result) {
-                    throw data;
-                }
-                const coordinateToSet = {
-                    latitude: result?.lat,
-                    longitude: result?.lon,
-                    formattedAddress: result?.formattedAddress,
-                    postalId: result?.PostalId
-                };
-
-                if (typeof result?.lon === "string") {
-                    coordinateToSet.longitude = Number(result.lon);
-                    coordinateToSet.lon = Number(result.lon);
-                }
-
-                if (typeof result?.lat === "string") {
-                    coordinateToSet.latitude = Number(result.lat);
-                    coordinateToSet.lat = Number(result.lat);
-                }
-
-                if (isBiilingAddress) {
-                    dispatch(updateBillingAddressAutoComplete(coordinateToSet));
-                } else {
-                    if (result.distance) {
-                        dispatch(
-                            updateDistanceFromLegok(result.distance.value)
-                        );
-                    }
-                    dispatch(updateRegion(coordinateToSet));
-                }
-                setIsMapLoading(() => false);
-            } catch (error) {
-                setIsMapLoading(() => false);
+            if (isBiilingAddress) {
+                dispatch(updateBillingAddressAutoComplete(coordinateToSet));
+            } else if (coordinateToSet.distance) {
+                dispatch(updateDistanceFromLegok(coordinateToSet.distance));
+            }
+        } catch (error) {
+            if (error?.message !== "canceled")
                 dispatch(
                     openPopUp({
                         popUpType: "error",
@@ -211,10 +187,8 @@ export default function SecondStep() {
                         outsideClickClosePopUp: true
                     })
                 );
-            }
-        },
-        []
-    );
+        }
+    };
 
     const inputsData: Input[] = useMemo(() => {
         const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
@@ -383,10 +357,6 @@ export default function SecondStep() {
     }, [onChangeRegion]);
 
     useEffect(() => {
-        dispatch(updateProjectAddress(region));
-    }, [region]);
-
-    useEffect(() => {
         if (keyboardVisible) {
             bottomSheetRef.current?.expand();
         }
@@ -422,10 +392,6 @@ export default function SecondStep() {
         <View style={style.container}>
             <BLocation
                 region={region}
-                onRegionChange={() => {
-                    dispatch(setUseSearchAddress({ value: false }));
-                    dispatch(setUseBillingAddress({ value: false }));
-                }}
                 onRegionChangeComplete={onChangeRegion}
                 CustomMarker={<BMarker />}
                 mapStyle={style.map}
@@ -475,7 +441,7 @@ export default function SecondStep() {
                                 ? searchedAddress
                                 : region.formattedAddress
                         }
-                        isLoading={isMapLoading}
+                        isLoading={loading === "pending"}
                     />
                 </>
             </BBottomSheetForm>

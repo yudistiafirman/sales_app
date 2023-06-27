@@ -27,9 +27,16 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
     title: {
+        flex: 1,
         fontFamily: font.family.montserrat[600],
         color: colors.text.darker,
         fontSize: font.size.md
+    },
+    subtitle: {
+        fontFamily: font.family.montserrat[600],
+        color: colors.text.darker,
+        fontSize: font.size.md,
+        textAlign: "right"
     },
     company: {
         fontFamily: font.family.montserrat[400],
@@ -132,16 +139,8 @@ function BInvoiceCard({
         >
             <View style={styles.header}>
                 <View style={styles.titleContainer}>
-                    <Text
-                        numberOfLines={1}
-                        style={[styles.title, { maxWidth: layout.pad.xxl * 4 }]}
-                    >
-                        {invoiceNo}
-                    </Text>
-                    <Text
-                        numberOfLines={1}
-                        style={[styles.title, { maxWidth: resScale(160) }]}
-                    >
+                    <Text style={[styles.title]}>{invoiceNo}</Text>
+                    <Text style={[styles.subtitle]}>
                         {formatCurrency(amount)}
                     </Text>
                 </View>
@@ -170,7 +169,7 @@ function BInvoiceCard({
                         </Text>
                     </View>
                 </View>
-                {paymentMethod.toUpperCase() === "CREDIT"
+                {paymentMethod.toString().toUpperCase() === "CREDIT"
                     ? renderInvoiceCardFooter()
                     : null}
             </View>

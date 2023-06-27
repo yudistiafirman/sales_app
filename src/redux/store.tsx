@@ -9,7 +9,7 @@ import SphReducer from "./reducers/SphReducer";
 import VisitationReducer, {
     VisitationGlobalState
 } from "./reducers/VisitationReducer";
-import authReducer from "./reducers/authReducer";
+import authReducer, { AuthState } from "./reducers/authReducer";
 import cameraReducer, { CameraGlobalState } from "./reducers/cameraReducer";
 import commonReducer from "./reducers/commonReducer";
 import locationReducer from "./reducers/locationReducer";
@@ -35,7 +35,6 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     location: locationReducer,
-    auth: authReducer,
     modal: modalReducer,
     productivity: productivityFlowReducer,
     common: commonReducer,
@@ -44,6 +43,7 @@ const rootReducer = combineReducers({
     purchaseOrder: purchaseOrderReducer,
     invoice: invoiceReducer,
     appoinment: appointmentReducer,
+    auth: persistReducer<AuthState, any>(persistConfig, authReducer),
     operation: persistReducer<OperationInitState, any>(
         persistConfig,
         operationReducer

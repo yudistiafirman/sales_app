@@ -72,7 +72,7 @@ export default function BGallery({
                     item?.attachType ? { marginBottom: layout.pad.ml * 2 } : {}
                 ]}
             >
-                {item.file === null && addMorePict && (
+                {item?.file === null && addMorePict && (
                     <TouchableOpacity
                         onPress={() => addMorePict(item?.attachType)}
                     >

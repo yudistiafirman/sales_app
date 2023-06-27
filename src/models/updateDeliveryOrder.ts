@@ -8,4 +8,5 @@ export interface UpdateDeliverOrder {
     conditionTruck: string;
     status?: string;
     weight: string;
+    batchingPlantId?: string;
 }

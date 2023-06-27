@@ -27,6 +27,8 @@ import {
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { resScale } from "@/utils";
 import crashlytics from "@react-native-firebase/crashlytics";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 import CoordinatesDetail from "./elements/CoordinatesDetail";
 import LocationStyles from "./styles";
 
@@ -36,14 +38,23 @@ function Location() {
     const [searchedAddress, setSearchedAddress] = React.useState("");
     const [useSearchedAddress, setUseSearchedAddress] = React.useState(false);
     const [state, send] = useMachine(locationMachine);
+    const authState = useSelector((rootState: RootState) => rootState.auth);
     const isReadOnly = route?.params.isReadOnly;
+    const abortControllerRef = React.useRef<AbortController>(
+        new AbortController()
+    );
 
     useHeaderTitleChanged({
-        title: isReadOnly === true ? "Lihat Area Proyek" : LOCATION_TITLE
+        title: isReadOnly === true ? "Lihat Area Proyek" : LOCATION_TITLE,
+        selectedBP: authState.selectedBatchingPlant,
+        hideBPBadges: true
     });
 
     React.useEffect(() => {
         crashlytics().log(LOCATION);
+        send("assignSelectedBatchingPlant", {
+            selectedBP: authState.selectedBatchingPlant
+        });
         if (route?.params) {
             const { params } = route;
             const { latitude, longitude, formattedAddress } = params.coordinate;
@@ -52,7 +63,9 @@ function Location() {
             }
 
             setUseSearchedAddress(true);
-            send("sendingCoorParams", { value: { latitude, longitude } });
+            send("sendingCoorParams", {
+                value: { latitude, longitude }
+            });
         }
     }, [route?.params]);
 
@@ -60,8 +73,18 @@ function Location() {
         const { latitude, longitude, latitudeDelta, longitudeDelta } =
             coordinate;
         if (isReadOnly === false) {
+            abortControllerRef.current.abort();
+            if (abortControllerRef.current.signal.aborted)
+                abortControllerRef.current = new AbortController();
+            const { signal } = abortControllerRef.current;
             send("onChangeRegion", {
-                value: { latitude, longitude, latitudeDelta, longitudeDelta }
+                value: {
+                    latitude,
+                    longitude,
+                    latitudeDelta,
+                    longitudeDelta,
+                    signal
+                }
             });
         }
     };
@@ -129,7 +152,7 @@ function Location() {
             <View
                 style={[
                     LocationStyles.bottomSheetContainer,
-                    isReadOnly === true && { minHeight: resScale(80) }
+                    isReadOnly === true && { minHeight: resScale(110) }
                 ]}
             >
                 <CoordinatesDetail

@@ -633,6 +633,7 @@ interface PayloadPostType {
     project: ProjectPayloadType;
     pic: PicPayloadType[];
     files: FilesType[];
+    batchingPlantId?: string;
 }
 
 type VisitationDataType = {
@@ -711,6 +712,7 @@ interface SphOrderPayloadType {
     paymentType: "CBD" | "CREDIT";
     viaTol: boolean;
     projectDocs: any[];
+    batchingPlantId?: string;
     isProvideBankGuarantee: boolean;
     shippingAddress: ShippingAddressType;
     requestedProducts: RequestedProductsType[];

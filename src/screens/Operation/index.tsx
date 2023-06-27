@@ -31,29 +31,46 @@ function Operation() {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const [doListState, send] = useMachine(displayOperationListMachine);
-    const { userData } = useSelector((state: RootState) => state.auth);
+    const { userData, selectedBatchingPlant, batchingPlants } = useSelector(
+        (state: RootState) => state.auth
+    );
     const { projectDetails, photoFiles } = useSelector(
         (state: RootState) => state.operation
     );
     const { operationListData, isLoadMore, isLoading, isRefreshing } =
         doListState.context;
 
+    useFocusEffect(
+        React.useCallback(() => {
+            send("assignUserData", {
+                payload: userData?.type,
+                selectedBP: selectedBatchingPlant
+            });
+            send("backToGetDO", {
+                userType: userData?.type,
+                selectedBP: selectedBatchingPlant
+            });
+        }, [send, selectedBatchingPlant])
+    );
+
     React.useEffect(() => {
         crashlytics().log(userData?.type ? userData.type : "Operation Default");
         DeviceEventEmitter.addListener("Operation.refreshlist", () => {
-            send("onRefreshList", { payload: userData?.type });
+            send("onRefreshList", {
+                payload: userData?.type,
+                selectedBP: selectedBatchingPlant
+            });
         });
-
         return () => {
             DeviceEventEmitter.removeAllListeners("Operation.refreshlist");
         };
-    }, [userData?.type, projectDetails, operationListData]);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            send("assignUserData", { payload: userData?.type });
-        }, [send])
-    );
+    }, [
+        send,
+        userData?.type,
+        projectDetails,
+        operationListData,
+        selectedBatchingPlant
+    ]);
 
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
         // NOTE: currently driver only
@@ -137,10 +154,15 @@ function Operation() {
                 onPressList={(item) => onPressItem(item)}
                 onLocationPress={(lonlat) => onLocationPress(lonlat)}
                 onRefresh={() =>
-                    send("onRefreshList", { payload: userData?.type })
+                    send("onRefreshList", {
+                        payload: userData?.type,
+                        selectedBP: selectedBatchingPlant
+                    })
                 }
                 onRetry={() =>
-                    send("retryGettingList", { payload: userData?.type })
+                    send("retryGettingList", {
+                        payload: userData?.type
+                    })
                 }
                 userType={userData?.type}
             />

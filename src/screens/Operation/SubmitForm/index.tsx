@@ -74,7 +74,7 @@ const style = StyleSheet.create({
         backgroundColor: colors.white
     },
     top: {
-        height: resScale(120),
+        // height: resScale(120),
         marginBottom: layout.pad.lg
     },
     headerTwo: {
@@ -107,7 +107,9 @@ function SubmitForm() {
     const route = useRoute<RootStackScreenProps>();
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
-    const { userData } = useSelector((state: RootState) => state.auth);
+    const { userData, selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const operationData = useSelector((state: RootState) => state.operation);
     const { keyboardVisible } = useKeyboardActive();
     const operationType = route?.params?.operationType;
@@ -274,6 +276,7 @@ function SubmitForm() {
                 })
             );
             const payload = {} as UpdateDeliverOrder;
+            payload.batchingPlantId = selectedBatchingPlant?.id;
             const photoFilestoUpload = operationData.photoFiles
                 ?.filter((v) => v.file !== null)
                 ?.map((photo) => ({
@@ -429,7 +432,10 @@ function SubmitForm() {
         }, [handleBack, operationData.photoFiles, userData?.type])
     );
 
-    useHeaderTitleChanged({ title: getHeaderTitle() });
+    useHeaderTitleChanged({
+        title: getHeaderTitle(),
+        selectedBP: selectedBatchingPlant
+    });
 
     const weightInputs: Input[] = [
         {
@@ -651,7 +657,7 @@ function SubmitForm() {
                                     ).format("L")} | ${moment(
                                         operationData.projectDetails
                                             .deliveryTime
-                                    ).format("hh:mm A")}`
+                                    ).format("HH:mm")}`
                                 }}
                                 customStyle={{
                                     backgroundColor: colors.tertiary

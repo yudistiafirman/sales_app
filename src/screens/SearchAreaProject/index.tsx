@@ -9,7 +9,7 @@ import { useMachine } from "@xstate/react";
 import searchAreaMachine from "@/machine/searchAreaMachine";
 import { assign } from "xstate";
 import { BSpacer } from "@/components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import {
     CREATE_VISITATION,
@@ -22,6 +22,7 @@ import { updateRegion } from "@/redux/reducers/locationReducer";
 import crashlytics from "@react-native-firebase/crashlytics";
 import { hasLocationPermission } from "@/utils/permissions";
 import { layout } from "@/constants";
+import { RootState } from "@/redux/store";
 import LocationList from "./element/LocationList";
 import CurrentLocation from "./element/SearchAreaCurrentLocation";
 import SearchAreaStyles from "./styles";
@@ -30,6 +31,9 @@ function SearchAreaProject({ route }: { route: any }) {
     const navigation = useNavigation();
     const [text, setText] = React.useState("");
     const dispatch = useDispatch();
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const [state, send] = useMachine(searchAreaMachine, {
         actions: {
             clearInputValue: assign((context, event) => {
@@ -103,6 +107,9 @@ function SearchAreaProject({ route }: { route: any }) {
 
     React.useEffect(() => {
         crashlytics().log(SEARCH_AREA);
+        send("assignSelectedBatchingPlant", {
+            selectedBP: selectedBatchingPlant
+        });
     }, []);
 
     useFocusEffect(
@@ -114,7 +121,9 @@ function SearchAreaProject({ route }: { route: any }) {
     const { result, loadPlaces, longlat, errorMessage } = state.context;
     const onChangeValue = (event: string) => {
         setText(event);
-        send("searchingLocation", { payload: event });
+        send("searchingLocation", {
+            payload: event
+        });
     };
 
     const onPressCurrentLocation = () => {
@@ -141,7 +150,9 @@ function SearchAreaProject({ route }: { route: any }) {
     };
 
     const onPressListLocations = (item: string) => {
-        send("onGettingPlacesId", { payload: item });
+        send("onGettingPlacesId", {
+            payload: item
+        });
     };
 
     return (

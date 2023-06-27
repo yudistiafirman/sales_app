@@ -6,6 +6,7 @@ import {
 import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
 import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
 import { getAvailableDepositProject } from "@/utils/generalFunc";
+import { BatchingPlant } from "@/models/BatchingPlant";
 
 const searchPOMachine = createMachine(
     {
@@ -21,13 +22,18 @@ const searchPOMachine = createMachine(
                 | { type: "getCategoriesData"; data: any[] }
                 | { type: "clearInput" }
                 | { type: "openingModal"; value: any }
-                | { type: "searching"; value: string }
+                | {
+                      type: "searching";
+                      value: string;
+                      selectedBP: BatchingPlant;
+                  }
                 | { type: "retryGettingList" }
                 | { type: "onCloseModal" }
                 | {
                       type: "setDataType";
                       value: "SPHDATA" | "DEPOSITDATA" | "SCHEDULEDATA";
                       filterBy: "INDIVIDU" | "COMPANY";
+                      selectedBP: BatchingPlant;
                   }
                 | { type: "onRefresh" }
                 | { type: "onEndReached" },
@@ -66,6 +72,7 @@ const searchPOMachine = createMachine(
                 isRefreshing: boolean;
                 isModalVisible: boolean;
                 availableDeposit: number;
+                batchingPlantId?: string;
                 paymentType: string | null;
                 dataType: "DEPOSITDATA" | "SPHDATA" | "SCHEDULEDATA" | "";
                 filterSphDataBy: "INDIVIDU" | "COMPANY";
@@ -89,6 +96,7 @@ const searchPOMachine = createMachine(
             loadMoreData: false,
             isRefreshing: false,
             isModalVisible: false,
+            batchingPlantId: undefined,
             dataType: "",
             paymentType: null,
             availableDeposit: 0,
@@ -221,25 +229,31 @@ const searchPOMachine = createMachine(
             })),
             assignSearchValue: assign((context, event) => ({
                 searchValue: event.value,
+                batchingPlantId: event?.selectedBP?.id,
                 loadData: true
             })),
-            assignSphData: assign((_context, event) => ({
-                routes: [
-                    {
-                        key: "first",
-                        title:
-                            _context.filterSphDataBy === "INDIVIDU"
-                                ? "Individu"
-                                : "Perusahaan",
-                        totalItems: event.data.length,
-                        chipPosition: "right"
-                    }
-                ],
-                sphData: event.data,
-                loadData: false,
-                isRefreshing: false,
-                loadMoreData: false
-            })),
+            assignSphData: assign((_context, event) => {
+                const newData = event.data.filter(
+                    (it) => it.QuotationRequests?.length > 0
+                );
+                return {
+                    routes: [
+                        {
+                            key: "first",
+                            title:
+                                _context.filterSphDataBy === "INDIVIDU"
+                                    ? "Individu"
+                                    : "Perusahaan",
+                            totalItems: newData.length,
+                            chipPosition: "right"
+                        }
+                    ],
+                    sphData: newData,
+                    loadData: false,
+                    isRefreshing: false,
+                    loadMoreData: false
+                };
+            }),
             closeModal: assign(() => ({
                 isModalVisible: false
             })),
@@ -260,21 +274,26 @@ const searchPOMachine = createMachine(
                 dataType: event.value,
                 filterSphDataBy: event.filterBy
             })),
-            assignPurchaseOrderListData: assign((context, event) => ({
-                routes: [
-                    {
-                        key: "first",
-                        title: "Proyek",
-                        totalItems: event.data.totalItems,
-                        chipPosition: "right"
-                    }
-                ],
-                totalPage: event.data.totalPages,
-                poData: event.data.data,
-                loadData: false,
-                isRefreshing: false,
-                loadMoreData: false
-            })),
+            assignPurchaseOrderListData: assign((context, event) => {
+                const newData = event.data.data.filter(
+                    (it) => it.PurchaseOrders?.length > 0
+                );
+                return {
+                    routes: [
+                        {
+                            key: "first",
+                            title: "Proyek",
+                            totalItems: newData.length,
+                            chipPosition: "right"
+                        }
+                    ],
+                    totalPage: event.data.totalPages,
+                    poData: newData,
+                    loadData: false,
+                    isRefreshing: false,
+                    loadMoreData: false
+                };
+            }),
             handleRefresh: assign(() => ({
                 isRefreshing: true,
                 sphData: [],
@@ -303,7 +322,8 @@ const searchPOMachine = createMachine(
                 try {
                     const response = await getSphByProject(
                         context.searchValue,
-                        context.filterSphDataBy
+                        context.filterSphDataBy,
+                        context.batchingPlantId
                     );
                     return response.data.data;
                 } catch (error) {
@@ -319,7 +339,8 @@ const searchPOMachine = createMachine(
                         page.toString(),
                         size.toString(),
                         searchValue,
-                        productPo
+                        productPo,
+                        context.batchingPlantId
                     );
                     return response.data.data;
                 } catch (error) {

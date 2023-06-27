@@ -15,7 +15,6 @@ import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import { LOGIN, VERIFICATION } from "@/navigation/ScreenNames";
 import crashlytics from "@react-native-firebase/crashlytics";
 import { RootState } from "@/redux/store";
-import { isProduction } from "@/utils/generalFunc";
 import BrikLogo from "@/assets/logo/brik_logo.png";
 import loginStyle from "./style";
 import Label from "./element/Label";
@@ -59,28 +58,15 @@ function Login() {
     useCustomHeaderLeft({
         customHeaderLeft: (
             <View>
-                {isProduction() && !__DEV__ ? (
-                    <TouchableOpacity
-                        onPress={
-                            isProduction() && !__DEV__
-                                ? onVersionClick
-                                : undefined
-                        }
-                    >
-                        <Image
-                            style={{
-                                width: resScale(70),
-                                height: resScale(33)
-                            }}
-                            source={BrikLogo}
-                        />
-                    </TouchableOpacity>
-                ) : (
+                <TouchableOpacity onPress={onVersionClick}>
                     <Image
-                        style={{ width: resScale(70), height: resScale(33) }}
+                        style={{
+                            width: resScale(70),
+                            height: resScale(33)
+                        }}
                         source={BrikLogo}
                     />
-                )}
+                </TouchableOpacity>
             </View>
         )
     });

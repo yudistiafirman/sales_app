@@ -66,6 +66,7 @@ export default function Appointment() {
     const appointmentState = useSelector(
         (state: RootState) => state.appoinment
     );
+    const authState = useSelector((state: RootState) => state.auth);
     const {
         searchQuery,
         stepOne,
@@ -177,7 +178,8 @@ export default function Appointment() {
                 project: {
                     location: {} as Address
                 } as projectPayloadType,
-                pic: [] as PIC[]
+                pic: [] as PIC[],
+                batchingPlantId: authState.selectedBatchingPlant?.id
             };
             if (stepOne[customerType].Pics.length === 1) {
                 const pic = [];

@@ -1,14 +1,19 @@
 import BrikApiCommon from "@/brikApi/BrikApiCommon";
 import { customRequest } from "@/networking/request";
+import { GenericAbortSignal } from "axios";
 
 export const getLocationCoordinates = async (
     longitude: number,
     latitude: number,
-    distance?: string
+    distance?: string,
+    signal?: GenericAbortSignal
 ) =>
     customRequest(
         BrikApiCommon.getLocationCoordinates(longitude, latitude, distance),
-        "GET"
+        "GET",
+        undefined,
+        undefined,
+        signal
     );
 
 export const getAllCustomers = async (
@@ -40,11 +45,14 @@ export const updateCustomerBillingAddress = async (id: string, data: any) =>
         true
     );
 
-export const searchLocation = async (searchValue: string) =>
-    customRequest(BrikApiCommon.searchPlaces(searchValue), "GET");
+export const searchLocation = async (searchValue: string, distance?: string) =>
+    customRequest(BrikApiCommon.searchPlaces(searchValue, distance), "GET");
 
 export const searchLocationById = async (id: string) =>
     customRequest(BrikApiCommon.searchPlacesById(id), "GET");
+
+export const getBatchingPlants = async () =>
+    customRequest(BrikApiCommon.getBatchingPlants(), "GET", undefined, true);
 
 export const signIn = async (body: Record<string, string>) => {
     const params = new URLSearchParams();
@@ -70,12 +78,23 @@ export const uploadFileImage = async (files: any[], from: string) => {
     return customRequest(BrikApiCommon.filesUpload(), "POST", formData, true);
 };
 
-export const allVisitationGetAction = async (search?: string) =>
-    customRequest(BrikApiCommon.allVisitation(search), "GET", undefined, true);
-
-export const projectByUserGetAction = async (search?: string) =>
+export const allVisitationGetAction = async (
+    search?: string,
+    batchingPlantId?: string
+) =>
     customRequest(
-        BrikApiCommon.getProjectByUser(search),
+        BrikApiCommon.allVisitation(search, batchingPlantId),
+        "GET",
+        undefined,
+        true
+    );
+
+export const projectByUserGetAction = async (
+    search?: string,
+    batchingPlantId?: string
+) =>
+    customRequest(
+        BrikApiCommon.getProjectByUser(search, batchingPlantId),
         "GET",
         undefined,
         true

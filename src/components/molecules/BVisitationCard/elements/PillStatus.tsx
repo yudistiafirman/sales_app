@@ -1,9 +1,8 @@
 import * as React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ViewStyle } from "react-native";
 import { layout } from "@/constants";
 import colors from "@/constants/colors";
 import font from "@/constants/fonts";
-import resScale from "@/utils/resScale";
 
 const style = StyleSheet.create({
     greenPill: {
@@ -17,6 +16,8 @@ const style = StyleSheet.create({
         backgroundColor: colors.status.grey
     },
     greenPillText: {
+        alignSelf: "center",
+        justifyContent: "center",
         fontFamily: font.family.montserrat[300],
         fontSize: font.size.xs,
         color: colors.textInput.input
@@ -26,19 +27,26 @@ const style = StyleSheet.create({
 type PillStatusType = {
     pilStatus?: string;
     color?: string;
+    styles?: ViewStyle;
 };
-export default function PillStatus({ pilStatus, color }: PillStatusType) {
+export default function PillStatus({
+    pilStatus,
+    color,
+    styles
+}: PillStatusType) {
     if (!pilStatus) {
         return null;
     }
     return (
-        <View
-            style={[
-                pilStatus ? style.greenPill : null,
-                color ? { backgroundColor: color } : null
-            ]}
-        >
-            <Text style={style.greenPillText}>{pilStatus}</Text>
+        <View style={[styles]}>
+            <View
+                style={[
+                    pilStatus ? style.greenPill : null,
+                    color ? { backgroundColor: color } : null
+                ]}
+            >
+                <Text style={style.greenPillText}>{pilStatus}</Text>
+            </View>
         </View>
     );
 }

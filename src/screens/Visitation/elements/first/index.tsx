@@ -5,9 +5,7 @@ import * as React from "react";
 import { DeviceEventEmitter, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import MapView from "react-native-maps";
-import Icons from "react-native-vector-icons/Feather";
 import { useDispatch, useSelector } from "react-redux";
-import { getLocationCoordinates } from "@/actions/CommonActions";
 import {
     BBottomSheet,
     BContainer,
@@ -16,8 +14,7 @@ import {
     BLocation,
     BLocationDetail,
     BMarker,
-    BSpacer,
-    BText
+    BSpacer
 } from "@/components";
 import { layout } from "@/constants";
 import { Region, Input } from "@/interfaces";
@@ -31,8 +28,11 @@ import { updateRegion } from "@/redux/reducers/locationReducer";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
-import getUserCurrentLocationDetail from "@/utils/getUserCurrentLocationDetail";
 import { hasLocationPermission } from "@/utils/permissions";
+import {
+    getCoordinateDetails,
+    getUserCurrentLocation
+} from "@/redux/async-thunks/commonThunks";
 
 const styles = StyleSheet.create({
     container: { flex: 1, marginHorizontal: -(layout.pad.md + layout.pad.ml) },
@@ -49,11 +49,16 @@ const styles = StyleSheet.create({
 });
 
 function FirstStep() {
-    const { region } = useSelector((state: RootState) => state.location);
-    const [isMapLoading, setIsMapLoading] = React.useState(false);
+    const { region, loading } = useSelector(
+        (state: RootState) => state.location
+    );
+
     const [grantedLocationPermission, setGrantedLocationPermission] =
         React.useState(false);
     const visitationData = useSelector((state: RootState) => state.visitation);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const navigation = useNavigation();
     const dispatch = useDispatch<AppDispatch>();
 
@@ -91,85 +96,42 @@ function FirstStep() {
     const onMapReady = async () => {
         try {
             if (grantedLocationPermission) {
-                setIsMapLoading(() => true);
-                const { result } = await getUserCurrentLocationDetail();
-                const coordinate = {
-                    longitude: Number(result?.lon),
-                    latitude: Number(result?.lat),
-                    formattedAddress: result?.formattedAddress,
-                    PostalId: result?.PostalId
-                };
-                dispatch(
-                    updateDataVisitation({
-                        type: "createdLocation",
-                        value: result
-                    })
-                );
-                if (region.latitude === 0) {
-                    dispatch(updateRegion(coordinate));
-                }
-
-                setIsMapLoading(() => false);
+                dispatch(getUserCurrentLocation(selectedBatchingPlant.name));
             } else {
                 askingPermission();
             }
         } catch (error) {
-            setIsMapLoading(() => false);
-            dispatch(
-                openPopUp({
-                    popUpType: "error",
-                    popUpText: error?.message,
-                    outsideClickClosePopUp: true
-                })
-            );
+            if (error?.message !== "canceled")
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText: error?.message,
+                        outsideClickClosePopUp: true
+                    })
+                );
         }
     };
 
     const onChangeRegion = async (coordinate: Region) => {
         try {
-            setIsMapLoading(() => true);
-            const { data } = await getLocationCoordinates(
-                // '',
-                coordinate.longitude as unknown as number,
-                coordinate.latitude as unknown as number,
-                ""
-            );
-            const { result } = data;
-            if (!result) {
-                throw data;
-            }
-
-            const coordinateToSet = {
-                latitude: result?.lat,
-                longitude: result?.lon,
-                lat: 0,
-                lon: 0,
-                formattedAddress: result?.formattedAddress,
-                PostalId: result?.PostalId
-            };
-
-            if (typeof result?.lon === "string") {
-                coordinateToSet.longitude = Number(result.lon);
-                coordinateToSet.lon = Number(result.lon);
-            }
-
-            if (typeof result?.lat === "string") {
-                coordinateToSet.latitude = Number(result.lat);
-                coordinateToSet.lat = Number(result.lat);
-            }
-            dispatch(updateRegion(coordinateToSet));
-            setIsMapLoading(() => false);
-        } catch (error) {
-            setIsMapLoading(() => false);
+            dispatch(setUseSearchedAddress({ value: false }));
             dispatch(
-                openPopUp({
-                    popUpType: "error",
-                    popUpText:
-                        error?.message ||
-                        "Terjadi error pengambilan data saat perpindahan region",
-                    outsideClickClosePopUp: true
+                getCoordinateDetails({
+                    coordinate,
+                    selectedBatchingPlant: selectedBatchingPlant.name
                 })
             );
+        } catch (error) {
+            if (error?.message !== "canceled")
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText:
+                            error?.message ||
+                            "Terjadi error pengambilan data saat perpindahan region",
+                        outsideClickClosePopUp: true
+                    })
+                );
         }
     };
 
@@ -208,7 +170,7 @@ function FirstStep() {
 
     React.useEffect(() => {
         onMapReady();
-    }, [region, grantedLocationPermission]);
+    }, [grantedLocationPermission]);
 
     React.useEffect(() => {
         DeviceEventEmitter.addListener("visitationSearchCoordinate", (data) => {
@@ -252,9 +214,6 @@ function FirstStep() {
                     ref={mapRef}
                     region={region}
                     onMapReady={onMapReady}
-                    onRegionChange={() =>
-                        dispatch(setUseSearchedAddress({ value: false }))
-                    }
                     onRegionChangeComplete={debounceResult}
                     CustomMarker={<BMarker />}
                     mapStyle={styles.map}
@@ -282,7 +241,7 @@ function FirstStep() {
                             <BSpacer size="verySmall" />
                             <BLocationDetail
                                 nameAddress={nameAddress}
-                                isLoading={isMapLoading}
+                                isLoading={loading === "pending"}
                                 formattedAddress={
                                     visitationData.useSearchedAddress
                                         ? visitationData.searchedAddress

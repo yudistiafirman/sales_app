@@ -12,7 +12,6 @@ import ProjectDetailPage from "@/screens/ProjectDetail";
 import PurchaseOrderWithProvider from "@/screens/PurchaseOrder";
 import CreateScheduleScreen from "@/screens/CreateSchedule";
 import PriceList from "@/screens/Price";
-import RequiredDocuments from "@/screens/RequiredDocuments";
 import VisitHistory from "@/screens/VisitHistory";
 import Deposit from "@/screens/Deposit";
 import SearchSO from "@/screens/SearchSO";
@@ -23,6 +22,8 @@ import InvoiceList from "@/screens/Invoice/InvoiceList";
 import InvoiceDetail from "@/screens/Invoice/InvoiceDetail";
 import CustomerDetail from "@/screens/Customer/Detail";
 import Appointment from "@/screens/Appointment";
+import { BSelectedBPBadges } from "@/components";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import {
     ALL_PRODUCT,
     ALL_PRODUCT_TITLE,
@@ -58,7 +59,6 @@ import {
     SEARCH_SO,
     SEARCH_SO_TITLE,
     SPH,
-    SPH_TITLE,
     TRANSACTION_DETAIL,
     TRANSACTION_DETAIL_TITLE,
     VISIT_HISTORY,
@@ -66,10 +66,23 @@ import {
     INVOICE_LIST,
     INVOICE_LIST_TITLE,
     INVOICE_DETAIL,
-    PROJECT_DETAIL_TITLE
+    PROJECT_DETAIL_TITLE,
+    SPH_TITLE
 } from "../ScreenNames";
 
-function SalesStack(Stack: any) {
+const selectedBPBadges = (
+    selectedBP: BatchingPlant,
+    title: string,
+    alignLeft?: boolean
+) => (
+    <BSelectedBPBadges
+        selectedBP={selectedBP}
+        title={title}
+        alignLeft={alignLeft !== undefined ? alignLeft : true}
+    />
+);
+
+function SalesStack(selectedBP: BatchingPlant, Stack: any) {
     return (
         <>
             <Stack.Screen
@@ -77,7 +90,8 @@ function SalesStack(Stack: any) {
                 key={CREATE_VISITATION}
                 component={CreateVisitation}
                 options={{
-                    headerTitle: CREATE_VISITATION_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, CREATE_VISITATION_TITLE)
                 }}
             />
             <Stack.Screen
@@ -85,7 +99,7 @@ function SalesStack(Stack: any) {
                 key={SPH}
                 component={Sph}
                 options={{
-                    headerTitle: SPH_TITLE
+                    headerTitle: () => selectedBPBadges(selectedBP, SPH_TITLE)
                 }}
             />
             <Stack.Screen
@@ -101,7 +115,8 @@ function SalesStack(Stack: any) {
                 key={APPOINTMENT}
                 component={Appointment}
                 options={{
-                    headerTitle: APPOINTMENT_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, APPOINTMENT_TITLE)
                 }}
             />
             <Stack.Screen
@@ -109,7 +124,8 @@ function SalesStack(Stack: any) {
                 key={SEARCH_PRODUCT}
                 component={SearchProduct}
                 options={{
-                    headerTitle: SEARCH_PRODUCT_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, SEARCH_PRODUCT_TITLE)
                 }}
             />
             <Stack.Screen
@@ -117,7 +133,8 @@ function SalesStack(Stack: any) {
                 key={LOCATION}
                 component={Location}
                 options={{
-                    headerTitle: LOCATION_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, LOCATION_TITLE)
                 }}
             />
             <Stack.Screen
@@ -125,7 +142,8 @@ function SalesStack(Stack: any) {
                 key={SEARCH_AREA}
                 component={SearchAreaProject}
                 options={{
-                    headerTitle: SEARCH_AREA_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, SEARCH_AREA_TITLE)
                 }}
             />
             <Stack.Screen
@@ -133,7 +151,8 @@ function SalesStack(Stack: any) {
                 key={CALENDAR}
                 component={CalendarScreen}
                 options={{
-                    headerTitle: CALENDAR_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, CALENDAR_TITLE)
                 }}
             />
             <Stack.Screen
@@ -141,7 +160,8 @@ function SalesStack(Stack: any) {
                 key={CAMERA}
                 component={CameraScreen}
                 options={{
-                    headerTitle: CAMERA_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, CAMERA_TITLE)
                 }}
             />
             <Stack.Screen
@@ -149,7 +169,8 @@ function SalesStack(Stack: any) {
                 key={IMAGE_PREVIEW}
                 component={Preview}
                 options={{
-                    headerTitle: IMAGE_PREVIEW_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, IMAGE_PREVIEW_TITLE)
                 }}
             />
             <Stack.Screen
@@ -157,7 +178,8 @@ function SalesStack(Stack: any) {
                 key={TRANSACTION_DETAIL}
                 component={TransactionDetail}
                 options={{
-                    headerTitle: TRANSACTION_DETAIL_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, TRANSACTION_DETAIL_TITLE)
                 }}
             />
             <Stack.Screen
@@ -165,8 +187,8 @@ function SalesStack(Stack: any) {
                 key={PROJECT_DETAIL}
                 component={ProjectDetailPage}
                 options={{
-                    headerTitle: PROJECT_DETAIL_TITLE,
-                    headerTitleAlign: "center"
+                    headerTitleAlign: "center",
+                    headerTitle: PROJECT_DETAIL_TITLE
                 }}
             />
             <Stack.Screen
@@ -192,7 +214,8 @@ function SalesStack(Stack: any) {
                 key={ALL_PRODUCT}
                 component={PriceList}
                 options={{
-                    headerTitle: ALL_PRODUCT_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, ALL_PRODUCT_TITLE)
                 }}
             />
             <Stack.Screen
@@ -200,16 +223,8 @@ function SalesStack(Stack: any) {
                 key={CREATE_SCHEDULE}
                 component={CreateScheduleScreen}
                 options={{
-                    headerTitle: CREATE_SCHEDULE_TITLE
-                }}
-            />
-            <Stack.Screen
-                name={DOCUMENTS}
-                key={DOCUMENTS}
-                component={RequiredDocuments}
-                options={{
-                    headerTitle: DOCUMENTS_TITLE,
-                    headerTitleAlign: "center"
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, CREATE_SCHEDULE_TITLE)
                 }}
             />
             <Stack.Screen
@@ -226,7 +241,8 @@ function SalesStack(Stack: any) {
                 key={CREATE_DEPOSIT}
                 component={Deposit}
                 options={{
-                    headerTitle: CREATE_DEPOSIT_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, CREATE_DEPOSIT_TITLE)
                 }}
             />
             <Stack.Screen
@@ -234,7 +250,8 @@ function SalesStack(Stack: any) {
                 key={SEARCH_SO}
                 component={SearchSO}
                 options={{
-                    headerTitle: SEARCH_SO_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, SEARCH_SO_TITLE)
                 }}
             />
             <Stack.Screen
@@ -242,7 +259,8 @@ function SalesStack(Stack: any) {
                 key={FORM_SO}
                 component={FormSO}
                 options={{
-                    headerTitle: FORM_SO_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, FORM_SO_TITLE)
                 }}
             />
             <Stack.Screen
@@ -250,7 +268,8 @@ function SalesStack(Stack: any) {
                 key={INVOICE_LIST}
                 component={InvoiceList}
                 options={{
-                    headerTitle: INVOICE_LIST_TITLE
+                    headerTitle: () =>
+                        selectedBPBadges(selectedBP, INVOICE_LIST_TITLE)
                 }}
             />
             <Stack.Screen

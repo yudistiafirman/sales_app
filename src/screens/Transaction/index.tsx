@@ -102,6 +102,9 @@ function Transaction() {
     const [localModalContinuePo, setLocalContinueModalPo] =
         React.useState(false);
     const poState = useSelector((state: RootState) => state.purchaseOrder);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const { isModalContinuePo, poNumber, currentStep, customerType } =
         poState.currentState.context;
     const [isVisibleSelectCustomerType, setIsVisibleSelectCustomerType] =
@@ -119,8 +122,16 @@ function Transaction() {
     } = trxState.context;
 
     const onTabPress = (title: string) => {
-        if (isError) send("retryGettingTransactions", { payload: title });
-        else send("onChangeType", { payload: title });
+        if (isError)
+            send("retryGettingTransactions", {
+                payload: title,
+                selectedBP: selectedBatchingPlant
+            });
+        else
+            send("onChangeType", {
+                payload: title,
+                selectedBP: selectedBatchingPlant
+            });
     };
 
     useCustomHeaderRight({
@@ -128,42 +139,58 @@ function Transaction() {
             selectedType === "DO" ||
             selectedType === "SO" ||
             (selectedType === "SPH" && loadTab) ? undefined : (
-                <BTouchableText
-                    onPress={() => {
-                        if (selectedType === "PO") {
-                            setFeature("PO");
-                            if (!isModalContinuePo) {
-                                setIsVisibleSelectCustomerType(true);
-                                setLocalContinueModalPo(false);
-                            } else {
-                                setLocalContinueModalPo(true);
-                            }
-                        } else if (selectedType === "Deposit") {
-                            navigation.navigate(CAMERA, {
-                                photoTitle: "Bukti",
-                                navigateTo: CREATE_DEPOSIT,
-                                closeButton: true,
-                                disabledDocPicker: false,
-                                disabledGalleryPicker: false
-                            });
-                        } else if (selectedType === "Jadwal") {
-                            navigation.navigate(CREATE_SCHEDULE);
-                        } else {
-                            setFeature("SPH");
-                            if (sphData?.selectedCompany)
-                                setPopupSPHVisible(true);
-                            else navigation.navigate(SPH, {});
-                        }
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        marginEnd: layout.pad.md
                     }}
-                    title={`Buat ${selectedType}`}
-                />
+                >
+                    <BTouchableText
+                        viewStyle={{ width: "100%" }}
+                        textStyle={{ width: "100%" }}
+                        onPress={() => {
+                            if (selectedType === "PO") {
+                                setFeature("PO");
+                                if (!isModalContinuePo) {
+                                    setIsVisibleSelectCustomerType(true);
+                                    setLocalContinueModalPo(false);
+                                } else {
+                                    setLocalContinueModalPo(true);
+                                }
+                            } else if (selectedType === "Deposit") {
+                                navigation.navigate(CAMERA, {
+                                    photoTitle: "Bukti",
+                                    navigateTo: CREATE_DEPOSIT,
+                                    closeButton: true,
+                                    disabledDocPicker: false,
+                                    disabledGalleryPicker: false
+                                });
+                            } else if (selectedType === "Jadwal") {
+                                navigation.navigate(CREATE_SCHEDULE);
+                            } else {
+                                setFeature("SPH");
+                                if (sphData?.selectedCompany)
+                                    setPopupSPHVisible(true);
+                                else navigation.navigate(SPH, {});
+                            }
+                        }}
+                        title={`Buat ${selectedType}`}
+                    />
+                </View>
             )
     });
 
     useFocusEffect(
         React.useCallback(() => {
-            send("backToGetTransactions");
-        }, [send])
+            send("assignSelectedBatchingPlant", {
+                selectedBP: selectedBatchingPlant
+            });
+            send("backToGetTransactions", {
+                payload: selectedType,
+                selectedBP: selectedBatchingPlant
+            });
+        }, [send, selectedBatchingPlant, selectedType])
     );
 
     React.useEffect(() => {
@@ -254,18 +281,30 @@ function Transaction() {
                 vehicleName = "-";
                 data = data.data.data;
 
-                const dataDrivers = await getDrivers();
-                const dataVehicles = await getVehicles();
+                // const dataDrivers = await getDrivers();
+                // const dataVehicles = await getVehicles();
 
-                dataDrivers?.data?.data.forEach((it) => {
-                    if (it.id === data?.driverId) driverName = it?.name;
-                });
-                dataVehicles?.data?.data.forEach((it) => {
-                    if (it.id === data?.vehicleId)
-                        vehicleName = `${
-                            it?.internal_id ? it?.internal_id : "-"
-                        } / ${it?.plate_number ? it?.plate_number : "-"}`;
-                });
+                // dataDrivers?.data?.data.forEach((it) => {
+                //     if (it.id === data?.driverId) driverName = it?.name;
+                // });
+                // dataVehicles?.data?.data.forEach((it) => {
+                //     if (it.id === data?.vehicleId)
+                //         vehicleName = `${
+                //             it?.internal_id ? it?.internal_id : "-"
+                //         } / ${it?.plate_number ? it?.plate_number : "-"}`;
+                // });
+                driverName = data?.Driver && data?.Driver?.fullName;
+                vehicleName =
+                    data?.Vehicle &&
+                    `${
+                        data?.Vehicle?.internalId
+                            ? data?.Vehicle?.internalId
+                            : "-"
+                    } / ${
+                        data?.Vehicle?.plateNumber
+                            ? data?.Vehicle?.plateNumber
+                            : "-"
+                    }`;
 
                 // TODO: handle from BE, ugly when use mapping in FE side
                 const products: any[] = [];
@@ -390,10 +429,15 @@ function Transaction() {
                             errorMessage={errorMessage}
                             onAction={() =>
                                 send("retryGettingTransactions", {
-                                    payload: selectedType
+                                    payload: selectedType,
+                                    selectedBP: selectedBatchingPlant
                                 })
                             }
-                            onRefresh={() => send("refreshingList")}
+                            onRefresh={() =>
+                                send("refreshingList", {
+                                    selectedBP: selectedBatchingPlant
+                                })
+                            }
                             onPress={(data: any) => getOneOrder(data.id)}
                             selectedType={selectedType}
                         />

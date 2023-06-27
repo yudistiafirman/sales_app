@@ -1,6 +1,7 @@
 import axios, {
     AxiosError,
     AxiosResponse,
+    GenericAbortSignal,
     InternalAxiosRequestConfig
 } from "axios";
 import BrikApiCommon from "@/brikApi/BrikApiCommon";
@@ -59,6 +60,7 @@ interface RequestInfo {
     headers: Record<string, string>;
     data?: Record<string, string> | FormDataValue;
     timeoutInterval?: number;
+    signal?: GenericAbortSignal;
 }
 
 function setCharAt(str: string, index: number, chr: string) {
@@ -81,6 +83,7 @@ export const getOptions = async (
     method: "GET" | "POST" | "DELETE" | "PUT",
     data?: Record<string, string> | FormDataValue,
     withToken?: boolean,
+    signal?: GenericAbortSignal,
     timeout = 10000
 ) => {
     try {
@@ -99,6 +102,8 @@ export const getOptions = async (
             options.data = data;
         }
 
+        if (signal) options.signal = signal;
+
         options.timeoutInterval = timeout;
         return options;
     } catch (error) {
@@ -115,13 +120,14 @@ export const customRequest = async (
     request: any,
     method: "GET" | "POST" | "DELETE" | "PUT",
     data?: Record<string, string> | FormDataValue,
-    withToken?: boolean
+    withToken?: boolean,
+    signal?: GenericAbortSignal
 ) => {
     // performance API log
     metric = await perf().newHttpMetric(request, method);
     await metric.start();
 
-    return instance(request, await getOptions(method, data, withToken));
+    return instance(request, await getOptions(method, data, withToken, signal));
 };
 
 export const injectStore = (_store: any) => {
@@ -154,6 +160,38 @@ export const doRefreshToken = async (
     return finalResponse;
 };
 
+export const showErrorMsg = (
+    url: string | undefined,
+    errMsg: string,
+    errStatus: number
+) => {
+    const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
+    const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
+    const postDepositUrl = `${URL_ORDER}/order/m/deposit/`;
+    const postPaymentUrl = `${URL_FINANCE}/finance/m/payment/`;
+    const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
+    const postPO = `${URL_ORDER}/order/m/purchase-order/`;
+    const postSOSigned = `${URL_ORDER}/order/m/purchase-order/docs/`;
+
+    if (
+        url !== postVisitationUrl &&
+        url !== postVisitationBookUrl &&
+        url !== postDepositUrl &&
+        url !== postPaymentUrl &&
+        url !== postScheduleUrl &&
+        url !== postPO &&
+        url !== postSOSigned &&
+        errMsg !== "canceled"
+    ) {
+        store.dispatch(
+            openSnackbar({
+                snackBarText: `${errMsg} code: ${errStatus}`,
+                isSuccess: false
+            })
+        );
+    }
+};
+
 instance.interceptors.response.use(
     async (res: AxiosResponse<Api.Response, any>) => {
         const { data, config } = res;
@@ -184,28 +222,40 @@ instance.interceptors.response.use(
         await metric?.stop();
         metric = undefined;
 
-        if (!data.success) {
+        if (data.success && data.success !== true) {
             // automatic logout
+            let errorMessage = `There's something wrong`;
+            let errorStatus = 500;
+
+            if (data.error?.status) {
+                errorStatus = data.error?.status;
+            }
+
+            if (data.error?.message) {
+                errorMessage = data.error.message;
+            } else if (data?.message) {
+                errorMessage = data.message;
+            }
+
             if (
                 data.error?.code === "TKN001" ||
-                data.error?.code === "TKN003"
+                data.error?.code === "TKN002" ||
+                data.error?.code === "TKN005"
             ) {
                 doLogout();
                 return Promise.resolve(res);
             }
 
-            if (data.error?.code === "TKN008") {
+            if (
+                data.error?.code === "TKN003" ||
+                data.error?.code === "TKN004" ||
+                data.error?.code === "TKN008"
+            ) {
                 const finalResponse = doRefreshToken(config);
                 return Promise.resolve(finalResponse);
             }
 
-            if (
-                (data.error === undefined || data.error?.code === undefined) &&
-                data.success === false
-            ) {
-                doLogout();
-                return Promise.resolve(res);
-            }
+            showErrorMsg(config?.url, errorMessage, errorStatus);
         } else if (config.method !== "get" && config.method !== "put") {
             let { url } = config;
             if (url) {
@@ -253,7 +303,6 @@ instance.interceptors.response.use(
     (error: AxiosError<Api.Response, any>) => {
         let errorMessage = `There's something wrong`;
         let errorStatus = 500;
-        const errorMethod = error.config?.method;
 
         if (error.response?.status) {
             errorStatus = error.response?.status;
@@ -261,47 +310,30 @@ instance.interceptors.response.use(
 
         if (error.response?.data?.message) {
             errorMessage = error.response.data.message;
+        } else if (error.response?.data?.error) {
+            errorMessage = error.response?.data?.error?.message;
         } else if (error.message) {
             errorMessage = error.message;
         }
 
-        const postVisitationUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation/`;
-        const postVisitationBookUrl = `${URL_PRODUCTIVITY}/productivity/m/flow/visitation-book/`;
-        const postDepositUrl = `${URL_ORDER}/order/m/deposit/`;
-        const postPaymentUrl = `${URL_FINANCE}/finance/m/payment/`;
-        const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
-        const postPO = `${URL_ORDER}/order/m/purchase-order/`;
-        const postSOSigned = `${URL_ORDER}/order/m/purchase-order/docs/`;
-
         if (
             error.response?.data?.code === "TKN001" ||
             error.response?.data?.code === "TKN002" ||
-            error.response?.data?.code === "TKN003"
+            error.response?.data?.code === "TKN005"
         ) {
             doLogout();
-        } else if (error.response?.data?.code === "TKN008") {
+        } else if (
+            error.response?.data?.code === "TKN003" ||
+            error.response?.data?.code === "TKN004" ||
+            error.response?.data?.code === "TKN008"
+        ) {
             if (error.config) {
                 const finalResponse = doRefreshToken(error.config);
                 return Promise.resolve(finalResponse);
             }
         }
 
-        if (
-            error?.config?.url !== postVisitationUrl &&
-            error?.config?.url !== postVisitationBookUrl &&
-            error?.config?.url !== postDepositUrl &&
-            error?.config?.url !== postPaymentUrl &&
-            error?.config?.url !== postScheduleUrl &&
-            error?.config?.url !== postPO &&
-            error?.config?.url !== postSOSigned
-        ) {
-            store.dispatch(
-                openSnackbar({
-                    snackBarText: `${errorMessage} code: ${errorStatus}`,
-                    isSuccess: false
-                })
-            );
-        }
+        showErrorMsg(error.config?.url, errorMessage, errorStatus);
         return Promise.reject(error);
     }
 );

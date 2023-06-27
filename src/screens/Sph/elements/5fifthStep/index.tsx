@@ -159,8 +159,8 @@ function payloadMapper(sphState: SphStateInterface) {
         if (projectAddress.rural) {
             payload.shippingAddress.rural = projectAddress.rural;
         }
-        if (projectAddress.postalId) {
-            payload.shippingAddress.postalId = projectAddress.postalId;
+        if (projectAddress.PostalId) {
+            payload.shippingAddress.postalId = projectAddress.PostalId;
         }
     }
     if (sphState.paymentType) {
@@ -214,9 +214,9 @@ function payloadMapper(sphState: SphStateInterface) {
                         sphState.billingAddress.addressAutoComplete.formattedAddress;
                 }
             }
-            if (sphState.billingAddress.addressAutoComplete.postalId) {
+            if (sphState.billingAddress.addressAutoComplete.PostalId) {
                 payload.billingAddress.postalId =
-                    sphState.billingAddress.addressAutoComplete.postalId;
+                    sphState.billingAddress.addressAutoComplete.PostalId;
             }
             if (sphState.billingAddress.addressAutoComplete.lat) {
                 payload.billingAddress.lat =
@@ -251,6 +251,9 @@ function payloadMapper(sphState: SphStateInterface) {
 export default function FifthStep() {
     const dispatch = useDispatch();
     const { isOrderLoading } = useSelector((state: RootState) => state.order);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
     const sphState = useSelector((state: RootState) => state.sph);
 
@@ -300,6 +303,7 @@ export default function FifthStep() {
             const photoFiles = Object.values(sphState.paymentRequiredDocuments);
             const isNoPhotoToUpload = photoFiles.every((val) => val === null);
             payload.projectDocs = [];
+            payload.batchingPlantId = selectedBatchingPlant?.id;
             const validPhotoCount = countNonNullValues(photoFiles);
             if (
                 (sphState.uploadedAndMappedRequiredDocs.length === 0 &&
@@ -487,9 +491,6 @@ export default function FifthStep() {
                 <BBackContinueBtn
                     isContinueIcon={false}
                     continueText="Buat SPH"
-                    disableContinue={
-                        !shouldAllowSPHStateToContinue(5, sphState)
-                    }
                     onPressContinue={() => buatSph()}
                     onPressBack={() => setCurrentPosition(3)}
                 />

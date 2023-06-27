@@ -118,7 +118,10 @@ function ProductDetail() {
                                             tableInputValue:
                                                 fiveToSix[0] !== "0" &&
                                                 fiveToSix.length > 0
-                                                    ? formatCurrency(fiveToSix)
+                                                    ? formatCurrency(
+                                                          fiveToSix,
+                                                          true
+                                                      )
                                                     : ""
                                         },
                                         {
@@ -130,7 +133,8 @@ function ProductDetail() {
                                                 lessThanFive[0] !== "0" &&
                                                 lessThanFive.length > 0
                                                     ? formatCurrency(
-                                                          lessThanFive
+                                                          lessThanFive,
+                                                          true
                                                       )
                                                     : ""
                                         }

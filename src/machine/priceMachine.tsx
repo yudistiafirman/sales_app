@@ -7,6 +7,7 @@ import {
     getProductsCategories
 } from "@/actions/InventoryActions";
 import { hasLocationPermission } from "@/utils/permissions";
+import { BatchingPlant } from "@/models/BatchingPlant";
 
 export { getLocationCoordinates } from "@/actions/CommonActions";
 
@@ -40,15 +41,29 @@ export const priceMachine =
                     | {
                           type: "sendingParams";
                           value: { latitude: number; longitude: number };
+                          selectedBP: BatchingPlant;
+                      }
+                    | {
+                          type: "assignSelectedBatchingPlant";
+                          selectedBP: BatchingPlant;
                       }
                     | {
                           type: "onChangeCategories";
                           payload: number;
+                          selectedBP: BatchingPlant;
+                      }
+                    | {
+                          type: "backToGetProducts";
+                          selectedBP: BatchingPlant;
                       }
                     | { type: "backToIdle" }
                     | { type: "onEndReached" }
-                    | { type: "onAskPermission" }
-                    | { type: "refreshingList" }
+                    | {
+                          type: "onAskPermission";
+                          value: { latitude: number; longitude: number };
+                          selectedBP: BatchingPlant;
+                      }
+                    | { type: "refreshingList"; selectedBP: BatchingPlant }
                     | { type: "hideWarning" }
                     | { type: "appComeForegroundState" }
                     | { type: "appComeBackgroundState" }
@@ -64,6 +79,8 @@ export const priceMachine =
                 routes: [] as any[],
                 size: 10,
                 page: 1,
+                batchingPlantId: undefined as string | undefined,
+                batchingPlantName: undefined as string | undefined,
                 selectedCategories: "",
                 productsData: [] as any[],
                 index: 0,
@@ -107,8 +124,7 @@ export const priceMachine =
                                             {
                                                 target: "productLoaded",
                                                 actions:
-                                                    "assignProductsDataToContext",
-                                                cond: "isNotLastPage"
+                                                    "assignProductsDataToContext"
                                             },
                                             {
                                                 target: "productLoaded",
@@ -141,6 +157,11 @@ export const priceMachine =
                                             }
                                         ],
 
+                                        backToGetProducts: {
+                                            target: "#price machine.getProduct.categoriesLoaded.getProductsBaseOnCategories",
+                                            actions: "resetProduct"
+                                        },
+
                                         backToIdle: "#price machine.idle"
                                     }
                                 },
@@ -167,6 +188,15 @@ export const priceMachine =
                     },
 
                     initial: "loadingProduct"
+                },
+
+                getSelectedBatchingPlant: {
+                    on: {
+                        assignSelectedBatchingPlant: {
+                            actions: "assignSelectedBP",
+                            target: "idle"
+                        }
+                    }
                 },
 
                 askPermission: {
@@ -275,7 +305,7 @@ export const priceMachine =
                 }
             },
 
-            initial: "idle"
+            initial: "getSelectedBatchingPlant"
         },
         {
             guards: {
@@ -306,10 +336,13 @@ export const priceMachine =
                     };
                 }),
                 assignProductsDataToContext: assign((context, event) => {
-                    const productsData = [
-                        ...context.productsData,
-                        ...event.data.products
-                    ];
+                    let productsData: any[] = [...context.productsData];
+                    if (event.data.products && event.data.products.length > 0) {
+                        productsData = [
+                            ...context.productsData,
+                            ...event.data.products
+                        ];
+                    }
                     return {
                         totalPage: event.data.totalPage,
                         loadProduct: false,
@@ -323,7 +356,9 @@ export const priceMachine =
                     selectedCategories: context.routes[event.payload].title,
                     page: 1,
                     loadProduct: true,
-                    productsData: []
+                    productsData: [],
+                    batchingPlantId: event?.selectedBP?.id,
+                    batchingPlantName: event?.selectedBP?.name
                 })),
                 incrementPage: assign((context, _event) => ({
                     page: context.page + 1,
@@ -333,7 +368,9 @@ export const priceMachine =
                     page: 1,
                     refreshing: true,
                     loadProduct: true,
-                    productsData: []
+                    productsData: [],
+                    batchingPlantId: _event?.selectedBP?.id,
+                    batchingPlantName: _event?.selectedBP?.name
                 })),
                 enableLoadProducts: assign((_context, _event) => ({
                     loadProduct: true
@@ -344,7 +381,9 @@ export const priceMachine =
                     loadProduct: true,
                     productsData: [],
                     selectedCategories: [],
-                    page: 1
+                    page: 1,
+                    batchingPlantId: event?.selectedBP?.id,
+                    batchingPlantName: event?.selectedBP?.name
                 })),
                 assignStopLoadMore: assign((context, event) => ({
                     isLoadMore: false
@@ -369,6 +408,21 @@ export const priceMachine =
                 })),
                 enableLoadLocation: assign((_context, _event) => ({
                     loadLocation: true
+                })),
+                assignSelectedBP: assign((_context, _event) => ({
+                    batchingPlantId: _event?.selectedBP?.id,
+                    batchingPlantName: _event?.selectedBP?.name
+                })),
+                resetProduct: assign((_context, _event) => ({
+                    totalPage: 1,
+                    loadProduct: false,
+                    isLoadMore: false,
+                    refreshing: false,
+                    page: 1,
+                    index: 0,
+                    productsData: [],
+                    batchingPlantId: _event?.selectedBP?.id,
+                    batchingPlantName: _event?.selectedBP?.name
                 }))
             },
             services: {
@@ -410,7 +464,7 @@ export const priceMachine =
                         const response = await getLocationCoordinates(
                             longitude,
                             latitude,
-                            "BP-LEGOK"
+                            context.batchingPlantName
                         );
                         return response.data;
                     } catch (error) {
@@ -432,8 +486,13 @@ export const priceMachine =
                     }
                 },
                 getProducts: async (context, _event) => {
-                    const { page, size, selectedCategories, locationDetail } =
-                        context;
+                    const {
+                        page,
+                        size,
+                        selectedCategories,
+                        locationDetail,
+                        batchingPlantId
+                    } = context;
                     const distance = locationDetail?.distance?.value
                         ? locationDetail.distance.value / 1000
                         : 0;
@@ -443,7 +502,8 @@ export const priceMachine =
                             size,
                             undefined,
                             selectedCategories,
-                            distance
+                            distance,
+                            batchingPlantId
                         );
                         return response.data;
                     } catch (error) {

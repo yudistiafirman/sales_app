@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
         fontFamily: font.family.montserrat[500],
         fontSize: font.size.sm,
         color: colors.text.darker,
-        textAlign: "right",
-        width: width - 170
+        textAlign: "right"
+        // width: width - 170
     },
     bottomCard: {
         marginTop: layout.pad.sm,

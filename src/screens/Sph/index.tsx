@@ -131,8 +131,14 @@ function SphContent() {
         useContext(SphContext);
     const stepControll = useCallback((step: number) => {}, []);
     const sphData = useSelector((state: RootState) => state.sph);
+    const { selectedBatchingPlant } = useSelector(
+        (state: RootState) => state.auth
+    );
     const [isPopupVisible, setPopupVisible] = React.useState(false);
     const projectId = route.params?.projectId;
+    const abortControllerRef = React.useRef<AbortController>(
+        new AbortController()
+    );
 
     const handleStepperFocus = () => {
         // to continue stepper focus when entering sph page
@@ -185,11 +191,15 @@ function SphContent() {
 
     const getLocationCoord = async (coordinate: Region) => {
         try {
+            abortControllerRef.current.abort();
+            if (abortControllerRef.current.signal.aborted)
+                abortControllerRef.current = new AbortController();
             const { data } = await getLocationCoordinates(
                 // '',
                 coordinate.longitude as unknown as number,
                 coordinate.latitude as unknown as number,
-                "BP-LEGOK"
+                selectedBatchingPlant?.name,
+                abortControllerRef.current.signal
             );
             const { result } = data;
             if (!result) {
@@ -215,15 +225,16 @@ function SphContent() {
             dispatch(updateDistanceFromLegok(result.distance?.value));
             dispatch(updateRegion(coordinateToSet));
         } catch (error) {
-            dispatch(
-                openPopUp({
-                    popUpType: "error",
-                    popUpText:
-                        error?.message ||
-                        "Terjadi error saat pengambilan data coordinate",
-                    outsideClickClosePopUp: true
-                })
-            );
+            if (error?.message !== "canceled")
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText:
+                            error?.message ||
+                            "Terjadi error saat pengambilan data coordinate",
+                        outsideClickClosePopUp: true
+                    })
+                );
         }
     };
 
@@ -291,6 +302,10 @@ function SphContent() {
 
         stepHandler(sphData, stepsDone, setStepsDone, stepControll);
         handleStepperFocus();
+
+        return () => {
+            abortControllerRef.current.abort();
+        };
     }, [
         sphData.selectedCompany,
         sphData.isBillingAddressSame,

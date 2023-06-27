@@ -83,13 +83,17 @@ function VisitationDatesAndStatus({
     const getLocalBookingDate = () => {
         let date = "-";
         let day = null;
-        date = `${new Date(bookingDate).getDate()} ${new Date(
-            bookingDate
-        ).toLocaleString(locale(), {
-            month: "short"
-        })} ${new Date(bookingDate).getFullYear()}`;
-        const newDate = new Date(bookingDate);
-        day = newDate.toLocaleDateString(locale(), { weekday: "long" });
+        try {
+            date = `${new Date(bookingDate).getDate()} ${new Date(
+                bookingDate
+            ).toLocaleString(locale(), {
+                month: "short"
+            })} ${new Date(bookingDate).getFullYear()}`;
+            const newDate = new Date(bookingDate);
+            day = newDate.toLocaleDateString(locale(), { weekday: "long" });
+        } catch (e) {
+            console.log(e);
+        }
         return `${day}, ${date}`;
     };
 
@@ -182,7 +186,7 @@ function VisitationDatesAndStatus({
             <View style={styles.dateAndStatus}>
                 <>
                     <BText style={[styles.date, { fontSize: font.size.sm }]}>
-                        {moment(bookingDate).format("hh:mm A")}
+                        {moment(bookingDate).format("HH:mm")}
                     </BText>
                     {renderCompBaseOnStatus()}
                 </>

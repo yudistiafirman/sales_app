@@ -2,6 +2,7 @@ import { assign, createMachine } from "xstate";
 import { getAllDeliveryOrders } from "@/actions/OrderActions";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import EntryType from "@/models/EnumModel";
+import { BatchingPlant } from "@/models/BatchingPlant";
 
 const displayOperationListMachine = createMachine(
     {
@@ -18,6 +19,7 @@ const displayOperationListMachine = createMachine(
                 isLoadMore: boolean;
                 isRefreshing: boolean;
                 errorMessage: unknown;
+                batchingPlantId?: string;
                 page: number;
                 size: number;
                 totalPage: number;
@@ -38,15 +40,36 @@ const displayOperationListMachine = createMachine(
             events: {} as
                 | {
                       type: "assignUserData";
-                      value: { payload: string; tabActive: string };
+                      value: {
+                          payload: string;
+                          tabActive: string;
+                      };
+                      selectedBP: BatchingPlant;
+                  }
+                | {
+                      type: "assignSelectedBatchingPlant";
+                      selectedBP: BatchingPlant;
+                  }
+                | {
+                      type: "backToGetDO";
+                      userType: string;
+                      tabActive: string;
+                      selectedBP: BatchingPlant;
                   }
                 | {
                       type: "retryGettingList";
-                      value: { payload: string; tabActive: string };
+                      value: {
+                          payload: string;
+                          tabActive: string;
+                      };
                   }
                 | {
                       type: "onRefreshList";
-                      value: { payload: string; tabActive: string };
+                      value: {
+                          payload: string;
+                          tabActive: string;
+                      };
+                      selectedBP: BatchingPlant;
                   }
                 | { type: "onEndReached" }
         },
@@ -57,6 +80,7 @@ const displayOperationListMachine = createMachine(
             isLoadMore: false,
             isRefreshing: false,
             errorMessage: "",
+            batchingPlantId: undefined,
             page: 1,
             size: 10,
             totalPage: 0,
@@ -65,6 +89,14 @@ const displayOperationListMachine = createMachine(
         },
 
         states: {
+            getSelectedBatchingPlant: {
+                on: {
+                    assignSelectedBatchingPlant: {
+                        actions: "assignSelectedBP",
+                        target: "idle"
+                    }
+                }
+            },
             idle: {
                 on: {
                     assignUserData: {
@@ -98,6 +130,10 @@ const displayOperationListMachine = createMachine(
                         target: "fetchingListData",
                         actions: "handleEndReached",
                         cond: "isNotLastPage"
+                    },
+                    backToGetDO: {
+                        target: "#operation list machine.fetchingListData",
+                        actions: "resetProduct"
                     }
                 }
             },
@@ -124,16 +160,16 @@ const displayOperationListMachine = createMachine(
                                 response = await getAllDeliveryOrders(
                                     "WB_OUT",
                                     context.size.toString(),
-                                    context.page.toString()
+                                    context.page.toString(),
+                                    context.batchingPlantId
                                 );
-                                console.log("SECURITY-DISPATCH");
                             } else {
                                 response = await getAllDeliveryOrders(
                                     "RECEIVED",
                                     context.size.toString(),
-                                    context.page.toString()
+                                    context.page.toString(),
+                                    context.batchingPlantId
                                 );
-                                console.log("SECURITY-RETURN");
                             }
                             break;
                         case EntryType.WB:
@@ -141,32 +177,31 @@ const displayOperationListMachine = createMachine(
                                 response = await getAllDeliveryOrders(
                                     "SUBMITTED",
                                     context.size.toString(),
-                                    context.page.toString()
+                                    context.page.toString(),
+                                    context.batchingPlantId
                                 );
-                                console.log("WB-OUT");
                             } else {
                                 response = await getAllDeliveryOrders(
                                     "AWAIT_WB_IN",
                                     context.size.toString(),
-                                    context.page.toString()
+                                    context.page.toString(),
+                                    context.batchingPlantId
                                 );
-                                console.log("WB-IN");
                             }
                             break;
                         case EntryType.DRIVER:
                             response = await getAllDeliveryOrders(
                                 ["ON_DELIVERY", "ARRIVED"],
-                                // 'ON_DELIVERY',
                                 context.size.toString(),
-                                context.page.toString()
+                                context.page.toString(),
+                                context.batchingPlantId
                             );
-                            console.log("DRIVER");
                             break;
                         default:
                             break;
                     }
 
-                    return response.data;
+                    return response?.data;
                 } catch (error) {
                     throw new Error(error);
                 }
@@ -174,9 +209,11 @@ const displayOperationListMachine = createMachine(
         },
         actions: {
             assignListData: assign((context, event) => {
-                const listData = [...context.operationListData];
+                let listData: any[] = [];
+                if (context.operationListData)
+                    listData = [...context.operationListData];
 
-                if (event?.data?.data?.data !== undefined) {
+                if (event?.data?.data?.data) {
                     listData.push(...event.data.data.data);
                 }
 
@@ -189,7 +226,7 @@ const displayOperationListMachine = createMachine(
                 };
             }),
             assignError: assign((context, event) => ({
-                errorMessage: event?.data.message,
+                errorMessage: event?.data?.message,
                 isLoading: false,
                 isLoadMore: false,
                 isRefreshing: false
@@ -199,7 +236,8 @@ const displayOperationListMachine = createMachine(
                 isRefreshing: true,
                 operationListData: [],
                 userType: event?.payload,
-                tabActive: event?.tabActive
+                tabActive: event?.tabActive,
+                batchingPlantId: event?.selectedBP?.id
             })),
             handleEndReached: assign((context, event) => ({
                 page: context.page + 1,
@@ -209,7 +247,22 @@ const displayOperationListMachine = createMachine(
                 userType: event?.payload,
                 tabActive: event?.tabActive,
                 isRefreshing: true,
-                isLoading: true
+                isLoading: true,
+                batchingPlantId: event?.selectedBP?.id
+            })),
+            assignSelectedBP: assign((context, event) => ({
+                batchingPlantId: event?.selectedBP?.id
+            })),
+            resetProduct: assign((context, event) => ({
+                userType: event?.userType,
+                tabActive: event?.tabActive,
+                page: 1,
+                totalPage: 0,
+                isRefreshing: false,
+                isLoading: false,
+                isLoadMore: false,
+                operationListData: [],
+                batchingPlantId: event?.selectedBP?.id
             }))
         }
     }

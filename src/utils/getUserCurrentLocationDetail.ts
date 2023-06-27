@@ -1,4 +1,6 @@
 import Geolocation from "react-native-geolocation-service";
+import { GenericAbortSignal } from "axios";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import { getLocationCoordinates } from "../actions/CommonActions";
 
 const getUserCurrentCoordinate = async () => {
@@ -17,9 +19,13 @@ const getUserCurrentCoordinate = async () => {
 };
 
 const getCoordinateDetail = async ({
-    coordinate
+    coordinate,
+    signal,
+    selectedBatchingPlant
 }: {
     coordinate: { latitude: number; longitude: number };
+    signal: GenericAbortSignal;
+    selectedBatchingPlant: BatchingPlant;
 }) => {
     try {
         const { latitude, longitude } = coordinate;
@@ -27,7 +33,8 @@ const getCoordinateDetail = async ({
             // '',
             longitude,
             latitude,
-            "BP-LEGOK"
+            selectedBatchingPlant?.name,
+            signal
         );
         return data;
     } catch (error) {
@@ -35,13 +42,20 @@ const getCoordinateDetail = async ({
     }
 };
 
-const getUserCurrentLocationDetail = async () => {
+const getUserCurrentLocationDetail = async (
+    signal: GenericAbortSignal,
+    selectedBatchingPlant: BatchingPlant
+) => {
     try {
         const currentCoordinate = await getUserCurrentCoordinate();
         if (currentCoordinate) {
             const { coords } = currentCoordinate;
             const coordinate = coords;
-            const coordinateDetails = await getCoordinateDetail({ coordinate });
+            const coordinateDetails = await getCoordinateDetail({
+                coordinate,
+                signal,
+                selectedBatchingPlant
+            });
             return coordinateDetails;
         }
         return undefined;

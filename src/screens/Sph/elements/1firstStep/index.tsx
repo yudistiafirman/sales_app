@@ -47,6 +47,7 @@ export default function FirstStep() {
         errorGettingProjectMessage
     } = useSelector((state: RootState) => state.common);
     const { selectedCompany } = useSelector((state: RootState) => state.sph);
+    const authState = useSelector((state: RootState) => state.auth);
     function resetSearch() {
         setSearchQuery("");
     }
@@ -69,7 +70,12 @@ export default function FirstStep() {
 
     const searchDispatch = useCallback(
         (text: string) => {
-            dispatch(getAllProject({ search: text }));
+            dispatch(
+                getAllProject({
+                    search: text,
+                    selectedBPId: authState.selectedBatchingPlant?.id
+                })
+            );
         },
         [dispatch]
     );
@@ -132,7 +138,6 @@ export default function FirstStep() {
                             onPressList={(item) => {
                                 let finalPIC: any[] = [];
                                 let finalItem;
-
                                 if (
                                     item.Pics &&
                                     item.Pics.length > 0 &&
@@ -151,7 +156,19 @@ export default function FirstStep() {
                                     dispatch(updateSelectedPic(finalPIC[0]));
                                     dispatch(updateSelectedCompany(finalItem));
                                 } else {
-                                    dispatch(updateSelectedCompany(item));
+                                    if (item.Pic) finalPIC.push(item.Pic);
+                                    finalPIC.forEach((it, index) => {
+                                        finalPIC[index] = {
+                                            ...finalPIC[index],
+                                            isSelected: index === 0
+                                        };
+                                    });
+                                    finalItem = { ...item };
+                                    if (finalItem.Pics)
+                                        finalItem.Pics = finalPIC;
+
+                                    dispatch(updateSelectedPic(finalPIC[0]));
+                                    dispatch(updateSelectedCompany(finalItem));
                                 }
                             }}
                             isError={errorGettingProject}

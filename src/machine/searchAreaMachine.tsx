@@ -20,7 +20,8 @@ const searchAreaMachine = createMachine(
             loadPlaces: false as boolean,
             formattedAddress: "",
             placesId: "" as string,
-            errorMessage: ""
+            errorMessage: "",
+            batchingPlantName: undefined as string | undefined
         },
         states: {
             getLocation: {
@@ -59,6 +60,14 @@ const searchAreaMachine = createMachine(
             },
             searchLocation: {
                 states: {
+                    getSelectedBatchingPlant: {
+                        on: {
+                            assignSelectedBatchingPlant: {
+                                actions: "assignSelectedBP",
+                                target: "inputting"
+                            }
+                        }
+                    },
                     inputting: {
                         on: {
                             clearInput: {
@@ -128,7 +137,7 @@ const searchAreaMachine = createMachine(
                     }
                 },
 
-                initial: "inputting"
+                initial: "getSelectedBatchingPlant"
             }
         }
     },
@@ -159,6 +168,9 @@ const searchAreaMachine = createMachine(
                 errorMessage: event.data.message,
                 loadPlaces: false,
                 result: []
+            })),
+            assignSelectedBP: assign((context, event) => ({
+                batchingPlantName: event?.selectedBP?.name
             }))
         },
         services: {
@@ -188,7 +200,10 @@ const searchAreaMachine = createMachine(
             },
             getLocationBySearch: async (context, event) => {
                 try {
-                    const response = await searchLocation(context.searchValue);
+                    const response = await searchLocation(
+                        context.searchValue,
+                        context.batchingPlantName
+                    );
                     return response.data.result;
                 } catch (error) {
                     throw new Error(error);
@@ -210,7 +225,7 @@ const searchAreaMachine = createMachine(
                         // '',
                         longitude,
                         latitude,
-                        ""
+                        context.batchingPlantName
                     );
 
                     return response.result;

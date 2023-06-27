@@ -13,6 +13,7 @@ import {
     UploadFilesResponsePayload
 } from "@/interfaces/CreatePurchaseOrder";
 import LocalFileType from "@/interfaces/LocalFileType";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import { PO } from "@/navigation/ScreenNames";
 import { uniqueStringGenerator } from "@/utils/generalFunc";
 import { assign, createMachine } from "xstate";
@@ -23,6 +24,7 @@ const purchaseOrderInitialState = {
     poNumber: "",
     sphCategories: "",
     choosenSphDataFromModal: {} as CreatedSPHListResponse,
+    selectedBP: undefined as BatchingPlant | undefined,
     isModalContinuePo: false,
     loadingDocument: false,
     errorGettingDocMessage: "",
@@ -82,7 +84,11 @@ const POMachine =
                     | { type: "searching"; value: string }
                     | { type: "onChangeCategories"; value: number }
                     | { type: "openingModal"; value: CreatedSPHListResponse }
-                    | { type: "addChoosenSph"; value: CreatedSPHListResponse }
+                    | {
+                          type: "addChoosenSph";
+                          value: CreatedSPHListResponse;
+                          selectedBP: BatchingPlant;
+                      }
                     | { type: "closeModal" }
                     | { type: "goToSecondStep" }
                     | { type: "goBackToFirstStep" }
@@ -564,6 +570,7 @@ const POMachine =
                         if (!finalPayload.projectDocs) {
                             finalPayload.projectDocs = [];
                         }
+                        finalPayload.batchingPlantId = context.selectedBP?.id;
                         const response = await postPurchaseOrder(finalPayload);
                         return response.data;
                     } catch (error) {
@@ -712,6 +719,7 @@ const POMachine =
                 })),
                 closeModalSph: assign((_context, event) => ({
                     choosenSphDataFromModal: event.value,
+                    selectedBP: event?.selectedBP,
                     isUseExistingFiles: false,
                     selectedProducts: []
                 })),

@@ -26,6 +26,7 @@ export interface Typegen0 {
         assignLocationDetail: "done.invoke.location.gettingLocationDetails:invocation[0]";
         assignOnChangeRegionValue: "onChangeRegion";
         assignParamsToContext: "sendingCoorParams";
+        assignSelectedBP: "assignSelectedBatchingPlant";
         enabledLoadingDetails: "onChangeRegion";
     };
     eventsCausingDelays: {};
@@ -35,6 +36,10 @@ export interface Typegen0 {
             | "sendingCoorParams"
             | "xstate.after(500)#location.debounce";
     };
-    matchesStates: "debounce" | "gettingLocationDetails" | "receivingParams";
+    matchesStates:
+        | "debounce"
+        | "getSelectedBatchingPlant"
+        | "gettingLocationDetails"
+        | "receivingParams";
     tags: never;
 }

@@ -97,6 +97,7 @@ export default function Popup() {
                         <BHighlightText
                             searchQuery={popUpOptions.highlightedText}
                             name={popUpOptions.popUpTitle}
+                            numberOfLines={2}
                         />
                     </View>
                 )}

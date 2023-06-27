@@ -364,6 +364,7 @@ const renderInput = (
                                 unit: "",
                                 suffixUnit: ""
                             }}
+                            placeholderTextColor={colors.textInput.placeHolder}
                             value={value}
                             onChangeText={onChange}
                             placeholder={placeholder}

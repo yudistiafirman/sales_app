@@ -1,12 +1,13 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { useDispatch } from "react-redux";
-import { BHttpLogger } from "@/components";
+import { BHttpLogger, BSelectedBPOptionMenu } from "@/components";
 import { colors, fonts } from "@/constants";
 import { useAsyncConfigSetup } from "@/hooks";
 import EntryType from "@/models/EnumModel";
 import UserModel from "@/models/User";
 import {
+    setSelectedBatchingPlant,
     setShowButtonNetwork,
     setVisibleNetworkLogger
 } from "@/redux/reducers/authReducer";
@@ -17,19 +18,16 @@ import Login from "@/screens/Login";
 import Operation from "@/screens/Operation";
 import Splash from "@/screens/Splash";
 import Verification from "@/screens/Verification";
+import { BatchingPlant } from "@/models/BatchingPlant";
 import SecurityTabs from "./tabs/SecurityTabs";
 import SalesTabs from "./tabs/SalesTabs";
 import {
     LOGIN,
     LOGIN_TITLE,
-    OPSMANAGER,
-    OPSMANAGER_TITLE,
     TAB_ROOT,
     VERIFICATION,
     VERIFICATION_TITLE,
-    BATCHER,
     DRIVER,
-    BATCHER_TITLE,
     DRIVER_TITLE,
     BLANK_SCREEN
 } from "./ScreenNames";
@@ -39,50 +37,46 @@ import OperationStack from "./Operation/Stack";
 
 const Stack = createNativeStackNavigator();
 
+const selectedBPOption = (
+    title: string,
+    selectedBP: BatchingPlant,
+    batchingPlants: BatchingPlant[],
+    onSelectBPOption: (item: BatchingPlant) => void
+) => (
+    <BSelectedBPOptionMenu
+        pageTitle={title}
+        selectedBatchingPlant={selectedBP}
+        batchingPlants={batchingPlants}
+        onPressOption={onSelectBPOption}
+    />
+);
+
 function RootScreen(
     userData: UserModel.DataSuccessLogin | null,
-    isSignout: boolean
+    isSignout: boolean,
+    selectedBatchingPlant: BatchingPlant,
+    batchingPlants: BatchingPlant[],
+    onSelectBPOption: (item: BatchingPlant) => void
 ) {
     if (userData !== null) {
-        const { type } = userData;
-        switch (type) {
-            case EntryType.OPSMANAGER:
-                return (
-                    <>
-                        <Stack.Screen
-                            name={OPSMANAGER}
-                            key={OPSMANAGER}
-                            component={Operation}
-                            options={{
-                                headerTitleAlign: "center",
-                                headerTitle: OPSMANAGER_TITLE,
-                                headerRight: () =>
-                                    SalesHeaderRight(colors.text.darker),
-                                headerShown: true
-                            }}
-                        />
-                        {OperationStack(Stack)}
-                    </>
-                );
-            case EntryType.BATCHER:
-                return (
-                    <>
-                        <Stack.Screen
-                            name={BATCHER}
-                            key={BATCHER}
-                            component={Operation}
-                            options={{
-                                headerTitleAlign: "center",
-                                headerTitle: BATCHER_TITLE,
-                                headerRight: () =>
-                                    SalesHeaderRight(colors.text.darker),
-                                headerShown: true
-                            }}
-                        />
-                        {OperationStack(Stack)}
-                    </>
-                );
-            case EntryType.DRIVER:
+        const { type, roles } = userData;
+        const mappingRoles: string[] = [];
+        let safetyType = type;
+        roles.forEach((item) => {
+            mappingRoles.push(item.toLowerCase());
+        });
+        if (mappingRoles.includes(EntryType.DRIVER.toLowerCase()))
+            safetyType = EntryType.DRIVER;
+        else if (mappingRoles.includes(EntryType.SECURITY.toLowerCase()))
+            safetyType = EntryType.SECURITY;
+        else if (mappingRoles.includes(EntryType.WB.toLowerCase()))
+            safetyType = EntryType.WB;
+        else if (mappingRoles.includes(EntryType.SALES.toLowerCase()))
+            safetyType = EntryType.SALES;
+        else if (mappingRoles.includes(EntryType.ADMIN.toLowerCase()))
+            safetyType = EntryType.ADMIN;
+        switch (safetyType?.toLowerCase()) {
+            case EntryType.DRIVER.toLowerCase():
                 return (
                     <>
                         <Stack.Screen
@@ -91,16 +85,22 @@ function RootScreen(
                             component={Operation}
                             options={{
                                 headerTitleAlign: "center",
-                                headerTitle: DRIVER_TITLE,
+                                headerTitle: () =>
+                                    selectedBPOption(
+                                        DRIVER_TITLE,
+                                        selectedBatchingPlant,
+                                        batchingPlants,
+                                        onSelectBPOption
+                                    ),
                                 headerRight: () =>
                                     SalesHeaderRight(colors.text.darker),
                                 headerShown: true
                             }}
                         />
-                        {OperationStack(Stack)}
+                        {OperationStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            case EntryType.SECURITY:
+            case EntryType.SECURITY.toLowerCase(): {
                 return (
                     <>
                         <Stack.Screen
@@ -111,10 +111,11 @@ function RootScreen(
                                 headerShown: false
                             }}
                         />
-                        {OperationStack(Stack)}
+                        {OperationStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            case EntryType.WB:
+            }
+            case EntryType.WB.toLowerCase():
                 return (
                     <>
                         <Stack.Screen
@@ -125,10 +126,10 @@ function RootScreen(
                                 headerShown: false
                             }}
                         />
-                        {OperationStack(Stack)}
+                        {OperationStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            case EntryType.SALES:
+            case EntryType.SALES.toLowerCase():
                 return (
                     <>
                         <Stack.Screen
@@ -139,10 +140,10 @@ function RootScreen(
                                 headerShown: false
                             }}
                         />
-                        {SalesStack(Stack)}
+                        {SalesStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            case EntryType.ADMIN:
+            case EntryType.ADMIN.toLowerCase():
                 return (
                     <>
                         <Stack.Screen
@@ -153,7 +154,7 @@ function RootScreen(
                                 headerShown: false
                             }}
                         />
-                        {SalesStack(Stack)}
+                        {SalesStack(selectedBatchingPlant, Stack)}
                     </>
                 );
             default:
@@ -206,7 +207,9 @@ function AppNavigator() {
         userData,
         isSignout,
         isNetworkLoggerVisible,
-        isShowButtonNetwork
+        isShowButtonNetwork,
+        selectedBatchingPlant,
+        batchingPlants
     } = useAsyncConfigSetup();
     const dispatch = useDispatch<AppDispatch>();
     if (isLoading) {
@@ -227,7 +230,13 @@ function AppNavigator() {
                     }
                 }}
             >
-                {RootScreen(userData, isSignout)}
+                {RootScreen(
+                    userData,
+                    isSignout,
+                    selectedBatchingPlant,
+                    batchingPlants,
+                    (item) => dispatch(setSelectedBatchingPlant(item))
+                )}
             </Stack.Navigator>
             <BHttpLogger
                 isShowButtonNetwork={isShowButtonNetwork}
