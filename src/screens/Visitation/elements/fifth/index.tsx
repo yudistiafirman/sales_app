@@ -57,8 +57,8 @@ function payloadMapper(
         pic: [] as picPayloadType[],
         files: []
     } as payloadPostType;
-    if (values.pics && values.pics.length > 0) {
-        payload.pic = values.pics;
+    if (values?.pics && values?.pics?.length > 0) {
+        payload.pic = values?.pics;
     }
     payload.visitation.order = 1;
     if (type === "REJECTED") {
@@ -67,113 +67,119 @@ function payloadMapper(
         payload.visitation.status = "VISIT";
     }
 
-    if (values.locationAddress?.line2) {
-        payload.project.location.line2 = values.locationAddress?.line2;
+    if (values?.locationAddress?.line2) {
+        payload.project.location.line2 = values?.locationAddress?.line2;
     }
-    if (values.locationAddress?.PostalId) {
-        payload.project.location.PostalId = values.locationAddress?.PostalId;
+    if (values?.locationAddress?.PostalId) {
+        payload.project.location.postalId = values?.locationAddress?.PostalId;
     }
-    if (values.createdLocation?.PostalId) {
-        payload.project.location.PostalId = values.createdLocation?.PostalId;
+    if (values?.createdLocation?.PostalId) {
+        payload.project.location.postalId = values?.createdLocation?.PostalId;
     }
-    if (values.existingLocationId) {
-        payload.project.locationAddressId = values.existingLocationId;
+    if (values?.existingLocationId) {
+        payload.project.locationAddressId = values?.existingLocationId;
     }
-    if (values.locationAddress?.formattedAddress) {
+
+    if (values?.locationAddress?.formattedAddress) {
         payload.project.location.formattedAddress =
             values.locationAddress?.formattedAddress;
     }
-    if (values.locationAddress?.longitude) {
-        payload.project.location.lon = values.locationAddress?.longitude;
+    if (values?.locationAddress?.longitude) {
+        payload.project.location.lon = values?.locationAddress?.longitude;
     }
-    if (values.locationAddress?.latitude) {
-        payload.project.location.lat = values.locationAddress?.latitude;
+    if (values?.locationAddress?.latitude) {
+        payload.project.location.lat = values?.locationAddress?.latitude;
     }
-    if (values.createdLocation?.formattedAddress) {
+    if (values?.createdLocation?.formattedAddress) {
         payload.visitation.location.formattedAddress =
-            values.createdLocation?.formattedAddress;
-    }
-    if (values.createdLocation?.lon) {
-        payload.visitation.location.lon = values.createdLocation?.lon;
-    }
-    if (values.createdLocation?.lat) {
-        payload.visitation.location.lat = values.createdLocation?.lat;
+            values?.createdLocation?.formattedAddress;
     }
 
-    if (values.customerType) {
-        payload.visitation.customerType = values.customerType;
+    if (values?.createdLocation?.longitude) {
+        payload.visitation.location.lon = values?.createdLocation?.longitude;
     }
-    if (values.paymentType) {
-        payload.visitation.paymentType = values.paymentType;
+    if (values?.createdLocation?.latitude) {
+        payload.visitation.location.lat = values?.createdLocation?.latitude;
     }
-    if (values.estimationDate?.estimationWeek) {
+    if (values?.createdLocation?.PostalId) {
+        payload.visitation.location.postalId =
+            values?.createdLocation?.PostalId;
+    }
+
+    if (values?.customerType) {
+        payload.visitation.customerType = values?.customerType;
+    }
+    if (values?.paymentType) {
+        payload.visitation.paymentType = values?.paymentType;
+    }
+    if (values?.estimationDate?.estimationWeek) {
         payload.visitation.estimationWeek =
-            values.estimationDate?.estimationWeek;
+            values?.estimationDate?.estimationWeek;
     }
-    if (values.estimationDate?.estimationMonth) {
+    if (values?.estimationDate?.estimationMonth) {
         payload.visitation.estimationMonth =
-            values.estimationDate?.estimationMonth;
+            values?.estimationDate?.estimationMonth;
     }
-    if (values.notes) {
-        payload.visitation.visitNotes = values.notes;
+    if (values?.notes) {
+        payload.visitation.visitNotes = values?.notes;
     }
-    if (values.selectedDate && type === "VISIT") {
-        const selectedDate = moment(values.selectedDate.date);
-        payload.visitation.bookingDate = selectedDate.valueOf();
+    if (values?.selectedDate && type === "VISIT") {
+        const selectedDate = moment(values?.selectedDate?.date);
+        payload.visitation.bookingDate = selectedDate?.valueOf();
     }
 
     // if (stepFour.selectedDate) {
-    payload.visitation.dateVisit = today.valueOf();
-    payload.visitation.finishDate = today.valueOf();
+    payload.visitation.dateVisit = today?.valueOf();
+    payload.visitation.finishDate = today?.valueOf();
     // }
 
-    if (values.kategoriAlasan && type === "REJECTED") {
-        payload.visitation.rejectCategory = values.kategoriAlasan;
+    if (values?.kategoriAlasan && type === "REJECTED") {
+        payload.visitation.rejectCategory = values?.kategoriAlasan;
     }
-    if (values.alasanPenolakan && type === "REJECTED") {
-        payload.visitation.rejectNotes = values.alasanPenolakan;
+    if (values?.alasanPenolakan && type === "REJECTED") {
+        payload.visitation.rejectNotes = values?.alasanPenolakan;
     }
-    if (values.products && values.products.length > 0) {
-        payload.visitation.products = values.products?.map((product) => ({
-            id: product.id,
-            quantity: product.quantity,
-            pouringMethod: product.pouringMethod
+    if (values?.products && values?.products?.length > 0) {
+        payload.visitation.products = values?.products?.map((product) => ({
+            id: product?.id,
+            quantity: product?.quantity,
+            pouringMethod: product?.pouringMethod
         }));
     }
-    if (values.projectName) {
-        payload.project.name = values.projectName;
+    if (values?.projectName) {
+        payload.project.name = values?.projectName;
     }
-    if (values.companyName) {
-        if (values.customerType === "COMPANY") {
-            payload.project.companyDisplayName = values.companyName;
+    if (values?.companyName) {
+        if (values?.customerType === "COMPANY") {
+            payload.project.companyDisplayName = values?.companyName;
         }
     }
-    if (values.stageProject) {
-        payload.project.stage = values.stageProject;
+    if (values?.stageProject) {
+        payload.project.stage = values?.stageProject;
     }
-    if (values.typeProject) {
-        payload.project.type = values.typeProject;
+    if (values?.typeProject) {
+        payload.project.type = values?.typeProject;
     }
-    if (values.competitors?.length > 0) {
-        payload.visitation.competitors = values.competitors;
+    if (values?.competitors?.length > 0) {
+        payload.visitation.competitors = values?.competitors;
     }
     // if (values.currentCompetitor) {
     //   payload.visitation.competitors = [values.currentCompetitor];
     // }
     payload.visitation.isBooking = type === "VISIT";
 
-    if (values.visitationId) {
-        payload.visitation.visitationId = values.visitationId;
+    if (values?.visitationId) {
+        payload.visitation.visitationId = values?.visitationId;
     }
-    if (typeof values.existingOrderNum === "number") {
-        payload.visitation.order = values.existingOrderNum;
+    if (typeof values?.existingOrderNum === "number") {
+        payload.visitation.order = values?.existingOrderNum;
     }
 
-    if (values.existingVisitationId) {
-        payload.visitation.id = values.existingVisitationId;
+    if (values?.existingVisitationId) {
+        payload.visitation.id = values?.existingVisitationId;
     }
-    if (values.projectId) {
-        payload.project.id = values.projectId;
+    if (values?.projectId) {
+        payload.project.id = values?.projectId;
         payload.visitation.order += 1;
     }
 
