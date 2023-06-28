@@ -40,7 +40,7 @@ export default class BrikApiProductivity {
                 params.append("year", year.toString());
             }
             if (batchingPlantId) {
-                params.append("batchingPlantId", batchingPlantId.toString());
+                params.append("batchingPlantId", batchingPlantId?.toString());
             }
         }
 
@@ -59,13 +59,13 @@ export default class BrikApiProductivity {
         const params = url.searchParams;
 
         if (date) {
-            params.append("date", date.toString());
+            params.append("date", date?.toString());
         }
         if (projectId) {
             params.append("projectId", projectId);
         }
         if (page) {
-            params.append("page", page.toString());
+            params.append("page", page?.toString());
         }
         if (search) {
             params.append("search", search);

@@ -20,10 +20,10 @@ function CoordinatesDetail({
     loadingLocation,
     disable = false
 }: CoordinatesDetailsProps) {
-    const isHasAddress = address.length > 0;
-    const addressTitle = isHasAddress ? address.split(",")[0] : "";
+    const isHasAddress = address?.length > 0;
+    const addressTitle = isHasAddress ? address?.split(",")[0] : "";
     const addressDetail = isHasAddress
-        ? address.split(",").join("").substring(addressTitle.length)
+        ? address?.split(",")?.join("")?.substring(addressTitle?.length)
         : "";
     if (loadingLocation) {
         return (

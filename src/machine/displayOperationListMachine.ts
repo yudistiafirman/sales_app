@@ -148,7 +148,8 @@ const displayOperationListMachine = createMachine(
     },
     {
         guards: {
-            isNotLastPage: (context, event) => context.page <= context.totalPage
+            isNotLastPage: (context, event) =>
+                context?.page <= context?.totalPage
         },
         services: {
             fetchOperationListData: async (context, event) => {
@@ -159,16 +160,16 @@ const displayOperationListMachine = createMachine(
                             if (context?.tabActive === "left") {
                                 response = await getAllDeliveryOrders(
                                     "WB_OUT",
-                                    context.size.toString(),
-                                    context.page.toString(),
-                                    context.batchingPlantId
+                                    context?.size?.toString(),
+                                    context?.page?.toString(),
+                                    context?.batchingPlantId
                                 );
                             } else {
                                 response = await getAllDeliveryOrders(
                                     "RECEIVED",
-                                    context.size.toString(),
-                                    context.page.toString(),
-                                    context.batchingPlantId
+                                    context?.size?.toString(),
+                                    context?.page?.toString(),
+                                    context?.batchingPlantId
                                 );
                             }
                             break;
@@ -176,25 +177,25 @@ const displayOperationListMachine = createMachine(
                             if (context?.tabActive === "left") {
                                 response = await getAllDeliveryOrders(
                                     "SUBMITTED",
-                                    context.size.toString(),
-                                    context.page.toString(),
-                                    context.batchingPlantId
+                                    context?.size?.toString(),
+                                    context?.page?.toString(),
+                                    context?.batchingPlantId
                                 );
                             } else {
                                 response = await getAllDeliveryOrders(
                                     "AWAIT_WB_IN",
-                                    context.size.toString(),
-                                    context.page.toString(),
-                                    context.batchingPlantId
+                                    context?.size?.toString(),
+                                    context?.page?.toString(),
+                                    context?.batchingPlantId
                                 );
                             }
                             break;
                         case EntryType.DRIVER:
                             response = await getAllDeliveryOrders(
                                 ["ON_DELIVERY", "ARRIVED"],
-                                context.size.toString(),
-                                context.page.toString(),
-                                context.batchingPlantId
+                                context?.size?.toString(),
+                                context?.page?.toString(),
+                                context?.batchingPlantId
                             );
                             break;
                         default:
@@ -210,7 +211,7 @@ const displayOperationListMachine = createMachine(
         actions: {
             assignListData: assign((context, event) => {
                 let listData: any[] = [];
-                if (context.operationListData)
+                if (context?.operationListData)
                     listData = [...context.operationListData];
 
                 if (event?.data?.data?.data) {
@@ -218,7 +219,7 @@ const displayOperationListMachine = createMachine(
                 }
 
                 return {
-                    totalPage: event.data.data.totalPages,
+                    totalPage: event?.data?.data?.totalPages,
                     operationListData: listData,
                     isLoading: false,
                     isLoadMore: false,
@@ -240,7 +241,7 @@ const displayOperationListMachine = createMachine(
                 batchingPlantId: event?.selectedBP?.id
             })),
             handleEndReached: assign((context, event) => ({
-                page: context.page + 1,
+                page: (context?.page || 0) + 1,
                 isLoadMore: true
             })),
             assignUserDataToContext: assign((context, event) => ({

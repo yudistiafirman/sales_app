@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 
 function VisitHistory() {
     const route = useRoute();
-    const { projectName } = route.params;
+    const projectName = route?.params?.projectName;
     const [state, send] = useMachine(visitHistoryMachine);
     const [index, setIndex] = useState(0);
     const { selectedBatchingPlant } = useSelector(
@@ -47,7 +47,7 @@ function VisitHistory() {
 
     useEffect(() => {
         if (route.params) {
-            const { projectId } = route.params;
+            const projectId = route?.params?.projectId;
             send("assignParams", {
                 value: projectId,
                 selectedBP: selectedBatchingPlant
@@ -60,8 +60,8 @@ function VisitHistory() {
     });
 
     const onTabPress = (tabroute: any) => {
-        const tabIndex = state.context.routes.findIndex(
-            (v) => v.key === tabroute.route.key
+        const tabIndex = state?.context?.routes?.findIndex(
+            (v) => v?.key === tabroute?.route?.key
         );
         send("onChangeVisitationIdx", {
             value: tabIndex,
@@ -96,7 +96,7 @@ function VisitHistory() {
 
     return (
         <View style={styles.container}>
-            {visitationData.length === 0 ? (
+            {!visitationData || visitationData?.length === 0 ? (
                 <BEmptyState
                     isError={state.matches("errorGettingData")}
                     errorMessage={errorMessage}

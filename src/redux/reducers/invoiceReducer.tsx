@@ -66,29 +66,29 @@ export const invoiceSlice = createSlice({
         resetInvoiceState: () => initialState,
         setInvoceData: (state, actions: PayloadAction<{ data: any[] }>) => ({
             ...state,
-            invoiceData: actions.payload.data
+            invoiceData: actions.payload?.data
         }),
         setPaymentMethod: (state, actions: PayloadAction<string>) => ({
             ...state,
-            filter: { ...state.filter, paymentMethod: actions.payload }
+            filter: { ...state.filter, paymentMethod: actions?.payload }
         }),
         setPaymentDuration: (
             state,
             actions: PayloadAction<string | number>
         ) => ({
             ...state,
-            filter: { ...state.filter, paymentDuration: actions.payload }
+            filter: { ...state.filter, paymentDuration: actions?.payload }
         }),
         setPaymentStatus: (state, actions: PayloadAction<string | number>) => ({
             ...state,
-            filter: { ...state.filter, paymentStatus: actions.payload }
+            filter: { ...state.filter, paymentStatus: actions?.payload }
         }),
         setIssueDate: (state, actions: PayloadAction<IssueDate>) => ({
             ...state,
             filter: {
                 ...state.filter,
-                startDateIssued: actions.payload.startDateIssued,
-                endDateIssued: actions.payload.endDateIssued
+                startDateIssued: actions.payload?.startDateIssued,
+                endDateIssued: actions.payload?.endDateIssued
             }
         }),
         setDueDateDifference: (
@@ -96,54 +96,57 @@ export const invoiceSlice = createSlice({
             actions: PayloadAction<string | number>
         ) => ({
             ...state,
-            filter: { ...state.filter, dueDateDifference: actions.payload }
+            filter: { ...state.filter, dueDateDifference: actions?.payload }
         }),
         setMarkedDates: (state, actions: PayloadAction<MarkedDates>) => ({
             ...state,
-            filter: { ...state.filter, markedDates: actions.payload }
+            filter: { ...state.filter, markedDates: actions?.payload }
         }),
         setLoading: (
             state,
             actions: PayloadAction<{ isLoading: boolean }>
         ) => ({
             ...state,
-            isLoading: actions.payload.isLoading
+            isLoading: actions.payload?.isLoading
         }),
         setLoadMore: (
             state,
             actions: PayloadAction<{ isLoadMore: boolean }>
         ) => ({
             ...state,
-            isLoadMore: actions.payload.isLoadMore
+            isLoadMore: actions.payload?.isLoadMore
         }),
         setRefreshing: (
             state,
             actions: PayloadAction<{ refreshing: boolean }>
-        ) => ({ ...state, isRefreshing: actions.payload.refreshing }),
+        ) => ({ ...state, isRefreshing: actions.payload?.refreshing }),
         setPage: (state, actions: PayloadAction<{ page: number }>) => ({
             ...state,
-            search: { ...state.search, page: actions.payload.page }
+            search: { ...state.search, page: actions.payload?.page }
         }),
         setTotalItems: (
             state,
             actions: PayloadAction<{ totalItems: number }>
         ) => ({
             ...state,
-            totalItems: actions.payload.totalItems
+            totalItems: actions.payload?.totalItems
         }),
         setInvoiceSearchQuery: (
             state,
             actions: PayloadAction<{ queryValue: string }>
         ) => ({
             ...state,
-            search: { ...state.search, searchQuery: actions.payload.queryValue }
+            search: {
+                ...state.search,
+                searchQuery: actions.payload?.queryValue
+            }
         }),
         setSearch: (state, actions: PayloadAction<SearchInvoice>) => ({
             ...state,
             search: {
                 ...state.search,
-                searchQuery: actions.payload.searchQuery,
-                page: actions.payload.page
+                searchQuery: actions.payload?.searchQuery,
+                page: actions.payload?.page
             }
         }),
         setErrorMessage: (
@@ -151,14 +154,14 @@ export const invoiceSlice = createSlice({
             actions: PayloadAction<{ message: string | unknown }>
         ) => ({
             ...state,
-            errorMessage: actions.payload.message
+            errorMessage: actions.payload?.message
         }),
         setTotalPage: (
             state,
             actions: PayloadAction<{ totalPage: number }>
         ) => ({
             ...state,
-            totalPages: actions.payload.totalPage
+            totalPages: actions.payload?.totalPage
         })
     }
 });

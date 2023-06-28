@@ -109,7 +109,7 @@ export default function BDepositCard({
                           )}`
                         : formatCurrency(
                               isSum ? getTotalSum() : getTotalDifference()
-                          ).replace("-", "")}
+                          )?.replace("-", "")}
                 </Text>
             </View>
             {isError && (

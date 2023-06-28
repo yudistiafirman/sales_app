@@ -198,7 +198,7 @@ function InvoiceDetail() {
     const getOneInvoiceData = async () => {
         try {
             setLoading(true);
-            const { invoiceId } = route.params;
+            const invoiceId = route?.params?.invoiceId;
 
             const response = await getOneInvoice(invoiceId);
             if (response?.data?.success) {
@@ -237,11 +237,11 @@ function InvoiceDetail() {
             invoiceDetailData?.paymentType
         ) {
             if (
-                invoiceDetailData.paymentType === "CREDIT" &&
-                invoiceDetailData.DeliveryOrders.length > 0
+                invoiceDetailData?.paymentType === "CREDIT" &&
+                invoiceDetailData?.DeliveryOrders.length > 0
             ) {
                 flex = 0.6;
-            } else if (invoiceDetailData.paymentType === "CREDIT") {
+            } else if (invoiceDetailData?.paymentType === "CREDIT") {
                 flex = 0.6;
             } else {
                 flex = 0;
@@ -269,7 +269,7 @@ function InvoiceDetail() {
                 invoiceDetailData?.status !== "PAID"
             ) {
                 defaultTextDays =
-                    invoiceDetailData?.dueDateDifference.toString();
+                    invoiceDetailData?.dueDateDifference?.toString();
                 defaultTextDays += " hari";
             }
             return defaultTextDays;
@@ -354,7 +354,7 @@ function InvoiceDetail() {
                     item?.quantity && item?.SO?.PoProd?.ReqProd?.Product?.unit
                         ? `${
                               item?.quantity
-                          } ${item?.SO?.PoProd?.ReqProd?.Product?.unit.toLowerCase()}`
+                          } ${item?.SO?.PoProd?.ReqProd?.Product?.unit?.toLowerCase()}`
                         : "-"
             },
             {
@@ -370,13 +370,14 @@ function InvoiceDetail() {
             {
                 itemTitle: "Total",
                 itemValue:
-                    item?.SO?.PoProd?.ReqProd?.offeringPrice &&
-                    item?.quantity &&
+                    item?.SO?.PoProd?.ReqProd?.offeringPrice !== undefined &&
+                    item?.quantity !== undefined &&
                     item?.additionalPrice !== undefined
                         ? formatCurrency(
-                              item.quantity *
-                                  item.SO.PoProd.ReqProd.offeringPrice +
-                                  item.additionalPrice
+                              (item?.quantity || 0) *
+                                  (item?.SO?.PoProd?.ReqProd?.offeringPrice ||
+                                      0) +
+                                  (item?.additionalPrice || 0)
                           )
                         : 0,
                 itemTitleStyles: { alignSelf: "flex-end" }
@@ -562,7 +563,7 @@ function InvoiceDetail() {
                     <Text style={styles.text}>DO </Text>
                     <BSpacer size="medium" />
                     {invoiceDetailData?.DeliveryOrders &&
-                    invoiceDetailData?.DeliveryOrders.length > 0 ? (
+                    invoiceDetailData?.DeliveryOrders?.length > 0 ? (
                         <TouchableWithoutFeedback
                             onPress={() => setExpand(!expand)}
                         >
@@ -577,21 +578,21 @@ function InvoiceDetail() {
                     )}
                 </View>
                 {invoiceDetailData?.DeliveryOrders &&
-                    invoiceDetailData?.DeliveryOrders.length > 0 &&
+                    invoiceDetailData?.DeliveryOrders?.length > 0 &&
                     expand && (
                         <View
                             style={{
                                 flex:
-                                    invoiceDetailData?.DeliveryOrders.length ===
-                                    1
+                                    invoiceDetailData?.DeliveryOrders
+                                        ?.length === 1
                                         ? 0.3
                                         : 0.6
                             }}
                         >
                             <FlashList
                                 data={
-                                    invoiceDetailData?.DeliveryOrders &&
-                                    invoiceDetailData?.DeliveryOrders.length > 0
+                                    invoiceDetailData?.DeliveryOrders?.length >
+                                    0
                                         ? invoiceDetailData?.DeliveryOrders
                                         : []
                                 }

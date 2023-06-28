@@ -58,7 +58,7 @@ export default function BGalleryDeposit({
 }: BGalleryDepositType) {
     return (
         <View style={style.summaryContainer}>
-            {picts && picts.length > 1 && (
+            {picts && picts?.length > 1 && (
                 <View
                     style={{
                         width: resScale(40),
@@ -98,7 +98,7 @@ export default function BGalleryDeposit({
                             source={picts[1]?.file}
                         />
                     )}
-                    {picts.length > 2 && (
+                    {picts?.length > 2 && (
                         <>
                             <View style={style.overlay} />
                             <Text style={style.textOverlay}>{`+${

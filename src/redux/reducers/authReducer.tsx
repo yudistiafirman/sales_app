@@ -91,127 +91,134 @@ export const authSlice = createSlice({
             selectedBatchingPlant: action.payload
         }),
         setUserData: (state, action: PayloadAction<any>) => {
-            if (action.payload.remoteConfigData) {
+            if (action.payload?.remoteConfigData) {
                 return {
                     ...state,
-                    userData: action.payload.userData,
+                    userData: action?.payload?.userData,
                     remoteConfigData: {
-                        ...state.remoteConfigData,
+                        ...state?.remoteConfigData,
                         enable_signed_so:
-                            action.payload.remoteConfigData.enable_signed_so,
+                            action?.payload?.remoteConfigData?.enable_signed_so,
                         enable_appointment:
-                            action.payload.remoteConfigData.enable_appointment,
+                            action?.payload?.remoteConfigData
+                                ?.enable_appointment,
                         enable_create_schedule:
-                            action.payload.remoteConfigData
-                                .enable_create_schedule,
+                            action?.payload?.remoteConfigData
+                                ?.enable_create_schedule,
                         enable_customer_detail:
-                            action.payload.remoteConfigData
-                                .enable_customer_detail,
+                            action?.payload?.remoteConfigData
+                                ?.enable_customer_detail,
                         enable_deposit:
-                            action.payload.remoteConfigData.enable_deposit,
+                            action?.payload?.remoteConfigData?.enable_deposit,
                         enable_hunter_farmer:
-                            action.payload.remoteConfigData
-                                .enable_hunter_farmer,
-                        enable_po: action.payload.remoteConfigData.enable_po,
+                            action?.payload?.remoteConfigData
+                                ?.enable_hunter_farmer,
+                        enable_po: action?.payload?.remoteConfigData?.enable_po,
                         enable_price_menu:
-                            action.payload.remoteConfigData.enable_price_menu,
+                            action?.payload?.remoteConfigData
+                                ?.enable_price_menu,
                         enable_profile_menu:
-                            action.payload.remoteConfigData.enable_profile_menu,
-                        enable_sph: action.payload.remoteConfigData.enable_sph,
+                            action?.payload?.remoteConfigData
+                                ?.enable_profile_menu,
+                        enable_sph:
+                            action?.payload?.remoteConfigData?.enable_sph,
                         enable_transaction_menu:
-                            action.payload.remoteConfigData
-                                .enable_transaction_menu,
+                            action?.payload?.remoteConfigData
+                                ?.enable_transaction_menu,
                         enable_visitation:
-                            action.payload.remoteConfigData.enable_visitation,
+                            action?.payload?.remoteConfigData
+                                ?.enable_visitation,
                         enable_invoice:
-                            action.payload.remoteConfigData.enable_invoice,
+                            action?.payload?.remoteConfigData?.enable_invoice,
                         force_update:
-                            action.payload.remoteConfigData.force_update
+                            action?.payload?.remoteConfigData?.force_update
                     },
                     isSignout: false,
                     isLoading: false,
                     batchingPlants:
-                        action.payload.batchingPlants &&
-                        action.payload.batchingPlants.length > 0 &&
-                        action.payload.batchingPlants
+                        action?.payload?.batchingPlants &&
+                        action?.payload?.batchingPlants?.length > 0 &&
+                        action?.payload?.batchingPlants
                 };
             }
             return {
                 ...state,
-                userData: action.payload.userData,
+                userData: action?.payload?.userData,
                 isSignout: false,
                 isLoading: false,
                 batchingPlants:
-                    action.payload.batchingPlants &&
-                    action.payload.batchingPlants.length > 0 &&
-                    action.payload.batchingPlants
+                    action?.payload?.batchingPlants &&
+                    action?.payload?.batchingPlants?.length > 0 &&
+                    action?.payload?.batchingPlants
             };
         },
         setIsLoading: (state, action: PayloadAction<any>) => {
-            if (action.payload.remoteConfigData) {
+            if (action.payload?.remoteConfigData) {
                 return {
                     ...state,
                     remoteConfigData: {
-                        ...state.remoteConfigData,
+                        ...state?.remoteConfigData,
                         enable_signed_so:
-                            action.payload.remoteConfigData.enable_signed_so,
+                            action?.payload?.remoteConfigData?.enable_signed_so,
                         enable_appointment:
-                            action.payload.remoteConfigData.enable_appointment,
+                            action?.payload?.remoteConfigData
+                                ?.enable_appointment,
                         enable_create_schedule:
-                            action.payload.remoteConfigData
-                                .enable_create_schedule,
+                            action?.payload?.remoteConfigData
+                                ?.enable_create_schedule,
                         enable_customer_detail:
-                            action.payload.remoteConfigData
-                                .enable_customer_detail,
+                            action?.payload?.remoteConfigData
+                                ?.enable_customer_detail,
                         enable_deposit:
-                            action.payload.remoteConfigData.enable_deposit,
+                            action?.payload?.remoteConfigData?.enable_deposit,
                         enable_hunter_farmer:
-                            action.payload.remoteConfigData
-                                .enable_hunter_farmer,
-                        enable_po: action.payload.remoteConfigData.enable_po,
+                            action?.payload?.remoteConfigData
+                                ?.enable_hunter_farmer,
+                        enable_po: action?.payload?.remoteConfigData?.enable_po,
                         enable_price_menu:
-                            action.payload.remoteConfigData.enable_price_menu,
+                            action?.payload?.remoteConfigData
+                                ?.enable_price_menu,
                         enable_profile_menu:
-                            action.payload.remoteConfigData.enable_profile_menu,
-                        enable_customer_menu:
-                            action.payload.remoteConfigData
-                                .enable_customer_menu,
-                        enable_sph: action.payload.remoteConfigData.enable_sph,
+                            action?.payload?.remoteConfigData
+                                ?.enable_profile_menu,
+                        enable_sph:
+                            action?.payload?.remoteConfigData?.enable_sph,
                         enable_transaction_menu:
-                            action.payload.remoteConfigData
-                                .enable_transaction_menu,
+                            action?.payload?.remoteConfigData
+                                ?.enable_transaction_menu,
                         enable_visitation:
-                            action.payload.remoteConfigData.enable_visitation,
+                            action?.payload?.remoteConfigData
+                                ?.enable_visitation,
                         enable_invoice:
-                            action.payload.remoteConfigData.enable_invoice,
+                            action?.payload?.remoteConfigData?.enable_invoice,
                         force_update:
-                            action.payload.remoteConfigData.force_update
+                            action?.payload?.remoteConfigData?.force_update
                     },
-                    isLoading: action.payload.loading
+                    isLoading: action?.payload?.loading
                 };
             }
             return {
                 ...state,
-                isLoading: action.payload.loading
+                isLoading: action?.payload?.loading
             };
         },
         signout: (state, action: PayloadAction<boolean>) => ({
             ...state,
             userData: null,
-            isLoading: action.payload,
+            isLoading: action?.payload,
             isSignout: true
         }),
         toggleHunterScreen: (state, action: PayloadAction<boolean>) => ({
             ...state,
-            hunterScreen: action.payload
+            hunterScreen: action?.payload
         }),
         setShowButtonNetwork: (state, action: PayloadAction<boolean>) => ({
             ...state,
-            isShowButtonNetwork: action.payload
+            isShowButtonNetwork: action?.payload
         }),
         setVisibleNetworkLogger: (state, action: PayloadAction<boolean>) => ({
             ...state,
-            isNetworkLoggerVisible: action.payload
+            isNetworkLoggerVisible: action?.payload
         })
     }
 });

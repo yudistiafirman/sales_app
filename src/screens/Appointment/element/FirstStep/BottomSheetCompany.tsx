@@ -103,7 +103,10 @@ function BottomSheetCompany({
                     <View style={styles.projectNameListContainer}>
                         <BProjectRBtnList
                             onSelect={onSelect}
-                            isOption={dataCompany?.project.length > 1}
+                            isOption={
+                                dataCompany?.project &&
+                                dataCompany?.project?.length > 1
+                            }
                             data={dataCompany?.project}
                         />
                     </View>

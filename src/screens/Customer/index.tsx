@@ -68,17 +68,17 @@ function Customer() {
     }, [state, send]);
 
     const goToCustomerDetail = (item: ICustomerListData) => {
-        navigation.navigate(CUSTOMER_DETAIL, { id: item.id });
+        navigation.navigate(CUSTOMER_DETAIL, { id: item?.id });
     };
 
     const onTabPress = (event: any) => {
         setSearchValue("");
-        send("onChangeTab", { value: event.route.key });
+        send("onChangeTab", { value: event?.route?.key });
     };
 
     const onSearchCustomer = (e) => {
         setSearchValue(e);
-        if (e.length > 2) {
+        if (e && e?.length > 2) {
             send("searching", { value: e });
         }
     };

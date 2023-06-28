@@ -174,7 +174,7 @@ function downloadPdf({
             downloadPopup();
         })
         .catch((err) => {
-            downloadError(err.message);
+            downloadError(err?.message || "Error Download Data.");
         });
 }
 
@@ -215,15 +215,15 @@ export default function StepDone({
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const sphState = useSelector((state: RootState) => state.sph);
-    const stateCompanyName = sphState.selectedCompany?.Company?.name
-        ? sphState.selectedCompany?.Company.name
-        : sphState.selectedPic?.name;
-    const locationState = sphState.isBillingAddressSame
-        ? sphState.selectedCompany?.LocationAddress.line1
-        : sphState?.billingAddress.addressAutoComplete.formattedAddress;
-    const locationObj = sphState.isBillingAddressSame
-        ? sphState.selectedCompany
-        : sphState?.billingAddress.addressAutoComplete;
+    const stateCompanyName = sphState?.selectedCompany?.Company?.name
+        ? sphState?.selectedCompany?.Company?.name
+        : sphState?.selectedPic?.name;
+    const locationState = sphState?.isBillingAddressSame
+        ? sphState?.selectedCompany?.LocationAddress?.line1
+        : sphState?.billingAddress?.addressAutoComplete?.formattedAddress;
+    const locationObj = sphState?.isBillingAddressSame
+        ? sphState?.selectedCompany
+        : sphState?.billingAddress?.addressAutoComplete;
 
     const shareFunc = async (url?: string) => {
         try {
@@ -311,8 +311,8 @@ export default function StepDone({
                             productionTime={sphResponse?.createdTime}
                             expiredDate={sphResponse?.expiryTime}
                             status="Diterbitkan"
-                            paymentMethod={paymentMethod[sphState.paymentType]}
-                            projectName={sphState.selectedCompany?.name}
+                            paymentMethod={paymentMethod[sphState?.paymentType]}
+                            projectName={sphState?.selectedCompany?.name}
                         />
                         <BSpacer size="extraSmall" />
                         <Text style={styles.partText}>Produk</Text>
@@ -321,14 +321,24 @@ export default function StepDone({
                             estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                             renderItem={({ item }) => (
                                 <BProductCard
-                                    name={item.product.name}
-                                    pricePerVol={+item.sellPrice}
-                                    volume={+item.volume}
-                                    totalPrice={+item.totalPrice}
+                                    name={item?.product?.name}
+                                    pricePerVol={
+                                        item?.sellPrice
+                                            ? +item.sellPrice
+                                            : undefined
+                                    }
+                                    volume={
+                                        item?.volume ? +item.volume : undefined
+                                    }
+                                    totalPrice={
+                                        item?.totalPrice
+                                            ? +item.totalPrice
+                                            : undefined
+                                    }
                                 />
                             )}
                             data={sphState?.chosenProducts}
-                            keyExtractor={(item) => item.productId}
+                            keyExtractor={(item) => item?.productId}
                             ItemSeparatorComponent={Separator}
                         />
                     </View>

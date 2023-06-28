@@ -54,7 +54,7 @@ function stepHandler(
     const images = stepOne?.deposit?.picts?.filter((v) => v?.file !== null);
     if (
         images &&
-        images.length > 0 &&
+        images?.length > 0 &&
         stepOne?.deposit?.createdAt &&
         stepOne?.deposit?.nominal
     ) {
@@ -95,30 +95,30 @@ function Deposit() {
                         outsideClickClosePopUp: false
                     })
                 );
-                const photoFiles = values.stepOne?.deposit?.picts
+                const photoFiles = values?.stepOne?.deposit?.picts
                     ?.filter((v) => v?.file !== null)
                     .map((photo) => ({
                         ...photo?.file,
                         uri: photo?.file?.uri?.replace("file:", "file://")
                     }));
                 let uploadedImage;
-                if (photoFiles && photoFiles.length > 0)
+                if (photoFiles && photoFiles?.length > 0)
                     uploadedImage = await uploadFileImage(
                         photoFiles,
                         "deposit"
                     ).catch((err) => Error(err));
 
                 const payload: CreatePayment = {
-                    projectId: values.existingProjectID,
-                    amount: values.stepOne?.deposit?.nominal,
+                    projectId: values?.existingProjectID,
+                    amount: values?.stepOne?.deposit?.nominal,
                     paymentDate: moment(
-                        values.stepOne?.deposit?.createdAt,
+                        values?.stepOne?.deposit?.createdAt,
                         "DD/MM/yyyy"
                     ).valueOf(),
                     status: "SUBMITTED",
                     type: "DEPOSIT",
                     files: [],
-                    saleOrderId: values.stepTwo?.selectedSaleOrder?.id,
+                    saleOrderId: values?.stepTwo?.selectedSaleOrder?.id,
                     batchingPlantId: authState.selectedBatchingPlant?.id
                 };
 
@@ -126,7 +126,7 @@ function Deposit() {
                     uploadedImage?.data?.success &&
                     uploadedImage?.data?.success !== false
                 )
-                    uploadedImage.data?.data.forEach((item: any) => {
+                    uploadedImage?.data?.data?.forEach((item: any) => {
                         payload.files?.push({ fileId: item?.id });
                     });
                 const response = await postPayment(payload).catch((err) =>
@@ -171,10 +171,10 @@ function Deposit() {
     };
 
     const actionBackButton = (directlyClose = false) => {
-        if (values.isSearchingPurchaseOrder === true) {
+        if (values?.isSearchingPurchaseOrder === true) {
             action.updateValue("isSearchingPurchaseOrder", false);
-        } else if (values.step > 0 && !directlyClose) {
-            next(values.step - 1)();
+        } else if (values?.step > 0 && !directlyClose) {
+            next((values?.step || 0) - 1)();
         } else {
             setPopupVisible(true);
         }
@@ -192,7 +192,7 @@ function Deposit() {
 
     useHeaderTitleChanged({
         title:
-            values.isSearchingPurchaseOrder === true
+            values?.isSearchingPurchaseOrder === true
                 ? "Cari PT / Proyek"
                 : "Buat Deposit",
         selectedBP: authState.selectedBatchingPlant
@@ -209,7 +209,7 @@ function Deposit() {
                 backAction
             );
             return () => backHandler.remove();
-        }, [values.step, values.isSearchingPurchaseOrder])
+        }, [values?.step, values?.isSearchingPurchaseOrder])
     );
 
     React.useEffect(
@@ -225,27 +225,27 @@ function Deposit() {
 
     return (
         <>
-            {values.isSearchingPurchaseOrder === false && (
+            {values?.isSearchingPurchaseOrder === false && (
                 <BStepperIndicator
                     stepsDone={stepsDone}
                     stepOnPress={(pos: number) => {
                         next(pos)();
                     }}
-                    currentStep={values.step}
+                    currentStep={values?.step}
                     labels={labels}
                 />
             )}
 
             <BContainer paddingHorizontal={layout.pad.lg + layout.pad.xs}>
                 <View style={styles.container}>
-                    {stepRender[values.step]}
+                    {stepRender[values?.step]}
                     <BSpacer size="extraSmall" />
                     {!keyboardVisible &&
-                        values.shouldScrollView &&
-                        values.step > -1 && (
+                        values?.shouldScrollView &&
+                        values?.step > -1 && (
                             <BBackContinueBtn
                                 onPressContinue={() => {
-                                    next(values.step + 1)();
+                                    next((values?.step || 0) + 1)();
                                     DeviceEventEmitter.emit(
                                         "Deposit.continueButton",
                                         true
@@ -253,12 +253,12 @@ function Deposit() {
                                 }}
                                 onPressBack={() => actionBackButton(false)}
                                 continueText={
-                                    values.step > 0 ? "Buat Deposit" : "Lanjut"
+                                    values?.step > 0 ? "Buat Deposit" : "Lanjut"
                                 }
                                 disableContinue={
-                                    !stepsDone.includes(values.step)
+                                    !stepsDone?.includes(values?.step)
                                 }
-                                isContinueIcon={values.step < 1}
+                                isContinueIcon={values?.step < 1}
                             />
                         )}
                 </View>

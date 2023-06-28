@@ -111,7 +111,7 @@ export default function LastStepPopUp({
             label: "Kategori Alasan Penolakan",
             isRequire: true,
             isError: false,
-            value: closedLostValueOnChange.dropdownValue,
+            value: closedLostValueOnChange?.dropdownValue,
             // onChange: closedLostValueOnChange.dropdownOnchange,
             type: "dropdown",
             dropdown: {
@@ -127,7 +127,7 @@ export default function LastStepPopUp({
                 ],
                 placeholder: "Pilih Alasan",
                 onChange: (value: any) => {
-                    closedLostValueOnChange.dropdownOnchange(value);
+                    closedLostValueOnChange?.dropdownOnchange(value);
                 }
             }
         },
@@ -136,8 +136,8 @@ export default function LastStepPopUp({
             isRequire: true,
             isError: false,
             type: "area",
-            onChange: closedLostValueOnChange.areaOnChange,
-            value: closedLostValueOnChange.areaValue
+            onChange: closedLostValueOnChange?.areaOnChange,
+            value: closedLostValueOnChange?.areaValue
         }
     ];
 
@@ -300,8 +300,8 @@ export default function LastStepPopUp({
                             isLoading={isLoading}
                             disable={
                                 !(
-                                    !!closedLostValueOnChange.areaValue &&
-                                    !!closedLostValueOnChange.dropdownValue
+                                    !!closedLostValueOnChange?.areaValue &&
+                                    !!closedLostValueOnChange?.dropdownValue
                                 )
                             }
                             onPress={() => onPressSubmit(lastStepPicked)}

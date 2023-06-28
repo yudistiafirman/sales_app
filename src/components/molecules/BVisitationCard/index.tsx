@@ -124,23 +124,23 @@ export default function BVisitationCard({
                         <View style={{ flex: 1 }}>
                             <HighlightText
                                 fontSize={nameSize}
-                                name={item.name}
+                                name={item?.name}
                                 searchQuery={searchQuery}
                                 numberOfLines={2}
                             />
                         </View>
                         <PillStatus
-                            pilStatus={item.pilStatus}
+                            pilStatus={item?.pilStatus}
                             color={
-                                item.pilStatus === "Belum Selesai"
+                                item?.pilStatus === "Belum Selesai"
                                     ? colors.lightGray
                                     : undefined
                             }
                         />
                     </View>
-                    {item.picOrCompanyName ? (
+                    {item?.picOrCompanyName ? (
                         <>
-                            <Text>{item.picOrCompanyName}</Text>
+                            <Text>{item?.picOrCompanyName}</Text>
                             <BSpacer size="verySmall" />
                         </>
                     ) : (
@@ -148,26 +148,26 @@ export default function BVisitationCard({
                     )}
                     <BLocationText
                         color={locationTextColor}
-                        location={item.location}
+                        location={item?.location}
                     />
-                    {item.pilNames && (
+                    {item?.pilNames && (
                         <PillNames
                             pillColor={pillColor}
-                            pilNames={item.pilNames}
+                            pilNames={item?.pilNames}
                             searchQuery={searchQuery}
                         />
                     )}
                     <View
                         style={[
                             style.row,
-                            item.time || item.unit || item.status
+                            item?.time || item?.unit || item?.status
                                 ? style.bottom
                                 : null
                         ]}
                     >
-                        <Unit unit={item.unit} />
-                        <Time time={item.time} />
-                        <VisitStatus status={item.status} />
+                        <Unit unit={item?.unit} />
+                        <Time time={item?.time} />
+                        <VisitStatus status={item?.status} />
                     </View>
                 </View>
                 <View style={style.rightSide}>
@@ -175,7 +175,7 @@ export default function BVisitationCard({
                 </View>
             </TouchableOpacity>
             {item?.lonlat?.latitude &&
-                item?.lonlat.longitude &&
+                item?.lonlat?.longitude &&
                 actionButton !== null && (
                     <View style={style.location}>
                         <BButtonPrimary
@@ -183,7 +183,7 @@ export default function BVisitationCard({
                             titleStyle={style.locationTextButton}
                             title="Lihat Peta"
                             isOutline
-                            onPress={() => actionButton(item.lonlat)}
+                            onPress={() => actionButton(item?.lonlat)}
                         />
                     </View>
                 )}

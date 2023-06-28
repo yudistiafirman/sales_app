@@ -77,7 +77,7 @@ function ThirdStep() {
     };
 
     const onChangeCompetitor = (key: keyof Competitor) => (text: string) => {
-        let current: Competitor = { ...visitationData.currentCompetitor };
+        let current: Competitor = { ...visitationData?.currentCompetitor };
         current = {
             ...current,
             [key]: text
@@ -99,9 +99,9 @@ function ThirdStep() {
             type: "dropdown",
             dropdown: {
                 items: STAGE_PROJECT,
-                placeholder: visitationData.stageProject
+                placeholder: visitationData?.stageProject
                     ? STAGE_PROJECT.find(
-                          (it) => it.value === visitationData.stageProject
+                          (it) => it?.value === visitationData?.stageProject
                       )?.label ?? ""
                     : "Fase Proyek",
                 onChange: (value: any) => {
@@ -117,9 +117,9 @@ function ThirdStep() {
             type: "dropdown",
             dropdown: {
                 items: TYPE_PROJECT,
-                placeholder: visitationData.typeProject
+                placeholder: visitationData?.typeProject
                     ? TYPE_PROJECT.find(
-                          (it) => it.value === visitationData.typeProject
+                          (it) => it?.value === visitationData?.typeProject
                       )?.label ?? ""
                     : "Tipe Proyek",
                 onChange: (value: any) => {
@@ -135,15 +135,15 @@ function ThirdStep() {
             isRequire: true,
             type: "comboDropdown",
             // onChange: onChange('estimationDate'),
-            value: visitationData.estimationDate,
+            value: visitationData?.estimationDate,
             comboDropdown: {
                 itemsOne: WEEK_LIST,
                 itemsTwo: MONTH_LIST,
-                valueOne: visitationData.estimationDate?.estimationWeek,
-                valueTwo: visitationData.estimationDate?.estimationMonth,
+                valueOne: visitationData?.estimationDate?.estimationWeek,
+                valueTwo: visitationData?.estimationDate?.estimationMonth,
                 onChangeOne: (value: any) => {
                     const estimateionDate = {
-                        ...visitationData.estimationDate
+                        ...visitationData?.estimationDate
                     };
                     estimateionDate.estimationWeek = value;
                     dispatch(
@@ -155,7 +155,7 @@ function ThirdStep() {
                 },
                 onChangeTwo: (value: any) => {
                     const estimateionDate = {
-                        ...visitationData.estimationDate
+                        ...visitationData?.estimationDate
                     };
                     estimateionDate.estimationMonth = value;
                     dispatch(
@@ -179,7 +179,7 @@ function ThirdStep() {
             isError: false,
             type: "cardOption",
             onChange: onChange("paymentType"),
-            value: visitationData.paymentType,
+            value: visitationData?.paymentType,
             options: [
                 {
                     title: "Cash Before Delivery",
@@ -206,7 +206,7 @@ function ThirdStep() {
             type: "area",
             placeholder: "Tulis catatan di sini",
             onChange: onChange("notes"),
-            value: visitationData.notes
+            value: visitationData?.notes
         }
     ];
 
@@ -218,9 +218,9 @@ function ThirdStep() {
             type: "textInput",
             placeholder: "Nama pesaing",
             onChange: (event) => {
-                onChangeCompetitor("name")(event.nativeEvent.text);
+                onChangeCompetitor("name")(event?.nativeEvent?.text);
             },
-            value: visitationData.currentCompetitor.name
+            value: visitationData?.currentCompetitor?.name
         }
     ];
 
@@ -234,7 +234,7 @@ function ThirdStep() {
             onChange: (val) => {
                 onChangeCompetitor("problem")(val);
             },
-            value: visitationData.currentCompetitor.problem
+            value: visitationData?.currentCompetitor?.problem
         },
         {
             label: "Harapan apa yang diinginkan dari BRIK?",
@@ -245,7 +245,7 @@ function ThirdStep() {
             onChange: (val) => {
                 onChangeCompetitor("hope")(val);
             },
-            value: visitationData.currentCompetitor.hope
+            value: visitationData?.currentCompetitor?.hope
         }
     ];
 
@@ -259,7 +259,7 @@ function ThirdStep() {
 
     const deleteProduct = (index: number) => {
         const { products } = visitationData;
-        const restProducts = products.filter((o, i) => index !== i);
+        const restProducts = products?.filter((o, i) => index !== i);
         dispatch(
             updateDataVisitation({
                 type: "products",
@@ -270,20 +270,21 @@ function ThirdStep() {
 
     const onSelectProduct = useCallback(
         ({ quantity, pouringMethod }) => {
-            const newArray = [
-                ...visitationData.products,
-                { ...choosenProduct, quantity, pouringMethod }
-            ];
-            const uniqueArray = newArray.reduce((acc, obj) => {
-                if (!acc[obj.id]) {
-                    acc[obj.id] = obj;
+            let newArray;
+            if (visitationData?.products)
+                newArray = [...visitationData.products];
+
+            newArray = [{ ...choosenProduct, quantity, pouringMethod }];
+            const uniqueArray = newArray?.reduce((acc, obj) => {
+                if (!acc[obj?.id]) {
+                    acc[obj?.id] = obj;
                 }
                 return acc;
             }, {} as { [id: number]: any });
             dispatch(
                 updateDataVisitation({
                     type: "products",
-                    value: Object.values(uniqueArray)
+                    value: Object?.values(uniqueArray)
                 })
             );
             setIsVisible(false);
@@ -299,8 +300,8 @@ function ThirdStep() {
         };
     }, [
         listenerCallback,
-        visitationData.stageProject,
-        visitationData.typeProject
+        visitationData?.stageProject,
+        visitationData?.typeProject
         // visitationData.currentCompetitor,
     ]);
 
@@ -312,13 +313,17 @@ function ThirdStep() {
                 onPress={() => {
                     const coordinate = {
                         longitude:
-                            visitationData.locationAddress.lon !== 0
-                                ? Number(visitationData.locationAddress?.lon)
-                                : Number(visitationData.createdLocation?.lon),
+                            visitationData?.locationAddress?.lon !== 0
+                                ? Number(visitationData?.locationAddress?.lon)
+                                : Number(
+                                      visitationData?.createdLocation?.lon || 0
+                                  ),
                         latitude:
-                            visitationData.locationAddress.lat !== 0
-                                ? Number(visitationData.locationAddress?.lat)
-                                : Number(visitationData.createdLocation?.lat)
+                            visitationData?.locationAddress?.lat !== 0
+                                ? Number(visitationData?.locationAddress?.lat)
+                                : Number(
+                                      visitationData?.createdLocation?.lat || 0
+                                  )
                     };
                     navigation.navigate(ALL_PRODUCT, {
                         coordinate,
@@ -344,10 +349,10 @@ function ThirdStep() {
                 <TouchableOpacity
                     style={styles.touchable}
                     onPress={() => {
-                        const distance = visitationData.locationAddress
+                        const distance = visitationData?.locationAddress
                             ?.distance?.value
-                            ? visitationData.locationAddress?.distance?.value
-                            : visitationData.createdLocation?.distance?.value;
+                            ? visitationData?.locationAddress?.distance?.value
+                            : visitationData?.createdLocation?.distance?.value;
                         navigation.navigate(SEARCH_PRODUCT, {
                             isGobackAfterPress: true,
                             distance
@@ -365,17 +370,17 @@ function ThirdStep() {
                 />
             </View>
             <BSpacer size="extraSmall" />
-            {visitationData.products?.length ? (
+            {visitationData?.products?.length ? (
                 <>
                     <ScrollView
                         horizontal
                         style={Platform.OS !== "android" && { zIndex: -1 }}
                     >
-                        {visitationData.products?.map((val, index) => (
+                        {visitationData?.products?.map((val, index) => (
                             <React.Fragment key={index}>
                                 <ProductChip
-                                    name={val.display_name}
-                                    category={val.Category}
+                                    name={val?.display_name}
+                                    category={val?.Category}
                                     onDelete={() => deleteProduct(index)}
                                 />
                             </React.Fragment>

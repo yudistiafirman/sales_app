@@ -71,7 +71,7 @@ function App() {
                             navigationRef?.current.getCurrentRoute().name;
                 }}
                 onStateChange={async () => {
-                    const previousRouteName = routeNameRef.current;
+                    const previousRouteName = routeNameRef?.current;
                     const currentRouteName =
                         navigationRef?.current &&
                         navigationRef?.current?.getCurrentRoute()
@@ -88,9 +88,9 @@ function App() {
                 }}
             >
                 <StatusBar
-                    barStyle={"dark-content"}
-                    backgroundColor={"transparent"}
-                    translucent={true}
+                    barStyle="dark-content"
+                    backgroundColor="transparent"
+                    translucent
                 />
                 <PaperProvider theme={paperTheme}>
                     <ReduxProvider store={store}>

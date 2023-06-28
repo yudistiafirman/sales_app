@@ -79,10 +79,9 @@ function payloadMapper(
     if (values?.existingLocationId) {
         payload.project.locationAddressId = values?.existingLocationId;
     }
-
     if (values?.locationAddress?.formattedAddress) {
         payload.project.location.formattedAddress =
-            values.locationAddress?.formattedAddress;
+            values?.locationAddress?.formattedAddress;
     }
     if (values?.locationAddress?.longitude) {
         payload.project.location.lon = values?.locationAddress?.longitude;
@@ -220,7 +219,7 @@ function Fifth() {
 
     useEffect(() => {
         crashlytics().log(`${CREATE_VISITATION}-Step5`);
-    }, [visitationData.images]);
+    }, [visitationData?.images]);
 
     useEffect(() => {
         DeviceEventEmitter.addListener(
@@ -272,11 +271,14 @@ function Fifth() {
                 if (clicked === "0") {
                     clicked = "1";
                     let response;
-                    if (uploadedFilesResponse.length === 0) {
-                        const photoFiles = visitationData.images
-                            ?.filter((v, i) => v.file !== null)
-                            .map((photo) => ({
-                                ...photo.file,
+                    if (
+                        !uploadedFilesResponse ||
+                        uploadedFilesResponse?.length === 0
+                    ) {
+                        const photoFiles = visitationData?.images
+                            ?.filter((v, i) => v?.file !== null)
+                            ?.map((photo) => ({
+                                ...photo?.file,
                                 uri: photo?.file?.uri?.replace(
                                     "file:",
                                     "file://"
@@ -284,7 +286,7 @@ function Fifth() {
                             }));
 
                         let photoResponse;
-                        if (photoFiles && photoFiles.length > 0) {
+                        if (photoFiles && photoFiles?.length > 0) {
                             photoResponse = await uploadFileImage(
                                 photoFiles,
                                 "visitation"
@@ -299,20 +301,21 @@ function Fifth() {
                             photoResponse?.data?.success !== false
                         ) {
                             photoResponse?.data?.data?.forEach((photo: any) => {
-                                const photoName = photo.name;
-                                const foundObject = visitationData.images?.find(
-                                    (obj) => obj?.file?.name.includes(photoName)
-                                );
+                                const photoName = photo?.name;
+                                const foundObject =
+                                    visitationData?.images?.find((obj) =>
+                                        obj?.file?.name?.includes(photoName)
+                                    );
                                 if (foundObject) {
-                                    files.push({
-                                        id: photo.id,
-                                        type: foundObject.type
+                                    files?.push({
+                                        id: photo?.id,
+                                        type: foundObject?.type
                                     });
                                 }
                             });
                         }
                         dispatch(setuploadedFilesResponse(files));
-                        if (files && files.length > 0) payload.files = files;
+                        if (files && files?.length > 0) payload.files = files;
                         const payloadData: {
                             payload: payloadPostType;
                             visitationId?: string;
@@ -330,7 +333,7 @@ function Fifth() {
                         } else {
                             response = await putVisitation(
                                 payloadData,
-                                payloadData.visitationId
+                                payloadData?.visitationId
                             ).catch((err) => Error(err));
                         }
                         if (
@@ -366,7 +369,7 @@ function Fifth() {
                     } else {
                         if (
                             uploadedFilesResponse &&
-                            uploadedFilesResponse.length > 0
+                            uploadedFilesResponse?.length > 0
                         )
                             payload.files = uploadedFilesResponse;
                         const payloadData: {
@@ -387,7 +390,7 @@ function Fifth() {
                         } else {
                             response = await putVisitation(
                                 payloadData,
-                                payloadData.visitationId
+                                payloadData?.visitationId
                             ).catch((err) => Error(err));
                         }
 
@@ -469,21 +472,21 @@ function Fifth() {
                 isVisible={isLastStepVisible}
                 setIsPopUpVisible={setIsLastStepVisible}
                 selectedDate={
-                    visitationData.selectedDate
-                        ? `${visitationData.selectedDate?.day}, ${visitationData.selectedDate?.prettyDate}`
+                    visitationData?.selectedDate
+                        ? `${visitationData?.selectedDate?.day}, ${visitationData?.selectedDate?.prettyDate}`
                         : ""
                 }
                 closedLostValueOnChange={{
                     dropdownOnchange: onChange("kategoriAlasan"),
-                    dropdownValue: visitationData.kategoriAlasan,
+                    dropdownValue: visitationData?.kategoriAlasan,
                     areaOnChange: onChange("alasanPenolakan"),
-                    areaValue: visitationData.alasanPenolakan
+                    areaValue: visitationData?.alasanPenolakan
                 }}
                 onPressSubmit={clicked === "0" ? onPressSubmit : undefined}
                 isLoading={isPostVisitationLoading || isUploadLoading}
             />
             <BGallery
-                picts={visitationData.images}
+                picts={visitationData?.images}
                 addMorePict={() =>
                     navigation.dispatch(
                         StackActions.push(CAMERA, {

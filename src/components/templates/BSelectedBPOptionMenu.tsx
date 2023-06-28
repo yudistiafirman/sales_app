@@ -80,7 +80,7 @@ function BSelectedBPOptionMenu({
         <View style={styles.parent}>
             <Text style={[styles.text, { color }]}>{pageTitle}</Text>
             {!updatedBatchingPlants ||
-                (updatedBatchingPlants.length <= 0 && (
+                (updatedBatchingPlants?.length <= 0 && (
                     <BSpacer size="extraSmall" />
                 ))}
             <Menu
@@ -105,7 +105,7 @@ function BSelectedBPOptionMenu({
                         }
                         onPress={
                             updatedBatchingPlants &&
-                            updatedBatchingPlants.length > 0
+                            updatedBatchingPlants?.length > 0
                                 ? () => setVisible(true)
                                 : () => checkUndefinedBatchingPlants()
                         }
@@ -124,7 +124,7 @@ function BSelectedBPOptionMenu({
                                 setVisible(false);
                             }}
                         >
-                            {el.name}
+                            {el?.name}
                         </MenuItem>
                         <MenuDivider />
                     </React.Fragment>

@@ -226,9 +226,9 @@ export default function BNestedProductCard({
                     item?.brikNumber;
                 const totalPrice = item?.totalPrice
                     ? item?.totalPrice
-                    : item?.products && item?.products.length > 0
+                    : item?.products && item?.products?.length > 0
                     ? item?.products
-                          ?.map((it) => it.totalPrice)
+                          ?.map((it) => it?.totalPrice)
                           ?.reduce((a, b) => a + b)
                     : 0;
                 const products =
@@ -251,10 +251,10 @@ export default function BNestedProductCard({
                                 {isOption && (
                                     <RadioButton
                                         uncheckedColor={colors.border.altGrey}
-                                        value={item.id}
+                                        value={item?.id}
                                         color={colors.primary}
                                         status={
-                                            item.isSelected
+                                            item?.isSelected
                                                 ? "checked"
                                                 : "unchecked"
                                         }
@@ -307,7 +307,7 @@ export default function BNestedProductCard({
                                         </View>
                                     )}
                                 </View>
-                                {products.length > 0 && (
+                                {products && products?.length > 0 && (
                                     <TouchableWithoutFeedback
                                         onPress={() => onExpand(index, item)}
                                     >

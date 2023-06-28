@@ -68,19 +68,29 @@ export const operationSlice = createSlice({
                 inputType: keyof InputsValue;
                 value: string;
             }>
-        ) => ({
-            ...state,
-            inputsValue: {
-                ...state.inputsValue,
-                [actions.payload.inputType]: actions.payload.value
+        ) => {
+            if (actions.payload?.inputType) {
+                return {
+                    ...state,
+                    inputsValue: {
+                        ...state.inputsValue,
+                        [actions.payload.inputType]: actions.payload?.value
+                    }
+                };
             }
-        }),
+            return {
+                ...state,
+                inputsValue: {
+                    ...state.inputsValue
+                }
+            };
+        },
         onChangeProjectDetails: (
             state,
             actions: PayloadAction<{ projectDetails: OperationProjectDetails }>
         ) => ({
             ...state,
-            projectDetails: actions.payload.projectDetails
+            projectDetails: actions.payload?.projectDetails
         }),
         setOperationPhoto: (
             state,
@@ -90,9 +100,11 @@ export const operationSlice = createSlice({
             }>
         ) => {
             let currentImages = [...state.photoFiles];
-            if (actions.payload.withoutAddButton)
-                currentImages = currentImages.filter((it) => it.file !== null);
-            currentImages.push(actions.payload.file);
+            if (actions.payload?.withoutAddButton)
+                currentImages = currentImages?.filter(
+                    (it) => it?.file !== null
+                );
+            currentImages?.push(actions.payload?.file);
             return {
                 ...state,
                 photoFiles: [...currentImages]
@@ -101,18 +113,25 @@ export const operationSlice = createSlice({
         setAllOperationPhoto: (
             state,
             actions: PayloadAction<{ file: LocalFileType[] }>
-        ) => ({
-            ...state,
-            photoFiles: [...actions.payload.file]
-        }),
+        ) => {
+            if (actions.payload?.file) {
+                return {
+                    ...state,
+                    photoFiles: [...actions.payload.file]
+                };
+            }
+            return {
+                ...state
+            };
+        },
         removeOperationPhoto: (
             state,
             actions: PayloadAction<{ index: number }>
         ) => {
             let currentImages = [...state.photoFiles];
-            currentImages = currentImages.filter((it) => it.file !== null);
-            currentImages.splice(actions.payload.index, 1);
-            currentImages.unshift({ file: null });
+            currentImages = currentImages?.filter((it) => it?.file !== null);
+            currentImages?.splice(actions.payload?.index, 1);
+            currentImages?.unshift({ file: null });
             return {
                 ...state,
                 photoFiles: [...currentImages]
@@ -123,16 +142,16 @@ export const operationSlice = createSlice({
             actions: PayloadAction<{ index: number; attachType: string }>
         ) => {
             const newPhotoFiles: LocalFileType[] = [];
-            state.photoFiles.forEach((item) => {
+            state?.photoFiles?.forEach((item) => {
                 let selectedItem: LocalFileType | undefined = { ...item };
-                if (selectedItem.attachType === actions.payload.attachType) {
+                if (selectedItem?.attachType === actions.payload?.attachType) {
                     selectedItem = {
                         file: null,
-                        attachType: actions.payload.attachType
+                        attachType: actions.payload?.attachType
                     };
                 }
 
-                if (selectedItem) newPhotoFiles.push(selectedItem);
+                if (selectedItem) newPhotoFiles?.push(selectedItem);
             });
             return {
                 ...state,

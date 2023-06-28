@@ -84,28 +84,28 @@ export default function CalendarScreen() {
             })
                 .then((response) => {
                     const visitationData = response?.data?.data || [];
-                    const visitMapped = visitationData.reduce(
+                    const visitMapped = visitationData?.reduce(
                         (
                             acc: { [key: string]: customerDataInterface[] },
                             obj: visitationListResponse
                         ) => {
-                            const formatedDate = moment(obj.dateVisit).format(
+                            const formatedDate = moment(obj?.dateVisit).format(
                                 "yyyy-MM-DD"
                             );
 
                             if (!acc[formatedDate]) {
                                 acc[formatedDate] = [];
                             }
-                            acc[formatedDate].push({
-                                display_name: obj.project?.Company?.displayName,
-                                name: obj.project?.name,
-                                // location: obj.project.locationAddress.district,
-                                email: obj.project?.Pic?.email,
-                                phone: obj.project?.Pic?.phone,
-                                position: obj.project?.Pic?.position,
-                                type: obj.project?.Pic?.type,
-                                picName: obj.project?.Pic?.name,
-                                location: obj.project?.LocationAddress?.line1
+                            acc[formatedDate]?.push({
+                                display_name:
+                                    obj?.project?.Company?.displayName,
+                                name: obj?.project?.name,
+                                email: obj?.project?.Pic?.email,
+                                phone: obj?.project?.Pic?.phone,
+                                position: obj?.project?.Pic?.position,
+                                type: obj?.project?.Pic?.type,
+                                picName: obj?.project?.Pic?.name,
+                                location: obj?.project?.LocationAddress?.line1
                             });
                             return acc;
                         },
@@ -114,7 +114,7 @@ export default function CalendarScreen() {
                     dispatch(setVisitationMapped(visitMapped));
                     const newMarkedDate = { ...markedDate };
                     if (visitMapped)
-                        Object.keys(visitMapped).forEach((date) => {
+                        Object?.keys(visitMapped)?.forEach((date) => {
                             newMarkedDate[date] = {
                                 ...newMarkedDate[date],
                                 marked: true
@@ -159,20 +159,20 @@ export default function CalendarScreen() {
 
     const onDayPress = useCallback(
         (day: DateData) => {
-            const custData = visitationCalendarMapped[day.dateString] || [];
+            const custData = visitationCalendarMapped[day?.dateString] || [];
             setCustomerDatas(custData);
             const newMarkedDate = { ...markedDate };
             if (newMarkedDate)
-                Object.keys(newMarkedDate).forEach((date) => {
-                    if (newMarkedDate[date].selected) {
+                Object?.keys(newMarkedDate)?.forEach((date) => {
+                    if (newMarkedDate[date]?.selected) {
                         newMarkedDate[date] = {
                             ...newMarkedDate[date],
                             selected: false
                         };
                     }
                 });
-            newMarkedDate[day.dateString] = {
-                ...newMarkedDate[day.dateString],
+            newMarkedDate[day?.dateString] = {
+                ...newMarkedDate[day?.dateString],
                 selected: true
             };
             dispatch(setMarkedData(newMarkedDate));
@@ -185,8 +185,8 @@ export default function CalendarScreen() {
         let day = null;
         let selectedDate = null;
         if (markedDate)
-            Object.keys(markedDate).forEach((key) => {
-                if (markedDate[key].selected) {
+            Object?.keys(markedDate)?.forEach((key) => {
+                if (markedDate[key]?.selected) {
                     try {
                         date = `${new Date(key).getDate()} ${new Date(
                             key
@@ -194,7 +194,7 @@ export default function CalendarScreen() {
                             month: "short"
                         })} ${new Date(key).getFullYear()}`;
                         const newDate = new Date(key);
-                        day = newDate.toLocaleDateString(locale(), {
+                        day = newDate?.toLocaleDateString(locale(), {
                             weekday: "long"
                         });
                     } catch (err) {
@@ -202,7 +202,7 @@ export default function CalendarScreen() {
                             key
                         ).toLocaleString()} ${new Date(key).getFullYear()}`;
                         const newDate = new Date(key);
-                        day = newDate.toLocaleDateString();
+                        day = newDate?.toLocaleDateString();
                     }
 
                     selectedDate = {
@@ -219,9 +219,9 @@ export default function CalendarScreen() {
     const onMonthPress = (dateData: DateData) => {
         setCustomerDatas([]);
         fetchVisitation({
-            month: dateData.month,
-            year: dateData.year,
-            fullDate: dateData.dateString
+            month: dateData?.month,
+            year: dateData?.year,
+            fullDate: dateData?.dateString
         });
     };
 
@@ -258,7 +258,7 @@ export default function CalendarScreen() {
                     renderItem={({ item }) => (
                         <ExpandableCustomerCard item={item} />
                     )}
-                    keyExtractor={(_, index) => index.toString()}
+                    keyExtractor={(_, index) => index?.toString()}
                 />
             </View>
             {selectedData ? (

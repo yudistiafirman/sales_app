@@ -59,7 +59,7 @@ function SearchProduct() {
         crashlytics().log(SEARCH_PRODUCT);
 
         if (routePage?.params) {
-            const { distance } = routePage.params;
+            const distance = routePage?.params?.distance;
             send("sendingParams", {
                 value: distance,
                 selectedBP: selectedBatchingPlant
@@ -77,7 +77,7 @@ function SearchProduct() {
     const onChangeText = (text: string) => {
         setSearchValue(text);
 
-        if (text.length === 0) {
+        if (text?.length === 0) {
             send("clearInput");
         } else {
             send("searchingProducts", { value: text });
@@ -123,7 +123,7 @@ function SearchProduct() {
 
     const onTabPress = ({ route }) => {
         const tabIndex = index === 0 ? 1 : 0;
-        if (route.key !== routes[index].key) {
+        if (route?.key !== routes[index]?.key) {
             send("onChangeTab", {
                 value: tabIndex,
                 selectedBP: selectedBatchingPlant

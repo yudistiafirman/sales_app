@@ -49,10 +49,10 @@ function stepHandler(
 ) {
     const { stepOne, stepTwo } = state;
 
-    if (stepOne?.purchaseOrders && stepOne?.purchaseOrders.length > 0) {
+    if (stepOne?.purchaseOrders && stepOne?.purchaseOrders?.length > 0) {
         setStepsDone((curr) => [...new Set(curr), 0]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 0));
+        setStepsDone((curr) => curr?.filter((num) => num !== 0));
     }
     if (
         stepTwo?.deliveryDate &&
@@ -65,7 +65,7 @@ function stepHandler(
     ) {
         setStepsDone((curr) => [...new Set(curr), 1]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 1));
+        setStepsDone((curr) => curr?.filter((num) => num !== 1));
     }
 }
 
@@ -81,7 +81,7 @@ function CreateScheduleScreen() {
     const stepRender = [<FirstStep />, <SecondStep />];
 
     const next = (nextStep: number) => async () => {
-        const totalStep = stepRender.length;
+        const totalStep = stepRender?.length;
         if (nextStep < totalStep && nextStep >= 0) {
             action.updateValue("step", nextStep);
         } else {
@@ -95,24 +95,24 @@ function CreateScheduleScreen() {
                     })
                 );
                 const payload: CreateSchedule = {
-                    saleOrderId: values.stepTwo?.salesOrder?.id,
-                    projectId: values.existingProjectID,
-                    purchaseOrderId: values.stepOne?.purchaseOrders[0].id,
+                    saleOrderId: values?.stepTwo?.salesOrder?.id,
+                    projectId: values?.existingProjectID,
+                    purchaseOrderId: values?.stepOne?.purchaseOrders[0]?.id,
                     quotationLetterId:
-                        values.stepOne?.purchaseOrders[0].quotationLetterId,
-                    quantity: values.stepTwo?.inputtedVolume, // volume inputted
+                        values?.stepOne?.purchaseOrders[0]?.quotationLetterId,
+                    quantity: values?.stepTwo?.inputtedVolume, // volume inputted
                     date: moment(
-                        `${values.stepTwo?.deliveryDate} ${values.stepTwo?.deliveryTime}`,
+                        `${values?.stepTwo?.deliveryDate} ${values?.stepTwo?.deliveryTime}`,
                         "DD/MM/yyyy HH:mm"
                     ).valueOf(), // date + time
-                    pouringMethod: values.stepTwo?.method,
+                    pouringMethod: values?.stepTwo?.method,
                     consecutive:
-                        values.stepTwo?.isConsecutive !== undefined
-                            ? values.stepTwo?.isConsecutive
+                        values?.stepTwo?.isConsecutive !== undefined
+                            ? values?.stepTwo?.isConsecutive
                             : false,
                     withTechnician:
-                        values.stepTwo?.hasTechnicalRequest !== undefined
-                            ? values.stepTwo?.hasTechnicalRequest
+                        values?.stepTwo?.hasTechnicalRequest !== undefined
+                            ? values?.stepTwo?.hasTechnicalRequest
                             : false,
                     status: "SUBMITTED",
                     batchingPlantId: authState.selectedBatchingPlant?.id
@@ -159,11 +159,11 @@ function CreateScheduleScreen() {
     };
 
     const actionBackButton = (directlyClose = false) => {
-        if (values.isSearchingPurchaseOrder === true) {
+        if (values?.isSearchingPurchaseOrder === true) {
             action.updateValue("isSearchingPurchaseOrder", false);
-        } else if (values.step > 0 && !directlyClose) {
-            next(values.step - 1)();
-        } else if (values.stepOne?.companyName) setPopupVisible(true);
+        } else if (values?.step > 0 && !directlyClose) {
+            next((values?.step || 0) - 1)();
+        } else if (values?.stepOne?.companyName) setPopupVisible(true);
         else navigation.goBack();
     };
 
@@ -179,7 +179,7 @@ function CreateScheduleScreen() {
 
     useHeaderTitleChanged({
         title:
-            values.isSearchingPurchaseOrder === true
+            values?.isSearchingPurchaseOrder === true
                 ? "Cari PT / Proyek"
                 : "Buat Jadwal",
         selectedBP: authState.selectedBatchingPlant
@@ -197,9 +197,9 @@ function CreateScheduleScreen() {
             );
             return () => backHandler.remove();
         }, [
-            values.step,
-            values.stepOne?.companyName,
-            values.isSearchingPurchaseOrder
+            values?.step,
+            values?.stepOne?.companyName,
+            values?.isSearchingPurchaseOrder
         ])
     );
 
@@ -213,7 +213,7 @@ function CreateScheduleScreen() {
     React.useEffect(() => {
         stepHandler(values, setStepsDone);
 
-        if (!values.stepTwo?.deliveryTime) {
+        if (!values?.stepTwo?.deliveryTime) {
             action.updateValueOnstep(
                 "stepTwo",
                 "deliveryTime",
@@ -224,27 +224,27 @@ function CreateScheduleScreen() {
 
     return (
         <>
-            {values.isSearchingPurchaseOrder === false && (
+            {values?.isSearchingPurchaseOrder === false && (
                 <BStepperIndicator
                     stepsDone={stepsDone}
                     stepOnPress={(pos: number) => {
                         next(pos)();
                     }}
-                    currentStep={values.step}
+                    currentStep={values?.step}
                     labels={labels}
                 />
             )}
 
             <BContainer>
                 <View style={styles.container}>
-                    {stepRender[values.step]}
+                    {stepRender[values?.step]}
                     <BSpacer size="extraSmall" />
                     {!keyboardVisible &&
-                        values.shouldScrollView &&
-                        values.step > -1 && (
+                        values?.shouldScrollView &&
+                        values?.step > -1 && (
                             <BBackContinueBtn
                                 onPressContinue={() => {
-                                    next(values.step + 1)();
+                                    next((values?.step || 0) + 1)();
                                     DeviceEventEmitter.emit(
                                         "CreateSchedule.continueButton",
                                         true
@@ -252,13 +252,13 @@ function CreateScheduleScreen() {
                                 }}
                                 onPressBack={() => actionBackButton(false)}
                                 continueText={
-                                    values.step > 0 ? "Buat Jadwal" : "Lanjut"
+                                    values?.step > 0 ? "Buat Jadwal" : "Lanjut"
                                 }
-                                unrenderBack={!(values.step > 0)}
+                                unrenderBack={!(values?.step > 0)}
                                 disableContinue={
-                                    !stepsDone.includes(values.step)
+                                    !stepsDone.includes(values?.step)
                                 }
-                                isContinueIcon={values.step < 1}
+                                isContinueIcon={values?.step < 1}
                             />
                         )}
                     <PopUpQuestion

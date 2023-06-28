@@ -70,7 +70,7 @@ function SecondStep() {
                     activeOutlineColor="gray"
                     value={
                         selectedDate
-                            ? `${selectedDate.day} , ${selectedDate.prettyDate}`
+                            ? `${selectedDate?.day} , ${selectedDate?.prettyDate}`
                             : ""
                     }
                     textColor={colors.textInput.input}

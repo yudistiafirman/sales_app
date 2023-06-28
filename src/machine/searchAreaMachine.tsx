@@ -143,29 +143,29 @@ const searchAreaMachine = createMachine(
     },
     {
         guards: {
-            searchLengthAccepted: (context, event) => event.payload.length > 2
+            searchLengthAccepted: (context, event) => event?.payload?.length > 2
         },
         actions: {
             assignCurrentLocationToContext: assign((context, event) => ({
-                longlat: event.data
+                longlat: event?.data
             })),
             assignSearchValue: assign((context, event) => ({
-                searchValue: event.payload,
+                searchValue: event?.payload,
                 loadPlaces: true
             })),
             assignResult: assign((context, event) => ({
-                result: event.data,
+                result: event?.data,
                 loadPlaces: false
             })),
             clearResult: assign((context, event) => ({
                 result: []
             })),
             assignPlacesId: assign((context, event) => ({
-                placesId: event.payload.place_id,
-                formattedAddress: event.payload.description
+                placesId: event?.payload?.place_id,
+                formattedAddress: event?.payload?.description
             })),
             handleErrorGettingLocation: assign((context, event) => ({
-                errorMessage: event.data.message,
+                errorMessage: event?.data?.message,
                 loadPlaces: false,
                 result: []
             })),
@@ -191,8 +191,9 @@ const searchAreaMachine = createMachine(
 
                 try {
                     const response = await getCurrentPosition();
-                    const { coords } = response;
-                    const { longitude, latitude } = coords;
+                    const coords = response?.coords;
+                    const longitude = coords?.longitude;
+                    const latitude = coords?.latitude;
                     return { longitude, latitude };
                 } catch (error) {
                     throw new Error(error);
@@ -201,34 +202,37 @@ const searchAreaMachine = createMachine(
             getLocationBySearch: async (context, event) => {
                 try {
                     const response = await searchLocation(
-                        context.searchValue,
-                        context.batchingPlantName
+                        context?.searchValue,
+                        context?.batchingPlantName
                     );
-                    return response.data.result;
+                    return response?.data?.result;
                 } catch (error) {
                     throw new Error(error);
                 }
             },
             gettingPlacesId: async (context, event) => {
                 try {
-                    const response = await searchLocationById(context.placesId);
+                    const response = await searchLocationById(
+                        context?.placesId
+                    );
 
-                    return response.data.result;
+                    return response?.data?.result;
                 } catch (error) {
                     throw new Error(error);
                 }
             },
             getLocationByCoordinate: async (context, e) => {
                 try {
-                    const { longitude, latitude } = context.longlat;
+                    const longitude = context?.longlat?.longitude;
+                    const latitude = context?.longlat?.latitude;
                     const response = await getLocationCoordinates(
                         // '',
                         longitude,
                         latitude,
-                        context.batchingPlantName
+                        context?.batchingPlantName
                     );
 
-                    return response.result;
+                    return response?.result;
                 } catch (error) {
                     throw new Error(error);
                 }

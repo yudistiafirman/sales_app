@@ -128,8 +128,8 @@ function BList({
                 return defaultText;
             };
             const listTextData = [`Payment Type: ${paymentType()}`];
-            const availableDebit = item.pendingBalance;
-            const availableCredit = item.creditPendingBalance;
+            const availableDebit = item?.pendingBalance;
+            const availableCredit = item?.creditPendingBalance;
             const chipBgColor =
                 item?.type === INDIVIDU
                     ? colors.status.lightYellow
@@ -137,7 +137,7 @@ function BList({
             const onPressCardCheck = onPressCard || null;
             return (
                 <BCard
-                    avatarText={avatarText.toUpperCase()}
+                    avatarText={avatarText?.toUpperCase()}
                     title={title}
                     chipStartIcon={
                         <Icon
@@ -194,7 +194,7 @@ function BList({
                         }
                         right={
                             searchQuery &&
-                            searchQuery.length > 2 && (
+                            searchQuery?.length > 2 && (
                                 <TextInput.Icon
                                     onPress={onClearValue}
                                     size={layout.pad.lg}
@@ -207,7 +207,7 @@ function BList({
             </View>
 
             <BSpacer size="extraSmall" />
-            {routes.length > 0 && (
+            {routes && routes?.length > 0 && (
                 <BTabSections
                     swipeEnabled={false}
                     navigationState={{ index: itemIndex, routes }}
@@ -224,7 +224,7 @@ function BList({
                                 paddingTop: layout.pad.lg
                             }}
                             onRefresh={onRefresh}
-                            keyExtractor={(item, index) => index.toString()}
+                            keyExtractor={(item, index) => index?.toString()}
                             onEndReached={onEndReached}
                             ListFooterComponent={
                                 isLoadMore ? <BShimmerAvatarList /> : null

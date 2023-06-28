@@ -5,12 +5,12 @@ function validatePicForm(payload: Partial<PicFormInitialState>) {
     const { name, position, email, phone } = payload;
     if (!name) {
         errors.errorName = "Nama harus diisi";
-    } else if (name.length < 4) {
+    } else if (name?.length < 4) {
         errors.errorName = "Nama tidak boleh kurang dari 4 karakter";
     }
     if (!position) {
         errors.errorPosition = "Jabatan harus diisi";
-    } else if (position.length < 4) {
+    } else if (position?.length < 4) {
         errors.errorPosition = "Jabatan tidak boleh kurang dari 4 karakter";
     }
     if (!email) {

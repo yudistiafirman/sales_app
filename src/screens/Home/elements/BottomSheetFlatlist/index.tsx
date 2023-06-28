@@ -84,7 +84,7 @@ export default function BottomSheetFlatlist({
         <BottomSheetFlatList
             style={style.flatListContainer}
             data={data}
-            keyExtractor={(item, index) => `${item.name}-${index}`}
+            keyExtractor={(item, index) => `${item?.name}-${index}`}
             renderItem={({ item }) => (
                 <BVisitationCard
                     item={item}

@@ -52,8 +52,9 @@ function BInvoiceCommonFooter({ footerItems }: IBInvoiceCommonFooter) {
         <>
             <BSpacer size="small" />
             <View style={[styles.container]}>
-                {footerItems.length > 0 &&
-                    footerItems.map((v, i) => (
+                {footerItems &&
+                    footerItems?.length > 0 &&
+                    footerItems?.map((v, i) => (
                         <React.Fragment key={i}>
                             <View
                                 style={[styles.item, { ...v.itemViewStyles }]}
@@ -65,7 +66,7 @@ function BInvoiceCommonFooter({ footerItems }: IBInvoiceCommonFooter) {
                                             { ...v.itemTitleStyles }
                                         ]}
                                     >
-                                        {v.itemTitle}
+                                        {v?.itemTitle}
                                     </Text>
                                 </ScrollView>
                                 <BSpacer size="extraSmall" />
@@ -81,7 +82,7 @@ function BInvoiceCommonFooter({ footerItems }: IBInvoiceCommonFooter) {
                                             }
                                         ]}
                                     >
-                                        {v.itemValue}
+                                        {v?.itemValue}
                                     </Text>
                                 </ScrollView>
                             </View>

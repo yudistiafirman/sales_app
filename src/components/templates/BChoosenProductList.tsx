@@ -66,21 +66,21 @@ function ChoosenProductList<ProductData extends Products>({
     const renderItem = useCallback(
         ({ item, index }) => {
             const checked = selectedProducts?.findIndex(
-                (val) => val.id === item.id
+                (val) => val?.id === item?.id
             );
             const inputsSelection: Input[] = [
                 {
                     label: "Volume",
                     isRequire: true,
                     type: "quantity",
-                    value: item?.quantity.toString(),
+                    value: item?.quantity?.toString(),
                     onChange: (value: string) => onChangeQuantity(index, value)
                 }
             ];
             const productName = `${item?.Product?.category?.Parent?.name} ${item?.Product?.displayName} ${item?.Product?.category?.name}`;
             const offeringPrice = item?.offeringPrice;
             const quantity =
-                item?.quantity.toString()[0] === "0" ? 0 : item?.quantity;
+                item?.quantity?.toString()[0] === "0" ? 0 : item?.quantity;
             const totalPrice =
                 item?.quantity && item?.offeringPrice
                     ? offeringPrice * quantity

@@ -202,8 +202,8 @@ export const visitationSlice = createSlice({
             actions: PayloadAction<{ value: number }>
         ) => {
             let filteredImages = [...state.images];
-            filteredImages = filteredImages.filter(
-                (v, i) => i !== actions.payload.value
+            filteredImages = filteredImages?.filter(
+                (v, i) => i !== actions.payload?.value
             );
             return {
                 ...state,
@@ -215,139 +215,139 @@ export const visitationSlice = createSlice({
             actions: PayloadAction<{ value: boolean }>
         ) => ({
             ...state,
-            useSearchedAddress: actions.payload.value
+            useSearchedAddress: actions.payload?.value
         }),
         setSearchedAddress: (
             state,
             actions: PayloadAction<{ value: string }>
         ) => ({
             ...state,
-            searchedAddress: actions.payload.value
+            searchedAddress: actions.payload?.value
         }),
         updateDataVisitation: (
             state,
             { payload }: { payload: { type: any; value: any } }
         ) => {
-            switch (payload.type) {
+            switch (payload?.type) {
                 case "createdLocation":
                     return {
                         ...state,
-                        createdLocation: payload.value
+                        createdLocation: payload?.value
                     };
                 case "locationAddress":
                     return {
                         ...state,
-                        locationAddress: payload.value
+                        locationAddress: payload?.value
                     };
                 case "existingLocationId":
                     return {
                         ...state,
-                        existingLocationId: payload.value
+                        existingLocationId: payload?.value
                     };
                 case "companyName":
                     return {
                         ...state,
-                        companyName: payload.value
+                        companyName: payload?.value
                     };
                 case "customerType":
                     return {
                         ...state,
-                        customerType: payload.value
+                        customerType: payload?.value
                     };
                 case "projectName":
                     return {
                         ...state,
-                        projectName: payload.value
+                        projectName: payload?.value
                     };
                 case "projectId":
                     return {
                         ...state,
-                        projectId: payload.value
+                        projectId: payload?.value
                     };
                 case "location":
                     return {
                         ...state,
-                        location: payload.value
+                        location: payload?.value
                     };
                 case "pics":
                     return {
                         ...state,
-                        pics: payload.value
+                        pics: payload?.value
                     };
                 case "competitors":
                     return {
                         ...state,
-                        competitors: payload.value
+                        competitors: payload?.value
                     };
                 case "currentCompetitor":
                     return {
                         ...state,
-                        currentCompetitor: payload.value
+                        currentCompetitor: payload?.value
                     };
                 case "options":
                     return {
                         ...state,
-                        options: payload.value
+                        options: payload?.value
                     };
                 case "visitationId":
                     return {
                         ...state,
-                        visitationId: payload.value
+                        visitationId: payload?.value
                     };
                 case "existingOrderNum":
                     return {
                         ...state,
-                        existingOrderNum: payload.value
+                        existingOrderNum: payload?.value
                     };
                 case "stageProject":
                     return {
                         ...state,
-                        stageProject: payload.value
+                        stageProject: payload?.value
                     };
                 case "typeProject":
                     return {
                         ...state,
-                        typeProject: payload.value
+                        typeProject: payload?.value
                     };
                 case "products":
                     return {
                         ...state,
-                        products: payload.value
+                        products: payload?.value
                     };
                 case "estimationDate":
                     return {
                         ...state,
-                        estimationDate: payload.value
+                        estimationDate: payload?.value
                     };
                 case "paymentType":
                     return {
                         ...state,
-                        paymentType: payload.value
+                        paymentType: payload?.value
                     };
                 case "notes":
                     return {
                         ...state,
-                        notes: payload.value
+                        notes: payload?.value
                     };
                 case "selectedDate":
                     return {
                         ...state,
-                        selectedDate: payload.value
+                        selectedDate: payload?.value
                     };
                 case "images":
                     return {
                         ...state,
-                        images: payload.value
+                        images: payload?.value
                     };
                 case "kategoriAlasan":
                     return {
                         ...state,
-                        kategoriAlasan: payload.value
+                        kategoriAlasan: payload?.value
                     };
                 case "alasanPenolakan":
                     return {
                         ...state,
-                        alasanPenolakan: payload.value
+                        alasanPenolakan: payload?.value
                     };
                 default:
                     return {

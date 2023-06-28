@@ -79,45 +79,45 @@ export const modalSlice = createSlice({
                 isPrimaryButtonLoading,
                 isOutlineButtonLoading
             } = state.popUpOptions;
-            if (payload.isRenderActions) {
+            if (payload?.isRenderActions) {
                 isRenderActions = payload.isRenderActions;
             }
-            if (payload.popUpTitle) {
+            if (payload?.popUpTitle) {
                 popUpTitle = payload.popUpTitle;
             }
-            if (payload.popUpText) {
+            if (payload?.popUpText) {
                 popUpText = payload.popUpText;
             }
-            if (payload.highlightedText) {
+            if (payload?.highlightedText) {
                 highlightedText = payload.highlightedText;
             }
-            if (payload.popUpType) {
+            if (payload?.popUpType) {
                 popUpType = payload.popUpType;
             } else {
                 popUpType = "success";
             }
-            if (typeof payload.outsideClickClosePopUp === "boolean") {
+            if (typeof payload?.outsideClickClosePopUp === "boolean") {
                 outsideClickClosePopUp = payload.outsideClickClosePopUp;
             }
-            if (payload.outlineBtnTitle) {
+            if (payload?.outlineBtnTitle) {
                 outlineBtnTitle = payload.outlineBtnTitle;
             }
-            if (payload.primaryBtnTitle) {
+            if (payload?.primaryBtnTitle) {
                 primaryBtnTitle = payload.primaryBtnTitle;
             }
-            if (payload.outlineBtnAction) {
+            if (payload?.outlineBtnAction) {
                 outlineBtnAction = payload.outlineBtnAction;
             }
-            if (payload.primaryBtnAction) {
+            if (payload?.primaryBtnAction) {
                 primaryBtnAction = payload.primaryBtnAction;
             }
-            if (payload.unRenderBackButton) {
+            if (payload?.unRenderBackButton) {
                 unRenderBackButton = payload.unRenderBackButton;
             }
-            if (typeof payload.isPrimaryButtonLoading === "boolean") {
+            if (typeof payload?.isPrimaryButtonLoading === "boolean") {
                 isPrimaryButtonLoading = payload.isPrimaryButtonLoading;
             }
-            if (typeof payload.isOutlineButtonLoading === "boolean") {
+            if (typeof payload?.isOutlineButtonLoading === "boolean") {
                 isOutlineButtonLoading = payload.isOutlineButtonLoading;
             }
 

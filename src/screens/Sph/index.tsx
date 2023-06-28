@@ -78,42 +78,46 @@ function stepHandler(
     setSteps: (e: number[] | ((curr: number[]) => number[])) => void,
     stepController: (step: number) => void
 ) {
-    if (sphData.selectedCompany) {
-        if (checkSelectedSPHPic(sphData.selectedCompany?.Pics)) {
-            if (!stepsDone.includes(0)) {
+    if (sphData?.selectedCompany) {
+        if (checkSelectedSPHPic(sphData?.selectedCompany?.Pics)) {
+            if (!stepsDone?.includes(0)) {
                 setSteps((curr) => [...new Set(curr), 0]);
             }
         }
     } else {
-        setSteps((curr) => curr.filter((num) => num !== 0));
+        setSteps((curr) => curr?.filter((num) => num !== 0));
     }
 
     const billingAddressFilled =
-        !Object.values(sphData.billingAddress).every((val) => !val) &&
-        Object.entries(sphData.billingAddress.addressAutoComplete).length > 1;
+        !Object?.values(sphData?.billingAddress)?.every((val) => !val) &&
+        Object?.entries(sphData?.billingAddress?.addressAutoComplete) &&
+        Object?.entries(sphData?.billingAddress?.addressAutoComplete)?.length >
+            1;
 
     if (
-        (sphData.isBillingAddressSame || billingAddressFilled) &&
-        sphData.distanceFromLegok !== null
+        (sphData?.isBillingAddressSame || billingAddressFilled) &&
+        sphData?.distanceFromLegok !== null
     ) {
         setSteps((curr) => [...new Set(curr), 1]);
     } else {
-        setSteps((curr) => curr.filter((num) => num !== 1));
+        setSteps((curr) => curr?.filter((num) => num !== 1));
     }
 
     const paymentCondition =
-        sphData.paymentType === "CREDIT" ? sphData.paymentBankGuarantee : true;
+        sphData?.paymentType === "CREDIT"
+            ? sphData?.paymentBankGuarantee
+            : true;
 
-    if (sphData.paymentType && paymentCondition) {
+    if (sphData?.paymentType && paymentCondition) {
         setSteps((curr) => [...new Set(curr), 2]);
     } else {
-        setSteps((curr) => curr.filter((num) => num !== 2));
+        setSteps((curr) => curr?.filter((num) => num !== 2));
     }
 
-    if (sphData.chosenProducts.length) {
+    if (sphData?.chosenProducts?.length) {
         setSteps((curr) => [...new Set(curr), 3]);
     } else {
-        setSteps((curr) => curr.filter((num) => num !== 3));
+        setSteps((curr) => curr?.filter((num) => num !== 3));
     }
     const max = Math.max(...stepsDone);
 
@@ -135,55 +139,56 @@ function SphContent() {
         (state: RootState) => state.auth
     );
     const [isPopupVisible, setPopupVisible] = React.useState(false);
-    const projectId = route.params?.projectId;
+    const projectId = route?.params?.projectId;
     const abortControllerRef = React.useRef<AbortController>(
         new AbortController()
     );
 
     const handleStepperFocus = () => {
         // to continue stepper focus when entering sph page
-        if (!sphData.stepperSPHShouldNotFocused) {
-            if (sphData.stepSPHFourFinished) setCurrentPosition(4);
-            else if (sphData.stepSPHThreeFinished) setCurrentPosition(3);
-            else if (sphData.stepSPHTwoFinished) setCurrentPosition(2);
-            else if (sphData.stepSPHOneFinished) setCurrentPosition(1);
+        if (!sphData?.stepperSPHShouldNotFocused) {
+            if (sphData?.stepSPHFourFinished) setCurrentPosition(4);
+            else if (sphData?.stepSPHThreeFinished) setCurrentPosition(3);
+            else if (sphData?.stepSPHTwoFinished) setCurrentPosition(2);
+            else if (sphData?.stepSPHOneFinished) setCurrentPosition(1);
         }
 
         // to reset stepper focus when continuing progress data
         if (
-            sphData.stepperSPHShouldNotFocused &&
+            sphData?.stepperSPHShouldNotFocused &&
             currentPosition === 0 &&
-            !sphData.selectedCompany
+            !sphData?.selectedCompany
         ) {
             dispatch(resetStepperFocused(1));
         }
         const billingAddressFilled =
-            !Object.values(sphData.billingAddress).every((val) => !val) &&
-            Object.entries(sphData.billingAddress?.addressAutoComplete).length >
-                1;
+            !Object?.values(sphData?.billingAddress)?.every((val) => !val) &&
+            Object?.entries(sphData?.billingAddress?.addressAutoComplete) &&
+            Object?.entries(sphData?.billingAddress?.addressAutoComplete)
+                ?.length > 1;
         if (
-            sphData.stepperSPHShouldNotFocused &&
+            sphData?.stepperSPHShouldNotFocused &&
             currentPosition === 1 &&
-            ((!sphData.isBillingAddressSame && !billingAddressFilled) ||
-                sphData.distanceFromLegok === null)
+            ((!sphData?.isBillingAddressSame && !billingAddressFilled) ||
+                sphData?.distanceFromLegok === null)
         ) {
             dispatch(resetStepperFocused(2));
         }
         const paymentCondition =
-            sphData.paymentType === "CREDIT"
-                ? sphData.paymentBankGuarantee
+            sphData?.paymentType === "CREDIT"
+                ? sphData?.paymentBankGuarantee
                 : true;
         if (
-            sphData.stepperSPHShouldNotFocused &&
+            sphData?.stepperSPHShouldNotFocused &&
             currentPosition === 2 &&
-            (!sphData.paymentType || !paymentCondition)
+            (!sphData?.paymentType || !paymentCondition)
         ) {
             dispatch(resetStepperFocused(3));
         }
         if (
-            sphData.stepperSPHShouldNotFocused &&
+            sphData?.stepperSPHShouldNotFocused &&
             currentPosition === 3 &&
-            (!sphData.chosenProducts || !sphData.chosenProducts?.length)
+            (!sphData?.chosenProducts || !sphData?.chosenProducts?.length)
         ) {
             dispatch(resetStepperFocused(4));
         }
@@ -191,15 +196,15 @@ function SphContent() {
 
     const getLocationCoord = async (coordinate: Region) => {
         try {
-            abortControllerRef.current.abort();
-            if (abortControllerRef.current.signal.aborted)
+            abortControllerRef?.current?.abort();
+            if (abortControllerRef?.current?.signal?.aborted)
                 abortControllerRef.current = new AbortController();
             const { data } = await getLocationCoordinates(
                 // '',
-                coordinate.longitude as unknown as number,
-                coordinate.latitude as unknown as number,
+                coordinate?.longitude as unknown as number,
+                coordinate?.latitude as unknown as number,
                 selectedBatchingPlant?.name,
-                abortControllerRef.current.signal
+                abortControllerRef?.current?.signal
             );
             const { result } = data;
             if (!result) {
@@ -222,7 +227,7 @@ function SphContent() {
                 coordinateToSet.lat = Number(result.lat);
             }
 
-            dispatch(updateDistanceFromLegok(result.distance?.value));
+            dispatch(updateDistanceFromLegok(result?.distance?.value));
             dispatch(updateRegion(coordinateToSet));
         } catch (error) {
             if (error?.message !== "canceled")
@@ -256,17 +261,31 @@ function SphContent() {
                 dispatch(closePopUp());
                 const project = response?.data?.data;
                 const { LocationAddress } = project;
-                if (project.Pic) {
-                    dispatch(updateSelectedPic(project.Pic));
+                if (project?.Pic) {
+                    dispatch(updateSelectedPic(project?.Pic));
                 }
 
                 dispatch(updateSelectedCompany(project));
 
                 if (LocationAddress) {
-                    if (LocationAddress.lon && LocationAddress.lat) {
-                        const longitude = +LocationAddress.lon;
-                        const latitude = +LocationAddress.lat;
-                        getLocationCoord({ longitude, latitude });
+                    if (LocationAddress?.lon && LocationAddress?.lat) {
+                        const longitude =
+                            LocationAddress?.lon !== null &&
+                            LocationAddress?.lon !== undefined
+                                ? +LocationAddress.lon
+                                : undefined;
+                        const latitude =
+                            LocationAddress?.lat !== null &&
+                            LocationAddress?.lat !== undefined
+                                ? +LocationAddress.lat
+                                : undefined;
+                        if (
+                            longitude !== null &&
+                            longitude !== undefined &&
+                            latitude !== undefined &&
+                            latitude !== null
+                        )
+                            getLocationCoord({ longitude, latitude });
                     }
                 }
             } else {
@@ -304,21 +323,21 @@ function SphContent() {
         handleStepperFocus();
 
         return () => {
-            abortControllerRef.current.abort();
+            abortControllerRef?.current?.abort();
         };
     }, [
-        sphData.selectedCompany,
-        sphData.isBillingAddressSame,
-        sphData.billingAddress,
-        sphData.distanceFromLegok,
-        sphData.paymentType,
-        sphData.paymentBankGuarantee,
-        sphData.chosenProducts
+        sphData?.selectedCompany,
+        sphData?.isBillingAddressSame,
+        sphData?.billingAddress,
+        sphData?.distanceFromLegok,
+        sphData?.paymentType,
+        sphData?.paymentBankGuarantee,
+        sphData?.chosenProducts
     ]);
 
     const actionBackButton = (popupVisible = false) => {
         if (popupVisible) {
-            if (sphData.selectedCompany) {
+            if (sphData?.selectedCompany) {
                 setPopupVisible(true);
             } else {
                 navigation.goBack();

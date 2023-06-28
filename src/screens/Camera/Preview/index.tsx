@@ -168,7 +168,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             hasLocationPermission().then((result) => {
                 if (result) {
                     getCurrentLocation().then((longlat) => {
-                        latlongResult = `${longlat.latitude}, ${longlat.longitude}`;
+                        latlongResult = `${longlat?.latitude}, ${longlat?.longitude}`;
                     });
                 }
             });
@@ -208,7 +208,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     operationData?.projectDetails?.deliveryOrderId
             );
 
-            if (responseUpdateDeliveryOrder.data.success) {
+            if (responseUpdateDeliveryOrder?.data?.success) {
                 // do nothing
                 console.log("SUCCESS ARRIVED");
             } else {
@@ -223,11 +223,11 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
 
     const savePhoto = () => {
         const imagePayloadType: "COVER" | "GALLERY" = getTypeOfImagePayload();
-        const photoName = photo?.split("/").pop();
+        const photoName = photo?.split("/")?.pop();
         const pdfName = picker?.name;
         const photoNameParts = photoName?.split(".");
         let photoType =
-            photoNameParts && photoNameParts.length > 0
+            photoNameParts && photoNameParts?.length > 0
                 ? photoNameParts[photoNameParts.length - 1]
                 : "";
 
@@ -301,9 +301,12 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 dispatch(
                     setImageURLS({ file: localFile, source: CREATE_VISITATION })
                 );
-                if (visitationData.images && visitationData.images.length > 0)
+                if (
+                    visitationData?.images &&
+                    visitationData?.images?.length > 0
+                )
                     images = [{ file: null }];
-                images.push(localFile);
+                images?.push(localFile);
                 dispatch(
                     updateDataVisitation({ type: "images", value: images })
                 );
@@ -367,13 +370,13 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             }
             case EntryType.DRIVER: {
                 const newPhotoFiles: LocalFileType[] = [];
-                operationData.photoFiles.forEach((item) => {
+                operationData?.photoFiles?.forEach((item) => {
                     let selectedItem: LocalFileType | undefined = { ...item };
-                    if (selectedItem.attachType === operationAddedStep) {
+                    if (selectedItem?.attachType === operationAddedStep) {
                         selectedItem = localFile;
                     }
 
-                    if (selectedItem) newPhotoFiles.push(selectedItem);
+                    if (selectedItem) newPhotoFiles?.push(selectedItem);
                 });
                 dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
@@ -475,9 +478,12 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 dispatch(
                     setImageURLS({ file: localFile, source: CREATE_VISITATION })
                 );
-                if (visitationData.images && visitationData.images.length > 0)
+                if (
+                    visitationData?.images &&
+                    visitationData?.images?.length > 0
+                )
                     images = [...visitationData.images];
-                images.push(localFile);
+                images?.push(localFile);
                 dispatch(
                     updateDataVisitation({ type: "images", value: images })
                 );

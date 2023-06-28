@@ -89,15 +89,15 @@ function RenderModal({
         return null;
     }
     const prevData = { volume: "", sellPrice: "", pouringMethod: "" };
-    const existingDataIndex = chosenProducts.findIndex(
-        (data) => data.product.id === selectedProduct.id
+    const existingDataIndex = chosenProducts?.findIndex(
+        (data) => data?.product?.id === selectedProduct?.id
     );
 
     if (existingDataIndex !== -1) {
-        prevData.sellPrice = chosenProducts[existingDataIndex].sellPrice;
-        prevData.volume = chosenProducts[existingDataIndex].volume;
+        prevData.sellPrice = chosenProducts[existingDataIndex]?.sellPrice;
+        prevData.volume = chosenProducts[existingDataIndex]?.volume;
         prevData.pouringMethod =
-            chosenProducts[existingDataIndex].pouringMethod;
+            chosenProducts[existingDataIndex]?.pouringMethod;
         // productDataProp = chosenProducts[existingDataIndex].product;
     }
 
@@ -146,8 +146,8 @@ export default function FourthStep() {
     const deleteSelectedProduct = useCallback((index: number) => {
         setChosenProducts((curr) => {
             let currentProducts: any[] = [];
-            if (curr && curr.length > 0) currentProducts = [...curr];
-            currentProducts.splice(index, 1);
+            if (curr && curr?.length > 0) currentProducts = [...curr];
+            currentProducts?.splice(index, 1);
             return [...currentProducts];
         });
     }, []);
@@ -155,7 +155,7 @@ export default function FourthStep() {
     useEffect(() => {
         crashlytics().log(`${SPH}-Step4`);
 
-        if (productsRedux.length > 0) {
+        if (productsRedux?.length > 0) {
             setChosenProducts(productsRedux);
         }
         DeviceEventEmitter.addListener("event.testEvent", getProduct);
@@ -215,7 +215,7 @@ export default function FourthStep() {
                         <FlashList
                             estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                             data={chosenProducts}
-                            keyExtractor={(item) => item.product.id}
+                            keyExtractor={(item) => item?.product?.id}
                             ListFooterComponent={
                                 <View
                                     style={{
@@ -226,12 +226,22 @@ export default function FourthStep() {
                             }
                             renderItem={({ item, index }) => (
                                 <BProductCard
-                                    name={item.product.name}
-                                    volume={+item.volume}
-                                    pricePerVol={+item.sellPrice}
-                                    totalPrice={+item.totalPrice}
+                                    name={item?.product?.name}
+                                    volume={
+                                        item?.volume ? +item.volume : undefined
+                                    }
+                                    pricePerVol={
+                                        item?.sellPrice
+                                            ? +item.sellPrice
+                                            : undefined
+                                    }
+                                    totalPrice={
+                                        item?.totalPrice
+                                            ? +item.totalPrice
+                                            : undefined
+                                    }
                                     onPressEdit={() => {
-                                        setSelectedProduct(item.product);
+                                        setSelectedProduct(item?.product);
                                         setIsModalVisible(true);
                                     }}
                                     onPressDelete={() =>
@@ -256,7 +266,9 @@ export default function FourthStep() {
                                 setCurrentPosition(4);
                             }
                         }}
-                        disableContinue={productsRedux.length === 0}
+                        disableContinue={
+                            !productsRedux || productsRedux?.length === 0
+                        }
                     />
                 </View>
             </View>

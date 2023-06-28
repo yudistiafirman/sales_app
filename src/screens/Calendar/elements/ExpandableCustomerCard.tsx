@@ -54,7 +54,7 @@ export default function ExpandableCustomerCard({
         <View style={styles.customerCard}>
             <View style={styles.topCard}>
                 <BText bold="500" color="darker">
-                    {item.display_name ? item.display_name : item.picName}
+                    {item?.display_name ? item?.display_name : item?.picName}
                 </BText>
                 <TouchableOpacity
                     onPress={() => changeLayout()}
@@ -73,16 +73,16 @@ export default function ExpandableCustomerCard({
             </View>
             <View style={[bottomCardHeight(), styles.bottomCard]}>
                 <BText bold="300" color="darker">
-                    {item.name}
+                    {item?.name}
                 </BText>
                 <BSpacer size="verySmall" />
-                <BLocationText location={item.location} />
+                <BLocationText location={item?.location} />
                 <BSpacer size="extraSmall" />
                 <BPic
-                    name={item.picName}
-                    email={item.email ? item.email : "-"}
-                    phone={item.phone}
-                    position={item.position}
+                    name={item?.picName}
+                    email={item?.email ? item?.email : "-"}
+                    phone={item?.phone}
+                    position={item?.position}
                     border={false}
                 />
             </View>

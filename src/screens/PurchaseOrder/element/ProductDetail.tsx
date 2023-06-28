@@ -54,12 +54,12 @@ function ProductDetail() {
 
     const calculatedTotalPrice = (): number => {
         const total = selectedProducts
-            .map((v) =>
-                v.quantity.toString()[0] === "0" || v.quantity.length === 0
+            ?.map((v) =>
+                v?.quantity?.toString()[0] === "0" || v?.quantity?.length === 0
                     ? 0
-                    : v.offeringPrice * v.quantity
+                    : (v?.offeringPrice || 0) * (v?.quantity || 0)
             )
-            .reduce((a, b) => a + b, 0);
+            ?.reduce((a, b) => a + b, 0);
         return total;
     };
 
@@ -117,7 +117,7 @@ function ProductDetail() {
                                             tableInputKeyboardType: "numeric",
                                             tableInputValue:
                                                 fiveToSix[0] !== "0" &&
-                                                fiveToSix.length > 0
+                                                fiveToSix?.length > 0
                                                     ? formatCurrency(
                                                           fiveToSix,
                                                           true
@@ -131,7 +131,7 @@ function ProductDetail() {
                                             tableInputKeyboardType: "numeric",
                                             tableInputValue:
                                                 lessThanFive[0] !== "0" &&
-                                                lessThanFive.length > 0
+                                                lessThanFive?.length > 0
                                                     ? formatCurrency(
                                                           lessThanFive,
                                                           true

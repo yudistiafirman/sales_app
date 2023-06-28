@@ -79,11 +79,11 @@ function BTableInput({
                 <View style={styles.innerCell}>
                     <Text style={styles.cellText}>
                         {item?.firstColumnRangeTitle
-                            ? item.firstColumnRangeTitle
+                            ? item?.firstColumnRangeTitle
                             : "0"}
                     </Text>
                     <Text style={styles.cellText}>
-                        {item?.firstColumnUnit ? item.firstColumnUnit : "m³"}
+                        {item?.firstColumnUnit ? item?.firstColumnUnit : "m³"}
                     </Text>
                 </View>
             </View>
@@ -94,7 +94,7 @@ function BTableInput({
                 <View style={[styles.inputLabel, { left: layout.pad.ml }]}>
                     <Text style={[styles.cellText]}>
                         {item?.secondColumnNominalInput
-                            ? item.secondColumnNominalInput
+                            ? item?.secondColumnNominalInput
                             : "Rp"}
                     </Text>
                 </View>
@@ -104,7 +104,7 @@ function BTableInput({
                         contentStyle={styles.cellText}
                         placeholder={
                             item?.tableInputPlaceholder
-                                ? item.tableInputPlaceholder
+                                ? item?.tableInputPlaceholder
                                 : ""
                         }
                         onChangeText={(val) =>
@@ -113,7 +113,7 @@ function BTableInput({
                         value={item?.tableInputValue ?? item?.tableInputValue}
                         keyboardType={
                             item?.tableInputKeyboardType
-                                ? item.tableInputKeyboardType
+                                ? item?.tableInputKeyboardType
                                 : "numeric"
                         }
                         style={styles.inputPrice}
@@ -122,7 +122,7 @@ function BTableInput({
                 <View style={[styles.inputLabel, { right: layout.pad.ml }]}>
                     <Text style={styles.cellText}>
                         {item?.secondColumnUnitInput
-                            ? item.secondColumnUnitInput
+                            ? item?.secondColumnUnitInput
                             : "/m³"}
                     </Text>
                 </View>
@@ -165,8 +165,8 @@ function BTableInput({
             </View>
             <BSpacer size="verySmall" />
             {tableInputListItem &&
-                tableInputListItem.length > 0 &&
-                tableInputListItem.map(
+                tableInputListItem?.length > 0 &&
+                tableInputListItem?.map(
                     (item: ITableInputListItem, index: number) =>
                         renderTableItems({ item, index })
                 )}

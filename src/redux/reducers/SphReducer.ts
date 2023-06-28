@@ -57,28 +57,28 @@ export const sphSlice = createSlice({
             actions: PayloadAction<{ value: boolean }>
         ) => ({
             ...state,
-            useSearchAddress: actions.payload.value
+            useSearchAddress: actions.payload?.value
         }),
         setSearchAddress: (
             state,
             actions: PayloadAction<{ value: string }>
         ) => ({
             ...state,
-            searchedAddress: actions.payload.value
+            searchedAddress: actions.payload?.value
         }),
         setUseBillingAddress: (
             state,
             actions: PayloadAction<{ value: boolean }>
         ) => ({
             ...state,
-            useSearchedBillingAddress: actions.payload.value
+            useSearchedBillingAddress: actions.payload?.value
         }),
         setSearchedBillingAddress: (
             state,
             actions: PayloadAction<{ value: string }>
         ) => ({
             ...state,
-            searchedBillingAddress: actions.payload.value
+            searchedBillingAddress: actions.payload?.value
         }),
         resetSPHState: () => initialState,
         setStepperFocused: (state, { payload }) => {

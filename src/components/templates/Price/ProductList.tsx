@@ -65,7 +65,7 @@ function ProductList<ArrayOfObject extends ProductsData>({
     const renderItem: ListRenderItem<ProductsData> = useCallback(({ item }) => {
         const fc =
             item?.properties?.fc?.length > 0
-                ? ` / FC${item.properties.fc}`
+                ? ` / FC${item?.properties?.fc}`
                 : "";
         const onPressCheck = onPress || null;
         return (
@@ -91,7 +91,7 @@ function ProductList<ArrayOfObject extends ProductsData>({
             data={products}
             onRefresh={onRefresh}
             contentContainerStyle={{ paddingHorizontal: layout.pad.lg }}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => index?.toString()}
             onEndReached={onEndReached}
             refreshing={refreshing}
             ListFooterComponent={isLoadMore ? <PriceListShimmer /> : null}

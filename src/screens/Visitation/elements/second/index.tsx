@@ -49,7 +49,7 @@ function SecondStep({ openBottomSheet }: IProps) {
     const [selectedCompany, setSelectedCompany] = useState<{
         id: number;
         title: string;
-    }>({ id: 1, title: visitationData.companyName });
+    }>({ id: 1, title: visitationData?.companyName });
 
     const onChange = (key: any) => (e: any) => {
         dispatch(updateDataVisitation({ type: key, value: e }));
@@ -58,21 +58,21 @@ function SecondStep({ openBottomSheet }: IProps) {
     useEffect(() => {
         crashlytics().log(`${CREATE_VISITATION}-Step2`);
 
-        if (visitationData.companyName) {
+        if (visitationData?.companyName) {
             dispatch(
                 updateDataVisitation({
                     type: "options",
                     value: {
-                        items: [{ id: 1, title: visitationData.companyName }]
+                        items: [{ id: 1, title: visitationData?.companyName }]
                     }
                 })
             );
             setSelectedCompany({
                 id: 1,
-                title: visitationData.companyName
+                title: visitationData?.companyName
             });
         }
-    }, [visitationData.companyName]);
+    }, [visitationData?.companyName]);
 
     const fetchDebounce = useMemo(
         () =>
@@ -84,8 +84,8 @@ function SecondStep({ openBottomSheet }: IProps) {
                     .then((response) => {
                         const items = response?.data?.data?.map(
                             (project: any) => ({
-                                id: project.id,
-                                title: project.display_name
+                                id: project?.id,
+                                title: project?.display_name
                             })
                         );
                         dispatch(
@@ -97,7 +97,7 @@ function SecondStep({ openBottomSheet }: IProps) {
                             })
                         );
 
-                        if (items.length <= 0) {
+                        if (!items || items?.length <= 0) {
                             dispatch(
                                 updateDataVisitation({
                                     type: "companyName",
@@ -111,6 +111,7 @@ function SecondStep({ openBottomSheet }: IProps) {
                         }
                     })
                     .catch(() => {
+                        console.log("gotcha failure");
                         dispatch(
                             updateDataVisitation({
                                 type: "companyName",
@@ -145,7 +146,7 @@ function SecondStep({ openBottomSheet }: IProps) {
                 isError: false,
                 type: "cardOption",
                 onChange: onChange("customerType"),
-                value: visitationData.customerType,
+                value: visitationData?.customerType,
                 options: [
                     {
                         icon: company,
@@ -168,8 +169,8 @@ function SecondStep({ openBottomSheet }: IProps) {
             }
         ];
         if (
-            visitationData.customerType &&
-            visitationData.customerType?.length > 0
+            visitationData?.customerType &&
+            visitationData?.customerType?.length > 0
         ) {
             const companyNameInput: Input = {
                 label: "Nama Perusahaan",
@@ -178,14 +179,15 @@ function SecondStep({ openBottomSheet }: IProps) {
                 type: "autocomplete",
                 onChange: onChangeText,
                 value: selectedCompany,
-                items: visitationData.options?.items,
-                loading: visitationData.options?.loading,
+                items: visitationData?.options?.items,
+                loading: visitationData?.options?.loading,
                 onSelect: (item: { id: string; title: string }): void => {
+                    console.log("thissss:: ", item);
                     if (item) {
                         dispatch(
                             updateDataVisitation({
                                 type: "companyName",
-                                value: item.title
+                                value: item?.title
                             })
                         );
                         setSelectedCompany(item);
@@ -204,9 +206,9 @@ function SecondStep({ openBottomSheet }: IProps) {
                     isError: false,
                     type: "textInput",
                     onChange: (e: any) => {
-                        onChange("projectName")(e.nativeEvent.text);
+                        onChange("projectName")(e?.nativeEvent?.text);
                     },
-                    value: visitationData.projectName,
+                    value: visitationData?.projectName,
                     placeholder: "Masukkan Nama Proyek",
                     isInputDisable: !!existingVisitation
                 },
@@ -215,12 +217,12 @@ function SecondStep({ openBottomSheet }: IProps) {
                     isRequire: true,
                     isError: false,
                     type: "PIC",
-                    value: visitationData.pics,
+                    value: visitationData?.pics,
                     onChange: () => {
                         openBottomSheet();
                     },
                     onSelect: (index: number) => {
-                        const newPicList = visitationData.pics.map(
+                        const newPicList = visitationData?.pics?.map(
                             (el, _index) => ({
                                 ...el,
                                 isSelected: _index === index
@@ -235,10 +237,10 @@ function SecondStep({ openBottomSheet }: IProps) {
                     }
                 }
             ];
-            if (visitationData.customerType === "COMPANY") {
-                aditionalInput.unshift(companyNameInput);
+            if (visitationData?.customerType === "COMPANY") {
+                aditionalInput?.unshift(companyNameInput);
             }
-            baseInput.push(...aditionalInput);
+            baseInput?.push(...aditionalInput);
         }
         return baseInput;
     }, [visitationData, selectedCompany]);
@@ -251,11 +253,11 @@ function SecondStep({ openBottomSheet }: IProps) {
         <SafeAreaView style={styles.flexFull}>
             <SearchFlow
                 searchingDisable={!!existingVisitation}
-                isSearch={visitationData.isSearchProject}
+                isSearch={visitationData?.isSearchProject}
                 onSearch={onSearch}
                 setSelectedCompany={setSelectedCompany}
             />
-            {!visitationData.isSearchProject && (
+            {!visitationData?.isSearchProject && (
                 <ScrollView
                     style={{ flex: 1 }}
                     showsVerticalScrollIndicator={false}

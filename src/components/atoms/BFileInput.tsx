@@ -156,7 +156,7 @@ export default function BFileInput({
                     openPopUp({
                         popUpType: "error",
                         popUpText:
-                            err.message ||
+                            err?.message ||
                             "Terjadi error dalam pengambilan file",
                         outsideClickClosePopUp: true
                     })

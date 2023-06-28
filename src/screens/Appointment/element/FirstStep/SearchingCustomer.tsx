@@ -52,14 +52,14 @@ function SearchingCustomer() {
     const onPressCard = useCallback(
         (item: selectedCompanyInterface) => {
             try {
-                const customerType = item.Company?.id ? "company" : "individu";
-                let userID = item.Pic?.id;
-                let userName = item.Pic?.name;
+                const customerType = item?.Company?.id ? "company" : "individu";
+                let userID = item?.Pic?.id;
+                let userName = item?.Pic?.name;
                 if (customerType === "company") {
-                    userID = item.Company?.id;
-                    userName = item.Company?.name;
+                    userID = item?.Company?.id;
+                    userName = item?.Company?.name;
                 }
-                if (appoinmentState.stepOne.options.items) {
+                if (appoinmentState?.stepOne?.options?.items) {
                     dispatch(
                         addCompanies({
                             value: [
@@ -75,19 +75,19 @@ function SearchingCustomer() {
                         })
                     );
                 }
-                const picList = item.Pics;
-                if (picList.length === 1) {
+                const picList = item?.Pics;
+                if (picList && picList?.length === 1) {
                     picList[0].isSelected = true;
                 }
 
                 const companyDataToSave = {
                     Company: { id: userID, title: userName },
                     Pics: picList,
-                    Visitation: item.Visitations[0],
-                    locationAddress: item.LocationAddress,
-                    Pic: item.Pic,
-                    id: item.id,
-                    name: item.name
+                    Visitation: item?.Visitations[0],
+                    locationAddress: item?.LocationAddress,
+                    Pic: item?.Pic,
+                    id: item?.id,
+                    name: item?.name
                 };
 
                 dispatch(
@@ -100,7 +100,7 @@ function SearchingCustomer() {
                 console.log(error, "errorappointment onPressCard");
             }
         },
-        [dispatch, appoinmentState.stepOne.options.items]
+        [dispatch, appoinmentState?.stepOne?.options?.items]
     );
 
     const routes: { title: string; totalItems: number }[] = React.useMemo(
@@ -108,7 +108,7 @@ function SearchingCustomer() {
             {
                 key: "first",
                 title: "Proyek",
-                totalItems: projects.length,
+                totalItems: projects?.length,
                 chipPosition: "right"
             }
         ],
@@ -117,7 +117,7 @@ function SearchingCustomer() {
 
     const onRetryGettingProjects = () => {
         dispatch(retrying());
-        onChangeWithDebounce(appoinmentState.searchQuery);
+        onChangeWithDebounce(appoinmentState?.searchQuery);
     };
 
     const onClearValue = () => {
@@ -127,12 +127,12 @@ function SearchingCustomer() {
     return (
         <View style={{ flex: 1 }}>
             <BCommonSearchList
-                searchQuery={appoinmentState.searchQuery}
+                searchQuery={appoinmentState?.searchQuery}
                 onChangeText={onChangeSearch}
                 onClearValue={() => {
                     if (
-                        appoinmentState.searchQuery &&
-                        appoinmentState.searchQuery.trim() !== ""
+                        appoinmentState?.searchQuery &&
+                        appoinmentState?.searchQuery?.trim() !== ""
                     ) {
                         onClearValue();
                     } else {
@@ -141,26 +141,26 @@ function SearchingCustomer() {
                 }}
                 placeholder="Cari PT / Proyek"
                 index={searchIndex}
-                emptyText={`${appoinmentState.searchQuery} tidak ditemukan!`}
+                emptyText={`${appoinmentState?.searchQuery} tidak ditemukan!`}
                 routes={routes}
                 autoFocus
                 onIndexChange={setSearchIndex}
                 loadList={isProjectLoading}
                 onPressList={(item) => {
                     const handlePicNull = { ...item };
-                    if (!handlePicNull.PIC) {
+                    if (!handlePicNull?.PIC) {
                         handlePicNull.PIC = [];
                     }
 
-                    if (item.PIC && item.PIC.length > 0) {
+                    if (item?.PIC && item?.PIC?.length > 0) {
                         const finalPIC = [...item.PIC];
-                        finalPIC.forEach((it, index) => {
+                        finalPIC?.forEach((it, index) => {
                             finalPIC[index] = {
                                 ...finalPIC[index],
                                 isSelected: index === 0
                             };
                         });
-                        if (handlePicNull.PIC) handlePicNull.PIC = finalPIC;
+                        if (handlePicNull?.PIC) handlePicNull.PIC = finalPIC;
                     }
                     onPressCard(handlePicNull);
                 }}

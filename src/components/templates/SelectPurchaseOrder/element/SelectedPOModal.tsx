@@ -84,14 +84,14 @@ export default function SelectedPOModal({
     React.useEffect(() => {
         const listData =
             poData?.listData && dataToGet === "SCHEDULEDATA"
-                ? poData?.listData.filter((v) => v.SaleOrders.length > 0)
+                ? poData?.listData?.filter((v) => v?.SaleOrders?.length > 0)
                 : poData?.listData;
         setSphData(listData);
     }, [poData?.listData]);
 
     const onSelectButton = (idx: number) => {
         const newSphData = [...sphData];
-        const selectedSphData: any[] = newSphData.map((v, i) => ({
+        const selectedSphData: any[] = newSphData?.map((v, i) => ({
             ...v,
             isSelected: idx === i
         }));
@@ -110,11 +110,11 @@ export default function SelectedPOModal({
             newExpandData = [...expandData, data];
         } else {
             newExpandData = sphData[0]?.QuotationLetter?.id
-                ? expandData.filter(
+                ? expandData?.filter(
                       (val) =>
                           val?.QuotationLetter?.id !== data?.QuotationLetter?.id
                   )
-                : expandData.filter((val) => val?.id !== data?.id);
+                : expandData?.filter((val) => val?.id !== data?.id);
         }
         setExpandData(newExpandData);
     };
@@ -126,12 +126,12 @@ export default function SelectedPOModal({
     };
 
     const onSaveSelectedPo = () => {
-        if (sphData.length === 1) {
+        if (sphData?.length === 1) {
             onPressCompleted(sphData);
             onCloseSelectedPoModal();
         } else {
-            const selectedSphData = sphData.filter((v) => v.isSelected);
-            if (selectedSphData.length > 0) {
+            const selectedSphData = sphData?.filter((v) => v?.isSelected);
+            if (selectedSphData?.length > 0) {
                 onPressCompleted(selectedSphData);
                 onCloseSelectedPoModal();
             } else {
@@ -180,7 +180,7 @@ export default function SelectedPOModal({
                                 <ScrollView
                                     onScroll={(event) => {
                                         setScrollOffSet(
-                                            event.nativeEvent.contentOffset.y
+                                            event?.nativeEvent?.contentOffset?.y
                                         );
                                     }}
                                 >
@@ -193,10 +193,10 @@ export default function SelectedPOModal({
                                     />
                                     <BSpacer size="extraSmall" />
                                     {poData?.listData &&
-                                        poData?.listData.length > 0 && (
+                                        poData?.listData?.length > 0 && (
                                             <BNestedProductCard
                                                 isOption={
-                                                    poData?.listData.length > 1
+                                                    poData?.listData?.length > 1
                                                 }
                                                 withoutHeader={false}
                                                 data={sphData}

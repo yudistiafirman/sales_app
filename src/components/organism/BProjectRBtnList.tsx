@@ -34,7 +34,7 @@ function BProjectRBtnList({ data, isOption, onSelect }: IProps) {
         <FlashList
             estimatedItemSize={10}
             data={data}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => index?.toString()}
             renderItem={renderItem}
         />
     );

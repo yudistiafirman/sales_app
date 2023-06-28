@@ -152,30 +152,30 @@ const searchProductMachine =
         {
             actions: {
                 assignSearchValue: assign((_context, event) => ({
-                    searchValue: event.value
+                    searchValue: event?.value
                 })),
                 assignCategories: assign((_context, event) => {
-                    const newCategoriesData = event.data.map((item) => ({
-                        key: item.id,
-                        title: item.display_name,
-                        totalItems: item.ProductCount,
+                    const newCategoriesData = event?.data?.map((item) => ({
+                        key: item?.id,
+                        title: item?.display_name,
+                        totalItems: item?.ProductCount,
                         chipPosition: "right"
                     }));
                     const selectedCategory =
-                        _context.selectedCategories.length > 0
-                            ? _context.selectedCategories
-                            : newCategoriesData[0].title;
+                        _context?.selectedCategories?.length > 0
+                            ? _context?.selectedCategories
+                            : newCategoriesData[0]?.title;
                     return {
                         routes: newCategoriesData,
                         selectedCategories: selectedCategory
                     };
                 }),
                 assignProducts: assign((_context, event) => ({
-                    productsData: event.data,
+                    productsData: event?.data,
                     loadProduct: false
                 })),
                 assignIndex: assign((context, event) => ({
-                    selectedCategories: context.routes[event.value].title,
+                    selectedCategories: context?.routes[event?.value]?.title,
                     loadProduct: true,
                     batchingPlantId: event?.selectedBP?.id
                 })),
@@ -187,12 +187,12 @@ const searchProductMachine =
                     loadProduct: true
                 })),
                 assignParams: assign((context, event) => ({
-                    distance: event.value / 1000,
+                    distance: event?.value ? event.value / 1000 : 0,
                     batchingPlantId: event?.selectedBP?.id
                 })),
                 handleError: assign((context, event) => ({
                     loadProduct: false,
-                    errorMessage: event.data.message
+                    errorMessage: event?.data?.message
                 })),
                 handleRetryGettingProductsData: assign((context, event) => ({
                     loadProduct: true,
@@ -201,7 +201,7 @@ const searchProductMachine =
             },
             guards: {
                 searchValueLengthAccepted: (_context, event) =>
-                    event.value.length > 2
+                    event?.value?.length > 2
             },
             services: {
                 getCategoriesData: async (context) => {
@@ -209,11 +209,11 @@ const searchProductMachine =
                         const response = await getProductsCategories(
                             undefined,
                             undefined,
-                            context.searchValue,
+                            context?.searchValue,
                             undefined,
                             true
                         );
-                        return response.data.result;
+                        return response?.data?.result;
                     } catch (error) {
                         throw new Error(error);
                     }
@@ -240,7 +240,7 @@ const searchProductMachine =
                             distance,
                             batchingPlantId
                         );
-                        return response.data.products;
+                        return response?.data?.products;
                     } catch (error) {
                         throw new Error(error);
                     }

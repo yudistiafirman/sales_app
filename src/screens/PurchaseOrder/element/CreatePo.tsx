@@ -85,7 +85,7 @@ function CreatePo() {
             onChange: (e: any) => {
                 dispatch({
                     type: "inputSph",
-                    value: e.nativeEvent.text
+                    value: e?.nativeEvent?.text
                 });
             },
             value: poNumber
@@ -104,9 +104,9 @@ function CreatePo() {
         data: QuotationRequests;
     }) => {
         const selectedSphFromModal = {};
-        selectedSphFromModal.name = parentData.companyName;
-        selectedSphFromModal.locationName = parentData.locationName;
-        selectedSphFromModal.id = parentData.projectId;
+        selectedSphFromModal.name = parentData?.companyName;
+        selectedSphFromModal.locationName = parentData?.locationName;
+        selectedSphFromModal.id = parentData?.projectId;
         selectedSphFromModal.QuotationRequests = data;
 
         dispatch({
@@ -131,7 +131,7 @@ function CreatePo() {
         if (isExisted === -1) {
             newExpandsetExpandData = [...expandData, data];
         } else {
-            newExpandsetExpandData = expandData.filter(
+            newExpandsetExpandData = expandData?.filter(
                 (val) => val?.QuotationLetter?.id !== data?.QuotationLetter?.id
             );
         }
@@ -173,9 +173,9 @@ function CreatePo() {
                                     <>
                                         <BVisitationCard
                                             item={{
-                                                name: choosenSphDataFromModal.name,
+                                                name: choosenSphDataFromModal?.name,
                                                 location:
-                                                    choosenSphDataFromModal.locationName
+                                                    choosenSphDataFromModal?.locationName
                                             }}
                                             isRenderIcon
                                             customIcon={renderCustomButton}

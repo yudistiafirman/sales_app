@@ -108,18 +108,18 @@ const locationMachine =
             actions: {
                 assignParamsToContext: assign((context, event) => ({
                     region: {
-                        latitude: event.value.latitude,
-                        longitude: event.value.longitude,
+                        latitude: event?.value?.latitude,
+                        longitude: event?.value?.longitude,
                         latitudeDelta: LATITUDE_DELTA,
                         longitudeDelta: LONGITUDE_DELTA
                     }
                 })),
                 assignLocationDetail: assign((context, event) => ({
                     locationDetail: {
-                        formattedAddress: event.data?.formattedAddress
-                            ? event.data.formattedAddress
+                        formattedAddress: event?.data?.formattedAddress
+                            ? event?.data?.formattedAddress
                             : "",
-                        postalId: event.data?.PostalId,
+                        postalId: event?.data?.PostalId,
                         lon: event?.data?.lon,
                         lat: event?.data?.lat
                     },
@@ -127,10 +127,10 @@ const locationMachine =
                 })),
                 assignOnChangeRegionValue: assign((context, event) => ({
                     region: {
-                        latitude: event.value.latitude,
-                        longitude: event.value.longitude,
-                        latitudeDelta: event.value.latitudeDelta,
-                        longitudeDelta: event.value.longitudeDelta
+                        latitude: event?.value?.latitude,
+                        longitude: event?.value?.longitude,
+                        latitudeDelta: event?.value?.latitudeDelta,
+                        longitudeDelta: event?.value?.longitudeDelta
                     }
                 })),
                 enabledLoadingDetails: assign((context, event) => ({
@@ -143,14 +143,15 @@ const locationMachine =
             },
             services: {
                 onGettingLocationDetails: async (context, event) => {
-                    const { latitude, longitude } = context.region;
+                    const latitude = context?.region?.latitude;
+                    const longitude = context?.region?.longitude;
                     const response = await getLocationCoordinates(
                         longitude,
                         latitude,
-                        context.batchingPlantName,
-                        context.signal
+                        context?.batchingPlantName,
+                        context?.signal
                     );
-                    return response.data.result;
+                    return response?.data?.result;
                 }
             }
         }

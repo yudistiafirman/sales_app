@@ -114,7 +114,7 @@ function BCard({
                     <BSpacer size="extraSmall" />
                     <View style={styles.credContainer}>
                         {listTextData &&
-                            listTextData.map((v, i) => (
+                            listTextData?.map((v, i) => (
                                 <Text key={i} style={styles.credText}>
                                     {v}
                                 </Text>

@@ -61,24 +61,24 @@ export default function FirstStep() {
 
     const listenerSearchCallback = React.useCallback(
         ({ parent, data }: { parent: any; data: any }) => {
-            updateValueOnstep("stepOne", "companyName", parent.companyName);
-            updateValueOnstep("stepOne", "locationName", parent.locationName);
-            updateValue("existingProjectID", parent.projectId);
+            updateValueOnstep("stepOne", "companyName", parent?.companyName);
+            updateValueOnstep("stepOne", "locationName", parent?.locationName);
+            updateValue("existingProjectID", parent?.projectId);
             updateValueOnstep("stepOne", "purchaseOrders", data);
             updateValueOnstep(
                 "stepTwo",
                 "availableDeposit",
-                parent.availableDeposit
+                parent?.availableDeposit
             );
-            updateValueOnstep("stepTwo", "paymentType", parent.paymentType);
+            updateValueOnstep("stepTwo", "paymentType", parent?.paymentType);
             updateValueOnstep("stepTwo", "inputtedVolume", 0);
             updateValueOnstep(
                 "stepTwo",
                 "salesOrder",
                 data &&
-                    data.length > 0 &&
+                    data?.length > 0 &&
                     data[0]?.SaleOrders &&
-                    data[0]?.SaleOrders.length > 0 &&
+                    data[0]?.SaleOrders?.length > 0 &&
                     data[0]?.SaleOrders[0]
             );
             updateValue("isSearchingPurchaseOrder", false);
@@ -92,7 +92,7 @@ export default function FirstStep() {
         if (isExisted === -1) {
             newExpandsetExpandData = [...expandData, data];
         } else {
-            newExpandsetExpandData = expandData.filter(
+            newExpandsetExpandData = expandData?.filter(
                 (val) => val?.id !== data?.id
             );
         }
@@ -101,7 +101,8 @@ export default function FirstStep() {
 
     return (
         <SafeAreaView style={style.flexFull}>
-            {stateOne?.purchaseOrders && stateOne?.purchaseOrders.length > 0 ? (
+            {stateOne?.purchaseOrders &&
+            stateOne?.purchaseOrders?.length > 0 ? (
                 <ScrollView style={style.flexFull}>
                     <View style={style.flexFull}>
                         <BSpacer size="extraSmall" />
@@ -115,7 +116,7 @@ export default function FirstStep() {
                     </View>
                     <View style={style.flexFull}>
                         {stateOne?.purchaseOrders &&
-                            stateOne?.purchaseOrders.length > 0 && (
+                            stateOne?.purchaseOrders?.length > 0 && (
                                 <BNestedProductCard
                                     withoutHeader={false}
                                     data={stateOne?.purchaseOrders}
@@ -176,7 +177,7 @@ export default function FirstStep() {
                 </ScrollView>
             ) : (
                 <View style={{ flex: 1 }}>
-                    {values.isSearchingPurchaseOrder ? (
+                    {values?.isSearchingPurchaseOrder ? (
                         <SelectPurchaseOrderData
                             dataToGet="SCHEDULEDATA"
                             onSubmitData={({ parentData, data }) =>

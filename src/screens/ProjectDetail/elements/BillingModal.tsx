@@ -121,10 +121,10 @@ export default function BillingModal({
                 onChange: (text: string) => {
                     setBillingState((prevState) => ({
                         ...prevState,
-                        kelurahan: text.nativeEvent.text
+                        kelurahan: text?.nativeEvent?.text
                     }));
                 },
-                value: billingState.kelurahan
+                value: billingState?.kelurahan
             },
             {
                 label: "Kecamatan",
@@ -134,10 +134,10 @@ export default function BillingModal({
                 onChange: (text: string) => {
                     setBillingState((prevState) => ({
                         ...prevState,
-                        kecamatan: text.nativeEvent.text
+                        kecamatan: text?.nativeEvent?.text
                     }));
                 },
-                value: billingState.kecamatan
+                value: billingState?.kecamatan
             },
             {
                 label: "Kota / Kabupaten",
@@ -147,10 +147,10 @@ export default function BillingModal({
                 onChange: (text: string) => {
                     setBillingState((prevState) => ({
                         ...prevState,
-                        kabupaten: text.nativeEvent.text
+                        kabupaten: text?.nativeEvent?.text
                     }));
                 },
-                value: billingState.kabupaten
+                value: billingState?.kabupaten
             }
         ],
         [billingState]
@@ -172,24 +172,24 @@ export default function BillingModal({
             body.line1 = region?.formattedAddress;
         }
 
-        if (billingState.kelurahan) {
+        if (billingState?.kelurahan) {
             body.line2 =
-                body.line2 !== undefined
-                    ? `${body.line2} ${billingState.kelurahan}`
-                    : billingState.kelurahan;
+                body?.line2 !== undefined
+                    ? `${body?.line2} ${billingState?.kelurahan}`
+                    : billingState?.kelurahan;
         }
 
-        if (billingState.kecamatan) {
+        if (billingState?.kecamatan) {
             body.line2 =
-                body.line2 !== undefined
-                    ? `${body.line2} ${billingState.kecamatan}`
-                    : billingState.kecamatan;
+                body?.line2 !== undefined
+                    ? `${body?.line2} ${billingState?.kecamatan}`
+                    : billingState?.kecamatan;
         }
-        if (billingState.kabupaten) {
+        if (billingState?.kabupaten) {
             body.line2 =
-                body.line2 !== undefined
-                    ? `${body.line2} ${billingState.kabupaten}`
-                    : billingState.kabupaten;
+                body?.line2 !== undefined
+                    ? `${body?.line2} ${billingState?.kabupaten}`
+                    : billingState?.kabupaten;
         }
         try {
             let response;
@@ -199,7 +199,7 @@ export default function BillingModal({
                 response = await updateLocationAddress(projectId, body);
             }
             if (response?.data?.success && response?.data?.success !== false) {
-                setFormattedAddress(region.formattedAddress);
+                setFormattedAddress(region?.formattedAddress);
                 setRegion(region);
                 setIsModalVisible((curr) => !curr);
                 dispatch(
@@ -266,7 +266,9 @@ export default function BillingModal({
                     <BSpacer size="extraSmall" />
                     <ScrollView
                         onScroll={(event) => {
-                            setScrollOffSet(event.nativeEvent.contentOffset.y);
+                            setScrollOffSet(
+                                event?.nativeEvent?.contentOffset?.y
+                            );
                         }}
                     >
                         <BLabel

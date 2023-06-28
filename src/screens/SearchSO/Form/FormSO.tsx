@@ -41,7 +41,7 @@ function FormSO() {
             isRequire: false,
             isError: false,
             type: "textInput",
-            value: soData.selectedPONumber,
+            value: soData?.selectedPONumber,
             isInputDisable: true,
             disableColor: colors.textInput.disabled
         }
@@ -49,7 +49,7 @@ function FormSO() {
 
     const actionBackButton = (popupVisible = false) => {
         if (popupVisible) {
-            if (soData.photoFiles) {
+            if (soData?.photoFiles) {
                 setPopupVisible(true);
             } else {
                 navigation.goBack();
@@ -94,15 +94,15 @@ function FormSO() {
                     outsideClickClosePopUp: false
                 })
             );
-            const photoFilestoUpload = soData.photoFiles
-                .filter((v) => v.file !== null)
-                .map((photo) => ({
-                    ...photo.file,
+            const photoFilestoUpload = soData?.photoFiles
+                ?.filter((v) => v?.file !== null)
+                ?.map((photo) => ({
+                    ...photo?.file,
                     uri: photo?.file?.uri?.replace("file:", "file://")
                 }));
 
             let responseFiles;
-            if (photoFilestoUpload && photoFilestoUpload.length > 0)
+            if (photoFilestoUpload && photoFilestoUpload?.length > 0)
                 responseFiles = await uploadFileImage(
                     photoFilestoUpload,
                     "SO Signed"
@@ -112,20 +112,20 @@ function FormSO() {
                 responseFiles?.data?.success !== false
             ) {
                 const payload = {} as UploadSOSigned;
-                const newFileData = responseFiles.data.data.map((v, i) => ({
-                    fileId: v.id,
+                const newFileData = responseFiles?.data?.data?.map((v, i) => ({
+                    fileId: v?.id,
                     type: "BRIK_SIGNED"
                 }));
-                payload.batchingPlantId = authState.selectedBatchingPlant?.id;
+                payload.batchingPlantId = authState?.selectedBatchingPlant?.id;
                 payload.poDocs = newFileData;
                 const responseSOSigned = await uploadSOSignedDocs(
                     payload,
-                    soData.selectedID
+                    soData?.selectedID
                 );
 
                 if (
-                    responseSOSigned.data.success &&
-                    responseSOSigned.data.success !== false
+                    responseSOSigned?.data?.success &&
+                    responseSOSigned?.data?.success !== false
                 ) {
                     dispatch(resetSOState());
                     dispatch(
@@ -146,7 +146,7 @@ function FormSO() {
                             popUpType: "error",
                             highlightedText: "SO",
                             popUpText:
-                                responseFiles.data.message ||
+                                responseFiles?.data?.message ||
                                 "SO\nGagal diupload",
                             outsideClickClosePopUp: true
                         })
@@ -200,7 +200,7 @@ function FormSO() {
         }, [])
     );
 
-    const filteredPhotoFiles = soData.photoFiles?.filter(
+    const filteredPhotoFiles = soData?.photoFiles?.filter(
         (it) => it?.file !== null
     );
     return (
@@ -213,7 +213,7 @@ function FormSO() {
                     <>
                         <BGallery
                             addMorePict={addMorePict}
-                            picts={soData.photoFiles}
+                            picts={soData?.photoFiles}
                             removePict={deleteImages}
                         />
                         <BSpacer size="extraSmall" />

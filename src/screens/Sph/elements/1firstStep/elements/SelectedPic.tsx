@@ -67,7 +67,7 @@ export default function SelectedPic({
     );
 
     const openBottomSheet = () => {
-        bottomSheetRef.current?.expand();
+        bottomSheetRef?.current?.expand();
     };
 
     const inputsData: Input[] = useMemo(
@@ -77,7 +77,7 @@ export default function SelectedPic({
                 isRequire: true,
                 isError: false,
                 type: "PIC",
-                value: selectedCompany?.Pics ? selectedCompany.Pics : [],
+                value: selectedCompany?.Pics ? selectedCompany?.Pics : [],
                 onChange: () => {
                     openBottomSheet();
                 },
@@ -91,7 +91,7 @@ export default function SelectedPic({
                         } else {
                             picChanged.isSelected = false;
                         }
-                        listPic.push(picChanged);
+                        listPic?.push(picChanged);
                     });
                     dispatch(updateSelectedCompanyPicList(listPic));
                 }
@@ -112,15 +112,15 @@ export default function SelectedPic({
         if (selectedCompany) {
             if (selectedCompany?.Pic?.id && !selectedPic) {
                 const foundMainPic = selectedCompany?.Pics?.find(
-                    (pic) => pic.id === selectedCompany?.Pic?.id
+                    (pic) => pic?.id === selectedCompany?.Pic?.id
                 );
                 if (foundMainPic) dispatch(updateSelectedPic(foundMainPic));
             }
             if (selectedCompany?.Pics) {
                 const listPic = selectedCompany?.Pics?.map((pic) => {
                     if (selectedPic) {
-                        if (selectedPic.id) {
-                            if (pic.id === selectedPic.id) {
+                        if (selectedPic?.id) {
+                            if (pic?.id === selectedPic?.id) {
                                 dispatch(updateSelectedPic(pic));
                                 return { ...pic, isSelected: true };
                             }
@@ -130,7 +130,7 @@ export default function SelectedPic({
                     }
                     return { ...pic, isSelected: false };
                 });
-                if (listPic.length === 1) {
+                if (listPic && listPic?.length === 1) {
                     listPic[0].isSelected = true;
                 }
                 dispatch(updateSelectedCompanyPicList(listPic));
@@ -140,7 +140,7 @@ export default function SelectedPic({
 
     let picOrCompanyName = "-";
     if (selectedCompany?.Company?.name) {
-        picOrCompanyName = selectedCompany.Company?.name;
+        picOrCompanyName = selectedCompany?.Company?.name;
     } else if (selectedCompany?.Pic?.name) {
         picOrCompanyName = selectedCompany?.Pic?.name;
     }
@@ -154,7 +154,7 @@ export default function SelectedPic({
                     <BVisitationCard
                         item={{
                             name: selectedCompany?.name || "-",
-                            location: selectedCompany?.LocationAddress.line1,
+                            location: selectedCompany?.LocationAddress?.line1,
                             picOrCompanyName
                         }}
                         customIcon={GantiIcon}
@@ -184,8 +184,8 @@ export default function SelectedPic({
                     const currentList = selectedCompany?.Pics
                         ? [...selectedCompany.Pics]
                         : [];
-                    if (currentList && currentList.length > 0) {
-                        currentList.forEach((it, index) => {
+                    if (currentList && currentList?.length > 0) {
+                        currentList?.forEach((it, index) => {
                             currentList[index] = {
                                 ...currentList[index],
                                 isSelected: false
@@ -194,7 +194,7 @@ export default function SelectedPic({
                     }
                     if (newPic) {
                         newPic.isSelected = true;
-                        currentList.push(newPic);
+                        currentList?.push(newPic);
                     }
                     dispatch(updateSelectedCompanyPicList(currentList));
                 }}
