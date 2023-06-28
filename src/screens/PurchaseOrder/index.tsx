@@ -98,7 +98,8 @@ function PurchaseOrder() {
         return (
             (hasNoQuantityMultiProducts &&
                 hasNoQuantityMultiProducts?.length > 0) ||
-            (selectedProducts && selectedProducts?.length === 0) ||
+            !selectedProducts ||
+            selectedProducts?.length === 0 ||
             checkHasSpecialMobilizationPrice()
         );
     };

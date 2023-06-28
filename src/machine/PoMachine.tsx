@@ -665,7 +665,10 @@ const POMachine =
                     currentStep: event?.value
                 })),
                 setNewStep: assign((context) => {
-                    const newStep = context?.currentStep === 0 ? 1 : 2;
+                    const newStep =
+                        !context?.currentStep || context?.currentStep === 0
+                            ? 1
+                            : 2;
                     return {
                         isModalContinuePo: false,
                         currentStep: newStep,
@@ -728,14 +731,14 @@ const POMachine =
                     selectedProducts: []
                 })),
                 setSelectedChoosenProduct: assign((context, event) => {
-                    let newSelectedProduct;
+                    let newSelectedProduct: any[] = [];
                     const isExisted = context?.selectedProducts?.findIndex(
                         (val) => val?.id === event?.value?.id
                     );
                     if (isExisted === -1) {
                         if (context?.selectedProducts)
                             newSelectedProduct = [...context.selectedProducts];
-                        newSelectedProduct = [event?.value];
+                        if (event?.value) newSelectedProduct?.push(event.value);
                     } else {
                         newSelectedProduct = context?.selectedProducts?.filter(
                             (val) => val?.id !== event?.value?.id
@@ -851,7 +854,7 @@ const POMachine =
                 }),
                 assignMobilizationPrice: assign((context, event) => {
                     const filteredValue = event?.value?.replace(/[^0-9]/g, "");
-                    if (event?.index === 0) {
+                    if (!event?.index || event?.index === 0) {
                         return {
                             fiveToSix: filteredValue
                         };

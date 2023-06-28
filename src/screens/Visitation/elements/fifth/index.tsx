@@ -267,7 +267,7 @@ function Fifth() {
                     clicked = "1";
                     let response;
                     if (
-                        uploadedFilesResponse &&
+                        !uploadedFilesResponse ||
                         uploadedFilesResponse?.length === 0
                     ) {
                         const photoFiles = visitationData?.images

@@ -151,7 +151,10 @@ function InvoiceList() {
                 getAllInvoiceData();
             }
 
-            if (invoiceData?.invoiceData?.length <= 0) {
+            if (
+                !invoiceData?.invoiceData ||
+                invoiceData?.invoiceData?.length <= 0
+            ) {
                 getAllInvoiceData();
             }
         }, [invoiceData?.search, invoiceData?.filter])

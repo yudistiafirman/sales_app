@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         paddingHorizontal: layout.pad.lg
     },
-    popupSPHContent: { height: resScale(78), paddingHorizontal: layout.pad.lg },
+    popupSPHContent: { height: resScale(82), paddingHorizontal: layout.pad.lg },
     popupSPHDesc: {
         alignSelf: "center",
         textAlign: "center",

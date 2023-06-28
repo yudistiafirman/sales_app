@@ -36,8 +36,8 @@ const useAsyncConfigSetup = () => {
             let userToken;
             try {
                 userToken = await bStorage.getItem(storageKey.userToken);
-                const batchingPlantsResponse = await getBatchingPlants();
                 if (userToken) {
+                    const batchingPlantsResponse = await getBatchingPlants();
                     const decoded =
                         jwtDecode<UserModel.DataSuccessLogin>(userToken);
 

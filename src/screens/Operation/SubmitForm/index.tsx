@@ -241,6 +241,7 @@ function SubmitForm() {
         if (userData?.type === EntryType.DRIVER) {
             return (
                 (photos && photos?.length < 7) ||
+                !operationData?.inputsValue?.recepientName ||
                 operationData?.inputsValue?.recepientName?.length === 0 ||
                 !phoneNumberRegex?.test(
                     operationData?.inputsValue?.recepientPhoneNumber
@@ -249,12 +250,14 @@ function SubmitForm() {
         }
         if (userData?.type === EntryType.WB) {
             return (
+                !operationData?.inputsValue?.weightBridge ||
                 operationData?.inputsValue?.weightBridge?.length === 0 ||
                 (photos && photos?.length < 2)
             );
         }
         if (operationType === EntryType.RETURN) {
             return (
+                !operationData?.inputsValue?.truckMixCondition ||
                 operationData?.inputsValue?.truckMixCondition?.length === 0 ||
                 (photos && photos?.length < 2)
             );

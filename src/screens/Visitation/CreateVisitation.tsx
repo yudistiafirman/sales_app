@@ -95,6 +95,9 @@ function stepHandler(
     const selectedPic = state?.pics?.filter((v) => v?.isSelected);
     const customerTypeCond =
         state?.customerType === "COMPANY" ? !!state?.companyName : true;
+    console.log("dataa 1:: ", state?.pics);
+    console.log("dataa 2:: ", state?.customerType);
+    console.log("dataa 3:: ", state?.companyName);
     if (
         state?.customerType &&
         customerTypeCond &&
@@ -442,6 +445,7 @@ function CreateVisitation() {
             visitationData?.stepperVisitationShouldNotFocused &&
             visitationData?.step === 2 &&
             (visitationData?.stageProject ||
+                !visitationData?.products ||
                 visitationData?.products?.length <= 0 ||
                 visitationData?.estimationDate?.estimationMonth ||
                 visitationData?.estimationDate?.estimationWeek ||
@@ -451,8 +455,9 @@ function CreateVisitation() {
         }
 
         if (
-            visitationData?.stepperVisitationShouldNotFocused &&
-            visitationData?.step === 3 &&
+            (visitationData?.stepperVisitationShouldNotFocused &&
+                visitationData?.step === 3 &&
+                !visitationData?.competitors) ||
             visitationData?.competitors?.length <= 0
         ) {
             dispatch(resetStepperFocused(4));

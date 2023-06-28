@@ -97,7 +97,7 @@ function SecondStep({ openBottomSheet }: IProps) {
                             })
                         );
 
-                        if (items?.length <= 0) {
+                        if (!items || items?.length <= 0) {
                             dispatch(
                                 updateDataVisitation({
                                     type: "companyName",
@@ -111,6 +111,7 @@ function SecondStep({ openBottomSheet }: IProps) {
                         }
                     })
                     .catch(() => {
+                        console.log("gotcha failure");
                         dispatch(
                             updateDataVisitation({
                                 type: "companyName",
@@ -181,6 +182,7 @@ function SecondStep({ openBottomSheet }: IProps) {
                 items: visitationData?.options?.items,
                 loading: visitationData?.options?.loading,
                 onSelect: (item: { id: string; title: string }): void => {
+                    console.log("thissss:: ", item);
                     if (item) {
                         dispatch(
                             updateDataVisitation({

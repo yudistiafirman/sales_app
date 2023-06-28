@@ -121,7 +121,10 @@ function BCalendarRange({
             onDayPress={(value) => {
                 let newMap: MarkedDates = {};
                 newMap = { ...selectedMarkedDates };
-                if (Object?.keys(selectedMarkedDates)?.length === 0) {
+                if (
+                    !Object?.keys(selectedMarkedDates) ||
+                    Object?.keys(selectedMarkedDates)?.length === 0
+                ) {
                     newMap[value?.dateString] = {
                         selected: true,
                         startingDay: true,

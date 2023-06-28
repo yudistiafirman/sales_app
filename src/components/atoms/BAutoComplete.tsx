@@ -70,7 +70,7 @@ function BAutoComplete({
     onClear
 }: IProps) {
     let isShowChevron = showChevron;
-    if (items?.length === 0) {
+    if (!items || items?.length === 0) {
         isShowChevron = false;
     }
     return (

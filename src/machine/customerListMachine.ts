@@ -216,9 +216,10 @@ const customerListMachine = createMachine(
                 isLoadDataCount: true
             })),
             assignData: assign((context, event) => {
-                let data;
+                let data: any[] = [];
                 if (context?.data) data = [...context.data];
-                if (event?.data?.data?.data) data = [...event.data.data.data];
+                if (event?.data?.data?.data)
+                    data?.push(...event.data.data.data);
                 return {
                     data,
                     totalPage: event?.data?.data?.totalPages,

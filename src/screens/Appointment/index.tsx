@@ -79,7 +79,8 @@ export default function Appointment() {
     const customerType =
         stepOne?.customerType === "company" ? "company" : "individu";
     const btnShown =
-        searchQuery?.length === 0 && stepOne?.customerType?.length > 0;
+        (!searchQuery || searchQuery?.length === 0) &&
+        stepOne?.customerType?.length > 0;
     const labels = ["Data Pelanggan", "Tanggal Kunjungan"];
     const inCustomerDataStep = step === 0;
     const inVisitationDateStep = step === 1;
@@ -138,19 +139,25 @@ export default function Appointment() {
             }
         }
 
-        if (stepOne[customerType]?.name?.length === 0) {
+        if (
+            !stepOne[customerType]?.name ||
+            stepOne[customerType]?.name?.length === 0
+        ) {
             errors.errorProject = "Nama Proyek harus diisi";
         } else if (stepOne[customerType]?.name?.length < 4) {
             errors.errorProject =
                 "Nama Proyek tidak boleh kurang dari 4 karakter";
         }
-        if (stepOne[customerType]?.Pics?.length === 0) {
+        if (
+            !stepOne[customerType]?.Pics ||
+            stepOne[customerType]?.Pics?.length === 0
+        ) {
             errors.errorPics = "Tambahkan minimal 1 PIC";
         } else if (stepOne[customerType]?.Pics?.length > 1) {
             const selectedPic = stepOne[customerType]?.Pics?.filter(
                 (v) => v?.isSelected
             );
-            if (selectedPic && selectedPic?.length === 0) {
+            if (!selectedPic || selectedPic?.length === 0) {
                 errors.errorPics = "Pilih salah satu PIC";
             }
         }

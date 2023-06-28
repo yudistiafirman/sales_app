@@ -172,6 +172,7 @@ export const showErrorMsg = (
     const postScheduleUrl = `${URL_ORDER}/order/m/schedule/`;
     const postPO = `${URL_ORDER}/order/m/purchase-order/`;
     const postSOSigned = `${URL_ORDER}/order/m/purchase-order/docs/`;
+    const getBatchingPlant = `${URL_COMMON}/common/batching-plant/`;
 
     if (
         url !== postVisitationUrl &&
@@ -181,6 +182,7 @@ export const showErrorMsg = (
         url !== postScheduleUrl &&
         url !== postPO &&
         url !== postSOSigned &&
+        url !== getBatchingPlant &&
         errMsg !== "canceled"
     ) {
         store.dispatch(

@@ -66,7 +66,8 @@ function Verification() {
                 const decoded =
                     jwtDecode<UserModel.DataSuccessLogin>(accessToken);
                 await bStorage.setItem(storageKey.userToken, accessToken);
-                const batchingPlantsResponse = await getBatchingPlants();
+                let batchingPlantsResponse;
+                if (decoded) batchingPlantsResponse = await getBatchingPlants();
                 if (batchingPlantsResponse?.data?.data?.data)
                     dispatch(
                         setUserData({

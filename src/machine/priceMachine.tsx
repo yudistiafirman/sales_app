@@ -342,9 +342,8 @@ export const priceMachine =
                     if (
                         event?.data?.products &&
                         event?.data?.products?.length > 0
-                    ) {
-                        productsData = [...event.data.products];
-                    }
+                    )
+                        productsData?.push(...event.data.products);
                     return {
                         totalPage: event?.data?.totalPage,
                         loadProduct: false,

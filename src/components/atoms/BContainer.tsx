@@ -32,14 +32,14 @@ const makeStyle = ({
         };
     }
 
-    if (paddingHorizontal || paddingHorizontal === 0) {
+    if (!paddingHorizontal || paddingHorizontal === 0) {
         styles = {
             ...styles,
             paddingHorizontal
         };
     }
 
-    if (paddingVertical || paddingVertical === 0) {
+    if (!paddingVertical || paddingVertical === 0) {
         styles = {
             ...styles,
             paddingVertical

@@ -314,8 +314,8 @@ export default function FifthStep() {
             payload.batchingPlantId = selectedBatchingPlant?.id;
             const validPhotoCount = countNonNullValues(photoFiles);
             if (
-                (sphState?.uploadedAndMappedRequiredDocs &&
-                    sphState?.uploadedAndMappedRequiredDocs?.length === 0 &&
+                ((!sphState?.uploadedAndMappedRequiredDocs ||
+                    sphState?.uploadedAndMappedRequiredDocs?.length === 0) &&
                     !isNoPhotoToUpload) ||
                 validPhotoCount >
                     sphState?.uploadedAndMappedRequiredDocs?.length
@@ -436,7 +436,7 @@ export default function FifthStep() {
                     }}
                 />
                 <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1, maxHeight: resScale(70) }}>
+                    <View style={{ flex: 1, maxHeight: resScale(82) }}>
                         <BVisitationCard
                             item={{
                                 name: sphState?.selectedCompany?.name

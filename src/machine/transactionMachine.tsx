@@ -201,11 +201,11 @@ const transactionMachine =
                 }),
                 assignTransactionsDataToContext: assign((context, event) => {
                     if (event?.data?.data?.length > 0) {
-                        let transactionsData;
+                        let transactionsData: any[] = [];
                         if (context?.transactionData)
                             transactionsData = [...context.transactionData];
                         if (event?.data?.data)
-                            transactionsData = [...event.data.data];
+                            transactionsData?.push(...event.data.data);
                         const newTypeData = context?.routes?.map((item) => ({
                             key: item?.key,
                             title: item?.title,

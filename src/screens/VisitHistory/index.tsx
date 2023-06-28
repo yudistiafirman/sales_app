@@ -96,7 +96,7 @@ function VisitHistory() {
 
     return (
         <View style={styles.container}>
-            {visitationData?.length === 0 ? (
+            {!visitationData || visitationData?.length === 0 ? (
                 <BEmptyState
                     isError={state.matches("errorGettingData")}
                     errorMessage={errorMessage}

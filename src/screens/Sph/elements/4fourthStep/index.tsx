@@ -266,7 +266,9 @@ export default function FourthStep() {
                                 setCurrentPosition(4);
                             }
                         }}
-                        disableContinue={productsRedux?.length === 0}
+                        disableContinue={
+                            !productsRedux || productsRedux?.length === 0
+                        }
                     />
                 </View>
             </View>
