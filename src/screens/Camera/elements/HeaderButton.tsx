@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
 
 type ConfigType = {
     style?: StyleProp<ViewStyle>;
+    onPressSwitchCamera: () => void;
     onPressFlashlight: () => void;
     onPressHDR: () => void;
     onPressHighQuality: () => void;
@@ -47,10 +48,13 @@ type ConfigType = {
     enableHDR: boolean;
     enableHighQuality: boolean;
     enableLowBoost: boolean;
+    enableSwitchCamera: boolean;
 };
 
 function HeaderButton({
     style,
+    onPressSwitchCamera,
+    enableSwitchCamera,
     onPressFlashlight,
     onPressHDR,
     enableFlashlight,
@@ -61,6 +65,10 @@ function HeaderButton({
     enableLowBoost
 }: ConfigType) {
     const cameraHeaderButtonValue = [
+        {
+            onPress: onPressSwitchCamera,
+            iconName: enableSwitchCamera ? "camera-flip" : "camera-flip"
+        },
         {
             onPress: onPressFlashlight,
             iconName: enableFlashlight ? "flash" : "flash-off"
