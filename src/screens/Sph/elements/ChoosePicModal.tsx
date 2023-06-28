@@ -121,10 +121,13 @@ export default function ChoosePicModal({
     );
 
     function selectedPicData() {
-        if (sphData.selectedCompany?.Pics.length) {
-            const listPic = sphData.selectedCompany?.Pics;
-            for (let i = 0; i < listPic.length; i += 1) {
-                if (listPic[i].isSelected) {
+        if (
+            sphData?.selectedCompany?.Pics &&
+            sphData?.selectedCompany?.Pics?.length > 0
+        ) {
+            const listPic = sphData?.selectedCompany?.Pics;
+            for (let i = 0; i < listPic?.length; i += 1) {
+                if (listPic[i]?.isSelected) {
                     return listPic[i];
                 }
             }
@@ -139,8 +142,8 @@ export default function ChoosePicModal({
                 isRequire: true,
                 isError: false,
                 type: "PIC",
-                value: sphData.selectedCompany?.Pics
-                    ? sphData.selectedCompany.Pics
+                value: sphData?.selectedCompany?.Pics
+                    ? sphData?.selectedCompany?.Pics
                     : [],
                 hidePicLabel: true,
                 onSelect: (index: number) => {
@@ -152,18 +155,18 @@ export default function ChoosePicModal({
                         } else {
                             picChanged.isSelected = false;
                         }
-                        listPic.push(picChanged);
+                        listPic?.push(picChanged);
                     });
                     dispatch(
                         updateSelectedCompany({
-                            ...sphData.selectedCompany,
+                            ...sphData?.selectedCompany,
                             Pics: listPic
                         })
                     );
                 }
             }
         ],
-        [sphData.selectedCompany]
+        [sphData?.selectedCompany]
     );
 
     return (
@@ -207,7 +210,7 @@ export default function ChoosePicModal({
                                 <ScrollView
                                     onScroll={(event) => {
                                         setScrollOffSet(
-                                            event.nativeEvent.contentOffset.y
+                                            event?.nativeEvent?.contentOffset?.y
                                         );
                                     }}
                                 >

@@ -106,19 +106,20 @@ const searchSOMachine = createMachine(
     },
     {
         guards: {
-            isNotLastPage: (context, event) => context.page <= context.totalPage
+            isNotLastPage: (context, event) =>
+                context?.page <= context?.totalPage
         },
         services: {
             fetchSOListData: async (context, event) => {
                 try {
                     const response = await getAllPurchaseOrders(
-                        context.page.toString(),
-                        context.size.toString(),
-                        context.keyword,
+                        context?.page?.toString(),
+                        context?.size?.toString(),
+                        context?.keyword,
                         "CONFIRMED",
-                        context.batchingPlantId
+                        context?.batchingPlantId
                     );
-                    return response.data;
+                    return response?.data;
                 } catch (error) {
                     throw new Error(error);
                 }
@@ -126,13 +127,13 @@ const searchSOMachine = createMachine(
         },
         actions: {
             assignListData: assign((context, event) => {
-                const listData = [...context.soListData];
-                if (event?.data?.data?.data !== undefined) {
-                    listData.push(...event.data.data.data);
-                }
+                let listData: any[] = [];
+                if (context?.soListData) listData = [...context.soListData];
+                if (event?.data?.data?.data)
+                    listData?.push(...event.data.data.data);
 
                 return {
-                    totalPage: event.data.data.totalPages,
+                    totalPage: event?.data?.data?.totalPages,
                     soListData: listData,
                     isLoading: false,
                     isLoadMore: false,
@@ -140,7 +141,7 @@ const searchSOMachine = createMachine(
                 };
             }),
             assignError: assign((context, event) => ({
-                errorMessage: event.data.message,
+                errorMessage: event?.data?.message,
                 isLoading: false,
                 isLoadMore: false,
                 isRefreshing: false
@@ -152,7 +153,7 @@ const searchSOMachine = createMachine(
                 keyword: event?.payload
             })),
             handleEndReached: assign((context, event) => ({
-                page: context.page + 1,
+                page: (context?.page || 0) + 1,
                 isLoadMore: true
             })),
             assignKeywordToContext: assign((context, event) => ({

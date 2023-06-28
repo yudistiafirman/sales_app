@@ -145,7 +145,7 @@ export default function BGallery({
         <FlashList
             estimatedItemSize={10}
             data={picts}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => index?.toString()}
             renderItem={renderItem}
             numColumns={3}
         />

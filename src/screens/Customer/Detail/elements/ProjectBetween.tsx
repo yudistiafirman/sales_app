@@ -50,7 +50,7 @@ export default function ProjectBetween({
     return (
         <View style={styles.container}>
             <View style={[styles.between]}>
-                <Text style={styles.projectName}>{projects.name}</Text>
+                <Text style={styles.projectName}>{projects?.name}</Text>
                 <TouchableOpacity
                     onPress={onPress}
                     style={styles.buttonContainer}

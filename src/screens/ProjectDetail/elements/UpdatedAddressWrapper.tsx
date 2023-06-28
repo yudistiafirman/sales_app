@@ -56,7 +56,7 @@ function UpdatedAddressWrapper({
         <View style={styles.filledAddressContainer}>
             <View style={styles.filledAddressInnerContainer}>
                 <BText numberOfLines={1} style={styles.mainAddress}>
-                    {address.split(",")[0]}
+                    {address?.split(",")[0]}
                 </BText>
                 <BText numberOfLines={1} style={styles.secondAddress}>
                     {address}

@@ -32,8 +32,8 @@ function TotalDocumentChip({
         const totalUploadedDocument = [
             ...(documents?.cbd || []),
             ...(documents?.credit || [])
-        ].filter((v) => v.File !== null);
-        return totalUploadedDocument.length;
+        ]?.filter((v) => v?.File !== null);
+        return totalUploadedDocument?.length;
     }, [documents]);
 
     if (!documents || !customerType) {

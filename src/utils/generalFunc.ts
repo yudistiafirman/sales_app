@@ -22,7 +22,7 @@ export const isUndefined = (state: any): boolean =>
     typeof state === "undefined";
 
 export const getColorStatusTrx = (id: string) => {
-    switch (id.toUpperCase()) {
+    switch (id?.toUpperCase()) {
         case "DIAJUKAN":
             return { color: colors.status.grey, textColor: colors.black };
         case "DRAFT":
@@ -63,7 +63,7 @@ export const getColorStatusTrx = (id: string) => {
 };
 
 export const getStatusTrx = (id: string) => {
-    switch (id.toUpperCase()) {
+    switch (id?.toUpperCase()) {
         case "DRAFT":
             return "Diterbitkan".toUpperCase();
         case "SUBMITTED":
@@ -81,18 +81,18 @@ export const getStatusTrx = (id: string) => {
         case "DECLINED":
             return "Ditolak".toUpperCase();
         default:
-            return id.toUpperCase();
+            return id?.toUpperCase();
     }
 };
 
 export const beautifyPhoneNumber = (text: string) => {
-    let firstChar: string[] = text.match(/.{1,3}/g) ?? [];
+    let firstChar: string[] = text?.match(/.{1,3}/g) ?? [];
     let result = "";
-    if (firstChar.length > 0) {
+    if (firstChar && firstChar?.length > 0) {
         result += firstChar[0];
-        firstChar = firstChar.splice(1, 4);
-        firstChar = firstChar.join("").match(/.{1,4}/g) ?? [];
-        result += ` ${firstChar.join(" ")}`;
+        firstChar = firstChar?.splice(1, 4);
+        firstChar = firstChar?.join("")?.match(/.{1,4}/g) ?? [];
+        result += ` ${firstChar?.join(" ")}`;
     } else {
         result += firstChar.join("");
     }
@@ -122,7 +122,7 @@ export const getAppVersionName = (): string => {
 export const isForceUpdate = (text: any): boolean => text?.is_forced;
 
 export const getMinVersionUpdate = (text: any): string =>
-    text?.min_version?.split(".").join("");
+    text?.min_version?.split(".")?.join("");
 
 export const isJsonString = (str: any) => {
     try {
@@ -161,7 +161,7 @@ export const getSuccessMsgFromAPI = (
     }
 
     if (domainType === COMMON_API_SERVER) {
-        switch (endPoint.toLowerCase()) {
+        switch (endPoint?.toLowerCase()) {
             case "projectdoc":
                 finalText += "dokumen";
                 break;
@@ -196,15 +196,15 @@ export const getSuccessMsgFromAPI = (
                 finalText = "Berhasil logout";
                 break;
             default:
-                if (fullUrl?.toLowerCase().includes("places/"))
+                if (fullUrl?.toLowerCase()?.includes("places/"))
                     finalText = "Berhasil mendapatkan detail alamat";
-                else if (fullUrl?.toLowerCase().includes("project/"))
+                else if (fullUrl?.toLowerCase()?.includes("project/"))
                     finalText += "detail proyek";
                 else finalText += "data";
                 break;
         }
     } else if (domainType === INVENTORY_API_SERVER) {
-        switch (endPoint.toLowerCase()) {
+        switch (endPoint?.toLowerCase()) {
             case "category":
                 finalText += "data semua produk berdasarkan kategori";
                 break;
@@ -216,7 +216,7 @@ export const getSuccessMsgFromAPI = (
                 break;
         }
     } else if (domainType === PRODUCTIVITY_API_SERVER) {
-        switch (endPoint.toLowerCase()) {
+        switch (endPoint?.toLowerCase()) {
             case "all-visitation":
                 finalText += "data semua kunjungan";
                 break;
@@ -230,13 +230,13 @@ export const getSuccessMsgFromAPI = (
                 finalText = "Berhasil buat janji";
                 break;
             default:
-                if (fullUrl?.toLowerCase().includes("visitation/"))
+                if (fullUrl?.toLowerCase()?.includes("visitation/"))
                     finalText = "";
                 else finalText += "data";
                 break;
         }
     } else if (domainType === ORDER_API_SERVER) {
-        switch (endPoint.toLowerCase()) {
+        switch (endPoint?.toLowerCase()) {
             case "project-sph":
                 finalText += "data semua SPH berdasarkan proyek";
                 break;
@@ -265,23 +265,23 @@ export const getSuccessMsgFromAPI = (
                 finalText = "";
                 break;
             default:
-                if (fullUrl?.toLowerCase().includes("sph/"))
+                if (fullUrl?.toLowerCase()?.includes("sph/"))
                     finalText += "dokumen SPH";
-                else if (fullUrl?.toLowerCase().includes("purchase-order/"))
+                else if (fullUrl?.toLowerCase()?.includes("purchase-order/"))
                     finalText = "";
-                else if (fullUrl?.toLowerCase().includes("quotation-letter/"))
+                else if (fullUrl?.toLowerCase()?.includes("quotation-letter/"))
                     finalText = "";
-                else if (fullUrl?.toLowerCase().includes("deposit/"))
+                else if (fullUrl?.toLowerCase()?.includes("deposit/"))
                     finalText = "";
-                else if (fullUrl?.toLowerCase().includes("schedule/"))
+                else if (fullUrl?.toLowerCase()?.includes("schedule/"))
                     finalText = "";
-                else if (fullUrl?.toLowerCase().includes("delivery-order/"))
+                else if (fullUrl?.toLowerCase()?.includes("delivery-order/"))
                     finalText = "";
                 else finalText += "data";
                 break;
         }
     } else if (domainType === FINANCE_API_SERVER) {
-        switch (endPoint.toLowerCase()) {
+        switch (endPoint?.toLowerCase()) {
             case "payment":
                 finalText = "";
                 break;
@@ -289,8 +289,9 @@ export const getSuccessMsgFromAPI = (
                 finalText = "";
                 break;
             default:
-                if (fullUrl?.toLowerCase().includes("invoice/")) finalText = "";
-                else if (fullUrl?.toLowerCase().includes("payment/"))
+                if (fullUrl?.toLowerCase()?.includes("invoice/"))
+                    finalText = "";
+                else if (fullUrl?.toLowerCase()?.includes("payment/"))
                     finalText = "";
                 else finalText += "data";
                 break;
@@ -305,9 +306,9 @@ export const showWarningDocument = (
     cbdDocs: CustomerDocsPayType[],
     customerType: "INDIVIDU" | "COMPANY"
 ) => {
-    if (!cbdDocs || !customerType || cbdDocs.length === 0) return true;
+    if (!cbdDocs || !customerType || cbdDocs?.length === 0) return true;
 
-    const documents = cbdDocs.filter((v) => v.File !== null);
+    const documents = cbdDocs?.filter((v) => v?.File !== null);
 
     if (customerType === INDIVIDU) {
         if (documents && documents?.length > 0) {
@@ -315,14 +316,14 @@ export const showWarningDocument = (
         }
         return true;
     }
-    const hasUploadedNpwp = cbdDocs.filter(
-        (v) => v.Document?.name === "Foto NPWP"
+    const hasUploadedNpwp = cbdDocs?.filter(
+        (v) => v?.Document?.name === "Foto NPWP"
     );
 
     if (
         documents &&
         documents?.length > 0 &&
-        hasUploadedNpwp[0].File !== null
+        hasUploadedNpwp[0]?.File !== null
     ) {
         return false;
     }
@@ -335,7 +336,7 @@ export const uniqueStringGenerator = () =>
 export const replaceDot = (value: string) => {
     let count = 0;
     let output = "";
-    for (let i = 0; i < value.length; i += 1) {
+    for (let i = 0; i < value?.length; i += 1) {
         if (value[i] === ".") {
             count += 1;
         }
@@ -394,8 +395,8 @@ export function checkSelectedSPHPic(picList: PIC[]) {
     let isSelectedExist = false;
 
     const list = picList || [];
-    list.forEach((pic) => {
-        if (pic.isSelected) {
+    list?.forEach((pic) => {
+        if (pic?.isSelected) {
             isSelectedExist = true;
         }
     });
@@ -412,28 +413,33 @@ export function shouldAllowSPHStateToContinue(
     let stepFourCompleted = false;
 
     if (
-        sphState.selectedCompany &&
-        checkSelectedSPHPic(sphState.selectedCompany?.Pics)
+        sphState?.selectedCompany &&
+        checkSelectedSPHPic(sphState?.selectedCompany?.Pics)
     ) {
         stepOneCompleted = true;
     }
     const billingAddressFilled =
-        !Object.values(sphState.billingAddress).every((val) => !val) &&
-        Object.entries(sphState.billingAddress.addressAutoComplete).length > 1;
+        !Object?.values(sphState?.billingAddress)?.every((val) => !val) &&
+        Object?.entries(sphState?.billingAddress?.addressAutoComplete)?.length >
+            1;
     if (
-        (sphState.isBillingAddressSame || billingAddressFilled) &&
-        sphState.distanceFromLegok !== null
+        (sphState?.isBillingAddressSame || billingAddressFilled) &&
+        sphState?.distanceFromLegok !== null
     ) {
         stepTwoCompleted = true;
     }
     const paymentCondition =
-        sphState.paymentType === "CREDIT"
-            ? sphState.paymentBankGuarantee
+        sphState?.paymentType === "CREDIT"
+            ? sphState?.paymentBankGuarantee
             : true;
-    if (sphState.paymentType && paymentCondition) {
+    if (sphState?.paymentType && paymentCondition) {
         stepThreeCompleted = true;
     }
-    if (sphState.chosenProducts.length && sphState.selectedCompany) {
+    if (
+        sphState?.chosenProducts &&
+        sphState?.chosenProducts?.length > 0 &&
+        sphState?.selectedCompany
+    ) {
         stepFourCompleted = true;
     }
     if (pos === 0) {
@@ -480,7 +486,7 @@ export function shouldAllowVisitationStateToContinue(
     ) {
         stepOneCompleted = true;
     }
-    const selectedPic = visitationState?.pics?.filter((v) => v.isSelected);
+    const selectedPic = visitationState?.pics?.filter((v) => v?.isSelected);
     const customerTypeCond =
         visitationState?.customerType === "COMPANY"
             ? !!visitationState?.companyName
@@ -489,7 +495,8 @@ export function shouldAllowVisitationStateToContinue(
         visitationState?.customerType &&
         customerTypeCond &&
         visitationState?.projectName &&
-        selectedPic.length > 0
+        selectedPic &&
+        selectedPic?.length > 0
     ) {
         stepTwoCompleted = true;
     }
@@ -559,7 +566,7 @@ export function getAvailableDepositProject(
     if (includeCredit && data?.Customer?.paymentType === "CREDIT") {
         availableDeposit =
             data?.Customer?.Accounts?.length > 0
-                ? data?.Customer?.Accounts[0].pendingBalance
+                ? data?.Customer?.Accounts[0]?.pendingBalance
                 : 0;
     } else {
         availableDeposit = data?.Account?.pendingBalance || 0;

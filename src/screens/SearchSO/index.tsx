@@ -60,8 +60,8 @@ function SearchSO() {
     const onChangeText = (text: string) => {
         setSearchValue(text);
 
-        if (text.length > 2) send("onRefreshList", { payload: text });
-        else if (text.length < 1) send("onRefreshList", { payload: "" });
+        if (text?.length > 2) send("onRefreshList", { payload: text });
+        else if (text?.length < 1) send("onRefreshList", { payload: "" });
     };
 
     const onClearValue = () => {
@@ -75,7 +75,7 @@ function SearchSO() {
     const onPressItem = (item: any) => {
         const number = item?.brikNumber;
         const id = item?.id;
-        if (soData.photoFiles && soData.selectedID === id) {
+        if (soData?.photoFiles && soData?.selectedID === id) {
             navigation.navigate(FORM_SO);
         } else {
             navigation.navigate(CAMERA, {
@@ -134,7 +134,7 @@ function SearchSO() {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <BSpacer size="small" />
-            {keyword !== "" && searchValue.length < 3 ? (
+            {keyword !== "" && searchValue?.length < 3 ? (
                 <BEmptyState emptyText="Minimal 3 huruf!" />
             ) : (
                 <View style={{ flexGrow: 1, flexDirection: "row" }}>

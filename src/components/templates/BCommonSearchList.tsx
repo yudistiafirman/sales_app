@@ -90,12 +90,12 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
     hidePicName,
     autoFocus
 }: BCommonSearchListProps) {
-    const isSearching = searchQuery.length > 2;
+    const isSearching = searchQuery?.length > 2;
     const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
         ({ item, idx }) => {
             let picOrCompanyName;
             if (item?.Company?.name) {
-                picOrCompanyName = item.Company?.name;
+                picOrCompanyName = item?.Company?.name;
             } else if (item?.mainPic?.name) {
                 picOrCompanyName = item?.mainPic?.name;
             }
@@ -103,13 +103,13 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                 id: idx,
                 name: item?.name,
                 location:
-                    item.locationName ||
+                    item?.locationName ||
                     item?.ShippingAddress?.Postal?.City?.name ||
                     item?.location ||
                     item?.locationAddress?.line1 ||
                     item?.address?.line1,
                 pilNames:
-                    item?.PurchaseOrders?.map((it) => it.brikNumber) ||
+                    item?.PurchaseOrders?.map((it) => it?.brikNumber) ||
                     item?.QuotationRequests?.map(
                         (val) => val?.QuotationLetter?.number
                     ),
@@ -123,7 +123,7 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                     <BSpacer size="small" />
                     <BVisitationCard
                         item={constructVisitationData}
-                        key={item.id}
+                        key={item?.id}
                         onPress={() =>
                             onPressListCheck !== null && onPressListCheck(item)
                         }
@@ -180,7 +180,7 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                                     DEFAULT_ON_END_REACHED_THREHOLD
                                 }
                                 onRefresh={onRefresh}
-                                keyExtractor={(item, indx) => indx.toString()}
+                                keyExtractor={(item, indx) => indx?.toString()}
                                 onEndReached={onEndReached}
                                 refreshing={refreshing}
                                 ListFooterComponent={

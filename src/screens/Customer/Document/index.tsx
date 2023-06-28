@@ -65,19 +65,19 @@ function Document() {
             dispatch(
                 openPopUp({
                     popUpType: "loading",
-                    popUpText: `Mengupload Dokumen ${customerDocs[paymentType][docsIndex].Document.name}`,
+                    popUpText: `Mengupload Dokumen ${customerDocs[paymentType][docsIndex]?.Document?.name}`,
                     outsideClickClosePopUp: true
                 })
             );
             const valueToUpload = {
                 ...value,
-                name: `CD-${uniqueStringGenerator()}-${value.name}}`
+                name: `CD-${uniqueStringGenerator()}-${value?.name}}`
             };
             const responseFile = await uploadFileImage([valueToUpload]);
-            const { id } = responseFile.data.data[0];
+            const id = responseFile?.data?.data[0]?.id;
             if (
-                responseFile.data.success &&
-                responseFile.data.success !== false
+                responseFile?.data?.success &&
+                responseFile?.data?.success !== false
             ) {
                 const payload = {};
                 payload.customerDocs = [
@@ -86,7 +86,8 @@ function Document() {
                             id
                         },
                         Document: {
-                            id: customerDocs[paymentType][docsIndex].Document.id
+                            id: customerDocs[paymentType][docsIndex]?.Document
+                                ?.id
                         }
                     }
                 ];
@@ -100,9 +101,9 @@ function Document() {
                     customerId,
                     payload
                 );
-                if (responseCustomer.data.success) {
+                if (responseCustomer?.data?.success) {
                     const newFilesData = [...customerDocs[paymentType]];
-                    const newFilesDataValue = newFilesData.map((v, i) => {
+                    const newFilesDataValue = newFilesData?.map((v, i) => {
                         if (i === docsIndex) {
                             return {
                                 ...v,
@@ -119,14 +120,14 @@ function Document() {
                     dispatch(
                         openPopUp({
                             popUpType: "success",
-                            popUpText: `Berhasil Upload Dokumen ${customerDocs[paymentType][docsIndex].Document.name}`
+                            popUpText: `Berhasil Upload Dokumen ${customerDocs[paymentType][docsIndex]?.Document?.name}`
                         })
                     );
                 } else {
                     dispatch(
                         openPopUp({
                             popUpType: "error",
-                            popUpText: `Error Upload Dokumen ${customerDocs[paymentType][docsIndex].Document.name}`,
+                            popUpText: `Error Upload Dokumen ${customerDocs[paymentType][docsIndex]?.Document?.name}`,
                             outsideClickClosePopUp: true
                         })
                     );
@@ -135,7 +136,7 @@ function Document() {
                 dispatch(
                     openPopUp({
                         popUpType: "error",
-                        popUpText: `Error Upload Dokumen ${customerDocs[paymentType][docsIndex].Document.name}`,
+                        popUpText: `Error Upload Dokumen ${customerDocs[paymentType][docsIndex]?.Document?.name}`,
                         outsideClickClosePopUp: true
                     })
                 );
@@ -146,7 +147,7 @@ function Document() {
                     popUpType: "error",
                     popUpText: error?.message
                         ? error?.message
-                        : `Error Upload Dokumen ${customerDocs[paymentType][docsIndex].Document.name}`,
+                        : `Error Upload Dokumen ${customerDocs[paymentType][docsIndex]?.Document?.name}`,
                     outsideClickClosePopUp: true
                 })
             );
@@ -156,14 +157,14 @@ function Document() {
     const cbdFileInput: Input[] = useMemo(() => {
         const cbdDocs = customerDocs?.cbd?.map(
             (v: CustomerDocsPayType, i: number) => ({
-                customerDocId: v.customerDocId,
-                documentId: v.Document?.id,
-                label: v.Document?.name,
+                customerDocId: v?.customerDocId,
+                documentId: v?.Document?.id,
+                label: v?.Document?.name,
                 type: "fileInput",
-                value: v.File,
+                value: v?.File,
                 titleBold: "500",
                 onChange: (newValue) => onChangeFileValue(newValue, i, "cbd"),
-                isRequire: v.Document?.isRequired
+                isRequire: v?.Document?.isRequired
             })
         );
 
@@ -173,15 +174,15 @@ function Document() {
     const creditFileInput: Input[] = useMemo(() => {
         const creditDocs = customerDocs?.credit?.map(
             (v: CustomerDocsPayType, i: number) => ({
-                customerDocId: v.customerDocId,
-                documentId: v.Document?.id,
-                label: v.Document?.name,
+                customerDocId: v?.customerDocId,
+                documentId: v?.Document?.id,
+                label: v?.Document?.name,
                 type: "fileInput",
-                value: v.File,
+                value: v?.File,
                 onChange: (newValue) =>
                     onChangeFileValue(newValue, i, "credit"),
                 titleBold: "500",
-                isRequire: v.Document?.isRequired
+                isRequire: v?.Document?.isRequired
             })
         );
 

@@ -83,7 +83,7 @@ function SearchFlow({
         if (!isSearch && text) {
             onSearch(true);
         }
-        if (visitationData.shouldScrollView) {
+        if (visitationData?.shouldScrollView) {
             dispatch(updateShouldScrollView(false));
         }
         dispatch(setSearchQuery(text));
@@ -134,7 +134,7 @@ function SearchFlow({
                 ...pic,
                 isSelected: i === 0
             }));
-            if (picList.length === 1) {
+            if (picList && picList?.length === 1) {
                 picList[0].isSelected = true;
             }
             dispatch(
@@ -185,7 +185,7 @@ function SearchFlow({
             {
                 key: "first",
                 title: "Proyek",
-                totalItems: projects.length,
+                totalItems: projects?.length,
                 chipPosition: "right"
             }
         ],
@@ -194,7 +194,7 @@ function SearchFlow({
 
     const onRetryGettingProject = () => {
         dispatch(retrying());
-        onChangeWithDebounce(visitationData.searchQuery);
+        onChangeWithDebounce(visitationData?.searchQuery);
     };
 
     return (
@@ -202,7 +202,7 @@ function SearchFlow({
             <View>
                 <BTextLocation
                     location={
-                        visitationData.locationAddress?.formattedAddress ?? ""
+                        visitationData?.locationAddress?.formattedAddress ?? ""
                     }
                     numberOfLines={1}
                 />
@@ -215,13 +215,13 @@ function SearchFlow({
                         onIndexChange={setIndex}
                         routes={routes}
                         placeholder="Cari PT / Proyek"
-                        searchQuery={visitationData.searchQuery}
+                        searchQuery={visitationData?.searchQuery}
                         autoFocus
                         onChangeText={onChangeSearch}
                         onClearValue={() => {
                             if (
-                                visitationData.searchQuery &&
-                                visitationData.searchQuery.trim() !== ""
+                                visitationData?.searchQuery &&
+                                visitationData?.searchQuery?.trim() !== ""
                             ) {
                                 onClear();
                             } else {
@@ -235,7 +235,7 @@ function SearchFlow({
                         loadList={isProjectLoading}
                         errorMessage={errorGettingProjectMessage}
                         onRetry={onRetryGettingProject}
-                        emptyText={`${visitationData.searchQuery} tidak ditemukan!`}
+                        emptyText={`${visitationData?.searchQuery} tidak ditemukan!`}
                     />
                 </View>
             ) : (

@@ -258,7 +258,7 @@ function Beranda() {
                 openPopUp({
                     popUpType: "error",
                     popUpText:
-                        err.message ||
+                        err?.message ||
                         "Terjadi error saat pengambilan data target harian kunjungan",
                     outsideClickClosePopUp: true
                 })
@@ -276,7 +276,7 @@ function Beranda() {
                     search: search || searchQuery,
                     ...(!search &&
                         !searchQuery && {
-                            date: date.valueOf()
+                            date: date?.valueOf()
                         }),
                     batchingPlantId: selectedBatchingPlant?.id
                 };
@@ -284,19 +284,19 @@ function Beranda() {
                 const displayData =
                     assignData?.data?.data?.map((el: any) => {
                         const status =
-                            el.status === "VISIT"
-                                ? `Visit ke ${el.order}`
-                                : el.status;
-                        const pilStatus = el.finishDate
+                            el?.status === "VISIT"
+                                ? `Visit ke ${el?.order}`
+                                : el?.status;
+                        const pilStatus = el?.finishDate
                             ? "Selesai"
                             : "Belum Selesai";
-                        const time = el.finishDate
-                            ? moment(el.finishDate).format("HH:mm")
+                        const time = el?.finishDate
+                            ? moment(el?.finishDate)?.format("HH:mm")
                             : null;
-                        const location = el.project?.LocationAddress?.line1;
+                        const location = el?.project?.LocationAddress?.line1;
                         return {
-                            id: el.id,
-                            name: el.project?.name || "--",
+                            id: el?.id,
+                            name: el?.project?.name || "--",
                             location: location || "-",
                             time,
                             status,
@@ -307,7 +307,7 @@ function Beranda() {
                 if (page > 1) {
                     setVisitData({
                         ...assignData?.data,
-                        data: visitData.data.concat(displayData)
+                        data: visitData?.data?.concat(displayData)
                     });
                 } else {
                     setVisitData({
@@ -322,7 +322,7 @@ function Beranda() {
                 setErrorMessage(error?.message);
             }
         },
-        [visitData.data, page, searchQuery, selectedBatchingPlant]
+        [visitData?.data, page, searchQuery, selectedBatchingPlant]
     );
 
     useFocusEffect(
@@ -426,7 +426,7 @@ function Beranda() {
         if (isDevelopment())
             currentVersionName = currentVersionName?.replace("(Dev)", "");
         setUpdateDialogVisible(
-            currentVersionName?.split(".").join("") <
+            currentVersionName?.split(".")?.join("") <
                 getMinVersionUpdate(force_update)
         );
     }, [force_update]);
@@ -450,7 +450,7 @@ function Beranda() {
             {
                 key: "first",
                 title: "Proyek",
-                totalItems: visitData.totalItems || 0,
+                totalItems: visitData?.totalItems || 0,
                 chipPosition: "right"
             }
         ],
@@ -458,12 +458,12 @@ function Beranda() {
     );
 
     const onEndReached = React.useCallback(() => {
-        if (visitData.totalPage) {
-            if (visitData.totalPage > 0 && page < visitData.totalPage) {
+        if (visitData?.totalPage) {
+            if (visitData?.totalPage > 0 && page < visitData?.totalPage) {
                 setPage(page + 1);
             }
         }
-    }, [visitData.totalPage, page, selectedBatchingPlant]);
+    }, [visitData?.totalPage, page, selectedBatchingPlant]);
 
     const getButtonsMenu = () => {
         let buttons = [
@@ -534,50 +534,50 @@ function Beranda() {
         ];
 
         if (!enable_sph) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.SPH
+            const filtered = buttons?.filter(
+                (item) => item?.title !== HOME_MENU.SPH
             );
             buttons = filtered;
         }
 
         if (!enable_po) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.PO
+            const filtered = buttons?.filter(
+                (item) => item?.title !== HOME_MENU.PO
             );
             buttons = filtered;
         }
 
         if (!enable_deposit) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.DEPOSIT
+            const filtered = buttons?.filter(
+                (item) => item?.title !== HOME_MENU.DEPOSIT
             );
             buttons = filtered;
         }
 
         if (!enable_create_schedule) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.SCHEDULE
+            const filtered = buttons?.filter(
+                (item) => item?.title !== HOME_MENU.SCHEDULE
             );
             buttons = filtered;
         }
 
         if (!enable_appointment) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.APPOINTMENT
+            const filtered = buttons?.filter(
+                (item) => item?.title !== HOME_MENU.APPOINTMENT
             );
             buttons = filtered;
         }
 
         if (!enable_signed_so) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.SIGN_SO
+            const filtered = buttons?.filter(
+                (item) => item?.title !== HOME_MENU.SIGN_SO
             );
             buttons = filtered;
         }
 
         if (!enable_invoice) {
-            const filtered = buttons.filter(
-                (item) => item.title !== HOME_MENU.INVOICE
+            const filtered = buttons?.filter(
+                (item) => item?.title !== HOME_MENU.INVOICE
             );
             buttons = filtered;
         }
@@ -630,7 +630,7 @@ function Beranda() {
     };
 
     const kunjunganAction = () => {
-        if (visitationData.images && visitationData.images.length > 1) {
+        if (visitationData?.images && visitationData?.images?.length > 1) {
             dispatch(resetFocusedStepperFlag());
             navigation.navigate(CREATE_VISITATION, {});
         } else {
@@ -648,7 +648,7 @@ function Beranda() {
         dataItem: visitationDataType
     ): Promise<void> {
         try {
-            const status = dataItem.pilStatus;
+            const status = dataItem?.pilStatus;
 
             dispatch(
                 openPopUp({
@@ -658,7 +658,7 @@ function Beranda() {
                 })
             );
             const response = await oneGetVisitation({
-                visitationId: dataItem.id
+                visitationId: dataItem?.id
             }).catch((err) => Error(err));
             if (response?.data?.success && response?.data?.success !== false) {
                 dispatch(closePopUp());
@@ -671,7 +671,7 @@ function Beranda() {
                     });
                 } else {
                     navigation.navigate(PROJECT_DETAIL, {
-                        projectId: response?.data?.data.project?.id,
+                        projectId: response?.data?.data?.project?.id,
                         isFromCustomerPage: false
                     });
                 }
@@ -735,7 +735,7 @@ function Beranda() {
                         onIndexChange={setSearchIndex}
                         onPressMagnify={kunjunganAction}
                         onClearValue={() => {
-                            if (searchQuery && searchQuery.trim() !== "") {
+                            if (searchQuery && searchQuery?.trim() !== "") {
                                 setSearchQuery("");
                             } else {
                                 toggleModal("close")();
@@ -754,7 +754,7 @@ function Beranda() {
                                   }
                                 : undefined
                         }
-                        data={visitData.data}
+                        data={visitData?.data}
                         onEndReached={onEndReached}
                         isError={isError}
                         errorMessage={errorMessage}
@@ -766,9 +766,9 @@ function Beranda() {
 
             <TargetCard
                 isExpanded={isExpanded}
-                maxVisitation={currentVisit.target ? currentVisit.target : 0}
+                maxVisitation={currentVisit?.target ? currentVisit?.target : 0}
                 currentVisitaion={
-                    currentVisit.current ? currentVisit.current : 0
+                    currentVisit?.current ? currentVisit?.current : 0
                 }
                 isLoading={isTargetLoading}
             />
@@ -822,7 +822,7 @@ function Beranda() {
                 <BSpacer size="extraSmall" />
                 <BottomSheetFlatlist
                     isLoading={isLoading}
-                    data={visitData.data}
+                    data={visitData?.data}
                     onAction={onRetryFetchVisitation}
                     isError={isError}
                     errorMessage={errorMessage}

@@ -33,43 +33,43 @@ function CustomTabBar({ state, descriptors, navigation }: TabBar) {
 
     const icons = [homeIcon];
     /* eslint-disable @typescript-eslint/naming-convention */
-    if (enable_transaction_menu) icons.push(transIcon);
-    if (enable_profile_menu) icons.push(profileIcon);
-    if (enable_price_menu) icons.push(priceIcon);
-    if (enable_customer_menu) icons.push(customerIcon);
+    if (enable_transaction_menu) icons?.push(transIcon);
+    if (enable_profile_menu) icons?.push(profileIcon);
+    if (enable_price_menu) icons?.push(priceIcon);
+    if (enable_customer_menu) icons?.push(customerIcon);
     /* eslint-enable @typescript-eslint/naming-convention */
 
     return (
         <View style={TabBarStyle.tabBarContainer}>
-            {state.routes.map((route: any, index: number) => {
-                const { options } = descriptors[route.key];
+            {state?.routes?.map((route: any, index: number) => {
+                const { options } = descriptors[route?.key];
                 const label =
-                    options.tabBarLabel !== undefined
-                        ? options.tabBarLabel
-                        : options.title !== undefined
-                        ? options.title
-                        : route.name;
+                    options?.tabBarLabel !== undefined
+                        ? options?.tabBarLabel
+                        : options?.title !== undefined
+                        ? options?.title
+                        : route?.name;
 
-                const isFocused = state.index === index;
+                const isFocused = state?.index === index;
 
                 const onPress = () => {
                     const event = navigation.emit({
                         type: "tabPress",
-                        target: route.key,
+                        target: route?.key,
                         canPreventDefault: true
                     });
 
-                    if (!isFocused && !event.defaultPrevented) {
+                    if (!isFocused && !event?.defaultPrevented) {
                         // The `merge: true` option makes sure that the params inside the tab screen are preserved
 
-                        navigation.navigate({ name: route.name, merge: true });
+                        navigation.navigate({ name: route?.name, merge: true });
                     }
                 };
 
                 const onLongPress = () => {
                     navigation.emit({
                         type: "tabLongPress",
-                        target: route.key
+                        target: route?.key
                     });
                 };
 

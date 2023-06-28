@@ -84,7 +84,7 @@ export default function AddedDepositModal({
             customerErrorMsg: "Tanggal bayar harus diisi",
             calendar: {
                 onDayPress: (value: any) => {
-                    const date = moment(value.dateString).format("DD/MM/yyyy");
+                    const date = moment(value?.dateString).format("DD/MM/yyyy");
                     setAddedDeposit({ ...addedDeposit, createdAt: date });
                 },
                 isCalendarVisible: isVisibleCalendar,
@@ -104,7 +104,7 @@ export default function AddedDepositModal({
             onChange: (value: any) => {
                 setAddedDeposit({
                     ...addedDeposit,
-                    nominal: value.split(".").join("")
+                    nominal: value?.split(".")?.join("")
                 });
             }
         }
@@ -162,7 +162,7 @@ export default function AddedDepositModal({
                                 <ScrollView
                                     onScroll={(event) => {
                                         setScrollOffSet(
-                                            event.nativeEvent.contentOffset.y
+                                            event?.nativeEvent?.contentOffset?.y
                                         );
                                     }}
                                 >

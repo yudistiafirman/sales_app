@@ -106,7 +106,7 @@ function SecondStep({ openBottomSheet }: IProps) {
                 isError: false,
                 type: "cardOption",
                 onChange: onChange("customerType"),
-                value: visitationData.customerType,
+                value: visitationData?.customerType,
                 options: [
                     {
                         icon: company,
@@ -225,7 +225,7 @@ function SecondStep({ openBottomSheet }: IProps) {
         <SafeAreaView style={styles.flexFull}>
             <SearchFlow
                 searchingDisable={!!existingVisitation}
-                isSearch={visitationData.isSearchProject}
+                isSearch={visitationData?.isSearchProject}
                 onSearch={onSearch}
             />
             {!visitationData.isSearchProject && (

@@ -79,8 +79,8 @@ function Return() {
     ]);
 
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
-        if (projectDetails && projectDetails.deliveryOrderId === item.id) {
-            if (photoFiles.length > 1) {
+        if (projectDetails && projectDetails?.deliveryOrderId === item?.id) {
+            if (photoFiles && photoFiles?.length > 1) {
                 navigation.navigate(SUBMIT_FORM, {
                     operationType:
                         userData?.type === EntryType.SECURITY
@@ -98,27 +98,26 @@ function Return() {
             }
         } else {
             const dataToDeliver: OperationProjectDetails = {
-                deliveryOrderId: item?.id ? item.id : "",
-                doNumber: item?.number ? item.number : "",
-                projectName: item.project?.projectName
+                deliveryOrderId: item?.id ? item?.id : "",
+                doNumber: item?.number ? item?.number : "",
+                projectName: item?.project?.projectName
                     ? item.project.projectName
                     : "",
-                address: item.project?.ShippingAddress?.line1
+                address: item?.project?.ShippingAddress?.line1
                     ? item.project.ShippingAddress.line1
                     : "",
                 lonlat: {
-                    longitude: item.project?.ShippingAddress?.lon
-                        ? Number(item.project.ShippingAddress.lon)
-                        : 0,
-                    latitude: item.project?.ShippingAddress?.lat
-                        ? Number(item.project.ShippingAddress.lat)
-                        : 0
+                    longitude:
+                        item?.project?.ShippingAddress?.lon !== undefined
+                            ? Number(item.project.ShippingAddress.lon)
+                            : 0,
+                    latitude:
+                        item?.project?.ShippingAddress?.lat !== undefined
+                            ? Number(item.project.ShippingAddress.lat)
+                            : 0
                 },
-                requestedQuantity: item?.Schedule?.SaleOrder?.PoProduct
-                    ?.requestedQuantity
-                    ? item?.Schedule?.SaleOrder?.PoProduct?.requestedQuantity
-                    : 0,
-                deliveryTime: item?.date ? item.date : ""
+                requestedQuantity: item?.quantity ? item?.quantity : 0,
+                deliveryTime: item?.date ? item?.date : ""
             };
             dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
             navigation.navigate(CAMERA, {

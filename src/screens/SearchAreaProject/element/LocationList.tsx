@@ -59,12 +59,12 @@ function LocationList<ArrayOfObject extends LocationData>({
             estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
             data={locationData}
             render
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => index?.toString()}
             ListEmptyComponent={renderEmptyComponent()}
             renderItem={({ item }) => (
                 <LocationListCard
-                    addressDetail={item.structured_formatting.secondary_text}
-                    addressTitle={item.structured_formatting.main_text}
+                    addressDetail={item?.structured_formatting?.secondary_text}
+                    addressTitle={item?.structured_formatting?.main_text}
                     onPress={() => onPress(item)}
                 />
             )}

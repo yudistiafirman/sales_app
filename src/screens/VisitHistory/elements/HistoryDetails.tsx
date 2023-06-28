@@ -16,13 +16,13 @@ function HistoryDetails({ details }: { details: VisitHistoryPayload }) {
         <View>
             <BSpacer size="small" />
             <VisitationDatesAndStatus
-                status={details.status}
-                bookingDate={details.dateVisit}
-                finishDate={details.finishDate}
-                rejectCategory={details.rejectCategory}
+                status={details?.status}
+                bookingDate={details?.dateVisit}
+                finishDate={details?.finishDate}
+                rejectCategory={details?.rejectCategory}
                 quatationId={
                     details?.QuotationRequests &&
-                    details?.QuotationRequests.length > 0
+                    details?.QuotationRequests?.length > 0
                         ? details?.QuotationRequests[0]?.QuotationLetter?.id
                         : undefined
                 }
@@ -57,8 +57,8 @@ function HistoryDetails({ details }: { details: VisitHistoryPayload }) {
             />
             <BSpacer size="small" />
             <Estimation
-                estimationWeek={details.estimationWeek}
-                estimationMonth={details.estimationMonth}
+                estimationWeek={details?.estimationWeek}
+                estimationMonth={details?.estimationMonth}
             />
             <BSpacer size="small" />
             <BDivider
@@ -68,7 +68,7 @@ function HistoryDetails({ details }: { details: VisitHistoryPayload }) {
                 marginHorizontal={layout.pad.lg}
             />
             <BSpacer size="small" />
-            <PaymentType paymentType={details.paymentType} />
+            <PaymentType paymentType={details?.paymentType} />
             <BSpacer size="small" />
             <BDivider
                 borderBottomWidth={1}
@@ -77,7 +77,7 @@ function HistoryDetails({ details }: { details: VisitHistoryPayload }) {
                 marginHorizontal={layout.pad.lg}
             />
             <BSpacer size="small" />
-            <Notes visitNotes={details.visitNotes} />
+            <Notes visitNotes={details?.visitNotes} />
             <BSpacer size="small" />
             <BSpacer size="small" />
         </View>

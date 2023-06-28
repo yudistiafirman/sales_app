@@ -74,7 +74,9 @@ function PriceList() {
         crashlytics().log(TAB_PRICE_LIST);
         if (route?.params) {
             const { params } = route;
-            const { latitude, longitude, formattedAddress } = params.coordinate;
+            const latitude = params?.coordinate?.latitude;
+            const longitude = params?.coordinate?.longitude;
+            const formattedAddress = params?.coordinate?.formattedAddress;
             setSearchFormattedAddress(formattedAddress);
             const { from } = params;
             if (from === CREATE_VISITATION) {
@@ -116,7 +118,7 @@ function PriceList() {
             dispatch(
                 openPopUp({
                     popUpType: "error",
-                    popUpText: state.context.errorMessage,
+                    popUpText: state?.context?.errorMessage,
                     primaryBtnTitle: "Retry",
                     outlineBtnTitle: "Back",
                     isRenderActions: true,
@@ -134,7 +136,7 @@ function PriceList() {
             dispatch(
                 openPopUp({
                     popUpType: "error",
-                    popUpText: state.context.errorMessage,
+                    popUpText: state?.context?.errorMessage,
                     primaryBtnTitle: "Retry",
                     outlineBtnTitle: "Back",
                     isRenderActions: true,
@@ -183,7 +185,7 @@ function PriceList() {
 
     const onTabPress = () => {
         const tabIndex = index === 0 ? 1 : 0;
-        if (route.key !== routes[index].key) {
+        if (route?.key !== routes[index]?.key) {
             send("onChangeCategories", {
                 payload: tabIndex,
                 selectedBP: selectedBatchingPlant
@@ -216,7 +218,7 @@ function PriceList() {
                 longitude: Number(lon),
                 latitude: Number(lat),
                 formattedAddress:
-                    searchFormattedAddress.length > 0
+                    searchFormattedAddress && searchFormattedAddress?.length > 0
                         ? searchFormattedAddress
                         : ""
             };
@@ -271,7 +273,7 @@ function PriceList() {
                     onAction={() => send("retryGettingCategories")}
                 />
             )}
-            {routes.length > 0 && (
+            {routes && routes?.length > 0 && (
                 <BTabSections
                     swipeEnabled={false}
                     navigationState={{ index, routes }}

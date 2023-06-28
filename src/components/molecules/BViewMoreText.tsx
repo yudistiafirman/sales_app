@@ -71,14 +71,14 @@ class BViewMoreText extends React.Component<ViewMoreTextProps> {
     };
 
     onLayoutTrimmedText = (event) => {
-        const { height } = event.nativeEvent.layout;
+        const height = event?.nativeEvent?.layout?.height;
 
         this.trimmedTextHeight = height;
         this.hideFullText();
     };
 
     onLayoutFullText = (event) => {
-        const { height } = event.nativeEvent.layout;
+        const height = event?.nativeEvent?.layout?.height;
 
         this.fullTextHeight = height;
         this.hideFullText();

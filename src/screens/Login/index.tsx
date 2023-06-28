@@ -79,7 +79,7 @@ function Login() {
         setLoginState({ ...loginState, loading: true });
         try {
             const response = await signIn({ phone: phoneNumber });
-            if (response.data.success) {
+            if (response?.data?.success) {
                 dispatch(setPhoneNumber(phoneNumber));
                 setLoginState({
                     ...loginState,
@@ -89,7 +89,7 @@ function Login() {
                 });
                 navigation.navigate(VERIFICATION);
             } else {
-                throw new Error(response.data.message);
+                throw new Error(response?.data?.message);
             }
         } catch (error) {
             setLoginState({

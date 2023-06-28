@@ -46,6 +46,7 @@ import { openPopUp } from "@/redux/reducers/modalReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { getCoordinateDetails } from "@/redux/async-thunks/commonThunks";
+import { getLocationCoordinates } from "@/actions/CommonActions";
 import { SphContext } from "../context/SphContext";
 
 const style = StyleSheet.create({
@@ -98,8 +99,9 @@ function checkObj(
     distanceFromLegok: number | null
 ) {
     const billingAddressFilled =
-        Object.values(billingAddress).every((val) => val) &&
-        Object.entries(billingAddress.addressAutoComplete).length > 1;
+        Object?.values(billingAddress)?.every((val) => val) &&
+        Object?.entries(billingAddress?.addressAutoComplete) &&
+        Object?.entries(billingAddress?.addressAutoComplete)?.length > 1;
 
     const billingAddressSame = isBillingAddressSame;
     const distanceFilled = distanceFromLegok !== null;
@@ -164,17 +166,37 @@ export default function SecondStep() {
         try {
             dispatch(setUseSearchAddress({ value: false }));
             dispatch(setUseBillingAddress({ value: false }));
-            const coordinateToSet = await dispatch(
-                getCoordinateDetails({
-                    coordinate,
-                    selectedBatchingPlant: selectedBatchingPlant.name
-                })
-            ).unwrap();
-
             if (isBiilingAddress) {
+                const response = await getLocationCoordinates(
+                    coordinate.longitude as unknown as number,
+                    coordinate.latitude as unknown as number,
+                    selectedBatchingPlant.name,
+                    undefined
+                );
+
+                const { result } = response.data;
+
+                const coordinateToSet = {
+                    latitude: result?.lat,
+                    longitude: result?.lon,
+                    lat: 0,
+                    lon: 0,
+                    formattedAddress: result?.formattedAddress,
+                    PostalId: result?.PostalId,
+                    distance: result?.distance?.value
+                };
                 dispatch(updateBillingAddressAutoComplete(coordinateToSet));
-            } else if (coordinateToSet.distance) {
-                dispatch(updateDistanceFromLegok(coordinateToSet.distance));
+            } else {
+                const coordinateToSet = await dispatch(
+                    getCoordinateDetails({
+                        coordinate,
+                        selectedBatchingPlant: selectedBatchingPlant?.name
+                    })
+                ).unwrap();
+                if (coordinateToSet.distance) {
+                    dispatch(updateDistanceFromLegok(coordinateToSet.distance));
+                }
+                dispatch(updateProjectAddress(coordinateToSet));
             }
         } catch (error) {
             if (error?.message !== "canceled")
@@ -196,7 +218,7 @@ export default function SecondStep() {
         if (isBillingAddressSame) {
             setSheetSnapPoints(["40%"]);
             setTimeout(() => {
-                bottomSheetRef.current?.collapse();
+                bottomSheetRef?.current?.collapse();
             }, 50);
             return [
                 {
@@ -228,7 +250,7 @@ export default function SecondStep() {
                 isError: !billingAddress?.name,
                 type: "textInput",
                 onChange: (event: any) => {
-                    const { text } = event.nativeEvent;
+                    const text = event?.nativeEvent?.text;
                     dispatch(
                         updateBillingAddressOptions({
                             value: text,
@@ -242,10 +264,10 @@ export default function SecondStep() {
             {
                 label: "No. Telepon",
                 isRequire: true,
-                isError: !phoneNumberRegex.test(`${billingAddress.phone}`),
+                isError: !phoneNumberRegex?.test(`${billingAddress?.phone}`),
                 type: "textInput",
                 onChange: (event: any) => {
-                    const { text } = event.nativeEvent;
+                    const text = event?.nativeEvent?.text;
                     dispatch(
                         updateBillingAddressOptions({
                             value: text,
@@ -253,11 +275,11 @@ export default function SecondStep() {
                         })
                     );
                 },
-                value: billingAddress.phone,
+                value: billingAddress?.phone,
                 keyboardType: "numeric",
                 placeholder: "Masukkan nomor telepon",
                 customerErrorMsg: "No. Telepon harus diisi sesuai format",
-                LeftIcon: billingAddress.phone ? LeftIcon : undefined
+                LeftIcon: billingAddress?.phone ? LeftIcon : undefined
             },
             {
                 label: "Cari Alamat",
@@ -276,7 +298,7 @@ export default function SecondStep() {
                 textInputAsButtonOnPress: () => {
                     navigation.navigate(SEARCH_AREA, {
                         from: SPH,
-                        eventKey: eventKeyObj.billing
+                        eventKey: eventKeyObj?.billing
                     });
                 },
                 LeftIcon: SearchIcon
@@ -284,7 +306,7 @@ export default function SecondStep() {
             {
                 label: "Alamat Lengkap",
                 isRequire: true,
-                isError: !billingAddress.fullAddress,
+                isError: !billingAddress?.fullAddress,
                 type: "area",
                 onChange: (text: string) => {
                     dispatch(
@@ -334,44 +356,64 @@ export default function SecondStep() {
     useEffect(() => {
         crashlytics().log(`${SPH}-Step2`);
 
-        DeviceEventEmitter.addListener(eventKeyObj.shipp, (data) => {
+        DeviceEventEmitter.addListener(eventKeyObj?.shipp, (data) => {
             dispatch(setUseSearchAddress({ value: true }));
             dispatch(
-                setSearchAddress({ value: data.coordinate.formattedAddress })
+                setSearchAddress({ value: data?.coordinate?.formattedAddress })
             );
-            onChangeRegion(data.coordinate, {});
+            onChangeRegion(data?.coordinate, {});
         });
-        DeviceEventEmitter.addListener(eventKeyObj.billing, (data) => {
+        DeviceEventEmitter.addListener(eventKeyObj?.billing, (data) => {
             dispatch(setUseBillingAddress({ value: true }));
             dispatch(
                 setSearchedBillingAddress({
-                    value: data.coordinate.formattedAddress
+                    value: data?.coordinate?.formattedAddress
                 })
             );
-            onChangeRegion(data.coordinate, { isBiilingAddress: true });
+            onChangeRegion(data?.coordinate, { isBiilingAddress: true });
         });
         return () => {
-            DeviceEventEmitter.removeAllListeners(eventKeyObj.shipp);
-            DeviceEventEmitter.removeAllListeners(eventKeyObj.billing);
+            DeviceEventEmitter.removeAllListeners(eventKeyObj?.shipp);
+            DeviceEventEmitter.removeAllListeners(eventKeyObj?.billing);
         };
     }, [onChangeRegion]);
 
     useEffect(() => {
         if (keyboardVisible) {
-            bottomSheetRef.current?.expand();
+            bottomSheetRef?.current?.expand();
         }
     }, [keyboardVisible]);
 
     useEffect(() => {
         if (projectAddress) {
-            const latitude = +projectAddress.latitude;
-            const longitude = +projectAddress.longitude;
+            const latitude =
+                projectAddress?.latitude !== undefined
+                    ? +projectAddress.latitude
+                    : 0;
+            const longitude =
+                projectAddress?.longitude !== undefined
+                    ? +projectAddress.longitude
+                    : 0;
             onChangeRegion({ latitude, longitude }, {});
         } else if (selectedCompany) {
-            if (selectedCompany.LocationAddress) {
-                const latitude = +selectedCompany.LocationAddress.lat;
-                const longitude = +selectedCompany.LocationAddress.lon;
-                onChangeRegion({ latitude, longitude }, {});
+            if (selectedCompany?.LocationAddress) {
+                const latitude =
+                    selectedCompany?.LocationAddress?.lat !== null &&
+                    selectedCompany?.LocationAddress?.lat !== undefined
+                        ? +selectedCompany.LocationAddress.lat
+                        : undefined;
+                const longitude =
+                    selectedCompany?.LocationAddress?.lon !== null &&
+                    selectedCompany?.LocationAddress?.lon !== undefined
+                        ? +selectedCompany.LocationAddress.lon
+                        : undefined;
+                if (
+                    latitude !== null &&
+                    latitude !== undefined &&
+                    longitude !== undefined &&
+                    longitude !== null
+                )
+                    onChangeRegion({ latitude, longitude }, {});
             }
         }
     }, []);
@@ -379,14 +421,14 @@ export default function SecondStep() {
     const nameAddress = React.useMemo(() => {
         const address = useSearchAddress
             ? searchedAddress
-            : region.formattedAddress;
+            : region?.formattedAddress;
         const idx = address?.split(",");
         if (idx?.length > 1) {
             return idx?.[0];
         }
 
         return "Nama Alamat";
-    }, [region.formattedAddress]);
+    }, [region?.formattedAddress]);
 
     return (
         <View style={style.container}>
@@ -432,14 +474,14 @@ export default function SecondStep() {
                         onPress={() => {
                             navigation.navigate(SEARCH_AREA, {
                                 from: SPH,
-                                eventKey: eventKeyObj.shipp
+                                eventKey: eventKeyObj?.shipp
                             });
                         }}
                         nameAddress={nameAddress}
                         formattedAddress={
                             useSearchAddress
                                 ? searchedAddress
-                                : region.formattedAddress
+                                : region?.formattedAddress
                         }
                         isLoading={loading === "pending"}
                     />

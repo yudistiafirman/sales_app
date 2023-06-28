@@ -36,8 +36,8 @@ const useAsyncConfigSetup = () => {
             let userToken;
             try {
                 userToken = await bStorage.getItem(storageKey.userToken);
-                const batchingPlantsResponse = await getBatchingPlants();
                 if (userToken) {
+                    const batchingPlantsResponse = await getBatchingPlants();
                     const decoded =
                         jwtDecode<UserModel.DataSuccessLogin>(userToken);
 
@@ -135,14 +135,15 @@ const useAsyncConfigSetup = () => {
             })
             .then(() => {
                 let fetchedData = {};
-                Object.entries(remoteConfig().getAll()).forEach(($) => {
+                Object?.entries(remoteConfig().getAll())?.forEach(($) => {
                     const [key, entry] = $;
                     let value = remoteConfigData?.[key];
                     if (
-                        Object.values(entry).length > 0 &&
-                        isJsonString(Object.values(entry)[0])
+                        Object?.values(entry) &&
+                        Object?.values(entry)?.length > 0 &&
+                        isJsonString(Object?.values(entry)[0])
                     )
-                        value = JSON.parse(Object.values(entry)[0]);
+                        value = JSON.parse(Object?.values(entry)[0]);
                     fetchedData = {
                         ...fetchedData,
                         [key]: value
@@ -158,7 +159,7 @@ const useAsyncConfigSetup = () => {
                     openPopUp({
                         popUpType: "error",
                         popUpText:
-                            err.message ||
+                            err?.message ||
                             "Terjadi error dalam pengambilan App Setup",
                         outsideClickClosePopUp: true
                     })

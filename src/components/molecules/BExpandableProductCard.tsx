@@ -127,12 +127,12 @@ function BExpandableProductCard({
                             <BForm titleBold="500" inputs={checkbox} />
                         ) : (
                             <RadioButton
-                                value={index.toString()}
+                                value={index?.toString()}
                                 status={checked ? "checked" : "unchecked"}
                                 color={colors.primary}
                                 uncheckedColor={colors.border.altGrey}
                                 onPress={() =>
-                                    onPressRadioButton(index.toString())
+                                    onPressRadioButton(index?.toString())
                                 }
                             />
                         )}

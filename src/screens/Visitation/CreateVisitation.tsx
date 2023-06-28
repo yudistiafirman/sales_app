@@ -94,7 +94,7 @@ function stepHandler(
     ) {
         setStepsDone((curr) => [...new Set(curr), 0]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 0));
+        setStepsDone((curr) => curr?.filter((num) => num !== 0));
     }
 
     const selectedCustomerType =
@@ -110,7 +110,7 @@ function stepHandler(
     ) {
         setStepsDone((curr) => [...new Set(curr), 1]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 1));
+        setStepsDone((curr) => curr?.filter((num) => num !== 1));
     }
 
     if (
@@ -122,20 +122,20 @@ function stepHandler(
     ) {
         setStepsDone((curr) => [...new Set(curr), 2]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 2));
+        setStepsDone((curr) => curr?.filter((num) => num !== 2));
     }
 
     if (state?.competitors?.length > 0) {
         setStepsDone((curr) => [...new Set(curr), 3]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 3));
+        setStepsDone((curr) => curr?.filter((num) => num !== 3));
     }
 
     const filteredImages = state?.images?.filter((it) => it?.file !== null);
     if (filteredImages?.length > 0) {
         setStepsDone((curr) => [...new Set(curr), 4]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 4));
+        setStepsDone((curr) => curr?.filter((num) => num !== 4));
     }
 }
 
@@ -153,7 +153,7 @@ function CreateVisitation() {
         route?.params?.existingVisitation;
 
     const openBottomSheet = () => {
-        bottomSheetRef.current?.expand();
+        bottomSheetRef?.current?.expand();
     };
 
     const stepRender = [
@@ -168,7 +168,7 @@ function CreateVisitation() {
         const { project, Customer } = existingData;
         const { company, Pics: picList, mainPic } = project;
         dispatch(
-            updateDataVisitation({ type: "projectId", value: project.id })
+            updateDataVisitation({ type: "projectId", value: project?.id })
         );
 
         if (company) {
@@ -178,7 +178,7 @@ function CreateVisitation() {
             dispatch(
                 updateDataVisitation({
                     type: "companyName",
-                    value: company.displayName
+                    value: company?.displayName
                 })
             );
         } else {
@@ -225,25 +225,25 @@ function CreateVisitation() {
             dispatch(
                 updateDataVisitation({
                     type: "stageProject",
-                    value: existingData.project?.stage
+                    value: existingData?.project?.stage
                 })
             );
         }
 
-        if (existingData.project?.type) {
+        if (existingData?.project?.type) {
             dispatch(
                 updateDataVisitation({
                     type: "typeProject",
-                    value: existingData.project?.type
+                    value: existingData?.project?.type
                 })
             );
         }
 
-        if (existingData.project?.Competitors?.length > 0) {
+        if (existingData?.project?.Competitors?.length > 0) {
             dispatch(
                 updateDataVisitation({
                     type: "competitors",
-                    value: existingData.project?.Competitors
+                    value: existingData?.project?.Competitors
                 })
             );
             // dispatch(
@@ -254,36 +254,36 @@ function CreateVisitation() {
             // );
         }
 
-        if (existingData.paymentType) {
+        if (existingData?.paymentType) {
             dispatch(
                 updateDataVisitation({
                     type: "paymentType",
-                    value: existingData.paymentType
+                    value: existingData?.paymentType
                 })
             );
         }
 
-        if (existingData.visitNotes) {
+        if (existingData?.visitNotes) {
             dispatch(
                 updateDataVisitation({
                     type: "notes",
-                    value: existingData.visitNotes
+                    value: existingData?.visitNotes
                 })
             );
         }
 
         let estimationDate = {};
 
-        if (existingData.estimationWeek) {
+        if (existingData?.estimationWeek) {
             estimationDate = {
                 ...estimationDate,
-                estimationWeek: Number(existingData.estimationWeek)
+                estimationWeek: Number(existingData?.estimationWeek)
             };
         }
-        if (existingData.estimationMonth) {
+        if (existingData?.estimationMonth) {
             estimationDate = {
                 ...estimationDate,
-                estimationMonth: Number(existingData.estimationMonth)
+                estimationMonth: Number(existingData?.estimationMonth)
             };
         }
         if (estimationDate) {
@@ -295,24 +295,24 @@ function CreateVisitation() {
             );
         }
 
-        if (existingData.products?.length > 0) {
+        if (existingData?.products?.length > 0) {
             const newProductIDList = [];
-            existingData.products.forEach((it) => {
+            existingData?.products?.forEach((it) => {
                 const newProduct = {
-                    id: it.productId,
-                    name: it.Product?.name,
-                    display_name: it.Product?.displayName,
-                    properties: it.Product?.properties,
+                    id: it?.productId,
+                    name: it?.Product?.name,
+                    display_name: it?.Product?.displayName,
+                    properties: it?.Product?.properties,
                     pouringMethod: it?.pouringMethod,
                     quantity: it?.quantity,
                     Category: {
-                        name: it.Product?.category?.name,
+                        name: it?.Product?.category?.name,
                         Parent: {
-                            name: it.Product?.category?.parent?.name
+                            name: it?.Product?.category?.parent?.name
                         }
                     }
                 };
-                newProductIDList.push(newProduct);
+                newProductIDList?.push(newProduct);
             });
 
             dispatch(
@@ -324,9 +324,9 @@ function CreateVisitation() {
         }
 
         if (picList) {
-            const list = picList.map((pic) => {
+            const list = picList?.map((pic) => {
                 if (mainPic) {
-                    if (pic.id === mainPic.id) {
+                    if (pic?.id === mainPic?.id) {
                         return {
                             ...pic,
                             isSelected: true
@@ -357,14 +357,14 @@ function CreateVisitation() {
     }
 
     const next = (nextStep: number) => () => {
-        const totalStep = stepRender.length;
+        const totalStep = stepRender?.length;
         if (nextStep < totalStep && nextStep >= 0) {
             dispatch(updateCurrentStep(nextStep));
         }
     };
 
     const actionBackButton = (directlyClose = false) => {
-        if (visitationData.step > 0 && !directlyClose) {
+        if (visitationData?.step > 0 && !directlyClose) {
             next(visitationData.step - 1)();
         } else {
             setPopupVisible(true);
@@ -419,10 +419,10 @@ function CreateVisitation() {
         React.useCallback(() => {
             const backAction = () => {
                 if (bottomSheetRef?.current) bottomSheetRef?.current?.close();
-                if (visitationData.isSearchProject) {
+                if (visitationData?.isSearchProject) {
                     if (
-                        visitationData.searchQuery &&
-                        visitationData.searchQuery.trim() !== ""
+                        visitationData?.searchQuery &&
+                        visitationData?.searchQuery?.trim() !== ""
                     ) {
                         dispatch(setSearchQuery(""));
                     } else {
@@ -440,29 +440,29 @@ function CreateVisitation() {
             );
             return () => backHandler.remove();
         }, [
-            visitationData.isSearchProject,
-            visitationData.searchQuery,
+            visitationData?.isSearchProject,
+            visitationData?.searchQuery,
             dispatch
         ])
     );
 
     const handleStepperFocus = () => {
         // to continue stepper focus when entering visitation page
-        if (!visitationData.stepperVisitationShouldNotFocused) {
-            if (visitationData.stepThreeVisitationFinished)
+        if (!visitationData?.stepperVisitationShouldNotFocused) {
+            if (visitationData?.stepThreeVisitationFinished)
                 dispatch(updateCurrentStep(3));
-            else if (visitationData.stepTwoVisitationFinished)
+            else if (visitationData?.stepTwoVisitationFinished)
                 dispatch(updateCurrentStep(2));
-            else if (visitationData.stepOneVisitationFinished)
+            else if (visitationData?.stepOneVisitationFinished)
                 dispatch(updateCurrentStep(1));
         }
 
         // to reset stepper focus when continuing progress data
         if (
-            visitationData.stepperVisitationShouldNotFocused &&
-            visitationData.step === 0 &&
-            (!visitationData.createdLocation?.formattedAddress ||
-                !visitationData.locationAddress?.formattedAddress)
+            visitationData?.stepperVisitationShouldNotFocused &&
+            visitationData?.step === 0 &&
+            (!visitationData?.createdLocation?.formattedAddress ||
+                !visitationData?.locationAddress?.formattedAddress)
         ) {
             dispatch(resetStepperFocused(1));
         }
@@ -483,21 +483,23 @@ function CreateVisitation() {
             dispatch(resetStepperFocused(2));
         }
         if (
-            visitationData.stepperVisitationShouldNotFocused &&
-            visitationData.step === 2 &&
-            (visitationData.stageProject ||
-                visitationData.products?.length <= 0 ||
-                visitationData.estimationDate?.estimationMonth ||
-                visitationData.estimationDate?.estimationWeek ||
-                visitationData.paymentType)
+            visitationData?.stepperVisitationShouldNotFocused &&
+            visitationData?.step === 2 &&
+            (visitationData?.stageProject ||
+                !visitationData?.products ||
+                visitationData?.products?.length <= 0 ||
+                visitationData?.estimationDate?.estimationMonth ||
+                visitationData?.estimationDate?.estimationWeek ||
+                visitationData?.paymentType)
         ) {
             dispatch(resetStepperFocused(3));
         }
 
         if (
-            visitationData.stepperVisitationShouldNotFocused &&
-            visitationData.step === 3 &&
-            visitationData.competitors?.length <= 0
+            (visitationData?.stepperVisitationShouldNotFocused &&
+                visitationData?.step === 3 &&
+                !visitationData?.competitors) ||
+            visitationData?.competitors?.length <= 0
         ) {
             dispatch(resetStepperFocused(4));
         }
@@ -567,18 +569,18 @@ function CreateVisitation() {
                         next(pos)();
                     }
                 }}
-                currentStep={visitationData.step}
+                currentStep={visitationData?.step}
                 labels={labels}
             />
 
             <BContainer paddingHorizontal={layout.pad.lg + layout.pad.xs}>
                 <View style={styles.container}>
-                    {stepRender[visitationData.step]}
+                    {stepRender[visitationData?.step]}
                     <BSpacer size="extraSmall" />
-                    {!keyboardVisible && visitationData.shouldScrollView && (
+                    {!keyboardVisible && visitationData?.shouldScrollView && (
                         <BBackContinueBtn
                             onPressContinue={() => {
-                                const step = visitationData.step + 1;
+                                const step = (visitationData?.step || 0) + 1;
                                 next(step)();
                                 dispatch(setStepperFocused(step));
                                 DeviceEventEmitter.emit(
@@ -588,7 +590,7 @@ function CreateVisitation() {
                             }}
                             onPressBack={() => actionBackButton(false)}
                             disableContinue={
-                                !stepsDone.includes(visitationData.step)
+                                !stepsDone?.includes(visitationData?.step)
                             }
                         />
                     )}

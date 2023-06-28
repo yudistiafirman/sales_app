@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
 
 type ConfigType = {
     style?: StyleProp<ViewStyle>;
+    onPressSwitchCamera: () => void;
     onPressFlashlight: () => void;
     onPressHDR: () => void;
     onPressHighQuality: () => void;
@@ -47,10 +48,13 @@ type ConfigType = {
     enableHDR: boolean;
     enableHighQuality: boolean;
     enableLowBoost: boolean;
+    enableSwitchCamera: boolean;
 };
 
 function HeaderButton({
     style,
+    onPressSwitchCamera,
+    enableSwitchCamera,
     onPressFlashlight,
     onPressHDR,
     enableFlashlight,
@@ -61,6 +65,10 @@ function HeaderButton({
     enableLowBoost
 }: ConfigType) {
     const cameraHeaderButtonValue = [
+        {
+            onPress: onPressSwitchCamera,
+            iconName: enableSwitchCamera ? "camera-flip" : "camera-flip"
+        },
         {
             onPress: onPressFlashlight,
             iconName: enableFlashlight ? "flash" : "flash-off"
@@ -92,10 +100,10 @@ function HeaderButton({
                 <BSpacer size="small" />
                 <TouchableOpacity
                     style={styles.photoIconContainer}
-                    onPress={item.onPress}
+                    onPress={item?.onPress}
                 >
                     <MaterialCommunityIcons
-                        name={item.iconName}
+                        name={item?.iconName}
                         color={colors.white}
                         size={resScale(20)}
                     />
@@ -112,7 +120,7 @@ function HeaderButton({
                     estimatedItemSize={4}
                     renderItem={renderItem}
                     data={cameraHeaderButtonValue}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={(item, index) => index?.toString()}
                 />
                 <BSpacer size="medium" />
             </View>

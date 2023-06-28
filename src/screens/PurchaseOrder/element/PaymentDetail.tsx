@@ -37,7 +37,7 @@ function PaymentDetail() {
     const paymentIcon = paymentType === "CBD" ? cbd : credit;
 
     const fileInput: Input[] = useMemo(() => {
-        const requiredFileInput = files.map(
+        const requiredFileInput = files?.map(
             (val: ProjectDocs, idx: number) => ({
                 ...val,
                 onChange: (newValue: any) =>

@@ -24,7 +24,7 @@ function BPicList({
                     <View>
                         <BPic
                             isOption={isOption}
-                            isSelected={el.isSelected}
+                            isSelected={el?.isSelected}
                             {...el}
                             onSelect={onSelect}
                             index={key}

@@ -55,7 +55,7 @@ function ProjectPhase({ phase }: { phase: string }) {
                         styles.circle,
                         {
                             backgroundColor:
-                                item.value === phase
+                                item?.value === phase
                                     ? colors.primary
                                     : colors.textInput.inActive
                         }
@@ -66,13 +66,13 @@ function ProjectPhase({ phase }: { phase: string }) {
                         styles.textFase,
                         {
                             color:
-                                item.value === phase
+                                item?.value === phase
                                     ? colors.primary
                                     : colors.text.darker
                         }
                     ]}
                 >
-                    {item.label}
+                    {item?.label}
                 </Text>
             </View>
         ),
@@ -90,7 +90,7 @@ function ProjectPhase({ phase }: { phase: string }) {
                 estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                 data={STAGE_PROJECT}
                 renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(item, index) => index?.toString()}
                 contentContainerStyle={{ paddingLeft: layout.pad.sm + 1 }}
             />
         </View>

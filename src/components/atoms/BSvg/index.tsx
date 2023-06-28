@@ -24,7 +24,7 @@ function BSvg({
 }: SvgProps) {
     if (!svgName) return <View />;
     const I = SvgFiles[svgName as keyof typeof SvgFiles];
-    const assignType: string = svgName.startsWith("Ic")
+    const assignType: string = svgName?.startsWith("Ic")
         ? String(type || "stroke")
         : "img";
     const assignColor = String(color || "#010206");

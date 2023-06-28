@@ -40,13 +40,13 @@ export const cameraSlice = createSlice({
             state,
             action: PayloadAction<{ file: LocalFileType; source?: string }>
         ) => {
-            switch (action.payload.source) {
+            switch (action.payload?.source) {
                 case CREATE_VISITATION:
                     return {
                         ...state,
                         visitationPhotoURLs: [
                             ...state.visitationPhotoURLs,
-                            action.payload.file
+                            action.payload?.file
                         ]
                     };
                 case CREATE_DEPOSIT:
@@ -54,7 +54,7 @@ export const cameraSlice = createSlice({
                         ...state,
                         createDepositPhotoURLs: [
                             ...state.createDepositPhotoURLs,
-                            action.payload.file
+                            action.payload?.file
                         ]
                     };
                 case CREATE_SCHEDULE:
@@ -62,18 +62,18 @@ export const cameraSlice = createSlice({
                         ...state,
                         createSchedulePhotoURLs: [
                             ...state.createSchedulePhotoURLs,
-                            action.payload.file
+                            action.payload?.file
                         ]
                     };
                 default:
                     return {
                         ...state,
-                        localURLs: [...state.localURLs, action.payload.file]
+                        localURLs: [...state.localURLs, action.payload?.file]
                     };
             }
         },
         resetImageURLS: (state, action: PayloadAction<{ source: string }>) => {
-            switch (action.payload.source) {
+            switch (action.payload?.source) {
                 case CREATE_VISITATION:
                     return {
                         ...state,
@@ -101,31 +101,31 @@ export const cameraSlice = createSlice({
             action: PayloadAction<{ pos: number; source: string }>
         ) => {
             let currentImages;
-            switch (action.payload.source) {
+            switch (action.payload?.source) {
                 case CREATE_VISITATION:
                     currentImages = [...state.visitationPhotoURLs];
-                    currentImages.splice(action.payload.pos, 1);
+                    currentImages?.splice(action.payload?.pos, 1);
                     return {
                         ...state,
                         visitationPhotoURLs: [...currentImages]
                     };
                 case CREATE_DEPOSIT:
                     currentImages = [...state.createDepositPhotoURLs];
-                    currentImages.splice(action.payload.pos, 1);
+                    currentImages?.splice(action.payload?.pos, 1);
                     return {
                         ...state,
                         createDepositPhotoURLs: [...currentImages]
                     };
                 case CREATE_SCHEDULE:
                     currentImages = [...state.createSchedulePhotoURLs];
-                    currentImages.splice(action.payload.pos, 1);
+                    currentImages?.splice(action.payload?.pos, 1);
                     return {
                         ...state,
                         createSchedulePhotoURLs: [...currentImages]
                     };
                 default:
                     currentImages = [...state.localURLs];
-                    currentImages.splice(action.payload.pos, 1);
+                    currentImages?.splice(action.payload?.pos, 1);
                     return {
                         ...state,
                         localURLs: [...currentImages]

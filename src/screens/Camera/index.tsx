@@ -8,7 +8,11 @@ import {
 } from "@react-navigation/native";
 import * as React from "react";
 import { Animated, SafeAreaView, StyleSheet, View } from "react-native";
-import { Camera, useCameraDevices } from "react-native-vision-camera";
+import {
+    Camera,
+    CameraDevice,
+    useCameraDevices
+} from "react-native-vision-camera";
 import { useDispatch, useSelector } from "react-redux";
 import { BHeaderIcon } from "@/components";
 import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
@@ -49,6 +53,7 @@ function CameraScreen() {
     const authState = useSelector((state: RootState) => state.auth);
     const [enableFlashlight, onEnableFlashlight] =
         React.useState<boolean>(false);
+    const [isFrontCamera, onSwitchCamera] = React.useState<boolean>(false);
     const [enableHDR, onEnableHDR] = React.useState<boolean>(false);
     const [enableLowBoost, onEnableLowBoost] = React.useState<boolean>(false);
     const [enableHighQuality, onEnableHighQuality] =
@@ -70,6 +75,7 @@ function CameraScreen() {
         route?.params?.disabledGalleryPicker !== undefined
             ? route?.params?.disabledGalleryPicker
             : true;
+    const devices = useCameraDevices();
 
     useHeaderTitleChanged({
         title: `Foto ${photoTitle}`,
@@ -99,9 +105,8 @@ function CameraScreen() {
         ) : undefined
     });
 
-    const device = useCameraDevices().back;
     const camera = React.useRef<Camera>(null);
-    const opacityAnimation = React.useRef(new Animated.Value(0)).current;
+    const opacityAnimation = React.useRef(new Animated.Value(0))?.current;
     const animateElement = () => {
         Animated.timing(opacityAnimation, {
             toValue: 1,
@@ -116,8 +121,11 @@ function CameraScreen() {
         });
     };
 
+    const getDevice = (): CameraDevice | undefined =>
+        isFrontCamera ? devices?.front : devices?.back;
+
     const takePhoto = async () => {
-        if (camera === undefined || camera.current === undefined) {
+        if (camera === undefined || camera?.current === undefined) {
             dispatch(
                 openPopUp({
                     popUpType: "error",
@@ -188,11 +196,11 @@ function CameraScreen() {
             <SafeAreaView style={styles.container}>
                 <View style={styles.containerCamera}>
                     <View style={{ flex: 1 }}>
-                        {device && (
+                        {getDevice() !== undefined && (
                             <Camera
                                 ref={camera}
                                 style={styles.camera}
-                                device={device}
+                                device={getDevice()}
                                 isActive={isFocused}
                                 photo
                                 enableHighQualityPhotos={!!enableHighQuality}
@@ -203,6 +211,9 @@ function CameraScreen() {
                         )}
                     </View>
                     <HeaderButton
+                        onPressSwitchCamera={() => {
+                            onSwitchCamera(!isFrontCamera);
+                        }}
                         onPressFlashlight={() =>
                             onEnableFlashlight(!enableFlashlight)
                         }
@@ -213,6 +224,7 @@ function CameraScreen() {
                         onPressLowBoost={() =>
                             onEnableLowBoost(!enableLowBoost)
                         }
+                        enableSwitchCamera={isFrontCamera}
                         enableLowBoost={enableLowBoost}
                         enableHighQuality={enableHighQuality}
                         enableFlashlight={enableFlashlight}

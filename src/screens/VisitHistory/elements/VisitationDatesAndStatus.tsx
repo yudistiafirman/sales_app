@@ -90,7 +90,7 @@ function VisitationDatesAndStatus({
                 month: "short"
             })} ${new Date(bookingDate).getFullYear()}`;
             const newDate = new Date(bookingDate);
-            day = newDate.toLocaleDateString(locale(), { weekday: "long" });
+            day = newDate?.toLocaleDateString(locale(), { weekday: "long" });
         } catch (e) {
             console.log(e);
         }
@@ -121,8 +121,8 @@ function VisitationDatesAndStatus({
         try {
             const { data } = await getVisitationOrderByID(quatationId);
             navigation.navigate(TRANSACTION_DETAIL, {
-                title: data.data ? data.data.number : "N/A",
-                data: data.data,
+                title: data?.data ? data?.data?.number : "N/A",
+                data: data?.data,
                 type: "SPH"
             });
         } catch (error) {

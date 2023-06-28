@@ -65,8 +65,8 @@ export default function OperationList({
                 lonlat:
                     userType === EntryType.DRIVER
                         ? {
-                              longitude: item.project?.ShippingAddress?.lon,
-                              latitude: item.project?.ShippingAddress?.lat
+                              longitude: item?.project?.ShippingAddress?.lon,
+                              latitude: item?.project?.ShippingAddress?.lat
                           }
                         : undefined
             }}
@@ -81,10 +81,10 @@ export default function OperationList({
             onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
             data={data}
             onRefresh={onRefresh}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => index?.toString()}
             refreshing={refreshing}
             onEndReached={onEndReached}
-            renderItem={(item) => renderItem(item.item)}
+            renderItem={(item) => renderItem(item?.item)}
             ListEmptyComponent={
                 loadList || refreshing ? (
                     <BCommonListShimmer />

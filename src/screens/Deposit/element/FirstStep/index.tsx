@@ -73,7 +73,7 @@ export default function FirstStep() {
             customerErrorMsg: "Tanggal bayar harus diisi",
             calendar: {
                 onDayPress: (value: any) => {
-                    const date = moment(value.dateString).format("DD/MM/yyyy");
+                    const date = moment(value?.dateString).format("DD/MM/yyyy");
                     onChange("createdAt")(date);
                 },
                 isCalendarVisible: isVisibleCalendar,
@@ -91,7 +91,7 @@ export default function FirstStep() {
             isError: !stateOne?.deposit?.nominal,
             customerErrorMsg: "Nominal harus diisi",
             onChange: (value: any) => {
-                onChange("nominal")(value.split(".").join(""));
+                onChange("nominal")(value?.split(".")?.join(""));
             }
         }
     ];

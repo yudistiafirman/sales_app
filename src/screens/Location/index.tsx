@@ -39,7 +39,7 @@ function Location() {
     const [useSearchedAddress, setUseSearchedAddress] = React.useState(false);
     const [state, send] = useMachine(locationMachine);
     const authState = useSelector((rootState: RootState) => rootState.auth);
-    const isReadOnly = route?.params.isReadOnly;
+    const isReadOnly = route?.params?.isReadOnly;
     const abortControllerRef = React.useRef<AbortController>(
         new AbortController()
     );
@@ -57,7 +57,9 @@ function Location() {
         });
         if (route?.params) {
             const { params } = route;
-            const { latitude, longitude, formattedAddress } = params.coordinate;
+            const latitude = params?.coordinate?.latitude;
+            const longitude = params?.coordinate?.longitude;
+            const formattedAddress = params?.coordinate?.formattedAddress;
             if (formattedAddress) {
                 setSearchedAddress(formattedAddress);
             }
@@ -73,8 +75,8 @@ function Location() {
         const { latitude, longitude, latitudeDelta, longitudeDelta } =
             coordinate;
         if (isReadOnly === false) {
-            abortControllerRef.current.abort();
-            if (abortControllerRef.current.signal.aborted)
+            abortControllerRef?.current?.abort();
+            if (abortControllerRef?.current?.signal?.aborted)
                 abortControllerRef.current = new AbortController();
             const { signal } = abortControllerRef.current;
             send("onChangeRegion", {
@@ -158,7 +160,7 @@ function Location() {
                 <CoordinatesDetail
                     loadingLocation={loadingLocation}
                     address={
-                        useSearchedAddress && searchedAddress.length > 0
+                        useSearchedAddress && searchedAddress?.length > 0
                             ? searchedAddress
                             : locationDetail?.formattedAddress
                             ? locationDetail?.formattedAddress

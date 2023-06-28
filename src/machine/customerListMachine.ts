@@ -147,7 +147,8 @@ const customerListMachine = createMachine(
     },
     {
         guards: {
-            isNotLastPage: (context, event) => context.page <= context.totalPage
+            isNotLastPage: (context, event) =>
+                context?.page <= context?.totalPage
         },
         services: {
             getAllData: async (context, event) => {
@@ -159,7 +160,7 @@ const customerListMachine = createMachine(
                         page
                     );
 
-                    return response.data;
+                    return response?.data;
                 } catch (error) {
                     throw new Error(error);
                 }
@@ -167,7 +168,7 @@ const customerListMachine = createMachine(
             getDataCount: async () => {
                 try {
                     const response = await getCustomerCount();
-                    return response.data;
+                    return response?.data;
                 } catch (error) {
                     throw new Error(error);
                 }
@@ -175,8 +176,9 @@ const customerListMachine = createMachine(
         },
         actions: {
             assignTotalCount: assign((context, event) => {
-                const { companyCount, individuCount, totalCount } =
-                    event.data.data;
+                const companyCount = event?.data?.data?.companyCount;
+                const individuCount = event?.data?.data?.individuCount;
+                const totalCount = event?.data?.data?.totalCount;
                 const routes = [
                     {
                         key: "",
@@ -213,16 +215,22 @@ const customerListMachine = createMachine(
                 isLoading: true,
                 isLoadDataCount: true
             })),
-            assignData: assign((context, event) => ({
-                data: [...context.data, ...event.data.data.data],
-                totalPage: event.data.data.totalPages,
-                isLoading: false,
-                refreshing: false,
-                isLoadMore: false,
-                errorMessage: ""
-            })),
+            assignData: assign((context, event) => {
+                let data: any[] = [];
+                if (context?.data) data = [...context.data];
+                if (event?.data?.data?.data)
+                    data?.push(...event.data.data.data);
+                return {
+                    data,
+                    totalPage: event?.data?.data?.totalPages,
+                    isLoading: false,
+                    refreshing: false,
+                    isLoadMore: false,
+                    errorMessage: ""
+                };
+            }),
             assignSearchQuery: assign((context, event) => ({
-                searchQuery: event.value,
+                searchQuery: event?.value,
                 data: [],
                 isLoading: true,
                 page: 1
@@ -234,10 +242,10 @@ const customerListMachine = createMachine(
                 refreshing: false,
                 page: 1,
                 searchQuery: "",
-                selectedTab: event.value
+                selectedTab: event?.value
             })),
             incrementPage: assign((context, event) => ({
-                page: context.page + 1,
+                page: (context?.page || 0) + 1,
                 isLoadMore: true
             })),
             retryGettingData: assign(() => ({
@@ -246,7 +254,7 @@ const customerListMachine = createMachine(
                 errorMessage: ""
             })),
             assignError: assign((context, event) => ({
-                errorMessage: event.data.message,
+                errorMessage: event?.data?.message,
                 data: [],
                 refreshing: false,
                 isLoading: false,

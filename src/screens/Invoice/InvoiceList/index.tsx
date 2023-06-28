@@ -68,34 +68,37 @@ function InvoiceList() {
             const { search, size, filter } = invoiceData;
 
             const paymentDurationCheck = filter?.paymentDuration
-                ? parseInt(filter?.paymentDuration.toString(), 10)
+                ? parseInt(filter?.paymentDuration?.toString(), 10)
                 : undefined;
 
             const response = await getAllInvoice(
-                size.toString(),
-                search?.page.toString(),
+                size?.toString(),
+                search?.page?.toString(),
                 search?.searchQuery,
                 filter?.paymentMethod,
                 paymentDurationCheck
                     ? paymentDurationCheck?.toString()
                     : undefined,
-                filter?.paymentStatus.toString(),
+                filter?.paymentStatus?.toString(),
                 filter?.startDateIssued,
                 filter?.endDateIssued,
-                filter?.dueDateDifference.toString(),
-                authState.selectedBatchingPlant?.id
+                filter?.dueDateDifference?.toString(),
+                authState?.selectedBatchingPlant?.id
             );
             if (response?.data?.data?.data) {
                 dispatch(setLoading({ isLoading: false }));
                 dispatch(setLoadMore({ isLoadMore: false }));
                 dispatch(setRefreshing({ refreshing: false }));
                 dispatch(setErrorMessage({ message: "" }));
-                const invoiceListData = [
-                    ...invoiceData.invoiceData,
-                    ...response.data.data.data
-                ];
+                let invoiceListData: any[] = [];
+                if (invoiceData?.invoiceData)
+                    invoiceListData = [...invoiceData.invoiceData];
+                if (response?.data?.data?.data)
+                    invoiceListData = [...response.data.data.data];
                 dispatch(
-                    setTotalPage({ totalPage: response.data.data.totalPages })
+                    setTotalPage({
+                        totalPage: response?.data?.data?.totalPages
+                    })
                 );
                 dispatch(setInvoceData({ data: invoiceListData }));
             } else {
@@ -129,7 +132,7 @@ function InvoiceList() {
     const onEndReached = () => {
         const { search, totalPages } = invoiceData;
         if (search?.page <= totalPages) {
-            dispatch(setPage({ page: search.page + 1 }));
+            dispatch(setPage({ page: (search?.page || 0) + 1 }));
             if (search?.page > 1) {
                 dispatch(setLoadMore({ isLoadMore: true }));
                 getAllInvoiceData();
@@ -139,16 +142,22 @@ function InvoiceList() {
 
     useFocusEffect(
         React.useCallback(() => {
-            if (invoiceData?.search?.searchQuery.length > 2) {
+            if (
+                invoiceData?.search?.searchQuery &&
+                invoiceData?.search?.searchQuery?.length > 2
+            ) {
                 dispatch(setLoading({ isLoading: true }));
                 dispatch(setInvoceData({ data: [] }));
                 getAllInvoiceData();
             }
 
-            if (invoiceData?.invoiceData?.length <= 0) {
+            if (
+                !invoiceData?.invoiceData ||
+                invoiceData?.invoiceData?.length <= 0
+            ) {
                 getAllInvoiceData();
             }
-        }, [invoiceData.search, invoiceData.filter])
+        }, [invoiceData?.search, invoiceData?.filter])
     );
 
     const renderShimmerInvoiceList = () => (
@@ -172,7 +181,7 @@ function InvoiceList() {
         if (invoiceData?.filter?.paymentMethod !== "") hide = true;
         if (
             invoiceData?.filter?.paymentDuration &&
-            parseInt(invoiceData?.filter?.paymentDuration.toString(), 10) > 0
+            parseInt(invoiceData?.filter?.paymentDuration?.toString(), 10) > 0
         )
             hide = true;
         if (invoiceData?.filter?.paymentStatus !== "") hide = true;
@@ -183,7 +192,7 @@ function InvoiceList() {
             hide = true;
         if (
             invoiceData?.filter?.dueDateDifference &&
-            parseInt(invoiceData?.filter?.dueDateDifference.toString(), 10) > 0
+            parseInt(invoiceData?.filter?.dueDateDifference?.toString(), 10) > 0
         )
             hide = true;
 
@@ -242,7 +251,7 @@ function InvoiceList() {
             const pastDueDateDays = () => {
                 let defaultTextDays = "-";
                 if (item?.dueDateDifference && item?.status !== "PAID") {
-                    defaultTextDays = item?.dueDateDifference.toString();
+                    defaultTextDays = item?.dueDateDifference?.toString();
                     defaultTextDays += " hari";
                 }
                 return defaultTextDays;
@@ -298,22 +307,22 @@ function InvoiceList() {
         <View style={styles.container}>
             {renderInvoiceListHeader()}
             <FlashList
-                data={invoiceData.invoiceData}
-                refreshing={invoiceData.isRefreshing}
+                data={invoiceData?.invoiceData}
+                refreshing={invoiceData?.isRefreshing}
                 renderItem={renderInvoiceCard}
                 estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                 onRefresh={onRefresh}
                 onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
                 onEndReached={onEndReached}
                 ListFooterComponent={
-                    invoiceData.isLoadMore ? renderShimmerInvoiceList() : null
+                    invoiceData?.isLoadMore ? renderShimmerInvoiceList() : null
                 }
                 ListEmptyComponent={
-                    invoiceData.isLoading ? (
+                    invoiceData?.isLoading ? (
                         renderShimmerInvoiceList()
                     ) : (
                         <BEmptyState
-                            errorMessage={invoiceData.errorMessage}
+                            errorMessage={invoiceData?.errorMessage}
                             isError={invoiceData?.errorMessage?.length > 0}
                             onAction={onRetry}
                             emptyText="Data Tidak Ditemukan"

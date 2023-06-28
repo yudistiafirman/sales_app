@@ -37,7 +37,8 @@ function BTabLabels({
         alignItems: "center",
         width: "100%",
         justifyContent: "center",
-        minWidth: layout.pad.xxl * (route.title?.length > 9 ? 4 : 2)
+        minWidth:
+            layout.pad.xxl * (route?.title && route?.title?.length > 9 ? 4 : 2)
     };
 
     const BTabLabelsTextStyle: TextStyle = {
@@ -56,7 +57,7 @@ function BTabLabels({
     };
     return (
         <View style={BTabLabelsContainer}>
-            <BText style={BTabLabelsTextStyle}>{route.title}</BText>
+            <BText style={BTabLabelsTextStyle}>{route?.title}</BText>
             {isHasItems && (
                 <BChip
                     type="header"

@@ -118,27 +118,28 @@ export default function ThirdStep() {
             const key: "cbd" | "credit" = objKey[paymentType];
 
             if (sphDocuments[key]) {
-                if (sphDocuments[key].length) {
-                    const newFileKeys = sphDocuments[key].map((doc) => ({
-                        key: doc.id,
-                        label: doc.name,
-                        isRequired: doc.is_required
+                if (sphDocuments[key]?.length) {
+                    const newFileKeys = sphDocuments[key]?.map((doc) => ({
+                        key: doc?.id,
+                        label: doc?.name,
+                        isRequired: doc?.is_required
                     }));
                     const documentObj: { [key: string]: any } = {};
-                    sphDocuments[key].forEach((doc) => {
-                        documentObj[doc.id] = null;
+                    sphDocuments[key]?.forEach((doc) => {
+                        documentObj[doc?.id] = null;
                     });
                     const parentReqDocKeys =
                         paymentRequiredDocuments &&
-                        Object.keys(paymentRequiredDocuments);
+                        Object?.keys(paymentRequiredDocuments);
                     const localReqDocKeys =
-                        documentObj && Object.keys(documentObj);
+                        documentObj && Object?.keys(documentObj);
                     const parentDocString = JSON.stringify(parentReqDocKeys);
                     const localDocString = JSON.stringify(localReqDocKeys);
 
                     if (
                         parentDocString === localDocString &&
-                        parentReqDocKeys.length > 0
+                        parentReqDocKeys &&
+                        parentReqDocKeys?.length > 0
                     ) {
                         setDocuments(paymentRequiredDocuments);
                     } else {
@@ -166,23 +167,23 @@ export default function ThirdStep() {
                     };
                     const key: "cbd" | "credit" = objKey[paymentType];
                     if (response?.data[key]) {
-                        if (response?.data[key].length) {
-                            const newFileKeys = response?.data[key].map(
+                        if (response?.data[key]?.length) {
+                            const newFileKeys = response?.data[key]?.map(
                                 (doc) => ({
-                                    key: doc.id,
-                                    label: doc.name,
-                                    isRequired: doc.is_required
+                                    key: doc?.id,
+                                    label: doc?.name,
+                                    isRequired: doc?.is_required
                                 })
                             );
                             const documentObj: { [key: string]: any } = {};
-                            response?.data[key].forEach((doc) => {
-                                documentObj[doc.id] = null;
+                            response?.data[key]?.forEach((doc) => {
+                                documentObj[doc?.id] = null;
                             });
                             const parentReqDocKeys =
                                 paymentRequiredDocuments &&
-                                Object.keys(paymentRequiredDocuments);
+                                Object?.keys(paymentRequiredDocuments);
                             const localReqDocKeys =
-                                documentObj && Object.keys(documentObj);
+                                documentObj && Object?.keys(documentObj);
                             const parentDocString =
                                 JSON.stringify(parentReqDocKeys);
                             const localDocString =
@@ -190,7 +191,8 @@ export default function ThirdStep() {
 
                             if (
                                 parentDocString === localDocString &&
-                                parentReqDocKeys.length > 0
+                                parentReqDocKeys &&
+                                parentReqDocKeys?.length > 0
                             ) {
                                 setDocuments(paymentRequiredDocuments);
                             } else {
@@ -262,25 +264,27 @@ export default function ThirdStep() {
                 ]
             }
         ];
-        fileKeys.forEach((key) => {
-            inputs.push({
-                label: key.label,
+        fileKeys?.forEach((key) => {
+            inputs?.push({
+                label: key?.label,
                 onChange: (data: any) => {
                     if (data) {
                         setDocuments((curr) => ({
                             ...curr,
-                            [key.key]: {
+                            [key?.key]: {
                                 ...data,
-                                name: key.key.trim() + data.name.trim()
+                                name:
+                                    (key?.key?.trim() || "") +
+                                    (data?.name?.trim() || "")
                             }
                         }));
                     }
                 },
                 type: "fileInput",
-                value: paymentRequiredDocuments?.[key.key],
-                isRequire: key.isRequired,
-                isError: key.isRequired
-                    ? !paymentRequiredDocuments?.[key.key]
+                value: paymentRequiredDocuments?.[key?.key],
+                isRequire: key?.isRequired,
+                isError: key?.isRequired
+                    ? !paymentRequiredDocuments?.[key?.key]
                     : false
             });
         });

@@ -3,9 +3,9 @@ import { BText } from "@/components";
 import VerificationStyles from "../styles";
 
 function CountDown({ count }: { count: number }): JSX.Element {
-    let finalCount = count.toString();
-    if (count.toString().match(/^\d$/)) {
-        finalCount = `0${count.toString()}`;
+    let finalCount = count?.toString();
+    if (count?.toString()?.match(/^\d$/)) {
+        finalCount = `0${count?.toString()}`;
     }
     return (
         <BText style={VerificationStyles.countDownText}>

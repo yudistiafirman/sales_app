@@ -169,7 +169,8 @@ function BInvoiceCard({
                         </Text>
                     </View>
                 </View>
-                {paymentMethod.toString().toUpperCase() === "CREDIT"
+                {paymentMethod &&
+                paymentMethod?.toString()?.toUpperCase() === "CREDIT"
                     ? renderInvoiceCardFooter()
                     : null}
             </View>

@@ -77,7 +77,7 @@ const style = StyleSheet.create({
 
 function countNonNullValues(array) {
     let count = 0;
-    for (let i = 0; i < array.length; i += 1) {
+    for (let i = 0; i < array?.length; i += 1) {
         if (array[i] !== null) {
             count += 1;
         }
@@ -96,154 +96,160 @@ function payloadMapper(sphState: SphStateInterface) {
     const { selectedCompany, projectAddress } = sphState;
     const LocationAddress = selectedCompany?.LocationAddress;
 
-    if (sphState.chosenProducts.length > 0) {
+    if (sphState?.chosenProducts && sphState?.chosenProducts?.length > 0) {
         // harcode m3
-        payload.requestedProducts = sphState.chosenProducts.map((product) => ({
-            productId: product.productId,
-            categoryId: product.categoryId,
-            offeringPrice: product.sellPrice
-                ? +product.sellPrice
-                : product.additionalData.delivery.price,
-            quantity: +product.volume,
-            pouringMethod: product.pouringMethod,
-            productName: product.product.name,
-            productUnit: "m3"
-        }));
+        payload.requestedProducts = sphState?.chosenProducts?.map(
+            (product) => ({
+                productId: product?.productId,
+                categoryId: product?.categoryId,
+                offeringPrice: product?.sellPrice
+                    ? +product.sellPrice
+                    : product?.additionalData?.delivery?.price,
+                quantity: product?.volume && +product.volume,
+                pouringMethod: product?.pouringMethod,
+                productName: product?.product?.name,
+                productUnit: "m3"
+            })
+        );
 
         payload.distance.id =
-            sphState.chosenProducts[0].additionalData.distance.id;
+            sphState?.chosenProducts[0]?.additionalData?.distance?.id;
         payload.distance.price =
-            sphState.chosenProducts[0].additionalData.distance.price;
+            sphState?.chosenProducts[0]?.additionalData?.distance?.price;
 
-        if (sphState.distanceFromLegok) {
+        if (sphState?.distanceFromLegok) {
             payload.distance.userDistance = Math.ceil(
-                sphState.distanceFromLegok / 1000
+                sphState?.distanceFromLegok || 0 / 1000
             );
         }
         // find highest delivery
         const deliveries: deliveryAndDistance[] = [];
-        sphState.chosenProducts.forEach((prod) => {
-            deliveries.push(prod.additionalData.delivery);
+        sphState?.chosenProducts?.forEach((prod) => {
+            deliveries?.push(prod?.additionalData?.delivery);
         });
-        const highestPrice = deliveries.reduce((prev, curr) =>
-            prev.price > curr.price ? prev : curr
+        const highestPrice = deliveries?.reduce((prev, curr) =>
+            prev?.price > curr?.price ? prev : curr
         );
         payload.delivery = highestPrice;
     }
 
     if (LocationAddress) {
-        if (LocationAddress.id) {
-            payload.shippingAddress.id = LocationAddress.id;
+        if (LocationAddress?.id) {
+            payload.shippingAddress.id = LocationAddress?.id;
         }
     }
     if (projectAddress) {
-        if (projectAddress.city) {
-            payload.shippingAddress.city = projectAddress.city;
+        if (projectAddress?.city) {
+            payload.shippingAddress.city = projectAddress?.city;
         }
-        if (projectAddress.district) {
-            payload.shippingAddress.district = projectAddress.district;
+        if (projectAddress?.district) {
+            payload.shippingAddress.district = projectAddress?.district;
         }
-        if (projectAddress.lat) {
-            payload.shippingAddress.lat = projectAddress.lat.toString();
+        if (projectAddress?.lat) {
+            payload.shippingAddress.lat = projectAddress?.lat?.toString();
         }
-        if (projectAddress.lon) {
-            payload.shippingAddress.lon = projectAddress.lon.toString();
+        if (projectAddress?.lon) {
+            payload.shippingAddress.lon = projectAddress?.lon?.toString();
         }
-        if (projectAddress.formattedAddress) {
-            if (sphState.useSearchAddress) {
-                payload.shippingAddress.line1 = sphState.searchedAddress;
+        if (projectAddress?.formattedAddress) {
+            if (sphState?.useSearchAddress) {
+                payload.shippingAddress.line1 = sphState?.searchedAddress;
             } else {
-                payload.shippingAddress.line1 = projectAddress.formattedAddress;
+                payload.shippingAddress.line1 =
+                    projectAddress?.formattedAddress;
             }
         }
-        if (projectAddress.rural) {
-            payload.shippingAddress.rural = projectAddress.rural;
+        if (projectAddress?.rural) {
+            payload.shippingAddress.rural = projectAddress?.rural;
         }
-        if (projectAddress.PostalId) {
-            payload.shippingAddress.postalId = projectAddress.PostalId;
+        if (projectAddress?.PostalId) {
+            payload.shippingAddress.postalId = projectAddress?.PostalId;
         }
     }
-    if (sphState.paymentType) {
-        payload.paymentType = sphState.paymentType;
+    if (sphState?.paymentType) {
+        payload.paymentType = sphState?.paymentType;
     }
-    if (typeof sphState.useHighway === "boolean") {
-        payload.viaTol = sphState.useHighway;
+    if (typeof sphState?.useHighway === "boolean") {
+        payload.viaTol = sphState?.useHighway;
     }
-    if (typeof sphState.isBillingAddressSame === "boolean") {
-        payload.isUseSameAddress = sphState.isBillingAddressSame;
+    if (typeof sphState?.isBillingAddressSame === "boolean") {
+        payload.isUseSameAddress = sphState?.isBillingAddressSame;
     }
     if (selectedCompany) {
-        payload.projectId = selectedCompany.id;
+        payload.projectId = selectedCompany?.id;
         if (selectedCompany?.Pics?.length > 0) {
-            payload.picArr = selectedCompany.Pics;
+            payload.picArr = selectedCompany?.Pics;
         } else {
             const newPicArr = [{ ...selectedCompany?.Pic, isSelected: true }];
             payload.picArr = newPicArr;
         }
     }
-    if (typeof sphState.paymentBankGuarantee === "boolean") {
-        payload.isProvideBankGuarantee = sphState.paymentBankGuarantee;
+    if (typeof sphState?.paymentBankGuarantee === "boolean") {
+        payload.isProvideBankGuarantee = sphState?.paymentBankGuarantee;
     }
 
-    if (sphState.isBillingAddressSame) {
-        if (sphState.selectedPic?.name) {
-            payload.billingRecipientName = sphState.selectedPic.name;
+    if (sphState?.isBillingAddressSame) {
+        if (sphState?.selectedPic?.name) {
+            payload.billingRecipientName = sphState?.selectedPic?.name;
         }
-        if (sphState.selectedPic?.phone) {
-            payload.billingRecipientPhone = sphState.selectedPic.phone;
+        if (sphState?.selectedPic?.phone) {
+            payload.billingRecipientPhone = sphState?.selectedPic?.phone;
         }
     } else {
-        if (sphState.billingAddress.name) {
-            payload.billingRecipientName = sphState.billingAddress.name;
+        if (sphState?.billingAddress?.name) {
+            payload.billingRecipientName = sphState?.billingAddress?.name;
         }
-        if (sphState.billingAddress.phone) {
+        if (sphState?.billingAddress?.phone) {
             payload.billingRecipientPhone =
-                sphState.billingAddress.phone.toString();
+                sphState?.billingAddress?.phone?.toString();
         }
     }
 
     // }
-    if (!sphState.isBillingAddressSame) {
-        if (sphState.billingAddress.addressAutoComplete) {
-            if (sphState.billingAddress.addressAutoComplete.formattedAddress) {
-                if (sphState.useSearchedBillingAddress) {
+    if (!sphState?.isBillingAddressSame) {
+        if (sphState?.billingAddress?.addressAutoComplete) {
+            if (
+                sphState?.billingAddress?.addressAutoComplete?.formattedAddress
+            ) {
+                if (sphState?.useSearchedBillingAddress) {
                     payload.billingAddress.line1 =
-                        sphState.searchedBillingAddress;
+                        sphState?.searchedBillingAddress;
                 } else {
                     payload.billingAddress.line1 =
-                        sphState.billingAddress.addressAutoComplete.formattedAddress;
+                        sphState?.billingAddress?.addressAutoComplete?.formattedAddress;
                 }
             }
-            if (sphState.billingAddress.addressAutoComplete.PostalId) {
+            if (sphState?.billingAddress?.addressAutoComplete?.PostalId) {
                 payload.billingAddress.postalId =
-                    sphState.billingAddress.addressAutoComplete.PostalId;
+                    sphState?.billingAddress?.addressAutoComplete?.PostalId;
             }
-            if (sphState.billingAddress.addressAutoComplete.lat) {
+            if (sphState?.billingAddress?.addressAutoComplete?.lat) {
                 payload.billingAddress.lat =
-                    sphState.billingAddress.addressAutoComplete.lat;
+                    sphState?.billingAddress?.addressAutoComplete?.lat;
             }
-            if (sphState.billingAddress.addressAutoComplete.lon) {
+            if (sphState?.billingAddress?.addressAutoComplete?.lon) {
                 payload.billingAddress.lon =
-                    sphState.billingAddress.addressAutoComplete.lon;
+                    sphState?.billingAddress?.addressAutoComplete?.lon;
             }
-            if (sphState.billingAddress.addressAutoComplete.rural) {
+            if (sphState?.billingAddress?.addressAutoComplete?.rural) {
                 payload.billingAddress.rural =
-                    sphState.billingAddress.addressAutoComplete.rural;
+                    sphState?.billingAddress?.addressAutoComplete?.rural;
             }
-            if (sphState.billingAddress.addressAutoComplete.district) {
+            if (sphState?.billingAddress?.addressAutoComplete?.district) {
                 payload.billingAddress.district =
-                    sphState.billingAddress.addressAutoComplete.district;
+                    sphState?.billingAddress?.addressAutoComplete?.district;
             }
-            if (sphState.billingAddress.addressAutoComplete.city) {
+            if (sphState?.billingAddress?.addressAutoComplete?.city) {
                 payload.billingAddress.city =
-                    sphState.billingAddress.addressAutoComplete.city;
+                    sphState?.billingAddress?.addressAutoComplete?.city;
             }
         }
-        if (sphState.billingAddress.fullAddress) {
-            payload.billingAddress.line2 = sphState.billingAddress.fullAddress;
+        if (sphState?.billingAddress?.fullAddress) {
+            payload.billingAddress.line2 =
+                sphState?.billingAddress?.fullAddress;
         }
     } else {
-        payload.billingAddress = payload.shippingAddress;
+        payload.billingAddress = payload?.shippingAddress;
     }
     return payload;
 }
@@ -287,7 +293,7 @@ export default function FifthStep() {
 
     function addPicHandler() {
         setIsModalVisible(false);
-        bottomSheetRef.current?.expand();
+        bottomSheetRef?.current?.expand();
     }
 
     async function buatSph() {
@@ -300,18 +306,22 @@ export default function FifthStep() {
                 })
             );
             const payload = payloadMapper(sphState);
-            const photoFiles = Object.values(sphState.paymentRequiredDocuments);
-            const isNoPhotoToUpload = photoFiles.every((val) => val === null);
+            const photoFiles = Object?.values(
+                sphState?.paymentRequiredDocuments
+            );
+            const isNoPhotoToUpload = photoFiles?.every((val) => val === null);
             payload.projectDocs = [];
             payload.batchingPlantId = selectedBatchingPlant?.id;
             const validPhotoCount = countNonNullValues(photoFiles);
             if (
-                (sphState.uploadedAndMappedRequiredDocs.length === 0 &&
+                ((!sphState?.uploadedAndMappedRequiredDocs ||
+                    sphState?.uploadedAndMappedRequiredDocs?.length === 0) &&
                     !isNoPhotoToUpload) ||
-                validPhotoCount > sphState.uploadedAndMappedRequiredDocs.length
+                validPhotoCount >
+                    sphState?.uploadedAndMappedRequiredDocs?.length
             ) {
                 let photoResponse;
-                if (photoFiles && photoFiles.length > 0) {
+                if (photoFiles && photoFiles?.length > 0) {
                     photoResponse = await uploadFileImage(
                         photoFiles,
                         "sph"
@@ -324,25 +334,25 @@ export default function FifthStep() {
                     photoResponse?.data?.success !== false
                 ) {
                     photoResponse?.data?.data?.forEach((photo: any) => {
-                        const photoName = photo.name;
+                        const photoName = photo?.name;
                         let foundPhoto;
-                        if (sphState.paymentRequiredDocuments)
-                            Object.keys(
-                                sphState.paymentRequiredDocuments
-                            ).forEach((documentId) => {
+                        if (sphState?.paymentRequiredDocuments)
+                            Object?.keys(
+                                sphState?.paymentRequiredDocuments
+                            )?.forEach((documentId) => {
                                 if (
-                                    Object.prototype.hasOwnProperty.call(
-                                        sphState.paymentRequiredDocuments,
+                                    Object?.prototype?.hasOwnProperty?.call(
+                                        sphState?.paymentRequiredDocuments,
                                         documentId
                                     )
                                 ) {
                                     const photoData =
-                                        sphState.paymentRequiredDocuments[
+                                        sphState?.paymentRequiredDocuments[
                                             documentId
                                         ];
                                     if (photoData) {
                                         if (
-                                            photoData.name.includes(photoName)
+                                            photoData?.name?.includes(photoName)
                                         ) {
                                             foundPhoto = documentId;
                                         }
@@ -350,26 +360,26 @@ export default function FifthStep() {
                                 }
                             });
                         if (foundPhoto) {
-                            files.push({
+                            files?.push({
                                 documentId: foundPhoto,
-                                fileId: photo.id
+                                fileId: photo?.id
                             });
                         }
                     });
                 }
-                const isFilePhotoNotNull = files.every((val) => val === null);
+                const isFilePhotoNotNull = files?.every((val) => val === null);
                 if (!isFilePhotoNotNull) {
                     payload.projectDocs = files;
                 }
                 dispatch(updateUploadedAndMappedRequiredDocs(files));
             } else if (!isNoPhotoToUpload) {
                 const isFilePhotoNotNull =
-                    sphState.uploadedAndMappedRequiredDocs.every(
+                    sphState?.uploadedAndMappedRequiredDocs?.every(
                         (val) => val === null
                     );
                 if (!isFilePhotoNotNull) {
                     payload.projectDocs =
-                        sphState.uploadedAndMappedRequiredDocs;
+                        sphState?.uploadedAndMappedRequiredDocs;
                 }
             }
             const sphResponse = await postSph(payload).catch((err) =>
@@ -379,7 +389,7 @@ export default function FifthStep() {
                 sphResponse?.data?.success &&
                 sphResponse?.data?.success !== false
             ) {
-                setMadeSphData(sphResponse.data?.data?.sph);
+                setMadeSphData(sphResponse?.data?.data?.sph);
                 dispatch(closePopUp());
                 setTimeout(
                     () => setIsStepDoneVisible(true),
@@ -426,7 +436,7 @@ export default function FifthStep() {
                     }}
                 />
                 <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1, maxHeight: resScale(70) }}>
+                    <View style={{ flex: 1, maxHeight: resScale(82) }}>
                         <BVisitationCard
                             item={{
                                 name: sphState?.selectedCompany?.name
@@ -476,10 +486,22 @@ export default function FifthStep() {
                         renderItem={(item) => (
                             <>
                                 <BProductCard
-                                    name={item.item.product.name}
-                                    pricePerVol={+item.item.sellPrice}
-                                    volume={+item.item.volume}
-                                    totalPrice={+item.item.totalPrice}
+                                    name={item?.item?.product?.name}
+                                    pricePerVol={
+                                        item?.item?.sellPrice
+                                            ? +item.item.sellPrice
+                                            : undefined
+                                    }
+                                    volume={
+                                        item?.item?.volume
+                                            ? +item.item.volume
+                                            : undefined
+                                    }
+                                    totalPrice={
+                                        item?.item?.totalPrice
+                                            ? +item.item.totalPrice
+                                            : undefined
+                                    }
                                 />
                                 <BSpacer size="small" />
                             </>
@@ -498,14 +520,14 @@ export default function FifthStep() {
                     ref={bottomSheetRef}
                     initialIndex={-1}
                     addPic={(pic: any) => {
-                        if (sphState.selectedCompany) {
-                            const newList = [
-                                ...sphState.selectedCompany.Pics,
-                                { ...pic, isSelected: false }
-                            ];
+                        if (sphState?.selectedCompany) {
+                            let newList;
+                            if (sphState?.selectedCompany?.Pics)
+                                newList = [...sphState.selectedCompany.Pics];
+                            newList = [{ ...pic, isSelected: false }];
                             dispatch(
                                 updateSelectedCompany({
-                                    ...sphState.selectedCompany,
+                                    ...sphState?.selectedCompany,
                                     Pics: newList
                                 })
                             );

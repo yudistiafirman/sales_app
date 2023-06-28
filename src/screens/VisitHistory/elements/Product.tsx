@@ -21,8 +21,8 @@ function Product({ products }: { products: Products }) {
         ({ item }) => (
             <View style={{ height: resScale(37) }}>
                 <ProductChip
-                    category={{ name: item.Product.category.displayName }}
-                    name={item.Product.displayName}
+                    category={{ name: item?.Product?.category?.displayName }}
+                    name={item?.Product?.displayName}
                 />
             </View>
         ),
@@ -35,7 +35,7 @@ function Product({ products }: { products: Products }) {
             <FlashList
                 estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                 data={products}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(item, index) => index?.toString()}
                 renderItem={renderItem}
                 horizontal
             />

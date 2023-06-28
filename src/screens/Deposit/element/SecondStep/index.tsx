@@ -64,21 +64,21 @@ export default function SecondStep() {
 
     const listenerCallback = React.useCallback(
         ({ parent, data }: { parent: any; data: any }) => {
-            updateValueOnstep("stepTwo", "companyName", parent.companyName);
-            updateValueOnstep("stepTwo", "locationName", parent.locationName);
-            updateValue("existingProjectID", parent.projectId);
+            updateValueOnstep("stepTwo", "companyName", parent?.companyName);
+            updateValueOnstep("stepTwo", "locationName", parent?.locationName);
+            updateValue("existingProjectID", parent?.projectId);
             updateValueOnstep(
                 "stepTwo",
                 "availableDeposit",
-                parent.availableDeposit
+                parent?.availableDeposit
             );
-            updateValueOnstep("stepTwo", "paymentType", parent.paymentType);
+            updateValueOnstep("stepTwo", "paymentType", parent?.paymentType);
             updateValueOnstep("stepTwo", "purchaseOrders", data);
             updateValueOnstep(
                 "stepTwo",
                 "selectedSaleOrder",
-                data?.length > 0 && data[0].SaleOrders?.length > 0
-                    ? data[0].SaleOrders[0]
+                data?.length > 0 && data[0]?.SaleOrders?.length > 0
+                    ? data[0]?.SaleOrders[0]
                     : undefined
             );
             updateValue("isSearchingPurchaseOrder", false);
@@ -114,14 +114,14 @@ export default function SecondStep() {
         if (isExisted === -1) {
             newExpandedData = [...expandData, data];
         } else {
-            newExpandedData = expandData.filter((val) => val?.id !== data?.id);
+            newExpandedData = expandData?.filter((val) => val?.id !== data?.id);
         }
         setExpandData(newExpandedData);
     };
 
     return (
         <SafeAreaView style={style.flexFull}>
-            {values.isSearchingPurchaseOrder === true ? (
+            {values?.isSearchingPurchaseOrder === true ? (
                 <SelectPurchaseOrderData
                     dataToGet="DEPOSITDATA"
                     onSubmitData={({ parentData, data }) =>
@@ -148,7 +148,7 @@ export default function SecondStep() {
                         </View>
                         <View style={style.flexFull}>
                             {stateTwo?.purchaseOrders &&
-                            stateTwo?.purchaseOrders.length > 0 ? (
+                            stateTwo?.purchaseOrders?.length > 0 ? (
                                 <>
                                     <ScrollView
                                         style={[
@@ -178,7 +178,7 @@ export default function SecondStep() {
                                                             stateTwo?.purchaseOrders
                                                         }
                                                         availableDeposit={
-                                                            stateTwo.availableDeposit
+                                                            stateTwo?.availableDeposit
                                                         }
                                                         // paymentType={
                                                         //     stateTwo.paymentType

@@ -37,7 +37,7 @@ export default function PillNames({
     searchQuery,
     pillColor = colors.blueSky
 }: PillNamesType) {
-    if (!pilNames.length) {
+    if (!pilNames?.length) {
         return null;
     }
     function nameCount() {
@@ -45,14 +45,14 @@ export default function PillNames({
             return (
                 <View style={[style.bluePill]}>
                     <Text style={style.bluePillText}>{`+${
-                        pilNames.length - 1
+                        (pilNames?.length || 0) - 1
                     } lagi`}</Text>
                 </View>
             );
         }
         return null;
     }
-    const filteredPilNames = pilNames.filter((it) => it);
+    const filteredPilNames = pilNames?.filter((it) => it);
     return (
         <View style={style.container}>
             <View

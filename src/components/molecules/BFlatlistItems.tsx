@@ -104,7 +104,7 @@ export default function BFlatlistItems({
                 ItemSeparatorComponent={renderItemSeparator}
                 refreshing={refreshing}
                 data={flatListDatas}
-                keyExtractor={(_, index) => index.toString()}
+                keyExtractor={(_, index) => index?.toString()}
                 renderItem={({ item }) => renderItem(item)}
                 ListFooterComponent={() => renderFlatListFooter()}
                 ListEmptyComponent={() => renderEmptyComponent()}
