@@ -98,15 +98,15 @@ function stepHandler(
     }
 
     const selectedCustomerType =
-        state.customerType === COMPANY ? "company" : "individu";
-    const selectedPic = state[selectedCustomerType].pics?.filter(
+        state?.customerType === COMPANY ? "company" : "individu";
+    const selectedPic = state[selectedCustomerType]?.pics?.filter(
         (v) => v.isSelected
     );
 
     if (
-        state[selectedCustomerType].selectedCustomer.title.length > 0 &&
-        state[selectedCustomerType].projectName &&
-        selectedPic.length > 0
+        state[selectedCustomerType]?.selectedCustomer?.title?.length > 0 &&
+        state[selectedCustomerType]?.projectName &&
+        selectedPic?.length > 0
     ) {
         setStepsDone((curr) => [...new Set(curr), 1]);
     } else {
@@ -344,7 +344,7 @@ function CreateVisitation() {
                     value: list
                 })
             );
-        } else if (project.Pic) {
+        } else if (project?.Pic) {
             const selectedPic = { ...project.Pic };
             selectedPic.isSelected = true;
             dispatch(
@@ -467,17 +467,17 @@ function CreateVisitation() {
             dispatch(resetStepperFocused(1));
         }
         const selectedCustomerType =
-            visitationData.customerType === COMPANY ? "company" : "individu";
-        const selectedPic = visitationData[selectedCustomerType].pics?.filter(
+            visitationData?.customerType === COMPANY ? "company" : "individu";
+        const selectedPic = visitationData[selectedCustomerType]?.pics?.filter(
             (v) => v.isSelected
         );
 
         if (
             visitationData.stepperVisitationShouldNotFocused &&
             visitationData.step === 1 &&
-            (visitationData[selectedCustomerType].selectedCustomer.title
-                .length > 0 ||
-                visitationData[selectedCustomerType].projectName ||
+            (visitationData[selectedCustomerType]?.selectedCustomer?.title
+                ?.length > 0 ||
+                visitationData[selectedCustomerType]?.projectName ||
                 selectedPic)
         ) {
             dispatch(resetStepperFocused(2));
@@ -509,32 +509,32 @@ function CreateVisitation() {
         stepHandler(visitationData, setStepsDone);
         handleStepperFocus();
     }, [
-        visitationData.createdLocation,
-        visitationData.locationAddress,
-        visitationData.pics,
-        visitationData.stageProject,
-        visitationData.products,
-        visitationData.customerType,
-        visitationData.companyName,
-        visitationData.typeProject,
-        visitationData.estimationDate.estimationMonth,
-        visitationData.estimationDate.estimationWeek,
-        visitationData.paymentType,
-        visitationData.competitors,
-        visitationData.images,
-        visitationData.individu,
-        visitationData.company
+        visitationData?.createdLocation,
+        visitationData?.locationAddress,
+        visitationData?.pics,
+        visitationData?.stageProject,
+        visitationData?.products,
+        visitationData?.customerType,
+        visitationData?.companyName,
+        visitationData?.typeProject,
+        visitationData?.estimationDate.estimationMonth,
+        visitationData?.estimationDate.estimationWeek,
+        visitationData?.paymentType,
+        visitationData?.competitors,
+        visitationData?.images,
+        visitationData?.individu,
+        visitationData?.company
     ]);
 
     const addPic = (state: PIC) => {
         const pic = state;
         pic.isSelected = true;
         const finalPIC =
-            visitationData.customerType === COMPANY
+            visitationData?.customerType === COMPANY
                 ? [...visitationData.company.pics]
                 : [...visitationData.individu.pics];
         const picsValue =
-            visitationData.customerType === COMPANY
+            visitationData?.customerType === COMPANY
                 ? visitationData.company.pics
                 : visitationData.individu.pics;
         if (picsValue && picsValue.length > 0) {
@@ -548,7 +548,10 @@ function CreateVisitation() {
 
         dispatch(
             setPics({
-                customerType: visitationData.customerType?.toLocaleLowerCase(),
+                customerType:
+                    visitationData?.customerType === COMPANY
+                        ? "company"
+                        : "individu",
                 value: [...finalPIC, pic]
             })
         );

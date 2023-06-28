@@ -52,9 +52,9 @@ function SecondStep({ openBottomSheet }: IProps) {
     const existingVisitation = route?.params?.existingVisitation;
     const visitationData = useSelector((state: RootState) => state.visitation);
     const authState = useSelector((state: RootState) => state.auth);
-    const isCompany = visitationData.customerType === COMPANY;
+    const isCompany = visitationData?.customerType === COMPANY;
     const selectedCustomerType =
-        visitationData.customerType === COMPANY ? "company" : "individu";
+        visitationData?.customerType === COMPANY ? "company" : "individu";
     const onChange = (key: any) => (e: any) => {
         dispatch(updateDataVisitation({ type: key, value: e }));
     };

@@ -110,9 +110,9 @@ function SearchFlow({
                 setSelectedCustomerData({
                     customerType: selectedCustomerType,
                     value: {
-                        id: item.Customer.id,
-                        title: item.Customer.displayName,
-                        paymentType: item.paymentType
+                        id: item?.Customer?.id,
+                        title: item?.Customer?.displayName,
+                        paymentType: item?.paymentType
                     }
                 })
             );
