@@ -132,6 +132,8 @@ interface Input {
         onValueChange: (value: any) => void;
     };
     onSelect?: (index: TAutocompleteDropdownItem) => void; // eg for pic radio
+    selectedItems?: { id: null | string; title: string };
+    onPressSelected?: () => void;
     isInputDisable?: boolean;
     disableColor?: string;
     onClear?: () => void;

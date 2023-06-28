@@ -13,7 +13,10 @@ import { layout } from "@/constants";
 import { PIC } from "@/interfaces";
 import { getAllProject } from "@/redux/async-thunks/commonThunks";
 import {
+    setPics,
+    setProjectName,
     setSearchQuery,
+    setSelectedCustomerData,
     updateDataVisitation,
     updateShouldScrollView
 } from "@/redux/reducers/VisitationReducer";
@@ -91,46 +94,6 @@ function SearchFlow({
     };
 
     const onSelectProject = (item: any) => {
-        if (item?.Company?.id) {
-            const company = {
-                id: item?.Company?.id,
-                title: item?.Company?.name
-            };
-            setSelectedCompany(company);
-            dispatch(
-                updateDataVisitation({
-                    type: "companyName",
-                    value: company.title
-                })
-            );
-            if (visitationData.options?.items) {
-                const newOptionsValue = [
-                    ...(visitationData.options?.items || [
-                        { id: "", title: "" }
-                    ])
-                ];
-                newOptionsValue.push(company);
-                dispatch(
-                    updateDataVisitation({
-                        type: "options",
-                        value: {
-                            ...visitationData.options,
-                            items: newOptionsValue
-                        }
-                    })
-                );
-            } else {
-                dispatch(
-                    updateDataVisitation({
-                        type: "options",
-                        value: {
-                            ...visitationData.options,
-                            items: [company]
-                        }
-                    })
-                );
-            }
-        }
         const customerType = item?.Company?.id ? "COMPANY" : "INDIVIDU";
         dispatch(
             updateDataVisitation({
@@ -138,6 +101,30 @@ function SearchFlow({
                 value: customerType
             })
         );
+
+        if (item?.Customer) {
+            dispatch(
+                setSelectedCustomerData({
+                    customerType: customerType.toLocaleLowerCase(),
+                    value: {
+                        id: item.Customer.id,
+                        title: item.Customer.displayName,
+                        paymentType: item.paymentType
+                    }
+                })
+            );
+        } else {
+            dispatch(
+                setSelectedCustomerData({
+                    customerType: customerType.toLocaleLowerCase(),
+                    value: {
+                        id: null,
+                        title: "",
+                        paymentType: ""
+                    }
+                })
+            );
+        }
 
         if (item?.Pics) {
             const picList = item?.Pics?.map((pic: PIC, i: number) => ({
@@ -148,15 +135,15 @@ function SearchFlow({
                 picList[0].isSelected = true;
             }
             dispatch(
-                updateDataVisitation({
-                    type: "pics",
+                setPics({
+                    customerType: customerType.toLocaleLowerCase(),
                     value: picList
                 })
             );
         }
         dispatch(
-            updateDataVisitation({
-                type: "projectName",
+            setProjectName({
+                customerType: customerType.toLocaleLowerCase(),
                 value: item?.name
             })
         );

@@ -25,8 +25,11 @@ import { CREATE_VISITATION } from "@/navigation/ScreenNames";
 import {
     resetStepperFocused,
     resetVisitationState,
+    setPics,
+    setProjectName,
     setSearchProject,
     setSearchQuery,
+    setSelectedCustomerData,
     setStepperFocused,
     updateCurrentStep,
     updateDataVisitation,
@@ -93,7 +96,7 @@ function stepHandler(
         setStepsDone((curr) => curr.filter((num) => num !== 0));
     }
     const selectedPic = state?.pics?.filter((v) => v.isSelected);
-    console.log(selectedPic);
+
     const customerTypeCond =
         state?.customerType === "COMPANY" ? !!state?.companyName : true;
     if (
@@ -159,14 +162,12 @@ function CreateVisitation() {
     ];
 
     function populateData(existingData: visitationListResponse) {
-        const { project } = existingData;
+        const { project, Customer } = existingData;
         const { company, Pics: picList, mainPic } = project;
         dispatch(
             updateDataVisitation({ type: "projectId", value: project.id })
         );
-        dispatch(
-            updateDataVisitation({ type: "projectName", value: project.name })
-        );
+
         if (company) {
             dispatch(
                 updateDataVisitation({ type: "customerType", value: "COMPANY" })
@@ -185,6 +186,37 @@ function CreateVisitation() {
                 })
             );
         }
+
+        if (Customer) {
+            dispatch(
+                setSelectedCustomerData({
+                    customerType: company ? "company" : "individu",
+                    value: {
+                        id: Customer.id,
+                        title: Customer.displayName,
+                        paymentType: Customer.paymentType
+                    }
+                })
+            );
+        } else {
+            dispatch(
+                setSelectedCustomerData({
+                    customerType: company ? "company" : "individu",
+                    value: {
+                        id: null,
+                        title: "",
+                        paymentType: ""
+                    }
+                })
+            );
+        }
+
+        dispatch(
+            setProjectName({
+                customerType: company ? "company" : "individu",
+                value: project?.name
+            })
+        );
 
         if (existingData.project?.stage) {
             dispatch(
@@ -303,12 +335,20 @@ function CreateVisitation() {
                     isSelected: false
                 };
             });
-            dispatch(updateDataVisitation({ type: "pics", value: list }));
+            dispatch(
+                setPics({
+                    customerType: company ? "company" : "individu",
+                    value: list
+                })
+            );
         } else if (project.Pic) {
             const selectedPic = { ...project.Pic };
             selectedPic.isSelected = true;
             dispatch(
-                updateDataVisitation({ type: "pics", value: [selectedPic] })
+                setPics({
+                    customerType: company ? "company" : "individu",
+                    value: [selectedPic]
+                })
             );
         }
     }
@@ -481,8 +521,15 @@ function CreateVisitation() {
     const addPic = (state: PIC) => {
         const pic = state;
         pic.isSelected = true;
-        const finalPIC = [...visitationData.pics];
-        if (visitationData.pics && visitationData.pics.length > 0) {
+        const finalPIC =
+            visitationData.customerType === "COMPANY"
+                ? [...visitationData.company.pics]
+                : [...visitationData.individu.pics];
+        const picsValue =
+            visitationData.customerType === "COMPANY"
+                ? visitationData.company.pics
+                : visitationData.individu.pics;
+        if (picsValue && picsValue.length > 0) {
             finalPIC.forEach((it, index) => {
                 finalPIC[index] = {
                     ...finalPIC[index],
@@ -490,9 +537,10 @@ function CreateVisitation() {
                 };
             });
         }
+
         dispatch(
-            updateDataVisitation({
-                type: "pics",
+            setPics({
+                customerType: visitationData.customerType?.toLocaleLowerCase(),
                 value: [...finalPIC, pic]
             })
         );

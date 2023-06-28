@@ -7,10 +7,12 @@ import {
     getSphDocuments,
     getAddressSuggestion,
     postProjectDoc,
-    getLocationCoordinates
+    getLocationCoordinates,
+    getAllCustomers
 } from "@/actions/CommonActions";
 import { Region, projectResponseType } from "@/interfaces";
 import Geolocation from "react-native-geolocation-service";
+import { COMPANY } from "@/constants/general";
 
 type ErrorType = {
     success: boolean;
@@ -28,6 +30,12 @@ interface CoordinateDetails {
     formattedAddress: string | undefined;
     PostalId: string | undefined;
     distance: number | undefined;
+}
+
+interface CustomerData {
+    id: string;
+    displayName: string;
+    paymentType: null | "CREDIT";
 }
 export const postUploadFiles = createAsyncThunk<
     any,
@@ -227,6 +235,23 @@ export const getUserCurrentLocation = createAsyncThunk(
             };
 
             return coordinate;
+        } catch (error) {
+            let errorData = error?.message;
+            if (error?.response?.data) {
+                errorData = error?.response?.data;
+            }
+            return rejectWithValue(errorData);
+        }
+    }
+);
+
+export const getAllCustomer = createAsyncThunk(
+    "common/getAllCustomer",
+    async (searchQuery: string, { rejectWithValue }) => {
+        try {
+            const response = await getAllCustomers("", searchQuery, 0);
+
+            return response.data.data.data;
         } catch (error) {
             let errorData = error?.message;
             if (error?.response?.data) {

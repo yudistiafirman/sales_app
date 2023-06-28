@@ -12,6 +12,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import BSpacer from "./BSpacer";
 import BCommonListShimmer from "../templates/BCommonListShimmer";
 import BChip from "./BChip";
+import BSearchBar from "../molecules/BSearchBar";
 
 const styles: Styles = {
     inputContainer: {
@@ -100,6 +101,7 @@ function BAutoComplete({
 
     const renderItemAutoComp: ListRenderItem<ItemSet> = ({ item, index }) => (
         <TouchableOpacity
+            onPress={() => onSelect(item)}
             style={{
                 paddingVertical: layout.pad.md,
                 backgroundColor: index % 2 ? colors.veryLightShadeGray : ""
@@ -148,11 +150,11 @@ function BAutoComplete({
             showClear={showClear}
             closeOnBlur={false}
             onClear={onClear}
-            onSelectItem={onSelect}
             inputContainerStyle={styles.inputContainer}
             flatListProps={{
                 data: itemSet,
-                renderItem: renderItemAutoComp,
+                renderItem:
+                    itemSet && itemSet.length > 0 ? renderItemAutoComp : null,
                 keyExtractor(item, index) {
                     return item.id;
                 },

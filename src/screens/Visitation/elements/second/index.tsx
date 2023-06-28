@@ -11,14 +11,21 @@ import { Input, Styles } from "@/interfaces";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import { CREATE_VISITATION } from "@/navigation/ScreenNames";
 import {
+    setCustomerData,
+    setCustomerSearchQuery,
+    setPics,
+    setProjectName,
     setSearchProject,
+    setSearchQuery,
+    setSelectedCustomerData,
     updateDataVisitation
 } from "@/redux/reducers/VisitationReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import company from "@/assets/icon/Visitation/company.png";
 import profile from "@/assets/icon/Visitation/profile.png";
-import { projectByUserGetAction } from "@/actions/CommonActions";
+import { DEBOUNCE_SEARCH } from "@/constants/general";
+import { getAllCustomer } from "@/redux/async-thunks/commonThunks";
 import SearchFlow from "./Searching";
 
 interface IProps {
@@ -46,95 +53,50 @@ function SecondStep({ openBottomSheet }: IProps) {
     const existingVisitation = route?.params?.existingVisitation;
     const visitationData = useSelector((state: RootState) => state.visitation);
     const authState = useSelector((state: RootState) => state.auth);
-    const [selectedCompany, setSelectedCompany] = useState<{
-        id: number;
-        title: string;
-    }>({ id: 1, title: visitationData.companyName });
 
     const onChange = (key: any) => (e: any) => {
         dispatch(updateDataVisitation({ type: key, value: e }));
     };
+    const fetchDebounce = debounce((searchQuery: string) => {
+        dispatch(getAllCustomer(searchQuery));
+    }, DEBOUNCE_SEARCH);
 
     useEffect(() => {
         crashlytics().log(`${CREATE_VISITATION}-Step2`);
+    }, []);
 
-        if (visitationData.companyName) {
+    useEffect(() => {
+        const searchValue =
+            visitationData.customerType === "COMPANY"
+                ? visitationData.company.customerData.searchQuery
+                : visitationData.individu.customerData.searchQuery;
+        if (searchValue.length > 2) {
+            fetchDebounce(searchValue);
+        } else {
             dispatch(
-                updateDataVisitation({
-                    type: "options",
-                    value: {
-                        items: [{ id: 1, title: visitationData.companyName }]
-                    }
+                setCustomerData({
+                    value: [],
+                    customerType:
+                        visitationData.customerType?.toLocaleLowerCase()
                 })
             );
-            setSelectedCompany({
-                id: 1,
-                title: visitationData.companyName
-            });
         }
-    }, [visitationData.companyName]);
-
-    const fetchDebounce = useMemo(
-        () =>
-            debounce((searchQuery: string) => {
-                projectByUserGetAction(
-                    searchQuery,
-                    authState.selectedBatchingPlant?.id
-                )
-                    .then((response) => {
-                        const items = response?.data?.data?.map(
-                            (project: any) => ({
-                                id: project.id,
-                                title: project.display_name
-                            })
-                        );
-                        dispatch(
-                            updateDataVisitation({
-                                type: "options",
-                                value: {
-                                    items
-                                }
-                            })
-                        );
-
-                        if (items.length <= 0) {
-                            dispatch(
-                                updateDataVisitation({
-                                    type: "companyName",
-                                    value: searchQuery
-                                })
-                            );
-                            setSelectedCompany({
-                                id: 1,
-                                title: searchQuery
-                            });
-                        }
-                    })
-                    .catch(() => {
-                        dispatch(
-                            updateDataVisitation({
-                                type: "companyName",
-                                value: searchQuery
-                            })
-                        );
-                        setSelectedCompany({
-                            id: 1,
-                            title: searchQuery
-                        });
-                    });
-            }, 500),
-        [selectedCompany]
-    );
+        return () => {
+            fetchDebounce.cancel();
+        };
+    }, [
+        visitationData.customerType === "COMPANY"
+            ? visitationData.company.customerData.searchQuery
+            : visitationData.individu.customerData.searchQuery
+    ]);
 
     const onChangeText = (searchQuery: string): void => {
-        fetchDebounce(searchQuery);
-        // fetchDebounce(searchQuery)
-        // setSelectedCompany({ id: 1, title: searchQuery });
-
-        // fetching then merge with the thing user type
-        // updateValueOnstep('stepTwo', 'options', {
-        //   items: [{ id: 1, title: searchQuery }],
-        // });
+        dispatch(
+            setCustomerSearchQuery({
+                customerType: visitationData.customerType?.toLocaleLowerCase(),
+                value: searchQuery
+            })
+        );
     };
 
     const inputs: Input[] = React.useMemo(() => {
@@ -172,24 +134,45 @@ function SecondStep({ openBottomSheet }: IProps) {
                 isError: false,
                 type: "autocomplete",
                 onChange: onChangeText,
-                value: selectedCompany,
-                items: visitationData.options?.items,
-                loading: visitationData.options?.loading,
+                value:
+                    visitationData.customerType === "COMPANY"
+                        ? visitationData.company.customerData.searchQuery
+                        : visitationData.individu.customerData.searchQuery,
+                itemSet:
+                    visitationData.customerType === "COMPANY"
+                        ? visitationData.company.customerData.items
+                        : visitationData.individu.customerData.items,
+                loading:
+                    visitationData.customerType === "COMPANY"
+                        ? visitationData.company.customerData.loading ===
+                          "pending"
+                        : visitationData.individu.customerData.loading ===
+                          "pending",
                 onSelect: (item: { id: string; title: string }): void => {
-                    if (item) {
-                        dispatch(
-                            updateDataVisitation({
-                                type: "companyName",
-                                value: item.title
-                            })
-                        );
-                        setSelectedCompany(item);
-                    }
+                    dispatch(
+                        setSelectedCustomerData({
+                            customerType:
+                                visitationData.customerType?.toLocaleLowerCase(),
+                            value: item
+                        })
+                    );
                 },
                 placeholder: "Masukkan Nama Pelanggan",
                 isInputDisable: !!existingVisitation,
-                // showChevronAutoCompleted: false,
-                showClearAutoCompleted: false
+                onPressSelected: () => {
+                    dispatch(
+                        setSelectedCustomerData({
+                            customerType:
+                                visitationData.customerType?.toLocaleLowerCase(),
+                            value: { id: null, title: "", paymentType: "" }
+                        })
+                    );
+                },
+                showClearAutoCompleted: false,
+                selectedItems:
+                    visitationData.customerType === "COMPANY"
+                        ? visitationData.company.selectedCustomer
+                        : visitationData.individu.selectedCustomer
             },
             {
                 label: "Nama Proyek",
@@ -197,9 +180,18 @@ function SecondStep({ openBottomSheet }: IProps) {
                 isError: false,
                 type: "textInput",
                 onChange: (e: any) => {
-                    onChange("projectName")(e.nativeEvent.text);
+                    dispatch(
+                        setProjectName({
+                            customerType:
+                                visitationData.customerType?.toLocaleLowerCase(),
+                            value: e.nativeEvent.text
+                        })
+                    );
                 },
-                value: visitationData.projectName,
+                value:
+                    visitationData.customerType === "COMPANY"
+                        ? visitationData.company.projectName
+                        : visitationData.individu.projectName,
                 placeholder: "Masukkan Nama Proyek",
                 isInputDisable: !!existingVisitation
             },
@@ -208,20 +200,26 @@ function SecondStep({ openBottomSheet }: IProps) {
                 isRequire: true,
                 isError: false,
                 type: "PIC",
-                value: visitationData.pics,
+                value:
+                    visitationData.customerType === "COMPANY"
+                        ? visitationData.company.pics
+                        : visitationData.individu.pics,
                 onChange: () => {
                     openBottomSheet();
                 },
                 onSelect: (index: number) => {
-                    const newPicList = visitationData.pics.map(
-                        (el, _index) => ({
-                            ...el,
-                            isSelected: _index === index
-                        })
-                    );
+                    const picsValue =
+                        visitationData.customerType === "COMPANY"
+                            ? visitationData.company.pics
+                            : visitationData.individu.pics;
+                    const newPicList = picsValue.map((el, _index) => ({
+                        ...el,
+                        isSelected: _index === index
+                    }));
                     dispatch(
-                        updateDataVisitation({
-                            type: "pics",
+                        setPics({
+                            customerType:
+                                visitationData.customerType?.toLocaleLowerCase(),
                             value: newPicList
                         })
                     );
@@ -230,7 +228,7 @@ function SecondStep({ openBottomSheet }: IProps) {
         ];
 
         return baseInput;
-    }, [visitationData, selectedCompany]);
+    }, [visitationData]);
 
     const onSearch = (searching: boolean) => {
         dispatch(setSearchProject(searching));
@@ -242,7 +240,6 @@ function SecondStep({ openBottomSheet }: IProps) {
                 searchingDisable={!!existingVisitation}
                 isSearch={visitationData.isSearchProject}
                 onSearch={onSearch}
-                setSelectedCompany={setSelectedCompany}
             />
             {!visitationData.isSearchProject && (
                 <KeyboardAvoidingView style={{ flex: 1 }} enabled>
