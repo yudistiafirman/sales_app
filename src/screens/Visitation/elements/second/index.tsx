@@ -16,7 +16,6 @@ import {
     setPics,
     setProjectName,
     setSearchProject,
-    setSearchQuery,
     setSelectedCustomerData,
     updateDataVisitation
 } from "@/redux/reducers/VisitationReducer";
@@ -24,7 +23,7 @@ import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import company from "@/assets/icon/Visitation/company.png";
 import profile from "@/assets/icon/Visitation/profile.png";
-import { DEBOUNCE_SEARCH } from "@/constants/general";
+import { COMPANY, DEBOUNCE_SEARCH, INDIVIDU } from "@/constants/general";
 import { getAllCustomer } from "@/redux/async-thunks/commonThunks";
 import SearchFlow from "./Searching";
 
@@ -53,7 +52,9 @@ function SecondStep({ openBottomSheet }: IProps) {
     const existingVisitation = route?.params?.existingVisitation;
     const visitationData = useSelector((state: RootState) => state.visitation);
     const authState = useSelector((state: RootState) => state.auth);
-
+    const isCompany = visitationData.customerType === COMPANY;
+    const selectedCustomerType =
+        visitationData.customerType === COMPANY ? "company" : "individu";
     const onChange = (key: any) => (e: any) => {
         dispatch(updateDataVisitation({ type: key, value: e }));
     };
@@ -66,18 +67,16 @@ function SecondStep({ openBottomSheet }: IProps) {
     }, []);
 
     useEffect(() => {
-        const searchValue =
-            visitationData.customerType === "COMPANY"
-                ? visitationData.company.customerData.searchQuery
-                : visitationData.individu.customerData.searchQuery;
+        const searchValue = isCompany
+            ? visitationData.company.customerData.searchQuery
+            : visitationData.individu.customerData.searchQuery;
         if (searchValue.length > 2) {
             fetchDebounce(searchValue);
         } else {
             dispatch(
                 setCustomerData({
                     value: [],
-                    customerType:
-                        visitationData.customerType?.toLocaleLowerCase()
+                    customerType: selectedCustomerType
                 })
             );
         }
@@ -85,7 +84,7 @@ function SecondStep({ openBottomSheet }: IProps) {
             fetchDebounce.cancel();
         };
     }, [
-        visitationData.customerType === "COMPANY"
+        isCompany
             ? visitationData.company.customerData.searchQuery
             : visitationData.individu.customerData.searchQuery
     ]);
@@ -93,7 +92,7 @@ function SecondStep({ openBottomSheet }: IProps) {
     const onChangeText = (searchQuery: string): void => {
         dispatch(
             setCustomerSearchQuery({
-                customerType: visitationData.customerType?.toLocaleLowerCase(),
+                customerType: selectedCustomerType,
                 value: searchQuery
             })
         );
@@ -112,17 +111,17 @@ function SecondStep({ openBottomSheet }: IProps) {
                     {
                         icon: company,
                         title: "Perusahaan",
-                        value: "COMPANY",
+                        value: COMPANY,
                         onChange: () => {
-                            onChange("customerType")("COMPANY");
+                            onChange("customerType")(COMPANY);
                         }
                     },
                     {
                         icon: profile,
                         title: "Individu",
-                        value: "INDIVIDU",
+                        value: INDIVIDU,
                         onChange: () => {
-                            onChange("customerType")("INDIVIDU");
+                            onChange("customerType")(INDIVIDU);
                         }
                     }
                 ],
@@ -134,25 +133,20 @@ function SecondStep({ openBottomSheet }: IProps) {
                 isError: false,
                 type: "autocomplete",
                 onChange: onChangeText,
-                value:
-                    visitationData.customerType === "COMPANY"
-                        ? visitationData.company.customerData.searchQuery
-                        : visitationData.individu.customerData.searchQuery,
-                itemSet:
-                    visitationData.customerType === "COMPANY"
-                        ? visitationData.company.customerData.items
-                        : visitationData.individu.customerData.items,
-                loading:
-                    visitationData.customerType === "COMPANY"
-                        ? visitationData.company.customerData.loading ===
-                          "pending"
-                        : visitationData.individu.customerData.loading ===
-                          "pending",
+                value: isCompany
+                    ? visitationData.company.customerData.searchQuery
+                    : visitationData.individu.customerData.searchQuery,
+                itemSet: isCompany
+                    ? visitationData.company.customerData.items
+                    : visitationData.individu.customerData.items,
+                loading: isCompany
+                    ? visitationData.company.customerData.loading === "pending"
+                    : visitationData.individu.customerData.loading ===
+                      "pending",
                 onSelect: (item: { id: string; title: string }): void => {
                     dispatch(
                         setSelectedCustomerData({
-                            customerType:
-                                visitationData.customerType?.toLocaleLowerCase(),
+                            customerType: selectedCustomerType,
                             value: item
                         })
                     );
@@ -162,17 +156,15 @@ function SecondStep({ openBottomSheet }: IProps) {
                 onPressSelected: () => {
                     dispatch(
                         setSelectedCustomerData({
-                            customerType:
-                                visitationData.customerType?.toLocaleLowerCase(),
+                            customerType: selectedCustomerType,
                             value: { id: null, title: "", paymentType: "" }
                         })
                     );
                 },
                 showClearAutoCompleted: false,
-                selectedItems:
-                    visitationData.customerType === "COMPANY"
-                        ? visitationData.company.selectedCustomer
-                        : visitationData.individu.selectedCustomer
+                selectedItems: isCompany
+                    ? visitationData.company.selectedCustomer
+                    : visitationData.individu.selectedCustomer
             },
             {
                 label: "Nama Proyek",
@@ -182,16 +174,14 @@ function SecondStep({ openBottomSheet }: IProps) {
                 onChange: (e: any) => {
                     dispatch(
                         setProjectName({
-                            customerType:
-                                visitationData.customerType?.toLocaleLowerCase(),
+                            customerType: selectedCustomerType,
                             value: e.nativeEvent.text
                         })
                     );
                 },
-                value:
-                    visitationData.customerType === "COMPANY"
-                        ? visitationData.company.projectName
-                        : visitationData.individu.projectName,
+                value: isCompany
+                    ? visitationData.company.projectName
+                    : visitationData.individu.projectName,
                 placeholder: "Masukkan Nama Proyek",
                 isInputDisable: !!existingVisitation
             },
@@ -200,26 +190,23 @@ function SecondStep({ openBottomSheet }: IProps) {
                 isRequire: true,
                 isError: false,
                 type: "PIC",
-                value:
-                    visitationData.customerType === "COMPANY"
-                        ? visitationData.company.pics
-                        : visitationData.individu.pics,
+                value: isCompany
+                    ? visitationData.company.pics
+                    : visitationData.individu.pics,
                 onChange: () => {
                     openBottomSheet();
                 },
                 onSelect: (index: number) => {
-                    const picsValue =
-                        visitationData.customerType === "COMPANY"
-                            ? visitationData.company.pics
-                            : visitationData.individu.pics;
+                    const picsValue = isCompany
+                        ? visitationData.company.pics
+                        : visitationData.individu.pics;
                     const newPicList = picsValue.map((el, _index) => ({
                         ...el,
                         isSelected: _index === index
                     }));
                     dispatch(
                         setPics({
-                            customerType:
-                                visitationData.customerType?.toLocaleLowerCase(),
+                            customerType: selectedCustomerType,
                             value: newPicList
                         })
                     );

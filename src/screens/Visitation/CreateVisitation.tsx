@@ -42,6 +42,7 @@ import { updateRegion } from "@/redux/reducers/locationReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { shouldAllowVisitationStateToContinue } from "@/utils/generalFunc";
+import { COMPANY } from "@/constants/general";
 import ThirdStep from "./elements/third";
 import BSheetAddPic from "./elements/second/BottomSheetAddPic";
 import SecondStep from "./elements/second";
@@ -95,14 +96,16 @@ function stepHandler(
     } else {
         setStepsDone((curr) => curr.filter((num) => num !== 0));
     }
-    const selectedPic = state?.pics?.filter((v) => v.isSelected);
 
-    const customerTypeCond =
-        state?.customerType === "COMPANY" ? !!state?.companyName : true;
+    const selectedCustomerType =
+        state.customerType === COMPANY ? "company" : "individu";
+    const selectedPic = state[selectedCustomerType].pics?.filter(
+        (v) => v.isSelected
+    );
+
     if (
-        state?.customerType &&
-        customerTypeCond &&
-        state?.projectName &&
+        state[selectedCustomerType].selectedCustomer.title.length > 0 &&
+        state[selectedCustomerType].projectName &&
         selectedPic.length > 0
     ) {
         setStepsDone((curr) => [...new Set(curr), 1]);
@@ -170,7 +173,7 @@ function CreateVisitation() {
 
         if (company) {
             dispatch(
-                updateDataVisitation({ type: "customerType", value: "COMPANY" })
+                updateDataVisitation({ type: "customerType", value: COMPANY })
             );
             dispatch(
                 updateDataVisitation({
@@ -463,17 +466,18 @@ function CreateVisitation() {
         ) {
             dispatch(resetStepperFocused(1));
         }
-        const selectedPic = visitationData.pics?.filter((v) => v.isSelected);
-        const customerTypeCond =
-            visitationData.customerType === "COMPANY"
-                ? !!visitationData.companyName
-                : true;
+        const selectedCustomerType =
+            visitationData.customerType === COMPANY ? "company" : "individu";
+        const selectedPic = visitationData[selectedCustomerType].pics?.filter(
+            (v) => v.isSelected
+        );
+
         if (
             visitationData.stepperVisitationShouldNotFocused &&
             visitationData.step === 1 &&
-            (visitationData.customerType ||
-                customerTypeCond ||
-                visitationData.projectName ||
+            (visitationData[selectedCustomerType].selectedCustomer.title
+                .length > 0 ||
+                visitationData[selectedCustomerType].projectName ||
                 selectedPic)
         ) {
             dispatch(resetStepperFocused(2));
@@ -515,18 +519,20 @@ function CreateVisitation() {
         visitationData.estimationDate.estimationWeek,
         visitationData.paymentType,
         visitationData.competitors,
-        visitationData.images
+        visitationData.images,
+        visitationData.individu,
+        visitationData.company
     ]);
 
     const addPic = (state: PIC) => {
         const pic = state;
         pic.isSelected = true;
         const finalPIC =
-            visitationData.customerType === "COMPANY"
+            visitationData.customerType === COMPANY
                 ? [...visitationData.company.pics]
                 : [...visitationData.individu.pics];
         const picsValue =
-            visitationData.customerType === "COMPANY"
+            visitationData.customerType === COMPANY
                 ? visitationData.company.pics
                 : visitationData.individu.pics;
         if (picsValue && picsValue.length > 0) {

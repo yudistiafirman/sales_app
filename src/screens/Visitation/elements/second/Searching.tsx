@@ -23,6 +23,7 @@ import {
 import { retrying } from "@/redux/reducers/commonReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import { COMPANY, INDIVIDU } from "@/constants/general";
 
 const style = StyleSheet.create({
     touchable: {
@@ -94,7 +95,9 @@ function SearchFlow({
     };
 
     const onSelectProject = (item: any) => {
-        const customerType = item?.Company?.id ? "COMPANY" : "INDIVIDU";
+        const customerType = item?.Company?.id ? COMPANY : INDIVIDU;
+        const selectedCustomerType =
+            customerType === COMPANY ? "company" : "individu";
         dispatch(
             updateDataVisitation({
                 type: "customerType",
@@ -105,7 +108,7 @@ function SearchFlow({
         if (item?.Customer) {
             dispatch(
                 setSelectedCustomerData({
-                    customerType: customerType.toLocaleLowerCase(),
+                    customerType: selectedCustomerType,
                     value: {
                         id: item.Customer.id,
                         title: item.Customer.displayName,
@@ -116,7 +119,7 @@ function SearchFlow({
         } else {
             dispatch(
                 setSelectedCustomerData({
-                    customerType: customerType.toLocaleLowerCase(),
+                    customerType: selectedCustomerType,
                     value: {
                         id: null,
                         title: "",
@@ -136,14 +139,14 @@ function SearchFlow({
             }
             dispatch(
                 setPics({
-                    customerType: customerType.toLocaleLowerCase(),
+                    customerType: selectedCustomerType,
                     value: picList
                 })
             );
         }
         dispatch(
             setProjectName({
-                customerType: customerType.toLocaleLowerCase(),
+                customerType: selectedCustomerType,
                 value: item?.name
             })
         );

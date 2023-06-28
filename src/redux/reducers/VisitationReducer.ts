@@ -494,11 +494,14 @@ export const visitationSlice = createSlice({
         );
         builder.addCase(getAllCustomer.pending, (state, { payload }) => ({
             ...state,
-            [state.customerType?.toLocaleLowerCase()]: {
-                ...state[state.customerType?.toLocaleLowerCase()],
+            [state.customerType === COMPANY ? "company" : "individu"]: {
+                ...state[
+                    state.customerType === COMPANY ? "company" : "individu"
+                ],
                 customerData: {
-                    ...state[state.customerType?.toLocaleLowerCase()]
-                        .customerData,
+                    ...state[
+                        state.customerType === COMPANY ? "company" : "individu"
+                    ].customerData,
                     loading: "pending"
                 }
             }
@@ -513,22 +516,23 @@ export const visitationSlice = createSlice({
                 paymentType: v.paymentType
             }));
 
+            const selectedCustomerType =
+                state.customerType === COMPANY ? "company" : "individu";
+
             return {
                 ...state,
-                [state.customerType?.toLocaleLowerCase()]: {
-                    ...state[state.customerType?.toLocaleLowerCase()],
+                [selectedCustomerType]: {
+                    ...state[selectedCustomerType],
                     customerData: {
-                        ...state[state.customerType?.toLocaleLowerCase()]
-                            .customerData,
+                        ...state[selectedCustomerType].customerData,
                         items:
                             items.length > 0
                                 ? items
                                 : [
                                       {
                                           id: null,
-                                          title: state[
-                                              state.customerType?.toLocaleLowerCase()
-                                          ].customerData.searchQuery,
+                                          title: state[selectedCustomerType]
+                                              .customerData.searchQuery,
                                           subtitle:
                                               state.customerType === "COMPANY"
                                                   ? "npwp : -"
