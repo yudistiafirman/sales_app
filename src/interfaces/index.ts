@@ -612,6 +612,12 @@ interface ProjectPayloadType {
     type?: "INFRASTRUKTUR" | "HIGH-RISE" | "RUMAH" | "KOMERSIAL" | "INDUSTRIAL";
 }
 
+interface CustomerVisitationPayloadType {
+    id: string | null;
+    name: string;
+    paymentType: "CBD" | "CREDIT";
+}
+
 interface PicPayloadType {
     name?: string;
     position?: string;
@@ -636,6 +642,7 @@ interface PayloadPostType {
     pic: PicPayloadType[];
     files: FilesType[];
     batchingPlantId?: string;
+    customer: CustomerVisitationPayloadType;
 }
 
 type VisitationDataType = {
@@ -801,6 +808,7 @@ export type {
     ProjectPayloadType as projectPayloadType,
     PicPayloadType as picPayloadType,
     PayloadPostType as payloadPostType,
+    CustomerVisitationPayloadType,
     VisitationDataType as visitationDataType,
     ProjectResponseType as projectResponseType,
     SelectedCompanyInterface as selectedCompanyInterface,

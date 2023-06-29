@@ -167,6 +167,7 @@ function CreateVisitation() {
     function populateData(existingData: visitationListResponse) {
         const { project, Customer } = existingData;
         const { company, Pics: picList, mainPic } = project;
+
         dispatch(
             updateDataVisitation({ type: "projectId", value: project?.id })
         );

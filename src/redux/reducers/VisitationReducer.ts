@@ -16,7 +16,11 @@ export interface VisitationGlobalState {
     customerType?: "INDIVIDU" | "COMPANY";
     projectName: string;
     individu: {
-        selectedCustomer: { id: string | null; title: string };
+        selectedCustomer: {
+            id: string | null;
+            title: string;
+            paymentType: string | null;
+        };
         projectName: string;
         pics: PIC[];
         customerData: {
@@ -29,7 +33,11 @@ export interface VisitationGlobalState {
         };
     };
     company: {
-        selectedCustomer: { id: string | null; title: string };
+        selectedCustomer: {
+            id: string | null;
+            title: string;
+            paymentType: string | null;
+        };
         projectName: string;
         pics: PIC[];
         customerData: {

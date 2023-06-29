@@ -12,7 +12,6 @@ import Icon from "react-native-vector-icons/AntDesign";
 import BSpacer from "./BSpacer";
 import BCommonListShimmer from "../templates/BCommonListShimmer";
 import BChip from "./BChip";
-import BSearchBar from "../molecules/BSearchBar";
 
 const styles: Styles = {
     inputContainer: {
@@ -138,7 +137,7 @@ function BAutoComplete({
             <Icon name="search1" size={layout.pad.lg} />
             <BSpacer size="extraSmall" />
 
-            <Text style={styles.emptyStateText}>Data Tidak Ditemukan</Text>
+            <Text style={styles.emptyStateText}>Minimal 3 huruf</Text>
         </View>
     );
 
