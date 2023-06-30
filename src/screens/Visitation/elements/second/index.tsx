@@ -59,7 +59,14 @@ function SecondStep({ openBottomSheet }: IProps) {
         dispatch(updateDataVisitation({ type: key, value: e }));
     };
     const fetchDebounce = debounce((searchQuery: string) => {
-        dispatch(getAllCustomer(searchQuery));
+        const customerType =
+            visitationData?.customerType === COMPANY ? COMPANY : INDIVIDU;
+        dispatch(
+            getAllCustomer({
+                searchQuery,
+                customerType
+            })
+        );
     }, DEBOUNCE_SEARCH);
 
     useEffect(() => {
@@ -158,6 +165,14 @@ function SecondStep({ openBottomSheet }: IProps) {
                         setSelectedCustomerData({
                             customerType: selectedCustomerType,
                             value: { id: null, title: "", paymentType: "" }
+                        })
+                    );
+                },
+                onClear: () => {
+                    dispatch(
+                        setCustomerSearchQuery({
+                            customerType: selectedCustomerType,
+                            value: ""
                         })
                     );
                 },

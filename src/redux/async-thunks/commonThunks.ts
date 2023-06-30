@@ -13,6 +13,7 @@ import {
 import { Region, projectResponseType } from "@/interfaces";
 import Geolocation from "react-native-geolocation-service";
 import { COMPANY } from "@/constants/general";
+import { ICustomerListData } from "@/models/Customer";
 
 type ErrorType = {
     success: boolean;
@@ -187,6 +188,7 @@ export const getCoordinateDetails = createAsyncThunk<
             if (error?.response?.data) {
                 errorData = error?.response?.data;
             }
+
             return rejectWithValue(errorData);
         }
     }
@@ -203,6 +205,7 @@ export const getUserCurrentLocation = createAsyncThunk(
             const position = await new Promise((resolve, error) =>
                 Geolocation.getCurrentPosition(resolve, error, opt)
             );
+
             const coords = position?.coords;
             const latitude = coords?.latitude;
             const longitude = coords?.longitude;
@@ -212,7 +215,9 @@ export const getUserCurrentLocation = createAsyncThunk(
                 selectedBatchingPlant,
                 signal
             );
+
             const result = response?.data?.result;
+
             const coordinate = {
                 longitude: Number(result?.lon),
                 latitude: Number(result?.lat),
@@ -222,20 +227,29 @@ export const getUserCurrentLocation = createAsyncThunk(
 
             return coordinate;
         } catch (error) {
+            console.log(error);
             let errorData = error?.message;
             if (error?.response?.data) {
                 errorData = error?.response?.data;
             }
+
             return rejectWithValue(errorData);
         }
     }
 );
 
-export const getAllCustomer = createAsyncThunk(
+export const getAllCustomer = createAsyncThunk<
+    ICustomerListData[],
+    { searchQuery: string; customerType: "COMPANY" | "INDIVIDU" }
+>(
     "common/getAllCustomer",
-    async (searchQuery: string, { rejectWithValue }) => {
+    async ({ searchQuery, customerType }, { rejectWithValue }) => {
         try {
-            const response = await getAllCustomers("", searchQuery, 0);
+            const response = await getAllCustomers(
+                customerType,
+                searchQuery,
+                0
+            );
 
             return response.data.data.data;
         } catch (error) {

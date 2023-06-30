@@ -854,7 +854,7 @@ const renderInput = (
                     <BSpacer size="verySmall" />
                 </View>
 
-                {selectedItems && selectedItems.title.length > 0 ? (
+                {selectedItems && selectedItems?.title?.length > 0 ? (
                     <TouchableOpacity
                         onPress={onPressSelected}
                         disabled={isInputDisable}

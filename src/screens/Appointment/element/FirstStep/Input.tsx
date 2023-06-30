@@ -1,5 +1,5 @@
 import debounce from "lodash.debounce";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { BDivider, BSpacer, BText, BForm } from "@/components";
@@ -8,16 +8,17 @@ import { Input, Styles } from "@/interfaces";
 import { AppDispatch, RootState } from "@/redux/store";
 import company from "@/assets/icon/Visitation/company.png";
 import profile from "@/assets/icon/Visitation/profile.png";
-import { projectByUserGetAction } from "@/actions/CommonActions";
 import {
-    addCompanies,
-    selectCompany,
-    setCompanyName,
+    setCustomerData,
+    setSelectedCustomerData,
+    setCustomerSearchQuery,
     setCustomerType,
     setPics,
     setProjectName,
     toggleModalPics
 } from "@/redux/reducers/appointmentReducer";
+import { COMPANY, DEBOUNCE_SEARCH, INDIVIDU } from "@/constants/general";
+import { getAllCustomer } from "@/redux/async-thunks/commonThunks";
 
 const styles: Styles = {
     dividerContainer: {
@@ -41,27 +42,50 @@ function Inputs() {
     const authState = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch<AppDispatch>();
     const isCompany = appointmentState?.stepOne?.customerType === "company";
-    const fetchDebounce = useMemo(
-        () =>
-            debounce((searchQuery: string) => {
-                projectByUserGetAction(
-                    searchQuery,
-                    authState?.selectedBatchingPlant?.id
-                ).then((response) => {
-                    const items = response?.data?.data?.map((project: any) => ({
-                        id: project?.id,
-                        title: project?.display_name
-                    }));
-                    dispatch(addCompanies({ value: items }));
-                });
-            }, 500),
-        [dispatch]
-    );
+    const selectedCustomerType =
+        appointmentState?.stepOne?.customerType === "company"
+            ? "company"
+            : "individu";
+
+    const fetchDebounce = debounce((searchQuery: string) => {
+        const customerType =
+            selectedCustomerType === "company" ? COMPANY : INDIVIDU;
+        dispatch(getAllCustomer({ searchQuery, customerType }));
+    }, DEBOUNCE_SEARCH);
+
+    useEffect(() => {
+        const searchValue = isCompany
+            ? appointmentState?.stepOne?.company?.customerData?.searchQuery
+            : appointmentState?.stepOne?.individu?.customerData?.searchQuery;
+
+        if (searchValue?.length > 2) {
+            fetchDebounce(searchValue);
+        } else {
+            dispatch(
+                setCustomerData({
+                    value: [],
+                    customerType: selectedCustomerType
+                })
+            );
+        }
+        return () => {
+            fetchDebounce.cancel();
+        };
+    }, [
+        isCompany
+            ? appointmentState?.stepOne?.company?.customerData?.searchQuery
+            : appointmentState?.stepOne?.individu?.customerData?.searchQuery
+    ]);
 
     const onChangeText = (searchQuery: string): void => {
-        dispatch(setCompanyName({ value: searchQuery }));
-        fetchDebounce(searchQuery);
+        dispatch(
+            setCustomerSearchQuery({
+                customerType: selectedCustomerType,
+                value: searchQuery
+            })
+        );
     };
+
     const inputs: Input[] = React.useMemo(() => {
         const baseInput: Input[] = [
             {
@@ -90,29 +114,56 @@ function Inputs() {
                 ]
             }
         ];
+
         if (appointmentState?.stepOne?.customerType?.length > 0) {
-            const aditionalInput: Input[] = [
+            const additionalInput: Input[] = [
                 {
-                    label: "Nama Perusahaan",
+                    label: "Nama Pelanggan",
                     isRequire: true,
-                    isError:
-                        appointmentState?.stepOne?.errorCompany?.length > 0,
-                    customerErrorMsg: appointmentState?.stepOne?.errorCompany,
+                    isError: false,
                     type: "autocomplete",
                     onChange: onChangeText,
                     onClear: () => {
-                        dispatch(setCompanyName({ value: null }));
+                        dispatch(
+                            setCustomerSearchQuery({
+                                customerType: selectedCustomerType,
+                                value: ""
+                            })
+                        );
                     },
 
-                    value: appointmentState?.stepOne?.company?.Company,
-                    items: appointmentState?.stepOne?.options?.items,
-                    placeholder: "Masukan Nama Perusahaan",
-                    loading: appointmentState?.stepOne?.options?.loading,
+                    value: isCompany
+                        ? appointmentState?.stepOne?.company?.customerData
+                              ?.searchQuery
+                        : appointmentState?.stepOne?.individu?.customerData
+                              ?.searchQuery,
+                    itemSet: isCompany
+                        ? appointmentState?.stepOne?.company?.customerData
+                              ?.items
+                        : appointmentState?.stepOne?.individu?.customerData
+                              ?.items,
+                    placeholder: "Masukan Nama Pelanggan",
+                    loading: isCompany
+                        ? appointmentState?.stepOne?.company?.customerData
+                              ?.loading === "pending"
+                        : appointmentState?.stepOne?.individu?.customerData
+                              ?.loading === "pending",
                     onSelect: (item: any) => {
                         dispatch(
-                            selectCompany({
-                                key: appointmentState?.stepOne?.customerType,
+                            setSelectedCustomerData({
+                                customerType: selectedCustomerType,
                                 value: item
+                            })
+                        );
+                    },
+                    selectedItems: isCompany
+                        ? appointmentState?.stepOne?.company?.selectedCustomer
+                        : appointmentState?.stepOne?.individu?.selectedCustomer,
+                    onPressSelected: () => {
+                        dispatch(
+                            setSelectedCustomerData({
+                                customerType: selectedCustomerType,
+                                value: { id: null, title: "", paymentType: "" }
                             })
                         );
                     }
@@ -167,14 +218,10 @@ function Inputs() {
                     }
                 }
             ];
-            if (appointmentState?.stepOne?.customerType === "individu") {
-                baseInput?.push(...aditionalInput.splice(1));
-            } else {
-                baseInput?.push(...aditionalInput);
-            }
+            baseInput.push(...additionalInput);
         }
         return baseInput;
-    }, [appointmentState?.stepOne]);
+    }, [appointmentState]);
     return (
         <>
             <View style={styles.dividerContainer}>

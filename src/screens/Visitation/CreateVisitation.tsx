@@ -165,7 +165,7 @@ function CreateVisitation() {
     ];
 
     function populateData(existingData: visitationListResponse) {
-        const { project, Customer } = existingData;
+        const { project } = existingData;
         const { company, Pics: picList, mainPic } = project;
 
         dispatch(
@@ -191,14 +191,14 @@ function CreateVisitation() {
             );
         }
 
-        if (Customer) {
+        if (project.Customer) {
             dispatch(
                 setSelectedCustomerData({
                     customerType: company ? "company" : "individu",
                     value: {
-                        id: Customer.id,
-                        title: Customer.displayName,
-                        paymentType: Customer.paymentType
+                        id: project?.Customer?.id,
+                        title: project?.Customer?.displayName,
+                        paymentType: project?.Customer?.paymentType
                     }
                 })
             );

@@ -113,9 +113,6 @@ function payloadMapper(
             values?.createdLocation?.PostalId;
     }
 
-    if (values?.customerType) {
-        payload.visitation.customerType = values?.customerType;
-    }
     if (values?.paymentType) {
         payload.visitation.paymentType = values?.paymentType;
     }
@@ -194,8 +191,12 @@ function payloadMapper(
         payload.customer.id = values[selectedCustomerType].selectedCustomer.id;
     }
     if (values[selectedCustomerType]?.selectedCustomer?.title) {
-        payload.customer.name =
+        payload.customer.displayName =
             values[selectedCustomerType].selectedCustomer.title;
+    }
+
+    if (values?.customerType) {
+        payload.customer.type = values?.customerType;
     }
     if (values[selectedCustomerType]?.selectedCustomer?.paymentType) {
         payload.customer.paymentType =
@@ -203,8 +204,6 @@ function payloadMapper(
     } else {
         payload.customer.paymentType = "CBD";
     }
-
-    console.log("ini payload", payload);
 
     return payload;
 }

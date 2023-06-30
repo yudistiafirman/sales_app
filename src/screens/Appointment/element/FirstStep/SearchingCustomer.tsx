@@ -11,7 +11,8 @@ import {
     addCompanies,
     enableSearching,
     onAddProject,
-    setSearchQuery
+    setSearchQuery,
+    setSelectedCustomerData
 } from "@/redux/reducers/appointmentReducer";
 
 function SearchingCustomer() {
@@ -49,59 +50,57 @@ function SearchingCustomer() {
         onChangeWithDebounce(text);
     };
 
-    const onPressCard = useCallback(
-        (item: selectedCompanyInterface) => {
-            try {
-                const customerType = item?.Company?.id ? "company" : "individu";
-                let userID = item?.Pic?.id;
-                let userName = item?.Pic?.name;
-                if (customerType === "company") {
-                    userID = item?.Company?.id;
-                    userName = item?.Company?.name;
-                }
-                if (appoinmentState?.stepOne?.options?.items) {
-                    dispatch(
-                        addCompanies({
-                            value: [
-                                ...appoinmentState.stepOne.options.items,
-                                { id: userID, title: userName }
-                            ]
-                        })
-                    );
-                } else {
-                    dispatch(
-                        addCompanies({
-                            value: [{ id: userID, title: userName }]
-                        })
-                    );
-                }
-                const picList = item?.Pics;
-                if (picList && picList?.length === 1) {
-                    picList[0].isSelected = true;
-                }
+    const onPressCard = useCallback((item: selectedCompanyInterface) => {
+        try {
+            const customerType = item?.Company?.id ? "company" : "individu";
+            const picList = item?.Pics;
+            if (picList && picList?.length === 1) {
+                picList[0].isSelected = true;
+            }
 
-                const companyDataToSave = {
-                    Company: { id: userID, title: userName },
-                    Pics: picList,
-                    Visitation: item?.Visitations[0],
-                    locationAddress: item?.LocationAddress,
-                    Pic: item?.Pic,
-                    id: item?.id,
-                    name: item?.name
-                };
-
+            if (item?.Customer) {
                 dispatch(
-                    onAddProject({
-                        key: customerType,
-                        value: companyDataToSave
+                    setSelectedCustomerData({
+                        customerType,
+                        value: {
+                            id: item?.Customer?.id,
+                            title: item?.Customer?.displayName,
+                            paymentType: item?.Customer?.paymentType
+                        }
                     })
                 );
-            } catch (error) {
-                console.log(error, "errorappointment onPressCard");
+            } else {
+                dispatch(
+                    setSelectedCustomerData({
+                        customerType,
+                        value: {
+                            id: null,
+                            title: "",
+                            paymentType: ""
+                        }
+                    })
+                );
             }
-        },
-        [dispatch, appoinmentState?.stepOne?.options?.items]
-    );
+
+            const companyDataToSave = {
+                Pics: picList,
+                Visitation: item?.Visitations[0],
+                locationAddress: item?.LocationAddress,
+                Pic: item?.Pic,
+                id: item?.id,
+                name: item?.name
+            };
+
+            dispatch(
+                onAddProject({
+                    key: customerType,
+                    value: companyDataToSave
+                })
+            );
+        } catch (error) {
+            console.log(error, "errorappointment onPressCard");
+        }
+    }, []);
 
     const routes: { title: string; totalItems: number }[] = React.useMemo(
         () => [

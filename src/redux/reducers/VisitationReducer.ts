@@ -121,7 +121,7 @@ const initialState: VisitationGlobalState = {
     pics: [],
     projectName: "",
     individu: {
-        selectedCustomer: { id: null, title: "" },
+        selectedCustomer: { id: null, title: "", paymentType: null },
         projectName: "",
         pics: [],
         customerData: {
@@ -131,7 +131,7 @@ const initialState: VisitationGlobalState = {
         }
     },
     company: {
-        selectedCustomer: { id: null, title: "" },
+        selectedCustomer: { id: null, title: "", paymentType: null },
         projectName: "",
         pics: [],
         customerData: {

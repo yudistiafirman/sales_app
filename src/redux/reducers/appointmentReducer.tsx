@@ -4,6 +4,8 @@ import {
     selectedCompanyInterface
 } from "@/interfaces";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { COMPANY } from "@/constants/general";
+import { getAllCustomer } from "../async-thunks/commonThunks";
 
 export type DataCompany = {
     id?: string;
@@ -86,7 +88,13 @@ const initialState: AppointmentState = {
                 lon: undefined,
                 formattedAddress: undefined
             },
-            Pic: {}
+            Pic: {},
+            selectedCustomer: { id: null, title: "", paymentType: null },
+            customerData: {
+                items: [],
+                loading: "idle",
+                searchQuery: ""
+            }
         },
         company: {
             id: "",
@@ -111,7 +119,13 @@ const initialState: AppointmentState = {
                 lat: 0,
                 lon: 0
             },
-            Pic: {}
+            Pic: {},
+            selectedCustomer: { id: null, title: "", paymentType: null },
+            customerData: {
+                items: [],
+                loading: "idle",
+                searchQuery: ""
+            }
         },
         errorCompany: "",
         errorProject: "",
@@ -158,14 +172,7 @@ export const appointmentSlice = createSlice({
             ...state,
             stepOne: {
                 ...state.stepOne,
-                customerType: actions.payload?.value,
-                errorCompany: "",
-                errorProject: "",
-                errorPics: "",
-                company: {
-                    ...state.stepOne.company,
-                    Company: { ...state.stepOne.company.Company }
-                }
+                customerType: actions.payload?.value
             }
         }),
         setProjectName: (
@@ -387,6 +394,66 @@ export const appointmentSlice = createSlice({
                 }
             }
         }),
+        setCustomerData: (
+            state,
+            actions: PayloadAction<{
+                value: any;
+                customerType: "company" | "individu";
+            }>
+        ) => ({
+            ...state,
+            stepOne: {
+                ...state.stepOne,
+                [actions.payload.customerType]: {
+                    ...state.stepOne[actions.payload.customerType],
+                    customerData: {
+                        ...state.stepOne[actions.payload.customerType]
+                            .customerData,
+                        items: actions.payload.value
+                    }
+                }
+            }
+        }),
+        setCustomerSearchQuery: (
+            state,
+            actions: PayloadAction<{
+                value: string;
+                customerType: "company" | "individu";
+            }>
+        ) => ({
+            ...state,
+            stepOne: {
+                ...state.stepOne,
+                [actions.payload.customerType]: {
+                    ...state.stepOne[actions.payload.customerType],
+                    customerData: {
+                        ...state.stepOne[actions.payload.customerType]
+                            .customerData,
+                        searchQuery: actions.payload.value
+                    }
+                }
+            }
+        }),
+        setSelectedCustomerData: (
+            state,
+            actions: PayloadAction<{
+                customerType: "company" | "individu";
+                value: {
+                    id: string | null;
+                    title: string;
+                    paymentType: string;
+                };
+            }>
+        ) => ({
+            ...state,
+            stepOne: {
+                ...state.stepOne,
+                [actions.payload.customerType]: {
+                    ...state.stepOne[actions.payload.customerType],
+                    selectedCustomer: actions.payload.value
+                }
+            }
+        }),
         setDate: (state, actions: PayloadAction<{ value: SelectedDate }>) => ({
             ...state,
             selectedDate: actions.payload?.value
@@ -407,6 +474,82 @@ export const appointmentSlice = createSlice({
             isSearching: actions.payload?.value
         }),
         resetAppointmentState: () => initialState
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getAllCustomer.pending, (state, { payload }) => ({
+            ...state,
+            stepOne: {
+                ...state.stepOne,
+                [state.stepOne.customerType === "company"
+                    ? "company"
+                    : "individu"]: {
+                    ...state.stepOne[
+                        state.stepOne.customerType === "company"
+                            ? "company"
+                            : "individu"
+                    ],
+                    customerData: {
+                        ...state.stepOne[
+                            state.stepOne.customerType === "company"
+                                ? "company"
+                                : "individu"
+                        ].customerData,
+                        loading: "pending"
+                    }
+                }
+            }
+        }));
+        builder.addCase(getAllCustomer.fulfilled, (state, { payload }) => {
+            const items = payload.map((v) => ({
+                id: v.id,
+                title: v.displayName,
+                chipTitle: v.type === "company" ? "Perusahaan" : "Individu",
+                subtitle:
+                    v.npwp.length > 0 ? `npwp : ${v.npwp}` : `nik: ${v.nik}`,
+                paymentType: v.paymentType
+            }));
+
+            const selectedCustomerType =
+                state.stepOne.customerType === "company"
+                    ? "company"
+                    : "individu";
+
+            return {
+                ...state,
+                stepOne: {
+                    ...state.stepOne,
+                    [selectedCustomerType]: {
+                        ...state.stepOne[selectedCustomerType],
+                        customerData: {
+                            ...state.stepOne[selectedCustomerType].customerData,
+                            items:
+                                items.length > 0
+                                    ? items
+                                    : [
+                                          {
+                                              id: null,
+                                              title: state.stepOne[
+                                                  selectedCustomerType
+                                              ].customerData.searchQuery,
+                                              subtitle:
+                                                  state.stepOne.customerType ===
+                                                  "company"
+                                                      ? "npwp : -"
+                                                      : "nik : -",
+                                              chipTitle:
+                                                  state.stepOne.customerType ===
+                                                  "company"
+                                                      ? "Perusahaan"
+                                                      : "Individu",
+                                              paymentType: ""
+                                          }
+                                      ],
+                            loading: "idle"
+                        }
+                    }
+                }
+            };
+        });
     }
 });
 
@@ -430,7 +573,10 @@ export const {
     setDate,
     increaseStep,
     decreaseStep,
-    enableSearching
+    enableSearching,
+    setCustomerSearchQuery,
+    setSelectedCustomerData,
+    setCustomerData
 } = appointmentSlice.actions;
 
 export default appointmentSlice.reducer;
