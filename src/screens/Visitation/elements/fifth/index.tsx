@@ -186,6 +186,9 @@ function payloadMapper(
         payload.project.id = values?.projectId;
         payload.visitation.order += 1;
     }
+    if (values?.customerType) {
+        payload.visitation.customerType = values?.customerType;
+    }
 
     if (values[selectedCustomerType]?.selectedCustomer?.id) {
         payload.customer.id = values[selectedCustomerType].selectedCustomer.id;
