@@ -19,6 +19,7 @@ import {
 } from "@/redux/reducers/appointmentReducer";
 import { COMPANY, DEBOUNCE_SEARCH, INDIVIDU } from "@/constants/general";
 import { getAllCustomer } from "@/redux/async-thunks/commonThunks";
+import { openPopUp } from "@/redux/reducers/modalReducer";
 
 const styles: Styles = {
     dividerContainer: {
@@ -48,9 +49,21 @@ function Inputs() {
             : "individu";
 
     const fetchDebounce = debounce((searchQuery: string) => {
-        const customerType =
-            selectedCustomerType === "company" ? COMPANY : INDIVIDU;
-        dispatch(getAllCustomer({ searchQuery, customerType }));
+        try {
+            const customerType =
+                selectedCustomerType === "company" ? COMPANY : INDIVIDU;
+            dispatch(getAllCustomer({ searchQuery, customerType }));
+        } catch (error) {
+            dispatch(
+                openPopUp({
+                    popUpType: "error",
+                    popUpText:
+                        error?.message ||
+                        "Terjadi error pengambilan data saat customer",
+                    outsideClickClosePopUp: true
+                })
+            );
+        }
     }, DEBOUNCE_SEARCH);
 
     useEffect(() => {

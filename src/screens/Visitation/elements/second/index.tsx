@@ -25,6 +25,7 @@ import company from "@/assets/icon/Visitation/company.png";
 import profile from "@/assets/icon/Visitation/profile.png";
 import { COMPANY, DEBOUNCE_SEARCH, INDIVIDU } from "@/constants/general";
 import { getAllCustomer } from "@/redux/async-thunks/commonThunks";
+import { openPopUp } from "@/redux/reducers/modalReducer";
 import SearchFlow from "./Searching";
 
 interface IProps {
@@ -59,14 +60,26 @@ function SecondStep({ openBottomSheet }: IProps) {
         dispatch(updateDataVisitation({ type: key, value: e }));
     };
     const fetchDebounce = debounce((searchQuery: string) => {
-        const customerType =
-            visitationData?.customerType === COMPANY ? COMPANY : INDIVIDU;
-        dispatch(
-            getAllCustomer({
-                searchQuery,
-                customerType
-            })
-        );
+        try {
+            const customerType =
+                visitationData?.customerType === COMPANY ? COMPANY : INDIVIDU;
+            dispatch(
+                getAllCustomer({
+                    searchQuery,
+                    customerType
+                })
+            );
+        } catch (error) {
+            dispatch(
+                openPopUp({
+                    popUpType: "error",
+                    popUpText:
+                        error?.message ||
+                        "Terjadi error pengambilan data customer",
+                    outsideClickClosePopUp: true
+                })
+            );
+        }
     }, DEBOUNCE_SEARCH);
 
     useEffect(() => {
