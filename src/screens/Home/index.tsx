@@ -639,7 +639,9 @@ function Beranda() {
             navigation.navigate(CAMERA, {
                 photoTitle: "Kunjungan",
                 navigateTo: CREATE_VISITATION,
-                closeButton: true
+                closeButton: true,
+                disabledDocPicker: false,
+                disabledGalleryPicker: false
             });
         }
     };
