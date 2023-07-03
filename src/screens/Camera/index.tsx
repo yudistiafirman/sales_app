@@ -24,6 +24,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { hasCameraPermissions } from "@/utils/permissions";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import { ALBUM_NAME } from "@/constants/general";
 import HeaderButton from "./elements/HeaderButton";
 import CameraButton from "./elements/CameraButton";
 
@@ -143,7 +144,7 @@ function CameraScreen() {
 
                 await CameraRoll.save(takenPhoto?.path, {
                     type: "photo",
-                    album: "BOD"
+                    album: ALBUM_NAME
                 });
 
                 animateElement();
