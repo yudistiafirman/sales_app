@@ -23,6 +23,8 @@ import { openPopUp } from "@/redux/reducers/modalReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { hasCameraPermissions } from "@/utils/permissions";
+import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import { ALBUM_NAME } from "@/constants/general";
 import HeaderButton from "./elements/HeaderButton";
 import CameraButton from "./elements/CameraButton";
 
@@ -139,7 +141,14 @@ function CameraScreen() {
                     flash: enableFlashlight ? "on" : "off",
                     quality: 70
                 });
+
+                await CameraRoll.save(takenPhoto?.path, {
+                    type: "photo",
+                    album: ALBUM_NAME
+                });
+
                 animateElement();
+
                 navigation.navigate(IMAGE_PREVIEW, {
                     photo: takenPhoto,
                     picker: undefined,
